@@ -1,16 +1,16 @@
 (ns cloiure.core
-    (:refer-clojure :only [* *err* *ns* *print-length* *warn-on-reflection* + - -> .. / < <= = > >= aget alength alter-meta! apply aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char coll? compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defn- defprotocol defrecord deref dissoc doseq dotimes double extend-type find find-ns first float fn gen-interface get hash-map hash-set identical? identity if-let if-not import inc indexed? int intern into into-array isa? key keys keyword keyword? let letfn list list* list? long loop make-array map map-entry? map? merge meta name namespace namespace-munge neg? next not= nth object-array parents peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot reduce reduced? reify rem repeat reset-meta! resolve rest rseq satisfies? seq seq? sequential? set? short sorted-map subvec swap! swap-vals! symbol symbol? to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector vector? when-let while with-meta zero?])
+    (:refer-clojure :only [* *err* *ns* *print-length* *warn-on-reflection* + - -> .. / < <= = > >= aget alength alter-meta! apply aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char coll? compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defn- defprotocol defrecord deref dissoc doseq dotimes extend-type find find-ns first fn gen-interface get hash-map hash-set identical? identity if-let if-not import inc indexed? int intern into into-array isa? key keys keyword keyword? let letfn list list* list? long loop make-array map map-entry? map? merge meta name namespace namespace-munge neg? next not= nth object-array parents peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot reduce reduced? reify rem repeat reset-meta! resolve rest rseq satisfies? seq seq? sequential? set? short sorted-map subvec swap! swap-vals! symbol symbol? to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector vector? when-let while with-meta zero?])
 )
 
 (import
-    [java.lang ArithmeticException Character Class ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Number Object RuntimeException String StringBuilder Thread Throwable UnsupportedOperationException]
+    [java.lang ArithmeticException Character Class ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Math Number Object RuntimeException String StringBuilder Thread Throwable UnsupportedOperationException]
 )
 
 (import
     [java.io BufferedReader InputStreamReader OutputStreamWriter PrintWriter PushbackReader Reader #_StringReader StringWriter Writer]
     [java.lang.ref Reference ReferenceQueue SoftReference WeakReference]
     [java.lang.reflect Array Constructor Field #_Method Modifier]
-    [java.math BigDecimal BigInteger MathContext]
+    [java.math BigInteger]
     [java.security AccessController PrivilegedAction]
     [java.util ArrayList Arrays Collection Comparator IdentityHashMap]
     [java.util.concurrent Callable ForkJoinPool ForkJoinTask]
@@ -166,9 +166,6 @@
 (defn boolean? [x] (instance? Boolean x))
 (defn char?    [x] (instance? Character x))
 (defn number?  [x] (instance? Number x))
-(defn float?   [x] (or (instance? Double x) (instance? Float x)))
-(defn double?  [x] (instance? Double x))
-(defn decimal? [x] (instance? BigDecimal x))
 (defn string?  [x] (instance? String x))
 
 ;;;
@@ -329,28 +326,12 @@
             "public static long clojure.lang.Numbers.unchecked_inc(long)"                 [ Opcodes/LCONST_1 Opcodes/LADD ]
             "public static long clojure.lang.Numbers.unchecked_dec(long)"                 [ Opcodes/LCONST_1 Opcodes/LSUB ]
 
-            "public static double clojure.lang.Numbers.add(double,double)"                  Opcodes/DADD
-            "public static double clojure.lang.Numbers.minus(double)"                       Opcodes/DNEG
-            "public static double clojure.lang.Numbers.minus(double,double)"                Opcodes/DSUB
-            "public static double clojure.lang.Numbers.multiply(double,double)"             Opcodes/DMUL
-            "public static double clojure.lang.Numbers.divide(double,double)"               Opcodes/DDIV
-            "public static double clojure.lang.Numbers.inc(double)"                       [ Opcodes/DCONST_1 Opcodes/DADD ]
-            "public static double clojure.lang.Numbers.dec(double)"                       [ Opcodes/DCONST_1 Opcodes/DSUB ]
-            "public static double clojure.lang.Numbers.unchecked_add(double,double)"        Opcodes/DADD
-            "public static double clojure.lang.Numbers.unchecked_minus(double)"             Opcodes/DNEG
-            "public static double clojure.lang.Numbers.unchecked_minus(double,double)"      Opcodes/DSUB
-            "public static double clojure.lang.Numbers.unchecked_multiply(double,double)"   Opcodes/DMUL
-            "public static double clojure.lang.Numbers.unchecked_inc(double)"             [ Opcodes/DCONST_1 Opcodes/DADD ]
-            "public static double clojure.lang.Numbers.unchecked_dec(double)"             [ Opcodes/DCONST_1 Opcodes/DSUB ]
-
             "public static boolean clojure.lang.RT.aget(boolean[],int)"                     Opcodes/BALOAD
             "public static byte clojure.lang.RT.aget(byte[],int)"                           Opcodes/BALOAD
             "public static short clojure.lang.RT.aget(short[],int)"                         Opcodes/SALOAD
             "public static char clojure.lang.RT.aget(char[],int)"                           Opcodes/CALOAD
             "public static int clojure.lang.RT.aget(int[],int)"                             Opcodes/IALOAD
             "public static long clojure.lang.RT.aget(long[],int)"                           Opcodes/LALOAD
-            "public static float clojure.lang.RT.aget(float[],int)"                         Opcodes/FALOAD
-            "public static double clojure.lang.RT.aget(double[],int)"                       Opcodes/DALOAD
             "public static java.lang.Object clojure.lang.RT.aget(java.lang.Object[],int)"   Opcodes/AALOAD
 
             "public static int clojure.lang.RT.alength(boolean[])"             Opcodes/ARRAYLENGTH
@@ -359,8 +340,6 @@
             "public static int clojure.lang.RT.alength(char[])"                Opcodes/ARRAYLENGTH
             "public static int clojure.lang.RT.alength(int[])"                 Opcodes/ARRAYLENGTH
             "public static int clojure.lang.RT.alength(long[])"                Opcodes/ARRAYLENGTH
-            "public static int clojure.lang.RT.alength(float[])"               Opcodes/ARRAYLENGTH
-            "public static int clojure.lang.RT.alength(double[])"              Opcodes/ARRAYLENGTH
             "public static int clojure.lang.RT.alength(java.lang.Object[])"    Opcodes/ARRAYLENGTH
 
             "public static long clojure.lang.RT.longCast(byte)"                Opcodes/I2L
@@ -368,34 +347,16 @@
             "public static long clojure.lang.RT.longCast(int)"                 Opcodes/I2L
             "public static long clojure.lang.RT.longCast(long)"                Opcodes/NOP
 
-            "public static double clojure.lang.RT.doubleCast(byte)"            Opcodes/I2D
-            "public static double clojure.lang.RT.doubleCast(short)"           Opcodes/I2D
-            "public static double clojure.lang.RT.doubleCast(int)"             Opcodes/I2D
-            "public static double clojure.lang.RT.doubleCast(long)"            Opcodes/L2D
-            "public static double clojure.lang.RT.doubleCast(float)"           Opcodes/F2D
-            "public static double clojure.lang.RT.doubleCast(double)"          Opcodes/NOP
-
             "public static int clojure.lang.RT.uncheckedIntCast(byte)"         Opcodes/NOP
             "public static int clojure.lang.RT.uncheckedIntCast(short)"        Opcodes/NOP
             "public static int clojure.lang.RT.uncheckedIntCast(char)"         Opcodes/NOP
             "public static int clojure.lang.RT.uncheckedIntCast(int)"          Opcodes/NOP
             "public static int clojure.lang.RT.uncheckedIntCast(long)"         Opcodes/L2I
-            "public static int clojure.lang.RT.uncheckedIntCast(float)"        Opcodes/F2I
-            "public static int clojure.lang.RT.uncheckedIntCast(double)"       Opcodes/D2I
 
             "public static long clojure.lang.RT.uncheckedLongCast(byte)"       Opcodes/I2L
             "public static long clojure.lang.RT.uncheckedLongCast(short)"      Opcodes/I2L
             "public static long clojure.lang.RT.uncheckedLongCast(int)"        Opcodes/I2L
             "public static long clojure.lang.RT.uncheckedLongCast(long)"       Opcodes/NOP
-            "public static long clojure.lang.RT.uncheckedLongCast(float)"      Opcodes/F2L
-            "public static long clojure.lang.RT.uncheckedLongCast(double)"     Opcodes/D2L
-
-            "public static double clojure.lang.RT.uncheckedDoubleCast(byte)"   Opcodes/I2D
-            "public static double clojure.lang.RT.uncheckedDoubleCast(short)"  Opcodes/I2D
-            "public static double clojure.lang.RT.uncheckedDoubleCast(int)"    Opcodes/I2D
-            "public static double clojure.lang.RT.uncheckedDoubleCast(long)"   Opcodes/L2D
-            "public static double clojure.lang.RT.uncheckedDoubleCast(float)"  Opcodes/F2D
-            "public static double clojure.lang.RT.uncheckedDoubleCast(double)" Opcodes/NOP
         )
     )
 
@@ -403,26 +364,17 @@
     (def #_"{String [int]}" Intrinsics'preds
         (hash-map
             "public static boolean clojure.lang.Numbers.equiv(long,long)"     [ Opcodes/LCMP  Opcodes/IFNE ]
-            "public static boolean clojure.lang.Numbers.equiv(double,double)" [ Opcodes/DCMPL Opcodes/IFNE ]
             "public static boolean clojure.lang.Numbers.lt(long,long)"        [ Opcodes/LCMP  Opcodes/IFGE ]
-            "public static boolean clojure.lang.Numbers.lt(double,double)"    [ Opcodes/DCMPG Opcodes/IFGE ]
             "public static boolean clojure.lang.Numbers.lte(long,long)"       [ Opcodes/LCMP  Opcodes/IFGT ]
-            "public static boolean clojure.lang.Numbers.lte(double,double)"   [ Opcodes/DCMPG Opcodes/IFGT ]
             "public static boolean clojure.lang.Numbers.gt(long,long)"        [ Opcodes/LCMP  Opcodes/IFLE ]
-            "public static boolean clojure.lang.Numbers.gt(double,double)"    [ Opcodes/DCMPL Opcodes/IFLE ]
             "public static boolean clojure.lang.Numbers.gte(long,long)"       [ Opcodes/LCMP  Opcodes/IFLT ]
-            "public static boolean clojure.lang.Numbers.gte(double,double)"   [ Opcodes/DCMPL Opcodes/IFLT ]
 
             "public static boolean clojure.lang.Util.equiv(long,long)"        [ Opcodes/LCMP  Opcodes/IFNE ]
-            "public static boolean clojure.lang.Util.equiv(double,double)"    [ Opcodes/DCMPL Opcodes/IFNE ]
             "public static boolean clojure.lang.Util.equiv(boolean,boolean)"  [ Opcodes/IF_ICMPNE ]
 
             "public static boolean clojure.lang.Numbers.isZero(long)"         [ Opcodes/LCONST_0 Opcodes/LCMP  Opcodes/IFNE ]
-            "public static boolean clojure.lang.Numbers.isZero(double)"       [ Opcodes/DCONST_0 Opcodes/DCMPL Opcodes/IFNE ]
             "public static boolean clojure.lang.Numbers.isPos(long)"          [ Opcodes/LCONST_0 Opcodes/LCMP  Opcodes/IFLE ]
-            "public static boolean clojure.lang.Numbers.isPos(double)"        [ Opcodes/DCONST_0 Opcodes/DCMPL Opcodes/IFLE ]
             "public static boolean clojure.lang.Numbers.isNeg(long)"          [ Opcodes/LCONST_0 Opcodes/LCMP  Opcodes/IFGE ]
-            "public static boolean clojure.lang.Numbers.isNeg(double)"        [ Opcodes/DCONST_0 Opcodes/DCMPG Opcodes/IFGE ]
         )
     )
 )
@@ -502,8 +454,6 @@
                 (number? arg)
                     (condp = c
                         Integer/TYPE   (.intValue arg)
-                        Float/TYPE     (.floatValue arg)
-                        Double/TYPE    (.doubleValue arg)
                         Long/TYPE      (.longValue arg)
                         Short/TYPE     (.shortValue arg)
                         Byte/TYPE      (.byteValue arg)
@@ -535,8 +485,6 @@
             :else
                 (condp = paramType
                     Integer/TYPE   (any = argType Integer Long/TYPE Long Short/TYPE Byte/TYPE)
-                    Float/TYPE     (any = argType Float Double/TYPE)
-                    Double/TYPE    (any = argType Double Float/TYPE)
                     Long/TYPE      (any = argType Long Integer/TYPE Short/TYPE Byte/TYPE)
                     Character/TYPE (= argType Character)
                     Short/TYPE     (= argType Short)
@@ -782,8 +730,6 @@
     (def #_"Class" Compiler'CHARS_CLASS    (Class/forName "[C"))
     (def #_"Class" Compiler'INTS_CLASS     (Class/forName "[I"))
     (def #_"Class" Compiler'LONGS_CLASS    (Class/forName "[J"))
-    (def #_"Class" Compiler'FLOATS_CLASS   (Class/forName "[F"))
-    (def #_"Class" Compiler'DOUBLES_CLASS  (Class/forName "[D"))
     (def #_"Class" Compiler'OBJECTS_CLASS  (Class/forName "[Ljava.lang.Object;"))
 
     (def #_"int" Compiler'MAX_POSITIONAL_ARITY 20)
@@ -1405,8 +1351,6 @@
             (condp = p
                 Integer/TYPE   Integer
                 Long/TYPE      Long
-                Float/TYPE     Float
-                Double/TYPE    Double
                 Character/TYPE Character
                 Short/TYPE     Short
                 Byte/TYPE      Byte
@@ -1699,7 +1643,6 @@
             (condp instance? (:n this)
                 Integer Long/TYPE
                 Long    Long/TYPE
-                Double  Double/TYPE
                         (throw! (str "unsupported Number type: " (.getName (class (:n this)))))
             )
         )
@@ -1713,7 +1656,6 @@
         (#_"void" MaybePrimitive'''emitUnboxed [#_"NumberExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
             (cond
                 (instance? Integer (:n this)) (.push gen, (.longValue (:n this)))
-                (instance? Double (:n this))  (.push gen, (.doubleValue (:n this)))
                 (instance? Long (:n this))    (.push gen, (.longValue (:n this)))
             )
             nil
@@ -1721,7 +1663,7 @@
     )
 
     (defn #_"Expr" NumberExpr'parse [#_"Number" form]
-        (if (or (instance? Integer form) (instance? Double form) (instance? Long form))
+        (if (or (instance? Integer form) (instance? Long form))
             (NumberExpr'new form)
             (ConstantExpr'new form)
         )
@@ -1840,8 +1782,6 @@
                 Character/TYPE (.invokeStatic gen, (Type/getType Character), (Method/getMethod "Character valueOf(char)"))
                 Integer/TYPE   (.invokeStatic gen, (Type/getType Integer), (Method/getMethod "Integer valueOf(int)"))
                 Long/TYPE      (.invokeStatic gen, (Type/getType Numbers), (Method/getMethod "Number num(long)"))
-                Float/TYPE     (.invokeStatic gen, (Type/getType Float), (Method/getMethod "Float valueOf(float)"))
-                Double/TYPE    (.invokeStatic gen, (Type/getType Double), (Method/getMethod "Double valueOf(double)"))
                 Void/TYPE      (Expr'''emit Compiler'NIL_EXPR, :Context'EXPRESSION, objx, gen)
             )
         )
@@ -1866,8 +1806,6 @@
                     (let [#_"Method" m
                             (condp = paramType
                                 Integer/TYPE (Method/getMethod "int intCast(Object)")
-                                Float/TYPE   (Method/getMethod "float floatCast(Object)")
-                                Double/TYPE  (Method/getMethod "double doubleCast(Object)")
                                 Long/TYPE    (Method/getMethod "long longCast(Object)")
                                 Byte/TYPE    (Method/getMethod "byte byteCast(Object)")
                                 Short/TYPE   (Method/getMethod "short shortCast(Object)")
@@ -1924,8 +1862,6 @@
                 "char"    Character/TYPE
                 "int"     Integer/TYPE
                 "long"    Long/TYPE
-                "float"   Float/TYPE
-                "double"  Double/TYPE
                 "void"    Void/TYPE
                           nil
             )
@@ -1941,8 +1877,6 @@
                 "chars"    Compiler'CHARS_CLASS
                 "ints"     Compiler'INTS_CLASS
                 "longs"    Compiler'LONGS_CLASS
-                "floats"   Compiler'FLOATS_CLASS
-                "doubles"  Compiler'DOUBLES_CLASS
                 "objects"  Compiler'OBJECTS_CLASS
                            nil
             )
@@ -2178,16 +2112,6 @@
                             (MaybePrimitive'''emitUnboxed e, :Context'EXPRESSION, objx, gen)
                             (.invokeStatic gen, (Type/getType RT), (Method/getMethod "int intCast(long)"))
                         )
-                    (and (= primc Float/TYPE) (= (aget parameterTypes i) Double/TYPE))
-                        (do
-                            (MaybePrimitive'''emitUnboxed e, :Context'EXPRESSION, objx, gen)
-                            (.visitInsn gen, Opcodes/F2D)
-                        )
-                    (and (= primc Double/TYPE) (= (aget parameterTypes i) Float/TYPE))
-                        (do
-                            (MaybePrimitive'''emitUnboxed e, :Context'EXPRESSION, objx, gen)
-                            (.visitInsn gen, Opcodes/D2F)
-                        )
                     :else
                         (do
                             (Expr'''emit e, :Context'EXPRESSION, objx, gen)
@@ -2228,20 +2152,10 @@
                         (MaybePrimitive'''emitUnboxed body, :Context'RETURN, objx, gen)
                         (.visitInsn gen, Opcodes/I2L)
                     )
-                    (and (= retClass Double/TYPE) (= c Float/TYPE))
-                    (do
-                        (MaybePrimitive'''emitUnboxed body, :Context'RETURN, objx, gen)
-                        (.visitInsn gen, Opcodes/F2D)
-                    )
                     (and (= retClass Integer/TYPE) (= c Long/TYPE))
                     (do
                         (MaybePrimitive'''emitUnboxed body, :Context'RETURN, objx, gen)
                         (.invokeStatic gen, (Type/getType RT), (Method/getMethod "int intCast(long)"))
-                    )
-                    (and (= retClass Float/TYPE) (= c Double/TYPE))
-                    (do
-                        (MaybePrimitive'''emitUnboxed body, :Context'RETURN, objx, gen)
-                        (.visitInsn gen, Opcodes/D2F)
                     )
                     :else
                     (do
@@ -2496,13 +2410,13 @@
                         (IopMethod''emitClearThis *method*, gen)
                     )
                     (let [#_"Type" type (Type/getType (:c this))
-                        #_"Method" m (Method. (:methodName this), (Type/getReturnType (:method this)), (Type/getArgumentTypes (:method this)))]
+                          #_"Method" m (Method. (:methodName this), (Type/getReturnType (:method this)), (Type/getArgumentTypes (:method this)))]
                         (.invokeStatic gen, type, m)
                         (when (= context :Context'STATEMENT) => (Interop'emitBoxReturn objx, gen, (.getReturnType (:method this)))
                             (let [#_"Class" rc (.getReturnType (:method this))]
                                 (cond
-                                    (any = rc Long/TYPE Double/TYPE) (.pop2 gen)
-                                    (not (= rc Void/TYPE))           (.pop gen)
+                                    (= rc Long/TYPE)       (.pop2 gen)
+                                    (not (= rc Void/TYPE)) (.pop gen)
                                 )
                             )
                         )
@@ -4020,11 +3934,11 @@
                       *loop-locals*       nil
                       *in-return-context* true]
                 (let [retTag (if (string? retTag) (symbol retTag) retTag)
-                      retTag (when (and (symbol? retTag) (any = (.getName retTag) "long" "double")) retTag)
+                      retTag (when (and (symbol? retTag) (= (.getName retTag) "long")) retTag)
                       #_"Class" retClass
                         (let-when [retClass (Interop'tagClass (or (Compiler'tagOf parms) retTag))] (.isPrimitive retClass) => Object
-                            (when-not (any = retClass Double/TYPE Long/TYPE) => retClass
-                                (throw! "only long and double primitives are supported")
+                            (when-not (= retClass Long/TYPE) => retClass
+                                (throw! "only long primitives are supported")
                             )
                         )
                       fm (assoc fm :retClass retClass)]
@@ -4046,8 +3960,8 @@
                                                 )
                                             :else
                                                 (let [#_"Class" c (Compiler'primClass (Interop'tagClass (Compiler'tagOf p)))]
-                                                    (when (and (.isPrimitive c) (not (any = c Double/TYPE Long/TYPE)))
-                                                        (throw! (str "only long and double primitives are supported: " p))
+                                                    (when (and (.isPrimitive c) (not= c Long/TYPE))
+                                                        (throw! (str "only long primitives are supported: " p))
                                                     )
                                                     (when (and rest? (some? (Compiler'tagOf p)))
                                                         (throw! "& arg cannot have type hint")
@@ -4389,12 +4303,6 @@
                         (.invokeStatic gen, (Type/getType Long), (Method/getMethod "Long valueOf(long)"))
                         true
                     )
-                    (instance? Double value)
-                    (do
-                        (.push gen, (.doubleValue value))
-                        (.invokeStatic gen, (Type/getType Double), (Method/getMethod "Double valueOf(double)"))
-                        true
-                    )
                     (char? value)
                     (do
                         (.push gen, (.charValue value))
@@ -4406,14 +4314,12 @@
                         (if (.isPrimitive value)
                             (let [#_"Type" t
                                     (condp = value
-                                        Boolean/TYPE   (Type/getType Boolean)
-                                        Byte/TYPE      (Type/getType Byte)
-                                        Character/TYPE (Type/getType Character)
-                                        Double/TYPE    (Type/getType Double)
-                                        Float/TYPE     (Type/getType Float)
                                         Integer/TYPE   (Type/getType Integer)
                                         Long/TYPE      (Type/getType Long)
+                                        Boolean/TYPE   (Type/getType Boolean)
+                                        Byte/TYPE      (Type/getType Byte)
                                         Short/TYPE     (Type/getType Short)
+                                        Character/TYPE (Type/getType Character)
                                         (throw! (str "can't embed unknown primitive in code: " value))
                                     )]
                                 (.getStatic gen, t, "TYPE", (Type/getType Class))
@@ -4620,7 +4526,7 @@
                                                 (do
                                                     (.visitVarInsn ctorgen, (.getOpcode (Type/getType primc), Opcodes/ILOAD), a)
                                                     (.putField ctorgen, (:objType this), (:name lb), (Type/getType primc))
-                                                    (if (any = primc Long/TYPE Double/TYPE) (inc a) a)
+                                                    (if (= primc Long/TYPE) (inc a) a)
                                                 )
                                                 (do
                                                     (.visitVarInsn ctorgen, (.getOpcode (Type/getType Object), Opcodes/ILOAD), a)
@@ -5309,7 +5215,6 @@
                                                                                             )
                                                                                             (condp = (Compiler'maybePrimitiveType init)
                                                                                                 Integer/TYPE (StaticMethodExpr'new 0, nil, RT, "longCast", [init], false)
-                                                                                                Float/TYPE   (StaticMethodExpr'new 0, nil, RT, "doubleCast", [init], false)
                                                                                                              init
                                                                                             )
                                                                                         )
@@ -5417,20 +5322,10 @@
                                         (MaybePrimitive'''emitUnboxed arg, :Context'EXPRESSION, objx, gen)
                                         (.visitInsn gen, Opcodes/I2L)
                                     )
-                                    (and (= primc Double/TYPE) (= pc Float/TYPE))
-                                    (do
-                                        (MaybePrimitive'''emitUnboxed arg, :Context'EXPRESSION, objx, gen)
-                                        (.visitInsn gen, Opcodes/F2D)
-                                    )
                                     (and (= primc Integer/TYPE) (= pc Long/TYPE))
                                     (do
                                         (MaybePrimitive'''emitUnboxed arg, :Context'EXPRESSION, objx, gen)
                                         (.invokeStatic gen, (Type/getType RT), (Method/getMethod "int intCast(long)"))
-                                    )
-                                    (and (= primc Float/TYPE) (= pc Double/TYPE))
-                                    (do
-                                        (MaybePrimitive'''emitUnboxed arg, :Context'EXPRESSION, objx, gen)
-                                        (.visitInsn gen, Opcodes/D2F)
                                     )
                                     :else
                                     (do
@@ -5499,7 +5394,6 @@
                                       #_"boolean" mismatch?
                                         (condp = primc
                                             Long/TYPE   (not (any = pc Long/TYPE Integer/TYPE Short/TYPE Character/TYPE Byte/TYPE))
-                                            Double/TYPE (not (any = pc Double/TYPE Float/TYPE))
                                                         false
                                         )]
                                     (when mismatch?
@@ -5678,7 +5572,7 @@
                                     )
                                 )]
                             (dotimes [#_"int" i (count parms)]
-                                (when (any = (aget pclasses i) Long/TYPE Double/TYPE)
+                                (when (= (aget pclasses i) Long/TYPE)
                                     (Compiler'nextLocalNum)
                                 )
                             )
@@ -6650,7 +6544,6 @@
     )
 
     (def- #_"Pattern" LispReader'rxInteger #"([-+]?)(?:(0)|([1-9][0-9]*)|0[xX]([0-9A-Fa-f]+)|0([0-7]+)|([1-9][0-9]?)[rR]([0-9A-Za-z]+)|0[0-9]+)(N)?")
-    (def- #_"Pattern" LispReader'rxFloat   #"([-+]?[0-9]+(\.[0-9]*)?([eE][-+]?[0-9]+)?)(M)?")
     (def- #_"Pattern" LispReader'rxRatio   #"([-+]?[0-9]+)/([0-9]+)")
 
     (defn- #_"Object" LispReader'matchNumber [#_"String" s]
@@ -6678,12 +6571,6 @@
                                     )
                                 )
                             )
-                        )
-                    )
-                    (let-when [#_"Matcher" m (.matcher LispReader'rxFloat, s)] (.matches m)
-                        (if (some? (.group m, 4))
-                            (BigDecimal. (.group m, 1))
-                            (Double/parseDouble s)
                         )
                     )
                     (let-when [#_"Matcher" m (.matcher LispReader'rxRatio, s)] (.matches m)
@@ -6941,24 +6828,6 @@
     (defn #_"Object" discard-reader [#_"PushbackReader" r, #_"char" _delim]
         (LispReader'read r)
         r
-    )
-)
-
-(class-ns SymbolicValueReader
-    (def #_"IPersistentMap" SymbolicValueReader'specials
-        (hash-map
-            'Inf  Double/POSITIVE_INFINITY
-            '-Inf Double/NEGATIVE_INFINITY
-            'NaN  Double/NaN
-        )
-    )
-
-    (defn #_"Object" symbolic-value-reader [#_"PushbackReader" r, #_"char" _delim]
-        (let-when [#_"Object" o (LispReader'read r)] (symbol? o) => (throw! (str "invalid token: ##" o))
-            (when (contains? SymbolicValueReader'specials o) => (throw! (str "unknown symbolic value: ##" o))
-                (get SymbolicValueReader'specials o)
-            )
-        )
     )
 )
 
@@ -7275,7 +7144,6 @@
     (def #_"{char IFn}" LispReader'dispatchMacros
         (hash-map
             \^  meta-reader
-            \#  symbolic-value-reader
             \'  var-reader
             \"  regex-reader ;; oops! "
             \(  fn-reader
@@ -7908,13 +7776,9 @@
         #_abstract
         (#_"Ops" opsWithLong [#_"Ops" this, #_"LongOps" x])
         #_abstract
-        (#_"Ops" opsWithDouble [#_"Ops" this, #_"DoubleOps" x])
-        #_abstract
         (#_"Ops" opsWithRatio [#_"Ops" this, #_"RatioOps" x])
         #_abstract
         (#_"Ops" opsWithBigInt [#_"Ops" this, #_"BigIntOps" x])
-        #_abstract
-        (#_"Ops" opsWithBigDecimal [#_"Ops" this, #_"BigDecimalOps" x])
         #_abstract
         (#_"boolean" isZero [#_"Ops" this, #_"Number" x])
         #_abstract
@@ -7960,10 +7824,8 @@
     #_abstract
     (class! OpsP [Ops])
     (class! LongOps [Ops])
-    (class! DoubleOps [#_"OpsP"])
     (class! RatioOps [#_"OpsP"])
     (class! BigIntOps [#_"OpsP"])
-    (class! BigDecimalOps [#_"OpsP"])
     #_stateless
     (§ soon class! Numbers [])
 )
@@ -8077,8 +7939,6 @@
 
 (java-ns cloiure.lang.ArraySeq
     (class! ArraySeq_int [#_"ASeq" IndexedSeq IReduce])
-    (class! ArraySeq_float [#_"ASeq" IndexedSeq IReduce])
-    (class! ArraySeq_double [#_"ASeq" IndexedSeq IReduce])
     (class! ArraySeq_long [#_"ASeq" IndexedSeq IReduce])
     (class! ArraySeq_byte [#_"ASeq" IndexedSeq IReduce])
     (class! ArraySeq_char [#_"ASeq" IndexedSeq IReduce])
@@ -8309,9 +8169,6 @@
     (defn #_"boolean" Util'equiv-2ll [   #_"long" k1,    #_"long" k2] (= k1 k2))
     (defn #_"boolean" Util'equiv-2ol [ #_"Object" k1,    #_"long" k2] (= k1 (cast Object k2)))
     (defn #_"boolean" Util'equiv-2lo [   #_"long" k1,  #_"Object" k2] (= (cast Object k1) k2))
-    (defn #_"boolean" Util'equiv-2dd [ #_"double" k1,  #_"double" k2] (= k1 k2))
-    (defn #_"boolean" Util'equiv-2od [ #_"Object" k1,  #_"double" k2] (= k1 (cast Object k2)))
-    (defn #_"boolean" Util'equiv-2do [ #_"double" k1,  #_"Object" k2] (= (cast Object k1) k2))
     (defn #_"boolean" Util'equiv-2bb [#_"boolean" k1, #_"boolean" k2] (= k1 k2))
     (defn #_"boolean" Util'equiv-2ob [ #_"Object" k1, #_"boolean" k2] (= k1 (cast Object k2)))
     (defn #_"boolean" Util'equiv-2bo [#_"boolean" k1,  #_"Object" k2] (= (cast Object k1) k2))
@@ -8464,14 +8321,6 @@
     )
 
     #_method
-    (defn #_"BigDecimal" BigInt''toBigDecimal [#_"BigInt" this]
-        (if (nil? (:bipart this))
-            (BigDecimal/valueOf (:lpart this))
-            (BigDecimal. (:bipart this))
-        )
-    )
-
-    #_method
     (defn #_"int" BigInt''intValue [#_"BigInt" this]
         (if (nil? (:bipart this))
             (int (:lpart this))
@@ -8484,22 +8333,6 @@
         (if (nil? (:bipart this))
             (:lpart this)
             (.longValue (:bipart this))
-        )
-    )
-
-    #_method
-    (defn #_"float" BigInt''floatValue [#_"BigInt" this]
-        (if (nil? (:bipart this))
-            (:lpart this)
-            (.floatValue (:bipart this))
-        )
-    )
-
-    #_method
-    (defn #_"double" BigInt''doubleValue [#_"BigInt" this]
-        (if (nil? (:bipart this))
-            (:lpart this)
-            (.doubleValue (:bipart this))
         )
     )
 
@@ -8631,29 +8464,8 @@
     )
 
     #_method
-    (defn #_"BigDecimal" Ratio''decimalValue
-        ([#_"Ratio" this] (Ratio''decimalValue this, MathContext/UNLIMITED))
-        ([#_"Ratio" this, #_"MathContext" mc]
-            (let [#_"BigDecimal" numerator (BigDecimal. (:numerator this))
-                  #_"BigDecimal" denominator (BigDecimal. (:denominator this))]
-                (.divide numerator, denominator, mc)
-            )
-        )
-    )
-
-    #_method
-    (defn #_"double" Ratio''doubleValue [#_"Ratio" this]
-        (.doubleValue (Ratio''decimalValue this, MathContext/DECIMAL64))
-    )
-
-    #_method
-    (defn #_"float" Ratio''floatValue [#_"Ratio" this]
-        (float (Ratio''doubleValue this))
-    )
-
-    #_method
     (defn #_"int" Ratio''intValue [#_"Ratio" this]
-        (int (Ratio''doubleValue this))
+        (.intValue (Ratio''bigIntegerValue this))
     )
 
     #_foreign
@@ -8711,13 +8523,6 @@
         this
     )
 
-    (declare Numbers'DOUBLE_OPS)
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithDouble--LongOps [#_"LongOps" this, #_"DoubleOps" x]
-        Numbers'DOUBLE_OPS
-    )
-
     (declare Numbers'RATIO_OPS)
 
     #_override
@@ -8730,13 +8535,6 @@
     #_override
     (defn #_"Ops" Ops'''opsWithBigInt--LongOps [#_"LongOps" this, #_"BigIntOps" x]
         Numbers'BIGINT_OPS
-    )
-
-    (declare Numbers'BIGDECIMAL_OPS)
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithBigDecimal--LongOps [#_"LongOps" this, #_"BigDecimalOps" x]
-        Numbers'BIGDECIMAL_OPS
     )
 
     #_override
@@ -8900,121 +8698,6 @@
     )
 )
 
-(class-ns DoubleOps
-    (defn #_"DoubleOps" DoubleOps'new []
-        (OpsP'new)
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''combine--DoubleOps [#_"DoubleOps" this, #_"Ops" y]
-        (.opsWithDouble y, this)
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithLong--DoubleOps [#_"DoubleOps" this, #_"LongOps" x]
-        this
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithDouble--DoubleOps [#_"DoubleOps" this, #_"DoubleOps" x]
-        this
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithRatio--DoubleOps [#_"DoubleOps" this, #_"RatioOps" x]
-        this
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithBigInt--DoubleOps [#_"DoubleOps" this, #_"BigIntOps" x]
-        this
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithBigDecimal--DoubleOps [#_"DoubleOps" this, #_"BigDecimalOps" x]
-        this
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''isZero--DoubleOps [#_"DoubleOps" this, #_"Number" x]
-        (zero? (.doubleValue x))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''isPos--DoubleOps [#_"DoubleOps" this, #_"Number" x]
-        (pos? (.doubleValue x))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''isNeg--DoubleOps [#_"DoubleOps" this, #_"Number" x]
-        (neg? (.doubleValue x))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''add--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
-        (Double/valueOf (+ (.doubleValue x) (.doubleValue y)))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''multiply--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
-        (Double/valueOf (* (.doubleValue x) (.doubleValue y)))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''divide--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
-        (Double/valueOf (/ (.doubleValue x) (.doubleValue y)))
-    )
-
-    (declare Numbers'quotient-2dd)
-
-    #_override
-    (defn #_"Number" Ops'''quotient--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
-        (Numbers'quotient-2dd (.doubleValue x), (.doubleValue y))
-    )
-
-    (declare Numbers'remainder-2dd)
-
-    #_override
-    (defn #_"Number" Ops'''remainder--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
-        (Numbers'remainder-2dd (.doubleValue x), (.doubleValue y))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''equiv--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
-        (= (.doubleValue x) (.doubleValue y))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''lt--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
-        (< (.doubleValue x) (.doubleValue y))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''lte--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
-        (<= (.doubleValue x) (.doubleValue y))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''gte--DoubleOps [#_"DoubleOps" this, #_"Number" x, #_"Number" y]
-        (>= (.doubleValue x) (.doubleValue y))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''negate--DoubleOps [#_"DoubleOps" this, #_"Number" x]
-        (Double/valueOf (- (.doubleValue x)))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''inc--DoubleOps [#_"DoubleOps" this, #_"Number" x]
-        (Double/valueOf (inc (.doubleValue x)))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''dec--DoubleOps [#_"DoubleOps" this, #_"Number" x]
-        (Double/valueOf (dec (.doubleValue x)))
-    )
-)
-
 (class-ns RatioOps
     (defn #_"RatioOps" RatioOps'new []
         (OpsP'new)
@@ -9031,11 +8714,6 @@
     )
 
     #_override
-    (defn #_"Ops" Ops'''opsWithDouble--RatioOps [#_"RatioOps" this, #_"DoubleOps" x]
-        Numbers'DOUBLE_OPS
-    )
-
-    #_override
     (defn #_"Ops" Ops'''opsWithRatio--RatioOps [#_"RatioOps" this, #_"RatioOps" x]
         this
     )
@@ -9043,11 +8721,6 @@
     #_override
     (defn #_"Ops" Ops'''opsWithBigInt--RatioOps [#_"RatioOps" this, #_"BigIntOps" x]
         this
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithBigDecimal--RatioOps [#_"RatioOps" this, #_"BigDecimalOps" x]
-        Numbers'BIGDECIMAL_OPS
     )
 
     #_override
@@ -9185,11 +8858,6 @@
     )
 
     #_override
-    (defn #_"Ops" Ops'''opsWithDouble--BigIntOps [#_"BigIntOps" this, #_"DoubleOps" x]
-        Numbers'DOUBLE_OPS
-    )
-
-    #_override
     (defn #_"Ops" Ops'''opsWithRatio--BigIntOps [#_"BigIntOps" this, #_"RatioOps" x]
         Numbers'RATIO_OPS
     )
@@ -9197,11 +8865,6 @@
     #_override
     (defn #_"Ops" Ops'''opsWithBigInt--BigIntOps [#_"BigIntOps" this, #_"BigIntOps" x]
         this
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithBigDecimal--BigIntOps [#_"BigIntOps" this, #_"BigDecimalOps" x]
-        Numbers'BIGDECIMAL_OPS
     )
 
     (declare Numbers'toBigInt)
@@ -9290,150 +8953,17 @@
     )
 )
 
-(class-ns BigDecimalOps
-    (def #_"Var" BigDecimalOps'MATH_CONTEXT (§ soon RT'MATH_CONTEXT))
-
-    (defn #_"BigDecimalOps" BigDecimalOps'new []
-        (OpsP'new)
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''combine--BigDecimalOps [#_"BigDecimalOps" this, #_"Ops" y]
-        (.opsWithBigDecimal y, this)
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithLong--BigDecimalOps [#_"BigDecimalOps" this, #_"LongOps" x]
-        this
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithDouble--BigDecimalOps [#_"BigDecimalOps" this, #_"DoubleOps" x]
-        Numbers'DOUBLE_OPS
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithRatio--BigDecimalOps [#_"BigDecimalOps" this, #_"RatioOps" x]
-        this
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithBigInt--BigDecimalOps [#_"BigDecimalOps" this, #_"BigIntOps" x]
-        this
-    )
-
-    #_override
-    (defn #_"Ops" Ops'''opsWithBigDecimal--BigDecimalOps [#_"BigDecimalOps" this, #_"BigDecimalOps" x]
-        this
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''isZero--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x]
-        (zero? (.signum (cast BigDecimal x)))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''isPos--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x]
-        (pos? (.signum (cast BigDecimal x)))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''isNeg--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x]
-        (neg? (.signum (cast BigDecimal x)))
-    )
-
-    #_override
-    (defn #_"Number" Ops'''add--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"MathContext" mc (deref BigDecimalOps'MATH_CONTEXT)]
-            (if (nil? mc) (.add (.toBigDecimal this, x), (.toBigDecimal this, y)) (.add (.toBigDecimal this, x), (.toBigDecimal this, y), mc))
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''multiply--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"MathContext" mc (deref BigDecimalOps'MATH_CONTEXT)]
-            (if (nil? mc) (.multiply (.toBigDecimal this, x), (.toBigDecimal this, y)) (.multiply (.toBigDecimal this, x), (.toBigDecimal this, y), mc))
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''divide--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"MathContext" mc (deref BigDecimalOps'MATH_CONTEXT)]
-            (if (nil? mc) (.divide (.toBigDecimal this, x), (.toBigDecimal this, y)) (.divide (.toBigDecimal this, x), (.toBigDecimal this, y), mc))
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''quotient--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"MathContext" mc (deref BigDecimalOps'MATH_CONTEXT)]
-            (if (nil? mc) (.divideToIntegralValue (.toBigDecimal this, x), (.toBigDecimal this, y)) (.divideToIntegralValue (.toBigDecimal this, x), (.toBigDecimal this, y), mc))
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''remainder--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"MathContext" mc (deref BigDecimalOps'MATH_CONTEXT)]
-            (if (nil? mc) (.remainder (.toBigDecimal this, x), (.toBigDecimal this, y)) (.remainder (.toBigDecimal this, x), (.toBigDecimal this, y), mc))
-        )
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''equiv--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
-        (zero? (.compareTo (.toBigDecimal this, x), (.toBigDecimal this, y)))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''lt--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
-        (neg? (.compareTo (.toBigDecimal this, x), (.toBigDecimal this, y)))
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''lte--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
-        (<= (.compareTo (.toBigDecimal this, x), (.toBigDecimal this, y)) 0)
-    )
-
-    #_override
-    (defn #_"boolean" Ops'''gte--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x, #_"Number" y]
-        (>= (.compareTo (.toBigDecimal this, x), (.toBigDecimal this, y)) 0)
-    )
-
-    #_override
-    (defn #_"Number" Ops'''negate--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x]
-        (let [#_"BigDecimal" bx (cast BigDecimal x) #_"MathContext" mc (deref BigDecimalOps'MATH_CONTEXT)]
-            (if (some? mc) (.negate bx, mc) (.negate bx))
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''inc--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x]
-        (let [#_"BigDecimal" bx (cast BigDecimal x) #_"MathContext" mc (deref BigDecimalOps'MATH_CONTEXT)]
-            (if (some? mc) (.add bx, BigDecimal/ONE, mc) (.add bx, BigDecimal/ONE))
-        )
-    )
-
-    #_override
-    (defn #_"Number" Ops'''dec--BigDecimalOps [#_"BigDecimalOps" this, #_"Number" x]
-        (let [#_"BigDecimal" bx (cast BigDecimal x) #_"MathContext" mc (deref BigDecimalOps'MATH_CONTEXT)]
-            (if (some? mc) (.subtract bx, BigDecimal/ONE, mc) (.subtract bx, BigDecimal/ONE))
-        )
-    )
-)
-
 (def Category'enum-set
     (hash-set
         :Category'INTEGER
-        :Category'FLOATING
-        :Category'DECIMAL
         :Category'RATIO
     )
 )
 
 (class-ns Numbers
     (def #_"LongOps"       Numbers'LONG_OPS       (LongOps'new)      )
-    (def #_"DoubleOps"     Numbers'DOUBLE_OPS     (DoubleOps'new)    )
     (def #_"RatioOps"      Numbers'RATIO_OPS      (RatioOps'new)     )
     (def #_"BigIntOps"     Numbers'BIGINT_OPS     (BigIntOps'new)    )
-    (def #_"BigDecimalOps" Numbers'BIGDECIMAL_OPS (BigDecimalOps'new))
 
     (defn #_"Ops" Numbers'ops [#_"Object" x]
         (condp = (class x)
@@ -9442,9 +8972,6 @@
             BigInt     Numbers'BIGINT_OPS
             BigInteger Numbers'BIGINT_OPS
             Ratio      Numbers'RATIO_OPS
-            Float      Numbers'DOUBLE_OPS
-            Double     Numbers'DOUBLE_OPS
-            BigDecimal Numbers'BIGDECIMAL_OPS
                        Numbers'LONG_OPS
         )
     )
@@ -9455,9 +8982,6 @@
             Long       :Category'INTEGER
             BigInt     :Category'INTEGER
             Ratio      :Category'RATIO
-            Float      :Category'FLOATING
-            Double     :Category'FLOATING
-            BigDecimal :Category'DECIMAL
                        :Category'INTEGER
         )
     )
@@ -9466,13 +8990,7 @@
         (or (instance? Integer x) (instance? Long x) (instance? BigInt x) (instance? BigInteger x))
     )
 
-    (defn #_"boolean" Numbers'isNaN [#_"Object" x]
-        (or (and (instance? Double x) (.isNaN (cast Double x))) (and (instance? Float x) (.isNaN (cast Float x))))
-    )
-
     (defn #_"Number" Numbers'num-1l [#_"long"   x] (Long/valueOf   x))
-    (defn #_"Number" Numbers'num-1f [#_"float"  x] (Float/valueOf  x))
-    (defn #_"Number" Numbers'num-1d [#_"double" x] (Double/valueOf x))
     (defn #_"Number" Numbers'num-1o [#_"Object" x] (cast Number    x))
 
     (defn #_"boolean" Numbers'isZero-1o [#_"Object" x] (.isZero (Numbers'ops x), (cast Number x)))
@@ -9517,16 +9035,11 @@
     )
 
     (defn #_"Number" Numbers'divide-2oo [#_"Object" x, #_"Object" y]
-        (cond
-            (Numbers'isNaN x) (cast Number x)
-            (Numbers'isNaN y) (cast Number y)
-            :else
-                (let [#_"Ops" yops (Numbers'ops y)]
-                    (when (.isZero yops, (cast Number y))
-                        (throw (ArithmeticException. "Divide by zero"))
-                    )
-                    (-> (.combine (Numbers'ops x), yops) (.divide (cast Number x), (cast Number y)))
-                )
+        (let [#_"Ops" yops (Numbers'ops y)]
+            (when (.isZero yops, (cast Number y))
+                (throw (ArithmeticException. "Divide by zero"))
+            )
+            (-> (.combine (Numbers'ops x), yops) (.divide (cast Number x), (cast Number y)))
         )
     )
 
@@ -9545,42 +9058,6 @@
                 (throw (ArithmeticException. "Divide by zero"))
             )
             (-> (.combine (Numbers'ops x), yops) (.remainder (cast Number x), (cast Number y)))
-        )
-    )
-
-    (defn #_"double" Numbers'quotient-2dd [#_"double" n, #_"double" d]
-        (when (zero? d)
-            (throw (ArithmeticException. "Divide by zero"))
-        )
-
-        (let [#_"double" q (/ n d)]
-            (cond (<= Long/MIN_VALUE q Long/MAX_VALUE)
-                (do
-                    (double (long q))
-                )
-                :else ;; bigint quotient
-                (do
-                    (.doubleValue (.toBigInteger (BigDecimal. q)))
-                )
-            )
-        )
-    )
-
-    (defn #_"double" Numbers'remainder-2dd [#_"double" n, #_"double" d]
-        (when (zero? d)
-            (throw (ArithmeticException. "Divide by zero"))
-        )
-
-        (let [#_"double" q (/ n d)]
-            (cond (<= Long/MIN_VALUE q Long/MAX_VALUE)
-                (do
-                    (- n (* (long q) d))
-                )
-                :else ;; bigint quotient
-                (let [#_"Number" bq (.toBigInteger (BigDecimal. q))]
-                    (- n (* (.doubleValue bq) d))
-                )
-            )
         )
     )
 
@@ -9634,45 +9111,10 @@
         )
     )
 
-    (defn #_"BigDecimal" Numbers'toBigDecimal [#_"Object" x]
-        (condp instance? x
-            BigDecimal x
-            BigInt     (if (some? (:bipart x)) (BigDecimal. (:bipart x)) (BigDecimal/valueOf (:lpart x)))
-            BigInteger (BigDecimal. x)
-            Double     (BigDecimal. (.doubleValue x))
-            Float      (BigDecimal. (.doubleValue x))
-            Ratio      (cast BigDecimal (Numbers'divide-2oo (BigDecimal. (:numerator x)), (:denominator x)))
-                       (BigDecimal/valueOf (.longValue (cast Number x)))
-        )
-    )
-
     (defn #_"Ratio" Numbers'toRatio [#_"Object" x]
         (condp instance? x
             Ratio x
-            BigDecimal
-                (let [#_"BigInteger" i (.unscaledValue x) #_"int" scale (.scale x)]
-                    (if (neg? scale)
-                        (Ratio'new (.multiply i, (.pow BigInteger/TEN, (- scale))), BigInteger/ONE)
-                        (Ratio'new i, (.pow BigInteger/TEN, scale))
-                    )
-                )
-                (Ratio'new (Numbers'toBigInteger x), BigInteger/ONE)
-        )
-    )
-
-    (defn #_"Number" Numbers'rationalize [#_"Number" x]
-        (cond
-            (or (instance? Float x) (instance? Double x))
-                (Numbers'rationalize (BigDecimal/valueOf (.doubleValue x)))
-            (instance? BigDecimal x)
-                (let [#_"BigInteger" i (.unscaledValue x) #_"int" scale (.scale x)]
-                    (if (neg? scale)
-                        (BigInt'fromBigInteger (.multiply i, (.pow BigInteger/TEN, (- scale))))
-                        (Numbers'divide-2ii i, (.pow BigInteger/TEN, scale))
-                    )
-                )
-            :else
-                x
+                  (Ratio'new (Numbers'toBigInteger x), BigInteger/ONE)
         )
     )
 
@@ -9700,7 +9142,7 @@
     )
 
     (defn #_"long" Numbers'bitOpsCast [#_"Object" x]
-        (let [#_"Class" xc (class x)]                   ;; no bignums, no decimals
+        (let [#_"Class" xc (class x)]                   ;; no bignums
             (when (any = xc Long Integer Short Byte) => (throw! (str "bit operation not supported for: " xc))
                 (long x)
             )
@@ -9733,70 +9175,6 @@
     (defn #_"long" Numbers'unsignedShiftRight-2oo [#_"Object" x, #_"Object" n] (Numbers'unsignedShiftRight-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
     (defn #_"long" Numbers'unsignedShiftRight-2ol [#_"Object" x, #_"long"   n] (Numbers'unsignedShiftRight-2ll (Numbers'bitOpsCast x),                     n ))
     (defn #_"long" Numbers'unsignedShiftRight-2lo [#_"long"   x, #_"Object" n] (Numbers'unsignedShiftRight-2ll                     x , (Numbers'bitOpsCast n)))
-
-    (defn #_"float[]" Numbers'float_array-2 [#_"int" size, #_"Object" init]
-        (let [#_"float[]" ret (.float-array size)]
-            (if (number? init)
-                (let [#_"float" f (.floatValue init)]
-                    (dotimes [#_"int" i (alength ret)]
-                        (aset ret i f)
-                    )
-                )
-                (let [#_"ISeq" s (seq init)]
-                    (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                        (aset ret i (.floatValue (first s)))
-                    )
-                )
-            )
-            ret
-        )
-    )
-
-    (defn #_"float[]" Numbers'float_array-1 [#_"Object" sizeOrSeq]
-        (if (number? sizeOrSeq)
-            (.float-array (.intValue sizeOrSeq))
-            (let [#_"ISeq" s (seq sizeOrSeq)
-                  #_"int" size (count s)
-                  #_"float[]" ret (.float-array size)]
-                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                    (aset ret i (.floatValue (first s)))
-                )
-                ret
-            )
-        )
-    )
-
-    (defn #_"double[]" Numbers'double_array-2 [#_"int" size, #_"Object" init]
-        (let [#_"double[]" ret (.double-array size)]
-            (if (number? init)
-                (let [#_"double" f (.doubleValue init)]
-                    (dotimes [#_"int" i (alength ret)]
-                        (aset ret i f)
-                    )
-                )
-                (let [#_"ISeq" s (seq init)]
-                    (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                        (aset ret i (.doubleValue (first s)))
-                    )
-                )
-            )
-            ret
-        )
-    )
-
-    (defn #_"double[]" Numbers'double_array-1 [#_"Object" sizeOrSeq]
-        (if (number? sizeOrSeq)
-            (.double-array (.intValue sizeOrSeq))
-            (let [#_"ISeq" s (seq sizeOrSeq)
-                  #_"int" size (count s)
-                  #_"double[]" ret (.double-array size)]
-                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                    (aset ret i (.doubleValue (first s)))
-                )
-                ret
-            )
-        )
-    )
 
     (defn #_"int[]" Numbers'int_array-2 [#_"int" size, #_"Object" init]
         (let [#_"int[]" ret (.int-array size)]
@@ -9996,34 +9374,6 @@
     (defn #_"char[]"    Numbers'chars    [#_"Object" array] (cast Compiler'CHARS_CLASS    array))
     (defn #_"int[]"     Numbers'ints     [#_"Object" array] (cast Compiler'INTS_CLASS     array))
     (defn #_"long[]"    Numbers'longs    [#_"Object" array] (cast Compiler'LONGS_CLASS    array))
-    (defn #_"float[]"   Numbers'floats   [#_"Object" array] (cast Compiler'FLOATS_CLASS   array))
-    (defn #_"double[]"  Numbers'doubles  [#_"Object" array] (cast Compiler'DOUBLES_CLASS  array))
-
-    (defn #_"double" Numbers'add-2dd    [#_"double" x, #_"double" y] (+ x y))
-    (defn #_"double" Numbers'addP-2dd   [#_"double" x, #_"double" y] (+ x y))
-    (defn #_"double" Numbers'minus-2dd  [#_"double" x, #_"double" y] (- x y))
-    (defn #_"double" Numbers'minusP-2dd [#_"double" x, #_"double" y] (- x y))
-
-    (defn #_"double" Numbers'minus-1d  [#_"double" x] (- x))
-    (defn #_"double" Numbers'minusP-1d [#_"double" x] (- x))
-    (defn #_"double" Numbers'inc-1d    [#_"double" x] (inc x))
-    (defn #_"double" Numbers'incP-1d   [#_"double" x] (inc x))
-    (defn #_"double" Numbers'dec-1d    [#_"double" x] (dec x))
-    (defn #_"double" Numbers'decP-1d   [#_"double" x] (dec x))
-
-    (defn #_"double" Numbers'multiply-2dd  [#_"double" x, #_"double" y] (* x y))
-    (defn #_"double" Numbers'multiplyP-2dd [#_"double" x, #_"double" y] (* x y))
-    (defn #_"double" Numbers'divide-2dd    [#_"double" x, #_"double" y] (/ x y))
-
-    (defn #_"boolean" Numbers'equiv-2dd [#_"double" x, #_"double" y] (= x y))
-    (defn #_"boolean" Numbers'lt-2dd    [#_"double" x, #_"double" y] (< x y))
-    (defn #_"boolean" Numbers'lte-2dd   [#_"double" x, #_"double" y] (<= x y))
-    (defn #_"boolean" Numbers'gt-2dd    [#_"double" x, #_"double" y] (> x y))
-    (defn #_"boolean" Numbers'gte-2dd   [#_"double" x, #_"double" y] (>= x y))
-
-    (defn #_"boolean" Numbers'isPos-1d  [#_"double" x] (> x 0))
-    (defn #_"boolean" Numbers'isNeg-1d  [#_"double" x] (< x 0))
-    (defn #_"boolean" Numbers'isZero-1d [#_"double" x] (zero? x))
 
     (defn #_"int" Numbers'unchecked_int_add       [#_"int" x, #_"int" y] (+ x y))
     (defn #_"int" Numbers'unchecked_int_subtract  [#_"int" x, #_"int" y] (- x y))
@@ -10078,19 +9428,11 @@
     (defn #_"boolean" Numbers'testBit-2ol [#_"Object" x, #_"long"   n] (Numbers'testBit-2ll (Numbers'bitOpsCast x),                     n ))
     (defn #_"boolean" Numbers'testBit-2lo [#_"long"   x, #_"Object" n] (Numbers'testBit-2ll                     x , (Numbers'bitOpsCast n)))
 
-    (defn #_"Number" Numbers'quotient-2do [#_"double" x, #_"Object" y] (Numbers'quotient-2oo (cast Object x),              y ))
-    (defn #_"Number" Numbers'quotient-2od [#_"Object" x, #_"double" y] (Numbers'quotient-2oo              x , (cast Object y)))
     (defn #_"Number" Numbers'quotient-2lo [#_"long"   x, #_"Object" y] (Numbers'quotient-2oo (cast Object x),              y ))
     (defn #_"Number" Numbers'quotient-2ol [#_"Object" x, #_"long"   y] (Numbers'quotient-2oo              x , (cast Object y)))
-    (defn #_"double" Numbers'quotient-2dl [#_"double" x, #_"long"   y] (Numbers'quotient-2dd              x ,      (double y)))
-    (defn #_"double" Numbers'quotient-2ld [#_"long"   x, #_"double" y] (Numbers'quotient-2dd      (double x),              y ))
 
-    (defn #_"Number" Numbers'remainder-2do [#_"double" x, #_"Object" y] (Numbers'remainder-2oo (cast Object x),              y ))
-    (defn #_"Number" Numbers'remainder-2od [#_"Object" x, #_"double" y] (Numbers'remainder-2oo              x , (cast Object y)))
     (defn #_"Number" Numbers'remainder-2lo [#_"long"   x, #_"Object" y] (Numbers'remainder-2oo (cast Object x),              y ))
     (defn #_"Number" Numbers'remainder-2ol [#_"Object" x, #_"long"   y] (Numbers'remainder-2oo              x , (cast Object y)))
-    (defn #_"double" Numbers'remainder-2dl [#_"double" x, #_"long"   y] (Numbers'remainder-2dd              x ,      (double y)))
-    (defn #_"double" Numbers'remainder-2ld [#_"long"   x, #_"double" y] (Numbers'remainder-2dd      (double x),              y ))
 
     (defn #_"int" Numbers'throwIntOverflow []
         (throw (ArithmeticException. "integer overflow"))
@@ -10184,112 +9526,51 @@
 
     (defn #_"Number" Numbers'add-2lo [#_"long"   x, #_"Object" y] (Numbers'add-2oo (cast Object x), y))
     (defn #_"Number" Numbers'add-2ol [#_"Object" x, #_"long"   y] (Numbers'add-2oo x, (cast Object y)))
-    (defn #_"double" Numbers'add-2do [#_"double" x, #_"Object" y] (Numbers'add-2dd x, (.doubleValue (cast Number y))))
-    (defn #_"double" Numbers'add-2od [#_"Object" x, #_"double" y] (Numbers'add-2dd (.doubleValue (cast Number x)), y))
-    (defn #_"double" Numbers'add-2dl [#_"double" x, #_"long"   y] (+ x y))
-    (defn #_"double" Numbers'add-2ld [#_"long"   x, #_"double" y] (+ x y))
 
     (defn #_"Number" Numbers'addP-2lo [#_"long"   x, #_"Object" y] (Numbers'addP-2oo (cast Object x), y))
     (defn #_"Number" Numbers'addP-2ol [#_"Object" x, #_"long"   y] (Numbers'addP-2oo x, (cast Object y)))
-    (defn #_"double" Numbers'addP-2do [#_"double" x, #_"Object" y] (Numbers'addP-2dd x, (.doubleValue (cast Number y))))
-    (defn #_"double" Numbers'addP-2od [#_"Object" x, #_"double" y] (Numbers'addP-2dd (.doubleValue (cast Number x)), y))
-    (defn #_"double" Numbers'addP-2dl [#_"double" x, #_"long"   y] (+ x y))
-    (defn #_"double" Numbers'addP-2ld [#_"long"   x, #_"double" y] (+ x y))
 
     (defn #_"Number" Numbers'minus-2lo [#_"long"   x, #_"Object" y] (Numbers'minus-2oo (cast Object x), y))
     (defn #_"Number" Numbers'minus-2ol [#_"Object" x, #_"long"   y] (Numbers'minus-2oo x, (cast Object y)))
-    (defn #_"double" Numbers'minus-2do [#_"double" x, #_"Object" y] (Numbers'minus-2dd x, (.doubleValue (cast Number y))))
-    (defn #_"double" Numbers'minus-2od [#_"Object" x, #_"double" y] (Numbers'minus-2dd (.doubleValue (cast Number x)), y))
-    (defn #_"double" Numbers'minus-2dl [#_"double" x, #_"long"   y] (- x y))
-    (defn #_"double" Numbers'minus-2ld [#_"long"   x, #_"double" y] (- x y))
 
     (defn #_"Number" Numbers'minusP-2lo [#_"long"   x, #_"Object" y] (Numbers'minusP-2oo (cast Object x), y))
     (defn #_"Number" Numbers'minusP-2ol [#_"Object" x, #_"long"   y] (Numbers'minusP-2oo x, (cast Object y)))
-    (defn #_"double" Numbers'minusP-2do [#_"double" x, #_"Object" y] (Numbers'minusP-2dd x, (.doubleValue (cast Number y))))
-    (defn #_"double" Numbers'minusP-2od [#_"Object" x, #_"double" y] (Numbers'minusP-2dd (.doubleValue (cast Number x)), y))
-    (defn #_"double" Numbers'minusP-2dl [#_"double" x, #_"long"   y] (- x y))
-    (defn #_"double" Numbers'minusP-2ld [#_"long"   x, #_"double" y] (- x y))
 
     (defn #_"Number" Numbers'multiply-2lo [#_"long"   x, #_"Object" y] (Numbers'multiply-2oo (cast Object x), y))
     (defn #_"Number" Numbers'multiply-2ol [#_"Object" x, #_"long"   y] (Numbers'multiply-2oo x, (cast Object y)))
-    (defn #_"double" Numbers'multiply-2do [#_"double" x, #_"Object" y] (Numbers'multiply-2dd x, (.doubleValue (cast Number y))))
-    (defn #_"double" Numbers'multiply-2od [#_"Object" x, #_"double" y] (Numbers'multiply-2dd (.doubleValue (cast Number x)), y))
-    (defn #_"double" Numbers'multiply-2dl [#_"double" x, #_"long"   y] (* x y))
-    (defn #_"double" Numbers'multiply-2ld [#_"long"   x, #_"double" y] (* x y))
 
     (defn #_"Number" Numbers'multiplyP-2lo [#_"long"   x, #_"Object" y] (Numbers'multiplyP-2oo (cast Object x), y))
     (defn #_"Number" Numbers'multiplyP-2ol [#_"Object" x, #_"long"   y] (Numbers'multiplyP-2oo x, (cast Object y)))
-    (defn #_"double" Numbers'multiplyP-2do [#_"double" x, #_"Object" y] (Numbers'multiplyP-2dd x, (.doubleValue (cast Number y))))
-    (defn #_"double" Numbers'multiplyP-2od [#_"Object" x, #_"double" y] (Numbers'multiplyP-2dd (.doubleValue (cast Number x)), y))
-    (defn #_"double" Numbers'multiplyP-2dl [#_"double" x, #_"long"   y] (* x y))
-    (defn #_"double" Numbers'multiplyP-2ld [#_"long"   x, #_"double" y] (* x y))
 
     (defn #_"Number" Numbers'divide-2lo [#_"long"   x, #_"Object" y] (Numbers'divide-2oo (cast Object x), y))
     (defn #_"Number" Numbers'divide-2ol [#_"Object" x, #_"long"   y] (Numbers'divide-2oo x, (cast Object y)))
-    (defn #_"double" Numbers'divide-2do [#_"double" x, #_"Object" y] (/ x (.doubleValue (cast Number y))))
-    (defn #_"double" Numbers'divide-2od [#_"Object" x, #_"double" y] (/ (.doubleValue (cast Number x)) y))
-    (defn #_"double" Numbers'divide-2dl [#_"double" x, #_"long"   y] (/ x y))
-    (defn #_"double" Numbers'divide-2ld [#_"long"   x, #_"double" y] (/ x y))
     (defn #_"Number" Numbers'divide-2ll [#_"long"   x, #_"long"   y] (Numbers'divide-2oo (cast Number x), (cast Number y)))
 
     (defn #_"boolean" Numbers'lt-2lo [#_"long"   x, #_"Object" y] (Numbers'lt-2oo (cast Object x), y))
     (defn #_"boolean" Numbers'lt-2ol [#_"Object" x, #_"long"   y] (Numbers'lt-2oo x, (cast Object y)))
-    (defn #_"boolean" Numbers'lt-2do [#_"double" x, #_"Object" y] (< x (.doubleValue (cast Number y))))
-    (defn #_"boolean" Numbers'lt-2od [#_"Object" x, #_"double" y] (< (.doubleValue (cast Number x)) y))
-    (defn #_"boolean" Numbers'lt-2dl [#_"double" x, #_"long"   y] (< x y))
-    (defn #_"boolean" Numbers'lt-2ld [#_"long"   x, #_"double" y] (< x y))
 
     (defn #_"boolean" Numbers'lte-2lo [#_"long"   x, #_"Object" y] (Numbers'lte-2oo (cast Object x), y))
     (defn #_"boolean" Numbers'lte-2ol [#_"Object" x, #_"long"   y] (Numbers'lte-2oo x, (cast Object y)))
-    (defn #_"boolean" Numbers'lte-2do [#_"double" x, #_"Object" y] (<= x (.doubleValue (cast Number y))))
-    (defn #_"boolean" Numbers'lte-2od [#_"Object" x, #_"double" y] (<= (.doubleValue (cast Number x)) y))
-    (defn #_"boolean" Numbers'lte-2dl [#_"double" x, #_"long"   y] (<= x y))
-    (defn #_"boolean" Numbers'lte-2ld [#_"long"   x, #_"double" y] (<= x y))
 
     (defn #_"boolean" Numbers'gt-2lo [#_"long"   x, #_"Object" y] (Numbers'gt-2oo (cast Object x), y))
     (defn #_"boolean" Numbers'gt-2ol [#_"Object" x, #_"long"   y] (Numbers'gt-2oo x, (cast Object y)))
-    (defn #_"boolean" Numbers'gt-2do [#_"double" x, #_"Object" y] (> x (.doubleValue (cast Number y))))
-    (defn #_"boolean" Numbers'gt-2od [#_"Object" x, #_"double" y] (> (.doubleValue (cast Number x)) y))
-    (defn #_"boolean" Numbers'gt-2dl [#_"double" x, #_"long"   y] (> x y))
-    (defn #_"boolean" Numbers'gt-2ld [#_"long"   x, #_"double" y] (> x y))
 
     (defn #_"boolean" Numbers'gte-2lo [#_"long"   x, #_"Object" y] (Numbers'gte-2oo (cast Object x), y))
     (defn #_"boolean" Numbers'gte-2ol [#_"Object" x, #_"long"   y] (Numbers'gte-2oo x, (cast Object y)))
-    (defn #_"boolean" Numbers'gte-2do [#_"double" x, #_"Object" y] (>= x (.doubleValue (cast Number y))))
-    (defn #_"boolean" Numbers'gte-2od [#_"Object" x, #_"double" y] (>= (.doubleValue (cast Number x)) y))
-    (defn #_"boolean" Numbers'gte-2dl [#_"double" x, #_"long"   y] (>= x y))
-    (defn #_"boolean" Numbers'gte-2ld [#_"long"   x, #_"double" y] (>= x y))
 
     (defn #_"boolean" Numbers'equiv-2lo [#_"long"   x, #_"Object" y] (Numbers'equiv (cast Object x), y))
     (defn #_"boolean" Numbers'equiv-2ol [#_"Object" x, #_"long"   y] (Numbers'equiv x, (cast Object y)))
-    (defn #_"boolean" Numbers'equiv-2do [#_"double" x, #_"Object" y] (= x (.doubleValue (cast Number y))))
-    (defn #_"boolean" Numbers'equiv-2od [#_"Object" x, #_"double" y] (= (.doubleValue (cast Number x)) y))
-    (defn #_"boolean" Numbers'equiv-2dl [#_"double" x, #_"long"   y] (= x y))
-    (defn #_"boolean" Numbers'equiv-2ld [#_"long"   x, #_"double" y] (= x y))
 
     (defn #_"long" Numbers'max-2ll [#_"long" x, #_"long" y] (if (> x y) x y))
     (defn #_"long" Numbers'min-2ll [#_"long" x, #_"long" y] (if (< x y) x y))
 
-    (defn #_"double" Numbers'max-2dd [#_"double" x, #_"double" y] (Math/max x, y))
-    (defn #_"double" Numbers'min-2dd [#_"double" x, #_"double" y] (Math/min x, y))
+    (defn #_"Object" Numbers'max-2lo [#_"long" x, #_"Object" y] (if (Numbers'gt-2lo x, y) x y))
+    (defn #_"Object" Numbers'max-2ol [#_"Object" x, #_"long" y] (if (Numbers'gt-2ol x, y) x y))
+    (defn #_"Object" Numbers'min-2lo [#_"long" x, #_"Object" y] (if (Numbers'lt-2lo x, y) x y))
+    (defn #_"Object" Numbers'min-2ol [#_"Object" x, #_"long" y] (if (Numbers'lt-2ol x, y) x y))
 
-    (defn #_"Object" Numbers'max-2ld [#_"long" x, #_"double" y] (cond (Double/isNaN y) y (> x y) x :else y))
-    (defn #_"Object" Numbers'max-2dl [#_"double" x, #_"long" y] (cond (Double/isNaN x) x (> x y) x :else y))
-    (defn #_"Object" Numbers'min-2ld [#_"long" x, #_"double" y] (cond (Double/isNaN y) y (< x y) x :else y))
-    (defn #_"Object" Numbers'min-2dl [#_"double" x, #_"long" y] (cond (Double/isNaN x) x (< x y) x :else y))
-
-    (defn #_"Object" Numbers'max-2lo [#_"long" x, #_"Object" y] (cond (Numbers'isNaN y) y (Numbers'gt-2lo x, y) x :else y))
-    (defn #_"Object" Numbers'max-2ol [#_"Object" x, #_"long" y] (cond (Numbers'isNaN x) x (Numbers'gt-2ol x, y) x :else y))
-    (defn #_"Object" Numbers'min-2lo [#_"long" x, #_"Object" y] (cond (Numbers'isNaN y) y (Numbers'lt-2lo x, y) x :else y))
-    (defn #_"Object" Numbers'min-2ol [#_"Object" x, #_"long" y] (cond (Numbers'isNaN x) x (Numbers'lt-2ol x, y) x :else y))
-
-    (defn #_"Object" Numbers'max-2do [#_"double" x, #_"Object" y] (cond (Double/isNaN x) x (Numbers'isNaN y) y (> x (.doubleValue (cast Number y))) x :else y))
-    (defn #_"Object" Numbers'max-2od [#_"Object" x, #_"double" y] (cond (Numbers'isNaN x) x (Double/isNaN y) y (> (.doubleValue (cast Number x)) y) x :else y))
-    (defn #_"Object" Numbers'min-2do [#_"double" x, #_"Object" y] (cond (Double/isNaN x) x (Numbers'isNaN y) y (< x (.doubleValue (cast Number y))) x :else y))
-    (defn #_"Object" Numbers'min-2od [#_"Object" x, #_"double" y] (cond (Numbers'isNaN x) x (Double/isNaN y) y (< (.doubleValue (cast Number x)) y) x :else y))
-
-    (defn #_"Object" Numbers'max-2oo [#_"Object" x, #_"Object" y] (cond (Numbers'isNaN x) x (Numbers'isNaN y) y (Numbers'gt-2oo x, y) x :else y))
-    (defn #_"Object" Numbers'min-2oo [#_"Object" x, #_"Object" y] (cond (Numbers'isNaN x) x (Numbers'isNaN y) y (Numbers'lt-2oo x, y) x :else y))
+    (defn #_"Object" Numbers'max-2oo [#_"Object" x, #_"Object" y] (if (Numbers'gt-2oo x, y) x y))
+    (defn #_"Object" Numbers'min-2oo [#_"Object" x, #_"Object" y] (if (Numbers'lt-2oo x, y) x y))
 
     (defn #_"long" Numbers'unchecked_add-2ll      [#_"long" x, #_"long" y] (+ x y))
     (defn #_"long" Numbers'unchecked_minus-2ll    [#_"long" x, #_"long" y] (- x y))
@@ -10307,30 +9588,6 @@
     (defn #_"Number" Numbers'unchecked_dec-1o   [#_"Object" x] (Numbers'dec-1o   x))
     (defn #_"Number" Numbers'unchecked_minus-1o [#_"Object" x] (Numbers'minus-1o x))
 
-    (defn #_"double" Numbers'unchecked_add-2dd      [#_"double" x, #_"double" y] (Numbers'add-2dd      x, y))
-    (defn #_"double" Numbers'unchecked_minus-2dd    [#_"double" x, #_"double" y] (Numbers'minus-2dd    x, y))
-    (defn #_"double" Numbers'unchecked_multiply-2dd [#_"double" x, #_"double" y] (Numbers'multiply-2dd x, y))
-
-    (defn #_"double" Numbers'unchecked_inc-1d   [#_"double" x] (Numbers'inc-1d   x))
-    (defn #_"double" Numbers'unchecked_dec-1d   [#_"double" x] (Numbers'dec-1d   x))
-    (defn #_"double" Numbers'unchecked_minus-1d [#_"double" x] (Numbers'minus-1d x))
-
-    (defn #_"double" Numbers'unchecked_add-2do      [#_"double" x, #_"Object" y] (Numbers'add-2do      x, y))
-    (defn #_"double" Numbers'unchecked_minus-2do    [#_"double" x, #_"Object" y] (Numbers'minus-2do    x, y))
-    (defn #_"double" Numbers'unchecked_multiply-2do [#_"double" x, #_"Object" y] (Numbers'multiply-2do x, y))
-
-    (defn #_"double" Numbers'unchecked_add-2od      [#_"Object" x, #_"double" y] (Numbers'add-2od      x, y))
-    (defn #_"double" Numbers'unchecked_minus-2od    [#_"Object" x, #_"double" y] (Numbers'minus-2od    x, y))
-    (defn #_"double" Numbers'unchecked_multiply-2od [#_"Object" x, #_"double" y] (Numbers'multiply-2od x, y))
-
-    (defn #_"double" Numbers'unchecked_add-2dl      [#_"double" x, #_"long" y] (Numbers'add-2dl      x, y))
-    (defn #_"double" Numbers'unchecked_minus-2dl    [#_"double" x, #_"long" y] (Numbers'minus-2dl    x, y))
-    (defn #_"double" Numbers'unchecked_multiply-2dl [#_"double" x, #_"long" y] (Numbers'multiply-2dl x, y))
-
-    (defn #_"double" Numbers'unchecked_add-2ld      [#_"long" x, #_"double" y] (Numbers'add-2ld      x, y))
-    (defn #_"double" Numbers'unchecked_minus-2ld    [#_"long" x, #_"double" y] (Numbers'minus-2ld    x, y))
-    (defn #_"double" Numbers'unchecked_multiply-2ld [#_"long" x, #_"double" y] (Numbers'multiply-2ld x, y))
-
     (defn #_"Number" Numbers'unchecked_add-2lo      [#_"long" x, #_"Object" y] (Numbers'add-2lo      x, y))
     (defn #_"Number" Numbers'unchecked_minus-2lo    [#_"long" x, #_"Object" y] (Numbers'minus-2lo    x, y))
     (defn #_"Number" Numbers'unchecked_multiply-2lo [#_"long" x, #_"Object" y] (Numbers'multiply-2lo x, y))
@@ -10339,32 +9596,11 @@
     (defn #_"Number" Numbers'unchecked_minus-2ol    [#_"Object" x, #_"long" y] (Numbers'minus-2ol    x, y))
     (defn #_"Number" Numbers'unchecked_multiply-2ol [#_"Object" x, #_"long" y] (Numbers'multiply-2ol x, y))
 
-    (defn- #_"int" Numbers'hasheqFrom [#_"Number" x, #_"Class" xc]
-        (cond
-            (or (any = xc Integer Short Byte) (and (= xc BigInteger) (Numbers'lte-2ol x, Long/MAX_VALUE) (Numbers'gte-2ol x, Long/MIN_VALUE)))
-                (Murmur3'hashLong (.longValue x))
-            (= xc BigDecimal)
-                ;; stripTrailingZeros() to make all numerically equal BigDecimal values come out the same before calling hashCode.
-                ;; Special check for 0 because stripTrailingZeros() does not do anything to values equal to 0 with different scales.
-                (.hashCode (if (Numbers'isZero-1o x) BigDecimal/ZERO (.stripTrailingZeros (cast BigDecimal x))))
-            (and (= xc Float) (= x (float -0.0)))
-                0 ;; match 0.0f
-            :else
-                (.hashCode x)
-        )
-    )
-
     (defn #_"int" Numbers'hasheq [#_"Number" x]
-        (let [#_"Class" xc (class x)]
-            (condp = xc
-                Long
-                    (Murmur3'hashLong (.longValue x))
-                Double
-                    (if (= x -0.0)
-                        0 ;; match 0.0
-                        (.hashCode x)
-                    )
-                (Numbers'hasheqFrom x, xc)
+        (let [#_"Class" c (class x)]
+            (if (or (any = c Long Integer Short Byte) (and (= c BigInteger) (Numbers'lte-2ol x, Long/MAX_VALUE) (Numbers'gte-2ol x, Long/MIN_VALUE)))
+                (Murmur3'hashLong (.longValue x))
+                (.hashCode x)
             )
         )
     )
@@ -13391,122 +12627,6 @@
     )
 )
 
-(class-ns ArraySeq_float
-    (defn #_"ArraySeq_float" ArraySeq_float'new [#_"IPersistentMap" meta, #_"float[]" array, #_"int" i]
-        (merge (ASeq'new meta)
-            (hash-map
-                #_"float[]" :array array
-                #_"int" :i i
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" ISeq'''first--ArraySeq_float [#_"ArraySeq_float" this]
-        (Numbers'num-1f (aget (:array this) (:i this)))
-    )
-
-    #_override
-    (defn #_"ISeq" ISeq'''next--ArraySeq_float [#_"ArraySeq_float" this]
-        (when (< (inc (:i this)) (alength (:array this)))
-            (ArraySeq_float'new (meta this), (:array this), (inc (:i this)))
-        )
-    )
-
-    #_override
-    (defn #_"int" Counted'''count--ArraySeq_float [#_"ArraySeq_float" this]
-        (- (alength (:array this)) (:i this))
-    )
-
-    #_override
-    (defn #_"int" IndexedSeq'''index--ArraySeq_float [#_"ArraySeq_float" this]
-        (:i this)
-    )
-
-    #_override
-    (defn #_"ArraySeq_float" IObj'''withMeta--ArraySeq_float [#_"ArraySeq_float" this, #_"IPersistentMap" meta]
-        (ArraySeq_float'new meta, (:array this), (:i this))
-    )
-
-    #_override
-    (defn #_"Object" IReduce'''reduce--ArraySeq_float [#_"ArraySeq_float" this, #_"IFn" f]
-        (let [#_"float[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-            (loop-when [#_"Object" r (Numbers'num-1f (aget a i)) i (inc i)] (< i n) => r
-                (let [r (.invoke f, r, (Numbers'num-1f (aget a i)))]
-                    (if (reduced? r) (deref r) (recur r (inc i)))
-                )
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IReduceInit'''reduce--ArraySeq_float [#_"ArraySeq_float" this, #_"IFn" f, #_"Object" r]
-        (let [#_"float[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-            (loop-when [r (.invoke f, r, (Numbers'num-1f (aget a i))) i (inc i)] (< i n) => (if (reduced? r) (deref r) r)
-                (if (reduced? r) (deref r) (recur (.invoke f, r, (Numbers'num-1f (aget a i))) (inc i)))
-            )
-        )
-    )
-)
-
-(class-ns ArraySeq_double
-    (defn #_"ArraySeq_double" ArraySeq_double'new [#_"IPersistentMap" meta, #_"double[]" array, #_"int" i]
-        (merge (ASeq'new meta)
-            (hash-map
-                #_"double[]" :array array
-                #_"int" :i i
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" ISeq'''first--ArraySeq_double [#_"ArraySeq_double" this]
-        (aget (:array this) (:i this))
-    )
-
-    #_override
-    (defn #_"ISeq" ISeq'''next--ArraySeq_double [#_"ArraySeq_double" this]
-        (when (< (inc (:i this)) (alength (:array this)))
-            (ArraySeq_double'new (meta this), (:array this), (inc (:i this)))
-        )
-    )
-
-    #_override
-    (defn #_"int" Counted'''count--ArraySeq_double [#_"ArraySeq_double" this]
-        (- (alength (:array this)) (:i this))
-    )
-
-    #_override
-    (defn #_"int" IndexedSeq'''index--ArraySeq_double [#_"ArraySeq_double" this]
-        (:i this)
-    )
-
-    #_override
-    (defn #_"ArraySeq_double" IObj'''withMeta--ArraySeq_double [#_"ArraySeq_double" this, #_"IPersistentMap" meta]
-        (ArraySeq_double'new meta, (:array this), (:i this))
-    )
-
-    #_override
-    (defn #_"Object" IReduce'''reduce--ArraySeq_double [#_"ArraySeq_double" this, #_"IFn" f]
-        (let [#_"double[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-            (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
-                (let [r (.invoke f, r, (aget a i))]
-                    (if (reduced? r) (deref r) (recur r (inc i)))
-                )
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IReduceInit'''reduce--ArraySeq_double [#_"ArraySeq_double" this, #_"IFn" f, #_"Object" r]
-        (let [#_"double[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-            (loop-when [r (.invoke f, r, (aget a i)) i (inc i)] (< i n) => (if (reduced? r) (deref r) r)
-                (if (reduced? r) (deref r) (recur (.invoke f, r, (aget a i)) (inc i)))
-            )
-        )
-    )
-)
-
 (class-ns ArraySeq_long
     (defn #_"ArraySeq_long" ArraySeq_long'new [#_"IPersistentMap" meta, #_"long[]" array, #_"int" i]
         (merge (ASeq'new meta)
@@ -13825,8 +12945,6 @@
             (let [#_"Class" c (class array)]
                 (condp = c
                     Compiler'INTS_CLASS     (ArraySeq_int'new     nil, (cast c array), 0)
-                    Compiler'FLOATS_CLASS   (ArraySeq_float'new   nil, (cast c array), 0)
-                    Compiler'DOUBLES_CLASS  (ArraySeq_double'new  nil, (cast c array), 0)
                     Compiler'LONGS_CLASS    (ArraySeq_long'new    nil, (cast c array), 0)
                     Compiler'BYTES_CLASS    (ArraySeq_byte'new    nil, (cast c array), 0)
                     Compiler'CHARS_CLASS    (ArraySeq_char'new    nil, (cast c array), 0)
@@ -19709,7 +18827,6 @@
     (def #_"Var" RT'ERR (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*err*"), (PrintWriter. (OutputStreamWriter. System/err), true))))
 
     (def #_"Var" RT'ASSERT (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*assert*"), true)))
-    (def #_"Var" RT'MATH_CONTEXT (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*math-context*"), nil)))
 
     ;;;
      ; A Namespace object representing the current namespace.
@@ -19736,7 +18853,6 @@
     (§ static
         (Var''setTag RT'OUT, (Symbol'intern "java.io.Writer"))
         (Var''setTag RT'CURRENT_NS, (Symbol'intern "cloiure.core.Namespace"))
-        (Var''setTag RT'MATH_CONTEXT, (Symbol'intern "java.math.MathContext"))
     )
 
     (def #_"AtomicInteger" RT'ID (AtomicInteger. 1))
@@ -20043,8 +19159,6 @@
     (defn #_"Number"    RT'box-1s [#_"short"   x] x)
     (defn #_"Number"    RT'box-1i [#_"int"     x] x)
     (defn #_"Number"    RT'box-1l [#_"long"    x] x)
-    (defn #_"Number"    RT'box-1f [#_"float"   x] x)
-    (defn #_"Number"    RT'box-1d [#_"double"  x] x)
 
     (defn #_"char" RT'charCast-1b [#_"byte" x]
         (let [#_"char" i (char x)]
@@ -20079,18 +19193,6 @@
             (when (= i x) => (throw! (str "value out of range for char: " x))
                 i
             )
-        )
-    )
-
-    (defn #_"char" RT'charCast-1f [#_"float" x]
-        (when (<= Character/MIN_VALUE x Character/MAX_VALUE) => (throw! (str "value out of range for char: " x))
-            (char x)
-        )
-    )
-
-    (defn #_"char" RT'charCast-1d [#_"double" x]
-        (when (<= Character/MIN_VALUE x Character/MAX_VALUE) => (throw! (str "value out of range for char: " x))
-            (char x)
         )
     )
 
@@ -20141,18 +19243,6 @@
         )
     )
 
-    (defn #_"byte" RT'byteCast-1f [#_"float" x]
-        (when (<= Byte/MIN_VALUE x Byte/MAX_VALUE) => (throw! (str "value out of range for byte: " x))
-            (byte x)
-        )
-    )
-
-    (defn #_"byte" RT'byteCast-1d [#_"double" x]
-        (when (<= Byte/MIN_VALUE x Byte/MAX_VALUE) => (throw! (str "value out of range for byte: " x))
-            (byte x)
-        )
-    )
-
     (defn #_"byte" RT'byteCast-1o [#_"Object" x]
         (if (instance? Byte x)
             (.byteValue x)
@@ -20183,18 +19273,6 @@
         )
     )
 
-    (defn #_"short" RT'shortCast-1f [#_"float" x]
-        (when (<= Short/MIN_VALUE x Short/MAX_VALUE) => (throw! (str "value out of range for short: " x))
-            (short x)
-        )
-    )
-
-    (defn #_"short" RT'shortCast-1d [#_"double" x]
-        (when (<= Short/MIN_VALUE x Short/MAX_VALUE) => (throw! (str "value out of range for short: " x))
-            (short x)
-        )
-    )
-
     (defn #_"short" RT'shortCast-1o [#_"Object" x]
         (if (instance? Short x)
             (.shortValue x)
@@ -20219,18 +19297,6 @@
         )
     )
 
-    (defn #_"int" RT'intCast-1f [#_"float" x]
-        (when (<= Integer/MIN_VALUE x Integer/MAX_VALUE) => (throw! (str "value out of range for int: " x))
-            (int x)
-        )
-    )
-
-    (defn #_"int" RT'intCast-1d [#_"double" x]
-        (when (<= Integer/MIN_VALUE x Integer/MAX_VALUE) => (throw! (str "value out of range for int: " x))
-            (int x)
-        )
-    )
-
     (defn #_"int" RT'intCast-1o [#_"Object" x]
         (cond
             (instance? Integer x) (.intValue x)
@@ -20244,13 +19310,7 @@
     (defn #_"long" RT'longCast-1i [#_"int"   x] x)
     (defn #_"long" RT'longCast-1l [#_"long"  x] x)
 
-    (defn #_"long" RT'longCast-1f [#_"float" x]
-        (when (<= Long/MIN_VALUE x Long/MAX_VALUE) => (throw! (str "value out of range for long: " x))
-            (long x)
-        )
-    )
-
-    (defn #_"long" RT'longCast-1d [#_"double" x]
+    (defn- #_"long" RT'longCast-1d [#_"double" x]
         (when (<= Long/MIN_VALUE x Long/MAX_VALUE) => (throw! (str "value out of range for long: " x))
             (long x)
         )
@@ -20279,46 +19339,10 @@
         )
     )
 
-    (defn #_"float" RT'floatCast-1b [#_"byte"  x] x)
-    (defn #_"float" RT'floatCast-1s [#_"short" x] x)
-    (defn #_"float" RT'floatCast-1i [#_"int"   x] x)
-    (defn #_"float" RT'floatCast-1l [#_"long"  x] x)
-    (defn #_"float" RT'floatCast-1f [#_"float" x] x)
-
-    (defn #_"float" RT'floatCast-1d [#_"double" x]
-        (when (<= (- Float/MAX_VALUE) x Float/MAX_VALUE) => (throw! (str "value out of range for float: " x))
-            (float x)
-        )
-    )
-
-    (defn #_"float" RT'floatCast-1o [#_"Object" x]
-        (if (instance? Float x)
-            (.floatValue x)
-            (let [#_"double" n (.doubleValue (cast Number x))]
-                (when (<= (- Float/MAX_VALUE) n Float/MAX_VALUE) => (throw! (str "value out of range for float: " x))
-                    (float n)
-                )
-            )
-        )
-    )
-
-    (defn #_"double" RT'doubleCast-1b [#_"byte"   x] x)
-    (defn #_"double" RT'doubleCast-1s [#_"short"  x] x)
-    (defn #_"double" RT'doubleCast-1i [#_"int"    x] x)
-    (defn #_"double" RT'doubleCast-1l [#_"long"   x] x)
-    (defn #_"double" RT'doubleCast-1f [#_"float"  x] x)
-    (defn #_"double" RT'doubleCast-1d [#_"double" x] x)
-
-    (defn #_"double" RT'doubleCast-1o [#_"Object" x]
-        (.doubleValue (cast Number x))
-    )
-
     (defn #_"byte" RT'uncheckedByteCast-1b [#_"byte"   x]       x )
     (defn #_"byte" RT'uncheckedByteCast-1s [#_"short"  x] (byte x))
     (defn #_"byte" RT'uncheckedByteCast-1i [#_"int"    x] (byte x))
     (defn #_"byte" RT'uncheckedByteCast-1l [#_"long"   x] (byte x))
-    (defn #_"byte" RT'uncheckedByteCast-1f [#_"float"  x] (byte x))
-    (defn #_"byte" RT'uncheckedByteCast-1d [#_"double" x] (byte x))
 
     (defn #_"byte" RT'uncheckedByteCast-1o [#_"Object" x]
         (.byteValue (cast Number x))
@@ -20328,8 +19352,6 @@
     (defn #_"short" RT'uncheckedShortCast-1s [#_"short"  x]        x )
     (defn #_"short" RT'uncheckedShortCast-1i [#_"int"    x] (short x))
     (defn #_"short" RT'uncheckedShortCast-1l [#_"long"   x] (short x))
-    (defn #_"short" RT'uncheckedShortCast-1f [#_"float"  x] (short x))
-    (defn #_"short" RT'uncheckedShortCast-1d [#_"double" x] (short x))
 
     (defn #_"short" RT'uncheckedShortCast-1o [#_"Object" x]
         (.shortValue (cast Number x))
@@ -20340,8 +19362,6 @@
     (defn #_"char" RT'uncheckedCharCast-1c [#_"char"   x]       x )
     (defn #_"char" RT'uncheckedCharCast-1i [#_"int"    x] (char x))
     (defn #_"char" RT'uncheckedCharCast-1l [#_"long"   x] (char x))
-    (defn #_"char" RT'uncheckedCharCast-1f [#_"float"  x] (char x))
-    (defn #_"char" RT'uncheckedCharCast-1d [#_"double" x] (char x))
 
     (defn #_"char" RT'uncheckedCharCast-1o [#_"Object" x]
         (if (instance? Character x) (.charValue x) (char (.longValue (cast Number x))))
@@ -20352,8 +19372,6 @@
     (defn #_"int" RT'uncheckedIntCast-1c [#_"char"   x]      x )
     (defn #_"int" RT'uncheckedIntCast-1i [#_"int"    x]      x )
     (defn #_"int" RT'uncheckedIntCast-1l [#_"long"   x] (int x))
-    (defn #_"int" RT'uncheckedIntCast-1f [#_"float"  x] (int x))
-    (defn #_"int" RT'uncheckedIntCast-1d [#_"double" x] (int x))
 
     (defn #_"int" RT'uncheckedIntCast-1o [#_"Object" x]
         (if (number? x) (.intValue x) (.charValue (cast Character x)))
@@ -20363,33 +19381,9 @@
     (defn #_"long" RT'uncheckedLongCast-1s [#_"short"  x]       x )
     (defn #_"long" RT'uncheckedLongCast-1i [#_"int"    x]       x )
     (defn #_"long" RT'uncheckedLongCast-1l [#_"long"   x]       x )
-    (defn #_"long" RT'uncheckedLongCast-1f [#_"float"  x] (long x))
-    (defn #_"long" RT'uncheckedLongCast-1d [#_"double" x] (long x))
 
     (defn #_"long" RT'uncheckedLongCast-1o [#_"Object" x]
         (.longValue (cast Number x))
-    )
-
-    (defn #_"float" RT'uncheckedFloatCast-1b [#_"byte"   x]        x )
-    (defn #_"float" RT'uncheckedFloatCast-1s [#_"short"  x]        x )
-    (defn #_"float" RT'uncheckedFloatCast-1i [#_"int"    x]        x )
-    (defn #_"float" RT'uncheckedFloatCast-1l [#_"long"   x]        x )
-    (defn #_"float" RT'uncheckedFloatCast-1f [#_"float"  x]        x )
-    (defn #_"float" RT'uncheckedFloatCast-1d [#_"double" x] (float x))
-
-    (defn #_"float" RT'uncheckedFloatCast-1o [#_"Object" x]
-        (.floatValue (cast Number x))
-    )
-
-    (defn #_"double" RT'uncheckedDoubleCast-1b [#_"byte"   x] x)
-    (defn #_"double" RT'uncheckedDoubleCast-1s [#_"short"  x] x)
-    (defn #_"double" RT'uncheckedDoubleCast-1i [#_"int"    x] x)
-    (defn #_"double" RT'uncheckedDoubleCast-1l [#_"long"   x] x)
-    (defn #_"double" RT'uncheckedDoubleCast-1f [#_"float"  x] x)
-    (defn #_"double" RT'uncheckedDoubleCast-1d [#_"double" x] x)
-
-    (defn #_"double" RT'uncheckedDoubleCast-1o [#_"Object" x]
-        (.doubleValue (cast Number x))
     )
 
     (defn #_"IPersistentMap" RT'map [& #_"Object..." init]
@@ -20486,10 +19480,6 @@
                     Byte/TYPE
                         (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (next s)]
                             (Array/set a, i, (RT'byteCast-1o (first s)))
-                        )
-                    Float/TYPE
-                        (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (next s)]
-                            (Array/set a, i, (RT'floatCast-1o (first s)))
                         )
                     Short/TYPE
                         (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (next s)]
@@ -21547,11 +20537,6 @@
  ; rem[ainder] of dividing numerator by denominator.
  ;;
 (§ defn rem [num div] (Numbers/remainder num div))
-
-;;;
- ; Returns the rational value of num.
- ;;
-(§ defn rationalize [num] (Numbers/rationalize num))
 
 ;;;
  ; Bitwise complement.
@@ -23350,7 +22335,7 @@
  ; Returns an array with components set to the values in aseq.
  ; The array's component type is type if provided, or the type of the first value in aseq if present, or Object.
  ; All values in aseq must be compatible with the component type.
- ; Class objects for the primitive types can be obtained using, e.g., Integer/TYPE.
+ ; Class objects for the primitive types can be obtained using, e.g. Integer/TYPE.
  ;;
 (§ defn into-array
     ([     aseq] (RT/seqToTypedArray      (seq aseq)))
@@ -23373,16 +22358,6 @@
  ; Coerce to long.
  ;;
 (§ defn long [^Number x] (RT/longCast x))
-
-;;;
- ; Coerce to float.
- ;;
-(§ defn float [^Number x] (RT/floatCast x))
-
-;;;
- ; Coerce to double.
- ;;
-(§ defn double [^Number x] (RT/doubleCast x))
 
 ;;;
  ; Coerce to short.
@@ -23425,16 +22400,6 @@
 (§ defn unchecked-long [^Number x] (RT/uncheckedLongCast x))
 
 ;;;
- ; Coerce to float. Subject to rounding.
- ;;
-(§ defn unchecked-float [^Number x] (RT/uncheckedFloatCast x))
-
-;;;
- ; Coerce to double. Subject to rounding.
- ;;
-(§ defn unchecked-double [^Number x] (RT/uncheckedDoubleCast x))
-
-;;;
  ; Modulus of num and div. Truncates toward negative infinity.
  ;;
 (§ defn mod [num div]
@@ -23464,7 +22429,7 @@
 ;;;
  ; Returns true if n is a rational number.
  ;;
-(§ defn rational? [n] (or (integer? n) (ratio? n) (decimal? n)))
+(§ defn rational? [n] (or (integer? n) (ratio? n)))
 
 ;;;
  ; Coerce to BigInt.
@@ -23473,8 +22438,6 @@
     (cond
         (instance? BigInt x)     x
         (instance? BigInteger x) (BigInt/fromBigInteger x)
-        (decimal? x)             (bigint (.toBigInteger ^BigDecimal x))
-        (float? x)               (bigint (BigDecimal/valueOf (double x)))
         (ratio? x)               (bigint (.bigIntegerValue ^Ratio x))
         (number? x)              (BigInt/valueOf (long x))
         :else                    (bigint (BigInteger. x))
@@ -23488,26 +22451,9 @@
     (cond
         (instance? BigInteger x) x
         (instance? BigInt x)     (.toBigInteger ^BigInt x)
-        (decimal? x)             (.toBigInteger ^BigDecimal x)
-        (float? x)               (.toBigInteger (BigDecimal/valueOf (double x)))
         (ratio? x)               (.bigIntegerValue ^Ratio x)
         (number? x)              (BigInteger/valueOf (long x))
         :else                    (BigInteger. x)
-    )
-)
-
-;;;
- ; Coerce to BigDecimal.
- ;;
-(§ defn ^BigDecimal bigdec [x]
-    (cond
-        (decimal? x)             x
-        (float? x)               (BigDecimal/valueOf (double x))
-        (ratio? x)               (/ (BigDecimal. (.numerator ^Ratio x)) (.denominator ^Ratio x))
-        (instance? BigInt x)     (.toBigDecimal ^BigInt x)
-        (instance? BigInteger x) (BigDecimal. ^BigInteger x)
-        (number? x)              (BigDecimal/valueOf (long x))
-        :else                    (BigDecimal. x)
     )
 )
 
@@ -23677,9 +22623,9 @@
 ;;;
  ; Evaluates expr and prints the time it took. Returns the value of expr.
  ;;
-(§ defmacro time [expr]
+(defmacro time [expr]
     `(let [start# (System/nanoTime) ret# ~expr]
-        (prn (str "Elapsed time: " (/ (double (- (System/nanoTime) start#)) 1000000.0) " msecs"))
+        (prn (str "Elapsed time: " (- (System/nanoTime) start#) " nsecs"))
         ret#
     )
 )
@@ -23750,16 +22696,6 @@
 (§ def-aset aset-boolean setBoolean boolean)
 
 ;;;
- ; Sets the value at the index/indices. Works on arrays of float. Returns val.
- ;;
-(§ def-aset aset-float setFloat float)
-
-;;;
- ; Sets the value at the index/indices. Works on arrays of double. Returns val.
- ;;
-(§ def-aset aset-double setDouble double)
-
-;;;
  ; Sets the value at the index/indices. Works on arrays of short. Returns val.
  ;;
 (§ def-aset aset-short setShort short)
@@ -23778,7 +22714,7 @@
  ; Creates and returns an array of instances of the specified class of the specified dimension(s).
  ; Note that a class object is required.
  ; Class objects can be obtained by using their imported or fully-qualified name.
- ; Class objects for the primitive types can be obtained using, e.g., Integer/TYPE.
+ ; Class objects for the primitive types can be obtained using, e.g. Integer/TYPE.
  ;;
 (§ defn make-array
     ([^Class type len] (Array/newInstance type (int len)))
@@ -24628,20 +23564,6 @@
 )
 
 ;;;
- ; Returns a random floating point number between 0 (inclusive) and
- ; n (default 1) (exclusive).
- ;;
-(§ defn rand
-    ([] (Math/random))
-    ([n] (* n (rand)))
-)
-
-;;;
- ; Returns a random integer between 0 (inclusive) and n (exclusive).
- ;;
-(§ defn rand-int [n] (int (rand n)))
-
-;;;
  ; Same as defn, yielding non-public def.
  ;;
 (§ defmacro defn- [name & decls]
@@ -24797,27 +23719,6 @@
                 coll (range (count coll))
             )
             (map #(if-let [e (find smap %)] (val e) %) coll)
-        )
-    )
-)
-
-;;;
- ; Sets the precision and rounding mode to be used for BigDecimal operations.
- ;
- ; Usage: (with-precision 10 (/ 1M 3))
- ; or:    (with-precision 10 :rounding HALF_DOWN (/ 1M 3))
- ;
- ; The rounding mode is one of CEILING, FLOOR, HALF_UP, HALF_DOWN,
- ; HALF_EVEN, UP, DOWN and UNNECESSARY; it defaults to HALF_UP.
- ;;
-(§ defmacro with-precision [precision & exprs]
-    (let [[body rm]
-            (if (= (first exprs) :rounding)
-                [(next (next exprs)) `((. java.math.RoundingMode ~(second exprs)))]
-                [exprs nil]
-            )]
-        `(binding [*math-context* (java.math.MathContext. ~precision ~@rm)]
-            ~@body
         )
     )
 )
@@ -25052,22 +23953,6 @@
 )
 
 ;;;
- ; Creates an array of floats.
- ;;
-(§ defn float-array
-    ([size-or-seq]          (Numbers/float_array size-or-seq))
-    ([size init-val-or-seq] (Numbers/float_array size init-val-or-seq))
-)
-
-;;;
- ; Creates an array of doubles.
- ;;
-(§ defn double-array
-    ([size-or-seq]          (Numbers/double_array size-or-seq))
-    ([size init-val-or-seq] (Numbers/double_array size init-val-or-seq))
-)
-
-;;;
  ; Creates an array of objects.
  ;;
 (§ defn object-array ([size-or-seq] (RT/object_array size-or-seq)))
@@ -25078,8 +23963,6 @@
 (§ definline shorts   [xs] `(Numbers/shorts   ~xs))
 (§ definline ints     [xs] `(Numbers/ints     ~xs))
 (§ definline longs    [xs] `(Numbers/longs    ~xs))
-(§ definline floats   [xs] `(Numbers/floats   ~xs))
-(§ definline doubles  [xs] `(Numbers/doubles  ~xs))
 
 ;;;
  ; Return true if x is a byte array.
@@ -26423,24 +25306,6 @@
     (.write w (str o))
 )
 
-(§ defmethod print-method Double [o, ^Writer w]
-    (cond
-        (= Double/POSITIVE_INFINITY o) (.write w "##Inf")
-        (= Double/NEGATIVE_INFINITY o) (.write w "##-Inf")
-        (.isNaN ^Double o) (.write w "##NaN")
-        :else (.write w (str o))
-    )
-)
-
-(§ defmethod print-method Float [o, ^Writer w]
-    (cond
-        (= Float/POSITIVE_INFINITY o) (.write w "##Inf")
-        (= Float/NEGATIVE_INFINITY o) (.write w "##-Inf")
-        (.isNaN ^Float o) (.write w "##NaN")
-        :else (.write w (str o))
-    )
-)
-
 (§ defmethod print-method Boolean [o, ^Writer w]
     (.write w (str o))
 )
@@ -26578,26 +25443,8 @@
     nil
 )
 
-(§ def primitives-classnames
-    (hash-map
-        Float/TYPE     "Float/TYPE"
-        Integer/TYPE   "Integer/TYPE"
-        Long/TYPE      "Long/TYPE"
-        Boolean/TYPE   "Boolean/TYPE"
-        Character/TYPE "Character/TYPE"
-        Double/TYPE    "Double/TYPE"
-        Byte/TYPE      "Byte/TYPE"
-        Short/TYPE     "Short/TYPE"
-    )
-)
-
 (§ defmethod print-method Class [^Class c, ^Writer w]
     (.write w (.getName c))
-)
-
-(§ defmethod print-method java.math.BigDecimal [b, ^Writer w]
-    (.write w (str b))
-    (.write w "M")
 )
 
 (§ defmethod print-method BigInt [b, ^Writer w]
@@ -26748,15 +25595,13 @@
 
 (§ def ^:private prim->class
      (hash-map
-        'int      Integer/TYPE   'ints     (Class/forName "[I")
-        'long     Long/TYPE      'longs    (Class/forName "[J")
-        'float    Float/TYPE     'floats   (Class/forName "[F")
-        'double   Double/TYPE    'doubles  (Class/forName "[D")
-        'void     Void/TYPE
-        'short    Short/TYPE     'shorts   (Class/forName "[S")
         'boolean  Boolean/TYPE   'booleans (Class/forName "[Z")
         'byte     Byte/TYPE      'bytes    (Class/forName "[B")
+        'short    Short/TYPE     'shorts   (Class/forName "[S")
         'char     Character/TYPE 'chars    (Class/forName "[C")
+        'int      Integer/TYPE   'ints     (Class/forName "[I")
+        'long     Long/TYPE      'longs    (Class/forName "[J")
+        'void     Void/TYPE
     )
 )
 
@@ -26770,7 +25615,7 @@
 
 ;;;
  ; Returns an asm Type object for c, which may be a primitive class (such as Integer/TYPE),
- ; any other class (such as Double), or a fully-qualified class name given as a string or symbol
+ ; any other class (such as Long), or a fully-qualified class name given as a string or symbol
  ; (such as 'java.lang.String).
  ;;
 (§ defn- ^Type asm-type [c]
@@ -26805,7 +25650,7 @@
 
 ;;;
  ; In all subsequent sections taking types, the primitive types can be
- ; referred to by their Java names (int, float etc), and classes in the
+ ; referred to by their Java names (int, long, etc.), and classes in the
  ; java.lang package can be used without a package qualifier. All other
  ; classes must be fully qualified.
  ;
@@ -28135,8 +26980,6 @@
     (hash-map
         :int     (mk-am int)
         :long    (mk-am long)
-        :float   (mk-am float)
-        :double  (mk-am double)
         :byte    (mk-am byte)
         :short   (mk-am short)
         :char    (mk-am char)
@@ -28144,18 +26987,11 @@
     )
 )
 
-(§ defmacro ^:private ams-check [t]
-    `(let [am# (ams ~t)]
-        (if am#
-            am#
-            (throw! (str "unrecognized type " ~t))
-        )
-    )
-)
+(§ defmacro ^:private ams-check [t] `(or (ams ~t) (throw! (str "unrecognized type " ~t))))
 
 ;;;
  ; Creates a new vector of a single primitive type t, where t is one
- ; of :int :long :float :double :byte :short :char or :boolean. The
+ ; of :int :long :byte :short :char or :boolean. The
  ; resulting vector complies with the interface of vectors in general,
  ; but stores the values unboxed internally.
  ;
@@ -28472,14 +27308,6 @@
             )
         )
     )
-)
-
-;;;
- ; Return a random element of the (sequential) collection. Will have
- ; the same performance characteristics as nth for the given collection.
- ;;
-(§ defn rand-nth [coll]
-    (nth coll (rand-int (count coll)))
 )
 
 ;;;
@@ -28998,15 +27826,6 @@
             )
         )
     )
-)
-
-;;;
- ; Returns items from coll with random probability of prob (0.0 - 1.0).
- ; Returns a transducer when no collection is provided.
- ;;
-(§ defn random-sample
-    ([prob     ] (filter (fn [_] (< (rand) prob))     ))
-    ([prob coll] (filter (fn [_] (< (rand) prob)) coll))
 )
 
 ;;;
