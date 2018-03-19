@@ -1,5 +1,5 @@
 (ns cloiure.core
-    (:refer-clojure :only [* *err* *ns* *print-length* *warn-on-reflection* + - -> .. / < <= = > >= aget alength alter-meta! apply aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char coll? compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defn- defprotocol defrecord deref dissoc doseq dotimes extend-type find find-ns first fn gen-interface get hash-map hash-set identical? identity if-let if-not import inc indexed? int intern into into-array isa? key keys keyword keyword? let letfn list list* list? long loop make-array map map-entry? map? merge meta name namespace namespace-munge neg? next not= nth object-array parents peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot reduce reduced? reify rem repeat reset-meta! resolve rest rseq satisfies? seq seq? sequential? set? short sorted-map subvec swap! swap-vals! symbol symbol? to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector vector? when-let while with-meta zero?])
+    (:refer-clojure :only [* *err* *ns* *print-length* *warn-on-reflection* + - -> .. / < <= = > >= aget alength alter-meta! apply aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char coll? compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defn- defprotocol defrecord deref dissoc doseq dotimes extend-type find find-ns first fn gen-interface get hash-map hash-set identical? identity if-let if-not import inc indexed? int intern into into-array isa? key keys keyword keyword? let letfn list list* list? long loop make-array map map-entry? map? merge meta name namespace namespace-munge neg? next not= nth object-array parents peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot reduce reduced? reify rem repeat reset-meta! resolve rest rseq satisfies? seq seq? sequential? set? sorted-map subvec swap! swap-vals! symbol symbol? to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector vector? when-let while with-meta zero?])
 )
 
 (import
@@ -328,7 +328,6 @@
 
             "public static boolean clojure.lang.RT.aget(boolean[],int)"                     Opcodes/BALOAD
             "public static byte clojure.lang.RT.aget(byte[],int)"                           Opcodes/BALOAD
-            "public static short clojure.lang.RT.aget(short[],int)"                         Opcodes/SALOAD
             "public static char clojure.lang.RT.aget(char[],int)"                           Opcodes/CALOAD
             "public static int clojure.lang.RT.aget(int[],int)"                             Opcodes/IALOAD
             "public static long clojure.lang.RT.aget(long[],int)"                           Opcodes/LALOAD
@@ -336,25 +335,21 @@
 
             "public static int clojure.lang.RT.alength(boolean[])"             Opcodes/ARRAYLENGTH
             "public static int clojure.lang.RT.alength(byte[])"                Opcodes/ARRAYLENGTH
-            "public static int clojure.lang.RT.alength(short[])"               Opcodes/ARRAYLENGTH
             "public static int clojure.lang.RT.alength(char[])"                Opcodes/ARRAYLENGTH
             "public static int clojure.lang.RT.alength(int[])"                 Opcodes/ARRAYLENGTH
             "public static int clojure.lang.RT.alength(long[])"                Opcodes/ARRAYLENGTH
             "public static int clojure.lang.RT.alength(java.lang.Object[])"    Opcodes/ARRAYLENGTH
 
             "public static long clojure.lang.RT.longCast(byte)"                Opcodes/I2L
-            "public static long clojure.lang.RT.longCast(short)"               Opcodes/I2L
             "public static long clojure.lang.RT.longCast(int)"                 Opcodes/I2L
             "public static long clojure.lang.RT.longCast(long)"                Opcodes/NOP
 
             "public static int clojure.lang.RT.uncheckedIntCast(byte)"         Opcodes/NOP
-            "public static int clojure.lang.RT.uncheckedIntCast(short)"        Opcodes/NOP
             "public static int clojure.lang.RT.uncheckedIntCast(char)"         Opcodes/NOP
             "public static int clojure.lang.RT.uncheckedIntCast(int)"          Opcodes/NOP
             "public static int clojure.lang.RT.uncheckedIntCast(long)"         Opcodes/L2I
 
             "public static long clojure.lang.RT.uncheckedLongCast(byte)"       Opcodes/I2L
-            "public static long clojure.lang.RT.uncheckedLongCast(short)"      Opcodes/I2L
             "public static long clojure.lang.RT.uncheckedLongCast(int)"        Opcodes/I2L
             "public static long clojure.lang.RT.uncheckedLongCast(long)"       Opcodes/NOP
         )
@@ -455,7 +450,6 @@
                     (condp = c
                         Integer/TYPE   (.intValue arg)
                         Long/TYPE      (.longValue arg)
-                        Short/TYPE     (.shortValue arg)
                         Byte/TYPE      (.byteValue arg)
                         (unexpected!)
                     )
@@ -484,10 +478,9 @@
                 true
             :else
                 (condp = paramType
-                    Integer/TYPE   (any = argType Integer Long/TYPE Long Short/TYPE Byte/TYPE)
-                    Long/TYPE      (any = argType Long Integer/TYPE Short/TYPE Byte/TYPE)
+                    Integer/TYPE   (any = argType Integer Long/TYPE Long Byte/TYPE)
+                    Long/TYPE      (any = argType Long Integer/TYPE Byte/TYPE)
                     Character/TYPE (= argType Character)
-                    Short/TYPE     (= argType Short)
                     Byte/TYPE      (= argType Byte)
                     Boolean/TYPE   (= argType Boolean)
                                    false
@@ -726,7 +719,6 @@
 (class-ns Compiler
     (def #_"Class" Compiler'BOOLEANS_CLASS (Class/forName "[Z"))
     (def #_"Class" Compiler'BYTES_CLASS    (Class/forName "[B"))
-    (def #_"Class" Compiler'SHORTS_CLASS   (Class/forName "[S"))
     (def #_"Class" Compiler'CHARS_CLASS    (Class/forName "[C"))
     (def #_"Class" Compiler'INTS_CLASS     (Class/forName "[I"))
     (def #_"Class" Compiler'LONGS_CLASS    (Class/forName "[J"))
@@ -1325,7 +1317,7 @@
         )
     )
 
-    (defn #_"boolean" Compiler'inty [#_"Class" c] (any = c Integer/TYPE Short/TYPE Byte/TYPE Character/TYPE))
+    (defn #_"boolean" Compiler'inty [#_"Class" c] (any = c Integer/TYPE Byte/TYPE Character/TYPE))
 
     (defn #_"Class" Compiler'retType [#_"Class" tc, #_"Class" ret]
         (cond
@@ -1352,7 +1344,6 @@
                 Integer/TYPE   Integer
                 Long/TYPE      Long
                 Character/TYPE Character
-                Short/TYPE     Short
                 Byte/TYPE      Byte
                 Boolean/TYPE   Boolean
                                nil
@@ -1778,7 +1769,6 @@
                         (.mark gen, endLabel)
                     )
                 Byte/TYPE      (.invokeStatic gen, (Type/getType Byte), (Method/getMethod "Byte valueOf(byte)"))
-                Short/TYPE     (.invokeStatic gen, (Type/getType Short), (Method/getMethod "Short valueOf(short)"))
                 Character/TYPE (.invokeStatic gen, (Type/getType Character), (Method/getMethod "Character valueOf(char)"))
                 Integer/TYPE   (.invokeStatic gen, (Type/getType Integer), (Method/getMethod "Integer valueOf(int)"))
                 Long/TYPE      (.invokeStatic gen, (Type/getType Numbers), (Method/getMethod "Number num(long)"))
@@ -1808,7 +1798,6 @@
                                 Integer/TYPE (Method/getMethod "int intCast(Object)")
                                 Long/TYPE    (Method/getMethod "long longCast(Object)")
                                 Byte/TYPE    (Method/getMethod "byte byteCast(Object)")
-                                Short/TYPE   (Method/getMethod "short shortCast(Object)")
                                              nil
                             )]
                         (.invokeStatic gen, (Type/getType RT), m)
@@ -1858,7 +1847,6 @@
             (case (ßname sym)
                 "boolean" Boolean/TYPE
                 "byte"    Byte/TYPE
-                "short"   Short/TYPE
                 "char"    Character/TYPE
                 "int"     Integer/TYPE
                 "long"    Long/TYPE
@@ -1873,7 +1861,6 @@
             (case (ßname sym)
                 "booleans" Compiler'BOOLEANS_CLASS
                 "bytes"    Compiler'BYTES_CLASS
-                "shorts"   Compiler'SHORTS_CLASS
                 "chars"    Compiler'CHARS_CLASS
                 "ints"     Compiler'INTS_CLASS
                 "longs"    Compiler'LONGS_CLASS
@@ -4318,7 +4305,6 @@
                                         Long/TYPE      (Type/getType Long)
                                         Boolean/TYPE   (Type/getType Boolean)
                                         Byte/TYPE      (Type/getType Byte)
-                                        Short/TYPE     (Type/getType Short)
                                         Character/TYPE (Type/getType Character)
                                         (throw! (str "can't embed unknown primitive in code: " value))
                                     )]
@@ -5393,7 +5379,7 @@
                                 (let [#_"Class" pc (Compiler'maybePrimitiveType (nth args i))
                                       #_"boolean" mismatch?
                                         (condp = primc
-                                            Long/TYPE   (not (any = pc Long/TYPE Integer/TYPE Short/TYPE Character/TYPE Byte/TYPE))
+                                            Long/TYPE   (not (any = pc Long/TYPE Integer/TYPE Character/TYPE Byte/TYPE))
                                                         false
                                         )]
                                     (when mismatch?
@@ -6059,7 +6045,7 @@
                 (.invokeVirtual gen, (Type/getType Number), (Method/getMethod "int intValue()"))
                 (CaseExpr''emitShiftMask this, gen)
             )
-            (or (= exprType Type/LONG_TYPE) (= exprType Type/INT_TYPE) (= exprType Type/SHORT_TYPE) (= exprType Type/BYTE_TYPE))
+            (any = exprType Type/LONG_TYPE Type/INT_TYPE Type/BYTE_TYPE)
             (do
                 (MaybePrimitive'''emitUnboxed (:expr this), :Context'EXPRESSION, objx, gen)
                 (.cast gen, exprType, Type/INT_TYPE)
@@ -6098,7 +6084,7 @@
                 (.ifCmp gen, Type/LONG_TYPE, GeneratorAdapter/NE, defaultLabel)
                 (CaseExpr'emitExpr objx, gen, then, emitUnboxed)
             )
-            (or (= exprType Type/INT_TYPE) (= exprType Type/SHORT_TYPE) (= exprType Type/BYTE_TYPE))
+            (any = exprType Type/INT_TYPE Type/BYTE_TYPE)
             (do
                 (when (CaseExpr''isShiftMasked this)
                     (MaybePrimitive'''emitUnboxed test, :Context'EXPRESSION, objx, gen)
@@ -7942,7 +7928,6 @@
     (class! ArraySeq_long [#_"ASeq" IndexedSeq IReduce])
     (class! ArraySeq_byte [#_"ASeq" IndexedSeq IReduce])
     (class! ArraySeq_char [#_"ASeq" IndexedSeq IReduce])
-    (class! ArraySeq_short [#_"ASeq" IndexedSeq IReduce])
     (class! ArraySeq_boolean [#_"ASeq" IndexedSeq IReduce])
     (§ soon class! ArraySeq [#_"ASeq" IndexedSeq IReduce])
 )
@@ -8341,14 +8326,6 @@
         (if (nil? (:bipart this))
             (byte (:lpart this))
             (.byteValue (:bipart this))
-        )
-    )
-
-    #_method
-    (defn #_"short" BigInt''shortValue [#_"BigInt" this]
-        (if (nil? (:bipart this))
-            (short (:lpart this))
-            (.shortValue (:bipart this))
         )
     )
 
@@ -9142,8 +9119,8 @@
     )
 
     (defn #_"long" Numbers'bitOpsCast [#_"Object" x]
-        (let [#_"Class" xc (class x)]                   ;; no bignums
-            (when (any = xc Long Integer Short Byte) => (throw! (str "bit operation not supported for: " xc))
+        (let [#_"Class" c (class x)]
+            (when (any = c Long Integer Byte) => (throw! (str "bit operation not supported for: " c))
                 (long x)
             )
         )
@@ -9234,38 +9211,6 @@
                   #_"long[]" ret (.long-array size)]
                 (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
                     (aset ret i (.longValue (first s)))
-                )
-                ret
-            )
-        )
-    )
-
-    (defn #_"short[]" Numbers'short_array-2 [#_"int" size, #_"Object" init]
-        (let [#_"short[]" ret (.short-array size)]
-            (if (instance? Short init)
-                (let [#_"short" s init]
-                    (dotimes [#_"int" i (alength ret)]
-                        (aset ret i s)
-                    )
-                )
-                (let [#_"ISeq" s (seq init)]
-                    (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                        (aset ret i (.shortValue (first s)))
-                    )
-                )
-            )
-            ret
-        )
-    )
-
-    (defn #_"short[]" Numbers'short_array-1 [#_"Object" sizeOrSeq]
-        (if (number? sizeOrSeq)
-            (.short-array (.intValue sizeOrSeq))
-            (let [#_"ISeq" s (seq sizeOrSeq)
-                  #_"int" size (count s)
-                  #_"short[]" ret (.short-array size)]
-                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                    (aset ret i (.shortValue (first s)))
                 )
                 ret
             )
@@ -9370,7 +9315,6 @@
 
     (defn #_"boolean[]" Numbers'booleans [#_"Object" array] (cast Compiler'BOOLEANS_CLASS array))
     (defn #_"byte[]"    Numbers'bytes    [#_"Object" array] (cast Compiler'BYTES_CLASS    array))
-    (defn #_"short[]"   Numbers'shorts   [#_"Object" array] (cast Compiler'SHORTS_CLASS   array))
     (defn #_"char[]"    Numbers'chars    [#_"Object" array] (cast Compiler'CHARS_CLASS    array))
     (defn #_"int[]"     Numbers'ints     [#_"Object" array] (cast Compiler'INTS_CLASS     array))
     (defn #_"long[]"    Numbers'longs    [#_"Object" array] (cast Compiler'LONGS_CLASS    array))
@@ -9598,7 +9542,7 @@
 
     (defn #_"int" Numbers'hasheq [#_"Number" x]
         (let [#_"Class" c (class x)]
-            (if (or (any = c Long Integer Short Byte) (and (= c BigInteger) (Numbers'lte-2ol x, Long/MAX_VALUE) (Numbers'gte-2ol x, Long/MIN_VALUE)))
+            (if (or (any = c Long Integer Byte) (and (= c BigInteger) (Numbers'lte-2ol x, Long/MAX_VALUE) (Numbers'gte-2ol x, Long/MIN_VALUE)))
                 (Murmur3'hashLong (.longValue x))
                 (.hashCode x)
             )
@@ -12801,64 +12745,6 @@
     )
 )
 
-(class-ns ArraySeq_short
-    (defn #_"ArraySeq_short" ArraySeq_short'new [#_"IPersistentMap" meta, #_"short[]" array, #_"int" i]
-        (merge (ASeq'new meta)
-            (hash-map
-                #_"short[]" :array array
-                #_"int" :i i
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" ISeq'''first--ArraySeq_short [#_"ArraySeq_short" this]
-        (aget (:array this) (:i this))
-    )
-
-    #_override
-    (defn #_"ISeq" ISeq'''next--ArraySeq_short [#_"ArraySeq_short" this]
-        (when (< (inc (:i this)) (alength (:array this)))
-            (ArraySeq_short'new (meta this), (:array this), (inc (:i this)))
-        )
-    )
-
-    #_override
-    (defn #_"int" Counted'''count--ArraySeq_short [#_"ArraySeq_short" this]
-        (- (alength (:array this)) (:i this))
-    )
-
-    #_override
-    (defn #_"int" IndexedSeq'''index--ArraySeq_short [#_"ArraySeq_short" this]
-        (:i this)
-    )
-
-    #_override
-    (defn #_"ArraySeq_short" IObj'''withMeta--ArraySeq_short [#_"ArraySeq_short" this, #_"IPersistentMap" meta]
-        (ArraySeq_short'new meta, (:array this), (:i this))
-    )
-
-    #_override
-    (defn #_"Object" IReduce'''reduce--ArraySeq_short [#_"ArraySeq_short" this, #_"IFn" f]
-        (let [#_"short[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-            (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
-                (let [r (.invoke f, r, (aget a i))]
-                    (if (reduced? r) (deref r) (recur r (inc i)))
-                )
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IReduceInit'''reduce--ArraySeq_short [#_"ArraySeq_short" this, #_"IFn" f, #_"Object" r]
-        (let [#_"short[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-            (loop-when [r (.invoke f, r, (aget a i)) i (inc i)] (< i n) => (if (reduced? r) (deref r) r)
-                (if (reduced? r) (deref r) (recur (.invoke f, r, (aget a i)) (inc i)))
-            )
-        )
-    )
-)
-
 (class-ns ArraySeq_boolean
     (defn #_"ArraySeq_boolean" ArraySeq_boolean'new [#_"IPersistentMap" meta, #_"boolean[]" array, #_"int" i]
         (merge (ASeq'new meta)
@@ -12948,7 +12834,6 @@
                     Compiler'LONGS_CLASS    (ArraySeq_long'new    nil, (cast c array), 0)
                     Compiler'BYTES_CLASS    (ArraySeq_byte'new    nil, (cast c array), 0)
                     Compiler'CHARS_CLASS    (ArraySeq_char'new    nil, (cast c array), 0)
-                    Compiler'SHORTS_CLASS   (ArraySeq_short'new   nil, (cast c array), 0)
                     Compiler'BOOLEANS_CLASS (ArraySeq_boolean'new nil, (cast c array), 0)
                                             (ArraySeq'new                      array,  0)
                 )
@@ -14640,7 +14525,7 @@
                 )
               init
                 (when (< n (alength init)) => init
-                    ;; Create a new shorter array with unique keys, and the last value associated with each key.
+                    ;; Create a new, shorter array with unique keys, and the last value associated with each key.
                     ;; To behave like assoc, the first occurrence of each key must be used, since its metadata
                     ;; may be different than later equal keys.
                     (let [#_"Object[]" nodups (make-array Object n)
@@ -19156,19 +19041,10 @@
     (defn #_"Object"    RT'box-1z [#_"boolean" x] (if x true false))
     (defn #_"Object"    RT'box-1Z [#_"Boolean" x] x)
     (defn #_"Number"    RT'box-1b [#_"byte"    x] x)
-    (defn #_"Number"    RT'box-1s [#_"short"   x] x)
     (defn #_"Number"    RT'box-1i [#_"int"     x] x)
     (defn #_"Number"    RT'box-1l [#_"long"    x] x)
 
     (defn #_"char" RT'charCast-1b [#_"byte" x]
-        (let [#_"char" i (char x)]
-            (when (= i x) => (throw! (str "value out of range for char: " x))
-                i
-            )
-        )
-    )
-
-    (defn #_"char" RT'charCast-1s [#_"short" x]
         (let [#_"char" i (char x)]
             (when (= i x) => (throw! (str "value out of range for char: " x))
                 i
@@ -19219,14 +19095,6 @@
         x
     )
 
-    (defn #_"byte" RT'byteCast-1s [#_"short" x]
-        (let [#_"byte" i (byte x)]
-            (when (= i x) => (throw! (str "value out of range for byte: " x))
-                i
-            )
-        )
-    )
-
     (defn #_"byte" RT'byteCast-1i [#_"int" x]
         (let [#_"byte" i (byte x)]
             (when (= i x) => (throw! (str "value out of range for byte: " x))
@@ -19254,38 +19122,7 @@
         )
     )
 
-    (defn #_"short" RT'shortCast-1b [#_"byte"  x] x)
-    (defn #_"short" RT'shortCast-1s [#_"short" x] x)
-
-    (defn #_"short" RT'shortCast-1i [#_"int" x]
-        (let [#_"short" i (short x)]
-            (when (= i x) => (throw! (str "value out of range for short: " x))
-                i
-            )
-        )
-    )
-
-    (defn #_"short" RT'shortCast-1l [#_"long" x]
-        (let [#_"short" i (short x)]
-            (when (= i x) => (throw! (str "value out of range for short: " x))
-                i
-            )
-        )
-    )
-
-    (defn #_"short" RT'shortCast-1o [#_"Object" x]
-        (if (instance? Short x)
-            (.shortValue x)
-            (let [#_"long" n (long x)]
-                (when (<= Short/MIN_VALUE n Short/MAX_VALUE) => (throw! (str "value out of range for short: " x))
-                    (short n)
-                )
-            )
-        )
-    )
-
     (defn #_"int" RT'intCast-1b [#_"byte"  x] x)
-    (defn #_"int" RT'intCast-1s [#_"short" x] x)
     (defn #_"int" RT'intCast-1c [#_"char"  x] x)
     (defn #_"int" RT'intCast-1i [#_"int"   x] x)
 
@@ -19306,7 +19143,6 @@
     )
 
     (defn #_"long" RT'longCast-1b [#_"byte"  x] x)
-    (defn #_"long" RT'longCast-1s [#_"short" x] x)
     (defn #_"long" RT'longCast-1i [#_"int"   x] x)
     (defn #_"long" RT'longCast-1l [#_"long"  x] x)
 
@@ -19318,7 +19154,7 @@
 
     (defn #_"long" RT'longCast-1o [#_"Object" x]
         (cond
-            (or (instance? Integer x) (instance? Long x))
+            (or (instance? Long x) (instance? Integer x) (instance? Byte x))
                 (.longValue x)
             (instance? BigInt x)
                 (when (nil? (:bipart x)) => (throw! (str "value out of range for long: " x))
@@ -19328,8 +19164,6 @@
                 (when (< (.bitLength x) 64) => (throw! (str "value out of range for long: " x))
                     (.longValue x)
                 )
-            (or (instance? Byte x) (instance? Short x))
-                (.longValue x)
             (instance? Ratio x)
                 (long (Ratio''bigIntegerValue x))
             (instance? Character x)
@@ -19340,7 +19174,6 @@
     )
 
     (defn #_"byte" RT'uncheckedByteCast-1b [#_"byte"   x]       x )
-    (defn #_"byte" RT'uncheckedByteCast-1s [#_"short"  x] (byte x))
     (defn #_"byte" RT'uncheckedByteCast-1i [#_"int"    x] (byte x))
     (defn #_"byte" RT'uncheckedByteCast-1l [#_"long"   x] (byte x))
 
@@ -19348,17 +19181,7 @@
         (.byteValue (cast Number x))
     )
 
-    (defn #_"short" RT'uncheckedShortCast-1b [#_"byte"   x]        x )
-    (defn #_"short" RT'uncheckedShortCast-1s [#_"short"  x]        x )
-    (defn #_"short" RT'uncheckedShortCast-1i [#_"int"    x] (short x))
-    (defn #_"short" RT'uncheckedShortCast-1l [#_"long"   x] (short x))
-
-    (defn #_"short" RT'uncheckedShortCast-1o [#_"Object" x]
-        (.shortValue (cast Number x))
-    )
-
     (defn #_"char" RT'uncheckedCharCast-1b [#_"byte"   x] (char x))
-    (defn #_"char" RT'uncheckedCharCast-1s [#_"short"  x] (char x))
     (defn #_"char" RT'uncheckedCharCast-1c [#_"char"   x]       x )
     (defn #_"char" RT'uncheckedCharCast-1i [#_"int"    x] (char x))
     (defn #_"char" RT'uncheckedCharCast-1l [#_"long"   x] (char x))
@@ -19368,7 +19191,6 @@
     )
 
     (defn #_"int" RT'uncheckedIntCast-1b [#_"byte"   x]      x )
-    (defn #_"int" RT'uncheckedIntCast-1s [#_"short"  x]      x )
     (defn #_"int" RT'uncheckedIntCast-1c [#_"char"   x]      x )
     (defn #_"int" RT'uncheckedIntCast-1i [#_"int"    x]      x )
     (defn #_"int" RT'uncheckedIntCast-1l [#_"long"   x] (int x))
@@ -19378,7 +19200,6 @@
     )
 
     (defn #_"long" RT'uncheckedLongCast-1b [#_"byte"   x]       x )
-    (defn #_"long" RT'uncheckedLongCast-1s [#_"short"  x]       x )
     (defn #_"long" RT'uncheckedLongCast-1i [#_"int"    x]       x )
     (defn #_"long" RT'uncheckedLongCast-1l [#_"long"   x]       x )
 
@@ -19480,10 +19301,6 @@
                     Byte/TYPE
                         (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (next s)]
                             (Array/set a, i, (RT'byteCast-1o (first s)))
-                        )
-                    Short/TYPE
-                        (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (next s)]
-                            (Array/set a, i, (RT'shortCast-1o (first s)))
                         )
                     Character/TYPE
                         (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (next s)]
@@ -20618,7 +20435,6 @@
         (instance? Long n)
         (instance? BigInt n)
         (instance? BigInteger n)
-        (instance? Short n)
         (instance? Byte n)
     )
 )
@@ -20644,7 +20460,6 @@
 (§ defn int? [x]
     (or (instance? Long x)
         (instance? Integer x)
-        (instance? Short x)
         (instance? Byte x)
     )
 )
@@ -22360,11 +22175,6 @@
 (§ defn long [^Number x] (RT/longCast x))
 
 ;;;
- ; Coerce to short.
- ;;
-(§ defn short [^Number x] (RT/shortCast x))
-
-;;;
  ; Coerce to byte.
  ;;
 (§ defn byte [^Number x] (RT/byteCast x))
@@ -22378,11 +22188,6 @@
  ; Coerce to byte. Subject to rounding or truncation.
  ;;
 (§ defn unchecked-byte [^Number x] (RT/uncheckedByteCast x))
-
-;;;
- ; Coerce to short. Subject to rounding or truncation.
- ;;
-(§ defn unchecked-short [^Number x] (RT/uncheckedShortCast x))
 
 ;;;
  ; Coerce to char. Subject to rounding or truncation.
@@ -22694,11 +22499,6 @@
  ; Sets the value at the index/indices. Works on arrays of boolean. Returns val.
  ;;
 (§ def-aset aset-boolean setBoolean boolean)
-
-;;;
- ; Sets the value at the index/indices. Works on arrays of short. Returns val.
- ;;
-(§ def-aset aset-short setShort short)
 
 ;;;
  ; Sets the value at the index/indices. Works on arrays of byte. Returns val.
@@ -23788,8 +23588,8 @@
 
 ;;;
  ; Returns the hash code of its argument. Note this is the hash code
- ; consistent with =, and thus is different than .hashCode for Integer,
- ; Short, Byte and Cloiure collections.
+ ; consistent with =, and thus is different from .hashCode for Integer,
+ ; Byte and Cloiure collections.
  ;;
 (§ defn hash [x] (Util/hasheq x))
 
@@ -23929,14 +23729,6 @@
 )
 
 ;;;
- ; Creates an array of shorts.
- ;;
-(§ defn short-array
-    ([size-or-seq]          (Numbers/short_array size-or-seq))
-    ([size init-val-or-seq] (Numbers/short_array size init-val-or-seq))
-)
-
-;;;
  ; Creates an array of ints.
  ;;
 (§ defn int-array
@@ -23960,7 +23752,6 @@
 (§ definline booleans [xs] `(Numbers/booleans ~xs))
 (§ definline bytes    [xs] `(Numbers/bytes    ~xs))
 (§ definline chars    [xs] `(Numbers/chars    ~xs))
-(§ definline shorts   [xs] `(Numbers/shorts   ~xs))
 (§ definline ints     [xs] `(Numbers/ints     ~xs))
 (§ definline longs    [xs] `(Numbers/longs    ~xs))
 
@@ -25597,7 +25388,6 @@
      (hash-map
         'boolean  Boolean/TYPE   'booleans (Class/forName "[Z")
         'byte     Byte/TYPE      'bytes    (Class/forName "[B")
-        'short    Short/TYPE     'shorts   (Class/forName "[S")
         'char     Character/TYPE 'chars    (Class/forName "[C")
         'int      Integer/TYPE   'ints     (Class/forName "[I")
         'long     Long/TYPE      'longs    (Class/forName "[J")
@@ -26981,7 +26771,6 @@
         :int     (mk-am int)
         :long    (mk-am long)
         :byte    (mk-am byte)
-        :short   (mk-am short)
         :char    (mk-am char)
         :boolean (mk-am boolean)
     )
@@ -26990,9 +26779,9 @@
 (§ defmacro ^:private ams-check [t] `(or (ams ~t) (throw! (str "unrecognized type " ~t))))
 
 ;;;
- ; Creates a new vector of a single primitive type t, where t is one
- ; of :int :long :byte :short :char or :boolean. The
- ; resulting vector complies with the interface of vectors in general,
+ ; Creates a new vector of a single primitive type t, where t is one of
+ ; :long :int :char :byte or :boolean.
+ ; The resulting vector complies with the interface of vectors in general,
  ; but stores the values unboxed internally.
  ;
  ; Optionally takes one or more elements to populate the vector.
