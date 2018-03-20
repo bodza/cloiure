@@ -1,5 +1,5 @@
 (ns cloiure.core
-    (:refer-clojure :only [* *err* *ns* *print-length* *warn-on-reflection* + - -> .. / < <= = > >= aget alength alter-meta! apply aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defn- defprotocol defrecord deref dissoc doseq dotimes extend-type find find-ns first fn gen-interface get hash-map hash-set identical? if-let import inc indexed? int intern into into-array isa? key keys keyword let letfn list list* long loop make-array map map-entry? merge meta name namespace namespace-munge neg? next not= nth object-array parents peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot reduce reduced? reify rem repeat reset-meta! resolve rest rseq satisfies? seq sequential? some sorted-map subvec swap! swap-vals! symbol to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector when-let while with-meta zero?])
+    (:refer-clojure :only [* *err* *ns* *print-length* *warn-on-reflection* + - -> .. / < <= = > >= aget alength alter-meta! apply aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defn- defprotocol defrecord deref dissoc doseq dotimes extend-type find find-ns first fn gen-interface get hash-map hash-set identical? if-let import inc indexed? int intern interpose into into-array isa? key keys keyword let letfn list list* long loop make-array map map-entry? mapv merge meta name namespace namespace-munge neg? next not= nth object-array parents peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot reduce reduced? reify rem repeat reset-meta! resolve rest rseq satisfies? seq sequential? some sorted-map subvec swap! swap-vals! symbol to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector when-let while with-meta zero?])
 )
 
 (defmacro § [& _])
@@ -1073,7 +1073,7 @@
         ;; Note: Regex matching rules mean that #"_|_COLON_" "_COLON_" returns "_", but #"_COLON_|_" "_COLON_"
         ;; returns "_COLON_" as desired. Sorting string keys of DEMUNGE_MAP from longest to shortest ensures
         ;; correct matching behavior, even if some strings are prefixes of others.
-        (let [#_"String[]" a (to-array (keys Compiler'DEMUNGE_MAP)) _ (Arrays/sort a, #(- (.length %2) (.length %1)))
+        (let [#_"String[]" a (to-array (keys Compiler'DEMUNGE_MAP)) _ (Arrays/sort a, #(- (count %2) (count %1)))
               #_"StringBuilder" sb (StringBuilder.)]
             (dotimes [#_"int" i (alength a)]
                 (when (pos? i)
@@ -1278,7 +1278,7 @@
     (defn #_"String" Compiler'destubClassName [#_"String" name]
         ;; skip over prefix + '.' or '/'
         (when (.startsWith name, Compiler'COMPILE_STUB_PREFIX) => name
-            (.substring name, (inc (.length Compiler'COMPILE_STUB_PREFIX)))
+            (.substring name, (inc (count Compiler'COMPILE_STUB_PREFIX)))
         )
     )
 
@@ -1303,7 +1303,7 @@
                         )
                     )
                 )
-            (or (pos? (.indexOf (ßname sym), (int \.))) (= (.charAt (ßname sym), 0) \[)) (RT/classForName (ßname sym))
+            (or (pos? (.indexOf (ßname sym), (int \.))) (= (nth (ßname sym) 0) \[)) (RT/classForName (ßname sym))
             (= sym 'ns)                #'ns
             (= sym 'in-ns)             #'in-ns
             (= sym *compile-stub-sym*) *compile-stub-class*
@@ -1325,7 +1325,7 @@
                         v
                     )
                 )
-            (or (and (pos? (.indexOf (ßname sym), (int \.))) (not (.endsWith (ßname sym), "."))) (= (.charAt (ßname sym), 0) \[))
+            (or (and (pos? (.indexOf (ßname sym), (int \.))) (not (.endsWith (ßname sym), "."))) (= (nth (ßname sym) 0) \[))
                 (RT/classForName (ßname sym))
             (= sym 'ns)
                 #'ns
@@ -1836,7 +1836,7 @@
                     (cond
                         (= form *compile-stub-sym*)
                             *compile-stub-class*
-                        (or (pos? (.indexOf (ßname form), (int \.))) (= (.charAt (ßname form), 0) \[))
+                        (or (pos? (.indexOf (ßname form), (int \.))) (= (nth (ßname form) 0) \[))
                             (RT/classForNameNonLoading (ßname form))
                         :else
                             (let [#_"Object" o (.getMapping *ns*, form)]
@@ -2501,7 +2501,7 @@
                           #_"Expr" instance (when (nil? c) (Compiler'analyze (if (= context :Context'EVAL) context :Context'EXPRESSION), (second form)))
                           #_"boolean" maybeField (and (= (count form) 3) (symbol? (third form)))
                           maybeField
-                            (when (and maybeField (not= (.charAt (ßname (third form)), 0) \-)) => maybeField
+                            (when (and maybeField (not= (nth (ßname (third form)) 0) \-)) => maybeField
                                 (let [#_"String" name (ßname (third form))]
                                     (cond
                                         (some? c)
@@ -2514,7 +2514,7 @@
                                 )
                             )]
                         (if maybeField
-                            (let [? (= (.charAt (ßname (third form)), 0) \-)
+                            (let [? (= (nth (ßname (third form)) 0) \-)
                                   #_"Symbol" sym (if ? (symbol (.substring (ßname (third form)), 1)) (third form))
                                   #_"Symbol" tag (Compiler'tagOf form)]
                                 (if (some? c)
@@ -4436,7 +4436,7 @@
                                     (throw! (str "can't embed object in code: " value))
                                 )
                             )]
-                        (when (zero? (.length cs))
+                        (when (zero? (count cs))
                             (throw! (str "can't embed unreadable object in code: " value))
                         )
                         (when (.startsWith cs, "#<")
@@ -4968,7 +4968,7 @@
                             (when dynamic?
                                 (.setDynamic v)
                             )
-                            (when (and (not dynamic?) (.startsWith (ßname sym), "*") (.endsWith (ßname sym), "*") (< 2 (.length (ßname sym))))
+                            (when (and (not dynamic?) (.startsWith (ßname sym), "*") (.endsWith (ßname sym), "*") (< 2 (count (ßname sym))))
                                 (.println *err*, (str "Warning: " sym " not declared dynamic and thus is not dynamically rebindable, but its name suggests otherwise. Please either indicate ^:dynamic or change the name."))
                             )
                             (let [#_"Context" c (if (= context :Context'EVAL) context :Context'EXPRESSION)
@@ -6298,7 +6298,7 @@
                         (let [#_"String" n (ßname op)]
                             ;; (.substring s 2 5) => (. s substring 2 5)
                             (cond
-                                (= (.charAt n, 0) \.)
+                                (= (nth n 0) \.)
                                     (when (< 1 (count form)) => (throw! "malformed member expression, expecting (.member target ...)")
                                         (let [#_"Object" target (second form)
                                               target
@@ -6316,7 +6316,7 @@
                                     ;; (s.substring ...) => (. s substring ...)
                                     ;; (package.class.name ...) => (. package.class name ...)
                                     ;; (StringBuilder. ...) => (new StringBuilder ...)
-                                    (let-when [#_"int" i (.lastIndexOf n, (int \.))] (= i (dec (.length n))) => form
+                                    (let-when [#_"int" i (.lastIndexOf n, (int \.))] (= i (dec (count n))) => form
                                         (list* 'new (symbol (.substring n, 0, i)) (next form))
                                     )
                             )
@@ -6649,7 +6649,7 @@
                             )
                         )
                     :else
-                        (let [#_"boolean" kw? (= (.charAt s, 0) \:) #_"Symbol" sym (symbol (.substring s, (if kw? 1 0)))]
+                        (let [#_"boolean" kw? (= (nth s 0) \:) #_"Symbol" sym (symbol (.substring s, (if kw? 1 0)))]
                             (if kw? (keyword sym) sym)
                         )
                 )
@@ -6704,9 +6704,9 @@
     )
 
     (defn- #_"int" LispReader'scanDigits [#_"String" token, #_"int" offset, #_"int" n, #_"int" base]
-        (when (= (+ offset n) (.length token)) => (throw! (str "invalid unicode character: \\" token))
+        (when (= (+ offset n) (count token)) => (throw! (str "invalid unicode character: \\" token))
             (loop-when [#_"int" c 0 #_"int" i 0] (< i n) => c
-                (let [#_"char" ch (.charAt token, (+ offset i)) #_"int" d (Character/digit ch, base)]
+                (let [#_"char" ch (nth token (+ offset i)) #_"int" d (Character/digit ch, base)]
                     (when-not (= d -1) => (throw! (str "invalid digit: " ch))
                         (recur (+ (* c base) d) (inc i))
                     )
@@ -6988,9 +6988,9 @@
                               form
                                 (cond
                                     (and (nil? ns) (.endsWith n, "#"))
-                                        (LispReader'registerGensym (symbol (.substring n, 0, (dec (.length n)))))
+                                        (LispReader'registerGensym (symbol (.substring n, 0, (dec (count n)))))
                                     (and (nil? ns) (.endsWith n, "."))
-                                        (symbol (str (ßname (Compiler'resolveSymbol (symbol (.substring n, 0, (dec (.length n)))))) "."))
+                                        (symbol (str (ßname (Compiler'resolveSymbol (symbol (.substring n, 0, (dec (count n)))))) "."))
                                     (and (nil? ns) (.startsWith n, "."))
                                         form ;; simply quote method names
                                     :else
@@ -7056,7 +7056,7 @@
     (defn #_"Object" character-reader [#_"PushbackReader" r, #_"char" _delim]
         (let-when [#_"char" ch (LispReader'read1 r)] (some? ch) => (throw! "EOF while reading character")
             (let [#_"String" token (LispReader'readToken r, ch)]
-                (when-not (= (.length token) 1) => (Character/valueOf (.charAt token, 0))
+                (when-not (= (count token) 1) => (Character/valueOf (nth token 0))
                     (case token
                         "newline"   \newline
                         "space"     \space
@@ -7064,14 +7064,14 @@
                         "backspace" \backspace
                         "formfeed"  \formfeed
                         "return"    \return
-                        (case (.charAt token, 0)
+                        (case (nth token 0)
                             \u  (let [#_"int" c (LispReader'scanDigits token, 1, 4, 16)]
                                     (when (<= 0xd800 c 0xdfff) ;; surrogate code unit?
                                         (throw! (str "invalid character constant: \\u" (Integer/toString c, 16)))
                                     )
                                     (char c)
                                 )
-                            \o  (let [#_"int" n (dec (.length token))]
+                            \o  (let [#_"int" n (dec (count token))]
                                     (when (< 3 n)
                                         (throw! (str "invalid octal escape sequence length: " n))
                                     )
@@ -7245,18 +7245,18 @@
 
     (defn #_"int" Murmur3'hashUnencodedChars [#_"CharSequence" input]
         (let [#_"int" h1 ;; step through the input 2 chars at a time
-                (loop-when [h1 Murmur3'seed #_"int" i 1] (< i (.length input)) => h1
-                    (let [#_"int" k1 (| (.charAt input, (dec i)) (<< (.charAt input, i) 16))]
+                (loop-when [h1 Murmur3'seed #_"int" i 1] (< i (count input)) => h1
+                    (let [#_"int" k1 (| (nth input (dec i)) (<< (nth input i) 16))]
                         (recur (Murmur3'mixH1 h1, (Murmur3'mixK1 k1)) (+ i 2))
                     )
                 )
               h1 ;; deal with any remaining characters
-                (when (= (& (.length input) 1) 1) => h1
-                    (let [#_"int" k1 (.charAt input, (dec (.length input)))]
+                (when (= (& (count input) 1) 1) => h1
+                    (let [#_"int" k1 (nth input (dec (count input)))]
                         (bit-xor h1 (Murmur3'mixK1 k1))
                     )
                 )]
-            (Murmur3'fmix h1, (* 2 (.length input)))
+            (Murmur3'fmix h1, (* 2 (count input)))
         )
     )
 
@@ -9991,7 +9991,7 @@
 
     #_override
     (defn #_"Object" AFn'''throwArity--AFn [#_"AFn" this, #_"int" n]
-        (throw! (str "wrong number of args (" n ") passed to: " (Compiler'demunge (.getSimpleName (class this)))))
+        (throw! (str "wrong number of args (" n ") passed to: " (Compiler'demunge (.getName (class this)))))
     )
 )
 )
@@ -18185,7 +18185,7 @@
     )
 
     (defn #_"StringSeq" StringSeq'create [#_"CharSequence" s]
-        (when (pos? (.length s))
+        (when (pos? (count s))
             (StringSeq'new nil, s, 0)
         )
     )
@@ -18199,12 +18199,12 @@
 
     #_override
     (defn #_"Object" ISeq'''first--StringSeq [#_"StringSeq" this]
-        (Character/valueOf (.charAt (:s this), (:i this)))
+        (Character/valueOf (nth (:s this) (:i this)))
     )
 
     #_override
     (defn #_"ISeq" ISeq'''next--StringSeq [#_"StringSeq" this]
-        (when (< (inc (:i this)) (.length (:s this)))
+        (when (< (inc (:i this)) (count (:s this)))
             (StringSeq'new (:_meta this), (:s this), (inc (:i this)))
         )
     )
@@ -18216,7 +18216,7 @@
 
     #_override
     (defn #_"int" Counted'''count--StringSeq [#_"StringSeq" this]
-        (- (.length (:s this)) (:i this))
+        (- (count (:s this)) (:i this))
     )
 )
 )
@@ -18834,7 +18834,7 @@
             (.isArray (class o))
                 (Array/getLength o)
             :else
-                (throw! (str "count not supported on this type: " (.getSimpleName (class o))))
+                (throw! (str "count not supported on this type: " (.getName (class o))))
         )
     )
 
@@ -18994,7 +18994,7 @@
                 (nil? coll)
                     nil
                 (instance? CharSequence coll)
-                    (Character/valueOf (.charAt coll, n))
+                    (Character/valueOf (nth coll n))
                 (.isArray (class coll))
                     (Reflector'prepRet (.getComponentType (class coll)), (Array/get coll, n))
                 (instance? Matcher coll)
@@ -19008,7 +19008,7 @@
                         (recur-if (< i n) [(inc i) (next s)] => (first s))
                     )
                 :else
-                    (throw! (str "nth not supported on this type: " (.getSimpleName (class coll))))
+                    (throw! (str "nth not supported on this type: " (.getName (class coll))))
             )
         )
         ([#_"Object" coll, #_"int" n, #_"Object" notFound]
@@ -19021,7 +19021,7 @@
                     notFound
                 (instance? CharSequence coll)
                     (let [#_"CharSequence" s coll]
-                        (if (< n (.length s)) (Character/valueOf (.charAt s, n)) notFound)
+                        (if (< n (count s)) (Character/valueOf (nth s n)) notFound)
                     )
                 (.isArray (class coll))
                     (when (< n (Array/getLength coll)) => notFound
@@ -19040,7 +19040,7 @@
                         (recur-if (< i n) [(inc i) (next s)] => (first s))
                     )
                 :else
-                    (throw! (str "nth not supported on this type: " (.getSimpleName (class coll))))
+                    (throw! (str "nth not supported on this type: " (.getName (class coll))))
             )
         )
     )
@@ -19441,12 +19441,12 @@
 ;;;
  ; Creates a new list containing the items.
  ;;
-(§ def list (PersistentList/creator))
+(§ def list (PersistentList'creator))
 
 ;;;
  ; Returns a new seq where x is the first element and seq is the rest.
  ;;
-(§ def cons (fn* cons [x seq] (RT/cons x seq)))
+(§ def cons (fn* cons [x seq] (RT'cons x seq)))
 
 ;; during bootstrap we don't have destructuring let, loop or fn, will redefine later
 
@@ -19457,17 +19457,17 @@
 ;;;
  ; Returns the first item in the collection. Calls seq on its argument. If s is nil, returns nil.
  ;;
-(§ defn first [s] (RT/first s))
+(§ defn first [s] (RT'first s))
 
 ;;;
  ; Returns a seq of the items after the first. Calls seq on its argument. If there are no more items, returns nil.
  ;;
-(§ defn ^ISeq next [s] (RT/next s))
+(§ defn ^ISeq next [s] (RT'next s))
 
 ;;;
  ; Returns a possibly empty seq of the items after the first. Calls seq on its argument.
  ;;
-(§ defn ^ISeq rest [s] (RT/rest s))
+(§ defn ^ISeq rest [s] (RT'rest s))
 
 ;;;
  ; conj[oin].
@@ -19477,7 +19477,7 @@
 (§ defn conj
     ([] [])
     ([coll] coll)
-    ([coll x] (RT/conj coll x))
+    ([coll x] (RT'conj coll x))
     ([coll x & xs] (recur-if xs [(conj coll x) (first xs) (next xs)] => (conj coll x)))
 )
 
@@ -19485,7 +19485,7 @@
  ; Returns a seq on the collection. If the collection is empty, returns nil.
  ; (seq nil) returns nil. seq also works on strings, arrays (of reference types).
  ;;
-(§ defn ^ISeq seq [s] (RT/seq s))
+(§ defn ^ISeq seq [s] (RT'seq s))
 
 ;;;
  ; assoc[iate].
@@ -19493,7 +19493,7 @@
  ; When applied to a vector, returns a new vector that contains val at index. Note - index must be <= (count vector).
  ;;
 (§ defn assoc
-    ([m k v] (RT/assoc m k v))
+    ([m k v] (RT'assoc m k v))
     ([m k v & s]
         (let-when [m (assoc m k v)] s => m
             (when (next s) => (throw! "assoc expects even number of arguments after map/vector, found odd number")
@@ -19515,7 +19515,7 @@
 
 (defn- ^:dynamic assert-valid-fdecl [_])
 
-(§ defn- sigs [s]
+(defn- sigs [s]
     (assert-valid-fdecl s)
     (letfn [(sig- [s]
                 (let [v (first s) s (next s) v (if (= '&form (first v)) (subvec v 2) v)] ;; elide implicit macro args
@@ -19526,8 +19526,8 @@
             )
             (tag- [s]
                 (let [v (sig- s) m (meta v) ^Symbol tag (:tag m)]
-                    (when (and (symbol? tag) (not (some #{\.} (ßname tag))) (not (Interop/maybeSpecialTag tag))) => v
-                        (let [c (Interop/maybeClass tag false)]
+                    (when (and (symbol? tag) (not (some #{\.} (ßname tag))) (not (Interop'maybeSpecialTag tag))) => v
+                        (let [c (Interop'maybeClass tag false)]
                             (when c => v
                                 (with-meta v (assoc m :tag (symbol (.getName c))))
                             )
@@ -19577,7 +19577,7 @@
 ;;;
  ; Returns an array of Objects containing the contents of coll.
  ;;
-(§ defn ^objects to-array [coll] (RT/toArray coll))
+(§ defn ^objects to-array [coll] (RT'toArray coll))
 
 ;;;
  ; Creates a new vector containing the args.
@@ -19590,7 +19590,7 @@
     ([a b c d] [a b c d])
     ([a b c d e] [a b c d e])
     ([a b c d e f] [a b c d e f])
-    ([a b c d e f & args] (LazilyPersistentVector/create (cons a (cons b (cons c (cons d (cons e (cons f args))))))))
+    ([a b c d e f & args] (LazilyPersistentVector'create (cons a (cons b (cons c (cons d (cons e (cons f args))))))))
 )
 
 ;;;
@@ -19598,7 +19598,7 @@
  ; will be aliased and should not be modified.
  ;;
 (§ defn vec [coll]
-    (when (and (vector? coll) (instance? IObj coll)) => (LazilyPersistentVector/create coll)
+    (when (and (vector? coll) (instance? IObj coll)) => (LazilyPersistentVector'create coll)
         (with-meta coll nil)
     )
 )
@@ -19610,7 +19610,7 @@
  ;;
 (§ defn hash-map
     ([] {})
-    ([& keyvals] (PersistentHashMap/create keyvals))
+    ([& keyvals] (PersistentHashMap'create keyvals))
 )
 
 ;;;
@@ -19619,7 +19619,7 @@
  ;;
 (§ defn hash-set
     ([] #{})
-    ([& keys] (PersistentHashSet/create keys))
+    ([& keys] (PersistentHashSet'create keys))
 )
 
 ;;;
@@ -19627,7 +19627,7 @@
  ; Returns a new sorted map with supplied mappings. If any keys are
  ; equal, they are handled as if by repeated uses of assoc.
  ;;
-(§ defn sorted-map [& keyvals] (PersistentTreeMap/create keyvals))
+(§ defn sorted-map [& keyvals] (PersistentTreeMap'create keyvals))
 
 ;;;
  ; keyval => key val
@@ -19635,20 +19635,20 @@
  ; comparator. If any keys are equal, they are handled as if by
  ; repeated uses of assoc.
  ;;
-(§ defn sorted-map-by [comp & keyvals] (PersistentTreeMap/create comp keyvals))
+(§ defn sorted-map-by [comp & keyvals] (PersistentTreeMap'create comp keyvals))
 
 ;;;
  ; Returns a new sorted set with supplied keys. Any equal keys are
  ; handled as if by repeated uses of conj.
  ;;
-(§ defn sorted-set [& keys] (PersistentTreeSet/create keys))
+(§ defn sorted-set [& keys] (PersistentTreeSet'create keys))
 
 ;;;
  ; Returns a new sorted set with supplied keys, using the supplied
  ; comparator. Any equal keys are handled as if by repeated uses of
  ; conj.
  ;;
-(§ defn sorted-set-by [comp & keys] (PersistentTreeSet/create comp keys))
+(§ defn sorted-set-by [comp & keys] (PersistentTreeSet'create comp keys))
 
 ;;;
  ; Like defn, but the resulting function name is declared as a macro
@@ -19716,8 +19716,8 @@
  ; Returns a Symbol with the given namespace and name.
  ;;
 (§ defn ^Symbol symbol
-    ([name] (if (symbol? name) name (Symbol/intern name)))
-    ([ns name] (Symbol/intern ns name))
+    ([name] (if (symbol? name) name (Symbol'intern name)))
+    ([ns name] (Symbol'intern ns name))
 )
 
 ;;;
@@ -19727,7 +19727,7 @@
  ;;
 (§ defn gensym
     ([] (gensym "G__"))
-    ([prefix] (symbol (str prefix (RT/nextID))))
+    ([prefix] (symbol (str prefix (RT'nextID))))
 )
 
 ;;;
@@ -19738,8 +19738,8 @@
     ([name]
         (cond
             (keyword? name) name
-            (symbol? name) (Keyword/intern ^Symbol name)
-            (string? name) (Keyword/intern (symbol ^String name))
+            (symbol? name) (Keyword'intern ^Symbol name)
+            (string? name) (Keyword'intern (symbol ^String name))
         )
     )
     ([ns name] (keyword (symbol ns name)))
@@ -19755,11 +19755,11 @@
     ([name]
         (cond
             (keyword? name) name
-            (symbol? name) (Keyword/find ^Symbol name)
-            (string? name) (Keyword/find ^String name)
+            (symbol? name) (Keyword'find ^Symbol name)
+            (string? name) (Keyword'find ^String name)
         )
     )
-    ([ns name] (Keyword/find ns name))
+    ([ns name] (Keyword'find ns name))
 )
 
 (defn- spread [s]
@@ -19805,13 +19805,9 @@
  ; is called, and will cache the result and return it on all subsequent
  ; seq calls. See also - realized?
  ;;
-(§ defmacro lazy-seq [& body]
-    (list 'new 'cloiure.core.LazySeq (list* '^{:once true} fn* [] body))
-)
+(§ defmacro lazy-seq [& body] (list 'new 'cloiure.core.LazySeq (list* '^{:once true} fn* [] body)))
 
-(§ defn ^ChunkBuffer chunk-buffer [capacity]
-    (ChunkBuffer. capacity)
-)
+(§ defn ^ChunkBuffer chunk-buffer [capacity] (ChunkBuffer. capacity))
 
 (§ defn chunk-append  [^ChunkBuffer b x] (.add b x))
 (§ defn ^IChunk chunk [^ChunkBuffer b  ] (.chunk b))
@@ -19820,12 +19816,7 @@
 (§ defn ^ISeq   chunk-rest  [^IChunkedSeq s] (.chunkedMore  s))
 (§ defn ^ISeq   chunk-next  [^IChunkedSeq s] (.chunkedNext  s))
 
-(§ defn chunk-cons [chunk rest]
-    (if (zero? (count chunk))
-        rest
-        (ChunkedCons. chunk rest)
-    )
-)
+(§ defn chunk-cons [chunk rest] (if (zero? (count chunk)) rest (ChunkedCons. chunk rest)))
 
 (defn chunked-seq? [s] (instance? IChunkedSeq s))
 
@@ -19837,35 +19828,31 @@
     ([x] (lazy-seq x))
     ([x y]
         (lazy-seq
-            (let [s (seq x)]
-                (if s
-                    (if (chunked-seq? s)
-                        (chunk-cons (chunk-first s) (concat (chunk-rest s) y))
-                        (cons (first s) (concat (rest s) y))
-                    )
-                    y
+            (let-when [s (seq x)] s => y
+                (if (chunked-seq? s)
+                    (chunk-cons (chunk-first s) (concat (chunk-rest s) y))
+                    (cons (first s) (concat (rest s) y))
                 )
             )
         )
     )
     ([x y & zs]
-        (let [cat
-                (fn cat [xys zs]
+        (letfn [(cat- [xys zs]
                     (lazy-seq
                         (let [xys (seq xys)]
                             (if xys
                                 (if (chunked-seq? xys)
-                                    (chunk-cons (chunk-first xys) (cat (chunk-rest xys) zs))
-                                    (cons (first xys) (cat (rest xys) zs))
+                                    (chunk-cons (chunk-first xys) (cat- (chunk-rest xys) zs))
+                                    (cons (first xys) (cat- (rest xys) zs))
                                 )
                                 (when zs
-                                    (cat (first zs) (next zs))
+                                    (cat- (first zs) (next zs))
                                 )
                             )
                         )
                     )
                 )]
-            (cat (concat x y) zs)
+            (cat- (concat x y) zs)
         )
     )
 )
@@ -19876,7 +19863,7 @@
  ; will cache the result and return it on all subsequent force calls.
  ; See also - realized?
  ;;
-(§ defmacro delay [& body] (list 'new 'cloiure.core.Delay (list* `^{:once true} fn* [] body)))
+(§ defmacro delay [& body] (list 'new 'cloiure.core.Delay (list* '^{:once true} fn* [] body)))
 
 ;;;
  ; Returns true if x is a Delay created with delay.
@@ -19886,7 +19873,7 @@
 ;;;
  ; If x is a Delay, returns the (possibly cached) value of its expression, else returns x.
  ;;
-(§ defn force [x] (Delay/force x))
+(defn force [x] (Delay'force x))
 
 ;;;
  ; Equality. Returns true if x equals y, false if not. Same as Java x.equals(y) except it also
@@ -19895,16 +19882,8 @@
  ;;
 (§ defn =
     ([x] true)
-    ([x y] (Util/equiv x y))
-    ([x y & more]
-        (if (= x y)
-            (if (next more)
-                (recur y (first more) (next more))
-                (= y (first more))
-            )
-            false
-        )
-    )
+    ([x y] (Util'equiv x y))
+    ([x y & s] (and (= x y) (recur-if (next s) [y (first s) (next s)] => (= y (first s)))))
 )
 
 ;;;
@@ -19913,7 +19892,7 @@
 (§ defn ^Boolean not=
     ([x] false)
     ([x y] (not (= x y)))
-    ([x y & more] (not (apply = x y more)))
+    ([x y & s] (not (apply = x y s)))
 )
 
 ;;;
@@ -19922,23 +19901,25 @@
  ; works for nil, and compares numbers and collections in a type-independent manner.
  ; x must implement Comparable.
  ;;
-(§ defn compare [x y] (Util/compare x y))
+(§ defn compare [x y] (Util'compare x y))
 
 ;;;
- ; Returns true if num is zero, else false.
+ ; Returns true if n is zero | greater than zero | less than zero, else false.
  ;;
-(§ defn zero? [num] (Numbers/isZero num))
+(§ defn zero? [n] (Numbers'isZero n))
+(§ defn pos?  [n] (Numbers'isPos  n))
+(§ defn neg?  [n] (Numbers'isNeg  n))
 
 ;;;
  ; Returns the number of items in the collection. (count nil) returns 0.
  ; Also works on strings, arrays, collections and maps.
  ;;
-(§ defn count [coll] (RT/count coll))
+(§ defn count [coll] (RT'count coll))
 
 ;;;
  ; Coerce to int.
  ;;
-(§ defn int [x] (RT/intCast x))
+(§ defn int [x] (RT'intCast x))
 
 ;;;
  ; Returns the value at the index.
@@ -19946,58 +19927,23 @@
  ; nth also works for strings, arrays, regex matchers and lists, and, in O(n) time, for sequences.
  ;;
 (§ defn nth
-    ([coll index]           (RT/nth coll index          ))
-    ([coll index not-found] (RT/nth coll index not-found))
+    ([coll index]           (RT'nth coll index          ))
+    ([coll index not-found] (RT'nth coll index not-found))
 )
-
-;;;
- ; Returns non-nil if nums are in monotonically increasing order, otherwise false.
- ;;
-(§ defn <
-    ([x] true)
-    ([x y] (Numbers/lt x y))
-    ([x y & more]
-        (if (< x y)
-            (if (next more)
-                (recur y (first more) (next more))
-                (< y (first more))
-            )
-            false
-        )
-    )
-)
-
-;;;
- ; Returns a number one greater than num. Supports arbitrary precision.
- ; See also: inc
- ;;
-(§ defn inc' [x] (Numbers/incP x))
-
-;;;
- ; Returns a number one greater than num. Does not auto-promote longs, will throw on overflow.
- ; See also: inc'
- ;;
-(§ defn inc [x] (Numbers/inc x))
 
 ;; reduce is defined again later after InternalReduce loads
 
-(§ defn ^:private reduce1
-    ([f coll]
-        (let [s (seq coll)]
-            (if s
-                (reduce1 f (first s) (next s))
-                (f)
-            )
+(§ defn- reduce1
+    ([f s]
+        (when (seq s) => (f)
+            (reduce1 f (first s) (next s))
         )
     )
     ([f val coll]
-        (let [s (seq coll)]
-            (if s
-                (if (chunked-seq? s)
-                    (recur f (.reduce (chunk-first s) f val) (chunk-next s))
-                    (recur f (f val (first s)) (next s))
-                )
-                val
+        (let-when [s (seq coll)] s => val
+            (if (chunked-seq? s)
+                (recur f (.reduce (chunk-first s) f val) (chunk-next s))
+                (recur f (f val (first s)) (next s))
             )
         )
     )
@@ -20015,8 +19961,8 @@
 (§ defn +'
     ([] 0)
     ([x] (cast Number x))
-    ([x y] (Numbers/addP x y))
-    ([x y & more] (reduce1 +' (+' x y) more))
+    ([x y] (Numbers'addP x y))
+    ([x y & s] (reduce1 +' (+' x y) s))
 )
 
 ;;;
@@ -20026,8 +19972,8 @@
 (§ defn +
     ([] 0)
     ([x] (cast Number x))
-    ([x y] (Numbers/add x y))
-    ([x y & more] (reduce1 + (+ x y) more))
+    ([x y] (Numbers'add x y))
+    ([x y & s] (reduce1 + (+ x y) s))
 )
 
 ;;;
@@ -20037,8 +19983,8 @@
 (§ defn *'
     ([] 1)
     ([x] (cast Number x))
-    ([x y] (Numbers/multiplyP x y))
-    ([x y & more] (reduce1 *' (*' x y) more))
+    ([x y] (Numbers'multiplyP x y))
+    ([x y & s] (reduce1 *' (*' x y) s))
 )
 
 ;;;
@@ -20048,8 +19994,8 @@
 (§ defn *
     ([] 1)
     ([x] (cast Number x))
-    ([x y] (Numbers/multiply x y))
-    ([x y & more] (reduce1 * (* x y) more))
+    ([x y] (Numbers'multiply x y))
+    ([x y & s] (reduce1 * (* x y) s))
 )
 
 ;;;
@@ -20058,8 +20004,8 @@
  ;;
 (§ defn /
     ([x] (/ 1 x))
-    ([x y] (Numbers/divide x y))
-    ([x y & more] (reduce1 / (/ x y) more))
+    ([x y] (Numbers'divide x y))
+    ([x y & s] (reduce1 / (/ x y) s))
 )
 
 ;;;
@@ -20068,9 +20014,9 @@
  ; See also: -
  ;;
 (§ defn -'
-    ([x] (Numbers/minusP x))
-    ([x y] (Numbers/minusP x y))
-    ([x y & more] (reduce1 -' (-' x y) more))
+    ([x] (Numbers'minusP x))
+    ([x y] (Numbers'minusP x y))
+    ([x y & s] (reduce1 -' (-' x y) s))
 )
 
 ;;;
@@ -20079,9 +20025,18 @@
  ; See also: -'
  ;;
 (§ defn -
-    ([x] (Numbers/minus x))
-    ([x y] (Numbers/minus x y))
-    ([x y & more] (reduce1 - (- x y) more))
+    ([x] (Numbers'minus x))
+    ([x y] (Numbers'minus x y))
+    ([x y & s] (reduce1 - (- x y) s))
+)
+
+;;;
+ ; Returns non-nil if nums are in monotonically increasing order, otherwise false.
+ ;;
+(§ defn <
+    ([x] true)
+    ([x y] (Numbers'lt x y))
+    ([x y & s] (and (< x y) (recur-if (next s) [y (first s) (next s)] => (< y (first s)))))
 )
 
 ;;;
@@ -20089,16 +20044,8 @@
  ;;
 (§ defn <=
     ([x] true)
-    ([x y] (Numbers/lte x y))
-    ([x y & more]
-        (if (<= x y)
-            (if (next more)
-                (recur y (first more) (next more))
-                (<= y (first more))
-            )
-            false
-        )
-    )
+    ([x y] (Numbers'lte x y))
+    ([x y & s] (and (<= x y) (recur-if (next s) [y (first s) (next s)] => (<= y (first s)))))
 )
 
 ;;;
@@ -20106,16 +20053,8 @@
  ;;
 (§ defn >
     ([x] true)
-    ([x y] (Numbers/gt x y))
-    ([x y & more]
-        (if (> x y)
-            (if (next more)
-                (recur y (first more) (next more))
-                (> y (first more))
-            )
-            false
-        )
-    )
+    ([x y] (Numbers'gt x y))
+    ([x y & s] (and (> x y) (recur-if (next s) [y (first s) (next s)] => (> y (first s)))))
 )
 
 ;;;
@@ -20123,16 +20062,8 @@
  ;;
 (§ defn >=
     ([x] true)
-    ([x y] (Numbers/gte x y))
-    ([x y & more]
-        (if (>= x y)
-            (if (next more)
-                (recur y (first more) (next more))
-                (>= y (first more))
-            )
-            false
-        )
-    )
+    ([x y] (Numbers'gte x y))
+    ([x y & s] (and (>= x y) (recur-if (next s) [y (first s) (next s)] => (>= y (first s)))))
 )
 
 ;;;
@@ -20140,16 +20071,8 @@
  ;;
 (§ defn ==
     ([x] true)
-    ([x y] (Numbers/equiv x y))
-    ([x y & more]
-        (if (== x y)
-            (if (next more)
-                (recur y (first more) (next more))
-                (== y (first more))
-            )
-            false
-        )
-    )
+    ([x y] (Numbers'equiv x y))
+    ([x y & s] (and (== x y) (recur-if (next s) [y (first s) (next s)] => (== y (first s)))))
 )
 
 ;;;
@@ -20157,8 +20080,8 @@
  ;;
 (§ defn max
     ([x] x)
-    ([x y] (Numbers/max x y))
-    ([x y & more] (reduce1 max (max x y) more))
+    ([x y] (Numbers'max x y))
+    ([x y & s] (reduce1 max (max x y) s))
 )
 
 ;;;
@@ -20166,197 +20089,179 @@
  ;;
 (§ defn min
     ([x] x)
-    ([x y] (Numbers/min x y))
-    ([x y & more] (reduce1 min (min x y) more))
+    ([x y] (Numbers'min x y))
+    ([x y & s] (reduce1 min (min x y) s))
 )
+
+;;;
+ ; Returns a number one greater than num. Supports arbitrary precision.
+ ; See also: inc
+ ;;
+(§ defn inc' [x] (Numbers'incP x))
+
+;;;
+ ; Returns a number one greater than num. Does not auto-promote longs, will throw on overflow.
+ ; See also: inc'
+ ;;
+(§ defn inc [x] (Numbers'inc x))
 
 ;;;
  ; Returns a number one less than num. Supports arbitrary precision.
  ; See also: dec
  ;;
-(§ defn dec' [x] (Numbers/decP x))
+(§ defn dec' [x] (Numbers'decP x))
 
 ;;;
  ; Returns a number one less than num. Does not auto-promote longs, will throw on overflow.
  ; See also: dec'
  ;;
-(§ defn dec [x] (Numbers/dec x))
+(§ defn dec [x] (Numbers'dec x))
 
 ;;;
  ; Returns a number one greater than x, an int.
  ; Note - uses a primitive operator subject to overflow.
  ;;
-(§ defn unchecked-inc-int [x] (Numbers/unchecked_int_inc x))
+(§ defn unchecked-inc-int [x] (Numbers'unchecked_int_inc x))
 
 ;;;
  ; Returns a number one greater than x, a long.
  ; Note - uses a primitive operator subject to overflow.
  ;;
-(§ defn unchecked-inc [x] (Numbers/unchecked_inc x))
+(§ defn unchecked-inc [x] (Numbers'unchecked_inc x))
 
 ;;;
  ; Returns a number one less than x, an int.
  ; Note - uses a primitive operator subject to overflow.
  ;;
-(§ defn unchecked-dec-int [x] (Numbers/unchecked_int_dec x))
+(§ defn unchecked-dec-int [x] (Numbers'unchecked_int_dec x))
 
 ;;;
  ; Returns a number one less than x, a long.
  ; Note - uses a primitive operator subject to overflow.
  ;;
-(§ defn unchecked-dec [x] (Numbers/unchecked_dec x))
+(§ defn unchecked-dec [x] (Numbers'unchecked_dec x))
 
 ;;;
  ; Returns the negation of x, an int.
  ; Note - uses a primitive operator subject to overflow.
  ;;
-(§ defn unchecked-negate-int [x] (Numbers/unchecked_int_negate x))
+(§ defn unchecked-negate-int [x] (Numbers'unchecked_int_negate x))
 
 ;;;
  ; Returns the negation of x, a long.
  ; Note - uses a primitive operator subject to overflow.
  ;;
-(§ defn unchecked-negate [x] (Numbers/unchecked_minus x))
+(§ defn unchecked-negate [x] (Numbers'unchecked_minus x))
 
 ;;;
  ; Returns the sum of x and y, both int.
  ; Note - uses a primitive operator subject to overflow.
  ;;
-(§ defn unchecked-add-int [x y] (Numbers/unchecked_int_add x y))
+(§ defn unchecked-add-int [x y] (Numbers'unchecked_int_add x y))
 
 ;;;
  ; Returns the sum of x and y, both long.
  ; Note - uses a primitive operator subject to overflow.
  ;;
-(§ defn unchecked-add [x y] (Numbers/unchecked_add x y))
+(§ defn unchecked-add [x y] (Numbers'unchecked_add x y))
 
 ;;;
  ; Returns the difference of x and y, both int.
  ; Note - uses a primitive operator subject to overflow.
  ;;
-(§ defn unchecked-subtract-int [x y] (Numbers/unchecked_int_subtract x y))
+(§ defn unchecked-subtract-int [x y] (Numbers'unchecked_int_subtract x y))
 
 ;;;
  ; Returns the difference of x and y, both long.
  ; Note - uses a primitive operator subject to overflow.
  ;;
-(§ defn unchecked-subtract [x y] (Numbers/unchecked_minus x y))
+(§ defn unchecked-subtract [x y] (Numbers'unchecked_minus x y))
 
 ;;;
  ; Returns the product of x and y, both int.
  ; Note - uses a primitive operator subject to overflow.
  ;;
-(§ defn unchecked-multiply-int [x y] (Numbers/unchecked_int_multiply x y))
+(§ defn unchecked-multiply-int [x y] (Numbers'unchecked_int_multiply x y))
 
 ;;;
  ; Returns the product of x and y, both long.
  ; Note - uses a primitive operator subject to overflow.
  ;;
-(§ defn unchecked-multiply [x y] (Numbers/unchecked_multiply x y))
+(§ defn unchecked-multiply [x y] (Numbers'unchecked_multiply x y))
 
 ;;;
  ; Returns the division of x by y, both int.
  ; Note - uses a primitive operator subject to truncation.
  ;;
-(§ defn unchecked-divide-int [x y] (Numbers/unchecked_int_divide x y))
+(§ defn unchecked-divide-int [x y] (Numbers'unchecked_int_divide x y))
 
 ;;;
  ; Returns the remainder of division of x by y, both int.
  ; Note - uses a primitive operator subject to truncation.
  ;;
-(§ defn unchecked-remainder-int [x y] (Numbers/unchecked_int_remainder x y))
-
-;;;
- ; Returns true if num is greater than zero, else false.
- ;;
-(§ defn pos? [num] (Numbers/isPos num))
-
-;;;
- ; Returns true if num is less than zero, else false.
- ;;
-(§ defn neg? [num] (Numbers/isNeg num))
+(§ defn unchecked-remainder-int [x y] (Numbers'unchecked_int_remainder x y))
 
 ;;;
  ; quot[ient] of dividing numerator by denominator.
  ;;
-(§ defn quot [num div] (Numbers/quotient num div))
+(§ defn quot [num div] (Numbers'quotient num div))
 
 ;;;
  ; rem[ainder] of dividing numerator by denominator.
  ;;
-(§ defn rem [num div] (Numbers/remainder num div))
+(§ defn rem [num div] (Numbers'remainder num div))
 
 ;;;
  ; Bitwise complement.
  ;;
-(§ defn bit-not [x] (Numbers/not x))
+(§ defn bit-not [x] (Numbers'not x))
 
 ;;;
  ; Bitwise and.
  ;;
 (§ defn bit-and
-    ([x y] (Numbers/and x y))
-    ([x y & more] (reduce1 bit-and (bit-and x y) more))
+    ([x y] (Numbers'and x y))
+    ([x y & s] (reduce1 bit-and (bit-and x y) s))
 )
 
 ;;;
  ; Bitwise or.
  ;;
 (§ defn bit-or
-    ([x y] (Numbers/or x y))
-    ([x y & more] (reduce1 bit-or (bit-or x y) more))
+    ([x y] (Numbers'or x y))
+    ([x y & s] (reduce1 bit-or (bit-or x y) s))
 )
 
 ;;;
  ; Bitwise exclusive or.
  ;;
 (§ defn bit-xor
-    ([x y] (Numbers/xor x y))
-    ([x y & more] (reduce1 bit-xor (bit-xor x y) more))
+    ([x y] (Numbers'xor x y))
+    ([x y & s] (reduce1 bit-xor (bit-xor x y) s))
 )
 
 ;;;
  ; Bitwise and with complement.
  ;;
 (§ defn bit-and-not
-    ([x y] (Numbers/andNot x y))
-    ([x y & more] (reduce1 bit-and-not (bit-and-not x y) more))
+    ([x y] (Numbers'andNot x y))
+    ([x y & s] (reduce1 bit-and-not (bit-and-not x y) s))
 )
 
 ;;;
- ; Clear bit at index n.
+ ; Clear | set | flip | test bit at index i.
  ;;
-(§ defn bit-clear [x n] (Numbers/clearBit x n))
+(§ defn bit-clear [x i] (Numbers'clearBit x i))
+(§ defn bit-set   [x i] (Numbers'setBit   x i))
+(§ defn bit-flip  [x i] (Numbers'flipBit  x i))
+(§ defn bit-test  [x i] (Numbers'testBit  x i))
 
 ;;;
- ; Set bit at index n.
+ ; Bitwise shift left | right | right, without sign-extension.
  ;;
-(§ defn bit-set [x n] (Numbers/setBit x n))
-
-;;;
- ; Flip bit at index n.
- ;;
-(§ defn bit-flip [x n] (Numbers/flipBit x n))
-
-;;;
- ; Test bit at index n.
- ;;
-(§ defn bit-test [x n] (Numbers/testBit x n))
-
-;;;
- ; Bitwise shift left.
- ;;
-(§ defn bit-shift-left [x n] (Numbers/shiftLeft x n))
-
-;;;
- ; Bitwise shift right.
- ;;
-(§ defn bit-shift-right [x n] (Numbers/shiftRight x n))
-
-;;;
- ; Bitwise shift right, without sign-extension.
- ;;
-(§ defn unsigned-bit-shift-right [x n] (Numbers/unsignedShiftRight x n))
+(§ defn          bit-shift-left  [x n] (Numbers'shiftLeft          x n))
+(§ defn          bit-shift-right [x n] (Numbers'shiftRight         x n))
+(§ defn unsigned-bit-shift-right [x n] (Numbers'unsignedShiftRight x n))
 
 ;;;
  ; Returns true if n is an integer.
@@ -20374,9 +20279,8 @@
  ; Returns true if n is even, throws an exception if n is not an integer.
  ;;
 (§ defn even? [n]
-    (if (integer? n)
-        (zero? (bit-and (RT/uncheckedLongCast n) 1))
-        (throw! (str "argument must be an integer: " n))
+    (when (integer? n) => (throw! (str "argument must be an integer: " n))
+        (zero? (bit-and (RT'uncheckedLongCast n) 1))
     )
 )
 
@@ -20396,18 +20300,10 @@
 )
 
 ;;;
- ; Return true if x is a positive fixed precision integer.
+ ; Return true if x is a positive | negative | non-negative fixed precision integer.
  ;;
-(§ defn pos-int? [x] (and (int? x) (pos? x)))
-
-;;;
- ; Return true if x is a negative fixed precision integer.
- ;;
-(§ defn neg-int? [x] (and (int? x) (neg? x)))
-
-;;;
- ; Return true if x is a non-negative fixed precision integer.
- ;;
+(§ defn pos-int? [x] (and (int? x)      (pos? x)))
+(§ defn neg-int? [x] (and (int? x)      (neg? x)))
 (§ defn nat-int? [x] (and (int? x) (not (neg? x))))
 
 ;;;
@@ -20419,17 +20315,15 @@
         ([] (not (f)))
         ([x] (not (f x)))
         ([x y] (not (f x y)))
-        ([x y & zs] (not (apply f x y zs)))
+        ([x y & s] (not (apply f x y s)))
     )
 )
-
-;; list stuff
 
 ;;;
  ; For a list or queue, same as first, for a vector, same as, but much
  ; more efficient than, last. If the collection is empty, returns nil.
  ;;
-(§ defn peek [coll] (RT/peek coll))
+(§ defn peek [coll] (RT'peek coll))
 
 ;;;
  ; For a list or queue, returns a new list/queue without the first item,
@@ -20437,9 +20331,7 @@
  ; If the collection is empty, throws an exception.
  ; Note - not the same as next/butlast.
  ;;
-(§ defn pop [coll] (RT/pop coll))
-
-;; map stuff
+(§ defn pop [coll] (RT'pop coll))
 
 ;;;
  ; Return true if x is a map entry.
@@ -20453,14 +20345,14 @@
  ; range of indexes. 'contains?' operates constant or logarithmic time;
  ; it will not perform a linear search for a value. See also 'some'.
  ;;
-(§ defn contains? [coll key] (RT/contains coll key))
+(§ defn contains? [coll key] (RT'contains coll key))
 
 ;;;
  ; Returns the value mapped to key, not-found or nil if key not present.
  ;;
 (§ defn get
-    ([map key] (RT/get map key))
-    ([map key not-found] (RT/get map key not-found))
+    ([map key          ] (RT'get map key          ))
+    ([map key not-found] (RT'get map key not-found))
 )
 
 ;;;
@@ -20468,16 +20360,9 @@
  ; that does not contain a mapping for key(s).
  ;;
 (§ defn dissoc
-    ([map] map)
-    ([map key] (RT/dissoc map key))
-    ([map key & ks]
-        (let [ret (dissoc map key)]
-            (if ks
-                (recur ret (first ks) (next ks))
-                ret
-            )
-        )
-    )
+    ([m] m)
+    ([m k] (RT'dissoc m k))
+    ([m k & s] (let [m (dissoc m k)] (recur-if s [m (first s) (next s)] => m)))
 )
 
 ;;;
@@ -20485,58 +20370,46 @@
  ; that does not contain key(s).
  ;;
 (§ defn disj
-    ([set] set)
-    ([^IPersistentSet set key]
-        (when set
-            (.disj set key)
+    ([s] s)
+    ([^IPersistentSet s k]
+        (when s
+            (.disj s k)
         )
     )
-    ([set key & ks]
-        (when set
-            (let [ret (disj set key)]
-                (if ks
-                    (recur ret (first ks) (next ks))
-                    ret
-                )
+    ([s k & ks]
+        (when s
+            (let [s (disj s k)]
+                (recur-if ks [s (first ks) (next ks)] => s)
             )
         )
     )
 )
 
 ;;;
- ; Returns the map entry for key, or nil if key not present.
+ ; Returns the map entry for k, or nil if key not present.
  ;;
-(§ defn find [map key] (RT/find map key))
+(§ defn find [m k] (RT'find m k))
 
 ;;;
- ; Returns a map containing only those entries in map whose key is in keys.
+ ; Returns a map containing only those entries in m whose key is in keys.
  ;;
-(§ defn select-keys [map keyseq]
-    (loop [ret {} keys (seq keyseq)]
-        (if keys
-            (let [entry (find map (first keys))]
-                (recur (if entry (conj ret entry) ret) (next keys))
-            )
-            (with-meta ret (meta map))
-        )
-    )
-)
+(§ defn select-keys [m keys] (with-meta (into {} (map #(find m %) keys)) (meta m)))
 
 ;;;
- ; Returns a sequence of the map's keys, in the same order as (seq map).
+ ; Returns a sequence of the map's keys, in the same order as (seq m).
  ;;
-(§ defn keys [map] (RT/keys map))
+(§ defn keys [m] (RT'keys m))
 
 ;;;
- ; Returns a sequence of the map's values, in the same order as (seq map).
+ ; Returns a sequence of the map's values, in the same order as (seq m).
  ;;
-(§ defn vals [map] (RT/vals map))
+(§ defn vals [m] (RT'vals m))
 
 ;;;
  ; Returns, in constant time, a seq of the items in rev (which can be a vector or sorted-map), in reverse order.
  ; If rev is empty, returns nil.
  ;;
-(§ defn rseq [^Reversible rev] (.rseq rev))
+(§ defn rseq [^Reversible s] (.rseq s))
 
 ;;;
  ; Returns the name String of a string, symbol or keyword.
@@ -20551,7 +20424,7 @@
 ;;;
  ; Coerce to boolean.
  ;;
-(§ defn boolean [x] (RT/booleanCast x))
+(§ defn boolean [x] (RT'booleanCast x))
 
 ;;;
  ; Return true if x is a symbol or keyword.
@@ -20559,34 +20432,22 @@
 (§ defn ident? [x] (or (keyword? x) (symbol? x)))
 
 ;;;
- ; Return true if x is a symbol or keyword without a namespace.
+ ; Return true if x is a symbol or keyword without | with a namespace.
  ;;
-(§ defn simple-ident? [x] (and (ident? x) (nil? (namespace x))))
+(§ defn simple-ident?    [x] (and (ident? x) (nil?  (namespace x))))
+(§ defn qualified-ident? [x] (and (ident? x) (some? (namespace x))))
 
 ;;;
- ; Return true if x is a symbol or keyword with a namespace.
+ ; Return true if x is a symbol without | with a namespace.
  ;;
-(§ defn qualified-ident? [x] (boolean (and (ident? x) (namespace x) true)))
+(§ defn simple-symbol?    [x] (and (symbol? x) (nil?  (namespace x))))
+(§ defn qualified-symbol? [x] (and (symbol? x) (some? (namespace x))))
 
 ;;;
- ; Return true if x is a symbol without a namespace.
+ ; Return true if x is a keyword without | with a namespace.
  ;;
-(§ defn simple-symbol? [x] (and (symbol? x) (nil? (namespace x))))
-
-;;;
- ; Return true if x is a symbol with a namespace.
- ;;
-(§ defn qualified-symbol? [x] (boolean (and (symbol? x) (namespace x) true)))
-
-;;;
- ; Return true if x is a keyword without a namespace.
- ;;
-(§ defn simple-keyword? [x] (and (keyword? x) (nil? (namespace x))))
-
-;;;
- ; Return true if x is a keyword with a namespace.
- ;;
-(§ defn qualified-keyword? [x] (boolean (and (keyword? x) (namespace x) true)))
+(§ defn simple-keyword?    [x] (and (keyword? x) (nil?  (namespace x))))
+(§ defn qualified-keyword? [x] (and (keyword? x) (some? (namespace x))))
 
 ;;;
  ; Executes exprs in an implicit do, while holding the monitor of x.
@@ -20620,7 +20481,7 @@
  ;;
 (§ defmacro ..
     ([x form] `(. ~x ~form))
-    ([x form & more] `(.. (. ~x ~form) ~@more))
+    ([x form & s] `(.. (. ~x ~form) ~@s))
 )
 
 ;;;
@@ -20629,18 +20490,13 @@
  ; If there are more forms, inserts the first form as the second item
  ; in second form, etc.
  ;;
-(§ defmacro -> [x & forms]
-    (loop [x x forms forms]
-        (if forms
-            (let [form (first forms)
-                  threaded
-                    (if (seq? form)
-                        (with-meta `(~(first form) ~x ~@(next form)) (meta form))
-                        (list form x)
-                    )]
-                (recur threaded (next forms))
+(§ defmacro -> [x & s]
+    (when s => x
+        (recur &form &env
+            (let-when [f (first s)] (seq? f) => (list f x)
+                (with-meta `(~(first f) ~x ~@(next f)) (meta f))
             )
-            x
+            (next s)
         )
     )
 )
@@ -20651,30 +20507,23 @@
  ; If there are more forms, inserts the first form as the last item
  ; in second form, etc.
  ;;
-(§ defmacro ->> [x & forms]
-    (loop [x x forms forms]
-        (if forms
-            (let [form (first forms)
-                  threaded
-                    (if (seq? form)
-                        (with-meta `(~(first form) ~@(next form) ~x) (meta form))
-                        (list form x)
-                    )]
-                (recur threaded (next forms))
+(defmacro ->> [x & s]
+    (when s => x
+        (recur &form &env
+            (let-when [f (first s)] (seq? f) => (list f x)
+                (with-meta `(~(first f) ~@(next f) ~x) (meta f))
             )
-            x
+            (next s)
         )
     )
 )
 
-(§ def map)
-
 ;;;
  ; Throws an exception if the given option map contains keys not listed as valid, else returns nil.
  ;;
-(§ defn ^:private check-valid-options [options & valid-keys]
+(§ defn- check-valid-options [options & valid-keys]
     (when (seq (apply disj (apply hash-set (keys options)) valid-keys))
-        (throw! (apply str "only these options are valid: " (first valid-keys) (map #(str ", " %) (rest valid-keys))))
+        (throw! (apply str "only these options are valid: " (interpose ", " valid-keys)))
     )
 )
 
@@ -20884,18 +20733,18 @@
  ; (finally
  ; (pop-thread-bindings)))
  ;;
-(§ defn push-thread-bindings [bindings] (Var/pushThreadBindings bindings))
+(§ defn push-thread-bindings [bindings] (Var'pushThreadBindings bindings))
 
 ;;;
  ; Pop one set of bindings pushed with push-binding before.
  ; It is an error to pop bindings without pushing before.
  ;;
-(§ defn pop-thread-bindings [] (Var/popThreadBindings))
+(§ defn pop-thread-bindings [] (Var'popThreadBindings))
 
 ;;;
  ; Get a map with the Var/value pairs which is currently in effect for the current thread.
  ;;
-(§ defn get-thread-bindings [] (Var/getThreadBindings))
+(§ defn get-thread-bindings [] (Var'getThreadBindings))
 
 ;;;
  ; binding => var-symbol init-expr
@@ -20980,7 +20829,7 @@
  ; Returns the global var named by the namespace-qualified symbol,
  ; or nil if no var with that name.
  ;;
-(§ defn find-var [sym] (Var/find sym))
+(§ defn find-var [sym] (Var'find sym))
 
 (§ defn ^:private setup-reference [^IReference r options]
     (let [opts (apply hash-map options)]
@@ -21262,7 +21111,7 @@
  ;;
 (§ defmacro dotimes [bindings & body]
     (let [i (first bindings) n (second bindings)]
-        `(let [n# (RT/longCast ~n)]
+        `(let [n# (RT'longCast ~n)]
             (loop [~i 0]
                 (when (< ~i n#)
                     ~@body
@@ -21421,7 +21270,7 @@
 ;;;
  ; Returns true if x is the result of a call to reduced.
  ;;
-(§ defn reduced? [x] (RT/isReduced x))
+(§ defn reduced? [x] (RT'isReduced x))
 
 ;;;
  ; If x is already reduced?, returns it, else returns (reduced x).
@@ -21598,7 +21447,7 @@
 ;;;
  ; Returns a lazy (infinite!) sequence of repetitions of the items in coll.
  ;;
-(§ defn cycle [coll] (Cycle/create (seq coll)))
+(§ defn cycle [coll] (Cycle'create (seq coll)))
 
 ;;;
  ; Returns a vector of [(take n coll) (drop n coll)].
@@ -21618,15 +21467,15 @@
  ; Returns a lazy (infinite!, or length n if supplied) sequence of xs.
  ;;
 (§ defn repeat
-    ([  x] (Repeat/create   x))
-    ([n x] (Repeat/create n x))
+    ([  x] (Repeat'create   x))
+    ([n x] (Repeat'create n x))
 )
 
 ;;;
  ; Returns a lazy sequence of x, (f x), (f (f x)), etc.
  ; f must be free of side-effects.
  ;;
-(§ defn iterate [f x] (Iterate/create f x))
+(§ defn iterate [f x] (Iterate'create f x))
 
 ;;;
  ; Returns a lazy seq of nums from start (inclusive) to end (exclusive),
@@ -21638,20 +21487,20 @@
     ([] (iterate inc' 0))
     ([end]
         (if (instance? Long end)
-            (LongRange/create end)
-            (Range/create end)
+            (LongRange'create end)
+            (Range'create end)
         )
     )
     ([start end]
         (if (and (instance? Long start) (instance? Long end))
-            (LongRange/create start end)
-            (Range/create start end)
+            (LongRange'create start end)
+            (Range'create start end)
         )
     )
     ([start end step]
         (if (and (instance? Long start) (instance? Long end) (instance? Long step))
-            (LongRange/create start end step)
-            (Range/create start end step)
+            (LongRange'create start end step)
+            (Range'create start end step)
         )
     )
 )
@@ -21860,7 +21709,7 @@
 ;;;
  ; Evaluates the form data structure (not text!) and returns the result.
  ;;
-(§ defn eval [form] (Compiler/eval form))
+(§ defn eval [form] (Compiler'eval form))
 
 ;;;
  ; Repeatedly executes body (presumably for side-effects) with bindings and filtering as provided by "for".
@@ -22074,8 +21923,8 @@
  ; Class objects for the primitive types can be obtained using, e.g. Integer/TYPE.
  ;;
 (§ defn into-array
-    ([     aseq] (RT/seqToTypedArray      (seq aseq)))
-    ([type aseq] (RT/seqToTypedArray type (seq aseq)))
+    ([     aseq] (RT'seqToTypedArray      (seq aseq)))
+    ([type aseq] (RT'seqToTypedArray type (seq aseq)))
 )
 
 (§ defn ^:private array [& items] (into-array items))
@@ -22088,42 +21937,42 @@
 ;;;
  ; Coerce to Number.
  ;;
-(§ defn ^Number num [x] (Numbers/num x))
+(§ defn ^Number num [x] (Numbers'num x))
 
 ;;;
  ; Coerce to long.
  ;;
-(§ defn long [^Number x] (RT/longCast x))
+(§ defn long [^Number x] (RT'longCast x))
 
 ;;;
  ; Coerce to byte.
  ;;
-(§ defn byte [^Number x] (RT/byteCast x))
+(§ defn byte [^Number x] (RT'byteCast x))
 
 ;;;
  ; Coerce to char.
  ;;
-(§ defn char [x] (RT/charCast x))
+(§ defn char [x] (RT'charCast x))
 
 ;;;
  ; Coerce to byte. Subject to rounding or truncation.
  ;;
-(§ defn unchecked-byte [^Number x] (RT/uncheckedByteCast x))
+(§ defn unchecked-byte [^Number x] (RT'uncheckedByteCast x))
 
 ;;;
  ; Coerce to char. Subject to rounding or truncation.
  ;;
-(§ defn unchecked-char [x] (RT/uncheckedCharCast x))
+(§ defn unchecked-char [x] (RT'uncheckedCharCast x))
 
 ;;;
  ; Coerce to int. Subject to rounding or truncation.
  ;;
-(§ defn unchecked-int [^Number x] (RT/uncheckedIntCast x))
+(§ defn unchecked-int [^Number x] (RT'uncheckedIntCast x))
 
 ;;;
  ; Coerce to long. Subject to rounding or truncation.
  ;;
-(§ defn unchecked-long [^Number x] (RT/uncheckedLongCast x))
+(§ defn unchecked-long [^Number x] (RT'uncheckedLongCast x))
 
 ;;;
  ; Modulus of num and div. Truncates toward negative infinity.
@@ -22163,9 +22012,9 @@
 (§ defn ^BigInt bigint [x]
     (cond
         (instance? BigInt x)     x
-        (instance? BigInteger x) (BigInt/fromBigInteger x)
+        (instance? BigInteger x) (BigInt'fromBigInteger x)
         (ratio? x)               (bigint (.bigIntegerValue ^Ratio x))
-        (number? x)              (BigInt/valueOf (long x))
+        (number? x)              (BigInt'valueOf (long x))
         :else                    (bigint (BigInteger. x))
     )
 )
@@ -22272,14 +22121,14 @@
         (read stream true nil)
     )
     ([stream eof-error? eof-value]
-        (LispReader/read stream (boolean eof-error?) eof-value)
+        (LispReader'read stream (boolean eof-error?) eof-value)
     )
 )
 
 ;;;
  ; Reads one object from the string s.
  ;;
-(§ defn read-string [s] (RT/readString s))
+(§ defn read-string [s] (RT'readString s))
 
 ;;;
  ; Returns a persistent vector of the items in vector from start (inclusive) to end (exclusive).
@@ -22288,7 +22137,7 @@
  ;;
 (§ defn subvec
     ([v start] (subvec v start (count v)))
-    ([v start end] (RT/subvec v start end))
+    ([v start end] (RT'subvec v start end))
 )
 
 ;;;
@@ -22372,7 +22221,7 @@
 (§ defn aget
     {:inline (fn [a i] `(clojure.lang.RT/aget ~a (int ~i))) :inline-arities #{2}}
     ([array idx]
-        (Reflector/prepRet (.getComponentType (class array)) (Array/get array idx))
+        (Reflector'prepRet (.getComponentType (class array)) (Array/get array idx))
     )
     ([array idx & idxs]
         (apply aget (aget array idx) idxs)
@@ -22452,7 +22301,7 @@
 ;;;
  ; If form represents a macro form, returns its expansion, else returns form.
  ;;
-(§ defn macroexpand-1 [form] (Compiler/macroexpand1 form))
+(§ defn macroexpand-1 [form] (Compiler'macroexpand1 form))
 
 ;;;
  ; Repeatedly calls macroexpand-1 on form until it no longer
@@ -22471,7 +22320,7 @@
 ;;;
  ; Sequentially read and evaluate the set of forms contained in the stream.
  ;;
-(§ defn load-reader [r] (Compiler/load r))
+(§ defn load-reader [r] (Compiler'load r))
 
 ;;;
  ; Sequentially read and evaluate the set of forms contained in the string.
@@ -22506,24 +22355,24 @@
 ;;;
  ; Returns the namespace named by the symbol or nil if it doesn't exist.
  ;;
-(§ defn find-ns [sym] (Namespace/find sym))
+(§ defn find-ns [sym] (Namespace'find sym))
 
 ;;;
  ; Create a new namespace named by the symbol if one doesn't already exist,
  ; returns it or the already-existing namespace of the same name.
  ;;
-(§ defn create-ns [sym] (Namespace/findOrCreate sym))
+(§ defn create-ns [sym] (Namespace'findOrCreate sym))
 
 ;;;
  ; Removes the namespace named by the symbol. Use with caution.
  ; Cannot be used to remove the cloiure namespace.
  ;;
-(§ defn remove-ns [sym] (Namespace/remove sym))
+(§ defn remove-ns [sym] (Namespace'remove sym))
 
 ;;;
  ; Returns a sequence of all namespaces.
  ;;
-(§ defn all-ns [] (Namespace/all))
+(§ defn all-ns [] (Namespace'all))
 
 ;;;
  ; If passed a namespace, returns it. Else, when passed a symbol,
@@ -22751,7 +22600,7 @@
         (vector? name-vals-vec) "a vector for its binding"
         (even? (count name-vals-vec)) "an even number of forms in binding vector"
     )
-    `(let [~@(interleave (take-nth 2 name-vals-vec) (repeat '(.setDynamic (Var/create))))]
+    `(let [~@(interleave (take-nth 2 name-vals-vec) (repeat '(.setDynamic (Var'create))))]
         (push-thread-bindings (hash-map ~@name-vals-vec))
         (try
             ~@body
@@ -22771,7 +22620,7 @@
     ([ns sym] (ns-resolve ns nil sym))
     ([ns env sym]
         (when-not (contains? env sym)
-            (Compiler/maybeResolveIn (the-ns ns) sym)
+            (Compiler'maybeResolveIn (the-ns ns) sym)
         )
     )
 )
@@ -22787,7 +22636,7 @@
  ;;
 (§ defn array-map
     ([] PersistentArrayMap/EMPTY)
-    ([& keyvals] (PersistentArrayMap/createAsIfByAssoc (to-array keyvals)))
+    ([& keyvals] (PersistentArrayMap'createAsIfByAssoc (to-array keyvals)))
 )
 
 ;; redefine let and loop with destructuring
@@ -22825,7 +22674,7 @@
                         (fn [bvec b v]
                             (let [gmap (gensym "map__") gmapseq (with-meta gmap {:tag 'cloiure.core.ISeq}) defaults (:or b)]
                                 (loop [ret (-> (conj bvec gmap v gmap)
-                                            (conj `(if (seq? ~gmap) (PersistentHashMap/create ~gmapseq) ~gmap))
+                                            (conj `(if (seq? ~gmap) (PersistentHashMap'create ~gmapseq) ~gmap))
                                             ((fn [ret] (if (:as b) (conj ret (:as b) gmap) ret)))
                                         )
                                        bes (let [trafos (reduce1
@@ -23507,7 +23356,7 @@
  ; consistent with =, and thus is different from .hashCode for Integer,
  ; Byte and Cloiure collections.
  ;;
-(§ defn hash [x] (Util/hasheq x))
+(§ defn hash [x] (Util'hasheq x))
 
 ;;;
  ; Mix final collection hash for ordered or unordered collections.
@@ -23516,14 +23365,14 @@
  ; consistent with =, different from .hashCode.
  ; See http://clojure.org/data_structures#hash for full algorithms.
  ;;
-(§ defn ^long mix-collection-hash [^long hash-basis ^long count] (Murmur3/mixCollHash hash-basis count))
+(§ defn ^long mix-collection-hash [^long hash-basis ^long count] (Murmur3'mixCollHash hash-basis count))
 
 ;;;
  ; Returns the hash code, consistent with =, for an external ordered
  ; collection implementing Seqable.
  ; See http://clojure.org/data_structures#hash for full algorithms.
  ;;
-(§ defn ^long hash-ordered-coll [coll] (Murmur3/hashOrdered coll))
+(§ defn ^long hash-ordered-coll [coll] (Murmur3'hashOrdered coll))
 
 ;;;
  ; Returns the hash code, consistent with =, for an external, unordered
@@ -23531,7 +23380,7 @@
  ; map entries, whose hash is computed as (hash-ordered-coll [k v]).
  ; See http://clojure.org/data_structures#hash for full algorithms.
  ;;
-(§ defn ^long hash-unordered-coll [coll] (Murmur3/hashUnordered coll))
+(§ defn ^long hash-unordered-coll [coll] (Murmur3'hashUnordered coll))
 
 ;;;
  ; Returns a lazy seq of the elements of coll separated by sep.
@@ -23624,52 +23473,52 @@
  ; Creates an array of booleans.
  ;;
 (§ defn boolean-array
-    ([size-or-seq]          (Numbers/boolean_array size-or-seq))
-    ([size init-val-or-seq] (Numbers/boolean_array size init-val-or-seq))
+    ([size-or-seq]          (Numbers'boolean_array size-or-seq))
+    ([size init-val-or-seq] (Numbers'boolean_array size init-val-or-seq))
 )
 
 ;;;
  ; Creates an array of bytes.
  ;;
 (§ defn byte-array
-    ([size-or-seq]          (Numbers/byte_array size-or-seq))
-    ([size init-val-or-seq] (Numbers/byte_array size init-val-or-seq))
+    ([size-or-seq]          (Numbers'byte_array size-or-seq))
+    ([size init-val-or-seq] (Numbers'byte_array size init-val-or-seq))
 )
 
 ;;;
  ; Creates an array of chars.
  ;;
 (§ defn char-array
-    ([size-or-seq]          (Numbers/char_array size-or-seq))
-    ([size init-val-or-seq] (Numbers/char_array size init-val-or-seq))
+    ([size-or-seq]          (Numbers'char_array size-or-seq))
+    ([size init-val-or-seq] (Numbers'char_array size init-val-or-seq))
 )
 
 ;;;
  ; Creates an array of ints.
  ;;
 (§ defn int-array
-    ([size-or-seq]          (Numbers/int_array size-or-seq))
-    ([size init-val-or-seq] (Numbers/int_array size init-val-or-seq))
+    ([size-or-seq]          (Numbers'int_array size-or-seq))
+    ([size init-val-or-seq] (Numbers'int_array size init-val-or-seq))
 )
 
 ;;;
  ; Creates an array of longs.
  ;;
 (§ defn long-array
-    ([size-or-seq]          (Numbers/long_array size-or-seq))
-    ([size init-val-or-seq] (Numbers/long_array size init-val-or-seq))
+    ([size-or-seq]          (Numbers'long_array size-or-seq))
+    ([size init-val-or-seq] (Numbers'long_array size init-val-or-seq))
 )
 
 ;;;
  ; Creates an array of objects.
  ;;
-(§ defn object-array ([size-or-seq] (RT/object_array size-or-seq)))
+(§ defn object-array ([size-or-seq] (RT'object_array size-or-seq)))
 
-(§ definline booleans [xs] `(Numbers/booleans ~xs))
-(§ definline bytes    [xs] `(Numbers/bytes    ~xs))
-(§ definline chars    [xs] `(Numbers/chars    ~xs))
-(§ definline ints     [xs] `(Numbers/ints     ~xs))
-(§ definline longs    [xs] `(Numbers/longs    ~xs))
+(§ definline booleans [xs] `(Numbers'booleans ~xs))
+(§ definline bytes    [xs] `(Numbers'bytes    ~xs))
+(§ definline chars    [xs] `(Numbers'chars    ~xs))
+(§ definline ints     [xs] `(Numbers'ints     ~xs))
+(§ definline longs    [xs] `(Numbers'longs    ~xs))
 
 ;;;
  ; Return true if x is a byte array.
@@ -23954,7 +23803,7 @@
         `(do
             (cloiure.core/in-ns '~name)
             ~@(when name-metadata
-                `((.resetMeta (Namespace/find '~name) ~name-metadata))
+                `((.resetMeta (Namespace'find '~name) ~name-metadata))
             )
             (with-loading-context
                 ~@(when (and (not= name 'cloiure.core) (not-any? #(= :refer-cloiure (first %)) references))
@@ -24063,7 +23912,7 @@
 ;;;
  ; Return true if the seq function is supported for x.
  ;;
-(§ defn seqable? [x] (RT/canSeq x))
+(§ defn seqable? [x] (RT'canSeq x))
 
 ;;;
  ; Returns true if x implements IFn.
@@ -24154,7 +24003,7 @@
  ;;
 (§ defn intern
     ([ns ^Symbol name]
-        (let [v (Var/intern (the-ns ns) name)]
+        (let [v (Var'intern (the-ns ns) name)]
             (when (meta name)
                 (.setMeta v (meta name))
             )
@@ -24162,7 +24011,7 @@
         )
     )
     ([ns name val]
-        (let [v (Var/intern (the-ns ns) name val)]
+        (let [v (Var'intern (the-ns ns) name val)]
             (when (meta name)
                 (.setMeta v (meta name))
             )
@@ -24363,7 +24212,7 @@
     (let [buckets
             (loop [m {} ks tests vs thens]
                 (if (and ks vs)
-                    (recur (update m (Util/hash (first ks)) (fnil conj []) [(first ks) (first vs)]) (next ks) (next vs))
+                    (recur (update m (Util'hash (first ks)) (fnil conj []) [(first ks) (first vs)]) (next ks) (next vs))
                     m
                 )
             )
@@ -24401,7 +24250,7 @@
  ; post-switch equivalence checking must not be done (occurs with hash collisions).
  ;;
 (§ defn- prep-hashes [expr-sym default tests thens]
-    (let [hashcode #(Util/hash %) hashes (into1 #{} (map hashcode tests))]
+    (let [hashcode #(Util'hash %) hashes (into1 #{} (map hashcode tests))]
         (if (== (count tests) (count hashes))
             (if (fits-table? hashes)
                 ;; compact case ints, no shift-mask
@@ -24610,7 +24459,7 @@
                             ;; box args
                             (dotimes [i (count ptypes)]
                                 (.loadArg gen i)
-                                (Interop/emitBoxReturn nil gen (nth pclasses i))
+                                (Interop'emitBoxReturn nil gen (nth pclasses i))
                             )
                             ;; call fn
                             (.invokeInterface gen ifn-type (Method. "invoke" obj-type (into-array (cons obj-type (repeat (count ptypes) obj-type)))))
@@ -24772,7 +24621,7 @@
  ;;
 (§ defn get-proxy-class [& bases]
     (let [[super interfaces] (get-super-and-interfaces bases) pname (proxy-name super interfaces)]
-        (or (RT/loadClassForName pname)
+        (or (RT'loadClassForName pname)
             (let [[cname bytecode] (generate-proxy super interfaces)]
                 (.defineClass ^DynamicClassLoader *class-loader* pname bytecode)
             )
@@ -24785,7 +24634,7 @@
  ; creates and returns an instance of the proxy.
  ;;
 (§ defn construct-proxy [c & ctor-args]
-    (Reflector/invokeConstructor c (to-array ctor-args))
+    (Reflector'invokeConstructor c (to-array ctor-args))
 )
 
 ;;;
@@ -25041,7 +24890,7 @@
         (do
             (.append w \") ;; oops! "
             (dotimes [n (count s)]
-                (let [c (.charAt s n) e (char-escape-string c)]
+                (let [c (nth s n) e (char-escape-string c)]
                     (if e (.write w e) (.append w c))
                 )
             )
@@ -25305,7 +25154,7 @@
     (cond
         (class? x) x
         (contains? prim->class x) (prim->class x)
-        :else (let [s (str x)] (RT/classForName (if (some #{\. \[} s) s (str "java.lang." s))))
+        :else (let [s (str x)] (RT'classForName (if (some #{\. \[} s) s (str "java.lang." s))))
     )
 )
 
@@ -25490,11 +25339,11 @@
 )
 
 (§ defn hash-combine [x y]
-    (Util/hashCombine x (Util/hash y))
+    (Util'hashCombine x (Util'hash y))
 )
 
 (§ defn munge [s]
-    ((if (symbol? s) symbol str) (Compiler/munge (str s)))
+    ((if (symbol? s) symbol str) (Compiler'munge (str s)))
 )
 
 (§ defn- validate-fields [fields name]
@@ -25714,7 +25563,7 @@
                             (let [gargs (map #(gensym (str "gf__" % "__")) args) target (first gargs)]
                                 `([~@gargs]
                                     (let [cache# (.__methodImplCache ~gthis)
-                                          f# (.fnFor cache# (Reflector/classOf ~target))]
+                                          f# (.fnFor cache# (Reflector'classOf ~target))]
                                         (if f#
                                             (f# ~@gargs)
                                             ((-cache-protocol-fn ~gthis ~target ~on-interface ~ginterf) ~@gargs)
@@ -26163,10 +26012,10 @@
 
     StringSeq
     (internal-reduce [str-seq f val]
-        (let [s (.s str-seq) len (.length s)]
+        (let [s (.s str-seq) len (count s)]
             (loop [i (.i str-seq) val val]
                 (if (< i len)
-                    (let [ret (f val (.charAt s i))]
+                    (let [ret (f val (nth s i))]
                         (if (reduced? ret)
                             @ret
                             (recur (inc i) ret)
@@ -26379,7 +26228,7 @@
             (if (= i cnt)
                 hash
                 (let [val (nth this i)]
-                    (recur (unchecked-add-int (unchecked-multiply-int 31 hash) (Util/hash val)) (inc i))
+                    (recur (unchecked-add-int (unchecked-multiply-int 31 hash) (Util'hash val)) (inc i))
                 )
             )
         )
@@ -26387,7 +26236,7 @@
 
     IHashEq
     ;; todo - cache
-    (hasheq [this] (Murmur3/hashOrdered this))
+    (hasheq [this] (Murmur3'hashOrdered this))
 
     Counted
     (count [_] cnt)
@@ -26498,26 +26347,26 @@
 
     Associative
     (assoc [this k v]
-        (if (Numbers/isInteger k)
+        (if (Numbers'isInteger k)
             (.assocN this k v)
             (throw! "key must be integer")
         )
     )
     (containsKey [this k]
-        (and (Numbers/isInteger k)
+        (and (Numbers'isInteger k)
             (< -1 (int k) cnt)
         )
     )
     (entryAt [this k]
         (if (.containsKey this k)
-            (MapEntry/create k (nth this (int k)))
+            (MapEntry'create k (nth this (int k)))
             nil
         )
     )
 
     ILookup
     (valAt [this k not-found]
-        (when (Numbers/isInteger k) => not-found
+        (when (Numbers'isInteger k) => not-found
             (let-when [i (int k)] (< -1 i cnt) => not-found
                 (nth this i)
             )
@@ -26527,7 +26376,7 @@
 
     IFn
     (invoke [this k]
-        (when (Numbers/isInteger k) => (throw! "key must be integer")
+        (when (Numbers'isInteger k) => (throw! "key must be integer")
             (let-when [i (int k)] (< -1 i cnt) => (throw (IndexOutOfBoundsException.))
                 (nth this i)
             )
@@ -26642,7 +26491,7 @@
                         (loop [i (int 0)]
                             (if (= i cnt)
                                 0
-                                (let [comp (Util/compare (nth this i) (nth v i))]
+                                (let [comp (Util'compare (nth this i) (nth v i))]
                                     (if (= 0 comp)
                                         (recur (inc i))
                                         comp
