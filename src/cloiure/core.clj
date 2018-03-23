@@ -1,5 +1,5 @@
 (ns cloiure.core
-    (:refer-clojure :only [* *err* *ns* *print-length* *warn-on-reflection* + - -> .. / < <= = > >= aget alength alter-meta! apply aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defn- defprotocol defrecord deref dissoc doseq dotimes extend-type find find-ns first fn gen-interface get hash-map hash-set identical? if-let import inc indexed? int intern interpose into into-array isa? key keys keyword let letfn list list* long loop make-array map map-entry? mapv merge meta name namespace namespace-munge neg? next not= nth object-array parents peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot reduce reduced? reify rem repeat reset-meta! resolve rest rseq satisfies? seq sequential? some sorted-map subvec swap! swap-vals! symbol to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector when-let while with-meta zero?])
+    (:refer-clojure :only [* *err* *ns* *print-length* *warn-on-reflection* + - -> .. / < <= = > >= aget alength alter-meta! apply as-> aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char chunk-next compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defprotocol defrecord deref dissoc doseq dotimes empty extend-type find find-ns first fn get hash-map hash-set identical? if-let import inc indexed? int intern interpose into into-array isa? key keys keyword let letfn list list* long loop make-array map map-entry? mapv merge meta name namespace neg? next not= nth object-array parents peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot realized? reduce reduced? reify rem repeat reset-meta! resolve rest rseq satisfies? seq sequential? some sorted-map subvec swap! swap-vals! symbol to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector when-let while with-meta zero?])
 )
 
 (defmacro § [& _])
@@ -34,10 +34,6 @@
 (defn char?    [x] (instance? Character x))
 (defn number?  [x] (instance? Number x))
 (defn string?  [x] (instance? String x))
-
-(import
-    [clojure.lang AFn AFunction APersistentMap APersistentSet APersistentVector ArraySeq BigInt DynamicClassLoader PersistentList$EmptyList IFn ILookup ILookupSite ILookupThunk IMapEntry IMeta IObj IPersistentCollection IPersistentList IPersistentMap IPersistentSet IPersistentVector IReference ISeq IType Keyword KeywordLookupSite LazySeq Namespace Numbers PersistentArrayMap PersistentHashMap PersistentHashSet PersistentList PersistentVector RestFn RT Symbol Tuple Util Var]
-)
 
 (defmacro java-ns    [_ & s] (cons 'do s))
 (defmacro class-ns   [_ & s] (cons 'do s))
@@ -141,21 +137,730 @@
     (defrecord CaseExpr           [] #_"Expr" #_"MaybePrimitive")
 )
 
-(defn seq?     [x] (instance? ISeq x))
-(defn coll?    [x] (instance? IPersistentCollection x))
-(defn list?    [x] (instance? IPersistentList x))
-(defn map?     [x] (instance? IPersistentMap x))
-(defn set?     [x] (instance? IPersistentSet x))
-(defn vector?  [x] (instance? IPersistentVector x))
+(java-ns cloiure.lang.IFn
+    (defprotocol IFn
+        (#_"Object" IFn'''invoke
+            [#_"IFn" this]
+            [#_"IFn" this, #_"Object" arg1]
+            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2]
+            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
+            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4]
+            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5]
+            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6]
+            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7]
+            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8]
+            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9]
+            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10]
+            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11]
+            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12]
+            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13]
+            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14]
+            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15]
+            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16]
+            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17]
+            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18]
+            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19]
+          #_[#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20]
+          #_[#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" #_arg19, #_"Object" #_arg20 & #_"Object..." args]
+        )
+        (#_"Object" IFn'''applyTo [#_"IFn" this, #_"ISeq" args])
+    )
+)
+
+(java-ns cloiure.lang.Fn
+    (defprotocol Fn)
+)
+
+(java-ns cloiure.lang.Sequential
+    (defprotocol Sequential)
+)
+
+(java-ns cloiure.lang.Seqable
+    (defprotocol Seqable
+        (#_"ISeq" Seqable'''seq [#_"Seqable" this])
+    )
+)
+
+(java-ns cloiure.lang.Reversible
+    (defprotocol Reversible
+        (#_"ISeq" Reversible'''rseq [#_"Reversible" this])
+    )
+)
+
+(java-ns cloiure.lang.Sorted
+    (defprotocol Sorted
+        (#_"Comparator" Sorted'''comparator [#_"Sorted" this])
+        (#_"Object" Sorted'''entryKey [#_"Sorted" this, #_"Object" entry])
+        (#_"ISeq" Sorted'''seq [#_"Sorted" this, #_"boolean" ascending?])
+        (#_"ISeq" Sorted'''seqFrom [#_"Sorted" this, #_"Object" key, #_"boolean" ascending?])
+    )
+)
+
+(java-ns cloiure.lang.Counted
+    (defprotocol Counted
+        (#_"int" Counted'''count [#_"Counted" this])
+    )
+)
+
+(java-ns cloiure.lang.IPersistentCollection
+    (defprotocol IPersistentCollection
+        (#_"IPersistentCollection" IPersistentCollection'''conj [#_"IPersistentCollection" this, #_"Object" o])
+        (#_"IPersistentCollection" IPersistentCollection'''empty [#_"IPersistentCollection" this])
+    )
+)
+
+(java-ns cloiure.lang.ISeq
+    (defprotocol ISeq
+        (#_"Object" ISeq'''first [#_"ISeq" this])
+        (#_"ISeq" ISeq'''next [#_"ISeq" this])
+    )
+)
+
+(java-ns cloiure.lang.IAtom
+    (defprotocol IAtom
+        (#_"boolean" IAtom'''compareAndSet [#_"IAtom" this, #_"Object" v, #_"Object" v'])
+        (#_"Object" IAtom'''swap
+            [#_"IAtom" this, #_"IFn" f]
+            [#_"IAtom" this, #_"IFn" f, #_"Object" x]
+            [#_"IAtom" this, #_"IFn" f, #_"Object" x, #_"Object" y]
+            [#_"IAtom" this, #_"IFn" f, #_"Object" x, #_"Object" y, #_"ISeq" z]
+        )
+        (#_"Object" IAtom'''reset [#_"IAtom" this, #_"Object" v'])
+        (#_"IPersistentVector" IAtom'''swapVals
+            [#_"IAtom" this, #_"IFn" f]
+            [#_"IAtom" this, #_"IFn" f, #_"Object" x]
+            [#_"IAtom" this, #_"IFn" f, #_"Object" x, #_"Object" y]
+            [#_"IAtom" this, #_"IFn" f, #_"Object" x, #_"Object" y, #_"ISeq" z]
+        )
+        (#_"IPersistentVector" IAtom'''resetVals [#_"IAtom" this, #_"Object" v'])
+    )
+)
+
+(java-ns cloiure.lang.IDeref
+    (defprotocol IDeref
+        (#_"Object" IDeref'''deref [#_"IDeref" this])
+    )
+)
+
+(java-ns cloiure.lang.IEditableCollection
+    (defprotocol IEditableCollection
+        (#_"ITransientCollection" IEditableCollection'''asTransient [#_"IEditableCollection" this])
+    )
+)
+
+(java-ns cloiure.lang.IHashEq
+    (defprotocol IHashEq
+        (#_"int" IHashEq'''hasheq [#_"IHashEq" this])
+    )
+)
+
+(java-ns cloiure.lang.ILookup
+    (defprotocol ILookup
+        (#_"Object" ILookup'''valAt
+            [#_"ILookup" this, #_"Object" key]
+            [#_"ILookup" this, #_"Object" key, #_"Object" notFound]
+        )
+    )
+)
+
+(java-ns cloiure.lang.ILookupSite
+    (defprotocol ILookupSite
+        (#_"ILookupThunk" ILookupSite'''fault [#_"ILookupSite" this, #_"Object" target])
+    )
+)
+
+(java-ns cloiure.lang.ILookupThunk
+    (defprotocol ILookupThunk
+        (#_"Object" ILookupThunk'''get [#_"ILookupThunk" this, #_"Object" target])
+    )
+)
+
+(java-ns cloiure.lang.IMapEntry
+    (defprotocol IMapEntry
+        (#_"Object" IMapEntry'''key [#_"IMapEntry" this])
+        (#_"Object" IMapEntry'''val [#_"IMapEntry" this])
+    )
+)
+
+(java-ns cloiure.lang.Named
+    (defprotocol Named
+        (#_"String" Named'''getNamespace [#_"Named" this])
+        (#_"String" Named'''getName [#_"Named" this])
+    )
+)
+
+(java-ns cloiure.lang.IMeta
+    (defprotocol IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"IMeta" this])
+    )
+)
+
+(java-ns cloiure.lang.IObj
+    (defprotocol IObj
+        (#_"IObj" IObj'''withMeta [#_"IObj" this, #_"IPersistentMap" meta])
+    )
+)
+
+(java-ns cloiure.lang.IReference
+    (defprotocol IReference
+        (#_"IPersistentMap" IReference'''alterMeta [#_"IReference" this, #_"IFn" alter, #_"ISeq" args])
+        (#_"IPersistentMap" IReference'''resetMeta [#_"IReference" this, #_"IPersistentMap" m])
+    )
+)
+
+(java-ns cloiure.lang.Indexed
+    (defprotocol Indexed
+        (#_"Object" Indexed'''nth
+            [#_"Indexed" this, #_"int" i]
+            [#_"Indexed" this, #_"int" i, #_"Object" notFound]
+        )
+    )
+)
+
+(java-ns cloiure.lang.IChunk
+    (defprotocol IChunk
+        (#_"IChunk" IChunk'''dropFirst [#_"IChunk" this])
+        (#_"Object" IChunk'''reduce [#_"IChunk" this, #_"IFn" f, #_"Object" start])
+    )
+)
+
+(java-ns cloiure.lang.IChunkedSeq
+    (defprotocol IChunkedSeq
+        (#_"IChunk" IChunkedSeq'''chunkedFirst [#_"IChunkedSeq" this])
+        (#_"ISeq" IChunkedSeq'''chunkedNext [#_"IChunkedSeq" this])
+    )
+)
+
+(java-ns cloiure.lang.IPending
+    (defprotocol IPending
+        (#_"boolean" IPending'''isRealized [#_"IPending" this])
+    )
+)
+
+(java-ns cloiure.lang.Associative
+    (defprotocol Associative
+        (#_"Associative" Associative'''assoc [#_"Associative" this, #_"Object" key, #_"Object" val])
+        (#_"boolean" Associative'''containsKey [#_"Associative" this, #_"Object" key])
+        (#_"IMapEntry" Associative'''entryAt [#_"Associative" this, #_"Object" key])
+    )
+)
+
+(java-ns cloiure.lang.IPersistentMap
+    (defprotocol IPersistentMap
+        (#_"IPersistentMap" IPersistentMap'''dissoc [#_"IPersistentMap" this, #_"Object" key])
+    )
+)
+
+(java-ns cloiure.lang.IPersistentSet
+    (defprotocol IPersistentSet
+        (#_"IPersistentSet" IPersistentSet'''disj [#_"IPersistentSet" this, #_"Object" key])
+        (#_"boolean" IPersistentSet'''contains [#_"IPersistentSet" this, #_"Object" key])
+        (#_"Object" IPersistentSet'''get [#_"IPersistentSet" this, #_"Object" key])
+    )
+)
+
+(java-ns cloiure.lang.IPersistentStack
+    (defprotocol IPersistentStack
+        (#_"Object" IPersistentStack'''peek [#_"IPersistentStack" this])
+        (#_"IPersistentStack" IPersistentStack'''pop [#_"IPersistentStack" this])
+    )
+)
+
+(java-ns cloiure.lang.IPersistentList
+    (defprotocol IPersistentList)
+)
+
+(java-ns cloiure.lang.IPersistentVector
+    (defprotocol IPersistentVector
+        (#_"IPersistentVector" IPersistentVector'''assocN [#_"IPersistentVector" this, #_"int" i, #_"Object" val])
+    )
+)
+
+(java-ns cloiure.lang.IReduceInit
+    (defprotocol IReduceInit
+        (#_"Object" IReduceInit'''reduce [#_"IReduceInit" this, #_"IFn" f, #_"Object" start])
+    )
+)
+
+(java-ns cloiure.lang.IReduce
+    (defprotocol IReduce
+        (#_"Object" IReduce'''reduce [#_"IReduce" this, #_"IFn" f])
+    )
+)
+
+(java-ns cloiure.lang.IKVReduce
+    (defprotocol IKVReduce
+        (#_"Object" IKVReduce'''kvreduce [#_"IKVReduce" this, #_"IFn" f, #_"Object" r])
+    )
+)
+
+(java-ns cloiure.lang.ITransientCollection
+    (defprotocol ITransientCollection
+        (#_"ITransientCollection" ITransientCollection'''conj [#_"ITransientCollection" this, #_"Object" val])
+        (#_"IPersistentCollection" ITransientCollection'''persistent [#_"ITransientCollection" this])
+    )
+)
+
+(java-ns cloiure.lang.ITransientAssociative
+    (defprotocol ITransientAssociative
+        (#_"ITransientAssociative" ITransientAssociative'''assoc [#_"ITransientAssociative" this, #_"Object" key, #_"Object" val])
+        (#_"boolean" ITransientAssociative'''containsKey [#_"ITransientAssociative" this, #_"Object" key])
+        (#_"IMapEntry" ITransientAssociative'''entryAt [#_"ITransientAssociative" this, #_"Object" key])
+    )
+)
+
+(java-ns cloiure.lang.ITransientMap
+    (defprotocol ITransientMap
+        (#_"ITransientMap" ITransientMap'''dissoc [#_"ITransientMap" this, #_"Object" key])
+    )
+)
+
+(java-ns cloiure.lang.ITransientSet
+    (defprotocol ITransientSet
+        (#_"ITransientSet" ITransientSet'''disj [#_"ITransientSet" this, #_"Object" key])
+        (#_"boolean" ITransientSet'''contains [#_"ITransientSet" this, #_"Object" key])
+        (#_"Object" ITransientSet'''get [#_"ITransientSet" this, #_"Object" key])
+    )
+)
+
+(java-ns cloiure.lang.ITransientVector
+    (defprotocol ITransientVector
+        (#_"ITransientVector" ITransientVector'''assocN [#_"ITransientVector" this, #_"int" i, #_"Object" val])
+        (#_"ITransientVector" ITransientVector'''pop [#_"ITransientVector" this])
+    )
+)
+
+(java-ns cloiure.lang.PersistentHashMap
+    (defprotocol INode
+        (#_"INode" INode'''assoc [#_"INode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf])
+        (#_"INode" INode'''dissoc [#_"INode" this, #_"int" shift, #_"int" hash, #_"Object" key])
+        (#_"IMapEntry|Object" INode'''find
+            [#_"INode" this, #_"int" shift, #_"int" hash, #_"Object" key]
+            [#_"INode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" notFound]
+        )
+        (#_"ISeq" INode'''nodeSeq [#_"INode" this])
+        (#_"INode" INode'''assocT [#_"INode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf])
+        (#_"INode" INode'''dissocT [#_"INode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Box" removedLeaf])
+        (#_"Object" INode'''kvreduce [#_"INode" this, #_"IFn" f, #_"Object" r])
+        (#_"Object" INode'''fold [#_"INode" this, #_"IFn" combinef, #_"IFn" reducef, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin])
+    )
+)
+
+(java-ns cloiure.lang.Range
+    (defprotocol RangeBoundsCheck
+        (#_"boolean" RangeBoundsCheck'''exceededBounds [#_"RangeBoundsCheck" this, #_"Object" val])
+    )
+)
+
+(java-ns cloiure.lang.LongRange
+    (defprotocol LongRangeBoundsCheck
+        (#_"boolean" LongRangeBoundsCheck'''exceededBounds [#_"LongRangeBoundsCheck" this, #_"long" val])
+    )
+)
+
+(java-ns cloiure.lang.IType
+    (defprotocol IType)
+)
+
+(java-ns cloiure.lang.IProxy
+    (defprotocol IProxy
+        (#_"void" IProxy'''__initCloiureFnMappings [#_"IProxy" this, #_"IPersistentMap" m])
+        (#_"void" IProxy'''__updateCloiureFnMappings [#_"IProxy" this, #_"IPersistentMap" m])
+        (#_"IPersistentMap" IProxy'''__getCloiureFnMappings [#_"IProxy" this])
+    )
+)
+
+(java-ns cloiure.lang.Util
+    #_stateless
+    (§ soon defrecord Util [])
+)
+
+(java-ns cloiure.lang.DynamicClassLoader
+    (§ soon defrecord DynamicClassLoader #_"ClassLoader" [])
+)
+
+(java-ns cloiure.lang.BigInt
+    (§ soon defrecord BigInt #_"Number" [] #_"IHashEq")
+)
+
+(java-ns cloiure.lang.Ratio
+    (defrecord Ratio #_"Number" [] #_"Comparable")
+)
+
+(java-ns cloiure.lang.Numbers
+    (defprotocol Ops
+        (#_"Ops" Ops'''combine [#_"Ops" this, #_"Ops" y])
+        (#_"Ops" Ops'''opsWithLong [#_"Ops" this, #_"LongOps" x])
+        (#_"Ops" Ops'''opsWithRatio [#_"Ops" this, #_"RatioOps" x])
+        (#_"Ops" Ops'''opsWithBigInt [#_"Ops" this, #_"BigIntOps" x])
+        (#_"boolean" Ops'''isZero [#_"Ops" this, #_"Number" x])
+        (#_"boolean" Ops'''isPos [#_"Ops" this, #_"Number" x])
+        (#_"boolean" Ops'''isNeg [#_"Ops" this, #_"Number" x])
+        (#_"Number" Ops'''add [#_"Ops" this, #_"Number" x, #_"Number" y])
+        (#_"Number" Ops'''addP [#_"Ops" this, #_"Number" x, #_"Number" y])
+        (#_"Number" Ops'''multiply [#_"Ops" this, #_"Number" x, #_"Number" y])
+        (#_"Number" Ops'''multiplyP [#_"Ops" this, #_"Number" x, #_"Number" y])
+        (#_"Number" Ops'''divide [#_"Ops" this, #_"Number" x, #_"Number" y])
+        (#_"Number" Ops'''quotient [#_"Ops" this, #_"Number" x, #_"Number" y])
+        (#_"Number" Ops'''remainder [#_"Ops" this, #_"Number" x, #_"Number" y])
+        (#_"boolean" Ops'''equiv [#_"Ops" this, #_"Number" x, #_"Number" y])
+        (#_"boolean" Ops'''lt [#_"Ops" this, #_"Number" x, #_"Number" y])
+        (#_"boolean" Ops'''lte [#_"Ops" this, #_"Number" x, #_"Number" y])
+        (#_"boolean" Ops'''gte [#_"Ops" this, #_"Number" x, #_"Number" y])
+        (#_"Number" Ops'''negate [#_"Ops" this, #_"Number" x])
+        (#_"Number" Ops'''negateP [#_"Ops" this, #_"Number" x])
+        (#_"Number" Ops'''inc [#_"Ops" this, #_"Number" x])
+        (#_"Number" Ops'''incP [#_"Ops" this, #_"Number" x])
+        (#_"Number" Ops'''dec [#_"Ops" this, #_"Number" x])
+        (#_"Number" Ops'''decP [#_"Ops" this, #_"Number" x])
+    )
+
+    #_abstract
+    (defrecord OpsP [] #_"Ops")
+    (defrecord LongOps [] #_"Ops")
+    (defrecord RatioOps #_"OpsP" [])
+    (defrecord BigIntOps #_"OpsP" [])
+    #_stateless
+    (§ soon defrecord Numbers [])
+)
+
+(java-ns cloiure.lang.AFn
+    #_abstract
+    (§ soon defrecord AFn [] #_"IFn" #_"Callable" #_"Runnable"
+        #_abstract
+        (#_"Object" throwArity [#_"AFn" this, #_"int" n])
+    )
+)
+
+(java-ns cloiure.lang.Symbol
+    (§ soon defrecord Symbol #_"AFn" [] #_"IObj" #_"IMeta" #_"Comparable" #_"Named" #_"IHashEq")
+)
+
+(java-ns cloiure.lang.Keyword
+    (§ soon defrecord Keyword [] #_"IFn" #_"Callable" #_"Runnable" #_"Comparable" #_"Named" #_"IHashEq")
+)
+
+(java-ns cloiure.lang.AFunction
+    #_abstract
+    (§ soon defrecord AFunction #_"AFn" [] #_"IObj" #_"IMeta" #_"Comparator" #_"Fn")
+)
+
+(java-ns cloiure.lang.RestFn
+    #_abstract
+    (§ soon defrecord RestFn #_"AFunction" []
+        #_abstract
+        (#_"int" getRequiredArity [#_"RestFn" this])
+        #_abstract
+        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" args])
+        #_abstract
+        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" args])
+        #_abstract
+        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" args])
+        #_abstract
+        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" args])
+        #_abstract
+        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" args])
+        #_abstract
+        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" args])
+        #_abstract
+        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" args])
+        #_abstract
+        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" args])
+        #_abstract
+        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" args])
+        #_abstract
+        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" args])
+        #_abstract
+        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" args])
+        #_abstract
+        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" args])
+        #_abstract
+        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" args])
+        #_abstract
+        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" args])
+        #_abstract
+        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" args])
+        #_abstract
+        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" args])
+        #_abstract
+        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" args])
+        #_abstract
+        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" args])
+        #_abstract
+        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" args])
+        #_abstract
+      #_(#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" args])
+        #_abstract
+      #_(#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20, #_"Object" args])
+    )
+)
+
+(java-ns cloiure.lang.ASeq
+    #_abstract
+    (defrecord ASeq [] #_"IObj" #_"IMeta" #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"IHashEq")
+)
+
+(java-ns cloiure.lang.LazySeq
+    (§ soon defrecord LazySeq [] #_"IObj" #_"IMeta" #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"IPending" #_"IHashEq")
+)
+
+(java-ns cloiure.lang.APersistentMap
+    #_abstract
+    (§ soon defrecord APersistentMap #_"AFn" [] #_"IPersistentMap" #_"Associative" #_"IPersistentCollection" #_"Seqable" #_"ILookup" #_"Counted" #_"IHashEq")
+)
+
+(java-ns cloiure.lang.APersistentSet
+    #_abstract
+    (§ soon defrecord APersistentSet #_"AFn" [] #_"IPersistentSet" #_"IPersistentCollection" #_"Seqable" #_"Counted" #_"IHashEq")
+)
+
+(java-ns cloiure.lang.APersistentVector
+    (defrecord VSeq #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce" #_"IReduceInit")
+    (defrecord RSeq #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted")
+    #_abstract
+    (§ soon defrecord APersistentVector #_"AFn" [] #_"IPersistentVector" #_"Associative" #_"IPersistentCollection" #_"Seqable" #_"ILookup" #_"Sequential" #_"IPersistentStack" #_"Reversible" #_"Indexed" #_"Counted" #_"Comparable" #_"IHashEq")
+    (defrecord SubVector #_"APersistentVector" [] #_"IObj" #_"IMeta")
+)
+
+(java-ns cloiure.lang.AMapEntry
+    #_abstract
+    (defrecord AMapEntry #_"APersistentVector" [] #_"IMapEntry")
+)
+
+(java-ns cloiure.lang.ArrayChunk
+    (defrecord ArrayChunk [] #_"IChunk" #_"Indexed" #_"Counted")
+)
+
+(java-ns cloiure.lang.ArraySeq
+    (defrecord ArraySeq_int #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce" #_"IReduceInit")
+    (defrecord ArraySeq_long #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce" #_"IReduceInit")
+    (defrecord ArraySeq_byte #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce" #_"IReduceInit")
+    (defrecord ArraySeq_char #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce" #_"IReduceInit")
+    (defrecord ArraySeq_boolean #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce" #_"IReduceInit")
+    (§ soon defrecord ArraySeq #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce" #_"IReduceInit")
+)
+
+(java-ns cloiure.lang.Atom
+    (defrecord Atom [] #_"IReference" #_"IMeta" #_"IDeref" #_"IAtom")
+)
+
+(java-ns cloiure.lang.ATransientMap
+    #_abstract
+    (defrecord ATransientMap #_"AFn" [] #_"ITransientMap" #_"ITransientAssociative" #_"ITransientCollection" #_"ILookup" #_"Counted") (§ soon 
+        #_abstract
+        (#_"void" ensureEditable [#_"ATransientMap" this])
+        #_abstract
+        (#_"ITransientMap" doAssoc [#_"ATransientMap" this, #_"Object" key, #_"Object" val])
+        #_abstract
+        (#_"ITransientMap" doDissoc [#_"ATransientMap" this, #_"Object" key])
+        #_abstract
+        (#_"Object" doValAt [#_"ATransientMap" this, #_"Object" key, #_"Object" notFound])
+        #_abstract
+        (#_"int" doCount [#_"ATransientMap" this])
+        #_abstract
+        (#_"IPersistentMap" doPersistent [#_"ATransientMap" this])
+    )
+)
+
+(java-ns cloiure.lang.ATransientSet
+    #_abstract
+    (defrecord ATransientSet #_"AFn" [] #_"ITransientSet" #_"ITransientCollection" #_"Counted")
+)
+
+(java-ns cloiure.lang.Binding
+    (defrecord Binding #_"<T>" [])
+)
+
+(java-ns cloiure.lang.Box
+    (defrecord Box [])
+)
+
+(java-ns cloiure.lang.ChunkBuffer
+    (defrecord ChunkBuffer [] #_"Counted")
+)
+
+(java-ns cloiure.lang.ChunkedCons
+    (defrecord ChunkedCons #_"ASeq" [] #_"IChunkedSeq" #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential")
+)
+
+(java-ns cloiure.lang.Cons
+    (defrecord Cons #_"ASeq" [])
+)
+
+(java-ns cloiure.lang.Cycle
+    (defrecord Cycle #_"ASeq" [] #_"IReduce" #_"IReduceInit" #_"IPending")
+)
+
+(java-ns cloiure.lang.Delay
+    (defrecord Delay [] #_"IDeref" #_"IPending")
+)
+
+(java-ns cloiure.lang.Iterate
+    (defrecord Iterate #_"ASeq" [] #_"IReduce" #_"IReduceInit" #_"IPending")
+)
+
+(java-ns cloiure.lang.KeywordLookupSite
+    (§ soon defrecord KeywordLookupSite [] #_"ILookupSite" #_"ILookupThunk")
+)
+
+(java-ns cloiure.lang.LongRange
+    (defrecord LongChunk [] #_"IChunk" #_"Indexed" #_"Counted")
+    (defrecord LongRange #_"ASeq" [] #_"Counted" #_"IChunkedSeq" #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"IReduce" #_"IReduceInit")
+)
+
+(java-ns cloiure.lang.MapEntry
+    (defrecord MapEntry #_"AMapEntry" [])
+)
+
+(java-ns cloiure.lang.MethodImplCache
+    (defrecord Entry [])
+    (defrecord MethodImplCache [])
+)
+
+(java-ns cloiure.lang.MultiFn
+    (defrecord MultiFn #_"AFn" [])
+)
+
+(java-ns cloiure.lang.Namespace
+    (§ soon defrecord Namespace [] #_"IReference" #_"IMeta")
+)
+
+(java-ns cloiure.lang.PersistentArrayMap
+    (defrecord MSeq #_"ASeq" [] #_"Counted")
+    (defrecord TransientArrayMap #_"ATransientMap" [])
+    (§ soon defrecord PersistentArrayMap #_"APersistentMap" [] #_"IObj" #_"IMeta" #_"IEditableCollection" #_"IKVReduce")
+)
+
+(java-ns cloiure.lang.PersistentHashMap
+    (defrecord TransientHashMap #_"ATransientMap" [])
+    (defrecord HSeq #_"ASeq" [])
+    (defrecord ArrayNode [] #_"INode")
+    (defrecord BitmapIndexedNode [] #_"INode")
+    (defrecord HashCollisionNode [] #_"INode")
+    (defrecord NodeSeq #_"ASeq" [])
+    (§ soon defrecord PersistentHashMap #_"APersistentMap" [] #_"IObj" #_"IMeta" #_"IEditableCollection" #_"IKVReduce")
+)
+
+(java-ns cloiure.lang.PersistentHashSet
+    (defrecord TransientHashSet #_"ATransientSet" [])
+    (§ soon defrecord PersistentHashSet #_"APersistentSet" [] #_"IObj" #_"IMeta" #_"IEditableCollection")
+)
+
+(java-ns cloiure.lang.PersistentList
+    (defrecord Primordial #_"RestFn" [])
+    (defrecord EmptyList [] #_"IObj" #_"IMeta" #_"IPersistentList" #_"Sequential" #_"IPersistentStack" #_"IPersistentCollection" #_"Seqable" #_"ISeq" #_"Counted" #_"IHashEq")
+    (§ soon defrecord PersistentList #_"ASeq" [] #_"IPersistentList" #_"Sequential" #_"IPersistentStack" #_"IPersistentCollection" #_"Seqable" #_"IReduce" #_"IReduceInit" #_"Counted")
+)
+
+(java-ns cloiure.lang.PersistentQueue
+    (defrecord QSeq #_"ASeq" [])
+    (defrecord PersistentQueue [] #_"IObj" #_"IMeta" #_"IPersistentList" #_"Sequential" #_"IPersistentStack" #_"IPersistentCollection" #_"Seqable" #_"Counted" #_"IHashEq")
+)
+
+(java-ns cloiure.lang.PersistentTreeMap
+    #_abstract
+    (defrecord TNode #_"AMapEntry" []) (§ soon 
+        #_abstract
+        (#_"TNode" left [#_"TNode" this])
+        #_abstract
+        (#_"TNode" right [#_"TNode" this])
+        #_abstract
+        (#_"TNode" addLeft [#_"TNode" this, #_"TNode" ins])
+        #_abstract
+        (#_"TNode" addRight [#_"TNode" this, #_"TNode" ins])
+        #_abstract
+        (#_"TNode" removeLeft [#_"TNode" this, #_"TNode" del])
+        #_abstract
+        (#_"TNode" removeRight [#_"TNode" this, #_"TNode" del])
+        #_abstract
+        (#_"TNode" blacken [#_"TNode" this])
+        #_abstract
+        (#_"TNode" redden [#_"TNode" this])
+        #_abstract
+        (#_"TNode" balanceLeft [#_"TNode" this, #_"TNode" parent])
+        #_abstract
+        (#_"TNode" balanceRight [#_"TNode" this, #_"TNode" parent])
+        #_abstract
+        (#_"TNode" replace [#_"TNode" this, #_"Object" key, #_"Object" val, #_"TNode" left, #_"TNode" right])
+    )
+    (defrecord Black #_"TNode" [])
+    (defrecord BlackVal #_"Black" [])
+    (defrecord BlackBranch #_"Black" [])
+    (defrecord BlackBranchVal #_"BlackBranch" [])
+    (defrecord Red #_"TNode" [])
+    (defrecord RedVal #_"Red" [])
+    (defrecord RedBranch #_"Red" [])
+    (defrecord RedBranchVal #_"RedBranch" [])
+    (defrecord TSeq #_"ASeq" [])
+    (defrecord PersistentTreeMap #_"APersistentMap" [] #_"IObj" #_"IMeta" #_"Reversible" #_"Sorted" #_"IKVReduce")
+)
+
+(java-ns cloiure.lang.PersistentTreeSet
+    (defrecord PersistentTreeSet #_"APersistentSet" [] #_"IObj" #_"IMeta" #_"Reversible" #_"Sorted")
+)
+
+(java-ns cloiure.lang.PersistentVector
+    (defrecord VNode [])
+    (defrecord ChunkedSeq #_"ASeq" [] #_"IChunkedSeq" #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted")
+    (defrecord TransientVector #_"AFn" [] #_"ITransientVector" #_"ITransientAssociative" #_"ITransientCollection" #_"ILookup" #_"Indexed" #_"Counted")
+    (§ soon defrecord PersistentVector #_"APersistentVector" [] #_"IObj" #_"IMeta" #_"IEditableCollection" #_"IReduce" #_"IReduceInit" #_"IKVReduce")
+)
+
+(java-ns cloiure.lang.Range
+    (defrecord Range #_"ASeq" [] #_"IChunkedSeq" #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"IReduce" #_"IReduceInit" #_"Counted")
+)
+
+(java-ns cloiure.lang.Reduced
+    (defrecord Reduced [] #_"IDeref")
+)
+
+(java-ns cloiure.lang.Repeat
+    (defrecord Repeat #_"ASeq" [] #_"IReduce" #_"IReduceInit")
+)
+
+(java-ns cloiure.lang.StringSeq
+    (defrecord StringSeq #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted")
+)
+
+(java-ns cloiure.lang.Tuple
+    #_stateless
+    (§ soon defrecord Tuple [])
+)
+
+(java-ns cloiure.lang.Var
+    (defrecord TBox [])
+    (defrecord Unbound #_"AFn" [])
+    (defrecord Frame [])
+    (§ soon defrecord Var [] #_"IReference" #_"IMeta" #_"IFn" #_"Callable" #_"Runnable" #_"IDeref")
+)
+
+(java-ns cloiure.lang.Volatile
+    (defrecord Volatile [] #_"IDeref")
+)
+
+(java-ns cloiure.lang.RT
+    #_stateless
+    (§ soon defrecord RT [])
+)
+
+(import
+    [clojure.lang AFn AFunction APersistentMap APersistentSet APersistentVector ArraySeq BigInt DynamicClassLoader PersistentList$EmptyList Keyword KeywordLookupSite LazySeq Namespace Numbers PersistentArrayMap PersistentHashMap PersistentHashSet PersistentList PersistentVector RestFn RT Symbol Tuple Util Var]
+)
+
+(defn seq?     [x] (§ soon satisfies? ISeq x)                  (instance? clojure.lang.ISeq x))
+(defn coll?    [x] (§ soon satisfies? IPersistentCollection x) (instance? clojure.lang.IPersistentCollection x))
+(defn list?    [x] (§ soon satisfies? IPersistentList x)       (instance? clojure.lang.IPersistentList x))
+(defn map?     [x] (§ soon satisfies? IPersistentMap x)        (instance? clojure.lang.IPersistentMap x))
+(defn set?     [x] (§ soon satisfies? IPersistentSet x)        (instance? clojure.lang.IPersistentSet x))
+(defn vector?  [x] (§ soon satisfies? IPersistentVector x)     (instance? clojure.lang.IPersistentVector x))
 (defn symbol?  [x] (instance? Symbol x))
 (defn keyword? [x] (instance? Keyword x))
 
 (defmacro throw! [^String s] `(throw (RuntimeException. ~s)))
 
-(defmacro def-
-    ([s  ] `(def ~(vary-meta s assoc :private true)   ))
-    ([s i] `(def ~(vary-meta s assoc :private true) ~i))
-)
+(defmacro def-      [x & s] `(def      ~(vary-meta x assoc :private true) ~@s))
+(defmacro defn-     [x & s] `(defn     ~(vary-meta x assoc :private true) ~@s))
+(defmacro defmacro- [x & s] `(defmacro ~(vary-meta x assoc :private true) ~@s))
 
 (defn identity   [x] x)
 (defn constantly [x] (fn [& _] x))
@@ -296,18 +1001,6 @@
         )
     )
 )
-
-(defmacro interface! [name [& sups] & sigs]
-    (let [tag- #(or (:tag (meta %)) Object)
-          sig- (fn [[name [this & args]]] [name (vec (map tag- args)) (tag- name) (map meta args)])
-          cname (with-meta (symbol (str (namespace-munge *ns*) "." name)) (meta name))]
-        `(do
-            (gen-interface :name ~cname :extends ~(vec (map resolve sups)) :methods ~(vec (map sig- sigs)))
-            (import ~cname)
-        )
-    )
-)
-(defmacro class! [& s] `(interface! ~@s))
 
 (defn- ßsym  [x] (condp instance? x                      Keyword (.sym x)                          Var (.sym x)  (:sym x) ))
 (defn- ßns   [x] (condp instance? x Symbol (namespace x) Keyword (namespace x)                     Var (.ns x)   (:ns x)  ))
@@ -849,13 +1542,13 @@
 
     (def #_"[Method]" Compiler'createTupleMethods
         (vector
-            (Method/getMethod "clojure.lang.IPersistentVector create()")
-            (Method/getMethod "clojure.lang.IPersistentVector create(Object)")
-            (Method/getMethod "clojure.lang.IPersistentVector create(Object, Object)")
-            (Method/getMethod "clojure.lang.IPersistentVector create(Object, Object, Object)")
-            (Method/getMethod "clojure.lang.IPersistentVector create(Object, Object, Object, Object)")
-            (Method/getMethod "clojure.lang.IPersistentVector create(Object, Object, Object, Object, Object)")
-            (Method/getMethod "clojure.lang.IPersistentVector create(Object, Object, Object, Object, Object, Object)")
+            (Method/getMethod "cloiure.core.IPersistentVector create()")
+            (Method/getMethod "cloiure.core.IPersistentVector create(Object)")
+            (Method/getMethod "cloiure.core.IPersistentVector create(Object, Object)")
+            (Method/getMethod "cloiure.core.IPersistentVector create(Object, Object, Object)")
+            (Method/getMethod "cloiure.core.IPersistentVector create(Object, Object, Object, Object)")
+            (Method/getMethod "cloiure.core.IPersistentVector create(Object, Object, Object, Object, Object)")
+            (Method/getMethod "cloiure.core.IPersistentVector create(Object, Object, Object, Object, Object, Object)")
         )
     )
 
@@ -1183,6 +1876,9 @@
         nil
     )
 
+    (declare Namespace''intern)
+    (declare Namespace''findInternedVar)
+
     (defn #_"Var" Compiler'lookupVar
         ([#_"Symbol" sym, #_"boolean" internNew] (Compiler'lookupVar sym, internNew, true))
         ([#_"Symbol" sym, #_"boolean" internNew, #_"boolean" registerMacro]
@@ -1193,8 +1889,8 @@
                             (when-let [#_"Namespace" ns (Compiler'namespaceFor sym)]
                                 (let [#_"Symbol" name (symbol (ßname sym))]
                                     (if (and internNew (= ns *ns*))
-                                        (.intern ns, name)
-                                        (.findInternedVar ns, name)
+                                        (Namespace''intern ns, name)
+                                        (Namespace''findInternedVar ns, name)
                                     )
                                 )
                             )
@@ -1205,7 +1901,7 @@
                                 (cond
                                     (nil? o) ;; introduce a new var in the current ns
                                         (when internNew
-                                            (.intern *ns*, (symbol (ßname sym)))
+                                            (Namespace''intern *ns*, (symbol (ßname sym)))
                                         )
                                     (var? o)
                                         o
@@ -1245,7 +1941,7 @@
                     (when (or (= (ßns v) *ns*) (not (get (meta v) :private))) => (throw! (str "var: " v " is private"))
                         (when-let [#_"IFn" f (get (meta v) :inline)]
                             (let [#_"IFn" arityPred (get (meta v) :inline-arities)]
-                                (when (or (nil? arityPred) (.invoke arityPred, arity))
+                                (when (or (nil? arityPred) (IFn'''invoke arityPred, arity))
                                     f
                                 )
                             )
@@ -1270,7 +1966,7 @@
     )
 
     (defn #_"Object" Compiler'preserveTag [#_"ISeq" src, #_"Object" dst]
-        (let-when [#_"Symbol" tag (Compiler'tagOf src)] (and (some? tag) (instance? IObj dst)) => dst
+        (let-when [#_"Symbol" tag (Compiler'tagOf src)] (and (some? tag) (satisfies? IObj dst)) => dst
             (vary-meta dst assoc :tag tag)
         )
     )
@@ -1297,7 +1993,7 @@
         (cond
             (some? (ßns sym))
                 (let-when [#_"Namespace" ns (Compiler'namespaceFor n, sym)] (some? ns)          => (throw! (str "no such namespace: " (ßns sym)))
-                    (let-when [#_"Var" v (.findInternedVar ns, (symbol (ßname sym)))] (some? v) => (throw! (str "no such var: " sym))
+                    (let-when [#_"Var" v (Namespace''findInternedVar ns, (symbol (ßname sym)))] (some? v) => (throw! (str "no such var: " sym))
                         (when (or (= (ßns v) *ns*) (not (get (meta v) :private)) allowPrivate)  => (throw! (str "var: " sym " is private"))
                             v
                         )
@@ -1321,7 +2017,7 @@
         (cond
             (some? (ßns sym))
                 (when-let [#_"Namespace" ns (Compiler'namespaceFor n, sym)]
-                    (when-let [#_"Var" v (.findInternedVar ns, (symbol (ßname sym)))]
+                    (when-let [#_"Var" v (Namespace''findInternedVar ns, (symbol (ßname sym)))]
                         v
                     )
                 )
@@ -1403,7 +2099,6 @@
 (class-ns MonitorEnterParser
     (defn #_"IParser" MonitorEnterParser'new []
         (reify IParser
-            #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (MonitorEnterExpr'new (Compiler'analyze :Context'EXPRESSION, (second form)))
             )
@@ -1441,7 +2136,6 @@
 (class-ns MonitorExitParser
     (defn #_"IParser" MonitorExitParser'new []
         (reify IParser
-            #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (MonitorExitExpr'new (Compiler'analyze :Context'EXPRESSION, (second form)))
             )
@@ -1478,7 +2172,6 @@
 (class-ns AssignParser
     (defn #_"IParser" AssignParser'new []
         (reify IParser
-            #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (when (= (count form) 3) => (throw! "malformed assignment, expecting (set! target val)")
                     (let [#_"Expr" target (Compiler'analyze :Context'EXPRESSION, (second form))]
@@ -1529,7 +2222,6 @@
 (class-ns ImportParser
     (defn #_"IParser" ImportParser'new []
         (reify IParser
-            #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (ImportExpr'new (second form))
             )
@@ -1552,7 +2244,7 @@
         )
 
         (#_"void" Expr'''emit [#_"EmptyExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
-            (condp instance? (:coll this)
+            (condp satisfies? (:coll this)
                 IPersistentList   (.getStatic gen, (Type/getType PersistentList),     "EMPTY", (Type/getType PersistentList$EmptyList))
                 IPersistentVector (.getStatic gen, (Type/getType PersistentVector),   "EMPTY", (Type/getType PersistentVector))
                 IPersistentMap    (.getStatic gen, (Type/getType PersistentArrayMap), "EMPTY", (Type/getType PersistentArrayMap))
@@ -1566,11 +2258,11 @@
         )
 
         (#_"Class" Expr'''getClass [#_"EmptyExpr" this]
-            (condp instance? (:coll this)
-                IPersistentList   IPersistentList
-                IPersistentVector IPersistentVector
-                IPersistentMap    IPersistentMap
-                IPersistentSet    IPersistentSet
+            (condp satisfies? (:coll this)
+                IPersistentList   cloiure.core.IPersistentList
+                IPersistentVector cloiure.core.IPersistentVector
+                IPersistentMap    cloiure.core.IPersistentMap
+                IPersistentSet    cloiure.core.IPersistentSet
                                   (throw! "unknown collection type")
             )
         )
@@ -1752,7 +2444,6 @@
 (class-ns ConstantParser
     (defn #_"IParser" ConstantParser'new []
         (reify IParser
-            #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (let [#_"int" n (dec (count form))]
                     (when (= n 1) => (throw! (str "wrong number of arguments passed to quote: " n))
@@ -2491,7 +3182,6 @@
             ;; (. x 0-ary-method)
             ;; (. x methodname-sym args+)
             ;; (. x (methodname-sym args?))
-            #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (when-not (< (count form) 3) => (throw! "malformed member expression, expecting (. target member ...)")
                     ;; determine static or instance
@@ -2653,7 +3343,6 @@
 (class-ns TheVarParser
     (defn #_"IParser" TheVarParser'new []
         (reify IParser
-            #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (let [#_"Symbol" sym (second form) #_"Var" v (Compiler'lookupVar sym, false)]
                     (when (some? v) => (throw! (str "unable to resolve var: " sym " in this context"))
@@ -2717,7 +3406,6 @@
 (class-ns BodyParser
     (defn #_"IParser" BodyParser'new []
         (reify IParser
-            #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (let [#_"ISeq" s form s (if (= (first s) 'do) (next s) s)
                       #_"PersistentVector" v
@@ -2766,7 +3454,7 @@
 
         (#_"void" Expr'''emit [#_"TryExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
             (let [#_"Label" startTry (.newLabel gen) #_"Label" endTry (.newLabel gen) #_"Label" end (.newLabel gen) #_"Label" ret (.newLabel gen) #_"Label" finallyLabel (.newLabel gen)
-                #_"int" n (count (:catchExprs this)) #_"Label[]" labels (make-array Label n) #_"Label[]" endLabels (make-array Label n)]
+                  #_"int" n (count (:catchExprs this)) #_"Label[]" labels (make-array Label n) #_"Label[]" endLabels (make-array Label n)]
                 (dotimes [#_"int" i n]
                     (aset labels i (.newLabel gen))
                     (aset endLabels i (.newLabel gen))
@@ -2848,7 +3536,6 @@
             ;; (try try-expr* catch-expr* finally-expr?)
             ;; catch-expr: (catch class sym expr*)
             ;; finally-expr: (finally expr*)
-            #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (when (= context :Context'RETURN) => (Compiler'analyze context, (list (list Compiler'FNONCE [] form)))
                     (let [[#_"Expr" bodyExpr #_"PersistentVector" catches #_"Expr" finallyExpr #_"PersistentVector" body]
@@ -2936,7 +3623,6 @@
 (class-ns ThrowParser
     (defn #_"IParser" ThrowParser'new []
         (reify IParser
-            #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (cond
                     (= context :Context'EVAL) (Compiler'analyze context, (list (list Compiler'FNONCE [] form)))
@@ -3026,7 +3712,6 @@
     (defn #_"IParser" NewParser'new []
         (reify IParser
             ;; (new Classname args...)
-            #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (let [#_"int" line *line*]
                     (when (< 1 (count form)) => (throw! "wrong number of arguments, expecting: (new Classname args...)")
@@ -3066,10 +3751,10 @@
 
         (#_"void" Expr'''emit [#_"MetaExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
             (Expr'''emit (:expr this), :Context'EXPRESSION, objx, gen)
-            (.checkCast gen, (Type/getType IObj))
+            (.checkCast gen, (Type/getType cloiure.core.IObj))
             (Expr'''emit (:meta this), :Context'EXPRESSION, objx, gen)
-            (.checkCast gen, (Type/getType IPersistentMap))
-            (.invokeInterface gen, (Type/getType IObj), (Method/getMethod "clojure.lang.IObj withMeta(clojure.lang.IPersistentMap)"))
+            (.checkCast gen, (Type/getType cloiure.core.IPersistentMap))
+            (.invokeInterface gen, (Type/getType cloiure.core.IObj), (Method/getMethod "cloiure.core.IObj withMeta(cloiure.core.IPersistentMap)"))
             (when (= context :Context'STATEMENT)
                 (.pop gen)
             )
@@ -3188,7 +3873,6 @@
     (defn #_"IParser" IfParser'new []
         (reify IParser
             ;; (if test then) or (if test then else)
-            #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (cond
                     (< 4 (count form)) (throw! "too many arguments to if")
@@ -3224,7 +3908,7 @@
 
         (#_"void" Expr'''emit [#_"ListExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
             (MethodExpr'emitArgsAsArray (:args this), objx, gen)
-            (.invokeStatic gen, (Type/getType RT), (Method/getMethod "clojure.lang.ISeq arrayToSeq(Object[])"))
+            (.invokeStatic gen, (Type/getType RT), (Method/getMethod "cloiure.core.ISeq arrayToSeq(Object[])"))
             (when (= context :Context'STATEMENT)
                 (.pop gen)
             )
@@ -3232,7 +3916,7 @@
         )
 
         (#_"Class" Expr'''getClass [#_"ListExpr" this]
-            IPersistentList
+            cloiure.core.IPersistentList
         )
     )
 )
@@ -3260,7 +3944,7 @@
             (let [[#_"boolean" allKeysConstant #_"boolean" allConstantKeysUnique]
                     (loop-when [constant? true unique? true #_"IPersistentSet" keys #{} #_"int" i 0] (< i (count (:keyvals this))) => [constant? unique?]
                         (let [#_"Expr" k (nth (:keyvals this) i)
-                            [constant? unique? keys]
+                              [constant? unique? keys]
                                 (when (satisfies? Literal k) => [false unique? keys]
                                     (let-when-not [#_"Object" v (Expr'''eval k)] (contains? keys v) => [constant? false keys]
                                         [constant? unique? (conj keys v)]
@@ -3271,8 +3955,8 @@
                     )]
                 (MethodExpr'emitArgsAsArray (:keyvals this), objx, gen)
                 (if (or (and allKeysConstant allConstantKeysUnique) (<= (count (:keyvals this)) 2))
-                    (.invokeStatic gen, (Type/getType RT), (Method/getMethod "clojure.lang.IPersistentMap mapUniqueKeys(Object[])"))
-                    (.invokeStatic gen, (Type/getType RT), (Method/getMethod "clojure.lang.IPersistentMap map(Object[])"))
+                    (.invokeStatic gen, (Type/getType RT), (Method/getMethod "cloiure.core.IPersistentMap mapUniqueKeys(Object[])"))
+                    (.invokeStatic gen, (Type/getType RT), (Method/getMethod "cloiure.core.IPersistentMap map(Object[])"))
                 )
                 (when (= context :Context'STATEMENT)
                     (.pop gen)
@@ -3282,7 +3966,7 @@
         )
 
         (#_"Class" Expr'''getClass [#_"MapExpr" this]
-            IPersistentMap
+            cloiure.core.IPersistentMap
         )
     )
 
@@ -3305,7 +3989,7 @@
                 )
               #_"Expr" e (MapExpr'new keyvals)]
             (cond
-                (and (instance? IObj form) (some? (meta form)))
+                (and (satisfies? IObj form) (some? (meta form)))
                     (MetaExpr'new e, (MapExpr'parse c, (meta form)))
                 keysConstant
                     (when allConstantKeysUnique => (throw! "duplicate constant keys in map")
@@ -3345,7 +4029,7 @@
 
         (#_"void" Expr'''emit [#_"SetExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
             (MethodExpr'emitArgsAsArray (:keys this), objx, gen)
-            (.invokeStatic gen, (Type/getType RT), (Method/getMethod "clojure.lang.IPersistentSet set(Object[])"))
+            (.invokeStatic gen, (Type/getType RT), (Method/getMethod "cloiure.core.IPersistentSet set(Object[])"))
             (when (= context :Context'STATEMENT)
                 (.pop gen)
             )
@@ -3353,7 +4037,7 @@
         )
 
         (#_"Class" Expr'''getClass [#_"SetExpr" this]
-            IPersistentSet
+            cloiure.core.IPersistentSet
         )
     )
 
@@ -3365,7 +4049,7 @@
                     )
                 )]
             (cond
-                (and (instance? IObj form) (some? (meta form)))
+                (and (satisfies? IObj form) (some? (meta form)))
                     (MetaExpr'new (SetExpr'new keys), (MapExpr'parse (if (= context :Context'EVAL) context :Context'EXPRESSION), (meta form)))
                 constant?
                     (loop-when-recur [#_"IPersistentSet" s #{} #_"int" i 0]
@@ -3410,7 +4094,7 @@
                 )
                 (do
                     (MethodExpr'emitArgsAsArray (:args this), objx, gen)
-                    (.invokeStatic gen, (Type/getType RT), (Method/getMethod "clojure.lang.IPersistentVector vector(Object[])"))
+                    (.invokeStatic gen, (Type/getType RT), (Method/getMethod "cloiure.core.IPersistentVector vector(Object[])"))
                 )
             )
 
@@ -3421,7 +4105,7 @@
         )
 
         (#_"Class" Expr'''getClass [#_"VectorExpr" this]
-            IPersistentVector
+            cloiure.core.IPersistentVector
         )
     )
 
@@ -3433,7 +4117,7 @@
                     )
                 )]
             (cond
-                (and (instance? IObj form) (some? (meta form)))
+                (and (satisfies? IObj form) (some? (meta form)))
                     (MetaExpr'new (VectorExpr'new args), (MapExpr'parse (if (= context :Context'EVAL) context :Context'EXPRESSION), (meta form)))
                 constant?
                     (loop-when-recur [#_"IPersistentVector" v [] #_"int" i 0]
@@ -3464,18 +4148,18 @@
 
     (extend-type KeywordInvokeExpr Expr
         (#_"Object" Expr'''eval [#_"KeywordInvokeExpr" this]
-            (.invoke (:k (:kw this)), (Expr'''eval (:target this)))
+            (IFn'''invoke (:k (:kw this)), (Expr'''eval (:target this)))
         )
 
         (#_"void" Expr'''emit [#_"KeywordInvokeExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
             (let [#_"Label" endLabel (.newLabel gen) #_"Label" faultLabel (.newLabel gen)]
                 (.visitLineNumber gen, (:line this), (.mark gen))
-                (.getStatic gen, (:objType objx), (Compiler'thunkNameStatic (:siteIndex this)), (Type/getType ILookupThunk))
+                (.getStatic gen, (:objType objx), (Compiler'thunkNameStatic (:siteIndex this)), (Type/getType cloiure.core.ILookupThunk))
                 (.dup gen) ;; thunk, thunk
                 (Expr'''emit (:target this), :Context'EXPRESSION, objx, gen) ;; thunk, thunk, target
                 (.visitLineNumber gen, (:line this), (.mark gen))
                 (.dupX2 gen) ;; target, thunk, thunk, target
-                (.invokeInterface gen, (Type/getType ILookupThunk), (Method/getMethod "Object get(Object)")) ;; target, thunk, result
+                (.invokeInterface gen, (Type/getType cloiure.core.ILookupThunk), (Method/getMethod "Object get(Object)")) ;; target, thunk, result
                 (.dupX2 gen) ;; result, target, thunk, result
                 (.visitJumpInsn gen, Opcodes/IF_ACMPEQ, faultLabel) ;; result, target
                 (.pop gen) ;; result
@@ -3487,11 +4171,11 @@
                 (.dup gen) ;; target, target
                 (.getStatic gen, (:objType objx), (Compiler'siteNameStatic (:siteIndex this)), (Type/getType KeywordLookupSite)) ;; target, target, site
                 (.swap gen) ;; target, site, target
-                (.invokeInterface gen, (Type/getType ILookupSite), (Method/getMethod "clojure.lang.ILookupThunk fault(Object)")) ;; target, new-thunk
+                (.invokeInterface gen, (Type/getType cloiure.core.ILookupSite), (Method/getMethod "cloiure.core.ILookupThunk fault(Object)")) ;; target, new-thunk
                 (.dup gen) ;; target, new-thunk, new-thunk
-                (.putStatic gen, (:objType objx), (Compiler'thunkNameStatic (:siteIndex this)), (Type/getType ILookupThunk)) ;; target, new-thunk
+                (.putStatic gen, (:objType objx), (Compiler'thunkNameStatic (:siteIndex this)), (Type/getType cloiure.core.ILookupThunk)) ;; target, new-thunk
                 (.swap gen) ;; new-thunk, target
-                (.invokeInterface gen, (Type/getType ILookupThunk), (Method/getMethod "Object get(Object)")) ;; result
+                (.invokeInterface gen, (Type/getType cloiure.core.ILookupThunk), (Method/getMethod "Object get(Object)")) ;; result
 
                 (.mark gen, endLabel)
                 (when (= context :Context'STATEMENT)
@@ -3614,7 +4298,7 @@
             (IopMethod''emitClearThis *method*, gen)
         )
 
-        (.invokeInterface gen, (Type/getType IFn), (Method. "invoke", (Type/getType Object), (aget Compiler'ARG_TYPES (Math/min (inc Compiler'MAX_POSITIONAL_ARITY), (count (:args this))))))
+        (.invokeInterface gen, (Type/getType cloiure.core.IFn), (Method. "invoke", (Type/getType Object), (aget Compiler'ARG_TYPES (Math/min (inc Compiler'MAX_POSITIONAL_ARITY), (count (:args this))))))
         nil
     )
 
@@ -3660,8 +4344,8 @@
     (extend-type InvokeExpr Expr
         (#_"Object" Expr'''eval [#_"InvokeExpr" this]
             (let [#_"IFn" fn (Expr'''eval (:fexpr this))
-                #_"PersistentVector" v (loop-when-recur [v [] #_"int" i 0] (< i (count (:args this))) [(conj v (Expr'''eval (nth (:args this) i))) (inc i)] => v)]
-                (.applyTo fn, (seq v))
+                  #_"PersistentVector" v (loop-when-recur [v [] #_"int" i 0] (< i (count (:args this))) [(conj v (Expr'''eval (nth (:args this) i))) (inc i)] => v)]
+                (IFn'''applyTo fn, (seq v))
             )
         )
 
@@ -3674,7 +4358,7 @@
                 (do
                     (Expr'''emit (:fexpr this), :Context'EXPRESSION, objx, gen)
                     (.visitLineNumber gen, (:line this), (.mark gen))
-                    (.checkCast gen, (Type/getType IFn))
+                    (.checkCast gen, (Type/getType cloiure.core.IFn))
                     (InvokeExpr''emitArgsAndCall this, 0, context, objx, gen)
                 )
             )
@@ -3903,7 +4587,7 @@
 
         (#_"void" IopMethod'''emit [#_"FnMethod" this, #_"IopObject" fn, #_"ClassVisitor" cv]
             (let [#_"Method" m (Method. (IopMethod'''getMethodName this), (IopMethod'''getReturnType this), (IopMethod'''getArgTypes this))
-                #_"GeneratorAdapter" gen (GeneratorAdapter. Opcodes/ACC_PUBLIC, m, nil, Compiler'EXCEPTION_TYPES, cv)]
+                  #_"GeneratorAdapter" gen (GeneratorAdapter. Opcodes/ACC_PUBLIC, m, nil, Compiler'EXCEPTION_TYPES, cv)]
                 (.visitCode gen)
                 (let [#_"Label" loopLabel (.mark gen)]
                     (.visitLineNumber gen, (:line this), loopLabel)
@@ -3940,7 +4624,7 @@
                       *loop-locals*       nil
                       *in-return-context* true]
                 (let [retTag (if (string? retTag) (symbol retTag) retTag)
-                      retTag (when (and (symbol? retTag) (= (.getName retTag) "long")) retTag)
+                      retTag (when (and (symbol? retTag) (= (Named'''getName retTag) "long")) retTag)
                       #_"Class" retClass
                         (let-when [retClass (Interop'tagClass (or (Compiler'tagOf parms) retTag))] (.isPrimitive retClass) => Object
                             (when-not (= retClass Long/TYPE) => retClass
@@ -3972,12 +4656,12 @@
                                                     (when (and rest? (some? (Compiler'tagOf p)))
                                                         (throw! "& arg cannot have type hint")
                                                     )
-                                                    (let [c (if rest? ISeq c)
+                                                    (let [c (if rest? cloiure.core.ISeq c)
                                                           fm (-> fm (update :argTypes conj (Type/getType c)) (update :argClasses conj c))
                                                           #_"LocalBinding" lb
                                                             (if (.isPrimitive c)
                                                                 (Compiler'registerLocal p, nil, (MethodParamExpr'new c), true)
-                                                                (Compiler'registerLocal p, (if rest? 'clojure.lang.ISeq (Compiler'tagOf p)), nil, true)
+                                                                (Compiler'registerLocal p, (if rest? 'cloiure.core.ISeq (Compiler'tagOf p)), nil, true)
                                                             )
                                                           fm (update fm :argLocals conj lb)]
                                                         (if-not rest?
@@ -4054,7 +4738,7 @@
                 (when (and (some? c) (Modifier/isPublic (.getModifiers c)))
                     ;; can't emit derived fn types due to visibility
                     (cond
-                        (.isAssignableFrom LazySeq, c) (Type/getType ISeq)
+                        (.isAssignableFrom LazySeq, c) (Type/getType cloiure.core.ISeq)
                         (= c Keyword)                  (Type/getType Keyword)
                         (.isAssignableFrom RestFn, c)  (Type/getType RestFn)
                         (.isAssignableFrom AFn, c)     (Type/getType AFn)
@@ -4069,7 +4753,7 @@
 
     #_method
     (defn #_"Type[]" IopObject''ctorTypes [#_"IopObject" this]
-        (let [#_"IPersistentVector" v (if (IopObject'''supportsMeta this) [(Type/getType IPersistentMap)] [])
+        (let [#_"IPersistentVector" v (if (IopObject'''supportsMeta this) [(Type/getType cloiure.core.IPersistentMap)] [])
               v (loop-when [v v #_"ISeq" s (vals (get *closes* (:uid this)))] (some? s) => v
                     (let [#_"Class" c (LocalBinding''getPrimitiveType (first s))]
                         (recur (conj v (if (some? c) (Type/getType c) (Type/getType Object))) (next s))
@@ -4103,7 +4787,7 @@
                 (.invokeConstructor clinitgen, (Type/getType KeywordLookupSite), (Method/getMethod "void <init>(clojure.lang.Keyword)"))
                 (.dup clinitgen)
                 (.putStatic clinitgen, (:objType this), (Compiler'siteNameStatic i), (Type/getType KeywordLookupSite))
-                (.putStatic clinitgen, (:objType this), (Compiler'thunkNameStatic i), (Type/getType ILookupThunk))
+                (.putStatic clinitgen, (:objType this), (Compiler'thunkNameStatic i), (Type/getType cloiure.core.ILookupThunk))
             )
         )
         nil
@@ -4357,7 +5041,7 @@
                         (.invokeStatic gen, (Type/getType RT), (Method/getMethod "clojure.lang.Var var(String, String)"))
                         true
                     )
-                    (instance? IType value)
+                    (satisfies? IType value)
                     (let [#_"Method" ctor (Method. "<init>", (Type/getConstructorDescriptor (aget (.getConstructors (class value)) 0)))]
                         (.newInstance gen, (Type/getType (class value)))
                         (.dup gen)
@@ -4384,7 +5068,7 @@
                                 )
                             )]
                         (IopObject''emitObjectArray this, (to-array v), gen)
-                        (.invokeStatic gen, (Type/getType RT), (Method/getMethod "clojure.lang.IPersistentMap map(Object[])"))
+                        (.invokeStatic gen, (Type/getType RT), (Method/getMethod "cloiure.core.IPersistentMap map(Object[])"))
                         true
                     )
                     (vector? value)
@@ -4398,7 +5082,7 @@
                             )
                             (do
                                 (IopObject''emitObjectArray this, (to-array args), gen)
-                                (.invokeStatic gen, (Type/getType RT), (Method/getMethod "clojure.lang.IPersistentVector vector(Object[])"))
+                                (.invokeStatic gen, (Type/getType RT), (Method/getMethod "cloiure.core.IPersistentVector vector(Object[])"))
                             )
                         )
                         true
@@ -4419,7 +5103,7 @@
                     (or (seq? value) (list? value))
                     (let [#_"ISeq" vs (seq value)]
                         (IopObject''emitObjectArray this, (RT/seqToArray vs), gen)
-                        (.invokeStatic gen, (Type/getType PersistentList), (Method/getMethod "clojure.lang.IPersistentList create(Object[])"))
+                        (.invokeStatic gen, (Type/getType PersistentList), (Method/getMethod "cloiure.core.IPersistentList create(Object[])"))
                         true
                     )
                     (instance? Pattern value)
@@ -4448,11 +5132,11 @@
                     )
                 )]
             (when partial?
-                (when (and (instance? IObj value) (pos? (count (meta value))))
-                    (.checkCast gen, (Type/getType IObj))
+                (when (and (satisfies? IObj value) (pos? (count (meta value))))
+                    (.checkCast gen, (Type/getType cloiure.core.IObj))
                     (IopObject''emitValue this, (meta value), gen)
-                    (.checkCast gen, (Type/getType IPersistentMap))
-                    (.invokeInterface gen, (Type/getType IObj), (Method/getMethod "clojure.lang.IObj withMeta(clojure.lang.IPersistentMap)"))
+                    (.checkCast gen, (Type/getType cloiure.core.IPersistentMap))
+                    (.invokeInterface gen, (Type/getType cloiure.core.IObj), (Method/getMethod "cloiure.core.IObj withMeta(cloiure.core.IPersistentMap)"))
                 )
             )
         )
@@ -4469,7 +5153,7 @@
             (let [#_"ClassWriter" cw (ClassWriter. ClassWriter/COMPUTE_MAXS) #_"ClassVisitor" cv cw]
                 (.visit cv, Opcodes/V1_5, (| Opcodes/ACC_PUBLIC Opcodes/ACC_SUPER Opcodes/ACC_FINAL), (:internalName this), nil, superName, interfaceNames)
                 (when (IopObject'''supportsMeta this)
-                    (.visitField cv, Opcodes/ACC_FINAL, "__meta", (.getDescriptor (Type/getType IPersistentMap)), nil, nil)
+                    (.visitField cv, Opcodes/ACC_FINAL, "__meta", (.getDescriptor (Type/getType cloiure.core.IPersistentMap)), nil, nil)
                 )
                 ;; instance fields for closed-overs
                 (loop-when-recur [#_"ISeq" s (vals (get *closes* (:uid this)))] (some? s) [(next s)]
@@ -4518,8 +5202,8 @@
 
                     (when (IopObject'''supportsMeta this)
                         (.loadThis ctorgen)
-                        (.visitVarInsn ctorgen, (.getOpcode (Type/getType IPersistentMap), Opcodes/ILOAD), 1)
-                        (.putField ctorgen, (:objType this), "__meta", (Type/getType IPersistentMap))
+                        (.visitVarInsn ctorgen, (.getOpcode (Type/getType cloiure.core.IPersistentMap), Opcodes/ILOAD), 1)
+                        (.putField ctorgen, (:objType this), "__meta", (Type/getType cloiure.core.IPersistentMap))
                     )
 
                     (let [[this #_"int" a]
@@ -4615,17 +5299,17 @@
                                 )
 
                                 ;; meta()
-                                (let [#_"Method" meth (Method/getMethod "clojure.lang.IPersistentMap meta()")
+                                (let [#_"Method" meth (Method/getMethod "cloiure.core.IPersistentMap meta()")
                                       #_"GeneratorAdapter" gen (GeneratorAdapter. Opcodes/ACC_PUBLIC, meth, nil, nil, cv)]
                                     (.visitCode gen)
                                     (.loadThis gen)
-                                    (.getField gen, (:objType this), "__meta", (Type/getType IPersistentMap))
+                                    (.getField gen, (:objType this), "__meta", (Type/getType cloiure.core.IPersistentMap))
                                     (.returnValue gen)
                                     (.endMethod gen)
                                 )
 
                                 ;; withMeta()
-                                (let [#_"Method" meth (Method/getMethod "clojure.lang.IObj withMeta(clojure.lang.IPersistentMap)")
+                                (let [#_"Method" meth (Method/getMethod "cloiure.core.IObj withMeta(cloiure.core.IPersistentMap)")
                                       #_"GeneratorAdapter" gen (GeneratorAdapter. Opcodes/ACC_PUBLIC, meth, nil, nil, cv)]
                                     (.visitCode gen)
                                     (.newInstance gen, (:objType this))
@@ -4659,7 +5343,7 @@
                         ;; static fields for lookup sites
                         (dotimes [#_"int" i (count (:keywordCallsites this))]
                             (.visitField cv, (| Opcodes/ACC_FINAL Opcodes/ACC_STATIC), (Compiler'siteNameStatic i), (.getDescriptor (Type/getType KeywordLookupSite)), nil, nil)
-                            (.visitField cv, Opcodes/ACC_STATIC, (Compiler'thunkNameStatic i), (.getDescriptor (Type/getType ILookupThunk)), nil, nil)
+                            (.visitField cv, Opcodes/ACC_STATIC, (Compiler'thunkNameStatic i), (.getDescriptor (Type/getType cloiure.core.ILookupThunk)), nil, nil)
                         )
 
                         ;; static init for constants, keywords and vars
@@ -4919,8 +5603,8 @@
             (when (some? (:meta this))
                 (.dup gen)
                 (Expr'''emit (:meta this), :Context'EXPRESSION, objx, gen)
-                (.checkCast gen, (Type/getType IPersistentMap))
-                (.invokeVirtual gen, (Type/getType Var), (Method/getMethod "void setMeta(clojure.lang.IPersistentMap)"))
+                (.checkCast gen, (Type/getType cloiure.core.IPersistentMap))
+                (.invokeVirtual gen, (Type/getType Var), (Method/getMethod "void setMeta(cloiure.core.IPersistentMap)"))
             )
             (when (:initProvided this)
                 (.dup gen)
@@ -4946,7 +5630,6 @@
     (defn #_"IParser" DefParser'new []
         (reify IParser
             ;; (def x) or (def x initexpr)
-            #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (cond
                     (< 3 (count form))            (throw! "too many arguments to def")
@@ -4958,7 +5641,7 @@
                         (let [[v #_"boolean" shadowsCoreMapping]
                                 (when-not (= (ßns v) *ns*) => [v false]
                                     (when (nil? (ßns sym)) => (throw! "can't create defs outside of current ns")
-                                        (let [v (.intern *ns*, sym)]
+                                        (let [v (Namespace''intern *ns*, sym)]
                                             (Compiler'registerVar v)
                                             [v true]
                                         )
@@ -5035,8 +5718,8 @@
                     (let [#_"Label" end (.mark gen)]
                         (loop-when-recur [#_"ISeq" bis (seq (:bindingInits this))] (some? bis) [(next bis)]
                             (let [#_"BindingInit" bi (first bis)
-                                #_"String" lname (:name (:binding bi)) lname (if (.endsWith lname, "__auto__") (str lname (RT/nextID)) lname)
-                                #_"Class" primc (Compiler'maybePrimitiveType (:init bi))]
+                                  #_"String" lname (:name (:binding bi)) lname (if (.endsWith lname, "__auto__") (str lname (RT/nextID)) lname)
+                                  #_"Class" primc (Compiler'maybePrimitiveType (:init bi))]
                                 (.visitLocalVariable gen, lname, (if (some? primc) (Type/getDescriptor primc) "Ljava/lang/Object;"), nil, loopLabel, end, (:idx (:binding bi)))
                             )
                         )
@@ -5056,7 +5739,6 @@
     (defn #_"IParser" LetFnParser'new []
         (reify IParser
             ;; (letfns* [var (fn [args] body) ...] body...)
-            #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (when (vector? (second form)) => (throw! "bad binding form, expected vector")
                     (let [#_"IPersistentVector" bindings (second form)]
@@ -5179,7 +5861,6 @@
     (defn #_"IParser" LetParser'new []
         (reify IParser
             ;; (let [var val var2 val2 ...] body...)
-            #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (let [#_"boolean" isLoop (= (first form) 'loop*)]
                     (when (vector? (second form)) => (throw! "bad binding form, expected vector")
@@ -5374,7 +6055,6 @@
 (class-ns RecurParser
     (defn #_"IParser" RecurParser'new []
         (reify IParser
-            #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (when-not (and (= context :Context'RETURN) (some? *loop-locals*))
                     (throw! "can only recur from tail position")
@@ -5452,7 +6132,7 @@
 
         (#_"void" IopMethod'''emit [#_"NewInstanceMethod" this, #_"IopObject" obj, #_"ClassVisitor" cv]
             (let [#_"Method" m (Method. (IopMethod'''getMethodName this), (IopMethod'''getReturnType this), (IopMethod'''getArgTypes this))
-                #_"Type[]" exTypes
+                  #_"Type[]" exTypes
                     (let-when [#_"int" n (alength (:exClasses this))] (pos? n)
                         (let [exTypes (make-array Type n)]
                             (dotimes [#_"int" i n]
@@ -5461,7 +6141,7 @@
                             exTypes
                         )
                     )
-                #_"GeneratorAdapter" gen (GeneratorAdapter. Opcodes/ACC_PUBLIC, m, nil, exTypes, cv)]
+                  #_"GeneratorAdapter" gen (GeneratorAdapter. Opcodes/ACC_PUBLIC, m, nil, exTypes, cv)]
                 (.visitCode gen)
                 (let [#_"Label" loopLabel (.mark gen)]
                     (.visitLineNumber gen, (:line this), loopLabel)
@@ -5722,7 +6402,7 @@
         #_memoize!
         (#_"Class" Expr'''getClass [#_"NewInstanceExpr" this]
             (or (:compiledClass this)
-                (if (some? (:tag this)) (Interop'tagToClass (:tag this)) IFn)
+                (if (some? (:tag this)) (Interop'tagToClass (:tag this)) cloiure.core.IFn)
             )
         )
     )
@@ -5735,8 +6415,8 @@
         (#_"void" IopObject'''emitStatics [#_"NewInstanceExpr" this, #_"ClassVisitor" cv]
             (when (IopObject''isDeftype this)
                 ;; getBasis()
-                (let [#_"Method" meth (Method/getMethod "clojure.lang.IPersistentVector getBasis()")
-                    #_"GeneratorAdapter" gen (GeneratorAdapter. (| Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC), meth, nil, nil, cv)]
+                (let [#_"Method" meth (Method/getMethod "cloiure.core.IPersistentVector getBasis()")
+                      #_"GeneratorAdapter" gen (GeneratorAdapter. (| Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC), meth, nil, nil, cv)]
                     (IopObject''emitValue this, (:hintedFields this), gen)
                     (.returnValue gen)
                     (.endMethod gen)
@@ -5744,17 +6424,17 @@
                     (let-when [#_"int" n (count (:hintedFields this))] (< n (count (:fields this)))
                         ;; create(IPersistentMap)
                         (let [#_"String" className (.replace (:name this), \., \/)
-                            #_"MethodVisitor" mv (.visitMethod cv, (| Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC), "create", (str "(Lclojure/lang/IPersistentMap;)L" className ";"), nil, nil)]
+                              #_"MethodVisitor" mv (.visitMethod cv, (| Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC), "create", (str "(Lcloiure/core/IPersistentMap;)L" className ";"), nil, nil)]
                             (.visitCode mv)
 
                             (loop-when-recur [#_"ISeq" s (seq (:hintedFields this)) #_"int" i 1] (some? s) [(next s) (inc i)]
                                 (let [#_"String" bName (ßname (first s))
-                                    #_"Class" k (Interop'tagClass (Compiler'tagOf (first s)))]
+                                      #_"Class" k (Interop'tagClass (Compiler'tagOf (first s)))]
                                     (.visitVarInsn mv, Opcodes/ALOAD, 0)
                                     (.visitLdcInsn mv, bName)
                                     (.visitMethodInsn mv, Opcodes/INVOKESTATIC, "clojure/lang/Keyword", "intern", "(Ljava/lang/String;)Lclojure/lang/Keyword;")
                                     (.visitInsn mv, Opcodes/ACONST_NULL)
-                                    (.visitMethodInsn mv, Opcodes/INVOKEINTERFACE, "clojure/lang/IPersistentMap", "valAt", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;")
+                                    (.visitMethodInsn mv, Opcodes/INVOKEINTERFACE, "cloiure/core/IPersistentMap", "valAt", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;")
                                     (when (.isPrimitive k)
                                         (.visitTypeInsn mv, Opcodes/CHECKCAST, (.getInternalName (Type/getType (Compiler'boxClass k))))
                                     )
@@ -5762,7 +6442,7 @@
                                     (.visitVarInsn mv, Opcodes/ALOAD, 0)
                                     (.visitLdcInsn mv, bName)
                                     (.visitMethodInsn mv, Opcodes/INVOKESTATIC, "clojure/lang/Keyword", "intern", "(Ljava/lang/String;)Lclojure/lang/Keyword;")
-                                    (.visitMethodInsn mv, Opcodes/INVOKEINTERFACE, "clojure/lang/IPersistentMap", "dissoc", "(Ljava/lang/Object;)Lclojure/lang/IPersistentMap;")
+                                    (.visitMethodInsn mv, Opcodes/INVOKEINTERFACE, "cloiure/core/IPersistentMap", "dissoc", "(Ljava/lang/Object;)Lcloiure/core/IPersistentMap;")
                                     (.visitVarInsn mv, Opcodes/ASTORE, 0)
                                 )
                             )
@@ -5810,7 +6490,7 @@
                       #_"Method" target (Method. (.getName m), (Type/getType (.getReturnType m)), argTypes)]
                     (doseq [#_"Class" retType (val e)]
                         (let [#_"Method" meth (Method. (.getName m), (Type/getType retType), argTypes)
-                            #_"GeneratorAdapter" gen (GeneratorAdapter. (| Opcodes/ACC_PUBLIC Opcodes/ACC_BRIDGE), meth, nil, Compiler'EXCEPTION_TYPES, cv)]
+                              #_"GeneratorAdapter" gen (GeneratorAdapter. (| Opcodes/ACC_PUBLIC Opcodes/ACC_BRIDGE), meth, nil, Compiler'EXCEPTION_TYPES, cv)]
                             (.visitCode gen)
                             (.loadThis gen)
                             (.loadArgs gen)
@@ -5960,17 +6640,16 @@
     (defn #_"IParser" ReifyParser'new []
         (reify IParser
             ;; (reify this-name? [interfaces] (method-name [args] body)*)
-            #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (let [#_"ISeq" s form                                                  s (next s)
-                      #_"IPersistentVector" ifaces (conj (first s) 'clojure.lang.IObj) s (next s)
+                      #_"IPersistentVector" ifaces (conj (first s) 'cloiure.core.IObj) s (next s)
                       #_"String" classname
                         (let [#_"IopMethod" owner *method*
                               #_"String" basename (if (some? owner) (IopObject'trimGenID (:name (:objx owner))) (Compiler'munge (ßname (ßname *ns*))))]
                             (str basename "$" "reify__" (RT/nextID))
                         )
                       #_"IopObject" nie (NewInstanceExpr'build ifaces, nil, nil, classname, (symbol classname), nil, s, form, nil)]
-                    (when (and (instance? IObj form) (some? (meta form))) => nie
+                    (when (and (satisfies? IObj form) (some? (meta form))) => nie
                         (MetaExpr'new nie, (MapExpr'parse (if (= context :Context'EVAL) context :Context'EXPRESSION), (meta form)))
                     )
                 )
@@ -5983,12 +6662,11 @@
     (defn #_"IParser" DeftypeParser'new []
         (reify IParser
             ;; (deftype* tagname classname [fields] :implements [interfaces] :tag tagname methods*)
-            #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
-                (let [#_"ISeq" s form                         s (next s)
-                      #_"String" tagname (.getName (first s)) s (next s)
-                      #_"Symbol" classname (first s)          s (next s)
-                      #_"IPersistentVector" fields (first s)  s (next s)
+                (let [#_"ISeq" s form                                s (next s)
+                      #_"String" tagname (Named'''getName (first s)) s (next s)
+                      #_"Symbol" classname (first s)                 s (next s)
+                      #_"IPersistentVector" fields (first s)         s (next s)
                       [#_"IPersistentMap" opts s]
                         (loop-when-recur [opts {} s s]
                                          (and (some? s) (keyword? (first s)))
@@ -6225,7 +6903,6 @@
             ;; prepared by case macro and presumed correct
             ;; case macro binds actual expr in let so expr is always a local,
             ;; no need to worry about multiple evaluation
-            #_override
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (if (= context :Context'EVAL)
                     (Compiler'analyze context, (list (list Compiler'FNONCE [] form)))
@@ -6384,7 +7061,7 @@
                         (let [#_"IFn" inline (Compiler'isInline op, (count (next form)))]
                             (cond
                                 (some? inline)
-                                    (Compiler'analyze context, (Compiler'preserveTag form, (.applyTo inline, (next form))))
+                                    (Compiler'analyze context, (Compiler'preserveTag form, (IFn'''applyTo inline, (next form))))
                                 (= op 'fn*)
                                     (FnExpr'parse context, form, name)
                                 :else
@@ -6418,7 +7095,7 @@
                         (keyword? form) (Compiler'registerKeyword form)
                         (number? form)  (NumberExpr'parse form)
                         (string? form)  (StringExpr'new (.intern form))
-                        (and (coll? form) (not (instance? IType form)) (zero? (count form)))
+                        (and (coll? form) (not (satisfies? IType form)) (zero? (count form)))
                             (let-when [#_"Expr" e (EmptyExpr'new form)] (some? (meta form)) => e
                                 (MetaExpr'new e, (MapExpr'parse (if (= context :Context'EVAL) context :Context'EXPRESSION), (meta form)))
                             )
@@ -6462,9 +7139,9 @@
                             (loop-when-recur [#_"ISeq" s (next form)] (some? (next s)) [(next s)] => (Compiler'eval (first s))
                                 (Compiler'eval (first s))
                             )
-                        (or (instance? IType form) (and (coll? form) (not (and (symbol? (first form)) (.startsWith (ßname (first form)), "def")))))
+                        (or (satisfies? IType form) (and (coll? form) (not (and (symbol? (first form)) (.startsWith (ßname (first form)), "def")))))
                             (let [#_"IopObject" fexpr (Compiler'analyze :Context'EXPRESSION, (list 'fn* [] form), (str "eval" (RT/nextID)))]
-                                (.invoke (Expr'''eval fexpr))
+                                (IFn'''invoke (Expr'''eval fexpr))
                             )
                         :else
                             (let [#_"Expr" expr (Compiler'analyze :Context'EVAL, form)]
@@ -6679,7 +7356,7 @@
                         :else
                             (let [#_"IFn" fn (get LispReader'macros ch)]
                                 (if (some? fn)
-                                    (let [#_"Object" o (.invoke fn, r, ch)]
+                                    (let [#_"Object" o (fn r ch)]
                                         ;; no op macros return the reader
                                         (recur-if (identical? o r) [] => o)
                                     )
@@ -6859,7 +7536,7 @@
 
     (defn #_"Object" dispatch-reader [#_"PushbackReader" r, #_"char" _delim]
         (let-when [#_"char" ch (LispReader'read1 r)] (some? ch) => (throw! "EOF while reading character")
-            (let-when [#_"IFn" fn (get LispReader'dispatchMacros ch)] (nil? fn) => (.invoke fn, r, ch)
+            (let-when [#_"IFn" fn (get LispReader'dispatchMacros ch)] (nil? fn) => (fn r ch)
                 (LispReader'unread r, ch)
                 (throw! (str "no dispatch macro for: " ch))
             )
@@ -6926,8 +7603,8 @@
                     :else (throw! "metadata must be Symbol, Keyword, String or Map")
                 )
               #_"Object" o (LispReader'read r)]
-            (when (instance? IMeta o) => (throw! "metadata can only be applied to IMetas")
-                (if (instance? IReference o)
+            (when (satisfies? IMeta o) => (throw! "metadata can only be applied to IMetas")
+                (if (satisfies? IReference o)
                     (do
                         (reset-meta! o meta)
                         o
@@ -7025,7 +7702,7 @@
                     :else
                         (list 'quote form)
                 )]
-            (when (and (instance? IObj form) (seq (dissoc (meta form) :line :column))) => q
+            (when (and (satisfies? IObj form) (seq (dissoc (meta form) :line :column))) => q
                 (list 'clojure.core/with-meta q (SyntaxQuoteReader'syntaxQuote (meta form)))
             )
         )
@@ -7284,876 +7961,6 @@
 )
 )
 
-(java-ns cloiure.lang.IFn
-    ;;;
-     ; IFn provides complete access to invoking any of Cloiure's APIs.
-     ; You can also access any other library written in Cloiure, after
-     ; adding either its source or compiled form to the classpath.
-     ;;
-    (§ soon interface! IFn [Callable Runnable]
-        #_abstract
-        (#_"Object" invoke [#_"IFn" this])
-        #_abstract
-        (#_"Object" invoke [#_"IFn" this, #_"Object" arg1])
-        #_abstract
-        (#_"Object" invoke [#_"IFn" this, #_"Object" arg1, #_"Object" arg2])
-        #_abstract
-        (#_"Object" invoke [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3])
-        #_abstract
-        (#_"Object" invoke [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4])
-        #_abstract
-        (#_"Object" invoke [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5])
-        #_abstract
-        (#_"Object" invoke [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6])
-        #_abstract
-        (#_"Object" invoke [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7])
-        #_abstract
-        (#_"Object" invoke [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8])
-
-        #_abstract
-        (#_"Object" invoke [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9])
-
-        #_abstract
-        (#_"Object" invoke [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10])
-
-        #_abstract
-        (#_"Object" invoke [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11])
-
-        #_abstract
-        (#_"Object" invoke [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12])
-
-        #_abstract
-        (#_"Object" invoke [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13])
-
-        #_abstract
-        (#_"Object" invoke [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14])
-
-        #_abstract
-        (#_"Object" invoke [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15])
-
-        #_abstract
-        (#_"Object" invoke [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16])
-
-        #_abstract
-        (#_"Object" invoke [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17])
-
-        #_abstract
-        (#_"Object" invoke [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18])
-
-        #_abstract
-        (#_"Object" invoke [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19])
-
-        #_abstract
-    #_(#_"Object" invoke [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20])
-
-        #_abstract
-    #_(#_"Object" invoke [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" #_arg19, #_"Object" #_arg20 & #_"Object..." args])
-
-        #_abstract
-        (#_"Object" applyTo [#_"IFn" this, #_"ISeq" args])
-    )
-)
-
-(java-ns cloiure.lang.Fn
-    (interface! Fn [])
-)
-
-(java-ns cloiure.lang.Sequential
-    (interface! Sequential [])
-)
-
-(java-ns cloiure.lang.Seqable
-    (interface! Seqable []
-        #_abstract
-        (#_"ISeq" seq [#_"Seqable" this])
-    )
-)
-
-(java-ns cloiure.lang.Reversible
-    (interface! Reversible []
-        #_abstract
-        (#_"ISeq" rseq [#_"Reversible" this])
-    )
-)
-
-(java-ns cloiure.lang.Sorted
-    (interface! Sorted []
-        #_abstract
-        (#_"Comparator" comparator [#_"Sorted" this])
-        #_abstract
-        (#_"Object" entryKey [#_"Sorted" this, #_"Object" entry])
-        #_abstract
-        (#_"ISeq" seq [#_"Sorted" this, #_"boolean" ascending?])
-        #_abstract
-        (#_"ISeq" seqFrom [#_"Sorted" this, #_"Object" key, #_"boolean" ascending?])
-    )
-)
-
-(java-ns cloiure.lang.Counted
-    (interface! Counted []
-        #_abstract
-        (#_"int" count [#_"Counted" this])
-    )
-)
-
-(java-ns cloiure.lang.IPersistentCollection
-    (§ soon interface! IPersistentCollection [Seqable]
-        #_abstract
-        (#_"int" count [#_"IPersistentCollection" this])
-        #_abstract
-        (#_"IPersistentCollection" conj [#_"IPersistentCollection" this, #_"Object" o])
-        #_abstract
-        (#_"IPersistentCollection" empty [#_"IPersistentCollection" this])
-    )
-)
-
-(java-ns cloiure.lang.ISeq
-    (§ soon interface! ISeq [IPersistentCollection]
-        #_abstract
-        (#_"Object" first [#_"ISeq" this])
-        #_abstract
-        (#_"ISeq" next [#_"ISeq" this])
-        #_abstract
-        (#_"ISeq" rest [#_"ISeq" this])
-        #_abstract
-        (#_"ISeq" cons [#_"ISeq" this, #_"Object" o])
-    )
-)
-
-(java-ns cloiure.lang.IAtom
-    (interface! IAtom []
-        #_abstract
-        (#_"boolean" compareAndSet [#_"IAtom" this, #_"Object" v, #_"Object" v'])
-        #_abstract
-        (#_"Object" swap [#_"IAtom" this, #_"IFn" f])
-        #_abstract
-        (#_"Object" swap [#_"IAtom" this, #_"IFn" f, #_"Object" x])
-        #_abstract
-        (#_"Object" swap [#_"IAtom" this, #_"IFn" f, #_"Object" x, #_"Object" y])
-        #_abstract
-        (#_"Object" swap [#_"IAtom" this, #_"IFn" f, #_"Object" x, #_"Object" y, #_"ISeq" z])
-        #_abstract
-        (#_"Object" reset [#_"IAtom" this, #_"Object" v'])
-        #_abstract
-        (#_"IPersistentVector" swapVals [#_"IAtom" this, #_"IFn" f])
-        #_abstract
-        (#_"IPersistentVector" swapVals [#_"IAtom" this, #_"IFn" f, #_"Object" x])
-        #_abstract
-        (#_"IPersistentVector" swapVals [#_"IAtom" this, #_"IFn" f, #_"Object" x, #_"Object" y])
-        #_abstract
-        (#_"IPersistentVector" swapVals [#_"IAtom" this, #_"IFn" f, #_"Object" x, #_"Object" y, #_"ISeq" z])
-        #_abstract
-        (#_"IPersistentVector" resetVals [#_"IAtom" this, #_"Object" v'])
-    )
-)
-
-(java-ns cloiure.lang.IDeref
-    (interface! IDeref []
-        #_abstract
-        (#_"Object" deref [#_"IDeref" this])
-    )
-)
-
-(java-ns cloiure.lang.IEditableCollection
-    (interface! IEditableCollection []
-        #_abstract
-        (#_"ITransientCollection" asTransient [#_"IEditableCollection" this])
-    )
-)
-
-(java-ns cloiure.lang.IHashEq
-    (interface! IHashEq []
-        #_abstract
-        (#_"int" hasheq [#_"IHashEq" this])
-    )
-)
-
-(java-ns cloiure.lang.ILookup
-    (§ soon interface! ILookup []
-        #_abstract
-        (#_"Object" valAt [#_"ILookup" this, #_"Object" key])
-        #_abstract
-        (#_"Object" valAt [#_"ILookup" this, #_"Object" key, #_"Object" notFound])
-    )
-)
-
-(java-ns cloiure.lang.ILookupSite
-    (§ soon interface! ILookupSite []
-        #_abstract
-        (#_"ILookupThunk" fault [#_"ILookupSite" this, #_"Object" target])
-    )
-)
-
-(java-ns cloiure.lang.ILookupThunk
-    (§ soon interface! ILookupThunk []
-        #_abstract
-        (#_"Object" get [#_"ILookupThunk" this, #_"Object" target])
-    )
-)
-
-(java-ns cloiure.lang.IMapEntry
-    (§ soon interface! IMapEntry []
-        #_abstract
-        (#_"Object" key [#_"IMapEntry" this])
-        #_abstract
-        (#_"Object" val [#_"IMapEntry" this])
-    )
-)
-
-(java-ns cloiure.lang.Named
-    (interface! Named []
-        #_abstract
-        (#_"String" getNamespace [#_"Named" this])
-        #_abstract
-        (#_"String" getName [#_"Named" this])
-    )
-)
-
-(java-ns cloiure.lang.IMeta
-    (§ soon interface! IMeta []
-        #_abstract
-        (#_"IPersistentMap" meta [#_"IMeta" this])
-    )
-)
-
-(java-ns cloiure.lang.IObj
-    (§ soon interface! IObj [IMeta]
-        #_abstract
-        (#_"IObj" withMeta [#_"IObj" this, #_"IPersistentMap" meta])
-    )
-)
-
-(java-ns cloiure.lang.IReference
-    (§ soon interface! IReference [IMeta]
-        #_abstract
-        (#_"IPersistentMap" alterMeta [#_"IReference" this, #_"IFn" alter, #_"ISeq" args])
-        #_abstract
-        (#_"IPersistentMap" resetMeta [#_"IReference" this, #_"IPersistentMap" m])
-    )
-)
-
-(java-ns cloiure.lang.Indexed
-    (interface! Indexed [Counted]
-        #_abstract
-        (#_"Object" nth [#_"Indexed" this, #_"int" i])
-        #_abstract
-        (#_"Object" nth [#_"Indexed" this, #_"int" i, #_"Object" notFound])
-    )
-)
-
-(java-ns cloiure.lang.IndexedSeq
-    (interface! IndexedSeq [ISeq Sequential Counted]
-        #_abstract
-        (#_"int" index [#_"IndexedSeq" this])
-    )
-)
-
-(java-ns cloiure.lang.IChunk
-    (interface! IChunk [Indexed]
-        #_abstract
-        (#_"IChunk" dropFirst [#_"IChunk" this])
-        #_abstract
-        (#_"Object" reduce [#_"IChunk" this, #_"IFn" f, #_"Object" start])
-    )
-)
-
-(java-ns cloiure.lang.IChunkedSeq
-    (interface! IChunkedSeq [ISeq Sequential]
-        #_abstract
-        (#_"IChunk" chunkedFirst [#_"IChunkedSeq" this])
-        #_abstract
-        (#_"ISeq" chunkedNext [#_"IChunkedSeq" this])
-        #_abstract
-        (#_"ISeq" chunkedMore [#_"IChunkedSeq" this])
-    )
-)
-
-(java-ns cloiure.lang.IPending
-    (interface! IPending []
-        #_abstract
-        (#_"boolean" isRealized [#_"IPending" this])
-    )
-)
-
-(java-ns cloiure.lang.Associative
-    (interface! Associative [IPersistentCollection ILookup]
-        #_abstract
-        (#_"boolean" containsKey [#_"Associative" this, #_"Object" key])
-        #_abstract
-        (#_"IMapEntry" entryAt [#_"Associative" this, #_"Object" key])
-        #_abstract
-        (#_"Associative" assoc [#_"Associative" this, #_"Object" key, #_"Object" val])
-    )
-)
-
-(java-ns cloiure.lang.IPersistentMap
-    (§ soon interface! IPersistentMap [Associative Counted]
-        #_abstract
-        (#_"IPersistentMap" assoc [#_"IPersistentMap" this, #_"Object" key, #_"Object" val])
-        #_abstract
-        (#_"IPersistentMap" dissoc [#_"IPersistentMap" this, #_"Object" key])
-    )
-)
-
-(java-ns cloiure.lang.IPersistentSet
-    (§ soon interface! IPersistentSet [IPersistentCollection Counted]
-        #_abstract
-        (#_"IPersistentSet" disj [#_"IPersistentSet" this, #_"Object" key])
-        #_abstract
-        (#_"boolean" contains [#_"IPersistentSet" this, #_"Object" key])
-        #_abstract
-        (#_"Object" get [#_"IPersistentSet" this, #_"Object" key])
-    )
-)
-
-(java-ns cloiure.lang.IPersistentStack
-    (interface! IPersistentStack [IPersistentCollection]
-        #_abstract
-        (#_"Object" peek [#_"IPersistentStack" this])
-        #_abstract
-        (#_"IPersistentStack" pop [#_"IPersistentStack" this])
-    )
-)
-
-(java-ns cloiure.lang.IPersistentList
-    (§ soon interface! IPersistentList [Sequential IPersistentStack])
-)
-
-(java-ns cloiure.lang.IPersistentVector
-    (§ soon interface! IPersistentVector [Associative Sequential IPersistentStack Reversible Indexed]
-        #_abstract
-        (#_"IPersistentVector" assocN [#_"IPersistentVector" this, #_"int" i, #_"Object" val])
-        #_abstract
-        (#_"IPersistentVector" conj [#_"IPersistentVector" this, #_"Object" o])
-    )
-)
-
-(java-ns cloiure.lang.IReduceInit
-    (interface! IReduceInit []
-        #_abstract
-        (#_"Object" reduce [#_"IReduceInit" this, #_"IFn" f, #_"Object" start])
-    )
-)
-
-(java-ns cloiure.lang.IReduce
-    (interface! IReduce [IReduceInit]
-        #_abstract
-        (#_"Object" reduce [#_"IReduce" this, #_"IFn" f])
-    )
-)
-
-(java-ns cloiure.lang.IKVReduce
-    (interface! IKVReduce []
-        #_abstract
-        (#_"Object" kvreduce [#_"IKVReduce" this, #_"IFn" f, #_"Object" r])
-    )
-)
-
-(java-ns cloiure.lang.ITransientCollection
-    (interface! ITransientCollection []
-        #_abstract
-        (#_"ITransientCollection" conj [#_"ITransientCollection" this, #_"Object" val])
-        #_abstract
-        (#_"IPersistentCollection" persistent [#_"ITransientCollection" this])
-    )
-)
-
-(java-ns cloiure.lang.ITransientAssociative
-    (interface! ITransientAssociative [ITransientCollection ILookup]
-        #_abstract
-        (#_"ITransientAssociative" assoc [#_"ITransientAssociative" this, #_"Object" key, #_"Object" val])
-    )
-)
-
-(java-ns cloiure.lang.ITransientAssociative2
-    (interface! ITransientAssociative2 [ITransientAssociative]
-        #_abstract
-        (#_"boolean" containsKey [#_"ITransientAssociative2" this, #_"Object" key])
-        #_abstract
-        (#_"IMapEntry" entryAt [#_"ITransientAssociative2" this, #_"Object" key])
-    )
-)
-
-(java-ns cloiure.lang.ITransientMap
-    (interface! ITransientMap [ITransientAssociative Counted]
-        #_abstract
-        (#_"ITransientMap" assoc [#_"ITransientMap" this, #_"Object" key, #_"Object" val])
-        #_abstract
-        (#_"ITransientMap" dissoc [#_"ITransientMap" this, #_"Object" key])
-        #_abstract
-        (#_"IPersistentMap" persistent [#_"ITransientMap" this])
-    )
-)
-
-(java-ns cloiure.lang.ITransientSet
-    (interface! ITransientSet [ITransientCollection Counted]
-        #_abstract
-        (#_"ITransientSet" disj [#_"ITransientSet" this, #_"Object" key])
-        #_abstract
-        (#_"boolean" contains [#_"ITransientSet" this, #_"Object" key])
-        #_abstract
-        (#_"Object" get [#_"ITransientSet" this, #_"Object" key])
-    )
-)
-
-(java-ns cloiure.lang.ITransientVector
-    (interface! ITransientVector [ITransientAssociative Indexed]
-        #_abstract
-        (#_"ITransientVector" assocN [#_"ITransientVector" this, #_"int" i, #_"Object" val])
-        #_abstract
-        (#_"ITransientVector" pop [#_"ITransientVector" this])
-    )
-)
-
-(java-ns cloiure.lang.PersistentHashMap
-    (interface! INode []
-        #_abstract
-        (#_"INode" assoc [#_"INode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf])
-        #_abstract
-        (#_"INode" dissoc [#_"INode" this, #_"int" shift, #_"int" hash, #_"Object" key])
-        #_abstract
-        (#_"IMapEntry" find [#_"INode" this, #_"int" shift, #_"int" hash, #_"Object" key])
-        #_abstract
-        (#_"Object" find [#_"INode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" notFound])
-        #_abstract
-        (#_"ISeq" nodeSeq [#_"INode" this])
-        #_abstract
-        (#_"INode" assoc [#_"INode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf])
-        #_abstract
-        (#_"INode" dissoc [#_"INode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Box" removedLeaf])
-        #_abstract
-        (#_"Object" kvreduce [#_"INode" this, #_"IFn" f, #_"Object" r])
-        #_abstract
-        (#_"Object" fold [#_"INode" this, #_"IFn" combinef, #_"IFn" reducef, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin])
-    )
-)
-
-(java-ns cloiure.lang.Range
-    (interface! RangeBoundsCheck []
-        #_abstract
-        (#_"boolean" exceededBounds [#_"RangeBoundsCheck" this, #_"Object" val])
-    )
-)
-
-(java-ns cloiure.lang.LongRange
-    (interface! LongRangeBoundsCheck []
-        #_abstract
-        (#_"boolean" exceededBounds [#_"LongRangeBoundsCheck" this, #_"long" val])
-    )
-)
-
-(java-ns cloiure.lang.IType
-    (§ soon interface! IType [])
-)
-
-(java-ns cloiure.lang.IProxy
-    (interface! IProxy []
-        #_abstract
-        (#_"void" __initCloiureFnMappings [#_"IProxy" this, #_"IPersistentMap" m])
-        #_abstract
-        (#_"void" __updateCloiureFnMappings [#_"IProxy" this, #_"IPersistentMap" m])
-        #_abstract
-        (#_"IPersistentMap" __getCloiureFnMappings [#_"IProxy" this])
-    )
-)
-
-(java-ns cloiure.lang.Util
-    #_stateless
-    (§ soon class! Util [])
-)
-
-(java-ns cloiure.lang.DynamicClassLoader
-    (§ soon class! DynamicClassLoader [#_"ClassLoader"])
-)
-
-(java-ns cloiure.lang.BigInt
-    (§ soon class! BigInt [#_"Number" IHashEq])
-)
-
-(java-ns cloiure.lang.Ratio
-    (class! Ratio [#_"Number" Comparable])
-)
-
-(java-ns cloiure.lang.Numbers
-    (interface! Ops []
-        #_abstract
-        (#_"Ops" combine [#_"Ops" this, #_"Ops" y])
-        #_abstract
-        (#_"Ops" opsWithLong [#_"Ops" this, #_"LongOps" x])
-        #_abstract
-        (#_"Ops" opsWithRatio [#_"Ops" this, #_"RatioOps" x])
-        #_abstract
-        (#_"Ops" opsWithBigInt [#_"Ops" this, #_"BigIntOps" x])
-        #_abstract
-        (#_"boolean" isZero [#_"Ops" this, #_"Number" x])
-        #_abstract
-        (#_"boolean" isPos [#_"Ops" this, #_"Number" x])
-        #_abstract
-        (#_"boolean" isNeg [#_"Ops" this, #_"Number" x])
-        #_abstract
-        (#_"Number" add [#_"Ops" this, #_"Number" x, #_"Number" y])
-        #_abstract
-        (#_"Number" addP [#_"Ops" this, #_"Number" x, #_"Number" y])
-        #_abstract
-        (#_"Number" multiply [#_"Ops" this, #_"Number" x, #_"Number" y])
-        #_abstract
-        (#_"Number" multiplyP [#_"Ops" this, #_"Number" x, #_"Number" y])
-        #_abstract
-        (#_"Number" divide [#_"Ops" this, #_"Number" x, #_"Number" y])
-        #_abstract
-        (#_"Number" quotient [#_"Ops" this, #_"Number" x, #_"Number" y])
-        #_abstract
-        (#_"Number" remainder [#_"Ops" this, #_"Number" x, #_"Number" y])
-        #_abstract
-        (#_"boolean" equiv [#_"Ops" this, #_"Number" x, #_"Number" y])
-        #_abstract
-        (#_"boolean" lt [#_"Ops" this, #_"Number" x, #_"Number" y])
-        #_abstract
-        (#_"boolean" lte [#_"Ops" this, #_"Number" x, #_"Number" y])
-        #_abstract
-        (#_"boolean" gte [#_"Ops" this, #_"Number" x, #_"Number" y])
-        #_abstract
-        (#_"Number" negate [#_"Ops" this, #_"Number" x])
-        #_abstract
-        (#_"Number" negateP [#_"Ops" this, #_"Number" x])
-        #_abstract
-        (#_"Number" inc [#_"Ops" this, #_"Number" x])
-        #_abstract
-        (#_"Number" incP [#_"Ops" this, #_"Number" x])
-        #_abstract
-        (#_"Number" dec [#_"Ops" this, #_"Number" x])
-        #_abstract
-        (#_"Number" decP [#_"Ops" this, #_"Number" x])
-    )
-
-    #_abstract
-    (class! OpsP [Ops])
-    (class! LongOps [Ops])
-    (class! RatioOps [#_"OpsP"])
-    (class! BigIntOps [#_"OpsP"])
-    #_stateless
-    (§ soon class! Numbers [])
-)
-
-(java-ns cloiure.lang.AFn
-    #_abstract
-    (§ soon class! AFn [IFn]
-        #_abstract
-        (#_"Object" throwArity [#_"AFn" this, #_"int" n])
-    )
-)
-
-(java-ns cloiure.lang.Symbol
-    (§ soon class! Symbol [#_"AFn" IObj Comparable Named IHashEq])
-)
-
-(java-ns cloiure.lang.Keyword
-    (§ soon class! Keyword [IFn Comparable Named IHashEq])
-)
-
-(java-ns cloiure.lang.AFunction
-    #_abstract
-    (§ soon class! AFunction [#_"AFn" IObj Comparator Fn])
-)
-
-(java-ns cloiure.lang.RestFn
-    #_abstract
-    (§ soon class! RestFn [#_"AFunction"]
-        #_abstract
-        (#_"int" getRequiredArity [#_"RestFn" this])
-        #_abstract
-        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" args])
-        #_abstract
-        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" args])
-        #_abstract
-        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" args])
-        #_abstract
-        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" args])
-        #_abstract
-        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" args])
-        #_abstract
-        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" args])
-        #_abstract
-        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" args])
-        #_abstract
-        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" args])
-        #_abstract
-        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" args])
-        #_abstract
-        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" args])
-        #_abstract
-        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" args])
-        #_abstract
-        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" args])
-        #_abstract
-        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" args])
-        #_abstract
-        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" args])
-        #_abstract
-        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" args])
-        #_abstract
-        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" args])
-        #_abstract
-        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" args])
-        #_abstract
-        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" args])
-        #_abstract
-        (#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" args])
-        #_abstract
-      #_(#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" args])
-        #_abstract
-      #_(#_"Object" doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20, #_"Object" args])
-    )
-)
-
-(java-ns cloiure.lang.ASeq
-    #_abstract
-    (class! ASeq [IObj ISeq Sequential IHashEq])
-)
-
-(java-ns cloiure.lang.LazySeq
-    (§ soon class! LazySeq [IObj ISeq Sequential IPending IHashEq])
-)
-
-(java-ns cloiure.lang.APersistentMap
-    #_abstract
-    (§ soon class! APersistentMap [#_"AFn" IPersistentMap IHashEq])
-)
-
-(java-ns cloiure.lang.APersistentSet
-    #_abstract
-    (§ soon class! APersistentSet [#_"AFn" IPersistentSet IHashEq])
-)
-
-(java-ns cloiure.lang.APersistentVector
-    (class! VSeq [#_"ASeq" IndexedSeq IReduce])
-    (class! RSeq [#_"ASeq" IndexedSeq Counted])
-    #_abstract
-    (§ soon class! APersistentVector [#_"AFn" IPersistentVector Comparable IHashEq])
-    (class! SubVector [#_"APersistentVector" IObj])
-)
-
-(java-ns cloiure.lang.AMapEntry
-    #_abstract
-    (class! AMapEntry [#_"APersistentVector" IMapEntry])
-)
-
-(java-ns cloiure.lang.ArrayChunk
-    (class! ArrayChunk [IChunk])
-)
-
-(java-ns cloiure.lang.ArraySeq
-    (class! ArraySeq_int [#_"ASeq" IndexedSeq IReduce])
-    (class! ArraySeq_long [#_"ASeq" IndexedSeq IReduce])
-    (class! ArraySeq_byte [#_"ASeq" IndexedSeq IReduce])
-    (class! ArraySeq_char [#_"ASeq" IndexedSeq IReduce])
-    (class! ArraySeq_boolean [#_"ASeq" IndexedSeq IReduce])
-    (§ soon class! ArraySeq [#_"ASeq" IndexedSeq IReduce])
-)
-
-(java-ns cloiure.lang.Atom
-    (class! Atom [IReference IDeref IAtom])
-)
-
-(java-ns cloiure.lang.ATransientMap
-    #_abstract
-    (class! ATransientMap [#_"AFn" ITransientMap ITransientAssociative2]
-        #_abstract
-        (#_"void" ensureEditable [#_"ATransientMap" this])
-        #_abstract
-        (#_"ITransientMap" doAssoc [#_"ATransientMap" this, #_"Object" key, #_"Object" val])
-        #_abstract
-        (#_"ITransientMap" doDissoc [#_"ATransientMap" this, #_"Object" key])
-        #_abstract
-        (#_"Object" doValAt [#_"ATransientMap" this, #_"Object" key, #_"Object" notFound])
-        #_abstract
-        (#_"int" doCount [#_"ATransientMap" this])
-        #_abstract
-        (#_"IPersistentMap" doPersistent [#_"ATransientMap" this])
-    )
-)
-
-(java-ns cloiure.lang.ATransientSet
-    #_abstract
-    (class! ATransientSet [#_"AFn" ITransientSet])
-)
-
-(java-ns cloiure.lang.Binding
-    (class! Binding #_"<T>" [])
-)
-
-(java-ns cloiure.lang.Box
-    (class! Box [])
-)
-
-(java-ns cloiure.lang.ChunkBuffer
-    (class! ChunkBuffer [Counted])
-)
-
-(java-ns cloiure.lang.ChunkedCons
-    (class! ChunkedCons [#_"ASeq" IChunkedSeq])
-)
-
-(java-ns cloiure.lang.Cons
-    (class! Cons [#_"ASeq"])
-)
-
-(java-ns cloiure.lang.Cycle
-    (class! Cycle [#_"ASeq" IReduce IPending])
-)
-
-(java-ns cloiure.lang.Delay
-    (class! Delay [IDeref IPending])
-)
-
-(java-ns cloiure.lang.Iterate
-    (class! Iterate [#_"ASeq" IReduce IPending])
-)
-
-(java-ns cloiure.lang.KeywordLookupSite
-    (§ soon class! KeywordLookupSite [ILookupSite ILookupThunk])
-)
-
-(java-ns cloiure.lang.LongRange
-    (class! LongChunk [IChunk])
-    (class! LongRange [#_"ASeq" Counted IChunkedSeq IReduce])
-)
-
-(java-ns cloiure.lang.MapEntry
-    (class! MapEntry [#_"AMapEntry"])
-)
-
-(java-ns cloiure.lang.MethodImplCache
-    (class! Entry [])
-    (class! MethodImplCache [])
-)
-
-(java-ns cloiure.lang.MultiFn
-    (class! MultiFn [#_"AFn"])
-)
-
-(java-ns cloiure.lang.Namespace
-    (§ soon class! Namespace [IReference])
-)
-
-(java-ns cloiure.lang.PersistentArrayMap
-    (class! MSeq [#_"ASeq" Counted])
-    (class! TransientArrayMap [#_"ATransientMap"])
-    (§ soon class! PersistentArrayMap [#_"APersistentMap" IObj IEditableCollection IKVReduce])
-)
-
-(java-ns cloiure.lang.PersistentHashMap
-    (class! TransientHashMap [#_"ATransientMap"])
-    (class! HSeq [#_"ASeq"])
-    (class! ArrayNode [INode])
-    (class! BitmapIndexedNode [INode])
-    (class! HashCollisionNode [INode])
-    (class! NodeSeq [#_"ASeq"])
-    (§ soon class! PersistentHashMap [#_"APersistentMap" IEditableCollection IObj IKVReduce])
-)
-
-(java-ns cloiure.lang.PersistentHashSet
-    (class! TransientHashSet [#_"ATransientSet"])
-    (§ soon class! PersistentHashSet [#_"APersistentSet" IObj IEditableCollection])
-)
-
-(java-ns cloiure.lang.PersistentList
-    (class! Primordial [#_"RestFn"])
-    (class! EmptyList [IObj IPersistentList ISeq Counted IHashEq])
-    (§ soon class! PersistentList [#_"ASeq" IPersistentList IReduce Counted])
-)
-
-(java-ns cloiure.lang.PersistentQueue
-    (class! QSeq [#_"ASeq"])
-    (class! PersistentQueue [IObj IPersistentList Counted IHashEq])
-)
-
-(java-ns cloiure.lang.PersistentTreeMap
-    #_abstract
-    (class! TNode [#_"AMapEntry"]
-        #_abstract
-        (#_"TNode" left [#_"TNode" this])
-        #_abstract
-        (#_"TNode" right [#_"TNode" this])
-        #_abstract
-        (#_"TNode" addLeft [#_"TNode" this, #_"TNode" ins])
-        #_abstract
-        (#_"TNode" addRight [#_"TNode" this, #_"TNode" ins])
-        #_abstract
-        (#_"TNode" removeLeft [#_"TNode" this, #_"TNode" del])
-        #_abstract
-        (#_"TNode" removeRight [#_"TNode" this, #_"TNode" del])
-        #_abstract
-        (#_"TNode" blacken [#_"TNode" this])
-        #_abstract
-        (#_"TNode" redden [#_"TNode" this])
-        #_abstract
-        (#_"TNode" balanceLeft [#_"TNode" this, #_"TNode" parent])
-        #_abstract
-        (#_"TNode" balanceRight [#_"TNode" this, #_"TNode" parent])
-        #_abstract
-        (#_"TNode" replace [#_"TNode" this, #_"Object" key, #_"Object" val, #_"TNode" left, #_"TNode" right])
-    )
-    (class! Black [#_"TNode"])
-    (class! BlackVal [#_"Black"])
-    (class! BlackBranch [#_"Black"])
-    (class! BlackBranchVal [#_"BlackBranch"])
-    (class! Red [#_"TNode"])
-    (class! RedVal [#_"Red"])
-    (class! RedBranch [#_"Red"])
-    (class! RedBranchVal [#_"RedBranch"])
-    (class! TSeq [#_"ASeq"])
-    (class! PersistentTreeMap [#_"APersistentMap" IObj Reversible Sorted IKVReduce])
-)
-
-(java-ns cloiure.lang.PersistentTreeSet
-    (class! PersistentTreeSet [#_"APersistentSet" IObj Reversible Sorted])
-)
-
-(java-ns cloiure.lang.PersistentVector
-    (class! VNode [])
-    (class! ChunkedSeq [#_"ASeq" IChunkedSeq Counted])
-    (class! TransientVector [#_"AFn" ITransientVector ITransientAssociative2 Counted])
-    (§ soon class! PersistentVector [#_"APersistentVector" IObj IEditableCollection IReduce IKVReduce])
-)
-
-(java-ns cloiure.lang.Range
-    (class! Range [#_"ASeq" IChunkedSeq IReduce])
-)
-
-(java-ns cloiure.lang.Reduced
-    (class! Reduced [IDeref])
-)
-
-(java-ns cloiure.lang.Repeat
-    (class! Repeat [#_"ASeq" IReduce])
-)
-
-(java-ns cloiure.lang.StringSeq
-    (class! StringSeq [#_"ASeq" IndexedSeq])
-)
-
-(java-ns cloiure.lang.Tuple
-    #_stateless
-    (§ soon class! Tuple [])
-)
-
-(java-ns cloiure.lang.Var
-    (class! TBox [])
-    (class! Unbound [#_"AFn"])
-    (class! Frame [])
-    (§ soon class! Var [IReference IFn IDeref])
-)
-
-(java-ns cloiure.lang.Volatile
-    (class! Volatile [IDeref])
-)
-
-(java-ns cloiure.lang.RT
-    #_stateless
-    (§ soon class! RT [])
-)
-
 (java-ns cloiure.lang.Util
 
 (class-ns Util
@@ -8201,11 +8008,11 @@
 
     (defn #_"int" Util'hasheq [#_"Object" o]
         (cond
-            (nil? o)              0
-            (instance? IHashEq o) (.hasheq o)
-            (number? o)           (Numbers'hasheq o)
-            (string? o)           (Murmur3'hashInt (.hashCode o))
-            :else                 (.hashCode o)
+            (nil? o)               0
+            (satisfies? IHashEq o) (IHashEq'''hasheq o)
+            (number? o)            (Numbers'hasheq o)
+            (string? o)            (Murmur3'hashInt (.hashCode o))
+            :else                  (.hashCode o)
         )
     )
 
@@ -8285,11 +8092,12 @@
         )
     )
 
-    #_override
-    (defn #_"int" IHashEq'''hasheq--BigInt [#_"BigInt" this]
-        (if (nil? (:bipart this))
-            (Murmur3'hashLong (:lpart this))
-            (.hashCode (:bipart this))
+    (extend-type BigInt IHashEq
+        (#_"int" IHashEq'''hasheq [#_"BigInt" this]
+            (if (nil? (:bipart this))
+                (Murmur3'hashLong (:lpart this))
+                (.hashCode (:bipart this))
+            )
         )
     )
 
@@ -8478,29 +8286,26 @@
         (hash-map)
     )
 
-    #_override
-    (defn #_"Number" Ops'''addP--OpsP [#_"OpsP" this, #_"Number" x, #_"Number" y]
-        (.add this, x, y)
-    )
+    (extend-type OpsP Ops
+        (#_"Number" Ops'''addP [#_"OpsP" this, #_"Number" x, #_"Number" y]
+            (Ops'''add this, x, y)
+        )
 
-    #_override
-    (defn #_"Number" Ops'''multiplyP--OpsP [#_"OpsP" this, #_"Number" x, #_"Number" y]
-        (.multiply this, x, y)
-    )
+        (#_"Number" Ops'''multiplyP [#_"OpsP" this, #_"Number" x, #_"Number" y]
+            (Ops'''multiply this, x, y)
+        )
 
-    #_override
-    (defn #_"Number" Ops'''negateP--OpsP [#_"OpsP" this, #_"Number" x]
-        (.negate this, x)
-    )
+        (#_"Number" Ops'''negateP [#_"OpsP" this, #_"Number" x]
+            (Ops'''negate this, x)
+        )
 
-    #_override
-    (defn #_"Number" Ops'''incP--OpsP [#_"OpsP" this, #_"Number" x]
-        (.inc this, x)
-    )
+        (#_"Number" Ops'''incP [#_"OpsP" this, #_"Number" x]
+            (Ops'''inc this, x)
+        )
 
-    #_override
-    (defn #_"Number" Ops'''decP--OpsP [#_"OpsP" this, #_"Number" x]
-        (.dec this, x)
+        (#_"Number" Ops'''decP [#_"OpsP" this, #_"Number" x]
+            (Ops'''dec this, x)
+        )
     )
 )
 
@@ -8509,79 +8314,78 @@
         (hash-map)
     )
 
-    #_override
-    (defn #_"Ops" Ops'''combine--LongOps [#_"LongOps" this, #_"Ops" y]
-        (.opsWithLong y, this)
-    )
+    (extend-type LongOps Ops
+        (#_"Ops" Ops'''combine [#_"LongOps" this, #_"Ops" y]
+            (Ops'''opsWithLong y, this)
+        )
 
-    #_override
-    (defn #_"Ops" Ops'''opsWithLong--LongOps [#_"LongOps" this, #_"LongOps" x]
-        this
+        (#_"Ops" Ops'''opsWithLong [#_"LongOps" this, #_"LongOps" x]
+            this
+        )
     )
 
     (declare Numbers'RATIO_OPS)
 
-    #_override
-    (defn #_"Ops" Ops'''opsWithRatio--LongOps [#_"LongOps" this, #_"RatioOps" x]
-        Numbers'RATIO_OPS
+    (extend-type LongOps Ops
+        (#_"Ops" Ops'''opsWithRatio [#_"LongOps" this, #_"RatioOps" x]
+            Numbers'RATIO_OPS
+        )
     )
 
     (declare Numbers'BIGINT_OPS)
 
-    #_override
-    (defn #_"Ops" Ops'''opsWithBigInt--LongOps [#_"LongOps" this, #_"BigIntOps" x]
-        Numbers'BIGINT_OPS
-    )
+    (extend-type LongOps Ops
+        (#_"Ops" Ops'''opsWithBigInt [#_"LongOps" this, #_"BigIntOps" x]
+            Numbers'BIGINT_OPS
+        )
 
-    #_override
-    (defn #_"boolean" Ops'''isZero--LongOps [#_"LongOps" this, #_"Number" x]
-        (zero? (.longValue x))
-    )
+        (#_"boolean" Ops'''isZero [#_"LongOps" this, #_"Number" x]
+            (zero? (.longValue x))
+        )
 
-    #_override
-    (defn #_"boolean" Ops'''isPos--LongOps [#_"LongOps" this, #_"Number" x]
-        (pos? (.longValue x))
-    )
+        (#_"boolean" Ops'''isPos [#_"LongOps" this, #_"Number" x]
+            (pos? (.longValue x))
+        )
 
-    #_override
-    (defn #_"boolean" Ops'''isNeg--LongOps [#_"LongOps" this, #_"Number" x]
-        (neg? (.longValue x))
+        (#_"boolean" Ops'''isNeg [#_"LongOps" this, #_"Number" x]
+            (neg? (.longValue x))
+        )
     )
 
     (declare Numbers'num-1l)
     (declare Numbers'add-2ll)
 
-    #_override
-    (defn #_"Number" Ops'''add--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
-        (Numbers'num-1l (Numbers'add-2ll (.longValue x), (.longValue y)))
-    )
+    (extend-type LongOps Ops
+        (#_"Number" Ops'''add [#_"LongOps" this, #_"Number" x, #_"Number" y]
+            (Numbers'num-1l (Numbers'add-2ll (.longValue x), (.longValue y)))
+        )
 
-    #_override
-    (defn #_"Number" Ops'''addP--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y) #_"long" lz (+ lx ly)]
-            (if (and (neg? (bit-xor lz lx)) (neg? (bit-xor lz ly)))
-                (.add Numbers'BIGINT_OPS, x, y)
-                (Numbers'num-1l lz)
+        (#_"Number" Ops'''addP [#_"LongOps" this, #_"Number" x, #_"Number" y]
+            (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y) #_"long" lz (+ lx ly)]
+                (if (and (neg? (bit-xor lz lx)) (neg? (bit-xor lz ly)))
+                    (Ops'''add Numbers'BIGINT_OPS, x, y)
+                    (Numbers'num-1l lz)
+                )
             )
         )
     )
 
     (declare Numbers'multiply-2ll)
 
-    #_override
-    (defn #_"Number" Ops'''multiply--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
-        (Numbers'num-1l (Numbers'multiply-2ll (.longValue x), (.longValue y)))
-    )
+    (extend-type LongOps Ops
+        (#_"Number" Ops'''multiply [#_"LongOps" this, #_"Number" x, #_"Number" y]
+            (Numbers'num-1l (Numbers'multiply-2ll (.longValue x), (.longValue y)))
+        )
 
-    #_override
-    (defn #_"Number" Ops'''multiplyP--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y)]
-            (if (and (= lx Long/MIN_VALUE) (neg? ly))
-                (.multiply Numbers'BIGINT_OPS, x, y)
-                (let [#_"long" lz (* lx ly)]
-                    (if (and (not= ly 0) (not= (/ lz ly) lx))
-                        (.multiply Numbers'BIGINT_OPS, x, y)
-                        (Numbers'num-1l lz)
+        (#_"Number" Ops'''multiplyP [#_"LongOps" this, #_"Number" x, #_"Number" y]
+            (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y)]
+                (if (and (= lx Long/MIN_VALUE) (neg? ly))
+                    (Ops'''multiply Numbers'BIGINT_OPS, x, y)
+                    (let [#_"long" lz (* lx ly)]
+                        (if (and (not= ly 0) (not= (/ lz ly) lx))
+                            (Ops'''multiply Numbers'BIGINT_OPS, x, y)
+                            (Numbers'num-1l lz)
+                        )
                     )
                 )
             )
@@ -8590,105 +8394,100 @@
 
     (defn #_"long" LongOps'gcd [#_"long" u, #_"long" v] (if (zero? v) u (recur v (% u v))))
 
-    #_override
-    (defn #_"Number" Ops'''divide--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y)]
-            (let-when-not [#_"long" gcd (LongOps'gcd lx, ly)] (zero? gcd) => (Numbers'num-1l 0)
-                (let-when-not [lx (/ lx gcd) ly (/ ly gcd)] (= ly 1) => (Numbers'num-1l lx)
-                    (let [[lx ly]
-                            (when (neg? ly) => [lx ly]
-                                [(- lx) (- ly)]
-                            )]
-                        (Ratio'new (BigInteger/valueOf lx), (BigInteger/valueOf ly))
+    (extend-type LongOps Ops
+        (#_"Number" Ops'''divide [#_"LongOps" this, #_"Number" x, #_"Number" y]
+            (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y)]
+                (let-when-not [#_"long" gcd (LongOps'gcd lx, ly)] (zero? gcd) => (Numbers'num-1l 0)
+                    (let-when-not [lx (/ lx gcd) ly (/ ly gcd)] (= ly 1) => (Numbers'num-1l lx)
+                        (let [[lx ly]
+                                (when (neg? ly) => [lx ly]
+                                    [(- lx) (- ly)]
+                                )]
+                            (Ratio'new (BigInteger/valueOf lx), (BigInteger/valueOf ly))
+                        )
                     )
                 )
             )
         )
-    )
 
-    #_override
-    (defn #_"Number" Ops'''quotient--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
-        (Numbers'num-1l (/ (.longValue x) (.longValue y)))
-    )
+        (#_"Number" Ops'''quotient [#_"LongOps" this, #_"Number" x, #_"Number" y]
+            (Numbers'num-1l (/ (.longValue x) (.longValue y)))
+        )
 
-    #_override
-    (defn #_"Number" Ops'''remainder--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
-        (Numbers'num-1l (% (.longValue x) (.longValue y)))
-    )
+        (#_"Number" Ops'''remainder [#_"LongOps" this, #_"Number" x, #_"Number" y]
+            (Numbers'num-1l (% (.longValue x) (.longValue y)))
+        )
 
-    #_override
-    (defn #_"boolean" Ops'''equiv--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
-        (= (.longValue x) (.longValue y))
-    )
+        (#_"boolean" Ops'''equiv [#_"LongOps" this, #_"Number" x, #_"Number" y]
+            (= (.longValue x) (.longValue y))
+        )
 
-    #_override
-    (defn #_"boolean" Ops'''lt--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
-        (< (.longValue x) (.longValue y))
-    )
+        (#_"boolean" Ops'''lt [#_"LongOps" this, #_"Number" x, #_"Number" y]
+            (< (.longValue x) (.longValue y))
+        )
 
-    #_override
-    (defn #_"boolean" Ops'''lte--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
-        (<= (.longValue x) (.longValue y))
-    )
+        (#_"boolean" Ops'''lte [#_"LongOps" this, #_"Number" x, #_"Number" y]
+            (<= (.longValue x) (.longValue y))
+        )
 
-    #_override
-    (defn #_"boolean" Ops'''gte--LongOps [#_"LongOps" this, #_"Number" x, #_"Number" y]
-        (>= (.longValue x) (.longValue y))
+        (#_"boolean" Ops'''gte [#_"LongOps" this, #_"Number" x, #_"Number" y]
+            (>= (.longValue x) (.longValue y))
+        )
     )
 
     (declare Numbers'minus-1l)
 
-    #_override
-    (defn #_"Number" Ops'''negate--LongOps [#_"LongOps" this, #_"Number" x]
-        (let [#_"long" val (.longValue x)]
-            (Numbers'num-1l (Numbers'minus-1l val))
+    (extend-type LongOps Ops
+        (#_"Number" Ops'''negate [#_"LongOps" this, #_"Number" x]
+            (let [#_"long" val (.longValue x)]
+                (Numbers'num-1l (Numbers'minus-1l val))
+            )
         )
-    )
 
-    #_override
-    (defn #_"Number" Ops'''negateP--LongOps [#_"LongOps" this, #_"Number" x]
-        (let [#_"long" val (.longValue x)]
-            (if (< Long/MIN_VALUE val)
-                (Numbers'num-1l (- val))
-                (BigInt'fromBigInteger (.negate (BigInteger/valueOf val)))
+        (#_"Number" Ops'''negateP [#_"LongOps" this, #_"Number" x]
+            (let [#_"long" val (.longValue x)]
+                (if (< Long/MIN_VALUE val)
+                    (Numbers'num-1l (- val))
+                    (BigInt'fromBigInteger (.negate (BigInteger/valueOf val)))
+                )
             )
         )
     )
 
     (declare Numbers'inc-1l)
 
-    #_override
-    (defn #_"Number" Ops'''inc--LongOps [#_"LongOps" this, #_"Number" x]
-        (let [#_"long" val (.longValue x)]
-            (Numbers'num-1l (Numbers'inc-1l val))
+    (extend-type LongOps Ops
+        (#_"Number" Ops'''inc [#_"LongOps" this, #_"Number" x]
+            (let [#_"long" val (.longValue x)]
+                (Numbers'num-1l (Numbers'inc-1l val))
+            )
         )
-    )
 
-    #_override
-    (defn #_"Number" Ops'''incP--LongOps [#_"LongOps" this, #_"Number" x]
-        (let [#_"long" val (.longValue x)]
-            (if (< val Long/MAX_VALUE)
-                (Numbers'num-1l (inc val))
-                (.inc Numbers'BIGINT_OPS, x)
+        (#_"Number" Ops'''incP [#_"LongOps" this, #_"Number" x]
+            (let [#_"long" val (.longValue x)]
+                (if (< val Long/MAX_VALUE)
+                    (Numbers'num-1l (inc val))
+                    (Ops'''inc Numbers'BIGINT_OPS, x)
+                )
             )
         )
     )
 
     (declare Numbers'dec-1l)
 
-    #_override
-    (defn #_"Number" Ops'''dec--LongOps [#_"LongOps" this, #_"Number" x]
-        (let [#_"long" val (.longValue x)]
-            (Numbers'num-1l (Numbers'dec-1l val))
+    (extend-type LongOps Ops
+        (#_"Number" Ops'''dec [#_"LongOps" this, #_"Number" x]
+            (let [#_"long" val (.longValue x)]
+                (Numbers'num-1l (Numbers'dec-1l val))
+            )
         )
-    )
 
-    #_override
-    (defn #_"Number" Ops'''decP--LongOps [#_"LongOps" this, #_"Number" x]
-        (let [#_"long" val (.longValue x)]
-            (if (< Long/MIN_VALUE val)
-                (Numbers'num-1l (dec val))
-                (.dec Numbers'BIGINT_OPS, x)
+        (#_"Number" Ops'''decP [#_"LongOps" this, #_"Number" x]
+            (let [#_"long" val (.longValue x)]
+                (if (< Long/MIN_VALUE val)
+                    (Numbers'num-1l (dec val))
+                    (Ops'''dec Numbers'BIGINT_OPS, x)
+                )
             )
         )
     )
@@ -8699,39 +8498,34 @@
         (OpsP'new)
     )
 
-    #_override
-    (defn #_"Ops" Ops'''combine--RatioOps [#_"RatioOps" this, #_"Ops" y]
-        (.opsWithRatio y, this)
-    )
+    (extend-type RatioOps Ops
+        (#_"Ops" Ops'''combine [#_"RatioOps" this, #_"Ops" y]
+            (Ops'''opsWithRatio y, this)
+        )
 
-    #_override
-    (defn #_"Ops" Ops'''opsWithLong--RatioOps [#_"RatioOps" this, #_"LongOps" x]
-        this
-    )
+        (#_"Ops" Ops'''opsWithLong [#_"RatioOps" this, #_"LongOps" x]
+            this
+        )
 
-    #_override
-    (defn #_"Ops" Ops'''opsWithRatio--RatioOps [#_"RatioOps" this, #_"RatioOps" x]
-        this
-    )
+        (#_"Ops" Ops'''opsWithRatio [#_"RatioOps" this, #_"RatioOps" x]
+            this
+        )
 
-    #_override
-    (defn #_"Ops" Ops'''opsWithBigInt--RatioOps [#_"RatioOps" this, #_"BigIntOps" x]
-        this
-    )
+        (#_"Ops" Ops'''opsWithBigInt [#_"RatioOps" this, #_"BigIntOps" x]
+            this
+        )
 
-    #_override
-    (defn #_"boolean" Ops'''isZero--RatioOps [#_"RatioOps" this, #_"Number" x]
-        (zero? (.signum (:numerator (cast Ratio x))))
-    )
+        (#_"boolean" Ops'''isZero [#_"RatioOps" this, #_"Number" x]
+            (zero? (.signum (:numerator (cast Ratio x))))
+        )
 
-    #_override
-    (defn #_"boolean" Ops'''isPos--RatioOps [#_"RatioOps" this, #_"Number" x]
-        (pos? (.signum (:numerator (cast Ratio x))))
-    )
+        (#_"boolean" Ops'''isPos [#_"RatioOps" this, #_"Number" x]
+            (pos? (.signum (:numerator (cast Ratio x))))
+        )
 
-    #_override
-    (defn #_"boolean" Ops'''isNeg--RatioOps [#_"RatioOps" this, #_"Number" x]
-        (neg? (.signum (:numerator (cast Ratio x))))
+        (#_"boolean" Ops'''isNeg [#_"RatioOps" this, #_"Number" x]
+            (neg? (.signum (:numerator (cast Ratio x))))
+        )
     )
 
     (defn #_"Number" RatioOps'normalizeRet [#_"Number" ret, #_"Number" x, #_"Number" y]
@@ -8740,101 +8534,101 @@
 
     (declare Numbers'toRatio)
 
-    #_override
-    (defn #_"Number" Ops'''add--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
-              #_"Number" ret (.divide this, (.add (.multiply (:numerator ry), (:denominator rx)), (.multiply (:numerator rx), (:denominator ry))), (.multiply (:denominator ry), (:denominator rx)))]
-            (RatioOps'normalizeRet ret, x, y)
+    (extend-type RatioOps Ops
+        (#_"Number" Ops'''add [#_"RatioOps" this, #_"Number" x, #_"Number" y]
+            (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
+                  #_"Number" ret (Ops'''divide this, (.add (.multiply (:numerator ry), (:denominator rx)), (.multiply (:numerator rx), (:denominator ry))), (.multiply (:denominator ry), (:denominator rx)))]
+                (RatioOps'normalizeRet ret, x, y)
+            )
         )
-    )
 
-    #_override
-    (defn #_"Number" Ops'''multiply--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
-              #_"Number" ret (.divide this, (.multiply (:numerator ry), (:numerator rx)), (.multiply (:denominator ry), (:denominator rx)))]
-            (RatioOps'normalizeRet ret, x, y)
+        (#_"Number" Ops'''multiply [#_"RatioOps" this, #_"Number" x, #_"Number" y]
+            (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
+                  #_"Number" ret (Ops'''divide this, (.multiply (:numerator ry), (:numerator rx)), (.multiply (:denominator ry), (:denominator rx)))]
+                (RatioOps'normalizeRet ret, x, y)
+            )
         )
-    )
 
-    #_override
-    (defn #_"Number" Ops'''divide--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
-              #_"Number" ret (.divide this, (.multiply (:denominator ry), (:numerator rx)), (.multiply (:numerator ry), (:denominator rx)))]
-            (RatioOps'normalizeRet ret, x, y)
+        (#_"Number" Ops'''divide [#_"RatioOps" this, #_"Number" x, #_"Number" y]
+            (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
+                  #_"Number" ret (Ops'''divide this, (.multiply (:denominator ry), (:numerator rx)), (.multiply (:numerator ry), (:denominator rx)))]
+                (RatioOps'normalizeRet ret, x, y)
+            )
         )
-    )
 
-    #_override
-    (defn #_"Number" Ops'''quotient--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
-              #_"BigInteger" q (.divide (.multiply (:numerator rx), (:denominator ry)), (.multiply (:denominator rx), (:numerator ry)))]
-            (RatioOps'normalizeRet (BigInt'fromBigInteger q), x, y)
+        (#_"Number" Ops'''quotient [#_"RatioOps" this, #_"Number" x, #_"Number" y]
+            (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
+                  #_"BigInteger" q (.divide (.multiply (:numerator rx), (:denominator ry)), (.multiply (:denominator rx), (:numerator ry)))]
+                (RatioOps'normalizeRet (BigInt'fromBigInteger q), x, y)
+            )
         )
     )
 
     (declare Numbers'minus-2oo)
     (declare Numbers'multiply-2oo)
 
-    #_override
-    (defn #_"Number" Ops'''remainder--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
-              #_"BigInteger" q (.divide (.multiply (:numerator rx), (:denominator ry)), (.multiply (:denominator rx), (:numerator ry)))
-              #_"Number" ret (Numbers'minus-2oo x, (Numbers'multiply-2oo q, y))]
-            (RatioOps'normalizeRet ret, x, y)
+    (extend-type RatioOps Ops
+        (#_"Number" Ops'''remainder [#_"RatioOps" this, #_"Number" x, #_"Number" y]
+            (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
+                  #_"BigInteger" q (.divide (.multiply (:numerator rx), (:denominator ry)), (.multiply (:denominator rx), (:numerator ry)))
+                  #_"Number" ret (Numbers'minus-2oo x, (Numbers'multiply-2oo q, y))]
+                (RatioOps'normalizeRet ret, x, y)
+            )
         )
-    )
 
-    #_override
-    (defn #_"boolean" Ops'''equiv--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
-            (and (= (:numerator rx) (:numerator ry)) (= (:denominator rx) (:denominator ry)))
+        (#_"boolean" Ops'''equiv [#_"RatioOps" this, #_"Number" x, #_"Number" y]
+            (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
+                (and (= (:numerator rx) (:numerator ry)) (= (:denominator rx) (:denominator ry)))
+            )
         )
     )
 
     (declare Numbers'lt-2oo)
 
-    #_override
-    (defn #_"boolean" Ops'''lt--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
-            (Numbers'lt-2oo (.multiply (:numerator rx), (:denominator ry)), (.multiply (:numerator ry), (:denominator rx)))
+    (extend-type RatioOps Ops
+        (#_"boolean" Ops'''lt [#_"RatioOps" this, #_"Number" x, #_"Number" y]
+            (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
+                (Numbers'lt-2oo (.multiply (:numerator rx), (:denominator ry)), (.multiply (:numerator ry), (:denominator rx)))
+            )
         )
     )
 
     (declare Numbers'lte-2oo)
 
-    #_override
-    (defn #_"boolean" Ops'''lte--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
-            (Numbers'lte-2oo (.multiply (:numerator rx), (:denominator ry)), (.multiply (:numerator ry), (:denominator rx)))
+    (extend-type RatioOps Ops
+        (#_"boolean" Ops'''lte [#_"RatioOps" this, #_"Number" x, #_"Number" y]
+            (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
+                (Numbers'lte-2oo (.multiply (:numerator rx), (:denominator ry)), (.multiply (:numerator ry), (:denominator rx)))
+            )
         )
     )
 
     (declare Numbers'gte-2oo)
 
-    #_override
-    (defn #_"boolean" Ops'''gte--RatioOps [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-        (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
-            (Numbers'gte-2oo (.multiply (:numerator rx), (:denominator ry)), (.multiply (:numerator ry), (:denominator rx)))
+    (extend-type RatioOps Ops
+        (#_"boolean" Ops'''gte [#_"RatioOps" this, #_"Number" x, #_"Number" y]
+            (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
+                (Numbers'gte-2oo (.multiply (:numerator rx), (:denominator ry)), (.multiply (:numerator ry), (:denominator rx)))
+            )
         )
-    )
 
-    #_override
-    (defn #_"Number" Ops'''negate--RatioOps [#_"RatioOps" this, #_"Number" x]
-        (let [#_"Ratio" r (cast Ratio x)]
-            (Ratio'new (.negate (:numerator r)), (:denominator r))
+        (#_"Number" Ops'''negate [#_"RatioOps" this, #_"Number" x]
+            (let [#_"Ratio" r (cast Ratio x)]
+                (Ratio'new (.negate (:numerator r)), (:denominator r))
+            )
         )
     )
 
     (declare Numbers'add-2ol)
 
-    #_override
-    (defn #_"Number" Ops'''inc--RatioOps [#_"RatioOps" this, #_"Number" x]
-        (Numbers'add-2ol x, 1)
-    )
+    (extend-type RatioOps Ops
+        (#_"Number" Ops'''inc [#_"RatioOps" this, #_"Number" x]
+            (Numbers'add-2ol x, 1)
+        )
 
-    #_override
-    (defn #_"Number" Ops'''dec--RatioOps [#_"RatioOps" this, #_"Number" x]
-        (Numbers'add-2ol x, -1)
+        (#_"Number" Ops'''dec [#_"RatioOps" this, #_"Number" x]
+            (Numbers'add-2ol x, -1)
+        )
     )
 )
 
@@ -8843,109 +8637,96 @@
         (OpsP'new)
     )
 
-    #_override
-    (defn #_"Ops" Ops'''combine--BigIntOps [#_"BigIntOps" this, #_"Ops" y]
-        (.opsWithBigInt y, this)
-    )
+    (extend-type BigIntOps Ops
+        (#_"Ops" Ops'''combine [#_"BigIntOps" this, #_"Ops" y]
+            (Ops'''opsWithBigInt y, this)
+        )
 
-    #_override
-    (defn #_"Ops" Ops'''opsWithLong--BigIntOps [#_"BigIntOps" this, #_"LongOps" x]
-        this
-    )
+        (#_"Ops" Ops'''opsWithLong [#_"BigIntOps" this, #_"LongOps" x]
+            this
+        )
 
-    #_override
-    (defn #_"Ops" Ops'''opsWithRatio--BigIntOps [#_"BigIntOps" this, #_"RatioOps" x]
-        Numbers'RATIO_OPS
-    )
+        (#_"Ops" Ops'''opsWithRatio [#_"BigIntOps" this, #_"RatioOps" x]
+            Numbers'RATIO_OPS
+        )
 
-    #_override
-    (defn #_"Ops" Ops'''opsWithBigInt--BigIntOps [#_"BigIntOps" this, #_"BigIntOps" x]
-        this
+        (#_"Ops" Ops'''opsWithBigInt [#_"BigIntOps" this, #_"BigIntOps" x]
+            this
+        )
     )
 
     (declare Numbers'toBigInt)
 
-    #_override
-    (defn #_"boolean" Ops'''isZero--BigIntOps [#_"BigIntOps" this, #_"Number" x]
-        (let [#_"BigInt" bx (Numbers'toBigInt x)]
-            (zero? (if (some? (:bipart bx)) (.signum (:bipart bx)) (:lpart bx)))
+    (extend-type BigIntOps Ops
+        (#_"boolean" Ops'''isZero [#_"BigIntOps" this, #_"Number" x]
+            (let [#_"BigInt" bx (Numbers'toBigInt x)]
+                (zero? (if (some? (:bipart bx)) (.signum (:bipart bx)) (:lpart bx)))
+            )
         )
-    )
 
-    #_override
-    (defn #_"boolean" Ops'''isPos--BigIntOps [#_"BigIntOps" this, #_"Number" x]
-        (let [#_"BigInt" bx (Numbers'toBigInt x)]
-            (pos? (if (some? (:bipart bx)) (.signum (:bipart bx)) (:lpart bx)))
+        (#_"boolean" Ops'''isPos [#_"BigIntOps" this, #_"Number" x]
+            (let [#_"BigInt" bx (Numbers'toBigInt x)]
+                (pos? (if (some? (:bipart bx)) (.signum (:bipart bx)) (:lpart bx)))
+            )
         )
-    )
 
-    #_override
-    (defn #_"boolean" Ops'''isNeg--BigIntOps [#_"BigIntOps" this, #_"Number" x]
-        (let [#_"BigInt" bx (Numbers'toBigInt x)]
-            (neg? (if (some? (:bipart bx)) (.signum (:bipart bx)) (:lpart bx)))
+        (#_"boolean" Ops'''isNeg [#_"BigIntOps" this, #_"Number" x]
+            (let [#_"BigInt" bx (Numbers'toBigInt x)]
+                (neg? (if (some? (:bipart bx)) (.signum (:bipart bx)) (:lpart bx)))
+            )
         )
-    )
 
-    #_override
-    (defn #_"Number" Ops'''add--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-        (BigInt''add (Numbers'toBigInt x), (Numbers'toBigInt y))
-    )
+        (#_"Number" Ops'''add [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
+            (BigInt''add (Numbers'toBigInt x), (Numbers'toBigInt y))
+        )
 
-    #_override
-    (defn #_"Number" Ops'''multiply--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-        (BigInt''multiply (Numbers'toBigInt x), (Numbers'toBigInt y))
+        (#_"Number" Ops'''multiply [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
+            (BigInt''multiply (Numbers'toBigInt x), (Numbers'toBigInt y))
+        )
     )
 
     (declare Numbers'divide-2ii)
 
-    #_override
-    (defn #_"Number" Ops'''divide--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-        (Numbers'divide-2ii (.toBigInteger this, x), (.toBigInteger this, y))
-    )
+    (extend-type BigIntOps Ops
+        (#_"Number" Ops'''divide [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
+            (Numbers'divide-2ii (.toBigInteger this, x), (.toBigInteger this, y))
+        )
 
-    #_override
-    (defn #_"Number" Ops'''quotient--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-        (BigInt''quotient (Numbers'toBigInt x), (Numbers'toBigInt y))
-    )
+        (#_"Number" Ops'''quotient [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
+            (BigInt''quotient (Numbers'toBigInt x), (Numbers'toBigInt y))
+        )
 
-    #_override
-    (defn #_"Number" Ops'''remainder--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-        (BigInt''remainder (Numbers'toBigInt x), (Numbers'toBigInt y))
-    )
+        (#_"Number" Ops'''remainder [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
+            (BigInt''remainder (Numbers'toBigInt x), (Numbers'toBigInt y))
+        )
 
-    #_override
-    (defn #_"boolean" Ops'''equiv--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-        (= (Numbers'toBigInt x) (Numbers'toBigInt y))
-    )
+        (#_"boolean" Ops'''equiv [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
+            (= (Numbers'toBigInt x) (Numbers'toBigInt y))
+        )
 
-    #_override
-    (defn #_"boolean" Ops'''lt--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-        (BigInt''lt (Numbers'toBigInt x), (Numbers'toBigInt y))
-    )
+        (#_"boolean" Ops'''lt [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
+            (BigInt''lt (Numbers'toBigInt x), (Numbers'toBigInt y))
+        )
 
-    #_override
-    (defn #_"boolean" Ops'''lte--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-        (<= (.compareTo (.toBigInteger this, x), (.toBigInteger this, y)) 0)
-    )
+        (#_"boolean" Ops'''lte [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
+            (<= (.compareTo (.toBigInteger this, x), (.toBigInteger this, y)) 0)
+        )
 
-    #_override
-    (defn #_"boolean" Ops'''gte--BigIntOps [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-        (>= (.compareTo (.toBigInteger this, x), (.toBigInteger this, y)) 0)
-    )
+        (#_"boolean" Ops'''gte [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
+            (>= (.compareTo (.toBigInteger this, x), (.toBigInteger this, y)) 0)
+        )
 
-    #_override
-    (defn #_"Number" Ops'''negate--BigIntOps [#_"BigIntOps" this, #_"Number" x]
-        (BigInt'fromBigInteger (.negate (.toBigInteger this, x)))
-    )
+        (#_"Number" Ops'''negate [#_"BigIntOps" this, #_"Number" x]
+            (BigInt'fromBigInteger (.negate (.toBigInteger this, x)))
+        )
 
-    #_override
-    (defn #_"Number" Ops'''inc--BigIntOps [#_"BigIntOps" this, #_"Number" x]
-        (BigInt'fromBigInteger (.add (.toBigInteger this, x), BigInteger/ONE))
-    )
+        (#_"Number" Ops'''inc [#_"BigIntOps" this, #_"Number" x]
+            (BigInt'fromBigInteger (.add (.toBigInteger this, x), BigInteger/ONE))
+        )
 
-    #_override
-    (defn #_"Number" Ops'''dec--BigIntOps [#_"BigIntOps" this, #_"Number" x]
-        (BigInt'fromBigInteger (.subtract (.toBigInteger this, x), BigInteger/ONE))
+        (#_"Number" Ops'''dec [#_"BigIntOps" this, #_"Number" x]
+            (BigInt'fromBigInteger (.subtract (.toBigInteger this, x), BigInteger/ONE))
+        )
     )
 )
 
@@ -8989,76 +8770,76 @@
     (defn #_"Number" Numbers'num-1l [#_"long"   x] (Long/valueOf   x))
     (defn #_"Number" Numbers'num-1o [#_"Object" x] (cast Number    x))
 
-    (defn #_"boolean" Numbers'isZero-1o [#_"Object" x] (.isZero (Numbers'ops x), (cast Number x)))
-    (defn #_"boolean" Numbers'isPos-1o  [#_"Object" x] (.isPos  (Numbers'ops x), (cast Number x)))
-    (defn #_"boolean" Numbers'isNeg-1o  [#_"Object" x] (.isNeg  (Numbers'ops x), (cast Number x)))
+    (defn #_"boolean" Numbers'isZero-1o [#_"Object" x] (Ops'''isZero (Numbers'ops x), (cast Number x)))
+    (defn #_"boolean" Numbers'isPos-1o  [#_"Object" x] (Ops'''isPos  (Numbers'ops x), (cast Number x)))
+    (defn #_"boolean" Numbers'isNeg-1o  [#_"Object" x] (Ops'''isNeg  (Numbers'ops x), (cast Number x)))
 
-    (defn #_"Number" Numbers'minus-1o  [#_"Object" x] (.negate  (Numbers'ops x), (cast Number x)))
-    (defn #_"Number" Numbers'minusP-1o [#_"Object" x] (.negateP (Numbers'ops x), (cast Number x)))
-    (defn #_"Number" Numbers'inc-1o    [#_"Object" x] (.inc     (Numbers'ops x), (cast Number x)))
-    (defn #_"Number" Numbers'incP-1o   [#_"Object" x] (.incP    (Numbers'ops x), (cast Number x)))
-    (defn #_"Number" Numbers'dec-1o    [#_"Object" x] (.dec     (Numbers'ops x), (cast Number x)))
-    (defn #_"Number" Numbers'decP-1o   [#_"Object" x] (.decP    (Numbers'ops x), (cast Number x)))
+    (defn #_"Number" Numbers'minus-1o  [#_"Object" x] (Ops'''negate  (Numbers'ops x), (cast Number x)))
+    (defn #_"Number" Numbers'minusP-1o [#_"Object" x] (Ops'''negateP (Numbers'ops x), (cast Number x)))
+    (defn #_"Number" Numbers'inc-1o    [#_"Object" x] (Ops'''inc     (Numbers'ops x), (cast Number x)))
+    (defn #_"Number" Numbers'incP-1o   [#_"Object" x] (Ops'''incP    (Numbers'ops x), (cast Number x)))
+    (defn #_"Number" Numbers'dec-1o    [#_"Object" x] (Ops'''dec     (Numbers'ops x), (cast Number x)))
+    (defn #_"Number" Numbers'decP-1o   [#_"Object" x] (Ops'''decP    (Numbers'ops x), (cast Number x)))
 
     (defn #_"Number" Numbers'add-2oo [#_"Object" x, #_"Object" y]
-        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.add (cast Number x), (cast Number y)))
+        (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''add (cast Number x), (cast Number y)))
     )
 
     (defn #_"Number" Numbers'addP-2oo [#_"Object" x, #_"Object" y]
-        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.addP (cast Number x), (cast Number y)))
+        (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''addP (cast Number x), (cast Number y)))
     )
 
     (defn #_"Number" Numbers'minus-2oo [#_"Object" x, #_"Object" y]
         (let [#_"Ops" yops (Numbers'ops y)]
-            (-> (.combine (Numbers'ops x), yops) (.add (cast Number x), (.negate yops, (cast Number y))))
+            (-> (Ops'''combine (Numbers'ops x), yops) (Ops'''add (cast Number x), (Ops'''negate yops, (cast Number y))))
         )
     )
 
     (defn #_"Number" Numbers'minusP-2oo [#_"Object" x, #_"Object" y]
         (let [#_"Ops" yops (Numbers'ops y)
-              #_"Number" negativeY (.negateP yops, (cast Number y))
+              #_"Number" negativeY (Ops'''negateP yops, (cast Number y))
               #_"Ops" negativeYOps (Numbers'ops negativeY)]
-            (-> (.combine (Numbers'ops x), negativeYOps) (.addP (cast Number x), negativeY))
+            (-> (Ops'''combine (Numbers'ops x), negativeYOps) (Ops'''addP (cast Number x), negativeY))
         )
     )
 
     (defn #_"Number" Numbers'multiply-2oo [#_"Object" x, #_"Object" y]
-        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.multiply (cast Number x), (cast Number y)))
+        (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''multiply (cast Number x), (cast Number y)))
     )
 
     (defn #_"Number" Numbers'multiplyP-2oo [#_"Object" x, #_"Object" y]
-        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.multiplyP (cast Number x), (cast Number y)))
+        (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''multiplyP (cast Number x), (cast Number y)))
     )
 
     (defn #_"Number" Numbers'divide-2oo [#_"Object" x, #_"Object" y]
         (let [#_"Ops" yops (Numbers'ops y)]
-            (when (.isZero yops, (cast Number y))
+            (when (Ops'''isZero yops, (cast Number y))
                 (throw (ArithmeticException. "Divide by zero"))
             )
-            (-> (.combine (Numbers'ops x), yops) (.divide (cast Number x), (cast Number y)))
+            (-> (Ops'''combine (Numbers'ops x), yops) (Ops'''divide (cast Number x), (cast Number y)))
         )
     )
 
     (defn #_"Number" Numbers'quotient-2oo [#_"Object" x, #_"Object" y]
         (let [#_"Ops" yops (Numbers'ops y)]
-            (when (.isZero yops, (cast Number y))
+            (when (Ops'''isZero yops, (cast Number y))
                 (throw (ArithmeticException. "Divide by zero"))
             )
-            (-> (.combine (Numbers'ops x), yops) (.quotient (cast Number x), (cast Number y)))
+            (-> (Ops'''combine (Numbers'ops x), yops) (Ops'''quotient (cast Number x), (cast Number y)))
         )
     )
 
     (defn #_"Number" Numbers'remainder-2oo [#_"Object" x, #_"Object" y]
         (let [#_"Ops" yops (Numbers'ops y)]
-            (when (.isZero yops, (cast Number y))
+            (when (Ops'''isZero yops, (cast Number y))
                 (throw (ArithmeticException. "Divide by zero"))
             )
-            (-> (.combine (Numbers'ops x), yops) (.remainder (cast Number x), (cast Number y)))
+            (-> (Ops'''combine (Numbers'ops x), yops) (Ops'''remainder (cast Number x), (cast Number y)))
         )
     )
 
     (defn #_"boolean" Numbers'equiv-2nn [#_"Number" x, #_"Number" y]
-        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.equiv x, y))
+        (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''equiv x, y))
     )
 
     (defn #_"boolean" Numbers'equiv [#_"Object" x, #_"Object" y]
@@ -9066,28 +8847,28 @@
     )
 
     (defn #_"boolean" Numbers'equal [#_"Number" x, #_"Number" y]
-        (and (= (Numbers'category x) (Numbers'category y)) (.equiv (.combine (Numbers'ops x), (Numbers'ops y)), x, y))
+        (and (= (Numbers'category x) (Numbers'category y)) (Ops'''equiv (Ops'''combine (Numbers'ops x), (Numbers'ops y)), x, y))
     )
 
     (defn #_"boolean" Numbers'lt-2oo [#_"Object" x, #_"Object" y]
-        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.lt (cast Number x), (cast Number y)))
+        (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''lt (cast Number x), (cast Number y)))
     )
 
     (defn #_"boolean" Numbers'lte-2oo [#_"Object" x, #_"Object" y]
-        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.lte (cast Number x), (cast Number y)))
+        (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''lte (cast Number x), (cast Number y)))
     )
 
     (defn #_"boolean" Numbers'gt-2oo [#_"Object" x, #_"Object" y]
-        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.lt (cast Number y), (cast Number x)))
+        (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''lt (cast Number y), (cast Number x)))
     )
 
     (defn #_"boolean" Numbers'gte-2oo [#_"Object" x, #_"Object" y]
-        (-> (.combine (Numbers'ops x), (Numbers'ops y)) (.gte (cast Number x), (cast Number y)))
+        (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''gte (cast Number x), (cast Number y)))
     )
 
     (defn #_"int" Numbers'compare [#_"Number" x, #_"Number" y]
-        (let [#_"Ops" ops (.combine (Numbers'ops x), (Numbers'ops y))]
-            (cond (.lt ops, x, y) -1 (.lt ops, y, x) 1 :else 0)
+        (let [#_"Ops" ops (Ops'''combine (Numbers'ops x), (Numbers'ops y))]
+            (cond (Ops'''lt ops, x, y) -1 (Ops'''lt ops, y, x) 1 :else 0)
         )
     )
 
@@ -9451,8 +9232,8 @@
     (defn #_"long" Numbers'inc-1l [#_"long" x] (if (= x Long/MAX_VALUE) (Numbers'throwIntOverflow) (inc x)))
     (defn #_"long" Numbers'dec-1l [#_"long" x] (if (= x Long/MIN_VALUE) (Numbers'throwIntOverflow) (dec x)))
 
-    (defn #_"Number" Numbers'incP-1l [#_"long" x] (if (= x Long/MAX_VALUE) (.inc Numbers'BIGINT_OPS, x) (Numbers'num-1l (inc x))))
-    (defn #_"Number" Numbers'decP-1l [#_"long" x] (if (= x Long/MIN_VALUE) (.dec Numbers'BIGINT_OPS, x) (Numbers'num-1l (dec x))))
+    (defn #_"Number" Numbers'incP-1l [#_"long" x] (if (= x Long/MAX_VALUE) (Ops'''inc Numbers'BIGINT_OPS, x) (Numbers'num-1l (inc x))))
+    (defn #_"Number" Numbers'decP-1l [#_"long" x] (if (= x Long/MIN_VALUE) (Ops'''dec Numbers'BIGINT_OPS, x) (Numbers'num-1l (dec x))))
 
     (defn #_"long" Numbers'multiply-2ll [#_"long" x, #_"long" y]
         (when-not (and (= x Long/MIN_VALUE) (neg? y)) => (Numbers'throwIntOverflow)
@@ -9579,130 +9360,48 @@
 
     #_foreign
     (defn #_"Object" call---AFn [#_"AFn" this]
-        (.invoke this)
+        (IFn'''invoke this)
     )
 
     #_foreign
     (defn #_"void" run---AFn [#_"AFn" this]
-        (.invoke this)
+        (IFn'''invoke this)
         nil
     )
 
-    #_override
-    (defn #_"Object" IFn'''invoke-1--AFn [#_"AFn" this]
-        (.throwArity this, 0)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-2--AFn [#_"AFn" this, #_"Object" arg1]
-        (.throwArity this, 1)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-3--AFn [#_"AFn" this, #_"Object" arg1, #_"Object" arg2]
-        (.throwArity this, 2)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--AFn [#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
-        (.throwArity this, 3)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-5--AFn [#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4]
-        (.throwArity this, 4)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-6--AFn [#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5]
-        (.throwArity this, 5)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-7--AFn [#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6]
-        (.throwArity this, 6)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-8--AFn [#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7]
-        (.throwArity this, 7)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-9--AFn [#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8]
-        (.throwArity this, 8)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-10--AFn [#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9]
-        (.throwArity this, 9)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-11--AFn [#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10]
-        (.throwArity this, 10)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-12--AFn [#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11]
-        (.throwArity this, 11)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-13--AFn [#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12]
-        (.throwArity this, 12)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-14--AFn [#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13]
-        (.throwArity this, 13)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-15--AFn [#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14]
-        (.throwArity this, 14)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-16--AFn [#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15]
-        (.throwArity this, 15)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-17--AFn [#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16]
-        (.throwArity this, 16)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-18--AFn [#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17]
-        (.throwArity this, 17)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-19--AFn [#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18]
-        (.throwArity this, 18)
-    )
-
-    #_override
-  #_(defn #_"Object" IFn'''invoke-20--AFn [#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19]
-        (.throwArity this, 19)
-    )
-
-    #_override
-  #_(defn #_"Object" IFn'''invoke-21--AFn [#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20]
-        (.throwArity this, 20)
-    )
-
-    #_override
-  #_(defn #_"Object" IFn'''invoke-22--AFn [#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20 & #_"Object..." args]
-        (.throwArity this, 21)
+    (extend-type AFn IFn
+        (#_"Object" IFn'''invoke
+            ([#_"AFn" this] (.throwArity this, 0))
+            ([#_"AFn" this, #_"Object" arg1] (.throwArity this, 1))
+            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2] (.throwArity this, 2))
+            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3] (.throwArity this, 3))
+            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4] (.throwArity this, 4))
+            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5] (.throwArity this, 5))
+            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6] (.throwArity this, 6))
+            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7] (.throwArity this, 7))
+            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8] (.throwArity this, 8))
+            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9] (.throwArity this, 9))
+            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10] (.throwArity this, 10))
+            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11] (.throwArity this, 11))
+            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12] (.throwArity this, 12))
+            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13] (.throwArity this, 13))
+            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14] (.throwArity this, 14))
+            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15] (.throwArity this, 15))
+            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16] (.throwArity this, 16))
+            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17] (.throwArity this, 17))
+            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18] (.throwArity this, 18))
+          #_([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19] (.throwArity this, 19))
+          #_([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20] (.throwArity this, 20))
+          #_([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20 & #_"Object..." args] (.throwArity this, 21))
+        )
     )
 
     (declare AFn'applyToHelper)
 
-    #_override
-    (defn #_"Object" IFn'''applyTo--AFn [#_"AFn" this, #_"ISeq" args]
-        (AFn'applyToHelper this, args)
+    (extend-type AFn IFn
+        (#_"Object" IFn'''applyTo [#_"AFn" this, #_"ISeq" args]
+            (AFn'applyToHelper this, args)
+        )
     )
 
     (declare RT'boundedLength)
@@ -9711,33 +9410,33 @@
     (defn #_"Object" AFn'applyToHelper [#_"IFn" ifn, #_"ISeq" args]
         (case (RT'boundedLength args, 20)
             0
-                (.invoke ifn)
+                (IFn'''invoke ifn)
             1
-                (.invoke ifn, (first args))
+                (IFn'''invoke ifn, (first args))
             2
-                (.invoke ifn, (first args),
+                (IFn'''invoke ifn, (first args),
                     (first (next args))
                 )
             3
-                (.invoke ifn, (first args),
+                (IFn'''invoke ifn, (first args),
                     (first (§ ass args (next args))),
                     (first (next args))
                 )
             4
-                (.invoke ifn, (first args),
+                (IFn'''invoke ifn, (first args),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
                     (first (next args))
                 )
             5
-                (.invoke ifn, (first args),
+                (IFn'''invoke ifn, (first args),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
                     (first (next args))
                 )
             6
-                (.invoke ifn, (first args),
+                (IFn'''invoke ifn, (first args),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
@@ -9745,7 +9444,7 @@
                     (first (next args))
                 )
             7
-                (.invoke ifn, (first args),
+                (IFn'''invoke ifn, (first args),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
@@ -9754,7 +9453,7 @@
                     (first (next args))
                 )
             8
-                (.invoke ifn, (first args),
+                (IFn'''invoke ifn, (first args),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
@@ -9764,7 +9463,7 @@
                     (first (next args))
                 )
             9
-                (.invoke ifn, (first args),
+                (IFn'''invoke ifn, (first args),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
@@ -9775,7 +9474,7 @@
                     (first (next args))
                 )
             10
-                (.invoke ifn, (first args),
+                (IFn'''invoke ifn, (first args),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
@@ -9787,7 +9486,7 @@
                     (first (next args))
                 )
             11
-                (.invoke ifn, (first args),
+                (IFn'''invoke ifn, (first args),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
@@ -9800,7 +9499,7 @@
                     (first (next args))
                 )
             12
-                (.invoke ifn, (first args),
+                (IFn'''invoke ifn, (first args),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
@@ -9814,7 +9513,7 @@
                     (first (next args))
                 )
             13
-                (.invoke ifn, (first args),
+                (IFn'''invoke ifn, (first args),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
@@ -9829,7 +9528,7 @@
                     (first (next args))
                 )
             14
-                (.invoke ifn, (first args),
+                (IFn'''invoke ifn, (first args),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
@@ -9845,7 +9544,7 @@
                     (first (next args))
                 )
             15
-                (.invoke ifn, (first args),
+                (IFn'''invoke ifn, (first args),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
@@ -9862,7 +9561,7 @@
                     (first (next args))
                 )
             16
-                (.invoke ifn, (first args),
+                (IFn'''invoke ifn, (first args),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
@@ -9880,7 +9579,7 @@
                     (first (next args))
                 )
             17
-                (.invoke ifn, (first args),
+                (IFn'''invoke ifn, (first args),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
@@ -9899,7 +9598,7 @@
                     (first (next args))
                 )
             18
-                (.invoke ifn, (first args),
+                (IFn'''invoke ifn, (first args),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
@@ -9919,7 +9618,7 @@
                     (first (next args))
                 )
             19
-              #_(.invoke ifn, (first args),
+              #_(IFn'''invoke ifn, (first args),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
@@ -9940,7 +9639,7 @@
                     (first (next args))
                 )
             20
-              #_(.invoke ifn, (first args),
+              #_(IFn'''invoke ifn, (first args),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
@@ -9962,7 +9661,7 @@
                     (first (next args))
                 )
             #_else
-              #_(.invoke ifn, (first args),
+              #_(IFn'''invoke ifn, (first args),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
                     (first (§ ass args (next args))),
@@ -10036,14 +9735,14 @@
         )
     )
 
-    #_override
-    (defn #_"String" Named'''getNamespace--Symbol [#_"Symbol" this]
-        (:ns this)
-    )
+    (extend-type Symbol Named
+        (#_"String" Named'''getNamespace [#_"Symbol" this]
+            (:ns this)
+        )
 
-    #_override
-    (defn #_"String" Named'''getName--Symbol [#_"Symbol" this]
-        (:name this)
+        (#_"String" Named'''getName [#_"Symbol" this]
+            (:name this)
+        )
     )
 
     #_foreign
@@ -10058,16 +9757,18 @@
         (Util'hashCombine (.hashCode (:name this)), (Util'hash (:ns this)))
     )
 
-    #_override
-    (defn #_"int" IHashEq'''hasheq--Symbol [#_"Symbol" this]
-        (let-when [#_"int" cached (:_hasheq this)] (zero? cached) => cached
-            (§ set! (:_hasheq this) (Util'hashCombine (Murmur3'hashUnencodedChars (:name this)), (Util'hash (:ns this))))
+    (extend-type Symbol IHashEq
+        (#_"int" IHashEq'''hasheq [#_"Symbol" this]
+            (let-when [#_"int" cached (:_hasheq this)] (zero? cached) => cached
+                (§ set! (:_hasheq this) (Util'hashCombine (Murmur3'hashUnencodedChars (:name this)), (Util'hash (:ns this))))
+            )
         )
     )
 
-    #_override
-    (defn #_"Symbol" IObj'''withMeta--Symbol [#_"Symbol" this, #_"IPersistentMap" meta]
-        (Symbol'new meta, (:ns this), (:name this))
+    (extend-type Symbol IObj
+        (#_"Symbol" IObj'''withMeta [#_"Symbol" this, #_"IPersistentMap" meta]
+            (Symbol'new meta, (:ns this), (:name this))
+        )
     )
 
     #_foreign
@@ -10084,19 +9785,17 @@
         )
     )
 
-    #_override
-    (defn #_"Object" IFn'''invoke-2--Symbol [#_"Symbol" this, #_"Object" obj]
-        (get obj this)
+    (extend-type Symbol IFn
+        (#_"Object" IFn'''invoke
+            ([#_"Symbol" this, #_"Object" arg1] (get arg1 this))
+            ([#_"Symbol" this, #_"Object" arg1, #_"Object" notFound] (get arg1 this notFound))
+        )
     )
 
-    #_override
-    (defn #_"Object" IFn'''invoke-3--Symbol [#_"Symbol" this, #_"Object" obj, #_"Object" notFound]
-        (get obj this notFound)
-    )
-
-    #_override
-    (defn #_"IPersistentMap" IMeta'''meta--Symbol [#_"Symbol" this]
-        (:_meta this)
+    (extend-type Symbol IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"Symbol" this]
+            (:_meta this)
+        )
     )
 )
 )
@@ -10111,7 +9810,7 @@
     (defn- #_"Keyword" Keyword'new [#_"Symbol" sym]
         (hash-map
             #_"Symbol" :sym sym
-            #_"int" :hasheq (+ (.hasheq sym) 0x9e3779b9)
+            #_"int" :hasheq (+ (IHashEq'''hasheq sym) 0x9e3779b9)
 
             #_mutable #_"String" :_str nil
         )
@@ -10161,9 +9860,10 @@
         (+ (.hashCode (:sym this)) 0x9e3779b9)
     )
 
-    #_override
-    (defn #_"int" IHashEq'''hasheq--Keyword [#_"Keyword" this]
-        (:hasheq this)
+    (extend-type Keyword IHashEq
+        (#_"int" IHashEq'''hasheq [#_"Keyword" this]
+            (:hasheq this)
+        )
     )
 
     #_foreign
@@ -10188,134 +9888,50 @@
         (throw! "unsupported operation")
     )
 
-    #_override
-    (defn #_"Object" IFn'''invoke-1--Keyword [#_"Keyword" this]
-        (Keyword''throwArity this)
-    )
-
     #_foreign
     (defn #_"int" compareTo---Keyword [#_"Keyword" this, #_"Keyword" that]
         (compare (:sym this) (:sym that))
     )
 
-    #_override
-    (defn #_"String" Named'''getNamespace--Keyword [#_"Keyword" this]
-        (.getNamespace (:sym this))
+    (extend-type Keyword Named
+        (#_"String" Named'''getNamespace [#_"Keyword" this]
+            (Named'''getNamespace (:sym this))
+        )
+
+        (#_"String" Named'''getName [#_"Keyword" this]
+            (Named'''getName (:sym this))
+        )
     )
 
-    #_override
-    (defn #_"String" Named'''getName--Keyword [#_"Keyword" this]
-        (.getName (:sym this))
-    )
+    (extend-type Keyword IFn
+        (#_"Object" IFn'''invoke
+            ([#_"Keyword" this] (Keyword''throwArity this))
+            ([#_"Keyword" this, #_"Object" obj] (get obj this))
+            ([#_"Keyword" this, #_"Object" obj, #_"Object" notFound] (get obj this notFound))
+            ([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3] (Keyword''throwArity this))
+            ([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4] (Keyword''throwArity this))
+            ([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5] (Keyword''throwArity this))
+            ([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6] (Keyword''throwArity this))
+            ([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7] (Keyword''throwArity this))
+            ([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8] (Keyword''throwArity this))
+            ([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9] (Keyword''throwArity this))
+            ([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10] (Keyword''throwArity this))
+            ([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11] (Keyword''throwArity this))
+            ([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12] (Keyword''throwArity this))
+            ([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13] (Keyword''throwArity this))
+            ([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14] (Keyword''throwArity this))
+            ([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15] (Keyword''throwArity this))
+            ([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16] (Keyword''throwArity this))
+            ([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17] (Keyword''throwArity this))
+            ([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18] (Keyword''throwArity this))
+          #_([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19] (Keyword''throwArity this))
+          #_([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20] (Keyword''throwArity this))
+          #_([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20 & #_"Object..." args] (Keyword''throwArity this))
+        )
 
-    #_override
-    (defn #_"Object" IFn'''invoke-2--Keyword [#_"Keyword" this, #_"Object" obj]
-        (get obj this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-3--Keyword [#_"Keyword" this, #_"Object" obj, #_"Object" notFound]
-        (get obj this notFound)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-5--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-6--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-7--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-8--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-9--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-10--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-11--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-12--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-13--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-14--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-15--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-16--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-17--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-18--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-19--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-  #_(defn #_"Object" IFn'''invoke-20--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-  #_(defn #_"Object" IFn'''invoke-21--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-  #_(defn #_"Object" IFn'''invoke-22--Keyword [#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20 & #_"Object..." args]
-        (Keyword''throwArity this)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''applyTo--Keyword [#_"Keyword" this, #_"ISeq" args]
-        (AFn'applyToHelper this, args)
+        (#_"Object" IFn'''applyTo [#_"Keyword" this, #_"ISeq" args]
+            (AFn'applyToHelper this, args)
+        )
     )
 )
 )
@@ -10331,41 +9947,45 @@
         )
     )
 
-    #_override
-    (defn #_"IPersistentMap" IMeta'''meta--AFunction [#_"AFunction" this]
-        nil
+    (extend-type AFunction IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"AFunction" this]
+            nil
+        )
     )
 
-    #_override
-    (defn #_"IObj" IObj'''withMeta--AFunction [#_"AFunction" this, #_"IPersistentMap" meta]
-        (§ proxy RestFn()
-            #_override
-            (defn #_"Object" RestFn'''doInvoke-2--RestFn [#_"RestFn" this, #_"Object" args]
-                (.applyTo (§ this AFunction), (cast ISeq args))
-            )
+    (extend-type AFunction IObj
+        (#_"IObj" IObj'''withMeta [#_"AFunction" this, #_"IPersistentMap" meta]
+            (§ proxy RestFn()
+                #_override
+                (defn #_"Object" RestFn'''doInvoke-2--RestFn [#_"RestFn" this, #_"Object" args]
+                    (IFn'''applyTo (§ this AFunction), (cast cloiure.core.ISeq args))
+                )
 
-            #_override
-            (defn #_"IPersistentMap" IMeta'''meta--RestFn [#_"RestFn" this]
-                meta
-            )
+                (extend-type RestFn IMeta
+                    (#_"IPersistentMap" IMeta'''meta [#_"RestFn" this]
+                        meta
+                    )
+                )
 
-            #_override
-            (defn #_"IObj" IObj'''withMeta--RestFn [#_"RestFn" this, #_"IPersistentMap" meta]
-                (.withMeta (§ this AFunction), meta)
-            )
+                (extend-type RestFn IObj
+                    (#_"IObj" IObj'''withMeta [#_"RestFn" this, #_"IPersistentMap" meta]
+                        (with-meta (§ this AFunction) meta)
+                    )
+                )
 
-            #_override
-            (defn #_"int" RestFn'''getRequiredArity--RestFn [#_"RestFn" this]
-                0
+                #_override
+                (defn #_"int" RestFn'''getRequiredArity--RestFn [#_"RestFn" this]
+                    0
+                )
             )
         )
     )
 
     #_foreign
     (defn #_"int" compare---AFunction [#_"AFunction" this, #_"Object" o1, #_"Object" o2]
-        (let [#_"Object" o (.invoke this, o1, o2)]
+        (let [#_"Object" o (IFn'''invoke this, o1, o2)]
             (if (instance? Boolean o)
-                (cond (boolean o) -1 (boolean (.invoke this, o2, o1)) 1 :else 0)
+                (cond (boolean o) -1 (boolean (IFn'''invoke this, o2, o1)) 1 :else 0)
                 (.intValue (cast Number o))
             )
         )
@@ -10386,10 +10006,10 @@
         )
     )
 
-    (declare ArraySeq'create-1)
+    (declare ArraySeq'create)
 
     (defn #_"ISeq" RestFn'ontoArrayPrepend [#_"Object[]" array & #_"Object..." args]
-        (loop-when-recur [#_"ISeq" s (ArraySeq'create-1 array) #_"int" i (dec (alength args))] (<= 0 i) [(cons (aget args i) s) (dec i)] => s)
+        (loop-when-recur [#_"ISeq" s (ArraySeq'create array) #_"int" i (dec (alength args))] (<= 0 i) [(cons (aget args i) s) (dec i)] => s)
     )
 
     #_override
@@ -10497,1215 +10117,1196 @@
         nil
     )
 
-    #_override
-    (defn #_"Object" IFn'''applyTo--RestFn [#_"RestFn" this, #_"ISeq" args]
-        (when (< (.getRequiredArity this) (RT'boundedLength args, (.getRequiredArity this))) => (AFn'applyToHelper this, args)
-            (case (.getRequiredArity this)
-                0
-                    (.doInvoke this, args)
-                1
-                    (.doInvoke this, (first args),
-                        (next args)
+    (extend-type RestFn IFn
+        (#_"Object" IFn'''applyTo [#_"RestFn" this, #_"ISeq" args]
+            (when (< (.getRequiredArity this) (RT'boundedLength args, (.getRequiredArity this))) => (AFn'applyToHelper this, args)
+                (case (.getRequiredArity this)
+                    0
+                        (.doInvoke this, args)
+                    1
+                        (.doInvoke this, (first args),
+                            (next args)
+                        )
+                    2
+                        (.doInvoke this, (first args),
+                            (first (§ ass args (next args))),
+                            (next args)
+                        )
+                    3
+                        (.doInvoke this, (first args),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (next args)
+                        )
+                    4
+                        (.doInvoke this, (first args),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (next args)
+                        )
+                    5
+                        (.doInvoke this, (first args),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (next args)
+                        )
+                    6
+                        (.doInvoke this, (first args),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (next args)
+                        )
+                    7
+                        (.doInvoke this, (first args),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (next args)
+                        )
+                    8
+                        (.doInvoke this, (first args),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (next args)
+                        )
+                    9
+                        (.doInvoke this, (first args),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (next args)
+                        )
+                    10
+                        (.doInvoke this, (first args),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (next args)
+                        )
+                    11
+                        (.doInvoke this, (first args),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (next args)
+                        )
+                    12
+                        (.doInvoke this, (first args),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (next args)
+                        )
+                    13
+                        (.doInvoke this, (first args),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (next args)
+                        )
+                    14
+                        (.doInvoke this, (first args),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (next args)
+                        )
+                    15
+                        (.doInvoke this, (first args),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (next args)
+                        )
+                    16
+                        (.doInvoke this, (first args),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (next args)
+                        )
+                    17
+                        (.doInvoke this, (first args),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (next args)
+                        )
+                    18
+                        (.doInvoke this, (first args),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (next args)
+                        )
+                    19
+                        (.doInvoke this, (first args),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (next args)
+                        )
+                    20
+                        (.doInvoke this, (first args),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (first (§ ass args (next args))),
+                            (next args)
+                        )
+                    (.throwArity this, -1)
+                )
+            )
+        )
+
+        (#_"Object" IFn'''invoke
+            ([#_"RestFn" this]
+                (case (.getRequiredArity this)
+                    0
+                        (.doInvoke this, nil)
+                    (do
+                        (.throwArity this, 0)
                     )
-                2
-                    (.doInvoke this, (first args),
-                        (first (§ ass args (next args))),
-                        (next args)
+                )
+            )
+
+            ([#_"RestFn" this, #_"Object" arg1]
+                (case (.getRequiredArity this)
+                    0
+                        (.doInvoke this, (ArraySeq'create arg1))
+                    1
+                        (.doInvoke this, arg1, nil)
+                    (do
+                        (.throwArity this, 1)
                     )
-                3
-                    (.doInvoke this, (first args),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (next args)
+                )
+            )
+
+            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2]
+                (case (.getRequiredArity this)
+                    0
+                        (.doInvoke this,
+                            (ArraySeq'create arg1, arg2))
+                    1
+                        (.doInvoke this, arg1,
+                            (ArraySeq'create arg2))
+                    2
+                        (.doInvoke this, arg1, arg2, nil)
+                    (do
+                        (.throwArity this, 2)
                     )
-                4
-                    (.doInvoke this, (first args),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (next args)
+                )
+            )
+
+            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
+                (case (.getRequiredArity this)
+                    0
+                        (.doInvoke this,
+                            (ArraySeq'create arg1, arg2, arg3))
+                    1
+                        (.doInvoke this, arg1,
+                            (ArraySeq'create arg2, arg3))
+                    2
+                        (.doInvoke this, arg1, arg2,
+                            (ArraySeq'create arg3))
+                    3
+                        (.doInvoke this, arg1, arg2, arg3, nil)
+                    (do
+                        (.throwArity this, 3)
                     )
-                5
-                    (.doInvoke this, (first args),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (next args)
+                )
+            )
+
+            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4]
+                (case (.getRequiredArity this)
+                    0
+                        (.doInvoke this,
+                            (ArraySeq'create arg1, arg2, arg3, arg4))
+                    1
+                        (.doInvoke this, arg1,
+                            (ArraySeq'create arg2, arg3, arg4))
+                    2
+                        (.doInvoke this, arg1, arg2,
+                            (ArraySeq'create arg3, arg4))
+                    3
+                        (.doInvoke this, arg1, arg2, arg3,
+                            (ArraySeq'create arg4))
+                    4
+                        (.doInvoke this, arg1, arg2, arg3, arg4, nil)
+                    (do
+                        (.throwArity this, 4)
                     )
-                6
-                    (.doInvoke this, (first args),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (next args)
+                )
+            )
+
+            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5]
+                (case (.getRequiredArity this)
+                    0
+                        (.doInvoke this,
+                            (ArraySeq'create arg1, arg2, arg3, arg4, arg5))
+                    1
+                        (.doInvoke this, arg1,
+                            (ArraySeq'create arg2, arg3, arg4, arg5))
+                    2
+                        (.doInvoke this, arg1, arg2,
+                            (ArraySeq'create arg3, arg4, arg5))
+                    3
+                        (.doInvoke this, arg1, arg2, arg3,
+                            (ArraySeq'create arg4, arg5))
+                    4
+                        (.doInvoke this, arg1, arg2, arg3, arg4,
+                            (ArraySeq'create arg5))
+                    5
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, nil)
+                    (do
+                        (.throwArity this, 5)
                     )
-                7
-                    (.doInvoke this, (first args),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (next args)
+                )
+            )
+
+            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6]
+                (case (.getRequiredArity this)
+                    0
+                        (.doInvoke this,
+                            (ArraySeq'create arg1, arg2, arg3, arg4, arg5, arg6))
+                    1
+                        (.doInvoke this, arg1,
+                            (ArraySeq'create arg2, arg3, arg4, arg5, arg6))
+                    2
+                        (.doInvoke this, arg1, arg2,
+                            (ArraySeq'create arg3, arg4, arg5, arg6))
+                    3
+                        (.doInvoke this, arg1, arg2, arg3,
+                            (ArraySeq'create arg4, arg5, arg6))
+                    4
+                        (.doInvoke this, arg1, arg2, arg3, arg4,
+                            (ArraySeq'create arg5, arg6))
+                    5
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                            (ArraySeq'create arg6))
+                    6
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, nil)
+                    (do
+                        (.throwArity this, 6)
                     )
-                8
-                    (.doInvoke this, (first args),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (next args)
+                )
+            )
+
+            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7]
+                (case (.getRequiredArity this)
+                    0
+                        (.doInvoke this,
+                            (ArraySeq'create arg1, arg2, arg3, arg4, arg5, arg6, arg7))
+                    1
+                        (.doInvoke this, arg1,
+                            (ArraySeq'create arg2, arg3, arg4, arg5, arg6, arg7))
+                    2
+                        (.doInvoke this, arg1, arg2,
+                            (ArraySeq'create arg3, arg4, arg5, arg6, arg7))
+                    3
+                        (.doInvoke this, arg1, arg2, arg3,
+                            (ArraySeq'create arg4, arg5, arg6, arg7))
+                    4
+                        (.doInvoke this, arg1, arg2, arg3, arg4,
+                            (ArraySeq'create arg5, arg6, arg7))
+                    5
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                            (ArraySeq'create arg6, arg7))
+                    6
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                            (ArraySeq'create arg7))
+                    7
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, nil)
+                    (do
+                        (.throwArity this, 7)
                     )
-                9
-                    (.doInvoke this, (first args),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (next args)
+                )
+            )
+
+            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8]
+                (case (.getRequiredArity this)
+                    0
+                        (.doInvoke this,
+                            (ArraySeq'create arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8))
+                    1
+                        (.doInvoke this, arg1,
+                            (ArraySeq'create arg2, arg3, arg4, arg5, arg6, arg7, arg8))
+                    2
+                        (.doInvoke this, arg1, arg2,
+                            (ArraySeq'create arg3, arg4, arg5, arg6, arg7, arg8))
+                    3
+                        (.doInvoke this, arg1, arg2, arg3,
+                            (ArraySeq'create arg4, arg5, arg6, arg7, arg8))
+                    4
+                        (.doInvoke this, arg1, arg2, arg3, arg4,
+                            (ArraySeq'create arg5, arg6, arg7, arg8))
+                    5
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                            (ArraySeq'create arg6, arg7, arg8))
+                    6
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                            (ArraySeq'create arg7, arg8))
+                    7
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                            (ArraySeq'create arg8))
+                    8
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, nil)
+                    (do
+                        (.throwArity this, 8)
                     )
-                10
-                    (.doInvoke this, (first args),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (next args)
+                )
+            )
+
+            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9]
+                (case (.getRequiredArity this)
+                    0
+                        (.doInvoke this,
+                            (ArraySeq'create arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9))
+                    1
+                        (.doInvoke this, arg1,
+                            (ArraySeq'create arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9))
+                    2
+                        (.doInvoke this, arg1, arg2,
+                            (ArraySeq'create arg3, arg4, arg5, arg6, arg7, arg8, arg9))
+                    3
+                        (.doInvoke this, arg1, arg2, arg3,
+                            (ArraySeq'create arg4, arg5, arg6, arg7, arg8, arg9))
+                    4
+                        (.doInvoke this, arg1, arg2, arg3, arg4,
+                            (ArraySeq'create arg5, arg6, arg7, arg8, arg9))
+                    5
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                            (ArraySeq'create arg6, arg7, arg8, arg9))
+                    6
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                            (ArraySeq'create arg7, arg8, arg9))
+                    7
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                            (ArraySeq'create arg8, arg9))
+                    8
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                            (ArraySeq'create arg9))
+                    9
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, nil)
+                    (do
+                        (.throwArity this, 9)
                     )
-                11
-                    (.doInvoke this, (first args),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (next args)
+                )
+            )
+
+            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10]
+                (case (.getRequiredArity this)
+                    0
+                        (.doInvoke this,
+                            (ArraySeq'create arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10))
+                    1
+                        (.doInvoke this, arg1,
+                            (ArraySeq'create arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10))
+                    2
+                        (.doInvoke this, arg1, arg2,
+                            (ArraySeq'create arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10))
+                    3
+                        (.doInvoke this, arg1, arg2, arg3,
+                            (ArraySeq'create arg4, arg5, arg6, arg7, arg8, arg9, arg10))
+                    4
+                        (.doInvoke this, arg1, arg2, arg3, arg4,
+                            (ArraySeq'create arg5, arg6, arg7, arg8, arg9, arg10))
+                    5
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                            (ArraySeq'create arg6, arg7, arg8, arg9, arg10))
+                    6
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                            (ArraySeq'create arg7, arg8, arg9, arg10))
+                    7
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                            (ArraySeq'create arg8, arg9, arg10))
+                    8
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                            (ArraySeq'create arg9, arg10))
+                    9
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                            (ArraySeq'create arg10))
+                    10
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, nil)
+                    (do
+                        (.throwArity this, 10)
                     )
-                12
-                    (.doInvoke this, (first args),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (next args)
+                )
+            )
+
+            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11]
+                (case (.getRequiredArity this)
+                    0
+                        (.doInvoke this,
+                            (ArraySeq'create arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11))
+                    1
+                        (.doInvoke this, arg1,
+                            (ArraySeq'create arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11))
+                    2
+                        (.doInvoke this, arg1, arg2,
+                            (ArraySeq'create arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11))
+                    3
+                        (.doInvoke this, arg1, arg2, arg3,
+                            (ArraySeq'create arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11))
+                    4
+                        (.doInvoke this, arg1, arg2, arg3, arg4,
+                            (ArraySeq'create arg5, arg6, arg7, arg8, arg9, arg10, arg11))
+                    5
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                            (ArraySeq'create arg6, arg7, arg8, arg9, arg10, arg11))
+                    6
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                            (ArraySeq'create arg7, arg8, arg9, arg10, arg11))
+                    7
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                            (ArraySeq'create arg8, arg9, arg10, arg11))
+                    8
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                            (ArraySeq'create arg9, arg10, arg11))
+                    9
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                            (ArraySeq'create arg10, arg11))
+                    10
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+                            (ArraySeq'create arg11))
+                    11
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, nil)
+                    (do
+                        (.throwArity this, 11)
                     )
-                13
-                    (.doInvoke this, (first args),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (next args)
+                )
+            )
+
+            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12]
+                (case (.getRequiredArity this)
+                    0
+                        (.doInvoke this,
+                            (ArraySeq'create arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12))
+                    1
+                        (.doInvoke this, arg1,
+                            (ArraySeq'create arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12))
+                    2
+                        (.doInvoke this, arg1, arg2,
+                            (ArraySeq'create arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12))
+                    3
+                        (.doInvoke this, arg1, arg2, arg3,
+                            (ArraySeq'create arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12))
+                    4
+                        (.doInvoke this, arg1, arg2, arg3, arg4,
+                            (ArraySeq'create arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12))
+                    5
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                            (ArraySeq'create arg6, arg7, arg8, arg9, arg10, arg11, arg12))
+                    6
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                            (ArraySeq'create arg7, arg8, arg9, arg10, arg11, arg12))
+                    7
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                            (ArraySeq'create arg8, arg9, arg10, arg11, arg12))
+                    8
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                            (ArraySeq'create arg9, arg10, arg11, arg12))
+                    9
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                            (ArraySeq'create arg10, arg11, arg12))
+                    10
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+                            (ArraySeq'create arg11, arg12))
+                    11
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
+                            (ArraySeq'create arg12))
+                    12
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, nil)
+                    (do
+                        (.throwArity this, 12)
                     )
-                14
-                    (.doInvoke this, (first args),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (next args)
+                )
+            )
+
+            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13]
+                (case (.getRequiredArity this)
+                    0
+                        (.doInvoke this,
+                            (ArraySeq'create arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13))
+                    1
+                        (.doInvoke this, arg1,
+                            (ArraySeq'create arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13))
+                    2
+                        (.doInvoke this, arg1, arg2,
+                            (ArraySeq'create arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13))
+                    3
+                        (.doInvoke this, arg1, arg2, arg3,
+                            (ArraySeq'create arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13))
+                    4
+                        (.doInvoke this, arg1, arg2, arg3, arg4,
+                            (ArraySeq'create arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13))
+                    5
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                            (ArraySeq'create arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13))
+                    6
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                            (ArraySeq'create arg7, arg8, arg9, arg10, arg11, arg12, arg13))
+                    7
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                            (ArraySeq'create arg8, arg9, arg10, arg11, arg12, arg13))
+                    8
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                            (ArraySeq'create arg9, arg10, arg11, arg12, arg13))
+                    9
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                            (ArraySeq'create arg10, arg11, arg12, arg13))
+                    10
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+                            (ArraySeq'create arg11, arg12, arg13))
+                    11
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
+                            (ArraySeq'create arg12, arg13))
+                    12
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
+                            (ArraySeq'create arg13))
+                    13
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, nil)
+                    (do
+                        (.throwArity this, 13)
                     )
-                15
-                    (.doInvoke this, (first args),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (next args)
+                )
+            )
+
+            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14]
+                (case (.getRequiredArity this)
+                    0
+                        (.doInvoke this,
+                            (ArraySeq'create arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14))
+                    1
+                        (.doInvoke this, arg1,
+                            (ArraySeq'create arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14))
+                    2
+                        (.doInvoke this, arg1, arg2,
+                            (ArraySeq'create arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14))
+                    3
+                        (.doInvoke this, arg1, arg2, arg3,
+                            (ArraySeq'create arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14))
+                    4
+                        (.doInvoke this, arg1, arg2, arg3, arg4,
+                            (ArraySeq'create arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14))
+                    5
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                            (ArraySeq'create arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14))
+                    6
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                            (ArraySeq'create arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14))
+                    7
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                            (ArraySeq'create arg8, arg9, arg10, arg11, arg12, arg13, arg14))
+                    8
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                            (ArraySeq'create arg9, arg10, arg11, arg12, arg13, arg14))
+                    9
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                            (ArraySeq'create arg10, arg11, arg12, arg13, arg14))
+                    10
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+                            (ArraySeq'create arg11, arg12, arg13, arg14))
+                    11
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
+                            (ArraySeq'create arg12, arg13, arg14))
+                    12
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
+                            (ArraySeq'create arg13, arg14))
+                    13
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13,
+                            (ArraySeq'create arg14))
+                    14
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, nil)
+                    (do
+                        (.throwArity this, 14)
                     )
-                16
-                    (.doInvoke this, (first args),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (next args)
+                )
+            )
+
+            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15]
+                (case (.getRequiredArity this)
+                    0
+                        (.doInvoke this,
+                            (ArraySeq'create arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
+                    1
+                        (.doInvoke this, arg1,
+                            (ArraySeq'create arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
+                    2
+                        (.doInvoke this, arg1, arg2,
+                            (ArraySeq'create arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
+                    3
+                        (.doInvoke this, arg1, arg2, arg3,
+                            (ArraySeq'create arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
+                    4
+                        (.doInvoke this, arg1, arg2, arg3, arg4,
+                            (ArraySeq'create arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
+                    5
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                            (ArraySeq'create arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
+                    6
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                            (ArraySeq'create arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
+                    7
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                            (ArraySeq'create arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
+                    8
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                            (ArraySeq'create arg9, arg10, arg11, arg12, arg13, arg14, arg15))
+                    9
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                            (ArraySeq'create arg10, arg11, arg12, arg13, arg14, arg15))
+                    10
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+                            (ArraySeq'create arg11, arg12, arg13, arg14, arg15))
+                    11
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
+                            (ArraySeq'create arg12, arg13, arg14, arg15))
+                    12
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
+                            (ArraySeq'create arg13, arg14, arg15))
+                    13
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13,
+                            (ArraySeq'create arg14, arg15))
+                    14
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
+                            (ArraySeq'create arg15))
+                    15
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, nil)
+                    (do
+                        (.throwArity this, 15)
                     )
-                17
-                    (.doInvoke this, (first args),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (next args)
+                )
+            )
+
+            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16]
+                (case (.getRequiredArity this)
+                    0
+                        (.doInvoke this,
+                            (ArraySeq'create arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
+                    1
+                        (.doInvoke this, arg1,
+                            (ArraySeq'create arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
+                    2
+                        (.doInvoke this, arg1, arg2,
+                            (ArraySeq'create arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
+                    3
+                        (.doInvoke this, arg1, arg2, arg3,
+                            (ArraySeq'create arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
+                    4
+                        (.doInvoke this, arg1, arg2, arg3, arg4,
+                            (ArraySeq'create arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
+                    5
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                            (ArraySeq'create arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
+                    6
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                            (ArraySeq'create arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
+                    7
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                            (ArraySeq'create arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
+                    8
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                            (ArraySeq'create arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
+                    9
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                            (ArraySeq'create arg10, arg11, arg12, arg13, arg14, arg15, arg16))
+                    10
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+                            (ArraySeq'create arg11, arg12, arg13, arg14, arg15, arg16))
+                    11
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
+                            (ArraySeq'create arg12, arg13, arg14, arg15, arg16))
+                    12
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
+                            (ArraySeq'create arg13, arg14, arg15, arg16))
+                    13
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13,
+                            (ArraySeq'create arg14, arg15, arg16))
+                    14
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
+                            (ArraySeq'create arg15, arg16))
+                    15
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,
+                            (ArraySeq'create arg16))
+                    16
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, nil)
+                    (do
+                        (.throwArity this, 16)
                     )
-                18
-                    (.doInvoke this, (first args),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (next args)
+                )
+            )
+
+            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17]
+                (case (.getRequiredArity this)
+                    0
+                        (.doInvoke this,
+                            (ArraySeq'create arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
+                    1
+                        (.doInvoke this, arg1,
+                            (ArraySeq'create arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
+                    2
+                        (.doInvoke this, arg1, arg2,
+                            (ArraySeq'create arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
+                    3
+                        (.doInvoke this, arg1, arg2, arg3,
+                            (ArraySeq'create arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
+                    4
+                        (.doInvoke this, arg1, arg2, arg3, arg4,
+                            (ArraySeq'create arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
+                    5
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                            (ArraySeq'create arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
+                    6
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                            (ArraySeq'create arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
+                    7
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                            (ArraySeq'create arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
+                    8
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                            (ArraySeq'create arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
+                    9
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                            (ArraySeq'create arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
+                    10
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+                            (ArraySeq'create arg11, arg12, arg13, arg14, arg15, arg16, arg17))
+                    11
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
+                            (ArraySeq'create arg12, arg13, arg14, arg15, arg16, arg17))
+                    12
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
+                            (ArraySeq'create arg13, arg14, arg15, arg16, arg17))
+                    13
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13,
+                            (ArraySeq'create arg14, arg15, arg16, arg17))
+                    14
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
+                            (ArraySeq'create arg15, arg16, arg17))
+                    15
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,
+                            (ArraySeq'create arg16, arg17))
+                    16
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16,
+                            (ArraySeq'create arg17))
+                    17
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, nil)
+                    (do
+                        (.throwArity this, 17)
                     )
-                19
-                    (.doInvoke this, (first args),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (next args)
+                )
+            )
+
+            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18]
+                (case (.getRequiredArity this)
+                    0
+                        (.doInvoke this,
+                            (ArraySeq'create arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
+                    1
+                        (.doInvoke this, arg1,
+                            (ArraySeq'create arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
+                    2
+                        (.doInvoke this, arg1, arg2,
+                            (ArraySeq'create arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
+                    3
+                        (.doInvoke this, arg1, arg2, arg3,
+                            (ArraySeq'create arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
+                    4
+                        (.doInvoke this, arg1, arg2, arg3, arg4,
+                            (ArraySeq'create arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
+                    5
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                            (ArraySeq'create arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
+                    6
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                            (ArraySeq'create arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
+                    7
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                            (ArraySeq'create arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
+                    8
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                            (ArraySeq'create arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
+                    9
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                            (ArraySeq'create arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
+                    10
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+                            (ArraySeq'create arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
+                    11
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
+                            (ArraySeq'create arg12, arg13, arg14, arg15, arg16, arg17, arg18))
+                    12
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
+                            (ArraySeq'create arg13, arg14, arg15, arg16, arg17, arg18))
+                    13
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13,
+                            (ArraySeq'create arg14, arg15, arg16, arg17, arg18))
+                    14
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
+                            (ArraySeq'create arg15, arg16, arg17, arg18))
+                    15
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,
+                            (ArraySeq'create arg16, arg17, arg18))
+                    16
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16,
+                            (ArraySeq'create arg17, arg18))
+                    17
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17,
+                            (ArraySeq'create arg18))
+                    18
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, nil)
+                    (do
+                        (.throwArity this, 18)
                     )
-                20
-                    (.doInvoke this, (first args),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (first (§ ass args (next args))),
-                        (next args)
+                )
+            )
+
+          #_([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19]
+                (case (.getRequiredArity this)
+                    0
+                        (.doInvoke this,
+                            (ArraySeq'create arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
+                    1
+                        (.doInvoke this, arg1,
+                            (ArraySeq'create arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
+                    2
+                        (.doInvoke this, arg1, arg2,
+                            (ArraySeq'create arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
+                    3
+                        (.doInvoke this, arg1, arg2, arg3,
+                            (ArraySeq'create arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
+                    4
+                        (.doInvoke this, arg1, arg2, arg3, arg4,
+                            (ArraySeq'create arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
+                    5
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                            (ArraySeq'create arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
+                    6
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                            (ArraySeq'create arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
+                    7
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                            (ArraySeq'create arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
+                    8
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                            (ArraySeq'create arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
+                    9
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                            (ArraySeq'create arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
+                    10
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+                            (ArraySeq'create arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
+                    11
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
+                            (ArraySeq'create arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
+                    12
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
+                            (ArraySeq'create arg13, arg14, arg15, arg16, arg17, arg18, arg19))
+                    13
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13,
+                            (ArraySeq'create arg14, arg15, arg16, arg17, arg18, arg19))
+                    14
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
+                            (ArraySeq'create arg15, arg16, arg17, arg18, arg19))
+                    15
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,
+                            (ArraySeq'create arg16, arg17, arg18, arg19))
+                    16
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16,
+                            (ArraySeq'create arg17, arg18, arg19))
+                    17
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17,
+                            (ArraySeq'create arg18, arg19))
+                    18
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18,
+                            (ArraySeq'create arg19))
+                    19
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, nil)
+                    (do
+                        (.throwArity this, 19)
                     )
-                (.throwArity this, -1)
+                )
             )
-        )
-    )
 
-    #_override
-    (defn #_"Object" IFn'''invoke-1--RestFn [#_"RestFn" this]
-        (case (.getRequiredArity this)
-            0
-                (.doInvoke this, nil)
-            (do
-                (.throwArity this, 0)
+          #_([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20]
+                (case (.getRequiredArity this)
+                    0
+                        (.doInvoke this,
+                            (ArraySeq'create arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    1
+                        (.doInvoke this, arg1,
+                            (ArraySeq'create arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    2
+                        (.doInvoke this, arg1, arg2,
+                            (ArraySeq'create arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    3
+                        (.doInvoke this, arg1, arg2, arg3,
+                            (ArraySeq'create arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    4
+                        (.doInvoke this, arg1, arg2, arg3, arg4,
+                            (ArraySeq'create arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    5
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                            (ArraySeq'create arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    6
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                            (ArraySeq'create arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    7
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                            (ArraySeq'create arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    8
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                            (ArraySeq'create arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    9
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                            (ArraySeq'create arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    10
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+                            (ArraySeq'create arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    11
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
+                            (ArraySeq'create arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    12
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
+                            (ArraySeq'create arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    13
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13,
+                            (ArraySeq'create arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    14
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
+                            (ArraySeq'create arg15, arg16, arg17, arg18, arg19, arg20))
+                    15
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,
+                            (ArraySeq'create arg16, arg17, arg18, arg19, arg20))
+                    16
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16,
+                            (ArraySeq'create arg17, arg18, arg19, arg20))
+                    17
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17,
+                            (ArraySeq'create arg18, arg19, arg20))
+                    18
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18,
+                            (ArraySeq'create arg19, arg20))
+                    19
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19,
+                            (ArraySeq'create arg20))
+                    20
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, nil)
+                    (do
+                        (.throwArity this, 20)
+                    )
+                )
             )
-        )
-    )
 
-    #_override
-    (defn #_"Object" IFn'''invoke-2--RestFn [#_"RestFn" this, #_"Object" arg1]
-        (case (.getRequiredArity this)
-            0
-                (.doInvoke this, (ArraySeq'create-1 arg1))
-            1
-                (.doInvoke this, arg1, nil)
-            (do
-                (.throwArity this, 1)
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-3--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2]
-        (case (.getRequiredArity this)
-            0
-                (.doInvoke this,
-                    (ArraySeq'create-1 arg1, arg2))
-            1
-                (.doInvoke this, arg1,
-                    (ArraySeq'create-1 arg2))
-            2
-                (.doInvoke this, arg1, arg2, nil)
-            (do
-                (.throwArity this, 2)
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
-        (case (.getRequiredArity this)
-            0
-                (.doInvoke this,
-                    (ArraySeq'create-1 arg1, arg2, arg3))
-            1
-                (.doInvoke this, arg1,
-                    (ArraySeq'create-1 arg2, arg3))
-            2
-                (.doInvoke this, arg1, arg2,
-                    (ArraySeq'create-1 arg3))
-            3
-                (.doInvoke this, arg1, arg2, arg3, nil)
-            (do
-                (.throwArity this, 3)
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-5--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4]
-        (case (.getRequiredArity this)
-            0
-                (.doInvoke this,
-                    (ArraySeq'create-1 arg1, arg2, arg3, arg4))
-            1
-                (.doInvoke this, arg1,
-                    (ArraySeq'create-1 arg2, arg3, arg4))
-            2
-                (.doInvoke this, arg1, arg2,
-                    (ArraySeq'create-1 arg3, arg4))
-            3
-                (.doInvoke this, arg1, arg2, arg3,
-                    (ArraySeq'create-1 arg4))
-            4
-                (.doInvoke this, arg1, arg2, arg3, arg4, nil)
-            (do
-                (.throwArity this, 4)
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-6--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5]
-        (case (.getRequiredArity this)
-            0
-                (.doInvoke this,
-                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5))
-            1
-                (.doInvoke this, arg1,
-                    (ArraySeq'create-1 arg2, arg3, arg4, arg5))
-            2
-                (.doInvoke this, arg1, arg2,
-                    (ArraySeq'create-1 arg3, arg4, arg5))
-            3
-                (.doInvoke this, arg1, arg2, arg3,
-                    (ArraySeq'create-1 arg4, arg5))
-            4
-                (.doInvoke this, arg1, arg2, arg3, arg4,
-                    (ArraySeq'create-1 arg5))
-            5
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, nil)
-            (do
-                (.throwArity this, 5)
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-7--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6]
-        (case (.getRequiredArity this)
-            0
-                (.doInvoke this,
-                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6))
-            1
-                (.doInvoke this, arg1,
-                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6))
-            2
-                (.doInvoke this, arg1, arg2,
-                    (ArraySeq'create-1 arg3, arg4, arg5, arg6))
-            3
-                (.doInvoke this, arg1, arg2, arg3,
-                    (ArraySeq'create-1 arg4, arg5, arg6))
-            4
-                (.doInvoke this, arg1, arg2, arg3, arg4,
-                    (ArraySeq'create-1 arg5, arg6))
-            5
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
-                    (ArraySeq'create-1 arg6))
-            6
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, nil)
-            (do
-                (.throwArity this, 6)
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-8--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7]
-        (case (.getRequiredArity this)
-            0
-                (.doInvoke this,
-                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7))
-            1
-                (.doInvoke this, arg1,
-                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7))
-            2
-                (.doInvoke this, arg1, arg2,
-                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7))
-            3
-                (.doInvoke this, arg1, arg2, arg3,
-                    (ArraySeq'create-1 arg4, arg5, arg6, arg7))
-            4
-                (.doInvoke this, arg1, arg2, arg3, arg4,
-                    (ArraySeq'create-1 arg5, arg6, arg7))
-            5
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
-                    (ArraySeq'create-1 arg6, arg7))
-            6
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
-                    (ArraySeq'create-1 arg7))
-            7
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, nil)
-            (do
-                (.throwArity this, 7)
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-9--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8]
-        (case (.getRequiredArity this)
-            0
-                (.doInvoke this,
-                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8))
-            1
-                (.doInvoke this, arg1,
-                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8))
-            2
-                (.doInvoke this, arg1, arg2,
-                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8))
-            3
-                (.doInvoke this, arg1, arg2, arg3,
-                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8))
-            4
-                (.doInvoke this, arg1, arg2, arg3, arg4,
-                    (ArraySeq'create-1 arg5, arg6, arg7, arg8))
-            5
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
-                    (ArraySeq'create-1 arg6, arg7, arg8))
-            6
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
-                    (ArraySeq'create-1 arg7, arg8))
-            7
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
-                    (ArraySeq'create-1 arg8))
-            8
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, nil)
-            (do
-                (.throwArity this, 8)
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-10--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9]
-        (case (.getRequiredArity this)
-            0
-                (.doInvoke this,
-                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9))
-            1
-                (.doInvoke this, arg1,
-                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9))
-            2
-                (.doInvoke this, arg1, arg2,
-                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8, arg9))
-            3
-                (.doInvoke this, arg1, arg2, arg3,
-                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8, arg9))
-            4
-                (.doInvoke this, arg1, arg2, arg3, arg4,
-                    (ArraySeq'create-1 arg5, arg6, arg7, arg8, arg9))
-            5
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
-                    (ArraySeq'create-1 arg6, arg7, arg8, arg9))
-            6
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
-                    (ArraySeq'create-1 arg7, arg8, arg9))
-            7
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
-                    (ArraySeq'create-1 arg8, arg9))
-            8
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
-                    (ArraySeq'create-1 arg9))
-            9
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, nil)
-            (do
-                (.throwArity this, 9)
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-11--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10]
-        (case (.getRequiredArity this)
-            0
-                (.doInvoke this,
-                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10))
-            1
-                (.doInvoke this, arg1,
-                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10))
-            2
-                (.doInvoke this, arg1, arg2,
-                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10))
-            3
-                (.doInvoke this, arg1, arg2, arg3,
-                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8, arg9, arg10))
-            4
-                (.doInvoke this, arg1, arg2, arg3, arg4,
-                    (ArraySeq'create-1 arg5, arg6, arg7, arg8, arg9, arg10))
-            5
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
-                    (ArraySeq'create-1 arg6, arg7, arg8, arg9, arg10))
-            6
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
-                    (ArraySeq'create-1 arg7, arg8, arg9, arg10))
-            7
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
-                    (ArraySeq'create-1 arg8, arg9, arg10))
-            8
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
-                    (ArraySeq'create-1 arg9, arg10))
-            9
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
-                    (ArraySeq'create-1 arg10))
-            10
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, nil)
-            (do
-                (.throwArity this, 10)
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-12--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11]
-        (case (.getRequiredArity this)
-            0
-                (.doInvoke this,
-                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11))
-            1
-                (.doInvoke this, arg1,
-                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11))
-            2
-                (.doInvoke this, arg1, arg2,
-                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11))
-            3
-                (.doInvoke this, arg1, arg2, arg3,
-                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11))
-            4
-                (.doInvoke this, arg1, arg2, arg3, arg4,
-                    (ArraySeq'create-1 arg5, arg6, arg7, arg8, arg9, arg10, arg11))
-            5
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
-                    (ArraySeq'create-1 arg6, arg7, arg8, arg9, arg10, arg11))
-            6
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
-                    (ArraySeq'create-1 arg7, arg8, arg9, arg10, arg11))
-            7
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
-                    (ArraySeq'create-1 arg8, arg9, arg10, arg11))
-            8
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
-                    (ArraySeq'create-1 arg9, arg10, arg11))
-            9
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
-                    (ArraySeq'create-1 arg10, arg11))
-            10
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
-                    (ArraySeq'create-1 arg11))
-            11
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, nil)
-            (do
-                (.throwArity this, 11)
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-13--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12]
-        (case (.getRequiredArity this)
-            0
-                (.doInvoke this,
-                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12))
-            1
-                (.doInvoke this, arg1,
-                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12))
-            2
-                (.doInvoke this, arg1, arg2,
-                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12))
-            3
-                (.doInvoke this, arg1, arg2, arg3,
-                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12))
-            4
-                (.doInvoke this, arg1, arg2, arg3, arg4,
-                    (ArraySeq'create-1 arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12))
-            5
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
-                    (ArraySeq'create-1 arg6, arg7, arg8, arg9, arg10, arg11, arg12))
-            6
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
-                    (ArraySeq'create-1 arg7, arg8, arg9, arg10, arg11, arg12))
-            7
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
-                    (ArraySeq'create-1 arg8, arg9, arg10, arg11, arg12))
-            8
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
-                    (ArraySeq'create-1 arg9, arg10, arg11, arg12))
-            9
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
-                    (ArraySeq'create-1 arg10, arg11, arg12))
-            10
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
-                    (ArraySeq'create-1 arg11, arg12))
-            11
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
-                    (ArraySeq'create-1 arg12))
-            12
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, nil)
-            (do
-                (.throwArity this, 12)
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-14--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13]
-        (case (.getRequiredArity this)
-            0
-                (.doInvoke this,
-                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13))
-            1
-                (.doInvoke this, arg1,
-                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13))
-            2
-                (.doInvoke this, arg1, arg2,
-                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13))
-            3
-                (.doInvoke this, arg1, arg2, arg3,
-                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13))
-            4
-                (.doInvoke this, arg1, arg2, arg3, arg4,
-                    (ArraySeq'create-1 arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13))
-            5
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
-                    (ArraySeq'create-1 arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13))
-            6
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
-                    (ArraySeq'create-1 arg7, arg8, arg9, arg10, arg11, arg12, arg13))
-            7
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
-                    (ArraySeq'create-1 arg8, arg9, arg10, arg11, arg12, arg13))
-            8
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
-                    (ArraySeq'create-1 arg9, arg10, arg11, arg12, arg13))
-            9
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
-                    (ArraySeq'create-1 arg10, arg11, arg12, arg13))
-            10
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
-                    (ArraySeq'create-1 arg11, arg12, arg13))
-            11
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
-                    (ArraySeq'create-1 arg12, arg13))
-            12
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
-                    (ArraySeq'create-1 arg13))
-            13
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, nil)
-            (do
-                (.throwArity this, 13)
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-15--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14]
-        (case (.getRequiredArity this)
-            0
-                (.doInvoke this,
-                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14))
-            1
-                (.doInvoke this, arg1,
-                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14))
-            2
-                (.doInvoke this, arg1, arg2,
-                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14))
-            3
-                (.doInvoke this, arg1, arg2, arg3,
-                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14))
-            4
-                (.doInvoke this, arg1, arg2, arg3, arg4,
-                    (ArraySeq'create-1 arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14))
-            5
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
-                    (ArraySeq'create-1 arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14))
-            6
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
-                    (ArraySeq'create-1 arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14))
-            7
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
-                    (ArraySeq'create-1 arg8, arg9, arg10, arg11, arg12, arg13, arg14))
-            8
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
-                    (ArraySeq'create-1 arg9, arg10, arg11, arg12, arg13, arg14))
-            9
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
-                    (ArraySeq'create-1 arg10, arg11, arg12, arg13, arg14))
-            10
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
-                    (ArraySeq'create-1 arg11, arg12, arg13, arg14))
-            11
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
-                    (ArraySeq'create-1 arg12, arg13, arg14))
-            12
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
-                    (ArraySeq'create-1 arg13, arg14))
-            13
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13,
-                    (ArraySeq'create-1 arg14))
-            14
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, nil)
-            (do
-                (.throwArity this, 14)
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-16--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15]
-        (case (.getRequiredArity this)
-            0
-                (.doInvoke this,
-                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
-            1
-                (.doInvoke this, arg1,
-                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
-            2
-                (.doInvoke this, arg1, arg2,
-                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
-            3
-                (.doInvoke this, arg1, arg2, arg3,
-                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
-            4
-                (.doInvoke this, arg1, arg2, arg3, arg4,
-                    (ArraySeq'create-1 arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
-            5
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
-                    (ArraySeq'create-1 arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
-            6
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
-                    (ArraySeq'create-1 arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
-            7
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
-                    (ArraySeq'create-1 arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
-            8
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
-                    (ArraySeq'create-1 arg9, arg10, arg11, arg12, arg13, arg14, arg15))
-            9
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
-                    (ArraySeq'create-1 arg10, arg11, arg12, arg13, arg14, arg15))
-            10
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
-                    (ArraySeq'create-1 arg11, arg12, arg13, arg14, arg15))
-            11
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
-                    (ArraySeq'create-1 arg12, arg13, arg14, arg15))
-            12
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
-                    (ArraySeq'create-1 arg13, arg14, arg15))
-            13
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13,
-                    (ArraySeq'create-1 arg14, arg15))
-            14
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
-                    (ArraySeq'create-1 arg15))
-            15
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, nil)
-            (do
-                (.throwArity this, 15)
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-17--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16]
-        (case (.getRequiredArity this)
-            0
-                (.doInvoke this,
-                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
-            1
-                (.doInvoke this, arg1,
-                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
-            2
-                (.doInvoke this, arg1, arg2,
-                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
-            3
-                (.doInvoke this, arg1, arg2, arg3,
-                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
-            4
-                (.doInvoke this, arg1, arg2, arg3, arg4,
-                    (ArraySeq'create-1 arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
-            5
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
-                    (ArraySeq'create-1 arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
-            6
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
-                    (ArraySeq'create-1 arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
-            7
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
-                    (ArraySeq'create-1 arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
-            8
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
-                    (ArraySeq'create-1 arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
-            9
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
-                    (ArraySeq'create-1 arg10, arg11, arg12, arg13, arg14, arg15, arg16))
-            10
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
-                    (ArraySeq'create-1 arg11, arg12, arg13, arg14, arg15, arg16))
-            11
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
-                    (ArraySeq'create-1 arg12, arg13, arg14, arg15, arg16))
-            12
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
-                    (ArraySeq'create-1 arg13, arg14, arg15, arg16))
-            13
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13,
-                    (ArraySeq'create-1 arg14, arg15, arg16))
-            14
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
-                    (ArraySeq'create-1 arg15, arg16))
-            15
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,
-                    (ArraySeq'create-1 arg16))
-            16
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, nil)
-            (do
-                (.throwArity this, 16)
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-18--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17]
-        (case (.getRequiredArity this)
-            0
-                (.doInvoke this,
-                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
-            1
-                (.doInvoke this, arg1,
-                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
-            2
-                (.doInvoke this, arg1, arg2,
-                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
-            3
-                (.doInvoke this, arg1, arg2, arg3,
-                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
-            4
-                (.doInvoke this, arg1, arg2, arg3, arg4,
-                    (ArraySeq'create-1 arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
-            5
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
-                    (ArraySeq'create-1 arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
-            6
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
-                    (ArraySeq'create-1 arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
-            7
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
-                    (ArraySeq'create-1 arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
-            8
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
-                    (ArraySeq'create-1 arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
-            9
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
-                    (ArraySeq'create-1 arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
-            10
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
-                    (ArraySeq'create-1 arg11, arg12, arg13, arg14, arg15, arg16, arg17))
-            11
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
-                    (ArraySeq'create-1 arg12, arg13, arg14, arg15, arg16, arg17))
-            12
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
-                    (ArraySeq'create-1 arg13, arg14, arg15, arg16, arg17))
-            13
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13,
-                    (ArraySeq'create-1 arg14, arg15, arg16, arg17))
-            14
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
-                    (ArraySeq'create-1 arg15, arg16, arg17))
-            15
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,
-                    (ArraySeq'create-1 arg16, arg17))
-            16
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16,
-                    (ArraySeq'create-1 arg17))
-            17
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, nil)
-            (do
-                (.throwArity this, 17)
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-19--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18]
-        (case (.getRequiredArity this)
-            0
-                (.doInvoke this,
-                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
-            1
-                (.doInvoke this, arg1,
-                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
-            2
-                (.doInvoke this, arg1, arg2,
-                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
-            3
-                (.doInvoke this, arg1, arg2, arg3,
-                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
-            4
-                (.doInvoke this, arg1, arg2, arg3, arg4,
-                    (ArraySeq'create-1 arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
-            5
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
-                    (ArraySeq'create-1 arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
-            6
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
-                    (ArraySeq'create-1 arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
-            7
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
-                    (ArraySeq'create-1 arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
-            8
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
-                    (ArraySeq'create-1 arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
-            9
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
-                    (ArraySeq'create-1 arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
-            10
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
-                    (ArraySeq'create-1 arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
-            11
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
-                    (ArraySeq'create-1 arg12, arg13, arg14, arg15, arg16, arg17, arg18))
-            12
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
-                    (ArraySeq'create-1 arg13, arg14, arg15, arg16, arg17, arg18))
-            13
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13,
-                    (ArraySeq'create-1 arg14, arg15, arg16, arg17, arg18))
-            14
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
-                    (ArraySeq'create-1 arg15, arg16, arg17, arg18))
-            15
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,
-                    (ArraySeq'create-1 arg16, arg17, arg18))
-            16
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16,
-                    (ArraySeq'create-1 arg17, arg18))
-            17
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17,
-                    (ArraySeq'create-1 arg18))
-            18
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, nil)
-            (do
-                (.throwArity this, 18)
-            )
-        )
-    )
-
-    #_override
-  #_(defn #_"Object" IFn'''invoke-20--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19]
-        (case (.getRequiredArity this)
-            0
-                (.doInvoke this,
-                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
-            1
-                (.doInvoke this, arg1,
-                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
-            2
-                (.doInvoke this, arg1, arg2,
-                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
-            3
-                (.doInvoke this, arg1, arg2, arg3,
-                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
-            4
-                (.doInvoke this, arg1, arg2, arg3, arg4,
-                    (ArraySeq'create-1 arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
-            5
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
-                    (ArraySeq'create-1 arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
-            6
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
-                    (ArraySeq'create-1 arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
-            7
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
-                    (ArraySeq'create-1 arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
-            8
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
-                    (ArraySeq'create-1 arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
-            9
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
-                    (ArraySeq'create-1 arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
-            10
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
-                    (ArraySeq'create-1 arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
-            11
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
-                    (ArraySeq'create-1 arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
-            12
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
-                    (ArraySeq'create-1 arg13, arg14, arg15, arg16, arg17, arg18, arg19))
-            13
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13,
-                    (ArraySeq'create-1 arg14, arg15, arg16, arg17, arg18, arg19))
-            14
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
-                    (ArraySeq'create-1 arg15, arg16, arg17, arg18, arg19))
-            15
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,
-                    (ArraySeq'create-1 arg16, arg17, arg18, arg19))
-            16
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16,
-                    (ArraySeq'create-1 arg17, arg18, arg19))
-            17
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17,
-                    (ArraySeq'create-1 arg18, arg19))
-            18
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18,
-                    (ArraySeq'create-1 arg19))
-            19
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, nil)
-            (do
-                (.throwArity this, 19)
-            )
-        )
-    )
-
-    #_override
-  #_(defn #_"Object" IFn'''invoke-21--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20]
-        (case (.getRequiredArity this)
-            0
-                (.doInvoke this,
-                    (ArraySeq'create-1 arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            1
-                (.doInvoke this, arg1,
-                    (ArraySeq'create-1 arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            2
-                (.doInvoke this, arg1, arg2,
-                    (ArraySeq'create-1 arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            3
-                (.doInvoke this, arg1, arg2, arg3,
-                    (ArraySeq'create-1 arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            4
-                (.doInvoke this, arg1, arg2, arg3, arg4,
-                    (ArraySeq'create-1 arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            5
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
-                    (ArraySeq'create-1 arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            6
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
-                    (ArraySeq'create-1 arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            7
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
-                    (ArraySeq'create-1 arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            8
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
-                    (ArraySeq'create-1 arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            9
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
-                    (ArraySeq'create-1 arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            10
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
-                    (ArraySeq'create-1 arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            11
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
-                    (ArraySeq'create-1 arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            12
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
-                    (ArraySeq'create-1 arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            13
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13,
-                    (ArraySeq'create-1 arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            14
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
-                    (ArraySeq'create-1 arg15, arg16, arg17, arg18, arg19, arg20))
-            15
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,
-                    (ArraySeq'create-1 arg16, arg17, arg18, arg19, arg20))
-            16
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16,
-                    (ArraySeq'create-1 arg17, arg18, arg19, arg20))
-            17
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17,
-                    (ArraySeq'create-1 arg18, arg19, arg20))
-            18
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18,
-                    (ArraySeq'create-1 arg19, arg20))
-            19
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19,
-                    (ArraySeq'create-1 arg20))
-            20
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, nil)
-            (do
-                (.throwArity this, 20)
-            )
-        )
-    )
-
-    #_override
-  #_(defn #_"Object" IFn'''invoke-22--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20 & #_"Object..." args]
-        (case (.getRequiredArity this)
-            0
-                (.doInvoke this,
-                    (RestFn'ontoArrayPrepend args, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            1
-                (.doInvoke this, arg1,
-                    (RestFn'ontoArrayPrepend args, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            2
-                (.doInvoke this, arg1, arg2,
-                    (RestFn'ontoArrayPrepend args, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            3
-                (.doInvoke this, arg1, arg2, arg3,
-                    (RestFn'ontoArrayPrepend args, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            4
-                (.doInvoke this, arg1, arg2, arg3, arg4,
-                    (RestFn'ontoArrayPrepend args, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            5
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
-                    (RestFn'ontoArrayPrepend args, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            6
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
-                    (RestFn'ontoArrayPrepend args, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            7
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
-                    (RestFn'ontoArrayPrepend args, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            8
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
-                    (RestFn'ontoArrayPrepend args, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            9
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
-                    (RestFn'ontoArrayPrepend args, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            10
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
-                    (RestFn'ontoArrayPrepend args, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            11
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
-                    (RestFn'ontoArrayPrepend args, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            12
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
-                    (RestFn'ontoArrayPrepend args, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            13
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13,
-                    (RestFn'ontoArrayPrepend args, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
-            14
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
-                    (RestFn'ontoArrayPrepend args, arg15, arg16, arg17, arg18, arg19, arg20))
-            15
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,
-                    (RestFn'ontoArrayPrepend args, arg16, arg17, arg18, arg19, arg20))
-            16
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16,
-                    (RestFn'ontoArrayPrepend args, arg17, arg18, arg19, arg20))
-            17
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17,
-                    (RestFn'ontoArrayPrepend args, arg18, arg19, arg20))
-            18
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18,
-                    (RestFn'ontoArrayPrepend args, arg19, arg20))
-            19
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19,
-                    (RestFn'ontoArrayPrepend args, arg20))
-            20
-                (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20,
-                    (ArraySeq'create-1 args))
-            (do
-                (.throwArity this, 21)
+          #_([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20 & #_"Object..." args]
+                (case (.getRequiredArity this)
+                    0
+                        (.doInvoke this,
+                            (RestFn'ontoArrayPrepend args, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    1
+                        (.doInvoke this, arg1,
+                            (RestFn'ontoArrayPrepend args, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    2
+                        (.doInvoke this, arg1, arg2,
+                            (RestFn'ontoArrayPrepend args, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    3
+                        (.doInvoke this, arg1, arg2, arg3,
+                            (RestFn'ontoArrayPrepend args, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    4
+                        (.doInvoke this, arg1, arg2, arg3, arg4,
+                            (RestFn'ontoArrayPrepend args, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    5
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5,
+                            (RestFn'ontoArrayPrepend args, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    6
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
+                            (RestFn'ontoArrayPrepend args, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    7
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
+                            (RestFn'ontoArrayPrepend args, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    8
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
+                            (RestFn'ontoArrayPrepend args, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    9
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                            (RestFn'ontoArrayPrepend args, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    10
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+                            (RestFn'ontoArrayPrepend args, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    11
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11,
+                            (RestFn'ontoArrayPrepend args, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    12
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12,
+                            (RestFn'ontoArrayPrepend args, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    13
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13,
+                            (RestFn'ontoArrayPrepend args, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+                    14
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14,
+                            (RestFn'ontoArrayPrepend args, arg15, arg16, arg17, arg18, arg19, arg20))
+                    15
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15,
+                            (RestFn'ontoArrayPrepend args, arg16, arg17, arg18, arg19, arg20))
+                    16
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16,
+                            (RestFn'ontoArrayPrepend args, arg17, arg18, arg19, arg20))
+                    17
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17,
+                            (RestFn'ontoArrayPrepend args, arg18, arg19, arg20))
+                    18
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18,
+                            (RestFn'ontoArrayPrepend args, arg19, arg20))
+                    19
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19,
+                            (RestFn'ontoArrayPrepend args, arg20))
+                    20
+                        (.doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20,
+                            (ArraySeq'create args))
+                    (do
+                        (.throwArity this, 21)
+                    )
+                )
             )
         )
     )
@@ -11724,9 +11325,10 @@
         )
     )
 
-    #_override
-    (defn #_"IPersistentMap" IMeta'''meta--ASeq [#_"ASeq" this]
-        (:_meta this)
+    (extend-type ASeq IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"ASeq" this]
+            (:_meta this)
+        )
     )
 
     (declare RT'printString)
@@ -11736,9 +11338,10 @@
         (RT'printString this)
     )
 
-    #_override
-    (defn #_"IPersistentCollection" IPersistentCollection'''empty--ASeq [#_"ASeq" this]
-        ()
+    (extend-type ASeq IPersistentCollection
+        (#_"IPersistentCollection" IPersistentCollection'''empty [#_"ASeq" this]
+            ()
+        )
     )
 
     #_foreign
@@ -11761,35 +11364,18 @@
         )
     )
 
-    #_override
-    (defn #_"int" IHashEq'''hasheq--ASeq [#_"ASeq" this]
-        (let-when [#_"int" cached (:_hasheq this)] (zero? cached) => cached
-            (§ set! (:_hasheq this) (Murmur3'hashOrdered this))
+    (extend-type ASeq IHashEq
+        (#_"int" IHashEq'''hasheq [#_"ASeq" this]
+            (let-when [#_"int" cached (:_hasheq this)] (zero? cached) => cached
+                (§ set! (:_hasheq this) (Murmur3'hashOrdered this))
+            )
         )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--ASeq [#_"ASeq" this]
-        (loop-when [#_"ISeq" s (next this) #_"int" i 1] (some? s) => i
-            (if (counted? s) (+ i (.count s)) (recur (next s) (inc i)))
+    (extend-type ASeq Seqable
+        (#_"ISeq" Seqable'''seq [#_"ASeq" this]
+            this
         )
-    )
-
-    #_override
-    (defn #_"ISeq" Seqable'''seq--ASeq [#_"ASeq" this]
-        this
-    )
-
-    (declare Cons'new)
-
-    #_override
-    (defn #_"ISeq" ISeq'''cons--ASeq [#_"ASeq" this, #_"Object" o]
-        (Cons'new o, this)
-    )
-
-    #_override
-    (defn #_"ISeq" ISeq'''rest--ASeq [#_"ASeq" this]
-        (or (next this) ())
     )
 )
 )
@@ -11812,76 +11398,64 @@
         ([#_"IFn" fn]                          (LazySeq'init nil, nil, fn))
     )
 
-    #_override
-    (defn #_"IPersistentMap" IMeta'''meta--LazySeq [#_"LazySeq" this]
-        (:_meta this)
+    (extend-type LazySeq IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"LazySeq" this]
+            (:_meta this)
+        )
     )
 
-    #_override
-    (defn #_"LazySeq" IObj'''withMeta--LazySeq [#_"LazySeq" this, #_"IPersistentMap" meta]
-        (LazySeq'new meta, (seq this))
+    (extend-type LazySeq IObj
+        (#_"LazySeq" IObj'''withMeta [#_"LazySeq" this, #_"IPersistentMap" meta]
+            (LazySeq'new meta, (seq this))
+        )
     )
 
     #_method
     (defn #_"Object" LazySeq''sval [#_"LazySeq" this]
         (§ sync this
             (when (some? (:fn this))
-                (§ set! (:sv this) (.invoke (:fn this)))
+                (§ set! (:sv this) ((:fn this)))
                 (§ set! (:fn this) nil)
             )
             (or (:sv this) (:s this))
         )
     )
 
-    #_override
-    (defn #_"ISeq" Seqable'''seq--LazySeq [#_"LazySeq" this]
-        (§ sync this
-            (LazySeq''sval this)
-            (when (some? (:sv this))
-                (let [#_"Object" ls (:sv this) _ (§ set! (:sv this) nil)
-                      ls (loop-when-recur ls (instance? LazySeq ls) (LazySeq''sval ls) => ls)]
-                    (§ set! (:s this) (seq ls))
+    (extend-type LazySeq Seqable
+        (#_"ISeq" Seqable'''seq [#_"LazySeq" this]
+            (§ sync this
+                (LazySeq''sval this)
+                (when (some? (:sv this))
+                    (let [#_"Object" ls (:sv this) _ (§ set! (:sv this) nil)
+                          ls (loop-when-recur ls (instance? LazySeq ls) (LazySeq''sval ls) => ls)]
+                        (§ set! (:s this) (seq ls))
+                    )
                 )
+                (:s this)
             )
-            (:s this)
         )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--LazySeq [#_"LazySeq" this]
-        (loop-when-recur [#_"int" c 0 #_"ISeq" s (seq this)] (some? s) [(inc c) (next s)] => c)
-    )
+    (extend-type LazySeq ISeq
+        (#_"Object" ISeq'''first [#_"LazySeq" this]
+            (seq this)
+            (when (some? (:s this))
+                (first (:s this))
+            )
+        )
 
-    #_override
-    (defn #_"Object" ISeq'''first--LazySeq [#_"LazySeq" this]
-        (seq this)
-        (when (some? (:s this))
-            (first (:s this))
+        (#_"ISeq" ISeq'''next [#_"LazySeq" this]
+            (seq this)
+            (when (some? (:s this))
+                (next (:s this))
+            )
         )
     )
 
-    #_override
-    (defn #_"ISeq" ISeq'''next--LazySeq [#_"LazySeq" this]
-        (seq this)
-        (when (some? (:s this))
-            (next (:s this))
+    (extend-type LazySeq IPersistentCollection
+        (#_"IPersistentCollection" IPersistentCollection'''empty [#_"LazySeq" this]
+            ()
         )
-    )
-
-    #_override
-    (defn #_"ISeq" ISeq'''rest--LazySeq [#_"LazySeq" this]
-        (seq this)
-        (if (some? (:s this)) (rest (:s this)) ())
-    )
-
-    #_override
-    (defn #_"ISeq" ISeq'''cons--LazySeq [#_"LazySeq" this, #_"Object" o]
-        (cons o (seq this))
-    )
-
-    #_override
-    (defn #_"IPersistentCollection" IPersistentCollection'''empty--LazySeq [#_"LazySeq" this]
-        ()
     )
 
     #_foreign
@@ -11900,15 +11474,17 @@
         )
     )
 
-    #_override
-    (defn #_"int" IHashEq'''hasheq--LazySeq [#_"LazySeq" this]
-        (Murmur3'hashOrdered this)
+    (extend-type LazySeq IHashEq
+        (#_"int" IHashEq'''hasheq [#_"LazySeq" this]
+            (Murmur3'hashOrdered this)
+        )
     )
 
-    #_override
-    (defn #_"boolean" IPending'''isRealized--LazySeq [#_"LazySeq" this]
-        (§ sync this
-            (nil? (:fn this))
+    (extend-type LazySeq IPending
+        (#_"boolean" IPending'''isRealized [#_"LazySeq" this]
+            (§ sync this
+                (nil? (:fn this))
+            )
         )
     )
 )
@@ -11931,21 +11507,22 @@
         (RT'printString this)
     )
 
-    #_override
-    (defn #_"IPersistentCollection" IPersistentCollection'''conj--APersistentMap [#_"APersistentMap" this, #_"Object" o]
-        (condp instance? o
-            IMapEntry
-                (assoc this (key o) (val o))
-            IPersistentVector
-                (when (= (count o) 2) => (throw! "vector arg to map conj must be a pair")
-                    (assoc this (nth o 0) (nth o 1))
-                )
-            #_else
-                (loop-when [this this #_"ISeq" s (seq o)] (some? s) => this
-                    (let [#_"IMapEntry" e (first s)]
-                        (recur (assoc this (key e) (val e)) (next s))
+    (extend-type APersistentMap IPersistentCollection
+        (#_"IPersistentCollection" IPersistentCollection'''conj [#_"APersistentMap" this, #_"Object" o]
+            (condp satisfies? o
+                IMapEntry
+                    (assoc this (key o) (val o))
+                IPersistentVector
+                    (when (= (count o) 2) => (throw! "vector arg to map conj must be a pair")
+                        (assoc this (nth o 0) (nth o 1))
                     )
-                )
+                #_else
+                    (loop-when [this this #_"ISeq" s (seq o)] (some? s) => this
+                        (let [#_"IMapEntry" e (first s)]
+                            (recur (assoc this (key e) (val e)) (next s))
+                        )
+                    )
+            )
         )
     )
 
@@ -11983,21 +11560,19 @@
         (Murmur3'hashUnordered m)
     )
 
-    #_override
-    (defn #_"int" IHashEq'''hasheq--APersistentMap [#_"APersistentMap" this]
-        (let-when [#_"int" cached (:_hasheq this)] (zero? cached) => cached
-            (§ set! (:_hasheq this) (APersistentMap'mapHasheq this))
+    (extend-type APersistentMap IHashEq
+        (#_"int" IHashEq'''hasheq [#_"APersistentMap" this]
+            (let-when [#_"int" cached (:_hasheq this)] (zero? cached) => cached
+                (§ set! (:_hasheq this) (APersistentMap'mapHasheq this))
+            )
         )
     )
 
-    #_override
-    (defn #_"Object" IFn'''invoke-2--APersistentMap [#_"APersistentMap" this, #_"Object" arg1]
-        (get this arg1)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-3--APersistentMap [#_"APersistentMap" this, #_"Object" arg1, #_"Object" notFound]
-        (get this arg1 notFound)
+    (extend-type APersistentMap IFn
+        (#_"Object" IFn'''invoke
+            ([#_"APersistentMap" this, #_"Object" key] (get this key))
+            ([#_"APersistentMap" this, #_"Object" key, #_"Object" notFound] (get this key notFound))
+        )
     )
 )
 )
@@ -12021,29 +11596,33 @@
         (RT'printString this)
     )
 
-    #_override
-    (defn #_"boolean" IPersistentSet'''contains--APersistentSet [#_"APersistentSet" this, #_"Object" key]
-        (contains? (:impl this) key)
+    (extend-type APersistentSet IPersistentSet
+        (#_"boolean" IPersistentSet'''contains [#_"APersistentSet" this, #_"Object" key]
+            (contains? (:impl this) key)
+        )
+
+        (#_"Object" IPersistentSet'''get [#_"APersistentSet" this, #_"Object" key]
+            (get (:impl this) key)
+        )
     )
 
-    #_override
-    (defn #_"Object" IPersistentSet'''get--APersistentSet [#_"APersistentSet" this, #_"Object" key]
-        (get (:impl this) key)
+    (extend-type APersistentSet Counted
+        (#_"int" Counted'''count [#_"APersistentSet" this]
+            (count (:impl this))
+        )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--APersistentSet [#_"APersistentSet" this]
-        (count (:impl this))
+    (extend-type APersistentSet Seqable
+        (#_"ISeq" Seqable'''seq [#_"APersistentSet" this]
+            (keys (:impl this))
+        )
     )
 
-    #_override
-    (defn #_"ISeq" Seqable'''seq--APersistentSet [#_"APersistentSet" this]
-        (keys (:impl this))
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-2--APersistentSet [#_"APersistentSet" this, #_"Object" arg1]
-        (get this arg1)
+    (extend-type APersistentSet IFn
+        (#_"Object" IFn'''invoke
+            ([#_"APersistentSet" this, #_"Object" key] (get this key))
+            ([#_"APersistentSet" this, #_"Object" key, #_"Object" notFound] (get this key notFound))
+        )
     )
 
     #_foreign
@@ -12066,10 +11645,11 @@
         )
     )
 
-    #_override
-    (defn #_"int" IHashEq'''hasheq--APersistentSet [#_"APersistentSet" this]
-        (let-when [#_"int" cached (:_hasheq this)] (zero? cached) => cached
-            (§ set! (:_hasheq this) (Murmur3'hashUnordered this))
+    (extend-type APersistentSet IHashEq
+        (#_"int" IHashEq'''hasheq [#_"APersistentSet" this]
+            (let-when [#_"int" cached (:_hasheq this)] (zero? cached) => cached
+                (§ set! (:_hasheq this) (Murmur3'hashUnordered this))
+            )
         )
     )
 )
@@ -12090,50 +11670,49 @@
         )
     )
 
-    #_override
-    (defn #_"Object" ISeq'''first--VSeq [#_"VSeq" this]
-        (nth (:v this) (:i this))
-    )
+    (extend-type VSeq ISeq
+        (#_"Object" ISeq'''first [#_"VSeq" this]
+            (nth (:v this) (:i this))
+        )
 
-    #_override
-    (defn #_"ISeq" ISeq'''next--VSeq [#_"VSeq" this]
-        (when (< (inc (:i this)) (count (:v this)))
-            (VSeq'new (:v this), (inc (:i this)))
+        (#_"ISeq" ISeq'''next [#_"VSeq" this]
+            (when (< (inc (:i this)) (count (:v this)))
+                (VSeq'new (:v this), (inc (:i this)))
+            )
         )
     )
 
-    #_override
-    (defn #_"int" IndexedSeq'''index--VSeq [#_"VSeq" this]
-        (:i this)
+    (extend-type VSeq Counted
+        (#_"int" Counted'''count [#_"VSeq" this]
+            (- (count (:v this)) (:i this))
+        )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--VSeq [#_"VSeq" this]
-        (- (count (:v this)) (:i this))
+    (extend-type VSeq IObj
+        (#_"VSeq" IObj'''withMeta [#_"VSeq" this, #_"IPersistentMap" meta]
+            (VSeq'new meta, (:v this), (:i this))
+        )
     )
 
-    #_override
-    (defn #_"VSeq" IObj'''withMeta--VSeq [#_"VSeq" this, #_"IPersistentMap" meta]
-        (VSeq'new meta, (:v this), (:i this))
-    )
-
-    #_override
-    (defn #_"Object" IReduce'''reduce--VSeq [#_"VSeq" this, #_"IFn" f]
-        (let [#_"IPersistentVector" v (:v this) #_"int" i (:i this) #_"int" n (count v)]
-            (loop-when [#_"Object" r (nth v i) i (inc i)] (< i n) => r
-                (let-when [r (.invoke f, r, (nth v i))] (reduced? r) => (recur r (inc i))
-                    (deref r)
+    (extend-type VSeq IReduce
+        (#_"Object" IReduce'''reduce [#_"VSeq" this, #_"IFn" f]
+            (let [#_"IPersistentVector" v (:v this) #_"int" i (:i this) #_"int" n (count v)]
+                (loop-when [#_"Object" r (nth v i) i (inc i)] (< i n) => r
+                    (let-when [r (f r (nth v i))] (reduced? r) => (recur r (inc i))
+                        (deref r)
+                    )
                 )
             )
         )
     )
 
-    #_override
-    (defn #_"Object" IReduceInit'''reduce--VSeq [#_"VSeq" this, #_"IFn" f, #_"Object" r]
-        (let [#_"IPersistentVector" v (:v this) #_"int" i (:i this) #_"int" n (count v)]
-            (loop-when [r (.invoke f, r, (nth v i)) i (inc i)] (< i n) => (if (reduced? r) (deref r) r)
-                (when (reduced? r) => (recur (.invoke f, r, (nth v i)) (inc i))
-                    (deref r)
+    (extend-type VSeq IReduceInit
+        (#_"Object" IReduceInit'''reduce [#_"VSeq" this, #_"IFn" f, #_"Object" r]
+            (let [#_"IPersistentVector" v (:v this) #_"int" i (:i this) #_"int" n (count v)]
+                (loop-when [r (f r (nth v i)) i (inc i)] (< i n) => (if (reduced? r) (deref r) r)
+                    (when (reduced? r) => (recur (f r (nth v i)) (inc i))
+                        (deref r)
+                    )
                 )
             )
         )
@@ -12153,31 +11732,28 @@
         )
     )
 
-    #_override
-    (defn #_"Object" ISeq'''first--RSeq [#_"RSeq" this]
-        (nth (:v this) (:i this))
-    )
+    (extend-type RSeq ISeq
+        (#_"Object" ISeq'''first [#_"RSeq" this]
+            (nth (:v this) (:i this))
+        )
 
-    #_override
-    (defn #_"ISeq" ISeq'''next--RSeq [#_"RSeq" this]
-        (when (pos? (:i this))
-            (RSeq'new (:v this), (dec (:i this)))
+        (#_"ISeq" ISeq'''next [#_"RSeq" this]
+            (when (pos? (:i this))
+                (RSeq'new (:v this), (dec (:i this)))
+            )
         )
     )
 
-    #_override
-    (defn #_"int" IndexedSeq'''index--RSeq [#_"RSeq" this]
-        (:i this)
+    (extend-type RSeq Counted
+        (#_"int" Counted'''count [#_"RSeq" this]
+            (inc (:i this))
+        )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--RSeq [#_"RSeq" this]
-        (inc (:i this))
-    )
-
-    #_override
-    (defn #_"RSeq" IObj'''withMeta--RSeq [#_"RSeq" this, #_"IPersistentMap" meta]
-        (RSeq'new meta, (:v this), (:i this))
+    (extend-type RSeq IObj
+        (#_"RSeq" IObj'''withMeta [#_"RSeq" this, #_"IPersistentMap" meta]
+            (RSeq'new meta, (:v this), (:i this))
+        )
     )
 )
 
@@ -12196,17 +11772,19 @@
         (RT'printString this)
     )
 
-    #_override
-    (defn #_"ISeq" Seqable'''seq--APersistentVector [#_"APersistentVector" this]
-        (when (pos? (count this))
-            (VSeq'new this, 0)
+    (extend-type APersistentVector Seqable
+        (#_"ISeq" Seqable'''seq [#_"APersistentVector" this]
+            (when (pos? (count this))
+                (VSeq'new this, 0)
+            )
         )
     )
 
-    #_override
-    (defn #_"ISeq" Reversible'''rseq--APersistentVector [#_"APersistentVector" this]
-        (when (pos? (count this))
-            (RSeq'new this, (dec (count this)))
+    (extend-type APersistentVector Reversible
+        (#_"ISeq" Reversible'''rseq [#_"APersistentVector" this]
+            (when (pos? (count this))
+                (RSeq'new this, (dec (count this)))
+            )
         )
     )
 
@@ -12244,72 +11822,68 @@
         )
     )
 
-    #_override
-    (defn #_"int" IHashEq'''hasheq--APersistentVector [#_"APersistentVector" this]
-        (let-when [#_"int" hash (:_hasheq this)] (zero? hash) => hash
-            (let [hash
-                    (loop-when [hash 1 #_"int" i 0] (< i (count this)) => (Murmur3'mixCollHash hash, i)
-                        (recur (+ (* 31 hash) (Util'hasheq (nth this i))) (inc i))
-                    )]
-                (§ set! (:_hasheq this) hash)
+    (extend-type APersistentVector IHashEq
+        (#_"int" IHashEq'''hasheq [#_"APersistentVector" this]
+            (let-when [#_"int" hash (:_hasheq this)] (zero? hash) => hash
+                (let [hash
+                        (loop-when [hash 1 #_"int" i 0] (< i (count this)) => (Murmur3'mixCollHash hash, i)
+                            (recur (+ (* 31 hash) (Util'hasheq (nth this i))) (inc i))
+                        )]
+                    (§ set! (:_hasheq this) hash)
+                )
             )
         )
     )
 
-    #_override
-    (defn #_"Object" Indexed'''nth-3--APersistentVector [#_"APersistentVector" this, #_"int" i, #_"Object" notFound]
-        (if (< -1 i (count this)) (nth this i) notFound)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-2--APersistentVector [#_"APersistentVector" this, #_"Object" arg1]
-        (when (Numbers'isInteger arg1) => (throw! "key must be integer")
-            (nth this (.intValue arg1))
+    (extend-type APersistentVector IFn
+        (#_"Object" IFn'''invoke [#_"APersistentVector" this, #_"Object" i]
+            (when (Numbers'isInteger i) => (throw! "key must be integer")
+                (nth this (.intValue i))
+            )
         )
     )
 
-    #_override
-    (defn #_"Object" IPersistentStack'''peek--APersistentVector [#_"APersistentVector" this]
-        (when (pos? (count this))
-            (nth this (dec (count this)))
+    (extend-type APersistentVector IPersistentStack
+        (#_"Object" IPersistentStack'''peek [#_"APersistentVector" this]
+            (let-when [#_"int" n (count this)] (pos? n)
+                (nth this (dec n))
+            )
         )
-    )
-
-    #_override
-    (defn #_"boolean" Associative'''containsKey--APersistentVector [#_"APersistentVector" this, #_"Object" key]
-        (and (Numbers'isInteger key) (< -1 (.intValue key) (count this)))
     )
 
     (declare MapEntry'create)
 
-    #_override
-    (defn #_"IMapEntry" Associative'''entryAt--APersistentVector [#_"APersistentVector" this, #_"Object" key]
-        (when (Numbers'isInteger key)
-            (let-when [#_"int" i (.intValue key)] (< -1 i (count this))
-                (MapEntry'create key, (nth this i))
+    (extend-type APersistentVector Associative
+        (#_"IPersistentVector" Associative'''assoc [#_"APersistentVector" this, #_"Object" key, #_"Object" val]
+            (when (Numbers'isInteger key) => (throw! "key must be integer")
+                (IPersistentVector'''assocN this, (.intValue key), val)
+            )
+        )
+
+        (#_"boolean" Associative'''containsKey [#_"APersistentVector" this, #_"Object" key]
+            (and (Numbers'isInteger key) (< -1 (.intValue key) (count this)))
+        )
+
+        (#_"IMapEntry" Associative'''entryAt [#_"APersistentVector" this, #_"Object" key]
+            (when (Numbers'isInteger key)
+                (let-when [#_"int" i (.intValue key)] (< -1 i (count this))
+                    (MapEntry'create key, (nth this i))
+                )
             )
         )
     )
 
-    #_override
-    (defn #_"IPersistentVector" Associative'''assoc--APersistentVector [#_"APersistentVector" this, #_"Object" key, #_"Object" val]
-        (when (Numbers'isInteger key) => (throw! "key must be integer")
-            (.assocN this, (.intValue key), val)
-        )
-    )
-
-    #_override
-    (defn #_"Object" ILookup'''valAt-3--APersistentVector [#_"APersistentVector" this, #_"Object" key, #_"Object" notFound]
-        (when (Numbers'isInteger key) => notFound
-            (let-when [#_"int" i (.intValue key)] (< -1 i (count this)) => notFound
-                (nth this i)
+    (extend-type APersistentVector ILookup
+        (#_"Object" ILookup'''valAt
+            ([#_"APersistentVector" this, #_"Object" key] (ILookup'''valAt this, key, nil))
+            ([#_"APersistentVector" this, #_"Object" key, #_"Object" notFound]
+                (when (Numbers'isInteger key) => notFound
+                    (let-when [#_"int" i (.intValue key)] (< -1 i (count this)) => notFound
+                        (nth this i)
+                    )
+                )
             )
         )
-    )
-
-    #_override
-    (defn #_"Object" ILookup'''valAt-2--APersistentVector [#_"APersistentVector" this, #_"Object" key]
-        (.valAt this, key, nil)
     )
 
     #_foreign
@@ -12346,55 +11920,68 @@
         )
     )
 
-    #_override
-    (defn #_"Object" Indexed'''nth-2--SubVector [#_"SubVector" this, #_"int" i]
-        (when (and (<= 0 i) (< (+ (:start this) i) (:end this))) => (throw (IndexOutOfBoundsException.))
-            (nth (:v this) (+ (:start this) i))
+    (extend-type SubVector Indexed
+        (#_"Object" Indexed'''nth
+            ([#_"SubVector" this, #_"int" i]
+                (let-when [i (+ (:start this) i)] (and (<= (:start this) i) (< i (:end this))) => (throw (IndexOutOfBoundsException.))
+                    (nth (:v this) i)
+                )
+            )
+            ([#_"SubVector" this, #_"int" i, #_"Object" notFound]
+                (when (< -1 i (count this)) => notFound
+                    (nth this i)
+                )
+            )
         )
     )
 
-    #_override
-    (defn #_"IPersistentVector" IPersistentVector'''assocN--SubVector [#_"SubVector" this, #_"int" i, #_"Object" val]
-        (cond
-            (< (:end this) (+ (:start this) i)) (throw (IndexOutOfBoundsException.))
-            (= (+ (:start this) i) (:end this)) (conj this val)
-            :else (SubVector'new (:_meta this), (.assocN (:v this), (+ (:start this) i), val), (:start this), (:end this))
+    (extend-type SubVector IPersistentVector
+        (#_"IPersistentVector" IPersistentVector'''assocN [#_"SubVector" this, #_"int" i, #_"Object" val]
+            (cond
+                (< (:end this) (+ (:start this) i)) (throw (IndexOutOfBoundsException.))
+                (= (+ (:start this) i) (:end this)) (conj this val)
+                :else (SubVector'new (:_meta this), (IPersistentVector'''assocN (:v this), (+ (:start this) i), val), (:start this), (:end this))
+            )
         )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--SubVector [#_"SubVector" this]
-        (- (:end this) (:start this))
-    )
-
-    #_override
-    (defn #_"IPersistentVector" IPersistentVector'''conj--SubVector [#_"SubVector" this, #_"Object" o]
-        (SubVector'new (:_meta this), (.assocN (:v this), (:end this), o), (:start this), (inc (:end this)))
-    )
-
-    #_override
-    (defn #_"IPersistentCollection" IPersistentCollection'''empty--SubVector [#_"SubVector" this]
-        (with-meta [] (meta this))
-    )
-
-    #_override
-    (defn #_"IPersistentStack" IPersistentStack'''pop--SubVector [#_"SubVector" this]
-        (if (= (dec (:end this)) (:start this))
-            []
-            (SubVector'new (:_meta this), (:v this), (:start this), (dec (:end this)))
+    (extend-type SubVector Counted
+        (#_"int" Counted'''count [#_"SubVector" this]
+            (- (:end this) (:start this))
         )
     )
 
-    #_override
-    (defn #_"SubVector" IObj'''withMeta--SubVector [#_"SubVector" this, #_"IPersistentMap" meta]
-        (when-not (= meta (:_meta this)) => this
-            (SubVector'new meta, (:v this), (:start this), (:end this))
+    (extend-type SubVector IPersistentCollection
+        (#_"IPersistentVector" IPersistentCollection'''conj [#_"SubVector" this, #_"Object" o]
+            (SubVector'new (:_meta this), (IPersistentVector'''assocN (:v this), (:end this), o), (:start this), (inc (:end this)))
+        )
+
+        (#_"IPersistentVector" IPersistentCollection'''empty [#_"SubVector" this]
+            (with-meta [] (meta this))
         )
     )
 
-    #_override
-    (defn #_"IPersistentMap" IMeta'''meta--SubVector [#_"SubVector" this]
-        (:_meta this)
+    (extend-type SubVector IPersistentStack
+        (#_"IPersistentStack" IPersistentStack'''pop [#_"SubVector" this]
+            (if (= (dec (:end this)) (:start this))
+                []
+                (SubVector'new (:_meta this), (:v this), (:start this), (dec (:end this)))
+            )
+        )
+    )
+
+    (extend-type SubVector IObj
+        (#_"SubVector" IObj'''withMeta [#_"SubVector" this, #_"IPersistentMap" meta]
+            (when-not (= meta (:_meta this)) => this
+                (SubVector'new meta, (:v this), (:start this), (:end this))
+            )
+        )
+    )
+
+    (extend-type SubVector IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"SubVector" this]
+            (:_meta this)
+        )
     )
 )
 )
@@ -12406,9 +11993,17 @@
         (APersistentVector'new)
     )
 
-    #_override
-    (defn #_"Object" Indexed'''nth-2--AMapEntry [#_"AMapEntry" this, #_"int" i]
-        (case i 0 (key this) 1 (val this) (throw (IndexOutOfBoundsException.)))
+    (extend-type AMapEntry Indexed
+        (#_"Object" Indexed'''nth
+            ([#_"AMapEntry" this, #_"int" i]
+                (case i 0 (key this) 1 (val this) (throw (IndexOutOfBoundsException.)))
+            )
+            ([#_"AMapEntry" this, #_"int" i, #_"Object" notFound]
+                (when (< -1 i (count this)) => notFound
+                    (nth this i)
+                )
+            )
+        )
     )
 
     (declare LazilyPersistentVector'createOwning)
@@ -12418,34 +12013,38 @@
         (LazilyPersistentVector'createOwning (key this), (val this))
     )
 
-    #_override
-    (defn #_"IPersistentVector" IPersistentVector'''assocN--AMapEntry [#_"AMapEntry" this, #_"int" i, #_"Object" val]
-        (.assocN (AMapEntry''asVector this), i, val)
+    (extend-type AMapEntry IPersistentVector
+        (#_"IPersistentVector" IPersistentVector'''assocN [#_"AMapEntry" this, #_"int" i, #_"Object" val]
+            (IPersistentVector'''assocN (AMapEntry''asVector this), i, val)
+        )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--AMapEntry [#_"AMapEntry" this]
-        2
+    (extend-type AMapEntry Counted
+        (#_"int" Counted'''count [#_"AMapEntry" this]
+            2
+        )
     )
 
-    #_override
-    (defn #_"ISeq" Seqable'''seq--AMapEntry [#_"AMapEntry" this]
-        (seq (AMapEntry''asVector this))
+    (extend-type AMapEntry Seqable
+        (#_"ISeq" Seqable'''seq [#_"AMapEntry" this]
+            (seq (AMapEntry''asVector this))
+        )
     )
 
-    #_override
-    (defn #_"IPersistentVector" IPersistentVector'''conj--AMapEntry [#_"AMapEntry" this, #_"Object" o]
-        (conj (AMapEntry''asVector this) o)
+    (extend-type AMapEntry IPersistentCollection
+        (#_"IPersistentVector" IPersistentCollection'''conj [#_"AMapEntry" this, #_"Object" o]
+            (conj (AMapEntry''asVector this) o)
+        )
+
+        (#_"IPersistentVector" IPersistentCollection'''empty [#_"AMapEntry" this]
+            nil
+        )
     )
 
-    #_override
-    (defn #_"IPersistentCollection" IPersistentCollection'''empty--AMapEntry [#_"AMapEntry" this]
-        nil
-    )
-
-    #_override
-    (defn #_"IPersistentStack" IPersistentStack'''pop--AMapEntry [#_"AMapEntry" this]
-        (LazilyPersistentVector'createOwning (key this))
+    (extend-type AMapEntry IPersistentStack
+        (#_"IPersistentStack" IPersistentStack'''pop [#_"AMapEntry" this]
+            (LazilyPersistentVector'createOwning (key this))
+        )
     )
 )
 )
@@ -12466,14 +12065,14 @@
         (MapEntry'new key, val)
     )
 
-    #_override
-    (defn #_"Object" IMapEntry'''key--MapEntry [#_"MapEntry" this]
-        (:_key this)
-    )
+    (extend-type MapEntry IMapEntry
+        (#_"Object" IMapEntry'''key [#_"MapEntry" this]
+            (:_key this)
+        )
 
-    #_override
-    (defn #_"Object" IMapEntry'''val--MapEntry [#_"MapEntry" this]
-        (:_val this)
+        (#_"Object" IMapEntry'''val [#_"MapEntry" this]
+            (:_val this)
+        )
     )
 )
 )
@@ -12493,36 +12092,38 @@
         )
     )
 
-    #_override
-    (defn #_"Object" Indexed'''nth-2--ArrayChunk [#_"ArrayChunk" this, #_"int" i]
-        (aget (:array this) (+ (:off this) i))
-    )
-
-    #_override
-    (defn #_"Object" Indexed'''nth-3--ArrayChunk [#_"ArrayChunk" this, #_"int" i, #_"Object" notFound]
-        (if (< -1 i (count this)) (nth this i) notFound)
-    )
-
-    #_override
-    (defn #_"int" Counted'''count--ArrayChunk [#_"ArrayChunk" this]
-        (- (:end this) (:off this))
-    )
-
-    #_override
-    (defn #_"IChunk" IChunk'''dropFirst--ArrayChunk [#_"ArrayChunk" this]
-        (when-not (= (:off this) (:end this)) => (throw! "dropFirst of empty chunk")
-            (ArrayChunk'new (:array this), (inc (:off this)), (:end this))
+    (extend-type ArrayChunk Indexed
+        (#_"Object" Indexed'''nth
+            ([#_"ArrayChunk" this, #_"int" i]
+                (aget (:array this) (+ (:off this) i))
+            )
+            ([#_"ArrayChunk" this, #_"int" i, #_"Object" notFound]
+                (if (< -1 i (count this)) (nth this i) notFound)
+            )
         )
     )
 
-    #_override
-    (defn #_"Object" IChunk'''reduce--ArrayChunk [#_"ArrayChunk" this, #_"IFn" f, #_"Object" r]
-        (let [r (.invoke f, r, (aget (:array this) (:off this)))]
-            (when-not (reduced? r) => r
-                (loop-when [#_"int" i (inc (:off this))] (< i (:end this)) => r
-                    (let [r (.invoke f, r, (aget (:array this) i))]
-                        (when-not (reduced? r) => r
-                            (recur (inc i))
+    (extend-type ArrayChunk Counted
+        (#_"int" Counted'''count [#_"ArrayChunk" this]
+            (- (:end this) (:off this))
+        )
+    )
+
+    (extend-type ArrayChunk IChunk
+        (#_"IChunk" IChunk'''dropFirst [#_"ArrayChunk" this]
+            (when-not (= (:off this) (:end this)) => (throw! "dropFirst of empty chunk")
+                (ArrayChunk'new (:array this), (inc (:off this)), (:end this))
+            )
+        )
+
+        (#_"Object" IChunk'''reduce [#_"ArrayChunk" this, #_"IFn" f, #_"Object" r]
+            (let [r (f r (aget (:array this) (:off this)))]
+                (when-not (reduced? r) => r
+                    (loop-when [#_"int" i (inc (:off this))] (< i (:end this)) => r
+                        (let [r (f r (aget (:array this) i))]
+                            (when-not (reduced? r) => r
+                                (recur (inc i))
+                            )
                         )
                     )
                 )
@@ -12544,49 +12145,48 @@
         )
     )
 
-    #_override
-    (defn #_"Object" ISeq'''first--ArraySeq_int [#_"ArraySeq_int" this]
-        (aget (:array this) (:i this))
-    )
+    (extend-type ArraySeq_int ISeq
+        (#_"Object" ISeq'''first [#_"ArraySeq_int" this]
+            (aget (:array this) (:i this))
+        )
 
-    #_override
-    (defn #_"ISeq" ISeq'''next--ArraySeq_int [#_"ArraySeq_int" this]
-        (when (< (inc (:i this)) (alength (:array this)))
-            (ArraySeq_int'new (meta this), (:array this), (inc (:i this)))
+        (#_"ISeq" ISeq'''next [#_"ArraySeq_int" this]
+            (when (< (inc (:i this)) (alength (:array this)))
+                (ArraySeq_int'new (meta this), (:array this), (inc (:i this)))
+            )
         )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--ArraySeq_int [#_"ArraySeq_int" this]
-        (- (alength (:array this)) (:i this))
+    (extend-type ArraySeq_int Counted
+        (#_"int" Counted'''count [#_"ArraySeq_int" this]
+            (- (alength (:array this)) (:i this))
+        )
     )
 
-    #_override
-    (defn #_"int" IndexedSeq'''index--ArraySeq_int [#_"ArraySeq_int" this]
-        (:i this)
+    (extend-type ArraySeq_int IObj
+        (#_"ArraySeq_int" IObj'''withMeta [#_"ArraySeq_int" this, #_"IPersistentMap" meta]
+            (ArraySeq_int'new meta, (:array this), (:i this))
+        )
     )
 
-    #_override
-    (defn #_"ArraySeq_int" IObj'''withMeta--ArraySeq_int [#_"ArraySeq_int" this, #_"IPersistentMap" meta]
-        (ArraySeq_int'new meta, (:array this), (:i this))
-    )
-
-    #_override
-    (defn #_"Object" IReduce'''reduce--ArraySeq_int [#_"ArraySeq_int" this, #_"IFn" f]
-        (let [#_"int[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-            (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
-                (let [r (.invoke f, r, (aget a i))]
-                    (if (reduced? r) (deref r) (recur r (inc i)))
+    (extend-type ArraySeq_int IReduce
+        (#_"Object" IReduce'''reduce [#_"ArraySeq_int" this, #_"IFn" f]
+            (let [#_"int[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
+                (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
+                    (let [r (f r (aget a i))]
+                        (if (reduced? r) (deref r) (recur r (inc i)))
+                    )
                 )
             )
         )
     )
 
-    #_override
-    (defn #_"Object" IReduceInit'''reduce--ArraySeq_int [#_"ArraySeq_int" this, #_"IFn" f, #_"Object" r]
-        (let [#_"int[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-            (loop-when [r (.invoke f, r, (aget a i)) i (inc i)] (< i n) => (if (reduced? r) (deref r) r)
-                (if (reduced? r) (deref r) (recur (.invoke f, r, (aget a i)) (inc i)))
+    (extend-type ArraySeq_int IReduceInit
+        (#_"Object" IReduceInit'''reduce [#_"ArraySeq_int" this, #_"IFn" f, #_"Object" r]
+            (let [#_"int[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
+                (loop-when [r (f r (aget a i)) i (inc i)] (< i n) => (if (reduced? r) (deref r) r)
+                    (if (reduced? r) (deref r) (recur (f r (aget a i)) (inc i)))
+                )
             )
         )
     )
@@ -12602,49 +12202,48 @@
         )
     )
 
-    #_override
-    (defn #_"Object" ISeq'''first--ArraySeq_long [#_"ArraySeq_long" this]
-        (Numbers'num-1l (aget (:array this) (:i this)))
-    )
+    (extend-type ArraySeq_long ISeq
+        (#_"Object" ISeq'''first [#_"ArraySeq_long" this]
+            (Numbers'num-1l (aget (:array this) (:i this)))
+        )
 
-    #_override
-    (defn #_"ISeq" ISeq'''next--ArraySeq_long [#_"ArraySeq_long" this]
-        (when (< (inc (:i this)) (alength (:array this)))
-            (ArraySeq_long'new (meta this), (:array this), (inc (:i this)))
+        (#_"ISeq" ISeq'''next [#_"ArraySeq_long" this]
+            (when (< (inc (:i this)) (alength (:array this)))
+                (ArraySeq_long'new (meta this), (:array this), (inc (:i this)))
+            )
         )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--ArraySeq_long [#_"ArraySeq_long" this]
-        (- (alength (:array this)) (:i this))
+    (extend-type ArraySeq_long Counted
+        (#_"int" Counted'''count [#_"ArraySeq_long" this]
+            (- (alength (:array this)) (:i this))
+        )
     )
 
-    #_override
-    (defn #_"int" IndexedSeq'''index--ArraySeq_long [#_"ArraySeq_long" this]
-        (:i this)
+    (extend-type ArraySeq_long IObj
+        (#_"ArraySeq_long" IObj'''withMeta [#_"ArraySeq_long" this, #_"IPersistentMap" meta]
+            (ArraySeq_long'new meta, (:array this), (:i this))
+        )
     )
 
-    #_override
-    (defn #_"ArraySeq_long" IObj'''withMeta--ArraySeq_long [#_"ArraySeq_long" this, #_"IPersistentMap" meta]
-        (ArraySeq_long'new meta, (:array this), (:i this))
-    )
-
-    #_override
-    (defn #_"Object" IReduce'''reduce--ArraySeq_long [#_"ArraySeq_long" this, #_"IFn" f]
-        (let [#_"long[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-            (loop-when [#_"Object" r (Numbers'num-1l (aget a i)) i (inc i)] (< i n) => r
-                (let [r (.invoke f, r, (Numbers'num-1l (aget a i)))]
-                    (if (reduced? r) (deref r) (recur r (inc i)))
+    (extend-type ArraySeq_long IReduce
+        (#_"Object" IReduce'''reduce [#_"ArraySeq_long" this, #_"IFn" f]
+            (let [#_"long[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
+                (loop-when [#_"Object" r (Numbers'num-1l (aget a i)) i (inc i)] (< i n) => r
+                    (let [r (f r (Numbers'num-1l (aget a i)))]
+                        (if (reduced? r) (deref r) (recur r (inc i)))
+                    )
                 )
             )
         )
     )
 
-    #_override
-    (defn #_"Object" IReduceInit'''reduce--ArraySeq_long [#_"ArraySeq_long" this, #_"IFn" f, #_"Object" r]
-        (let [#_"long[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-            (loop-when [r (.invoke f, r, (Numbers'num-1l (aget a i))) i (inc i)] (< i n) => (if (reduced? r) (deref r) r)
-                (if (reduced? r) (deref r) (recur (.invoke f, r, (Numbers'num-1l (aget a i))) (inc i)))
+    (extend-type ArraySeq_long IReduceInit
+        (#_"Object" IReduceInit'''reduce [#_"ArraySeq_long" this, #_"IFn" f, #_"Object" r]
+            (let [#_"long[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
+                (loop-when [r (f r (Numbers'num-1l (aget a i))) i (inc i)] (< i n) => (if (reduced? r) (deref r) r)
+                    (if (reduced? r) (deref r) (recur (f r (Numbers'num-1l (aget a i))) (inc i)))
+                )
             )
         )
     )
@@ -12660,49 +12259,48 @@
         )
     )
 
-    #_override
-    (defn #_"Object" ISeq'''first--ArraySeq_byte [#_"ArraySeq_byte" this]
-        (aget (:array this) (:i this))
-    )
+    (extend-type ArraySeq_byte ISeq
+        (#_"Object" ISeq'''first [#_"ArraySeq_byte" this]
+            (aget (:array this) (:i this))
+        )
 
-    #_override
-    (defn #_"ISeq" ISeq'''next--ArraySeq_byte [#_"ArraySeq_byte" this]
-        (when (< (inc (:i this)) (alength (:array this)))
-            (ArraySeq_byte'new (meta this), (:array this), (inc (:i this)))
+        (#_"ISeq" ISeq'''next [#_"ArraySeq_byte" this]
+            (when (< (inc (:i this)) (alength (:array this)))
+                (ArraySeq_byte'new (meta this), (:array this), (inc (:i this)))
+            )
         )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--ArraySeq_byte [#_"ArraySeq_byte" this]
-        (- (alength (:array this)) (:i this))
+    (extend-type ArraySeq_byte Counted
+        (#_"int" Counted'''count [#_"ArraySeq_byte" this]
+            (- (alength (:array this)) (:i this))
+        )
     )
 
-    #_override
-    (defn #_"int" IndexedSeq'''index--ArraySeq_byte [#_"ArraySeq_byte" this]
-        (:i this)
+    (extend-type ArraySeq_byte IObj
+        (#_"ArraySeq_byte" IObj'''withMeta [#_"ArraySeq_byte" this, #_"IPersistentMap" meta]
+            (ArraySeq_byte'new meta, (:array this), (:i this))
+        )
     )
 
-    #_override
-    (defn #_"ArraySeq_byte" IObj'''withMeta--ArraySeq_byte [#_"ArraySeq_byte" this, #_"IPersistentMap" meta]
-        (ArraySeq_byte'new meta, (:array this), (:i this))
-    )
-
-    #_override
-    (defn #_"Object" IReduce'''reduce--ArraySeq_byte [#_"ArraySeq_byte" this, #_"IFn" f]
-        (let [#_"byte[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-            (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
-                (let [r (.invoke f, r, (aget a i))]
-                    (if (reduced? r) (deref r) (recur r (inc i)))
+    (extend-type ArraySeq_byte IReduce
+        (#_"Object" IReduce'''reduce [#_"ArraySeq_byte" this, #_"IFn" f]
+            (let [#_"byte[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
+                (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
+                    (let [r (f r (aget a i))]
+                        (if (reduced? r) (deref r) (recur r (inc i)))
+                    )
                 )
             )
         )
     )
 
-    #_override
-    (defn #_"Object" IReduceInit'''reduce--ArraySeq_byte [#_"ArraySeq_byte" this, #_"IFn" f, #_"Object" r]
-        (let [#_"byte[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-            (loop-when [r (.invoke f, r, (aget a i)) i (inc i)] (< i n) => (if (reduced? r) (deref r) r)
-                (if (reduced? r) (deref r) (recur (.invoke f, r, (aget a i)) (inc i)))
+    (extend-type ArraySeq_byte IReduceInit
+        (#_"Object" IReduceInit'''reduce [#_"ArraySeq_byte" this, #_"IFn" f, #_"Object" r]
+            (let [#_"byte[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
+                (loop-when [r (f r (aget a i)) i (inc i)] (< i n) => (if (reduced? r) (deref r) r)
+                    (if (reduced? r) (deref r) (recur (f r (aget a i)) (inc i)))
+                )
             )
         )
     )
@@ -12718,49 +12316,48 @@
         )
     )
 
-    #_override
-    (defn #_"Object" ISeq'''first--ArraySeq_char [#_"ArraySeq_char" this]
-        (aget (:array this) (:i this))
-    )
+    (extend-type ArraySeq_char ISeq
+        (#_"Object" ISeq'''first [#_"ArraySeq_char" this]
+            (aget (:array this) (:i this))
+        )
 
-    #_override
-    (defn #_"ISeq" ISeq'''next--ArraySeq_char [#_"ArraySeq_char" this]
-        (when (< (inc (:i this)) (alength (:array this)))
-            (ArraySeq_char'new (meta this), (:array this), (inc (:i this)))
+        (#_"ISeq" ISeq'''next [#_"ArraySeq_char" this]
+            (when (< (inc (:i this)) (alength (:array this)))
+                (ArraySeq_char'new (meta this), (:array this), (inc (:i this)))
+            )
         )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--ArraySeq_char [#_"ArraySeq_char" this]
-        (- (alength (:array this)) (:i this))
+    (extend-type ArraySeq_char Counted
+        (#_"int" Counted'''count [#_"ArraySeq_char" this]
+            (- (alength (:array this)) (:i this))
+        )
     )
 
-    #_override
-    (defn #_"int" IndexedSeq'''index--ArraySeq_char [#_"ArraySeq_char" this]
-        (:i this)
+    (extend-type ArraySeq_char IObj
+        (#_"ArraySeq_char" IObj'''withMeta [#_"ArraySeq_char" this, #_"IPersistentMap" meta]
+            (ArraySeq_char'new meta, (:array this), (:i this))
+        )
     )
 
-    #_override
-    (defn #_"ArraySeq_char" IObj'''withMeta--ArraySeq_char [#_"ArraySeq_char" this, #_"IPersistentMap" meta]
-        (ArraySeq_char'new meta, (:array this), (:i this))
-    )
-
-    #_override
-    (defn #_"Object" IReduce'''reduce--ArraySeq_char [#_"ArraySeq_char" this, #_"IFn" f]
-        (let [#_"char[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-            (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
-                (let [r (.invoke f, r, (aget a i))]
-                    (if (reduced? r) (deref r) (recur r (inc i)))
+    (extend-type ArraySeq_char IReduce
+        (#_"Object" IReduce'''reduce [#_"ArraySeq_char" this, #_"IFn" f]
+            (let [#_"char[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
+                (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
+                    (let [r (f r (aget a i))]
+                        (if (reduced? r) (deref r) (recur r (inc i)))
+                    )
                 )
             )
         )
     )
 
-    #_override
-    (defn #_"Object" IReduceInit'''reduce--ArraySeq_char [#_"ArraySeq_char" this, #_"IFn" f, #_"Object" r]
-        (let [#_"char[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-            (loop-when [r (.invoke f, r, (aget a i)) i (inc i)] (< i n) => (if (reduced? r) (deref r) r)
-                (if (reduced? r) (deref r) (recur (.invoke f, r, (aget a i)) (inc i)))
+    (extend-type ArraySeq_char IReduceInit
+        (#_"Object" IReduceInit'''reduce [#_"ArraySeq_char" this, #_"IFn" f, #_"Object" r]
+            (let [#_"char[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
+                (loop-when [r (f r (aget a i)) i (inc i)] (< i n) => (if (reduced? r) (deref r) r)
+                    (if (reduced? r) (deref r) (recur (f r (aget a i)) (inc i)))
+                )
             )
         )
     )
@@ -12776,49 +12373,48 @@
         )
     )
 
-    #_override
-    (defn #_"Object" ISeq'''first--ArraySeq_boolean [#_"ArraySeq_boolean" this]
-        (aget (:array this) (:i this))
-    )
+    (extend-type ArraySeq_boolean ISeq
+        (#_"Object" ISeq'''first [#_"ArraySeq_boolean" this]
+            (aget (:array this) (:i this))
+        )
 
-    #_override
-    (defn #_"ISeq" ISeq'''next--ArraySeq_boolean [#_"ArraySeq_boolean" this]
-        (when (< (inc (:i this)) (alength (:array this)))
-            (ArraySeq_boolean'new (meta this), (:array this), (inc (:i this)))
+        (#_"ISeq" ISeq'''next [#_"ArraySeq_boolean" this]
+            (when (< (inc (:i this)) (alength (:array this)))
+                (ArraySeq_boolean'new (meta this), (:array this), (inc (:i this)))
+            )
         )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--ArraySeq_boolean [#_"ArraySeq_boolean" this]
-        (- (alength (:array this)) (:i this))
+    (extend-type ArraySeq_boolean Counted
+        (#_"int" Counted'''count [#_"ArraySeq_boolean" this]
+            (- (alength (:array this)) (:i this))
+        )
     )
 
-    #_override
-    (defn #_"int" IndexedSeq'''index--ArraySeq_boolean [#_"ArraySeq_boolean" this]
-        (:i this)
+    (extend-type ArraySeq_boolean IObj
+        (#_"ArraySeq_boolean" IObj'''withMeta [#_"ArraySeq_boolean" this, #_"IPersistentMap" meta]
+            (ArraySeq_boolean'new meta, (:array this), (:i this))
+        )
     )
 
-    #_override
-    (defn #_"ArraySeq_boolean" IObj'''withMeta--ArraySeq_boolean [#_"ArraySeq_boolean" this, #_"IPersistentMap" meta]
-        (ArraySeq_boolean'new meta, (:array this), (:i this))
-    )
-
-    #_override
-    (defn #_"Object" IReduce'''reduce--ArraySeq_boolean [#_"ArraySeq_boolean" this, #_"IFn" f]
-        (let [#_"boolean[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-            (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
-                (let [r (.invoke f, r, (aget a i))]
-                    (if (reduced? r) (deref r) (recur r (inc i)))
+    (extend-type ArraySeq_boolean IReduce
+        (#_"Object" IReduce'''reduce [#_"ArraySeq_boolean" this, #_"IFn" f]
+            (let [#_"boolean[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
+                (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
+                    (let [r (f r (aget a i))]
+                        (if (reduced? r) (deref r) (recur r (inc i)))
+                    )
                 )
             )
         )
     )
 
-    #_override
-    (defn #_"Object" IReduceInit'''reduce--ArraySeq_boolean [#_"ArraySeq_boolean" this, #_"IFn" f, #_"Object" r]
-        (let [#_"boolean[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-            (loop-when [r (.invoke f, r, (aget a i)) i (inc i)] (< i n) => (if (reduced? r) (deref r) r)
-                (if (reduced? r) (deref r) (recur (.invoke f, r, (aget a i)) (inc i)))
+    (extend-type ArraySeq_boolean IReduceInit
+        (#_"Object" IReduceInit'''reduce [#_"ArraySeq_boolean" this, #_"IFn" f, #_"Object" r]
+            (let [#_"boolean[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
+                (loop-when [r (f r (aget a i)) i (inc i)] (< i n) => (if (reduced? r) (deref r) r)
+                    (if (reduced? r) (deref r) (recur (f r (aget a i)) (inc i)))
+                )
             )
         )
     )
@@ -12837,11 +12433,7 @@
         )
     )
 
-    (defn #_"ArraySeq" ArraySeq'create-0 []
-        nil
-    )
-
-    (defn #_"ArraySeq" ArraySeq'create-1 [& #_"Object..." array]
+    (defn #_"ArraySeq" ArraySeq'create [& #_"Object..." array]
         (when (and (some? array) (pos? (alength array)))
             (ArraySeq'new array, 0)
         )
@@ -12862,54 +12454,53 @@
         )
     )
 
-    #_override
-    (defn #_"Object" ISeq'''first--ArraySeq [#_"ArraySeq" this]
-        (when (some? (:array this))
-            (aget (:array this) (:i this))
+    (extend-type ArraySeq ISeq
+        (#_"Object" ISeq'''first [#_"ArraySeq" this]
+            (when (some? (:array this))
+                (aget (:array this) (:i this))
+            )
+        )
+
+        (#_"ISeq" ISeq'''next [#_"ArraySeq" this]
+            (when (and (some? (:array this)) (< (inc (:i this)) (alength (:array this))))
+                (ArraySeq'new (:array this), (inc (:i this)))
+            )
         )
     )
 
-    #_override
-    (defn #_"ISeq" ISeq'''next--ArraySeq [#_"ArraySeq" this]
-        (when (and (some? (:array this)) (< (inc (:i this)) (alength (:array this))))
-            (ArraySeq'new (:array this), (inc (:i this)))
+    (extend-type ArraySeq Counted
+        (#_"int" Counted'''count [#_"ArraySeq" this]
+            (if (some? (:array this)) (- (alength (:array this)) (:i this)) 0)
         )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--ArraySeq [#_"ArraySeq" this]
-        (if (some? (:array this)) (- (alength (:array this)) (:i this)) 0)
+    (extend-type ArraySeq IObj
+        (#_"ArraySeq" IObj'''withMeta [#_"ArraySeq" this, #_"IPersistentMap" meta]
+            (ArraySeq'new meta, (:array this), (:i this))
+        )
     )
 
-    #_override
-    (defn #_"int" IndexedSeq'''index--ArraySeq [#_"ArraySeq" this]
-        (:i this)
-    )
-
-    #_override
-    (defn #_"ArraySeq" IObj'''withMeta--ArraySeq [#_"ArraySeq" this, #_"IPersistentMap" meta]
-        (ArraySeq'new meta, (:array this), (:i this))
-    )
-
-    #_override
-    (defn #_"Object" IReduce'''reduce--ArraySeq [#_"ArraySeq" this, #_"IFn" f]
-        (when-let [#_"Object[]" a (:array this)]
-            (let [#_"int" i (:i this) #_"int" n (alength a)]
-                (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
-                    (let [r (.invoke f, r, (aget a i))]
-                        (if (reduced? r) (deref r) (recur r (inc i)))
+    (extend-type ArraySeq IReduce
+        (#_"Object" IReduce'''reduce [#_"ArraySeq" this, #_"IFn" f]
+            (when-let [#_"Object[]" a (:array this)]
+                (let [#_"int" i (:i this) #_"int" n (alength a)]
+                    (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
+                        (let [r (f r (aget a i))]
+                            (if (reduced? r) (deref r) (recur r (inc i)))
+                        )
                     )
                 )
             )
         )
     )
 
-    #_override
-    (defn #_"Object" IReduceInit'''reduce--ArraySeq [#_"ArraySeq" this, #_"IFn" f, #_"Object" r]
-        (when-let [#_"Object[]" a (:array this)]
-            (let [#_"int" i (:i this) #_"int" n (alength a)]
-                (loop-when [r (.invoke f, r, (aget a i)) i (inc i)] (< i n) => (if (reduced? r) (deref r) r)
-                    (if (reduced? r) (deref r) (recur (.invoke f, r, (aget a i)) (inc i)))
+    (extend-type ArraySeq IReduceInit
+        (#_"Object" IReduceInit'''reduce [#_"ArraySeq" this, #_"IFn" f, #_"Object" r]
+            (when-let [#_"Object[]" a (:array this)]
+                (let [#_"int" i (:i this) #_"int" n (alength a)]
+                    (loop-when [r (f r (aget a i)) i (inc i)] (< i n) => (if (reduced? r) (deref r) r)
+                        (if (reduced? r) (deref r) (recur (f r (aget a i)) (inc i)))
+                    )
                 )
             )
         )
@@ -12930,137 +12521,128 @@
         )
     )
 
-    #_override
-    (defn #_"IPersistentMap" IMeta'''meta--Atom [#_"Atom" this]
-        (§ sync this
-            (:_meta this)
-        )
-    )
-
-    #_override
-    (defn #_"IPersistentMap" IReference'''alterMeta--Atom [#_"Atom" this, #_"IFn" f, #_"ISeq" z]
-        (§ sync this
-            (§ update! (:_meta this) #(apply f % z))
-        )
-    )
-
-    #_override
-    (defn #_"IPersistentMap" IReference'''resetMeta--Atom [#_"Atom" this, #_"IPersistentMap" m]
-        (§ sync this
-            (§ set! (:_meta this) m)
-        )
-    )
-
-    #_override
-    (defn #_"Object" IDeref'''deref--Atom [#_"Atom" this]
-        (.get (:state this))
-    )
-
-    #_override
-    (defn #_"boolean" IAtom'''compareAndSet--Atom [#_"Atom" this, #_"Object" v, #_"Object" v']
-        (.compareAndSet (:state this), v, v')
-    )
-
-    #_override
-    (defn #_"Object" IAtom'''swap-2--Atom [#_"Atom" this, #_"IFn" f]
-        (loop []
-            (let [#_"Object" v (deref this) #_"Object" v' (f v)]
-                (when (compare-and-set! this v v') => (recur)
-                    v'
-                )
+    (extend-type Atom IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"Atom" this]
+            (§ sync this
+                (:_meta this)
             )
         )
     )
 
-    #_override
-    (defn #_"Object" IAtom'''swap-3--Atom [#_"Atom" this, #_"IFn" f, #_"Object" x]
-        (loop []
-            (let [#_"Object" v (deref this) #_"Object" v' (f v x)]
-                (when (compare-and-set! this v v') => (recur)
-                    v'
-                )
+    (extend-type Atom IReference
+        (#_"IPersistentMap" IReference'''alterMeta [#_"Atom" this, #_"IFn" f, #_"ISeq" z]
+            (§ sync this
+                (§ update! (:_meta this) #(apply f % z))
+            )
+        )
+
+        (#_"IPersistentMap" IReference'''resetMeta [#_"Atom" this, #_"IPersistentMap" m]
+            (§ sync this
+                (§ set! (:_meta this) m)
             )
         )
     )
 
-    #_override
-    (defn #_"Object" IAtom'''swap-4--Atom [#_"Atom" this, #_"IFn" f, #_"Object" x, #_"Object" y]
-        (loop []
-            (let [#_"Object" v (deref this) #_"Object" v' (f v x y)]
-                (when (compare-and-set! this v v') => (recur)
-                    v'
-                )
-            )
+    (extend-type Atom IDeref
+        (#_"Object" IDeref'''deref [#_"Atom" this]
+            (.get (:state this))
         )
     )
 
-    #_override
-    (defn #_"Object" IAtom'''swap-5--Atom [#_"Atom" this, #_"IFn" f, #_"Object" x, #_"Object" y, #_"ISeq" z]
-        (loop []
-            (let [#_"Object" v (deref this) #_"Object" v' (apply f v x y z)]
-                (when (compare-and-set! this v v') => (recur)
-                    v'
+    (extend-type Atom IAtom
+        (#_"boolean" IAtom'''compareAndSet [#_"Atom" this, #_"Object" v, #_"Object" v']
+            (.compareAndSet (:state this), v, v')
+        )
+
+        (#_"Object" IAtom'''swap
+            ([#_"Atom" this, #_"IFn" f]
+                (loop []
+                    (let [#_"Object" v (deref this) #_"Object" v' (f v)]
+                        (when (compare-and-set! this v v') => (recur)
+                            v'
+                        )
+                    )
+                )
+            )
+            ([#_"Atom" this, #_"IFn" f, #_"Object" x]
+                (loop []
+                    (let [#_"Object" v (deref this) #_"Object" v' (f v x)]
+                        (when (compare-and-set! this v v') => (recur)
+                            v'
+                        )
+                    )
+                )
+            )
+            ([#_"Atom" this, #_"IFn" f, #_"Object" x, #_"Object" y]
+                (loop []
+                    (let [#_"Object" v (deref this) #_"Object" v' (f v x y)]
+                        (when (compare-and-set! this v v') => (recur)
+                            v'
+                        )
+                    )
+                )
+            )
+            ([#_"Atom" this, #_"IFn" f, #_"Object" x, #_"Object" y, #_"ISeq" z]
+                (loop []
+                    (let [#_"Object" v (deref this) #_"Object" v' (apply f v x y z)]
+                        (when (compare-and-set! this v v') => (recur)
+                            v'
+                        )
+                    )
                 )
             )
         )
-    )
 
-    #_override
-    (defn #_"IPersistentVector" IAtom'''swapVals-2--Atom [#_"Atom" this, #_"IFn" f]
-        (loop []
-            (let [#_"Object" v (deref this) #_"Object" v' (f v)]
-                (when (compare-and-set! this v v') => (recur)
-                    (LazilyPersistentVector'createOwning v, v')
+        (#_"IPersistentVector" IAtom'''swapVals
+            ([#_"Atom" this, #_"IFn" f]
+                (loop []
+                    (let [#_"Object" v (deref this) #_"Object" v' (f v)]
+                        (when (compare-and-set! this v v') => (recur)
+                            (LazilyPersistentVector'createOwning v, v')
+                        )
+                    )
+                )
+            )
+            ([#_"Atom" this, #_"IFn" f, #_"Object" x]
+                (loop []
+                    (let [#_"Object" v (deref this) #_"Object" v' (f v x)]
+                        (when (compare-and-set! this v v') => (recur)
+                            (LazilyPersistentVector'createOwning v, v')
+                        )
+                    )
+                )
+            )
+            ([#_"Atom" this, #_"IFn" f, #_"Object" x, #_"Object" y]
+                (loop []
+                    (let [#_"Object" v (deref this) #_"Object" v' (f v x y)]
+                        (when (compare-and-set! this v v') => (recur)
+                            (LazilyPersistentVector'createOwning v, v')
+                        )
+                    )
+                )
+            )
+            ([#_"Atom" this, #_"IFn" f, #_"Object" x, #_"Object" y, #_"ISeq" z]
+                (loop []
+                    (let [#_"Object" v (deref this) #_"Object" v' (apply f v x y z)]
+                        (when (compare-and-set! this v v') => (recur)
+                            (LazilyPersistentVector'createOwning v, v')
+                        )
+                    )
                 )
             )
         )
-    )
 
-    #_override
-    (defn #_"IPersistentVector" IAtom'''swapVals-3--Atom [#_"Atom" this, #_"IFn" f, #_"Object" x]
-        (loop []
-            (let [#_"Object" v (deref this) #_"Object" v' (f v x)]
-                (when (compare-and-set! this v v') => (recur)
-                    (LazilyPersistentVector'createOwning v, v')
-                )
-            )
+        (#_"Object" IAtom'''reset [#_"Atom" this, #_"Object" v']
+            (.set (:state this), v')
+            v'
         )
-    )
 
-    #_override
-    (defn #_"IPersistentVector" IAtom'''swapVals-4--Atom [#_"Atom" this, #_"IFn" f, #_"Object" x, #_"Object" y]
-        (loop []
-            (let [#_"Object" v (deref this) #_"Object" v' (f v x y)]
-                (when (compare-and-set! this v v') => (recur)
-                    (LazilyPersistentVector'createOwning v, v')
-                )
-            )
-        )
-    )
-
-    #_override
-    (defn #_"IPersistentVector" IAtom'''swapVals-5--Atom [#_"Atom" this, #_"IFn" f, #_"Object" x, #_"Object" y, #_"ISeq" z]
-        (loop []
-            (let [#_"Object" v (deref this) #_"Object" v' (apply f v x y z)]
-                (when (compare-and-set! this v v') => (recur)
-                    (LazilyPersistentVector'createOwning v, v')
-                )
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IAtom'''reset--Atom [#_"Atom" this, #_"Object" v']
-        (.set (:state this), v')
-        v'
-    )
-
-    #_override
-    (defn #_"IPersistentVector" IAtom'''resetVals--Atom [#_"Atom" this, #_"Object" v']
-        (loop []
-            (let [#_"Object" v (deref this)]
-                (when (compare-and-set! this v v') => (recur)
-                    (LazilyPersistentVector'createOwning v, v')
+        (#_"IPersistentVector" IAtom'''resetVals [#_"Atom" this, #_"Object" v']
+            (loop []
+                (let [#_"Object" v (deref this)]
+                    (when (compare-and-set! this v v') => (recur)
+                        (LazilyPersistentVector'createOwning v, v')
+                    )
                 )
             )
         )
@@ -13078,7 +12660,7 @@
     #_method
     (defn #_"ITransientMap" ATransientMap''conj [#_"ATransientMap" this, #_"Object" o]
         (.ensureEditable this)
-        (condp instance? o
+        (condp satisfies? o
             IMapEntry
                 (assoc this (key o) (val o))
             IPersistentVector
@@ -13094,65 +12676,65 @@
         )
     )
 
-    #_override
-    (defn #_"Object" IFn'''invoke-2--ATransientMap [#_"ATransientMap" this, #_"Object" arg1]
-        (get this arg1)
+    (extend-type ATransientMap IFn
+        (#_"Object" IFn'''invoke
+            ([#_"ATransientMap" this, #_"Object" key] (get this key))
+            ([#_"ATransientMap" this, #_"Object" key, #_"Object" notFound] (get this key notFound))
+        )
     )
 
-    #_override
-    (defn #_"Object" IFn'''invoke-3--ATransientMap [#_"ATransientMap" this, #_"Object" arg1, #_"Object" notFound]
-        (get this arg1 notFound)
+    (extend-type ATransientMap ITransientAssociative
+        (#_"ITransientMap" ITransientAssociative'''assoc [#_"ATransientMap" this, #_"Object" key, #_"Object" val]
+            (.ensureEditable this)
+            (.doAssoc this, key, val)
+        )
     )
 
-    #_override
-    (defn #_"ITransientMap" ITransientMap'''assoc--ATransientMap [#_"ATransientMap" this, #_"Object" key, #_"Object" val]
-        (.ensureEditable this)
-        (.doAssoc this, key, val)
+    (extend-type ATransientMap ITransientMap
+        (#_"ITransientMap" ITransientMap'''dissoc [#_"ATransientMap" this, #_"Object" key]
+            (.ensureEditable this)
+            (.doDissoc this, key)
+        )
     )
 
-    #_override
-    (defn #_"ITransientMap" ITransientMap'''dissoc--ATransientMap [#_"ATransientMap" this, #_"Object" key]
-        (.ensureEditable this)
-        (.doDissoc this, key)
+    (extend-type ATransientMap ITransientCollection
+        (#_"IPersistentMap" ITransientCollection'''persistent [#_"ATransientMap" this]
+            (.ensureEditable this)
+            (.doPersistent this)
+        )
     )
 
-    #_override
-    (defn #_"IPersistentMap" ITransientMap'''persistent--ATransientMap [#_"ATransientMap" this]
-        (.ensureEditable this)
-        (.doPersistent this)
-    )
-
-    #_override
-    (defn #_"Object" ILookup'''valAt-2--ATransientMap [#_"ATransientMap" this, #_"Object" key]
-        (.valAt this, key, nil)
-    )
-
-    #_override
-    (defn #_"Object" ILookup'''valAt-3--ATransientMap [#_"ATransientMap" this, #_"Object" key, #_"Object" notFound]
-        (.ensureEditable this)
-        (.doValAt this, key, notFound)
-    )
-
-    (def- #_"Object" ATransientMap'NOT_FOUND (Object.))
-
-    #_override
-    (defn #_"boolean" ITransientAssociative2'''containsKey--ATransientMap [#_"ATransientMap" this, #_"Object" key]
-        (not (identical? (get this key ATransientMap'NOT_FOUND) ATransientMap'NOT_FOUND))
-    )
-
-    #_override
-    (defn #_"IMapEntry" ITransientAssociative2'''entryAt--ATransientMap [#_"ATransientMap" this, #_"Object" key]
-        (let [#_"Object" v (get this key ATransientMap'NOT_FOUND)]
-            (when-not (identical? v ATransientMap'NOT_FOUND)
-                (MapEntry'create key, v)
+    (extend-type ATransientMap ILookup
+        (#_"Object" ILookup'''valAt
+            ([#_"ATransientMap" this, #_"Object" key] (ILookup'''valAt this, key, nil))
+            ([#_"ATransientMap" this, #_"Object" key, #_"Object" notFound]
+                (.ensureEditable this)
+                (.doValAt this, key, notFound)
             )
         )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--ATransientMap [#_"ATransientMap" this]
-        (.ensureEditable this)
-        (.doCount this)
+    (def- #_"Object" ATransientMap'NOT_FOUND (Object.))
+
+    (extend-type ATransientMap ITransientAssociative
+        (#_"boolean" ITransientAssociative'''containsKey [#_"ATransientMap" this, #_"Object" key]
+            (not (identical? (get this key ATransientMap'NOT_FOUND) ATransientMap'NOT_FOUND))
+        )
+
+        (#_"IMapEntry" ITransientAssociative'''entryAt [#_"ATransientMap" this, #_"Object" key]
+            (let [#_"Object" v (get this key ATransientMap'NOT_FOUND)]
+                (when-not (identical? v ATransientMap'NOT_FOUND)
+                    (MapEntry'create key, v)
+                )
+            )
+        )
+    )
+
+    (extend-type ATransientMap Counted
+        (#_"int" Counted'''count [#_"ATransientMap" this]
+            (.ensureEditable this)
+            (.doCount this)
+        )
     )
 )
 )
@@ -13168,47 +12750,45 @@
         )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--ATransientSet [#_"ATransientSet" this]
-        (count (:impl this))
+    (extend-type ATransientSet Counted
+        (#_"int" Counted'''count [#_"ATransientSet" this]
+            (count (:impl this))
+        )
     )
 
-    #_override
-    (defn #_"ITransientSet" ITransientCollection'''conj--ATransientSet [#_"ATransientSet" this, #_"Object" val]
-        (let [#_"ITransientMap" m (assoc (:impl this) val val)]
-            (when-not (= m (:impl this)) => this
-                (assoc this :impl m)
+    (extend-type ATransientSet ITransientCollection
+        (#_"ITransientSet" ITransientCollection'''conj [#_"ATransientSet" this, #_"Object" val]
+            (let [#_"ITransientMap" m (assoc (:impl this) val val)]
+                (when-not (= m (:impl this)) => this
+                    (assoc this :impl m)
+                )
             )
         )
     )
 
-    #_override
-    (defn #_"ITransientSet" ITransientSet'''disj--ATransientSet [#_"ATransientSet" this, #_"Object" key]
-        (let [#_"ITransientMap" m (dissoc (:impl this) key)]
-            (when-not (= m (:impl this)) => this
-                (assoc this :impl m)
+    (extend-type ATransientSet ITransientSet
+        (#_"ITransientSet" ITransientSet'''disj [#_"ATransientSet" this, #_"Object" key]
+            (let [#_"ITransientMap" m (dissoc (:impl this) key)]
+                (when-not (= m (:impl this)) => this
+                    (assoc this :impl m)
+                )
             )
+        )
+
+        (#_"boolean" ITransientSet'''contains [#_"ATransientSet" this, #_"Object" key]
+            (not (identical? (get (:impl this) key this) this))
+        )
+
+        (#_"Object" ITransientSet'''get [#_"ATransientSet" this, #_"Object" key]
+            (get (:impl this) key)
         )
     )
 
-    #_override
-    (defn #_"boolean" ITransientSet'''contains--ATransientSet [#_"ATransientSet" this, #_"Object" key]
-        (not (identical? (get (:impl this) key this) this))
-    )
-
-    #_override
-    (defn #_"Object" ITransientSet'''get--ATransientSet [#_"ATransientSet" this, #_"Object" key]
-        (get (:impl this) key)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-2--ATransientSet [#_"ATransientSet" this, #_"Object" key]
-        (get (:impl this) key)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-3--ATransientSet [#_"ATransientSet" this, #_"Object" key, #_"Object" notFound]
-        (get (:impl this) key notFound)
+    (extend-type ATransientSet IFn
+        (#_"Object" IFn'''invoke
+            ([#_"ATransientSet" this, #_"Object" key] (get (:impl this) key))
+            ([#_"ATransientSet" this, #_"Object" key, #_"Object" notFound] (get (:impl this) key notFound))
+        )
     )
 )
 )
@@ -13264,9 +12844,10 @@
         )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--ChunkBuffer [#_"ChunkBuffer" this]
-        (:end this)
+    (extend-type ChunkBuffer Counted
+        (#_"int" Counted'''count [#_"ChunkBuffer" this]
+            (:end this)
+        )
     )
 )
 )
@@ -13286,47 +12867,35 @@
         )
     )
 
-    #_override
-    (defn #_"ChunkedCons" IObj'''withMeta--ChunkedCons [#_"ChunkedCons" this, #_"IPersistentMap" meta]
-        (when-not (= meta (:_meta this)) => this
-            (ChunkedCons'new meta, (:chunk this), (:_more this))
+    (extend-type ChunkedCons IObj
+        (#_"ChunkedCons" IObj'''withMeta [#_"ChunkedCons" this, #_"IPersistentMap" meta]
+            (when-not (= meta (:_meta this)) => this
+                (ChunkedCons'new meta, (:chunk this), (:_more this))
+            )
         )
     )
 
-    #_override
-    (defn #_"Object" ISeq'''first--ChunkedCons [#_"ChunkedCons" this]
-        (nth (:chunk this) 0)
-    )
+    (extend-type ChunkedCons ISeq
+        (#_"Object" ISeq'''first [#_"ChunkedCons" this]
+            (nth (:chunk this) 0)
+        )
 
-    #_override
-    (defn #_"ISeq" ISeq'''next--ChunkedCons [#_"ChunkedCons" this]
-        (if (< 1 (count (:chunk this)))
-            (ChunkedCons'new (.dropFirst (:chunk this)), (:_more this))
-            (.chunkedNext this)
+        (#_"ISeq" ISeq'''next [#_"ChunkedCons" this]
+            (if (< 1 (count (:chunk this)))
+                (ChunkedCons'new (IChunk'''dropFirst (:chunk this)), (:_more this))
+                (chunk-next this)
+            )
         )
     )
 
-    #_override
-    (defn #_"ISeq" ISeq'''rest--ChunkedCons [#_"ChunkedCons" this]
-        (if (< 1 (count (:chunk this)))
-            (ChunkedCons'new (.dropFirst (:chunk this)), (:_more this))
-            (or (:_more this) ())
+    (extend-type ChunkedCons IChunkedSeq
+        (#_"IChunk" IChunkedSeq'''chunkedFirst [#_"ChunkedCons" this]
+            (:chunk this)
         )
-    )
 
-    #_override
-    (defn #_"IChunk" IChunkedSeq'''chunkedFirst--ChunkedCons [#_"ChunkedCons" this]
-        (:chunk this)
-    )
-
-    #_override
-    (defn #_"ISeq" IChunkedSeq'''chunkedNext--ChunkedCons [#_"ChunkedCons" this]
-        (seq (.chunkedMore this))
-    )
-
-    #_override
-    (defn #_"ISeq" IChunkedSeq'''chunkedMore--ChunkedCons [#_"ChunkedCons" this]
-        (or (:_more this) ())
+        (#_"ISeq" IChunkedSeq'''chunkedNext [#_"ChunkedCons" this]
+            (seq (:_more this))
+        )
     )
 )
 )
@@ -13346,29 +12915,26 @@
         )
     )
 
-    #_override
-    (defn #_"Object" ISeq'''first--Cons [#_"Cons" this]
-        (:_first this)
+    (extend-type Cons ISeq
+        (#_"Object" ISeq'''first [#_"Cons" this]
+            (:_first this)
+        )
+
+        (#_"ISeq" ISeq'''next [#_"Cons" this]
+            (seq (:_more this))
+        )
     )
 
-    #_override
-    (defn #_"ISeq" ISeq'''next--Cons [#_"Cons" this]
-        (seq (rest this))
+    (extend-type Cons Counted
+        (#_"int" Counted'''count [#_"Cons" this]
+            (inc (count (:_more this)))
+        )
     )
 
-    #_override
-    (defn #_"ISeq" ISeq'''rest--Cons [#_"Cons" this]
-        (or (:_more this) ())
-    )
-
-    #_override
-    (defn #_"int" Counted'''count--Cons [#_"Cons" this]
-        (inc (count (:_more this)))
-    )
-
-    #_override
-    (defn #_"Cons" IObj'''withMeta--Cons [#_"Cons" this, #_"IPersistentMap" meta]
-        (Cons'new meta, (:_first this), (:_more this))
+    (extend-type Cons IObj
+        (#_"Cons" IObj'''withMeta [#_"Cons" this, #_"IPersistentMap" meta]
+            (Cons'new meta, (:_first this), (:_more this))
+        )
     )
 )
 )
@@ -13401,45 +12967,49 @@
         )
     )
 
-    #_override
-    (defn #_"boolean" IPending'''isRealized--Cycle [#_"Cycle" this]
-        (some? (:_current this))
-    )
-
-    #_override
-    (defn #_"Object" ISeq'''first--Cycle [#_"Cycle" this]
-        (first (Cycle''current this))
-    )
-
-    #_override
-    (defn #_"ISeq" ISeq'''next--Cycle [#_"Cycle" this]
-        (or (:_next this)
-            (§ set! (:_next this) (Cycle'new (:all this), (Cycle''current this), nil))
+    (extend-type Cycle IPending
+        (#_"boolean" IPending'''isRealized [#_"Cycle" this]
+            (some? (:_current this))
         )
     )
 
-    #_override
-    (defn #_"Cycle" IObj'''withMeta--Cycle [#_"Cycle" this, #_"IPersistentMap" meta]
-        (Cycle'new meta, (:all this), (:prev this), (:_current this), (:_next this))
+    (extend-type Cycle ISeq
+        (#_"Object" ISeq'''first [#_"Cycle" this]
+            (first (Cycle''current this))
+        )
+
+        (#_"ISeq" ISeq'''next [#_"Cycle" this]
+            (or (:_next this)
+                (§ set! (:_next this) (Cycle'new (:all this), (Cycle''current this), nil))
+            )
+        )
     )
 
-    #_override
-    (defn #_"Object" IReduce'''reduce--Cycle [#_"Cycle" this, #_"IFn" f]
-        (loop [#_"ISeq" s (Cycle''current this) #_"Object" r (first s)]
-            (let [s (or (next s) (:all this)) r (.invoke f, r, (first s))]
-                (when-not (reduced? r) => (deref r)
-                    (recur s r)
+    (extend-type Cycle IObj
+        (#_"Cycle" IObj'''withMeta [#_"Cycle" this, #_"IPersistentMap" meta]
+            (Cycle'new meta, (:all this), (:prev this), (:_current this), (:_next this))
+        )
+    )
+
+    (extend-type Cycle IReduce
+        (#_"Object" IReduce'''reduce [#_"Cycle" this, #_"IFn" f]
+            (loop [#_"ISeq" s (Cycle''current this) #_"Object" r (first s)]
+                (let [s (or (next s) (:all this)) r (f r (first s))]
+                    (when-not (reduced? r) => (deref r)
+                        (recur s r)
+                    )
                 )
             )
         )
     )
 
-    #_override
-    (defn #_"Object" IReduceInit'''reduce--Cycle [#_"Cycle" this, #_"IFn" f, #_"Object" r]
-        (loop [#_"ISeq" s (Cycle''current this) r (.invoke f, r, (first s))]
-            (when-not (reduced? r) => (deref r)
-                (let [s (or (next s) (:all this))]
-                    (recur s (.invoke f, r, (first s)))
+    (extend-type Cycle IReduceInit
+        (#_"Object" IReduceInit'''reduce [#_"Cycle" this, #_"IFn" f, #_"Object" r]
+            (loop [#_"ISeq" s (Cycle''current this) r (f r (first s))]
+                (when-not (reduced? r) => (deref r)
+                    (let [s (or (next s) (:all this))]
+                        (recur s (f r (first s)))
+                    )
                 )
             )
         )
@@ -13462,32 +13032,34 @@
         (if (instance? Delay x) (deref x) x)
     )
 
-    #_override
-    (defn #_"Object" IDeref'''deref--Delay [#_"Delay" this]
-        (when (some? (:fn this))
-            (§ sync this
-                ;; double check
-                (when (some? (:fn this))
-                    (try
-                        (§ set! (:val this) (.invoke (:fn this)))
-                        (catch Throwable t
-                            (§ set! (:exception this) t)
+    (extend-type Delay IDeref
+        (#_"Object" IDeref'''deref [#_"Delay" this]
+            (when (some? (:fn this))
+                (§ sync this
+                    ;; double check
+                    (when (some? (:fn this))
+                        (try
+                            (§ set! (:val this) ((:fn this)))
+                            (catch Throwable t
+                                (§ set! (:exception this) t)
+                            )
                         )
+                        (§ set! (:fn this) nil)
                     )
-                    (§ set! (:fn this) nil)
                 )
             )
+            (when (some? (:exception this))
+                (throw (:exception this))
+            )
+            (:val this)
         )
-        (when (some? (:exception this))
-            (throw (:exception this))
-        )
-        (:val this)
     )
 
-    #_override
-    (defn #_"boolean" IPending'''isRealized--Delay [#_"Delay" this]
-        (§ sync this
-            (nil? (:fn this))
+    (extend-type Delay IPending
+        (#_"boolean" IPending'''isRealized [#_"Delay" this]
+            (§ sync this
+                (nil? (:fn this))
+            )
         )
     )
 )
@@ -13516,47 +13088,47 @@
         (Iterate'new f, nil, seed)
     )
 
-    #_override
-    (defn #_"boolean" IPending'''isRealized--Iterate [#_"Iterate" this]
-        (not= (:_seed this) Iterate'UNREALIZED_SEED)
-    )
-
-    #_override
-    (defn #_"Object" ISeq'''first--Iterate [#_"Iterate" this]
-        (let-when [#_"Object" seed (:_seed this)] (= seed Iterate'UNREALIZED_SEED) => seed
-            (§ set! (:_seed this) (.invoke (:f this), (:prevSeed this)))
+    (extend-type Iterate IPending
+        (#_"boolean" IPending'''isRealized [#_"Iterate" this]
+            (not (identical? (:_seed this) Iterate'UNREALIZED_SEED))
         )
     )
 
-    #_override
-    (defn #_"ISeq" ISeq'''next--Iterate [#_"Iterate" this]
-        (or (:_next this)
-            (§ set! (:_next this) (Iterate'new (:f this), (first this), Iterate'UNREALIZED_SEED))
+    (extend-type Iterate ISeq
+        (#_"Object" ISeq'''first [#_"Iterate" this]
+            (let-when [#_"Object" seed (:_seed this)] (identical? seed Iterate'UNREALIZED_SEED) => seed
+                (§ set! (:_seed this) ((:f this) (:prevSeed this)))
+            )
+        )
+
+        (#_"ISeq" ISeq'''next [#_"Iterate" this]
+            (or (:_next this)
+                (§ set! (:_next this) (Iterate'new (:f this), (first this), Iterate'UNREALIZED_SEED))
+            )
         )
     )
 
-    #_override
-    (defn #_"Iterate" IObj'''withMeta--Iterate [#_"Iterate" this, #_"IPersistentMap" meta]
-        (Iterate'new meta, (:f this), (:prevSeed this), (:_seed this), (:_next this))
+    (extend-type Iterate IObj
+        (#_"Iterate" IObj'''withMeta [#_"Iterate" this, #_"IPersistentMap" meta]
+            (Iterate'new meta, (:f this), (:prevSeed this), (:_seed this), (:_next this))
+        )
     )
 
-    #_override
-    (defn #_"Object" IReduce'''reduce--Iterate [#_"Iterate" this, #_"IFn" f]
-        (loop [#_"Object" r (first this) #_"Object" v (.invoke (:f this), r)]
-            (let [r (.invoke f, r, v)]
-                (when-not (reduced? r) => (deref r)
-                    (recur r (.invoke (:f this), v))
+    (extend-type Iterate IReduce
+        (#_"Object" IReduce'''reduce [#_"Iterate" this, #_"IFn" f]
+            (loop [#_"Object" r (first this) #_"Object" v ((:f this) r)]
+                (let-when [r (f r v)] (reduced? r) => (recur r ((:f this) v))
+                    (deref r)
                 )
             )
         )
     )
 
-    #_override
-    (defn #_"Object" IReduceInit'''reduce--Iterate [#_"Iterate" this, #_"IFn" f, #_"Object" r]
-        (loop [r r #_"Object" v (first this)]
-            (let [r (.invoke f, r, v)]
-                (when-not (reduced? r) => (deref r)
-                    (recur r (.invoke (:f this), v))
+    (extend-type Iterate IReduceInit
+        (#_"Object" IReduceInit'''reduce [#_"Iterate" this, #_"IFn" f, #_"Object" r]
+            (loop [r r #_"Object" v (first this)]
+                (let-when [r (f r v)] (reduced? r) => (recur r ((:f this) v))
+                    (deref r)
                 )
             )
         )
@@ -13576,29 +13148,30 @@
     #_method
     (defn- #_"ILookupThunk" KeywordLookupSite''ilookupThunk [#_"KeywordLookupSite" this, #_"Class" c]
         (reify ILookupThunk
-            #_override
-            (#_"Object" get [#_"ILookupThunk" self, #_"Object" target]
+            (#_"Object" ILookupThunk'''get [#_"ILookupThunk" self, #_"Object" target]
                 (if (and (some? target) (= (class target) c))
-                    (.valAt (cast ILookup target), (:k this))
+                    (ILookup'''valAt (cast cloiure.core.ILookup target), (:k this))
                     self
                 )
             )
         )
     )
 
-    #_override
-    (defn #_"ILookupThunk" ILookupSite'''fault--KeywordLookupSite [#_"KeywordLookupSite" this, #_"Object" target]
-        (if (instance? ILookup target)
-            (KeywordLookupSite''ilookupThunk this, (class target))
-            this
+    (extend-type KeywordLookupSite ILookupSite
+        (#_"ILookupThunk" ILookupSite'''fault [#_"KeywordLookupSite" this, #_"Object" target]
+            (if (satisfies? ILookup target)
+                (KeywordLookupSite''ilookupThunk this, (class target))
+                this
+            )
         )
     )
 
-    #_override
-    (defn #_"Object" ILookupThunk'''get--KeywordLookupSite [#_"KeywordLookupSite" this, #_"Object" target]
-        (if (instance? ILookup target)
-            this
-            (get target (:k this))
+    (extend-type KeywordLookupSite ILookupThunk
+        (#_"Object" ILookupThunk'''get [#_"KeywordLookupSite" this, #_"Object" target]
+            (if (satisfies? ILookup target)
+                this
+                (get target (:k this))
+            )
         )
     )
 )
@@ -13620,33 +13193,35 @@
         (:start this)
     )
 
-    #_override
-    (defn #_"Object" Indexed'''nth-2--LongChunk [#_"LongChunk" this, #_"int" i]
-        (+ (:start this) (* i (:step this)))
-    )
-
-    #_override
-    (defn #_"Object" Indexed'''nth-3--LongChunk [#_"LongChunk" this, #_"int" i, #_"Object" notFound]
-        (if (< -1 i (:count this)) (+ (:start this) (* i (:step this))) notFound)
-    )
-
-    #_override
-    (defn #_"int" Counted'''count--LongChunk [#_"LongChunk" this]
-        (:count this)
-    )
-
-    #_override
-    (defn #_"LongChunk" IChunk'''dropFirst--LongChunk [#_"LongChunk" this]
-        (when (< 1 (:count this)) => (throw! "dropFirst of empty chunk")
-            (LongChunk'new (+ (:start this) (:step this)), (:step this), (dec (:count this)))
+    (extend-type LongChunk Indexed
+        (#_"Object" Indexed'''nth
+            ([#_"LongChunk" this, #_"int" i]
+                (+ (:start this) (* i (:step this)))
+            )
+            ([#_"LongChunk" this, #_"int" i, #_"Object" notFound]
+                (if (< -1 i (:count this)) (+ (:start this) (* i (:step this))) notFound)
+            )
         )
     )
 
-    #_override
-    (defn #_"Object" IChunk'''reduce--LongChunk [#_"LongChunk" this, #_"IFn" f, #_"Object" r]
-        (loop-when [r r #_"long" x (:start this) #_"int" i 0] (< i (:count this)) => r
-            (let-when-not [r (.invoke f, r, x)] (reduced? r) => r
-                (recur r (+ x (:step this)) (inc i))
+    (extend-type LongChunk Counted
+        (#_"int" Counted'''count [#_"LongChunk" this]
+            (:count this)
+        )
+    )
+
+    (extend-type LongChunk IChunk
+        (#_"LongChunk" IChunk'''dropFirst [#_"LongChunk" this]
+            (when (< 1 (:count this)) => (throw! "dropFirst of empty chunk")
+                (LongChunk'new (+ (:start this) (:step this)), (:step this), (dec (:count this)))
+            )
+        )
+
+        (#_"Object" IChunk'''reduce [#_"LongChunk" this, #_"IFn" f, #_"Object" r]
+            (loop-when [r r #_"long" x (:start this) #_"int" i 0] (< i (:count this)) => r
+                (let-when-not [r (f r x)] (reduced? r) => r
+                    (recur r (+ x (:step this)) (inc i))
+                )
             )
         )
     )
@@ -13660,8 +13235,7 @@
 
     (defn- #_"LongRangeBoundsCheck" LongRange'positiveStep [#_"long" end]
         (reify LongRangeBoundsCheck
-            #_override
-            (#_"boolean" exceededBounds [#_"LongRangeBoundsCheck" _self, #_"long" val]
+            (#_"boolean" LongRangeBoundsCheck'''exceededBounds [#_"LongRangeBoundsCheck" _self, #_"long" val]
                 (<= end val)
             )
         )
@@ -13669,8 +13243,7 @@
 
     (defn- #_"LongRangeBoundsCheck" LongRange'negativeStep [#_"long" end]
         (reify LongRangeBoundsCheck
-            #_override
-            (#_"boolean" exceededBounds [#_"LongRangeBoundsCheck" _self, #_"long" val]
+            (#_"boolean" LongRangeBoundsCheck'''exceededBounds [#_"LongRangeBoundsCheck" _self, #_"long" val]
                 (<= val end)
             )
         )
@@ -13722,10 +13295,11 @@
         )
     )
 
-    #_override
-    (defn #_"LongRange" IObj'''withMeta--LongRange [#_"LongRange" this, #_"IPersistentMap" meta]
-        (when-not (= meta (:_meta this)) => this
-            (LongRange'new meta, (:start this), (:end this), (:step this), (:boundsCheck this), (:_chunk this), (:_chunkNext this))
+    (extend-type LongRange IObj
+        (#_"LongRange" IObj'''withMeta [#_"LongRange" this, #_"IPersistentMap" meta]
+            (when-not (= meta (:_meta this)) => this
+                (LongRange'new meta, (:start this), (:end this), (:step this), (:boundsCheck this), (:_chunk this), (:_chunkNext this))
+            )
         )
     )
 
@@ -13737,7 +13311,7 @@
             (let [[s n]
                     (try
                         (let [s (Numbers'add-2ll s, step)]
-                            (if (.exceededBounds (:boundsCheck this), s)
+                            (if (LongRangeBoundsCheck'''exceededBounds (:boundsCheck this), s)
                                 [nil n]
                                 [s (inc n)]
                             )
@@ -13760,28 +13334,30 @@
         (/ (Numbers'add-2ll (Numbers'add-2ll (Numbers'minus-2ll end, start), step), (if (pos? (:step this)) -1 1)) step)
     )
 
-    #_override
-    (defn #_"int" Counted'''count--LongRange [#_"LongRange" this]
-        (try
-            (let [#_"long" n (LongRange''rangeCount this, (:start this), (:end this), (:step this))]
-                (when (<= n Integer/MAX_VALUE) => (Numbers'throwIntOverflow)
-                    (int n)
-                )
-            )
-            (catch ArithmeticException _
-                ;; rare case from large range or step, fall back to iterating and counting
-                (let [#_"long" n (loop-when-recur [n 0 #_"ISeq" s (seq this)] (some? s) [(inc n) (next s)] => n)]
+    (extend-type LongRange Counted
+        (#_"int" Counted'''count [#_"LongRange" this]
+            (try
+                (let [#_"long" n (LongRange''rangeCount this, (:start this), (:end this), (:step this))]
                     (when (<= n Integer/MAX_VALUE) => (Numbers'throwIntOverflow)
                         (int n)
+                    )
+                )
+                (catch ArithmeticException _
+                    ;; rare case from large range or step, fall back to iterating and counting
+                    (let [#_"long" n (loop-when-recur [n 0 #_"ISeq" s (seq this)] (some? s) [(inc n) (next s)] => n)]
+                        (when (<= n Integer/MAX_VALUE) => (Numbers'throwIntOverflow)
+                            (int n)
+                        )
                     )
                 )
             )
         )
     )
 
-    #_override
-    (defn #_"Object" ISeq'''first--LongRange [#_"LongRange" this]
-        (:start this)
+    (extend-type LongRange ISeq
+        (#_"Object" ISeq'''first [#_"LongRange" this]
+            (:start this)
+        )
     )
 
     #_method
@@ -13811,52 +13387,50 @@
         nil
     )
 
-    #_override
-    (defn #_"ISeq" ISeq'''next--LongRange [#_"LongRange" this]
-        (let-when [#_"ISeq" _next (:_next this)] (nil? _next) => _next
+    (extend-type LongRange ISeq
+        (#_"ISeq" ISeq'''next [#_"LongRange" this]
+            (let-when [#_"ISeq" _next (:_next this)] (nil? _next) => _next
+                (LongRange''forceChunk this)
+                (when (< 1 (count (:_chunk this))) => (chunk-next this)
+                    (let [#_"LongChunk" _rest (IChunk'''dropFirst (:_chunk this))]
+                        (§ set! (:_next this) (LongRange'new (LongChunk''first _rest), (:end this), (:step this), (:boundsCheck this), _rest, (:_chunkNext this)))
+                    )
+                )
+            )
+        )
+    )
+
+    (extend-type LongRange IChunkedSeq
+        (#_"IChunk" IChunkedSeq'''chunkedFirst [#_"LongRange" this]
             (LongRange''forceChunk this)
-            (when (< 1 (count (:_chunk this))) => (.chunkedNext this)
-                (let [#_"LongChunk" _rest (.dropFirst (:_chunk this))]
-                    (§ set! (:_next this) (LongRange'new (LongChunk''first _rest), (:end this), (:step this), (:boundsCheck this), _rest, (:_chunkNext this)))
+            (:_chunk this)
+        )
+
+        (#_"ISeq" IChunkedSeq'''chunkedNext [#_"LongRange" this]
+            (LongRange''forceChunk this)
+            (seq (:_chunkNext this))
+        )
+    )
+
+    (extend-type LongRange IReduce
+        (#_"Object" IReduce'''reduce [#_"LongRange" this, #_"IFn" f]
+            (loop [#_"Object" r (:start this) #_"long" n r]
+                (let-when-not [n (+ n (:step this))] (LongRangeBoundsCheck'''exceededBounds (:boundsCheck this), n) => r
+                    (let-when-not [r (f r n)] (reduced? r) => (deref r)
+                        (recur r n)
+                    )
                 )
             )
         )
     )
 
-    #_override
-    (defn #_"IChunk" IChunkedSeq'''chunkedFirst--LongRange [#_"LongRange" this]
-        (LongRange''forceChunk this)
-        (:_chunk this)
-    )
-
-    #_override
-    (defn #_"ISeq" IChunkedSeq'''chunkedNext--LongRange [#_"LongRange" this]
-        (seq (.chunkedMore this))
-    )
-
-    #_override
-    (defn #_"ISeq" IChunkedSeq'''chunkedMore--LongRange [#_"LongRange" this]
-        (LongRange''forceChunk this)
-        (or (:_chunkNext this) ())
-    )
-
-    #_override
-    (defn #_"Object" IReduce'''reduce--LongRange [#_"LongRange" this, #_"IFn" f]
-        (loop [#_"Object" r (:start this) #_"long" n r]
-            (let-when-not [n (+ n (:step this))] (.exceededBounds (:boundsCheck this), n) => r
-                (let-when-not [r (.invoke f, r, n)] (reduced? r) => (deref r)
-                    (recur r n)
-                )
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IReduceInit'''reduce--LongRange [#_"LongRange" this, #_"IFn" f, #_"Object" r]
-        (loop [r r #_"long" n (:start this)]
-            (let-when-not [r (.invoke f, r, n)] (reduced? r) => (deref r)
-                (let-when-not [n (+ n (:step this))] (.exceededBounds (:boundsCheck this), n) => r
-                    (recur r n)
+    (extend-type LongRange IReduceInit
+        (#_"Object" IReduceInit'''reduce [#_"LongRange" this, #_"IFn" f, #_"Object" r]
+            (loop [r r #_"long" n (:start this)]
+                (let-when-not [r (f r n)] (reduced? r) => (deref r)
+                    (let-when-not [n (+ n (:step this))] (LongRangeBoundsCheck'''exceededBounds (:boundsCheck this), n) => r
+                        (recur r n)
+                    )
                 )
             )
         )
@@ -14070,7 +13644,7 @@
                         (do
                             ;; place in cache
                             (§ update! (:methodCache this) assoc dispatchVal bestValue)
-                            (cast IFn bestValue)
+                            (cast cloiure.core.IFn bestValue)
                         )
                         (do
                             (MultiFn''resetCache this)
@@ -14102,114 +13676,31 @@
         )
     )
 
-    #_override
-    (defn #_"Object" IFn'''invoke-1--MultiFn [#_"MultiFn" this]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this))))
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-2--MultiFn [#_"MultiFn" this, #_"Object" arg1]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1)), arg1)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-3--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2)), arg1, arg2)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3)), arg1, arg2, arg3)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-5--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4)), arg1, arg2, arg3, arg4)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-6--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5)), arg1, arg2, arg3, arg4, arg5)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-7--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6)), arg1, arg2, arg3, arg4, arg5, arg6)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-8--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7)), arg1, arg2, arg3, arg4, arg5, arg6, arg7)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-9--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-10--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-11--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-12--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-13--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-14--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-15--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-16--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-17--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-18--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-19--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18)
-    )
-
-    #_override
-  #_(defn #_"Object" IFn'''invoke-20--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19)
-    )
-
-    #_override
-  #_(defn #_"Object" IFn'''invoke-21--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20)
-    )
-
-    #_override
-  #_(defn #_"Object" IFn'''invoke-22--MultiFn [#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20 & #_"Object..." args]
-        (.invoke (MultiFn''getFn this, (.invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, args)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, args)
+    (extend-type MultiFn IFn
+        (#_"Object" IFn'''invoke
+            ([#_"MultiFn" this] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this)))))
+            ([#_"MultiFn" this, #_"Object" arg1] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1)), arg1))
+            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2)), arg1, arg2))
+            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3)), arg1, arg2, arg3))
+            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4)), arg1, arg2, arg3, arg4))
+            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5)), arg1, arg2, arg3, arg4, arg5))
+            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6)), arg1, arg2, arg3, arg4, arg5, arg6))
+            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7)), arg1, arg2, arg3, arg4, arg5, arg6, arg7))
+            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8))
+            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9))
+            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10))
+            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11))
+            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12))
+            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13))
+            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14))
+            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
+            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
+            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
+            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
+          #_([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
+          #_([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+          #_([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20 & #_"Object..." args] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, args)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, args))
+        )
     )
 )
 )
@@ -14229,24 +13720,25 @@
         )
     )
 
-    #_override
-    (defn #_"IPersistentMap" IMeta'''meta--Namespace [#_"Namespace" this]
-        (§ sync this
-            (:_meta this)
+    (extend-type Namespace IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"Namespace" this]
+            (§ sync this
+                (:_meta this)
+            )
         )
     )
 
-    #_override
-    (defn #_"IPersistentMap" IReference'''alterMeta--Namespace [#_"Namespace" this, #_"IFn" f, #_"ISeq" args]
-        (§ sync this
-            (§ update! (:_meta this) #(apply f % args))
+    (extend-type Namespace IReference
+        (#_"IPersistentMap" IReference'''alterMeta [#_"Namespace" this, #_"IFn" f, #_"ISeq" args]
+            (§ sync this
+                (§ update! (:_meta this) #(apply f % args))
+            )
         )
-    )
 
-    #_override
-    (defn #_"IPersistentMap" IReference'''resetMeta--Namespace [#_"Namespace" this, #_"IPersistentMap" m]
-        (§ sync this
-            (§ set! (:_meta this) m)
+        (#_"IPersistentMap" IReference'''resetMeta [#_"Namespace" this, #_"IPersistentMap" m]
+            (§ sync this
+                (§ set! (:_meta this) m)
+            )
         )
     )
 
@@ -14459,26 +13951,28 @@
         )
     )
 
-    #_override
-    (defn #_"Object" ISeq'''first--MSeq [#_"MSeq" this]
-        (MapEntry'create (aget (:array this) (:i this)), (aget (:array this) (inc (:i this))))
-    )
+    (extend-type MSeq ISeq
+        (#_"Object" ISeq'''first [#_"MSeq" this]
+            (MapEntry'create (aget (:array this) (:i this)), (aget (:array this) (inc (:i this))))
+        )
 
-    #_override
-    (defn #_"ISeq" ISeq'''next--MSeq [#_"MSeq" this]
-        (when (< (+ (:i this) 2) (alength (:array this)))
-            (MSeq'new (:array this), (+ (:i this) 2))
+        (#_"ISeq" ISeq'''next [#_"MSeq" this]
+            (when (< (+ (:i this) 2) (alength (:array this)))
+                (MSeq'new (:array this), (+ (:i this) 2))
+            )
         )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--MSeq [#_"MSeq" this]
-        (/ (- (alength (:array this)) (:i this)) 2)
+    (extend-type MSeq Counted
+        (#_"int" Counted'''count [#_"MSeq" this]
+            (/ (- (alength (:array this)) (:i this)) 2)
+        )
     )
 
-    #_override
-    (defn #_"MSeq" IObj'''withMeta--MSeq [#_"MSeq" this, #_"IPersistentMap" meta]
-        (MSeq'new meta, (:array this), (:i this))
+    (extend-type MSeq IObj
+        (#_"MSeq" IObj'''withMeta [#_"MSeq" this, #_"IPersistentMap" meta]
+            (MSeq'new meta, (:array this), (:i this))
+        )
     )
 )
 
@@ -14508,9 +14002,10 @@
 
     (def #_"PersistentArrayMap" PersistentArrayMap'EMPTY (PersistentArrayMap'new))
 
-    #_override
-    (defn #_"PersistentArrayMap" IObj'''withMeta--PersistentArrayMap [#_"PersistentArrayMap" this, #_"IPersistentMap" meta]
-        (PersistentArrayMap'new meta, (:array this))
+    (extend-type PersistentArrayMap IObj
+        (#_"PersistentArrayMap" IObj'''withMeta [#_"PersistentArrayMap" this, #_"IPersistentMap" meta]
+            (PersistentArrayMap'new meta, (:array this))
+        )
     )
 
     #_method
@@ -14585,9 +14080,10 @@
         )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--PersistentArrayMap [#_"PersistentArrayMap" this]
-        (/ (alength (:array this)) 2)
+    (extend-type PersistentArrayMap Counted
+        (#_"int" Counted'''count [#_"PersistentArrayMap" this]
+            (/ (alength (:array this)) 2)
+        )
     )
 
     #_method
@@ -14597,40 +14093,56 @@
         )
     )
 
-    #_override
-    (defn #_"boolean" Associative'''containsKey--PersistentArrayMap [#_"PersistentArrayMap" this, #_"Object" key]
-        (<= 0 (PersistentArrayMap''indexOf this, key))
-    )
+    (extend-type PersistentArrayMap Associative
+        (#_"boolean" Associative'''containsKey [#_"PersistentArrayMap" this, #_"Object" key]
+            (<= 0 (PersistentArrayMap''indexOf this, key))
+        )
 
-    #_override
-    (defn #_"IMapEntry" Associative'''entryAt--PersistentArrayMap [#_"PersistentArrayMap" this, #_"Object" key]
-        (let-when [#_"int" i (PersistentArrayMap''indexOf this, key)] (<= 0 i)
-            (MapEntry'create (aget (:array this) i), (aget (:array this) (inc i)))
+        (#_"IMapEntry" Associative'''entryAt [#_"PersistentArrayMap" this, #_"Object" key]
+            (let-when [#_"int" i (PersistentArrayMap''indexOf this, key)] (<= 0 i)
+                (MapEntry'create (aget (:array this) i), (aget (:array this) (inc i)))
+            )
         )
     )
 
     (declare PersistentHashMap'create-1a)
 
-    #_override
-    (defn #_"IPersistentMap" IPersistentMap'''assoc--PersistentArrayMap [#_"PersistentArrayMap" this, #_"Object" key, #_"Object" val]
-        (let [#_"int" i (PersistentArrayMap''indexOf this, key)]
-            (if (<= 0 i) ;; already have key, same-sized replacement
-                (if (= (aget (:array this) (inc i)) val) ;; no change, no op
-                    this
-                    (let [#_"Object[]" a (.clone (:array this))]
-                        (aset a (inc i) val)
-                        (PersistentArrayMap''create this, a)
-                    )
-                )
-                ;; didn't have key, grow
-                (if (< PersistentArrayMap'HASHTABLE_THRESHOLD (alength (:array this)))
-                    (-> (PersistentHashMap'create-1a (:array this)) (assoc key val) (with-meta (meta this)))
-                    (let [#_"int" n (alength (:array this)) #_"Object[]" a (make-array Object (+ n 2))]
-                        (when (pos? n)
-                            (System/arraycopy (:array this), 0, a, 0, n)
+    (extend-type PersistentArrayMap Associative
+        (#_"IPersistentMap" Associative'''assoc [#_"PersistentArrayMap" this, #_"Object" key, #_"Object" val]
+            (let [#_"int" i (PersistentArrayMap''indexOf this, key)]
+                (if (<= 0 i) ;; already have key, same-sized replacement
+                    (if (= (aget (:array this) (inc i)) val) ;; no change, no op
+                        this
+                        (let [#_"Object[]" a (.clone (:array this))]
+                            (aset a (inc i) val)
+                            (PersistentArrayMap''create this, a)
                         )
-                        (aset a n key)
-                        (aset a (inc n) val)
+                    )
+                    ;; didn't have key, grow
+                    (if (< PersistentArrayMap'HASHTABLE_THRESHOLD (alength (:array this)))
+                        (-> (PersistentHashMap'create-1a (:array this)) (assoc key val) (with-meta (meta this)))
+                        (let [#_"int" n (alength (:array this)) #_"Object[]" a (make-array Object (+ n 2))]
+                            (when (pos? n)
+                                (System/arraycopy (:array this), 0, a, 0, n)
+                            )
+                            (aset a n key)
+                            (aset a (inc n) val)
+                            (PersistentArrayMap''create this, a)
+                        )
+                    )
+                )
+            )
+        )
+    )
+
+    (extend-type PersistentArrayMap IPersistentMap
+        (#_"IPersistentMap" IPersistentMap'''dissoc [#_"PersistentArrayMap" this, #_"Object" key]
+            (let-when [#_"int" i (PersistentArrayMap''indexOf this, key)] (<= 0 i) => this ;; don't have key, no op
+                ;; have key, will remove
+                (let-when [#_"int" n (- (alength (:array this)) 2)] (pos? n) => (empty this)
+                    (let [#_"Object[]" a (make-array Object n)]
+                        (System/arraycopy (:array this), 0, a, 0, i)
+                        (System/arraycopy (:array this), (+ i 2), a, i, (- n i))
                         (PersistentArrayMap''create this, a)
                     )
                 )
@@ -14638,34 +14150,20 @@
         )
     )
 
-    #_override
-    (defn #_"IPersistentMap" IPersistentMap'''dissoc--PersistentArrayMap [#_"PersistentArrayMap" this, #_"Object" key]
-        (let-when [#_"int" i (PersistentArrayMap''indexOf this, key)] (<= 0 i) => this ;; don't have key, no op
-            ;; have key, will remove
-            (let-when [#_"int" n (- (alength (:array this)) 2)] (pos? n) => (.empty this)
-                (let [#_"Object[]" a (make-array Object n)]
-                    (System/arraycopy (:array this), 0, a, 0, i)
-                    (System/arraycopy (:array this), (+ i 2), a, i, (- n i))
-                    (PersistentArrayMap''create this, a)
-                )
-            )
+    (extend-type PersistentArrayMap IPersistentCollection
+        (#_"IPersistentMap" IPersistentCollection'''empty [#_"PersistentArrayMap" this]
+            (with-meta PersistentArrayMap'EMPTY (meta this))
         )
     )
 
-    #_override
-    (defn #_"IPersistentMap" IPersistentCollection'''empty--PersistentArrayMap [#_"PersistentArrayMap" this]
-        (with-meta PersistentArrayMap'EMPTY (meta this))
-    )
-
-    #_override
-    (defn #_"Object" ILookup'''valAt-2--PersistentArrayMap [#_"PersistentArrayMap" this, #_"Object" key]
-        (.valAt this, key, nil)
-    )
-
-    #_override
-    (defn #_"Object" ILookup'''valAt-3--PersistentArrayMap [#_"PersistentArrayMap" this, #_"Object" key, #_"Object" notFound]
-        (let [#_"int" i (PersistentArrayMap''indexOf this, key)]
-            (if (<= 0 i) (aget (:array this) (inc i)) notFound)
+    (extend-type PersistentArrayMap ILookup
+        (#_"Object" ILookup'''valAt
+            ([#_"PersistentArrayMap" this, #_"Object" key] (ILookup'''valAt this, key, nil))
+            ([#_"PersistentArrayMap" this, #_"Object" key, #_"Object" notFound]
+                (let [#_"int" i (PersistentArrayMap''indexOf this, key)]
+                    (if (<= 0 i) (aget (:array this) (inc i)) notFound)
+                )
+            )
         )
     )
 
@@ -14674,32 +14172,36 @@
         (count this)
     )
 
-    #_override
-    (defn #_"ISeq" Seqable'''seq--PersistentArrayMap [#_"PersistentArrayMap" this]
-        (when (pos? (alength (:array this)))
-            (MSeq'new (:array this), 0)
+    (extend-type PersistentArrayMap Seqable
+        (#_"ISeq" Seqable'''seq [#_"PersistentArrayMap" this]
+            (when (pos? (alength (:array this)))
+                (MSeq'new (:array this), 0)
+            )
         )
     )
 
-    #_override
-    (defn #_"IPersistentMap" IMeta'''meta--PersistentArrayMap [#_"PersistentArrayMap" this]
-        (:_meta this)
+    (extend-type PersistentArrayMap IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"PersistentArrayMap" this]
+            (:_meta this)
+        )
     )
 
-    #_override
-    (defn #_"Object" IKVReduce'''kvreduce--PersistentArrayMap [#_"PersistentArrayMap" this, #_"IFn" f, #_"Object" r]
-        (loop-when [r r #_"int" i 0] (< i (alength (:array this))) => r
-            (let [r (.invoke f, r, (aget (:array this) i), (aget (:array this) (inc i)))]
-                (if (reduced? r) (deref r) (recur r (+ i 2)))
+    (extend-type PersistentArrayMap IKVReduce
+        (#_"Object" IKVReduce'''kvreduce [#_"PersistentArrayMap" this, #_"IFn" f, #_"Object" r]
+            (loop-when [r r #_"int" i 0] (< i (alength (:array this))) => r
+                (let [r (f r (aget (:array this) i), (aget (:array this) (inc i)))]
+                    (if (reduced? r) (deref r) (recur r (+ i 2)))
+                )
             )
         )
     )
 
     (declare TransientArrayMap'new)
 
-    #_override
-    (defn #_"ITransientMap" IEditableCollection'''asTransient--PersistentArrayMap [#_"PersistentArrayMap" this]
-        (TransientArrayMap'new (:array this))
+    (extend-type PersistentArrayMap IEditableCollection
+        (#_"ITransientMap" IEditableCollection'''asTransient [#_"PersistentArrayMap" this]
+            (TransientArrayMap'new (:array this))
+        )
     )
 )
 
@@ -14807,7 +14309,7 @@
         (when (nil? s) => (HSeq'new meta, nodes, i, s)
             (loop-when i (< i (alength nodes))
                 (let-when [#_"INode" ai (aget nodes i)] (some? ai) => (recur (inc i))
-                    (let-when [s (.nodeSeq ai)] (some? s) => (recur (inc i))
+                    (let-when [s (INode'''nodeSeq ai)] (some? s) => (recur (inc i))
                         (HSeq'new meta, nodes, (inc i), s)
                     )
                 )
@@ -14819,19 +14321,20 @@
         (HSeq'create-4 nil, nodes, 0, nil)
     )
 
-    #_override
-    (defn #_"HSeq" IObj'''withMeta--HSeq [#_"HSeq" this, #_"IPersistentMap" meta]
-        (HSeq'new meta, (:nodes this), (:i this), (:s this))
+    (extend-type HSeq IObj
+        (#_"HSeq" IObj'''withMeta [#_"HSeq" this, #_"IPersistentMap" meta]
+            (HSeq'new meta, (:nodes this), (:i this), (:s this))
+        )
     )
 
-    #_override
-    (defn #_"Object" ISeq'''first--HSeq [#_"HSeq" this]
-        (first (:s this))
-    )
+    (extend-type HSeq ISeq
+        (#_"Object" ISeq'''first [#_"HSeq" this]
+            (first (:s this))
+        )
 
-    #_override
-    (defn #_"ISeq" ISeq'''next--HSeq [#_"HSeq" this]
-        (HSeq'create-4 nil, (:nodes this), (:i this), (next (:s this)))
+        (#_"ISeq" ISeq'''next [#_"HSeq" this]
+            (HSeq'create-4 nil, (:nodes this), (:i this), (next (:s this)))
+        )
     )
 )
 
@@ -14854,8 +14357,8 @@
             (loop-when i (< i (alength array))
                 (when (nil? (aget array i)) => (NodeSeq'new nil, array, i, nil)
                     (or
-                        (when-let [#_"INode" node (cast INode (aget array (inc i)))]
-                            (when-let [s (.nodeSeq node)]
+                        (when-let [#_"INode" node (cast cloiure.core.INode (aget array (inc i)))]
+                            (when-let [s (INode'''nodeSeq node)]
                                 (NodeSeq'new nil, array, (+ i 2), s)
                             )
                         )
@@ -14873,9 +14376,9 @@
     (defn #_"Object" NodeSeq'kvreduce [#_"Object[]" array, #_"IFn" f, #_"Object" r]
         (loop-when [r r #_"int" i 0] (< i (alength array)) => r
             (let [r (if (some? (aget array i))
-                        (.invoke f, r, (aget array i), (aget array (inc i)))
-                        (let-when [#_"INode" node (cast INode (aget array (inc i)))] (some? node) => r
-                            (.kvreduce node, f, r)
+                        (f r (aget array i), (aget array (inc i)))
+                        (let-when [#_"INode" node (cast cloiure.core.INode (aget array (inc i)))] (some? node) => r
+                            (INode'''kvreduce node, f, r)
                         )
                     )]
                 (when-not (reduced? r) => r
@@ -14885,24 +14388,25 @@
         )
     )
 
-    #_override
-    (defn #_"NodeSeq" IObj'''withMeta--NodeSeq [#_"NodeSeq" this, #_"IPersistentMap" meta]
-        (NodeSeq'new meta, (:array this), (:i this), (:s this))
-    )
-
-    #_override
-    (defn #_"Object" ISeq'''first--NodeSeq [#_"NodeSeq" this]
-        (if (some? (:s this))
-            (first (:s this))
-            (MapEntry'create (aget (:array this) (:i this)), (aget (:array this) (inc (:i this))))
+    (extend-type NodeSeq IObj
+        (#_"NodeSeq" IObj'''withMeta [#_"NodeSeq" this, #_"IPersistentMap" meta]
+            (NodeSeq'new meta, (:array this), (:i this), (:s this))
         )
     )
 
-    #_override
-    (defn #_"ISeq" ISeq'''next--NodeSeq [#_"NodeSeq" this]
-        (if (some? (:s this))
-            (NodeSeq'create-3 (:array this), (:i this), (next (:s this)))
-            (NodeSeq'create-3 (:array this), (+ (:i this) 2), nil)
+    (extend-type NodeSeq ISeq
+        (#_"Object" ISeq'''first [#_"NodeSeq" this]
+            (if (some? (:s this))
+                (first (:s this))
+                (MapEntry'create (aget (:array this) (:i this)), (aget (:array this) (inc (:i this))))
+            )
+        )
+
+        (#_"ISeq" ISeq'''next [#_"NodeSeq" this]
+            (if (some? (:s this))
+                (NodeSeq'create-3 (:array this), (:i this), (next (:s this)))
+                (NodeSeq'create-3 (:array this), (+ (:i this) 2), nil)
+            )
         )
     )
 )
@@ -14956,17 +14460,18 @@
 
     (declare BitmapIndexedNode'EMPTY)
 
-    #_override
-    (defn #_"INode" INode'''assoc-6--ArrayNode [#_"ArrayNode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf]
-        (let [#_"int" i (PersistentHashMap'mask hash, shift) #_"INode" ai (aget (:array this) i)]
-            (if (some? ai)
-                (let [#_"INode" node (.assoc ai, (+ shift 5), hash, key, val, addedLeaf)]
-                    (when-not (= node ai) => this
-                        (ArrayNode'new nil, (:count this), (PersistentHashMap'cloneAndSet (:array this), i, node))
+    (extend-type ArrayNode INode
+        (#_"INode" INode'''assoc [#_"ArrayNode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf]
+            (let [#_"int" i (PersistentHashMap'mask hash, shift) #_"INode" ai (aget (:array this) i)]
+                (if (some? ai)
+                    (let [#_"INode" node (INode'''assoc ai, (+ shift 5), hash, key, val, addedLeaf)]
+                        (when-not (= node ai) => this
+                            (ArrayNode'new nil, (:count this), (PersistentHashMap'cloneAndSet (:array this), i, node))
+                        )
                     )
-                )
-                (let [#_"INode" node (.assoc BitmapIndexedNode'EMPTY, (+ shift 5), hash, key, val, addedLeaf)]
-                    (ArrayNode'new nil, (inc (:count this)), (PersistentHashMap'cloneAndSet (:array this), i, node))
+                    (let [#_"INode" node (INode'''assoc BitmapIndexedNode'EMPTY, (+ shift 5), hash, key, val, addedLeaf)]
+                        (ArrayNode'new nil, (inc (:count this)), (PersistentHashMap'cloneAndSet (:array this), i, node))
+                    )
                 )
             )
         )
@@ -15001,50 +14506,48 @@
         )
     )
 
-    #_override
-    (defn #_"INode" INode'''dissoc-4--ArrayNode [#_"ArrayNode" this, #_"int" shift, #_"int" hash, #_"Object" key]
-        (let-when [#_"int" i (PersistentHashMap'mask hash, shift) #_"INode" ai (aget (:array this) i)] (some? ai) => this
-            (let-when-not [#_"INode" node (.dissoc ai, (+ shift 5), hash, key)] (= node ai) => this
-                (cond
-                    (some? node)         (ArrayNode'new nil, (:count this), (PersistentHashMap'cloneAndSet (:array this), i, node))
-                    (<= (:count this) 8) (ArrayNode''pack this, nil, i) ;; shrink
-                    :else                (ArrayNode'new nil, (dec (:count this)), (PersistentHashMap'cloneAndSet (:array this), i, node))
+    (extend-type ArrayNode INode
+        (#_"INode" INode'''dissoc [#_"ArrayNode" this, #_"int" shift, #_"int" hash, #_"Object" key]
+            (let-when [#_"int" i (PersistentHashMap'mask hash, shift) #_"INode" ai (aget (:array this) i)] (some? ai) => this
+                (let-when-not [#_"INode" node (INode'''dissoc ai, (+ shift 5), hash, key)] (= node ai) => this
+                    (cond
+                        (some? node)         (ArrayNode'new nil, (:count this), (PersistentHashMap'cloneAndSet (:array this), i, node))
+                        (<= (:count this) 8) (ArrayNode''pack this, nil, i) ;; shrink
+                        :else                (ArrayNode'new nil, (dec (:count this)), (PersistentHashMap'cloneAndSet (:array this), i, node))
+                    )
                 )
             )
         )
-    )
 
-    #_override
-    (defn #_"IMapEntry" INode'''find-4--ArrayNode [#_"ArrayNode" this, #_"int" shift, #_"int" hash, #_"Object" key]
-        (let [#_"int" i (PersistentHashMap'mask hash, shift) #_"INode" node (aget (:array this) i)]
-            (when (some? node)
-                (.find node, (+ shift 5), hash, key)
+        (#_"IMapEntry|Object" INode'''find
+            ([#_"ArrayNode" this, #_"int" shift, #_"int" hash, #_"Object" key]
+                (let [#_"int" i (PersistentHashMap'mask hash, shift) #_"INode" node (aget (:array this) i)]
+                    (when (some? node)
+                        (INode'''find node, (+ shift 5), hash, key)
+                    )
+                )
+            )
+            ([#_"ArrayNode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" notFound]
+                (let [#_"int" i (PersistentHashMap'mask hash, shift) #_"INode" node (aget (:array this) i)]
+                    (when (some? node) => notFound
+                        (INode'''find node, (+ shift 5), hash, key, notFound)
+                    )
+                )
             )
         )
-    )
 
-    #_override
-    (defn #_"Object" INode'''find-5--ArrayNode [#_"ArrayNode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" notFound]
-        (let [#_"int" i (PersistentHashMap'mask hash, shift) #_"INode" node (aget (:array this) i)]
-            (when (some? node) => notFound
-                (.find node, (+ shift 5), hash, key, notFound)
-            )
+        (#_"ISeq" INode'''nodeSeq [#_"ArrayNode" this]
+            (HSeq'create-1 (:array this))
         )
-    )
 
-    #_override
-    (defn #_"ISeq" INode'''nodeSeq--ArrayNode [#_"ArrayNode" this]
-        (HSeq'create-1 (:array this))
-    )
-
-    #_override
-    (defn #_"Object" INode'''kvreduce--ArrayNode [#_"ArrayNode" this, #_"IFn" f, #_"Object" r]
-        (let [#_"INode[]" a (:array this)]
-            (loop-when [r r #_"int" i 0] (< i (alength a)) => r
-                (let-when [#_"INode" node (aget a i)] (some? node) => (recur r (inc i))
-                    (let [r (.kvreduce node, f, r)]
-                        (when-not (reduced? r) => r
-                            (recur r (inc i))
+        (#_"Object" INode'''kvreduce [#_"ArrayNode" this, #_"IFn" f, #_"Object" r]
+            (let [#_"INode[]" a (:array this)]
+                (loop-when [r r #_"int" i 0] (< i (alength a)) => r
+                    (let-when [#_"INode" node (aget a i)] (some? node) => (recur r (inc i))
+                        (let [r (INode'''kvreduce node, f, r)]
+                            (when-not (reduced? r) => r
+                                (recur r (inc i))
+                            )
                         )
                     )
                 )
@@ -15055,30 +14558,31 @@
     (defn #_"Object" ArrayNode'foldTasks [#_"PersistentVector" tasks, #_"IFn" combinef, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin]
         (let [#_"int" n (count tasks)]
             (case n
-                0   (.invoke combinef)
+                0   (combinef)
                 1   (.call (nth tasks 0))
                     (let [#_"PersistentVector" t1 (subvec tasks 0 (quot n 2)) #_"PersistentVector" t2 (subvec tasks (quot n 2) n)
-                          #_"Object" forked (.invoke fjfork, (.invoke fjtask, #(ArrayNode'foldTasks t2, combinef, fjtask, fjfork, fjjoin)))]
-                        (.invoke combinef, (ArrayNode'foldTasks t1, combinef, fjtask, fjfork, fjjoin), (.invoke fjjoin, forked))
+                          #_"Object" forked (fjfork (fjtask #(ArrayNode'foldTasks t2, combinef, fjtask, fjfork, fjjoin)))]
+                        (combinef (ArrayNode'foldTasks t1, combinef, fjtask, fjfork, fjjoin) (fjjoin forked))
                     )
             )
         )
     )
 
-    #_override
-    (defn #_"Object" INode'''fold--ArrayNode [#_"ArrayNode" this, #_"IFn" combinef, #_"IFn" reducef, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin]
-        (let [#_"INode[]" a (:array this)
-              #_"PersistentVector" tasks
-                (loop-when [tasks [] #_"int" i 0] (< i (alength a)) => tasks
-                    (let [#_"INode" node (aget a i)
-                          tasks
-                            (when (some? node) => tasks
-                                (conj tasks #(.fold node, combinef, reducef, fjtask, fjfork, fjjoin))
-                            )]
-                        (recur tasks (inc i))
-                    )
-                )]
-            (ArrayNode'foldTasks tasks, combinef, fjtask, fjfork, fjjoin)
+    (extend-type ArrayNode INode
+        (#_"Object" INode'''fold [#_"ArrayNode" this, #_"IFn" combinef, #_"IFn" reducef, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin]
+            (let [#_"INode[]" a (:array this)
+                  #_"PersistentVector" tasks
+                    (loop-when [tasks [] #_"int" i 0] (< i (alength a)) => tasks
+                        (let [#_"INode" node (aget a i)
+                              tasks
+                                (when (some? node) => tasks
+                                    (conj tasks #(INode'''fold node, combinef, reducef, fjtask, fjfork, fjjoin))
+                                )]
+                            (recur tasks (inc i))
+                        )
+                    )]
+                (ArrayNode'foldTasks tasks, combinef, fjtask, fjfork, fjjoin)
+            )
         )
     )
 
@@ -15098,30 +14602,30 @@
         )
     )
 
-    #_override
-    (defn #_"INode" INode'''assoc-7--ArrayNode [#_"ArrayNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf]
-        (let [#_"int" i (PersistentHashMap'mask hash, shift) #_"INode" ai (aget (:array this) i)]
-            (if (some? ai)
-                (let [#_"INode" node (.assoc ai, edit, (+ shift 5), hash, key, val, addedLeaf)]
-                    (when-not (= node ai) => this
-                        (ArrayNode''editAndSet this, edit, i, node)
+    (extend-type ArrayNode INode
+        (#_"INode" INode'''assocT [#_"ArrayNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf]
+            (let [#_"int" i (PersistentHashMap'mask hash, shift) #_"INode" ai (aget (:array this) i)]
+                (if (some? ai)
+                    (let [#_"INode" node (INode'''assocT ai, edit, (+ shift 5), hash, key, val, addedLeaf)]
+                        (when-not (= node ai) => this
+                            (ArrayNode''editAndSet this, edit, i, node)
+                        )
                     )
-                )
-                (-> (ArrayNode''editAndSet this, edit, i, (.assoc BitmapIndexedNode'EMPTY, edit, (+ shift 5), hash, key, val, addedLeaf))
-                    (update :count inc)
+                    (-> (ArrayNode''editAndSet this, edit, i, (INode'''assocT BitmapIndexedNode'EMPTY, edit, (+ shift 5), hash, key, val, addedLeaf))
+                        (update :count inc)
+                    )
                 )
             )
         )
-    )
 
-    #_override
-    (defn #_"INode" INode'''dissoc-6--ArrayNode [#_"ArrayNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Box" removedLeaf]
-        (let-when [#_"int" i (PersistentHashMap'mask hash, shift) #_"INode" ai (aget (:array this) i)] (some? ai) => this
-            (let-when-not [#_"INode" node (.dissoc ai, edit, (+ shift 5), hash, key, removedLeaf)] (= node ai) => this
-                (cond
-                    (some? node)         (ArrayNode''editAndSet this, edit, i, node)
-                    (<= (:count this) 8) (ArrayNode''pack this, edit, i) ;; shrink
-                    :else            (-> (ArrayNode''editAndSet this, edit, i, node) (update :count dec))
+        (#_"INode" INode'''dissocT [#_"ArrayNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Box" removedLeaf]
+            (let-when [#_"int" i (PersistentHashMap'mask hash, shift) #_"INode" ai (aget (:array this) i)] (some? ai) => this
+                (let-when-not [#_"INode" node (INode'''dissocT ai, edit, (+ shift 5), hash, key, removedLeaf)] (= node ai) => this
+                    (cond
+                        (some? node)         (ArrayNode''editAndSet this, edit, i, node)
+                        (<= (:count this) 8) (ArrayNode''pack this, edit, i) ;; shrink
+                        :else            (-> (ArrayNode''editAndSet this, edit, i, node) (update :count dec))
+                    )
                 )
             )
         )
@@ -15151,137 +14655,133 @@
             (when-not (= key1hash key2hash) => (HashCollisionNode'new nil, key1hash, 2, (object-array [ key1, val1, key2, val2 ]))
                 (let [#_"Box" addedLeaf (Box'new nil) #_"AtomicReference<Thread>" edit (AtomicReference.)]
                     (-> BitmapIndexedNode'EMPTY
-                        (.assoc edit, shift, key1hash, key1, val1, addedLeaf)
-                        (.assoc edit, shift, key2hash, key2, val2, addedLeaf)
+                        (INode'''assocT edit, shift, key1hash, key1, val1, addedLeaf)
+                        (INode'''assocT edit, shift, key2hash, key2, val2, addedLeaf)
                     )
                 )
             )
         )
     )
 
-    #_override
-    (defn #_"INode" INode'''assoc-6--BitmapIndexedNode [#_"BitmapIndexedNode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf]
-        (let [#_"int" bit (PersistentHashMap'bitpos hash, shift) #_"int" idx (BitmapIndexedNode''index this, bit)]
-            (if-not (zero? (& (:bitmap this) bit))
-                (let [#_"Object" keyOrNull (aget (:array this) (* 2 idx))
-                      #_"Object" valOrNode (aget (:array this) (inc (* 2 idx)))
-                      _ (cond
-                            (nil? keyOrNull)
-                                (let [#_"INode" n (.assoc (cast INode valOrNode), (+ shift 5), hash, key, val, addedLeaf)]
-                                    (when-not (= n valOrNode)
-                                        (PersistentHashMap'cloneAndSet (:array this), (inc (* 2 idx)), n)
+    (extend-type BitmapIndexedNode INode
+        (#_"INode" INode'''assoc [#_"BitmapIndexedNode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf]
+            (let [#_"int" bit (PersistentHashMap'bitpos hash, shift) #_"int" idx (BitmapIndexedNode''index this, bit)]
+                (if-not (zero? (& (:bitmap this) bit))
+                    (let [#_"Object" keyOrNull (aget (:array this) (* 2 idx))
+                          #_"Object" valOrNode (aget (:array this) (inc (* 2 idx)))
+                          _ (cond
+                                (nil? keyOrNull)
+                                    (let [#_"INode" n (INode'''assoc (cast cloiure.core.INode valOrNode), (+ shift 5), hash, key, val, addedLeaf)]
+                                        (when-not (= n valOrNode)
+                                            (PersistentHashMap'cloneAndSet (:array this), (inc (* 2 idx)), n)
+                                        )
+                                    )
+                                (= key keyOrNull)
+                                    (when-not (= val valOrNode)
+                                        (PersistentHashMap'cloneAndSet (:array this), (inc (* 2 idx)), val)
+                                    )
+                                :else
+                                    (let [_ (§ set! (:val addedLeaf) addedLeaf)]
+                                        (PersistentHashMap'cloneAndSet (:array this), (* 2 idx), nil, (inc (* 2 idx)), (BitmapIndexedNode'createNode-6 (+ shift 5), keyOrNull, valOrNode, hash, key, val))
+                                    )
+                            )]
+                        (if (some? _) (BitmapIndexedNode'new nil, (:bitmap this), _) this)
+                    )
+                    (let [#_"int" n (Integer/bitCount (:bitmap this))]
+                        (if (<= 16 n)
+                            (let [#_"INode[]" nodes (make-array #_"INode" Object 32) #_"int" jdx (PersistentHashMap'mask hash, shift)]
+                                (aset nodes jdx (INode'''assoc BitmapIndexedNode'EMPTY, (+ shift 5), hash, key, val, addedLeaf))
+                                (loop-when [#_"int" j 0 #_"int" i 0] (< i 32)
+                                    (when-not (= (& (>>> (:bitmap this) i) 1) 0) => (recur j (inc i))
+                                        (if (some? (aget (:array this) j))
+                                            (aset nodes i (INode'''assoc BitmapIndexedNode'EMPTY, (+ shift 5), (PersistentHashMap'hash (aget (:array this) j)), (aget (:array this) j), (aget (:array this) (inc j)), addedLeaf))
+                                            (aset nodes i (cast cloiure.core.INode (aget (:array this) (inc j))))
+                                        )
+                                        (recur (+ j 2) (inc i))
                                     )
                                 )
-                            (= key keyOrNull)
-                                (when-not (= val valOrNode)
-                                    (PersistentHashMap'cloneAndSet (:array this), (inc (* 2 idx)), val)
-                                )
-                            :else
-                                (let [_ (§ set! (:val addedLeaf) addedLeaf)]
-                                    (PersistentHashMap'cloneAndSet (:array this), (* 2 idx), nil, (inc (* 2 idx)), (BitmapIndexedNode'createNode-6 (+ shift 5), keyOrNull, valOrNode, hash, key, val))
-                                )
-                        )]
-                    (if (some? _) (BitmapIndexedNode'new nil, (:bitmap this), _) this)
-                )
-                (let [#_"int" n (Integer/bitCount (:bitmap this))]
-                    (if (<= 16 n)
-                        (let [#_"INode[]" nodes (make-array #_"INode" Object 32) #_"int" jdx (PersistentHashMap'mask hash, shift)]
-                            (aset nodes jdx (.assoc BitmapIndexedNode'EMPTY, (+ shift 5), hash, key, val, addedLeaf))
-                            (loop-when [#_"int" j 0 #_"int" i 0] (< i 32)
-                                (when-not (= (& (>>> (:bitmap this) i) 1) 0) => (recur j (inc i))
-                                    (if (some? (aget (:array this) j))
-                                        (aset nodes i (.assoc BitmapIndexedNode'EMPTY, (+ shift 5), (PersistentHashMap'hash (aget (:array this) j)), (aget (:array this) j), (aget (:array this) (inc j)), addedLeaf))
-                                        (aset nodes i (cast INode (aget (:array this) (inc j))))
-                                    )
-                                    (recur (+ j 2) (inc i))
-                                )
+                                (ArrayNode'new nil, (inc n), nodes)
                             )
-                            (ArrayNode'new nil, (inc n), nodes)
-                        )
-                        (let [#_"Object[]" a (make-array Object (* 2 (inc n)))]
-                            (System/arraycopy (:array this), 0, a, 0, (* 2 idx))
-                            (aset a (* 2 idx) key)
-                            (§ set! (:val addedLeaf) addedLeaf)
-                            (aset a (inc (* 2 idx)) val)
-                            (System/arraycopy (:array this), (* 2 idx), a, (* 2 (inc idx)), (* 2 (- n idx)))
-                            (BitmapIndexedNode'new nil, (| (:bitmap this) bit), a)
+                            (let [#_"Object[]" a (make-array Object (* 2 (inc n)))]
+                                (System/arraycopy (:array this), 0, a, 0, (* 2 idx))
+                                (aset a (* 2 idx) key)
+                                (§ set! (:val addedLeaf) addedLeaf)
+                                (aset a (inc (* 2 idx)) val)
+                                (System/arraycopy (:array this), (* 2 idx), a, (* 2 (inc idx)), (* 2 (- n idx)))
+                                (BitmapIndexedNode'new nil, (| (:bitmap this) bit), a)
+                            )
                         )
                     )
                 )
             )
         )
-    )
 
-    #_override
-    (defn #_"INode" INode'''dissoc-4--BitmapIndexedNode [#_"BitmapIndexedNode" this, #_"int" shift, #_"int" hash, #_"Object" key]
-        (let-when-not [#_"int" bit (PersistentHashMap'bitpos hash, shift)] (zero? (& (:bitmap this) bit)) => this
-            (let [#_"int" i (BitmapIndexedNode''index this, bit) #_"int" ii (* 2 i)
-                  #_"Object" keyOrNull (aget (:array this) ii)
-                  #_"Object" valOrNode (aget (:array this) (inc ii))]
-                (if (some? keyOrNull)
-                    (when (= key keyOrNull) => this
-                        ;; TODO: collapse
-                        (BitmapIndexedNode'new nil, (bit-xor (:bitmap this) bit), (PersistentHashMap'removePair (:array this), i))
+        (#_"INode" INode'''dissoc [#_"BitmapIndexedNode" this, #_"int" shift, #_"int" hash, #_"Object" key]
+            (let-when-not [#_"int" bit (PersistentHashMap'bitpos hash, shift)] (zero? (& (:bitmap this) bit)) => this
+                (let [#_"int" i (BitmapIndexedNode''index this, bit) #_"int" ii (* 2 i)
+                      #_"Object" keyOrNull (aget (:array this) ii)
+                      #_"Object" valOrNode (aget (:array this) (inc ii))]
+                    (if (some? keyOrNull)
+                        (when (= key keyOrNull) => this
+                            ;; TODO: collapse
+                            (BitmapIndexedNode'new nil, (bit-xor (:bitmap this) bit), (PersistentHashMap'removePair (:array this), i))
+                        )
+                        (let [#_"INode" n (INode'''dissoc (cast cloiure.core.INode valOrNode), (+ shift 5), hash, key)]
+                            (cond
+                                (= n valOrNode)
+                                    this
+                                (some? n)
+                                    (BitmapIndexedNode'new nil, (:bitmap this), (PersistentHashMap'cloneAndSet (:array this), (inc ii), n))
+                                (= (:bitmap this) bit)
+                                    nil
+                                :else
+                                    (BitmapIndexedNode'new nil, (bit-xor (:bitmap this) bit), (PersistentHashMap'removePair (:array this), i))
+                            )
+                        )
                     )
-                    (let [#_"INode" n (.dissoc (cast INode valOrNode), (+ shift 5), hash, key)]
+                )
+            )
+        )
+
+        (#_"IMapEntry|Object" INode'''find
+            ([#_"BitmapIndexedNode" this, #_"int" shift, #_"int" hash, #_"Object" key]
+                (let-when-not [#_"int" bit (PersistentHashMap'bitpos hash, shift)] (zero? (& (:bitmap this) bit))
+                    (let [#_"int" i (BitmapIndexedNode''index this, bit)
+                        #_"Object" keyOrNull (aget (:array this) (* 2 i))
+                        #_"Object" valOrNode (aget (:array this) (inc (* 2 i)))]
                         (cond
-                            (= n valOrNode)
-                                this
-                            (some? n)
-                                (BitmapIndexedNode'new nil, (:bitmap this), (PersistentHashMap'cloneAndSet (:array this), (inc ii), n))
-                            (= (:bitmap this) bit)
-                                nil
-                            :else
-                                (BitmapIndexedNode'new nil, (bit-xor (:bitmap this) bit), (PersistentHashMap'removePair (:array this), i))
+                            (nil? keyOrNull)  (INode'''find (cast cloiure.core.INode valOrNode), (+ shift 5), hash, key)
+                            (= key keyOrNull) (MapEntry'create keyOrNull, valOrNode)
+                        )
+                    )
+                )
+            )
+            ([#_"BitmapIndexedNode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" notFound]
+                (let-when-not [#_"int" bit (PersistentHashMap'bitpos hash, shift)] (zero? (& (:bitmap this) bit)) => notFound
+                    (let [#_"int" i (BitmapIndexedNode''index this, bit)
+                        #_"Object" keyOrNull (aget (:array this) (* 2 i))
+                        #_"Object" valOrNode (aget (:array this) (inc (* 2 i)))]
+                        (cond
+                            (nil? keyOrNull)  (INode'''find (cast cloiure.core.INode valOrNode), (+ shift 5), hash, key, notFound)
+                            (= key keyOrNull) valOrNode
+                            :else             notFound
                         )
                     )
                 )
             )
         )
-    )
 
-    #_override
-    (defn #_"IMapEntry" INode'''find-4--BitmapIndexedNode [#_"BitmapIndexedNode" this, #_"int" shift, #_"int" hash, #_"Object" key]
-        (let-when-not [#_"int" bit (PersistentHashMap'bitpos hash, shift)] (zero? (& (:bitmap this) bit))
-            (let [#_"int" i (BitmapIndexedNode''index this, bit)
-                  #_"Object" keyOrNull (aget (:array this) (* 2 i))
-                  #_"Object" valOrNode (aget (:array this) (inc (* 2 i)))]
-                (cond
-                    (nil? keyOrNull)  (.find (cast INode valOrNode), (+ shift 5), hash, key)
-                    (= key keyOrNull) (MapEntry'create keyOrNull, valOrNode)
-                )
-            )
+        (#_"ISeq" INode'''nodeSeq [#_"BitmapIndexedNode" this]
+            (NodeSeq'create-1 (:array this))
         )
-    )
 
-    #_override
-    (defn #_"Object" INode'''find-5--BitmapIndexedNode [#_"BitmapIndexedNode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" notFound]
-        (let-when-not [#_"int" bit (PersistentHashMap'bitpos hash, shift)] (zero? (& (:bitmap this) bit)) => notFound
-            (let [#_"int" i (BitmapIndexedNode''index this, bit)
-                  #_"Object" keyOrNull (aget (:array this) (* 2 i))
-                  #_"Object" valOrNode (aget (:array this) (inc (* 2 i)))]
-                (cond
-                    (nil? keyOrNull)  (.find (cast INode valOrNode), (+ shift 5), hash, key, notFound)
-                    (= key keyOrNull) valOrNode
-                    :else             notFound
-                )
-            )
+        (#_"Object" INode'''kvreduce [#_"BitmapIndexedNode" this, #_"IFn" f, #_"Object" r]
+            (NodeSeq'kvreduce (:array this), f, r)
         )
-    )
 
-    #_override
-    (defn #_"ISeq" INode'''nodeSeq--BitmapIndexedNode [#_"BitmapIndexedNode" this]
-        (NodeSeq'create-1 (:array this))
-    )
-
-    #_override
-    (defn #_"Object" INode'''kvreduce--BitmapIndexedNode [#_"BitmapIndexedNode" this, #_"IFn" f, #_"Object" r]
-        (NodeSeq'kvreduce (:array this), f, r)
-    )
-
-    #_override
-    (defn #_"Object" INode'''fold--BitmapIndexedNode [#_"BitmapIndexedNode" this, #_"IFn" combinef, #_"IFn" reducef, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin]
-        (NodeSeq'kvreduce (:array this), reducef, (.invoke combinef))
+        (#_"Object" INode'''fold [#_"BitmapIndexedNode" this, #_"IFn" combinef, #_"IFn" reducef, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin]
+            (NodeSeq'kvreduce (:array this), reducef, (combinef))
+        )
     )
 
     #_method
@@ -15329,101 +14829,101 @@
             (when-not (= key1hash key2hash) => (HashCollisionNode'new nil, key1hash, 2, (object-array [ key1, val1, key2, val2 ]))
                 (let [#_"Box" addedLeaf (Box'new nil)]
                     (-> BitmapIndexedNode'EMPTY
-                        (.assoc edit, shift, key1hash, key1, val1, addedLeaf)
-                        (.assoc edit, shift, key2hash, key2, val2, addedLeaf)
+                        (INode'''assocT edit, shift, key1hash, key1, val1, addedLeaf)
+                        (INode'''assocT edit, shift, key2hash, key2, val2, addedLeaf)
                     )
                 )
             )
         )
     )
 
-    #_override
-    (defn #_"INode" INode'''assoc-7--BitmapIndexedNode [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf]
-        (let [#_"int" bit (PersistentHashMap'bitpos hash, shift) #_"int" idx (BitmapIndexedNode''index this, bit)]
-            (if-not (zero? (& (:bitmap this) bit))
-                (let [#_"Object" keyOrNull (aget (:array this) (* 2 idx))
-                      #_"Object" valOrNode (aget (:array this) (inc (* 2 idx)))]
-                    (cond
-                        (nil? keyOrNull)
-                            (let [#_"INode" n (.assoc (cast INode valOrNode), edit, (+ shift 5), hash, key, val, addedLeaf)]
-                                (when-not (= n valOrNode) => this
-                                    (BitmapIndexedNode''editAndSet-4 this, edit, (inc (* 2 idx)), n)
-                                )
-                            )
-                        (= key keyOrNull)
-                            (when-not (= val valOrNode) => this
-                                (BitmapIndexedNode''editAndSet-4 this, edit, (inc (* 2 idx)), val)
-                            )
-                        :else
-                            (let [_ (§ set! (:val addedLeaf) addedLeaf)]
-                                (BitmapIndexedNode''editAndSet-6 this, edit, (* 2 idx), nil, (inc (* 2 idx)), (BitmapIndexedNode'createNode-7 edit, (+ shift 5), keyOrNull, valOrNode, hash, key, val))
-                            )
-                    )
-                )
-                (let [#_"int" n (Integer/bitCount (:bitmap this))]
-                    (cond
-                        (< (* n 2) (alength (:array this)))
-                            (let [_ (§ set! (:val addedLeaf) addedLeaf)
-                                  #_"BitmapIndexedNode" e (-> (BitmapIndexedNode''ensureEditable this, edit) (update :bitmap | bit))]
-                                (System/arraycopy (:array e), (* 2 idx), (:array e), (* 2 (inc idx)), (* 2 (- n idx)))
-                                (aset (:array e) (* 2 idx) key)
-                                (aset (:array e) (inc (* 2 idx)) val)
-                                e
-                            )
-                        (<= 16 n)
-                            (let [#_"INode[]" nodes (make-array #_"INode" Object 32) #_"int" jdx (PersistentHashMap'mask hash, shift)]
-                                (aset nodes jdx (.assoc BitmapIndexedNode'EMPTY, edit, (+ shift 5), hash, key, val, addedLeaf))
-                                (loop-when [#_"int" j 0 #_"int" i 0] (< i 32)
-                                    (when-not (= (& (>>> (:bitmap this) i) 1) 0) => (recur j (inc i))
-                                        (if (some? (aget (:array this) j))
-                                            (aset nodes i (.assoc BitmapIndexedNode'EMPTY, edit, (+ shift 5), (PersistentHashMap'hash (aget (:array this) j)), (aget (:array this) j), (aget (:array this) (inc j)), addedLeaf))
-                                            (aset nodes i (cast INode (aget (:array this) (inc j))))
-                                        )
-                                        (recur (+ j 2) (inc i))
+    (extend-type BitmapIndexedNode INode
+        (#_"INode" INode'''assocT [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf]
+            (let [#_"int" bit (PersistentHashMap'bitpos hash, shift) #_"int" idx (BitmapIndexedNode''index this, bit)]
+                (if-not (zero? (& (:bitmap this) bit))
+                    (let [#_"Object" keyOrNull (aget (:array this) (* 2 idx))
+                          #_"Object" valOrNode (aget (:array this) (inc (* 2 idx)))]
+                        (cond
+                            (nil? keyOrNull)
+                                (let [#_"INode" n (INode'''assocT (cast cloiure.core.INode valOrNode), edit, (+ shift 5), hash, key, val, addedLeaf)]
+                                    (when-not (= n valOrNode) => this
+                                        (BitmapIndexedNode''editAndSet-4 this, edit, (inc (* 2 idx)), n)
                                     )
                                 )
-                                (ArrayNode'new edit, (inc n), nodes)
-                            )
-                        :else
-                            (let [#_"Object[]" a (make-array Object (* 2 (+ n 4)))]
-                                (System/arraycopy (:array this), 0, a, 0, (* 2 idx))
-                                (aset a (* 2 idx) key)
-                                (§ set! (:val addedLeaf) addedLeaf)
-                                (aset a (inc (* 2 idx)) val)
-                                (System/arraycopy (:array this), (* 2 idx), a, (* 2 (inc idx)), (* 2 (- n idx)))
-                                (-> (BitmapIndexedNode''ensureEditable this, edit)
-                                    (assoc :array a)
-                                    (update :bitmap | bit)
+                            (= key keyOrNull)
+                                (when-not (= val valOrNode) => this
+                                    (BitmapIndexedNode''editAndSet-4 this, edit, (inc (* 2 idx)), val)
                                 )
-                            )
+                            :else
+                                (let [_ (§ set! (:val addedLeaf) addedLeaf)]
+                                    (BitmapIndexedNode''editAndSet-6 this, edit, (* 2 idx), nil, (inc (* 2 idx)), (BitmapIndexedNode'createNode-7 edit, (+ shift 5), keyOrNull, valOrNode, hash, key, val))
+                                )
+                        )
+                    )
+                    (let [#_"int" n (Integer/bitCount (:bitmap this))]
+                        (cond
+                            (< (* n 2) (alength (:array this)))
+                                (let [_ (§ set! (:val addedLeaf) addedLeaf)
+                                      #_"BitmapIndexedNode" e (-> (BitmapIndexedNode''ensureEditable this, edit) (update :bitmap | bit))]
+                                    (System/arraycopy (:array e), (* 2 idx), (:array e), (* 2 (inc idx)), (* 2 (- n idx)))
+                                    (aset (:array e) (* 2 idx) key)
+                                    (aset (:array e) (inc (* 2 idx)) val)
+                                    e
+                                )
+                            (<= 16 n)
+                                (let [#_"INode[]" nodes (make-array #_"INode" Object 32) #_"int" jdx (PersistentHashMap'mask hash, shift)]
+                                    (aset nodes jdx (INode'''assocT BitmapIndexedNode'EMPTY, edit, (+ shift 5), hash, key, val, addedLeaf))
+                                    (loop-when [#_"int" j 0 #_"int" i 0] (< i 32)
+                                        (when-not (= (& (>>> (:bitmap this) i) 1) 0) => (recur j (inc i))
+                                            (if (some? (aget (:array this) j))
+                                                (aset nodes i (INode'''assocT BitmapIndexedNode'EMPTY, edit, (+ shift 5), (PersistentHashMap'hash (aget (:array this) j)), (aget (:array this) j), (aget (:array this) (inc j)), addedLeaf))
+                                                (aset nodes i (cast cloiure.core.INode (aget (:array this) (inc j))))
+                                            )
+                                            (recur (+ j 2) (inc i))
+                                        )
+                                    )
+                                    (ArrayNode'new edit, (inc n), nodes)
+                                )
+                            :else
+                                (let [#_"Object[]" a (make-array Object (* 2 (+ n 4)))]
+                                    (System/arraycopy (:array this), 0, a, 0, (* 2 idx))
+                                    (aset a (* 2 idx) key)
+                                    (§ set! (:val addedLeaf) addedLeaf)
+                                    (aset a (inc (* 2 idx)) val)
+                                    (System/arraycopy (:array this), (* 2 idx), a, (* 2 (inc idx)), (* 2 (- n idx)))
+                                    (-> (BitmapIndexedNode''ensureEditable this, edit)
+                                        (assoc :array a)
+                                        (update :bitmap | bit)
+                                    )
+                                )
+                        )
                     )
                 )
             )
         )
-    )
 
-    #_override
-    (defn #_"INode" INode'''dissoc-6--BitmapIndexedNode [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Box" removedLeaf]
-        (let-when-not [#_"int" bit (PersistentHashMap'bitpos hash, shift)] (zero? (& (:bitmap this) bit)) => this
-            (let [#_"int" i (BitmapIndexedNode''index this, bit) #_"int" ii (* 2 i)
-                  #_"Object" keyOrNull (aget (:array this) ii)
-                  #_"Object" valOrNode (aget (:array this) (inc ii))]
-                (if (some? keyOrNull)
-                    (when (= key keyOrNull) => this
-                        (§ set! (:val removedLeaf) removedLeaf)
-                        ;; TODO: collapse
-                        (BitmapIndexedNode''editAndRemovePair this, edit, bit, i)
-                    )
-                    (let [#_"INode" n (.dissoc (cast INode valOrNode), edit, (+ shift 5), hash, key, removedLeaf)]
-                        (cond
-                            (= n valOrNode)
-                                this
-                            (some? n)
-                                (BitmapIndexedNode''editAndSet-4 this, edit, (inc ii), n)
-                            (= (:bitmap this) bit)
-                                nil
-                            :else
-                                (BitmapIndexedNode''editAndRemovePair this, edit, bit, i)
+        (#_"INode" INode'''dissocT [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Box" removedLeaf]
+            (let-when-not [#_"int" bit (PersistentHashMap'bitpos hash, shift)] (zero? (& (:bitmap this) bit)) => this
+                (let [#_"int" i (BitmapIndexedNode''index this, bit) #_"int" ii (* 2 i)
+                      #_"Object" keyOrNull (aget (:array this) ii)
+                      #_"Object" valOrNode (aget (:array this) (inc ii))]
+                    (if (some? keyOrNull)
+                        (when (= key keyOrNull) => this
+                            (§ set! (:val removedLeaf) removedLeaf)
+                            ;; TODO: collapse
+                            (BitmapIndexedNode''editAndRemovePair this, edit, bit, i)
+                        )
+                        (let [#_"INode" n (INode'''dissocT (cast cloiure.core.INode valOrNode), edit, (+ shift 5), hash, key, removedLeaf)]
+                            (cond
+                                (= n valOrNode)
+                                    this
+                                (some? n)
+                                    (BitmapIndexedNode''editAndSet-4 this, edit, (inc ii), n)
+                                (= (:bitmap this) bit)
+                                    nil
+                                :else
+                                    (BitmapIndexedNode''editAndRemovePair this, edit, bit, i)
+                            )
                         )
                     )
                 )
@@ -15451,70 +14951,66 @@
         )
     )
 
-    #_override
-    (defn #_"INode" INode'''assoc-6--HashCollisionNode [#_"HashCollisionNode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf]
-        (if (= hash (:hash this))
-            (let [#_"int" i (HashCollisionNode''findIndex this, key)]
-                (if (<= 0 i)
-                    (when-not (= (aget (:array this) (inc i)) val) => this
-                        (HashCollisionNode'new nil, hash, (:count this), (PersistentHashMap'cloneAndSet (:array this), (inc i), val))
+    (extend-type HashCollisionNode INode
+        (#_"INode" INode'''assoc [#_"HashCollisionNode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf]
+            (if (= hash (:hash this))
+                (let [#_"int" i (HashCollisionNode''findIndex this, key)]
+                    (if (<= 0 i)
+                        (when-not (= (aget (:array this) (inc i)) val) => this
+                            (HashCollisionNode'new nil, hash, (:count this), (PersistentHashMap'cloneAndSet (:array this), (inc i), val))
+                        )
+                        (let [#_"int" n (:count this) #_"Object[]" a (make-array Object (* 2 (inc n)))]
+                            (System/arraycopy (:array this), 0, a, 0, (* 2 n))
+                            (aset a (* 2 n) key)
+                            (aset a (inc (* 2 n)) val)
+                            (§ set! (:val addedLeaf) addedLeaf)
+                            (HashCollisionNode'new (:edit this), hash, (inc n), a)
+                        )
                     )
-                    (let [#_"int" n (:count this) #_"Object[]" a (make-array Object (* 2 (inc n)))]
-                        (System/arraycopy (:array this), 0, a, 0, (* 2 n))
-                        (aset a (* 2 n) key)
-                        (aset a (inc (* 2 n)) val)
-                        (§ set! (:val addedLeaf) addedLeaf)
-                        (HashCollisionNode'new (:edit this), hash, (inc n), a)
+                )
+                ;; nest it in a bitmap node
+                (let [#_"BitmapIndexedNode" node (BitmapIndexedNode'new nil, (PersistentHashMap'bitpos (:hash this), shift), (object-array [ nil, this ]))]
+                    (INode'''assoc node, shift, hash, key, val, addedLeaf)
+                )
+            )
+        )
+
+        (#_"INode" INode'''dissoc [#_"HashCollisionNode" this, #_"int" shift, #_"int" hash, #_"Object" key]
+            (let-when [#_"int" i (HashCollisionNode''findIndex this, key)] (<= 0 i) => this
+                (let-when [#_"int" n (:count this)] (< 1 n)
+                    (HashCollisionNode'new nil, hash, (dec n), (PersistentHashMap'removePair (:array this), (/ i 2)))
+                )
+            )
+        )
+
+        (#_"IMapEntry|Object" INode'''find
+            ([#_"HashCollisionNode" this, #_"int" shift, #_"int" hash, #_"Object" key]
+                (let-when [#_"int" i (HashCollisionNode''findIndex this, key)] (<= 0 i)
+                    (let-when [#_"Object" ai (aget (:array this) i)] (= key ai)
+                        (MapEntry'create ai, (aget (:array this) (inc i)))
                     )
                 )
             )
-            ;; nest it in a bitmap node
-            (let [#_"BitmapIndexedNode" node (BitmapIndexedNode'new nil, (PersistentHashMap'bitpos (:hash this), shift), (object-array [ nil, this ]))]
-                (.assoc node, shift, hash, key, val, addedLeaf)
+            ([#_"HashCollisionNode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" notFound]
+                (let-when [#_"int" i (HashCollisionNode''findIndex this, key)] (<= 0 i) => notFound
+                    (when (= key (aget (:array this) i)) => notFound
+                        (aget (:array this) (inc i))
+                    )
+                )
             )
         )
-    )
 
-    #_override
-    (defn #_"INode" INode'''dissoc-4--HashCollisionNode [#_"HashCollisionNode" this, #_"int" shift, #_"int" hash, #_"Object" key]
-        (let-when [#_"int" i (HashCollisionNode''findIndex this, key)] (<= 0 i) => this
-            (let-when [#_"int" n (:count this)] (< 1 n)
-                (HashCollisionNode'new nil, hash, (dec n), (PersistentHashMap'removePair (:array this), (/ i 2)))
-            )
+        (#_"ISeq" INode'''nodeSeq [#_"HashCollisionNode" this]
+            (NodeSeq'create-1 (:array this))
         )
-    )
 
-    #_override
-    (defn #_"IMapEntry" INode'''find-4--HashCollisionNode [#_"HashCollisionNode" this, #_"int" shift, #_"int" hash, #_"Object" key]
-        (let-when [#_"int" i (HashCollisionNode''findIndex this, key)] (<= 0 i)
-            (let-when [#_"Object" ai (aget (:array this) i)] (= key ai)
-                (MapEntry'create ai, (aget (:array this) (inc i)))
-            )
+        (#_"Object" INode'''kvreduce [#_"HashCollisionNode" this, #_"IFn" f, #_"Object" r]
+            (NodeSeq'kvreduce (:array this), f, r)
         )
-    )
 
-    #_override
-    (defn #_"Object" INode'''find-5--HashCollisionNode [#_"HashCollisionNode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" notFound]
-        (let-when [#_"int" i (HashCollisionNode''findIndex this, key)] (<= 0 i) => notFound
-            (when (= key (aget (:array this) i)) => notFound
-                (aget (:array this) (inc i))
-            )
+        (#_"Object" INode'''fold [#_"HashCollisionNode" this, #_"IFn" combinef, #_"IFn" reducef, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin]
+            (NodeSeq'kvreduce (:array this), reducef, (combinef))
         )
-    )
-
-    #_override
-    (defn #_"ISeq" INode'''nodeSeq--HashCollisionNode [#_"HashCollisionNode" this]
-        (NodeSeq'create-1 (:array this))
-    )
-
-    #_override
-    (defn #_"Object" INode'''kvreduce--HashCollisionNode [#_"HashCollisionNode" this, #_"IFn" f, #_"Object" r]
-        (NodeSeq'kvreduce (:array this), f, r)
-    )
-
-    #_override
-    (defn #_"Object" INode'''fold--HashCollisionNode [#_"HashCollisionNode" this, #_"IFn" combinef, #_"IFn" reducef, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin]
-        (NodeSeq'kvreduce (:array this), reducef, (.invoke combinef))
     )
 
     #_method
@@ -15552,51 +15048,51 @@
         )
     )
 
-    #_override
-    (defn #_"INode" INode'''assoc-7--HashCollisionNode [#_"HashCollisionNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf]
-        (if (= hash (:hash this))
-            (let [#_"int" i (HashCollisionNode''findIndex this, key)]
-                (if (<= 0 i)
-                    (when-not (= (aget (:array this) (inc i)) val) => this
-                        (HashCollisionNode''editAndSet-4 this, edit, (inc i), val)
-                    )
-                    (let [#_"int" n (:count this) #_"int" m (alength (:array this))]
-                        (if (< (* 2 n) m)
-                            (let [_ (§ set! (:val addedLeaf) addedLeaf)]
-                                (-> (HashCollisionNode''editAndSet-6 this, edit, (* 2 n), key, (inc (* 2 n)), val)
-                                    (update :count inc)
+    (extend-type HashCollisionNode INode
+        (#_"INode" INode'''assocT [#_"HashCollisionNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf]
+            (if (= hash (:hash this))
+                (let [#_"int" i (HashCollisionNode''findIndex this, key)]
+                    (if (<= 0 i)
+                        (when-not (= (aget (:array this) (inc i)) val) => this
+                            (HashCollisionNode''editAndSet-4 this, edit, (inc i), val)
+                        )
+                        (let [#_"int" n (:count this) #_"int" m (alength (:array this))]
+                            (if (< (* 2 n) m)
+                                (let [_ (§ set! (:val addedLeaf) addedLeaf)]
+                                    (-> (HashCollisionNode''editAndSet-6 this, edit, (* 2 n), key, (inc (* 2 n)), val)
+                                        (update :count inc)
+                                    )
                                 )
-                            )
-                            (let [#_"Object[]" a (make-array Object (+ m 2))]
-                                (System/arraycopy (:array this), 0, a, 0, m)
-                                (aset a m key)
-                                (aset a (inc m) val)
-                                (§ set! (:val addedLeaf) addedLeaf)
-                                (HashCollisionNode''ensureEditable-4 this, edit, (inc n), a)
+                                (let [#_"Object[]" a (make-array Object (+ m 2))]
+                                    (System/arraycopy (:array this), 0, a, 0, m)
+                                    (aset a m key)
+                                    (aset a (inc m) val)
+                                    (§ set! (:val addedLeaf) addedLeaf)
+                                    (HashCollisionNode''ensureEditable-4 this, edit, (inc n), a)
+                                )
                             )
                         )
                     )
                 )
-            )
-            ;; nest it in a bitmap node
-            (let [#_"BitmapIndexedNode" node (BitmapIndexedNode'new edit, (PersistentHashMap'bitpos (:hash this), shift), (object-array [ nil, this, nil, nil ]))]
-                (.assoc node, edit, shift, hash, key, val, addedLeaf)
+                ;; nest it in a bitmap node
+                (let [#_"BitmapIndexedNode" node (BitmapIndexedNode'new edit, (PersistentHashMap'bitpos (:hash this), shift), (object-array [ nil, this, nil, nil ]))]
+                    (INode'''assocT node, edit, shift, hash, key, val, addedLeaf)
+                )
             )
         )
-    )
 
-    #_override
-    (defn #_"INode" INode'''dissoc-6--HashCollisionNode [#_"HashCollisionNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Box" removedLeaf]
-        (let-when [#_"int" i (HashCollisionNode''findIndex this, key)] (<= 0 i) => this
-            (§ set! (:val removedLeaf) removedLeaf)
-            (let-when [#_"int" n (:count this)] (< 1 n)
-                (let [#_"HashCollisionNode" e (-> (HashCollisionNode''ensureEditable-2 this, edit) (update :count dec))
-                      #_"int" m (* 2 n)]
-                    (aset (:array e) i (aget (:array e) (- m 2)))
-                    (aset (:array e) (inc i) (aget (:array e) (- m 1)))
-                    (aset (:array e) (- m 2) nil)
-                    (aset (:array e) (- m 1) nil)
-                    e
+        (#_"INode" INode'''dissocT [#_"HashCollisionNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Box" removedLeaf]
+            (let-when [#_"int" i (HashCollisionNode''findIndex this, key)] (<= 0 i) => this
+                (§ set! (:val removedLeaf) removedLeaf)
+                (let-when [#_"int" n (:count this)] (< 1 n)
+                    (let [#_"HashCollisionNode" e (-> (HashCollisionNode''ensureEditable-2 this, edit) (update :count dec))
+                          #_"int" m (* 2 n)]
+                        (aset (:array e) i (aget (:array e) (- m 2)))
+                        (aset (:array e) (inc i) (aget (:array e) (- m 1)))
+                        (aset (:array e) (- m 2) nil)
+                        (aset (:array e) (- m 1) nil)
+                        e
+                    )
                 )
             )
         )
@@ -15632,7 +15128,7 @@
                 )
             )
             (let [_ (§ set! (:val (:leafFlag this)) nil)
-                  #_"INode" n (.assoc (or (:root this) BitmapIndexedNode'EMPTY), (:edit this), 0, (PersistentHashMap'hash key), key, val, (:leafFlag this))
+                  #_"INode" n (INode'''assocT (or (:root this) BitmapIndexedNode'EMPTY), (:edit this), 0, (PersistentHashMap'hash key), key, val, (:leafFlag this))
                   this (if (= (:root this) n) this (assoc this :root n))]
                 (when (some? (:val (:leafFlag this))) => this
                     (update this :count inc)
@@ -15649,7 +15145,7 @@
             )
             (when (some? (:root this)) => this
                 (let [_ (§ set! (:val (:leafFlag this)) nil)
-                      #_"INode" n (.dissoc (:root this), (:edit this), 0, (PersistentHashMap'hash key), key, (:leafFlag this))
+                      #_"INode" n (INode'''dissocT (:root this), (:edit this), 0, (PersistentHashMap'hash key), key, (:leafFlag this))
                       this (if (= (:root this) n) this (assoc this :root n))]
                     (when (some? (:val (:leafFlag this))) => this
                         (update this :count dec)
@@ -15674,7 +15170,7 @@
                 (:nullValue this)
             )
             (when (some? (:root this)) => notFound
-                (.find (:root this), 0, (PersistentHashMap'hash key), key, notFound)
+                (INode'''find (:root this), 0, (PersistentHashMap'hash key), key, notFound)
             )
         )
     )
@@ -15704,8 +15200,6 @@
  ; Any errors are my own.
  ;;
 (class-ns PersistentHashMap
-    (def- #_"Object" PersistentHashMap'NOT_FOUND (Object.))
-
     (defn #_"PersistentHashMap" PersistentHashMap'new
         ([#_"int" count, #_"INode" root, #_"boolean" hasNull, #_"Object" nullValue] (PersistentHashMap'new nil, count, root, hasNull, nullValue))
         ([#_"IPersistentMap" meta, #_"int" count, #_"INode" root, #_"boolean" hasNull, #_"Object" nullValue]
@@ -15770,76 +15264,88 @@
         )
     )
 
-    #_override
-    (defn #_"boolean" Associative'''containsKey--PersistentHashMap [#_"PersistentHashMap" this, #_"Object" key]
-        (if (nil? key)
-            (:hasNull this)
-            (and (some? (:root this))
-                 (not= (.find (:root this), 0, (PersistentHashMap'hash key), key, PersistentHashMap'NOT_FOUND) PersistentHashMap'NOT_FOUND)
+    (def- #_"Object" PersistentHashMap'NOT_FOUND (Object.))
+
+    (extend-type PersistentHashMap Associative
+        (#_"boolean" Associative'''containsKey [#_"PersistentHashMap" this, #_"Object" key]
+            (if (nil? key)
+                (:hasNull this)
+                (and (some? (:root this))
+                    (not (identical? (INode'''find (:root this), 0, (PersistentHashMap'hash key), key, PersistentHashMap'NOT_FOUND) PersistentHashMap'NOT_FOUND))
+                )
             )
         )
-    )
 
-    #_override
-    (defn #_"IMapEntry" Associative'''entryAt--PersistentHashMap [#_"PersistentHashMap" this, #_"Object" key]
-        (if (nil? key)
-            (when (:hasNull this) (MapEntry'create nil, (:nullValue this)))
-            (when (some? (:root this)) (.find (:root this), 0, (PersistentHashMap'hash key), key))
-        )
-    )
-
-    #_override
-    (defn #_"IPersistentMap" IPersistentMap'''assoc--PersistentHashMap [#_"PersistentHashMap" this, #_"Object" key, #_"Object" val]
-        (if (nil? key)
-            (when-not (and (:hasNull this) (= val (:nullValue this))) => this
-                (PersistentHashMap'new (meta this), (+ (:count this) (if (:hasNull this) 0 1)), (:root this), true, val)
-            )
-            (let [#_"Box" addedLeaf (Box'new nil)
-                  #_"INode" newroot (.assoc (or (:root this) BitmapIndexedNode'EMPTY), 0, (PersistentHashMap'hash key), key, val, addedLeaf)]
-                (when-not (= newroot (:root this)) => this
-                    (PersistentHashMap'new (meta this), (+ (:count this) (if (some? (:val addedLeaf)) 1 0)), newroot, (:hasNull this), (:nullValue this))
+        (#_"IMapEntry" Associative'''entryAt [#_"PersistentHashMap" this, #_"Object" key]
+            (if (nil? key)
+                (when (:hasNull this)
+                    (MapEntry'create nil, (:nullValue this))
+                )
+                (when (some? (:root this))
+                    (INode'''find (:root this), 0, (PersistentHashMap'hash key), key)
                 )
             )
         )
     )
 
-    #_override
-    (defn #_"Object" ILookup'''valAt-2--PersistentHashMap [#_"PersistentHashMap" this, #_"Object" key]
-        (.valAt this, key, nil)
-    )
-
-    #_override
-    (defn #_"Object" ILookup'''valAt-3--PersistentHashMap [#_"PersistentHashMap" this, #_"Object" key, #_"Object" notFound]
-        (if (nil? key)
-            (if (:hasNull this) (:nullValue this) notFound)
-            (if (some? (:root this)) (.find (:root this), 0, (PersistentHashMap'hash key), key, notFound) notFound)
-        )
-    )
-
-    #_override
-    (defn #_"IPersistentMap" IPersistentMap'''dissoc--PersistentHashMap [#_"PersistentHashMap" this, #_"Object" key]
-        (cond
-            (nil? key)
-                (if (:hasNull this) (PersistentHashMap'new (meta this), (dec (:count this)), (:root this), false, nil) this)
-            (nil? (:root this))
-                this
-            :else
-                (let [#_"INode" newroot (.dissoc (:root this), 0, (PersistentHashMap'hash key), key)]
+    (extend-type PersistentHashMap Associative
+        (#_"IPersistentMap" Associative'''assoc [#_"PersistentHashMap" this, #_"Object" key, #_"Object" val]
+            (if (nil? key)
+                (when-not (and (:hasNull this) (= val (:nullValue this))) => this
+                    (PersistentHashMap'new (meta this), (+ (:count this) (if (:hasNull this) 0 1)), (:root this), true, val)
+                )
+                (let [#_"Box" addedLeaf (Box'new nil)
+                      #_"INode" newroot (INode'''assoc (or (:root this) BitmapIndexedNode'EMPTY), 0, (PersistentHashMap'hash key), key, val, addedLeaf)]
                     (when-not (= newroot (:root this)) => this
-                        (PersistentHashMap'new (meta this), (dec (:count this)), newroot, (:hasNull this), (:nullValue this))
+                        (PersistentHashMap'new (meta this), (+ (:count this) (if (some? (:val addedLeaf)) 1 0)), newroot, (:hasNull this), (:nullValue this))
                     )
                 )
+            )
         )
     )
 
-    #_override
-    (defn #_"Object" IKVReduce'''kvreduce--PersistentHashMap [#_"PersistentHashMap" this, #_"IFn" f, #_"Object" r]
-        (let [r (if (:hasNull this) (.invoke f, r, nil, (:nullValue this)) r)]
-            (when-not (reduced? r) => (deref r)
-                (when (some? (:root this)) => r
-                    (let [r (.kvreduce (:root this), f, r)]
-                        (when-not (reduced? r) => (deref r)
-                            r
+    (extend-type PersistentHashMap ILookup
+        (#_"Object" ILookup'''valAt
+            ([#_"PersistentHashMap" this, #_"Object" key] (ILookup'''valAt this, key, nil))
+            ([#_"PersistentHashMap" this, #_"Object" key, #_"Object" notFound]
+                (if (nil? key)
+                    (when (:hasNull this) => notFound
+                        (:nullValue this)
+                    )
+                    (when (some? (:root this)) => notFound
+                        (INode'''find (:root this), 0, (PersistentHashMap'hash key), key, notFound)
+                    )
+                )
+            )
+        )
+    )
+
+    (extend-type PersistentHashMap IPersistentMap
+        (#_"IPersistentMap" IPersistentMap'''dissoc [#_"PersistentHashMap" this, #_"Object" key]
+            (cond
+                (nil? key)
+                    (if (:hasNull this) (PersistentHashMap'new (meta this), (dec (:count this)), (:root this), false, nil) this)
+                (nil? (:root this))
+                    this
+                :else
+                    (let [#_"INode" newroot (INode'''dissoc (:root this), 0, (PersistentHashMap'hash key), key)]
+                        (when-not (= newroot (:root this)) => this
+                            (PersistentHashMap'new (meta this), (dec (:count this)), newroot, (:hasNull this), (:nullValue this))
+                        )
+                    )
+            )
+        )
+    )
+
+    (extend-type PersistentHashMap IKVReduce
+        (#_"Object" IKVReduce'''kvreduce [#_"PersistentHashMap" this, #_"IFn" f, #_"Object" r]
+            (let [r (if (:hasNull this) (f r nil (:nullValue this)) r)]
+                (when-not (reduced? r) => (deref r)
+                    (when (some? (:root this)) => r
+                        (let [r (INode'''kvreduce (:root this), f, r)]
+                            (when-not (reduced? r) => (deref r)
+                                r
+                            )
                         )
                     )
                 )
@@ -15850,45 +15356,54 @@
     #_method
     (defn #_"Object" PersistentHashMap''fold [#_"PersistentHashMap" this, #_"long" n, #_"IFn" combinef, #_"IFn" reducef, #_"IFn" fjinvoke, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin]
         ;; we are ignoring n for now
-        (.invoke fjinvoke,
-            #(let [_ (.invoke combinef)
-                  _ (if (some? (:root this)) (.invoke combinef, _, (.fold (:root this), combinef, reducef, fjtask, fjfork, fjjoin)) _)
-                  _ (if (:hasNull this) (.invoke combinef, _, (.invoke reducef, (.invoke combinef), nil, (:nullValue this))) _)]
-                _
+        (fjinvoke
+            #(as-> (combinef) ?
+                (when (some? (:root this)) => ?
+                    (combinef ? (INode'''fold (:root this), combinef, reducef, fjtask, fjfork, fjjoin))
+                )
+                (when (:hasNull this) => ?
+                    (combinef ? (reducef (combinef) nil (:nullValue this)))
+                )
             )
         )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--PersistentHashMap [#_"PersistentHashMap" this]
-        (:count this)
-    )
-
-    #_override
-    (defn #_"ISeq" Seqable'''seq--PersistentHashMap [#_"PersistentHashMap" this]
-        (let [#_"ISeq" s (when (some? (:root this)) (.nodeSeq (:root this)))]
-            (if (:hasNull this) (Cons'new (MapEntry'create nil, (:nullValue this)), s) s)
+    (extend-type PersistentHashMap Counted
+        (#_"int" Counted'''count [#_"PersistentHashMap" this]
+            (:count this)
         )
     )
 
-    #_override
-    (defn #_"IPersistentCollection" IPersistentCollection'''empty--PersistentHashMap [#_"PersistentHashMap" this]
-        (with-meta PersistentHashMap'EMPTY (meta this))
+    (extend-type PersistentHashMap Seqable
+        (#_"ISeq" Seqable'''seq [#_"PersistentHashMap" this]
+            (let [#_"ISeq" s (when (some? (:root this)) (INode'''nodeSeq (:root this)))]
+                (if (:hasNull this) (Cons'new (MapEntry'create nil, (:nullValue this)), s) s)
+            )
+        )
     )
 
-    #_override
-    (defn #_"PersistentHashMap" IObj'''withMeta--PersistentHashMap [#_"PersistentHashMap" this, #_"IPersistentMap" meta]
-        (PersistentHashMap'new meta, (:count this), (:root this), (:hasNull this), (:nullValue this))
+    (extend-type PersistentHashMap IPersistentCollection
+        (#_"IPersistentCollection" IPersistentCollection'''empty [#_"PersistentHashMap" this]
+            (with-meta PersistentHashMap'EMPTY (meta this))
+        )
     )
 
-    #_override
-    (defn #_"TransientHashMap" IEditableCollection'''asTransient--PersistentHashMap [#_"PersistentHashMap" this]
-        (TransientHashMap'new this)
+    (extend-type PersistentHashMap IObj
+        (#_"PersistentHashMap" IObj'''withMeta [#_"PersistentHashMap" this, #_"IPersistentMap" meta]
+            (PersistentHashMap'new meta, (:count this), (:root this), (:hasNull this), (:nullValue this))
+        )
     )
 
-    #_override
-    (defn #_"IPersistentMap" IMeta'''meta--PersistentHashMap [#_"PersistentHashMap" this]
-        (:_meta this)
+    (extend-type PersistentHashMap IEditableCollection
+        (#_"TransientHashMap" IEditableCollection'''asTransient [#_"PersistentHashMap" this]
+            (TransientHashMap'new this)
+        )
+    )
+
+    (extend-type PersistentHashMap IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"PersistentHashMap" this]
+            (:_meta this)
+        )
     )
 )
 )
@@ -15902,9 +15417,10 @@
 
     (declare PersistentHashSet'new)
 
-    #_override
-    (defn #_"IPersistentCollection" ITransientCollection'''persistent--TransientHashSet [#_"TransientHashSet" this]
-        (PersistentHashSet'new nil, (persistent! (:impl this)))
+    (extend-type TransientHashSet ITransientCollection
+        (#_"PersistentHashSet" ITransientCollection'''persistent [#_"TransientHashSet" this]
+            (PersistentHashSet'new nil, (persistent! (:impl this)))
+        )
     )
 )
 
@@ -15961,40 +15477,44 @@
         )
     )
 
-    #_override
-    (defn #_"IPersistentSet" IPersistentSet'''disj--PersistentHashSet [#_"PersistentHashSet" this, #_"Object" key]
-        (if (contains? this key)
-            (PersistentHashSet'new (meta this), (dissoc (:impl this) key))
-            this
+    (extend-type PersistentHashSet IPersistentSet
+        (#_"IPersistentSet" IPersistentSet'''disj [#_"PersistentHashSet" this, #_"Object" key]
+            (if (contains? this key)
+                (PersistentHashSet'new (meta this), (dissoc (:impl this) key))
+                this
+            )
         )
     )
 
-    #_override
-    (defn #_"IPersistentSet" IPersistentCollection'''conj--PersistentHashSet [#_"PersistentHashSet" this, #_"Object" o]
-        (if (contains? this o)
-            this
-            (PersistentHashSet'new (meta this), (assoc (:impl this) o o))
+    (extend-type PersistentHashSet IPersistentCollection
+        (#_"PersistentHashSet" IPersistentCollection'''conj [#_"PersistentHashSet" this, #_"Object" o]
+            (if (contains? this o)
+                this
+                (PersistentHashSet'new (meta this), (assoc (:impl this) o o))
+            )
+        )
+
+        (#_"PersistentHashSet" IPersistentCollection'''empty [#_"PersistentHashSet" this]
+            (with-meta PersistentHashSet'EMPTY (meta this))
         )
     )
 
-    #_override
-    (defn #_"IPersistentCollection" IPersistentCollection'''empty--PersistentHashSet [#_"PersistentHashSet" this]
-        (with-meta PersistentHashSet'EMPTY (meta this))
+    (extend-type PersistentHashSet IObj
+        (#_"PersistentHashSet" IObj'''withMeta [#_"PersistentHashSet" this, #_"IPersistentMap" meta]
+            (PersistentHashSet'new meta, (:impl this))
+        )
     )
 
-    #_override
-    (defn #_"PersistentHashSet" IObj'''withMeta--PersistentHashSet [#_"PersistentHashSet" this, #_"IPersistentMap" meta]
-        (PersistentHashSet'new meta, (:impl this))
+    (extend-type PersistentHashSet IEditableCollection
+        (#_"ITransientCollection" IEditableCollection'''asTransient [#_"PersistentHashSet" this]
+            (TransientHashSet'new (transient (:impl this)))
+        )
     )
 
-    #_override
-    (defn #_"ITransientCollection" IEditableCollection'''asTransient--PersistentHashSet [#_"PersistentHashSet" this]
-        (TransientHashSet'new (transient (:impl this)))
-    )
-
-    #_override
-    (defn #_"IPersistentMap" IMeta'''meta--PersistentHashSet [#_"PersistentHashSet" this]
-        (:_meta this)
+    (extend-type PersistentHashSet IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"PersistentHashSet" this]
+            (:_meta this)
+        )
     )
 )
 )
@@ -16041,14 +15561,16 @@
         )
     )
 
-    #_override
-    (defn #_"Primordial" IObj'''withMeta--Primordial [#_"Primordial" this, #_"IPersistentMap" meta]
-        (throw! "unsupported operation")
+    (extend-type Primordial IObj
+        (#_"Primordial" IObj'''withMeta [#_"Primordial" this, #_"IPersistentMap" meta]
+            (throw! "unsupported operation")
+        )
     )
 
-    #_override
-    (defn #_"IPersistentMap" IMeta'''meta--Primordial [#_"Primordial" this]
-        nil
+    (extend-type Primordial IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"Primordial" this]
+            nil
+        )
     )
 )
 
@@ -16081,63 +15603,62 @@
         (and (sequential? that) (nil? (seq that)))
     )
 
-    #_override
-    (defn #_"Object" ISeq'''first--EmptyList [#_"EmptyList" this]
-        nil
-    )
+    (extend-type EmptyList ISeq
+        (#_"Object" ISeq'''first [#_"EmptyList" this]
+            nil
+        )
 
-    #_override
-    (defn #_"ISeq" ISeq'''next--EmptyList [#_"EmptyList" this]
-        nil
-    )
-
-    #_override
-    (defn #_"ISeq" ISeq'''rest--EmptyList [#_"EmptyList" this]
-        this
+        (#_"ISeq" ISeq'''next [#_"EmptyList" this]
+            nil
+        )
     )
 
     (declare PersistentList'new)
 
-    #_override
-    (defn #_"PersistentList" IPersistentCollection'''conj--EmptyList [#_"EmptyList" this, #_"Object" o]
-        (PersistentList'new (meta this), o, nil, 1)
-    )
+    (extend-type EmptyList IPersistentCollection
+        (#_"PersistentList" IPersistentCollection'''conj [#_"EmptyList" this, #_"Object" o]
+            (PersistentList'new (meta this), o, nil, 1)
+        )
 
-    #_override
-    (defn #_"IPersistentCollection" IPersistentCollection'''empty--EmptyList [#_"EmptyList" this]
-        this
-    )
-
-    #_override
-    (defn #_"IPersistentMap" IMeta'''meta--EmptyList [#_"EmptyList" this]
-        (:_meta this)
-    )
-
-    #_override
-    (defn #_"EmptyList" IObj'''withMeta--EmptyList [#_"EmptyList" this, #_"IPersistentMap" meta]
-        (when-not (= meta (meta this)) => this
-            (EmptyList'new meta)
+        (#_"EmptyList" IPersistentCollection'''empty [#_"EmptyList" this]
+            this
         )
     )
 
-    #_override
-    (defn #_"Object" IPersistentStack'''peek--EmptyList [#_"EmptyList" this]
-        nil
+    (extend-type EmptyList IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"EmptyList" this]
+            (:_meta this)
+        )
     )
 
-    #_override
-    (defn #_"IPersistentList" IPersistentStack'''pop--EmptyList [#_"EmptyList" this]
-        (throw! "can't pop empty list")
+    (extend-type EmptyList IObj
+        (#_"EmptyList" IObj'''withMeta [#_"EmptyList" this, #_"IPersistentMap" meta]
+            (when-not (= meta (meta this)) => this
+                (EmptyList'new meta)
+            )
+        )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--EmptyList [#_"EmptyList" this]
-        0
+    (extend-type EmptyList IPersistentStack
+        (#_"Object" IPersistentStack'''peek [#_"EmptyList" this]
+            nil
+        )
+
+        (#_"IPersistentList" IPersistentStack'''pop [#_"EmptyList" this]
+            (throw! "can't pop empty list")
+        )
     )
 
-    #_override
-    (defn #_"ISeq" Seqable'''seq--EmptyList [#_"EmptyList" this]
-        nil
+    (extend-type EmptyList Counted
+        (#_"int" Counted'''count [#_"EmptyList" this]
+            0
+        )
+    )
+
+    (extend-type EmptyList Seqable
+        (#_"ISeq" Seqable'''seq [#_"EmptyList" this]
+            nil
+        )
     )
 )
 
@@ -16167,63 +15688,67 @@
         )
     )
 
-    #_override
-    (defn #_"Object" ISeq'''first--PersistentList [#_"PersistentList" this]
-        (:_first this)
-    )
-
-    #_override
-    (defn #_"ISeq" ISeq'''next--PersistentList [#_"PersistentList" this]
-        (when-not (= (:_count this) 1)
-            (:_rest this)
+    (extend-type PersistentList ISeq
+        (#_"Object" ISeq'''first [#_"PersistentList" this]
+            (:_first this)
         )
-    )
 
-    #_override
-    (defn #_"Object" IPersistentStack'''peek--PersistentList [#_"PersistentList" this]
-        (first this)
-    )
-
-    #_override
-    (defn #_"IPersistentList" IPersistentStack'''pop--PersistentList [#_"PersistentList" this]
-        (or (:_rest this) (with-meta PersistentList'EMPTY (:_meta this)))
-    )
-
-    #_override
-    (defn #_"int" Counted'''count--PersistentList [#_"PersistentList" this]
-        (:_count this)
-    )
-
-    #_override
-    (defn #_"PersistentList" IPersistentCollection'''conj--PersistentList [#_"PersistentList" this, #_"Object" o]
-        (PersistentList'new (meta this), o, this, (inc (:_count this)))
-    )
-
-    #_override
-    (defn #_"IPersistentCollection" IPersistentCollection'''empty--PersistentList [#_"PersistentList" this]
-        (with-meta PersistentList'EMPTY (meta this))
-    )
-
-    #_override
-    (defn #_"PersistentList" IObj'''withMeta--PersistentList [#_"PersistentList" this, #_"IPersistentMap" meta]
-        (when-not (= meta (:_meta this)) => this
-            (PersistentList'new meta, (:_first this), (:_rest this), (:_count this))
-        )
-    )
-
-    #_override
-    (defn #_"Object" IReduce'''reduce--PersistentList [#_"PersistentList" this, #_"IFn" f]
-        (loop-when [#_"Object" r (first this) #_"ISeq" s (next this)] (some? s) => r
-            (let [r (.invoke f, r, (first s))]
-                (if (reduced? r) (deref r) (recur r (next s)))
+        (#_"ISeq" ISeq'''next [#_"PersistentList" this]
+            (when-not (= (:_count this) 1)
+                (:_rest this)
             )
         )
     )
 
-    #_override
-    (defn #_"Object" IReduceInit'''reduce--PersistentList [#_"PersistentList" this, #_"IFn" f, #_"Object" r]
-        (loop-when [r (.invoke f, r, (first this)) #_"ISeq" s (next this)] (some? s) => (if (reduced? r) (deref r) r)
-            (if (reduced? r) (deref r) (recur (.invoke f, r, (first s)) (next s)))
+    (extend-type PersistentList IPersistentStack
+        (#_"Object" IPersistentStack'''peek [#_"PersistentList" this]
+            (first this)
+        )
+
+        (#_"IPersistentList" IPersistentStack'''pop [#_"PersistentList" this]
+            (or (:_rest this) (with-meta PersistentList'EMPTY (:_meta this)))
+        )
+    )
+
+    (extend-type PersistentList Counted
+        (#_"int" Counted'''count [#_"PersistentList" this]
+            (:_count this)
+        )
+    )
+
+    (extend-type PersistentList IPersistentCollection
+        (#_"PersistentList" IPersistentCollection'''conj [#_"PersistentList" this, #_"Object" o]
+            (PersistentList'new (meta this), o, this, (inc (:_count this)))
+        )
+
+        (#_"PersistentList" IPersistentCollection'''empty [#_"PersistentList" this]
+            (with-meta PersistentList'EMPTY (meta this))
+        )
+    )
+
+    (extend-type PersistentList IObj
+        (#_"PersistentList" IObj'''withMeta [#_"PersistentList" this, #_"IPersistentMap" meta]
+            (when-not (= meta (:_meta this)) => this
+                (PersistentList'new meta, (:_first this), (:_rest this), (:_count this))
+            )
+        )
+    )
+
+    (extend-type PersistentList IReduce
+        (#_"Object" IReduce'''reduce [#_"PersistentList" this, #_"IFn" f]
+            (loop-when [#_"Object" r (first this) #_"ISeq" s (next this)] (some? s) => r
+                (let [r (f r (first s))]
+                    (if (reduced? r) (deref r) (recur r (next s)))
+                )
+            )
+        )
+    )
+
+    (extend-type PersistentList IReduceInit
+        (#_"Object" IReduceInit'''reduce [#_"PersistentList" this, #_"IFn" f, #_"Object" r]
+            (loop-when [r (f r (first this)) #_"ISeq" s (next this)] (some? s) => (if (reduced? r) (deref r) r)
+                (if (reduced? r) (deref r) (recur (f r (first s)) (next s)))
+            )
         )
     )
 )
@@ -16244,29 +15769,31 @@
         )
     )
 
-    #_override
-    (defn #_"Object" ISeq'''first--QSeq [#_"QSeq" this]
-        (first (:f this))
-    )
+    (extend-type QSeq ISeq
+        (#_"Object" ISeq'''first [#_"QSeq" this]
+            (first (:f this))
+        )
 
-    #_override
-    (defn #_"ISeq" ISeq'''next--QSeq [#_"QSeq" this]
-        (let [#_"ISeq" f (next (:f this)) #_"ISeq" r (:rseq this)]
-            (cond
-                (some? f) (QSeq'new f, r)
-                (some? r) (QSeq'new r, nil)
+        (#_"ISeq" ISeq'''next [#_"QSeq" this]
+            (let [#_"ISeq" f (next (:f this)) #_"ISeq" r (:rseq this)]
+                (cond
+                    (some? f) (QSeq'new f, r)
+                    (some? r) (QSeq'new r, nil)
+                )
             )
         )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--QSeq [#_"QSeq" this]
-        (+ (count (:f this)) (count (:rseq this)))
+    (extend-type QSeq Counted
+        (#_"int" Counted'''count [#_"QSeq" this]
+            (+ (count (:f this)) (count (:rseq this)))
+        )
     )
 
-    #_override
-    (defn #_"QSeq" IObj'''withMeta--QSeq [#_"QSeq" this, #_"IPersistentMap" meta]
-        (QSeq'new meta, (:f this), (:rseq this))
+    (extend-type QSeq IObj
+        (#_"QSeq" IObj'''withMeta [#_"QSeq" this, #_"IPersistentMap" meta]
+            (QSeq'new meta, (:f this), (:rseq this))
+        )
     )
 )
 
@@ -16314,67 +15841,72 @@
         )
     )
 
-    #_override
-    (defn #_"int" IHashEq'''hasheq--PersistentQueue [#_"PersistentQueue" this]
-        (let-when [#_"int" cached (:_hasheq this)] (zero? cached) => cached
-            (§ set! (:_hasheq this) (Murmur3'hashOrdered this))
-        )
-    )
-
-    #_override
-    (defn #_"Object" IPersistentStack'''peek--PersistentQueue [#_"PersistentQueue" this]
-        (first (:f this))
-    )
-
-    #_override
-    (defn #_"PersistentQueue" IPersistentStack'''pop--PersistentQueue [#_"PersistentQueue" this]
-        (when (some? (:f this)) => this ;; hmmm... pop of empty queue -> empty queue?
-            (let [#_"ISeq" f (next (:f this)) #_"PersistentVector" r (:r this)
-                  [f r]
-                    (when (nil? f) => [f r]
-                        [(seq r) nil]
-                    )]
-                (PersistentQueue'new (meta this), (dec (:cnt this)), f, r)
+    (extend-type PersistentQueue IHashEq
+        (#_"int" IHashEq'''hasheq [#_"PersistentQueue" this]
+            (let-when [#_"int" cached (:_hasheq this)] (zero? cached) => cached
+                (§ set! (:_hasheq this) (Murmur3'hashOrdered this))
             )
         )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--PersistentQueue [#_"PersistentQueue" this]
-        (:cnt this)
-    )
+    (extend-type PersistentQueue IPersistentStack
+        (#_"Object" IPersistentStack'''peek [#_"PersistentQueue" this]
+            (first (:f this))
+        )
 
-    #_override
-    (defn #_"ISeq" Seqable'''seq--PersistentQueue [#_"PersistentQueue" this]
-        (when (some? (:f this))
-            (QSeq'new (:f this), (seq (:r this)))
+        (#_"PersistentQueue" IPersistentStack'''pop [#_"PersistentQueue" this]
+            (when (some? (:f this)) => this ;; hmmm... pop of empty queue -> empty queue?
+                (let [#_"ISeq" f (next (:f this)) #_"PersistentVector" r (:r this)
+                      [f r]
+                        (when (nil? f) => [f r]
+                            [(seq r) nil]
+                        )]
+                    (PersistentQueue'new (meta this), (dec (:cnt this)), f, r)
+                )
+            )
         )
     )
 
-    #_override
-    (defn #_"PersistentQueue" IPersistentCollection'''conj--PersistentQueue [#_"PersistentQueue" this, #_"Object" o]
-        (let [[#_"ISeq" f #_"PersistentVector" r]
-                (if (nil? (:f this)) ;; empty
-                    [(list o) nil]
-                    [(:f this) (conj (or (:r this) []) o)]
-                )]
-            (PersistentQueue'new (meta this), (inc (:cnt this)), f, r)
+    (extend-type PersistentQueue Counted
+        (#_"int" Counted'''count [#_"PersistentQueue" this]
+            (:cnt this)
         )
     )
 
-    #_override
-    (defn #_"IPersistentCollection" IPersistentCollection'''empty--PersistentQueue [#_"PersistentQueue" this]
-        (with-meta PersistentQueue'EMPTY (meta this))
+    (extend-type PersistentQueue Seqable
+        (#_"ISeq" Seqable'''seq [#_"PersistentQueue" this]
+            (when (some? (:f this))
+                (QSeq'new (:f this), (seq (:r this)))
+            )
+        )
     )
 
-    #_override
-    (defn #_"IPersistentMap" IMeta'''meta--PersistentQueue [#_"PersistentQueue" this]
-        (:_meta this)
+    (extend-type PersistentQueue IPersistentCollection
+        (#_"PersistentQueue" IPersistentCollection'''conj [#_"PersistentQueue" this, #_"Object" o]
+            (let [[#_"ISeq" f #_"PersistentVector" r]
+                    (if (nil? (:f this)) ;; empty
+                        [(list o) nil]
+                        [(:f this) (conj (or (:r this) []) o)]
+                    )]
+                (PersistentQueue'new (meta this), (inc (:cnt this)), f, r)
+            )
+        )
+
+        (#_"PersistentQueue" IPersistentCollection'''empty [#_"PersistentQueue" this]
+            (with-meta PersistentQueue'EMPTY (meta this))
+        )
     )
 
-    #_override
-    (defn #_"PersistentQueue" IObj'''withMeta--PersistentQueue [#_"PersistentQueue" this, #_"IPersistentMap" meta]
-        (PersistentQueue'new meta, (:cnt this), (:f this), (:r this))
+    (extend-type PersistentQueue IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"PersistentQueue" this]
+            (:_meta this)
+        )
+    )
+
+    (extend-type PersistentQueue IObj
+        (#_"PersistentQueue" IObj'''withMeta [#_"PersistentQueue" this, #_"IPersistentMap" meta]
+            (PersistentQueue'new meta, (:cnt this), (:f this), (:r this))
+        )
     )
 )
 )
@@ -16390,14 +15922,14 @@
         )
     )
 
-    #_override
-    (defn #_"Object" IMapEntry'''key--TNode [#_"TNode" this]
-        (:key this)
-    )
+    (extend-type TNode IMapEntry
+        (#_"Object" IMapEntry'''key [#_"TNode" this]
+            (:key this)
+        )
 
-    #_override
-    (defn #_"Object" IMapEntry'''val--TNode [#_"TNode" this]
-        nil
+        (#_"Object" IMapEntry'''val [#_"TNode" this]
+            nil
+        )
     )
 
     #_override
@@ -16414,29 +15946,30 @@
 
     #_override
     (defn #_"TNode" TNode'''balanceLeft--TNode [#_"TNode" this, #_"TNode" parent]
-        (PersistentTreeMap'black (:key parent), (.val parent), this, (.right parent))
+        (PersistentTreeMap'black (:key parent), (IMapEntry'''val parent), this, (.right parent))
     )
 
     #_override
     (defn #_"TNode" TNode'''balanceRight--TNode [#_"TNode" this, #_"TNode" parent]
-        (PersistentTreeMap'black (:key parent), (.val parent), (.left parent), this)
+        (PersistentTreeMap'black (:key parent), (IMapEntry'''val parent), (.left parent), this)
     )
 
-    #_override
-    (defn #_"Object" IKVReduce'''kvreduce--TNode [#_"TNode" this, #_"IFn" f, #_"Object" r]
-        (or
-            (when (some? (.left this))
-                (let [r (.kvreduce (.left this), f, r)]
-                    (when (reduced? r)
-                        r
+    (extend-type TNode IKVReduce
+        (#_"Object" IKVReduce'''kvreduce [#_"TNode" this, #_"IFn" f, #_"Object" r]
+            (or
+                (when (some? (.left this))
+                    (let [r (INode'''kvreduce (.left this), f, r)]
+                        (when (reduced? r)
+                            r
+                        )
                     )
                 )
-            )
-            (let [r (.invoke f, r, (.key this), (.val this))]
-                (cond
-                    (reduced? r)          r
-                    (some? (.right this)) (.kvreduce (.right this), f, r)
-                    :else                 r
+                (let [r (f r (key this) (val this))]
+                    (cond
+                        (reduced? r)          r
+                        (some? (.right this)) (INode'''kvreduce (.right this), f, r)
+                        :else                 r
+                    )
                 )
             )
         )
@@ -16462,14 +15995,14 @@
 
     #_override
     (defn #_"TNode" TNode'''removeLeft--Black [#_"Black" this, #_"TNode" del]
-        (PersistentTreeMap'balanceLeftDel (:key this), (.val this), del, (.right this))
+        (PersistentTreeMap'balanceLeftDel (:key this), (IMapEntry'''val this), del, (.right this))
     )
 
     (declare PersistentTreeMap'balanceRightDel)
 
     #_override
     (defn #_"TNode" TNode'''removeRight--Black [#_"Black" this, #_"TNode" del]
-        (PersistentTreeMap'balanceRightDel (:key this), (.val this), (.left this), del)
+        (PersistentTreeMap'balanceRightDel (:key this), (IMapEntry'''val this), (.left this), del)
     )
 
     #_override
@@ -16499,9 +16032,10 @@
         )
     )
 
-    #_override
-    (defn #_"Object" IMapEntry'''val--BlackVal [#_"BlackVal" this]
-        (:val this)
+    (extend-type BlackVal IMapEntry
+        (#_"Object" IMapEntry'''val [#_"BlackVal" this]
+            (:val this)
+        )
     )
 
     (declare RedVal'new)
@@ -16549,9 +16083,10 @@
         )
     )
 
-    #_override
-    (defn #_"Object" IMapEntry'''val--BlackBranchVal [#_"BlackBranchVal" this]
-        (:val this)
+    (extend-type BlackBranchVal IMapEntry
+        (#_"Object" IMapEntry'''val [#_"BlackBranchVal" this]
+            (:val this)
+        )
     )
 
     (declare RedBranchVal'new)
@@ -16571,22 +16106,22 @@
 
     #_override
     (defn #_"TNode" TNode'''addLeft--Red [#_"Red" this, #_"TNode" ins]
-        (PersistentTreeMap'red (:key this), (.val this), ins, (.right this))
+        (PersistentTreeMap'red (:key this), (IMapEntry'''val this), ins, (.right this))
     )
 
     #_override
     (defn #_"TNode" TNode'''addRight--Red [#_"Red" this, #_"TNode" ins]
-        (PersistentTreeMap'red (:key this), (.val this), (.left this), ins)
+        (PersistentTreeMap'red (:key this), (IMapEntry'''val this), (.left this), ins)
     )
 
     #_override
     (defn #_"TNode" TNode'''removeLeft--Red [#_"Red" this, #_"TNode" del]
-        (PersistentTreeMap'red (:key this), (.val this), del, (.right this))
+        (PersistentTreeMap'red (:key this), (IMapEntry'''val this), del, (.right this))
     )
 
     #_override
     (defn #_"TNode" TNode'''removeRight--Red [#_"Red" this, #_"TNode" del]
-        (PersistentTreeMap'red (:key this), (.val this), (.left this), del)
+        (PersistentTreeMap'red (:key this), (IMapEntry'''val this), (.left this), del)
     )
 
     #_override
@@ -16614,9 +16149,10 @@
         )
     )
 
-    #_override
-    (defn #_"Object" IMapEntry'''val--RedVal [#_"RedVal" this]
-        (:val this)
+    (extend-type RedVal IMapEntry
+        (#_"Object" IMapEntry'''val [#_"RedVal" this]
+            (:val this)
+        )
     )
 
     #_override
@@ -16649,11 +16185,11 @@
     (defn #_"TNode" TNode'''balanceLeft--RedBranch [#_"RedBranch" this, #_"TNode" parent]
         (cond (instance? Red (:left this))
             (do
-                (PersistentTreeMap'red (:key this), (.val this), (.blacken (:left this)), (PersistentTreeMap'black (:key parent), (.val parent), (:right this), (.right parent)))
+                (PersistentTreeMap'red (:key this), (IMapEntry'''val this), (.blacken (:left this)), (PersistentTreeMap'black (:key parent), (IMapEntry'''val parent), (:right this), (.right parent)))
             )
             (instance? Red (:right this))
             (do
-                (PersistentTreeMap'red (:key (:right this)), (.val (:right this)), (PersistentTreeMap'black (:key this), (.val this), (:left this), (.left (:right this))), (PersistentTreeMap'black (:key parent), (.val parent), (.right (:right this)), (.right parent)))
+                (PersistentTreeMap'red (:key (:right this)), (IMapEntry'''val (:right this)), (PersistentTreeMap'black (:key this), (IMapEntry'''val this), (:left this), (.left (:right this))), (PersistentTreeMap'black (:key parent), (IMapEntry'''val parent), (.right (:right this)), (.right parent)))
             )
             :else
             (do
@@ -16666,11 +16202,11 @@
     (defn #_"TNode" TNode'''balanceRight--RedBranch [#_"RedBranch" this, #_"TNode" parent]
         (cond (instance? Red (:right this))
             (do
-                (PersistentTreeMap'red (:key this), (.val this), (PersistentTreeMap'black (:key parent), (.val parent), (.left parent), (:left this)), (.blacken (:right this)))
+                (PersistentTreeMap'red (:key this), (IMapEntry'''val this), (PersistentTreeMap'black (:key parent), (IMapEntry'''val parent), (.left parent), (:left this)), (.blacken (:right this)))
             )
             (instance? Red (:left this))
             (do
-                (PersistentTreeMap'red (:key (:left this)), (.val (:left this)), (PersistentTreeMap'black (:key parent), (.val parent), (.left parent), (.left (:left this))), (PersistentTreeMap'black (:key this), (.val this), (.right (:left this)), (:right this)))
+                (PersistentTreeMap'red (:key (:left this)), (IMapEntry'''val (:left this)), (PersistentTreeMap'black (:key parent), (IMapEntry'''val parent), (.left parent), (.left (:left this))), (PersistentTreeMap'black (:key this), (IMapEntry'''val this), (.right (:left this)), (:right this)))
             )
             :else
             (do
@@ -16694,9 +16230,10 @@
         )
     )
 
-    #_override
-    (defn #_"Object" IMapEntry'''val--RedBranchVal [#_"RedBranchVal" this]
-        (:val this)
+    (extend-type RedBranchVal IMapEntry
+        (#_"Object" IMapEntry'''val [#_"RedBranchVal" this]
+            (:val this)
+        )
     )
 
     #_override
@@ -16730,30 +16267,32 @@
         (TSeq'new (TSeq'push t, nil, asc), asc, cnt)
     )
 
-    #_override
-    (defn #_"Object" ISeq'''first--TSeq [#_"TSeq" this]
-        (first (:stack this))
-    )
+    (extend-type TSeq ISeq
+        (#_"Object" ISeq'''first [#_"TSeq" this]
+            (first (:stack this))
+        )
 
-    #_override
-    (defn #_"ISeq" ISeq'''next--TSeq [#_"TSeq" this]
-        (let [#_"TNode" t (cast TNode (first (:stack this))) #_"boolean" asc? (:asc this)]
-            (when-let [#_"ISeq" stack (TSeq'push (if asc? (.right t) (.left t)), (next (:stack this)), asc?)]
-                (TSeq'new stack, asc?, (dec (:cnt this)))
+        (#_"ISeq" ISeq'''next [#_"TSeq" this]
+            (let [#_"TNode" t (cast TNode (first (:stack this))) #_"boolean" asc? (:asc this)]
+                (when-let [#_"ISeq" stack (TSeq'push (if asc? (.right t) (.left t)), (next (:stack this)), asc?)]
+                    (TSeq'new stack, asc?, (dec (:cnt this)))
+                )
             )
         )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--TSeq [#_"TSeq" this]
-        (when (neg? (:cnt this)) => (:cnt this)
-            (.count (§ super ))
+    (extend-type TSeq Counted
+        (#_"int" Counted'''count [#_"TSeq" this]
+            (when (neg? (:cnt this)) => (:cnt this)
+                (Counted'''count (§ super ))
+            )
         )
     )
 
-    #_override
-    (defn #_"TSeq" IObj'''withMeta--TSeq [#_"TSeq" this, #_"IPersistentMap" meta]
-        (TSeq'new meta, (:stack this), (:asc this), (:cnt this))
+    (extend-type TSeq IObj
+        (#_"TSeq" IObj'''withMeta [#_"TSeq" this, #_"IPersistentMap" meta]
+            (TSeq'new meta, (:stack this), (:asc this), (:cnt this))
+        )
     )
 )
 
@@ -16784,9 +16323,10 @@
 
     (def #_"PersistentTreeMap" PersistentTreeMap'EMPTY (PersistentTreeMap'new))
 
-    #_override
-    (defn #_"PersistentTreeMap" IObj'''withMeta--PersistentTreeMap [#_"PersistentTreeMap" this, #_"IPersistentMap" meta]
-        (PersistentTreeMap'new meta, (:comp this), (:tree this), (:_count this))
+    (extend-type PersistentTreeMap IObj
+        (#_"PersistentTreeMap" IObj'''withMeta [#_"PersistentTreeMap" this, #_"IPersistentMap" meta]
+            (PersistentTreeMap'new meta, (:comp this), (:tree this), (:_count this))
+        )
     )
 
     (defn #_"PersistentTreeMap" PersistentTreeMap'create
@@ -16806,33 +16346,38 @@
         )
     )
 
-    #_override
-    (defn #_"boolean" Associative'''containsKey--PersistentTreeMap [#_"PersistentTreeMap" this, #_"Object" key]
-        (some? (find this key))
-    )
-
-    #_override
-    (defn #_"ISeq" Seqable'''seq--PersistentTreeMap [#_"PersistentTreeMap" this]
-        (when (pos? (:_count this))
-            (TSeq'create (:tree this), true, (:_count this))
+    (extend-type PersistentTreeMap Associative
+        (#_"boolean" Associative'''containsKey [#_"PersistentTreeMap" this, #_"Object" key]
+            (some? (find this key))
         )
     )
 
-    #_override
-    (defn #_"IPersistentCollection" IPersistentCollection'''empty--PersistentTreeMap [#_"PersistentTreeMap" this]
-        (PersistentTreeMap'new (meta this), (:comp this))
-    )
-
-    #_override
-    (defn #_"ISeq" Reversible'''rseq--PersistentTreeMap [#_"PersistentTreeMap" this]
-        (when (pos? (:_count this))
-            (TSeq'create (:tree this), false, (:_count this))
+    (extend-type PersistentTreeMap Seqable
+        (#_"ISeq" Seqable'''seq [#_"PersistentTreeMap" this]
+            (when (pos? (:_count this))
+                (TSeq'create (:tree this), true, (:_count this))
+            )
         )
     )
 
-    #_override
-    (defn #_"Comparator" Sorted'''comparator--PersistentTreeMap [#_"PersistentTreeMap" this]
-        (:comp this)
+    (extend-type PersistentTreeMap IPersistentCollection
+        (#_"IPersistentCollection" IPersistentCollection'''empty [#_"PersistentTreeMap" this]
+            (PersistentTreeMap'new (meta this), (:comp this))
+        )
+    )
+
+    (extend-type PersistentTreeMap Reversible
+        (#_"ISeq" Reversible'''rseq [#_"PersistentTreeMap" this]
+            (when (pos? (:_count this))
+                (TSeq'create (:tree this), false, (:_count this))
+            )
+        )
+    )
+
+    (extend-type PersistentTreeMap Sorted
+        (#_"Comparator" Sorted'''comparator [#_"PersistentTreeMap" this]
+            (:comp this)
+        )
     )
 
     #_method
@@ -16840,37 +16385,37 @@
         (.compare (:comp this), k1, k2)
     )
 
-    #_override
-    (defn #_"Object" Sorted'''entryKey--PersistentTreeMap [#_"PersistentTreeMap" this, #_"Object" entry]
-        (.key (cast IMapEntry entry))
-    )
-
-    #_override
-    (defn #_"ISeq" Sorted'''seq--PersistentTreeMap [#_"PersistentTreeMap" this, #_"boolean" ascending?]
-        (when (pos? (:_count this))
-            (TSeq'create (:tree this), ascending?, (:_count this))
+    (extend-type PersistentTreeMap Sorted
+        (#_"Object" Sorted'''entryKey [#_"PersistentTreeMap" this, #_"Object" entry]
+            (key entry)
         )
-    )
 
-    #_override
-    (defn #_"ISeq" Sorted'''seqFrom--PersistentTreeMap [#_"PersistentTreeMap" this, #_"Object" key, #_"boolean" ascending?]
-        (when (pos? (:_count this))
-            (loop-when [#_"ISeq" s nil #_"TNode" t (:tree this)] (some? t) => (when (some? s) (TSeq'new s, ascending?))
-                (let [#_"int" cmp (PersistentTreeMap''doCompare this, key, (:key t))]
-                    (cond
-                        (zero? cmp) (TSeq'new (cons t s), ascending?)
-                        ascending?  (if (neg? cmp) (recur (cons t s) (.left t)) (recur s (.right t)))
-                        :else       (if (pos? cmp) (recur (cons t s) (.right t)) (recur s (.left t)))
+        (#_"ISeq" Sorted'''seq [#_"PersistentTreeMap" this, #_"boolean" ascending?]
+            (when (pos? (:_count this))
+                (TSeq'create (:tree this), ascending?, (:_count this))
+            )
+        )
+
+        (#_"ISeq" Sorted'''seqFrom [#_"PersistentTreeMap" this, #_"Object" key, #_"boolean" ascending?]
+            (when (pos? (:_count this))
+                (loop-when [#_"ISeq" s nil #_"TNode" t (:tree this)] (some? t) => (when (some? s) (TSeq'new s, ascending?))
+                    (let [#_"int" cmp (PersistentTreeMap''doCompare this, key, (:key t))]
+                        (cond
+                            (zero? cmp) (TSeq'new (cons t s), ascending?)
+                            ascending?  (if (neg? cmp) (recur (cons t s) (.left t)) (recur s (.right t)))
+                            :else       (if (pos? cmp) (recur (cons t s) (.right t)) (recur s (.left t)))
+                        )
                     )
                 )
             )
         )
     )
 
-    #_override
-    (defn #_"Object" IKVReduce'''kvreduce--PersistentTreeMap [#_"PersistentTreeMap" this, #_"IFn" f, #_"Object" r]
-        (let [r (if (some? (:tree this)) (.kvreduce (:tree this), f, r) r)]
-            (if (reduced? r) (deref r) r)
+    (extend-type PersistentTreeMap IKVReduce
+        (#_"Object" IKVReduce'''kvreduce [#_"PersistentTreeMap" this, #_"IFn" f, #_"Object" r]
+            (let [r (if (some? (:tree this)) (INode'''kvreduce (:tree this), f, r) r)]
+                (if (reduced? r) (deref r) r)
+            )
         )
     )
 
@@ -16914,15 +16459,14 @@
         (PersistentTreeMap''depth-2 this, (:tree this))
     )
 
-    #_override
-    (defn #_"Object" ILookup'''valAt-2--PersistentTreeMap [#_"PersistentTreeMap" this, #_"Object" key]
-        (.valAt this, key, nil)
-    )
-
-    #_override
-    (defn #_"Object" ILookup'''valAt-3--PersistentTreeMap [#_"PersistentTreeMap" this, #_"Object" key, #_"Object" notFound]
-        (let [#_"TNode" n (find this key)]
-            (if (some? n) (.val n) notFound)
+    (extend-type PersistentTreeMap ILookup
+        (#_"Object" ILookup'''valAt
+            ([#_"PersistentTreeMap" this, #_"Object" key] (ILookup'''valAt this, key, nil))
+            ([#_"PersistentTreeMap" this, #_"Object" key, #_"Object" notFound]
+                (let [#_"TNode" n (find this key)]
+                    (if (some? n) (IMapEntry'''val n) notFound)
+                )
+            )
         )
     )
 
@@ -16931,19 +16475,21 @@
         (:_count this)
     )
 
-    #_override
-    (defn #_"int" Counted'''count--PersistentTreeMap [#_"PersistentTreeMap" this]
-        (:_count this)
+    (extend-type PersistentTreeMap Counted
+        (#_"int" Counted'''count [#_"PersistentTreeMap" this]
+            (:_count this)
+        )
     )
 
-    #_override
-    (defn #_"TNode" Associative'''entryAt--PersistentTreeMap [#_"PersistentTreeMap" this, #_"Object" key]
-        (loop-when [#_"TNode" t (:tree this)] (some? t) => t
-            (let [#_"int" cmp (PersistentTreeMap''doCompare this, key, (:key t))]
-                (cond
-                    (neg? cmp) (recur (.left t))
-                    (pos? cmp) (recur (.right t))
-                    :else      t
+    (extend-type PersistentTreeMap Associative
+        (#_"TNode" Associative'''entryAt [#_"PersistentTreeMap" this, #_"Object" key]
+            (loop-when [#_"TNode" t (:tree this)] (some? t) => t
+                (let [#_"int" cmp (PersistentTreeMap''doCompare this, key, (:key t))]
+                    (cond
+                        (neg? cmp) (recur (.left t))
+                        (pos? cmp) (recur (.right t))
+                        :else      t
+                    )
                 )
             )
         )
@@ -16952,9 +16498,9 @@
     (defn #_"TNode" PersistentTreeMap'rightBalance [#_"Object" key, #_"Object" val, #_"TNode" left, #_"TNode" ins]
         (cond
             (and (instance? Red ins) (instance? Red (.right ins)))
-                (PersistentTreeMap'red (:key ins), (.val ins), (PersistentTreeMap'black key, val, left, (.left ins)), (.blacken (.right ins)))
+                (PersistentTreeMap'red (:key ins), (IMapEntry'''val ins), (PersistentTreeMap'black key, val, left, (.left ins)), (.blacken (.right ins)))
             (and (instance? Red ins) (instance? Red (.left ins)))
-                (PersistentTreeMap'red (:key (.left ins)), (.val (.left ins)), (PersistentTreeMap'black key, val, left, (.left (.left ins))), (PersistentTreeMap'black (:key ins), (.val ins), (.right (.left ins)), (.right ins)))
+                (PersistentTreeMap'red (:key (.left ins)), (IMapEntry'''val (.left ins)), (PersistentTreeMap'black key, val, left, (.left (.left ins))), (PersistentTreeMap'black (:key ins), (IMapEntry'''val ins), (.right (.left ins)), (.right ins)))
             :else
                 (PersistentTreeMap'black key, val, left, ins)
         )
@@ -16967,7 +16513,7 @@
             (instance? Black right)
                 (PersistentTreeMap'rightBalance key, val, del, (.redden right))
             (and (instance? Red right) (instance? Black (.left right)))
-                (PersistentTreeMap'red (:key (.left right)), (.val (.left right)), (PersistentTreeMap'black key, val, del, (.left (.left right))), (PersistentTreeMap'rightBalance (:key right), (.val right), (.right (.left right)), (.redden (.right right))))
+                (PersistentTreeMap'red (:key (.left right)), (IMapEntry'''val (.left right)), (PersistentTreeMap'black key, val, del, (.left (.left right))), (PersistentTreeMap'rightBalance (:key right), (IMapEntry'''val right), (.right (.left right)), (.redden (.right right))))
             :else
                 (throw! "invariant violation")
         )
@@ -16976,9 +16522,9 @@
     (defn #_"TNode" PersistentTreeMap'leftBalance [#_"Object" key, #_"Object" val, #_"TNode" ins, #_"TNode" right]
         (cond
             (and (instance? Red ins) (instance? Red (.left ins)))
-                (PersistentTreeMap'red (:key ins), (.val ins), (.blacken (.left ins)), (PersistentTreeMap'black key, val, (.right ins), right))
+                (PersistentTreeMap'red (:key ins), (IMapEntry'''val ins), (.blacken (.left ins)), (PersistentTreeMap'black key, val, (.right ins), right))
             (and (instance? Red ins) (instance? Red (.right ins)))
-                (PersistentTreeMap'red (:key (.right ins)), (.val (.right ins)), (PersistentTreeMap'black (:key ins), (.val ins), (.left ins), (.left (.right ins))), (PersistentTreeMap'black key, val, (.right (.right ins)), right))
+                (PersistentTreeMap'red (:key (.right ins)), (IMapEntry'''val (.right ins)), (PersistentTreeMap'black (:key ins), (IMapEntry'''val ins), (.left ins), (.left (.right ins))), (PersistentTreeMap'black key, val, (.right (.right ins)), right))
             :else
                 (PersistentTreeMap'black key, val, ins, right)
         )
@@ -16991,7 +16537,7 @@
             (instance? Black left)
                 (PersistentTreeMap'leftBalance key, val, (.redden left), del)
             (and (instance? Red left) (instance? Black (.right left)))
-                (PersistentTreeMap'red (:key (.right left)), (.val (.right left)), (PersistentTreeMap'leftBalance (:key left), (.val left), (.redden (.left left)), (.left (.right left))), (PersistentTreeMap'black key, val, (.right (.right left)), del))
+                (PersistentTreeMap'red (:key (.right left)), (IMapEntry'''val (.right left)), (PersistentTreeMap'leftBalance (:key left), (IMapEntry'''val left), (.redden (.left left)), (.left (.right left))), (PersistentTreeMap'black key, val, (.right (.right left)), del))
             :else
                 (throw! "invariant violation")
         )
@@ -17032,19 +16578,19 @@
                 (if (instance? Red right)
                     (let [#_"TNode" app (PersistentTreeMap'append (.right left), (.left right))]
                         (if (instance? Red app)
-                            (PersistentTreeMap'red (:key app), (.val app), (PersistentTreeMap'red (:key left), (.val left), (.left left), (.left app)), (PersistentTreeMap'red (:key right), (.val right), (.right app), (.right right)))
-                            (PersistentTreeMap'red (:key left), (.val left), (.left left), (PersistentTreeMap'red (:key right), (.val right), app, (.right right)))
+                            (PersistentTreeMap'red (:key app), (IMapEntry'''val app), (PersistentTreeMap'red (:key left), (IMapEntry'''val left), (.left left), (.left app)), (PersistentTreeMap'red (:key right), (IMapEntry'''val right), (.right app), (.right right)))
+                            (PersistentTreeMap'red (:key left), (IMapEntry'''val left), (.left left), (PersistentTreeMap'red (:key right), (IMapEntry'''val right), app, (.right right)))
                         )
                     )
-                    (PersistentTreeMap'red (:key left), (.val left), (.left left), (PersistentTreeMap'append (.right left), right))
+                    (PersistentTreeMap'red (:key left), (IMapEntry'''val left), (.left left), (PersistentTreeMap'append (.right left), right))
                 )
             (instance? Red right)
-                (PersistentTreeMap'red (:key right), (.val right), (PersistentTreeMap'append left, (.left right)), (.right right))
+                (PersistentTreeMap'red (:key right), (IMapEntry'''val right), (PersistentTreeMap'append left, (.left right)), (.right right))
             :else ;; black/black
                 (let [#_"TNode" app (PersistentTreeMap'append (.right left), (.left right))]
                     (if (instance? Red app)
-                        (PersistentTreeMap'red (:key app), (.val app), (PersistentTreeMap'black (:key left), (.val left), (.left left), (.left app)), (PersistentTreeMap'black (:key right), (.val right), (.right app), (.right right)))
-                        (PersistentTreeMap'balanceLeftDel (:key left), (.val left), (.left left), (PersistentTreeMap'black (:key right), (.val right), app, (.right right)))
+                        (PersistentTreeMap'red (:key app), (IMapEntry'''val app), (PersistentTreeMap'black (:key left), (IMapEntry'''val left), (.left left), (.left app)), (PersistentTreeMap'black (:key right), (IMapEntry'''val right), (.right app), (.right right)))
+                        (PersistentTreeMap'balanceLeftDel (:key left), (IMapEntry'''val left), (.left left), (PersistentTreeMap'black (:key right), (IMapEntry'''val right), app, (.right right)))
                     )
                 )
         )
@@ -17063,12 +16609,12 @@
                         (when (or (some? del) (some? (:val found))) => nil ;; not found below
                             (if (neg? cmp)
                                 (if (instance? Black (.left t))
-                                    (PersistentTreeMap'balanceLeftDel (:key t), (.val t), del, (.right t))
-                                    (PersistentTreeMap'red (:key t), (.val t), del, (.right t))
+                                    (PersistentTreeMap'balanceLeftDel (:key t), (IMapEntry'''val t), del, (.right t))
+                                    (PersistentTreeMap'red (:key t), (IMapEntry'''val t), del, (.right t))
                                 )
                                 (if (instance? Black (.right t))
-                                    (PersistentTreeMap'balanceRightDel (:key t), (.val t), (.left t), del)
-                                    (PersistentTreeMap'red (:key t), (.val t), (.left t), del)
+                                    (PersistentTreeMap'balanceRightDel (:key t), (IMapEntry'''val t), (.left t), del)
+                                    (PersistentTreeMap'red (:key t), (IMapEntry'''val t), (.left t), del)
                                 )
                             )
                         )
@@ -17081,7 +16627,7 @@
     #_method
     (defn- #_"TNode" PersistentTreeMap''replace [#_"PersistentTreeMap" this, #_"TNode" t, #_"Object" key, #_"Object" val]
         (let [#_"int" cmp (PersistentTreeMap''doCompare this, key, (:key t))]
-            (.replace t, (:key t), (if (zero? cmp) val (.val t)), (if (neg? cmp) (PersistentTreeMap''replace this, (.left t), key, val) (.left t)), (if (pos? cmp) (PersistentTreeMap''replace this, (.right t), key, val) (.right t)))
+            (.replace t, (:key t), (if (zero? cmp) val (IMapEntry'''val t)), (if (neg? cmp) (PersistentTreeMap''replace this, (.left t), key, val) (.left t)), (if (pos? cmp) (PersistentTreeMap''replace this, (.right t), key, val) (.right t)))
         )
     )
 
@@ -17111,33 +16657,36 @@
         )
     )
 
-    #_override
-    (defn #_"IPersistentMap" IMeta'''meta--PersistentTreeMap [#_"PersistentTreeMap" this]
-        (:_meta this)
+    (extend-type PersistentTreeMap IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"PersistentTreeMap" this]
+            (:_meta this)
+        )
     )
 
-    #_override
-    (defn #_"PersistentTreeMap" IPersistentMap'''assoc--PersistentTreeMap [#_"PersistentTreeMap" this, #_"Object" key, #_"Object" val]
-        (let [#_"Box" found (Box'new nil) #_"TNode" t (PersistentTreeMap''add this, (:tree this), key, val, found)]
-            (if (nil? t) ;; nil == already contains key
-                (if (= (.val (cast TNode (:val found))) val) ;; note only get same collection on identity of val, not equals()
-                    this
-                    (PersistentTreeMap'new (meta this), (:comp this), (PersistentTreeMap''replace this, (:tree this), key, val), (:_count this))
+    (extend-type PersistentTreeMap Associative
+        (#_"PersistentTreeMap" Associative'''assoc [#_"PersistentTreeMap" this, #_"Object" key, #_"Object" val]
+            (let [#_"Box" found (Box'new nil) #_"TNode" t (PersistentTreeMap''add this, (:tree this), key, val, found)]
+                (if (nil? t) ;; nil == already contains key
+                    (if (= (IMapEntry'''val (cast TNode (:val found))) val) ;; note only get same collection on identity of val, not equals()
+                        this
+                        (PersistentTreeMap'new (meta this), (:comp this), (PersistentTreeMap''replace this, (:tree this), key, val), (:_count this))
+                    )
+                    (PersistentTreeMap'new (meta this), (:comp this), (.blacken t), (inc (:_count this)))
                 )
-                (PersistentTreeMap'new (meta this), (:comp this), (.blacken t), (inc (:_count this)))
             )
         )
     )
 
-    #_override
-    (defn #_"PersistentTreeMap" IPersistentMap'''dissoc--PersistentTreeMap [#_"PersistentTreeMap" this, #_"Object" key]
-        (let [#_"Box" found (Box'new nil) #_"TNode" t (PersistentTreeMap''remove this, (:tree this), key, found)]
-            (if (nil? t)
-                (if (nil? (:val found)) ;; nil == doesn't contain key
-                    this
-                    (PersistentTreeMap'new (meta this), (:comp this)) ;; empty
+    (extend-type PersistentTreeMap IPersistentMap
+        (#_"PersistentTreeMap" IPersistentMap'''dissoc [#_"PersistentTreeMap" this, #_"Object" key]
+            (let [#_"Box" found (Box'new nil) #_"TNode" t (PersistentTreeMap''remove this, (:tree this), key, found)]
+                (if (nil? t)
+                    (if (nil? (:val found)) ;; nil == doesn't contain key
+                        this
+                        (PersistentTreeMap'new (meta this), (:comp this)) ;; empty
+                    )
+                    (PersistentTreeMap'new (meta this), (:comp this), (.blacken t), (dec (:_count this)))
                 )
-                (PersistentTreeMap'new (meta this), (:comp this), (.blacken t), (dec (:_count this)))
             )
         )
     )
@@ -17162,60 +16711,62 @@
         ([#_"Comparator" comp, #_"Seqable" items] (reduce conj (PersistentTreeSet'new nil, (PersistentTreeMap'new nil, comp)) items))
     )
 
-    #_override
-    (defn #_"IPersistentSet" IPersistentSet'''disj--PersistentTreeSet [#_"PersistentTreeSet" this, #_"Object" key]
-        (if (contains? this key)
-            (PersistentTreeSet'new (meta this), (dissoc (:impl this) key))
-            this
+    (extend-type PersistentTreeSet IPersistentSet
+        (#_"IPersistentSet" IPersistentSet'''disj [#_"PersistentTreeSet" this, #_"Object" key]
+            (if (contains? this key)
+                (PersistentTreeSet'new (meta this), (dissoc (:impl this) key))
+                this
+            )
         )
     )
 
-    #_override
-    (defn #_"IPersistentSet" IPersistentCollection'''conj--PersistentTreeSet [#_"PersistentTreeSet" this, #_"Object" o]
-        (if (contains? this o)
-            this
-            (PersistentTreeSet'new (meta this), (assoc (:impl this) o o))
+    (extend-type PersistentTreeSet IPersistentCollection
+        (#_"PersistentTreeSet" IPersistentCollection'''conj [#_"PersistentTreeSet" this, #_"Object" o]
+            (if (contains? this o)
+                this
+                (PersistentTreeSet'new (meta this), (assoc (:impl this) o o))
+            )
+        )
+
+        (#_"PersistentTreeSet" IPersistentCollection'''empty [#_"PersistentTreeSet" this]
+            (PersistentTreeSet'new (meta this), (empty (:impl this)))
         )
     )
 
-    #_override
-    (defn #_"IPersistentCollection" IPersistentCollection'''empty--PersistentTreeSet [#_"PersistentTreeSet" this]
-        (PersistentTreeSet'new (meta this), (.empty (:impl this)))
+    (extend-type PersistentTreeSet Reversible
+        (#_"ISeq" Reversible'''rseq [#_"PersistentTreeSet" this]
+            (map key (rseq (:impl this)))
+        )
     )
 
-    #_override
-    (defn #_"ISeq" Reversible'''rseq--PersistentTreeSet [#_"PersistentTreeSet" this]
-        (map key (rseq (:impl this)))
+    (extend-type PersistentTreeSet IObj
+        (#_"PersistentTreeSet" IObj'''withMeta [#_"PersistentTreeSet" this, #_"IPersistentMap" meta]
+            (PersistentTreeSet'new meta, (:impl this))
+        )
     )
 
-    #_override
-    (defn #_"PersistentTreeSet" IObj'''withMeta--PersistentTreeSet [#_"PersistentTreeSet" this, #_"IPersistentMap" meta]
-        (PersistentTreeSet'new meta, (:impl this))
+    (extend-type PersistentTreeSet Sorted
+        (#_"Comparator" Sorted'''comparator [#_"PersistentTreeSet" this]
+            (Sorted'''comparator (:impl this))
+        )
+
+        (#_"Object" Sorted'''entryKey [#_"PersistentTreeSet" this, #_"Object" entry]
+            entry
+        )
+
+        (#_"ISeq" Sorted'''seq [#_"PersistentTreeSet" this, #_"boolean" ascending?]
+            (keys (Sorted'''seq (:impl this), ascending?))
+        )
+
+        (#_"ISeq" Sorted'''seqFrom [#_"PersistentTreeSet" this, #_"Object" key, #_"boolean" ascending?]
+            (keys (Sorted'''seqFrom (:impl this), key, ascending?))
+        )
     )
 
-    #_override
-    (defn #_"Comparator" Sorted'''comparator--PersistentTreeSet [#_"PersistentTreeSet" this]
-        (.comparator (:impl this))
-    )
-
-    #_override
-    (defn #_"Object" Sorted'''entryKey--PersistentTreeSet [#_"PersistentTreeSet" this, #_"Object" entry]
-        entry
-    )
-
-    #_override
-    (defn #_"ISeq" Sorted'''seq--PersistentTreeSet [#_"PersistentTreeSet" this, #_"boolean" ascending?]
-        (keys (.seq (:impl this), ascending?))
-    )
-
-    #_override
-    (defn #_"ISeq" Sorted'''seqFrom--PersistentTreeSet [#_"PersistentTreeSet" this, #_"Object" key, #_"boolean" ascending?]
-        (keys (.seqFrom (:impl this), key, ascending?))
-    )
-
-    #_override
-    (defn #_"IPersistentMap" IMeta'''meta--PersistentTreeSet [#_"PersistentTreeSet" this]
-        (:_meta this)
+    (extend-type PersistentTreeSet IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"PersistentTreeSet" this]
+            (:_meta this)
+        )
     )
 )
 )
@@ -17261,46 +16812,43 @@
         )
     )
 
-    #_override
-    (defn #_"IChunk" IChunkedSeq'''chunkedFirst--ChunkedSeq [#_"ChunkedSeq" this]
-        (ArrayChunk'new (:node this), (:offset this))
-    )
+    (extend-type ChunkedSeq IChunkedSeq
+        (#_"IChunk" IChunkedSeq'''chunkedFirst [#_"ChunkedSeq" this]
+            (ArrayChunk'new (:node this), (:offset this))
+        )
 
-    #_override
-    (defn #_"ISeq" IChunkedSeq'''chunkedNext--ChunkedSeq [#_"ChunkedSeq" this]
-        (when (< (+ (:i this) (alength (:node this))) (:cnt (:vec this)))
-            (ChunkedSeq'new (:vec this), (+ (:i this) (alength (:node this))), 0)
+        (#_"ISeq" IChunkedSeq'''chunkedNext [#_"ChunkedSeq" this]
+            (when (< (+ (:i this) (alength (:node this))) (:cnt (:vec this)))
+                (ChunkedSeq'new (:vec this), (+ (:i this) (alength (:node this))), 0)
+            )
         )
     )
 
-    #_override
-    (defn #_"ISeq" IChunkedSeq'''chunkedMore--ChunkedSeq [#_"ChunkedSeq" this]
-        (or (.chunkedNext this) ())
-    )
-
-    #_override
-    (defn #_"ChunkedSeq" IObj'''withMeta--ChunkedSeq [#_"ChunkedSeq" this, #_"IPersistentMap" meta]
-        (when-not (= meta (:_meta this)) => this
-            (ChunkedSeq'new meta, (:vec this), (:node this), (:i this), (:offset this))
+    (extend-type ChunkedSeq IObj
+        (#_"ChunkedSeq" IObj'''withMeta [#_"ChunkedSeq" this, #_"IPersistentMap" meta]
+            (when-not (= meta (:_meta this)) => this
+                (ChunkedSeq'new meta, (:vec this), (:node this), (:i this), (:offset this))
+            )
         )
     )
 
-    #_override
-    (defn #_"Object" ISeq'''first--ChunkedSeq [#_"ChunkedSeq" this]
-        (aget (:node this) (:offset this))
-    )
+    (extend-type ChunkedSeq ISeq
+        (#_"Object" ISeq'''first [#_"ChunkedSeq" this]
+            (aget (:node this) (:offset this))
+        )
 
-    #_override
-    (defn #_"ISeq" ISeq'''next--ChunkedSeq [#_"ChunkedSeq" this]
-        (if (< (inc (:offset this)) (alength (:node this)))
-            (ChunkedSeq'new (:vec this), (:node this), (:i this), (inc (:offset this)))
-            (.chunkedNext this)
+        (#_"ISeq" ISeq'''next [#_"ChunkedSeq" this]
+            (if (< (inc (:offset this)) (alength (:node this)))
+                (ChunkedSeq'new (:vec this), (:node this), (:i this), (inc (:offset this)))
+                (chunk-next this)
+            )
         )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--ChunkedSeq [#_"ChunkedSeq" this]
-        (- (:cnt (:vec this)) (+ (:i this) (:offset this)))
+    (extend-type ChunkedSeq Counted
+        (#_"int" Counted'''count [#_"ChunkedSeq" this]
+            (- (:cnt (:vec this)) (+ (:i this) (:offset this)))
+        )
     )
 )
 
@@ -17333,10 +16881,11 @@
         )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--TransientVector [#_"TransientVector" this]
-        (TransientVector''ensureEditable this)
-        (:cnt this)
+    (extend-type TransientVector Counted
+        (#_"int" Counted'''count [#_"TransientVector" this]
+            (TransientVector''ensureEditable this)
+            (:cnt this)
+        )
     )
 
     (defn #_"VNode" TransientVector'editableRoot [#_"VNode" node]
@@ -17350,13 +16899,14 @@
 
     (declare PersistentVector'new)
 
-    #_override
-    (defn #_"PersistentVector" ITransientCollection'''persistent--TransientVector [#_"TransientVector" this]
-        (TransientVector''ensureEditable this)
-        (.set (:edit (:root this)), nil)
-        (let [#_"Object[]" trimmedTail (make-array Object (- (:cnt this) (TransientVector''tailoff this)))]
-            (System/arraycopy (:tail this), 0, trimmedTail, 0, (alength trimmedTail))
-            (PersistentVector'new (:cnt this), (:shift this), (:root this), trimmedTail)
+    (extend-type TransientVector ITransientCollection
+        (#_"PersistentVector" ITransientCollection'''persistent [#_"TransientVector" this]
+            (TransientVector''ensureEditable this)
+            (.set (:edit (:root this)), nil)
+            (let [#_"Object[]" trimmedTail (make-array Object (- (:cnt this) (TransientVector''tailoff this)))]
+                (System/arraycopy (:tail this), 0, trimmedTail, 0, (alength trimmedTail))
+                (PersistentVector'new (:cnt this), (:shift this), (:root this), trimmedTail)
+            )
         )
     )
 
@@ -17389,30 +16939,31 @@
         )
     )
 
-    #_override
-    (defn #_"TransientVector" ITransientCollection'''conj--TransientVector [#_"TransientVector" this, #_"Object" val]
-        (TransientVector''ensureEditable this)
-        (let [#_"int" n (:cnt this)]
-            (if (< (- n (TransientVector''tailoff this)) 32) ;; room in tail?
-                (do
-                    (aset (:tail this) (& n 0x01f) val)
-                    (update this :cnt inc)
-                )
-                ;; full tail, push into tree
-                (let [#_"VNode" tailnode (VNode'new (:edit (:root this)), (:tail this))
-                      this (assoc this :tail (make-array Object 32))
-                      _ (aset (:tail this) 0 val)
-                      #_"int" shift (:shift this)
-                      [#_"VNode" root shift]
-                        (if (< (<< 1 shift) (>>> n 5)) ;; overflow root?
-                            (let [root (VNode'new (:edit (:root this)))]
-                                (aset (:array root) 0 (:root this))
-                                (aset (:array root) 1 (VNode'newPath (:edit (:root this)), shift, tailnode))
-                                [root (+ shift 5)]
-                            )
-                            [(TransientVector''pushTail this, shift, (:root this), tailnode) shift]
-                        )]
-                    (-> this (assoc :root root :shift shift) (update :cnt inc))
+    (extend-type TransientVector ITransientCollection
+        (#_"TransientVector" ITransientCollection'''conj [#_"TransientVector" this, #_"Object" val]
+            (TransientVector''ensureEditable this)
+            (let [#_"int" n (:cnt this)]
+                (if (< (- n (TransientVector''tailoff this)) 32) ;; room in tail?
+                    (do
+                        (aset (:tail this) (& n 0x01f) val)
+                        (update this :cnt inc)
+                    )
+                    ;; full tail, push into tree
+                    (let [#_"VNode" tailnode (VNode'new (:edit (:root this)), (:tail this))
+                          this (assoc this :tail (make-array Object 32))
+                          _ (aset (:tail this) 0 val)
+                          #_"int" shift (:shift this)
+                          [#_"VNode" root shift]
+                            (if (< (<< 1 shift) (>>> n 5)) ;; overflow root?
+                                (let [root (VNode'new (:edit (:root this)))]
+                                    (aset (:array root) 0 (:root this))
+                                    (aset (:array root) 1 (VNode'newPath (:edit (:root this)), shift, tailnode))
+                                    [root (+ shift 5)]
+                                )
+                                [(TransientVector''pushTail this, shift, (:root this), tailnode) shift]
+                            )]
+                        (-> this (assoc :root root :shift shift) (update :cnt inc))
+                    )
                 )
             )
         )
@@ -17444,58 +16995,56 @@
         )
     )
 
-    #_override
-    (defn #_"Object" ILookup'''valAt-2--TransientVector [#_"TransientVector" this, #_"Object" key]
-        ;; note - relies on ensureEditable in 2-arg valAt
-        (.valAt this, key, nil)
-    )
-
-    #_override
-    (defn #_"Object" ILookup'''valAt-3--TransientVector [#_"TransientVector" this, #_"Object" key, #_"Object" notFound]
-        (TransientVector''ensureEditable this)
-        (when (Numbers'isInteger key) => notFound
-            (let-when [#_"int" i (.intValue key)] (< -1 i (:cnt this)) => notFound
-                (nth this i)
+    (extend-type TransientVector ILookup
+        (#_"Object" ILookup'''valAt
+            ([#_"TransientVector" this, #_"Object" key] (ILookup'''valAt this, key, nil))
+            ([#_"TransientVector" this, #_"Object" key, #_"Object" notFound]
+                (TransientVector''ensureEditable this)
+                (when (Numbers'isInteger key) => notFound
+                    (let-when [#_"int" i (.intValue key)] (< -1 i (:cnt this)) => notFound
+                        (nth this i)
+                    )
+                )
             )
         )
     )
 
     (def- #_"Object" TransientVector'NOT_FOUND (Object.))
 
-    #_override
-    (defn #_"boolean" ITransientAssociative2'''containsKey--TransientVector [#_"TransientVector" this, #_"Object" key]
-        (not (identical? (get this key TransientVector'NOT_FOUND) TransientVector'NOT_FOUND))
-    )
+    (extend-type TransientVector ITransientAssociative
+        (#_"boolean" ITransientAssociative'''containsKey [#_"TransientVector" this, #_"Object" key]
+            (not (identical? (get this key TransientVector'NOT_FOUND) TransientVector'NOT_FOUND))
+        )
 
-    #_override
-    (defn #_"IMapEntry" ITransientAssociative2'''entryAt--TransientVector [#_"TransientVector" this, #_"Object" key]
-        (let [#_"Object" v (get this key TransientVector'NOT_FOUND)]
-            (when-not (identical? v TransientVector'NOT_FOUND)
-                (MapEntry'create key, v)
+        (#_"IMapEntry" ITransientAssociative'''entryAt [#_"TransientVector" this, #_"Object" key]
+            (let [#_"Object" v (get this key TransientVector'NOT_FOUND)]
+                (when-not (identical? v TransientVector'NOT_FOUND)
+                    (MapEntry'create key, v)
+                )
             )
         )
     )
 
-    #_override
-    (defn #_"Object" IFn'''invoke-2--TransientVector [#_"TransientVector" this, #_"Object" arg1]
-        ;; note - relies on ensureEditable in nth
-        (when (Numbers'isInteger arg1) => (throw! "key must be integer")
-            (nth this (.intValue arg1))
+    (extend-type TransientVector IFn
+        (#_"Object" IFn'''invoke [#_"TransientVector" this, #_"Object" i]
+            ;; note - relies on ensureEditable in nth
+            (when (Numbers'isInteger i) => (throw! "key must be integer")
+                (nth this (.intValue i))
+            )
         )
     )
 
-    #_override
-    (defn #_"Object" Indexed'''nth-2--TransientVector [#_"TransientVector" this, #_"int" i]
-        (TransientVector''ensureEditable this)
-        (let [#_"Object[]" node (TransientVector''arrayFor this, i)]
-            (aget node (& i 0x01f))
-        )
-    )
-
-    #_override
-    (defn #_"Object" Indexed'''nth-3--TransientVector [#_"TransientVector" this, #_"int" i, #_"Object" notFound]
-        (when (< -1 i (count this)) => notFound
-            (nth this i)
+    (extend-type TransientVector Indexed
+        (#_"Object" Indexed'''nth
+            ([#_"TransientVector" this, #_"int" i]
+                (TransientVector''ensureEditable this)
+                (aget (TransientVector''arrayFor this, i) (& i 0x01f))
+            )
+            ([#_"TransientVector" this, #_"int" i, #_"Object" notFound]
+                (when (< -1 i (count this)) => notFound
+                    (nth this i)
+                )
+            )
         )
     )
 
@@ -17512,30 +17061,32 @@
         )
     )
 
-    #_override
-    (defn #_"TransientVector" ITransientVector'''assocN--TransientVector [#_"TransientVector" this, #_"int" i, #_"Object" val]
-        (TransientVector''ensureEditable this)
-        (if (< -1 i (:cnt this))
-            (if (<= (TransientVector''tailoff this) i)
-                (do
-                    (aset (:tail this) (& i 0x01f) val)
-                    this
+    (extend-type TransientVector ITransientVector
+        (#_"TransientVector" ITransientVector'''assocN [#_"TransientVector" this, #_"int" i, #_"Object" val]
+            (TransientVector''ensureEditable this)
+            (if (< -1 i (:cnt this))
+                (if (<= (TransientVector''tailoff this) i)
+                    (do
+                        (aset (:tail this) (& i 0x01f) val)
+                        this
+                    )
+                    (do
+                        (assoc this :root (TransientVector''doAssoc this, (:shift this), (:root this), i, val))
+                    )
                 )
-                (do
-                    (assoc this :root (TransientVector''doAssoc this, (:shift this), (:root this), i, val))
+                (when (= i (:cnt this)) => (throw (IndexOutOfBoundsException.))
+                    (conj! this val)
                 )
-            )
-            (when (= i (:cnt this)) => (throw (IndexOutOfBoundsException.))
-                (conj! this val)
             )
         )
     )
 
-    #_override
-    (defn #_"TransientVector" ITransientAssociative'''assoc--TransientVector [#_"TransientVector" this, #_"Object" key, #_"Object" val]
-        ;; note - relies on ensureEditable in assocN
-        (when (Numbers'isInteger key) => (throw! "key must be integer")
-            (.assocN this, (.intValue key), val)
+    (extend-type TransientVector ITransientAssociative
+        (#_"TransientVector" ITransientAssociative'''assoc [#_"TransientVector" this, #_"Object" key, #_"Object" val]
+            ;; note - relies on ensureEditable in assocN
+            (when (Numbers'isInteger key) => (throw! "key must be integer")
+                (ITransientVector'''assocN this, (.intValue key), val)
+            )
         )
     )
 
@@ -17560,20 +17111,21 @@
         )
     )
 
-    #_override
-    (defn #_"TransientVector" ITransientVector'''pop--TransientVector [#_"TransientVector" this]
-        (TransientVector''ensureEditable this)
-        (let [#_"int" n (:cnt this)]
-            (when-not (zero? n) => (throw! "can't pop empty vector")
-                (when (and (not= n 1) (zero? (& (dec n) 0x01f))) => (assoc this :cnt (dec n))
-                    (let [#_"Object[]" tail (TransientVector''editableArrayFor this, (- n 2))
-                          #_"int" shift (:shift this) #_"VNode" root (:root this)
-                          root (or (TransientVector''popTail this, shift, root) (VNode'new (:edit root)))
-                          [shift root]
-                            (when (and (< 5 shift) (nil? (aget (:array root) 1))) => [shift root]
-                                [(- shift 5) (TransientVector''ensureEditable this, (cast VNode (aget (:array root) 0)))]
-                            )]
-                        (assoc this :cnt (dec n) :shift shift :root root :tail tail)
+    (extend-type TransientVector ITransientVector
+        (#_"TransientVector" ITransientVector'''pop [#_"TransientVector" this]
+            (TransientVector''ensureEditable this)
+            (let [#_"int" n (:cnt this)]
+                (when-not (zero? n) => (throw! "can't pop empty vector")
+                    (when (and (not= n 1) (zero? (& (dec n) 0x01f))) => (assoc this :cnt (dec n))
+                        (let [#_"Object[]" tail (TransientVector''editableArrayFor this, (- n 2))
+                              #_"int" shift (:shift this) #_"VNode" root (:root this)
+                              root (or (TransientVector''popTail this, shift, root) (VNode'new (:edit root)))
+                              [shift root]
+                                (when (and (< 5 shift) (nil? (aget (:array root) 1))) => [shift root]
+                                    [(- shift 5) (TransientVector''ensureEditable this, (cast VNode (aget (:array root) 0)))]
+                                )]
+                            (assoc this :cnt (dec n) :shift shift :root root :tail tail)
+                        )
                     )
                 )
             )
@@ -17638,9 +17190,10 @@
         )
     )
 
-    #_override
-    (defn #_"TransientVector" IEditableCollection'''asTransient--PersistentVector [#_"PersistentVector" this]
-        (TransientVector'new this)
+    (extend-type PersistentVector IEditableCollection
+        (#_"TransientVector" IEditableCollection'''asTransient [#_"PersistentVector" this]
+            (TransientVector'new this)
+        )
     )
 
     #_method
@@ -17661,15 +17214,16 @@
         )
     )
 
-    #_override
-    (defn #_"Object" Indexed'''nth-2--PersistentVector [#_"PersistentVector" this, #_"int" i]
-        (aget (PersistentVector''arrayFor this, i) (& i 0x01f))
-    )
-
-    #_override
-    (defn #_"Object" Indexed'''nth-3--PersistentVector [#_"PersistentVector" this, #_"int" i, #_"Object" notFound]
-        (when (< -1 i (:cnt this)) => notFound
-            (nth this i)
+    (extend-type PersistentVector Indexed
+        (#_"Object" Indexed'''nth
+            ([#_"PersistentVector" this, #_"int" i]
+                (aget (PersistentVector''arrayFor this, i) (& i 0x01f))
+            )
+            ([#_"PersistentVector" this, #_"int" i, #_"Object" notFound]
+                (when (< -1 i (:cnt this)) => notFound
+                    (nth this i)
+                )
+            )
         )
     )
 
@@ -17685,36 +17239,40 @@
         )
     )
 
-    #_override
-    (defn #_"PersistentVector" IPersistentVector'''assocN--PersistentVector [#_"PersistentVector" this, #_"int" i, #_"Object" val]
-        (if (< -1 i (:cnt this))
-            (if (<= (PersistentVector''tailoff this) i)
-                (let [#_"Object[]" tail (make-array Object (alength (:tail this)))]
-                    (System/arraycopy (:tail this), 0, tail, 0, (alength (:tail this)))
-                    (aset tail (& i 0x01f) val)
-                    (PersistentVector'new (meta this), (:cnt this), (:shift this), (:root this), tail)
+    (extend-type PersistentVector IPersistentVector
+        (#_"PersistentVector" IPersistentVector'''assocN [#_"PersistentVector" this, #_"int" i, #_"Object" val]
+            (if (< -1 i (:cnt this))
+                (if (<= (PersistentVector''tailoff this) i)
+                    (let [#_"Object[]" tail (make-array Object (alength (:tail this)))]
+                        (System/arraycopy (:tail this), 0, tail, 0, (alength (:tail this)))
+                        (aset tail (& i 0x01f) val)
+                        (PersistentVector'new (meta this), (:cnt this), (:shift this), (:root this), tail)
+                    )
+                    (PersistentVector'new (meta this), (:cnt this), (:shift this), (PersistentVector'doAssoc (:shift this), (:root this), i, val), (:tail this))
                 )
-                (PersistentVector'new (meta this), (:cnt this), (:shift this), (PersistentVector'doAssoc (:shift this), (:root this), i, val), (:tail this))
-            )
-            (when (= i (:cnt this)) => (throw (IndexOutOfBoundsException.))
-                (conj this val)
+                (when (= i (:cnt this)) => (throw (IndexOutOfBoundsException.))
+                    (conj this val)
+                )
             )
         )
     )
 
-    #_override
-    (defn #_"int" Counted'''count--PersistentVector [#_"PersistentVector" this]
-        (:cnt this)
+    (extend-type PersistentVector Counted
+        (#_"int" Counted'''count [#_"PersistentVector" this]
+            (:cnt this)
+        )
     )
 
-    #_override
-    (defn #_"PersistentVector" IObj'''withMeta--PersistentVector [#_"PersistentVector" this, #_"IPersistentMap" meta]
-        (PersistentVector'new meta, (:cnt this), (:shift this), (:root this), (:tail this))
+    (extend-type PersistentVector IObj
+        (#_"PersistentVector" IObj'''withMeta [#_"PersistentVector" this, #_"IPersistentMap" meta]
+            (PersistentVector'new meta, (:cnt this), (:shift this), (:root this), (:tail this))
+        )
     )
 
-    #_override
-    (defn #_"IPersistentMap" IMeta'''meta--PersistentVector [#_"PersistentVector" this]
-        (:_meta this)
+    (extend-type PersistentVector IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"PersistentVector" this]
+            (:_meta this)
+        )
     )
 
     #_method
@@ -17739,30 +17297,35 @@
         )
     )
 
-    #_override
-    (defn #_"PersistentVector" IPersistentVector'''conj--PersistentVector [#_"PersistentVector" this, #_"Object" val]
-        (let [#_"int" n (:cnt this)]
-            (if (< (- n (PersistentVector''tailoff this)) 32) ;; room in tail?
-                (let [#_"int" e (alength (:tail this)) #_"Object[]" tail (make-array Object (inc e))]
-                    (System/arraycopy (:tail this), 0, tail, 0, e)
-                    (aset tail e val)
-                    (PersistentVector'new (meta this), (inc n), (:shift this), (:root this), tail)
-                )
-                ;; full tail, push into tree
-                (let [#_"VNode" tailnode (VNode'new (:edit (:root this)), (:tail this))
-                      #_"int" shift (:shift this)
-                      [#_"VNode" root shift]
-                        (if (< (<< 1 shift) (>>> n 5)) ;; overflow root?
-                            (let [root (VNode'new (:edit (:root this)))]
-                                (aset (:array root) 0 (:root this))
-                                (aset (:array root) 1 (VNode'newPath (:edit (:root this)), shift, tailnode))
-                                [root (+ shift 5)]
-                            )
-                            [(PersistentVector''pushTail this, shift, (:root this), tailnode) shift]
-                        )]
-                    (PersistentVector'new (meta this), (inc n), shift, root, (object-array [ val ]))
+    (extend-type PersistentVector IPersistentCollection
+        (#_"PersistentVector" IPersistentCollection'''conj [#_"PersistentVector" this, #_"Object" val]
+            (let [#_"int" n (:cnt this)]
+                (if (< (- n (PersistentVector''tailoff this)) 32) ;; room in tail?
+                    (let [#_"int" e (alength (:tail this)) #_"Object[]" tail (make-array Object (inc e))]
+                        (System/arraycopy (:tail this), 0, tail, 0, e)
+                        (aset tail e val)
+                        (PersistentVector'new (meta this), (inc n), (:shift this), (:root this), tail)
+                    )
+                    ;; full tail, push into tree
+                    (let [#_"VNode" tailnode (VNode'new (:edit (:root this)), (:tail this))
+                          #_"int" shift (:shift this)
+                          [#_"VNode" root shift]
+                            (if (< (<< 1 shift) (>>> n 5)) ;; overflow root?
+                                (let [root (VNode'new (:edit (:root this)))]
+                                    (aset (:array root) 0 (:root this))
+                                    (aset (:array root) 1 (VNode'newPath (:edit (:root this)), shift, tailnode))
+                                    [root (+ shift 5)]
+                                )
+                                [(PersistentVector''pushTail this, shift, (:root this), tailnode) shift]
+                            )]
+                        (PersistentVector'new (meta this), (inc n), shift, root, (object-array [ val ]))
+                    )
                 )
             )
+        )
+
+        (#_"PersistentVector" IPersistentCollection'''empty [#_"PersistentVector" this]
+            (with-meta PersistentVector'EMPTY (meta this))
         )
     )
 
@@ -17773,18 +17336,37 @@
         )
     )
 
-    #_override
-    (defn #_"ISeq" Seqable'''seq--PersistentVector [#_"PersistentVector" this]
-        (PersistentVector''chunkedSeq this)
+    (extend-type PersistentVector Seqable
+        (#_"ISeq" Seqable'''seq [#_"PersistentVector" this]
+            (PersistentVector''chunkedSeq this)
+        )
     )
 
-    #_override
-    (defn #_"Object" IReduce'''reduce--PersistentVector [#_"PersistentVector" this, #_"IFn" f]
-        (when (pos? (:cnt this)) => (.invoke f)
-            (loop-when [#_"Object" r (aget (PersistentVector''arrayFor this, 0) 0) #_"int" i 0] (< i (:cnt this)) => r
+    (extend-type PersistentVector IReduce
+        (#_"Object" IReduce'''reduce [#_"PersistentVector" this, #_"IFn" f]
+            (when (pos? (:cnt this)) => (f)
+                (loop-when [#_"Object" r (aget (PersistentVector''arrayFor this, 0) 0) #_"int" i 0] (< i (:cnt this)) => r
+                    (let [#_"Object[]" a (PersistentVector''arrayFor this, i)
+                          r (loop-when [r r #_"int" j (if (zero? i) 1 0)] (< j (alength a)) => r
+                                (let [r (f r (aget a j))]
+                                    (when-not (reduced? r) => (ß return (deref r))
+                                        (recur r (inc j))
+                                    )
+                                )
+                            )]
+                        (recur r (+ i (alength a)))
+                    )
+                )
+            )
+        )
+    )
+
+    (extend-type PersistentVector IReduceInit
+        (#_"Object" IReduceInit'''reduce [#_"PersistentVector" this, #_"IFn" f, #_"Object" r]
+            (loop-when [r r #_"int" i 0] (< i (:cnt this)) => r
                 (let [#_"Object[]" a (PersistentVector''arrayFor this, i)
-                      r (loop-when [r r #_"int" j (if (zero? i) 1 0)] (< j (alength a)) => r
-                            (let [r (.invoke f, r, (aget a j))]
+                      r (loop-when [r r #_"int" j 0] (< j (alength a)) => r
+                            (let [r (f r (aget a j))]
                                 (when-not (reduced? r) => (ß return (deref r))
                                     (recur r (inc j))
                                 )
@@ -17796,41 +17378,21 @@
         )
     )
 
-    #_override
-    (defn #_"Object" IReduceInit'''reduce--PersistentVector [#_"PersistentVector" this, #_"IFn" f, #_"Object" r]
-        (loop-when [r r #_"int" i 0] (< i (:cnt this)) => r
-            (let [#_"Object[]" a (PersistentVector''arrayFor this, i)
-                  r (loop-when [r r #_"int" j 0] (< j (alength a)) => r
-                        (let [r (.invoke f, r, (aget a j))]
-                            (when-not (reduced? r) => (ß return (deref r))
-                                (recur r (inc j))
+    (extend-type PersistentVector IKVReduce
+        (#_"Object" IKVReduce'''kvreduce [#_"PersistentVector" this, #_"IFn" f, #_"Object" r]
+            (loop-when [r r #_"int" i 0] (< i (:cnt this)) => r
+                (let [#_"Object[]" a (PersistentVector''arrayFor this, i)
+                      r (loop-when [r r #_"int" j 0] (< j (alength a)) => r
+                            (let [r (f r (+ j i) (aget a j))]
+                                (when-not (reduced? r) => (ß return (deref r))
+                                    (recur r (inc j))
+                                )
                             )
-                        )
-                    )]
-                (recur r (+ i (alength a)))
+                        )]
+                    (recur r (+ i (alength a)))
+                )
             )
         )
-    )
-
-    #_override
-    (defn #_"Object" IKVReduce'''kvreduce--PersistentVector [#_"PersistentVector" this, #_"IFn" f, #_"Object" r]
-        (loop-when [r r #_"int" i 0] (< i (:cnt this)) => r
-            (let [#_"Object[]" a (PersistentVector''arrayFor this, i)
-                  r (loop-when [r r #_"int" j 0] (< j (alength a)) => r
-                        (let [r (.invoke f, r, (+ j i), (aget a j))]
-                            (when-not (reduced? r) => (ß return (deref r))
-                                (recur r (inc j))
-                            )
-                        )
-                    )]
-                (recur r (+ i (alength a)))
-            )
-        )
-    )
-
-    #_override
-    (defn #_"IPersistentCollection" IPersistentCollection'''empty--PersistentVector [#_"PersistentVector" this]
-        (with-meta PersistentVector'EMPTY (meta this))
     )
 
     #_method
@@ -17855,28 +17417,29 @@
         )
     )
 
-    #_override
-    (defn #_"PersistentVector" IPersistentStack'''pop--PersistentVector [#_"PersistentVector" this]
-        (cond
-            (zero? (:cnt this))
-                (throw! "can't pop empty vector")
-            (= (:cnt this) 1)
-                (with-meta PersistentVector'EMPTY (meta this))
-            (< 1 (- (:cnt this) (PersistentVector''tailoff this)))
-                (let [#_"Object[]" tail (make-array Object (dec (alength (:tail this))))]
-                    (System/arraycopy (:tail this), 0, tail, 0, (alength tail))
-                    (PersistentVector'new (meta this), (dec (:cnt this)), (:shift this), (:root this), tail)
-                )
-            :else
-                (let [#_"Object[]" tail (PersistentVector''arrayFor this, (- (:cnt this) 2))
-                      #_"int" shift (:shift this)
-                      #_"VNode" root (or (PersistentVector''popTail this, shift, (:root this)) PersistentVector'EMPTY_NODE)
-                      [shift root]
-                        (when (and (< 5 shift) (nil? (aget (:array root) 1))) => [shift root]
-                            [(- shift 5) (cast VNode (aget (:array root) 0))]
-                        )]
-                    (PersistentVector'new (meta this), (dec (:cnt this)), shift, root, tail)
-                )
+    (extend-type PersistentVector IPersistentStack
+        (#_"PersistentVector" IPersistentStack'''pop [#_"PersistentVector" this]
+            (cond
+                (zero? (:cnt this))
+                    (throw! "can't pop empty vector")
+                (= (:cnt this) 1)
+                    (with-meta PersistentVector'EMPTY (meta this))
+                (< 1 (- (:cnt this) (PersistentVector''tailoff this)))
+                    (let [#_"Object[]" tail (make-array Object (dec (alength (:tail this))))]
+                        (System/arraycopy (:tail this), 0, tail, 0, (alength tail))
+                        (PersistentVector'new (meta this), (dec (:cnt this)), (:shift this), (:root this), tail)
+                    )
+                :else
+                    (let [#_"Object[]" tail (PersistentVector''arrayFor this, (- (:cnt this) 2))
+                          #_"int" shift (:shift this)
+                          #_"VNode" root (or (PersistentVector''popTail this, shift, (:root this)) PersistentVector'EMPTY_NODE)
+                          [shift root]
+                            (when (and (< 5 shift) (nil? (aget (:array root) 1))) => [shift root]
+                                [(- shift 5) (cast VNode (aget (:array root) 0))]
+                            )]
+                        (PersistentVector'new (meta this), (dec (:cnt this)), shift, root, tail)
+                    )
+            )
         )
     )
 )
@@ -17893,7 +17456,7 @@
     )
 
     (defn #_"IPersistentVector" LazilyPersistentVector'create [#_"Object" obj]
-        (condp instance? obj
+        (condp satisfies? obj
             IReduceInit (PersistentVector'create-1r obj)
             Seqable     (PersistentVector'create-1s obj)
                         (LazilyPersistentVector'createOwning (to-array obj))
@@ -17912,8 +17475,7 @@
 
     (defn- #_"RangeBoundsCheck" Range'positiveStep [#_"Object" end]
         (reify RangeBoundsCheck
-            #_override
-            (#_"boolean" exceededBounds [#_"RangeBoundsCheck" _self, #_"Object" val]
+            (#_"boolean" RangeBoundsCheck'''exceededBounds [#_"RangeBoundsCheck" _self, #_"Object" val]
                 (Numbers'gte-2oo val, end)
             )
         )
@@ -17921,8 +17483,7 @@
 
     (defn- #_"RangeBoundsCheck" Range'negativeStep [#_"Object" end]
         (reify RangeBoundsCheck
-            #_override
-            (#_"boolean" exceededBounds [#_"RangeBoundsCheck" _self, #_"Object" val]
+            (#_"boolean" RangeBoundsCheck'''exceededBounds [#_"RangeBoundsCheck" _self, #_"Object" val]
                 (Numbers'lte-2oo val, end)
             )
         )
@@ -17976,16 +17537,18 @@
         )
     )
 
-    #_override
-    (defn #_"Range" IObj'''withMeta--Range [#_"Range" this, #_"IPersistentMap" meta]
-        (when-not (= meta (:_meta this)) => this
-            (Range'new meta, (:end this), (:start this), (:step this), (:boundsCheck this), (:_chunk this), (:_chunkNext this))
+    (extend-type Range IObj
+        (#_"Range" IObj'''withMeta [#_"Range" this, #_"IPersistentMap" meta]
+            (when-not (= meta (:_meta this)) => this
+                (Range'new meta, (:end this), (:start this), (:step this), (:boundsCheck this), (:_chunk this), (:_chunkNext this))
+            )
         )
     )
 
-    #_override
-    (defn #_"Object" ISeq'''first--Range [#_"Range" this]
-        (:start this)
+    (extend-type Range ISeq
+        (#_"Object" ISeq'''first [#_"Range" this]
+            (:start this)
+        )
     )
 
     #_method
@@ -17996,12 +17559,12 @@
                     (if (< i Range'CHUNK_SIZE)
                         (do
                             (aset a i n)
-                            (let-when [n (Numbers'addP-2oo n, (:step this))] (.exceededBounds (:boundsCheck this), n) => (recur n (inc i))
+                            (let-when [n (Numbers'addP-2oo n, (:step this))] (RangeBoundsCheck'''exceededBounds (:boundsCheck this), n) => (recur n (inc i))
                                 ;; partial last chunk
                                 (§ set! (:_chunk this) (ArrayChunk'new a, 0, (inc i)))
                             )
                         )
-                        (if (.exceededBounds (:boundsCheck this), n)
+                        (if (RangeBoundsCheck'''exceededBounds (:boundsCheck this), n)
                             (do
                                 ;; full last chunk
                                 (§ set! (:_chunk this) (ArrayChunk'new a, 0, Range'CHUNK_SIZE))
@@ -18019,52 +17582,50 @@
         nil
     )
 
-    #_override
-    (defn #_"ISeq" ISeq'''next--Range [#_"Range" this]
-        (let-when [#_"Range" _next (:_next this)] (nil? _next) => _next
+    (extend-type Range ISeq
+        (#_"ISeq" ISeq'''next [#_"Range" this]
+            (let-when [#_"Range" _next (:_next this)] (nil? _next) => _next
+                (Range''forceChunk this)
+                (when (< 1 (count (:_chunk this))) => (chunk-next this)
+                    (let [#_"IChunk" _rest (IChunk'''dropFirst (:_chunk this))]
+                        (§ set! (:_next this) (Range'new (nth _rest 0), (:end this), (:step this), (:boundsCheck this), _rest, (:_chunkNext this)))
+                    )
+                )
+            )
+        )
+    )
+
+    (extend-type Range IChunkedSeq
+        (#_"IChunk" IChunkedSeq'''chunkedFirst [#_"Range" this]
             (Range''forceChunk this)
-            (when (< 1 (count (:_chunk this))) => (.chunkedNext this)
-                (let [#_"IChunk" _rest (.dropFirst (:_chunk this))]
-                    (§ set! (:_next this) (Range'new (nth _rest 0), (:end this), (:step this), (:boundsCheck this), _rest, (:_chunkNext this)))
+            (:_chunk this)
+        )
+
+        (#_"ISeq" IChunkedSeq'''chunkedNext [#_"Range" this]
+            (Range''forceChunk this)
+            (seq (:_chunkNext this))
+        )
+    )
+
+    (extend-type Range IReduce
+        (#_"Object" IReduce'''reduce [#_"Range" this, #_"IFn" f]
+            (loop [#_"Object" r (:start this) #_"Number" n r]
+                (let-when-not [n (Numbers'addP-2oo n, (:step this))] (RangeBoundsCheck'''exceededBounds (:boundsCheck this), n) => r
+                    (let-when-not [r (f r n)] (reduced? r) => (deref r)
+                        (recur r n)
+                    )
                 )
             )
         )
     )
 
-    #_override
-    (defn #_"IChunk" IChunkedSeq'''chunkedFirst--Range [#_"Range" this]
-        (Range''forceChunk this)
-        (:_chunk this)
-    )
-
-    #_override
-    (defn #_"ISeq" IChunkedSeq'''chunkedNext--Range [#_"Range" this]
-        (seq (.chunkedMore this))
-    )
-
-    #_override
-    (defn #_"ISeq" IChunkedSeq'''chunkedMore--Range [#_"Range" this]
-        (Range''forceChunk this)
-        (or (:_chunkNext this) ())
-    )
-
-    #_override
-    (defn #_"Object" IReduce'''reduce--Range [#_"Range" this, #_"IFn" f]
-        (loop [#_"Object" r (:start this) #_"Number" n r]
-            (let-when-not [n (Numbers'addP-2oo n, (:step this))] (.exceededBounds (:boundsCheck this), n) => r
-                (let-when-not [r (.invoke f, r, n)] (reduced? r) => (deref r)
-                    (recur r n)
-                )
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IReduceInit'''reduce--Range [#_"Range" this, #_"IFn" f, #_"Object" r]
-        (loop [r r #_"Object" n (:start this)]
-            (let-when-not [r (.invoke f, r, n)] (reduced? r) => (deref r)
-                (let-when-not [n (Numbers'addP-2oo n, (:step this))] (.exceededBounds (:boundsCheck this), n) => r
-                    (recur r n)
+    (extend-type Range IReduceInit
+        (#_"Object" IReduceInit'''reduce [#_"Range" this, #_"IFn" f, #_"Object" r]
+            (loop [r r #_"Object" n (:start this)]
+                (let-when-not [r (f r n)] (reduced? r) => (deref r)
+                    (let-when-not [n (Numbers'addP-2oo n, (:step this))] (RangeBoundsCheck'''exceededBounds (:boundsCheck this), n) => r
+                        (recur r n)
+                    )
                 )
             )
         )
@@ -18081,9 +17642,10 @@
         )
     )
 
-    #_override
-    (defn #_"Object" IDeref'''deref--Reduced [#_"Reduced" this]
-        (:val this)
+    (extend-type Reduced IDeref
+        (#_"Object" IDeref'''deref [#_"Reduced" this]
+            (:val this)
+        )
     )
 )
 )
@@ -18115,56 +17677,59 @@
         (if (pos? count) (Repeat'new count, val) ())
     )
 
-    #_override
-    (defn #_"Object" ISeq'''first--Repeat [#_"Repeat" this]
-        (:val this)
+    (extend-type Repeat ISeq
+        (#_"Object" ISeq'''first [#_"Repeat" this]
+            (:val this)
+        )
+
+        (#_"ISeq" ISeq'''next [#_"Repeat" this]
+            (when (nil? (:_next this))
+                (cond
+                    (< 1 (:count this))               (§ set! (:_next this) (Repeat'new (dec (:count this)), (:val this)))
+                    (= (:count this) Repeat'INFINITE) (§ set! (:_next this) this)
+                )
+            )
+            (:_next this)
+        )
     )
 
-    #_override
-    (defn #_"ISeq" ISeq'''next--Repeat [#_"Repeat" this]
-        (when (nil? (:_next this))
-            (cond
-                (< 1 (:count this))               (§ set! (:_next this) (Repeat'new (dec (:count this)), (:val this)))
-                (= (:count this) Repeat'INFINITE) (§ set! (:_next this) this)
+    (extend-type Repeat IObj
+        (#_"Repeat" IObj'''withMeta [#_"Repeat" this, #_"IPersistentMap" meta]
+            (Repeat'new meta, (:count this), (:val this))
+        )
+    )
+
+    (extend-type Repeat IReduce
+        (#_"Object" IReduce'''reduce [#_"Repeat" this, #_"IFn" f]
+            (let [#_"Object" r (:val this)]
+                (if (= (:count this) Repeat'INFINITE)
+                    (loop [r r]
+                        (let [r (f r (:val this))]
+                            (if (reduced? r) (deref r) (recur r))
+                        )
+                    )
+                    (loop-when [r r #_"long" i 1] (< i (:count this)) => r
+                        (let [r (f r (:val this))]
+                            (if (reduced? r) (deref r) (recur r (inc i)))
+                        )
+                    )
+                )
             )
         )
-        (:_next this)
     )
 
-    #_override
-    (defn #_"Repeat" IObj'''withMeta--Repeat [#_"Repeat" this, #_"IPersistentMap" meta]
-        (Repeat'new meta, (:count this), (:val this))
-    )
-
-    #_override
-    (defn #_"Object" IReduce'''reduce--Repeat [#_"Repeat" this, #_"IFn" f]
-        (let [#_"Object" r (:val this)]
+    (extend-type Repeat IReduceInit
+        (#_"Object" IReduceInit'''reduce [#_"Repeat" this, #_"IFn" f, #_"Object" r]
             (if (= (:count this) Repeat'INFINITE)
                 (loop [r r]
-                    (let [r (.invoke f, r, (:val this))]
+                    (let [r (f r (:val this))]
                         (if (reduced? r) (deref r) (recur r))
                     )
                 )
-                (loop-when [r r #_"long" i 1] (< i (:count this)) => r
-                    (let [r (.invoke f, r, (:val this))]
+                (loop-when [r r #_"long" i 0] (< i (:count this)) => r
+                    (let [r (f r (:val this))]
                         (if (reduced? r) (deref r) (recur r (inc i)))
                     )
-                )
-            )
-        )
-    )
-
-    #_override
-    (defn #_"Object" IReduceInit'''reduce--Repeat [#_"Repeat" this, #_"IFn" f, #_"Object" r]
-        (if (= (:count this) Repeat'INFINITE)
-            (loop [r r]
-                (let [r (.invoke f, r, (:val this))]
-                    (if (reduced? r) (deref r) (recur r))
-                )
-            )
-            (loop-when [r r #_"long" i 0] (< i (:count this)) => r
-                (let [r (.invoke f, r, (:val this))]
-                    (if (reduced? r) (deref r) (recur r (inc i)))
                 )
             )
         )
@@ -18190,33 +17755,30 @@
         )
     )
 
-    #_override
-    (defn #_"StringSeq" IObj'''withMeta--StringSeq [#_"StringSeq" this, #_"IPersistentMap" meta]
-        (when-not (= meta (meta this)) => this
-            (StringSeq'new meta, (:s this), (:i this))
+    (extend-type StringSeq IObj
+        (#_"StringSeq" IObj'''withMeta [#_"StringSeq" this, #_"IPersistentMap" meta]
+            (when-not (= meta (meta this)) => this
+                (StringSeq'new meta, (:s this), (:i this))
+            )
         )
     )
 
-    #_override
-    (defn #_"Object" ISeq'''first--StringSeq [#_"StringSeq" this]
-        (Character/valueOf (nth (:s this) (:i this)))
-    )
+    (extend-type StringSeq ISeq
+        (#_"Object" ISeq'''first [#_"StringSeq" this]
+            (Character/valueOf (nth (:s this) (:i this)))
+        )
 
-    #_override
-    (defn #_"ISeq" ISeq'''next--StringSeq [#_"StringSeq" this]
-        (when (< (inc (:i this)) (count (:s this)))
-            (StringSeq'new (:_meta this), (:s this), (inc (:i this)))
+        (#_"ISeq" ISeq'''next [#_"StringSeq" this]
+            (when (< (inc (:i this)) (count (:s this)))
+                (StringSeq'new (:_meta this), (:s this), (inc (:i this)))
+            )
         )
     )
 
-    #_override
-    (defn #_"int" IndexedSeq'''index--StringSeq [#_"StringSeq" this]
-        (:i this)
-    )
-
-    #_override
-    (defn #_"int" Counted'''count--StringSeq [#_"StringSeq" this]
-        (- (count (:s this)) (:i this))
+    (extend-type StringSeq Counted
+        (#_"int" Counted'''count [#_"StringSeq" this]
+            (- (count (:s this)) (:i this))
+        )
     )
 )
 )
@@ -18338,24 +17900,25 @@
         )
     )
 
-    #_override
-    (defn #_"IPersistentMap" IMeta'''meta--Var [#_"Var" this]
-        (§ sync this
-            (:_meta this)
+    (extend-type Var IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"Var" this]
+            (§ sync this
+                (:_meta this)
+            )
         )
     )
 
-    #_override
-    (defn #_"IPersistentMap" IReference'''alterMeta--Var [#_"Var" this, #_"IFn" f, #_"ISeq" args]
-        (§ sync this
-            (§ update! (:_meta this) #(apply f % args))
+    (extend-type Var IReference
+        (#_"IPersistentMap" IReference'''alterMeta [#_"Var" this, #_"IFn" f, #_"ISeq" args]
+            (§ sync this
+                (§ update! (:_meta this) #(apply f % args))
+            )
         )
-    )
 
-    #_override
-    (defn #_"IPersistentMap" IReference'''resetMeta--Var [#_"Var" this, #_"IPersistentMap" m]
-        (§ sync this
-            (§ set! (:_meta this) m)
+        (#_"IPersistentMap" IReference'''resetMeta [#_"Var" this, #_"IPersistentMap" m]
+            (§ sync this
+                (§ set! (:_meta this) m)
+            )
         )
     )
 
@@ -18402,10 +17965,11 @@
         )
     )
 
-    #_override
-    (defn #_"Object" IDeref'''deref--Var [#_"Var" this]
-        (let [#_"TBox" b (Var''getThreadBinding this)]
-            (if (some? b) (:val b) (:root this))
+    (extend-type Var IDeref
+        (#_"Object" IDeref'''deref [#_"Var" this]
+            (let [#_"TBox" b (Var''getThreadBinding this)]
+                (if (some? b) (:val b) (:root this))
+            )
         )
     )
 
@@ -18422,7 +17986,7 @@
 
     #_method
     (defn #_"Object" Var''alter [#_"Var" this, #_"IFn" fn, #_"ISeq" args]
-        (Var''set this, (.applyTo fn, (cons (deref this) args)))
+        (Var''set this, (IFn'''applyTo fn, (cons (deref this) args)))
         this
     )
 
@@ -18434,12 +17998,12 @@
 
     #_method
     (defn #_"boolean" Var''isMacro [#_"Var" this]
-        (boolean (get (meta this) :macro))
+        (boolean (:macro (meta this)))
     )
 
     #_method
     (defn #_"boolean" Var''isPublic [#_"Var" this]
-        (not (get (meta this) :private))
+        (not (:private (meta this)))
     )
 
     #_method
@@ -18449,7 +18013,7 @@
 
     #_method
     (defn #_"Object" Var''getTag [#_"Var" this]
-        (get (meta this) :tag)
+        (:tag (meta this))
     )
 
     #_method
@@ -18487,7 +18051,7 @@
     #_method
     (defn #_"void" Var''commuteRoot [#_"Var" this, #_"IFn" fn]
         (§ sync this
-            (§ set! (:root this) (.invoke fn, (:root this)))
+            (§ set! (:root this) (IFn'''invoke fn, (:root this)))
         )
         nil
     )
@@ -18495,7 +18059,7 @@
     #_method
     (defn #_"Object" Var''alterRoot [#_"Var" this, #_"IFn" fn, #_"ISeq" args]
         (§ sync this
-            (§ set! (:root this) (.applyTo fn, (cons (:root this) args)))
+            (§ set! (:root this) (IFn'''applyTo fn, (cons (:root this) args)))
         )
     )
 
@@ -18559,135 +18123,46 @@
         )
     )
 
-    #_method
-    (defn #_"IFn" Var''fn [#_"Var" this]
-        (cast IFn (deref this))
-    )
-
     #_foreign
     (defn #_"Object" call---Var [#_"Var" this]
-        (.invoke this)
+        (IFn'''invoke this)
     )
 
     #_foreign
     (defn #_"void" run---Var [#_"Var" this]
-        (.invoke this)
+        (IFn'''invoke this)
         nil
     )
 
-    #_override
-    (defn #_"Object" IFn'''invoke-1--Var [#_"Var" this]
-        (.invoke (Var''fn this))
-    )
+    (extend-type Var IFn
+        (#_"Object" IFn'''invoke
+            ([#_"Var" this] (IFn'''invoke (deref this)))
+            ([#_"Var" this, #_"Object" arg1] (IFn'''invoke (deref this), arg1))
+            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2] (IFn'''invoke (deref this), arg1, arg2))
+            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3] (IFn'''invoke (deref this), arg1, arg2, arg3))
+            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4))
+            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5))
+            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6))
+            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6, arg7))
+            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8))
+            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9))
+            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10))
+            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11))
+            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12))
+            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13))
+            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14))
+            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15))
+            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16))
+            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17))
+            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18))
+          #_([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19))
+          #_([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20))
+          #_([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20 & #_"Object..." args] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, (cast Compiler'OBJECTS_CLASS args)))
+        )
 
-    #_override
-    (defn #_"Object" IFn'''invoke-2--Var [#_"Var" this, #_"Object" arg1]
-        (.invoke (Var''fn this), arg1)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-3--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2]
-        (.invoke (Var''fn this), arg1, arg2)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-4--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
-        (.invoke (Var''fn this), arg1, arg2, arg3)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-5--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-6--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-7--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-8--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-9--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-10--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-11--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-12--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-13--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-14--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-15--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-16--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-17--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-18--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17)
-    )
-
-    #_override
-    (defn #_"Object" IFn'''invoke-19--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18)
-    )
-
-    #_override
-  #_(defn #_"Object" IFn'''invoke-20--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19)
-    )
-
-    #_override
-  #_(defn #_"Object" IFn'''invoke-21--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20)
-    )
-
-    #_override
-  #_(defn #_"Object" IFn'''invoke-22--Var [#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" arg10, #_"Object" arg11, #_"Object" arg12, #_"Object" arg13, #_"Object" arg14, #_"Object" arg15, #_"Object" arg16, #_"Object" arg17, #_"Object" arg18, #_"Object" arg19, #_"Object" arg20 & #_"Object..." args]
-        (.invoke (Var''fn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, (cast Compiler'OBJECTS_CLASS args))
-    )
-
-    #_override
-    (defn #_"Object" IFn'''applyTo--Var [#_"Var" this, #_"ISeq" args]
-        (.applyTo (Var''fn this), args)
+        (#_"Object" IFn'''applyTo [#_"Var" this, #_"ISeq" args]
+            (IFn'''applyTo (deref this), args)
+        )
     )
 )
 )
@@ -18701,9 +18176,10 @@
         )
     )
 
-    #_override
-    (defn #_"Object" IDeref'''deref--Volatile [#_"Volatile" this]
-        (:val this)
+    (extend-type Volatile IDeref
+        (#_"Object" IDeref'''deref [#_"Volatile" this]
+            (:val this)
+        )
     )
 
     #_method
@@ -18774,7 +18250,7 @@
     (defn #_"ISeq" RT'seq [#_"Object" coll]
         (condp instance? coll
             ASeq    coll
-            LazySeq (.seq coll)
+            LazySeq (Seqable'''seq coll)
                     (RT'seqFrom coll)
         )
     )
@@ -18782,7 +18258,7 @@
     ;; N.B. canSeq must be kept in sync with this!
     (defn #_"ISeq" RT'seqFrom [#_"Object" coll]
         (cond
-            (instance? Seqable coll)      (.seq coll)
+            (satisfies? Seqable coll)     (Seqable'''seq coll)
             (nil? coll)                   nil
             (.isArray (class coll))       (ArraySeq'createFromObject coll)
             (instance? CharSequence coll) (StringSeq'create coll)
@@ -18793,7 +18269,7 @@
     (defn #_"boolean" RT'canSeq [#_"Object" coll]
         (or
             (seq? coll)
-            (instance? Seqable coll)
+            (satisfies? Seqable coll)
             (nil? coll)
             (.isArray (class coll))
             (instance? CharSequence coll)
@@ -18806,25 +18282,16 @@
         )
     )
 
-    (defn #_"ISeq" RT'keys [#_"Object" coll] (map key coll))
-    (defn #_"ISeq" RT'vals [#_"Object" coll] (map val coll))
-
-    (defn #_"IPersistentMap" RT'meta [#_"Object" x]
-        (when (instance? IMeta x)
-            (.meta x)
-        )
-    )
-
     (defn #_"int" RT'count [#_"Object" o]
         (cond
             (counted? o)
-                (.count o)
+                (Counted'''count o)
             (nil? o)
                 0
             (coll? o)
-                (loop-when [#_"int" i 0 #_"ISeq" s (seq o)] (some? s) => i
-                    (when (counted? s) => (recur (inc i) (next s))
-                        (+ i (.count s))
+                (loop-when [#_"int" n 0 #_"ISeq" s (seq o)] (some? s) => n
+                    (when (counted? s) => (recur (inc n) (next s))
+                        (+ n (Counted'''count s))
                     )
                 )
             (instance? CharSequence o)
@@ -18839,87 +18306,78 @@
     )
 
     (defn #_"IPersistentCollection" RT'conj [#_"IPersistentCollection" coll, #_"Object" x]
-        (if (some? coll) (.conj coll, x) (PersistentList'new x))
+        (if (some? coll) (ITransientCollection'''conj coll, x) (list x))
     )
 
-    (defn #_"ISeq" RT'cons [#_"Object" x, #_"Object" coll]
+    (defn #_"ISeq" RT'cons [#_"Object" x, #_"Seqable" s]
         (cond
-            (nil? coll) (PersistentList'new x)
-            (seq? coll) (Cons'new x, coll)
-            :else       (Cons'new x, (seq coll))
+            (nil? s) (list x)
+            (seq? s) (Cons'new x, s)
+            :else    (Cons'new x, (seq s))
         )
     )
 
-    (defn #_"Object" RT'first [#_"Object" x]
-        (if (seq? x)
-            (.first x)
-            (when-let [#_"ISeq" s (seq x)]
-                (.first s)
+    (defn #_"Object" RT'first [#_"Seqable" s]
+        (if (seq? s)
+            (ISeq'''first s)
+            (when-let [s (seq s)]
+                (ISeq'''first s)
             )
         )
     )
 
-    (defn #_"ISeq" RT'next [#_"Object" x]
-        (if (seq? x)
-            (.next x)
-            (when-let [#_"ISeq" s (seq x)]
-                (.next s)
-            )
-        )
-    )
-
-    (defn #_"ISeq" RT'rest [#_"Object" x]
-        (if (seq? x)
-            (.rest x)
-            (let [#_"ISeq" s (seq x)]
-                (if (some? s) (.rest s) ())
+    (defn #_"ISeq" RT'next [#_"Seqable" s]
+        (if (seq? s)
+            (ISeq'''next s)
+            (when-let [s (seq s)]
+                (ISeq'''next s)
             )
         )
     )
 
     (defn #_"Object" RT'peek [#_"Object" x]
         (when (some? x)
-            (.peek (cast IPersistentStack x))
+            (IPersistentStack'''peek (cast cloiure.core.IPersistentStack x))
         )
     )
 
     (defn #_"Object" RT'pop [#_"Object" x]
         (when (some? x)
-            (.pop (cast IPersistentStack x))
+            (IPersistentStack'''pop (cast cloiure.core.IPersistentStack x))
         )
     )
 
     (defn #_"Object" RT'get
         ([#_"Object" coll, #_"Object" key]
             (cond
-                (instance? ILookup coll)
-                    (.valAt coll, key)
+                (satisfies? ILookup coll)
+                    (ILookup'''valAt coll, key)
                 (nil? coll)
                     nil
                 (set? coll)
-                    (.get coll, key)
+                    (IPersistentSet'''get coll, key)
                 (and (number? key) (or (string? coll) (.isArray (class coll))))
                     (let-when [#_"int" n (.intValue key)] (< -1 n (count coll))
                         (nth coll n)
                     )
-                (instance? ITransientSet coll)
-                    (.get coll, key)
+                (satisfies? ITransientSet coll)
+                    (ITransientSet'''get coll, key)
             )
         )
         ([#_"Object" coll, #_"Object" key, #_"Object" notFound]
             (cond
-                (instance? ILookup coll)
-                    (.valAt coll, key, notFound)
+                (satisfies? ILookup coll)
+                    (ILookup'''valAt coll, key, notFound)
                 (nil? coll)
                     notFound
                 (set? coll)
-                    (if (contains? coll key) (.get coll, key) notFound)
+                    (if (contains? coll key) (IPersistentSet'''get coll, key) notFound)
                 (and (number? key) (or (string? coll) (.isArray (class coll))))
                     (let [#_"int" n (.intValue key)]
                         (if (< -1 n (count coll)) (nth coll n) notFound)
                     )
-                (instance? ITransientSet coll)
-                    (if (contains? coll key) (.get coll, key) notFound)
+                (satisfies? ITransientSet coll)
+                    (if (contains? coll key) (ITransientSet'''get coll, key) notFound)
                 :else
                     notFound
             )
@@ -18928,7 +18386,7 @@
 
     (defn #_"Associative" RT'assoc [#_"Object" coll, #_"Object" key, #_"Object" val]
         (if (some? coll)
-            (.assoc (cast Associative coll), key, val)
+            (Associative'''assoc (cast cloiure.core.Associative coll), key, val)
             (PersistentArrayMap'new (object-array [ key, val ]))
         )
     )
@@ -18938,17 +18396,17 @@
             (nil? coll)
                 false
             (associative? coll)
-                (if (.containsKey coll, key) true false)
+                (if (Associative'''containsKey coll, key) true false)
             (set? coll)
-                (if (.contains coll, key) true false)
+                (if (IPersistentSet'''contains coll, key) true false)
             (and (number? key) (or (string? coll) (.isArray (class coll))))
                 (let [#_"int" n (.intValue key)]
                     (if (< -1 n (count coll)) true false)
                 )
-            (instance? ITransientSet coll)
-                (if (.contains coll, key) true false)
-            (instance? ITransientAssociative2 coll)
-                (if (.containsKey coll, key) true false)
+            (satisfies? ITransientSet coll)
+                (if (ITransientSet'''contains coll, key) true false)
+            (satisfies? ITransientAssociative coll)
+                (if (ITransientAssociative'''containsKey coll, key) true false)
             :else
                 (throw! (str "contains? not supported on type: " (.getName (class coll))))
         )
@@ -18959,9 +18417,9 @@
             (nil? coll)
                 nil
             (associative? coll)
-                (.entryAt coll, key)
-            (instance? ITransientAssociative2 coll)
-                (.entryAt coll, key)
+                (Associative'''entryAt coll, key)
+            (satisfies? ITransientAssociative coll)
+                (ITransientAssociative'''entryAt coll, key)
             :else
                 (throw! (str "find not supported on type: " (.getName (class coll))))
         )
@@ -18982,7 +18440,7 @@
 
     (defn #_"Object" RT'dissoc [#_"Object" coll, #_"Object" key]
         (when (some? coll)
-            (.dissoc (cast IPersistentMap coll), key)
+            (IPersistentMap'''dissoc (cast cloiure.core.IPersistentMap coll), key)
         )
     )
 
@@ -18990,7 +18448,7 @@
         ([#_"Object" coll, #_"int" n]
             (cond
                 (indexed? coll)
-                    (.nth coll, n)
+                    (Indexed'''nth coll, n)
                 (nil? coll)
                     nil
                 (instance? CharSequence coll)
@@ -19014,7 +18472,7 @@
         ([#_"Object" coll, #_"int" n, #_"Object" notFound]
             (cond
                 (indexed? coll)
-                    (.nth coll, n, notFound)
+                    (Indexed'''nth coll, n, notFound)
                 (nil? coll)
                     notFound
                 (neg? n)
@@ -19042,20 +18500,6 @@
                 :else
                     (throw! (str "nth not supported on this type: " (.getName (class coll))))
             )
-        )
-    )
-
-    (defn #_"Object" RT'assocN [#_"int" n, #_"Object" val, #_"Object" coll]
-        (condp instance? coll
-            IPersistentVector
-                (.assocN coll, n, val)
-            Compiler'OBJECTS_CLASS
-                ;; hmm... this is not persistent
-                (let [#_"Object[]" array coll]
-                    (aset array n val)
-                    array
-                )
-            nil
         )
     )
 
@@ -19352,7 +18796,7 @@
                     )
                     a
                 )
-            (instance? Seqable coll)
+            (satisfies? Seqable coll)
                 (RT'seqToArray (seq coll))
             (string? coll)
                 (let [#_"char[]" chars (.toCharArray coll)
@@ -19452,7 +18896,7 @@
 
 (§ def ^:macro let  (fn* let  [&form &env & decl] (cons 'let* decl)))
 (§ def ^:macro loop (fn* loop [&form &env & decl] (cons 'loop* decl)))
-(§ def ^:macro fn   (fn* fn   [&form &env & decl] (.withMeta ^IObj (cons 'fn* decl) (.meta ^IMeta &form))))
+(§ def ^:macro fn   (fn* fn   [&form &env & decl] (with-meta (cons 'fn* decl) (meta &form))))
 
 ;;;
  ; Returns the first item in the collection. Calls seq on its argument. If s is nil, returns nil.
@@ -19462,12 +18906,12 @@
 ;;;
  ; Returns a seq of the items after the first. Calls seq on its argument. If there are no more items, returns nil.
  ;;
-(§ defn ^ISeq next [s] (RT'next s))
+(§ defn ^cloiure.core.ISeq next [s] (RT'next s))
 
 ;;;
  ; Returns a possibly empty seq of the items after the first. Calls seq on its argument.
  ;;
-(§ defn ^ISeq rest [s] (RT'rest s))
+(§ defn ^cloiure.core.ISeq rest [s] (or (next s) ()))
 
 ;;;
  ; conj[oin].
@@ -19485,7 +18929,7 @@
  ; Returns a seq on the collection. If the collection is empty, returns nil.
  ; (seq nil) returns nil. seq also works on strings, arrays (of reference types).
  ;;
-(§ defn ^ISeq seq [s] (RT'seq s))
+(§ defn ^cloiure.core.ISeq seq [s] (RT'seq s))
 
 ;;;
  ; assoc[iate].
@@ -19493,11 +18937,11 @@
  ; When applied to a vector, returns a new vector that contains val at index. Note - index must be <= (count vector).
  ;;
 (§ defn assoc
-    ([m k v] (RT'assoc m k v))
-    ([m k v & s]
-        (let-when [m (assoc m k v)] s => m
-            (when (next s) => (throw! "assoc expects even number of arguments after map/vector, found odd number")
-                (recur m (first s) (second s) (nnext s))
+    ([a k v] (RT'assoc a k v))
+    ([a k v & kvs]
+        (let-when [a (assoc a k v)] kvs => a
+            (when (next kvs) => (throw! "assoc expects even number of arguments after map/vector, found odd number")
+                (recur a (first kvs) (second kvs) (nnext kvs))
             )
         )
     )
@@ -19506,12 +18950,12 @@
 ;;;
  ; Returns the metadata of obj, returns nil if there is no metadata.
  ;;
-(§ defn meta [x] (when (instance? IMeta x) (.meta ^IMeta x)))
+(§ defn meta [x] (when (satisfies? IMeta x) (IMeta'''meta ^cloiure.core.IMeta x)))
 
 ;;;
  ; Returns an object of the same type and value as obj, with map m as its metadata.
  ;;
-(§ defn with-meta [^IObj x m] (.withMeta x m))
+(§ defn with-meta [^cloiure.core.IObj x m] (IObj'''withMeta x m))
 
 (defn- ^:dynamic assert-valid-fdecl [_])
 
@@ -19598,7 +19042,7 @@
  ; will be aliased and should not be modified.
  ;;
 (§ defn vec [coll]
-    (when (and (vector? coll) (instance? IObj coll)) => (LazilyPersistentVector'create coll)
+    (when (and (vector? coll) (satisfies? IObj coll)) => (LazilyPersistentVector'create coll)
         (with-meta coll nil)
     )
 )
@@ -19786,11 +19230,11 @@
  ; Applies fn f to the argument list formed by prepending intervening arguments to args.
  ;;
 (§ defn apply
-    ([^IFn f args] (.applyTo f (seq args)))
-    ([^IFn f x args] (.applyTo f (list* x args)))
-    ([^IFn f x y args] (.applyTo f (list* x y args)))
-    ([^IFn f x y z args] (.applyTo f (list* x y z args)))
-    ([^IFn f a b c d & more] (.applyTo f (cons a (cons b (cons c (cons d (spread more)))))))
+    ([^cloiure.core.IFn f args] (IFn'''applyTo f (seq args)))
+    ([^cloiure.core.IFn f x args] (IFn'''applyTo f (list* x args)))
+    ([^cloiure.core.IFn f x y args] (IFn'''applyTo f (list* x y args)))
+    ([^cloiure.core.IFn f x y z args] (IFn'''applyTo f (list* x y z args)))
+    ([^cloiure.core.IFn f a b c d & more] (IFn'''applyTo f (cons a (cons b (cons c (cons d (spread more)))))))
 )
 
 ;;;
@@ -19810,15 +19254,15 @@
 (§ defn ^ChunkBuffer chunk-buffer [capacity] (ChunkBuffer. capacity))
 
 (§ defn chunk-append  [^ChunkBuffer b x] (.add b x))
-(§ defn ^IChunk chunk [^ChunkBuffer b  ] (.chunk b))
+(§ defn ^cloiure.core.IChunk chunk [^ChunkBuffer b  ] (.chunk b))
 
-(§ defn ^IChunk chunk-first [^IChunkedSeq s] (.chunkedFirst s))
-(§ defn ^ISeq   chunk-rest  [^IChunkedSeq s] (.chunkedMore  s))
-(§ defn ^ISeq   chunk-next  [^IChunkedSeq s] (.chunkedNext  s))
+(§ defn ^cloiure.core.IChunk chunk-first [^cloiure.core.IChunkedSeq s] (IChunkedSeq'''chunkedFirst s))
+(§ defn ^cloiure.core.ISeq   chunk-next  [^cloiure.core.IChunkedSeq s] (IChunkedSeq'''chunkedNext  s))
+(§ defn ^cloiure.core.ISeq   chunk-rest  [^cloiure.core.IChunkedSeq s] (or (chunk-next s) ()))
 
 (§ defn chunk-cons [chunk rest] (if (zero? (count chunk)) rest (ChunkedCons. chunk rest)))
 
-(defn chunked-seq? [s] (instance? IChunkedSeq s))
+(defn chunked-seq? [s] (satisfies? IChunkedSeq s))
 
 ;;;
  ; Returns a lazy seq representing the concatenation of the elements in the supplied colls.
@@ -19942,7 +19386,7 @@
     ([f val coll]
         (let-when [s (seq coll)] s => val
             (if (chunked-seq? s)
-                (recur f (.reduce (chunk-first s) f val) (chunk-next s))
+                (recur f (IChunk'''reduce (chunk-first s) f val) (chunk-next s))
                 (recur f (f val (first s)) (next s))
             )
         )
@@ -20336,7 +19780,7 @@
 ;;;
  ; Return true if x is a map entry.
  ;;
-(§ defn map-entry? [x] (instance? IMapEntry x))
+(§ defn map-entry? [x] (satisfies? IMapEntry x))
 
 ;;;
  ; Returns true if key is present in the given collection, otherwise
@@ -20362,7 +19806,7 @@
 (§ defn dissoc
     ([m] m)
     ([m k] (RT'dissoc m k))
-    ([m k & s] (let [m (dissoc m k)] (recur-if s [m (first s) (next s)] => m)))
+    ([m k & ks] (let [m (dissoc m k)] (recur-if ks [m (first ks) (next ks)] => m)))
 )
 
 ;;;
@@ -20371,9 +19815,9 @@
  ;;
 (§ defn disj
     ([s] s)
-    ([^IPersistentSet s k]
+    ([^cloiure.core.IPersistentSet s k]
         (when s
-            (.disj s k)
+            (IPersistentSet'''disj s k)
         )
     )
     ([s k & ks]
@@ -20396,30 +19840,40 @@
 (§ defn select-keys [m keys] (with-meta (into {} (map #(find m %) keys)) (meta m)))
 
 ;;;
+ ; Returns the key of the map entry.
+ ;;
+(§ defn key [^cloiure.core.IMapEntry e] (IMapEntry'''key e))
+
+;;;
+ ; Returns the value in the map entry.
+ ;;
+(§ defn val [^cloiure.core.IMapEntry e] (IMapEntry'''val e))
+
+;;;
  ; Returns a sequence of the map's keys, in the same order as (seq m).
  ;;
-(§ defn keys [m] (RT'keys m))
+(§ defn keys [m] (map key m))
 
 ;;;
  ; Returns a sequence of the map's values, in the same order as (seq m).
  ;;
-(§ defn vals [m] (RT'vals m))
+(§ defn vals [m] (map val m))
 
 ;;;
  ; Returns, in constant time, a seq of the items in rev (which can be a vector or sorted-map), in reverse order.
  ; If rev is empty, returns nil.
  ;;
-(§ defn rseq [^Reversible s] (.rseq s))
+(§ defn rseq [^cloiure.core.Reversible s] (Reversible'''rseq s))
 
 ;;;
  ; Returns the name String of a string, symbol or keyword.
  ;;
-(§ defn ^String name [x] (if (string? x) x (.getName ^Named x)))
+(§ defn ^String name [x] (if (string? x) x (Named'''getName ^cloiure.core.Named x)))
 
 ;;;
  ; Returns the namespace String of a symbol or keyword, or nil if not present.
  ;;
-(§ defn ^String namespace [^Named x] (.getNamespace x))
+(§ defn ^String namespace [^cloiure.core.Named x] (Named'''getNamespace x))
 
 ;;;
  ; Coerce to boolean.
@@ -20589,7 +20043,7 @@
  ; Removes all of the methods of multimethod.
  ;;
 (§ defn remove-all-methods [^MultiFn multifn]
-    (.reset multifn)
+    (MultiFn''reset multifn)
 )
 
 ;;;
@@ -20630,7 +20084,7 @@
 
 ;; var stuff
 
-(§ defmacro ^:private assert-args [& pairs]
+(§ defmacro- assert-args [& pairs]
     `(do
         (when-not ~(first pairs)
             (throw! (str (first ~'&form) " requires " ~(second pairs) " in " ~'*ns* ":" (:line (meta ~'&form))))
@@ -20831,10 +20285,10 @@
  ;;
 (§ defn find-var [sym] (Var'find sym))
 
-(§ defn ^:private setup-reference [^IReference r options]
+(§ defn- setup-reference [^cloiure.core.IReference r options]
     (let [opts (apply hash-map options)]
         (when (:meta opts)
-            (.resetMeta r (:meta opts))
+            (reset-meta! r (:meta opts))
         )
         r
     )
@@ -20847,7 +20301,7 @@
  ; or atom, returns its current state. When applied to a delay, forces
  ; it if not already forced. See also - realized?.
  ;;
-(§ defn deref [ref] (.deref ^IDeref ref))
+(§ defn deref [^cloiure.core.IDeref ref] (IDeref'''deref ref))
 
 ;;;
  ; Creates and returns an Atom with an initial value of x and zero or more
@@ -20868,10 +20322,10 @@
  ; Returns the value that was swapped in.
  ;;
 (§ defn swap!
-    ([^IAtom atom f] (.swap atom f))
-    ([^IAtom atom f x] (.swap atom f x))
-    ([^IAtom atom f x y] (.swap atom f x y))
-    ([^IAtom atom f x y & args] (.swap atom f x y args))
+    ([^cloiure.core.IAtom atom f] (IAtom'''swap atom f))
+    ([^cloiure.core.IAtom atom f x] (IAtom'''swap atom f x))
+    ([^cloiure.core.IAtom atom f x y] (IAtom'''swap atom f x y))
+    ([^cloiure.core.IAtom atom f x y & args] (IAtom'''swap atom f x y args))
 )
 
 ;;;
@@ -20879,11 +20333,11 @@
  ; Note that f may be called multiple times, and thus should be free of side effects.
  ; Returns [old new], the value of the atom before and after the swap.
  ;;
-(§ defn ^IPersistentVector swap-vals!
-    ([^IAtom atom f] (.swapVals atom f))
-    ([^IAtom atom f x] (.swapVals atom f x))
-    ([^IAtom atom f x y] (.swapVals atom f x y))
-    ([^IAtom atom f x y & args] (.swapVals atom f x y args))
+(§ defn ^cloiure.core.IPersistentVector swap-vals!
+    ([^cloiure.core.IAtom atom f] (IAtom'''swapVals atom f))
+    ([^cloiure.core.IAtom atom f x] (IAtom'''swapVals atom f x))
+    ([^cloiure.core.IAtom atom f x y] (IAtom'''swapVals atom f x y))
+    ([^cloiure.core.IAtom atom f x y & args] (IAtom'''swapVals atom f x y args))
 )
 
 ;;;
@@ -20891,24 +20345,24 @@
  ; current value of the atom is identical to oldval. Returns true if
  ; set happened, else false.
  ;;
-(§ defn compare-and-set! [^IAtom atom oldval newval]
-    (.compareAndSet atom oldval newval)
+(§ defn compare-and-set! [^cloiure.core.IAtom atom oldval newval]
+    (IAtom'''compareAndSet atom oldval newval)
 )
 
 ;;;
  ; Sets the value of atom to newval without regard for the current value.
  ; Returns newval.
  ;;
-(§ defn reset! [^IAtom atom newval]
-    (.reset atom newval)
+(§ defn reset! [^cloiure.core.IAtom atom newval]
+    (IAtom'''reset atom newval)
 )
 
 ;;;
  ; Sets the value of atom to newval. Returns [old new], the value of the
  ; atom before and after the reset.
  ;;
-(§ defn ^IPersistentVector reset-vals! [^IAtom atom newval]
-    (.resetVals atom newval)
+(§ defn ^cloiure.core.IPersistentVector reset-vals! [^cloiure.core.IAtom atom newval]
+    (IAtom'''resetVals atom newval)
 )
 
 ;;;
@@ -20918,40 +20372,36 @@
  ;
  ; f must be free of side-effects.
  ;;
-(§ defn alter-meta! [^IReference iref f & args]
-    (.alterMeta iref f args)
+(§ defn alter-meta! [^cloiure.core.IReference iref f & args]
+    (IReference'''alterMeta iref f args)
 )
 
 ;;;
  ; Atomically resets the metadata for a namespace/var/ref/atom.
  ;;
-(§ defn reset-meta! [^IReference iref metadata-map]
-    (.resetMeta iref metadata-map)
+(§ defn reset-meta! [^cloiure.core.IReference iref metadata-map]
+    (IReference'''resetMeta iref metadata-map)
 )
 
 ;;;
- ; Creates and returns a Volatile with an initial value of val.
+ ; Creates and returns a Volatile with an initial value of o.
  ;;
-(§ defn ^Volatile volatile! [val]
-    (Volatile. val)
-)
+(§ defn ^Volatile volatile! [o] (Volatile. o))
 
 ;;;
- ; Sets the value of volatile to newval without regard for the
- ; current value. Returns newval.
+ ; Sets the value of volatile to o without regard for the
+ ; current value. Returns o.
  ;;
-(§ defn vreset! [^Volatile vol newval]
-    (.reset vol newval)
-)
+(§ defn vreset! [^Volatile v o] (Volatile''reset v o))
 
 ;;;
  ; Non-atomically swaps the value of the volatile as if:
  ; (apply f current-value-of-vol args).
  ; Returns the value that was swapped in.
  ;;
-(§ defmacro vswap! [vol f & args]
-    (let [v (with-meta vol {:tag 'cloiure.core.Volatile})]
-        `(.reset ~v (~f (.deref ~v) ~@args))
+(§ defmacro vswap! [v f & args]
+    (let [v (with-meta v {:tag 'cloiure.core.Volatile})]
+        `(vreset! ~v (~f (deref ~v) ~@args))
     )
 )
 
@@ -21800,8 +21250,8 @@
 ;;;
  ; Returns a new, transient version of the collection, in constant time.
  ;;
-(§ defn transient [^IEditableCollection coll]
-    (.asTransient coll)
+(§ defn transient [^cloiure.core.IEditableCollection coll]
+    (IEditableCollection'''asTransient coll)
 )
 
 ;;;
@@ -21809,8 +21259,8 @@
  ; constant time. The transient collection cannot be used after this
  ; call, any such use will throw an exception.
  ;;
-(§ defn persistent! [^ITransientCollection coll]
-    (.persistent coll)
+(§ defn persistent! [^cloiure.core.ITransientCollection coll]
+    (ITransientCollection'''persistent coll)
 )
 
 ;;;
@@ -21820,7 +21270,7 @@
 (§ defn conj!
     ([] (transient []))
     ([coll] coll)
-    ([^ITransientCollection coll x] (.conj coll x))
+    ([^cloiure.core.ITransientCollection coll x] (ITransientCollection'''conj coll x))
 )
 
 ;;;
@@ -21829,13 +21279,10 @@
  ; Note - index must be <= (count vector). Returns coll.
  ;;
 (§ defn assoc!
-    ([^ITransientAssociative coll key val] (.assoc coll key val))
-    ([^ITransientAssociative coll key val & kvs]
-        (let [ret (.assoc coll key val)]
-            (if kvs
-                (recur ret (first kvs) (second kvs) (nnext kvs))
-                ret
-            )
+    ([^cloiure.core.ITransientAssociative a k v] (ITransientAssociative'''assoc a k v))
+    ([a k v & kvs]
+        (let [a (assoc! a k v)]
+            (recur-if kvs [a (first kvs) (second kvs) (nnext kvs)] => a)
         )
     )
 )
@@ -21844,13 +21291,10 @@
  ; Returns a transient map that doesn't contain a mapping for key(s).
  ;;
 (§ defn dissoc!
-    ([^ITransientMap map key] (.dissoc map key))
-    ([^ITransientMap map key & ks]
-        (let [ret (.dissoc map key)]
-            (if ks
-                (recur ret (first ks) (next ks))
-                ret
-            )
+    ([^cloiure.core.ITransientMap m k] (ITransientMap'''dissoc m k))
+    ([m k & ks]
+        (let [m (dissoc! m k)]
+            (recur-if ks [m (first ks) (next ks)] => m)
         )
     )
 )
@@ -21859,8 +21303,8 @@
  ; Removes the last item from a transient vector.
  ; If the collection is empty, throws an exception. Returns coll.
  ;;
-(§ defn pop! [^ITransientVector coll]
-    (.pop coll)
+(§ defn pop! [^cloiure.core.ITransientVector coll]
+    (ITransientVector'''pop coll)
 )
 
 ;;;
@@ -21868,14 +21312,11 @@
  ; Returns a transient set of the same (hashed/sorted) type, that does not contain key(s).
  ;;
 (§ defn disj!
-    ([set] set)
-    ([^ITransientSet set key] (.disj set key))
-    ([^ITransientSet set key & ks]
-        (let [ret (.disj set key)]
-            (if ks
-                (recur ret (first ks) (next ks))
-                ret
-            )
+    ([s] s)
+    ([^cloiure.core.ITransientSet s k] (ITransientSet'''disj s k))
+    ([s k & ks]
+        (let [s (disj! s k)]
+            (recur-if ks [s (first ks) (next ks)] => s)
         )
     )
 )
@@ -21885,8 +21326,8 @@
 ;;;
  ; Returns a new coll consisting of to-coll with all of the items of from-coll conjoined.
  ;;
-(§ defn ^:private into1 [to from]
-    (if (instance? IEditableCollection to)
+(§ defn- into1 [to from]
+    (if (satisfies? IEditableCollection to)
         (persistent! (reduce1 conj! (transient to) from))
         (reduce1 conj to from)
     )
@@ -21923,16 +21364,16 @@
  ; Class objects for the primitive types can be obtained using, e.g. Integer/TYPE.
  ;;
 (§ defn into-array
-    ([     aseq] (RT'seqToTypedArray      (seq aseq)))
-    ([type aseq] (RT'seqToTypedArray type (seq aseq)))
+    ([     s] (RT'seqToTypedArray      (seq s)))
+    ([type s] (RT'seqToTypedArray type (seq s)))
 )
 
-(§ defn ^:private array [& items] (into-array items))
+(§ defn- array [& s] (into-array s))
 
 ;;;
  ; Returns the :type metadata of x, or its Class if none.
  ;;
-(§ defn type [x] (or (get (meta x) :type) (class x)))
+(§ defn type [x] (or (:type (meta x)) (class x)))
 
 ;;;
  ; Coerce to Number.
@@ -22034,7 +21475,7 @@
 
 (§ defmulti print-method (fn [x writer] (let [t (get (meta x) :type)] (if (keyword? t) t (class x)))))
 
-(§ defn ^:private pr-on [x w]
+(§ defn- pr-on [x w]
     (print-method x w)
     nil
 )
@@ -22243,7 +21684,7 @@
     )
 )
 
-(§ defmacro ^:private def-aset [name method coerce]
+(§ defmacro- def-aset [name method coerce]
     `(defn ~name
         ([array# idx# val#]
             (. Array (~method array# idx# (~coerce val#)))
@@ -22333,14 +21774,14 @@
 (§ defn set [coll]
     (if (set? coll)
         (with-meta coll nil)
-        (if (instance? IReduceInit coll)
-            (persistent! (.reduce ^IReduceInit coll conj! (transient #{})))
+        (if (satisfies? IReduceInit coll)
+            (persistent! (IReduceInit'''reduce ^cloiure.core.IReduceInit coll conj! (transient #{})))
             (persistent! (reduce1 conj! (transient #{}) coll))
         )
     )
 )
 
-(§ defn ^:private filter-key [keyfn pred amap]
+(§ defn- filter-key [keyfn pred amap]
     (loop [ret {} es (seq amap)]
         (if es
             (if (pred (keyfn (first es)))
@@ -22389,7 +21830,7 @@
  ; Returns the name of the namespace, a symbol.
  ;;
 (§ defn ns-name [ns]
-    (.getName (the-ns ns))
+    (Namespace''getName (the-ns ns))
 )
 
 ;;;
@@ -22700,7 +22141,7 @@
                                         )]
                                     (if (seq bes)
                                         (let [bb (key (first bes)) bk (val (first bes))
-                                              local (if (instance? Named bb) (with-meta (symbol nil (name bb)) (meta bb)) bb)
+                                              local (if (satisfies? Named bb) (with-meta (symbol nil (name bb)) (meta bb)) bb)
                                               bv (if (contains? defaults local)
                                                     (list `get gmap bk (defaults local))
                                                     (list `get gmap bk)
@@ -22742,7 +22183,7 @@
     `(let* ~(destructure bindings) ~@body)
 )
 
-(§ defn ^:private maybe-destructured [params body]
+(§ defn- maybe-destructured [params body]
     (if (every? symbol? params)
         (cons params body)
         (loop [params params new-params (with-meta [] (meta params)) lets []]
@@ -23129,13 +22570,6 @@
 )
 
 ;;;
- ; Same as defn, yielding non-public def.
- ;;
-(§ defmacro defn- [name & decls]
-    (list* `defn (with-meta name (assoc (meta name) :private true)) decls)
-)
-
-;;;
  ; Returns a lazy sequence of the nodes in a tree, via a depth-first walk.
  ; branch? must be a fn of one arg that returns true if passed a node
  ; that can have children (but may not). children must be a fn of one
@@ -23288,8 +22722,8 @@
     )
 )
 
-(§ defn ^:private mk-bound-fn [^Sorted sc test key]
-    (fn [e] (test (.compare (.comparator sc) (.entryKey sc e) key) 0))
+(§ defn- mk-bound-fn [^cloiure.core.Sorted sc test key]
+    (fn [e] (test (.compare (Sorted'''comparator sc) (Sorted'''entryKey sc e) key) 0))
 )
 
 ;;;
@@ -23298,18 +22732,18 @@
  ; (test (.. sc comparator (compare ek key)) 0) is true.
  ;;
 (§ defn subseq
-    ([^Sorted sc test key]
+    ([^cloiure.core.Sorted sc test key]
         (let [include (mk-bound-fn sc test key)]
             (if (#{> >=} test)
-                (when-let [[e :as s] (.seqFrom sc key true)]
+                (when-let [[e :as s] (Sorted'''seqFrom sc key true)]
                     (if (include e) s (next s))
                 )
-                (take-while include (.seq sc true))
+                (take-while include (Sorted'''seq sc true))
             )
         )
     )
-    ([^Sorted sc start-test start-key end-test end-key]
-        (when-let [[e :as s] (.seqFrom sc start-key true)]
+    ([^cloiure.core.Sorted sc start-test start-key end-test end-key]
+        (when-let [[e :as s] (Sorted'''seqFrom sc start-key true)]
             (take-while (mk-bound-fn sc end-test end-key)
                 (if ((mk-bound-fn sc start-test start-key) e) s (next s))
             )
@@ -23323,18 +22757,18 @@
  ; (test (.. sc comparator (compare ek key)) 0) is true.
  ;;
 (§ defn rsubseq
-    ([^Sorted sc test key]
+    ([^cloiure.core.Sorted sc test key]
         (let [include (mk-bound-fn sc test key)]
             (if (#{< <=} test)
-                (when-let [[e :as s] (.seqFrom sc key false)]
+                (when-let [[e :as s] (Sorted'''seqFrom sc key false)]
                     (if (include e) s (next s))
                 )
-                (take-while include (.seq sc false))
+                (take-while include (Sorted'''seq sc false))
             )
         )
     )
-    ([^Sorted sc start-test start-key end-test end-key]
-        (when-let [[e :as s] (.seqFrom sc end-key false)]
+    ([^cloiure.core.Sorted sc start-test start-key end-test end-key]
+        (when-let [[e :as s] (Sorted'''seqFrom sc end-key false)]
             (take-while (mk-bound-fn sc start-test start-key)
                 (if ((mk-bound-fn sc end-test end-key) e) s (next s))
             )
@@ -23432,9 +22866,14 @@
  ;;
 (§ defn empty [coll]
     (when (coll? coll)
-        (.empty ^IPersistentCollection coll)
+        (IPersistentCollection'''empty ^cloiure.core.IPersistentCollection coll)
     )
 )
+
+;;;
+ ; If coll is empty, returns nil, else coll.
+ ;;
+(defn not-empty [coll] (when (seq coll) coll))
 
 ;;;
  ; Maps an expression across an array a, using an index named idx, and
@@ -23547,12 +22986,7 @@
  ;;
 (§ defn make-hierarchy [] {:parents {} :descendants {} :ancestors {}})
 
-(§ def ^:private global-hierarchy (make-hierarchy))
-
-;;;
- ; If coll is empty, returns nil, else coll.
- ;;
-(§ defn not-empty [coll] (when (seq coll) coll))
+(§ def- global-hierarchy (make-hierarchy))
 
 ;;;
  ; Returns the immediate superclass and direct interfaces of c, if any.
@@ -23671,15 +23105,15 @@
 (§ defn derive
     ([tag parent]
         (assert (namespace parent))
-        (assert (or (class? tag) (and (instance? Named tag) (namespace tag))))
+        (assert (or (class? tag) (and (satisfies? Named tag) (namespace tag))))
 
         (alter-var-root #'global-hierarchy derive tag parent)
         nil
     )
     ([h tag parent]
         (assert (not= tag parent))
-        (assert (or (class? tag) (instance? Named tag)))
-        (assert (instance? Named parent))
+        (assert (or (class? tag) (satisfies? Named tag)))
+        (assert (satisfies? Named parent))
 
         (let [tp (:parents h) td (:descendants h) ta (:ancestors h)
               tf
@@ -23803,7 +23237,7 @@
         `(do
             (cloiure.core/in-ns '~name)
             ~@(when name-metadata
-                `((.resetMeta (Namespace'find '~name) ~name-metadata))
+                `((reset-meta! (Namespace'find '~name) ~name-metadata))
             )
             (with-loading-context
                 ~@(when (and (not= name 'cloiure.core) (not-any? #(= :refer-cloiure (first %)) references))
@@ -23918,42 +23352,42 @@
  ; Returns true if x implements IFn.
  ; Note that many data structures (e.g. sets and maps) implement IFn.
  ;;
-(§ defn ifn? [x] (instance? IFn x))
+(§ defn ifn? [x] (satisfies? IFn x))
 
 ;;;
  ; Returns true if x implements Fn, i.e. is an object created via fn.
  ;;
-(§ defn fn? [x] (instance? Fn x))
+(§ defn fn? [x] (satisfies? Fn x))
 
 ;;;
  ; Returns true if coll implements Associative.
  ;;
-(§ defn associative? [coll] (instance? Associative coll))
+(§ defn associative? [coll] (satisfies? Associative coll))
 
 ;;;
  ; Returns true if coll implements Sequential.
  ;;
-(§ defn sequential? [coll] (instance? Sequential coll))
+(§ defn sequential? [coll] (satisfies? Sequential coll))
 
 ;;;
  ; Returns true if coll implements Sorted.
  ;;
-(§ defn sorted? [coll] (instance? Sorted coll))
+(§ defn sorted? [coll] (satisfies? Sorted coll))
 
 ;;;
  ; Returns true if coll implements count in constant time.
  ;;
-(§ defn counted? [coll] (instance? Counted coll))
+(§ defn counted? [coll] (satisfies? Counted coll))
 
 ;;;
  ; Returns true if coll implements Reversible.
  ;;
-(§ defn reversible? [coll] (instance? Reversible coll))
+(§ defn reversible? [coll] (satisfies? Reversible coll))
 
 ;;;
  ; Return true if coll implements Indexed, indicating efficient lookup by index.
  ;;
-(§ defn indexed? [coll] (instance? Indexed coll))
+(§ defn indexed? [coll] (satisfies? Indexed coll))
 
 ;;;
  ; Bound in a repl thread to the most recent value printed.
@@ -24137,8 +23571,8 @@
     (-> x (bit-shift-right shift) (bit-and mask))
 )
 
-(§ def ^:private max-mask-bits 13)
-(§ def ^:private max-switch-table-size (bit-shift-left 1 max-mask-bits))
+(§ def- max-mask-bits 13)
+(§ def- max-switch-table-size (bit-shift-left 1 max-mask-bits))
 
 ;;;
  ; Takes a collection of hashes and returns [shift mask] or nil if none found.
@@ -24404,8 +23838,8 @@
           totype     (fn [^Class c] (Type/getType c))
           to-types   (fn [cs] (if (pos? (count cs)) (into-array (map totype cs)) (make-array Type 0)))
           super-type ^Type (totype super)
-          imap-type  ^Type (totype IPersistentMap)
-          ifn-type   (totype IFn)
+          imap-type  ^Type (totype cloiure.core.IPersistentMap)
+          ifn-type   (totype cloiure.core.IFn)
           obj-type   (totype Object)
           sym-type   (totype Symbol)
           rt-type    (totype RT)
@@ -24481,7 +23915,7 @@
                 )
             )]
         ;; start class definition
-        (.visit cv Opcodes/V1_5 (+ Opcodes/ACC_PUBLIC Opcodes/ACC_SUPER) cname nil (iname super) (into-array (map iname (cons IProxy interfaces))))
+        (.visit cv Opcodes/V1_5 (+ Opcodes/ACC_PUBLIC Opcodes/ACC_SUPER) cname nil (iname super) (into-array (map iname (cons cloiure.core.IProxy interfaces))))
         ;; add field for fn mappings
         (.visitField cv (+ Opcodes/ACC_PRIVATE Opcodes/ACC_VOLATILE) fmap (.getDescriptor imap-type) nil nil)
         ;; add ctors matching/calling super's
@@ -24517,9 +23951,9 @@
             (.loadThis gen)
             (.dup gen)
             (.getField gen ctype fmap imap-type)
-            (.checkCast gen (totype IPersistentCollection))
+            (.checkCast gen (totype cloiure.core.IPersistentCollection))
             (.loadArgs gen)
-            (.invokeInterface gen (totype IPersistentCollection) (Method/getMethod "cloiure.core.IPersistentCollection cons(Object)"))
+            (.invokeInterface gen (totype cloiure.core.IPersistentCollection) (Method/getMethod "cloiure.core.IPersistentCollection cons(Object)"))
             (.checkCast gen imap-type)
             (.putField gen ctype fmap imap-type)
             (.returnValue gen)
@@ -24644,8 +24078,8 @@
  ; first arg corresponding to this, and sets the proxy's fn map.
  ; Returns the proxy.
  ;;
-(§ defn init-proxy [^IProxy proxy mappings]
-    (.__initCloiureFnMappings proxy mappings)
+(§ defn init-proxy [^cloiure.core.IProxy proxy mappings]
+    (IProxy'''__initCloiureFnMappings proxy mappings)
     proxy
 )
 
@@ -24659,15 +24093,15 @@
  ; to update the behavior of an existing instance without changing its identity.
  ; Returns the proxy.
  ;;
-(§ defn update-proxy [^IProxy proxy mappings]
-    (.__updateCloiureFnMappings proxy mappings)
+(§ defn update-proxy [^cloiure.core.IProxy proxy mappings]
+    (IProxy'''__updateCloiureFnMappings proxy mappings)
     proxy
 )
 
 ;;;
  ; Takes a proxy instance and returns the proxy's fn map.
  ;;
-(§ defn proxy-mappings [^IProxy proxy] (.__getCloiureFnMappings proxy))
+(§ defn proxy-mappings [^cloiure.core.IProxy proxy] (IProxy'''__getCloiureFnMappings proxy))
 
 ;;;
  ; class-and-interfaces - a vector of class names.
@@ -24804,7 +24238,7 @@
 )
 
 (§ defmethod print-method :default [o, ^Writer w]
-    (if (instance? IObj o)
+    (if (satisfies? IObj o)
         (print-method (vary-meta o #(dissoc % :type)) w)
         (print-simple o w)
     )
@@ -24864,11 +24298,11 @@
     (print-simple o w)
 )
 
-(§ defmethod print-method ISeq [o, ^Writer w]
+(§ defmethod print-method cloiure.core.ISeq [o, ^Writer w]
     (print-sequential "(" pr-on " " ")" o w)
 )
 
-(§ prefer-method print-method ISeq IPersistentCollection)
+(§ prefer-method print-method cloiure.core.ISeq cloiure.core.IPersistentCollection)
 
 ;;;
  ; Returns escape string for char or nil if none.
@@ -24901,7 +24335,7 @@
     nil
 )
 
-(§ defmethod print-method IPersistentVector [v, ^Writer w]
+(§ defmethod print-method cloiure.core.IPersistentVector [v, ^Writer w]
     (print-sequential "[" pr-on " " "]" v w)
 )
 
@@ -24949,7 +24383,7 @@
     )
 )
 
-(§ defmethod print-method IPersistentMap [m, ^Writer w]
+(§ defmethod print-method cloiure.core.IPersistentMap [m, ^Writer w]
     (let [[ns lift-map] (lift-ns m)]
         (if ns
             (print-prefix-map (str "#:" ns) lift-map pr-on w)
@@ -24958,7 +24392,7 @@
     )
 )
 
-(§ defmethod print-method IPersistentSet [s, ^Writer w]
+(§ defmethod print-method cloiure.core.IPersistentSet [s, ^Writer w]
     (print-sequential "#{" pr-on " " "}" (seq s) w)
 )
 
@@ -25030,30 +24464,25 @@
     (.append w \") ;; oops! "
 )
 
-(§ defn- deref-as-map [^IDeref o]
-    (let [pending (and (instance? IPending o) (not (.isRealized ^IPending o)))
-          [ex val]
-            (when-not pending
+(defn- deref-as-map [^cloiure.core.IDeref r]
+    (let [pending? (and (satisfies? IPending r) (not (realized? r)))
+          [failed? val]
+            (when-not pending?
                 (try
-                    [false (deref o)]
+                    [false (deref r)]
                     (catch Throwable e
                         [true e]
                     )
                 )
             )]
         (hash-map
-            :status
-                (cond
-                    ex :failed
-                    pending :pending
-                    :else :ready
-                )
+            :status (cond failed? :failed pending? :pending :else :ready)
             :val val
         )
     )
 )
 
-(§ defmethod print-method IDeref [o ^Writer w]
+(§ defmethod print-method cloiure.core.IDeref [o ^Writer w]
     (print-tagged-object o (deref-as-map o) w)
 )
 
@@ -25139,7 +24568,7 @@
     (print-throwable o w)
 )
 
-(§ def ^:private prim->class
+(§ def- prim->class
      (hash-map
         'boolean  Boolean/TYPE   'booleans (Class/forName "[Z")
         'byte     Byte/TYPE      'bytes    (Class/forName "[B")
@@ -25322,12 +24751,12 @@
  ; == "foo"
  ;
  ; (seq (let [f "foo"]
- ;  (reify cloiure.core.Seqable
+ ;  (reify Seqable
  ;   (seq [this] (seq f)))))
  ; == (\f \o \o)
  ;
- ; reify always implements cloiure.core.IObj and transfers meta
- ; data of the form to the created object.
+ ; reify always implements IObj and transfers meta data of the form
+ ; to the created object.
  ;
  ; (meta ^{:k :v} (reify Object (toString [this] "foo")))
  ; == {:k :v}
@@ -25469,13 +24898,13 @@
     )
 )
 
-(§ defn- super-chain [^Class c]
+(defn- super-chain [^Class c]
     (when c
         (cons c (super-chain (.getSuperclass c)))
     )
 )
 
-(§ defn- pref
+(defn- pref
     ([] nil)
     ([a] a)
     ([^Class a ^Class b] (if (.isAssignableFrom a b) b a))
@@ -25530,7 +24959,7 @@
     (boolean (find-protocol-impl protocol x))
 )
 
-(§ defn -cache-protocol-fn [^AFunction pf x ^Class c ^IFn interf]
+(§ defn -cache-protocol-fn [^AFunction pf x ^Class c ^cloiure.core.IFn interf]
     (let [cache (.__methodImplCache pf)
           f (if (.isInstance c x) interf (find-protocol-method (.protocol cache) (.methodk cache) x))]
         (when-not f
@@ -25942,8 +25371,8 @@
  ; Reduces via IReduceInit if possible, else naively.
  ;;
 (§ defn- interface-or-naive-reduce [coll f val]
-    (if (instance? IReduceInit coll)
-        (.reduce ^IReduceInit coll f val)
+    (if (satisfies? IReduceInit coll)
+        (IReduceInit'''reduce ^cloiure.core.IReduceInit coll f val)
         (naive-seq-reduce coll f val)
     )
 )
@@ -25963,8 +25392,8 @@
 
     IReduceInit
     (coll-reduce
-        ([coll f] (.reduce ^IReduce coll f))
-        ([coll f val] (.reduce coll f val))
+        ([coll f] (IReduce'''reduce ^cloiure.core.IReduce coll f))
+        ([coll f val] (IReduceInit'''reduce coll f val))
     )
 
     ;; aseqs were iterable, masking internal-reducers
@@ -25998,7 +25427,7 @@
     (internal-reduce [s f val]
         (if-let [s (seq s)]
             (if (chunked-seq? s)
-                (let [ret (.reduce (chunk-first s) f val)]
+                (let [ret (IChunk'''reduce (chunk-first s) f val)]
                     (if (reduced? ret)
                         @ret
                         (recur (chunk-next s) f ret)
@@ -26052,7 +25481,7 @@
  ; map entries. Called by cloiure.core/reduce-kv, and has same
  ; semantics (just different arg order).
  ;;
-(§ defprotocol IKVReduce
+(§ defprotocol KVReduce
     (kv-reduce [amap f init])
 )
 
@@ -26079,17 +25508,19 @@
 
 (§ deftype ArrayChunk [^ArrayManager am arr ^int off ^int end]
     Indexed
-    (nth [_ i] (.aget am arr (+ off i)))
-    (count [_] (- end off))
+    (Indexed'''nth [_ i] (.aget am arr (+ off i)))
+
+    Counted
+    (Counted'''count [_] (- end off))
 
     IChunk
-    (dropFirst [_]
+    (IChunk'''dropFirst [_]
         (if (= off end)
             (throw! "dropFirst of empty chunk")
             (ArrayChunk. am arr (inc off) end)
         )
     )
-    (reduce [_ f init]
+    (IChunk'''reduce [_ f init]
         (loop [ret init i off]
             (if (< i end)
                 (let [ret (f ret (.aget am arr i))]
@@ -26152,16 +25583,16 @@
     )
 
     ISeq
-    (first [_] (.aget am anode offset))
-    (next [this]
+    (ISeq'''first [_] (.aget am anode offset))
+    (ISeq'''next [this]
         (if (< (inc offset) (.alength am anode))
             (VecSeq. am vec anode i (inc offset))
-            (.chunkedNext this)
+            (chunk-next this)
         )
     )
-    (rest [this] (or (next this) ()))
-    (cons [this o] (Cons. o this))
-    (count [this]
+
+    Counted
+    (Counted'''count [this]
         (loop [i 1 s (next this)]
             (if s
                 (if (counted? s)
@@ -26172,31 +25603,28 @@
             )
         )
     )
-    (empty [_] PersistentList/EMPTY)
+
+    IPersistentCollection
+    (IPersistentCollection'''empty [_] PersistentList/EMPTY)
 
     Seqable
-    (seq [this] this)
+    (Seqable'''seq [this] this)
 
     IChunkedSeq
-    (chunkedFirst [_]
+    (IChunkedSeq'''chunkedFirst [_]
         (ArrayChunk. am anode offset (.alength am anode))
     )
-    (chunkedNext [_]
+    (IChunkedSeq'''chunkedNext [_]
         (let [nexti (+ i (.alength am anode))]
             (when (< nexti (count vec))
                 (VecSeq. am vec (.arrayFor vec nexti) nexti 0)
             )
         )
     )
-    (chunkedMore [this]
-        (let [s (.chunkedNext this)]
-            (or s PersistentList/EMPTY)
-        )
-    )
 )
 
 (§ defmethod print-method ::VecSeq [v w]
-    ((get (methods print-method) ISeq) v w)
+    ((get (methods print-method) cloiure.core.ISeq) v w)
 )
 
 (§ deftype Vec [^ArrayManager am ^int cnt ^int shift ^VecNode root tail _meta]
@@ -26236,34 +25664,31 @@
 
     IHashEq
     ;; todo - cache
-    (hasheq [this] (Murmur3'hashOrdered this))
+    (IHashEq'''hasheq [this] (Murmur3'hashOrdered this))
 
     Counted
-    (count [_] cnt)
+    (Counted'''count [_] cnt)
 
     IMeta
-    (meta [_] _meta)
+    (IMeta'''meta [_] _meta)
 
     IObj
-    (withMeta [_ m] (Vec. am cnt shift root tail m))
+    (IObj'''withMeta [_ m] (Vec. am cnt shift root tail m))
 
     Indexed
-    (nth [this i]
-        (let [a (.arrayFor this i)]
-            (.aget am a (bit-and i (int 0x1f)))
+    (Indexed'''nth
+        ([this i]
+            (.aget am (.arrayFor this i) (bit-and i (int 0x1f)))
         )
-    )
-    (nth [this i not-found]
-        (let [z (int 0)]
-            (if (and (>= i z) (< i (count this)))
+        ([this i not-found]
+            (when (< -1 i (count this)) => not-found
                 (nth this i)
-                not-found
             )
         )
     )
 
     IPersistentCollection
-    (cons [this val]
+    (IPersistentCollection'''conj [this val]
         (if (< (- cnt (.tailoff this)) (int 32))
             (let [new-tail (.array am (inc (.alength am tail)))]
                 (System/arraycopy tail 0 new-tail 0 (.alength am tail))
@@ -26284,15 +25709,15 @@
             )
         )
     )
-    (empty [_] (Vec. am 0 5 EMPTY-NODE (.array am 0) nil))
+    (IPersistentCollection'''empty [_] (Vec. am 0 5 EMPTY-NODE (.array am 0) nil))
 
     IPersistentStack
-    (peek [this]
+    (IPersistentStack'''peek [this]
         (when (pos? cnt)
             (nth this (dec cnt))
         )
     )
-    (pop [this]
+    (IPersistentStack'''pop [this]
         (cond
             (zero? cnt)
                 (throw! "can't pop empty vector")
@@ -26318,7 +25743,7 @@
     )
 
     IPersistentVector
-    (assocN [this i val]
+    (IPersistentVector'''assocN [this i val]
         (cond
             (and (<= (int 0) i) (< i cnt))
                 (if (>= i (.tailoff this))
@@ -26330,7 +25755,7 @@
                     (Vec. am cnt shift (.doAssoc this shift root i val) tail (meta this))
                 )
             (= i cnt)
-                (.conj this val)
+                (IPersistentCollection'''conj this val)
             :else
                 (throw (IndexOutOfBoundsException.))
         )
@@ -26338,44 +25763,41 @@
     (length [_] cnt)
 
     Reversible
-    (rseq [this]
-        (if (pos? (count this))
-            (RSeq. this (dec (count this)))
-            nil
+    (Reversible'''rseq [this]
+        (let-when [n (count this)] (pos? n)
+            (RSeq. this (dec n))
         )
     )
 
     Associative
-    (assoc [this k v]
-        (if (Numbers'isInteger k)
-            (.assocN this k v)
-            (throw! "key must be integer")
+    (Associative'''assoc [this k v]
+        (when (Numbers'isInteger k) => (throw! "key must be integer")
+            (IPersistentVector'''assocN this k v)
         )
     )
-    (containsKey [this k]
-        (and (Numbers'isInteger k)
-            (< -1 (int k) cnt)
-        )
+    (Associative'''containsKey [this k]
+        (and (Numbers'isInteger k) (< -1 (int k) cnt))
     )
-    (entryAt [this k]
-        (if (.containsKey this k)
+    (Associative'''entryAt [this k]
+        (when (Associative'''containsKey this k)
             (MapEntry'create k (nth this (int k)))
-            nil
         )
     )
 
     ILookup
-    (valAt [this k not-found]
-        (when (Numbers'isInteger k) => not-found
-            (let-when [i (int k)] (< -1 i cnt) => not-found
-                (nth this i)
+    (ILookup'''valAt
+        ([this k] (ILookup'''valAt this k nil))
+        ([this k not-found]
+            (when (Numbers'isInteger k) => not-found
+                (let-when [i (int k)] (< -1 i cnt) => not-found
+                    (nth this i)
+                )
             )
         )
     )
-    (valAt [this k] (.valAt this k nil))
 
     IFn
-    (invoke [this k]
+    (IFn'''invoke [this k]
         (when (Numbers'isInteger k) => (throw! "key must be integer")
             (let-when [i (int k)] (< -1 i cnt) => (throw (IndexOutOfBoundsException.))
                 (nth this i)
@@ -26384,7 +25806,7 @@
     )
 
     Seqable
-    (seq [this]
+    (Seqable'''seq [this]
         (if (zero? cnt)
             nil
             (VecSeq. am this (.arrayFor this 0) 0 0)
@@ -26481,7 +25903,7 @@
     (compareTo [this o]
         (if (identical? this o)
             0
-            (let [^IPersistentVector v (cast IPersistentVector o) vcnt (count v)]
+            (let [^cloiure.core.IPersistentVector v (cast cloiure.core.IPersistentVector o) vcnt (count v)]
                 (cond
                     (< cnt vcnt)
                         -1
@@ -26506,10 +25928,10 @@
 )
 
 (§ defmethod print-method ::Vec [v w]
-    ((get (methods print-method) IPersistentVector) v w)
+    ((get (methods print-method) cloiure.core.IPersistentVector) v w)
 )
 
-(§ defmacro ^:private mk-am [t]
+(§ defmacro- mk-am [t]
     (let [garr (gensym) tgarr (with-meta garr {:tag (symbol (str t "s"))})]
         `(reify ArrayManager
             (array [_ size#] (~(symbol (str t "-array")) size#))
@@ -26521,7 +25943,7 @@
     )
 )
 
-(§ def ^:private ams
+(§ def- ams
     (hash-map
         :int     (mk-am int)
         :long    (mk-am long)
@@ -26531,7 +25953,7 @@
     )
 )
 
-(§ defmacro ^:private ams-check [t] `(or (ams ~t) (throw! (str "unrecognized type " ~t))))
+(§ defmacro- ams-check [t] `(or (ams ~t) (throw! (str "unrecognized type " ~t))))
 
 ;;;
  ; Creates a new vector of a single primitive type t, where t is one of
@@ -26601,20 +26023,20 @@
  ;;
 (§ defn reduce
     ([f coll]
-        (if (instance? IReduce coll)
-            (.reduce ^IReduce coll f)
-            (cloiure.core.protocols/coll-reduce coll f)
+        (if (satisfies? IReduce coll)
+            (IReduce'''reduce ^cloiure.core.IReduce coll f)
+            (coll-reduce coll f)
         )
     )
     ([f val coll]
-        (if (instance? IReduceInit coll)
-            (.reduce ^IReduceInit coll f val)
-            (cloiure.core.protocols/coll-reduce coll f val)
+        (if (satisfies? IReduceInit coll)
+            (IReduceInit'''reduce ^cloiure.core.IReduceInit coll f val)
+            (coll-reduce coll f val)
         )
     )
 )
 
-(§ extend-protocol cloiure.core.protocols/IKVReduce
+(§ extend-protocol KVReduce
     nil
     (kv-reduce [_ f init] init)
 
@@ -26623,7 +26045,7 @@
     (kv-reduce [amap f init] (reduce (fn [ret [k v]] (f ret k v)) init amap))
 
     IKVReduce
-    (kv-reduce [amap f init] (.kvreduce amap f init))
+    (kv-reduce [amap f init] (IKVReduce'''kvreduce amap f init))
 )
 
 ;;;
@@ -26634,7 +26056,7 @@
  ; reduce-kv is supported on vectors, where the keys will be the ordinals.
  ;;
 (§ defn reduce-kv [f init coll]
-    (cloiure.core.protocols/kv-reduce coll f init)
+    (kv-reduce coll f init)
 )
 
 ;;;
@@ -26665,13 +26087,8 @@
 (§ defn transduce
     ([xform f coll] (transduce xform f (f) coll))
     ([xform f init coll]
-        (let [f (xform f)
-              ret
-                (if (instance? IReduceInit coll)
-                    (.reduce ^IReduceInit coll f init)
-                    (cloiure.core.protocols/coll-reduce coll f init)
-                )]
-            (f ret)
+        (let [f (xform f)]
+            (f (reduce f init coll))
         )
     )
 )
@@ -26684,13 +26101,13 @@
     ([] [])
     ([to] to)
     ([to from]
-        (if (instance? IEditableCollection to)
-            (with-meta (persistent! (reduce conj! (transient to) from)) (meta to))
+        (if (satisfies? IEditableCollection to)
+            (with-meta (reduce! conj! to from) (meta to))
             (reduce conj to from)
         )
     )
     ([to xform from]
-        (if (instance? IEditableCollection to)
+        (if (satisfies? IEditableCollection to)
             (with-meta (persistent! (transduce xform conj! (transient to) from)) (meta to))
             (transduce xform conj to from)
         )
@@ -26704,27 +26121,17 @@
  ; colls are ignored. Function f should accept number-of-colls arguments.
  ;;
 (§ defn mapv
-    ([f coll]
-        (-> (reduce (fn [v o] (conj! v (f o))) (transient []) coll) persistent!)
-    )
-    ([f c1 c2]
-        (into [] (map f c1 c2))
-    )
-    ([f c1 c2 c3]
-        (into [] (map f c1 c2 c3))
-    )
-    ([f c1 c2 c3 & colls]
-        (into [] (apply map f c1 c2 c3 colls))
-    )
+    ([f coll] (reduce! #(conj! %1 (f %2)) [] coll))
+    ([f c1 c2] (into [] (map f c1 c2)))
+    ([f c1 c2 c3] (into [] (map f c1 c2 c3)))
+    ([f c1 c2 c3 & colls] (into [] (apply map f c1 c2 c3 colls)))
 )
 
 ;;;
  ; Returns a vector of the items in coll for which (pred item)
  ; returns logical true. pred must be free of side-effects.
  ;;
-(§ defn filterv [pred coll]
-    (-> (reduce (fn [v o] (if (pred o) (conj! v o) v)) (transient []) coll) persistent!)
-)
+(§ defn filterv [pred? coll] (reduce! #(if (pred? %2) (conj! %1 %2) %1) [] coll))
 
 ;;;
  ; Takes any nested combination of sequential things (lists, vectors, etc.)
@@ -26740,18 +26147,7 @@
  ; f on each element. The value at each key will be a vector of the
  ; corresponding elements, in the order they appeared in coll.
  ;;
-(§ defn group-by [f coll]
-    (persistent!
-        (reduce
-            (fn [ret x]
-                (let [k (f x)]
-                    (assoc! ret k (conj (get ret k []) x))
-                )
-            )
-            (transient {}) coll
-        )
-    )
-)
+(§ defn group-by [f coll] (reduce! #(let [k (f %2)] (assoc! %1 k (conj (get %1 k []) %2))) {} coll))
 
 ;;;
  ; Applies f to each value in coll, splitting it each time f returns
@@ -26816,16 +26212,7 @@
 ;;;
  ; Returns a map from distinct items in coll to the number of times they appear.
  ;;
-(§ defn frequencies [coll]
-    (persistent!
-        (reduce
-            (fn [counts x]
-                (assoc! counts x (inc (get counts x 0)))
-            )
-            (transient {}) coll
-        )
-    )
-)
+(§ defn frequencies [coll] (reduce! #(assoc! %1 %2 (inc (get %1 %2 0))) {} coll))
 
 ;;;
  ; Returns a lazy seq of the intermediate values of the reduction (as per reduce)
@@ -27235,7 +26622,7 @@
 ;;;
  ; Returns true if a value has been produced for a delay or lazy sequence.
  ;;
-(§ defn realized? [^IPending x] (.isRealized x))
+(§ defn realized? [^cloiure.core.IPending x] (IPending'''isRealized x))
 
 ;;;
  ; Takes an expression and a set of test/form pairs. Threads expr (via ->)
@@ -27321,7 +26708,7 @@
     )
 )
 
-(§ defn ^:private preserving-reduced [rf]
+(§ defn- preserving-reduced [rf]
     #(let [ret (rf %1 %2)]
         (if (reduced? ret) (reduced ret) ret)
     )
@@ -27388,8 +26775,8 @@
  ; Move a maximal element of coll according to fn k (which returns a number) to the front of coll.
  ;;
 (§ defn- bubble-max-key [k coll]
-    (let [max (apply max-key k coll)]
-        (cons max (remove #(identical? max %) coll))
+    (let [m (apply max-key k coll)]
+        (cons m (remove #(identical? m %) coll))
     )
 )
 
@@ -27845,8 +27232,8 @@
     ([f coll] (reduce f (f) coll))
     ([f init coll]
         (if (map? coll)
-            (cloiure.core.protocols/kv-reduce coll f init)
-            (cloiure.core.protocols/coll-reduce coll f init)
+            (kv-reduce coll f init)
+            (coll-reduce coll f init)
         )
     )
 )
@@ -27880,8 +27267,8 @@
     ([coll xf]
         (reify
             CollReduce
-            (coll-reduce [this f1] (cloiure.core.protocols/coll-reduce this f1 (f1)))
-            (coll-reduce [_ f1 init] (cloiure.core.protocols/coll-reduce coll (xf f1) init))
+            (coll-reduce [this f1] (coll-reduce this f1 (f1)))
+            (coll-reduce [_ f1 init] (coll-reduce coll (xf f1) init))
         )
     )
 )
@@ -27895,8 +27282,8 @@
     ([coll xf]
         (reify
             CollReduce
-            (coll-reduce [_ f1] (cloiure.core.protocols/coll-reduce coll (xf f1) (f1)))
-            (coll-reduce [_ f1 init] (cloiure.core.protocols/coll-reduce coll (xf f1) init))
+            (coll-reduce [_ f1] (coll-reduce coll (xf f1) (f1)))
+            (coll-reduce [_ f1 init] (coll-reduce coll (xf f1) init))
 
             CollFold
             (coll-fold [_ n combinef reducef] (coll-fold coll n combinef (xf reducef)))
@@ -27916,7 +27303,7 @@
 ;;;
  ; Builds another arity of the fn that returns a fn awaiting the last param.
  ;;
-(§ defmacro ^:private defcurried [name meta args & body]
+(§ defmacro- defcurried [name meta args & body]
     (do-curried name meta args body)
 )
 
@@ -27937,7 +27324,7 @@
 ;;;
  ; Builds 3-arity reducing fn given names of wrapped fn and key, and k/v impl.
  ;;
-(§ defmacro ^:private rfn [[f1 k] fkv]
+(§ defmacro- rfn [[f1 k] fkv]
     (do-rfn f1 k fkv)
 )
 
@@ -28016,7 +27403,7 @@
                 ([] (f1))
                 ([ret v]
                     (if (sequential? v)
-                        (cloiure.core.protocols/coll-reduce (flatten v) f1 ret)
+                        (coll-reduce (flatten v) f1 ret)
                         (f1 ret v)
                     )
                 )
@@ -28089,17 +27476,17 @@
 
 (§ deftype Cat [cnt left right]
     Counted
-    (count [_] cnt)
+    (Counted'''count [_] cnt)
 
     Seqable
-    (seq [_] (concat (seq left) (seq right)))
+    (Seqable'''seq [_] (concat (seq left) (seq right)))
 
     CollReduce
     (coll-reduce [this f1]
-        (cloiure.core.protocols/coll-reduce this f1 (f1))
+        (coll-reduce this f1 (f1))
     )
     (coll-reduce [_ f1 init]
-        (cloiure.core.protocols/coll-reduce right f1 (cloiure.core.protocols/coll-reduce left f1 init))
+        (coll-reduce right f1 (coll-reduce left f1 init))
     )
 
     CollFold
@@ -28188,7 +27575,7 @@
     (coll-fold [v n combinef reducef] (foldvec v n combinef reducef))
 
     PersistentHashMap
-    (coll-fold [m n combinef reducef] (.fold m n combinef reducef fjinvoke fjtask fjfork fjjoin))
+    (coll-fold [m n combinef reducef] (INode'''fold m n combinef reducef fjinvoke fjtask fjfork fjjoin))
 )
 )
 
