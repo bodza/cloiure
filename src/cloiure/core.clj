@@ -1,5 +1,5 @@
 (ns cloiure.core
-    (:refer-clojure :only [* *err* *ns* *print-length* *warn-on-reflection* + - -> .. / < <= = > >= aget alength alter-meta! apply as-> aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char chunk-next compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defprotocol defrecord deref dissoc doseq dotimes empty extend-type find find-ns first fn get hash-map hash-set identical? if-let import inc indexed? int intern interpose into into-array isa? key keys keyword let letfn list list* long loop make-array map map-entry? mapv merge meta name namespace neg? next not= nth object-array parents peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot realized? reduce reduced? reify rem repeat reset-meta! resolve rest rseq satisfies? seq sequential? some sorted-map subvec swap! swap-vals! symbol to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector when-let while with-meta zero?])
+    (:refer-clojure :only [* *err* *ns* *print-length* *warn-on-reflection* + - -> .. / < <= = > >= aget alength alter-meta! apply as-> aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defprotocol defrecord deref dissoc doseq dotimes empty extend-type find find-ns first fn get hash-map hash-set identical? if-let import inc indexed? int intern interpose into into-array isa? key keys keyword let letfn list list* long loop make-array map map-entry? mapv merge meta name namespace neg? next not= nth object-array parents peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot realized? reduce reduced? reify rem repeat reset-meta! resolve rest rseq satisfies? seq sequential? some sorted-map subvec swap! swap-vals! symbol to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector when-let while with-meta zero?])
 )
 
 (defmacro § [& _])
@@ -316,20 +316,6 @@
     )
 )
 
-(java-ns cloiure.lang.IChunk
-    (defprotocol IChunk
-        (#_"IChunk" IChunk'''dropFirst [#_"IChunk" this])
-        (#_"Object" IChunk'''reduce [#_"IChunk" this, #_"IFn" f, #_"Object" start])
-    )
-)
-
-(java-ns cloiure.lang.IChunkedSeq
-    (defprotocol IChunkedSeq
-        (#_"IChunk" IChunkedSeq'''chunkedFirst [#_"IChunkedSeq" this])
-        (#_"ISeq" IChunkedSeq'''chunkedNext [#_"IChunkedSeq" this])
-    )
-)
-
 (java-ns cloiure.lang.IPending
     (defprotocol IPending
         (#_"boolean" IPending'''isRealized [#_"IPending" this])
@@ -626,7 +612,7 @@
 )
 
 (java-ns cloiure.lang.ArrayChunk
-    (defrecord ArrayChunk [] #_"IChunk" #_"Indexed" #_"Counted")
+    (defrecord ArrayChunk [] #_"Indexed" #_"Counted")
 )
 
 (java-ns cloiure.lang.ArraySeq
@@ -673,14 +659,6 @@
     (defrecord Box [])
 )
 
-(java-ns cloiure.lang.ChunkBuffer
-    (defrecord ChunkBuffer [] #_"Counted")
-)
-
-(java-ns cloiure.lang.ChunkedCons
-    (defrecord ChunkedCons #_"ASeq" [] #_"IChunkedSeq" #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential")
-)
-
 (java-ns cloiure.lang.Cons
     (defrecord Cons #_"ASeq" [])
 )
@@ -702,8 +680,8 @@
 )
 
 (java-ns cloiure.lang.LongRange
-    (defrecord LongChunk [] #_"IChunk" #_"Indexed" #_"Counted")
-    (defrecord LongRange #_"ASeq" [] #_"Counted" #_"IChunkedSeq" #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"IReduce" #_"IReduceInit")
+    (defrecord LongChunk [] #_"Indexed" #_"Counted")
+    (defrecord LongRange #_"ASeq" [] #_"Counted" #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"IReduce" #_"IReduceInit")
 )
 
 (java-ns cloiure.lang.MapEntry
@@ -799,13 +777,12 @@
 
 (java-ns cloiure.lang.PersistentVector
     (defrecord VNode [])
-    (defrecord ChunkedSeq #_"ASeq" [] #_"IChunkedSeq" #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted")
     (defrecord TransientVector #_"AFn" [] #_"ITransientVector" #_"ITransientAssociative" #_"ITransientCollection" #_"ILookup" #_"Indexed" #_"Counted")
     (§ soon defrecord PersistentVector #_"APersistentVector" [] #_"IObj" #_"IMeta" #_"IEditableCollection" #_"IReduce" #_"IReduceInit" #_"IKVReduce")
 )
 
 (java-ns cloiure.lang.Range
-    (defrecord Range #_"ASeq" [] #_"IChunkedSeq" #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"IReduce" #_"IReduceInit" #_"Counted")
+    (defrecord Range #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"IReduce" #_"IReduceInit" #_"Counted")
 )
 
 (java-ns cloiure.lang.Reduced
@@ -11668,6 +11645,12 @@
         )
     )
 
+    (extend-type VSeq IObj
+        (#_"VSeq" IObj'''withMeta [#_"VSeq" this, #_"IPersistentMap" meta]
+            (VSeq'new meta, (:v this), (:i this))
+        )
+    )
+
     (extend-type VSeq ISeq
         (#_"Object" ISeq'''first [#_"VSeq" this]
             (nth (:v this) (:i this))
@@ -11683,12 +11666,6 @@
     (extend-type VSeq Counted
         (#_"int" Counted'''count [#_"VSeq" this]
             (- (count (:v this)) (:i this))
-        )
-    )
-
-    (extend-type VSeq IObj
-        (#_"VSeq" IObj'''withMeta [#_"VSeq" this, #_"IPersistentMap" meta]
-            (VSeq'new meta, (:v this), (:i this))
         )
     )
 
@@ -12107,25 +12084,10 @@
         )
     )
 
-    (extend-type ArrayChunk IChunk
-        (#_"IChunk" IChunk'''dropFirst [#_"ArrayChunk" this]
-            (when-not (= (:off this) (:end this)) => (throw! "dropFirst of empty chunk")
-                (ArrayChunk'new (:array this), (inc (:off this)), (:end this))
-            )
-        )
-
-        (#_"Object" IChunk'''reduce [#_"ArrayChunk" this, #_"IFn" f, #_"Object" r]
-            (let [r (f r (aget (:array this) (:off this)))]
-                (when-not (reduced? r) => r
-                    (loop-when [#_"int" i (inc (:off this))] (< i (:end this)) => r
-                        (let [r (f r (aget (:array this) i))]
-                            (when-not (reduced? r) => r
-                                (recur (inc i))
-                            )
-                        )
-                    )
-                )
-            )
+    #_method
+    (defn #_"ArrayChunk" ArrayChunk''dropFirst [#_"ArrayChunk" this]
+        (when-not (= (:off this) (:end this)) => (throw! "dropFirst of empty chunk")
+            (ArrayChunk'new (:array this), (inc (:off this)), (:end this))
         )
     )
 )
@@ -12817,87 +12779,6 @@
 )
 )
 
-(java-ns cloiure.lang.ChunkBuffer
-
-(class-ns ChunkBuffer
-    (defn #_"ChunkBuffer" ChunkBuffer'new [#_"int" capacity]
-        (hash-map
-            #_mutable #_"Object[]" :buffer (make-array Object capacity)
-            #_mutable #_"int" :end 0
-        )
-    )
-
-    #_method
-    (defn #_"void" ChunkBuffer''add [#_"ChunkBuffer" this, #_"Object" o]
-        (aset (:buffer this) (:end this) o)
-        (§ update! (:end this) inc)
-        nil
-    )
-
-    #_method
-    (defn #_"IChunk" ChunkBuffer''chunk [#_"ChunkBuffer" this]
-        (let [_ (ArrayChunk'new (:buffer this), 0, (:end this))]
-            (§ set! (:buffer this) nil)
-            _
-        )
-    )
-
-    (extend-type ChunkBuffer Counted
-        (#_"int" Counted'''count [#_"ChunkBuffer" this]
-            (:end this)
-        )
-    )
-)
-)
-
-(java-ns cloiure.lang.ChunkedCons
-
-(class-ns ChunkedCons
-    (defn #_"ChunkedCons" ChunkedCons'new
-        ([#_"IChunk" chunk, #_"ISeq" more] (ChunkedCons'new nil, chunk, more))
-        ([#_"IPersistentMap" meta, #_"IChunk" chunk, #_"ISeq" more]
-            (merge (ASeq'new meta)
-                (hash-map
-                    #_"IChunk" :chunk chunk
-                    #_"ISeq" :_more more
-                )
-            )
-        )
-    )
-
-    (extend-type ChunkedCons IObj
-        (#_"ChunkedCons" IObj'''withMeta [#_"ChunkedCons" this, #_"IPersistentMap" meta]
-            (when-not (= meta (:_meta this)) => this
-                (ChunkedCons'new meta, (:chunk this), (:_more this))
-            )
-        )
-    )
-
-    (extend-type ChunkedCons ISeq
-        (#_"Object" ISeq'''first [#_"ChunkedCons" this]
-            (nth (:chunk this) 0)
-        )
-
-        (#_"ISeq" ISeq'''next [#_"ChunkedCons" this]
-            (if (< 1 (count (:chunk this)))
-                (ChunkedCons'new (IChunk'''dropFirst (:chunk this)), (:_more this))
-                (chunk-next this)
-            )
-        )
-    )
-
-    (extend-type ChunkedCons IChunkedSeq
-        (#_"IChunk" IChunkedSeq'''chunkedFirst [#_"ChunkedCons" this]
-            (:chunk this)
-        )
-
-        (#_"ISeq" IChunkedSeq'''chunkedNext [#_"ChunkedCons" this]
-            (seq (:_more this))
-        )
-    )
-)
-)
-
 (java-ns cloiure.lang.Cons
 
 (class-ns Cons
@@ -13208,19 +13089,10 @@
         )
     )
 
-    (extend-type LongChunk IChunk
-        (#_"LongChunk" IChunk'''dropFirst [#_"LongChunk" this]
-            (when (< 1 (:count this)) => (throw! "dropFirst of empty chunk")
-                (LongChunk'new (+ (:start this) (:step this)), (:step this), (dec (:count this)))
-            )
-        )
-
-        (#_"Object" IChunk'''reduce [#_"LongChunk" this, #_"IFn" f, #_"Object" r]
-            (loop-when [r r #_"long" x (:start this) #_"int" i 0] (< i (:count this)) => r
-                (let-when-not [r (f r x)] (reduced? r) => r
-                    (recur r (+ x (:step this)) (inc i))
-                )
-            )
+    #_method
+    (defn #_"LongChunk" LongChunk''dropFirst [#_"LongChunk" this]
+        (when (< 1 (:count this)) => (throw! "dropFirst of empty chunk")
+            (LongChunk'new (+ (:start this) (:step this)), (:step this), (dec (:count this)))
         )
     )
 )
@@ -13229,8 +13101,6 @@
  ; Implements the special common case of a finite range based on long start, end, and step.
  ;;
 (class-ns LongRange
-    (def- #_"int" LongRange'CHUNK_SIZE 32)
-
     (defn- #_"LongRangeBoundsCheck" LongRange'positiveStep [#_"long" end]
         (reify LongRangeBoundsCheck
             (#_"boolean" LongRangeBoundsCheck'''exceededBounds [#_"LongRangeBoundsCheck" _self, #_"long" val]
@@ -13300,6 +13170,8 @@
             )
         )
     )
+
+    (def- #_"int" LongRange'CHUNK_SIZE 32)
 
     ;; fallback count mechanism for pathological cases
     ;; returns either exact count or CHUNK_SIZE+1
@@ -13389,24 +13261,16 @@
         (#_"ISeq" ISeq'''next [#_"LongRange" this]
             (let-when [#_"ISeq" _next (:_next this)] (nil? _next) => _next
                 (LongRange''forceChunk this)
-                (when (< 1 (count (:_chunk this))) => (chunk-next this)
-                    (let [#_"LongChunk" _rest (IChunk'''dropFirst (:_chunk this))]
+                (if (< 1 (count (:_chunk this)))
+                    (let [#_"LongChunk" _rest (LongChunk''dropFirst (:_chunk this))]
                         (§ set! (:_next this) (LongRange'new (LongChunk''first _rest), (:end this), (:step this), (:boundsCheck this), _rest, (:_chunkNext this)))
+                    )
+                    (do
+                        (LongRange''forceChunk this)
+                        (seq (:_chunkNext this))
                     )
                 )
             )
-        )
-    )
-
-    (extend-type LongRange IChunkedSeq
-        (#_"IChunk" IChunkedSeq'''chunkedFirst [#_"LongRange" this]
-            (LongRange''forceChunk this)
-            (:_chunk this)
-        )
-
-        (#_"ISeq" IChunkedSeq'''chunkedNext [#_"LongRange" this]
-            (LongRange''forceChunk this)
-            (seq (:_chunkNext this))
         )
     )
 
@@ -16738,64 +16602,6 @@
     )
 )
 
-(declare PersistentVector''arrayFor)
-
-(class-ns ChunkedSeq
-    (defn #_"ChunkedSeq" ChunkedSeq'new
-        ([#_"PersistentVector" vec, #_"int" i, #_"int" offset] (ChunkedSeq'new nil, vec, (PersistentVector''arrayFor vec, i), i, offset))
-        ([#_"PersistentVector" vec, #_"Object[]" node, #_"int" i, #_"int" offset] (ChunkedSeq'new nil, vec, node, i, offset))
-        ([#_"IPersistentMap" meta, #_"PersistentVector" vec, #_"Object[]" node, #_"int" i, #_"int" offset]
-            (merge (ASeq'new meta)
-                (hash-map
-                    #_"PersistentVector" :vec vec
-                    #_"Object[]" :node node
-                    #_"int" :i i
-                    #_"int" :offset offset
-                )
-            )
-        )
-    )
-
-    (extend-type ChunkedSeq IChunkedSeq
-        (#_"IChunk" IChunkedSeq'''chunkedFirst [#_"ChunkedSeq" this]
-            (ArrayChunk'new (:node this), (:offset this))
-        )
-
-        (#_"ISeq" IChunkedSeq'''chunkedNext [#_"ChunkedSeq" this]
-            (when (< (+ (:i this) (alength (:node this))) (:cnt (:vec this)))
-                (ChunkedSeq'new (:vec this), (+ (:i this) (alength (:node this))), 0)
-            )
-        )
-    )
-
-    (extend-type ChunkedSeq IObj
-        (#_"ChunkedSeq" IObj'''withMeta [#_"ChunkedSeq" this, #_"IPersistentMap" meta]
-            (when-not (= meta (:_meta this)) => this
-                (ChunkedSeq'new meta, (:vec this), (:node this), (:i this), (:offset this))
-            )
-        )
-    )
-
-    (extend-type ChunkedSeq ISeq
-        (#_"Object" ISeq'''first [#_"ChunkedSeq" this]
-            (aget (:node this) (:offset this))
-        )
-
-        (#_"ISeq" ISeq'''next [#_"ChunkedSeq" this]
-            (if (< (inc (:offset this)) (alength (:node this)))
-                (ChunkedSeq'new (:vec this), (:node this), (:i this), (inc (:offset this)))
-                (chunk-next this)
-            )
-        )
-    )
-
-    (extend-type ChunkedSeq Counted
-        (#_"int" Counted'''count [#_"ChunkedSeq" this]
-            (- (:cnt (:vec this)) (+ (:i this) (:offset this)))
-        )
-    )
-)
-
 (class-ns TransientVector
     (defn #_"TransientVector" TransientVector'new
         ([#_"PersistentVector" v] (TransientVector'new (:cnt v), (:shift v), (.editableRoot (:root v)), (.editableTail (:tail v))))
@@ -17273,19 +17079,6 @@
         )
     )
 
-    #_method
-    (defn #_"IChunkedSeq" PersistentVector''chunkedSeq [#_"PersistentVector" this]
-        (when (pos? (count this))
-            (ChunkedSeq'new this, 0, 0)
-        )
-    )
-
-    (extend-type PersistentVector Seqable
-        (#_"ISeq" Seqable'''seq [#_"PersistentVector" this]
-            (PersistentVector''chunkedSeq this)
-        )
-    )
-
     (extend-type PersistentVector IReduce
         (#_"Object" IReduce'''reduce [#_"PersistentVector" this, #_"IFn" f]
             (when (pos? (:cnt this)) => (f)
@@ -17415,8 +17208,6 @@
  ; Implements generic numeric (potentially infinite) range.
  ;;
 (class-ns Range
-    (def- #_"int" Range'CHUNK_SIZE 32)
-
     (defn- #_"RangeBoundsCheck" Range'positiveStep [#_"Object" end]
         (reify RangeBoundsCheck
             (#_"boolean" RangeBoundsCheck'''exceededBounds [#_"RangeBoundsCheck" _self, #_"Object" val]
@@ -17437,10 +17228,10 @@
         ([#_"Object" start, #_"Object" end, #_"Object" step, #_"RangeBoundsCheck" boundsCheck]
             (Range'new start, end, step, boundsCheck, nil, nil)
         )
-        ([#_"Object" start, #_"Object" end, #_"Object" step, #_"RangeBoundsCheck" boundsCheck, #_"IChunk" chunk, #_"ISeq" chunkNext]
+        ([#_"Object" start, #_"Object" end, #_"Object" step, #_"RangeBoundsCheck" boundsCheck, #_"ArrayChunk" chunk, #_"ISeq" chunkNext]
             (Range'new nil, start, end, step, boundsCheck, chunk, chunkNext)
         )
-        ([#_"IPersistentMap" meta, #_"Object" start, #_"Object" end, #_"Object" step, #_"RangeBoundsCheck" boundsCheck, #_"IChunk" chunk, #_"ISeq" chunkNext]
+        ([#_"IPersistentMap" meta, #_"Object" start, #_"Object" end, #_"Object" step, #_"RangeBoundsCheck" boundsCheck, #_"ArrayChunk" chunk, #_"ISeq" chunkNext]
             (merge (ASeq'new meta)
                 (hash-map
                     ;; Invariants guarantee this is never an "empty" seq
@@ -17449,7 +17240,7 @@
                     #_"Object" :step step
                     #_"RangeBoundsCheck" :boundsCheck boundsCheck
 
-                    #_volatile #_"IChunk" :_chunk chunk ;; lazy
+                    #_volatile #_"ArrayChunk" :_chunk chunk ;; lazy
                     #_volatile #_"ISeq" :_chunkNext chunkNext ;; lazy
                     #_volatile #_"ISeq" :_next nil ;; cached
                 )
@@ -17495,6 +17286,8 @@
         )
     )
 
+    (def- #_"int" Range'CHUNK_SIZE 32)
+
     #_method
     (defn #_"void" Range''forceChunk [#_"Range" this]
         (when (nil? (:_chunk this))
@@ -17530,24 +17323,16 @@
         (#_"ISeq" ISeq'''next [#_"Range" this]
             (let-when [#_"Range" _next (:_next this)] (nil? _next) => _next
                 (Range''forceChunk this)
-                (when (< 1 (count (:_chunk this))) => (chunk-next this)
-                    (let [#_"IChunk" _rest (IChunk'''dropFirst (:_chunk this))]
+                (if (< 1 (count (:_chunk this)))
+                    (let [#_"ArrayChunk" _rest (ArrayChunk''dropFirst (:_chunk this))]
                         (§ set! (:_next this) (Range'new (nth _rest 0), (:end this), (:step this), (:boundsCheck this), _rest, (:_chunkNext this)))
+                    )
+                    (do
+                        (Range''forceChunk this)
+                        (seq (:_chunkNext this))
                     )
                 )
             )
-        )
-    )
-
-    (extend-type Range IChunkedSeq
-        (#_"IChunk" IChunkedSeq'''chunkedFirst [#_"Range" this]
-            (Range''forceChunk this)
-            (:_chunk this)
-        )
-
-        (#_"ISeq" IChunkedSeq'''chunkedNext [#_"Range" this]
-            (Range''forceChunk this)
-            (seq (:_chunkNext this))
         )
     )
 
@@ -19195,19 +18980,6 @@
  ;;
 (§ defmacro lazy-seq [& body] (list 'new 'cloiure.core.LazySeq (list* '^{:once true} fn* [] body)))
 
-(§ defn ^ChunkBuffer chunk-buffer [capacity] (ChunkBuffer. capacity))
-
-(§ defn chunk-append  [^ChunkBuffer b x] (.add b x))
-(§ defn ^cloiure.core.IChunk chunk [^ChunkBuffer b  ] (.chunk b))
-
-(§ defn ^cloiure.core.IChunk chunk-first [^cloiure.core.IChunkedSeq s] (IChunkedSeq'''chunkedFirst s))
-(§ defn ^cloiure.core.ISeq   chunk-next  [^cloiure.core.IChunkedSeq s] (IChunkedSeq'''chunkedNext  s))
-(§ defn ^cloiure.core.ISeq   chunk-rest  [^cloiure.core.IChunkedSeq s] (or (chunk-next s) ()))
-
-(§ defn chunk-cons [chunk rest] (if (zero? (count chunk)) rest (ChunkedCons. chunk rest)))
-
-(defn chunked-seq? [s] (satisfies? IChunkedSeq s))
-
 ;;;
  ; Returns a lazy seq representing the concatenation of the elements in the supplied colls.
  ;;
@@ -19217,30 +18989,22 @@
     ([x y]
         (lazy-seq
             (let-when [s (seq x)] s => y
-                (if (chunked-seq? s)
-                    (chunk-cons (chunk-first s) (concat (chunk-rest s) y))
-                    (cons (first s) (concat (rest s) y))
-                )
+                (cons (first s) (concat (rest s) y))
             )
         )
     )
-    ([x y & zs]
-        (letfn [(cat- [xys zs]
+    ([x y & z]
+        (letfn [(cat- [s z]
                     (lazy-seq
-                        (let [xys (seq xys)]
-                            (if xys
-                                (if (chunked-seq? xys)
-                                    (chunk-cons (chunk-first xys) (cat- (chunk-rest xys) zs))
-                                    (cons (first xys) (cat- (rest xys) zs))
-                                )
-                                (when zs
-                                    (cat- (first zs) (next zs))
-                                )
+                        (let [s (seq s)]
+                            (cond
+                                s (cons (first s) (cat- (rest s) z))
+                                z (cat- (first z) (next z))
                             )
                         )
                     )
                 )]
-            (cat- (concat x y) zs)
+            (cat- (concat x y) z)
         )
     )
 )
@@ -19323,16 +19087,13 @@
 
 (§ defn- reduce1
     ([f s]
-        (when (seq s) => (f)
+        (let-when [s (seq s)] s => (f)
             (reduce1 f (first s) (next s))
         )
     )
-    ([f val coll]
-        (let-when [s (seq coll)] s => val
-            (if (chunked-seq? s)
-                (recur f (IChunk'''reduce (chunk-first s) f val) (chunk-next s))
-                (recur f (f val (first s)) (next s))
-            )
+    ([f r s]
+        (let-when [s (seq s)] s => r
+            (recur f (f r (first s)) (next s))
         )
     )
 )
@@ -20526,60 +20287,45 @@
  ;;
 (§ defn map
     ([f]
-        (fn [rf]
+        (fn [g]
             (fn
-                ([] (rf))
-                ([result] (rf result))
-                ([result input] (rf result (f input)))
-                ([result input & inputs] (rf result (apply f input inputs)))
+                ([] (g))
+                ([x] (g x))
+                ([x y] (g x (f y)))
+                ([x y & s] (g x (apply f y s)))
             )
         )
     )
-    ([f coll]
+    ([f s]
         (lazy-seq
-            (when-let [s (seq coll)]
-                (if (chunked-seq? s)
-                    (let [c (chunk-first s) size (int (count c)) b (chunk-buffer size)]
-                        (dotimes [i size]
-                            (chunk-append b (f (nth c i)))
-                        )
-                        (chunk-cons (chunk b) (map f (chunk-rest s)))
-                    )
-                    (cons (f (first s)) (map f (rest s)))
-                )
+            (when-let [s (seq s)]
+                (cons (f (first s)) (map f (next s)))
             )
         )
     )
-    ([f c1 c2]
+    ([f s1 s2]
         (lazy-seq
-            (let [s1 (seq c1) s2 (seq c2)]
-                (when (and s1 s2)
-                    (cons (f (first s1) (first s2)) (map f (rest s1) (rest s2)))
-                )
+            (let-when [s1 (seq s1) s2 (seq s2)] (and s1 s2)
+                (cons (f (first s1) (first s2)) (map f (next s1) (next s2)))
             )
         )
     )
-    ([f c1 c2 c3]
+    ([f s1 s2 s3]
         (lazy-seq
-            (let [s1 (seq c1) s2 (seq c2) s3 (seq c3)]
-                (when (and s1 s2 s3)
-                    (cons (f (first s1) (first s2) (first s3)) (map f (rest s1) (rest s2) (rest s3)))
-                )
+            (let-when [s1 (seq s1) s2 (seq s2) s3 (seq s3)] (and s1 s2 s3)
+                (cons (f (first s1) (first s2) (first s3)) (map f (next s1) (next s2) (next s3)))
             )
         )
     )
-    ([f c1 c2 c3 & colls]
-        (let [step
-                (fn step [cs]
+    ([f s1 s2 s3 & z]
+        (letfn [(map- [s]
                     (lazy-seq
-                        (let [ss (map seq cs)]
-                            (when (every? identity ss)
-                                (cons (map first ss) (step (map rest ss)))
-                            )
+                        (let-when [s (map seq s)] (every? identity s)
+                            (cons (map first s) (map- (map next s)))
                         )
                     )
                 )]
-            (map #(apply f %) (step (conj colls c3 c2 c1)))
+            (map #(apply f %) (map- (conj z s3 s2 s1)))
         )
     )
 )
@@ -20611,35 +20357,20 @@
  ; Returns a transducer when no collection is provided.
  ;;
 (§ defn filter
-    ([pred]
-        (fn [rf]
+    ([f]
+        (fn [g]
             (fn
-                ([] (rf))
-                ([result] (rf result))
-                ([result input] (if (pred input) (rf result input) result))
+                ([] (g))
+                ([x] (g x))
+                ([x y] (if (f y) (g x y) x))
             )
         )
     )
-    ([pred coll]
+    ([f s]
         (lazy-seq
-            (when-let [s (seq coll)]
-                (if (chunked-seq? s)
-                    (let [c (chunk-first s) size (count c) b (chunk-buffer size)]
-                        (dotimes [i size]
-                            (let [v (nth c i)]
-                                (when (pred v)
-                                    (chunk-append b v)
-                                )
-                            )
-                        )
-                        (chunk-cons (chunk b) (filter pred (chunk-rest s)))
-                    )
-                    (let [f (first s) r (rest s)]
-                        (if (pred f)
-                            (cons f (filter pred r))
-                            (filter pred r)
-                        )
-                    )
+            (when-let [s (seq s)]
+                (let-when [x (first s) s (next s)] (f x) => (filter f s)
+                    (cons x (filter f s))
                 )
             )
         )
@@ -21114,57 +20845,35 @@
         (vector? seq-exprs) "a vector for its binding"
         (even? (count seq-exprs)) "an even number of forms in binding vector"
     )
-    (let [step
-            (fn step [recform exprs]
-                (if-not exprs
-                    [true `(do ~@body)]
-                    (let [k (first exprs) v (second exprs)]
-                        (if (keyword? k)
-                            (let [steppair (step recform (nnext exprs)) needrec (steppair 0) subform (steppair 1)]
-                                (cond
-                                    (= k :let)   [needrec `(let ~v ~subform)]
-                                    (= k :while) [false `(when ~v ~subform ~@(when needrec [recform]))]
-                                    (= k :when)  [false `(if ~v (do ~subform ~@(when needrec [recform])) ~recform)]
-                                )
+    (letfn [step- [recform exprs]
+            (when exprs => [true `(do ~@body)]
+                (let [k (first exprs) v (second exprs)]
+                    (if (keyword? k)
+                        (let [[needrec subform] (step- recform (nnext exprs))]
+                            (cond
+                                (= k :let)   [needrec `(let ~v ~subform)]
+                                (= k :while) [false `(when ~v ~subform ~@(when needrec [recform]))]
+                                (= k :when)  [false `(if ~v (do ~subform ~@(when needrec [recform])) ~recform)]
                             )
-                            (let [seq- (gensym "seq_")
-                                  chunk- (with-meta (gensym "chunk_") {:tag 'cloiure.core.IChunk})
-                                  count- (gensym "count_")
-                                  i- (gensym "i_")
-                                  recform `(recur (next ~seq-) nil 0 0)
-                                  steppair (step recform (nnext exprs))
-                                  needrec (steppair 0)
-                                  subform (steppair 1)
-                                  recform-chunk `(recur ~seq- ~chunk- ~count- (unchecked-inc ~i-))
-                                  steppair-chunk (step recform-chunk (nnext exprs))
-                                  subform-chunk (steppair-chunk 1)]
-                                [true
-                                    `(loop [~seq- (seq ~v), ~chunk- nil, ~count- 0, ~i- 0]
-                                        (if (< ~i- ~count-)
-                                            (let [~k (nth ~chunk- ~i-)]
-                                                ~subform-chunk
-                                                ~@(when needrec [recform-chunk])
-                                            )
-                                            (when-let [~seq- (seq ~seq-)]
-                                                (if (chunked-seq? ~seq-)
-                                                    (let [c# (chunk-first ~seq-)]
-                                                        (recur (chunk-rest ~seq-) c# (int (count c#)) (int 0))
-                                                    )
-                                                    (let [~k (first ~seq-)]
-                                                        ~subform
-                                                        ~@(when needrec [recform])
-                                                    )
-                                                )
-                                            )
+                        )
+                        (let [s- (gensym "s_") i- (gensym "i_")
+                              recform `(recur (next ~s-) 0)
+                              [needrec subform] (step- recform (nnext exprs))]
+                            [true
+                                `(loop [~s- (seq ~v) ~i- 0]
+                                    (when-let [~s- (seq ~s-)]
+                                        (let [~k (first ~s-)]
+                                            ~subform
+                                            ~@(when needrec [recform])
                                         )
                                     )
-                                ]
-                            )
+                                )
+                            ]
                         )
                     )
                 )
             )]
-        (nth (step nil (seq seq-exprs)) 1)
+        (nth (step- nil (seq seq-exprs)) 1)
     )
 )
 
@@ -22325,39 +22034,12 @@
                             )
                         )
                         #_"inner-most loop"
-                        (let [gi (gensym "i__") gb (gensym "b__")
-                              do-cmod
-                                (fn do-cmod [[[k v :as pair] & etc]]
-                                    (cond
-                                        (= k :let) `(let ~v ~(do-cmod etc))
-                                        (= k :while) `(when ~v ~(do-cmod etc))
-                                        (= k :when) `(if ~v ~(do-cmod etc) (recur (unchecked-inc ~gi)))
-                                        (keyword? k) (err "Invalid 'for' keyword " k)
-                                        :else `(do (chunk-append ~gb ~body-expr) (recur (unchecked-inc ~gi)))
-                                    )
-                                )]
-                            `(fn ~giter [~gxs]
-                                (lazy-seq
-                                    (loop [~gxs ~gxs]
-                                        (when-let [~gxs (seq ~gxs)]
-                                            (if (chunked-seq? ~gxs)
-                                                (let [c# (chunk-first ~gxs) size# (int (count c#)) ~gb (chunk-buffer size#)]
-                                                    (if (loop [~gi (int 0)]
-                                                            (if (< ~gi size#)
-                                                                (let [~bind (nth c# ~gi)]
-                                                                    ~(do-cmod mod-pairs)
-                                                                )
-                                                                true
-                                                            )
-                                                        )
-                                                        (chunk-cons (chunk ~gb) (~giter (chunk-rest ~gxs)))
-                                                        (chunk-cons (chunk ~gb) nil)
-                                                    )
-                                                )
-                                                (let [~bind (first ~gxs)]
-                                                    ~(do-mod mod-pairs)
-                                                )
-                                            )
+                        `(fn ~giter [~gxs]
+                            (lazy-seq
+                                (loop [~gxs ~gxs]
+                                    (when-let [~gxs (seq ~gxs)]
+                                        (let [~bind (first ~gxs)]
+                                            ~(do-mod mod-pairs)
                                         )
                                     )
                                 )
@@ -22366,9 +22048,7 @@
                     )
                 )
             )]
-        `(let [iter# ~(emit-bind (to-groups seq-exprs))]
-            (iter# ~(second seq-exprs))
-        )
+        `(~(emit-bind (to-groups seq-exprs)) ~(second seq-exprs))
     )
 )
 
@@ -25366,23 +25046,6 @@
     nil
     (internal-reduce [s f val] val)
 
-    ;; handles vectors and ranges
-    IChunkedSeq
-    (internal-reduce [s f val]
-        (if-let [s (seq s)]
-            (if (chunked-seq? s)
-                (let [ret (IChunk'''reduce (chunk-first s) f val)]
-                    (if (reduced? ret)
-                        @ret
-                        (recur (chunk-next s) f ret)
-                    )
-                )
-                (interface-or-naive-reduce s f val)
-            )
-            val
-        )
-    )
-
     StringSeq
     (internal-reduce [str-seq f val]
         (let [s (.s str-seq) len (count s)]
@@ -25735,15 +25398,7 @@
         (letfn [(mapi [idx coll]
                     (lazy-seq
                         (when-let [s (seq coll)]
-                            (if (chunked-seq? s)
-                                (let [c (chunk-first s) size (int (count c)) b (chunk-buffer size)]
-                                    (dotimes [i size]
-                                        (chunk-append b (f (+ idx i) (nth c i)))
-                                    )
-                                    (chunk-cons (chunk b) (mapi (+ idx size) (chunk-rest s)))
-                                )
-                                (cons (f idx (first s)) (mapi (inc idx) (rest s)))
-                            )
+                            (cons (f idx (first s)) (mapi (inc idx) (rest s)))
                         )
                     )
                 )]
@@ -25777,22 +25432,10 @@
     ([f coll]
         (lazy-seq
             (when-let [s (seq coll)]
-                (if (chunked-seq? s)
-                    (let [c (chunk-first s) size (count c) b (chunk-buffer size)]
-                        (dotimes [i size]
-                            (let [x (f (nth c i))]
-                                (when-not (nil? x)
-                                    (chunk-append b x)
-                                )
-                            )
-                        )
-                        (chunk-cons (chunk b) (keep f (chunk-rest s)))
-                    )
-                    (let [x (f (first s))]
-                        (if (nil? x)
-                            (keep f (rest s))
-                            (cons x (keep f (rest s)))
-                        )
+                (let [x (f (first s))]
+                    (if (nil? x)
+                        (keep f (rest s))
+                        (cons x (keep f (rest s)))
                     )
                 )
             )
@@ -25829,22 +25472,10 @@
         (letfn [(keepi [idx coll]
                     (lazy-seq
                         (when-let [s (seq coll)]
-                            (if (chunked-seq? s)
-                                (let [c (chunk-first s) size (count c) b (chunk-buffer size)]
-                                    (dotimes [i size]
-                                        (let [x (f (+ idx i) (nth c i))]
-                                            (when-not (nil? x)
-                                                (chunk-append b x)
-                                            )
-                                        )
-                                    )
-                                    (chunk-cons (chunk b) (keepi (+ idx size) (chunk-rest s)))
-                                )
-                                (let [x (f idx (first s))]
-                                    (if (nil? x)
-                                        (keepi (inc idx) (rest s))
-                                        (cons x (keepi (inc idx) (rest s)))
-                                    )
+                            (let [x (f idx (first s))]
+                                (if (nil? x)
+                                    (keepi (inc idx) (rest s))
+                                    (cons x (keepi (inc idx) (rest s)))
                                 )
                             )
                         )
