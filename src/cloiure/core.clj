@@ -436,12 +436,6 @@
     )
 )
 
-(java-ns cloiure.lang.LongRange
-    (defprotocol LongRangeBoundsCheck
-        (#_"boolean" LongRangeBoundsCheck'''exceededBounds [#_"LongRangeBoundsCheck" this, #_"long" val])
-    )
-)
-
 (java-ns cloiure.lang.IType
     (defprotocol IType)
 )
@@ -677,11 +671,6 @@
 
 (java-ns cloiure.lang.KeywordLookupSite
     (§ soon defrecord KeywordLookupSite [] #_"ILookupSite" #_"ILookupThunk")
-)
-
-(java-ns cloiure.lang.LongRange
-    (defrecord LongChunk [] #_"Indexed" #_"Counted")
-    (defrecord LongRange #_"ASeq" [] #_"Counted" #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"IReduce" #_"IReduceInit")
 )
 
 (java-ns cloiure.lang.MapEntry
@@ -13056,250 +13045,6 @@
 )
 )
 
-(java-ns cloiure.lang.LongRange
-
-(class-ns LongChunk
-    (defn #_"LongChunk" LongChunk'new [#_"long" start, #_"long" step, #_"int" count]
-        (hash-map
-            #_"long" :start start
-            #_"long" :step step
-            #_"int" :count count
-        )
-    )
-
-    #_method
-    (defn #_"long" LongChunk''first [#_"LongChunk" this]
-        (:start this)
-    )
-
-    (extend-type LongChunk Indexed
-        (#_"Object" Indexed'''nth
-            ([#_"LongChunk" this, #_"int" i]
-                (+ (:start this) (* i (:step this)))
-            )
-            ([#_"LongChunk" this, #_"int" i, #_"Object" notFound]
-                (if (< -1 i (:count this)) (+ (:start this) (* i (:step this))) notFound)
-            )
-        )
-    )
-
-    (extend-type LongChunk Counted
-        (#_"int" Counted'''count [#_"LongChunk" this]
-            (:count this)
-        )
-    )
-
-    #_method
-    (defn #_"LongChunk" LongChunk''dropFirst [#_"LongChunk" this]
-        (when (< 1 (:count this)) => (throw! "dropFirst of empty chunk")
-            (LongChunk'new (+ (:start this) (:step this)), (:step this), (dec (:count this)))
-        )
-    )
-)
-
-;;;
- ; Implements the special common case of a finite range based on long start, end, and step.
- ;;
-(class-ns LongRange
-    (defn- #_"LongRangeBoundsCheck" LongRange'positiveStep [#_"long" end]
-        (reify LongRangeBoundsCheck
-            (#_"boolean" LongRangeBoundsCheck'''exceededBounds [#_"LongRangeBoundsCheck" _self, #_"long" val]
-                (<= end val)
-            )
-        )
-    )
-
-    (defn- #_"LongRangeBoundsCheck" LongRange'negativeStep [#_"long" end]
-        (reify LongRangeBoundsCheck
-            (#_"boolean" LongRangeBoundsCheck'''exceededBounds [#_"LongRangeBoundsCheck" _self, #_"long" val]
-                (<= val end)
-            )
-        )
-    )
-
-    (defn- #_"LongRange" LongRange'new
-        ([#_"long" start, #_"long" end, #_"long" step, #_"LongRangeBoundsCheck" boundsCheck]
-            (LongRange'new start, end, step, boundsCheck, nil, nil)
-        )
-        ([#_"long" start, #_"long" end, #_"long" step, #_"LongRangeBoundsCheck" boundsCheck, #_"LongChunk" chunk, #_"ISeq" chunkNext]
-            (LongRange'new nil, start, end, step, boundsCheck, chunk, chunkNext)
-        )
-        ([#_"IPersistentMap" meta, #_"long" start, #_"long" end, #_"long" step, #_"LongRangeBoundsCheck" boundsCheck, #_"LongChunk" chunk, #_"ISeq" chunkNext]
-            (merge (ASeq'new meta)
-                (hash-map
-                    ;; Invariants guarantee this is never an empty or infinite seq
-                    #_"long" :start start
-                    #_"long" :end end
-                    #_"long" :step step
-                    #_"LongRangeBoundsCheck" :boundsCheck boundsCheck
-
-                    #_volatile #_"LongChunk" :_chunk chunk ;; lazy
-                    #_volatile #_"ISeq" :_chunkNext chunkNext ;; lazy
-                    #_volatile #_"ISeq" :_next nil ;; cached
-                )
-            )
-        )
-    )
-
-    (defn #_"ISeq" LongRange'create-1 [#_"long" end]
-        (when (< 0 end) => ()
-            (LongRange'new 0, end, 1, (LongRange'positiveStep end))
-        )
-    )
-
-    (defn #_"ISeq" LongRange'create-2 [#_"long" start, #_"long" end]
-        (when (< start end) => ()
-            (LongRange'new start, end, 1, (LongRange'positiveStep end))
-        )
-    )
-
-    (declare Repeat'create-1)
-
-    (defn #_"ISeq" LongRange'create-3 [#_"long" start, #_"long" end, #_"long" step]
-        (cond
-            (pos? step) (if (< start end) (LongRange'new start, end, step, (LongRange'positiveStep end)) ())
-            (neg? step) (if (< end start) (LongRange'new start, end, step, (LongRange'negativeStep end)) ())
-            :else       (if (= start end) () (Repeat'create-1 start))
-        )
-    )
-
-    (extend-type LongRange IObj
-        (#_"LongRange" IObj'''withMeta [#_"LongRange" this, #_"IPersistentMap" meta]
-            (when-not (= meta (:_meta this)) => this
-                (LongRange'new meta, (:start this), (:end this), (:step this), (:boundsCheck this), (:_chunk this), (:_chunkNext this))
-            )
-        )
-    )
-
-    (def- #_"int" LongRange'CHUNK_SIZE 32)
-
-    ;; fallback count mechanism for pathological cases
-    ;; returns either exact count or CHUNK_SIZE+1
-    #_method
-    (defn #_"long" LongRange''steppingCount [#_"LongRange" this, #_"long" start, #_"long" end, #_"long" step]
-        (loop-when [#_"long" s start #_"long" n 1] (<= n LongRange'CHUNK_SIZE) => n
-            (let [[s n]
-                    (try
-                        (let [s (Numbers'add-2ll s, step)]
-                            (if (LongRangeBoundsCheck'''exceededBounds (:boundsCheck this), s)
-                                [nil n]
-                                [s (inc n)]
-                            )
-                        )
-                        (catch ArithmeticException _
-                            [nil n]
-                        )
-                    )]
-                (recur-if (some? s) [s n] => n)
-            )
-        )
-    )
-
-    ;; returns exact size of remaining items OR throws ArithmeticException for overflow case
-    #_method
-    (defn #_"long" LongRange''rangeCount [#_"LongRange" this, #_"long" start, #_"long" end, #_"long" step]
-        ;; (1) count = ceiling ((end - start) / step)
-        ;; (2) ceiling(a/b) = (a+b+o)/b where o=-1 for positive stepping and +1 for negative stepping
-        ;; thus: count = end - start + step + o / step
-        (/ (Numbers'add-2ll (Numbers'add-2ll (Numbers'minus-2ll end, start), step), (if (pos? (:step this)) -1 1)) step)
-    )
-
-    (extend-type LongRange Counted
-        (#_"int" Counted'''count [#_"LongRange" this]
-            (try
-                (let [#_"long" n (LongRange''rangeCount this, (:start this), (:end this), (:step this))]
-                    (when (<= n Integer/MAX_VALUE) => (Numbers'throwIntOverflow)
-                        (int n)
-                    )
-                )
-                (catch ArithmeticException _
-                    ;; rare case from large range or step, fall back to iterating and counting
-                    (let [#_"long" n (loop-when-recur [n 0 #_"ISeq" s (seq this)] (some? s) [(inc n) (next s)] => n)]
-                        (when (<= n Integer/MAX_VALUE) => (Numbers'throwIntOverflow)
-                            (int n)
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (extend-type LongRange ISeq
-        (#_"Object" ISeq'''first [#_"LongRange" this]
-            (:start this)
-        )
-    )
-
-    #_method
-    (defn #_"void" LongRange''forceChunk [#_"LongRange" this]
-        (when (nil? (:_chunk this))
-            (let [#_"long" n
-                    (try
-                        (LongRange''rangeCount this, (:start this), (:end this), (:step this))
-                        (catch ArithmeticException _
-                            ;; size of total range is > Long.MAX_VALUE, so must step to count
-                            ;; this only happens in pathological range cases like:
-                            ;; (range -9223372036854775808 9223372036854775807 9223372036854775807)
-                            (LongRange''steppingCount this, (:start this), (:end this), (:step this))
-                        )
-                    )]
-                (if (< LongRange'CHUNK_SIZE n)
-                    ;; not last chunk
-                    (let [#_"long" nextStart (+ (:start this) (* (:step this) LongRange'CHUNK_SIZE))] ;; cannot overflow, must be < end
-                        (§ set! (:_chunkNext this) (LongRange'new nextStart, (:end this), (:step this), (:boundsCheck this)))
-                        (§ set! (:_chunk this) (LongChunk'new (:start this), (:step this), LongRange'CHUNK_SIZE))
-                    )
-                    ;; last chunk
-                    (§ set! (:_chunk this) (LongChunk'new (:start this), (:step this), (int n))) ;; n must be <= CHUNK_SIZE
-                )
-            )
-        )
-        nil
-    )
-
-    (extend-type LongRange ISeq
-        (#_"ISeq" ISeq'''next [#_"LongRange" this]
-            (let-when [#_"ISeq" _next (:_next this)] (nil? _next) => _next
-                (LongRange''forceChunk this)
-                (if (< 1 (count (:_chunk this)))
-                    (let [#_"LongChunk" _rest (LongChunk''dropFirst (:_chunk this))]
-                        (§ set! (:_next this) (LongRange'new (LongChunk''first _rest), (:end this), (:step this), (:boundsCheck this), _rest, (:_chunkNext this)))
-                    )
-                    (do
-                        (LongRange''forceChunk this)
-                        (seq (:_chunkNext this))
-                    )
-                )
-            )
-        )
-    )
-
-    (extend-type LongRange IReduce
-        (#_"Object" IReduce'''reduce [#_"LongRange" this, #_"IFn" f]
-            (loop [#_"Object" r (:start this) #_"long" n r]
-                (let-when-not [n (+ n (:step this))] (LongRangeBoundsCheck'''exceededBounds (:boundsCheck this), n) => r
-                    (let-when-not [r (f r n)] (reduced? r) => (deref r)
-                        (recur r n)
-                    )
-                )
-            )
-        )
-    )
-
-    (extend-type LongRange IReduceInit
-        (#_"Object" IReduceInit'''reduce [#_"LongRange" this, #_"IFn" f, #_"Object" r]
-            (loop [r r #_"long" n (:start this)]
-                (let-when-not [r (f r n)] (reduced? r) => (deref r)
-                    (let-when-not [n (+ n (:step this))] (LongRangeBoundsCheck'''exceededBounds (:boundsCheck this), n) => r
-                        (recur r n)
-                    )
-                )
-            )
-        )
-    )
-)
-)
-
 (java-ns cloiure.lang.MethodImplCache
 
 (class-ns Entry
@@ -17248,6 +16993,8 @@
         )
     )
 
+    (declare Repeat'create-1)
+
     (defn #_"ISeq" Range'create
         ([#_"Object" end]
             (when (Numbers'isPos-1o end) => ()
@@ -20610,24 +20357,9 @@
  ;;
 (§ defn range
     ([] (iterate inc' 0))
-    ([end]
-        (if (instance? Long end)
-            (LongRange'create end)
-            (Range'create end)
-        )
-    )
-    ([start end]
-        (if (and (instance? Long start) (instance? Long end))
-            (LongRange'create start end)
-            (Range'create start end)
-        )
-    )
-    ([start end step]
-        (if (and (instance? Long start) (instance? Long end) (instance? Long step))
-            (LongRange'create start end step)
-            (Range'create start end step)
-        )
-    )
+    ([end] (Range'create end))
+    ([start end] (Range'create start end))
+    ([start end step] (Range'create start end step))
 )
 
 ;;;
