@@ -16,7 +16,6 @@
     [java.math BigInteger]
     [java.security AccessController PrivilegedAction]
     [java.util ArrayList Arrays Collection Comparator IdentityHashMap]
-    [java.util.concurrent Callable ForkJoinPool ForkJoinTask]
     [java.util.concurrent.atomic AtomicBoolean AtomicInteger AtomicReference]
     [java.util.concurrent.locks ReentrantReadWriteLock]
     [java.util.regex Matcher Pattern]
@@ -442,7 +441,6 @@
         (#_"INode" INode'''assocT [#_"INode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"Box" addedLeaf])
         (#_"INode" INode'''dissocT [#_"INode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Box" removedLeaf])
         (#_"Object" INode'''kvreduce [#_"INode" this, #_"IFn" f, #_"Object" r])
-        (#_"Object" INode'''fold [#_"INode" this, #_"IFn" combinef, #_"IFn" reducef, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin])
     )
 )
 
@@ -526,7 +524,7 @@
 
 (java-ns cloiure.lang.AFn
     #_abstract
-    (§ soon defrecord AFn [] #_"IFn" #_"Callable" #_"Runnable"
+    (§ soon defrecord AFn [] #_"IFn" #_"Runnable"
         #_abstract
         (#_"Object" throwArity [#_"AFn" this, #_"int" n])
     )
@@ -537,7 +535,7 @@
 )
 
 (java-ns cloiure.lang.Keyword
-    (§ soon defrecord Keyword [] #_"IFn" #_"Callable" #_"Runnable" #_"Comparable" #_"Named" #_"IHashEq")
+    (§ soon defrecord Keyword [] #_"IFn" #_"Runnable" #_"Comparable" #_"Named" #_"IHashEq")
 )
 
 (java-ns cloiure.lang.AFunction
@@ -831,7 +829,7 @@
     (defrecord TBox [])
     (defrecord Unbound #_"AFn" [])
     (defrecord Frame [])
-    (§ soon defrecord Var [] #_"IReference" #_"IMeta" #_"IFn" #_"Callable" #_"Runnable" #_"IDeref")
+    (§ soon defrecord Var [] #_"IReference" #_"IMeta" #_"IFn" #_"Runnable" #_"IDeref")
 )
 
 (java-ns cloiure.lang.Volatile
@@ -14555,37 +14553,6 @@
         )
     )
 
-    (defn #_"Object" ArrayNode'foldTasks [#_"PersistentVector" tasks, #_"IFn" combinef, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin]
-        (let [#_"int" n (count tasks)]
-            (case n
-                0   (combinef)
-                1   (.call (nth tasks 0))
-                    (let [#_"PersistentVector" t1 (subvec tasks 0 (quot n 2)) #_"PersistentVector" t2 (subvec tasks (quot n 2) n)
-                          #_"Object" forked (fjfork (fjtask #(ArrayNode'foldTasks t2, combinef, fjtask, fjfork, fjjoin)))]
-                        (combinef (ArrayNode'foldTasks t1, combinef, fjtask, fjfork, fjjoin) (fjjoin forked))
-                    )
-            )
-        )
-    )
-
-    (extend-type ArrayNode INode
-        (#_"Object" INode'''fold [#_"ArrayNode" this, #_"IFn" combinef, #_"IFn" reducef, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin]
-            (let [#_"INode[]" a (:array this)
-                  #_"PersistentVector" tasks
-                    (loop-when [tasks [] #_"int" i 0] (< i (alength a)) => tasks
-                        (let [#_"INode" node (aget a i)
-                              tasks
-                                (when (some? node) => tasks
-                                    (conj tasks #(INode'''fold node, combinef, reducef, fjtask, fjfork, fjjoin))
-                                )]
-                            (recur tasks (inc i))
-                        )
-                    )]
-                (ArrayNode'foldTasks tasks, combinef, fjtask, fjfork, fjjoin)
-            )
-        )
-    )
-
     #_method
     (defn- #_"ArrayNode" ArrayNode''ensureEditable [#_"ArrayNode" this, #_"AtomicReference<Thread>" edit]
         (if (= (:edit this) edit)
@@ -14777,10 +14744,6 @@
 
         (#_"Object" INode'''kvreduce [#_"BitmapIndexedNode" this, #_"IFn" f, #_"Object" r]
             (NodeSeq'kvreduce (:array this), f, r)
-        )
-
-        (#_"Object" INode'''fold [#_"BitmapIndexedNode" this, #_"IFn" combinef, #_"IFn" reducef, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin]
-            (NodeSeq'kvreduce (:array this), reducef, (combinef))
         )
     )
 
@@ -15006,10 +14969,6 @@
 
         (#_"Object" INode'''kvreduce [#_"HashCollisionNode" this, #_"IFn" f, #_"Object" r]
             (NodeSeq'kvreduce (:array this), f, r)
-        )
-
-        (#_"Object" INode'''fold [#_"HashCollisionNode" this, #_"IFn" combinef, #_"IFn" reducef, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin]
-            (NodeSeq'kvreduce (:array this), reducef, (combinef))
         )
     )
 
@@ -15348,21 +15307,6 @@
                             )
                         )
                     )
-                )
-            )
-        )
-    )
-
-    #_method
-    (defn #_"Object" PersistentHashMap''fold [#_"PersistentHashMap" this, #_"long" n, #_"IFn" combinef, #_"IFn" reducef, #_"IFn" fjinvoke, #_"IFn" fjtask, #_"IFn" fjfork, #_"IFn" fjjoin]
-        ;; we are ignoring n for now
-        (fjinvoke
-            #(as-> (combinef) ?
-                (when (some? (:root this)) => ?
-                    (combinef ? (INode'''fold (:root this), combinef, reducef, fjtask, fjfork, fjjoin))
-                )
-                (when (:hasNull this) => ?
-                    (combinef ? (reducef (combinef) nil (:nullValue this)))
                 )
             )
         )
@@ -26675,383 +26619,6 @@
  ;;
 (§ defn macroexpand-all [form]
     (prewalk (fn [x] (if (seq? x) (macroexpand x) x)) form)
-)
-)
-
-(clojure-ns cloiure.core.reducers
-  #_(:refer-cloiure :exclude [reduce map mapcat filter remove take take-while drop flatten cat])
-  #_(:require [cloiure.walk :as walk])
-
-(§ alias 'core 'cloiure.core)
-
-(§ def pool (delay (ForkJoinPool.)))
-
-(§ defn fjtask [^Callable f] (ForkJoinTask/adapt f))
-
-(§ defn- fjinvoke [f]
-    (if (ForkJoinTask/inForkJoinPool)
-        (f)
-        (.invoke ^ForkJoinPool @pool ^ForkJoinTask (fjtask f))
-    )
-)
-
-(§ defn- fjfork [task] (.fork ^ForkJoinTask task))
-
-(§ defn- fjjoin [task] (.join ^ForkJoinTask task))
-
-;;;
- ; Like core/reduce except:
- ; - when init is not provided, (f) is used;
- ; - maps are reduced with reduce-kv.
- ;;
-(§ defn reduce
-    ([f coll] (reduce f (f) coll))
-    ([f init coll]
-        (if (map? coll)
-            (kv-reduce coll f init)
-            (coll-reduce coll f init)
-        )
-    )
-)
-
-(§ defprotocol CollFold
-    (coll-fold [coll n combinef reducef])
-)
-
-;;;
- ; Reduces a collection using a (potentially parallel) reduce-combine
- ; strategy. The collection is partitioned into groups of approximately
- ; n (default 512), each of which is reduced with reducef (with a seed
- ; value obtained by calling (combinef) with no arguments). The results
- ; of these reductions are then reduced with combinef (default reducef).
- ; combinef must be associative, and, when called with no arguments,
- ; (combinef) must produce its identity element. These operations may
- ; be performed in parallel, but the results will preserve order.
- ;;
-(§ defn fold
-    ([reducef coll] (fold reducef reducef coll))
-    ([combinef reducef coll] (fold 512 combinef reducef coll))
-    ([n combinef reducef coll] (coll-fold coll n combinef reducef))
-)
-
-;;;
- ; Given a reducible collection, and a transformation function xf,
- ; returns a reducible collection, where any supplied reducing fn will
- ; be transformed by xf. xf is a function of reducing fn to reducing fn.
- ;;
-(§ defn reducer
-    ([coll xf]
-        (reify
-            CollReduce
-            (coll-reduce [this f1] (coll-reduce this f1 (f1)))
-            (coll-reduce [_ f1 init] (coll-reduce coll (xf f1) init))
-        )
-    )
-)
-
-;;;
- ; Given a foldable collection, and a transformation function xf,
- ; returns a foldable collection, where any supplied reducing fn will
- ; be transformed by xf. xf is a function of reducing fn to reducing fn.
- ;;
-(§ defn folder
-    ([coll xf]
-        (reify
-            CollReduce
-            (coll-reduce [_ f1] (coll-reduce coll (xf f1) (f1)))
-            (coll-reduce [_ f1 init] (coll-reduce coll (xf f1) init))
-
-            CollFold
-            (coll-fold [_ n combinef reducef] (coll-fold coll n combinef (xf reducef)))
-        )
-    )
-)
-
-(§ defn- do-curried [name meta args body]
-    (let [cargs (vec (butlast args))]
-        `(defn ~name ~meta
-            (~cargs (fn [x#] (~name ~@cargs x#)))
-            (~args ~@body)
-        )
-    )
-)
-
-;;;
- ; Builds another arity of the fn that returns a fn awaiting the last param.
- ;;
-(§ defmacro- defcurried [name meta args & body]
-    (do-curried name meta args body)
-)
-
-(§ defn- do-rfn [f1 k fkv]
-    `(fn
-        ([] (~f1))
-        ~(cloiure.walk/postwalk
-            #(if (sequential? %)
-                ((if (vector? %) vec identity) (core/remove #{k} %))
-                %
-            )
-            fkv
-        )
-        ~fkv
-    )
-)
-
-;;;
- ; Builds 3-arity reducing fn given names of wrapped fn and key, and k/v impl.
- ;;
-(§ defmacro- rfn [[f1 k] fkv]
-    (do-rfn f1 k fkv)
-)
-
-;;;
- ; Applies f to every value in the reduction of coll. Foldable.
- ;;
-(§ defcurried map [f coll]
-    (folder coll
-        (fn [f1]
-            (rfn [f1 k]
-                ([ret k v]
-                    (f1 ret (f k v))
-                )
-            )
-        )
-    )
-)
-
-;;;
- ; Applies f to every value in the reduction of coll, concatenating
- ; the result colls of (f val). Foldable.
- ;;
-(§ defcurried mapcat [f coll]
-    (folder coll
-        (fn [f1]
-            (let [f1
-                    (fn
-                        ([ret   v] (let [x (f1 ret   v)] (if (reduced? x) (reduced x) x)))
-                        ([ret k v] (let [x (f1 ret k v)] (if (reduced? x) (reduced x) x)))
-                    )]
-                (rfn [f1 k]
-                    ([ret k v]
-                        (reduce f1 ret (f k v))
-                    )
-                )
-            )
-        )
-    )
-)
-
-;;;
- ; Retains values in the reduction of coll for which (pred val)
- ; returns logical true. Foldable.
- ;;
-(§ defcurried filter [pred coll]
-    (folder coll
-        (fn [f1]
-            (rfn [f1 k]
-                ([ret k v]
-                    (if (pred k v)
-                        (f1 ret k v)
-                        ret
-                    )
-                )
-            )
-        )
-    )
-)
-
-;;;
- ; Removes values in the reduction of coll for which (pred val)
- ; returns logical true. Foldable.
- ;;
-(§ defcurried remove [pred coll]
-    (filter (complement pred) coll)
-)
-
-;;;
- ; Takes any nested combination of sequential things (lists, vectors, etc.)
- ; and returns their contents as a single, flat foldable collection.
- ;;
-(§ defcurried flatten [coll]
-    (folder coll
-        (fn [f1]
-            (fn
-                ([] (f1))
-                ([ret v]
-                    (if (sequential? v)
-                        (coll-reduce (flatten v) f1 ret)
-                        (f1 ret v)
-                    )
-                )
-            )
-        )
-    )
-)
-
-;;;
- ; Ends the reduction of coll when (pred val) returns logical false.
- ;;
-(§ defcurried take-while [pred coll]
-    (reducer coll
-        (fn [f1]
-            (rfn [f1 k]
-                ([ret k v]
-                    (if (pred k v)
-                        (f1 ret k v)
-                        (reduced ret)
-                    )
-                )
-            )
-        )
-    )
-)
-
-;;;
- ; Ends the reduction of coll after consuming n values.
- ;;
-(§ defcurried take [n coll]
-    (reducer coll
-        (fn [f1]
-            (let [cnt (atom n)]
-                (rfn [f1 k]
-                    ([ret k v]
-                        (swap! cnt dec)
-                        (if (neg? @cnt)
-                            (reduced ret)
-                            (f1 ret k v)
-                        )
-                    )
-                )
-            )
-        )
-    )
-)
-
-;;;
- ; Elides the first n values from the reduction of coll.
- ;;
-(§ defcurried drop [n coll]
-    (reducer coll
-        (fn [f1]
-            (let [cnt (atom n)]
-                (rfn [f1 k]
-                    ([ret k v]
-                        (swap! cnt dec)
-                        (if (neg? @cnt)
-                            (f1 ret k v)
-                            ret
-                        )
-                    )
-                )
-            )
-        )
-    )
-)
-
-;; do not construct this directly, use cat
-
-(§ deftype Cat [cnt left right]
-    Counted
-    (Counted'''count [_] cnt)
-
-    Seqable
-    (Seqable'''seq [_] (concat (seq left) (seq right)))
-
-    CollReduce
-    (coll-reduce [this f1]
-        (coll-reduce this f1 (f1))
-    )
-    (coll-reduce [_ f1 init]
-        (coll-reduce right f1 (coll-reduce left f1 init))
-    )
-
-    CollFold
-    (coll-fold [_ n combinef reducef]
-        (fjinvoke
-            (fn []
-                (let [rt (fjfork (fjtask #(coll-fold right n combinef reducef)))]
-                    (combinef
-                        (coll-fold left n combinef reducef)
-                        (fjjoin rt)
-                    )
-                )
-            )
-        )
-    )
-)
-
-;;;
- ; A high-performance combining fn that yields the catenation of the reduced values.
- ; The result is reducible, foldable, seqable and counted, providing the identity
- ; collections are reducible, seqable and counted. The single argument version will
- ; build a combining fn with the supplied identity constructor. Tests for identity
- ; with (zero? (count x)). See also foldcat.
- ;;
-(§ defn cat
-    ([] (ArrayList.))
-    ([ctor]
-        (fn
-            ([] (ctor))
-            ([left right] (cat left right))
-        )
-    )
-    ([left right]
-        (cond
-            (zero? (count left)) right
-            (zero? (count right)) left
-            :else (Cat. (+ (count left) (count right)) left right)
-        )
-    )
-)
-
-;;;
- ; .adds x to acc and returns acc.
- ;;
-(§ defn append! [^Collection acc x] (doto acc (.add x)))
-
-;;;
- ; Equivalent to (fold cat append! coll).
- ;;
-(§ defn foldcat [coll] (fold cat append! coll))
-
-;;;
- ; Builds a combining fn out of the supplied operator and identity
- ; constructor. op must be associative and ctor called with no args
- ; must return an identity value for it.
- ;;
-(§ defn monoid [op ctor] (fn m ([] (ctor)) ([a b] (op a b))))
-
-(§ defn- foldvec [v n combinef reducef]
-    (cond
-        (empty? v)
-            (combinef)
-        (<= (count v) n)
-            (reduce reducef (combinef) v)
-        :else
-            (let [split (quot (count v) 2) v1 (subvec v 0 split) v2 (subvec v split (count v))
-                  fc (fn [child] #(foldvec child n combinef reducef))]
-                (fjinvoke
-                    #(let [f1 (fc v1) t2 (fjtask (fc v2))]
-                        (fjfork t2)
-                        (combinef (f1) (fjjoin t2))
-                    )
-                )
-            )
-    )
-)
-
-(§ extend-protocol CollFold
-    nil
-    (coll-fold [coll n combinef reducef] (combinef))
-
-    Object
-    (coll-fold [coll n combinef reducef] (reduce reducef (combinef) coll)) ;; can't fold, single reduce
-
-    IPersistentVector
-    (coll-fold [v n combinef reducef] (foldvec v n combinef reducef))
-
-    PersistentHashMap
-    (coll-fold [m n combinef reducef] (INode'''fold m n combinef reducef fjinvoke fjtask fjfork fjjoin))
 )
 )
 
