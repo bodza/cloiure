@@ -780,7 +780,7 @@
 )
 
 (java-ns cloiure.lang.StringSeq
-    (defrecord StringSeq #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted")
+    (defrecord StringSeq #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
 )
 
 (java-ns cloiure.lang.Tuple
@@ -920,19 +920,19 @@
 )
 
 (defn =?
-    ([x y] (if (sequential? x) (if (seq x) (or (=? (first x) y) (recur (rest x) y)) false) (if (sequential? y) (recur y x) (= x y))))
+    ([x y] (cond (sequential? x) (if (seq x) (or (=? (first x) y) (recur (rest x) y)) false) (sequential? y) (recur y x) :else (= x y)))
     ([x y & z] (=? x (cons y z)))
 )
 
-;; reduce is redefined later after InternalReduce loads
+;; naïve reduce to be redefined later with IReduce
 
 (defn reduce
-    ([f s] (let [s (seq s)] (if s (reduce f (first s) (next s)) (f))))
-    ([f r s] (let [s (seq s)] (if s (recur f (f r (first s)) (next s)) r)))
+    ([f s] (if-let [s (seq s)] (reduce f (first s) (next s)) (f)))
+    ([f r s] (if-let [s (seq s)] (recur f (f r (first s)) (next s)) r))
 )
 
 (defn reduce!
-    ([f s] (reduce! f (f) s))
+    ([f s] (if-let [s (seq s)] (reduce! f (first s) (next s)) (f)))
     ([f r s] (persistent! (reduce f (transient r) s)))
 )
 
@@ -7904,20 +7904,20 @@
         )
     )
 
-    (defn #_"int" Murmur3'hashUnencodedChars [#_"CharSequence" input]
+    (defn #_"int" Murmur3'hashUnencodedChars [#_"CharSequence" s]
         (let [#_"int" h1 ;; step through the input 2 chars at a time
-                (loop-when [h1 Murmur3'seed #_"int" i 1] (< i (count input)) => h1
-                    (let [#_"int" k1 (| (nth input (dec i)) (<< (nth input i) 16))]
+                (loop-when [h1 Murmur3'seed #_"int" i 1] (< i (.length s)) => h1
+                    (let [#_"int" k1 (| (.charAt s, (dec i)) (<< (.charAt s, i) 16))]
                         (recur (Murmur3'mixH1 h1, (Murmur3'mixK1 k1)) (+ i 2))
                     )
                 )
               h1 ;; deal with any remaining characters
-                (when (= (& (count input) 1) 1) => h1
-                    (let [#_"int" k1 (nth input (dec (count input)))]
+                (when (= (& (.length s) 1) 1) => h1
+                    (let [#_"int" k1 (.charAt s, (dec (.length s)))]
                         (bit-xor h1 (Murmur3'mixK1 k1))
                     )
                 )]
-            (Murmur3'fmix h1, (* 2 (count input)))
+            (Murmur3'fmix h1, (* 2 (.length s)))
         )
     )
 
@@ -9694,6 +9694,18 @@
         )
     )
 
+    (extend-type Symbol IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"Symbol" this]
+            (:_meta this)
+        )
+    )
+
+    (extend-type Symbol IObj
+        (#_"Symbol" IObj'''withMeta [#_"Symbol" this, #_"IPersistentMap" meta]
+            (Symbol'new meta, (:ns this), (:name this))
+        )
+    )
+
     (defn #_"Symbol" Symbol'intern
         ([#_"String" nsname]
             (let [#_"int" i (.indexOf nsname, (int \/))]
@@ -9745,12 +9757,6 @@
         )
     )
 
-    (extend-type Symbol IObj
-        (#_"Symbol" IObj'''withMeta [#_"Symbol" this, #_"IPersistentMap" meta]
-            (Symbol'new meta, (:ns this), (:name this))
-        )
-    )
-
     #_foreign
     (defn #_"int" compareTo---Symbol [#_"Symbol" this, #_"Symbol" that]
         (cond
@@ -9769,12 +9775,6 @@
         (#_"Object" IFn'''invoke
             ([#_"Symbol" this, #_"Object" arg1] (get arg1 this))
             ([#_"Symbol" this, #_"Object" arg1, #_"Object" notFound] (get arg1 this notFound))
-        )
-    )
-
-    (extend-type Symbol IMeta
-        (#_"IPersistentMap" IMeta'''meta [#_"Symbol" this]
-            (:_meta this)
         )
     )
 )
@@ -11711,6 +11711,12 @@
         )
     )
 
+    (extend-type RSeq IObj
+        (#_"RSeq" IObj'''withMeta [#_"RSeq" this, #_"IPersistentMap" meta]
+            (RSeq'new meta, (:v this), (:i this))
+        )
+    )
+
     (extend-type RSeq ISeq
         (#_"Object" ISeq'''first [#_"RSeq" this]
             (nth (:v this) (:i this))
@@ -11726,12 +11732,6 @@
     (extend-type RSeq Counted
         (#_"int" Counted'''count [#_"RSeq" this]
             (inc (:i this))
-        )
-    )
-
-    (extend-type RSeq IObj
-        (#_"RSeq" IObj'''withMeta [#_"RSeq" this, #_"IPersistentMap" meta]
-            (RSeq'new meta, (:v this), (:i this))
         )
     )
 )
@@ -11899,6 +11899,20 @@
         )
     )
 
+    (extend-type SubVector IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"SubVector" this]
+            (:_meta this)
+        )
+    )
+
+    (extend-type SubVector IObj
+        (#_"SubVector" IObj'''withMeta [#_"SubVector" this, #_"IPersistentMap" meta]
+            (when-not (= meta (:_meta this)) => this
+                (SubVector'new meta, (:v this), (:start this), (:end this))
+            )
+        )
+    )
+
     (extend-type SubVector Indexed
         (#_"Object" Indexed'''nth
             ([#_"SubVector" this, #_"int" i]
@@ -11946,20 +11960,6 @@
                 []
                 (SubVector'new (:_meta this), (:v this), (:start this), (dec (:end this)))
             )
-        )
-    )
-
-    (extend-type SubVector IObj
-        (#_"SubVector" IObj'''withMeta [#_"SubVector" this, #_"IPersistentMap" meta]
-            (when-not (= meta (:_meta this)) => this
-                (SubVector'new meta, (:v this), (:start this), (:end this))
-            )
-        )
-    )
-
-    (extend-type SubVector IMeta
-        (#_"IPersistentMap" IMeta'''meta [#_"SubVector" this]
-            (:_meta this)
         )
     )
 )
@@ -12109,6 +12109,12 @@
         )
     )
 
+    (extend-type ArraySeq_int IObj
+        (#_"ArraySeq_int" IObj'''withMeta [#_"ArraySeq_int" this, #_"IPersistentMap" meta]
+            (ArraySeq_int'new meta, (:array this), (:i this))
+        )
+    )
+
     (extend-type ArraySeq_int ISeq
         (#_"Object" ISeq'''first [#_"ArraySeq_int" this]
             (aget (:array this) (:i this))
@@ -12124,12 +12130,6 @@
     (extend-type ArraySeq_int Counted
         (#_"int" Counted'''count [#_"ArraySeq_int" this]
             (- (alength (:array this)) (:i this))
-        )
-    )
-
-    (extend-type ArraySeq_int IObj
-        (#_"ArraySeq_int" IObj'''withMeta [#_"ArraySeq_int" this, #_"IPersistentMap" meta]
-            (ArraySeq_int'new meta, (:array this), (:i this))
         )
     )
 
@@ -12165,6 +12165,12 @@
         )
     )
 
+    (extend-type ArraySeq_long IObj
+        (#_"ArraySeq_long" IObj'''withMeta [#_"ArraySeq_long" this, #_"IPersistentMap" meta]
+            (ArraySeq_long'new meta, (:array this), (:i this))
+        )
+    )
+
     (extend-type ArraySeq_long ISeq
         (#_"Object" ISeq'''first [#_"ArraySeq_long" this]
             (Numbers'num-1l (aget (:array this) (:i this)))
@@ -12180,12 +12186,6 @@
     (extend-type ArraySeq_long Counted
         (#_"int" Counted'''count [#_"ArraySeq_long" this]
             (- (alength (:array this)) (:i this))
-        )
-    )
-
-    (extend-type ArraySeq_long IObj
-        (#_"ArraySeq_long" IObj'''withMeta [#_"ArraySeq_long" this, #_"IPersistentMap" meta]
-            (ArraySeq_long'new meta, (:array this), (:i this))
         )
     )
 
@@ -12221,6 +12221,12 @@
         )
     )
 
+    (extend-type ArraySeq_byte IObj
+        (#_"ArraySeq_byte" IObj'''withMeta [#_"ArraySeq_byte" this, #_"IPersistentMap" meta]
+            (ArraySeq_byte'new meta, (:array this), (:i this))
+        )
+    )
+
     (extend-type ArraySeq_byte ISeq
         (#_"Object" ISeq'''first [#_"ArraySeq_byte" this]
             (aget (:array this) (:i this))
@@ -12236,12 +12242,6 @@
     (extend-type ArraySeq_byte Counted
         (#_"int" Counted'''count [#_"ArraySeq_byte" this]
             (- (alength (:array this)) (:i this))
-        )
-    )
-
-    (extend-type ArraySeq_byte IObj
-        (#_"ArraySeq_byte" IObj'''withMeta [#_"ArraySeq_byte" this, #_"IPersistentMap" meta]
-            (ArraySeq_byte'new meta, (:array this), (:i this))
         )
     )
 
@@ -12277,6 +12277,12 @@
         )
     )
 
+    (extend-type ArraySeq_char IObj
+        (#_"ArraySeq_char" IObj'''withMeta [#_"ArraySeq_char" this, #_"IPersistentMap" meta]
+            (ArraySeq_char'new meta, (:array this), (:i this))
+        )
+    )
+
     (extend-type ArraySeq_char ISeq
         (#_"Object" ISeq'''first [#_"ArraySeq_char" this]
             (aget (:array this) (:i this))
@@ -12292,12 +12298,6 @@
     (extend-type ArraySeq_char Counted
         (#_"int" Counted'''count [#_"ArraySeq_char" this]
             (- (alength (:array this)) (:i this))
-        )
-    )
-
-    (extend-type ArraySeq_char IObj
-        (#_"ArraySeq_char" IObj'''withMeta [#_"ArraySeq_char" this, #_"IPersistentMap" meta]
-            (ArraySeq_char'new meta, (:array this), (:i this))
         )
     )
 
@@ -12333,6 +12333,12 @@
         )
     )
 
+    (extend-type ArraySeq_boolean IObj
+        (#_"ArraySeq_boolean" IObj'''withMeta [#_"ArraySeq_boolean" this, #_"IPersistentMap" meta]
+            (ArraySeq_boolean'new meta, (:array this), (:i this))
+        )
+    )
+
     (extend-type ArraySeq_boolean ISeq
         (#_"Object" ISeq'''first [#_"ArraySeq_boolean" this]
             (aget (:array this) (:i this))
@@ -12348,12 +12354,6 @@
     (extend-type ArraySeq_boolean Counted
         (#_"int" Counted'''count [#_"ArraySeq_boolean" this]
             (- (alength (:array this)) (:i this))
-        )
-    )
-
-    (extend-type ArraySeq_boolean IObj
-        (#_"ArraySeq_boolean" IObj'''withMeta [#_"ArraySeq_boolean" this, #_"IPersistentMap" meta]
-            (ArraySeq_boolean'new meta, (:array this), (:i this))
         )
     )
 
@@ -12389,6 +12389,12 @@
                     #_"int" :i i
                 )
             )
+        )
+    )
+
+    (extend-type ArraySeq IObj
+        (#_"ArraySeq" IObj'''withMeta [#_"ArraySeq" this, #_"IPersistentMap" meta]
+            (ArraySeq'new meta, (:array this), (:i this))
         )
     )
 
@@ -12430,12 +12436,6 @@
     (extend-type ArraySeq Counted
         (#_"int" Counted'''count [#_"ArraySeq" this]
             (if (some? (:array this)) (- (alength (:array this)) (:i this)) 0)
-        )
-    )
-
-    (extend-type ArraySeq IObj
-        (#_"ArraySeq" IObj'''withMeta [#_"ArraySeq" this, #_"IPersistentMap" meta]
-            (ArraySeq'new meta, (:array this), (:i this))
         )
     )
 
@@ -12792,6 +12792,12 @@
         )
     )
 
+    (extend-type Cons IObj
+        (#_"Cons" IObj'''withMeta [#_"Cons" this, #_"IPersistentMap" meta]
+            (Cons'new meta, (:_first this), (:_more this))
+        )
+    )
+
     (extend-type Cons ISeq
         (#_"Object" ISeq'''first [#_"Cons" this]
             (:_first this)
@@ -12805,12 +12811,6 @@
     (extend-type Cons Counted
         (#_"int" Counted'''count [#_"Cons" this]
             (inc (count (:_more this)))
-        )
-    )
-
-    (extend-type Cons IObj
-        (#_"Cons" IObj'''withMeta [#_"Cons" this, #_"IPersistentMap" meta]
-            (Cons'new meta, (:_first this), (:_more this))
         )
     )
 )
@@ -12833,9 +12833,13 @@
         )
     )
 
-    (defn #_"ISeq" Cycle'create [#_"ISeq" s]
-        (if (some? s) (Cycle'new s, nil, s) ())
+    (extend-type Cycle IObj
+        (#_"Cycle" IObj'''withMeta [#_"Cycle" this, #_"IPersistentMap" meta]
+            (Cycle'new meta, (:all this), (:prev this), (:_current this), (:_next this))
+        )
     )
+
+    (defn #_"ISeq" Cycle'create [#_"Seqable" s] (if-let [s (seq s)] (Cycle'new s, nil, s) ()))
 
     #_method
     (defn- #_"ISeq" Cycle''current [#_"Cycle" this]
@@ -12859,12 +12863,6 @@
             (or (:_next this)
                 (§ set! (:_next this) (Cycle'new (:all this), (Cycle''current this), nil))
             )
-        )
-    )
-
-    (extend-type Cycle IObj
-        (#_"Cycle" IObj'''withMeta [#_"Cycle" this, #_"IPersistentMap" meta]
-            (Cycle'new meta, (:all this), (:prev this), (:_current this), (:_next this))
         )
     )
 
@@ -12960,6 +12958,12 @@
         )
     )
 
+    (extend-type Iterate IObj
+        (#_"Iterate" IObj'''withMeta [#_"Iterate" this, #_"IPersistentMap" meta]
+            (Iterate'new meta, (:f this), (:prevSeed this), (:_seed this), (:_next this))
+        )
+    )
+
     (defn #_"ISeq" Iterate'create [#_"IFn" f, #_"Object" seed]
         (Iterate'new f, nil, seed)
     )
@@ -12981,12 +12985,6 @@
             (or (:_next this)
                 (§ set! (:_next this) (Iterate'new (:f this), (first this), Iterate'UNREALIZED_SEED))
             )
-        )
-    )
-
-    (extend-type Iterate IObj
-        (#_"Iterate" IObj'''withMeta [#_"Iterate" this, #_"IPersistentMap" meta]
-            (Iterate'new meta, (:f this), (:prevSeed this), (:_seed this), (:_next this))
         )
     )
 
@@ -13565,6 +13563,12 @@
         )
     )
 
+    (extend-type MSeq IObj
+        (#_"MSeq" IObj'''withMeta [#_"MSeq" this, #_"IPersistentMap" meta]
+            (MSeq'new meta, (:array this), (:i this))
+        )
+    )
+
     (extend-type MSeq ISeq
         (#_"Object" ISeq'''first [#_"MSeq" this]
             (MapEntry'create (aget (:array this) (:i this)), (aget (:array this) (inc (:i this))))
@@ -13580,12 +13584,6 @@
     (extend-type MSeq Counted
         (#_"int" Counted'''count [#_"MSeq" this]
             (/ (- (alength (:array this)) (:i this)) 2)
-        )
-    )
-
-    (extend-type MSeq IObj
-        (#_"MSeq" IObj'''withMeta [#_"MSeq" this, #_"IPersistentMap" meta]
-            (MSeq'new meta, (:array this), (:i this))
         )
     )
 )
@@ -13614,13 +13612,19 @@
         )
     )
 
-    (def #_"PersistentArrayMap" PersistentArrayMap'EMPTY (PersistentArrayMap'new))
+    (extend-type PersistentArrayMap IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"PersistentArrayMap" this]
+            (:_meta this)
+        )
+    )
 
     (extend-type PersistentArrayMap IObj
         (#_"PersistentArrayMap" IObj'''withMeta [#_"PersistentArrayMap" this, #_"IPersistentMap" meta]
             (PersistentArrayMap'new meta, (:array this))
         )
     )
+
+    (def #_"PersistentArrayMap" PersistentArrayMap'EMPTY (PersistentArrayMap'new))
 
     #_method
     (defn #_"PersistentArrayMap" PersistentArrayMap''create [#_"PersistentArrayMap" this & #_"Object..." init]
@@ -13794,12 +13798,6 @@
         )
     )
 
-    (extend-type PersistentArrayMap IMeta
-        (#_"IPersistentMap" IMeta'''meta [#_"PersistentArrayMap" this]
-            (:_meta this)
-        )
-    )
-
     (extend-type PersistentArrayMap IKVReduce
         (#_"Object" IKVReduce'''kvreduce [#_"PersistentArrayMap" this, #_"IFn" f, #_"Object" r]
             (loop-when [r r #_"int" i 0] (< i (alength (:array this))) => r
@@ -13919,6 +13917,12 @@
         )
     )
 
+    (extend-type HSeq IObj
+        (#_"HSeq" IObj'''withMeta [#_"HSeq" this, #_"IPersistentMap" meta]
+            (HSeq'new meta, (:nodes this), (:i this), (:s this))
+        )
+    )
+
     (defn- #_"ISeq" HSeq'create-4 [#_"IPersistentMap" meta, #_"INode[]" nodes, #_"int" i, #_"ISeq" s]
         (when (nil? s) => (HSeq'new meta, nodes, i, s)
             (loop-when i (< i (alength nodes))
@@ -13933,12 +13937,6 @@
 
     (defn #_"ISeq" HSeq'create-1 [#_"INode[]" nodes]
         (HSeq'create-4 nil, nodes, 0, nil)
-    )
-
-    (extend-type HSeq IObj
-        (#_"HSeq" IObj'''withMeta [#_"HSeq" this, #_"IPersistentMap" meta]
-            (HSeq'new meta, (:nodes this), (:i this), (:s this))
-        )
     )
 
     (extend-type HSeq ISeq
@@ -13966,6 +13964,12 @@
         )
     )
 
+    (extend-type NodeSeq IObj
+        (#_"NodeSeq" IObj'''withMeta [#_"NodeSeq" this, #_"IPersistentMap" meta]
+            (NodeSeq'new meta, (:array this), (:i this), (:s this))
+        )
+    )
+
     (defn- #_"ISeq" NodeSeq'create-3 [#_"Object[]" array, #_"int" i, #_"ISeq" s]
         (when (nil? s) => (NodeSeq'new nil, array, i, s)
             (loop-when i (< i (alength array))
@@ -13987,27 +13991,6 @@
         (NodeSeq'create-3 array, 0, nil)
     )
 
-    (defn #_"Object" NodeSeq'kvreduce [#_"Object[]" array, #_"IFn" f, #_"Object" r]
-        (loop-when [r r #_"int" i 0] (< i (alength array)) => r
-            (let [r (if (some? (aget array i))
-                        (f r (aget array i), (aget array (inc i)))
-                        (let-when [#_"INode" node (cast cloiure.core.INode (aget array (inc i)))] (some? node) => r
-                            (INode'''kvreduce node, f, r)
-                        )
-                    )]
-                (when-not (reduced? r) => r
-                    (recur r (+ i 2))
-                )
-            )
-        )
-    )
-
-    (extend-type NodeSeq IObj
-        (#_"NodeSeq" IObj'''withMeta [#_"NodeSeq" this, #_"IPersistentMap" meta]
-            (NodeSeq'new meta, (:array this), (:i this), (:s this))
-        )
-    )
-
     (extend-type NodeSeq ISeq
         (#_"Object" ISeq'''first [#_"NodeSeq" this]
             (if (some? (:s this))
@@ -14020,6 +14003,21 @@
             (if (some? (:s this))
                 (NodeSeq'create-3 (:array this), (:i this), (next (:s this)))
                 (NodeSeq'create-3 (:array this), (+ (:i this) 2), nil)
+            )
+        )
+    )
+
+    (defn #_"Object" NodeSeq'kvreduce [#_"Object[]" array, #_"IFn" f, #_"Object" r]
+        (loop-when [r r #_"int" i 0] (< i (alength array)) => r
+            (let [r (if (some? (aget array i))
+                        (f r (aget array i), (aget array (inc i)))
+                        (let-when [#_"INode" node (cast cloiure.core.INode (aget array (inc i)))] (some? node) => r
+                            (INode'''kvreduce node, f, r)
+                        )
+                    )]
+                (when-not (reduced? r) => r
+                    (recur r (+ i 2))
+                )
             )
         )
     )
@@ -14790,6 +14788,18 @@
         )
     )
 
+    (extend-type PersistentHashMap IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"PersistentHashMap" this]
+            (:_meta this)
+        )
+    )
+
+    (extend-type PersistentHashMap IObj
+        (#_"PersistentHashMap" IObj'''withMeta [#_"PersistentHashMap" this, #_"IPersistentMap" meta]
+            (PersistentHashMap'new meta, (:count this), (:root this), (:hasNull this), (:nullValue this))
+        )
+    )
+
     (def #_"PersistentHashMap" PersistentHashMap'EMPTY (PersistentHashMap'new 0, nil, false, nil))
 
     (defn #_"PersistentHashMap" PersistentHashMap'create-1a [& #_"Object..." a]
@@ -14948,21 +14958,9 @@
         )
     )
 
-    (extend-type PersistentHashMap IObj
-        (#_"PersistentHashMap" IObj'''withMeta [#_"PersistentHashMap" this, #_"IPersistentMap" meta]
-            (PersistentHashMap'new meta, (:count this), (:root this), (:hasNull this), (:nullValue this))
-        )
-    )
-
     (extend-type PersistentHashMap IEditableCollection
         (#_"TransientHashMap" IEditableCollection'''asTransient [#_"PersistentHashMap" this]
             (TransientHashMap'new this)
-        )
-    )
-
-    (extend-type PersistentHashMap IMeta
-        (#_"IPersistentMap" IMeta'''meta [#_"PersistentHashMap" this]
-            (:_meta this)
         )
     )
 )
@@ -14990,6 +14988,18 @@
             (hash-map
                 #_"IPersistentMap" :_meta meta
             )
+        )
+    )
+
+    (extend-type PersistentHashSet IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"PersistentHashSet" this]
+            (:_meta this)
+        )
+    )
+
+    (extend-type PersistentHashSet IObj
+        (#_"PersistentHashSet" IObj'''withMeta [#_"PersistentHashSet" this, #_"IPersistentMap" meta]
+            (PersistentHashSet'new meta, (:impl this))
         )
     )
 
@@ -15059,21 +15069,9 @@
         )
     )
 
-    (extend-type PersistentHashSet IObj
-        (#_"PersistentHashSet" IObj'''withMeta [#_"PersistentHashSet" this, #_"IPersistentMap" meta]
-            (PersistentHashSet'new meta, (:impl this))
-        )
-    )
-
     (extend-type PersistentHashSet IEditableCollection
         (#_"ITransientCollection" IEditableCollection'''asTransient [#_"PersistentHashSet" this]
             (TransientHashSet'new (transient (:impl this)))
-        )
-    )
-
-    (extend-type PersistentHashSet IMeta
-        (#_"IPersistentMap" IMeta'''meta [#_"PersistentHashSet" this]
-            (:_meta this)
         )
     )
 )
@@ -15084,6 +15082,18 @@
 (class-ns Primordial
     (defn #_"Primordial" Primordial'new []
         (RestFn'new)
+    )
+
+    (extend-type Primordial IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"Primordial" this]
+            nil
+        )
+    )
+
+    (extend-type Primordial IObj
+        (#_"Primordial" IObj'''withMeta [#_"Primordial" this, #_"IPersistentMap" meta]
+            (throw! "unsupported operation")
+        )
     )
 
     #_override
@@ -15120,18 +15130,6 @@
             (PersistentList'create (RT'seqToArray (seq args)))
         )
     )
-
-    (extend-type Primordial IObj
-        (#_"Primordial" IObj'''withMeta [#_"Primordial" this, #_"IPersistentMap" meta]
-            (throw! "unsupported operation")
-        )
-    )
-
-    (extend-type Primordial IMeta
-        (#_"IPersistentMap" IMeta'''meta [#_"Primordial" this]
-            nil
-        )
-    )
 )
 
 (class-ns EmptyList
@@ -15140,6 +15138,20 @@
     (defn #_"EmptyList" EmptyList'new [#_"IPersistentMap" meta]
         (hash-map
             #_"IPersistentMap" :_meta meta
+        )
+    )
+
+    (extend-type EmptyList IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"EmptyList" this]
+            (:_meta this)
+        )
+    )
+
+    (extend-type EmptyList IObj
+        (#_"EmptyList" IObj'''withMeta [#_"EmptyList" this, #_"IPersistentMap" meta]
+            (when-not (= meta (meta this)) => this
+                (EmptyList'new meta)
+            )
         )
     )
 
@@ -15185,20 +15197,6 @@
         )
     )
 
-    (extend-type EmptyList IMeta
-        (#_"IPersistentMap" IMeta'''meta [#_"EmptyList" this]
-            (:_meta this)
-        )
-    )
-
-    (extend-type EmptyList IObj
-        (#_"EmptyList" IObj'''withMeta [#_"EmptyList" this, #_"IPersistentMap" meta]
-            (when-not (= meta (meta this)) => this
-                (EmptyList'new meta)
-            )
-        )
-    )
-
     (extend-type EmptyList IPersistentStack
         (#_"Object" IPersistentStack'''peek [#_"EmptyList" this]
             nil
@@ -15236,6 +15234,14 @@
                     #_"IPersistentList" :_rest _rest
                     #_"int" :_count _count
                 )
+            )
+        )
+    )
+
+    (extend-type PersistentList IObj
+        (#_"PersistentList" IObj'''withMeta [#_"PersistentList" this, #_"IPersistentMap" meta]
+            (when-not (= meta (:_meta this)) => this
+                (PersistentList'new meta, (:_first this), (:_rest this), (:_count this))
             )
         )
     )
@@ -15286,14 +15292,6 @@
         )
     )
 
-    (extend-type PersistentList IObj
-        (#_"PersistentList" IObj'''withMeta [#_"PersistentList" this, #_"IPersistentMap" meta]
-            (when-not (= meta (:_meta this)) => this
-                (PersistentList'new meta, (:_first this), (:_rest this), (:_count this))
-            )
-        )
-    )
-
     (extend-type PersistentList IReduce
         (#_"Object" IReduce'''reduce
             ([#_"PersistentList" this, #_"IFn" f]
@@ -15328,6 +15326,12 @@
         )
     )
 
+    (extend-type QSeq IObj
+        (#_"QSeq" IObj'''withMeta [#_"QSeq" this, #_"IPersistentMap" meta]
+            (QSeq'new meta, (:f this), (:rseq this))
+        )
+    )
+
     (extend-type QSeq ISeq
         (#_"Object" ISeq'''first [#_"QSeq" this]
             (first (:f this))
@@ -15346,12 +15350,6 @@
     (extend-type QSeq Counted
         (#_"int" Counted'''count [#_"QSeq" this]
             (+ (count (:f this)) (count (:rseq this)))
-        )
-    )
-
-    (extend-type QSeq IObj
-        (#_"QSeq" IObj'''withMeta [#_"QSeq" this, #_"IPersistentMap" meta]
-            (QSeq'new meta, (:f this), (:rseq this))
         )
     )
 )
@@ -15373,6 +15371,18 @@
 
             #_mutable #_"int" :_hash 0
             #_mutable #_"int" :_hasheq 0
+        )
+    )
+
+    (extend-type PersistentQueue IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"PersistentQueue" this]
+            (:_meta this)
+        )
+    )
+
+    (extend-type PersistentQueue IObj
+        (#_"PersistentQueue" IObj'''withMeta [#_"PersistentQueue" this, #_"IPersistentMap" meta]
+            (PersistentQueue'new meta, (:cnt this), (:f this), (:r this))
         )
     )
 
@@ -15453,18 +15463,6 @@
 
         (#_"PersistentQueue" IPersistentCollection'''empty [#_"PersistentQueue" this]
             (with-meta PersistentQueue'EMPTY (meta this))
-        )
-    )
-
-    (extend-type PersistentQueue IMeta
-        (#_"IPersistentMap" IMeta'''meta [#_"PersistentQueue" this]
-            (:_meta this)
-        )
-    )
-
-    (extend-type PersistentQueue IObj
-        (#_"PersistentQueue" IObj'''withMeta [#_"PersistentQueue" this, #_"IPersistentMap" meta]
-            (PersistentQueue'new meta, (:cnt this), (:f this), (:r this))
         )
     )
 )
@@ -15816,6 +15814,12 @@
         )
     )
 
+    (extend-type TSeq IObj
+        (#_"TSeq" IObj'''withMeta [#_"TSeq" this, #_"IPersistentMap" meta]
+            (TSeq'new meta, (:stack this), (:asc this), (:cnt this))
+        )
+    )
+
     (defn #_"ISeq" TSeq'push [#_"TNode" t, #_"ISeq" stack, #_"boolean" asc]
         (loop-when [stack stack t t] (some? t) => stack
             (recur (cons t stack) (if asc (.left t) (.right t)))
@@ -15847,12 +15851,6 @@
             )
         )
     )
-
-    (extend-type TSeq IObj
-        (#_"TSeq" IObj'''withMeta [#_"TSeq" this, #_"IPersistentMap" meta]
-            (TSeq'new meta, (:stack this), (:asc this), (:cnt this))
-        )
-    )
 )
 
 ;;;
@@ -15880,13 +15878,19 @@
         )
     )
 
-    (def #_"PersistentTreeMap" PersistentTreeMap'EMPTY (PersistentTreeMap'new))
+    (extend-type PersistentTreeMap IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"PersistentTreeMap" this]
+            (:_meta this)
+        )
+    )
 
     (extend-type PersistentTreeMap IObj
         (#_"PersistentTreeMap" IObj'''withMeta [#_"PersistentTreeMap" this, #_"IPersistentMap" meta]
             (PersistentTreeMap'new meta, (:comp this), (:tree this), (:_count this))
         )
     )
+
+    (def #_"PersistentTreeMap" PersistentTreeMap'EMPTY (PersistentTreeMap'new))
 
     (defn #_"PersistentTreeMap" PersistentTreeMap'create
         ([#_"Seqable" keyvals]
@@ -16216,12 +16220,6 @@
         )
     )
 
-    (extend-type PersistentTreeMap IMeta
-        (#_"IPersistentMap" IMeta'''meta [#_"PersistentTreeMap" this]
-            (:_meta this)
-        )
-    )
-
     (extend-type PersistentTreeMap Associative
         (#_"PersistentTreeMap" Associative'''assoc [#_"PersistentTreeMap" this, #_"Object" key, #_"Object" val]
             (let [#_"Box" found (Box'new nil) #_"TNode" t (PersistentTreeMap''add this, (:tree this), key, val, found)]
@@ -16263,6 +16261,18 @@
         )
     )
 
+    (extend-type PersistentTreeSet IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"PersistentTreeSet" this]
+            (:_meta this)
+        )
+    )
+
+    (extend-type PersistentTreeSet IObj
+        (#_"PersistentTreeSet" IObj'''withMeta [#_"PersistentTreeSet" this, #_"IPersistentMap" meta]
+            (PersistentTreeSet'new meta, (:impl this))
+        )
+    )
+
     (def #_"PersistentTreeSet" PersistentTreeSet'EMPTY (PersistentTreeSet'new nil, PersistentTreeMap'EMPTY))
 
     (defn #_"PersistentTreeSet" PersistentTreeSet'create
@@ -16298,12 +16308,6 @@
         )
     )
 
-    (extend-type PersistentTreeSet IObj
-        (#_"PersistentTreeSet" IObj'''withMeta [#_"PersistentTreeSet" this, #_"IPersistentMap" meta]
-            (PersistentTreeSet'new meta, (:impl this))
-        )
-    )
-
     (extend-type PersistentTreeSet Sorted
         (#_"Comparator" Sorted'''comparator [#_"PersistentTreeSet" this]
             (Sorted'''comparator (:impl this))
@@ -16319,12 +16323,6 @@
 
         (#_"ISeq" Sorted'''seqFrom [#_"PersistentTreeSet" this, #_"Object" key, #_"boolean" ascending?]
             (keys (Sorted'''seqFrom (:impl this), key, ascending?))
-        )
-    )
-
-    (extend-type PersistentTreeSet IMeta
-        (#_"IPersistentMap" IMeta'''meta [#_"PersistentTreeSet" this]
-            (:_meta this)
         )
     )
 )
@@ -16653,6 +16651,18 @@
         )
     )
 
+    (extend-type PersistentVector IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"PersistentVector" this]
+            (:_meta this)
+        )
+    )
+
+    (extend-type PersistentVector IObj
+        (#_"PersistentVector" IObj'''withMeta [#_"PersistentVector" this, #_"IPersistentMap" meta]
+            (PersistentVector'new meta, (:cnt this), (:shift this), (:root this), (:tail this))
+        )
+    )
+
     (def #_"PersistentVector" PersistentVector'EMPTY (PersistentVector'new 0, 5, PersistentVector'EMPTY_NODE, (object-array 0)))
 
     (defn #_"PersistentVector" PersistentVector'adopt [#_"Object[]" items]
@@ -16764,18 +16774,6 @@
         )
     )
 
-    (extend-type PersistentVector IObj
-        (#_"PersistentVector" IObj'''withMeta [#_"PersistentVector" this, #_"IPersistentMap" meta]
-            (PersistentVector'new meta, (:cnt this), (:shift this), (:root this), (:tail this))
-        )
-    )
-
-    (extend-type PersistentVector IMeta
-        (#_"IPersistentMap" IMeta'''meta [#_"PersistentVector" this]
-            (:_meta this)
-        )
-    )
-
     #_method
     (defn- #_"VNode" PersistentVector''pushTail [#_"PersistentVector" this, #_"int" level, #_"VNode" parent, #_"VNode" tailnode]
         ;; if parent is leaf, insert node,
@@ -16836,7 +16834,7 @@
                 (when (pos? (:cnt this)) => (f)
                     (loop-when [#_"Object" r (aget (PersistentVector''arrayFor this, 0) 0) #_"int" i 0] (< i (:cnt this)) => r
                         (let [#_"Object[]" a (PersistentVector''arrayFor this, i)
-                            r (loop-when [r r #_"int" j (if (zero? i) 1 0)] (< j (alength a)) => r
+                              r (loop-when [r r #_"int" j (if (zero? i) 1 0)] (< j (alength a)) => r
                                     (let [r (f r (aget a j))]
                                         (when-not (reduced? r) => (ß return @r)
                                             (recur r (inc j))
@@ -16851,7 +16849,7 @@
             ([#_"PersistentVector" this, #_"IFn" f, #_"Object" r]
                 (loop-when [r r #_"int" i 0] (< i (:cnt this)) => r
                     (let [#_"Object[]" a (PersistentVector''arrayFor this, i)
-                        r (loop-when [r r #_"int" j 0] (< j (alength a)) => r
+                          r (loop-when [r r #_"int" j 0] (< j (alength a)) => r
                                 (let [r (f r (aget a j))]
                                     (when-not (reduced? r) => (ß return @r)
                                         (recur r (inc j))
@@ -16998,6 +16996,14 @@
         )
     )
 
+    (extend-type Range IObj
+        (#_"Range" IObj'''withMeta [#_"Range" this, #_"IPersistentMap" meta]
+            (when-not (= meta (:_meta this)) => this
+                (Range'new meta, (:end this), (:start this), (:step this), (:boundsCheck this), (:_chunk this), (:_chunkNext this))
+            )
+        )
+    )
+
     (declare Repeat'create)
 
     (defn #_"ISeq" Range'create
@@ -17020,14 +17026,6 @@
                     (Repeat'create start)
                 :else
                     (Range'new start, end, step, (if (pos? step) (Range'positiveStep end) (Range'negativeStep end)))
-            )
-        )
-    )
-
-    (extend-type Range IObj
-        (#_"Range" IObj'''withMeta [#_"Range" this, #_"IPersistentMap" meta]
-            (when-not (= meta (:_meta this)) => this
-                (Range'new meta, (:end this), (:start this), (:step this), (:boundsCheck this), (:_chunk this), (:_chunkNext this))
             )
         )
     )
@@ -17149,6 +17147,12 @@
         )
     )
 
+    (extend-type Repeat IObj
+        (#_"Repeat" IObj'''withMeta [#_"Repeat" this, #_"IPersistentMap" meta]
+            (Repeat'new meta, (:cnt this), (:val this))
+        )
+    )
+
     (defn #_"Repeat|ISeq" Repeat'create
         ([#_"Object" val] (Repeat'new Repeat'INFINITE, val))
         ([#_"long" n, #_"Object" val] (if (pos? n) (Repeat'new n, val) ()))
@@ -17167,12 +17171,6 @@
                 )
             )
             (:_next this)
-        )
-    )
-
-    (extend-type Repeat IObj
-        (#_"Repeat" IObj'''withMeta [#_"Repeat" this, #_"IPersistentMap" meta]
-            (Repeat'new meta, (:cnt this), (:val this))
         )
     )
 
@@ -17225,17 +17223,17 @@
         )
     )
 
-    (defn #_"StringSeq" StringSeq'create [#_"CharSequence" s]
-        (when (pos? (count s))
-            (StringSeq'new nil, s, 0)
-        )
-    )
-
     (extend-type StringSeq IObj
         (#_"StringSeq" IObj'''withMeta [#_"StringSeq" this, #_"IPersistentMap" meta]
             (when-not (= meta (meta this)) => this
                 (StringSeq'new meta, (:s this), (:i this))
             )
+        )
+    )
+
+    (defn #_"StringSeq" StringSeq'create [#_"CharSequence" s]
+        (when (pos? (count s))
+            (StringSeq'new nil, s, 0)
         )
     )
 
@@ -17254,6 +17252,27 @@
     (extend-type StringSeq Counted
         (#_"int" Counted'''count [#_"StringSeq" this]
             (- (count (:s this)) (:i this))
+        )
+    )
+
+    (extend-type StringSeq IReduce
+        (#_"Object" IReduce'''reduce
+            ([#_"StringSeq" this, #_"IFn" f]
+                (let [#_"CharSequence" s (:s this) #_"int" i (:i this) #_"int" n (count s)]
+                    (loop-when [#_"Object" r (nth s i) i (inc i)] (< i n) => r
+                        (let [r (f r (nth s i))]
+                            (if (reduced? r) @r (recur r (inc i)))
+                        )
+                    )
+                )
+            )
+            ([#_"StringSeq" this, #_"IFn" f, #_"Object" r]
+                (let [#_"CharSequence" s (:s this) #_"int" i (:i this) #_"int" n (count s)]
+                    (loop-when [r (f r (nth s i)) i (inc i)] (< i n) => (if (reduced? r) @r r)
+                        (if (reduced? r) @r (recur (f r (nth s i)) (inc i)))
+                    )
+                )
+            )
         )
     )
 )
@@ -17771,7 +17790,7 @@
                     )
                 )
             (instance? CharSequence o)
-                (.length o)
+                (.length ^CharSequence o)
             (map-entry? o)
                 2
             (.isArray (class o))
@@ -17928,7 +17947,7 @@
                 (nil? coll)
                     nil
                 (instance? CharSequence coll)
-                    (Character/valueOf (nth coll n))
+                    (Character/valueOf (.charAt ^CharSequence coll, n))
                 (.isArray (class coll))
                     (Reflector'prepRet (.getComponentType (class coll)), (Array/get coll, n))
                 (instance? Matcher coll)
@@ -17954,8 +17973,8 @@
                 (neg? n)
                     notFound
                 (instance? CharSequence coll)
-                    (let [#_"CharSequence" s coll]
-                        (if (< n (count s)) (Character/valueOf (nth s n)) notFound)
+                    (let [^CharSequence s coll]
+                        (if (< n (.length s)) (Character/valueOf (.charAt s, n)) notFound)
                     )
                 (.isArray (class coll))
                     (when (< n (Array/getLength coll)) => notFound
@@ -20285,7 +20304,7 @@
 ;;;
  ; Returns a lazy (infinite!) sequence of repetitions of the items in coll.
  ;;
-(§ defn cycle [s] (Cycle'create (seq s)))
+(§ defn cycle [s] (Cycle'create s))
 
 ;;;
  ; Returns a vector of [(take n coll) (drop n coll)].
@@ -21086,13 +21105,7 @@
 ;;;
  ; Returns a set of the distinct elements of coll.
  ;;
-(§ defn set [coll]
-    (cond
-        (set? coll) (with-meta coll nil)
-        (satisfies? IReduce coll) (persistent! (IReduce'''reduce ^cloiure.core.IReduce coll conj! (transient #{})))
-        :else (into #{} coll)
-    )
-)
+(§ defn set [s] (if (set? s) (with-meta s nil) (into #{} s)))
 
 (defn- filter-key [f pred? m]
     (loop-when-recur [s (seq m) m (transient {})]
@@ -24599,135 +24612,18 @@
 
 (clojure-ns cloiure.core.protocols
 
-;;;
- ; Protocol for collection types that can implement reduce faster
- ; than first/next recursion. Called by cloiure.core/reduce.
- ;;
-(§ defprotocol CollReduce
-    (coll-reduce [s f] [s f r])
-)
-
-;;;
- ; Protocol for concrete seq types that can reduce themselves faster
- ; than first/next recursion. Called by cloiure.core/reduce.
- ;;
-(§ defprotocol InternalReduce
-    (internal-reduce [s f r])
-)
-
-(§ defn- seq-reduce
-    ([s f]
-        (if-let [s (seq s)]
-            (internal-reduce (next s) f (first s))
-            (f)
-        )
-    )
-    ([s f r] (internal-reduce (seq s) f r))
-)
-
-;;;
- ; Reduces a seq, ignoring any opportunities to switch to
- ; a more specialized implementation.
- ;;
-(defn- naive-seq-reduce [s f r]
-    (loop-when [s (seq s) r r] s => r
-        (let-when [r (f r (first s))] (reduced? r) => (recur (next s) r)
-            @r
-        )
-    )
-)
-
-;;;
- ; Reduces via IReduce if possible, else naively.
- ;;
-(defn- interface-or-naive-reduce [coll f r]
-    (if (satisfies? IReduce coll)
-        (IReduce'''reduce ^cloiure.core.IReduce coll f r)
-        (naive-seq-reduce coll f r)
-    )
-)
-
-(§ extend-protocol CollReduce
-    nil
-    (coll-reduce
-        ([s f] (f))
-        ([s f r] r)
-    )
-
-    Object
-    (coll-reduce
-        ([s f] (seq-reduce s f))
-        ([s f r] (seq-reduce s f r))
-    )
-
-    IReduce
-    (coll-reduce
-        ([s f] (IReduce'''reduce ^cloiure.core.IReduce s f))
-        ([s f r] (IReduce'''reduce ^cloiure.core.IReduce s f r))
-    )
-
-    ;; aseqs were iterable, masking internal-reducers
-    ASeq
-    (coll-reduce
-        ([s f] (seq-reduce s f))
-        ([s f r] (seq-reduce s f r))
-    )
-
-    ;; for range
-    LazySeq
-    (coll-reduce
-        ([s f] (seq-reduce s f))
-        ([s f r] (seq-reduce s f r))
-    )
-
-    ;; vector's chunked seq is faster than its iter
-    PersistentVector
-    (coll-reduce
-        ([s f] (seq-reduce s f))
-        ([s f r] (seq-reduce s f r))
-    )
-)
-
-(§ extend-protocol InternalReduce
-    nil
-    (internal-reduce [s f r] r)
-
-    StringSeq
-    (internal-reduce [str-seq f r]
-        (let [s (.s str-seq) n (count s)]
-            (loop-when [i (.i str-seq) r r] (< i n) => r
-                (let [r (f r (nth s i))]
-                    (when (reduced? r) => (recur (inc i) r)
-                        @r
-                    )
-                )
-            )
-        )
-    )
-
-    Object
-    (internal-reduce [s f r]
-        (loop-when [c (class s) s (seq s) r r] s => r
-            (when (identical? (class s) c) => (interface-or-naive-reduce s f r)
-                (let-when [r (f r (first s))] (reduced? r) => (recur c (next s) r)
-                    @r
-                )
+(defn- seq-reduce
+    ([s f] (if-let [s (seq s)] (seq-reduce (next s) f (first s)) (f)))
+    ([s f r]
+        (loop-when [r r s (seq s)] s => r
+            (let [r (f r (first s))]
+                (if (reduced? r) @r (recur r (next s)))
             )
         )
     )
 )
 
-;;;
- ; Protocol for concrete associative types that can reduce themselves
- ; via a function of key and val faster than first/next recursion over
- ; map entries. Called by cloiure.core/reduce-kv, and has same
- ; semantics (just different arg order).
- ;;
-(§ defprotocol KVReduce
-    (kv-reduce [amap f init])
-)
-
-;; redefine reduce with internal-reduce
+;; redefine reduce with IReduce
 
 ;;;
  ; f should be a function of 2 arguments. If val is not supplied, returns
@@ -24743,24 +24639,34 @@
     ([f s]
         (if (satisfies? IReduce s)
             (IReduce'''reduce ^cloiure.core.IReduce s f)
-            (coll-reduce s f)
+            (seq-reduce s f)
         )
     )
     ([f r s]
         (if (satisfies? IReduce s)
             (IReduce'''reduce ^cloiure.core.IReduce s f r)
-            (coll-reduce s f r)
+            (seq-reduce s f r)
         )
     )
 )
 
+;;;
+ ; Protocol for concrete associative types that can reduce themselves
+ ; via a function of key and val faster than first/next recursion over
+ ; map entries. Called by cloiure.core/reduce-kv, and has same
+ ; semantics (just different arg order).
+ ;;
+(§ defprotocol KVReduce
+    (kv-reduce [m f r])
+)
+
 (§ extend-protocol KVReduce
     nil
-    (kv-reduce [_ f r] r)
+    (kv-reduce [_ _ r] r)
 
     ;; slow path default
     IPersistentMap
-    (kv-reduce [m f r] (reduce (fn [m' [k v]] (f m' k v)) r m))
+    (kv-reduce [m f r] (reduce (fn [r [k v]] (f r k v)) r m))
 
     IKVReduce
     (kv-reduce [m f r] (IKVReduce'''kvreduce m f r))
@@ -24773,7 +24679,7 @@
  ; If coll contains no entries, returns init and f is not called. Note that
  ; reduce-kv is supported on vectors, where the keys will be the ordinals.
  ;;
-(§ defn reduce-kv [f r s] (kv-reduce s f r))
+(§ defn reduce-kv [f r m] (kv-reduce m f r))
 
 ;;;
  ; Takes a reducing function f of 2 args and returns a fn suitable for
