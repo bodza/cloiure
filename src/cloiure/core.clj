@@ -1,5 +1,5 @@
 (ns cloiure.core
-    (:refer-clojure :only [* *err* *ns* *print-length* *warn-on-reflection* + - -> .. / < <= = > >= aget alength alter-meta! apply as-> aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defprotocol defrecord deref dissoc doseq dotimes empty extend-type find find-ns first fn get hash-map hash-set identical? if-let import inc indexed? int intern interpose into into-array isa? key keys keyword let letfn list list* long loop make-array map map-entry? mapv merge meta name namespace neg? next not= nth object-array parents peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot realized? reduce reduced? reify rem repeat reset-meta! resolve rest rseq satisfies? seq sequential? some sorted-map subvec swap! swap-vals! symbol to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector when-let while with-meta zero?])
+    (:refer-clojure :only [* *err* *ns* *print-length* *warn-on-reflection* + +' - -> .. / < <= = > >= aget alength alter-meta! apply as-> aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defprotocol defrecord deref dissoc doseq dotimes empty extend-type find find-ns first fn get hash-map hash-set identical? if-let import inc indexed? int intern interpose into-array isa? key keys keyword let letfn list list* long loop make-array map map-entry? mapv merge meta name namespace neg? next not= nth object-array parents peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot realized? reduced? reify rem repeat reset-meta! resolve rest rseq satisfies? seq sequential? some sorted-map subvec swap! swap-vals! symbol to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector when-let while with-meta zero?])
 )
 
 (defmacro § [& _])
@@ -361,15 +361,12 @@
     )
 )
 
-(java-ns cloiure.lang.IReduceInit
-    (defprotocol IReduceInit
-        (#_"Object" IReduceInit'''reduce [#_"IReduceInit" this, #_"IFn" f, #_"Object" start])
-    )
-)
-
 (java-ns cloiure.lang.IReduce
     (defprotocol IReduce
-        (#_"Object" IReduce'''reduce [#_"IReduce" this, #_"IFn" f])
+        (#_"Object" IReduce'''reduce
+            [#_"IReduce" this, #_"IFn" f]
+            [#_"IReduce" this, #_"IFn" f, #_"Object" start]
+        )
     )
 )
 
@@ -593,7 +590,7 @@
 )
 
 (java-ns cloiure.lang.APersistentVector
-    (defrecord VSeq #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce" #_"IReduceInit")
+    (defrecord VSeq #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
     (defrecord RSeq #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted")
     #_abstract
     (§ soon defrecord APersistentVector #_"AFn" [] #_"IPersistentVector" #_"Associative" #_"IPersistentCollection" #_"Seqable" #_"ILookup" #_"Sequential" #_"IPersistentStack" #_"Reversible" #_"Indexed" #_"Counted" #_"Comparable" #_"IHashEq")
@@ -610,12 +607,12 @@
 )
 
 (java-ns cloiure.lang.ArraySeq
-    (defrecord ArraySeq_int #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce" #_"IReduceInit")
-    (defrecord ArraySeq_long #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce" #_"IReduceInit")
-    (defrecord ArraySeq_byte #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce" #_"IReduceInit")
-    (defrecord ArraySeq_char #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce" #_"IReduceInit")
-    (defrecord ArraySeq_boolean #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce" #_"IReduceInit")
-    (§ soon defrecord ArraySeq #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce" #_"IReduceInit")
+    (defrecord ArraySeq_int #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
+    (defrecord ArraySeq_long #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
+    (defrecord ArraySeq_byte #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
+    (defrecord ArraySeq_char #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
+    (defrecord ArraySeq_boolean #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
+    (§ soon defrecord ArraySeq #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
 )
 
 (java-ns cloiure.lang.Atom
@@ -624,7 +621,7 @@
 
 (java-ns cloiure.lang.ATransientMap
     #_abstract
-    (defrecord ATransientMap #_"AFn" [] #_"ITransientMap" #_"ITransientAssociative" #_"ITransientCollection" #_"ILookup" #_"Counted") (§ soon 
+    (defrecord ATransientMap #_"AFn" [] #_"ITransientMap" #_"ITransientAssociative" #_"ITransientCollection" #_"ILookup" #_"Counted") (§ soon
         #_abstract
         (#_"void" ensureEditable [#_"ATransientMap" this])
         #_abstract
@@ -658,7 +655,7 @@
 )
 
 (java-ns cloiure.lang.Cycle
-    (defrecord Cycle #_"ASeq" [] #_"IReduce" #_"IReduceInit" #_"IPending")
+    (defrecord Cycle #_"ASeq" [] #_"IReduce" #_"IPending")
 )
 
 (java-ns cloiure.lang.Delay
@@ -666,7 +663,7 @@
 )
 
 (java-ns cloiure.lang.Iterate
-    (defrecord Iterate #_"ASeq" [] #_"IReduce" #_"IReduceInit" #_"IPending")
+    (defrecord Iterate #_"ASeq" [] #_"IReduce" #_"IPending")
 )
 
 (java-ns cloiure.lang.KeywordLookupSite
@@ -714,7 +711,7 @@
 (java-ns cloiure.lang.PersistentList
     (defrecord Primordial #_"RestFn" [])
     (defrecord EmptyList [] #_"IObj" #_"IMeta" #_"IPersistentList" #_"Sequential" #_"IPersistentStack" #_"IPersistentCollection" #_"Seqable" #_"ISeq" #_"Counted" #_"IHashEq")
-    (§ soon defrecord PersistentList #_"ASeq" [] #_"IPersistentList" #_"Sequential" #_"IPersistentStack" #_"IPersistentCollection" #_"Seqable" #_"IReduce" #_"IReduceInit" #_"Counted")
+    (§ soon defrecord PersistentList #_"ASeq" [] #_"IPersistentList" #_"Sequential" #_"IPersistentStack" #_"IPersistentCollection" #_"Seqable" #_"IReduce" #_"Counted")
 )
 
 (java-ns cloiure.lang.PersistentQueue
@@ -724,7 +721,7 @@
 
 (java-ns cloiure.lang.PersistentTreeMap
     #_abstract
-    (defrecord TNode #_"AMapEntry" []) (§ soon 
+    (defrecord TNode #_"AMapEntry" []) (§ soon
         #_abstract
         (#_"TNode" left [#_"TNode" this])
         #_abstract
@@ -767,11 +764,11 @@
 (java-ns cloiure.lang.PersistentVector
     (defrecord VNode [])
     (defrecord TransientVector #_"AFn" [] #_"ITransientVector" #_"ITransientAssociative" #_"ITransientCollection" #_"ILookup" #_"Indexed" #_"Counted")
-    (§ soon defrecord PersistentVector #_"APersistentVector" [] #_"IObj" #_"IMeta" #_"IEditableCollection" #_"IReduce" #_"IReduceInit" #_"IKVReduce")
+    (§ soon defrecord PersistentVector #_"APersistentVector" [] #_"IObj" #_"IMeta" #_"IEditableCollection" #_"IReduce" #_"IKVReduce")
 )
 
 (java-ns cloiure.lang.Range
-    (defrecord Range #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"IReduce" #_"IReduceInit" #_"Counted")
+    (defrecord Range #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"IReduce" #_"Counted")
 )
 
 (java-ns cloiure.lang.Reduced
@@ -779,7 +776,7 @@
 )
 
 (java-ns cloiure.lang.Repeat
-    (defrecord Repeat #_"ASeq" [] #_"IReduce" #_"IReduceInit")
+    (defrecord Repeat #_"ASeq" [] #_"IReduce")
 )
 
 (java-ns cloiure.lang.StringSeq
@@ -927,9 +924,23 @@
     ([x y & z] (=? x (cons y z)))
 )
 
+;; reduce is redefined later after InternalReduce loads
+
+(defn reduce
+    ([f s] (let [s (seq s)] (if s (reduce f (first s) (next s)) (f))))
+    ([f r s] (let [s (seq s)] (if s (recur f (f r (first s)) (next s)) r)))
+)
+
 (defn reduce!
-    ([f coll] (reduce! f (f) coll))
-    ([f init coll] (persistent! (reduce f (transient init) coll)))
+    ([f s] (reduce! f (f) s))
+    ([f r s] (persistent! (reduce f (transient r) s)))
+)
+
+(defn into [to from]
+    (if #_(§ soon satisfies? IEditableCollection to) (instance? clojure.lang.IEditableCollection to)
+        (reduce! conj! to from)
+        (reduce conj to from)
+    )
 )
 
 (defmacro update! [x f & z] `(set! ~x (~f ~x ~@z)))
@@ -950,6 +961,15 @@
  ; Returns the Class of x.
  ;;
 (defn ^Class class [^Object x] (when (some? x) (.getClass x)))
+
+(defn integer? [n]
+    (or (instance? Integer n)
+        (instance? Long n)
+        (instance? BigInt n)
+        (instance? BigInteger n)
+        (instance? Byte n)
+    )
+)
 
 ;;;
  ; With no args, returns the empty string. With one arg x, returns x.toString().
@@ -7221,7 +7241,7 @@
                     )
                     (let-when [#_"Matcher" m (.matcher LispReader'rxRatio, s)] (.matches m)
                         (let [#_"String" n (.group m, 1) n (if (.startsWith n, "+") (.substring n, 1) n)]
-                            (Numbers/divide #_"-2oo"
+                            (Numbers/divide
                                 (Numbers/reduceBigInt (BigInt/fromBigInteger (BigInteger. n))),
                                 (Numbers/reduceBigInt (BigInt/fromBigInteger (BigInteger. (.group m, 2))))
                             )
@@ -8528,14 +8548,14 @@
         )
     )
 
-    (declare Numbers'minus-2oo)
-    (declare Numbers'multiply-2oo)
+    (declare Numbers'minus)
+    (declare Numbers'multiply)
 
     (extend-type RatioOps Ops
         (#_"Number" Ops'''remainder [#_"RatioOps" this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
                   #_"BigInteger" q (.divide (.multiply (:numerator rx), (:denominator ry)), (.multiply (:denominator rx), (:numerator ry)))
-                  #_"Number" ret (Numbers'minus-2oo x, (Numbers'multiply-2oo q, y))]
+                  #_"Number" ret (Numbers'minus x, (Numbers'multiply q, y))]
                 (RatioOps'normalizeRet ret, x, y)
             )
         )
@@ -8547,32 +8567,32 @@
         )
     )
 
-    (declare Numbers'lt-2oo)
+    (declare Numbers'lt)
 
     (extend-type RatioOps Ops
         (#_"boolean" Ops'''lt [#_"RatioOps" this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
-                (Numbers'lt-2oo (.multiply (:numerator rx), (:denominator ry)), (.multiply (:numerator ry), (:denominator rx)))
+                (Numbers'lt (.multiply (:numerator rx), (:denominator ry)), (.multiply (:numerator ry), (:denominator rx)))
             )
         )
     )
 
-    (declare Numbers'lte-2oo)
+    (declare Numbers'lte)
 
     (extend-type RatioOps Ops
         (#_"boolean" Ops'''lte [#_"RatioOps" this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
-                (Numbers'lte-2oo (.multiply (:numerator rx), (:denominator ry)), (.multiply (:numerator ry), (:denominator rx)))
+                (Numbers'lte (.multiply (:numerator rx), (:denominator ry)), (.multiply (:numerator ry), (:denominator rx)))
             )
         )
     )
 
-    (declare Numbers'gte-2oo)
+    (declare Numbers'gte)
 
     (extend-type RatioOps Ops
         (#_"boolean" Ops'''gte [#_"RatioOps" this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
-                (Numbers'gte-2oo (.multiply (:numerator rx), (:denominator ry)), (.multiply (:numerator ry), (:denominator rx)))
+                (Numbers'gte (.multiply (:numerator rx), (:denominator ry)), (.multiply (:numerator ry), (:denominator rx)))
             )
         )
 
@@ -8727,39 +8747,35 @@
         )
     )
 
-    (defn #_"boolean" Numbers'isInteger [#_"Object" x]
-        (or (instance? Integer x) (instance? Long x) (instance? BigInt x) (instance? BigInteger x))
-    )
-
     (defn #_"Number" Numbers'num-1l [#_"long"   x] (Long/valueOf   x))
-    (defn #_"Number" Numbers'num-1o [#_"Object" x] (cast Number    x))
+    (defn #_"Number" Numbers'num [#_"Object" x] (cast Number    x))
 
-    (defn #_"boolean" Numbers'isZero-1o [#_"Object" x] (Ops'''isZero (Numbers'ops x), (cast Number x)))
-    (defn #_"boolean" Numbers'isPos-1o  [#_"Object" x] (Ops'''isPos  (Numbers'ops x), (cast Number x)))
-    (defn #_"boolean" Numbers'isNeg-1o  [#_"Object" x] (Ops'''isNeg  (Numbers'ops x), (cast Number x)))
+    (defn #_"boolean" Numbers'isZero [#_"Object" x] (Ops'''isZero (Numbers'ops x), (cast Number x)))
+    (defn #_"boolean" Numbers'isPos  [#_"Object" x] (Ops'''isPos  (Numbers'ops x), (cast Number x)))
+    (defn #_"boolean" Numbers'isNeg  [#_"Object" x] (Ops'''isNeg  (Numbers'ops x), (cast Number x)))
 
-    (defn #_"Number" Numbers'minus-1o  [#_"Object" x] (Ops'''negate  (Numbers'ops x), (cast Number x)))
-    (defn #_"Number" Numbers'minusP-1o [#_"Object" x] (Ops'''negateP (Numbers'ops x), (cast Number x)))
-    (defn #_"Number" Numbers'inc-1o    [#_"Object" x] (Ops'''inc     (Numbers'ops x), (cast Number x)))
-    (defn #_"Number" Numbers'incP-1o   [#_"Object" x] (Ops'''incP    (Numbers'ops x), (cast Number x)))
-    (defn #_"Number" Numbers'dec-1o    [#_"Object" x] (Ops'''dec     (Numbers'ops x), (cast Number x)))
-    (defn #_"Number" Numbers'decP-1o   [#_"Object" x] (Ops'''decP    (Numbers'ops x), (cast Number x)))
+    (defn #_"Number" Numbers'minus  [#_"Object" x] (Ops'''negate  (Numbers'ops x), (cast Number x)))
+    (defn #_"Number" Numbers'minusP [#_"Object" x] (Ops'''negateP (Numbers'ops x), (cast Number x)))
+    (defn #_"Number" Numbers'inc    [#_"Object" x] (Ops'''inc     (Numbers'ops x), (cast Number x)))
+    (defn #_"Number" Numbers'incP   [#_"Object" x] (Ops'''incP    (Numbers'ops x), (cast Number x)))
+    (defn #_"Number" Numbers'dec    [#_"Object" x] (Ops'''dec     (Numbers'ops x), (cast Number x)))
+    (defn #_"Number" Numbers'decP   [#_"Object" x] (Ops'''decP    (Numbers'ops x), (cast Number x)))
 
-    (defn #_"Number" Numbers'add-2oo [#_"Object" x, #_"Object" y]
+    (defn #_"Number" Numbers'add [#_"Object" x, #_"Object" y]
         (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''add (cast Number x), (cast Number y)))
     )
 
-    (defn #_"Number" Numbers'addP-2oo [#_"Object" x, #_"Object" y]
+    (defn #_"Number" Numbers'addP [#_"Object" x, #_"Object" y]
         (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''addP (cast Number x), (cast Number y)))
     )
 
-    (defn #_"Number" Numbers'minus-2oo [#_"Object" x, #_"Object" y]
+    (defn #_"Number" Numbers'minus [#_"Object" x, #_"Object" y]
         (let [#_"Ops" yops (Numbers'ops y)]
             (-> (Ops'''combine (Numbers'ops x), yops) (Ops'''add (cast Number x), (Ops'''negate yops, (cast Number y))))
         )
     )
 
-    (defn #_"Number" Numbers'minusP-2oo [#_"Object" x, #_"Object" y]
+    (defn #_"Number" Numbers'minusP [#_"Object" x, #_"Object" y]
         (let [#_"Ops" yops (Numbers'ops y)
               #_"Number" negativeY (Ops'''negateP yops, (cast Number y))
               #_"Ops" negativeYOps (Numbers'ops negativeY)]
@@ -8767,15 +8783,15 @@
         )
     )
 
-    (defn #_"Number" Numbers'multiply-2oo [#_"Object" x, #_"Object" y]
+    (defn #_"Number" Numbers'multiply [#_"Object" x, #_"Object" y]
         (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''multiply (cast Number x), (cast Number y)))
     )
 
-    (defn #_"Number" Numbers'multiplyP-2oo [#_"Object" x, #_"Object" y]
+    (defn #_"Number" Numbers'multiplyP [#_"Object" x, #_"Object" y]
         (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''multiplyP (cast Number x), (cast Number y)))
     )
 
-    (defn #_"Number" Numbers'divide-2oo [#_"Object" x, #_"Object" y]
+    (defn #_"Number" Numbers'divide [#_"Object" x, #_"Object" y]
         (let [#_"Ops" yops (Numbers'ops y)]
             (when (Ops'''isZero yops, (cast Number y))
                 (throw (ArithmeticException. "Divide by zero"))
@@ -8784,7 +8800,7 @@
         )
     )
 
-    (defn #_"Number" Numbers'quotient-2oo [#_"Object" x, #_"Object" y]
+    (defn #_"Number" Numbers'quotient [#_"Object" x, #_"Object" y]
         (let [#_"Ops" yops (Numbers'ops y)]
             (when (Ops'''isZero yops, (cast Number y))
                 (throw (ArithmeticException. "Divide by zero"))
@@ -8793,7 +8809,7 @@
         )
     )
 
-    (defn #_"Number" Numbers'remainder-2oo [#_"Object" x, #_"Object" y]
+    (defn #_"Number" Numbers'remainder [#_"Object" x, #_"Object" y]
         (let [#_"Ops" yops (Numbers'ops y)]
             (when (Ops'''isZero yops, (cast Number y))
                 (throw (ArithmeticException. "Divide by zero"))
@@ -8814,19 +8830,19 @@
         (and (= (Numbers'category x) (Numbers'category y)) (Ops'''equiv (Ops'''combine (Numbers'ops x), (Numbers'ops y)), x, y))
     )
 
-    (defn #_"boolean" Numbers'lt-2oo [#_"Object" x, #_"Object" y]
+    (defn #_"boolean" Numbers'lt [#_"Object" x, #_"Object" y]
         (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''lt (cast Number x), (cast Number y)))
     )
 
-    (defn #_"boolean" Numbers'lte-2oo [#_"Object" x, #_"Object" y]
+    (defn #_"boolean" Numbers'lte [#_"Object" x, #_"Object" y]
         (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''lte (cast Number x), (cast Number y)))
     )
 
-    (defn #_"boolean" Numbers'gt-2oo [#_"Object" x, #_"Object" y]
+    (defn #_"boolean" Numbers'gt [#_"Object" x, #_"Object" y]
         (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''lt (cast Number y), (cast Number x)))
     )
 
-    (defn #_"boolean" Numbers'gte-2oo [#_"Object" x, #_"Object" y]
+    (defn #_"boolean" Numbers'gte [#_"Object" x, #_"Object" y]
         (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''gte (cast Number x), (cast Number y)))
     )
 
@@ -8895,7 +8911,7 @@
     )
 
     (defn #_"long" Numbers'shiftLeft-2ll [#_"long"   x, #_"long"   n] (<< x n))
-    (defn #_"long" Numbers'shiftLeft-2oo [#_"Object" x, #_"Object" n] (Numbers'shiftLeft-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
+    (defn #_"long" Numbers'shiftLeft [#_"Object" x, #_"Object" n] (Numbers'shiftLeft-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
     (defn #_"long" Numbers'shiftLeft-2ol [#_"Object" x, #_"long"   n] (Numbers'shiftLeft-2ll (Numbers'bitOpsCast x),                     n ))
     (defn #_"long" Numbers'shiftLeft-2lo [#_"long"   x, #_"Object" n] (Numbers'shiftLeft-2ll                     x , (Numbers'bitOpsCast n)))
 
@@ -8904,7 +8920,7 @@
     )
 
     (defn #_"long" Numbers'shiftRight-2ll [#_"long"   x, #_"long"   n] (>> x n))
-    (defn #_"long" Numbers'shiftRight-2oo [#_"Object" x, #_"Object" n] (Numbers'shiftRight-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
+    (defn #_"long" Numbers'shiftRight [#_"Object" x, #_"Object" n] (Numbers'shiftRight-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
     (defn #_"long" Numbers'shiftRight-2ol [#_"Object" x, #_"long"   n] (Numbers'shiftRight-2ll (Numbers'bitOpsCast x),                     n ))
     (defn #_"long" Numbers'shiftRight-2lo [#_"long"   x, #_"Object" n] (Numbers'shiftRight-2ll                     x , (Numbers'bitOpsCast n)))
 
@@ -8913,7 +8929,7 @@
     )
 
     (defn #_"long" Numbers'unsignedShiftRight-2ll [#_"long"   x, #_"long"   n] (>>> x n))
-    (defn #_"long" Numbers'unsignedShiftRight-2oo [#_"Object" x, #_"Object" n] (Numbers'unsignedShiftRight-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
+    (defn #_"long" Numbers'unsignedShiftRight [#_"Object" x, #_"Object" n] (Numbers'unsignedShiftRight-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
     (defn #_"long" Numbers'unsignedShiftRight-2ol [#_"Object" x, #_"long"   n] (Numbers'unsignedShiftRight-2ll (Numbers'bitOpsCast x),                     n ))
     (defn #_"long" Numbers'unsignedShiftRight-2lo [#_"long"   x, #_"Object" n] (Numbers'unsignedShiftRight-2ll                     x , (Numbers'bitOpsCast n)))
 
@@ -9094,53 +9110,53 @@
     (defn #_"int" Numbers'unchecked_int_negate [#_"int" x] (- x)  )
 
     (defn #_"long" Numbers'not-1l [#_"long"   x] (bit-not x))
-    (defn #_"long" Numbers'not-1o [#_"Object" x] (Numbers'not-1l (Numbers'bitOpsCast x)))
+    (defn #_"long" Numbers'not [#_"Object" x] (Numbers'not-1l (Numbers'bitOpsCast x)))
 
     (defn #_"long" Numbers'and-2ll [#_"long"   x, #_"long"   y] (& x y))
-    (defn #_"long" Numbers'and-2oo [#_"Object" x, #_"Object" y] (Numbers'and-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y)))
+    (defn #_"long" Numbers'and [#_"Object" x, #_"Object" y] (Numbers'and-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y)))
     (defn #_"long" Numbers'and-2ol [#_"Object" x, #_"long"   y] (Numbers'and-2ll (Numbers'bitOpsCast x),                     y ))
     (defn #_"long" Numbers'and-2lo [#_"long"   x, #_"Object" y] (Numbers'and-2ll                     x , (Numbers'bitOpsCast y)))
 
     (defn #_"long" Numbers'or-2ll [#_"long"   x, #_"long"   y] (| x y))
-    (defn #_"long" Numbers'or-2oo [#_"Object" x, #_"Object" y] (Numbers'or-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y)))
+    (defn #_"long" Numbers'or [#_"Object" x, #_"Object" y] (Numbers'or-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y)))
     (defn #_"long" Numbers'or-2ol [#_"Object" x, #_"long"   y] (Numbers'or-2ll (Numbers'bitOpsCast x),                     y ))
     (defn #_"long" Numbers'or-2lo [#_"long"   x, #_"Object" y] (Numbers'or-2ll                     x , (Numbers'bitOpsCast y)))
 
     (defn #_"long" Numbers'xor-2ll [#_"long"   x, #_"long"   y] (bit-xor x y))
-    (defn #_"long" Numbers'xor-2oo [#_"Object" x, #_"Object" y] (Numbers'xor-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y)))
+    (defn #_"long" Numbers'xor [#_"Object" x, #_"Object" y] (Numbers'xor-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y)))
     (defn #_"long" Numbers'xor-2ol [#_"Object" x, #_"long"   y] (Numbers'xor-2ll (Numbers'bitOpsCast x),                     y ))
     (defn #_"long" Numbers'xor-2lo [#_"long"   x, #_"Object" y] (Numbers'xor-2ll                     x , (Numbers'bitOpsCast y)))
 
     (defn #_"long" Numbers'andNot-2ll [#_"long"   x, #_"long"   y] (& x (bit-not y)))
-    (defn #_"long" Numbers'andNot-2oo [#_"Object" x, #_"Object" y] (Numbers'andNot-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y)))
+    (defn #_"long" Numbers'andNot [#_"Object" x, #_"Object" y] (Numbers'andNot-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y)))
     (defn #_"long" Numbers'andNot-2ol [#_"Object" x, #_"long"   y] (Numbers'andNot-2ll (Numbers'bitOpsCast x),                     y ))
     (defn #_"long" Numbers'andNot-2lo [#_"long"   x, #_"Object" y] (Numbers'andNot-2ll                     x , (Numbers'bitOpsCast y)))
 
     (defn #_"long" Numbers'clearBit-2ll [#_"long"   x, #_"long"   n] (& x (bit-not (<< 1 n))))
-    (defn #_"long" Numbers'clearBit-2oo [#_"Object" x, #_"Object" n] (Numbers'clearBit-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
+    (defn #_"long" Numbers'clearBit [#_"Object" x, #_"Object" n] (Numbers'clearBit-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
     (defn #_"long" Numbers'clearBit-2ol [#_"Object" x, #_"long"   n] (Numbers'clearBit-2ll (Numbers'bitOpsCast x),                     n ))
     (defn #_"long" Numbers'clearBit-2lo [#_"long"   x, #_"Object" n] (Numbers'clearBit-2ll                     x , (Numbers'bitOpsCast n)))
 
     (defn #_"long" Numbers'setBit-2ll [#_"long"   x, #_"long"   n] (| x (<< 1 n)))
-    (defn #_"long" Numbers'setBit-2oo [#_"Object" x, #_"Object" n] (Numbers'setBit-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
+    (defn #_"long" Numbers'setBit [#_"Object" x, #_"Object" n] (Numbers'setBit-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
     (defn #_"long" Numbers'setBit-2ol [#_"Object" x, #_"long"   n] (Numbers'setBit-2ll (Numbers'bitOpsCast x),                     n ))
     (defn #_"long" Numbers'setBit-2lo [#_"long"   x, #_"Object" n] (Numbers'setBit-2ll                     x , (Numbers'bitOpsCast n)))
 
     (defn #_"long" Numbers'flipBit-2ll [#_"long"   x, #_"long"   n] (bit-xor x (<< 1 n)))
-    (defn #_"long" Numbers'flipBit-2oo [#_"Object" x, #_"Object" n] (Numbers'flipBit-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
+    (defn #_"long" Numbers'flipBit [#_"Object" x, #_"Object" n] (Numbers'flipBit-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
     (defn #_"long" Numbers'flipBit-2ol [#_"Object" x, #_"long"   n] (Numbers'flipBit-2ll (Numbers'bitOpsCast x),                     n ))
     (defn #_"long" Numbers'flipBit-2lo [#_"long"   x, #_"Object" n] (Numbers'flipBit-2ll                     x , (Numbers'bitOpsCast n)))
 
     (defn #_"boolean" Numbers'testBit-2ll [#_"long"   x, #_"long"   n] (not= (& x (<< 1 n)) 0))
-    (defn #_"boolean" Numbers'testBit-2oo [#_"Object" x, #_"Object" n] (Numbers'testBit-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
+    (defn #_"boolean" Numbers'testBit [#_"Object" x, #_"Object" n] (Numbers'testBit-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
     (defn #_"boolean" Numbers'testBit-2ol [#_"Object" x, #_"long"   n] (Numbers'testBit-2ll (Numbers'bitOpsCast x),                     n ))
     (defn #_"boolean" Numbers'testBit-2lo [#_"long"   x, #_"Object" n] (Numbers'testBit-2ll                     x , (Numbers'bitOpsCast n)))
 
-    (defn #_"Number" Numbers'quotient-2lo [#_"long"   x, #_"Object" y] (Numbers'quotient-2oo (cast Object x),              y ))
-    (defn #_"Number" Numbers'quotient-2ol [#_"Object" x, #_"long"   y] (Numbers'quotient-2oo              x , (cast Object y)))
+    (defn #_"Number" Numbers'quotient-2lo [#_"long"   x, #_"Object" y] (Numbers'quotient (cast Object x),              y ))
+    (defn #_"Number" Numbers'quotient-2ol [#_"Object" x, #_"long"   y] (Numbers'quotient              x , (cast Object y)))
 
-    (defn #_"Number" Numbers'remainder-2lo [#_"long"   x, #_"Object" y] (Numbers'remainder-2oo (cast Object x),              y ))
-    (defn #_"Number" Numbers'remainder-2ol [#_"Object" x, #_"long"   y] (Numbers'remainder-2oo              x , (cast Object y)))
+    (defn #_"Number" Numbers'remainder-2lo [#_"long"   x, #_"Object" y] (Numbers'remainder (cast Object x),              y ))
+    (defn #_"Number" Numbers'remainder-2ol [#_"Object" x, #_"long"   y] (Numbers'remainder              x , (cast Object y)))
 
     (defn #_"int" Numbers'throwIntOverflow []
         (throw (ArithmeticException. "integer overflow"))
@@ -9157,7 +9173,7 @@
     (defn #_"Number" Numbers'addP-2ll [#_"long" x, #_"long" y]
         (let [#_"long" ret (+ x y)]
             (if (and (neg? (bit-xor ret x)) (neg? (bit-xor ret y)))
-                (Numbers'addP-2oo (cast Number x), (cast Number y))
+                (Numbers'addP (cast Number x), (cast Number y))
                 (Numbers'num-1l ret)
             )
         )
@@ -9174,7 +9190,7 @@
     (defn #_"Number" Numbers'minusP-2ll [#_"long" x, #_"long" y]
         (let [#_"long" ret (- x y)]
             (if (and (neg? (bit-xor ret x)) (neg? (bit-xor ret (bit-not y))))
-                (Numbers'minusP-2oo (cast Number x), (cast Number y))
+                (Numbers'minusP (cast Number x), (cast Number y))
                 (Numbers'num-1l ret)
             )
         )
@@ -9210,9 +9226,9 @@
     )
 
     (defn #_"Number" Numbers'multiplyP-2ll [#_"long" x, #_"long" y]
-        (when-not (and (= x Long/MIN_VALUE) (neg? y)) => (Numbers'multiplyP-2oo (cast Number x), (cast Number y))
+        (when-not (and (= x Long/MIN_VALUE) (neg? y)) => (Numbers'multiplyP (cast Number x), (cast Number y))
             (let [#_"long" ret (* x y)]
-                (when (or (zero? y) (= (/ ret y) x)) => (Numbers'multiplyP-2oo (cast Number x), (cast Number y))
+                (when (or (zero? y) (= (/ ret y) x)) => (Numbers'multiplyP (cast Number x), (cast Number y))
                     (Numbers'num-1l ret)
                 )
             )
@@ -9232,39 +9248,39 @@
     (defn #_"boolean" Numbers'isNeg-1l  [#_"long" x] (< x 0))
     (defn #_"boolean" Numbers'isZero-1l [#_"long" x] (zero? x))
 
-    (defn #_"Number" Numbers'add-2lo [#_"long"   x, #_"Object" y] (Numbers'add-2oo (cast Object x), y))
-    (defn #_"Number" Numbers'add-2ol [#_"Object" x, #_"long"   y] (Numbers'add-2oo x, (cast Object y)))
+    (defn #_"Number" Numbers'add-2lo [#_"long"   x, #_"Object" y] (Numbers'add (cast Object x), y))
+    (defn #_"Number" Numbers'add-2ol [#_"Object" x, #_"long"   y] (Numbers'add x, (cast Object y)))
 
-    (defn #_"Number" Numbers'addP-2lo [#_"long"   x, #_"Object" y] (Numbers'addP-2oo (cast Object x), y))
-    (defn #_"Number" Numbers'addP-2ol [#_"Object" x, #_"long"   y] (Numbers'addP-2oo x, (cast Object y)))
+    (defn #_"Number" Numbers'addP-2lo [#_"long"   x, #_"Object" y] (Numbers'addP (cast Object x), y))
+    (defn #_"Number" Numbers'addP-2ol [#_"Object" x, #_"long"   y] (Numbers'addP x, (cast Object y)))
 
-    (defn #_"Number" Numbers'minus-2lo [#_"long"   x, #_"Object" y] (Numbers'minus-2oo (cast Object x), y))
-    (defn #_"Number" Numbers'minus-2ol [#_"Object" x, #_"long"   y] (Numbers'minus-2oo x, (cast Object y)))
+    (defn #_"Number" Numbers'minus-2lo [#_"long"   x, #_"Object" y] (Numbers'minus (cast Object x), y))
+    (defn #_"Number" Numbers'minus-2ol [#_"Object" x, #_"long"   y] (Numbers'minus x, (cast Object y)))
 
-    (defn #_"Number" Numbers'minusP-2lo [#_"long"   x, #_"Object" y] (Numbers'minusP-2oo (cast Object x), y))
-    (defn #_"Number" Numbers'minusP-2ol [#_"Object" x, #_"long"   y] (Numbers'minusP-2oo x, (cast Object y)))
+    (defn #_"Number" Numbers'minusP-2lo [#_"long"   x, #_"Object" y] (Numbers'minusP (cast Object x), y))
+    (defn #_"Number" Numbers'minusP-2ol [#_"Object" x, #_"long"   y] (Numbers'minusP x, (cast Object y)))
 
-    (defn #_"Number" Numbers'multiply-2lo [#_"long"   x, #_"Object" y] (Numbers'multiply-2oo (cast Object x), y))
-    (defn #_"Number" Numbers'multiply-2ol [#_"Object" x, #_"long"   y] (Numbers'multiply-2oo x, (cast Object y)))
+    (defn #_"Number" Numbers'multiply-2lo [#_"long"   x, #_"Object" y] (Numbers'multiply (cast Object x), y))
+    (defn #_"Number" Numbers'multiply-2ol [#_"Object" x, #_"long"   y] (Numbers'multiply x, (cast Object y)))
 
-    (defn #_"Number" Numbers'multiplyP-2lo [#_"long"   x, #_"Object" y] (Numbers'multiplyP-2oo (cast Object x), y))
-    (defn #_"Number" Numbers'multiplyP-2ol [#_"Object" x, #_"long"   y] (Numbers'multiplyP-2oo x, (cast Object y)))
+    (defn #_"Number" Numbers'multiplyP-2lo [#_"long"   x, #_"Object" y] (Numbers'multiplyP (cast Object x), y))
+    (defn #_"Number" Numbers'multiplyP-2ol [#_"Object" x, #_"long"   y] (Numbers'multiplyP x, (cast Object y)))
 
-    (defn #_"Number" Numbers'divide-2lo [#_"long"   x, #_"Object" y] (Numbers'divide-2oo (cast Object x), y))
-    (defn #_"Number" Numbers'divide-2ol [#_"Object" x, #_"long"   y] (Numbers'divide-2oo x, (cast Object y)))
-    (defn #_"Number" Numbers'divide-2ll [#_"long"   x, #_"long"   y] (Numbers'divide-2oo (cast Number x), (cast Number y)))
+    (defn #_"Number" Numbers'divide-2lo [#_"long"   x, #_"Object" y] (Numbers'divide (cast Object x), y))
+    (defn #_"Number" Numbers'divide-2ol [#_"Object" x, #_"long"   y] (Numbers'divide x, (cast Object y)))
+    (defn #_"Number" Numbers'divide-2ll [#_"long"   x, #_"long"   y] (Numbers'divide (cast Number x), (cast Number y)))
 
-    (defn #_"boolean" Numbers'lt-2lo [#_"long"   x, #_"Object" y] (Numbers'lt-2oo (cast Object x), y))
-    (defn #_"boolean" Numbers'lt-2ol [#_"Object" x, #_"long"   y] (Numbers'lt-2oo x, (cast Object y)))
+    (defn #_"boolean" Numbers'lt-2lo [#_"long"   x, #_"Object" y] (Numbers'lt (cast Object x), y))
+    (defn #_"boolean" Numbers'lt-2ol [#_"Object" x, #_"long"   y] (Numbers'lt x, (cast Object y)))
 
-    (defn #_"boolean" Numbers'lte-2lo [#_"long"   x, #_"Object" y] (Numbers'lte-2oo (cast Object x), y))
-    (defn #_"boolean" Numbers'lte-2ol [#_"Object" x, #_"long"   y] (Numbers'lte-2oo x, (cast Object y)))
+    (defn #_"boolean" Numbers'lte-2lo [#_"long"   x, #_"Object" y] (Numbers'lte (cast Object x), y))
+    (defn #_"boolean" Numbers'lte-2ol [#_"Object" x, #_"long"   y] (Numbers'lte x, (cast Object y)))
 
-    (defn #_"boolean" Numbers'gt-2lo [#_"long"   x, #_"Object" y] (Numbers'gt-2oo (cast Object x), y))
-    (defn #_"boolean" Numbers'gt-2ol [#_"Object" x, #_"long"   y] (Numbers'gt-2oo x, (cast Object y)))
+    (defn #_"boolean" Numbers'gt-2lo [#_"long"   x, #_"Object" y] (Numbers'gt (cast Object x), y))
+    (defn #_"boolean" Numbers'gt-2ol [#_"Object" x, #_"long"   y] (Numbers'gt x, (cast Object y)))
 
-    (defn #_"boolean" Numbers'gte-2lo [#_"long"   x, #_"Object" y] (Numbers'gte-2oo (cast Object x), y))
-    (defn #_"boolean" Numbers'gte-2ol [#_"Object" x, #_"long"   y] (Numbers'gte-2oo x, (cast Object y)))
+    (defn #_"boolean" Numbers'gte-2lo [#_"long"   x, #_"Object" y] (Numbers'gte (cast Object x), y))
+    (defn #_"boolean" Numbers'gte-2ol [#_"Object" x, #_"long"   y] (Numbers'gte x, (cast Object y)))
 
     (defn #_"boolean" Numbers'equiv-2lo [#_"long"   x, #_"Object" y] (Numbers'equiv (cast Object x), y))
     (defn #_"boolean" Numbers'equiv-2ol [#_"Object" x, #_"long"   y] (Numbers'equiv x, (cast Object y)))
@@ -9277,8 +9293,8 @@
     (defn #_"Object" Numbers'min-2lo [#_"long" x, #_"Object" y] (if (Numbers'lt-2lo x, y) x y))
     (defn #_"Object" Numbers'min-2ol [#_"Object" x, #_"long" y] (if (Numbers'lt-2ol x, y) x y))
 
-    (defn #_"Object" Numbers'max-2oo [#_"Object" x, #_"Object" y] (if (Numbers'gt-2oo x, y) x y))
-    (defn #_"Object" Numbers'min-2oo [#_"Object" x, #_"Object" y] (if (Numbers'lt-2oo x, y) x y))
+    (defn #_"Object" Numbers'max [#_"Object" x, #_"Object" y] (if (Numbers'gt x, y) x y))
+    (defn #_"Object" Numbers'min [#_"Object" x, #_"Object" y] (if (Numbers'lt x, y) x y))
 
     (defn #_"long" Numbers'unchecked_add-2ll      [#_"long" x, #_"long" y] (+ x y))
     (defn #_"long" Numbers'unchecked_minus-2ll    [#_"long" x, #_"long" y] (- x y))
@@ -9288,13 +9304,13 @@
     (defn #_"long" Numbers'unchecked_inc-1l   [#_"long" x] (inc x))
     (defn #_"long" Numbers'unchecked_dec-1l   [#_"long" x] (dec x))
 
-    (defn #_"Number" Numbers'unchecked_add-2oo      [#_"Object" x, #_"Object" y] (Numbers'add-2oo      x, y))
-    (defn #_"Number" Numbers'unchecked_minus-2oo    [#_"Object" x, #_"Object" y] (Numbers'minus-2oo    x, y))
-    (defn #_"Number" Numbers'unchecked_multiply-2oo [#_"Object" x, #_"Object" y] (Numbers'multiply-2oo x, y))
+    (defn #_"Number" Numbers'unchecked_add      [#_"Object" x, #_"Object" y] (Numbers'add      x, y))
+    (defn #_"Number" Numbers'unchecked_minus    [#_"Object" x, #_"Object" y] (Numbers'minus    x, y))
+    (defn #_"Number" Numbers'unchecked_multiply [#_"Object" x, #_"Object" y] (Numbers'multiply x, y))
 
-    (defn #_"Number" Numbers'unchecked_inc-1o   [#_"Object" x] (Numbers'inc-1o   x))
-    (defn #_"Number" Numbers'unchecked_dec-1o   [#_"Object" x] (Numbers'dec-1o   x))
-    (defn #_"Number" Numbers'unchecked_minus-1o [#_"Object" x] (Numbers'minus-1o x))
+    (defn #_"Number" Numbers'unchecked_inc   [#_"Object" x] (Numbers'inc   x))
+    (defn #_"Number" Numbers'unchecked_dec   [#_"Object" x] (Numbers'dec   x))
+    (defn #_"Number" Numbers'unchecked_minus [#_"Object" x] (Numbers'minus x))
 
     (defn #_"Number" Numbers'unchecked_add-2lo      [#_"long" x, #_"Object" y] (Numbers'add-2lo      x, y))
     (defn #_"Number" Numbers'unchecked_minus-2lo    [#_"long" x, #_"Object" y] (Numbers'minus-2lo    x, y))
@@ -11659,23 +11675,22 @@
     )
 
     (extend-type VSeq IReduce
-        (#_"Object" IReduce'''reduce [#_"VSeq" this, #_"IFn" f]
-            (let [#_"IPersistentVector" v (:v this) #_"int" i (:i this) #_"int" n (count v)]
-                (loop-when [#_"Object" r (nth v i) i (inc i)] (< i n) => r
-                    (let-when [r (f r (nth v i))] (reduced? r) => (recur r (inc i))
-                        (deref r)
+        (#_"Object" IReduce'''reduce
+            ([#_"VSeq" this, #_"IFn" f]
+                (let [#_"IPersistentVector" v (:v this) #_"int" i (:i this) #_"int" n (count v)]
+                    (loop-when [#_"Object" r (nth v i) i (inc i)] (< i n) => r
+                        (let-when [r (f r (nth v i))] (reduced? r) => (recur r (inc i))
+                            @r
+                        )
                     )
                 )
             )
-        )
-    )
-
-    (extend-type VSeq IReduceInit
-        (#_"Object" IReduceInit'''reduce [#_"VSeq" this, #_"IFn" f, #_"Object" r]
-            (let [#_"IPersistentVector" v (:v this) #_"int" i (:i this) #_"int" n (count v)]
-                (loop-when [r (f r (nth v i)) i (inc i)] (< i n) => (if (reduced? r) (deref r) r)
-                    (when (reduced? r) => (recur (f r (nth v i)) (inc i))
-                        (deref r)
+            ([#_"VSeq" this, #_"IFn" f, #_"Object" r]
+                (let [#_"IPersistentVector" v (:v this) #_"int" i (:i this) #_"int" n (count v)]
+                    (loop-when [r (f r (nth v i)) i (inc i)] (< i n) => (if (reduced? r) @r r)
+                        (when (reduced? r) => (recur (f r (nth v i)) (inc i))
+                            @r
+                        )
                     )
                 )
             )
@@ -11801,7 +11816,7 @@
 
     (extend-type APersistentVector IFn
         (#_"Object" IFn'''invoke [#_"APersistentVector" this, #_"Object" i]
-            (when (Numbers'isInteger i) => (throw! "key must be integer")
+            (when (integer? i) => (throw! "key must be integer")
                 (nth this (.intValue i))
             )
         )
@@ -11819,17 +11834,17 @@
 
     (extend-type APersistentVector Associative
         (#_"IPersistentVector" Associative'''assoc [#_"APersistentVector" this, #_"Object" key, #_"Object" val]
-            (when (Numbers'isInteger key) => (throw! "key must be integer")
+            (when (integer? key) => (throw! "key must be integer")
                 (IPersistentVector'''assocN this, (.intValue key), val)
             )
         )
 
         (#_"boolean" Associative'''containsKey [#_"APersistentVector" this, #_"Object" key]
-            (and (Numbers'isInteger key) (< -1 (.intValue key) (count this)))
+            (and (integer? key) (< -1 (.intValue key) (count this)))
         )
 
         (#_"IMapEntry" Associative'''entryAt [#_"APersistentVector" this, #_"Object" key]
-            (when (Numbers'isInteger key)
+            (when (integer? key)
                 (let-when [#_"int" i (.intValue key)] (< -1 i (count this))
                     (MapEntry'create key, (nth this i))
                 )
@@ -11841,7 +11856,7 @@
         (#_"Object" ILookup'''valAt
             ([#_"APersistentVector" this, #_"Object" key] (ILookup'''valAt this, key, nil))
             ([#_"APersistentVector" this, #_"Object" key, #_"Object" notFound]
-                (when (Numbers'isInteger key) => notFound
+                (when (integer? key) => notFound
                     (let-when [#_"int" i (.intValue key)] (< -1 i (count this)) => notFound
                         (nth this i)
                     )
@@ -12119,22 +12134,21 @@
     )
 
     (extend-type ArraySeq_int IReduce
-        (#_"Object" IReduce'''reduce [#_"ArraySeq_int" this, #_"IFn" f]
-            (let [#_"int[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-                (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
-                    (let [r (f r (aget a i))]
-                        (if (reduced? r) (deref r) (recur r (inc i)))
+        (#_"Object" IReduce'''reduce
+            ([#_"ArraySeq_int" this, #_"IFn" f]
+                (let [#_"int[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
+                    (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
+                        (let [r (f r (aget a i))]
+                            (if (reduced? r) @r (recur r (inc i)))
+                        )
                     )
                 )
             )
-        )
-    )
-
-    (extend-type ArraySeq_int IReduceInit
-        (#_"Object" IReduceInit'''reduce [#_"ArraySeq_int" this, #_"IFn" f, #_"Object" r]
-            (let [#_"int[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-                (loop-when [r (f r (aget a i)) i (inc i)] (< i n) => (if (reduced? r) (deref r) r)
-                    (if (reduced? r) (deref r) (recur (f r (aget a i)) (inc i)))
+            ([#_"ArraySeq_int" this, #_"IFn" f, #_"Object" r]
+                (let [#_"int[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
+                    (loop-when [r (f r (aget a i)) i (inc i)] (< i n) => (if (reduced? r) @r r)
+                        (if (reduced? r) @r (recur (f r (aget a i)) (inc i)))
+                    )
                 )
             )
         )
@@ -12176,22 +12190,21 @@
     )
 
     (extend-type ArraySeq_long IReduce
-        (#_"Object" IReduce'''reduce [#_"ArraySeq_long" this, #_"IFn" f]
-            (let [#_"long[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-                (loop-when [#_"Object" r (Numbers'num-1l (aget a i)) i (inc i)] (< i n) => r
-                    (let [r (f r (Numbers'num-1l (aget a i)))]
-                        (if (reduced? r) (deref r) (recur r (inc i)))
+        (#_"Object" IReduce'''reduce
+            ([#_"ArraySeq_long" this, #_"IFn" f]
+                (let [#_"long[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
+                    (loop-when [#_"Object" r (Numbers'num-1l (aget a i)) i (inc i)] (< i n) => r
+                        (let [r (f r (Numbers'num-1l (aget a i)))]
+                            (if (reduced? r) @r (recur r (inc i)))
+                        )
                     )
                 )
             )
-        )
-    )
-
-    (extend-type ArraySeq_long IReduceInit
-        (#_"Object" IReduceInit'''reduce [#_"ArraySeq_long" this, #_"IFn" f, #_"Object" r]
-            (let [#_"long[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-                (loop-when [r (f r (Numbers'num-1l (aget a i))) i (inc i)] (< i n) => (if (reduced? r) (deref r) r)
-                    (if (reduced? r) (deref r) (recur (f r (Numbers'num-1l (aget a i))) (inc i)))
+            ([#_"ArraySeq_long" this, #_"IFn" f, #_"Object" r]
+                (let [#_"long[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
+                    (loop-when [r (f r (Numbers'num-1l (aget a i))) i (inc i)] (< i n) => (if (reduced? r) @r r)
+                        (if (reduced? r) @r (recur (f r (Numbers'num-1l (aget a i))) (inc i)))
+                    )
                 )
             )
         )
@@ -12233,22 +12246,21 @@
     )
 
     (extend-type ArraySeq_byte IReduce
-        (#_"Object" IReduce'''reduce [#_"ArraySeq_byte" this, #_"IFn" f]
-            (let [#_"byte[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-                (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
-                    (let [r (f r (aget a i))]
-                        (if (reduced? r) (deref r) (recur r (inc i)))
+        (#_"Object" IReduce'''reduce
+            ([#_"ArraySeq_byte" this, #_"IFn" f]
+                (let [#_"byte[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
+                    (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
+                        (let [r (f r (aget a i))]
+                            (if (reduced? r) @r (recur r (inc i)))
+                        )
                     )
                 )
             )
-        )
-    )
-
-    (extend-type ArraySeq_byte IReduceInit
-        (#_"Object" IReduceInit'''reduce [#_"ArraySeq_byte" this, #_"IFn" f, #_"Object" r]
-            (let [#_"byte[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-                (loop-when [r (f r (aget a i)) i (inc i)] (< i n) => (if (reduced? r) (deref r) r)
-                    (if (reduced? r) (deref r) (recur (f r (aget a i)) (inc i)))
+            ([#_"ArraySeq_byte" this, #_"IFn" f, #_"Object" r]
+                (let [#_"byte[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
+                    (loop-when [r (f r (aget a i)) i (inc i)] (< i n) => (if (reduced? r) @r r)
+                        (if (reduced? r) @r (recur (f r (aget a i)) (inc i)))
+                    )
                 )
             )
         )
@@ -12290,22 +12302,21 @@
     )
 
     (extend-type ArraySeq_char IReduce
-        (#_"Object" IReduce'''reduce [#_"ArraySeq_char" this, #_"IFn" f]
-            (let [#_"char[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-                (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
-                    (let [r (f r (aget a i))]
-                        (if (reduced? r) (deref r) (recur r (inc i)))
+        (#_"Object" IReduce'''reduce
+            ([#_"ArraySeq_char" this, #_"IFn" f]
+                (let [#_"char[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
+                    (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
+                        (let [r (f r (aget a i))]
+                            (if (reduced? r) @r (recur r (inc i)))
+                        )
                     )
                 )
             )
-        )
-    )
-
-    (extend-type ArraySeq_char IReduceInit
-        (#_"Object" IReduceInit'''reduce [#_"ArraySeq_char" this, #_"IFn" f, #_"Object" r]
-            (let [#_"char[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-                (loop-when [r (f r (aget a i)) i (inc i)] (< i n) => (if (reduced? r) (deref r) r)
-                    (if (reduced? r) (deref r) (recur (f r (aget a i)) (inc i)))
+            ([#_"ArraySeq_char" this, #_"IFn" f, #_"Object" r]
+                (let [#_"char[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
+                    (loop-when [r (f r (aget a i)) i (inc i)] (< i n) => (if (reduced? r) @r r)
+                        (if (reduced? r) @r (recur (f r (aget a i)) (inc i)))
+                    )
                 )
             )
         )
@@ -12347,22 +12358,21 @@
     )
 
     (extend-type ArraySeq_boolean IReduce
-        (#_"Object" IReduce'''reduce [#_"ArraySeq_boolean" this, #_"IFn" f]
-            (let [#_"boolean[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-                (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
-                    (let [r (f r (aget a i))]
-                        (if (reduced? r) (deref r) (recur r (inc i)))
+        (#_"Object" IReduce'''reduce
+            ([#_"ArraySeq_boolean" this, #_"IFn" f]
+                (let [#_"boolean[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
+                    (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
+                        (let [r (f r (aget a i))]
+                            (if (reduced? r) @r (recur r (inc i)))
+                        )
                     )
                 )
             )
-        )
-    )
-
-    (extend-type ArraySeq_boolean IReduceInit
-        (#_"Object" IReduceInit'''reduce [#_"ArraySeq_boolean" this, #_"IFn" f, #_"Object" r]
-            (let [#_"boolean[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-                (loop-when [r (f r (aget a i)) i (inc i)] (< i n) => (if (reduced? r) (deref r) r)
-                    (if (reduced? r) (deref r) (recur (f r (aget a i)) (inc i)))
+            ([#_"ArraySeq_boolean" this, #_"IFn" f, #_"Object" r]
+                (let [#_"boolean[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
+                    (loop-when [r (f r (aget a i)) i (inc i)] (< i n) => (if (reduced? r) @r r)
+                        (if (reduced? r) @r (recur (f r (aget a i)) (inc i)))
+                    )
                 )
             )
         )
@@ -12430,25 +12440,24 @@
     )
 
     (extend-type ArraySeq IReduce
-        (#_"Object" IReduce'''reduce [#_"ArraySeq" this, #_"IFn" f]
-            (when-let [#_"Object[]" a (:array this)]
-                (let [#_"int" i (:i this) #_"int" n (alength a)]
-                    (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
-                        (let [r (f r (aget a i))]
-                            (if (reduced? r) (deref r) (recur r (inc i)))
+        (#_"Object" IReduce'''reduce
+            ([#_"ArraySeq" this, #_"IFn" f]
+                (when-let [#_"Object[]" a (:array this)]
+                    (let [#_"int" i (:i this) #_"int" n (alength a)]
+                        (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
+                            (let [r (f r (aget a i))]
+                                (if (reduced? r) @r (recur r (inc i)))
+                            )
                         )
                     )
                 )
             )
-        )
-    )
-
-    (extend-type ArraySeq IReduceInit
-        (#_"Object" IReduceInit'''reduce [#_"ArraySeq" this, #_"IFn" f, #_"Object" r]
-            (when-let [#_"Object[]" a (:array this)]
-                (let [#_"int" i (:i this) #_"int" n (alength a)]
-                    (loop-when [r (f r (aget a i)) i (inc i)] (< i n) => (if (reduced? r) (deref r) r)
-                        (if (reduced? r) (deref r) (recur (f r (aget a i)) (inc i)))
+            ([#_"ArraySeq" this, #_"IFn" f, #_"Object" r]
+                (when-let [#_"Object[]" a (:array this)]
+                    (let [#_"int" i (:i this) #_"int" n (alength a)]
+                        (loop-when [r (f r (aget a i)) i (inc i)] (< i n) => (if (reduced? r) @r r)
+                            (if (reduced? r) @r (recur (f r (aget a i)) (inc i)))
+                        )
                     )
                 )
             )
@@ -12860,23 +12869,22 @@
     )
 
     (extend-type Cycle IReduce
-        (#_"Object" IReduce'''reduce [#_"Cycle" this, #_"IFn" f]
-            (loop [#_"ISeq" s (Cycle''current this) #_"Object" r (first s)]
-                (let [s (or (next s) (:all this)) r (f r (first s))]
-                    (when-not (reduced? r) => (deref r)
-                        (recur s r)
+        (#_"Object" IReduce'''reduce
+            ([#_"Cycle" this, #_"IFn" f]
+                (loop [#_"ISeq" s (Cycle''current this) #_"Object" r (first s)]
+                    (let [s (or (next s) (:all this)) r (f r (first s))]
+                        (when-not (reduced? r) => @r
+                            (recur s r)
+                        )
                     )
                 )
             )
-        )
-    )
-
-    (extend-type Cycle IReduceInit
-        (#_"Object" IReduceInit'''reduce [#_"Cycle" this, #_"IFn" f, #_"Object" r]
-            (loop [#_"ISeq" s (Cycle''current this) r (f r (first s))]
-                (when-not (reduced? r) => (deref r)
-                    (let [s (or (next s) (:all this))]
-                        (recur s (f r (first s)))
+            ([#_"Cycle" this, #_"IFn" f, #_"Object" r]
+                (loop [#_"ISeq" s (Cycle''current this) r (f r (first s))]
+                    (when-not (reduced? r) => @r
+                        (let [s (or (next s) (:all this))]
+                            (recur s (f r (first s)))
+                        )
                     )
                 )
             )
@@ -12983,20 +12991,19 @@
     )
 
     (extend-type Iterate IReduce
-        (#_"Object" IReduce'''reduce [#_"Iterate" this, #_"IFn" f]
-            (loop [#_"Object" r (first this) #_"Object" v ((:f this) r)]
-                (let-when [r (f r v)] (reduced? r) => (recur r ((:f this) v))
-                    (deref r)
+        (#_"Object" IReduce'''reduce
+            ([#_"Iterate" this, #_"IFn" f]
+                (loop [#_"Object" r (first this) #_"Object" v ((:f this) r)]
+                    (let-when [r (f r v)] (reduced? r) => (recur r ((:f this) v))
+                        @r
+                    )
                 )
             )
-        )
-    )
-
-    (extend-type Iterate IReduceInit
-        (#_"Object" IReduceInit'''reduce [#_"Iterate" this, #_"IFn" f, #_"Object" r]
-            (loop [r r #_"Object" v (first this)]
-                (let-when [r (f r v)] (reduced? r) => (recur r ((:f this) v))
-                    (deref r)
+            ([#_"Iterate" this, #_"IFn" f, #_"Object" r]
+                (loop [r r #_"Object" v (first this)]
+                    (let-when [r (f r v)] (reduced? r) => (recur r ((:f this) v))
+                        @r
+                    )
                 )
             )
         )
@@ -13797,7 +13804,7 @@
         (#_"Object" IKVReduce'''kvreduce [#_"PersistentArrayMap" this, #_"IFn" f, #_"Object" r]
             (loop-when [r r #_"int" i 0] (< i (alength (:array this))) => r
                 (let [r (f r (aget (:array this) i), (aget (:array this) (inc i)))]
-                    (if (reduced? r) (deref r) (recur r (+ i 2)))
+                    (if (reduced? r) @r (recur r (+ i 2)))
                 )
             )
         )
@@ -14908,10 +14915,10 @@
     (extend-type PersistentHashMap IKVReduce
         (#_"Object" IKVReduce'''kvreduce [#_"PersistentHashMap" this, #_"IFn" f, #_"Object" r]
             (let [r (if (:hasNull this) (f r nil (:nullValue this)) r)]
-                (when-not (reduced? r) => (deref r)
+                (when-not (reduced? r) => @r
                     (when (some? (:root this)) => r
                         (let [r (INode'''kvreduce (:root this), f, r)]
-                            (when-not (reduced? r) => (deref r)
+                            (when-not (reduced? r) => @r
                                 r
                             )
                         )
@@ -15288,19 +15295,18 @@
     )
 
     (extend-type PersistentList IReduce
-        (#_"Object" IReduce'''reduce [#_"PersistentList" this, #_"IFn" f]
-            (loop-when [#_"Object" r (first this) #_"ISeq" s (next this)] (some? s) => r
-                (let [r (f r (first s))]
-                    (if (reduced? r) (deref r) (recur r (next s)))
+        (#_"Object" IReduce'''reduce
+            ([#_"PersistentList" this, #_"IFn" f]
+                (loop-when [#_"Object" r (first this) #_"ISeq" s (next this)] (some? s) => r
+                    (let [r (f r (first s))]
+                        (if (reduced? r) @r (recur r (next s)))
+                    )
                 )
             )
-        )
-    )
-
-    (extend-type PersistentList IReduceInit
-        (#_"Object" IReduceInit'''reduce [#_"PersistentList" this, #_"IFn" f, #_"Object" r]
-            (loop-when [r (f r (first this)) #_"ISeq" s (next this)] (some? s) => (if (reduced? r) (deref r) r)
-                (if (reduced? r) (deref r) (recur (f r (first s)) (next s)))
+            ([#_"PersistentList" this, #_"IFn" f, #_"Object" r]
+                (loop-when [r (f r (first this)) #_"ISeq" s (next this)] (some? s) => (if (reduced? r) @r r)
+                    (if (reduced? r) @r (recur (f r (first s)) (next s)))
+                )
             )
         )
     )
@@ -15967,7 +15973,7 @@
     (extend-type PersistentTreeMap IKVReduce
         (#_"Object" IKVReduce'''kvreduce [#_"PersistentTreeMap" this, #_"IFn" f, #_"Object" r]
             (let [r (if (some? (:tree this)) (INode'''kvreduce (:tree this), f, r) r)]
-                (if (reduced? r) (deref r) r)
+                (if (reduced? r) @r r)
             )
         )
     )
@@ -16260,8 +16266,8 @@
     (def #_"PersistentTreeSet" PersistentTreeSet'EMPTY (PersistentTreeSet'new nil, PersistentTreeMap'EMPTY))
 
     (defn #_"PersistentTreeSet" PersistentTreeSet'create
-        ([                     #_"Seqable" items] (reduce conj PersistentTreeSet'EMPTY                                        items))
-        ([#_"Comparator" comp, #_"Seqable" items] (reduce conj (PersistentTreeSet'new nil, (PersistentTreeMap'new nil, comp)) items))
+        ([                     #_"Seqable" items] (into PersistentTreeSet'EMPTY                                        items))
+        ([#_"Comparator" comp, #_"Seqable" items] (into (PersistentTreeSet'new nil, (PersistentTreeMap'new nil, comp)) items))
     )
 
     (extend-type PersistentTreeSet IPersistentSet
@@ -16495,7 +16501,7 @@
             ([#_"TransientVector" this, #_"Object" key] (ILookup'''valAt this, key, nil))
             ([#_"TransientVector" this, #_"Object" key, #_"Object" notFound]
                 (TransientVector''ensureEditable this)
-                (when (Numbers'isInteger key) => notFound
+                (when (integer? key) => notFound
                     (let-when [#_"int" i (.intValue key)] (< -1 i (:cnt this)) => notFound
                         (nth this i)
                     )
@@ -16523,7 +16529,7 @@
     (extend-type TransientVector IFn
         (#_"Object" IFn'''invoke [#_"TransientVector" this, #_"Object" i]
             ;; note - relies on ensureEditable in nth
-            (when (Numbers'isInteger i) => (throw! "key must be integer")
+            (when (integer? i) => (throw! "key must be integer")
                 (nth this (.intValue i))
             )
         )
@@ -16579,7 +16585,7 @@
     (extend-type TransientVector ITransientAssociative
         (#_"TransientVector" ITransientAssociative'''assoc [#_"TransientVector" this, #_"Object" key, #_"Object" val]
             ;; note - relies on ensureEditable in assocN
-            (when (Numbers'isInteger key) => (throw! "key must be integer")
+            (when (integer? key) => (throw! "key must be integer")
                 (ITransientVector'''assocN this, (.intValue key), val)
             )
         )
@@ -16653,7 +16659,7 @@
         (PersistentVector'new (alength items), 5, PersistentVector'EMPTY_NODE, items)
     )
 
-    (defn #_"PersistentVector" PersistentVector'create-1r [#_"IReduceInit" items]
+    (defn #_"PersistentVector" PersistentVector'create-1r [#_"IReduce" items]
         (into PersistentVector'EMPTY items)
     )
 
@@ -16825,13 +16831,29 @@
     )
 
     (extend-type PersistentVector IReduce
-        (#_"Object" IReduce'''reduce [#_"PersistentVector" this, #_"IFn" f]
-            (when (pos? (:cnt this)) => (f)
-                (loop-when [#_"Object" r (aget (PersistentVector''arrayFor this, 0) 0) #_"int" i 0] (< i (:cnt this)) => r
+        (#_"Object" IReduce'''reduce
+            ([#_"PersistentVector" this, #_"IFn" f]
+                (when (pos? (:cnt this)) => (f)
+                    (loop-when [#_"Object" r (aget (PersistentVector''arrayFor this, 0) 0) #_"int" i 0] (< i (:cnt this)) => r
+                        (let [#_"Object[]" a (PersistentVector''arrayFor this, i)
+                            r (loop-when [r r #_"int" j (if (zero? i) 1 0)] (< j (alength a)) => r
+                                    (let [r (f r (aget a j))]
+                                        (when-not (reduced? r) => (ß return @r)
+                                            (recur r (inc j))
+                                        )
+                                    )
+                                )]
+                            (recur r (+ i (alength a)))
+                        )
+                    )
+                )
+            )
+            ([#_"PersistentVector" this, #_"IFn" f, #_"Object" r]
+                (loop-when [r r #_"int" i 0] (< i (:cnt this)) => r
                     (let [#_"Object[]" a (PersistentVector''arrayFor this, i)
-                          r (loop-when [r r #_"int" j (if (zero? i) 1 0)] (< j (alength a)) => r
+                        r (loop-when [r r #_"int" j 0] (< j (alength a)) => r
                                 (let [r (f r (aget a j))]
-                                    (when-not (reduced? r) => (ß return (deref r))
+                                    (when-not (reduced? r) => (ß return @r)
                                         (recur r (inc j))
                                     )
                                 )
@@ -16843,30 +16865,13 @@
         )
     )
 
-    (extend-type PersistentVector IReduceInit
-        (#_"Object" IReduceInit'''reduce [#_"PersistentVector" this, #_"IFn" f, #_"Object" r]
-            (loop-when [r r #_"int" i 0] (< i (:cnt this)) => r
-                (let [#_"Object[]" a (PersistentVector''arrayFor this, i)
-                      r (loop-when [r r #_"int" j 0] (< j (alength a)) => r
-                            (let [r (f r (aget a j))]
-                                (when-not (reduced? r) => (ß return (deref r))
-                                    (recur r (inc j))
-                                )
-                            )
-                        )]
-                    (recur r (+ i (alength a)))
-                )
-            )
-        )
-    )
-
     (extend-type PersistentVector IKVReduce
         (#_"Object" IKVReduce'''kvreduce [#_"PersistentVector" this, #_"IFn" f, #_"Object" r]
             (loop-when [r r #_"int" i 0] (< i (:cnt this)) => r
                 (let [#_"Object[]" a (PersistentVector''arrayFor this, i)
                       r (loop-when [r r #_"int" j 0] (< j (alength a)) => r
                             (let [r (f r (+ j i) (aget a j))]
-                                (when-not (reduced? r) => (ß return (deref r))
+                                (when-not (reduced? r) => (ß return @r)
                                     (recur r (inc j))
                                 )
                             )
@@ -16939,9 +16944,9 @@
 
     (defn #_"IPersistentVector" LazilyPersistentVector'create [#_"Object" obj]
         (condp satisfies? obj
-            IReduceInit (PersistentVector'create-1r obj)
-            Seqable     (PersistentVector'create-1s obj)
-                        (LazilyPersistentVector'createOwning (to-array obj))
+            IReduce (PersistentVector'create-1r obj)
+            Seqable (PersistentVector'create-1s obj)
+                    (LazilyPersistentVector'createOwning (to-array obj))
         )
     )
 )
@@ -16956,7 +16961,7 @@
     (defn- #_"RangeBoundsCheck" Range'positiveStep [#_"Object" end]
         (reify RangeBoundsCheck
             (#_"boolean" RangeBoundsCheck'''exceededBounds [#_"RangeBoundsCheck" _self, #_"Object" val]
-                (Numbers'gte-2oo val, end)
+                (<= end val)
             )
         )
     )
@@ -16964,7 +16969,7 @@
     (defn- #_"RangeBoundsCheck" Range'negativeStep [#_"Object" end]
         (reify RangeBoundsCheck
             (#_"boolean" RangeBoundsCheck'''exceededBounds [#_"RangeBoundsCheck" _self, #_"Object" val]
-                (Numbers'lte-2oo val, end)
+                (<= val end)
             )
         )
     )
@@ -16993,11 +16998,11 @@
         )
     )
 
-    (declare Repeat'create-1)
+    (declare Repeat'create)
 
     (defn #_"ISeq" Range'create
         ([#_"Object" end]
-            (when (Numbers'isPos-1o end) => ()
+            (when (pos? end) => ()
                 (Range'new 0, end, 1, (Range'positiveStep end))
             )
         )
@@ -17006,15 +17011,15 @@
         )
         ([#_"Object" start, #_"Object" end, #_"Object" step]
             (cond
-                (or (and (Numbers'isPos-1o step) (Numbers'gt-2oo start, end))
-                    (and (Numbers'isNeg-1o step) (Numbers'gt-2oo end, start))
-                    (Numbers'equiv start, end)
+                (or (and (pos? step) (< end start))
+                    (and (neg? step) (< start end))
+                    (= start end)
                 )
                     ()
-                (Numbers'isZero-1o step)
-                    (Repeat'create-1 start)
+                (zero? step)
+                    (Repeat'create start)
                 :else
-                    (Range'new start, end, step, (if (Numbers'isPos-1o step) (Range'positiveStep end) (Range'negativeStep end)))
+                    (Range'new start, end, step, (if (pos? step) (Range'positiveStep end) (Range'negativeStep end)))
             )
         )
     )
@@ -17043,7 +17048,7 @@
                     (if (< i Range'CHUNK_SIZE)
                         (do
                             (aset a i n)
-                            (let-when [n (Numbers'addP-2oo n, (:step this))] (RangeBoundsCheck'''exceededBounds (:boundsCheck this), n) => (recur n (inc i))
+                            (let-when [n (+' n (:step this))] (RangeBoundsCheck'''exceededBounds (:boundsCheck this), n) => (recur n (inc i))
                                 ;; partial last chunk
                                 (§ set! (:_chunk this) (ArrayChunk'new a, 0, (inc i)))
                             )
@@ -17084,23 +17089,22 @@
     )
 
     (extend-type Range IReduce
-        (#_"Object" IReduce'''reduce [#_"Range" this, #_"IFn" f]
-            (loop [#_"Object" r (:start this) #_"Number" n r]
-                (let-when-not [n (Numbers'addP-2oo n, (:step this))] (RangeBoundsCheck'''exceededBounds (:boundsCheck this), n) => r
-                    (let-when-not [r (f r n)] (reduced? r) => (deref r)
-                        (recur r n)
+        (#_"Object" IReduce'''reduce
+            ([#_"Range" this, #_"IFn" f]
+                (loop [#_"Object" r (:start this) #_"Number" n r]
+                    (let-when-not [n (+' n (:step this))] (RangeBoundsCheck'''exceededBounds (:boundsCheck this), n) => r
+                        (let-when-not [r (f r n)] (reduced? r) => @r
+                            (recur r n)
+                        )
                     )
                 )
             )
-        )
-    )
-
-    (extend-type Range IReduceInit
-        (#_"Object" IReduceInit'''reduce [#_"Range" this, #_"IFn" f, #_"Object" r]
-            (loop [r r #_"Object" n (:start this)]
-                (let-when-not [r (f r n)] (reduced? r) => (deref r)
-                    (let-when-not [n (Numbers'addP-2oo n, (:step this))] (RangeBoundsCheck'''exceededBounds (:boundsCheck this), n) => r
-                        (recur r n)
+            ([#_"Range" this, #_"IFn" f, #_"Object" r]
+                (loop [r r #_"Object" n (:start this)]
+                    (let-when-not [r (f r n)] (reduced? r) => @r
+                        (let-when-not [n (+' n (:step this))] (RangeBoundsCheck'''exceededBounds (:boundsCheck this), n) => r
+                            (recur r n)
+                        )
                     )
                 )
             )
@@ -17132,11 +17136,11 @@
     (def- #_"long" Repeat'INFINITE -1)
 
     (defn- #_"Repeat" Repeat'new
-        ([#_"long" count, #_"Object" val] (Repeat'new nil, count, val))
-        ([#_"IPersistentMap" meta, #_"long" count, #_"Object" val]
+        ([#_"long" cnt, #_"Object" val] (Repeat'new nil, cnt, val))
+        ([#_"IPersistentMap" meta, #_"long" cnt, #_"Object" val]
             (merge (ASeq'new meta)
                 (hash-map
-                    #_"long" :count count ;; always INFINITE or pos?
+                    #_"long" :cnt cnt ;; always INFINITE or pos?
                     #_"Object" :val val
 
                     #_volatile #_"ISeq" :_next nil ;; cached
@@ -17145,12 +17149,9 @@
         )
     )
 
-    (defn #_"Repeat" Repeat'create-1 [#_"Object" val]
-        (Repeat'new Repeat'INFINITE, val)
-    )
-
-    (defn #_"ISeq" Repeat'create-2 [#_"long" count, #_"Object" val]
-        (if (pos? count) (Repeat'new count, val) ())
+    (defn #_"Repeat|ISeq" Repeat'create
+        ([#_"Object" val] (Repeat'new Repeat'INFINITE, val))
+        ([#_"long" n, #_"Object" val] (if (pos? n) (Repeat'new n, val) ()))
     )
 
     (extend-type Repeat ISeq
@@ -17161,8 +17162,8 @@
         (#_"ISeq" ISeq'''next [#_"Repeat" this]
             (when (nil? (:_next this))
                 (cond
-                    (< 1 (:count this))               (§ set! (:_next this) (Repeat'new (dec (:count this)), (:val this)))
-                    (= (:count this) Repeat'INFINITE) (§ set! (:_next this) this)
+                    (< 1 (:cnt this))               (§ set! (:_next this) (Repeat'new (dec (:cnt this)), (:val this)))
+                    (= (:cnt this) Repeat'INFINITE) (§ set! (:_next this) this)
                 )
             )
             (:_next this)
@@ -17171,40 +17172,39 @@
 
     (extend-type Repeat IObj
         (#_"Repeat" IObj'''withMeta [#_"Repeat" this, #_"IPersistentMap" meta]
-            (Repeat'new meta, (:count this), (:val this))
+            (Repeat'new meta, (:cnt this), (:val this))
         )
     )
 
     (extend-type Repeat IReduce
-        (#_"Object" IReduce'''reduce [#_"Repeat" this, #_"IFn" f]
-            (let [#_"Object" r (:val this)]
-                (if (= (:count this) Repeat'INFINITE)
-                    (loop [r r]
-                        (let [r (f r (:val this))]
-                            (if (reduced? r) (deref r) (recur r))
+        (#_"Object" IReduce'''reduce
+            ([#_"Repeat" this, #_"IFn" f]
+                (let [#_"Object" r (:val this)]
+                    (if (= (:cnt this) Repeat'INFINITE)
+                        (loop [r r]
+                            (let [r (f r (:val this))]
+                                (if (reduced? r) @r (recur r))
+                            )
                         )
-                    )
-                    (loop-when [r r #_"long" i 1] (< i (:count this)) => r
-                        (let [r (f r (:val this))]
-                            (if (reduced? r) (deref r) (recur r (inc i)))
+                        (loop-when [r r #_"long" i 1] (< i (:cnt this)) => r
+                            (let [r (f r (:val this))]
+                                (if (reduced? r) @r (recur r (inc i)))
+                            )
                         )
                     )
                 )
             )
-        )
-    )
-
-    (extend-type Repeat IReduceInit
-        (#_"Object" IReduceInit'''reduce [#_"Repeat" this, #_"IFn" f, #_"Object" r]
-            (if (= (:count this) Repeat'INFINITE)
-                (loop [r r]
-                    (let [r (f r (:val this))]
-                        (if (reduced? r) (deref r) (recur r))
+            ([#_"Repeat" this, #_"IFn" f, #_"Object" r]
+                (if (= (:cnt this) Repeat'INFINITE)
+                    (loop [r r]
+                        (let [r (f r (:val this))]
+                            (if (reduced? r) @r (recur r))
+                        )
                     )
-                )
-                (loop-when [r r #_"long" i 0] (< i (:count this)) => r
-                    (let [r (f r (:val this))]
-                        (if (reduced? r) (deref r) (recur r (inc i)))
+                    (loop-when [r r #_"long" i 0] (< i (:cnt this)) => r
+                        (let [r (f r (:val this))]
+                            (if (reduced? r) @r (recur r (inc i)))
+                        )
                     )
                 )
             )
@@ -17979,7 +17979,7 @@
         )
     )
 
-    (defn #_"Object"    RT'box-1o [#_"Object"  x] x)
+    (defn #_"Object"    RT'box [#_"Object"  x] x)
     (defn #_"Character" RT'box-1c [#_"char"    x] (Character/valueOf x))
     (defn #_"Object"    RT'box-1z [#_"boolean" x] (if x true false))
     (defn #_"Object"    RT'box-1Z [#_"Boolean" x] x)
@@ -18015,7 +18015,7 @@
         )
     )
 
-    (defn #_"char" RT'charCast-1o [#_"Object" x]
+    (defn #_"char" RT'charCast [#_"Object" x]
         (if (instance? Character x)
             (.charValue x)
             (let [#_"long" n (.longValue (cast Number x))]
@@ -18030,7 +18030,7 @@
         x
     )
 
-    (defn #_"boolean" RT'booleanCast-1o [#_"Object" x]
+    (defn #_"boolean" RT'booleanCast [#_"Object" x]
         (if (instance? Boolean x) (.booleanValue x) (some? x))
     )
 
@@ -18054,7 +18054,7 @@
         )
     )
 
-    (defn #_"byte" RT'byteCast-1o [#_"Object" x]
+    (defn #_"byte" RT'byteCast [#_"Object" x]
         (if (instance? Byte x)
             (.byteValue x)
             (let [#_"long" n (long x)]
@@ -18077,7 +18077,7 @@
         )
     )
 
-    (defn #_"int" RT'intCast-1o [#_"Object" x]
+    (defn #_"int" RT'intCast [#_"Object" x]
         (cond
             (instance? Integer x) (.intValue x)
             (number? x)           (RT'intCast-1l (long x))
@@ -18095,7 +18095,7 @@
         )
     )
 
-    (defn #_"long" RT'longCast-1o [#_"Object" x]
+    (defn #_"long" RT'longCast [#_"Object" x]
         (cond
             (or (instance? Long x) (instance? Integer x) (instance? Byte x))
                 (.longValue x)
@@ -18120,7 +18120,7 @@
     (defn #_"byte" RT'uncheckedByteCast-1i [#_"int"    x] (byte x))
     (defn #_"byte" RT'uncheckedByteCast-1l [#_"long"   x] (byte x))
 
-    (defn #_"byte" RT'uncheckedByteCast-1o [#_"Object" x]
+    (defn #_"byte" RT'uncheckedByteCast [#_"Object" x]
         (.byteValue (cast Number x))
     )
 
@@ -18129,7 +18129,7 @@
     (defn #_"char" RT'uncheckedCharCast-1i [#_"int"    x] (char x))
     (defn #_"char" RT'uncheckedCharCast-1l [#_"long"   x] (char x))
 
-    (defn #_"char" RT'uncheckedCharCast-1o [#_"Object" x]
+    (defn #_"char" RT'uncheckedCharCast [#_"Object" x]
         (if (instance? Character x) (.charValue x) (char (.longValue (cast Number x))))
     )
 
@@ -18138,7 +18138,7 @@
     (defn #_"int" RT'uncheckedIntCast-1i [#_"int"    x]      x )
     (defn #_"int" RT'uncheckedIntCast-1l [#_"long"   x] (int x))
 
-    (defn #_"int" RT'uncheckedIntCast-1o [#_"Object" x]
+    (defn #_"int" RT'uncheckedIntCast [#_"Object" x]
         (if (number? x) (.intValue x) (.charValue (cast Character x)))
     )
 
@@ -18146,7 +18146,7 @@
     (defn #_"long" RT'uncheckedLongCast-1i [#_"int"    x]       x )
     (defn #_"long" RT'uncheckedLongCast-1l [#_"long"   x]       x )
 
-    (defn #_"long" RT'uncheckedLongCast-1o [#_"Object" x]
+    (defn #_"long" RT'uncheckedLongCast [#_"Object" x]
         (.longValue (cast Number x))
     )
 
@@ -18239,15 +18239,15 @@
                 (condp = type
                     Integer/TYPE
                         (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (next s)]
-                            (Array/set a, i, (RT'intCast-1o (first s)))
+                            (Array/set a, i, (RT'intCast (first s)))
                         )
                     Byte/TYPE
                         (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (next s)]
-                            (Array/set a, i, (RT'byteCast-1o (first s)))
+                            (Array/set a, i, (RT'byteCast (first s)))
                         )
                     Character/TYPE
                         (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (next s)]
-                            (Array/set a, i, (RT'charCast-1o (first s)))
+                            (Array/set a, i, (RT'charCast (first s)))
                         )
                     #_else
                         (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (next s)]
@@ -18813,7 +18813,7 @@
  ; Returns the number of items in the collection. (count nil) returns 0.
  ; Also works on strings, arrays, collections and maps.
  ;;
-(§ defn count [coll] (RT'count coll))
+(§ defn count [s] (RT'count s))
 
 ;;;
  ; Coerce to int.
@@ -18826,29 +18826,14 @@
  ; nth also works for strings, arrays, regex matchers and lists, and, in O(n) time, for sequences.
  ;;
 (§ defn nth
-    ([coll index]           (RT'nth coll index          ))
-    ([coll index not-found] (RT'nth coll index not-found))
-)
-
-;; reduce is defined again later after InternalReduce loads
-
-(§ defn- reduce1
-    ([f s]
-        (let-when [s (seq s)] s => (f)
-            (reduce1 f (first s) (next s))
-        )
-    )
-    ([f r s]
-        (let-when [s (seq s)] s => r
-            (recur f (f r (first s)) (next s))
-        )
-    )
+    ([s i]           (RT'nth s i          ))
+    ([s i not-found] (RT'nth s i not-found))
 )
 
 ;;;
  ; Returns a seq of the items in coll in reverse order. Not lazy.
  ;;
-(§ defn reverse [coll] (reduce1 conj () coll))
+(§ defn reverse [s] (into () s))
 
 ;;;
  ; Returns the sum of nums. (+') returns 0. Supports arbitrary precision.
@@ -18858,7 +18843,7 @@
     ([] 0)
     ([x] (cast Number x))
     ([x y] (Numbers'addP x y))
-    ([x y & s] (reduce1 +' (+' x y) s))
+    ([x y & s] (reduce +' (+' x y) s))
 )
 
 ;;;
@@ -18869,7 +18854,7 @@
     ([] 0)
     ([x] (cast Number x))
     ([x y] (Numbers'add x y))
-    ([x y & s] (reduce1 + (+ x y) s))
+    ([x y & s] (reduce + (+ x y) s))
 )
 
 ;;;
@@ -18880,7 +18865,7 @@
     ([] 1)
     ([x] (cast Number x))
     ([x y] (Numbers'multiplyP x y))
-    ([x y & s] (reduce1 *' (*' x y) s))
+    ([x y & s] (reduce *' (*' x y) s))
 )
 
 ;;;
@@ -18891,7 +18876,7 @@
     ([] 1)
     ([x] (cast Number x))
     ([x y] (Numbers'multiply x y))
-    ([x y & s] (reduce1 * (* x y) s))
+    ([x y & s] (reduce * (* x y) s))
 )
 
 ;;;
@@ -18901,7 +18886,7 @@
 (§ defn /
     ([x] (/ 1 x))
     ([x y] (Numbers'divide x y))
-    ([x y & s] (reduce1 / (/ x y) s))
+    ([x y & s] (reduce / (/ x y) s))
 )
 
 ;;;
@@ -18912,7 +18897,7 @@
 (§ defn -'
     ([x] (Numbers'minusP x))
     ([x y] (Numbers'minusP x y))
-    ([x y & s] (reduce1 -' (-' x y) s))
+    ([x y & s] (reduce -' (-' x y) s))
 )
 
 ;;;
@@ -18923,7 +18908,7 @@
 (§ defn -
     ([x] (Numbers'minus x))
     ([x y] (Numbers'minus x y))
-    ([x y & s] (reduce1 - (- x y) s))
+    ([x y & s] (reduce - (- x y) s))
 )
 
 ;;;
@@ -18977,7 +18962,7 @@
 (§ defn max
     ([x] x)
     ([x y] (Numbers'max x y))
-    ([x y & s] (reduce1 max (max x y) s))
+    ([x y & s] (reduce max (max x y) s))
 )
 
 ;;;
@@ -18986,7 +18971,7 @@
 (§ defn min
     ([x] x)
     ([x y] (Numbers'min x y))
-    ([x y & s] (reduce1 min (min x y) s))
+    ([x y & s] (reduce min (min x y) s))
 )
 
 ;;;
@@ -19117,7 +19102,7 @@
  ;;
 (§ defn bit-and
     ([x y] (Numbers'and x y))
-    ([x y & s] (reduce1 bit-and (bit-and x y) s))
+    ([x y & s] (reduce bit-and (bit-and x y) s))
 )
 
 ;;;
@@ -19125,7 +19110,7 @@
  ;;
 (§ defn bit-or
     ([x y] (Numbers'or x y))
-    ([x y & s] (reduce1 bit-or (bit-or x y) s))
+    ([x y & s] (reduce bit-or (bit-or x y) s))
 )
 
 ;;;
@@ -19133,7 +19118,7 @@
  ;;
 (§ defn bit-xor
     ([x y] (Numbers'xor x y))
-    ([x y & s] (reduce1 bit-xor (bit-xor x y) s))
+    ([x y & s] (reduce bit-xor (bit-xor x y) s))
 )
 
 ;;;
@@ -19141,7 +19126,7 @@
  ;;
 (§ defn bit-and-not
     ([x y] (Numbers'andNot x y))
-    ([x y & s] (reduce1 bit-and-not (bit-and-not x y) s))
+    ([x y & s] (reduce bit-and-not (bit-and-not x y) s))
 )
 
 ;;;
@@ -19158,18 +19143,6 @@
 (§ defn          bit-shift-left  [x n] (Numbers'shiftLeft          x n))
 (§ defn          bit-shift-right [x n] (Numbers'shiftRight         x n))
 (§ defn unsigned-bit-shift-right [x n] (Numbers'unsignedShiftRight x n))
-
-;;;
- ; Returns true if n is an integer.
- ;;
-(§ defn integer? [n]
-    (or (instance? Integer n)
-        (instance? Long n)
-        (instance? BigInt n)
-        (instance? BigInteger n)
-        (instance? Byte n)
-    )
-)
 
 ;;;
  ; Returns true if n is even, throws an exception if n is not an integer.
@@ -19247,8 +19220,8 @@
  ; Returns the value mapped to key, not-found or nil if key not present.
  ;;
 (§ defn get
-    ([map key          ] (RT'get map key          ))
-    ([map key not-found] (RT'get map key not-found))
+    ([coll key          ] (RT'get coll key          ))
+    ([coll key not-found] (RT'get coll key not-found))
 )
 
 ;;;
@@ -19541,10 +19514,8 @@
         (when-not ~(first pairs)
             (throw! (str (first ~'&form) " requires " ~(second pairs) " in " ~'*ns* ":" (:line (meta ~'&form))))
         )
-        ~(let [more (nnext pairs)]
-            (when more
-                (list* `assert-args more)
-            )
+        ~(when-let [s (nnext pairs)]
+            (list* `assert-args s)
         )
     )
 )
@@ -19880,7 +19851,7 @@
             ([x y z & args] (f (apply g x y z args)))
         )
     )
-    ([f g & fs] (reduce1 comp (list* f g fs)))
+    ([f g & fs] (reduce comp (list* f g fs)))
 )
 
 ;;;
@@ -19921,11 +19892,11 @@
     ([f g h & fs]
         (let [fs (list* f g h fs)]
             (fn
-                ([] (reduce1 #(conj %1 (%2)) [] fs))
-                ([x] (reduce1 #(conj %1 (%2 x)) [] fs))
-                ([x y] (reduce1 #(conj %1 (%2 x y)) [] fs))
-                ([x y z] (reduce1 #(conj %1 (%2 x y z)) [] fs))
-                ([x y z & args] (reduce1 #(conj %1 (apply %2 x y z args)) [] fs))
+                ([] (reduce #(conj %1 (%2)) [] fs))
+                ([x] (reduce #(conj %1 (%2 x)) [] fs))
+                ([x y] (reduce #(conj %1 (%2 x y)) [] fs))
+                ([x y z] (reduce #(conj %1 (%2 x y z)) [] fs))
+                ([x y z & args] (reduce #(conj %1 (apply %2 x y z args)) [] fs))
             )
         )
     )
@@ -19938,68 +19909,68 @@
  ;;
 (§ defn partial
     ([f] f)
-    ([f arg1]
+    ([f a]
         (fn
-            ([] (f arg1))
-            ([x] (f arg1 x))
-            ([x y] (f arg1 x y))
-            ([x y z] (f arg1 x y z))
-            ([x y z & args] (apply f arg1 x y z args))
+            ([] (f a))
+            ([x] (f a x))
+            ([x y] (f a x y))
+            ([x y z] (f a x y z))
+            ([x y z & args] (apply f a x y z args))
         )
     )
-    ([f arg1 arg2]
+    ([f a b]
         (fn
-            ([] (f arg1 arg2))
-            ([x] (f arg1 arg2 x))
-            ([x y] (f arg1 arg2 x y))
-            ([x y z] (f arg1 arg2 x y z))
-            ([x y z & args] (apply f arg1 arg2 x y z args))
+            ([] (f a b))
+            ([x] (f a b x))
+            ([x y] (f a b x y))
+            ([x y z] (f a b x y z))
+            ([x y z & args] (apply f a b x y z args))
         )
     )
-    ([f arg1 arg2 arg3]
+    ([f a b c]
         (fn
-            ([] (f arg1 arg2 arg3))
-            ([x] (f arg1 arg2 arg3 x))
-            ([x y] (f arg1 arg2 arg3 x y))
-            ([x y z] (f arg1 arg2 arg3 x y z))
-            ([x y z & args] (apply f arg1 arg2 arg3 x y z args))
+            ([] (f a b c))
+            ([x] (f a b c x))
+            ([x y] (f a b c x y))
+            ([x y z] (f a b c x y z))
+            ([x y z & args] (apply f a b c x y z args))
         )
     )
-    ([f arg1 arg2 arg3 & more]
-        (fn [& args] (apply f arg1 arg2 arg3 (concat more args)))
+    ([f a b c & more]
+        (fn [& args] (apply f a b c (concat more args)))
     )
 )
 
 ;;;
- ; Returns true if (pred x) is logical true for every x in coll, else false.
+ ; Returns true if (pred? x) is logical true for every x in coll, else false.
  ;;
-(§ defn ^Boolean every? [pred coll]
+(§ defn ^Boolean every? [pred? s]
     (cond
-        (nil? (seq coll)) true
-        (pred (first coll)) (recur pred (next coll))
+        (nil? (seq s)) true
+        (pred? (first s)) (recur pred? (next s))
         :else false
     )
 )
 
 ;;;
- ; Returns false if (pred x) is logical true for every x in coll, else true.
+ ; Returns false if (pred? x) is logical true for every x in coll, else true.
  ;;
 (§ def ^Boolean not-every? (comp not every?))
 
 ;;;
- ; Returns the first logical true value of (pred x) for any x in coll,
- ; else nil. One common idiom is to use a set as pred, for example
+ ; Returns the first logical true value of (pred? x) for any x in coll,
+ ; else nil. One common idiom is to use a set as pred?, for example
  ; this will return :fred if :fred is in the sequence, otherwise nil:
  ; (some #{:fred} coll).
  ;;
-(§ defn some [pred coll]
-    (when (seq coll)
-        (or (pred (first coll)) (recur pred (next coll)))
+(§ defn some [pred? s]
+    (when (seq s)
+        (or (pred? (first s)) (recur pred? (next s)))
     )
 )
 
 ;;;
- ; Returns false if (pred x) is logical true for any x in coll, else true.
+ ; Returns false if (pred? x) is logical true for any x in coll, else true.
  ;;
 (§ def ^Boolean not-any? (comp not some))
 
@@ -20095,7 +20066,7 @@
  ;;
 (§ defn mapcat
     ([f] (comp (map f) cat))
-    ([f & colls] (apply concat (apply map f colls)))
+    ([f & s] (apply concat (apply map f s)))
 )
 
 ;;;
@@ -20130,8 +20101,8 @@
  ; Returns a transducer when no collection is provided.
  ;;
 (§ defn remove
-    ([pred]      (filter (complement pred)     ))
-    ([pred coll] (filter (complement pred) coll))
+    ([pred?]   (filter (complement pred?)  ))
+    ([pred? s] (filter (complement pred?) s))
 )
 
 ;;;
@@ -20257,8 +20228,8 @@
  ; Return a lazy sequence of all but the last n (default 1) items in coll.
  ;;
 (§ defn drop-last
-    ([coll] (drop-last 1 coll))
-    ([n coll] (map (fn [x _] x) coll (drop n coll)))
+    ([s] (drop-last 1 s))
+    ([n s] (map (fn [x _] x) s (drop n s)))
 )
 
 ;;;
@@ -20266,12 +20237,7 @@
  ; may be no better than linear time. For vectors, see also subvec.
  ;;
 (§ defn take-last [n coll]
-    (loop [s (seq coll) lead (seq (drop n coll))]
-        (if lead
-            (recur (next s) (next lead))
-            s
-        )
-    )
+    (loop-when-recur [s (seq coll) z (seq (drop n coll))] z [(next s) (next z)] => s)
 )
 
 ;;;
@@ -20319,21 +20285,17 @@
 ;;;
  ; Returns a lazy (infinite!) sequence of repetitions of the items in coll.
  ;;
-(§ defn cycle [coll] (Cycle'create (seq coll)))
+(§ defn cycle [s] (Cycle'create (seq s)))
 
 ;;;
  ; Returns a vector of [(take n coll) (drop n coll)].
  ;;
-(§ defn split-at [n coll]
-    [(take n coll) (drop n coll)]
-)
+(§ defn split-at [n s] [(take n s) (drop n s)])
 
 ;;;
- ; Returns a vector of [(take-while pred coll) (drop-while pred coll)].
+ ; Returns a vector of [(take-while pred? coll) (drop-while pred? coll)].
  ;;
-(§ defn split-with [pred coll]
-    [(take-while pred coll) (drop-while pred coll)]
-)
+(§ defn split-with [pred? s] [(take-while pred? s) (drop-while pred? s)])
 
 ;;;
  ; Returns a lazy (infinite!, or length n if supplied) sequence of xs.
@@ -20369,7 +20331,7 @@
  ;;
 (§ defn merge [& maps]
     (when (some identity maps)
-        (reduce1 #(conj (or %1 {}) %2) maps)
+        (reduce #(conj (or %1 {}) %2) maps)
     )
 )
 
@@ -20381,20 +20343,12 @@
  ;;
 (§ defn merge-with [f & maps]
     (when (some identity maps)
-        (let [merge-entry
-                (fn [m e]
+        (letfn [(merge- [m e]
                     (let [k (key e) v (val e)]
-                        (if (contains? m k)
-                            (assoc m k (f (get m k) v))
-                            (assoc m k v)
-                        )
+                        (assoc m k (if (contains? m k) (f (get m k) v) v))
                     )
-                )
-              merge2
-                (fn [m1 m2]
-                    (reduce1 merge-entry (or m1 {}) (seq m2))
                 )]
-            (reduce1 merge2 maps)
+            (reduce #(reduce merge- (or %1 {}) %2) maps)
         )
     )
 )
@@ -20403,11 +20357,10 @@
  ; Returns a map with the keys mapped to the corresponding vals.
  ;;
 (§ defn zipmap [keys vals]
-    (loop [map {} ks (seq keys) vs (seq vals)]
-        (if (and ks vs)
-            (recur (assoc map (first ks) (first vs)) (next ks) (next vs))
-            map
-        )
+    (loop-when-recur [m (transient {}) ks (seq keys) vs (seq vals)]
+                     (and ks vs)
+                     [(assoc! m (first ks) (first vs)) (next ks) (next vs)]
+                  => (persistent! m)
     )
 )
 
@@ -20422,11 +20375,11 @@
 )
 
 ;;;
- ; Returns an implementation of java.util.Comparator based upon pred.
+ ; Returns an implementation of java.util.Comparator based upon pred?.
  ;;
-(§ defn comparator [pred]
+(§ defn comparator [pred?]
     (fn [x y]
-        (cond (pred x y) -1 (pred y x) 1 :else 0)
+        (cond (pred? x y) -1 (pred? y x) 1 :else 0)
     )
 )
 
@@ -20437,14 +20390,13 @@
  ; If coll is a Java array, it will be modified. To avoid this, sort a copy of the array.
  ;;
 (§ defn sort
-    ([coll] (sort compare coll))
-    ([^Comparator comp coll]
-        (if (seq coll)
-            (let [a (to-array coll)]
+    ([s] (sort compare s))
+    ([^Comparator comp s]
+        (when (seq s) => ()
+            (let [a (to-array s)]
                 (java.util.Arrays/sort a comp)
                 (seq a)
             )
-            ()
         )
     )
 )
@@ -20456,12 +20408,8 @@
  ; If coll is a Java array, it will be modified. To avoid this, sort a copy of the array.
  ;;
 (§ defn sort-by
-    ([keyfn coll]
-        (sort-by keyfn compare coll)
-    )
-    ([keyfn ^Comparator comp coll]
-        (sort (fn [x y] (.compare comp (keyfn x) (keyfn y))) coll)
-    )
+    ([f s] (sort-by f compare s))
+    ([f ^Comparator comp s] (sort #(.compare comp (f %1) (f %2)) s))
 )
 
 ;;;
@@ -20472,14 +20420,14 @@
  ; the seq, does not retain the head and returns nil.
  ;;
 (§ defn dorun
-    ([coll]
-        (when-let [s (seq coll)]
+    ([s]
+        (when-let [s (seq s)]
             (recur (next s))
         )
     )
-    ([n coll]
-        (when (and (seq coll) (pos? n))
-            (recur (dec n) (next coll))
+    ([n s]
+        (when (and (pos? n) (seq s))
+            (recur (dec n) (next s))
         )
     )
 )
@@ -20493,14 +20441,8 @@
  ; seq to reside in memory at one time.
  ;;
 (§ defn doall
-    ([coll]
-        (dorun coll)
-        coll
-    )
-    ([n coll]
-        (dorun n coll)
-        coll
-    )
+    ([s] (dorun s) s)
+    ([n s] (dorun n s) s)
 )
 
 ;;;
@@ -20706,18 +20648,6 @@
     )
 )
 
-;; redef into with batch support
-
-;;;
- ; Returns a new coll consisting of to-coll with all of the items of from-coll conjoined.
- ;;
-(§ defn- into1 [to from]
-    (if (satisfies? IEditableCollection to)
-        (persistent! (reduce1 conj! (transient to) from))
-        (reduce1 conj to from)
-    )
-)
-
 ;;;
  ; import-list => (package-symbol class-name-symbols*)
  ;
@@ -20728,11 +20658,11 @@
     (let [specs (map #(if (and (seq? %) (= 'quote (first %))) (second %) %) import-symbols-or-lists)]
         `(do
             ~@(map #(list 'import* %)
-                (reduce1
+                (reduce
                     (fn [v spec]
                         (if (symbol? spec)
                             (conj v (name spec))
-                            (let [p (first spec) cs (rest spec)] (into1 v (map #(str p "." %) cs)))
+                            (let [p (first spec) cs (rest spec)] (into v (map #(str p "." %) cs)))
                         )
                     )
                     [] specs
@@ -21157,24 +21087,18 @@
  ; Returns a set of the distinct elements of coll.
  ;;
 (§ defn set [coll]
-    (if (set? coll)
-        (with-meta coll nil)
-        (if (satisfies? IReduceInit coll)
-            (persistent! (IReduceInit'''reduce ^cloiure.core.IReduceInit coll conj! (transient #{})))
-            (persistent! (reduce1 conj! (transient #{}) coll))
-        )
+    (cond
+        (set? coll) (with-meta coll nil)
+        (satisfies? IReduce coll) (persistent! (IReduce'''reduce ^cloiure.core.IReduce coll conj! (transient #{})))
+        :else (into #{} coll)
     )
 )
 
-(§ defn- filter-key [keyfn pred amap]
-    (loop [ret {} es (seq amap)]
-        (if es
-            (if (pred (keyfn (first es)))
-                (recur (assoc ret (key (first es)) (val (first es))) (next es))
-                (recur ret (next es))
-            )
-            ret
-        )
+(defn- filter-key [f pred? m]
+    (loop-when-recur [s (seq m) m (transient {})]
+                     s
+                     [(next s) (let [e (first s)] (if (pred? (f e)) (assoc m (key e) (val e)) m))]
+                  => (persistent! m)
     )
 )
 
@@ -21503,15 +21427,15 @@
                                             (conj `(if (seq? ~gmap) (PersistentHashMap'create ~gmapseq) ~gmap))
                                             ((fn [ret] (if (:as b) (conj ret (:as b) gmap) ret)))
                                         )
-                                       bes (let [trafos (reduce1
+                                       bes (let [trafos (reduce
                                                     (fn [trafos mk]
                                                         (if (keyword? mk)
                                                             (let [mkns (namespace mk) mkn (name mk)]
-                                                                (cond
-                                                                    (= mkn "keys") (assoc trafos mk #(keyword (or mkns (namespace %)) (name %)))
-                                                                    (= mkn "syms") (assoc trafos mk #(list `quote (symbol (or mkns (namespace %)) (name %))))
-                                                                    (= mkn "strs") (assoc trafos mk str)
-                                                                    :else trafos
+                                                                (case mkn
+                                                                    "keys" (assoc trafos mk #(keyword (or mkns (namespace %)) (name %)))
+                                                                    "syms" (assoc trafos mk #(list `quote (symbol (or mkns (namespace %)) (name %))))
+                                                                    "strs" (assoc trafos mk str)
+                                                                           trafos
                                                                 )
                                                             )
                                                             trafos
@@ -21519,8 +21443,8 @@
                                                     )
                                                     {} (keys b)
                                                 )]
-                                            (reduce1
-                                                (fn [bes entry] (reduce1 #(assoc %1 %2 ((val entry) %2)) (dissoc bes (key entry)) ((key entry) bes)))
+                                            (reduce
+                                                (fn [bes entry] (reduce #(assoc %1 %2 ((val entry) %2)) (dissoc bes (key entry)) ((key entry) bes)))
                                                 (dissoc b :as :or) trafos
                                             )
                                         )]
@@ -21549,7 +21473,7 @@
           process-entry (fn [bvec b] (pb bvec (first b) (second b)))]
         (if (every? symbol? (map first bents))
             bindings
-            (reduce1 process-entry [] bents)
+            (reduce process-entry [] bents)
         )
     )
 )
@@ -21655,7 +21579,7 @@
             (let [vs (take-nth 2 (drop 1 bindings))
                   bs (take-nth 2 bindings)
                   gs (map (fn [b] (if (symbol? b) b (gensym))) bs)
-                  bfs (reduce1
+                  bfs (reduce
                         (fn [ret [b v g]]
                             (if (symbol? b)
                                 (conj ret g v)
@@ -21723,7 +21647,7 @@
     )
     (let [to-groups
             (fn [seq-exprs]
-                (reduce1
+                (reduce
                     (fn [groups [k v]]
                         (if (keyword? k)
                             (conj (pop groups) (conj (peek groups) [k v]))
@@ -22064,7 +21988,7 @@
     )
     ([smap coll]
         (if (vector? coll)
-            (reduce1
+            (reduce
                 (fn [v i]
                     (if-let [e (find smap (nth v i))]
                         (assoc v i (val e))
@@ -22362,7 +22286,7 @@
     (loop [ret (set (bases class)) cs ret]
         (if (seq cs)
             (let [c (first cs) bs (bases c)]
-                (recur (into1 ret bs) (into1 (disj cs c) bs))
+                (recur (into ret bs) (into (disj cs c) bs))
             )
             (not-empty ret)
         )
@@ -22405,7 +22329,7 @@
         (not-empty
             (let [tp (get (:parents h) tag)]
                 (if (class? tag)
-                    (into1 (set (bases tag)) tp)
+                    (into (set (bases tag)) tp)
                     tp
                 )
             )
@@ -22426,7 +22350,7 @@
             (let [ta (get (:ancestors h) tag)]
                 (if (class? tag)
                     (let [superclasses (set (supers tag))]
-                        (reduce1 into1 superclasses (cons ta (map #(get (:ancestors h) %) superclasses)))
+                        (reduce into superclasses (cons ta (map #(get (:ancestors h) %) superclasses)))
                     )
                     ta
                 )
@@ -22474,9 +22398,9 @@
         (let [tp (:parents h) td (:descendants h) ta (:ancestors h)
               tf
                 (fn [m source sources target targets]
-                    (reduce1
+                    (reduce
                         (fn [ret k]
-                            (assoc ret k (reduce1 conj (get targets k #{}) (cons target (targets target))))
+                            (assoc ret k (reduce conj (get targets k #{}) (cons target (targets target))))
                         )
                         m (cons source (sources source))
                     )
@@ -22519,7 +22443,7 @@
               newParents    (if (not-empty childsParents) (assoc parentMap tag childsParents) (dissoc parentMap tag))
               deriv-seq     (flatten (map #(cons (key %) (interpose (key %) (val %))) (seq newParents)))]
             (if (contains? (parentMap tag) parent)
-                (reduce1 #(apply derive %1 %2) (make-hierarchy) (partition 2 deriv-seq))
+                (reduce #(apply derive %1 %2) (make-hierarchy) (partition 2 deriv-seq))
                 h
             )
         )
@@ -22631,7 +22555,7 @@
  ; is not present, or the not-found value if supplied.
  ;;
 (§ defn get-in
-    ([m ks] (reduce1 get m ks))
+    ([m ks] (reduce get m ks))
     ([m ks not-found]
         (loop [sentinel (Object.) m m ks (seq ks)]
             (if ks
@@ -22949,7 +22873,7 @@
  ; entries are {(case-f test) [(test-f test) then]}.
  ;;
 (§ defn- case-map [case-f test-f tests thens]
-    (into1 (sorted-map)
+    (into (sorted-map)
         (zipmap
             (map case-f tests)
             (map vector (map test-f tests) thens)
@@ -23013,7 +22937,7 @@
                 )
             )
           hmap
-            (reduce1
+            (reduce
                 (fn [m [h bucket]]
                     (if (== 1 (count bucket))
                         (assoc m (ffirst bucket) (second (first bucket)))
@@ -23026,7 +22950,7 @@
             (->> buckets
                 (filter #(< 1 (count (second %))))
                 (map first)
-                (into1 #{})
+                (into #{})
             )]
         [(keys hmap) (vals hmap) skip-check]
     )
@@ -23040,7 +22964,7 @@
  ; post-switch equivalence checking must not be done (occurs with hash collisions).
  ;;
 (§ defn- prep-hashes [expr-sym default tests thens]
-    (let [hashcode #(Util'hash %) hashes (into1 #{} (map hashcode tests))]
+    (let [hashcode #(Util'hash %) hashes (into #{} (map hashcode tests))]
         (if (== (count tests) (count hashes))
             (if (fits-table? hashes)
                 ;; compact case ints, no shift-mask
@@ -23060,7 +22984,7 @@
                   skip-check
                     (if (zero? mask)
                         skip-check
-                        (into1 #{} (map #(shift-mask shift mask %) skip-check))
+                        (into #{} (map #(shift-mask shift mask %) skip-check))
                     )]
                 [shift mask case-map switch-type skip-check]
             )
@@ -23110,10 +23034,10 @@
                         )
                     )
                   pairs
-                    (reduce1
+                    (reduce
                         (fn [m [test expr]]
                             (if (seq? test)
-                                (reduce1 #(assoc-test %1 %2 expr) m test)
+                                (reduce #(assoc-test %1 %2 expr) m test)
                                 (assoc-test m test expr)
                             )
                         )
@@ -23159,7 +23083,7 @@
  ;;
 (§ defn- group-by-sig [coll]
     (vals
-        (reduce1
+        (reduce
             (fn [m [msig meth]]
                 (let [rtype (peek msig) argsig (pop msig)]
                     (assoc m argsig (assoc (m argsig {}) rtype meth))
@@ -23171,7 +23095,7 @@
 )
 
 (§ defn ^String proxy-name [^Class super interfaces]
-    (let [inames (into1 (sorted-set) (map #(.getName ^Class %) interfaces))]
+    (let [inames (into (sorted-set) (map #(.getName ^Class %) interfaces))]
         (apply str (.replace (str *ns*) \- \_) ".proxy"
             (interleave (repeat "$")
                 (concat
@@ -23351,7 +23275,7 @@
                     )
                 )
               ifaces-meths
-                (into1 {}
+                (into {}
                     (for [^Class iface interfaces meth (.getMethods iface) :let [msig (method-sig meth)] :when (not (considered msig))]
                         {msig meth}
                     )
@@ -23366,7 +23290,7 @@
               mgroups      (group-by-sig (concat mm ifaces-meths))
               rtypes       (map #(most-specific (keys %)) mgroups)
               mb           (map #(vector (%1 %2) (vals (dissoc %1 %2))) mgroups rtypes)
-              bridge?      (reduce1 into1 #{} (map second mb))
+              bridge?      (reduce into #{} (map second mb))
               ifaces-meths (remove bridge? (vals ifaces-meths))
               mm           (remove bridge? (vals mm))]
             ;; add methods matching supers', if no mapping -> call super
@@ -24231,12 +24155,12 @@
         (let [cs (assoc (.map cache) c (Entry. c f))]
             (MethodImplCache. (.protocol cache) (.methodk cache) cs)
         )
-        (let [cs (into1 {} (remove (fn [[c e]] (nil? e)) (map vec (partition 2 (.table cache)))))
+        (let [cs (into {} (remove (fn [[c e]] (nil? e)) (map vec (partition 2 (.table cache)))))
               cs (assoc cs c (Entry. c f))]
             (if-let [[shift mask] (maybe-min-hash (map hash (keys cs)))]
                 (let [table (make-array Object (* 2 (inc mask)))
                       table
-                        (reduce1
+                        (reduce
                             (fn [^objects t [c e]]
                                 (let [i (* 2 (int (shift-mask shift mask (hash c))))]
                                     (aset t i c)
@@ -24273,7 +24197,7 @@
             (or (impl c)
                 (and c
                     (or (first (remove nil? (map impl (butlast (super-chain c)))))
-                        (when-let [t (reduce1 pref (filter impl (disj (supers c) Object)))]
+                        (when-let [t (reduce pref (filter impl (disj (supers c) Object)))]
                             (impl t)
                         )
                         (impl Object)
@@ -24402,7 +24326,7 @@
             )
           sigs
             (when sigs
-                (reduce1
+                (reduce
                     (fn [m s]
                         (let [name-meta (meta (first s))
                               mname (with-meta (first s) nil)
@@ -24680,7 +24604,7 @@
  ; than first/next recursion. Called by cloiure.core/reduce.
  ;;
 (§ defprotocol CollReduce
-    (coll-reduce [coll f] [coll f val])
+    (coll-reduce [s f] [s f r])
 )
 
 ;;;
@@ -24688,127 +24612,106 @@
  ; than first/next recursion. Called by cloiure.core/reduce.
  ;;
 (§ defprotocol InternalReduce
-    (internal-reduce [seq f start])
+    (internal-reduce [s f r])
 )
 
 (§ defn- seq-reduce
-    ([coll f]
-        (if-let [s (seq coll)]
+    ([s f]
+        (if-let [s (seq s)]
             (internal-reduce (next s) f (first s))
             (f)
         )
     )
-    ([coll f val]
-        (let [s (seq coll)]
-            (internal-reduce s f val)
-        )
-    )
+    ([s f r] (internal-reduce (seq s) f r))
 )
 
 ;;;
  ; Reduces a seq, ignoring any opportunities to switch to
  ; a more specialized implementation.
  ;;
-(§ defn- naive-seq-reduce [s f val]
-    (loop [s (seq s) val val]
-        (if s
-            (let [ret (f val (first s))]
-                (if (reduced? ret)
-                    @ret
-                    (recur (next s) ret)
-                )
-            )
-            val
+(defn- naive-seq-reduce [s f r]
+    (loop-when [s (seq s) r r] s => r
+        (let-when [r (f r (first s))] (reduced? r) => (recur (next s) r)
+            @r
         )
     )
 )
 
 ;;;
- ; Reduces via IReduceInit if possible, else naively.
+ ; Reduces via IReduce if possible, else naively.
  ;;
-(§ defn- interface-or-naive-reduce [coll f val]
-    (if (satisfies? IReduceInit coll)
-        (IReduceInit'''reduce ^cloiure.core.IReduceInit coll f val)
-        (naive-seq-reduce coll f val)
+(defn- interface-or-naive-reduce [coll f r]
+    (if (satisfies? IReduce coll)
+        (IReduce'''reduce ^cloiure.core.IReduce coll f r)
+        (naive-seq-reduce coll f r)
     )
 )
 
 (§ extend-protocol CollReduce
     nil
     (coll-reduce
-        ([coll f] (f))
-        ([coll f val] val)
+        ([s f] (f))
+        ([s f r] r)
     )
 
     Object
     (coll-reduce
-        ([coll f] (seq-reduce coll f))
-        ([coll f val] (seq-reduce coll f val))
+        ([s f] (seq-reduce s f))
+        ([s f r] (seq-reduce s f r))
     )
 
-    IReduceInit
+    IReduce
     (coll-reduce
-        ([coll f] (IReduce'''reduce ^cloiure.core.IReduce coll f))
-        ([coll f val] (IReduceInit'''reduce coll f val))
+        ([s f] (IReduce'''reduce ^cloiure.core.IReduce s f))
+        ([s f r] (IReduce'''reduce ^cloiure.core.IReduce s f r))
     )
 
     ;; aseqs were iterable, masking internal-reducers
     ASeq
     (coll-reduce
-        ([coll f] (seq-reduce coll f))
-        ([coll f val] (seq-reduce coll f val))
+        ([s f] (seq-reduce s f))
+        ([s f r] (seq-reduce s f r))
     )
 
     ;; for range
     LazySeq
     (coll-reduce
-        ([coll f] (seq-reduce coll f))
-        ([coll f val] (seq-reduce coll f val))
+        ([s f] (seq-reduce s f))
+        ([s f r] (seq-reduce s f r))
     )
 
     ;; vector's chunked seq is faster than its iter
     PersistentVector
     (coll-reduce
-        ([coll f] (seq-reduce coll f))
-        ([coll f val] (seq-reduce coll f val))
+        ([s f] (seq-reduce s f))
+        ([s f r] (seq-reduce s f r))
     )
 )
 
 (§ extend-protocol InternalReduce
     nil
-    (internal-reduce [s f val] val)
+    (internal-reduce [s f r] r)
 
     StringSeq
-    (internal-reduce [str-seq f val]
-        (let [s (.s str-seq) len (count s)]
-            (loop [i (.i str-seq) val val]
-                (if (< i len)
-                    (let [ret (f val (nth s i))]
-                        (if (reduced? ret)
-                            @ret
-                            (recur (inc i) ret)
-                        )
+    (internal-reduce [str-seq f r]
+        (let [s (.s str-seq) n (count s)]
+            (loop-when [i (.i str-seq) r r] (< i n) => r
+                (let [r (f r (nth s i))]
+                    (when (reduced? r) => (recur (inc i) r)
+                        @r
                     )
-                    val
                 )
             )
         )
     )
 
     Object
-    (internal-reduce [s f val]
-        (loop [cls (class s) s s f f val val]
-            (if-let [s (seq s)]
-                (if (identical? (class s) cls)
-                    (let [ret (f val (first s))]
-                        (if (reduced? ret)
-                            @ret
-                            (recur cls (next s) f ret)
-                        )
-                    )
-                    (interface-or-naive-reduce s f val)
+    (internal-reduce [s f r]
+        (loop-when [c (class s) s (seq s) r r] s => r
+            (when (identical? (class s) c) => (interface-or-naive-reduce s f r)
+                (let-when [r (f r (first s))] (reduced? r) => (recur c (next s) r)
+                    @r
                 )
-                val
             )
         )
     )
@@ -24837,30 +24740,30 @@
  ; etc. If coll contains no items, returns val and f is not called.
  ;;
 (§ defn reduce
-    ([f coll]
-        (if (satisfies? IReduce coll)
-            (IReduce'''reduce ^cloiure.core.IReduce coll f)
-            (coll-reduce coll f)
+    ([f s]
+        (if (satisfies? IReduce s)
+            (IReduce'''reduce ^cloiure.core.IReduce s f)
+            (coll-reduce s f)
         )
     )
-    ([f val coll]
-        (if (satisfies? IReduceInit coll)
-            (IReduceInit'''reduce ^cloiure.core.IReduceInit coll f val)
-            (coll-reduce coll f val)
+    ([f r s]
+        (if (satisfies? IReduce s)
+            (IReduce'''reduce ^cloiure.core.IReduce s f r)
+            (coll-reduce s f r)
         )
     )
 )
 
 (§ extend-protocol KVReduce
     nil
-    (kv-reduce [_ f init] init)
+    (kv-reduce [_ f r] r)
 
     ;; slow path default
     IPersistentMap
-    (kv-reduce [amap f init] (reduce (fn [ret [k v]] (f ret k v)) init amap))
+    (kv-reduce [m f r] (reduce (fn [m' [k v]] (f m' k v)) r m))
 
     IKVReduce
-    (kv-reduce [amap f init] (IKVReduce'''kvreduce amap f init))
+    (kv-reduce [m f r] (IKVReduce'''kvreduce m f r))
 )
 
 ;;;
@@ -24870,9 +24773,7 @@
  ; If coll contains no entries, returns init and f is not called. Note that
  ; reduce-kv is supported on vectors, where the keys will be the ordinals.
  ;;
-(§ defn reduce-kv [f init coll]
-    (kv-reduce coll f init)
-)
+(§ defn reduce-kv [f r s] (kv-reduce s f r))
 
 ;;;
  ; Takes a reducing function f of 2 args and returns a fn suitable for
@@ -24900,12 +24801,8 @@
  ; Note that certain transforms may inject or skip items.
  ;;
 (§ defn transduce
-    ([xform f coll] (transduce xform f (f) coll))
-    ([xform f init coll]
-        (let [f (xform f)]
-            (f (reduce f init coll))
-        )
-    )
+    ([xform f s] (transduce xform f (f) s))
+    ([xform f r s] (let [f (xform f)] (f (reduce f r s))))
 )
 
 ;;;
@@ -25568,16 +25465,11 @@
  ;;
 (§ defn union
     ([] #{})
-    ([s1] s1)
-    ([s1 s2]
-        (if (< (count s1) (count s2))
-            (reduce conj s2 s1)
-            (reduce conj s1 s2)
-        )
-    )
-    ([s1 s2 & sets]
-        (let [bubbled-sets (bubble-max-key count (conj sets s2 s1))]
-            (reduce into (first bubbled-sets) (rest bubbled-sets))
+    ([x] x)
+    ([x y] (if (< (count x) (count y)) (into y x) (into x y)))
+    ([x y & s]
+        (let [[x & y] (bubble-max-key count (into s y x))]
+            (reduce into x y)
         )
     )
 )
@@ -25586,24 +25478,11 @@
  ; Return a set that is the intersection of the input sets.
  ;;
 (§ defn intersection
-    ([s1] s1)
-    ([s1 s2]
-        (if (< (count s2) (count s1))
-            (recur s2 s1)
-            (reduce
-                (fn [result item]
-                    (if (contains? s2 item)
-                        result
-                        (disj result item)
-                    )
-                )
-                s1 s1
-            )
-        )
-    )
-    ([s1 s2 & sets]
-        (let [bubbled-sets (bubble-max-key #(- (count %)) (conj sets s2 s1))]
-            (reduce intersection (first bubbled-sets) (rest bubbled-sets))
+    ([x] x)
+    ([x y] (recur-if (< (count y) (count x)) [y x] => (reduce #(if (contains? y %2) %1 (disj %1 %2)) x x)))
+    ([x y & s]
+        (let [[x & y] (bubble-max-key #(- (count %)) (conj s y x))]
+            (reduce intersection x y)
         )
     )
 )
@@ -25612,29 +25491,21 @@
  ; Return a set that is the first set without elements of the remaining sets.
  ;;
 (§ defn difference
-    ([s1] s1)
-    ([s1 s2]
-        (if (< (count s1) (count s2))
-            (reduce
-                (fn [result item]
-                    (if (contains? s2 item)
-                        (disj result item)
-                        result
-                    )
-                )
-                s1 s1
-            )
-            (reduce disj s1 s2)
+    ([x] x)
+    ([x y]
+        (if (< (count x) (count y))
+            (reduce #(if (contains? y %2) (disj %1 %2) %1) x x)
+            (reduce disj x y)
         )
     )
-    ([s1 s2 & sets] (reduce difference s1 (conj sets s2)))
+    ([x y & s] (reduce difference x (conj s y)))
 )
 
 ;;;
- ; Returns a set of the elements for which pred is true.
+ ; Returns a set of the elements for which pred? is true.
  ;;
-(§ defn select [pred xset]
-    (reduce (fn [s k] (if (pred k) s (disj s k))) xset xset)
+(§ defn select [pred? xset]
+    (reduce (fn [s k] (if (pred? k) s (disj s k))) xset xset)
 )
 
 ;;;
