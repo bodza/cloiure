@@ -1,5 +1,5 @@
 (ns cloiure.core
-    (:refer-clojure :only [* *err* *ns* *print-length* *warn-on-reflection* + +' - -> .. / < <= = > >= aget alength alter-meta! apply as-> aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defprotocol defrecord deref dissoc doseq dotimes empty extend-type find find-ns first fn get hash-map hash-set identical? if-let import inc indexed? int intern interpose into-array isa? key keys keyword let letfn list list* long loop make-array map map-entry? mapv merge meta name namespace neg? next not= nth object-array parents peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot realized? reduced? reify rem repeat reset-meta! resolve rest rseq satisfies? seq sequential? some sorted-map subvec swap! swap-vals! symbol to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector when-let while with-meta zero?])
+    (:refer-clojure :only [* *err* *ns* *print-length* *warn-on-reflection* + +' - -> .. / < <= = > >= aget alength alter-meta! apply as-> aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defprotocol defrecord deref dissoc doseq dotimes empty extend-type find find-ns first fn get hash-map hash-set identical? if-let import inc indexed? int intern interpose into-array isa? key keys keyword let letfn list list* long loop make-array map map-entry? mapv merge meta name namespace neg? next not= ns-unmap nth object-array parents peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot realized? reduced? reify rem repeat reset-meta! resolve rest rseq satisfies? seq sequential? some sorted-map subvec swap! swap-vals! symbol to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector when-let while with-meta zero?])
 )
 
 (defmacro § [& _])
@@ -9,11 +9,12 @@
     [java.lang ArithmeticException Character Class ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Math Number Object RuntimeException String StringBuilder Thread Throwable UnsupportedOperationException]
 )
 
+(ns-unmap 'cloiure.core 'BigInteger)
+
 (import
     [java.io BufferedReader InputStreamReader OutputStreamWriter PrintWriter PushbackReader Reader #_StringReader StringWriter Writer]
     [java.lang.ref Reference ReferenceQueue SoftReference WeakReference]
     [java.lang.reflect Array Constructor Field #_Method Modifier]
-    [java.math BigInteger]
     [java.security AccessController PrivilegedAction]
     [java.util ArrayList Arrays Collection Comparator IdentityHashMap]
     [java.util.concurrent.atomic AtomicBoolean AtomicInteger AtomicReference]
@@ -21,6 +22,7 @@
     [java.util.regex Matcher Pattern]
     [cloiure.asm ClassVisitor ClassWriter Label MethodVisitor Opcodes Type]
     [cloiure.asm.commons GeneratorAdapter Method]
+    [cloiure.math BigInteger]
 )
 
 ;;;
