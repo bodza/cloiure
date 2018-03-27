@@ -1,18 +1,9 @@
 package cloiure.math;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.ObjectStreamField;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-import sun.misc.DoubleConsts;
-import sun.misc.FloatConsts;
 
-import java.math.BigDecimal;
-
-import static cloiure.math.BigInteger.INFLATED;
 import static cloiure.math.BigInteger.LONG_MASK;
 
 /**
@@ -241,9 +232,8 @@ class MutableBigInteger {
 
     // Constants
     /**
-     * MutableBigInteger with one element value array with the value 1. Used by
-     * BigDecimal divideAndRound to increment the quotient. Use this constant
-     * only when the method is not going to modify this object.
+     * MutableBigInteger with one element value array with the value 1. Use
+     * this constant only when the method is not going to modify this object.
      */
     static final MutableBigInteger ONE = new MutableBigInteger(1);
 
@@ -364,47 +354,6 @@ class MutableBigInteger {
     BigInteger toBigInteger() {
         normalize();
         return toBigInteger(isZero() ? 0 : 1);
-    }
-
-    /**
-     * Convert this MutableBigInteger to BigDecimal object with the specified sign
-     * and scale.
-     */
-    BigDecimal toBigDecimal(int sign, int scale) {
-        if (intLen == 0 || sign == 0)
-            throw new UnsupportedOperationException("return BigDecimal.zeroValueOf(scale);");
-        int[] mag = getMagnitudeArray();
-        int len = mag.length;
-        int d = mag[0];
-        // If this MutableBigInteger can't be fit into long, we need to
-        // make a BigInteger object for the resultant BigDecimal object.
-        if (len > 2 || (d < 0 && len == 2))
-            throw new UnsupportedOperationException("return new BigDecimal(new BigInteger(mag, sign), INFLATED, scale, 0);");
-        long v = (len == 2) ?
-            ((mag[1] & LONG_MASK) | (d & LONG_MASK) << 32) :
-            d & LONG_MASK;
-        return BigDecimal.valueOf(sign == -1 ? -v : v, scale);
-    }
-
-    /**
-     * This is for internal use in converting from a MutableBigInteger
-     * object into a long value given a specified sign.
-     * returns INFLATED if value is not fit into long
-     */
-    long toCompactValue(int sign) {
-        if (intLen == 0 || sign == 0)
-            return 0L;
-        int[] mag = getMagnitudeArray();
-        int len = mag.length;
-        int d = mag[0];
-        // If this MutableBigInteger can not be fitted into long, we need to
-        // make a BigInteger object for the resultant BigDecimal object.
-        if (len > 2 || (d < 0 && len == 2))
-            return INFLATED;
-        long v = (len == 2) ?
-            ((mag[1] & LONG_MASK) | (d & LONG_MASK) << 32) :
-            d & LONG_MASK;
-        return sign == -1 ? -v : v;
     }
 
     /**
@@ -2590,7 +2539,6 @@ class SignedMutableBigInteger extends MutableBigInteger {
  * -2<sup>{@code Integer.MAX_VALUE}</sup> (exclusive) to
  * +2<sup>{@code Integer.MAX_VALUE}</sup> (exclusive).
  *
- * @see     BigDecimal
  * @author  Josh Bloch
  * @author  Michael McCloskey
  * @author  Alan Eliasen
@@ -2599,15 +2547,11 @@ class SignedMutableBigInteger extends MutableBigInteger {
  */
 
 public class BigInteger extends Number implements Comparable<BigInteger> {
-    static final long INFLATED = Long.MIN_VALUE;
-
     /**
      * The signum of this BigInteger: -1 for negative, 0 for zero, or
      * 1 for positive.  Note that the BigInteger zero <i>must</i> have
      * a signum of 0.  This is necessary to ensures that there is exactly one
      * representation for each BigInteger value.
-     *
-     * @serial
      */
     final int signum;
 
@@ -2629,7 +2573,6 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
      /**
      * One plus the bitCount of this BigInteger. Zeros means unitialized.
      *
-     * @serial
      * @see #bitCount
      * @deprecated Deprecated since logical value is offset from stored
      * value and correction factor is applied in accessor method.
@@ -2641,7 +2584,6 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
      * One plus the bitLength of this BigInteger. Zeros means unitialized.
      * (either value is acceptable).
      *
-     * @serial
      * @see #bitLength()
      * @deprecated Deprecated since logical value is offset from stored
      * value and correction factor is applied in accessor method.
@@ -2653,7 +2595,6 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
      * Two plus the lowest set bit of this BigInteger, as returned by
      * getLowestSetBit().
      *
-     * @serial
      * @see #getLowestSetBit
      * @deprecated Deprecated since logical value is offset from stored
      * value and correction factor is applied in accessor method.
@@ -3703,73 +3644,6 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
     }
 
     /**
-     * Package private methods used by BigDecimal code to add a BigInteger
-     * with a long. Assumes val is not equal to INFLATED.
-     */
-    BigInteger add(long val) {
-        if (val == 0)
-            return this;
-        if (signum == 0)
-            return valueOf(val);
-        if (Long.signum(val) == signum)
-            return new BigInteger(add(mag, Math.abs(val)), signum);
-        int cmp = compareMagnitude(val);
-        if (cmp == 0)
-            return ZERO;
-        int[] resultMag = (cmp > 0 ? subtract(mag, Math.abs(val)) : subtract(Math.abs(val), mag));
-        resultMag = trustedStripLeadingZeroInts(resultMag);
-        return new BigInteger(resultMag, cmp == signum ? 1 : -1);
-    }
-
-    /**
-     * Adds the contents of the int array x and long value val. This
-     * method allocates a new int array to hold the answer and returns
-     * a reference to that array.  Assumes x.length &gt; 0 and val is
-     * non-negative
-     */
-    private static int[] add(int[] x, long val) {
-        int[] y;
-        long sum = 0;
-        int xIndex = x.length;
-        int[] result;
-        int highWord = (int)(val >>> 32);
-        if (highWord == 0) {
-            result = new int[xIndex];
-            sum = (x[--xIndex] & LONG_MASK) + val;
-            result[xIndex] = (int)sum;
-        } else {
-            if (xIndex == 1) {
-                result = new int[2];
-                sum = val  + (x[0] & LONG_MASK);
-                result[1] = (int)sum;
-                result[0] = (int)(sum >>> 32);
-                return result;
-            } else {
-                result = new int[xIndex];
-                sum = (x[--xIndex] & LONG_MASK) + (val & LONG_MASK);
-                result[xIndex] = (int)sum;
-                sum = (x[--xIndex] & LONG_MASK) + (highWord & LONG_MASK) + (sum >>> 32);
-                result[xIndex] = (int)sum;
-            }
-        }
-        // Copy remainder of longer number while carry propagation is required
-        boolean carry = (sum >>> 32 != 0);
-        while (xIndex > 0 && carry)
-            carry = ((result[--xIndex] = x[xIndex] + 1) == 0);
-        // Copy remainder of longer number
-        while (xIndex > 0)
-            result[--xIndex] = x[xIndex];
-        // Grow result if necessary
-        if (carry) {
-            int bigger[] = new int[result.length + 1];
-            System.arraycopy(result, 0, bigger, 1, result.length);
-            bigger[0] = 0x01;
-            return bigger;
-        }
-        return result;
-    }
-
-    /**
      * Adds the contents of the int arrays x and y. This method allocates
      * a new int array to hold the answer and returns a reference to that
      * array.
@@ -3989,48 +3863,6 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
             rmag[rstart] = (int)carry;
         }
         return new BigInteger(rmag, sign);
-    }
-
-    /**
-     * Package private methods used by BigDecimal code to multiply a BigInteger
-     * with a long. Assumes v is not equal to INFLATED.
-     */
-    BigInteger multiply(long v) {
-        if (v == 0 || signum == 0)
-          return ZERO;
-        if (v == INFLATED)
-            return multiply(BigInteger.valueOf(v));
-        int rsign = (v > 0 ? signum : -signum);
-        if (v < 0)
-            v = -v;
-        long dh = v >>> 32;      // higher order bits
-        long dl = v & LONG_MASK; // lower order bits
-
-        int xlen = mag.length;
-        int[] value = mag;
-        int[] rmag = (dh == 0L) ? (new int[xlen + 1]) : (new int[xlen + 2]);
-        long carry = 0;
-        int rstart = rmag.length - 1;
-        for (int i = xlen - 1; i >= 0; i--) {
-            long product = (value[i] & LONG_MASK) * dl + carry;
-            rmag[rstart--] = (int)product;
-            carry = product >>> 32;
-        }
-        rmag[rstart] = (int)carry;
-        if (dh != 0L) {
-            carry = 0;
-            rstart = rmag.length - 2;
-            for (int i = xlen - 1; i >= 0; i--) {
-                long product = (value[i] & LONG_MASK) * dh +
-                    (rmag[rstart] & LONG_MASK) + carry;
-                rmag[rstart--] = (int)product;
-                carry = product >>> 32;
-            }
-            rmag[0] = (int)carry;
-        }
-        if (carry == 0L)
-            rmag = java.util.Arrays.copyOfRange(rmag, 1, rmag.length);
-        return new BigInteger(rmag, rsign);
     }
 
     /**
@@ -6250,182 +6082,6 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
     }
 
     /**
-     * Converts this BigInteger to a {@code float}.  This
-     * conversion is similar to the
-     * <i>narrowing primitive conversion</i> from {@code double} to
-     * {@code float} as defined in section 5.1.3 of
-     * <cite>The Java&trade; Language Specification</cite>:
-     * if this BigInteger has too great a magnitude
-     * to represent as a {@code float}, it will be converted to
-     * {@link Float#NEGATIVE_INFINITY} or {@link
-     * Float#POSITIVE_INFINITY} as appropriate.  Note that even when
-     * the return value is finite, this conversion can lose
-     * information about the precision of the BigInteger value.
-     *
-     * @return this BigInteger converted to a {@code float}.
-     */
-    public float floatValue() {
-        if (signum == 0) {
-            return 0.0f;
-        }
-
-        int exponent = ((mag.length - 1) << 5) + bitLengthForInt(mag[0]) - 1;
-
-        // exponent == floor(log2(abs(this)))
-        if (exponent < Long.SIZE - 1) {
-            return longValue();
-        } else if (exponent > Float.MAX_EXPONENT) {
-            return signum > 0 ? Float.POSITIVE_INFINITY : Float.NEGATIVE_INFINITY;
-        }
-
-        /*
-         * We need the top SIGNIFICAND_WIDTH bits, including the "implicit"
-         * one bit. To make rounding easier, we pick out the top
-         * SIGNIFICAND_WIDTH + 1 bits, so we have one to help us round up or
-         * down. twiceSignifFloor will contain the top SIGNIFICAND_WIDTH + 1
-         * bits, and signifFloor the top SIGNIFICAND_WIDTH.
-         *
-         * It helps to consider the real number signif = abs(this) *
-         * 2^(SIGNIFICAND_WIDTH - 1 - exponent).
-         */
-        int shift = exponent - FloatConsts.SIGNIFICAND_WIDTH;
-
-        int twiceSignifFloor;
-        // twiceSignifFloor will be == abs().shiftRight(shift).intValue()
-        // We do the shift into an int directly to improve performance.
-
-        int nBits = shift & 0x1f;
-        int nBits2 = 32 - nBits;
-
-        if (nBits == 0) {
-            twiceSignifFloor = mag[0];
-        } else {
-            twiceSignifFloor = mag[0] >>> nBits;
-            if (twiceSignifFloor == 0) {
-                twiceSignifFloor = (mag[0] << nBits2) | (mag[1] >>> nBits);
-            }
-        }
-
-        int signifFloor = twiceSignifFloor >> 1;
-        signifFloor &= FloatConsts.SIGNIF_BIT_MASK; // remove the implied bit
-
-        /*
-         * We round up if either the fractional part of signif is strictly
-         * greater than 0.5 (which is true if the 0.5 bit is set and any lower
-         * bit is set), or if the fractional part of signif is >= 0.5 and
-         * signifFloor is odd (which is true if both the 0.5 bit and the 1 bit
-         * are set). This is equivalent to the desired HALF_EVEN rounding.
-         */
-        boolean increment = (twiceSignifFloor & 1) != 0
-                && ((signifFloor & 1) != 0 || abs().getLowestSetBit() < shift);
-        int signifRounded = increment ? signifFloor + 1 : signifFloor;
-        int bits = ((exponent + FloatConsts.EXP_BIAS))
-                << (FloatConsts.SIGNIFICAND_WIDTH - 1);
-        bits += signifRounded;
-        /*
-         * If signifRounded == 2^24, we'd need to set all of the significand
-         * bits to zero and add 1 to the exponent. This is exactly the behavior
-         * we get from just adding signifRounded to bits directly. If the
-         * exponent is Float.MAX_EXPONENT, we round up (correctly) to
-         * Float.POSITIVE_INFINITY.
-         */
-        bits |= signum & FloatConsts.SIGN_BIT_MASK;
-        return Float.intBitsToFloat(bits);
-    }
-
-    /**
-     * Converts this BigInteger to a {@code double}.  This
-     * conversion is similar to the
-     * <i>narrowing primitive conversion</i> from {@code double} to
-     * {@code float} as defined in section 5.1.3 of
-     * <cite>The Java&trade; Language Specification</cite>:
-     * if this BigInteger has too great a magnitude
-     * to represent as a {@code double}, it will be converted to
-     * {@link Double#NEGATIVE_INFINITY} or {@link
-     * Double#POSITIVE_INFINITY} as appropriate.  Note that even when
-     * the return value is finite, this conversion can lose
-     * information about the precision of the BigInteger value.
-     *
-     * @return this BigInteger converted to a {@code double}.
-     */
-    public double doubleValue() {
-        if (signum == 0) {
-            return 0.0;
-        }
-
-        int exponent = ((mag.length - 1) << 5) + bitLengthForInt(mag[0]) - 1;
-
-        // exponent == floor(log2(abs(this))Double)
-        if (exponent < Long.SIZE - 1) {
-            return longValue();
-        } else if (exponent > Double.MAX_EXPONENT) {
-            return signum > 0 ? Double.POSITIVE_INFINITY : Double.NEGATIVE_INFINITY;
-        }
-
-        /*
-         * We need the top SIGNIFICAND_WIDTH bits, including the "implicit"
-         * one bit. To make rounding easier, we pick out the top
-         * SIGNIFICAND_WIDTH + 1 bits, so we have one to help us round up or
-         * down. twiceSignifFloor will contain the top SIGNIFICAND_WIDTH + 1
-         * bits, and signifFloor the top SIGNIFICAND_WIDTH.
-         *
-         * It helps to consider the real number signif = abs(this) *
-         * 2^(SIGNIFICAND_WIDTH - 1 - exponent).
-         */
-        int shift = exponent - DoubleConsts.SIGNIFICAND_WIDTH;
-
-        long twiceSignifFloor;
-        // twiceSignifFloor will be == abs().shiftRight(shift).longValue()
-        // We do the shift into a long directly to improve performance.
-
-        int nBits = shift & 0x1f;
-        int nBits2 = 32 - nBits;
-
-        int highBits;
-        int lowBits;
-        if (nBits == 0) {
-            highBits = mag[0];
-            lowBits = mag[1];
-        } else {
-            highBits = mag[0] >>> nBits;
-            lowBits = (mag[0] << nBits2) | (mag[1] >>> nBits);
-            if (highBits == 0) {
-                highBits = lowBits;
-                lowBits = (mag[1] << nBits2) | (mag[2] >>> nBits);
-            }
-        }
-
-        twiceSignifFloor = ((highBits & LONG_MASK) << 32)
-                | (lowBits & LONG_MASK);
-
-        long signifFloor = twiceSignifFloor >> 1;
-        signifFloor &= DoubleConsts.SIGNIF_BIT_MASK; // remove the implied bit
-
-        /*
-         * We round up if either the fractional part of signif is strictly
-         * greater than 0.5 (which is true if the 0.5 bit is set and any lower
-         * bit is set), or if the fractional part of signif is >= 0.5 and
-         * signifFloor is odd (which is true if both the 0.5 bit and the 1 bit
-         * are set). This is equivalent to the desired HALF_EVEN rounding.
-         */
-        boolean increment = (twiceSignifFloor & 1) != 0
-                && ((signifFloor & 1) != 0 || abs().getLowestSetBit() < shift);
-        long signifRounded = increment ? signifFloor + 1 : signifFloor;
-        long bits = (long) ((exponent + DoubleConsts.EXP_BIAS))
-                << (DoubleConsts.SIGNIFICAND_WIDTH - 1);
-        bits += signifRounded;
-        /*
-         * If signifRounded == 2^53, we'd need to set all of the significand
-         * bits to zero and add 1 to the exponent. This is exactly the behavior
-         * we get from just adding signifRounded to bits directly. If the
-         * exponent is Double.MAX_EXPONENT, we round up (correctly) to
-         * Double.POSITIVE_INFINITY.
-         */
-        bits |= signum & DoubleConsts.SIGN_BIT_MASK;
-        return Double.longBitsToDouble(bits);
-    }
-
-    /**
      * Returns a copy of the input array stripped of any leading zero bytes.
      */
     private static int[] stripLeadingZeroInts(int val[]) {
@@ -6622,12 +6278,12 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
 
     /* Returns sign bit */
     private int signBit() {
-        return signum < 0 ? 1 : 0;
+        return (signum < 0) ? 1 : 0;
     }
 
     /* Returns an int of sign bits */
     private int signInt() {
-        return signum < 0 ? -1 : 0;
+        return (signum < 0) ? -1 : 0;
     }
 
     /**
@@ -6644,8 +6300,7 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
 
         int magInt = mag[mag.length-n-1];
 
-        return (signum >= 0 ? magInt :
-                (n <= firstNonzeroIntNum() ? -magInt : ~magInt));
+        return (signum >= 0) ? magInt : (n <= firstNonzeroIntNum() ? -magInt : ~magInt);
     }
 
     /**
@@ -6667,165 +6322,6 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
             firstNonzeroIntNum = fn + 2; // offset by two to initialize
         }
         return fn;
-    }
-
-    /** use serialVersionUID from JDK 1.1. for interoperability */
-    private static final long serialVersionUID = -8287574255936472291L;
-
-    /**
-     * Serializable fields for BigInteger.
-     *
-     * @serialField signum  int
-     *              signum of this BigInteger.
-     * @serialField magnitude int[]
-     *              magnitude array of this BigInteger.
-     * @serialField bitCount  int
-     *              number of bits in this BigInteger
-     * @serialField bitLength int
-     *              the number of bits in the minimal two's-complement
-     *              representation of this BigInteger
-     * @serialField lowestSetBit int
-     *              lowest set bit in the twos complement representation
-     */
-    private static final ObjectStreamField[] serialPersistentFields = {
-        new ObjectStreamField("signum", Integer.TYPE),
-        new ObjectStreamField("magnitude", byte[].class),
-        new ObjectStreamField("bitCount", Integer.TYPE),
-        new ObjectStreamField("bitLength", Integer.TYPE),
-        new ObjectStreamField("firstNonzeroByteNum", Integer.TYPE),
-        new ObjectStreamField("lowestSetBit", Integer.TYPE)
-        };
-
-    /**
-     * Reconstitute the {@code BigInteger} instance from a stream (that is,
-     * deserialize it). The magnitude is read in as an array of bytes
-     * for historical reasons, but it is converted to an array of ints
-     * and the byte array is discarded.
-     * Note:
-     * The current convention is to initialize the cache fields, bitCount,
-     * bitLength and lowestSetBit, to 0 rather than some other marker value.
-     * Therefore, no explicit action to set these fields needs to be taken in
-     * readObject because those fields already have a 0 value be default since
-     * defaultReadObject is not being used.
-     */
-    private void readObject(java.io.ObjectInputStream s)
-        throws java.io.IOException, ClassNotFoundException {
-        /*
-         * In order to maintain compatibility with previous serialized forms,
-         * the magnitude of a BigInteger is serialized as an array of bytes.
-         * The magnitude field is used as a temporary store for the byte array
-         * that is deserialized. The cached computation fields should be
-         * transient but are serialized for compatibility reasons.
-         */
-
-        // prepare to read the alternate persistent fields
-        ObjectInputStream.GetField fields = s.readFields();
-
-        // Read the alternate persistent fields that we care about
-        int sign = fields.get("signum", -2);
-        byte[] magnitude = (byte[])fields.get("magnitude", null);
-
-        // Validate signum
-        if (sign < -1 || sign > 1) {
-            String message = "BigInteger: Invalid signum value";
-            if (fields.defaulted("signum"))
-                message = "BigInteger: Signum not present in stream";
-            throw new java.io.StreamCorruptedException(message);
-        }
-        int[] mag = stripLeadingZeroBytes(magnitude);
-        if ((mag.length == 0) != (sign == 0)) {
-            String message = "BigInteger: signum-magnitude mismatch";
-            if (fields.defaulted("magnitude"))
-                message = "BigInteger: Magnitude not present in stream";
-            throw new java.io.StreamCorruptedException(message);
-        }
-
-        // Commit final fields via Unsafe
-        UnsafeHolder.putSign(this, sign);
-
-        // Calculate mag field from magnitude and discard magnitude
-        UnsafeHolder.putMag(this, mag);
-        if (mag.length >= MAX_MAG_LENGTH) {
-            try {
-                checkRange();
-            } catch (ArithmeticException e) {
-                throw new java.io.StreamCorruptedException("BigInteger: Out of the supported range");
-            }
-        }
-    }
-
-    // Support for resetting final fields while deserializing
-    private static class UnsafeHolder {
-        private static final sun.misc.Unsafe unsafe;
-        private static final long signumOffset;
-        private static final long magOffset;
-        static {
-            try {
-                unsafe = sun.misc.Unsafe.getUnsafe();
-                signumOffset = unsafe.objectFieldOffset
-                    (BigInteger.class.getDeclaredField("signum"));
-                magOffset = unsafe.objectFieldOffset
-                    (BigInteger.class.getDeclaredField("mag"));
-            } catch (Exception ex) {
-                throw new ExceptionInInitializerError(ex);
-            }
-        }
-
-        static void putSign(BigInteger bi, int sign) {
-            unsafe.putIntVolatile(bi, signumOffset, sign);
-        }
-
-        static void putMag(BigInteger bi, int[] magnitude) {
-            unsafe.putObjectVolatile(bi, magOffset, magnitude);
-        }
-    }
-
-    /**
-     * Save the {@code BigInteger} instance to a stream.
-     * The magnitude of a BigInteger is serialized as a byte array for
-     * historical reasons.
-     *
-     * @serialData two necessary fields are written as well as obsolete
-     *             fields for compatibility with older versions.
-     */
-    private void writeObject(ObjectOutputStream s) throws IOException {
-        // set the values of the Serializable fields
-        ObjectOutputStream.PutField fields = s.putFields();
-        fields.put("signum", signum);
-        fields.put("magnitude", magSerializedForm());
-        // The values written for cached fields are compatible with older
-        // versions, but are ignored in readObject so don't otherwise matter.
-        fields.put("bitCount", -1);
-        fields.put("bitLength", -1);
-        fields.put("lowestSetBit", -2);
-        fields.put("firstNonzeroByteNum", -2);
-
-        // save them
-        s.writeFields();
-}
-
-    /**
-     * Returns the mag array as an array of bytes.
-     */
-    private byte[] magSerializedForm() {
-        int len = mag.length;
-
-        int bitLen = (len == 0 ? 0 : ((len - 1) << 5) + bitLengthForInt(mag[0]));
-        int byteLen = (bitLen + 7) >>> 3;
-        byte[] result = new byte[byteLen];
-
-        for (int i = byteLen - 1, bytesCopied = 4, intIndex = len - 1, nextInt = 0;
-             i >= 0; i--) {
-            if (bytesCopied == 4) {
-                nextInt = mag[intIndex--];
-                bytesCopied = 1;
-            } else {
-                nextInt >>>= 8;
-                bytesCopied++;
-            }
-            result[i] = (byte)nextInt;
-        }
-        return result;
     }
 
     /**
@@ -6867,27 +6363,6 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
     }
 
     /**
-     * Converts this {@code BigInteger} to a {@code short}, checking
-     * for lost information.  If the value of this {@code BigInteger}
-     * is out of the range of the {@code short} type, then an
-     * {@code ArithmeticException} is thrown.
-     *
-     * @return this {@code BigInteger} converted to a {@code short}.
-     * @throws ArithmeticException if the value of {@code this} will
-     * not exactly fit in a {@code short}.
-     * @see BigInteger#shortValue
-     * @since  1.8
-     */
-    public short shortValueExact() {
-        if (mag.length <= 1 && bitLength() <= 31) {
-            int value = intValue();
-            if (value >= Short.MIN_VALUE && value <= Short.MAX_VALUE)
-                return shortValue();
-        }
-        throw new ArithmeticException("BigInteger out of short range");
-    }
-
-    /**
      * Converts this {@code BigInteger} to a {@code byte}, checking
      * for lost information.  If the value of this {@code BigInteger}
      * is out of the range of the {@code byte} type, then an
@@ -6906,5 +6381,13 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
                 return byteValue();
         }
         throw new ArithmeticException("BigInteger out of byte range");
+    }
+
+    public float floatValue() {
+        throw new UnsupportedOperationException("sorry, no floating loathing for now");
+    }
+
+    public double doubleValue() {
+        throw new UnsupportedOperationException("sorry, no double bubble for now");
     }
 }
