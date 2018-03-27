@@ -436,15 +436,15 @@
 
 (java-ns cloiure.lang.Util
     #_stateless
-    (§ soon defrecord Util [])
+    (defrecord Util [])
 )
 
 (java-ns cloiure.lang.DynamicClassLoader
-    (§ soon defrecord DynamicClassLoader #_"ClassLoader" [])
+    (defrecord DynamicClassLoader #_"ClassLoader" [])
 )
 
 (java-ns cloiure.lang.BigInt
-    (§ soon defrecord BigInt #_"Number" [] #_"IHashEq")
+    (defrecord BigInt #_"Number" [] #_"IHashEq")
 )
 
 (java-ns cloiure.lang.Ratio
@@ -485,30 +485,30 @@
     (defrecord RatioOps #_"OpsP" [])
     (defrecord BigIntOps #_"OpsP" [])
     #_stateless
-    (§ soon defrecord Numbers [])
+    (defrecord Numbers [])
 )
 
 (declare AFn'''throwArity)
 
 (java-ns cloiure.lang.AFn
     #_abstract
-    (§ soon defrecord AFn [] #_"IFn" #_"Runnable"
+    (defrecord AFn [] #_"IFn" #_"Runnable"
         #_abstract
-        (#_"Object" AFn'''throwArity [#_"AFn" this, #_"int" n])
+      #_(#_"Object" AFn'''throwArity [#_"AFn" this, #_"int" n])
     )
 )
 
 (java-ns cloiure.lang.Symbol
-    (§ soon defrecord Symbol #_"AFn" [] #_"IObj" #_"IMeta" #_"Comparable" #_"Named" #_"IHashEq")
+    (defrecord Symbol #_"AFn" [] #_"IObj" #_"IMeta" #_"Comparable" #_"Named" #_"IHashEq")
 )
 
 (java-ns cloiure.lang.Keyword
-    (§ soon defrecord Keyword [] #_"IFn" #_"Runnable" #_"Comparable" #_"Named" #_"IHashEq")
+    (defrecord Keyword [] #_"IFn" #_"Runnable" #_"Comparable" #_"Named" #_"IHashEq")
 )
 
 (java-ns cloiure.lang.AFunction
     #_abstract
-    (§ soon defrecord AFunction #_"AFn" [] #_"IObj" #_"IMeta" #_"Comparator" #_"Fn")
+    (defrecord AFunction #_"AFn" [] #_"IObj" #_"IMeta" #_"Comparator" #_"Fn")
 )
 
 (declare RestFn'''getRequiredArity)
@@ -516,29 +516,29 @@
 
 (java-ns cloiure.lang.RestFn
     #_abstract
-    (§ soon defrecord RestFn #_"AFunction" []
+    (defrecord RestFn #_"AFunction" []
         #_abstract
-        (#_"int" RestFn'''getRequiredArity [#_"RestFn" this])
+      #_(#_"int" RestFn'''getRequiredArity [#_"RestFn" this])
         #_abstract
-        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" args])
+      #_(#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" args])
         #_abstract
-        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" args])
+      #_(#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" args])
         #_abstract
-        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" args])
+      #_(#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" args])
         #_abstract
-        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" args])
+      #_(#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" args])
         #_abstract
-        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" args])
+      #_(#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" args])
         #_abstract
-        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" args])
+      #_(#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" args])
         #_abstract
-        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" args])
+      #_(#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" args])
         #_abstract
-        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" args])
+      #_(#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" args])
         #_abstract
-        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" args])
+      #_(#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" args])
         #_abstract
-        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" args])
+      #_(#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" args])
     )
 )
 
@@ -548,24 +548,24 @@
 )
 
 (java-ns cloiure.lang.LazySeq
-    (§ soon defrecord LazySeq [] #_"IObj" #_"IMeta" #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"IPending" #_"IHashEq")
+    (defrecord LazySeq [] #_"IObj" #_"IMeta" #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"IPending" #_"IHashEq")
 )
 
 (java-ns cloiure.lang.APersistentMap
     #_abstract
-    (§ soon defrecord APersistentMap #_"AFn" [] #_"IPersistentMap" #_"Associative" #_"IPersistentCollection" #_"Seqable" #_"ILookup" #_"Counted" #_"IHashEq")
+    (defrecord APersistentMap #_"AFn" [] #_"IPersistentMap" #_"Associative" #_"IPersistentCollection" #_"Seqable" #_"ILookup" #_"Counted" #_"IHashEq")
 )
 
 (java-ns cloiure.lang.APersistentSet
     #_abstract
-    (§ soon defrecord APersistentSet #_"AFn" [] #_"IPersistentSet" #_"IPersistentCollection" #_"Seqable" #_"Counted" #_"IHashEq")
+    (defrecord APersistentSet #_"AFn" [] #_"IPersistentSet" #_"IPersistentCollection" #_"Seqable" #_"Counted" #_"IHashEq")
 )
 
 (java-ns cloiure.lang.APersistentVector
     (defrecord VSeq #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
     (defrecord RSeq #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted")
     #_abstract
-    (§ soon defrecord APersistentVector #_"AFn" [] #_"IPersistentVector" #_"Associative" #_"IPersistentCollection" #_"Seqable" #_"ILookup" #_"Sequential" #_"IPersistentStack" #_"Reversible" #_"Indexed" #_"Counted" #_"Comparable" #_"IHashEq")
+    (defrecord APersistentVector #_"AFn" [] #_"IPersistentVector" #_"Associative" #_"IPersistentCollection" #_"Seqable" #_"ILookup" #_"Sequential" #_"IPersistentStack" #_"Reversible" #_"Indexed" #_"Counted" #_"Comparable" #_"IHashEq")
     (defrecord SubVector #_"APersistentVector" [] #_"IObj" #_"IMeta")
 )
 
@@ -584,7 +584,7 @@
     (defrecord ArraySeq_byte #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
     (defrecord ArraySeq_char #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
     (defrecord ArraySeq_boolean #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
-    (§ soon defrecord ArraySeq #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
+    (defrecord ArraySeq #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
 )
 
 (java-ns cloiure.lang.Atom
@@ -646,7 +646,7 @@
 )
 
 (java-ns cloiure.lang.KeywordLookupSite
-    (§ soon defrecord KeywordLookupSite [] #_"ILookupSite" #_"ILookupThunk")
+    (defrecord KeywordLookupSite [] #_"ILookupSite" #_"ILookupThunk")
 )
 
 (java-ns cloiure.lang.MapEntry
@@ -663,13 +663,13 @@
 )
 
 (java-ns cloiure.lang.Namespace
-    (§ soon defrecord Namespace [] #_"IReference" #_"IMeta")
+    (defrecord Namespace [] #_"IReference" #_"IMeta")
 )
 
 (java-ns cloiure.lang.PersistentArrayMap
     (defrecord MSeq #_"ASeq" [] #_"Counted")
     (defrecord TransientArrayMap #_"ATransientMap" [])
-    (§ soon defrecord PersistentArrayMap #_"APersistentMap" [] #_"IObj" #_"IMeta" #_"IEditableCollection" #_"IKVReduce")
+    (defrecord PersistentArrayMap #_"APersistentMap" [] #_"IObj" #_"IMeta" #_"IEditableCollection" #_"IKVReduce")
 )
 
 (java-ns cloiure.lang.PersistentHashMap
@@ -679,18 +679,18 @@
     (defrecord BitmapIndexedNode [] #_"INode")
     (defrecord HashCollisionNode [] #_"INode")
     (defrecord NodeSeq #_"ASeq" [])
-    (§ soon defrecord PersistentHashMap #_"APersistentMap" [] #_"IObj" #_"IMeta" #_"IEditableCollection" #_"IKVReduce")
+    (defrecord PersistentHashMap #_"APersistentMap" [] #_"IObj" #_"IMeta" #_"IEditableCollection" #_"IKVReduce")
 )
 
 (java-ns cloiure.lang.PersistentHashSet
     (defrecord TransientHashSet #_"ATransientSet" [])
-    (§ soon defrecord PersistentHashSet #_"APersistentSet" [] #_"IObj" #_"IMeta" #_"IEditableCollection")
+    (defrecord PersistentHashSet #_"APersistentSet" [] #_"IObj" #_"IMeta" #_"IEditableCollection")
 )
 
 (java-ns cloiure.lang.PersistentList
     (defrecord Primordial #_"RestFn" [])
     (defrecord EmptyList [] #_"IObj" #_"IMeta" #_"IPersistentList" #_"Sequential" #_"IPersistentStack" #_"IPersistentCollection" #_"Seqable" #_"ISeq" #_"Counted" #_"IHashEq")
-    (§ soon defrecord PersistentList #_"ASeq" [] #_"IPersistentList" #_"Sequential" #_"IPersistentStack" #_"IPersistentCollection" #_"Seqable" #_"IReduce" #_"Counted")
+    (defrecord PersistentList #_"ASeq" [] #_"IPersistentList" #_"Sequential" #_"IPersistentStack" #_"IPersistentCollection" #_"Seqable" #_"IReduce" #_"Counted")
 )
 
 (java-ns cloiure.lang.PersistentQueue
@@ -755,7 +755,7 @@
 (java-ns cloiure.lang.PersistentVector
     (defrecord VNode [])
     (defrecord TransientVector #_"AFn" [] #_"ITransientVector" #_"ITransientAssociative" #_"ITransientCollection" #_"ILookup" #_"Indexed" #_"Counted")
-    (§ soon defrecord PersistentVector #_"APersistentVector" [] #_"IObj" #_"IMeta" #_"IEditableCollection" #_"IReduce" #_"IKVReduce")
+    (defrecord PersistentVector #_"APersistentVector" [] #_"IObj" #_"IMeta" #_"IEditableCollection" #_"IReduce" #_"IKVReduce")
 )
 
 (java-ns cloiure.lang.Range
@@ -776,14 +776,14 @@
 
 (java-ns cloiure.lang.Tuple
     #_stateless
-    (§ soon defrecord Tuple [])
+    (defrecord Tuple [])
 )
 
 (java-ns cloiure.lang.Var
     (defrecord TBox [])
     (defrecord Unbound #_"AFn" [])
     (defrecord Frame [])
-    (§ soon defrecord Var [] #_"IReference" #_"IMeta" #_"IFn" #_"Runnable" #_"IDeref")
+    (defrecord Var [] #_"IReference" #_"IMeta" #_"IFn" #_"Runnable" #_"IDeref")
 )
 
 (java-ns cloiure.lang.Volatile
@@ -792,11 +792,7 @@
 
 (java-ns cloiure.lang.RT
     #_stateless
-    (§ soon defrecord RT [])
-)
-
-(import
-    [clojure.lang AFn AFunction APersistentMap APersistentSet APersistentVector ArraySeq BigInt DynamicClassLoader PersistentList$EmptyList Keyword KeywordLookupSite LazySeq Namespace Numbers PersistentArrayMap PersistentHashMap PersistentHashSet PersistentList PersistentVector RestFn RT Symbol Tuple Util Var]
+    (defrecord RT [])
 )
 
 (defn seq?     [x] (§ soon satisfies? ISeq x)                  (instance? clojure.lang.ISeq x))
@@ -1963,6 +1959,8 @@
         )
     )
 
+    (declare RT'classForName)
+
     (defn #_"Object" Compiler'resolveIn [#_"Namespace" n, #_"Symbol" sym, #_"boolean" allowPrivate]
         ;; note - ns-qualified vars must already exist
         (cond
@@ -1974,7 +1972,7 @@
                         )
                     )
                 )
-            (or (pos? (.indexOf (:name sym), (int \.))) (= (nth (:name sym) 0) \[)) (RT/classForName (:name sym))
+            (or (pos? (.indexOf (:name sym), (int \.))) (= (nth (:name sym) 0) \[)) (RT'classForName (:name sym))
             (= sym 'ns)                #'ns
             (= sym 'in-ns)             #'in-ns
             (= sym *compile-stub-sym*) *compile-stub-class*
@@ -1997,7 +1995,7 @@
                     )
                 )
             (or (and (pos? (.indexOf (:name sym), (int \.))) (not (.endsWith (:name sym), "."))) (= (nth (:name sym) 0) \[))
-                (RT/classForName (:name sym))
+                (RT'classForName (:name sym))
             (= sym 'ns)
                 #'ns
             (= sym 'in-ns)
@@ -2170,10 +2168,11 @@
     )
 
     (declare Namespace''importClass)
+    (declare RT'classForNameNonLoading)
 
     (extend-type ImportExpr Expr
         (#_"Object" Expr'''eval [#_"ImportExpr" this]
-            (Namespace''importClass *ns*, (RT/classForNameNonLoading (:c this)))
+            (Namespace''importClass *ns*, (RT'classForNameNonLoading (:c this)))
             nil
         )
 
@@ -2222,7 +2221,7 @@
 
         (#_"void" Expr'''emit [#_"EmptyExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
             (condp satisfies? (:coll this)
-                IPersistentList   (.getStatic gen, (Type/getType PersistentList),     "EMPTY", (Type/getType PersistentList$EmptyList))
+                IPersistentList   (.getStatic gen, (Type/getType PersistentList),     "EMPTY", (Type/getType EmptyList))
                 IPersistentVector (.getStatic gen, (Type/getType PersistentVector),   "EMPTY", (Type/getType PersistentVector))
                 IPersistentMap    (.getStatic gen, (Type/getType PersistentArrayMap), "EMPTY", (Type/getType PersistentArrayMap))
                 IPersistentSet    (.getStatic gen, (Type/getType PersistentHashSet),  "EMPTY", (Type/getType PersistentHashSet))
@@ -2505,7 +2504,7 @@
                         (= form *compile-stub-sym*)
                             *compile-stub-class*
                         (or (pos? (.indexOf (:name form), (int \.))) (= (nth (:name form) 0) \[))
-                            (RT/classForNameNonLoading (:name form))
+                            (RT'classForNameNonLoading (:name form))
                         :else
                             (let [#_"Object" o (Namespace''getMapping *ns*, form)]
                                 (cond
@@ -2515,7 +2514,7 @@
                                         nil
                                     :else
                                         (try
-                                            (RT/classForNameNonLoading (:name form))
+                                            (RT'classForNameNonLoading (:name form))
                                             (catch Exception _
                                                 nil
                                             )
@@ -2525,7 +2524,7 @@
                     )
                 )
             (and stringOk (string? form))
-                (RT/classForNameNonLoading form)
+                (RT'classForNameNonLoading form)
         )
     )
 
@@ -3907,13 +3906,15 @@
         )
     )
 
+    (declare RT'map)
+
     (extend-type MapExpr Expr
         (#_"Object" Expr'''eval [#_"MapExpr" this]
             (let [#_"Object[]" a (make-array Object (count (:keyvals this)))]
                 (dotimes [#_"int" i (count (:keyvals this))]
                     (aset a i (Expr'''eval (nth (:keyvals this) i)))
                 )
-                (RT/map a)
+                (RT'map a)
             )
         )
 
@@ -3994,13 +3995,15 @@
         )
     )
 
+    (declare RT'set)
+
     (extend-type SetExpr Expr
         (#_"Object" Expr'''eval [#_"SetExpr" this]
             (let [#_"Object[]" a (make-array Object (count (:keys this)))]
                 (dotimes [#_"int" i (count (:keys this))]
                     (aset a i (Expr'''eval (nth (:keys this) i)))
                 )
-                (RT/set a)
+                (RT'set a)
             )
         )
 
@@ -4942,6 +4945,9 @@
         nil
     )
 
+    (declare RT'seqToArray)
+    (declare RT'printString)
+
     #_method
     (defn #_"void" IopObject''emitValue [#_"IopObject" this, #_"Object" value, #_"GeneratorAdapter" gen]
         (let [#_"boolean" partial?
@@ -5073,7 +5079,7 @@
                                 (.getStatic gen, (Type/getType PersistentHashSet), "EMPTY", (Type/getType PersistentHashSet))
                             )
                             (do
-                                (IopObject''emitObjectArray this, (RT/seqToArray vs), gen)
+                                (IopObject''emitObjectArray this, (RT'seqToArray vs), gen)
                                 (.invokeStatic gen, (Type/getType PersistentHashSet), (Method/getMethod "clojure.lang.PersistentHashSet create(Object[])"))
                             )
                         )
@@ -5081,7 +5087,7 @@
                     )
                     (or (seq? value) (list? value))
                     (let [#_"ISeq" vs (seq value)]
-                        (IopObject''emitObjectArray this, (RT/seqToArray vs), gen)
+                        (IopObject''emitObjectArray this, (RT'seqToArray vs), gen)
                         (.invokeStatic gen, (Type/getType PersistentList), (Method/getMethod "cloiure.core.IPersistentList create(Object[])"))
                         true
                     )
@@ -5094,7 +5100,7 @@
                     :else
                     (let [#_"String" cs
                             (try
-                                (RT/printString value)
+                                (RT'printString value)
                                 (catch Exception _
                                     (throw! (str "can't embed object in code: " value))
                                 )
@@ -5419,6 +5425,8 @@
         )
     )
 
+    (declare RT'nextID)
+
     (defn #_"Expr" FnExpr'parse [#_"Context" context, #_"ISeq" form, #_"String" name]
         (let [#_"IPersistentMap" fmeta (meta form)
               #_"IopMethod" owner *method*
@@ -5433,11 +5441,11 @@
               [#_"Symbol" nm name]
                 (if (symbol? (second form))
                     (let [nm (second form)]
-                        [nm (str (:name nm) "__" (RT/nextID))]
+                        [nm (str (:name nm) "__" (RT'nextID))]
                     )
                     (cond
-                        (nil? name)   [nil (str "fn__" (RT/nextID))]
-                        (some? owner) [nil (str name "__"(RT/nextID))]
+                        (nil? name)   [nil (str "fn__" (RT'nextID))]
+                        (some? owner) [nil (str name "__"(RT'nextID))]
                         :else         [nil name]
                     )
                 )
@@ -5701,7 +5709,7 @@
                     (let [#_"Label" end (.mark gen)]
                         (loop-when-recur [#_"ISeq" bis (seq (:bindingInits this))] (some? bis) [(next bis)]
                             (let [#_"BindingInit" bi (first bis)
-                                  #_"String" lname (:name (:binding bi)) lname (if (.endsWith lname, "__auto__") (str lname (RT/nextID)) lname)
+                                  #_"String" lname (:name (:binding bi)) lname (if (.endsWith lname, "__auto__") (str lname (RT'nextID)) lname)
                                   #_"Class" primc (Compiler'maybePrimitiveType (:init bi))]
                                 (.visitLocalVariable gen, lname, (if (some? primc) (Type/getDescriptor primc) "Ljava/lang/Object;"), nil, loopLabel, end, (:idx (:binding bi)))
                             )
@@ -5803,7 +5811,7 @@
             (let [#_"Label" end (.mark gen)]
                 (loop-when-recur [#_"ISeq" bis (seq (:bindingInits this))] (some? bis) [(next bis)]
                     (let [#_"BindingInit" bi (first bis)
-                          #_"String" lname (:name (:binding bi)) lname (if (.endsWith lname, "__auto__") (str lname (RT/nextID)) lname)
+                          #_"String" lname (:name (:binding bi)) lname (if (.endsWith lname, "__auto__") (str lname (RT'nextID)) lname)
                           #_"Class" primc (Compiler'maybePrimitiveType (:init bi))]
                         (.visitLocalVariable gen, lname, (if (some? primc) (Type/getDescriptor primc) "Ljava/lang/Object;"), nil, (get bindingLabels bi), end, (:idx (:binding bi)))
                     )
@@ -6526,6 +6534,8 @@
         )
     )
 
+    (declare PersistentArrayMap'new)
+
     (defn #_"IopObject" NewInstanceExpr'build [#_"IPersistentVector" interfaceSyms, #_"IPersistentVector" fieldSyms, #_"Symbol" thisSym, #_"String" tagName, #_"Symbol" className, #_"Symbol" typeTag, #_"ISeq" methodForms, #_"ISeq" form, #_"IPersistentMap" opts]
         (let [#_"String" name (.toString className) #_"String" name' (.replace name, \., \/)
               #_"NewInstanceExpr" nie
@@ -6546,7 +6556,7 @@
                                 )
                             )
                           ;; use array map to preserve ctor order
-                          _ (update! *closes* assoc (:uid nie) (PersistentArrayMap. a))
+                          _ (update! *closes* assoc (:uid nie) (PersistentArrayMap'new a))
                           nie (assoc nie :fields fmap)]
                         (loop-when-recur [nie nie #_"int" i (dec (count fieldSyms))]
                                          (and (<= 0 i) (any = (:name (nth fieldSyms i)) "__meta" "__extmap" "__hash" "__hasheq"))
@@ -6629,7 +6639,7 @@
                       #_"String" classname
                         (let [#_"IopMethod" owner *method*
                               #_"String" basename (if (some? owner) (IopObject'trimGenID (:name (:objx owner))) (Compiler'munge (:name (:name *ns*))))]
-                            (str basename "$" "reify__" (RT/nextID))
+                            (str basename "$" "reify__" (RT'nextID))
                         )
                       #_"IopObject" nie (NewInstanceExpr'build ifaces, nil, nil, classname, (symbol classname), nil, s, form, nil)]
                     (when (and (satisfies? IObj form) (some? (meta form))) => nie
@@ -6807,6 +6817,8 @@
         nil
     )
 
+    (declare Numbers'int_array)
+
     #_method
     (defn- #_"void" CaseExpr''doEmit [#_"CaseExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen, #_"boolean" emitUnboxed]
         (let [#_"Label" defaultLabel (.newLabel gen) #_"Label" endLabel (.newLabel gen)
@@ -6820,7 +6832,7 @@
                 )
                 (if (= (:switchType this) :sparse)
                     (let [#_"Label[]" la (into-array Label (vals labels))]
-                        (.visitLookupSwitchInsn gen, defaultLabel, (Numbers/int_array (keys (:tests this))), la)
+                        (.visitLookupSwitchInsn gen, defaultLabel, (Numbers'int_array (keys (:tests this))), la)
                     )
                     (let [#_"Label[]" la (make-array Label (inc (- (:high this) (:low this))))]
                         (loop-when-recur [#_"int" i (:low this)] (<= i (:high this)) [(inc i)]
@@ -7100,13 +7112,15 @@
         )
     )
 
+    (declare DynamicClassLoader'new)
+
     (defn #_"ClassLoader" Compiler'makeClassLoader []
         (cast ClassLoader
             (AccessController/doPrivileged
                 (reify PrivilegedAction
                     #_foreign
                     (#_"Object" run [#_"PrivilegedAction" _self]
-                        (DynamicClassLoader. (Compiler'baseLoader))
+                        (DynamicClassLoader'new (Compiler'baseLoader))
                     )
                 )
             )
@@ -7123,7 +7137,7 @@
                                 (Compiler'eval (first s))
                             )
                         (or (satisfies? IType form) (and (coll? form) (not (and (symbol? (first form)) (.startsWith (:name (first form)), "def")))))
-                            (let [#_"IopObject" fexpr (Compiler'analyze :Context'EXPRESSION, (list 'fn* [] form), (str "eval" (RT/nextID)))]
+                            (let [#_"IopObject" fexpr (Compiler'analyze :Context'EXPRESSION, (list 'fn* [] form), (str "eval" (RT'nextID)))]
                                 (IFn'''invoke (Expr'''eval fexpr))
                             )
                         :else
@@ -7145,7 +7159,7 @@
     (def #_"Var" ^:dynamic *gensym-env*) ;; symbol->gensymbol
 
     (defn #_"Symbol" LispReader'garg [#_"int" n]
-        (symbol (str (if (= n -1) "rest" (str "p" n)) "__" (RT/nextID) "#"))
+        (symbol (str (if (= n -1) "rest" (str "p" n)) "__" (RT'nextID) "#"))
     )
 
     (defn #_"Symbol" LispReader'registerArg [#_"int" n]
@@ -7162,7 +7176,7 @@
     (defn #_"Symbol" LispReader'registerGensym [#_"Symbol" sym]
         (when (bound? #'*gensym-env*) => (throw! "gensym literal not in syntax-quote")
             (or (get *gensym-env* sym)
-                (let [#_"Symbol" gsym (symbol (str (:name sym) "__" (RT/nextID) "__auto__"))]
+                (let [#_"Symbol" gsym (symbol (str (:name sym) "__" (RT'nextID) "__auto__"))]
                     (update! *gensym-env* assoc sym gsym)
                     gsym
                 )
@@ -7211,13 +7225,19 @@
     (def- #_"Pattern" LispReader'rxInteger #"([-+]?)(?:(0)|([1-9][0-9]*)|0[xX]([0-9A-Fa-f]+)|0([0-7]+)|([1-9][0-9]?)[rR]([0-9A-Za-z]+)|0[0-9]+)(N)?")
     (def- #_"Pattern" LispReader'rxRatio   #"([-+]?[0-9]+)/([0-9]+)")
 
+    (declare BigInt'ZERO)
+    (declare Numbers'num-1l)
+    (declare BigInt'fromBigInteger)
+    (declare Numbers'divide)
+    (declare Numbers'reduceBigInt)
+
     (defn- #_"Object" LispReader'matchNumber [#_"String" s]
         (let [_ (or
                     (let-when [#_"Matcher" m (.matcher LispReader'rxInteger, s)] (.matches m)
                         (if (some? (.group m, 2))
                             (if (some? (.group m, 8))
-                                BigInt/ZERO
-                                (Numbers/num #_"-1l" 0)
+                                BigInt'ZERO
+                                (Numbers'num-1l 0)
                             )
                             (let [[#_"String" n #_"int" radix]
                                     (cond-let
@@ -7229,9 +7249,9 @@
                                 (when (some? n) => :nil
                                     (let [#_"BigInteger" bn (BigInteger. n, radix) bn (if (= (.group m, 1) "-") (.negate bn) bn)]
                                         (cond
-                                            (some? (.group m, 8))  (BigInt/fromBigInteger bn)
-                                            (< (.bitLength bn) 64) (Numbers/num #_"-1l" (.longValue bn))
-                                            :else                  (BigInt/fromBigInteger bn)
+                                            (some? (.group m, 8))  (BigInt'fromBigInteger bn)
+                                            (< (.bitLength bn) 64) (Numbers'num-1l (.longValue bn))
+                                            :else                  (BigInt'fromBigInteger bn)
                                         )
                                     )
                                 )
@@ -7240,9 +7260,9 @@
                     )
                     (let-when [#_"Matcher" m (.matcher LispReader'rxRatio, s)] (.matches m)
                         (let [#_"String" n (.group m, 1) n (if (.startsWith n, "+") (.substring n, 1) n)]
-                            (Numbers/divide
-                                (Numbers/reduceBigInt (BigInt/fromBigInteger (BigInteger. n))),
-                                (Numbers/reduceBigInt (BigInt/fromBigInteger (BigInteger. (.group m, 2))))
+                            (Numbers'divide
+                                (Numbers'reduceBigInt (BigInt'fromBigInteger (BigInteger. n))),
+                                (Numbers'reduceBigInt (BigInt'fromBigInteger (BigInteger. (.group m, 2))))
                             )
                         )
                     )
@@ -7769,15 +7789,17 @@
     (defn #_"Object" map-reader [#_"PushbackReader" r, #_"char" _delim]
         (let [#_"PersistentVector" v (LispReader'readDelimitedForms r, \})]
             (when (zero? (% (count v) 2)) => (throw! "map literal must contain an even number of forms")
-                (RT/map (to-array v))
+                (RT'map (to-array v))
             )
         )
     )
 )
 
+(declare PersistentHashSet'createWithCheck-1s)
+
 (class-ns SetReader
     (defn #_"Object" set-reader [#_"PushbackReader" r, #_"char" _delim]
-        (PersistentHashSet/createWithCheck #_"-1s" (LispReader'readDelimitedForms r, \}))
+        (PersistentHashSet'createWithCheck-1s (LispReader'readDelimitedForms r, \}))
     )
 )
 
@@ -8026,7 +8048,7 @@
     (def #_"ReferenceQueue" DynamicClassLoader'RQ (ReferenceQueue.))
 
     (defn #_"DynamicClassLoader" DynamicClassLoader'new [#_"ClassLoader" parent]
-        (§ foreign ClassLoader'new parent)
+        (merge (DynamicClassLoader.) (§ foreign ClassLoader'new parent))
     )
 
     #_method
@@ -8055,7 +8077,7 @@
 
 (class-ns BigInt
     (defn- #_"BigInt" BigInt'new [#_"long" lpart, #_"BigInteger" bipart]
-        (merge (§ foreign Number'new)
+        (merge (BigInt.) (§ foreign Number'new)
             (hash-map
                 #_"long" :lpart lpart
                 #_"BigInteger" :bipart bipart
@@ -8212,7 +8234,7 @@
 
 (class-ns Ratio
     (defn #_"Ratio" Ratio'new [#_"BigInteger" numerator, #_"BigInteger" denominator]
-        (merge (§ foreign Number'new)
+        (merge (Ratio.) (§ foreign Number'new)
             (hash-map
                 #_"BigInteger" :numerator numerator
                 #_"BigInteger" :denominator denominator
@@ -8261,7 +8283,7 @@
 
 (class-ns OpsP
     (defn #_"OpsP" OpsP'new []
-        (hash-map)
+        (OpsP.)
     )
 
     (extend-type OpsP Ops
@@ -8289,7 +8311,7 @@
 
 (class-ns LongOps
     (defn #_"LongOps" LongOps'new []
-        (hash-map)
+        (LongOps.)
     )
 
     (extend-type LongOps Ops
@@ -8473,7 +8495,7 @@
 
 (class-ns RatioOps
     (defn #_"RatioOps" RatioOps'new []
-        (OpsP'new)
+        (merge (RatioOps.) (OpsP'new))
     )
 
     (extend-type RatioOps Ops
@@ -8612,7 +8634,7 @@
 
 (class-ns BigIntOps
     (defn #_"BigIntOps" BigIntOps'new []
-        (OpsP'new)
+        (merge (BigIntOps.) (OpsP'new))
     )
 
     (extend-type BigIntOps Ops
@@ -8928,162 +8950,167 @@
     (defn #_"long" Numbers'unsignedShiftRight-2ol [#_"Object" x, #_"long"   n] (Numbers'unsignedShiftRight-2ll (Numbers'bitOpsCast x),                     n ))
     (defn #_"long" Numbers'unsignedShiftRight-2lo [#_"long"   x, #_"Object" n] (Numbers'unsignedShiftRight-2ll                     x , (Numbers'bitOpsCast n)))
 
-    (defn #_"int[]" Numbers'int_array-2 [#_"int" size, #_"Object" init]
-        (let [#_"int[]" ret (make-array Integer/TYPE size)]
-            (if (number? init)
-                (let [#_"int" f (.intValue ^Number init)]
-                    (dotimes [#_"int" i (alength ret)]
-                        (aset ret i f)
-                    )
-                )
-                (let [#_"ISeq" s (seq init)]
+    (defn #_"int[]" Numbers'int_array
+        ([#_"Object" sizeOrSeq]
+            (if (number? sizeOrSeq)
+                (make-array Integer/TYPE (.intValue ^Number sizeOrSeq))
+                (let [#_"ISeq" s (seq sizeOrSeq)
+                    #_"int" size (count s)
+                    #_"int[]" a (make-array Integer/TYPE size)]
                     (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                        (aset ret i (.intValue (first s)))
+                        (aset a i (.intValue (first s)))
                     )
+                    a
                 )
             )
-            ret
+        )
+        ([#_"int" size, #_"Object" init]
+            (let [#_"int[]" a (make-array Integer/TYPE size)]
+                (if (number? init)
+                    (let [#_"int" f (.intValue ^Number init)]
+                        (dotimes [#_"int" i (alength a)]
+                            (aset a i f)
+                        )
+                    )
+                    (let [#_"ISeq" s (seq init)]
+                        (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
+                            (aset a i (.intValue (first s)))
+                        )
+                    )
+                )
+                a
+            )
         )
     )
 
-    (defn #_"int[]" Numbers'int_array-1 [#_"Object" sizeOrSeq]
-        (if (number? sizeOrSeq)
-            (make-array Integer/TYPE (.intValue ^Number sizeOrSeq))
-            (let [#_"ISeq" s (seq sizeOrSeq)
-                  #_"int" size (count s)
-                  #_"int[]" ret (make-array Integer/TYPE size)]
-                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                    (aset ret i (.intValue (first s)))
-                )
-                ret
-            )
-        )
-    )
-
-    (defn #_"long[]" Numbers'long_array-2 [#_"int" size, #_"Object" init]
-        (let [#_"long[]" ret (make-array Long/TYPE size)]
-            (if (number? init)
-                (let [#_"long" f (.longValue ^Number init)]
-                    (dotimes [#_"int" i (alength ret)]
-                        (aset ret i f)
-                    )
-                )
-                (let [#_"ISeq" s (seq init)]
+    (defn #_"long[]" Numbers'long_array
+        ([#_"Object" sizeOrSeq]
+            (if (number? sizeOrSeq)
+                (make-array Long/TYPE (.intValue ^Number sizeOrSeq))
+                (let [#_"ISeq" s (seq sizeOrSeq)
+                    #_"int" size (count s)
+                    #_"long[]" a (make-array Long/TYPE size)]
                     (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                        (aset ret i (.longValue (first s)))
+                        (aset a i (.longValue (first s)))
                     )
+                    a
                 )
             )
-            ret
+        )
+        ([#_"int" size, #_"Object" init]
+            (let [#_"long[]" a (make-array Long/TYPE size)]
+                (if (number? init)
+                    (let [#_"long" f (.longValue ^Number init)]
+                        (dotimes [#_"int" i (alength a)]
+                            (aset a i f)
+                        )
+                    )
+                    (let [#_"ISeq" s (seq init)]
+                        (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
+                            (aset a i (.longValue (first s)))
+                        )
+                    )
+                )
+                a
+            )
         )
     )
 
-    (defn #_"long[]" Numbers'long_array-1 [#_"Object" sizeOrSeq]
-        (if (number? sizeOrSeq)
-            (make-array Long/TYPE (.intValue ^Number sizeOrSeq))
-            (let [#_"ISeq" s (seq sizeOrSeq)
-                  #_"int" size (count s)
-                  #_"long[]" ret (make-array Long/TYPE size)]
-                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                    (aset ret i (.longValue (first s)))
-                )
-                ret
-            )
-        )
-    )
-
-    (defn #_"char[]" Numbers'char_array-2 [#_"int" size, #_"Object" init]
-        (let [#_"char[]" ret (make-array Character/TYPE size)]
-            (if (instance? Character init)
-                (let [#_"char" c init]
-                    (dotimes [#_"int" i (alength ret)]
-                        (aset ret i c)
-                    )
-                )
-                (let [#_"ISeq" s (seq init)]
+    (defn #_"char[]" Numbers'char_array
+        ([#_"Object" sizeOrSeq]
+            (if (number? sizeOrSeq)
+                (make-array Character/TYPE (.intValue ^Number sizeOrSeq))
+                (let [#_"ISeq" s (seq sizeOrSeq)
+                    #_"int" size (count s)
+                    #_"char[]" a (make-array Character/TYPE size)]
                     (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                        (aset ret i (cast Character (first s)))
+                        (aset a i (cast Character (first s)))
                     )
+                    a
                 )
             )
-            ret
+        )
+        ([#_"int" size, #_"Object" init]
+            (let [#_"char[]" a (make-array Character/TYPE size)]
+                (if (instance? Character init)
+                    (let [#_"char" c init]
+                        (dotimes [#_"int" i (alength a)]
+                            (aset a i c)
+                        )
+                    )
+                    (let [#_"ISeq" s (seq init)]
+                        (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
+                            (aset a i (cast Character (first s)))
+                        )
+                    )
+                )
+                a
+            )
         )
     )
 
-    (defn #_"char[]" Numbers'char_array-1 [#_"Object" sizeOrSeq]
-        (if (number? sizeOrSeq)
-            (make-array Character/TYPE (.intValue ^Number sizeOrSeq))
-            (let [#_"ISeq" s (seq sizeOrSeq)
-                  #_"int" size (count s)
-                  #_"char[]" ret (make-array Character/TYPE size)]
-                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                    (aset ret i (cast Character (first s)))
-                )
-                ret
-            )
-        )
-    )
-
-    (defn #_"byte[]" Numbers'byte_array-2 [#_"int" size, #_"Object" init]
-        (let [#_"byte[]" ret (make-array Byte/TYPE size)]
-            (if (instance? Byte init)
-                (let [#_"byte" b init]
-                    (dotimes [#_"int" i (alength ret)]
-                        (aset ret i b)
-                    )
-                )
-                (let [#_"ISeq" s (seq init)]
+    (defn #_"byte[]" Numbers'byte_array
+        ([#_"Object" sizeOrSeq]
+            (if (number? sizeOrSeq)
+                (make-array Byte/TYPE (.intValue ^Number sizeOrSeq))
+                (let [#_"ISeq" s (seq sizeOrSeq)
+                    #_"int" size (count s)
+                    #_"byte[]" a (make-array Byte/TYPE size)]
                     (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                        (aset ret i (.byteValue (first s)))
+                        (aset a i (.byteValue (first s)))
                     )
+                    a
                 )
             )
-            ret
+        )
+        ([#_"int" size, #_"Object" init]
+            (let [#_"byte[]" a (make-array Byte/TYPE size)]
+                (if (instance? Byte init)
+                    (let [#_"byte" b init]
+                        (dotimes [#_"int" i (alength a)]
+                            (aset a i b)
+                        )
+                    )
+                    (let [#_"ISeq" s (seq init)]
+                        (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
+                            (aset a i (.byteValue (first s)))
+                        )
+                    )
+                )
+                a
+            )
         )
     )
 
-    (defn #_"byte[]" Numbers'byte_array-1 [#_"Object" sizeOrSeq]
-        (if (number? sizeOrSeq)
-            (make-array Byte/TYPE (.intValue ^Number sizeOrSeq))
-            (let [#_"ISeq" s (seq sizeOrSeq)
-                  #_"int" size (count s)
-                  #_"byte[]" ret (make-array Byte/TYPE size)]
-                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                    (aset ret i (.byteValue (first s)))
-                )
-                ret
-            )
-        )
-    )
-
-    (defn #_"boolean[]" Numbers'boolean_array-2 [#_"int" size, #_"Object" init]
-        (let [#_"boolean[]" ret (make-array Boolean/TYPE size)]
-            (if (instance? Boolean init)
-                (let [#_"boolean" b init]
-                    (dotimes [#_"int" i (alength ret)]
-                        (aset ret i b)
-                    )
-                )
-                (let [#_"ISeq" s (seq init)]
+    (defn #_"boolean[]" Numbers'boolean_array
+        ([#_"Object" sizeOrSeq]
+            (if (number? sizeOrSeq)
+                (make-array Boolean/TYPE (.intValue ^Number sizeOrSeq))
+                (let [#_"ISeq" s (seq sizeOrSeq)
+                    #_"int" size (count s)
+                    #_"boolean[]" a (make-array Boolean/TYPE size)]
                     (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                        (aset ret i (cast Boolean (first s)))
+                        (aset a i (cast Boolean (first s)))
                     )
+                    a
                 )
             )
-            ret
         )
-    )
-
-    (defn #_"boolean[]" Numbers'boolean_array-1 [#_"Object" sizeOrSeq]
-        (if (number? sizeOrSeq)
-            (make-array Boolean/TYPE (.intValue ^Number sizeOrSeq))
-            (let [#_"ISeq" s (seq sizeOrSeq)
-                  #_"int" size (count s)
-                  #_"boolean[]" ret (make-array Boolean/TYPE size)]
-                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                    (aset ret i (cast Boolean (first s)))
+        ([#_"int" size, #_"Object" init]
+            (let [#_"boolean[]" a (make-array Boolean/TYPE size)]
+                (if (instance? Boolean init)
+                    (let [#_"boolean" b init]
+                        (dotimes [#_"int" i (alength a)]
+                            (aset a i b)
+                        )
+                    )
+                    (let [#_"ISeq" s (seq init)]
+                        (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
+                            (aset a i (cast Boolean (first s)))
+                        )
+                    )
                 )
-                ret
+                a
             )
         )
     )
@@ -9330,7 +9357,7 @@
 
 (class-ns AFn
     (defn #_"AFn" AFn'new []
-        (hash-map)
+        (AFn.)
     )
 
     #_foreign
@@ -9574,11 +9601,13 @@
     (def #_"ReferenceQueue" Keyword'RQ (ReferenceQueue.))
 
     (defn- #_"Keyword" Keyword'new [#_"Symbol" sym]
-        (hash-map
-            #_"Symbol" :sym sym
-            #_"int" :hasheq (+ (IHashEq'''hasheq sym) 0x9e3779b9)
+        (merge (Keyword.)
+            (hash-map
+                #_"Symbol" :sym sym
+                #_"int" :hasheq (+ (IHashEq'''hasheq sym) 0x9e3779b9)
 
-            #_mutable #_"String" :_str nil
+                #_mutable #_"String" :_str nil
+            )
         )
     )
 
@@ -9695,7 +9724,7 @@
 
 (class-ns AFunction
     (defn #_"AFunction" AFunction'new []
-        (merge (AFn'new)
+        (merge (AFunction.) (AFn'new)
             (hash-map
                 #_volatile #_"MethodImplCache" :__methodImplCache nil
             )
@@ -9752,7 +9781,7 @@
 
 (class-ns RestFn
     (defn #_"RestFn" RestFn'new []
-        (AFunction'new)
+        (merge (RestFn.) (AFunction'new))
     )
 
     (defn #_"ISeq" RestFn'findKey [#_"Object" key, #_"ISeq" args]
@@ -10181,11 +10210,13 @@
 
 (class-ns ASeq
     (defn #_"ASeq" ASeq'new [#_"IPersistentMap" meta]
-        (hash-map
-            #_"IPersistentMap" :_meta meta
+        (merge (ASeq.)
+            (hash-map
+                #_"IPersistentMap" :_meta meta
 
-            #_mutable #_"int" :_hash 0
-            #_mutable #_"int" :_hasheq 0
+                #_mutable #_"int" :_hash 0
+                #_mutable #_"int" :_hasheq 0
+            )
         )
     )
 
@@ -10358,7 +10389,7 @@
 
 (class-ns APersistentMap
     (defn #_"APersistentMap" APersistentMap'new []
-        (merge (AFn'new)
+        (merge (APersistentMap.) (AFn'new)
             (hash-map
                 #_mutable #_"int" :_hash 0
                 #_mutable #_"int" :_hasheq 0
@@ -10445,7 +10476,7 @@
 
 (class-ns APersistentSet
     (defn #_"APersistentSet" APersistentSet'new [#_"IPersistentMap" impl]
-        (merge (AFn'new)
+        (merge (APersistentSet.) (AFn'new)
             (hash-map
                 #_"IPersistentMap" :impl impl
 
@@ -10622,7 +10653,7 @@
 
 (class-ns APersistentVector
     (defn #_"APersistentVector" APersistentVector'new []
-        (merge (AFn'new)
+        (merge (APersistentVector.) (AFn'new)
             (hash-map
                 #_mutable #_"int" :_hash 0
                 #_mutable #_"int" :_hasheq 0
@@ -10772,7 +10803,7 @@
                         [(:v sv) (+ (:start sv) start) (+ (:start sv) end)]
                     )
                 )]
-            (merge (APersistentVector'new)
+            (merge (SubVector.) (APersistentVector'new)
                 (hash-map
                     #_"IPersistentMap" :_meta meta
                     #_"IPersistentVector" :v v
@@ -10853,7 +10884,7 @@
 
 (class-ns AMapEntry
     (defn #_"AMapEntry" AMapEntry'new []
-        (APersistentVector'new)
+        (merge (AMapEntry.) (APersistentVector'new))
     )
 
     (extend-type AMapEntry Indexed
@@ -10916,7 +10947,7 @@
 
 (class-ns MapEntry
     (defn- #_"MapEntry" MapEntry'new [#_"Object" key, #_"Object" val]
-        (merge (AMapEntry'new)
+        (merge (MapEntry.) (AMapEntry'new)
             (hash-map
                 #_"Object" :_key key
                 #_"Object" :_val val
@@ -10985,7 +11016,7 @@
 
 (class-ns ArraySeq_int
     (defn #_"ArraySeq_int" ArraySeq_int'new [#_"IPersistentMap" meta, #_"int[]" array, #_"int" i]
-        (merge (ASeq'new meta)
+        (merge (ArraySeq_int.) (ASeq'new meta)
             (hash-map
                 #_"int[]" :array array
                 #_"int" :i i
@@ -11041,7 +11072,7 @@
 
 (class-ns ArraySeq_long
     (defn #_"ArraySeq_long" ArraySeq_long'new [#_"IPersistentMap" meta, #_"long[]" array, #_"int" i]
-        (merge (ASeq'new meta)
+        (merge (ArraySeq_long.) (ASeq'new meta)
             (hash-map
                 #_"long[]" :array array
                 #_"int" :i i
@@ -11097,7 +11128,7 @@
 
 (class-ns ArraySeq_byte
     (defn #_"ArraySeq_byte" ArraySeq_byte'new [#_"IPersistentMap" meta, #_"byte[]" array, #_"int" i]
-        (merge (ASeq'new meta)
+        (merge (ArraySeq_byte.) (ASeq'new meta)
             (hash-map
                 #_"byte[]" :array array
                 #_"int" :i i
@@ -11153,7 +11184,7 @@
 
 (class-ns ArraySeq_char
     (defn #_"ArraySeq_char" ArraySeq_char'new [#_"IPersistentMap" meta, #_"char[]" array, #_"int" i]
-        (merge (ASeq'new meta)
+        (merge (ArraySeq_char.) (ASeq'new meta)
             (hash-map
                 #_"char[]" :array array
                 #_"int" :i i
@@ -11209,7 +11240,7 @@
 
 (class-ns ArraySeq_boolean
     (defn #_"ArraySeq_boolean" ArraySeq_boolean'new [#_"IPersistentMap" meta, #_"boolean[]" array, #_"int" i]
-        (merge (ASeq'new meta)
+        (merge (ArraySeq_boolean.) (ASeq'new meta)
             (hash-map
                 #_"boolean[]" :array array
                 #_"int" :i i
@@ -11496,7 +11527,7 @@
 
 (class-ns ATransientMap
     (defn #_"ATransientMap" ATransientMap'new []
-        (AFn'new)
+        (merge (ATransientMap.) (AFn'new))
     )
 
     #_method
@@ -11585,7 +11616,7 @@
 
 (class-ns ATransientSet
     (defn #_"ATransientSet" ATransientSet'new [#_"ITransientMap" impl]
-        (merge (AFn'new)
+        (merge (ATransientSet.) (AFn'new)
             (hash-map
                 #_"ITransientMap" :impl impl
             )
@@ -11654,8 +11685,10 @@
 
 (class-ns Box
     (defn #_"Box" Box'new [#_"Object" val]
-        (hash-map
-            #_mutable #_"Object" :val val
+        (merge (Box.)
+            (hash-map
+                #_mutable #_"Object" :val val
+            )
         )
     )
 )
@@ -11779,10 +11812,12 @@
 
 (class-ns Delay
     (defn #_"Delay" Delay'new [#_"IFn" fn]
-        (hash-map
-            #_volatile #_"Object" :val nil
-            #_volatile #_"Throwable" :exception nil
-            #_volatile #_"IFn" :fn fn
+        (merge (Delay.)
+            (hash-map
+                #_volatile #_"Object" :val nil
+                #_volatile #_"Throwable" :exception nil
+                #_volatile #_"IFn" :fn fn
+            )
         )
     )
 
@@ -11897,8 +11932,10 @@
 
 (class-ns KeywordLookupSite
     (defn #_"KeywordLookupSite" KeywordLookupSite'new [#_"Keyword" k]
-        (hash-map
-            #_"Keyword" :k k
+        (merge (KeywordLookupSite.)
+            (hash-map
+                #_"Keyword" :k k
+            )
         )
     )
 
@@ -11938,9 +11975,11 @@
 
 (class-ns Entry
     (defn #_"Entry" Entry'new [#_"Class" c, #_"IFn" fn]
-        (hash-map
-            #_"Class" :c c
-            #_"IFn" :fn fn
+        (merge (Entry.)
+            (hash-map
+                #_"Class" :c c
+                #_"IFn" :fn fn
+            )
         )
     )
 )
@@ -11991,7 +12030,7 @@
 
 (class-ns MultiFn
     (defn #_"MultiFn" MultiFn'new [#_"String" name, #_"IFn" dispatchFn, #_"Object" defaultDispatchVal, #_"IDeref" hierarchy]
-        (merge (AFn'new)
+        (merge (MultiFn.) (AFn'new)
             (hash-map
                 #_"String" :name name
                 #_"IFn" :dispatchFn dispatchFn
@@ -12196,12 +12235,14 @@
     (def #_"{Symbol Namespace}'" Namespace'namespaces (atom {}))
 
     (defn #_"Namespace" Namespace'new [#_"Symbol" name]
-        (hash-map
-            #_mutable #_"IPersistentMap" :_meta (meta name)
-            #_"Symbol" :name name
+        (merge (Namespace.)
+            (hash-map
+                #_mutable #_"IPersistentMap" :_meta (meta name)
+                #_"Symbol" :name name
 
-            #_"AtomicReference<IPersistentMap>" :mappings (AtomicReference. {})
-            #_"AtomicReference<IPersistentMap>" :aliases (AtomicReference. {})
+                #_"AtomicReference<IPersistentMap>" :mappings (AtomicReference. {})
+                #_"AtomicReference<IPersistentMap>" :aliases (AtomicReference. {})
+            )
         )
     )
 
@@ -12689,7 +12730,7 @@
     (defn #_"TransientArrayMap" TransientArrayMap'new [#_"Object[]" array]
         (let [#_"Object[]" a (make-array Object (Math/max PersistentArrayMap'HASHTABLE_THRESHOLD, (alength array)))
               _ (System/arraycopy array, 0, a, 0, (alength array))]
-            (merge (ATransientMap'new)
+            (merge (TransientArrayMap.) (ATransientMap'new)
                 (hash-map
                     #_"Object[]" :array a
                     #_"int" :len (alength array)
@@ -12776,7 +12817,7 @@
 
 (class-ns HSeq
     (defn- #_"HSeq" HSeq'new [#_"IPersistentMap" meta, #_"INode[]" nodes, #_"int" i, #_"ISeq" s]
-        (merge (ASeq'new meta)
+        (merge (HSeq.) (ASeq'new meta)
             (hash-map
                 #_"INode[]" :nodes nodes
                 #_"int" :i i
@@ -12931,10 +12972,12 @@
 
 (class-ns ArrayNode
     (defn #_"ArrayNode" ArrayNode'new [#_"AtomicReference<Thread>" edit, #_"int" count, #_"INode[]" array]
-        (hash-map
-            #_"AtomicReference<Thread>" :edit edit
-            #_"int" :count count
-            #_"INode[]" :array array
+        (merge (ArrayNode.)
+            (hash-map
+                #_"AtomicReference<Thread>" :edit edit
+                #_"int" :count count
+                #_"INode[]" :array array
+            )
         )
     )
 
@@ -13083,10 +13126,12 @@
 
 (class-ns BitmapIndexedNode
     (defn #_"BitmapIndexedNode" BitmapIndexedNode'new [#_"AtomicReference<Thread>" edit, #_"int" bitmap, #_"Object[]" array]
-        (hash-map
-            #_"AtomicReference<Thread>" :edit edit
-            #_"int" :bitmap bitmap
-            #_"Object[]" :array array
+        (merge (BitmapIndexedNode.)
+            (hash-map
+                #_"AtomicReference<Thread>" :edit edit
+                #_"int" :bitmap bitmap
+                #_"Object[]" :array array
+            )
         )
     )
 
@@ -13379,11 +13424,13 @@
 
 (class-ns HashCollisionNode
     (defn #_"HashCollisionNode" HashCollisionNode'new [#_"AtomicReference<Thread>" edit, #_"int" hash, #_"int" count & #_"Object..." array]
-        (hash-map
-            #_"AtomicReference<Thread>" :edit edit
-            #_"int" :hash hash
-            #_"int" :count count
-            #_"Object[]" :array array
+        (merge (HashCollisionNode.)
+            (hash-map
+                #_"AtomicReference<Thread>" :edit edit
+                #_"int" :hash hash
+                #_"int" :count count
+                #_"Object[]" :array array
+            )
         )
     )
 
@@ -13838,7 +13885,7 @@
 
 (class-ns TransientHashSet
     (defn #_"TransientHashSet" TransientHashSet'new [#_"ITransientMap" impl]
-        (ATransientSet'new impl)
+        (merge (TransientHashSet.) (ATransientSet'new impl))
     )
 
     (declare PersistentHashSet'new)
@@ -13852,7 +13899,7 @@
 
 (class-ns PersistentHashSet
     (defn #_"PersistentHashSet" PersistentHashSet'new [#_"IPersistentMap" meta, #_"IPersistentMap" impl]
-        (merge (APersistentSet'new impl)
+        (merge (PersistentHashSet.) (APersistentSet'new impl)
             (hash-map
                 #_"IPersistentMap" :_meta meta
             )
@@ -13949,7 +13996,7 @@
 
 (class-ns Primordial
     (defn #_"Primordial" Primordial'new []
-        (RestFn'new)
+        (merge (Primordial.) (RestFn'new))
     )
 
     (extend-type Primordial IMeta
@@ -14004,8 +14051,10 @@
     (def #_"int" EmptyList'HASHEQ (§ soon Murmur3'hashOrdered nil))
 
     (defn #_"EmptyList" EmptyList'new [#_"IPersistentMap" meta]
-        (hash-map
-            #_"IPersistentMap" :_meta meta
+        (merge (EmptyList.)
+            (hash-map
+                #_"IPersistentMap" :_meta meta
+            )
         )
     )
 
@@ -14231,14 +14280,16 @@
  ;;
 (class-ns PersistentQueue
     (defn #_"PersistentQueue" PersistentQueue'new [#_"IPersistentMap" meta, #_"int" cnt, #_"ISeq" f, #_"PersistentVector" r]
-        (hash-map
-            #_"IPersistentMap" :_meta meta
-            #_"int" :cnt cnt
-            #_"ISeq" :f f
-            #_"PersistentVector" :r r
+        (merge (PersistentQueue.)
+            (hash-map
+                #_"IPersistentMap" :_meta meta
+                #_"int" :cnt cnt
+                #_"ISeq" :f f
+                #_"PersistentVector" :r r
 
-            #_mutable #_"int" :_hash 0
-            #_mutable #_"int" :_hasheq 0
+                #_mutable #_"int" :_hash 0
+                #_mutable #_"int" :_hasheq 0
+            )
         )
     )
 
@@ -14340,7 +14391,7 @@
 
 (class-ns TNode
     (defn #_"TNode" TNode'new [#_"Object" key]
-        (merge (AMapEntry'new)
+        (merge (TNode.) (AMapEntry'new)
             (hash-map
                 #_"Object" :key key
             )
@@ -14403,7 +14454,7 @@
 
 (class-ns Black
     (defn #_"Black" Black'new [#_"Object" key]
-        (TNode'new key)
+        (merge (Black.) (TNode'new key))
     )
 
     #_override
@@ -14450,7 +14501,7 @@
 
 (class-ns BlackVal
     (defn #_"BlackVal" BlackVal'new [#_"Object" key, #_"Object" val]
-        (merge (Black'new key)
+        (merge (BlackVal.) (Black'new key)
             (hash-map
                 #_"Object" :val val
             )
@@ -14473,7 +14524,7 @@
 
 (class-ns BlackBranch
     (defn #_"BlackBranch" BlackBranch'new [#_"Object" key, #_"TNode" left, #_"TNode" right]
-        (merge (Black'new key)
+        (merge (BlackBranch.) (Black'new key)
             (hash-map
                 #_"TNode" :left left
                 #_"TNode" :right right
@@ -14501,7 +14552,7 @@
 
 (class-ns BlackBranchVal
     (defn #_"BlackBranchVal" BlackBranchVal'new [#_"Object" key, #_"Object" val, #_"TNode" left, #_"TNode" right]
-        (merge (BlackBranch'new key, left, right)
+        (merge (BlackBranchVal.) (BlackBranch'new key, left, right)
             (hash-map
                 #_"Object" :val val
             )
@@ -14524,7 +14575,7 @@
 
 (class-ns Red
     (defn #_"Red" Red'new [#_"Object" key]
-        (TNode'new key)
+        (merge (Red.) (TNode'new key))
     )
 
     (declare PersistentTreeMap'red)
@@ -14567,7 +14618,7 @@
 
 (class-ns RedVal
     (defn #_"RedVal" RedVal'new [#_"Object" key, #_"Object" val]
-        (merge (Red'new key)
+        (merge (RedVal.) (Red'new key)
             (hash-map
                 #_"Object" :val val
             )
@@ -14588,7 +14639,7 @@
 
 (class-ns RedBranch
     (defn #_"RedBranch" RedBranch'new [#_"Object" key, #_"TNode" left, #_"TNode" right]
-        (merge (Red'new key)
+        (merge (RedBranch.) (Red'new key)
             (hash-map
                 #_"TNode" :left left
                 #_"TNode" :right right
@@ -14648,7 +14699,7 @@
 
 (class-ns RedBranchVal
     (defn #_"RedBranchVal" RedBranchVal'new [#_"Object" key, #_"Object" val, #_"TNode" left, #_"TNode" right]
-        (merge (RedBranch'new key, left, right)
+        (merge (RedBranchVal.) (RedBranch'new key, left, right)
             (hash-map
                 #_"Object" :val val
             )
@@ -15122,7 +15173,7 @@
 
 (class-ns PersistentTreeSet
     (defn #_"PersistentTreeSet" PersistentTreeSet'new [#_"IPersistentMap" meta, #_"IPersistentMap" impl]
-        (merge (APersistentSet'new impl)
+        (merge (PersistentTreeSet.) (APersistentSet'new impl)
             (hash-map
                 #_"IPersistentMap" :_meta meta
             )
@@ -15985,8 +16036,10 @@
 
 (class-ns Reduced
     (defn #_"Reduced" Reduced'new [#_"Object" val]
-        (hash-map
-            #_"Object" :val val
+        (merge (Reduced.)
+            (hash-map
+                #_"Object" :val val
+            )
         )
     )
 
@@ -16085,7 +16138,7 @@
 
 (class-ns StringSeq
     (defn- #_"StringSeq" StringSeq'new [#_"IPersistentMap" meta, #_"CharSequence" s, #_"int" i]
-        (merge (ASeq'new meta)
+        (merge (StringSeq.) (ASeq'new meta)
             (hash-map
                 #_"CharSequence" :s s
                 #_"int" :i i
@@ -16169,16 +16222,18 @@
 
 (class-ns TBox
     (defn #_"TBox" TBox'new [#_"Thread" t, #_"Object" val]
-        (hash-map
-            #_"Thread" :thread t
-            #_volatile #_"Object" :val val
+        (merge (TBox.)
+            (hash-map
+                #_"Thread" :thread t
+                #_volatile #_"Object" :val val
+            )
         )
     )
 )
 
 (class-ns Unbound
     (defn #_"Unbound" Unbound'new [#_"Var" v]
-        (merge (AFn'new)
+        (merge (Unbound.) (AFn'new)
             (hash-map
                 #_"Var" :v v
             )
@@ -16198,11 +16253,13 @@
 
 (class-ns Frame
     (defn #_"Frame" Frame'new [#_"Associative" bindings, #_"Frame" prev]
-        (hash-map
-            ;; Var->TBox
-            #_"Associative" :bindings bindings
-            ;; Var->val
-            #_"Frame" :prev prev
+        (merge (Frame.)
+            (hash-map
+                ;; Var->TBox
+                #_"Associative" :bindings bindings
+                ;; Var->val
+                #_"Frame" :prev prev
+            )
         )
     )
 
@@ -16525,8 +16582,10 @@
 
 (class-ns Volatile
     (defn #_"Volatile" Volatile'new [#_"Object" val]
-        (hash-map
-            #_volatile #_"Object" :val val
+        (merge (Volatile.)
+            (hash-map
+                #_volatile #_"Object" :val val
+            )
         )
     )
 
@@ -18327,7 +18386,7 @@
             (check-valid-options options :default :hierarchy)
             `(let [v# (def ~mm-name)]
                 (when-not (and (Var''hasRoot v#) (instance? MultiFn (deref v#)))
-                    (def ~mm-name (MultiFn. ~(name mm-name) ~dispatch-fn ~default ~hierarchy))
+                    (def ~mm-name (MultiFn'new ~(name mm-name) ~dispatch-fn ~default ~hierarchy))
                 )
             )
         )
@@ -18612,7 +18671,7 @@
  ; If metadata-map is supplied, it will become the metadata on the atom.
  ;;
 (§ defn atom
-    ([x] (Atom. x))
+    ([x] (Atom'new x))
     ([x & options] (setup-reference (atom x) options))
 )
 
@@ -18686,7 +18745,7 @@
 ;;;
  ; Creates and returns a Volatile with an initial value of o.
  ;;
-(§ defn ^Volatile volatile! [o] (Volatile. o))
+(§ defn ^Volatile volatile! [o] (Volatile'new o))
 
 ;;;
  ; Sets the value of volatile to o without regard for the
@@ -18985,7 +19044,7 @@
 ;;;
  ; Wraps x in a way such that a reduce will terminate with the value x.
  ;;
-(§ defn reduced [x] (Reduced. x))
+(§ defn reduced [x] (Reduced'new x))
 
 ;;;
  ; Returns true if x is the result of a call to reduced.
@@ -19841,18 +19900,18 @@
 ;;;
  ; Returns the length of the Java array. Works on arrays of all types.
  ;;
-(§ defn alength [array] (clojure.lang.RT/alength array))
+(§ defn alength [array] (RT'alength array))
 
 ;;;
  ; Returns a clone of the Java array. Works on arrays of known types.
  ;;
-(§ defn aclone [array] (clojure.lang.RT/aclone array))
+(§ defn aclone [array] (RT'aclone array))
 
 ;;;
  ; Returns the value at the index/indices. Works on Java arrays of all types.
  ;;
 (§ defn aget
-    {:inline (fn [a i] `(clojure.lang.RT/aget ~a (int ~i))) :inline-arities #{2}}
+    {:inline (fn [a i] `(RT'aget ~a (int ~i))) :inline-arities #{2}}
     ([array idx]
         (Reflector'prepRet (.getComponentType (class array)) (Array/get array idx))
     )
@@ -19866,7 +19925,7 @@
  ; Works on Java arrays of reference types. Returns val.
  ;;
 (§ defn aset
-    {:inline (fn [a i v] `(clojure.lang.RT/aset ~a (int ~i) ~v)) :inline-arities #{3}}
+    {:inline (fn [a i v] `(RT'aset ~a (int ~i) ~v)) :inline-arities #{3}}
     ([array idx val]
         (Array/set array idx val)
         val
@@ -22927,11 +22986,11 @@
 
 (§ defn- expand-method-impl-cache [^MethodImplCache cache c f]
     (if (:map cache)
-        (let [cs (assoc (:map cache) c (Entry. c f))]
-            (MethodImplCache. (:protocol cache) (:methodk cache) cs)
+        (let [cs (assoc (:map cache) c (Entry'new c f))]
+            (MethodImplCache'new (:protocol cache) (:methodk cache) cs)
         )
         (let [cs (into {} (remove (fn [[c e]] (nil? e)) (map vec (partition 2 (:table cache)))))
-              cs (assoc cs c (Entry. c f))]
+              cs (assoc cs c (Entry'new c f))]
             (if-let [[shift mask] (maybe-min-hash (map hash (keys cs)))]
                 (let [table (make-array Object (* 2 (inc mask)))
                       table
@@ -22945,9 +23004,9 @@
                             )
                             table cs
                         )]
-                    (MethodImplCache. (:protocol cache) (:methodk cache) shift mask table)
+                    (MethodImplCache'new (:protocol cache) (:methodk cache) shift mask table)
                 )
-                (MethodImplCache. (:protocol cache) (:methodk cache) cs)
+                (MethodImplCache'new (:protocol cache) (:methodk cache) cs)
             )
         )
     )
@@ -23067,7 +23126,7 @@
 
 (§ defn -reset-methods [protocol]
     (doseq [[^Var v build] (:method-builders protocol)]
-        (let [cache (MethodImplCache. protocol (keyword (:sym v)))]
+        (let [cache (MethodImplCache'new protocol (keyword (:sym v)))]
             (Var''bindRoot v (build cache))
         )
     )
