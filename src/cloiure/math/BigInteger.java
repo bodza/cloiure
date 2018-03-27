@@ -304,20 +304,6 @@ class MutableBigInteger {
     }
 
     /**
-     * Makes this number an {@code n}-int number all of whose bits are ones.
-     * Used by Burnikel-Ziegler division.
-     * @param n number of ints in the {@code value} array
-     * @return a number equal to {@code ((1<<(32*n)))-1}
-     */
-    private void ones(int n) {
-        if (n > value.length)
-            value = new int[n];
-        Arrays.fill(value, -1);
-        offset = 0;
-        intLen = n;
-    }
-
-    /**
      * Internal helper method to return the magnitude array. The caller is not
      * supposed to modify the returned array.
      */
@@ -396,72 +382,6 @@ class MutableBigInteger {
                 return 1;
         }
         return 0;
-    }
-
-    /**
-     * Returns a value equal to what {@code b.leftShift(32*ints); return compare(b);}
-     * would return, but doesn't change the value of {@code b}.
-     */
-    private int compareShifted(MutableBigInteger b, int ints) {
-        int blen = b.intLen;
-        int alen = intLen - ints;
-        if (alen < blen)
-            return -1;
-        if (alen > blen)
-           return 1;
-
-        // Add Integer.MIN_VALUE to make the comparison act as unsigned integer
-        // comparison.
-        int[] bval = b.value;
-        for (int i = offset, j = b.offset; i < alen + offset; i++, j++) {
-            int b1 = value[i] + 0x80000000;
-            int b2 = bval[j]  + 0x80000000;
-            if (b1 < b2)
-                return -1;
-            if (b1 > b2)
-                return 1;
-        }
-        return 0;
-    }
-
-    /**
-     * Compare this against half of a MutableBigInteger object (Needed for
-     * remainder tests).
-     * Assumes no leading unnecessary zeros, which holds for results
-     * from divide().
-     */
-    final int compareHalf(MutableBigInteger b) {
-        int blen = b.intLen;
-        int len = intLen;
-        if (len <= 0)
-            return blen <= 0 ? 0 : -1;
-        if (len > blen)
-            return 1;
-        if (len < blen - 1)
-            return -1;
-        int[] bval = b.value;
-        int bstart = 0;
-        int carry = 0;
-        // Only 2 cases left:len == blen or len == blen - 1
-        if (len != blen) { // len == blen - 1
-            if (bval[bstart] == 1) {
-                ++bstart;
-                carry = 0x80000000;
-            } else
-                return -1;
-        }
-        // compare values with right-shifted values of b,
-        // carrying shifted-out bits across words
-        int[] val = value;
-        for (int i = offset, j = bstart; i < len + offset;) {
-            int bv = bval[j++];
-            long hb = ((bv >>> 1) + carry) & LONG_MASK;
-            long v = val[i++] & LONG_MASK;
-            if (v != hb)
-                return v < hb ? -1 : 1;
-            carry = (bv & 1) << 31; // carray will be either 0x80000000 or 0
-        }
-        return carry == 0 ? 0 : -1;
     }
 
     /**
@@ -641,17 +561,6 @@ class MutableBigInteger {
     }
 
     /**
-     * Like {@link #rightShift(int)} but {@code n} can be greater than the length of the number.
-     */
-    void safeRightShift(int n) {
-        if (n/32 >= intLen) {
-            reset();
-        } else {
-            rightShift(n);
-        }
-    }
-
-    /**
      * Right shift this MutableBigInteger n bits. The MutableBigInteger is left
      * in normal form.
      */
@@ -669,15 +578,6 @@ class MutableBigInteger {
             this.intLen--;
         } else {
             primitiveRightShift(nBits);
-        }
-    }
-
-    /**
-     * Like {@link #leftShift(int)} but {@code n} can be zero.
-     */
-    void safeLeftShift(int n) {
-        if (n > 0) {
-            leftShift(n);
         }
     }
 
@@ -822,35 +722,6 @@ class MutableBigInteger {
     }
 
     /**
-     * Returns a {@code BigInteger} equal to the {@code n}
-     * low ints of this number.
-     */
-    private BigInteger getLower(int n) {
-        if (isZero()) {
-            return BigInteger.ZERO;
-        } else if (intLen < n) {
-            return toBigInteger(1);
-        } else {
-            // strip zeros
-            int len = n;
-            while (len > 0 && value[offset+intLen-len] == 0)
-                len--;
-            int sign = len > 0 ? 1 : 0;
-            return new BigInteger(Arrays.copyOfRange(value, offset+intLen-len, offset+intLen), sign);
-        }
-    }
-
-    /**
-     * Discards all ints whose index is greater than {@code n}.
-     */
-    private void keepLower(int n) {
-        if (intLen >= n) {
-            offset += intLen - n;
-            intLen = n;
-        }
-    }
-
-    /**
      * Adds the contents of two MutableBigInteger objects.The result
      * is placed within this MutableBigInteger.
      * The contents of the addend are not changed.
@@ -907,124 +778,6 @@ class MutableBigInteger {
         value = result;
         intLen = resultLen;
         offset = result.length - resultLen;
-    }
-
-    /**
-     * Adds the value of {@code addend} shifted {@code n} ints to the left.
-     * Has the same effect as {@code addend.leftShift(32*ints); add(addend);}
-     * but doesn't change the value of {@code addend}.
-     */
-    void addShifted(MutableBigInteger addend, int n) {
-        if (addend.isZero()) {
-            return;
-        }
-
-        int x = intLen;
-        int y = addend.intLen + n;
-        int resultLen = (intLen > y ? intLen : y);
-        int[] result = (value.length < resultLen ? new int[resultLen] : value);
-
-        int rstart = result.length-1;
-        long sum;
-        long carry = 0;
-
-        // Add common parts of both numbers
-        while (x > 0 && y > 0) {
-            x--; y--;
-            int bval = y+addend.offset < addend.value.length ? addend.value[y+addend.offset] : 0;
-            sum = (value[x+offset] & LONG_MASK) +
-                (bval & LONG_MASK) + carry;
-            result[rstart--] = (int)sum;
-            carry = sum >>> 32;
-        }
-
-        // Add remainder of the longer number
-        while (x > 0) {
-            x--;
-            if (carry == 0 && result == value && rstart == (x + offset)) {
-                return;
-            }
-            sum = (value[x+offset] & LONG_MASK) + carry;
-            result[rstart--] = (int)sum;
-            carry = sum >>> 32;
-        }
-        while (y > 0) {
-            y--;
-            int bval = y+addend.offset < addend.value.length ? addend.value[y+addend.offset] : 0;
-            sum = (bval & LONG_MASK) + carry;
-            result[rstart--] = (int)sum;
-            carry = sum >>> 32;
-        }
-
-        if (carry > 0) { // Result must grow in length
-            resultLen++;
-            if (result.length < resultLen) {
-                int temp[] = new int[resultLen];
-                // Result one word longer from carry-out; copy low-order
-                // bits into new result.
-                System.arraycopy(result, 0, temp, 1, result.length);
-                temp[0] = 1;
-                result = temp;
-            } else {
-                result[rstart--] = 1;
-            }
-        }
-
-        value = result;
-        intLen = resultLen;
-        offset = result.length - resultLen;
-    }
-
-    /**
-     * Like {@link #addShifted(MutableBigInteger, int)} but {@code this.intLen} must
-     * not be greater than {@code n}. In other words, concatenates {@code this}
-     * and {@code addend}.
-     */
-    void addDisjoint(MutableBigInteger addend, int n) {
-        if (addend.isZero())
-            return;
-
-        int x = intLen;
-        int y = addend.intLen + n;
-        int resultLen = (intLen > y ? intLen : y);
-        int[] result;
-        if (value.length < resultLen)
-            result = new int[resultLen];
-        else {
-            result = value;
-            Arrays.fill(value, offset+intLen, value.length, 0);
-        }
-
-        int rstart = result.length-1;
-
-        // copy from this if needed
-        System.arraycopy(value, offset, result, rstart+1-x, x);
-        y -= x;
-        rstart -= x;
-
-        int len = Math.min(y, addend.value.length-addend.offset);
-        System.arraycopy(addend.value, addend.offset, result, rstart+1-y, len);
-
-        // zero the gap
-        for (int i=rstart+1-y+len; i < rstart+1; i++)
-            result[i] = 0;
-
-        value = result;
-        intLen = resultLen;
-        offset = result.length - resultLen;
-    }
-
-    /**
-     * Adds the low {@code n} ints of {@code addend}.
-     */
-    void addLower(MutableBigInteger addend, int n) {
-        MutableBigInteger a = new MutableBigInteger(addend);
-        if (a.offset + a.intLen >= n) {
-            a.offset = a.offset + a.intLen - n;
-            a.intLen = n;
-        }
-        a.normalize();
-        add(a);
     }
 
     /**
@@ -1265,23 +1018,18 @@ class MutableBigInteger {
      *
      */
     MutableBigInteger divide(MutableBigInteger b, MutableBigInteger quotient) {
-        return divide(b,quotient,true);
+        return divide(b, quotient, true);
     }
 
     MutableBigInteger divide(MutableBigInteger b, MutableBigInteger quotient, boolean needRemainder) {
-        if (b.intLen < BigInteger.BURNIKEL_ZIEGLER_THRESHOLD ||
-                intLen - b.intLen < BigInteger.BURNIKEL_ZIEGLER_OFFSET) {
-            return divideKnuth(b, quotient, needRemainder);
-        } else {
-            return divideAndRemainderBurnikelZiegler(b, quotient);
-        }
+        return divideKnuth(b, quotient, needRemainder);
     }
 
     /**
      * @see #divideKnuth(MutableBigInteger, MutableBigInteger, boolean)
      */
     MutableBigInteger divideKnuth(MutableBigInteger b, MutableBigInteger quotient) {
-        return divideKnuth(b,quotient,true);
+        return divideKnuth(b, quotient, true);
     }
 
     /**
@@ -1348,199 +1096,6 @@ class MutableBigInteger {
         return divideMagnitude(b, quotient, needRemainder);
     }
 
-    /**
-     * Computes {@code this/b} and {@code this%b} using the
-     * <a href="http://cr.yp.to/bib/1998/burnikel.ps"> Burnikel-Ziegler algorithm</a>.
-     * This method implements algorithm 3 from pg. 9 of the Burnikel-Ziegler paper.
-     * The parameter beta was chosen to b 2<sup>32</sup> so almost all shifts are
-     * multiples of 32 bits.<br/>
-     * {@code this} and {@code b} must be nonnegative.
-     * @param b the divisor
-     * @param quotient output parameter for {@code this/b}
-     * @return the remainder
-     */
-    MutableBigInteger divideAndRemainderBurnikelZiegler(MutableBigInteger b, MutableBigInteger quotient) {
-        int r = intLen;
-        int s = b.intLen;
-
-        // Clear the quotient
-        quotient.offset = quotient.intLen = 0;
-
-        if (r < s) {
-            return this;
-        } else {
-            // Unlike Knuth division, we don't check for common powers of two here because
-            // BZ already runs faster if both numbers contain powers of two and cancelling them has no
-            // additional benefit.
-
-            // step 1: let m = min{2^k | (2^k)*BURNIKEL_ZIEGLER_THRESHOLD > s}
-            int m = 1 << (32-Integer.numberOfLeadingZeros(s/BigInteger.BURNIKEL_ZIEGLER_THRESHOLD));
-
-            int j = (s+m-1) / m;      // step 2a: j = ceil(s/m)
-            int n = j * m;            // step 2b: block length in 32-bit units
-            long n32 = 32L * n;         // block length in bits
-            int sigma = (int) Math.max(0, n32 - b.bitLength());   // step 3: sigma = max{T | (2^T)*B < beta^n}
-            MutableBigInteger bShifted = new MutableBigInteger(b);
-            bShifted.safeLeftShift(sigma);   // step 4a: shift b so its length is a multiple of n
-            safeLeftShift(sigma);     // step 4b: shift this by the same amount
-
-            // step 5: t is the number of blocks needed to accommodate this plus one additional bit
-            int t = (int) ((bitLength()+n32) / n32);
-            if (t < 2) {
-                t = 2;
-            }
-
-            // step 6: conceptually split this into blocks a[t-1], ..., a[0]
-            MutableBigInteger a1 = getBlock(t-1, t, n);   // the most significant block of this
-
-            // step 7: z[t-2] = [a[t-1], a[t-2]]
-            MutableBigInteger z = getBlock(t-2, t, n);    // the second to most significant block
-            z.addDisjoint(a1, n);   // z[t-2]
-
-            // do schoolbook division on blocks, dividing 2-block numbers by 1-block numbers
-            MutableBigInteger qi = new MutableBigInteger();
-            MutableBigInteger ri;
-            for (int i=t-2; i > 0; i--) {
-                // step 8a: compute (qi,ri) such that z=b*qi+ri
-                ri = z.divide2n1n(bShifted, qi);
-
-                // step 8b: z = [ri, a[i-1]]
-                z = getBlock(i-1, t, n);   // a[i-1]
-                z.addDisjoint(ri, n);
-                quotient.addShifted(qi, i*n);   // update q (part of step 9)
-            }
-            // final iteration of step 8: do the loop one more time for i=0 but leave z unchanged
-            ri = z.divide2n1n(bShifted, qi);
-            quotient.add(qi);
-
-            ri.rightShift(sigma);   // step 9: this and b were shifted, so shift back
-            return ri;
-        }
-    }
-
-    /**
-     * This method implements algorithm 1 from pg. 4 of the Burnikel-Ziegler paper.
-     * It divides a 2n-digit number by a n-digit number.<br/>
-     * The parameter beta is 2<sup>32</sup> so all shifts are multiples of 32 bits.
-     * <br/>
-     * {@code this} must be a nonnegative number such that {@code this.bitLength() <= 2*b.bitLength()}
-     * @param b a positive number such that {@code b.bitLength()} is even
-     * @param quotient output parameter for {@code this/b}
-     * @return {@code this%b}
-     */
-    private MutableBigInteger divide2n1n(MutableBigInteger b, MutableBigInteger quotient) {
-        int n = b.intLen;
-
-        // step 1: base case
-        if (n%2 != 0 || n < BigInteger.BURNIKEL_ZIEGLER_THRESHOLD) {
-            return divideKnuth(b, quotient);
-        }
-
-        // step 2: view this as [a1,a2,a3,a4] where each ai is n/2 ints or less
-        MutableBigInteger aUpper = new MutableBigInteger(this);
-        aUpper.safeRightShift(32*(n/2));   // aUpper = [a1,a2,a3]
-        keepLower(n/2);   // this = a4
-
-        // step 3: q1=aUpper/b, r1=aUpper%b
-        MutableBigInteger q1 = new MutableBigInteger();
-        MutableBigInteger r1 = aUpper.divide3n2n(b, q1);
-
-        // step 4: quotient=[r1,this]/b, r2=[r1,this]%b
-        addDisjoint(r1, n/2);   // this = [r1,this]
-        MutableBigInteger r2 = divide3n2n(b, quotient);
-
-        // step 5: let quotient=[q1,quotient] and return r2
-        quotient.addDisjoint(q1, n/2);
-        return r2;
-    }
-
-    /**
-     * This method implements algorithm 2 from pg. 5 of the Burnikel-Ziegler paper.
-     * It divides a 3n-digit number by a 2n-digit number.<br/>
-     * The parameter beta is 2<sup>32</sup> so all shifts are multiples of 32 bits.<br/>
-     * <br/>
-     * {@code this} must be a nonnegative number such that {@code 2*this.bitLength() <= 3*b.bitLength()}
-     * @param quotient output parameter for {@code this/b}
-     * @return {@code this%b}
-     */
-    private MutableBigInteger divide3n2n(MutableBigInteger b, MutableBigInteger quotient) {
-        int n = b.intLen / 2;   // half the length of b in ints
-
-        // step 1: view this as [a1,a2,a3] where each ai is n ints or less; let a12=[a1,a2]
-        MutableBigInteger a12 = new MutableBigInteger(this);
-        a12.safeRightShift(32*n);
-
-        // step 2: view b as [b1,b2] where each bi is n ints or less
-        MutableBigInteger b1 = new MutableBigInteger(b);
-        b1.safeRightShift(n * 32);
-        BigInteger b2 = b.getLower(n);
-
-        MutableBigInteger r;
-        MutableBigInteger d;
-        if (compareShifted(b, n) < 0) {
-            // step 3a: if a1<b1, let quotient=a12/b1 and r=a12%b1
-            r = a12.divide2n1n(b1, quotient);
-
-            // step 4: d=quotient*b2
-            d = new MutableBigInteger(quotient.toBigInteger().multiply(b2));
-        } else {
-            // step 3b: if a1>=b1, let quotient=beta^n-1 and r=a12-b1*2^n+b1
-            quotient.ones(n);
-            a12.add(b1);
-            b1.leftShift(32*n);
-            a12.subtract(b1);
-            r = a12;
-
-            // step 4: d=quotient*b2=(b2 << 32*n) - b2
-            d = new MutableBigInteger(b2);
-            d.leftShift(32 * n);
-            d.subtract(new MutableBigInteger(b2));
-        }
-
-        // step 5: r = r*beta^n + a3 - d (paper says a4)
-        // However, don't subtract d until after the while loop so r doesn't become negative
-        r.leftShift(32 * n);
-        r.addLower(this, n);
-
-        // step 6: add b until r>=d
-        while (r.compare(d) < 0) {
-            r.add(b);
-            quotient.subtract(MutableBigInteger.ONE);
-        }
-        r.subtract(d);
-
-        return r;
-    }
-
-    /**
-     * Returns a {@code MutableBigInteger} containing {@code blockLength} ints from
-     * {@code this} number, starting at {@code index*blockLength}.<br/>
-     * Used by Burnikel-Ziegler division.
-     * @param index the block index
-     * @param numBlocks the total number of blocks in {@code this} number
-     * @param blockLength length of one block in units of 32 bits
-     * @return
-     */
-    private MutableBigInteger getBlock(int index, int numBlocks, int blockLength) {
-        int blockStart = index * blockLength;
-        if (blockStart >= intLen) {
-            return new MutableBigInteger();
-        }
-
-        int blockEnd;
-        if (index == numBlocks-1) {
-            blockEnd = intLen;
-        } else {
-            blockEnd = (index+1) * blockLength;
-        }
-        if (blockEnd > intLen) {
-            return new MutableBigInteger();
-        }
-
-        int[] newVal = Arrays.copyOfRange(value, offset+intLen-blockEnd, offset+intLen-blockStart);
-        return new MutableBigInteger(newVal);
-    }
-
     /** @see BigInteger#bitLength() */
     long bitLength() {
         if (intLen == 0)
@@ -1605,13 +1160,13 @@ class MutableBigInteger {
         MutableBigInteger rem; // Remainder starts as dividend with space for a leading zero
         if (shift > 0) {
             divisor = new int[dlen];
-            copyAndShift(div.value,div.offset,dlen,divisor,0,shift);
+            copyAndShift(div.value, div.offset, dlen, divisor, 0, shift);
             if (Integer.numberOfLeadingZeros(value[offset]) >= shift) {
                 int[] remarr = new int[intLen + 1];
                 rem = new MutableBigInteger(remarr);
                 rem.intLen = intLen;
                 rem.offset = 1;
-                copyAndShift(value,offset,intLen,remarr,1,shift);
+                copyAndShift(value, offset, intLen, remarr, 1, shift);
             } else {
                 int[] remarr = new int[intLen + 2];
                 rem = new MutableBigInteger(remarr);
@@ -1620,7 +1175,7 @@ class MutableBigInteger {
                 int rFrom = offset;
                 int c=0;
                 int n2 = 32 - shift;
-                for (int i=1; i < intLen+1; i++,rFrom++) {
+                for (int i=1; i < intLen+1; i++, rFrom++) {
                     int b = c;
                     c = value[rFrom];
                     remarr[i] = (b << shift) | (c >>> n2);
@@ -1887,7 +1442,7 @@ class MutableBigInteger {
             // D5 Test remainder
             if (borrow + 0x80000000 > nh2) {
                 // D6 Add back
-                divaddLong(dh,dl, rem.value, j + 1 + rem.offset);
+                divaddLong(dh, dl, rem.value, j + 1 + rem.offset);
                 qhat--;
             }
 
@@ -2622,62 +2177,13 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
      * This constant limits {@code mag.length} of BigIntegers to the supported
      * range.
      */
-    private static final int MAX_MAG_LENGTH = Integer.MAX_VALUE / Integer.SIZE + 1; // (1 << 26)
+    private static final int MAX_MAG_LENGTH = 64;
 
     /**
      * Bit lengths larger than this constant can cause overflow in searchLen
      * calculation and in BitSieve.singleSearch method.
      */
-    private static final  int PRIME_SEARCH_BIT_LENGTH_LIMIT = 500000000;
-
-    /**
-     * The threshold value for using Karatsuba multiplication.  If the number
-     * of ints in both mag arrays are greater than this number, then
-     * Karatsuba multiplication will be used.   This value is found
-     * experimentally to work well.
-     */
-    private static final int KARATSUBA_THRESHOLD = 80;
-
-    /**
-     * The threshold value for using 3-way Toom-Cook multiplication.
-     * If the number of ints in each mag array is greater than the
-     * Karatsuba threshold, and the number of ints in at least one of
-     * the mag arrays is greater than this threshold, then Toom-Cook
-     * multiplication will be used.
-     */
-    private static final int TOOM_COOK_THRESHOLD = 240;
-
-    /**
-     * The threshold value for using Karatsuba squaring.  If the number
-     * of ints in the number are larger than this value,
-     * Karatsuba squaring will be used.   This value is found
-     * experimentally to work well.
-     */
-    private static final int KARATSUBA_SQUARE_THRESHOLD = 128;
-
-    /**
-     * The threshold value for using Toom-Cook squaring.  If the number
-     * of ints in the number are larger than this value,
-     * Toom-Cook squaring will be used.   This value is found
-     * experimentally to work well.
-     */
-    private static final int TOOM_COOK_SQUARE_THRESHOLD = 216;
-
-    /**
-     * The threshold value for using Burnikel-Ziegler division.  If the number
-     * of ints in the divisor are larger than this value, Burnikel-Ziegler
-     * division may be used.  This value is found experimentally to work well.
-     */
-    static final int BURNIKEL_ZIEGLER_THRESHOLD = 80;
-
-    /**
-     * The offset value for using Burnikel-Ziegler division.  If the number
-     * of ints in the divisor exceeds the Burnikel-Ziegler threshold, and the
-     * number of ints in the dividend is greater than the number of ints in the
-     * divisor plus this value, Burnikel-Ziegler division will be used.  This
-     * value is found experimentally to work well.
-     */
-    static final int BURNIKEL_ZIEGLER_OFFSET = 40;
+    private static final int PRIME_SEARCH_BIT_LENGTH_LIMIT = 500000000;
 
     /**
      * The threshold value for using Schoenhage recursive base conversion. If
@@ -3145,8 +2651,7 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
         }
     }
 
-    private static final BigInteger SMALL_PRIME_PRODUCT
-                       = valueOf(3L*5*7*11*13*17*19*23*29*31*37*41);
+    private static final BigInteger SMALL_PRIME_PRODUCT = valueOf(3L*5*7*11*13*17*19*23*29*31*37*41);
 
     /**
      * Find a random number of the specified bitLength that is probably prime.
@@ -3237,8 +2742,7 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
 
         while (true) {
            BitSieve searchSieve = new BitSieve(result, searchLen);
-           BigInteger candidate = searchSieve.retrieve(result,
-                                                 DEFAULT_PRIME_CERTAINTY, null);
+           BigInteger candidate = searchSieve.retrieve(result, DEFAULT_PRIME_CERTAINTY, null);
            if (candidate != null)
                return candidate;
            result = result.add(BigInteger.valueOf(2 * searchLen));
@@ -3822,30 +3326,21 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
         int xlen = mag.length;
         int ylen = val.mag.length;
 
-        if ((xlen < KARATSUBA_THRESHOLD) || (ylen < KARATSUBA_THRESHOLD)) {
-            int resultSign = signum == val.signum ? 1 : -1;
-            if (val.mag.length == 1) {
-                return multiplyByInt(mag,val.mag[0], resultSign);
-            }
-            if (mag.length == 1) {
-                return multiplyByInt(val.mag,mag[0], resultSign);
-            }
-            int[] result = multiplyToLen(mag, xlen,
-                                         val.mag, ylen, null);
-            result = trustedStripLeadingZeroInts(result);
-            return new BigInteger(result, resultSign);
-        } else {
-            if ((xlen < TOOM_COOK_THRESHOLD) && (ylen < TOOM_COOK_THRESHOLD)) {
-                return multiplyKaratsuba(this, val);
-            } else {
-                return multiplyToomCook3(this, val);
-            }
+        int resultSign = (signum == val.signum) ? 1 : -1;
+        if (val.mag.length == 1) {
+            return multiplyByInt(mag, val.mag[0], resultSign);
         }
+        if (mag.length == 1) {
+            return multiplyByInt(val.mag, mag[0], resultSign);
+        }
+        int[] result = multiplyToLen(mag, xlen, val.mag, ylen, null);
+        result = trustedStripLeadingZeroInts(result);
+        return new BigInteger(result, resultSign);
     }
 
     private static BigInteger multiplyByInt(int[] x, int y, int sign) {
         if (Integer.bitCount(y) == 1) {
-            return new BigInteger(shiftLeft(x,Integer.numberOfTrailingZeros(y)), sign);
+            return new BigInteger(shiftLeft(x, Integer.numberOfTrailingZeros(y)), sign);
         }
         int xlen = x.length;
         int[] rmag =  new int[xlen + 1];
@@ -3899,270 +3394,6 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
         return z;
     }
 
-    /**
-     * Multiplies two BigIntegers using the Karatsuba multiplication
-     * algorithm.  This is a recursive divide-and-conquer algorithm which is
-     * more efficient for large numbers than what is commonly called the
-     * "grade-school" algorithm used in multiplyToLen.  If the numbers to be
-     * multiplied have length n, the "grade-school" algorithm has an
-     * asymptotic complexity of O(n^2).  In contrast, the Karatsuba algorithm
-     * has complexity of O(n^(log2(3))), or O(n^1.585).  It achieves this
-     * increased performance by doing 3 multiplies instead of 4 when
-     * evaluating the product.  As it has some overhead, should be used when
-     * both numbers are larger than a certain threshold (found
-     * experimentally).
-     *
-     * See:  http://en.wikipedia.org/wiki/Karatsuba_algorithm
-     */
-    private static BigInteger multiplyKaratsuba(BigInteger x, BigInteger y) {
-        int xlen = x.mag.length;
-        int ylen = y.mag.length;
-
-        // The number of ints in each half of the number.
-        int half = (Math.max(xlen, ylen)+1) / 2;
-
-        // xl and yl are the lower halves of x and y respectively,
-        // xh and yh are the upper halves.
-        BigInteger xl = x.getLower(half);
-        BigInteger xh = x.getUpper(half);
-        BigInteger yl = y.getLower(half);
-        BigInteger yh = y.getUpper(half);
-
-        BigInteger p1 = xh.multiply(yh);  // p1 = xh*yh
-        BigInteger p2 = xl.multiply(yl);  // p2 = xl*yl
-
-        // p3=(xh+xl)*(yh+yl)
-        BigInteger p3 = xh.add(xl).multiply(yh.add(yl));
-
-        // result = p1 * 2^(32*2*half) + (p3 - p1 - p2) * 2^(32*half) + p2
-        BigInteger result = p1.shiftLeft(32*half).add(p3.subtract(p1).subtract(p2)).shiftLeft(32*half).add(p2);
-
-        if (x.signum != y.signum) {
-            return result.negate();
-        } else {
-            return result;
-        }
-    }
-
-    /**
-     * Multiplies two BigIntegers using a 3-way Toom-Cook multiplication
-     * algorithm.  This is a recursive divide-and-conquer algorithm which is
-     * more efficient for large numbers than what is commonly called the
-     * "grade-school" algorithm used in multiplyToLen.  If the numbers to be
-     * multiplied have length n, the "grade-school" algorithm has an
-     * asymptotic complexity of O(n^2).  In contrast, 3-way Toom-Cook has a
-     * complexity of about O(n^1.465).  It achieves this increased asymptotic
-     * performance by breaking each number into three parts and by doing 5
-     * multiplies instead of 9 when evaluating the product.  Due to overhead
-     * (additions, shifts, and one division) in the Toom-Cook algorithm, it
-     * should only be used when both numbers are larger than a certain
-     * threshold (found experimentally).  This threshold is generally larger
-     * than that for Karatsuba multiplication, so this algorithm is generally
-     * only used when numbers become significantly larger.
-     *
-     * The algorithm used is the "optimal" 3-way Toom-Cook algorithm outlined
-     * by Marco Bodrato.
-     *
-     *  See: http://bodrato.it/toom-cook/
-     *       http://bodrato.it/papers/#WAIFI2007
-     *
-     * "Towards Optimal Toom-Cook Multiplication for Univariate and
-     * Multivariate Polynomials in Characteristic 2 and 0." by Marco BODRATO;
-     * In C.Carlet and B.Sunar, Eds., "WAIFI'07 proceedings", p. 116-133,
-     * LNCS #4547. Springer, Madrid, Spain, June 21-22, 2007.
-     *
-     */
-    private static BigInteger multiplyToomCook3(BigInteger a, BigInteger b) {
-        int alen = a.mag.length;
-        int blen = b.mag.length;
-
-        int largest = Math.max(alen, blen);
-
-        // k is the size (in ints) of the lower-order slices.
-        int k = (largest+2)/3;   // Equal to ceil(largest/3)
-
-        // r is the size (in ints) of the highest-order slice.
-        int r = largest - 2*k;
-
-        // Obtain slices of the numbers. a2 and b2 are the most significant
-        // bits of the numbers a and b, and a0 and b0 the least significant.
-        BigInteger a0, a1, a2, b0, b1, b2;
-        a2 = a.getToomSlice(k, r, 0, largest);
-        a1 = a.getToomSlice(k, r, 1, largest);
-        a0 = a.getToomSlice(k, r, 2, largest);
-        b2 = b.getToomSlice(k, r, 0, largest);
-        b1 = b.getToomSlice(k, r, 1, largest);
-        b0 = b.getToomSlice(k, r, 2, largest);
-
-        BigInteger v0, v1, v2, vm1, vinf, t1, t2, tm1, da1, db1;
-
-        v0 = a0.multiply(b0);
-        da1 = a2.add(a0);
-        db1 = b2.add(b0);
-        vm1 = da1.subtract(a1).multiply(db1.subtract(b1));
-        da1 = da1.add(a1);
-        db1 = db1.add(b1);
-        v1 = da1.multiply(db1);
-        v2 = da1.add(a2).shiftLeft(1).subtract(a0).multiply(
-             db1.add(b2).shiftLeft(1).subtract(b0));
-        vinf = a2.multiply(b2);
-
-        // The algorithm requires two divisions by 2 and one by 3.
-        // All divisions are known to be exact, that is, they do not produce
-        // remainders, and all results are positive.  The divisions by 2 are
-        // implemented as right shifts which are relatively efficient, leaving
-        // only an exact division by 3, which is done by a specialized
-        // linear-time algorithm.
-        t2 = v2.subtract(vm1).exactDivideBy3();
-        tm1 = v1.subtract(vm1).shiftRight(1);
-        t1 = v1.subtract(v0);
-        t2 = t2.subtract(t1).shiftRight(1);
-        t1 = t1.subtract(tm1).subtract(vinf);
-        t2 = t2.subtract(vinf.shiftLeft(1));
-        tm1 = tm1.subtract(t2);
-
-        // Number of bits to shift left.
-        int ss = k*32;
-
-        BigInteger result = vinf.shiftLeft(ss).add(t2).shiftLeft(ss).add(t1).shiftLeft(ss).add(tm1).shiftLeft(ss).add(v0);
-
-        if (a.signum != b.signum) {
-            return result.negate();
-        } else {
-            return result;
-        }
-    }
-
-
-    /**
-     * Returns a slice of a BigInteger for use in Toom-Cook multiplication.
-     *
-     * @param lowerSize The size of the lower-order bit slices.
-     * @param upperSize The size of the higher-order bit slices.
-     * @param slice The index of which slice is requested, which must be a
-     * number from 0 to size-1. Slice 0 is the highest-order bits, and slice
-     * size-1 are the lowest-order bits. Slice 0 may be of different size than
-     * the other slices.
-     * @param fullsize The size of the larger integer array, used to align
-     * slices to the appropriate position when multiplying different-sized
-     * numbers.
-     */
-    private BigInteger getToomSlice(int lowerSize, int upperSize, int slice,
-                                    int fullsize) {
-        int start, end, sliceSize, len, offset;
-
-        len = mag.length;
-        offset = fullsize - len;
-
-        if (slice == 0) {
-            start = 0 - offset;
-            end = upperSize - 1 - offset;
-        } else {
-            start = upperSize + (slice-1)*lowerSize - offset;
-            end = start + lowerSize - 1;
-        }
-
-        if (start < 0) {
-            start = 0;
-        }
-        if (end < 0) {
-           return ZERO;
-        }
-
-        sliceSize = (end-start) + 1;
-
-        if (sliceSize <= 0) {
-            return ZERO;
-        }
-
-        // While performing Toom-Cook, all slices are positive and
-        // the sign is adjusted when the final number is composed.
-        if (start == 0 && sliceSize >= len) {
-            return this.abs();
-        }
-
-        int intSlice[] = new int[sliceSize];
-        System.arraycopy(mag, start, intSlice, 0, sliceSize);
-
-        return new BigInteger(trustedStripLeadingZeroInts(intSlice), 1);
-    }
-
-    /**
-     * Does an exact division (that is, the remainder is known to be zero)
-     * of the specified number by 3.  This is used in Toom-Cook
-     * multiplication.  This is an efficient algorithm that runs in linear
-     * time.  If the argument is not exactly divisible by 3, results are
-     * undefined.  Note that this is expected to be called with positive
-     * arguments only.
-     */
-    private BigInteger exactDivideBy3() {
-        int len = mag.length;
-        int[] result = new int[len];
-        long x, w, q, borrow;
-        borrow = 0L;
-        for (int i=len-1; i >= 0; i--) {
-            x = (mag[i] & LONG_MASK);
-            w = x - borrow;
-            if (borrow > x) {      // Did we make the number go negative?
-                borrow = 1L;
-            } else {
-                borrow = 0L;
-            }
-
-            // 0xAAAAAAAB is the modular inverse of 3 (mod 2^32).  Thus,
-            // the effect of this is to divide by 3 (mod 2^32).
-            // This is much faster than division on most architectures.
-            q = (w * 0xAAAAAAABL) & LONG_MASK;
-            result[i] = (int) q;
-
-            // Now check the borrow. The second check can of course be
-            // eliminated if the first fails.
-            if (q >= 0x55555556L) {
-                borrow++;
-                if (q >= 0xAAAAAAABL)
-                    borrow++;
-            }
-        }
-        result = trustedStripLeadingZeroInts(result);
-        return new BigInteger(result, signum);
-    }
-
-    /**
-     * Returns a new BigInteger representing n lower ints of the number.
-     * This is used by Karatsuba multiplication and Karatsuba squaring.
-     */
-    private BigInteger getLower(int n) {
-        int len = mag.length;
-
-        if (len <= n) {
-            return abs();
-        }
-
-        int lowerInts[] = new int[n];
-        System.arraycopy(mag, len-n, lowerInts, 0, n);
-
-        return new BigInteger(trustedStripLeadingZeroInts(lowerInts), 1);
-    }
-
-    /**
-     * Returns a new BigInteger representing mag.length-n upper
-     * ints of the number.  This is used by Karatsuba multiplication and
-     * Karatsuba squaring.
-     */
-    private BigInteger getUpper(int n) {
-        int len = mag.length;
-
-        if (len <= n) {
-            return ZERO;
-        }
-
-        int upperLen = len - n;
-        int upperInts[] = new int[upperLen];
-        System.arraycopy(mag, 0, upperInts, 0, upperLen);
-
-        return new BigInteger(trustedStripLeadingZeroInts(upperInts), 1);
-    }
-
     // Squaring
 
     /**
@@ -4174,18 +3405,9 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
         if (signum == 0) {
             return ZERO;
         }
-        int len = mag.length;
 
-        if (len < KARATSUBA_SQUARE_THRESHOLD) {
-            int[] z = squareToLen(mag, len, null);
-            return new BigInteger(trustedStripLeadingZeroInts(z), 1);
-        } else {
-            if (len < TOOM_COOK_SQUARE_THRESHOLD) {
-                return squareKaratsuba();
-            } else {
-                return squareToomCook3();
-            }
-        }
+        int[] z = squareToLen(mag, mag.length, null);
+        return new BigInteger(trustedStripLeadingZeroInts(z), 1);
     }
 
     /**
@@ -4255,78 +3477,6 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
         return z;
     }
 
-    /**
-     * Squares a BigInteger using the Karatsuba squaring algorithm.  It should
-     * be used when both numbers are larger than a certain threshold (found
-     * experimentally).  It is a recursive divide-and-conquer algorithm that
-     * has better asymptotic performance than the algorithm used in
-     * squareToLen.
-     */
-    private BigInteger squareKaratsuba() {
-        int half = (mag.length+1) / 2;
-
-        BigInteger xl = getLower(half);
-        BigInteger xh = getUpper(half);
-
-        BigInteger xhs = xh.square();  // xhs = xh^2
-        BigInteger xls = xl.square();  // xls = xl^2
-
-        // xh^2 << 64  +  (((xl+xh)^2 - (xh^2 + xl^2)) << 32) + xl^2
-        return xhs.shiftLeft(half*32).add(xl.add(xh).square().subtract(xhs.add(xls))).shiftLeft(half*32).add(xls);
-    }
-
-    /**
-     * Squares a BigInteger using the 3-way Toom-Cook squaring algorithm.  It
-     * should be used when both numbers are larger than a certain threshold
-     * (found experimentally).  It is a recursive divide-and-conquer algorithm
-     * that has better asymptotic performance than the algorithm used in
-     * squareToLen or squareKaratsuba.
-     */
-    private BigInteger squareToomCook3() {
-        int len = mag.length;
-
-        // k is the size (in ints) of the lower-order slices.
-        int k = (len+2)/3;   // Equal to ceil(largest/3)
-
-        // r is the size (in ints) of the highest-order slice.
-        int r = len - 2*k;
-
-        // Obtain slices of the numbers. a2 is the most significant
-        // bits of the number, and a0 the least significant.
-        BigInteger a0, a1, a2;
-        a2 = getToomSlice(k, r, 0, len);
-        a1 = getToomSlice(k, r, 1, len);
-        a0 = getToomSlice(k, r, 2, len);
-        BigInteger v0, v1, v2, vm1, vinf, t1, t2, tm1, da1;
-
-        v0 = a0.square();
-        da1 = a2.add(a0);
-        vm1 = da1.subtract(a1).square();
-        da1 = da1.add(a1);
-        v1 = da1.square();
-        vinf = a2.square();
-        v2 = da1.add(a2).shiftLeft(1).subtract(a0).square();
-
-        // The algorithm requires two divisions by 2 and one by 3.
-        // All divisions are known to be exact, that is, they do not produce
-        // remainders, and all results are positive.  The divisions by 2 are
-        // implemented as right shifts which are relatively efficient, leaving
-        // only a division by 3.
-        // The division by 3 is done by an optimized algorithm for this case.
-        t2 = v2.subtract(vm1).exactDivideBy3();
-        tm1 = v1.subtract(vm1).shiftRight(1);
-        t1 = v1.subtract(v0);
-        t2 = t2.subtract(t1).shiftRight(1);
-        t1 = t1.subtract(tm1).subtract(vinf);
-        t2 = t2.subtract(vinf.shiftLeft(1));
-        tm1 = tm1.subtract(t2);
-
-        // Number of bits to shift left.
-        int ss = k*32;
-
-        return vinf.shiftLeft(ss).add(t2).shiftLeft(ss).add(t1).shiftLeft(ss).add(tm1).shiftLeft(ss).add(v0);
-    }
-
     // Division
 
     /**
@@ -4337,12 +3487,7 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
      * @throws ArithmeticException if {@code val} is zero.
      */
     public BigInteger divide(BigInteger val) {
-        if (val.mag.length < BURNIKEL_ZIEGLER_THRESHOLD ||
-                mag.length - val.mag.length < BURNIKEL_ZIEGLER_OFFSET) {
-            return divideKnuth(val);
-        } else {
-            return divideBurnikelZiegler(val);
-        }
+        return divideKnuth(val);
     }
 
     /**
@@ -4374,12 +3519,7 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
      * @throws ArithmeticException if {@code val} is zero.
      */
     public BigInteger[] divideAndRemainder(BigInteger val) {
-        if (val.mag.length < BURNIKEL_ZIEGLER_THRESHOLD ||
-                mag.length - val.mag.length < BURNIKEL_ZIEGLER_OFFSET) {
-            return divideAndRemainderKnuth(val);
-        } else {
-            return divideAndRemainderBurnikelZiegler(val);
-        }
+        return divideAndRemainderKnuth(val);
     }
 
     /** Long division */
@@ -4403,12 +3543,7 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
      * @throws ArithmeticException if {@code val} is zero.
      */
     public BigInteger remainder(BigInteger val) {
-        if (val.mag.length < BURNIKEL_ZIEGLER_THRESHOLD ||
-                mag.length - val.mag.length < BURNIKEL_ZIEGLER_OFFSET) {
-            return remainderKnuth(val);
-        } else {
-            return remainderBurnikelZiegler(val);
-        }
+        return remainderKnuth(val);
     }
 
     /** Long division */
@@ -4418,38 +3553,6 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
                           b = new MutableBigInteger(val.mag);
 
         return a.divideKnuth(b, q).toBigInteger(this.signum);
-    }
-
-    /**
-     * Calculates {@code this / val} using the Burnikel-Ziegler algorithm.
-     * @param  val the divisor
-     * @return {@code this / val}
-     */
-    private BigInteger divideBurnikelZiegler(BigInteger val) {
-        return divideAndRemainderBurnikelZiegler(val)[0];
-    }
-
-    /**
-     * Calculates {@code this % val} using the Burnikel-Ziegler algorithm.
-     * @param val the divisor
-     * @return {@code this % val}
-     */
-    private BigInteger remainderBurnikelZiegler(BigInteger val) {
-        return divideAndRemainderBurnikelZiegler(val)[1];
-    }
-
-    /**
-     * Computes {@code this / val} and {@code this % val} using the
-     * Burnikel-Ziegler algorithm.
-     * @param val the divisor
-     * @return an array containing the quotient and remainder
-     */
-    private BigInteger[] divideAndRemainderBurnikelZiegler(BigInteger val) {
-        MutableBigInteger q = new MutableBigInteger();
-        MutableBigInteger r = new MutableBigInteger(this).divideAndRemainderBurnikelZiegler(new MutableBigInteger(val), q);
-        BigInteger qBigInt = q.isZero() ? ZERO : q.toBigInteger(signum*val.signum);
-        BigInteger rBigInt = r.isZero() ? ZERO : r.toBigInteger(signum);
-        return new BigInteger[] {qBigInt, rBigInt};
     }
 
     /**
@@ -5543,7 +4646,7 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
                 lsb -= 1;
             } else {
                 // Search for lowest order nonzero int
-                int i,b;
+                int i, b;
                 for (i=0; (b = getInt(i)) == 0; i++)
                     ;
                 lsb += (i << 5) + Integer.numberOfTrailingZeros(b);
@@ -6050,7 +5153,6 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
      * result with the opposite sign.
      *
      * @return this BigInteger converted to an {@code int}.
-     * @see #intValueExact()
      */
     public int intValue() {
         int result = 0;
@@ -6071,7 +5173,6 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
      * result with the opposite sign.
      *
      * @return this BigInteger converted to a {@code long}.
-     * @see #longValueExact()
      */
     public long longValue() {
         long result = 0;
@@ -6322,65 +5423,6 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
             firstNonzeroIntNum = fn + 2; // offset by two to initialize
         }
         return fn;
-    }
-
-    /**
-     * Converts this {@code BigInteger} to a {@code long}, checking
-     * for lost information.  If the value of this {@code BigInteger}
-     * is out of the range of the {@code long} type, then an
-     * {@code ArithmeticException} is thrown.
-     *
-     * @return this {@code BigInteger} converted to a {@code long}.
-     * @throws ArithmeticException if the value of {@code this} will
-     * not exactly fit in a {@code long}.
-     * @see BigInteger#longValue
-     * @since  1.8
-     */
-    public long longValueExact() {
-        if (mag.length <= 2 && bitLength() <= 63)
-            return longValue();
-        else
-            throw new ArithmeticException("BigInteger out of long range");
-    }
-
-    /**
-     * Converts this {@code BigInteger} to an {@code int}, checking
-     * for lost information.  If the value of this {@code BigInteger}
-     * is out of the range of the {@code int} type, then an
-     * {@code ArithmeticException} is thrown.
-     *
-     * @return this {@code BigInteger} converted to an {@code int}.
-     * @throws ArithmeticException if the value of {@code this} will
-     * not exactly fit in a {@code int}.
-     * @see BigInteger#intValue
-     * @since  1.8
-     */
-    public int intValueExact() {
-        if (mag.length <= 1 && bitLength() <= 31)
-            return intValue();
-        else
-            throw new ArithmeticException("BigInteger out of int range");
-    }
-
-    /**
-     * Converts this {@code BigInteger} to a {@code byte}, checking
-     * for lost information.  If the value of this {@code BigInteger}
-     * is out of the range of the {@code byte} type, then an
-     * {@code ArithmeticException} is thrown.
-     *
-     * @return this {@code BigInteger} converted to a {@code byte}.
-     * @throws ArithmeticException if the value of {@code this} will
-     * not exactly fit in a {@code byte}.
-     * @see BigInteger#byteValue
-     * @since  1.8
-     */
-    public byte byteValueExact() {
-        if (mag.length <= 1 && bitLength() <= 31) {
-            int value = intValue();
-            if (value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE)
-                return byteValue();
-        }
-        throw new ArithmeticException("BigInteger out of byte range");
     }
 
     public float floatValue() {
