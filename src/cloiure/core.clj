@@ -445,10 +445,6 @@
     (defrecord DynamicClassLoader #_"ClassLoader" [])
 )
 
-(java-ns cloiure.lang.BigInt
-    (defrecord BigInt #_"Number" [] #_"IHashEq")
-)
-
 (java-ns cloiure.lang.Ratio
     (defrecord Ratio #_"Number" [] #_"Comparable")
 )
@@ -952,10 +948,9 @@
 (defn ^Class class [^Object x] (when (some? x) (.getClass x)))
 
 (defn integer? [n]
-    (or (instance? Integer n)
-        (instance? Long n)
-        (instance? BigInt n)
+    (or (instance? Long n)
         (instance? BigInteger n)
+        (instance? Integer n)
         (instance? Byte n)
     )
 )
@@ -7224,23 +7219,16 @@
         nil
     )
 
-    (def- #_"Pattern" LispReader'rxInteger #"([-+]?)(?:(0)|([1-9][0-9]*)|0[xX]([0-9A-Fa-f]+)|0([0-7]+)|([1-9][0-9]?)[rR]([0-9A-Za-z]+)|0[0-9]+)(N)?")
+    (def- #_"Pattern" LispReader'rxInteger #"([-+]?)(?:(0)|([1-9][0-9]*)|0[xX]([0-9A-Fa-f]+)|0([0-7]+)|([1-9][0-9]?)[rR]([0-9A-Za-z]+)|0[0-9]+)")
     (def- #_"Pattern" LispReader'rxRatio   #"([-+]?[0-9]+)/([0-9]+)")
 
-    (declare BigInt'ZERO)
     (declare Numbers'num-1l)
-    (declare BigInt'fromBigInteger)
     (declare Numbers'divide)
-    (declare Numbers'reduceBigInt)
 
     (defn- #_"Object" LispReader'matchNumber [#_"String" s]
         (let [_ (or
                     (let-when [#_"Matcher" m (.matcher LispReader'rxInteger, s)] (.matches m)
-                        (if (some? (.group m, 2))
-                            (if (some? (.group m, 8))
-                                BigInt'ZERO
-                                (Numbers'num-1l 0)
-                            )
+                        (when (nil? (.group m, 2)) => (Numbers'num-1l 0)
                             (let [[#_"String" n #_"int" radix]
                                     (cond-let
                                         [n (.group m, 3)] [n 10]
@@ -7250,10 +7238,8 @@
                                     )]
                                 (when (some? n) => :nil
                                     (let [#_"BigInteger" bn (BigInteger. n, radix) bn (if (= (.group m, 1) "-") (.negate bn) bn)]
-                                        (cond
-                                            (some? (.group m, 8))  (BigInt'fromBigInteger bn)
-                                            (< (.bitLength bn) 64) (Numbers'num-1l (.longValue bn))
-                                            :else                  (BigInt'fromBigInteger bn)
+                                        (when (< (.bitLength bn) 64) => bn
+                                            (Numbers'num-1l (.longValue bn))
                                         )
                                     )
                                 )
@@ -7262,10 +7248,7 @@
                     )
                     (let-when [#_"Matcher" m (.matcher LispReader'rxRatio, s)] (.matches m)
                         (let [#_"String" n (.group m, 1) n (if (.startsWith n, "+") (.substring n, 1) n)]
-                            (Numbers'divide
-                                (Numbers'reduceBigInt (BigInt'fromBigInteger (BigInteger. n))),
-                                (Numbers'reduceBigInt (BigInt'fromBigInteger (BigInteger. (.group m, 2))))
-                            )
+                            (Numbers'divide (BigInteger. n), (BigInteger. (.group m, 2)))
                         )
                     )
                 )]
@@ -8075,163 +8058,6 @@
 )
 )
 
-(java-ns cloiure.lang.BigInt
-
-(class-ns BigInt
-    (defn- #_"BigInt" BigInt'new [#_"long" lpart, #_"BigInteger" bipart]
-        (merge (BigInt.) (§ foreign Number'new)
-            (hash-map
-                #_"long" :lpart lpart
-                #_"BigInteger" :bipart bipart
-            )
-        )
-    )
-
-    (def #_"BigInt" BigInt'ZERO (BigInt'new 0, nil))
-    (def #_"BigInt" BigInt'ONE (BigInt'new 1, nil))
-
-    ;; must follow Long
-    #_foreign
-    (defn #_"int" hashCode---BigInt [#_"BigInt" this]
-        (if (nil? (:bipart this))
-            (int (bit-xor (:lpart this) (>>> (:lpart this) 32)))
-            (.hashCode (:bipart this))
-        )
-    )
-
-    (extend-type BigInt IHashEq
-        (#_"int" IHashEq'''hasheq [#_"BigInt" this]
-            (if (nil? (:bipart this))
-                (Murmur3'hashLong (:lpart this))
-                (.hashCode (:bipart this))
-            )
-        )
-    )
-
-    #_foreign
-    (defn #_"boolean" equals---BigInt [#_"BigInt" this, #_"Object" that]
-        (or (identical? this that)
-            (and (instance? BigInt that)
-                (if (nil? (:bipart this))
-                    (and (nil? (:bipart that)) (= (:lpart this) (:lpart that)))
-                    (and (some? (:bipart that)) (= (:bipart this) (:bipart that)))
-                )
-            )
-        )
-    )
-
-    (defn #_"BigInt" BigInt'fromBigInteger [#_"BigInteger" n]
-        (if (< (.bitLength n) 64)
-            (BigInt'new (.longValue n), nil)
-            (BigInt'new 0, n)
-        )
-    )
-
-    (defn #_"BigInt" BigInt'fromLong [#_"long" n]
-        (BigInt'new n, nil)
-    )
-
-    #_method
-    (defn #_"BigInteger" BigInt''toBigInteger [#_"BigInt" this]
-        (if (nil? (:bipart this))
-            (BigInteger/valueOf (:lpart this))
-            (:bipart this)
-        )
-    )
-
-    #_method
-    (defn #_"int" BigInt''intValue [#_"BigInt" this]
-        (if (nil? (:bipart this))
-            (int (:lpart this))
-            (.intValue (:bipart this))
-        )
-    )
-
-    #_method
-    (defn #_"long" BigInt''longValue [#_"BigInt" this]
-        (if (nil? (:bipart this))
-            (:lpart this)
-            (.longValue (:bipart this))
-        )
-    )
-
-    #_method
-    (defn #_"byte" BigInt''byteValue [#_"BigInt" this]
-        (if (nil? (:bipart this))
-            (byte (:lpart this))
-            (.byteValue (:bipart this))
-        )
-    )
-
-    (defn #_"BigInt" BigInt'valueOf [#_"long" val]
-        (BigInt'new val, nil)
-    )
-
-    #_foreign
-    (defn #_"String" toString---BigInt [#_"BigInt" this]
-        (if (nil? (:bipart this))
-            (String/valueOf (:lpart this))
-            (.toString (:bipart this))
-        )
-    )
-
-    #_method
-    (defn #_"BigInt" BigInt''add [#_"BigInt" this, #_"BigInt" y]
-        (or
-            (when (and (nil? (:bipart this)) (nil? (:bipart y)))
-                (let [#_"long" ret (+ (:lpart this) (:lpart y))]
-                    (when (or (<= 0 (bit-xor ret (:lpart this))) (<= 0 (bit-xor ret (:lpart y))))
-                        (BigInt'valueOf ret)
-                    )
-                )
-            )
-            (BigInt'fromBigInteger (.add (BigInt''toBigInteger this), (BigInt''toBigInteger y)))
-        )
-    )
-
-    #_method
-    (defn #_"BigInt" BigInt''multiply [#_"BigInt" this, #_"BigInt" y]
-        (or
-            (when (and (nil? (:bipart this)) (nil? (:bipart y)))
-                (let [#_"long" ret (* (:lpart this) (:lpart y))]
-                    (when (or (zero? (:lpart y)) (and (= (/ ret (:lpart y)) (:lpart this)) (not= (:lpart this) Long/MIN_VALUE)))
-                        (BigInt'valueOf ret)
-                    )
-                )
-            )
-            (BigInt'fromBigInteger (.multiply (BigInt''toBigInteger this), (BigInt''toBigInteger y)))
-        )
-    )
-
-    #_method
-    (defn #_"BigInt" BigInt''quotient [#_"BigInt" this, #_"BigInt" y]
-        (if (and (nil? (:bipart this)) (nil? (:bipart y)))
-            (if (and (= (:lpart this) Long/MIN_VALUE) (= (:lpart y) -1))
-                (BigInt'fromBigInteger (.negate (BigInt''toBigInteger this)))
-                (BigInt'valueOf (/ (:lpart this) (:lpart y)))
-            )
-            (BigInt'fromBigInteger (.divide (BigInt''toBigInteger this), (BigInt''toBigInteger y)))
-        )
-    )
-
-    #_method
-    (defn #_"BigInt" BigInt''remainder [#_"BigInt" this, #_"BigInt" y]
-        (if (and (nil? (:bipart this)) (nil? (:bipart y)))
-            (BigInt'valueOf (% (:lpart this) (:lpart y)))
-            (BigInt'fromBigInteger (.remainder (BigInt''toBigInteger this), (BigInt''toBigInteger y)))
-        )
-    )
-
-    #_method
-    (defn #_"boolean" BigInt''lt [#_"BigInt" this, #_"BigInt" y]
-        (if (and (nil? (:bipart this)) (nil? (:bipart y)))
-            (< (:lpart this) (:lpart y))
-            (neg? (.compareTo (BigInt''toBigInteger this), (BigInt''toBigInteger y)))
-        )
-    )
-)
-)
-
 (java-ns cloiure.lang.Ratio
 
 (class-ns Ratio
@@ -8450,7 +8276,7 @@
             (let [#_"long" val (.longValue x)]
                 (if (< Long/MIN_VALUE val)
                     (Numbers'num-1l (- val))
-                    (BigInt'fromBigInteger (.negate (BigInteger/valueOf val)))
+                    (.negate (BigInteger/valueOf val))
                 )
             )
         )
@@ -8530,38 +8356,30 @@
         )
     )
 
-    (defn #_"Number" RatioOps'normalizeRet [#_"Number" ret, #_"Number" x, #_"Number" y]
-        ret
-    )
-
     (declare Numbers'toRatio)
 
     (extend-type RatioOps Ops
         (#_"Number" Ops'''add [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-            (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
-                  #_"Number" ret (Ops'''divide this, (.add (.multiply (:numerator ry), (:denominator rx)), (.multiply (:numerator rx), (:denominator ry))), (.multiply (:denominator ry), (:denominator rx)))]
-                (RatioOps'normalizeRet ret, x, y)
+            (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
+                (Ops'''divide this, (.add (.multiply (:numerator ry), (:denominator rx)), (.multiply (:numerator rx), (:denominator ry))), (.multiply (:denominator ry), (:denominator rx)))
             )
         )
 
         (#_"Number" Ops'''multiply [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-            (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
-                  #_"Number" ret (Ops'''divide this, (.multiply (:numerator ry), (:numerator rx)), (.multiply (:denominator ry), (:denominator rx)))]
-                (RatioOps'normalizeRet ret, x, y)
+            (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
+                (Ops'''divide this, (.multiply (:numerator ry), (:numerator rx)), (.multiply (:denominator ry), (:denominator rx)))
             )
         )
 
         (#_"Number" Ops'''divide [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-            (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
-                  #_"Number" ret (Ops'''divide this, (.multiply (:denominator ry), (:numerator rx)), (.multiply (:numerator ry), (:denominator rx)))]
-                (RatioOps'normalizeRet ret, x, y)
+            (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
+                (Ops'''divide this, (.multiply (:denominator ry), (:numerator rx)), (.multiply (:numerator ry), (:denominator rx)))
             )
         )
 
         (#_"Number" Ops'''quotient [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-            (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
-                  #_"BigInteger" q (.divide (.multiply (:numerator rx), (:denominator ry)), (.multiply (:denominator rx), (:numerator ry)))]
-                (RatioOps'normalizeRet (BigInt'fromBigInteger q), x, y)
+            (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
+               (.divide (.multiply (:numerator rx), (:denominator ry)), (.multiply (:denominator rx), (:numerator ry)))
             )
         )
     )
@@ -8571,11 +8389,7 @@
 
     (extend-type RatioOps Ops
         (#_"Number" Ops'''remainder [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-            (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)
-                  #_"BigInteger" q (.divide (.multiply (:numerator rx), (:denominator ry)), (.multiply (:denominator rx), (:numerator ry)))
-                  #_"Number" ret (Numbers'minus x, (Numbers'multiply q, y))]
-                (RatioOps'normalizeRet ret, x, y)
-            )
+            (Numbers'minus x, (Numbers'multiply (Ops'''quotient this, x, y), y))
         )
 
         (#_"boolean" Ops'''equiv [#_"RatioOps" this, #_"Number" x, #_"Number" y]
@@ -8657,33 +8471,27 @@
         )
     )
 
-    (declare Numbers'toBigInt)
+    (declare Numbers'toBigInteger)
 
     (extend-type BigIntOps Ops
         (#_"boolean" Ops'''isZero [#_"BigIntOps" this, #_"Number" x]
-            (let [#_"BigInt" bx (Numbers'toBigInt x)]
-                (zero? (if (some? (:bipart bx)) (.signum (:bipart bx)) (:lpart bx)))
-            )
+            (zero? (.signum (Numbers'toBigInteger x)))
         )
 
         (#_"boolean" Ops'''isPos [#_"BigIntOps" this, #_"Number" x]
-            (let [#_"BigInt" bx (Numbers'toBigInt x)]
-                (pos? (if (some? (:bipart bx)) (.signum (:bipart bx)) (:lpart bx)))
-            )
+            (pos? (.signum (Numbers'toBigInteger x)))
         )
 
         (#_"boolean" Ops'''isNeg [#_"BigIntOps" this, #_"Number" x]
-            (let [#_"BigInt" bx (Numbers'toBigInt x)]
-                (neg? (if (some? (:bipart bx)) (.signum (:bipart bx)) (:lpart bx)))
-            )
+            (neg? (.signum (Numbers'toBigInteger x)))
         )
 
         (#_"Number" Ops'''add [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-            (BigInt''add (Numbers'toBigInt x), (Numbers'toBigInt y))
+            (.add (Numbers'toBigInteger x), (Numbers'toBigInteger y))
         )
 
         (#_"Number" Ops'''multiply [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-            (BigInt''multiply (Numbers'toBigInt x), (Numbers'toBigInt y))
+            (.multiply (Numbers'toBigInteger x), (Numbers'toBigInteger y))
         )
     )
 
@@ -8696,19 +8504,19 @@
         )
 
         (#_"Number" Ops'''quotient [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-            (BigInt''quotient (Numbers'toBigInt x), (Numbers'toBigInt y))
+            (.divide (Numbers'toBigInteger x), (Numbers'toBigInteger y))
         )
 
         (#_"Number" Ops'''remainder [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-            (BigInt''remainder (Numbers'toBigInt x), (Numbers'toBigInt y))
+            (.remainder (Numbers'toBigInteger x), (Numbers'toBigInteger y))
         )
 
         (#_"boolean" Ops'''equiv [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-            (= (Numbers'toBigInt x) (Numbers'toBigInt y))
+            (= (Numbers'toBigInteger x) (Numbers'toBigInteger y))
         )
 
         (#_"boolean" Ops'''lt [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-            (BigInt''lt (Numbers'toBigInt x), (Numbers'toBigInt y))
+            (neg? (.compareTo (Numbers'toBigInteger x), (Numbers'toBigInteger y)))
         )
 
         (#_"boolean" Ops'''lte [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
@@ -8720,15 +8528,15 @@
         )
 
         (#_"Number" Ops'''negate [#_"BigIntOps" this, #_"Number" x]
-            (BigInt'fromBigInteger (.negate (Numbers'toBigInteger x)))
+            (.negate (Numbers'toBigInteger x))
         )
 
         (#_"Number" Ops'''inc [#_"BigIntOps" this, #_"Number" x]
-            (BigInt'fromBigInteger (.add (Numbers'toBigInteger x), BigInteger/ONE))
+            (.add (Numbers'toBigInteger x), BigInteger/ONE)
         )
 
         (#_"Number" Ops'''dec [#_"BigIntOps" this, #_"Number" x]
-            (BigInt'fromBigInteger (.subtract (Numbers'toBigInteger x), BigInteger/ONE))
+            (.subtract (Numbers'toBigInteger x), BigInteger/ONE)
         )
     )
 )
@@ -8747,9 +8555,6 @@
 
     (defn #_"Ops" Numbers'ops [#_"Object" x]
         (condp = (class x)
-            Integer    Numbers'LONG_OPS
-            Long       Numbers'LONG_OPS
-            BigInt     Numbers'BIGINT_OPS
             BigInteger Numbers'BIGINT_OPS
             Ratio      Numbers'RATIO_OPS
                        Numbers'LONG_OPS
@@ -8758,9 +8563,6 @@
 
     (defn #_"Category" Numbers'category [#_"Object" x]
         (condp = (class x)
-            Integer    :Category'INTEGER
-            Long       :Category'INTEGER
-            BigInt     :Category'INTEGER
             Ratio      :Category'RATIO
                        :Category'INTEGER
         )
@@ -8871,18 +8673,9 @@
         )
     )
 
-    (defn #_"BigInt" Numbers'toBigInt [#_"Object" x]
-        (condp instance? x
-            BigInt     x
-            BigInteger (BigInt'fromBigInteger x)
-                       (BigInt'fromLong (.longValue (cast Number x)))
-        )
-    )
-
     (defn #_"BigInteger" Numbers'toBigInteger [#_"Object" x]
         (condp instance? x
             BigInteger x
-            BigInt     (BigInt''toBigInteger x)
                        (BigInteger/valueOf (.longValue (cast Number x)))
         )
     )
@@ -8894,22 +8687,15 @@
         )
     )
 
-    (defn #_"Number" Numbers'reduceBigInt [#_"BigInt" val]
-        (or (:bipart val) (Numbers'num-1l (:lpart val)))
-    )
-
     (defn #_"Number" Numbers'divide-2ii [#_"BigInteger" n, #_"BigInteger" d]
         (when-not (= d BigInteger/ZERO) => (throw (ArithmeticException. "Divide by zero"))
             (let [#_"BigInteger" gcd (.gcd n, d)]
-                (when-not (= gcd BigInteger/ZERO) => BigInt'ZERO
+                (when-not (= gcd BigInteger/ZERO) => BigInteger/ZERO
                     (let [n (.divide n, gcd) d (.divide d, gcd)]
-                        (cond
-                            (= d BigInteger/ONE)
-                                (BigInt'fromBigInteger n)
-                            (= d (.negate BigInteger/ONE))
-                                (BigInt'fromBigInteger (.negate n))
-                            :else
-                                (Ratio'new (if (neg? (.signum d)) (.negate n) n), (if (neg? (.signum d)) (.negate d) d))
+                        (condp = d
+                            BigInteger/ONE           n
+                            (.negate BigInteger/ONE) (.negate n)
+                                                     (Ratio'new (if (neg? (.signum d)) (.negate n) n), (if (neg? (.signum d)) (.negate d) d))
                         )
                     )
                 )
@@ -9228,7 +9014,7 @@
 
     (defn #_"Number" Numbers'minusP-1l [#_"long" x]
         (if (= x Long/MIN_VALUE)
-            (BigInt'fromBigInteger (.negate (BigInteger/valueOf x)))
+            (.negate (BigInteger/valueOf x))
             (Numbers'num-1l (- x))
         )
     )
@@ -9346,7 +9132,7 @@
 
     (defn #_"int" Numbers'hasheq [#_"Number" x]
         (let [#_"Class" c (class x)]
-            (if (or (any = c Long Integer Byte) (and (= c BigInteger) (Numbers'lte-2ol x, Long/MAX_VALUE) (Numbers'gte-2ol x, Long/MIN_VALUE)))
+            (if (or (any = c Long Integer Byte) (and (= c BigInteger) (<= Long/MIN_VALUE x Long/MAX_VALUE)))
                 (Murmur3'hashLong (.longValue x))
                 (.hashCode x)
             )
@@ -17038,10 +16824,6 @@
         (cond
             (or (instance? Long x) (instance? Integer x) (instance? Byte x))
                 (.longValue x)
-            (instance? BigInt x)
-                (when (nil? (:bipart x)) => (throw! (str "value out of range for long: " x))
-                    (:lpart x)
-                )
             (instance? BigInteger x)
                 (when (< (.bitLength x) 64) => (throw! (str "value out of range for long: " x))
                     (.longValue x)
@@ -19686,32 +19468,9 @@
 (§ defn ratio? [n] (instance? Ratio n))
 
 ;;;
- ; Returns the numerator part of a Ratio.
- ;;
-(§ defn ^BigInteger numerator [r] (:numerator ^Ratio r))
-
-;;;
- ; Returns the denominator part of a Ratio.
- ;;
-(§ defn ^BigInteger denominator [r] (:denominator ^Ratio r))
-
-;;;
  ; Returns true if n is a rational number.
  ;;
 (§ defn rational? [n] (or (integer? n) (ratio? n)))
-
-;;;
- ; Coerce to BigInt.
- ;;
-(§ defn ^BigInt bigint [x]
-    (cond
-        (instance? BigInt x)     x
-        (instance? BigInteger x) (BigInt'fromBigInteger x)
-        (ratio? x)               (bigint (Ratio''bigIntegerValue ^Ratio x))
-        (number? x)              (BigInt'valueOf (long x))
-        :else                    (bigint (BigInteger. x))
-    )
-)
 
 ;;;
  ; Coerce to BigInteger.
@@ -19719,7 +19478,6 @@
 (§ defn ^BigInteger biginteger [x]
     (cond
         (instance? BigInteger x) x
-        (instance? BigInt x)     (.toBigInteger ^BigInt x)
         (ratio? x)               (Ratio''bigIntegerValue ^Ratio x)
         (number? x)              (BigInteger/valueOf (long x))
         :else                    (BigInteger. x)
@@ -22623,11 +22381,6 @@
 
 (§ defmethod print-method Class [^Class c, ^Writer w]
     (.write w (.getName c))
-)
-
-(§ defmethod print-method BigInt [b, ^Writer w]
-    (.write w (str b))
-    (.write w "N")
 )
 
 (§ defmethod print-method java.util.regex.Pattern [p ^Writer w]
