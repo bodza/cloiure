@@ -1551,7 +1551,7 @@
         (and (= context :Context'RETURN) *in-return-context* (not *in-catch-finally*))
     )
 
-    (declare Namespace''lookupAlias)
+    (declare Namespace''getAlias)
 
     (defn #_"Namespace" Compiler'namespaceFor
         ([#_"Symbol" sym] (Compiler'namespaceFor *ns*, sym))
@@ -1559,7 +1559,7 @@
             ;; note, presumes non-nil sym.ns
             (let [#_"Symbol" nsSym (symbol (:ns sym))]
                 ;; first check against currentNS' aliases, otherwise check the Namespaces map
-                (or (Namespace''lookupAlias inns, nsSym) (find-ns nsSym))
+                (or (Namespace''getAlias inns, nsSym) (find-ns nsSym))
             )
         )
     )
@@ -7307,7 +7307,7 @@
                         nil
                     (.startsWith s, "::")
                         (let [#_"Symbol" ks (symbol (.substring s, 2))
-                              #_"Namespace" kns (if (some? (:ns ks)) (Namespace''lookupAlias *ns*, (symbol (:ns ks))) *ns*)]
+                              #_"Namespace" kns (if (some? (:ns ks)) (Namespace''getAlias *ns*, (symbol (:ns ks))) *ns*)]
                             ;; auto-resolving keyword
                             (when (some? kns)
                                 (keyword (:name (:name kns)) (:name ks))
@@ -12028,8 +12028,8 @@
                 #_mutable #_"IPersistentMap" :_meta (meta name)
                 #_"Symbol" :name name
 
-                #_"AtomicReference<IPersistentMap>" :mappings (AtomicReference. {})
-                #_"AtomicReference<IPersistentMap>" :aliases (AtomicReference. {})
+                #_"{Symbol Class|Var}'" :mappings (atom {})
+                #_"{Symbol Namespace}'" :aliases (atom {})
             )
         )
     )
@@ -12067,7 +12067,12 @@
 
     #_method
     (defn #_"IPersistentMap" Namespace''getMappings [#_"Namespace" this]
-        (.get (:mappings this))
+        @(:mappings this)
+    )
+
+    #_method
+    (defn #_"Object" Namespace''getMapping [#_"Namespace" this, #_"Symbol" name]
+        (get @(:mappings this) name)
     )
 
     (declare RT'CLOIURE_NS)
@@ -12075,7 +12080,7 @@
     #_method
     (defn- #_"void" Namespace''warnOrFailOnReplace [#_"Namespace" this, #_"Symbol" sym, #_"Object" o, #_"Var" var]
         (or
-            (when (instance? Var o)
+            (when (var? o)
                 (when-not (or (= (:ns o) this) (= (:ns var) RT'CLOIURE_NS)) => :ok
                     (when-not (= (:ns o) RT'CLOIURE_NS)
                         (throw! (str sym " already refers to: " o " in namespace: " (:name this)))
@@ -12092,19 +12097,17 @@
     #_method
     (defn #_"Var" Namespace''intern [#_"Namespace" this, #_"Symbol" sym]
         (when (nil? (:ns sym)) => (throw! "can't intern namespace-qualified symbol")
-            (let [[#_"IPersistentMap" m #_"Object" o #_"Var" v]
-                    (loop [v nil]
-                        (let-when [m (Namespace''getMappings this) o (get m sym)] (nil? o) => [m o v]
-                            (let [v (or v (Var'new this, sym))]
-                                (.compareAndSet (:mappings this), m, (assoc m sym v))
-                                (recur v)
-                            )
+            (let [#_"Object" o
+                    (or (get @(:mappings this) sym)
+                        (let [#_"Var" v (Var'new this, sym)]
+                            (swap! (:mappings this) assoc sym v)
+                            v
                         )
                     )]
-                (when-not (and (instance? Var o) (= (:ns o) this)) => o
-                    (let [v (or v (Var'new this, sym))]
+                (when-not (and (var? o) (= (:ns o) this)) => o
+                    (let [#_"Var" v (Var'new this, sym)]
                         (Namespace''warnOrFailOnReplace this, sym, o, v)
-                        (loop-when-recur m (not (.compareAndSet (:mappings this), m, (assoc m sym v))) (Namespace''getMappings this))
+                        (swap! (:mappings this) assoc sym v)
                         v
                     )
                 )
@@ -12115,36 +12118,34 @@
     #_method
     (defn #_"Var" Namespace''referenceVar [#_"Namespace" this, #_"Symbol" sym, #_"Var" var]
         (when (nil? (:ns sym)) => (throw! "can't intern namespace-qualified symbol")
-            (let [[#_"IPersistentMap" m #_"Object" o]
-                    (loop []
-                        (let-when [m (Namespace''getMappings this) o (get m sym)] (nil? o) => [m o]
-                            (.compareAndSet (:mappings this), m, (assoc m sym var))
-                            (recur)
+            (let [#_"Object" o
+                    (or (get @(:mappings this) sym)
+                        (do
+                            (swap! (:mappings this) assoc sym var)
+                            var
                         )
                     )]
                 (when-not (= o var)
                     (Namespace''warnOrFailOnReplace this, sym, o, var)
-                    (loop-when-recur m (not (.compareAndSet (:mappings this), m, (assoc m sym var))) (Namespace''getMappings this))
+                    (swap! (:mappings this) assoc sym var)
                 )
                 var
             )
         )
     )
 
-    (defn #_"boolean" Namespace'areDifferentInstancesOfSameClassName [#_"Class" cls1, #_"Class" cls2]
-        (and (not= cls1 cls2) (= (.getName cls1) (.getName cls2)))
+    (defn- #_"boolean" Namespace'areDifferentInstancesOfSameClassName [#_"Class" c1, #_"Class" c2]
+        (and (not= c1 c2) (= (.getName c1) (.getName c2)))
     )
 
     #_method
     (defn #_"Class" Namespace''referenceClass [#_"Namespace" this, #_"Symbol" sym, #_"Class" cls]
         (when (nil? (:ns sym)) => (throw! "can't intern namespace-qualified symbol")
             (let [#_"Class" c
-                    (loop []
-                        (let [#_"IPersistentMap" m (Namespace''getMappings this) c (get m sym)]
-                            (when (or (nil? c) (Namespace'areDifferentInstancesOfSameClassName c, cls)) => c
-                                (.compareAndSet (:mappings this), m, (assoc m sym cls))
-                                (recur)
-                            )
+                    (let [c (get @(:mappings this) sym)]
+                        (when (or (nil? c) (Namespace'areDifferentInstancesOfSameClassName c, cls)) => c
+                            (swap! (:mappings this) assoc sym cls)
+                            cls
                         )
                     )]
                 (when (= c cls) => (throw! (str sym " already refers to: " c " in namespace: " (:name this)))
@@ -12157,9 +12158,7 @@
     #_method
     (defn #_"void" Namespace''unmap [#_"Namespace" this, #_"Symbol" sym]
         (when (nil? (:ns sym)) => (throw! "can't unintern namespace-qualified symbol")
-            (loop-when-recur [#_"IPersistentMap" m (Namespace''getMappings this)] (contains? m sym) [(Namespace''getMappings this)]
-                (.compareAndSet (:mappings this), m, (dissoc m sym))
-            )
+            (swap! (:mappings this) dissoc sym)
         )
         nil
     )
@@ -12196,14 +12195,9 @@
     )
 
     #_method
-    (defn #_"Object" Namespace''getMapping [#_"Namespace" this, #_"Symbol" name]
-        (get (.get (:mappings this)) name)
-    )
-
-    #_method
     (defn #_"Var" Namespace''findInternedVar [#_"Namespace" this, #_"Symbol" name]
-        (let [#_"Object" o (get (.get (:mappings this)) name)]
-            (when (and (instance? Var o) (= (:ns o) this))
+        (let [#_"Object" o (get @(:mappings this) name)]
+            (when (and (var? o) (= (:ns o) this))
                 o
             )
         )
@@ -12211,24 +12205,27 @@
 
     #_method
     (defn #_"IPersistentMap" Namespace''getAliases [#_"Namespace" this]
-        (.get (:aliases this))
+        @(:aliases this)
     )
 
     #_method
-    (defn #_"Namespace" Namespace''lookupAlias [#_"Namespace" this, #_"Symbol" alias]
-        (get (Namespace''getAliases this) alias)
+    (defn #_"Namespace" Namespace''getAlias [#_"Namespace" this, #_"Symbol" alias]
+        (get @(:aliases this) alias)
     )
 
     #_method
     (defn #_"void" Namespace''addAlias [#_"Namespace" this, #_"Symbol" alias, #_"Namespace" ns]
         (when (and (some? alias) (some? ns)) => (throw! "expecting Symbol + Namespace")
-            (let [#_"IPersistentMap" m
-                    (loop-when-recur [m (Namespace''getAliases this)] (not (contains? m alias)) [(Namespace''getAliases this)] => m
-                        (.compareAndSet (:aliases this), m, (assoc m alias ns))
+            (let [#_"Object" o
+                    (or (get @(:aliases this) alias)
+                        (do
+                            (swap! (:aliases this) assoc alias ns)
+                            ns
+                        )
                     )]
                 ;; you can rebind an alias, but only to the initially-aliased namespace
-                (when-not (= (get m alias) ns)
-                    (throw! (str "alias " alias " already exists in namespace " (:name this) ", aliasing " (get m alias)))
+                (when-not (= o ns)
+                    (throw! (str "alias " alias " already exists in namespace " (:name this) ", aliasing " o))
                 )
             )
         )
@@ -12237,9 +12234,7 @@
 
     #_method
     (defn #_"void" Namespace''removeAlias [#_"Namespace" this, #_"Symbol" alias]
-        (loop-when-recur [#_"IPersistentMap" m (Namespace''getAliases this)] (contains? m alias) [(Namespace''getAliases this)]
-            (.compareAndSet (:aliases this), m, (dissoc m alias))
-        )
+        (swap! (:aliases this) dissoc alias)
         nil
     )
 )
