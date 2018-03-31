@@ -1,12 +1,12 @@
 (ns cloiure.core
-    (:refer-clojure :only [* *err* *ns* *print-length* *warn-on-reflection* + +' - -> .. / < <= = > >= aget alength alter-meta! apply as-> aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defprotocol defrecord deref dissoc doseq dotimes empty extend-type find find-ns first fn get hash-map hash-set identical? if-let import inc indexed? int intern interpose into-array isa? key keys keyword let letfn list list* long loop make-array map map-entry? mapv merge meta name namespace neg? next not= ns-unmap nth object-array parents peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot realized? reduced? reify rem repeat reset! reset-meta! resolve rest rseq satisfies? seq sequential? some sorted-map subvec swap! swap-vals! symbol to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector when-let while with-meta zero?])
+    (:refer-clojure :only [* *ns* + +' - -> .. / < <= = > >= aget alength alter-meta! apply as-> aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defprotocol defrecord deref dissoc doseq dotimes empty extend-type find find-ns first fn get hash-map hash-set identical? if-let import inc indexed? int intern interpose into-array isa? key keys keyword let letfn list list* long loop make-array map map-entry? mapv merge meta name namespace neg? next not= ns-unmap nth object-array parents peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot realized? reduced? reify rem repeat reset! reset-meta! resolve rest rseq satisfies? seq sequential? some sorted-map subvec swap! swap-vals! symbol to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector volatile! vreset! when-let while with-meta zero?])
 )
 
 (defmacro § [& _])
 (defmacro ß [& _])
 
 (import
-    [java.lang ArithmeticException Character Class ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Math Number Object RuntimeException String StringBuilder Thread Throwable UnsupportedOperationException]
+    [java.lang ArithmeticException Character Class ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Math Number Object RuntimeException String StringBuilder System Thread ThreadLocal Throwable UnsupportedOperationException]
 )
 
 (ns-unmap 'cloiure.core 'BigInteger)
@@ -17,13 +17,47 @@
     [java.lang.reflect Array Constructor Field #_Method Modifier]
     [java.security AccessController PrivilegedAction]
     [java.util ArrayList Arrays Collection Comparator IdentityHashMap]
-    [java.util.concurrent.atomic AtomicInteger AtomicReference]
+    [java.util.concurrent.atomic AtomicReference]
     [java.util.concurrent.locks ReentrantReadWriteLock]
     [java.util.regex Matcher Pattern]
     [cloiure.asm ClassVisitor ClassWriter Label MethodVisitor Opcodes Type]
     [cloiure.asm.commons GeneratorAdapter Method]
     [cloiure.math BigInteger]
 )
+
+;;;
+ ; A java.io.Reader object representing standard input for read operations.
+ ; Defaults to System/in, wrapped in a PushbackReader.
+ ;;
+(def ^:dynamic *in* (PushbackReader. (InputStreamReader. System/in)))
+;;;
+ ; A java.io.Writer object representing standard output for print operations.
+ ; Defaults to System/out, wrapped in an OutputStreamWriter.
+ ;;
+(def ^:dynamic *out* (OutputStreamWriter. System/out))
+;;;
+ ; A java.io.Writer object representing standard error for print operations.
+ ; Defaults to System/err, wrapped in a PrintWriter.
+ ;;
+(def ^:dynamic *err* (PrintWriter. (OutputStreamWriter. System/err), true))
+
+;;;
+ ; When set to true, output will be flushed whenever a newline is printed.
+ ; Defaults to true.
+ ;;
+(def ^:dynamic *flush-on-newline* true)
+;;;
+ ; When set to logical false, strings and characters will be printed with
+ ; non-alphanumeric characters converted to the appropriate escape sequences.
+ ; Defaults to true.
+ ;;
+(def ^:dynamic *print-readably* true)
+;;;
+ ; When set to true, the compiler will emit warnings when reflection
+ ; is needed to resolve Java method calls or field accesses.
+ ; Defaults to false.
+ ;;
+(def ^:dynamic *warn-on-reflection* false)
 
 ;;;
  ; Evaluates x and tests if it is an instance of class c. Returns true or false.
@@ -476,11 +510,19 @@
     (defrecord Numbers [])
 )
 
+(java-ns cloiure.lang.Atom
+    (defrecord Atom [] #_"IReference" #_"IMeta" #_"IDeref" #_"IAtom")
+)
+
+(java-ns cloiure.lang.Volatile
+    (defrecord Volatile [] #_"IDeref")
+)
+
 (declare AFn'''throwArity)
 
 (java-ns cloiure.lang.AFn
     #_abstract
-    (defrecord AFn [] #_"IFn" #_"Runnable"
+    (defrecord AFn [] #_"IFn"
         #_abstract
       #_(#_"Object" AFn'''throwArity [#_"AFn" this, #_"int" n])
     )
@@ -491,7 +533,7 @@
 )
 
 (java-ns cloiure.lang.Keyword
-    (defrecord Keyword [] #_"IFn" #_"Runnable" #_"Comparable" #_"Named" #_"IHashEq")
+    (defrecord Keyword [] #_"IFn" #_"Comparable" #_"Named" #_"IHashEq")
 )
 
 (java-ns cloiure.lang.AFunction
@@ -573,10 +615,6 @@
     (defrecord ArraySeq_char #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
     (defrecord ArraySeq_boolean #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
     (defrecord ArraySeq #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
-)
-
-(java-ns cloiure.lang.Atom
-    (defrecord Atom [] #_"IReference" #_"IMeta" #_"IDeref" #_"IAtom")
 )
 
 (declare ATransientMap'''ensureEditable)
@@ -768,14 +806,8 @@
 )
 
 (java-ns cloiure.lang.Var
-    (defrecord TBox [])
     (defrecord Unbound #_"AFn" [])
-    (defrecord Frame [])
-    (defrecord Var [] #_"IReference" #_"IMeta" #_"IFn" #_"Runnable" #_"IDeref")
-)
-
-(java-ns cloiure.lang.Volatile
-    (defrecord Volatile [] #_"IDeref")
+    (defrecord Var [] #_"IReference" #_"IMeta" #_"IFn" #_"IDeref")
 )
 
 (java-ns cloiure.lang.RT
@@ -4910,12 +4942,10 @@
         nil
     )
 
-    (declare Var''isDynamic)
-
     #_method
     (defn #_"void" IopObject''emitVarValue [#_"IopObject" this, #_"GeneratorAdapter" gen, #_"Var" v]
         (IopObject''emitConstant this, gen, (get (:vars this) v))
-        (.invokeVirtual gen, (Type/getType Var), (if (Var''isDynamic v) (Method/getMethod "Object get()") (Method/getMethod "Object getRawRoot()")))
+        (.invokeVirtual gen, (Type/getType Var), (Method/getMethod "Object get()"))
         nil
     )
 
@@ -5523,7 +5553,7 @@
 )
 
 (class-ns DefExpr
-    (defn #_"DefExpr" DefExpr'new [#_"int" line, #_"Var" var, #_"Expr" init, #_"Expr" meta, #_"boolean" initProvided, #_"boolean" isDynamic, #_"boolean" shadowsCoreMapping]
+    (defn #_"DefExpr" DefExpr'new [#_"int" line, #_"Var" var, #_"Expr" init, #_"Expr" meta, #_"boolean" initProvided, #_"boolean" shadowsCoreMapping]
         (merge (DefExpr.)
             (hash-map
                 #_"int" :line line
@@ -5531,7 +5561,6 @@
                 #_"Expr" :init init
                 #_"Expr" :meta meta
                 #_"boolean" :initProvided initProvided
-                #_"boolean" :isDynamic isDynamic
                 #_"boolean" :shadowsCoreMapping shadowsCoreMapping
             )
         )
@@ -5545,8 +5574,6 @@
     )
 
     (declare Var''bindRoot)
-    (declare Var''setMeta)
-    (declare Var''setDynamic)
 
     (extend-type DefExpr Expr
         (#_"Object" Expr'''eval [#_"DefExpr" this]
@@ -5554,13 +5581,9 @@
                 (Var''bindRoot (:var this), (Expr'''eval (:init this)))
             )
             (when (some? (:meta this))
-                (let [#_"IPersistentMap" metaMap (Expr'''eval (:meta this))]
-                    (when (or (:initProvided this) true)
-                        (Var''setMeta (:var this), metaMap)
-                    )
-                )
+                (reset-meta! (:var this) (Expr'''eval (:meta this)))
             )
-            (Var''setDynamic (:var this), (:isDynamic this))
+            (:var this)
         )
 
         (#_"void" Expr'''emit [#_"DefExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
@@ -5573,10 +5596,6 @@
                 (.getField gen, (Type/getType Var), "sym", (Type/getType Symbol))
                 (.swap gen)
                 (.invokeVirtual gen, (Type/getType Namespace), (Method/getMethod "clojure.lang.Var refer(clojure.lang.Symbol, clojure.lang.Var)"))
-            )
-            (when (:isDynamic this)
-                (.push gen, (:isDynamic this))
-                (.invokeVirtual gen, (Type/getType Var), (Method/getMethod "clojure.lang.Var setDynamic(boolean)"))
             )
             (when (some? (:meta this))
                 (.dup gen)
@@ -5625,17 +5644,10 @@
                                         )
                                     )
                                 )
-                              #_"IPersistentMap" m (meta sym) #_"boolean" dynamic? (boolean (get m :dynamic))]
-                            (when dynamic?
-                                (Var''setDynamic v)
-                            )
-                            (when (and (not dynamic?) (.startsWith (:name sym), "*") (.endsWith (:name sym), "*") (< 2 (count (:name sym))))
-                                (.println *err*, (str "Warning: " sym " not declared dynamic and thus is not dynamically rebindable, but its name suggests otherwise. Please either indicate ^:dynamic or change the name."))
-                            )
-                            (let [#_"Context" c (if (= context :Context'EVAL) context :Context'EXPRESSION)
-                                  m (assoc m :line *line*)]
-                                (DefExpr'new *line*, v, (Compiler'analyze c, (third form), (:name (:sym v))), (Compiler'analyze c, m), (= (count form) 3), dynamic?, shadowsCoreMapping)
-                            )
+                              #_"Context" c (if (= context :Context'EVAL) context :Context'EXPRESSION)
+                              #_"Expr" init (Compiler'analyze c, (third form), (:name (:sym v)))
+                              #_"Expr" meta (Compiler'analyze c, (assoc (meta sym) :line *line*))]
+                            (DefExpr'new *line*, v, init, meta, (= (count form) 3), shadowsCoreMapping)
                         )
                     )
                 )
@@ -9131,22 +9143,120 @@
 )
 )
 
+(java-ns cloiure.lang.Atom
+
+(class-ns Atom
+    (defn #_"Atom" Atom'new
+        ([#_"Object" data] (Atom'new nil, data))
+        ([#_"IPersistentMap" meta, #_"Object" data]
+            (hash-map
+                #_"AtomicReference" :meta (AtomicReference. meta)
+                #_"AtomicReference" :data (AtomicReference. data)
+            )
+        )
+    )
+
+    (extend-type Atom IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"Atom" this]
+            (.get (:meta this))
+        )
+    )
+
+    (extend-type Atom IReference
+        (#_"IPersistentMap" IReference'''alterMeta [#_"Atom" this, #_"IFn" f, #_"ISeq" args]
+            (loop []
+                (let [#_"IPersistentMap" m (.get (:meta this)) #_"IPersistentMap" m' (apply f m args)]
+                    (when (.compareAndSet (:meta this), m, m') => (recur)
+                        m'
+                    )
+                )
+            )
+        )
+
+        (#_"IPersistentMap" IReference'''resetMeta [#_"Atom" this, #_"IPersistentMap" m']
+            (.set (:meta this), m')
+            m'
+        )
+    )
+
+    (extend-type Atom IDeref
+        (#_"Object" IDeref'''deref [#_"Atom" this]
+            (.get (:data this))
+        )
+    )
+
+    (extend-type Atom IAtom
+        (#_"boolean" IAtom'''compareAndSet [#_"Atom" this, #_"Object" o, #_"Object" o']
+            (.compareAndSet (:data this), o, o')
+        )
+
+        (#_"Object" IAtom'''swap [#_"Atom" this, #_"IFn" f, #_"ISeq" args]
+            (loop []
+                (let [#_"Object" o (.get (:data this)) #_"Object" o' (apply f o args)]
+                    (when (.compareAndSet (:data this), o, o') => (recur)
+                        o'
+                    )
+                )
+            )
+        )
+
+        (#_"Object" IAtom'''reset [#_"Atom" this, #_"Object" o']
+            (.set (:data this), o')
+            o'
+        )
+
+        (#_"[Object Object]" IAtom'''swapVals [#_"Atom" this, #_"IFn" f, #_"ISeq" args]
+            (loop []
+                (let [#_"Object" o (.get (:data this)) #_"Object" o' (apply f o args)]
+                    (when (.compareAndSet (:data this), o, o') => (recur)
+                        [o o']
+                    )
+                )
+            )
+        )
+
+        (#_"[Object Object]" IAtom'''resetVals [#_"Atom" this, #_"Object" o']
+            (loop []
+                (let [#_"Object" o (.get (:data this))]
+                    (when (.compareAndSet (:data this), o, o') => (recur)
+                        [o o']
+                    )
+                )
+            )
+        )
+    )
+)
+)
+
+(java-ns cloiure.lang.Volatile
+
+(class-ns Volatile
+    (defn #_"Volatile" Volatile'new [#_"Object" o]
+        (merge (Volatile.)
+            (hash-map
+                #_volatile #_"Object" :data o
+            )
+        )
+    )
+
+    (extend-type Volatile IDeref
+        (#_"Object" IDeref'''deref [#_"Volatile" this]
+            (:data this)
+        )
+    )
+
+    #_method
+    (defn #_"Object" Volatile''reset [#_"Volatile" this, #_"Object" o']
+        (§ set! (:data this) o')
+    )
+)
+)
+
 (java-ns cloiure.lang.AFn
 
 (class-ns AFn
     (defn #_"AFn" AFn'new []
         (AFn.)
-    )
-
-    #_foreign
-    (defn #_"Object" call---AFn [#_"AFn" this]
-        (IFn'''invoke this)
-    )
-
-    #_foreign
-    (defn #_"void" run---AFn [#_"AFn" this]
-        (IFn'''invoke this)
-        nil
     )
 
     (extend-type AFn IFn
@@ -9449,16 +9559,6 @@
     #_method
     (defn #_"Object" Keyword''throwArity [#_"Keyword" this]
         (throw! (str "wrong number of args passed to keyword: " this))
-    )
-
-    #_foreign
-    (defn #_"Object" call---Keyword [#_"Keyword" this]
-        (Keyword''throwArity this)
-    )
-
-    #_foreign
-    (defn #_"void" run---Keyword [#_"Keyword" this]
-        (throw! "unsupported operation")
     )
 
     #_foreign
@@ -11151,91 +11251,6 @@
                         (loop-when [r (f r (aget a i)) i (inc i)] (< i n) => (if (reduced? r) @r r)
                             (if (reduced? r) @r (recur (f r (aget a i)) (inc i)))
                         )
-                    )
-                )
-            )
-        )
-    )
-)
-)
-
-(java-ns cloiure.lang.Atom
-
-(class-ns Atom
-    (defn #_"Atom" Atom'new
-        ([#_"Object" data] (Atom'new nil, data))
-        ([#_"IPersistentMap" meta, #_"Object" data]
-            (hash-map
-                #_"AtomicReference" :meta (AtomicReference. meta)
-                #_"AtomicReference" :data (AtomicReference. data)
-            )
-        )
-    )
-
-    (extend-type Atom IMeta
-        (#_"IPersistentMap" IMeta'''meta [#_"Atom" this]
-            (.get (:meta this))
-        )
-    )
-
-    (extend-type Atom IReference
-        (#_"IPersistentMap" IReference'''alterMeta [#_"Atom" this, #_"IFn" f, #_"ISeq" args]
-            (loop []
-                (let [#_"IPersistentMap" m (.get (:meta this)) #_"IPersistentMap" m' (apply f m args)]
-                    (when (.compareAndSet (:meta this), m, m') => (recur)
-                        m'
-                    )
-                )
-            )
-        )
-
-        (#_"IPersistentMap" IReference'''resetMeta [#_"Atom" this, #_"IPersistentMap" m']
-            (.set (:meta this), m')
-            m'
-        )
-    )
-
-    (extend-type Atom IDeref
-        (#_"Object" IDeref'''deref [#_"Atom" this]
-            (.get (:data this))
-        )
-    )
-
-    (extend-type Atom IAtom
-        (#_"boolean" IAtom'''compareAndSet [#_"Atom" this, #_"Object" o, #_"Object" o']
-            (.compareAndSet (:data this), o, o')
-        )
-
-        (#_"Object" IAtom'''swap [#_"Atom" this, #_"IFn" f, #_"ISeq" args]
-            (loop []
-                (let [#_"Object" o (.get (:data this)) #_"Object" o' (apply f o args)]
-                    (when (.compareAndSet (:data this), o, o') => (recur)
-                        o'
-                    )
-                )
-            )
-        )
-
-        (#_"Object" IAtom'''reset [#_"Atom" this, #_"Object" o']
-            (.set (:data this), o')
-            o'
-        )
-
-        (#_"[Object Object]" IAtom'''swapVals [#_"Atom" this, #_"IFn" f, #_"ISeq" args]
-            (loop []
-                (let [#_"Object" o (.get (:data this)) #_"Object" o' (apply f o args)]
-                    (when (.compareAndSet (:data this), o, o') => (recur)
-                        [o o']
-                    )
-                )
-            )
-        )
-
-        (#_"[Object Object]" IAtom'''resetVals [#_"Atom" this, #_"Object" o']
-            (loop []
-                (let [#_"Object" o (.get (:data this))]
-                    (when (.compareAndSet (:data this), o, o') => (recur)
-                        [o o']
                     )
                 )
             )
@@ -15913,17 +15928,6 @@
 
 (java-ns cloiure.lang.Var
 
-(class-ns TBox
-    (defn #_"TBox" TBox'new [#_"Thread" t, #_"Object" val]
-        (merge (TBox.)
-            (hash-map
-                #_"Thread" :thread t
-                #_volatile #_"Object" :val val
-            )
-        )
-    )
-)
-
 (class-ns Unbound
     (defn #_"Unbound" Unbound'new [#_"Namespace" ns, #_"Symbol" sym]
         (merge (Unbound.) (AFn'new)
@@ -15947,30 +15951,8 @@
     )
 )
 
-(class-ns Frame
-    (defn #_"Frame" Frame'new [#_"Associative" bindings, #_"Frame" prev]
-        (merge (Frame.)
-            (hash-map
-                ;; Var->TBox
-                #_"Associative" :bindings bindings
-                ;; Var->val
-                #_"Frame" :prev prev
-            )
-        )
-    )
-
-    (def #_"Frame" Frame'TOP (Frame'new {}, nil))
-)
-
 (class-ns Var
-    (def #_"ThreadLocal<Frame>" Var'dvals
-        (proxy [ThreadLocal #_"<Frame>"] []
-            #_foreign
-            (#_"Frame" initialValue [#_"ThreadLocal<Frame>" #_this]
-                Frame'TOP
-            )
-        )
-    )
+    (def #_"ThreadLocal" Var'dvals (ThreadLocal.))
 
     (defn #_"Var" Var'find [#_"Symbol" sym]
         (when (some? (:ns sym)) => (throw! "symbol must be namespace-qualified")
@@ -15982,23 +15964,13 @@
         )
     )
 
-    #_method
-    (defn #_"void" Var''setMeta [#_"Var" this, #_"IPersistentMap" m]
-        ;; ensure these basis keys
-        (reset-meta! this (assoc m :ns (:ns this) :name (:sym this)))
-        nil
-    )
-
     (defn #_"Var" Var'new
-        ([] (Var'new nil, nil))
         ([#_"Namespace" ns, #_"Symbol" sym] (Var'new ns, sym, (Unbound'new ns, sym)))
         ([#_"Namespace" ns, #_"Symbol" sym, #_"Object" root]
             (hash-map
                 #_"Namespace" :ns ns
                 #_"Symbol" :sym sym
-
-                #_"Object'" :root (atom {:ns ns :name sym} root)
-                #_volatile #_"boolean" :dynamic false
+                #_"Object'" :root (atom root)
             )
         )
     )
@@ -16017,17 +15989,6 @@
         (#_"IPersistentMap" IReference'''resetMeta [#_"Var" this, #_"IPersistentMap" m]
             (reset-meta! (:root this) m)
         )
-    )
-
-    #_method
-    (defn #_"Var" Var''setDynamic
-        ([#_"Var" this] (Var''setDynamic this, true))
-        ([#_"Var" this, #_"boolean" b] (§ set! (:dynamic this) b) this)
-    )
-
-    #_method
-    (defn #_"boolean" Var''isDynamic [#_"Var" this]
-        (:dynamic this)
     )
 
     (defn- #_"String" Var'toString [#_"Namespace" ns, #_"Symbol" sym]
@@ -16049,17 +16010,17 @@
 
     #_method
     (defn #_"boolean" Var''isBound [#_"Var" this]
-        (or (Var''hasRoot this) (contains? (:bindings (.get Var'dvals)) this))
+        (or (Var''hasRoot this) (contains? (first (.get Var'dvals)) this))
     )
 
     #_method
-    (defn #_"TBox" Var''getThreadBinding [#_"Var" this]
-        (get (:bindings (.get Var'dvals)) this)
+    (defn #_"Volatile" Var''getThreadBinding [#_"Var" this]
+        (get (first (.get Var'dvals)) this)
     )
 
     #_method
     (defn #_"Object" Var''get [#_"Var" this]
-        (if-let [#_"TBox" tb (Var''getThreadBinding this)] (:val tb) @(:root this))
+        @(or (Var''getThreadBinding this) (:root this))
     )
 
     (extend-type Var IDeref
@@ -16070,19 +16031,11 @@
 
     #_method
     (defn #_"Object" Var''set [#_"Var" this, #_"Object" val]
-        (let [#_"TBox" tb (Var''getThreadBinding this)]
-            (when (some? tb) => (throw! (str "can't change/establish root binding of: " (:sym this) " with set"))
-                (when (= (Thread/currentThread) (:thread tb)) => (throw! (str "can't set!: " (:sym this) " from non-binding thread"))
-                    (§ set! (:val tb) val)
-                )
+        (let [#_"Volatile" v (Var''getThreadBinding this)]
+            (when (some? v) => (throw! (str "can't change/establish root binding of: " (:sym this) " with var-set/set!"))
+                (vreset! v val)
             )
         )
-    )
-
-    #_method
-    (defn #_"Object" Var''alter [#_"Var" this, #_"IFn" f, #_"ISeq" args]
-        (Var''set this, (apply f (deref this) args))
-        this
     )
 
     #_method
@@ -16124,32 +16077,18 @@
             (Namespace''intern ns, sym)
         )
         ([#_"Namespace" ns, #_"Symbol" sym, #_"Object" root]
-            (Var'intern ns, sym, root, true)
-        )
-        ([#_"Namespace" ns, #_"Symbol" sym, #_"Object" root, #_"boolean" replaceRoot]
             (let [#_"Var" v (Namespace''intern ns, sym)]
-                (when (or (not (Var''hasRoot v)) replaceRoot)
-                    (Var''bindRoot v, root)
-                )
+                (Var''bindRoot v, root)
                 v
             )
         )
     )
 
-    (defn #_"Var" Var'internPrivate [#_"String" nsName, #_"String" sym]
-        (let [#_"Namespace" ns (Namespace'findOrCreate (Symbol'intern nsName)) #_"Var" v (Var'intern ns, (Symbol'intern sym))]
-            (Var''setMeta v, {:private true})
-            v
-        )
-    )
-
-    (defn #_"void" Var'pushThreadBindings [#_"Associative" bindings]
-        (let [#_"Frame" f (.get Var'dvals)]
-            (loop-when [#_"Associative" m (:bindings f) #_"ISeq" s (seq bindings)] (some? s) => (.set Var'dvals, (Frame'new m, f))
-                (let [#_"IMapEntry" e (first s) #_"Var" v (key e)]
-                    (when (Var''isDynamic v) => (throw! (str "can't dynamically bind non-dynamic var: " (:ns v) "/" (:sym v)))
-                        (recur (assoc m v (TBox'new (Thread/currentThread), (val e))) (next s))
-                    )
+    (defn #_"void" Var'pushThreadBindings [#_"{Var Object}" bindings]
+        (let [#_"ISeq" l (.get Var'dvals)]
+            (loop-when [#_"{Var Volatile}" m (first l) #_"ISeq" s (seq bindings)] (some? s) => (.set Var'dvals, (cons m l))
+                (let [#_"IMapEntry" e (first s)]
+                    (recur (assoc m (key e) (volatile! (val e))) (next s))
                 )
             )
         )
@@ -16157,35 +16096,18 @@
     )
 
     (defn #_"void" Var'popThreadBindings []
-        (let [#_"Frame" f (:prev (.get Var'dvals))]
-            (cond
-                (nil? f)        (throw! "pop without matching push")
-                (= f Frame'TOP) (.remove Var'dvals)
-                :else           (.set Var'dvals, f)
-            )
+        (let-when [#_"ISeq" s (.get Var'dvals)] (some? s) => (throw! "pop without matching push")
+            (.set Var'dvals, (next s))
         )
         nil
     )
 
-    (defn #_"Associative" Var'getThreadBindings []
-        (let [#_"Frame" f (.get Var'dvals)]
-            (loop-when [#_"IPersistentMap" m {} #_"ISeq" s (seq (:bindings f))] (some? s) => m
-                (let [#_"IMapEntry" e (first s) #_"Var" v (key e) #_"TBox" b (val e)]
-                    (recur (assoc m v (:val b)) (next s))
-                )
+    (defn #_"{Var Object}" Var'getThreadBindings []
+        (loop-when [#_"{Var Object}" m (transient {}) #_"ISeq" s (seq (first (.get Var'dvals)))] (some? s) => (persistent! m)
+            (let [#_"IMapEntry" e (first s)]
+                (recur (assoc! m (key e) @(val e)) (next s))
             )
         )
-    )
-
-    #_foreign
-    (defn #_"Object" call---Var [#_"Var" this]
-        (IFn'''invoke this)
-    )
-
-    #_foreign
-    (defn #_"void" run---Var [#_"Var" this]
-        (IFn'''invoke this)
-        nil
     )
 
     (extend-type Var IFn
@@ -16210,85 +16132,19 @@
 )
 )
 
-(java-ns cloiure.lang.Volatile
-
-(class-ns Volatile
-    (defn #_"Volatile" Volatile'new [#_"Object" val]
-        (merge (Volatile.)
-            (hash-map
-                #_volatile #_"Object" :val val
-            )
-        )
-    )
-
-    (extend-type Volatile IDeref
-        (#_"Object" IDeref'''deref [#_"Volatile" this]
-            (:val this)
-        )
-    )
-
-    #_method
-    (defn #_"Object" Volatile''reset [#_"Volatile" this, #_"Object" newval]
-        (§ set! (:val this) newval)
-    )
-)
-)
-
 (java-ns cloiure.lang.RT
 
 (class-ns RT
     (def #_"Namespace" RT'CLOIURE_NS (§ soon Namespace'findOrCreate 'cloiure.core))
 
     ;;;
-     ; A java.io.Reader object representing standard input for read operations.
-     ; Defaults to System/in, wrapped in a PushbackReader.
-     ;;
-    (def #_"Var" RT'IN (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, '*in*, (PushbackReader. (InputStreamReader. System/in)))))
-    ;;;
-     ; A java.io.Writer object representing standard output for print operations.
-     ; Defaults to System/out, wrapped in an OutputStreamWriter.
-     ;;
-    (def #_"Var" RT'OUT (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, '*out*, (OutputStreamWriter. System/out))))
-    ;;;
-     ; A java.io.Writer object representing standard error for print operations.
-     ; Defaults to System/err, wrapped in a PrintWriter.
-     ;;
-    (def #_"Var" RT'ERR (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, '*err*, (PrintWriter. (OutputStreamWriter. System/err), true))))
-
-    (def #_"Var" RT'ASSERT (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, '*assert*, true)))
-
-    ;;;
      ; A Namespace object representing the current namespace.
      ;;
-    (def #_"Var" RT'CURRENT_NS (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, '*ns*, RT'CLOIURE_NS)))
-    ;;;
-     ; When set to true, output will be flushed whenever a newline is printed.
-     ; Defaults to true.
-     ;;
-    (def #_"Var" RT'FLUSH_ON_NEWLINE (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, '*flush-on-newline*, true)))
-    ;;;
-     ; When set to logical false, strings and characters will be printed with
-     ; non-alphanumeric characters converted to the appropriate escape sequences.
-     ; Defaults to true.
-     ;;
-    (def #_"Var" RT'PRINT_READABLY (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, '*print-readably*, true)))
-    ;;;
-     ; When set to true, the compiler will emit warnings when reflection
-     ; is needed to resolve Java method calls or field accesses.
-     ; Defaults to false.
-     ;;
-    (def #_"Var" RT'WARN_ON_REFLECTION (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, '*warn-on-reflection*, false)))
+    (§ soon def #_"Var" ^:dynamic ^Namespace *ns* RT'CLOIURE_NS)
 
-    (§ static
-        (alter-meta! RT'OUT assoc :tag 'java.io.Writer)
-        (alter-meta! RT'CURRENT_NS assoc :tag 'cloiure.core.Namespace)
-    )
+    (def- #_"int'" RT'ID (atom 0))
 
-    (def #_"AtomicInteger" RT'ID (AtomicInteger. 1))
-
-    (defn #_"int" RT'nextID []
-        (.getAndIncrement RT'ID)
-    )
+    (defn #_"int" RT'nextID [] (swap! RT'ID inc))
 
     (declare RT'seqFrom)
 
@@ -19856,7 +19712,7 @@
         (vector? name-vals-vec) "a vector for its binding"
         (even? (count name-vals-vec)) "an even number of forms in binding vector"
     )
-    `(let [~@(interleave (take-nth 2 name-vals-vec) (repeat '(Var''setDynamic (Var'new))))]
+    `(let [~@(interleave (take-nth 2 name-vals-vec) (repeat '(Var'new nil, nil)))]
         (push-thread-bindings (hash-map ~@name-vals-vec))
         (try
             ~@body
@@ -20251,6 +20107,8 @@
 (§ defn ^String prn-str     [& xs] (with-out-str (apply prn     xs)))
 (§ defn ^String print-str   [& xs] (with-out-str (apply print   xs)))
 (§ defn ^String println-str [& xs] (with-out-str (apply println xs)))
+
+(def ^:dynamic *assert* true)
 
 ;;;
  ; Evaluates expr and throws an exception if it does not evaluate to logical true.
@@ -21168,26 +21026,6 @@
 (§ defn indexed? [coll] (satisfies? Indexed coll))
 
 ;;;
- ; Bound in a repl thread to the most recent value printed.
- ;;
-(§ def ^:dynamic *1)
-
-;;;
- ; Bound in a repl thread to the second most recent value printed.
- ;;
-(§ def ^:dynamic *2)
-
-;;;
- ; Bound in a repl thread to the third most recent value printed.
- ;;
-(§ def ^:dynamic *3)
-
-;;;
- ; Bound in a repl thread to the most recent exception caught by the repl.
- ;;
-(§ def ^:dynamic *e)
-
-;;;
  ; trampoline can be used to convert algorithms requiring mutual recursion without
  ; stack consumption. Calls f with supplied args, if any. If f returns a fn, calls
  ; that fn with no arguments, and continues to repeat, until the return value is
@@ -21217,7 +21055,7 @@
     ([ns ^Symbol name]
         (let [v (Var'intern (the-ns ns) name)]
             (when (meta name)
-                (Var''setMeta v (meta name))
+                (reset-meta! v (meta name))
             )
             v
         )
@@ -21225,7 +21063,7 @@
     ([ns name val]
         (let [v (Var'intern (the-ns ns) name val)]
             (when (meta name)
-                (Var''setMeta v (meta name))
+                (reset-meta! v (meta name))
             )
             v
         )
@@ -21957,7 +21795,7 @@
  ; followed by '...' to represent the remaining items. The root binding is nil
  ; indicating no limit.
  ;;
-(§ def ^:dynamic *print-length* nil)
+(def ^:dynamic *print-length* nil)
 
 ;;;
  ; *print-level* controls how many levels deep the printer will print nested objects.
@@ -21968,13 +21806,13 @@
  ; bound to *print-level*, the printer prints '#' to represent it. The root binding
  ; is nil indicating no limit.
  ;;
-(§ def ^:dynamic *print-level* nil)
+(def ^:dynamic *print-level* nil)
 
 ;;;
  ; *print-namespace-maps* controls whether the printer will print namespace map literal
  ; syntax. It defaults to false, but the REPL binds to true.
  ;;
-(§ def ^:dynamic *print-namespace-maps* false)
+(def ^:dynamic *print-namespace-maps* false)
 
 (§ defn- print-sequential [^String begin, print-one, ^String sep, ^String end, sequence, ^Writer w]
     (binding [*print-level* (and *print-level* (dec *print-level*))]
@@ -22785,7 +22623,7 @@
                         ~(and (:on opts)
                             (apply hash-map
                                 (mapcat
-                                    (fn [s] [(keyword (:name s)) (keyword (or (:on s) (:name s)))])
+                                    (fn [sig] [(keyword (:name sig)) (keyword (or (:on sig) (:name sig)))])
                                     (vals sigs)
                                 )
                             )
@@ -22793,9 +22631,9 @@
                     :method-builders
                         ~(apply hash-map
                             (mapcat
-                                (fn [s] [
-                                    `(intern *ns* (with-meta '~(:name s) (merge '~s {:protocol (var ~name)})))
-                                    (emit-method-builder (:on-interface opts) (:name s) (:on s) (:arglists s))
+                                (fn [sig] [
+                                    `(intern *ns* (with-meta '~(:name sig) (merge '~sig {:protocol (var ~name)})))
+                                    (emit-method-builder (:on-interface opts) (:name sig) (:on sig) (:arglists sig))
                                 ])
                                 (vals sigs)
                             )
@@ -23559,51 +23397,6 @@
 )
 
 ;;;
- ; Temporarily redefines Vars during a call to func. Each val of binding-map
- ; will replace the root value of its key which must be a Var. After func is
- ; called with no args, the root values of all the Vars will be set back to
- ; their old values. These temporary changes will be visible in all threads.
- ; Useful for mocking out functions during testing.
- ;;
-(§ defn with-redefs-fn [binding-map func]
-    (let [root-bind
-            (fn [m]
-                (doseq [[a-var a-val] m]
-                    (Var''bindRoot ^Var a-var a-val)
-                )
-            )
-          old-vals
-            (zipmap
-                (keys binding-map)
-                (map #(Var''getRawRoot ^Var %) (keys binding-map))
-            )]
-        (try
-            (root-bind binding-map)
-            (func)
-            (finally
-                (root-bind old-vals)
-            )
-        )
-    )
-)
-
-;;;
- ; binding => var-symbol temp-value-expr
- ;
- ; Temporarily redefines Vars while executing the body. The temp-value-exprs
- ; will be evaluated and each resulting value will replace in parallel the root
- ; value of its Var. After the body is executed, the root values of all the
- ; Vars will be set back to their old values. These temporary changes will be
- ; visible in all threads. Useful for mocking out functions during testing.
- ;;
-(§ defmacro with-redefs [bindings & body]
-    `(with-redefs-fn
-        ~(zipmap (map #(list `var %) (take-nth 2 bindings)) (take-nth 2 (next bindings)))
-        (fn [] ~@body)
-    )
-)
-
-;;;
  ; Returns true if a value has been produced for a delay or lazy sequence.
  ;;
 (§ defn realized? [^cloiure.core.IPending x] (IPending'''isRealized x))
@@ -23616,6 +23409,7 @@
  ;;
 (§ defmacro cond-> [expr & clauses]
     (assert (even? (count clauses)))
+
     (let [g (gensym)
           steps (map (fn [[test step]] `(if ~test (-> ~g ~step) ~g)) (partition 2 clauses))]
         `(let [~g ~expr ~@(interleave (repeat g) (butlast steps))]
@@ -23635,6 +23429,7 @@
  ;;
 (§ defmacro cond->> [expr & clauses]
     (assert (even? (count clauses)))
+
     (let [g (gensym)
           steps (map (fn [[test step]] `(if ~test (->> ~g ~step) ~g)) (partition 2 clauses))]
         `(let [~g ~expr ~@(interleave (repeat g) (butlast steps))]
