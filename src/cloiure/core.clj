@@ -1,5 +1,5 @@
 (ns cloiure.core
-    (:refer-clojure :only [* *err* *ns* *print-length* *warn-on-reflection* + +' - -> .. / < <= = > >= aget alength alter-meta! apply as-> aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defprotocol defrecord deref dissoc doseq dotimes empty extend-type find find-ns first fn get hash-map hash-set identical? if-let import inc indexed? int intern interpose into-array isa? key keys keyword let letfn list list* long loop make-array map map-entry? mapv merge meta name namespace neg? next not= ns-unmap nth object-array parents peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot realized? reduced? reify rem repeat reset-meta! resolve rest rseq satisfies? seq sequential? some sorted-map subvec swap! swap-vals! symbol to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector when-let while with-meta zero?])
+    (:refer-clojure :only [* *err* *ns* *print-length* *warn-on-reflection* + +' - -> .. / < <= = > >= aget alength alter-meta! apply as-> aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defprotocol defrecord deref dissoc doseq dotimes empty extend-type find find-ns first fn get hash-map hash-set identical? if-let import inc indexed? int intern interpose into-array isa? key keys keyword let letfn list list* long loop make-array map map-entry? mapv merge meta name namespace neg? next not= ns-unmap nth object-array parents peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot realized? reduced? reify rem repeat reset! reset-meta! resolve rest rseq satisfies? seq sequential? some sorted-map subvec swap! swap-vals! symbol to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector when-let while with-meta zero?])
 )
 
 (defmacro § [& _])
@@ -17,7 +17,7 @@
     [java.lang.reflect Array Constructor Field #_Method Modifier]
     [java.security AccessController PrivilegedAction]
     [java.util ArrayList Arrays Collection Comparator IdentityHashMap]
-    [java.util.concurrent.atomic AtomicBoolean AtomicInteger AtomicReference]
+    [java.util.concurrent.atomic AtomicInteger AtomicReference]
     [java.util.concurrent.locks ReentrantReadWriteLock]
     [java.util.regex Matcher Pattern]
     [cloiure.asm ClassVisitor ClassWriter Label MethodVisitor Opcodes Type]
@@ -208,21 +208,11 @@
 
 (java-ns cloiure.lang.IAtom
     (defprotocol IAtom
-        (#_"boolean" IAtom'''compareAndSet [#_"IAtom" this, #_"Object" v, #_"Object" v'])
-        (#_"Object" IAtom'''swap
-            [#_"IAtom" this, #_"IFn" f]
-            [#_"IAtom" this, #_"IFn" f, #_"Object" x]
-            [#_"IAtom" this, #_"IFn" f, #_"Object" x, #_"Object" y]
-            [#_"IAtom" this, #_"IFn" f, #_"Object" x, #_"Object" y, #_"ISeq" z]
-        )
-        (#_"Object" IAtom'''reset [#_"IAtom" this, #_"Object" v'])
-        (#_"IPersistentVector" IAtom'''swapVals
-            [#_"IAtom" this, #_"IFn" f]
-            [#_"IAtom" this, #_"IFn" f, #_"Object" x]
-            [#_"IAtom" this, #_"IFn" f, #_"Object" x, #_"Object" y]
-            [#_"IAtom" this, #_"IFn" f, #_"Object" x, #_"Object" y, #_"ISeq" z]
-        )
-        (#_"IPersistentVector" IAtom'''resetVals [#_"IAtom" this, #_"Object" v'])
+        (#_"boolean" IAtom'''compareAndSet [#_"IAtom" this, #_"Object" o, #_"Object" o'])
+        (#_"Object" IAtom'''swap [#_"IAtom" this, #_"IFn" f, #_"ISeq" args])
+        (#_"Object" IAtom'''reset [#_"IAtom" this, #_"Object" o'])
+        (#_"[Object Object]" IAtom'''swapVals [#_"IAtom" this, #_"IFn" f, #_"ISeq" args])
+        (#_"[Object Object]" IAtom'''resetVals [#_"IAtom" this, #_"Object" o'])
     )
 )
 
@@ -293,7 +283,7 @@
 
 (java-ns cloiure.lang.IReference
     (defprotocol IReference
-        (#_"IPersistentMap" IReference'''alterMeta [#_"IReference" this, #_"IFn" alter, #_"ISeq" args])
+        (#_"IPersistentMap" IReference'''alterMeta [#_"IReference" this, #_"IFn" f, #_"ISeq" args])
         (#_"IPersistentMap" IReference'''resetMeta [#_"IReference" this, #_"IPersistentMap" m])
     )
 )
@@ -661,7 +651,7 @@
 )
 
 (java-ns cloiure.lang.Namespace
-    (defrecord Namespace [] #_"IReference" #_"IMeta")
+    (defrecord Namespace [])
 )
 
 (java-ns cloiure.lang.PersistentArrayMap
@@ -11173,136 +11163,79 @@
 
 (class-ns Atom
     (defn #_"Atom" Atom'new
-        ([#_"Object" state] (Atom'new state, nil))
-        ([#_"Object" state, #_"IPersistentMap" meta]
+        ([#_"Object" data] (Atom'new nil, data))
+        ([#_"IPersistentMap" meta, #_"Object" data]
             (hash-map
-                #_"AtomicReference" :state (AtomicReference. state)
-                #_mutable #_"IPersistentMap" :_meta meta
+                #_"AtomicReference" :meta (AtomicReference. meta)
+                #_"AtomicReference" :data (AtomicReference. data)
             )
         )
     )
 
     (extend-type Atom IMeta
         (#_"IPersistentMap" IMeta'''meta [#_"Atom" this]
-            (§ sync this
-                (:_meta this)
-            )
+            (.get (:meta this))
         )
     )
 
     (extend-type Atom IReference
-        (#_"IPersistentMap" IReference'''alterMeta [#_"Atom" this, #_"IFn" f, #_"ISeq" z]
-            (§ sync this
-                (§ update! (:_meta this) #(apply f % z))
+        (#_"IPersistentMap" IReference'''alterMeta [#_"Atom" this, #_"IFn" f, #_"ISeq" args]
+            (loop []
+                (let [#_"IPersistentMap" m (.get (:meta this)) #_"IPersistentMap" m' (apply f m args)]
+                    (when (.compareAndSet (:meta this), m, m') => (recur)
+                        m'
+                    )
+                )
             )
         )
 
-        (#_"IPersistentMap" IReference'''resetMeta [#_"Atom" this, #_"IPersistentMap" m]
-            (§ sync this
-                (§ set! (:_meta this) m)
-            )
+        (#_"IPersistentMap" IReference'''resetMeta [#_"Atom" this, #_"IPersistentMap" m']
+            (.set (:meta this), m')
+            m'
         )
     )
 
     (extend-type Atom IDeref
         (#_"Object" IDeref'''deref [#_"Atom" this]
-            (.get (:state this))
+            (.get (:data this))
         )
     )
 
     (extend-type Atom IAtom
-        (#_"boolean" IAtom'''compareAndSet [#_"Atom" this, #_"Object" v, #_"Object" v']
-            (.compareAndSet (:state this), v, v')
+        (#_"boolean" IAtom'''compareAndSet [#_"Atom" this, #_"Object" o, #_"Object" o']
+            (.compareAndSet (:data this), o, o')
         )
 
-        (#_"Object" IAtom'''swap
-            ([#_"Atom" this, #_"IFn" f]
-                (loop []
-                    (let [#_"Object" v (deref this) #_"Object" v' (f v)]
-                        (when (compare-and-set! this v v') => (recur)
-                            v'
-                        )
-                    )
-                )
-            )
-            ([#_"Atom" this, #_"IFn" f, #_"Object" x]
-                (loop []
-                    (let [#_"Object" v (deref this) #_"Object" v' (f v x)]
-                        (when (compare-and-set! this v v') => (recur)
-                            v'
-                        )
-                    )
-                )
-            )
-            ([#_"Atom" this, #_"IFn" f, #_"Object" x, #_"Object" y]
-                (loop []
-                    (let [#_"Object" v (deref this) #_"Object" v' (f v x y)]
-                        (when (compare-and-set! this v v') => (recur)
-                            v'
-                        )
-                    )
-                )
-            )
-            ([#_"Atom" this, #_"IFn" f, #_"Object" x, #_"Object" y, #_"ISeq" z]
-                (loop []
-                    (let [#_"Object" v (deref this) #_"Object" v' (apply f v x y z)]
-                        (when (compare-and-set! this v v') => (recur)
-                            v'
-                        )
-                    )
-                )
-            )
-        )
-
-        (#_"IPersistentVector" IAtom'''swapVals
-            ([#_"Atom" this, #_"IFn" f]
-                (loop []
-                    (let [#_"Object" v (deref this) #_"Object" v' (f v)]
-                        (when (compare-and-set! this v v') => (recur)
-                            (LazilyPersistentVector'createOwning v, v')
-                        )
-                    )
-                )
-            )
-            ([#_"Atom" this, #_"IFn" f, #_"Object" x]
-                (loop []
-                    (let [#_"Object" v (deref this) #_"Object" v' (f v x)]
-                        (when (compare-and-set! this v v') => (recur)
-                            (LazilyPersistentVector'createOwning v, v')
-                        )
-                    )
-                )
-            )
-            ([#_"Atom" this, #_"IFn" f, #_"Object" x, #_"Object" y]
-                (loop []
-                    (let [#_"Object" v (deref this) #_"Object" v' (f v x y)]
-                        (when (compare-and-set! this v v') => (recur)
-                            (LazilyPersistentVector'createOwning v, v')
-                        )
-                    )
-                )
-            )
-            ([#_"Atom" this, #_"IFn" f, #_"Object" x, #_"Object" y, #_"ISeq" z]
-                (loop []
-                    (let [#_"Object" v (deref this) #_"Object" v' (apply f v x y z)]
-                        (when (compare-and-set! this v v') => (recur)
-                            (LazilyPersistentVector'createOwning v, v')
-                        )
-                    )
-                )
-            )
-        )
-
-        (#_"Object" IAtom'''reset [#_"Atom" this, #_"Object" v']
-            (.set (:state this), v')
-            v'
-        )
-
-        (#_"IPersistentVector" IAtom'''resetVals [#_"Atom" this, #_"Object" v']
+        (#_"Object" IAtom'''swap [#_"Atom" this, #_"IFn" f, #_"ISeq" args]
             (loop []
-                (let [#_"Object" v (deref this)]
-                    (when (compare-and-set! this v v') => (recur)
-                        (LazilyPersistentVector'createOwning v, v')
+                (let [#_"Object" o (.get (:data this)) #_"Object" o' (apply f o args)]
+                    (when (.compareAndSet (:data this), o, o') => (recur)
+                        o'
+                    )
+                )
+            )
+        )
+
+        (#_"Object" IAtom'''reset [#_"Atom" this, #_"Object" o']
+            (.set (:data this), o')
+            o'
+        )
+
+        (#_"[Object Object]" IAtom'''swapVals [#_"Atom" this, #_"IFn" f, #_"ISeq" args]
+            (loop []
+                (let [#_"Object" o (.get (:data this)) #_"Object" o' (apply f o args)]
+                    (when (.compareAndSet (:data this), o, o') => (recur)
+                        [o o']
+                    )
+                )
+            )
+        )
+
+        (#_"[Object Object]" IAtom'''resetVals [#_"Atom" this, #_"Object" o']
+            (loop []
+                (let [#_"Object" o (.get (:data this))]
+                    (when (.compareAndSet (:data this), o, o') => (recur)
+                        [o o']
                     )
                 )
             )
@@ -12025,7 +11958,6 @@
     (defn #_"Namespace" Namespace'new [#_"Symbol" name]
         (merge (Namespace.)
             (hash-map
-                #_mutable #_"IPersistentMap" :_meta (meta name)
                 #_"Symbol" :name name
 
                 #_"{Symbol Class|Var}'" :mappings (atom {})
@@ -12034,31 +11966,9 @@
         )
     )
 
-    (extend-type Namespace IMeta
-        (#_"IPersistentMap" IMeta'''meta [#_"Namespace" this]
-            (§ sync this
-                (:_meta this)
-            )
-        )
-    )
-
-    (extend-type Namespace IReference
-        (#_"IPersistentMap" IReference'''alterMeta [#_"Namespace" this, #_"IFn" f, #_"ISeq" args]
-            (§ sync this
-                (§ update! (:_meta this) #(apply f % args))
-            )
-        )
-
-        (#_"IPersistentMap" IReference'''resetMeta [#_"Namespace" this, #_"IPersistentMap" m]
-            (§ sync this
-                (§ set! (:_meta this) m)
-            )
-        )
-    )
-
     #_foreign
     (defn #_"String" toString---Namespace [#_"Namespace" this]
-        (.toString (:name this))
+        (:name (:name this))
     )
 
     (defn #_"ISeq" Namespace'all []
@@ -12948,9 +12858,9 @@
                           #_"Object" valOrNode (aget (:array this) (inc (* 2 idx)))
                           _ (cond
                                 (nil? keyOrNull)
-                                    (let [#_"INode" n (INode'''assoc (cast cloiure.core.INode valOrNode), (+ shift 5), hash, key, val, addedLeaf)]
-                                        (when-not (= n valOrNode)
-                                            (PersistentHashMap'cloneAndSet (:array this), (inc (* 2 idx)), n)
+                                    (let [#_"INode" node (INode'''assoc (cast cloiure.core.INode valOrNode), (+ shift 5), hash, key, val, addedLeaf)]
+                                        (when-not (= node valOrNode)
+                                            (PersistentHashMap'cloneAndSet (:array this), (inc (* 2 idx)), node)
                                         )
                                     )
                                 (= key keyOrNull)
@@ -13003,12 +12913,12 @@
                             ;; TODO: collapse
                             (BitmapIndexedNode'new nil, (bit-xor (:bitmap this) bit), (PersistentHashMap'removePair (:array this), i))
                         )
-                        (let [#_"INode" n (INode'''dissoc (cast cloiure.core.INode valOrNode), (+ shift 5), hash, key)]
+                        (let [#_"INode" node (INode'''dissoc (cast cloiure.core.INode valOrNode), (+ shift 5), hash, key)]
                             (cond
-                                (= n valOrNode)
+                                (= node valOrNode)
                                     this
-                                (some? n)
-                                    (BitmapIndexedNode'new nil, (:bitmap this), (PersistentHashMap'cloneAndSet (:array this), (inc ii), n))
+                                (some? node)
+                                    (BitmapIndexedNode'new nil, (:bitmap this), (PersistentHashMap'cloneAndSet (:array this), (inc ii), node))
                                 (= (:bitmap this) bit)
                                     nil
                                 :else
@@ -13118,9 +13028,9 @@
                           #_"Object" valOrNode (aget (:array this) (inc (* 2 idx)))]
                         (cond
                             (nil? keyOrNull)
-                                (let [#_"INode" n (INode'''assocT (cast cloiure.core.INode valOrNode), edit, (+ shift 5), hash, key, val, addedLeaf)]
-                                    (when-not (= n valOrNode) => this
-                                        (BitmapIndexedNode''editAndSet-4 this, edit, (inc (* 2 idx)), n)
+                                (let [#_"INode" node (INode'''assocT (cast cloiure.core.INode valOrNode), edit, (+ shift 5), hash, key, val, addedLeaf)]
+                                    (when-not (= node valOrNode) => this
+                                        (BitmapIndexedNode''editAndSet-4 this, edit, (inc (* 2 idx)), node)
                                     )
                                 )
                             (= key keyOrNull)
@@ -13186,12 +13096,12 @@
                             ;; TODO: collapse
                             (BitmapIndexedNode''editAndRemovePair this, edit, bit, i)
                         )
-                        (let [#_"INode" n (INode'''dissocT (cast cloiure.core.INode valOrNode), edit, (+ shift 5), hash, key, removedLeaf)]
+                        (let [#_"INode" node (INode'''dissocT (cast cloiure.core.INode valOrNode), edit, (+ shift 5), hash, key, removedLeaf)]
                             (cond
-                                (= n valOrNode)
+                                (= node valOrNode)
                                     this
-                                (some? n)
-                                    (BitmapIndexedNode''editAndSet-4 this, edit, (inc ii), n)
+                                (some? node)
+                                    (BitmapIndexedNode''editAndSet-4 this, edit, (inc ii), node)
                                 (= (:bitmap this) bit)
                                     nil
                                 :else
@@ -13399,8 +13309,8 @@
                 )
             )
             (let [_ (§ set! (:val (:leafFlag this)) nil)
-                  #_"INode" n (INode'''assocT (or (:root this) BitmapIndexedNode'EMPTY), (:edit this), 0, (PersistentHashMap'hash key), key, val, (:leafFlag this))
-                  this (if (= (:root this) n) this (assoc this :root n))]
+                  #_"INode" node (INode'''assocT (or (:root this) BitmapIndexedNode'EMPTY), (:edit this), 0, (PersistentHashMap'hash key), key, val, (:leafFlag this))
+                  this (if (= (:root this) node) this (assoc this :root node))]
                 (when (some? (:val (:leafFlag this))) => this
                     (update this :count inc)
                 )
@@ -13416,8 +13326,8 @@
             )
             (when (some? (:root this)) => this
                 (let [_ (§ set! (:val (:leafFlag this)) nil)
-                      #_"INode" n (INode'''dissocT (:root this), (:edit this), 0, (PersistentHashMap'hash key), key, (:leafFlag this))
-                      this (if (= (:root this) n) this (assoc this :root n))]
+                      #_"INode" node (INode'''dissocT (:root this), (:edit this), 0, (PersistentHashMap'hash key), key, (:leafFlag this))
+                      this (if (= (:root this) node) this (assoc this :root node))]
                     (when (some? (:val (:leafFlag this))) => this
                         (update this :count dec)
                     )
@@ -14728,8 +14638,8 @@
         (#_"Object" ILookup'''valAt
             ([#_"PersistentTreeMap" this, #_"Object" key] (ILookup'''valAt this, key, nil))
             ([#_"PersistentTreeMap" this, #_"Object" key, #_"Object" notFound]
-                (let [#_"TNode" n (find this key)]
-                    (if (some? n) (IMapEntry'''val n) notFound)
+                (let [#_"TNode" node (find this key)]
+                    (if (some? node) (IMapEntry'''val node) notFound)
                 )
             )
         )
@@ -16015,22 +15925,25 @@
 )
 
 (class-ns Unbound
-    (defn #_"Unbound" Unbound'new [#_"Var" v]
+    (defn #_"Unbound" Unbound'new [#_"Namespace" ns, #_"Symbol" sym]
         (merge (Unbound.) (AFn'new)
             (hash-map
-                #_"Var" :v v
+                #_"Namespace" :ns ns
+                #_"Symbol" :sym sym
             )
         )
     )
 
+    (declare Var'toString)
+
     #_foreign
     (defn #_"String" toString---Unbound [#_"Unbound" this]
-        (str "Unbound: " (:v this))
+        (str "Unbound: " (Var'toString (:ns this), (:sym this)))
     )
 
     #_override
     (defn #_"Object" AFn'''throwArity--Unbound [#_"Unbound" this, #_"int" n]
-        (throw! (str "attempting to call unbound fn: " (:v this)))
+        (throw! (str "attempting to call unbound fn: " (Var'toString (:ns this), (:sym this))))
     )
 )
 
@@ -16072,58 +15985,37 @@
     #_method
     (defn #_"void" Var''setMeta [#_"Var" this, #_"IPersistentMap" m]
         ;; ensure these basis keys
-        (reset-meta! this (assoc m :name (:sym this) :ns (:ns this)))
+        (reset-meta! this (assoc m :ns (:ns this) :name (:sym this)))
         nil
     )
 
     (defn #_"Var" Var'new
-        ([#_"Namespace" ns, #_"Symbol" sym]
-            (let [this
-                    (hash-map
-                        #_mutable #_"IPersistentMap" :_meta nil
-                        #_"Namespace" :ns ns
-                        #_"Symbol" :sym sym
-
-                        #_volatile #_"Object" :root (Unbound'new (§ cyc this))
-                        #_volatile #_"boolean" :dynamic false
-                        #_"AtomicBoolean" :threadBound (AtomicBoolean. false)
-                    )]
-                (Var''setMeta this, {})
-                this
-            )
-        )
+        ([] (Var'new nil, nil))
+        ([#_"Namespace" ns, #_"Symbol" sym] (Var'new ns, sym, (Unbound'new ns, sym)))
         ([#_"Namespace" ns, #_"Symbol" sym, #_"Object" root]
-            (let [this (Var'new ns, sym)]
-                (§ set! (:root this) root)
-                this
+            (hash-map
+                #_"Namespace" :ns ns
+                #_"Symbol" :sym sym
+
+                #_"Object'" :root (atom {:ns ns :name sym} root)
+                #_volatile #_"boolean" :dynamic false
             )
         )
-    )
-
-    (defn #_"Var" Var'create
-        ([               ] (Var'new nil, nil      ))
-        ([#_"Object" root] (Var'new nil, nil, root))
     )
 
     (extend-type Var IMeta
         (#_"IPersistentMap" IMeta'''meta [#_"Var" this]
-            (§ sync this
-                (:_meta this)
-            )
+            (meta (:root this))
         )
     )
 
     (extend-type Var IReference
         (#_"IPersistentMap" IReference'''alterMeta [#_"Var" this, #_"IFn" f, #_"ISeq" args]
-            (§ sync this
-                (§ update! (:_meta this) #(apply f % args))
-            )
+            (apply alter-meta! (:root this) f args)
         )
 
         (#_"IPersistentMap" IReference'''resetMeta [#_"Var" this, #_"IPersistentMap" m]
-            (§ sync this
-                (§ set! (:_meta this) m)
-            )
+            (reset-meta! (:root this) m)
         )
     )
 
@@ -16138,43 +16030,41 @@
         (:dynamic this)
     )
 
+    (defn- #_"String" Var'toString [#_"Namespace" ns, #_"Symbol" sym]
+        (if (some? ns)
+            (str "#'" (:name ns) "/" sym)
+            (str "#<Var: " (or sym "--unnamed--") ">")
+        )
+    )
+
     #_foreign
     (defn #_"String" toString---Var [#_"Var" this]
-        (if (some? (:ns this))
-            (str "#'" (:name (:ns this)) "/" (:sym this))
-            (str "#<Var: " (or (:sym this) "--unnamed--") ">")
-        )
+        (Var'toString (:ns this), (:sym this))
     )
 
     #_method
     (defn #_"boolean" Var''hasRoot [#_"Var" this]
-        (not (instance? Unbound (:root this)))
+        (not (instance? Unbound @(:root this)))
     )
 
     #_method
     (defn #_"boolean" Var''isBound [#_"Var" this]
-        (or (Var''hasRoot this) (and (.get (:threadBound this)) (contains? (:bindings (.get Var'dvals)) this)))
-    )
-
-    #_method
-    (defn #_"Object" Var''get [#_"Var" this]
-        (if (.get (:threadBound this)) (deref this) (:root this))
+        (or (Var''hasRoot this) (contains? (:bindings (.get Var'dvals)) this))
     )
 
     #_method
     (defn #_"TBox" Var''getThreadBinding [#_"Var" this]
-        (when (.get (:threadBound this))
-            (when-let [#_"IMapEntry" e (find (:bindings (.get Var'dvals)) this)]
-                (val e)
-            )
-        )
+        (get (:bindings (.get Var'dvals)) this)
+    )
+
+    #_method
+    (defn #_"Object" Var''get [#_"Var" this]
+        (if-let [#_"TBox" tb (Var''getThreadBinding this)] (:val tb) @(:root this))
     )
 
     (extend-type Var IDeref
         (#_"Object" IDeref'''deref [#_"Var" this]
-            (let [#_"TBox" b (Var''getThreadBinding this)]
-                (if (some? b) (:val b) (:root this))
-            )
+            (Var''get this)
         )
     )
 
@@ -16190,8 +16080,8 @@
     )
 
     #_method
-    (defn #_"Object" Var''alter [#_"Var" this, #_"IFn" fn, #_"ISeq" args]
-        (Var''set this, (IFn'''applyTo fn, (cons (deref this) args)))
+    (defn #_"Object" Var''alter [#_"Var" this, #_"IFn" f, #_"ISeq" args]
+        (Var''set this, (apply f (deref this) args))
         this
     )
 
@@ -16213,59 +16103,20 @@
 
     #_method
     (defn #_"Object" Var''getRawRoot [#_"Var" this]
-        (:root this)
+        @(:root this)
     )
 
-    #_method
-    (defn #_"Object" Var''getTag [#_"Var" this]
-        (:tag (meta this))
-    )
-
-    #_method
-    (defn #_"void" Var''setTag [#_"Var" this, #_"Symbol" tag]
-        (alter-meta! this assoc :tag tag)
-        nil
-    )
-
-    ;; binding root always clears macro flag
     #_method
     (defn #_"void" Var''bindRoot [#_"Var" this, #_"Object" root]
-        (§ sync this
-            (§ set! (:root this) root)
-            (alter-meta! this dissoc :macro)
-        )
+        ;; binding root always clears macro flag
+        (alter-meta! this dissoc :macro)
+        (reset! (:root this) root)
         nil
     )
 
     #_method
-    (defn #_"void" Var''swapRoot [#_"Var" this, #_"Object" root]
-        (§ sync this
-            (§ set! (:root this) root)
-        )
-        nil
-    )
-
-    #_method
-    (defn #_"void" Var''unbindRoot [#_"Var" this]
-        (§ sync this
-            (§ set! (:root this) (Unbound'new (§ cyc this)))
-        )
-        nil
-    )
-
-    #_method
-    (defn #_"void" Var''commuteRoot [#_"Var" this, #_"IFn" fn]
-        (§ sync this
-            (§ set! (:root this) (IFn'''invoke fn, (:root this)))
-        )
-        nil
-    )
-
-    #_method
-    (defn #_"Object" Var''alterRoot [#_"Var" this, #_"IFn" fn, #_"ISeq" args]
-        (§ sync this
-            (§ set! (:root this) (IFn'''applyTo fn, (cons (:root this) args)))
-        )
+    (defn #_"Object" Var''alterRoot [#_"Var" this, #_"IFn" f, #_"ISeq" args]
+        (apply swap! (:root this) f args)
     )
 
     (defn #_"Var" Var'intern
@@ -16296,11 +16147,9 @@
         (let [#_"Frame" f (.get Var'dvals)]
             (loop-when [#_"Associative" m (:bindings f) #_"ISeq" s (seq bindings)] (some? s) => (.set Var'dvals, (Frame'new m, f))
                 (let [#_"IMapEntry" e (first s) #_"Var" v (key e)]
-                    (when-not (Var''isDynamic v)
-                        (throw! (str "can't dynamically bind non-dynamic var: " (:ns v) "/" (:sym v)))
+                    (when (Var''isDynamic v) => (throw! (str "can't dynamically bind non-dynamic var: " (:ns v) "/" (:sym v)))
+                        (recur (assoc m v (TBox'new (Thread/currentThread), (val e))) (next s))
                     )
-                    (.set (:threadBound v), true)
-                    (recur (assoc m v (TBox'new (Thread/currentThread), (val e))) (next s))
                 )
             )
         )
@@ -16388,51 +16237,51 @@
 (java-ns cloiure.lang.RT
 
 (class-ns RT
-    (def #_"Namespace" RT'CLOIURE_NS (§ soon Namespace'findOrCreate (Symbol'intern "cloiure.core")))
+    (def #_"Namespace" RT'CLOIURE_NS (§ soon Namespace'findOrCreate 'cloiure.core))
 
     ;;;
      ; A java.io.Reader object representing standard input for read operations.
      ; Defaults to System/in, wrapped in a PushbackReader.
      ;;
-    (def #_"Var" RT'IN (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*in*"), (PushbackReader. (InputStreamReader. System/in)))))
+    (def #_"Var" RT'IN (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, '*in*, (PushbackReader. (InputStreamReader. System/in)))))
     ;;;
      ; A java.io.Writer object representing standard output for print operations.
      ; Defaults to System/out, wrapped in an OutputStreamWriter.
      ;;
-    (def #_"Var" RT'OUT (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*out*"), (OutputStreamWriter. System/out))))
+    (def #_"Var" RT'OUT (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, '*out*, (OutputStreamWriter. System/out))))
     ;;;
      ; A java.io.Writer object representing standard error for print operations.
      ; Defaults to System/err, wrapped in a PrintWriter.
      ;;
-    (def #_"Var" RT'ERR (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*err*"), (PrintWriter. (OutputStreamWriter. System/err), true))))
+    (def #_"Var" RT'ERR (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, '*err*, (PrintWriter. (OutputStreamWriter. System/err), true))))
 
-    (def #_"Var" RT'ASSERT (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*assert*"), true)))
+    (def #_"Var" RT'ASSERT (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, '*assert*, true)))
 
     ;;;
      ; A Namespace object representing the current namespace.
      ;;
-    (def #_"Var" RT'CURRENT_NS (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*ns*"), RT'CLOIURE_NS)))
+    (def #_"Var" RT'CURRENT_NS (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, '*ns*, RT'CLOIURE_NS)))
     ;;;
      ; When set to true, output will be flushed whenever a newline is printed.
      ; Defaults to true.
      ;;
-    (def #_"Var" RT'FLUSH_ON_NEWLINE (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*flush-on-newline*"), true)))
+    (def #_"Var" RT'FLUSH_ON_NEWLINE (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, '*flush-on-newline*, true)))
     ;;;
      ; When set to logical false, strings and characters will be printed with
      ; non-alphanumeric characters converted to the appropriate escape sequences.
      ; Defaults to true.
      ;;
-    (def #_"Var" RT'PRINT_READABLY (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*print-readably*"), true)))
+    (def #_"Var" RT'PRINT_READABLY (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, '*print-readably*, true)))
     ;;;
      ; When set to true, the compiler will emit warnings when reflection
      ; is needed to resolve Java method calls or field accesses.
      ; Defaults to false.
      ;;
-    (def #_"Var" RT'WARN_ON_REFLECTION (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, (Symbol'intern "*warn-on-reflection*"), false)))
+    (def #_"Var" RT'WARN_ON_REFLECTION (§ soon Var''setDynamic (Var'intern RT'CLOIURE_NS, '*warn-on-reflection*, false)))
 
     (§ static
-        (Var''setTag RT'OUT, (Symbol'intern "java.io.Writer"))
-        (Var''setTag RT'CURRENT_NS, (Symbol'intern "cloiure.core.Namespace"))
+        (alter-meta! RT'OUT assoc :tag 'java.io.Writer)
+        (alter-meta! RT'CURRENT_NS assoc :tag 'cloiure.core.Namespace)
     )
 
     (def #_"AtomicInteger" RT'ID (AtomicInteger. 1))
@@ -18423,35 +18272,28 @@
  ;;
 (§ defn find-var [sym] (Var'find sym))
 
-(§ defn- setup-reference [^cloiure.core.IReference r options]
-    (let [opts (apply hash-map options)]
-        (when (:meta opts)
-            (reset-meta! r (:meta opts))
-        )
-        r
-    )
-)
-
 ;;;
- ; Also reader macro: @ref/@var/@atom/@delay.
- ; Within a transaction, returns the in-transaction-value of ref, else
- ; returns the most-recently-committed value of ref. When applied to a var
- ; or atom, returns its current state. When applied to a delay, forces
- ; it if not already forced. See also - realized?.
+ ; When applied to a var or atom, returns its current state.
+ ; When applied to a delay, forces it if not already forced.
+ ; See also - realized?. Also reader macro: @.
  ;;
 (§ defn deref [^cloiure.core.IDeref ref] (IDeref'''deref ref))
 
 ;;;
- ; Creates and returns an Atom with an initial value of x and zero or more
- ; options (in any order):
- ;
- ; :meta      metadata-map
- ;
- ; If metadata-map is supplied, it will become the metadata on the atom.
+ ; Creates and returns an Atom with an initial value of x and optional meta m.
  ;;
 (§ defn atom
     ([x] (Atom'new x))
-    ([x & options] (setup-reference (atom x) options))
+    ([m x] (Atom'new m x))
+)
+
+;;;
+ ; Atomically sets the value of atom to x' if and only if the
+ ; current value of the atom is identical to x. Returns true if
+ ; set happened, else false.
+ ;;
+(§ defn compare-and-set! [^cloiure.core.IAtom a x x']
+    (IAtom'''compareAndSet a x x')
 )
 
 ;;;
@@ -18459,11 +18301,16 @@
  ; Note that f may be called multiple times, and thus should be free of side effects.
  ; Returns the value that was swapped in.
  ;;
-(§ defn swap!
-    ([^cloiure.core.IAtom atom f] (IAtom'''swap atom f))
-    ([^cloiure.core.IAtom atom f x] (IAtom'''swap atom f x))
-    ([^cloiure.core.IAtom atom f x y] (IAtom'''swap atom f x y))
-    ([^cloiure.core.IAtom atom f x y & args] (IAtom'''swap atom f x y args))
+(§ defn swap! [^cloiure.core.IAtom a f & args]
+    (IAtom'''swap a f args)
+)
+
+;;;
+ ; Sets the value of atom to x' without regard for the current value.
+ ; Returns x'.
+ ;;
+(§ defn reset! [^cloiure.core.IAtom a x']
+    (IAtom'''reset a x')
 )
 
 ;;;
@@ -18471,54 +18318,34 @@
  ; Note that f may be called multiple times, and thus should be free of side effects.
  ; Returns [old new], the value of the atom before and after the swap.
  ;;
-(§ defn ^cloiure.core.IPersistentVector swap-vals!
-    ([^cloiure.core.IAtom atom f] (IAtom'''swapVals atom f))
-    ([^cloiure.core.IAtom atom f x] (IAtom'''swapVals atom f x))
-    ([^cloiure.core.IAtom atom f x y] (IAtom'''swapVals atom f x y))
-    ([^cloiure.core.IAtom atom f x y & args] (IAtom'''swapVals atom f x y args))
+(§ defn ^cloiure.core.IPersistentVector swap-vals! [^cloiure.core.IAtom a f & args]
+    (IAtom'''swapVals a f args)
 )
 
 ;;;
- ; Atomically sets the value of atom to newval if and only if the
- ; current value of the atom is identical to oldval. Returns true if
- ; set happened, else false.
- ;;
-(§ defn compare-and-set! [^cloiure.core.IAtom atom oldval newval]
-    (IAtom'''compareAndSet atom oldval newval)
-)
-
-;;;
- ; Sets the value of atom to newval without regard for the current value.
- ; Returns newval.
- ;;
-(§ defn reset! [^cloiure.core.IAtom atom newval]
-    (IAtom'''reset atom newval)
-)
-
-;;;
- ; Sets the value of atom to newval. Returns [old new], the value of the
+ ; Sets the value of atom to x'. Returns [old new], the value of the
  ; atom before and after the reset.
  ;;
-(§ defn ^cloiure.core.IPersistentVector reset-vals! [^cloiure.core.IAtom atom newval]
-    (IAtom'''resetVals atom newval)
+(§ defn ^cloiure.core.IPersistentVector reset-vals! [^cloiure.core.IAtom a x']
+    (IAtom'''resetVals a x')
 )
 
 ;;;
- ; Atomically sets the metadata for a namespace/var/ref/atom to be:
+ ; Atomically sets the metadata for a var/atom to be:
  ;
  ; (apply f its-current-meta args)
  ;
  ; f must be free of side-effects.
  ;;
-(§ defn alter-meta! [^cloiure.core.IReference iref f & args]
-    (IReference'''alterMeta iref f args)
+(§ defn alter-meta! [^cloiure.core.IReference r f & args]
+    (IReference'''alterMeta r f args)
 )
 
 ;;;
- ; Atomically resets the metadata for a namespace/var/ref/atom.
+ ; Atomically resets the metadata for a var/atom.
  ;;
-(§ defn reset-meta! [^cloiure.core.IReference iref metadata-map]
-    (IReference'''resetMeta iref metadata-map)
+(§ defn reset-meta! [^cloiure.core.IReference r m]
+    (IReference'''resetMeta r m)
 )
 
 ;;;
@@ -20029,7 +19856,7 @@
         (vector? name-vals-vec) "a vector for its binding"
         (even? (count name-vals-vec)) "an even number of forms in binding vector"
     )
-    `(let [~@(interleave (take-nth 2 name-vals-vec) (repeat '(Var''setDynamic (Var'create))))]
+    `(let [~@(interleave (take-nth 2 name-vals-vec) (repeat '(Var''setDynamic (Var'new))))]
         (push-thread-bindings (hash-map ~@name-vals-vec))
         (try
             ~@body
