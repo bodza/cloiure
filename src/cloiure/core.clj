@@ -1,12 +1,12 @@
 (ns cloiure.core
-    (:refer-clojure :only [* *ns* + +' - -> .. / < <= = > >= aget alength alter-meta! apply as-> aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defprotocol defrecord deref dissoc doseq dotimes empty extend-type find find-ns first fn get hash-map hash-set identical? if-let import inc indexed? int intern interpose into-array isa? key keys keyword let letfn list list* locking long loop make-array map map-entry? mapv merge meta name namespace neg? next not= ns-unmap nth object-array parents peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot realized? reduced? reify rem repeat reset! reset-meta! resolve rest rseq satisfies? seq sequential? some sorted-map subvec swap! swap-vals! symbol to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector volatile! vreset! vswap! when-let while with-meta zero?])
+    (:refer-clojure :only [* *ns* + +' - -> .. / < <= = > >= aget alength alter-meta! apply as-> aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defprotocol defrecord deref dissoc doseq dotimes empty extend-type find find-ns first fn get hash-map hash-set identical? if-let import inc indexed? int intern interpose into-array key keys keyword let letfn list list* locking long loop make-array map map-entry? mapv max merge meta min name namespace neg? next not= ns-unmap nth object-array peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot realized? reduced? reify rem repeat reset! reset-meta! resolve rest rseq satisfies? seq sequential? some sorted-map subvec swap! swap-vals! symbol to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector volatile! vreset! vswap! when-let while with-meta zero?])
 )
 
 (defmacro § [& _])
 (defmacro ß [& _])
 
 (import
-    [java.lang ArithmeticException Character Class ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Math Number Object RuntimeException String StringBuilder System Thread ThreadLocal Throwable UnsupportedOperationException]
+    [java.lang ArithmeticException Character Class ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Number Object RuntimeException String StringBuilder System Thread ThreadLocal Throwable UnsupportedOperationException]
 )
 
 (ns-unmap 'cloiure.core 'BigInteger)
@@ -16,9 +16,8 @@
     [java.lang.ref Reference ReferenceQueue SoftReference WeakReference]
     [java.lang.reflect Array Constructor Field #_Method Modifier]
     [java.security AccessController PrivilegedAction]
-    [java.util Arrays Collection Comparator IdentityHashMap]
+    [java.util Arrays Comparator IdentityHashMap]
     [java.util.concurrent.atomic AtomicReference]
-    [java.util.concurrent.locks ReentrantReadWriteLock]
     [java.util.regex Matcher Pattern]
     [cloiure.asm ClassVisitor ClassWriter Label MethodVisitor Opcodes Type]
     [cloiure.asm.commons GeneratorAdapter Method]
@@ -674,10 +673,6 @@
 (java-ns cloiure.lang.MethodImplCache
     (defrecord Entry [])
     (defrecord MethodImplCache [])
-)
-
-(java-ns cloiure.lang.MultiFn
-    (defrecord MultiFn #_"AFn" [])
 )
 
 (java-ns cloiure.lang.Namespace
@@ -4270,7 +4265,7 @@
 
     #_method
     (defn #_"void" InvokeExpr''emitArgsAndCall [#_"InvokeExpr" this, #_"int" firstArgToEmit, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen]
-        (loop-when-recur [#_"int" i firstArgToEmit] (< i (Math/min Compiler'MAX_POSITIONAL_ARITY, (count (:args this)))) [(inc i)]
+        (loop-when-recur [#_"int" i firstArgToEmit] (< i (min Compiler'MAX_POSITIONAL_ARITY (count (:args this)))) [(inc i)]
             (Expr'''emit (nth (:args this) i), :Context'EXPRESSION, objx, gen)
         )
         (when (< Compiler'MAX_POSITIONAL_ARITY (count (:args this)))
@@ -4289,7 +4284,7 @@
             (IopMethod''emitClearThis *method*, gen)
         )
 
-        (.invokeInterface gen, (Type/getType cloiure.core.IFn), (Method. "invoke", (Type/getType Object), (aget Compiler'ARG_TYPES (Math/min (inc Compiler'MAX_POSITIONAL_ARITY), (count (:args this))))))
+        (.invokeInterface gen, (Type/getType cloiure.core.IFn), (Method. "invoke", (Type/getType Object), (aget Compiler'ARG_TYPES (min (inc Compiler'MAX_POSITIONAL_ARITY) (count (:args this))))))
         nil
     )
 
@@ -11633,209 +11628,6 @@
 )
 )
 
-(java-ns cloiure.lang.MultiFn
-
-(class-ns MultiFn
-    (defn #_"MultiFn" MultiFn'new [#_"String" name, #_"IFn" dispatchFn, #_"Object" defaultDispatchVal, #_"IDeref" hierarchy]
-        (merge (MultiFn.) (AFn'new)
-            (hash-map
-                #_"String" :name name
-                #_"IFn" :dispatchFn dispatchFn
-                #_"Object" :defaultDispatchVal defaultDispatchVal
-                #_"IDeref" :hierarchy hierarchy
-
-                #_"ReentrantReadWriteLock" :rw (ReentrantReadWriteLock.)
-
-                #_"IPersistentMap'" :methodTable (volatile! {})
-                #_"IPersistentMap'" :preferTable (volatile! {})
-                #_"IPersistentMap'" :methodCache (volatile! {})
-                #_"Object'" :cachedHierarchy (volatile! nil)
-            )
-        )
-    )
-
-    #_method
-    (defn #_"MultiFn" MultiFn''reset [#_"MultiFn" this]
-        (.lock (.writeLock (:rw this)))
-        (try
-            (vreset! (:methodTable this) {})
-            (vreset! (:methodCache this) {})
-            (vreset! (:preferTable this) {})
-            (vreset! (:cachedHierarchy this) nil)
-            this
-            (finally
-                (.unlock (.writeLock (:rw this)))
-            )
-        )
-    )
-
-    #_method
-    (defn- #_"IPersistentMap" MultiFn''resetCache [#_"MultiFn" this]
-        (.lock (.writeLock (:rw this)))
-        (try
-            (vreset! (:methodCache this) @(:methodTable this))
-            (vreset! (:cachedHierarchy this) (deref (:hierarchy this)))
-            @(:methodCache this)
-            (finally
-                (.unlock (.writeLock (:rw this)))
-            )
-        )
-    )
-
-    #_method
-    (defn #_"MultiFn" MultiFn''addMethod [#_"MultiFn" this, #_"Object" dispatchVal, #_"IFn" method]
-        (.lock (.writeLock (:rw this)))
-        (try
-            (let [_ (vswap! (:methodTable this) assoc dispatchVal method)]
-                (MultiFn''resetCache this)
-                this
-            )
-            (finally
-                (.unlock (.writeLock (:rw this)))
-            )
-        )
-    )
-
-    #_method
-    (defn #_"MultiFn" MultiFn''removeMethod [#_"MultiFn" this, #_"Object" dispatchVal]
-        (.lock (.writeLock (:rw this)))
-        (try
-            (let [_ (vswap! (:methodTable this) dissoc dispatchVal)]
-                (MultiFn''resetCache this)
-                this
-            )
-            (finally
-                (.unlock (.writeLock (:rw this)))
-            )
-        )
-    )
-
-    #_method
-    (defn- #_"boolean" MultiFn''prefers [#_"MultiFn" this, #_"Object" x, #_"Object" y]
-        (or
-            (let [#_"IPersistentSet" xprefs (get @(:preferTable this) x)]
-                (and (some? xprefs) (contains? xprefs y))
-            )
-            (loop-when [#_"ISeq" ps (seq (parents y))] (some? ps) => false
-                (or (MultiFn''prefers this, x, (first ps)) (recur (next ps)))
-            )
-            (loop-when [#_"ISeq" ps (seq (parents x))] (some? ps) => false
-                (or (MultiFn''prefers this, (first ps), y) (recur (next ps)))
-            )
-        )
-    )
-
-    #_method
-    (defn #_"MultiFn" MultiFn''preferMethod [#_"MultiFn" this, #_"Object" dispatchValX, #_"Object" dispatchValY]
-        (.lock (.writeLock (:rw this)))
-        (try
-            (when (MultiFn''prefers this, dispatchValY, dispatchValX)
-                (throw! (str "preference conflict in multimethod '" (:name this) "': " dispatchValY " is already preferred to " dispatchValX))
-            )
-            (let [_ (vswap! (:preferTable this) #(assoc % dispatchValX (conj (get % dispatchValX #{}) dispatchValY)))]
-                (MultiFn''resetCache this)
-                this
-            )
-            (finally
-                (.unlock (.writeLock (:rw this)))
-            )
-        )
-    )
-
-    #_method
-    (defn- #_"boolean" MultiFn''isA [#_"MultiFn" this, #_"Object" x, #_"Object" y]
-        (isa? (deref (:hierarchy this)) x y)
-    )
-
-    #_method
-    (defn- #_"boolean" MultiFn''dominates [#_"MultiFn" this, #_"Object" x, #_"Object" y]
-        (or (MultiFn''prefers this, x, y) (MultiFn''isA this, x, y))
-    )
-
-    #_method
-    (defn- #_"IFn" MultiFn''findAndCacheBestMethod [#_"MultiFn" this, #_"Object" dispatchVal]
-        (.lock (.readLock (:rw this)))
-        (let [#_"IPersistentMap" mt @(:methodTable this) #_"IPersistentMap" pt @(:preferTable this) #_"Object" ch @(:cachedHierarchy this)
-              #_"Object" bestValue
-                (try
-                    (let [#_"IMapEntry" bestEntry
-                            (loop-when [bestEntry nil #_"ISeq" s (seq @(:methodTable this))] (some? s) => bestEntry
-                                (let-when [#_"IMapEntry" e (first s)] (MultiFn''isA this, dispatchVal, (key e)) => (recur bestEntry (next s))
-                                    (let [bestEntry
-                                            (when (or (nil? bestEntry) (MultiFn''dominates this, (key e), (key bestEntry))) => bestEntry
-                                                e
-                                            )]
-                                        (when-not (MultiFn''dominates this, (key bestEntry), (key e))
-                                            (throw! (str "multiple methods in multimethod '" (:name this) "' match dispatch value: " dispatchVal " -> " (key e) " and " (key bestEntry) ", and neither is preferred"))
-                                        )
-                                        (recur bestEntry (next s))
-                                    )
-                                )
-                            )]
-                        (if (some? bestEntry) (val bestEntry) (get @(:methodTable this) (:defaultDispatchVal this)))
-                    )
-                    (finally
-                        (.unlock (.readLock (:rw this)))
-                    )
-                )]
-            (when (some? bestValue)
-                ;; ensure basis has stayed stable throughout, else redo
-                (.lock (.writeLock (:rw this)))
-                (try
-                    (if (and (= mt @(:methodTable this)) (= pt @(:preferTable this)) (= ch @(:cachedHierarchy this)) (= @(:cachedHierarchy this) (deref (:hierarchy this))))
-                        (do
-                            ;; place in cache
-                            (vswap! (:methodCache this) assoc dispatchVal bestValue)
-                            (cast cloiure.core.IFn bestValue)
-                        )
-                        (do
-                            (MultiFn''resetCache this)
-                            (MultiFn''findAndCacheBestMethod this, dispatchVal)
-                        )
-                    )
-                    (finally
-                        (.unlock (.writeLock (:rw this)))
-                    )
-                )
-            )
-        )
-    )
-
-    #_method
-    (defn #_"IFn" MultiFn''getMethod [#_"MultiFn" this, #_"Object" dispatchVal]
-        (when-not (= @(:cachedHierarchy this) (deref (:hierarchy this)))
-            (MultiFn''resetCache this)
-        )
-        (let [#_"IFn" targetFn (get @(:methodCache this) dispatchVal)]
-            (or targetFn (MultiFn''findAndCacheBestMethod this, dispatchVal))
-        )
-    )
-
-    #_method
-    (defn- #_"IFn" MultiFn''getFn [#_"MultiFn" this, #_"Object" dispatchVal]
-        (let [#_"IFn" targetFn (MultiFn''getMethod this, dispatchVal)]
-            (or targetFn (throw! (str "no method in multimethod '" (:name this) "' for dispatch value: " dispatchVal)))
-        )
-    )
-
-    (extend-type MultiFn IFn
-        (#_"Object" IFn'''invoke
-            ([#_"MultiFn" this] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this)))))
-            ([#_"MultiFn" this, #_"Object" arg1] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1)), arg1))
-            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2)), arg1, arg2))
-            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3)), arg1, arg2, arg3))
-            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4)), arg1, arg2, arg3, arg4))
-            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5)), arg1, arg2, arg3, arg4, arg5))
-            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6)), arg1, arg2, arg3, arg4, arg5, arg6))
-            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7)), arg1, arg2, arg3, arg4, arg5, arg6, arg7))
-            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8))
-            ([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9))
-          #_([#_"MultiFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9 & #_"Object..." args] (IFn'''invoke (MultiFn''getFn this, (IFn'''invoke (:dispatchFn this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, args)), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, args))
-        )
-    )
-)
-)
-
 (java-ns cloiure.lang.Namespace
 
 (class-ns Namespace
@@ -12307,7 +12099,7 @@
 
 (class-ns TransientArrayMap
     (defn #_"TransientArrayMap" TransientArrayMap'new [#_"Object[]" array]
-        (let [#_"Object[]" a (make-array Object (Math/max PersistentArrayMap'HASHTABLE_THRESHOLD, (alength array)))
+        (let [#_"Object[]" a (make-array Object (max PersistentArrayMap'HASHTABLE_THRESHOLD (alength array)))
               _ (System/arraycopy array, 0, a, 0, (alength array))]
             (merge (TransientArrayMap.) (ATransientMap'new)
                 (hash-map
@@ -14503,7 +14295,7 @@
     #_method
     (defn #_"int" PersistentTreeMap''depth-2 [#_"PersistentTreeMap" this, #_"TNode" t]
         (when (some? t) => 0
-            (inc (Math/max (PersistentTreeMap''depth-2 this, (TNode'''left t)), (PersistentTreeMap''depth-2 this, (TNode'''right t))))
+            (inc (max (PersistentTreeMap''depth-2 this, (TNode'''left t)) (PersistentTreeMap''depth-2 this, (TNode'''right t))))
         )
     )
 
@@ -17623,117 +17415,6 @@
     )
 )
 
-;;;
- ; Throws an exception if the given option map contains keys not listed as valid, else returns nil.
- ;;
-(§ defn- check-valid-options [options & valid-keys]
-    (when (seq (apply disj (apply hash-set (keys options)) valid-keys))
-        (throw! (apply str "only these options are valid: " (interpose ", " valid-keys)))
-    )
-)
-
-;; multimethods
-
-(§ def global-hierarchy)
-
-;;;
- ; Creates a new multimethod with the associated dispatch function.
- ;
- ; Options are key-value pairs and may be one of:
- ;
- ; :default
- ;
- ; The default dispatch value, defaults to :default
- ;
- ; :hierarchy
- ;
- ; The value used for hierarchical dispatch (e.g. ::square is-a ::shape)
- ;
- ; Hierarchies are type-like relationships that do not depend upon type
- ; inheritance. By default Cloiure's multimethods dispatch off of a
- ; global hierarchy map. However, a hierarchy relationship can be
- ; created with the derive function used to augment the root ancestor
- ; created with make-hierarchy.
- ;
- ; Multimethods expect the value of the hierarchy option to be supplied as
- ; a reference type e.g. a var (i.e. via the Var-quote dispatch macro #'
- ; or the var special form).
- ;;
-(§ defmacro defmulti [mm-name & options]
-    (let [m           (if (map? (first options)) (first options) {})
-          options     (if (map? (first options)) (next options) options)
-          dispatch-fn (first options)
-          options     (next options)
-          m           (if (meta mm-name) (conj (meta mm-name) m) m)
-          mm-name     (with-meta mm-name m)]
-        (when (= (count options) 1)
-            (throw! "the syntax for defmulti has changed: (defmulti name dispatch-fn :default dispatch-value)")
-        )
-        (let [options   (apply hash-map options)
-              default   (get options :default :default)
-              hierarchy (get options :hierarchy #'global-hierarchy)]
-            (check-valid-options options :default :hierarchy)
-            `(let [v# (def ~mm-name)]
-                (when-not (and (Var''hasRoot v#) (instance? MultiFn (deref v#)))
-                    (def ~mm-name (MultiFn'new ~(name mm-name) ~dispatch-fn ~default ~hierarchy))
-                )
-            )
-        )
-    )
-)
-
-;;;
- ; Creates and installs a new method of multimethod associated with dispatch-value.
- ;;
-(§ defmacro defmethod [multifn dispatch-val & fn-tail]
-    `(MultiFn''addMethod ~(with-meta multifn {:tag 'cloiure.core.MultiFn}) ~dispatch-val (fn ~@fn-tail))
-)
-
-;;;
- ; Removes all of the methods of multimethod.
- ;;
-(§ defn remove-all-methods [^MultiFn multifn]
-    (MultiFn''reset multifn)
-)
-
-;;;
- ; Removes the method of multimethod associated with dispatch-value.
- ;;
-(§ defn remove-method [^MultiFn multifn dispatch-val]
-    (MultiFn''removeMethod multifn dispatch-val)
-)
-
-;;;
- ; Causes the multimethod to prefer matches of dispatch-val-x over dispatch-val-y when there is a conflict.
- ;;
-(§ defn prefer-method [^MultiFn multifn dispatch-val-x dispatch-val-y]
-    (MultiFn''preferMethod multifn dispatch-val-x dispatch-val-y)
-)
-
-;;;
- ; Given a multimethod, returns a map of dispatch values -> dispatch fns.
- ;;
-(§ defn methods [^MultiFn multifn]
-    @(:methodTable multifn)
-)
-
-;;;
- ; Given a multimethod and a dispatch value, returns the dispatch fn
- ; that would apply to that value, or nil if none apply and no default.
- ;;
-(§ defn get-method [^MultiFn multifn dispatch-val]
-    (MultiFn''getMethod multifn dispatch-val)
-)
-
-;;;
- ; Given a multimethod, returns a map of preferred value -> set of other values.
- ;;
-(§ defn prefers [^MultiFn multifn]
-    @(:preferTable multifn)
-)
-
-;; var stuff
-
 (§ defmacro- assert-args [& pairs]
     `(do
         (when-not ~(first pairs)
@@ -18705,8 +18386,6 @@
         )
     )
 )
-
-;; evaluation
 
 ;;;
  ; Evaluates the form data structure (not text!) and returns the result.
@@ -19913,28 +19592,6 @@
 (§ defn ^String print-str   [& xs] (with-out-str (apply print   xs)))
 (§ defn ^String println-str [& xs] (with-out-str (apply println xs)))
 
-(def ^:dynamic *assert* true)
-
-;;;
- ; Evaluates expr and throws an exception if it does not evaluate to logical true.
- ;;
-(§ defmacro assert
-    ([x]
-        (when *assert*
-            `(when-not ~x
-                (throw (AssertionError. (str "Assert failed: " (pr-str '~x))))
-            )
-        )
-    )
-    ([x message]
-        (when *assert*
-            `(when-not ~x
-                (throw (AssertionError. (str "Assert failed: " ~message "\n" (pr-str '~x))))
-            )
-        )
-    )
-)
-
 ;;;
  ; Returns an instance of java.util.regex.Pattern, for use, e.g. in re-matcher.
  ;;
@@ -20423,13 +20080,6 @@
 (§ defn thread-bound? [& vars] (every? #(Var''getThreadBinding ^Var %) vars))
 
 ;;;
- ; Creates a hierarchy object for use with derive, isa?, etc.
- ;;
-(§ defn make-hierarchy [] {:parents {} :descendants {} :ancestors {}})
-
-(§ def- global-hierarchy (make-hierarchy))
-
-;;;
  ; Returns the immediate superclass and direct interfaces of c, if any.
  ;;
 (§ defn bases [^Class c]
@@ -20443,170 +20093,23 @@
 ;;;
  ; Returns the immediate and indirect superclasses and interfaces of c, if any.
  ;;
-(§ defn supers [^Class class]
-    (loop [ret (set (bases class)) cs ret]
-        (if (seq cs)
-            (let [c (first cs) bs (bases c)]
-                (recur (into ret bs) (into (disj cs c) bs))
-            )
-            (not-empty ret)
+(§ defn supers [^Class c]
+    (loop-when [s (set (bases c)) cs s] (seq cs) => (not-empty s)
+        (let [c (first cs) bs (bases c)]
+            (recur (into s bs) (into (disj cs c) bs))
         )
     )
 )
 
 ;;;
  ; Returns true if (= child parent), or child is directly or indirectly derived
- ; from parent, either via a Java type inheritance relationship or a relationship
- ; established via derive. h must be a hierarchy obtained from make-hierarchy,
- ; if not supplied, defaults to the global hierarchy.
+ ; from parent via Java type inheritance relationship.
  ;;
-(§ defn isa?
-    ([child parent] (isa? global-hierarchy child parent))
-    ([h child parent]
-        (or (= child parent)
-            (and (class? parent) (class? child) (.isAssignableFrom ^Class parent child))
-            (contains? ((:ancestors h) child) parent)
-            (and (class? child) (some #(contains? ((:ancestors h) %) parent) (supers child)))
-            (and (vector? parent) (vector? child) (= (count parent) (count child))
-                (loop [ret true i 0]
-                    (if (or (not ret) (= i (count parent)))
-                        ret
-                        (recur (isa? h (child i) (parent i)) (inc i))
-                    )
-                )
-            )
-        )
-    )
-)
-
-;;;
- ; Returns the immediate parents of tag, either via a Java type inheritance
- ; relationship or a relationship established via derive. h must be a hierarchy
- ; obtained from make-hierarchy, if not supplied, defaults to the global hierarchy.
- ;;
-(§ defn parents
-    ([tag] (parents global-hierarchy tag))
-    ([h tag]
-        (not-empty
-            (let [tp (get (:parents h) tag)]
-                (if (class? tag)
-                    (into (set (bases tag)) tp)
-                    tp
-                )
-            )
-        )
-    )
-)
-
-;;;
- ; Returns the immediate and indirect parents of tag, either via a Java type
- ; inheritance relationship or a relationship established via derive. h must
- ; be a hierarchy obtained from make-hierarchy, if not supplied, defaults to
- ; the global hierarchy.
- ;;
-(§ defn ancestors
-    ([tag] (ancestors global-hierarchy tag))
-    ([h tag]
-        (not-empty
-            (let [ta (get (:ancestors h) tag)]
-                (if (class? tag)
-                    (let [superclasses (set (supers tag))]
-                        (reduce into superclasses (cons ta (map #(get (:ancestors h) %) superclasses)))
-                    )
-                    ta
-                )
-            )
-        )
-    )
-)
-
-;;;
- ; Returns the immediate and indirect children of tag, through a relationship
- ; established via derive. h must be a hierarchy obtained from make-hierarchy,
- ; if not supplied, defaults to the global hierarchy.
- ; Note: does not work on Java type inheritance relationships.
- ;;
-(§ defn descendants
-    ([tag] (descendants global-hierarchy tag))
-    ([h tag]
-        (if (class? tag)
-            (throw! "can't get descendants of classes")
-            (not-empty (get (:descendants h) tag))
-        )
-    )
-)
-
-;;;
- ; Establishes a parent/child relationship between parent and tag.
- ; Parent must be a namespace-qualified symbol or keyword and child
- ; can be either a namespace-qualified symbol or keyword or a class.
- ; h must be a hierarchy obtained from make-hierarchy, if not
- ; supplied, defaults to, and modifies, the global hierarchy.
- ;;
-(§ defn derive
-    ([tag parent]
-        (assert (namespace parent))
-        (assert (or (class? tag) (and (satisfies? Named tag) (namespace tag))))
-
-        (alter-var-root #'global-hierarchy derive tag parent)
-        nil
-    )
-    ([h tag parent]
-        (assert (not= tag parent))
-        (assert (or (class? tag) (satisfies? Named tag)))
-        (assert (satisfies? Named parent))
-
-        (let [tp (:parents h) td (:descendants h) ta (:ancestors h)
-              tf
-                (fn [m source sources target targets]
-                    (reduce
-                        (fn [ret k]
-                            (assoc ret k (reduce conj (get targets k #{}) (cons target (targets target))))
-                        )
-                        m (cons source (sources source))
-                    )
-                )]
-            (or
-                (when-not (contains? (tp tag) parent)
-                    (when (contains? (ta tag) parent)
-                        (throw! (print-str tag "already has" parent "as ancestor"))
-                    )
-                    (when (contains? (ta parent) tag)
-                        (throw! (print-str "cyclic derivation:" parent "has" tag "as ancestor"))
-                    )
-                    (hash-map
-                        :parents (assoc (:parents h) tag (conj (get tp tag #{}) parent))
-                        :ancestors (tf (:ancestors h) tag td parent ta)
-                        :descendants (tf (:descendants h) parent ta tag td)
-                    )
-                )
-                h
-            )
-        )
-    )
-)
-
-(§ declare flatten)
-
-;;;
- ; Removes a parent/child relationship between parent and tag.
- ; h must be a hierarchy obtained from make-hierarchy, if not
- ; supplied, defaults to, and modifies, the global hierarchy.
- ;;
-(§ defn underive
-    ([tag parent]
-        (alter-var-root #'global-hierarchy underive tag parent)
-        nil
-    )
-    ([h tag parent]
-        (let [parentMap     (:parents h)
-              childsParents (if (parentMap tag) (disj (parentMap tag) parent) #{})
-              newParents    (if (not-empty childsParents) (assoc parentMap tag childsParents) (dissoc parentMap tag))
-              deriv-seq     (flatten (map #(cons (key %) (interpose (key %) (val %))) (seq newParents)))]
-            (if (contains? (parentMap tag) parent)
-                (reduce #(apply derive %1 %2) (make-hierarchy) (partition 2 deriv-seq))
-                h
-            )
+(defn isa? [child parent]
+    (or (= child parent)
+        (and (class? parent) (class? child) (.isAssignableFrom ^Class parent child))
+        (and (vector? parent) (vector? child) (= (count parent) (count child))
+            (loop-when-recur [? true i 0] (and ? (< i (count parent))) [(isa? (child i) (parent i)) (inc i)] => ?)
         )
     )
 )
@@ -20664,7 +20167,7 @@
  ; Use of ns is preferred to individual calls to in-ns/import:
  ;
  ; (ns foo.bar
- ;   (:refer-cloiure :exclude [ancestors printf])
+ ;   (:refer-cloiure :exclude [format printf])
  ;   (:import (java.util Date Timer Random)
  ;            (java.sql Connection Statement)))
  ;;
@@ -22111,17 +21614,13 @@
 
 (§ defn- validate-fields [fields name]
     (when-not (vector? fields)
-        (throw (AssertionError. "No fields vector given."))
+        (throw! "No fields vector given.")
     )
-    (let [specials '#{__meta __hash __hasheq __extmap}]
-        (when (some specials fields)
-            (throw (AssertionError. (str "The names in " specials " cannot be used as field names for types.")))
-        )
+    (let-when [specials '#{__meta __hash __hasheq __extmap}] (some specials fields)
+        (throw! (str "The names in " specials " cannot be used as field names for types."))
     )
-    (let [non-syms (remove symbol? fields)]
-        (when (seq non-syms)
-            (throw (AssertionError. (apply str "deftype fields must be symbols, " *ns* "." name " had: " (interpose ", " non-syms))))
-        )
+    (let-when [non-syms (remove symbol? fields)] (seq non-syms)
+        (throw! (apply str "deftype fields must be symbols, " *ns* "." name " had: " (interpose ", " non-syms)))
     )
 )
 
@@ -23213,8 +22712,9 @@
  ; after the first true test expression.
  ;;
 (§ defmacro cond-> [expr & clauses]
-    (assert (even? (count clauses)))
-
+    (assert-args
+        (even? (count clauses)) "an even number of forms as clauses"
+    )
     (let [g (gensym)
           steps (map (fn [[test step]] `(if ~test (-> ~g ~step) ~g)) (partition 2 clauses))]
         `(let [~g ~expr ~@(interleave (repeat g) (butlast steps))]
@@ -23233,8 +22733,9 @@
  ; after the first true test expression.
  ;;
 (§ defmacro cond->> [expr & clauses]
-    (assert (even? (count clauses)))
-
+    (assert-args
+        (even? (count clauses)) "an even number of forms as clauses"
+    )
     (let [g (gensym)
           steps (map (fn [[test step]] `(if ~test (->> ~g ~step) ~g)) (partition 2 clauses))]
         `(let [~g ~expr ~@(interleave (repeat g) (butlast steps))]
