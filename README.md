@@ -6,3 +6,4 @@ Clojure research playground
 - [spec.alpha](https://github.com/clojure/spec.alpha) [[cbe72e2](https://github.com/clojure/spec.alpha/commit/cbe72e2314557f64957fd9a104e8709717be24d1)]
 - [core.specs.alpha](https://github.com/clojure/core.specs.alpha) [[354726f](https://github.com/clojure/core.specs.alpha/commit/354726f77c458fe08b2dd952e7f03df357113979)]
 - [java.math.BigInteger](https://github.com/dmlloyd/openjdk) [[20d40e1](https://github.com/dmlloyd/openjdk/commit/20d40e1a18c28db37052e2a3b974bd2b99eb6191)]
+- [java.util.concurrent.atomic.AtomicReference](https://github.com/dmlloyd/openjdk) [[97a94b4](https://github.com/dmlloyd/openjdk/commit/97a94b4ebe89e1fb24aab57ca87fcec0ac1808e1)]

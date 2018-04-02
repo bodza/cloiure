@@ -1,5 +1,5 @@
 (ns cloiure.core
-    (:refer-clojure :only [* *ns* + +' - -> .. / < <= = > >= aget alength alter-meta! apply as-> aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defprotocol defrecord deref dissoc doseq dotimes empty extend-type find find-ns first fn get hash-map hash-set identical? if-let import inc indexed? int intern interpose into-array key keys keyword let letfn list list* locking long loop make-array map map-entry? mapv max merge meta min name namespace neg? next not= ns-unmap nth object-array peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot realized? reduced? reify rem repeat reset! reset-meta! resolve rest rseq satisfies? seq sequential? some sorted-map subvec swap! swap-vals! symbol to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector volatile! vreset! vswap! when-let while with-meta zero?])
+    (:refer-clojure :only [* *ns* *print-length* + +' - -> .. / < <= = > >= aget alength alter-meta! apply as-> aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defprotocol defrecord deref dissoc doseq dotimes empty extend-type find find-ns first fn get hash-map hash-set identical? if-let import inc indexed? int intern interpose into-array key keys keyword let letfn list list* locking long loop make-array map map-entry? mapv max merge meta min name namespace neg? next not= ns-unmap nth object-array peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot realized? reduced? reify rem repeat reset! reset-meta! resolve rest rseq satisfies? seq sequential? some sorted-map subvec swap! swap-vals! symbol to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector volatile! vreset! vswap! when-let while with-meta zero?])
 )
 
 (defmacro § [& _])
@@ -17,11 +17,11 @@
     [java.lang.reflect Array Constructor Field #_Method Modifier]
     [java.security AccessController PrivilegedAction]
     [java.util Arrays Comparator IdentityHashMap]
-    [java.util.concurrent.atomic AtomicReference]
     [java.util.regex Matcher Pattern]
     [cloiure.asm ClassVisitor ClassWriter Label MethodVisitor Opcodes Type]
     [cloiure.asm.commons GeneratorAdapter Method]
     [cloiure.math BigInteger]
+    [cloiure.util.concurrent.atomic AtomicReference]
 )
 
 ;;;
@@ -5133,7 +5133,7 @@
     )
 
     #_method
-    (defn #_"IopObject" IopObject''compile [#_"IopObject" this, #_"String" superName, #_"String[]" interfaceNames, #_"boolean" oneTimeUse]
+    (defn #_"IopObject" IopObject''compile [#_"IopObject" this, #_"String" superName, #_"String[]" interfaceNames, #_"boolean" _oneTimeUse]
         (binding [*used-constants* #{}]
             ;; create bytecode for a class
             ;; with name current_ns.defname[$letname]+
@@ -5340,21 +5340,17 @@
                             (.visitCode clinitgen)
                             (.visitLineNumber clinitgen, (:line this), (.mark clinitgen))
 
-                            (when (pos? (count (:constants this)))
-                                (IopObject''emitConstants this, clinitgen)
-                            )
-
-                            (when (pos? (count (:keywordCallsites this)))
-                                (IopObject''emitKeywordCallsites this, clinitgen)
-                            )
+                            (IopObject''emitConstants this, clinitgen)
+                            (IopObject''emitKeywordCallsites this, clinitgen)
 
                             (.returnValue clinitgen)
                             (.endMethod clinitgen)
-                            ;; end of class
-                            (.visitEnd cv)
-
-                            (assoc this :compiledClass (.defineClass *class-loader*, (:name this), (.toByteArray cw), (§ obsolete nil)))
                         )
+
+                        ;; end of class
+                        (.visitEnd cv)
+
+                        (assoc this :compiledClass (.defineClass *class-loader*, (:name this), (.toByteArray cw), (§ obsolete nil)))
                     )
                 )
             )
@@ -9136,9 +9132,11 @@
     (defn #_"Atom" Atom'new
         ([#_"Object" data] (Atom'new nil, data))
         ([#_"IPersistentMap" meta, #_"Object" data]
-            (hash-map
-                #_"AtomicReference" :meta (AtomicReference. meta)
-                #_"AtomicReference" :data (AtomicReference. data)
+            (merge (Atom.)
+                (hash-map
+                    #_"AtomicReference" :meta (AtomicReference. meta)
+                    #_"AtomicReference" :data (AtomicReference. data)
+                )
             )
         )
     )
@@ -9221,20 +9219,21 @@
     (defn #_"Volatile" Volatile'new [#_"Object" o]
         (merge (Volatile.)
             (hash-map
-                #_volatile #_"Object" :data o
+                #_"Object'" :data (AtomicReference. o)
             )
         )
     )
 
     (extend-type Volatile IDeref
         (#_"Object" IDeref'''deref [#_"Volatile" this]
-            (:data this)
+            (.get (:data this))
         )
     )
 
     #_method
     (defn #_"Object" Volatile''reset [#_"Volatile" this, #_"Object" o']
-        (§ set! (:data this) o')
+        (.set (:data this), o')
+        o'
     )
 )
 )
@@ -9369,7 +9368,7 @@
     (defn- #_"Symbol" Symbol'new
         ([#_"String" ns, #_"String" name] (Symbol'new nil, ns, name))
         ([#_"IPersistentMap" meta, #_"String" ns, #_"String" name]
-            (merge (AFn'new)
+            (merge (Symbol.) (AFn'new)
                 (hash-map
                     #_"IPersistentMap" :_meta meta
                     #_"String" :ns ns
@@ -10126,12 +10125,14 @@
 
 (class-ns LazySeq
     (defn- #_"LazySeq" LazySeq'init [#_"IPersistentMap" meta, #_"IFn" f, #_"ISeq" s]
-        (hash-map
-            #_"IPersistentMap" :_meta meta
+        (merge (LazySeq.)
+            (hash-map
+                #_"IPersistentMap" :_meta meta
 
-            #_"IFn'" :f (volatile! f)
-            #_"Object'" :o (volatile! nil)
-            #_"ISeq'" :s (volatile! s)
+                #_"IFn'" :f (volatile! f)
+                #_"Object'" :o (volatile! nil)
+                #_"ISeq'" :s (volatile! s)
+            )
         )
     )
 
@@ -10375,7 +10376,7 @@
     (defn #_"VSeq" VSeq'new
         ([#_"IPersistentVector" v, #_"int" i] (VSeq'new nil, v, i))
         ([#_"IPersistentMap" meta, #_"IPersistentVector" v, #_"int" i]
-            (merge (ASeq'new meta)
+            (merge (VSeq.) (ASeq'new meta)
                 (hash-map
                     #_"IPersistentVector" :v v
                     #_"int" :i i
@@ -10436,7 +10437,7 @@
     (defn #_"RSeq" RSeq'new
         ([#_"IPersistentVector" v, #_"int" i] (RSeq'new nil, v, i))
         ([#_"IPersistentMap" meta, #_"IPersistentVector" v, #_"int" i]
-            (merge (ASeq'new meta)
+            (merge (RSeq.) (ASeq'new meta)
                 (hash-map
                     #_"IPersistentVector" :v v
                     #_"int" :i i
@@ -11061,7 +11062,7 @@
     (defn #_"ArraySeq" ArraySeq'new
         ([#_"Object" array, #_"int" i] (ArraySeq'new nil, array, i))
         ([#_"IPersistentMap" meta, #_"Object" array, #_"int" i]
-            (merge (ASeq'new meta)
+            (merge (ArraySeq.) (ASeq'new meta)
                 (hash-map
                     #_"Object[]" :array (cast Compiler'OBJECTS_CLASS array)
                     #_"int" :i i
@@ -11293,9 +11294,11 @@
     (defn #_"Binding" Binding'new
         ([#_"T" val] (Binding'new val, nil))
         ([#_"T" val, #_"Binding" rest]
-            (hash-map
-                #_"T" :val val
-                #_"Binding" :rest rest
+            (merge (Binding.)
+                (hash-map
+                    #_"T" :val val
+                    #_"Binding" :rest rest
+                )
             )
         )
     )
@@ -11308,7 +11311,7 @@
     (defn #_"Cons" Cons'new
         ([#_"Object" _first, #_"ISeq" _more] (Cons'new nil, _first, _more))
         ([#_"IPersistentMap" meta, #_"Object" _first, #_"ISeq" _more]
-            (merge (ASeq'new meta)
+            (merge (Cons.) (ASeq'new meta)
                 (hash-map
                     #_"Object" :_first _first
                     #_"ISeq" :_more _more
@@ -11347,7 +11350,7 @@
     (defn- #_"Cycle" Cycle'new
         ([#_"ISeq" all, #_"ISeq" prev, #_"ISeq" current] (Cycle'new nil, all, prev, current))
         ([#_"IPersistentMap" meta, #_"ISeq" all, #_"ISeq" prev, #_"ISeq" current]
-            (merge (ASeq'new meta)
+            (merge (Cycle.) (ASeq'new meta)
                 (hash-map
                     #_"ISeq" :all all ;; never nil
                     #_"ISeq" :prev prev
@@ -11472,7 +11475,7 @@
     (defn- #_"Iterate" Iterate'new
         ([#_"IFn" f, #_"Object" prev, #_"Object" seed] (Iterate'new nil, f, prev, seed))
         ([#_"IPersistentMap" meta, #_"IFn" f, #_"Object" prev, #_"Object" seed]
-            (merge (ASeq'new meta)
+            (merge (Iterate.) (ASeq'new meta)
                 (hash-map
                     #_"IFn" :f f ;; never nil
                     #_"Object" :prev prev
@@ -11588,13 +11591,15 @@
 
 (class-ns MethodImplCache
     (defn- #_"MethodImplCache" MethodImplCache'init [#_"IPersistentMap" protocol, #_"Keyword" methodk, #_"int" shift, #_"int" mask, #_"Object[]" table, #_"IPersistentMap" map]
-        (hash-map
-            #_"IPersistentMap" :protocol protocol
-            #_"Keyword" :methodk methodk
-            #_"int" :shift shift
-            #_"int" :mask mask
-            #_"Object[]" :table table ;; [class, entry. class, entry ...]
-            #_"IPersistentMap" :map map
+        (merge (MethodImplCache.)
+            (hash-map
+                #_"IPersistentMap" :protocol protocol
+                #_"Keyword" :methodk methodk
+                #_"int" :shift shift
+                #_"int" :mask mask
+                #_"Object[]" :table table ;; [class, entry. class, entry ...]
+                #_"IPersistentMap" :map map
+            )
         )
     )
 
@@ -11834,7 +11839,7 @@
     (defn #_"MSeq" MSeq'new
         ([#_"Object[]" array, #_"int" i] (MSeq'new nil, array, i))
         ([#_"IPersistentMap" meta, #_"Object[]" array, #_"int" i]
-            (merge (ASeq'new meta)
+            (merge (MSeq.) (ASeq'new meta)
                 (hash-map
                     #_"Object[]" :array array
                     #_"int" :i i
@@ -11883,7 +11888,7 @@
         ;; This ctor captures/aliases the passed array, so do not modify it later.
         ([#_"Object[]" init] (PersistentArrayMap'new nil, init))
         ([#_"IPersistentMap" meta, #_"Object[]" init]
-            (merge (APersistentMap'new)
+            (merge (PersistentArrayMap.) (APersistentMap'new)
                 (hash-map
                     #_"IPersistentMap" :_meta meta
                     #_"Object[]" :array init
@@ -12235,7 +12240,7 @@
     (defn #_"NodeSeq" NodeSeq'new
         ([#_"Object[]" array, #_"int" i] (NodeSeq'new nil, array, i, nil))
         ([#_"IPersistentMap" meta, #_"Object[]" array, #_"int" i, #_"ISeq" s]
-            (merge (ASeq'new meta)
+            (merge (NodeSeq.) (ASeq'new meta)
                 (hash-map
                     #_"Object[]" :array array
                     #_"int" :i i
@@ -12519,7 +12524,7 @@
     (defn- #_"INode" BitmapIndexedNode'createNode-6 [#_"int" shift, #_"Object" key1, #_"Object" val1, #_"int" key2hash, #_"Object" key2, #_"Object" val2]
         (let [#_"int" key1hash (PersistentHashMap'hash key1)]
             (when-not (= key1hash key2hash) => (HashCollisionNode'new nil, key1hash, 2, (object-array [ key1, val1, key2, val2 ]))
-                (let [#_"boolean'" addedLeaf (volatile! false) #_"AtomicReference<Thread>" edit (AtomicReference.)]
+                (let [#_"boolean'" addedLeaf (volatile! false) #_"AtomicReference<Thread>" edit (AtomicReference. nil)]
                     (-> BitmapIndexedNode'EMPTY
                         (INode'''assocT edit, shift, key1hash, key1, val1, addedLeaf)
                         (INode'''assocT edit, shift, key2hash, key2, val2, addedLeaf)
@@ -12965,7 +12970,7 @@
             (TransientHashMap'new (AtomicReference. (Thread/currentThread)), (:root m), (:count m), (:hasNull m), (:nullValue m))
         )
         ([#_"AtomicReference<Thread>" edit, #_"INode" root, #_"int" count, #_"boolean" hasNull, #_"Object" nullValue]
-            (merge (ATransientMap'new)
+            (merge (TransientHashMap.) (ATransientMap'new)
                 (hash-map
                     #_"AtomicReference<Thread>" :edit edit
                     #_"INode" :root root
@@ -13061,7 +13066,7 @@
     (defn #_"PersistentHashMap" PersistentHashMap'new
         ([#_"int" count, #_"INode" root, #_"boolean" hasNull, #_"Object" nullValue] (PersistentHashMap'new nil, count, root, hasNull, nullValue))
         ([#_"IPersistentMap" meta, #_"int" count, #_"INode" root, #_"boolean" hasNull, #_"Object" nullValue]
-            (merge (APersistentMap'new)
+            (merge (PersistentHashMap.) (APersistentMap'new)
                 (hash-map
                     #_"IPersistentMap" :_meta meta
                     #_"int" :count count
@@ -13515,7 +13520,7 @@
     (defn #_"PersistentList" PersistentList'new
         ([#_"Object" _first] (PersistentList'new nil, _first, nil, 1))
         ([#_"IPersistentMap" meta, #_"Object" _first, #_"IPersistentList" _rest, #_"int" _count]
-            (merge (ASeq'new meta)
+            (merge (PersistentList.) (ASeq'new meta)
                 (hash-map
                     #_"Object" :_first _first
                     #_"IPersistentList" :_rest _rest
@@ -13604,7 +13609,7 @@
     (defn #_"QSeq" QSeq'new
         ([#_"ISeq" f, #_"ISeq" rseq] (QSeq'new nil, f, rseq))
         ([#_"IPersistentMap" meta, #_"ISeq" f, #_"ISeq" rseq]
-            (merge (ASeq'new meta)
+            (merge (QSeq.) (ASeq'new meta)
                 (hash-map
                     #_"ISeq" :f f
                     #_"ISeq" :rseq rseq
@@ -14086,7 +14091,7 @@
         ([#_"ISeq" stack, #_"boolean" asc] (TSeq'new stack, asc, -1))
         ([#_"ISeq" stack, #_"boolean" asc, #_"int" cnt] (TSeq'new nil, stack, asc, cnt))
         ([#_"IPersistentMap" meta, #_"ISeq" stack, #_"boolean" asc, #_"int" cnt]
-            (merge (ASeq'new meta)
+            (merge (TSeq.) (ASeq'new meta)
                 (hash-map
                     #_"ISeq" :stack stack
                     #_"boolean" :asc asc
@@ -14149,7 +14154,7 @@
         ([#_"Comparator" comp] (PersistentTreeMap'new nil, comp))
         ([#_"IPersistentMap" meta, #_"Comparator" comp] (PersistentTreeMap'new meta, comp, nil, 0))
         ([#_"IPersistentMap" meta, #_"Comparator" comp, #_"TNode" tree, #_"int" _count]
-            (merge (APersistentMap'new)
+            (merge (PersistentTreeMap.) (APersistentMap'new)
                 (hash-map
                     #_"IPersistentMap" :_meta meta
                     #_"Comparator" :comp comp
@@ -14616,9 +14621,11 @@
     (defn #_"VNode" VNode'new
         ([#_"AtomicReference<Thread>" edit] (VNode'new edit, (make-array Object 32)))
         ([#_"AtomicReference<Thread>" edit, #_"Object[]" array]
-            (hash-map
-                #_"AtomicReference<Thread>" :edit edit
-                #_"Object[]" :array array
+            (merge (VNode.)
+                (hash-map
+                    #_"AtomicReference<Thread>" :edit edit
+                    #_"Object[]" :array array
+                )
             )
         )
     )
@@ -14650,7 +14657,7 @@
             (TransientVector'new (:cnt v), (:shift v), (TransientVector'editableRoot (:root v)), (TransientVector'editableTail (:tail v)))
         )
         ([#_"int" cnt, #_"int" shift, #_"VNode" root, #_"Object[]" tail]
-            (merge (AFn'new)
+            (merge (TransientVector.) (AFn'new)
                 (hash-map
                     #_"int" :cnt cnt
                     #_"int" :shift shift
@@ -14917,13 +14924,12 @@
 )
 
 (class-ns PersistentVector
-    (def #_"AtomicReference<Thread>" PersistentVector'NOEDIT (AtomicReference. nil))
-    (def #_"VNode" PersistentVector'EMPTY_NODE (VNode'new PersistentVector'NOEDIT, (object-array 32)))
+    (def #_"VNode" PersistentVector'EMPTY_NODE (VNode'new (AtomicReference. nil), (object-array 32)))
 
     (defn #_"PersistentVector" PersistentVector'new
         ([#_"int" cnt, #_"int" shift, #_"VNode" root, #_"Object[]" tail] (PersistentVector'new nil, cnt, shift, root, tail))
         ([#_"IPersistentMap" meta, #_"int" cnt, #_"int" shift, #_"VNode" root, #_"Object[]" tail]
-            (merge (APersistentVector'new)
+            (merge (PersistentVector.) (APersistentVector'new)
                 (hash-map
                     #_"IPersistentMap" :_meta meta
                     #_"int" :cnt cnt
@@ -15242,7 +15248,7 @@
     (defn- #_"Repeat" Repeat'new
         ([#_"long" cnt, #_"Object" val] (Repeat'new nil, cnt, val))
         ([#_"IPersistentMap" meta, #_"long" cnt, #_"Object" val]
-            (merge (ASeq'new meta)
+            (merge (Repeat.) (ASeq'new meta)
                 (hash-map
                     #_"long" :cnt cnt ;; always INFINITE or pos?
                     #_"Object" :val val
@@ -15339,7 +15345,7 @@
             (Range'new nil, start, end, step, boundsCheck)
         )
         ([#_"IPersistentMap" meta, #_"Object" start, #_"Object" end, #_"Object" step, #_"RangeBoundsCheck" boundsCheck]
-            (merge (ASeq'new meta)
+            (merge (Range.) (ASeq'new meta)
                 (hash-map
                     ;; Invariants guarantee this is never an "empty" seq
                     #_"Object" :start start
@@ -15564,10 +15570,12 @@
     (defn #_"Var" Var'new
         ([#_"Namespace" ns, #_"Symbol" sym] (Var'new ns, sym, (Unbound'new ns, sym)))
         ([#_"Namespace" ns, #_"Symbol" sym, #_"Object" root]
-            (hash-map
-                #_"Namespace" :ns ns
-                #_"Symbol" :sym sym
-                #_"Object'" :root (atom root)
+            (merge (Var.)
+                (hash-map
+                    #_"Namespace" :ns ns
+                    #_"Symbol" :sym sym
+                    #_"Object'" :root (atom root)
+                )
             )
         )
     )
@@ -21103,7 +21111,7 @@
  ; followed by '...' to represent the remaining items. The root binding is nil
  ; indicating no limit.
  ;;
-(def ^:dynamic *print-length* nil)
+(§ soon def ^:dynamic *print-length* nil)
 
 ;;;
  ; *print-level* controls how many levels deep the printer will print nested objects.
