@@ -5,6 +5,11 @@
 (defmacro § [& _])
 (defmacro ß [& _])
 
+;;;
+ ; Ignores body, yields nil.
+ ;;
+(defmacro comment [& body])
+
 (import
     [java.lang ArithmeticException Boolean Byte Character Class ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Long Number Object RuntimeException String StringBuilder System Thread ThreadLocal Throwable]
 )
@@ -194,14 +199,79 @@
     (defprotocol Fn)
 )
 
-(java-ns cloiure.lang.Sequential
-    (defprotocol Sequential)
+(java-ns cloiure.lang.IType
+    (defprotocol IType)
+)
+
+(java-ns cloiure.lang.INamed
+    (defprotocol INamed
+        (#_"String" INamed'''getNamespace [#_"INamed" this])
+        (#_"String" INamed'''getName [#_"INamed" this])
+    )
+)
+
+(java-ns cloiure.lang.IMeta
+    (defprotocol IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"IMeta" this])
+    )
+)
+
+(java-ns cloiure.lang.IObj
+    (defprotocol IObj
+        (#_"IObj" IObj'''withMeta [#_"IObj" this, #_"IPersistentMap" meta])
+    )
+)
+
+(java-ns cloiure.lang.IReference
+    (defprotocol IReference
+        (#_"IPersistentMap" IReference'''alterMeta [#_"IReference" this, #_"IFn" f, #_"ISeq" args])
+        (#_"IPersistentMap" IReference'''resetMeta [#_"IReference" this, #_"IPersistentMap" m])
+    )
+)
+
+(java-ns cloiure.lang.IDeref
+    (defprotocol IDeref
+        (#_"Object" IDeref'''deref [#_"IDeref" this])
+    )
+)
+
+(java-ns cloiure.lang.IAtom
+    (defprotocol IAtom
+        (#_"boolean" IAtom'''compareAndSet [#_"IAtom" this, #_"Object" o, #_"Object" o'])
+        (#_"Object" IAtom'''swap [#_"IAtom" this, #_"IFn" f, #_"ISeq" args])
+        (#_"Object" IAtom'''reset [#_"IAtom" this, #_"Object" o'])
+        (#_"[Object Object]" IAtom'''swapVals [#_"IAtom" this, #_"IFn" f, #_"ISeq" args])
+        (#_"[Object Object]" IAtom'''resetVals [#_"IAtom" this, #_"Object" o'])
+    )
+)
+
+(java-ns cloiure.lang.IPending
+    (defprotocol IPending
+        (#_"boolean" IPending'''isRealized [#_"IPending" this])
+    )
+)
+
+(java-ns cloiure.lang.IHashEq
+    (defprotocol IHashEq
+        (#_"int" IHashEq'''hasheq [#_"IHashEq" this])
+    )
+)
+
+(java-ns cloiure.lang.ISeq
+    (defprotocol ISeq
+        (#_"Object" ISeq'''first [#_"ISeq" this])
+        (#_"ISeq" ISeq'''next [#_"ISeq" this])
+    )
 )
 
 (java-ns cloiure.lang.Seqable
     (defprotocol Seqable
         (#_"ISeq" Seqable'''seq [#_"Seqable" this])
     )
+)
+
+(java-ns cloiure.lang.Sequential
+    (defprotocol Sequential)
 )
 
 (java-ns cloiure.lang.Reversible
@@ -225,45 +295,12 @@
     )
 )
 
-(java-ns cloiure.lang.IPersistentCollection
-    (defprotocol IPersistentCollection
-        (#_"IPersistentCollection" IPersistentCollection'''conj [#_"IPersistentCollection" this, #_"Object" o])
-        (#_"IPersistentCollection" IPersistentCollection'''empty [#_"IPersistentCollection" this])
-    )
-)
-
-(java-ns cloiure.lang.ISeq
-    (defprotocol ISeq
-        (#_"Object" ISeq'''first [#_"ISeq" this])
-        (#_"ISeq" ISeq'''next [#_"ISeq" this])
-    )
-)
-
-(java-ns cloiure.lang.IAtom
-    (defprotocol IAtom
-        (#_"boolean" IAtom'''compareAndSet [#_"IAtom" this, #_"Object" o, #_"Object" o'])
-        (#_"Object" IAtom'''swap [#_"IAtom" this, #_"IFn" f, #_"ISeq" args])
-        (#_"Object" IAtom'''reset [#_"IAtom" this, #_"Object" o'])
-        (#_"[Object Object]" IAtom'''swapVals [#_"IAtom" this, #_"IFn" f, #_"ISeq" args])
-        (#_"[Object Object]" IAtom'''resetVals [#_"IAtom" this, #_"Object" o'])
-    )
-)
-
-(java-ns cloiure.lang.IDeref
-    (defprotocol IDeref
-        (#_"Object" IDeref'''deref [#_"IDeref" this])
-    )
-)
-
-(java-ns cloiure.lang.IEditableCollection
-    (defprotocol IEditableCollection
-        (#_"ITransientCollection" IEditableCollection'''asTransient [#_"IEditableCollection" this])
-    )
-)
-
-(java-ns cloiure.lang.IHashEq
-    (defprotocol IHashEq
-        (#_"int" IHashEq'''hasheq [#_"IHashEq" this])
+(java-ns cloiure.lang.Indexed
+    (defprotocol Indexed
+        (#_"Object" Indexed'''nth
+            [#_"Indexed" this, #_"int" i]
+            [#_"Indexed" this, #_"int" i, #_"Object" notFound]
+        )
     )
 )
 
@@ -295,44 +332,16 @@
     )
 )
 
-(java-ns cloiure.lang.Named
-    (defprotocol Named
-        (#_"String" Named'''getNamespace [#_"Named" this])
-        (#_"String" Named'''getName [#_"Named" this])
+(java-ns cloiure.lang.IPersistentCollection
+    (defprotocol IPersistentCollection
+        (#_"IPersistentCollection" IPersistentCollection'''conj [#_"IPersistentCollection" this, #_"Object" o])
+        (#_"IPersistentCollection" IPersistentCollection'''empty [#_"IPersistentCollection" this])
     )
 )
 
-(java-ns cloiure.lang.IMeta
-    (defprotocol IMeta
-        (#_"IPersistentMap" IMeta'''meta [#_"IMeta" this])
-    )
-)
-
-(java-ns cloiure.lang.IObj
-    (defprotocol IObj
-        (#_"IObj" IObj'''withMeta [#_"IObj" this, #_"IPersistentMap" meta])
-    )
-)
-
-(java-ns cloiure.lang.IReference
-    (defprotocol IReference
-        (#_"IPersistentMap" IReference'''alterMeta [#_"IReference" this, #_"IFn" f, #_"ISeq" args])
-        (#_"IPersistentMap" IReference'''resetMeta [#_"IReference" this, #_"IPersistentMap" m])
-    )
-)
-
-(java-ns cloiure.lang.Indexed
-    (defprotocol Indexed
-        (#_"Object" Indexed'''nth
-            [#_"Indexed" this, #_"int" i]
-            [#_"Indexed" this, #_"int" i, #_"Object" notFound]
-        )
-    )
-)
-
-(java-ns cloiure.lang.IPending
-    (defprotocol IPending
-        (#_"boolean" IPending'''isRealized [#_"IPending" this])
+(java-ns cloiure.lang.IEditableCollection
+    (defprotocol IEditableCollection
+        (#_"ITransientCollection" IEditableCollection'''asTransient [#_"IEditableCollection" this])
     )
 )
 
@@ -372,21 +381,6 @@
 (java-ns cloiure.lang.IPersistentVector
     (defprotocol IPersistentVector
         (#_"IPersistentVector" IPersistentVector'''assocN [#_"IPersistentVector" this, #_"int" i, #_"Object" val])
-    )
-)
-
-(java-ns cloiure.lang.IReduce
-    (defprotocol IReduce
-        (#_"Object" IReduce'''reduce
-            [#_"IReduce" this, #_"IFn" f]
-            [#_"IReduce" this, #_"IFn" f, #_"Object" r]
-        )
-    )
-)
-
-(java-ns cloiure.lang.IKVReduce
-    (defprotocol IKVReduce
-        (#_"Object" IKVReduce'''kvreduce [#_"IKVReduce" this, #_"IFn" f, #_"Object" r])
     )
 )
 
@@ -441,14 +435,25 @@
     )
 )
 
+(java-ns cloiure.lang.IReduce
+    (defprotocol IReduce
+        (#_"Object" IReduce'''reduce
+            [#_"IReduce" this, #_"IFn" f]
+            [#_"IReduce" this, #_"IFn" f, #_"Object" r]
+        )
+    )
+)
+
+(java-ns cloiure.lang.IKVReduce
+    (defprotocol IKVReduce
+        (#_"Object" IKVReduce'''kvreduce [#_"IKVReduce" this, #_"IFn" f, #_"Object" r])
+    )
+)
+
 (java-ns cloiure.lang.Range
     (defprotocol RangeBoundsCheck
         (#_"boolean" RangeBoundsCheck'''exceededBounds [#_"RangeBoundsCheck" this, #_"Object" val])
     )
-)
-
-(java-ns cloiure.lang.IType
-    (defprotocol IType)
 )
 
 (java-ns cloiure.lang.Util
@@ -483,7 +488,6 @@
         (#_"boolean" Ops'''equiv [#_"Ops" this, #_"Number" x, #_"Number" y])
         (#_"boolean" Ops'''lt [#_"Ops" this, #_"Number" x, #_"Number" y])
         (#_"boolean" Ops'''lte [#_"Ops" this, #_"Number" x, #_"Number" y])
-        (#_"boolean" Ops'''gte [#_"Ops" this, #_"Number" x, #_"Number" y])
         (#_"Number" Ops'''negate [#_"Ops" this, #_"Number" x])
         (#_"Number" Ops'''negateP [#_"Ops" this, #_"Number" x])
         (#_"Number" Ops'''inc [#_"Ops" this, #_"Number" x])
@@ -492,11 +496,9 @@
         (#_"Number" Ops'''decP [#_"Ops" this, #_"Number" x])
     )
 
-    #_abstract
-    (defrecord OpsP [] #_"Ops")
     (defrecord LongOps [] #_"Ops")
-    (defrecord RatioOps #_"OpsP" [])
-    (defrecord BigIntOps #_"OpsP" [])
+    (defrecord RatioOps [] #_"Ops")
+    (defrecord BigIntOps [] #_"Ops")
     #_stateless
     (defrecord Numbers [])
 )
@@ -520,11 +522,11 @@
 )
 
 (java-ns cloiure.lang.Symbol
-    (defrecord Symbol #_"AFn" [] #_"IObj" #_"IMeta" #_"Comparable" #_"Named" #_"IHashEq")
+    (defrecord Symbol #_"AFn" [] #_"IObj" #_"IMeta" #_"Comparable" #_"INamed" #_"IHashEq")
 )
 
 (java-ns cloiure.lang.Keyword
-    (defrecord Keyword [] #_"IFn" #_"Comparable" #_"Named" #_"IHashEq")
+    (defrecord Keyword [] #_"IFn" #_"Comparable" #_"INamed" #_"IHashEq")
 )
 
 (java-ns cloiure.lang.AFunction
@@ -4590,7 +4592,7 @@
                       *loop-locals*       nil
                       *in-return-context* true]
                 (let [retTag (if (string? retTag) (symbol retTag) retTag)
-                      retTag (when (and (symbol? retTag) (= (Named'''getName retTag) "long")) retTag)
+                      retTag (when (and (symbol? retTag) (= (INamed'''getName retTag) "long")) retTag)
                       #_"Class" retClass
                         (let-when [retClass (Interop'tagClass (or (Compiler'tagOf parms) retTag))] (.isPrimitive retClass) => Object
                             (when-not (= retClass Long/TYPE) => retClass
@@ -6618,10 +6620,10 @@
         (reify IParser
             ;; (deftype* tagname classname [fields] :implements [interfaces] :tag tagname methods*)
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
-                (let [#_"ISeq" s form                                s (next s)
-                      #_"String" tagname (Named'''getName (first s)) s (next s)
-                      #_"Symbol" classname (first s)                 s (next s)
-                      #_"IPersistentVector" fields (first s)         s (next s)
+                (let [#_"ISeq" s form                                 s (next s)
+                      #_"String" tagname (INamed'''getName (first s)) s (next s)
+                      #_"Symbol" classname (first s)                  s (next s)
+                      #_"IPersistentVector" fields (first s)          s (next s)
                       [#_"IPersistentMap" opts s]
                         (loop-when-recur [opts {} s s]
                                          (and (some? s) (keyword? (first s)))
@@ -8026,30 +8028,30 @@
     (defn #_"Ratio" Ratio'new [#_"BigInteger" numerator, #_"BigInteger" denominator]
         (merge (Ratio.) (§ foreign Number'new)
             (hash-map
-                #_"BigInteger" :numerator numerator
-                #_"BigInteger" :denominator denominator
+                #_"BigInteger" :n numerator
+                #_"BigInteger" :d denominator
             )
         )
     )
 
     #_foreign
     (defn #_"boolean" equals---Ratio [#_"Ratio" this, #_"Object" that]
-        (and (instance? Ratio that) (= (:numerator that) (:numerator this)) (= (:denominator that) (:denominator this)))
+        (and (instance? Ratio that) (= (:n that) (:n this)) (= (:d that) (:d this)))
     )
 
     #_foreign
     (defn #_"int" hashCode---Ratio [#_"Ratio" this]
-        (bit-xor (.hashCode (:numerator this)) (.hashCode (:denominator this)))
+        (bit-xor (.hashCode (:n this)) (.hashCode (:d this)))
     )
 
     #_foreign
     (defn #_"String" toString---Ratio [#_"Ratio" this]
-        (str (:numerator this) "/" (:denominator this))
+        (str (:n this) "/" (:d this))
     )
 
     #_method
     (defn #_"BigInteger" Ratio''bigIntegerValue [#_"Ratio" this]
-        (.divide (:numerator this), (:denominator this))
+        (.divide (:n this), (:d this))
     )
 
     #_method
@@ -8071,34 +8073,6 @@
 
 (java-ns cloiure.lang.Numbers
 
-(class-ns OpsP
-    (defn #_"OpsP" OpsP'new []
-        (OpsP.)
-    )
-
-    (extend-type OpsP Ops
-        (#_"Number" Ops'''addP [#_"OpsP" this, #_"Number" x, #_"Number" y]
-            (Ops'''add this, x, y)
-        )
-
-        (#_"Number" Ops'''multiplyP [#_"OpsP" this, #_"Number" x, #_"Number" y]
-            (Ops'''multiply this, x, y)
-        )
-
-        (#_"Number" Ops'''negateP [#_"OpsP" this, #_"Number" x]
-            (Ops'''negate this, x)
-        )
-
-        (#_"Number" Ops'''incP [#_"OpsP" this, #_"Number" x]
-            (Ops'''inc this, x)
-        )
-
-        (#_"Number" Ops'''decP [#_"OpsP" this, #_"Number" x]
-            (Ops'''dec this, x)
-        )
-    )
-)
-
 (class-ns LongOps
     (defn #_"LongOps" LongOps'new []
         (LongOps.)
@@ -8115,59 +8089,33 @@
     (declare Numbers'dec-1l)
 
     (extend-type LongOps Ops
-        (#_"Ops" Ops'''combine [#_"LongOps" this, #_"Ops" y]
-            (Ops'''opsWithLong y, this)
-        )
+        (#_"Ops" Ops'''combine [#_"LongOps" this, #_"Ops" y] (Ops'''opsWithLong y, this))
 
-        (#_"Ops" Ops'''opsWithLong [#_"LongOps" this, #_"LongOps" x]
-            this
-        )
+        (#_"Ops" Ops'''opsWithLong [#_"LongOps" this, #_"LongOps" x] this)
+        (#_"Ops" Ops'''opsWithRatio [#_"LongOps" this, #_"RatioOps" x] Numbers'RATIO_OPS)
+        (#_"Ops" Ops'''opsWithBigInt [#_"LongOps" this, #_"BigIntOps" x] Numbers'BIGINT_OPS)
 
-        (#_"Ops" Ops'''opsWithRatio [#_"LongOps" this, #_"RatioOps" x]
-            Numbers'RATIO_OPS
-        )
+        (#_"boolean" Ops'''isZero [#_"LongOps" this, #_"Number" x] (§ interop #_"==" (.longValue x) 0))
+        (#_"boolean" Ops'''isPos [#_"LongOps" this, #_"Number" x] (§ interop #_">" (.longValue x) 0))
+        (#_"boolean" Ops'''isNeg [#_"LongOps" this, #_"Number" x] (§ interop #_"<" (.longValue x) 0))
 
-        (#_"Ops" Ops'''opsWithBigInt [#_"LongOps" this, #_"BigIntOps" x]
-            Numbers'BIGINT_OPS
-        )
-
-        (#_"boolean" Ops'''isZero [#_"LongOps" this, #_"Number" x]
-            (zero? (.longValue x))
-        )
-
-        (#_"boolean" Ops'''isPos [#_"LongOps" this, #_"Number" x]
-            (pos? (.longValue x))
-        )
-
-        (#_"boolean" Ops'''isNeg [#_"LongOps" this, #_"Number" x]
-            (neg? (.longValue x))
-        )
-
-        (#_"Number" Ops'''add [#_"LongOps" this, #_"Number" x, #_"Number" y]
-            (Long/valueOf (Numbers'add-2ll (.longValue x), (.longValue y)))
-        )
-
+        (#_"Number" Ops'''add [#_"LongOps" this, #_"Number" x, #_"Number" y] (Long/valueOf (Numbers'add-2ll (.longValue x), (.longValue y))))
         (#_"Number" Ops'''addP [#_"LongOps" this, #_"Number" x, #_"Number" y]
-            (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y) #_"long" lz (+ lx ly)]
-                (if (and (neg? (bit-xor lz lx)) (neg? (bit-xor lz ly)))
+            (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y) #_"long" lz (§ interop #_"+" lx ly)]
+                (when (and (neg? (bit-xor lz lx)) (neg? (bit-xor lz ly))) => (Long/valueOf lz)
                     (Ops'''add Numbers'BIGINT_OPS, x, y)
-                    (Long/valueOf lz)
                 )
             )
         )
 
-        (#_"Number" Ops'''multiply [#_"LongOps" this, #_"Number" x, #_"Number" y]
-            (Long/valueOf (Numbers'multiply-2ll (.longValue x), (.longValue y)))
-        )
-
+        (#_"Number" Ops'''multiply [#_"LongOps" this, #_"Number" x, #_"Number" y] (Long/valueOf (Numbers'multiply-2ll (.longValue x), (.longValue y))))
         (#_"Number" Ops'''multiplyP [#_"LongOps" this, #_"Number" x, #_"Number" y]
             (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y)]
                 (if (and (= lx Long/MIN_VALUE) (neg? ly))
                     (Ops'''multiply Numbers'BIGINT_OPS, x, y)
-                    (let [#_"long" lz (* lx ly)]
-                        (if (and (not= ly 0) (not= (/ lz ly) lx))
+                    (let [#_"long" lz (§ interop #_"*" lx ly)]
+                        (when (and (not= ly 0) (not= (§ interop #_"/" lz ly) lx)) => (Long/valueOf lz)
                             (Ops'''multiply Numbers'BIGINT_OPS, x, y)
-                            (Long/valueOf lz)
                         )
                     )
                 )
@@ -8177,7 +8125,7 @@
         (#_"Number" Ops'''divide [#_"LongOps" this, #_"Number" x, #_"Number" y]
             (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y)]
                 (let-when-not [#_"long" gcd (LongOps'gcd lx, ly)] (zero? gcd) => (Long/valueOf 0)
-                    (let-when-not [lx (/ lx gcd) ly (/ ly gcd)] (= ly 1) => (Long/valueOf lx)
+                    (let-when-not [lx (§ interop #_"/" lx gcd) ly (§ interop #_"/" ly gcd)] (= ly 1) => (Long/valueOf lx)
                         (let [[lx ly]
                                 (when (neg? ly) => [lx ly]
                                     [(- lx) (- ly)]
@@ -8189,70 +8137,38 @@
             )
         )
 
-        (#_"Number" Ops'''quotient [#_"LongOps" this, #_"Number" x, #_"Number" y]
-            (Long/valueOf (/ (.longValue x) (.longValue y)))
-        )
+        (#_"Number" Ops'''quotient [#_"LongOps" this, #_"Number" x, #_"Number" y] (Long/valueOf (§ interop #_"/" (.longValue x) (.longValue y))))
+        (#_"Number" Ops'''remainder [#_"LongOps" this, #_"Number" x, #_"Number" y] (Long/valueOf (§ interop #_"%" (.longValue x) (.longValue y))))
 
-        (#_"Number" Ops'''remainder [#_"LongOps" this, #_"Number" x, #_"Number" y]
-            (Long/valueOf (§ interop % (.longValue x) (.longValue y)))
-        )
+        (#_"boolean" Ops'''equiv [#_"LongOps" this, #_"Number" x, #_"Number" y] (§ interop #_"==" (.longValue x) (.longValue y)))
+        (#_"boolean" Ops'''lt [#_"LongOps" this, #_"Number" x, #_"Number" y] (§ interop #_"<" (.longValue x) (.longValue y)))
+        (#_"boolean" Ops'''lte [#_"LongOps" this, #_"Number" x, #_"Number" y] (§ interop #_"<=" (.longValue x) (.longValue y)))
 
-        (#_"boolean" Ops'''equiv [#_"LongOps" this, #_"Number" x, #_"Number" y]
-            (= (.longValue x) (.longValue y))
-        )
-
-        (#_"boolean" Ops'''lt [#_"LongOps" this, #_"Number" x, #_"Number" y]
-            (< (.longValue x) (.longValue y))
-        )
-
-        (#_"boolean" Ops'''lte [#_"LongOps" this, #_"Number" x, #_"Number" y]
-            (<= (.longValue x) (.longValue y))
-        )
-
-        (#_"boolean" Ops'''gte [#_"LongOps" this, #_"Number" x, #_"Number" y]
-            (>= (.longValue x) (.longValue y))
-        )
-
-        (#_"Number" Ops'''negate [#_"LongOps" this, #_"Number" x]
-            (let [#_"long" val (.longValue x)]
-                (Long/valueOf (Numbers'minus-1l val))
-            )
-        )
-
+        (#_"Number" Ops'''negate [#_"LongOps" this, #_"Number" x] (Long/valueOf (Numbers'minus-1l (.longValue x))))
         (#_"Number" Ops'''negateP [#_"LongOps" this, #_"Number" x]
-            (let [#_"long" val (.longValue x)]
-                (if (< Long/MIN_VALUE val)
-                    (Long/valueOf (- val))
-                    (.negate (BigInteger/valueOf val))
+            (let [#_"long" lx (.longValue x)]
+                (if (< Long/MIN_VALUE lx)
+                    (Long/valueOf (- lx))
+                    (.negate (BigInteger/valueOf lx))
                 )
             )
         )
 
-        (#_"Number" Ops'''inc [#_"LongOps" this, #_"Number" x]
-            (let [#_"long" val (.longValue x)]
-                (Long/valueOf (Numbers'inc-1l val))
-            )
-        )
-
+        (#_"Number" Ops'''inc [#_"LongOps" this, #_"Number" x] (Long/valueOf (Numbers'inc-1l (.longValue x))))
         (#_"Number" Ops'''incP [#_"LongOps" this, #_"Number" x]
-            (let [#_"long" val (.longValue x)]
-                (if (< val Long/MAX_VALUE)
-                    (Long/valueOf (inc val))
+            (let [#_"long" lx (.longValue x)]
+                (if (< lx Long/MAX_VALUE)
+                    (Long/valueOf (inc lx))
                     (Ops'''inc Numbers'BIGINT_OPS, x)
                 )
             )
         )
 
-        (#_"Number" Ops'''dec [#_"LongOps" this, #_"Number" x]
-            (let [#_"long" val (.longValue x)]
-                (Long/valueOf (Numbers'dec-1l val))
-            )
-        )
-
+        (#_"Number" Ops'''dec [#_"LongOps" this, #_"Number" x] (Long/valueOf (Numbers'dec-1l (.longValue x))))
         (#_"Number" Ops'''decP [#_"LongOps" this, #_"Number" x]
-            (let [#_"long" val (.longValue x)]
-                (if (< Long/MIN_VALUE val)
-                    (Long/valueOf (dec val))
+            (let [#_"long" lx (.longValue x)]
+                (if (< Long/MIN_VALUE lx)
+                    (Long/valueOf (dec lx))
                     (Ops'''dec Numbers'BIGINT_OPS, x)
                 )
             )
@@ -8262,7 +8178,7 @@
 
 (class-ns RatioOps
     (defn #_"RatioOps" RatioOps'new []
-        (merge (RatioOps.) (OpsP'new))
+        (RatioOps.)
     )
 
     (declare Numbers'toRatio)
@@ -8271,58 +8187,41 @@
     (declare Numbers'lt)
     (declare Numbers'lte)
     (declare Numbers'gte)
-    (declare Numbers'add-2ol)
 
     (extend-type RatioOps Ops
-        (#_"Ops" Ops'''combine [#_"RatioOps" this, #_"Ops" y]
-            (Ops'''opsWithRatio y, this)
-        )
+        (#_"Ops" Ops'''combine [#_"RatioOps" this, #_"Ops" y] (Ops'''opsWithRatio y, this))
 
-        (#_"Ops" Ops'''opsWithLong [#_"RatioOps" this, #_"LongOps" x]
-            this
-        )
+        (#_"Ops" Ops'''opsWithLong [#_"RatioOps" this, #_"LongOps" x] this)
+        (#_"Ops" Ops'''opsWithRatio [#_"RatioOps" this, #_"RatioOps" x] this)
+        (#_"Ops" Ops'''opsWithBigInt [#_"RatioOps" this, #_"BigIntOps" x] this)
 
-        (#_"Ops" Ops'''opsWithRatio [#_"RatioOps" this, #_"RatioOps" x]
-            this
-        )
-
-        (#_"Ops" Ops'''opsWithBigInt [#_"RatioOps" this, #_"BigIntOps" x]
-            this
-        )
-
-        (#_"boolean" Ops'''isZero [#_"RatioOps" this, #_"Number" x]
-            (zero? (.signum (:numerator (cast Ratio x))))
-        )
-
-        (#_"boolean" Ops'''isPos [#_"RatioOps" this, #_"Number" x]
-            (pos? (.signum (:numerator (cast Ratio x))))
-        )
-
-        (#_"boolean" Ops'''isNeg [#_"RatioOps" this, #_"Number" x]
-            (neg? (.signum (:numerator (cast Ratio x))))
-        )
+        (#_"boolean" Ops'''isZero [#_"RatioOps" this, #_"Number" x] (§ interop #_"==" (.signum (:n (cast Ratio x))) 0))
+        (#_"boolean" Ops'''isPos [#_"RatioOps" this, #_"Number" x] (§ interop #_">" (.signum (:n (cast Ratio x))) 0))
+        (#_"boolean" Ops'''isNeg [#_"RatioOps" this, #_"Number" x] (§ interop #_"<" (.signum (:n (cast Ratio x))) 0))
 
         (#_"Number" Ops'''add [#_"RatioOps" this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
-                (Ops'''divide this, (.add (.multiply (:numerator ry), (:denominator rx)), (.multiply (:numerator rx), (:denominator ry))), (.multiply (:denominator ry), (:denominator rx)))
+                (Ops'''divide this, (.add (.multiply (:n ry), (:d rx)), (.multiply (:n rx), (:d ry))), (.multiply (:d ry), (:d rx)))
             )
         )
+        (#_"Number" Ops'''addP [#_"RatioOps" this, #_"Number" x, #_"Number" y] (Ops'''add this, x, y))
 
         (#_"Number" Ops'''multiply [#_"RatioOps" this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
-                (Ops'''divide this, (.multiply (:numerator ry), (:numerator rx)), (.multiply (:denominator ry), (:denominator rx)))
+                (Ops'''divide this, (.multiply (:n ry), (:n rx)), (.multiply (:d ry), (:d rx)))
             )
         )
+        (#_"Number" Ops'''multiplyP [#_"RatioOps" this, #_"Number" x, #_"Number" y] (Ops'''multiply this, x, y))
 
         (#_"Number" Ops'''divide [#_"RatioOps" this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
-                (Ops'''divide this, (.multiply (:denominator ry), (:numerator rx)), (.multiply (:numerator ry), (:denominator rx)))
+                (Ops'''divide this, (.multiply (:d ry), (:n rx)), (.multiply (:n ry), (:d rx)))
             )
         )
 
         (#_"Number" Ops'''quotient [#_"RatioOps" this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
-               (.divide (.multiply (:numerator rx), (:denominator ry)), (.multiply (:denominator rx), (:numerator ry)))
+               (.divide (.multiply (:n rx), (:d ry)), (.multiply (:d rx), (:n ry)))
             )
         )
 
@@ -8332,92 +8231,81 @@
 
         (#_"boolean" Ops'''equiv [#_"RatioOps" this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
-                (and (= (:numerator rx) (:numerator ry)) (= (:denominator rx) (:denominator ry)))
+                (and (§ interop #_"equals" (:n rx) (:n ry)) (§ interop #_"equals" (:d rx) (:d ry)))
             )
         )
 
         (#_"boolean" Ops'''lt [#_"RatioOps" this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
-                (Numbers'lt (.multiply (:numerator rx), (:denominator ry)), (.multiply (:numerator ry), (:denominator rx)))
+                (Numbers'lt (.multiply (:n rx), (:d ry)), (.multiply (:n ry), (:d rx)))
             )
         )
 
         (#_"boolean" Ops'''lte [#_"RatioOps" this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
-                (Numbers'lte (.multiply (:numerator rx), (:denominator ry)), (.multiply (:numerator ry), (:denominator rx)))
-            )
-        )
-
-        (#_"boolean" Ops'''gte [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-            (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
-                (Numbers'gte (.multiply (:numerator rx), (:denominator ry)), (.multiply (:numerator ry), (:denominator rx)))
+                (Numbers'lte (.multiply (:n rx), (:d ry)), (.multiply (:n ry), (:d rx)))
             )
         )
 
         (#_"Number" Ops'''negate [#_"RatioOps" this, #_"Number" x]
             (let [#_"Ratio" r (cast Ratio x)]
-                (Ratio'new (.negate (:numerator r)), (:denominator r))
+                (Ratio'new (.negate (:n r)), (:d r))
             )
         )
+        (#_"Number" Ops'''negateP [#_"RatioOps" this, #_"Number" x] (Ops'''negate this, x))
 
-        (#_"Number" Ops'''inc [#_"RatioOps" this, #_"Number" x]
-            (Numbers'add-2ol x, 1)
-        )
+        (#_"Number" Ops'''inc [#_"RatioOps" this, #_"Number" x] (§ soon Numbers'add-2ol x, 1))
+        (#_"Number" Ops'''incP [#_"RatioOps" this, #_"Number" x] (Ops'''inc this, x))
 
-        (#_"Number" Ops'''dec [#_"RatioOps" this, #_"Number" x]
-            (Numbers'add-2ol x, -1)
-        )
+        (#_"Number" Ops'''dec [#_"RatioOps" this, #_"Number" x] (§ soon Numbers'add-2ol x, -1))
+        (#_"Number" Ops'''decP [#_"RatioOps" this, #_"Number" x] (Ops'''dec this, x))
     )
 )
 
 (class-ns BigIntOps
     (defn #_"BigIntOps" BigIntOps'new []
-        (merge (BigIntOps.) (OpsP'new))
+        (BigIntOps.)
     )
 
     (declare Numbers'toBigInteger)
-    (declare Numbers'divide-2ii)
-    (declare Numbers'toBigInteger)
 
     (extend-type BigIntOps Ops
-        (#_"Ops" Ops'''combine [#_"BigIntOps" this, #_"Ops" y]
-            (Ops'''opsWithBigInt y, this)
-        )
+        (#_"Ops" Ops'''combine [#_"BigIntOps" this, #_"Ops" y] (Ops'''opsWithBigInt y, this))
 
-        (#_"Ops" Ops'''opsWithLong [#_"BigIntOps" this, #_"LongOps" x]
-            this
-        )
+        (#_"Ops" Ops'''opsWithLong [#_"BigIntOps" this, #_"LongOps" x] this)
+        (#_"Ops" Ops'''opsWithRatio [#_"BigIntOps" this, #_"RatioOps" x] Numbers'RATIO_OPS)
+        (#_"Ops" Ops'''opsWithBigInt [#_"BigIntOps" this, #_"BigIntOps" x] this)
 
-        (#_"Ops" Ops'''opsWithRatio [#_"BigIntOps" this, #_"RatioOps" x]
-            Numbers'RATIO_OPS
-        )
-
-        (#_"Ops" Ops'''opsWithBigInt [#_"BigIntOps" this, #_"BigIntOps" x]
-            this
-        )
-
-        (#_"boolean" Ops'''isZero [#_"BigIntOps" this, #_"Number" x]
-            (zero? (.signum (Numbers'toBigInteger x)))
-        )
-
-        (#_"boolean" Ops'''isPos [#_"BigIntOps" this, #_"Number" x]
-            (pos? (.signum (Numbers'toBigInteger x)))
-        )
-
-        (#_"boolean" Ops'''isNeg [#_"BigIntOps" this, #_"Number" x]
-            (neg? (.signum (Numbers'toBigInteger x)))
-        )
+        (#_"boolean" Ops'''isZero [#_"BigIntOps" this, #_"Number" x] (§ interop #_"==" (.signum (Numbers'toBigInteger x)) 0))
+        (#_"boolean" Ops'''isPos [#_"BigIntOps" this, #_"Number" x] (§ interop #_">" (.signum (Numbers'toBigInteger x)) 0))
+        (#_"boolean" Ops'''isNeg [#_"BigIntOps" this, #_"Number" x] (§ interop #_"<" (.signum (Numbers'toBigInteger x)) 0))
 
         (#_"Number" Ops'''add [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
             (.add (Numbers'toBigInteger x), (Numbers'toBigInteger y))
         )
+        (#_"Number" Ops'''addP [#_"BigIntOps" this, #_"Number" x, #_"Number" y] (Ops'''add this, x, y))
 
         (#_"Number" Ops'''multiply [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
             (.multiply (Numbers'toBigInteger x), (Numbers'toBigInteger y))
         )
+        (#_"Number" Ops'''multiplyP [#_"BigIntOps" this, #_"Number" x, #_"Number" y] (Ops'''multiply this, x, y))
 
         (#_"Number" Ops'''divide [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-            (Numbers'divide-2ii (Numbers'toBigInteger x), (Numbers'toBigInteger y))
+            (let [#_"BigInteger" n (Numbers'toBigInteger x) #_"BigInteger" d (Numbers'toBigInteger y)]
+                (when-not (= d BigInteger/ZERO) => (throw (ArithmeticException. "Divide by zero"))
+                    (let [#_"BigInteger" gcd (.gcd n, d)]
+                        (when-not (= gcd BigInteger/ZERO) => BigInteger/ZERO
+                            (let [n (.divide n, gcd) d (.divide d, gcd)]
+                                (condp = d
+                                    BigInteger/ONE           n
+                                    (.negate BigInteger/ONE) (.negate n)
+                                                             (Ratio'new (if (neg? (.signum d)) (.negate n) n), (if (neg? (.signum d)) (.negate d) d))
+                                )
+                            )
+                        )
+                    )
+                )
+            )
         )
 
         (#_"Number" Ops'''quotient [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
@@ -8429,32 +8317,25 @@
         )
 
         (#_"boolean" Ops'''equiv [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-            (= (Numbers'toBigInteger x) (Numbers'toBigInteger y))
+            (§ interop #_"equals" (Numbers'toBigInteger x) (Numbers'toBigInteger y))
         )
 
         (#_"boolean" Ops'''lt [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-            (neg? (.compareTo (Numbers'toBigInteger x), (Numbers'toBigInteger y)))
+            (§ interop #_"<" (.compareTo (Numbers'toBigInteger x), (Numbers'toBigInteger y)) 0)
         )
 
         (#_"boolean" Ops'''lte [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-            (<= (.compareTo (Numbers'toBigInteger x), (Numbers'toBigInteger y)) 0)
+            (§ interop #_"<=" (.compareTo (Numbers'toBigInteger x), (Numbers'toBigInteger y)) 0)
         )
 
-        (#_"boolean" Ops'''gte [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-            (>= (.compareTo (Numbers'toBigInteger x), (Numbers'toBigInteger y)) 0)
-        )
+        (#_"Number" Ops'''negate [#_"BigIntOps" this, #_"Number" x] (.negate (Numbers'toBigInteger x)))
+        (#_"Number" Ops'''negateP [#_"BigIntOps" this, #_"Number" x] (Ops'''negate this, x))
 
-        (#_"Number" Ops'''negate [#_"BigIntOps" this, #_"Number" x]
-            (.negate (Numbers'toBigInteger x))
-        )
+        (#_"Number" Ops'''inc [#_"BigIntOps" this, #_"Number" x] (.add (Numbers'toBigInteger x), BigInteger/ONE))
+        (#_"Number" Ops'''incP [#_"BigIntOps" this, #_"Number" x] (Ops'''inc this, x))
 
-        (#_"Number" Ops'''inc [#_"BigIntOps" this, #_"Number" x]
-            (.add (Numbers'toBigInteger x), BigInteger/ONE)
-        )
-
-        (#_"Number" Ops'''dec [#_"BigIntOps" this, #_"Number" x]
-            (.subtract (Numbers'toBigInteger x), BigInteger/ONE)
-        )
+        (#_"Number" Ops'''dec [#_"BigIntOps" this, #_"Number" x] (.subtract (Numbers'toBigInteger x), BigInteger/ONE))
+        (#_"Number" Ops'''decP [#_"BigIntOps" this, #_"Number" x] (Ops'''dec this, x))
     )
 )
 
@@ -8556,7 +8437,7 @@
     )
 
     (defn #_"boolean" Numbers'gte [#_"Object" x, #_"Object" y]
-        (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''gte (cast Number x), (cast Number y)))
+        (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''lte (cast Number y), (cast Number x)))
     )
 
     (defn #_"int" Numbers'compare [#_"Number" x, #_"Number" y]
@@ -8576,22 +8457,6 @@
         (condp instance? x
             Ratio x
                   (Ratio'new (Numbers'toBigInteger x), BigInteger/ONE)
-        )
-    )
-
-    (defn #_"Number" Numbers'divide-2ii [#_"BigInteger" n, #_"BigInteger" d]
-        (when-not (= d BigInteger/ZERO) => (throw (ArithmeticException. "Divide by zero"))
-            (let [#_"BigInteger" gcd (.gcd n, d)]
-                (when-not (= gcd BigInteger/ZERO) => BigInteger/ZERO
-                    (let [n (.divide n, gcd) d (.divide d, gcd)]
-                        (condp = d
-                            BigInteger/ONE           n
-                            (.negate BigInteger/ONE) (.negate n)
-                                                     (Ratio'new (if (neg? (.signum d)) (.negate n) n), (if (neg? (.signum d)) (.negate d) d))
-                        )
-                    )
-                )
-            )
         )
     )
 
@@ -8996,12 +8861,12 @@
         (if (some? (:ns this)) (str (:ns this) "/" (:name this)) (:name this))
     )
 
-    (extend-type Symbol Named
-        (#_"String" Named'''getNamespace [#_"Symbol" this]
+    (extend-type Symbol INamed
+        (#_"String" INamed'''getNamespace [#_"Symbol" this]
             (:ns this)
         )
 
-        (#_"String" Named'''getName [#_"Symbol" this]
+        (#_"String" INamed'''getName [#_"Symbol" this]
             (:name this)
         )
     )
@@ -9128,13 +8993,13 @@
         (compare (:sym this) (:sym that))
     )
 
-    (extend-type Keyword Named
-        (#_"String" Named'''getNamespace [#_"Keyword" this]
-            (Named'''getNamespace (:sym this))
+    (extend-type Keyword INamed
+        (#_"String" INamed'''getNamespace [#_"Keyword" this]
+            (INamed'''getNamespace (:sym this))
         )
 
-        (#_"String" Named'''getName [#_"Keyword" this]
-            (Named'''getName (:sym this))
+        (#_"String" INamed'''getName [#_"Keyword" this]
+            (INamed'''getName (:sym this))
         )
     )
 
@@ -16337,12 +16202,12 @@
 ;;;
  ; Returns the name String of a string, symbol or keyword.
  ;;
-(§ defn ^String name [x] (if (string? x) x (Named'''getName ^cloiure.core.Named x)))
+(§ defn ^String name [x] (if (string? x) x (INamed'''getName ^cloiure.core.INamed x)))
 
 ;;;
  ; Returns the namespace String of a symbol or keyword, or nil if not present.
  ;;
-(§ defn ^String namespace [^cloiure.core.Named x] (Named'''getNamespace x))
+(§ defn ^String namespace [^cloiure.core.INamed x] (INamed'''getNamespace x))
 
 ;;;
  ; Coerce to boolean.
@@ -18267,7 +18132,7 @@
                                         )]
                                     (if (seq bes)
                                         (let [bb (key (first bes)) bk (val (first bes))
-                                              local (if (satisfies? Named bb) (with-meta (symbol nil (name bb)) (meta bb)) bb)
+                                              local (if (satisfies? INamed bb) (with-meta (symbol nil (name bb)) (meta bb)) bb)
                                               bv (if (contains? defaults local)
                                                     (list `get gmap bk (defaults local))
                                                     (list `get gmap bk)
@@ -18524,11 +18389,6 @@
         `(~(emit-bind (to-groups seq-exprs)) ~(second seq-exprs))
     )
 )
-
-;;;
- ; Ignores body, yields nil.
- ;;
-(§ defmacro comment [& body])
 
 ;;;
  ; Evaluates exprs in a context in which *out* is bound to a fresh StringWriter.
