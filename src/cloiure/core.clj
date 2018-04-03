@@ -1,12 +1,12 @@
 (ns cloiure.core
-    (:refer-clojure :only [* *ns* *print-length* + +' - -> .. / < <= = > >= aget alength alter-meta! apply as-> aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defprotocol defrecord deref dissoc doseq dotimes empty extend-type find find-ns first fn get hash-map hash-set identical? if-let import inc indexed? int intern interpose into-array key keys keyword let letfn list list* locking long loop make-array map map-entry? mapv max merge meta min name namespace neg? next not= ns-unmap nth object-array peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot realized? reduced? reify rem repeat reset! reset-meta! resolve rest rseq satisfies? seq sequential? some sorted-map subvec swap! swap-vals! symbol to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector volatile! vreset! vswap! when-let while with-meta zero?])
+    (:refer-clojure :only [* *ns* *print-length* + +' - -> .. / < <= = > >= aget alength alter-meta! apply as-> aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defprotocol defrecord deref dissoc doseq dotimes empty even? extend-type find find-ns first fn get hash-map hash-set identical? if-let import inc indexed? int int-array intern interpose into-array key keys keyword let letfn list list* locking long loop make-array map map-entry? mapv max merge meta min name namespace neg? next not= ns-unmap nth object-array odd? peek persistent! pop pop-thread-bindings pos? proxy push-thread-bindings quot realized? reduced? reify repeat reset! reset-meta! resolve rest rseq satisfies? seq sequential? some sorted-map subvec swap! swap-vals! symbol to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector volatile! vreset! vswap! when-let while with-meta zero?])
 )
 
 (defmacro § [& _])
 (defmacro ß [& _])
 
 (import
-    [java.lang ArithmeticException Character Class ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Number Object RuntimeException String StringBuilder System Thread ThreadLocal Throwable UnsupportedOperationException]
+    [java.lang ArithmeticException Boolean Byte Character Class ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Long Number Object RuntimeException String StringBuilder System Thread ThreadLocal Throwable UnsupportedOperationException]
 )
 
 (ns-unmap 'cloiure.core 'BigInteger)
@@ -604,11 +604,6 @@
 )
 
 (java-ns cloiure.lang.ArraySeq
-    (defrecord ArraySeq_int #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
-    (defrecord ArraySeq_long #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
-    (defrecord ArraySeq_byte #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
-    (defrecord ArraySeq_char #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
-    (defrecord ArraySeq_boolean #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
     (defrecord ArraySeq #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
 )
 
@@ -938,13 +933,6 @@
 )
 
 (defmacro update! [x f & z] `(set! ~x (~f ~x ~@z)))
-
-(def % rem)
-(def & bit-and)
-(def | bit-or)
-(def << bit-shift-left)
-(def >> bit-shift-right)
-(def >>> unsigned-bit-shift-right)
 
 ;;;
  ; Throws a ClassCastException if x is not a c, else returns x.
@@ -2489,8 +2477,8 @@
                             (condp = paramType
                                 Integer/TYPE (Method/getMethod "int intCast(Object)")
                                 Long/TYPE    (Method/getMethod "long longCast(Object)")
-                                Byte/TYPE    (Method/getMethod "byte byteCast(Object)")
-                                             nil
+                              #_Byte/TYPE  #_(Method/getMethod "byte byteCast(Object)")
+                                           #_nil
                             )]
                         (.invokeStatic gen, (Type/getType RT), m)
                     )
@@ -5140,7 +5128,7 @@
             ;; anonymous fns get names fn__id
             ;; derived from AFn'RestFn
             (let [#_"ClassWriter" cw (ClassWriter. ClassWriter/COMPUTE_MAXS) #_"ClassVisitor" cv cw]
-                (.visit cv, Opcodes/V1_5, (| Opcodes/ACC_PUBLIC Opcodes/ACC_SUPER Opcodes/ACC_FINAL), (:internalName this), nil, superName, interfaceNames)
+                (.visit cv, Opcodes/V1_5, (+ Opcodes/ACC_PUBLIC Opcodes/ACC_SUPER Opcodes/ACC_FINAL), (:internalName this), nil, superName, interfaceNames)
                 (when (IopObject'''supportsMeta this)
                     (.visitField cv, Opcodes/ACC_FINAL, "__meta", (.getDescriptor (Type/getType cloiure.core.IPersistentMap)), nil, nil)
                 )
@@ -5158,7 +5146,7 @@
                                     (cond
                                         (IopObject''isVolatile this, lb) Opcodes/ACC_VOLATILE
                                         (IopObject''isMutable this, lb) 0
-                                        :else (| Opcodes/ACC_PUBLIC Opcodes/ACC_FINAL)
+                                        :else (+ Opcodes/ACC_PUBLIC Opcodes/ACC_FINAL)
                                     )]
                                 (.visitField cv, access, (:name lb), fd, nil, nil)
                             )
@@ -5176,7 +5164,7 @@
 
                 ;; static fields for callsites and thunks
                 (dotimes [#_"int" i (count (:protocolCallsites this))]
-                    (.visitField cv, (| Opcodes/ACC_PRIVATE Opcodes/ACC_STATIC), (Compiler'cachedClassName i), (.getDescriptor (Type/getType Class)), nil, nil)
+                    (.visitField cv, (+ Opcodes/ACC_PRIVATE Opcodes/ACC_STATIC), (Compiler'cachedClassName i), (.getDescriptor (Type/getType Class)), nil, nil)
                 )
 
                 ;; ctor that takes closed-overs and inits base + fields
@@ -5325,18 +5313,18 @@
                         ;; static fields for constants
                         (dotimes [#_"int" i (count (:constants this))]
                             (when (contains? *used-constants* i)
-                                (.visitField cv, (| Opcodes/ACC_PUBLIC Opcodes/ACC_FINAL Opcodes/ACC_STATIC), (Compiler'constantName i), (.getDescriptor (IopObject''constantType this, i)), nil, nil)
+                                (.visitField cv, (+ Opcodes/ACC_PUBLIC Opcodes/ACC_FINAL Opcodes/ACC_STATIC), (Compiler'constantName i), (.getDescriptor (IopObject''constantType this, i)), nil, nil)
                             )
                         )
 
                         ;; static fields for lookup sites
                         (dotimes [#_"int" i (count (:keywordCallsites this))]
-                            (.visitField cv, (| Opcodes/ACC_FINAL Opcodes/ACC_STATIC), (Compiler'siteNameStatic i), (.getDescriptor (Type/getType KeywordLookupSite)), nil, nil)
+                            (.visitField cv, (+ Opcodes/ACC_FINAL Opcodes/ACC_STATIC), (Compiler'siteNameStatic i), (.getDescriptor (Type/getType KeywordLookupSite)), nil, nil)
                             (.visitField cv, Opcodes/ACC_STATIC, (Compiler'thunkNameStatic i), (.getDescriptor (Type/getType cloiure.core.ILookupThunk)), nil, nil)
                         )
 
                         ;; static init for constants, keywords and vars
-                        (let [#_"GeneratorAdapter" clinitgen (GeneratorAdapter. (| Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC), (Method/getMethod "void <clinit> ()"), nil, nil, cv)]
+                        (let [#_"GeneratorAdapter" clinitgen (GeneratorAdapter. (+ Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC), (Method/getMethod "void <clinit> ()"), nil, nil, cv)]
                             (.visitCode clinitgen)
                             (.visitLineNumber clinitgen, (:line this), (.mark clinitgen))
 
@@ -5715,7 +5703,7 @@
             (#_"Expr" IParser'''parse [#_"IParser" _self, #_"Context" context, #_"ISeq" form]
                 (when (vector? (second form)) => (throw! "bad binding form, expected vector")
                     (let [#_"IPersistentVector" bindings (second form)]
-                        (when (zero? (% (count bindings) 2)) => (throw! "bad binding form, expected matched symbol expression pairs")
+                        (when (even? (count bindings)) => (throw! "bad binding form, expected matched symbol expression pairs")
                             (if (= context :Context'EVAL)
                                 (Compiler'analyze context, (list (list Compiler'FNONCE [] form)))
                                 (binding [*local-env* *local-env*, *last-local-num* *last-local-num*]
@@ -5838,7 +5826,7 @@
                 (let [#_"boolean" isLoop (= (first form) 'loop*)]
                     (when (vector? (second form)) => (throw! "bad binding form, expected vector")
                         (let [#_"IPersistentVector" bindings (second form)]
-                            (when (zero? (% (count bindings) 2)) => (throw! "bad binding form, expected matched symbol expression pairs")
+                            (when (even? (count bindings)) => (throw! "bad binding form, expected matched symbol expression pairs")
                                 (if (or (= context :Context'EVAL) (and (= context :Context'EXPRESSION) isLoop))
                                     (Compiler'analyze context, (list (list Compiler'FNONCE [] form)))
                                     (let [#_"ISeq" body (next (next form))
@@ -6271,12 +6259,12 @@
      ;;
     (defn #_"Class" NewInstanceExpr'compileStub [#_"String" superName, #_"NewInstanceExpr" ret, #_"String[]" interfaceNames, #_"ISeq" form]
         (let [#_"ClassWriter" cw (ClassWriter. ClassWriter/COMPUTE_MAXS) #_"ClassVisitor" cv cw]
-            (.visit cv, Opcodes/V1_5, (| Opcodes/ACC_PUBLIC Opcodes/ACC_SUPER), (str Compiler'COMPILE_STUB_PREFIX "/" (:internalName ret)), nil, superName, interfaceNames)
+            (.visit cv, Opcodes/V1_5, (+ Opcodes/ACC_PUBLIC Opcodes/ACC_SUPER), (str Compiler'COMPILE_STUB_PREFIX "/" (:internalName ret)), nil, superName, interfaceNames)
 
             ;; instance fields for closed-overs
             (loop-when-recur [#_"ISeq" s (vals (get *closes* (:uid ret)))] (some? s) [(next s)]
                 (let [#_"LocalBinding" lb (first s)
-                      #_"int" access (| Opcodes/ACC_PUBLIC (if (IopObject''isVolatile ret, lb) Opcodes/ACC_VOLATILE (if (IopObject''isMutable ret, lb) 0 Opcodes/ACC_FINAL)))]
+                      #_"int" access (+ Opcodes/ACC_PUBLIC (if (IopObject''isVolatile ret, lb) Opcodes/ACC_VOLATILE (if (IopObject''isMutable ret, lb) 0 Opcodes/ACC_FINAL)))]
                     (if (some? (LocalBinding''getPrimitiveType lb))
                         (.visitField cv, access, (:name lb), (.getDescriptor (Type/getType (LocalBinding''getPrimitiveType lb))), nil, nil)
                         ;; todo - when closed-overs are fields, use more specific types here and in ctor and emitLocal?
@@ -6389,7 +6377,7 @@
             (when (IopObject''isDeftype this)
                 ;; getBasis()
                 (let [#_"Method" meth (Method/getMethod "cloiure.core.IPersistentVector getBasis()")
-                      #_"GeneratorAdapter" gen (GeneratorAdapter. (| Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC), meth, nil, nil, cv)]
+                      #_"GeneratorAdapter" gen (GeneratorAdapter. (+ Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC), meth, nil, nil, cv)]
                     (IopObject''emitValue this, (:hintedFields this), gen)
                     (.returnValue gen)
                     (.endMethod gen)
@@ -6397,7 +6385,7 @@
                     (let-when [#_"int" n (count (:hintedFields this))] (< n (count (:fields this)))
                         ;; create(IPersistentMap)
                         (let [#_"String" className (.replace (:name this), \., \/)
-                              #_"MethodVisitor" mv (.visitMethod cv, (| Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC), "create", (str "(Lcloiure/core/IPersistentMap;)L" className ";"), nil, nil)]
+                              #_"MethodVisitor" mv (.visitMethod cv, (+ Opcodes/ACC_PUBLIC Opcodes/ACC_STATIC), "create", (str "(Lcloiure/core/IPersistentMap;)L" className ";"), nil, nil)]
                             (.visitCode mv)
 
                             (loop-when-recur [#_"ISeq" s (seq (:hintedFields this)) #_"int" i 1] (some? s) [(next s) (inc i)]
@@ -6463,7 +6451,7 @@
                       #_"Method" target (Method. (.getName m), (Type/getType (.getReturnType m)), argTypes)]
                     (doseq [#_"Class" retType (val e)]
                         (let [#_"Method" meth (Method. (.getName m), (Type/getType retType), argTypes)
-                              #_"GeneratorAdapter" gen (GeneratorAdapter. (| Opcodes/ACC_PUBLIC Opcodes/ACC_BRIDGE), meth, nil, Compiler'EXCEPTION_TYPES, cv)]
+                              #_"GeneratorAdapter" gen (GeneratorAdapter. (+ Opcodes/ACC_PUBLIC Opcodes/ACC_BRIDGE), meth, nil, Compiler'EXCEPTION_TYPES, cv)]
                             (.visitCode gen)
                             (.loadThis gen)
                             (.loadArgs gen)
@@ -6799,8 +6787,6 @@
         nil
     )
 
-    (declare Numbers'int_array)
-
     #_method
     (defn- #_"void" CaseExpr''doEmit [#_"CaseExpr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen, #_"boolean" emitUnboxed]
         (let [#_"Label" defaultLabel (.newLabel gen) #_"Label" endLabel (.newLabel gen)
@@ -6814,7 +6800,7 @@
                 )
                 (if (= (:switchType this) :sparse)
                     (let [#_"Label[]" la (into-array Label (vals labels))]
-                        (.visitLookupSwitchInsn gen, defaultLabel, (Numbers'int_array (keys (:tests this))), la)
+                        (.visitLookupSwitchInsn gen, defaultLabel, (int-array (keys (:tests this))), la)
                     )
                     (let [#_"Label[]" la (make-array Label (inc (- (:high this) (:low this))))]
                         (loop-when-recur [#_"int" i (:low this)] (<= i (:high this)) [(inc i)]
@@ -7207,13 +7193,12 @@
     (def- #_"Pattern" LispReader'rxInteger #"([-+]?)(?:(0)|([1-9][0-9]*)|0[xX]([0-9A-Fa-f]+)|0([0-7]+)|([1-9][0-9]?)[rR]([0-9A-Za-z]+)|0[0-9]+)")
     (def- #_"Pattern" LispReader'rxRatio   #"([-+]?[0-9]+)/([0-9]+)")
 
-    (declare Numbers'num-1l)
     (declare Numbers'divide)
 
     (defn- #_"Object" LispReader'matchNumber [#_"String" s]
         (let [_ (or
                     (let-when [#_"Matcher" m (.matcher LispReader'rxInteger, s)] (.matches m)
-                        (when (nil? (.group m, 2)) => (Numbers'num-1l 0)
+                        (when (nil? (.group m, 2)) => (Long/valueOf 0)
                             (let [[#_"String" n #_"int" radix]
                                     (cond-let
                                         [n (.group m, 3)] [n 10]
@@ -7224,7 +7209,7 @@
                                 (when (some? n) => :nil
                                     (let [#_"BigInteger" bn (BigInteger. n, radix) bn (if (= (.group m, 1) "-") (.negate bn) bn)]
                                         (when (< (.bitLength bn) 64) => bn
-                                            (Numbers'num-1l (.longValue bn))
+                                            (Long/valueOf (.longValue bn))
                                         )
                                     )
                                 )
@@ -7758,7 +7743,7 @@
 (class-ns MapReader
     (defn #_"Object" map-reader [#_"PushbackReader" r, #_"char" _delim]
         (let [#_"PersistentVector" v (LispReader'readDelimitedForms r, \})]
-            (when (zero? (% (count v) 2)) => (throw! "map literal must contain an even number of forms")
+            (when (even? (count v)) => (throw! "map literal must contain an even number of forms")
                 (RT'map (to-array v))
             )
         )
@@ -7866,9 +7851,9 @@
 
     ;; finalization mix - force all bits of a hash block to avalanche
     (defn- #_"int" Murmur3'fmix [#_"int" h1, #_"int" n]
-        (let [h1 (bit-xor h1 n)    h1 (bit-xor h1 (>>> h1 16))
-              h1 (* h1 0x85ebca6b) h1 (bit-xor h1 (>>> h1 13))
-              h1 (* h1 0xc2b2ae35) h1 (bit-xor h1 (>>> h1 16))]
+        (let [h1 (bit-xor h1 n)    h1 (bit-xor h1 (unsigned-bit-shift-right h1 16))
+              h1 (* h1 0x85ebca6b) h1 (bit-xor h1 (unsigned-bit-shift-right h1 13))
+              h1 (* h1 0xc2b2ae35) h1 (bit-xor h1 (unsigned-bit-shift-right h1 16))]
             h1
         )
     )
@@ -7885,7 +7870,7 @@
     (defn #_"int" Murmur3'hashLong [#_"long" input]
         (when-not (zero? input) => 0
             (let [#_"int" low (int input)
-                  #_"int" high (int (>>> input 32))
+                  #_"int" high (int (unsigned-bit-shift-right input 32))
                   #_"int" k1 (Murmur3'mixK1 low)
                   #_"int" h1 (Murmur3'mixH1 Murmur3'seed, k1)
                   k1 (Murmur3'mixK1 high)
@@ -7898,12 +7883,12 @@
     (defn #_"int" Murmur3'hashUnencodedChars [#_"CharSequence" s]
         (let [#_"int" h1 ;; step through the input 2 chars at a time
                 (loop-when [h1 Murmur3'seed #_"int" i 1] (< i (.length s)) => h1
-                    (let [#_"int" k1 (| (.charAt s, (dec i)) (<< (.charAt s, i) 16))]
+                    (let [#_"int" k1 (bit-or (.charAt s, (dec i)) (bit-shift-left (.charAt s, i) 16))]
                         (recur (Murmur3'mixH1 h1, (Murmur3'mixK1 k1)) (+ i 2))
                     )
                 )
               h1 ;; deal with any remaining characters
-                (when (= (& (.length s) 1) 1) => h1
+                (when (odd? (.length s)) => h1
                     (let [#_"int" k1 (.charAt s, (dec (.length s)))]
                         (bit-xor h1 (Murmur3'mixK1 k1))
                     )
@@ -7993,7 +7978,7 @@
 
     (defn #_"int" Util'hashCombine [#_"int" seed, #_"int" hash]
         ;; a la boost
-        (bit-xor seed (+ hash 0x9e3779b9 (<< seed 6) (>> seed 2)))
+        (bit-xor seed (+ hash 0x9e3779b9 (bit-shift-left seed 6) (bit-shift-right seed 2)))
     )
 
     (defn #_"<K, V> void" Util'clearCache [#_"ReferenceQueue" rq, #_"{K Reference<V>}'" cache]
@@ -8127,6 +8112,16 @@
         (LongOps.)
     )
 
+    (defn #_"long" LongOps'gcd [#_"long" u, #_"long" v] (if (zero? v) u (recur v (§ interop % u v))))
+
+    (declare Numbers'RATIO_OPS)
+    (declare Numbers'BIGINT_OPS)
+    (declare Numbers'add-2ll)
+    (declare Numbers'multiply-2ll)
+    (declare Numbers'minus-1l)
+    (declare Numbers'inc-1l)
+    (declare Numbers'dec-1l)
+
     (extend-type LongOps Ops
         (#_"Ops" Ops'''combine [#_"LongOps" this, #_"Ops" y]
             (Ops'''opsWithLong y, this)
@@ -8135,19 +8130,11 @@
         (#_"Ops" Ops'''opsWithLong [#_"LongOps" this, #_"LongOps" x]
             this
         )
-    )
 
-    (declare Numbers'RATIO_OPS)
-
-    (extend-type LongOps Ops
         (#_"Ops" Ops'''opsWithRatio [#_"LongOps" this, #_"RatioOps" x]
             Numbers'RATIO_OPS
         )
-    )
 
-    (declare Numbers'BIGINT_OPS)
-
-    (extend-type LongOps Ops
         (#_"Ops" Ops'''opsWithBigInt [#_"LongOps" this, #_"BigIntOps" x]
             Numbers'BIGINT_OPS
         )
@@ -8163,31 +8150,22 @@
         (#_"boolean" Ops'''isNeg [#_"LongOps" this, #_"Number" x]
             (neg? (.longValue x))
         )
-    )
 
-    (declare Numbers'num-1l)
-    (declare Numbers'add-2ll)
-
-    (extend-type LongOps Ops
         (#_"Number" Ops'''add [#_"LongOps" this, #_"Number" x, #_"Number" y]
-            (Numbers'num-1l (Numbers'add-2ll (.longValue x), (.longValue y)))
+            (Long/valueOf (Numbers'add-2ll (.longValue x), (.longValue y)))
         )
 
         (#_"Number" Ops'''addP [#_"LongOps" this, #_"Number" x, #_"Number" y]
             (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y) #_"long" lz (+ lx ly)]
                 (if (and (neg? (bit-xor lz lx)) (neg? (bit-xor lz ly)))
                     (Ops'''add Numbers'BIGINT_OPS, x, y)
-                    (Numbers'num-1l lz)
+                    (Long/valueOf lz)
                 )
             )
         )
-    )
 
-    (declare Numbers'multiply-2ll)
-
-    (extend-type LongOps Ops
         (#_"Number" Ops'''multiply [#_"LongOps" this, #_"Number" x, #_"Number" y]
-            (Numbers'num-1l (Numbers'multiply-2ll (.longValue x), (.longValue y)))
+            (Long/valueOf (Numbers'multiply-2ll (.longValue x), (.longValue y)))
         )
 
         (#_"Number" Ops'''multiplyP [#_"LongOps" this, #_"Number" x, #_"Number" y]
@@ -8197,21 +8175,17 @@
                     (let [#_"long" lz (* lx ly)]
                         (if (and (not= ly 0) (not= (/ lz ly) lx))
                             (Ops'''multiply Numbers'BIGINT_OPS, x, y)
-                            (Numbers'num-1l lz)
+                            (Long/valueOf lz)
                         )
                     )
                 )
             )
         )
-    )
 
-    (defn #_"long" LongOps'gcd [#_"long" u, #_"long" v] (if (zero? v) u (recur v (% u v))))
-
-    (extend-type LongOps Ops
         (#_"Number" Ops'''divide [#_"LongOps" this, #_"Number" x, #_"Number" y]
             (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y)]
-                (let-when-not [#_"long" gcd (LongOps'gcd lx, ly)] (zero? gcd) => (Numbers'num-1l 0)
-                    (let-when-not [lx (/ lx gcd) ly (/ ly gcd)] (= ly 1) => (Numbers'num-1l lx)
+                (let-when-not [#_"long" gcd (LongOps'gcd lx, ly)] (zero? gcd) => (Long/valueOf 0)
+                    (let-when-not [lx (/ lx gcd) ly (/ ly gcd)] (= ly 1) => (Long/valueOf lx)
                         (let [[lx ly]
                                 (when (neg? ly) => [lx ly]
                                     [(- lx) (- ly)]
@@ -8224,11 +8198,11 @@
         )
 
         (#_"Number" Ops'''quotient [#_"LongOps" this, #_"Number" x, #_"Number" y]
-            (Numbers'num-1l (/ (.longValue x) (.longValue y)))
+            (Long/valueOf (/ (.longValue x) (.longValue y)))
         )
 
         (#_"Number" Ops'''remainder [#_"LongOps" this, #_"Number" x, #_"Number" y]
-            (Numbers'num-1l (% (.longValue x) (.longValue y)))
+            (Long/valueOf (§ interop % (.longValue x) (.longValue y)))
         )
 
         (#_"boolean" Ops'''equiv [#_"LongOps" this, #_"Number" x, #_"Number" y]
@@ -8246,59 +8220,47 @@
         (#_"boolean" Ops'''gte [#_"LongOps" this, #_"Number" x, #_"Number" y]
             (>= (.longValue x) (.longValue y))
         )
-    )
 
-    (declare Numbers'minus-1l)
-
-    (extend-type LongOps Ops
         (#_"Number" Ops'''negate [#_"LongOps" this, #_"Number" x]
             (let [#_"long" val (.longValue x)]
-                (Numbers'num-1l (Numbers'minus-1l val))
+                (Long/valueOf (Numbers'minus-1l val))
             )
         )
 
         (#_"Number" Ops'''negateP [#_"LongOps" this, #_"Number" x]
             (let [#_"long" val (.longValue x)]
                 (if (< Long/MIN_VALUE val)
-                    (Numbers'num-1l (- val))
+                    (Long/valueOf (- val))
                     (.negate (BigInteger/valueOf val))
                 )
             )
         )
-    )
 
-    (declare Numbers'inc-1l)
-
-    (extend-type LongOps Ops
         (#_"Number" Ops'''inc [#_"LongOps" this, #_"Number" x]
             (let [#_"long" val (.longValue x)]
-                (Numbers'num-1l (Numbers'inc-1l val))
+                (Long/valueOf (Numbers'inc-1l val))
             )
         )
 
         (#_"Number" Ops'''incP [#_"LongOps" this, #_"Number" x]
             (let [#_"long" val (.longValue x)]
                 (if (< val Long/MAX_VALUE)
-                    (Numbers'num-1l (inc val))
+                    (Long/valueOf (inc val))
                     (Ops'''inc Numbers'BIGINT_OPS, x)
                 )
             )
         )
-    )
 
-    (declare Numbers'dec-1l)
-
-    (extend-type LongOps Ops
         (#_"Number" Ops'''dec [#_"LongOps" this, #_"Number" x]
             (let [#_"long" val (.longValue x)]
-                (Numbers'num-1l (Numbers'dec-1l val))
+                (Long/valueOf (Numbers'dec-1l val))
             )
         )
 
         (#_"Number" Ops'''decP [#_"LongOps" this, #_"Number" x]
             (let [#_"long" val (.longValue x)]
                 (if (< Long/MIN_VALUE val)
-                    (Numbers'num-1l (dec val))
+                    (Long/valueOf (dec val))
                     (Ops'''dec Numbers'BIGINT_OPS, x)
                 )
             )
@@ -8310,6 +8272,14 @@
     (defn #_"RatioOps" RatioOps'new []
         (merge (RatioOps.) (OpsP'new))
     )
+
+    (declare Numbers'toRatio)
+    (declare Numbers'minus)
+    (declare Numbers'multiply)
+    (declare Numbers'lt)
+    (declare Numbers'lte)
+    (declare Numbers'gte)
+    (declare Numbers'add-2ol)
 
     (extend-type RatioOps Ops
         (#_"Ops" Ops'''combine [#_"RatioOps" this, #_"Ops" y]
@@ -8339,11 +8309,7 @@
         (#_"boolean" Ops'''isNeg [#_"RatioOps" this, #_"Number" x]
             (neg? (.signum (:numerator (cast Ratio x))))
         )
-    )
 
-    (declare Numbers'toRatio)
-
-    (extend-type RatioOps Ops
         (#_"Number" Ops'''add [#_"RatioOps" this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
                 (Ops'''divide this, (.add (.multiply (:numerator ry), (:denominator rx)), (.multiply (:numerator rx), (:denominator ry))), (.multiply (:denominator ry), (:denominator rx)))
@@ -8367,12 +8333,7 @@
                (.divide (.multiply (:numerator rx), (:denominator ry)), (.multiply (:denominator rx), (:numerator ry)))
             )
         )
-    )
 
-    (declare Numbers'minus)
-    (declare Numbers'multiply)
-
-    (extend-type RatioOps Ops
         (#_"Number" Ops'''remainder [#_"RatioOps" this, #_"Number" x, #_"Number" y]
             (Numbers'minus x, (Numbers'multiply (Ops'''quotient this, x, y), y))
         )
@@ -8382,31 +8343,19 @@
                 (and (= (:numerator rx) (:numerator ry)) (= (:denominator rx) (:denominator ry)))
             )
         )
-    )
 
-    (declare Numbers'lt)
-
-    (extend-type RatioOps Ops
         (#_"boolean" Ops'''lt [#_"RatioOps" this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
                 (Numbers'lt (.multiply (:numerator rx), (:denominator ry)), (.multiply (:numerator ry), (:denominator rx)))
             )
         )
-    )
 
-    (declare Numbers'lte)
-
-    (extend-type RatioOps Ops
         (#_"boolean" Ops'''lte [#_"RatioOps" this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
                 (Numbers'lte (.multiply (:numerator rx), (:denominator ry)), (.multiply (:numerator ry), (:denominator rx)))
             )
         )
-    )
 
-    (declare Numbers'gte)
-
-    (extend-type RatioOps Ops
         (#_"boolean" Ops'''gte [#_"RatioOps" this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
                 (Numbers'gte (.multiply (:numerator rx), (:denominator ry)), (.multiply (:numerator ry), (:denominator rx)))
@@ -8418,11 +8367,7 @@
                 (Ratio'new (.negate (:numerator r)), (:denominator r))
             )
         )
-    )
 
-    (declare Numbers'add-2ol)
-
-    (extend-type RatioOps Ops
         (#_"Number" Ops'''inc [#_"RatioOps" this, #_"Number" x]
             (Numbers'add-2ol x, 1)
         )
@@ -8437,6 +8382,10 @@
     (defn #_"BigIntOps" BigIntOps'new []
         (merge (BigIntOps.) (OpsP'new))
     )
+
+    (declare Numbers'toBigInteger)
+    (declare Numbers'divide-2ii)
+    (declare Numbers'toBigInteger)
 
     (extend-type BigIntOps Ops
         (#_"Ops" Ops'''combine [#_"BigIntOps" this, #_"Ops" y]
@@ -8454,11 +8403,7 @@
         (#_"Ops" Ops'''opsWithBigInt [#_"BigIntOps" this, #_"BigIntOps" x]
             this
         )
-    )
 
-    (declare Numbers'toBigInteger)
-
-    (extend-type BigIntOps Ops
         (#_"boolean" Ops'''isZero [#_"BigIntOps" this, #_"Number" x]
             (zero? (.signum (Numbers'toBigInteger x)))
         )
@@ -8478,12 +8423,7 @@
         (#_"Number" Ops'''multiply [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
             (.multiply (Numbers'toBigInteger x), (Numbers'toBigInteger y))
         )
-    )
 
-    (declare Numbers'divide-2ii)
-    (declare Numbers'toBigInteger)
-
-    (extend-type BigIntOps Ops
         (#_"Number" Ops'''divide [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
             (Numbers'divide-2ii (Numbers'toBigInteger x), (Numbers'toBigInteger y))
         )
@@ -8526,13 +8466,6 @@
     )
 )
 
-(def Category'enum-set
-    (hash-set
-        :Category'INTEGER
-        :Category'RATIO
-    )
-)
-
 (class-ns Numbers
     (def #_"LongOps"       Numbers'LONG_OPS       (LongOps'new)      )
     (def #_"RatioOps"      Numbers'RATIO_OPS      (RatioOps'new)     )
@@ -8545,16 +8478,6 @@
                        Numbers'LONG_OPS
         )
     )
-
-    (defn #_"Category" Numbers'category [#_"Object" x]
-        (condp = (class x)
-            Ratio      :Category'RATIO
-                       :Category'INTEGER
-        )
-    )
-
-    (defn #_"Number" Numbers'num-1l [#_"long"   x] (Long/valueOf   x))
-    (defn #_"Number" Numbers'num [#_"Object" x] (cast Number    x))
 
     (defn #_"boolean" Numbers'isZero [#_"Object" x] (Ops'''isZero (Numbers'ops x), (cast Number x)))
     (defn #_"boolean" Numbers'isPos  [#_"Object" x] (Ops'''isPos  (Numbers'ops x), (cast Number x)))
@@ -8624,16 +8547,8 @@
         )
     )
 
-    (defn #_"boolean" Numbers'equiv-2nn [#_"Number" x, #_"Number" y]
-        (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''equiv x, y))
-    )
-
-    (defn #_"boolean" Numbers'equiv [#_"Object" x, #_"Object" y]
-        (Numbers'equiv-2nn (cast Number x), (cast Number y))
-    )
-
     (defn #_"boolean" Numbers'equal [#_"Number" x, #_"Number" y]
-        (and (= (Numbers'category x) (Numbers'category y)) (Ops'''equiv (Ops'''combine (Numbers'ops x), (Numbers'ops y)), x, y))
+        (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''equiv x, y))
     )
 
     (defn #_"boolean" Numbers'lt [#_"Object" x, #_"Object" y]
@@ -8688,7 +8603,7 @@
         )
     )
 
-    (defn #_"long" Numbers'bitOpsCast [#_"Object" x]
+    (defn- #_"long" Numbers'bitOpsCast [#_"Object" x]
         (let [#_"Class" c (class x)]
             (when (any = c Long Integer Byte) => (throw! (str "bit operation not supported for: " c))
                 (long x)
@@ -8696,325 +8611,75 @@
         )
     )
 
-    (defn #_"int" Numbers'shiftLeftInt [#_"int" x, #_"int" n]
-        (<< x n)
-    )
+    (defn #_"long" Numbers'not [#_"Object" x] (§ interop #_"~" (Numbers'bitOpsCast x)))
 
-    (defn #_"long" Numbers'shiftLeft-2ll [#_"long"   x, #_"long"   n] (<< x n))
-    (defn #_"long" Numbers'shiftLeft [#_"Object" x, #_"Object" n] (Numbers'shiftLeft-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
-    (defn #_"long" Numbers'shiftLeft-2ol [#_"Object" x, #_"long"   n] (Numbers'shiftLeft-2ll (Numbers'bitOpsCast x),                     n ))
-    (defn #_"long" Numbers'shiftLeft-2lo [#_"long"   x, #_"Object" n] (Numbers'shiftLeft-2ll                     x , (Numbers'bitOpsCast n)))
+    (defn #_"long" Numbers'and [#_"Object" x, #_"Object" y] (§ interop #_"&" (Numbers'bitOpsCast x) (Numbers'bitOpsCast y)))
+    (defn #_"long" Numbers'or  [#_"Object" x, #_"Object" y] (§ interop #_"|" (Numbers'bitOpsCast x) (Numbers'bitOpsCast y)))
+    (defn #_"long" Numbers'xor [#_"Object" x, #_"Object" y] (§ interop #_"^" (Numbers'bitOpsCast x) (Numbers'bitOpsCast y)))
 
-    (defn #_"int" Numbers'shiftRightInt [#_"int" x, #_"int" n]
-        (>> x n)
-    )
+    (defn #_"long" Numbers'andNot [#_"Object" x, #_"Object" y] (§ interop #_"&" (Numbers'bitOpsCast x) (§ interop #_"~" (Numbers'bitOpsCast y))))
 
-    (defn #_"long" Numbers'shiftRight-2ll [#_"long"   x, #_"long"   n] (>> x n))
-    (defn #_"long" Numbers'shiftRight [#_"Object" x, #_"Object" n] (Numbers'shiftRight-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
-    (defn #_"long" Numbers'shiftRight-2ol [#_"Object" x, #_"long"   n] (Numbers'shiftRight-2ll (Numbers'bitOpsCast x),                     n ))
-    (defn #_"long" Numbers'shiftRight-2lo [#_"long"   x, #_"Object" n] (Numbers'shiftRight-2ll                     x , (Numbers'bitOpsCast n)))
+    (defn #_"long" Numbers'shiftLeft          [#_"Object" x, #_"Object" n] (§ interop #_"<<"  (Numbers'bitOpsCast x) (Numbers'bitOpsCast n)))
+    (defn #_"long" Numbers'shiftRight         [#_"Object" x, #_"Object" n] (§ interop #_">>"  (Numbers'bitOpsCast x) (Numbers'bitOpsCast n)))
+    (defn #_"long" Numbers'unsignedShiftRight [#_"Object" x, #_"Object" n] (§ interop #_">>>" (Numbers'bitOpsCast x) (Numbers'bitOpsCast n)))
 
-    (defn #_"int" Numbers'unsignedShiftRightInt [#_"int" x, #_"int" n]
-        (>>> x n)
-    )
+    (defn #_"long" Numbers'clearBit [#_"Object" x, #_"Object" n] (§ interop #_"&" (Numbers'bitOpsCast x) (§ interop #_"~" (§ interop #_"<<" 1 (Numbers'bitOpsCast n)))))
+    (defn #_"long" Numbers'setBit   [#_"Object" x, #_"Object" n] (§ interop #_"|" (Numbers'bitOpsCast x)                  (§ interop #_"<<" 1 (Numbers'bitOpsCast n))))
+    (defn #_"long" Numbers'flipBit  [#_"Object" x, #_"Object" n] (§ interop #_"^" (Numbers'bitOpsCast x)                  (§ interop #_"<<" 1 (Numbers'bitOpsCast n))))
 
-    (defn #_"long" Numbers'unsignedShiftRight-2ll [#_"long"   x, #_"long"   n] (>>> x n))
-    (defn #_"long" Numbers'unsignedShiftRight [#_"Object" x, #_"Object" n] (Numbers'unsignedShiftRight-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
-    (defn #_"long" Numbers'unsignedShiftRight-2ol [#_"Object" x, #_"long"   n] (Numbers'unsignedShiftRight-2ll (Numbers'bitOpsCast x),                     n ))
-    (defn #_"long" Numbers'unsignedShiftRight-2lo [#_"long"   x, #_"Object" n] (Numbers'unsignedShiftRight-2ll                     x , (Numbers'bitOpsCast n)))
+    (defn #_"boolean" Numbers'testBit [#_"Object" x, #_"Object" n] (not= (§ interop #_"&" (Numbers'bitOpsCast x) (§ interop #_"<<" 1 (Numbers'bitOpsCast n))) 0))
 
-    (defn #_"int[]" Numbers'int_array
-        ([#_"Object" sizeOrSeq]
-            (if (number? sizeOrSeq)
-                (make-array Integer/TYPE (.intValue ^Number sizeOrSeq))
-                (let [#_"ISeq" s (seq sizeOrSeq)
-                    #_"int" size (count s)
-                    #_"int[]" a (make-array Integer/TYPE size)]
-                    (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                        (aset a i (.intValue (first s)))
-                    )
-                    a
-                )
-            )
-        )
-        ([#_"int" size, #_"Object" init]
-            (let [#_"int[]" a (make-array Integer/TYPE size)]
-                (if (number? init)
-                    (let [#_"int" f (.intValue ^Number init)]
-                        (dotimes [#_"int" i (alength a)]
-                            (aset a i f)
-                        )
-                    )
-                    (let [#_"ISeq" s (seq init)]
-                        (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                            (aset a i (.intValue (first s)))
-                        )
-                    )
-                )
-                a
-            )
-        )
-    )
-
-    (defn #_"long[]" Numbers'long_array
-        ([#_"Object" sizeOrSeq]
-            (if (number? sizeOrSeq)
-                (make-array Long/TYPE (.intValue ^Number sizeOrSeq))
-                (let [#_"ISeq" s (seq sizeOrSeq)
-                    #_"int" size (count s)
-                    #_"long[]" a (make-array Long/TYPE size)]
-                    (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                        (aset a i (.longValue (first s)))
-                    )
-                    a
-                )
-            )
-        )
-        ([#_"int" size, #_"Object" init]
-            (let [#_"long[]" a (make-array Long/TYPE size)]
-                (if (number? init)
-                    (let [#_"long" f (.longValue ^Number init)]
-                        (dotimes [#_"int" i (alength a)]
-                            (aset a i f)
-                        )
-                    )
-                    (let [#_"ISeq" s (seq init)]
-                        (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                            (aset a i (.longValue (first s)))
-                        )
-                    )
-                )
-                a
-            )
-        )
-    )
-
-    (defn #_"char[]" Numbers'char_array
-        ([#_"Object" sizeOrSeq]
-            (if (number? sizeOrSeq)
-                (make-array Character/TYPE (.intValue ^Number sizeOrSeq))
-                (let [#_"ISeq" s (seq sizeOrSeq)
-                    #_"int" size (count s)
-                    #_"char[]" a (make-array Character/TYPE size)]
-                    (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                        (aset a i (cast Character (first s)))
-                    )
-                    a
-                )
-            )
-        )
-        ([#_"int" size, #_"Object" init]
-            (let [#_"char[]" a (make-array Character/TYPE size)]
-                (if (instance? Character init)
-                    (let [#_"char" c init]
-                        (dotimes [#_"int" i (alength a)]
-                            (aset a i c)
-                        )
-                    )
-                    (let [#_"ISeq" s (seq init)]
-                        (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                            (aset a i (cast Character (first s)))
-                        )
-                    )
-                )
-                a
-            )
-        )
-    )
-
-    (defn #_"byte[]" Numbers'byte_array
-        ([#_"Object" sizeOrSeq]
-            (if (number? sizeOrSeq)
-                (make-array Byte/TYPE (.intValue ^Number sizeOrSeq))
-                (let [#_"ISeq" s (seq sizeOrSeq)
-                    #_"int" size (count s)
-                    #_"byte[]" a (make-array Byte/TYPE size)]
-                    (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                        (aset a i (.byteValue (first s)))
-                    )
-                    a
-                )
-            )
-        )
-        ([#_"int" size, #_"Object" init]
-            (let [#_"byte[]" a (make-array Byte/TYPE size)]
-                (if (instance? Byte init)
-                    (let [#_"byte" b init]
-                        (dotimes [#_"int" i (alength a)]
-                            (aset a i b)
-                        )
-                    )
-                    (let [#_"ISeq" s (seq init)]
-                        (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                            (aset a i (.byteValue (first s)))
-                        )
-                    )
-                )
-                a
-            )
-        )
-    )
-
-    (defn #_"boolean[]" Numbers'boolean_array
-        ([#_"Object" sizeOrSeq]
-            (if (number? sizeOrSeq)
-                (make-array Boolean/TYPE (.intValue ^Number sizeOrSeq))
-                (let [#_"ISeq" s (seq sizeOrSeq)
-                    #_"int" size (count s)
-                    #_"boolean[]" a (make-array Boolean/TYPE size)]
-                    (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                        (aset a i (cast Boolean (first s)))
-                    )
-                    a
-                )
-            )
-        )
-        ([#_"int" size, #_"Object" init]
-            (let [#_"boolean[]" a (make-array Boolean/TYPE size)]
-                (if (instance? Boolean init)
-                    (let [#_"boolean" b init]
-                        (dotimes [#_"int" i (alength a)]
-                            (aset a i b)
-                        )
-                    )
-                    (let [#_"ISeq" s (seq init)]
-                        (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                            (aset a i (cast Boolean (first s)))
-                        )
-                    )
-                )
-                a
-            )
-        )
-    )
-
-    (defn #_"boolean[]" Numbers'booleans [#_"Object" array] (cast Compiler'BOOLEANS_CLASS array))
-    (defn #_"byte[]"    Numbers'bytes    [#_"Object" array] (cast Compiler'BYTES_CLASS    array))
-    (defn #_"char[]"    Numbers'chars    [#_"Object" array] (cast Compiler'CHARS_CLASS    array))
-    (defn #_"int[]"     Numbers'ints     [#_"Object" array] (cast Compiler'INTS_CLASS     array))
-    (defn #_"long[]"    Numbers'longs    [#_"Object" array] (cast Compiler'LONGS_CLASS    array))
-
-    (defn #_"int" Numbers'unchecked_int_add       [#_"int" x, #_"int" y] (+ x y))
-    (defn #_"int" Numbers'unchecked_int_subtract  [#_"int" x, #_"int" y] (- x y))
-    (defn #_"int" Numbers'unchecked_int_multiply  [#_"int" x, #_"int" y] (* x y))
-    (defn #_"int" Numbers'unchecked_int_divide    [#_"int" x, #_"int" y] (/ x y))
-    (defn #_"int" Numbers'unchecked_int_remainder [#_"int" x, #_"int" y] (% x y))
-
-    (defn #_"int" Numbers'unchecked_int_inc    [#_"int" x] (inc x))
-    (defn #_"int" Numbers'unchecked_int_dec    [#_"int" x] (dec x))
-    (defn #_"int" Numbers'unchecked_int_negate [#_"int" x] (- x)  )
-
-    (defn #_"long" Numbers'not-1l [#_"long"   x] (bit-not x))
-    (defn #_"long" Numbers'not [#_"Object" x] (Numbers'not-1l (Numbers'bitOpsCast x)))
-
-    (defn #_"long" Numbers'and-2ll [#_"long"   x, #_"long"   y] (& x y))
-    (defn #_"long" Numbers'and [#_"Object" x, #_"Object" y] (Numbers'and-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y)))
-    (defn #_"long" Numbers'and-2ol [#_"Object" x, #_"long"   y] (Numbers'and-2ll (Numbers'bitOpsCast x),                     y ))
-    (defn #_"long" Numbers'and-2lo [#_"long"   x, #_"Object" y] (Numbers'and-2ll                     x , (Numbers'bitOpsCast y)))
-
-    (defn #_"long" Numbers'or-2ll [#_"long"   x, #_"long"   y] (| x y))
-    (defn #_"long" Numbers'or [#_"Object" x, #_"Object" y] (Numbers'or-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y)))
-    (defn #_"long" Numbers'or-2ol [#_"Object" x, #_"long"   y] (Numbers'or-2ll (Numbers'bitOpsCast x),                     y ))
-    (defn #_"long" Numbers'or-2lo [#_"long"   x, #_"Object" y] (Numbers'or-2ll                     x , (Numbers'bitOpsCast y)))
-
-    (defn #_"long" Numbers'xor-2ll [#_"long"   x, #_"long"   y] (bit-xor x y))
-    (defn #_"long" Numbers'xor [#_"Object" x, #_"Object" y] (Numbers'xor-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y)))
-    (defn #_"long" Numbers'xor-2ol [#_"Object" x, #_"long"   y] (Numbers'xor-2ll (Numbers'bitOpsCast x),                     y ))
-    (defn #_"long" Numbers'xor-2lo [#_"long"   x, #_"Object" y] (Numbers'xor-2ll                     x , (Numbers'bitOpsCast y)))
-
-    (defn #_"long" Numbers'andNot-2ll [#_"long"   x, #_"long"   y] (& x (bit-not y)))
-    (defn #_"long" Numbers'andNot [#_"Object" x, #_"Object" y] (Numbers'andNot-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast y)))
-    (defn #_"long" Numbers'andNot-2ol [#_"Object" x, #_"long"   y] (Numbers'andNot-2ll (Numbers'bitOpsCast x),                     y ))
-    (defn #_"long" Numbers'andNot-2lo [#_"long"   x, #_"Object" y] (Numbers'andNot-2ll                     x , (Numbers'bitOpsCast y)))
-
-    (defn #_"long" Numbers'clearBit-2ll [#_"long"   x, #_"long"   n] (& x (bit-not (<< 1 n))))
-    (defn #_"long" Numbers'clearBit [#_"Object" x, #_"Object" n] (Numbers'clearBit-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
-    (defn #_"long" Numbers'clearBit-2ol [#_"Object" x, #_"long"   n] (Numbers'clearBit-2ll (Numbers'bitOpsCast x),                     n ))
-    (defn #_"long" Numbers'clearBit-2lo [#_"long"   x, #_"Object" n] (Numbers'clearBit-2ll                     x , (Numbers'bitOpsCast n)))
-
-    (defn #_"long" Numbers'setBit-2ll [#_"long"   x, #_"long"   n] (| x (<< 1 n)))
-    (defn #_"long" Numbers'setBit [#_"Object" x, #_"Object" n] (Numbers'setBit-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
-    (defn #_"long" Numbers'setBit-2ol [#_"Object" x, #_"long"   n] (Numbers'setBit-2ll (Numbers'bitOpsCast x),                     n ))
-    (defn #_"long" Numbers'setBit-2lo [#_"long"   x, #_"Object" n] (Numbers'setBit-2ll                     x , (Numbers'bitOpsCast n)))
-
-    (defn #_"long" Numbers'flipBit-2ll [#_"long"   x, #_"long"   n] (bit-xor x (<< 1 n)))
-    (defn #_"long" Numbers'flipBit [#_"Object" x, #_"Object" n] (Numbers'flipBit-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
-    (defn #_"long" Numbers'flipBit-2ol [#_"Object" x, #_"long"   n] (Numbers'flipBit-2ll (Numbers'bitOpsCast x),                     n ))
-    (defn #_"long" Numbers'flipBit-2lo [#_"long"   x, #_"Object" n] (Numbers'flipBit-2ll                     x , (Numbers'bitOpsCast n)))
-
-    (defn #_"boolean" Numbers'testBit-2ll [#_"long"   x, #_"long"   n] (not= (& x (<< 1 n)) 0))
-    (defn #_"boolean" Numbers'testBit [#_"Object" x, #_"Object" n] (Numbers'testBit-2ll (Numbers'bitOpsCast x), (Numbers'bitOpsCast n)))
-    (defn #_"boolean" Numbers'testBit-2ol [#_"Object" x, #_"long"   n] (Numbers'testBit-2ll (Numbers'bitOpsCast x),                     n ))
-    (defn #_"boolean" Numbers'testBit-2lo [#_"long"   x, #_"Object" n] (Numbers'testBit-2ll                     x , (Numbers'bitOpsCast n)))
-
-    (defn #_"Number" Numbers'quotient-2lo [#_"long"   x, #_"Object" y] (Numbers'quotient (cast Object x),              y ))
-    (defn #_"Number" Numbers'quotient-2ol [#_"Object" x, #_"long"   y] (Numbers'quotient              x , (cast Object y)))
-
-    (defn #_"Number" Numbers'remainder-2lo [#_"long"   x, #_"Object" y] (Numbers'remainder (cast Object x),              y ))
-    (defn #_"Number" Numbers'remainder-2ol [#_"Object" x, #_"long"   y] (Numbers'remainder              x , (cast Object y)))
-
-    (defn #_"int" Numbers'throwIntOverflow []
+    (defn- #_"int" Numbers'throwIntOverflow []
         (throw (ArithmeticException. "integer overflow"))
     )
 
     (defn #_"long" Numbers'add-2ll [#_"long" x, #_"long" y]
-        (let [#_"long" ret (+ x y)]
-            (when-not (and (neg? (bit-xor ret x)) (neg? (bit-xor ret y))) => (Numbers'throwIntOverflow)
-                ret
-            )
+        (let-when [#_"long" n (§ interop #_"+" x y)] (and (neg? (bit-xor n x)) (neg? (bit-xor n y))) => n
+            (Numbers'throwIntOverflow)
         )
     )
 
     (defn #_"Number" Numbers'addP-2ll [#_"long" x, #_"long" y]
-        (let [#_"long" ret (+ x y)]
-            (if (and (neg? (bit-xor ret x)) (neg? (bit-xor ret y)))
-                (Numbers'addP (cast Number x), (cast Number y))
-                (Numbers'num-1l ret)
-            )
+        (let-when [#_"long" n (§ interop #_"+" x y)] (and (neg? (bit-xor n x)) (neg? (bit-xor n y))) => (Long/valueOf n)
+            (Numbers'addP (cast Number x), (cast Number y))
         )
     )
 
     (defn #_"long" Numbers'minus-2ll [#_"long" x, #_"long" y]
-        (let [#_"long" ret (- x y)]
-            (when-not (and (neg? (bit-xor ret x)) (neg? (bit-xor ret (bit-not y)))) => (Numbers'throwIntOverflow)
-                ret
-            )
+        (let-when [#_"long" n (§ interop #_"-" x y)] (and (neg? (bit-xor n x)) (neg? (bit-xor n (bit-not y)))) => n
+            (Numbers'throwIntOverflow)
         )
     )
 
     (defn #_"Number" Numbers'minusP-2ll [#_"long" x, #_"long" y]
-        (let [#_"long" ret (- x y)]
-            (if (and (neg? (bit-xor ret x)) (neg? (bit-xor ret (bit-not y))))
-                (Numbers'minusP (cast Number x), (cast Number y))
-                (Numbers'num-1l ret)
-            )
+        (let-when [#_"long" n (§ interop #_"-" x y)] (and (neg? (bit-xor n x)) (neg? (bit-xor n (bit-not y)))) => (Long/valueOf n)
+            (Numbers'minusP (cast Number x), (cast Number y))
         )
     )
 
     (defn #_"long" Numbers'minus-1l [#_"long" x]
-        (when-not (= x Long/MIN_VALUE) => (Numbers'throwIntOverflow)
-            (- x)
+        (when (= x Long/MIN_VALUE) => (§ interop #_"-" x)
+            (Numbers'throwIntOverflow)
         )
     )
 
     (defn #_"Number" Numbers'minusP-1l [#_"long" x]
-        (if (= x Long/MIN_VALUE)
+        (when (= x Long/MIN_VALUE) => (Long/valueOf (§ interop #_"-" x))
             (.negate (BigInteger/valueOf x))
-            (Numbers'num-1l (- x))
         )
     )
 
-    (defn #_"long" Numbers'inc-1l [#_"long" x] (if (= x Long/MAX_VALUE) (Numbers'throwIntOverflow) (inc x)))
-    (defn #_"long" Numbers'dec-1l [#_"long" x] (if (= x Long/MIN_VALUE) (Numbers'throwIntOverflow) (dec x)))
+    (defn #_"long" Numbers'inc-1l [#_"long" x] (if (= x Long/MAX_VALUE) (Numbers'throwIntOverflow) (§ interop #_"++" x)))
+    (defn #_"long" Numbers'dec-1l [#_"long" x] (if (= x Long/MIN_VALUE) (Numbers'throwIntOverflow) (§ interop #_"--" x)))
 
-    (defn #_"Number" Numbers'incP-1l [#_"long" x] (if (= x Long/MAX_VALUE) (Ops'''inc Numbers'BIGINT_OPS, x) (Numbers'num-1l (inc x))))
-    (defn #_"Number" Numbers'decP-1l [#_"long" x] (if (= x Long/MIN_VALUE) (Ops'''dec Numbers'BIGINT_OPS, x) (Numbers'num-1l (dec x))))
+    (defn #_"Number" Numbers'incP-1l [#_"long" x] (if (= x Long/MAX_VALUE) (Ops'''inc Numbers'BIGINT_OPS, x) (Long/valueOf (§ interop #_"++" x))))
+    (defn #_"Number" Numbers'decP-1l [#_"long" x] (if (= x Long/MIN_VALUE) (Ops'''dec Numbers'BIGINT_OPS, x) (Long/valueOf (§ interop #_"--" x))))
 
     (defn #_"long" Numbers'multiply-2ll [#_"long" x, #_"long" y]
         (when-not (and (= x Long/MIN_VALUE) (neg? y)) => (Numbers'throwIntOverflow)
-            (let [#_"long" ret (* x y)]
-                (when (or (zero? y) (= (/ ret y) x)) => (Numbers'throwIntOverflow)
-                    ret
+            (let [#_"long" n (§ interop #_"*" x y)]
+                (when (or (zero? y) (= (§ interop #_"/" n y) x)) => (Numbers'throwIntOverflow)
+                    n
                 )
             )
         )
@@ -9022,98 +8687,29 @@
 
     (defn #_"Number" Numbers'multiplyP-2ll [#_"long" x, #_"long" y]
         (when-not (and (= x Long/MIN_VALUE) (neg? y)) => (Numbers'multiplyP (cast Number x), (cast Number y))
-            (let [#_"long" ret (* x y)]
-                (when (or (zero? y) (= (/ ret y) x)) => (Numbers'multiplyP (cast Number x), (cast Number y))
-                    (Numbers'num-1l ret)
+            (let [#_"long" n (§ interop #_"*" x y)]
+                (when (or (zero? y) (= (§ interop #_"/" n y) x)) => (Numbers'multiplyP (cast Number x), (cast Number y))
+                    (Long/valueOf n)
                 )
             )
         )
     )
 
-    (defn #_"long" Numbers'quotient-2ll  [#_"long" x, #_"long" y] (/ x y))
-    (defn #_"long" Numbers'remainder-2ll [#_"long" x, #_"long" y] (% x y))
+    (defn #_"long" Numbers'quotient-2ll  [#_"long" x, #_"long" y] (§ interop #_"/" x y))
+    (defn #_"long" Numbers'remainder-2ll [#_"long" x, #_"long" y] (§ interop #_"%" x y))
 
-    (defn #_"boolean" Numbers'equiv-2ll [#_"long" x, #_"long" y] (= x y))
-    (defn #_"boolean" Numbers'lt-2ll    [#_"long" x, #_"long" y] (< x y))
-    (defn #_"boolean" Numbers'lte-2ll   [#_"long" x, #_"long" y] (<= x y))
-    (defn #_"boolean" Numbers'gt-2ll    [#_"long" x, #_"long" y] (> x y))
-    (defn #_"boolean" Numbers'gte-2ll   [#_"long" x, #_"long" y] (>= x y))
+    (defn #_"boolean" Numbers'equiv-2ll [#_"long" x, #_"long" y] (§ interop #_"==" x y))
+    (defn #_"boolean" Numbers'lt-2ll    [#_"long" x, #_"long" y] (§ interop #_"<" x y))
+    (defn #_"boolean" Numbers'lte-2ll   [#_"long" x, #_"long" y] (§ interop #_"<=" x y))
+    (defn #_"boolean" Numbers'gt-2ll    [#_"long" x, #_"long" y] (§ interop #_">" x y))
+    (defn #_"boolean" Numbers'gte-2ll   [#_"long" x, #_"long" y] (§ interop #_">=" x y))
 
-    (defn #_"boolean" Numbers'isPos-1l  [#_"long" x] (> x 0))
-    (defn #_"boolean" Numbers'isNeg-1l  [#_"long" x] (< x 0))
-    (defn #_"boolean" Numbers'isZero-1l [#_"long" x] (zero? x))
-
-    (defn #_"Number" Numbers'add-2lo [#_"long"   x, #_"Object" y] (Numbers'add (cast Object x), y))
-    (defn #_"Number" Numbers'add-2ol [#_"Object" x, #_"long"   y] (Numbers'add x, (cast Object y)))
-
-    (defn #_"Number" Numbers'addP-2lo [#_"long"   x, #_"Object" y] (Numbers'addP (cast Object x), y))
-    (defn #_"Number" Numbers'addP-2ol [#_"Object" x, #_"long"   y] (Numbers'addP x, (cast Object y)))
-
-    (defn #_"Number" Numbers'minus-2lo [#_"long"   x, #_"Object" y] (Numbers'minus (cast Object x), y))
-    (defn #_"Number" Numbers'minus-2ol [#_"Object" x, #_"long"   y] (Numbers'minus x, (cast Object y)))
-
-    (defn #_"Number" Numbers'minusP-2lo [#_"long"   x, #_"Object" y] (Numbers'minusP (cast Object x), y))
-    (defn #_"Number" Numbers'minusP-2ol [#_"Object" x, #_"long"   y] (Numbers'minusP x, (cast Object y)))
-
-    (defn #_"Number" Numbers'multiply-2lo [#_"long"   x, #_"Object" y] (Numbers'multiply (cast Object x), y))
-    (defn #_"Number" Numbers'multiply-2ol [#_"Object" x, #_"long"   y] (Numbers'multiply x, (cast Object y)))
-
-    (defn #_"Number" Numbers'multiplyP-2lo [#_"long"   x, #_"Object" y] (Numbers'multiplyP (cast Object x), y))
-    (defn #_"Number" Numbers'multiplyP-2ol [#_"Object" x, #_"long"   y] (Numbers'multiplyP x, (cast Object y)))
-
-    (defn #_"Number" Numbers'divide-2lo [#_"long"   x, #_"Object" y] (Numbers'divide (cast Object x), y))
-    (defn #_"Number" Numbers'divide-2ol [#_"Object" x, #_"long"   y] (Numbers'divide x, (cast Object y)))
-    (defn #_"Number" Numbers'divide-2ll [#_"long"   x, #_"long"   y] (Numbers'divide (cast Number x), (cast Number y)))
-
-    (defn #_"boolean" Numbers'lt-2lo [#_"long"   x, #_"Object" y] (Numbers'lt (cast Object x), y))
-    (defn #_"boolean" Numbers'lt-2ol [#_"Object" x, #_"long"   y] (Numbers'lt x, (cast Object y)))
-
-    (defn #_"boolean" Numbers'lte-2lo [#_"long"   x, #_"Object" y] (Numbers'lte (cast Object x), y))
-    (defn #_"boolean" Numbers'lte-2ol [#_"Object" x, #_"long"   y] (Numbers'lte x, (cast Object y)))
-
-    (defn #_"boolean" Numbers'gt-2lo [#_"long"   x, #_"Object" y] (Numbers'gt (cast Object x), y))
-    (defn #_"boolean" Numbers'gt-2ol [#_"Object" x, #_"long"   y] (Numbers'gt x, (cast Object y)))
-
-    (defn #_"boolean" Numbers'gte-2lo [#_"long"   x, #_"Object" y] (Numbers'gte (cast Object x), y))
-    (defn #_"boolean" Numbers'gte-2ol [#_"Object" x, #_"long"   y] (Numbers'gte x, (cast Object y)))
-
-    (defn #_"boolean" Numbers'equiv-2lo [#_"long"   x, #_"Object" y] (Numbers'equiv (cast Object x), y))
-    (defn #_"boolean" Numbers'equiv-2ol [#_"Object" x, #_"long"   y] (Numbers'equiv x, (cast Object y)))
-
-    (defn #_"long" Numbers'max-2ll [#_"long" x, #_"long" y] (if (> x y) x y))
-    (defn #_"long" Numbers'min-2ll [#_"long" x, #_"long" y] (if (< x y) x y))
-
-    (defn #_"Object" Numbers'max-2lo [#_"long" x, #_"Object" y] (if (Numbers'gt-2lo x, y) x y))
-    (defn #_"Object" Numbers'max-2ol [#_"Object" x, #_"long" y] (if (Numbers'gt-2ol x, y) x y))
-    (defn #_"Object" Numbers'min-2lo [#_"long" x, #_"Object" y] (if (Numbers'lt-2lo x, y) x y))
-    (defn #_"Object" Numbers'min-2ol [#_"Object" x, #_"long" y] (if (Numbers'lt-2ol x, y) x y))
+    (defn #_"boolean" Numbers'isPos-1l  [#_"long" x] (§ interop #_">" x 0))
+    (defn #_"boolean" Numbers'isNeg-1l  [#_"long" x] (§ interop #_"<" x 0))
+    (defn #_"boolean" Numbers'isZero-1l [#_"long" x] (§ interop #_"==" x 0))
 
     (defn #_"Object" Numbers'max [#_"Object" x, #_"Object" y] (if (Numbers'gt x, y) x y))
     (defn #_"Object" Numbers'min [#_"Object" x, #_"Object" y] (if (Numbers'lt x, y) x y))
-
-    (defn #_"long" Numbers'unchecked_add-2ll      [#_"long" x, #_"long" y] (+ x y))
-    (defn #_"long" Numbers'unchecked_minus-2ll    [#_"long" x, #_"long" y] (- x y))
-    (defn #_"long" Numbers'unchecked_multiply-2ll [#_"long" x, #_"long" y] (* x y))
-
-    (defn #_"long" Numbers'unchecked_minus-1l [#_"long" x] (- x))
-    (defn #_"long" Numbers'unchecked_inc-1l   [#_"long" x] (inc x))
-    (defn #_"long" Numbers'unchecked_dec-1l   [#_"long" x] (dec x))
-
-    (defn #_"Number" Numbers'unchecked_add      [#_"Object" x, #_"Object" y] (Numbers'add      x, y))
-    (defn #_"Number" Numbers'unchecked_minus    [#_"Object" x, #_"Object" y] (Numbers'minus    x, y))
-    (defn #_"Number" Numbers'unchecked_multiply [#_"Object" x, #_"Object" y] (Numbers'multiply x, y))
-
-    (defn #_"Number" Numbers'unchecked_inc   [#_"Object" x] (Numbers'inc   x))
-    (defn #_"Number" Numbers'unchecked_dec   [#_"Object" x] (Numbers'dec   x))
-    (defn #_"Number" Numbers'unchecked_minus [#_"Object" x] (Numbers'minus x))
-
-    (defn #_"Number" Numbers'unchecked_add-2lo      [#_"long" x, #_"Object" y] (Numbers'add-2lo      x, y))
-    (defn #_"Number" Numbers'unchecked_minus-2lo    [#_"long" x, #_"Object" y] (Numbers'minus-2lo    x, y))
-    (defn #_"Number" Numbers'unchecked_multiply-2lo [#_"long" x, #_"Object" y] (Numbers'multiply-2lo x, y))
-
-    (defn #_"Number" Numbers'unchecked_add-2ol      [#_"Object" x, #_"long" y] (Numbers'add-2ol      x, y))
-    (defn #_"Number" Numbers'unchecked_minus-2ol    [#_"Object" x, #_"long" y] (Numbers'minus-2ol    x, y))
-    (defn #_"Number" Numbers'unchecked_multiply-2ol [#_"Object" x, #_"long" y] (Numbers'multiply-2ol x, y))
 
     (defn #_"int" Numbers'hasheq [#_"Number" x]
         (let [#_"Class" c (class x)]
@@ -9270,7 +8866,6 @@
     )
 
     (declare RT'boundedLength)
-    (declare RT'seqToArray)
 
     (defn #_"Object" AFn'applyToHelper [#_"IFn" ifn, #_"ISeq" args]
         (case (RT'boundedLength args, 9)
@@ -10778,293 +10373,13 @@
 
 (java-ns cloiure.lang.ArraySeq
 
-(class-ns ArraySeq_int
-    (defn #_"ArraySeq_int" ArraySeq_int'new [#_"IPersistentMap" meta, #_"int[]" array, #_"int" i]
-        (merge (ArraySeq_int.) (ASeq'new meta)
-            (hash-map
-                #_"int[]" :array array
-                #_"int" :i i
-            )
-        )
-    )
-
-    (extend-type ArraySeq_int IObj
-        (#_"ArraySeq_int" IObj'''withMeta [#_"ArraySeq_int" this, #_"IPersistentMap" meta]
-            (ArraySeq_int'new meta, (:array this), (:i this))
-        )
-    )
-
-    (extend-type ArraySeq_int ISeq
-        (#_"Object" ISeq'''first [#_"ArraySeq_int" this]
-            (aget (:array this) (:i this))
-        )
-
-        (#_"ISeq" ISeq'''next [#_"ArraySeq_int" this]
-            (when (< (inc (:i this)) (alength (:array this)))
-                (ArraySeq_int'new (meta this), (:array this), (inc (:i this)))
-            )
-        )
-    )
-
-    (extend-type ArraySeq_int Counted
-        (#_"int" Counted'''count [#_"ArraySeq_int" this]
-            (- (alength (:array this)) (:i this))
-        )
-    )
-
-    (extend-type ArraySeq_int IReduce
-        (#_"Object" IReduce'''reduce
-            ([#_"ArraySeq_int" this, #_"IFn" f]
-                (let [#_"int[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-                    (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
-                        (let [r (f r (aget a i))]
-                            (if (reduced? r) @r (recur r (inc i)))
-                        )
-                    )
-                )
-            )
-            ([#_"ArraySeq_int" this, #_"IFn" f, #_"Object" r]
-                (let [#_"int[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-                    (loop-when [r (f r (aget a i)) i (inc i)] (< i n) => (if (reduced? r) @r r)
-                        (if (reduced? r) @r (recur (f r (aget a i)) (inc i)))
-                    )
-                )
-            )
-        )
-    )
-)
-
-(class-ns ArraySeq_long
-    (defn #_"ArraySeq_long" ArraySeq_long'new [#_"IPersistentMap" meta, #_"long[]" array, #_"int" i]
-        (merge (ArraySeq_long.) (ASeq'new meta)
-            (hash-map
-                #_"long[]" :array array
-                #_"int" :i i
-            )
-        )
-    )
-
-    (extend-type ArraySeq_long IObj
-        (#_"ArraySeq_long" IObj'''withMeta [#_"ArraySeq_long" this, #_"IPersistentMap" meta]
-            (ArraySeq_long'new meta, (:array this), (:i this))
-        )
-    )
-
-    (extend-type ArraySeq_long ISeq
-        (#_"Object" ISeq'''first [#_"ArraySeq_long" this]
-            (Numbers'num-1l (aget (:array this) (:i this)))
-        )
-
-        (#_"ISeq" ISeq'''next [#_"ArraySeq_long" this]
-            (when (< (inc (:i this)) (alength (:array this)))
-                (ArraySeq_long'new (meta this), (:array this), (inc (:i this)))
-            )
-        )
-    )
-
-    (extend-type ArraySeq_long Counted
-        (#_"int" Counted'''count [#_"ArraySeq_long" this]
-            (- (alength (:array this)) (:i this))
-        )
-    )
-
-    (extend-type ArraySeq_long IReduce
-        (#_"Object" IReduce'''reduce
-            ([#_"ArraySeq_long" this, #_"IFn" f]
-                (let [#_"long[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-                    (loop-when [#_"Object" r (Numbers'num-1l (aget a i)) i (inc i)] (< i n) => r
-                        (let [r (f r (Numbers'num-1l (aget a i)))]
-                            (if (reduced? r) @r (recur r (inc i)))
-                        )
-                    )
-                )
-            )
-            ([#_"ArraySeq_long" this, #_"IFn" f, #_"Object" r]
-                (let [#_"long[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-                    (loop-when [r (f r (Numbers'num-1l (aget a i))) i (inc i)] (< i n) => (if (reduced? r) @r r)
-                        (if (reduced? r) @r (recur (f r (Numbers'num-1l (aget a i))) (inc i)))
-                    )
-                )
-            )
-        )
-    )
-)
-
-(class-ns ArraySeq_byte
-    (defn #_"ArraySeq_byte" ArraySeq_byte'new [#_"IPersistentMap" meta, #_"byte[]" array, #_"int" i]
-        (merge (ArraySeq_byte.) (ASeq'new meta)
-            (hash-map
-                #_"byte[]" :array array
-                #_"int" :i i
-            )
-        )
-    )
-
-    (extend-type ArraySeq_byte IObj
-        (#_"ArraySeq_byte" IObj'''withMeta [#_"ArraySeq_byte" this, #_"IPersistentMap" meta]
-            (ArraySeq_byte'new meta, (:array this), (:i this))
-        )
-    )
-
-    (extend-type ArraySeq_byte ISeq
-        (#_"Object" ISeq'''first [#_"ArraySeq_byte" this]
-            (aget (:array this) (:i this))
-        )
-
-        (#_"ISeq" ISeq'''next [#_"ArraySeq_byte" this]
-            (when (< (inc (:i this)) (alength (:array this)))
-                (ArraySeq_byte'new (meta this), (:array this), (inc (:i this)))
-            )
-        )
-    )
-
-    (extend-type ArraySeq_byte Counted
-        (#_"int" Counted'''count [#_"ArraySeq_byte" this]
-            (- (alength (:array this)) (:i this))
-        )
-    )
-
-    (extend-type ArraySeq_byte IReduce
-        (#_"Object" IReduce'''reduce
-            ([#_"ArraySeq_byte" this, #_"IFn" f]
-                (let [#_"byte[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-                    (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
-                        (let [r (f r (aget a i))]
-                            (if (reduced? r) @r (recur r (inc i)))
-                        )
-                    )
-                )
-            )
-            ([#_"ArraySeq_byte" this, #_"IFn" f, #_"Object" r]
-                (let [#_"byte[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-                    (loop-when [r (f r (aget a i)) i (inc i)] (< i n) => (if (reduced? r) @r r)
-                        (if (reduced? r) @r (recur (f r (aget a i)) (inc i)))
-                    )
-                )
-            )
-        )
-    )
-)
-
-(class-ns ArraySeq_char
-    (defn #_"ArraySeq_char" ArraySeq_char'new [#_"IPersistentMap" meta, #_"char[]" array, #_"int" i]
-        (merge (ArraySeq_char.) (ASeq'new meta)
-            (hash-map
-                #_"char[]" :array array
-                #_"int" :i i
-            )
-        )
-    )
-
-    (extend-type ArraySeq_char IObj
-        (#_"ArraySeq_char" IObj'''withMeta [#_"ArraySeq_char" this, #_"IPersistentMap" meta]
-            (ArraySeq_char'new meta, (:array this), (:i this))
-        )
-    )
-
-    (extend-type ArraySeq_char ISeq
-        (#_"Object" ISeq'''first [#_"ArraySeq_char" this]
-            (aget (:array this) (:i this))
-        )
-
-        (#_"ISeq" ISeq'''next [#_"ArraySeq_char" this]
-            (when (< (inc (:i this)) (alength (:array this)))
-                (ArraySeq_char'new (meta this), (:array this), (inc (:i this)))
-            )
-        )
-    )
-
-    (extend-type ArraySeq_char Counted
-        (#_"int" Counted'''count [#_"ArraySeq_char" this]
-            (- (alength (:array this)) (:i this))
-        )
-    )
-
-    (extend-type ArraySeq_char IReduce
-        (#_"Object" IReduce'''reduce
-            ([#_"ArraySeq_char" this, #_"IFn" f]
-                (let [#_"char[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-                    (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
-                        (let [r (f r (aget a i))]
-                            (if (reduced? r) @r (recur r (inc i)))
-                        )
-                    )
-                )
-            )
-            ([#_"ArraySeq_char" this, #_"IFn" f, #_"Object" r]
-                (let [#_"char[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-                    (loop-when [r (f r (aget a i)) i (inc i)] (< i n) => (if (reduced? r) @r r)
-                        (if (reduced? r) @r (recur (f r (aget a i)) (inc i)))
-                    )
-                )
-            )
-        )
-    )
-)
-
-(class-ns ArraySeq_boolean
-    (defn #_"ArraySeq_boolean" ArraySeq_boolean'new [#_"IPersistentMap" meta, #_"boolean[]" array, #_"int" i]
-        (merge (ArraySeq_boolean.) (ASeq'new meta)
-            (hash-map
-                #_"boolean[]" :array array
-                #_"int" :i i
-            )
-        )
-    )
-
-    (extend-type ArraySeq_boolean IObj
-        (#_"ArraySeq_boolean" IObj'''withMeta [#_"ArraySeq_boolean" this, #_"IPersistentMap" meta]
-            (ArraySeq_boolean'new meta, (:array this), (:i this))
-        )
-    )
-
-    (extend-type ArraySeq_boolean ISeq
-        (#_"Object" ISeq'''first [#_"ArraySeq_boolean" this]
-            (aget (:array this) (:i this))
-        )
-
-        (#_"ISeq" ISeq'''next [#_"ArraySeq_boolean" this]
-            (when (< (inc (:i this)) (alength (:array this)))
-                (ArraySeq_boolean'new (meta this), (:array this), (inc (:i this)))
-            )
-        )
-    )
-
-    (extend-type ArraySeq_boolean Counted
-        (#_"int" Counted'''count [#_"ArraySeq_boolean" this]
-            (- (alength (:array this)) (:i this))
-        )
-    )
-
-    (extend-type ArraySeq_boolean IReduce
-        (#_"Object" IReduce'''reduce
-            ([#_"ArraySeq_boolean" this, #_"IFn" f]
-                (let [#_"boolean[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-                    (loop-when [#_"Object" r (aget a i) i (inc i)] (< i n) => r
-                        (let [r (f r (aget a i))]
-                            (if (reduced? r) @r (recur r (inc i)))
-                        )
-                    )
-                )
-            )
-            ([#_"ArraySeq_boolean" this, #_"IFn" f, #_"Object" r]
-                (let [#_"boolean[]" a (:array this) #_"int" i (:i this) #_"int" n (alength a)]
-                    (loop-when [r (f r (aget a i)) i (inc i)] (< i n) => (if (reduced? r) @r r)
-                        (if (reduced? r) @r (recur (f r (aget a i)) (inc i)))
-                    )
-                )
-            )
-        )
-    )
-)
-
 (class-ns ArraySeq
     (defn #_"ArraySeq" ArraySeq'new
-        ([#_"Object" array, #_"int" i] (ArraySeq'new nil, array, i))
-        ([#_"IPersistentMap" meta, #_"Object" array, #_"int" i]
+        ([#_"Object[]" array, #_"int" i] (ArraySeq'new nil, array, i))
+        ([#_"IPersistentMap" meta, #_"Object[]" array, #_"int" i]
             (merge (ArraySeq.) (ASeq'new meta)
                 (hash-map
-                    #_"Object[]" :array (cast Compiler'OBJECTS_CLASS array)
+                    #_"Object[]" :array array
                     #_"int" :i i
                 )
             )
@@ -11080,21 +10395,6 @@
     (defn #_"ArraySeq" ArraySeq'create [& #_"Object..." array]
         (when (and (some? array) (pos? (alength array)))
             (ArraySeq'new array, 0)
-        )
-    )
-
-    (defn #_"ISeq" ArraySeq'createFromObject [#_"Object" array]
-        (when (and (some? array) (pos? (Array/getLength array)))
-            (let [#_"Class" c (class array)]
-                (condp = c
-                    Compiler'INTS_CLASS     (ArraySeq_int'new     nil, (cast c array), 0)
-                    Compiler'LONGS_CLASS    (ArraySeq_long'new    nil, (cast c array), 0)
-                    Compiler'BYTES_CLASS    (ArraySeq_byte'new    nil, (cast c array), 0)
-                    Compiler'CHARS_CLASS    (ArraySeq_char'new    nil, (cast c array), 0)
-                    Compiler'BOOLEANS_CLASS (ArraySeq_boolean'new nil, (cast c array), 0)
-                                            (ArraySeq'new                      array,  0)
-                )
-            )
         )
     )
 
@@ -11621,7 +10921,7 @@
             (when-let [#_"Entry" e (get (:map this) c)]
                 (:fn e)
             )
-            (let [#_"int" i (<< (& (>> (Util'hash c) (:shift this)) (:mask this)) 1)]
+            (let [#_"int" i (bit-shift-left (bit-and (bit-shift-right (Util'hash c) (:shift this)) (:mask this)) 1)]
                 (let-when [#_"Object[]" t (:table this)] (and (< i (alength t)) (= (aget t i) c))
                     (when-let [#_"Entry" e (aget t (inc i))]
                         (:fn e)
@@ -11928,7 +11228,7 @@
     )
 
     (defn #_"PersistentArrayMap" PersistentArrayMap'createAsIfByAssoc [#_"Object[]" init]
-        (when (= (& (alength init) 1) 1)
+        (when (odd? (alength init))
             (throw! (str "no value supplied for key: " (aget init (dec (alength init)))))
         )
         ;; If this looks like it is doing busy-work, it is because it is achieving these goals: O(n^2) run time
@@ -12311,11 +11611,11 @@
 
 (class-ns PersistentHashMap
     (defn #_"int" PersistentHashMap'mask [#_"int" hash, #_"int" shift]
-        (& (>>> hash shift) 0x01f)
+        (bit-and (unsigned-bit-shift-right hash shift) 0x01f)
     )
 
     (defn- #_"int" PersistentHashMap'bitpos [#_"int" hash, #_"int" shift]
-        (<< 1 (PersistentHashMap'mask hash, shift))
+        (bit-shift-left 1 (PersistentHashMap'mask hash, shift))
     )
 
     (defn- #_"Object[]" PersistentHashMap'cloneAndSet
@@ -12387,7 +11687,7 @@
                     (let [[bitmap j]
                             (when (some? (aget (:array this) i)) => [bitmap j]
                                 (aset a j (aget (:array this) i))
-                                [(| bitmap (<< 1 i)) (+ j 2)]
+                                [(bit-or bitmap (bit-shift-left 1 i)) (+ j 2)]
                             )]
                         (recur bitmap j (inc i))
                     )
@@ -12397,7 +11697,7 @@
                     (let [[bitmap j]
                             (when (some? (aget (:array this) i)) => [bitmap j]
                                 (aset a j (aget (:array this) i))
-                                [(| bitmap (<< 1 i)) (+ j 2)]
+                                [(bit-or bitmap (bit-shift-left 1 i)) (+ j 2)]
                             )]
                         (recur bitmap j (inc i))
                     )
@@ -12516,7 +11816,7 @@
 
     #_method
     (defn #_"int" BitmapIndexedNode''index [#_"BitmapIndexedNode" this, #_"int" bit]
-        (Integer/bitCount (& (:bitmap this) (dec bit)))
+        (Integer/bitCount (bit-and (:bitmap this) (dec bit)))
     )
 
     (declare HashCollisionNode'new)
@@ -12537,7 +11837,7 @@
     (extend-type BitmapIndexedNode INode
         (#_"INode" INode'''assoc [#_"BitmapIndexedNode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"boolean'" addedLeaf]
             (let [#_"int" bit (PersistentHashMap'bitpos hash, shift) #_"int" idx (BitmapIndexedNode''index this, bit)]
-                (if-not (zero? (& (:bitmap this) bit))
+                (if-not (zero? (bit-and (:bitmap this) bit))
                     (let [#_"Object" keyOrNull (aget (:array this) (* 2 idx))
                           #_"Object" valOrNode (aget (:array this) (inc (* 2 idx)))
                           _ (cond
@@ -12563,7 +11863,7 @@
                             (let [#_"INode[]" nodes (make-array #_"INode" Object 32) #_"int" jdx (PersistentHashMap'mask hash, shift)]
                                 (aset nodes jdx (INode'''assoc BitmapIndexedNode'EMPTY, (+ shift 5), hash, key, val, addedLeaf))
                                 (loop-when [#_"int" j 0 #_"int" i 0] (< i 32)
-                                    (when-not (= (& (>>> (:bitmap this) i) 1) 0) => (recur j (inc i))
+                                    (when (odd? (unsigned-bit-shift-right (:bitmap this) i)) => (recur j (inc i))
                                         (if (some? (aget (:array this) j))
                                             (aset nodes i (INode'''assoc BitmapIndexedNode'EMPTY, (+ shift 5), (PersistentHashMap'hash (aget (:array this) j)), (aget (:array this) j), (aget (:array this) (inc j)), addedLeaf))
                                             (aset nodes i (cast cloiure.core.INode (aget (:array this) (inc j))))
@@ -12579,7 +11879,7 @@
                                 (vreset! addedLeaf true)
                                 (aset a (inc (* 2 idx)) val)
                                 (System/arraycopy (:array this), (* 2 idx), a, (* 2 (inc idx)), (* 2 (- n idx)))
-                                (BitmapIndexedNode'new nil, (| (:bitmap this) bit), a)
+                                (BitmapIndexedNode'new nil, (bit-or (:bitmap this) bit), a)
                             )
                         )
                     )
@@ -12588,7 +11888,7 @@
         )
 
         (#_"INode" INode'''dissoc [#_"BitmapIndexedNode" this, #_"int" shift, #_"int" hash, #_"Object" key]
-            (let-when-not [#_"int" bit (PersistentHashMap'bitpos hash, shift)] (zero? (& (:bitmap this) bit)) => this
+            (let-when-not [#_"int" bit (PersistentHashMap'bitpos hash, shift)] (zero? (bit-and (:bitmap this) bit)) => this
                 (let [#_"int" i (BitmapIndexedNode''index this, bit) #_"int" ii (* 2 i)
                       #_"Object" keyOrNull (aget (:array this) ii)
                       #_"Object" valOrNode (aget (:array this) (inc ii))]
@@ -12616,7 +11916,7 @@
 
         (#_"IMapEntry|Object" INode'''find
             ([#_"BitmapIndexedNode" this, #_"int" shift, #_"int" hash, #_"Object" key]
-                (let-when-not [#_"int" bit (PersistentHashMap'bitpos hash, shift)] (zero? (& (:bitmap this) bit))
+                (let-when-not [#_"int" bit (PersistentHashMap'bitpos hash, shift)] (zero? (bit-and (:bitmap this) bit))
                     (let [#_"int" i (BitmapIndexedNode''index this, bit)
                         #_"Object" keyOrNull (aget (:array this) (* 2 i))
                         #_"Object" valOrNode (aget (:array this) (inc (* 2 i)))]
@@ -12628,7 +11928,7 @@
                 )
             )
             ([#_"BitmapIndexedNode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" notFound]
-                (let-when-not [#_"int" bit (PersistentHashMap'bitpos hash, shift)] (zero? (& (:bitmap this) bit)) => notFound
+                (let-when-not [#_"int" bit (PersistentHashMap'bitpos hash, shift)] (zero? (bit-and (:bitmap this) bit)) => notFound
                     (let [#_"int" i (BitmapIndexedNode''index this, bit)
                         #_"Object" keyOrNull (aget (:array this) (* 2 i))
                         #_"Object" valOrNode (aget (:array this) (inc (* 2 i)))]
@@ -12707,7 +12007,7 @@
     (extend-type BitmapIndexedNode INode
         (#_"INode" INode'''assocT [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"boolean'" addedLeaf]
             (let [#_"int" bit (PersistentHashMap'bitpos hash, shift) #_"int" idx (BitmapIndexedNode''index this, bit)]
-                (if-not (zero? (& (:bitmap this) bit))
+                (if-not (zero? (bit-and (:bitmap this) bit))
                     (let [#_"Object" keyOrNull (aget (:array this) (* 2 idx))
                           #_"Object" valOrNode (aget (:array this) (inc (* 2 idx)))]
                         (cond
@@ -12731,7 +12031,7 @@
                         (cond
                             (< (* n 2) (alength (:array this)))
                                 (let [_ (vreset! addedLeaf true)
-                                      #_"BitmapIndexedNode" e (-> (BitmapIndexedNode''ensureEditable this, edit) (update :bitmap | bit))]
+                                      #_"BitmapIndexedNode" e (-> (BitmapIndexedNode''ensureEditable this, edit) (update :bitmap bit-or bit))]
                                     (System/arraycopy (:array e), (* 2 idx), (:array e), (* 2 (inc idx)), (* 2 (- n idx)))
                                     (aset (:array e) (* 2 idx) key)
                                     (aset (:array e) (inc (* 2 idx)) val)
@@ -12741,7 +12041,7 @@
                                 (let [#_"INode[]" nodes (make-array #_"INode" Object 32) #_"int" jdx (PersistentHashMap'mask hash, shift)]
                                     (aset nodes jdx (INode'''assocT BitmapIndexedNode'EMPTY, edit, (+ shift 5), hash, key, val, addedLeaf))
                                     (loop-when [#_"int" j 0 #_"int" i 0] (< i 32)
-                                        (when-not (= (& (>>> (:bitmap this) i) 1) 0) => (recur j (inc i))
+                                        (when (odd? (unsigned-bit-shift-right (:bitmap this) i)) => (recur j (inc i))
                                             (if (some? (aget (:array this) j))
                                                 (aset nodes i (INode'''assocT BitmapIndexedNode'EMPTY, edit, (+ shift 5), (PersistentHashMap'hash (aget (:array this) j)), (aget (:array this) j), (aget (:array this) (inc j)), addedLeaf))
                                                 (aset nodes i (cast cloiure.core.INode (aget (:array this) (inc j))))
@@ -12760,7 +12060,7 @@
                                     (System/arraycopy (:array this), (* 2 idx), a, (* 2 (inc idx)), (* 2 (- n idx)))
                                     (-> (BitmapIndexedNode''ensureEditable this, edit)
                                         (assoc :array a)
-                                        (update :bitmap | bit)
+                                        (update :bitmap bit-or bit)
                                     )
                                 )
                         )
@@ -12770,7 +12070,7 @@
         )
 
         (#_"INode" INode'''dissocT [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"boolean'" removedLeaf]
-            (let-when-not [#_"int" bit (PersistentHashMap'bitpos hash, shift)] (zero? (& (:bitmap this) bit)) => this
+            (let-when-not [#_"int" bit (PersistentHashMap'bitpos hash, shift)] (zero? (bit-and (:bitmap this) bit)) => this
                 (let [#_"int" i (BitmapIndexedNode''index this, bit) #_"int" ii (* 2 i)
                       #_"Object" keyOrNull (aget (:array this) ii)
                       #_"Object" valOrNode (aget (:array this) (inc ii))]
@@ -14510,8 +13810,8 @@
     (extend-type PersistentTreeMap Associative
         (#_"PersistentTreeMap" Associative'''assoc [#_"PersistentTreeMap" this, #_"Object" key, #_"Object" val]
             (let [#_"Volatile" found (volatile! nil) #_"TNode" t (PersistentTreeMap''add this, (:tree this), key, val, found)]
-                (if (nil? t) ;; nil == already contains key
-                    (if (= (IMapEntry'''val (cast TNode @found)) val) ;; note only get same collection on identity of val, not equals()
+                (if (nil? t)
+                    (if (= (IMapEntry'''val (cast TNode @found)) val)
                         this
                         (PersistentTreeMap'new (meta this), (:comp this), (PersistentTreeMap''replace this, (:tree this), key, val), (:_count this))
                     )
@@ -14525,9 +13825,9 @@
         (#_"PersistentTreeMap" IPersistentMap'''dissoc [#_"PersistentTreeMap" this, #_"Object" key]
             (let [#_"Volatile" found (volatile! nil) #_"TNode" t (PersistentTreeMap''remove this, (:tree this), key, found)]
                 (if (nil? t)
-                    (if (nil? @found) ;; nil == doesn't contain key
+                    (if (nil? @found)
                         this
-                        (PersistentTreeMap'new (meta this), (:comp this)) ;; empty
+                        (PersistentTreeMap'new (meta this), (:comp this))
                     )
                     (PersistentTreeMap'new (meta this), (:comp this), (TNode'''blacken t), (dec (:_count this)))
                 )
@@ -14691,7 +13991,7 @@
 
     #_method
     (defn- #_"int" TransientVector''tailoff [#_"TransientVector" this]
-        (if (< (:cnt this) 32) 0 (<< (>>> (dec (:cnt this)) 5) 5))
+        (if (< (:cnt this) 32) 0 (bit-shift-left (unsigned-bit-shift-right (dec (:cnt this)) 5) 5))
     )
 
     (declare PersistentVector'new)
@@ -14714,7 +14014,7 @@
         ;; else alloc new path
         ;; return nodeToInsert placed in parent
         (let [parent (TransientVector''ensureEditable this, parent)
-              #_"int" i (& (>>> (dec (:cnt this)) level) 0x01f)
+              #_"int" i (bit-and (unsigned-bit-shift-right (dec (:cnt this)) level) 0x01f)
               #_"VNode" nodeToInsert
                 (when-not (= level 5) => tailnode
                     (let [#_"VNode" child (cast VNode (aget (:array parent) i))]
@@ -14735,7 +14035,7 @@
             (let [#_"int" n (:cnt this)]
                 (if (< (- n (TransientVector''tailoff this)) 32) ;; room in tail?
                     (do
-                        (aset (:tail this) (& n 0x01f) val)
+                        (aset (:tail this) (bit-and n 0x01f) val)
                         (update this :cnt inc)
                     )
                     ;; full tail, push into tree
@@ -14744,7 +14044,7 @@
                           _ (aset (:tail this) 0 val)
                           #_"int" shift (:shift this)
                           [#_"VNode" root shift]
-                            (if (< (<< 1 shift) (>>> n 5)) ;; overflow root?
+                            (if (< (bit-shift-left 1 shift) (unsigned-bit-shift-right n 5)) ;; overflow root?
                                 (let [root (VNode'new (:edit (:root this)))]
                                     (aset (:array root) 0 (:root this))
                                     (aset (:array root) 1 (VNode'newPath (:edit (:root this)), shift, tailnode))
@@ -14765,7 +14065,7 @@
             (when (< i (TransientVector''tailoff this)) => (:tail this)
                 (loop-when-recur [#_"VNode" node (:root this) #_"int" level (:shift this)]
                                  (< 0 level)
-                                 [(cast VNode (aget (:array node) (& (>>> i level) 0x01f))) (- level 5)]
+                                 [(cast VNode (aget (:array node) (bit-and (unsigned-bit-shift-right i level) 0x01f))) (- level 5)]
                               => (:array node)
                 )
             )
@@ -14778,7 +14078,7 @@
             (when (< i (TransientVector''tailoff this)) => (:tail this)
                 (loop-when-recur [#_"VNode" node (:root this) #_"int" level (:shift this)]
                                  (< 0 level)
-                                 [(TransientVector''ensureEditable this, (cast VNode (aget (:array node) (& (>>> i level) 0x01f)))) (- level 5)]
+                                 [(TransientVector''ensureEditable this, (cast VNode (aget (:array node) (bit-and (unsigned-bit-shift-right i level) 0x01f)))) (- level 5)]
                               => (:array node)
                 )
             )
@@ -14828,7 +14128,7 @@
         (#_"Object" Indexed'''nth
             ([#_"TransientVector" this, #_"int" i]
                 (TransientVector''ensureEditable this)
-                (aget (TransientVector''arrayFor this, i) (& i 0x01f))
+                (aget (TransientVector''arrayFor this, i) (bit-and i 0x01f))
             )
             ([#_"TransientVector" this, #_"int" i, #_"Object" notFound]
                 (when (< -1 i (count this)) => notFound
@@ -14842,8 +14142,8 @@
     (defn- #_"VNode" TransientVector''doAssoc [#_"TransientVector" this, #_"int" level, #_"VNode" node, #_"int" i, #_"Object" val]
         (let [node (TransientVector''ensureEditable this, node)]
             (if (zero? level)
-                (aset (:array node) (& i 0x01f) val)
-                (let [#_"int" si (& (>>> i level) 0x01f)]
+                (aset (:array node) (bit-and i 0x01f) val)
+                (let [#_"int" si (bit-and (unsigned-bit-shift-right i level) 0x01f)]
                     (aset (:array node) si (TransientVector''doAssoc this, (- level 5), (cast VNode (aget (:array node) si)), i, val))
                 )
             )
@@ -14857,7 +14157,7 @@
             (if (< -1 i (:cnt this))
                 (if (<= (TransientVector''tailoff this) i)
                     (do
-                        (aset (:tail this) (& i 0x01f) val)
+                        (aset (:tail this) (bit-and i 0x01f) val)
                         this
                     )
                     (do
@@ -14883,7 +14183,7 @@
     #_method
     (defn- #_"VNode" TransientVector''popTail [#_"TransientVector" this, #_"int" level, #_"VNode" node]
         (let [node (TransientVector''ensureEditable this, node)
-              #_"int" i (& (>>> (- (:cnt this) 2) level) 0x01f)]
+              #_"int" i (bit-and (unsigned-bit-shift-right (- (:cnt this) 2) level) 0x01f)]
             (cond
                 (< 5 level)
                     (let [#_"VNode" child (TransientVector''popTail this, (- level 5), (cast VNode (aget (:array node) i)))]
@@ -14906,7 +14206,7 @@
             (TransientVector''ensureEditable this)
             (let [#_"int" n (:cnt this)]
                 (when-not (zero? n) => (throw! "can't pop empty vector")
-                    (when (and (not= n 1) (zero? (& (dec n) 0x01f))) => (assoc this :cnt (dec n))
+                    (when (and (not= n 1) (zero? (bit-and (dec n) 0x01f))) => (assoc this :cnt (dec n))
                         (let [#_"Object[]" tail (TransientVector''editableArrayFor this, (- n 2))
                               #_"int" shift (:shift this) #_"VNode" root (:root this)
                               root (or (TransientVector''popTail this, shift, root) (VNode'new (:edit root)))
@@ -14999,7 +14299,7 @@
 
     #_method
     (defn #_"int" PersistentVector''tailoff [#_"PersistentVector" this]
-        (if (< (:cnt this) 32) 0 (<< (>>> (dec (:cnt this)) 5) 5))
+        (if (< (:cnt this) 32) 0 (bit-shift-left (unsigned-bit-shift-right (dec (:cnt this)) 5) 5))
     )
 
     #_method
@@ -15008,7 +14308,7 @@
             (when (< i (PersistentVector''tailoff this)) => (:tail this)
                 (loop-when-recur [#_"VNode" node (:root this) #_"int" level (:shift this)]
                                  (< 0 level)
-                                 [(cast VNode (aget (:array node) (& (>>> i level) 0x01f))) (- level 5)]
+                                 [(cast VNode (aget (:array node) (bit-and (unsigned-bit-shift-right i level) 0x01f))) (- level 5)]
                               => (:array node)
                 )
             )
@@ -15018,7 +14318,7 @@
     (extend-type PersistentVector Indexed
         (#_"Object" Indexed'''nth
             ([#_"PersistentVector" this, #_"int" i]
-                (aget (PersistentVector''arrayFor this, i) (& i 0x01f))
+                (aget (PersistentVector''arrayFor this, i) (bit-and i 0x01f))
             )
             ([#_"PersistentVector" this, #_"int" i, #_"Object" notFound]
                 (when (< -1 i (:cnt this)) => notFound
@@ -15031,8 +14331,8 @@
     (defn- #_"VNode" PersistentVector'doAssoc [#_"int" level, #_"VNode" node, #_"int" i, #_"Object" val]
         (let [#_"VNode" ret (VNode'new (:edit node), (.clone (:array node)))]
             (if (zero? level)
-                (aset (:array ret) (& i 0x01f) val)
-                (let [#_"int" si (& (>>> i level) 0x01f)]
+                (aset (:array ret) (bit-and i 0x01f) val)
+                (let [#_"int" si (bit-and (unsigned-bit-shift-right i level) 0x01f)]
                     (aset (:array ret) si (PersistentVector'doAssoc (- level 5), (cast VNode (aget (:array node) si)), i, val))
                 )
             )
@@ -15046,7 +14346,7 @@
                 (if (<= (PersistentVector''tailoff this) i)
                     (let [#_"Object[]" tail (make-array Object (alength (:tail this)))]
                         (System/arraycopy (:tail this), 0, tail, 0, (alength (:tail this)))
-                        (aset tail (& i 0x01f) val)
+                        (aset tail (bit-and i 0x01f) val)
                         (PersistentVector'new (meta this), (:cnt this), (:shift this), (:root this), tail)
                     )
                     (PersistentVector'new (meta this), (:cnt this), (:shift this), (PersistentVector'doAssoc (:shift this), (:root this), i, val), (:tail this))
@@ -15070,7 +14370,7 @@
         ;; else does it map to an existing child? -> nodeToInsert = pushNode one more level
         ;; else alloc new path
         ;; return nodeToInsert placed in copy of parent
-        (let [#_"int" i (& (>>> (dec (:cnt this)) level) 0x01f)
+        (let [#_"int" i (bit-and (unsigned-bit-shift-right (dec (:cnt this)) level) 0x01f)
               #_"VNode" ret (VNode'new (:edit parent), (.clone (:array parent)))
               #_"VNode" nodeToInsert
                 (when-not (= level 5) => tailnode
@@ -15099,7 +14399,7 @@
                     (let [#_"VNode" tailnode (VNode'new (:edit (:root this)), (:tail this))
                           #_"int" shift (:shift this)
                           [#_"VNode" root shift]
-                            (if (< (<< 1 shift) (>>> n 5)) ;; overflow root?
+                            (if (< (bit-shift-left 1 shift) (unsigned-bit-shift-right n 5)) ;; overflow root?
                                 (let [root (VNode'new (:edit (:root this)))]
                                     (aset (:array root) 0 (:root this))
                                     (aset (:array root) 1 (VNode'newPath (:edit (:root this)), shift, tailnode))
@@ -15172,7 +14472,7 @@
 
     #_method
     (defn- #_"VNode" PersistentVector''popTail [#_"PersistentVector" this, #_"int" level, #_"VNode" node]
-        (let [#_"int" i (& (>>> (- (:cnt this) 2) level) 0x01f)]
+        (let [#_"int" i (bit-and (unsigned-bit-shift-right (- (:cnt this) 2) level) 0x01f)]
             (cond
                 (< 5 level)
                     (let [#_"VNode" child (PersistentVector''popTail this, (- level 5), (cast VNode (aget (:array node) i)))]
@@ -15766,7 +15066,7 @@
         (cond
             (satisfies? Seqable coll)     (Seqable'''seq coll)
             (nil? coll)                   nil
-            (.isArray (class coll))       (ArraySeq'createFromObject coll)
+            (.isArray (class coll))       (ArraySeq'create coll)
             (instance? CharSequence coll) (StringSeq'create coll)
             :else (throw! (str "don't know how to create ISeq from: " (.getName (class coll))))
         )
@@ -16017,82 +15317,12 @@
     (defn #_"Number"    RT'box-1i [#_"int"     x] x)
     (defn #_"Number"    RT'box-1l [#_"long"    x] x)
 
-    (defn #_"char" RT'charCast-1b [#_"byte" x]
-        (let [#_"char" i (char x)]
-            (when (= i x) => (throw! (str "value out of range for char: " x))
-                i
-            )
-        )
-    )
-
-    (defn #_"char" RT'charCast-1c [#_"char" x]
-        x
-    )
-
-    (defn #_"char" RT'charCast-1i [#_"int" x]
-        (let [#_"char" i (char x)]
-            (when (= i x) => (throw! (str "value out of range for char: " x))
-                i
-            )
-        )
-    )
-
-    (defn #_"char" RT'charCast-1l [#_"long" x]
-        (let [#_"char" i (char x)]
-            (when (= i x) => (throw! (str "value out of range for char: " x))
-                i
-            )
-        )
-    )
-
-    (defn #_"char" RT'charCast [#_"Object" x]
-        (if (instance? Character x)
-            (.charValue ^Character x)
-            (let [#_"long" n (.longValue (cast Number x))]
-                (when (<= Character/MIN_VALUE n Character/MAX_VALUE) => (throw! (str "value out of range for char: " x))
-                    (char n)
-                )
-            )
-        )
-    )
-
     (defn #_"boolean" RT'booleanCast-1b [#_"boolean" x]
         x
     )
 
     (defn #_"boolean" RT'booleanCast [#_"Object" x]
         (if (instance? Boolean x) (.booleanValue ^Boolean x) (some? x))
-    )
-
-    (defn #_"byte" RT'byteCast-1b [#_"byte" x]
-        x
-    )
-
-    (defn #_"byte" RT'byteCast-1i [#_"int" x]
-        (let [#_"byte" i (byte x)]
-            (when (= i x) => (throw! (str "value out of range for byte: " x))
-                i
-            )
-        )
-    )
-
-    (defn #_"byte" RT'byteCast-1l [#_"long" x]
-        (let [#_"byte" i (byte x)]
-            (when (= i x) => (throw! (str "value out of range for byte: " x))
-                i
-            )
-        )
-    )
-
-    (defn #_"byte" RT'byteCast [#_"Object" x]
-        (if (instance? Byte x)
-            (.byteValue ^Byte x)
-            (let [#_"long" n (long x)]
-                (when (<= Byte/MIN_VALUE n Byte/MAX_VALUE) => (throw! (str "value out of range for byte: " x))
-                    (byte n)
-                )
-            )
-        )
     )
 
     (defn #_"int" RT'intCast-1b [#_"byte"  x] x)
@@ -16119,12 +15349,6 @@
     (defn #_"long" RT'longCast-1i [#_"int"   x] x)
     (defn #_"long" RT'longCast-1l [#_"long"  x] x)
 
-    (defn- #_"long" RT'longCast-1d [#_"double" x]
-        (when (<= Long/MIN_VALUE x Long/MAX_VALUE) => (throw! (str "value out of range for long: " x))
-            (long x)
-        )
-    )
-
     (defn #_"long" RT'longCast [#_"Object" x]
         (cond
             (or (instance? Long x) (instance? Integer x) (instance? Byte x))
@@ -16138,42 +15362,8 @@
             (instance? Character x)
                 (RT'longCast-1l (.charValue ^Character x))
             :else
-                (RT'longCast-1d (.doubleValue (cast Number x)))
+                (throw! (str "unexpected value type cast for long: " x))
         )
-    )
-
-    (defn #_"byte" RT'uncheckedByteCast-1b [#_"byte"   x]       x )
-    (defn #_"byte" RT'uncheckedByteCast-1i [#_"int"    x] (byte x))
-    (defn #_"byte" RT'uncheckedByteCast-1l [#_"long"   x] (byte x))
-
-    (defn #_"byte" RT'uncheckedByteCast [#_"Object" x]
-        (.byteValue (cast Number x))
-    )
-
-    (defn #_"char" RT'uncheckedCharCast-1b [#_"byte"   x] (char x))
-    (defn #_"char" RT'uncheckedCharCast-1c [#_"char"   x]       x )
-    (defn #_"char" RT'uncheckedCharCast-1i [#_"int"    x] (char x))
-    (defn #_"char" RT'uncheckedCharCast-1l [#_"long"   x] (char x))
-
-    (defn #_"char" RT'uncheckedCharCast [#_"Object" x]
-        (if (instance? Character x) (.charValue ^Character x) (char (.longValue (cast Number x))))
-    )
-
-    (defn #_"int" RT'uncheckedIntCast-1b [#_"byte"   x]      x )
-    (defn #_"int" RT'uncheckedIntCast-1c [#_"char"   x]      x )
-    (defn #_"int" RT'uncheckedIntCast-1i [#_"int"    x]      x )
-    (defn #_"int" RT'uncheckedIntCast-1l [#_"long"   x] (int x))
-
-    (defn #_"int" RT'uncheckedIntCast [#_"Object" x]
-        (if (number? x) (.intValue ^Number x) (.charValue (cast Character x)))
-    )
-
-    (defn #_"long" RT'uncheckedLongCast-1b [#_"byte"   x]       x )
-    (defn #_"long" RT'uncheckedLongCast-1i [#_"int"    x]       x )
-    (defn #_"long" RT'uncheckedLongCast-1l [#_"long"   x]       x )
-
-    (defn #_"long" RT'uncheckedLongCast [#_"Object" x]
-        (.longValue (cast Number x))
     )
 
     (defn #_"IPersistentMap" RT'map [& #_"Object..." init]
@@ -16233,7 +15423,7 @@
         (loop-when-recur [#_"ISeq" s nil #_"int" i (dec (alength a))] (<= 0 i) [(cons (aget a i) s) (dec i)] => s)
     )
 
-    (defn #_"Object[]" RT'object_array [#_"Object" sizeOrSeq]
+    (defn #_"Object[]" RT'objectArray [#_"Object" sizeOrSeq]
         (if (number? sizeOrSeq)
             (make-array Object (.intValue ^Number sizeOrSeq))
             (let [#_"ISeq" s (seq sizeOrSeq) #_"int" size (count s) #_"Object[]" a (make-array Object size)]
@@ -16254,34 +15444,12 @@
         )
     )
 
-    (defn #_"Object" RT'seqToTypedArray
-        ([#_"ISeq" s]
-            (let [#_"Class" type (if (and (some? s) (some? (first s))) (class (first s)) Object)]
-                (RT'seqToTypedArray type, s)
+    (defn #_"?[]" RT'seqToTypedArray [#_"Class" type, #_"ISeq" s]
+        (let [#_"?[]" a (make-array (or type (class (first s)) Object) (count s))]
+            (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (next s)]
+                (aset a i (first s))
             )
-        )
-        ([#_"Class" type, #_"ISeq" s]
-            (let [#_"Object" a (Array/newInstance type, (count s))]
-                (condp = type
-                    Integer/TYPE
-                        (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (next s)]
-                            (Array/set a, i, (RT'intCast (first s)))
-                        )
-                    Byte/TYPE
-                        (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (next s)]
-                            (Array/set a, i, (RT'byteCast (first s)))
-                        )
-                    Character/TYPE
-                        (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (next s)]
-                            (Array/set a, i, (RT'charCast (first s)))
-                        )
-                    #_else
-                        (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (next s)]
-                            (Array/set a, i, (first s))
-                        )
-                )
-                a
-            )
+            a
         )
     )
 
@@ -16974,15 +16142,6 @@
 )
 
 ;;;
- ; Returns non-nil if nums all have the equivalent value (type-independent), otherwise false.
- ;;
-(§ defn ==
-    ([x] true)
-    ([x y] (Numbers'equiv x y))
-    ([x y & s] (and (== x y) (recur-if (next s) [y (first s) (next s)] => (== y (first s)))))
-)
-
-;;;
  ; Returns the greatest of the nums.
  ;;
 (§ defn max
@@ -17023,90 +16182,6 @@
  ; See also: dec'
  ;;
 (§ defn dec [x] (Numbers'dec x))
-
-;;;
- ; Returns a number one greater than x, an int.
- ; Note - uses a primitive operator subject to overflow.
- ;;
-(§ defn unchecked-inc-int [x] (Numbers'unchecked_int_inc x))
-
-;;;
- ; Returns a number one greater than x, a long.
- ; Note - uses a primitive operator subject to overflow.
- ;;
-(§ defn unchecked-inc [x] (Numbers'unchecked_inc x))
-
-;;;
- ; Returns a number one less than x, an int.
- ; Note - uses a primitive operator subject to overflow.
- ;;
-(§ defn unchecked-dec-int [x] (Numbers'unchecked_int_dec x))
-
-;;;
- ; Returns a number one less than x, a long.
- ; Note - uses a primitive operator subject to overflow.
- ;;
-(§ defn unchecked-dec [x] (Numbers'unchecked_dec x))
-
-;;;
- ; Returns the negation of x, an int.
- ; Note - uses a primitive operator subject to overflow.
- ;;
-(§ defn unchecked-negate-int [x] (Numbers'unchecked_int_negate x))
-
-;;;
- ; Returns the negation of x, a long.
- ; Note - uses a primitive operator subject to overflow.
- ;;
-(§ defn unchecked-negate [x] (Numbers'unchecked_minus x))
-
-;;;
- ; Returns the sum of x and y, both int.
- ; Note - uses a primitive operator subject to overflow.
- ;;
-(§ defn unchecked-add-int [x y] (Numbers'unchecked_int_add x y))
-
-;;;
- ; Returns the sum of x and y, both long.
- ; Note - uses a primitive operator subject to overflow.
- ;;
-(§ defn unchecked-add [x y] (Numbers'unchecked_add x y))
-
-;;;
- ; Returns the difference of x and y, both int.
- ; Note - uses a primitive operator subject to overflow.
- ;;
-(§ defn unchecked-subtract-int [x y] (Numbers'unchecked_int_subtract x y))
-
-;;;
- ; Returns the difference of x and y, both long.
- ; Note - uses a primitive operator subject to overflow.
- ;;
-(§ defn unchecked-subtract [x y] (Numbers'unchecked_minus x y))
-
-;;;
- ; Returns the product of x and y, both int.
- ; Note - uses a primitive operator subject to overflow.
- ;;
-(§ defn unchecked-multiply-int [x y] (Numbers'unchecked_int_multiply x y))
-
-;;;
- ; Returns the product of x and y, both long.
- ; Note - uses a primitive operator subject to overflow.
- ;;
-(§ defn unchecked-multiply [x y] (Numbers'unchecked_multiply x y))
-
-;;;
- ; Returns the division of x by y, both int.
- ; Note - uses a primitive operator subject to truncation.
- ;;
-(§ defn unchecked-divide-int [x y] (Numbers'unchecked_int_divide x y))
-
-;;;
- ; Returns the remainder of division of x by y, both int.
- ; Note - uses a primitive operator subject to truncation.
- ;;
-(§ defn unchecked-remainder-int [x y] (Numbers'unchecked_int_remainder x y))
 
 ;;;
  ; quot[ient] of dividing numerator by denominator.
@@ -17175,7 +16250,7 @@
  ;;
 (§ defn even? [n]
     (when (integer? n) => (throw! (str "argument must be an integer: " n))
-        (zero? (bit-and (RT'uncheckedLongCast n) 1))
+        (zero? (bit-and n 1))
     )
 )
 
@@ -17183,23 +16258,6 @@
  ; Returns true if n is odd, throws an exception if n is not an integer.
  ;;
 (§ defn odd? [n] (not (even? n)))
-
-;;;
- ; Return true if x is a fixed precision integer.
- ;;
-(§ defn int? [x]
-    (or (instance? Long x)
-        (instance? Integer x)
-        (instance? Byte x)
-    )
-)
-
-;;;
- ; Return true if x is a positive | negative | non-negative fixed precision integer.
- ;;
-(§ defn pos-int? [x] (and (int? x)      (pos? x)))
-(§ defn neg-int? [x] (and (int? x)      (neg? x)))
-(§ defn nat-int? [x] (and (int? x) (not (neg? x))))
 
 ;;;
  ; Takes a fn f and returns a fn that takes the same arguments as f,
@@ -17866,27 +16924,6 @@
  ;;
 (§ def ^Boolean not-any? (comp not some))
 
-;; will be redefed later with arg checks
-
-;;;
- ; bindings => name n
- ;
- ; Repeatedly executes body (presumably for side-effects) with name
- ; bound to integers from 0 through n-1.
- ;;
-(§ defmacro dotimes [bindings & body]
-    (let [i (first bindings) n (second bindings)]
-        `(let [n# (RT'longCast ~n)]
-            (loop [~i 0]
-                (when (< ~i n#)
-                    ~@body
-                    (recur (unchecked-inc ~i))
-                )
-            )
-        )
-    )
-)
-
 ;;;
  ; Returns a lazy sequence consisting of the result of applying f to
  ; the set of first items of each coll, followed by applying f to the
@@ -18454,11 +17491,8 @@
     )
     (let [i (first bindings) n (second bindings)]
         `(let [n# (long ~n)]
-            (loop [~i 0]
-                (when (< ~i n#)
-                    ~@body
-                    (recur (unchecked-inc ~i))
-                )
+            (loop-when-recur [~i 0] (< ~i n#) [(inc ~i)]
+                ~@body
             )
         )
     )
@@ -18566,10 +17600,9 @@
  ; Returns an array with components set to the values in aseq.
  ; The array's component type is type if provided, or the type of the first value in aseq if present, or Object.
  ; All values in aseq must be compatible with the component type.
- ; Class objects for the primitive types can be obtained using, e.g. Integer/TYPE.
  ;;
 (§ defn into-array
-    ([     s] (RT'seqToTypedArray      (seq s)))
+    ([s] (into-array nil s))
     ([type s] (RT'seqToTypedArray type (seq s)))
 )
 
@@ -18583,42 +17616,12 @@
 ;;;
  ; Coerce to Number.
  ;;
-(§ defn ^Number num [x] (Numbers'num x))
+(§ defn ^Number num [x] (cast Number x))
 
 ;;;
  ; Coerce to long.
  ;;
 (§ defn long [^Number x] (RT'longCast x))
-
-;;;
- ; Coerce to byte.
- ;;
-(§ defn byte [^Number x] (RT'byteCast x))
-
-;;;
- ; Coerce to char.
- ;;
-(§ defn char [x] (RT'charCast x))
-
-;;;
- ; Coerce to byte. Subject to rounding or truncation.
- ;;
-(§ defn unchecked-byte [^Number x] (RT'uncheckedByteCast x))
-
-;;;
- ; Coerce to char. Subject to rounding or truncation.
- ;;
-(§ defn unchecked-char [x] (RT'uncheckedCharCast x))
-
-;;;
- ; Coerce to int. Subject to rounding or truncation.
- ;;
-(§ defn unchecked-int [^Number x] (RT'uncheckedIntCast x))
-
-;;;
- ; Coerce to long. Subject to rounding or truncation.
- ;;
-(§ defn unchecked-long [^Number x] (RT'uncheckedLongCast x))
 
 ;;;
  ; Modulus of num and div. Truncates toward negative infinity.
@@ -19982,93 +18985,9 @@
 (defn not-empty [coll] (when (seq coll) coll))
 
 ;;;
- ; Maps an expression across an array a, using an index named idx, and
- ; return value named ret, initialized to a clone of a, then setting
- ; each element of ret to the evaluation of expr, returning the new
- ; array ret.
- ;;
-(§ defmacro amap [a idx ret expr]
-    `(let [a# ~a l# (alength a#) ~ret (aclone a#)]
-        (loop [~idx 0]
-            (if (< ~idx l#)
-                (do (aset ~ret ~idx ~expr) (recur (unchecked-inc ~idx)))
-                ~ret
-            )
-        )
-    )
-)
-
-;;;
- ; Reduces an expression across an array a, using an index named idx,
- ; and return value named ret, initialized to init, setting ret to the
- ; evaluation of expr at each step, returning ret.
- ;;
-(§ defmacro areduce [a idx ret init expr]
-    `(let [a# ~a l# (alength a#)]
-        (loop [~idx 0 ~ret ~init]
-            (if (< ~idx l#)
-                (recur (unchecked-inc-int ~idx) ~expr)
-                ~ret
-            )
-        )
-    )
-)
-
-;;;
- ; Creates an array of booleans.
- ;;
-(§ defn boolean-array
-    ([size-or-seq]          (Numbers'boolean_array size-or-seq))
-    ([size init-val-or-seq] (Numbers'boolean_array size init-val-or-seq))
-)
-
-;;;
- ; Creates an array of bytes.
- ;;
-(§ defn byte-array
-    ([size-or-seq]          (Numbers'byte_array size-or-seq))
-    ([size init-val-or-seq] (Numbers'byte_array size init-val-or-seq))
-)
-
-;;;
- ; Creates an array of chars.
- ;;
-(§ defn char-array
-    ([size-or-seq]          (Numbers'char_array size-or-seq))
-    ([size init-val-or-seq] (Numbers'char_array size init-val-or-seq))
-)
-
-;;;
- ; Creates an array of ints.
- ;;
-(§ defn int-array
-    ([size-or-seq]          (Numbers'int_array size-or-seq))
-    ([size init-val-or-seq] (Numbers'int_array size init-val-or-seq))
-)
-
-;;;
- ; Creates an array of longs.
- ;;
-(§ defn long-array
-    ([size-or-seq]          (Numbers'long_array size-or-seq))
-    ([size init-val-or-seq] (Numbers'long_array size init-val-or-seq))
-)
-
-;;;
  ; Creates an array of objects.
  ;;
-(§ defn object-array ([size-or-seq] (RT'object_array size-or-seq)))
-
-(§ definline booleans [xs] `(Numbers'booleans ~xs))
-(§ definline bytes    [xs] `(Numbers'bytes    ~xs))
-(§ definline chars    [xs] `(Numbers'chars    ~xs))
-(§ definline ints     [xs] `(Numbers'ints     ~xs))
-(§ definline longs    [xs] `(Numbers'longs    ~xs))
-
-;;;
- ; Return true if x is a byte array.
- ;;
-(§ defn bytes? [x] (and (some? x) (= (.getComponentType (class x)) Byte/TYPE)))
+(§ defn object-array ([size-or-seq] (RT'objectArray size-or-seq)))
 
 ;;;
  ; Atomically alters the root binding of var v by applying f to its current value plus any args.
@@ -20591,7 +19510,7 @@
           hmap
             (reduce
                 (fn [m [h bucket]]
-                    (if (== 1 (count bucket))
+                    (if (= (count bucket) 1)
                         (assoc m (ffirst bucket) (second (first bucket)))
                         (assoc-multi m h bucket)
                     )
@@ -20617,7 +19536,7 @@
  ;;
 (§ defn- prep-hashes [expr-sym default tests thens]
     (let [hashcode #(Util'hash %) hashes (into #{} (map hashcode tests))]
-        (if (== (count tests) (count hashes))
+        (if (= (count tests) (count hashes))
             (if (fits-table? hashes)
                 ;; compact case ints, no shift-mask
                 [0 0 (case-map hashcode identity tests thens) :compact]
@@ -21593,18 +20512,18 @@
  ; (str (let [f "foo"]
  ;  (reify Object
  ;   (toString [this] f))))
- ; == "foo"
+ ; => "foo"
  ;
  ; (seq (let [f "foo"]
  ;  (reify Seqable
  ;   (seq [this] (seq f)))))
- ; == (\f \o \o)
+ ; => (\f \o \o)
  ;
  ; reify always implements IObj and transfers meta data of the form
  ; to the created object.
  ;
  ; (meta ^{:k :v} (reify Object (toString [this] "foo")))
- ; == {:k :v}
+ ; => {:k :v}
  ;;
 (§ defmacro reify [& opts+specs]
     (let [[interfaces methods] (parse-opts+specs opts+specs)]
