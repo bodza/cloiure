@@ -78,6 +78,40 @@
 (defmacro class-ns   [_ & s] (cons 'do s))
 (defmacro clojure-ns [_ & s] (cons 'do s))
 
+(java-ns cloiure.lang.IObject
+    (defprotocol IObject
+        (#_"boolean" IObject'''equals [#_"IObject" this, #_"Object" that])
+        (#_"int" IObject'''hashCode [#_"IObject" this])
+        (#_"String" IObject'''toString [#_"IObject" this])
+    )
+
+    (extend-type nil IObject
+        (#_"int" IObject'''hashCode [#_"nil" this]
+            0
+        )
+    )
+
+    (extend-type Object IObject
+        (#_"boolean" IObject'''equals [#_"Object" this, #_"Object" that]
+            (.equals this, that)
+        )
+
+        (#_"int" IObject'''hashCode [#_"Object" this]
+            (.hashCode this)
+        )
+
+        (#_"String" IObject'''toString [#_"Object" this]
+            (.toString this)
+        )
+    )
+)
+
+(java-ns cloiure.lang.IHashEq
+    (defprotocol IHashEq
+        (#_"int" IHashEq'''hasheq [#_"IHashEq" this])
+    )
+)
+
 (java-ns cloiure.lang.Reflector
     (§ soon definterface Reflector) (import [clojure.lang Reflector])
 )
@@ -248,12 +282,6 @@
 (java-ns cloiure.lang.IPending
     (defprotocol IPending
         (#_"boolean" IPending'''isRealized [#_"IPending" this])
-    )
-)
-
-(java-ns cloiure.lang.IHashEq
-    (defprotocol IHashEq
-        (#_"int" IHashEq'''hasheq [#_"IHashEq" this])
     )
 )
 
@@ -948,7 +976,7 @@
  ;;
 (defn ^String str
     ([] "")
-    ([^Object x] (if (nil? x) "" (.toString x)))
+    ([^Object x] (if (nil? x) "" (IObject'''toString x)))
     ([x & y]
         ((fn [^StringBuilder s z] (recur-if z [(.append s (str (first z))) (next z)] => (str s)))
             (StringBuilder. (str x)) y
@@ -3023,7 +3051,7 @@
 
     #_method
     (defn #_"boolean" StaticMethodExpr''canEmitIntrinsicPredicate [#_"StaticMethodExpr" this]
-        (and (some? (:method this)) (some? (get Intrinsics'preds (.toString (:method this)))))
+        (and (some? (:method this)) (some? (get Intrinsics'preds (str (:method this)))))
     )
 
     #_method
@@ -3034,7 +3062,7 @@
             (when (= context :Context'RETURN)
                 (IopMethod''emitClearLocals *method*, gen)
             )
-            (let [#_"[int]" preds (get Intrinsics'preds (.toString (:method this)))]
+            (let [#_"[int]" preds (get Intrinsics'preds (str (:method this)))]
                 (doseq [#_"int" pred (pop preds)]
                     (.visitInsn gen, pred)
                 )
@@ -3115,7 +3143,7 @@
                 (when (= context :Context'RETURN)
                     (IopMethod''emitClearLocals *method*, gen)
                 )
-                (let [#_"int|[int]" ops (get Intrinsics'ops (.toString (:method this)))]
+                (let [#_"int|[int]" ops (get Intrinsics'ops (str (:method this)))]
                     (if (some? ops)
                         (if (vector? ops)
                             (doseq [#_"int" op ops]
@@ -4224,7 +4252,7 @@
                                 (let [#_"IPersistentMap" mmap (get (var-get pvar) :method-map)
                                       #_"Keyword" mmapVal (get mmap (keyword (:sym fvar)))]
                                     (when (some? mmapVal) => (throw! (str "no method of interface: " (.getName (:protocolOn this)) " found for function: " (:sym fvar) " of protocol: " (:sym pvar)))
-                                        (let [#_"String" mname (Compiler'munge (.toString (:sym mmapVal)))
+                                        (let [#_"String" mname (Compiler'munge (str (:sym mmapVal)))
                                               #_"PersistentVector" methods (Reflector'getMethods (:protocolOn this), (dec (count args)), mname, false)]
                                             (when (= (count methods) 1) => (throw! (str "no single method: " mname " of interface: " (.getName (:protocolOn this)) " found for function: " (:sym fvar) " of protocol: " (:sym pvar)))
                                                 (assoc this :onMethod (nth methods 0))
@@ -5002,8 +5030,8 @@
                     )
                     (var? value)
                     (do
-                        (.push gen, (.toString (:name (:ns value))))
-                        (.push gen, (.toString (:sym value)))
+                        (.push gen, (str (:name (:ns value))))
+                        (.push gen, (str (:sym value)))
                         (.invokeStatic gen, (Type/getType RT), (Method/getMethod "clojure.lang.Var var(String, String)"))
                         true
                     )
@@ -5074,7 +5102,7 @@
                     )
                     (instance? Pattern value)
                     (do
-                        (IopObject''emitValue this, (.toString value), gen)
+                        (IopObject''emitValue this, (str value), gen)
                         (.invokeStatic gen, (Type/getType Pattern), (Method/getMethod "java.util.regex.Pattern compile(String)"))
                         true
                     )
@@ -6496,7 +6524,7 @@
     (declare PersistentArrayMap'new)
 
     (defn #_"IopObject" NewInstanceExpr'build [#_"IPersistentVector" interfaceSyms, #_"IPersistentVector" fieldSyms, #_"Symbol" thisSym, #_"String" tagName, #_"Symbol" className, #_"Symbol" typeTag, #_"ISeq" methodForms, #_"ISeq" form, #_"IPersistentMap" opts]
-        (let [#_"String" name (.toString className) #_"String" name' (.replace name, \., \/)
+        (let [#_"String" name (str className) #_"String" name' (.replace name, \., \/)
               #_"NewInstanceExpr" nie
                 (-> (NewInstanceExpr'new nil)
                     (assoc :name name :internalName name' :objType (Type/getObjectType name') :opts opts)
@@ -7920,19 +7948,11 @@
             (identical? k1 k2)              true
             (nil? k1)                       false
             (and (number? k1) (number? k2)) (Numbers'equal k1, k2)
-            (coll? k1)                      (.equals k1, k2)
-            (coll? k2)                      (.equals k2, k1)
-            :else                           (.equals k1, k2)
+            (coll? k1)                      (IObject'''equals k1, k2)
+            (coll? k2)                      (IObject'''equals k2, k1)
+            :else                           (IObject'''equals k1, k2)
         )
     )
-
-    (defn #_"boolean" Util'equiv-2ll [   #_"long" k1,    #_"long" k2] (= k1 k2))
-    (defn #_"boolean" Util'equiv-2ol [ #_"Object" k1,    #_"long" k2] (= k1 (cast Object k2)))
-    (defn #_"boolean" Util'equiv-2lo [   #_"long" k1,  #_"Object" k2] (= (cast Object k1) k2))
-    (defn #_"boolean" Util'equiv-2bb [#_"boolean" k1, #_"boolean" k2] (= k1 k2))
-    (defn #_"boolean" Util'equiv-2ob [ #_"Object" k1, #_"boolean" k2] (= k1 (cast Object k2)))
-    (defn #_"boolean" Util'equiv-2bo [#_"boolean" k1,  #_"Object" k2] (= (cast Object k1) k2))
-    (defn #_"boolean" Util'equiv-2cc [   #_"char" c1,    #_"char" c2] (= c1 c2))
 
     (declare Numbers'compare)
 
@@ -7946,13 +7966,6 @@
         )
     )
 
-    (defn #_"int" Util'hash [#_"Object" o]
-        (cond
-            (nil? o) 0
-            :else    (.hashCode o)
-        )
-    )
-
     (declare Numbers'hasheq)
 
     (defn #_"int" Util'hasheq [#_"Object" o]
@@ -7960,8 +7973,8 @@
             (nil? o)               0
             (satisfies? IHashEq o) (IHashEq'''hasheq o)
             (number? o)            (Numbers'hasheq o)
-            (string? o)            (Murmur3'hashInt (.hashCode o))
-            :else                  (.hashCode o)
+            (string? o)            (Murmur3'hashInt (IObject'''hashCode o))
+            :else                  (IObject'''hashCode o)
         )
     )
 
@@ -8029,19 +8042,18 @@
         )
     )
 
-    #_foreign
-    (defn #_"boolean" equals---Ratio [#_"Ratio" this, #_"Object" that]
-        (and (instance? Ratio that) (= (:n that) (:n this)) (= (:d that) (:d this)))
-    )
+    (extend-type Ratio IObject
+        (#_"boolean" IObject'''equals [#_"Ratio" this, #_"Object" that]
+            (and (instance? Ratio that) (= (:n that) (:n this)) (= (:d that) (:d this)))
+        )
 
-    #_foreign
-    (defn #_"int" hashCode---Ratio [#_"Ratio" this]
-        (bit-xor (.hashCode (:n this)) (.hashCode (:d this)))
-    )
+        (#_"int" IObject'''hashCode [#_"Ratio" this]
+            (bit-xor (IObject'''hashCode (:n this)) (IObject'''hashCode (:d this)))
+        )
 
-    #_foreign
-    (defn #_"String" toString---Ratio [#_"Ratio" this]
-        (str (:n this) "/" (:d this))
+        (#_"String" IObject'''toString [#_"Ratio" this]
+            (str (:n this) "/" (:d this))
+        )
     )
 
     #_method
@@ -8060,8 +8072,8 @@
     )
 
     #_foreign
-    (defn #_"int" compareTo---Ratio [#_"Ratio" this, #_"Object" o]
-        (Numbers'compare this, (cast Number o))
+    (defn #_"int" compareTo---Ratio [#_"Ratio" this, #_"Object" that]
+        (Numbers'compare this, (cast Number that))
     )
 )
 )
@@ -8431,7 +8443,7 @@
         (let [#_"Class" c (class x)]
             (if (or (any = c Long Integer Byte) (and (= c BigInteger) (§ interop #_"<=" Long/MIN_VALUE x Long/MAX_VALUE)))
                 (Murmur3'hashLong (.longValue x))
-                (.hashCode x)
+                (IObject'''hashCode x)
             )
         )
     )
@@ -8715,9 +8727,10 @@
         )
     )
 
-    #_foreign
-    (defn #_"String" toString---Symbol [#_"Symbol" this]
-        (if (some? (:ns this)) (str (:ns this) "/" (:name this)) (:name this))
+    (extend-type Symbol IObject
+        (#_"String" IObject'''toString [#_"Symbol" this]
+            (if (some? (:ns this)) (str (:ns this) "/" (:name this)) (:name this))
+        )
     )
 
     (extend-type Symbol INamed
@@ -8730,21 +8743,21 @@
         )
     )
 
-    #_foreign
-    (defn #_"boolean" equals---Symbol [#_"Symbol" this, #_"Object" that]
-        (or (identical? this that)
-            (and (symbol? that) (= (:ns this) (:ns that)) (= (:name this) (:name that)))
+    (extend-type Symbol IObject
+        (#_"boolean" IObject'''equals [#_"Symbol" this, #_"Object" that]
+            (or (identical? this that)
+                (and (symbol? that) (= (:ns this) (:ns that)) (= (:name this) (:name that)))
+            )
         )
-    )
 
-    #_foreign
-    (defn #_"int" hashCode---Symbol [#_"Symbol" this]
-        (Util'hashCombine (.hashCode (:name this)), (Util'hash (:ns this)))
+        (#_"int" IObject'''hashCode [#_"Symbol" this]
+            (Util'hashCombine (IObject'''hashCode (:name this)), (IObject'''hashCode (:ns this)))
+        )
     )
 
     (extend-type Symbol IHashEq
         (#_"int" IHashEq'''hasheq [#_"Symbol" this]
-            (Util'hashCombine (Murmur3'hashUnencodedChars (:name this)), (Util'hash (:ns this)))
+            (Util'hashCombine (Murmur3'hashUnencodedChars (:name this)), (IObject'''hashCode (:ns this)))
         )
     )
 
@@ -8818,33 +8831,20 @@
         )
     )
 
-    (defn #_"Keyword" Keyword'find-2 [#_"String" ns, #_"String" name]
-        (Keyword'find (Symbol'intern ns, name))
-    )
-
-    (defn #_"Keyword" Keyword'find-1 [#_"String" nsname]
-        (Keyword'find (Symbol'intern nsname))
-    )
-
-    #_foreign
-    (defn #_"int" hashCode---Keyword [#_"Keyword" this]
-        (+ (.hashCode (:sym this)) 0x9e3779b9)
-    )
-
     (extend-type Keyword IHashEq
         (#_"int" IHashEq'''hasheq [#_"Keyword" this]
             (:hasheq this)
         )
     )
 
-    #_foreign
-    (defn #_"String" toString---Keyword [#_"Keyword" this]
-        (str ":" (:sym this))
-    )
+    (extend-type Keyword IObject
+        (#_"int" IObject'''hashCode [#_"Keyword" this]
+            (+ (IObject'''hashCode (:sym this)) 0x9e3779b9)
+        )
 
-    #_method
-    (defn #_"Object" Keyword''throwArity [#_"Keyword" this]
-        (throw! (str "wrong number of args passed to keyword: " this))
+        (#_"String" IObject'''toString [#_"Keyword" this]
+            (str ":" (:sym this))
+        )
     )
 
     #_foreign
@@ -8860,6 +8860,11 @@
         (#_"String" INamed'''getName [#_"Keyword" this]
             (INamed'''getName (:sym this))
         )
+    )
+
+    #_method
+    (defn- #_"Object" Keyword''throwArity [#_"Keyword" this]
+        (throw! (str "wrong number of args passed to keyword: " this))
     )
 
     (extend-type Keyword IFn
@@ -9359,40 +9364,21 @@
         )
     )
 
-    (extend-type ASeq IMeta
-        (#_"IPersistentMap" IMeta'''meta [#_"ASeq" this]
-            (:_meta this)
-        )
-    )
-
-    (declare RT'printString)
-
-    #_foreign
-    (defn #_"String" toString---ASeq [#_"ASeq" this]
-        (RT'printString this)
-    )
-
     (extend-type ASeq IPersistentCollection
         (#_"IPersistentCollection" IPersistentCollection'''empty [#_"ASeq" this]
             ()
         )
     )
 
-    #_foreign
-    (defn #_"boolean" equals---ASeq [#_"ASeq" this, #_"Object" that]
-        (or (identical? this that)
-            (and (sequential? that)
-                (loop-when [#_"ISeq" s (seq this) #_"ISeq" z (seq that)] (some? s) => (nil? z)
-                    (and (some? z) (= (first s) (first z)) (recur (next s) (next z)))
-                )
-            )
+    (extend-type ASeq IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"ASeq" this]
+            (:_meta this)
         )
     )
 
-    #_foreign
-    (defn #_"int" hashCode---ASeq [#_"ASeq" this]
-        (loop-when [#_"int" hash 1 #_"ISeq" s (seq this)] (some? s) => hash
-            (recur (+ (* 31 hash) (if (some? (first s)) (.hashCode (first s)) 0)) (next s))
+    (extend-type ASeq Seqable
+        (#_"ISeq" Seqable'''seq [#_"ASeq" this]
+            this
         )
     )
 
@@ -9402,9 +9388,27 @@
         )
     )
 
-    (extend-type ASeq Seqable
-        (#_"ISeq" Seqable'''seq [#_"ASeq" this]
-            this
+    (declare RT'printString)
+
+    (extend-type ASeq IObject
+        (#_"boolean" IObject'''equals [#_"ASeq" this, #_"Object" that]
+            (or (identical? this that)
+                (and (sequential? that)
+                    (loop-when [#_"ISeq" s (seq this) #_"ISeq" z (seq that)] (some? s) => (nil? z)
+                        (and (some? z) (= (first s) (first z)) (recur (next s) (next z)))
+                    )
+                )
+            )
+        )
+
+        (#_"int" IObject'''hashCode [#_"ASeq" this]
+            (loop-when [#_"int" hash 1 #_"ISeq" s (seq this)] (some? s) => hash
+                (recur (+ (* 31 hash) (if (some? (first s)) (IObject'''hashCode (first s)) 0)) (next s))
+            )
+        )
+
+        (#_"String" IObject'''toString [#_"ASeq" this]
+            (RT'printString this)
         )
     )
 )
@@ -9428,6 +9432,12 @@
     (defn- #_"LazySeq" LazySeq'new
         ([#_"IFn" f]                           (LazySeq'init nil,  f,   nil))
         ([#_"IPersistentMap" meta, #_"ISeq" s] (LazySeq'init meta, nil, s  ))
+    )
+
+    (extend-type LazySeq IPersistentCollection
+        (#_"IPersistentCollection" IPersistentCollection'''empty [#_"LazySeq" this]
+            ()
+        )
     )
 
     (extend-type LazySeq IMeta
@@ -9480,25 +9490,19 @@
         )
     )
 
-    (extend-type LazySeq IPersistentCollection
-        (#_"IPersistentCollection" IPersistentCollection'''empty [#_"LazySeq" this]
-            ()
+    (extend-type LazySeq IObject
+        (#_"boolean" IObject'''equals [#_"LazySeq" this, #_"Object" that]
+            (if-let [#_"ISeq" s (seq this)]
+                (= s that)
+                (and (sequential? that) (nil? (seq that)))
+            )
         )
-    )
 
-    #_foreign
-    (defn #_"boolean" equals---LazySeq [#_"LazySeq" this, #_"Object" that]
-        (if-let [#_"ISeq" s (seq this)]
-            (= s that)
-            (and (sequential? that) (nil? (seq that)))
-        )
-    )
-
-    #_foreign
-    (defn #_"int" hashCode---LazySeq [#_"LazySeq" this]
-        (if-let [#_"ISeq" s (seq this)]
-            (Util'hash s)
-            1
+        (#_"int" IObject'''hashCode [#_"LazySeq" this]
+            (if-let [#_"ISeq" s (seq this)]
+                (IObject'''hashCode s)
+                1
+            )
         )
     )
 
@@ -9525,9 +9529,10 @@
         (merge (APersistentMap.) (AFn'new))
     )
 
-    #_foreign
-    (defn #_"String" toString---APersistentMap [#_"APersistentMap" this]
-        (RT'printString this)
+    (extend-type APersistentMap IObject
+        (#_"String" IObject'''toString [#_"APersistentMap" this]
+            (RT'printString this)
+        )
     )
 
     (extend-type APersistentMap IPersistentCollection
@@ -9549,26 +9554,26 @@
         )
     )
 
-    #_foreign
-    (defn #_"boolean" equals---APersistentMap [#_"APersistentMap" this, #_"Object" that]
-        (or (identical? this that)
-            (and (map? that) (= (count that) (count this))
-                (loop-when [#_"ISeq" s (seq this)] (some? s) => true
-                    (let [#_"IMapEntry" e (first s) #_"Object" k (key e)]
-                        (and (contains? that k) (= (val e) (get that k))
-                            (recur (next s))
+    (extend-type APersistentMap IObject
+        (#_"boolean" IObject'''equals [#_"APersistentMap" this, #_"Object" that]
+            (or (identical? this that)
+                (and (map? that) (= (count that) (count this))
+                    (loop-when [#_"ISeq" s (seq this)] (some? s) => true
+                        (let [#_"IMapEntry" e (first s) #_"Object" k (key e)]
+                            (and (contains? that k) (= (val e) (get that k))
+                                (recur (next s))
+                            )
                         )
                     )
                 )
             )
         )
-    )
 
-    #_foreign
-    (defn #_"int" hashCode---APersistentMap [#_"APersistentMap" this]
-        (loop-when [#_"int" hash 0 #_"ISeq" s (seq this)] (some? s) => hash
-            (let [#_"IMapEntry" e (first s) #_"Object" k (key e) #_"Object" v (val e)]
-                (recur (+ hash (bit-xor (if (some? k) (.hashCode k) 0) (if (some? v) (.hashCode v) 0))) (next s))
+        (#_"int" IObject'''hashCode [#_"APersistentMap" this]
+            (loop-when [#_"int" hash 0 #_"ISeq" s (seq this)] (some? s) => hash
+                (let [#_"IMapEntry" e (first s) #_"Object" k (key e) #_"Object" v (val e)]
+                    (recur (+ hash (bit-xor (if (some? k) (IObject'''hashCode k) 0) (if (some? v) (IObject'''hashCode v) 0))) (next s))
+                )
             )
         )
     )
@@ -9599,9 +9604,10 @@
         )
     )
 
-    #_foreign
-    (defn #_"String" toString---APersistentSet [#_"APersistentSet" this]
-        (RT'printString this)
+    (extend-type APersistentSet IObject
+        (#_"String" IObject'''toString [#_"APersistentSet" this]
+            (RT'printString this)
+        )
     )
 
     (extend-type APersistentSet IPersistentSet
@@ -9633,21 +9639,21 @@
         )
     )
 
-    #_foreign
-    (defn #_"boolean" equals---APersistentSet [#_"APersistentSet" this, #_"Object" that]
-        (or (identical? this that)
-            (and (set? that) (= (count this) (count that))
-                (loop-when [#_"ISeq" s (seq that)] (some? s) => true
-                    (and (contains? this (first s)) (recur (next s)))
+    (extend-type APersistentSet IObject
+        (#_"boolean" IObject'''equals [#_"APersistentSet" this, #_"Object" that]
+            (or (identical? this that)
+                (and (set? that) (= (count this) (count that))
+                    (loop-when [#_"ISeq" s (seq that)] (some? s) => true
+                        (and (contains? this (first s)) (recur (next s)))
+                    )
                 )
             )
         )
-    )
 
-    #_foreign
-    (defn #_"int" hashCode---APersistentSet [#_"APersistentSet" this]
-        (loop-when [#_"int" hash 0 #_"ISeq" s (seq this)] (some? s) => hash
-            (recur (+ hash (Util'hash (first s))) (next s))
+        (#_"int" IObject'''hashCode [#_"APersistentSet" this]
+            (loop-when [#_"int" hash 0 #_"ISeq" s (seq this)] (some? s) => hash
+                (recur (+ hash (IObject'''hashCode (first s))) (next s))
+            )
         )
     )
 
@@ -9765,9 +9771,10 @@
         (merge (APersistentVector.) (AFn'new))
     )
 
-    #_foreign
-    (defn #_"String" toString---APersistentVector [#_"APersistentVector" this]
-        (RT'printString this)
+    (extend-type APersistentVector IObject
+        (#_"String" IObject'''toString [#_"APersistentVector" this]
+            (RT'printString this)
+        )
     )
 
     (extend-type APersistentVector Seqable
@@ -9786,31 +9793,31 @@
         )
     )
 
-    #_foreign
-    (defn #_"boolean" equals---APersistentVector [#_"APersistentVector" this, #_"Object" that]
-        (or (identical? this that)
-            (cond
-                (vector? that)
-                    (when (= (count this) (count that)) => false
-                        (loop-when [#_"int" i 0] (< i (count this)) => true
-                            (recur-if (= (nth this i) (nth that i)) [(inc i)] => false)
+    (extend-type APersistentVector IObject
+        (#_"boolean" IObject'''equals [#_"APersistentVector" this, #_"Object" that]
+            (or (identical? this that)
+                (cond
+                    (vector? that)
+                        (when (= (count this) (count that)) => false
+                            (loop-when [#_"int" i 0] (< i (count this)) => true
+                                (recur-if (= (nth this i) (nth that i)) [(inc i)] => false)
+                            )
                         )
-                    )
-                (sequential? that)
-                    (loop-when [#_"int" i 0 #_"ISeq" s (seq that)] (< i (count this)) => (nil? s)
-                        (recur-if (and (some? s) (= (nth this i) (first s))) [(inc i) (next s)] => false)
-                    )
-                :else
-                    false
+                    (sequential? that)
+                        (loop-when [#_"int" i 0 #_"ISeq" s (seq that)] (< i (count this)) => (nil? s)
+                            (recur-if (and (some? s) (= (nth this i) (first s))) [(inc i) (next s)] => false)
+                        )
+                    :else
+                        false
+                )
             )
         )
-    )
 
-    #_foreign
-    (defn #_"int" hashCode---APersistentVector [#_"APersistentVector" this]
-        (loop-when [#_"int" hash 1 #_"int" i 0] (< i (count this)) => hash
-            (let [#_"Object" o (nth this i)]
-                (recur (+ (* 31 hash) (if (some? o) (.hashCode o) 0)) (inc i))
+        (#_"int" IObject'''hashCode [#_"APersistentVector" this]
+            (loop-when [#_"int" hash 1 #_"int" i 0] (< i (count this)) => hash
+                (let [#_"Object" o (nth this i)]
+                    (recur (+ (* 31 hash) (if (some? o) (IObject'''hashCode o) 0)) (inc i))
+                )
             )
         )
     )
@@ -10615,7 +10622,7 @@
             (when-let [#_"Entry" e (get (:map this) c)]
                 (:fn e)
             )
-            (let [#_"int" i (bit-shift-left (bit-and (bit-shift-right (Util'hash c) (:shift this)) (:mask this)) 1)]
+            (let [#_"int" i (bit-shift-left (bit-and (bit-shift-right (IObject'''hashCode c) (:shift this)) (:mask this)) 1)]
                 (let-when [#_"Object[]" t (:table this)] (and (< i (alength t)) (= (aget t i) c))
                     (when-let [#_"Entry" e (aget t (inc i))]
                         (:fn e)
@@ -10643,9 +10650,10 @@
         )
     )
 
-    #_foreign
-    (defn #_"String" toString---Namespace [#_"Namespace" this]
-        (:name (:name this))
+    (extend-type Namespace IObject
+        (#_"String" IObject'''toString [#_"Namespace" this]
+            (:name (:name this))
+        )
     )
 
     (defn #_"ISeq" Namespace'all []
@@ -12441,24 +12449,24 @@
         )
     )
 
-    #_foreign
-    (defn #_"int" hashCode---EmptyList [#_"EmptyList" this]
-        1
+    (extend-type EmptyList IHashEq
+        (#_"int" IHashEq'''hasheq [#_"EmptyList" this]
+            EmptyList'HASHEQ
+        )
     )
 
-    #_method
-    (defn #_"int" EmptyList'hasheq [#_"EmptyList" this]
-        EmptyList'HASHEQ
-    )
+    (extend-type EmptyList IObject
+        (#_"boolean" IObject'''equals [#_"EmptyList" this, #_"Object" that]
+            (and (sequential? that) (nil? (seq that)))
+        )
 
-    #_foreign
-    (defn #_"String" toString---EmptyList [#_"EmptyList" this]
-        "()"
-    )
+        (#_"int" IObject'''hashCode [#_"EmptyList" this]
+            1
+        )
 
-    #_foreign
-    (defn #_"boolean" equals---EmptyList [#_"EmptyList" this, #_"Object" that]
-        (and (sequential? that) (nil? (seq that)))
+        (#_"String" IObject'''toString [#_"EmptyList" this]
+            "()"
+        )
     )
 
     (extend-type EmptyList ISeq
@@ -12673,23 +12681,23 @@
 
     (def #_"PersistentQueue" PersistentQueue'EMPTY (PersistentQueue'new nil, 0, nil, nil))
 
-    #_foreign
-    (defn #_"boolean" equals---PersistentQueue [#_"PersistentQueue" this, #_"Object" that]
-        (or (identical? this that)
-            (and (sequential? that)
-                (loop-when [#_"ISeq" s (seq this) #_"ISeq" z (seq that)] (some? s) => (nil? z)
-                    (and (some? z) (= (first s) (first z))
-                        (recur (next s) (next z))
+    (extend-type PersistentQueue IObject
+        (#_"boolean" IObject'''equals [#_"PersistentQueue" this, #_"Object" that]
+            (or (identical? this that)
+                (and (sequential? that)
+                    (loop-when [#_"ISeq" s (seq this) #_"ISeq" z (seq that)] (some? s) => (nil? z)
+                        (and (some? z) (= (first s) (first z))
+                            (recur (next s) (next z))
+                        )
                     )
                 )
             )
         )
-    )
 
-    #_foreign
-    (defn #_"int" hashCode---PersistentQueue [#_"PersistentQueue" this]
-        (loop-when [#_"int" hash 1 #_"ISeq" s (seq this)] (some? s) => hash
-            (recur (+ (* 31 hash) (if (some? (first s)) (.hashCode (first s)) 0)) (next s))
+        (#_"int" IObject'''hashCode [#_"PersistentQueue" this]
+            (loop-when [#_"int" hash 1 #_"ISeq" s (seq this)] (some? s) => hash
+                (recur (+ (* 31 hash) (if (some? (first s)) (IObject'''hashCode (first s)) 0)) (next s))
+            )
         )
     )
 
@@ -14537,9 +14545,10 @@
 
     (declare Var'toString)
 
-    #_foreign
-    (defn #_"String" toString---Unbound [#_"Unbound" this]
-        (str "Unbound: " (Var'toString (:ns this), (:sym this)))
+    (extend-type Unbound IObject
+        (#_"String" IObject'''toString [#_"Unbound" this]
+            (str "Unbound: " (Var'toString (:ns this), (:sym this)))
+        )
     )
 
     #_override
@@ -14597,9 +14606,10 @@
         )
     )
 
-    #_foreign
-    (defn #_"String" toString---Var [#_"Var" this]
-        (Var'toString (:ns this), (:sym this))
+    (extend-type Var IObject
+        (#_"String" IObject'''toString [#_"Var" this]
+            (Var'toString (:ns this), (:sym this))
+        )
     )
 
     #_method
@@ -15540,7 +15550,7 @@
             (string? name) (Keyword'intern (symbol ^String name))
         )
     )
-    ([ns name] (keyword (symbol ns name)))
+    ([ns name] (Keyword'intern (symbol ns name)))
 )
 
 ;;;
@@ -15554,10 +15564,10 @@
         (cond
             (keyword? name) name
             (symbol? name) (Keyword'find ^Symbol name)
-            (string? name) (Keyword'find ^String name)
+            (string? name) (Keyword'find (symbol ^String name))
         )
     )
-    ([ns name] (Keyword'find ns name))
+    ([ns name] (Keyword'find (symbol ns name)))
 )
 
 (defn- spread [s]
@@ -19126,7 +19136,7 @@
     (let [buckets
             (loop [m {} ks tests vs thens]
                 (if (and ks vs)
-                    (recur (update m (Util'hash (first ks)) (fnil conj []) [(first ks) (first vs)]) (next ks) (next vs))
+                    (recur (update m (IObject'''hashCode (first ks)) (fnil conj []) [(first ks) (first vs)]) (next ks) (next vs))
                     m
                 )
             )
@@ -19164,7 +19174,7 @@
  ; post-switch equivalence checking must not be done (occurs with hash collisions).
  ;;
 (§ defn- prep-hashes [expr-sym default tests thens]
-    (let [hashcode #(Util'hash %) hashes (into #{} (map hashcode tests))]
+    (let [hashcode #(IObject'''hashCode %) hashes (into #{} (map hashcode tests))]
         (if (= (count tests) (count hashes))
             (if (fits-table? hashes)
                 ;; compact case ints, no shift-mask
@@ -19780,7 +19790,7 @@
 )
 
 (§ defn hash-combine [x y]
-    (Util'hashCombine x (Util'hash y))
+    (Util'hashCombine x (IObject'''hashCode y))
 )
 
 (§ defn munge [s]
@@ -19791,7 +19801,7 @@
     (when-not (vector? fields)
         (throw! "No fields vector given.")
     )
-    (let-when [specials '#{__meta __hash __hasheq __extmap}] (some specials fields)
+    (let-when [specials '#{__meta __extmap __hash __hasheq}] (some specials fields)
         (throw! (str "The names in " specials " cannot be used as field names for types."))
     )
     (let-when [non-syms (remove symbol? fields)] (seq non-syms)
