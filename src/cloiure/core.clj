@@ -1,5 +1,5 @@
 (ns cloiure.core
-    (:refer-clojure :only [* *ns* *print-length* + +' - -> .. / < <= = > >= aget alength alter-meta! apply as-> aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defprotocol defrecord deref dissoc doseq dotimes empty even? extend-type find find-ns first fn get hash-map hash-set identical? if-let import inc indexed? int int-array intern interpose into-array key keys keyword let letfn list list* locking long loop make-array map map-entry? mapv max merge meta min name namespace neg? next not= ns-unmap nth object-array odd? peek persistent! pop pop-thread-bindings pos? push-thread-bindings quot realized? reduced? reify repeat reset! reset-meta! resolve rest rseq satisfies? seq sequential? some sorted-map subvec swap! swap-vals! symbol to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector volatile! vreset! vswap! when-let while with-meta zero?])
+    (:refer-clojure :only [* *ns* *print-length* + - -> .. / < <= = > >= aget alength alter-meta! apply as-> aset assoc assoc! associative? atom binding bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean bound? byte case char compare compare-and-set! concat condp conj conj! cons contains? count counted? dec declare definterface defmacro defn defprotocol defrecord deref dissoc doseq dotimes empty even? extend-type find find-ns first fn get hash-map hash-set identical? if-let import inc indexed? int int-array intern interpose into-array key keys keyword let letfn list list* locking long loop make-array map map-entry? mapv max merge meta min name namespace neg? next not= ns-unmap nth object-array odd? peek persistent! pop pop-thread-bindings pos? push-thread-bindings quot realized? reduced? reify repeat reset! reset-meta! resolve rest rseq satisfies? seq sequential? some sorted-map subvec swap! swap-vals! symbol to-array transient unsigned-bit-shift-right update val vals var-get var-set var? vary-meta vec vector volatile! vreset! vswap! when-let while with-meta zero?])
 )
 
 (defmacro § [& _])
@@ -479,9 +479,7 @@
         (#_"boolean" Ops'''isPos [#_"Ops" this, #_"Number" x])
         (#_"boolean" Ops'''isNeg [#_"Ops" this, #_"Number" x])
         (#_"Number" Ops'''add [#_"Ops" this, #_"Number" x, #_"Number" y])
-        (#_"Number" Ops'''addP [#_"Ops" this, #_"Number" x, #_"Number" y])
         (#_"Number" Ops'''multiply [#_"Ops" this, #_"Number" x, #_"Number" y])
-        (#_"Number" Ops'''multiplyP [#_"Ops" this, #_"Number" x, #_"Number" y])
         (#_"Number" Ops'''divide [#_"Ops" this, #_"Number" x, #_"Number" y])
         (#_"Number" Ops'''quotient [#_"Ops" this, #_"Number" x, #_"Number" y])
         (#_"Number" Ops'''remainder [#_"Ops" this, #_"Number" x, #_"Number" y])
@@ -489,11 +487,8 @@
         (#_"boolean" Ops'''lt [#_"Ops" this, #_"Number" x, #_"Number" y])
         (#_"boolean" Ops'''lte [#_"Ops" this, #_"Number" x, #_"Number" y])
         (#_"Number" Ops'''negate [#_"Ops" this, #_"Number" x])
-        (#_"Number" Ops'''negateP [#_"Ops" this, #_"Number" x])
         (#_"Number" Ops'''inc [#_"Ops" this, #_"Number" x])
-        (#_"Number" Ops'''incP [#_"Ops" this, #_"Number" x])
         (#_"Number" Ops'''dec [#_"Ops" this, #_"Number" x])
-        (#_"Number" Ops'''decP [#_"Ops" this, #_"Number" x])
     )
 
     (defrecord LongOps [] #_"Ops")
@@ -8078,15 +8073,10 @@
         (LongOps.)
     )
 
-    (defn #_"long" LongOps'gcd [#_"long" u, #_"long" v] (if (zero? v) u (recur v (§ interop % u v))))
+    (defn #_"long" LongOps'gcd [#_"long" u, #_"long" v] (if (§ interop #_"==" v 0) u (recur v (§ interop #_"%" u v))))
 
     (declare Numbers'RATIO_OPS)
     (declare Numbers'BIGINT_OPS)
-    (declare Numbers'add-2ll)
-    (declare Numbers'multiply-2ll)
-    (declare Numbers'minus-1l)
-    (declare Numbers'inc-1l)
-    (declare Numbers'dec-1l)
 
     (extend-type LongOps Ops
         (#_"Ops" Ops'''combine [#_"LongOps" this, #_"Ops" y] (Ops'''opsWithLong y, this))
@@ -8099,8 +8089,7 @@
         (#_"boolean" Ops'''isPos [#_"LongOps" this, #_"Number" x] (§ interop #_">" (.longValue x) 0))
         (#_"boolean" Ops'''isNeg [#_"LongOps" this, #_"Number" x] (§ interop #_"<" (.longValue x) 0))
 
-        (#_"Number" Ops'''add [#_"LongOps" this, #_"Number" x, #_"Number" y] (Long/valueOf (Numbers'add-2ll (.longValue x), (.longValue y))))
-        (#_"Number" Ops'''addP [#_"LongOps" this, #_"Number" x, #_"Number" y]
+        (#_"Number" Ops'''add [#_"LongOps" this, #_"Number" x, #_"Number" y]
             (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y) #_"long" lz (§ interop #_"+" lx ly)]
                 (when (and (neg? (bit-xor lz lx)) (neg? (bit-xor lz ly))) => (Long/valueOf lz)
                     (Ops'''add Numbers'BIGINT_OPS, x, y)
@@ -8108,14 +8097,12 @@
             )
         )
 
-        (#_"Number" Ops'''multiply [#_"LongOps" this, #_"Number" x, #_"Number" y] (Long/valueOf (Numbers'multiply-2ll (.longValue x), (.longValue y))))
-        (#_"Number" Ops'''multiplyP [#_"LongOps" this, #_"Number" x, #_"Number" y]
+        (#_"Number" Ops'''multiply [#_"LongOps" this, #_"Number" x, #_"Number" y]
             (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y)]
-                (if (and (= lx Long/MIN_VALUE) (neg? ly))
-                    (Ops'''multiply Numbers'BIGINT_OPS, x, y)
+                (when-not (and (§ interop #_"==" lx Long/MIN_VALUE) (neg? ly)) => (Ops'''multiply Numbers'BIGINT_OPS, x, y)
                     (let [#_"long" lz (§ interop #_"*" lx ly)]
-                        (when (and (not= ly 0) (not= (§ interop #_"/" lz ly) lx)) => (Long/valueOf lz)
-                            (Ops'''multiply Numbers'BIGINT_OPS, x, y)
+                        (when (or (§ interop #_"==" ly 0) (§ interop #_"==" (§ interop #_"/" lz ly) lx)) => (Ops'''multiply Numbers'BIGINT_OPS, x, y)
+                            (Long/valueOf lz)
                         )
                     )
                 )
@@ -8124,8 +8111,8 @@
 
         (#_"Number" Ops'''divide [#_"LongOps" this, #_"Number" x, #_"Number" y]
             (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y)]
-                (let-when-not [#_"long" gcd (LongOps'gcd lx, ly)] (zero? gcd) => (Long/valueOf 0)
-                    (let-when-not [lx (§ interop #_"/" lx gcd) ly (§ interop #_"/" ly gcd)] (= ly 1) => (Long/valueOf lx)
+                (let-when-not [#_"long" gcd (LongOps'gcd lx, ly)] (§ interop #_"==" gcd 0) => (Long/valueOf 0)
+                    (let-when-not [lx (§ interop #_"/" lx gcd) ly (§ interop #_"/" ly gcd)] (§ interop #_"==" ly 1) => (Long/valueOf lx)
                         (let [[lx ly]
                                 (when (neg? ly) => [lx ly]
                                     [(- lx) (- ly)]
@@ -8144,31 +8131,25 @@
         (#_"boolean" Ops'''lt [#_"LongOps" this, #_"Number" x, #_"Number" y] (§ interop #_"<" (.longValue x) (.longValue y)))
         (#_"boolean" Ops'''lte [#_"LongOps" this, #_"Number" x, #_"Number" y] (§ interop #_"<=" (.longValue x) (.longValue y)))
 
-        (#_"Number" Ops'''negate [#_"LongOps" this, #_"Number" x] (Long/valueOf (Numbers'minus-1l (.longValue x))))
-        (#_"Number" Ops'''negateP [#_"LongOps" this, #_"Number" x]
+        (#_"Number" Ops'''negate [#_"LongOps" this, #_"Number" x]
             (let [#_"long" lx (.longValue x)]
-                (if (< Long/MIN_VALUE lx)
-                    (Long/valueOf (- lx))
+                (when (§ interop #_"==" lx Long/MIN_VALUE) => (Long/valueOf (§ interop #_"-" lx))
                     (.negate (BigInteger/valueOf lx))
                 )
             )
         )
 
-        (#_"Number" Ops'''inc [#_"LongOps" this, #_"Number" x] (Long/valueOf (Numbers'inc-1l (.longValue x))))
-        (#_"Number" Ops'''incP [#_"LongOps" this, #_"Number" x]
+        (#_"Number" Ops'''inc [#_"LongOps" this, #_"Number" x]
             (let [#_"long" lx (.longValue x)]
-                (if (< lx Long/MAX_VALUE)
-                    (Long/valueOf (inc lx))
+                (when (§ interop #_"==" lx Long/MAX_VALUE) => (Long/valueOf (§ interop #_"+" lx 1))
                     (Ops'''inc Numbers'BIGINT_OPS, x)
                 )
             )
         )
 
-        (#_"Number" Ops'''dec [#_"LongOps" this, #_"Number" x] (Long/valueOf (Numbers'dec-1l (.longValue x))))
-        (#_"Number" Ops'''decP [#_"LongOps" this, #_"Number" x]
+        (#_"Number" Ops'''dec [#_"LongOps" this, #_"Number" x]
             (let [#_"long" lx (.longValue x)]
-                (if (< Long/MIN_VALUE lx)
-                    (Long/valueOf (dec lx))
+                (when (§ interop #_"==" lx Long/MIN_VALUE) => (Long/valueOf (§ interop #_"-" lx 1))
                     (Ops'''dec Numbers'BIGINT_OPS, x)
                 )
             )
@@ -8182,7 +8163,7 @@
     )
 
     (declare Numbers'toRatio)
-    (declare Numbers'minus)
+    (declare Numbers'subtract)
     (declare Numbers'multiply)
     (declare Numbers'lt)
     (declare Numbers'lte)
@@ -8204,18 +8185,16 @@
                 (Ops'''divide this, (.add (.multiply (:n ry), (:d rx)), (.multiply (:n rx), (:d ry))), (.multiply (:d ry), (:d rx)))
             )
         )
-        (#_"Number" Ops'''addP [#_"RatioOps" this, #_"Number" x, #_"Number" y] (Ops'''add this, x, y))
 
         (#_"Number" Ops'''multiply [#_"RatioOps" this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
                 (Ops'''divide this, (.multiply (:n ry), (:n rx)), (.multiply (:d ry), (:d rx)))
             )
         )
-        (#_"Number" Ops'''multiplyP [#_"RatioOps" this, #_"Number" x, #_"Number" y] (Ops'''multiply this, x, y))
 
         (#_"Number" Ops'''divide [#_"RatioOps" this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
-                (Ops'''divide this, (.multiply (:d ry), (:n rx)), (.multiply (:n ry), (:d rx)))
+                (Ops'''divide this, (.multiply (:d ry), (:n rx)), (.multiply (:n ry), (:d rx)))
             )
         )
 
@@ -8226,7 +8205,7 @@
         )
 
         (#_"Number" Ops'''remainder [#_"RatioOps" this, #_"Number" x, #_"Number" y]
-            (Numbers'minus x, (Numbers'multiply (Ops'''quotient this, x, y), y))
+            (Numbers'subtract x, (Numbers'multiply (Ops'''quotient this, x, y), y))
         )
 
         (#_"boolean" Ops'''equiv [#_"RatioOps" this, #_"Number" x, #_"Number" y]
@@ -8248,17 +8227,13 @@
         )
 
         (#_"Number" Ops'''negate [#_"RatioOps" this, #_"Number" x]
-            (let [#_"Ratio" r (cast Ratio x)]
+            (let [#_"Ratio" r (Numbers'toRatio x)]
                 (Ratio'new (.negate (:n r)), (:d r))
             )
         )
-        (#_"Number" Ops'''negateP [#_"RatioOps" this, #_"Number" x] (Ops'''negate this, x))
 
-        (#_"Number" Ops'''inc [#_"RatioOps" this, #_"Number" x] (§ soon Numbers'add-2ol x, 1))
-        (#_"Number" Ops'''incP [#_"RatioOps" this, #_"Number" x] (Ops'''inc this, x))
-
-        (#_"Number" Ops'''dec [#_"RatioOps" this, #_"Number" x] (§ soon Numbers'add-2ol x, -1))
-        (#_"Number" Ops'''decP [#_"RatioOps" this, #_"Number" x] (Ops'''dec this, x))
+        (#_"Number" Ops'''inc [#_"RatioOps" this, #_"Number" x] (Ops'''add this, x, 1))
+        (#_"Number" Ops'''dec [#_"RatioOps" this, #_"Number" x] (Ops'''add this, x, -1))
     )
 )
 
@@ -8283,20 +8258,18 @@
         (#_"Number" Ops'''add [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
             (.add (Numbers'toBigInteger x), (Numbers'toBigInteger y))
         )
-        (#_"Number" Ops'''addP [#_"BigIntOps" this, #_"Number" x, #_"Number" y] (Ops'''add this, x, y))
 
         (#_"Number" Ops'''multiply [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
             (.multiply (Numbers'toBigInteger x), (Numbers'toBigInteger y))
         )
-        (#_"Number" Ops'''multiplyP [#_"BigIntOps" this, #_"Number" x, #_"Number" y] (Ops'''multiply this, x, y))
 
         (#_"Number" Ops'''divide [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
             (let [#_"BigInteger" n (Numbers'toBigInteger x) #_"BigInteger" d (Numbers'toBigInteger y)]
-                (when-not (= d BigInteger/ZERO) => (throw (ArithmeticException. "Divide by zero"))
+                (when-not (§ interop #_"equals" d BigInteger/ZERO) => (throw (ArithmeticException. "Divide by zero"))
                     (let [#_"BigInteger" gcd (.gcd n, d)]
-                        (when-not (= gcd BigInteger/ZERO) => BigInteger/ZERO
+                        (when-not (§ interop #_"equals" gcd BigInteger/ZERO) => BigInteger/ZERO
                             (let [n (.divide n, gcd) d (.divide d, gcd)]
-                                (condp = d
+                                (§ interop condp #_"equals" d
                                     BigInteger/ONE           n
                                     (.negate BigInteger/ONE) (.negate n)
                                                              (Ratio'new (if (neg? (.signum d)) (.negate n) n), (if (neg? (.signum d)) (.negate d) d))
@@ -8329,13 +8302,9 @@
         )
 
         (#_"Number" Ops'''negate [#_"BigIntOps" this, #_"Number" x] (.negate (Numbers'toBigInteger x)))
-        (#_"Number" Ops'''negateP [#_"BigIntOps" this, #_"Number" x] (Ops'''negate this, x))
 
         (#_"Number" Ops'''inc [#_"BigIntOps" this, #_"Number" x] (.add (Numbers'toBigInteger x), BigInteger/ONE))
-        (#_"Number" Ops'''incP [#_"BigIntOps" this, #_"Number" x] (Ops'''inc this, x))
-
         (#_"Number" Ops'''dec [#_"BigIntOps" this, #_"Number" x] (.subtract (Numbers'toBigInteger x), BigInteger/ONE))
-        (#_"Number" Ops'''decP [#_"BigIntOps" this, #_"Number" x] (Ops'''dec this, x))
     )
 )
 
@@ -8356,32 +8325,17 @@
     (defn #_"boolean" Numbers'isPos  [#_"Object" x] (Ops'''isPos  (Numbers'ops x), (cast Number x)))
     (defn #_"boolean" Numbers'isNeg  [#_"Object" x] (Ops'''isNeg  (Numbers'ops x), (cast Number x)))
 
-    (defn #_"Number" Numbers'minus  [#_"Object" x] (Ops'''negate  (Numbers'ops x), (cast Number x)))
-    (defn #_"Number" Numbers'minusP [#_"Object" x] (Ops'''negateP (Numbers'ops x), (cast Number x)))
-    (defn #_"Number" Numbers'inc    [#_"Object" x] (Ops'''inc     (Numbers'ops x), (cast Number x)))
-    (defn #_"Number" Numbers'incP   [#_"Object" x] (Ops'''incP    (Numbers'ops x), (cast Number x)))
-    (defn #_"Number" Numbers'dec    [#_"Object" x] (Ops'''dec     (Numbers'ops x), (cast Number x)))
-    (defn #_"Number" Numbers'decP   [#_"Object" x] (Ops'''decP    (Numbers'ops x), (cast Number x)))
+    (defn #_"Number" Numbers'negate [#_"Object" x] (Ops'''negate (Numbers'ops x), (cast Number x)))
+    (defn #_"Number" Numbers'inc    [#_"Object" x] (Ops'''inc    (Numbers'ops x), (cast Number x)))
+    (defn #_"Number" Numbers'dec    [#_"Object" x] (Ops'''dec    (Numbers'ops x), (cast Number x)))
 
     (defn #_"Number" Numbers'add [#_"Object" x, #_"Object" y]
         (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''add (cast Number x), (cast Number y)))
     )
 
-    (defn #_"Number" Numbers'addP [#_"Object" x, #_"Object" y]
-        (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''addP (cast Number x), (cast Number y)))
-    )
-
-    (defn #_"Number" Numbers'minus [#_"Object" x, #_"Object" y]
-        (let [#_"Ops" yops (Numbers'ops y)]
-            (-> (Ops'''combine (Numbers'ops x), yops) (Ops'''add (cast Number x), (Ops'''negate yops, (cast Number y))))
-        )
-    )
-
-    (defn #_"Number" Numbers'minusP [#_"Object" x, #_"Object" y]
-        (let [#_"Ops" yops (Numbers'ops y)
-              #_"Number" negativeY (Ops'''negateP yops, (cast Number y))
-              #_"Ops" negativeYOps (Numbers'ops negativeY)]
-            (-> (Ops'''combine (Numbers'ops x), negativeYOps) (Ops'''addP (cast Number x), negativeY))
+    (defn #_"Number" Numbers'subtract [#_"Object" x, #_"Object" y]
+        (let [#_"Number" negativeY (Ops'''negate (Numbers'ops y), (cast Number y))]
+            (-> (Ops'''combine (Numbers'ops x), (Numbers'ops negativeY)) (Ops'''add (cast Number x), negativeY))
         )
     )
 
@@ -8389,33 +8343,20 @@
         (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''multiply (cast Number x), (cast Number y)))
     )
 
-    (defn #_"Number" Numbers'multiplyP [#_"Object" x, #_"Object" y]
-        (-> (Ops'''combine (Numbers'ops x), (Numbers'ops y)) (Ops'''multiplyP (cast Number x), (cast Number y)))
-    )
-
     (defn #_"Number" Numbers'divide [#_"Object" x, #_"Object" y]
-        (let [#_"Ops" yops (Numbers'ops y)]
-            (when (Ops'''isZero yops, (cast Number y))
-                (throw (ArithmeticException. "Divide by zero"))
-            )
+        (let-when-not [#_"Ops" yops (Numbers'ops y)] (Ops'''isZero yops, (cast Number y)) => (throw (ArithmeticException. "Divide by zero"))
             (-> (Ops'''combine (Numbers'ops x), yops) (Ops'''divide (cast Number x), (cast Number y)))
         )
     )
 
     (defn #_"Number" Numbers'quotient [#_"Object" x, #_"Object" y]
-        (let [#_"Ops" yops (Numbers'ops y)]
-            (when (Ops'''isZero yops, (cast Number y))
-                (throw (ArithmeticException. "Divide by zero"))
-            )
+        (let-when-not [#_"Ops" yops (Numbers'ops y)] (Ops'''isZero yops, (cast Number y)) => (throw (ArithmeticException. "Divide by zero"))
             (-> (Ops'''combine (Numbers'ops x), yops) (Ops'''quotient (cast Number x), (cast Number y)))
         )
     )
 
     (defn #_"Number" Numbers'remainder [#_"Object" x, #_"Object" y]
-        (let [#_"Ops" yops (Numbers'ops y)]
-            (when (Ops'''isZero yops, (cast Number y))
-                (throw (ArithmeticException. "Divide by zero"))
-            )
+        (let-when-not [#_"Ops" yops (Numbers'ops y)] (Ops'''isZero yops, (cast Number y)) => (throw (ArithmeticException. "Divide by zero"))
             (-> (Ops'''combine (Numbers'ops x), yops) (Ops'''remainder (cast Number x), (cast Number y)))
         )
     )
@@ -8484,89 +8425,7 @@
     (defn #_"long" Numbers'setBit   [#_"Object" x, #_"Object" n] (§ interop #_"|" (Numbers'bitOpsCast x)                  (§ interop #_"<<" 1 (Numbers'bitOpsCast n))))
     (defn #_"long" Numbers'flipBit  [#_"Object" x, #_"Object" n] (§ interop #_"^" (Numbers'bitOpsCast x)                  (§ interop #_"<<" 1 (Numbers'bitOpsCast n))))
 
-    (defn #_"boolean" Numbers'testBit [#_"Object" x, #_"Object" n] (not= (§ interop #_"&" (Numbers'bitOpsCast x) (§ interop #_"<<" 1 (Numbers'bitOpsCast n))) 0))
-
-    (defn- #_"int" Numbers'throwIntOverflow []
-        (throw (ArithmeticException. "integer overflow"))
-    )
-
-    (defn #_"long" Numbers'add-2ll [#_"long" x, #_"long" y]
-        (let-when [#_"long" n (§ interop #_"+" x y)] (and (neg? (bit-xor n x)) (neg? (bit-xor n y))) => n
-            (Numbers'throwIntOverflow)
-        )
-    )
-
-    (defn #_"Number" Numbers'addP-2ll [#_"long" x, #_"long" y]
-        (let-when [#_"long" n (§ interop #_"+" x y)] (and (neg? (bit-xor n x)) (neg? (bit-xor n y))) => (Long/valueOf n)
-            (Numbers'addP (cast Number x), (cast Number y))
-        )
-    )
-
-    (defn #_"long" Numbers'minus-2ll [#_"long" x, #_"long" y]
-        (let-when [#_"long" n (§ interop #_"-" x y)] (and (neg? (bit-xor n x)) (neg? (bit-xor n (bit-not y)))) => n
-            (Numbers'throwIntOverflow)
-        )
-    )
-
-    (defn #_"Number" Numbers'minusP-2ll [#_"long" x, #_"long" y]
-        (let-when [#_"long" n (§ interop #_"-" x y)] (and (neg? (bit-xor n x)) (neg? (bit-xor n (bit-not y)))) => (Long/valueOf n)
-            (Numbers'minusP (cast Number x), (cast Number y))
-        )
-    )
-
-    (defn #_"long" Numbers'minus-1l [#_"long" x]
-        (when (= x Long/MIN_VALUE) => (§ interop #_"-" x)
-            (Numbers'throwIntOverflow)
-        )
-    )
-
-    (defn #_"Number" Numbers'minusP-1l [#_"long" x]
-        (when (= x Long/MIN_VALUE) => (Long/valueOf (§ interop #_"-" x))
-            (.negate (BigInteger/valueOf x))
-        )
-    )
-
-    (defn #_"long" Numbers'inc-1l [#_"long" x] (if (= x Long/MAX_VALUE) (Numbers'throwIntOverflow) (§ interop #_"++" x)))
-    (defn #_"long" Numbers'dec-1l [#_"long" x] (if (= x Long/MIN_VALUE) (Numbers'throwIntOverflow) (§ interop #_"--" x)))
-
-    (defn #_"Number" Numbers'incP-1l [#_"long" x] (if (= x Long/MAX_VALUE) (Ops'''inc Numbers'BIGINT_OPS, x) (Long/valueOf (§ interop #_"++" x))))
-    (defn #_"Number" Numbers'decP-1l [#_"long" x] (if (= x Long/MIN_VALUE) (Ops'''dec Numbers'BIGINT_OPS, x) (Long/valueOf (§ interop #_"--" x))))
-
-    (defn #_"long" Numbers'multiply-2ll [#_"long" x, #_"long" y]
-        (when-not (and (= x Long/MIN_VALUE) (neg? y)) => (Numbers'throwIntOverflow)
-            (let [#_"long" n (§ interop #_"*" x y)]
-                (when (or (zero? y) (= (§ interop #_"/" n y) x)) => (Numbers'throwIntOverflow)
-                    n
-                )
-            )
-        )
-    )
-
-    (defn #_"Number" Numbers'multiplyP-2ll [#_"long" x, #_"long" y]
-        (when-not (and (= x Long/MIN_VALUE) (neg? y)) => (Numbers'multiplyP (cast Number x), (cast Number y))
-            (let [#_"long" n (§ interop #_"*" x y)]
-                (when (or (zero? y) (= (§ interop #_"/" n y) x)) => (Numbers'multiplyP (cast Number x), (cast Number y))
-                    (Long/valueOf n)
-                )
-            )
-        )
-    )
-
-    (defn #_"long" Numbers'quotient-2ll  [#_"long" x, #_"long" y] (§ interop #_"/" x y))
-    (defn #_"long" Numbers'remainder-2ll [#_"long" x, #_"long" y] (§ interop #_"%" x y))
-
-    (defn #_"boolean" Numbers'equiv-2ll [#_"long" x, #_"long" y] (§ interop #_"==" x y))
-    (defn #_"boolean" Numbers'lt-2ll    [#_"long" x, #_"long" y] (§ interop #_"<" x y))
-    (defn #_"boolean" Numbers'lte-2ll   [#_"long" x, #_"long" y] (§ interop #_"<=" x y))
-    (defn #_"boolean" Numbers'gt-2ll    [#_"long" x, #_"long" y] (§ interop #_">" x y))
-    (defn #_"boolean" Numbers'gte-2ll   [#_"long" x, #_"long" y] (§ interop #_">=" x y))
-
-    (defn #_"boolean" Numbers'isPos-1l  [#_"long" x] (§ interop #_">" x 0))
-    (defn #_"boolean" Numbers'isNeg-1l  [#_"long" x] (§ interop #_"<" x 0))
-    (defn #_"boolean" Numbers'isZero-1l [#_"long" x] (§ interop #_"==" x 0))
-
-    (defn #_"Object" Numbers'max [#_"Object" x, #_"Object" y] (if (Numbers'gt x, y) x y))
-    (defn #_"Object" Numbers'min [#_"Object" x, #_"Object" y] (if (Numbers'lt x, y) x y))
+    (defn #_"boolean" Numbers'testBit [#_"Object" x, #_"Object" n] (§ interop #_"!=" (§ interop #_"&" (Numbers'bitOpsCast x) (§ interop #_"<<" 1 (Numbers'bitOpsCast n))) 0))
 
     (defn #_"int" Numbers'hasheq [#_"Number" x]
         (let [#_"Class" c (class x)]
@@ -14530,7 +14389,7 @@
         )
 
         (#_"ISeq" ISeq'''next [#_"Range" this]
-            (let-when-not [#_"Object" n (+' (:start this) (:step this))] (RangeBoundsCheck'''exceededBounds (:boundsCheck this), n)
+            (let-when-not [#_"Object" n (+ (:start this) (:step this))] (RangeBoundsCheck'''exceededBounds (:boundsCheck this), n)
                 (Range'new n, (:end this), (:step this), (:boundsCheck this))
             )
         )
@@ -14540,7 +14399,7 @@
         (#_"Object" IReduce'''reduce
             ([#_"Range" this, #_"IFn" f]
                 (loop [#_"Object" r (:start this) #_"Number" n r]
-                    (let-when-not [n (+' n (:step this))] (RangeBoundsCheck'''exceededBounds (:boundsCheck this), n) => r
+                    (let-when-not [n (+ n (:step this))] (RangeBoundsCheck'''exceededBounds (:boundsCheck this), n) => r
                         (let-when-not [r (f r n)] (reduced? r) => @r
                             (recur r n)
                         )
@@ -14550,7 +14409,7 @@
             ([#_"Range" this, #_"IFn" f, #_"Object" r]
                 (loop [r r #_"Object" n (:start this)]
                     (let-when-not [r (f r n)] (reduced? r) => @r
-                        (let-when-not [n (+' n (:step this))] (RangeBoundsCheck'''exceededBounds (:boundsCheck this), n) => r
+                        (let-when-not [n (+ n (:step this))] (RangeBoundsCheck'''exceededBounds (:boundsCheck this), n) => r
                             (recur r n)
                         )
                     )
@@ -15855,19 +15714,7 @@
 (§ defn reverse [s] (into () s))
 
 ;;;
- ; Returns the sum of nums. (+') returns 0. Supports arbitrary precision.
- ; See also: +
- ;;
-(§ defn +'
-    ([] 0)
-    ([x] (cast Number x))
-    ([x y] (Numbers'addP x y))
-    ([x y & s] (reduce +' (+' x y) s))
-)
-
-;;;
- ; Returns the sum of nums. (+) returns 0. Does not auto-promote longs, will throw on overflow.
- ; See also: +'
+ ; Returns the sum of nums. (+) returns 0. Supports arbitrary precision.
  ;;
 (§ defn +
     ([] 0)
@@ -15877,19 +15724,7 @@
 )
 
 ;;;
- ; Returns the product of nums. (*') returns 1. Supports arbitrary precision.
- ; See also: *
- ;;
-(§ defn *'
-    ([] 1)
-    ([x] (cast Number x))
-    ([x y] (Numbers'multiplyP x y))
-    ([x y & s] (reduce *' (*' x y) s))
-)
-
-;;;
- ; Returns the product of nums. (*) returns 1. Does not auto-promote longs, will throw on overflow.
- ; See also: *'
+ ; Returns the product of nums. (*) returns 1. Supports arbitrary precision.
  ;;
 (§ defn *
     ([] 1)
@@ -15911,22 +15746,10 @@
 ;;;
  ; If no ys are supplied, returns the negation of x, else subtracts
  ; the ys from x and returns the result. Supports arbitrary precision.
- ; See also: -
- ;;
-(§ defn -'
-    ([x] (Numbers'minusP x))
-    ([x y] (Numbers'minusP x y))
-    ([x y & s] (reduce -' (-' x y) s))
-)
-
-;;;
- ; If no ys are supplied, returns the negation of x, else subtracts
- ; the ys from x and returns the result. Does not auto-promote longs, will throw on overflow.
- ; See also: -'
  ;;
 (§ defn -
-    ([x] (Numbers'minus x))
-    ([x y] (Numbers'minus x y))
+    ([x] (Numbers'negate x))
+    ([x y] (Numbers'subtract x y))
     ([x y & s] (reduce - (- x y) s))
 )
 
@@ -15971,7 +15794,7 @@
  ;;
 (§ defn max
     ([x] x)
-    ([x y] (Numbers'max x y))
+    ([x y] (if (> x y) x y))
     ([x y & s] (reduce max (max x y) s))
 )
 
@@ -15980,31 +15803,17 @@
  ;;
 (§ defn min
     ([x] x)
-    ([x y] (Numbers'min x y))
+    ([x y] (if (< x y) x y))
     ([x y & s] (reduce min (min x y) s))
 )
 
 ;;;
  ; Returns a number one greater than num. Supports arbitrary precision.
- ; See also: inc
- ;;
-(§ defn inc' [x] (Numbers'incP x))
-
-;;;
- ; Returns a number one greater than num. Does not auto-promote longs, will throw on overflow.
- ; See also: inc'
  ;;
 (§ defn inc [x] (Numbers'inc x))
 
 ;;;
  ; Returns a number one less than num. Supports arbitrary precision.
- ; See also: dec
- ;;
-(§ defn dec' [x] (Numbers'decP x))
-
-;;;
- ; Returns a number one less than num. Does not auto-promote longs, will throw on overflow.
- ; See also: dec'
  ;;
 (§ defn dec [x] (Numbers'dec x))
 
@@ -17072,7 +16881,7 @@
  ; When start is equal to end, returns empty list.
  ;;
 (§ defn range
-    ([] (iterate inc' 0))
+    ([] (iterate inc 0))
     ([end] (Range'create end))
     ([start end] (Range'create start end))
     ([start end step] (Range'create start end step))
