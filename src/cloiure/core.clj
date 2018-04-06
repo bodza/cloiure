@@ -1,27 +1,90 @@
 (ns cloiure.core
-    (:refer-clojure :only [*ns* *print-length* = assoc char cons declare definterface defmacro defn defprotocol defrecord extend-type first fn identical? import int-array let letfn list loop next ns-unmap reify satisfies? seq vary-meta vec with-meta])
+    (:refer-clojure :only [*ns* *print-length* = assoc char cons declare definterface defmacro defn defprotocol defrecord extend-protocol extend-type fn identical? if-some import int-array let letfn list loop reify satisfies? vary-meta vec when-some with-meta])
 )
 
 (defmacro § [& _])
 (defmacro ß [& _])
 
+(defmacro java-ns    [_ & s] `(do ~s))
+(defmacro class-ns   [_ & s] `(do ~s))
+(defmacro clojure-ns [_ & s] `(do ~s))
+
+(clojure.core/doseq [% (clojure.core/keys (clojure.core/ns-imports *ns*))] (clojure.core/ns-unmap *ns* %))
+
 (import
-    [java.lang ArithmeticException Boolean Byte Character Class ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Long Number Object RuntimeException String StringBuilder System Thread ThreadLocal Throwable]
+    [java.lang ArithmeticException Boolean Byte Character CharSequence Class #_ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Long Number Object RuntimeException String StringBuilder System Thread ThreadLocal Throwable]
 )
 
-(ns-unmap 'cloiure.core 'BigInteger)
+(def #_"Class" Object'array (Class/forName "[Ljava.lang.Object;"))
 
 (import
-    [java.io BufferedReader InputStreamReader OutputStreamWriter PrintWriter PushbackReader Reader #_StringReader StringWriter Writer]
-    [java.lang.ref Reference ReferenceQueue SoftReference WeakReference]
-    [java.lang.reflect Array Constructor Field #_Method Modifier]
+    [java.io BufferedReader InputStreamReader OutputStreamWriter PrintWriter PushbackReader #_Reader #_StringReader StringWriter Writer]
+    [java.lang.ref #_Reference ReferenceQueue SoftReference WeakReference]
+    [java.lang.reflect Array #_Constructor #_Field #_Method Modifier]
     [java.security AccessController PrivilegedAction]
     [java.util Arrays Comparator IdentityHashMap]
     [java.util.regex Matcher Pattern]
-    [cloiure.asm ClassVisitor ClassWriter Label MethodVisitor Opcodes Type]
+    [cloiure.asm #_ClassVisitor ClassWriter Label #_MethodVisitor Opcodes Type]
     [cloiure.asm.commons GeneratorAdapter Method]
     [cloiure.math BigInteger]
     [cloiure.util.concurrent.atomic AtomicReference]
+)
+
+(java-ns cloiure.lang.Seqable
+    (defprotocol Seqable
+        (#_"ISeq" Seqable'''seq [#_"Seqable" this])
+    )
+
+    (extend-protocol Seqable
+        nil                  (Seqable'''seq [_] nil)
+        clojure.lang.Seqable (Seqable'''seq [o] (.seq o))
+    )
+)
+
+(java-ns cloiure.lang.ISeq
+    (defprotocol ISeq
+        (#_"Object" ISeq'''first [#_"ISeq" this])
+        (#_"ISeq" ISeq'''next [#_"ISeq" this])
+    )
+
+    (extend-protocol ISeq
+        nil               (ISeq'''first [_] nil)        (ISeq'''next [_] nil)
+        clojure.lang.ISeq (ISeq'''first [o] (.first o)) (ISeq'''next [o] (.next o))
+    )
+)
+
+;;;
+ ; Returns a seq on the collection. If the collection is empty, returns nil.
+ ; (seq nil) returns nil. seq also works on strings, arrays (of reference types).
+ ;;
+(defn ^cloiure.core.ISeq seq [s] (Seqable'''seq s))
+
+(defn seq? [x] (satisfies? ISeq x))
+
+;;;
+ ; Returns the first item in the collection. Calls seq on its argument.
+ ; If s is nil, returns nil.
+ ;;
+(defn first [s]
+    (if (seq? s)
+        (ISeq'''first s)
+        (when-some [s (seq s)]
+            (ISeq'''first s)
+        )
+    )
+)
+
+;;;
+ ; Returns a seq of the items after the first. Calls seq on its argument.
+ ; If there are no more items, returns nil.
+ ;;
+(defn ^cloiure.core.ISeq next [s]
+    (if (seq? s)
+        (ISeq'''next s)
+        (when-some [s (seq s)]
+            (ISeq'''next s)
+        )
+    )
 )
 
 ;;;
@@ -77,10 +140,6 @@
         ~@(map #(list 'def (vary-meta % assoc :declared true)) names)
     )
 )
-
-(defmacro java-ns    [_ & s] (cons 'do s))
-(defmacro class-ns   [_ & s] (cons 'do s))
-(defmacro clojure-ns [_ & s] (cons 'do s))
 
 (java-ns cloiure.lang.IObject
     (defprotocol IObject
@@ -286,19 +345,6 @@
 (java-ns cloiure.lang.IPending
     (defprotocol IPending
         (#_"boolean" IPending'''isRealized [#_"IPending" this])
-    )
-)
-
-(java-ns cloiure.lang.ISeq
-    (defprotocol ISeq
-        (#_"Object" ISeq'''first [#_"ISeq" this])
-        (#_"ISeq" ISeq'''next [#_"ISeq" this])
-    )
-)
-
-(java-ns cloiure.lang.Seqable
-    (defprotocol Seqable
-        (#_"ISeq" Seqable'''seq [#_"Seqable" this])
     )
 )
 
@@ -658,10 +704,6 @@
     (defrecord ATransientSet #_"AFn" [] #_"ITransientSet" #_"ITransientCollection" #_"Counted")
 )
 
-(java-ns cloiure.lang.Binding
-    (defrecord Binding #_"<T>" [])
-)
-
 (java-ns cloiure.lang.Cons
     (defrecord Cons #_"ASeq" [])
 )
@@ -818,7 +860,6 @@
     (defrecord RT [])
 )
 
-(defn seq?       [x] (§ soon satisfies? ISeq x)                  (instance? clojure.lang.ISeq x))
 (defn coll?      [x] (§ soon satisfies? IPersistentCollection x) (instance? clojure.lang.IPersistentCollection x))
 (defn list?      [x] (§ soon satisfies? IPersistentList x)       (instance? clojure.lang.IPersistentList x))
 (defn map?       [x] (§ soon satisfies? IPersistentMap x)        (instance? clojure.lang.IPersistentMap x))
@@ -852,8 +893,6 @@
     ([? then] (if-not ? then nil))
     ([? then else] (list 'if ? else then))
 )
-
-(declare if-some)
 
 (defn second [s] (first (next s)))
 (defn third  [s] (first (next (next s))))
@@ -930,14 +969,6 @@
 (defmacro any
     ([f x y] `(~f ~x ~y))
     ([f x y & z] `(let [f# ~f x# ~x _# (any f# x# ~y)] (if _# _# (any f# x# ~@z))))
-)
-
-(declare sequential?)
-(declare rest)
-
-(defn =?
-    ([x y] (cond (sequential? x) (if (seq x) (or (=? (first x) y) (recur (rest x) y)) false) (sequential? y) (recur y x) :else (= x y)))
-    ([x y & z] (=? x (cons y z)))
 )
 
 ;; naïve reduce to be redefined later with IReduce
@@ -1330,8 +1361,6 @@
         )
     )
 
-    (declare when-some)
-
     (defn #_"java.lang.reflect.Method" Reflector'getAsMethodOfPublicBase [#_"Class" c, #_"java.lang.reflect.Method" m]
         (or
             (let [#_"Class[]" ifaces (.getInterfaces c)]
@@ -1542,7 +1571,6 @@
     (def #_"Class" Compiler'CHARS_CLASS    (Class/forName "[C"))
     (def #_"Class" Compiler'INTS_CLASS     (Class/forName "[I"))
     (def #_"Class" Compiler'LONGS_CLASS    (Class/forName "[J"))
-    (def #_"Class" Compiler'OBJECTS_CLASS  (Class/forName "[Ljava.lang.Object;"))
 
     (def #_"int" Compiler'MAX_POSITIONAL_ARITY 9)
 
@@ -1682,7 +1710,7 @@
                 (dotimes [#_"int" j n]
                     (aset b j t)
                 )
-                (aset b n (Type/getType Compiler'OBJECTS_CLASS))
+                (aset b n (Type/getType Object'array))
                 (aset a (inc n) b)
                 a
             )
@@ -2719,7 +2747,7 @@
                 "chars"    Compiler'CHARS_CLASS
                 "ints"     Compiler'INTS_CLASS
                 "longs"    Compiler'LONGS_CLASS
-                "objects"  Compiler'OBJECTS_CLASS
+                "objects"  Object'array
                            nil
             )
         )
@@ -2750,7 +2778,7 @@
 (class-ns InstanceFieldExpr
     (defn #_"InstanceFieldExpr" InstanceFieldExpr'new [#_"int" line, #_"Expr" target, #_"String" fieldName, #_"Symbol" tag, #_"boolean" requireField]
         (let [#_"Class" c (Expr'''getClass target)
-              #_"java.lang.reflect.Field" f (when (some? c) (Reflector'getField c, fieldName, false))]
+              #_"Field" f (when (some? c) (Reflector'getField c, fieldName, false))]
             (when (and (nil? f) *warn-on-reflection*)
                 (if (nil? c)
                     (.println *err*, (str "Reflection warning, line " line " - reference to field " fieldName " can't be resolved."))
@@ -2761,7 +2789,7 @@
                 (hash-map
                     #_"Expr" :target target
                     #_"Class" :targetClass c
-                    #_"java.lang.reflect.Field" :field f
+                    #_"Field" :field f
                     #_"String" :fieldName fieldName
                     #_"int" :line line
                     #_"Symbol" :tag tag
@@ -2865,7 +2893,7 @@
                 #_"String" :fieldName fieldName
                 #_"Symbol" :tag tag
 
-                #_"java.lang.reflect.Field" :field (.getField c, fieldName)
+                #_"Field" :field (.getField c, fieldName)
             )
         )
     )
@@ -10613,6 +10641,10 @@
         )
     )
 
+    (extend-protocol Seqable Object'array
+        (#_"ArraySeq" Seqable'''seq [#_"Object[]" a] (ArraySeq'create a))
+    )
+
     (extend-type ArraySeq ISeq
         (#_"Object" ISeq'''first [#_"ArraySeq" this]
             (when (some? (:a this))
@@ -10798,23 +10830,6 @@
         (#_"Object" IFn'''invoke
             ([#_"ATransientSet" this, #_"Object" key] (get (:impl this) key))
             ([#_"ATransientSet" this, #_"Object" key, #_"Object" notFound] (get (:impl this) key notFound))
-        )
-    )
-)
-)
-
-(java-ns cloiure.lang.Binding
-
-(class-ns Binding
-    (defn #_"Binding" Binding'new
-        ([#_"T" val] (Binding'new val, nil))
-        ([#_"T" val, #_"Binding" rest]
-            (merge (Binding.)
-                (hash-map
-                    #_"T" :val val
-                    #_"Binding" :rest rest
-                )
-            )
         )
     )
 )
@@ -14977,6 +14992,10 @@
         )
     )
 
+    (extend-protocol Seqable CharSequence
+        (#_"StringSeq" Seqable'''seq [#_"CharSequence" s] (StringSeq'create s))
+    )
+
     (extend-type StringSeq ISeq
         (#_"Object" ISeq'''first [#_"StringSeq" this]
             (Character/valueOf (nth (:s this) (:i this)))
@@ -15235,7 +15254,7 @@
             ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6, arg7))
             ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8))
             ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9))
-          #_([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9 & #_"Object..." args] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, (cast Compiler'OBJECTS_CLASS args)))
+          #_([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9 & #_"Object..." args] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, (cast Object'array args)))
         )
 
         (#_"Object" IFn'''applyTo [#_"Var" this, #_"ISeq" args]
@@ -15258,37 +15277,6 @@
     (def- #_"int'" RT'ID (atom 0))
 
     (defn #_"int" RT'nextID [] (swap! RT'ID inc))
-
-    (declare RT'seqFrom)
-
-    (defn #_"ISeq" RT'seq [#_"Object" coll]
-        (condp instance? coll
-            ASeq    coll
-            LazySeq (Seqable'''seq coll)
-                    (RT'seqFrom coll)
-        )
-    )
-
-    ;; N.B. canSeq must be kept in sync with this!
-    (defn #_"ISeq" RT'seqFrom [#_"Object" coll]
-        (cond
-            (satisfies? Seqable coll)     (Seqable'''seq coll)
-            (nil? coll)                   nil
-            (.isArray (class coll))       (ArraySeq'create coll)
-            (instance? CharSequence coll) (StringSeq'create coll)
-            :else (throw! (str "don't know how to create ISeq from: " (.getName (class coll))))
-        )
-    )
-
-    (defn #_"boolean" RT'canSeq [#_"Object" coll]
-        (or
-            (seq? coll)
-            (satisfies? Seqable coll)
-            (nil? coll)
-            (.isArray (class coll))
-            (instance? CharSequence coll)
-        )
-    )
 
     (defn #_"Object" RT'seqOrElse [#_"Object" o]
         (when (some? (seq o))
@@ -15328,24 +15316,6 @@
             (nil? s) (list x)
             (seq? s) (Cons'new x, s)
             :else    (Cons'new x, (seq s))
-        )
-    )
-
-    (defn #_"Object" RT'first [#_"Seqable" s]
-        (if (seq? s)
-            (ISeq'''first s)
-            (when-some [s (seq s)]
-                (ISeq'''first s)
-            )
-        )
-    )
-
-    (defn #_"ISeq" RT'next [#_"Seqable" s]
-        (if (seq? s)
-            (ISeq'''next s)
-            (when-some [s (seq s)]
-                (ISeq'''next s)
-            )
         )
     )
 
@@ -15665,7 +15635,7 @@
         (cond
             (nil? coll)
                 (make-array Object 0)
-            (instance? Compiler'OBJECTS_CLASS coll)
+            (instance? Object'array coll)
                 coll
             (indexed? coll)
                 (let [#_"int" n (count coll) #_"Object[]" a (make-array Object n)]
@@ -15767,21 +15737,6 @@
 (§ def ^:macro fn   (fn* fn   [&form &env & decl] (with-meta (cons 'fn* decl) (meta &form))))
 
 ;;;
- ; Returns the first item in the collection. Calls seq on its argument. If s is nil, returns nil.
- ;;
-(§ defn first [s] (RT'first s))
-
-;;;
- ; Returns a seq of the items after the first. Calls seq on its argument. If there are no more items, returns nil.
- ;;
-(§ defn ^cloiure.core.ISeq next [s] (RT'next s))
-
-;;;
- ; Returns a possibly empty seq of the items after the first. Calls seq on its argument.
- ;;
-(defn ^cloiure.core.ISeq rest [s] (or (next s) ()))
-
-;;;
  ; conj[oin].
  ; Returns a new collection with the items 'added'. (conj nil item) returns (item).
  ; The 'addition' may happen at different 'places' depending on the concrete type.
@@ -15792,12 +15747,6 @@
     ([coll x] (RT'conj coll x))
     ([coll x & s] (recur-if s [(conj coll x) (first s) (next s)] => (conj coll x)))
 )
-
-;;;
- ; Returns a seq on the collection. If the collection is empty, returns nil.
- ; (seq nil) returns nil. seq also works on strings, arrays (of reference types).
- ;;
-(§ defn ^cloiure.core.ISeq seq [s] (RT'seq s))
 
 ;;;
  ; assoc[iate].
@@ -17857,7 +17806,7 @@
         (lazy-seq
             (let [ss (map seq (conj colls c2 c1))]
                 (when (every? identity ss)
-                    (concat (map first ss) (apply interleave (map rest ss)))
+                    (concat (map first ss) (apply interleave (map next ss)))
                 )
             )
         )
@@ -18203,16 +18152,16 @@
                             (cond
                                 (= k :let) `(let ~v ~(do-mod etc))
                                 (= k :while) `(when ~v ~(do-mod etc))
-                                (= k :when) `(if ~v ~(do-mod etc) (recur (rest ~s-)))
+                                (= k :when) `(if ~v ~(do-mod etc) (recur (next ~s-)))
                                 (keyword? k) (throw! (str "Invalid 'for' keyword " k))
                                 next-groups
                                     `(let [iterys# ~(emit-bind next-groups) fs# (seq (iterys# ~next-expr))]
                                         (if fs#
-                                            (concat fs# (~i- (rest ~s-)))
-                                            (recur (rest ~s-))
+                                            (concat fs# (~i- (next ~s-)))
+                                            (recur (next ~s-))
                                         )
                                     )
-                                :else `(cons ~body-expr (~i- (rest ~s-)))
+                                :else `(cons ~body-expr (~i- (next ~s-)))
                             )
                         )]
                     (if next-groups
@@ -18467,8 +18416,8 @@
                         ((fn [[f :as xs] seen]
                             (when-some [s (seq xs)]
                                 (if (contains? seen f)
-                                    (recur (rest s) seen)
-                                    (cons f (step (rest s) (conj seen f)))
+                                    (recur (next s) seen)
+                                    (cons f (step (next s) (conj seen f)))
                                 )
                             ))
                             xs seen
@@ -18869,11 +18818,6 @@
  ; Please use the idiom (seq x) rather than (not (empty? x)).
  ;;
 (defn empty? [coll] (not (seq coll)))
-
-;;;
- ; Return true if the seq function is supported for x.
- ;;
-(defn seqable? [x] (RT'canSeq x))
 
 ;;;
  ; trampoline can be used to convert algorithms requiring mutual recursion without
@@ -19971,7 +19915,7 @@
                     (fn ~@(map
                         (fn [args]
                             (let [gargs (map #(gensym (str "gf__" % "__")) args) target (first gargs)]
-                                `([~@gargs] (. ~(with-meta target {:tag on-interface}) (~(or on-method method) ~@(rest gargs))))
+                                `([~@gargs] (. ~(with-meta target {:tag on-interface}) (~(or on-method method) ~@(next gargs))))
                             )
                         )
                         arglists
