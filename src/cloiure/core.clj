@@ -1,18 +1,18 @@
 (ns cloiure.core
-    (:refer-clojure :only [*ns* *print-length* = assoc char cons declare definterface defmacro defn defprotocol defrecord extend-protocol extend-type fn identical? if-some import int-array let letfn list loop reify satisfies? vary-meta vec when-some with-meta])
+    (:refer-clojure :only [*ns* *print-length* = and assoc char cons declare defmacro defn defprotocol defrecord dotimes extend-protocol extend-type fn hash-map hash-set identical? if-some import int-array let letfn list loop reify satisfies? some? vary-meta vec when-some with-meta])
 )
 
 (defmacro § [& _])
 (defmacro ß [& _])
 
-(defmacro java-ns    [_ & s] `(do ~s))
-(defmacro class-ns   [_ & s] `(do ~s))
-(defmacro clojure-ns [_ & s] `(do ~s))
+(defmacro java-ns    [_ & s] (cons 'do s))
+(defmacro class-ns   [_ & s] (cons 'do s))
+(defmacro clojure-ns [_ & s] (cons 'do s))
 
 (clojure.core/doseq [% (clojure.core/keys (clojure.core/ns-imports *ns*))] (clojure.core/ns-unmap *ns* %))
 
 (import
-    [java.lang ArithmeticException Boolean Byte Character CharSequence Class #_ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Long Number Object RuntimeException String StringBuilder System Thread ThreadLocal Throwable]
+    [java.lang ArithmeticException Boolean Byte Character CharSequence Class #_ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Long NoSuchMethodException Number Object RuntimeException String StringBuilder System Thread ThreadLocal Throwable Void]
 )
 
 (def #_"Class" Object'array (Class/forName "[Ljava.lang.Object;"))
@@ -59,7 +59,7 @@
  ;;
 (defn ^cloiure.core.ISeq seq [s] (Seqable'''seq s))
 
-(defn seq? [x] (satisfies? ISeq x))
+(defn seq? [x] (and (some? x) (satisfies? ISeq x)))
 
 ;;;
  ; Returns the first item in the collection. Calls seq on its argument.
@@ -176,7 +176,8 @@
 )
 
 (java-ns cloiure.lang.Reflector
-    (§ soon definterface Reflector) (import [clojure.lang Reflector])
+    #_stateless
+    (defrecord Reflector [])
 )
 
 (java-ns cloiure.lang.Compiler
@@ -222,55 +223,56 @@
         (#_"Expr" IParser'''parse [#_"IParser" this, #_"Context" context, #_"ISeq" form])
     )
 
-    (definterface Recur)
+    #_stateless
+    (defrecord Recur [])
 )
 
 (java-ns cloiure.lang.Compiler
-    (defrecord NilExpr            [] #_"Expr" #_"Literal")
-    (defrecord BooleanExpr        [] #_"Expr" #_"Literal")
-    (defrecord MonitorEnterExpr   [] #_"Expr" #_"Untyped")
-    (defrecord MonitorExitExpr    [] #_"Expr" #_"Untyped")
-    (defrecord AssignExpr         [] #_"Expr")
-    (defrecord ImportExpr         [] #_"Expr")
-    (defrecord EmptyExpr          [] #_"Expr")
-    (defrecord ConstantExpr       [] #_"Expr" #_"Literal")
-    (defrecord NumberExpr         [] #_"Expr" #_"Literal" #_"MaybePrimitive")
-    (defrecord StringExpr         [] #_"Expr" #_"Literal")
-    (defrecord KeywordExpr        [] #_"Expr" #_"Literal")
-    (defrecord InstanceFieldExpr  [] #_"Expr" #_"MaybePrimitive" #_"Assignable" #_"Interop")
-    (defrecord StaticFieldExpr    [] #_"Expr" #_"MaybePrimitive" #_"Assignable" #_"Interop")
-    (defrecord InstanceMethodExpr [] #_"Expr" #_"MaybePrimitive" #_"Interop")
-    (defrecord StaticMethodExpr   [] #_"Expr" #_"MaybePrimitive" #_"Interop")
-    (defrecord UnresolvedVarExpr  [] #_"Expr")
-    (defrecord VarExpr            [] #_"Expr" #_"Assignable")
-    (defrecord TheVarExpr         [] #_"Expr")
-    (defrecord BodyExpr           [] #_"Expr" #_"MaybePrimitive")
+    (defrecord NilExpr            [] Expr Literal)
+    (defrecord BooleanExpr        [] Expr Literal)
+    (defrecord MonitorEnterExpr   [] Expr Untyped)
+    (defrecord MonitorExitExpr    [] Expr Untyped)
+    (defrecord AssignExpr         [] Expr)
+    (defrecord ImportExpr         [] Expr)
+    (defrecord EmptyExpr          [] Expr)
+    (defrecord ConstantExpr       [] Expr Literal)
+    (defrecord NumberExpr         [] Expr Literal MaybePrimitive)
+    (defrecord StringExpr         [] Expr Literal)
+    (defrecord KeywordExpr        [] Expr Literal)
+    (defrecord InstanceFieldExpr  [] Assignable Expr Interop MaybePrimitive)
+    (defrecord StaticFieldExpr    [] Assignable Expr Interop MaybePrimitive)
+    (defrecord InstanceMethodExpr [] Expr Interop MaybePrimitive)
+    (defrecord StaticMethodExpr   [] Expr Interop MaybePrimitive)
+    (defrecord UnresolvedVarExpr  [] Expr)
+    (defrecord VarExpr            [] Assignable Expr)
+    (defrecord TheVarExpr         [] Expr)
+    (defrecord BodyExpr           [] Expr MaybePrimitive)
     (defrecord CatchClause        [])
-    (defrecord TryExpr            [] #_"Expr")
-    (defrecord ThrowExpr          [] #_"Expr" #_"Untyped")
-    (defrecord NewExpr            [] #_"Expr")
-    (defrecord MetaExpr           [] #_"Expr")
-    (defrecord IfExpr             [] #_"Expr" #_"MaybePrimitive")
-    (defrecord ListExpr           [] #_"Expr")
-    (defrecord MapExpr            [] #_"Expr")
-    (defrecord SetExpr            [] #_"Expr")
-    (defrecord VectorExpr         [] #_"Expr")
-    (defrecord KeywordInvokeExpr  [] #_"Expr")
-    (defrecord InstanceOfExpr     [] #_"Expr" #_"MaybePrimitive")
-    (defrecord InvokeExpr         [] #_"Expr")
+    (defrecord TryExpr            [] Expr)
+    (defrecord ThrowExpr          [] Expr Untyped)
+    (defrecord NewExpr            [] Expr)
+    (defrecord MetaExpr           [] Expr)
+    (defrecord IfExpr             [] Expr MaybePrimitive)
+    (defrecord ListExpr           [] Expr)
+    (defrecord MapExpr            [] Expr)
+    (defrecord SetExpr            [] Expr)
+    (defrecord VectorExpr         [] Expr)
+    (defrecord KeywordInvokeExpr  [] Expr)
+    (defrecord InstanceOfExpr     [] Expr MaybePrimitive)
+    (defrecord InvokeExpr         [] Expr)
     (defrecord LocalBinding       [])
-    (defrecord LocalBindingExpr   [] #_"Expr" #_"MaybePrimitive" #_"Assignable")
-    (defrecord MethodParamExpr    [] #_"Expr" #_"MaybePrimitive")
-    (defrecord FnMethod           [] #_"IopMethod")
-    (defrecord FnExpr             [] #_"Expr" #_"IopObject")
-    (defrecord DefExpr            [] #_"Expr")
+    (defrecord LocalBindingExpr   [] Assignable Expr MaybePrimitive)
+    (defrecord MethodParamExpr    [] Expr MaybePrimitive)
+    (defrecord FnMethod           [] IopMethod)
+    (defrecord FnExpr             [] Expr IopObject)
+    (defrecord DefExpr            [] Expr)
     (defrecord BindingInit        [])
-    (defrecord LetFnExpr          [] #_"Expr")
-    (defrecord LetExpr            [] #_"Expr" #_"MaybePrimitive")
-    (defrecord RecurExpr          [] #_"Expr" #_"MaybePrimitive")
-    (defrecord NewInstanceMethod  [] #_"IopMethod")
-    (defrecord NewInstanceExpr    [] #_"Expr" #_"IopObject")
-    (defrecord CaseExpr           [] #_"Expr" #_"MaybePrimitive")
+    (defrecord LetFnExpr          [] Expr)
+    (defrecord LetExpr            [] Expr MaybePrimitive)
+    (defrecord RecurExpr          [] Expr MaybePrimitive)
+    (defrecord NewInstanceMethod  [] IopMethod)
+    (defrecord NewInstanceExpr    [] Expr IopObject)
+    (defrecord CaseExpr           [] Expr MaybePrimitive)
 )
 
 (java-ns cloiure.lang.IFn
@@ -544,7 +546,7 @@
 )
 
 (java-ns cloiure.lang.Ratio
-    (defrecord Ratio #_"Number" [] #_"Comparable")
+    (defrecord Ratio #_"Number" [] #_"Comparable" IObject)
 )
 
 (java-ns cloiure.lang.Numbers
@@ -569,42 +571,42 @@
         (#_"Number" Ops'''remainder [#_"Ops" this, #_"Number" x, #_"Number" y])
     )
 
-    (defrecord LongOps [] #_"Ops")
-    (defrecord RatioOps [] #_"Ops")
-    (defrecord BigIntOps [] #_"Ops")
+    (defrecord LongOps [] Ops)
+    (defrecord RatioOps [] Ops)
+    (defrecord BigIntOps [] Ops)
     #_stateless
     (defrecord Numbers [])
 )
 
 (java-ns cloiure.lang.Atom
-    (defrecord Atom [] #_"IReference" #_"IMeta" #_"IDeref" #_"IAtom")
+    (defrecord Atom [] IAtom IMeta IDeref IReference)
 )
 
 (java-ns cloiure.lang.Volatile
-    (defrecord Volatile [] #_"IDeref")
+    (defrecord Volatile [] IDeref)
 )
 
 (declare AFn'''throwArity)
 
 (java-ns cloiure.lang.AFn
     #_abstract
-    (defrecord AFn [] #_"IFn"
+    (defrecord AFn [] IFn
         #_abstract
       #_(#_"Object" AFn'''throwArity [#_"AFn" this, #_"int" n])
     )
 )
 
 (java-ns cloiure.lang.Symbol
-    (defrecord Symbol #_"AFn" [] #_"IObj" #_"IMeta" #_"Comparable" #_"INamed" #_"IHashEq")
+    (defrecord Symbol #_"AFn" [] #_"Comparable" IFn IHashEq IMeta INamed IObj IObject)
 )
 
 (java-ns cloiure.lang.Keyword
-    (defrecord Keyword [] #_"IFn" #_"Comparable" #_"INamed" #_"IHashEq")
+    (defrecord Keyword [] #_"Comparable" IFn IHashEq INamed IObject)
 )
 
 (java-ns cloiure.lang.AFunction
     #_abstract
-    (defrecord AFunction #_"AFn" [] #_"IObj" #_"IMeta" #_"Comparator" #_"Fn")
+    (defrecord AFunction #_"AFn" [] #_"Comparator" Fn IFn IMeta IObj)
 )
 
 (declare RestFn'''getRequiredArity)
@@ -612,7 +614,7 @@
 
 (java-ns cloiure.lang.RestFn
     #_abstract
-    (defrecord RestFn #_"AFunction" []
+    (defrecord RestFn #_"AFunction" [] #_"Comparator" Fn IFn IMeta IObj
         #_abstract
       #_(#_"int" RestFn'''getRequiredArity [#_"RestFn" this])
         #_abstract
@@ -640,38 +642,38 @@
 
 (java-ns cloiure.lang.ASeq
     #_abstract
-    (defrecord ASeq [] #_"IObj" #_"IMeta" #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"IHashEq")
+    (defrecord ASeq [] IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.LazySeq
-    (defrecord LazySeq [] #_"IObj" #_"IMeta" #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"IPending" #_"IHashEq")
+    (defrecord LazySeq [] IHashEq IMeta IObj IObject IPending IPersistentCollection ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.APersistentMap
     #_abstract
-    (defrecord APersistentMap #_"AFn" [] #_"IPersistentMap" #_"Associative" #_"IPersistentCollection" #_"Seqable" #_"ILookup" #_"Counted" #_"IHashEq")
+    (defrecord APersistentMap #_"AFn" [] Associative Counted IFn IHashEq ILookup IObject IPersistentCollection IPersistentMap Seqable)
 )
 
 (java-ns cloiure.lang.APersistentSet
     #_abstract
-    (defrecord APersistentSet #_"AFn" [] #_"IPersistentSet" #_"IPersistentCollection" #_"Seqable" #_"Counted" #_"IHashEq")
+    (defrecord APersistentSet #_"AFn" [] Counted IFn IHashEq IObject IPersistentCollection IPersistentSet Seqable)
 )
 
 (java-ns cloiure.lang.APersistentVector
-    (defrecord VSeq #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
-    (defrecord RSeq #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted")
+    (defrecord VSeq #_"ASeq" [] Counted IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
+    (defrecord RSeq #_"ASeq" [] Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
     #_abstract
-    (defrecord APersistentVector #_"AFn" [] #_"IPersistentVector" #_"Associative" #_"IPersistentCollection" #_"Seqable" #_"ILookup" #_"Sequential" #_"IPersistentStack" #_"Reversible" #_"Indexed" #_"Counted" #_"Comparable" #_"IHashEq")
-    (defrecord SubVector #_"APersistentVector" [] #_"IObj" #_"IMeta")
+    (defrecord APersistentVector #_"AFn" [] Associative #_"Comparable" Counted IFn IHashEq ILookup Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord SubVector #_"APersistentVector" [] Associative #_"Comparable" Counted IFn IHashEq ILookup IMeta Indexed IObj IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
 )
 
 (java-ns cloiure.lang.AMapEntry
     #_abstract
-    (defrecord AMapEntry #_"APersistentVector" [] #_"IMapEntry")
+    (defrecord AMapEntry #_"APersistentVector" [] Associative #_"Comparable" Counted IFn IHashEq ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
 )
 
 (java-ns cloiure.lang.ArraySeq
-    (defrecord ArraySeq #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
+    (defrecord ArraySeq #_"ASeq" [] Counted IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
 )
 
 (declare ATransientMap'''ensureEditable)
@@ -683,7 +685,7 @@
 
 (java-ns cloiure.lang.ATransientMap
     #_abstract
-    (defrecord ATransientMap #_"AFn" [] #_"ITransientMap" #_"ITransientAssociative" #_"ITransientCollection" #_"ILookup" #_"Counted") (§ soon
+    (defrecord ATransientMap #_"AFn" [] Counted IFn ILookup ITransientAssociative ITransientCollection ITransientMap) (§ soon
         #_abstract
         (#_"void" ATransientMap'''ensureEditable [#_"ATransientMap" this])
         #_abstract
@@ -701,31 +703,31 @@
 
 (java-ns cloiure.lang.ATransientSet
     #_abstract
-    (defrecord ATransientSet #_"AFn" [] #_"ITransientSet" #_"ITransientCollection" #_"Counted")
+    (defrecord ATransientSet #_"AFn" [] Counted IFn ITransientCollection ITransientSet)
 )
 
 (java-ns cloiure.lang.Cons
-    (defrecord Cons #_"ASeq" [])
+    (defrecord Cons #_"ASeq" [] Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.Cycle
-    (defrecord Cycle #_"ASeq" [] #_"IReduce" #_"IPending")
+    (defrecord Cycle #_"ASeq" [] IHashEq IMeta IObj IObject IPending IPersistentCollection IReduce ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.Delay
-    (defrecord Delay [] #_"IDeref" #_"IPending")
+    (defrecord Delay [] IDeref IPending)
 )
 
 (java-ns cloiure.lang.Iterate
-    (defrecord Iterate #_"ASeq" [] #_"IReduce" #_"IPending")
+    (defrecord Iterate #_"ASeq" [] IHashEq IMeta IObj IObject IPending IPersistentCollection IReduce ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.KeywordLookupSite
-    (defrecord KeywordLookupSite [] #_"ILookupSite" #_"ILookupThunk")
+    (defrecord KeywordLookupSite [] ILookupSite ILookupThunk)
 )
 
 (java-ns cloiure.lang.MapEntry
-    (defrecord MapEntry #_"AMapEntry" [])
+    (defrecord MapEntry #_"AMapEntry" [] Associative #_"Comparable" Counted IFn IHashEq ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
 )
 
 (java-ns cloiure.lang.MethodImplCache
@@ -734,39 +736,39 @@
 )
 
 (java-ns cloiure.lang.Namespace
-    (defrecord Namespace [])
+    (defrecord Namespace [] IObject)
 )
 
 (java-ns cloiure.lang.PersistentArrayMap
-    (defrecord MSeq #_"ASeq" [] #_"Counted")
-    (defrecord TransientArrayMap #_"ATransientMap" [])
-    (defrecord PersistentArrayMap #_"APersistentMap" [] #_"IObj" #_"IMeta" #_"IEditableCollection" #_"IKVReduce")
+    (defrecord MSeq #_"ASeq" [] Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+    (defrecord TransientArrayMap #_"ATransientMap" [] Counted IFn ILookup ITransientAssociative ITransientCollection ITransientMap)
+    (defrecord PersistentArrayMap #_"APersistentMap" [] Associative Counted IEditableCollection IFn IHashEq IKVReduce ILookup IMeta IObj IObject IPersistentCollection IPersistentMap Seqable)
 )
 
 (java-ns cloiure.lang.PersistentHashMap
-    (defrecord TransientHashMap #_"ATransientMap" [])
-    (defrecord HSeq #_"ASeq" [])
-    (defrecord ArrayNode [] #_"INode")
-    (defrecord BitmapIndexedNode [] #_"INode")
-    (defrecord HashCollisionNode [] #_"INode")
-    (defrecord NodeSeq #_"ASeq" [])
-    (defrecord PersistentHashMap #_"APersistentMap" [] #_"IObj" #_"IMeta" #_"IEditableCollection" #_"IKVReduce")
+    (defrecord TransientHashMap #_"ATransientMap" [] Counted IFn ILookup ITransientAssociative ITransientCollection ITransientMap)
+    (defrecord HSeq #_"ASeq" [] IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+    (defrecord ArrayNode [] INode)
+    (defrecord BitmapIndexedNode [] INode)
+    (defrecord HashCollisionNode [] INode)
+    (defrecord NodeSeq #_"ASeq" [] IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+    (defrecord PersistentHashMap #_"APersistentMap" [] Associative Counted IEditableCollection IFn IHashEq IKVReduce ILookup IMeta IObj IObject IPersistentCollection IPersistentMap Seqable)
 )
 
 (java-ns cloiure.lang.PersistentHashSet
-    (defrecord TransientHashSet #_"ATransientSet" [])
-    (defrecord PersistentHashSet #_"APersistentSet" [] #_"IObj" #_"IMeta" #_"IEditableCollection")
+    (defrecord TransientHashSet #_"ATransientSet" [] Counted IFn ITransientCollection ITransientSet)
+    (defrecord PersistentHashSet #_"APersistentSet" [] Counted IEditableCollection IFn IHashEq IMeta IObj IObject IPersistentCollection IPersistentSet Seqable)
 )
 
 (java-ns cloiure.lang.PersistentList
-    (defrecord Primordial #_"RestFn" [])
-    (defrecord EmptyList [] #_"IObj" #_"IMeta" #_"IPersistentList" #_"Sequential" #_"IPersistentStack" #_"IPersistentCollection" #_"Seqable" #_"ISeq" #_"Counted" #_"IHashEq")
-    (defrecord PersistentList #_"ASeq" [] #_"IPersistentList" #_"Sequential" #_"IPersistentStack" #_"IPersistentCollection" #_"Seqable" #_"IReduce" #_"Counted")
+    (defrecord Primordial #_"RestFn" [] #_"Comparator" Fn IFn IMeta IObj)
+    (defrecord EmptyList [] Counted IHashEq IMeta IObj IObject IPersistentCollection IPersistentList IPersistentStack ISeq Seqable Sequential)
+    (defrecord PersistentList #_"ASeq" [] Counted IHashEq IMeta IObj IObject IPersistentCollection IPersistentList IPersistentStack IReduce ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.PersistentQueue
-    (defrecord QSeq #_"ASeq" [])
-    (defrecord PersistentQueue [] #_"IObj" #_"IMeta" #_"IPersistentList" #_"Sequential" #_"IPersistentStack" #_"IPersistentCollection" #_"Seqable" #_"Counted" #_"IHashEq")
+    (defrecord QSeq #_"ASeq" [] Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+    (defrecord PersistentQueue [] Counted IHashEq IMeta IObj IObject IPersistentCollection IPersistentList IPersistentStack Seqable Sequential)
 )
 
 (declare TNode'''left)
@@ -783,7 +785,7 @@
 
 (java-ns cloiure.lang.PersistentTreeMap
     #_abstract
-    (defrecord TNode #_"AMapEntry" []) (§ soon
+    (defrecord TNode #_"AMapEntry" [] Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential) (§ soon
         #_abstract
         (#_"TNode" TNode'''left [#_"TNode" this])
         #_abstract
@@ -807,42 +809,42 @@
         #_abstract
         (#_"TNode" TNode'''replace [#_"TNode" this, #_"Object" key, #_"Object" val, #_"TNode" left, #_"TNode" right])
     )
-    (defrecord Black #_"TNode" [])
-    (defrecord BlackVal #_"Black" [])
-    (defrecord BlackBranch #_"Black" [])
-    (defrecord BlackBranchVal #_"BlackBranch" [])
-    (defrecord Red #_"TNode" [])
-    (defrecord RedVal #_"Red" [])
-    (defrecord RedBranch #_"Red" [])
-    (defrecord RedBranchVal #_"RedBranch" [])
-    (defrecord TSeq #_"ASeq" [])
-    (defrecord PersistentTreeMap #_"APersistentMap" [] #_"IObj" #_"IMeta" #_"Reversible" #_"Sorted" #_"IKVReduce")
+    (defrecord Black #_"TNode" [] Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord BlackVal #_"Black" [] Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord BlackBranch #_"Black" [] Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord BlackBranchVal #_"BlackBranch" [] Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord Red #_"TNode" [] Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord RedVal #_"Red" [] Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord RedBranch #_"Red" [] Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord RedBranchVal #_"RedBranch" [] Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord TSeq #_"ASeq" [] Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+    (defrecord PersistentTreeMap #_"APersistentMap" [] Associative Counted IFn IHashEq IKVReduce ILookup IMeta IObj IObject IPersistentCollection IPersistentMap Reversible Seqable Sorted)
 )
 
 (java-ns cloiure.lang.PersistentTreeSet
-    (defrecord PersistentTreeSet #_"APersistentSet" [] #_"IObj" #_"IMeta" #_"Reversible" #_"Sorted")
+    (defrecord PersistentTreeSet #_"APersistentSet" [] Counted IFn IHashEq IMeta IObj IObject IPersistentCollection IPersistentSet Reversible Seqable Sorted)
 )
 
 (java-ns cloiure.lang.PersistentVector
     (defrecord VNode [])
-    (defrecord TransientVector #_"AFn" [] #_"ITransientVector" #_"ITransientAssociative" #_"ITransientCollection" #_"ILookup" #_"Indexed" #_"Counted")
-    (defrecord PersistentVector #_"APersistentVector" [] #_"IObj" #_"IMeta" #_"IEditableCollection" #_"IReduce" #_"IKVReduce")
+    (defrecord TransientVector #_"AFn" [] Counted IFn ILookup Indexed ITransientAssociative ITransientCollection ITransientVector)
+    (defrecord PersistentVector #_"APersistentVector" [] Associative #_"Comparable" Counted IEditableCollection IFn IHashEq IKVReduce ILookup IMeta Indexed IObj IObject IPersistentCollection IPersistentStack IPersistentVector IReduce Reversible Seqable Sequential)
 )
 
 (java-ns cloiure.lang.Repeat
-    (defrecord Repeat #_"ASeq" [] #_"IReduce")
+    (defrecord Repeat #_"ASeq" [] IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.Range
-    (defrecord Range #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"IReduce" #_"Counted")
+    (defrecord Range #_"ASeq" [] Counted IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.Reduced
-    (defrecord Reduced [] #_"IDeref")
+    (defrecord Reduced [] IDeref)
 )
 
 (java-ns cloiure.lang.StringSeq
-    (defrecord StringSeq #_"ASeq" [] #_"ISeq" #_"IPersistentCollection" #_"Seqable" #_"Sequential" #_"Counted" #_"IReduce")
+    (defrecord StringSeq #_"ASeq" [] Counted IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.Tuple
@@ -851,8 +853,8 @@
 )
 
 (java-ns cloiure.lang.Var
-    (defrecord Unbound #_"AFn" [])
-    (defrecord Var [] #_"IReference" #_"IMeta" #_"IFn" #_"IDeref")
+    (defrecord Unbound #_"AFn" [] IFn IObject)
+    (defrecord Var [] IDeref IFn IMeta IObject IReference)
 )
 
 (java-ns cloiure.lang.RT
@@ -882,7 +884,7 @@
 (defn ^Boolean false? [x] (identical? x false))
 (defn ^Boolean true?  [x] (identical? x true))
 (defn ^Boolean not    [x] (if x false true))
-(defn ^Boolean some?  [x] (not (nil? x)))
+(§ defn ^Boolean some?  [x] (not (nil? x)))
 (defn ^Boolean any?   [_] true)
 
 ;;;
@@ -906,7 +908,7 @@
  ; (nil or false), and returns that value and doesn't evaluate any of the other expressions,
  ; otherwise it returns the value of the last expr. (and) returns true.
  ;;
-(defmacro and
+(§ defmacro and
     ([] true)
     ([x] x)
     ([x & s] `(let [and# ~x] (if and# (and ~@s) and#)))
@@ -1125,8 +1127,6 @@
 
 (java-ns cloiure.lang.Intrinsics
 
-(declare hash-map)
-
 (class-ns Intrinsics
     (def #_"{String int|[int]}" Intrinsics'ops
         (hash-map
@@ -1303,7 +1303,6 @@
 
     (declare pos?)
     (declare make-array)
-    (declare dotimes)
     (declare aset)
 
     (defn #_"Object[]" Reflector'boxArgs [#_"Class[]" params, #_"Object[]" args]
@@ -1553,8 +1552,6 @@
 )
 
 (java-ns cloiure.lang.Compiler
-
-(declare hash-set)
 
 (def Context'enum-set
     (hash-set
@@ -15862,7 +15859,7 @@
  ; Returns a new hash map with supplied mappings.
  ; If any keys are equal, they are handled as if by repeated uses of assoc.
  ;;
-(defn hash-map
+(§ defn hash-map
     ([] {})
     ([& keyvals] (PersistentHashMap'create keyvals))
 )
@@ -15871,7 +15868,7 @@
  ; Returns a new hash set with supplied keys.
  ; Any equal keys are handled as if by repeated uses of conj.
  ;;
-(defn hash-set
+(§ defn hash-set
     ([] #{})
     ([& keys] (PersistentHashSet'create keys))
 )
@@ -17169,7 +17166,7 @@
  ; Repeatedly executes body (presumably for side-effects) with name
  ; bound to integers from 0 through n-1.
  ;;
-(defmacro dotimes [v & body]
+(§ defmacro dotimes [v & body]
     (assert-args
         (vector? v) "a vector for its binding"
         (= 2 (count v)) "exactly 2 forms in binding vector"
@@ -19589,29 +19586,7 @@
 ;;;
  ; Convert a Cloiure namespace name to a legal Java package name.
  ;;
-(§ defn namespace-munge [ns] (.replace (str ns) \- \_))
-
-;; for now, built on gen-interface
-
-;;;
- ; Creates a new Java interface with the given name and method sigs.
- ; The method return types and parameter types may be specified with
- ; type hints, defaulting to Object if omitted.
- ;
- ; (definterface MyInterface
- ;  (^int method1 [x])
- ;  (^Bar method2 [^Baz b ^Quux q]))
- ;;
-(§ defmacro definterface [name & sigs]
-    (let [tag (fn [x] (or (:tag (meta x)) Object))
-          psig (fn [[name [& args]]] (vector name (vec (map tag args)) (tag name) (map meta args)))
-          cname (with-meta (symbol (str (namespace-munge *ns*) "." name)) (meta name))]
-        `(let []
-            (gen-interface :name ~cname :methods ~(vec (map psig sigs)))
-            (import ~cname)
-        )
-    )
-)
+(defn- namespace-munge [ns] (.replace (str ns) \- \_))
 
 (§ defn- parse-opts [s]
     (loop [opts {} [k v & rs :as s] s]
