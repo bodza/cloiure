@@ -1,5 +1,5 @@
 (ns cloiure.core
-    (:refer-clojure :only [*ns* *print-length* = and assoc char cons declare defmacro defn defprotocol defrecord dotimes extend-protocol extend-type fn hash-map hash-set identical? if-some import int-array let letfn list loop reify satisfies? some? vary-meta vec when-some with-meta])
+    (:refer-clojure :only [*ns* *print-length* + - -> = alength aget aset assoc atom binding case char condp cons count declare defmacro defn defprotocol defrecord doseq dotimes extend-protocol extend-type fn hash-map hash-set identical? if-some import inc int-array intern key keys let letfn list locking loop make-array merge object-array pos? reify satisfies? the-ns to-array val vary-meta vec vector when-some while with-meta])
 )
 
 (defmacro § [& _])
@@ -12,7 +12,7 @@
 (clojure.core/doseq [% (clojure.core/keys (clojure.core/ns-imports *ns*))] (clojure.core/ns-unmap *ns* %))
 
 (import
-    [java.lang ArithmeticException Boolean Byte Character CharSequence Class #_ClassCastException ClassLoader ClassNotFoundException Exception IndexOutOfBoundsException Integer Long NoSuchMethodException Number Object RuntimeException String StringBuilder System Thread ThreadLocal Throwable Void]
+    [java.lang ArithmeticException Boolean Byte Character CharSequence Class #_ClassCastException ClassLoader ClassNotFoundException Comparable Exception IndexOutOfBoundsException Integer Long NoSuchMethodException Number Object RuntimeException String StringBuilder System Thread ThreadLocal Throwable Void]
 )
 
 (def #_"Class" Object'array (Class/forName "[Ljava.lang.Object;"))
@@ -28,6 +28,98 @@
     [cloiure.asm.commons GeneratorAdapter Method]
     [cloiure.math BigInteger]
     [cloiure.util.concurrent.atomic AtomicReference]
+)
+
+;;;
+ ; A java.io.Reader object representing standard input for read operations.
+ ; Defaults to System/in, wrapped in a PushbackReader.
+ ;;
+(def ^:dynamic *in* (PushbackReader. (InputStreamReader. System/in)))
+;;;
+ ; A java.io.Writer object representing standard output for print operations.
+ ; Defaults to System/out, wrapped in an OutputStreamWriter.
+ ;;
+(def ^:dynamic *out* (OutputStreamWriter. System/out))
+;;;
+ ; A java.io.Writer object representing standard error for print operations.
+ ; Defaults to System/err, wrapped in a PrintWriter.
+ ;;
+(def ^:dynamic *err* (PrintWriter. (OutputStreamWriter. System/err), true))
+
+;;;
+ ; When set to true, output will be flushed whenever a newline is printed.
+ ; Defaults to true.
+ ;;
+(def ^:dynamic *flush-on-newline* true)
+;;;
+ ; When set to logical false, strings and characters will be printed with
+ ; non-alphanumeric characters converted to the appropriate escape sequences.
+ ; Defaults to true.
+ ;;
+(def ^:dynamic *print-readably* true)
+;;;
+ ; When set to true, the compiler will emit warnings when reflection
+ ; is needed to resolve Java method calls or field accesses.
+ ; Defaults to false.
+ ;;
+(def ^:dynamic *warn-on-reflection* false)
+
+;;;
+ ; Evaluates x and tests if it is an instance of class c. Returns true or false.
+ ;;
+(defn instance? [^Class c x] (.isInstance c x))
+
+(defn class?   [x] (instance? Class x))
+(defn boolean? [x] (instance? Boolean x))
+(defn char?    [x] (instance? Character x))
+(defn number?  [x] (instance? Number x))
+(defn string?  [x] (instance? String x))
+
+(defmacro throw! [^String s] `(throw (RuntimeException. ~s)))
+
+(defmacro def-      [x & s] `(def      ~(vary-meta x assoc :private true) ~@s))
+(defmacro defn-     [x & s] `(defn     ~(vary-meta x assoc :private true) ~@s))
+(defmacro defmacro- [x & s] `(defmacro ~(vary-meta x assoc :private true) ~@s))
+
+(defn identity   [x] x)
+(defn constantly [x] (fn [& _] x))
+
+(defn ^Boolean nil?   [x] (identical? x nil))
+(defn ^Boolean false? [x] (identical? x false))
+(defn ^Boolean true?  [x] (identical? x true))
+(defn ^Boolean not    [x] (if x false true))
+(defn ^Boolean some?  [x] (not (nil? x)))
+(defn ^Boolean any?   [_] true)
+
+;;;
+ ; Evaluates test. If logical false, evaluates and returns then expr,
+ ; otherwise else expr, if supplied, else nil.
+ ;;
+(defmacro if-not
+    ([? then] (if-not ? then nil))
+    ([? then else] (list 'if ? else then))
+)
+
+;;;
+ ; Evaluates exprs one at a time, from left to right. If a form returns logical false
+ ; (nil or false), and returns that value and doesn't evaluate any of the other expressions,
+ ; otherwise it returns the value of the last expr. (and) returns true.
+ ;;
+(defmacro and
+    ([] true)
+    ([x] x)
+    ([x & s] `(let [and# ~x] (if and# (and ~@s) and#)))
+)
+
+;;;
+ ; Evaluates exprs one at a time, from left to right. If a form returns a logical true value,
+ ; or returns that value and doesn't evaluate any of the other expressions, otherwise it returns
+ ; the value of the last expression. (or) returns nil.
+ ;;
+(defmacro or
+    ([] nil)
+    ([x] x)
+    ([x & s] `(let [or# ~x] (if or# or# (or ~@s))))
 )
 
 (java-ns cloiure.lang.Seqable
@@ -87,50 +179,12 @@
     )
 )
 
-;;;
- ; A java.io.Reader object representing standard input for read operations.
- ; Defaults to System/in, wrapped in a PushbackReader.
- ;;
-(def ^:dynamic *in* (PushbackReader. (InputStreamReader. System/in)))
-;;;
- ; A java.io.Writer object representing standard output for print operations.
- ; Defaults to System/out, wrapped in an OutputStreamWriter.
- ;;
-(def ^:dynamic *out* (OutputStreamWriter. System/out))
-;;;
- ; A java.io.Writer object representing standard error for print operations.
- ; Defaults to System/err, wrapped in a PrintWriter.
- ;;
-(def ^:dynamic *err* (PrintWriter. (OutputStreamWriter. System/err), true))
-
-;;;
- ; When set to true, output will be flushed whenever a newline is printed.
- ; Defaults to true.
- ;;
-(def ^:dynamic *flush-on-newline* true)
-;;;
- ; When set to logical false, strings and characters will be printed with
- ; non-alphanumeric characters converted to the appropriate escape sequences.
- ; Defaults to true.
- ;;
-(def ^:dynamic *print-readably* true)
-;;;
- ; When set to true, the compiler will emit warnings when reflection
- ; is needed to resolve Java method calls or field accesses.
- ; Defaults to false.
- ;;
-(def ^:dynamic *warn-on-reflection* false)
-
-;;;
- ; Evaluates x and tests if it is an instance of class c. Returns true or false.
- ;;
-(defn instance? [^Class c x] (.isInstance c x))
-
-(defn class?   [x] (instance? Class x))
-(defn boolean? [x] (instance? Boolean x))
-(defn char?    [x] (instance? Character x))
-(defn number?  [x] (instance? Number x))
-(defn string?  [x] (instance? String x))
+(defn second [s] (first (next s)))
+(defn third  [s] (first (next (next s))))
+(defn fourth [s] (first (next (next (next s)))))
+(defn ffirst [s] (first (first s)))
+(defn nnext  [s] (next (next s)))
+(defn last   [s] (if-some [r (next s)] (recur r) (first s)))
 
 ;;;
  ; defs the supplied var names with no bindings, useful for making forward declarations.
@@ -149,8 +203,16 @@
     )
 
     (extend-type nil IObject
+        (#_"boolean" IObject'''equals [#_"nil" this, #_"Object" that]
+            (nil? that)
+        )
+
         (#_"int" IObject'''hashCode [#_"nil" this]
             0
+        )
+
+        (#_"String" IObject'''toString [#_"nil" this]
+            "nil"
         )
     )
 
@@ -228,51 +290,51 @@
 )
 
 (java-ns cloiure.lang.Compiler
-    (defrecord NilExpr            [] Expr Literal)
-    (defrecord BooleanExpr        [] Expr Literal)
-    (defrecord MonitorEnterExpr   [] Expr Untyped)
-    (defrecord MonitorExitExpr    [] Expr Untyped)
-    (defrecord AssignExpr         [] Expr)
-    (defrecord ImportExpr         [] Expr)
-    (defrecord EmptyExpr          [] Expr)
-    (defrecord ConstantExpr       [] Expr Literal)
-    (defrecord NumberExpr         [] Expr Literal MaybePrimitive)
-    (defrecord StringExpr         [] Expr Literal)
-    (defrecord KeywordExpr        [] Expr Literal)
-    (defrecord InstanceFieldExpr  [] Assignable Expr Interop MaybePrimitive)
-    (defrecord StaticFieldExpr    [] Assignable Expr Interop MaybePrimitive)
-    (defrecord InstanceMethodExpr [] Expr Interop MaybePrimitive)
-    (defrecord StaticMethodExpr   [] Expr Interop MaybePrimitive)
-    (defrecord UnresolvedVarExpr  [] Expr)
-    (defrecord VarExpr            [] Assignable Expr)
-    (defrecord TheVarExpr         [] Expr)
-    (defrecord BodyExpr           [] Expr MaybePrimitive)
+    (defrecord NilExpr            []) (extend-type NilExpr Expr Literal)
+    (defrecord BooleanExpr        []) (extend-type BooleanExpr Expr Literal)
+    (defrecord MonitorEnterExpr   []) (extend-type MonitorEnterExpr Expr Untyped)
+    (defrecord MonitorExitExpr    []) (extend-type MonitorExitExpr Expr Untyped)
+    (defrecord AssignExpr         []) (extend-type AssignExpr Expr)
+    (defrecord ImportExpr         []) (extend-type ImportExpr Expr)
+    (defrecord EmptyExpr          []) (extend-type EmptyExpr Expr)
+    (defrecord ConstantExpr       []) (extend-type ConstantExpr Expr Literal)
+    (defrecord NumberExpr         []) (extend-type NumberExpr Expr Literal MaybePrimitive)
+    (defrecord StringExpr         []) (extend-type StringExpr Expr Literal)
+    (defrecord KeywordExpr        []) (extend-type KeywordExpr Expr Literal)
+    (defrecord InstanceFieldExpr  []) (extend-type InstanceFieldExpr Assignable Expr Interop MaybePrimitive)
+    (defrecord StaticFieldExpr    []) (extend-type StaticFieldExpr Assignable Expr Interop MaybePrimitive)
+    (defrecord InstanceMethodExpr []) (extend-type InstanceMethodExpr Expr Interop MaybePrimitive)
+    (defrecord StaticMethodExpr   []) (extend-type StaticMethodExpr Expr Interop MaybePrimitive)
+    (defrecord UnresolvedVarExpr  []) (extend-type UnresolvedVarExpr Expr)
+    (defrecord VarExpr            []) (extend-type VarExpr Assignable Expr)
+    (defrecord TheVarExpr         []) (extend-type TheVarExpr Expr)
+    (defrecord BodyExpr           []) (extend-type BodyExpr Expr MaybePrimitive)
     (defrecord CatchClause        [])
-    (defrecord TryExpr            [] Expr)
-    (defrecord ThrowExpr          [] Expr Untyped)
-    (defrecord NewExpr            [] Expr)
-    (defrecord MetaExpr           [] Expr)
-    (defrecord IfExpr             [] Expr MaybePrimitive)
-    (defrecord ListExpr           [] Expr)
-    (defrecord MapExpr            [] Expr)
-    (defrecord SetExpr            [] Expr)
-    (defrecord VectorExpr         [] Expr)
-    (defrecord KeywordInvokeExpr  [] Expr)
-    (defrecord InstanceOfExpr     [] Expr MaybePrimitive)
-    (defrecord InvokeExpr         [] Expr)
+    (defrecord TryExpr            []) (extend-type TryExpr Expr)
+    (defrecord ThrowExpr          []) (extend-type ThrowExpr Expr Untyped)
+    (defrecord NewExpr            []) (extend-type NewExpr Expr)
+    (defrecord MetaExpr           []) (extend-type MetaExpr Expr)
+    (defrecord IfExpr             []) (extend-type IfExpr Expr MaybePrimitive)
+    (defrecord ListExpr           []) (extend-type ListExpr Expr)
+    (defrecord MapExpr            []) (extend-type MapExpr Expr)
+    (defrecord SetExpr            []) (extend-type SetExpr Expr)
+    (defrecord VectorExpr         []) (extend-type VectorExpr Expr)
+    (defrecord KeywordInvokeExpr  []) (extend-type KeywordInvokeExpr Expr)
+    (defrecord InstanceOfExpr     []) (extend-type InstanceOfExpr Expr MaybePrimitive)
+    (defrecord InvokeExpr         []) (extend-type InvokeExpr Expr)
     (defrecord LocalBinding       [])
-    (defrecord LocalBindingExpr   [] Assignable Expr MaybePrimitive)
-    (defrecord MethodParamExpr    [] Expr MaybePrimitive)
-    (defrecord FnMethod           [] IopMethod)
-    (defrecord FnExpr             [] Expr IopObject)
-    (defrecord DefExpr            [] Expr)
+    (defrecord LocalBindingExpr   []) (extend-type LocalBindingExpr Assignable Expr MaybePrimitive)
+    (defrecord MethodParamExpr    []) (extend-type MethodParamExpr Expr MaybePrimitive)
+    (defrecord FnMethod           []) (extend-type FnMethod IopMethod)
+    (defrecord FnExpr             []) (extend-type FnExpr Expr IopObject)
+    (defrecord DefExpr            []) (extend-type DefExpr Expr)
     (defrecord BindingInit        [])
-    (defrecord LetFnExpr          [] Expr)
-    (defrecord LetExpr            [] Expr MaybePrimitive)
-    (defrecord RecurExpr          [] Expr MaybePrimitive)
-    (defrecord NewInstanceMethod  [] IopMethod)
-    (defrecord NewInstanceExpr    [] Expr IopObject)
-    (defrecord CaseExpr           [] Expr MaybePrimitive)
+    (defrecord LetFnExpr          []) (extend-type LetFnExpr Expr)
+    (defrecord LetExpr            []) (extend-type LetExpr Expr MaybePrimitive)
+    (defrecord RecurExpr          []) (extend-type RecurExpr Expr MaybePrimitive)
+    (defrecord NewInstanceMethod  []) (extend-type NewInstanceMethod IopMethod)
+    (defrecord NewInstanceExpr    []) (extend-type NewInstanceExpr Expr IopObject)
+    (defrecord CaseExpr           []) (extend-type CaseExpr Expr MaybePrimitive)
 )
 
 (java-ns cloiure.lang.IFn
@@ -294,9 +356,20 @@
     )
 )
 
+;;;
+ ; Returns true if x implements IFn.
+ ; Note that many data structures (e.g. sets and maps) implement IFn.
+ ;;
+(defn ifn? [x] (or (satisfies? IFn x) (instance? clojure.lang.IFn x)))
+
 (java-ns cloiure.lang.Fn
     (defprotocol Fn)
 )
+
+;;;
+ ; Returns true if x implements Fn, i.e. is an object created via fn.
+ ;;
+(defn fn? [x] (or (satisfies? Fn x) (instance? clojure.lang.Fn x)))
 
 (java-ns cloiure.lang.IType
     (defprotocol IType)
@@ -354,11 +427,15 @@
     (defprotocol Sequential)
 )
 
+(defn sequential? [x] (or (satisfies? Sequential x) (instance? clojure.lang.Sequential x)))
+
 (java-ns cloiure.lang.Reversible
     (defprotocol Reversible
         (#_"ISeq" Reversible'''rseq [#_"Reversible" this])
     )
 )
+
+(defn reversible? [x] (or (satisfies? Reversible x) (instance? clojure.lang.Reversible x)))
 
 (java-ns cloiure.lang.Sorted
     (defprotocol Sorted
@@ -369,11 +446,18 @@
     )
 )
 
+(defn sorted? [x] (or (satisfies? Sorted x) (instance? clojure.lang.Sorted x)))
+
 (java-ns cloiure.lang.Counted
     (defprotocol Counted
         (#_"int" Counted'''count [#_"Counted" this])
     )
 )
+
+;;;
+ ; Returns true if x implements count in constant time.
+ ;;
+(defn counted? [x] (or (satisfies? Counted x) (instance? clojure.lang.Counted x)))
 
 (java-ns cloiure.lang.Indexed
     (defprotocol Indexed
@@ -383,6 +467,11 @@
         )
     )
 )
+
+;;;
+ ; Return true if x implements Indexed, indicating efficient lookup by index.
+ ;;
+(defn indexed? [x] (or (satisfies? Indexed x) (instance? clojure.lang.Indexed x)))
 
 (java-ns cloiure.lang.ILookup
     (defprotocol ILookup
@@ -412,6 +501,8 @@
     )
 )
 
+(defn map-entry? [x] (or (satisfies? IMapEntry x) (instance? clojure.lang.IMapEntry x)))
+
 (java-ns cloiure.lang.IPersistentCollection
     (defprotocol IPersistentCollection
         (#_"IPersistentCollection" IPersistentCollection'''conj [#_"IPersistentCollection" this, #_"Object" o])
@@ -419,11 +510,15 @@
     )
 )
 
+(defn coll? [x] (or (satisfies? IPersistentCollection x) (instance? clojure.lang.IPersistentCollection x)))
+
 (java-ns cloiure.lang.IEditableCollection
     (defprotocol IEditableCollection
         (#_"ITransientCollection" IEditableCollection'''asTransient [#_"IEditableCollection" this])
     )
 )
+
+(defn editable? [x] (or (satisfies? IEditableCollection x) (instance? clojure.lang.IEditableCollection x)))
 
 (java-ns cloiure.lang.Associative
     (defprotocol Associative
@@ -433,11 +528,15 @@
     )
 )
 
+(defn associative? [x] (or (satisfies? Associative x) (instance? clojure.lang.Associative x)))
+
 (java-ns cloiure.lang.IPersistentMap
     (defprotocol IPersistentMap
         (#_"IPersistentMap" IPersistentMap'''dissoc [#_"IPersistentMap" this, #_"Object" key])
     )
 )
+
+(defn map? [x] (or (satisfies? IPersistentMap x) (instance? clojure.lang.IPersistentMap x)))
 
 (java-ns cloiure.lang.IPersistentSet
     (defprotocol IPersistentSet
@@ -446,6 +545,8 @@
         (#_"Object" IPersistentSet'''get [#_"IPersistentSet" this, #_"Object" key])
     )
 )
+
+(defn set? [x] (or (satisfies? IPersistentSet x) (instance? clojure.lang.IPersistentSet x)))
 
 (java-ns cloiure.lang.IPersistentStack
     (defprotocol IPersistentStack
@@ -458,11 +559,15 @@
     (defprotocol IPersistentList)
 )
 
+(defn list? [x] (or (satisfies? IPersistentList x) (instance? clojure.lang.IPersistentList x)))
+
 (java-ns cloiure.lang.IPersistentVector
     (defprotocol IPersistentVector
         (#_"IPersistentVector" IPersistentVector'''assocN [#_"IPersistentVector" this, #_"int" i, #_"Object" val])
     )
 )
+
+(defn vector? [x] (or (satisfies? IPersistentVector x) (instance? clojure.lang.IPersistentVector x)))
 
 (java-ns cloiure.lang.ITransientCollection
     (defprotocol ITransientCollection
@@ -546,7 +651,7 @@
 )
 
 (java-ns cloiure.lang.Ratio
-    (defrecord Ratio #_"Number" [] #_"Comparable" IObject)
+    (defrecord Ratio #_"Number" []) (extend-type Ratio #_"Comparable" IObject)
 )
 
 (java-ns cloiure.lang.Numbers
@@ -571,42 +676,46 @@
         (#_"Number" Ops'''remainder [#_"Ops" this, #_"Number" x, #_"Number" y])
     )
 
-    (defrecord LongOps [] Ops)
-    (defrecord RatioOps [] Ops)
-    (defrecord BigIntOps [] Ops)
+    (defrecord LongOps []) (extend-type LongOps Ops)
+    (defrecord RatioOps []) (extend-type RatioOps Ops)
+    (defrecord BigIntOps []) (extend-type BigIntOps Ops)
     #_stateless
     (defrecord Numbers [])
 )
 
 (java-ns cloiure.lang.Atom
-    (defrecord Atom [] IAtom IMeta IDeref IReference)
+    (defrecord Atom []) (extend-type Atom IAtom IMeta IDeref IReference)
 )
 
 (java-ns cloiure.lang.Volatile
-    (defrecord Volatile [] IDeref)
+    (defrecord Volatile []) (extend-type Volatile IDeref)
 )
 
 (declare AFn'''throwArity)
 
 (java-ns cloiure.lang.AFn
     #_abstract
-    (defrecord AFn [] IFn
+    (defrecord AFn []) (extend-type AFn IFn) (§ soon
         #_abstract
-      #_(#_"Object" AFn'''throwArity [#_"AFn" this, #_"int" n])
+        (#_"Object" AFn'''throwArity [#_"AFn" this, #_"int" n])
     )
 )
 
 (java-ns cloiure.lang.Symbol
-    (defrecord Symbol #_"AFn" [] #_"Comparable" IFn IHashEq IMeta INamed IObj IObject)
+    (defrecord Symbol #_"AFn" []) (extend-type Symbol #_"Comparable" IFn IHashEq IMeta INamed IObj IObject)
 )
 
+(defn symbol? [x] (or (instance? Symbol x) (instance? clojure.lang.Symbol x)))
+
 (java-ns cloiure.lang.Keyword
-    (defrecord Keyword [] #_"Comparable" IFn IHashEq INamed IObject)
+    (defrecord Keyword []) (extend-type Keyword #_"Comparable" IFn IHashEq INamed IObject)
 )
+
+(defn keyword? [x] (or (instance? Keyword x) (instance? clojure.lang.Keyword x)))
 
 (java-ns cloiure.lang.AFunction
     #_abstract
-    (defrecord AFunction #_"AFn" [] #_"Comparator" Fn IFn IMeta IObj)
+    (defrecord AFunction #_"AFn" []) (extend-type AFunction #_"Comparator" Fn IFn IMeta IObj)
 )
 
 (declare RestFn'''getRequiredArity)
@@ -614,66 +723,66 @@
 
 (java-ns cloiure.lang.RestFn
     #_abstract
-    (defrecord RestFn #_"AFunction" [] #_"Comparator" Fn IFn IMeta IObj
+    (defrecord RestFn #_"AFunction" []) (extend-type RestFn #_"Comparator" Fn IFn IMeta IObj) (§ soon
         #_abstract
-      #_(#_"int" RestFn'''getRequiredArity [#_"RestFn" this])
+        (#_"int" RestFn'''getRequiredArity [#_"RestFn" this])
         #_abstract
-      #_(#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" args])
+        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" args])
         #_abstract
-      #_(#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" args])
+        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" args])
         #_abstract
-      #_(#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" args])
+        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" args])
         #_abstract
-      #_(#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" args])
+        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" args])
         #_abstract
-      #_(#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" args])
+        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" args])
         #_abstract
-      #_(#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" args])
+        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" args])
         #_abstract
-      #_(#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" args])
+        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" args])
         #_abstract
-      #_(#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" args])
+        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" args])
         #_abstract
-      #_(#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" args])
+        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" args])
         #_abstract
-      #_(#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" args])
+        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" args])
     )
 )
 
 (java-ns cloiure.lang.ASeq
     #_abstract
-    (defrecord ASeq [] IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+    (defrecord ASeq []) (extend-type ASeq IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.LazySeq
-    (defrecord LazySeq [] IHashEq IMeta IObj IObject IPending IPersistentCollection ISeq Seqable Sequential)
+    (defrecord LazySeq []) (extend-type LazySeq IHashEq IMeta IObj IObject IPending IPersistentCollection ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.APersistentMap
     #_abstract
-    (defrecord APersistentMap #_"AFn" [] Associative Counted IFn IHashEq ILookup IObject IPersistentCollection IPersistentMap Seqable)
+    (defrecord APersistentMap #_"AFn" []) (extend-type APersistentMap Associative Counted IFn IHashEq ILookup IObject IPersistentCollection IPersistentMap Seqable)
 )
 
 (java-ns cloiure.lang.APersistentSet
     #_abstract
-    (defrecord APersistentSet #_"AFn" [] Counted IFn IHashEq IObject IPersistentCollection IPersistentSet Seqable)
+    (defrecord APersistentSet #_"AFn" []) (extend-type APersistentSet Counted IFn IHashEq IObject IPersistentCollection IPersistentSet Seqable)
 )
 
 (java-ns cloiure.lang.APersistentVector
-    (defrecord VSeq #_"ASeq" [] Counted IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
-    (defrecord RSeq #_"ASeq" [] Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+    (defrecord VSeq #_"ASeq" []) (extend-type VSeq Counted IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
+    (defrecord RSeq #_"ASeq" []) (extend-type RSeq Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
     #_abstract
-    (defrecord APersistentVector #_"AFn" [] Associative #_"Comparable" Counted IFn IHashEq ILookup Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
-    (defrecord SubVector #_"APersistentVector" [] Associative #_"Comparable" Counted IFn IHashEq ILookup IMeta Indexed IObj IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord APersistentVector #_"AFn" []) (extend-type APersistentVector Associative #_"Comparable" Counted IFn IHashEq ILookup Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord SubVector #_"APersistentVector" []) (extend-type SubVector Associative #_"Comparable" Counted IFn IHashEq ILookup IMeta Indexed IObj IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
 )
 
 (java-ns cloiure.lang.AMapEntry
     #_abstract
-    (defrecord AMapEntry #_"APersistentVector" [] Associative #_"Comparable" Counted IFn IHashEq ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord AMapEntry #_"APersistentVector" []) (extend-type AMapEntry Associative #_"Comparable" Counted IFn IHashEq ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
 )
 
 (java-ns cloiure.lang.ArraySeq
-    (defrecord ArraySeq #_"ASeq" [] Counted IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
+    (defrecord ArraySeq #_"ASeq" []) (extend-type ArraySeq Counted IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
 )
 
 (declare ATransientMap'''ensureEditable)
@@ -685,7 +794,7 @@
 
 (java-ns cloiure.lang.ATransientMap
     #_abstract
-    (defrecord ATransientMap #_"AFn" [] Counted IFn ILookup ITransientAssociative ITransientCollection ITransientMap) (§ soon
+    (defrecord ATransientMap #_"AFn" []) (extend-type ATransientMap Counted IFn ILookup ITransientAssociative ITransientCollection ITransientMap) (§ soon
         #_abstract
         (#_"void" ATransientMap'''ensureEditable [#_"ATransientMap" this])
         #_abstract
@@ -703,31 +812,31 @@
 
 (java-ns cloiure.lang.ATransientSet
     #_abstract
-    (defrecord ATransientSet #_"AFn" [] Counted IFn ITransientCollection ITransientSet)
+    (defrecord ATransientSet #_"AFn" []) (extend-type ATransientSet Counted IFn ITransientCollection ITransientSet)
 )
 
 (java-ns cloiure.lang.Cons
-    (defrecord Cons #_"ASeq" [] Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+    (defrecord Cons #_"ASeq" []) (extend-type Cons Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.Cycle
-    (defrecord Cycle #_"ASeq" [] IHashEq IMeta IObj IObject IPending IPersistentCollection IReduce ISeq Seqable Sequential)
+    (defrecord Cycle #_"ASeq" []) (extend-type Cycle IHashEq IMeta IObj IObject IPending IPersistentCollection IReduce ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.Delay
-    (defrecord Delay [] IDeref IPending)
+    (defrecord Delay []) (extend-type Delay IDeref IPending)
 )
 
 (java-ns cloiure.lang.Iterate
-    (defrecord Iterate #_"ASeq" [] IHashEq IMeta IObj IObject IPending IPersistentCollection IReduce ISeq Seqable Sequential)
+    (defrecord Iterate #_"ASeq" []) (extend-type Iterate IHashEq IMeta IObj IObject IPending IPersistentCollection IReduce ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.KeywordLookupSite
-    (defrecord KeywordLookupSite [] ILookupSite ILookupThunk)
+    (defrecord KeywordLookupSite []) (extend-type KeywordLookupSite ILookupSite ILookupThunk)
 )
 
 (java-ns cloiure.lang.MapEntry
-    (defrecord MapEntry #_"AMapEntry" [] Associative #_"Comparable" Counted IFn IHashEq ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord MapEntry #_"AMapEntry" []) (extend-type MapEntry Associative #_"Comparable" Counted IFn IHashEq ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
 )
 
 (java-ns cloiure.lang.MethodImplCache
@@ -736,39 +845,39 @@
 )
 
 (java-ns cloiure.lang.Namespace
-    (defrecord Namespace [] IObject)
+    (defrecord Namespace []) (extend-type Namespace IObject)
 )
 
 (java-ns cloiure.lang.PersistentArrayMap
-    (defrecord MSeq #_"ASeq" [] Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
-    (defrecord TransientArrayMap #_"ATransientMap" [] Counted IFn ILookup ITransientAssociative ITransientCollection ITransientMap)
-    (defrecord PersistentArrayMap #_"APersistentMap" [] Associative Counted IEditableCollection IFn IHashEq IKVReduce ILookup IMeta IObj IObject IPersistentCollection IPersistentMap Seqable)
+    (defrecord MSeq #_"ASeq" []) (extend-type MSeq Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+    (defrecord TransientArrayMap #_"ATransientMap" []) (extend-type TransientArrayMap Counted IFn ILookup ITransientAssociative ITransientCollection ITransientMap)
+    (defrecord PersistentArrayMap #_"APersistentMap" []) (extend-type PersistentArrayMap Associative Counted IEditableCollection IFn IHashEq IKVReduce ILookup IMeta IObj IObject IPersistentCollection IPersistentMap Seqable)
 )
 
 (java-ns cloiure.lang.PersistentHashMap
-    (defrecord TransientHashMap #_"ATransientMap" [] Counted IFn ILookup ITransientAssociative ITransientCollection ITransientMap)
-    (defrecord HSeq #_"ASeq" [] IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
-    (defrecord ArrayNode [] INode)
-    (defrecord BitmapIndexedNode [] INode)
-    (defrecord HashCollisionNode [] INode)
-    (defrecord NodeSeq #_"ASeq" [] IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
-    (defrecord PersistentHashMap #_"APersistentMap" [] Associative Counted IEditableCollection IFn IHashEq IKVReduce ILookup IMeta IObj IObject IPersistentCollection IPersistentMap Seqable)
+    (defrecord TransientHashMap #_"ATransientMap" []) (extend-type TransientHashMap Counted IFn ILookup ITransientAssociative ITransientCollection ITransientMap)
+    (defrecord HSeq #_"ASeq" []) (extend-type HSeq IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+    (defrecord ArrayNode []) (extend-type ArrayNode INode)
+    (defrecord BitmapIndexedNode []) (extend-type BitmapIndexedNode INode)
+    (defrecord HashCollisionNode []) (extend-type HashCollisionNode INode)
+    (defrecord NodeSeq #_"ASeq" []) (extend-type NodeSeq IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+    (defrecord PersistentHashMap #_"APersistentMap" []) (extend-type PersistentHashMap Associative Counted IEditableCollection IFn IHashEq IKVReduce ILookup IMeta IObj IObject IPersistentCollection IPersistentMap Seqable)
 )
 
 (java-ns cloiure.lang.PersistentHashSet
-    (defrecord TransientHashSet #_"ATransientSet" [] Counted IFn ITransientCollection ITransientSet)
-    (defrecord PersistentHashSet #_"APersistentSet" [] Counted IEditableCollection IFn IHashEq IMeta IObj IObject IPersistentCollection IPersistentSet Seqable)
+    (defrecord TransientHashSet #_"ATransientSet" []) (extend-type TransientHashSet Counted IFn ITransientCollection ITransientSet)
+    (defrecord PersistentHashSet #_"APersistentSet" []) (extend-type PersistentHashSet Counted IEditableCollection IFn IHashEq IMeta IObj IObject IPersistentCollection IPersistentSet Seqable)
 )
 
 (java-ns cloiure.lang.PersistentList
-    (defrecord Primordial #_"RestFn" [] #_"Comparator" Fn IFn IMeta IObj)
-    (defrecord EmptyList [] Counted IHashEq IMeta IObj IObject IPersistentCollection IPersistentList IPersistentStack ISeq Seqable Sequential)
-    (defrecord PersistentList #_"ASeq" [] Counted IHashEq IMeta IObj IObject IPersistentCollection IPersistentList IPersistentStack IReduce ISeq Seqable Sequential)
+    (defrecord Primordial #_"RestFn" []) (extend-type Primordial #_"Comparator" Fn IFn IMeta IObj)
+    (defrecord EmptyList []) (extend-type EmptyList Counted IHashEq IMeta IObj IObject IPersistentCollection IPersistentList IPersistentStack ISeq Seqable Sequential)
+    (defrecord PersistentList #_"ASeq" []) (extend-type PersistentList Counted IHashEq IMeta IObj IObject IPersistentCollection IPersistentList IPersistentStack IReduce ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.PersistentQueue
-    (defrecord QSeq #_"ASeq" [] Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
-    (defrecord PersistentQueue [] Counted IHashEq IMeta IObj IObject IPersistentCollection IPersistentList IPersistentStack Seqable Sequential)
+    (defrecord QSeq #_"ASeq" []) (extend-type QSeq Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+    (defrecord PersistentQueue []) (extend-type PersistentQueue Counted IHashEq IMeta IObj IObject IPersistentCollection IPersistentList IPersistentStack Seqable Sequential)
 )
 
 (declare TNode'''left)
@@ -785,7 +894,7 @@
 
 (java-ns cloiure.lang.PersistentTreeMap
     #_abstract
-    (defrecord TNode #_"AMapEntry" [] Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential) (§ soon
+    (defrecord TNode #_"AMapEntry" []) (extend-type TNode Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential) (§ soon
         #_abstract
         (#_"TNode" TNode'''left [#_"TNode" this])
         #_abstract
@@ -809,42 +918,42 @@
         #_abstract
         (#_"TNode" TNode'''replace [#_"TNode" this, #_"Object" key, #_"Object" val, #_"TNode" left, #_"TNode" right])
     )
-    (defrecord Black #_"TNode" [] Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
-    (defrecord BlackVal #_"Black" [] Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
-    (defrecord BlackBranch #_"Black" [] Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
-    (defrecord BlackBranchVal #_"BlackBranch" [] Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
-    (defrecord Red #_"TNode" [] Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
-    (defrecord RedVal #_"Red" [] Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
-    (defrecord RedBranch #_"Red" [] Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
-    (defrecord RedBranchVal #_"RedBranch" [] Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
-    (defrecord TSeq #_"ASeq" [] Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
-    (defrecord PersistentTreeMap #_"APersistentMap" [] Associative Counted IFn IHashEq IKVReduce ILookup IMeta IObj IObject IPersistentCollection IPersistentMap Reversible Seqable Sorted)
+    (defrecord Black #_"TNode" []) (extend-type Black Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord BlackVal #_"Black" []) (extend-type BlackVal Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord BlackBranch #_"Black" []) (extend-type BlackBranch Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord BlackBranchVal #_"BlackBranch" []) (extend-type BlackBranchVal Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord Red #_"TNode" []) (extend-type Red Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord RedVal #_"Red" []) (extend-type RedVal Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord RedBranch #_"Red" []) (extend-type RedBranch Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord RedBranchVal #_"RedBranch" []) (extend-type RedBranchVal Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord TSeq #_"ASeq" []) (extend-type TSeq Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+    (defrecord PersistentTreeMap #_"APersistentMap" []) (extend-type PersistentTreeMap Associative Counted IFn IHashEq IKVReduce ILookup IMeta IObj IObject IPersistentCollection IPersistentMap Reversible Seqable Sorted)
 )
 
 (java-ns cloiure.lang.PersistentTreeSet
-    (defrecord PersistentTreeSet #_"APersistentSet" [] Counted IFn IHashEq IMeta IObj IObject IPersistentCollection IPersistentSet Reversible Seqable Sorted)
+    (defrecord PersistentTreeSet #_"APersistentSet" []) (extend-type PersistentTreeSet Counted IFn IHashEq IMeta IObj IObject IPersistentCollection IPersistentSet Reversible Seqable Sorted)
 )
 
 (java-ns cloiure.lang.PersistentVector
     (defrecord VNode [])
-    (defrecord TransientVector #_"AFn" [] Counted IFn ILookup Indexed ITransientAssociative ITransientCollection ITransientVector)
-    (defrecord PersistentVector #_"APersistentVector" [] Associative #_"Comparable" Counted IEditableCollection IFn IHashEq IKVReduce ILookup IMeta Indexed IObj IObject IPersistentCollection IPersistentStack IPersistentVector IReduce Reversible Seqable Sequential)
+    (defrecord TransientVector #_"AFn" []) (extend-type TransientVector Counted IFn ILookup Indexed ITransientAssociative ITransientCollection ITransientVector)
+    (defrecord PersistentVector #_"APersistentVector" []) (extend-type PersistentVector Associative #_"Comparable" Counted IEditableCollection IFn IHashEq IKVReduce ILookup IMeta Indexed IObj IObject IPersistentCollection IPersistentStack IPersistentVector IReduce Reversible Seqable Sequential)
 )
 
 (java-ns cloiure.lang.Repeat
-    (defrecord Repeat #_"ASeq" [] IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
+    (defrecord Repeat #_"ASeq" []) (extend-type Repeat IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.Range
-    (defrecord Range #_"ASeq" [] Counted IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
+    (defrecord Range #_"ASeq" []) (extend-type Range Counted IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.Reduced
-    (defrecord Reduced [] IDeref)
+    (defrecord Reduced []) (extend-type Reduced IDeref)
 )
 
 (java-ns cloiure.lang.StringSeq
-    (defrecord StringSeq #_"ASeq" [] Counted IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
+    (defrecord StringSeq #_"ASeq" []) (extend-type StringSeq Counted IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.Tuple
@@ -853,76 +962,13 @@
 )
 
 (java-ns cloiure.lang.Var
-    (defrecord Unbound #_"AFn" [] IFn IObject)
-    (defrecord Var [] IDeref IFn IMeta IObject IReference)
+    (defrecord Unbound #_"AFn" []) (extend-type Unbound IFn IObject)
+    (defrecord Var []) (extend-type Var IDeref IFn IMeta IObject IReference)
 )
 
 (java-ns cloiure.lang.RT
     #_stateless
     (defrecord RT [])
-)
-
-(defn coll?      [x] (§ soon satisfies? IPersistentCollection x) (instance? clojure.lang.IPersistentCollection x))
-(defn list?      [x] (§ soon satisfies? IPersistentList x)       (instance? clojure.lang.IPersistentList x))
-(defn map?       [x] (§ soon satisfies? IPersistentMap x)        (instance? clojure.lang.IPersistentMap x))
-(defn set?       [x] (§ soon satisfies? IPersistentSet x)        (instance? clojure.lang.IPersistentSet x))
-(defn vector?    [x] (§ soon satisfies? IPersistentVector x)     (instance? clojure.lang.IPersistentVector x))
-(defn map-entry? [x] (satisfies? IMapEntry x))
-(defn symbol?    [x] (instance? Symbol x))
-(defn keyword?   [x] (instance? Keyword x))
-
-(defmacro throw! [^String s] `(throw (RuntimeException. ~s)))
-
-(defmacro def-      [x & s] `(def      ~(vary-meta x assoc :private true) ~@s))
-(defmacro defn-     [x & s] `(defn     ~(vary-meta x assoc :private true) ~@s))
-(defmacro defmacro- [x & s] `(defmacro ~(vary-meta x assoc :private true) ~@s))
-
-(defn identity   [x] x)
-(defn constantly [x] (fn [& _] x))
-
-(defn ^Boolean nil?   [x] (identical? x nil))
-(defn ^Boolean false? [x] (identical? x false))
-(defn ^Boolean true?  [x] (identical? x true))
-(defn ^Boolean not    [x] (if x false true))
-(§ defn ^Boolean some?  [x] (not (nil? x)))
-(defn ^Boolean any?   [_] true)
-
-;;;
- ; Evaluates test. If logical false, evaluates and returns then expr,
- ; otherwise else expr, if supplied, else nil.
- ;;
-(defmacro if-not
-    ([? then] (if-not ? then nil))
-    ([? then else] (list 'if ? else then))
-)
-
-(defn second [s] (first (next s)))
-(defn third  [s] (first (next (next s))))
-(defn fourth [s] (first (next (next (next s)))))
-(defn ffirst [s] (first (first s)))
-(defn nnext  [s] (next (next s)))
-(defn last   [s] (if-some [r (next s)] (recur r) (first s)))
-
-;;;
- ; Evaluates exprs one at a time, from left to right. If a form returns logical false
- ; (nil or false), and returns that value and doesn't evaluate any of the other expressions,
- ; otherwise it returns the value of the last expr. (and) returns true.
- ;;
-(§ defmacro and
-    ([] true)
-    ([x] x)
-    ([x & s] `(let [and# ~x] (if and# (and ~@s) and#)))
-)
-
-;;;
- ; Evaluates exprs one at a time, from left to right. If a form returns a logical true value,
- ; or returns that value and doesn't evaluate any of the other expressions, otherwise it returns
- ; the value of the last expression. (or) returns nil.
- ;;
-(defmacro or
-    ([] nil)
-    ([x] x)
-    ([x & s] `(let [or# ~x] (if or# or# (or ~@s))))
 )
 
 (letfn [(=> [s] (if (= '=> (first s)) (next s) (cons nil s)))]
@@ -992,7 +1038,7 @@
 (declare conj)
 
 (defn into [to from]
-    (if #_(§ soon satisfies? IEditableCollection to) (instance? clojure.lang.IEditableCollection to)
+    (if (editable? to)
         (reduce! conj! to from)
         (reduce conj to from)
     )
@@ -1017,17 +1063,6 @@
         (instance? Byte n)
     )
 )
-
-;;;
- ; Returns true if x implements IFn.
- ; Note that many data structures (e.g. sets and maps) implement IFn.
- ;;
-(defn ifn? [x] (satisfies? IFn x))
-
-;;;
- ; Returns true if x implements Fn, i.e. is an object created via fn.
- ;;
-(defn fn? [x] (satisfies? Fn x))
 
 ;;;
  ; Returns the namespace String of a symbol or keyword, or nil if not present.
@@ -1079,36 +1114,6 @@
  ; Returns true if a value has been produced for a delay or lazy sequence.
  ;;
 (defn realized? [^cloiure.core.IPending x] (IPending'''isRealized x))
-
-;;;
- ; Returns true if coll implements Sequential.
- ;;
-(defn sequential? [coll] (satisfies? Sequential coll))
-
-;;;
- ; Returns true if coll implements Reversible.
- ;;
-(defn reversible? [coll] (satisfies? Reversible coll))
-
-;;;
- ; Returns true if coll implements Sorted.
- ;;
-(defn sorted? [coll] (satisfies? Sorted coll))
-
-;;;
- ; Returns true if coll implements count in constant time.
- ;;
-(defn counted? [coll] (satisfies? Counted coll))
-
-;;;
- ; Return true if coll implements Indexed, indicating efficient lookup by index.
- ;;
-(defn indexed? [coll] (satisfies? Indexed coll))
-
-;;;
- ; Returns true if coll implements Associative.
- ;;
-(defn associative? [coll] (satisfies? Associative coll))
 
 ;;;
  ; With no args, returns the empty string. With one arg x, returns x.toString().
@@ -1218,9 +1223,6 @@
     )
 
     (declare <)
-    (declare alength)
-    (declare aget)
-    (declare inc)
 
     (defn #_"Field" Reflector'getField [#_"Class" c, #_"String" name, #_"boolean" static?]
         (let [#_"Field[]" allfields (.getFields c)]
@@ -1236,7 +1238,6 @@
     )
 
     (declare zero?)
-    (declare count)
     (declare nth)
 
     (defn #_"PersistentVector" Reflector'getMethods [#_"Class" c, #_"int" arity, #_"String" name, #_"boolean" static?]
@@ -1280,8 +1281,6 @@
         )
     )
 
-    (declare condp)
-
     (defn #_"Object" Reflector'boxArg [#_"Class" c, #_"Object" arg]
         (let [unexpected! #(throw! (str "unexpected param type, expected: " c ", given: " (.getName (class arg))))]
             (cond
@@ -1300,10 +1299,6 @@
             )
         )
     )
-
-    (declare pos?)
-    (declare make-array)
-    (declare aset)
 
     (defn #_"Object[]" Reflector'boxArgs [#_"Class[]" params, #_"Object[]" args]
         (when (pos? (alength params))
@@ -1613,8 +1608,6 @@
     (def #_"NilExpr" Compiler'NIL_EXPR (NilExpr'new))
 )
 
-(declare merge)
-
 (class-ns BooleanExpr
     (defn #_"BooleanExpr" BooleanExpr'new [#_"boolean" val]
         (merge (BooleanExpr.)
@@ -1675,8 +1668,6 @@
     (def #_"Var" ^:dynamic *compile-stub-sym*  ) ;; Symbol
     (def #_"Var" ^:dynamic *compile-stub-class*) ;; Class
 
-    (declare vector)
-
     (def #_"[Method]" Compiler'createTupleMethods
         (vector
             (Method/getMethod "cloiure.core.IPersistentVector create()")
@@ -1688,8 +1679,6 @@
             (Method/getMethod "cloiure.core.IPersistentVector create(Object, Object, Object, Object, Object, Object)")
         )
     )
-
-    (declare +)
 
     (def- #_"Type[][]" Compiler'ARG_TYPES
         (let [#_"int" n Compiler'MAX_POSITIONAL_ARITY
@@ -1900,9 +1889,6 @@
         )
     )
 
-    (declare val)
-    (declare key)
-
     (def #_"IPersistentMap" Compiler'DEMUNGE_MAP
         ;; DEMUNGE_MAP maps strings to characters in the opposite direction that CHAR_MAP does, plus it maps "$" to '/'.
         (loop-when [#_"IPersistentMap" m { "$" \/ } #_"ISeq" s (seq Compiler'CHAR_MAP)] (some? s) => m
@@ -1911,10 +1897,6 @@
             )
         )
     )
-
-    (declare to-array)
-    (declare keys)
-    (declare -)
 
     (def #_"Pattern" Compiler'DEMUNGE_PATTERN
         ;; DEMUNGE_PATTERN searches for the first of any occurrence of the strings that are keys of DEMUNGE_MAP.
@@ -1935,7 +1917,6 @@
         )
     )
 
-    (declare doseq)
     (declare get)
 
     (defn #_"String" Compiler'munge [#_"String" name]
@@ -2719,8 +2700,6 @@
                 (RT'classForNameNonLoading form)
         )
     )
-
-    (declare case)
 
     (defn #_"Class" Interop'primClassForName [#_"Symbol" sym]
         (when (some? sym)
@@ -3707,8 +3686,6 @@
         )
     )
 )
-
-(declare binding)
 
 (class-ns TryParser
     (defn #_"IParser" TryParser'new []
@@ -4801,7 +4778,6 @@
         )
     )
 
-    (declare ->)
     (declare into-array)
 
     (defn #_"FnMethod" FnMethod'parse [#_"IopObject" objx, #_"ISeq" form, #_"Object" retTag]
@@ -5159,7 +5135,6 @@
         nil
     )
 
-    (declare object-array)
     (declare RT'seqToArray)
     (declare RT'printString)
 
@@ -7697,8 +7672,6 @@
     )
 )
 
-(declare while)
-
 (class-ns CommentReader
     (defn #_"Object" comment-reader [#_"PushbackReader" r, #_"char" _delim]
         (while (not (any = (LispReader'read1 r) nil \newline \return)))
@@ -8268,7 +8241,7 @@
 ;;;
  ; Creates and returns an Atom with an initial value of x and optional meta m.
  ;;
-(defn atom
+(§ defn atom
     ([x] (Atom'new x))
     ([m x] (Atom'new m x))
 )
@@ -8959,13 +8932,13 @@
  ; Returns true if n is zero | greater than zero | less than zero, else false.
  ;;
 (defn zero? [n] (Numbers'isZero n))
-(defn pos?  [n] (Numbers'isPos  n))
+(§ defn pos?  [n] (Numbers'isPos  n))
 (defn neg?  [n] (Numbers'isNeg  n))
 
 ;;;
  ; Returns the sum of nums. (+) returns 0. Supports arbitrary precision.
  ;;
-(defn +
+(§ defn +
     ([] 0)
     ([x] (cast Number x))
     ([x y] (Numbers'add x y))
@@ -8976,7 +8949,7 @@
  ; If no ys are supplied, returns the negation of x, else subtracts
  ; the ys from x and returns the result. Supports arbitrary precision.
  ;;
-(defn -
+(§ defn -
     ([x] (Numbers'negate x))
     ([x y] (Numbers'subtract x y))
     ([x y & s] (reduce - (- x y) s))
@@ -8985,7 +8958,7 @@
 ;;;
  ; Returns a number one greater than num. Supports arbitrary precision.
  ;;
-(defn inc [x] (Numbers'inc x))
+(§ defn inc [x] (Numbers'inc x))
 
 ;;;
  ; Returns a number one less than num. Supports arbitrary precision.
@@ -9987,8 +9960,6 @@
         )
     )
 
-    (declare locking)
-
     #_method
     (defn- #_"Object" LazySeq''step [#_"LazySeq" this]
         (locking this
@@ -10638,7 +10609,7 @@
         )
     )
 
-    (extend-protocol Seqable Object'array
+    (§ soon extend-protocol Seqable Object'array
         (#_"ArraySeq" Seqable'''seq [#_"Object[]" a] (ArraySeq'create a))
     )
 
@@ -15828,12 +15799,12 @@
 ;;;
  ; Returns an array of Objects containing the contents of coll.
  ;;
-(defn ^objects to-array [coll] (RT'toArray coll))
+(§ defn ^objects to-array [coll] (RT'toArray coll))
 
 ;;;
  ; Creates a new vector containing the args.
  ;;
-(defn vector
+(§ defn vector
     ([] [])
     ([a] [a])
     ([a b] [a b])
@@ -16101,7 +16072,7 @@
  ; Returns the number of items in the collection. (count nil) returns 0.
  ; Also works on strings, arrays, collections and maps.
  ;;
-(defn count [s] (RT'count s))
+(§ defn count [s] (RT'count s))
 
 ;;;
  ; Coerce to boolean/int/long.
@@ -16212,13 +16183,13 @@
 ;;;
  ; Returns the key/value of/in the map entry.
  ;;
-(defn key [^cloiure.core.IMapEntry e] (IMapEntry'''key e))
-(defn val [^cloiure.core.IMapEntry e] (IMapEntry'''val e))
+(§ defn key [^cloiure.core.IMapEntry e] (IMapEntry'''key e))
+(§ defn val [^cloiure.core.IMapEntry e] (IMapEntry'''val e))
 
 ;;;
  ; Returns a sequence of the map's keys/values, in the same order as (seq m).
  ;;
-(defn keys [m] (map key m))
+(§ defn keys [m] (map key m))
 (defn vals [m] (map val m))
 
 ;;;
@@ -16236,7 +16207,7 @@
  ; Executes exprs in an implicit do, while holding the monitor of x.
  ; Will release the monitor of x in all circumstances.
  ;;
-(defmacro locking [x & body]
+(§ defmacro locking [x & body]
     `(let [lockee# ~x]
         (try
             (monitor-enter lockee#)
@@ -16273,7 +16244,7 @@
  ; If there are more forms, inserts the first form as the second item
  ; in second form, etc.
  ;;
-(defmacro -> [x & s]
+(§ defmacro -> [x & s]
     (when s => x
         (recur &form &env
             (let-when [f (first s)] (seq? f) => (list f x)
@@ -16302,9 +16273,11 @@
 )
 
 (defmacro- assert-args [& pairs]
-    `(when ~(first pairs) => (throw! (str (first ~'&form) " requires " ~(second pairs) " in " ~'*ns* ":" (:line (meta ~'&form))))
-        ~(when-some [s (nnext pairs)]
-            (list* `assert-args s)
+    (§ soon
+        `(when ~(first pairs) => (throw! (str (first ~'&form) " requires " ~(second pairs) " in " ~'*ns* ":" (:line (meta ~'&form))))
+            ~(when-some [s (nnext pairs)]
+                (list* `assert-args s)
+            )
         )
     )
 )
@@ -16413,7 +16386,7 @@
  ; are made in parallel (unlike let); all init-exprs are evaluated
  ; before the vars are bound to their new values.
  ;;
-(defmacro binding [bindings & body]
+(§ defmacro binding [bindings & body]
     (assert-args
         (vector? bindings) "a vector for its binding"
         (even? (count bindings)) "an even number of forms in binding vector"
@@ -16921,7 +16894,7 @@
  ; the first. If a key occurs in more than one map, the mapping from
  ; the latter (left-to-right) will be the mapping in the result.
  ;;
-(defn merge [& maps]
+(§ defn merge [& maps]
     (when (some identity maps)
         (reduce #(conj (or %1 {}) %2) maps)
     )
@@ -17122,7 +17095,7 @@
  ; Repeatedly executes body (presumably for side-effects) with bindings and filtering as provided by "for".
  ; Does not retain the head of the sequence. Returns nil.
  ;;
-(defmacro doseq [seq-exprs & body]
+(§ defmacro doseq [seq-exprs & body]
     (assert-args
         (vector? seq-exprs) "a vector for its binding"
         (even? (count seq-exprs)) "an even number of forms in binding vector"
@@ -17474,17 +17447,17 @@
 ;;;
  ; Returns the length of the Java array. Works on arrays of all types.
  ;;
-(defn alength [a] (RT'alength a))
+(§ defn alength [a] (RT'alength a))
 
 ;;;
  ; Returns a clone of the Java array. Works on arrays of known types.
  ;;
-(defn aclone [a] (RT'aclone a))
+(§ defn aclone [a] (RT'aclone a))
 
 ;;;
  ; Returns the value at the index/indices. Works on Java arrays of all types.
  ;;
-(defn aget
+(§ defn aget
     {:inline (fn [a i] `(RT'aget ~a (int ~i))) :inline-arities #{2}}
     ([a i]
         (Reflector'prepRet (.getComponentType (class a)) (Array/get a i))
@@ -17498,7 +17471,7 @@
  ; Sets the value at the index/indices.
  ; Works on Java arrays of reference types. Returns value.
  ;;
-(defn aset
+(§ defn aset
     {:inline (fn [a i v] `(RT'aset ~a (int ~i) ~v)) :inline-arities #{3}}
     ([a i v]
         (Array/set a i v)
@@ -17525,7 +17498,7 @@
  ; Sets the value at the index/indices. Works on arrays of boolean/byte/char/int/long. Returns value.
  ;;
 (def-aset aset-boolean setBoolean boolean)
-(def-aset aset-byte    setByte    byte   )
+(§ def-aset aset-byte    setByte    byte   )
 (def-aset aset-char    setChar    char   )
 (def-aset aset-int     setInt     int    )
 (def-aset aset-long    setLong    long   )
@@ -17533,7 +17506,7 @@
 ;;;
  ; Creates an array of objects.
  ;;
-(defn object-array ([size-or-seq] (RT'objectArray size-or-seq)))
+(§ defn object-array ([size-or-seq] (RT'objectArray size-or-seq)))
 
 ;;;
  ; Creates and returns an array of instances of the specified class of the specified dimension(s).
@@ -17541,7 +17514,7 @@
  ; Class objects can be obtained by using their imported or fully-qualified name.
  ; Class objects for the primitive types can be obtained using, e.g. Integer/TYPE.
  ;;
-(defn make-array
+(§ defn make-array
     ([^Class type n] (Array/newInstance type (int n)))
     ([^Class type dim & s]
         (let [dims (cons dim s) ^"[I" a (make-array Integer/TYPE (count dims))]
@@ -17628,7 +17601,7 @@
 ;;;
  ; Returns the name of the namespace, a symbol.
  ;;
-(§ defn ns-name [ns] (:name (the-ns ns)))
+(defn ns-name [ns] (:name (the-ns ns)))
 
 ;;;
  ; Returns a map of all the mappings for the namespace.
@@ -17850,7 +17823,7 @@
  ; (unless found in the environment), else nil. Note that if the symbol is fully qualified,
  ; the var/Class to which it resolves need not be present in the namespace.
  ;;
-(§ defn ns-resolve
+(defn ns-resolve
     ([ns sym] (ns-resolve ns nil sym))
     ([ns env sym]
         (when-not (contains? env sym)
@@ -18307,7 +18280,7 @@
  ; nodes for which branch? returns true. Root is the root node of the
  ; tree.
  ;;
-(§ defn tree-seq [branch? children root]
+(defn tree-seq [branch? children root]
     (let [walk
             (fn walk [node]
                 (lazy-seq
@@ -18839,7 +18812,7 @@
  ; to val if supplied. The namespace must exist. The var will adopt
  ; any metadata from the name symbol. Returns the var.
  ;;
-(defn intern
+(§ defn intern
     ([ns ^Symbol name]
         (let [v (Var'intern (the-ns ns) name)]
             (when-some [m (meta name)]
@@ -18862,7 +18835,7 @@
  ; Repeatedly executes body while test expression is true. Presumes
  ; some side-effect will cause test to become false/nil. Returns nil.
  ;;
-(defmacro while [? & s]
+(§ defmacro while [? & s]
     `(loop [] (when ~? ~@s (recur)))
 )
 
@@ -18904,7 +18877,7 @@
  ; and its value will be returned if no clause matches. If no default expression
  ; is provided and no clause matches, an IllegalArgumentException is thrown.
  ;;
-(defmacro condp [f? expr & clauses]
+(§ defmacro condp [f? expr & clauses]
     (let [gpred (gensym "pred__") gexpr (gensym "expr__")
           emit
             (fn emit [f? expr args]
@@ -19140,7 +19113,7 @@
  ; expression, a vector can be used to match a list if needed. The
  ; test-constants need not be all of the same type.
  ;;
-(defmacro case [e & clauses]
+(§ defmacro case [e & clauses]
     (let [ge (with-meta (gensym) {:tag Object})
           default
             (when (odd? (count clauses)) => `(throw! (str "no matching clause: " ~ge))
@@ -20335,13 +20308,13 @@
     ([] [])
     ([to] to)
     ([to from]
-        (if (satisfies? IEditableCollection to)
+        (if (editable? to)
             (with-meta (reduce! conj! to from) (meta to))
             (reduce conj to from)
         )
     )
     ([to xform from]
-        (if (satisfies? IEditableCollection to)
+        (if (editable? to)
             (with-meta (persistent! (transduce xform conj! (transient to) from)) (meta to))
             (transduce xform conj to from)
         )
@@ -20723,7 +20696,7 @@
  ; Note that, unlike cond branching, cond-> threading does not short circuit
  ; after the first true test expression.
  ;;
-(defmacro cond-> [expr & clauses]
+(§ defmacro cond-> [expr & clauses]
     (assert-args
         (even? (count clauses)) "an even number of forms as clauses"
     )
@@ -20741,7 +20714,7 @@
  ; Note that, unlike cond branching, cond->> threading does not short circuit
  ; after the first true test expression.
  ;;
-(defmacro cond->> [expr & clauses]
+(§ defmacro cond->> [expr & clauses]
     (assert-args
         (even? (count clauses)) "an even number of forms as clauses"
     )
@@ -20758,7 +20731,7 @@
  ; of that binding, then binds name to that result, repeating for each
  ; successive form, returning the result of the last form.
  ;;
-(defmacro as-> [expr name & forms]
+(§ defmacro as-> [expr name & forms]
     `(let [~name ~expr ~@(interleave (repeat name) (butlast forms))]
         ~(if (seq forms) (last forms) name)
     )
@@ -20768,7 +20741,7 @@
  ; When expr is not nil, threads it into the first form (via ->),
  ; and when that result is not nil, through the next, etc.
  ;;
-(defmacro some-> [expr & forms]
+(§ defmacro some-> [expr & forms]
     (let [g (gensym)
           steps (map (fn [step] `(if (nil? ~g) nil (-> ~g ~step))) forms)]
         `(let [~g ~expr ~@(interleave (repeat g) (butlast steps))]
@@ -20781,7 +20754,7 @@
  ; When expr is not nil, threads it into the first form (via ->>),
  ; and when that result is not nil, through the next, etc.
  ;;
-(defmacro some->> [expr & forms]
+(§ defmacro some->> [expr & forms]
     (let [g (gensym)
           steps (map (fn [step] `(if (nil? ~g) nil (->> ~g ~step))) forms)]
         `(let [~g ~expr ~@(interleave (repeat g) (butlast steps))]
