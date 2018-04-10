@@ -1,5 +1,5 @@
 (ns cloiure.core
-    (:refer-clojure :only [*ns* *print-length* + - -> = alength aget aset assoc atom binding case char condp cons count declare defmacro defn defprotocol defrecord doseq dotimes extend-protocol extend-type fn hash-map hash-set identical? if-some import inc int-array intern key keys let letfn list locking loop make-array merge object-array pos? reify satisfies? the-ns to-array val vary-meta vec vector when-some while with-meta])
+    (:refer-clojure :only [*ns* *print-length* + - -> = aclone alength aget apply aset assoc atom binding case char condp cons defmacro defn defprotocol defrecord doseq dotimes extend-protocol extend-type fn hash-map hash-set identical? if-some import inc int-array interleave intern key let list loop make-array map merge object-array pos? reify satisfies? symbol? the-ns to-array val vary-meta vec vector vector? when-some with-meta])
 )
 
 (defmacro § [& _])
@@ -64,17 +64,6 @@
  ;;
 (def ^:dynamic *warn-on-reflection* false)
 
-;;;
- ; Evaluates x and tests if it is an instance of class c. Returns true or false.
- ;;
-(defn instance? [^Class c x] (.isInstance c x))
-
-(defn class?   [x] (instance? Class x))
-(defn boolean? [x] (instance? Boolean x))
-(defn char?    [x] (instance? Character x))
-(defn number?  [x] (instance? Number x))
-(defn string?  [x] (instance? String x))
-
 (defmacro throw! [^String s] `(throw (RuntimeException. ~s)))
 
 (defmacro def-      [x & s] `(def      ~(vary-meta x assoc :private true) ~@s))
@@ -90,6 +79,26 @@
 (defn ^Boolean not    [x] (if x false true))
 (defn ^Boolean some?  [x] (not (nil? x)))
 (defn ^Boolean any?   [_] true)
+
+(java-ns cloiure.lang.IObject
+    (defprotocol IObject
+        (#_"boolean" IObject'''equals [#_"IObject" this, #_"Object" that])
+        (#_"int" IObject'''hashCode [#_"IObject" this])
+        (#_"String" IObject'''toString [#_"IObject" this])
+    )
+
+    (extend-type nil IObject
+        (#_"boolean" IObject'''equals [#_"nil" this, #_"Object" that] (nil? that))
+        (#_"int" IObject'''hashCode [#_"nil" this] 0)
+        (#_"String" IObject'''toString [#_"nil" this] "nil")
+    )
+
+    (extend-type Object IObject
+        (#_"boolean" IObject'''equals [#_"Object" this, #_"Object" that] (.equals this, that))
+        (#_"int" IObject'''hashCode [#_"Object" this] (.hashCode this))
+        (#_"String" IObject'''toString [#_"Object" this] (.toString this))
+    )
+)
 
 ;;;
  ; Evaluates test. If logical false, evaluates and returns then expr,
@@ -122,6 +131,22 @@
     ([x & s] `(let [or# ~x] (if or# or# (or ~@s))))
 )
 
+;;;
+ ; Executes exprs in an implicit do, while holding the monitor of x.
+ ; Will release the monitor of x in all circumstances.
+ ;;
+(defmacro locking [x & body]
+    `(let [lockee# ~x]
+        (try
+            (monitor-enter lockee#)
+            ~@body
+            (finally
+                (monitor-exit lockee#)
+            )
+        )
+    )
+)
+
 (java-ns cloiure.lang.Seqable
     (defprotocol Seqable
         (#_"ISeq" Seqable'''seq [#_"Seqable" this])
@@ -145,16 +170,22 @@
     )
 )
 
-;;;
- ; Returns a seq on the collection. If the collection is empty, returns nil.
- ; (seq nil) returns nil. seq also works on strings, arrays (of reference types).
- ;;
-(defn ^cloiure.core.ISeq seq [s] (Seqable'''seq s))
-
 (defn seq? [x] (and (some? x) (satisfies? ISeq x)))
 
 ;;;
- ; Returns the first item in the collection. Calls seq on its argument.
+ ; Returns a seq on coll. If coll is empty, returns nil.
+ ; (seq nil) returns nil.
+ ;;
+(defn ^cloiure.core.ISeq seq [s] (Seqable'''seq s))
+
+;;;
+ ; Returns true if coll has no items.
+ ; Please use the idiom (seq x) rather than (not (empty? x)).
+ ;;
+(defn empty? [s] (not (seq s)))
+
+;;;
+ ; Returns the first item in coll. Calls seq on its argument.
  ; If s is nil, returns nil.
  ;;
 (defn first [s]
@@ -187,47 +218,142 @@
 (defn last   [s] (if-some [r (next s)] (recur r) (first s)))
 
 ;;;
- ; defs the supplied var names with no bindings, useful for making forward declarations.
+ ; fnspec => (fname [params*] exprs) or (fname ([params*] exprs)+)
+ ;
+ ; Takes a vector of function specs and a body, and generates a set of
+ ; bindings of functions to their names. All of the names are available
+ ; in all of the definitions of the functions, as well as the body.
  ;;
-(§ defmacro declare [& names]
-    `(do
-        ~@(map #(list 'def (vary-meta % assoc :declared true)) names)
+(defmacro letfn {:special-form true, :forms '[(letfn [fnspecs*] exprs*)]} [fnspecs & body]
+    `(letfn* ~(vec (interleave (map first fnspecs) (map #(cons `fn %) fnspecs))) ~@body)
+)
+
+(letfn [(=> [s] (if (= '=> (first s)) (next s) (cons nil s)))]
+    (defmacro     when       [? & s] (let [[e & s] (=> s)]               `(if     ~? (do ~@s) ~e)))
+    (defmacro     when-not   [? & s] (let [[e & s] (=> s)]               `(if-not ~? (do ~@s) ~e)))
+    (defmacro let-when     [v ? & s] (let [[e & s] (=> s)] `(let ~(vec v) (if     ~? (do ~@s) ~e))))
+    (defmacro let-when-not [v ? & s] (let [[e & s] (=> s)] `(let ~(vec v) (if-not ~? (do ~@s) ~e))))
+)
+
+;;;
+ ; Takes a set of test/expr pairs. It evaluates each test one at a time.
+ ; If a test returns logical true, cond evaluates and returns the value of the
+ ; corresponding expr and doesn't evaluate any of the other tests or exprs.
+ ; (cond) returns nil.
+ ;;
+(defmacro cond [& s]
+    (when s
+        `(if ~(first s)
+            ~(when (next s) => (throw! "cond requires an even number of forms")
+                (second s)
+            )
+            (cond ~@(nnext s))
+        )
     )
 )
 
-(java-ns cloiure.lang.IObject
-    (defprotocol IObject
-        (#_"boolean" IObject'''equals [#_"IObject" this, #_"Object" that])
-        (#_"int" IObject'''hashCode [#_"IObject" this])
-        (#_"String" IObject'''toString [#_"IObject" this])
+;;;
+ ; Repeatedly executes body while test expression is true. Presumes
+ ; some side-effect will cause test to become false/nil. Returns nil.
+ ;;
+(defmacro while [? & s]
+    `(loop [] (when ~? ~@s (recur)))
+)
+
+(letfn [(v' [v] (cond (vector? v) v (symbol? v) [v v] :else [`_# v]))
+        (r' [r] (cond (vector? r) `((recur ~@r)) (some? r) `((recur ~r))))
+        (=> [s] (if (= '=> (first s)) (next s) (cons nil s)))
+        (l' [v ? r s] (let [r (r' r) [e & s] (=> s)] `(loop ~(v' v) (if ~? (do ~@s ~@r) ~e))))]
+    (defmacro loop-when [v ? & s] (l' v ? nil s))
+    (defmacro loop-when-recur [v ? r & s] (l' v ? r s))
+)
+
+(letfn [(r' [r] (cond (vector? r) `(recur ~@r) (some? r) `(recur ~r)))
+        (=> [s] (if (= '=> (first s)) (second s)))]
+    (defmacro recur-if [? r & s] `(if ~? ~(r' r) ~(=> s)))
+)
+
+(defmacro cond-let [v r & s]
+    (let [v (if (vector? v) v [`_# v]) e (when (seq s) `(cond-let ~@s))]
+        `(if-some ~v ~r ~e)
     )
+)
 
-    (extend-type nil IObject
-        (#_"boolean" IObject'''equals [#_"nil" this, #_"Object" that]
-            (nil? that)
-        )
+(defmacro any
+    ([f x y] `(~f ~x ~y))
+    ([f x y & z] `(let [f# ~f x# ~x _# (any f# x# ~y)] (if _# _# (any f# x# ~@z))))
+)
 
-        (#_"int" IObject'''hashCode [#_"nil" this]
-            0
-        )
+(defn- spread [s]
+    (cond
+        (nil? s) nil
+        (nil? (next s)) (seq (first s))
+        :else (cons (first s) (spread (next s)))
+    )
+)
 
-        (#_"String" IObject'''toString [#_"nil" this]
-            "nil"
+;;;
+ ; Creates a new seq containing the items prepended to the rest,
+ ; the last of which will be treated as a sequence.
+ ;;
+(defn list*
+    ([s] (seq s))
+    ([a s] (cons a s))
+    ([a b s] (cons a (cons b s)))
+    ([a b c s] (cons a (cons b (cons c s))))
+    ([a b c d & s] (cons a (cons b (cons c (cons d (spread s))))))
+)
+
+;;;
+ ; Returns the Class of x.
+ ;;
+(defn ^Class class [^Object x] (when (some? x) (.getClass x)))
+
+;;;
+ ; Throws a ClassCastException if x is not a c, else returns x.
+ ;;
+(defn cast [^Class c x] (.cast c x))
+
+;;;
+ ; Evaluates x and tests if it is an instance of class c. Returns true or false.
+ ;;
+(defn instance? [^Class c x] (.isInstance c x))
+
+(defn class?   [x] (instance? Class x))
+(defn boolean? [x] (instance? Boolean x))
+(defn char?    [x] (instance? Character x))
+(defn number?  [x] (instance? Number x))
+(defn string?  [x] (instance? String x))
+
+(defn integer? [n]
+    (or (instance? Long n)
+        (instance? BigInteger n)
+        (instance? Integer n)
+        (instance? Byte n)
+    )
+)
+
+;;;
+ ; With no args, returns the empty string. With one arg x, returns x.toString().
+ ; (str nil) returns the empty string.
+ ; With more than one arg, returns the concatenation of the str values of the args.
+ ;;
+(defn ^String str
+    ([] "")
+    ([^Object x] (if (nil? x) "" (IObject'''toString x)))
+    ([x & y]
+        ((fn [^StringBuilder s z] (recur-if z [(.append s (str (first z))) (next z)] => (str s)))
+            (StringBuilder. (str x)) y
         )
     )
+)
 
-    (extend-type Object IObject
-        (#_"boolean" IObject'''equals [#_"Object" this, #_"Object" that]
-            (.equals this, that)
-        )
-
-        (#_"int" IObject'''hashCode [#_"Object" this]
-            (.hashCode this)
-        )
-
-        (#_"String" IObject'''toString [#_"Object" this]
-            (.toString this)
-        )
+;;;
+ ; defs the supplied var names with no bindings, useful for making forward declarations.
+ ;;
+(defmacro declare [& names]
+    `(do
+        ~@(map #(list 'def (vary-meta % assoc :declared true)) names)
     )
 )
 
@@ -382,17 +508,43 @@
     )
 )
 
+;;;
+ ; Returns the namespace String of a symbol or keyword, or nil if not present.
+ ;;
+(defn ^String namespace [^cloiure.core.INamed x] (INamed'''getNamespace x))
+
+;;;
+ ; Returns the name String of a string, symbol or keyword.
+ ;;
+(defn ^String name [x] (if (string? x) x (INamed'''getName ^cloiure.core.INamed x)))
+
 (java-ns cloiure.lang.IMeta
     (defprotocol IMeta
         (#_"IPersistentMap" IMeta'''meta [#_"IMeta" this])
     )
 )
 
+;;;
+ ; Returns the metadata of obj, returns nil if there is no metadata.
+ ;;
+(defn meta [x] (when (satisfies? IMeta x) (IMeta'''meta ^cloiure.core.IMeta x)))
+
 (java-ns cloiure.lang.IObj
     (defprotocol IObj
         (#_"IObj" IObj'''withMeta [#_"IObj" this, #_"IPersistentMap" meta])
     )
 )
+
+;;;
+ ; Returns an object of the same type and value as obj, with map m as its metadata.
+ ;;
+(§ defn with-meta [^cloiure.core.IObj x m] (IObj'''withMeta x m))
+
+;;;
+ ; Returns an object of the same type and value as x,
+ ; with (apply f (meta x) args) as its metadata.
+ ;;
+(§ defn vary-meta [x f & args] (with-meta x (apply f (meta x) args)))
 
 (java-ns cloiure.lang.IReference
     (defprotocol IReference
@@ -401,11 +553,29 @@
     )
 )
 
+;;;
+ ; Atomically sets the metadata for a var/atom to be: (apply f its-current-meta args)
+ ; f must be free of side-effects.
+ ;;
+(defn alter-meta! [^cloiure.core.IReference r f & args] (IReference'''alterMeta r f args))
+
+;;;
+ ; Atomically resets the metadata for a var/atom.
+ ;;
+(defn reset-meta! [^cloiure.core.IReference r m] (IReference'''resetMeta r m))
+
 (java-ns cloiure.lang.IDeref
     (defprotocol IDeref
         (#_"Object" IDeref'''deref [#_"IDeref" this])
     )
 )
+
+;;;
+ ; When applied to a var or atom, returns its current state.
+ ; When applied to a delay, forces it if not already forced.
+ ; See also - realized?. Also reader macro: @.
+ ;;
+(defn deref [^cloiure.core.IDeref ref] (IDeref'''deref ref))
 
 (java-ns cloiure.lang.IAtom
     (defprotocol IAtom
@@ -423,6 +593,11 @@
     )
 )
 
+;;;
+ ; Returns true if a value has been produced for a delay or lazy sequence.
+ ;;
+(defn realized? [^cloiure.core.IPending x] (IPending'''isRealized x))
+
 (java-ns cloiure.lang.Sequential
     (defprotocol Sequential)
 )
@@ -434,6 +609,12 @@
         (#_"ISeq" Reversible'''rseq [#_"Reversible" this])
     )
 )
+
+;;;
+ ; Returns, in constant time, a seq of the items in rev (which can be a vector or sorted-map), in reverse order.
+ ; If rev is empty, returns nil.
+ ;;
+(defn rseq [^cloiure.core.Reversible s] (Reversible'''rseq s))
 
 (defn reversible? [x] (or (satisfies? Reversible x) (instance? clojure.lang.Reversible x)))
 
@@ -452,12 +633,41 @@
     (defprotocol Counted
         (#_"int" Counted'''count [#_"Counted" this])
     )
+
+    (extend-protocol Counted
+        nil                  (Counted'''count [_] 0)
+        clojure.lang.Counted (Counted'''count [o] (.count o))
+    )
+    (extend-protocol Counted
+        @#'Object'array      (Counted'''count [a] (Array/getLength a))
+        CharSequence         (Counted'''count [s] (.length s))
+    )
 )
 
 ;;;
  ; Returns true if x implements count in constant time.
  ;;
-(defn counted? [x] (or (satisfies? Counted x) (instance? clojure.lang.Counted x)))
+(defn counted? [x] (and (some? x) (satisfies? Counted x)))
+
+;;;
+ ; Returns the number of items in coll. (count nil) returns 0.
+ ;;
+(defn #_"int" count [#_"Object" o]
+    (cond
+        (satisfies? Counted o)
+            (Counted'''count o)
+        (§ soon coll? o)
+            (loop-when [#_"int" n 0 #_"ISeq" s (seq o)] (some? s) => n
+                (when (satisfies? Counted s) => (recur (inc n) (next s))
+                    (+ n (Counted'''count s))
+                )
+            )
+        (§ soon map-entry? o)
+            2
+        :else
+            (throw! (str "count not supported on this type: " (.getName (class o))))
+    )
+)
 
 (java-ns cloiure.lang.Indexed
     (defprotocol Indexed
@@ -500,6 +710,18 @@
         (#_"Object" IMapEntry'''val [#_"IMapEntry" this])
     )
 )
+
+;;;
+ ; Returns the key/value of/in the map entry.
+ ;;
+(§ defn key [^cloiure.core.IMapEntry e] (IMapEntry'''key e))
+(§ defn val [^cloiure.core.IMapEntry e] (IMapEntry'''val e))
+
+;;;
+ ; Returns a sequence of the map's keys/values, in the same order as (seq m).
+ ;;
+(defn keys [m] (map key m))
+(defn vals [m] (map val m))
 
 (defn map-entry? [x] (or (satisfies? IMapEntry x) (instance? clojure.lang.IMapEntry x)))
 
@@ -567,7 +789,7 @@
     )
 )
 
-(defn vector? [x] (or (satisfies? IPersistentVector x) (instance? clojure.lang.IPersistentVector x)))
+(§ defn vector? [x] (or (satisfies? IPersistentVector x) (instance? clojure.lang.IPersistentVector x)))
 
 (java-ns cloiure.lang.ITransientCollection
     (defprotocol ITransientCollection
@@ -705,7 +927,7 @@
     (defrecord Symbol #_"AFn" []) (extend-type Symbol #_"Comparable" IFn IHashEq IMeta INamed IObj IObject)
 )
 
-(defn symbol? [x] (or (instance? Symbol x) (instance? clojure.lang.Symbol x)))
+(§ defn symbol? [x] (or (instance? Symbol x) (instance? clojure.lang.Symbol x)))
 
 (java-ns cloiure.lang.Keyword
     (defrecord Keyword []) (extend-type Keyword #_"Comparable" IFn IHashEq INamed IObject)
@@ -971,54 +1193,6 @@
     (defrecord RT [])
 )
 
-(letfn [(=> [s] (if (= '=> (first s)) (next s) (cons nil s)))]
-    (defmacro     when       [? & s] (let [[e & s] (=> s)]               `(if     ~? (do ~@s) ~e)))
-    (defmacro     when-not   [? & s] (let [[e & s] (=> s)]               `(if-not ~? (do ~@s) ~e)))
-    (defmacro let-when     [v ? & s] (let [[e & s] (=> s)] `(let ~(vec v) (if     ~? (do ~@s) ~e))))
-    (defmacro let-when-not [v ? & s] (let [[e & s] (=> s)] `(let ~(vec v) (if-not ~? (do ~@s) ~e))))
-)
-
-;;;
- ; Takes a set of test/expr pairs. It evaluates each test one at a time.
- ; If a test returns logical true, cond evaluates and returns the value of the
- ; corresponding expr and doesn't evaluate any of the other tests or exprs.
- ; (cond) returns nil.
- ;;
-(defmacro cond [& s]
-    (when s
-        `(if ~(first s)
-            ~(when (next s) => (throw! "cond requires an even number of forms")
-                (second s)
-            )
-            (cond ~@(nnext s))
-        )
-    )
-)
-
-(letfn [(v' [v] (cond (vector? v) v (symbol? v) [v v] :else [`_# v]))
-        (r' [r] (cond (vector? r) `((recur ~@r)) (some? r) `((recur ~r))))
-        (=> [s] (if (= '=> (first s)) (next s) (cons nil s)))
-        (l' [v ? r s] (let [r (r' r) [e & s] (=> s)] `(loop ~(v' v) (if ~? (do ~@s ~@r) ~e))))]
-    (defmacro loop-when [v ? & s] (l' v ? nil s))
-    (defmacro loop-when-recur [v ? r & s] (l' v ? r s))
-)
-
-(letfn [(r' [r] (cond (vector? r) `(recur ~@r) (some? r) `(recur ~r)))
-        (=> [s] (if (= '=> (first s)) (second s)))]
-    (defmacro recur-if [? r & s] `(if ~? ~(r' r) ~(=> s)))
-)
-
-(defmacro cond-let [v r & s]
-    (let [v (if (vector? v) v [`_# v]) e (when (seq s) `(cond-let ~@s))]
-        `(if-some ~v ~r ~e)
-    )
-)
-
-(defmacro any
-    ([f x y] `(~f ~x ~y))
-    ([f x y & z] `(let [f# ~f x# ~x _# (any f# x# ~y)] (if _# _# (any f# x# ~@z))))
-)
-
 ;; naïve reduce to be redefined later with IReduce
 
 (defn reduce
@@ -1046,87 +1220,81 @@
 
 (defmacro update! [x f & z] `(set! ~x (~f ~x ~@z)))
 
-;;;
- ; Throws a ClassCastException if x is not a c, else returns x.
- ;;
-(defn cast [^Class c x] (.cast c x))
-
-;;;
- ; Returns the Class of x.
- ;;
-(defn ^Class class [^Object x] (when (some? x) (.getClass x)))
-
-(defn integer? [n]
-    (or (instance? Long n)
-        (instance? BigInteger n)
-        (instance? Integer n)
-        (instance? Byte n)
+(defmacro- assert-args [& pairs]
+    (§ soon
+        `(when ~(first pairs) => (throw! (str (first ~'&form) " requires " ~(second pairs) " in " ~'*ns* ":" (:line (meta ~'&form))))
+            ~(when-some [s (nnext pairs)]
+                (list* `assert-args s)
+            )
+        )
     )
 )
 
 ;;;
- ; Returns the namespace String of a symbol or keyword, or nil if not present.
+ ; bindings => binding-form test
+ ;
+ ; If test is true, evaluates then with binding-form bound to the value of test, if not, yields else.
  ;;
-(defn ^String namespace [^cloiure.core.INamed x] (INamed'''getNamespace x))
-
-;;;
- ; Returns the name String of a string, symbol or keyword.
- ;;
-(defn ^String name [x] (if (string? x) x (INamed'''getName ^cloiure.core.INamed x)))
-
-;;;
- ; Returns the metadata of obj, returns nil if there is no metadata.
- ;;
-(defn meta [x] (when (satisfies? IMeta x) (IMeta'''meta ^cloiure.core.IMeta x)))
-
-;;;
- ; Returns an object of the same type and value as obj, with map m as its metadata.
- ;;
-(§ defn with-meta [^cloiure.core.IObj x m] (IObj'''withMeta x m))
-
-(declare apply)
-
-;;;
- ; Returns an object of the same type and value as x,
- ; with (apply f (meta x) args) as its metadata.
- ;;
-(§ defn vary-meta [x f & args] (with-meta x (apply f (meta x) args)))
-
-;;;
- ; Atomically sets the metadata for a var/atom to be: (apply f its-current-meta args)
- ; f must be free of side-effects.
- ;;
-(defn alter-meta! [^cloiure.core.IReference r f & args] (IReference'''alterMeta r f args))
-
-;;;
- ; Atomically resets the metadata for a var/atom.
- ;;
-(defn reset-meta! [^cloiure.core.IReference r m] (IReference'''resetMeta r m))
-
-;;;
- ; When applied to a var or atom, returns its current state.
- ; When applied to a delay, forces it if not already forced.
- ; See also - realized?. Also reader macro: @.
- ;;
-(defn deref [^cloiure.core.IDeref ref] (IDeref'''deref ref))
-
-;;;
- ; Returns true if a value has been produced for a delay or lazy sequence.
- ;;
-(defn realized? [^cloiure.core.IPending x] (IPending'''isRealized x))
-
-;;;
- ; With no args, returns the empty string. With one arg x, returns x.toString().
- ; (str nil) returns the empty string.
- ; With more than one arg, returns the concatenation of the str values of the args.
- ;;
-(defn ^String str
-    ([] "")
-    ([^Object x] (if (nil? x) "" (IObject'''toString x)))
-    ([x & y]
-        ((fn [^StringBuilder s z] (recur-if z [(.append s (str (first z))) (next z)] => (str s)))
-            (StringBuilder. (str x)) y
+(defmacro if-let
+    ([v then] `(if-let ~v ~then nil))
+    ([v then else & _]
+        (assert-args
+            (vector? v) "a vector for its binding"
+            (nil? _) "1 or 2 forms after binding vector"
+            (= 2 (count v)) "exactly 2 forms in binding vector"
         )
+        `(let [_# ~(v 1)]
+            (if _# (let [~(v 0) _#] ~then) ~else)
+        )
+    )
+)
+
+;;;
+ ; bindings => binding-form test
+ ;
+ ; When test is true, evaluates body with binding-form bound to the value of test.
+ ;;
+(defmacro when-let [v & body]
+    (assert-args
+        (vector? v) "a vector for its binding"
+        (= 2 (count v)) "exactly 2 forms in binding vector"
+    )
+    `(let [_# ~(v 1)]
+        (when _# (let [~(v 0) _#] ~@body))
+    )
+)
+
+;;;
+ ; bindings => binding-form test
+ ;
+ ; If test is not nil, evaluates then with binding-form bound to the value of test, if not, yields else.
+ ;;
+(§ defmacro if-some
+    ([v then] `(if-some ~v ~then nil))
+    ([v then else & _]
+        (assert-args
+            (vector? v) "a vector for its binding"
+            (nil? _) "1 or 2 forms after binding vector"
+            (= 2 (count v)) "exactly 2 forms in binding vector"
+        )
+        `(let [_# ~(v 1)]
+            (if (nil? _#) ~else (let [~(v 0) _#] ~then))
+        )
+    )
+)
+
+;;;
+ ; bindings => binding-form test
+ ;
+ ; When test is not nil, evaluates body with binding-form bound to the value of test.
+ ;;
+(§ defmacro when-some [v & body]
+    (assert-args
+        (vector? v) "a vector for its binding"
+        (= 2 (count v)) "exactly 2 forms in binding vector"
+    )
+    `(let [_# ~(v 1)]
+        (if (nil? _#) nil (let [~(v 0) _#] ~@body))
     )
 )
 
@@ -7143,8 +7311,6 @@
         )
     )
 
-    (declare list*)
-
     (defn #_"Object" Compiler'macroexpand1 [#_"Object" form]
         (when (seq? form) => form
             (let-when [#_"Object" op (first form)] (not (Compiler'isSpecial op)) => form
@@ -10609,7 +10775,7 @@
         )
     )
 
-    (§ soon extend-protocol Seqable Object'array
+    (extend-protocol Seqable @#'Object'array
         (#_"ArraySeq" Seqable'''seq [#_"Object[]" a] (ArraySeq'create a))
     )
 
@@ -14076,8 +14242,6 @@
         )
     )
 
-    (declare map)
-
     (extend-type PersistentTreeSet Reversible
         (#_"ISeq" Reversible'''rseq [#_"PersistentTreeSet" this]
             (map key (rseq (:impl this)))
@@ -15252,32 +15416,21 @@
         )
     )
 
-    (defn #_"int" RT'count [#_"Object" o]
-        (cond
-            (counted? o)
-                (Counted'''count o)
-            (nil? o)
-                0
-            (coll? o)
-                (loop-when [#_"int" n 0 #_"ISeq" s (seq o)] (some? s) => n
-                    (when (counted? s) => (recur (inc n) (next s))
-                        (+ n (Counted'''count s))
-                    )
-                )
-            (instance? CharSequence o)
-                (.length ^CharSequence o)
-            (map-entry? o)
-                2
-            (.isArray (class o))
-                (Array/getLength o)
-            :else
-                (throw! (str "count not supported on this type: " (.getName (class o))))
-        )
-    )
-
     (defn #_"IPersistentCollection" RT'conj [#_"IPersistentCollection" coll, #_"Object" x]
         (if (some? coll) (ITransientCollection'''conj coll, x) (list x))
     )
+
+;;;
+ ; conj[oin].
+ ; Returns a new collection with the items 'added'. (conj nil item) returns (item).
+ ; The 'addition' may happen at different 'places' depending on the concrete type.
+ ;;
+(defn conj
+    ([] [])
+    ([coll] coll)
+    ([coll x] (RT'conj coll x))
+    ([coll x & s] (recur-if s [(conj coll x) (first s) (next s)] => (conj coll x)))
+)
 
     (defn #_"ISeq" RT'cons [#_"Object" x, #_"Seqable" s]
         (cond
@@ -15287,17 +15440,36 @@
         )
     )
 
+;;;
+ ; Returns a new seq where x is the first element and seq is the rest.
+ ;;
+(§ def cons (fn* cons [x seq] (RT'cons x seq)))
+
     (defn #_"Object" RT'peek [#_"Object" x]
         (when (some? x)
             (IPersistentStack'''peek (cast cloiure.core.IPersistentStack x))
         )
     )
 
+;;;
+ ; For a list or queue, same as first, for a vector, same as, but much
+ ; more efficient than, last. If the collection is empty, returns nil.
+ ;;
+(defn peek [coll] (RT'peek coll))
+
     (defn #_"Object" RT'pop [#_"Object" x]
         (when (some? x)
             (IPersistentStack'''pop (cast cloiure.core.IPersistentStack x))
         )
     )
+
+;;;
+ ; For a list or queue, returns a new list/queue without the first item,
+ ; for a vector, returns a new vector without the last item.
+ ; If the collection is empty, throws an exception.
+ ; Note - not the same as next/butlast.
+ ;;
+(defn pop [coll] (RT'pop coll))
 
     (defn #_"Object" RT'get
         ([#_"Object" coll, #_"Object" key]
@@ -15336,12 +15508,36 @@
         )
     )
 
+;;;
+ ; Returns the value mapped to key, not-found or nil if key not present.
+ ;;
+(defn get
+    ([coll key          ] (RT'get coll key          ))
+    ([coll key not-found] (RT'get coll key not-found))
+)
+
     (defn #_"Associative" RT'assoc [#_"Object" coll, #_"Object" key, #_"Object" val]
         (if (some? coll)
             (Associative'''assoc (cast cloiure.core.Associative coll), key, val)
             (PersistentArrayMap'new (object-array [ key, val ]))
         )
     )
+
+;;;
+ ; assoc[iate].
+ ; When applied to a map, returns a new map of the same (hashed/sorted) type, that contains the mapping of key(s) to val(s).
+ ; When applied to a vector, returns a new vector that contains val at index. Note - index must be <= (count vector).
+ ;;
+(§ defn assoc
+    ([a k v] (RT'assoc a k v))
+    ([a k v & kvs]
+        (let-when [a (assoc a k v)] kvs => a
+            (when (next kvs) => (throw! "assoc expects even number of arguments after map/vector, found odd number")
+                (recur a (first kvs) (second kvs) (nnext kvs))
+            )
+        )
+    )
+)
 
     (defn #_"Object" RT'contains [#_"Object" coll, #_"Object" key]
         (cond
@@ -15364,6 +15560,15 @@
         )
     )
 
+;;;
+ ; Returns true if key is present in the given collection, otherwise
+ ; returns false. Note that for numerically indexed collections, like
+ ; vectors and Java arrays, this tests if the numeric key is within the
+ ; range of indexes. 'contains?' operates constant or logarithmic time;
+ ; it will not perform a linear search for a value. See also 'some'.
+ ;;
+(defn contains? [coll key] (RT'contains coll key))
+
     (defn #_"Object" RT'find [#_"Object" coll, #_"Object" key]
         (cond
             (nil? coll)
@@ -15376,6 +15581,11 @@
                 (throw! (str "find not supported on type: " (.getName (class coll))))
         )
     )
+
+;;;
+ ; Returns the map entry for k, or nil if key not present.
+ ;;
+(defn find [m k] (RT'find m k))
 
     ;; takes a seq of key, val, key, val
     ;; returns tail starting at val of matching key if found, else nil
@@ -15395,6 +15605,16 @@
             (IPersistentMap'''dissoc (cast cloiure.core.IPersistentMap coll), key)
         )
     )
+
+;;;
+ ; dissoc[iate]. Returns a new map of the same (hashed/sorted) type,
+ ; that does not contain a mapping for key(s).
+ ;;
+(defn dissoc
+    ([m] m)
+    ([m k] (RT'dissoc m k))
+    ([m k & ks] (let [m (dissoc m k)] (recur-if ks [m (first ks) (next ks)] => m)))
+)
 
     (defn #_"Object" RT'nth
         ([#_"Object" coll, #_"int" n]
@@ -15454,6 +15674,16 @@
             )
         )
     )
+
+;;;
+ ; Returns the value at the index.
+ ; get returns nil if index out of bounds, nth throws an exception unless not-found is supplied.
+ ; nth also works for strings, arrays, regex matchers and lists, and, in O(n) time, for sequences.
+ ;;
+(defn nth
+    ([s i]           (RT'nth s i          ))
+    ([s i not-found] (RT'nth s i not-found))
+)
 
     (defn #_"Object"    RT'box [#_"Object"  x] x)
     (defn #_"Character" RT'box-1c [#_"char"    x] (Character/valueOf x))
@@ -15581,6 +15811,11 @@
         )
     )
 
+;;;
+ ; Creates an array of objects.
+ ;;
+(§ defn object-array ([size-or-seq] (RT'objectArray size-or-seq)))
+
     (defn #_"Object[]" RT'seqToArray [#_"ISeq" s]
         (let [#_"Object[]" a (make-array Object (count s))]
             (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (next s)]
@@ -15693,44 +15928,11 @@
  ;;
 (§ def list (PersistentList'creator))
 
-;;;
- ; Returns a new seq where x is the first element and seq is the rest.
- ;;
-(§ def cons (fn* cons [x seq] (RT'cons x seq)))
-
 ;; during bootstrap we don't have destructuring let, loop or fn, will redefine later
 
 (§ def ^:macro let  (fn* let  [&form &env & decl] (cons 'let* decl)))
 (§ def ^:macro loop (fn* loop [&form &env & decl] (cons 'loop* decl)))
 (§ def ^:macro fn   (fn* fn   [&form &env & decl] (with-meta (cons 'fn* decl) (meta &form))))
-
-;;;
- ; conj[oin].
- ; Returns a new collection with the items 'added'. (conj nil item) returns (item).
- ; The 'addition' may happen at different 'places' depending on the concrete type.
- ;;
-(defn conj
-    ([] [])
-    ([coll] coll)
-    ([coll x] (RT'conj coll x))
-    ([coll x & s] (recur-if s [(conj coll x) (first s) (next s)] => (conj coll x)))
-)
-
-;;;
- ; assoc[iate].
- ; When applied to a map, returns a new map of the same (hashed/sorted) type, that contains the mapping of key(s) to val(s).
- ; When applied to a vector, returns a new vector that contains val at index. Note - index must be <= (count vector).
- ;;
-(§ defn assoc
-    ([a k v] (RT'assoc a k v))
-    ([a k v & kvs]
-        (let-when [a (assoc a k v)] kvs => a
-            (when (next kvs) => (throw! "assoc expects even number of arguments after map/vector, found odd number")
-                (recur a (first kvs) (second kvs) (nnext kvs))
-            )
-        )
-    )
-)
 
 (defn- ^:dynamic assert-valid-fdecl [_])
 
@@ -15982,30 +16184,10 @@
     ([ns name] (Keyword'find (symbol ns name)))
 )
 
-(defn- spread [s]
-    (cond
-        (nil? s) nil
-        (nil? (next s)) (seq (first s))
-        :else (cons (first s) (spread (next s)))
-    )
-)
-
-;;;
- ; Creates a new seq containing the items prepended to the rest,
- ; the last of which will be treated as a sequence.
- ;;
-(defn list*
-    ([s] (seq s))
-    ([a s] (cons a s))
-    ([a b s] (cons a (cons b s)))
-    ([a b c s] (cons a (cons b (cons c s))))
-    ([a b c d & s] (cons a (cons b (cons c (cons d (spread s))))))
-)
-
 ;;;
  ; Applies fn f to the argument list formed by prepending intervening arguments to args.
  ;;
-(defn apply
+(§ defn apply
     ([^cloiure.core.IFn f s] (IFn'''applyTo f (seq s)))
     ([^cloiure.core.IFn f a s] (IFn'''applyTo f (list* a s)))
     ([^cloiure.core.IFn f a b s] (IFn'''applyTo f (list* a b s)))
@@ -16069,27 +16251,11 @@
 (defn force [x] (Delay'force x))
 
 ;;;
- ; Returns the number of items in the collection. (count nil) returns 0.
- ; Also works on strings, arrays, collections and maps.
- ;;
-(§ defn count [s] (RT'count s))
-
-;;;
  ; Coerce to boolean/int/long.
  ;;
 (defn boolean [x] (RT'booleanCast x))
 (defn int     [x] (RT'intCast     x))
 (defn long    [x] (RT'longCast    x))
-
-;;;
- ; Returns the value at the index.
- ; get returns nil if index out of bounds, nth throws an exception unless not-found is supplied.
- ; nth also works for strings, arrays, regex matchers and lists, and, in O(n) time, for sequences.
- ;;
-(defn nth
-    ([s i]           (RT'nth s i          ))
-    ([s i not-found] (RT'nth s i not-found))
-)
 
 ;;;
  ; Returns a seq of the items in coll in reverse order. Not lazy.
@@ -16107,47 +16273,6 @@
         ([x y] (not (f x y)))
         ([x y & s] (not (apply f x y s)))
     )
-)
-
-;;;
- ; For a list or queue, same as first, for a vector, same as, but much
- ; more efficient than, last. If the collection is empty, returns nil.
- ;;
-(defn peek [coll] (RT'peek coll))
-
-;;;
- ; For a list or queue, returns a new list/queue without the first item,
- ; for a vector, returns a new vector without the last item.
- ; If the collection is empty, throws an exception.
- ; Note - not the same as next/butlast.
- ;;
-(defn pop [coll] (RT'pop coll))
-
-;;;
- ; Returns true if key is present in the given collection, otherwise
- ; returns false. Note that for numerically indexed collections, like
- ; vectors and Java arrays, this tests if the numeric key is within the
- ; range of indexes. 'contains?' operates constant or logarithmic time;
- ; it will not perform a linear search for a value. See also 'some'.
- ;;
-(defn contains? [coll key] (RT'contains coll key))
-
-;;;
- ; Returns the value mapped to key, not-found or nil if key not present.
- ;;
-(defn get
-    ([coll key          ] (RT'get coll key          ))
-    ([coll key not-found] (RT'get coll key not-found))
-)
-
-;;;
- ; dissoc[iate]. Returns a new map of the same (hashed/sorted) type,
- ; that does not contain a mapping for key(s).
- ;;
-(defn dissoc
-    ([m] m)
-    ([m k] (RT'dissoc m k))
-    ([m k & ks] (let [m (dissoc m k)] (recur-if ks [m (first ks) (next ks)] => m)))
 )
 
 ;;;
@@ -16171,53 +16296,9 @@
 )
 
 ;;;
- ; Returns the map entry for k, or nil if key not present.
- ;;
-(defn find [m k] (RT'find m k))
-
-;;;
  ; Returns a map containing only those entries in m whose key is in keys.
  ;;
 (defn select-keys [m keys] (with-meta (into {} (map #(find m %) keys)) (meta m)))
-
-;;;
- ; Returns the key/value of/in the map entry.
- ;;
-(§ defn key [^cloiure.core.IMapEntry e] (IMapEntry'''key e))
-(§ defn val [^cloiure.core.IMapEntry e] (IMapEntry'''val e))
-
-;;;
- ; Returns a sequence of the map's keys/values, in the same order as (seq m).
- ;;
-(§ defn keys [m] (map key m))
-(defn vals [m] (map val m))
-
-;;;
- ; Returns, in constant time, a seq of the items in rev (which can be a vector or sorted-map), in reverse order.
- ; If rev is empty, returns nil.
- ;;
-(defn rseq [^cloiure.core.Reversible s] (Reversible'''rseq s))
-
-;;;
- ; Return true if x is a symbol or keyword.
- ;;
-(defn ident? [x] (or (symbol? x) (keyword? x)))
-
-;;;
- ; Executes exprs in an implicit do, while holding the monitor of x.
- ; Will release the monitor of x in all circumstances.
- ;;
-(§ defmacro locking [x & body]
-    `(let [lockee# ~x]
-        (try
-            (monitor-enter lockee#)
-            ~@body
-            (finally
-                (monitor-exit lockee#)
-            )
-        )
-    )
-)
 
 ;;;
  ; form => fieldName-symbol or (instanceMethodName-symbol args*)
@@ -16269,84 +16350,6 @@
             )
             (next s)
         )
-    )
-)
-
-(defmacro- assert-args [& pairs]
-    (§ soon
-        `(when ~(first pairs) => (throw! (str (first ~'&form) " requires " ~(second pairs) " in " ~'*ns* ":" (:line (meta ~'&form))))
-            ~(when-some [s (nnext pairs)]
-                (list* `assert-args s)
-            )
-        )
-    )
-)
-
-;;;
- ; bindings => binding-form test
- ;
- ; If test is true, evaluates then with binding-form bound to the value of test, if not, yields else.
- ;;
-(defmacro if-let
-    ([v then] `(if-let ~v ~then nil))
-    ([v then else & _]
-        (assert-args
-            (vector? v) "a vector for its binding"
-            (nil? _) "1 or 2 forms after binding vector"
-            (= 2 (count v)) "exactly 2 forms in binding vector"
-        )
-        `(let [_# ~(v 1)]
-            (if _# (let [~(v 0) _#] ~then) ~else)
-        )
-    )
-)
-
-;;;
- ; bindings => binding-form test
- ;
- ; When test is true, evaluates body with binding-form bound to the value of test.
- ;;
-(defmacro when-let [v & body]
-    (assert-args
-        (vector? v) "a vector for its binding"
-        (= 2 (count v)) "exactly 2 forms in binding vector"
-    )
-    `(let [_# ~(v 1)]
-        (when _# (let [~(v 0) _#] ~@body))
-    )
-)
-
-;;;
- ; bindings => binding-form test
- ;
- ; If test is not nil, evaluates then with binding-form bound to the value of test, if not, yields else.
- ;;
-(§ defmacro if-some
-    ([v then] `(if-some ~v ~then nil))
-    ([v then else & _]
-        (assert-args
-            (vector? v) "a vector for its binding"
-            (nil? _) "1 or 2 forms after binding vector"
-            (= 2 (count v)) "exactly 2 forms in binding vector"
-        )
-        `(let [_# ~(v 1)]
-            (if (nil? _#) ~else (let [~(v 0) _#] ~then))
-        )
-    )
-)
-
-;;;
- ; bindings => binding-form test
- ;
- ; When test is not nil, evaluates body with binding-form bound to the value of test.
- ;;
-(§ defmacro when-some [v & body]
-    (assert-args
-        (vector? v) "a vector for its binding"
-        (= 2 (count v)) "exactly 2 forms in binding vector"
-    )
-    `(let [_# ~(v 1)]
-        (if (nil? _#) nil (let [~(v 0) _#] ~@body))
     )
 )
 
@@ -16601,7 +16604,7 @@
  ; f should accept number-of-colls arguments. Returns a transducer when
  ; no collection is provided.
  ;;
-(defn map
+(§ defn map
     ([f]
         (fn [g]
             (fn
@@ -17445,16 +17448,6 @@
 )
 
 ;;;
- ; Returns the length of the Java array. Works on arrays of all types.
- ;;
-(§ defn alength [a] (RT'alength a))
-
-;;;
- ; Returns a clone of the Java array. Works on arrays of known types.
- ;;
-(§ defn aclone [a] (RT'aclone a))
-
-;;;
  ; Returns the value at the index/indices. Works on Java arrays of all types.
  ;;
 (§ defn aget
@@ -17502,11 +17495,6 @@
 (def-aset aset-char    setChar    char   )
 (def-aset aset-int     setInt     int    )
 (def-aset aset-long    setLong    long   )
-
-;;;
- ; Creates an array of objects.
- ;;
-(§ defn object-array ([size-or-seq] (RT'objectArray size-or-seq)))
 
 ;;;
  ; Creates and returns an array of instances of the specified class of the specified dimension(s).
@@ -17845,6 +17833,11 @@
     ([] PersistentArrayMap/EMPTY)
     ([& keyvals] (PersistentArrayMap'createAsIfByAssoc (to-array keyvals)))
 )
+
+;;;
+ ; Return true if x is a symbol or keyword.
+ ;;
+(defn ident? [x] (or (symbol? x) (keyword? x)))
 
 ;; redefine let and loop with destructuring
 
@@ -18784,12 +18777,6 @@
 )
 
 ;;;
- ; Returns true if coll has no items - same as (not (seq coll)).
- ; Please use the idiom (seq x) rather than (not (empty? x)).
- ;;
-(defn empty? [coll] (not (seq coll)))
-
-;;;
  ; trampoline can be used to convert algorithms requiring mutual recursion without
  ; stack consumption. Calls f with supplied args, if any. If f returns a fn, calls
  ; that fn with no arguments, and continues to repeat, until the return value is
@@ -18829,14 +18816,6 @@
             v
         )
     )
-)
-
-;;;
- ; Repeatedly executes body while test expression is true. Presumes
- ; some side-effect will cause test to become false/nil. Returns nil.
- ;;
-(§ defmacro while [? & s]
-    `(loop [] (when ~? ~@s (recur)))
 )
 
 ;;;
@@ -18900,17 +18879,6 @@
             ~(emit gpred gexpr clauses)
         )
     )
-)
-
-;;;
- ; fnspec => (fname [params*] exprs) or (fname ([params*] exprs)+)
- ;
- ; Takes a vector of function specs and a body, and generates a set of
- ; bindings of functions to their names. All of the names are available
- ; in all of the definitions of the functions, as well as the body.
- ;;
-(§ defmacro letfn {:special-form true, :forms '[(letfn [fnspecs*] exprs*)]} [fnspecs & body]
-    `(letfn* ~(vec (interleave (map first fnspecs) (map #(cons `fn %) fnspecs))) ~@body)
 )
 
 ;;;
@@ -20558,7 +20526,7 @@
 )
 
 ;;;
- ; If coll is counted? returns its count, else will count at most the first m
+ ; If coll is counted?, returns its count, else will count at most the first m
  ; elements of coll using its seq.
  ;;
 (defn bounded-count [m coll]
