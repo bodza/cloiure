@@ -1,5 +1,5 @@
 (ns cloiure.core
-    (:refer-clojure :only [*ns* *print-length* + - -> = aclone alength aget apply aset assoc atom binding case char condp cons defmacro defn defprotocol defrecord doseq dotimes extend-protocol extend-type fn hash-map hash-set identical? if-some import inc int-array interleave intern key let list loop make-array map merge object-array pos? reify satisfies? symbol? the-ns to-array val vary-meta vec vector vector? when-some with-meta])
+    (:refer-clojure :only [*ns* *print-length* + - < = alength aget apply aset assoc atom binding boolean case char cons count dec defmacro defn defprotocol defrecord even? extend-protocol extend-type first fn hash-map hash-set identical? import inc int int-array interleave intern key keyword? let list long loop map merge meta next pos? reify satisfies? second seq seq? split-at str swap! symbol symbol? the-ns to-array val vary-meta vec vector vector? with-meta])
 )
 
 (defmacro § [& _])
@@ -15,7 +15,19 @@
     [java.lang ArithmeticException Boolean Byte Character CharSequence Class #_ClassCastException ClassLoader ClassNotFoundException Comparable Exception IndexOutOfBoundsException Integer Long NoSuchMethodException Number Object RuntimeException String StringBuilder System Thread ThreadLocal Throwable Void]
 )
 
-(def #_"Class" Object'array (Class/forName "[Ljava.lang.Object;"))
+(defmacro import-as [#_"Symbol" sym #_"String" sig]
+    (let [#_"java.lang.reflect.Method" m (.getDeclaredMethod clojure.lang.Namespace, "referenceClass", (clojure.core/into-array [clojure.lang.Symbol Class]))]
+        (.setAccessible m, true)
+        (.invoke m, *ns*, (clojure.core/object-array [sym (Class/forName sig)]))
+    )
+)
+
+(import-as boolean'array "[Z")
+(import-as byte'array    "[B")
+(import-as char'array    "[C")
+(import-as int'array     "[I")
+(import-as long'array    "[J")
+(import-as Object'array  "[Ljava.lang.Object;")
 
 (import
     [java.io BufferedReader InputStreamReader OutputStreamWriter PrintWriter PushbackReader #_Reader #_StringReader StringWriter Writer]
@@ -28,6 +40,18 @@
     [cloiure.asm.commons GeneratorAdapter Method]
     [cloiure.math BigInteger]
     [cloiure.util.concurrent.atomic AtomicReference]
+)
+
+(let [id (atom 0)] (defn next-id! [] (swap! id inc)))
+
+;;;
+ ; Returns a new symbol with a unique name. If a prefix string is supplied,
+ ; the name is prefix# where # is some unique number.
+ ; If prefix is not supplied, the prefix is 'G__'.
+ ;;
+(defn gensym
+    ([] (gensym "G__"))
+    ([prefix] (symbol (str prefix (next-id!))))
 )
 
 ;;;
@@ -66,6 +90,11 @@
 
 (defmacro throw! [^String s] `(throw (RuntimeException. ~s)))
 
+;;;
+ ; defs the supplied var names with no bindings, useful for making forward declarations.
+ ;;
+(defmacro declare [& names] `(do ~@(map #(list 'def (vary-meta % assoc :declared true)) names)))
+
 (defmacro def-      [x & s] `(def      ~(vary-meta x assoc :private true) ~@s))
 (defmacro defn-     [x & s] `(defn     ~(vary-meta x assoc :private true) ~@s))
 (defmacro defmacro- [x & s] `(defmacro ~(vary-meta x assoc :private true) ~@s))
@@ -79,26 +108,6 @@
 (defn ^Boolean not    [x] (if x false true))
 (defn ^Boolean some?  [x] (not (nil? x)))
 (defn ^Boolean any?   [_] true)
-
-(java-ns cloiure.lang.IObject
-    (defprotocol IObject
-        (#_"boolean" IObject'''equals [#_"IObject" this, #_"Object" that])
-        (#_"int" IObject'''hashCode [#_"IObject" this])
-        (#_"String" IObject'''toString [#_"IObject" this])
-    )
-
-    (extend-type nil IObject
-        (#_"boolean" IObject'''equals [#_"nil" this, #_"Object" that] (nil? that))
-        (#_"int" IObject'''hashCode [#_"nil" this] 0)
-        (#_"String" IObject'''toString [#_"nil" this] "nil")
-    )
-
-    (extend-type Object IObject
-        (#_"boolean" IObject'''equals [#_"Object" this, #_"Object" that] (.equals this, that))
-        (#_"int" IObject'''hashCode [#_"Object" this] (.hashCode this))
-        (#_"String" IObject'''toString [#_"Object" this] (.toString this))
-    )
-)
 
 ;;;
  ; Evaluates test. If logical false, evaluates and returns then expr,
@@ -131,91 +140,10 @@
     ([x & s] `(let [or# ~x] (if or# or# (or ~@s))))
 )
 
-;;;
- ; Executes exprs in an implicit do, while holding the monitor of x.
- ; Will release the monitor of x in all circumstances.
- ;;
-(defmacro locking [x & body]
-    `(let [lockee# ~x]
-        (try
-            (monitor-enter lockee#)
-            ~@body
-            (finally
-                (monitor-exit lockee#)
-            )
-        )
-    )
+(defmacro any
+    ([f x y] `(~f ~x ~y))
+    ([f x y & z] `(let [f# ~f x# ~x _# (any f# x# ~y)] (if _# _# (any f# x# ~@z))))
 )
-
-(java-ns cloiure.lang.Seqable
-    (defprotocol Seqable
-        (#_"ISeq" Seqable'''seq [#_"Seqable" this])
-    )
-
-    (extend-protocol Seqable
-        nil                  (Seqable'''seq [_] nil)
-        clojure.lang.Seqable (Seqable'''seq [o] (.seq o))
-    )
-)
-
-(java-ns cloiure.lang.ISeq
-    (defprotocol ISeq
-        (#_"Object" ISeq'''first [#_"ISeq" this])
-        (#_"ISeq" ISeq'''next [#_"ISeq" this])
-    )
-
-    (extend-protocol ISeq
-        nil               (ISeq'''first [_] nil)        (ISeq'''next [_] nil)
-        clojure.lang.ISeq (ISeq'''first [o] (.first o)) (ISeq'''next [o] (.next o))
-    )
-)
-
-(defn seq? [x] (and (some? x) (satisfies? ISeq x)))
-
-;;;
- ; Returns a seq on coll. If coll is empty, returns nil.
- ; (seq nil) returns nil.
- ;;
-(defn ^cloiure.core.ISeq seq [s] (Seqable'''seq s))
-
-;;;
- ; Returns true if coll has no items.
- ; Please use the idiom (seq x) rather than (not (empty? x)).
- ;;
-(defn empty? [s] (not (seq s)))
-
-;;;
- ; Returns the first item in coll. Calls seq on its argument.
- ; If s is nil, returns nil.
- ;;
-(defn first [s]
-    (if (seq? s)
-        (ISeq'''first s)
-        (when-some [s (seq s)]
-            (ISeq'''first s)
-        )
-    )
-)
-
-;;;
- ; Returns a seq of the items after the first. Calls seq on its argument.
- ; If there are no more items, returns nil.
- ;;
-(defn ^cloiure.core.ISeq next [s]
-    (if (seq? s)
-        (ISeq'''next s)
-        (when-some [s (seq s)]
-            (ISeq'''next s)
-        )
-    )
-)
-
-(defn second [s] (first (next s)))
-(defn third  [s] (first (next (next s))))
-(defn fourth [s] (first (next (next (next s)))))
-(defn ffirst [s] (first (first s)))
-(defn nnext  [s] (next (next s)))
-(defn last   [s] (if-some [r (next s)] (recur r) (first s)))
 
 ;;;
  ; fnspec => (fname [params*] exprs) or (fname ([params*] exprs)+)
@@ -247,17 +175,134 @@
             ~(when (next s) => (throw! "cond requires an even number of forms")
                 (second s)
             )
-            (cond ~@(nnext s))
+            (cond ~@(next (next s)))
+        )
+    )
+)
+
+(defmacro- assert-args [& s]
+    `(when ~(first s) ~'=> (throw! (str (first ~'&form) " requires " ~(second s)))
+        ~(let-when [s (next (next s))] s
+            `(assert-args ~@s)
+        )
+    )
+)
+
+(defmacro if-let
+    ([bind then] `(if-let ~bind ~then nil))
+    ([bind then else & _]
+        (assert-args
+            (vector? bind) "a vector for its binding"
+            (= 2 (count bind)) "exactly 2 forms in binding vector"
+            (nil? _) "1 or 2 forms after binding vector"
+        )
+        `(let-when [x# ~(bind 1)] x# ~'=> ~else
+            (let [~(bind 0) x#]
+                ~then
+            )
+        )
+    )
+)
+
+(defmacro if-some
+    ([bind then] `(if-some ~bind ~then nil))
+    ([bind then else & _]
+        (assert-args
+            (vector? bind) "a vector for its binding"
+            (= 2 (count bind)) "exactly 2 forms in binding vector"
+            (nil? _) "1 or 2 forms after binding vector"
+        )
+        `(let-when [x# ~(bind 1)] (some? x#) ~'=> ~else
+            (let [~(bind 0) x#]
+                ~then
+            )
+        )
+    )
+)
+
+(defmacro cond-let [bind then & else]
+    (let [bind (if (vector? bind) bind [`_# bind])]
+        `(if-some ~bind ~then ~(when else `(cond-let ~@else)))
+    )
+)
+
+(defmacro when-let [bindings & body]
+    (assert-args
+        (vector? bindings) "a vector for its binding"
+        (= 2 (count bindings)) "exactly 2 forms in binding vector"
+    )
+    `(let-when [x# ~(bindings 1)] x#
+        (let [~(bindings 0) x#]
+            ~@body
+        )
+    )
+)
+
+(defmacro when-some [bindings & body]
+    (assert-args
+        (vector? bindings) "a vector for its binding"
+        (= 2 (count bindings)) "exactly 2 forms in binding vector"
+    )
+    `(let-when [x# ~(bindings 1)] (some? x#)
+        (let [~(bindings 0) x#]
+            ~@body
+        )
+    )
+)
+
+(defmacro when-first [bindings & body]
+    (assert-args
+        (vector? bindings) "a vector for its binding"
+        (= 2 (count bindings)) "exactly 2 forms in binding vector"
+    )
+    `(when-some [s# (seq ~(bindings 1))]
+        (let [~(bindings 0) (first s#)]
+            ~@body
         )
     )
 )
 
 ;;;
- ; Repeatedly executes body while test expression is true. Presumes
- ; some side-effect will cause test to become false/nil. Returns nil.
+ ; Takes a binary predicate, an expression, and a set of clauses.
+ ; Each clause can take the form of either:
+ ;
+ ; test-expr result-expr
+ ;
+ ; test-expr :>> result-fn
+ ;
+ ; Note :>> is an ordinary keyword.
+ ;
+ ; For each clause, (f? test-expr expr) is evaluated. If it returns logical true,
+ ; the clause is a match. If a binary clause matches, the result-expr is returned,
+ ; if a ternary clause matches, its result-fn, which must be a unary function, is
+ ; called with the result of the predicate as its argument, the result of that call
+ ; being the return value of condp. A single default expression can follow the clauses,
+ ; and its value will be returned if no clause matches. If no default expression
+ ; is provided and no clause matches, an IllegalArgumentException is thrown.
  ;;
-(defmacro while [? & s]
-    `(loop [] (when ~? ~@s (recur)))
+(defmacro condp [f? expr & clauses]
+    (let [gpred (gensym "pred__") gexpr (gensym "expr__")
+          emit
+            (fn emit [f? expr args]
+                (let [[[a b c :as clause] more] (split-at (if (= :>> (second args)) 3 2) args) n (count clause)]
+                    (cond
+                        (= 0 n) `(throw! (str "no matching clause: " ~expr))
+                        (= 1 n) a
+                        (= 2 n) `(if (~f? ~a ~expr)
+                                    ~b
+                                    ~(emit f? expr more)
+                                )
+                        :else   `(if-let [p# (~f? ~a ~expr)]
+                                    (~c p#)
+                                    ~(emit f? expr more)
+                                )
+                    )
+                )
+            )]
+        `(let [~gpred ~f? ~gexpr ~expr]
+            ~(emit gpred gexpr clauses)
+        )
+    )
 )
 
 (letfn [(v' [v] (cond (vector? v) v (symbol? v) [v v] :else [`_# v]))
@@ -273,35 +318,132 @@
     (defmacro recur-if [? r & s] `(if ~? ~(r' r) ~(=> s)))
 )
 
-(defmacro cond-let [v r & s]
-    (let [v (if (vector? v) v [`_# v]) e (when (seq s) `(cond-let ~@s))]
-        `(if-some ~v ~r ~e)
-    )
+;;;
+ ; Repeatedly executes body while test expression is true. Presumes
+ ; some side-effect will cause test to become false/nil. Returns nil.
+ ;;
+(defmacro while [? & s]
+    `(loop [] (when ~? ~@s (recur)))
 )
 
-(defmacro any
-    ([f x y] `(~f ~x ~y))
-    ([f x y & z] `(let [f# ~f x# ~x _# (any f# x# ~y)] (if _# _# (any f# x# ~@z))))
+;;;
+ ; form => fieldName-symbol or (instanceMethodName-symbol args*)
+ ;
+ ; Expands into a member access (.) of the first member on the first argument,
+ ; followed by the next member on the result, etc. For instance:
+ ;
+ ; (.. System (getProperties) (get "os.name"))
+ ;
+ ; expands to:
+ ;
+ ; (. (. System (getProperties)) (get "os.name"))
+ ;
+ ; but is easier to write, read, and understand.
+ ;;
+(defmacro ..
+    ([x form] `(. ~x ~form))
+    ([x form & s] `(.. (. ~x ~form) ~@s))
 )
 
-(defn- spread [s]
-    (cond
-        (nil? s) nil
-        (nil? (next s)) (seq (first s))
-        :else (cons (first s) (spread (next s)))
+;;;
+ ; Threads the expr through the forms. Inserts x as the second item
+ ; in the first form, making a list of it if it is not a list already.
+ ; If there are more forms, inserts the first form as the second item
+ ; in second form, etc.
+ ;;
+(defmacro -> [x & s]
+    (when s => x
+        (recur &form &env
+            (let-when [f (first s)] (seq? f) => (list f x)
+                (with-meta `(~(first f) ~x ~@(next f)) (meta f))
+            )
+            (next s)
+        )
     )
 )
 
 ;;;
- ; Creates a new seq containing the items prepended to the rest,
- ; the last of which will be treated as a sequence.
+ ; Threads the expr through the forms. Inserts x as the last item
+ ; in the first form, making a list of it if it is not a list already.
+ ; If there are more forms, inserts the first form as the last item
+ ; in second form, etc.
  ;;
-(defn list*
-    ([s] (seq s))
-    ([a s] (cons a s))
-    ([a b s] (cons a (cons b s)))
-    ([a b c s] (cons a (cons b (cons c s))))
-    ([a b c d & s] (cons a (cons b (cons c (cons d (spread s))))))
+(defmacro ->> [x & s]
+    (when s => x
+        (recur &form &env
+            (let-when [f (first s)] (seq? f) => (list f x)
+                (with-meta `(~(first f) ~@(next f) ~x) (meta f))
+            )
+            (next s)
+        )
+    )
+)
+
+;;;
+ ; Repeatedly executes body (presumably for side-effects) with bindings and filtering as provided by "for".
+ ; Does not retain the head of the sequence. Returns nil.
+ ;;
+(defmacro doseq [bindings & body]
+    (assert-args
+        (vector? bindings) "a vector for its binding"
+        (even? (count bindings)) "an even number of forms in binding vector"
+    )
+    (letfn [(emit- [e r]
+                (when e => [`(do ~@body) true]
+                    (let [[k v & e] e]
+                        (if (keyword? k)
+                            (let [[f r?] (emit- e r)]
+                                (case k
+                                    :let   [`(let ~v ~f) r?]
+                                    :while [`(when ~v ~f ~@(when r? [r])) false]
+                                    :when  [`(if ~v (do ~f ~@(when r? [r])) ~r) false]
+                                )
+                            )
+                            (let [s (gensym "s_") r `(recur (next ~s)) [f r?] (emit- e r)]
+                                [`(loop-when [~s (seq ~v)] ~s (let [~k (first ~s)] ~f ~@(when r? [r]))) true]
+                            )
+                        )
+                    )
+                )
+            )]
+        (first (emit- (seq bindings) nil))
+    )
+)
+
+;;;
+ ; bindings => name n
+ ;
+ ; Repeatedly executes body (presumably for side-effects) with name
+ ; bound to integers from 0 through n-1.
+ ;;
+(defmacro dotimes [bindings & body]
+    (assert-args
+        (vector? bindings) "a vector for its binding"
+        (= 2 (count bindings)) "exactly 2 forms in binding vector"
+    )
+    (let [[i n] bindings]
+        `(let [n# (long ~n)]
+            (loop-when-recur [~i 0] (< ~i n#) [(inc ~i)]
+                ~@body
+            )
+        )
+    )
+)
+
+;;;
+ ; Executes exprs in an implicit do, while holding the monitor of x.
+ ; Will release the monitor of x in all circumstances.
+ ;;
+(defmacro locking [x & body]
+    `(let [lockee# ~x]
+        (try
+            (monitor-enter lockee#)
+            ~@body
+            (finally
+                (monitor-exit lockee#)
+            )
+        )
+    )
 )
 
 ;;;
@@ -334,13 +476,59 @@
 )
 
 ;;;
+ ; Creates and returns an array of instances of the specified class of the specified dimension(s).
+ ; Note that a class object is required.
+ ; Class objects can be obtained by using their imported or fully-qualified name.
+ ; Class objects for the primitive types can be obtained using, e.g. Integer/TYPE.
+ ;;
+(defn make-array
+    ([^Class type n] (Array/newInstance type (int n)))
+    ([^Class type dim & s] (Array/newInstance type (int-array (cons dim s))))
+)
+
+;;;
+ ; Creates an array of objects.
+ ;;
+(defn object-array [size-or-seq]
+    (if (number? size-or-seq)
+        (make-array Object (.intValue ^Number size-or-seq))
+        (let [#_"ISeq" s (seq size-or-seq) #_"int" size (count s) #_"Object[]" a (make-array Object size)]
+            (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
+                (aset a i (first s))
+            )
+            a
+        )
+    )
+)
+
+(java-ns cloiure.lang.IObject
+    (defprotocol IObject
+        (#_"boolean" IObject'''equals [#_"IObject" this, #_"Object" that])
+        (#_"int" IObject'''hashCode [#_"IObject" this])
+        (#_"String" IObject'''toString [#_"IObject" this])
+    )
+
+    (extend-type nil IObject
+        (#_"boolean" IObject'''equals [#_"nil" this, #_"Object" that] (nil? that))
+        (#_"int" IObject'''hashCode [#_"nil" this] 0)
+        (#_"String" IObject'''toString [#_"nil" this] "")
+    )
+
+    (extend-type Object IObject
+        (#_"boolean" IObject'''equals [#_"Object" this, #_"Object" that] (.equals this, that))
+        (#_"int" IObject'''hashCode [#_"Object" this] (.hashCode this))
+        (#_"String" IObject'''toString [#_"Object" this] (.toString this))
+    )
+)
+
+;;;
  ; With no args, returns the empty string. With one arg x, returns x.toString().
  ; (str nil) returns the empty string.
  ; With more than one arg, returns the concatenation of the str values of the args.
  ;;
-(defn ^String str
+(§ defn ^String str
     ([] "")
-    ([^Object x] (if (nil? x) "" (IObject'''toString x)))
+    ([^Object x] (IObject'''toString x))
     ([x & y]
         ((fn [^StringBuilder s z] (recur-if z [(.append s (str (first z))) (next z)] => (str s)))
             (StringBuilder. (str x)) y
@@ -348,14 +536,93 @@
     )
 )
 
-;;;
- ; defs the supplied var names with no bindings, useful for making forward declarations.
- ;;
-(defmacro declare [& names]
-    `(do
-        ~@(map #(list 'def (vary-meta % assoc :declared true)) names)
+(java-ns cloiure.lang.Seqable
+    (defprotocol Seqable
+        (#_"ISeq" Seqable'''seq [#_"Seqable" this])
+    )
+
+    (extend-protocol Seqable
+        nil                  (Seqable'''seq [_] nil)
+        clojure.lang.Seqable (Seqable'''seq [o] (.seq o))
     )
 )
+
+(java-ns cloiure.lang.ISeq
+    (defprotocol ISeq
+        (#_"Object" ISeq'''first [#_"ISeq" this])
+        (#_"ISeq" ISeq'''next [#_"ISeq" this])
+    )
+
+    (extend-protocol ISeq
+        nil               (ISeq'''first [_] nil)        (ISeq'''next [_] nil)
+        clojure.lang.ISeq (ISeq'''first [o] (.first o)) (ISeq'''next [o] (.next o))
+    )
+)
+
+(§ defn seq? [x] (and (some? x) (satisfies? ISeq x)))
+
+;;;
+ ; Returns a seq on coll. If coll is empty, returns nil.
+ ; (seq nil) returns nil.
+ ;;
+(§ defn ^cloiure.core.ISeq seq [s] (Seqable'''seq s))
+
+;;;
+ ; Returns true if coll has no items.
+ ; Please use the idiom (seq x) rather than (not (empty? x)).
+ ;;
+(defn empty? [s] (not (seq s)))
+
+;;;
+ ; Returns the first item in coll. Calls seq on its argument.
+ ; If s is nil, returns nil.
+ ;;
+(§ defn first [s] (ISeq'''first (if (satisfies? ISeq s) s (seq s))))
+
+;;;
+ ; Returns a seq of the items after the first. Calls seq on its argument.
+ ; If there are no more items, returns nil.
+ ;;
+(§ defn ^cloiure.core.ISeq next [s] (ISeq'''next (if (satisfies? ISeq s) s (seq s))))
+
+(java-ns cloiure.lang.Counted
+    (defprotocol Counted
+        (#_"int" Counted'''count [#_"Counted" this])
+    )
+
+    (extend-protocol Counted
+        nil                  (Counted'''count [_] 0)
+        clojure.lang.Counted (Counted'''count [o] (.count o))
+        Object'array         (Counted'''count [a] (Array/getLength a))
+        CharSequence         (Counted'''count [s] (.length s))
+    )
+)
+
+(§ defn count [x]
+    (condp satisfies? x
+        Counted
+            (Counted'''count x)
+        Seqable
+            (loop-when [n 0 s (Seqable'''seq x)] s => n
+                (when (satisfies? Counted s) => (recur (inc n) (next s))
+                    (+ n (Counted'''count s))
+                )
+            )
+        (throw! (str "count not supported on " (class x)))
+    )
+)
+
+(§ defn second [s] (first (next s)))
+(defn third  [s] (first (next (next s))))
+(defn fourth [s] (first (next (next (next s)))))
+(defn last   [s] (if-some [r (next s)] (recur r) (first s)))
+
+(declare conj)
+
+;;;
+ ; Return a seq of all but the last item in coll, in linear time.
+ ;;
+(defn butlast [s] (loop-when-recur [v [] s s] (next s) [(conj v (first s)) (next s)] => (seq v)))
 
 (java-ns cloiure.lang.IHashEq
     (defprotocol IHashEq
@@ -527,7 +794,7 @@
 ;;;
  ; Returns the metadata of obj, returns nil if there is no metadata.
  ;;
-(defn meta [x] (when (satisfies? IMeta x) (IMeta'''meta ^cloiure.core.IMeta x)))
+(§ defn meta [x] (when (satisfies? IMeta x) (IMeta'''meta ^cloiure.core.IMeta x)))
 
 (java-ns cloiure.lang.IObj
     (defprotocol IObj
@@ -629,46 +896,6 @@
 
 (defn sorted? [x] (or (satisfies? Sorted x) (instance? clojure.lang.Sorted x)))
 
-(java-ns cloiure.lang.Counted
-    (defprotocol Counted
-        (#_"int" Counted'''count [#_"Counted" this])
-    )
-
-    (extend-protocol Counted
-        nil                  (Counted'''count [_] 0)
-        clojure.lang.Counted (Counted'''count [o] (.count o))
-    )
-    (extend-protocol Counted
-        @#'Object'array      (Counted'''count [a] (Array/getLength a))
-        CharSequence         (Counted'''count [s] (.length s))
-    )
-)
-
-;;;
- ; Returns true if x implements count in constant time.
- ;;
-(defn counted? [x] (and (some? x) (satisfies? Counted x)))
-
-;;;
- ; Returns the number of items in coll. (count nil) returns 0.
- ;;
-(defn #_"int" count [#_"Object" o]
-    (cond
-        (satisfies? Counted o)
-            (Counted'''count o)
-        (§ soon coll? o)
-            (loop-when [#_"int" n 0 #_"ISeq" s (seq o)] (some? s) => n
-                (when (satisfies? Counted s) => (recur (inc n) (next s))
-                    (+ n (Counted'''count s))
-                )
-            )
-        (§ soon map-entry? o)
-            2
-        :else
-            (throw! (str "count not supported on this type: " (.getName (class o))))
-    )
-)
-
 (java-ns cloiure.lang.Indexed
     (defprotocol Indexed
         (#_"Object" Indexed'''nth
@@ -682,6 +909,13 @@
  ; Return true if x implements Indexed, indicating efficient lookup by index.
  ;;
 (defn indexed? [x] (or (satisfies? Indexed x) (instance? clojure.lang.Indexed x)))
+
+;;;
+ ; Returns the nth next of coll, (seq coll) when n is 0.
+ ;;
+(defn nthnext [s n]
+    (loop-when-recur [s (seq s) n n] (and s (pos? n)) [(next s) (dec n)] => s)
+)
 
 (java-ns cloiure.lang.ILookup
     (defprotocol ILookup
@@ -933,7 +1167,7 @@
     (defrecord Keyword []) (extend-type Keyword #_"Comparable" IFn IHashEq INamed IObject)
 )
 
-(defn keyword? [x] (or (instance? Keyword x) (instance? clojure.lang.Keyword x)))
+(§ defn keyword? [x] (or (instance? Keyword x) (instance? clojure.lang.Keyword x)))
 
 (java-ns cloiure.lang.AFunction
     #_abstract
@@ -1209,7 +1443,6 @@
 )
 
 (declare conj!)
-(declare conj)
 
 (defn into [to from]
     (if (editable? to)
@@ -1219,84 +1452,6 @@
 )
 
 (defmacro update! [x f & z] `(set! ~x (~f ~x ~@z)))
-
-(defmacro- assert-args [& pairs]
-    (§ soon
-        `(when ~(first pairs) => (throw! (str (first ~'&form) " requires " ~(second pairs) " in " ~'*ns* ":" (:line (meta ~'&form))))
-            ~(when-some [s (nnext pairs)]
-                (list* `assert-args s)
-            )
-        )
-    )
-)
-
-;;;
- ; bindings => binding-form test
- ;
- ; If test is true, evaluates then with binding-form bound to the value of test, if not, yields else.
- ;;
-(defmacro if-let
-    ([v then] `(if-let ~v ~then nil))
-    ([v then else & _]
-        (assert-args
-            (vector? v) "a vector for its binding"
-            (nil? _) "1 or 2 forms after binding vector"
-            (= 2 (count v)) "exactly 2 forms in binding vector"
-        )
-        `(let [_# ~(v 1)]
-            (if _# (let [~(v 0) _#] ~then) ~else)
-        )
-    )
-)
-
-;;;
- ; bindings => binding-form test
- ;
- ; When test is true, evaluates body with binding-form bound to the value of test.
- ;;
-(defmacro when-let [v & body]
-    (assert-args
-        (vector? v) "a vector for its binding"
-        (= 2 (count v)) "exactly 2 forms in binding vector"
-    )
-    `(let [_# ~(v 1)]
-        (when _# (let [~(v 0) _#] ~@body))
-    )
-)
-
-;;;
- ; bindings => binding-form test
- ;
- ; If test is not nil, evaluates then with binding-form bound to the value of test, if not, yields else.
- ;;
-(§ defmacro if-some
-    ([v then] `(if-some ~v ~then nil))
-    ([v then else & _]
-        (assert-args
-            (vector? v) "a vector for its binding"
-            (nil? _) "1 or 2 forms after binding vector"
-            (= 2 (count v)) "exactly 2 forms in binding vector"
-        )
-        `(let [_# ~(v 1)]
-            (if (nil? _#) ~else (let [~(v 0) _#] ~then))
-        )
-    )
-)
-
-;;;
- ; bindings => binding-form test
- ;
- ; When test is not nil, evaluates body with binding-form bound to the value of test.
- ;;
-(§ defmacro when-some [v & body]
-    (assert-args
-        (vector? v) "a vector for its binding"
-        (= 2 (count v)) "exactly 2 forms in binding vector"
-    )
-    `(let [_# ~(v 1)]
-        (if (nil? _#) nil (let [~(v 0) _#] ~@body))
-    )
-)
 
 (java-ns cloiure.lang.Intrinsics
 
@@ -1390,8 +1545,6 @@
         (and (some? c) (.isPrimitive c) (not (= c Void/TYPE)))
     )
 
-    (declare <)
-
     (defn #_"Field" Reflector'getField [#_"Class" c, #_"String" name, #_"boolean" static?]
         (let [#_"Field[]" allfields (.getFields c)]
             (loop-when [#_"int" i 0] (< i (alength allfields))
@@ -1470,7 +1623,7 @@
 
     (defn #_"Object[]" Reflector'boxArgs [#_"Class[]" params, #_"Object[]" args]
         (when (pos? (alength params))
-            (let [#_"Object[]" a (make-array Object (alength params))]
+            (let [#_"Object[]" a (object-array (alength params))]
                 (dotimes [#_"int" i (alength params)]
                     (aset a i (Reflector'boxArg (aget params i), (aget args i)))
                 )
@@ -1704,7 +1857,7 @@
                 )
                 (let [#_"PersistentVector" methods (Reflector'getMethods c, 0, name, false)]
                     (if (pos? (count methods))
-                        (Reflector'invokeMatchingMethod name, methods, target, (make-array Object 0))
+                        (Reflector'invokeMatchingMethod name, methods, target, (object-array 0))
                         (Reflector'getInstanceField target, name)
                     )
                 )
@@ -1726,12 +1879,6 @@
 )
 
 (class-ns Compiler
-    (def #_"Class" Compiler'BOOLEANS_CLASS (Class/forName "[Z"))
-    (def #_"Class" Compiler'BYTES_CLASS    (Class/forName "[B"))
-    (def #_"Class" Compiler'CHARS_CLASS    (Class/forName "[C"))
-    (def #_"Class" Compiler'INTS_CLASS     (Class/forName "[I"))
-    (def #_"Class" Compiler'LONGS_CLASS    (Class/forName "[J"))
-
     (def #_"int" Compiler'MAX_POSITIONAL_ARITY 9)
 
     (def #_"String" Compiler'COMPILE_STUB_PREFIX "compile__stub")
@@ -1884,7 +2031,6 @@
         (and (= context :Context'RETURN) *in-return-context* (not *in-catch-finally*))
     )
 
-    (declare symbol)
     (declare Namespace''getAlias)
     (declare find-ns)
 
@@ -1899,7 +2045,6 @@
         )
     )
 
-    (declare int)
     (declare Namespace''getMapping)
     (declare var?)
 
@@ -2170,8 +2315,6 @@
             )
         )
     )
-
-    (declare dec)
 
     (defn- #_"int" Compiler'registerKeywordCallsite [#_"Keyword" k]
         (dec (count (update! *keyword-callsites* conj k)))
@@ -2886,11 +3029,11 @@
     (defn #_"Class" Interop'maybeSpecialTag [#_"Symbol" sym]
         (or (Interop'primClassForName sym)
             (case (:name sym)
-                "booleans" Compiler'BOOLEANS_CLASS
-                "bytes"    Compiler'BYTES_CLASS
-                "chars"    Compiler'CHARS_CLASS
-                "ints"     Compiler'INTS_CLASS
-                "longs"    Compiler'LONGS_CLASS
+                "booleans" boolean'array
+                "bytes"    byte'array
+                "chars"    char'array
+                "ints"     int'array
+                "longs"    long'array
                 "objects"  Object'array
                            nil
             )
@@ -3262,7 +3405,7 @@
 
     (extend-type InstanceMethodExpr Expr
         (#_"Object" Expr'''eval [#_"InstanceMethodExpr" this]
-            (let [#_"Object" target (Expr'''eval (:target this)) #_"Object[]" args (make-array Object (count (:args this)))]
+            (let [#_"Object" target (Expr'''eval (:target this)) #_"Object[]" args (object-array (count (:args this)))]
                 (dotimes [#_"int" i (count (:args this))]
                     (aset args i (Expr'''eval (nth (:args this) i)))
                 )
@@ -3409,7 +3552,7 @@
 
     (extend-type StaticMethodExpr Expr
         (#_"Object" Expr'''eval [#_"StaticMethodExpr" this]
-            (let [#_"Object[]" args (make-array Object (count (:args this)))]
+            (let [#_"Object[]" args (object-array (count (:args this)))]
                 (dotimes [#_"int" i (count (:args this))]
                     (aset args i (Expr'''eval (nth (:args this) i)))
                 )
@@ -3996,7 +4139,7 @@
 
     (extend-type NewExpr Expr
         (#_"Object" Expr'''eval [#_"NewExpr" this]
-            (let [#_"Object[]" args (make-array Object (count (:args this)))]
+            (let [#_"Object[]" args (object-array (count (:args this)))]
                 (dotimes [#_"int" i (count (:args this))]
                     (aset args i (Expr'''eval (nth (:args this) i)))
                 )
@@ -4259,7 +4402,7 @@
 
     (extend-type MapExpr Expr
         (#_"Object" Expr'''eval [#_"MapExpr" this]
-            (let [#_"Object[]" a (make-array Object (count (:keyvals this)))]
+            (let [#_"Object[]" a (object-array (count (:keyvals this)))]
                 (dotimes [#_"int" i (count (:keyvals this))]
                     (aset a i (Expr'''eval (nth (:keyvals this) i)))
                 )
@@ -4348,7 +4491,7 @@
 
     (extend-type SetExpr Expr
         (#_"Object" Expr'''eval [#_"SetExpr" this]
-            (let [#_"Object[]" a (make-array Object (count (:keys this)))]
+            (let [#_"Object[]" a (object-array (count (:keys this)))]
                 (dotimes [#_"int" i (count (:keys this))]
                     (aset a i (Expr'''eval (nth (:keys this) i)))
                 )
@@ -5779,8 +5922,6 @@
         )
     )
 
-    (declare boolean)
-    (declare RT'nextID)
     (declare dissoc)
 
     (defn #_"Expr" FnExpr'parse [#_"Context" context, #_"ISeq" form, #_"String" name]
@@ -5797,11 +5938,11 @@
               [#_"Symbol" nm name]
                 (if (symbol? (second form))
                     (let [nm (second form)]
-                        [nm (str (:name nm) "__" (RT'nextID))]
+                        [nm (str (:name nm) "__" (next-id!))]
                     )
                     (cond
-                        (nil? name)   [nil (str "fn__" (RT'nextID))]
-                        (some? owner) [nil (str name "__"(RT'nextID))]
+                        (nil? name)   [nil (str "fn__" (next-id!))]
+                        (some? owner) [nil (str name "__"(next-id!))]
                         :else         [nil name]
                     )
                 )
@@ -6047,7 +6188,7 @@
                     (let [#_"Label" end (.mark gen)]
                         (loop-when-recur [#_"ISeq" bis (seq (:bindingInits this))] (some? bis) [(next bis)]
                             (let [#_"BindingInit" bi (first bis)
-                                  #_"String" lname (:name (:binding bi)) lname (if (.endsWith lname, "__auto__") (str lname (RT'nextID)) lname)
+                                  #_"String" lname (:name (:binding bi)) lname (if (.endsWith lname, "__auto__") (str lname (next-id!)) lname)
                                   #_"Class" primc (Compiler'maybePrimitiveType (:init bi))]
                                 (.visitLocalVariable gen, lname, (if (some? primc) (Type/getDescriptor primc) "Ljava/lang/Object;"), nil, loopLabel, end, (:idx (:binding bi)))
                             )
@@ -6064,7 +6205,6 @@
     )
 )
 
-(declare even?)
 (declare quot)
 
 (class-ns LetFnParser
@@ -6152,7 +6292,7 @@
             (let [#_"Label" end (.mark gen)]
                 (loop-when-recur [#_"ISeq" bis (seq (:bindingInits this))] (some? bis) [(next bis)]
                     (let [#_"BindingInit" bi (first bis)
-                          #_"String" lname (:name (:binding bi)) lname (if (.endsWith lname, "__auto__") (str lname (RT'nextID)) lname)
+                          #_"String" lname (:name (:binding bi)) lname (if (.endsWith lname, "__auto__") (str lname (next-id!)) lname)
                           #_"Class" primc (Compiler'maybePrimitiveType (:init bi))]
                         (.visitLocalVariable gen, lname, (if (some? primc) (Type/getDescriptor primc) "Ljava/lang/Object;"), nil, (get bindingLabels bi), end, (:idx (:binding bi)))
                     )
@@ -6894,7 +7034,7 @@
               nie (if (some? thisSym) (assoc nie :thisName (:name thisSym)) nie)
               nie
                 (when (some? fieldSyms) => nie
-                    (let [#_"Object[]" a (make-array Object (* 2 (count fieldSyms)))
+                    (let [#_"Object[]" a (object-array (* 2 (count fieldSyms)))
                           #_"IPersistentMap" fmap
                             (loop-when [fmap {} #_"int" i 0] (< i (count fieldSyms)) => fmap
                                 (let [#_"Symbol" sym (nth fieldSyms i)
@@ -6988,7 +7128,7 @@
                       #_"String" classname
                         (let [#_"IopMethod" owner *method*
                               #_"String" basename (if (some? owner) (IopObject'trimGenID (:name (:objx owner))) (Compiler'munge (:name (:name *ns*))))]
-                            (str basename "$" "reify__" (RT'nextID))
+                            (str basename "$" "reify__" (next-id!))
                         )
                       #_"IopObject" nie (NewInstanceExpr'build ifaces, nil, nil, classname, (symbol classname), nil, s, form, nil)]
                     (when (and (satisfies? IObj form) (some? (meta form))) => nie
@@ -7311,6 +7451,8 @@
         )
     )
 
+    (declare list*)
+
     (defn #_"Object" Compiler'macroexpand1 [#_"Object" form]
         (when (seq? form) => form
             (let-when [#_"Object" op (first form)] (not (Compiler'isSpecial op)) => form
@@ -7486,7 +7628,7 @@
                                 (Compiler'eval (first s))
                             )
                         (or (satisfies? IType form) (and (coll? form) (not (and (symbol? (first form)) (.startsWith (:name (first form)), "def")))))
-                            (let [#_"IopObject" fexpr (Compiler'analyze :Context'EXPRESSION, (list 'fn* [] form), (str "eval" (RT'nextID)))]
+                            (let [#_"IopObject" fexpr (Compiler'analyze :Context'EXPRESSION, (list 'fn* [] form), (str "eval" (next-id!)))]
                                 (IFn'''invoke (Expr'''eval fexpr))
                             )
                         :else
@@ -7508,7 +7650,7 @@
     (def #_"Var" ^:dynamic *gensym-env*) ;; symbol->gensymbol
 
     (defn #_"Symbol" LispReader'garg [#_"int" n]
-        (symbol (str (if (= n -1) "rest" (str "p" n)) "__" (RT'nextID) "#"))
+        (symbol (str (if (= n -1) "rest" (str "p" n)) "__" (next-id!) "#"))
     )
 
     (defn #_"Symbol" LispReader'registerArg [#_"int" n]
@@ -7525,7 +7667,7 @@
     (defn #_"Symbol" LispReader'registerGensym [#_"Symbol" sym]
         (when (bound? #'*gensym-env*) => (throw! "gensym literal not in syntax-quote")
             (or (get *gensym-env* sym)
-                (let [#_"Symbol" gsym (symbol (str (:name sym) "__" (RT'nextID) "__auto__"))]
+                (let [#_"Symbol" gsym (symbol (str (:name sym) "__" (next-id!) "__auto__"))]
                     (update! *gensym-env* assoc sym gsym)
                     gsym
                 )
@@ -8423,7 +8565,7 @@
  ; Note that f may be called multiple times, and thus should be free of side effects.
  ; Returns the value that was swapped in.
  ;;
-(defn swap! [^cloiure.core.IAtom a f & args] (IAtom'''swap a f args))
+(§ defn swap! [^cloiure.core.IAtom a f & args] (IAtom'''swap a f args))
 
 ;;;
  ; Sets the value of atom to x' without regard for the current value.
@@ -9001,8 +9143,6 @@
         )
     )
 
-    (declare long)
-
     (defn- #_"long" Numbers'bitOpsCast [#_"Object" x]
         (let [#_"Class" c (class x)]
             (when (any = c Long Integer Byte) => (throw! (str "bit operation not supported for: " c))
@@ -9043,7 +9183,7 @@
 ;;;
  ; Returns non-nil if nums are in monotonically increasing order, otherwise false.
  ;;
-(defn <
+(§ defn <
     ([x] true)
     ([x y] (Numbers'lt x y))
     ([x y & s] (and (< x y) (recur-if (next s) [y (first s) (next s)] => (< y (first s)))))
@@ -9129,7 +9269,7 @@
 ;;;
  ; Returns a number one less than num. Supports arbitrary precision.
  ;;
-(defn dec [x] (Numbers'dec x))
+(§ defn dec [x] (Numbers'dec x))
 
 ;;;
  ; Returns the product of nums. (*) returns 1. Supports arbitrary precision.
@@ -9225,7 +9365,7 @@
 ;;;
  ; Returns true if n is even, throws an exception if n is not an integer.
  ;;
-(defn even? [n]
+(§ defn even? [n]
     (when (integer? n) => (throw! (str "argument must be an integer: " n))
         (zero? (bit-and n 1))
     )
@@ -10775,7 +10915,7 @@
         )
     )
 
-    (extend-protocol Seqable @#'Object'array
+    (extend-protocol Seqable Object'array
         (#_"ArraySeq" Seqable'''seq [#_"Object[]" a] (ArraySeq'create a))
     )
 
@@ -11269,7 +11409,7 @@
 
     (defn #_"MethodImplCache" MethodImplCache'new
         ([#_"IPersistentMap" protocol, #_"Keyword" methodk]
-            (MethodImplCache'new protocol, methodk, 0, 0, (make-array Object 0))
+            (MethodImplCache'new protocol, methodk, 0, 0, (object-array 0))
         )
         ([#_"IPersistentMap" protocol, #_"Keyword" methodk, #_"int" shift, #_"int" mask, #_"Object[]" table]
             (MethodImplCache'init protocol, methodk, shift, mask, table, nil)
@@ -11556,7 +11696,7 @@
             (merge (PersistentArrayMap.) (APersistentMap'new)
                 (hash-map
                     #_"IPersistentMap" :_meta meta
-                    #_"Object[]" :a (or a (make-array Object 0))
+                    #_"Object[]" :a (or a (object-array 0))
                 )
             )
         )
@@ -11614,7 +11754,7 @@
                     ;; Create a new, shorter array with unique keys, and the last value associated with each key.
                     ;; To behave like assoc, the first occurrence of each key must be used, since its metadata
                     ;; may be different than later equal keys.
-                    (let [#_"Object[]" nodups (make-array Object n)
+                    (let [#_"Object[]" nodups (object-array n)
                           #_"int" m
                             (loop-when [m 0 #_"int" i 0] (< i (alength init)) => m
                                 (let [#_"boolean" dup?
@@ -11689,7 +11829,7 @@
                     ;; didn't have key, grow
                     (if (< PersistentArrayMap'HASHTABLE_THRESHOLD (alength (:a this)))
                         (-> (PersistentHashMap'create-1a (:a this)) (assoc key val) (with-meta (meta this)))
-                        (let [#_"int" n (alength (:a this)) #_"Object[]" a (make-array Object (+ n 2))]
+                        (let [#_"int" n (alength (:a this)) #_"Object[]" a (object-array (+ n 2))]
                             (when (pos? n)
                                 (System/arraycopy (:a this), 0, a, 0, n)
                             )
@@ -11710,7 +11850,7 @@
             (let-when [#_"int" i (PersistentArrayMap''indexOf this, key)] (<= 0 i) => this ;; don't have key, no op
                 ;; have key, will remove
                 (let-when [#_"int" n (- (alength (:a this)) 2)] (pos? n) => (empty this)
-                    (let [#_"Object[]" a (make-array Object n)]
+                    (let [#_"Object[]" a (object-array n)]
                         (System/arraycopy (:a this), 0, a, 0, i)
                         (System/arraycopy (:a this), (+ i 2), a, i, (- n i))
                         (PersistentArrayMap''create this, a)
@@ -11772,7 +11912,7 @@
 (class-ns TransientArrayMap
     (defn #_"TransientArrayMap" TransientArrayMap'new [#_"Object[]" a]
         (let [#_"int" n (alength a)
-              #_"Object[]" a' (make-array Object (max PersistentArrayMap'HASHTABLE_THRESHOLD n)) _ (System/arraycopy a, 0, a', 0, n)]
+              #_"Object[]" a' (object-array (max PersistentArrayMap'HASHTABLE_THRESHOLD n)) _ (System/arraycopy a, 0, a', 0, n)]
             (merge (TransientArrayMap.) (ATransientMap'new)
                 (hash-map
                     #_"Object[]" :a a'
@@ -11841,7 +11981,7 @@
     (defn #_"IPersistentMap" ATransientMap'''doPersistent--TransientArrayMap [#_"TransientArrayMap" this]
         (ATransientMap'''ensureEditable this)
         (vreset! (:owner this) nil)
-        (let [#_"Object[]" a' (make-array Object (:n this)) _ (System/arraycopy (:a this), 0, a', 0, (:n this))]
+        (let [#_"Object[]" a' (object-array (:n this)) _ (System/arraycopy (:a this), 0, a', 0, (:n this))]
             (PersistentArrayMap'new a')
         )
     )
@@ -11990,7 +12130,7 @@
     )
 
     (defn- #_"Object[]" PersistentHashMap'removePair [#_"Object[]" a, #_"int" i]
-        (let [#_"Object[]" a' (make-array Object (- (alength a) 2)) #_"int" ii (* 2 i)]
+        (let [#_"Object[]" a' (object-array (- (alength a) 2)) #_"int" ii (* 2 i)]
             (System/arraycopy a, 0, a', 0, ii)
             (System/arraycopy a, (+ ii 2), a', ii, (- (alength a') ii))
             a'
@@ -12032,7 +12172,7 @@
 
     #_method
     (defn- #_"INode" ArrayNode''pack [#_"ArrayNode" this, #_"AtomicReference<Thread>" edit, #_"int" idx]
-        (let [#_"Object[]" a' (make-array Object (* 2 (dec (:n this))))
+        (let [#_"Object[]" a' (object-array (* 2 (dec (:n this))))
               [#_"int" bitmap #_"int" j]
                 (loop-when [bitmap 0 j 1 #_"int" i 0] (< i idx) => [bitmap j]
                     (let [[bitmap j]
@@ -12224,7 +12364,7 @@
                                 )
                                 (ArrayNode'new nil, (inc n), nodes)
                             )
-                            (let [#_"Object[]" a' (make-array Object (* 2 (inc n)))]
+                            (let [#_"Object[]" a' (object-array (* 2 (inc n)))]
                                 (System/arraycopy (:a this), 0, a', 0, (* 2 idx))
                                 (aset a' (* 2 idx) key)
                                 (vreset! addedLeaf true)
@@ -12305,7 +12445,7 @@
     #_method
     (defn- #_"BitmapIndexedNode" BitmapIndexedNode''ensureEditable [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit]
         (when-not (= (:edit this) edit) => this
-            (let [#_"int" n (Integer/bitCount (:bitmap this)) #_"Object[]" a' (make-array Object (* 2 (inc n)))] ;; make room for next assoc
+            (let [#_"int" n (Integer/bitCount (:bitmap this)) #_"Object[]" a' (object-array (* 2 (inc n)))] ;; make room for next assoc
                 (System/arraycopy (:a this), 0, a', 0, (* 2 n))
                 (BitmapIndexedNode'new edit, (:bitmap this), a')
             )
@@ -12403,7 +12543,7 @@
                                     (ArrayNode'new edit, (inc n), nodes)
                                 )
                             :else
-                                (let [#_"Object[]" a' (make-array Object (* 2 (+ n 4)))]
+                                (let [#_"Object[]" a' (object-array (* 2 (+ n 4)))]
                                     (System/arraycopy (:a this), 0, a', 0, (* 2 idx))
                                     (aset a' (* 2 idx) key)
                                     (vreset! addedLeaf true)
@@ -12479,7 +12619,7 @@
                         (when-not (= (aget (:a this) (inc i)) val) => this
                             (HashCollisionNode'new nil, hash, (:n this), (PersistentHashMap'cloneAndSet (:a this), (inc i), val))
                         )
-                        (let [#_"int" n (:n this) #_"Object[]" a' (make-array Object (* 2 (inc n)))]
+                        (let [#_"int" n (:n this) #_"Object[]" a' (object-array (* 2 (inc n)))]
                             (System/arraycopy (:a this), 0, a', 0, (* 2 n))
                             (aset a' (* 2 n) key)
                             (aset a' (inc (* 2 n)) val)
@@ -12532,7 +12672,7 @@
     #_method
     (defn- #_"HashCollisionNode" HashCollisionNode''ensureEditable-2 [#_"HashCollisionNode" this, #_"AtomicReference<Thread>" edit]
         (when-not (= (:edit this) edit) => this
-            (let [#_"int" n (:n this) #_"Object[]" a' (make-array Object (* 2 (inc n)))] ;; make room for next assoc
+            (let [#_"int" n (:n this) #_"Object[]" a' (object-array (* 2 (inc n)))] ;; make room for next assoc
                 (System/arraycopy (:a this), 0, a', 0, (* 2 n))
                 (HashCollisionNode'new edit, (:hash this), n, a')
             )
@@ -12579,7 +12719,7 @@
                                         (update :n inc)
                                     )
                                 )
-                                (let [#_"Object[]" a' (make-array Object (+ m 2))]
+                                (let [#_"Object[]" a' (object-array (+ m 2))]
                                     (System/arraycopy (:a this), 0, a', 0, m)
                                     (aset a' m key)
                                     (aset a' (inc m) val)
@@ -14272,7 +14412,7 @@
 
 (class-ns VNode
     (defn #_"VNode" VNode'new
-        ([#_"AtomicReference<Thread>" edit] (VNode'new edit, (make-array Object 32)))
+        ([#_"AtomicReference<Thread>" edit] (VNode'new edit, (object-array 32)))
         ([#_"AtomicReference<Thread>" edit, #_"Object[]" a]
             (merge (VNode.)
                 (hash-map
@@ -14299,7 +14439,7 @@
     )
 
     (defn- #_"Object[]" TransientVector'editableTail [#_"Object[]" tail]
-        (let [#_"Object[]" a (make-array Object 32)]
+        (let [#_"Object[]" a (object-array 32)]
             (System/arraycopy tail, 0, a, 0, (alength tail))
             a
         )
@@ -14353,7 +14493,7 @@
         (#_"PersistentVector" ITransientCollection'''persistent [#_"TransientVector" this]
             (TransientVector''ensureEditable this)
             (.set (:edit (:root this)), nil)
-            (let [#_"Object[]" trimmedTail (make-array Object (- (:cnt this) (TransientVector''tailoff this)))]
+            (let [#_"Object[]" trimmedTail (object-array (- (:cnt this) (TransientVector''tailoff this)))]
                 (System/arraycopy (:tail this), 0, trimmedTail, 0, (alength trimmedTail))
                 (PersistentVector'new (:cnt this), (:shift this), (:root this), trimmedTail)
             )
@@ -14393,7 +14533,7 @@
                     )
                     ;; full tail, push into tree
                     (let [#_"VNode" tailnode (VNode'new (:edit (:root this)), (:tail this))
-                          this (assoc this :tail (make-array Object 32))
+                          this (assoc this :tail (object-array 32))
                           _ (aset (:tail this) 0 val)
                           #_"int" shift (:shift this)
                           [#_"VNode" root shift]
@@ -14617,7 +14757,7 @@
     )
 
     (defn #_"PersistentVector" PersistentVector'create-1s [#_"Seqable" items]
-        (let [#_"Object[]" a (make-array Object 32)
+        (let [#_"Object[]" a (object-array 32)
               [#_"ISeq" s #_"int" i]
                 (loop-when-recur [s (seq items) i 0] (and (some? s) (< i 32)) [(next s) (inc i)] => [s i]
                     (aset a i (first s))
@@ -14628,7 +14768,7 @@
                 (= i 32) ;; exactly 32, skip copy
                     (PersistentVector'new 32, 5, PersistentVector'EMPTY_NODE, a)
                 :else ;; <32, copy to minimum array and construct
-                    (let [#_"Object[]" b (make-array Object i)]
+                    (let [#_"Object[]" b (object-array i)]
                         (System/arraycopy a, 0, b, 0, i)
                         (PersistentVector'new i, 5, PersistentVector'EMPTY_NODE, b)
                     )
@@ -14697,7 +14837,7 @@
         (#_"PersistentVector" IPersistentVector'''assocN [#_"PersistentVector" this, #_"int" i, #_"Object" o]
             (if (< -1 i (:cnt this))
                 (if (<= (PersistentVector''tailoff this) i)
-                    (let [#_"Object[]" tail (make-array Object (alength (:tail this)))]
+                    (let [#_"Object[]" tail (object-array (alength (:tail this)))]
                         (System/arraycopy (:tail this), 0, tail, 0, (alength (:tail this)))
                         (aset tail (bit-and i 0x01f) o)
                         (PersistentVector'new (meta this), (:cnt this), (:shift this), (:root this), tail)
@@ -14743,7 +14883,7 @@
         (#_"PersistentVector" IPersistentCollection'''conj [#_"PersistentVector" this, #_"Object" val]
             (let [#_"int" n (:cnt this)]
                 (if (< (- n (PersistentVector''tailoff this)) 32) ;; room in tail?
-                    (let [#_"int" e (alength (:tail this)) #_"Object[]" tail (make-array Object (inc e))]
+                    (let [#_"int" e (alength (:tail this)) #_"Object[]" tail (object-array (inc e))]
                         (System/arraycopy (:tail this), 0, tail, 0, e)
                         (aset tail e val)
                         (PersistentVector'new (meta this), (inc n), (:shift this), (:root this), tail)
@@ -14853,7 +14993,7 @@
                 (= (:cnt this) 1)
                     (with-meta PersistentVector'EMPTY (meta this))
                 (< 1 (- (:cnt this) (PersistentVector''tailoff this)))
-                    (let [#_"Object[]" tail (make-array Object (dec (alength (:tail this))))]
+                    (let [#_"Object[]" tail (object-array (dec (alength (:tail this))))]
                         (System/arraycopy (:tail this), 0, tail, 0, (alength tail))
                         (PersistentVector'new (meta this), (dec (:cnt this)), (:shift this), (:root this), tail)
                     )
@@ -15406,10 +15546,6 @@
      ;;
     (§ soon def #_"Var" ^:dynamic ^Namespace *ns* RT'CLOIURE_NS)
 
-    (def- #_"int'" RT'ID (atom 0))
-
-    (defn #_"int" RT'nextID [] (swap! RT'ID inc))
-
     (defn #_"Object" RT'seqOrElse [#_"Object" o]
         (when (some? (seq o))
             o
@@ -15533,7 +15669,7 @@
     ([a k v & kvs]
         (let-when [a (assoc a k v)] kvs => a
             (when (next kvs) => (throw! "assoc expects even number of arguments after map/vector, found odd number")
-                (recur a (first kvs) (second kvs) (nnext kvs))
+                (recur a (first kvs) (second kvs) (next (next kvs)))
             )
         )
     )
@@ -15799,23 +15935,6 @@
         (loop-when-recur [#_"ISeq" s nil #_"int" i (dec (alength a))] (<= 0 i) [(cons (aget a i) s) (dec i)] => s)
     )
 
-    (defn #_"Object[]" RT'objectArray [#_"Object" sizeOrSeq]
-        (if (number? sizeOrSeq)
-            (make-array Object (.intValue ^Number sizeOrSeq))
-            (let [#_"ISeq" s (seq sizeOrSeq) #_"int" size (count s) #_"Object[]" a (make-array Object size)]
-                (loop-when-recur [#_"int" i 0 s s] (and (< i size) (some? s)) [(inc i) (next s)]
-                    (aset a i (first s))
-                )
-                a
-            )
-        )
-    )
-
-;;;
- ; Creates an array of objects.
- ;;
-(§ defn object-array ([size-or-seq] (RT'objectArray size-or-seq)))
-
     (defn #_"Object[]" RT'seqToArray [#_"ISeq" s]
         (let [#_"Object[]" a (make-array Object (count s))]
             (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (next s)]
@@ -15837,11 +15956,11 @@
     (defn #_"Object[]" RT'toArray [#_"Object" coll]
         (cond
             (nil? coll)
-                (make-array Object 0)
+                (object-array 0)
             (instance? Object'array coll)
                 coll
             (indexed? coll)
-                (let [#_"int" n (count coll) #_"Object[]" a (make-array Object n)]
+                (let [#_"int" n (count coll) #_"Object[]" a (object-array n)]
                     (dotimes [#_"int" i n]
                         (aset a i (nth coll i))
                     )
@@ -15851,7 +15970,7 @@
                 (RT'seqToArray (seq coll))
             (string? coll)
                 (let [#_"char[]" chars (.toCharArray coll)
-                      #_"Object[]" a (make-array Object (alength chars))]
+                      #_"Object[]" a (object-array (alength chars))]
                     (dotimes [#_"int" i (alength chars)]
                         (aset a i (aget chars i))
                     )
@@ -15859,7 +15978,7 @@
                 )
             (.isArray (class coll))
                 (let [#_"ISeq" s (seq coll)
-                      #_"Object[]" a (make-array Object (count s))]
+                      #_"Object[]" a (object-array (count s))]
                     (loop-when-recur [#_"int" i 0 s s] (< i (alength a)) [(inc i) (next s)]
                         (aset a i (first s))
                     )
@@ -15964,11 +16083,6 @@
         )
     )
 )
-
-;;;
- ; Return a seq of all but the last item in coll, in linear time.
- ;;
-(defn butlast [s] (loop-when-recur [v [] s s] (next s) [(conj v (first s)) (next s)] => (seq v)))
 
 ;;;
  ; Same as (def name (fn [params*] exprs*)) or (def name (fn ([params*] exprs*)+)) with any attrs added to the var metadata.
@@ -16137,19 +16251,9 @@
 ;;;
  ; Returns a Symbol with the given namespace and name.
  ;;
-(defn ^Symbol symbol
+(§ defn ^Symbol symbol
     ([name] (if (symbol? name) name (Symbol'intern name)))
     ([ns name] (Symbol'intern ns name))
-)
-
-;;;
- ; Returns a new symbol with a unique name. If a prefix string is supplied,
- ; the name is prefix# where # is some unique number.
- ; If prefix is not supplied, the prefix is 'G__'.
- ;;
-(defn gensym
-    ([] (gensym "G__"))
-    ([prefix] (symbol (str prefix (RT'nextID))))
 )
 
 ;;;
@@ -16182,6 +16286,26 @@
         )
     )
     ([ns name] (Keyword'find (symbol ns name)))
+)
+
+(defn- spread [s]
+    (cond
+        (nil? s) nil
+        (nil? (next s)) (seq (first s))
+        :else (cons (first s) (spread (next s)))
+    )
+)
+
+;;;
+ ; Creates a new seq containing the items prepended to the rest,
+ ; the last of which will be treated as a sequence.
+ ;;
+(defn list*
+    ([s] (seq s))
+    ([a s] (cons a s))
+    ([a b s] (cons a (cons b s)))
+    ([a b c s] (cons a (cons b (cons c s))))
+    ([a b c d & s] (cons a (cons b (cons c (cons d (spread s))))))
 )
 
 ;;;
@@ -16253,9 +16377,9 @@
 ;;;
  ; Coerce to boolean/int/long.
  ;;
-(defn boolean [x] (RT'booleanCast x))
-(defn int     [x] (RT'intCast     x))
-(defn long    [x] (RT'longCast    x))
+(§ defn boolean [x] (RT'booleanCast x))
+(§ defn int     [x] (RT'intCast     x))
+(§ defn long    [x] (RT'longCast    x))
 
 ;;;
  ; Returns a seq of the items in coll in reverse order. Not lazy.
@@ -16299,59 +16423,6 @@
  ; Returns a map containing only those entries in m whose key is in keys.
  ;;
 (defn select-keys [m keys] (with-meta (into {} (map #(find m %) keys)) (meta m)))
-
-;;;
- ; form => fieldName-symbol or (instanceMethodName-symbol args*)
- ;
- ; Expands into a member access (.) of the first member on the first argument,
- ; followed by the next member on the result, etc. For instance:
- ;
- ; (.. System (getProperties) (get "os.name"))
- ;
- ; expands to:
- ;
- ; (. (. System (getProperties)) (get "os.name"))
- ;
- ; but is easier to write, read, and understand.
- ;;
-(defmacro ..
-    ([x form] `(. ~x ~form))
-    ([x form & s] `(.. (. ~x ~form) ~@s))
-)
-
-;;;
- ; Threads the expr through the forms. Inserts x as the second item
- ; in the first form, making a list of it if it is not a list already.
- ; If there are more forms, inserts the first form as the second item
- ; in second form, etc.
- ;;
-(§ defmacro -> [x & s]
-    (when s => x
-        (recur &form &env
-            (let-when [f (first s)] (seq? f) => (list f x)
-                (with-meta `(~(first f) ~x ~@(next f)) (meta f))
-            )
-            (next s)
-        )
-    )
-)
-
-;;;
- ; Threads the expr through the forms. Inserts x as the last item
- ; in the first form, making a list of it if it is not a list already.
- ; If there are more forms, inserts the first form as the last item
- ; in second form, etc.
- ;;
-(defmacro ->> [x & s]
-    (when s => x
-        (recur &form &env
-            (let-when [f (first s)] (seq? f) => (list f x)
-                (with-meta `(~(first f) ~@(next f) ~x) (meta f))
-            )
-            (next s)
-        )
-    )
-)
 
 ;;;
  ; WARNING: This is a low-level function.
@@ -16858,7 +16929,7 @@
 ;;;
  ; Returns a vector of [(take n coll) (drop n coll)].
  ;;
-(defn split-at [n s] [(take n s) (drop n s)])
+(§ defn split-at [n s] [(take n s) (drop n s)])
 
 ;;;
  ; Returns a vector of [(take-while f? coll) (drop-while f? coll)].
@@ -17016,13 +17087,6 @@
 )
 
 ;;;
- ; Returns the nth next of coll, (seq coll) when n is 0.
- ;;
-(defn nthnext [s n]
-    (loop-when-recur [n n s (seq s)] (and s (pos? n)) [(dec n) (next s)] => s)
-)
-
-;;;
  ; Returns a lazy sequence of lists of n items each, at offsets step apart.
  ; If step is not supplied, defaults to n, i.e. the partitions do not overlap.
  ; If a pad is supplied, use it as necessary to complete the last partition upto n items.
@@ -17095,68 +17159,6 @@
 )
 
 ;;;
- ; Repeatedly executes body (presumably for side-effects) with bindings and filtering as provided by "for".
- ; Does not retain the head of the sequence. Returns nil.
- ;;
-(§ defmacro doseq [seq-exprs & body]
-    (assert-args
-        (vector? seq-exprs) "a vector for its binding"
-        (even? (count seq-exprs)) "an even number of forms in binding vector"
-    )
-    (letfn [(step- [recform exprs]
-                (when exprs => [true `(do ~@body)]
-                    (let [k (first exprs) v (second exprs)]
-                        (if (keyword? k)
-                            (let [[recur? subform] (step- recform (nnext exprs))]
-                                (case k
-                                    :let   [recur? `(let ~v ~subform)]
-                                    :while [false `(when ~v ~subform ~@(when recur? [recform]))]
-                                    :when  [false `(if ~v (do ~subform ~@(when recur? [recform])) ~recform)]
-                                )
-                            )
-                            (let [s- (gensym "s_") i- (gensym "i_")
-                                  recform `(recur (next ~s-) 0)
-                                  [recur? subform] (step- recform (nnext exprs))]
-                                [true
-                                    `(loop [~s- (seq ~v) ~i- 0]
-                                        (when-some [~s- (seq ~s-)]
-                                            (let [~k (first ~s-)]
-                                                ~subform
-                                                ~@(when recur? [recform])
-                                            )
-                                        )
-                                    )
-                                ]
-                            )
-                        )
-                    )
-                )
-            )]
-        (nth (step- nil (seq seq-exprs)) 1)
-    )
-)
-
-;;;
- ; bindings => name n
- ;
- ; Repeatedly executes body (presumably for side-effects) with name
- ; bound to integers from 0 through n-1.
- ;;
-(§ defmacro dotimes [v & body]
-    (assert-args
-        (vector? v) "a vector for its binding"
-        (= 2 (count v)) "exactly 2 forms in binding vector"
-    )
-    (let [i (v 0) n (v 1)]
-        `(let [n# (long ~n)]
-            (loop-when-recur [~i 0] (< ~i n#) [(inc ~i)]
-                ~@body
-            )
-        )
-    )
-)
-
-;;;
  ; Returns a new, transient version of the collection, in constant time.
  ;;
 (defn transient [^cloiure.core.IEditableCollection coll] (IEditableCollection'''asTransient coll))
@@ -17187,7 +17189,7 @@
     ([^cloiure.core.ITransientAssociative a k v] (ITransientAssociative'''assoc a k v))
     ([a k v & kvs]
         (let [a (assoc! a k v)]
-            (recur-if kvs [a (first kvs) (second kvs) (nnext kvs)] => a)
+            (recur-if kvs [a (first kvs) (second kvs) (next (next kvs))] => a)
         )
     )
 )
@@ -17495,24 +17497,6 @@
 (def-aset aset-char    setChar    char   )
 (def-aset aset-int     setInt     int    )
 (def-aset aset-long    setLong    long   )
-
-;;;
- ; Creates and returns an array of instances of the specified class of the specified dimension(s).
- ; Note that a class object is required.
- ; Class objects can be obtained by using their imported or fully-qualified name.
- ; Class objects for the primitive types can be obtained using, e.g. Integer/TYPE.
- ;;
-(§ defn make-array
-    ([^Class type n] (Array/newInstance type (int n)))
-    ([^Class type dim & s]
-        (let [dims (cons dim s) ^"[I" a (make-array Integer/TYPE (count dims))]
-            (dotimes [i (alength a)]
-                (aset-int a i (nth dims i))
-            )
-            (Array/newInstance type a)
-        )
-    )
-)
 
 ;;;
  ; If form represents a macro form, returns its expansion, else returns form.
@@ -17851,7 +17835,7 @@
                                     (if (seq bs)
                                         (let [firstb (first bs)]
                                             (cond
-                                                (= firstb '&)   (recur (pb ret (second bs) gseq) n (nnext bs) true)
+                                                (= firstb '&)   (recur (pb ret (second bs) gseq) n (next (next bs)) true)
                                                 (= firstb :as)  (pb ret (second bs) gvec)
                                                 :else           (if seen-rest?
                                                                     (throw! "unsupported binding form, only :as can follow & parameter")
@@ -18045,25 +18029,6 @@
                         )
                     )
                 )
-            )
-        )
-    )
-)
-
-;;;
- ; bindings => x xs
- ;
- ; Roughly the same as (when (seq xs) (let [x (first xs)] body)) but xs is evaluated only once.
- ;;
-(§ defmacro when-first [bindings & body]
-    (assert-args
-        (vector? bindings) "a vector for its binding"
-        (= 2 (count bindings)) "exactly 2 forms in binding vector"
-    )
-    (let [[x xs] bindings]
-        `(when-some [xs# (seq ~xs)]
-            (let [~x (first xs#)]
-                ~@body
             )
         )
     )
@@ -18839,49 +18804,6 @@
 )
 
 ;;;
- ; Takes a binary predicate, an expression, and a set of clauses.
- ; Each clause can take the form of either:
- ;
- ; test-expr result-expr
- ;
- ; test-expr :>> result-fn
- ;
- ; Note :>> is an ordinary keyword.
- ;
- ; For each clause, (f? test-expr expr) is evaluated. If it returns logical true,
- ; the clause is a match. If a binary clause matches, the result-expr is returned,
- ; if a ternary clause matches, its result-fn, which must be a unary function, is
- ; called with the result of the predicate as its argument, the result of that call
- ; being the return value of condp. A single default expression can follow the clauses,
- ; and its value will be returned if no clause matches. If no default expression
- ; is provided and no clause matches, an IllegalArgumentException is thrown.
- ;;
-(§ defmacro condp [f? expr & clauses]
-    (let [gpred (gensym "pred__") gexpr (gensym "expr__")
-          emit
-            (fn emit [f? expr args]
-                (let [[[a b c :as clause] more] (split-at (if (= :>> (second args)) 3 2) args) n (count clause)]
-                    (cond
-                        (= 0 n) `(throw! (str "no matching clause: " ~expr))
-                        (= 1 n) a
-                        (= 2 n) `(if (~f? ~a ~expr)
-                                    ~b
-                                    ~(emit f? expr more)
-                                )
-                        :else   `(if-let [p# (~f? ~a ~expr)]
-                                    (~c p#)
-                                    ~(emit f? expr more)
-                                )
-                    )
-                )
-            )]
-        `(let [~gpred ~f? ~gexpr ~expr]
-            ~(emit gpred gexpr clauses)
-        )
-    )
-)
-
-;;;
  ; Takes a function f, and returns a function that calls f, replacing a nil first argument
  ; to f with the supplied value x. Higher arity versions can replace arguments in the second
  ; and third positions (y, z). Note that the function f can take any number of arguments,
@@ -19005,7 +18927,7 @@
             (reduce
                 (fn [m [h bucket]]
                     (if (= (count bucket) 1)
-                        (assoc m (ffirst bucket) (second (first bucket)))
+                        (assoc m (first (first bucket)) (second (first bucket)))
                         (assoc-multi m h bucket)
                     )
                 )
@@ -19444,12 +19366,12 @@
 
 (def- prim->class
      (hash-map
-        'boolean  Boolean/TYPE   'booleans (Class/forName "[Z")
-        'byte     Byte/TYPE      'bytes    (Class/forName "[B")
-        'char     Character/TYPE 'chars    (Class/forName "[C")
-        'int      Integer/TYPE   'ints     (Class/forName "[I")
-        'long     Long/TYPE      'longs    (Class/forName "[J")
-        'void     Void/TYPE
+        'boolean Boolean/TYPE   'booleans boolean'array
+        'byte    Byte/TYPE      'bytes    byte'array
+        'char    Character/TYPE 'chars    char'array
+        'int     Integer/TYPE   'ints     int'array
+        'long    Long/TYPE      'longs    long'array
+        'void    Void/TYPE
     )
 )
 
@@ -19728,7 +19650,7 @@
         (let [cs (into {} (remove (fn [[c e]] (nil? e)) (map vec (partition 2 (:table cache)))))
               cs (assoc cs c (Entry'new c f))]
             (if-some [[shift mask] (maybe-min-hash (map hash (keys cs)))]
-                (let [table (make-array Object (* 2 (inc mask)))
+                (let [table (object-array (* 2 (inc mask)))
                       table
                         (reduce
                             (fn [^objects t [c e]]
@@ -19890,7 +19812,7 @@
           [opts sigs]
             (loop [opts {:on (list 'quote iname) :on-interface iname} sigs opts+sigs]
                 (condp #(%1 %2) (first sigs)
-                    keyword? (recur (assoc opts (first sigs) (second sigs)) (nnext sigs))
+                    keyword? (recur (assoc opts (first sigs) (second sigs)) (next (next sigs)))
                     [opts sigs]
                 )
             )
@@ -20522,16 +20444,6 @@
                 )]
             (keepi 0 coll)
         )
-    )
-)
-
-;;;
- ; If coll is counted?, returns its count, else will count at most the first m
- ; elements of coll using its seq.
- ;;
-(defn bounded-count [m coll]
-    (when (counted? coll) => (loop-when-recur [n 0 s (seq coll)] (and s (< n m)) [(inc n) (next s)] => n)
-        (count coll)
     )
 )
 
