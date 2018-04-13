@@ -1,5 +1,5 @@
 (ns cloiure.core
-    (:refer-clojure :only [*ns* *print-length* + - < = alength aget apply aset assoc atom binding boolean case char cons count dec defmacro defn defprotocol defrecord even? extend-protocol extend-type first fn hash-map hash-set identical? import inc int int-array interleave intern key keyword? let list long loop map merge meta next pos? reify satisfies? second seq seq? split-at str swap! symbol symbol? the-ns to-array val vary-meta vec vector vector? with-meta])
+    (:refer-clojure :only [*err* *in* *ns* *out* *print-length* *warn-on-reflection* + - < = alength aget apply aset assoc atom binding boolean case char cons count dec defmacro defn defprotocol defrecord even? extend-protocol extend-type first fn hash-map hash-set identical? import inc int int-array interleave intern key keyword? let list long loop map merge meta next pos? reify satisfies? second seq seq? split-at str swap! symbol symbol? the-ns to-array val vary-meta vec vector vector? with-meta])
 )
 
 (defmacro § [& _])
@@ -30,7 +30,7 @@
 (import-as Object'array  "[Ljava.lang.Object;")
 
 (import
-    [java.io BufferedReader InputStreamReader OutputStreamWriter PrintWriter PushbackReader #_Reader #_StringReader StringWriter Writer]
+    [java.io BufferedReader PushbackReader #_Reader #_StringReader StringWriter Writer]
     [java.lang.ref #_Reference ReferenceQueue SoftReference WeakReference]
     [java.lang.reflect Array #_Constructor #_Field #_Method Modifier]
     [java.security AccessController PrivilegedAction]
@@ -53,40 +53,6 @@
     ([] (gensym "G__"))
     ([prefix] (symbol (str prefix (next-id!))))
 )
-
-;;;
- ; A java.io.Reader object representing standard input for read operations.
- ; Defaults to System/in, wrapped in a PushbackReader.
- ;;
-(def ^:dynamic *in* (PushbackReader. (InputStreamReader. System/in)))
-;;;
- ; A java.io.Writer object representing standard output for print operations.
- ; Defaults to System/out, wrapped in an OutputStreamWriter.
- ;;
-(def ^:dynamic *out* (OutputStreamWriter. System/out))
-;;;
- ; A java.io.Writer object representing standard error for print operations.
- ; Defaults to System/err, wrapped in a PrintWriter.
- ;;
-(def ^:dynamic *err* (PrintWriter. (OutputStreamWriter. System/err), true))
-
-;;;
- ; When set to true, output will be flushed whenever a newline is printed.
- ; Defaults to true.
- ;;
-(def ^:dynamic *flush-on-newline* true)
-;;;
- ; When set to logical false, strings and characters will be printed with
- ; non-alphanumeric characters converted to the appropriate escape sequences.
- ; Defaults to true.
- ;;
-(def ^:dynamic *print-readably* true)
-;;;
- ; When set to true, the compiler will emit warnings when reflection
- ; is needed to resolve Java method calls or field accesses.
- ; Defaults to false.
- ;;
-(def ^:dynamic *warn-on-reflection* false)
 
 (defmacro throw! [^String s] `(throw (RuntimeException. ~s)))
 
@@ -11340,16 +11306,12 @@
         (get @(:mappings this) name)
     )
 
-    (declare RT'CLOIURE_NS)
-
     #_method
     (defn- #_"void" Namespace''warnOrFailOnReplace [#_"Namespace" this, #_"Symbol" sym, #_"Object" o, #_"Var" var]
         (or
             (when (var? o)
-                (when-not (or (= (:ns o) this) (= (:ns var) RT'CLOIURE_NS)) => :ok
-                    (when-not (= (:ns o) RT'CLOIURE_NS)
-                        (throw! (str sym " already refers to: " o " in namespace: " (:name this)))
-                    )
+                (when (= (:ns o) this) => (throw! (str sym " already refers to: " o " in namespace: " (:name this)))
+                    :ok
                 )
             )
             (.println *err*, (str "WARNING: " sym " already refers to: " o " in namespace: " (:name this) ", being replaced by: " var))
@@ -11454,7 +11416,7 @@
     )
 
     (defn #_"Namespace" Namespace'remove [#_"Symbol" name]
-        (when-not (= name (:name RT'CLOIURE_NS)) => (throw! "cannot remove core namespace")
+        (when-not (= name 'cloiure.core) => (throw! "cannot remove core namespace")
             (get (first (swap-vals! Namespace'namespaces dissoc name)) name)
         )
     )
@@ -15399,13 +15361,6 @@
 (java-ns cloiure.lang.RT
 
 (class-ns RT
-    (def #_"Namespace" RT'CLOIURE_NS (§ soon Namespace'findOrCreate 'cloiure.core))
-
-    ;;;
-     ; A Namespace object representing the current namespace.
-     ;;
-    (§ soon def #_"Var" ^:dynamic ^Namespace *ns* RT'CLOIURE_NS)
-
     (defn #_"Object" RT'seqOrElse [#_"Object" o]
         (when (some? (seq o))
             o
@@ -15869,15 +15824,10 @@
 
     (declare pr-on)
 
-    (defn #_"void" RT'print [#_"Object" x, #_"Writer" w]
-        (pr-on x w) ;; call multimethod
-        nil
-    )
-
     (defn #_"String" RT'printString [#_"Object" x]
-        (let [#_"StringWriter" sw (StringWriter.)]
-            (RT'print x, sw)
-            (.toString sw)
+        (let [#_"StringWriter" w (StringWriter.)]
+            (pr-on x w) ;; call multimethod
+            (.toString w)
         )
     )
 
@@ -17144,77 +17094,6 @@
     )
 )
 
-(§ defmulti print-method (fn [x w] (let [t (get (meta x) :type)] (if (keyword? t) t (class x)))))
-
-(§ defn- pr-on [x w]
-    (print-method x w)
-    nil
-)
-
-;;;
- ; Prints the object(s) to the output stream that is the current value of *out*.
- ; Prints the object(s), separated by spaces if there is more than one.
- ; By default, pr and prn print in a way that objects can be read by the reader.
- ;;
-(§ defn ^:dynamic pr
-    ([] nil)
-    ([x] (pr-on x *out*))
-    ([x & more]
-        (pr x)
-        (.append *out* \space)
-        (if-some [nmore (next more)]
-            (recur (first more) nmore)
-            (apply pr more)
-        )
-    )
-)
-
-;;;
- ; Writes a newline to *out*.
- ;;
-(§ defn newline []
-    (.append *out* \newline)
-    nil
-)
-
-;;;
- ; Flushes the output stream that is the current value of *out*.
- ;;
-(§ defn flush []
-    (.flush *out*)
-    nil
-)
-
-;;;
- ; Same as pr followed by (newline). Observes *flush-on-newline*.
- ;;
-(§ defn prn [& more]
-    (apply pr more)
-    (newline)
-    (when *flush-on-newline*
-        (flush)
-    )
-)
-
-;;;
- ; Prints the object(s) to the output stream that is the current value of *out*.
- ; print and println produce output for human consumption.
- ;;
-(§ defn print [& more]
-    (binding [*print-readably* nil]
-        (apply pr more)
-    )
-)
-
-;;;
- ; Same as print followed by (newline).
- ;;
-(§ defn println [& more]
-    (binding [*print-readably* nil]
-        (apply prn more)
-    )
-)
-
 ;;;
  ; Reads the next object from stream, which must be an instance of
  ; java.io.PushbackReader or some derivee. stream defaults to the
@@ -17253,32 +17132,6 @@
 )
 
 ;;;
- ; bindings => [name init ...]
- ;
- ; Evaluates body in a try expression with names bound to the values of the inits,
- ; and a finally clause that calls (.close name) on each name in reverse order.
- ;;
-(defmacro with-open [bindings & body]
-    (assert-args
-        (vector? bindings) "a vector for its binding"
-        (even? (count bindings)) "an even number of forms in binding vector"
-    )
-    (cond
-        (zero? (count bindings)) `(do ~@body)
-        (symbol? (bindings 0))
-            `(let ~(subvec bindings 0 2)
-                (try
-                    (with-open ~(subvec bindings 2) ~@body)
-                    (finally
-                        (.close ~(bindings 0))
-                    )
-                )
-            )
-        :else (throw! "with-open only allows Symbols in bindings")
-    )
-)
-
-;;;
  ; Evaluates x, then calls all of the methods and functions with the
  ; value of x supplied at the front of the given arguments. The forms
  ; are evaluated in order. Returns x.
@@ -17291,16 +17144,6 @@
             ~@(map (fn [f] (with-meta (if (seq? f) `(~(first f) ~gx ~@(next f)) `(~f ~gx)) (meta f))) forms)
             ~gx
         )
-    )
-)
-
-;;;
- ; Evaluates expr and prints the time it took. Returns the value of expr.
- ;;
-(defmacro time [expr]
-    `(let [start# (System/nanoTime) ret# ~expr]
-        (prn (str "Elapsed time: " (- (System/nanoTime) start#) " nsecs"))
-        ret#
     )
 )
 
@@ -17978,39 +17821,6 @@
 )
 
 ;;;
- ; Evaluates exprs in a context in which *out* is bound to a fresh StringWriter.
- ; Returns the string created by any nested printing calls.
- ;;
-(§ defmacro with-out-str [& body]
-    `(let [s# (StringWriter.)]
-        (binding [*out* s#]
-            ~@body
-            (str s#)
-        )
-    )
-)
-
-;;;
- ; Evaluates body in a context in which *in* is bound to a fresh StringReader
- ; initialized with the string s.
- ;;
-(§ defmacro with-in-str [s & body]
-    `(with-open [s# (-> ~s (java.io.StringReader.) (PushbackReader.))]
-        (binding [*in* s#]
-            ~@body
-        )
-    )
-)
-
-;;;
- ; pr/prn/print/println to a string, returning it.
- ;;
-(§ defn ^String pr-str      [& xs] (with-out-str (apply pr      xs)))
-(§ defn ^String prn-str     [& xs] (with-out-str (apply prn     xs)))
-(§ defn ^String print-str   [& xs] (with-out-str (apply print   xs)))
-(§ defn ^String println-str [& xs] (with-out-str (apply println xs)))
-
-;;;
  ; Returns an instance of java.util.regex.Pattern, for use, e.g. in re-matcher.
  ;;
 (§ defn ^Pattern re-pattern [s]
@@ -18465,17 +18275,6 @@
     )
 )
 
-;;;
- ; Formats a string using String/format.
- ; See java.util.Formatter for format string syntax.
- ;;
-(§ defn ^String format [fmt & args] (String/format fmt (to-array args)))
-
-;;;
- ; Prints formatted output, as per format.
- ;;
-(§ defn printf [fmt & args] (print (apply format fmt args)))
-
 (defmacro- with-loading-context [& body]
     `((fn loading# []
         (binding [*class-loader* (.getClassLoader (.getClass ^Object loading#))]
@@ -18909,314 +18708,43 @@
     )
 )
 
-;;;
- ; *print-length* controls how many items of each collection the printer will print.
- ; If it is bound to logical false, there is no limit. Otherwise, it must be bound
- ; to an integer indicating the maximum number of items of each collection to print.
- ; If a collection contains more items, the printer will print items up to the limit
- ; followed by '...' to represent the remaining items. The root binding is nil
- ; indicating no limit.
- ;;
-(§ soon def ^:dynamic *print-length* nil)
-
-;;;
- ; *print-level* controls how many levels deep the printer will print nested objects.
- ; If it is bound to logical false, there is no limit. Otherwise, it must be bound
- ; to an integer indicating the maximum level to print. Each argument to print is at
- ; level 0; if an argument is a collection, its items are at level 1; and so on.
- ; If an object is a collection and is at a level greater than or equal to the value
- ; bound to *print-level*, the printer prints '#' to represent it. The root binding
- ; is nil indicating no limit.
- ;;
-(def ^:dynamic *print-level* nil)
-
-;;;
- ; *print-namespace-maps* controls whether the printer will print namespace map literal
- ; syntax. It defaults to false, but the REPL binds to true.
- ;;
-(def ^:dynamic *print-namespace-maps* false)
-
-(§ defn- print-sequential [^String begin, print-one, ^String sep, ^String end, sequence, ^Writer w]
-    (binding [*print-level* (and *print-level* (dec *print-level*))]
-        (if (and *print-level* (neg? *print-level*))
-            (.write w "#")
-            (do
-                (.write w begin)
-                (when-some [xs (seq sequence)]
-                    (if *print-length*
-                        (loop [[x & xs] xs print-length *print-length*]
-                            (if (zero? print-length)
-                                (.write w "...")
-                                (do
-                                    (print-one x w)
-                                    (when xs
-                                        (.write w sep)
-                                        (recur xs (dec print-length))
-                                    )
-                                )
-                            )
-                        )
-                        (loop [[x & xs] xs]
-                            (print-one x w)
-                            (when xs
-                                (.write w sep)
-                                (recur xs)
-                            )
-                        )
-                    )
-                )
-                (.write w end)
+(§ defn- print-sequential [^String begin, p, ^String sep, ^String end, o, ^Writer w]
+    (.write w begin)
+    (when-some [s (seq o)]
+        (loop [[x & s] s]
+            (p x w)
+            (when s
+                (.write w sep)
+                (recur s)
             )
         )
     )
+    (.write w end)
 )
 
-(§ defn print-simple [o, ^Writer w]
-    (.write w (str o))
-)
-
-(§ defmethod print-method :default [o, ^Writer w]
-    (if (satisfies? IObj o)
-        (print-method (vary-meta o #(dissoc % :type)) w)
-        (print-simple o w)
-    )
-)
-
-(§ defmethod print-method nil [o, ^Writer w]
-    (.write w "nil")
-)
-
-(§ defn print-ctor [o print-args ^Writer w]
-    (.write w "#=(")
-    (.write w (.getName (class o)))
-    (.write w ". ")
-    (print-args o w)
-    (.write w ")")
-)
-
-(§ defn- print-tagged-object [o rep ^Writer w]
-    (.write w "#object[")
-    (let [c (class o)]
-        (if (.isArray c)
-            (print-method (.getName c) w)
-            (.write w (.getName c))
-        )
-    )
-    (.write w " ")
-    (.write w (format "0x%x " (System/identityHashCode o)))
-    (print-method rep w)
-    (.write w "]")
-)
-
-(§ defn- print-object [o, ^Writer w]
-    (print-tagged-object o (str o) w)
-)
-
-(§ defmethod print-method Object [o, ^Writer w]
-    (print-object o w)
-)
-
-(§ defmethod print-method Keyword [o, ^Writer w]
-    (.write w (str o))
-)
-
-(§ defmethod print-method Number [o, ^Writer w]
-    (.write w (str o))
-)
-
-(§ defmethod print-method Boolean [o, ^Writer w]
-    (.write w (str o))
-)
-
-(§ defmethod print-method Symbol [o, ^Writer w]
-    (print-simple o w)
-)
-
-(§ defmethod print-method Var [o, ^Writer w]
-    (print-simple o w)
+(§ defn- pr-on [o w]
+    (print-method o w)
+    nil
 )
 
 (§ defmethod print-method cloiure.core.ISeq [o, ^Writer w]
     (print-sequential "(" pr-on " " ")" o w)
 )
 
-(§ prefer-method print-method cloiure.core.ISeq cloiure.core.IPersistentCollection)
-
-;;;
- ; Returns escape string for char or nil if none.
- ;;
-(§ def ^String char-escape-string
-    (hash-map
-        \newline   "\\n"
-        \tab       "\\t"
-        \return    "\\r"
-        \"         "\\\""
-        \\         "\\\\"
-        \formfeed  "\\f"
-        \backspace "\\b"
-    )
+(§ defmethod print-method cloiure.core.IPersistentCollection [o, ^Writer w]
+    (print-sequential "(" pr-on " " ")" o w)
 )
 
-(§ defmethod print-method String [^String s, ^Writer w]
-    (if *print-readably*
-        (do
-            (.append w \") ;; oops! "
-            (dotimes [n (count s)]
-                (let [c (nth s n) e (char-escape-string c)]
-                    (if e (.write w e) (.append w c))
-                )
-            )
-            (.append w \") ;; oops! "
-        )
-        (.write w s)
-    )
-    nil
+(§ defmethod print-method cloiure.core.IPersistentVector [o, ^Writer w]
+    (print-sequential "[" pr-on " " "]" o w)
 )
 
-(§ defmethod print-method cloiure.core.IPersistentVector [v, ^Writer w]
-    (print-sequential "[" pr-on " " "]" v w)
+(§ defmethod print-method cloiure.core.IPersistentMap [o, ^Writer w]
+    (print-sequential "{" (fn [e ^Writer w] (do (pr-on (key e) w) (.append w \space) (pr-on (val e) w))) ", " "}" (seq o) w)
 )
 
-(§ defn- print-prefix-map [prefix m print-one w]
-    (print-sequential
-        (str prefix "{")
-        (fn [e ^Writer w] (do (print-one (key e) w) (.append w \space) (print-one (val e) w)))
-        ", "
-        "}"
-        (seq m) w
-    )
-)
-
-(§ defn- print-map [m print-one w]
-    (print-prefix-map nil m print-one w)
-)
-
-(§ defn- strip-ns [named]
-    (if (symbol? named)
-        (symbol nil (name named))
-        (keyword nil (name named))
-    )
-)
-
-;;;
- ; Returns [lifted-ns lifted-map] or nil if m can't be lifted.
- ;;
-(§ defn- lift-ns [m]
-    (when *print-namespace-maps*
-        (loop [ns nil [[k v :as entry] & entries] (seq m) lm {}]
-            (if entry
-                (when (or (keyword? k) (symbol? k))
-                    (if ns
-                        (when (= ns (namespace k))
-                            (recur ns entries (assoc lm (strip-ns k) v))
-                        )
-                        (when-some [new-ns (namespace k)]
-                            (recur new-ns entries (assoc lm (strip-ns k) v))
-                        )
-                    )
-                )
-                [ns (apply conj (empty m) lm)]
-            )
-        )
-    )
-)
-
-(§ defmethod print-method cloiure.core.IPersistentMap [m, ^Writer w]
-    (let [[ns lift-map] (lift-ns m)]
-        (if ns
-            (print-prefix-map (str "#:" ns) lift-map pr-on w)
-            (print-map m pr-on w)
-        )
-    )
-)
-
-(§ defmethod print-method cloiure.core.IPersistentSet [s, ^Writer w]
-    (print-sequential "#{" pr-on " " "}" (seq s) w)
-)
-
-;;;
- ; Returns name string for char or nil if none
- ;;
-(§ def ^String char-name-string
-    (hash-map
-        \newline   "newline"
-        \tab       "tab"
-        \space     "space"
-        \backspace "backspace"
-        \formfeed  "formfeed"
-        \return    "return"
-    )
-)
-
-(§ defmethod print-method Character [^Character c, ^Writer w]
-    (if *print-readably*
-        (do
-            (.append w \\)
-            (let [n (char-name-string c)]
-                (if n (.write w n) (.append w c))
-            )
-        )
-        (.append w c)
-    )
-    nil
-)
-
-(§ defmethod print-method Class [^Class c, ^Writer w]
-    (.write w (.getName c))
-)
-
-(§ defmethod print-method Pattern [p ^Writer w]
-    (.write w "#\"")
-    (loop [[^Character c & r :as s] (seq (.pattern ^Pattern p)) qmode false]
-        (when s
-            (condp = c
-                \\
-                    (let [[^Character c2 & r2] r]
-                        (.append w \\)
-                        (.append w c2)
-                        (if qmode
-                            (recur r2 (not= c2 \E))
-                            (recur r2 (= c2 \Q))
-                        )
-                    )
-                \" ;; oops! "
-                    (do
-                        (if qmode
-                            (.write w "\\E\\\"\\Q")
-                            (.write w "\\\"")
-                        )
-                        (recur r qmode)
-                    )
-                (do
-                    (.append w c)
-                    (recur r qmode)
-                )
-            )
-        )
-    )
-    (.append w \") ;; oops! "
-)
-
-(defn- deref-as-map [^cloiure.core.IDeref r]
-    (let [pending? (and (satisfies? IPending r) (not (realized? r)))
-          [failed? val]
-            (when-not pending?
-                (try
-                    [false (deref r)]
-                    (catch Throwable e
-                        [true e]
-                    )
-                )
-            )]
-        (hash-map
-            :status (cond failed? :failed pending? :pending :else :ready)
-            :val val
-        )
-    )
-)
-
-(§ defmethod print-method cloiure.core.IDeref [o ^Writer w]
-    (print-tagged-object o (deref-as-map o) w)
+(§ defmethod print-method cloiure.core.IPersistentSet [o, ^Writer w]
+    (print-sequential "#{" pr-on " " "}" (seq o) w)
 )
 
 (def- prim->class
@@ -19336,7 +18864,7 @@
           methods
             (map (fn [[name params & body]] (cons name (maybe-destructured params body))) (apply concat (vals impls)))]
         (when-some [bad-opts (seq (keys opts))]
-            (throw! (apply print-str "unsupported option(s) -" bad-opts))
+            (throw! (apply str "unsupported option(s): " (interpose ", " bad-opts)))
         )
         [interfaces methods opts]
     )
@@ -19641,23 +19169,6 @@
     (doseq [[^Var v build] (:method-builders protocol)]
         (let [cache (MethodImplCache'new protocol (keyword (:sym v)))]
             (Var''bindRoot v (build cache))
-        )
-    )
-)
-
-(§ defn- assert-same-protocol [protocol-var method-syms]
-    (doseq [m method-syms]
-        (let [v (resolve m) pv (:protocol (meta v))]
-            (when (and v (bound? v) (not= protocol-var pv))
-                (binding [*out* *err*]
-                    (println "Warning: protocol" protocol-var "is overwriting"
-                        (if pv
-                            (str "method " (:sym v) " of protocol " (:sym pv))
-                            (str "function " (:sym v))
-                        )
-                    )
-                )
-            )
         )
     )
 )
