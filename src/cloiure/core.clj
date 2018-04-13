@@ -1070,8 +1070,8 @@
             [#_"INode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" notFound]
         )
         (#_"ISeq" INode'''nodeSeq [#_"INode" this])
-        (#_"INode" INode'''assocT [#_"INode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"boolean'" addedLeaf])
-        (#_"INode" INode'''dissocT [#_"INode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"boolean'" removedLeaf])
+        (#_"INode" INode'''assocT [#_"INode" this, #_"Thread'" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"boolean'" addedLeaf])
+        (#_"INode" INode'''dissocT [#_"INode" this, #_"Thread'" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"boolean'" removedLeaf])
         (#_"Object" INode'''kvreduce [#_"INode" this, #_"IFn" f, #_"Object" r])
     )
 )
@@ -1141,10 +1141,6 @@
 
 (java-ns cloiure.lang.Atom
     (defrecord Atom []) (extend-type Atom IAtom IMeta IDeref IReference)
-)
-
-(java-ns cloiure.lang.Volatile
-    (defrecord Volatile []) (extend-type Volatile IDeref)
 )
 
 (declare AFn'''throwArity)
@@ -1273,10 +1269,6 @@
 
 (java-ns cloiure.lang.Cons
     (defrecord Cons #_"ASeq" []) (extend-type Cons Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
-)
-
-(java-ns cloiure.lang.Cycle
-    (defrecord Cycle #_"ASeq" []) (extend-type Cycle IHashEq IMeta IObj IObject IPending IPersistentCollection IReduce ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.Delay
@@ -5199,12 +5191,12 @@
 
     #_method
     (defn #_"boolean" IopObject''isVolatile [#_"IopObject" this, #_"LocalBinding" lb]
-        (and (contains? (:fields this) (:sym lb)) (get (meta (:sym lb)) :volatile-mutable))
+        (and (contains? (:fields this) (:sym lb)) (get (meta (:sym lb)) :volatile))
     )
 
     #_method
     (defn #_"boolean" IopObject''isMutable [#_"IopObject" this, #_"LocalBinding" lb]
-        (or (IopObject''isVolatile this, lb) (and (contains? (:fields this) (:sym lb)) (get (meta (:sym lb)) :unsynchronized-mutable)))
+        (or (IopObject''isVolatile this, lb) (and (contains? (:fields this) (:sym lb)) (get (meta (:sym lb)) :mutable)))
     )
 
     #_method
@@ -8586,58 +8578,6 @@
  ;;
 (defn ^cloiure.core.IPersistentVector reset-vals! [^cloiure.core.IAtom a x'] (IAtom'''resetVals a x'))
 
-(java-ns cloiure.lang.Volatile
-
-(class-ns Volatile
-    (defn #_"Volatile" Volatile'new [#_"Object" o]
-        (merge (Volatile.)
-            (hash-map
-                #_"Object'" :data (AtomicReference. o)
-            )
-        )
-    )
-
-    (extend-type Volatile IDeref
-        (#_"Object" IDeref'''deref [#_"Volatile" this]
-            (.get (:data this))
-        )
-    )
-
-    #_method
-    (defn #_"Object" Volatile''reset [#_"Volatile" this, #_"Object" o']
-        (.set (:data this), o')
-        o'
-    )
-)
-)
-
-;;;
- ; Creates and returns a Volatile with an initial value of o.
- ;;
-(defn ^Volatile volatile! [o] (Volatile'new o))
-
-;;;
- ; Sets the value of volatile to o without regard for the
- ; current value. Returns o.
- ;;
-(defn vreset! [^Volatile v o] (Volatile''reset v o))
-
-;;;
- ; Non-atomically swaps the value of the volatile as if:
- ; (apply f current-value-of-vol args).
- ; Returns the value that was swapped in.
- ;;
-(defmacro vswap! [v f & args]
-    (let [v (with-meta v {:tag 'cloiure.core.Volatile})]
-        `(vreset! ~v (~f (deref ~v) ~@args))
-    )
-)
-
-;;;
- ; Returns true if x is a volatile.
- ;;
-(defn volatile? [x] (instance? Volatile x))
-
 (java-ns cloiure.lang.Util
 
 (class-ns Util
@@ -9709,7 +9649,7 @@
     (defn #_"AFunction" AFunction'new []
         (merge (AFunction.) (AFn'new)
             (hash-map
-                #_"MethodImplCache'" :__methodImplCache (volatile! nil)
+                #_"MethodImplCache'" :__methodImplCache (atom nil)
             )
         )
     )
@@ -10236,9 +10176,9 @@
             (hash-map
                 #_"IPersistentMap" :_meta meta
 
-                #_"IFn'" :f (volatile! f)
-                #_"Object'" :o (volatile! nil)
-                #_"ISeq'" :s (volatile! s)
+                #_"IFn'" :f (atom f)
+                #_"Object'" :o (atom nil)
+                #_"ISeq'" :s (atom s)
             )
         )
     )
@@ -10270,8 +10210,8 @@
     (defn- #_"Object" LazySeq''step [#_"LazySeq" this]
         (locking this
             (when-some [#_"IFn" f @(:f this)]
-                (vreset! (:f this) nil)
-                (vreset! (:o this) (f))
+                (reset! (:f this) nil)
+                (reset! (:o this) (f))
             )
             (or @(:o this) @(:s this))
         )
@@ -10282,8 +10222,8 @@
             (locking this
                 (LazySeq''step this)
                 (when-some [#_"Object" o @(:o this)]
-                    (vreset! (:o this) nil)
-                    (vreset! (:s this) (loop-when-recur o (instance? LazySeq o) (LazySeq''step o) => (seq o)))
+                    (reset! (:o this) nil)
+                    (reset! (:s this) (loop-when-recur o (instance? LazySeq o) (LazySeq''step o) => (seq o)))
                 )
                 @(:s this)
             )
@@ -11148,88 +11088,15 @@
 )
 )
 
-(java-ns cloiure.lang.Cycle
-
-(class-ns Cycle
-    (defn- #_"Cycle" Cycle'new
-        ([#_"ISeq" all, #_"ISeq" prev, #_"ISeq" current] (Cycle'new nil, all, prev, current))
-        ([#_"IPersistentMap" meta, #_"ISeq" all, #_"ISeq" prev, #_"ISeq" current]
-            (merge (Cycle.) (ASeq'new meta)
-                (hash-map
-                    #_"ISeq" :all all ;; never nil
-                    #_"ISeq" :prev prev
-
-                    #_"ISeq'" :_current (volatile! current) ;; lazily realized
-                )
-            )
-        )
-    )
-
-    (extend-type Cycle IObj
-        (#_"Cycle" IObj'''withMeta [#_"Cycle" this, #_"IPersistentMap" meta]
-            (Cycle'new meta, (:all this), (:prev this), @(:_current this))
-        )
-    )
-
-    (defn #_"ISeq" Cycle'create [#_"Seqable" s] (if-some [s (seq s)] (Cycle'new s, nil, s) ()))
-
-    #_method
-    (defn- #_"ISeq" Cycle''current [#_"Cycle" this]
-        (or @(:_current this)
-            (vreset! (:_current this) (or (next (:prev this)) (:all this)))
-        )
-    )
-
-    (extend-type Cycle IPending
-        (#_"boolean" IPending'''isRealized [#_"Cycle" this]
-            (some? @(:_current this))
-        )
-    )
-
-    (extend-type Cycle ISeq
-        (#_"Object" ISeq'''first [#_"Cycle" this]
-            (first (Cycle''current this))
-        )
-
-        (#_"ISeq" ISeq'''next [#_"Cycle" this]
-            (Cycle'new (:all this), (Cycle''current this), nil)
-        )
-    )
-
-    (extend-type Cycle IReduce
-        (#_"Object" IReduce'''reduce
-            ([#_"Cycle" this, #_"IFn" f]
-                (loop [#_"ISeq" s (Cycle''current this) #_"Object" r (first s)]
-                    (let [s (or (next s) (:all this)) r (f r (first s))]
-                        (when-not (reduced? r) => @r
-                            (recur s r)
-                        )
-                    )
-                )
-            )
-            ([#_"Cycle" this, #_"IFn" f, #_"Object" r]
-                (loop [#_"ISeq" s (Cycle''current this) r (f r (first s))]
-                    (when-not (reduced? r) => @r
-                        (let [s (or (next s) (:all this))]
-                            (recur s (f r (first s)))
-                        )
-                    )
-                )
-            )
-        )
-    )
-)
-)
-
 (java-ns cloiure.lang.Delay
 
 (class-ns Delay
     (defn #_"Delay" Delay'new [#_"IFn" f]
         (merge (Delay.)
             (hash-map
-                #_"IFn'" :f (volatile! f)
-                #_"Object'" :o (volatile! nil)
-                #_"Throwable'" :e (volatile! nil)
+                #_"IFn'" :f (atom f)
+                #_"Object'" :o (atom nil)
+                #_"Throwable'" :e (atom nil)
             )
         )
     )
@@ -11244,11 +11111,11 @@
                 (locking this
                     ;; double check
                     (when-some [#_"IFn" f @(:f this)]
-                        (vreset! (:f this) nil)
+                        (reset! (:f this) nil)
                         (try
-                            (vreset! (:o this) (f))
+                            (reset! (:o this) (f))
                             (catch Throwable t
-                                (vreset! (:e this) t)
+                                (reset! (:e this) t)
                             )
                         )
                     )
@@ -11284,7 +11151,7 @@
                     #_"IFn" :f f ;; never nil
                     #_"Object" :prev prev
 
-                    #_"Object'" :_seed (volatile! seed) ;; lazily realized
+                    #_"Object'" :_seed (atom seed) ;; lazily realized
                 )
             )
         )
@@ -11307,7 +11174,7 @@
     (extend-type Iterate ISeq
         (#_"Object" ISeq'''first [#_"Iterate" this]
             (let-when [#_"Object" seed @(:_seed this)] (identical? seed Iterate'UNREALIZED_SEED) => seed
-                (vreset! (:_seed this) ((:f this) (:prev this)))
+                (reset! (:_seed this) ((:f this) (:prev this)))
             )
         )
 
@@ -11918,7 +11785,7 @@
                     #_"Object[]" :a a'
                     #_"int" :n n
 
-                    #_"Thread'" :owner (volatile! (Thread/currentThread))
+                    #_"Thread'" :owner (atom (Thread/currentThread))
                 )
             )
         )
@@ -11980,7 +11847,7 @@
     #_override
     (defn #_"IPersistentMap" ATransientMap'''doPersistent--TransientArrayMap [#_"TransientArrayMap" this]
         (ATransientMap'''ensureEditable this)
-        (vreset! (:owner this) nil)
+        (reset! (:owner this) nil)
         (let [#_"Object[]" a' (object-array (:n this)) _ (System/arraycopy (:a this), 0, a', 0, (:n this))]
             (PersistentArrayMap'new a')
         )
@@ -11988,9 +11855,7 @@
 
     #_override
     (defn #_"void" ATransientMap'''ensureEditable--TransientArrayMap [#_"TransientArrayMap" this]
-        (when (nil? @(:owner this))
-            (throw! "transient used after persistent! call")
-        )
+        (or @(:owner this) (throw! "transient used after persistent! call"))
         nil
     )
 )
@@ -12139,10 +12004,10 @@
 )
 
 (class-ns ArrayNode
-    (defn #_"ArrayNode" ArrayNode'new [#_"AtomicReference<Thread>" edit, #_"int" n, #_"INode[]" a]
+    (defn #_"ArrayNode" ArrayNode'new [#_"Thread'" edit, #_"int" n, #_"INode[]" a]
         (merge (ArrayNode.)
             (hash-map
-                #_"AtomicReference<Thread>" :edit edit
+                #_"Thread'" :edit edit
                 #_"int" :n n
                 #_"INode[]" :a a
             )
@@ -12171,7 +12036,7 @@
     (declare BitmapIndexedNode'new)
 
     #_method
-    (defn- #_"INode" ArrayNode''pack [#_"ArrayNode" this, #_"AtomicReference<Thread>" edit, #_"int" idx]
+    (defn- #_"INode" ArrayNode''pack [#_"ArrayNode" this, #_"Thread'" edit, #_"int" idx]
         (let [#_"Object[]" a' (object-array (* 2 (dec (:n this))))
               [#_"int" bitmap #_"int" j]
                 (loop-when [bitmap 0 j 1 #_"int" i 0] (< i idx) => [bitmap j]
@@ -12247,15 +12112,14 @@
     )
 
     #_method
-    (defn- #_"ArrayNode" ArrayNode''ensureEditable [#_"ArrayNode" this, #_"AtomicReference<Thread>" edit]
-        (if (= (:edit this) edit)
-            this
+    (defn- #_"ArrayNode" ArrayNode''ensureEditable [#_"ArrayNode" this, #_"Thread'" edit]
+        (when-not (identical? (:edit this) edit) => this
             (ArrayNode'new edit, (:n this), (.clone (:a this)))
         )
     )
 
     #_method
-    (defn- #_"ArrayNode" ArrayNode''editAndSet [#_"ArrayNode" this, #_"AtomicReference<Thread>" edit, #_"int" i, #_"INode" node]
+    (defn- #_"ArrayNode" ArrayNode''editAndSet [#_"ArrayNode" this, #_"Thread'" edit, #_"int" i, #_"INode" node]
         (let [#_"ArrayNode" e (ArrayNode''ensureEditable this, edit)]
             (aset (:a e) i node)
             e
@@ -12263,7 +12127,7 @@
     )
 
     (extend-type ArrayNode INode
-        (#_"INode" INode'''assocT [#_"ArrayNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"boolean'" addedLeaf]
+        (#_"INode" INode'''assocT [#_"ArrayNode" this, #_"Thread'" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"boolean'" addedLeaf]
             (let [#_"int" i (PersistentHashMap'mask hash, shift) #_"INode" ai (aget (:a this) i)]
                 (if (some? ai)
                     (let [#_"INode" node (INode'''assocT ai, edit, (+ shift 5), hash, key, val, addedLeaf)]
@@ -12278,7 +12142,7 @@
             )
         )
 
-        (#_"INode" INode'''dissocT [#_"ArrayNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"boolean'" removedLeaf]
+        (#_"INode" INode'''dissocT [#_"ArrayNode" this, #_"Thread'" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"boolean'" removedLeaf]
             (let-when [#_"int" i (PersistentHashMap'mask hash, shift) #_"INode" ai (aget (:a this) i)] (some? ai) => this
                 (let-when-not [#_"INode" node (INode'''dissocT ai, edit, (+ shift 5), hash, key, removedLeaf)] (= node ai) => this
                     (cond
@@ -12293,10 +12157,10 @@
 )
 
 (class-ns BitmapIndexedNode
-    (defn #_"BitmapIndexedNode" BitmapIndexedNode'new [#_"AtomicReference<Thread>" edit, #_"int" bitmap, #_"Object[]" a]
+    (defn #_"BitmapIndexedNode" BitmapIndexedNode'new [#_"Thread'" edit, #_"int" bitmap, #_"Object[]" a]
         (merge (BitmapIndexedNode.)
             (hash-map
-                #_"AtomicReference<Thread>" :edit edit
+                #_"Thread'" :edit edit
                 #_"int" :bitmap bitmap
                 #_"Object[]" :a a
             )
@@ -12315,7 +12179,7 @@
     (defn- #_"INode" BitmapIndexedNode'createNode-6 [#_"int" shift, #_"Object" key1, #_"Object" val1, #_"int" key2hash, #_"Object" key2, #_"Object" val2]
         (let [#_"int" key1hash (Util'hasheq key1)]
             (when-not (= key1hash key2hash) => (HashCollisionNode'new nil, key1hash, 2, (object-array [ key1, val1, key2, val2 ]))
-                (let [#_"boolean'" addedLeaf (volatile! false) #_"AtomicReference<Thread>" edit (AtomicReference. nil)]
+                (let [#_"boolean'" addedLeaf (atom false) #_"Thread'" edit (atom nil)]
                     (-> BitmapIndexedNode'EMPTY
                         (INode'''assocT edit, shift, key1hash, key1, val1, addedLeaf)
                         (INode'''assocT edit, shift, key2hash, key2, val2, addedLeaf)
@@ -12343,7 +12207,7 @@
                                         (PersistentHashMap'cloneAndSet (:a this), (inc (* 2 idx)), val)
                                     )
                                 :else
-                                    (let [_ (vreset! addedLeaf true)]
+                                    (let [_ (reset! addedLeaf true)]
                                         (PersistentHashMap'cloneAndSet (:a this), (* 2 idx), nil, (inc (* 2 idx)), (BitmapIndexedNode'createNode-6 (+ shift 5), keyOrNull, valOrNode, hash, key, val))
                                     )
                             )]
@@ -12367,7 +12231,7 @@
                             (let [#_"Object[]" a' (object-array (* 2 (inc n)))]
                                 (System/arraycopy (:a this), 0, a', 0, (* 2 idx))
                                 (aset a' (* 2 idx) key)
-                                (vreset! addedLeaf true)
+                                (reset! addedLeaf true)
                                 (aset a' (inc (* 2 idx)) val)
                                 (System/arraycopy (:a this), (* 2 idx), a', (* 2 (inc idx)), (* 2 (- n idx)))
                                 (BitmapIndexedNode'new nil, (bit-or (:bitmap this) bit), a')
@@ -12443,8 +12307,8 @@
     )
 
     #_method
-    (defn- #_"BitmapIndexedNode" BitmapIndexedNode''ensureEditable [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit]
-        (when-not (= (:edit this) edit) => this
+    (defn- #_"BitmapIndexedNode" BitmapIndexedNode''ensureEditable [#_"BitmapIndexedNode" this, #_"Thread'" edit]
+        (when-not (identical? (:edit this) edit) => this
             (let [#_"int" n (Integer/bitCount (:bitmap this)) #_"Object[]" a' (object-array (* 2 (inc n)))] ;; make room for next assoc
                 (System/arraycopy (:a this), 0, a', 0, (* 2 n))
                 (BitmapIndexedNode'new edit, (:bitmap this), a')
@@ -12453,7 +12317,7 @@
     )
 
     #_method
-    (defn- #_"BitmapIndexedNode" BitmapIndexedNode''editAndSet-4 [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit, #_"int" i, #_"Object" x]
+    (defn- #_"BitmapIndexedNode" BitmapIndexedNode''editAndSet-4 [#_"BitmapIndexedNode" this, #_"Thread'" edit, #_"int" i, #_"Object" x]
         (let [#_"BitmapIndexedNode" e (BitmapIndexedNode''ensureEditable this, edit)]
             (aset (:a e) i x)
             e
@@ -12461,7 +12325,7 @@
     )
 
     #_method
-    (defn- #_"BitmapIndexedNode" BitmapIndexedNode''editAndSet-6 [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit, #_"int" i, #_"Object" x, #_"int" j, #_"Object" y]
+    (defn- #_"BitmapIndexedNode" BitmapIndexedNode''editAndSet-6 [#_"BitmapIndexedNode" this, #_"Thread'" edit, #_"int" i, #_"Object" x, #_"int" j, #_"Object" y]
         (let [#_"BitmapIndexedNode" e (BitmapIndexedNode''ensureEditable this, edit)]
             (aset (:a e) i x)
             (aset (:a e) j y)
@@ -12470,7 +12334,7 @@
     )
 
     #_method
-    (defn- #_"BitmapIndexedNode" BitmapIndexedNode''editAndRemovePair [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit, #_"int" bit, #_"int" i]
+    (defn- #_"BitmapIndexedNode" BitmapIndexedNode''editAndRemovePair [#_"BitmapIndexedNode" this, #_"Thread'" edit, #_"int" bit, #_"int" i]
         (when-not (= (:bitmap this) bit)
             (let [#_"BitmapIndexedNode" e (-> (BitmapIndexedNode''ensureEditable this, edit) (update :bitmap bit-xor bit))
                   #_"Object[]" a (:a e) #_"int" n (alength a)]
@@ -12482,10 +12346,10 @@
         )
     )
 
-    (defn- #_"INode" BitmapIndexedNode'createNode-7 [#_"AtomicReference<Thread>" edit, #_"int" shift, #_"Object" key1, #_"Object" val1, #_"int" key2hash, #_"Object" key2, #_"Object" val2]
+    (defn- #_"INode" BitmapIndexedNode'createNode-7 [#_"Thread'" edit, #_"int" shift, #_"Object" key1, #_"Object" val1, #_"int" key2hash, #_"Object" key2, #_"Object" val2]
         (let [#_"int" key1hash (Util'hasheq key1)]
             (when-not (= key1hash key2hash) => (HashCollisionNode'new nil, key1hash, 2, (object-array [ key1, val1, key2, val2 ]))
-                (let [#_"boolean'" addedLeaf (volatile! false)]
+                (let [#_"boolean'" addedLeaf (atom false)]
                     (-> BitmapIndexedNode'EMPTY
                         (INode'''assocT edit, shift, key1hash, key1, val1, addedLeaf)
                         (INode'''assocT edit, shift, key2hash, key2, val2, addedLeaf)
@@ -12496,7 +12360,7 @@
     )
 
     (extend-type BitmapIndexedNode INode
-        (#_"INode" INode'''assocT [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"boolean'" addedLeaf]
+        (#_"INode" INode'''assocT [#_"BitmapIndexedNode" this, #_"Thread'" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"boolean'" addedLeaf]
             (let [#_"int" bit (PersistentHashMap'bitpos hash, shift) #_"int" idx (BitmapIndexedNode''index this, bit)]
                 (if-not (zero? (bit-and (:bitmap this) bit))
                     (let [#_"Object" keyOrNull (aget (:a this) (* 2 idx))
@@ -12513,7 +12377,7 @@
                                     (BitmapIndexedNode''editAndSet-4 this, edit, (inc (* 2 idx)), val)
                                 )
                             :else
-                                (let [_ (vreset! addedLeaf true)]
+                                (let [_ (reset! addedLeaf true)]
                                     (BitmapIndexedNode''editAndSet-6 this, edit, (* 2 idx), nil, (inc (* 2 idx)), (BitmapIndexedNode'createNode-7 edit, (+ shift 5), keyOrNull, valOrNode, hash, key, val))
                                 )
                         )
@@ -12521,7 +12385,7 @@
                     (let [#_"int" n (Integer/bitCount (:bitmap this))]
                         (cond
                             (< (* n 2) (alength (:a this)))
-                                (let [_ (vreset! addedLeaf true)
+                                (let [_ (reset! addedLeaf true)
                                       #_"BitmapIndexedNode" e (-> (BitmapIndexedNode''ensureEditable this, edit) (update :bitmap bit-or bit))]
                                     (System/arraycopy (:a e), (* 2 idx), (:a e), (* 2 (inc idx)), (* 2 (- n idx)))
                                     (aset (:a e) (* 2 idx) key)
@@ -12546,7 +12410,7 @@
                                 (let [#_"Object[]" a' (object-array (* 2 (+ n 4)))]
                                     (System/arraycopy (:a this), 0, a', 0, (* 2 idx))
                                     (aset a' (* 2 idx) key)
-                                    (vreset! addedLeaf true)
+                                    (reset! addedLeaf true)
                                     (aset a' (inc (* 2 idx)) val)
                                     (System/arraycopy (:a this), (* 2 idx), a', (* 2 (inc idx)), (* 2 (- n idx)))
                                     (-> (BitmapIndexedNode''ensureEditable this, edit)
@@ -12560,14 +12424,14 @@
             )
         )
 
-        (#_"INode" INode'''dissocT [#_"BitmapIndexedNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"boolean'" removedLeaf]
+        (#_"INode" INode'''dissocT [#_"BitmapIndexedNode" this, #_"Thread'" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"boolean'" removedLeaf]
             (let-when-not [#_"int" bit (PersistentHashMap'bitpos hash, shift)] (zero? (bit-and (:bitmap this) bit)) => this
                 (let [#_"int" i (BitmapIndexedNode''index this, bit) #_"int" ii (* 2 i)
                       #_"Object" keyOrNull (aget (:a this) ii)
                       #_"Object" valOrNode (aget (:a this) (inc ii))]
                     (if (some? keyOrNull)
                         (when (= key keyOrNull) => this
-                            (vreset! removedLeaf true)
+                            (reset! removedLeaf true)
                             ;; TODO: collapse
                             (BitmapIndexedNode''editAndRemovePair this, edit, bit, i)
                         )
@@ -12591,10 +12455,10 @@
 )
 
 (class-ns HashCollisionNode
-    (defn #_"HashCollisionNode" HashCollisionNode'new [#_"AtomicReference<Thread>" edit, #_"int" hash, #_"int" n & #_"Object..." a]
+    (defn #_"HashCollisionNode" HashCollisionNode'new [#_"Thread'" edit, #_"int" hash, #_"int" n & #_"Object..." a]
         (merge (HashCollisionNode.)
             (hash-map
-                #_"AtomicReference<Thread>" :edit edit
+                #_"Thread'" :edit edit
                 #_"int" :hash hash
                 #_"int" :n n
                 #_"Object[]" :a a
@@ -12623,7 +12487,7 @@
                             (System/arraycopy (:a this), 0, a', 0, (* 2 n))
                             (aset a' (* 2 n) key)
                             (aset a' (inc (* 2 n)) val)
-                            (vreset! addedLeaf true)
+                            (reset! addedLeaf true)
                             (HashCollisionNode'new (:edit this), hash, (inc n), a')
                         )
                     )
@@ -12670,8 +12534,8 @@
     )
 
     #_method
-    (defn- #_"HashCollisionNode" HashCollisionNode''ensureEditable-2 [#_"HashCollisionNode" this, #_"AtomicReference<Thread>" edit]
-        (when-not (= (:edit this) edit) => this
+    (defn- #_"HashCollisionNode" HashCollisionNode''ensureEditable-2 [#_"HashCollisionNode" this, #_"Thread'" edit]
+        (when-not (identical? (:edit this) edit) => this
             (let [#_"int" n (:n this) #_"Object[]" a' (object-array (* 2 (inc n)))] ;; make room for next assoc
                 (System/arraycopy (:a this), 0, a', 0, (* 2 n))
                 (HashCollisionNode'new edit, (:hash this), n, a')
@@ -12680,15 +12544,14 @@
     )
 
     #_method
-    (defn- #_"HashCollisionNode" HashCollisionNode''ensureEditable-4 [#_"HashCollisionNode" this, #_"AtomicReference<Thread>" edit, #_"int" n, #_"Object[]" a]
-        (if (= (:edit this) edit)
-            (assoc this :a a :n n)
+    (defn- #_"HashCollisionNode" HashCollisionNode''ensureEditable-4 [#_"HashCollisionNode" this, #_"Thread'" edit, #_"int" n, #_"Object[]" a]
+        (when-not (identical? (:edit this) edit) => (assoc this :a a :n n)
             (HashCollisionNode'new edit, (:hash this), n, a)
         )
     )
 
     #_method
-    (defn- #_"HashCollisionNode" HashCollisionNode''editAndSet-4 [#_"HashCollisionNode" this, #_"AtomicReference<Thread>" edit, #_"int" i, #_"Object" x]
+    (defn- #_"HashCollisionNode" HashCollisionNode''editAndSet-4 [#_"HashCollisionNode" this, #_"Thread'" edit, #_"int" i, #_"Object" x]
         (let [#_"HashCollisionNode" e (HashCollisionNode''ensureEditable-2 this, edit)]
             (aset (:a e) i x)
             e
@@ -12696,7 +12559,7 @@
     )
 
     #_method
-    (defn- #_"HashCollisionNode" HashCollisionNode''editAndSet-6 [#_"HashCollisionNode" this, #_"AtomicReference<Thread>" edit, #_"int" i, #_"Object" x, #_"int" j, #_"Object" y]
+    (defn- #_"HashCollisionNode" HashCollisionNode''editAndSet-6 [#_"HashCollisionNode" this, #_"Thread'" edit, #_"int" i, #_"Object" x, #_"int" j, #_"Object" y]
         (let [#_"HashCollisionNode" e (HashCollisionNode''ensureEditable-2 this, edit)]
             (aset (:a e) i x)
             (aset (:a e) j y)
@@ -12705,7 +12568,7 @@
     )
 
     (extend-type HashCollisionNode INode
-        (#_"INode" INode'''assocT [#_"HashCollisionNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"boolean'" addedLeaf]
+        (#_"INode" INode'''assocT [#_"HashCollisionNode" this, #_"Thread'" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"boolean'" addedLeaf]
             (if (= hash (:hash this))
                 (let [#_"int" i (HashCollisionNode''findIndex this, key)]
                     (if (<= 0 i)
@@ -12714,7 +12577,7 @@
                         )
                         (let [#_"int" n (:n this) #_"int" m (alength (:a this))]
                             (if (< (* 2 n) m)
-                                (let [_ (vreset! addedLeaf true)]
+                                (let [_ (reset! addedLeaf true)]
                                     (-> (HashCollisionNode''editAndSet-6 this, edit, (* 2 n), key, (inc (* 2 n)), val)
                                         (update :n inc)
                                     )
@@ -12723,7 +12586,7 @@
                                     (System/arraycopy (:a this), 0, a', 0, m)
                                     (aset a' m key)
                                     (aset a' (inc m) val)
-                                    (vreset! addedLeaf true)
+                                    (reset! addedLeaf true)
                                     (HashCollisionNode''ensureEditable-4 this, edit, (inc n), a')
                                 )
                             )
@@ -12737,9 +12600,9 @@
             )
         )
 
-        (#_"INode" INode'''dissocT [#_"HashCollisionNode" this, #_"AtomicReference<Thread>" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"boolean'" removedLeaf]
+        (#_"INode" INode'''dissocT [#_"HashCollisionNode" this, #_"Thread'" edit, #_"int" shift, #_"int" hash, #_"Object" key, #_"boolean'" removedLeaf]
             (let-when [#_"int" i (HashCollisionNode''findIndex this, key)] (<= 0 i) => this
-                (vreset! removedLeaf true)
+                (reset! removedLeaf true)
                 (let-when [#_"int" n (:n this)] (< 1 n)
                     (let [#_"HashCollisionNode" e (-> (HashCollisionNode''ensureEditable-2 this, edit) (update :n dec))
                           #_"int" m (* 2 n)]
@@ -12758,12 +12621,12 @@
 (class-ns TransientHashMap
     (defn #_"TransientHashMap" TransientHashMap'new
         ([#_"PersistentHashMap" m]
-            (TransientHashMap'new (AtomicReference. (Thread/currentThread)), (:root m), (:n m), (:hasNull m), (:nullValue m))
+            (TransientHashMap'new (atom (Thread/currentThread)), (:root m), (:n m), (:hasNull m), (:nullValue m))
         )
-        ([#_"AtomicReference<Thread>" edit, #_"INode" root, #_"int" n, #_"boolean" hasNull, #_"Object" nullValue]
+        ([#_"Thread'" edit, #_"INode" root, #_"int" n, #_"boolean" hasNull, #_"Object" nullValue]
             (merge (TransientHashMap.) (ATransientMap'new)
                 (hash-map
-                    #_"AtomicReference<Thread>" :edit edit
+                    #_"Thread'" :edit edit
                     #_"INode" :root root
                     #_"int" :n n
                     #_"boolean" :hasNull hasNull
@@ -12781,7 +12644,7 @@
                     (-> this (update :n inc) (assoc :hasNull true))
                 )
             )
-            (let [#_"boolean'" addedLeaf (volatile! false)
+            (let [#_"boolean'" addedLeaf (atom false)
                   #_"INode" node (INode'''assocT (or (:root this) BitmapIndexedNode'EMPTY), (:edit this), 0, (Util'hasheq key), key, val, addedLeaf)
                   this (if (= (:root this) node) this (assoc this :root node))]
                 (when @addedLeaf => this
@@ -12798,7 +12661,7 @@
                 (-> this (assoc :hasNull false :nullValue nil) (update :n dec))
             )
             (when (some? (:root this)) => this
-                (let [#_"boolean'" removedLeaf (volatile! false)
+                (let [#_"boolean'" removedLeaf (atom false)
                       #_"INode" node (INode'''dissocT (:root this), (:edit this), 0, (Util'hasheq key), key, removedLeaf)
                       this (if (= (:root this) node) this (assoc this :root node))]
                     (when @removedLeaf => this
@@ -12813,7 +12676,7 @@
 
     #_override
     (defn #_"IPersistentMap" ATransientMap'''doPersistent--TransientHashMap [#_"TransientHashMap" this]
-        (.set (:edit this), nil)
+        (reset! (:edit this) nil)
         (PersistentHashMap'new (:n this), (:root this), (:hasNull this), (:nullValue this))
     )
 
@@ -12836,9 +12699,7 @@
 
     #_override
     (defn #_"void" ATransientMap'''ensureEditable--TransientHashMap [#_"TransientHashMap" this]
-        (when (nil? (.get (:edit this)))
-            (throw! "transient used after persistent! call")
-        )
+        (or @(:edit this) (throw! "transient used after persistent! call"))
         nil
     )
 )
@@ -12960,7 +12821,7 @@
                 (when-not (and (:hasNull this) (= val (:nullValue this))) => this
                     (PersistentHashMap'new (meta this), (+ (:n this) (if (:hasNull this) 0 1)), (:root this), true, val)
                 )
-                (let [#_"boolean'" addedLeaf (volatile! false)
+                (let [#_"boolean'" addedLeaf (atom false)
                       #_"INode" newroot (INode'''assoc (or (:root this) BitmapIndexedNode'EMPTY), 0, (Util'hasheq key), key, val, addedLeaf)]
                     (when-not (= newroot (:root this)) => this
                         (PersistentHashMap'new (meta this), (+ (:n this) (if @addedLeaf 1 0)), newroot, (:hasNull this), (:nullValue this))
@@ -14187,7 +14048,7 @@
     )
 
     #_method
-    (defn #_"TNode" PersistentTreeMap''add [#_"PersistentTreeMap" this, #_"TNode" t, #_"Object" key, #_"Object" val, #_"Volatile" found]
+    (defn #_"TNode" PersistentTreeMap''add [#_"PersistentTreeMap" this, #_"TNode" t, #_"Object" key, #_"Object" val, #_"Atom" found]
         (if (nil? t)
             (if (nil? val)
                 (Red'new key)
@@ -14196,7 +14057,7 @@
             (let [#_"int" cmp (PersistentTreeMap''doCompare this, key, (:key t))]
                 (if (zero? cmp)
                     (do
-                        (vreset! found t)
+                        (reset! found t)
                         nil
                     )
                     (let [#_"TNode" ins (if (neg? cmp) (PersistentTreeMap''add this, (TNode'''left t), key, val, found) (PersistentTreeMap''add this, (TNode'''right t), key, val, found))]
@@ -14240,12 +14101,12 @@
     )
 
     #_method
-    (defn #_"TNode" PersistentTreeMap''remove [#_"PersistentTreeMap" this, #_"TNode" t, #_"Object" key, #_"Volatile" found]
+    (defn #_"TNode" PersistentTreeMap''remove [#_"PersistentTreeMap" this, #_"TNode" t, #_"Object" key, #_"Atom" found]
         (when (some? t) => nil ;; not found indicator
             (let [#_"int" cmp (PersistentTreeMap''doCompare this, key, (:key t))]
                 (if (zero? cmp)
                     (do
-                        (vreset! found t)
+                        (reset! found t)
                         (PersistentTreeMap'append (TNode'''left t), (TNode'''right t))
                     )
                     (let [#_"TNode" del (if (neg? cmp) (PersistentTreeMap''remove this, (TNode'''left t), key, found) (PersistentTreeMap''remove this, (TNode'''right t), key, found))]
@@ -14302,7 +14163,7 @@
 
     (extend-type PersistentTreeMap Associative
         (#_"PersistentTreeMap" Associative'''assoc [#_"PersistentTreeMap" this, #_"Object" key, #_"Object" val]
-            (let [#_"Volatile" found (volatile! nil) #_"TNode" t (PersistentTreeMap''add this, (:tree this), key, val, found)]
+            (let [#_"Atom" found (atom nil) #_"TNode" t (PersistentTreeMap''add this, (:tree this), key, val, found)]
                 (if (nil? t)
                     (if (= (IMapEntry'''val (cast TNode @found)) val)
                         this
@@ -14316,7 +14177,7 @@
 
     (extend-type PersistentTreeMap IPersistentMap
         (#_"PersistentTreeMap" IPersistentMap'''dissoc [#_"PersistentTreeMap" this, #_"Object" key]
-            (let [#_"Volatile" found (volatile! nil) #_"TNode" t (PersistentTreeMap''remove this, (:tree this), key, found)]
+            (let [#_"Atom" found (atom nil) #_"TNode" t (PersistentTreeMap''remove this, (:tree this), key, found)]
                 (if (nil? t)
                     (if (nil? @found)
                         this
@@ -14412,18 +14273,18 @@
 
 (class-ns VNode
     (defn #_"VNode" VNode'new
-        ([#_"AtomicReference<Thread>" edit] (VNode'new edit, (object-array 32)))
-        ([#_"AtomicReference<Thread>" edit, #_"Object[]" a]
+        ([#_"Thread'" edit] (VNode'new edit, (object-array 32)))
+        ([#_"Thread'" edit, #_"Object[]" a]
             (merge (VNode.)
                 (hash-map
-                    #_"AtomicReference<Thread>" :edit edit
+                    #_"Thread'" :edit edit
                     #_"Object[]" :a a
                 )
             )
         )
     )
 
-    (defn #_"VNode" VNode'newPath [#_"AtomicReference<Thread>" edit, #_"int" level, #_"VNode" node]
+    (defn #_"VNode" VNode'newPath [#_"Thread'" edit, #_"int" level, #_"VNode" node]
         (when-not (zero? level) => node
             (let [#_"VNode" v (VNode'new edit)]
                 (aset (:a v) 0 (VNode'newPath edit, (- level 5), node))
@@ -14435,7 +14296,7 @@
 
 (class-ns TransientVector
     (defn- #_"VNode" TransientVector'editableRoot [#_"VNode" node]
-        (VNode'new (AtomicReference. (Thread/currentThread)), (.clone (:a node)))
+        (VNode'new (atom (Thread/currentThread)), (.clone (:a node)))
     )
 
     (defn- #_"Object[]" TransientVector'editableTail [#_"Object[]" tail]
@@ -14464,12 +14325,11 @@
     #_method
     (defn TransientVector''ensureEditable
         (#_"void" [#_"TransientVector" this]
-            (when-not (some? (.get (:edit (:root this)))) => nil
-                (throw! "transient used after persistent! call")
-            )
+            (or @(:edit (:root this)) (throw! "transient used after persistent! call"))
+            nil
         )
         (#_"VNode" [#_"TransientVector" this, #_"VNode" node]
-            (when-not (= (:edit node) (:edit (:root this))) => node
+            (when-not (identical? (:edit node) (:edit (:root this))) => node
                 (VNode'new (:edit (:root this)), (.clone (:a node)))
             )
         )
@@ -14492,7 +14352,7 @@
     (extend-type TransientVector ITransientCollection
         (#_"PersistentVector" ITransientCollection'''persistent [#_"TransientVector" this]
             (TransientVector''ensureEditable this)
-            (.set (:edit (:root this)), nil)
+            (reset! (:edit (:root this)) nil)
             (let [#_"Object[]" trimmedTail (object-array (- (:cnt this) (TransientVector''tailoff this)))]
                 (System/arraycopy (:tail this), 0, trimmedTail, 0, (alength trimmedTail))
                 (PersistentVector'new (:cnt this), (:shift this), (:root this), trimmedTail)
@@ -14717,7 +14577,7 @@
 )
 
 (class-ns PersistentVector
-    (def #_"VNode" PersistentVector'EMPTY_NODE (VNode'new (AtomicReference. nil), (object-array 32)))
+    (def #_"VNode" PersistentVector'EMPTY_NODE (VNode'new (atom nil), (object-array 32)))
 
     (defn #_"PersistentVector" PersistentVector'new
         ([#_"int" cnt, #_"int" shift, #_"VNode" root, #_"Object[]" tail] (PersistentVector'new nil, cnt, shift, root, tail))
@@ -15418,7 +15278,7 @@
     )
 
     #_method
-    (defn #_"Volatile" Var''getThreadBinding [#_"Var" this]
+    (defn #_"Atom" Var''getThreadBinding [#_"Var" this]
         (get (first (.get Var'dvals)) this)
     )
 
@@ -15435,9 +15295,9 @@
 
     #_method
     (defn #_"Object" Var''set [#_"Var" this, #_"Object" val]
-        (let [#_"Volatile" v (Var''getThreadBinding this)]
+        (let [#_"Atom" v (Var''getThreadBinding this)]
             (when (some? v) => (throw! (str "can't change/establish root binding of: " (:sym this) " with var-set/set!"))
-                (vreset! v val)
+                (reset! v val)
             )
         )
     )
@@ -15490,9 +15350,9 @@
 
     (defn #_"void" Var'pushThreadBindings [#_"{Var Object}" bindings]
         (let [#_"ISeq" l (.get Var'dvals)]
-            (loop-when [#_"{Var Volatile}" m (first l) #_"ISeq" s (seq bindings)] (some? s) => (.set Var'dvals, (cons m l))
+            (loop-when [#_"{Var Atom}" m (first l) #_"ISeq" s (seq bindings)] (some? s) => (.set Var'dvals, (cons m l))
                 (let [#_"IMapEntry" e (first s)]
-                    (recur (assoc m (key e) (volatile! (val e))) (next s))
+                    (recur (assoc m (key e) (atom (val e))) (next s))
                 )
             )
         )
@@ -16795,12 +16655,12 @@
 (defn take
     ([n]
         (fn [g]
-            (let [n' (volatile! n)]
+            (let [n' (atom n)]
                 (fn
                     ([] (g))
                     ([x] (g x))
                     ([x y]
-                        (let [n @n' m (vswap! n' dec) x (if (pos? n) (g x y) x)]
+                        (let [n @n' m (swap! n' dec) x (if (pos? n) (g x y) x)]
                             (if (pos? m) x (ensure-reduced x))
                         )
                     )
@@ -16852,11 +16712,11 @@
 (defn drop
     ([n]
         (fn [g]
-            (let [n' (volatile! n)]
+            (let [n' (atom n)]
                 (fn
                     ([] (g))
                     ([x] (g x))
-                    ([x y] (if (neg? (vswap! n' dec)) (g x y) x))
+                    ([x y] (if (neg? (swap! n' dec)) (g x y) x))
                 )
             )
         )
@@ -16896,13 +16756,13 @@
 (defn drop-while
     ([f?]
         (fn [g]
-            (let [drop? (volatile! true)]
+            (let [drop? (atom true)]
                 (fn
                     ([] (g))
                     ([x] (g x))
                     ([x y]
                         (when-not (and @drop? (f? y)) => x
-                            (vreset! drop? nil)
+                            (reset! drop? nil)
                             (g x y)
                         )
                     )
@@ -16920,11 +16780,6 @@
         )
     )
 )
-
-;;;
- ; Returns a lazy (infinite!) sequence of repetitions of the items in coll.
- ;;
-(defn cycle [s] (Cycle'create s))
 
 ;;;
  ; Returns a vector of [(take n coll) (drop n coll)].
@@ -17122,12 +16977,12 @@
 (defn partition-all
     ([n]
         (fn [g]
-            (let [v' (volatile! [])]
+            (let [v' (atom [])]
                 (fn
                     ([] (g))
                     ([x]
                         (let [x (when (seq @v') => x
-                                    (let [v @v' _ (vswap! v' empty)]
+                                    (let [v @v' _ (swap! v' empty)]
                                         (unreduced (g x v))
                                     )
                                 )]
@@ -17135,9 +16990,9 @@
                         )
                     )
                     ([x y]
-                        (vswap! v' conj y)
+                        (swap! v' conj y)
                         (when (= (count @v') n) => x
-                            (let [v @v' _ (vswap! v' empty)]
+                            (let [v @v' _ (swap! v' empty)]
                                 (g x v)
                             )
                         )
@@ -17704,12 +17559,12 @@
 (§ defn take-nth
     ([n]
         (fn [rf]
-            (let [iv (volatile! -1)]
+            (let [iv (atom -1)]
                 (fn
                     ([] (rf))
                     ([result] (rf result))
                     ([result input]
-                        (let [i (vswap! iv inc)]
+                        (let [i (swap! iv inc)]
                             (if (zero? (rem i n))
                                 (rf result input)
                                 result
@@ -18323,14 +18178,14 @@
 (§ defn distinct
     ([]
         (fn [rf]
-            (let [seen (volatile! #{})]
+            (let [seen (atom #{})]
                 (fn
                     ([] (rf))
                     ([result] (rf result))
                     ([result input]
                         (if (contains? @seen input)
                             result
-                            (do (vswap! seen conj input) (rf result input))
+                            (do (swap! seen conj input) (rf result input))
                         )
                     )
                 )
@@ -18484,7 +18339,7 @@
 (§ defn interpose
     ([sep]
         (fn [rf]
-            (let [started (volatile! false)]
+            (let [started (atom false)]
                 (fn
                     ([] (rf))
                     ([result] (rf result))
@@ -18496,7 +18351,7 @@
                                     (rf sepr input)
                                 )
                             )
-                            (do (vreset! started true) (rf result input))
+                            (do (reset! started true) (rf result input))
                         )
                     )
                 )
@@ -19598,12 +19453,12 @@
  ; methods that can be supplied are those declared in the protocols/interfaces.
  ; Note that method bodies are not closures, the local environment includes only
  ; the named fields, and those fields can be accessed directly. Fields can be
- ; qualified with the metadata :volatile-mutable true or :unsynchronized-mutable true,
+ ; qualified with the metadata :volatile true or :mutable true,
  ; at which point (set! afield aval) will be supported in method bodies. Note well
  ; that mutable fields are extremely difficult to use correctly, and are present only
  ; to facilitate the building of higher level constructs, such as Cloiure's reference
  ; types, in Cloiure itself. They are for experts only - if the semantics and
- ; implications of :volatile-mutable or :unsynchronized-mutable are not immediately
+ ; implications of :volatile or :mutable are not immediately
  ; apparent to you, you should not be using them.
  ;
  ; Method definitions take the form:
@@ -19741,7 +19596,7 @@
                      " found for class: " (if (some? x) (.getName (class x)) "nil"))
             )
         )
-        (vreset! (:__methodImplCache pf) (expand-method-impl-cache cache (class x) f))
+        (reset! (:__methodImplCache pf) (expand-method-impl-cache cache (class x) f))
         f
     )
 )
@@ -19775,7 +19630,7 @@
                         )
                         arglists
                     ))]
-                (vreset! (:__methodImplCache f#) cache#)
+                (reset! (:__methodImplCache f#) cache#)
                 f#
             )
         )
@@ -20252,7 +20107,7 @@
 (§ defn partition-by
     ([f]
         (fn [rf]
-            (let [lv (volatile! []) pv (volatile! ::none)]
+            (let [lv (atom []) pv (atom ::none)]
                 (fn
                     ([] (rf))
                     ([result]
@@ -20260,7 +20115,7 @@
                                 (if (empty? @lv)
                                     result
                                     (let [v @lv]
-                                        (vswap! lv empty)
+                                        (swap! lv empty)
                                         (unreduced (rf result v))
                                     )
                                 )]
@@ -20269,17 +20124,17 @@
                     )
                     ([result input]
                         (let [pval @pv val (f input)]
-                            (vreset! pv val)
+                            (reset! pv val)
                             (if (or (identical? pval ::none) (= val pval))
                                 (do
-                                    (vswap! lv conj input)
+                                    (swap! lv conj input)
                                     result
                                 )
                                 (let [v @lv]
-                                    (vswap! lv empty)
+                                    (swap! lv empty)
                                     (let [ret (rf result v)]
                                         (when-not (reduced? ret)
-                                            (vswap! lv conj input)
+                                            (swap! lv conj input)
                                         )
                                         ret
                                     )
@@ -20346,11 +20201,11 @@
 (§ defn map-indexed
     ([f]
         (fn [rf]
-            (let [i (volatile! -1)]
+            (let [i (atom -1)]
                 (fn
                     ([] (rf))
                     ([result] (rf result))
-                    ([result input] (rf result (f (vswap! i inc) input)))
+                    ([result input] (rf result (f (swap! i inc) input)))
                 )
             )
         )
@@ -20413,12 +20268,12 @@
 (§ defn keep-indexed
     ([f]
         (fn [rf]
-            (let [iv (volatile! -1)]
+            (let [iv (atom -1)]
                 (fn
                     ([] (rf))
                     ([result] (rf result))
                     ([result input]
-                        (let [i (vswap! iv inc) v (f i input)]
+                        (let [i (swap! iv inc) v (f i input)]
                             (if (nil? v)
                                 result
                                 (rf result v)
