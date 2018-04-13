@@ -1,5 +1,5 @@
 (ns cloiure.core
-    (:refer-clojure :only [*err* *in* *ns* *out* *print-length* *warn-on-reflection* + - < = alength aget apply aset assoc atom binding boolean case char cons count dec defmacro defn defprotocol defrecord even? extend-protocol extend-type first fn hash-map hash-set identical? import inc int int-array interleave intern key keyword? let list long loop map merge meta next pos? reify satisfies? second seq seq? split-at str swap! symbol symbol? the-ns to-array val vary-meta vec vector vector? with-meta])
+    (:refer-clojure :only [*err* *in* *ns* *out* *print-length* *warn-on-reflection* + - < = alength aget apply aset assoc atom binding boolean case char cons count dec defmacro defn defprotocol defrecord even? extend-protocol extend-type first fn hash-map hash-set identical? import inc int int-array interleave intern key keyword? let list long loop map merge meta neg? next pos? reify satisfies? second seq seq? split-at str swap! symbol symbol? the-ns to-array val vary-meta vec vector vector? with-meta])
 )
 
 (defmacro § [& _])
@@ -564,17 +564,20 @@
     )
 )
 
-(§ defn count [x]
-    (condp satisfies? x
-        Counted
-            (Counted'''count x)
-        Seqable
-            (loop-when [n 0 s (Seqable'''seq x)] s => n
-                (when (satisfies? Counted s) => (recur (inc n) (next s))
-                    (+ n (Counted'''count s))
+(defn count'
+    ([x] (count' x -1))
+    ([x m]
+        (condp satisfies? x
+            Counted
+                (Counted'''count x)
+            Seqable
+                (loop-when [n 0 s (Seqable'''seq x)] (and s (or (neg? m) (< n m))) => n
+                    (when (satisfies? Counted s) => (recur (inc n) (next s))
+                        (+ n (Counted'''count s))
+                    )
                 )
-            )
-        (throw! (str "count not supported on " (class x)))
+            (throw! (str "count not supported on " (class x)))
+        )
     )
 )
 
@@ -700,16 +703,16 @@
     (defprotocol IFn
         (#_"Object" IFn'''invoke
             [#_"IFn" this]
-            [#_"IFn" this, #_"Object" arg1]
-            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2]
-            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
-            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4]
-            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5]
-            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6]
-            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7]
-            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8]
-            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9]
-            [#_"IFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9 & #_"Object..." args]
+            [#_"IFn" this, a1]
+            [#_"IFn" this, a1, a2]
+            [#_"IFn" this, a1, a2, a3]
+            [#_"IFn" this, a1, a2, a3, a4]
+            [#_"IFn" this, a1, a2, a3, a4, a5]
+            [#_"IFn" this, a1, a2, a3, a4, a5, a6]
+            [#_"IFn" this, a1, a2, a3, a4, a5, a6, a7]
+            [#_"IFn" this, a1, a2, a3, a4, a5, a6, a7, a8]
+            [#_"IFn" this, a1, a2, a3, a4, a5, a6, a7, a8, a9]
+            [#_"IFn" this, a1, a2, a3, a4, a5, a6, a7, a8, a9, #_"ISeq" args]
         )
         (#_"Object" IFn'''applyTo [#_"IFn" this, #_"ISeq" args])
     )
@@ -1136,35 +1139,25 @@
     (defrecord AFunction #_"AFn" []) (extend-type AFunction #_"Comparator" Fn IFn IMeta IObj)
 )
 
-(declare RestFn'''getRequiredArity)
-(declare RestFn'''doInvoke)
-
 (java-ns cloiure.lang.RestFn
-    #_abstract
-    (defrecord RestFn #_"AFunction" []) (extend-type RestFn #_"Comparator" Fn IFn IMeta IObj) (§ soon
-        #_abstract
-        (#_"int" RestFn'''getRequiredArity [#_"RestFn" this])
-        #_abstract
-        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" args])
-        #_abstract
-        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" args])
-        #_abstract
-        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" args])
-        #_abstract
-        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" args])
-        #_abstract
-        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" args])
-        #_abstract
-        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" args])
-        #_abstract
-        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" args])
-        #_abstract
-        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" args])
-        #_abstract
-        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" args])
-        #_abstract
-        (#_"Object" RestFn'''doInvoke [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" args])
+    (defprotocol IRestFn
+        (#_"int" IRestFn'''requiredArity [#_"IRestFn" this])
+        (#_"Object" IRestFn'''doInvoke
+            [#_"IRestFn" this, #_"ISeq" args]
+            [#_"IRestFn" this, a1, #_"ISeq" args]
+            [#_"IRestFn" this, a1, a2, #_"ISeq" args]
+            [#_"IRestFn" this, a1, a2, a3, #_"ISeq" args]
+            [#_"IRestFn" this, a1, a2, a3, a4, #_"ISeq" args]
+            [#_"IRestFn" this, a1, a2, a3, a4, a5, #_"ISeq" args]
+            [#_"IRestFn" this, a1, a2, a3, a4, a5, a6, #_"ISeq" args]
+            [#_"IRestFn" this, a1, a2, a3, a4, a5, a6, a7, #_"ISeq" args]
+            [#_"IRestFn" this, a1, a2, a3, a4, a5, a6, a7, a8, #_"ISeq" args]
+            [#_"IRestFn" this, a1, a2, a3, a4, a5, a6, a7, a8, a9, #_"ISeq" args]
+        )
     )
+
+    #_abstract
+    (defrecord RestFn #_"AFunction" []) (extend-type RestFn #_"Comparator" Fn IFn IMeta IObj IRestFn)
 )
 
 (java-ns cloiure.lang.ASeq
@@ -1284,7 +1277,7 @@
 )
 
 (java-ns cloiure.lang.PersistentList
-    (defrecord Primordial #_"RestFn" []) (extend-type Primordial #_"Comparator" Fn IFn IMeta IObj)
+    (defrecord Primordial #_"RestFn" []) (extend-type Primordial #_"Comparator" Fn IFn IMeta IObj IRestFn)
     (defrecord EmptyList []) (extend-type EmptyList Counted IHashEq IMeta IObj IObject IPersistentCollection IPersistentList IPersistentStack ISeq Seqable Sequential)
     (defrecord PersistentList #_"ASeq" []) (extend-type PersistentList Counted IHashEq IMeta IObj IObject IPersistentCollection IPersistentList IPersistentStack IReduce ISeq Seqable Sequential)
 )
@@ -5179,7 +5172,7 @@
                     (cond
                         (.isAssignableFrom LazySeq, c) (Type/getType cloiure.core.ISeq)
                         (= c Keyword)                  (Type/getType Keyword)
-                        (.isAssignableFrom RestFn, c)  (Type/getType RestFn)
+                        (.isAssignableFrom RestFn, c)  (Type/getType cloiure.core.IRestFn)
                         (.isAssignableFrom AFn, c)     (Type/getType AFn)
                         (= c Var)                      (Type/getType Var)
                         (= c String)                   (Type/getType String)
@@ -5869,7 +5862,7 @@
             )
 
             (when (FnExpr''isVariadic this)
-                (let [#_"GeneratorAdapter" gen (GeneratorAdapter. Opcodes/ACC_PUBLIC, (Method/getMethod "int getRequiredArity()"), nil, nil, cv)]
+                (let [#_"GeneratorAdapter" gen (GeneratorAdapter. Opcodes/ACC_PUBLIC, (Method/getMethod "int requiredArity()"), nil, nil, cv)]
                     (.visitCode gen)
                     (.push gen, (count (:reqParms (:variadicMethod this))))
                     (.returnValue gen)
@@ -8544,6 +8537,45 @@
  ;;
 (defn ^cloiure.core.IPersistentVector reset-vals! [^cloiure.core.IAtom a x'] (IAtom'''resetVals a x'))
 
+(java-ns cloiure.lang.Reduced
+
+(class-ns Reduced
+    (defn #_"Reduced" Reduced'new [#_"Object" val]
+        (merge (Reduced.)
+            (hash-map
+                #_"Object" :val val
+            )
+        )
+    )
+
+    (extend-type Reduced IDeref
+        (#_"Object" IDeref'''deref [#_"Reduced" this]
+            (:val this)
+        )
+    )
+)
+)
+
+;;;
+ ; Wraps x in a way such that a reduce will terminate with the value x.
+ ;;
+(defn reduced [x] (Reduced'new x))
+
+;;;
+ ; Returns true if x is the result of a call to reduced.
+ ;;
+(defn reduced? [x] (instance? Reduced x))
+
+;;;
+ ; If x is already reduced?, returns it, else returns (reduced x).
+ ;;
+(defn ensure-reduced [x] (if (reduced? x) x (reduced x)))
+
+;;;
+ ; If x is reduced?, returns (deref x), else returns x.
+ ;;
+(defn unreduced [x] (if (reduced? x) (deref x) x))
+
 (java-ns cloiure.lang.Util
 
 (class-ns Util
@@ -9145,7 +9177,7 @@
  ;;
 (defn zero? [n] (Numbers'isZero n))
 (§ defn pos?  [n] (Numbers'isPos  n))
-(defn neg?  [n] (Numbers'isNeg  n))
+(§ defn neg?  [n] (Numbers'isNeg  n))
 
 ;;;
  ; Returns the sum of nums. (+) returns 0. Supports arbitrary precision.
@@ -9291,108 +9323,39 @@
 
     (extend-type AFn IFn
         (#_"Object" IFn'''invoke
-            ([#_"AFn" this] (AFn'''throwArity this, 0))
-            ([#_"AFn" this, #_"Object" arg1] (AFn'''throwArity this, 1))
-            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2] (AFn'''throwArity this, 2))
-            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3] (AFn'''throwArity this, 3))
-            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4] (AFn'''throwArity this, 4))
-            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5] (AFn'''throwArity this, 5))
-            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6] (AFn'''throwArity this, 6))
-            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7] (AFn'''throwArity this, 7))
-            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8] (AFn'''throwArity this, 8))
-            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9] (AFn'''throwArity this, 9))
-            ([#_"AFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9 & #_"Object..." args] (AFn'''throwArity this, 10))
+            ([#_"AFn" this]                                                    (AFn'''throwArity this, 0))
+            ([#_"AFn" this, a1]                                                (AFn'''throwArity this, 1))
+            ([#_"AFn" this, a1, a2]                                            (AFn'''throwArity this, 2))
+            ([#_"AFn" this, a1, a2, a3]                                        (AFn'''throwArity this, 3))
+            ([#_"AFn" this, a1, a2, a3, a4]                                    (AFn'''throwArity this, 4))
+            ([#_"AFn" this, a1, a2, a3, a4, a5]                                (AFn'''throwArity this, 5))
+            ([#_"AFn" this, a1, a2, a3, a4, a5, a6]                            (AFn'''throwArity this, 6))
+            ([#_"AFn" this, a1, a2, a3, a4, a5, a6, a7]                        (AFn'''throwArity this, 7))
+            ([#_"AFn" this, a1, a2, a3, a4, a5, a6, a7, a8]                    (AFn'''throwArity this, 8))
+            ([#_"AFn" this, a1, a2, a3, a4, a5, a6, a7, a8, a9]                (AFn'''throwArity this, 9))
+            ([#_"AFn" this, a1, a2, a3, a4, a5, a6, a7, a8, a9, #_"ISeq" args] (AFn'''throwArity this, 10))
         )
     )
 
-    (declare AFn'applyToHelper)
+    (defn #_"Object" AFn'applyToHelper [#_"IFn" f, #_"ISeq" s]
+        (case (count' s (inc 9))
+            0                                           (IFn'''invoke f)
+            1 (let [[a1] s]                             (IFn'''invoke f, a1))
+            2 (let [[a1 a2] s]                          (IFn'''invoke f, a1, a2))
+            3 (let [[a1 a2 a3] s]                       (IFn'''invoke f, a1, a2, a3))
+            4 (let [[a1 a2 a3 a4] s]                    (IFn'''invoke f, a1, a2, a3, a4))
+            5 (let [[a1 a2 a3 a4 a5] s]                 (IFn'''invoke f, a1, a2, a3, a4, a5))
+            6 (let [[a1 a2 a3 a4 a5 a6] s]              (IFn'''invoke f, a1, a2, a3, a4, a5, a6))
+            7 (let [[a1 a2 a3 a4 a5 a6 a7] s]           (IFn'''invoke f, a1, a2, a3, a4, a5, a6, a7))
+            8 (let [[a1 a2 a3 a4 a5 a6 a7 a8] s]        (IFn'''invoke f, a1, a2, a3, a4, a5, a6, a7, a8))
+            9 (let [[a1 a2 a3 a4 a5 a6 a7 a8 a9] s]     (IFn'''invoke f, a1, a2, a3, a4, a5, a6, a7, a8, a9))
+              (let [[a1 a2 a3 a4 a5 a6 a7 a8 a9 & s] s] (IFn'''invoke f, a1, a2, a3, a4, a5, a6, a7, a8, a9, s))
+        )
+    )
 
     (extend-type AFn IFn
         (#_"Object" IFn'''applyTo [#_"AFn" this, #_"ISeq" args]
             (AFn'applyToHelper this, args)
-        )
-    )
-
-    (declare RT'boundedLength)
-
-    (defn #_"Object" AFn'applyToHelper [#_"IFn" ifn, #_"ISeq" args]
-        (case (RT'boundedLength args, 9)
-            0
-                (IFn'''invoke ifn)
-            1
-                (IFn'''invoke ifn, (first args))
-            2
-                (IFn'''invoke ifn, (first args),
-                    (first (next args))
-                )
-            3
-                (IFn'''invoke ifn, (first args),
-                    (first (§ ass args (next args))),
-                    (first (next args))
-                )
-            4
-                (IFn'''invoke ifn, (first args),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (next args))
-                )
-            5
-                (IFn'''invoke ifn, (first args),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (next args))
-                )
-            6
-                (IFn'''invoke ifn, (first args),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (next args))
-                )
-            7
-                (IFn'''invoke ifn, (first args),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (next args))
-                )
-            8
-                (IFn'''invoke ifn, (first args),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (next args))
-                )
-            9
-                (IFn'''invoke ifn, (first args),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (next args))
-                )
-            #_else
-                (§ soon IFn'''invoke ifn, (first args),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (first (§ ass args (next args))),
-                    (RT'seqToArray (next args))
-                )
         )
     )
 
@@ -9497,8 +9460,8 @@
 
     (extend-type Symbol IFn
         (#_"Object" IFn'''invoke
-            ([#_"Symbol" this, #_"Object" arg1] (get arg1 this))
-            ([#_"Symbol" this, #_"Object" arg1, #_"Object" notFound] (get arg1 this notFound))
+            ([#_"Symbol" this, #_"Object" obj] (get obj this))
+            ([#_"Symbol" this, #_"Object" obj, #_"Object" notFound] (get obj this notFound))
         )
     )
 )
@@ -9582,24 +9545,10 @@
         )
     )
 
-    #_method
-    (defn- #_"Object" Keyword''throwArity [#_"Keyword" this]
-        (throw! (str "wrong number of args passed to keyword: " this))
-    )
-
     (extend-type Keyword IFn
         (#_"Object" IFn'''invoke
-            ([#_"Keyword" this] (Keyword''throwArity this))
             ([#_"Keyword" this, #_"Object" obj] (get obj this))
             ([#_"Keyword" this, #_"Object" obj, #_"Object" notFound] (get obj this notFound))
-            ([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3] (Keyword''throwArity this))
-            ([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4] (Keyword''throwArity this))
-            ([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5] (Keyword''throwArity this))
-            ([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6] (Keyword''throwArity this))
-            ([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7] (Keyword''throwArity this))
-            ([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8] (Keyword''throwArity this))
-            ([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9] (Keyword''throwArity this))
-            ([#_"Keyword" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9 & #_"Object..." args] (Keyword''throwArity this))
         )
 
         (#_"Object" IFn'''applyTo [#_"Keyword" this, #_"ISeq" args]
@@ -9651,421 +9600,169 @@
         (merge (RestFn.) (AFunction'new))
     )
 
-    (defn #_"ISeq" RestFn'findKey [#_"Object" key, #_"ISeq" args]
-        (loop-when args (some? args)
-            (if (= key (first args)) (next args) (recur (next (next args))))
+    (extend-type RestFn IRestFn
+        (#_"Object" IRestFn'''doInvoke
+            ([#_"RestFn" this, #_"ISeq" args]                                     nil)
+            ([#_"RestFn" this, a1, #_"ISeq" args]                                 nil)
+            ([#_"RestFn" this, a1, a2, #_"ISeq" args]                             nil)
+            ([#_"RestFn" this, a1, a2, a3, #_"ISeq" args]                         nil)
+            ([#_"RestFn" this, a1, a2, a3, a4, #_"ISeq" args]                     nil)
+            ([#_"RestFn" this, a1, a2, a3, a4, a5, #_"ISeq" args]                 nil)
+            ([#_"RestFn" this, a1, a2, a3, a4, a5, a6, #_"ISeq" args]             nil)
+            ([#_"RestFn" this, a1, a2, a3, a4, a5, a6, a7, #_"ISeq" args]         nil)
+            ([#_"RestFn" this, a1, a2, a3, a4, a5, a6, a7, a8, #_"ISeq" args]     nil)
+            ([#_"RestFn" this, a1, a2, a3, a4, a5, a6, a7, a8, a9, #_"ISeq" args] nil)
         )
     )
 
-    (declare ArraySeq'create)
-
-    (defn #_"ISeq" RestFn'ontoArrayPrepend [#_"Object[]" a & #_"Object..." args]
-        (loop-when-recur [#_"ISeq" s (ArraySeq'create a) #_"int" i (dec (alength args))] (<= 0 i) [(cons (aget args i) s) (dec i)] => s)
-    )
-
-    #_override
-    (defn #_"Object" RestFn'''doInvoke-2--RestFn [#_"RestFn" this, #_"Object" args]
-        nil
-    )
-
-    #_override
-    (defn #_"Object" RestFn'''doInvoke-3--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" args]
-        nil
-    )
-
-    #_override
-    (defn #_"Object" RestFn'''doInvoke-4--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" args]
-        nil
-    )
-
-    #_override
-    (defn #_"Object" RestFn'''doInvoke-5--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" args]
-        nil
-    )
-
-    #_override
-    (defn #_"Object" RestFn'''doInvoke-6--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" args]
-        nil
-    )
-
-    #_override
-    (defn #_"Object" RestFn'''doInvoke-7--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" args]
-        nil
-    )
-
-    #_override
-    (defn #_"Object" RestFn'''doInvoke-8--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" args]
-        nil
-    )
-
-    #_override
-    (defn #_"Object" RestFn'''doInvoke-9--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" args]
-        nil
-    )
-
-    #_override
-    (defn #_"Object" RestFn'''doInvoke-10--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" args]
-        nil
-    )
-
-    #_override
-    (defn #_"Object" RestFn'''doInvoke-11--RestFn [#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9, #_"Object" args]
-        nil
-    )
-
     (extend-type RestFn IFn
-        (#_"Object" IFn'''applyTo [#_"RestFn" this, #_"ISeq" args]
-            (let-when [#_"int" n (RestFn'''getRequiredArity this)] (< n (RT'boundedLength args, n)) => (AFn'applyToHelper this, args)
+        (#_"Object" IFn'''applyTo [#_"RestFn" this, #_"ISeq" s]
+            (let-when [#_"int" n (IRestFn'''requiredArity this)] (< n (count' s (inc n))) => (AFn'applyToHelper this, s)
                 (case n
-                    0
-                        (RestFn'''doInvoke this, args)
-                    1
-                        (RestFn'''doInvoke this, (first args),
-                            (next args)
-                        )
-                    2
-                        (RestFn'''doInvoke this, (first args),
-                            (first (§ ass args (next args))),
-                            (next args)
-                        )
-                    3
-                        (RestFn'''doInvoke this, (first args),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (next args)
-                        )
-                    4
-                        (RestFn'''doInvoke this, (first args),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (next args)
-                        )
-                    5
-                        (RestFn'''doInvoke this, (first args),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (next args)
-                        )
-                    6
-                        (RestFn'''doInvoke this, (first args),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (next args)
-                        )
-                    7
-                        (RestFn'''doInvoke this, (first args),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (next args)
-                        )
-                    8
-                        (RestFn'''doInvoke this, (first args),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (next args)
-                        )
-                    9
-                        (RestFn'''doInvoke this, (first args),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (first (§ ass args (next args))),
-                            (next args)
-                        )
-                    (AFn'''throwArity this, -1)
+                    0                                           (IRestFn'''doInvoke this, s)
+                    1 (let [[a1 & s] s]                         (IRestFn'''doInvoke this, a1, s))
+                    2 (let [[a1 a2 & s] s]                      (IRestFn'''doInvoke this, a1, a2, s))
+                    3 (let [[a1 a2 a3 & s] s]                   (IRestFn'''doInvoke this, a1, a2, a3, s))
+                    4 (let [[a1 a2 a3 a4 & s] s]                (IRestFn'''doInvoke this, a1, a2, a3, a4, s))
+                    5 (let [[a1 a2 a3 a4 a5 & s] s]             (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, s))
+                    6 (let [[a1 a2 a3 a4 a5 a6 & s] s]          (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, s))
+                    7 (let [[a1 a2 a3 a4 a5 a6 a7 & s] s]       (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, s))
+                    8 (let [[a1 a2 a3 a4 a5 a6 a7 a8 & s] s]    (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, a8, s))
+                    9 (let [[a1 a2 a3 a4 a5 a6 a7 a8 a9 & s] s] (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, a8, a9, s))
+                      (AFn'''throwArity this, -1)
                 )
             )
         )
 
         (#_"Object" IFn'''invoke
             ([#_"RestFn" this]
-                (case (RestFn'''getRequiredArity this)
-                    0
-                        (RestFn'''doInvoke this, nil)
-                    (do
-                        (AFn'''throwArity this, 0)
-                    )
+                (case (IRestFn'''requiredArity this)
+                    0 (IRestFn'''doInvoke this, nil)
+                      (AFn'''throwArity this, 0)
                 )
             )
 
-            ([#_"RestFn" this, #_"Object" arg1]
-                (case (RestFn'''getRequiredArity this)
-                    0
-                        (RestFn'''doInvoke this, (ArraySeq'create arg1))
-                    1
-                        (RestFn'''doInvoke this, arg1, nil)
-                    (do
-                        (AFn'''throwArity this, 1)
-                    )
+            ([#_"RestFn" this, a1]
+                (case (IRestFn'''requiredArity this)
+                    0 (IRestFn'''doInvoke this, (list a1))
+                    1 (IRestFn'''doInvoke this, a1, nil)
+                      (AFn'''throwArity this, 1)
                 )
             )
 
-            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2]
-                (case (RestFn'''getRequiredArity this)
-                    0
-                        (RestFn'''doInvoke this,
-                            (ArraySeq'create arg1, arg2))
-                    1
-                        (RestFn'''doInvoke this, arg1,
-                            (ArraySeq'create arg2))
-                    2
-                        (RestFn'''doInvoke this, arg1, arg2, nil)
-                    (do
-                        (AFn'''throwArity this, 2)
-                    )
+            ([#_"RestFn" this, a1, a2]
+                (case (IRestFn'''requiredArity this)
+                    0 (IRestFn'''doInvoke this, (list a1 a2))
+                    1 (IRestFn'''doInvoke this, a1, (list a2))
+                    2 (IRestFn'''doInvoke this, a1, a2, nil)
+                      (AFn'''throwArity this, 2)
                 )
             )
 
-            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3]
-                (case (RestFn'''getRequiredArity this)
-                    0
-                        (RestFn'''doInvoke this,
-                            (ArraySeq'create arg1, arg2, arg3))
-                    1
-                        (RestFn'''doInvoke this, arg1,
-                            (ArraySeq'create arg2, arg3))
-                    2
-                        (RestFn'''doInvoke this, arg1, arg2,
-                            (ArraySeq'create arg3))
-                    3
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, nil)
-                    (do
-                        (AFn'''throwArity this, 3)
-                    )
+            ([#_"RestFn" this, a1, a2, a3]
+                (case (IRestFn'''requiredArity this)
+                    0 (IRestFn'''doInvoke this, (list a1 a2 a3))
+                    1 (IRestFn'''doInvoke this, a1, (list a2 a3))
+                    2 (IRestFn'''doInvoke this, a1, a2, (list a3))
+                    3 (IRestFn'''doInvoke this, a1, a2, a3, nil)
+                      (AFn'''throwArity this, 3)
                 )
             )
 
-            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4]
-                (case (RestFn'''getRequiredArity this)
-                    0
-                        (RestFn'''doInvoke this,
-                            (ArraySeq'create arg1, arg2, arg3, arg4))
-                    1
-                        (RestFn'''doInvoke this, arg1,
-                            (ArraySeq'create arg2, arg3, arg4))
-                    2
-                        (RestFn'''doInvoke this, arg1, arg2,
-                            (ArraySeq'create arg3, arg4))
-                    3
-                        (RestFn'''doInvoke this, arg1, arg2, arg3,
-                            (ArraySeq'create arg4))
-                    4
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4, nil)
-                    (do
-                        (AFn'''throwArity this, 4)
-                    )
+            ([#_"RestFn" this, a1, a2, a3, a4]
+                (case (IRestFn'''requiredArity this)
+                    0 (IRestFn'''doInvoke this, (list a1 a2 a3 a4))
+                    1 (IRestFn'''doInvoke this, a1, (list a2 a3 a4))
+                    2 (IRestFn'''doInvoke this, a1, a2, (list a3 a4))
+                    3 (IRestFn'''doInvoke this, a1, a2, a3, (list a4))
+                    4 (IRestFn'''doInvoke this, a1, a2, a3, a4, nil)
+                      (AFn'''throwArity this, 4)
                 )
             )
 
-            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5]
-                (case (RestFn'''getRequiredArity this)
-                    0
-                        (RestFn'''doInvoke this,
-                            (ArraySeq'create arg1, arg2, arg3, arg4, arg5))
-                    1
-                        (RestFn'''doInvoke this, arg1,
-                            (ArraySeq'create arg2, arg3, arg4, arg5))
-                    2
-                        (RestFn'''doInvoke this, arg1, arg2,
-                            (ArraySeq'create arg3, arg4, arg5))
-                    3
-                        (RestFn'''doInvoke this, arg1, arg2, arg3,
-                            (ArraySeq'create arg4, arg5))
-                    4
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4,
-                            (ArraySeq'create arg5))
-                    5
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4, arg5, nil)
-                    (do
-                        (AFn'''throwArity this, 5)
-                    )
+            ([#_"RestFn" this, a1, a2, a3, a4, a5]
+                (case (IRestFn'''requiredArity this)
+                    0 (IRestFn'''doInvoke this, (list a1 a2 a3 a4 a5))
+                    1 (IRestFn'''doInvoke this, a1, (list a2 a3 a4 a5))
+                    2 (IRestFn'''doInvoke this, a1, a2, (list a3 a4 a5))
+                    3 (IRestFn'''doInvoke this, a1, a2, a3, (list a4 a5))
+                    4 (IRestFn'''doInvoke this, a1, a2, a3, a4, (list a5))
+                    5 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, nil)
+                      (AFn'''throwArity this, 5)
                 )
             )
 
-            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6]
-                (case (RestFn'''getRequiredArity this)
-                    0
-                        (RestFn'''doInvoke this,
-                            (ArraySeq'create arg1, arg2, arg3, arg4, arg5, arg6))
-                    1
-                        (RestFn'''doInvoke this, arg1,
-                            (ArraySeq'create arg2, arg3, arg4, arg5, arg6))
-                    2
-                        (RestFn'''doInvoke this, arg1, arg2,
-                            (ArraySeq'create arg3, arg4, arg5, arg6))
-                    3
-                        (RestFn'''doInvoke this, arg1, arg2, arg3,
-                            (ArraySeq'create arg4, arg5, arg6))
-                    4
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4,
-                            (ArraySeq'create arg5, arg6))
-                    5
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4, arg5,
-                            (ArraySeq'create arg6))
-                    6
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, nil)
-                    (do
-                        (AFn'''throwArity this, 6)
-                    )
+            ([#_"RestFn" this, a1, a2, a3, a4, a5, a6]
+                (case (IRestFn'''requiredArity this)
+                    0 (IRestFn'''doInvoke this, (list a1 a2 a3 a4 a5 a6))
+                    1 (IRestFn'''doInvoke this, a1, (list a2 a3 a4 a5 a6))
+                    2 (IRestFn'''doInvoke this, a1, a2, (list a3 a4 a5 a6))
+                    3 (IRestFn'''doInvoke this, a1, a2, a3, (list a4 a5 a6))
+                    4 (IRestFn'''doInvoke this, a1, a2, a3, a4, (list a5 a6))
+                    5 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, (list a6))
+                    6 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, nil)
+                      (AFn'''throwArity this, 6)
                 )
             )
 
-            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7]
-                (case (RestFn'''getRequiredArity this)
-                    0
-                        (RestFn'''doInvoke this,
-                            (ArraySeq'create arg1, arg2, arg3, arg4, arg5, arg6, arg7))
-                    1
-                        (RestFn'''doInvoke this, arg1,
-                            (ArraySeq'create arg2, arg3, arg4, arg5, arg6, arg7))
-                    2
-                        (RestFn'''doInvoke this, arg1, arg2,
-                            (ArraySeq'create arg3, arg4, arg5, arg6, arg7))
-                    3
-                        (RestFn'''doInvoke this, arg1, arg2, arg3,
-                            (ArraySeq'create arg4, arg5, arg6, arg7))
-                    4
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4,
-                            (ArraySeq'create arg5, arg6, arg7))
-                    5
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4, arg5,
-                            (ArraySeq'create arg6, arg7))
-                    6
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
-                            (ArraySeq'create arg7))
-                    7
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, nil)
-                    (do
-                        (AFn'''throwArity this, 7)
-                    )
+            ([#_"RestFn" this, a1, a2, a3, a4, a5, a6, a7]
+                (case (IRestFn'''requiredArity this)
+                    0 (IRestFn'''doInvoke this, (list a1 a2 a3 a4 a5 a6 a7))
+                    1 (IRestFn'''doInvoke this, a1, (list a2 a3 a4 a5 a6 a7))
+                    2 (IRestFn'''doInvoke this, a1, a2, (list a3 a4 a5 a6 a7))
+                    3 (IRestFn'''doInvoke this, a1, a2, a3, (list a4 a5 a6 a7))
+                    4 (IRestFn'''doInvoke this, a1, a2, a3, a4, (list a5 a6 a7))
+                    5 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, (list a6 a7))
+                    6 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, (list a7))
+                    7 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, nil)
+                      (AFn'''throwArity this, 7)
                 )
             )
 
-            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8]
-                (case (RestFn'''getRequiredArity this)
-                    0
-                        (RestFn'''doInvoke this,
-                            (ArraySeq'create arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8))
-                    1
-                        (RestFn'''doInvoke this, arg1,
-                            (ArraySeq'create arg2, arg3, arg4, arg5, arg6, arg7, arg8))
-                    2
-                        (RestFn'''doInvoke this, arg1, arg2,
-                            (ArraySeq'create arg3, arg4, arg5, arg6, arg7, arg8))
-                    3
-                        (RestFn'''doInvoke this, arg1, arg2, arg3,
-                            (ArraySeq'create arg4, arg5, arg6, arg7, arg8))
-                    4
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4,
-                            (ArraySeq'create arg5, arg6, arg7, arg8))
-                    5
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4, arg5,
-                            (ArraySeq'create arg6, arg7, arg8))
-                    6
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
-                            (ArraySeq'create arg7, arg8))
-                    7
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
-                            (ArraySeq'create arg8))
-                    8
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, nil)
-                    (do
-                        (AFn'''throwArity this, 8)
-                    )
+            ([#_"RestFn" this, a1, a2, a3, a4, a5, a6, a7, a8]
+                (case (IRestFn'''requiredArity this)
+                    0 (IRestFn'''doInvoke this, (list a1 a2 a3 a4 a5 a6 a7 a8))
+                    1 (IRestFn'''doInvoke this, a1, (list a2 a3 a4 a5 a6 a7 a8))
+                    2 (IRestFn'''doInvoke this, a1, a2, (list a3 a4 a5 a6 a7 a8))
+                    3 (IRestFn'''doInvoke this, a1, a2, a3, (list a4 a5 a6 a7 a8))
+                    4 (IRestFn'''doInvoke this, a1, a2, a3, a4, (list a5 a6 a7 a8))
+                    5 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, (list a6 a7 a8))
+                    6 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, (list a7 a8))
+                    7 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, (list a8))
+                    8 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, a8, nil)
+                      (AFn'''throwArity this, 8)
                 )
             )
 
-            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9]
-                (case (RestFn'''getRequiredArity this)
-                    0
-                        (RestFn'''doInvoke this,
-                            (ArraySeq'create arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9))
-                    1
-                        (RestFn'''doInvoke this, arg1,
-                            (ArraySeq'create arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9))
-                    2
-                        (RestFn'''doInvoke this, arg1, arg2,
-                            (ArraySeq'create arg3, arg4, arg5, arg6, arg7, arg8, arg9))
-                    3
-                        (RestFn'''doInvoke this, arg1, arg2, arg3,
-                            (ArraySeq'create arg4, arg5, arg6, arg7, arg8, arg9))
-                    4
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4,
-                            (ArraySeq'create arg5, arg6, arg7, arg8, arg9))
-                    5
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4, arg5,
-                            (ArraySeq'create arg6, arg7, arg8, arg9))
-                    6
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
-                            (ArraySeq'create arg7, arg8, arg9))
-                    7
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
-                            (ArraySeq'create arg8, arg9))
-                    8
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
-                            (ArraySeq'create arg9))
-                    9
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, nil)
-                    (do
-                        (AFn'''throwArity this, 9)
-                    )
+            ([#_"RestFn" this, a1, a2, a3, a4, a5, a6, a7, a8, a9]
+                (case (IRestFn'''requiredArity this)
+                    0 (IRestFn'''doInvoke this, (list a1 a2 a3 a4 a5 a6 a7 a8 a9))
+                    1 (IRestFn'''doInvoke this, a1, (list a2 a3 a4 a5 a6 a7 a8 a9))
+                    2 (IRestFn'''doInvoke this, a1, a2, (list a3 a4 a5 a6 a7 a8 a9))
+                    3 (IRestFn'''doInvoke this, a1, a2, a3, (list a4 a5 a6 a7 a8 a9))
+                    4 (IRestFn'''doInvoke this, a1, a2, a3, a4, (list a5 a6 a7 a8 a9))
+                    5 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, (list a6 a7 a8 a9))
+                    6 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, (list a7 a8 a9))
+                    7 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, (list a8 a9))
+                    8 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, a8, (list a9))
+                    9 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, a8, a9, nil)
+                      (AFn'''throwArity this, 9)
                 )
             )
 
-            ([#_"RestFn" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9 & #_"Object..." args]
-                (case (RestFn'''getRequiredArity this)
-                    0
-                        (RestFn'''doInvoke this,
-                            (RestFn'ontoArrayPrepend args, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9))
-                    1
-                        (RestFn'''doInvoke this, arg1,
-                            (RestFn'ontoArrayPrepend args, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9))
-                    2
-                        (RestFn'''doInvoke this, arg1, arg2,
-                            (RestFn'ontoArrayPrepend args, arg3, arg4, arg5, arg6, arg7, arg8, arg9))
-                    3
-                        (RestFn'''doInvoke this, arg1, arg2, arg3,
-                            (RestFn'ontoArrayPrepend args, arg4, arg5, arg6, arg7, arg8, arg9))
-                    4
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4,
-                            (RestFn'ontoArrayPrepend args, arg5, arg6, arg7, arg8, arg9))
-                    5
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4, arg5,
-                            (RestFn'ontoArrayPrepend args, arg6, arg7, arg8, arg9))
-                    6
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6,
-                            (RestFn'ontoArrayPrepend args, arg7, arg8, arg9))
-                    7
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
-                            (RestFn'ontoArrayPrepend args, arg8, arg9))
-                    8
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8,
-                            (RestFn'ontoArrayPrepend args, arg9))
-                    9
-                        (RestFn'''doInvoke this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
-                            (ArraySeq'create args))
-                    (do
-                        (AFn'''throwArity this, 10)
-                    )
+            ([#_"RestFn" this, a1, a2, a3, a4, a5, a6, a7, a8, a9, #_"ISeq" args]
+                (case (IRestFn'''requiredArity this)
+                    0 (IRestFn'''doInvoke this, (list* a1 a2 a3 a4 a5 a6 a7 a8 a9 args))
+                    1 (IRestFn'''doInvoke this, a1, (list* a2 a3 a4 a5 a6 a7 a8 a9 args))
+                    2 (IRestFn'''doInvoke this, a1, a2, (list* a3 a4 a5 a6 a7 a8 a9 args))
+                    3 (IRestFn'''doInvoke this, a1, a2, a3, (list* a4 a5 a6 a7 a8 a9 args))
+                    4 (IRestFn'''doInvoke this, a1, a2, a3, a4, (list* a5 a6 a7 a8 a9 args))
+                    5 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, (list* a6 a7 a8 a9 args))
+                    6 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, (list* a7 a8 a9 args))
+                    7 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, (list* a8 a9 args))
+                    8 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, a8, (list* a9 args))
+                    9 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, a8, a9, args)
+                      (AFn'''throwArity this, 10)
                 )
             )
         )
@@ -10815,7 +10512,7 @@
         )
     )
 
-    (defn #_"ArraySeq" ArraySeq'create [& #_"Object..." a]
+    (defn #_"ArraySeq" ArraySeq'create [#_"Object[]" a]
         (when (and (some? a) (pos? (alength a)))
             (ArraySeq'new a, 0)
         )
@@ -13000,25 +12697,25 @@
         )
     )
 
-    #_override
-    (defn #_"int" RestFn'''getRequiredArity--Primordial [#_"Primordial" this]
-        0
-    )
-
     (declare PersistentList'EMPTY)
     (declare PersistentList'create)
 
-    #_override
-    (defn #_"Object" RestFn'''doInvoke-2--Primordial [#_"Primordial" this, #_"Object" args]
-        (if (instance? ArraySeq args)
-            (let [#_"Object[]" a (:a args) #_"int" i0 (:i args)]
-                (loop-when-recur [#_"IPersistentList" l PersistentList'EMPTY #_"int" i (dec (alength a))]
-                                 (<= i0 i)
-                                 [(conj l (aget a i)) (dec i)]
-                              => l
+    (extend-type Primordial IRestFn
+        (#_"int" IRestFn'''requiredArity [#_"Primordial" this]
+            0
+        )
+
+        (#_"Object" IRestFn'''doInvoke [#_"Primordial" this, #_"ISeq" args]
+            (if (instance? ArraySeq args)
+                (let [#_"Object[]" a (:a args) #_"int" i0 (:i args)]
+                    (loop-when-recur [#_"IPersistentList" l PersistentList'EMPTY #_"int" i (dec (alength a))]
+                                     (<= i0 i)
+                                     [(conj l (aget a i)) (dec i)]
+                                  => l
+                    )
                 )
+                (PersistentList'create (RT'seqToArray (seq args)))
             )
-            (PersistentList'create (RT'seqToArray (seq args)))
         )
     )
 
@@ -15041,25 +14738,6 @@
 )
 )
 
-(java-ns cloiure.lang.Reduced
-
-(class-ns Reduced
-    (defn #_"Reduced" Reduced'new [#_"Object" val]
-        (merge (Reduced.)
-            (hash-map
-                #_"Object" :val val
-            )
-        )
-    )
-
-    (extend-type Reduced IDeref
-        (#_"Object" IDeref'''deref [#_"Reduced" this]
-            (:val this)
-        )
-    )
-)
-)
-
 (java-ns cloiure.lang.StringSeq
 
 (class-ns StringSeq
@@ -15338,21 +15016,21 @@
 
     (extend-type Var IFn
         (#_"Object" IFn'''invoke
-            ([#_"Var" this] (IFn'''invoke (deref this)))
-            ([#_"Var" this, #_"Object" arg1] (IFn'''invoke (deref this), arg1))
-            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2] (IFn'''invoke (deref this), arg1, arg2))
-            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3] (IFn'''invoke (deref this), arg1, arg2, arg3))
-            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4))
-            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5))
-            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6))
-            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6, arg7))
-            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8))
-            ([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9))
-          #_([#_"Var" this, #_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"Object" arg6, #_"Object" arg7, #_"Object" arg8, #_"Object" arg9 & #_"Object..." args] (IFn'''invoke (deref this), arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, (cast Object'array args)))
+            ([#_"Var" this]                                                    (IFn'''invoke @this))
+            ([#_"Var" this, a1]                                                (IFn'''invoke @this, a1))
+            ([#_"Var" this, a1, a2]                                            (IFn'''invoke @this, a1, a2))
+            ([#_"Var" this, a1, a2, a3]                                        (IFn'''invoke @this, a1, a2, a3))
+            ([#_"Var" this, a1, a2, a3, a4]                                    (IFn'''invoke @this, a1, a2, a3, a4))
+            ([#_"Var" this, a1, a2, a3, a4, a5]                                (IFn'''invoke @this, a1, a2, a3, a4, a5))
+            ([#_"Var" this, a1, a2, a3, a4, a5, a6]                            (IFn'''invoke @this, a1, a2, a3, a4, a5, a6))
+            ([#_"Var" this, a1, a2, a3, a4, a5, a6, a7]                        (IFn'''invoke @this, a1, a2, a3, a4, a5, a6, a7))
+            ([#_"Var" this, a1, a2, a3, a4, a5, a6, a7, a8]                    (IFn'''invoke @this, a1, a2, a3, a4, a5, a6, a7, a8))
+            ([#_"Var" this, a1, a2, a3, a4, a5, a6, a7, a8, a9]                (IFn'''invoke @this, a1, a2, a3, a4, a5, a6, a7, a8, a9))
+            ([#_"Var" this, a1, a2, a3, a4, a5, a6, a7, a8, a9, #_"ISeq" args] (IFn'''invoke @this, a1, a2, a3, a4, a5, a6, a7, a8, a9, args))
         )
 
         (#_"Object" IFn'''applyTo [#_"Var" this, #_"ISeq" args]
-            (IFn'''applyTo (deref this), args)
+            (IFn'''applyTo @this, args)
         )
     )
 )
@@ -15729,21 +15407,31 @@
         )
     )
 
+;;;
+ ; Returns a persistent vector of the items in vector from start (inclusive) to end (exclusive).
+ ; If end is not supplied, defaults to (count vector). This operation is O(1) and very fast, as
+ ; the resulting vector shares structure with the original and no trimming is done.
+ ;;
+(defn subvec
+    ([v start] (subvec v start (count v)))
+    ([v start end] (RT'subvec v start end))
+)
+
     (defn #_"ISeq" RT'list
         ([] nil)
-        ([#_"Object" arg1] (PersistentList'new arg1))
-        ([#_"Object" arg1, #_"Object" arg2] (list* arg1 arg2 nil))
-        ([#_"Object" arg1, #_"Object" arg2, #_"Object" arg3] (list* arg1 arg2 arg3 nil))
-        ([#_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4] (list* arg1 arg2 arg3 arg4 nil))
-        ([#_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5] (list* arg1 arg2 arg3 arg4 arg5 nil))
+        ([a1] (PersistentList'new a1))
+        ([a1, a2] (list* a1 a2 nil))
+        ([a1, a2, a3] (list* a1 a2 a3 nil))
+        ([a1, a2, a3, a4] (list* a1 a2 a3 a4 nil))
+        ([a1, a2, a3, a4, a5] (list* a1 a2 a3 a4 a5 nil))
     )
 
     (defn #_"ISeq" RT'list*
-        ([#_"Object" arg1, #_"ISeq" args] (cons arg1 args))
-        ([#_"Object" arg1, #_"Object" arg2, #_"ISeq" args] (cons arg1 (cons arg2 args)))
-        ([#_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"ISeq" args] (cons arg1 (cons arg2 (cons arg3 args))))
-        ([#_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"ISeq" args] (cons arg1 (cons arg2 (cons arg3 (cons arg4 args)))))
-        ([#_"Object" arg1, #_"Object" arg2, #_"Object" arg3, #_"Object" arg4, #_"Object" arg5, #_"ISeq" args] (cons arg1 (cons arg2 (cons arg3 (cons arg4 (cons arg5 args))))))
+        ([a1, #_"ISeq" args] (cons a1 args))
+        ([a1, a2, #_"ISeq" args] (cons a1 (cons a2 args)))
+        ([a1, a2, a3, #_"ISeq" args] (cons a1 (cons a2 (cons a3 args))))
+        ([a1, a2, a3, a4, #_"ISeq" args] (cons a1 (cons a2 (cons a3 (cons a4 args)))))
+        ([a1, a2, a3, a4, a5, #_"ISeq" args] (cons a1 (cons a2 (cons a3 (cons a4 (cons a5 args))))))
     )
 
     (defn #_"ISeq" RT'arrayToSeq [#_"Object[]" a]
@@ -15803,16 +15491,6 @@
                 (throw! (str "unable to convert: " (class coll) " to Object[]"))
         )
     )
-
-    (defn #_"int" RT'length [#_"ISeq" s]
-        (loop-when-recur [#_"int" i 0 s s] (some? s) [(inc i) (next s)] => i)
-    )
-
-    (defn #_"int" RT'boundedLength [#_"ISeq" s, #_"int" limit]
-        (loop-when-recur [#_"int" i 0 s s] (and (some? s) (<= i limit)) [(inc i) (next s)] => i)
-    )
-
-    (defn #_"boolean" RT'isReduced [#_"Object" r] (instance? Reduced r))
 
     (declare LispReader'read)
 
@@ -16279,7 +15957,7 @@
             (fn [var-vals]
                 (loop-when-recur [v [] s (seq var-vals)] s [(conj (conj v `(var ~(first s))) (second s)) (next (next s))] => (seq v))
             )]
-        `(let []
+        `(do
             (push-thread-bindings (hash-map ~@(var-ize bindings)))
             (try
                 ~@body
@@ -16577,26 +16255,6 @@
     ([f?]   (filter (complement f?)  ))
     ([f? s] (filter (complement f?) s))
 )
-
-;;;
- ; Wraps x in a way such that a reduce will terminate with the value x.
- ;;
-(defn reduced [x] (Reduced'new x))
-
-;;;
- ; Returns true if x is the result of a call to reduced.
- ;;
-(defn reduced? [x] (RT'isReduced x))
-
-;;;
- ; If x is already reduced?, returns it, else returns (reduced x).
- ;;
-(defn ensure-reduced [x] (if (reduced? x) x (reduced x)))
-
-;;;
- ; If x is reduced?, returns (deref x), else returns x.
- ;;
-(defn unreduced [x] (if (reduced? x) (deref x) x))
 
 ;;;
  ; Returns a lazy sequence of the first n items in coll, or all items if there are fewer than n.
@@ -17120,16 +16778,6 @@
  ; Reads one object from the string s.
  ;;
 (defn read-string [s] (RT'readString s))
-
-;;;
- ; Returns a persistent vector of the items in vector from start (inclusive) to end (exclusive).
- ; If end is not supplied, defaults to (count vector). This operation is O(1) and very fast, as
- ; the resulting vector shares structure with the original and no trimming is done.
- ;;
-(defn subvec
-    ([v start] (subvec v start (count v)))
-    ([v start end] (RT'subvec v start end))
-)
 
 ;;;
  ; Evaluates x, then calls all of the methods and functions with the
@@ -19018,7 +18666,7 @@
           [interfaces methods opts] (parse-opts+specs opts+specs)
           ns-part                   (namespace-munge *ns*)
           classname                 (symbol (str ns-part "." gname))]
-        `(let []
+        `(do
             ~(emit-deftype* name gname (vec fields) (vec interfaces) methods opts)
             (import ~classname)
         )
