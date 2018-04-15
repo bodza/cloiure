@@ -1,5 +1,5 @@
 (ns cloiure.core
-    (:refer-clojure :only [*err* *in* *ns* *out* *print-length* *warn-on-reflection* + - < = alength aget apply aset assoc atom binding boolean case char cons count dec defmacro defn defprotocol defrecord even? extend-protocol extend-type first fn hash-map hash-set identical? import inc int int-array interleave intern key keyword? let list long loop map merge meta neg? next pos? reify satisfies? second seq seq? split-at str swap! symbol symbol? the-ns to-array val vary-meta vec vector vector? with-meta])
+    (:refer-clojure :only [*err* *in* *ns* *out* *print-length* *warn-on-reflection* + - < = alength aget aset assoc atom binding boolean case char cons count dec defmacro defn defprotocol defrecord even? extend-protocol extend-type first fn hash-map hash-set identical? import inc int int-array interleave intern key keyword? let list long loop map merge meta neg? next pos? reify satisfies? second seq seq? split-at str swap! symbol symbol? the-ns to-array val vary-meta vec vector vector? with-meta])
 )
 
 (defmacro § [& _])
@@ -724,6 +724,37 @@
  ;;
 (defn ifn? [x] (or (satisfies? IFn x) (instance? clojure.lang.IFn x)))
 
+(defn- spread [s]
+    (cond
+        (nil? s) nil
+        (nil? (next s)) (seq (first s))
+        :else (cons (first s) (spread (next s)))
+    )
+)
+
+;;;
+ ; Creates a new seq containing the items prepended to the rest,
+ ; the last of which will be treated as a sequence.
+ ;;
+(defn list*
+    ([s] (seq s))
+    ([a s] (cons a s))
+    ([a b s] (cons a (cons b s)))
+    ([a b c s] (cons a (cons b (cons c s))))
+    ([a b c d & s] (cons a (cons b (cons c (cons d (spread s))))))
+)
+
+;;;
+ ; Applies fn f to the argument list formed by prepending intervening arguments to args.
+ ;;
+(defn apply
+    ([^cloiure.core.IFn f s] (IFn'''applyTo f (seq s)))
+    ([^cloiure.core.IFn f a s] (IFn'''applyTo f (list* a s)))
+    ([^cloiure.core.IFn f a b s] (IFn'''applyTo f (list* a b s)))
+    ([^cloiure.core.IFn f a b c s] (IFn'''applyTo f (list* a b c s)))
+    ([^cloiure.core.IFn f a b c d & s] (IFn'''applyTo f (cons a (cons b (cons c (cons d (spread s)))))))
+)
+
 (java-ns cloiure.lang.Fn
     (defprotocol Fn)
 )
@@ -1112,31 +1143,26 @@
     (defrecord Atom []) (extend-type Atom IAtom IMeta IDeref IReference)
 )
 
-(declare AFn'''throwArity)
-
 (java-ns cloiure.lang.AFn
     #_abstract
-    (defrecord AFn []) (extend-type AFn IFn) (§ soon
-        #_abstract
-        (#_"Object" AFn'''throwArity [#_"AFn" this, #_"int" n])
-    )
+    (defprotocol AFn) (extend-type cloiure.core.AFn IFn)
 )
 
 (java-ns cloiure.lang.Symbol
-    (defrecord Symbol #_"AFn" []) (extend-type Symbol #_"Comparable" IFn IHashEq IMeta INamed IObj IObject)
+    (defrecord Symbol []) (extend-type Symbol AFn #_"Comparable" IFn IHashEq IMeta INamed IObj IObject)
 )
 
 (§ defn symbol? [x] (or (instance? Symbol x) (instance? clojure.lang.Symbol x)))
 
 (java-ns cloiure.lang.Keyword
-    (defrecord Keyword []) (extend-type Keyword #_"Comparable" IFn IHashEq INamed IObject)
+    (defrecord Keyword []) (extend-type Keyword AFn #_"Comparable" IFn IHashEq INamed IObject)
 )
 
 (§ defn keyword? [x] (or (instance? Keyword x) (instance? clojure.lang.Keyword x)))
 
 (java-ns cloiure.lang.AFunction
     #_abstract
-    (defrecord AFunction #_"AFn" []) (extend-type AFunction #_"Comparator" Fn IFn IMeta IObj)
+    (defrecord AFunction []) (extend-type AFunction AFn #_"Comparator" Fn IFn)
 )
 
 (java-ns cloiure.lang.RestFn
@@ -1157,12 +1183,12 @@
     )
 
     #_abstract
-    (defrecord RestFn #_"AFunction" []) (extend-type RestFn #_"Comparator" Fn IFn IMeta IObj IRestFn)
+    (defrecord RestFn #_"AFunction" []) (extend-type RestFn #_"Comparator" Fn IFn IRestFn)
 )
 
 (java-ns cloiure.lang.ASeq
     #_abstract
-    (defrecord ASeq []) (extend-type ASeq IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+    (defprotocol ASeq) (extend-type cloiure.core.ASeq IHashEq IObject IPersistentCollection ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.LazySeq
@@ -1171,19 +1197,19 @@
 
 (java-ns cloiure.lang.APersistentMap
     #_abstract
-    (defrecord APersistentMap #_"AFn" []) (extend-type APersistentMap Associative Counted IFn IHashEq ILookup IObject IPersistentCollection IPersistentMap Seqable)
+    (defrecord APersistentMap []) (extend-type APersistentMap AFn Associative Counted IFn IHashEq ILookup IObject IPersistentCollection IPersistentMap Seqable)
 )
 
 (java-ns cloiure.lang.APersistentSet
     #_abstract
-    (defrecord APersistentSet #_"AFn" []) (extend-type APersistentSet Counted IFn IHashEq IObject IPersistentCollection IPersistentSet Seqable)
+    (defrecord APersistentSet []) (extend-type APersistentSet AFn Counted IFn IHashEq IObject IPersistentCollection IPersistentSet Seqable)
 )
 
 (java-ns cloiure.lang.APersistentVector
-    (defrecord VSeq #_"ASeq" []) (extend-type VSeq Counted IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
-    (defrecord RSeq #_"ASeq" []) (extend-type RSeq Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+    (defrecord VSeq []) (extend-type VSeq ASeq Counted IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
+    (defrecord RSeq []) (extend-type RSeq ASeq Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
     #_abstract
-    (defrecord APersistentVector #_"AFn" []) (extend-type APersistentVector Associative #_"Comparable" Counted IFn IHashEq ILookup Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord APersistentVector []) (extend-type APersistentVector AFn Associative #_"Comparable" Counted IFn IHashEq ILookup Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
     (defrecord SubVector #_"APersistentVector" []) (extend-type SubVector Associative #_"Comparable" Counted IFn IHashEq ILookup IMeta Indexed IObj IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
 )
 
@@ -1193,41 +1219,30 @@
 )
 
 (java-ns cloiure.lang.ArraySeq
-    (defrecord ArraySeq #_"ASeq" []) (extend-type ArraySeq Counted IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
+    (defrecord ArraySeq []) (extend-type ArraySeq ASeq Counted IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
 )
 
-(declare ATransientMap'''ensureEditable)
-(declare ATransientMap'''doAssoc)
-(declare ATransientMap'''doDissoc)
-(declare ATransientMap'''doValAt)
-(declare ATransientMap'''doCount)
-(declare ATransientMap'''doPersistent)
-
 (java-ns cloiure.lang.ATransientMap
-    #_abstract
-    (defrecord ATransientMap #_"AFn" []) (extend-type ATransientMap Counted IFn ILookup ITransientAssociative ITransientCollection ITransientMap) (§ soon
-        #_abstract
-        (#_"void" ATransientMap'''ensureEditable [#_"ATransientMap" this])
-        #_abstract
-        (#_"ITransientMap" ATransientMap'''doAssoc [#_"ATransientMap" this, #_"Object" key, #_"Object" val])
-        #_abstract
-        (#_"ITransientMap" ATransientMap'''doDissoc [#_"ATransientMap" this, #_"Object" key])
-        #_abstract
-        (#_"Object" ATransientMap'''doValAt [#_"ATransientMap" this, #_"Object" key, #_"Object" notFound])
-        #_abstract
-        (#_"int" ATransientMap'''doCount [#_"ATransientMap" this])
-        #_abstract
-        (#_"IPersistentMap" ATransientMap'''doPersistent [#_"ATransientMap" this])
+    (defprotocol IATransientMap
+        (#_"void" IATransientMap'''ensureEditable [#_"IATransientMap" this])
+        (#_"ITransientMap" IATransientMap'''doAssoc [#_"IATransientMap" this, #_"Object" key, #_"Object" val])
+        (#_"ITransientMap" IATransientMap'''doDissoc [#_"IATransientMap" this, #_"Object" key])
+        (#_"Object" IATransientMap'''doValAt [#_"IATransientMap" this, #_"Object" key, #_"Object" notFound])
+        (#_"int" IATransientMap'''doCount [#_"IATransientMap" this])
+        (#_"IPersistentMap" IATransientMap'''doPersistent [#_"IATransientMap" this])
     )
+
+    #_abstract
+    (defrecord ATransientMap []) (extend-type ATransientMap AFn Counted IATransientMap IFn ILookup ITransientAssociative ITransientCollection ITransientMap)
 )
 
 (java-ns cloiure.lang.ATransientSet
     #_abstract
-    (defrecord ATransientSet #_"AFn" []) (extend-type ATransientSet Counted IFn ITransientCollection ITransientSet)
+    (defrecord ATransientSet []) (extend-type ATransientSet AFn Counted IFn ITransientCollection ITransientSet)
 )
 
 (java-ns cloiure.lang.Cons
-    (defrecord Cons #_"ASeq" []) (extend-type Cons Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+    (defrecord Cons []) (extend-type Cons ASeq Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.Delay
@@ -1235,7 +1250,7 @@
 )
 
 (java-ns cloiure.lang.Iterate
-    (defrecord Iterate #_"ASeq" []) (extend-type Iterate IHashEq IMeta IObj IObject IPending IPersistentCollection IReduce ISeq Seqable Sequential)
+    (defrecord Iterate []) (extend-type Iterate ASeq IHashEq IMeta IObj IObject IPending IPersistentCollection IReduce ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.KeywordLookupSite
@@ -1256,18 +1271,18 @@
 )
 
 (java-ns cloiure.lang.PersistentArrayMap
-    (defrecord MSeq #_"ASeq" []) (extend-type MSeq Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
-    (defrecord TransientArrayMap #_"ATransientMap" []) (extend-type TransientArrayMap Counted IFn ILookup ITransientAssociative ITransientCollection ITransientMap)
+    (defrecord MSeq []) (extend-type MSeq ASeq Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+    (defrecord TransientArrayMap #_"ATransientMap" []) (extend-type TransientArrayMap Counted IATransientMap IFn ILookup ITransientAssociative ITransientCollection ITransientMap)
     (defrecord PersistentArrayMap #_"APersistentMap" []) (extend-type PersistentArrayMap Associative Counted IEditableCollection IFn IHashEq IKVReduce ILookup IMeta IObj IObject IPersistentCollection IPersistentMap Seqable)
 )
 
 (java-ns cloiure.lang.PersistentHashMap
-    (defrecord TransientHashMap #_"ATransientMap" []) (extend-type TransientHashMap Counted IFn ILookup ITransientAssociative ITransientCollection ITransientMap)
-    (defrecord HSeq #_"ASeq" []) (extend-type HSeq IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+    (defrecord TransientHashMap #_"ATransientMap" []) (extend-type TransientHashMap Counted IATransientMap IFn ILookup ITransientAssociative ITransientCollection ITransientMap)
+    (defrecord HSeq []) (extend-type HSeq ASeq IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
     (defrecord ArrayNode []) (extend-type ArrayNode INode)
     (defrecord BitmapIndexedNode []) (extend-type BitmapIndexedNode INode)
     (defrecord HashCollisionNode []) (extend-type HashCollisionNode INode)
-    (defrecord NodeSeq #_"ASeq" []) (extend-type NodeSeq IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+    (defrecord NodeSeq []) (extend-type NodeSeq ASeq IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
     (defrecord PersistentHashMap #_"APersistentMap" []) (extend-type PersistentHashMap Associative Counted IEditableCollection IFn IHashEq IKVReduce ILookup IMeta IObj IObject IPersistentCollection IPersistentMap Seqable)
 )
 
@@ -1277,63 +1292,42 @@
 )
 
 (java-ns cloiure.lang.PersistentList
-    (defrecord Primordial #_"RestFn" []) (extend-type Primordial #_"Comparator" Fn IFn IMeta IObj IRestFn)
+    (defrecord Primordial #_"RestFn" []) (extend-type Primordial #_"Comparator" Fn IFn IRestFn)
     (defrecord EmptyList []) (extend-type EmptyList Counted IHashEq IMeta IObj IObject IPersistentCollection IPersistentList IPersistentStack ISeq Seqable Sequential)
-    (defrecord PersistentList #_"ASeq" []) (extend-type PersistentList Counted IHashEq IMeta IObj IObject IPersistentCollection IPersistentList IPersistentStack IReduce ISeq Seqable Sequential)
+    (defrecord PersistentList []) (extend-type PersistentList ASeq Counted IHashEq IMeta IObj IObject IPersistentCollection IPersistentList IPersistentStack IReduce ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.PersistentQueue
-    (defrecord QSeq #_"ASeq" []) (extend-type QSeq Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+    (defrecord QSeq []) (extend-type QSeq ASeq Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
     (defrecord PersistentQueue []) (extend-type PersistentQueue Counted IHashEq IMeta IObj IObject IPersistentCollection IPersistentList IPersistentStack Seqable Sequential)
 )
 
-(declare TNode'''left)
-(declare TNode'''right)
-(declare TNode'''addLeft)
-(declare TNode'''addRight)
-(declare TNode'''removeLeft)
-(declare TNode'''removeRight)
-(declare TNode'''blacken)
-(declare TNode'''redden)
-(declare TNode'''balanceLeft)
-(declare TNode'''balanceRight)
-(declare TNode'''replace)
-
 (java-ns cloiure.lang.PersistentTreeMap
-    #_abstract
-    (defrecord TNode #_"AMapEntry" []) (extend-type TNode Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential) (§ soon
-        #_abstract
-        (#_"TNode" TNode'''left [#_"TNode" this])
-        #_abstract
-        (#_"TNode" TNode'''right [#_"TNode" this])
-        #_abstract
-        (#_"TNode" TNode'''addLeft [#_"TNode" this, #_"TNode" ins])
-        #_abstract
-        (#_"TNode" TNode'''addRight [#_"TNode" this, #_"TNode" ins])
-        #_abstract
-        (#_"TNode" TNode'''removeLeft [#_"TNode" this, #_"TNode" del])
-        #_abstract
-        (#_"TNode" TNode'''removeRight [#_"TNode" this, #_"TNode" del])
-        #_abstract
-        (#_"TNode" TNode'''blacken [#_"TNode" this])
-        #_abstract
-        (#_"TNode" TNode'''redden [#_"TNode" this])
-        #_abstract
-        (#_"TNode" TNode'''balanceLeft [#_"TNode" this, #_"TNode" parent])
-        #_abstract
-        (#_"TNode" TNode'''balanceRight [#_"TNode" this, #_"TNode" parent])
-        #_abstract
-        (#_"TNode" TNode'''replace [#_"TNode" this, #_"Object" key, #_"Object" val, #_"TNode" left, #_"TNode" right])
+    (defprotocol ITNode
+        (#_"ITNode" ITNode'''left [#_"ITNode" this])
+        (#_"ITNode" ITNode'''right [#_"ITNode" this])
+        (#_"ITNode" ITNode'''addLeft [#_"ITNode" this, #_"ITNode" ins])
+        (#_"ITNode" ITNode'''addRight [#_"ITNode" this, #_"ITNode" ins])
+        (#_"ITNode" ITNode'''removeLeft [#_"ITNode" this, #_"ITNode" del])
+        (#_"ITNode" ITNode'''removeRight [#_"ITNode" this, #_"ITNode" del])
+        (#_"ITNode" ITNode'''blacken [#_"ITNode" this])
+        (#_"ITNode" ITNode'''redden [#_"ITNode" this])
+        (#_"ITNode" ITNode'''balanceLeft [#_"ITNode" this, #_"ITNode" parent])
+        (#_"ITNode" ITNode'''balanceRight [#_"ITNode" this, #_"ITNode" parent])
+        (#_"ITNode" ITNode'''replace [#_"ITNode" this, #_"Object" key, #_"Object" val, #_"ITNode" left, #_"ITNode" right])
     )
-    (defrecord Black #_"TNode" []) (extend-type Black Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
-    (defrecord BlackVal #_"Black" []) (extend-type BlackVal Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
-    (defrecord BlackBranch #_"Black" []) (extend-type BlackBranch Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
-    (defrecord BlackBranchVal #_"BlackBranch" []) (extend-type BlackBranchVal Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
-    (defrecord Red #_"TNode" []) (extend-type Red Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
-    (defrecord RedVal #_"Red" []) (extend-type RedVal Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
-    (defrecord RedBranch #_"Red" []) (extend-type RedBranch Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
-    (defrecord RedBranchVal #_"RedBranch" []) (extend-type RedBranchVal Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
-    (defrecord TSeq #_"ASeq" []) (extend-type TSeq Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+
+    #_abstract
+    (defrecord TNode #_"AMapEntry" []) (extend-type TNode Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
+    (defrecord Black #_"TNode" []) (extend-type Black Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
+    (defrecord BlackVal #_"Black" []) (extend-type BlackVal Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
+    (defrecord BlackBranch #_"Black" []) (extend-type BlackBranch Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
+    (defrecord BlackBranchVal #_"BlackBranch" []) (extend-type BlackBranchVal Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
+    (defrecord Red #_"TNode" []) (extend-type Red Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
+    (defrecord RedVal #_"Red" []) (extend-type RedVal Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
+    (defrecord RedBranch #_"Red" []) (extend-type RedBranch Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
+    (defrecord RedBranchVal #_"RedBranch" []) (extend-type RedBranchVal Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
+    (defrecord TSeq []) (extend-type TSeq ASeq Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
     (defrecord PersistentTreeMap #_"APersistentMap" []) (extend-type PersistentTreeMap Associative Counted IFn IHashEq IKVReduce ILookup IMeta IObj IObject IPersistentCollection IPersistentMap Reversible Seqable Sorted)
 )
 
@@ -1343,16 +1337,16 @@
 
 (java-ns cloiure.lang.PersistentVector
     (defrecord VNode [])
-    (defrecord TransientVector #_"AFn" []) (extend-type TransientVector Counted IFn ILookup Indexed ITransientAssociative ITransientCollection ITransientVector)
+    (defrecord TransientVector []) (extend-type TransientVector AFn Counted IFn ILookup Indexed ITransientAssociative ITransientCollection ITransientVector)
     (defrecord PersistentVector #_"APersistentVector" []) (extend-type PersistentVector Associative #_"Comparable" Counted IEditableCollection IFn IHashEq IKVReduce ILookup IMeta Indexed IObj IObject IPersistentCollection IPersistentStack IPersistentVector IReduce Reversible Seqable Sequential)
 )
 
 (java-ns cloiure.lang.Repeat
-    (defrecord Repeat #_"ASeq" []) (extend-type Repeat IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
+    (defrecord Repeat []) (extend-type Repeat ASeq IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.Range
-    (defrecord Range #_"ASeq" []) (extend-type Range Counted IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
+    (defrecord Range []) (extend-type Range ASeq Counted IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.Reduced
@@ -1360,7 +1354,7 @@
 )
 
 (java-ns cloiure.lang.StringSeq
-    (defrecord StringSeq #_"ASeq" []) (extend-type StringSeq Counted IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
+    (defrecord StringSeq []) (extend-type StringSeq ASeq Counted IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
 )
 
 (java-ns cloiure.lang.Tuple
@@ -1369,7 +1363,7 @@
 )
 
 (java-ns cloiure.lang.Var
-    (defrecord Unbound #_"AFn" []) (extend-type Unbound IFn IObject)
+    (defrecord Unbound []) (extend-type Unbound AFn IFn IObject)
     (defrecord Var []) (extend-type Var IDeref IFn IMeta IObject IReference)
 )
 
@@ -5170,12 +5164,12 @@
                 (when (and (some? c) (Modifier/isPublic (.getModifiers c)))
                     ;; can't emit derived fn types due to visibility
                     (cond
-                        (.isAssignableFrom LazySeq, c) (Type/getType cloiure.core.ISeq)
-                        (= c Keyword)                  (Type/getType Keyword)
-                        (.isAssignableFrom RestFn, c)  (Type/getType cloiure.core.IRestFn)
-                        (.isAssignableFrom AFn, c)     (Type/getType AFn)
-                        (= c Var)                      (Type/getType Var)
-                        (= c String)                   (Type/getType String)
+                        (.isAssignableFrom LazySeq, c)          (Type/getType cloiure.core.ISeq)
+                        (= c Keyword)                           (Type/getType Keyword)
+                        (.isAssignableFrom RestFn, c)           (Type/getType cloiure.core.IRestFn)
+                        (.isAssignableFrom cloiure.core.AFn, c) (Type/getType cloiure.core.AFn)
+                        (= c Var)                               (Type/getType Var)
+                        (= c String)                            (Type/getType String)
                     )
                 )
                 (Type/getType Object)
@@ -7402,8 +7396,6 @@
         )
     )
 
-    (declare list*)
-
     (defn #_"Object" Compiler'macroexpand1 [#_"Object" form]
         (when (seq? form) => form
             (let-when [#_"Object" op (first form)] (not (Compiler'isSpecial op)) => form
@@ -9317,23 +9309,25 @@
 (java-ns cloiure.lang.AFn
 
 (class-ns AFn
-    (defn #_"AFn" AFn'new []
-        (AFn.)
+    (declare Compiler'demunge)
+
+    (defn #_"void" AFn'throwArity [#_"IFn" f, #_"int" n]
+        (throw! (str "wrong number of args (" (if (neg? n) (str "more than " (- n)) n) ") passed to: " (Compiler'demunge (.getName (class f)))))
     )
 
-    (extend-type AFn IFn
+    (extend-type cloiure.core.AFn IFn
         (#_"Object" IFn'''invoke
-            ([#_"AFn" this]                                                    (AFn'''throwArity this, 0))
-            ([#_"AFn" this, a1]                                                (AFn'''throwArity this, 1))
-            ([#_"AFn" this, a1, a2]                                            (AFn'''throwArity this, 2))
-            ([#_"AFn" this, a1, a2, a3]                                        (AFn'''throwArity this, 3))
-            ([#_"AFn" this, a1, a2, a3, a4]                                    (AFn'''throwArity this, 4))
-            ([#_"AFn" this, a1, a2, a3, a4, a5]                                (AFn'''throwArity this, 5))
-            ([#_"AFn" this, a1, a2, a3, a4, a5, a6]                            (AFn'''throwArity this, 6))
-            ([#_"AFn" this, a1, a2, a3, a4, a5, a6, a7]                        (AFn'''throwArity this, 7))
-            ([#_"AFn" this, a1, a2, a3, a4, a5, a6, a7, a8]                    (AFn'''throwArity this, 8))
-            ([#_"AFn" this, a1, a2, a3, a4, a5, a6, a7, a8, a9]                (AFn'''throwArity this, 9))
-            ([#_"AFn" this, a1, a2, a3, a4, a5, a6, a7, a8, a9, #_"ISeq" args] (AFn'''throwArity this, 10))
+            ([#_"AFn" this]                                                    (AFn'throwArity this, 0))
+            ([#_"AFn" this, a1]                                                (AFn'throwArity this, 1))
+            ([#_"AFn" this, a1, a2]                                            (AFn'throwArity this, 2))
+            ([#_"AFn" this, a1, a2, a3]                                        (AFn'throwArity this, 3))
+            ([#_"AFn" this, a1, a2, a3, a4]                                    (AFn'throwArity this, 4))
+            ([#_"AFn" this, a1, a2, a3, a4, a5]                                (AFn'throwArity this, 5))
+            ([#_"AFn" this, a1, a2, a3, a4, a5, a6]                            (AFn'throwArity this, 6))
+            ([#_"AFn" this, a1, a2, a3, a4, a5, a6, a7]                        (AFn'throwArity this, 7))
+            ([#_"AFn" this, a1, a2, a3, a4, a5, a6, a7, a8]                    (AFn'throwArity this, 8))
+            ([#_"AFn" this, a1, a2, a3, a4, a5, a6, a7, a8, a9]                (AFn'throwArity this, 9))
+            ([#_"AFn" this, a1, a2, a3, a4, a5, a6, a7, a8, a9, #_"ISeq" args] (AFn'throwArity this, -9))
         )
     )
 
@@ -9353,17 +9347,10 @@
         )
     )
 
-    (extend-type AFn IFn
+    (extend-type cloiure.core.AFn IFn
         (#_"Object" IFn'''applyTo [#_"AFn" this, #_"ISeq" args]
             (AFn'applyToHelper this, args)
         )
-    )
-
-    (declare Compiler'demunge)
-
-    #_override
-    (defn #_"Object" AFn'''throwArity--AFn [#_"AFn" this, #_"int" n]
-        (throw! (str "wrong number of args (" n ") passed to: " (Compiler'demunge (.getName (class this)))))
     )
 )
 )
@@ -9374,7 +9361,7 @@
     (defn- #_"Symbol" Symbol'new
         ([#_"String" ns, #_"String" name] (Symbol'new nil, ns, name))
         ([#_"IPersistentMap" meta, #_"String" ns, #_"String" name]
-            (merge (Symbol.) (AFn'new)
+            (merge (Symbol.)
                 (hash-map
                     #_"IPersistentMap" :_meta meta
                     #_"String" :ns ns
@@ -9410,12 +9397,6 @@
         )
     )
 
-    (extend-type Symbol IObject
-        (#_"String" IObject'''toString [#_"Symbol" this]
-            (if (some? (:ns this)) (str (:ns this) "/" (:name this)) (:name this))
-        )
-    )
-
     (extend-type Symbol INamed
         (#_"String" INamed'''getNamespace [#_"Symbol" this]
             (:ns this)
@@ -9435,6 +9416,10 @@
 
         (#_"int" IObject'''hashCode [#_"Symbol" this]
             (Util'hashCombine (IObject'''hashCode (:name this)), (IObject'''hashCode (:ns this)))
+        )
+
+        (#_"String" IObject'''toString [#_"Symbol" this]
+            (if (some? (:ns this)) (str (:ns this) "/" (:name this)) (:name this))
         )
     )
 
@@ -9514,6 +9499,16 @@
         )
     )
 
+    (extend-type Keyword INamed
+        (#_"String" INamed'''getNamespace [#_"Keyword" this]
+            (INamed'''getNamespace (:sym this))
+        )
+
+        (#_"String" INamed'''getName [#_"Keyword" this]
+            (INamed'''getName (:sym this))
+        )
+    )
+
     (extend-type Keyword IHashEq
         (#_"int" IHashEq'''hasheq [#_"Keyword" this]
             (:hasheq this)
@@ -9535,24 +9530,10 @@
         (compare (:sym this) (:sym that))
     )
 
-    (extend-type Keyword INamed
-        (#_"String" INamed'''getNamespace [#_"Keyword" this]
-            (INamed'''getNamespace (:sym this))
-        )
-
-        (#_"String" INamed'''getName [#_"Keyword" this]
-            (INamed'''getName (:sym this))
-        )
-    )
-
     (extend-type Keyword IFn
         (#_"Object" IFn'''invoke
             ([#_"Keyword" this, #_"Object" obj] (get obj this))
             ([#_"Keyword" this, #_"Object" obj, #_"Object" notFound] (get obj this notFound))
-        )
-
-        (#_"Object" IFn'''applyTo [#_"Keyword" this, #_"ISeq" args]
-            (AFn'applyToHelper this, args)
         )
     )
 )
@@ -9562,22 +9543,10 @@
 
 (class-ns AFunction
     (defn #_"AFunction" AFunction'new []
-        (merge (AFunction.) (AFn'new)
+        (merge (AFunction.)
             (hash-map
                 #_"MethodImplCache'" :__methodImplCache (atom nil)
             )
-        )
-    )
-
-    (extend-type AFunction IMeta
-        (#_"IPersistentMap" IMeta'''meta [#_"AFunction" this]
-            nil
-        )
-    )
-
-    (extend-type AFunction IObj
-        (#_"AFunction" IObj'''withMeta [#_"AFunction" this, #_"IPersistentMap" meta]
-            (throw! "unsupported operation")
         )
     )
 
@@ -9629,7 +9598,7 @@
                     7 (let [[a1 a2 a3 a4 a5 a6 a7 & s] s]       (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, s))
                     8 (let [[a1 a2 a3 a4 a5 a6 a7 a8 & s] s]    (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, a8, s))
                     9 (let [[a1 a2 a3 a4 a5 a6 a7 a8 a9 & s] s] (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, a8, a9, s))
-                      (AFn'''throwArity this, -1)
+                      (AFn'throwArity this, -9)
                 )
             )
         )
@@ -9638,7 +9607,7 @@
             ([#_"RestFn" this]
                 (case (IRestFn'''requiredArity this)
                     0 (IRestFn'''doInvoke this, nil)
-                      (AFn'''throwArity this, 0)
+                      (AFn'throwArity this, 0)
                 )
             )
 
@@ -9646,7 +9615,7 @@
                 (case (IRestFn'''requiredArity this)
                     0 (IRestFn'''doInvoke this, (list a1))
                     1 (IRestFn'''doInvoke this, a1, nil)
-                      (AFn'''throwArity this, 1)
+                      (AFn'throwArity this, 1)
                 )
             )
 
@@ -9655,7 +9624,7 @@
                     0 (IRestFn'''doInvoke this, (list a1 a2))
                     1 (IRestFn'''doInvoke this, a1, (list a2))
                     2 (IRestFn'''doInvoke this, a1, a2, nil)
-                      (AFn'''throwArity this, 2)
+                      (AFn'throwArity this, 2)
                 )
             )
 
@@ -9665,7 +9634,7 @@
                     1 (IRestFn'''doInvoke this, a1, (list a2 a3))
                     2 (IRestFn'''doInvoke this, a1, a2, (list a3))
                     3 (IRestFn'''doInvoke this, a1, a2, a3, nil)
-                      (AFn'''throwArity this, 3)
+                      (AFn'throwArity this, 3)
                 )
             )
 
@@ -9676,7 +9645,7 @@
                     2 (IRestFn'''doInvoke this, a1, a2, (list a3 a4))
                     3 (IRestFn'''doInvoke this, a1, a2, a3, (list a4))
                     4 (IRestFn'''doInvoke this, a1, a2, a3, a4, nil)
-                      (AFn'''throwArity this, 4)
+                      (AFn'throwArity this, 4)
                 )
             )
 
@@ -9688,7 +9657,7 @@
                     3 (IRestFn'''doInvoke this, a1, a2, a3, (list a4 a5))
                     4 (IRestFn'''doInvoke this, a1, a2, a3, a4, (list a5))
                     5 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, nil)
-                      (AFn'''throwArity this, 5)
+                      (AFn'throwArity this, 5)
                 )
             )
 
@@ -9701,7 +9670,7 @@
                     4 (IRestFn'''doInvoke this, a1, a2, a3, a4, (list a5 a6))
                     5 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, (list a6))
                     6 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, nil)
-                      (AFn'''throwArity this, 6)
+                      (AFn'throwArity this, 6)
                 )
             )
 
@@ -9715,7 +9684,7 @@
                     5 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, (list a6 a7))
                     6 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, (list a7))
                     7 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, nil)
-                      (AFn'''throwArity this, 7)
+                      (AFn'throwArity this, 7)
                 )
             )
 
@@ -9730,7 +9699,7 @@
                     6 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, (list a7 a8))
                     7 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, (list a8))
                     8 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, a8, nil)
-                      (AFn'''throwArity this, 8)
+                      (AFn'throwArity this, 8)
                 )
             )
 
@@ -9746,7 +9715,7 @@
                     7 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, (list a8 a9))
                     8 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, a8, (list a9))
                     9 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, a8, a9, nil)
-                      (AFn'''throwArity this, 9)
+                      (AFn'throwArity this, 9)
                 )
             )
 
@@ -9762,7 +9731,7 @@
                     7 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, (list* a8 a9 args))
                     8 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, a8, (list* a9 args))
                     9 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, a8, a9, args)
-                      (AFn'''throwArity this, 10)
+                      (AFn'throwArity this, -9)
                 )
             )
         )
@@ -9773,33 +9742,19 @@
 (java-ns cloiure.lang.ASeq
 
 (class-ns ASeq
-    (defn #_"ASeq" ASeq'new [#_"IPersistentMap" meta]
-        (merge (ASeq.)
-            (hash-map
-                #_"IPersistentMap" :_meta meta
-            )
-        )
-    )
-
-    (extend-type ASeq IPersistentCollection
+    (extend-type cloiure.core.ASeq IPersistentCollection
         (#_"IPersistentCollection" IPersistentCollection'''empty [#_"ASeq" this]
             ()
         )
     )
 
-    (extend-type ASeq IMeta
-        (#_"IPersistentMap" IMeta'''meta [#_"ASeq" this]
-            (:_meta this)
-        )
-    )
-
-    (extend-type ASeq Seqable
+    (extend-type cloiure.core.ASeq Seqable
         (#_"ISeq" Seqable'''seq [#_"ASeq" this]
             this
         )
     )
 
-    (extend-type ASeq IHashEq
+    (extend-type cloiure.core.ASeq IHashEq
         (#_"int" IHashEq'''hasheq [#_"ASeq" this]
             (Murmur3'hashOrdered this)
         )
@@ -9807,7 +9762,7 @@
 
     (declare RT'printString)
 
-    (extend-type ASeq IObject
+    (extend-type cloiure.core.ASeq IObject
         (#_"boolean" IObject'''equals [#_"ASeq" this, #_"Object" that]
             (or (identical? this that)
                 (and (sequential? that)
@@ -9943,7 +9898,7 @@
 
 (class-ns APersistentMap
     (defn #_"APersistentMap" APersistentMap'new []
-        (merge (APersistentMap.) (AFn'new))
+        (APersistentMap.)
     )
 
     (extend-type APersistentMap IObject
@@ -10014,7 +9969,7 @@
 
 (class-ns APersistentSet
     (defn #_"APersistentSet" APersistentSet'new [#_"IPersistentMap" impl]
-        (merge (APersistentSet.) (AFn'new)
+        (merge (APersistentSet.)
             (hash-map
                 #_"IPersistentMap" :impl impl
             )
@@ -10088,12 +10043,20 @@
     (defn #_"VSeq" VSeq'new
         ([#_"IPersistentVector" v, #_"int" i] (VSeq'new nil, v, i))
         ([#_"IPersistentMap" meta, #_"IPersistentVector" v, #_"int" i]
-            (merge (VSeq.) (ASeq'new meta)
+            (merge (VSeq.)
                 (hash-map
+                    #_"IPersistentMap" :_meta meta
+
                     #_"IPersistentVector" :v v
                     #_"int" :i i
                 )
             )
+        )
+    )
+
+    (extend-type VSeq IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"VSeq" this]
+            (:_meta this)
         )
     )
 
@@ -10151,12 +10114,20 @@
     (defn #_"RSeq" RSeq'new
         ([#_"IPersistentVector" v, #_"int" i] (RSeq'new nil, v, i))
         ([#_"IPersistentMap" meta, #_"IPersistentVector" v, #_"int" i]
-            (merge (RSeq.) (ASeq'new meta)
+            (merge (RSeq.)
                 (hash-map
+                    #_"IPersistentMap" :_meta meta
+
                     #_"IPersistentVector" :v v
                     #_"int" :i i
                 )
             )
+        )
+    )
+
+    (extend-type RSeq IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"RSeq" this]
+            (:_meta this)
         )
     )
 
@@ -10187,7 +10158,7 @@
 
 (class-ns APersistentVector
     (defn #_"APersistentVector" APersistentVector'new []
-        (merge (APersistentVector.) (AFn'new))
+        (APersistentVector.)
     )
 
     (extend-type APersistentVector IObject
@@ -10497,12 +10468,20 @@
     (defn #_"ArraySeq" ArraySeq'new
         ([#_"Object[]" a, #_"int" i] (ArraySeq'new nil, a, i))
         ([#_"IPersistentMap" meta, #_"Object[]" a, #_"int" i]
-            (merge (ArraySeq.) (ASeq'new meta)
+            (merge (ArraySeq.)
                 (hash-map
+                    #_"IPersistentMap" :_meta meta
+
                     #_"Object[]" :a a
                     #_"int" :i i
                 )
             )
+        )
+    )
+
+    (extend-type ArraySeq IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"ArraySeq" this]
+            (:_meta this)
         )
     )
 
@@ -10573,12 +10552,12 @@
 
 (class-ns ATransientMap
     (defn #_"ATransientMap" ATransientMap'new []
-        (merge (ATransientMap.) (AFn'new))
+        (ATransientMap.)
     )
 
     #_method
     (defn #_"ITransientMap" ATransientMap''conj [#_"ATransientMap" this, #_"Object" o]
-        (ATransientMap'''ensureEditable this)
+        (IATransientMap'''ensureEditable this)
         (condp satisfies? o
             IMapEntry
                 (assoc this (key o) (val o))
@@ -10604,22 +10583,22 @@
 
     (extend-type ATransientMap ITransientAssociative
         (#_"ITransientMap" ITransientAssociative'''assoc [#_"ATransientMap" this, #_"Object" key, #_"Object" val]
-            (ATransientMap'''ensureEditable this)
-            (ATransientMap'''doAssoc this, key, val)
+            (IATransientMap'''ensureEditable this)
+            (IATransientMap'''doAssoc this, key, val)
         )
     )
 
     (extend-type ATransientMap ITransientMap
         (#_"ITransientMap" ITransientMap'''dissoc [#_"ATransientMap" this, #_"Object" key]
-            (ATransientMap'''ensureEditable this)
-            (ATransientMap'''doDissoc this, key)
+            (IATransientMap'''ensureEditable this)
+            (IATransientMap'''doDissoc this, key)
         )
     )
 
     (extend-type ATransientMap ITransientCollection
         (#_"IPersistentMap" ITransientCollection'''persistent [#_"ATransientMap" this]
-            (ATransientMap'''ensureEditable this)
-            (ATransientMap'''doPersistent this)
+            (IATransientMap'''ensureEditable this)
+            (IATransientMap'''doPersistent this)
         )
     )
 
@@ -10627,8 +10606,8 @@
         (#_"Object" ILookup'''valAt
             ([#_"ATransientMap" this, #_"Object" key] (ILookup'''valAt this, key, nil))
             ([#_"ATransientMap" this, #_"Object" key, #_"Object" notFound]
-                (ATransientMap'''ensureEditable this)
-                (ATransientMap'''doValAt this, key, notFound)
+                (IATransientMap'''ensureEditable this)
+                (IATransientMap'''doValAt this, key, notFound)
             )
         )
     )
@@ -10651,8 +10630,8 @@
 
     (extend-type ATransientMap Counted
         (#_"int" Counted'''count [#_"ATransientMap" this]
-            (ATransientMap'''ensureEditable this)
-            (ATransientMap'''doCount this)
+            (IATransientMap'''ensureEditable this)
+            (IATransientMap'''doCount this)
         )
     )
 )
@@ -10662,7 +10641,7 @@
 
 (class-ns ATransientSet
     (defn #_"ATransientSet" ATransientSet'new [#_"ITransientMap" impl]
-        (merge (ATransientSet.) (AFn'new)
+        (merge (ATransientSet.)
             (hash-map
                 #_"ITransientMap" :impl impl
             )
@@ -10718,12 +10697,20 @@
     (defn #_"Cons" Cons'new
         ([#_"Object" _first, #_"ISeq" _more] (Cons'new nil, _first, _more))
         ([#_"IPersistentMap" meta, #_"Object" _first, #_"ISeq" _more]
-            (merge (Cons.) (ASeq'new meta)
+            (merge (Cons.)
                 (hash-map
+                    #_"IPersistentMap" :_meta meta
+
                     #_"Object" :_first _first
                     #_"ISeq" :_more _more
                 )
             )
+        )
+    )
+
+    (extend-type Cons IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"Cons" this]
+            (:_meta this)
         )
     )
 
@@ -10809,14 +10796,22 @@
     (defn- #_"Iterate" Iterate'new
         ([#_"IFn" f, #_"Object" prev, #_"Object" seed] (Iterate'new nil, f, prev, seed))
         ([#_"IPersistentMap" meta, #_"IFn" f, #_"Object" prev, #_"Object" seed]
-            (merge (Iterate.) (ASeq'new meta)
+            (merge (Iterate.)
                 (hash-map
+                    #_"IPersistentMap" :_meta meta
+
                     #_"IFn" :f f ;; never nil
                     #_"Object" :prev prev
 
                     #_"Object'" :_seed (atom seed) ;; lazily realized
                 )
             )
+        )
+    )
+
+    (extend-type Iterate IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"Iterate" this]
+            (:_meta this)
         )
     )
 
@@ -11170,12 +11165,20 @@
     (defn #_"MSeq" MSeq'new
         ([#_"Object[]" a, #_"int" i] (MSeq'new nil, a, i))
         ([#_"IPersistentMap" meta, #_"Object[]" a, #_"int" i]
-            (merge (MSeq.) (ASeq'new meta)
+            (merge (MSeq.)
                 (hash-map
+                    #_"IPersistentMap" :_meta meta
+
                     #_"Object[]" :a a
                     #_"int" :i i
                 )
             )
+        )
+    )
+
+    (extend-type MSeq IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"MSeq" this]
+            (:_meta this)
         )
     )
 
@@ -11457,65 +11460,61 @@
         )
     )
 
-    #_override
-    (defn #_"ITransientMap" ATransientMap'''doAssoc--TransientArrayMap [#_"TransientArrayMap" this, #_"Object" key, #_"Object" val]
-        (let [#_"int" i (TransientArrayMap''indexOf this, key)]
-            (cond (<= 0 i) ;; already have key,
-                (do
-                    (when-not (= (aget (:a this) (inc i)) val) ;; no change, no op
-                        (aset (:a this) (inc i) val)
-                    )
-                    this
-                )
-                :else ;; didn't have key, grow
-                (if (< (:n this) (alength (:a this)))
-                    (let [_ (aset (:a this) (:n this) key) this (update this :n inc)
-                          _ (aset (:a this) (:n this) val) this (update this :n inc)]
+    (extend-type TransientArrayMap IATransientMap
+        (#_"ITransientMap" IATransientMap'''doAssoc [#_"TransientArrayMap" this, #_"Object" key, #_"Object" val]
+            (let [#_"int" i (TransientArrayMap''indexOf this, key)]
+                (cond (<= 0 i) ;; already have key,
+                    (do
+                        (when-not (= (aget (:a this) (inc i)) val) ;; no change, no op
+                            (aset (:a this) (inc i) val)
+                        )
                         this
                     )
-                    (-> (PersistentHashMap'create-1a (:a this)) (transient) (assoc key val))
+                    :else ;; didn't have key, grow
+                    (if (< (:n this) (alength (:a this)))
+                        (let [_ (aset (:a this) (:n this) key) this (update this :n inc)
+                              _ (aset (:a this) (:n this) val) this (update this :n inc)]
+                            this
+                        )
+                        (-> (PersistentHashMap'create-1a (:a this)) (transient) (assoc key val))
+                    )
                 )
             )
         )
-    )
 
-    #_override
-    (defn #_"ITransientMap" ATransientMap'''doDissoc--TransientArrayMap [#_"TransientArrayMap" this, #_"Object" key]
-        (let-when [#_"int" i (TransientArrayMap''indexOf this, key)] (<= 0 i) => this
-            ;; have key, will remove
-            (when (<= 2 (:n this))
-                (aset (:a this) i (aget (:a this) (- (:n this) 2)))
-                (aset (:a this) (inc i) (aget (:a this) (- (:n this) 1)))
+        (#_"ITransientMap" IATransientMap'''doDissoc [#_"TransientArrayMap" this, #_"Object" key]
+            (let-when [#_"int" i (TransientArrayMap''indexOf this, key)] (<= 0 i) => this
+                ;; have key, will remove
+                (when (<= 2 (:n this))
+                    (aset (:a this) i (aget (:a this) (- (:n this) 2)))
+                    (aset (:a this) (inc i) (aget (:a this) (- (:n this) 1)))
+                )
+                (update this :n - 2)
             )
-            (update this :n - 2)
         )
-    )
 
-    #_override
-    (defn #_"Object" ATransientMap'''doValAt--TransientArrayMap [#_"TransientArrayMap" this, #_"Object" key, #_"Object" notFound]
-        (let [#_"int" i (TransientArrayMap''indexOf this, key)]
-            (if (<= 0 i) (aget (:a this) (inc i)) notFound)
+        (#_"Object" IATransientMap'''doValAt [#_"TransientArrayMap" this, #_"Object" key, #_"Object" notFound]
+            (let [#_"int" i (TransientArrayMap''indexOf this, key)]
+                (if (<= 0 i) (aget (:a this) (inc i)) notFound)
+            )
         )
-    )
 
-    #_override
-    (defn #_"int" ATransientMap'''doCount--TransientArrayMap [#_"TransientArrayMap" this]
-        (quot (:n this) 2)
-    )
-
-    #_override
-    (defn #_"IPersistentMap" ATransientMap'''doPersistent--TransientArrayMap [#_"TransientArrayMap" this]
-        (ATransientMap'''ensureEditable this)
-        (reset! (:owner this) nil)
-        (let [#_"Object[]" a' (object-array (:n this)) _ (System/arraycopy (:a this), 0, a', 0, (:n this))]
-            (PersistentArrayMap'new a')
+        (#_"int" IATransientMap'''doCount [#_"TransientArrayMap" this]
+            (quot (:n this) 2)
         )
-    )
 
-    #_override
-    (defn #_"void" ATransientMap'''ensureEditable--TransientArrayMap [#_"TransientArrayMap" this]
-        (or @(:owner this) (throw! "transient used after persistent! call"))
-        nil
+        (#_"IPersistentMap" IATransientMap'''doPersistent [#_"TransientArrayMap" this]
+            (IATransientMap'''ensureEditable this)
+            (reset! (:owner this) nil)
+            (let [#_"Object[]" a' (object-array (:n this)) _ (System/arraycopy (:a this), 0, a', 0, (:n this))]
+                (PersistentArrayMap'new a')
+            )
+        )
+
+        (#_"void" IATransientMap'''ensureEditable [#_"TransientArrayMap" this]
+            (or @(:owner this) (throw! "transient used after persistent! call"))
+            nil
+        )
     )
 )
 )
@@ -11524,12 +11523,20 @@
 
 (class-ns HSeq
     (defn- #_"HSeq" HSeq'new [#_"IPersistentMap" meta, #_"INode[]" nodes, #_"int" i, #_"ISeq" s]
-        (merge (HSeq.) (ASeq'new meta)
+        (merge (HSeq.)
             (hash-map
+                #_"IPersistentMap" :_meta meta
+
                 #_"INode[]" :nodes nodes
                 #_"int" :i i
                 #_"ISeq" :s s
             )
+        )
+    )
+
+    (extend-type HSeq IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"HSeq" this]
+            (:_meta this)
         )
     )
 
@@ -11570,13 +11577,21 @@
     (defn #_"NodeSeq" NodeSeq'new
         ([#_"Object[]" a, #_"int" i] (NodeSeq'new nil, a, i, nil))
         ([#_"IPersistentMap" meta, #_"Object[]" a, #_"int" i, #_"ISeq" s]
-            (merge (NodeSeq.) (ASeq'new meta)
+            (merge (NodeSeq.)
                 (hash-map
+                    #_"IPersistentMap" :_meta meta
+
                     #_"Object[]" :a a
                     #_"int" :i i
                     #_"ISeq" :s s
                 )
             )
+        )
+    )
+
+    (extend-type NodeSeq IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"NodeSeq" this]
+            (:_meta this)
         )
     )
 
@@ -12295,71 +12310,67 @@
         )
     )
 
-    #_override
-    (defn #_"ITransientMap" ATransientMap'''doAssoc--TransientHashMap [#_"TransientHashMap" this, #_"Object" key, #_"Object" val]
-        (if (nil? key)
-            (let [this (if (= (:nullValue this) val) this (assoc this :nullValue val))]
-                (when-not (:hasNull this) => this
-                    (-> this (update :n inc) (assoc :hasNull true))
-                )
-            )
-            (let [#_"boolean'" addedLeaf (atom false)
-                  #_"INode" node (INode'''assocT (or (:root this) BitmapIndexedNode'EMPTY), (:edit this), 0, (Util'hasheq key), key, val, addedLeaf)
-                  this (if (= (:root this) node) this (assoc this :root node))]
-                (when @addedLeaf => this
-                    (update this :n inc)
-                )
-            )
-        )
-    )
+    (declare PersistentHashMap'new)
 
-    #_override
-    (defn #_"ITransientMap" ATransientMap'''doDissoc--TransientHashMap [#_"TransientHashMap" this, #_"Object" key]
-        (if (nil? key)
-            (when (:hasNull this) => this
-                (-> this (assoc :hasNull false :nullValue nil) (update :n dec))
-            )
-            (when (some? (:root this)) => this
-                (let [#_"boolean'" removedLeaf (atom false)
-                      #_"INode" node (INode'''dissocT (:root this), (:edit this), 0, (Util'hasheq key), key, removedLeaf)
+    (extend-type TransientHashMap IATransientMap
+        (#_"ITransientMap" IATransientMap'''doAssoc [#_"TransientHashMap" this, #_"Object" key, #_"Object" val]
+            (if (nil? key)
+                (let [this (if (= (:nullValue this) val) this (assoc this :nullValue val))]
+                    (when-not (:hasNull this) => this
+                        (-> this (update :n inc) (assoc :hasNull true))
+                    )
+                )
+                (let [#_"boolean'" addedLeaf (atom false)
+                      #_"INode" node (INode'''assocT (or (:root this) BitmapIndexedNode'EMPTY), (:edit this), 0, (Util'hasheq key), key, val, addedLeaf)
                       this (if (= (:root this) node) this (assoc this :root node))]
-                    (when @removedLeaf => this
-                        (update this :n dec)
+                    (when @addedLeaf => this
+                        (update this :n inc)
                     )
                 )
             )
         )
-    )
 
-    (declare PersistentHashMap'new)
-
-    #_override
-    (defn #_"IPersistentMap" ATransientMap'''doPersistent--TransientHashMap [#_"TransientHashMap" this]
-        (reset! (:edit this) nil)
-        (PersistentHashMap'new (:n this), (:root this), (:hasNull this), (:nullValue this))
-    )
-
-    #_override
-    (defn #_"Object" ATransientMap'''doValAt--TransientHashMap [#_"TransientHashMap" this, #_"Object" key, #_"Object" notFound]
-        (if (nil? key)
-            (when (:hasNull this) => notFound
-                (:nullValue this)
-            )
-            (when (some? (:root this)) => notFound
-                (INode'''find (:root this), 0, (Util'hasheq key), key, notFound)
+        (#_"ITransientMap" IATransientMap'''doDissoc [#_"TransientHashMap" this, #_"Object" key]
+            (if (nil? key)
+                (when (:hasNull this) => this
+                    (-> this (assoc :hasNull false :nullValue nil) (update :n dec))
+                )
+                (when (some? (:root this)) => this
+                    (let [#_"boolean'" removedLeaf (atom false)
+                          #_"INode" node (INode'''dissocT (:root this), (:edit this), 0, (Util'hasheq key), key, removedLeaf)
+                          this (if (= (:root this) node) this (assoc this :root node))]
+                        (when @removedLeaf => this
+                            (update this :n dec)
+                        )
+                    )
+                )
             )
         )
-    )
 
-    #_override
-    (defn #_"int" ATransientMap'''doCount--TransientHashMap [#_"TransientHashMap" this]
-        (:n this)
-    )
+        (#_"IPersistentMap" IATransientMap'''doPersistent [#_"TransientHashMap" this]
+            (reset! (:edit this) nil)
+            (PersistentHashMap'new (:n this), (:root this), (:hasNull this), (:nullValue this))
+        )
 
-    #_override
-    (defn #_"void" ATransientMap'''ensureEditable--TransientHashMap [#_"TransientHashMap" this]
-        (or @(:edit this) (throw! "transient used after persistent! call"))
-        nil
+        (#_"Object" IATransientMap'''doValAt [#_"TransientHashMap" this, #_"Object" key, #_"Object" notFound]
+            (if (nil? key)
+                (when (:hasNull this) => notFound
+                    (:nullValue this)
+                )
+                (when (some? (:root this)) => notFound
+                    (INode'''find (:root this), 0, (Util'hasheq key), key, notFound)
+                )
+            )
+        )
+
+        (#_"int" IATransientMap'''doCount [#_"TransientHashMap" this]
+            (:n this)
+        )
+
+        (#_"void" IATransientMap'''ensureEditable [#_"TransientHashMap" this]
+            (or @(:edit this) (throw! "transient used after persistent! call"))
+            nil
+        )
     )
 )
 
@@ -12685,18 +12696,6 @@
         (merge (Primordial.) (RestFn'new))
     )
 
-    (extend-type Primordial IMeta
-        (#_"IPersistentMap" IMeta'''meta [#_"Primordial" this]
-            nil
-        )
-    )
-
-    (extend-type Primordial IObj
-        (#_"Primordial" IObj'''withMeta [#_"Primordial" this, #_"IPersistentMap" meta]
-            (throw! "unsupported operation")
-        )
-    )
-
     (declare PersistentList'EMPTY)
     (declare PersistentList'create)
 
@@ -12716,19 +12715,6 @@
                 )
                 (PersistentList'create (RT'seqToArray (seq args)))
             )
-        )
-    )
-
-    (defn #_"Object" Primordial'invokeStatic [#_"ISeq" args]
-        (if (instance? ArraySeq args)
-            (let [#_"Object[]" a (:a args)]
-                (loop-when-recur [#_"IPersistentList" l PersistentList'EMPTY #_"int" i (dec (alength a))]
-                                 (<= 0 i)
-                                 [(conj l (aget a i)) (dec i)]
-                              => l
-                )
-            )
-            (PersistentList'create (RT'seqToArray (seq args)))
         )
     )
 )
@@ -12824,20 +12810,28 @@
 )
 
 (class-ns PersistentList
-    (def #_"IFn" PersistentList'creator (§ soon Primordial'new))
+    (def #_"IFn" PersistentList'creator (§ soon Primordial'new))
 
-    (def #_"EmptyList" PersistentList'EMPTY (§ soon EmptyList'new nil))
+    (def #_"EmptyList" PersistentList'EMPTY (§ soon EmptyList'new nil))
 
     (defn #_"PersistentList" PersistentList'new
         ([#_"Object" _first] (PersistentList'new nil, _first, nil, 1))
         ([#_"IPersistentMap" meta, #_"Object" _first, #_"IPersistentList" _rest, #_"int" _count]
-            (merge (PersistentList.) (ASeq'new meta)
+            (merge (PersistentList.)
                 (hash-map
+                    #_"IPersistentMap" :_meta meta
+
                     #_"Object" :_first _first
                     #_"IPersistentList" :_rest _rest
                     #_"int" :_count _count
                 )
             )
+        )
+    )
+
+    (extend-type PersistentList IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"PersistentList" this]
+            (:_meta this)
         )
     )
 
@@ -12920,12 +12914,20 @@
     (defn #_"QSeq" QSeq'new
         ([#_"ISeq" f, #_"ISeq" rseq] (QSeq'new nil, f, rseq))
         ([#_"IPersistentMap" meta, #_"ISeq" f, #_"ISeq" rseq]
-            (merge (QSeq.) (ASeq'new meta)
+            (merge (QSeq.)
                 (hash-map
+                    #_"IPersistentMap" :_meta meta
+
                     #_"ISeq" :f f
                     #_"ISeq" :rseq rseq
                 )
             )
+        )
+    )
+
+    (extend-type QSeq IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"QSeq" this]
+            (:_meta this)
         )
     )
 
@@ -13087,33 +13089,31 @@
         )
     )
 
-    #_override
-    (defn #_"TNode" TNode'''left--TNode [#_"TNode" this]
-        nil
-    )
-
-    #_override
-    (defn #_"TNode" TNode'''right--TNode [#_"TNode" this]
-        nil
-    )
-
     (declare PersistentTreeMap'black)
 
-    #_override
-    (defn #_"TNode" TNode'''balanceLeft--TNode [#_"TNode" this, #_"TNode" parent]
-        (PersistentTreeMap'black (:key parent), (IMapEntry'''val parent), this, (TNode'''right parent))
-    )
+    (extend-type TNode ITNode
+        (#_"TNode" ITNode'''left [#_"TNode" this]
+            nil
+        )
 
-    #_override
-    (defn #_"TNode" TNode'''balanceRight--TNode [#_"TNode" this, #_"TNode" parent]
-        (PersistentTreeMap'black (:key parent), (IMapEntry'''val parent), (TNode'''left parent), this)
+        (#_"TNode" ITNode'''right [#_"TNode" this]
+            nil
+        )
+
+        (#_"TNode" ITNode'''balanceLeft [#_"TNode" this, #_"TNode" parent]
+            (PersistentTreeMap'black (:key parent), (IMapEntry'''val parent), this, (ITNode'''right parent))
+        )
+
+        (#_"TNode" ITNode'''balanceRight [#_"TNode" this, #_"TNode" parent]
+            (PersistentTreeMap'black (:key parent), (IMapEntry'''val parent), (ITNode'''left parent), this)
+        )
     )
 
     (extend-type TNode IKVReduce
         (#_"Object" IKVReduce'''kvreduce [#_"TNode" this, #_"IFn" f, #_"Object" r]
             (or
-                (when (some? (TNode'''left this))
-                    (let [r (INode'''kvreduce (TNode'''left this), f, r)]
+                (when (some? (ITNode'''left this))
+                    (let [r (INode'''kvreduce (ITNode'''left this), f, r)]
                         (when (reduced? r)
                             r
                         )
@@ -13122,7 +13122,7 @@
                 (let [r (f r (key this) (val this))]
                     (cond
                         (reduced? r)          r
-                        (some? (TNode'''right this)) (INode'''kvreduce (TNode'''right this), f, r)
+                        (some? (ITNode'''right this)) (INode'''kvreduce (ITNode'''right this), f, r)
                         :else                 r
                     )
                 )
@@ -13136,45 +13136,38 @@
         (merge (Black.) (TNode'new key))
     )
 
-    #_override
-    (defn #_"TNode" TNode'''addLeft--Black [#_"Black" this, #_"TNode" ins]
-        (TNode'''balanceLeft ins, this)
-    )
-
-    #_override
-    (defn #_"TNode" TNode'''addRight--Black [#_"Black" this, #_"TNode" ins]
-        (TNode'''balanceRight ins, this)
-    )
-
     (declare PersistentTreeMap'balanceLeftDel)
-
-    #_override
-    (defn #_"TNode" TNode'''removeLeft--Black [#_"Black" this, #_"TNode" del]
-        (PersistentTreeMap'balanceLeftDel (:key this), (IMapEntry'''val this), del, (TNode'''right this))
-    )
-
     (declare PersistentTreeMap'balanceRightDel)
-
-    #_override
-    (defn #_"TNode" TNode'''removeRight--Black [#_"Black" this, #_"TNode" del]
-        (PersistentTreeMap'balanceRightDel (:key this), (IMapEntry'''val this), (TNode'''left this), del)
-    )
-
-    #_override
-    (defn #_"TNode" TNode'''blacken--Black [#_"Black" this]
-        this
-    )
-
     (declare Red'new)
 
-    #_override
-    (defn #_"TNode" TNode'''redden--Black [#_"Black" this]
-        (Red'new (:key this))
-    )
+    (extend-type Black ITNode
+        (#_"TNode" ITNode'''addLeft [#_"Black" this, #_"TNode" ins]
+            (ITNode'''balanceLeft ins, this)
+        )
 
-    #_override
-    (defn #_"TNode" TNode'''replace--Black [#_"Black" this, #_"Object" key, #_"Object" val, #_"TNode" left, #_"TNode" right]
-        (PersistentTreeMap'black key, val, left, right)
+        (#_"TNode" ITNode'''addRight [#_"Black" this, #_"TNode" ins]
+            (ITNode'''balanceRight ins, this)
+        )
+
+        (#_"TNode" ITNode'''removeLeft [#_"Black" this, #_"TNode" del]
+            (PersistentTreeMap'balanceLeftDel (:key this), (IMapEntry'''val this), del, (ITNode'''right this))
+        )
+
+        (#_"TNode" ITNode'''removeRight [#_"Black" this, #_"TNode" del]
+            (PersistentTreeMap'balanceRightDel (:key this), (IMapEntry'''val this), (ITNode'''left this), del)
+        )
+
+        (#_"TNode" ITNode'''blacken [#_"Black" this]
+            this
+        )
+
+        (#_"TNode" ITNode'''redden [#_"Black" this]
+            (Red'new (:key this))
+        )
+
+        (#_"TNode" ITNode'''replace [#_"Black" this, #_"Object" key, #_"Object" val, #_"TNode" left, #_"TNode" right]
+            (PersistentTreeMap'black key, val, left, right)
+        )
     )
 )
 
@@ -13195,9 +13188,10 @@
 
     (declare RedVal'new)
 
-    #_override
-    (defn #_"TNode" TNode'''redden--BlackVal [#_"BlackVal" this]
-        (RedVal'new (:key this), (:val this))
+    (extend-type BlackVal ITNode
+        (#_"TNode" ITNode'''redden [#_"BlackVal" this]
+            (RedVal'new (:key this), (:val this))
+        )
     )
 )
 
@@ -13211,21 +13205,20 @@
         )
     )
 
-    #_override
-    (defn #_"TNode" TNode'''left--BlackBranch [#_"BlackBranch" this]
-        (:left this)
-    )
-
-    #_override
-    (defn #_"TNode" TNode'''right--BlackBranch [#_"BlackBranch" this]
-        (:right this)
-    )
-
     (declare RedBranch'new)
 
-    #_override
-    (defn #_"TNode" TNode'''redden--BlackBranch [#_"BlackBranch" this]
-        (RedBranch'new (:key this), (:left this), (:right this))
+    (extend-type BlackBranch ITNode
+        (#_"TNode" ITNode'''left [#_"BlackBranch" this]
+            (:left this)
+        )
+
+        (#_"TNode" ITNode'''right [#_"BlackBranch" this]
+            (:right this)
+        )
+
+        (#_"TNode" ITNode'''redden [#_"BlackBranch" this]
+            (RedBranch'new (:key this), (:left this), (:right this))
+        )
     )
 )
 
@@ -13246,9 +13239,10 @@
 
     (declare RedBranchVal'new)
 
-    #_override
-    (defn #_"TNode" TNode'''redden--BlackBranchVal [#_"BlackBranchVal" this]
-        (RedBranchVal'new (:key this), (:val this), (:left this), (:right this))
+    (extend-type BlackBranchVal ITNode
+        (#_"TNode" ITNode'''redden [#_"BlackBranchVal" this]
+            (RedBranchVal'new (:key this), (:val this), (:left this), (:right this))
+        )
     )
 )
 
@@ -13259,39 +13253,34 @@
 
     (declare PersistentTreeMap'red)
 
-    #_override
-    (defn #_"TNode" TNode'''addLeft--Red [#_"Red" this, #_"TNode" ins]
-        (PersistentTreeMap'red (:key this), (IMapEntry'''val this), ins, (TNode'''right this))
-    )
+    (extend-type Red ITNode
+        (#_"TNode" ITNode'''addLeft [#_"Red" this, #_"TNode" ins]
+            (PersistentTreeMap'red (:key this), (IMapEntry'''val this), ins, (ITNode'''right this))
+        )
 
-    #_override
-    (defn #_"TNode" TNode'''addRight--Red [#_"Red" this, #_"TNode" ins]
-        (PersistentTreeMap'red (:key this), (IMapEntry'''val this), (TNode'''left this), ins)
-    )
+        (#_"TNode" ITNode'''addRight [#_"Red" this, #_"TNode" ins]
+            (PersistentTreeMap'red (:key this), (IMapEntry'''val this), (ITNode'''left this), ins)
+        )
 
-    #_override
-    (defn #_"TNode" TNode'''removeLeft--Red [#_"Red" this, #_"TNode" del]
-        (PersistentTreeMap'red (:key this), (IMapEntry'''val this), del, (TNode'''right this))
-    )
+        (#_"TNode" ITNode'''removeLeft [#_"Red" this, #_"TNode" del]
+            (PersistentTreeMap'red (:key this), (IMapEntry'''val this), del, (ITNode'''right this))
+        )
 
-    #_override
-    (defn #_"TNode" TNode'''removeRight--Red [#_"Red" this, #_"TNode" del]
-        (PersistentTreeMap'red (:key this), (IMapEntry'''val this), (TNode'''left this), del)
-    )
+        (#_"TNode" ITNode'''removeRight [#_"Red" this, #_"TNode" del]
+            (PersistentTreeMap'red (:key this), (IMapEntry'''val this), (ITNode'''left this), del)
+        )
 
-    #_override
-    (defn #_"TNode" TNode'''blacken--Red [#_"Red" this]
-        (Black'new (:key this))
-    )
+        (#_"TNode" ITNode'''blacken [#_"Red" this]
+            (Black'new (:key this))
+        )
 
-    #_override
-    (defn #_"TNode" TNode'''redden--Red [#_"Red" this]
-        (throw! "invariant violation")
-    )
+        (#_"TNode" ITNode'''redden [#_"Red" this]
+            (throw! "invariant violation")
+        )
 
-    #_override
-    (defn #_"TNode" TNode'''replace--Red [#_"Red" this, #_"Object" key, #_"Object" val, #_"TNode" left, #_"TNode" right]
-        (PersistentTreeMap'red key, val, left, right)
+        (#_"TNode" ITNode'''replace [#_"Red" this, #_"Object" key, #_"Object" val, #_"TNode" left, #_"TNode" right]
+            (PersistentTreeMap'red key, val, left, right)
+        )
     )
 )
 
@@ -13310,9 +13299,10 @@
         )
     )
 
-    #_override
-    (defn #_"TNode" TNode'''blacken--RedVal [#_"RedVal" this]
-        (BlackVal'new (:key this), (:val this))
+    (extend-type RedVal ITNode
+        (#_"TNode" ITNode'''blacken [#_"RedVal" this]
+            (BlackVal'new (:key this), (:val this))
+        )
     )
 )
 
@@ -13326,53 +13316,50 @@
         )
     )
 
-    #_override
-    (defn #_"TNode" TNode'''left--RedBranch [#_"RedBranch" this]
-        (:left this)
-    )
+    (extend-type RedBranch ITNode
+        (#_"TNode" ITNode'''left [#_"RedBranch" this]
+            (:left this)
+        )
 
-    #_override
-    (defn #_"TNode" TNode'''right--RedBranch [#_"RedBranch" this]
-        (:right this)
-    )
+        (#_"TNode" ITNode'''right [#_"RedBranch" this]
+            (:right this)
+        )
 
-    #_override
-    (defn #_"TNode" TNode'''balanceLeft--RedBranch [#_"RedBranch" this, #_"TNode" parent]
-        (cond (instance? Red (:left this))
-            (do
-                (PersistentTreeMap'red (:key this), (IMapEntry'''val this), (TNode'''blacken (:left this)), (PersistentTreeMap'black (:key parent), (IMapEntry'''val parent), (:right this), (TNode'''right parent)))
-            )
-            (instance? Red (:right this))
-            (do
-                (PersistentTreeMap'red (:key (:right this)), (IMapEntry'''val (:right this)), (PersistentTreeMap'black (:key this), (IMapEntry'''val this), (:left this), (TNode'''left (:right this))), (PersistentTreeMap'black (:key parent), (IMapEntry'''val parent), (TNode'''right (:right this)), (TNode'''right parent)))
-            )
-            :else
-            (do
-                (TNode'''balanceLeft (§ super ), parent)
+        (#_"TNode" ITNode'''balanceLeft [#_"RedBranch" this, #_"TNode" parent]
+            (cond (instance? Red (:left this))
+                (do
+                    (PersistentTreeMap'red (:key this), (IMapEntry'''val this), (ITNode'''blacken (:left this)), (PersistentTreeMap'black (:key parent), (IMapEntry'''val parent), (:right this), (ITNode'''right parent)))
+                )
+                (instance? Red (:right this))
+                (do
+                    (PersistentTreeMap'red (:key (:right this)), (IMapEntry'''val (:right this)), (PersistentTreeMap'black (:key this), (IMapEntry'''val this), (:left this), (ITNode'''left (:right this))), (PersistentTreeMap'black (:key parent), (IMapEntry'''val parent), (ITNode'''right (:right this)), (ITNode'''right parent)))
+                )
+                :else
+                (do
+                    (ITNode'''balanceLeft (§ super ), parent)
+                )
             )
         )
-    )
 
-    #_override
-    (defn #_"TNode" TNode'''balanceRight--RedBranch [#_"RedBranch" this, #_"TNode" parent]
-        (cond (instance? Red (:right this))
-            (do
-                (PersistentTreeMap'red (:key this), (IMapEntry'''val this), (PersistentTreeMap'black (:key parent), (IMapEntry'''val parent), (TNode'''left parent), (:left this)), (TNode'''blacken (:right this)))
-            )
-            (instance? Red (:left this))
-            (do
-                (PersistentTreeMap'red (:key (:left this)), (IMapEntry'''val (:left this)), (PersistentTreeMap'black (:key parent), (IMapEntry'''val parent), (TNode'''left parent), (TNode'''left (:left this))), (PersistentTreeMap'black (:key this), (IMapEntry'''val this), (TNode'''right (:left this)), (:right this)))
-            )
-            :else
-            (do
-                (TNode'''balanceRight (§ super ), parent)
+        (#_"TNode" ITNode'''balanceRight [#_"RedBranch" this, #_"TNode" parent]
+            (cond (instance? Red (:right this))
+                (do
+                    (PersistentTreeMap'red (:key this), (IMapEntry'''val this), (PersistentTreeMap'black (:key parent), (IMapEntry'''val parent), (ITNode'''left parent), (:left this)), (ITNode'''blacken (:right this)))
+                )
+                (instance? Red (:left this))
+                (do
+                    (PersistentTreeMap'red (:key (:left this)), (IMapEntry'''val (:left this)), (PersistentTreeMap'black (:key parent), (IMapEntry'''val parent), (ITNode'''left parent), (ITNode'''left (:left this))), (PersistentTreeMap'black (:key this), (IMapEntry'''val this), (ITNode'''right (:left this)), (:right this)))
+                )
+                :else
+                (do
+                    (ITNode'''balanceRight (§ super ), parent)
+                )
             )
         )
-    )
 
-    #_override
-    (defn #_"TNode" TNode'''blacken--RedBranch [#_"RedBranch" this]
-        (BlackBranch'new (:key this), (:left this), (:right this))
+        (#_"TNode" ITNode'''blacken [#_"RedBranch" this]
+            (BlackBranch'new (:key this), (:left this), (:right this))
+        )
     )
 )
 
@@ -13391,41 +13378,50 @@
         )
     )
 
-    #_override
-    (defn #_"TNode" TNode'''blacken--RedBranchVal [#_"RedBranchVal" this]
-        (BlackBranchVal'new (:key this), (:val this), (:left this), (:right this))
+    (extend-type RedBranchVal ITNode
+        (#_"TNode" ITNode'''blacken [#_"RedBranchVal" this]
+            (BlackBranchVal'new (:key this), (:val this), (:left this), (:right this))
+        )
     )
 )
 
 (class-ns TSeq
     (defn #_"TSeq" TSeq'new
-        ([#_"ISeq" stack, #_"boolean" asc] (TSeq'new stack, asc, -1))
-        ([#_"ISeq" stack, #_"boolean" asc, #_"int" cnt] (TSeq'new nil, stack, asc, cnt))
-        ([#_"IPersistentMap" meta, #_"ISeq" stack, #_"boolean" asc, #_"int" cnt]
-            (merge (TSeq.) (ASeq'new meta)
+        ([#_"ISeq" stack, #_"boolean" asc?] (TSeq'new stack, asc?, -1))
+        ([#_"ISeq" stack, #_"boolean" asc?, #_"int" cnt] (TSeq'new nil, stack, asc?, cnt))
+        ([#_"IPersistentMap" meta, #_"ISeq" stack, #_"boolean" asc?, #_"int" cnt]
+            (merge (TSeq.)
                 (hash-map
+                    #_"IPersistentMap" :_meta meta
+
                     #_"ISeq" :stack stack
-                    #_"boolean" :asc asc
+                    #_"boolean" :asc? asc?
                     #_"int" :cnt cnt
                 )
             )
         )
     )
 
+    (extend-type TSeq IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"TSeq" this]
+            (:_meta this)
+        )
+    )
+
     (extend-type TSeq IObj
         (#_"TSeq" IObj'''withMeta [#_"TSeq" this, #_"IPersistentMap" meta]
-            (TSeq'new meta, (:stack this), (:asc this), (:cnt this))
+            (TSeq'new meta, (:stack this), (:asc? this), (:cnt this))
         )
     )
 
-    (defn #_"ISeq" TSeq'push [#_"TNode" t, #_"ISeq" stack, #_"boolean" asc]
+    (defn #_"ISeq" TSeq'push [#_"TNode" t, #_"ISeq" stack, #_"boolean" asc?]
         (loop-when [stack stack t t] (some? t) => stack
-            (recur (cons t stack) (if asc (TNode'''left t) (TNode'''right t)))
+            (recur (cons t stack) (if asc? (ITNode'''left t) (ITNode'''right t)))
         )
     )
 
-    (defn #_"TSeq" TSeq'create [#_"TNode" t, #_"boolean" asc, #_"int" cnt]
-        (TSeq'new (TSeq'push t, nil, asc), asc, cnt)
+    (defn #_"TSeq" TSeq'create [#_"TNode" t, #_"boolean" asc?, #_"int" cnt]
+        (TSeq'new (TSeq'push t, nil, asc?), asc?, cnt)
     )
 
     (extend-type TSeq ISeq
@@ -13434,8 +13430,8 @@
         )
 
         (#_"ISeq" ISeq'''next [#_"TSeq" this]
-            (let [#_"TNode" t (cast TNode (first (:stack this))) #_"boolean" asc? (:asc this)]
-                (when-some [#_"ISeq" stack (TSeq'push (if asc? (TNode'''right t) (TNode'''left t)), (next (:stack this)), asc?)]
+            (let [#_"TNode" t (cast TNode (first (:stack this))) #_"boolean" asc? (:asc? this)]
+                (when-some [#_"ISeq" stack (TSeq'push (if asc? (ITNode'''right t) (ITNode'''left t)), (next (:stack this)), asc?)]
                     (TSeq'new stack, asc?, (dec (:cnt this)))
                 )
             )
@@ -13565,8 +13561,8 @@
                     (let [#_"int" cmp (PersistentTreeMap''doCompare this, key, (:key t))]
                         (cond
                             (zero? cmp) (TSeq'new (cons t s), ascending?)
-                            ascending?  (if (neg? cmp) (recur (cons t s) (TNode'''left t)) (recur s (TNode'''right t)))
-                            :else       (if (pos? cmp) (recur (cons t s) (TNode'''right t)) (recur s (TNode'''left t)))
+                            ascending?  (if (neg? cmp) (recur (cons t s) (ITNode'''left t)) (recur s (ITNode'''right t)))
+                            :else       (if (pos? cmp) (recur (cons t s) (ITNode'''right t)) (recur s (ITNode'''left t)))
                         )
                     )
                 )
@@ -13585,14 +13581,14 @@
     #_method
     (defn #_"TNode" PersistentTreeMap''min [#_"PersistentTreeMap" this]
         (when-some [#_"TNode" t (:tree this)]
-            (loop-when-recur t (some? (TNode'''left t)) (TNode'''left t) => t)
+            (loop-when-recur t (some? (ITNode'''left t)) (ITNode'''left t) => t)
         )
     )
 
     #_method
     (defn #_"TNode" PersistentTreeMap''max [#_"PersistentTreeMap" this]
         (when-some [#_"TNode" t (:tree this)]
-            (loop-when-recur t (some? (TNode'''right t)) (TNode'''right t) => t)
+            (loop-when-recur t (some? (ITNode'''right t)) (ITNode'''right t) => t)
         )
     )
 
@@ -13613,7 +13609,7 @@
     #_method
     (defn #_"int" PersistentTreeMap''depth-2 [#_"PersistentTreeMap" this, #_"TNode" t]
         (when (some? t) => 0
-            (inc (max (PersistentTreeMap''depth-2 this, (TNode'''left t)) (PersistentTreeMap''depth-2 this, (TNode'''right t))))
+            (inc (max (PersistentTreeMap''depth-2 this, (ITNode'''left t)) (PersistentTreeMap''depth-2 this, (ITNode'''right t))))
         )
     )
 
@@ -13649,8 +13645,8 @@
             (loop-when [#_"TNode" t (:tree this)] (some? t) => t
                 (let [#_"int" cmp (PersistentTreeMap''doCompare this, key, (:key t))]
                     (cond
-                        (neg? cmp) (recur (TNode'''left t))
-                        (pos? cmp) (recur (TNode'''right t))
+                        (neg? cmp) (recur (ITNode'''left t))
+                        (pos? cmp) (recur (ITNode'''right t))
                         :else      t
                     )
                 )
@@ -13660,10 +13656,10 @@
 
     (defn #_"TNode" PersistentTreeMap'rightBalance [#_"Object" key, #_"Object" val, #_"TNode" left, #_"TNode" ins]
         (cond
-            (and (instance? Red ins) (instance? Red (TNode'''right ins)))
-                (PersistentTreeMap'red (:key ins), (IMapEntry'''val ins), (PersistentTreeMap'black key, val, left, (TNode'''left ins)), (TNode'''blacken (TNode'''right ins)))
-            (and (instance? Red ins) (instance? Red (TNode'''left ins)))
-                (PersistentTreeMap'red (:key (TNode'''left ins)), (IMapEntry'''val (TNode'''left ins)), (PersistentTreeMap'black key, val, left, (TNode'''left (TNode'''left ins))), (PersistentTreeMap'black (:key ins), (IMapEntry'''val ins), (TNode'''right (TNode'''left ins)), (TNode'''right ins)))
+            (and (instance? Red ins) (instance? Red (ITNode'''right ins)))
+                (PersistentTreeMap'red (:key ins), (IMapEntry'''val ins), (PersistentTreeMap'black key, val, left, (ITNode'''left ins)), (ITNode'''blacken (ITNode'''right ins)))
+            (and (instance? Red ins) (instance? Red (ITNode'''left ins)))
+                (PersistentTreeMap'red (:key (ITNode'''left ins)), (IMapEntry'''val (ITNode'''left ins)), (PersistentTreeMap'black key, val, left, (ITNode'''left (ITNode'''left ins))), (PersistentTreeMap'black (:key ins), (IMapEntry'''val ins), (ITNode'''right (ITNode'''left ins)), (ITNode'''right ins)))
             :else
                 (PersistentTreeMap'black key, val, left, ins)
         )
@@ -13672,11 +13668,11 @@
     (defn #_"TNode" PersistentTreeMap'balanceLeftDel [#_"Object" key, #_"Object" val, #_"TNode" del, #_"TNode" right]
         (cond
             (instance? Red del)
-                (PersistentTreeMap'red key, val, (TNode'''blacken del), right)
+                (PersistentTreeMap'red key, val, (ITNode'''blacken del), right)
             (instance? Black right)
-                (PersistentTreeMap'rightBalance key, val, del, (TNode'''redden right))
-            (and (instance? Red right) (instance? Black (TNode'''left right)))
-                (PersistentTreeMap'red (:key (TNode'''left right)), (IMapEntry'''val (TNode'''left right)), (PersistentTreeMap'black key, val, del, (TNode'''left (TNode'''left right))), (PersistentTreeMap'rightBalance (:key right), (IMapEntry'''val right), (TNode'''right (TNode'''left right)), (TNode'''redden (TNode'''right right))))
+                (PersistentTreeMap'rightBalance key, val, del, (ITNode'''redden right))
+            (and (instance? Red right) (instance? Black (ITNode'''left right)))
+                (PersistentTreeMap'red (:key (ITNode'''left right)), (IMapEntry'''val (ITNode'''left right)), (PersistentTreeMap'black key, val, del, (ITNode'''left (ITNode'''left right))), (PersistentTreeMap'rightBalance (:key right), (IMapEntry'''val right), (ITNode'''right (ITNode'''left right)), (ITNode'''redden (ITNode'''right right))))
             :else
                 (throw! "invariant violation")
         )
@@ -13684,10 +13680,10 @@
 
     (defn #_"TNode" PersistentTreeMap'leftBalance [#_"Object" key, #_"Object" val, #_"TNode" ins, #_"TNode" right]
         (cond
-            (and (instance? Red ins) (instance? Red (TNode'''left ins)))
-                (PersistentTreeMap'red (:key ins), (IMapEntry'''val ins), (TNode'''blacken (TNode'''left ins)), (PersistentTreeMap'black key, val, (TNode'''right ins), right))
-            (and (instance? Red ins) (instance? Red (TNode'''right ins)))
-                (PersistentTreeMap'red (:key (TNode'''right ins)), (IMapEntry'''val (TNode'''right ins)), (PersistentTreeMap'black (:key ins), (IMapEntry'''val ins), (TNode'''left ins), (TNode'''left (TNode'''right ins))), (PersistentTreeMap'black key, val, (TNode'''right (TNode'''right ins)), right))
+            (and (instance? Red ins) (instance? Red (ITNode'''left ins)))
+                (PersistentTreeMap'red (:key ins), (IMapEntry'''val ins), (ITNode'''blacken (ITNode'''left ins)), (PersistentTreeMap'black key, val, (ITNode'''right ins), right))
+            (and (instance? Red ins) (instance? Red (ITNode'''right ins)))
+                (PersistentTreeMap'red (:key (ITNode'''right ins)), (IMapEntry'''val (ITNode'''right ins)), (PersistentTreeMap'black (:key ins), (IMapEntry'''val ins), (ITNode'''left ins), (ITNode'''left (ITNode'''right ins))), (PersistentTreeMap'black key, val, (ITNode'''right (ITNode'''right ins)), right))
             :else
                 (PersistentTreeMap'black key, val, ins, right)
         )
@@ -13696,11 +13692,11 @@
     (defn #_"TNode" PersistentTreeMap'balanceRightDel [#_"Object" key, #_"Object" val, #_"TNode" left, #_"TNode" del]
         (cond
             (instance? Red del)
-                (PersistentTreeMap'red key, val, left, (TNode'''blacken del))
+                (PersistentTreeMap'red key, val, left, (ITNode'''blacken del))
             (instance? Black left)
-                (PersistentTreeMap'leftBalance key, val, (TNode'''redden left), del)
-            (and (instance? Red left) (instance? Black (TNode'''right left)))
-                (PersistentTreeMap'red (:key (TNode'''right left)), (IMapEntry'''val (TNode'''right left)), (PersistentTreeMap'leftBalance (:key left), (IMapEntry'''val left), (TNode'''redden (TNode'''left left)), (TNode'''left (TNode'''right left))), (PersistentTreeMap'black key, val, (TNode'''right (TNode'''right left)), del))
+                (PersistentTreeMap'leftBalance key, val, (ITNode'''redden left), del)
+            (and (instance? Red left) (instance? Black (ITNode'''right left)))
+                (PersistentTreeMap'red (:key (ITNode'''right left)), (IMapEntry'''val (ITNode'''right left)), (PersistentTreeMap'leftBalance (:key left), (IMapEntry'''val left), (ITNode'''redden (ITNode'''left left)), (ITNode'''left (ITNode'''right left))), (PersistentTreeMap'black key, val, (ITNode'''right (ITNode'''right left)), del))
             :else
                 (throw! "invariant violation")
         )
@@ -13719,11 +13715,11 @@
                         (reset! found t)
                         nil
                     )
-                    (let [#_"TNode" ins (if (neg? cmp) (PersistentTreeMap''add this, (TNode'''left t), key, val, found) (PersistentTreeMap''add this, (TNode'''right t), key, val, found))]
+                    (let [#_"TNode" ins (if (neg? cmp) (PersistentTreeMap''add this, (ITNode'''left t), key, val, found) (PersistentTreeMap''add this, (ITNode'''right t), key, val, found))]
                         (cond
                             (nil? ins) nil ;; found below
-                            (neg? cmp) (TNode'''addLeft t, ins)
-                            :else      (TNode'''addRight t, ins)
+                            (neg? cmp) (ITNode'''addLeft t, ins)
+                            :else      (ITNode'''addRight t, ins)
                         )
                     )
                 )
@@ -13739,21 +13735,21 @@
                 left
             (instance? Red left)
                 (if (instance? Red right)
-                    (let [#_"TNode" app (PersistentTreeMap'append (TNode'''right left), (TNode'''left right))]
+                    (let [#_"TNode" app (PersistentTreeMap'append (ITNode'''right left), (ITNode'''left right))]
                         (if (instance? Red app)
-                            (PersistentTreeMap'red (:key app), (IMapEntry'''val app), (PersistentTreeMap'red (:key left), (IMapEntry'''val left), (TNode'''left left), (TNode'''left app)), (PersistentTreeMap'red (:key right), (IMapEntry'''val right), (TNode'''right app), (TNode'''right right)))
-                            (PersistentTreeMap'red (:key left), (IMapEntry'''val left), (TNode'''left left), (PersistentTreeMap'red (:key right), (IMapEntry'''val right), app, (TNode'''right right)))
+                            (PersistentTreeMap'red (:key app), (IMapEntry'''val app), (PersistentTreeMap'red (:key left), (IMapEntry'''val left), (ITNode'''left left), (ITNode'''left app)), (PersistentTreeMap'red (:key right), (IMapEntry'''val right), (ITNode'''right app), (ITNode'''right right)))
+                            (PersistentTreeMap'red (:key left), (IMapEntry'''val left), (ITNode'''left left), (PersistentTreeMap'red (:key right), (IMapEntry'''val right), app, (ITNode'''right right)))
                         )
                     )
-                    (PersistentTreeMap'red (:key left), (IMapEntry'''val left), (TNode'''left left), (PersistentTreeMap'append (TNode'''right left), right))
+                    (PersistentTreeMap'red (:key left), (IMapEntry'''val left), (ITNode'''left left), (PersistentTreeMap'append (ITNode'''right left), right))
                 )
             (instance? Red right)
-                (PersistentTreeMap'red (:key right), (IMapEntry'''val right), (PersistentTreeMap'append left, (TNode'''left right)), (TNode'''right right))
+                (PersistentTreeMap'red (:key right), (IMapEntry'''val right), (PersistentTreeMap'append left, (ITNode'''left right)), (ITNode'''right right))
             :else ;; black/black
-                (let [#_"TNode" app (PersistentTreeMap'append (TNode'''right left), (TNode'''left right))]
+                (let [#_"TNode" app (PersistentTreeMap'append (ITNode'''right left), (ITNode'''left right))]
                     (if (instance? Red app)
-                        (PersistentTreeMap'red (:key app), (IMapEntry'''val app), (PersistentTreeMap'black (:key left), (IMapEntry'''val left), (TNode'''left left), (TNode'''left app)), (PersistentTreeMap'black (:key right), (IMapEntry'''val right), (TNode'''right app), (TNode'''right right)))
-                        (PersistentTreeMap'balanceLeftDel (:key left), (IMapEntry'''val left), (TNode'''left left), (PersistentTreeMap'black (:key right), (IMapEntry'''val right), app, (TNode'''right right)))
+                        (PersistentTreeMap'red (:key app), (IMapEntry'''val app), (PersistentTreeMap'black (:key left), (IMapEntry'''val left), (ITNode'''left left), (ITNode'''left app)), (PersistentTreeMap'black (:key right), (IMapEntry'''val right), (ITNode'''right app), (ITNode'''right right)))
+                        (PersistentTreeMap'balanceLeftDel (:key left), (IMapEntry'''val left), (ITNode'''left left), (PersistentTreeMap'black (:key right), (IMapEntry'''val right), app, (ITNode'''right right)))
                     )
                 )
         )
@@ -13766,18 +13762,18 @@
                 (if (zero? cmp)
                     (do
                         (reset! found t)
-                        (PersistentTreeMap'append (TNode'''left t), (TNode'''right t))
+                        (PersistentTreeMap'append (ITNode'''left t), (ITNode'''right t))
                     )
-                    (let [#_"TNode" del (if (neg? cmp) (PersistentTreeMap''remove this, (TNode'''left t), key, found) (PersistentTreeMap''remove this, (TNode'''right t), key, found))]
+                    (let [#_"TNode" del (if (neg? cmp) (PersistentTreeMap''remove this, (ITNode'''left t), key, found) (PersistentTreeMap''remove this, (ITNode'''right t), key, found))]
                         (when (or (some? del) (some? @found)) => nil ;; not found below
                             (if (neg? cmp)
-                                (if (instance? Black (TNode'''left t))
-                                    (PersistentTreeMap'balanceLeftDel (:key t), (IMapEntry'''val t), del, (TNode'''right t))
-                                    (PersistentTreeMap'red (:key t), (IMapEntry'''val t), del, (TNode'''right t))
+                                (if (instance? Black (ITNode'''left t))
+                                    (PersistentTreeMap'balanceLeftDel (:key t), (IMapEntry'''val t), del, (ITNode'''right t))
+                                    (PersistentTreeMap'red (:key t), (IMapEntry'''val t), del, (ITNode'''right t))
                                 )
-                                (if (instance? Black (TNode'''right t))
-                                    (PersistentTreeMap'balanceRightDel (:key t), (IMapEntry'''val t), (TNode'''left t), del)
-                                    (PersistentTreeMap'red (:key t), (IMapEntry'''val t), (TNode'''left t), del)
+                                (if (instance? Black (ITNode'''right t))
+                                    (PersistentTreeMap'balanceRightDel (:key t), (IMapEntry'''val t), (ITNode'''left t), del)
+                                    (PersistentTreeMap'red (:key t), (IMapEntry'''val t), (ITNode'''left t), del)
                                 )
                             )
                         )
@@ -13790,7 +13786,7 @@
     #_method
     (defn- #_"TNode" PersistentTreeMap''replace [#_"PersistentTreeMap" this, #_"TNode" t, #_"Object" key, #_"Object" val]
         (let [#_"int" cmp (PersistentTreeMap''doCompare this, key, (:key t))]
-            (TNode'''replace t, (:key t), (if (zero? cmp) val (IMapEntry'''val t)), (if (neg? cmp) (PersistentTreeMap''replace this, (TNode'''left t), key, val) (TNode'''left t)), (if (pos? cmp) (PersistentTreeMap''replace this, (TNode'''right t), key, val) (TNode'''right t)))
+            (ITNode'''replace t, (:key t), (if (zero? cmp) val (IMapEntry'''val t)), (if (neg? cmp) (PersistentTreeMap''replace this, (ITNode'''left t), key, val) (ITNode'''left t)), (if (pos? cmp) (PersistentTreeMap''replace this, (ITNode'''right t), key, val) (ITNode'''right t)))
         )
     )
 
@@ -13828,7 +13824,7 @@
                         this
                         (PersistentTreeMap'new (meta this), (:comp this), (PersistentTreeMap''replace this, (:tree this), key, val), (:_count this))
                     )
-                    (PersistentTreeMap'new (meta this), (:comp this), (TNode'''blacken t), (inc (:_count this)))
+                    (PersistentTreeMap'new (meta this), (:comp this), (ITNode'''blacken t), (inc (:_count this)))
                 )
             )
         )
@@ -13842,7 +13838,7 @@
                         this
                         (PersistentTreeMap'new (meta this), (:comp this))
                     )
-                    (PersistentTreeMap'new (meta this), (:comp this), (TNode'''blacken t), (dec (:_count this)))
+                    (PersistentTreeMap'new (meta this), (:comp this), (ITNode'''blacken t), (dec (:_count this)))
                 )
             )
         )
@@ -13970,7 +13966,7 @@
             (TransientVector'new (:cnt v), (:shift v), (TransientVector'editableRoot (:root v)), (TransientVector'editableTail (:tail v)))
         )
         ([#_"int" cnt, #_"int" shift, #_"VNode" root, #_"Object[]" tail]
-            (merge (TransientVector.) (AFn'new)
+            (merge (TransientVector.)
                 (hash-map
                     #_"int" :cnt cnt
                     #_"int" :shift shift
@@ -14560,12 +14556,20 @@
     (defn- #_"Repeat" Repeat'new
         ([#_"long" cnt, #_"Object" val] (Repeat'new nil, cnt, val))
         ([#_"IPersistentMap" meta, #_"long" cnt, #_"Object" val]
-            (merge (Repeat.) (ASeq'new meta)
+            (merge (Repeat.)
                 (hash-map
+                    #_"IPersistentMap" :_meta meta
+
                     #_"long" :cnt cnt ;; always INFINITE or pos?
                     #_"Object" :val val
                 )
             )
+        )
+    )
+
+    (extend-type Repeat IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"Repeat" this]
+            (:_meta this)
         )
     )
 
@@ -14657,8 +14661,10 @@
             (Range'new nil, start, end, step, boundsCheck)
         )
         ([#_"IPersistentMap" meta, #_"Object" start, #_"Object" end, #_"Object" step, #_"RangeBoundsCheck" boundsCheck]
-            (merge (Range.) (ASeq'new meta)
+            (merge (Range.)
                 (hash-map
+                    #_"IPersistentMap" :_meta meta
+
                     ;; Invariants guarantee this is never an "empty" seq
                     #_"Object" :start start
                     #_"Object" :end end
@@ -14666,6 +14672,12 @@
                     #_"RangeBoundsCheck" :boundsCheck boundsCheck
                 )
             )
+        )
+    )
+
+    (extend-type Range IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"Range" this]
+            (:_meta this)
         )
     )
 
@@ -14742,11 +14754,19 @@
 
 (class-ns StringSeq
     (defn- #_"StringSeq" StringSeq'new [#_"IPersistentMap" meta, #_"CharSequence" s, #_"int" i]
-        (merge (StringSeq.) (ASeq'new meta)
+        (merge (StringSeq.)
             (hash-map
+                #_"IPersistentMap" :_meta meta
+
                 #_"CharSequence" :s s
                 #_"int" :i i
             )
+        )
+    )
+
+    (extend-type StringSeq IMeta
+        (#_"IPersistentMap" IMeta'''meta [#_"StringSeq" this]
+            (:_meta this)
         )
     )
 
@@ -14830,7 +14850,7 @@
 
 (class-ns Unbound
     (defn #_"Unbound" Unbound'new [#_"Namespace" ns, #_"Symbol" sym]
-        (merge (Unbound.) (AFn'new)
+        (merge (Unbound.)
             (hash-map
                 #_"Namespace" :ns ns
                 #_"Symbol" :sym sym
@@ -14844,11 +14864,6 @@
         (#_"String" IObject'''toString [#_"Unbound" this]
             (str "Unbound: " (Var'toString (:ns this), (:sym this)))
         )
-    )
-
-    #_override
-    (defn #_"Object" AFn'''throwArity--Unbound [#_"Unbound" this, #_"int" n]
-        (throw! (str "attempting to call unbound fn: " (Var'toString (:ns this), (:sym this))))
     )
 )
 
@@ -15417,7 +15432,7 @@
     ([v start end] (RT'subvec v start end))
 )
 
-    (defn #_"ISeq" RT'list
+    (defn #_"ISeq" RT'list
         ([] nil)
         ([a1] (PersistentList'new a1))
         ([a1, a2] (list* a1 a2 nil))
@@ -15426,7 +15441,7 @@
         ([a1, a2, a3, a4, a5] (list* a1 a2 a3 a4 a5 nil))
     )
 
-    (defn #_"ISeq" RT'list*
+    (defn #_"ISeq" RT'list*
         ([a1, #_"ISeq" args] (cons a1 args))
         ([a1, a2, #_"ISeq" args] (cons a1 (cons a2 args)))
         ([a1, a2, a3, #_"ISeq" args] (cons a1 (cons a2 (cons a3 args))))
@@ -15774,37 +15789,6 @@
         )
     )
     ([ns name] (Keyword'find (symbol ns name)))
-)
-
-(defn- spread [s]
-    (cond
-        (nil? s) nil
-        (nil? (next s)) (seq (first s))
-        :else (cons (first s) (spread (next s)))
-    )
-)
-
-;;;
- ; Creates a new seq containing the items prepended to the rest,
- ; the last of which will be treated as a sequence.
- ;;
-(defn list*
-    ([s] (seq s))
-    ([a s] (cons a s))
-    ([a b s] (cons a (cons b s)))
-    ([a b c s] (cons a (cons b (cons c s))))
-    ([a b c d & s] (cons a (cons b (cons c (cons d (spread s))))))
-)
-
-;;;
- ; Applies fn f to the argument list formed by prepending intervening arguments to args.
- ;;
-(§ defn apply
-    ([^cloiure.core.IFn f s] (IFn'''applyTo f (seq s)))
-    ([^cloiure.core.IFn f a s] (IFn'''applyTo f (list* a s)))
-    ([^cloiure.core.IFn f a b s] (IFn'''applyTo f (list* a b s)))
-    ([^cloiure.core.IFn f a b c s] (IFn'''applyTo f (list* a b c s)))
-    ([^cloiure.core.IFn f a b c d & s] (IFn'''applyTo f (cons a (cons b (cons c (cons d (spread s)))))))
 )
 
 ;;;
