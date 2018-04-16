@@ -118,7 +118,7 @@
  ; bindings of functions to their names. All of the names are available
  ; in all of the definitions of the functions, as well as the body.
  ;;
-(defmacro letfn {:special-form true, :forms '[(letfn [fnspecs*] exprs*)]} [fnspecs & body]
+(defmacro letfn [fnspecs & body]
     `(letfn* ~(vec (interleave (map first fnspecs) (map #(cons `fn %) fnspecs))) ~@body)
 )
 
@@ -755,15 +755,6 @@
     ([^cloiure.core.IFn f a b c d & s] (IFn'''applyTo f (cons a (cons b (cons c (cons d (spread s)))))))
 )
 
-(java-ns cloiure.lang.Fn
-    (defprotocol Fn)
-)
-
-;;;
- ; Returns true if x implements Fn, i.e. is an object created via fn.
- ;;
-(defn fn? [x] (or (satisfies? Fn x) (instance? clojure.lang.Fn x)))
-
 (java-ns cloiure.lang.IType
     (defprotocol IType)
 )
@@ -1160,10 +1151,15 @@
 
 (§ defn keyword? [x] (or (instance? Keyword x) (instance? clojure.lang.Keyword x)))
 
-(java-ns cloiure.lang.AFunction
+(java-ns cloiure.lang.Fn
     #_abstract
-    (defrecord AFunction []) (extend-type AFunction AFn #_"Comparator" Fn IFn)
+    (defrecord Fn []) (extend-type Fn AFn #_"Comparator" IFn)
 )
+
+;;;
+ ; Returns true if x is an object created via fn.
+ ;;
+(defn fn? [x] (or (instance? Fn x) (instance? clojure.lang.Fn x)))
 
 (java-ns cloiure.lang.RestFn
     (defprotocol IRestFn
@@ -1183,7 +1179,7 @@
     )
 
     #_abstract
-    (defrecord RestFn #_"AFunction" []) (extend-type RestFn #_"Comparator" Fn IFn IRestFn)
+    (defrecord RestFn #_"Fn" []) (extend-type RestFn #_"Comparator" IFn IRestFn)
 )
 
 (java-ns cloiure.lang.ASeq
@@ -1292,7 +1288,6 @@
 )
 
 (java-ns cloiure.lang.PersistentList
-    (defrecord Primordial #_"RestFn" []) (extend-type Primordial #_"Comparator" Fn IFn IRestFn)
     (defrecord EmptyList []) (extend-type EmptyList Counted IHashEq IMeta IObj IObject IPersistentCollection IPersistentList IPersistentStack ISeq Seqable Sequential)
     (defrecord PersistentList []) (extend-type PersistentList ASeq Counted IHashEq IMeta IObj IObject IPersistentCollection IPersistentList IPersistentStack IReduce ISeq Seqable Sequential)
 )
@@ -5836,7 +5831,7 @@
 
         #_memoize!
         (#_"Class" Expr'''getClass [#_"FnExpr" this]
-            (if (some? (:tag this)) (Interop'tagToClass (:tag this)) AFunction)
+            (if (some? (:tag this)) (Interop'tagToClass (:tag this)) Fn)
         )
     )
 
@@ -5963,7 +5958,7 @@
                     (dissoc fmeta :line :column :rettag)
                 )
               fn (assoc fn :hasMeta (pos? (count fmeta)))
-              fn (IopObject''compile fn, (if (FnExpr''isVariadic fn) "clojure/lang/RestFn" "clojure/lang/AFunction"), nil, (:onceOnly fn))]
+              fn (IopObject''compile fn, (if (FnExpr''isVariadic fn) "cloiure/core/RestFn" "cloiure/core/Fn"), nil, (:onceOnly fn))]
             (when (IopObject'''supportsMeta fn) => fn
                 (MetaExpr'new fn, (MapExpr'parse (if (= context :Context'EVAL) context :Context'EXPRESSION), fmeta))
             )
@@ -9312,22 +9307,22 @@
     (declare Compiler'demunge)
 
     (defn #_"void" AFn'throwArity [#_"IFn" f, #_"int" n]
-        (throw! (str "wrong number of args (" (if (neg? n) (str "more than " (- n)) n) ") passed to: " (Compiler'demunge (.getName (class f)))))
+        (throw! (str "wrong number of args (" (if (neg? n) (str "more than " (dec (- n))) n) ") passed to: " (Compiler'demunge (.getName (class f)))))
     )
 
     (extend-type cloiure.core.AFn IFn
         (#_"Object" IFn'''invoke
-            ([#_"AFn" this]                                                    (AFn'throwArity this, 0))
-            ([#_"AFn" this, a1]                                                (AFn'throwArity this, 1))
-            ([#_"AFn" this, a1, a2]                                            (AFn'throwArity this, 2))
-            ([#_"AFn" this, a1, a2, a3]                                        (AFn'throwArity this, 3))
-            ([#_"AFn" this, a1, a2, a3, a4]                                    (AFn'throwArity this, 4))
-            ([#_"AFn" this, a1, a2, a3, a4, a5]                                (AFn'throwArity this, 5))
-            ([#_"AFn" this, a1, a2, a3, a4, a5, a6]                            (AFn'throwArity this, 6))
-            ([#_"AFn" this, a1, a2, a3, a4, a5, a6, a7]                        (AFn'throwArity this, 7))
-            ([#_"AFn" this, a1, a2, a3, a4, a5, a6, a7, a8]                    (AFn'throwArity this, 8))
-            ([#_"AFn" this, a1, a2, a3, a4, a5, a6, a7, a8, a9]                (AFn'throwArity this, 9))
-            ([#_"AFn" this, a1, a2, a3, a4, a5, a6, a7, a8, a9, #_"ISeq" args] (AFn'throwArity this, -9))
+            ([#_"AFn" this]                                                    (AFn'throwArity this,   0))
+            ([#_"AFn" this, a1]                                                (AFn'throwArity this,   1))
+            ([#_"AFn" this, a1, a2]                                            (AFn'throwArity this,   2))
+            ([#_"AFn" this, a1, a2, a3]                                        (AFn'throwArity this,   3))
+            ([#_"AFn" this, a1, a2, a3, a4]                                    (AFn'throwArity this,   4))
+            ([#_"AFn" this, a1, a2, a3, a4, a5]                                (AFn'throwArity this,   5))
+            ([#_"AFn" this, a1, a2, a3, a4, a5, a6]                            (AFn'throwArity this,   6))
+            ([#_"AFn" this, a1, a2, a3, a4, a5, a6, a7]                        (AFn'throwArity this,   7))
+            ([#_"AFn" this, a1, a2, a3, a4, a5, a6, a7, a8]                    (AFn'throwArity this,   8))
+            ([#_"AFn" this, a1, a2, a3, a4, a5, a6, a7, a8, a9]                (AFn'throwArity this,   9))
+            ([#_"AFn" this, a1, a2, a3, a4, a5, a6, a7, a8, a9, #_"ISeq" args] (AFn'throwArity this, -10))
         )
     )
 
@@ -9539,11 +9534,11 @@
 )
 )
 
-(java-ns cloiure.lang.AFunction
+(java-ns cloiure.lang.Fn
 
-(class-ns AFunction
-    (defn #_"AFunction" AFunction'new []
-        (merge (AFunction.)
+(class-ns Fn
+    (defn #_"Fn" Fn'new []
+        (merge (Fn.)
             (hash-map
                 #_"MethodImplCache'" :__methodImplCache (atom nil)
             )
@@ -9551,7 +9546,7 @@
     )
 
     #_foreign
-    (defn #_"int" compare---AFunction [#_"AFunction" this, #_"Object" o1, #_"Object" o2]
+    (defn #_"int" compare---Fn [#_"Fn" this, #_"Object" o1, #_"Object" o2]
         (let [#_"Object" o (IFn'''invoke this, o1, o2)]
             (if (instance? Boolean o)
                 (cond (boolean o) -1 (boolean (IFn'''invoke this, o2, o1)) 1 :else 0)
@@ -9566,7 +9561,7 @@
 
 (class-ns RestFn
     (defn #_"RestFn" RestFn'new []
-        (merge (RestFn.) (AFunction'new))
+        (merge (RestFn.) (Fn'new))
     )
 
     (extend-type RestFn IRestFn
@@ -9598,7 +9593,7 @@
                     7 (let [[a1 a2 a3 a4 a5 a6 a7 & s] s]       (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, s))
                     8 (let [[a1 a2 a3 a4 a5 a6 a7 a8 & s] s]    (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, a8, s))
                     9 (let [[a1 a2 a3 a4 a5 a6 a7 a8 a9 & s] s] (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, a8, a9, s))
-                      (AFn'throwArity this, -9)
+                      (AFn'throwArity this, -10)
                 )
             )
         )
@@ -9731,7 +9726,7 @@
                     7 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, (list* a8 a9 args))
                     8 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, a8, (list* a9 args))
                     9 (IRestFn'''doInvoke this, a1, a2, a3, a4, a5, a6, a7, a8, a9, args)
-                      (AFn'throwArity this, -9)
+                      (AFn'throwArity this, -10)
                 )
             )
         )
@@ -12691,34 +12686,6 @@
 
 (java-ns cloiure.lang.PersistentList
 
-(class-ns Primordial
-    (defn #_"Primordial" Primordial'new []
-        (merge (Primordial.) (RestFn'new))
-    )
-
-    (declare PersistentList'EMPTY)
-    (declare PersistentList'create)
-
-    (extend-type Primordial IRestFn
-        (#_"int" IRestFn'''requiredArity [#_"Primordial" this]
-            0
-        )
-
-        (#_"Object" IRestFn'''doInvoke [#_"Primordial" this, #_"ISeq" args]
-            (if (instance? ArraySeq args)
-                (let [#_"Object[]" a (:a args) #_"int" i0 (:i args)]
-                    (loop-when-recur [#_"IPersistentList" l PersistentList'EMPTY #_"int" i (dec (alength a))]
-                                     (<= i0 i)
-                                     [(conj l (aget a i)) (dec i)]
-                                  => l
-                    )
-                )
-                (PersistentList'create (RT'seqToArray (seq args)))
-            )
-        )
-    )
-)
-
 (class-ns EmptyList
     (def #_"int" EmptyList'HASHEQ (§ soon Murmur3'hashOrdered nil))
 
@@ -12810,9 +12777,7 @@
 )
 
 (class-ns PersistentList
-    (def #_"IFn" PersistentList'creator (§ soon Primordial'new))
-
-    (def #_"EmptyList" PersistentList'EMPTY (§ soon EmptyList'new nil))
+    (def #_"EmptyList" PersistentList'EMPTY (§ soon EmptyList'new nil))
 
     (defn #_"PersistentList" PersistentList'new
         ([#_"Object" _first] (PersistentList'new nil, _first, nil, 1))
@@ -15432,23 +15397,6 @@
     ([v start end] (RT'subvec v start end))
 )
 
-    (defn #_"ISeq" RT'list
-        ([] nil)
-        ([a1] (PersistentList'new a1))
-        ([a1, a2] (list* a1 a2 nil))
-        ([a1, a2, a3] (list* a1 a2 a3 nil))
-        ([a1, a2, a3, a4] (list* a1 a2 a3 a4 nil))
-        ([a1, a2, a3, a4, a5] (list* a1 a2 a3 a4 a5 nil))
-    )
-
-    (defn #_"ISeq" RT'list*
-        ([a1, #_"ISeq" args] (cons a1 args))
-        ([a1, a2, #_"ISeq" args] (cons a1 (cons a2 args)))
-        ([a1, a2, a3, #_"ISeq" args] (cons a1 (cons a2 (cons a3 args))))
-        ([a1, a2, a3, a4, #_"ISeq" args] (cons a1 (cons a2 (cons a3 (cons a4 args)))))
-        ([a1, a2, a3, a4, a5, #_"ISeq" args] (cons a1 (cons a2 (cons a3 (cons a4 (cons a5 args))))))
-    )
-
     (defn #_"ISeq" RT'arrayToSeq [#_"Object[]" a]
         (loop-when-recur [#_"ISeq" s nil #_"int" i (dec (alength a))] (<= 0 i) [(cons (aget a i) s) (dec i)] => s)
     )
@@ -15507,6 +15455,11 @@
         )
     )
 
+;;;
+ ; Returns an array of Objects containing the contents of coll.
+ ;;
+(§ defn ^objects to-array [coll] (RT'toArray coll))
+
     (declare LispReader'read)
 
     (defn #_"Object" RT'readString [#_"String" s]
@@ -15545,18 +15498,33 @@
 
 (clojure-ns cloiure.core
 
+(declare remove)
+
 ;;;
- ; Creates a new list containing the items.
+ ; A good fdecl looks like (([a] ...) ([a b] ...)) near the end of defn.
  ;;
-(§ def list (PersistentList'creator))
-
-;; during bootstrap we don't have destructuring let, loop or fn, will redefine later
-
-(§ def ^:macro let  (fn* let  [&form &env & decl] (cons 'let* decl)))
-(§ def ^:macro loop (fn* loop [&form &env & decl] (cons 'loop* decl)))
-(§ def ^:macro fn   (fn* fn   [&form &env & decl] (with-meta (cons 'fn* decl) (meta &form))))
-
-(defn- ^:dynamic assert-valid-fdecl [_])
+(defn- ^:dynamic assert-valid-fdecl [fdecl]
+    (when (seq fdecl) => (throw! "parameter declaration missing")
+        (let [argdecls
+                (map
+                    #(if (seq? %)
+                        (first %)
+                        (throw!
+                            (if (seq? (first fdecl))
+                                (str "invalid signature \"" % "\" should be a list")
+                                (str "parameter declaration \"" % "\" should be a vector")
+                            )
+                        )
+                    )
+                    fdecl
+                )
+            bad-args (seq (remove #(vector? %) argdecls))]
+            (when bad-args
+                (throw! (str "parameter declaration \"" (first bad-args) "\" should be a vector"))
+            )
+        )
+    )
+)
 
 (declare some)
 (declare mapv)
@@ -15616,11 +15584,6 @@
 )
 
 ;;;
- ; Returns an array of Objects containing the contents of coll.
- ;;
-(§ defn ^objects to-array [coll] (RT'toArray coll))
-
-;;;
  ; Creates a new vector containing the args.
  ;;
 (§ defn vector
@@ -15642,6 +15605,15 @@
     (when (and (vector? coll) (satisfies? IObj coll)) => (LazilyPersistentVector'create coll)
         (with-meta coll nil)
     )
+)
+
+;;;
+ ; Constructs an array-map.
+ ; If any keys are equal, they are handled as if by repeated uses of assoc.
+ ;;
+(§ defn array-map
+    ([] PersistentArrayMap'EMPTY)
+    ([& keyvals] (PersistentArrayMap'createAsIfByAssoc (to-array keyvals)))
 )
 
 ;;;
@@ -16783,7 +16755,6 @@
  ; Returns the value at the index/indices. Works on Java arrays of all types.
  ;;
 (§ defn aget
-    {:inline (fn [a i] `(RT'aget ~a (int ~i))) :inline-arities #{2}}
     ([a i]
         (Reflector'prepRet (.getComponentType (class a)) (Array/get a i))
     )
@@ -16797,7 +16768,6 @@
  ; Works on Java arrays of reference types. Returns value.
  ;;
 (§ defn aset
-    {:inline (fn [a i v] `(RT'aset ~a (int ~i) ~v)) :inline-arities #{3}}
     ([a i v]
         (Array/set a i v)
         v
@@ -17139,20 +17109,6 @@
     ([env sym] (ns-resolve *ns* env sym))
 )
 
-;;;
- ; Constructs an array-map.
- ; If any keys are equal, they are handled as if by repeated uses of assoc.
- ;;
-(§ defn array-map
-    ([] PersistentArrayMap/EMPTY)
-    ([& keyvals] (PersistentArrayMap'createAsIfByAssoc (to-array keyvals)))
-)
-
-;;;
- ; Return true if x is a symbol or keyword.
- ;;
-(defn ident? [x] (or (symbol? x) (keyword? x)))
-
 ;; redefine let and loop with destructuring
 
 (§ defn destructure [bindings]
@@ -17219,7 +17175,7 @@
                                                     (list `get gmap bk (defaults local))
                                                     (list `get gmap bk)
                                                 )]
-                                            (recur (if (ident? bb) (conj ret local bv) (pb ret bb bv)) (next bes))
+                                            (recur (if (or (symbol? bb) (keyword? bb)) (conj ret local bv) (pb ret bb bv)) (next bes))
                                         )
                                         ret
                                     )
@@ -17248,7 +17204,7 @@
  ; Evaluates the exprs in a lexical context in which the symbols in the
  ; binding-forms are bound to their respective init-exprs or parts therein.
  ;;
-(§ defmacro let {:special-form true, :forms '[(let [bindings*] exprs*)]} [bindings & body]
+(§ defmacro let [bindings & body]
     (assert-args
         (vector? bindings) "a vector for its binding"
         (even? (count bindings)) "an even number of forms in binding vector"
@@ -17283,7 +17239,7 @@
  ;
  ; Defines a function.
  ;;
-(§ defmacro fn {:special-form true, :forms '[(fn name? [params* ] exprs*) (fn name? ([params* ] exprs*)+)]} [& sigs]
+(§ defmacro fn [& sigs]
     (let [name (when (symbol? (first sigs)) (first sigs))
           sigs (if name (next sigs) sigs)
           sigs
@@ -17332,7 +17288,7 @@
  ; the binding-forms are bound to their respective init-exprs or parts
  ; therein. Acts as a recur target.
  ;;
-(§ defmacro loop {:special-form true, :forms '[(loop [bindings*] exprs*)]} [bindings & body]
+(§ defmacro loop [bindings & body]
     (assert-args
         (vector? bindings) "a vector for its binding"
         (even? (count bindings)) "an even number of forms in binding vector"
@@ -18746,7 +18702,7 @@
     (boolean (find-protocol-impl protocol x))
 )
 
-(§ defn -cache-protocol-fn [^AFunction pf x ^Class c ^cloiure.core.IFn interf]
+(§ defn -cache-protocol-fn [^Fn pf x ^Class c ^cloiure.core.IFn interf]
     (let [cache @(:__methodImplCache pf)
           f (if (instance? c x) interf (find-protocol-method (:protocol cache) (:methodk cache) x))]
         (when-not f
@@ -18762,7 +18718,7 @@
 )
 
 (§ defn- emit-method-builder [on-interface method on-method arglists]
-    (let [methodk (keyword method) gthis (with-meta (gensym) {:tag 'cloiure.core.AFunction}) ginterf (gensym)]
+    (let [methodk (keyword method) gthis (with-meta (gensym) {:tag 'cloiure.core.Fn}) ginterf (gensym)]
         `(fn [cache#]
             (let [~ginterf
                     (fn ~@(map
@@ -18773,7 +18729,7 @@
                         )
                         arglists
                     ))
-                  ^AFunction f#
+                  ^Fn f#
                     (fn ~gthis ~@(map
                         (fn [args]
                             (let [gargs (map #(gensym (str "gf__" % "__")) args) target (first gargs)]
@@ -19537,33 +19493,6 @@
                 ([x y z] (some #(or (% x) (% y) (% z)) ps))
                 ([x y z & args] (or (spn x y z) (some #(some % args) ps)))
             )
-        )
-    )
-)
-
-;;;
- ; A good fdecl looks like (([a] ...) ([a b] ...)) near the end of defn.
- ;;
-(§ defn- ^:dynamic assert-valid-fdecl [fdecl]
-    (when (empty? fdecl)
-        (throw! "parameter declaration missing")
-    )
-    (let [argdecls
-            (map
-                #(if (seq? %)
-                    (first %)
-                    (throw!
-                        (if (seq? (first fdecl))
-                            (str "invalid signature \"" % "\" should be a list")
-                            (str "parameter declaration \"" % "\" should be a vector")
-                        )
-                    )
-                )
-                fdecl
-            )
-          bad-args (seq (remove #(vector? %) argdecls))]
-        (when bad-args
-            (throw! (str "parameter declaration \"" (first bad-args) "\" should be a vector"))
         )
     )
 )
