@@ -108,7 +108,7 @@
 
 (defmacro any
     ([f x y] `(~f ~x ~y))
-    ([f x y & z] `(let [f# ~f x# ~x _# (any f# x# ~y)] (if _# _# (any f# x# ~@z))))
+    ([f x y & s] `(let [f# ~f x# ~x _# (any f# x# ~y)] (if _# _# (any f# x# ~@s))))
 )
 
 ;;;
@@ -492,11 +492,11 @@
  ; (str nil) returns the empty string.
  ; With more than one arg, returns the concatenation of the str values of the args.
  ;;
-(§ defn ^String str
+(defn ^String str
     ([] "")
     ([^Object x] (IObject'''toString x))
     ([x & y]
-        ((fn [^StringBuilder s z] (recur-if z [(.append s (str (first z))) (next z)] => (str s)))
+        ((fn [^StringBuilder sb s] (recur-if s [(.append sb (str (first s))) (next s)] => (str sb)))
             (StringBuilder. (str x)) y
         )
     )
@@ -525,13 +525,13 @@
     )
 )
 
-(§ defn seq? [x] (and (some? x) (satisfies? ISeq x)))
+(defn seq? [x] (and (some? x) (satisfies? ISeq x)))
 
 ;;;
  ; Returns a seq on coll. If coll is empty, returns nil.
  ; (seq nil) returns nil.
  ;;
-(§ defn ^cloiure.core.ISeq seq [s] (Seqable'''seq s))
+(defn ^cloiure.core.ISeq seq [s] (Seqable'''seq s))
 
 ;;;
  ; Returns true if coll has no items.
@@ -543,13 +543,13 @@
  ; Returns the first item in coll. Calls seq on its argument.
  ; If s is nil, returns nil.
  ;;
-(§ defn first [s] (ISeq'''first (if (satisfies? ISeq s) s (seq s))))
+(defn first [s] (ISeq'''first (if (satisfies? ISeq s) s (seq s))))
 
 ;;;
  ; Returns a seq of the items after the first. Calls seq on its argument.
  ; If there are no more items, returns nil.
  ;;
-(§ defn ^cloiure.core.ISeq next [s] (ISeq'''next (if (satisfies? ISeq s) s (seq s))))
+(defn ^cloiure.core.ISeq next [s] (ISeq'''next (if (satisfies? ISeq s) s (seq s))))
 
 (java-ns cloiure.lang.Counted
     (defprotocol Counted
@@ -581,7 +581,7 @@
     )
 )
 
-(§ defn second [s] (first (next s)))
+(defn second [s] (first (next s)))
 (defn third  [s] (first (next (next s))))
 (defn fourth [s] (first (next (next (next s)))))
 (defn last   [s] (if-some [r (next s)] (recur r) (first s)))
@@ -785,7 +785,7 @@
 ;;;
  ; Returns the metadata of obj, returns nil if there is no metadata.
  ;;
-(§ defn meta [x] (when (satisfies? IMeta x) (IMeta'''meta ^cloiure.core.IMeta x)))
+(defn meta [x] (when (satisfies? IMeta x) (IMeta'''meta ^cloiure.core.IMeta x)))
 
 (java-ns cloiure.lang.IObj
     (defprotocol IObj
@@ -796,13 +796,13 @@
 ;;;
  ; Returns an object of the same type and value as obj, with map m as its metadata.
  ;;
-(§ defn with-meta [^cloiure.core.IObj x m] (IObj'''withMeta x m))
+(defn with-meta [^cloiure.core.IObj x m] (IObj'''withMeta x m))
 
 ;;;
  ; Returns an object of the same type and value as x,
  ; with (apply f (meta x) args) as its metadata.
  ;;
-(§ defn vary-meta [x f & args] (with-meta x (apply f (meta x) args)))
+(defn vary-meta [x f & args] (with-meta x (apply f (meta x) args)))
 
 (java-ns cloiure.lang.IReference
     (defprotocol IReference
@@ -939,8 +939,8 @@
 ;;;
  ; Returns the key/value of/in the map entry.
  ;;
-(§ defn key [^cloiure.core.IMapEntry e] (IMapEntry'''key e))
-(§ defn val [^cloiure.core.IMapEntry e] (IMapEntry'''val e))
+(defn key [^cloiure.core.IMapEntry e] (IMapEntry'''key e))
+(defn val [^cloiure.core.IMapEntry e] (IMapEntry'''val e))
 
 ;;;
  ; Returns a sequence of the map's keys/values, in the same order as (seq m).
@@ -1014,7 +1014,7 @@
     )
 )
 
-(§ defn vector? [x] (or (satisfies? IPersistentVector x) (instance? clojure.lang.IPersistentVector x)))
+(defn vector? [x] (or (satisfies? IPersistentVector x) (instance? clojure.lang.IPersistentVector x)))
 
 (java-ns cloiure.lang.ITransientCollection
     (defprotocol ITransientCollection
@@ -1143,13 +1143,13 @@
     (defrecord Symbol []) (extend-type Symbol AFn #_"Comparable" IFn IHashEq IMeta INamed IObj IObject)
 )
 
-(§ defn symbol? [x] (or (instance? Symbol x) (instance? clojure.lang.Symbol x)))
+(defn symbol? [x] (or (instance? Symbol x) (instance? clojure.lang.Symbol x)))
 
 (java-ns cloiure.lang.Keyword
     (defrecord Keyword []) (extend-type Keyword AFn #_"Comparable" IFn IHashEq INamed IObject)
 )
 
-(§ defn keyword? [x] (or (instance? Keyword x) (instance? clojure.lang.Keyword x)))
+(defn keyword? [x] (or (instance? Keyword x) (instance? clojure.lang.Keyword x)))
 
 (java-ns cloiure.lang.Fn
     #_abstract
@@ -6637,7 +6637,7 @@
                                     1   (if hinted? ;; validate match
                                             (let [m (get matches mk)]
                                                 (when (nil? m)
-                                                    (throw! (str "can't find matching method: " (:name name) ", leave off hints for auto match."))
+                                                    (throw! (str "can't find matching method: " (:name name) ", leave off hints for auto match"))
                                                 )
                                                 (when-not (= (.getReturnType m) (:retClass nim))
                                                     (throw! (str "mismatched return type: " (:name name) ", expected: " (.getName (.getReturnType m)) ", had: " (.getName (:retClass nim))))
@@ -7404,7 +7404,7 @@
                                         (let [#_"Object" target (second form)
                                               target
                                                 (when (some? (Interop'maybeClass target, false)) => target
-                                                    (with-meta (list 'cloiure.core/identity target) {:tag 'java.lang.Class})
+                                                    (with-meta (list `identity target) {:tag 'java.lang.Class})
                                                 )]
                                             (Compiler'preserveTag form, (list* '. target (symbol (.substring n, 1)) (next (next form))))
                                         )
@@ -7940,7 +7940,7 @@
 
 (class-ns DerefReader
     (defn #_"Object" deref-reader [#_"PushbackReader" r, #_"char" _delim]
-        (list 'cloiure.core/deref (LispReader'read r))
+        (list `deref (LispReader'read r))
     )
 )
 
@@ -8054,11 +8054,11 @@
     )
 
     (defn #_"boolean" SyntaxQuoteReader'isUnquote [#_"Object" form]
-        (and (seq? form) (= (first form) 'cloiure.core/unquote))
+        (and (seq? form) (= (first form) `unquote))
     )
 
     (defn #_"boolean" SyntaxQuoteReader'isUnquoteSplicing [#_"Object" form]
-        (and (seq? form) (= (first form) 'cloiure.core/unquote-splicing))
+        (and (seq? form) (= (first form) `unquote-splicing))
     )
 
     (declare SyntaxQuoteReader'syntaxQuote)
@@ -8067,9 +8067,9 @@
         (loop-when [#_"PersistentVector" v [] s s] (some? s) => (seq v)
             (let [#_"Object" item (first s)
                   v (cond
-                        (SyntaxQuoteReader'isUnquote item)         (conj v (list 'cloiure.core/list (second item)))
+                        (SyntaxQuoteReader'isUnquote item)         (conj v (list `list (second item)))
                         (SyntaxQuoteReader'isUnquoteSplicing item) (conj v (second item))
-                        :else                                      (conj v (list 'cloiure.core/list (SyntaxQuoteReader'syntaxQuote item)))
+                        :else                                      (conj v (list `list (SyntaxQuoteReader'syntaxQuote item)))
                     )]
                 (recur v (next s))
             )
@@ -8106,14 +8106,14 @@
                     (coll? form)
                         (cond
                             (map? form)
-                                (list 'cloiure.core/apply 'cloiure.core/hash-map (list 'cloiure.core/seq (cons 'cloiure.core/concat (SyntaxQuoteReader'sqExpandList (seq (SyntaxQuoteReader'flattened form))))))
+                                (list `apply `hash-map (list `seq (cons `concat (SyntaxQuoteReader'sqExpandList (seq (SyntaxQuoteReader'flattened form))))))
                             (vector? form)
-                                (list 'cloiure.core/apply 'cloiure.core/vector (list 'cloiure.core/seq (cons 'cloiure.core/concat (SyntaxQuoteReader'sqExpandList (seq form)))))
+                                (list `apply `vector (list `seq (cons `concat (SyntaxQuoteReader'sqExpandList (seq form)))))
                             (set? form)
-                                (list 'cloiure.core/apply 'cloiure.core/hash-set (list 'cloiure.core/seq (cons 'cloiure.core/concat (SyntaxQuoteReader'sqExpandList (seq form)))))
+                                (list `apply `hash-set (list `seq (cons `concat (SyntaxQuoteReader'sqExpandList (seq form)))))
                             (or (seq? form) (list? form))
-                                (let-when [#_"ISeq" s (seq form)] (some? s) => (cons 'cloiure.core/list nil)
-                                    (list 'cloiure.core/seq (cons 'cloiure.core/concat (SyntaxQuoteReader'sqExpandList s)))
+                                (let-when [#_"ISeq" s (seq form)] (some? s) => (cons `list nil)
+                                    (list `seq (cons `concat (SyntaxQuoteReader'sqExpandList s)))
                                 )
                             :else
                                 (throw! "unknown collection type")
@@ -8124,7 +8124,7 @@
                         (list 'quote form)
                 )]
             (when (and (satisfies? IObj form) (seq (dissoc (meta form) :line :column))) => q
-                (list 'cloiure.core/with-meta q (SyntaxQuoteReader'syntaxQuote (meta form)))
+                (list `with-meta q (SyntaxQuoteReader'syntaxQuote (meta form)))
             )
         )
     )
@@ -8140,10 +8140,10 @@
     (defn #_"Object" unquote-reader [#_"PushbackReader" r, #_"char" _delim]
         (let-when [#_"char" ch (LispReader'read1 r)] (some? ch) => (throw! "EOF while reading character")
             (if (= ch \@)
-                (list 'cloiure.core/unquote-splicing (LispReader'read r))
+                (list `unquote-splicing (LispReader'read r))
                 (do
                     (LispReader'unread r, ch)
-                    (list 'cloiure.core/unquote (LispReader'read r))
+                    (list `unquote (LispReader'read r))
                 )
             )
         )
@@ -8487,7 +8487,7 @@
 ;;;
  ; Creates and returns an Atom with an initial value of x and optional meta m.
  ;;
-(§ defn atom
+(defn atom
     ([x] (Atom'new x))
     ([m x] (Atom'new m x))
 )
@@ -8503,7 +8503,7 @@
  ; Note that f may be called multiple times, and thus should be free of side effects.
  ; Returns the value that was swapped in.
  ;;
-(§ defn swap! [^cloiure.core.IAtom a f & args] (IAtom'''swap a f args))
+(defn swap! [^cloiure.core.IAtom a f & args] (IAtom'''swap a f args))
 
 ;;;
  ; Sets the value of atom to x' without regard for the current value.
@@ -8630,7 +8630,7 @@
  ; works for nil, and compares numbers and collections in a type-independent manner. Cloiure's
  ; immutable data structures define equals() (and thus =) as a value, not an identity, comparison.
  ;;
-(§ defn =
+(defn =
     ([x] true)
     ([x y] (Util'equiv x y))
     ([x y & s] (and (= x y) (recur-if (next s) [y (first s) (next s)] => (= y (first s)))))
@@ -9108,7 +9108,7 @@
 ;;;
  ; Returns non-nil if nums are in monotonically increasing order, otherwise false.
  ;;
-(§ defn <
+(defn <
     ([x] true)
     ([x y] (Numbers'lt x y))
     ([x y & s] (and (< x y) (recur-if (next s) [y (first s) (next s)] => (< y (first s)))))
@@ -9163,13 +9163,13 @@
  ; Returns true if n is zero | greater than zero | less than zero, else false.
  ;;
 (defn zero? [n] (Numbers'isZero n))
-(§ defn pos?  [n] (Numbers'isPos  n))
-(§ defn neg?  [n] (Numbers'isNeg  n))
+(defn pos?  [n] (Numbers'isPos  n))
+(defn neg?  [n] (Numbers'isNeg  n))
 
 ;;;
  ; Returns the sum of nums. (+) returns 0. Supports arbitrary precision.
  ;;
-(§ defn +
+(defn +
     ([] 0)
     ([x] (cast Number x))
     ([x y] (Numbers'add x y))
@@ -9180,7 +9180,7 @@
  ; If no ys are supplied, returns the negation of x, else subtracts
  ; the ys from x and returns the result. Supports arbitrary precision.
  ;;
-(§ defn -
+(defn -
     ([x] (Numbers'negate x))
     ([x y] (Numbers'subtract x y))
     ([x y & s] (reduce - (- x y) s))
@@ -9189,12 +9189,12 @@
 ;;;
  ; Returns a number one greater than num. Supports arbitrary precision.
  ;;
-(§ defn inc [x] (Numbers'inc x))
+(defn inc [x] (Numbers'inc x))
 
 ;;;
  ; Returns a number one less than num. Supports arbitrary precision.
  ;;
-(§ defn dec [x] (Numbers'dec x))
+(defn dec [x] (Numbers'dec x))
 
 ;;;
  ; Returns the product of nums. (*) returns 1. Supports arbitrary precision.
@@ -9290,7 +9290,7 @@
 ;;;
  ; Returns true if n is even, throws an exception if n is not an integer.
  ;;
-(§ defn even? [n]
+(defn even? [n]
     (when (integer? n) => (throw! (str "argument must be an integer: " n))
         (zero? (bit-and n 1))
     )
@@ -13423,13 +13423,13 @@
 (class-ns PersistentTreeMap
     (defn #_"PersistentTreeMap" PersistentTreeMap'new
         ([] (PersistentTreeMap'new compare))
-        ([#_"Comparator" comp] (PersistentTreeMap'new nil, comp))
-        ([#_"IPersistentMap" meta, #_"Comparator" comp] (PersistentTreeMap'new meta, comp, nil, 0))
-        ([#_"IPersistentMap" meta, #_"Comparator" comp, #_"TNode" tree, #_"int" _count]
+        ([#_"Comparator" cmp] (PersistentTreeMap'new nil, cmp))
+        ([#_"IPersistentMap" meta, #_"Comparator" cmp] (PersistentTreeMap'new meta, cmp, nil, 0))
+        ([#_"IPersistentMap" meta, #_"Comparator" cmp, #_"TNode" tree, #_"int" _count]
             (merge (PersistentTreeMap.) (APersistentMap'new)
                 (hash-map
                     #_"IPersistentMap" :_meta meta
-                    #_"Comparator" :comp comp
+                    #_"Comparator" :cmp cmp
                     #_"TNode" :tree tree
                     #_"int" :_count _count
                 )
@@ -13445,7 +13445,7 @@
 
     (extend-type PersistentTreeMap IObj
         (#_"PersistentTreeMap" IObj'''withMeta [#_"PersistentTreeMap" this, #_"IPersistentMap" meta]
-            (PersistentTreeMap'new meta, (:comp this), (:tree this), (:_count this))
+            (PersistentTreeMap'new meta, (:cmp this), (:tree this), (:_count this))
         )
     )
 
@@ -13459,8 +13459,8 @@
                 )
             )
         )
-        ([#_"Comparator" comp, #_"Seqable" keyvals]
-            (loop-when [#_"IPersistentMap" m (PersistentTreeMap'new comp) #_"ISeq" s (seq keyvals)] (some? s) => m
+        ([#_"Comparator" cmp, #_"Seqable" keyvals]
+            (loop-when [#_"IPersistentMap" m (PersistentTreeMap'new cmp) #_"ISeq" s (seq keyvals)] (some? s) => m
                 (when (some? (next s)) => (throw! (str "no value supplied for key: " (first s)))
                     (recur (assoc m (first s) (second s)) (next (next s)))
                 )
@@ -13486,7 +13486,7 @@
 
     (extend-type PersistentTreeMap IPersistentCollection
         (#_"IPersistentCollection" IPersistentCollection'''empty [#_"PersistentTreeMap" this]
-            (PersistentTreeMap'new (meta this), (:comp this))
+            (PersistentTreeMap'new (meta this), (:cmp this))
         )
     )
 
@@ -13500,13 +13500,13 @@
 
     (extend-type PersistentTreeMap Sorted
         (#_"Comparator" Sorted'''comparator [#_"PersistentTreeMap" this]
-            (:comp this)
+            (:cmp this)
         )
     )
 
     #_method
     (defn #_"int" PersistentTreeMap''doCompare [#_"PersistentTreeMap" this, #_"Object" k1, #_"Object" k2]
-        (.compare (:comp this), k1, k2)
+        (.compare (:cmp this), k1, k2)
     )
 
     (extend-type PersistentTreeMap Sorted
@@ -13787,9 +13787,9 @@
                 (if (nil? t)
                     (if (= (IMapEntry'''val (cast TNode @found)) val)
                         this
-                        (PersistentTreeMap'new (meta this), (:comp this), (PersistentTreeMap''replace this, (:tree this), key, val), (:_count this))
+                        (PersistentTreeMap'new (meta this), (:cmp this), (PersistentTreeMap''replace this, (:tree this), key, val), (:_count this))
                     )
-                    (PersistentTreeMap'new (meta this), (:comp this), (ITNode'''blacken t), (inc (:_count this)))
+                    (PersistentTreeMap'new (meta this), (:cmp this), (ITNode'''blacken t), (inc (:_count this)))
                 )
             )
         )
@@ -13801,9 +13801,9 @@
                 (if (nil? t)
                     (if (nil? @found)
                         this
-                        (PersistentTreeMap'new (meta this), (:comp this))
+                        (PersistentTreeMap'new (meta this), (:cmp this))
                     )
-                    (PersistentTreeMap'new (meta this), (:comp this), (ITNode'''blacken t), (dec (:_count this)))
+                    (PersistentTreeMap'new (meta this), (:cmp this), (ITNode'''blacken t), (dec (:_count this)))
                 )
             )
         )
@@ -13837,8 +13837,8 @@
     (def #_"PersistentTreeSet" PersistentTreeSet'EMPTY (PersistentTreeSet'new nil, PersistentTreeMap'EMPTY))
 
     (defn #_"PersistentTreeSet" PersistentTreeSet'create
-        ([                     #_"Seqable" items] (into PersistentTreeSet'EMPTY                                        items))
-        ([#_"Comparator" comp, #_"Seqable" items] (into (PersistentTreeSet'new nil, (PersistentTreeMap'new nil, comp)) items))
+        ([                    #_"Seqable" items] (into PersistentTreeSet'EMPTY                                       items))
+        ([#_"Comparator" cmp, #_"Seqable" items] (into (PersistentTreeSet'new nil, (PersistentTreeMap'new nil, cmp)) items))
     )
 
     (extend-type PersistentTreeSet IPersistentSet
@@ -15026,7 +15026,7 @@
     )
 
     (defn #_"IPersistentCollection" RT'conj [#_"IPersistentCollection" coll, #_"Object" x]
-        (if (some? coll) (ITransientCollection'''conj coll, x) (list x))
+        (if (some? coll) (IPersistentCollection'''conj coll, x) (list x))
     )
 
 ;;;
@@ -15041,22 +15041,14 @@
     ([coll x & s] (recur-if s [(conj coll x) (first s) (next s)] => (conj coll x)))
 )
 
-    (defn #_"ISeq" RT'cons [#_"Object" x, #_"Seqable" s]
-        (cond
-            (nil? s) (list x)
-            (seq? s) (Cons'new x, s)
-            :else    (Cons'new x, (seq s))
-        )
-    )
-
 ;;;
- ; Returns a new seq where x is the first element and seq is the rest.
+ ; Returns a new seq where x is the first element and s is the rest.
  ;;
-(§ def cons (fn* cons [x seq] (RT'cons x seq)))
+(defn cons [x s] (Cons'new x, (seq s)))
 
-    (defn #_"Object" RT'peek [#_"Object" x]
-        (when (some? x)
-            (IPersistentStack'''peek (cast cloiure.core.IPersistentStack x))
+    (defn #_"Object" RT'peek [#_"IPersistentStack" s]
+        (when (some? s)
+            (IPersistentStack'''peek s)
         )
     )
 
@@ -15064,11 +15056,11 @@
  ; For a list or queue, same as first, for a vector, same as, but much
  ; more efficient than, last. If the collection is empty, returns nil.
  ;;
-(defn peek [coll] (RT'peek coll))
+(defn peek [s] (RT'peek s))
 
-    (defn #_"Object" RT'pop [#_"Object" x]
-        (when (some? x)
-            (IPersistentStack'''pop (cast cloiure.core.IPersistentStack x))
+    (defn #_"Object" RT'pop [#_"IPersistentStack" s]
+        (when (some? s)
+            (IPersistentStack'''pop s)
         )
     )
 
@@ -15078,7 +15070,7 @@
  ; If the collection is empty, throws an exception.
  ; Note - not the same as next/butlast.
  ;;
-(defn pop [coll] (RT'pop coll))
+(defn pop [s] (RT'pop s))
 
     (defn #_"Object" RT'get
         ([#_"Object" coll, #_"Object" key]
@@ -15137,7 +15129,7 @@
  ; When applied to a map, returns a new map of the same (hashed/sorted) type, that contains the mapping of key(s) to val(s).
  ; When applied to a vector, returns a new vector that contains val at index. Note - index must be <= (count vector).
  ;;
-(§ defn assoc
+(defn assoc
     ([a k v] (RT'assoc a k v))
     ([a k v & kvs]
         (let-when [a (assoc a k v)] kvs => a
@@ -15456,9 +15448,9 @@
     )
 
 ;;;
- ; Returns an array of Objects containing the contents of coll.
+ ; Returns an array of Objects containing the contents of s.
  ;;
-(§ defn ^objects to-array [coll] (RT'toArray coll))
+(defn ^objects to-array [s] (RT'toArray s))
 
     (declare LispReader'read)
 
@@ -15558,14 +15550,12 @@
 ;;;
  ; Same as (def name (fn [params*] exprs*)) or (def name (fn ([params*] exprs*)+)) with any attrs added to the var metadata.
  ;;
-(§ defmacro defn [&form &env fname & s]
+(defmacro defn [&form &env fname & s]
     ;; note: cannot delegate this check to def because of the call to (with-meta name ...)
     (when (symbol? fname) => (throw! "first argument to defn must be a symbol")
-        (let [m (if (map?    (first s)) (first s)        {})
-              s (if (map?    (first s)) (next s)          s)
-              s (if (vector? (first s)) (list s)          s)
-              m (if (map?    (last  s)) (conj m (last s)) m)
-              s (if (map?    (last  s)) (butlast s)       s)
+        (let [m (if (map?    (first s)) (first s) {})
+              s (if (map?    (first s)) (next s)   s)
+              s (if (vector? (first s)) (list s)   s)
               m (conj {:arglists (list 'quote (sigs s))} m)
               m (let [inline (:inline m) ifn (first inline) iname (second inline)]
                     (when (and (= 'fn ifn) (not (symbol? iname))) => m
@@ -15586,7 +15576,7 @@
 ;;;
  ; Creates a new vector containing the args.
  ;;
-(§ defn vector
+(defn vector
     ([] [])
     ([a] [a])
     ([a b] [a b])
@@ -15598,12 +15588,12 @@
 )
 
 ;;;
- ; Creates a new vector containing the contents of coll.
+ ; Creates a new vector containing the contents of s.
  ; Java arrays will be aliased and should not be modified.
  ;;
-(§ defn vec [coll]
-    (when (and (vector? coll) (satisfies? IObj coll)) => (LazilyPersistentVector'create coll)
-        (with-meta coll nil)
+(defn vec [s]
+    (when (and (vector? s) (satisfies? IObj s)) => (LazilyPersistentVector'create s)
+        (with-meta s nil)
     )
 )
 
@@ -15611,7 +15601,7 @@
  ; Constructs an array-map.
  ; If any keys are equal, they are handled as if by repeated uses of assoc.
  ;;
-(§ defn array-map
+(defn array-map
     ([] PersistentArrayMap'EMPTY)
     ([& keyvals] (PersistentArrayMap'createAsIfByAssoc (to-array keyvals)))
 )
@@ -15621,7 +15611,7 @@
  ; Returns a new hash map with supplied mappings.
  ; If any keys are equal, they are handled as if by repeated uses of assoc.
  ;;
-(§ defn hash-map
+(defn hash-map
     ([] {})
     ([& keyvals] (PersistentHashMap'create keyvals))
 )
@@ -15630,7 +15620,7 @@
  ; Returns a new hash set with supplied keys.
  ; Any equal keys are handled as if by repeated uses of conj.
  ;;
-(§ defn hash-set
+(defn hash-set
     ([] #{})
     ([& keys] (PersistentHashSet'create keys))
 )
@@ -15647,7 +15637,7 @@
  ; Returns a new sorted map with supplied mappings, using the supplied comparator.
  ; If any keys are equal, they are handled as if by repeated uses of assoc.
  ;;
-(defn sorted-map-by [comp & keyvals] (PersistentTreeMap'create comp keyvals))
+(defn sorted-map-by [cmp & keyvals] (PersistentTreeMap'create cmp keyvals))
 
 ;;;
  ; Returns a new sorted set with supplied keys.
@@ -15659,74 +15649,23 @@
  ; Returns a new sorted set with supplied keys, using the supplied comparator.
  ; Any equal keys are handled as if by repeated uses of conj.
  ;;
-(defn sorted-set-by [comp & keys] (PersistentTreeSet'create comp keys))
+(defn sorted-set-by [cmp & keys] (PersistentTreeSet'create cmp keys))
 
 ;;;
  ; Like defn, but the resulting function name is declared as a macro
  ; and will be used as a macro by the compiler when it is called.
  ;;
-(§ def defmacro
-    (fn [&form &env name & args]
-        (let [prefix
-                (loop [p (list name) args args]
-                    (let [f (first args)]
-                        (if (string? f)
-                            (recur (cons f p) (next args))
-                            (if (map? f)
-                                (recur (cons f p) (next args))
-                                p
-                            )
-                        )
-                    )
-                )
-              fdecl
-                (loop [fd args]
-                    (if (string? (first fd))
-                        (recur (next fd))
-                        (if (map? (first fd))
-                            (recur (next fd))
-                            fd
-                        )
-                    )
-                )
-              fdecl (if (vector? (first fdecl)) (list fdecl) fdecl)
-              add-implicit-args
-                (fn [fd]
-                    (let [args (first fd)]
-                        (cons (vec (cons '&form (cons '&env args))) (next fd))
-                    )
-                )
-              add-args
-                (fn [acc ds]
-                    (if (nil? ds)
-                        acc
-                        (let [d (first ds)]
-                            (if (map? d)
-                                (conj acc d)
-                                (recur (conj acc (add-implicit-args d)) (next ds))
-                            )
-                        )
-                    )
-                )
-              fdecl (seq (add-args [] fdecl))
-              decl
-                (loop [p prefix d fdecl]
-                    (if p
-                        (recur (next p) (cons (first p) d))
-                        d
-                    )
-                )]
-            (list 'do (cons `defn decl) (list '. (list 'var name) '(setMacro)) (list 'var name))
-        )
+(defmacro defmacro [&form &env name & args]
+    (let [[m s] (split-with map? args) s (if (vector? (first s)) (list s) s)
+          s (map (fn [bindings & body] (cons (apply vector '&form '&env bindings) body)) s)]
+        `(do (defn ~name ~@m ~@s) (Var''setMacro (var ~name)) (var ~name))
     )
 )
-
-(§ .setMacro (var defmacro))
 
 ;;;
  ; Returns a Symbol with the given namespace and name.
  ;;
-(§ defn ^Symbol symbol
+(defn ^Symbol symbol
     ([name] (if (symbol? name) name (Symbol'intern name)))
     ([ns name] (Symbol'intern ns name))
 )
@@ -15821,9 +15760,9 @@
 ;;;
  ; Coerce to boolean/int/long.
  ;;
-(§ defn boolean [x] (RT'booleanCast x))
-(§ defn int     [x] (RT'intCast     x))
-(§ defn long    [x] (RT'longCast    x))
+(defn boolean [x] (RT'booleanCast x))
+(defn int     [x] (RT'intCast     x))
+(defn long    [x] (RT'longCast    x))
 
 ;;;
  ; Returns a seq of the items in coll in reverse order. Not lazy.
@@ -15904,14 +15843,13 @@
  ; are made in parallel (unlike let); all init-exprs are evaluated
  ; before the vars are bound to their new values.
  ;;
-(§ defmacro binding [bindings & body]
+(defmacro binding [bindings & body]
     (assert-args
         (vector? bindings) "a vector for its binding"
         (even? (count bindings)) "an even number of forms in binding vector"
     )
-    (let [var-ize
-            (fn [var-vals]
-                (loop-when-recur [v [] s (seq var-vals)] s [(conj (conj v `(var ~(first s))) (second s)) (next (next s))] => (seq v))
+    (letfn [(var-ize [var-vals]
+                (loop-when-recur [v [] s (seq var-vals)] s [(conj v `(var ~(first s)) (second s)) (next (next s))] => (seq v))
             )]
         `(do
             (push-thread-bindings (hash-map ~@(var-ize bindings)))
@@ -16119,7 +16057,7 @@
  ; f should accept number-of-colls arguments. Returns a transducer when
  ; no collection is provided.
  ;;
-(§ defn map
+(defn map
     ([f]
         (fn [g]
             (fn
@@ -16348,7 +16286,7 @@
 ;;;
  ; Returns a vector of [(take n coll) (drop n coll)].
  ;;
-(§ defn split-at [n s] [(take n s) (drop n s)])
+(defn split-at [n s] [(take n s) (drop n s)])
 
 ;;;
  ; Returns a vector of [(take-while f? coll) (drop-while f? coll)].
@@ -16377,9 +16315,9 @@
  ;;
 (defn range
     ([] (iterate inc 0))
-    ([end] (Range'create end))
-    ([start end] (Range'create start end))
-    ([start end step] (Range'create start end step))
+    ([over] (Range'create over))
+    ([from over] (Range'create from over))
+    ([from over step] (Range'create from over step))
 )
 
 ;;;
@@ -16387,7 +16325,7 @@
  ; the first. If a key occurs in more than one map, the mapping from
  ; the latter (left-to-right) will be the mapping in the result.
  ;;
-(§ defn merge [& maps]
+(defn merge [& maps]
     (when (some identity maps)
         (reduce #(conj (or %1 {}) %2) maps)
     )
@@ -16449,10 +16387,10 @@
  ;;
 (defn sort
     ([s] (sort compare s))
-    ([^Comparator comp s]
+    ([^Comparator cmp s]
         (when (seq s) => ()
             (let [a (to-array s)]
-                (Arrays/sort a comp)
+                (Arrays/sort a cmp)
                 (seq a)
             )
         )
@@ -16467,7 +16405,7 @@
  ;;
 (defn sort-by
     ([f s] (sort-by f compare s))
-    ([f ^Comparator comp s] (sort #(.compare comp (f %1) (f %2)) s))
+    ([f ^Comparator cmp s] (sort #(.compare cmp (f %1) (f %2)) s))
 )
 
 ;;;
@@ -16651,19 +16589,17 @@
  ; For each name in class-name-symbols, adds a mapping from name to the class named by package.name
  ; to the current namespace. Use :import in the ns macro in preference to calling this directly.
  ;;
-(§ defmacro import [& import-symbols-or-lists]
-    (let [specs (map #(if (and (seq? %) (= 'quote (first %))) (second %) %) import-symbols-or-lists)]
-        `(do
-            ~@(map #(list 'import* %)
-                (reduce
-                    (fn [v spec]
-                        (if (symbol? spec)
-                            (conj v (name spec))
-                            (let [p (first spec) cs (next spec)] (into v (map #(str p "." %) cs)))
-                        )
+(defmacro import [& s]
+    `(do
+        ~@(map #(list 'import* %)
+            (reduce
+                (fn [v s]
+                    (if (symbol? s)
+                        (conj v (name s))
+                        (into v (map #(str (first s) "." %) (next s)))
                     )
-                    [] specs
                 )
+                [] (map #(if (and (seq? %) (= 'quote (first %))) (second %) %) s)
             )
         )
     )
@@ -16718,16 +16654,10 @@
  ; :eof - on eof, return value unless :eofthrow, then throw.
  ;        if not specified, will throw.
  ;;
-(§ defn read
-    ([]
-        (read *in*)
-    )
-    ([stream]
-        (read stream true nil)
-    )
-    ([stream eof-error? eof-value]
-        (LispReader'read stream (boolean eof-error?) eof-value)
-    )
+(defn read
+    ([] (read *in*))
+    ([s] (read s true nil))
+    ([s eof-error? eof-value] (LispReader'read s (boolean eof-error?) eof-value))
 )
 
 ;;;
@@ -16742,11 +16672,11 @@
  ;
  ; (doto (new java.util.HashMap) (.put "a" 1) (.put "b" 2))
  ;;
-(§ defmacro doto [x & forms]
-    (let [gx (gensym)]
-        `(let [~gx ~x]
-            ~@(map (fn [f] (with-meta (if (seq? f) `(~(first f) ~gx ~@(next f)) `(~f ~gx)) (meta f))) forms)
-            ~gx
+(defmacro doto [x & s]
+    (let [x' (gensym)]
+        `(let [~x' ~x]
+            ~@(map (fn [f] (with-meta (if (seq? f) `(~(first f) ~x' ~@(next f)) `(~f ~x')) (meta f))) s)
+            ~x'
         )
     )
 )
@@ -16754,38 +16684,24 @@
 ;;;
  ; Returns the value at the index/indices. Works on Java arrays of all types.
  ;;
-(§ defn aget
-    ([a i]
-        (Reflector'prepRet (.getComponentType (class a)) (Array/get a i))
-    )
-    ([a i & s]
-        (apply aget (aget a i) s)
-    )
+(defn aget
+    ([a i] (Reflector'prepRet (.getComponentType (class a)) (Array/get a i)))
+    ([a i & s] (apply aget (aget a i) s))
 )
 
 ;;;
  ; Sets the value at the index/indices.
  ; Works on Java arrays of reference types. Returns value.
  ;;
-(§ defn aset
-    ([a i v]
-        (Array/set a i v)
-        v
-    )
-    ([a i j & s]
-        (apply aset (aget a i) j s)
-    )
+(defn aset
+    ([a i v] (Array/set a i v) v)
+    ([a i j & s] (apply aset (aget a i) j s))
 )
 
 (defmacro- def-aset [name method coerce]
     `(defn ~name
-        ([a# i# v#]
-            (. Array (~method a# i# (~coerce v#)))
-            v#
-        )
-        ([a# i# j# & s#]
-            (apply ~name (aget a# i#) j# s#)
-        )
+        ([a# i# v#] (. Array (~method a# i# (~coerce v#))) v#)
+        ([a# i# j# & s#] (apply ~name (aget a# i#) j# s#))
     )
 )
 
@@ -16793,7 +16709,7 @@
  ; Sets the value at the index/indices. Works on arrays of boolean/byte/char/int/long. Returns value.
  ;;
 (def-aset aset-boolean setBoolean boolean)
-(§ def-aset aset-byte    setByte    byte   )
+(def-aset aset-byte    setByte    byte   )
 (def-aset aset-char    setChar    char   )
 (def-aset aset-int     setInt     int    )
 (def-aset aset-long    setLong    long   )
@@ -16863,7 +16779,7 @@
  ; If passed a namespace, returns it. Else, when passed a symbol,
  ; returns the namespace named by it, throwing an exception if not found.
  ;;
-(§ defn ^Namespace the-ns [x]
+(defn ^Namespace the-ns [x]
     (if (instance? Namespace x)
         x
         (or (find-ns x) (throw! (str "no namespace: " x " found")))
@@ -16878,46 +16794,36 @@
 ;;;
  ; Returns a map of all the mappings for the namespace.
  ;;
-(§ defn ns-map [ns] (Namespace''getMappings (the-ns ns)))
+(defn ns-map [ns] (Namespace''getMappings (the-ns ns)))
 
 ;;;
  ; Removes the mappings for the symbol from the namespace.
  ;;
-(§ defn ns-unmap [ns sym] (Namespace''unmap (the-ns ns) sym))
+(defn ns-unmap [ns sym] (Namespace''unmap (the-ns ns) sym))
+
+;;;
+ ; Returns a map of the intern mappings for the namespace.
+ ;;
+(defn ns-interns [ns]
+    (let [ns (the-ns ns)]
+        (filter-key val (fn [^Var v] (and (var? v) (= ns (:ns v)))) (ns-map ns))
+    )
+)
 
 ;;;
  ; Returns a map of the public intern mappings for the namespace.
  ;;
-(§ defn ns-publics [ns]
+(defn ns-publics [ns]
     (let [ns (the-ns ns)]
-        (filter-key val
-            (fn [^Var v]
-                (and (var? v) (= ns (:ns v)) (Var''isPublic v))
-            )
-            (ns-map ns)
-        )
+        (filter-key val (fn [^Var v] (and (var? v) (= ns (:ns v)) (Var''isPublic v))) (ns-map ns))
     )
 )
 
 ;;;
  ; Returns a map of the import mappings for the namespace.
  ;;
-(§ defn ns-imports [ns]
+(defn ns-imports [ns]
     (filter-key val (partial instance? Class) (ns-map ns))
-)
-
-;;;
- ; Returns a map of the intern mappings for the namespace.
- ;;
-(§ defn ns-interns [ns]
-    (let [ns (the-ns ns)]
-        (filter-key val
-            (fn [^Var v]
-                (and (var? v) (= ns (:ns v)))
-            )
-            (ns-map ns)
-        )
-    )
 )
 
 ;;;
@@ -16934,25 +16840,14 @@
  ; be used to select a subset, via inclusion or exclusion, or to provide a mapping
  ; to a symbol different from the var's name, in order to prevent clashes.
  ;;
-(§ defn refer [ns-sym & filters]
-    (let [ns (or (find-ns ns-sym) (throw! (str "no namespace: " ns-sym)))
-          fs (apply hash-map filters)
-          nspublics (ns-publics ns)
-          rename (or (:rename fs) {})
-          exclude (set (:exclude fs))
-          to-do
-            (if (= :all (:refer fs))
-                (keys nspublics)
-                (or (:refer fs) (:only fs) (keys nspublics))
-            )]
-        (when (and to-do (not (sequential? to-do)))
-            (throw! "the value of :only/:refer must be a sequential collection of symbols")
-        )
-        (doseq [sym to-do]
-            (when-not (exclude sym)
-                (let [v (nspublics sym)]
-                    (when v => (throw! (str sym (if (get (ns-interns ns) sym) " is not public" " does not exist")))
-                        (Namespace''refer *ns* (or (rename sym) sym) v)
+(defn refer [ns-sym & filters]
+    (let [ns (the-ns ns-sym) ps* (ns-publics ns) fs* (apply hash-map filters)
+          r (:refer fs*) s (if (= r :all) (keys ps*) (or r (:only fs*) (keys ps*)))]
+        (when (sequential? s) => (throw! "the value of :only/:refer must be a sequential collection of symbols")
+            (let [es* (set (:exclude fs*)) rs* (or (:rename fs*) {})]
+                (doseq [x (remove es* s)]
+                    (let-when [v (ps* x)] (some? v) => (throw! (str x (if (get (ns-interns ns) x) " is not public" " does not exist")))
+                        (Namespace''refer *ns* (or (rs* x) x) v)
                     )
                 )
             )
@@ -16963,37 +16858,32 @@
 ;;;
  ; Returns a map of the refer mappings for the namespace.
  ;;
-(§ defn ns-refers [ns]
+(defn ns-refers [ns]
     (let [ns (the-ns ns)]
-        (filter-key val
-            (fn [^Var v]
-                (and (var? v) (not= ns (:ns v)))
-            )
-            (ns-map ns)
-        )
+        (filter-key val (fn [^Var v] (and (var? v) (not= ns (:ns v)))) (ns-map ns))
     )
 )
 
 ;;;
  ; Add an alias in the current namespace to another namespace.
- ; Arguments are two symbols: the alias to be used, and the symbolic name of the target namespace.
+ ; Arguments are two symbols: the alias to be used, and [the symbolic name of] the target namespace.
  ; Use :as in the ns macro in preference to calling this directly.
  ;;
-(§ defn alias [alias namespace-sym]
-    (Namespace''addAlias *ns* alias (the-ns namespace-sym))
+(defn alias [sym ns]
+    (Namespace''addAlias *ns* sym (the-ns ns))
 )
 
 ;;;
  ; Returns a map of the aliases for the namespace.
  ;;
-(§ defn ns-aliases [ns]
+(defn ns-aliases [ns]
     (Namespace''getAliases (the-ns ns))
 )
 
 ;;;
  ; Removes the alias for the symbol from the namespace.
  ;;
-(§ defn ns-unalias [ns sym]
+(defn ns-unalias [ns sym]
     (Namespace''removeAlias (the-ns ns) sym)
 )
 
@@ -18524,10 +18414,10 @@
 
 (§ defn- validate-fields [fields name]
     (when-not (vector? fields)
-        (throw! "No fields vector given.")
+        (throw! "no fields vector given")
     )
     (let-when [specials '#{__meta __extmap __hash __hasheq}] (some specials fields)
-        (throw! (str "The names in " specials " cannot be used as field names for types."))
+        (throw! (str "the names in " specials " cannot be used as field names for types"))
     )
     (let-when [non-syms (remove symbol? fields)] (seq non-syms)
         (throw! (apply str "deftype fields must be symbols, " *ns* "." name " had: " (interpose ", " non-syms)))
@@ -18761,6 +18651,23 @@
     )
 )
 
+(§ defn- assert-same-protocol [protocol-var method-syms]
+    (doseq [m method-syms]
+        (let [v (resolve m) pv (:protocol (meta v))]
+            (when (and v (bound? v) (not= protocol-var pv))
+                (.println *err*,
+                    (str "WARNING: protocol " protocol-var " is overwriting "
+                        (if pv
+                            (str "method " (:sym v) " of protocol " (:sym pv))
+                            (str "function " (:sym v))
+                        )
+                    )
+                )
+            )
+        )
+    )
+)
+
 (§ defn- emit-protocol [name opts+sigs]
     (let [iname (symbol (str (munge (namespace-munge *ns*)) "." (munge name)))
           [opts sigs]
@@ -18784,7 +18691,7 @@
                                     )
                                 )]
                             (when (some #{0} (map count arglists))
-                                (throw! (str "definition of function " mname " in protocol " name " must take at least one arg."))
+                                (throw! (str "definition of function " mname " in protocol " name " must take at least one arg"))
                             )
                             (when (m (keyword mname))
                                 (throw! (str "function " mname " in protocol " name " was redefined: specify all arities in single definition"))
