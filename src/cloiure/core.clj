@@ -16891,19 +16891,16 @@
  ; Returns a lazy seq of every nth item in coll.
  ; Returns a stateful transducer when no collection is provided.
  ;;
-(§ defn take-nth
+(defn take-nth
     ([n]
-        (fn [rf]
-            (let [iv (atom -1)]
+        (fn [g]
+            (let [i' (atom -1)]
                 (fn
-                    ([] (rf))
-                    ([result] (rf result))
-                    ([result input]
-                        (let [i (swap! iv inc)]
-                            (if (zero? (rem i n))
-                                (rf result input)
-                                result
-                            )
+                    ([] (g))
+                    ([x] (g x))
+                    ([x y]
+                        (let-when [i (swap! i' inc)] (zero? (rem i n)) => x
+                            (g x y)
                         )
                     )
                 )
@@ -16922,24 +16919,20 @@
 ;;;
  ; Returns a lazy seq of the first item in each coll, then the second, etc.
  ;;
-(§ defn interleave
+(defn interleave
     ([] ())
     ([c1] (lazy-seq c1))
     ([c1 c2]
         (lazy-seq
-            (let [s1 (seq c1) s2 (seq c2)]
-                (when (and s1 s2)
-                    (cons (first s1) (cons (first s2) (interleave (next s1) (next s2))))
-                )
+            (let-when [s1 (seq c1) s2 (seq c2)] (and s1 s2)
+                (cons (first s1) (cons (first s2) (interleave (next s1) (next s2))))
             )
         )
     )
-    ([c1 c2 & colls]
+    ([c1 c2 & cs]
         (lazy-seq
-            (let [ss (map seq (conj colls c2 c1))]
-                (when (every? identity ss)
-                    (concat (map first ss) (apply interleave (map next ss)))
-                )
+            (let-when [ss (map seq (conj cs c2 c1))] (every? identity ss)
+                (concat (map first ss) (apply interleave (map next ss)))
             )
         )
     )
@@ -16959,18 +16952,17 @@
 ;;;
  ; varbinding => symbol init-expr
  ;
- ; Executes the exprs in a context in which the symbols are bound to
- ; vars with per-thread bindings to the init-exprs. The symbols refer
- ; to the var objects themselves, and must be accessed with var-get and
- ; var-set.
+ ; Executes the exprs in a context in which the symbols are bound to vars
+ ; with per-thread bindings to the init-exprs. The symbols refer to the
+ ; var objects themselves, and must be accessed with var-get and var-set.
  ;;
-(§ defmacro with-local-vars [name-vals-vec & body]
+(defmacro with-local-vars [bindings & body]
     (assert-args
-        (vector? name-vals-vec) "a vector for its binding"
-        (even? (count name-vals-vec)) "an even number of forms in binding vector"
+        (vector? bindings) "a vector for its binding"
+        (even? (count bindings)) "an even number of forms in binding vector"
     )
-    `(let [~@(interleave (take-nth 2 name-vals-vec) (repeat '(Var'new nil, nil)))]
-        (push-thread-bindings (hash-map ~@name-vals-vec))
+    `(let [~@(interleave (take-nth 2 bindings) (repeat '(Var'new nil, nil)))]
+        (push-thread-bindings (hash-map ~@bindings))
         (try
             ~@body
             (finally
@@ -17001,89 +16993,73 @@
 
 ;; redefine let and loop with destructuring
 
-(§ defn destructure [bindings]
-    (let [bents (partition 2 bindings)
-          pb (fn pb [bvec b v]
-                (let [pvec
-                        (fn [bvec b val]
-                            (let [gvec (gensym "vec__") gseq (gensym "seq__") gfirst (gensym "first__") has-rest (some #{'&} b)]
-                                (loop [ret (let [ret (conj bvec gvec val)] (if has-rest (conj ret gseq (list `seq gvec)) ret)) n 0 bs b seen-rest? false]
-                                    (if (seq bs)
-                                        (let [firstb (first bs)]
-                                            (cond
-                                                (= firstb '&)   (recur (pb ret (second bs) gseq) n (next (next bs)) true)
-                                                (= firstb :as)  (pb ret (second bs) gvec)
-                                                :else           (if seen-rest?
-                                                                    (throw! "unsupported binding form, only :as can follow & parameter")
-                                                                    (recur
-                                                                        (pb (if has-rest (conj ret gfirst `(first ~gseq) gseq `(next ~gseq)) ret)
-                                                                            firstb
-                                                                            (if has-rest gfirst (list `nth gvec n nil))
-                                                                        )
-                                                                        (inc n) (next bs) seen-rest?
-                                                                    )
-                                                                )
-                                            )
+(defn destructure [bindings]
+    (letfn [(vec- [v x y]
+                (let [v' (gensym "v__") s' (gensym "s__") f' (gensym "f__") amp (some #{'&} x)]
+                    (loop-when [v (let [v (conj v v' y)] (if amp (conj v s' `(seq ~v')) v)) n 0 s (seq x) amp? false] s => v
+                        (case (first s)
+                            '&  (recur (destructure- v (second s) s') n (next (next s)) true)
+                            :as (destructure- v (second s) v')
+                                (when-not amp? => (throw! "unsupported binding form, only :as can follow & parameter")
+                                    (recur
+                                        (destructure- (if amp (conj v f' `(first ~s') s' `(next ~s')) v)
+                                            (first s)
+                                            (if amp f' `(nth ~v' ~n nil))
                                         )
-                                        ret
+                                        (inc n) (next s) amp?
                                     )
                                 )
-                            )
                         )
-                      pmap
-                        (fn [bvec b v]
-                            (let [gmap (gensym "map__") gmapseq (with-meta gmap {:tag 'cloiure.core.ISeq}) defaults (:or b)]
-                                (loop [ret (-> (conj bvec gmap v gmap)
-                                            (conj `(if (seq? ~gmap) (PersistentHashMap'create ~gmapseq) ~gmap))
-                                            ((fn [ret] (if (:as b) (conj ret (:as b) gmap) ret)))
-                                        )
-                                       bes (let [trafos (reduce
-                                                    (fn [trafos mk]
-                                                        (if (keyword? mk)
-                                                            (let [mkns (namespace mk) mkn (name mk)]
-                                                                (case mkn
-                                                                    "keys" (assoc trafos mk #(keyword (or mkns (namespace %)) (name %)))
-                                                                    "syms" (assoc trafos mk #(list `quote (symbol (or mkns (namespace %)) (name %))))
-                                                                    "strs" (assoc trafos mk str)
-                                                                           trafos
-                                                                )
-                                                            )
-                                                            trafos
-                                                        )
-                                                    )
-                                                    {} (keys b)
-                                                )]
-                                            (reduce
-                                                (fn [bes entry] (reduce #(assoc %1 %2 ((val entry) %2)) (dissoc bes (key entry)) ((key entry) bes)))
-                                                (dissoc b :as :or) trafos
-                                            )
-                                        )]
-                                    (if (seq bes)
-                                        (let [bb (key (first bes)) bk (val (first bes))
-                                              local (if (satisfies? INamed bb) (with-meta (symbol nil (name bb)) (meta bb)) bb)
-                                              bv (if (contains? defaults local)
-                                                    (list `get gmap bk (defaults local))
-                                                    (list `get gmap bk)
-                                                )]
-                                            (recur (if (or (symbol? bb) (keyword? bb)) (conj ret local bv) (pb ret bb bv)) (next bes))
-                                        )
-                                        ret
-                                    )
-                                )
-                            )
-                        )]
-                    (cond
-                        (symbol? b) (conj bvec b v)
-                        (vector? b) (pvec bvec b v)
-                        (map? b) (pmap bvec b v)
-                        :else (throw! (str "unsupported binding form: " b))
                     )
                 )
             )
-          process-entry (fn [bvec b] (pb bvec (first b) (second b)))]
-        (if (every? symbol? (map first bents))
-            bindings
-            (reduce process-entry [] bents)
+            (map- [v x y]
+                (let [m' (gensym "m__") ms' (with-meta m' {:tag 'cloiure.core.ISeq}) as (:as x) or* (:or x)
+                      v (conj v m' y m' `(if (seq? ~m') (apply hash-map ~ms') ~m')) v (if as (conj v as m') v)
+                      s (reduce
+                            (fn [m e] (reduce #(assoc %1 %2 ((val e) %2)) (dissoc m (key e)) ((key e) m)))
+                            (dissoc x :as :or)
+                            (reduce
+                                (fn [m k]
+                                    (when (keyword? k) => m
+                                        (let [ns (namespace k)]
+                                            (case (name k)
+                                                "keys" (assoc m k #(keyword (or ns (namespace %)) (name %)))
+                                                "syms" (assoc m k #(list 'quote (symbol (or ns (namespace %)) (name %))))
+                                                "strs" (assoc m k str)
+                                                       m
+                                            )
+                                        )
+                                    )
+                                )
+                                {} (keys x)
+                            )
+                        )]
+                    (loop-when [v v s (seq s)] s => v
+                        (let [x (key (first s)) k (val (first s))
+                              local (if (satisfies? INamed x) (with-meta (symbol nil (name x)) (meta x)) x)
+                              y (if (contains? or* local)
+                                    `(get ~m' ~k ~(or* local))
+                                    `(get ~m' ~k)
+                                )]
+                            (recur (if (or (symbol? x) (keyword? x)) (conj v local y) (destructure- v x y)) (next s))
+                        )
+                    )
+                )
+            )
+            (destructure- [v x y]
+                (cond
+                    (symbol? x) (conj v x y)
+                    (vector? x) (vec- v x y)
+                    (map? x)    (map- v x y)
+                    :else       (throw! (str "unsupported binding form: " x))
+                )
+            )]
+        (let [pairs (partition 2 bindings)]
+            (if (every? symbol? (map first pairs))
+                bindings
+                (reduce #(destructure- %1 (first %2) (second %2)) [] pairs)
+            )
         )
     )
 )
@@ -17094,7 +17070,7 @@
  ; Evaluates the exprs in a lexical context in which the symbols in the
  ; binding-forms are bound to their respective init-exprs or parts therein.
  ;;
-(§ defmacro let [bindings & body]
+(defmacro let [bindings & body]
     (assert-args
         (vector? bindings) "a vector for its binding"
         (even? (count bindings)) "an even number of forms in binding vector"
@@ -17102,18 +17078,15 @@
     `(let* ~(destructure bindings) ~@body)
 )
 
-(§ defn- maybe-destructured [params body]
-    (if (every? symbol? params)
-        (cons params body)
-        (loop [params params new-params (with-meta [] (meta params)) lets []]
-            (if params
-                (if (symbol? (first params))
-                    (recur (next params) (conj new-params (first params)) lets)
-                    (let [gparam (gensym "p__")]
-                        (recur (next params) (conj new-params gparam) (conj lets (first params) gparam))
-                    )
+(defn- maybe-destructured [pars body]
+    (if (every? symbol? pars)
+        (cons (vec pars) body)
+        (loop-when [s (seq pars) pars (with-meta [] (meta pars)) lets []] s => `(~pars (let ~lets ~@body))
+            (if (symbol? (first s))
+                (recur (next s) (conj pars (first s)) lets)
+                (let [p' (gensym "p__")]
+                    (recur (next s) (conj pars p') (conj lets (first s) p'))
                 )
-                `(~new-params (let ~lets ~@body))
             )
         )
     )
@@ -17129,47 +17102,37 @@
  ;
  ; Defines a function.
  ;;
-(§ defmacro fn [& sigs]
-    (let [name (when (symbol? (first sigs)) (first sigs))
-          sigs (if name (next sigs) sigs)
-          sigs
-            (if (vector? (first sigs))
-                (list sigs)
-                (if (seq? (first sigs))
-                    sigs
+(defmacro fn [& s]
+    (let [name (when (symbol? (first s)) (first s)) s (if name (next s) s)
+          s (if (vector? (first s))
+                (list s)
+                (if (seq? (first s))
+                    s
                     ;; assume single arity syntax
                     (throw!
-                        (if (seq sigs)
-                            (str "parameter declaration " (first sigs) " should be a vector")
+                        (if (seq s)
+                            (str "parameter declaration " (first s) " should be a vector")
                             (str "parameter declaration missing")
                         )
                     )
                 )
             )
-          psig
+          sig-
             (fn* [sig]
                 ;; ensure correct type before destructuring sig
-                (when (not (seq? sig))
-                    (throw! (str "invalid signature " sig " should be a list"))
-                )
-                (let [[params & body] sig
-                      _ (when (not (vector? params))
-                            (throw!
-                                (if (seq? (first sigs))
-                                    (str "parameter declaration " params " should be a vector")
-                                    (str "invalid signature " sig " should be a list")
-                                )
-                            )
-                        )
-                      conds (when (and (next body) (map? (first body))) (first body))
-                      body (if conds (next body) body)
-                      conds (or conds (meta params))
-                ]
-                    (maybe-destructured params body)
+                (when (seq? sig) => (throw! (str "invalid signature " sig " should be a list"))
+                    (let-when [[pars & body] sig] (vector? pars) => (throw!
+                                                                        (if (seq? (first s))
+                                                                            (str "parameter declaration " pars " should be a vector")
+                                                                            (str "invalid signature " sig " should be a list")
+                                                                        )
+                                                                    )
+                        (maybe-destructured pars (or (and (map? (first body)) (next body)) body))
+                    )
                 )
             )
-          new-sigs (map psig sigs)]
-        (with-meta (if name (list* 'fn* name new-sigs) (cons 'fn* new-sigs)) (meta &form))
+          s (map sig- s)]
+        (with-meta (if name (list* 'fn* name s) (cons 'fn* s)) (meta &form))
     )
 )
 
@@ -17178,31 +17141,22 @@
  ; the binding-forms are bound to their respective init-exprs or parts
  ; therein. Acts as a recur target.
  ;;
-(§ defmacro loop [bindings & body]
+(defmacro loop [bindings & body]
     (assert-args
         (vector? bindings) "a vector for its binding"
         (even? (count bindings)) "an even number of forms in binding vector"
     )
-    (let [db (destructure bindings)]
-        (if (= db bindings)
-            `(loop* ~bindings ~@body)
-            (let [vs (take-nth 2 (drop 1 bindings))
-                  bs (take-nth 2 bindings)
-                  gs (map (fn [b] (if (symbol? b) b (gensym))) bs)
-                  bfs (reduce
-                        (fn [ret [b v g]]
-                            (if (symbol? b)
-                                (conj ret g v)
-                                (conj ret g v b g)
-                            )
-                        )
-                        [] (map vector bs vs gs)
-                    )]
-                `(let ~bfs
-                    (loop* ~(vec (interleave gs gs))
-                        (let ~(vec (interleave bs gs))
-                            ~@body
-                        )
+    (if (= (destructure bindings) bindings)
+        `(loop* ~bindings ~@body)
+        (let [s (take-nth 2 bindings) s' (map #(if (symbol? %) % (gensym)) s)
+              v (reduce
+                    (fn [v [x y z]] (if (symbol? x) (conj v z y) (conj v z y x z)))
+                    [] (map vector s (take-nth 2 (drop 1 bindings)) s')
+                )]
+            `(let ~v
+                (loop* ~(vec (interleave s' s'))
+                    (let ~(vec (interleave s s'))
+                        ~@body
                     )
                 )
             )
@@ -17216,8 +17170,8 @@
  ;
  ; (lazy-cat xs ys zs) === (concat (lazy-seq xs) (lazy-seq ys) (lazy-seq zs))
  ;;
-(§ defmacro lazy-cat [& colls]
-    `(concat ~@(map #(list `lazy-seq %) colls))
+(defmacro lazy-cat [& s]
+    `(concat ~@(map #(list `lazy-seq %) s))
 )
 
 ;;;
@@ -18335,16 +18289,16 @@
 (§ defn- parse-opts+specs [opts+specs]
     (let [[opts specs] (parse-opts opts+specs)
           impls (parse-impls specs)
-          interfaces
+          ifaces
             (-> (map #(if (var? (resolve %)) (:on (deref (resolve %))) %) (keys impls))
                 set (disj 'Object 'java.lang.Object) vec
             )
           methods
-            (map (fn [[name params & body]] (cons name (maybe-destructured params body))) (apply concat (vals impls)))]
+            (map (fn [[name pars & body]] (cons name (maybe-destructured pars body))) (apply concat (vals impls)))]
         (when-some [bad-opts (seq (keys opts))]
             (throw! (apply str "unsupported option(s): " (interpose ", " bad-opts)))
         )
-        [interfaces methods opts]
+        [ifaces methods opts]
     )
 )
 
