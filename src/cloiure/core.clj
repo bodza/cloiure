@@ -1362,6 +1362,11 @@
     (defrecord Var []) (extend-type Var IDeref IFn IMeta IObject IReference)
 )
 
+;;;
+ ; Returns true if v is of type Var.
+ ;;
+(defn var? [v] (instance? Var v))
+
 (java-ns cloiure.lang.RT
     #_stateless
     (defrecord RT [])
@@ -1960,13 +1965,6 @@
 
     (def- #_"Type[]" Compiler'EXCEPTION_TYPES (make-array Type 0))
 
-    (declare contains?)
-    (declare Compiler'specials)
-
-    (defn #_"boolean" Compiler'isSpecial [#_"Object" sym]
-        (contains? Compiler'specials sym)
-    )
-
     (defn #_"boolean" Compiler'inTailCall [#_"Context" context]
         (and (= context :Context'RETURN) *in-return-context* (not *in-catch-finally*))
     )
@@ -2226,6 +2224,8 @@
             lb
         )
     )
+
+    (declare contains?)
 
     (defn- #_"void" Compiler'closeOver [#_"LocalBinding" lb, #_"IopMethod" m]
         (when (and (some? lb) (some? m) (not (contains? (:locals m) (:uid lb))))
@@ -7390,6 +7390,15 @@
             '&             nil
         )
     )
+
+    (defn #_"boolean" Compiler'isSpecial [#_"Object" sym]
+        (contains? Compiler'specials sym)
+    )
+
+;;;
+ ; Returns true if s names a special form.
+ ;;
+(defn special-symbol? [s] (contains? Compiler'specials s))
 
     (defn #_"Object" Compiler'macroexpand1 [#_"Object" form]
         (when (seq? form) => form
@@ -16124,16 +16133,16 @@
         (fn [g]
             (fn
                 ([] (g))
-                ([x] (g x))
-                ([x y] (if (f? y) (g x y) x))
+                ([s] (g s))
+                ([s x] (if (f? x) (g s x) s))
             )
         )
     )
     ([f? s]
         (lazy-seq
             (when-some [s (seq s)]
-                (let-when [x (first s) s (next s)] (f? x) => (filter f? s)
-                    (cons x (filter f? s))
+                (let-when [x (first s)] (f? x) => (filter f? (next s))
+                    (cons x (filter f? (next s)))
                 )
             )
         )
@@ -16160,10 +16169,10 @@
             (let [n' (atom n)]
                 (fn
                     ([] (g))
-                    ([x] (g x))
-                    ([x y]
-                        (let [n @n' m (swap! n' dec) x (if (pos? n) (g x y) x)]
-                            (if (pos? m) x (ensure-reduced x))
+                    ([s] (g s))
+                    ([s x]
+                        (let [n @n' m (swap! n' dec) s (if (pos? n) (g s x) s)]
+                            (if (pos? m) s (ensure-reduced s))
                         )
                     )
                 )
@@ -16191,16 +16200,16 @@
         (fn [g]
             (fn
                 ([] (g))
-                ([x] (g x))
-                ([x y] (if (f? y) (g x y) (reduced x)))
+                ([s] (g s))
+                ([s x] (if (f? x) (g s x) (reduced s)))
             )
         )
     )
     ([f? s]
         (lazy-seq
             (when-some [s (seq s)]
-                (when (f? (first s))
-                    (cons (first s) (take-while f? (next s)))
+                (let-when [x (first s)] (f? x)
+                    (cons x (take-while f? (next s)))
                 )
             )
         )
@@ -16217,8 +16226,8 @@
             (let [n' (atom n)]
                 (fn
                     ([] (g))
-                    ([x] (g x))
-                    ([x y] (if (neg? (swap! n' dec)) (g x y) x))
+                    ([s] (g s))
+                    ([s x] (if (neg? (swap! n' dec)) (g s x) s))
                 )
             )
         )
@@ -16261,11 +16270,11 @@
             (let [drop? (atom true)]
                 (fn
                     ([] (g))
-                    ([x] (g x))
-                    ([x y]
-                        (when-not (and @drop? (f? y)) => x
+                    ([s] (g s))
+                    ([s x]
+                        (when-not (and @drop? (f? x)) => s
                             (reset! drop? nil)
-                            (g x y)
+                            (g s x)
                         )
                     )
                 )
@@ -16897,19 +16906,19 @@
             (let [i' (atom -1)]
                 (fn
                     ([] (g))
-                    ([x] (g x))
-                    ([x y]
-                        (let-when [i (swap! i' inc)] (zero? (rem i n)) => x
-                            (g x y)
+                    ([s] (g s))
+                    ([s x]
+                        (let-when [i (swap! i' inc)] (zero? (rem i n)) => s
+                            (g s x)
                         )
                     )
                 )
             )
         )
     )
-    ([n coll]
+    ([n s]
         (lazy-seq
-            (when-some [s (seq coll)]
+            (when-some [s (seq s)]
                 (cons (first s) (take-nth n (drop n s)))
             )
         )
@@ -17185,61 +17194,60 @@
  ;
  ; (take 100 (for [x (range 100000000) y (range 1000000) :while (< y x)] [x y]))
  ;;
-(§ defmacro for [seq-exprs body-expr]
+(defmacro for [bindings body]
     (assert-args
-        (vector? seq-exprs) "a vector for its binding"
-        (even? (count seq-exprs)) "an even number of forms in binding vector"
+        (vector? bindings) "a vector for its binding"
+        (even? (count bindings)) "an even number of forms in binding vector"
     )
-    (let [to-groups
-            (fn [seq-exprs]
+    (letfn [(group- [bindings]
                 (reduce
-                    (fn [groups [k v]]
-                        (if (keyword? k)
-                            (conj (pop groups) (conj (peek groups) [k v]))
-                            (conj groups [k v])
+                    (fn [v [x y]]
+                        (if (keyword? x)
+                            (conj (pop v) (conj (peek v) [x y]))
+                            (conj v [x y])
                         )
                     )
-                    [] (partition 2 seq-exprs)
+                    [] (partition 2 bindings)
                 )
             )
-          emit-bind
-            (fn emit-bind [[[bind expr & mod-pairs] & [[_ next-expr] :as next-groups]]]
-                (let [i- (gensym "i__") s- (gensym "s__")
-                      do-mod
-                        (fn do-mod [[[k v :as pair] & etc]]
-                            (cond
-                                (= k :let) `(let ~v ~(do-mod etc))
-                                (= k :while) `(when ~v ~(do-mod etc))
-                                (= k :when) `(if ~v ~(do-mod etc) (recur (next ~s-)))
-                                (keyword? k) (throw! (str "Invalid 'for' keyword " k))
-                                next-groups
-                                    `(let [iterys# ~(emit-bind next-groups) fs# (seq (iterys# ~next-expr))]
-                                        (if fs#
-                                            (concat fs# (~i- (next ~s-)))
-                                            (recur (next ~s-))
+            (emit- [[[x _ & z] & [[_ e] :as more]]]
+                (let [f' (gensym "f_") s' (gensym "s_")]
+                    (letfn [(mod- [[[k v] & z]]
+                                (if (keyword? k)
+                                    (case k
+                                        :let   `(let ~v ~(mod- z))
+                                        :while `(when ~v ~(mod- z))
+                                        :when  `(if ~v ~(mod- z) (recur (next ~s')))
+                                    )
+                                    (when more => `(cons ~body (~f' (next ~s')))
+                                        `(let [f# ~(emit- more) s# (seq (f# ~e))]
+                                            (if s#
+                                                (concat s# (~f' (next ~s')))
+                                                (recur (next ~s'))
+                                            )
                                         )
                                     )
-                                :else `(cons ~body-expr (~i- (next ~s-)))
-                            )
-                        )]
-                    (if next-groups
-                        #_"not the inner-most loop"
-                        `(fn ~i- [~s-]
-                            (lazy-seq
-                                (loop [~s- ~s-]
-                                    (when-first [~bind ~s-]
-                                        ~(do-mod mod-pairs)
+                                )
+                            )]
+                        (if more
+                            #_"not the inner-most loop"
+                            `(fn ~f' [~s']
+                                (lazy-seq
+                                    (loop [~s' ~s']
+                                        (when-first [~x ~s']
+                                            ~(mod- z)
+                                        )
                                     )
                                 )
                             )
-                        )
-                        #_"inner-most loop"
-                        `(fn ~i- [~s-]
-                            (lazy-seq
-                                (loop [~s- ~s-]
-                                    (when-some [~s- (seq ~s-)]
-                                        (let [~bind (first ~s-)]
-                                            ~(do-mod mod-pairs)
+                            #_"inner-most loop"
+                            `(fn ~f' [~s']
+                                (lazy-seq
+                                    (loop [~s' ~s']
+                                        (when-some [~s' (seq ~s')]
+                                            (let [~x (first ~s')]
+                                                ~(mod- z)
+                                            )
                                         )
                                     )
                                 )
@@ -17248,26 +17256,19 @@
                     )
                 )
             )]
-        `(~(emit-bind (to-groups seq-exprs)) ~(second seq-exprs))
+        `(~(emit- (group- bindings)) ~(second bindings))
     )
 )
 
 ;;;
  ; Returns an instance of java.util.regex.Pattern, for use, e.g. in re-matcher.
  ;;
-(§ defn ^Pattern re-pattern [s]
-    (if (instance? Pattern s)
-        s
-        (Pattern/compile s)
-    )
-)
+(defn ^Pattern re-pattern [s] (if (instance? Pattern s) s (Pattern/compile s)))
 
 ;;;
  ; Returns an instance of java.util.regex.Matcher, for use, e.g. in re-find.
  ;;
-(§ defn ^Matcher re-matcher [^Pattern re s]
-    (.matcher re s)
-)
+(defn ^Matcher re-matcher [^Pattern re s] (.matcher re s))
 
 ;;;
  ; Returns the groups from the most recent match/find. If there are no
@@ -17275,7 +17276,7 @@
  ; nested groups, returns a vector of the groups, the first element
  ; being the entire match.
  ;;
-(§ defn re-groups [^Matcher m]
+(defn re-groups [^Matcher m]
     (let-when [n (.groupCount m)] (pos? n) => (.group m)
         (into [] (for [i (range (inc n))] (.group m i)))
     )
@@ -17286,7 +17287,7 @@
  ; using java.util.regex.Matcher.find(), each such match processed with
  ; re-groups.
  ;;
-(§ defn re-seq [^Pattern re s]
+(defn re-seq [^Pattern re s]
     (let [m (re-matcher re s)]
         ((fn step []
             (when (.find m)
@@ -17297,24 +17298,22 @@
 )
 
 ;;;
- ; Returns the match, if any, of string to pattern, using
- ; java.util.regex.Matcher.matches(). Uses re-groups to return
- ; the groups.
+ ; Returns the match, if any, of string to pattern,
+ ; using java.util.regex.Matcher.matches().
+ ; Uses re-groups to return the groups.
  ;;
-(§ defn re-matches [^Pattern re s]
-    (let [m (re-matcher re s)]
-        (when (.matches m)
-            (re-groups m)
-        )
+(defn re-matches [^Pattern re s]
+    (let-when [m (re-matcher re s)] (.matches m)
+        (re-groups m)
     )
 )
 
 ;;;
- ; Returns the next regex match, if any, of string to pattern, using
- ; java.util.regex.Matcher.find(). Uses re-groups to return
- ; the groups.
+ ; Returns the next regex match, if any, of string to pattern,
+ ; using java.util.regex.Matcher.find().
+ ; Uses re-groups to return the groups.
  ;;
-(§ defn re-find
+(defn re-find
     ([^Matcher m]
         (when (.find m)
             (re-groups m)
@@ -17330,59 +17329,35 @@
 ;;;
  ; Returns a lazy sequence of the nodes in a tree, via a depth-first walk.
  ; branch? must be a fn of one arg that returns true if passed a node
- ; that can have children (but may not). children must be a fn of one
- ; arg that returns a sequence of the children. Will only be called on
- ; nodes for which branch? returns true. Root is the root node of the
- ; tree.
+ ; that can have children (but may not). children must be a fn of one arg
+ ; that returns a sequence of the children. Will only be called on nodes
+ ; for which branch? returns true. Root is the root node of the tree.
  ;;
 (defn tree-seq [branch? children root]
-    (let [walk
-            (fn walk [node]
+    (letfn [(walk- [node]
                 (lazy-seq
-                    (cons node (when (branch? node) (mapcat walk (children node))))
+                    (cons node (when (branch? node) (mapcat walk- (children node))))
                 )
             )]
-        (walk root)
+        (walk- root)
     )
-)
-
-;;;
- ; Returns true if s names a special form.
- ;;
-(§ defn special-symbol? [s] (contains? Compiler/specials s))
-
-;;;
- ; Returns true if v is of type Var.
- ;;
-(defn var? [v] (instance? Var v))
-
-;;;
- ; Returns the substring of s beginning at start inclusive,
- ; and ending at end (defaults to length of string), exclusive.
- ;;
-(§ defn ^String subs
-    ([^String s start    ] (.substring s start    ))
-    ([^String s start end] (.substring s start end))
 )
 
 ;;;
  ; Returns the x for which (k x), a number, is greatest.
  ; If there are multiple such xs, the last one is returned.
  ;;
-(§ defn max-key
+(defn max-key
     ([k x] x)
     ([k x y] (if (> (k x) (k y)) x y))
-    ([k x y & more]
+    ([k x y & s]
         (let [kx (k x) ky (k y) [v kv] (if (> kx ky) [x kx] [y ky])]
-            (loop [v v kv kv more more]
-                (if more
-                    (let [w (first more) kw (k w)]
-                        (if (>= kw kv)
-                            (recur w kw (next more))
-                            (recur v kv (next more))
-                        )
+            (loop-when [v v kv kv s s] s => v
+                (let [w (first s) kw (k w)]
+                    (if (>= kw kv)
+                        (recur w kw (next s))
+                        (recur v kv (next s))
                     )
-                    v
                 )
             )
         )
@@ -17393,20 +17368,17 @@
  ; Returns the x for which (k x), a number, is least.
  ; If there are multiple such xs, the last one is returned.
  ;;
-(§ defn min-key
+(defn min-key
     ([k x] x)
     ([k x y] (if (< (k x) (k y)) x y))
-    ([k x y & more]
+    ([k x y & s]
         (let [kx (k x) ky (k y) [v kv] (if (< kx ky) [x kx] [y ky])]
-            (loop [v v kv kv more more]
-                (if more
-                    (let [w (first more) kw (k w)]
-                        (if (<= kw kv)
-                            (recur w kw (next more))
-                            (recur v kv (next more))
-                        )
+            (loop-when [v v kv kv s s] s => v
+                (let [w (first s) kw (k w)]
+                    (if (<= kw kv)
+                        (recur w kw (next s))
+                        (recur v kv (next s))
                     )
-                    v
                 )
             )
         )
@@ -17417,39 +17389,37 @@
  ; Returns a lazy sequence of the elements of coll with duplicates removed.
  ; Returns a stateful transducer when no collection is provided.
  ;;
-(§ defn distinct
+(defn distinct
     ([]
-        (fn [rf]
+        (fn [g]
             (let [seen (atom #{})]
                 (fn
-                    ([] (rf))
-                    ([result] (rf result))
-                    ([result input]
-                        (if (contains? @seen input)
-                            result
-                            (do (swap! seen conj input) (rf result input))
+                    ([] (g))
+                    ([s] (g s))
+                    ([s x]
+                        (when-not (contains? @seen x) => s
+                            (swap! seen conj x)
+                            (g s x)
                         )
                     )
                 )
             )
         )
     )
-    ([coll]
-        (let [step
-                (fn step [xs seen]
+    ([s]
+        (letfn [(step- [s seen]
                     (lazy-seq
-                        ((fn [[f :as xs] seen]
-                            (when-some [s (seq xs)]
-                                (if (contains? seen f)
-                                    (recur (next s) seen)
-                                    (cons f (step (next s) (conj seen f)))
+                        ((fn [[x :as s] seen]
+                            (when-some [s (seq s)]
+                                (when-not (contains? seen x) => (recur (next s) seen)
+                                    (cons x (step- (next s) (conj seen x)))
                                 )
                             ))
-                            xs seen
+                            s seen
                         )
                     )
                 )]
-            (step coll #{})
+            (step- s #{})
         )
     )
 )
@@ -17460,27 +17430,24 @@
  ; corresponding val in smap. Returns a transducer when no collection
  ; is provided.
  ;;
-(§ defn replace
-    ([smap]
-        (map #(if-some [e (find smap %)] (val e) %))
-    )
-    ([smap coll]
-        (if (vector? coll)
+(defn replace
+    ([m] (map #(if-some [e (find m %)] (val e) %)))
+    ([m s]
+        (when (vector? s) => (map #(if-some [e (find m %)] (val e) %) s)
             (reduce
                 (fn [v i]
-                    (if-some [e (find smap (nth v i))]
+                    (if-some [e (find m (nth v i))]
                         (assoc v i (val e))
                         v
                     )
                 )
-                coll (range (count coll))
+                s (range (count s))
             )
-            (map #(if-some [e (find smap %)] (val e) %) coll)
         )
     )
 )
 
-(§ defn- mk-bound-fn [^cloiure.core.Sorted sc test key]
+(defn- mk-bound-fn [^cloiure.core.Sorted sc test key]
     (fn [e] (test (.compare (Sorted'''comparator sc) (Sorted'''entryKey sc e) key) 0))
 )
 
@@ -17489,22 +17456,20 @@
  ; Returns a seq of those entries with keys ek for which
  ; (test (.. sc comparator (compare ek key)) 0) is true.
  ;;
-(§ defn subseq
+(defn subseq
     ([^cloiure.core.Sorted sc test key]
-        (let [include (mk-bound-fn sc test key)]
+        (let [keep? (mk-bound-fn sc test key)]
             (if (#{> >=} test)
                 (when-some [[e :as s] (Sorted'''seqFrom sc key true)]
-                    (if (include e) s (next s))
+                    (if (keep? e) s (next s))
                 )
-                (take-while include (Sorted'''seq sc true))
+                (take-while keep? (Sorted'''seq sc true))
             )
         )
     )
-    ([^cloiure.core.Sorted sc start-test start-key end-test end-key]
-        (when-some [[e :as s] (Sorted'''seqFrom sc start-key true)]
-            (take-while (mk-bound-fn sc end-test end-key)
-                (if ((mk-bound-fn sc start-test start-key) e) s (next s))
-            )
+    ([^cloiure.core.Sorted sc test key test' key']
+        (when-some [[e :as s] (Sorted'''seqFrom sc key true)]
+            (take-while (mk-bound-fn sc test' key') (if ((mk-bound-fn sc test key) e) s (next s)))
         )
     )
 )
@@ -17514,22 +17479,20 @@
  ; Returns a reverse seq of those entries with keys ek for which
  ; (test (.. sc comparator (compare ek key)) 0) is true.
  ;;
-(§ defn rsubseq
+(defn rsubseq
     ([^cloiure.core.Sorted sc test key]
-        (let [include (mk-bound-fn sc test key)]
+        (let [keep? (mk-bound-fn sc test key)]
             (if (#{< <=} test)
                 (when-some [[e :as s] (Sorted'''seqFrom sc key false)]
-                    (if (include e) s (next s))
+                    (if (keep? e) s (next s))
                 )
-                (take-while include (Sorted'''seq sc false))
+                (take-while keep? (Sorted'''seq sc false))
             )
         )
     )
-    ([^cloiure.core.Sorted sc start-test start-key end-test end-key]
-        (when-some [[e :as s] (Sorted'''seqFrom sc end-key false)]
-            (take-while (mk-bound-fn sc start-test start-key)
-                (if ((mk-bound-fn sc end-test end-key) e) s (next s))
-            )
+    ([^cloiure.core.Sorted sc test key test' key']
+        (when-some [[e :as s] (Sorted'''seqFrom sc key' false)]
+            (take-while (mk-bound-fn sc test key) (if ((mk-bound-fn sc test' key') e) s (next s)))
         )
     )
 )
@@ -17538,7 +17501,7 @@
  ; Takes a function of no args, presumably with side effects, and returns
  ; an infinite (or length n if supplied) lazy sequence of calls to it.
  ;;
-(§ defn repeatedly
+(defn repeatedly
     ([f] (lazy-seq (cons (f) (repeatedly f))))
     ([n f] (take n (repeatedly f)))
 )
@@ -17548,7 +17511,7 @@
  ; consistent with =, and thus is different from .hashCode for Integer,
  ; Byte and Cloiure collections.
  ;;
-(§ defn hash [x] (Util'hasheq x))
+(defn hash [x] (Util'hasheq x))
 
 ;;;
  ; Mix final collection hash for ordered or unordered collections.
@@ -17557,14 +17520,14 @@
  ; consistent with =, different from .hashCode.
  ; See http://clojure.org/data_structures#hash for full algorithms.
  ;;
-(§ defn ^long mix-collection-hash [^long hash-basis ^long n] (Murmur3'mixCollHash hash-basis n))
+(defn ^long mix-collection-hash [^long hash-basis ^long n] (Murmur3'mixCollHash hash-basis n))
 
 ;;;
- ; Returns the hash code, consistent with =, for an external ordered
+ ; Returns the hash code, consistent with =, for an external, ordered
  ; collection implementing Seqable.
  ; See http://clojure.org/data_structures#hash for full algorithms.
  ;;
-(§ defn ^long hash-ordered-coll [coll] (Murmur3'hashOrdered coll))
+(defn ^long hash-ordered-coll [s] (Murmur3'hashOrdered s))
 
 ;;;
  ; Returns the hash code, consistent with =, for an external, unordered
@@ -17572,36 +17535,31 @@
  ; map entries, whose hash is computed as (hash-ordered-coll [k v]).
  ; See http://clojure.org/data_structures#hash for full algorithms.
  ;;
-(§ defn ^long hash-unordered-coll [coll] (Murmur3'hashUnordered coll))
+(defn ^long hash-unordered-coll [s] (Murmur3'hashUnordered s))
 
 ;;;
  ; Returns a lazy seq of the elements of coll separated by sep.
  ; Returns a stateful transducer when no collection is provided.
  ;;
-(§ defn interpose
+(defn interpose
     ([sep]
-        (fn [rf]
+        (fn [g]
             (let [started (atom false)]
                 (fn
-                    ([] (rf))
-                    ([result] (rf result))
-                    ([result input]
-                        (if @started
-                            (let [sepr (rf result sep)]
-                                (if (reduced? sepr)
-                                    sepr
-                                    (rf sepr input)
-                                )
+                    ([] (g))
+                    ([s] (g s))
+                    ([s x]
+                        (when @started => (do (reset! started true) (g s x))
+                            (let [r (g s sep)]
+                                (if (reduced? r) r (g r x))
                             )
-                            (do (reset! started true) (rf result input))
                         )
                     )
                 )
             )
         )
     )
-    ([sep coll]
-        (drop 1 (interleave (repeat sep) coll)))
+    ([sep coll] (drop 1 (interleave (repeat sep) coll)))
 )
 
 ;;;
