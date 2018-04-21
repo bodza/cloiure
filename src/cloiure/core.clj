@@ -1,5 +1,5 @@
 (ns cloiure.core
-    (:refer-clojure :only [*err* *in* *ns* *out* *print-length* *warn-on-reflection* + - < = alength aget aset assoc atom binding boolean case char cons count dec defmacro defn defprotocol defrecord even? extend-protocol extend-type first fn hash-map hash-set identical? import inc int int-array interleave intern key keyword? let list long loop map merge meta neg? next pos? reify satisfies? second seq seq? split-at str swap! symbol symbol? the-ns to-array val vary-meta vec vector vector? with-meta])
+    (:refer-clojure :only [*err* *in* *ns* *out* *print-length* *warn-on-reflection* + - < = alength aget aset assoc atom binding boolean case char cons count dec defmacro defmethod defn defprotocol defrecord even? extend-protocol extend-type first fn hash-map hash-set identical? import inc int int-array interleave intern key keyword? let list long loop map merge meta neg? next pos? print-method reify satisfies? second seq seq? split-at str swap! symbol symbol? the-ns to-array val vary-meta vec vector vector? with-meta])
 )
 
 (defmacro § [& _])
@@ -365,7 +365,7 @@
                                     :when  [`(if ~v (do ~f ~@(when r? [r])) ~r) false]
                                 )
                             )
-                            (let [s (gensym "s_") r `(recur (next ~s)) [f r?] (emit- e r)]
+                            (let [s (gensym "s__") r `(recur (next ~s)) [f r?] (emit- e r)]
                                 [`(loop-when [~s (seq ~v)] ~s (let [~k (first ~s)] ~f ~@(when r? [r]))) true]
                             )
                         )
@@ -1258,7 +1258,6 @@
 )
 
 (java-ns cloiure.lang.MethodImplCache
-    (defrecord Entry [])
     (defrecord MethodImplCache [])
 )
 
@@ -8619,6 +8618,10 @@
         (bit-xor seed (+ hash 0x9e3779b9 (bit-shift-left seed 6) (bit-shift-right seed 2)))
     )
 
+(defn hash-combine [x y]
+    (Util'hashCombine x (IObject'''hashCode y))
+)
+
     (defn #_"<K, V> void" Util'clearCache [#_"ReferenceQueue" rq, #_"{K Reference<V>}'" cache]
         ;; cleanup any dead entries
         (when (some? (.poll rq))
@@ -9419,7 +9422,7 @@
         )
 
         (#_"int" IObject'''hashCode [#_"Symbol" this]
-            (Util'hashCombine (IObject'''hashCode (:name this)), (IObject'''hashCode (:ns this)))
+            (hash-combine (IObject'''hashCode (:name this)) (:ns this))
         )
 
         (#_"String" IObject'''toString [#_"Symbol" this]
@@ -9429,7 +9432,7 @@
 
     (extend-type Symbol IHashEq
         (#_"int" IHashEq'''hasheq [#_"Symbol" this]
-            (Util'hashCombine (Murmur3'hashUnencodedChars (:name this)), (IObject'''hashCode (:ns this)))
+            (hash-combine (Murmur3'hashUnencodedChars (:name this)) (:ns this))
         )
     )
 
@@ -10911,57 +10914,24 @@
 
 (java-ns cloiure.lang.MethodImplCache
 
-(class-ns Entry
-    (defn #_"Entry" Entry'new [#_"Class" c, #_"IFn" fn]
-        (merge (Entry.)
-            (hash-map
-                #_"Class" :c c
-                #_"IFn" :fn fn
-            )
-        )
-    )
-)
-
 (class-ns MethodImplCache
-    (defn- #_"MethodImplCache" MethodImplCache'init [#_"IPersistentMap" protocol, #_"Keyword" methodk, #_"int" shift, #_"int" mask, #_"Object[]" table, #_"IPersistentMap" map]
+    (defn #_"MethodImplCache" MethodImplCache'new [#_"IPersistentMap" protocol, #_"Keyword" methodk]
         (merge (MethodImplCache.)
             (hash-map
                 #_"IPersistentMap" :protocol protocol
                 #_"Keyword" :methodk methodk
-                #_"int" :shift shift
-                #_"int" :mask mask
-                #_"Object[]" :table table ;; [class, entry. class, entry ...]
-                #_"IPersistentMap" :map map
             )
-        )
-    )
-
-    (defn #_"MethodImplCache" MethodImplCache'new
-        ([#_"IPersistentMap" protocol, #_"Keyword" methodk]
-            (MethodImplCache'new protocol, methodk, 0, 0, (object-array 0))
-        )
-        ([#_"IPersistentMap" protocol, #_"Keyword" methodk, #_"int" shift, #_"int" mask, #_"Object[]" table]
-            (MethodImplCache'init protocol, methodk, shift, mask, table, nil)
-        )
-        ([#_"IPersistentMap" protocol, #_"Keyword" methodk, #_"IPersistentMap" map]
-            (MethodImplCache'init protocol, methodk, 0, 0, nil, map)
         )
     )
 
     #_method
-    (defn #_"IFn" MethodImplCache''fnFor [#_"MethodImplCache" this, #_"Class" c]
-        (if (some? (:map this))
-            (when-some [#_"Entry" e (get (:map this) c)]
-                (:fn e)
-            )
-            (let [#_"int" i (bit-shift-left (bit-and (bit-shift-right (IObject'''hashCode c) (:shift this)) (:mask this)) 1)]
-                (let-when [#_"Object[]" t (:table this)] (and (< i (alength t)) (= (aget t i) c))
-                    (when-some [#_"Entry" e (aget t (inc i))]
-                        (:fn e)
-                    )
-                )
-            )
-        )
+    (defn #_"MethodImplCache" MethodImplCache''assoc [#_"MethodImplCache" this, #_"Class" c, #_"IFn" f]
+        (assoc this (cast Class c) f)
+    )
+
+    #_method
+    (defn #_"IFn" MethodImplCache''get [#_"MethodImplCache" this, #_"Class" c]
+        (get this (cast Class c))
     )
 )
 )
@@ -14977,6 +14947,31 @@
         )
     )
 
+;;;
+ ; Finds or creates a var named by the symbol name in the namespace
+ ; ns (which can be a symbol or a namespace), setting its root binding
+ ; to val if supplied. The namespace must exist. The var will adopt
+ ; any metadata from the name symbol. Returns the var.
+ ;;
+(defn intern
+    ([ns name]
+        (let [v (Var'intern (the-ns ns) name)]
+            (when-some [m (meta name)]
+                (reset-meta! v m)
+            )
+            v
+        )
+    )
+    ([ns name o]
+        (let [v (Var'intern (the-ns ns) name o)]
+            (when-some [m (meta name)]
+                (reset-meta! v m)
+            )
+            v
+        )
+    )
+)
+
     (defn #_"void" Var'pushThreadBindings [#_"{Var Object}" bindings]
         (let [#_"ISeq" l (.get Var'dvals)]
             (loop-when [#_"{Var Atom}" m (first l) #_"ISeq" s (seq bindings)] (some? s) => (.set Var'dvals, (cons m l))
@@ -16864,6 +16859,10 @@
     )
 )
 
+(defmacro refer-cloiure [& filters]
+    `(refer '~'cloiure.core ~@filters)
+)
+
 ;;;
  ; Returns a map of the refer mappings for the namespace.
  ;;
@@ -17211,7 +17210,7 @@
                 )
             )
             (emit- [[[x _ & z] & [[_ e] :as more]]]
-                (let [f' (gensym "f_") s' (gensym "s_")]
+                (let [f' (gensym "f__") s' (gensym "s__")]
                     (letfn [(mod- [[[k v] & z]]
                                 (if (keyword? k)
                                     (case k
@@ -17567,7 +17566,7 @@
  ; body is the expansion, calls to which may be expanded inline as if
  ; it were a macro. Cannot be used with variadic (&) args.
  ;;
-(§ defmacro definline [name & decl]
+(defmacro definline [name & decl]
     (let [[pre-args [args expr]] (split-with (comp not vector?) decl)]
         `(do
             (defn ~name ~@pre-args ~args ~(apply (eval (list `fn args expr)) args))
@@ -17594,7 +17593,7 @@
 ;;;
  ; Atomically alters the root binding of var v by applying f to its current value plus any args.
  ;;
-(§ defn alter-var-root [^Var v f & args] (Var''alterRoot v f args))
+(defn alter-var-root [^Var v f & args] (Var''alterRoot v f args))
 
 ;;;
  ; Returns true if all of the vars provided as arguments have any bound value, root or thread-local.
@@ -17611,7 +17610,7 @@
 ;;;
  ; Returns the immediate superclass and direct interfaces of c, if any.
  ;;
-(§ defn bases [^Class c]
+(defn bases [^Class c]
     (when c
         (let [i (seq (.getInterfaces c)) s (.getSuperclass c)]
             (if s (cons s i) i)
@@ -17622,7 +17621,7 @@
 ;;;
  ; Returns the immediate and indirect superclasses and interfaces of c, if any.
  ;;
-(§ defn supers [^Class c]
+(defn supers [^Class c]
     (loop-when [s (set (bases c)) cs s] (seq cs) => (not-empty s)
         (let [c (first cs) bs (bases c)]
             (recur (into s bs) (into (disj cs c) bs))
@@ -17646,21 +17645,16 @@
 ;;;
  ; Returns true if no two of the arguments are =.
  ;;
-(§ defn ^Boolean distinct?
+(defn ^Boolean distinct?
     ([x] true)
     ([x y] (not (= x y)))
-    ([x y & more]
-        (if (not= x y)
-            (loop [s #{x y} [x & etc :as xs] more]
-                (if xs
-                    (if (contains? s x)
-                        false
-                        (recur (conj s x) etc)
-                    )
-                    true
+    ([x y & z]
+        (and (distinct? x y)
+            (loop-when [s* #{x y} z z] z => true
+                (and (not (contains? s* (first z)))
+                    (recur (conj s* (first z)) (next z))
                 )
             )
-            false
         )
     )
 )
@@ -17713,18 +17707,11 @@
 )
 
 ;;;
- ; Same as (refer 'cloiure.core <filters>).
- ;;
-(§ defmacro refer-cloiure [& filters]
-    `(cloiure.core/refer '~'cloiure.core ~@filters)
-)
-
-;;;
  ; defs name to have the root value of the expr iff the named var has no root value,
  ; else expr is unevaluated.
  ;;
 (defmacro defonce [name expr]
-    `(let-when-not [v# (def ~name)] (Var''hasRoot v#)
+    `(let-when [v# (def ~name)] (not (Var''hasRoot v#))
         (def ~name ~expr)
     )
 )
@@ -17803,44 +17790,19 @@
 )
 
 ;;;
- ; Finds or creates a var named by the symbol name in the namespace
- ; ns (which can be a symbol or a namespace), setting its root binding
- ; to val if supplied. The namespace must exist. The var will adopt
- ; any metadata from the name symbol. Returns the var.
- ;;
-(§ defn intern
-    ([ns ^Symbol name]
-        (let [v (Var'intern (the-ns ns) name)]
-            (when-some [m (meta name)]
-                (reset-meta! v m)
-            )
-            v
-        )
-    )
-    ([ns name o]
-        (let [v (Var'intern (the-ns ns) name o)]
-            (when-some [m (meta name)]
-                (reset-meta! v m)
-            )
-            v
-        )
-    )
-)
-
-;;;
  ; Returns a memoized version of a referentially transparent function.
  ; The memoized version of the function keeps a cache of the mapping from
  ; arguments to results and, when calls with the same arguments are repeated
  ; often, has higher performance at the expense of higher memory use.
  ;;
-(§ defn memoize [f]
+(defn memoize [f]
     (let [mem (atom {})]
         (fn [& args]
             (if-some [e (find @mem args)]
                 (val e)
-                (let [ret (apply f args)]
-                    (swap! mem assoc args ret)
-                    ret
+                (let [r (apply f args)]
+                    (swap! mem assoc args r)
+                    r
                 )
             )
         )
@@ -17853,32 +17815,32 @@
  ; and third positions (y, z). Note that the function f can take any number of arguments,
  ; not just the one(s) being nil-patched.
  ;;
-(§ defn fnil
+(defn fnil
     ([f x]
         (fn
-            ([a] (f (if (nil? a) x a)))
-            ([a b] (f (if (nil? a) x a) b))
-            ([a b c] (f (if (nil? a) x a) b c))
-            ([a b c & ds] (apply f (if (nil? a) x a) b c ds))
+            ([a]               (f (if (nil? a) x a)))
+            ([a b]             (f (if (nil? a) x a) b))
+            ([a b c]           (f (if (nil? a) x a) b c))
+            ([a b c & s] (apply f (if (nil? a) x a) b c s))
         )
     )
     ([f x y]
         (fn
-            ([a b] (f (if (nil? a) x a) (if (nil? b) y b)))
-            ([a b c] (f (if (nil? a) x a) (if (nil? b) y b) c))
-            ([a b c & ds] (apply f (if (nil? a) x a) (if (nil? b) y b) c ds))
+            ([a b]             (f (if (nil? a) x a) (if (nil? b) y b)))
+            ([a b c]           (f (if (nil? a) x a) (if (nil? b) y b) c))
+            ([a b c & s] (apply f (if (nil? a) x a) (if (nil? b) y b) c s))
         )
     )
     ([f x y z]
         (fn
-            ([a b] (f (if (nil? a) x a) (if (nil? b) y b)))
-            ([a b c] (f (if (nil? a) x a) (if (nil? b) y b) (if (nil? c) z c)))
-            ([a b c & ds] (apply f (if (nil? a) x a) (if (nil? b) y b) (if (nil? c) z c) ds))
+            ([a b]             (f (if (nil? a) x a) (if (nil? b) y b)))
+            ([a b c]           (f (if (nil? a) x a) (if (nil? b) y b) (if (nil? c) z c)))
+            ([a b c & s] (apply f (if (nil? a) x a) (if (nil? b) y b) (if (nil? c) z c) s))
         )
     )
 )
 
-(§ defn- shift-mask [shift mask x]
+(defn- shift-mask [shift mask x]
     (-> x (bit-shift-right shift) (bit-and mask))
 )
 
@@ -17888,7 +17850,7 @@
 ;;;
  ; Takes a collection of hashes and returns [shift mask] or nil if none found.
  ;;
-(§ defn- maybe-min-hash [hashes]
+(defn- maybe-min-hash [hashes]
     (first
         (filter (fn [[s m]] (apply distinct? (map #(shift-mask s m %) hashes)))
             (for [mask (map #(dec (bit-shift-left 1 %)) (range 1 (inc max-mask-bits))) shift (range 0 31)]
@@ -17903,7 +17865,7 @@
  ; expressions into a sorted map to be consumed by case*. The form of the map
  ; entries are {(case-f test) [(test-f test) then]}.
  ;;
-(§ defn- case-map [case-f test-f tests thens]
+(defn- case-map [case-f test-f tests thens]
     (into (sorted-map)
         (zipmap
             (map case-f tests)
@@ -17916,7 +17878,7 @@
  ; Returns true if the collection of ints can fit within the max-table-switch-size,
  ; false otherwise.
  ;;
-(§ defn- fits-table? [ints]
+(defn- fits-table? [ints]
     (< (- (apply max (seq ints)) (apply min (seq ints))) max-switch-table-size)
 )
 
@@ -17926,7 +17888,7 @@
  ; case-map is a map of int case values to [test then] tuples, and switch-type
  ; is either :sparse or :compact.
  ;;
-(§ defn- prep-ints [tests thens]
+(defn- prep-ints [tests thens]
     (if (fits-table? tests)
         ;; compact case ints, no shift-mask
         [0 0 (case-map int int tests thens) :compact]
@@ -17953,20 +17915,15 @@
  ; The skip-check is a set of case ints for which post-switch equivalence
  ; checking must not be done (the cases holding the above condp thens).
  ;;
-(§ defn- merge-hash-collisions [expr-sym default tests thens]
+(defn- merge-hash-collisions [expr-sym default tests thens]
     (let [buckets
-            (loop [m {} ks tests vs thens]
-                (if (and ks vs)
-                    (recur (update m (IObject'''hashCode (first ks)) (fnil conj []) [(first ks) (first vs)]) (next ks) (next vs))
-                    m
-                )
+            (loop-when-recur [m {} ks tests vs thens]
+                             (and ks vs)
+                             [(update m (IObject'''hashCode (first ks)) (fnil conj []) [(first ks) (first vs)]) (next ks) (next vs)]
+                          => m
             )
           assoc-multi
-            (fn [m h bucket]
-                (let [testexprs (apply concat bucket) expr `(condp = ~expr-sym ~@testexprs ~default)]
-                    (assoc m h expr)
-                )
-            )
+            (fn [m h bucket] (assoc m h `(condp = ~expr-sym ~@(apply concat bucket) ~default)))
           hmap
             (reduce
                 (fn [m [h bucket]]
@@ -17994,7 +17951,7 @@
  ; is either :sparse or :compact, and skip-check is a set of case ints for which
  ; post-switch equivalence checking must not be done (occurs with hash collisions).
  ;;
-(§ defn- prep-hashes [expr-sym default tests thens]
+(defn- prep-hashes [expr-sym default tests thens]
     (let [hashcode #(IObject'''hashCode %) hashes (into #{} (map hashcode tests))]
         (if (= (count tests) (count hashes))
             (if (fits-table? hashes)
@@ -18047,13 +18004,13 @@
  ; expression, a vector can be used to match a list if needed. The
  ; test-constants need not be all of the same type.
  ;;
-(§ defmacro case [e & clauses]
-    (let [ge (with-meta (gensym) {:tag Object})
+(defmacro case [e & clauses]
+    (let [e' (with-meta (gensym) {:tag Object})
           default
-            (when (odd? (count clauses)) => `(throw! (str "no matching clause: " ~ge))
+            (when (odd? (count clauses)) => `(throw! (str "no matching clause: " ~e'))
                 (last clauses)
             )]
-        (when (<= 2 (count clauses)) => `(let [~ge ~e] ~default)
+        (when (<= 2 (count clauses)) => `(let [~e' ~e] ~default)
             (let [pairs (partition 2 clauses)
                   assoc-test
                     (fn [m test expr]
@@ -18082,15 +18039,15 @@
                 (condp = mode
                     :ints
                         (let [[shift mask imap switch-type] (prep-ints tests thens)]
-                            `(let [~ge ~e] (case* ~ge ~shift ~mask ~default ~imap ~switch-type :int))
+                            `(let [~e' ~e] (case* ~e' ~shift ~mask ~default ~imap ~switch-type :int))
                         )
                     :hashes
-                        (let [[shift mask imap switch-type skip-check] (prep-hashes ge default tests thens)]
-                            `(let [~ge ~e] (case* ~ge ~shift ~mask ~default ~imap ~switch-type :hash-equiv ~skip-check))
+                        (let [[shift mask imap switch-type skip-check] (prep-hashes e' default tests thens)]
+                            `(let [~e' ~e] (case* ~e' ~shift ~mask ~default ~imap ~switch-type :hash-equiv ~skip-check))
                         )
                     :identity
-                        (let [[shift mask imap switch-type skip-check] (prep-hashes ge default tests thens)]
-                            `(let [~ge ~e] (case* ~ge ~shift ~mask ~default ~imap ~switch-type :hash-identity ~skip-check))
+                        (let [[shift mask imap switch-type skip-check] (prep-hashes e' default tests thens)]
+                            `(let [~e' ~e] (case* ~e' ~shift ~mask ~default ~imap ~switch-type :hash-identity ~skip-check))
                         )
                 )
             )
@@ -18098,7 +18055,7 @@
     )
 )
 
-(§ defn- print-sequential [^String begin, p, ^String sep, ^String end, o, ^Writer w]
+(defn- print-sequential [^String begin, p, ^String sep, ^String end, o, ^Writer w]
     (.write w begin)
     (when-some [s (seq o)]
         (loop [[x & s] s]
@@ -18112,29 +18069,29 @@
     (.write w end)
 )
 
-(§ defn- pr-on [o w]
+(defn- pr-on [o w]
     (print-method o w)
     nil
 )
 
-(§ defmethod print-method cloiure.core.ISeq [o, ^Writer w]
+(defmethod print-method cloiure.core.ISeq [o, ^Writer w]
     (print-sequential "(" pr-on " " ")" o w)
 )
 
-(§ defmethod print-method cloiure.core.IPersistentCollection [o, ^Writer w]
+(defmethod print-method cloiure.core.IPersistentCollection [o, ^Writer w]
     (print-sequential "(" pr-on " " ")" o w)
 )
 
-(§ defmethod print-method cloiure.core.IPersistentVector [o, ^Writer w]
+(defmethod print-method cloiure.core.IPersistentVector [o, ^Writer w]
     (print-sequential "[" pr-on " " "]" o w)
 )
 
-(§ defmethod print-method cloiure.core.IPersistentMap [o, ^Writer w]
-    (print-sequential "{" (fn [e ^Writer w] (do (pr-on (key e) w) (.append w \space) (pr-on (val e) w))) ", " "}" (seq o) w)
+(defmethod print-method cloiure.core.IPersistentMap [o, ^Writer w]
+    (print-sequential "{" (fn [e ^Writer w] (pr-on (key e) w) (.append w \space) (pr-on (val e) w)) ", " "}" o w)
 )
 
-(§ defmethod print-method cloiure.core.IPersistentSet [o, ^Writer w]
-    (print-sequential "#{" pr-on " " "}" (seq o) w)
+(defmethod print-method cloiure.core.IPersistentSet [o, ^Writer w]
+    (print-sequential "#{" pr-on " " "}" o w)
 )
 
 (def- prim->class
@@ -18148,7 +18105,7 @@
     )
 )
 
-(§ defn- ^Class the-class [x]
+(defn- ^Class the-class [x]
     (cond
         (class? x) x
         (contains? prim->class x) (prim->class x)
@@ -18161,7 +18118,7 @@
  ; any other class (such as Long), or a fully-qualified class name given as a string or symbol
  ; (such as 'java.lang.String).
  ;;
-(§ defn- ^Type asm-type [c]
+(defn- ^Type asm-type [c]
     (if (or (class? c) (prim->class c))
         (Type/getType (the-class c))
         (let [s (str c)]
@@ -18170,7 +18127,7 @@
     )
 )
 
-(§ defn- generate-interface [{:keys [name extends methods]}]
+(defn- generate-interface [{:keys [name extends methods]}]
     (when (some #(-> % first cloiure.core/name (.contains "-")) methods)
         (throw! "interface methods must not contain '-'")
     )
@@ -18213,9 +18170,9 @@
  ; This parameter is used to specify the signatures of the methods of the
  ; generated interface. Do not repeat superinterface signatures here.
  ;;
-(§ defmacro gen-interface [& options]
-    (let [options-map (apply hash-map options) [cname bytecode] (generate-interface options-map)]
-        (.defineClass ^DynamicClassLoader *class-loader* (str (:name options-map)) bytecode)
+(defmacro gen-interface [& options]
+    (let [opts (apply hash-map options) name (str (:name opts)) [_ code] (generate-interface opts)]
+        (.defineClass ^DynamicClassLoader *class-loader* name code)
     )
 )
 
@@ -18224,35 +18181,17 @@
  ;;
 (defn- namespace-munge [ns] (.replace (str ns) \- \_))
 
-(§ defn- parse-opts [s]
-    (loop [opts {} [k v & rs :as s] s]
-        (if (keyword? k)
-            (recur (assoc opts k v) rs)
-            [opts s]
-        )
-    )
-)
+(defn- parse-opts [s] (loop-when-recur [m {} [k v & s'] s] (keyword? k) [(assoc m k v) s'] => [m s]))
 
-(§ defn- parse-impls [specs]
-    (loop [ret {} s specs]
-        (if (seq s)
-            (recur (assoc ret (first s) (take-while seq? (next s))) (drop-while seq? (next s)))
-            ret
-        )
-    )
-)
+(defn- parse-impls [s] (loop-when-recur [m {} s s] (seq s) [(assoc m (first s) (take-while seq? (next s))) (drop-while seq? (next s))] => m))
 
 (declare resolve)
 
-(§ defn- parse-opts+specs [opts+specs]
+(defn- parse-opts+specs [opts+specs]
     (let [[opts specs] (parse-opts opts+specs)
           impls (parse-impls specs)
-          ifaces
-            (-> (map #(if (var? (resolve %)) (:on (deref (resolve %))) %) (keys impls))
-                set (disj 'Object 'java.lang.Object) vec
-            )
-          methods
-            (map (fn [[name pars & body]] (cons name (maybe-destructured pars body))) (apply concat (vals impls)))]
+          ifaces (-> (map #(let [v (resolve %)] (if (var? v) (:on @v) %)) (keys impls)) set (disj 'Object 'java.lang.Object) vec)
+          methods (map #(let [[name pars & body] %] (cons name (maybe-destructured pars body))) (apply concat (vals impls)))]
         (when-some [bad-opts (seq (keys opts))]
             (throw! (apply str "unsupported option(s): " (interpose ", " bad-opts)))
         )
@@ -18310,21 +18249,15 @@
  ; (meta ^{:k :v} (reify Object (toString [this] "foo")))
  ; => {:k :v}
  ;;
-(§ defmacro reify [& opts+specs]
+(defmacro reify [& opts+specs]
     (let [[interfaces methods] (parse-opts+specs opts+specs)]
         (with-meta `(reify* ~interfaces ~@methods) (meta &form))
     )
 )
 
-(§ defn hash-combine [x y]
-    (Util'hashCombine x (IObject'''hashCode y))
-)
+(defn munge [s] ((if (symbol? s) symbol str) (Compiler'munge (str s))))
 
-(§ defn munge [s]
-    ((if (symbol? s) symbol str) (Compiler'munge (str s)))
-)
-
-(§ defn- validate-fields [fields name]
+(defn- validate-fields [fields name]
     (when-not (vector? fields)
         (throw! "no fields vector given")
     )
@@ -18339,15 +18272,13 @@
 ;;;
  ; Do not use this directly - use deftype.
  ;;
-(§ defn- emit-deftype* [tagname cname fields interfaces methods opts]
-    (let [classname (with-meta (symbol (str (namespace-munge *ns*) "." cname)) (meta cname)) interfaces (conj interfaces 'cloiure.core.IType)]
-        `(deftype* ~(symbol (name (ns-name *ns*)) (name tagname))
-            ~classname
-            ~fields
-            :implements ~interfaces
-            ~@(mapcat identity opts)
-            ~@methods
-        )
+(defn- emit-deftype* [tagname cname fields interfaces methods opts]
+    `(deftype* ~(symbol (name (ns-name *ns*)) (name tagname))
+        ~(with-meta (symbol (str (namespace-munge *ns*) "." cname)) (meta cname))
+        ~fields
+        :implements ~(conj interfaces 'cloiure.core.IType)
+        ~@(mapcat identity opts)
+        ~@methods
     )
 )
 
@@ -18402,43 +18333,12 @@
  ; that the field names __meta, __extmap, __hash and __hasheq are currently
  ; reserved and should not be used when defining your own types.
  ;;
-(§ defmacro deftype [name fields & opts+specs]
+(defmacro deftype [name fields & opts+specs]
     (validate-fields fields name)
-    (let [gname                     name
-          [interfaces methods opts] (parse-opts+specs opts+specs)
-          ns-part                   (namespace-munge *ns*)
-          classname                 (symbol (str ns-part "." gname))]
+    (let [[interfaces methods opts] (parse-opts+specs opts+specs)]
         `(do
-            ~(emit-deftype* name gname (vec fields) (vec interfaces) methods opts)
-            (import ~classname)
-        )
-    )
-)
-
-(§ defn- expand-method-impl-cache [^MethodImplCache cache c f]
-    (if (:map cache)
-        (let [cs (assoc (:map cache) c (Entry'new c f))]
-            (MethodImplCache'new (:protocol cache) (:methodk cache) cs)
-        )
-        (let [cs (into {} (remove (fn [[c e]] (nil? e)) (map vec (partition 2 (:table cache)))))
-              cs (assoc cs c (Entry'new c f))]
-            (if-some [[shift mask] (maybe-min-hash (map hash (keys cs)))]
-                (let [table (object-array (* 2 (inc mask)))
-                      table
-                        (reduce
-                            (fn [^objects t [c e]]
-                                (let [i (* 2 (int (shift-mask shift mask (hash c))))]
-                                    (aset t i c)
-                                    (aset t (inc i) e)
-                                    t
-                                )
-                            )
-                            table cs
-                        )]
-                    (MethodImplCache'new (:protocol cache) (:methodk cache) shift mask table)
-                )
-                (MethodImplCache'new (:protocol cache) (:methodk cache) cs)
-            )
+            ~(emit-deftype* name name (vec fields) (vec interfaces) methods opts)
+            (import ~(symbol (str (namespace-munge *ns*) "." name)))
         )
     )
 )
@@ -18449,23 +18349,24 @@
     )
 )
 
-(defn- pref
-    ([] nil)
-    ([a] a)
-    ([^Class a ^Class b] (if (.isAssignableFrom a b) b a))
-)
-
-(§ defn find-protocol-impl [protocol x]
+(defn find-protocol-impl [protocol x]
     (if (instance? (:on-interface protocol) x)
         x
-        (let [c (class x) impl #(get (:impls protocol) %)]
-            (or (impl c)
+        (let [find- #(get (:impls protocol) %)
+              pref-
+                (fn
+                    ([] nil)
+                    ([a] a)
+                    ([^Class a ^Class b] (if (.isAssignableFrom a b) b a))
+                )
+              c (class x)]
+            (or (find- c)
                 (and c
-                    (or (first (remove nil? (map impl (butlast (super-chain c)))))
-                        (when-some [t (reduce pref (filter impl (disj (supers c) Object)))]
-                            (impl t)
+                    (or (some find- (butlast (super-chain c)))
+                        (when-some [t (reduce pref- (filter find- (disj (supers c) Object)))]
+                            (find- t)
                         )
-                        (impl Object)
+                        (find- Object)
                     )
                 )
             )
@@ -18473,40 +18374,40 @@
     )
 )
 
-(§ defn find-protocol-method [protocol methodk x]
+(defn find-protocol-method [protocol methodk x]
     (get (find-protocol-impl protocol x) methodk)
 )
 
-(§ defn- protocol? [maybe-p]
+(defn- protocol? [maybe-p]
     (boolean (:on-interface maybe-p))
 )
 
-(§ defn- implements? [protocol atype]
+(defn- implements? [protocol atype]
     (and atype (.isAssignableFrom ^Class (:on-interface protocol) atype))
 )
 
 ;;;
  ; Returns true if atype extends protocol.
  ;;
-(§ defn extends? [protocol atype]
+(defn extends? [protocol atype]
     (boolean (or (implements? protocol atype) (get (:impls protocol) atype)))
 )
 
 ;;;
  ; Returns a collection of the types explicitly extending protocol.
  ;;
-(§ defn extenders [protocol] (keys (:impls protocol)))
+(defn extenders [protocol] (keys (:impls protocol)))
 
 ;;;
  ; Returns true if x satisfies the protocol.
  ;;
-(§ defn satisfies? [protocol x]
+(defn satisfies? [protocol x]
     (boolean (find-protocol-impl protocol x))
 )
 
-(§ defn -cache-protocol-fn [^Fn pf x ^Class c ^cloiure.core.IFn interf]
-    (let [cache @(:__methodImplCache pf)
-          f (if (instance? c x) interf (find-protocol-method (:protocol cache) (:methodk cache) x))]
+(defn -cache-protocol-fn [^Fn this x ^Class c ^cloiure.core.IFn ifn]
+    (let [cache @(:__methodImplCache this)
+          f (if (instance? c x) ifn (find-protocol-method (:protocol cache) (:methodk cache) x))]
         (when-not f
             (throw!
                 (str "no implementation of method: " (:methodk cache)
@@ -18514,34 +18415,31 @@
                      " found for class: " (if (some? x) (.getName (class x)) "nil"))
             )
         )
-        (reset! (:__methodImplCache pf) (expand-method-impl-cache cache (class x) f))
+        (reset! (:__methodImplCache this) (MethodImplCache''assoc cache (class x) f))
         f
     )
 )
 
-(§ defn- emit-method-builder [on-interface method on-method arglists]
-    (let [methodk (keyword method) gthis (with-meta (gensym) {:tag 'cloiure.core.Fn}) ginterf (gensym)]
+(defn- emit-method-builder [on-interface method on-method arglists]
+    (let [methodk (keyword method) this' (with-meta (gensym) {:tag 'cloiure.core.Fn}) ifn' (gensym)]
         `(fn [cache#]
-            (let [~ginterf
+            (let [~ifn'
                     (fn ~@(map
                         (fn [args]
-                            (let [gargs (map #(gensym (str "gf__" % "__")) args) target (first gargs)]
-                                `([~@gargs] (. ~(with-meta target {:tag on-interface}) (~(or on-method method) ~@(next gargs))))
+                            (let [args' (map #(gensym (str "gf__" % "__")) args) target (first args')]
+                                `([~@args'] (. ~(with-meta target {:tag on-interface}) (~(or on-method method) ~@(next args'))))
                             )
                         )
                         arglists
                     ))
                   ^Fn f#
-                    (fn ~gthis ~@(map
+                    (fn ~this' ~@(map
                         (fn [args]
-                            (let [gargs (map #(gensym (str "gf__" % "__")) args) target (first gargs)]
-                                `([~@gargs]
-                                    (let [cache# @(:__methodImplCache ~gthis)
-                                          f# (MethodImplCache''fnFor cache# (Reflector'classOf ~target))]
-                                        (if f#
-                                            (f# ~@gargs)
-                                            ((-cache-protocol-fn ~gthis ~target ~on-interface ~ginterf) ~@gargs)
-                                        )
+                            (let [args' (map #(gensym (str "gf__" % "__")) args) target (first args')]
+                                `([~@args']
+                                    (let [cache# @(:__methodImplCache ~this')
+                                          f# (MethodImplCache''get cache# (Reflector'classOf ~target))]
+                                        ((or f# (-cache-protocol-fn ~this' ~target ~on-interface ~ifn')) ~@args')
                                     )
                                 )
                             )
@@ -18555,15 +18453,13 @@
     )
 )
 
-(§ defn -reset-methods [protocol]
+(defn -reset-methods [protocol]
     (doseq [[^Var v build] (:method-builders protocol)]
-        (let [cache (MethodImplCache'new protocol (keyword (:sym v)))]
-            (Var''bindRoot v (build cache))
-        )
+        (Var''bindRoot v (build (MethodImplCache'new protocol (keyword (:sym v)))))
     )
 )
 
-(§ defn- assert-same-protocol [protocol-var method-syms]
+(defn- assert-same-protocol [protocol-var method-syms]
     (doseq [m method-syms]
         (let [v (resolve m) pv (:protocol (meta v))]
             (when (and v (bound? v) (not= protocol-var pv))
@@ -18580,7 +18476,7 @@
     )
 )
 
-(§ defn- emit-protocol [name opts+sigs]
+(defn- emit-protocol [name opts+sigs]
     (let [iname (symbol (str (munge (namespace-munge *ns*)) "." (munge name)))
           [opts sigs]
             (loop [opts {:on (list 'quote iname) :on-interface iname} sigs opts+sigs]
@@ -18593,24 +18489,14 @@
             (when sigs
                 (reduce
                     (fn [m s]
-                        (let [name-meta (meta (first s))
-                              mname (with-meta (first s) nil)
-                              arglists
-                                (loop [as [] rs (next s)]
-                                    (if (vector? (first rs))
-                                        (recur (conj as (first rs)) (next rs))
-                                        (seq as)
-                                    )
-                                )]
-                            (when (some #{0} (map count arglists))
+                        (let [nmeta (meta (first s)) mname (with-meta (first s) nil) arglists (take-while vector? (next s))]
+                            (when (some zero? (map count arglists))
                                 (throw! (str "definition of function " mname " in protocol " name " must take at least one arg"))
                             )
                             (when (m (keyword mname))
                                 (throw! (str "function " mname " in protocol " name " was redefined: specify all arities in single definition"))
                             )
-                            (assoc m (keyword mname)
-                                (merge name-meta {:name (vary-meta mname assoc :arglists arglists) :arglists arglists})
-                            )
+                            (assoc m (keyword mname) (merge nmeta {:name (vary-meta mname assoc :arglists arglists) :arglists arglists}))
                         )
                     )
                     {} sigs
@@ -18620,7 +18506,7 @@
             (mapcat
                 (fn [sig]
                     (let [m (munge (:name sig))]
-                        (map #(vector m (vec (repeat (dec (count %))'Object)) 'Object) (:arglists sig))
+                        (map #(vector m (vec (repeat (dec (count %)) 'Object)) 'Object) (:arglists sig))
                     )
                 )
                 (vals sigs)
@@ -18647,10 +18533,12 @@
                     :method-builders
                         ~(apply hash-map
                             (mapcat
-                                (fn [sig] [
-                                    `(intern *ns* (with-meta '~(:name sig) (merge '~sig {:protocol (var ~name)})))
-                                    (emit-method-builder (:on-interface opts) (:name sig) (:on sig) (:arglists sig))
-                                ])
+                                (fn [sig]
+                                    [
+                                        `(intern *ns* (with-meta '~(:name sig) (merge '~sig {:protocol (var ~name)})))
+                                        (emit-method-builder (:on-interface opts) (:name sig) (:on sig) (:arglists sig))
+                                    ]
+                                )
                                 (vals sigs)
                             )
                         )
@@ -18709,7 +18597,7 @@
  ;    (bar-me [this y] x))))
  ; => 17
  ;;
-(§ defmacro defprotocol [name & opts+sigs]
+(defmacro defprotocol [name & opts+sigs]
     (emit-protocol name opts+sigs)
 )
 
@@ -18749,7 +18637,7 @@
  ;
  ; See also: extends?, satisfies?, extenders.
  ;;
-(§ defn extend [atype & proto+mmaps]
+(defn extend [atype & proto+mmaps]
     (doseq [[proto mmap] (partition 2 proto+mmaps)]
         (when-not (protocol? proto)
             (throw! (str proto " is not a protocol"))
@@ -18761,29 +18649,22 @@
     )
 )
 
-(§ defn- emit-impl [[p fs]]
+(defn- emit-impl [[p fs]]
     [p (zipmap (map #(-> % first keyword) fs) (map #(cons `fn (drop 1 %)) fs))]
 )
 
-(§ defn- emit-hinted-impl [c [p fs]]
-    (let [hint
-            (fn [specs]
-                (let [specs (if (vector? (first specs)) (list specs) specs)]
+(defn- emit-hinted-impl [c [p fs]]
+    (letfn [(hint- [s]
+                (let [s (if (vector? (first s)) (list s) s)]
                     (map
                         (fn [[[target & args] & body]]
                             (cons (apply vector (vary-meta target assoc :tag c) args) body)
                         )
-                        specs
+                        s
                     )
                 )
             )]
-        [p (zipmap (map #(-> % first name keyword) fs) (map #(cons `fn (hint (drop 1 %))) fs))]
-    )
-)
-
-(§ defn- emit-extend-type [c specs]
-    (let [impls (parse-impls specs)]
-        `(extend ~c ~@(mapcat (partial emit-hinted-impl c) impls))
+        [p (zipmap (map #(-> % first name keyword) fs) (map #(cons `fn (hint- (drop 1 %))) fs))]
     )
 )
 
@@ -18809,16 +18690,8 @@
  ;  {:baz (fn ([x] ...) ([x y & zs] ...))
  ;   :bar (fn [x y] ...)})
  ;;
-(§ defmacro extend-type [t & specs]
-    (emit-extend-type t specs)
-)
-
-(§ defn- emit-extend-protocol [p specs]
-    (let [impls (parse-impls specs)]
-        `(do
-            ~@(map (fn [[t fs]] `(extend-type ~t ~p ~@fs)) impls)
-        )
-    )
+(defmacro extend-type [t & specs]
+    `(extend ~t ~@(mapcat (partial emit-hinted-impl t) (parse-impls specs)))
 )
 
 ;;;
@@ -18857,8 +18730,8 @@
  ;   (foo [x] ...)
  ;   (bar [x y] ...)))
  ;;
-(§ defmacro extend-protocol [p & specs]
-    (emit-extend-protocol p specs)
+(defmacro extend-protocol [p & specs]
+    `(do ~@(map (fn [[t fs]] `(extend-type ~t ~p ~@fs)) (parse-impls specs)))
 )
 )
 
