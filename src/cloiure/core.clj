@@ -467,22 +467,19 @@
     )
 )
 
-(java-ns cloiure.lang.IObject
+(java-ns cloiure.core.IObject
     (defprotocol IObject
         (#_"boolean" IObject'''equals [#_"IObject" this, #_"Object" that])
-        (#_"int" IObject'''hashCode [#_"IObject" this])
         (#_"String" IObject'''toString [#_"IObject" this])
     )
 
     (extend-type nil IObject
         (#_"boolean" IObject'''equals [#_"nil" this, #_"Object" that] (nil? that))
-        (#_"int" IObject'''hashCode [#_"nil" this] 0)
         (#_"String" IObject'''toString [#_"nil" this] "")
     )
 
     (extend-type Object IObject
         (#_"boolean" IObject'''equals [#_"Object" this, #_"Object" that] (.equals this, that))
-        (#_"int" IObject'''hashCode [#_"Object" this] (.hashCode this))
         (#_"String" IObject'''toString [#_"Object" this] (.toString this))
     )
 )
@@ -502,7 +499,7 @@
     )
 )
 
-(java-ns cloiure.lang.Seqable
+(java-ns cloiure.core.Seqable
     (defprotocol Seqable
         (#_"ISeq" Seqable'''seq [#_"Seqable" this])
     )
@@ -513,7 +510,7 @@
     )
 )
 
-(java-ns cloiure.lang.ISeq
+(java-ns cloiure.core.ISeq
     (defprotocol ISeq
         (#_"Object" ISeq'''first [#_"ISeq" this])
         (#_"ISeq" ISeq'''next [#_"ISeq" this])
@@ -551,7 +548,7 @@
  ;;
 (defn ^cloiure.core.ISeq next [s] (ISeq'''next (if (satisfies? ISeq s) s (seq s))))
 
-(java-ns cloiure.lang.Counted
+(java-ns cloiure.core.Counted
     (defprotocol Counted
         (#_"int" Counted'''count [#_"Counted" this])
     )
@@ -593,18 +590,30 @@
  ;;
 (defn butlast [s] (loop-when-recur [v [] s s] (next s) [(conj v (first s)) (next s)] => (seq v)))
 
-(java-ns cloiure.lang.IHashEq
-    (defprotocol IHashEq
-        (#_"int" IHashEq'''hasheq [#_"IHashEq" this])
+(java-ns cloiure.core.Hashed
+    (defprotocol Hashed
+        (#_"int" Hashed'''hash [#_"Hashed" this])
+    )
+
+    (declare Murmur3'hashInt)
+    (declare Murmur3'hashLong)
+
+    (extend-protocol Hashed
+        nil                  (Hashed'''hash [_] 0)
+        Object               (Hashed'''hash [o] (.hashCode o))
+        String               (Hashed'''hash [s] (Murmur3'hashInt (.hashCode s)))
+        Number               (Hashed'''hash [n] (Murmur3'hashLong (.longValue n)))
+        BigInteger           (Hashed'''hash [i] (if (< (.bitLength i) 64) (Murmur3'hashLong (.longValue i)) (.hashCode i)))
+        clojure.lang.IHashEq (Hashed'''hash [o] (.hasheq o))
     )
 )
 
-(java-ns cloiure.lang.Reflector
+(java-ns cloiure.core.Reflector
     #_stateless
     (defrecord Reflector [])
 )
 
-(java-ns cloiure.lang.Compiler
+(java-ns cloiure.core.Compiler
     (defprotocol Expr
         (#_"Object" Expr'''eval [#_"Expr" this])
         (#_"void" Expr'''emit [#_"Expr" this, #_"Context" context, #_"IopObject" objx, #_"GeneratorAdapter" gen])
@@ -651,7 +660,7 @@
     (defrecord Recur [])
 )
 
-(java-ns cloiure.lang.Compiler
+(java-ns cloiure.core.Compiler
     (defrecord NilExpr            []) (extend-type NilExpr Expr Literal)
     (defrecord BooleanExpr        []) (extend-type BooleanExpr Expr Literal)
     (defrecord MonitorEnterExpr   []) (extend-type MonitorEnterExpr Expr Untyped)
@@ -699,7 +708,7 @@
     (defrecord CaseExpr           []) (extend-type CaseExpr Expr MaybePrimitive)
 )
 
-(java-ns cloiure.lang.IFn
+(java-ns cloiure.core.IFn
     (defprotocol IFn
         (#_"Object" IFn'''invoke
             [#_"IFn" this]
@@ -755,11 +764,19 @@
     ([^cloiure.core.IFn f a b c d & s] (IFn'''applyTo f (cons a (cons b (cons c (cons d (spread s)))))))
 )
 
-(java-ns cloiure.lang.IType
+(java-ns cloiure.core.IType
     (defprotocol IType)
 )
 
-(java-ns cloiure.lang.INamed
+(defn type? [x] (or (satisfies? IType x) (instance? clojure.lang.IType x)))
+
+(java-ns cloiure.core.IRecord
+    (defprotocol IRecord)
+)
+
+(defn record? [x] (or (satisfies? IRecord x) (instance? clojure.lang.IRecord x)))
+
+(java-ns cloiure.core.INamed
     (defprotocol INamed
         (#_"String" INamed'''getNamespace [#_"INamed" this])
         (#_"String" INamed'''getName [#_"INamed" this])
@@ -776,7 +793,7 @@
  ;;
 (defn ^String name [x] (if (string? x) x (INamed'''getName ^cloiure.core.INamed x)))
 
-(java-ns cloiure.lang.IMeta
+(java-ns cloiure.core.IMeta
     (defprotocol IMeta
         (#_"IPersistentMap" IMeta'''meta [#_"IMeta" this])
     )
@@ -787,7 +804,7 @@
  ;;
 (defn meta [x] (when (satisfies? IMeta x) (IMeta'''meta ^cloiure.core.IMeta x)))
 
-(java-ns cloiure.lang.IObj
+(java-ns cloiure.core.IObj
     (defprotocol IObj
         (#_"IObj" IObj'''withMeta [#_"IObj" this, #_"IPersistentMap" meta])
     )
@@ -804,7 +821,7 @@
  ;;
 (defn vary-meta [x f & args] (with-meta x (apply f (meta x) args)))
 
-(java-ns cloiure.lang.IReference
+(java-ns cloiure.core.IReference
     (defprotocol IReference
         (#_"IPersistentMap" IReference'''alterMeta [#_"IReference" this, #_"IFn" f, #_"ISeq" args])
         (#_"IPersistentMap" IReference'''resetMeta [#_"IReference" this, #_"IPersistentMap" m])
@@ -822,7 +839,7 @@
  ;;
 (defn reset-meta! [^cloiure.core.IReference r m] (IReference'''resetMeta r m))
 
-(java-ns cloiure.lang.IDeref
+(java-ns cloiure.core.IDeref
     (defprotocol IDeref
         (#_"Object" IDeref'''deref [#_"IDeref" this])
     )
@@ -835,7 +852,7 @@
  ;;
 (defn deref [^cloiure.core.IDeref ref] (IDeref'''deref ref))
 
-(java-ns cloiure.lang.IAtom
+(java-ns cloiure.core.IAtom
     (defprotocol IAtom
         (#_"boolean" IAtom'''compareAndSet [#_"IAtom" this, #_"Object" o, #_"Object" o'])
         (#_"Object" IAtom'''swap [#_"IAtom" this, #_"IFn" f, #_"ISeq" args])
@@ -845,7 +862,7 @@
     )
 )
 
-(java-ns cloiure.lang.IPending
+(java-ns cloiure.core.IPending
     (defprotocol IPending
         (#_"boolean" IPending'''isRealized [#_"IPending" this])
     )
@@ -856,13 +873,13 @@
  ;;
 (defn realized? [^cloiure.core.IPending x] (IPending'''isRealized x))
 
-(java-ns cloiure.lang.Sequential
+(java-ns cloiure.core.Sequential
     (defprotocol Sequential)
 )
 
 (defn sequential? [x] (or (satisfies? Sequential x) (instance? clojure.lang.Sequential x)))
 
-(java-ns cloiure.lang.Reversible
+(java-ns cloiure.core.Reversible
     (defprotocol Reversible
         (#_"ISeq" Reversible'''rseq [#_"Reversible" this])
     )
@@ -876,7 +893,7 @@
 
 (defn reversible? [x] (or (satisfies? Reversible x) (instance? clojure.lang.Reversible x)))
 
-(java-ns cloiure.lang.Sorted
+(java-ns cloiure.core.Sorted
     (defprotocol Sorted
         (#_"Comparator" Sorted'''comparator [#_"Sorted" this])
         (#_"Object" Sorted'''entryKey [#_"Sorted" this, #_"Object" entry])
@@ -887,7 +904,7 @@
 
 (defn sorted? [x] (or (satisfies? Sorted x) (instance? clojure.lang.Sorted x)))
 
-(java-ns cloiure.lang.Indexed
+(java-ns cloiure.core.Indexed
     (defprotocol Indexed
         (#_"Object" Indexed'''nth
             [#_"Indexed" this, #_"int" i]
@@ -908,7 +925,7 @@
     (loop-when-recur [s (seq s) n n] (and s (pos? n)) [(next s) (dec n)] => s)
 )
 
-(java-ns cloiure.lang.ILookup
+(java-ns cloiure.core.ILookup
     (defprotocol ILookup
         (#_"Object" ILookup'''valAt
             [#_"ILookup" this, #_"Object" key]
@@ -917,19 +934,19 @@
     )
 )
 
-(java-ns cloiure.lang.ILookupSite
+(java-ns cloiure.core.ILookupSite
     (defprotocol ILookupSite
         (#_"ILookupThunk" ILookupSite'''fault [#_"ILookupSite" this, #_"Object" target])
     )
 )
 
-(java-ns cloiure.lang.ILookupThunk
+(java-ns cloiure.core.ILookupThunk
     (defprotocol ILookupThunk
         (#_"Object" ILookupThunk'''get [#_"ILookupThunk" this, #_"Object" target])
     )
 )
 
-(java-ns cloiure.lang.IMapEntry
+(java-ns cloiure.core.IMapEntry
     (defprotocol IMapEntry
         (#_"Object" IMapEntry'''key [#_"IMapEntry" this])
         (#_"Object" IMapEntry'''val [#_"IMapEntry" this])
@@ -950,7 +967,7 @@
 
 (defn map-entry? [x] (or (satisfies? IMapEntry x) (instance? clojure.lang.IMapEntry x)))
 
-(java-ns cloiure.lang.IPersistentCollection
+(java-ns cloiure.core.IPersistentCollection
     (defprotocol IPersistentCollection
         (#_"IPersistentCollection" IPersistentCollection'''conj [#_"IPersistentCollection" this, #_"Object" o])
         (#_"IPersistentCollection" IPersistentCollection'''empty [#_"IPersistentCollection" this])
@@ -959,7 +976,7 @@
 
 (defn coll? [x] (or (satisfies? IPersistentCollection x) (instance? clojure.lang.IPersistentCollection x)))
 
-(java-ns cloiure.lang.IEditableCollection
+(java-ns cloiure.core.IEditableCollection
     (defprotocol IEditableCollection
         (#_"ITransientCollection" IEditableCollection'''asTransient [#_"IEditableCollection" this])
     )
@@ -967,7 +984,7 @@
 
 (defn editable? [x] (or (satisfies? IEditableCollection x) (instance? clojure.lang.IEditableCollection x)))
 
-(java-ns cloiure.lang.Associative
+(java-ns cloiure.core.Associative
     (defprotocol Associative
         (#_"Associative" Associative'''assoc [#_"Associative" this, #_"Object" key, #_"Object" val])
         (#_"boolean" Associative'''containsKey [#_"Associative" this, #_"Object" key])
@@ -977,7 +994,7 @@
 
 (defn associative? [x] (or (satisfies? Associative x) (instance? clojure.lang.Associative x)))
 
-(java-ns cloiure.lang.IPersistentMap
+(java-ns cloiure.core.IPersistentMap
     (defprotocol IPersistentMap
         (#_"IPersistentMap" IPersistentMap'''dissoc [#_"IPersistentMap" this, #_"Object" key])
     )
@@ -985,7 +1002,7 @@
 
 (defn map? [x] (or (satisfies? IPersistentMap x) (instance? clojure.lang.IPersistentMap x)))
 
-(java-ns cloiure.lang.IPersistentSet
+(java-ns cloiure.core.IPersistentSet
     (defprotocol IPersistentSet
         (#_"IPersistentSet" IPersistentSet'''disj [#_"IPersistentSet" this, #_"Object" key])
         (#_"boolean" IPersistentSet'''contains [#_"IPersistentSet" this, #_"Object" key])
@@ -995,20 +1012,20 @@
 
 (defn set? [x] (or (satisfies? IPersistentSet x) (instance? clojure.lang.IPersistentSet x)))
 
-(java-ns cloiure.lang.IPersistentStack
+(java-ns cloiure.core.IPersistentStack
     (defprotocol IPersistentStack
         (#_"Object" IPersistentStack'''peek [#_"IPersistentStack" this])
         (#_"IPersistentStack" IPersistentStack'''pop [#_"IPersistentStack" this])
     )
 )
 
-(java-ns cloiure.lang.IPersistentList
+(java-ns cloiure.core.IPersistentList
     (defprotocol IPersistentList)
 )
 
 (defn list? [x] (or (satisfies? IPersistentList x) (instance? clojure.lang.IPersistentList x)))
 
-(java-ns cloiure.lang.IPersistentVector
+(java-ns cloiure.core.IPersistentVector
     (defprotocol IPersistentVector
         (#_"IPersistentVector" IPersistentVector'''assocN [#_"IPersistentVector" this, #_"int" i, #_"Object" val])
     )
@@ -1016,14 +1033,14 @@
 
 (defn vector? [x] (or (satisfies? IPersistentVector x) (instance? clojure.lang.IPersistentVector x)))
 
-(java-ns cloiure.lang.ITransientCollection
+(java-ns cloiure.core.ITransientCollection
     (defprotocol ITransientCollection
         (#_"ITransientCollection" ITransientCollection'''conj [#_"ITransientCollection" this, #_"Object" val])
         (#_"IPersistentCollection" ITransientCollection'''persistent [#_"ITransientCollection" this])
     )
 )
 
-(java-ns cloiure.lang.ITransientAssociative
+(java-ns cloiure.core.ITransientAssociative
     (defprotocol ITransientAssociative
         (#_"ITransientAssociative" ITransientAssociative'''assoc [#_"ITransientAssociative" this, #_"Object" key, #_"Object" val])
         (#_"boolean" ITransientAssociative'''containsKey [#_"ITransientAssociative" this, #_"Object" key])
@@ -1031,13 +1048,13 @@
     )
 )
 
-(java-ns cloiure.lang.ITransientMap
+(java-ns cloiure.core.ITransientMap
     (defprotocol ITransientMap
         (#_"ITransientMap" ITransientMap'''dissoc [#_"ITransientMap" this, #_"Object" key])
     )
 )
 
-(java-ns cloiure.lang.ITransientSet
+(java-ns cloiure.core.ITransientSet
     (defprotocol ITransientSet
         (#_"ITransientSet" ITransientSet'''disj [#_"ITransientSet" this, #_"Object" key])
         (#_"boolean" ITransientSet'''contains [#_"ITransientSet" this, #_"Object" key])
@@ -1045,14 +1062,14 @@
     )
 )
 
-(java-ns cloiure.lang.ITransientVector
+(java-ns cloiure.core.ITransientVector
     (defprotocol ITransientVector
         (#_"ITransientVector" ITransientVector'''assocN [#_"ITransientVector" this, #_"int" i, #_"Object" val])
         (#_"ITransientVector" ITransientVector'''pop [#_"ITransientVector" this])
     )
 )
 
-(java-ns cloiure.lang.PersistentHashMap
+(java-ns cloiure.core.PersistentHashMap
     (defprotocol INode
         (#_"INode" INode'''assoc [#_"INode" this, #_"int" shift, #_"int" hash, #_"Object" key, #_"Object" val, #_"boolean'" addedLeaf])
         (#_"INode" INode'''dissoc [#_"INode" this, #_"int" shift, #_"int" hash, #_"Object" key])
@@ -1067,7 +1084,7 @@
     )
 )
 
-(java-ns cloiure.lang.IReduce
+(java-ns cloiure.core.IReduce
     (defprotocol IReduce
         (#_"Object" IReduce'''reduce
             [#_"IReduce" this, #_"IFn" f]
@@ -1076,32 +1093,32 @@
     )
 )
 
-(java-ns cloiure.lang.IKVReduce
+(java-ns cloiure.core.IKVReduce
     (defprotocol IKVReduce
         (#_"Object" IKVReduce'''kvreduce [#_"IKVReduce" this, #_"IFn" f, #_"Object" r])
     )
 )
 
-(java-ns cloiure.lang.Range
+(java-ns cloiure.core.Range
     (defprotocol RangeBoundsCheck
         (#_"boolean" RangeBoundsCheck'''exceededBounds [#_"RangeBoundsCheck" this, #_"Object" val])
     )
 )
 
-(java-ns cloiure.lang.Util
+(java-ns cloiure.core.Util
     #_stateless
     (defrecord Util [])
 )
 
-(java-ns cloiure.lang.DynamicClassLoader
+(java-ns cloiure.core.DynamicClassLoader
     (defrecord DynamicClassLoader #_"ClassLoader" [])
 )
 
-(java-ns cloiure.lang.Ratio
-    (defrecord Ratio #_"Number" []) (extend-type Ratio #_"Comparable" IObject)
+(java-ns cloiure.core.Ratio
+    (defrecord Ratio #_"Number" []) (extend-type Ratio #_"Comparable" Hashed IObject)
 )
 
-(java-ns cloiure.lang.Numbers
+(java-ns cloiure.core.Numbers
     (defprotocol Ops
         (#_"Ops" Ops'''combine [#_"Ops" this, #_"Ops" y])
         (#_"Ops" Ops'''opsWithLong [#_"Ops" this, #_"LongOps" x])
@@ -1130,28 +1147,28 @@
     (defrecord Numbers [])
 )
 
-(java-ns cloiure.lang.Atom
+(java-ns cloiure.core.Atom
     (defrecord Atom []) (extend-type Atom IAtom IMeta IDeref IReference)
 )
 
-(java-ns cloiure.lang.AFn
+(java-ns cloiure.core.AFn
     #_abstract
     (defprotocol AFn) (extend-type cloiure.core.AFn IFn)
 )
 
-(java-ns cloiure.lang.Symbol
-    (defrecord Symbol []) (extend-type Symbol AFn #_"Comparable" IFn IHashEq IMeta INamed IObj IObject)
+(java-ns cloiure.core.Symbol
+    (defrecord Symbol []) (extend-type Symbol AFn #_"Comparable" IFn Hashed IMeta INamed IObj IObject)
 )
 
 (defn symbol? [x] (or (instance? Symbol x) (instance? clojure.lang.Symbol x)))
 
-(java-ns cloiure.lang.Keyword
-    (defrecord Keyword []) (extend-type Keyword AFn #_"Comparable" IFn IHashEq INamed IObject)
+(java-ns cloiure.core.Keyword
+    (defrecord Keyword []) (extend-type Keyword AFn #_"Comparable" IFn Hashed INamed IObject)
 )
 
 (defn keyword? [x] (or (instance? Keyword x) (instance? clojure.lang.Keyword x)))
 
-(java-ns cloiure.lang.Fn
+(java-ns cloiure.core.Fn
     #_abstract
     (defrecord Fn []) (extend-type Fn AFn #_"Comparator" IFn)
 )
@@ -1161,7 +1178,7 @@
  ;;
 (defn fn? [x] (or (instance? Fn x) (instance? clojure.lang.Fn x)))
 
-(java-ns cloiure.lang.RestFn
+(java-ns cloiure.core.RestFn
     (defprotocol IRestFn
         (#_"int" IRestFn'''requiredArity [#_"IRestFn" this])
         (#_"Object" IRestFn'''doInvoke
@@ -1182,43 +1199,43 @@
     (defrecord RestFn #_"Fn" []) (extend-type RestFn #_"Comparator" IFn IRestFn)
 )
 
-(java-ns cloiure.lang.ASeq
+(java-ns cloiure.core.ASeq
     #_abstract
-    (defprotocol ASeq) (extend-type cloiure.core.ASeq IHashEq IObject IPersistentCollection ISeq Seqable Sequential)
+    (defprotocol ASeq) (extend-type cloiure.core.ASeq Hashed IObject IPersistentCollection ISeq Seqable Sequential)
 )
 
-(java-ns cloiure.lang.LazySeq
-    (defrecord LazySeq []) (extend-type LazySeq IHashEq IMeta IObj IObject IPending IPersistentCollection ISeq Seqable Sequential)
+(java-ns cloiure.core.LazySeq
+    (defrecord LazySeq []) (extend-type LazySeq Hashed IMeta IObj IObject IPending IPersistentCollection ISeq Seqable Sequential)
 )
 
-(java-ns cloiure.lang.APersistentMap
+(java-ns cloiure.core.APersistentMap
     #_abstract
-    (defrecord APersistentMap []) (extend-type APersistentMap AFn Associative Counted IFn IHashEq ILookup IObject IPersistentCollection IPersistentMap Seqable)
+    (defrecord APersistentMap []) (extend-type APersistentMap AFn Associative Counted IFn Hashed ILookup IObject IPersistentCollection IPersistentMap Seqable)
 )
 
-(java-ns cloiure.lang.APersistentSet
+(java-ns cloiure.core.APersistentSet
     #_abstract
-    (defrecord APersistentSet []) (extend-type APersistentSet AFn Counted IFn IHashEq IObject IPersistentCollection IPersistentSet Seqable)
+    (defrecord APersistentSet []) (extend-type APersistentSet AFn Counted IFn Hashed IObject IPersistentCollection IPersistentSet Seqable)
 )
 
-(java-ns cloiure.lang.APersistentVector
-    (defrecord VSeq []) (extend-type VSeq ASeq Counted IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
-    (defrecord RSeq []) (extend-type RSeq ASeq Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+(java-ns cloiure.core.APersistentVector
+    (defrecord VSeq []) (extend-type VSeq ASeq Counted Hashed IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
+    (defrecord RSeq []) (extend-type RSeq ASeq Counted Hashed IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
     #_abstract
-    (defrecord APersistentVector []) (extend-type APersistentVector AFn Associative #_"Comparable" Counted IFn IHashEq ILookup Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
-    (defrecord SubVector #_"APersistentVector" []) (extend-type SubVector Associative #_"Comparable" Counted IFn IHashEq ILookup IMeta Indexed IObj IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord APersistentVector []) (extend-type APersistentVector AFn Associative #_"Comparable" Counted IFn Hashed ILookup Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord SubVector #_"APersistentVector" []) (extend-type SubVector Associative #_"Comparable" Counted IFn Hashed ILookup IMeta Indexed IObj IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
 )
 
-(java-ns cloiure.lang.AMapEntry
+(java-ns cloiure.core.AMapEntry
     #_abstract
-    (defrecord AMapEntry #_"APersistentVector" []) (extend-type AMapEntry Associative #_"Comparable" Counted IFn IHashEq ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+    (defrecord AMapEntry #_"APersistentVector" []) (extend-type AMapEntry Associative #_"Comparable" Counted IFn Hashed ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
 )
 
-(java-ns cloiure.lang.ArraySeq
-    (defrecord ArraySeq []) (extend-type ArraySeq ASeq Counted IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
+(java-ns cloiure.core.ArraySeq
+    (defrecord ArraySeq []) (extend-type ArraySeq ASeq Counted Hashed IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
 )
 
-(java-ns cloiure.lang.ATransientMap
+(java-ns cloiure.core.ATransientMap
     (defprotocol IATransientMap
         (#_"void" IATransientMap'''ensureEditable [#_"IATransientMap" this])
         (#_"ITransientMap" IATransientMap'''doAssoc [#_"IATransientMap" this, #_"Object" key, #_"Object" val])
@@ -1232,71 +1249,71 @@
     (defrecord ATransientMap []) (extend-type ATransientMap AFn Counted IATransientMap IFn ILookup ITransientAssociative ITransientCollection ITransientMap)
 )
 
-(java-ns cloiure.lang.ATransientSet
+(java-ns cloiure.core.ATransientSet
     #_abstract
     (defrecord ATransientSet []) (extend-type ATransientSet AFn Counted IFn ITransientCollection ITransientSet)
 )
 
-(java-ns cloiure.lang.Cons
-    (defrecord Cons []) (extend-type Cons ASeq Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+(java-ns cloiure.core.Cons
+    (defrecord Cons []) (extend-type Cons ASeq Counted Hashed IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
 )
 
-(java-ns cloiure.lang.Delay
+(java-ns cloiure.core.Delay
     (defrecord Delay []) (extend-type Delay IDeref IPending)
 )
 
-(java-ns cloiure.lang.Iterate
-    (defrecord Iterate []) (extend-type Iterate ASeq IHashEq IMeta IObj IObject IPending IPersistentCollection IReduce ISeq Seqable Sequential)
+(java-ns cloiure.core.Iterate
+    (defrecord Iterate []) (extend-type Iterate ASeq Hashed IMeta IObj IObject IPending IPersistentCollection IReduce ISeq Seqable Sequential)
 )
 
-(java-ns cloiure.lang.KeywordLookupSite
+(java-ns cloiure.core.KeywordLookupSite
     (defrecord KeywordLookupSite []) (extend-type KeywordLookupSite ILookupSite ILookupThunk)
 )
 
-(java-ns cloiure.lang.MapEntry
-    (defrecord MapEntry #_"AMapEntry" []) (extend-type MapEntry Associative #_"Comparable" Counted IFn IHashEq ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
+(java-ns cloiure.core.MapEntry
+    (defrecord MapEntry #_"AMapEntry" []) (extend-type MapEntry Associative #_"Comparable" Counted IFn Hashed ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector Reversible Seqable Sequential)
 )
 
-(java-ns cloiure.lang.MethodImplCache
+(java-ns cloiure.core.MethodImplCache
     (defrecord MethodImplCache [])
 )
 
-(java-ns cloiure.lang.Namespace
+(java-ns cloiure.core.Namespace
     (defrecord Namespace []) (extend-type Namespace IObject)
 )
 
-(java-ns cloiure.lang.PersistentArrayMap
-    (defrecord MSeq []) (extend-type MSeq ASeq Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+(java-ns cloiure.core.PersistentArrayMap
+    (defrecord MSeq []) (extend-type MSeq ASeq Counted Hashed IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
     (defrecord TransientArrayMap #_"ATransientMap" []) (extend-type TransientArrayMap Counted IATransientMap IFn ILookup ITransientAssociative ITransientCollection ITransientMap)
-    (defrecord PersistentArrayMap #_"APersistentMap" []) (extend-type PersistentArrayMap Associative Counted IEditableCollection IFn IHashEq IKVReduce ILookup IMeta IObj IObject IPersistentCollection IPersistentMap Seqable)
+    (defrecord PersistentArrayMap #_"APersistentMap" []) (extend-type PersistentArrayMap Associative Counted IEditableCollection IFn Hashed IKVReduce ILookup IMeta IObj IObject IPersistentCollection IPersistentMap Seqable)
 )
 
-(java-ns cloiure.lang.PersistentHashMap
+(java-ns cloiure.core.PersistentHashMap
     (defrecord TransientHashMap #_"ATransientMap" []) (extend-type TransientHashMap Counted IATransientMap IFn ILookup ITransientAssociative ITransientCollection ITransientMap)
-    (defrecord HSeq []) (extend-type HSeq ASeq IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+    (defrecord HSeq []) (extend-type HSeq ASeq Hashed IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
     (defrecord ArrayNode []) (extend-type ArrayNode INode)
     (defrecord BitmapIndexedNode []) (extend-type BitmapIndexedNode INode)
     (defrecord HashCollisionNode []) (extend-type HashCollisionNode INode)
-    (defrecord NodeSeq []) (extend-type NodeSeq ASeq IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
-    (defrecord PersistentHashMap #_"APersistentMap" []) (extend-type PersistentHashMap Associative Counted IEditableCollection IFn IHashEq IKVReduce ILookup IMeta IObj IObject IPersistentCollection IPersistentMap Seqable)
+    (defrecord NodeSeq []) (extend-type NodeSeq ASeq Hashed IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+    (defrecord PersistentHashMap #_"APersistentMap" []) (extend-type PersistentHashMap Associative Counted IEditableCollection IFn Hashed IKVReduce ILookup IMeta IObj IObject IPersistentCollection IPersistentMap Seqable)
 )
 
-(java-ns cloiure.lang.PersistentHashSet
+(java-ns cloiure.core.PersistentHashSet
     (defrecord TransientHashSet #_"ATransientSet" []) (extend-type TransientHashSet Counted IFn ITransientCollection ITransientSet)
-    (defrecord PersistentHashSet #_"APersistentSet" []) (extend-type PersistentHashSet Counted IEditableCollection IFn IHashEq IMeta IObj IObject IPersistentCollection IPersistentSet Seqable)
+    (defrecord PersistentHashSet #_"APersistentSet" []) (extend-type PersistentHashSet Counted IEditableCollection IFn Hashed IMeta IObj IObject IPersistentCollection IPersistentSet Seqable)
 )
 
-(java-ns cloiure.lang.PersistentList
-    (defrecord EmptyList []) (extend-type EmptyList Counted IHashEq IMeta IObj IObject IPersistentCollection IPersistentList IPersistentStack ISeq Seqable Sequential)
-    (defrecord PersistentList []) (extend-type PersistentList ASeq Counted IHashEq IMeta IObj IObject IPersistentCollection IPersistentList IPersistentStack IReduce ISeq Seqable Sequential)
+(java-ns cloiure.core.PersistentList
+    (defrecord EmptyList []) (extend-type EmptyList Counted Hashed IMeta IObj IObject IPersistentCollection IPersistentList IPersistentStack ISeq Seqable Sequential)
+    (defrecord PersistentList []) (extend-type PersistentList ASeq Counted Hashed IMeta IObj IObject IPersistentCollection IPersistentList IPersistentStack IReduce ISeq Seqable Sequential)
 )
 
-(java-ns cloiure.lang.PersistentQueue
-    (defrecord QSeq []) (extend-type QSeq ASeq Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
-    (defrecord PersistentQueue []) (extend-type PersistentQueue Counted IHashEq IMeta IObj IObject IPersistentCollection IPersistentList IPersistentStack Seqable Sequential)
+(java-ns cloiure.core.PersistentQueue
+    (defrecord QSeq []) (extend-type QSeq ASeq Counted Hashed IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+    (defrecord PersistentQueue []) (extend-type PersistentQueue Counted Hashed IMeta IObj IObject IPersistentCollection IPersistentList IPersistentStack Seqable Sequential)
 )
 
-(java-ns cloiure.lang.PersistentTreeMap
+(java-ns cloiure.core.PersistentTreeMap
     (defprotocol ITNode
         (#_"ITNode" ITNode'''left [#_"ITNode" this])
         (#_"ITNode" ITNode'''right [#_"ITNode" this])
@@ -1312,51 +1329,51 @@
     )
 
     #_abstract
-    (defrecord TNode #_"AMapEntry" []) (extend-type TNode Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
-    (defrecord Black #_"TNode" []) (extend-type Black Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
-    (defrecord BlackVal #_"Black" []) (extend-type BlackVal Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
-    (defrecord BlackBranch #_"Black" []) (extend-type BlackBranch Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
-    (defrecord BlackBranchVal #_"BlackBranch" []) (extend-type BlackBranchVal Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
-    (defrecord Red #_"TNode" []) (extend-type Red Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
-    (defrecord RedVal #_"Red" []) (extend-type RedVal Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
-    (defrecord RedBranch #_"Red" []) (extend-type RedBranch Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
-    (defrecord RedBranchVal #_"RedBranch" []) (extend-type RedBranchVal Associative #_"Comparable" Counted IFn IHashEq IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
-    (defrecord TSeq []) (extend-type TSeq ASeq Counted IHashEq IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
-    (defrecord PersistentTreeMap #_"APersistentMap" []) (extend-type PersistentTreeMap Associative Counted IFn IHashEq IKVReduce ILookup IMeta IObj IObject IPersistentCollection IPersistentMap Reversible Seqable Sorted)
+    (defrecord TNode #_"AMapEntry" []) (extend-type TNode Associative #_"Comparable" Counted IFn Hashed IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
+    (defrecord Black #_"TNode" []) (extend-type Black Associative #_"Comparable" Counted IFn Hashed IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
+    (defrecord BlackVal #_"Black" []) (extend-type BlackVal Associative #_"Comparable" Counted IFn Hashed IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
+    (defrecord BlackBranch #_"Black" []) (extend-type BlackBranch Associative #_"Comparable" Counted IFn Hashed IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
+    (defrecord BlackBranchVal #_"BlackBranch" []) (extend-type BlackBranchVal Associative #_"Comparable" Counted IFn Hashed IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
+    (defrecord Red #_"TNode" []) (extend-type Red Associative #_"Comparable" Counted IFn Hashed IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
+    (defrecord RedVal #_"Red" []) (extend-type RedVal Associative #_"Comparable" Counted IFn Hashed IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
+    (defrecord RedBranch #_"Red" []) (extend-type RedBranch Associative #_"Comparable" Counted IFn Hashed IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
+    (defrecord RedBranchVal #_"RedBranch" []) (extend-type RedBranchVal Associative #_"Comparable" Counted IFn Hashed IKVReduce ILookup IMapEntry Indexed IObject IPersistentCollection IPersistentStack IPersistentVector ITNode Reversible Seqable Sequential)
+    (defrecord TSeq []) (extend-type TSeq ASeq Counted Hashed IMeta IObj IObject IPersistentCollection ISeq Seqable Sequential)
+    (defrecord PersistentTreeMap #_"APersistentMap" []) (extend-type PersistentTreeMap Associative Counted IFn Hashed IKVReduce ILookup IMeta IObj IObject IPersistentCollection IPersistentMap Reversible Seqable Sorted)
 )
 
-(java-ns cloiure.lang.PersistentTreeSet
-    (defrecord PersistentTreeSet #_"APersistentSet" []) (extend-type PersistentTreeSet Counted IFn IHashEq IMeta IObj IObject IPersistentCollection IPersistentSet Reversible Seqable Sorted)
+(java-ns cloiure.core.PersistentTreeSet
+    (defrecord PersistentTreeSet #_"APersistentSet" []) (extend-type PersistentTreeSet Counted IFn Hashed IMeta IObj IObject IPersistentCollection IPersistentSet Reversible Seqable Sorted)
 )
 
-(java-ns cloiure.lang.PersistentVector
+(java-ns cloiure.core.PersistentVector
     (defrecord VNode [])
     (defrecord TransientVector []) (extend-type TransientVector AFn Counted IFn ILookup Indexed ITransientAssociative ITransientCollection ITransientVector)
-    (defrecord PersistentVector #_"APersistentVector" []) (extend-type PersistentVector Associative #_"Comparable" Counted IEditableCollection IFn IHashEq IKVReduce ILookup IMeta Indexed IObj IObject IPersistentCollection IPersistentStack IPersistentVector IReduce Reversible Seqable Sequential)
+    (defrecord PersistentVector #_"APersistentVector" []) (extend-type PersistentVector Associative #_"Comparable" Counted IEditableCollection IFn Hashed IKVReduce ILookup IMeta Indexed IObj IObject IPersistentCollection IPersistentStack IPersistentVector IReduce Reversible Seqable Sequential)
 )
 
-(java-ns cloiure.lang.Repeat
-    (defrecord Repeat []) (extend-type Repeat ASeq IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
+(java-ns cloiure.core.Repeat
+    (defrecord Repeat []) (extend-type Repeat ASeq Hashed IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
 )
 
-(java-ns cloiure.lang.Range
-    (defrecord Range []) (extend-type Range ASeq Counted IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
+(java-ns cloiure.core.Range
+    (defrecord Range []) (extend-type Range ASeq Counted Hashed IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
 )
 
-(java-ns cloiure.lang.Reduced
+(java-ns cloiure.core.Reduced
     (defrecord Reduced []) (extend-type Reduced IDeref)
 )
 
-(java-ns cloiure.lang.StringSeq
-    (defrecord StringSeq []) (extend-type StringSeq ASeq Counted IHashEq IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
+(java-ns cloiure.core.StringSeq
+    (defrecord StringSeq []) (extend-type StringSeq ASeq Counted Hashed IMeta IObj IObject IPersistentCollection IReduce ISeq Seqable Sequential)
 )
 
-(java-ns cloiure.lang.Tuple
+(java-ns cloiure.core.Tuple
     #_stateless
     (defrecord Tuple [])
 )
 
-(java-ns cloiure.lang.Var
+(java-ns cloiure.core.Var
     (defrecord Unbound []) (extend-type Unbound AFn IFn IObject)
     (defrecord Var []) (extend-type Var IDeref IFn IMeta IObject IReference)
 )
@@ -1366,7 +1383,7 @@
  ;;
 (defn var? [v] (instance? Var v))
 
-(java-ns cloiure.lang.RT
+(java-ns cloiure.core.RT
     #_stateless
     (defrecord RT [])
 )
@@ -1397,7 +1414,7 @@
 
 (defmacro update! [x f & z] `(set! ~x (~f ~x ~@z)))
 
-(java-ns cloiure.lang.Intrinsics
+(java-ns cloiure.core.Intrinsics
 
 (class-ns Intrinsics
     (def #_"{String int|[int]}" Intrinsics'ops
@@ -1478,7 +1495,7 @@
 )
 )
 
-(java-ns cloiure.lang.Reflector
+(java-ns cloiure.core.Reflector
 
 (class-ns Reflector
     (defn #_"Class" Reflector'classOf [#_"Object" o]
@@ -1811,7 +1828,7 @@
 )
 )
 
-(java-ns cloiure.lang.Compiler
+(java-ns cloiure.core.Compiler
 
 (def Context'enum-set
     (hash-set
@@ -5466,7 +5483,7 @@
                         (.invokeStatic gen, (Type/getType RT), (Method/getMethod "clojure.lang.Var var(String, String)"))
                         true
                     )
-                    (satisfies? IType value)
+                    (type? value)
                     (let [#_"Method" ctor (Method. "<init>", (Type/getConstructorDescriptor (aget (.getConstructors (class value)) 0)))]
                         (.newInstance gen, (Type/getType (class value)))
                         (.dup gen)
@@ -5474,15 +5491,21 @@
                             (loop-when-recur [#_"ISeq" s (seq fields)] (some? s) [(next s)]
                                 (let [#_"Symbol" field (first s)]
                                     (IopObject''emitValue this, (Reflector'getInstanceField value, (Compiler'munge (:name field))), gen)
-                                    (let-when [#_"Class" k (Interop'tagClass (Compiler'tagOf field))] (.isPrimitive k)
-                                        (let [#_"Type" b (Type/getType (Compiler'boxClass k))]
-                                            (.invokeVirtual gen, b, (Method. (str (.getName k) "Value"), (str "()" (.getDescriptor (Type/getType k)))))
+                                    (let-when [#_"Class" c (Interop'tagClass (Compiler'tagOf field))] (.isPrimitive c)
+                                        (let [#_"Type" b (Type/getType (Compiler'boxClass c))]
+                                            (.invokeVirtual gen, b, (Method. (str (.getName c) "Value"), (str "()" (.getDescriptor (Type/getType c)))))
                                         )
                                     )
                                 )
                             )
                             (.invokeConstructor gen, (Type/getType (class value)), ctor)
                         )
+                        true
+                    )
+                    (record? value)
+                    (let [#_"Class" c (class value)]
+                        (IopObject''emitValue this, (apply array-map value), gen)
+                        (.invokeStatic gen, (Compiler'getType c), (Method/getMethod (str (.getName c) " create(cloiure.core.IPersistentMap)")))
                         true
                     )
                     (map? value)
@@ -5674,7 +5697,6 @@
                                     (.visitInsn ctorgen, Opcodes/ACONST_NULL) ;; __meta
                                     (.visitInsn ctorgen, Opcodes/ACONST_NULL) ;; __extmap
                                     (.visitInsn ctorgen, Opcodes/ICONST_0) ;; __hash
-                                    (.visitInsn ctorgen, Opcodes/ICONST_0) ;; __hasheq
 
                                     (.invokeConstructor ctorgen, (:objType this), (Method. "<init>", Type/VOID_TYPE, ctorTypes))
 
@@ -5682,7 +5704,7 @@
                                     (.endMethod ctorgen)
                                 )
 
-                                ;; alt ctor no __hash, __hasheq
+                                ;; alt ctor w/o __hash
                                 (let [#_"Type[]" altCtorTypes (make-array Type (- (alength ctorTypes) 2))
                                       _ (dotimes [#_"int" i (alength altCtorTypes)]
                                             (aset altCtorTypes i (aget ctorTypes i))
@@ -5694,7 +5716,6 @@
                                     (.loadArgs ctorgen)
 
                                     (.visitInsn ctorgen, Opcodes/ICONST_0) ;; __hash
-                                    (.visitInsn ctorgen, Opcodes/ICONST_0) ;; __hasheq
 
                                     (.invokeConstructor ctorgen, (:objType this), (Method. "<init>", Type/VOID_TYPE, ctorTypes))
 
@@ -5786,7 +5807,7 @@
                         ;; end of class
                         (.visitEnd cv)
 
-                        (assoc this :compiledClass (.defineClass *class-loader*, (:name this), (.toByteArray cw), (§ obsolete nil)))
+                        (assoc this :compiledClass (.defineClass *class-loader*, (:name this), (.toByteArray cw)))
                     )
                 )
             )
@@ -6753,7 +6774,6 @@
                         (.visitInsn ctorgen, Opcodes/ACONST_NULL) ;; __meta
                         (.visitInsn ctorgen, Opcodes/ACONST_NULL) ;; __extmap
                         (.visitInsn ctorgen, Opcodes/ICONST_0) ;; __hash
-                        (.visitInsn ctorgen, Opcodes/ICONST_0) ;; __hasheq
 
                         (.invokeConstructor ctorgen, (Type/getObjectType (str Compiler'COMPILE_STUB_PREFIX "/" (:internalName ret))), (Method. "<init>", Type/VOID_TYPE, ctorTypes))
 
@@ -6761,7 +6781,7 @@
                         (.endMethod ctorgen)
                     )
 
-                    ;; alt ctor no __hash, __hasheq
+                    ;; alt ctor w/o __hash
                     (let [#_"Type[]" altCtorTypes (make-array Type (- (alength ctorTypes) 2))
                           _ (dotimes [#_"int" i (alength altCtorTypes)]
                                 (aset altCtorTypes i (aget ctorTypes i))
@@ -6773,7 +6793,6 @@
                         (.loadArgs ctorgen)
 
                         (.visitInsn ctorgen, Opcodes/ICONST_0) ;; __hash
-                        (.visitInsn ctorgen, Opcodes/ICONST_0) ;; __hasheq
 
                         (.invokeConstructor ctorgen, (Type/getObjectType (str Compiler'COMPILE_STUB_PREFIX "/" (:internalName ret))), (Method. "<init>", Type/VOID_TYPE, ctorTypes))
 
@@ -6786,7 +6805,7 @@
             ;; end of class
             (.visitEnd cv)
 
-            (.defineClass *class-loader*, (str Compiler'COMPILE_STUB_PREFIX "." (:name ret)), (.toByteArray cw), (§ obsolete nil))
+            (.defineClass *class-loader*, (str Compiler'COMPILE_STUB_PREFIX "." (:name ret)), (.toByteArray cw))
         )
     )
 
@@ -6877,7 +6896,6 @@
                                 (.visitVarInsn mv, Opcodes/ALOAD, 0) ;; __extmap
                                 (.visitMethodInsn mv, Opcodes/INVOKESTATIC, "clojure/lang/RT", "seqOrElse", "(Ljava/lang/Object;)Ljava/lang/Object;")
                                 (.visitInsn mv, Opcodes/ICONST_0) ;; __hash
-                                (.visitInsn mv, Opcodes/ICONST_0) ;; __hasheq
                                 (.visitMethodInsn mv, Opcodes/INVOKESPECIAL, className, "<init>", (.getDescriptor ctor))
                                 (.visitInsn mv, Opcodes/ARETURN)
                                 (.visitMaxs mv, (+ 4 n), (+ 1 n))
@@ -6987,7 +7005,7 @@
                           _ (update! *closes* assoc (:uid nie) (PersistentArrayMap'new a))
                           nie (assoc nie :fields fmap)]
                         (loop-when-recur [nie nie #_"int" i (dec (count fieldSyms))]
-                                         (and (<= 0 i) (any = (:name (nth fieldSyms i)) "__meta" "__extmap" "__hash" "__hasheq"))
+                                         (and (<= 0 i) (any = (:name (nth fieldSyms i)) "__meta" "__extmap" "__hash"))
                                          [(update nie :altCtorDrops inc) (dec i)]
                                       => nie
                         )
@@ -7527,7 +7545,7 @@
                         (keyword? form) (Compiler'registerKeyword form)
                         (number? form)  (NumberExpr'parse form)
                         (string? form)  (StringExpr'new (.intern ^String form))
-                        (and (coll? form) (not (satisfies? IType form)) (zero? (count form)))
+                        (and (coll? form) (not (record? form)) (not (type? form)) (zero? (count form)))
                             (let-when [#_"Expr" e (EmptyExpr'new form)] (some? (meta form)) => e
                                 (MetaExpr'new e, (MapExpr'parse (if (= context :Context'EVAL) context :Context'EXPRESSION), (meta form)))
                             )
@@ -7573,7 +7591,7 @@
                             (loop-when-recur [#_"ISeq" s (next form)] (some? (next s)) [(next s)] => (Compiler'eval (first s))
                                 (Compiler'eval (first s))
                             )
-                        (or (satisfies? IType form) (and (coll? form) (not (and (symbol? (first form)) (.startsWith (:name (first form)), "def")))))
+                        (or (type? form) (and (coll? form) (not (and (symbol? (first form)) (.startsWith (:name (first form)), "def")))))
                             (let [#_"IopObject" fexpr (Compiler'analyze :Context'EXPRESSION, (list 'fn* [] form), (str "eval" (next-id!)))]
                                 (IFn'''invoke (Expr'''eval fexpr))
                             )
@@ -7589,7 +7607,7 @@
 )
 )
 
-(java-ns cloiure.lang.LispReader
+(java-ns cloiure.core.LispReader
 
 (class-ns LispReader
     (def #_"Var" ^:dynamic *arg-env*   ) ;; sorted-map num->gensymbol
@@ -7787,14 +7805,13 @@
                                         ;; no op macros return the reader
                                         (recur-if (identical? o r) [] => o)
                                     )
-                                    (do
+                                    (or
                                         (when (any = ch \+ \-)
-                                            (let [#_"char" ch2 (LispReader'read1 r)]
-                                                (when (LispReader'isDigit ch2, 10)
-                                                    (LispReader'unread r, ch2)
-                                                    (ß return (LispReader'readNumber r, ch))
+                                            (let [#_"char" ch' (LispReader'read1 r) ? (LispReader'isDigit ch', 10)]
+                                                (LispReader'unread r, ch')
+                                                (when ?
+                                                    (LispReader'readNumber r, ch)
                                                 )
-                                                (LispReader'unread r, ch2)
                                             )
                                         )
                                         (LispReader'interpretToken (LispReader'readToken r, ch))
@@ -8108,11 +8125,13 @@
                             (list 'quote form)
                         )
                     (SyntaxQuoteReader'isUnquote form)
-                        (ß return (second form))
+                        (second form)
                     (SyntaxQuoteReader'isUnquoteSplicing form)
                         (throw! "splice not in list")
                     (coll? form)
                         (cond
+                            (record? form)
+                                form
                             (map? form)
                                 (list `apply `hash-map (list `seq (cons `concat (SyntaxQuoteReader'sqExpandList (seq (SyntaxQuoteReader'flattened form))))))
                             (vector? form)
@@ -8131,7 +8150,7 @@
                     :else
                         (list 'quote form)
                 )]
-            (when (and (satisfies? IObj form) (seq (dissoc (meta form) :line :column))) => q
+            (when (and (satisfies? IObj form) (seq (dissoc (meta form) :line :column)) (not (SyntaxQuoteReader'isUnquote form))) => q
                 (list `with-meta q (SyntaxQuoteReader'syntaxQuote (meta form)))
             )
         )
@@ -8268,7 +8287,7 @@
 )
 )
 
-(java-ns cloiure.lang.Compiler
+(java-ns cloiure.core.Compiler
 
 (class-ns Compiler
     (defn #_"Object" Compiler'load [#_"Reader" reader]
@@ -8302,7 +8321,7 @@
  ;;
 (defn eval [form] (Compiler'eval form))
 
-(java-ns cloiure.lang.Murmur3
+(java-ns cloiure.core.Murmur3
 
 ;;;
  ; See http://smhasher.googlecode.com/svn/trunk/MurmurHash3.cpp
@@ -8385,12 +8404,10 @@
         (Murmur3'fmix (Murmur3'mixH1 Murmur3'seed, (Murmur3'mixK1 hash)), n)
     )
 
-    (declare Util'hasheq)
-
     (defn #_"int" Murmur3'hashOrdered [#_"Seqable" items]
         (loop-when-recur [#_"int" hash 1 #_"int" n 0 #_"ISeq" s (seq items)]
                          (some? s)
-                         [(+ (* 31 hash) (Util'hasheq (first s))) (inc n) (next s)]
+                         [(+ (* 31 hash) (Hashed'''hash (first s))) (inc n) (next s)]
                       => (Murmur3'mixCollHash hash, n)
         )
     )
@@ -8398,14 +8415,38 @@
     (defn #_"int" Murmur3'hashUnordered [#_"Seqable" items]
         (loop-when-recur [#_"int" hash 0 #_"int" n 0 #_"ISeq" s (seq items)]
                          (some? s)
-                         [(+ hash (Util'hasheq (first s))) (inc n) (next s)]
+                         [(+ hash (Hashed'''hash (first s))) (inc n) (next s)]
                       => (Murmur3'mixCollHash hash, n)
         )
     )
 )
 )
 
-(java-ns cloiure.lang.Atom
+;;;
+ ; Mix final collection hash for ordered or unordered collections.
+ ; hash-basis is the combined collection hash, n is the number
+ ; of elements included in the basis. Note this is the hash code
+ ; consistent with =, different from .hashCode.
+ ; See http://clojure.org/data_structures#hash for full algorithms.
+ ;;
+(defn ^long mix-collection-hash [^long hash-basis ^long n] (Murmur3'mixCollHash hash-basis n))
+
+;;;
+ ; Returns the hash code, consistent with =, for an external, ordered
+ ; collection implementing Seqable.
+ ; See http://clojure.org/data_structures#hash for full algorithms.
+ ;;
+(defn ^long hash-ordered-coll [s] (Murmur3'hashOrdered s))
+
+;;;
+ ; Returns the hash code, consistent with =, for an external, unordered
+ ; collection implementing Seqable. For maps, it should return
+ ; map entries, whose hash is computed as (hash-ordered-coll [k v]).
+ ; See http://clojure.org/data_structures#hash for full algorithms.
+ ;;
+(defn ^long hash-unordered-coll [s] (Murmur3'hashUnordered s))
+
+(java-ns cloiure.core.Atom
 
 (class-ns Atom
     (defn #_"Atom" Atom'new
@@ -8532,7 +8573,7 @@
  ;;
 (defn ^cloiure.core.IPersistentVector reset-vals! [^cloiure.core.IAtom a x'] (IAtom'''resetVals a x'))
 
-(java-ns cloiure.lang.Reduced
+(java-ns cloiure.core.Reduced
 
 (class-ns Reduced
     (defn #_"Reduced" Reduced'new [#_"Object" val]
@@ -8571,7 +8612,7 @@
  ;;
 (defn unreduced [x] (if (reduced? x) (deref x) x))
 
-(java-ns cloiure.lang.Util
+(java-ns cloiure.core.Util
 
 (class-ns Util
     (declare Numbers'equal)
@@ -8599,17 +8640,12 @@
         )
     )
 
-    (declare Numbers'hasheq)
-
-    (defn #_"int" Util'hasheq [#_"Object" o]
-        (cond
-            (nil? o)               0
-            (satisfies? IHashEq o) (IHashEq'''hasheq o)
-            (number? o)            (Numbers'hasheq o)
-            (string? o)            (Murmur3'hashInt (IObject'''hashCode o))
-            :else                  (IObject'''hashCode o)
-        )
-    )
+;;;
+ ; Returns the hash code of its argument. Note this is the hash code
+ ; consistent with =, and thus is different from .hashCode for Integer,
+ ; Byte and Cloiure collections.
+ ;;
+(defn hash [x] (Hashed'''hash x))
 
     (declare bit-shift-right)
 
@@ -8619,7 +8655,7 @@
     )
 
 (defn hash-combine [x y]
-    (Util'hashCombine x (IObject'''hashCode y))
+    (Util'hashCombine x (Hashed'''hash y))
 )
 
     (defn #_"<K, V> void" Util'clearCache [#_"ReferenceQueue" rq, #_"{K Reference<V>}'" cache]
@@ -8665,7 +8701,7 @@
  ;;
 (defn compare [x y] (Util'compare x y))
 
-(java-ns cloiure.lang.DynamicClassLoader
+(java-ns cloiure.core.DynamicClassLoader
 
 (class-ns DynamicClassLoader
     (def #_"{String Reference<Class>}'" DynamicClassLoader'classCache (atom {}))
@@ -8697,7 +8733,7 @@
 )
 )
 
-(java-ns cloiure.lang.Ratio
+(java-ns cloiure.core.Ratio
 
 (class-ns Ratio
     (defn #_"Ratio" Ratio'new [#_"BigInteger" numerator, #_"BigInteger" denominator]
@@ -8709,13 +8745,15 @@
         )
     )
 
+    (extend-type Ratio Hashed
+        (#_"int" Hashed'''hash [#_"Ratio" this]
+            (bit-xor (Hashed'''hash (:n this)) (Hashed'''hash (:d this)))
+        )
+    )
+
     (extend-type Ratio IObject
         (#_"boolean" IObject'''equals [#_"Ratio" this, #_"Object" that]
             (and (instance? Ratio that) (= (:n that) (:n this)) (= (:d that) (:d this)))
-        )
-
-        (#_"int" IObject'''hashCode [#_"Ratio" this]
-            (bit-xor (IObject'''hashCode (:n this)) (IObject'''hashCode (:d this)))
         )
 
         (#_"String" IObject'''toString [#_"Ratio" this]
@@ -8745,14 +8783,14 @@
 )
 )
 
-(java-ns cloiure.lang.Numbers
+(java-ns cloiure.core.Numbers
 
 (class-ns LongOps
     (defn #_"LongOps" LongOps'new []
         (LongOps.)
     )
 
-    (defn #_"long" LongOps'gcd [#_"long" u, #_"long" v] (if (§ interop #_"==" v 0) u (recur v (§ interop #_"%" u v))))
+    (defn #_"long" LongOps'gcd [#_"long" u, #_"long" v] (if (ß #_"==" v 0) u (recur v (ß #_"%" u v))))
 
     (declare Numbers'RATIO_OPS)
     (declare Numbers'BIGINT_OPS)
@@ -8764,17 +8802,17 @@
         (#_"Ops" Ops'''opsWithRatio [#_"LongOps" this, #_"RatioOps" x] Numbers'RATIO_OPS)
         (#_"Ops" Ops'''opsWithBigInt [#_"LongOps" this, #_"BigIntOps" x] Numbers'BIGINT_OPS)
 
-        (#_"boolean" Ops'''eq [#_"LongOps" this, #_"Number" x, #_"Number" y] (§ interop #_"==" (.longValue x) (.longValue y)))
-        (#_"boolean" Ops'''lt [#_"LongOps" this, #_"Number" x, #_"Number" y] (§ interop #_"<" (.longValue x) (.longValue y)))
-        (#_"boolean" Ops'''lte [#_"LongOps" this, #_"Number" x, #_"Number" y] (§ interop #_"<=" (.longValue x) (.longValue y)))
+        (#_"boolean" Ops'''eq [#_"LongOps" this, #_"Number" x, #_"Number" y] (ß #_"==" (.longValue x) (.longValue y)))
+        (#_"boolean" Ops'''lt [#_"LongOps" this, #_"Number" x, #_"Number" y] (ß #_"<" (.longValue x) (.longValue y)))
+        (#_"boolean" Ops'''lte [#_"LongOps" this, #_"Number" x, #_"Number" y] (ß #_"<=" (.longValue x) (.longValue y)))
 
-        (#_"boolean" Ops'''isZero [#_"LongOps" this, #_"Number" x] (§ interop #_"==" (.longValue x) 0))
-        (#_"boolean" Ops'''isPos [#_"LongOps" this, #_"Number" x] (§ interop #_">" (.longValue x) 0))
-        (#_"boolean" Ops'''isNeg [#_"LongOps" this, #_"Number" x] (§ interop #_"<" (.longValue x) 0))
+        (#_"boolean" Ops'''isZero [#_"LongOps" this, #_"Number" x] (ß #_"==" (.longValue x) 0))
+        (#_"boolean" Ops'''isPos [#_"LongOps" this, #_"Number" x] (ß #_">" (.longValue x) 0))
+        (#_"boolean" Ops'''isNeg [#_"LongOps" this, #_"Number" x] (ß #_"<" (.longValue x) 0))
 
         (#_"Number" Ops'''add [#_"LongOps" this, #_"Number" x, #_"Number" y]
-            (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y) #_"long" lz (§ interop #_"+" lx ly)]
-                (when (and (§ interop #_"<" (§ interop #_"^" lz lx) 0) (§ interop #_"<" (§ interop #_"^" lz ly) 0)) => (Long/valueOf lz)
+            (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y) #_"long" lz (ß #_"+" lx ly)]
+                (when (and (ß #_"<" (ß #_"^" lz lx) 0) (ß #_"<" (ß #_"^" lz ly) 0)) => (Long/valueOf lz)
                     (Ops'''add Numbers'BIGINT_OPS, x, y)
                 )
             )
@@ -8782,7 +8820,7 @@
 
         (#_"Number" Ops'''negate [#_"LongOps" this, #_"Number" x]
             (let [#_"long" lx (.longValue x)]
-                (when (§ interop #_"==" lx Long/MIN_VALUE) => (Long/valueOf (§ interop #_"-" lx))
+                (when (ß #_"==" lx Long/MIN_VALUE) => (Long/valueOf (ß #_"-" lx))
                     (.negate (BigInteger/valueOf lx))
                 )
             )
@@ -8790,7 +8828,7 @@
 
         (#_"Number" Ops'''inc [#_"LongOps" this, #_"Number" x]
             (let [#_"long" lx (.longValue x)]
-                (when (§ interop #_"==" lx Long/MAX_VALUE) => (Long/valueOf (§ interop #_"+" lx 1))
+                (when (ß #_"==" lx Long/MAX_VALUE) => (Long/valueOf (ß #_"+" lx 1))
                     (Ops'''inc Numbers'BIGINT_OPS, x)
                 )
             )
@@ -8798,7 +8836,7 @@
 
         (#_"Number" Ops'''dec [#_"LongOps" this, #_"Number" x]
             (let [#_"long" lx (.longValue x)]
-                (when (§ interop #_"==" lx Long/MIN_VALUE) => (Long/valueOf (§ interop #_"-" lx 1))
+                (when (ß #_"==" lx Long/MIN_VALUE) => (Long/valueOf (ß #_"-" lx 1))
                     (Ops'''dec Numbers'BIGINT_OPS, x)
                 )
             )
@@ -8806,9 +8844,9 @@
     
         (#_"Number" Ops'''multiply [#_"LongOps" this, #_"Number" x, #_"Number" y]
             (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y)]
-                (when-not (and (§ interop #_"==" lx Long/MIN_VALUE) (§ interop #_"<" ly 0)) => (Ops'''multiply Numbers'BIGINT_OPS, x, y)
-                    (let [#_"long" lz (§ interop #_"*" lx ly)]
-                        (when (or (§ interop #_"==" ly 0) (§ interop #_"==" (§ interop #_"/" lz ly) lx)) => (Ops'''multiply Numbers'BIGINT_OPS, x, y)
+                (when-not (and (ß #_"==" lx Long/MIN_VALUE) (ß #_"<" ly 0)) => (Ops'''multiply Numbers'BIGINT_OPS, x, y)
+                    (let [#_"long" lz (ß #_"*" lx ly)]
+                        (when (or (ß #_"==" ly 0) (ß #_"==" (ß #_"/" lz ly) lx)) => (Ops'''multiply Numbers'BIGINT_OPS, x, y)
                             (Long/valueOf lz)
                         )
                     )
@@ -8818,11 +8856,11 @@
 
         (#_"Number" Ops'''divide [#_"LongOps" this, #_"Number" x, #_"Number" y]
             (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y)]
-                (let-when-not [#_"long" gcd (LongOps'gcd lx, ly)] (§ interop #_"==" gcd 0) => (Long/valueOf 0)
-                    (let-when-not [lx (§ interop #_"/" lx gcd) ly (§ interop #_"/" ly gcd)] (§ interop #_"==" ly 1) => (Long/valueOf lx)
+                (let-when-not [#_"long" gcd (LongOps'gcd lx, ly)] (ß #_"==" gcd 0) => (Long/valueOf 0)
+                    (let-when-not [lx (ß #_"/" lx gcd) ly (ß #_"/" ly gcd)] (ß #_"==" ly 1) => (Long/valueOf lx)
                         (let [[lx ly]
-                                (when (§ interop #_"<" ly 0) => [lx ly]
-                                    [(§ interop #_"-" lx) (§ interop #_"-" ly)]
+                                (when (ß #_"<" ly 0) => [lx ly]
+                                    [(ß #_"-" lx) (ß #_"-" ly)]
                                 )]
                             (Ratio'new (BigInteger/valueOf lx), (BigInteger/valueOf ly))
                         )
@@ -8831,8 +8869,8 @@
             )
         )
 
-        (#_"Number" Ops'''quotient [#_"LongOps" this, #_"Number" x, #_"Number" y] (Long/valueOf (§ interop #_"/" (.longValue x) (.longValue y))))
-        (#_"Number" Ops'''remainder [#_"LongOps" this, #_"Number" x, #_"Number" y] (Long/valueOf (§ interop #_"%" (.longValue x) (.longValue y))))
+        (#_"Number" Ops'''quotient [#_"LongOps" this, #_"Number" x, #_"Number" y] (Long/valueOf (ß #_"/" (.longValue x) (.longValue y))))
+        (#_"Number" Ops'''remainder [#_"LongOps" this, #_"Number" x, #_"Number" y] (Long/valueOf (ß #_"%" (.longValue x) (.longValue y))))
 )
 )
 
@@ -8857,7 +8895,7 @@
 
         (#_"boolean" Ops'''eq [#_"RatioOps" this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
-                (and (§ interop #_"equals" (:n rx) (:n ry)) (§ interop #_"equals" (:d rx) (:d ry)))
+                (and (ß #_"equals" (:n rx) (:n ry)) (ß #_"equals" (:d rx) (:d ry)))
             )
         )
 
@@ -8873,9 +8911,9 @@
             )
         )
 
-        (#_"boolean" Ops'''isZero [#_"RatioOps" this, #_"Number" x] (§ interop #_"==" (.signum (:n (cast Ratio x))) 0))
-        (#_"boolean" Ops'''isPos [#_"RatioOps" this, #_"Number" x] (§ interop #_">" (.signum (:n (cast Ratio x))) 0))
-        (#_"boolean" Ops'''isNeg [#_"RatioOps" this, #_"Number" x] (§ interop #_"<" (.signum (:n (cast Ratio x))) 0))
+        (#_"boolean" Ops'''isZero [#_"RatioOps" this, #_"Number" x] (ß #_"==" (.signum (:n (cast Ratio x))) 0))
+        (#_"boolean" Ops'''isPos [#_"RatioOps" this, #_"Number" x] (ß #_">" (.signum (:n (cast Ratio x))) 0))
+        (#_"boolean" Ops'''isNeg [#_"RatioOps" this, #_"Number" x] (ß #_"<" (.signum (:n (cast Ratio x))) 0))
 
         (#_"Number" Ops'''add [#_"RatioOps" this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
@@ -8931,20 +8969,20 @@
         (#_"Ops" Ops'''opsWithBigInt [#_"BigIntOps" this, #_"BigIntOps" x] this)
 
         (#_"boolean" Ops'''eq [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-            (§ interop #_"equals" (Numbers'toBigInteger x) (Numbers'toBigInteger y))
+            (ß #_"equals" (Numbers'toBigInteger x) (Numbers'toBigInteger y))
         )
 
         (#_"boolean" Ops'''lt [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-            (§ interop #_"<" (.compareTo (Numbers'toBigInteger x), (Numbers'toBigInteger y)) 0)
+            (ß #_"<" (.compareTo (Numbers'toBigInteger x), (Numbers'toBigInteger y)) 0)
         )
 
         (#_"boolean" Ops'''lte [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-            (§ interop #_"<=" (.compareTo (Numbers'toBigInteger x), (Numbers'toBigInteger y)) 0)
+            (ß #_"<=" (.compareTo (Numbers'toBigInteger x), (Numbers'toBigInteger y)) 0)
         )
 
-        (#_"boolean" Ops'''isZero [#_"BigIntOps" this, #_"Number" x] (§ interop #_"==" (.signum (Numbers'toBigInteger x)) 0))
-        (#_"boolean" Ops'''isPos [#_"BigIntOps" this, #_"Number" x] (§ interop #_">" (.signum (Numbers'toBigInteger x)) 0))
-        (#_"boolean" Ops'''isNeg [#_"BigIntOps" this, #_"Number" x] (§ interop #_"<" (.signum (Numbers'toBigInteger x)) 0))
+        (#_"boolean" Ops'''isZero [#_"BigIntOps" this, #_"Number" x] (ß #_"==" (.signum (Numbers'toBigInteger x)) 0))
+        (#_"boolean" Ops'''isPos [#_"BigIntOps" this, #_"Number" x] (ß #_">" (.signum (Numbers'toBigInteger x)) 0))
+        (#_"boolean" Ops'''isNeg [#_"BigIntOps" this, #_"Number" x] (ß #_"<" (.signum (Numbers'toBigInteger x)) 0))
 
         (#_"Number" Ops'''add [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
             (.add (Numbers'toBigInteger x), (Numbers'toBigInteger y))
@@ -8961,14 +8999,14 @@
 
         (#_"Number" Ops'''divide [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
             (let [#_"BigInteger" n (Numbers'toBigInteger x) #_"BigInteger" d (Numbers'toBigInteger y)]
-                (when-not (§ interop #_"equals" d BigInteger/ZERO) => (throw (ArithmeticException. "Divide by zero"))
+                (when-not (ß #_"equals" d BigInteger/ZERO) => (throw (ArithmeticException. "Divide by zero"))
                     (let [#_"BigInteger" gcd (.gcd n, d)]
-                        (when-not (§ interop #_"equals" gcd BigInteger/ZERO) => BigInteger/ZERO
+                        (when-not (ß #_"equals" gcd BigInteger/ZERO) => BigInteger/ZERO
                             (let [n (.divide n, gcd) d (.divide d, gcd)]
-                                (§ interop condp #_"equals" d
+                                (ß condp #_"equals" d
                                     BigInteger/ONE           n
                                     (.negate BigInteger/ONE) (.negate n)
-                                                             (Ratio'new (if (§ interop #_"<" (.signum d) 0) (.negate n) n), (if (§ interop #_"<" (.signum d) 0) (.negate d) d))
+                                                             (Ratio'new (if (ß #_"<" (.signum d) 0) (.negate n) n), (if (ß #_"<" (.signum d) 0) (.negate d) d))
                                 )
                             )
                         )
@@ -9082,38 +9120,29 @@
 
     (defn- #_"long" Numbers'bitOpsCast [#_"Object" x]
         (let [#_"Class" c (class x)]
-            (when (any = c Long Integer Byte) => (throw! (str "bit operation not supported for: " c))
+            (when (any = c Long Integer Byte) => (throw! (str "bit operation not supported on " c))
                 (long x)
             )
         )
     )
 
-    (defn #_"long" Numbers'not [#_"Object" x] (§ interop #_"~" (Numbers'bitOpsCast x)))
+    (defn #_"long" Numbers'not [#_"Object" x] (ß #_"~" (Numbers'bitOpsCast x)))
 
-    (defn #_"long" Numbers'and [#_"Object" x, #_"Object" y] (§ interop #_"&" (Numbers'bitOpsCast x) (Numbers'bitOpsCast y)))
-    (defn #_"long" Numbers'or  [#_"Object" x, #_"Object" y] (§ interop #_"|" (Numbers'bitOpsCast x) (Numbers'bitOpsCast y)))
-    (defn #_"long" Numbers'xor [#_"Object" x, #_"Object" y] (§ interop #_"^" (Numbers'bitOpsCast x) (Numbers'bitOpsCast y)))
+    (defn #_"long" Numbers'and [#_"Object" x, #_"Object" y] (ß #_"&" (Numbers'bitOpsCast x) (Numbers'bitOpsCast y)))
+    (defn #_"long" Numbers'or  [#_"Object" x, #_"Object" y] (ß #_"|" (Numbers'bitOpsCast x) (Numbers'bitOpsCast y)))
+    (defn #_"long" Numbers'xor [#_"Object" x, #_"Object" y] (ß #_"^" (Numbers'bitOpsCast x) (Numbers'bitOpsCast y)))
 
-    (defn #_"long" Numbers'andNot [#_"Object" x, #_"Object" y] (§ interop #_"&" (Numbers'bitOpsCast x) (§ interop #_"~" (Numbers'bitOpsCast y))))
+    (defn #_"long" Numbers'andNot [#_"Object" x, #_"Object" y] (ß #_"&" (Numbers'bitOpsCast x) (ß #_"~" (Numbers'bitOpsCast y))))
 
-    (defn #_"long" Numbers'shiftLeft          [#_"Object" x, #_"Object" n] (§ interop #_"<<"  (Numbers'bitOpsCast x) (Numbers'bitOpsCast n)))
-    (defn #_"long" Numbers'shiftRight         [#_"Object" x, #_"Object" n] (§ interop #_">>"  (Numbers'bitOpsCast x) (Numbers'bitOpsCast n)))
-    (defn #_"long" Numbers'unsignedShiftRight [#_"Object" x, #_"Object" n] (§ interop #_">>>" (Numbers'bitOpsCast x) (Numbers'bitOpsCast n)))
+    (defn #_"long" Numbers'shiftLeft          [#_"Object" x, #_"Object" n] (ß #_"<<"  (Numbers'bitOpsCast x) (Numbers'bitOpsCast n)))
+    (defn #_"long" Numbers'shiftRight         [#_"Object" x, #_"Object" n] (ß #_">>"  (Numbers'bitOpsCast x) (Numbers'bitOpsCast n)))
+    (defn #_"long" Numbers'unsignedShiftRight [#_"Object" x, #_"Object" n] (ß #_">>>" (Numbers'bitOpsCast x) (Numbers'bitOpsCast n)))
 
-    (defn #_"long" Numbers'clearBit [#_"Object" x, #_"Object" n] (§ interop #_"&" (Numbers'bitOpsCast x) (§ interop #_"~" (§ interop #_"<<" 1 (Numbers'bitOpsCast n)))))
-    (defn #_"long" Numbers'setBit   [#_"Object" x, #_"Object" n] (§ interop #_"|" (Numbers'bitOpsCast x)                  (§ interop #_"<<" 1 (Numbers'bitOpsCast n))))
-    (defn #_"long" Numbers'flipBit  [#_"Object" x, #_"Object" n] (§ interop #_"^" (Numbers'bitOpsCast x)                  (§ interop #_"<<" 1 (Numbers'bitOpsCast n))))
+    (defn #_"long" Numbers'clearBit [#_"Object" x, #_"Object" n] (ß #_"&" (Numbers'bitOpsCast x) (ß #_"~" (ß #_"<<" 1 (Numbers'bitOpsCast n)))))
+    (defn #_"long" Numbers'setBit   [#_"Object" x, #_"Object" n] (ß #_"|" (Numbers'bitOpsCast x) (ß #_"<<" 1 (Numbers'bitOpsCast n))))
+    (defn #_"long" Numbers'flipBit  [#_"Object" x, #_"Object" n] (ß #_"^" (Numbers'bitOpsCast x) (ß #_"<<" 1 (Numbers'bitOpsCast n))))
 
-    (defn #_"boolean" Numbers'testBit [#_"Object" x, #_"Object" n] (§ interop #_"!=" (§ interop #_"&" (Numbers'bitOpsCast x) (§ interop #_"<<" 1 (Numbers'bitOpsCast n))) 0))
-
-    (defn #_"int" Numbers'hasheq [#_"Number" x]
-        (let [#_"Class" c (class x)]
-            (if (or (any = c Long Integer Byte) (and (= c BigInteger) (§ interop #_"<=" Long/MIN_VALUE x Long/MAX_VALUE)))
-                (Murmur3'hashLong (.longValue x))
-                (IObject'''hashCode x)
-            )
-        )
-    )
+    (defn #_"boolean" Numbers'testBit [#_"Object" x, #_"Object" n] (ß #_"!=" (ß #_"&" (Numbers'bitOpsCast x) (ß #_"<<" 1 (Numbers'bitOpsCast n))) 0))
 )
 )
 
@@ -9313,7 +9342,7 @@
  ;;
 (defn odd? [n] (not (even? n)))
 
-(java-ns cloiure.lang.AFn
+(java-ns cloiure.core.AFn
 
 (class-ns AFn
     (declare Compiler'demunge)
@@ -9362,7 +9391,7 @@
 )
 )
 
-(java-ns cloiure.lang.Symbol
+(java-ns cloiure.core.Symbol
 
 (class-ns Symbol
     (defn- #_"Symbol" Symbol'new
@@ -9421,17 +9450,13 @@
             )
         )
 
-        (#_"int" IObject'''hashCode [#_"Symbol" this]
-            (hash-combine (IObject'''hashCode (:name this)) (:ns this))
-        )
-
         (#_"String" IObject'''toString [#_"Symbol" this]
             (if (some? (:ns this)) (str (:ns this) "/" (:name this)) (:name this))
         )
     )
 
-    (extend-type Symbol IHashEq
-        (#_"int" IHashEq'''hasheq [#_"Symbol" this]
+    (extend-type Symbol Hashed
+        (#_"int" Hashed'''hash [#_"Symbol" this]
             (hash-combine (Murmur3'hashUnencodedChars (:name this)) (:ns this))
         )
     )
@@ -9459,7 +9484,7 @@
 )
 )
 
-(java-ns cloiure.lang.Keyword
+(java-ns cloiure.core.Keyword
 
 (class-ns Keyword
     (def- #_"{Symbol Reference<Keyword>}'" Keyword'TABLE (atom {}))
@@ -9470,7 +9495,7 @@
         (merge (Keyword.)
             (hash-map
                 #_"Symbol" :sym sym
-                #_"int" :hasheq (+ (IHashEq'''hasheq sym) 0x9e3779b9)
+                #_"int" :hash (+ (Hashed'''hash sym) 0x9e3779b9)
             )
         )
     )
@@ -9516,17 +9541,13 @@
         )
     )
 
-    (extend-type Keyword IHashEq
-        (#_"int" IHashEq'''hasheq [#_"Keyword" this]
-            (:hasheq this)
+    (extend-type Keyword Hashed
+        (#_"int" Hashed'''hash [#_"Keyword" this]
+            (:hash this)
         )
     )
 
     (extend-type Keyword IObject
-        (#_"int" IObject'''hashCode [#_"Keyword" this]
-            (+ (IObject'''hashCode (:sym this)) 0x9e3779b9)
-        )
-
         (#_"String" IObject'''toString [#_"Keyword" this]
             (str ":" (:sym this))
         )
@@ -9546,7 +9567,7 @@
 )
 )
 
-(java-ns cloiure.lang.Fn
+(java-ns cloiure.core.Fn
 
 (class-ns Fn
     (defn #_"Fn" Fn'new []
@@ -9569,7 +9590,7 @@
 )
 )
 
-(java-ns cloiure.lang.RestFn
+(java-ns cloiure.core.RestFn
 
 (class-ns RestFn
     (defn #_"RestFn" RestFn'new []
@@ -9746,7 +9767,7 @@
 )
 )
 
-(java-ns cloiure.lang.ASeq
+(java-ns cloiure.core.ASeq
 
 (class-ns ASeq
     (extend-type cloiure.core.ASeq IPersistentCollection
@@ -9761,8 +9782,8 @@
         )
     )
 
-    (extend-type cloiure.core.ASeq IHashEq
-        (#_"int" IHashEq'''hasheq [#_"ASeq" this]
+    (extend-type cloiure.core.ASeq Hashed
+        (#_"int" Hashed'''hash [#_"ASeq" this]
             (Murmur3'hashOrdered this)
         )
     )
@@ -9780,12 +9801,6 @@
             )
         )
 
-        (#_"int" IObject'''hashCode [#_"ASeq" this]
-            (loop-when [#_"int" hash 1 #_"ISeq" s (seq this)] (some? s) => hash
-                (recur (+ (* 31 hash) (if (some? (first s)) (IObject'''hashCode (first s)) 0)) (next s))
-            )
-        )
-
         (#_"String" IObject'''toString [#_"ASeq" this]
             (RT'printString this)
         )
@@ -9793,7 +9808,7 @@
 )
 )
 
-(java-ns cloiure.lang.LazySeq
+(java-ns cloiure.core.LazySeq
 
 (class-ns LazySeq
     (defn- #_"LazySeq" LazySeq'init [#_"IPersistentMap" meta, #_"IFn" f, #_"ISeq" s]
@@ -9876,17 +9891,10 @@
                 (and (sequential? that) (nil? (seq that)))
             )
         )
-
-        (#_"int" IObject'''hashCode [#_"LazySeq" this]
-            (if-some [#_"ISeq" s (seq this)]
-                (IObject'''hashCode s)
-                1
-            )
-        )
     )
 
-    (extend-type LazySeq IHashEq
-        (#_"int" IHashEq'''hasheq [#_"LazySeq" this]
+    (extend-type LazySeq Hashed
+        (#_"int" Hashed'''hash [#_"LazySeq" this]
             (Murmur3'hashOrdered this)
         )
     )
@@ -9901,7 +9909,7 @@
 )
 )
 
-(java-ns cloiure.lang.APersistentMap
+(java-ns cloiure.core.APersistentMap
 
 (class-ns APersistentMap
     (defn #_"APersistentMap" APersistentMap'new []
@@ -9947,18 +9955,10 @@
                 )
             )
         )
-
-        (#_"int" IObject'''hashCode [#_"APersistentMap" this]
-            (loop-when [#_"int" hash 0 #_"ISeq" s (seq this)] (some? s) => hash
-                (let [#_"IMapEntry" e (first s) #_"Object" k (key e) #_"Object" v (val e)]
-                    (recur (+ hash (bit-xor (if (some? k) (IObject'''hashCode k) 0) (if (some? v) (IObject'''hashCode v) 0))) (next s))
-                )
-            )
-        )
     )
 
-    (extend-type APersistentMap IHashEq
-        (#_"int" IHashEq'''hasheq [#_"APersistentMap" this]
+    (extend-type APersistentMap Hashed
+        (#_"int" Hashed'''hash [#_"APersistentMap" this]
             (Murmur3'hashUnordered this)
         )
     )
@@ -9972,7 +9972,7 @@
 )
 )
 
-(java-ns cloiure.lang.APersistentSet
+(java-ns cloiure.core.APersistentSet
 
 (class-ns APersistentSet
     (defn #_"APersistentSet" APersistentSet'new [#_"IPersistentMap" impl]
@@ -10028,23 +10028,17 @@
                 )
             )
         )
-
-        (#_"int" IObject'''hashCode [#_"APersistentSet" this]
-            (loop-when [#_"int" hash 0 #_"ISeq" s (seq this)] (some? s) => hash
-                (recur (+ hash (IObject'''hashCode (first s))) (next s))
-            )
-        )
     )
 
-    (extend-type APersistentSet IHashEq
-        (#_"int" IHashEq'''hasheq [#_"APersistentSet" this]
+    (extend-type APersistentSet Hashed
+        (#_"int" Hashed'''hash [#_"APersistentSet" this]
             (Murmur3'hashUnordered this)
         )
     )
 )
 )
 
-(java-ns cloiure.lang.APersistentVector
+(java-ns cloiure.core.APersistentVector
 
 (class-ns VSeq
     (defn #_"VSeq" VSeq'new
@@ -10209,20 +10203,12 @@
                 )
             )
         )
-
-        (#_"int" IObject'''hashCode [#_"APersistentVector" this]
-            (loop-when [#_"int" hash 1 #_"int" i 0] (< i (count this)) => hash
-                (let [#_"Object" o (nth this i)]
-                    (recur (+ (* 31 hash) (if (some? o) (IObject'''hashCode o) 0)) (inc i))
-                )
-            )
-        )
     )
 
-    (extend-type APersistentVector IHashEq
-        (#_"int" IHashEq'''hasheq [#_"APersistentVector" this]
+    (extend-type APersistentVector Hashed
+        (#_"int" Hashed'''hash [#_"APersistentVector" this]
             (loop-when [#_"int" hash 1 #_"int" i 0] (< i (count this)) => (Murmur3'mixCollHash hash, i)
-                (recur (+ (* 31 hash) (Util'hasheq (nth this i))) (inc i))
+                (recur (+ (* 31 hash) (Hashed'''hash (nth this i))) (inc i))
             )
         )
     )
@@ -10378,7 +10364,7 @@
 )
 )
 
-(java-ns cloiure.lang.AMapEntry
+(java-ns cloiure.core.AMapEntry
 
 (class-ns AMapEntry
     (defn #_"AMapEntry" AMapEntry'new []
@@ -10441,7 +10427,7 @@
 )
 )
 
-(java-ns cloiure.lang.MapEntry
+(java-ns cloiure.core.MapEntry
 
 (class-ns MapEntry
     (defn- #_"MapEntry" MapEntry'new [#_"Object" key, #_"Object" val]
@@ -10469,7 +10455,7 @@
 )
 )
 
-(java-ns cloiure.lang.ArraySeq
+(java-ns cloiure.core.ArraySeq
 
 (class-ns ArraySeq
     (defn #_"ArraySeq" ArraySeq'new
@@ -10555,7 +10541,7 @@
 )
 )
 
-(java-ns cloiure.lang.ATransientMap
+(java-ns cloiure.core.ATransientMap
 
 (class-ns ATransientMap
     (defn #_"ATransientMap" ATransientMap'new []
@@ -10644,7 +10630,7 @@
 )
 )
 
-(java-ns cloiure.lang.ATransientSet
+(java-ns cloiure.core.ATransientSet
 
 (class-ns ATransientSet
     (defn #_"ATransientSet" ATransientSet'new [#_"ITransientMap" impl]
@@ -10698,7 +10684,7 @@
 )
 )
 
-(java-ns cloiure.lang.Cons
+(java-ns cloiure.core.Cons
 
 (class-ns Cons
     (defn #_"Cons" Cons'new
@@ -10745,7 +10731,7 @@
 )
 )
 
-(java-ns cloiure.lang.Delay
+(java-ns cloiure.core.Delay
 
 (class-ns Delay
     (defn #_"Delay" Delay'new [#_"IFn" f]
@@ -10795,7 +10781,7 @@
 )
 )
 
-(java-ns cloiure.lang.Iterate
+(java-ns cloiure.core.Iterate
 
 (class-ns Iterate
     (def- #_"Object" Iterate'UNREALIZED_SEED (Object.))
@@ -10869,7 +10855,7 @@
 )
 )
 
-(java-ns cloiure.lang.KeywordLookupSite
+(java-ns cloiure.core.KeywordLookupSite
 
 (class-ns KeywordLookupSite
     (defn #_"KeywordLookupSite" KeywordLookupSite'new [#_"Keyword" k]
@@ -10912,7 +10898,7 @@
 )
 )
 
-(java-ns cloiure.lang.MethodImplCache
+(java-ns cloiure.core.MethodImplCache
 
 (class-ns MethodImplCache
     (defn #_"MethodImplCache" MethodImplCache'new [#_"IPersistentMap" protocol, #_"Keyword" methodk]
@@ -10936,7 +10922,7 @@
 )
 )
 
-(java-ns cloiure.lang.Namespace
+(java-ns cloiure.core.Namespace
 
 (class-ns Namespace
     (def #_"{Symbol Namespace}'" Namespace'namespaces (atom {}))
@@ -11133,7 +11119,7 @@
 )
 )
 
-(java-ns cloiure.lang.PersistentArrayMap
+(java-ns cloiure.core.PersistentArrayMap
 
 (class-ns MSeq
     (defn #_"MSeq" MSeq'new
@@ -11493,7 +11479,7 @@
 )
 )
 
-(java-ns cloiure.lang.PersistentHashMap
+(java-ns cloiure.core.PersistentHashMap
 
 (class-ns HSeq
     (defn- #_"HSeq" HSeq'new [#_"IPersistentMap" meta, #_"INode[]" nodes, #_"int" i, #_"ISeq" s]
@@ -11825,7 +11811,7 @@
     (declare HashCollisionNode'new)
 
     (defn- #_"INode" BitmapIndexedNode'createNode-6 [#_"int" shift, #_"Object" key1, #_"Object" val1, #_"int" key2hash, #_"Object" key2, #_"Object" val2]
-        (let [#_"int" key1hash (Util'hasheq key1)]
+        (let [#_"int" key1hash (Hashed'''hash key1)]
             (when-not (= key1hash key2hash) => (HashCollisionNode'new nil, key1hash, 2, (object-array [ key1, val1, key2, val2 ]))
                 (let [#_"boolean'" addedLeaf (atom false) #_"Thread'" edit (atom nil)]
                     (-> BitmapIndexedNode'EMPTY
@@ -11868,7 +11854,7 @@
                                 (loop-when [#_"int" j 0 #_"int" i 0] (< i 32)
                                     (when (odd? (unsigned-bit-shift-right (:bitmap this) i)) => (recur j (inc i))
                                         (if (some? (aget (:a this) j))
-                                            (aset nodes i (INode'''assoc BitmapIndexedNode'EMPTY, (+ shift 5), (Util'hasheq (aget (:a this) j)), (aget (:a this) j), (aget (:a this) (inc j)), addedLeaf))
+                                            (aset nodes i (INode'''assoc BitmapIndexedNode'EMPTY, (+ shift 5), (Hashed'''hash (aget (:a this) j)), (aget (:a this) j), (aget (:a this) (inc j)), addedLeaf))
                                             (aset nodes i (cast cloiure.core.INode (aget (:a this) (inc j))))
                                         )
                                         (recur (+ j 2) (inc i))
@@ -11995,7 +11981,7 @@
     )
 
     (defn- #_"INode" BitmapIndexedNode'createNode-7 [#_"Thread'" edit, #_"int" shift, #_"Object" key1, #_"Object" val1, #_"int" key2hash, #_"Object" key2, #_"Object" val2]
-        (let [#_"int" key1hash (Util'hasheq key1)]
+        (let [#_"int" key1hash (Hashed'''hash key1)]
             (when-not (= key1hash key2hash) => (HashCollisionNode'new nil, key1hash, 2, (object-array [ key1, val1, key2, val2 ]))
                 (let [#_"boolean'" addedLeaf (atom false)]
                     (-> BitmapIndexedNode'EMPTY
@@ -12046,7 +12032,7 @@
                                     (loop-when [#_"int" j 0 #_"int" i 0] (< i 32)
                                         (when (odd? (unsigned-bit-shift-right (:bitmap this) i)) => (recur j (inc i))
                                             (if (some? (aget (:a this) j))
-                                                (aset nodes i (INode'''assocT BitmapIndexedNode'EMPTY, edit, (+ shift 5), (Util'hasheq (aget (:a this) j)), (aget (:a this) j), (aget (:a this) (inc j)), addedLeaf))
+                                                (aset nodes i (INode'''assocT BitmapIndexedNode'EMPTY, edit, (+ shift 5), (Hashed'''hash (aget (:a this) j)), (aget (:a this) j), (aget (:a this) (inc j)), addedLeaf))
                                                 (aset nodes i (cast cloiure.core.INode (aget (:a this) (inc j))))
                                             )
                                             (recur (+ j 2) (inc i))
@@ -12295,7 +12281,7 @@
                     )
                 )
                 (let [#_"boolean'" addedLeaf (atom false)
-                      #_"INode" node (INode'''assocT (or (:root this) BitmapIndexedNode'EMPTY), (:edit this), 0, (Util'hasheq key), key, val, addedLeaf)
+                      #_"INode" node (INode'''assocT (or (:root this) BitmapIndexedNode'EMPTY), (:edit this), 0, (Hashed'''hash key), key, val, addedLeaf)
                       this (if (= (:root this) node) this (assoc this :root node))]
                     (when @addedLeaf => this
                         (update this :n inc)
@@ -12311,7 +12297,7 @@
                 )
                 (when (some? (:root this)) => this
                     (let [#_"boolean'" removedLeaf (atom false)
-                          #_"INode" node (INode'''dissocT (:root this), (:edit this), 0, (Util'hasheq key), key, removedLeaf)
+                          #_"INode" node (INode'''dissocT (:root this), (:edit this), 0, (Hashed'''hash key), key, removedLeaf)
                           this (if (= (:root this) node) this (assoc this :root node))]
                         (when @removedLeaf => this
                             (update this :n dec)
@@ -12332,7 +12318,7 @@
                     (:nullValue this)
                 )
                 (when (some? (:root this)) => notFound
-                    (INode'''find (:root this), 0, (Util'hasheq key), key, notFound)
+                    (INode'''find (:root this), 0, (Hashed'''hash key), key, notFound)
                 )
             )
         )
@@ -12442,7 +12428,7 @@
             (if (nil? key)
                 (:hasNull this)
                 (and (some? (:root this))
-                    (not (identical? (INode'''find (:root this), 0, (Util'hasheq key), key, PersistentHashMap'NOT_FOUND) PersistentHashMap'NOT_FOUND))
+                    (not (identical? (INode'''find (:root this), 0, (Hashed'''hash key), key, PersistentHashMap'NOT_FOUND) PersistentHashMap'NOT_FOUND))
                 )
             )
         )
@@ -12453,7 +12439,7 @@
                     (MapEntry'create nil, (:nullValue this))
                 )
                 (when (some? (:root this))
-                    (INode'''find (:root this), 0, (Util'hasheq key), key)
+                    (INode'''find (:root this), 0, (Hashed'''hash key), key)
                 )
             )
         )
@@ -12466,7 +12452,7 @@
                     (PersistentHashMap'new (meta this), (+ (:n this) (if (:hasNull this) 0 1)), (:root this), true, val)
                 )
                 (let [#_"boolean'" addedLeaf (atom false)
-                      #_"INode" newroot (INode'''assoc (or (:root this) BitmapIndexedNode'EMPTY), 0, (Util'hasheq key), key, val, addedLeaf)]
+                      #_"INode" newroot (INode'''assoc (or (:root this) BitmapIndexedNode'EMPTY), 0, (Hashed'''hash key), key, val, addedLeaf)]
                     (when-not (= newroot (:root this)) => this
                         (PersistentHashMap'new (meta this), (+ (:n this) (if @addedLeaf 1 0)), newroot, (:hasNull this), (:nullValue this))
                     )
@@ -12484,7 +12470,7 @@
                         (:nullValue this)
                     )
                     (when (some? (:root this)) => notFound
-                        (INode'''find (:root this), 0, (Util'hasheq key), key, notFound)
+                        (INode'''find (:root this), 0, (Hashed'''hash key), key, notFound)
                     )
                 )
             )
@@ -12499,7 +12485,7 @@
                 (nil? (:root this))
                     this
                 :else
-                    (let [#_"INode" newroot (INode'''dissoc (:root this), 0, (Util'hasheq key), key)]
+                    (let [#_"INode" newroot (INode'''dissoc (:root this), 0, (Hashed'''hash key), key)]
                         (when-not (= newroot (:root this)) => this
                             (PersistentHashMap'new (meta this), (dec (:n this)), newroot, (:hasNull this), (:nullValue this))
                         )
@@ -12552,7 +12538,7 @@
 )
 )
 
-(java-ns cloiure.lang.PersistentHashSet
+(java-ns cloiure.core.PersistentHashSet
 
 (class-ns TransientHashSet
     (defn #_"TransientHashSet" TransientHashSet'new [#_"ITransientMap" impl]
@@ -12663,10 +12649,10 @@
 )
 )
 
-(java-ns cloiure.lang.PersistentList
+(java-ns cloiure.core.PersistentList
 
 (class-ns EmptyList
-    (def #_"int" EmptyList'HASHEQ (§ soon Murmur3'hashOrdered nil))
+    (def #_"int" EmptyList'HASH (§ soon Murmur3'hashOrdered nil))
 
     (defn #_"EmptyList" EmptyList'new [#_"IPersistentMap" meta]
         (merge (EmptyList.)
@@ -12690,19 +12676,15 @@
         )
     )
 
-    (extend-type EmptyList IHashEq
-        (#_"int" IHashEq'''hasheq [#_"EmptyList" this]
-            EmptyList'HASHEQ
+    (extend-type EmptyList Hashed
+        (#_"int" Hashed'''hash [#_"EmptyList" this]
+            EmptyList'HASH
         )
     )
 
     (extend-type EmptyList IObject
         (#_"boolean" IObject'''equals [#_"EmptyList" this, #_"Object" that]
             (and (sequential? that) (nil? (seq that)))
-        )
-
-        (#_"int" IObject'''hashCode [#_"EmptyList" this]
-            1
         )
 
         (#_"String" IObject'''toString [#_"EmptyList" this]
@@ -12852,7 +12834,7 @@
 )
 )
 
-(java-ns cloiure.lang.PersistentQueue
+(java-ns cloiure.core.PersistentQueue
 
 (class-ns QSeq
     (defn #_"QSeq" QSeq'new
@@ -12948,16 +12930,10 @@
                 )
             )
         )
-
-        (#_"int" IObject'''hashCode [#_"PersistentQueue" this]
-            (loop-when [#_"int" hash 1 #_"ISeq" s (seq this)] (some? s) => hash
-                (recur (+ (* 31 hash) (if (some? (first s)) (IObject'''hashCode (first s)) 0)) (next s))
-            )
-        )
     )
 
-    (extend-type PersistentQueue IHashEq
-        (#_"int" IHashEq'''hasheq [#_"PersistentQueue" this]
+    (extend-type PersistentQueue Hashed
+        (#_"int" Hashed'''hash [#_"PersistentQueue" this]
             (Murmur3'hashOrdered this)
         )
     )
@@ -13012,7 +12988,7 @@
 )
 )
 
-(java-ns cloiure.lang.PersistentTreeMap
+(java-ns cloiure.core.PersistentTreeMap
 
 (class-ns TNode
     (defn #_"TNode" TNode'new [#_"Object" key]
@@ -13790,7 +13766,7 @@
 )
 )
 
-(java-ns cloiure.lang.PersistentTreeSet
+(java-ns cloiure.core.PersistentTreeSet
 
 (class-ns PersistentTreeSet
     (defn #_"PersistentTreeSet" PersistentTreeSet'new [#_"IPersistentMap" meta, #_"IPersistentMap" impl]
@@ -13868,7 +13844,7 @@
 )
 )
 
-(java-ns cloiure.lang.PersistentVector
+(java-ns cloiure.core.PersistentVector
 
 (class-ns VNode
     (defn #_"VNode" VNode'new
@@ -14378,12 +14354,14 @@
                         (let [#_"Object[]" a (PersistentVector''arrayFor this, i)
                               r (loop-when [r r #_"int" j (if (zero? i) 1 0)] (< j (alength a)) => r
                                     (let [r (f r (aget a j))]
-                                        (when-not (reduced? r) => (ß return @r)
+                                        (when-not (reduced? r) => r
                                             (recur r (inc j))
                                         )
                                     )
                                 )]
-                            (recur r (+ i (alength a)))
+                            (when-not (reduced? r) => @r
+                                (recur r (+ i (alength a)))
+                            )
                         )
                     )
                 )
@@ -14393,12 +14371,14 @@
                     (let [#_"Object[]" a (PersistentVector''arrayFor this, i)
                           r (loop-when [r r #_"int" j 0] (< j (alength a)) => r
                                 (let [r (f r (aget a j))]
-                                    (when-not (reduced? r) => (ß return @r)
+                                    (when-not (reduced? r) => r
                                         (recur r (inc j))
                                     )
                                 )
                             )]
-                        (recur r (+ i (alength a)))
+                        (when-not (reduced? r) => @r
+                            (recur r (+ i (alength a)))
+                        )
                     )
                 )
             )
@@ -14411,12 +14391,14 @@
                 (let [#_"Object[]" a (PersistentVector''arrayFor this, i)
                       r (loop-when [r r #_"int" j 0] (< j (alength a)) => r
                             (let [r (f r (+ j i) (aget a j))]
-                                (when-not (reduced? r) => (ß return @r)
+                                (when-not (reduced? r) => r
                                     (recur r (inc j))
                                 )
                             )
                         )]
-                    (recur r (+ i (alength a)))
+                    (when-not (reduced? r) => @r
+                        (recur r (+ i (alength a)))
+                    )
                 )
             )
         )
@@ -14472,7 +14454,7 @@
 )
 )
 
-(java-ns cloiure.lang.LazilyPersistentVector
+(java-ns cloiure.core.LazilyPersistentVector
 
 (class-ns LazilyPersistentVector
     (defn #_"IPersistentVector" LazilyPersistentVector'createOwning [& #_"Object..." items]
@@ -14492,7 +14474,7 @@
 )
 )
 
-(java-ns cloiure.lang.Repeat
+(java-ns cloiure.core.Repeat
 
 (class-ns Repeat
     (def- #_"long" Repeat'INFINITE -1)
@@ -14578,7 +14560,7 @@
 )
 )
 
-(java-ns cloiure.lang.Range
+(java-ns cloiure.core.Range
 
 ;;;
  ; Implements generic numeric (potentially infinite) range.
@@ -14694,7 +14676,7 @@
 )
 )
 
-(java-ns cloiure.lang.StringSeq
+(java-ns cloiure.core.StringSeq
 
 (class-ns StringSeq
     (defn- #_"StringSeq" StringSeq'new [#_"IPersistentMap" meta, #_"CharSequence" s, #_"int" i]
@@ -14773,7 +14755,7 @@
 )
 )
 
-(java-ns cloiure.lang.Tuple
+(java-ns cloiure.core.Tuple
 
 (class-ns Tuple
     (def #_"int" Tuple'MAX_SIZE 6)
@@ -14790,7 +14772,7 @@
 )
 )
 
-(java-ns cloiure.lang.Var
+(java-ns cloiure.core.Var
 
 (class-ns Unbound
     (defn #_"Unbound" Unbound'new [#_"Namespace" ns, #_"Symbol" sym]
@@ -15020,7 +15002,7 @@
 )
 )
 
-(java-ns cloiure.lang.RT
+(java-ns cloiure.core.RT
 
 (class-ns RT
     (defn #_"Object" RT'seqOrElse [#_"Object" o]
@@ -15161,7 +15143,7 @@
             (satisfies? ITransientAssociative coll)
                 (if (ITransientAssociative'''containsKey coll, key) true false)
             :else
-                (throw! (str "contains? not supported on type: " (.getName (class coll))))
+                (throw! (str "contains? not supported on " (class coll)))
         )
     )
 
@@ -15183,7 +15165,7 @@
             (satisfies? ITransientAssociative coll)
                 (ITransientAssociative'''entryAt coll, key)
             :else
-                (throw! (str "find not supported on type: " (.getName (class coll))))
+                (throw! (str "find not supported on " (class coll)))
         )
     )
 
@@ -15243,7 +15225,7 @@
                         (recur-if (< i n) [(inc i) (next s)] => (first s))
                     )
                 :else
-                    (throw! (str "nth not supported on this type: " (.getName (class coll))))
+                    (throw! (str "nth not supported on " (class coll)))
             )
         )
         ([#_"Object" coll, #_"int" n, #_"Object" notFound]
@@ -15275,7 +15257,7 @@
                         (recur-if (< i n) [(inc i) (next s)] => (first s))
                     )
                 :else
-                    (throw! (str "nth not supported on this type: " (.getName (class coll))))
+                    (throw! (str "nth not supported on " (class coll)))
             )
         )
     )
@@ -17506,37 +17488,6 @@
 )
 
 ;;;
- ; Returns the hash code of its argument. Note this is the hash code
- ; consistent with =, and thus is different from .hashCode for Integer,
- ; Byte and Cloiure collections.
- ;;
-(defn hash [x] (Util'hasheq x))
-
-;;;
- ; Mix final collection hash for ordered or unordered collections.
- ; hash-basis is the combined collection hash, count is the number
- ; of elements included in the basis. Note this is the hash code
- ; consistent with =, different from .hashCode.
- ; See http://clojure.org/data_structures#hash for full algorithms.
- ;;
-(defn ^long mix-collection-hash [^long hash-basis ^long n] (Murmur3'mixCollHash hash-basis n))
-
-;;;
- ; Returns the hash code, consistent with =, for an external, ordered
- ; collection implementing Seqable.
- ; See http://clojure.org/data_structures#hash for full algorithms.
- ;;
-(defn ^long hash-ordered-coll [s] (Murmur3'hashOrdered s))
-
-;;;
- ; Returns the hash code, consistent with =, for an external, unordered
- ; collection implementing Seqable. For maps, it should return
- ; map entries, whose hash is computed as (hash-ordered-coll [k v]).
- ; See http://clojure.org/data_structures#hash for full algorithms.
- ;;
-(defn ^long hash-unordered-coll [s] (Murmur3'hashUnordered s))
-
-;;;
  ; Returns a lazy seq of the elements of coll separated by sep.
  ; Returns a stateful transducer when no collection is provided.
  ;;
@@ -17919,7 +17870,7 @@
     (let [buckets
             (loop-when-recur [m {} ks tests vs thens]
                              (and ks vs)
-                             [(update m (IObject'''hashCode (first ks)) (fnil conj []) [(first ks) (first vs)]) (next ks) (next vs)]
+                             [(update m (Hashed'''hash (first ks)) (fnil conj []) [(first ks) (first vs)]) (next ks) (next vs)]
                           => m
             )
           assoc-multi
@@ -17952,17 +17903,17 @@
  ; post-switch equivalence checking must not be done (occurs with hash collisions).
  ;;
 (defn- prep-hashes [expr-sym default tests thens]
-    (let [hashcode #(IObject'''hashCode %) hashes (into #{} (map hashcode tests))]
+    (let [hashes (into #{} (map Hashed'''hash tests))]
         (if (= (count tests) (count hashes))
             (if (fits-table? hashes)
                 ;; compact case ints, no shift-mask
-                [0 0 (case-map hashcode identity tests thens) :compact]
+                [0 0 (case-map Hashed'''hash identity tests thens) :compact]
                 (let [[shift mask] (or (maybe-min-hash hashes) [0 0])]
                     (if (zero? mask)
                         ;; sparse case ints, no shift-mask
-                        [0 0 (case-map hashcode identity tests thens) :sparse]
+                        [0 0 (case-map Hashed'''hash identity tests thens) :sparse]
                         ;; compact case ints, with shift-mask
-                        [shift mask (case-map #(shift-mask shift mask (hashcode %)) identity tests thens) :compact]
+                        [shift mask (case-map #(shift-mask shift mask (Hashed'''hash %)) identity tests thens) :compact]
                     )
                 )
             )
@@ -18261,16 +18212,16 @@
     (when-not (vector? fields)
         (throw! "no fields vector given")
     )
-    (let-when [specials '#{__meta __extmap __hash __hasheq}] (some specials fields)
-        (throw! (str "the names in " specials " cannot be used as field names for types"))
+    (let-when [specials '#{__meta __extmap __hash}] (some specials fields)
+        (throw! (str "the names in " specials " cannot be used as field names for types or records"))
     )
     (let-when [non-syms (remove symbol? fields)] (seq non-syms)
-        (throw! (apply str "deftype fields must be symbols, " *ns* "." name " had: " (interpose ", " non-syms)))
+        (throw! (apply str "defrecord and deftype fields must be symbols, " *ns* "." name " had: " (interpose ", " non-syms)))
     )
 )
 
 ;;;
- ; Do not use this directly - use deftype.
+ ; Do not use this directly, use deftype.
  ;;
 (defn- emit-deftype* [tagname cname fields interfaces methods opts]
     `(deftype* ~(symbol (name (ns-name *ns*)) (name tagname))
@@ -18330,7 +18281,7 @@
  ; class (for calls to new, instance?, etc).
  ;
  ; One constructor will be defined, taking the designated fields. Note
- ; that the field names __meta, __extmap, __hash and __hasheq are currently
+ ; that the field names __meta, __extmap and __hash are currently
  ; reserved and should not be used when defining your own types.
  ;;
 (defmacro deftype [name fields & opts+specs]
@@ -18338,6 +18289,194 @@
     (let [[interfaces methods opts] (parse-opts+specs opts+specs)]
         `(do
             ~(emit-deftype* name name (vec fields) (vec interfaces) methods opts)
+            (import ~(symbol (str (namespace-munge *ns*) "." name)))
+        )
+    )
+)
+
+;;;
+ ; Do not use this directly, use defrecord.
+ ;;
+(defn- emit-defrecord* [tagname cname fields interfaces methods opts]
+    (let [classname      (with-meta (symbol (str (namespace-munge *ns*) "." cname)) (meta cname))
+          interfaces     (vec interfaces)
+          hinted-fields  fields
+          fields         (mapv #(with-meta % nil) fields)
+          base-fields    fields
+          fields         (conj fields '__meta '__extmap '^:mutable __hash)
+          type-hash      (hash classname)]
+        (when (some #{:volatile :mutable} (mapcat (comp keys meta) hinted-fields))
+            (throw! ":volatile or :mutable not supported for record fields")
+        )
+        (let [gs (gensym)]
+            (letfn [(irecord [[i m]] [(conj i 'cloiure.core.IRecord) m])
+                    (eqhash [[i m]]
+                        [
+                            (conj i 'cloiure.core.Hashed 'cloiure.core.IObject)
+                            (conj m
+                                `(Hashed'''hash [this#]
+                                    (let-when [hash# ~'__hash] (zero? hash#) => hash#
+                                        (set! ~'__hash (int (bit-xor ~type-hash (Murmur3'hashUnordered this#))))
+                                    )
+                                )
+                                `(IObject'''equals [this# ~gs]
+                                    (or (identical? this# ~gs)
+                                        (and (identical? (class this#) (class ~gs))
+                                            (let [~gs ~(with-meta gs {:tag tagname})]
+                                                (and ~@(map (fn [%] `(= ~% (. ~gs ~(symbol (str "-" %))))) base-fields)
+                                                    (= ~'__extmap (. ~gs ~'__extmap))
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        ]
+                    )
+                    (iobj [[i m]]
+                        [
+                            (conj i 'cloiure.core.IMeta 'cloiure.core.IObj)
+                            (conj m
+                                `(IMeta'''meta [_] ~'__meta)
+                                `(IObj'''withMeta [_ ~gs] (new ~tagname ~@(replace {'__meta gs} fields)))
+                            )
+                        ]
+                    )
+                    (ilookup [[i m]]
+                        [
+                            (conj i 'cloiure.core.ILookup)
+                            (conj m
+                                `(ILookup'''valAt [this# k#] (ILookup'''valAt this# k# nil))
+                                `(ILookup'''valAt [_ k# else#]
+                                    (case k#
+                                        ~@(mapcat (fn [%] [(keyword %) %]) base-fields)
+                                        (get ~'__extmap k# else#)
+                                    )
+                                )
+                            )
+                        ]
+                    )
+                    (imap [[i m]]
+                        [
+                            (conj i 'cloiure.core.Associative 'cloiure.core.Counted 'cloiure.core.IPersistentCollection 'cloiure.core.IPersistentMap 'cloiure.core.Seqable)
+                            (conj m
+                                `(Associative'''assoc [_ k# ~gs]
+                                    (condp identical? k#
+                                        ~@(mapcat
+                                            (fn [%] [(keyword %) (list* `new tagname (replace {% gs} (remove '#{__hash} fields)))])
+                                            base-fields
+                                        )
+                                        (new ~tagname ~@(remove '#{__extmap __hash} fields) (assoc ~'__extmap k# ~gs))
+                                    )
+                                )
+                                `(Associative'''containsKey [this# k#] (not (identical? (ILookup'''valAt this# k# this#) this#)))
+                                `(Associative'''entryAt [this# k#]
+                                    (let-when [v# (ILookup'''valAt this# k# this#)] (not (identical? v# this#))
+                                        (MapEntry'create k# v#)
+                                    )
+                                )
+                                `(Counted'''count [_] (+ ~(count base-fields) (count ~'__extmap)))
+                                `(IPersistentCollection'''empty [_] (throw! (str "empty not supported on " ~(str classname))))
+                                `(IPersistentCollection'''conj [this# o#]
+                                    (cond
+                                        (map-entry? o#) (let [^IMapEntry e# o#] (Associative'''assoc this# (key e#) (val e#)))
+                                        (indexed? o#) (let [^Indexed i# o#] (Associative'''assoc this# (nth i# 0) (nth i# 1)))
+                                        :else
+                                            (loop-when [this# this# s# (seq o#)] s# => this#
+                                                (let [^IMapEntry e# (first s#)]
+                                                    (recur (Associative'''assoc this# (key e#) (val e#)) (next s#))
+                                                )
+                                            )
+                                    )
+                                )
+                                `(IPersistentMap'''dissoc [this# k#]
+                                    (if (contains? #{~@(map keyword base-fields)} k#)
+                                        (dissoc (with-meta (into {} this#) ~'__meta) k#)
+                                        (new ~tagname ~@(remove '#{__extmap __hash} fields) (not-empty (dissoc ~'__extmap k#)))
+                                    )
+                                )
+                                `(Seqable'''seq [_] (seq (concat [~@(map #(list `MapEntry'create (keyword %) %) base-fields)] ~'__extmap)))
+                            )
+                        ]
+                    )]
+                (let [[i m] (-> [interfaces methods] irecord eqhash iobj ilookup imap)]
+                    `(deftype* ~(symbol (name (ns-name *ns*)) (name tagname))
+                        ~classname
+                        ~(conj hinted-fields '__meta '__extmap '^int ^:mutable __hash)
+                        :implements ~(vec i)
+                        ~@(mapcat identity opts)
+                        ~@m
+                    )
+                )
+            )
+        )
+    )
+)
+ 
+;;;
+ ; (defrecord name [fields*] options* specs*)
+ ;
+ ; Options are expressed as sequential keywords and arguments (in any order).
+ ;
+ ; Each spec consists of a protocol or interface name followed by zero
+ ; or more method bodies:
+ ;
+ ; protocol-or-interface-or-Object
+ ; (methodName [args*] body)*
+ ;
+ ; Dynamically generates compiled bytecode for class with the given name,
+ ; in a package with the same name as the current namespace, the given fields,
+ ; and, optionally, methods for protocols and/or interfaces.
+ ;
+ ; The class will have the (immutable) fields named by fields, which can have
+ ; type hints. Protocols/interfaces and methods are optional. The only methods
+ ; that can be supplied are those declared in the protocols/interfaces. Note
+ ; that method bodies are not closures, the local environment includes only
+ ; the named fields, and those fields can be accessed directly.
+ ;
+ ; Method definitions take the form:
+ ;
+ ; (methodname [args*] body)
+ ;
+ ; The argument and return types can be hinted on the arg and methodname
+ ; symbols. If not supplied, they will be inferred, so type hints should be
+ ; reserved for disambiguation.
+ ;
+ ; Methods should be supplied for all methods of the desired protocol(s)
+ ; and interface(s). You can also define overrides for methods of Object.
+ ; Note that a parameter must be supplied to correspond to the target object
+ ; ('this' in Java parlance). Thus methods for interfaces will take one more
+ ; argument than do the interface declarations. Note also that recur calls
+ ; to the method head should *not* pass the target object, it will be
+ ; supplied automatically and can not be substituted.
+ ;
+ ; In the method bodies, the (unqualified) name can be used to name the
+ ; class (for calls to new, instance?, etc).
+ ;
+ ; The class will have implementations of several (cloiure.core)
+ ; interfaces generated automatically: IObj (metadata support) and
+ ; IPersistentMap, and all of their superinterfaces.
+ ;
+ ; In addition, defrecord will define type-and-value-based =,
+ ; and will defined Java .hashCode and .equals consistent with the
+ ; contract for java.util.Map.
+ ;
+ ; Two constructors will be defined, one taking the designated fields
+ ; followed by a metadata map (nil for none) and an extension field map
+ ; (nil for none), and one taking only the fields (using nil for meta and
+ ; extension fields). Note that the field names __meta, __extmap and
+ ; __hash are currently reserved and should not be used when defining
+ ; your own records.
+ ;
+ ; Given (defrecord TypeName ...), two factory functions will be defined:
+ ; ->TypeName, taking positional parameters for the fields, and
+ ; map->TypeName, taking a map of keywords to field values.
+ ;;
+(defmacro defrecord [name fields & opts+specs]
+    (validate-fields fields name)
+    (let [[interfaces methods opts] (parse-opts+specs opts+specs)]
+        `(do
+            ~(emit-defrecord* name name (vec fields) (vec interfaces) methods opts)
             (import ~(symbol (str (namespace-munge *ns*) "." name)))
         )
     )
@@ -19470,6 +19609,7 @@
         (list? form)      (outer (apply list (map inner form)))
         (map-entry? form) (outer (vec (map inner form)))
         (seq? form)       (outer (doall (map inner form)))
+        (record? form)    (outer (reduce #(conj %1 (inner %2)) form form))
         (coll? form)      (outer (into (empty form) (map inner form)))
         :else             (outer form)
     )
