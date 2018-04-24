@@ -18760,7 +18760,7 @@
  ; the first item in coll, then applying f to that result and the 2nd item,
  ; etc. If coll contains no items, returns val and f is not called.
  ;;
-(§ defn reduce
+(defn reduce
     ([f s]
         (if (satisfies? IReduce s)
             (IReduce'''reduce ^cloiure.core.IReduce s f)
@@ -18781,11 +18781,11 @@
  ; map entries. Called by cloiure.core/reduce-kv, and has same
  ; semantics (just different arg order).
  ;;
-(§ defprotocol KVReduce
+(defprotocol KVReduce
     (kv-reduce [m f r])
 )
 
-(§ extend-protocol KVReduce
+(extend-protocol KVReduce
     nil
     (kv-reduce [_ _ r] r)
 
@@ -18804,14 +18804,14 @@
  ; If coll contains no entries, returns init and f is not called. Note that
  ; reduce-kv is supported on vectors, where the keys will be the ordinals.
  ;;
-(§ defn reduce-kv [f r m] (kv-reduce m f r))
+(defn reduce-kv [f r m] (kv-reduce m f r))
 
 ;;;
  ; Takes a reducing function f of 2 args and returns a fn suitable for
  ; transduce by adding an arity-1 signature that calls cf (default -
  ; identity) on the result argument.
  ;;
-(§ defn completing
+(defn completing
     ([f] (completing f identity))
     ([f cf]
         (fn
@@ -18831,7 +18831,7 @@
  ; item, etc. If coll contains no items, returns init and f is not called.
  ; Note that certain transforms may inject or skip items.
  ;;
-(§ defn transduce
+(defn transduce
     ([xform f s] (transduce xform f (f) s))
     ([xform f r s] (let [f (xform f)] (f (reduce f r s))))
 )
@@ -18840,7 +18840,7 @@
  ; Returns a new coll consisting of to-coll with all of the items of from-coll
  ; conjoined. A transducer may be supplied.
  ;;
-(§ defn into
+(defn into
     ([] [])
     ([to] to)
     ([to from]
@@ -18874,7 +18874,7 @@
  ; Returns a vector of the items in coll for which (f? item)
  ; returns logical true. f? must be free of side-effects.
  ;;
-(defn filterv [f? coll] (reduce! #(if (f? %2) (conj! %1 %2) %1) [] coll))
+(defn filterv [f? s] (reduce! #(if (f? %2) (conj! %1 %2) %1) [] s))
 
 ;;;
  ; Takes any nested combination of sequential things (lists, vectors, etc.)
@@ -18888,47 +18888,40 @@
  ; f on each element. The value at each key will be a vector of the
  ; corresponding elements, in the order they appeared in coll.
  ;;
-(defn group-by [f coll] (reduce! #(let [k (f %2)] (assoc! %1 k (conj (get %1 k []) %2))) {} coll))
+(defn group-by [f s] (reduce! #(let [k (f %2)] (assoc! %1 k (conj (get %1 k []) %2))) {} s))
 
 ;;;
  ; Applies f to each value in coll, splitting it each time f returns
  ; a new value. Returns a lazy seq of partitions. Returns a stateful
  ; transducer when no collection is provided.
  ;;
-(§ defn partition-by
+(defn partition-by
     ([f]
-        (fn [rf]
-            (let [lv (atom []) pv (atom ::none)]
+        (fn [g]
+            (let [l' (atom []) p' (atom ::none)]
                 (fn
-                    ([] (rf))
-                    ([result]
-                        (let [result
-                                (if (empty? @lv)
-                                    result
-                                    (let [v @lv]
-                                        (swap! lv empty)
-                                        (unreduced (rf result v))
+                    ([] (g))
+                    ([s]
+                        (let [s (when (seq @l') => s
+                                    (let [l @l' _ (swap! l' empty)]
+                                        (unreduced (g s l))
                                     )
                                 )]
-                            (rf result)
+                            (g s)
                         )
                     )
-                    ([result input]
-                        (let [pval @pv val (f input)]
-                            (reset! pv val)
-                            (if (or (identical? pval ::none) (= val pval))
+                    ([s x]
+                        (let [p @p' y (f x) _ (reset! p' y)]
+                            (if (or (identical? p ::none) (= y p))
                                 (do
-                                    (swap! lv conj input)
-                                    result
+                                    (swap! l' conj x)
+                                    s
                                 )
-                                (let [v @lv]
-                                    (swap! lv empty)
-                                    (let [ret (rf result v)]
-                                        (when-not (reduced? ret)
-                                            (swap! lv conj input)
-                                        )
-                                        ret
+                                (let [l @l' _ (swap! l' empty) s' (g s l)]
+                                    (when-not (reduced? s')
+                                        (swap! l' conj x)
                                     )
+                                    s'
                                 )
                             )
                         )
@@ -18937,13 +18930,12 @@
             )
         )
     )
-    ([f coll]
+    ([f s]
         (lazy-seq
-            (when-some [s (seq coll)]
-                (let [fst (first s)
-                      fv (f fst)
-                      run (cons fst (take-while #(= fv (f %)) (next s)))]
-                    (cons run (partition-by f (seq (drop (count run) s))))
+            (when-some [s (seq s)]
+                (let [x (first s) fx (f x)
+                      s' (cons x (take-while #(= (f %) fx) (next s)))]
+                    (cons s' (partition-by f (drop (count s') s)))
                 )
             )
         )
@@ -18959,7 +18951,7 @@
  ; Returns a lazy seq of the intermediate values of the reduction (as per reduce)
  ; of coll by f, starting with init.
  ;;
-(§ defn reductions
+(defn reductions
     ([f coll]
         (lazy-seq
             (if-some [s (seq coll)]
@@ -18989,27 +18981,27 @@
  ; accept 2 arguments, index and item. Returns a stateful transducer when
  ; no collection is provided.
  ;;
-(§ defn map-indexed
+(defn map-indexed
     ([f]
-        (fn [rf]
-            (let [i (atom -1)]
+        (fn [g]
+            (let [i' (atom -1)]
                 (fn
-                    ([] (rf))
-                    ([result] (rf result))
-                    ([result input] (rf result (f (swap! i inc) input)))
+                    ([] (g))
+                    ([s] (g s))
+                    ([s x] (g s (f (swap! i' inc) x)))
                 )
             )
         )
     )
-    ([f coll]
-        (letfn [(mapi [idx coll]
+    ([f s]
+        (letfn [(mapi- [i s]
                     (lazy-seq
-                        (when-some [s (seq coll)]
-                            (cons (f idx (first s)) (mapi (inc idx) (next s)))
+                        (when-some [s (seq s)]
+                            (cons (f i (first s)) (mapi- (inc i) (next s)))
                         )
                     )
                 )]
-            (mapi 0 coll)
+            (mapi- 0 s)
         )
     )
 )
@@ -19019,31 +19011,25 @@
  ; this means false return values will be included. f must be free of
  ; side-effects. Returns a transducer when no collection is provided.
  ;;
-(§ defn keep
+(defn keep
     ([f]
-        (fn [rf]
+        (fn [g]
             (fn
-                ([] (rf))
-                ([result] (rf result))
-                ([result input]
-                    (let [v (f input)]
-                        (if (nil? v)
-                            result
-                            (rf result v)
-                        )
+                ([] (g))
+                ([s] (g s))
+                ([s x]
+                    (let-when [y (f x)] (some? y) => s
+                        (g s y)
                     )
                 )
             )
         )
     )
-    ([f coll]
+    ([f s]
         (lazy-seq
-            (when-some [s (seq coll)]
-                (let [x (f (first s))]
-                    (if (nil? x)
-                        (keep f (next s))
-                        (cons x (keep f (next s)))
-                    )
+            (when-some [s (seq s)]
+                (let-when [y (f (first s))] (some? y) => (keep f (next s))
+                    (cons y (keep f (next s)))
                 )
             )
         )
@@ -19056,39 +19042,33 @@
  ; of side-effects. Returns a stateful transducer when no collection is
  ; provided.
  ;;
-(§ defn keep-indexed
+(defn keep-indexed
     ([f]
-        (fn [rf]
-            (let [iv (atom -1)]
+        (fn [g]
+            (let [i' (atom -1)]
                 (fn
-                    ([] (rf))
-                    ([result] (rf result))
-                    ([result input]
-                        (let [i (swap! iv inc) v (f i input)]
-                            (if (nil? v)
-                                result
-                                (rf result v)
-                            )
+                    ([] (g))
+                    ([s] (g s))
+                    ([s x]
+                        (let-when [y (f (swap! i' inc) x)] (some? y) => s
+                            (g s y)
                         )
                     )
                 )
             )
         )
     )
-    ([f coll]
-        (letfn [(keepi [idx coll]
+    ([f s]
+        (letfn [(keepi- [i s]
                     (lazy-seq
-                        (when-some [s (seq coll)]
-                            (let [x (f idx (first s))]
-                                (if (nil? x)
-                                    (keepi (inc idx) (next s))
-                                    (cons x (keepi (inc idx) (next s)))
-                                )
+                        (when-some [s (seq s)]
+                            (let-when [y (f i (first s))] (some? y) => (keepi- (inc i) (next s))
+                                (cons y (keepi- (inc i) (next s)))
                             )
                         )
                     )
                 )]
-            (keepi 0 coll)
+            (keepi- 0 s)
         )
     )
 )
@@ -19100,42 +19080,42 @@
  ; it will stop execution on the first argument that triggers a logical false
  ; result against the original predicates.
  ;;
-(§ defn every-pred
+(defn every-pred
     ([p]
-        (fn ep1
+        (fn ep-
             ([] true)
             ([x] (boolean (p x)))
             ([x y] (boolean (and (p x) (p y))))
             ([x y z] (boolean (and (p x) (p y) (p z))))
-            ([x y z & args] (boolean (and (ep1 x y z) (every? p args))))
+            ([x y z & args] (boolean (and (ep- x y z) (every? p args))))
         )
     )
     ([p1 p2]
-        (fn ep2
+        (fn ep-
             ([] true)
             ([x] (boolean (and (p1 x) (p2 x))))
             ([x y] (boolean (and (p1 x) (p1 y) (p2 x) (p2 y))))
             ([x y z] (boolean (and (p1 x) (p1 y) (p1 z) (p2 x) (p2 y) (p2 z))))
-            ([x y z & args] (boolean (and (ep2 x y z) (every? #(and (p1 %) (p2 %)) args))))
+            ([x y z & args] (boolean (and (ep- x y z) (every? #(and (p1 %) (p2 %)) args))))
         )
     )
     ([p1 p2 p3]
-        (fn ep3
+        (fn ep-
             ([] true)
             ([x] (boolean (and (p1 x) (p2 x) (p3 x))))
             ([x y] (boolean (and (p1 x) (p2 x) (p3 x) (p1 y) (p2 y) (p3 y))))
             ([x y z] (boolean (and (p1 x) (p2 x) (p3 x) (p1 y) (p2 y) (p3 y) (p1 z) (p2 z) (p3 z))))
-            ([x y z & args] (boolean (and (ep3 x y z) (every? #(and (p1 %) (p2 %) (p3 %)) args))))
+            ([x y z & args] (boolean (and (ep- x y z) (every? #(and (p1 %) (p2 %) (p3 %)) args))))
         )
     )
     ([p1 p2 p3 & ps]
         (let [ps (list* p1 p2 p3 ps)]
-            (fn epn
+            (fn ep-
                 ([] true)
                 ([x] (every? #(% x) ps))
                 ([x y] (every? #(and (% x) (% y)) ps))
                 ([x y z] (every? #(and (% x) (% y) (% z)) ps))
-                ([x y z & args] (boolean (and (epn x y z) (every? #(every? % args) ps))))
+                ([x y z & args] (boolean (and (ep- x y z) (every? #(every? % args) ps))))
             )
         )
     )
@@ -19148,42 +19128,42 @@
  ; in that it will stop execution on the first argument that triggers a logical
  ; true result against the original predicates.
  ;;
-(§ defn some-fn
+(defn some-fn
     ([p]
-        (fn sp1
+        (fn sp-
             ([] nil)
             ([x] (p x))
             ([x y] (or (p x) (p y)))
             ([x y z] (or (p x) (p y) (p z)))
-            ([x y z & args] (or (sp1 x y z) (some p args)))
+            ([x y z & args] (or (sp- x y z) (some p args)))
         )
     )
     ([p1 p2]
-        (fn sp2
+        (fn sp-
             ([] nil)
             ([x] (or (p1 x) (p2 x)))
             ([x y] (or (p1 x) (p1 y) (p2 x) (p2 y)))
             ([x y z] (or (p1 x) (p1 y) (p1 z) (p2 x) (p2 y) (p2 z)))
-            ([x y z & args] (or (sp2 x y z) (some #(or (p1 %) (p2 %)) args)))
+            ([x y z & args] (or (sp- x y z) (some #(or (p1 %) (p2 %)) args)))
         )
     )
     ([p1 p2 p3]
-        (fn sp3
+        (fn sp-
             ([] nil)
             ([x] (or (p1 x) (p2 x) (p3 x)))
             ([x y] (or (p1 x) (p2 x) (p3 x) (p1 y) (p2 y) (p3 y)))
             ([x y z] (or (p1 x) (p2 x) (p3 x) (p1 y) (p2 y) (p3 y) (p1 z) (p2 z) (p3 z)))
-            ([x y z & args] (or (sp3 x y z) (some #(or (p1 %) (p2 %) (p3 %)) args)))
+            ([x y z & args] (or (sp- x y z) (some #(or (p1 %) (p2 %) (p3 %)) args)))
         )
     )
     ([p1 p2 p3 & ps]
         (let [ps (list* p1 p2 p3 ps)]
-            (fn spn
+            (fn sp-
                 ([] nil)
                 ([x] (some #(% x) ps))
                 ([x y] (some #(or (% x) (% y)) ps))
                 ([x y z] (some #(or (% x) (% y) (% z)) ps))
-                ([x y z & args] (or (spn x y z) (some #(some % args) ps)))
+                ([x y z & args] (or (sp- x y z) (some #(some % args) ps)))
             )
         )
     )
@@ -19195,14 +19175,14 @@
  ; Note that, unlike cond branching, cond-> threading does not short circuit
  ; after the first true test expression.
  ;;
-(§ defmacro cond-> [expr & clauses]
+(defmacro cond-> [e & s]
     (assert-args
-        (even? (count clauses)) "an even number of forms as clauses"
+        (even? (count s)) "an even number of forms as clauses"
     )
-    (let [g (gensym)
-          steps (map (fn [[test step]] `(if ~test (-> ~g ~step) ~g)) (partition 2 clauses))]
-        `(let [~g ~expr ~@(interleave (repeat g) (butlast steps))]
-            ~(if (seq steps) (last steps) g)
+    (let [e' (gensym)
+          s (map (fn [[? x]] `(if ~? (-> ~e' ~x) ~e')) (partition 2 s))]
+        `(let [~e' ~e ~@(interleave (repeat e') (butlast s))]
+            ~(if (seq s) (last s) e')
         )
     )
 )
@@ -19213,14 +19193,14 @@
  ; Note that, unlike cond branching, cond->> threading does not short circuit
  ; after the first true test expression.
  ;;
-(§ defmacro cond->> [expr & clauses]
+(defmacro cond->> [e & s]
     (assert-args
-        (even? (count clauses)) "an even number of forms as clauses"
+        (even? (count s)) "an even number of forms as clauses"
     )
-    (let [g (gensym)
-          steps (map (fn [[test step]] `(if ~test (->> ~g ~step) ~g)) (partition 2 clauses))]
-        `(let [~g ~expr ~@(interleave (repeat g) (butlast steps))]
-            ~(if (seq steps) (last steps) g)
+    (let [e' (gensym)
+          s (map (fn [[? x]] `(if ~? (->> ~e' ~x) ~e')) (partition 2 s))]
+        `(let [~e' ~e ~@(interleave (repeat e') (butlast s))]
+            ~(if (seq s) (last s) e')
         )
     )
 )
@@ -19230,9 +19210,9 @@
  ; of that binding, then binds name to that result, repeating for each
  ; successive form, returning the result of the last form.
  ;;
-(§ defmacro as-> [expr name & forms]
-    `(let [~name ~expr ~@(interleave (repeat name) (butlast forms))]
-        ~(if (seq forms) (last forms) name)
+(defmacro as-> [e e' & s]
+    `(let [~e' ~e ~@(interleave (repeat e') (butlast s))]
+        ~(if (seq s) (last s) e')
     )
 )
 
@@ -19240,11 +19220,11 @@
  ; When expr is not nil, threads it into the first form (via ->),
  ; and when that result is not nil, through the next, etc.
  ;;
-(§ defmacro some-> [expr & forms]
-    (let [g (gensym)
-          steps (map (fn [step] `(if (nil? ~g) nil (-> ~g ~step))) forms)]
-        `(let [~g ~expr ~@(interleave (repeat g) (butlast steps))]
-            ~(if (seq steps) (last steps) g)
+(defmacro some-> [e & s]
+    (let [e' (gensym)
+          s (map (fn [x] `(when (some? ~e') (-> ~e' ~x))) s)]
+        `(let [~e' ~e ~@(interleave (repeat e') (butlast s))]
+            ~(if (seq s) (last s) e')
         )
     )
 )
@@ -19253,31 +19233,27 @@
  ; When expr is not nil, threads it into the first form (via ->>),
  ; and when that result is not nil, through the next, etc.
  ;;
-(§ defmacro some->> [expr & forms]
-    (let [g (gensym)
-          steps (map (fn [step] `(if (nil? ~g) nil (->> ~g ~step))) forms)]
-        `(let [~g ~expr ~@(interleave (repeat g) (butlast steps))]
-            ~(if (seq steps) (last steps) g)
+(defmacro some->> [e & s]
+    (let [e' (gensym)
+          s (map (fn [x] `(when (some? ~e') (->> ~e' ~x))) s)]
+        `(let [~e' ~e ~@(interleave (repeat e') (butlast s))]
+            ~(if (seq s) (last s) e')
         )
     )
 )
 
-(defn- preserving-reduced [rf]
-    #(let [r (rf %1 %2)]
-        (if (reduced? r) (reduced r) r)
-    )
-)
+(defn- preserving-reduced [f] #(let [r (f %1 %2)] (if (reduced? r) (reduced r) r)))
 
 ;;;
  ; A transducer which concatenates the contents of each input, which must
  ; be a collection, into the reduction.
  ;;
-(§ defn cat [rf]
-    (let [rrf (preserving-reduced rf)]
+(defn cat [f]
+    (let [g (preserving-reduced f)]
         (fn
-            ([] (rf))
-            ([result] (rf result))
-            ([result input] (reduce rrf result input))
+            ([] (f))
+            ([s] (f s))
+            ([s x] (reduce g s x))
         )
     )
 )
@@ -19290,22 +19266,20 @@
  ; transducer. If retf is not supplied, the input that triggered the predicate will
  ; be returned. If the predicate never returns true the transduction is unaffected.
  ;;
-(§ defn halt-when
+(defn halt-when
     ([f?] (halt-when f? nil))
-    ([f? retf]
-        (fn [rf]
+    ([f? h]
+        (fn [g]
             (fn
-                ([] (rf))
-                ([result]
-                    (if (and (map? result) (contains? result ::halt))
-                        (::halt result)
-                        (rf result)
+                ([] (g))
+                ([s]
+                    (when (and (map? s) (contains? s ::halt)) => (g s)
+                        (::halt s)
                     )
                 )
-                ([result input]
-                    (if (f? input)
-                        (reduced {::halt (if retf (retf (rf result) input) input)})
-                        (rf result input)
+                ([s x]
+                    (when (f? x) => (g s x)
+                        (reduced {::halt (if (some? h) (h (g s) x) x)})
                     )
                 )
             )
@@ -19317,7 +19291,7 @@
  ; Runs the supplied procedure (via reduce), for purposes of side effects,
  ; on successive items in the collection. Returns nil.
  ;;
-(§ defn run! [proc coll]
+(defn run! [proc coll]
     (reduce #(proc %2) nil coll)
     nil
 )
@@ -19328,16 +19302,16 @@
 ;;;
  ; Move a maximal element of coll according to fn k (which returns a number) to the front of coll.
  ;;
-(§ defn- bubble-max-key [k coll]
-    (let [m (apply max-key k coll)]
-        (cons m (remove #(identical? m %) coll))
+(defn- bubble-max-key [k s]
+    (let [m (apply max-key k s)]
+        (cons m (remove #(identical? m %) s))
     )
 )
 
 ;;;
  ; Return a set that is the union of the input sets.
  ;;
-(§ defn union
+(defn union
     ([] #{})
     ([x] x)
     ([x y] (if (< (count x) (count y)) (into y x) (into x y)))
@@ -19351,11 +19325,11 @@
 ;;;
  ; Return a set that is the intersection of the input sets.
  ;;
-(§ defn intersection
+(defn intersection
     ([x] x)
     ([x y] (recur-if (< (count y) (count x)) [y x] => (reduce #(if (contains? y %2) %1 (disj %1 %2)) x x)))
     ([x y & s]
-        (let [[x & y] (bubble-max-key #(- (count %)) (conj s y x))]
+        (let [[x & y] (bubble-max-key (comp - count) (conj s y x))]
             (reduce intersection x y)
         )
     )
@@ -19364,7 +19338,7 @@
 ;;;
  ; Return a set that is the first set without elements of the remaining sets.
  ;;
-(§ defn difference
+(defn difference
     ([x] x)
     ([x y]
         (if (< (count x) (count y))
@@ -19378,36 +19352,36 @@
 ;;;
  ; Returns a set of the elements for which f? is true.
  ;;
-(§ defn select [f? xset]
+(defn select [f? xset]
     (reduce (fn [s k] (if (f? k) s (disj s k))) xset xset)
 )
 
 ;;;
  ; Returns a rel of the elements of xrel with only the keys in ks.
  ;;
-(§ defn project [xrel ks]
+(defn project [xrel ks]
     (with-meta (set (map #(select-keys % ks) xrel)) (meta xrel))
 )
 
 ;;;
- ; Returns the map with the keys in kmap renamed to the vals in kmap.
+ ; Returns m with the keys in r renamed to the vals in r.
  ;;
-(§ defn rename-keys [map kmap]
+(defn rename-keys [m r]
     (reduce
-        (fn [m [old new]]
-            (if (contains? map old)
-                (assoc m new (get map old))
-                m
+        (fn [m' [k k']]
+            (if (contains? m k)
+                (assoc m' k' (get m k))
+                m'
             )
         )
-        (apply dissoc map (keys kmap)) kmap
+        (apply dissoc m (keys r)) r
     )
 )
 
 ;;;
  ; Returns a rel of the maps in xrel with the keys in kmap renamed to the vals in kmap.
  ;;
-(§ defn rename [xrel kmap]
+(defn rename [xrel kmap]
     (with-meta (set (map #(rename-keys % kmap) xrel)) (meta xrel))
 )
 
@@ -19415,7 +19389,7 @@
  ; Returns a map of the distinct values of ks in the xrel mapped to
  ; a set of the maps in xrel with the corresponding values of ks.
  ;;
-(§ defn index [xrel ks]
+(defn index [xrel ks]
     (reduce
         (fn [m x]
             (let [ik (select-keys x ks)]
@@ -19429,64 +19403,48 @@
 ;;;
  ; Returns the map with the vals mapped to the keys.
  ;;
-(§ defn map-invert [m] (reduce (fn [m [k v]] (assoc m v k)) {} m))
+(defn map-invert [m] (reduce (fn [m [k v]] (assoc m v k)) {} m))
 
 ;;;
  ; When passed 2 rels, returns the rel corresponding to the natural join.
  ; When passed an additional keymap, joins on the corresponding keys.
  ;;
-(§ defn join
-    ([xrel yrel] ;; natural join
-        (if (and (seq xrel) (seq yrel))
-            (let [ks (intersection (set (keys (first xrel))) (set (keys (first yrel))))
-                  [r s] (if (<= (count xrel) (count yrel)) [xrel yrel] [yrel xrel])
-                  idx (index r ks)]
+(defn join
+    ([a b] ;; natural join
+        (when (and (seq a) (seq b)) => #{}
+            (let [k* (intersection (set (keys (first a))) (set (keys (first b))))
+                  [a b] (if (<= (count a) (count b)) [a b] [b a])
+                  i* (index a k*)]
                 (reduce
-                    (fn [ret x]
-                        (let [found (idx (select-keys x ks))]
-                            (if found
-                                (reduce #(conj %1 (merge %2 x)) ret found)
-                                ret
-                            )
+                    (fn [s x]
+                        (if-let [found (i* (select-keys x k*))]
+                            (reduce #(conj %1 (merge %2 x)) s found)
+                            s
                         )
                     )
-                    #{} s
+                    #{} b
                 )
             )
-            #{}
         )
     )
-    ([xrel yrel km] ;; arbitrary key mapping
-        (let [[r s k] (if (<= (count xrel) (count yrel)) [xrel yrel (map-invert km)] [yrel xrel km])
-              idx (index r (vals k))]
+    ([a b m] ;; arbitrary key mapping
+        (let [[a b m] (if (<= (count a) (count b)) [a b (map-invert m)] [b a m])
+              i* (index a (vals m))]
             (reduce
-                (fn [ret x]
-                    (let [found (idx (rename-keys (select-keys x (keys k)) k))]
-                        (if found
-                            (reduce #(conj %1 (merge %2 x)) ret found)
-                            ret
-                        )
+                (fn [s x]
+                    (if-let [found (i* (rename-keys (select-keys x (keys m)) m))]
+                        (reduce #(conj %1 (merge %2 x)) s found)
+                        s
                     )
                 )
-                #{} s
+                #{} b
             )
         )
     )
 )
 
-;;;
- ; Is set1 a subset of set2?
- ;;
-(§ defn ^Boolean subset? [set1 set2]
-    (and (<= (count set1) (count set2)) (every? #(contains? set2 %) set1))
-)
-
-;;;
- ; Is set1 a superset of set2?
- ;;
-(§ defn ^Boolean superset? [set1 set2]
-    (and (>= (count set1) (count set2)) (every? #(contains? set1 %) set2))
-)
+(defn ^Boolean subset?   [a b] (and (<= (count a) (count b)) (every? #(contains? b %) a)))
+(defn ^Boolean superset? [a b] (and (<= (count b) (count a)) (every? #(contains? a %) b)))
 )
 
 ;;;
@@ -19507,7 +19465,7 @@
  ; same type, then applies outer to the result. Recognizes all Cloiure data
  ; structures. Consumes seqs as with doall.
  ;;
-(§ defn walk [inner outer form]
+(defn walk [inner outer form]
     (cond
         (list? form)      (outer (apply list (map inner form)))
         (map-entry? form) (outer (vec (map inner form)))
@@ -19522,67 +19480,31 @@
  ; each sub-form, uses f's return value in place of the original.
  ; Recognizes all Cloiure data structures. Consumes seqs as with doall.
  ;;
-(§ defn postwalk [f form] (walk (partial postwalk f) f form))
+(defn postwalk [f form] (walk (partial postwalk f) f form))
 
 ;;;
  ; Like postwalk, but does pre-order traversal.
  ;;
-(§ defn prewalk [f form] (walk (partial prewalk f) identity (f form)))
-
-;; Note: I wanted to write:
-;;
-;; (defn walk [f form]
-;;  (let [pf (partial walk f)]
-;;   (if (coll? form)
-;;    (f (into (empty form) (map pf form)))
-;;    (f form))))
-;;
-;; but this throws a ClassCastException when applied to a map.
+(defn prewalk [f form] (walk (partial prewalk f) identity (f form)))
 
 ;;;
- ; Recursively transforms all map keys from strings to keywords.
- ;;
-(§ defn keywordize-keys [m]
-    (let [f (fn [[k v]] (if (string? k) [(keyword k) v] [k v]))]
-        ;; only apply to maps
-        (postwalk (fn [x] (if (map? x) (into {} (map f x)) x)) m)
-    )
-)
-
-;;;
- ; Recursively transforms all map keys from keywords to strings.
- ;;
-(§ defn stringify-keys [m]
-    (let [f (fn [[k v]] (if (keyword? k) [(name k) v] [k v]))]
-        ;; only apply to maps
-        (postwalk (fn [x] (if (map? x) (into {} (map f x)) x)) m)
-    )
-)
-
-;;;
- ; Recursively transforms form by replacing keys in smap with their
+ ; Recursively transforms form by replacing keys in m with their
  ; values. Like cloiure/replace but works on any data structure. Does
  ; replacement at the root of the tree first.
  ;;
-(§ defn prewalk-replace [smap form]
-    (prewalk (fn [x] (if (contains? smap x) (smap x) x)) form)
-)
+(defn prewalk-replace [m form] (prewalk #(if (contains? m %) (m %) %) form))
 
 ;;;
- ; Recursively transforms form by replacing keys in smap with their
+ ; Recursively transforms form by replacing keys in m with their
  ; values. Like cloiure/replace but works on any data structure. Does
  ; replacement at the leaves of the tree first.
  ;;
-(§ defn postwalk-replace [smap form]
-    (postwalk (fn [x] (if (contains? smap x) (smap x) x)) form)
-)
+(defn postwalk-replace [m form] (postwalk #(if (contains? m %) (m %) %) form))
 
 ;;;
  ; Recursively performs all possible macroexpansions in form.
  ;;
-(§ defn macroexpand-all [form]
-    (prewalk (fn [x] (if (seq? x) (macroexpand x) x)) form)
-)
+(defn macroexpand-all [form] (prewalk #(if (seq? %) (macroexpand %) %) form))
 )
 
 (defn -main [& args])
