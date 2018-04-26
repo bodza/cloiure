@@ -1,5 +1,5 @@
 (ns cloiure.core
-    (:refer-clojure :only [*err* *in* *ns* *out* *print-length* *warn-on-reflection* + - < = alength aget aset assoc atom binding boolean case char cons count dec defmacro defmethod defn defprotocol defrecord even? extend-protocol extend-type first fn hash-map hash-set identical? import inc int int-array interleave intern key keyword? let list long loop map merge meta neg? next pos? print-method reify satisfies? second seq seq? split-at str swap! symbol symbol? the-ns to-array val vary-meta vec vector vector? with-meta])
+    (:refer-clojure :only [*err* *in* *ns* *out* *print-length* *warn-on-reflection* + - < = alength aget aset assoc atom binding boolean case char cons count dec defmacro defmethod defn defprotocol defrecord even? extend-protocol extend-type first fn hash-map hash-set identical? import inc int int-array interleave intern key keyword? let list long loop map merge meta neg? next pos? print-method proxy reify satisfies? second seq seq? split-at str swap! symbol symbol? the-ns to-array val vary-meta vec vector vector? with-meta])
 )
 
 (defmacro § [& _])
@@ -1110,10 +1110,6 @@
     (defrecord Util [])
 )
 
-(java-ns cloiure.core.DynamicClassLoader
-    (defrecord DynamicClassLoader #_"ClassLoader" [])
-)
-
 (java-ns cloiure.core.Ratio
     (defrecord Ratio #_"Number" []) (extend-type Ratio #_"Comparable" Hashed IObject)
 )
@@ -1413,6 +1409,83 @@
 )
 
 (defmacro update! [x f & z] `(set! ~x (~f ~x ~@z)))
+
+(java-ns cloiure.core.Cache
+
+(declare get)
+(declare dissoc)
+
+(class-ns Cache
+    (defn #_"<K, V> void" Cache'purge [#_"ReferenceQueue" queue, #_"{K Reference<V>}'" cache]
+        (when (some? (.poll queue))
+            (while (some? (.poll queue)))
+            (doseq [#_"IMapEntry<K, Reference<V>>" e @cache]
+                (let-when [#_"Reference<V>" r (val e)] (and (some? r) (nil? (.get r)))
+                    (swap! cache #(if (identical? (get % (key e)) r) (dissoc % (key e)) %))
+                )
+            )
+        )
+        nil
+    )
+)
+)
+
+(java-ns cloiure.core.Loader
+
+(class-ns Loader
+    (def- #_"{String Reference<Class>}'" Loader'cache (atom {}))
+    (def- #_"ReferenceQueue" Loader'queue (ReferenceQueue.))
+
+    (defn #_"Class<?>" Loader'findCached [#_"String" name]
+        (when-some [#_"Reference<Class>" r (get @Loader'cache name)]
+            (or (.get r) (do (swap! Loader'cache #(if (identical? (get % name) r) (dissoc % name) %)) nil))
+        )
+    )
+
+    (defprotocol Loader)
+
+    (defn #_"Loader" Loader'new [#_"ClassLoader" parent]
+        (proxy [ClassLoader cloiure.core.Loader] [parent]
+            (#_"Class<?>" findClass [#_"Loader" #_this, #_"String" name]
+                (or (Loader'findCached name) (throw (ClassNotFoundException. name)))
+            )
+        )
+    )
+
+    (declare bound?)
+    (declare *class-loader*)
+
+    (defn #_"ClassLoader" Loader'context [] (if (bound? #'*class-loader*) *class-loader* (.getContextClassLoader (Thread/currentThread))))
+
+    (defn #_"ClassLoader" Loader'create [] (AccessController/doPrivileged (reify PrivilegedAction (run [_] (Loader'new (Loader'context))))))
+
+    #_method
+    (defn #_"Class" Loader''defineClass [#_"Loader" this, #_"String" name, #_"byte[]" bytes]
+        (Cache'purge Loader'queue, Loader'cache)
+        (let [#_"Class" c (.defineClass ^ClassLoader this, name, bytes, 0, (alength bytes))]
+            (swap! Loader'cache assoc name (SoftReference. c, Loader'queue))
+            c
+        )
+    )
+
+    (defn #_"Class" Loader'classForName
+        ([#_"String" name] (Loader'classForName name, true))
+        ([#_"String" name, #_"boolean" load?]
+            (let [#_"ClassLoader" loader (Loader'context)
+                  #_"Class" c
+                    (when-not (satisfies? Loader loader)
+                        (Loader'findCached name)
+                    )]
+                (or c (Class/forName name, load?, loader))
+            )
+        )
+    )
+
+    (defn #_"Class" Loader'classForNameNonLoading [#_"String" name]
+        (Loader'classForName name, false)
+    )
+)
+)
 
 (java-ns cloiure.core.Intrinsics
 
@@ -1922,7 +1995,7 @@
 )
 
 (class-ns Compiler
-    (def #_"Var" ^:dynamic *class-loader*      ) ;; DynamicClassLoader
+    (def #_"Var" ^:dynamic *class-loader*      ) ;; Loader
     (def #_"Var" ^:dynamic *line*              ) ;; Integer
     (def #_"Var" ^:dynamic *last-unique-id*    ) ;; Integer
     (def #_"Var" ^:dynamic *closes*            ) ;; IPersistentMap
@@ -2184,8 +2257,6 @@
         )
     )
 
-    (declare get)
-
     (defn #_"String" Compiler'munge [#_"String" name]
         (let [#_"StringBuilder" sb (StringBuilder.)]
             (doseq [#_"char" ch name]
@@ -2257,8 +2328,6 @@
             lb
         )
     )
-
-    (declare bound?)
 
     (defn- #_"int" Compiler'registerConstant [#_"Object" o]
         (when (bound? #'*constants*) => -1
@@ -2399,8 +2468,6 @@
         )
     )
 
-    (declare RT'classForName)
-
     (defn #_"Object" Compiler'resolveIn [#_"Namespace" n, #_"Symbol" sym, #_"boolean" allowPrivate]
         ;; note - ns-qualified vars must already exist
         (cond
@@ -2412,7 +2479,7 @@
                         )
                     )
                 )
-            (or (pos? (.indexOf (:name sym), (int \.))) (= (nth (:name sym) 0) \[)) (RT'classForName (:name sym))
+            (or (pos? (.indexOf (:name sym), (int \.))) (= (nth (:name sym) 0) \[)) (Loader'classForName (:name sym))
             (= sym 'ns)                #'ns
             (= sym 'in-ns)             #'in-ns
             (= sym *compile-stub-sym*) *compile-stub-class*
@@ -2435,7 +2502,7 @@
                     )
                 )
             (or (and (pos? (.indexOf (:name sym), (int \.))) (not (.endsWith (:name sym), "."))) (= (nth (:name sym) 0) \[))
-                (RT'classForName (:name sym))
+                (Loader'classForName (:name sym))
             (= sym 'ns)
                 #'ns
             (= sym 'in-ns)
@@ -2608,11 +2675,10 @@
     )
 
     (declare Namespace''importClass)
-    (declare RT'classForNameNonLoading)
 
     (extend-type ImportExpr Expr
         (#_"Object" Expr'''eval [#_"ImportExpr" this]
-            (Namespace''importClass *ns*, (RT'classForNameNonLoading (:c this)))
+            (Namespace''importClass *ns*, (Loader'classForNameNonLoading (:c this)))
             nil
         )
 
@@ -2621,7 +2687,7 @@
             (.invokeVirtual gen, (Type/getType Var), (Method/getMethod "Object deref()"))
             (.checkCast gen, (Type/getType Namespace))
             (.push gen, (:c this))
-            (.invokeStatic gen, (Type/getType RT), (Method/getMethod "Class classForNameNonLoading(String)"))
+            (.invokeStatic gen, (Type/getType Loader), (Method/getMethod "Class classForNameNonLoading(String)"))
             (.invokeVirtual gen, (Type/getType Namespace), (Method/getMethod "Class importClass(Class)"))
             (when (= context :Context'STATEMENT)
                 (.pop gen)
@@ -2944,7 +3010,7 @@
                         (= form *compile-stub-sym*)
                             *compile-stub-class*
                         (or (pos? (.indexOf (:name form), (int \.))) (= (nth (:name form) 0) \[))
-                            (RT'classForNameNonLoading (:name form))
+                            (Loader'classForNameNonLoading (:name form))
                         :else
                             (let [#_"Object" o (Namespace''getMapping *ns*, form)]
                                 (cond
@@ -2954,7 +3020,7 @@
                                         nil
                                     :else
                                         (try
-                                            (RT'classForNameNonLoading (:name form))
+                                            (Loader'classForNameNonLoading (:name form))
                                             (catch Exception _
                                                 nil
                                             )
@@ -2964,7 +3030,7 @@
                     )
                 )
             (and stringOk (string? form))
-                (RT'classForNameNonLoading form)
+                (Loader'classForNameNonLoading form)
         )
     )
 
@@ -3543,7 +3609,7 @@
                 (do
                     (.visitLineNumber gen, (:line this), (.mark gen))
                     (.push gen, (.getName (:c this)))
-                    (.invokeStatic gen, (Type/getType RT), (Method/getMethod "Class classForName(String)"))
+                    (.invokeStatic gen, (Type/getType Loader), (Method/getMethod "Class classForName(String)"))
                     (.push gen, (:methodName this))
                     (MethodExpr'emitArgsAsArray (:args this), objx, gen)
                     (.visitLineNumber gen, (:line this), (.mark gen))
@@ -4115,7 +4181,7 @@
                 )
                 (do
                     (.push gen, (Compiler'destubClassName (.getName (:c this))))
-                    (.invokeStatic gen, (Type/getType RT), (Method/getMethod "Class classForName(String)"))
+                    (.invokeStatic gen, (Type/getType Loader), (Method/getMethod "Class classForName(String)"))
                     (MethodExpr'emitArgsAsArray (:args this), objx, gen)
                     (.invokeStatic gen, (Type/getType Reflector), (Method/getMethod "Object invokeConstructor(Class, Object[])"))
                 )
@@ -5223,7 +5289,7 @@
                 (.newInstance clinitgen, (Type/getType KeywordLookupSite))
                 (.dup clinitgen)
                 (IopObject''emitValue this, k, clinitgen)
-                (.invokeConstructor clinitgen, (Type/getType KeywordLookupSite), (Method/getMethod "void <init>(clojure.lang.Keyword)"))
+                (.invokeConstructor clinitgen, (Type/getType KeywordLookupSite), (Method/getMethod "void <init>(cloiure.core.Keyword)"))
                 (.dup clinitgen)
                 (.putStatic clinitgen, (:objType this), (Compiler'siteNameStatic i), (Type/getType KeywordLookupSite))
                 (.putStatic clinitgen, (:objType this), (Compiler'thunkNameStatic i), (Type/getType cloiure.core.ILookupThunk))
@@ -5457,7 +5523,7 @@
                             )
                             (do
                                 (.push gen, (Compiler'destubClassName (.getName value)))
-                                (.invokeStatic gen, (Type/getType RT), (Method/getMethod "Class classForName(String)"))
+                                (.invokeStatic gen, (Type/getType Loader), (Method/getMethod "Class classForName(String)"))
                             )
                         )
                         true
@@ -5466,21 +5532,21 @@
                     (do
                         (.push gen, (:ns value))
                         (.push gen, (:name value))
-                        (.invokeStatic gen, (Type/getType Symbol), (Method/getMethod "clojure.lang.Symbol intern(String, String)"))
+                        (.invokeStatic gen, (Type/getType Symbol), (Method/getMethod "cloiure.core.Symbol intern(String, String)"))
                         true
                     )
                     (keyword? value)
                     (do
                         (.push gen, (:ns (:sym value)))
                         (.push gen, (:name (:sym value)))
-                        (.invokeStatic gen, (Type/getType RT), (Method/getMethod "clojure.lang.Keyword keyword(String, String)"))
+                        (.invokeStatic gen, (Type/getType RT), (Method/getMethod "cloiure.core.Keyword keyword(String, String)"))
                         true
                     )
                     (var? value)
                     (do
                         (.push gen, (str (:name (:ns value))))
                         (.push gen, (str (:sym value)))
-                        (.invokeStatic gen, (Type/getType RT), (Method/getMethod "clojure.lang.Var var(String, String)"))
+                        (.invokeStatic gen, (Type/getType RT), (Method/getMethod "cloiure.core.Var var(String, String)"))
                         true
                     )
                     (type? value)
@@ -5543,7 +5609,7 @@
                             )
                             (do
                                 (IopObject''emitObjectArray this, (RT'seqToArray vs), gen)
-                                (.invokeStatic gen, (Type/getType PersistentHashSet), (Method/getMethod "clojure.lang.PersistentHashSet create(Object[])"))
+                                (.invokeStatic gen, (Type/getType PersistentHashSet), (Method/getMethod "cloiure.core.PersistentHashSet create(Object[])"))
                             )
                         )
                         true
@@ -5807,7 +5873,7 @@
                         ;; end of class
                         (.visitEnd cv)
 
-                        (assoc this :compiledClass (.defineClass *class-loader*, (:name this), (.toByteArray cw)))
+                        (assoc this :compiledClass (Loader''defineClass *class-loader*, (:name this), (.toByteArray cw)))
                     )
                 )
             )
@@ -5881,8 +5947,6 @@
             nil
         )
     )
-
-    (declare dissoc)
 
     (defn #_"Expr" FnExpr'parse [#_"Context" context, #_"ISeq" form, #_"String" name]
         (let [#_"IPersistentMap" fmeta (meta form)
@@ -6035,7 +6099,7 @@
                 (.dup gen)
                 (.getField gen, (Type/getType Var), "sym", (Type/getType Symbol))
                 (.swap gen)
-                (.invokeVirtual gen, (Type/getType Namespace), (Method/getMethod "clojure.lang.Var refer(clojure.lang.Symbol, clojure.lang.Var)"))
+                (.invokeVirtual gen, (Type/getType Namespace), (Method/getMethod "cloiure.core.Var refer(cloiure.core.Symbol, cloiure.core.Var)"))
             )
             (when (some? (:meta this))
                 (.dup gen)
@@ -6805,7 +6869,7 @@
             ;; end of class
             (.visitEnd cv)
 
-            (.defineClass *class-loader*, (str Compiler'COMPILE_STUB_PREFIX "." (:name ret)), (.toByteArray cw))
+            (Loader''defineClass *class-loader*, (str Compiler'COMPILE_STUB_PREFIX "." (:name ret)), (.toByteArray cw))
         )
     )
 
@@ -6866,7 +6930,7 @@
                                       #_"Class" k (Interop'tagClass (Compiler'tagOf (first s)))]
                                     (.visitVarInsn mv, Opcodes/ALOAD, 0)
                                     (.visitLdcInsn mv, bName)
-                                    (.visitMethodInsn mv, Opcodes/INVOKESTATIC, "clojure/lang/Keyword", "intern", "(Ljava/lang/String;)Lclojure/lang/Keyword;")
+                                    (.visitMethodInsn mv, Opcodes/INVOKESTATIC, "cloiure/core/Keyword", "intern", "(Ljava/lang/String;)Lcloiure/core/Keyword;")
                                     (.visitInsn mv, Opcodes/ACONST_NULL)
                                     (.visitMethodInsn mv, Opcodes/INVOKEINTERFACE, "cloiure/core/IPersistentMap", "valAt", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;")
                                     (when (.isPrimitive k)
@@ -6875,7 +6939,7 @@
                                     (.visitVarInsn mv, Opcodes/ASTORE, i)
                                     (.visitVarInsn mv, Opcodes/ALOAD, 0)
                                     (.visitLdcInsn mv, bName)
-                                    (.visitMethodInsn mv, Opcodes/INVOKESTATIC, "clojure/lang/Keyword", "intern", "(Ljava/lang/String;)Lclojure/lang/Keyword;")
+                                    (.visitMethodInsn mv, Opcodes/INVOKESTATIC, "cloiure/core/Keyword", "intern", "(Ljava/lang/String;)Lcloiure/core/Keyword;")
                                     (.visitMethodInsn mv, Opcodes/INVOKEINTERFACE, "cloiure/core/IPersistentMap", "dissoc", "(Ljava/lang/Object;)Lcloiure/core/IPersistentMap;")
                                     (.visitVarInsn mv, Opcodes/ASTORE, 0)
                                 )
@@ -6894,7 +6958,7 @@
 
                                 (.visitInsn mv, Opcodes/ACONST_NULL) ;; __meta
                                 (.visitVarInsn mv, Opcodes/ALOAD, 0) ;; __extmap
-                                (.visitMethodInsn mv, Opcodes/INVOKESTATIC, "clojure/lang/RT", "seqOrElse", "(Ljava/lang/Object;)Ljava/lang/Object;")
+                                (.visitMethodInsn mv, Opcodes/INVOKESTATIC, "cloiure/core/RT", "seqOrElse", "(Ljava/lang/Object;)Ljava/lang/Object;")
                                 (.visitInsn mv, Opcodes/ICONST_0) ;; __hash
                                 (.visitMethodInsn mv, Opcodes/INVOKESPECIAL, className, "<init>", (.getDescriptor ctor))
                                 (.visitInsn mv, Opcodes/ARETURN)
@@ -7560,31 +7624,9 @@
         )
     )
 
-    (defn #_"ClassLoader" Compiler'baseLoader []
-        (if (bound? #'*class-loader*)
-            *class-loader*
-            (.getContextClassLoader (Thread/currentThread))
-        )
-    )
-
-    (declare DynamicClassLoader'new)
-
-    (defn #_"ClassLoader" Compiler'makeClassLoader []
-        (cast ClassLoader
-            (AccessController/doPrivileged
-                (reify PrivilegedAction
-                    #_foreign
-                    (#_"Object" run [#_"PrivilegedAction" _self]
-                        (DynamicClassLoader'new (Compiler'baseLoader))
-                    )
-                )
-            )
-        )
-    )
-
     (defn #_"Object" Compiler'eval [#_"Object" form]
         (let [#_"IPersistentMap" meta (meta form)]
-            (binding [*class-loader* (Compiler'makeClassLoader), *line* (if (contains? meta :line) (get meta :line) *line*)]
+            (binding [*class-loader* (Loader'create), *line* (if (contains? meta :line) (get meta :line) *line*)]
                 (let [form (Compiler'macroexpand form)]
                     (cond
                         (and (seq? form) (= (first form) 'do))
@@ -8657,19 +8699,6 @@
 (defn hash-combine [x y]
     (Util'hashCombine x (Hashed'''hash y))
 )
-
-    (defn #_"<K, V> void" Util'clearCache [#_"ReferenceQueue" rq, #_"{K Reference<V>}'" cache]
-        ;; cleanup any dead entries
-        (when (some? (.poll rq))
-            (while (some? (.poll rq)))
-            (doseq [#_"IMapEntry<K, Reference<V>>" e @cache]
-                (let-when [#_"Reference<V>" r (val e)] (and (some? r) (nil? (.get r)))
-                    (swap! cache #(if (identical? (get % (key e)) r) (dissoc % (key e)) %))
-                )
-            )
-        )
-        nil
-    )
 )
 )
 
@@ -8700,38 +8729,6 @@
  ; x must implement Comparable.
  ;;
 (defn compare [x y] (Util'compare x y))
-
-(java-ns cloiure.core.DynamicClassLoader
-
-(class-ns DynamicClassLoader
-    (def #_"{String Reference<Class>}'" DynamicClassLoader'classCache (atom {}))
-    (def #_"ReferenceQueue" DynamicClassLoader'RQ (ReferenceQueue.))
-
-    (defn #_"DynamicClassLoader" DynamicClassLoader'new [#_"ClassLoader" parent]
-        (merge (DynamicClassLoader.) (§ foreign ClassLoader'new parent))
-    )
-
-    #_method
-    (defn #_"Class" DynamicClassLoader''defineClass [#_"DynamicClassLoader" this, #_"String" name, #_"byte[]" bytes]
-        (Util'clearCache DynamicClassLoader'RQ, DynamicClassLoader'classCache)
-        (let [#_"Class" c (.defineClass this, name, bytes, 0, (alength bytes))]
-            (swap! DynamicClassLoader'classCache assoc name (SoftReference. c, DynamicClassLoader'RQ))
-            c
-        )
-    )
-
-    (defn #_"Class<?>" DynamicClassLoader'findInMemoryClass [#_"String" name]
-        (when-some [#_"Reference<Class>" r (get @DynamicClassLoader'classCache name)]
-            (or (.get r) (do (swap! DynamicClassLoader'classCache #(if (identical? (get % name) r) (dissoc % name) %)) nil))
-        )
-    )
-
-    #_foreign
-    (defn #_"Class<?>" findClass---DynamicClassLoader [#_"DynamicClassLoader" this, #_"String" name]
-        (or (DynamicClassLoader'findInMemoryClass name) (throw (ClassNotFoundException. name)))
-    )
-)
-)
 
 (java-ns cloiure.core.Ratio
 
@@ -8790,7 +8787,7 @@
         (LongOps.)
     )
 
-    (defn #_"long" LongOps'gcd [#_"long" u, #_"long" v] (if (ß #_"==" v 0) u (recur v (ß #_"%" u v))))
+    (defn #_"long" LongOps'gcd [#_"long" u, #_"long" v] (if (clojure.core/= v 0) u (recur v (clojure.core/rem u v))))
 
     (declare Numbers'RATIO_OPS)
     (declare Numbers'BIGINT_OPS)
@@ -8802,17 +8799,17 @@
         (#_"Ops" Ops'''opsWithRatio [#_"LongOps" this, #_"RatioOps" x] Numbers'RATIO_OPS)
         (#_"Ops" Ops'''opsWithBigInt [#_"LongOps" this, #_"BigIntOps" x] Numbers'BIGINT_OPS)
 
-        (#_"boolean" Ops'''eq [#_"LongOps" this, #_"Number" x, #_"Number" y] (ß #_"==" (.longValue x) (.longValue y)))
-        (#_"boolean" Ops'''lt [#_"LongOps" this, #_"Number" x, #_"Number" y] (ß #_"<" (.longValue x) (.longValue y)))
-        (#_"boolean" Ops'''lte [#_"LongOps" this, #_"Number" x, #_"Number" y] (ß #_"<=" (.longValue x) (.longValue y)))
+        (#_"boolean" Ops'''eq [#_"LongOps" this, #_"Number" x, #_"Number" y] (clojure.core/= (.longValue x) (.longValue y)))
+        (#_"boolean" Ops'''lt [#_"LongOps" this, #_"Number" x, #_"Number" y] (clojure.core/< (.longValue x) (.longValue y)))
+        (#_"boolean" Ops'''lte [#_"LongOps" this, #_"Number" x, #_"Number" y] (clojure.core/<= (.longValue x) (.longValue y)))
 
-        (#_"boolean" Ops'''isZero [#_"LongOps" this, #_"Number" x] (ß #_"==" (.longValue x) 0))
-        (#_"boolean" Ops'''isPos [#_"LongOps" this, #_"Number" x] (ß #_">" (.longValue x) 0))
-        (#_"boolean" Ops'''isNeg [#_"LongOps" this, #_"Number" x] (ß #_"<" (.longValue x) 0))
+        (#_"boolean" Ops'''isZero [#_"LongOps" this, #_"Number" x] (clojure.core/= (.longValue x) 0))
+        (#_"boolean" Ops'''isPos [#_"LongOps" this, #_"Number" x] (clojure.core/> (.longValue x) 0))
+        (#_"boolean" Ops'''isNeg [#_"LongOps" this, #_"Number" x] (clojure.core/< (.longValue x) 0))
 
         (#_"Number" Ops'''add [#_"LongOps" this, #_"Number" x, #_"Number" y]
-            (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y) #_"long" lz (ß #_"+" lx ly)]
-                (when (and (ß #_"<" (ß #_"^" lz lx) 0) (ß #_"<" (ß #_"^" lz ly) 0)) => (Long/valueOf lz)
+            (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y) #_"long" lz (clojure.core/+ lx ly)]
+                (when (and (clojure.core/< (clojure.core/bit-xor lz lx) 0) (clojure.core/< (clojure.core/bit-xor lz ly) 0)) => (Long/valueOf lz)
                     (Ops'''add Numbers'BIGINT_OPS, x, y)
                 )
             )
@@ -8820,7 +8817,7 @@
 
         (#_"Number" Ops'''negate [#_"LongOps" this, #_"Number" x]
             (let [#_"long" lx (.longValue x)]
-                (when (ß #_"==" lx Long/MIN_VALUE) => (Long/valueOf (ß #_"-" lx))
+                (when (clojure.core/= lx Long/MIN_VALUE) => (Long/valueOf (clojure.core/- lx))
                     (.negate (BigInteger/valueOf lx))
                 )
             )
@@ -8828,7 +8825,7 @@
 
         (#_"Number" Ops'''inc [#_"LongOps" this, #_"Number" x]
             (let [#_"long" lx (.longValue x)]
-                (when (ß #_"==" lx Long/MAX_VALUE) => (Long/valueOf (ß #_"+" lx 1))
+                (when (clojure.core/= lx Long/MAX_VALUE) => (Long/valueOf (clojure.core/+ lx 1))
                     (Ops'''inc Numbers'BIGINT_OPS, x)
                 )
             )
@@ -8836,7 +8833,7 @@
 
         (#_"Number" Ops'''dec [#_"LongOps" this, #_"Number" x]
             (let [#_"long" lx (.longValue x)]
-                (when (ß #_"==" lx Long/MIN_VALUE) => (Long/valueOf (ß #_"-" lx 1))
+                (when (clojure.core/= lx Long/MIN_VALUE) => (Long/valueOf (clojure.core/- lx 1))
                     (Ops'''dec Numbers'BIGINT_OPS, x)
                 )
             )
@@ -8844,9 +8841,9 @@
     
         (#_"Number" Ops'''multiply [#_"LongOps" this, #_"Number" x, #_"Number" y]
             (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y)]
-                (when-not (and (ß #_"==" lx Long/MIN_VALUE) (ß #_"<" ly 0)) => (Ops'''multiply Numbers'BIGINT_OPS, x, y)
-                    (let [#_"long" lz (ß #_"*" lx ly)]
-                        (when (or (ß #_"==" ly 0) (ß #_"==" (ß #_"/" lz ly) lx)) => (Ops'''multiply Numbers'BIGINT_OPS, x, y)
+                (when-not (and (clojure.core/= lx Long/MIN_VALUE) (clojure.core/< ly 0)) => (Ops'''multiply Numbers'BIGINT_OPS, x, y)
+                    (let [#_"long" lz (clojure.core/* lx ly)]
+                        (when (or (clojure.core/= ly 0) (clojure.core/= (clojure.core/quot lz ly) lx)) => (Ops'''multiply Numbers'BIGINT_OPS, x, y)
                             (Long/valueOf lz)
                         )
                     )
@@ -8856,11 +8853,11 @@
 
         (#_"Number" Ops'''divide [#_"LongOps" this, #_"Number" x, #_"Number" y]
             (let [#_"long" lx (.longValue x) #_"long" ly (.longValue y)]
-                (let-when-not [#_"long" gcd (LongOps'gcd lx, ly)] (ß #_"==" gcd 0) => (Long/valueOf 0)
-                    (let-when-not [lx (ß #_"/" lx gcd) ly (ß #_"/" ly gcd)] (ß #_"==" ly 1) => (Long/valueOf lx)
+                (let-when-not [#_"long" gcd (LongOps'gcd lx, ly)] (clojure.core/= gcd 0) => (Long/valueOf 0)
+                    (let-when-not [lx (clojure.core/quot lx gcd) ly (clojure.core/quot ly gcd)] (clojure.core/= ly 1) => (Long/valueOf lx)
                         (let [[lx ly]
-                                (when (ß #_"<" ly 0) => [lx ly]
-                                    [(ß #_"-" lx) (ß #_"-" ly)]
+                                (when (clojure.core/< ly 0) => [lx ly]
+                                    [(clojure.core/- lx) (clojure.core/- ly)]
                                 )]
                             (Ratio'new (BigInteger/valueOf lx), (BigInteger/valueOf ly))
                         )
@@ -8869,8 +8866,8 @@
             )
         )
 
-        (#_"Number" Ops'''quotient [#_"LongOps" this, #_"Number" x, #_"Number" y] (Long/valueOf (ß #_"/" (.longValue x) (.longValue y))))
-        (#_"Number" Ops'''remainder [#_"LongOps" this, #_"Number" x, #_"Number" y] (Long/valueOf (ß #_"%" (.longValue x) (.longValue y))))
+        (#_"Number" Ops'''quotient [#_"LongOps" this, #_"Number" x, #_"Number" y] (Long/valueOf (clojure.core/quot (.longValue x) (.longValue y))))
+        (#_"Number" Ops'''remainder [#_"LongOps" this, #_"Number" x, #_"Number" y] (Long/valueOf (clojure.core/rem (.longValue x) (.longValue y))))
 )
 )
 
@@ -8895,7 +8892,7 @@
 
         (#_"boolean" Ops'''eq [#_"RatioOps" this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
-                (and (ß #_"equals" (:n rx) (:n ry)) (ß #_"equals" (:d rx) (:d ry)))
+                (and (clojure.core/= (:n rx) (:n ry)) (clojure.core/= (:d rx) (:d ry)))
             )
         )
 
@@ -8911,9 +8908,9 @@
             )
         )
 
-        (#_"boolean" Ops'''isZero [#_"RatioOps" this, #_"Number" x] (ß #_"==" (.signum (:n (cast Ratio x))) 0))
-        (#_"boolean" Ops'''isPos [#_"RatioOps" this, #_"Number" x] (ß #_">" (.signum (:n (cast Ratio x))) 0))
-        (#_"boolean" Ops'''isNeg [#_"RatioOps" this, #_"Number" x] (ß #_"<" (.signum (:n (cast Ratio x))) 0))
+        (#_"boolean" Ops'''isZero [#_"RatioOps" this, #_"Number" x] (clojure.core/= (.signum (:n (cast Ratio x))) 0))
+        (#_"boolean" Ops'''isPos [#_"RatioOps" this, #_"Number" x] (clojure.core/> (.signum (:n (cast Ratio x))) 0))
+        (#_"boolean" Ops'''isNeg [#_"RatioOps" this, #_"Number" x] (clojure.core/< (.signum (:n (cast Ratio x))) 0))
 
         (#_"Number" Ops'''add [#_"RatioOps" this, #_"Number" x, #_"Number" y]
             (let [#_"Ratio" rx (Numbers'toRatio x) #_"Ratio" ry (Numbers'toRatio y)]
@@ -8969,20 +8966,20 @@
         (#_"Ops" Ops'''opsWithBigInt [#_"BigIntOps" this, #_"BigIntOps" x] this)
 
         (#_"boolean" Ops'''eq [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-            (ß #_"equals" (Numbers'toBigInteger x) (Numbers'toBigInteger y))
+            (clojure.core/= (Numbers'toBigInteger x) (Numbers'toBigInteger y))
         )
 
         (#_"boolean" Ops'''lt [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-            (ß #_"<" (.compareTo (Numbers'toBigInteger x), (Numbers'toBigInteger y)) 0)
+            (clojure.core/< (.compareTo (Numbers'toBigInteger x), (Numbers'toBigInteger y)) 0)
         )
 
         (#_"boolean" Ops'''lte [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
-            (ß #_"<=" (.compareTo (Numbers'toBigInteger x), (Numbers'toBigInteger y)) 0)
+            (clojure.core/<= (.compareTo (Numbers'toBigInteger x), (Numbers'toBigInteger y)) 0)
         )
 
-        (#_"boolean" Ops'''isZero [#_"BigIntOps" this, #_"Number" x] (ß #_"==" (.signum (Numbers'toBigInteger x)) 0))
-        (#_"boolean" Ops'''isPos [#_"BigIntOps" this, #_"Number" x] (ß #_">" (.signum (Numbers'toBigInteger x)) 0))
-        (#_"boolean" Ops'''isNeg [#_"BigIntOps" this, #_"Number" x] (ß #_"<" (.signum (Numbers'toBigInteger x)) 0))
+        (#_"boolean" Ops'''isZero [#_"BigIntOps" this, #_"Number" x] (clojure.core/= (.signum (Numbers'toBigInteger x)) 0))
+        (#_"boolean" Ops'''isPos [#_"BigIntOps" this, #_"Number" x] (clojure.core/> (.signum (Numbers'toBigInteger x)) 0))
+        (#_"boolean" Ops'''isNeg [#_"BigIntOps" this, #_"Number" x] (clojure.core/< (.signum (Numbers'toBigInteger x)) 0))
 
         (#_"Number" Ops'''add [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
             (.add (Numbers'toBigInteger x), (Numbers'toBigInteger y))
@@ -8999,14 +8996,14 @@
 
         (#_"Number" Ops'''divide [#_"BigIntOps" this, #_"Number" x, #_"Number" y]
             (let [#_"BigInteger" n (Numbers'toBigInteger x) #_"BigInteger" d (Numbers'toBigInteger y)]
-                (when-not (ß #_"equals" d BigInteger/ZERO) => (throw (ArithmeticException. "Divide by zero"))
+                (when-not (clojure.core/= d BigInteger/ZERO) => (throw (ArithmeticException. "Divide by zero"))
                     (let [#_"BigInteger" gcd (.gcd n, d)]
-                        (when-not (ß #_"equals" gcd BigInteger/ZERO) => BigInteger/ZERO
+                        (when-not (clojure.core/= gcd BigInteger/ZERO) => BigInteger/ZERO
                             (let [n (.divide n, gcd) d (.divide d, gcd)]
-                                (ß condp #_"equals" d
+                                (condp clojure.core/= d
                                     BigInteger/ONE           n
                                     (.negate BigInteger/ONE) (.negate n)
-                                                             (Ratio'new (if (ß #_"<" (.signum d) 0) (.negate n) n), (if (ß #_"<" (.signum d) 0) (.negate d) d))
+                                                             (Ratio'new (if (clojure.core/< (.signum d) 0) (.negate n) n), (if (clojure.core/< (.signum d) 0) (.negate d) d))
                                 )
                             )
                         )
@@ -9126,23 +9123,23 @@
         )
     )
 
-    (defn #_"long" Numbers'not [#_"Object" x] (ß #_"~" (Numbers'bitOpsCast x)))
+    (defn #_"long" Numbers'not [#_"Object" x] (clojure.core/bit-not (Numbers'bitOpsCast x)))
 
-    (defn #_"long" Numbers'and [#_"Object" x, #_"Object" y] (ß #_"&" (Numbers'bitOpsCast x) (Numbers'bitOpsCast y)))
-    (defn #_"long" Numbers'or  [#_"Object" x, #_"Object" y] (ß #_"|" (Numbers'bitOpsCast x) (Numbers'bitOpsCast y)))
-    (defn #_"long" Numbers'xor [#_"Object" x, #_"Object" y] (ß #_"^" (Numbers'bitOpsCast x) (Numbers'bitOpsCast y)))
+    (defn #_"long" Numbers'and [#_"Object" x, #_"Object" y] (clojure.core/bit-and (Numbers'bitOpsCast x) (Numbers'bitOpsCast y)))
+    (defn #_"long" Numbers'or  [#_"Object" x, #_"Object" y] (clojure.core/bit-or (Numbers'bitOpsCast x) (Numbers'bitOpsCast y)))
+    (defn #_"long" Numbers'xor [#_"Object" x, #_"Object" y] (clojure.core/bit-xor (Numbers'bitOpsCast x) (Numbers'bitOpsCast y)))
 
-    (defn #_"long" Numbers'andNot [#_"Object" x, #_"Object" y] (ß #_"&" (Numbers'bitOpsCast x) (ß #_"~" (Numbers'bitOpsCast y))))
+    (defn #_"long" Numbers'andNot [#_"Object" x, #_"Object" y] (clojure.core/bit-and (Numbers'bitOpsCast x) (clojure.core/bit-not (Numbers'bitOpsCast y))))
 
-    (defn #_"long" Numbers'shiftLeft          [#_"Object" x, #_"Object" n] (ß #_"<<"  (Numbers'bitOpsCast x) (Numbers'bitOpsCast n)))
-    (defn #_"long" Numbers'shiftRight         [#_"Object" x, #_"Object" n] (ß #_">>"  (Numbers'bitOpsCast x) (Numbers'bitOpsCast n)))
-    (defn #_"long" Numbers'unsignedShiftRight [#_"Object" x, #_"Object" n] (ß #_">>>" (Numbers'bitOpsCast x) (Numbers'bitOpsCast n)))
+    (defn #_"long" Numbers'shiftLeft          [#_"Object" x, #_"Object" n] (clojure.core/bit-shift-left (Numbers'bitOpsCast x) (Numbers'bitOpsCast n)))
+    (defn #_"long" Numbers'shiftRight         [#_"Object" x, #_"Object" n] (clojure.core/bit-shift-right (Numbers'bitOpsCast x) (Numbers'bitOpsCast n)))
+    (defn #_"long" Numbers'unsignedShiftRight [#_"Object" x, #_"Object" n] (clojure.core/unsigned-bit-shift-right (Numbers'bitOpsCast x) (Numbers'bitOpsCast n)))
 
-    (defn #_"long" Numbers'clearBit [#_"Object" x, #_"Object" n] (ß #_"&" (Numbers'bitOpsCast x) (ß #_"~" (ß #_"<<" 1 (Numbers'bitOpsCast n)))))
-    (defn #_"long" Numbers'setBit   [#_"Object" x, #_"Object" n] (ß #_"|" (Numbers'bitOpsCast x) (ß #_"<<" 1 (Numbers'bitOpsCast n))))
-    (defn #_"long" Numbers'flipBit  [#_"Object" x, #_"Object" n] (ß #_"^" (Numbers'bitOpsCast x) (ß #_"<<" 1 (Numbers'bitOpsCast n))))
+    (defn #_"long" Numbers'clearBit [#_"Object" x, #_"Object" n] (clojure.core/bit-and (Numbers'bitOpsCast x) (clojure.core/bit-not (clojure.core/bit-shift-left 1 (Numbers'bitOpsCast n)))))
+    (defn #_"long" Numbers'setBit   [#_"Object" x, #_"Object" n] (clojure.core/bit-or (Numbers'bitOpsCast x) (clojure.core/bit-shift-left 1 (Numbers'bitOpsCast n))))
+    (defn #_"long" Numbers'flipBit  [#_"Object" x, #_"Object" n] (clojure.core/bit-xor (Numbers'bitOpsCast x) (clojure.core/bit-shift-left 1 (Numbers'bitOpsCast n))))
 
-    (defn #_"boolean" Numbers'testBit [#_"Object" x, #_"Object" n] (ß #_"!=" (ß #_"&" (Numbers'bitOpsCast x) (ß #_"<<" 1 (Numbers'bitOpsCast n))) 0))
+    (defn #_"boolean" Numbers'testBit [#_"Object" x, #_"Object" n] (clojure.core/not= (clojure.core/bit-and (Numbers'bitOpsCast x) (clojure.core/bit-shift-left 1 (Numbers'bitOpsCast n))) 0))
 )
 )
 
@@ -9487,9 +9484,8 @@
 (java-ns cloiure.core.Keyword
 
 (class-ns Keyword
-    (def- #_"{Symbol Reference<Keyword>}'" Keyword'TABLE (atom {}))
-
-    (def #_"ReferenceQueue" Keyword'RQ (ReferenceQueue.))
+    (def- #_"{Symbol Reference<Keyword>}'" Keyword'cache (atom {}))
+    (def- #_"ReferenceQueue" Keyword'queue (ReferenceQueue.))
 
     (defn- #_"Keyword" Keyword'new [#_"Symbol" sym]
         (merge (Keyword.)
@@ -9501,23 +9497,23 @@
     )
 
     (defn #_"Keyword" Keyword'intern [#_"Symbol" sym]
-        (let [#_"Reference<Keyword>" r (get @Keyword'TABLE sym)
+        (let [#_"Reference<Keyword>" r (get @Keyword'cache sym)
               [sym r #_"Keyword" k]
                 (when (nil? r) => [sym r nil]
-                    (Util'clearCache Keyword'RQ, Keyword'TABLE)
+                    (Cache'purge Keyword'queue, Keyword'cache)
                     (let [sym
                             (when (some? (meta sym)) => sym
                                 (with-meta sym nil)
                             )
-                          k (Keyword'new sym) r (WeakReference. #_"<Keyword>" k, Keyword'RQ)
-                          _ (swap! Keyword'TABLE assoc sym r)]
+                          k (Keyword'new sym) r (WeakReference. #_"<Keyword>" k, Keyword'queue)
+                          _ (swap! Keyword'cache assoc sym r)]
                         [sym r k]
                     )
                 )]
             (when (some? r) => k
                 (or (.get r)
                     (do ;; entry died in the interim, do over
-                        (swap! Keyword'TABLE #(if (identical? (get % sym) r) (dissoc % sym) %))
+                        (swap! Keyword'cache #(if (identical? (get % sym) r) (dissoc % sym) %))
                         (recur #_"Keyword'intern" sym)
                     )
                 )
@@ -9526,7 +9522,7 @@
     )
 
     (defn #_"Keyword" Keyword'find [#_"Symbol" sym]
-        (when-some [#_"Reference<Keyword>" ref (get @Keyword'TABLE sym)]
+        (when-some [#_"Reference<Keyword>" ref (get @Keyword'cache sym)]
             (.get ref)
         )
     )
@@ -12652,7 +12648,7 @@
 (java-ns cloiure.core.PersistentList
 
 (class-ns EmptyList
-    (def #_"int" EmptyList'HASH (§ soon Murmur3'hashOrdered nil))
+    (def #_"int" EmptyList'HASH (Murmur3'hashOrdered nil))
 
     (defn #_"EmptyList" EmptyList'new [#_"IPersistentMap" meta]
         (merge (EmptyList.)
@@ -12738,7 +12734,7 @@
 )
 
 (class-ns PersistentList
-    (def #_"EmptyList" PersistentList'EMPTY (§ soon EmptyList'new nil))
+    (def #_"EmptyList" PersistentList'EMPTY (EmptyList'new nil))
 
     (defn #_"PersistentList" PersistentList'new
         ([#_"Object" _first] (PersistentList'new nil, _first, nil, 1))
@@ -13041,9 +13037,9 @@
                 )
                 (let [r (f r (key this) (val this))]
                     (cond
-                        (reduced? r)          r
+                        (reduced? r)                  r
                         (some? (ITNode'''right this)) (INode'''kvreduce (ITNode'''right this), f, r)
-                        :else                 r
+                        :else                         r
                     )
                 )
             )
@@ -13256,7 +13252,7 @@
                 )
                 :else
                 (do
-                    (ITNode'''balanceLeft (§ super ), parent)
+                    (PersistentTreeMap'black (:key parent), (IMapEntry'''val parent), this, (ITNode'''right parent))
                 )
             )
         )
@@ -13272,7 +13268,7 @@
                 )
                 :else
                 (do
-                    (ITNode'''balanceRight (§ super ), parent)
+                    (PersistentTreeMap'black (:key parent), (IMapEntry'''val parent), (ITNode'''left parent), this)
                 )
             )
         )
@@ -13361,7 +13357,7 @@
     (extend-type TSeq Counted
         (#_"int" Counted'''count [#_"TSeq" this]
             (when (neg? (:cnt this)) => (:cnt this)
-                (Counted'''count (§ super ))
+                (count (:stack this))
             )
         )
     )
@@ -15453,23 +15449,6 @@
             (pr-on x w) ;; call multimethod
             (.toString w)
         )
-    )
-
-    (defn #_"Class" RT'classForName
-        ([#_"String" name] (RT'classForName name, true))
-        ([#_"String" name, #_"boolean" load?]
-            (let [#_"ClassLoader" loader (Compiler'baseLoader)
-                  #_"Class" c
-                    (when-not (instance? DynamicClassLoader loader)
-                        (DynamicClassLoader'findInMemoryClass name)
-                    )]
-                (or c (Class/forName name, load?, loader))
-            )
-        )
-    )
-
-    (defn #_"Class" RT'classForNameNonLoading [#_"String" name]
-        (RT'classForName name, false)
     )
 )
 )
@@ -17634,23 +17613,18 @@
  ;   (:import (java.util Date Timer Random)
  ;            (java.sql Connection Statement)))
  ;;
-(§ defmacro ns [name & references]
-    (let [process-reference (fn [[kname & args]] `(~(symbol "cloiure.core" (cloiure.core/name kname)) ~@(map #(list 'quote %) args)))
-          metadata          (when (map? (first references)) (first references))
-          references        (if metadata (next references) references)
-          name              (if metadata (vary-meta name merge metadata) name)
-          ;; ns-effect (cloiure.core/in-ns name)
-          name-metadata (meta name)]
+(defmacro ns [n & s]
+    (let [m (let-when [m (first s)] (map? m) m) s (if m (next s) s) n (if m (vary-meta n merge m) n) m (meta n)]
         `(do
-            (cloiure.core/in-ns '~name)
-            ~@(when name-metadata
-                `((reset-meta! (Namespace'find '~name) ~name-metadata))
+            (in-ns '~n)
+            ~@(when m
+                `((reset-meta! (Namespace'find '~n) ~m))
             )
             (with-loading-context
-                ~@(when (and (not= name 'cloiure.core) (not-any? #(= :refer-cloiure (first %)) references))
-                    `((cloiure.core/refer '~'cloiure.core))
+                ~@(when (and (not= n 'cloiure.core) (not-any? #(= :refer-cloiure (first %)) s))
+                    `((refer '~'cloiure.core))
                 )
-                ~@(map process-reference references)
+                ~@(map (fn [[k & s]] `(~(symbol "cloiure.core" (name k)) ~@(map #(list 'quote %) s))) s)
             )
             nil
         )
@@ -18060,7 +18034,7 @@
     (cond
         (class? x) x
         (contains? prim->class x) (prim->class x)
-        :else (let [s (str x)] (RT'classForName (if (some #{\. \[} s) s (str "java.lang." s))))
+        :else (let [s (str x)] (Loader'classForName (if (some #{\. \[} s) s (str "java.lang." s))))
     )
 )
 
@@ -18078,24 +18052,23 @@
     )
 )
 
-(defn- generate-interface [{:keys [name extends methods]}]
-    (when (some #(-> % first cloiure.core/name (.contains "-")) methods)
-        (throw! "interface methods must not contain '-'")
-    )
-    (let [iname (.replace (str name) "." "/") cv (ClassWriter. ClassWriter/COMPUTE_MAXS)]
-        (.visit cv Opcodes/V1_5 (+ Opcodes/ACC_PUBLIC Opcodes/ACC_ABSTRACT Opcodes/ACC_INTERFACE) iname nil "java/lang/Object"
-            (when (seq extends)
-                (into-array (map #(.getInternalName (asm-type %)) extends))
+(defn- generate-interface [{:keys [iname extends methods]}]
+    (when-not (some #(-> % first name (.contains "-")) methods) => (throw! "interface methods must not contain '-'")
+        (let [iname (.replace (str iname) "." "/") cv (ClassWriter. ClassWriter/COMPUTE_MAXS)]
+            (.visit cv Opcodes/V1_5 (+ Opcodes/ACC_PUBLIC Opcodes/ACC_ABSTRACT Opcodes/ACC_INTERFACE) iname nil "java/lang/Object"
+                (when (seq extends)
+                    (into-array (map #(.getInternalName (asm-type %)) extends))
+                )
             )
-        )
-        (doseq [[mname pclasses rclass pmetas] methods]
-            (let [md (Type/getMethodDescriptor (asm-type rclass) (if pclasses (into-array Type (map asm-type pclasses)) (make-array Type 0)))
-                  mv (.visitMethod cv (+ Opcodes/ACC_PUBLIC Opcodes/ACC_ABSTRACT) (str mname) md nil nil)]
-                (.visitEnd mv)
+            (doseq [[mname pclasses rclass pmetas] methods]
+                (let [md (Type/getMethodDescriptor (asm-type rclass) (if pclasses (into-array Type (map asm-type pclasses)) (make-array Type 0)))
+                      mv (.visitMethod cv (+ Opcodes/ACC_PUBLIC Opcodes/ACC_ABSTRACT) (str mname) md nil nil)]
+                    (.visitEnd mv)
+                )
             )
+            (.visitEnd cv)
+            [iname (.toByteArray cv)]
         )
-        (.visitEnd cv)
-        [iname (.toByteArray cv)]
     )
 )
 
@@ -18123,7 +18096,7 @@
  ;;
 (defmacro gen-interface [& options]
     (let [opts (apply hash-map options) name (str (:name opts)) [_ code] (generate-interface opts)]
-        (.defineClass ^DynamicClassLoader *class-loader* name code)
+        (Loader''defineClass *class-loader*, name, code)
     )
 )
 
@@ -18915,10 +18888,9 @@
 )
 
 ;;;
- ; Protocol for concrete associative types that can reduce themselves
- ; via a function of key and val faster than first/next recursion over
- ; map entries. Called by cloiure.core/reduce-kv, and has same
- ; semantics (just different arg order).
+ ; Protocol for concrete associative types that can reduce themselves via
+ ; a function of key and val faster than first/next recursion over map entries.
+ ; Called by reduce-kv, and has same semantics (just different arg order).
  ;;
 (defprotocol KVReduce
     (kv-reduce [m f r])
