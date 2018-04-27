@@ -69,21 +69,17 @@
     ;;;
      ; Stores the bits in this bitSieve.
      ;;
-    #_private
-    (§ def #_"long[]" bits)
+    (§ field- #_"long[]" bits)
 
     ;;;
      ; Length is how many bits this sieve holds.
      ;;
-    #_private
-    (§ def #_"int" length)
+    (§ field- #_"int" length)
 
     ;;;
      ; A small sieve used to filter out multiples of small primes in a search sieve.
      ;;
-    #_private
-    #_static
-    (§ def #_"BitSieve" smallSieve = new BitSieve())
+    (def- #_"BitSieve" BitSieve'smallSieve (ß BitSieve'new()))
 
     ;;;
      ; Construct a "small sieve" with a base of 0. This constructor is
@@ -96,104 +92,105 @@
      ; for primality. The length was chosen experimentally to yield good
      ; performance.
      ;;
-    #_private
-    (§ constructor BitSieve [])
-    (§
-        length = 150 * 64;
-        bits = new long[(unitIndex(length - 1) + 1)];
-
-        ;; mark 1 as composite
-        set(0);
-        int nextIndex = 1;
-        int nextPrime = 3;
-
-        ;; find primes and remove their multiples from sieve
-        do
+    (defn- #_"BitSieve" BitSieve'new []
         (§
-            sieveSingle(length, nextIndex + nextPrime, nextPrime);
-            nextIndex = sieveSearch(length, nextIndex + 1);
-            nextPrime = 2 * nextIndex + 1;
-        ) while ((nextIndex > 0) && (nextPrime < length));
+            length = 150 * 64;
+            bits = new long[(BitSieve'unitIndex(length - 1) + 1)];
+
+            ;; mark 1 as composite
+            BitSieve''set(this, 0);
+            int nextIndex = 1;
+            int nextPrime = 3;
+
+            ;; find primes and remove their multiples from sieve
+            do
+            (§
+                BitSieve''sieveSingle(this, length, nextIndex + nextPrime, nextPrime);
+                nextIndex = BitSieve''sieveSearch(this, length, nextIndex + 1);
+                nextPrime = 2 * nextIndex + 1;
+            ) while ((nextIndex > 0) && (nextPrime < length));
+        )
     )
 
     ;;;
      ; Construct a bit sieve of searchLen bits used for finding prime number candidates.
      ; The new sieve begins at the specified base, which must be even.
      ;;
-    (§ constructor BitSieve [#_"BigInteger" base, #_"int" searchLen])
-    (§
-        ;;
-         ; Candidates are indicated by clear bits in the sieve. As a candidates
-         ; nonprimality is calculated, a bit is set in the sieve to eliminate
-         ; it. To reduce storage space and increase efficiency, no even numbers
-         ; are represented in the sieve (each bit in the sieve represents an
-         ; odd number).
-         ;;
-        bits = new long[(unitIndex(searchLen - 1) + 1)];
-        length = searchLen;
-        int start = 0;
-
-        int step = smallSieve.sieveSearch(smallSieve.length, start);
-        int convertedStep = (step * 2) + 1;
-
-        ;; construct the large sieve at an even offset specified by base
-        MutableBigInteger b = new MutableBigInteger(base);
-        MutableBigInteger q = new MutableBigInteger();
-        do
+    (defn #_"BitSieve" BitSieve'new [#_"BigInteger" base, #_"int" searchLen]
         (§
-            ;; calculate base mod convertedStep
-            start = b.divideOneWord(convertedStep, q);
+            ;;
+            ; Candidates are indicated by clear bits in the sieve. As a candidates
+            ; nonprimality is calculated, a bit is set in the sieve to eliminate
+            ; it. To reduce storage space and increase efficiency, no even numbers
+            ; are represented in the sieve (each bit in the sieve represents an
+            ; odd number).
+            ;;
+            bits = new long[(BitSieve'unitIndex(searchLen - 1) + 1)];
+            length = searchLen;
+            int start = 0;
 
-            ;; take each multiple of step out of sieve
-            start = convertedStep - start;
-            if (start % 2 == 0)
-                start += convertedStep;
-            sieveSingle(searchLen, (start - 1) / 2, convertedStep);
+            int step = BitSieve''sieveSearch(BitSieve'smallSieve, BitSieve'smallSieve.length, start);
+            int convertedStep = (step * 2) + 1;
 
-            ;; find next prime from small sieve
-            step = smallSieve.sieveSearch(smallSieve.length, step + 1);
-            convertedStep = (step * 2) + 1;
-        ) while (step > 0);
+            ;; construct the large sieve at an even offset specified by base
+            MutableBigInteger b = MutableBigInteger'new(base);
+            MutableBigInteger q = MutableBigInteger'new();
+            do
+            (§
+                ;; calculate base mod convertedStep
+                start = MutableBigInteger''divideOneWord(b, convertedStep, q);
+
+                ;; take each multiple of step out of sieve
+                start = convertedStep - start;
+                if (start % 2 == 0)
+                    start += convertedStep;
+                BitSieve''sieveSingle(this, searchLen, (start - 1) / 2, convertedStep);
+
+                ;; find next prime from small sieve
+                step = BitSieve''sieveSearch(BitSieve'smallSieve, BitSieve'smallSieve.length, step + 1);
+                convertedStep = (step * 2) + 1;
+            ) while (step > 0);
+        )
     )
 
     ;;;
      ; Given a bit index return unit index containing it.
      ;;
-    #_private
-    #_static
-    (§ defn #_"int" unitIndex [#_"int" bitIndex])
-    (§
-        return bitIndex >>> 6;
+    (defn- #_"int" BitSieve'unitIndex [#_"int" bitIndex]
+        (§
+            return bitIndex >>> 6;
+        )
     )
 
     ;;;
      ; Return a unit that masks the specified bit in its unit.
      ;;
-    #_private
-    #_static
-    (§ defn #_"long" bit [#_"int" bitIndex])
-    (§
-        return 1 #_"L" << (bitIndex & ((1 << 6) - 1));
+    (defn- #_"long" BitSieve'bit [#_"int" bitIndex]
+        (§
+            return 1 #_"L" << (bitIndex & ((1 << 6) - 1));
+        )
     )
 
     ;;;
      ; Get the value of the bit at the specified index.
      ;;
-    #_private
-    (§ defn #_"boolean" get [#_"int" bitIndex])
-    (§
-        int unitIndex = unitIndex(bitIndex);
-        return ((bits[unitIndex] & bit(bitIndex)) != 0);
+    #_method
+    (defn- #_"boolean" BitSieve''get [#_"BitSieve" this, #_"int" bitIndex]
+        (§
+            int unitIndex = BitSieve'unitIndex(bitIndex);
+            return ((bits[unitIndex] & BitSieve'bit(bitIndex)) != 0);
+        )
     )
 
     ;;;
      ; Set the bit at the specified index.
      ;;
-    #_private
-    (§ defn #_"void" set [#_"int" bitIndex])
-    (§
-        int unitIndex = unitIndex(bitIndex);
-        bits[unitIndex] |= bit(bitIndex);
+    #_method
+    (defn- #_"void" BitSieve''set [#_"BitSieve" this, #_"int" bitIndex]
+        (§
+            int unitIndex = BitSieve'unitIndex(bitIndex);
+            bits[unitIndex] |= BitSieve'bit(bitIndex);
+        )
     )
 
     ;;;
@@ -201,20 +198,21 @@
      ; array that occurs at or after start. It will not search past the
      ; specified limit. It returns -1 if there is no such clear bit.
      ;;
-    #_private
-    (§ defn #_"int" sieveSearch [#_"int" limit, #_"int" start])
-    (§
-        if (start >= limit)
-            return -1;
-
-        int index = start;
-        do
+    #_method
+    (defn- #_"int" BitSieve''sieveSearch [#_"BitSieve" this, #_"int" limit, #_"int" start]
         (§
-            if (!get(index))
-                return index;
-            index++;
-        ) while (index < limit - 1);
-        return -1;
+            if (start >= limit)
+                return -1;
+
+            int index = start;
+            do
+            (§
+                if (!BitSieve''get(this, index))
+                    return index;
+                index++;
+            ) while (index < limit - 1);
+            return -1;
+        )
     )
 
     ;;;
@@ -222,39 +220,42 @@
      ; multiples of the specified step starting at the specified start index,
      ; up to the specified limit.
      ;;
-    #_private
-    (§ defn #_"void" sieveSingle [#_"int" limit, #_"int" start, #_"int" step])
-    (§
-        while (start < limit)
+    #_method
+    (defn- #_"void" BitSieve''sieveSingle [#_"BitSieve" this, #_"int" limit, #_"int" start, #_"int" step]
         (§
-            set(start);
-            start += step;
+            while (start < limit)
+            (§
+                BitSieve''set(this, start);
+                start += step;
+            )
         )
     )
 
     ;;;
      ; Test probable primes in the sieve and return successful candidates.
      ;;
-    (§ defn #_"BigInteger" retrieve [#_"BigInteger" initValue, #_"int" certainty, #_"Random" random])
-    (§
-        ;; examine the sieve one long at a time to find possible primes
-        int offset = 1;
-        for (int i = 0(ß) i < bits.length(ß) i++)
+    #_method
+    (defn #_"BigInteger" BitSieve''retrieve [#_"BitSieve" this, #_"BigInteger" initValue, #_"int" certainty, #_"Random" random]
         (§
-            long nextLong = (ß bit-not)bits[i];
-            for (int j = 0(ß) j < 64(ß) j++)
+            ;; examine the sieve one long at a time to find possible primes
+            int offset = 1;
+            for (int i = 0(§ for) i < bits.length(§ for) i++)
             (§
-                if ((nextLong & 1) == 1)
+                long nextLong = (§ bit-not)bits[i];
+                for (int j = 0(§ for) j < 64(§ for) j++)
                 (§
-                    BigInteger candidate = initValue.add(BigInteger.valueOf(offset));
-                    if (candidate.primeToCertainty(certainty, random))
-                        return candidate;
+                    if ((nextLong & 1) == 1)
+                    (§
+                        BigInteger candidate = BigInteger''add(initValue, BigInteger'valueOf-l(offset));
+                        if (BigInteger''primeToCertainty(candidate, certainty, random))
+                            return candidate;
+                    )
+                    nextLong >>>= 1;
+                    offset += 2;
                 )
-                nextLong >>>= 1;
-                offset += 2;
             )
+            return null;
         )
-        return null;
     )
 )
 
@@ -276,20 +277,20 @@
      ; The magnitude may start at an offset into the value array, and it may
      ; end before the length of the value array.
      ;;
-    (§ def #_"int[]" value)
+    (§ field #_"int[]" value)
 
     ;;;
      ; The number of ints of the value array that are currently used
      ; to hold the magnitude of this MutableBigInteger. The magnitude starts
      ; at an offset and offset + intLen may be less than value.length.
      ;;
-    (§ def #_"int" intLen)
+    (§ field #_"int" intLen)
 
     ;;;
      ; The offset into the value array where the magnitude of this
      ; MutableBigInteger begins.
      ;;
-    (§ def #_"int" offset = 0)
+    (§ field #_"int" offset = 0)
 
     ;; constants
 
@@ -297,9 +298,7 @@
      ; MutableBigInteger with one element value array with the value 1. Use
      ; this constant only when the method is not going to modify this object.
      ;;
-    #_static
-    #_final
-    (§ def #_"MutableBigInteger" ONE = new MutableBigInteger(1))
+    (def #_"MutableBigInteger" MutableBigInteger'ONE (ß MutableBigInteger'new(1)))
 
     ;;;
      ; The minimum {@code intLen} for cancelling powers of two before dividing.
@@ -307,131 +306,142 @@
      ; {@code divideKnuth} does not eliminate common powers of two from
      ; the dividend and divisor.
      ;;
-    #_static
-    #_final
-    (§ def #_"int" KNUTH_POW2_THRESH_LEN = 6)
+    (def #_"int" MutableBigInteger'KNUTH_POW2_THRESH_LEN 6)
 
     ;;;
      ; The minimum number of trailing zero ints for cancelling powers of two before dividing.
      ; If the dividend and divisor don't share at least this many zero ints at the end,
      ; {@code divideKnuth} does not eliminate common powers of two from the dividend and divisor.
      ;;
-    #_static
-    #_final
-    (§ def #_"int" KNUTH_POW2_THRESH_ZEROS = 3)
+    (def #_"int" MutableBigInteger'KNUTH_POW2_THRESH_ZEROS 3)
 
     ;; constructors
 
     ;;;
      ; The default constructor. An empty MutableBigInteger is created with a one word capacity.
      ;;
-    (§ constructor MutableBigInteger [])
-    (§
-        value = new int[1];
-        intLen = 0;
+    (defn #_"MutableBigInteger" MutableBigInteger'new []
+        (§
+            value = new int[1];
+            intLen = 0;
+        )
     )
 
     ;;;
      ; Construct a new MutableBigInteger with a magnitude specified by the int val.
      ;;
-    (§ constructor MutableBigInteger [#_"int" val])
-    (§
-        value = new int[1];
-        intLen = 1;
-        value[0] = val;
+    (defn #_"MutableBigInteger" MutableBigInteger'new [#_"int" val]
+        (§
+            value = new int[1];
+            intLen = 1;
+            value[0] = val;
+        )
     )
 
     ;;;
      ; Construct a new MutableBigInteger with the specified value array
      ; up to the length of the array supplied.
      ;;
-    (§ constructor MutableBigInteger [#_"int[]" val])
-    (§
-        value = val;
-        intLen = val.length;
+    (defn #_"MutableBigInteger" MutableBigInteger'new [#_"int[]" val]
+        (§
+            value = val;
+            intLen = val.length;
+        )
     )
 
     ;;;
      ; Construct a new MutableBigInteger with a magnitude equal to the
      ; specified BigInteger.
      ;;
-    (§ constructor MutableBigInteger [#_"BigInteger" b])
-    (§
-        intLen = b.mag.length;
-        value = Arrays.copyOf(b.mag, intLen);
+    (defn #_"MutableBigInteger" MutableBigInteger'new [#_"BigInteger" b]
+        (§
+            intLen = b.mag.length;
+            value = Arrays.copyOf(b.mag, intLen);
+        )
     )
 
     ;;;
      ; Construct a new MutableBigInteger with a magnitude equal to the
      ; specified MutableBigInteger.
      ;;
-    (§ constructor MutableBigInteger [#_"MutableBigInteger" val])
-    (§
-        intLen = val.intLen;
-        value = Arrays.copyOfRange(val.value, val.offset, val.offset + intLen);
+    (defn #_"MutableBigInteger" MutableBigInteger'new [#_"MutableBigInteger" val]
+        (§
+            intLen = val.intLen;
+            value = Arrays.copyOfRange(val.value, val.offset, val.offset + intLen);
+        )
     )
 
     ;;;
      ; Internal helper method to return the magnitude array. The caller is not
      ; supposed to modify the returned array.
      ;;
-    #_private
-    (§ defn #_"int[]" getMagnitudeArray [])
-    (§
-        if (offset > 0 || value.length != intLen)
-            return Arrays.copyOfRange(value, offset, offset + intLen);
-        return value;
+    #_method
+    (defn- #_"int[]" MutableBigInteger''getMagnitudeArray [#_"MutableBigInteger" this]
+        (§
+            if (offset > 0 || value.length != intLen)
+                return Arrays.copyOfRange(value, offset, offset + intLen);
+            return value;
+        )
     )
 
     ;;;
      ; Convert this MutableBigInteger to a long value. The caller has to make
      ; sure this MutableBigInteger can be fit into long.
      ;;
-    #_private
-    (§ defn #_"long" toLong [])
-    (§
-        assert (intLen <= 2) #_":" "this MutableBigInteger exceeds the range of long";
-        if (intLen == 0)
-            return 0;
-        long d = value[offset] & BigInteger'LONG_MASK;
-        return (intLen == 2) ? d << 32 | (value[offset + 1] & BigInteger'LONG_MASK) #_":" d;
+    #_method
+    (defn- #_"long" MutableBigInteger''toLong [#_"MutableBigInteger" this]
+        (§
+            assert (intLen <= 2) #_":" "this MutableBigInteger exceeds the range of long";
+            if (intLen == 0)
+                return 0;
+            long d = value[offset] & BigInteger'LONG_MASK;
+            return (intLen == 2) ? d << 32 | (value[offset + 1] & BigInteger'LONG_MASK) #_":" d;
+        )
     )
 
     ;;;
      ; Convert this MutableBigInteger to a BigInteger object.
      ;;
-    (§ defn #_"BigInteger" toBigInteger [#_"int" sign])
-    (§
-        if (intLen == 0 || sign == 0)
-            return BigInteger.ZERO;
-        return new BigInteger(getMagnitudeArray(), sign);
+    #_method
+    (defn #_"BigInteger" MutableBigInteger''toBigInteger-2 [#_"MutableBigInteger" this, #_"int" sign]
+        (§
+            if (intLen == 0 || sign == 0)
+                return BigInteger'ZERO;
+            return BigInteger'new(MutableBigInteger''getMagnitudeArray(this), sign);
+        )
     )
 
     ;;;
      ; Converts this number to a nonnegative {@code BigInteger}.
      ;;
-    (§ defn #_"BigInteger" toBigInteger [])
-    (§
-        normalize();
-        return toBigInteger(isZero() ? 0 #_":" 1);
+    #_method
+    (defn #_"BigInteger" MutableBigInteger''toBigInteger-1 [#_"MutableBigInteger" this]
+        (§
+            MutableBigInteger''normalize(this);
+            return MutableBigInteger''toBigInteger-2(this, MutableBigInteger''isZero(this) ? 0 #_":" 1);
+        )
     )
 
     ;;;
      ; Clear out a MutableBigInteger for reuse.
      ;;
-    (§ defn #_"void" clear [])
-    (§
-        offset = intLen = 0;
-        for (int index = 0, n = value.length(ß) index < n(ß) index++)
-            value[index] = 0;
+    #_method
+    (defn #_"void" MutableBigInteger''clear [#_"MutableBigInteger" this]
+        (§
+            offset = intLen = 0;
+            for (int index = 0, n = value.length(§ for) index < n(§ for) index++)
+                value[index] = 0;
+        )
     )
 
     ;;;
      ; Set a MutableBigInteger to zero, removing its offset.
      ;;
-    (§ defn #_"void" reset [])
-    (§
-        offset = intLen = 0;
+    #_method
+    (defn #_"void" MutableBigInteger''reset [#_"MutableBigInteger" this]
+        (§
+            offset = intLen = 0;
+        )
     )
 
     ;;;
@@ -439,57 +449,58 @@
      ; as this MutableBigInteger is numerically less than, equal to, or
      ; greater than <tt>b</tt>.
      ;;
-    #_final
-    (§ defn #_"int" compare [#_"MutableBigInteger" b])
-    (§
-        int blen = b.intLen;
-        if (intLen < blen)
-            return -1;
-        if (intLen > blen)
-            return 1;
-
-        ;; Add Integer.MIN_VALUE to make the comparison act as unsigned integer comparison.
-        int[] bval = b.value;
-        for (int i = offset, j = b.offset(ß) i < intLen + offset(ß) i++, j++)
+    #_method
+    (defn #_"int" MutableBigInteger''compare [#_"MutableBigInteger" this, #_"MutableBigInteger" b]
         (§
-            int b1 = value[i] + 0x80000000;
-            int b2 = bval[j] + 0x80000000;
-            if (b1 < b2)
+            int blen = b.intLen;
+            if (intLen < blen)
                 return -1;
-            if (b1 > b2)
+            if (intLen > blen)
                 return 1;
+
+            ;; Add Integer.MIN_VALUE to make the comparison act as unsigned integer comparison.
+            int[] bval = b.value;
+            for (int i = offset, j = b.offset(§ for) i < intLen + offset(§ for) i++, j++)
+            (§
+                int b1 = value[i] + 0x80000000;
+                int b2 = bval[j] + 0x80000000;
+                if (b1 < b2)
+                    return -1;
+                if (b1 > b2)
+                    return 1;
+            )
+            return 0;
         )
-        return 0;
     )
 
     ;;;
      ; Return the index of the lowest set bit in this MutableBigInteger.
      ; If the magnitude of this MutableBigInteger is zero, -1 is returned.
      ;;
-    #_private
-    #_final
-    (§ defn #_"int" getLowestSetBit [])
-    (§
-        if (intLen == 0)
-            return -1;
-        int j, b;
-        for (j = intLen - 1(ß) (j > 0) && (value[j + offset] == 0)(ß) j--)
-            ;
-        b = value[j + offset];
-        if (b == 0)
-            return -1;
-        return ((intLen - 1 - j) << 5) + Integer.numberOfTrailingZeros(b);
+    #_method
+    (defn- #_"int" MutableBigInteger''getLowestSetBit [#_"MutableBigInteger" this]
+        (§
+            if (intLen == 0)
+                return -1;
+            int j, b;
+            for (j = intLen - 1(§ for) (j > 0) && (value[j + offset] == 0)(§ for) j--)
+                ;
+            b = value[j + offset];
+            if (b == 0)
+                return -1;
+            return ((intLen - 1 - j) << 5) + Integer.numberOfTrailingZeros(b);
+        )
     )
 
     ;;;
      ; Return the int in use in this MutableBigInteger at the specified index.
      ; This method is not used because it is not inlined on all platforms.
      ;;
-    #_private
-    #_final
-    (§ defn #_"int" getInt [#_"int" index])
-    (§
-        return value[offset + index];
+    #_method
+    (defn- #_"int" MutableBigInteger''getInt [#_"MutableBigInteger" this, #_"int" index]
+        (§
+            return value[offset + index];
+        )
     )
 
     ;;;
@@ -497,11 +508,11 @@
      ; use in this MutableBigInteger at the specified index. This method is
      ; not used because it is not inlined on all platforms.
      ;;
-    #_private
-    #_final
-    (§ defn #_"long" getLong [#_"int" index])
-    (§
-        return value[offset + index] & BigInteger'LONG_MASK;
+    #_method
+    (defn- #_"long" MutableBigInteger''getLong [#_"MutableBigInteger" this, #_"int" index]
+        (§
+            return value[offset + index] & BigInteger'LONG_MASK;
+        )
     )
 
     ;;;
@@ -509,43 +520,44 @@
      ; making sure that there are no leading zeros, and that if the
      ; magnitude is zero, then intLen is zero.
      ;;
-    #_final
-    (§ defn #_"void" normalize [])
-    (§
-        if (intLen == 0)
+    #_method
+    (defn #_"void" MutableBigInteger''normalize [#_"MutableBigInteger" this]
         (§
-            offset = 0;
-            return;
+            if (intLen == 0)
+            (§
+                offset = 0;
+                return;
+            )
+
+            int index = offset;
+            if (value[index] != 0)
+                return;
+
+            int indexBound = index + intLen;
+            do
+            (§
+                index++;
+            ) while (index < indexBound && value[index] == 0);
+
+            int numZeros = index - offset;
+            intLen -= numZeros;
+            offset = (intLen == 0) ? 0 #_":" offset + numZeros;
         )
-
-        int index = offset;
-        if (value[index] != 0)
-            return;
-
-        int indexBound = index + intLen;
-        do
-        (§
-            index++;
-        ) while (index < indexBound && value[index] == 0);
-
-        int numZeros = index - offset;
-        intLen -= numZeros;
-        offset = (intLen == 0) ? 0 #_":" offset + numZeros;
     )
 
     ;;;
      ; If this MutableBigInteger cannot hold len words, increase the size
      ; of the value array to len words.
      ;;
-    #_private
-    #_final
-    (§ defn #_"void" ensureCapacity [#_"int" len])
-    (§
-        if (value.length < len)
+    #_method
+    (defn- #_"void" MutableBigInteger''ensureCapacity [#_"MutableBigInteger" this, #_"int" len]
         (§
-            value = new int[len];
-            offset = 0;
-            intLen = len;
+            if (value.length < len)
+            (§
+                value = new int[len];
+                offset = 0;
+                intLen = len;
+            )
         )
     )
 
@@ -553,12 +565,14 @@
      ; Convert this MutableBigInteger into an int array with no leading
      ; zeros, of a length that is equal to this MutableBigInteger's intLen.
      ;;
-    (§ defn #_"int[]" toIntArray [])
-    (§
-        int[] result = new int[intLen];
-        for (int i = 0(ß) i < intLen(ß) i++)
-            result[i] = value[offset + i];
-        return result;
+    #_method
+    (defn #_"int[]" MutableBigInteger''toIntArray [#_"MutableBigInteger" this]
+        (§
+            int[] result = new int[intLen];
+            for (int i = 0(§ for) i < intLen(§ for) i++)
+                result[i] = value[offset + i];
+            return result;
+        )
     )
 
     ;;;
@@ -566,80 +580,96 @@
      ; This does not get inlined on all platforms so it is not used
      ; as often as originally intended.
      ;;
-    (§ defn #_"void" setInt [#_"int" index, #_"int" val])
-    (§
-        value[offset + index] = val;
+    #_method
+    (defn #_"void" MutableBigInteger''setInt [#_"MutableBigInteger" this, #_"int" index, #_"int" val]
+        (§
+            value[offset + index] = val;
+        )
     )
 
     ;;;
      ; Sets this MutableBigInteger's value array to the specified array.
      ; The intLen is set to the specified length.
      ;;
-    (§ defn #_"void" setValue [#_"int[]" val, #_"int" length])
-    (§
-        value = val;
-        intLen = length;
-        offset = 0;
+    #_method
+    (defn #_"void" MutableBigInteger''setValue [#_"MutableBigInteger" this, #_"int[]" val, #_"int" length]
+        (§
+            value = val;
+            intLen = length;
+            offset = 0;
+        )
     )
 
     ;;;
      ; Sets this MutableBigInteger's value array to a copy of the specified array.
      ; The intLen is set to the length of the new array.
      ;;
-    (§ defn #_"void" copyValue [#_"MutableBigInteger" src])
-    (§
-        int len = src.intLen;
-        if (value.length < len)
-            value = new int[len];
-        System.arraycopy(src.value, src.offset, value, 0, len);
-        intLen = len;
-        offset = 0;
+    #_method
+    (defn #_"void" MutableBigInteger''copyValue-m [#_"MutableBigInteger" this, #_"MutableBigInteger" src]
+        (§
+            int len = src.intLen;
+            if (value.length < len)
+                value = new int[len];
+            System.arraycopy(src.value, src.offset, value, 0, len);
+            intLen = len;
+            offset = 0;
+        )
     )
 
     ;;;
      ; Sets this MutableBigInteger's value array to a copy of the specified array.
      ; The intLen is set to the length of the specified array.
      ;;
-    (§ defn #_"void" copyValue [#_"int[]" val])
-    (§
-        int len = val.length;
-        if (value.length < len)
-            value = new int[len];
-        System.arraycopy(val, 0, value, 0, len);
-        intLen = len;
-        offset = 0;
+    #_method
+    (defn #_"void" MutableBigInteger''copyValue-a [#_"MutableBigInteger" this, #_"int[]" val]
+        (§
+            int len = val.length;
+            if (value.length < len)
+                value = new int[len];
+            System.arraycopy(val, 0, value, 0, len);
+            intLen = len;
+            offset = 0;
+        )
     )
 
     ;;;
      ; Returns true iff this MutableBigInteger has a value of one.
      ;;
-    (§ defn #_"boolean" isOne [])
-    (§
-        return (intLen == 1) && (value[offset] == 1);
+    #_method
+    (defn #_"boolean" MutableBigInteger''isOne [#_"MutableBigInteger" this]
+        (§
+            return (intLen == 1) && (value[offset] == 1);
+        )
     )
 
     ;;;
      ; Returns true iff this MutableBigInteger has a value of zero.
      ;;
-    (§ defn #_"boolean" isZero [])
-    (§
-        return (intLen == 0);
+    #_method
+    (defn #_"boolean" MutableBigInteger''isZero [#_"MutableBigInteger" this]
+        (§
+            return (intLen == 0);
+        )
     )
 
     ;;;
      ; Returns true iff this MutableBigInteger is even.
      ;;
-    (§ defn #_"boolean" isEven [])
-    (§
-        return (intLen == 0) || ((value[offset + intLen - 1] & 1) == 0);
+    #_method
+    (defn #_"boolean" MutableBigInteger''isEven [#_"MutableBigInteger" this]
+        (§
+            return (intLen == 0) || ((value[offset + intLen - 1] & 1) == 0);
+        )
     )
 
     ;;;
      ; Returns true iff this MutableBigInteger is odd.
      ;;
-    (§ defn #_"boolean" isOdd [])
-    (§
-        return isZero() ? false #_":" ((value[offset + intLen - 1] & 1) == 1);
+    #_method
+    (defn #_"boolean" MutableBigInteger''isOdd [#_"MutableBigInteger" this]
+        (§
+            return MutableBigInteger''isZero(this) ? false #_":" ((value[offset + intLen - 1] & 1) == 1);
+        )
     )
 
     ;;;
@@ -647,107 +677,114 @@
      ; A MutableBigInteger is in normal form if it has no leading zeros
      ; after the offset, and intLen + offset <= value.length.
      ;;
-    (§ defn #_"boolean" isNormal [])
-    (§
-        if (intLen + offset > value.length)
-            return false;
-        if (intLen == 0)
-            return true;
-        return (value[offset] != 0);
+    #_method
+    (defn #_"boolean" MutableBigInteger''isNormal [#_"MutableBigInteger" this]
+        (§
+            if (intLen + offset > value.length)
+                return false;
+            if (intLen == 0)
+                return true;
+            return (value[offset] != 0);
+        )
     )
 
     ;;;
      ; Returns a String representation of this MutableBigInteger in radix 10.
      ;;
-    #_public
-    (§ defn #_"String" toString [])
-    (§
-        BigInteger b = toBigInteger(1);
-        return b.toString();
+    #_foreign
+    (defn #_"String" toString---MutableBigInteger [#_"MutableBigInteger" this]
+        (§
+            BigInteger b = MutableBigInteger''toBigInteger-2(this, 1);
+            return b.toString();
+        )
     )
 
     ;;;
      ; Right shift this MutableBigInteger n bits.
      ; The MutableBigInteger is left in normal form.
      ;;
-    (§ defn #_"void" rightShift [#_"int" n])
-    (§
-        if (intLen == 0)
-            return;
-        int nInts = n >>> 5;
-        int nBits = n & 0x1f;
-        this.intLen -= nInts;
-        if (nBits == 0)
-            return;
-        int bitsInHighWord = BigInteger.bitLengthForInt(value[offset]);
-        if (nBits >= bitsInHighWord)
+    #_method
+    (defn #_"void" MutableBigInteger''rightShift [#_"MutableBigInteger" this, #_"int" n]
         (§
-            this.primitiveLeftShift(32 - nBits);
-            this.intLen--;
-        )
-        else
-        (§
-            primitiveRightShift(nBits);
+            if (intLen == 0)
+                return;
+            int nInts = n >>> 5;
+            int nBits = n & 0x1f;
+            this.intLen -= nInts;
+            if (nBits == 0)
+                return;
+            int bitsInHighWord = BigInteger'bitLengthForInt(value[offset]);
+            if (nBits >= bitsInHighWord)
+            (§
+                MutableBigInteger''primitiveLeftShift(this, 32 - nBits);
+                this.intLen--;
+            )
+            else
+            (§
+                MutableBigInteger''primitiveRightShift(this, nBits);
+            )
         )
     )
 
     ;;;
      ; Left shift this MutableBigInteger n bits.
      ;;
-    (§ defn #_"void" leftShift [#_"int" n])
-    (§
-        ;;
-         ; If there is enough storage space in this MutableBigInteger already
-         ; the available space will be used. Space to the right of the used
-         ; ints in the value array is faster to utilize, so the extra space
-         ; will be taken from the right if possible.
-         ;;
-        if (intLen == 0)
-            return;
-        int nInts = n >>> 5;
-        int nBits = n & 0x1f;
-        int bitsInHighWord = BigInteger.bitLengthForInt(value[offset]);
+    #_method
+    (defn #_"void" MutableBigInteger''leftShift [#_"MutableBigInteger" this, #_"int" n]
+        (§
+            ;;
+            ; If there is enough storage space in this MutableBigInteger already
+            ; the available space will be used. Space to the right of the used
+            ; ints in the value array is faster to utilize, so the extra space
+            ; will be taken from the right if possible.
+            ;;
+            if (intLen == 0)
+                return;
+            int nInts = n >>> 5;
+            int nBits = n & 0x1f;
+            int bitsInHighWord = BigInteger'bitLengthForInt(value[offset]);
 
-        ;; if shift can be done without moving words, do so
-        if (n <= (32 - bitsInHighWord))
-        (§
-            primitiveLeftShift(nBits);
-            return;
-        )
+            ;; if shift can be done without moving words, do so
+            if (n <= (32 - bitsInHighWord))
+            (§
+                MutableBigInteger''primitiveLeftShift(this, nBits);
+                return;
+            )
 
-        int newLen = intLen + nInts +1;
-        if (nBits <= (32 - bitsInHighWord))
-            newLen--;
-        if (value.length < newLen)
-        (§
-            ;; the array must grow
-            int[] result = new int[newLen];
-            for (int i = 0(ß) i < intLen(ß) i++)
-                result[i] = value[offset + i];
-            setValue(result, newLen);
+            int newLen = intLen + nInts +1;
+            if (nBits <= (32 - bitsInHighWord))
+                newLen--;
+            if (value.length < newLen)
+            (§
+                ;; the array must grow
+                int[] result = new int[newLen];
+                for (int i = 0(§ for) i < intLen(§ for) i++)
+                    result[i] = value[offset + i];
+                MutableBigInteger''setValue(this, result, newLen);
+            )
+            else if (value.length - offset >= newLen)
+            (§
+                ;; use space on right
+                for (int i = 0(§ for) i < newLen - intLen(§ for) i++)
+                    value[offset + intLen + i] = 0;
+            )
+            else
+            (§
+                ;; must use space on left
+                for (int i = 0(§ for) i < intLen(§ for) i++)
+                    value[i] = value[offset + i];
+                for (int i = intLen(§ for) i < newLen(§ for) i++)
+                    value[i] = 0;
+                offset = 0;
+            )
+            intLen = newLen;
+            if (nBits == 0)
+                return;
+            if (nBits <= (32 - bitsInHighWord))
+                MutableBigInteger''primitiveLeftShift(this, nBits);
+            else
+                MutableBigInteger''primitiveRightShift(this, 32 - nBits);
         )
-        else if (value.length - offset >= newLen)
-        (§
-            ;; use space on right
-            for (int i = 0(ß) i < newLen - intLen(ß) i++)
-                value[offset + intLen + i] = 0;
-        )
-        else
-        (§
-            ;; must use space on left
-            for (int i = 0(ß) i < intLen(ß) i++)
-                value[i] = value[offset + i];
-            for (int i = intLen(ß) i < newLen(ß) i++)
-                value[i] = 0;
-            offset = 0;
-        )
-        intLen = newLen;
-        if (nBits == 0)
-            return;
-        if (nBits <= (32 - bitsInHighWord))
-            primitiveLeftShift(nBits);
-        else
-            primitiveRightShift(32 - nBits);
     )
 
     ;;;
@@ -755,18 +792,19 @@
      ; divisor a back to the dividend result at a specified offset. It is used
      ; when qhat was estimated too large, and must be adjusted.
      ;;
-    #_private
-    (§ defn #_"int" divadd [#_"int[]" a, #_"int[]" result, #_"int" offset])
-    (§
-        long carry = 0;
-
-        for (int j = a.length - 1(ß) j >= 0(ß) j--)
+    #_method
+    (defn- #_"int" MutableBigInteger''divadd [#_"MutableBigInteger" this, #_"int[]" a, #_"int[]" result, #_"int" offset]
         (§
-            long sum = (a[j] & BigInteger'LONG_MASK) + (result[j + offset] & BigInteger'LONG_MASK) + carry;
-            result[j + offset] = (int)sum;
-            carry = sum >>> 32;
+            long carry = 0;
+
+            for (int j = a.length - 1(§ for) j >= 0(§ for) j--)
+            (§
+                long sum = (a[j] & BigInteger'LONG_MASK) + (result[j + offset] & BigInteger'LONG_MASK) + carry;
+                result[j + offset] = (int)sum;
+                carry = sum >>> 32;
+            )
+            return (int)carry;
         )
-        return (int)carry;
     )
 
     ;;;
@@ -774,78 +812,80 @@
      ; word input x, and subtracts the n word product from q. This is needed
      ; when subtracting qhat*divisor from dividend.
      ;;
-    #_private
-    (§ defn #_"int" mulsub [#_"int[]" q, #_"int[]" a, #_"int" x, #_"int" len, #_"int" offset])
-    (§
-        long xLong = x & BigInteger'LONG_MASK;
-        long carry = 0;
-        offset += len;
-
-        for (int j = len - 1(ß) j >= 0(ß) j--)
+    #_method
+    (defn- #_"int" MutableBigInteger''mulsub [#_"MutableBigInteger" this, #_"int[]" q, #_"int[]" a, #_"int" x, #_"int" len, #_"int" offset]
         (§
-            long product = (a[j] & BigInteger'LONG_MASK) * xLong + carry;
-            long difference = q[offset] - product;
-            q[offset--] = (int)difference;
-            carry = (product >>> 32) + (((difference & BigInteger'LONG_MASK) > ((((ß bit-not)(int)product) & BigInteger'LONG_MASK))) ? 1 #_":" 0);
+            long xLong = x & BigInteger'LONG_MASK;
+            long carry = 0;
+            offset += len;
+
+            for (int j = len - 1(§ for) j >= 0(§ for) j--)
+            (§
+                long product = (a[j] & BigInteger'LONG_MASK) * xLong + carry;
+                long difference = q[offset] - product;
+                q[offset--] = (int)difference;
+                carry = (product >>> 32) + (((difference & BigInteger'LONG_MASK) > ((((§ bit-not)(int)product) & BigInteger'LONG_MASK))) ? 1 #_":" 0);
+            )
+            return (int)carry;
         )
-        return (int)carry;
     )
 
     ;;;
      ; The method is the same as mulsun, except the fact that q array is not
      ; updated, the only result of the method is borrow flag.
      ;;
-    #_private
-    (§ defn #_"int" mulsubBorrow [#_"int[]" q, #_"int[]" a, #_"int" x, #_"int" len, #_"int" offset])
-    (§
-        long xLong = x & BigInteger'LONG_MASK;
-        long carry = 0;
-        offset += len;
-        for (int j = len - 1(ß) j >= 0(ß) j--)
+    #_method
+    (defn- #_"int" MutableBigInteger''mulsubBorrow [#_"MutableBigInteger" this, #_"int[]" q, #_"int[]" a, #_"int" x, #_"int" len, #_"int" offset]
         (§
-            long product = (a[j] & BigInteger'LONG_MASK) * xLong + carry;
-            long difference = q[offset--] - product;
-            carry = (product >>> 32) + (((difference & BigInteger'LONG_MASK) > ((((ß bit-not)(int)product) & BigInteger'LONG_MASK))) ? 1 #_":" 0);
+            long xLong = x & BigInteger'LONG_MASK;
+            long carry = 0;
+            offset += len;
+            for (int j = len - 1(§ for) j >= 0(§ for) j--)
+            (§
+                long product = (a[j] & BigInteger'LONG_MASK) * xLong + carry;
+                long difference = q[offset--] - product;
+                carry = (product >>> 32) + (((difference & BigInteger'LONG_MASK) > ((((§ bit-not)(int)product) & BigInteger'LONG_MASK))) ? 1 #_":" 0);
+            )
+            return (int)carry;
         )
-        return (int)carry;
     )
 
     ;;;
      ; Right shift this MutableBigInteger n bits, where n is less than 32.
      ; Assumes that intLen > 0, n > 0 for speed
      ;;
-    #_private
-    #_final
-    (§ defn #_"void" primitiveRightShift [#_"int" n])
-    (§
-        int[] val = value;
-        int n2 = 32 - n;
-        for (int i = offset + intLen - 1, c = val[i](ß) i > offset(ß) i--)
+    #_method
+    (defn- #_"void" MutableBigInteger''primitiveRightShift [#_"MutableBigInteger" this, #_"int" n]
         (§
-            int b = c;
-            c = val[i - 1];
-            val[i] = (c << n2) | (b >>> n);
+            int[] val = value;
+            int n2 = 32 - n;
+            for (int i = offset + intLen - 1, c = val[i](§ for) i > offset(§ for) i--)
+            (§
+                int b = c;
+                c = val[i - 1];
+                val[i] = (c << n2) | (b >>> n);
+            )
+            val[offset] >>>= n;
         )
-        val[offset] >>>= n;
     )
 
     ;;;
      ; Left shift this MutableBigInteger n bits, where n is less than 32.
      ; Assumes that intLen > 0, n > 0 for speed
      ;;
-    #_private
-    #_final
-    (§ defn #_"void" primitiveLeftShift [#_"int" n])
-    (§
-        int[] val = value;
-        int n2 = 32 - n;
-        for (int i = offset, c = val[i], m = i + intLen - 1(ß) i < m(ß) i++)
+    #_method
+    (defn- #_"void" MutableBigInteger''primitiveLeftShift [#_"MutableBigInteger" this, #_"int" n]
         (§
-            int b = c;
-            c = val[i + 1];
-            val[i] = (b << n) | (c >>> n2);
+            int[] val = value;
+            int n2 = 32 - n;
+            for (int i = offset, c = val[i], m = i + intLen - 1(§ for) i < m(§ for) i++)
+            (§
+                int b = c;
+                c = val[i + 1];
+                val[i] = (b << n) | (c >>> n2);
+            )
+            val[offset + intLen - 1] <<= n;
         )
-        val[offset + intLen - 1] <<= n;
     )
 
     ;;;
@@ -853,247 +893,256 @@
      ; The result is placed within this MutableBigInteger.
      ; The contents of the addend are not changed.
      ;;
-    (§ defn #_"void" add [#_"MutableBigInteger" addend])
-    (§
-        int x = intLen;
-        int y = addend.intLen;
-        int resultLen = (intLen > addend.intLen ? intLen #_":" addend.intLen);
-        int[] result = (value.length < resultLen) ? new int[resultLen] #_":" value;
-
-        int rstart = result.length - 1;
-        long sum;
-        long carry = 0;
-
-        ;; add common parts of both numbers
-        while (x > 0 && y > 0)
+    #_method
+    (defn #_"void" MutableBigInteger''add [#_"MutableBigInteger" this, #_"MutableBigInteger" addend]
         (§
-            x--; y--;
-            sum = (value[x + offset] & BigInteger'LONG_MASK) + (addend.value[y + addend.offset] & BigInteger'LONG_MASK) + carry;
-            result[rstart--] = (int)sum;
-            carry = sum >>> 32;
-        )
+            int x = intLen;
+            int y = addend.intLen;
+            int resultLen = (intLen > addend.intLen ? intLen #_":" addend.intLen);
+            int[] result = (value.length < resultLen) ? new int[resultLen] #_":" value;
 
-        ;; add remainder of the longer number
-        while (x > 0)
-        (§
-            x--;
-            if (carry == 0 && result == value && rstart == (x + offset))
-                return;
-            sum = (value[x + offset] & BigInteger'LONG_MASK) + carry;
-            result[rstart--] = (int)sum;
-            carry = sum >>> 32;
-        )
-        while (y > 0)
-        (§
-            y--;
-            sum = (addend.value[y + addend.offset] & BigInteger'LONG_MASK) + carry;
-            result[rstart--] = (int)sum;
-            carry = sum >>> 32;
-        )
+            int rstart = result.length - 1;
+            long sum;
+            long carry = 0;
 
-        if (carry > 0) ;; result must grow in length
-        (§
-            resultLen++;
-            if (result.length < resultLen)
+            ;; add common parts of both numbers
+            while (x > 0 && y > 0)
             (§
-                int temp[] = new int[resultLen];
-                ;; result one word longer from carry-out,
-                ;; copy low-order bits into new result
-                System.arraycopy(result, 0, temp, 1, result.length);
-                temp[0] = 1;
-                result = temp;
+                x--; y--;
+                sum = (value[x + offset] & BigInteger'LONG_MASK) + (addend.value[y + addend.offset] & BigInteger'LONG_MASK) + carry;
+                result[rstart--] = (int)sum;
+                carry = sum >>> 32;
             )
-            else
-            (§
-                result[rstart--] = 1;
-            )
-        )
 
-        value = result;
-        intLen = resultLen;
-        offset = result.length - resultLen;
+            ;; add remainder of the longer number
+            while (x > 0)
+            (§
+                x--;
+                if (carry == 0 && result == value && rstart == (x + offset))
+                    return;
+                sum = (value[x + offset] & BigInteger'LONG_MASK) + carry;
+                result[rstart--] = (int)sum;
+                carry = sum >>> 32;
+            )
+            while (y > 0)
+            (§
+                y--;
+                sum = (addend.value[y + addend.offset] & BigInteger'LONG_MASK) + carry;
+                result[rstart--] = (int)sum;
+                carry = sum >>> 32;
+            )
+
+            if (carry > 0) ;; result must grow in length
+            (§
+                resultLen++;
+                if (result.length < resultLen)
+                (§
+                    int temp[] = new int[resultLen];
+                    ;; result one word longer from carry-out,
+                    ;; copy low-order bits into new result
+                    System.arraycopy(result, 0, temp, 1, result.length);
+                    temp[0] = 1;
+                    result = temp;
+                )
+                else
+                (§
+                    result[rstart--] = 1;
+                )
+            )
+
+            value = result;
+            intLen = resultLen;
+            offset = result.length - resultLen;
+        )
     )
 
     ;;;
      ; Subtracts the smaller of this and b from the larger and places the
      ; result into this MutableBigInteger.
      ;;
-    (§ defn #_"int" subtract [#_"MutableBigInteger" b])
-    (§
-        MutableBigInteger a = this;
-
-        int[] result = value;
-        int sign = a.compare(b);
-
-        if (sign == 0)
+    #_method
+    (defn #_"int" MutableBigInteger''subtract [#_"MutableBigInteger" this, #_"MutableBigInteger" b]
         (§
-            reset();
-            return 0;
+            MutableBigInteger a = this;
+
+            int[] result = value;
+            int sign = MutableBigInteger''compare(a, b);
+
+            if (sign == 0)
+            (§
+                MutableBigInteger''reset(this);
+                return 0;
+            )
+            if (sign < 0)
+            (§
+                MutableBigInteger tmp = a;
+                a = b;
+                b = tmp;
+            )
+
+            int resultLen = a.intLen;
+            if (result.length < resultLen)
+                result = new int[resultLen];
+
+            long diff = 0;
+            int x = a.intLen;
+            int y = b.intLen;
+            int rstart = result.length - 1;
+
+            ;; subtract common parts of both numbers
+            while (y > 0)
+            (§
+                x--; y--;
+
+                diff = (a.value[x + a.offset] & BigInteger'LONG_MASK) - (b.value[y + b.offset] & BigInteger'LONG_MASK) - ((int)-(diff >> 32));
+                result[rstart--] = (int)diff;
+            )
+            ;; subtract remainder of longer number
+            while (x > 0)
+            (§
+                x--;
+                diff = (a.value[x + a.offset] & BigInteger'LONG_MASK) - ((int)-(diff >> 32));
+                result[rstart--] = (int)diff;
+            )
+
+            value = result;
+            intLen = resultLen;
+            offset = value.length - resultLen;
+            MutableBigInteger''normalize(this);
+            return sign;
         )
-        if (sign < 0)
-        (§
-            MutableBigInteger tmp = a;
-            a = b;
-            b = tmp;
-        )
-
-        int resultLen = a.intLen;
-        if (result.length < resultLen)
-            result = new int[resultLen];
-
-        long diff = 0;
-        int x = a.intLen;
-        int y = b.intLen;
-        int rstart = result.length - 1;
-
-        ;; subtract common parts of both numbers
-        while (y > 0)
-        (§
-            x--; y--;
-
-            diff = (a.value[x + a.offset] & BigInteger'LONG_MASK) - (b.value[y + b.offset] & BigInteger'LONG_MASK) - ((int)-(diff >> 32));
-            result[rstart--] = (int)diff;
-        )
-        ;; subtract remainder of longer number
-        while (x > 0)
-        (§
-            x--;
-            diff = (a.value[x + a.offset] & BigInteger'LONG_MASK) - ((int)-(diff >> 32));
-            result[rstart--] = (int)diff;
-        )
-
-        value = result;
-        intLen = resultLen;
-        offset = value.length - resultLen;
-        normalize();
-        return sign;
     )
 
     ;;;
      ; Subtracts the smaller of a and b from the larger and places the result into the larger.
      ; Returns 1 if the answer is in a, -1 if in b, 0 if no operation was performed.
      ;;
-    #_private
-    (§ defn #_"int" difference [#_"MutableBigInteger" b])
-    (§
-        MutableBigInteger a = this;
-        int sign = a.compare(b);
-        if (sign == 0)
-            return 0;
-        if (sign < 0)
+    #_method
+    (defn- #_"int" MutableBigInteger''difference [#_"MutableBigInteger" this, #_"MutableBigInteger" b]
         (§
-            MutableBigInteger tmp = a;
-            a = b;
-            b = tmp;
-        )
+            MutableBigInteger a = this;
+            int sign = MutableBigInteger''compare(a, b);
+            if (sign == 0)
+                return 0;
+            if (sign < 0)
+            (§
+                MutableBigInteger tmp = a;
+                a = b;
+                b = tmp;
+            )
 
-        long diff = 0;
-        int x = a.intLen;
-        int y = b.intLen;
+            long diff = 0;
+            int x = a.intLen;
+            int y = b.intLen;
 
-        ;; subtract common parts of both numbers
-        while (y > 0)
-        (§
-            x--; y--;
-            diff = (a.value[a.offset + x] & BigInteger'LONG_MASK) - (b.value[b.offset + y] & BigInteger'LONG_MASK) - ((int)-(diff >> 32));
-            a.value[a.offset + x] = (int)diff;
-        )
-        ;; subtract remainder of longer number
-        while (x > 0)
-        (§
-            x--;
-            diff = (a.value[a.offset + x] & BigInteger'LONG_MASK) - ((int)-(diff >> 32));
-            a.value[a.offset + x] = (int)diff;
-        )
+            ;; subtract common parts of both numbers
+            while (y > 0)
+            (§
+                x--; y--;
+                diff = (a.value[a.offset + x] & BigInteger'LONG_MASK) - (b.value[b.offset + y] & BigInteger'LONG_MASK) - ((int)-(diff >> 32));
+                a.value[a.offset + x] = (int)diff;
+            )
+            ;; subtract remainder of longer number
+            while (x > 0)
+            (§
+                x--;
+                diff = (a.value[a.offset + x] & BigInteger'LONG_MASK) - ((int)-(diff >> 32));
+                a.value[a.offset + x] = (int)diff;
+            )
 
-        a.normalize();
-        return sign;
+            MutableBigInteger''normalize(a);
+            return sign;
+        )
     )
 
     ;;;
      ; Multiply the contents of two MutableBigInteger objects. The result is
      ; placed into MutableBigInteger z. The contents of y are not changed.
      ;;
-    (§ defn #_"void" multiply [#_"MutableBigInteger" y, #_"MutableBigInteger" z])
-    (§
-        int xLen = intLen;
-        int yLen = y.intLen;
-        int newLen = xLen + yLen;
-
-        ;; put z into an appropriate state to receive product
-        if (z.value.length < newLen)
-            z.value = new int[newLen];
-        z.offset = 0;
-        z.intLen = newLen;
-
-        ;; the first iteration is hoisted out of the loop to avoid extra add
-        long carry = 0;
-        for (int j = yLen - 1, k = yLen + xLen - 1(ß) j >= 0(ß) j--, k--)
+    #_method
+    (defn #_"void" MutableBigInteger''multiply [#_"MutableBigInteger" this, #_"MutableBigInteger" y, #_"MutableBigInteger" z]
         (§
-            long product = (y.value[j + y.offset] & BigInteger'LONG_MASK) * (value[xLen - 1 + offset] & BigInteger'LONG_MASK) + carry;
-            z.value[k] = (int)product;
-            carry = product >>> 32;
-        )
-        z.value[xLen - 1] = (int)carry;
+            int xLen = intLen;
+            int yLen = y.intLen;
+            int newLen = xLen + yLen;
 
-        ;; perform the multiplication word by word
-        for (int i = xLen - 2(ß) i >= 0(ß) i--)
-        (§
-            carry = 0;
-            for (int j = yLen - 1, k = yLen + i(ß) j >= 0(ß) j--, k--)
+            ;; put z into an appropriate state to receive product
+            if (z.value.length < newLen)
+                z.value = new int[newLen];
+            z.offset = 0;
+            z.intLen = newLen;
+
+            ;; the first iteration is hoisted out of the loop to avoid extra add
+            long carry = 0;
+            for (int j = yLen - 1, k = yLen + xLen - 1(§ for) j >= 0(§ for) j--, k--)
             (§
-                long product = (y.value[j + y.offset] & BigInteger'LONG_MASK) * (value[i + offset] & BigInteger'LONG_MASK) + (z.value[k] & BigInteger'LONG_MASK) + carry;
+                long product = (y.value[j + y.offset] & BigInteger'LONG_MASK) * (value[xLen - 1 + offset] & BigInteger'LONG_MASK) + carry;
                 z.value[k] = (int)product;
                 carry = product >>> 32;
             )
-            z.value[i] = (int)carry;
-        )
+            z.value[xLen - 1] = (int)carry;
 
-        ;; remove leading zeros from product
-        z.normalize();
+            ;; perform the multiplication word by word
+            for (int i = xLen - 2(§ for) i >= 0(§ for) i--)
+            (§
+                carry = 0;
+                for (int j = yLen - 1, k = yLen + i(§ for) j >= 0(§ for) j--, k--)
+                (§
+                    long product = (y.value[j + y.offset] & BigInteger'LONG_MASK) * (value[i + offset] & BigInteger'LONG_MASK) + (z.value[k] & BigInteger'LONG_MASK) + carry;
+                    z.value[k] = (int)product;
+                    carry = product >>> 32;
+                )
+                z.value[i] = (int)carry;
+            )
+
+            ;; remove leading zeros from product
+            MutableBigInteger''normalize(z);
+        )
     )
 
     ;;;
      ; Multiply the contents of this MutableBigInteger by the word y.
      ; The result is placed into z.
      ;;
-    (§ defn #_"void" mul [#_"int" y, #_"MutableBigInteger" z])
-    (§
-        if (y == 1)
+    #_method
+    (defn #_"void" MutableBigInteger''mul [#_"MutableBigInteger" this, #_"int" y, #_"MutableBigInteger" z]
         (§
-            z.copyValue(this);
-            return;
-        )
+            if (y == 1)
+            (§
+                MutableBigInteger''copyValue-m(z, this);
+                return;
+            )
 
-        if (y == 0)
-        (§
-            z.clear();
-            return;
-        )
+            if (y == 0)
+            (§
+                MutableBigInteger''clear(z);
+                return;
+            )
 
-        ;; perform the multiplication word by word
-        long ylong = y & BigInteger'LONG_MASK;
-        int[] zval = (z.value.length < intLen + 1) ? new int[intLen + 1] #_":" z.value;
-        long carry = 0;
-        for (int i = intLen - 1(ß) i >= 0(ß) i--)
-        (§
-            long product = ylong * (value[i + offset] & BigInteger'LONG_MASK) + carry;
-            zval[i + 1] = (int)product;
-            carry = product >>> 32;
-        )
+            ;; perform the multiplication word by word
+            long ylong = y & BigInteger'LONG_MASK;
+            int[] zval = (z.value.length < intLen + 1) ? new int[intLen + 1] #_":" z.value;
+            long carry = 0;
+            for (int i = intLen - 1(§ for) i >= 0(§ for) i--)
+            (§
+                long product = ylong * (value[i + offset] & BigInteger'LONG_MASK) + carry;
+                zval[i + 1] = (int)product;
+                carry = product >>> 32;
+            )
 
-        if (carry == 0)
-        (§
-            z.offset = 1;
-            z.intLen = intLen;
+            if (carry == 0)
+            (§
+                z.offset = 1;
+                z.intLen = intLen;
+            )
+            else
+            (§
+                z.offset = 0;
+                z.intLen = intLen + 1;
+                zval[0] = (int)carry;
+            )
+            z.value = zval;
         )
-        else
-        (§
-            z.offset = 0;
-            z.intLen = intLen + 1;
-            zval[0] = (int)carry;
-        )
-        z.value = zval;
     )
 
     ;;;
@@ -1102,87 +1151,95 @@
      ;
      ; @return the remainder of the division is returned.
      ;;
-    (§ defn #_"int" divideOneWord [#_"int" divisor, #_"MutableBigInteger" quotient])
-    (§
-        long divisorLong = divisor & BigInteger'LONG_MASK;
-
-        ;; special case of one word dividend
-        if (intLen == 1)
+    #_method
+    (defn #_"int" MutableBigInteger''divideOneWord [#_"MutableBigInteger" this, #_"int" divisor, #_"MutableBigInteger" quotient]
         (§
-            long dividendValue = value[offset] & BigInteger'LONG_MASK;
-            int q = (int) (dividendValue / divisorLong);
-            int r = (int) (dividendValue - q * divisorLong);
-            quotient.value[0] = q;
-            quotient.intLen = (q == 0) ? 0 #_":" 1;
-            quotient.offset = 0;
-            return r;
-        )
+            long divisorLong = divisor & BigInteger'LONG_MASK;
 
-        if (quotient.value.length < intLen)
-            quotient.value = new int[intLen];
-        quotient.offset = 0;
-        quotient.intLen = intLen;
-
-        ;; normalize the divisor
-        int shift = Integer.numberOfLeadingZeros(divisor);
-
-        int rem = value[offset];
-        long remLong = rem & BigInteger'LONG_MASK;
-        if (remLong < divisorLong)
-        (§
-            quotient.value[0] = 0;
-        )
-        else
-        (§
-            quotient.value[0] = (int)(remLong / divisorLong);
-            rem = (int) (remLong - (quotient.value[0] * divisorLong));
-            remLong = rem & BigInteger'LONG_MASK;
-        )
-        int xlen = intLen;
-        while (--xlen > 0)
-        (§
-            long dividendEstimate = (remLong << 32) | (value[offset + intLen - xlen] & BigInteger'LONG_MASK);
-            int q;
-            if (dividendEstimate >= 0)
+            ;; special case of one word dividend
+            if (intLen == 1)
             (§
-                q = (int) (dividendEstimate / divisorLong);
-                rem = (int) (dividendEstimate - q * divisorLong);
+                long dividendValue = value[offset] & BigInteger'LONG_MASK;
+                int q = (int) (dividendValue / divisorLong);
+                int r = (int) (dividendValue - q * divisorLong);
+                quotient.value[0] = q;
+                quotient.intLen = (q == 0) ? 0 #_":" 1;
+                quotient.offset = 0;
+                return r;
+            )
+
+            if (quotient.value.length < intLen)
+                quotient.value = new int[intLen];
+            quotient.offset = 0;
+            quotient.intLen = intLen;
+
+            ;; normalize the divisor
+            int shift = Integer.numberOfLeadingZeros(divisor);
+
+            int rem = value[offset];
+            long remLong = rem & BigInteger'LONG_MASK;
+            if (remLong < divisorLong)
+            (§
+                quotient.value[0] = 0;
             )
             else
             (§
-                long tmp = divWord(dividendEstimate, divisor);
-                q = (int) (tmp & BigInteger'LONG_MASK);
-                rem = (int) (tmp >>> 32);
+                quotient.value[0] = (int)(remLong / divisorLong);
+                rem = (int) (remLong - (quotient.value[0] * divisorLong));
+                remLong = rem & BigInteger'LONG_MASK;
             )
-            quotient.value[intLen - xlen] = q;
-            remLong = rem & BigInteger'LONG_MASK;
-        )
+            int xlen = intLen;
+            while (--xlen > 0)
+            (§
+                long dividendEstimate = (remLong << 32) | (value[offset + intLen - xlen] & BigInteger'LONG_MASK);
+                int q;
+                if (dividendEstimate >= 0)
+                (§
+                    q = (int) (dividendEstimate / divisorLong);
+                    rem = (int) (dividendEstimate - q * divisorLong);
+                )
+                else
+                (§
+                    long tmp = MutableBigInteger'divWord(dividendEstimate, divisor);
+                    q = (int) (tmp & BigInteger'LONG_MASK);
+                    rem = (int) (tmp >>> 32);
+                )
+                quotient.value[intLen - xlen] = q;
+                remLong = rem & BigInteger'LONG_MASK;
+            )
 
-        quotient.normalize();
-        ;; unnormalize
-        if (shift > 0)
-            return rem % divisor;
-        else
-            return rem;
+            MutableBigInteger''normalize(quotient);
+            ;; unnormalize
+            if (shift > 0)
+                return rem % divisor;
+            else
+                return rem;
+        )
     )
 
     ;;;
      ; Calculates the quotient of this div b and places the quotient in the
      ; provided MutableBigInteger objects and the remainder object is returned.
      ;;
-    (§ defn #_"MutableBigInteger" divide [#_"MutableBigInteger" b, #_"MutableBigInteger" quotient])
-    (§
-        return divide(b, quotient, true);
+    #_method
+    (defn #_"MutableBigInteger" MutableBigInteger''divide-3 [#_"MutableBigInteger" this, #_"MutableBigInteger" b, #_"MutableBigInteger" quotient]
+        (§
+            return MutableBigInteger''divide-4(this, b, quotient, true);
+        )
     )
 
-    (§ defn #_"MutableBigInteger" divide [#_"MutableBigInteger" b, #_"MutableBigInteger" quotient, #_"boolean" needRemainder])
-    (§
-        return divideKnuth(b, quotient, needRemainder);
+    #_method
+    (defn #_"MutableBigInteger" MutableBigInteger''divide-4 [#_"MutableBigInteger" this, #_"MutableBigInteger" b, #_"MutableBigInteger" quotient, #_"boolean" needRemainder]
+        (§
+            return MutableBigInteger''divideKnuth-4(this, b, quotient, needRemainder);
+        )
     )
 
-    (§ defn #_"MutableBigInteger" divideKnuth [#_"MutableBigInteger" b, #_"MutableBigInteger" quotient])
-    (§
-        return divideKnuth(b, quotient, true);
+    #_method
+    (defn #_"MutableBigInteger" MutableBigInteger''divideKnuth [#_"MutableBigInteger" this, #_"MutableBigInteger" b, #_"MutableBigInteger" quotient]
+        (§
+            return MutableBigInteger''divideKnuth-4(this, b, quotient, true);
+        )
     )
 
     ;;;
@@ -1193,121 +1250,92 @@
      ; Many optimizations to that algorithm have been adapted from the Colin Plumb C library.
      ; It special cases one word divisors for speed. The content of b is not changed.
      ;;
-    (§ defn #_"MutableBigInteger" divideKnuth [#_"MutableBigInteger" b, #_"MutableBigInteger" quotient, #_"boolean" needRemainder])
-    (§
-        if (b.intLen == 0)
-            throw new ArithmeticException("BigInteger divide by zero");
+    #_method
+    (defn #_"MutableBigInteger" MutableBigInteger''divideKnuth [#_"MutableBigInteger" this, #_"MutableBigInteger" b, #_"MutableBigInteger" quotient, #_"boolean" needRemainder]
+        (§
+            if (b.intLen == 0)
+                throw new ArithmeticException("BigInteger divide by zero");
 
-        ;; dividend is zero
-        if (intLen == 0)
-        (§
-            quotient.intLen = quotient.offset = 0;
-            return needRemainder ? new MutableBigInteger() #_":" null;
-        )
-
-        int cmp = compare(b);
-        ;; dividend less than divisor
-        if (cmp < 0)
-        (§
-            quotient.intLen = quotient.offset = 0;
-            return needRemainder ? new MutableBigInteger(this) #_":" null;
-        )
-        ;; dividend equal to divisor
-        if (cmp == 0)
-        (§
-            quotient.value[0] = quotient.intLen = 1;
-            quotient.offset = 0;
-            return needRemainder ? new MutableBigInteger() #_":" null;
-        )
-
-        quotient.clear();
-        ;; special case one word divisor
-        if (b.intLen == 1)
-        (§
-            int r = divideOneWord(b.value[b.offset], quotient);
-            if (needRemainder)
+            ;; dividend is zero
+            if (intLen == 0)
             (§
-                if (r == 0)
-                    return new MutableBigInteger();
-                return new MutableBigInteger(r);
+                quotient.intLen = quotient.offset = 0;
+                return needRemainder ? MutableBigInteger'new() #_":" null;
             )
-            else
+
+            int cmp = MutableBigInteger''compare(this, b);
+            ;; dividend less than divisor
+            if (cmp < 0)
             (§
-                return null;
+                quotient.intLen = quotient.offset = 0;
+                return needRemainder ? MutableBigInteger'new(this) #_":" null;
             )
-        )
-
-        ;; cancel common powers of two if we're above the KNUTH_POW2_* thresholds
-        if (intLen >= KNUTH_POW2_THRESH_LEN)
-        (§
-            int trailingZeroBits = Math.min(getLowestSetBit(), b.getLowestSetBit());
-            if (trailingZeroBits >= KNUTH_POW2_THRESH_ZEROS * 32)
+            ;; dividend equal to divisor
+            if (cmp == 0)
             (§
-                MutableBigInteger a = new MutableBigInteger(this);
-                b = new MutableBigInteger(b);
-                a.rightShift(trailingZeroBits);
-                b.rightShift(trailingZeroBits);
-                MutableBigInteger r = a.divideKnuth(b, quotient);
-                r.leftShift(trailingZeroBits);
-                return r;
+                quotient.value[0] = quotient.intLen = 1;
+                quotient.offset = 0;
+                return needRemainder ? MutableBigInteger'new() #_":" null;
             )
-        )
 
-        return divideMagnitude(b, quotient, needRemainder);
-    )
+            MutableBigInteger''clear(quotient);
+            ;; special case one word divisor
+            if (b.intLen == 1)
+            (§
+                int r = MutableBigInteger''divideOneWord(this, b.value[b.offset], quotient);
+                if (needRemainder)
+                (§
+                    if (r == 0)
+                        return MutableBigInteger'new();
+                    return MutableBigInteger'new(r);
+                )
+                else
+                (§
+                    return null;
+                )
+            )
 
-    (§ defn #_"long" bitLength [])
-    (§
-        if (intLen == 0)
-            return 0;
-        return intLen * 32 #_"L" - Integer.numberOfLeadingZeros(value[offset]);
-    )
+            ;; cancel common powers of two if we're above the KNUTH_POW2_* thresholds
+            if (intLen >= MutableBigInteger'KNUTH_POW2_THRESH_LEN)
+            (§
+                int trailingZeroBits = Math.min(MutableBigInteger''getLowestSetBit(this), MutableBigInteger''getLowestSetBit(b));
+                if (trailingZeroBits >= MutableBigInteger'KNUTH_POW2_THRESH_ZEROS * 32)
+                (§
+                    MutableBigInteger a = MutableBigInteger'new(this);
+                    b = MutableBigInteger'new(b);
+                    MutableBigInteger''rightShift(a, trailingZeroBits);
+                    MutableBigInteger''rightShift(b, trailingZeroBits);
+                    MutableBigInteger r = MutableBigInteger''divideKnuth-3(a, b, quotient);
+                    MutableBigInteger''leftShift(r, trailingZeroBits);
+                    return r;
+                )
+            )
 
-    ;;;
-     ; Internally used to calculate the quotient of this div v and places the
-     ; quotient in the provided MutableBigInteger object and the remainder is
-     ; returned.
-     ;
-     ; @return the remainder of the division will be returned.
-     ;;
-    (§ defn #_"long" divide [#_"long" v, #_"MutableBigInteger" quotient])
-    (§
-        if (v == 0)
-            throw new ArithmeticException("BigInteger divide by zero");
-
-        ;; dividend is zero
-        if (intLen == 0)
-        (§
-            quotient.intLen = quotient.offset = 0;
-            return 0;
-        )
-        if (v < 0)
-            v = -v;
-
-        int d = (int)(v >>> 32);
-        quotient.clear();
-        ;; special case on word divisor
-        if (d == 0)
-            return divideOneWord((int)v, quotient) & BigInteger'LONG_MASK;
-        else
-        (§
-            return divideLongMagnitude(v, quotient).toLong();
+            return MutableBigInteger''divideMagnitude(this, b, quotient, needRemainder);
         )
     )
 
-    #_private
-    #_static
-    (§ defn #_"void" copyAndShift [#_"int[]" src, #_"int" srcFrom, #_"int" srcLen, #_"int[]" dst, #_"int" dstFrom, #_"int" shift])
-    (§
-        int n2 = 32 - shift;
-        int c = src[srcFrom];
-        for (int i = 0(ß) i < srcLen - 1(ß) i++)
+    #_method
+    (defn #_"long" MutableBigInteger''bitLength [#_"MutableBigInteger" this]
         (§
-            int b = c;
-            c = src[++srcFrom];
-            dst[dstFrom + i] = (b << shift) | (c >>> n2);
+            if (intLen == 0)
+                return 0;
+            return intLen * 32 #_"L" - Integer.numberOfLeadingZeros(value[offset]);
         )
-        dst[dstFrom + srcLen - 1] = c << shift;
+    )
+
+    (defn- #_"void" MutableBigInteger'copyAndShift [#_"int[]" src, #_"int" srcFrom, #_"int" srcLen, #_"int[]" dst, #_"int" dstFrom, #_"int" shift]
+        (§
+            int n2 = 32 - shift;
+            int c = src[srcFrom];
+            for (int i = 0(§ for) i < srcLen - 1(§ for) i++)
+            (§
+                int b = c;
+                c = src[++srcFrom];
+                dst[dstFrom + i] = (b << shift) | (c >>> n2);
+            )
+            dst[dstFrom + srcLen - 1] = c << shift;
+        )
     )
 
     ;;;
@@ -1315,300 +1343,166 @@
      ; The quotient will be placed into the provided quotient object &
      ; the remainder object is returned.
      ;;
-    #_private
-    (§ defn #_"MutableBigInteger" divideMagnitude [#_"MutableBigInteger" div, #_"MutableBigInteger" quotient, #_"boolean" needRemainder])
-    (§
-        ;; assert div.intLen > 1
-        ;; D1 normalize the divisor
-        int shift = Integer.numberOfLeadingZeros(div.value[div.offset]);
-        ;; copy divisor value to protect divisor
-        #_final
-        int dlen = div.intLen;
-        int[] divisor;
-        ;; remainder starts as dividend with space for a leading zero
-        MutableBigInteger rem;
-        if (shift > 0)
+    #_method
+    (defn- #_"MutableBigInteger" MutableBigInteger''divideMagnitude [#_"MutableBigInteger" this, #_"MutableBigInteger" div, #_"MutableBigInteger" quotient, #_"boolean" needRemainder]
         (§
-            divisor = new int[dlen];
-            copyAndShift(div.value, div.offset, dlen, divisor, 0, shift);
-            if (Integer.numberOfLeadingZeros(value[offset]) >= shift)
+            ;; assert div.intLen > 1
+            ;; D1 normalize the divisor
+            int shift = Integer.numberOfLeadingZeros(div.value[div.offset]);
+            ;; copy divisor value to protect divisor
+            int dlen = div.intLen;
+            int[] divisor;
+            ;; remainder starts as dividend with space for a leading zero
+            MutableBigInteger rem;
+            if (shift > 0)
             (§
-                int[] remarr = new int[intLen + 1];
-                rem = new MutableBigInteger(remarr);
-                rem.intLen = intLen;
-                rem.offset = 1;
-                copyAndShift(value, offset, intLen, remarr, 1, shift);
-            )
-            else
-            (§
-                int[] remarr = new int[intLen + 2];
-                rem = new MutableBigInteger(remarr);
-                rem.intLen = intLen + 1;
-                rem.offset = 1;
-                int rFrom = offset;
-                int c = 0;
-                int n2 = 32 - shift;
-                for (int i = 1(ß) i < intLen + 1(ß) i++, rFrom++)
+                divisor = new int[dlen];
+                MutableBigInteger'copyAndShift(div.value, div.offset, dlen, divisor, 0, shift);
+                if (Integer.numberOfLeadingZeros(value[offset]) >= shift)
                 (§
-                    int b = c;
-                    c = value[rFrom];
-                    remarr[i] = (b << shift) | (c >>> n2);
-                )
-                remarr[intLen + 1] = c << shift;
-            )
-        )
-        else
-        (§
-            divisor = Arrays.copyOfRange(div.value, div.offset, div.offset + div.intLen);
-            rem = new MutableBigInteger(new int[intLen + 1]);
-            System.arraycopy(value, offset, rem.value, 1, intLen);
-            rem.intLen = intLen;
-            rem.offset = 1;
-        )
-
-        int nlen = rem.intLen;
-
-        ;; set the quotient size
-        #_final
-        int limit = nlen - dlen + 1;
-        if (quotient.value.length < limit)
-        (§
-            quotient.value = new int[limit];
-            quotient.offset = 0;
-        )
-        quotient.intLen = limit;
-        int[] q = quotient.value;
-
-        ;; must insert leading 0 in rem if its length did not change
-        if (rem.intLen == nlen)
-        (§
-            rem.offset = 0;
-            rem.value[0] = 0;
-            rem.intLen++;
-        )
-
-        int dh = divisor[0];
-        long dhLong = dh & BigInteger'LONG_MASK;
-        int dl = divisor[1];
-
-        ;; D2 Initialize j
-        for (int j = 0(ß) j < limit - 1(ß) j++)
-        (§
-            ;; D3 Calculate qhat
-            ;; estimate qhat
-            int qhat = 0;
-            int qrem = 0;
-            boolean skipCorrection = false;
-            int nh = rem.value[j + rem.offset];
-            int nh2 = nh + 0x80000000;
-            int nm = rem.value[j + 1 + rem.offset];
-
-            if (nh == dh)
-            (§
-                qhat = (ß bit-not)0;
-                qrem = nh + nm;
-                skipCorrection = qrem + 0x80000000 < nh2;
-            )
-            else
-            (§
-                long nChunk = (((long)nh) << 32) | (nm & BigInteger'LONG_MASK);
-                if (nChunk >= 0)
-                (§
-                    qhat = (int) (nChunk / dhLong);
-                    qrem = (int) (nChunk - (qhat * dhLong));
+                    int[] remarr = new int[intLen + 1];
+                    rem = MutableBigInteger'new(remarr);
+                    rem.intLen = intLen;
+                    rem.offset = 1;
+                    MutableBigInteger'copyAndShift(value, offset, intLen, remarr, 1, shift);
                 )
                 else
                 (§
-                    long tmp = divWord(nChunk, dh);
-                    qhat = (int) (tmp & BigInteger'LONG_MASK);
-                    qrem = (int) (tmp >>> 32);
-                )
-            )
-
-            if (qhat == 0)
-                continue;
-
-            if (!skipCorrection) ;; correct qhat
-            (§
-                long nl = rem.value[j + 2 + rem.offset] & BigInteger'LONG_MASK;
-                long rs = ((qrem & BigInteger'LONG_MASK) << 32) | nl;
-                long estProduct = (dl & BigInteger'LONG_MASK) * (qhat & BigInteger'LONG_MASK);
-
-                if (unsignedLongCompare(estProduct, rs))
-                (§
-                    qhat--;
-                    qrem = (int)((qrem & BigInteger'LONG_MASK) + dhLong);
-                    if ((qrem & BigInteger'LONG_MASK) >= dhLong)
+                    int[] remarr = new int[intLen + 2];
+                    rem = MutableBigInteger'new(remarr);
+                    rem.intLen = intLen + 1;
+                    rem.offset = 1;
+                    int rFrom = offset;
+                    int c = 0;
+                    int n2 = 32 - shift;
+                    for (int i = 1(§ for) i < intLen + 1(§ for) i++, rFrom++)
                     (§
-                        estProduct -= (dl & BigInteger'LONG_MASK);
-                        rs = ((qrem & BigInteger'LONG_MASK) << 32) | nl;
-                        if (unsignedLongCompare(estProduct, rs))
-                            qhat--;
+                        int b = c;
+                        c = value[rFrom];
+                        remarr[i] = (b << shift) | (c >>> n2);
                     )
+                    remarr[intLen + 1] = c << shift;
                 )
-            )
-
-            ;; D4 Multiply and subtract
-            rem.value[j + rem.offset] = 0;
-            int borrow = mulsub(rem.value, divisor, qhat, dlen, j + rem.offset);
-
-            ;; D5 Test remainder
-            if (borrow + 0x80000000 > nh2)
-            (§
-                ;; D6 Add back
-                divadd(divisor, rem.value, j + 1 + rem.offset);
-                qhat--;
-            )
-
-            ;; store the quotient digit
-            q[j] = qhat;
-        ) ;; D7 loop on j
-        ;; D3 Calculate qhat
-        ;; estimate qhat
-        int qhat = 0;
-        int qrem = 0;
-        boolean skipCorrection = false;
-        int nh = rem.value[limit - 1 + rem.offset];
-        int nh2 = nh + 0x80000000;
-        int nm = rem.value[limit + rem.offset];
-
-        if (nh == dh)
-        (§
-            qhat = (ß bit-not)0;
-            qrem = nh + nm;
-            skipCorrection = qrem + 0x80000000 < nh2;
-        )
-        else
-        (§
-            long nChunk = (((long) nh) << 32) | (nm & BigInteger'LONG_MASK);
-            if (nChunk >= 0)
-            (§
-                qhat = (int) (nChunk / dhLong);
-                qrem = (int) (nChunk - (qhat * dhLong));
             )
             else
             (§
-                long tmp = divWord(nChunk, dh);
-                qhat = (int) (tmp & BigInteger'LONG_MASK);
-                qrem = (int) (tmp >>> 32);
+                divisor = Arrays.copyOfRange(div.value, div.offset, div.offset + div.intLen);
+                rem = MutableBigInteger'new(new int[intLen + 1]);
+                System.arraycopy(value, offset, rem.value, 1, intLen);
+                rem.intLen = intLen;
+                rem.offset = 1;
             )
-        )
-        if (qhat != 0)
-        (§
-            if (!skipCorrection) ;; correct qhat
-            (§
-                long nl = rem.value[limit + 1 + rem.offset] & BigInteger'LONG_MASK;
-                long rs = ((qrem & BigInteger'LONG_MASK) << 32) | nl;
-                long estProduct = (dl & BigInteger'LONG_MASK) * (qhat & BigInteger'LONG_MASK);
 
-                if (unsignedLongCompare(estProduct, rs))
+            int nlen = rem.intLen;
+
+            ;; set the quotient size
+            int limit = nlen - dlen + 1;
+            if (quotient.value.length < limit)
+            (§
+                quotient.value = new int[limit];
+                quotient.offset = 0;
+            )
+            quotient.intLen = limit;
+            int[] q = quotient.value;
+
+            ;; must insert leading 0 in rem if its length did not change
+            if (rem.intLen == nlen)
+            (§
+                rem.offset = 0;
+                rem.value[0] = 0;
+                rem.intLen++;
+            )
+
+            int dh = divisor[0];
+            long dhLong = dh & BigInteger'LONG_MASK;
+            int dl = divisor[1];
+
+            ;; D2 Initialize j
+            for (int j = 0(§ for) j < limit - 1(§ for) j++)
+            (§
+                ;; D3 Calculate qhat
+                ;; estimate qhat
+                int qhat = 0;
+                int qrem = 0;
+                boolean skipCorrection = false;
+                int nh = rem.value[j + rem.offset];
+                int nh2 = nh + 0x80000000;
+                int nm = rem.value[j + 1 + rem.offset];
+
+                if (nh == dh)
                 (§
-                    qhat--;
-                    qrem = (int) ((qrem & BigInteger'LONG_MASK) + dhLong);
-                    if ((qrem & BigInteger'LONG_MASK) >= dhLong)
+                    qhat = (§ bit-not)0;
+                    qrem = nh + nm;
+                    skipCorrection = qrem + 0x80000000 < nh2;
+                )
+                else
+                (§
+                    long nChunk = (((long)nh) << 32) | (nm & BigInteger'LONG_MASK);
+                    if (nChunk >= 0)
                     (§
-                        estProduct -= (dl & BigInteger'LONG_MASK);
-                        rs = ((qrem & BigInteger'LONG_MASK) << 32) | nl;
-                        if (unsignedLongCompare(estProduct, rs))
-                            qhat--;
+                        qhat = (int) (nChunk / dhLong);
+                        qrem = (int) (nChunk - (qhat * dhLong));
+                    )
+                    else
+                    (§
+                        long tmp = MutableBigInteger'divWord(nChunk, dh);
+                        qhat = (int) (tmp & BigInteger'LONG_MASK);
+                        qrem = (int) (tmp >>> 32);
                     )
                 )
-            )
 
-            ;; D4 Multiply and subtract
-            int borrow;
-            rem.value[limit - 1 + rem.offset] = 0;
-            if (needRemainder)
-                borrow = mulsub(rem.value, divisor, qhat, dlen, limit - 1 + rem.offset);
-            else
-                borrow = mulsubBorrow(rem.value, divisor, qhat, dlen, limit - 1 + rem.offset);
+                if (qhat == 0)
+                    continue;
 
-            ;; D5 Test remainder
-            if (borrow + 0x80000000 > nh2)
-            (§
-                ;; D6 Add back
-                if (needRemainder)
-                    divadd(divisor, rem.value, limit - 1 + 1 + rem.offset);
-                qhat--;
-            )
+                if (!skipCorrection) ;; correct qhat
+                (§
+                    long nl = rem.value[j + 2 + rem.offset] & BigInteger'LONG_MASK;
+                    long rs = ((qrem & BigInteger'LONG_MASK) << 32) | nl;
+                    long estProduct = (dl & BigInteger'LONG_MASK) * (qhat & BigInteger'LONG_MASK);
 
-            ;; store the quotient digit
-            q[limit - 1] = qhat;
-        )
+                    if (MutableBigInteger''unsignedLongCompare(this, estProduct, rs))
+                    (§
+                        qhat--;
+                        qrem = (int)((qrem & BigInteger'LONG_MASK) + dhLong);
+                        if ((qrem & BigInteger'LONG_MASK) >= dhLong)
+                        (§
+                            estProduct -= (dl & BigInteger'LONG_MASK);
+                            rs = ((qrem & BigInteger'LONG_MASK) << 32) | nl;
+                            if (MutableBigInteger''unsignedLongCompare(this, estProduct, rs))
+                                qhat--;
+                        )
+                    )
+                )
 
-        if (needRemainder)
-        (§
-            ;; D8 Unnormalize
-            if (shift > 0)
-                rem.rightShift(shift);
-            rem.normalize();
-        )
-        quotient.normalize();
-        return needRemainder ? rem #_":" null;
-    )
+                ;; D4 Multiply and subtract
+                rem.value[j + rem.offset] = 0;
+                int borrow = MutableBigInteger''mulsub(this, rem.value, divisor, qhat, dlen, j + rem.offset);
 
-    ;;;
-     ; Divide this MutableBigInteger by the divisor represented by positive long value.
-     ; The quotient will be placed into the provided quotient object &
-     ; the remainder object is returned.
-     ;;
-    #_private
-    (§ defn #_"MutableBigInteger" divideLongMagnitude [#_"long" ldivisor, #_"MutableBigInteger" quotient])
-    (§
-        ;; remainder starts as dividend with space for a leading zero
-        MutableBigInteger rem = new MutableBigInteger(new int[intLen + 1]);
-        System.arraycopy(value, offset, rem.value, 1, intLen);
-        rem.intLen = intLen;
-        rem.offset = 1;
+                ;; D5 Test remainder
+                if (borrow + 0x80000000 > nh2)
+                (§
+                    ;; D6 Add back
+                    MutableBigInteger''divadd(this, divisor, rem.value, j + 1 + rem.offset);
+                    qhat--;
+                )
 
-        int nlen = rem.intLen;
-
-        int limit = nlen - 2 + 1;
-        if (quotient.value.length < limit)
-        (§
-            quotient.value = new int[limit];
-            quotient.offset = 0;
-        )
-        quotient.intLen = limit;
-        int[] q = quotient.value;
-
-        ;; D1 normalize the divisor
-        int shift = Long.numberOfLeadingZeros(ldivisor);
-        if (shift > 0)
-        (§
-            ldivisor <<= shift;
-            rem.leftShift(shift);
-        )
-
-        ;; must insert leading 0 in rem if its length did not change
-        if (rem.intLen == nlen)
-        (§
-            rem.offset = 0;
-            rem.value[0] = 0;
-            rem.intLen++;
-        )
-
-        int dh = (int)(ldivisor >>> 32);
-        long dhLong = dh & BigInteger'LONG_MASK;
-        int dl = (int)(ldivisor & BigInteger'LONG_MASK);
-
-        ;; D2 Initialize j
-        for (int j = 0(ß) j < limit(ß) j++)
-        (§
+                ;; store the quotient digit
+                q[j] = qhat;
+            ) ;; D7 loop on j
             ;; D3 Calculate qhat
             ;; estimate qhat
             int qhat = 0;
             int qrem = 0;
             boolean skipCorrection = false;
-            int nh = rem.value[j + rem.offset];
+            int nh = rem.value[limit - 1 + rem.offset];
             int nh2 = nh + 0x80000000;
-            int nm = rem.value[j + 1 + rem.offset];
+            int nm = rem.value[limit + rem.offset];
 
             if (nh == dh)
             (§
-                qhat = (ß bit-not)0;
+                qhat = (§ bit-not)0;
                 qrem = nh + nm;
-                skipCorrection = (qrem + 0x80000000 < nh2);
+                skipCorrection = qrem + 0x80000000 < nh2;
             )
             else
             (§
@@ -1620,58 +1514,64 @@
                 )
                 else
                 (§
-                    long tmp = divWord(nChunk, dh);
-                    qhat =(int)(tmp & BigInteger'LONG_MASK);
-                    qrem = (int)(tmp >>> 32);
+                    long tmp = MutableBigInteger'divWord(nChunk, dh);
+                    qhat = (int) (tmp & BigInteger'LONG_MASK);
+                    qrem = (int) (tmp >>> 32);
                 )
             )
-
-            if (qhat == 0)
-                continue;
-
-            if (!skipCorrection) ;; correct qhat
+            if (qhat != 0)
             (§
-                long nl = rem.value[j + 2 + rem.offset] & BigInteger'LONG_MASK;
-                long rs = ((qrem & BigInteger'LONG_MASK) << 32) | nl;
-                long estProduct = (dl & BigInteger'LONG_MASK) * (qhat & BigInteger'LONG_MASK);
-
-                if (unsignedLongCompare(estProduct, rs))
+                if (!skipCorrection) ;; correct qhat
                 (§
-                    qhat--;
-                    qrem = (int) ((qrem & BigInteger'LONG_MASK) + dhLong);
-                    if ((qrem & BigInteger'LONG_MASK) >= dhLong)
+                    long nl = rem.value[limit + 1 + rem.offset] & BigInteger'LONG_MASK;
+                    long rs = ((qrem & BigInteger'LONG_MASK) << 32) | nl;
+                    long estProduct = (dl & BigInteger'LONG_MASK) * (qhat & BigInteger'LONG_MASK);
+
+                    if (MutableBigInteger''unsignedLongCompare(this, estProduct, rs))
                     (§
-                        estProduct -= (dl & BigInteger'LONG_MASK);
-                        rs = ((qrem & BigInteger'LONG_MASK) << 32) | nl;
-                        if (unsignedLongCompare(estProduct, rs))
-                            qhat--;
+                        qhat--;
+                        qrem = (int) ((qrem & BigInteger'LONG_MASK) + dhLong);
+                        if ((qrem & BigInteger'LONG_MASK) >= dhLong)
+                        (§
+                            estProduct -= (dl & BigInteger'LONG_MASK);
+                            rs = ((qrem & BigInteger'LONG_MASK) << 32) | nl;
+                            if (MutableBigInteger''unsignedLongCompare(this, estProduct, rs))
+                                qhat--;
+                        )
                     )
                 )
+
+                ;; D4 Multiply and subtract
+                int borrow;
+                rem.value[limit - 1 + rem.offset] = 0;
+                if (needRemainder)
+                    borrow = MutableBigInteger''mulsub(this, rem.value, divisor, qhat, dlen, limit - 1 + rem.offset);
+                else
+                    borrow = MutableBigInteger''mulsubBorrow(this, rem.value, divisor, qhat, dlen, limit - 1 + rem.offset);
+
+                ;; D5 Test remainder
+                if (borrow + 0x80000000 > nh2)
+                (§
+                    ;; D6 Add back
+                    if (needRemainder)
+                        MutableBigInteger''divadd(this, divisor, rem.value, limit - 1 + 1 + rem.offset);
+                    qhat--;
+                )
+
+                ;; store the quotient digit
+                q[limit - 1] = qhat;
             )
 
-            ;; D4 Multiply and subtract
-            rem.value[j + rem.offset] = 0;
-            int borrow = mulsubLong(rem.value, dh, dl, qhat, j + rem.offset);
-
-            ;; D5 Test remainder
-            if (borrow + 0x80000000 > nh2)
+            if (needRemainder)
             (§
-                ;; D6 Add back
-                divaddLong(dh, dl, rem.value, j + 1 + rem.offset);
-                qhat--;
+                ;; D8 Unnormalize
+                if (shift > 0)
+                    MutableBigInteger''rightShift(rem, shift);
+                MutableBigInteger''normalize(rem);
             )
-
-            ;; store the quotient digit
-            q[j] = qhat;
-        ) ;; D7 loop on j
-
-        ;; D8 Unnormalize
-        if (shift > 0)
-            rem.rightShift(shift);
-
-        quotient.normalize();
-        rem.normalize();
-        return rem;
+            MutableBigInteger''normalize(quotient);
+            return needRemainder ? rem #_":" null;
+        )
     )
 
     ;;;
@@ -1679,18 +1579,19 @@
      ; Specialized version of the method divadd.
      ; dh is a high part of the divisor, dl is a low part
      ;;
-    #_private
-    (§ defn #_"int" divaddLong [#_"int" dh, #_"int" dl, #_"int[]" result, #_"int" offset])
-    (§
-        long carry = 0;
+    #_method
+    (defn- #_"int" MutableBigInteger''divaddLong [#_"MutableBigInteger" this, #_"int" dh, #_"int" dl, #_"int[]" result, #_"int" offset]
+        (§
+            long carry = 0;
 
-        long sum = (dl & BigInteger'LONG_MASK) + (result[1 + offset] & BigInteger'LONG_MASK);
-        result[1 + offset] = (int)sum;
+            long sum = (dl & BigInteger'LONG_MASK) + (result[1 + offset] & BigInteger'LONG_MASK);
+            result[1 + offset] = (int)sum;
 
-        sum = (dh & BigInteger'LONG_MASK) + (result[offset] & BigInteger'LONG_MASK) + carry;
-        result[offset] = (int)sum;
-        carry = sum >>> 32;
-        return (int)carry;
+            sum = (dh & BigInteger'LONG_MASK) + (result[offset] & BigInteger'LONG_MASK) + carry;
+            result[offset] = (int)sum;
+            carry = sum >>> 32;
+            return (int)carry;
+        )
     )
 
     ;;;
@@ -1698,30 +1599,32 @@
      ; Specialized version of the method sulsub.
      ; dh is a high part of the divisor, dl is a low part
      ;;
-    #_private
-    (§ defn #_"int" mulsubLong [#_"int[]" q, #_"int" dh, #_"int" dl, #_"int" x, #_"int" offset])
-    (§
-        long xLong = x & BigInteger'LONG_MASK;
-        offset += 2;
-        long product = (dl & BigInteger'LONG_MASK) * xLong;
-        long difference = q[offset] - product;
-        q[offset--] = (int)difference;
-        long carry = (product >>> 32) + (((difference & BigInteger'LONG_MASK) > ((((ß bit-not)(int)product) & BigInteger'LONG_MASK))) ? 1 #_":" 0);
-        product = (dh & BigInteger'LONG_MASK) * xLong + carry;
-        difference = q[offset] - product;
-        q[offset--] = (int)difference;
-        carry = (product >>> 32) + (((difference & BigInteger'LONG_MASK) > ((((ß bit-not)(int)product) & BigInteger'LONG_MASK))) ? 1 #_":" 0);
-        return (int)carry;
+    #_method
+    (defn- #_"int" MutableBigInteger''mulsubLong [#_"MutableBigInteger" this, #_"int[]" q, #_"int" dh, #_"int" dl, #_"int" x, #_"int" offset]
+        (§
+            long xLong = x & BigInteger'LONG_MASK;
+            offset += 2;
+            long product = (dl & BigInteger'LONG_MASK) * xLong;
+            long difference = q[offset] - product;
+            q[offset--] = (int)difference;
+            long carry = (product >>> 32) + (((difference & BigInteger'LONG_MASK) > ((((§ bit-not)(int)product) & BigInteger'LONG_MASK))) ? 1 #_":" 0);
+            product = (dh & BigInteger'LONG_MASK) * xLong + carry;
+            difference = q[offset] - product;
+            q[offset--] = (int)difference;
+            carry = (product >>> 32) + (((difference & BigInteger'LONG_MASK) > ((((§ bit-not)(int)product) & BigInteger'LONG_MASK))) ? 1 #_":" 0);
+            return (int)carry;
+        )
     )
 
     ;;;
      ; Compare two longs as if they were unsigned.
      ; Returns true iff one is bigger than two.
      ;;
-    #_private
-    (§ defn #_"boolean" unsignedLongCompare [#_"long" one, #_"long" two])
-    (§
-        return (one + Long.MIN_VALUE) > (two + Long.MIN_VALUE);
+    #_method
+    (defn- #_"boolean" MutableBigInteger''unsignedLongCompare [#_"MutableBigInteger" this, #_"long" one, #_"long" two]
+        (§
+            return (one + Long.MIN_VALUE) > (two + Long.MIN_VALUE);
+        )
     )
 
     ;;;
@@ -1731,262 +1634,269 @@
      ; Returns long value where high 32 bits contain remainder
      ; value and low 32 bits contain quotient value.
      ;;
-    #_static
-    (§ defn #_"long" divWord [#_"long" n, #_"int" d])
-    (§
-        long dLong = d & BigInteger'LONG_MASK;
-        long r;
-        long q;
-        if (dLong == 1)
+    (defn #_"long" MutableBigInteger'divWord [#_"long" n, #_"int" d]
         (§
-            q = (int)n;
-            r = 0;
+            long dLong = d & BigInteger'LONG_MASK;
+            long r;
+            long q;
+            if (dLong == 1)
+            (§
+                q = (int)n;
+                r = 0;
+                return (r << 32) | (q & BigInteger'LONG_MASK);
+            )
+
+            ;; approximate the quotient and remainder
+            q = (n >>> 1) / (dLong >>> 1);
+            r = n - q * dLong;
+
+            ;; correct the approximation
+            while (r < 0)
+            (§
+                r += dLong;
+                q--;
+            )
+            while (r >= dLong)
+            (§
+                r -= dLong;
+                q++;
+            )
+            ;; n - q*dlong == r && 0 <= r < dLong, hence we're done.
             return (r << 32) | (q & BigInteger'LONG_MASK);
         )
-
-        ;; approximate the quotient and remainder
-        q = (n >>> 1) / (dLong >>> 1);
-        r = n - q * dLong;
-
-        ;; correct the approximation
-        while (r < 0)
-        (§
-            r += dLong;
-            q--;
-        )
-        while (r >= dLong)
-        (§
-            r -= dLong;
-            q++;
-        )
-        ;; n - q*dlong == r && 0 <= r < dLong, hence we're done.
-        return (r << 32) | (q & BigInteger'LONG_MASK);
     )
 
     ;;;
      ; Calculate GCD of this and b. This and b are changed by the computation.
      ;;
-    (§ defn #_"MutableBigInteger" hybridGCD [#_"MutableBigInteger" b])
-    (§
-        ;; Use Euclid's algorithm until the numbers are approximately the
-        ;; same length, then use the binary GCD algorithm to find the GCD.
-        MutableBigInteger a = this;
-        MutableBigInteger q = new MutableBigInteger();
-
-        while (b.intLen != 0)
+    #_method
+    (defn #_"MutableBigInteger" MutableBigInteger''hybridGCD [#_"MutableBigInteger" this, #_"MutableBigInteger" b]
         (§
-            if (Math.abs(a.intLen - b.intLen) < 2)
-                return a.binaryGCD(b);
+            ;; Use Euclid's algorithm until the numbers are approximately the
+            ;; same length, then use the binary GCD algorithm to find the GCD.
+            MutableBigInteger a = this;
+            MutableBigInteger q = MutableBigInteger'new();
 
-            MutableBigInteger r = a.divide(b, q);
-            a = b;
-            b = r;
+            while (b.intLen != 0)
+            (§
+                if (Math.abs(a.intLen - b.intLen) < 2)
+                    return MutableBigInteger''binaryGCD(a, b);
+
+                MutableBigInteger r = MutableBigInteger''divide-3(a, b, q);
+                a = b;
+                b = r;
+            )
+            return a;
         )
-        return a;
     )
 
     ;;;
      ; Calculate GCD of this and v.
      ; Assumes that this and v are not zero.
      ;;
-    #_private
-    (§ defn #_"MutableBigInteger" binaryGCD [#_"MutableBigInteger" v])
-    (§
-        ;; algorithm B from Knuth section 4.5.2
-        MutableBigInteger u = this;
-        MutableBigInteger r = new MutableBigInteger();
-
-        ;; step B1
-        int s1 = u.getLowestSetBit();
-        int s2 = v.getLowestSetBit();
-        int k = (s1 < s2) ? s1 #_":" s2;
-        if (k != 0)
+    #_method
+    (defn- #_"MutableBigInteger" MutableBigInteger''binaryGCD [#_"MutableBigInteger" this, #_"MutableBigInteger" v]
         (§
-            u.rightShift(k);
-            v.rightShift(k);
-        )
+            ;; algorithm B from Knuth section 4.5.2
+            MutableBigInteger u = this;
+            MutableBigInteger r = MutableBigInteger'new();
 
-        ;; step B2
-        boolean uOdd = (k == s1);
-        MutableBigInteger t = uOdd ? v #_":" u;
-        int tsign = uOdd ? -1 #_":" 1;
-
-        int lb;
-        while ((lb = t.getLowestSetBit()) >= 0)
-        (§
-            ;; steps B3 and B4
-            t.rightShift(lb);
-            ;; step B5
-            if (tsign > 0)
-                u = t;
-            else
-                v = t;
-
-            ;; special case one word numbers
-            if (u.intLen < 2 && v.intLen < 2)
+            ;; step B1
+            int s1 = MutableBigInteger''getLowestSetBit(u);
+            int s2 = MutableBigInteger''getLowestSetBit(v);
+            int k = (s1 < s2) ? s1 #_":" s2;
+            if (k != 0)
             (§
-                int x = u.value[u.offset];
-                int y = v.value[v.offset];
-                x = binaryGcd(x, y);
-                r.value[0] = x;
-                r.intLen = 1;
-                r.offset = 0;
-                if (k > 0)
-                    r.leftShift(k);
-                return r;
+                MutableBigInteger''rightShift(u, k);
+                MutableBigInteger''rightShift(v, k);
             )
 
-            ;; step B6
-            if ((tsign = u.difference(v)) == 0)
-                break;
-            t = (tsign >= 0) ? u #_":" v;
-        )
+            ;; step B2
+            boolean uOdd = (k == s1);
+            MutableBigInteger t = uOdd ? v #_":" u;
+            int tsign = uOdd ? -1 #_":" 1;
 
-        if (k > 0)
-            u.leftShift(k);
-        return u;
+            int lb;
+            while ((lb = MutableBigInteger''getLowestSetBit(t)) >= 0)
+            (§
+                ;; steps B3 and B4
+                MutableBigInteger''rightShift(t, lb);
+                ;; step B5
+                if (tsign > 0)
+                    u = t;
+                else
+                    v = t;
+
+                ;; special case one word numbers
+                if (u.intLen < 2 && v.intLen < 2)
+                (§
+                    int x = u.value[u.offset];
+                    int y = v.value[v.offset];
+                    x = MutableBigInteger'binaryGcd(x, y);
+                    r.value[0] = x;
+                    r.intLen = 1;
+                    r.offset = 0;
+                    if (k > 0)
+                        MutableBigInteger''leftShift(r, k);
+                    return r;
+                )
+
+                ;; step B6
+                if ((tsign = MutableBigInteger''difference(u, v)) == 0)
+                    break;
+                t = (tsign >= 0) ? u #_":" v;
+            )
+
+            if (k > 0)
+                MutableBigInteger''leftShift(u, k);
+            return u;
+        )
     )
 
     ;;;
      ; Calculate GCD of a and b interpreted as unsigned integers.
      ;;
-    #_static
-    (§ defn #_"int" binaryGcd [#_"int" a, #_"int" b])
-    (§
-        if (b == 0)
-            return a;
-        if (a == 0)
-            return b;
-
-        ;; right shift a & b till their last bits equal to 1
-        int aZeros = Integer.numberOfTrailingZeros(a);
-        int bZeros = Integer.numberOfTrailingZeros(b);
-        a >>>= aZeros;
-        b >>>= bZeros;
-
-        int t = (aZeros < bZeros) ? aZeros #_":" bZeros;
-
-        while (a != b)
+    (defn #_"int" MutableBigInteger'binaryGcd [#_"int" a, #_"int" b]
         (§
-            if ((a + 0x80000000) > (b + 0x80000000)) ;; a > b as unsigned
+            if (b == 0)
+                return a;
+            if (a == 0)
+                return b;
+
+            ;; right shift a & b till their last bits equal to 1
+            int aZeros = Integer.numberOfTrailingZeros(a);
+            int bZeros = Integer.numberOfTrailingZeros(b);
+            a >>>= aZeros;
+            b >>>= bZeros;
+
+            int t = (aZeros < bZeros) ? aZeros #_":" bZeros;
+
+            while (a != b)
             (§
-                a -= b;
-                a >>>= Integer.numberOfTrailingZeros(a);
+                if ((a + 0x80000000) > (b + 0x80000000)) ;; a > b as unsigned
+                (§
+                    a -= b;
+                    a >>>= Integer.numberOfTrailingZeros(a);
+                )
+                else
+                (§
+                    b -= a;
+                    b >>>= Integer.numberOfTrailingZeros(b);
+                )
             )
-            else
-            (§
-                b -= a;
-                b >>>= Integer.numberOfTrailingZeros(b);
-            )
+            return a<<t;
         )
-        return a<<t;
     )
 
     ;;;
      ; Returns the modInverse of this mod p.
      ; This and p are not affected by the operation.
      ;;
-    (§ defn #_"MutableBigInteger" mutableModInverse [#_"MutableBigInteger" p])
-    (§
-        ;; modulus is odd, use Schroeppel's algorithm
-        if (p.isOdd())
-            return modInverse(p);
+    #_method
+    (defn #_"MutableBigInteger" MutableBigInteger''mutableModInverse [#_"MutableBigInteger" this, #_"MutableBigInteger" p]
+        (§
+            ;; modulus is odd, use Schroeppel's algorithm
+            if (MutableBigInteger''isOdd(p))
+                return MutableBigInteger''modInverse(this, p);
 
-        ;; base and modulus are even, throw exception
-        if (isEven())
-            throw new ArithmeticException("BigInteger not invertible.");
+            ;; base and modulus are even, throw exception
+            if (MutableBigInteger''isEven(this))
+                throw new ArithmeticException("BigInteger not invertible.");
 
-        ;; get even part of modulus expressed as a power of 2
-        int powersOf2 = p.getLowestSetBit();
+            ;; get even part of modulus expressed as a power of 2
+            int powersOf2 = MutableBigInteger''getLowestSetBit(p);
 
-        ;; construct odd part of modulus
-        MutableBigInteger oddMod = new MutableBigInteger(p);
-        oddMod.rightShift(powersOf2);
+            ;; construct odd part of modulus
+            MutableBigInteger oddMod = MutableBigInteger'new(p);
+            MutableBigInteger''rightShift(oddMod, powersOf2);
 
-        if (oddMod.isOne())
-            return modInverseMP2(powersOf2);
+            if (MutableBigInteger''isOne(oddMod))
+                return MutableBigInteger''modInverseMP2(this, powersOf2);
 
-        ;; calculate 1/a mod oddMod
-        MutableBigInteger oddPart = modInverse(oddMod);
+            ;; calculate 1/a mod oddMod
+            MutableBigInteger oddPart = MutableBigInteger''modInverse(this, oddMod);
 
-        ;; calculate 1/a mod evenMod
-        MutableBigInteger evenPart = modInverseMP2(powersOf2);
+            ;; calculate 1/a mod evenMod
+            MutableBigInteger evenPart = MutableBigInteger''modInverseMP2(this, powersOf2);
 
-        ;; combine the results using Chinese Remainder Theorem
-        MutableBigInteger y1 = modInverseBP2(oddMod, powersOf2);
-        MutableBigInteger y2 = oddMod.modInverseMP2(powersOf2);
+            ;; combine the results using Chinese Remainder Theorem
+            MutableBigInteger y1 = MutableBigInteger'modInverseBP2(oddMod, powersOf2);
+            MutableBigInteger y2 = MutableBigInteger''modInverseMP2(oddMod, powersOf2);
 
-        MutableBigInteger temp1 = new MutableBigInteger();
-        MutableBigInteger temp2 = new MutableBigInteger();
-        MutableBigInteger result = new MutableBigInteger();
+            MutableBigInteger temp1 = MutableBigInteger'new();
+            MutableBigInteger temp2 = MutableBigInteger'new();
+            MutableBigInteger result = MutableBigInteger'new();
 
-        oddPart.leftShift(powersOf2);
-        oddPart.multiply(y1, result);
+            MutableBigInteger''leftShift(oddPart, powersOf2);
+            MutableBigInteger''multiply(oddPart, y1, result);
 
-        evenPart.multiply(oddMod, temp1);
-        temp1.multiply(y2, temp2);
+            MutableBigInteger''multiply(evenPart, oddMod, temp1);
+            MutableBigInteger''multiply(temp1, y2, temp2);
 
-        result.add(temp2);
-        return result.divide(p, temp1);
+            MutableBigInteger''add(result, temp2);
+            return MutableBigInteger''divide-3(result, p, temp1);
+        )
     )
 
     ;;
      ; Calculate the multiplicative inverse of this mod 2^k.
      ;;
-    (§ defn #_"MutableBigInteger" modInverseMP2 [#_"int" k])
-    (§
-        if (isEven())
-            throw new ArithmeticException("Non-invertible. (GCD != 1)");
-
-        if (k > 64)
-            return euclidModInverse(k);
-
-        int t = inverseMod32(value[offset + intLen - 1]);
-
-        if (k < 33)
+    #_method
+    (defn #_"MutableBigInteger" MutableBigInteger''modInverseMP2 [#_"MutableBigInteger" this, #_"int" k]
         (§
-            t = (k == 32) ? t #_":" t & ((1 << k) - 1);
-            return new MutableBigInteger(t);
+            if (MutableBigInteger''isEven(this))
+                throw new ArithmeticException("Non-invertible. (GCD != 1)");
+
+            if (k > 64)
+                return MutableBigInteger''euclidModInverse(this, k);
+
+            int t = MutableBigInteger'inverseMod32(value[offset + intLen - 1]);
+
+            if (k < 33)
+            (§
+                t = (k == 32) ? t #_":" t & ((1 << k) - 1);
+                return MutableBigInteger'new(t);
+            )
+
+            long pLong = (value[offset + intLen - 1] & BigInteger'LONG_MASK);
+            if (intLen > 1)
+                pLong |= ((long)value[offset + intLen - 2] << 32);
+            long tLong = t & BigInteger'LONG_MASK;
+            tLong = tLong * (2 - pLong * tLong); ;; 1 more Newton iter step
+            tLong = (k == 64) ? tLong #_":" tLong & ((1 #_"L" << k) - 1);
+
+            MutableBigInteger result = MutableBigInteger'new(new int[2]);
+            result.value[0] = (int)(tLong >>> 32);
+            result.value[1] = (int)tLong;
+            result.intLen = 2;
+            MutableBigInteger''normalize(result);
+            return result;
         )
-
-        long pLong = (value[offset + intLen - 1] & BigInteger'LONG_MASK);
-        if (intLen > 1)
-            pLong |= ((long)value[offset + intLen - 2] << 32);
-        long tLong = t & BigInteger'LONG_MASK;
-        tLong = tLong * (2 - pLong * tLong); ;; 1 more Newton iter step
-        tLong = (k == 64) ? tLong #_":" tLong & ((1 #_"L" << k) - 1);
-
-        MutableBigInteger result = new MutableBigInteger(new int[2]);
-        result.value[0] = (int)(tLong >>> 32);
-        result.value[1] = (int)tLong;
-        result.intLen = 2;
-        result.normalize();
-        return result;
     )
 
     ;;;
      ; Returns the multiplicative inverse of val mod 2^32. Assumes val is odd.
      ;;
-    #_static
-    (§ defn #_"int" inverseMod32 [#_"int" val])
-    (§
-        ;; Newton's iteration!
-        int t = val;
-        t *= 2 - val * t;
-        t *= 2 - val * t;
-        t *= 2 - val * t;
-        t *= 2 - val * t;
-        return t;
+    (defn #_"int" MutableBigInteger'inverseMod32 [#_"int" val]
+        (§
+            ;; Newton's iteration!
+            int t = val;
+            t *= 2 - val * t;
+            t *= 2 - val * t;
+            t *= 2 - val * t;
+            t *= 2 - val * t;
+            return t;
+        )
     )
 
     ;;;
      ; Calculate the multiplicative inverse of 2^k mod mod, where mod is odd.
      ;;
-    #_static
-    (§ defn #_"MutableBigInteger" modInverseBP2 [#_"MutableBigInteger" mod, #_"int" k])
-    (§
-        ;; copy the mod to protect original
-        return fixup(new MutableBigInteger(1), new MutableBigInteger(mod), k);
+    (defn #_"MutableBigInteger" MutableBigInteger'modInverseBP2 [#_"MutableBigInteger" mod, #_"int" k]
+        (§
+            ;; copy the mod to protect original
+            return MutableBigInteger'fixup(MutableBigInteger'new(1), MutableBigInteger'new(mod), k);
+        )
     )
 
     ;;;
@@ -1998,64 +1908,65 @@
      ; ("Montgomery Form"). The algorithm is described in an unpublished
      ; manuscript entitled "Fast Modular Reciprocals."
      ;;
-    #_private
-    (§ defn #_"MutableBigInteger" modInverse [#_"MutableBigInteger" mod])
-    (§
-        MutableBigInteger p = new MutableBigInteger(mod);
-        MutableBigInteger f = new MutableBigInteger(this);
-        MutableBigInteger g = new MutableBigInteger(p);
-        SignedMutableBigInteger c = new SignedMutableBigInteger(1);
-        SignedMutableBigInteger d = new SignedMutableBigInteger();
-        MutableBigInteger temp = null;
-        SignedMutableBigInteger sTemp = null;
-
-        int k = 0;
-        ;; right shift f k times until odd, left shift d k times
-        if (f.isEven())
+    #_method
+    (defn- #_"MutableBigInteger" MutableBigInteger''modInverse [#_"MutableBigInteger" this, #_"MutableBigInteger" mod]
         (§
-            int trailingZeros = f.getLowestSetBit();
-            f.rightShift(trailingZeros);
-            d.leftShift(trailingZeros);
-            k = trailingZeros;
-        )
+            MutableBigInteger p = MutableBigInteger'new(mod);
+            MutableBigInteger f = MutableBigInteger'new(this);
+            MutableBigInteger g = MutableBigInteger'new(p);
+            SignedMutableBigInteger c = SignedMutableBigInteger'new(1);
+            SignedMutableBigInteger d = SignedMutableBigInteger'new();
+            MutableBigInteger temp = null;
+            SignedMutableBigInteger sTemp = null;
 
-        ;; the Almost Inverse Algorithm
-        while (!f.isOne())
-        (§
-            ;; if gcd(f, g) != 1, number is not invertible modulo mod
-            if (f.isZero())
-                throw new ArithmeticException("BigInteger not invertible.");
-
-            ;; if f < g exchange f, g and c, d
-            if (f.compare(g) < 0)
-            (§
-                temp = f; f = g; g = temp;
-                sTemp = d; d = c; c = sTemp;
-            )
-
-            ;; if f == g (mod 4)
-            if (((f.value[f.offset + f.intLen - 1] (ß bit-xor) g.value[g.offset + g.intLen - 1]) & 3) == 0)
-            (§
-                f.subtract(g);
-                c.signedSubtract(d);
-            )
-            else ;; if f != g (mod 4)
-            (§
-                f.add(g);
-                c.signedAdd(d);
-            )
-
+            int k = 0;
             ;; right shift f k times until odd, left shift d k times
-            int trailingZeros = f.getLowestSetBit();
-            f.rightShift(trailingZeros);
-            d.leftShift(trailingZeros);
-            k += trailingZeros;
+            if (MutableBigInteger''isEven(f))
+            (§
+                int trailingZeros = MutableBigInteger''getLowestSetBit(f);
+                MutableBigInteger''rightShift(f, trailingZeros);
+                MutableBigInteger''leftShift(d, trailingZeros);
+                k = trailingZeros;
+            )
+
+            ;; the Almost Inverse Algorithm
+            while (!MutableBigInteger''isOne(f))
+            (§
+                ;; if gcd(f, g) != 1, number is not invertible modulo mod
+                if (MutableBigInteger''isZero(f))
+                    throw new ArithmeticException("BigInteger not invertible.");
+
+                ;; if f < g exchange f, g and c, d
+                if (MutableBigInteger''compare(f, g) < 0)
+                (§
+                    temp = f; f = g; g = temp;
+                    sTemp = d; d = c; c = sTemp;
+                )
+
+                ;; if f == g (mod 4)
+                if (((f.value[f.offset + f.intLen - 1] (§ bit-xor) g.value[g.offset + g.intLen - 1]) & 3) == 0)
+                (§
+                    MutableBigInteger''subtract(f, g);
+                    SignedMutableBigInteger''signedSubtract-s(c, d);
+                )
+                else ;; if f != g (mod 4)
+                (§
+                    MutableBigInteger''add(f, g);
+                    SignedMutableBigInteger''signedAdd-s(c, d);
+                )
+
+                ;; right shift f k times until odd, left shift d k times
+                int trailingZeros = MutableBigInteger''getLowestSetBit(f);
+                MutableBigInteger''rightShift(f, trailingZeros);
+                MutableBigInteger''leftShift(d, trailingZeros);
+                k += trailingZeros;
+            )
+
+            while (c.sign < 0)
+            SignedMutableBigInteger''signedAdd-m(c, p);
+
+            return MutableBigInteger'fixup(c, p, k);
         )
-
-        while (c.sign < 0)
-           c.signedAdd(p);
-
-        return fixup(c, p, k);
     )
 
     ;;;
@@ -2063,106 +1974,108 @@
      ; Calculates X such that X = C * 2^(-k) (mod P)
      ; Assumes C<P and P is odd.
      ;;
-    #_static
-    (§ defn #_"MutableBigInteger" fixup [#_"MutableBigInteger" c, #_"MutableBigInteger" p, #_"int" k])
-    (§
-        MutableBigInteger temp = new MutableBigInteger();
-        ;; set r to the multiplicative inverse of p mod 2^32
-        int r = -inverseMod32(p.value[p.offset + p.intLen - 1]);
-
-        for (int i = 0, numWords = k >> 5(ß) i < numWords(ß) i++)
+    (defn #_"MutableBigInteger" MutableBigInteger'fixup [#_"MutableBigInteger" c, #_"MutableBigInteger" p, #_"int" k]
         (§
-            ;; V = R * c (mod 2^j)
-            int v = r * c.value[c.offset + c.intLen - 1];
-            ;; c = c + (v * p)
-            p.mul(v, temp);
-            c.add(temp);
-            ;; c = c / 2^j
-            c.intLen--;
-        )
-        int numBits = k & 0x1f;
-        if (numBits != 0)
-        (§
-            ;; V = R * c (mod 2^j)
-            int v = r * c.value[c.offset + c.intLen - 1];
-            v &= ((1 << numBits) - 1);
-            ;; c = c + (v * p)
-            p.mul(v, temp);
-            c.add(temp);
-            ;; c = c / 2^j
-            c.rightShift(numBits);
-        )
+            MutableBigInteger temp = MutableBigInteger'new();
+            ;; set r to the multiplicative inverse of p mod 2^32
+            int r = -MutableBigInteger'inverseMod32(p.value[p.offset + p.intLen - 1]);
 
-        ;; In theory, c may be greater than p at this point (Very rare!)
-        while (c.compare(p) >= 0)
-            c.subtract(p);
+            for (int i = 0, numWords = k >> 5(§ for) i < numWords(§ for) i++)
+            (§
+                ;; V = R * c (mod 2^j)
+                int v = r * c.value[c.offset + c.intLen - 1];
+                ;; c = c + (v * p)
+                MutableBigInteger''mul(p, v, temp);
+                MutableBigInteger''add(c, temp);
+                ;; c = c / 2^j
+                c.intLen--;
+            )
+            int numBits = k & 0x1f;
+            if (numBits != 0)
+            (§
+                ;; V = R * c (mod 2^j)
+                int v = r * c.value[c.offset + c.intLen - 1];
+                v &= ((1 << numBits) - 1);
+                ;; c = c + (v * p)
+                MutableBigInteger''mul(p, v, temp);
+                MutableBigInteger''add(c, temp);
+                ;; c = c / 2^j
+                MutableBigInteger''rightShift(c, numBits);
+            )
 
-        return c;
+            ;; In theory, c may be greater than p at this point (Very rare!)
+            while (MutableBigInteger''compare(c, p) >= 0)
+                MutableBigInteger''subtract(c, p);
+
+            return c;
+        )
     )
 
     ;;;
      ; Uses the extended Euclidean algorithm to compute the modInverse of base
      ; mod a modulus that is a power of 2. The modulus is 2^k.
      ;;
-    (§ defn #_"MutableBigInteger" euclidModInverse [#_"int" k])
-    (§
-        MutableBigInteger b = new MutableBigInteger(1);
-        b.leftShift(k);
-        MutableBigInteger mod = new MutableBigInteger(b);
-
-        MutableBigInteger a = new MutableBigInteger(this);
-        MutableBigInteger q = new MutableBigInteger();
-        MutableBigInteger r = b.divide(a, q);
-
-        MutableBigInteger swapper = b;
-        ;; swap b & r
-        b = r;
-        r = swapper;
-
-        MutableBigInteger t1 = new MutableBigInteger(q);
-        MutableBigInteger t0 = new MutableBigInteger(1);
-        MutableBigInteger temp = new MutableBigInteger();
-
-        while (!b.isOne())
+    #_method
+    (defn #_"MutableBigInteger" MutableBigInteger''euclidModInverse [#_"MutableBigInteger" this, #_"int" k]
         (§
-            r = a.divide(b, q);
+            MutableBigInteger b = MutableBigInteger'new(1);
+            MutableBigInteger''leftShift(b, k);
+            MutableBigInteger mod = MutableBigInteger'new(b);
 
-            if (r.intLen == 0)
-                throw new ArithmeticException("BigInteger not invertible.");
+            MutableBigInteger a = MutableBigInteger'new(this);
+            MutableBigInteger q = MutableBigInteger'new();
+            MutableBigInteger r = MutableBigInteger''divide-3(b, a, q);
 
-            swapper = r;
-            a = swapper;
-
-            if (q.intLen == 1)
-                t1.mul(q.value[q.offset], temp);
-            else
-                q.multiply(t1, temp);
-            swapper = q;
-            q = temp;
-            temp = swapper;
-            t0.add(q);
-
-            if (a.isOne())
-                return t0;
-
-            r = b.divide(a, q);
-
-            if (r.intLen == 0)
-                throw new ArithmeticException("BigInteger not invertible.");
-
-            swapper = b;
+            MutableBigInteger swapper = b;
+            ;; swap b & r
             b = r;
+            r = swapper;
 
-            if (q.intLen == 1)
-                t0.mul(q.value[q.offset], temp);
-            else
-                q.multiply(t0, temp);
-            swapper = q; q = temp; temp = swapper;
+            MutableBigInteger t1 = MutableBigInteger'new(q);
+            MutableBigInteger t0 = MutableBigInteger'new(1);
+            MutableBigInteger temp = MutableBigInteger'new();
 
-            t1.add(q);
+            while (!MutableBigInteger''isOne(b))
+            (§
+                r = MutableBigInteger''divide-3(a, b, q);
+
+                if (r.intLen == 0)
+                    throw new ArithmeticException("BigInteger not invertible.");
+
+                swapper = r;
+                a = swapper;
+
+                if (q.intLen == 1)
+                    MutableBigInteger''mul(t1, q.value[q.offset], temp);
+                else
+                    MutableBigInteger''multiply(q, t1, temp);
+                swapper = q;
+                q = temp;
+                temp = swapper;
+                MutableBigInteger''add(t0, q);
+
+                if (MutableBigInteger''isOne(a))
+                    return t0;
+
+                r = MutableBigInteger''divide-3(b, a, q);
+
+                if (r.intLen == 0)
+                    throw new ArithmeticException("BigInteger not invertible.");
+
+                swapper = b;
+                b = r;
+
+                if (q.intLen == 1)
+                    MutableBigInteger''mul(t0, q.value[q.offset], temp);
+                else
+                    MutableBigInteger''multiply(q, t0, temp);
+                swapper = q; q = temp; temp = swapper;
+
+                MutableBigInteger''add(t1, q);
+            )
+            MutableBigInteger''subtract(mod, t1);
+            return mod;
         )
-        mod.subtract(t1);
-        return mod;
     )
 )
 
@@ -2186,7 +2099,7 @@
     ;;;
      ; The sign of this MutableBigInteger.
      ;;
-    (§ def #_"int" sign = 1)
+    (§ field #_"int" sign = 1)
 
     ;; constructors
 
@@ -2194,27 +2107,30 @@
      ; The default constructor. An empty MutableBigInteger is created with
      ; a one word capacity.
      ;;
-    (§ constructor SignedMutableBigInteger [])
-    (§
-        super();
+    (defn #_"SignedMutableBigInteger" SignedMutableBigInteger'new []
+        (§
+            super();
+        )
     )
 
     ;;;
      ; Construct a new MutableBigInteger with a magnitude specified by
      ; the int val.
      ;;
-    (§ constructor SignedMutableBigInteger [#_"int" val])
-    (§
-        super(val);
+    (defn #_"SignedMutableBigInteger" SignedMutableBigInteger'new [#_"int" val]
+        (§
+            super(val);
+        )
     )
 
     ;;;
      ; Construct a new MutableBigInteger with a magnitude equal to the
      ; specified MutableBigInteger.
      ;;
-    (§ constructor SignedMutableBigInteger [#_"MutableBigInteger" val])
-    (§
-        super(val);
+    (defn #_"SignedMutableBigInteger" SignedMutableBigInteger'new [#_"MutableBigInteger" val]
+        (§
+            super(val);
+        )
     )
 
     ;; arithmetic operations
@@ -2222,60 +2138,69 @@
     ;;;
      ; Signed addition built upon unsigned add and subtract.
      ;;
-    (§ defn #_"void" signedAdd [#_"SignedMutableBigInteger" addend])
-    (§
-        if (sign == addend.sign)
-            add(addend);
-        else
-            sign = sign * subtract(addend);
+    #_method
+    (defn #_"void" SignedMutableBigInteger''signedAdd-s [#_"SignedMutableBigInteger" this, #_"SignedMutableBigInteger" addend]
+        (§
+            if (sign == addend.sign)
+                MutableBigInteger''add(this, addend);
+            else
+                sign = sign * MutableBigInteger''subtract(this, addend);
 
+        )
     )
 
     ;;;
      ; Signed addition built upon unsigned add and subtract.
      ;;
-    (§ defn #_"void" signedAdd [#_"MutableBigInteger" addend])
-    (§
-        if (sign == 1)
-            add(addend);
-        else
-            sign = sign * subtract(addend);
+    #_method
+    (defn #_"void" SignedMutableBigInteger''signedAdd-m [#_"SignedMutableBigInteger" this, #_"MutableBigInteger" addend]
+        (§
+            if (sign == 1)
+                MutableBigInteger''add(this, addend);
+            else
+                sign = sign * MutableBigInteger''subtract(this, addend);
 
+        )
     )
 
     ;;;
      ; Signed subtraction built upon unsigned add and subtract.
      ;;
-    (§ defn #_"void" signedSubtract [#_"SignedMutableBigInteger" addend])
-    (§
-        if (sign == addend.sign)
-            sign = sign * subtract(addend);
-        else
-            add(addend);
+    #_method
+    (defn #_"void" SignedMutableBigInteger''signedSubtract-s [#_"SignedMutableBigInteger" this, #_"SignedMutableBigInteger" addend]
+        (§
+            if (sign == addend.sign)
+                sign = sign * MutableBigInteger''subtract(this, addend);
+            else
+                MutableBigInteger''add(this, addend);
 
+        )
     )
 
     ;;;
      ; Signed subtraction built upon unsigned add and subtract.
      ;;
-    (§ defn #_"void" signedSubtract [#_"MutableBigInteger" addend])
-    (§
-        if (sign == 1)
-            sign = sign * subtract(addend);
-        else
-            add(addend);
-        if (intLen == 0)
-            sign = 1;
+    #_method
+    (defn #_"void" SignedMutableBigInteger''signedSubtract-m [#_"SignedMutableBigInteger" this, #_"MutableBigInteger" addend]
+        (§
+            if (sign == 1)
+                sign = sign * MutableBigInteger''subtract(this, addend);
+            else
+                MutableBigInteger''add(this, addend);
+            if (intLen == 0)
+                sign = 1;
+        )
     )
 
     ;;;
      ; Print out the first intLen ints of this MutableBigInteger's value
      ; array starting at offset.
      ;;
-    #_public
-    (§ defn #_"String" toString [])
-    (§
-        return this.toBigInteger(sign).toString();
+    #_foreign
+    (defn #_"String" toString---SignedMutableBigInteger [#_"SignedMutableBigInteger" this]
+        (§
+            return MutableBigInteger''toBigInteger-2(this, sign).toString();
+        )
     )
 )
 
@@ -2361,7 +2286,7 @@
      ; representation for each BigInteger value.
      ;;
     #_final
-    (§ def #_"int" signum)
+    (§ field #_"int" signum)
 
     ;;;
      ; The magnitude of this BigInteger, in <i>big-endian</i> order: the
@@ -2373,7 +2298,7 @@
      ; zero-length mag array.
      ;;
     #_final
-    (§ def #_"int[]" mag)
+    (§ field #_"int[]" mag)
 
     ;; These "redundant fields" are initialized with recognizable nonsense
     ;; values, and cached the first time they are needed (or never, if they
@@ -2386,8 +2311,7 @@
      ; value and correction factor is applied in accessor method.
      ;;
     #_deprecated
-    #_private
-    (§ def #_"int" bitCount)
+    (§ field- #_"int" bitCount)
 
     ;;;
      ; One plus the bitLength of this BigInteger. Zeros means unitialized.
@@ -2397,8 +2321,7 @@
      ; value and correction factor is applied in accessor method.
      ;;
     #_deprecated
-    #_private
-    (§ def #_"int" bitLength)
+    (§ field- #_"int" bitLength)
 
     ;;;
      ; Two plus the lowest set bit of this BigInteger, as returned by
@@ -2408,8 +2331,7 @@
      ; value and correction factor is applied in accessor method.
      ;;
     #_deprecated
-    #_private
-    (§ def #_"int" lowestSetBit)
+    (§ field- #_"int" lowestSetBit)
 
     ;;;
      ; Two plus the index of the lowest-order int in the magnitude of this
@@ -2420,33 +2342,24 @@
      ; value and correction factor is applied in accessor method.
      ;;
     #_deprecated
-    #_private
-    (§ def #_"int" firstNonzeroIntNum)
+    (§ field- #_"int" firstNonzeroIntNum)
 
     ;;;
      ; This mask is used to obtain the value of an int as if it were unsigned.
      ;;
-    #_final
-    #_static
-    (§ def #_"long" BigInteger'LONG_MASK = 0xffffffff #_"L")
+    (def #_"long" BigInteger'LONG_MASK (ß 0xffffffff #_"L"))
 
     ;;;
      ; This constant limits {@code mag.length} of BigIntegers to the supported
      ; range.
      ;;
-    #_private
-    #_static
-    #_final
-    (§ def #_"int" MAX_MAG_LENGTH = 64)
+    (def- #_"int" BigInteger'MAX_MAG_LENGTH 64)
 
     ;;;
      ; Bit lengths larger than this constant can cause overflow in searchLen
      ; calculation and in BitSieve.singleSearch method.
      ;;
-    #_private
-    #_static
-    #_final
-    (§ def #_"int" PRIME_SEARCH_BIT_LENGTH_LIMIT = 500000000)
+    (def- #_"int" BigInteger'PRIME_SEARCH_BIT_LENGTH_LIMIT 500000000)
 
     ;;;
      ; The threshold value for using Schoenhage recursive base conversion.
@@ -2456,10 +2369,7 @@
      ; relatively flat for thresholds between 2-25, so this choice may be
      ; varied within this range for very small effect.
      ;;
-    #_private
-    #_static
-    #_final
-    (§ def #_"int" SCHOENHAGE_BASE_CONVERSION_THRESHOLD = 20)
+    (def- #_"int" BigInteger'SCHOENHAGE_BASE_CONVERSION_THRESHOLD 20)
 
     ;; constructors
 
@@ -2471,25 +2381,25 @@
      ; @param  val big-endian two's-complement binary representation of BigInteger.
      ; @throws NumberFormatException {@code val} is zero bytes long.
      ;;
-    #_public
-    (§ constructor BigInteger [#_"byte[]" val])
-    (§
-        if (val.length == 0)
-            throw new NumberFormatException("Zero length BigInteger");
+    (defn #_"BigInteger" BigInteger'new [#_"byte[]" val]
+        (§
+            if (val.length == 0)
+                throw new NumberFormatException("Zero length BigInteger");
 
-        if (val[0] < 0)
-        (§
-            mag = makePositive(val);
-            signum = -1;
-        )
-        else
-        (§
-            mag = stripLeadingZeroBytes(val);
-            signum = (mag.length == 0) ? 0 #_":" 1;
-        )
-        if (mag.length >= MAX_MAG_LENGTH)
-        (§
-            checkRange();
+            if (val[0] < 0)
+            (§
+                mag = BigInteger'makePositive-b(val);
+                signum = -1;
+            )
+            else
+            (§
+                mag = BigInteger'stripLeadingZeroBytes(val);
+                signum = (mag.length == 0) ? 0 #_":" 1;
+            )
+            if (mag.length >= BigInteger'MAX_MAG_LENGTH)
+            (§
+                BigInteger''checkRange(this);
+            )
         )
     )
 
@@ -2499,25 +2409,25 @@
      ; BigInteger. The input array is assumed to be in <i>big-endian</i>
      ; int-order: the most significant int is in the zeroth element.
      ;;
-    #_private
-    (§ constructor BigInteger [#_"int[]" val])
-    (§
-        if (val.length == 0)
-            throw new NumberFormatException("Zero length BigInteger");
+    (defn- #_"BigInteger" BigInteger'new [#_"int[]" val]
+        (§
+            if (val.length == 0)
+                throw new NumberFormatException("Zero length BigInteger");
 
-        if (val[0] < 0)
-        (§
-            mag = makePositive(val);
-            signum = -1;
-        )
-        else
-        (§
-            mag = trustedStripLeadingZeroInts(val);
-            signum = (mag.length == 0) ? 0 #_":" 1;
-        )
-        if (mag.length >= MAX_MAG_LENGTH)
-        (§
-            checkRange();
+            if (val[0] < 0)
+            (§
+                mag = BigInteger'makePositive-i(val);
+                signum = -1;
+            )
+            else
+            (§
+                mag = BigInteger'trustedStripLeadingZeroInts(val);
+                signum = (mag.length == 0) ? 0 #_":" 1;
+            )
+            if (mag.length >= BigInteger'MAX_MAG_LENGTH)
+            (§
+                BigInteger''checkRange(this);
+            )
         )
     )
 
@@ -2535,27 +2445,27 @@
      ;         legal values (-1, 0, and 1), or {@code signum} is 0 and
      ;         {@code magnitude} contains one or more non-zero bytes.
      ;;
-    #_public
-    (§ constructor BigInteger [#_"int" signum, #_"byte[]" magnitude])
-    (§
-        this.mag = stripLeadingZeroBytes(magnitude);
+    (defn #_"BigInteger" BigInteger'new [#_"int" signum, #_"byte[]" magnitude]
+        (§
+            this.mag = BigInteger'stripLeadingZeroBytes(magnitude);
 
-        if (signum < -1 || signum > 1)
-            throw(new NumberFormatException("Invalid signum value"));
+            if (signum < -1 || signum > 1)
+                throw(new NumberFormatException("Invalid signum value"));
 
-        if (this.mag.length == 0)
-        (§
-            this.signum = 0;
-        )
-        else
-        (§
-            if (signum == 0)
-                throw(new NumberFormatException("signum-magnitude mismatch"));
-            this.signum = signum;
-        )
-        if (mag.length >= MAX_MAG_LENGTH)
-        (§
-            checkRange();
+            if (this.mag.length == 0)
+            (§
+                this.signum = 0;
+            )
+            else
+            (§
+                if (signum == 0)
+                    throw(new NumberFormatException("signum-magnitude mismatch"));
+                this.signum = signum;
+            )
+            if (mag.length >= BigInteger'MAX_MAG_LENGTH)
+            (§
+                BigInteger''checkRange(this);
+            )
         )
     )
 
@@ -2565,27 +2475,27 @@
      ; arguments and copies the magnitude so this constructor would be
      ; safe for external use.
      ;;
-    #_private
-    (§ constructor BigInteger [#_"int" signum, #_"int[]" magnitude])
-    (§
-        this.mag = stripLeadingZeroInts(magnitude);
+    (defn- #_"BigInteger" BigInteger'new [#_"int" signum, #_"int[]" magnitude]
+        (§
+            this.mag = BigInteger'stripLeadingZeroInts(magnitude);
 
-        if (signum < -1 || signum > 1)
-            throw new NumberFormatException("Invalid signum value");
+            if (signum < -1 || signum > 1)
+                throw new NumberFormatException("Invalid signum value");
 
-        if (this.mag.length == 0)
-        (§
-            this.signum = 0;
-        )
-        else
-        (§
-            if (signum == 0)
-                throw new NumberFormatException("signum-magnitude mismatch");
-            this.signum = signum;
-        )
-        if (mag.length >= MAX_MAG_LENGTH)
-        (§
-            checkRange();
+            if (this.mag.length == 0)
+            (§
+                this.signum = 0;
+            )
+            else
+            (§
+                if (signum == 0)
+                    throw new NumberFormatException("signum-magnitude mismatch");
+                this.signum = signum;
+            )
+            if (mag.length >= BigInteger'MAX_MAG_LENGTH)
+            (§
+                BigInteger''checkRange(this);
+            )
         )
     )
 
@@ -2604,93 +2514,92 @@
      ;         outside the range from {@link Character#MIN_RADIX} to
      ;         {@link Character#MAX_RADIX}, inclusive.
      ;;
-    #_public
-    (§ constructor BigInteger [#_"String" val, #_"int" radix])
-    (§
-        int cursor = 0, numDigits;
-        #_final
-        int len = val.length();
-
-        if (radix < Character.MIN_RADIX || radix > Character.MAX_RADIX)
-            throw new NumberFormatException("Radix out of range");
-        if (len == 0)
-            throw new NumberFormatException("Zero length BigInteger");
-
-        ;; check for at most one leading sign
-        int sign = 1;
-        int index1 = val.lastIndexOf((§ char "-"));
-        int index2 = val.lastIndexOf((§ char "+"));
-        if (index1 >= 0)
+    (defn #_"BigInteger" BigInteger'new [#_"String" val, #_"int" radix]
         (§
-            if (index1 != 0 || index2 >= 0)
+            int cursor = 0, numDigits;
+            int len = val.length();
+
+            if (radix < Character.MIN_RADIX || radix > Character.MAX_RADIX)
+                throw new NumberFormatException("Radix out of range");
+            if (len == 0)
+                throw new NumberFormatException("Zero length BigInteger");
+
+            ;; check for at most one leading sign
+            int sign = 1;
+            int index1 = val.lastIndexOf((§ char "-"));
+            int index2 = val.lastIndexOf((§ char "+"));
+            if (index1 >= 0)
             (§
-                throw new NumberFormatException("Illegal embedded sign character");
+                if (index1 != 0 || index2 >= 0)
+                (§
+                    throw new NumberFormatException("Illegal embedded sign character");
+                )
+                sign = -1;
+                cursor = 1;
             )
-            sign = -1;
-            cursor = 1;
-        )
-        else if (index2 >= 0)
-        (§
-            if (index2 != 0)
+            else if (index2 >= 0)
             (§
-                throw new NumberFormatException("Illegal embedded sign character");
+                if (index2 != 0)
+                (§
+                    throw new NumberFormatException("Illegal embedded sign character");
+                )
+                cursor = 1;
             )
-            cursor = 1;
-        )
-        if (cursor == len)
-            throw new NumberFormatException("Zero length BigInteger");
+            if (cursor == len)
+                throw new NumberFormatException("Zero length BigInteger");
 
-        ;; skip leading zeros and compute number of digits in magnitude
-        while (cursor < len && Character.digit(val.charAt(cursor), radix) == 0)
-        (§
-            cursor++;
-        )
+            ;; skip leading zeros and compute number of digits in magnitude
+            while (cursor < len && Character.digit(val.charAt(cursor), radix) == 0)
+            (§
+                cursor++;
+            )
 
-        if (cursor == len)
-        (§
-            signum = 0;
-            mag = ZERO.mag;
-            return;
-        )
+            if (cursor == len)
+            (§
+                signum = 0;
+                mag = BigInteger'ZERO.mag;
+                return;
+            )
 
-        numDigits = len - cursor;
-        signum = sign;
+            numDigits = len - cursor;
+            signum = sign;
 
-        ;; Pre-allocate array of expected size. May be too large but can
-        ;; never be too small. Typically exact.
-        long numBits = ((numDigits * bitsPerDigit[radix]) >>> 10) + 1;
-        if (numBits + 31 >= (1 #_"L" << 32))
-        (§
-            reportOverflow();
-        )
-        int numWords = (int) (numBits + 31) >>> 5;
-        int[] magnitude = new int[numWords];
+            ;; Pre-allocate array of expected size. May be too large but can
+            ;; never be too small. Typically exact.
+            long numBits = ((numDigits * bitsPerDigit[radix]) >>> 10) + 1;
+            if (numBits + 31 >= (1 #_"L" << 32))
+            (§
+                BigInteger'reportOverflow();
+            )
+            int numWords = (int) (numBits + 31) >>> 5;
+            int[] magnitude = new int[numWords];
 
-        ;; process first (potentially short) digit group
-        int firstGroupLen = numDigits % digitsPerInt[radix];
-        if (firstGroupLen == 0)
-            firstGroupLen = digitsPerInt[radix];
-        String group = val.substring(cursor, cursor += firstGroupLen);
-        magnitude[numWords - 1] = Integer.parseInt(group, radix);
-        if (magnitude[numWords - 1] < 0)
-            throw new NumberFormatException("Illegal digit");
-
-        ;; process remaining digit groups
-        int superRadix = intRadix[radix];
-        int groupVal = 0;
-        while (cursor < len)
-        (§
-            group = val.substring(cursor, cursor += digitsPerInt[radix]);
-            groupVal = Integer.parseInt(group, radix);
-            if (groupVal < 0)
+            ;; process first (potentially short) digit group
+            int firstGroupLen = numDigits % digitsPerInt[radix];
+            if (firstGroupLen == 0)
+                firstGroupLen = digitsPerInt[radix];
+            String group = val.substring(cursor, cursor += firstGroupLen);
+            magnitude[numWords - 1] = Integer.parseInt(group, radix);
+            if (magnitude[numWords - 1] < 0)
                 throw new NumberFormatException("Illegal digit");
-            destructiveMulAdd(magnitude, superRadix, groupVal);
-        )
-        ;; required for cases where the array was overallocated
-        mag = trustedStripLeadingZeroInts(magnitude);
-        if (mag.length >= MAX_MAG_LENGTH)
-        (§
-            checkRange();
+
+            ;; process remaining digit groups
+            int superRadix = intRadix[radix];
+            int groupVal = 0;
+            while (cursor < len)
+            (§
+                group = val.substring(cursor, cursor += digitsPerInt[radix]);
+                groupVal = Integer.parseInt(group, radix);
+                if (groupVal < 0)
+                    throw new NumberFormatException("Illegal digit");
+                BigInteger'destructiveMulAdd(magnitude, superRadix, groupVal);
+            )
+            ;; required for cases where the array was overallocated
+            mag = BigInteger'trustedStripLeadingZeroInts(magnitude);
+            if (mag.length >= BigInteger'MAX_MAG_LENGTH)
+            (§
+                BigInteger''checkRange(this);
+            )
         )
     )
 
@@ -2698,86 +2607,87 @@
      ; Constructs a new BigInteger using a char array with radix=10.
      ; Sign is precalculated outside and not allowed in the val.
      ;;
-    (§ constructor BigInteger [#_"char[]" val, #_"int" sign, #_"int" len])
-    (§
-        int cursor = 0, numDigits;
+    (defn #_"BigInteger" BigInteger'new [#_"char[]" val, #_"int" sign, #_"int" len]
+        (§
+            int cursor = 0, numDigits;
 
-        ;; skip leading zeros and compute number of digits in magnitude
-        while (cursor < len && Character.digit(val[cursor], 10) == 0)
-        (§
-            cursor++;
-        )
-        if (cursor == len)
-        (§
-            signum = 0;
-            mag = ZERO.mag;
-            return;
-        )
-
-        numDigits = len - cursor;
-        signum = sign;
-        ;; pre-allocate array of expected size
-        int numWords;
-        if (len < 10)
-        (§
-            numWords = 1;
-        )
-        else
-        (§
-            long numBits = ((numDigits * bitsPerDigit[10]) >>> 10) + 1;
-            if (numBits + 31 >= (1 #_"L" << 32))
+            ;; skip leading zeros and compute number of digits in magnitude
+            while (cursor < len && Character.digit(val[cursor], 10) == 0)
             (§
-                reportOverflow();
+                cursor++;
             )
-            numWords = (int) (numBits + 31) >>> 5;
-        )
-        int[] magnitude = new int[numWords];
+            if (cursor == len)
+            (§
+                signum = 0;
+                mag = BigInteger'ZERO.mag;
+                return;
+            )
 
-        ;; process first (potentially short) digit group
-        int firstGroupLen = numDigits % digitsPerInt[10];
-        if (firstGroupLen == 0)
-            firstGroupLen = digitsPerInt[10];
-        magnitude[numWords - 1] = parseInt(val, cursor, cursor += firstGroupLen);
+            numDigits = len - cursor;
+            signum = sign;
+            ;; pre-allocate array of expected size
+            int numWords;
+            if (len < 10)
+            (§
+                numWords = 1;
+            )
+            else
+            (§
+                long numBits = ((numDigits * bitsPerDigit[10]) >>> 10) + 1;
+                if (numBits + 31 >= (1 #_"L" << 32))
+                (§
+                    BigInteger'reportOverflow();
+                )
+                numWords = (int) (numBits + 31) >>> 5;
+            )
+            int[] magnitude = new int[numWords];
 
-        ;; process remaining digit groups
-        while (cursor < len)
-        (§
-            int groupVal = parseInt(val, cursor, cursor += digitsPerInt[10]);
-            destructiveMulAdd(magnitude, intRadix[10], groupVal);
-        )
-        mag = trustedStripLeadingZeroInts(magnitude);
-        if (mag.length >= MAX_MAG_LENGTH)
-        (§
-            checkRange();
+            ;; process first (potentially short) digit group
+            int firstGroupLen = numDigits % digitsPerInt[10];
+            if (firstGroupLen == 0)
+                firstGroupLen = digitsPerInt[10];
+            magnitude[numWords - 1] = BigInteger''parseInt(this, val, cursor, cursor += firstGroupLen);
+
+            ;; process remaining digit groups
+            while (cursor < len)
+            (§
+                int groupVal = BigInteger''parseInt(this, val, cursor, cursor += digitsPerInt[10]);
+                BigInteger'destructiveMulAdd(magnitude, intRadix[10], groupVal);
+            )
+            mag = BigInteger'trustedStripLeadingZeroInts(magnitude);
+            if (mag.length >= BigInteger'MAX_MAG_LENGTH)
+            (§
+                BigInteger''checkRange(this);
+            )
         )
     )
 
     ;; Create an integer with the digits between the two indexes.
     ;; Assumes start < end. The result may be negative, but it
     ;; is to be treated as an unsigned value.
-    #_private
-    (§ defn #_"int" parseInt [#_"char[]" source, #_"int" start, #_"int" end])
-    (§
-        int result = Character.digit(source[start++], 10);
-        if (result == -1)
-            throw new NumberFormatException(new String(source));
-
-        for (int index = start(ß) index < end(ß) index++)
+    #_method
+    (defn- #_"int" BigInteger''parseInt [#_"BigInteger" this, #_"char[]" source, #_"int" start, #_"int" end]
         (§
-            int nextVal = Character.digit(source[index], 10);
-            if (nextVal == -1)
+            int result = Character.digit(source[start++], 10);
+            if (result == -1)
                 throw new NumberFormatException(new String(source));
-            result = 10 * result + nextVal;
-        )
 
-        return result;
+            for (int index = start(§ for) index < end(§ for) index++)
+            (§
+                int nextVal = Character.digit(source[index], 10);
+                if (nextVal == -1)
+                    throw new NumberFormatException(new String(source));
+                result = 10 * result + nextVal;
+            )
+
+            return result;
+        )
     )
 
     ;; bitsPerDigit in the given radix times 1024
     ;; Rounded up to avoid underallocation.
-    #_private
     #_static
-    (§ def #_"long[]" bitsPerDigit =)
+    (§ def- #_"long[]" bitsPerDigit =)
     (§
         0, 0,
         1024, 1624, 2048, 2378, 2648, 2875, 3072, 3247, 3402, 3543, 3672,
@@ -2787,33 +2697,32 @@
     )
 
     ;; multiply x array times word y in place, and add word z
-    #_private
-    #_static
-    (§ defn #_"void" destructiveMulAdd [#_"int[]" x, #_"int" y, #_"int" z])
-    (§
-        ;; perform the multiplication word by word
-        long ylong = y & BigInteger'LONG_MASK;
-        long zlong = z & BigInteger'LONG_MASK;
-        int len = x.length;
-
-        long product = 0;
-        long carry = 0;
-        for (int i = len - 1(ß) i >= 0(ß) i--)
+    (defn- #_"void" BigInteger'destructiveMulAdd [#_"int[]" x, #_"int" y, #_"int" z]
         (§
-            product = ylong * (x[i] & BigInteger'LONG_MASK) + carry;
-            x[i] = (int)product;
-            carry = product >>> 32;
-        )
+            ;; perform the multiplication word by word
+            long ylong = y & BigInteger'LONG_MASK;
+            long zlong = z & BigInteger'LONG_MASK;
+            int len = x.length;
 
-        ;; perform the addition
-        long sum = (x[len - 1] & BigInteger'LONG_MASK) + zlong;
-        x[len - 1] = (int)sum;
-        carry = sum >>> 32;
-        for (int i = len - 2(ß) i >= 0(ß) i--)
-        (§
-            sum = (x[i] & BigInteger'LONG_MASK) + carry;
-            x[i] = (int)sum;
+            long product = 0;
+            long carry = 0;
+            for (int i = len - 1(§ for) i >= 0(§ for) i--)
+            (§
+                product = ylong * (x[i] & BigInteger'LONG_MASK) + carry;
+                x[i] = (int)product;
+                carry = product >>> 32;
+            )
+
+            ;; perform the addition
+            long sum = (x[len - 1] & BigInteger'LONG_MASK) + zlong;
+            x[len - 1] = (int)sum;
             carry = sum >>> 32;
+            for (int i = len - 2(§ for) i >= 0(§ for) i--)
+            (§
+                sum = (x[i] & BigInteger'LONG_MASK) + carry;
+                x[i] = (int)sum;
+                carry = sum >>> 32;
+            )
         )
     )
 
@@ -2829,10 +2738,10 @@
      ; @throws NumberFormatException {@code val} is not a valid representation
      ;         of a BigInteger.
      ;;
-    #_public
-    (§ constructor BigInteger [#_"String" val])
-    (§
-        this(val, 10);
+    (defn #_"BigInteger" BigInteger'new [#_"String" val]
+        (§
+            BigInteger'new(val, 10);
+        )
     )
 
     ;;;
@@ -2846,31 +2755,38 @@
      ; @param  rnd source of randomness to be used in computing the new BigInteger.
      ; @throws IllegalArgumentException {@code numBits} is negative.
      ;;
-    #_public
-    (§ constructor BigInteger [#_"int" numBits, #_"Random" rnd])
-    (§
-        this(1, randomBits(numBits, rnd));
-    )
-
-    #_private
-    #_static
-    (§ defn #_"byte[]" randomBits [#_"int" numBits, #_"Random" rnd])
-    (§
-        if (numBits < 0)
-            throw new IllegalArgumentException("numBits must be non-negative");
-
-        int numBytes = (int)(((long)numBits + 7) / 8); ;; avoid overflow
-        byte[] randomBits = new byte[numBytes];
-
-        ;; generate random bytes and mask out any excess bits
-        if (numBytes > 0)
+    (defn #_"BigInteger" BigInteger'new [#_"int" numBits, #_"Random" rnd]
         (§
-            rnd.nextBytes(randomBits);
-            int excessBits = 8 * numBytes - numBits;
-            randomBits[0] &= (1 << (8 - excessBits)) - 1;
+            BigInteger'new(1, BigInteger'randomBits(numBits, rnd));
         )
-        return randomBits;
     )
+
+    (defn- #_"byte[]" BigInteger'randomBits [#_"int" numBits, #_"Random" rnd]
+        (§
+            if (numBits < 0)
+                throw new IllegalArgumentException("numBits must be non-negative");
+
+            int numBytes = (int)(((long)numBits + 7) / 8); ;; avoid overflow
+            byte[] randomBits = new byte[numBytes];
+
+            ;; generate random bytes and mask out any excess bits
+            if (numBytes > 0)
+            (§
+                rnd.nextBytes(randomBits);
+                int excessBits = 8 * numBytes - numBits;
+                randomBits[0] &= (1 << (8 - excessBits)) - 1;
+            )
+            return randomBits;
+        )
+    )
+
+    ;; Minimum size in bits that the requested prime number has
+    ;; before we use the large prime number generating algorithms.
+    ;; The cutoff of 95 was chosen empirically for best performance.
+    (def- #_"int" BigInteger'SMALL_PRIME_THRESHOLD 95)
+
+    ;; certainty required to meet the spec of probablePrime
+    (def- #_"int" BigInteger'DEFAULT_PRIME_CERTAINTY 100)
 
     ;;;
      ; Constructs a randomly generated positive BigInteger that is probably
@@ -2888,30 +2804,16 @@
      ; @param  rnd source of random bits used to select candidates to be tested for primality.
      ; @throws ArithmeticException {@code bitLength < 2} or {@code bitLength} is too large.
      ;;
-    #_public
-    (§ constructor BigInteger [#_"int" bitLength, #_"int" certainty, #_"Random" rnd])
-    (§
-        if (bitLength < 2)
-            throw new ArithmeticException("bitLength < 2");
+    (defn #_"BigInteger" BigInteger'new [#_"int" bitLength, #_"int" certainty, #_"Random" rnd]
+        (§
+            if (bitLength < 2)
+                throw new ArithmeticException("bitLength < 2");
 
-        BigInteger prime = (bitLength < SMALL_PRIME_THRESHOLD) ? smallPrime(bitLength, certainty, rnd) #_":" largePrime(bitLength, certainty, rnd);
-        signum = 1;
-        mag = prime.mag;
+            BigInteger prime = (bitLength < BigInteger'SMALL_PRIME_THRESHOLD) ? BigInteger'smallPrime(bitLength, certainty, rnd) #_":" BigInteger'largePrime(bitLength, certainty, rnd);
+            signum = 1;
+            mag = prime.mag;
+        )
     )
-
-    ;; Minimum size in bits that the requested prime number has
-    ;; before we use the large prime number generating algorithms.
-    ;; The cutoff of 95 was chosen empirically for best performance.
-    #_private
-    #_static
-    #_final
-    (§ def #_"int" SMALL_PRIME_THRESHOLD = 95)
-
-    ;; certainty required to meet the spec of probablePrime
-    #_private
-    #_static
-    #_final
-    (§ def #_"int" DEFAULT_PRIME_CERTAINTY = 100)
 
     ;;;
      ; Returns a positive BigInteger that is probably prime, with the
@@ -2923,15 +2825,16 @@
      ; @return a BigInteger of {@code bitLength} bits that is probably prime.
      ; @throws ArithmeticException {@code bitLength < 2} or {@code bitLength} is too large.
      ;;
-    #_public
-    #_static
-    (§ defn #_"BigInteger" probablePrime [#_"int" bitLength, #_"Random" rnd])
-    (§
-        if (bitLength < 2)
-            throw new ArithmeticException("bitLength < 2");
+    (defn #_"BigInteger" BigInteger'probablePrime [#_"int" bitLength, #_"Random" rnd]
+        (§
+            if (bitLength < 2)
+                throw new ArithmeticException("bitLength < 2");
 
-        return (bitLength < SMALL_PRIME_THRESHOLD) ? smallPrime(bitLength, DEFAULT_PRIME_CERTAINTY, rnd) #_":" largePrime(bitLength, DEFAULT_PRIME_CERTAINTY, rnd);
+            return (bitLength < BigInteger'SMALL_PRIME_THRESHOLD) ? BigInteger'smallPrime(bitLength, BigInteger'DEFAULT_PRIME_CERTAINTY, rnd) #_":" BigInteger'largePrime(bitLength, BigInteger'DEFAULT_PRIME_CERTAINTY, rnd);
+        )
     )
+
+    (def- #_"BigInteger" BigInteger'SMALL_PRIME_PRODUCT (ß BigInteger'valueOf-l(3 #_"L" * 5 * 7 * 11 * 13 * 17 * 19 * 23 * 29 * 31 * 37 * 41)))
 
     ;;;
      ; Find a random number of the specified bitLength that is probably prime.
@@ -2939,79 +2842,72 @@
      ;
      ; This method assumes bitLength > 1.
      ;;
-    #_private
-    #_static
-    (§ defn #_"BigInteger" smallPrime [#_"int" bitLength, #_"int" certainty, #_"Random" rnd])
-    (§
-        int magLen = (bitLength + 31) >>> 5;
-        int temp[] = new int[magLen];
-        int highBit = 1 << ((bitLength + 31) & 0x1f); ;; high bit of high int
-        int highMask = (highBit << 1) - 1; ;; bits to keep in high int
-
-        while (true)
+    (defn- #_"BigInteger" BigInteger'smallPrime [#_"int" bitLength, #_"int" certainty, #_"Random" rnd]
         (§
-            ;; construct a candidate
-            for (int i = 0(ß) i < magLen(ß) i++)
-                temp[i] = rnd.nextInt();
-            temp[0] = (temp[0] & highMask) | highBit; ;; ensure exact length
-            if (bitLength > 2)
-                temp[magLen - 1] |= 1; ;; make odd if bitlen > 2
+            int magLen = (bitLength + 31) >>> 5;
+            int temp[] = new int[magLen];
+            int highBit = 1 << ((bitLength + 31) & 0x1f); ;; high bit of high int
+            int highMask = (highBit << 1) - 1; ;; bits to keep in high int
 
-            BigInteger p = new BigInteger(temp, 1);
-
-            ;; do cheap "pre-test" if applicable
-            if (bitLength > 6)
+            while (true)
             (§
-                long r = p.remainder(SMALL_PRIME_PRODUCT).longValue();
-                if ((r %  3 == 0) || (r %  5 == 0) || (r %  7 == 0) || (r % 11 == 0) ||
-                    (r % 13 == 0) || (r % 17 == 0) || (r % 19 == 0) || (r % 23 == 0) ||
-                    (r % 29 == 0) || (r % 31 == 0) || (r % 37 == 0) || (r % 41 == 0))
-                    continue; ;; candidate is composite; try another
+                ;; construct a candidate
+                for (int i = 0(§ for) i < magLen(§ for) i++)
+                    temp[i] = rnd.nextInt();
+                temp[0] = (temp[0] & highMask) | highBit; ;; ensure exact length
+                if (bitLength > 2)
+                    temp[magLen - 1] |= 1; ;; make odd if bitlen > 2
+
+                BigInteger p = BigInteger'new(temp, 1);
+
+                ;; do cheap "pre-test" if applicable
+                if (bitLength > 6)
+                (§
+                    long r = BigInteger''remainder(p, BigInteger'SMALL_PRIME_PRODUCT).longValue();
+                    if ((r %  3 == 0) || (r %  5 == 0) || (r %  7 == 0) || (r % 11 == 0) ||
+                        (r % 13 == 0) || (r % 17 == 0) || (r % 19 == 0) || (r % 23 == 0) ||
+                        (r % 29 == 0) || (r % 31 == 0) || (r % 37 == 0) || (r % 41 == 0))
+                        continue; ;; candidate is composite; try another
+                )
+
+                ;; all candidates of bitLength 2 and 3 are prime by this point
+                if (bitLength < 4)
+                    return p;
+
+                ;; do expensive test if we survive pre-test (or it's inapplicable)
+                if (BigInteger''primeToCertainty(p, certainty, rnd))
+                    return p;
             )
-
-            ;; all candidates of bitLength 2 and 3 are prime by this point
-            if (bitLength < 4)
-                return p;
-
-            ;; do expensive test if we survive pre-test (or it's inapplicable)
-            if (p.primeToCertainty(certainty, rnd))
-                return p;
         )
     )
-
-    #_private
-    #_static
-    #_final
-    (§ def #_"BigInteger" SMALL_PRIME_PRODUCT = valueOf(3 #_"L" * 5 * 7 * 11 * 13 * 17 * 19 * 23 * 29 * 31 * 37 * 41))
 
     ;;;
      ; Find a random number of the specified bitLength that is probably prime.
      ; This method is more appropriate for larger bitlengths since it uses
      ; a sieve to eliminate most composites before using a more expensive test.
      ;;
-    #_private
-    #_static
-    (§ defn #_"BigInteger" largePrime [#_"int" bitLength, #_"int" certainty, #_"Random" rnd])
-    (§
-        BigInteger p;
-        p = new BigInteger(bitLength, rnd).setBit(bitLength - 1);
-        p.mag[p.mag.length - 1] &= 0xfffffffe;
-
-        ;; use a sieve length likely to contain the next prime number
-        int searchLen = getPrimeSearchLen(bitLength);
-        BitSieve searchSieve = new BitSieve(p, searchLen);
-        BigInteger candidate = searchSieve.retrieve(p, certainty, rnd);
-
-        while ((candidate == null) || (candidate.bitLength() != bitLength))
+    (defn- #_"BigInteger" BigInteger'largePrime [#_"int" bitLength, #_"int" certainty, #_"Random" rnd]
         (§
-            p = p.add(BigInteger.valueOf(2 * searchLen));
-            if (p.bitLength() != bitLength)
-                p = new BigInteger(bitLength, rnd).setBit(bitLength - 1);
+            BigInteger p;
+            p = BigInteger'new(bitLength, rnd).BigInteger''setBit((§ pipe), bitLength - 1);
             p.mag[p.mag.length - 1] &= 0xfffffffe;
-            searchSieve = new BitSieve(p, searchLen);
-            candidate = searchSieve.retrieve(p, certainty, rnd);
+
+            ;; use a sieve length likely to contain the next prime number
+            int searchLen = BigInteger'getPrimeSearchLen(bitLength);
+            BitSieve searchSieve = BitSieve'new(p, searchLen);
+            BigInteger candidate = BitSieve''retrieve(searchSieve, p, certainty, rnd);
+
+            while ((candidate == null) || (BigInteger''bitLength(candidate) != bitLength))
+            (§
+                p = BigInteger''add(p, BigInteger'valueOf-l(2 * searchLen));
+                if (BigInteger''bitLength(p) != bitLength)
+                    p = BigInteger'new(bitLength, rnd).BigInteger''setBit((§ pipe), bitLength - 1);
+                p.mag[p.mag.length - 1] &= 0xfffffffe;
+                searchSieve = BitSieve'new(p, searchLen);
+                candidate = BitSieve''retrieve(searchSieve, p, certainty, rnd);
+            )
+            return candidate;
         )
-        return candidate;
     )
 
     ;;;
@@ -3024,78 +2920,78 @@
      ; @return the first integer greater than this {@code BigInteger} that is probably prime.
      ; @throws ArithmeticException {@code this < 0} or {@code this} is too large.
      ;;
-    #_public
-    (§ defn #_"BigInteger" nextProbablePrime [])
-    (§
-        if (this.signum < 0)
-            throw new ArithmeticException("start < 0: " + this);
-
-        ;; handle trivial cases
-        if ((this.signum == 0) || this.equals(ONE))
-            return TWO;
-
-        BigInteger result = this.add(ONE);
-
-        ;; fastpath for small numbers
-        if (result.bitLength() < SMALL_PRIME_THRESHOLD)
+    #_method
+    (defn #_"BigInteger" BigInteger''nextProbablePrime [#_"BigInteger" this]
         (§
-            ;; ensure an odd number
-            if (!result.testBit(0))
-                result = result.add(ONE);
+            if (this.signum < 0)
+                throw new ArithmeticException("start < 0: " + this);
+
+            ;; handle trivial cases
+            if ((this.signum == 0) || this.equals(BigInteger'ONE))
+                return BigInteger'TWO;
+
+            BigInteger result = BigInteger''add(this, BigInteger'ONE);
+
+            ;; fastpath for small numbers
+            if (BigInteger''bitLength(result) < BigInteger'SMALL_PRIME_THRESHOLD)
+            (§
+                ;; ensure an odd number
+                if (!BigInteger''testBit(result, 0))
+                    result = BigInteger''add(result, BigInteger'ONE);
+
+                while (true)
+                (§
+                    ;; do cheap "pre-test" if applicable
+                    if (BigInteger''bitLength(result) > 6)
+                    (§
+                        long r = BigInteger''remainder(result, BigInteger'SMALL_PRIME_PRODUCT).longValue();
+                        if ((r %  3 == 0) || (r %  5 == 0) || (r %  7 == 0) || (r%11 == 0) ||
+                            (r % 13 == 0) || (r % 17 == 0) || (r % 19 == 0) || (r%23 == 0) ||
+                            (r % 29 == 0) || (r % 31 == 0) || (r % 37 == 0) || (r%41 == 0))
+                        (§
+                            result = BigInteger''add(result, BigInteger'TWO);
+                            continue; ;; candidate is composite; try another
+                        )
+                    )
+
+                    ;; all candidates of bitLength 2 and 3 are prime by this point
+                    if (BigInteger''bitLength(result) < 4)
+                        return result;
+
+                    ;; the expensive test
+                    if (BigInteger''primeToCertainty(result, BigInteger'DEFAULT_PRIME_CERTAINTY, null))
+                        return result;
+
+                    result = BigInteger''add(result, BigInteger'TWO);
+                )
+            )
+
+            ;; start at previous even number
+            if (BigInteger''testBit(result, 0))
+                result = BigInteger''subtract(result, BigInteger'ONE);
+
+            ;; looking for the next large prime
+            int searchLen = BigInteger'getPrimeSearchLen(BigInteger''bitLength(result));
 
             while (true)
             (§
-                ;; do cheap "pre-test" if applicable
-                if (result.bitLength() > 6)
-                (§
-                    long r = result.remainder(SMALL_PRIME_PRODUCT).longValue();
-                    if ((r %  3 == 0) || (r %  5 == 0) || (r %  7 == 0) || (r%11 == 0) ||
-                        (r % 13 == 0) || (r % 17 == 0) || (r % 19 == 0) || (r%23 == 0) ||
-                        (r % 29 == 0) || (r % 31 == 0) || (r % 37 == 0) || (r%41 == 0))
-                    (§
-                        result = result.add(TWO);
-                        continue; ;; candidate is composite; try another
-                    )
-                )
-
-                ;; all candidates of bitLength 2 and 3 are prime by this point
-                if (result.bitLength() < 4)
-                    return result;
-
-                ;; the expensive test
-                if (result.primeToCertainty(DEFAULT_PRIME_CERTAINTY, null))
-                    return result;
-
-                result = result.add(TWO);
+                BitSieve searchSieve = BitSieve'new(result, searchLen);
+                BigInteger candidate = BitSieve''retrieve(searchSieve, result, BigInteger'DEFAULT_PRIME_CERTAINTY, null);
+                if (candidate != null)
+                    return candidate;
+                result = BigInteger''add(result, BigInteger'valueOf-l(2 * searchLen));
             )
-        )
-
-        ;; start at previous even number
-        if (result.testBit(0))
-            result = result.subtract(ONE);
-
-        ;; looking for the next large prime
-        int searchLen = getPrimeSearchLen(result.bitLength());
-
-        while (true)
-        (§
-            BitSieve searchSieve = new BitSieve(result, searchLen);
-            BigInteger candidate = searchSieve.retrieve(result, DEFAULT_PRIME_CERTAINTY, null);
-            if (candidate != null)
-                return candidate;
-            result = result.add(BigInteger.valueOf(2 * searchLen));
         )
     )
 
-    #_private
-    #_static
-    (§ defn #_"int" getPrimeSearchLen [#_"int" bitLength])
-    (§
-        if (bitLength > PRIME_SEARCH_BIT_LENGTH_LIMIT + 1)
+    (defn- #_"int" BigInteger'getPrimeSearchLen [#_"int" bitLength]
         (§
-            throw new ArithmeticException("Prime search implementation restriction on bitLength");
+            if (bitLength > BigInteger'PRIME_SEARCH_BIT_LENGTH_LIMIT + 1)
+            (§
+                throw new ArithmeticException("Prime search implementation restriction on bitLength");
+            )
+            return bitLength / 20 * 64;
         )
-        return bitLength / 20 * 64;
     )
 
     ;;;
@@ -3112,44 +3008,46 @@
      ; @return {@code true} if this BigInteger is probably prime,
      ;         {@code false} if it's definitely composite.
      ;;
-    (§ defn #_"boolean" primeToCertainty [#_"int" certainty, #_"Random" random])
-    (§
-        int rounds = 0;
-        int n = (Math.min(certainty, Integer.MAX_VALUE - 1) + 1) / 2;
-
-        ;; The relationship between the certainty and the number of rounds we perform is given in the draft
-        ;; standard ANSI X9.80, "PRIME NUMBER GENERATION, PRIMALITY TESTING, AND PRIMALITY CERTIFICATES".
-        int sizeInBits = this.bitLength();
-        if (sizeInBits < 100)
+    #_method
+    (defn #_"boolean" BigInteger''primeToCertainty [#_"BigInteger" this, #_"int" certainty, #_"Random" random]
         (§
-            rounds = 50;
+            int rounds = 0;
+            int n = (Math.min(certainty, Integer.MAX_VALUE - 1) + 1) / 2;
+
+            ;; The relationship between the certainty and the number of rounds we perform is given in the draft
+            ;; standard ANSI X9.80, "PRIME NUMBER GENERATION, PRIMALITY TESTING, AND PRIMALITY CERTIFICATES".
+            int sizeInBits = BigInteger''bitLength(this);
+            if (sizeInBits < 100)
+            (§
+                rounds = 50;
+                rounds = (n < rounds) ? n #_":" rounds;
+                return BigInteger''passesMillerRabin(this, rounds, random);
+            )
+
+            if (sizeInBits < 256)
+            (§
+                rounds = 27;
+            )
+            else if (sizeInBits < 512)
+            (§
+                rounds = 15;
+            )
+            else if (sizeInBits < 768)
+            (§
+                rounds = 8;
+            )
+            else if (sizeInBits < 1024)
+            (§
+                rounds = 4;
+            )
+            else
+            (§
+                rounds = 2;
+            )
             rounds = (n < rounds) ? n #_":" rounds;
-            return passesMillerRabin(rounds, random);
-        )
 
-        if (sizeInBits < 256)
-        (§
-            rounds = 27;
+            return BigInteger''passesMillerRabin(this, rounds, random) && BigInteger''passesLucasLehmer(this);
         )
-        else if (sizeInBits < 512)
-        (§
-            rounds = 15;
-        )
-        else if (sizeInBits < 768)
-        (§
-            rounds = 8;
-        )
-        else if (sizeInBits < 1024)
-        (§
-            rounds = 4;
-        )
-        else
-        (§
-            rounds = 2;
-        )
-        rounds = (n < rounds) ? n #_":" rounds;
-
-        return passesMillerRabin(rounds, random) && passesLucasLehmer();
     )
 
     ;;;
@@ -3158,126 +3056,125 @@
      ; The following assumptions are made:
      ; This BigInteger is a positive, odd number.
      ;;
-    #_private
-    (§ defn #_"boolean" passesLucasLehmer [])
-    (§
-        BigInteger thisPlusOne = this.add(ONE);
-
-        ;; step 1
-        int d = 5;
-        while (jacobiSymbol(d, this) != -1)
+    #_method
+    (defn- #_"boolean" BigInteger''passesLucasLehmer [#_"BigInteger" this]
         (§
-            ;; 5, -7, 9, -11, ...
-            d = (d < 0) ? Math.abs(d) + 2 #_":" -(d + 2);
+            BigInteger thisPlusOne = BigInteger''add(this, BigInteger'ONE);
+
+            ;; step 1
+            int d = 5;
+            while (BigInteger'jacobiSymbol(d, this) != -1)
+            (§
+                ;; 5, -7, 9, -11, ...
+                d = (d < 0) ? Math.abs(d) + 2 #_":" -(d + 2);
+            )
+
+            ;; step 2
+            BigInteger u = BigInteger'lucasLehmerSequence(d, thisPlusOne, this);
+
+            ;; step 3
+            return BigInteger''mod(u, this).equals(BigInteger'ZERO);
         )
-
-        ;; step 2
-        BigInteger u = lucasLehmerSequence(d, thisPlusOne, this);
-
-        ;; step 3
-        return u.mod(this).equals(ZERO);
     )
 
     ;;;
      ; Computes Jacobi(p,n).
      ; Assumes n positive, odd, n>=3.
      ;;
-    #_private
-    #_static
-    (§ defn #_"int" jacobiSymbol [#_"int" p, #_"BigInteger" n])
-    (§
-        if (p == 0)
-            return 0;
-
-        ;; Algorithm and comments adapted from Colin Plumb's C library.
-        int j = 1;
-        int u = n.mag[n.mag.length - 1];
-
-        ;; make p positive
-        if (p < 0)
+    (defn- #_"int" BigInteger'jacobiSymbol [#_"int" p, #_"BigInteger" n]
         (§
-            p = -p;
-            int n8 = u & 7;
-            if ((n8 == 3) || (n8 == 7))
-                j = -j; ;; 3 (011) or 7 (111) mod 8
-        )
+            if (p == 0)
+                return 0;
 
-        ;; get rid of factors of 2 in p
-        while ((p & 3) == 0)
-            p >>= 2;
-        if ((p & 1) == 0)
-        (§
-            p >>= 1;
-            if (((u (ß bit-xor) (u >> 1)) & 2) != 0)
-                j = -j; ;; 3 (011) or 5 (101) mod 8
-        )
-        if (p == 1)
-            return j;
-        ;; then, apply quadratic reciprocity
-        if ((p & u & 2) != 0) ;; p = u = 3 (mod 4)?
-            j = -j;
-        ;; and reduce u mod p
-        u = n.mod(BigInteger.valueOf(p)).intValue();
+            ;; Algorithm and comments adapted from Colin Plumb's C library.
+            int j = 1;
+            int u = n.mag[n.mag.length - 1];
 
-        ;; now compute Jacobi(u,p), u < p
-        while (u != 0)
-        (§
-            while ((u & 3) == 0)
-                u >>= 2;
-            if ((u & 1) == 0)
+            ;; make p positive
+            if (p < 0)
             (§
-                u >>= 1;
-                if (((p (ß bit-xor) (p >> 1)) & 2) != 0)
+                p = -p;
+                int n8 = u & 7;
+                if ((n8 == 3) || (n8 == 7))
+                    j = -j; ;; 3 (011) or 7 (111) mod 8
+            )
+
+            ;; get rid of factors of 2 in p
+            while ((p & 3) == 0)
+                p >>= 2;
+            if ((p & 1) == 0)
+            (§
+                p >>= 1;
+                if (((u (§ bit-xor) (u >> 1)) & 2) != 0)
                     j = -j; ;; 3 (011) or 5 (101) mod 8
             )
-            if (u == 1)
+            if (p == 1)
                 return j;
-            ;; now both u and p are odd, so use quadratic reciprocity
-            assert (u < p);
-            int t = u; u = p; p = t;
-            if ((u & p & 2) != 0) ;; u = p = 3 (mod 4)?
+            ;; then, apply quadratic reciprocity
+            if ((p & u & 2) != 0) ;; p = u = 3 (mod 4)?
                 j = -j;
-            ;; now u >= p, so it can be reduced
-            u %= p;
+            ;; and reduce u mod p
+            u = BigInteger''mod(n, BigInteger'valueOf-l(p)).intValue();
+
+            ;; now compute Jacobi(u,p), u < p
+            while (u != 0)
+            (§
+                while ((u & 3) == 0)
+                    u >>= 2;
+                if ((u & 1) == 0)
+                (§
+                    u >>= 1;
+                    if (((p (§ bit-xor) (p >> 1)) & 2) != 0)
+                        j = -j; ;; 3 (011) or 5 (101) mod 8
+                )
+                if (u == 1)
+                    return j;
+                ;; now both u and p are odd, so use quadratic reciprocity
+                assert (u < p);
+                int t = u; u = p; p = t;
+                if ((u & p & 2) != 0) ;; u = p = 3 (mod 4)?
+                    j = -j;
+                ;; now u >= p, so it can be reduced
+                u %= p;
+            )
+            return 0;
         )
-        return 0;
     )
 
-    #_private
-    #_static
-    (§ defn #_"BigInteger" lucasLehmerSequence [#_"int" z, #_"BigInteger" k, #_"BigInteger" n])
-    (§
-        BigInteger d = BigInteger.valueOf(z);
-        BigInteger u = ONE; BigInteger u2;
-        BigInteger v = ONE; BigInteger v2;
-
-        for (int i = k.bitLength() - 2(ß) i >= 0(ß) i--)
+    (defn- #_"BigInteger" BigInteger'lucasLehmerSequence [#_"int" z, #_"BigInteger" k, #_"BigInteger" n]
         (§
-            u2 = u.multiply(v).mod(n);
+            BigInteger d = BigInteger'valueOf-l(z);
+            BigInteger u = BigInteger'ONE; BigInteger u2;
+            BigInteger v = BigInteger'ONE; BigInteger v2;
 
-            v2 = v.square().add(d.multiply(u.square())).mod(n);
-            if (v2.testBit(0))
-                v2 = v2.subtract(n);
-
-            v2 = v2.shiftRight(1);
-
-            u = u2; v = v2;
-            if (k.testBit(i))
+            for (int i = BigInteger''bitLength(k) - 2(§ for) i >= 0(§ for) i--)
             (§
-                u2 = u.add(v).mod(n);
-                if (u2.testBit(0))
-                    u2 = u2.subtract(n);
+                u2 = BigInteger''multiply(u, v).BigInteger''mod((§ pipe), n);
 
-                u2 = u2.shiftRight(1);
-                v2 = v.add(d.multiply(u)).mod(n);
-                if (v2.testBit(0))
-                    v2 = v2.subtract(n);
-                v2 = v2.shiftRight(1);
+                v2 = BigInteger''square(v).BigInteger''add((§ pipe), BigInteger''multiply(d, BigInteger''square(u))).BigInteger''mod((§ pipe), n);
+                if (BigInteger''testBit(v2, 0))
+                    v2 = BigInteger''subtract(v2, n);
+
+                v2 = BigInteger''shiftRight(v2, 1);
 
                 u = u2; v = v2;
+                if (BigInteger''testBit(k, i))
+                (§
+                    u2 = BigInteger''add(u, v).BigInteger''mod((§ pipe), n);
+                    if (BigInteger''testBit(u2, 0))
+                        u2 = BigInteger''subtract(u2, n);
+
+                    u2 = BigInteger''shiftRight(u2, 1);
+                    v2 = BigInteger''add(v, BigInteger''multiply(d, u)).BigInteger''mod((§ pipe), n);
+                    if (BigInteger''testBit(v2, 0))
+                        v2 = BigInteger''subtract(v2, n);
+                    v2 = BigInteger''shiftRight(v2, 1);
+
+                    u = u2; v = v2;
+                )
             )
+            return u;
         )
-        return u;
     )
 
     ;;;
@@ -3288,39 +3185,40 @@
      ; This BigInteger is a positive, odd number greater than 2.
      ; iterations<=50.
      ;;
-    #_private
-    (§ defn #_"boolean" passesMillerRabin [#_"int" iterations, #_"Random" rnd])
-    (§
-        ;; find a and m such that m is odd and this == 1 + 2**a * m
-        BigInteger thisMinusOne = this.subtract(ONE);
-        BigInteger m = thisMinusOne;
-        int a = m.getLowestSetBit();
-        m = m.shiftRight(a);
-
-        ;; do the tests
-        if (rnd == null)
+    #_method
+    (defn- #_"boolean" BigInteger''passesMillerRabin [#_"BigInteger" this, #_"int" iterations, #_"Random" rnd]
         (§
-            rnd = ThreadLocalRandom.current();
-        )
-        for (int i = 0(ß) i < iterations(ß) i++)
-        (§
-            ;; generate a uniform random on (1, this)
-            BigInteger b;
-            do
-            (§
-                b = new BigInteger(this.bitLength(), rnd);
-            ) while (b.compareTo(ONE) <= 0 || b.compareTo(this) >= 0);
+            ;; find a and m such that m is odd and this == 1 + 2**a * m
+            BigInteger thisMinusOne = BigInteger''subtract(this, BigInteger'ONE);
+            BigInteger m = thisMinusOne;
+            int a = BigInteger''getLowestSetBit(m);
+            m = BigInteger''shiftRight(m, a);
 
-            int j = 0;
-            BigInteger z = b.modPow(m, this);
-            while (!((j == 0 && z.equals(ONE)) || z.equals(thisMinusOne)))
+            ;; do the tests
+            if (rnd == null)
             (§
-                if (j > 0 && z.equals(ONE) || ++j == a)
-                    return false;
-                z = z.modPow(TWO, this);
+                rnd = ThreadLocalRandom.current();
             )
+            for (int i = 0(§ for) i < iterations(§ for) i++)
+            (§
+                ;; generate a uniform random on (1, this)
+                BigInteger b;
+                do
+                (§
+                    b = BigInteger'new(BigInteger''bitLength(this), rnd);
+                ) while (b.compareTo(BigInteger'ONE) <= 0 || b.compareTo(this) >= 0);
+
+                int j = 0;
+                BigInteger z = BigInteger''modPow(b, m, this);
+                while (!((j == 0 && z.equals(BigInteger'ONE)) || z.equals(thisMinusOne)))
+                (§
+                    if (j > 0 && z.equals(BigInteger'ONE) || ++j == a)
+                        return false;
+                    z = BigInteger''modPow(z, BigInteger'TWO, this);
+                )
+            )
+            return true;
         )
-        return true;
     )
 
     ;;;
@@ -3328,13 +3226,14 @@
      ; with the arguments reversed in two ways: it assumes that its
      ; arguments are correct, and it doesn't copy the magnitude array.
      ;;
-    (§ constructor BigInteger [#_"int[]" magnitude, #_"int" signum])
-    (§
-        this.signum = (magnitude.length == 0) ? 0 #_":" signum;
-        this.mag = magnitude;
-        if (mag.length >= MAX_MAG_LENGTH)
+    (defn #_"BigInteger" BigInteger'new [#_"int[]" magnitude, #_"int" signum]
         (§
-            checkRange();
+            this.signum = (magnitude.length == 0) ? 0 #_":" signum;
+            this.mag = magnitude;
+            if (mag.length >= BigInteger'MAX_MAG_LENGTH)
+            (§
+                BigInteger''checkRange(this);
+            )
         )
     )
 
@@ -3342,14 +3241,14 @@
      ; This private constructor is for internal use and assumes that its
      ; arguments are correct.
      ;;
-    #_private
-    (§ constructor BigInteger [#_"byte[]" magnitude, #_"int" signum])
-    (§
-        this.signum = (magnitude.length == 0) ? 0 #_":" signum;
-        this.mag = stripLeadingZeroBytes(magnitude);
-        if (mag.length >= MAX_MAG_LENGTH)
+    (defn- #_"BigInteger" BigInteger'new [#_"byte[]" magnitude, #_"int" signum]
         (§
-            checkRange();
+            this.signum = (magnitude.length == 0) ? 0 #_":" signum;
+            this.mag = BigInteger'stripLeadingZeroBytes(magnitude);
+            if (mag.length >= BigInteger'MAX_MAG_LENGTH)
+            (§
+                BigInteger''checkRange(this);
+            )
         )
     )
 
@@ -3359,20 +3258,20 @@
      ;
      ; @throws ArithmeticException if {@code this} exceeds the supported range.
      ;;
-    #_private
-    (§ defn #_"void" checkRange [])
-    (§
-        if (mag.length > MAX_MAG_LENGTH || mag.length == MAX_MAG_LENGTH && mag[0] < 0)
+    #_method
+    (defn- #_"void" BigInteger''checkRange [#_"BigInteger" this]
         (§
-            reportOverflow();
+            if (mag.length > BigInteger'MAX_MAG_LENGTH || mag.length == BigInteger'MAX_MAG_LENGTH && mag[0] < 0)
+            (§
+                BigInteger'reportOverflow();
+            )
         )
     )
 
-    #_private
-    #_static
-    (§ defn #_"void" reportOverflow [])
-    (§
-        throw new ArithmeticException("BigInteger would overflow supported range");
+    (defn- #_"void" BigInteger'reportOverflow []
+        (§
+            throw new ArithmeticException("BigInteger would overflow supported range");
+        )
     )
 
     ;; static factory methods
@@ -3385,48 +3284,47 @@
      ; @param  val value of the BigInteger to return.
      ; @return a BigInteger with the specified value.
      ;;
-    #_public
-    #_static
-    (§ defn #_"BigInteger" valueOf [#_"long" val])
-    (§
-        ;; if -MAX_CONSTANT < val < MAX_CONSTANT, return stashed constant
-        if (val == 0)
-            return ZERO;
-        if (val > 0 && val <= MAX_CONSTANT)
-            return posConst[(int) val];
-        else if (val < 0 && val >= -MAX_CONSTANT)
-            return negConst[(int) -val];
+    (defn #_"BigInteger" BigInteger'valueOf [#_"long" val]
+        (§
+            ;; if -MAX_CONSTANT < val < MAX_CONSTANT, return stashed constant
+            if (val == 0)
+                return BigInteger'ZERO;
+            if (val > 0 && val <= BigInteger'MAX_CONSTANT)
+                return posConst[(int) val];
+            else if (val < 0 && val >= -BigInteger'MAX_CONSTANT)
+                return negConst[(int) -val];
 
-        return new BigInteger(val);
+            return BigInteger'new(val);
+        )
     )
 
     ;;;
      ; Constructs a BigInteger with the specified value, which may not be zero.
      ;;
-    #_private
-    (§ constructor BigInteger [#_"long" val])
-    (§
-        if (val < 0)
+    (defn- #_"BigInteger" BigInteger'new [#_"long" val]
         (§
-            val = -val;
-            signum = -1;
-        )
-        else
-        (§
-            signum = 1;
-        )
+            if (val < 0)
+            (§
+                val = -val;
+                signum = -1;
+            )
+            else
+            (§
+                signum = 1;
+            )
 
-        int highWord = (int)(val >>> 32);
-        if (highWord == 0)
-        (§
-            mag = new int[1];
-            mag[0] = (int)val;
-        )
-        else
-        (§
-            mag = new int[2];
-            mag[0] = highWord;
-            mag[1] = (int)val;
+            int highWord = (int)(val >>> 32);
+            if (highWord == 0)
+            (§
+                mag = new int[1];
+                mag[0] = (int)val;
+            )
+            else
+            (§
+                mag = new int[2];
+                mag[0] = highWord;
+                mag[1] = (int)val;
+            )
         )
     )
 
@@ -3435,11 +3333,10 @@
      ; Assumes that the input array will not be modified (the returned
      ; BigInteger will reference the input array if feasible).
      ;;
-    #_private
-    #_static
-    (§ defn #_"BigInteger" valueOf [#_"int[]" val])
-    (§
-        return (val[0] > 0) ? new BigInteger(val, 1) #_":" new BigInteger(val);
+    (defn- #_"BigInteger" BigInteger'valueOf [#_"int[]" val]
+        (§
+            return (val[0] > 0) ? BigInteger'new(val, 1) #_":" BigInteger'new(val);
+        )
     )
 
     ;; constants
@@ -3447,47 +3344,37 @@
     ;;;
      ; Initialize static constant array when class is loaded.
      ;;
-    #_private
-    #_final
+    (def- #_"int" BigInteger'MAX_CONSTANT 16)
     #_static
-    (§ def #_"int" MAX_CONSTANT = 16)
-    #_private
+    (§ def- #_"BigInteger[]" posConst = new BigInteger[BigInteger'MAX_CONSTANT + 1])
     #_static
-    (§ def #_"BigInteger[]" posConst = new BigInteger[MAX_CONSTANT + 1])
-    #_private
-    #_static
-    (§ def #_"BigInteger[]" negConst = new BigInteger[MAX_CONSTANT + 1])
+    (§ def- #_"BigInteger[]" negConst = new BigInteger[BigInteger'MAX_CONSTANT + 1])
 
     ;;;
      ; The cache of powers of each radix. This allows us to not have to
      ; recalculate powers of radix^(2^n) more than once. This speeds
      ; Schoenhage recursive base conversion significantly.
      ;;
-    #_private
-    #_static
     #_volatile
-    (§ def #_"BigInteger[][]" powerCache)
+    #_static
+    (§ def- #_"BigInteger[][]" powerCache)
 
     ;;; The cache of logarithms of radices for base conversion. */
-    #_private
-    #_static
     #_final
-    (§ def #_"double[]" logCache)
+    #_static
+    (§ def- #_"double[]" logCache)
 
     ;;; The natural log of 2. This is used in computing cache indices. */
-    #_private
-    #_static
-    #_final
-    (§ def #_"double" LOG_TWO = Math.log(2.0))
+    (def- #_"double" BigInteger'LOG_TWO (ß Math.log(2.0)))
 
     #_static
     (§
-        for (int i = 1(ß) i <= MAX_CONSTANT(ß) i++)
+        for (int i = 1(§ for) i <= BigInteger'MAX_CONSTANT(§ for) i++)
         (§
             int[] magnitude = new int[1];
             magnitude[0] = i;
-            posConst[i] = new BigInteger(magnitude,  1);
-            negConst[i] = new BigInteger(magnitude, -1);
+            posConst[i] = BigInteger'new(magnitude,  1);
+            negConst[i] = BigInteger'new(magnitude, -1);
         )
 
         ;;
@@ -3497,9 +3384,9 @@
         powerCache = new BigInteger[Character.MAX_RADIX + 1][];
         logCache = new double[Character.MAX_RADIX + 1];
 
-        for (int i = Character.MIN_RADIX(ß) i <= Character.MAX_RADIX(ß) i++)
+        for (int i = Character.MIN_RADIX(§ for) i <= Character.MAX_RADIX(§ for) i++)
         (§
-            powerCache[i] = new BigInteger[] (§ init BigInteger.valueOf(i) );
+            powerCache[i] = new BigInteger[] (§ init BigInteger'valueOf-l(i) );
             logCache[i] = Math.log(i);
         )
     )
@@ -3507,42 +3394,27 @@
     ;;;
      ; The BigInteger constant zero.
      ;;
-    #_public
-    #_static
-    #_final
-    (§ def #_"BigInteger" ZERO = new BigInteger(new int[0], 0))
+    (def #_"BigInteger" BigInteger'ZERO (ß BigInteger'new(new int[0], 0)))
 
     ;;;
      ; The BigInteger constant one.
      ;;
-    #_public
-    #_static
-    #_final
-    (§ def #_"BigInteger" ONE = valueOf(1))
+    (def #_"BigInteger" BigInteger'ONE (ß BigInteger'valueOf-l(1)))
 
     ;;;
      ; The BigInteger constant two. (Not exported.)
      ;;
-    #_private
-    #_static
-    #_final
-    (§ def #_"BigInteger" TWO = valueOf(2))
+    (def- #_"BigInteger" BigInteger'TWO (ß BigInteger'valueOf-l(2)))
 
     ;;;
      ; The BigInteger constant -1. (Not exported.)
      ;;
-    #_private
-    #_static
-    #_final
-    (§ def #_"BigInteger" NEGATIVE_ONE = valueOf(-1))
+    (def- #_"BigInteger" BigInteger'NEGATIVE_ONE (ß BigInteger'valueOf-l(-1)))
 
     ;;;
      ; The BigInteger constant ten.
      ;;
-    #_public
-    #_static
-    #_final
-    (§ def #_"BigInteger" TEN = valueOf(10))
+    (def #_"BigInteger" BigInteger'TEN (ß BigInteger'valueOf-l(10)))
 
     ;; arithmetic operations
 
@@ -3552,114 +3424,113 @@
      ; @param  val value to be added to this BigInteger.
      ; @return {@code this + val}
      ;;
-    #_public
-    (§ defn #_"BigInteger" add [#_"BigInteger" val])
-    (§
-        if (val.signum == 0)
-            return this;
-        if (signum == 0)
-            return val;
-        if (val.signum == signum)
-            return new BigInteger(add(mag, val.mag), signum);
+    #_method
+    (defn #_"BigInteger" BigInteger''add [#_"BigInteger" this, #_"BigInteger" val]
+        (§
+            if (val.signum == 0)
+                return this;
+            if (signum == 0)
+                return val;
+            if (val.signum == signum)
+                return BigInteger'new(BigInteger'add(mag, val.mag), signum);
 
-        int cmp = compareMagnitude(val);
-        if (cmp == 0)
-            return ZERO;
-        int[] resultMag = (cmp > 0) ? subtract(mag, val.mag) #_":" subtract(val.mag, mag);
-        resultMag = trustedStripLeadingZeroInts(resultMag);
+            int cmp = BigInteger''compareMagnitude-i(this, val);
+            if (cmp == 0)
+                return BigInteger'ZERO;
+            int[] resultMag = (cmp > 0) ? BigInteger'subtract(mag, val.mag) #_":" BigInteger'subtract(val.mag, mag);
+            resultMag = BigInteger'trustedStripLeadingZeroInts(resultMag);
 
-        return new BigInteger(resultMag, (cmp == signum) ? 1 #_":" -1);
+            return BigInteger'new(resultMag, (cmp == signum) ? 1 #_":" -1);
+        )
     )
 
     ;;;
      ; Adds the contents of the int arrays x and y. This method allocates a
      ; new int array to hold the answer and returns a reference to that array.
      ;;
-    #_private
-    #_static
-    (§ defn #_"int[]" add [#_"int[]" x, #_"int[]" y])
-    (§
-        ;; if x is shorter, swap the two arrays
-        if (x.length < y.length)
+    (defn- #_"int[]" BigInteger'add [#_"int[]" x, #_"int[]" y]
         (§
-            int[] tmp = x; x = y; y = tmp;
-        )
-
-        int xIndex = x.length;
-        int yIndex = y.length;
-        int result[] = new int[xIndex];
-        long sum = 0;
-        if (yIndex == 1)
-        (§
-            sum = (x[--xIndex] & BigInteger'LONG_MASK) + (y[0] & BigInteger'LONG_MASK);
-            result[xIndex] = (int)sum;
-        )
-        else
-        (§
-            ;; add common parts of both numbers
-            while (yIndex > 0)
+            ;; if x is shorter, swap the two arrays
+            if (x.length < y.length)
             (§
-                sum = (x[--xIndex] & BigInteger'LONG_MASK) + (y[--yIndex] & BigInteger'LONG_MASK) + (sum >>> 32);
+                int[] tmp = x; x = y; y = tmp;
+            )
+
+            int xIndex = x.length;
+            int yIndex = y.length;
+            int result[] = new int[xIndex];
+            long sum = 0;
+            if (yIndex == 1)
+            (§
+                sum = (x[--xIndex] & BigInteger'LONG_MASK) + (y[0] & BigInteger'LONG_MASK);
                 result[xIndex] = (int)sum;
             )
-        )
-        ;; copy remainder of longer number while carry propagation is required
-        boolean carry = (sum >>> 32 != 0);
-        while (xIndex > 0 && carry)
-            carry = ((result[--xIndex] = x[xIndex] + 1) == 0);
+            else
+            (§
+                ;; add common parts of both numbers
+                while (yIndex > 0)
+                (§
+                    sum = (x[--xIndex] & BigInteger'LONG_MASK) + (y[--yIndex] & BigInteger'LONG_MASK) + (sum >>> 32);
+                    result[xIndex] = (int)sum;
+                )
+            )
+            ;; copy remainder of longer number while carry propagation is required
+            boolean carry = (sum >>> 32 != 0);
+            while (xIndex > 0 && carry)
+                carry = ((result[--xIndex] = x[xIndex] + 1) == 0);
 
-        ;; copy remainder of longer number
-        while (xIndex > 0)
-            result[--xIndex] = x[xIndex];
+            ;; copy remainder of longer number
+            while (xIndex > 0)
+                result[--xIndex] = x[xIndex];
 
-        ;; grow result if necessary
-        if (carry)
-        (§
-            int bigger[] = new int[result.length + 1];
-            System.arraycopy(result, 0, bigger, 1, result.length);
-            bigger[0] = 0x01;
-            return bigger;
-        )
-        return result;
-    )
-
-    #_private
-    #_static
-    (§ defn #_"int[]" subtract [#_"long" val, #_"int[]" little])
-    (§
-        int highWord = (int)(val >>> 32);
-        if (highWord == 0)
-        (§
-            int result[] = new int[1];
-            result[0] = (int)(val - (little[0] & BigInteger'LONG_MASK));
+            ;; grow result if necessary
+            if (carry)
+            (§
+                int bigger[] = new int[result.length + 1];
+                System.arraycopy(result, 0, bigger, 1, result.length);
+                bigger[0] = 0x01;
+                return bigger;
+            )
             return result;
         )
-        else
+    )
+
+    (defn- #_"int[]" BigInteger'subtract [#_"long" val, #_"int[]" little]
         (§
-            int result[] = new int[2];
-            if (little.length == 1)
+            int highWord = (int)(val >>> 32);
+            if (highWord == 0)
             (§
-                long difference = ((int)val & BigInteger'LONG_MASK) - (little[0] & BigInteger'LONG_MASK);
-                result[1] = (int)difference;
-                ;; subtract remainder of longer number while borrow propagates
-                boolean borrow = (difference >> 32 != 0);
-                if (borrow)
-                (§
-                    result[0] = highWord - 1;
-                )
-                else ;; copy remainder of longer number
-                (§
-                    result[0] = highWord;
-                )
+                int result[] = new int[1];
+                result[0] = (int)(val - (little[0] & BigInteger'LONG_MASK));
                 return result;
             )
-            else ;; little.length == 2
+            else
             (§
-                long difference = ((int)val & BigInteger'LONG_MASK) - (little[1] & BigInteger'LONG_MASK);
-                result[1] = (int)difference;
-                difference = (highWord & BigInteger'LONG_MASK) - (little[0] & BigInteger'LONG_MASK) + (difference >> 32);
-                result[0] = (int)difference;
-                return result;
+                int result[] = new int[2];
+                if (little.length == 1)
+                (§
+                    long difference = ((int)val & BigInteger'LONG_MASK) - (little[0] & BigInteger'LONG_MASK);
+                    result[1] = (int)difference;
+                    ;; subtract remainder of longer number while borrow propagates
+                    boolean borrow = (difference >> 32 != 0);
+                    if (borrow)
+                    (§
+                        result[0] = highWord - 1;
+                    )
+                    else ;; copy remainder of longer number
+                    (§
+                        result[0] = highWord;
+                    )
+                    return result;
+                )
+                else ;; little.length == 2
+                (§
+                    long difference = ((int)val & BigInteger'LONG_MASK) - (little[1] & BigInteger'LONG_MASK);
+                    result[1] = (int)difference;
+                    difference = (highWord & BigInteger'LONG_MASK) - (little[0] & BigInteger'LONG_MASK) + (difference >> 32);
+                    result[0] = (int)difference;
+                    return result;
+                )
             )
         )
     )
@@ -3670,38 +3541,37 @@
      ; This method allocates the space necessary to hold the answer.
      ; assumes val >= 0
      ;;
-    #_private
-    #_static
-    (§ defn #_"int[]" subtract [#_"int[]" big, #_"long" val])
-    (§
-        int highWord = (int)(val >>> 32);
-        int bigIndex = big.length;
-        int result[] = new int[bigIndex];
-        long difference = 0;
-
-        if (highWord == 0)
+    (defn- #_"int[]" BigInteger'subtract [#_"int[]" big, #_"long" val]
         (§
-            difference = (big[--bigIndex] & BigInteger'LONG_MASK) - val;
-            result[bigIndex] = (int)difference;
+            int highWord = (int)(val >>> 32);
+            int bigIndex = big.length;
+            int result[] = new int[bigIndex];
+            long difference = 0;
+
+            if (highWord == 0)
+            (§
+                difference = (big[--bigIndex] & BigInteger'LONG_MASK) - val;
+                result[bigIndex] = (int)difference;
+            )
+            else
+            (§
+                difference = (big[--bigIndex] & BigInteger'LONG_MASK) - (val & BigInteger'LONG_MASK);
+                result[bigIndex] = (int)difference;
+                difference = (big[--bigIndex] & BigInteger'LONG_MASK) - (highWord & BigInteger'LONG_MASK) + (difference >> 32);
+                result[bigIndex] = (int)difference;
+            )
+
+            ;; subtract remainder of longer number while borrow propagates
+            boolean borrow = (difference >> 32 != 0);
+            while (bigIndex > 0 && borrow)
+                borrow = ((result[--bigIndex] = big[bigIndex] - 1) == -1);
+
+            ;; copy remainder of longer number
+            while (bigIndex > 0)
+                result[--bigIndex] = big[bigIndex];
+
+            return result;
         )
-        else
-        (§
-            difference = (big[--bigIndex] & BigInteger'LONG_MASK) - (val & BigInteger'LONG_MASK);
-            result[bigIndex] = (int)difference;
-            difference = (big[--bigIndex] & BigInteger'LONG_MASK) - (highWord & BigInteger'LONG_MASK) + (difference >> 32);
-            result[bigIndex] = (int)difference;
-        )
-
-        ;; subtract remainder of longer number while borrow propagates
-        boolean borrow = (difference >> 32 != 0);
-        while (bigIndex > 0 && borrow)
-            borrow = ((result[--bigIndex] = big[bigIndex] - 1) == -1);
-
-        ;; copy remainder of longer number
-        while (bigIndex > 0)
-            result[--bigIndex] = big[bigIndex];
-
-        return result;
     )
 
     ;;;
@@ -3710,22 +3580,23 @@
      ; @param  val value to be subtracted from this BigInteger.
      ; @return {@code this - val}
      ;;
-    #_public
-    (§ defn #_"BigInteger" subtract [#_"BigInteger" val])
-    (§
-        if (val.signum == 0)
-            return this;
-        if (signum == 0)
-            return val.negate();
-        if (val.signum != signum)
-            return new BigInteger(add(mag, val.mag), signum);
+    #_method
+    (defn #_"BigInteger" BigInteger''subtract [#_"BigInteger" this, #_"BigInteger" val]
+        (§
+            if (val.signum == 0)
+                return this;
+            if (signum == 0)
+                return BigInteger''negate(val);
+            if (val.signum != signum)
+                return BigInteger'new(BigInteger'add(mag, val.mag), signum);
 
-        int cmp = compareMagnitude(val);
-        if (cmp == 0)
-            return ZERO;
-        int[] resultMag = (cmp > 0) ? subtract(mag, val.mag) #_":" subtract(val.mag, mag);
-        resultMag = trustedStripLeadingZeroInts(resultMag);
-        return new BigInteger(resultMag, (cmp == signum) ? 1 #_":" -1);
+            int cmp = BigInteger''compareMagnitude-i(this, val);
+            if (cmp == 0)
+                return BigInteger'ZERO;
+            int[] resultMag = (cmp > 0) ? BigInteger'subtract(mag, val.mag) #_":" BigInteger'subtract(val.mag, mag);
+            resultMag = BigInteger'trustedStripLeadingZeroInts(resultMag);
+            return BigInteger'new(resultMag, (cmp == signum) ? 1 #_":" -1);
+        )
     )
 
     ;;;
@@ -3733,32 +3604,31 @@
      ; The first int array (big) must represent a larger number than the second.
      ; This method allocates the space necessary to hold the answer.
      ;;
-    #_private
-    #_static
-    (§ defn #_"int[]" subtract [#_"int[]" big, #_"int[]" little])
-    (§
-        int bigIndex = big.length;
-        int result[] = new int[bigIndex];
-        int littleIndex = little.length;
-        long difference = 0;
-
-        ;; subtract common parts of both numbers
-        while (littleIndex > 0)
+    (defn- #_"int[]" BigInteger'subtract [#_"int[]" big, #_"int[]" little]
         (§
-            difference = (big[--bigIndex] & BigInteger'LONG_MASK) - (little[--littleIndex] & BigInteger'LONG_MASK) + (difference >> 32);
-            result[bigIndex] = (int)difference;
+            int bigIndex = big.length;
+            int result[] = new int[bigIndex];
+            int littleIndex = little.length;
+            long difference = 0;
+
+            ;; subtract common parts of both numbers
+            while (littleIndex > 0)
+            (§
+                difference = (big[--bigIndex] & BigInteger'LONG_MASK) - (little[--littleIndex] & BigInteger'LONG_MASK) + (difference >> 32);
+                result[bigIndex] = (int)difference;
+            )
+
+            ;; subtract remainder of longer number while borrow propagates
+            boolean borrow = (difference >> 32 != 0);
+            while (bigIndex > 0 && borrow)
+                borrow = ((result[--bigIndex] = big[bigIndex] - 1) == -1);
+
+            ;; copy remainder of longer number
+            while (bigIndex > 0)
+                result[--bigIndex] = big[bigIndex];
+
+            return result;
         )
-
-        ;; subtract remainder of longer number while borrow propagates
-        boolean borrow = (difference >> 32 != 0);
-        while (bigIndex > 0 && borrow)
-            borrow = ((result[--bigIndex] = big[bigIndex] - 1) == -1);
-
-        ;; copy remainder of longer number
-        while (bigIndex > 0)
-            result[--bigIndex] = big[bigIndex];
-
-        return result;
     )
 
     ;;;
@@ -3767,93 +3637,94 @@
      ; @param  val value to be multiplied by this BigInteger.
      ; @return {@code this * val}
      ;;
-    #_public
-    (§ defn #_"BigInteger" multiply [#_"BigInteger" val])
-    (§
-        if (val.signum == 0 || signum == 0)
-            return ZERO;
-
-        int xlen = mag.length;
-        int ylen = val.mag.length;
-
-        int resultSign = (signum == val.signum) ? 1 #_":" -1;
-        if (val.mag.length == 1)
+    #_method
+    (defn #_"BigInteger" BigInteger''multiply [#_"BigInteger" this, #_"BigInteger" val]
         (§
-            return multiplyByInt(mag, val.mag[0], resultSign);
+            if (val.signum == 0 || signum == 0)
+                return BigInteger'ZERO;
+
+            int xlen = mag.length;
+            int ylen = val.mag.length;
+
+            int resultSign = (signum == val.signum) ? 1 #_":" -1;
+            if (val.mag.length == 1)
+            (§
+                return BigInteger'multiplyByInt(mag, val.mag[0], resultSign);
+            )
+            if (mag.length == 1)
+            (§
+                return BigInteger'multiplyByInt(val.mag, mag[0], resultSign);
+            )
+            int[] result = BigInteger''multiplyToLen(this, mag, xlen, val.mag, ylen, null);
+            result = BigInteger'trustedStripLeadingZeroInts(result);
+            return BigInteger'new(result, resultSign);
         )
-        if (mag.length == 1)
-        (§
-            return multiplyByInt(val.mag, mag[0], resultSign);
-        )
-        int[] result = multiplyToLen(mag, xlen, val.mag, ylen, null);
-        result = trustedStripLeadingZeroInts(result);
-        return new BigInteger(result, resultSign);
     )
 
-    #_private
-    #_static
-    (§ defn #_"BigInteger" multiplyByInt [#_"int[]" x, #_"int" y, #_"int" sign])
-    (§
-        if (Integer.bitCount(y) == 1)
+    (defn- #_"BigInteger" BigInteger'multiplyByInt [#_"int[]" x, #_"int" y, #_"int" sign]
         (§
-            return new BigInteger(shiftLeft(x, Integer.numberOfTrailingZeros(y)), sign);
+            if (Integer.bitCount(y) == 1)
+            (§
+                return BigInteger'new(BigInteger'shiftLeft(x, Integer.numberOfTrailingZeros(y)), sign);
+            )
+            int xlen = x.length;
+            int[] rmag = new int[xlen + 1];
+            long carry = 0;
+            long yl = y & BigInteger'LONG_MASK;
+            int rstart = rmag.length - 1;
+            for (int i = xlen - 1(§ for) i >= 0(§ for) i--)
+            (§
+                long product = (x[i] & BigInteger'LONG_MASK) * yl + carry;
+                rmag[rstart--] = (int)product;
+                carry = product >>> 32;
+            )
+            if (carry == 0 #_"L")
+            (§
+                rmag = Arrays.copyOfRange(rmag, 1, rmag.length);
+            )
+            else
+            (§
+                rmag[rstart] = (int)carry;
+            )
+            return BigInteger'new(rmag, sign);
         )
-        int xlen = x.length;
-        int[] rmag = new int[xlen + 1];
-        long carry = 0;
-        long yl = y & BigInteger'LONG_MASK;
-        int rstart = rmag.length - 1;
-        for (int i = xlen - 1(ß) i >= 0(ß) i--)
-        (§
-            long product = (x[i] & BigInteger'LONG_MASK) * yl + carry;
-            rmag[rstart--] = (int)product;
-            carry = product >>> 32;
-        )
-        if (carry == 0 #_"L")
-        (§
-            rmag = Arrays.copyOfRange(rmag, 1, rmag.length);
-        )
-        else
-        (§
-            rmag[rstart] = (int)carry;
-        )
-        return new BigInteger(rmag, sign);
     )
 
     ;;;
      ; Multiplies int arrays x and y to the specified lengths and places the
      ; result into z. There will be no leading zeros in the resultant array.
      ;;
-    #_private
-    (§ defn #_"int[]" multiplyToLen [#_"int[]" x, #_"int" xlen, #_"int[]" y, #_"int" ylen, #_"int[]" z])
-    (§
-        int xstart = xlen - 1;
-        int ystart = ylen - 1;
-
-        if (z == null || z.length < (xlen + ylen))
-            z = new int[xlen + ylen];
-
-        long carry = 0;
-        for (int j = ystart, k = ystart + 1 + xstart(ß) j >= 0(ß) j--, k--)
+    #_method
+    (defn- #_"int[]" BigInteger''multiplyToLen [#_"BigInteger" this, #_"int[]" x, #_"int" xlen, #_"int[]" y, #_"int" ylen, #_"int[]" z]
         (§
-            long product = (y[j] & BigInteger'LONG_MASK) * (x[xstart] & BigInteger'LONG_MASK) + carry;
-            z[k] = (int)product;
-            carry = product >>> 32;
-        )
-        z[xstart] = (int)carry;
+            int xstart = xlen - 1;
+            int ystart = ylen - 1;
 
-        for (int i = xstart - 1(ß) i >= 0(ß) i--)
-        (§
-            carry = 0;
-            for (int j = ystart, k = ystart + 1 + i(ß) j >= 0(ß) j--, k--)
+            if (z == null || z.length < (xlen + ylen))
+                z = new int[xlen + ylen];
+
+            long carry = 0;
+            for (int j = ystart, k = ystart + 1 + xstart(§ for) j >= 0(§ for) j--, k--)
             (§
-                long product = (y[j] & BigInteger'LONG_MASK) * (x[i] & BigInteger'LONG_MASK) + (z[k] & BigInteger'LONG_MASK) + carry;
+                long product = (y[j] & BigInteger'LONG_MASK) * (x[xstart] & BigInteger'LONG_MASK) + carry;
                 z[k] = (int)product;
                 carry = product >>> 32;
             )
-            z[i] = (int)carry;
+            z[xstart] = (int)carry;
+
+            for (int i = xstart - 1(§ for) i >= 0(§ for) i--)
+            (§
+                carry = 0;
+                for (int j = ystart, k = ystart + 1 + i(§ for) j >= 0(§ for) j--, k--)
+                (§
+                    long product = (y[j] & BigInteger'LONG_MASK) * (x[i] & BigInteger'LONG_MASK) + (z[k] & BigInteger'LONG_MASK) + carry;
+                    z[k] = (int)product;
+                    carry = product >>> 32;
+                )
+                z[i] = (int)carry;
+            )
+            return z;
         )
-        return z;
     )
 
     ;; squaring
@@ -3863,89 +3734,88 @@
      ;
      ; @return {@code this<sup>2</sup>}
      ;;
-    #_private
-    (§ defn #_"BigInteger" square [])
-    (§
-        if (signum == 0)
+    #_method
+    (defn- #_"BigInteger" BigInteger''square [#_"BigInteger" this]
         (§
-            return ZERO;
-        )
+            if (signum == 0)
+            (§
+                return BigInteger'ZERO;
+            )
 
-        int[] z = squareToLen(mag, mag.length, null);
-        return new BigInteger(trustedStripLeadingZeroInts(z), 1);
+            int[] z = BigInteger'squareToLen(mag, mag.length, null);
+            return BigInteger'new(BigInteger'trustedStripLeadingZeroInts(z), 1);
+        )
     )
 
     ;;;
      ; Squares the contents of the int array x. The result is placed into the
      ; int array z. The contents of x are not changed.
      ;;
-    #_private
-    #_static
-    #_final
-    (§ defn #_"int[]" squareToLen [#_"int[]" x, #_"int" len, #_"int[]" z])
-    (§
-        ;;
-         ; The algorithm used here is adapted from Colin Plumb's C library.
-         ; Technique: Consider the partial products in the multiplication
-         ; of "abcde" by itself:
-         ;
-         ;               a  b  c  d  e
-         ;            *  a  b  c  d  e
-         ;          ==================
-         ;              ae be ce de ee
-         ;           ad bd cd dd de
-         ;        ac bc cc cd ce
-         ;     ab bb bc bd be
-         ;  aa ab ac ad ae
-         ;
-         ; Note that everything above the main diagonal:
-         ;              ae be ce de = (abcd) * e
-         ;           ad bd cd       = (abc) * d
-         ;        ac bc             = (ab) * c
-         ;     ab                   = (a) * b
-         ;
-         ; is a copy of everything below the main diagonal:
-         ;                       de
-         ;                 cd ce
-         ;           bc bd be
-         ;     ab ac ad ae
-         ;
-         ; Thus, the sum is 2 * (off the diagonal) + diagonal.
-         ;
-         ; This is accumulated beginning with the diagonal (which
-         ; consist of the squares of the digits of the input), which is then
-         ; divided by two, the off-diagonal added, and multiplied by two
-         ; again. The low bit is simply a copy of the low bit of the
-         ; input, so it doesn't need special care.
-         ;;
-        int zlen = len << 1;
-        if (z == null || z.length < zlen)
-            z = new int[zlen];
-
-        ;; store the squares, right shifted one bit (i.e., divided by 2)
-        int lastProductLowWord = 0;
-        for (int j = 0, i = 0(ß) j < len(ß) j++)
+    (defn- #_"int[]" BigInteger'squareToLen [#_"int[]" x, #_"int" len, #_"int[]" z]
         (§
-            long piece = (x[j] & BigInteger'LONG_MASK);
-            long product = piece * piece;
-            z[i++] = (lastProductLowWord << 31) | (int)(product >>> 33);
-            z[i++] = (int)(product >>> 1);
-            lastProductLowWord = (int)product;
+            ;;
+            ; The algorithm used here is adapted from Colin Plumb's C library.
+            ; Technique: Consider the partial products in the multiplication
+            ; of "abcde" by itself:
+            ;
+            ;               a  b  c  d  e
+            ;            *  a  b  c  d  e
+            ;          ==================
+            ;              ae be ce de ee
+            ;           ad bd cd dd de
+            ;        ac bc cc cd ce
+            ;     ab bb bc bd be
+            ;  aa ab ac ad ae
+            ;
+            ; Note that everything above the main diagonal:
+            ;              ae be ce de = (abcd) * e
+            ;           ad bd cd       = (abc) * d
+            ;        ac bc             = (ab) * c
+            ;     ab                   = (a) * b
+            ;
+            ; is a copy of everything below the main diagonal:
+            ;                       de
+            ;                 cd ce
+            ;           bc bd be
+            ;     ab ac ad ae
+            ;
+            ; Thus, the sum is 2 * (off the diagonal) + diagonal.
+            ;
+            ; This is accumulated beginning with the diagonal (which
+            ; consist of the squares of the digits of the input), which is then
+            ; divided by two, the off-diagonal added, and multiplied by two
+            ; again. The low bit is simply a copy of the low bit of the
+            ; input, so it doesn't need special care.
+            ;;
+            int zlen = len << 1;
+            if (z == null || z.length < zlen)
+                z = new int[zlen];
+
+            ;; store the squares, right shifted one bit (i.e., divided by 2)
+            int lastProductLowWord = 0;
+            for (int j = 0, i = 0(§ for) j < len(§ for) j++)
+            (§
+                long piece = (x[j] & BigInteger'LONG_MASK);
+                long product = piece * piece;
+                z[i++] = (lastProductLowWord << 31) | (int)(product >>> 33);
+                z[i++] = (int)(product >>> 1);
+                lastProductLowWord = (int)product;
+            )
+
+            ;; add in off-diagonal sums
+            for (int i = len, offset = 1(§ for) i > 0(§ for) i--, offset += 2)
+            (§
+                int t = x[i - 1];
+                t = BigInteger'mulAdd(z, x, offset, i - 1, t);
+                BigInteger'addOne(z, offset - 1, i, t);
+            )
+
+            ;; shift back up and set low bit
+            BigInteger'primitiveLeftShift(z, zlen, 1);
+            z[zlen - 1] |= x[len - 1] & 1;
+
+            return z;
         )
-
-        ;; add in off-diagonal sums
-        for (int i = len, offset = 1(ß) i > 0(ß) i--, offset += 2)
-        (§
-            int t = x[i - 1];
-            t = mulAdd(z, x, offset, i - 1, t);
-            addOne(z, offset - 1, i, t);
-        )
-
-        ;; shift back up and set low bit
-        primitiveLeftShift(z, zlen, 1);
-        z[zlen - 1] |= x[len - 1] & 1;
-
-        return z;
     )
 
     ;; division
@@ -3957,10 +3827,11 @@
      ; @return {@code this / val}
      ; @throws ArithmeticException if {@code val} is zero.
      ;;
-    #_public
-    (§ defn #_"BigInteger" divide [#_"BigInteger" val])
-    (§
-        return divideKnuth(val);
+    #_method
+    (defn #_"BigInteger" BigInteger''divide [#_"BigInteger" this, #_"BigInteger" val]
+        (§
+            return BigInteger''divideKnuth(this, val);
+        )
     )
 
     ;;;
@@ -3970,15 +3841,16 @@
      ; @return {@code this / val}
      ; @throws ArithmeticException if {@code val} is zero.
      ;;
-    #_private
-    (§ defn #_"BigInteger" divideKnuth [#_"BigInteger" val])
-    (§
-        MutableBigInteger q = new MutableBigInteger();
-        MutableBigInteger a = new MutableBigInteger(this.mag);
-        MutableBigInteger b = new MutableBigInteger(val.mag);
+    #_method
+    (defn- #_"BigInteger" BigInteger''divideKnuth [#_"BigInteger" this, #_"BigInteger" val]
+        (§
+            MutableBigInteger q = MutableBigInteger'new();
+            MutableBigInteger a = MutableBigInteger'new(this.mag);
+            MutableBigInteger b = MutableBigInteger'new(val.mag);
 
-        a.divideKnuth(b, q, false);
-        return q.toBigInteger(this.signum * val.signum);
+            MutableBigInteger''divideKnuth-4(a, b, q, false);
+            return MutableBigInteger''toBigInteger-2(q, this.signum * val.signum);
+        )
     )
 
     ;;;
@@ -3992,26 +3864,28 @@
      ;         is the final element.
      ; @throws ArithmeticException if {@code val} is zero.
      ;;
-    #_public
-    (§ defn #_"BigInteger[]" divideAndRemainder [#_"BigInteger" val])
-    (§
-        return divideAndRemainderKnuth(val);
+    #_method
+    (defn #_"BigInteger[]" BigInteger''divideAndRemainder [#_"BigInteger" this, #_"BigInteger" val]
+        (§
+            return BigInteger''divideAndRemainderKnuth(this, val);
+        )
     )
 
     ;;;
      ; Long division.
      ;;
-    #_private
-    (§ defn #_"BigInteger[]" divideAndRemainderKnuth [#_"BigInteger" val])
-    (§
-        BigInteger[] result = new BigInteger[2];
-        MutableBigInteger q = new MutableBigInteger();
-        MutableBigInteger a = new MutableBigInteger(this.mag);
-        MutableBigInteger b = new MutableBigInteger(val.mag);
-        MutableBigInteger r = a.divideKnuth(b, q);
-        result[0] = q.toBigInteger((this.signum == val.signum) ? 1 #_":" -1);
-        result[1] = r.toBigInteger(this.signum);
-        return result;
+    #_method
+    (defn- #_"BigInteger[]" BigInteger''divideAndRemainderKnuth [#_"BigInteger" this, #_"BigInteger" val]
+        (§
+            BigInteger[] result = new BigInteger[2];
+            MutableBigInteger q = MutableBigInteger'new();
+            MutableBigInteger a = MutableBigInteger'new(this.mag);
+            MutableBigInteger b = MutableBigInteger'new(val.mag);
+            MutableBigInteger r = MutableBigInteger''divideKnuth-3(a, b, q);
+            result[0] = MutableBigInteger''toBigInteger-2(q, (this.signum == val.signum) ? 1 #_":" -1);
+            result[1] = MutableBigInteger''toBigInteger-2(r, this.signum);
+            return result;
+        )
     )
 
     ;;;
@@ -4021,23 +3895,25 @@
      ; @return {@code this % val}
      ; @throws ArithmeticException if {@code val} is zero.
      ;;
-    #_public
-    (§ defn #_"BigInteger" remainder [#_"BigInteger" val])
-    (§
-        return remainderKnuth(val);
+    #_method
+    (defn #_"BigInteger" BigInteger''remainder [#_"BigInteger" this, #_"BigInteger" val]
+        (§
+            return BigInteger''remainderKnuth(this, val);
+        )
     )
 
     ;;;
      ; Long division.
      ;;
-    #_private
-    (§ defn #_"BigInteger" remainderKnuth [#_"BigInteger" val])
-    (§
-        MutableBigInteger q = new MutableBigInteger();
-        MutableBigInteger a = new MutableBigInteger(this.mag);
-        MutableBigInteger b = new MutableBigInteger(val.mag);
+    #_method
+    (defn- #_"BigInteger" BigInteger''remainderKnuth [#_"BigInteger" this, #_"BigInteger" val]
+        (§
+            MutableBigInteger q = MutableBigInteger'new();
+            MutableBigInteger a = MutableBigInteger'new(this.mag);
+            MutableBigInteger b = MutableBigInteger'new(val.mag);
 
-        return a.divideKnuth(b, q).toBigInteger(this.signum);
+            return MutableBigInteger''divideKnuth-3(a, b, q).MutableBigInteger''toBigInteger-2((§ pipe), this.signum);
+        )
     )
 
     ;;;
@@ -4049,146 +3925,147 @@
      ; @throws ArithmeticException {@code exponent} is negative. (This would
      ;         cause the operation to yield a non-integer value.)
      ;;
-    #_public
-    (§ defn #_"BigInteger" pow [#_"int" exponent])
-    (§
-        if (exponent < 0)
+    #_method
+    (defn #_"BigInteger" BigInteger''pow [#_"BigInteger" this, #_"int" exponent]
         (§
-            throw new ArithmeticException("Negative exponent");
-        )
-        if (signum == 0)
-        (§
-            return (exponent == 0) ? ONE #_":" this;
-        )
-
-        BigInteger partToSquare = this.abs();
-
-        ;; Factor out powers of two from the base, as the exponentiation of these can be done by left shifts only.
-        ;; The remaining part can then be exponentiated faster.
-        ;; The powers of two will be multiplied back at the end.
-        int powersOfTwo = partToSquare.getLowestSetBit();
-        long bitsToShift = (long)powersOfTwo * exponent;
-        if (bitsToShift > Integer.MAX_VALUE)
-        (§
-            reportOverflow();
-        )
-
-        int remainingBits;
-
-        ;; Factor the powers of two out quickly by shifting right, if needed.
-        if (powersOfTwo > 0)
-        (§
-            partToSquare = partToSquare.shiftRight(powersOfTwo);
-            remainingBits = partToSquare.bitLength();
-            if (remainingBits == 1) ;; Nothing left but +/- 1?
+            if (exponent < 0)
             (§
-                if (signum < 0 && (exponent & 1) == 1)
-                (§
-                    return NEGATIVE_ONE.shiftLeft(powersOfTwo * exponent);
-                )
-                else
-                (§
-                    return ONE.shiftLeft(powersOfTwo * exponent);
-                )
+                throw new ArithmeticException("Negative exponent");
             )
-        )
-        else
-        (§
-            remainingBits = partToSquare.bitLength();
-            if (remainingBits == 1) ;; Nothing left but +/- 1?
+            if (signum == 0)
             (§
-                if (signum < 0 && (exponent & 1) == 1)
-                (§
-                    return NEGATIVE_ONE;
-                )
-                else
-                (§
-                    return ONE;
-                )
-            )
-        )
-
-        ;; This is a quick way to approximate the size of the result,
-        ;; similar to doing log2[n] * exponent. This will give an upper bound
-        ;; of how big the result can be, and which algorithm to use.
-        long scaleFactor = (long)remainingBits * exponent;
-
-        ;; Use slightly different algorithms for small and large operands.
-        ;; See if the result will safely fit into a long. (Largest 2^63-1)
-        if (partToSquare.mag.length == 1 && scaleFactor <= 62)
-        (§
-            ;; Small number algorithm. Everything fits into a long.
-            int newSign = (signum < 0 && ((exponent & 1) == 1) ? -1 #_":" 1);
-            long result = 1;
-            long baseToPow2 = partToSquare.mag[0] & BigInteger'LONG_MASK;
-
-            int workingExponent = exponent;
-
-            ;; perform exponentiation using repeated squaring trick
-            while (workingExponent != 0)
-            (§
-                if ((workingExponent & 1) == 1)
-                (§
-                    result = result * baseToPow2;
-                )
-
-                if ((workingExponent >>>= 1) != 0)
-                (§
-                    baseToPow2 = baseToPow2 * baseToPow2;
-                )
+                return (exponent == 0) ? BigInteger'ONE #_":" this;
             )
 
-            ;; multiply back the powers of two (quickly, by shifting left)
+            BigInteger partToSquare = BigInteger''abs(this);
+
+            ;; Factor out powers of two from the base, as the exponentiation of these can be done by left shifts only.
+            ;; The remaining part can then be exponentiated faster.
+            ;; The powers of two will be multiplied back at the end.
+            int powersOfTwo = BigInteger''getLowestSetBit(partToSquare);
+            long bitsToShift = (long)powersOfTwo * exponent;
+            if (bitsToShift > Integer.MAX_VALUE)
+            (§
+                BigInteger'reportOverflow();
+            )
+
+            int remainingBits;
+
+            ;; Factor the powers of two out quickly by shifting right, if needed.
             if (powersOfTwo > 0)
             (§
-                if (bitsToShift + scaleFactor <= 62) ;; Fits in long?
+                partToSquare = BigInteger''shiftRight(partToSquare, powersOfTwo);
+                remainingBits = BigInteger''bitLength(partToSquare);
+                if (remainingBits == 1) ;; Nothing left but +/- 1?
                 (§
-                    return valueOf((result << bitsToShift) * newSign);
-                )
-                else
-                (§
-                    return valueOf(result * newSign).shiftLeft((int) bitsToShift);
+                    if (signum < 0 && (exponent & 1) == 1)
+                    (§
+                        return BigInteger''shiftLeft(BigInteger'NEGATIVE_ONE, powersOfTwo * exponent);
+                    )
+                    else
+                    (§
+                        return BigInteger''shiftLeft(BigInteger'ONE, powersOfTwo * exponent);
+                    )
                 )
             )
             else
             (§
-                return valueOf(result * newSign);
-            )
-        )
-        else
-        (§
-            ;; Large number algorithm. This is basically identical to
-            ;; the algorithm above, but calls multiply() and square()
-            ;; which may use more efficient algorithms for large numbers.
-            BigInteger answer = ONE;
-
-            int workingExponent = exponent;
-            ;; perform exponentiation using repeated squaring trick
-            while (workingExponent != 0)
-            (§
-                if ((workingExponent & 1) == 1)
+                remainingBits = BigInteger''bitLength(partToSquare);
+                if (remainingBits == 1) ;; Nothing left but +/- 1?
                 (§
-                    answer = answer.multiply(partToSquare);
-                )
-
-                if ((workingExponent >>>= 1) != 0)
-                (§
-                    partToSquare = partToSquare.square();
+                    if (signum < 0 && (exponent & 1) == 1)
+                    (§
+                        return BigInteger'NEGATIVE_ONE;
+                    )
+                    else
+                    (§
+                        return BigInteger'ONE;
+                    )
                 )
             )
-            ;; multiply back the (exponentiated) powers of two (quickly, by shifting left)
-            if (powersOfTwo > 0)
-            (§
-                answer = answer.shiftLeft(powersOfTwo * exponent);
-            )
 
-            if (signum < 0 && (exponent & 1) == 1)
+            ;; This is a quick way to approximate the size of the result,
+            ;; similar to doing log2[n] * exponent. This will give an upper bound
+            ;; of how big the result can be, and which algorithm to use.
+            long scaleFactor = (long)remainingBits * exponent;
+
+            ;; Use slightly different algorithms for small and large operands.
+            ;; See if the result will safely fit into a long. (Largest 2^63-1)
+            if (partToSquare.mag.length == 1 && scaleFactor <= 62)
             (§
-                return answer.negate();
+                ;; Small number algorithm. Everything fits into a long.
+                int newSign = (signum < 0 && ((exponent & 1) == 1) ? -1 #_":" 1);
+                long result = 1;
+                long baseToPow2 = partToSquare.mag[0] & BigInteger'LONG_MASK;
+
+                int workingExponent = exponent;
+
+                ;; perform exponentiation using repeated squaring trick
+                while (workingExponent != 0)
+                (§
+                    if ((workingExponent & 1) == 1)
+                    (§
+                        result = result * baseToPow2;
+                    )
+
+                    if ((workingExponent >>>= 1) != 0)
+                    (§
+                        baseToPow2 = baseToPow2 * baseToPow2;
+                    )
+                )
+
+                ;; multiply back the powers of two (quickly, by shifting left)
+                if (powersOfTwo > 0)
+                (§
+                    if (bitsToShift + scaleFactor <= 62) ;; Fits in long?
+                    (§
+                        return BigInteger'valueOf-l((result << bitsToShift) * newSign);
+                    )
+                    else
+                    (§
+                        return BigInteger'valueOf-l(result * newSign).BigInteger''shiftLeft((§ pipe), (int)bitsToShift);
+                    )
+                )
+                else
+                (§
+                    return BigInteger'valueOf-l(result * newSign);
+                )
             )
             else
             (§
-                return answer;
+                ;; Large number algorithm. This is basically identical to
+                ;; the algorithm above, but calls multiply() and square()
+                ;; which may use more efficient algorithms for large numbers.
+                BigInteger answer = BigInteger'ONE;
+
+                int workingExponent = exponent;
+                ;; perform exponentiation using repeated squaring trick
+                while (workingExponent != 0)
+                (§
+                    if ((workingExponent & 1) == 1)
+                    (§
+                        answer = BigInteger''multiply(answer, partToSquare);
+                    )
+
+                    if ((workingExponent >>>= 1) != 0)
+                    (§
+                        partToSquare = BigInteger''square(partToSquare);
+                    )
+                )
+                ;; multiply back the (exponentiated) powers of two (quickly, by shifting left)
+                if (powersOfTwo > 0)
+                (§
+                    answer = BigInteger''shiftLeft(answer, powersOfTwo * exponent);
+                )
+
+                if (signum < 0 && (exponent & 1) == 1)
+                (§
+                    return BigInteger''negate(answer);
+                )
+                else
+                (§
+                    return answer;
+                )
             )
         )
     )
@@ -4201,110 +4078,109 @@
      ; @param  val value with which the GCD is to be computed.
      ; @return {@code GCD(abs(this), abs(val))}
      ;;
-    #_public
-    (§ defn #_"BigInteger" gcd [#_"BigInteger" val])
-    (§
-        if (val.signum == 0)
-            return this.abs();
-        else if (this.signum == 0)
-            return val.abs();
+    #_method
+    (defn #_"BigInteger" BigInteger''gcd [#_"BigInteger" this, #_"BigInteger" val]
+        (§
+            if (val.signum == 0)
+                return BigInteger''abs(this);
+            else if (this.signum == 0)
+                return BigInteger''abs(val);
 
-        MutableBigInteger a = new MutableBigInteger(this);
-        MutableBigInteger b = new MutableBigInteger(val);
+            MutableBigInteger a = MutableBigInteger'new(this);
+            MutableBigInteger b = MutableBigInteger'new(val);
 
-        MutableBigInteger result = a.hybridGCD(b);
+            MutableBigInteger result = MutableBigInteger''hybridGCD(a, b);
 
-        return result.toBigInteger(1);
+            return MutableBigInteger''toBigInteger-2(result, 1);
+        )
     )
 
     ;;;
      ; Package private method to return bit length for an integer.
      ;;
-    #_static
-    (§ defn #_"int" bitLengthForInt [#_"int" n])
-    (§
-        return 32 - Integer.numberOfLeadingZeros(n);
+    (defn #_"int" BigInteger'bitLengthForInt [#_"int" n]
+        (§
+            return 32 - Integer.numberOfLeadingZeros(n);
+        )
     )
 
     ;;;
      ; Left shift int array a up to len by n bits. Returns the array that
      ; results from the shift since space may have to be reallocated.
      ;;
-    #_private
-    #_static
-    (§ defn #_"int[]" leftShift [#_"int[]" a, #_"int" len, #_"int" n])
-    (§
-        int nInts = n >>> 5;
-        int nBits = n & 0x1f;
-        int bitsInHighWord = bitLengthForInt(a[0]);
+    (defn- #_"int[]" BigInteger'leftShift [#_"int[]" a, #_"int" len, #_"int" n]
+        (§
+            int nInts = n >>> 5;
+            int nBits = n & 0x1f;
+            int bitsInHighWord = BigInteger'bitLengthForInt(a[0]);
 
-        ;; if shift can be done without recopy, do so
-        if (n <= (32 - bitsInHighWord))
-        (§
-            primitiveLeftShift(a, len, nBits);
-            return a;
-        )
-        else ;; array must be resized
-        (§
-            if (nBits <= (32 - bitsInHighWord))
+            ;; if shift can be done without recopy, do so
+            if (n <= (32 - bitsInHighWord))
             (§
-                int result[] = new int[nInts + len];
-                System.arraycopy(a, 0, result, 0, len);
-                primitiveLeftShift(result, result.length, nBits);
-                return result;
+                BigInteger'primitiveLeftShift(a, len, nBits);
+                return a;
             )
-            else
+            else ;; array must be resized
             (§
-                int result[] = new int[nInts + len + 1];
-                System.arraycopy(a, 0, result, 0, len);
-                primitiveRightShift(result, result.length, 32 - nBits);
-                return result;
+                if (nBits <= (32 - bitsInHighWord))
+                (§
+                    int result[] = new int[nInts + len];
+                    System.arraycopy(a, 0, result, 0, len);
+                    BigInteger'primitiveLeftShift(result, result.length, nBits);
+                    return result;
+                )
+                else
+                (§
+                    int result[] = new int[nInts + len + 1];
+                    System.arraycopy(a, 0, result, 0, len);
+                    BigInteger'primitiveRightShift(result, result.length, 32 - nBits);
+                    return result;
+                )
             )
         )
     )
 
     ;; shifts a up to len right n bits assumes no leading zeros, 0 < n < 32
-    #_static
-    (§ defn #_"void" primitiveRightShift [#_"int[]" a, #_"int" len, #_"int" n])
-    (§
-        int n2 = 32 - n;
-        for (int i = len - 1, c = a[i](ß) i > 0(ß) i--)
+    (defn #_"void" BigInteger'primitiveRightShift [#_"int[]" a, #_"int" len, #_"int" n]
         (§
-            int b = c;
-            c = a[i - 1];
-            a[i] = (c << n2) | (b >>> n);
+            int n2 = 32 - n;
+            for (int i = len - 1, c = a[i](§ for) i > 0(§ for) i--)
+            (§
+                int b = c;
+                c = a[i - 1];
+                a[i] = (c << n2) | (b >>> n);
+            )
+            a[0] >>>= n;
         )
-        a[0] >>>= n;
     )
 
     ;; shifts a up to len left n bits assumes no leading zeros, 0 <= n < 32
-    #_static
-    (§ defn #_"void" primitiveLeftShift [#_"int[]" a, #_"int" len, #_"int" n])
-    (§
-        if (len == 0 || n == 0)
-            return;
-
-        int n2 = 32 - n;
-        for (int i = 0, c = a[i], m = i + len - 1(ß) i < m(ß) i++)
+    (defn #_"void" BigInteger'primitiveLeftShift [#_"int[]" a, #_"int" len, #_"int" n]
         (§
-            int b = c;
-            c = a[i + 1];
-            a[i] = (b << n) | (c >>> n2);
+            if (len == 0 || n == 0)
+                return;
+
+            int n2 = 32 - n;
+            for (int i = 0, c = a[i], m = i + len - 1(§ for) i < m(§ for) i++)
+            (§
+                int b = c;
+                c = a[i + 1];
+                a[i] = (b << n) | (c >>> n2);
+            )
+            a[len - 1] <<= n;
         )
-        a[len - 1] <<= n;
     )
 
     ;;;
      ; Calculate bitlength of contents of the first len elements an int array,
      ; assuming there are no leading zero ints.
      ;;
-    #_private
-    #_static
-    (§ defn #_"int" bitLength [#_"int[]" val, #_"int" len])
-    (§
-        if (len == 0)
-            return 0;
-        return ((len - 1) << 5) + bitLengthForInt(val[0]);
+    (defn- #_"int" BigInteger'bitLength [#_"int[]" val, #_"int" len]
+        (§
+            if (len == 0)
+                return 0;
+            return ((len - 1) << 5) + BigInteger'bitLengthForInt(val[0]);
+        )
     )
 
     ;;;
@@ -4312,10 +4188,11 @@
      ;
      ; @return {@code abs(this)}
      ;;
-    #_public
-    (§ defn #_"BigInteger" abs [])
-    (§
-        return (signum >= 0) ? this #_":" this.negate();
+    #_method
+    (defn #_"BigInteger" BigInteger''abs [#_"BigInteger" this]
+        (§
+            return (signum >= 0) ? this #_":" BigInteger''negate(this);
+        )
     )
 
     ;;;
@@ -4323,10 +4200,11 @@
      ;
      ; @return {@code -this}
      ;;
-    #_public
-    (§ defn #_"BigInteger" negate [])
-    (§
-        return new BigInteger(this.mag, -this.signum);
+    #_method
+    (defn #_"BigInteger" BigInteger''negate [#_"BigInteger" this]
+        (§
+            return BigInteger'new(this.mag, -this.signum);
+        )
     )
 
     ;;;
@@ -4334,10 +4212,11 @@
      ;
      ; @return -1, 0 or 1 as the value of this BigInteger is negative, zero or positive.
      ;;
-    #_public
-    (§ defn #_"int" signum [])
-    (§
-        return this.signum;
+    #_method
+    (defn #_"int" BigInteger''signum [#_"BigInteger" this]
+        (§
+            return this.signum;
+        )
     )
 
     ;; modular arithmetic operations
@@ -4351,14 +4230,15 @@
      ; @return {@code this mod m}
      ; @throws ArithmeticException {@code m} <= 0
      ;;
-    #_public
-    (§ defn #_"BigInteger" mod [#_"BigInteger" m])
-    (§
-        if (m.signum <= 0)
-            throw new ArithmeticException("BigInteger: modulus not positive");
+    #_method
+    (defn #_"BigInteger" BigInteger''mod [#_"BigInteger" this, #_"BigInteger" m]
+        (§
+            if (m.signum <= 0)
+                throw new ArithmeticException("BigInteger: modulus not positive");
 
-        BigInteger result = this.remainder(m);
-        return (result.signum >= 0) ? result #_":" result.add(m);
+            BigInteger result = BigInteger''remainder(this, m);
+            return (result.signum >= 0) ? result #_":" BigInteger''add(result, m);
+        )
     )
 
     ;;;
@@ -4371,79 +4251,80 @@
      ; @throws ArithmeticException {@code m} <= 0 or the exponent is negative
      ;         and this BigInteger is not <i>relatively prime</i> to {@code m}.
      ;;
-    #_public
-    (§ defn #_"BigInteger" modPow [#_"BigInteger" exponent, #_"BigInteger" m])
-    (§
-        if (m.signum <= 0)
-            throw new ArithmeticException("BigInteger: modulus not positive");
-
-        ;; trivial cases
-        if (exponent.signum == 0)
-            return m.equals(ONE) ? ZERO #_":" ONE;
-
-        if (this.equals(ONE))
-            return m.equals(ONE) ? ZERO #_":" ONE;
-
-        if (this.equals(ZERO) && exponent.signum >= 0)
-            return ZERO;
-
-        if (this.equals(negConst[1]) && (!exponent.testBit(0)))
-            return m.equals(ONE) ? ZERO #_":" ONE;
-
-        boolean invertResult = (exponent.signum < 0);
-        if (invertResult)
-            exponent = exponent.negate();
-
-        BigInteger base = (this.signum < 0 || this.compareTo(m) >= 0) ? this.mod(m) #_":" this;
-        BigInteger result;
-        if (m.testBit(0)) ;; odd modulus
+    #_method
+    (defn #_"BigInteger" BigInteger''modPow [#_"BigInteger" this, #_"BigInteger" exponent, #_"BigInteger" m]
         (§
-            result = base.oddModPow(exponent, m);
-        )
-        else
-        (§
-            ;;
-             ; Even modulus. Tear it into an "odd part" (m1) and power of two (m2),
-             ; exponentiate mod m1, manually exponentiate mod m2, and use
-             ; Chinese Remainder Theorem to combine results.
-             ;;
+            if (m.signum <= 0)
+                throw new ArithmeticException("BigInteger: modulus not positive");
 
-            ;; tear m apart into odd part (m1) and power of 2 (m2)
-            int p = m.getLowestSetBit(); ;; max pow of 2 that divides m
+            ;; trivial cases
+            if (exponent.signum == 0)
+                return m.equals(BigInteger'ONE) ? BigInteger'ZERO #_":" BigInteger'ONE;
 
-            BigInteger m1 = m.shiftRight(p); ;; m/2**p
-            BigInteger m2 = ONE.shiftLeft(p); ;; 2**p
+            if (this.equals(BigInteger'ONE))
+                return m.equals(BigInteger'ONE) ? BigInteger'ZERO #_":" BigInteger'ONE;
 
-            ;; calculate new base from m1
-            BigInteger base2 = (this.signum < 0 || this.compareTo(m1) >= 0) ? this.mod(m1) #_":" this;
+            if (this.equals(BigInteger'ZERO) && exponent.signum >= 0)
+                return BigInteger'ZERO;
 
-            ;; caculate (base ** exponent) mod m1
-            BigInteger a1 = m1.equals(ONE) ? ZERO #_":" base2.oddModPow(exponent, m1);
+            if (this.equals(negConst[1]) && (!BigInteger''testBit(exponent, 0)))
+                return m.equals(BigInteger'ONE) ? BigInteger'ZERO #_":" BigInteger'ONE;
 
-            ;; calculate (this ** exponent) mod m2
-            BigInteger a2 = base.modPow2(exponent, p);
+            boolean invertResult = (exponent.signum < 0);
+            if (invertResult)
+                exponent = BigInteger''negate(exponent);
 
-            ;; combine results using Chinese Remainder Theorem
-            BigInteger y1 = m2.modInverse(m1);
-            BigInteger y2 = m1.modInverse(m2);
-
-            if (m.mag.length < MAX_MAG_LENGTH / 2)
+            BigInteger base = (this.signum < 0 || this.compareTo(m) >= 0) ? BigInteger''mod(this, m) #_":" this;
+            BigInteger result;
+            if (BigInteger''testBit(m, 0)) ;; odd modulus
             (§
-                result = a1.multiply(m2).multiply(y1).add(a2.multiply(m1).multiply(y2)).mod(m);
+                result = BigInteger''oddModPow(base, exponent, m);
             )
             else
             (§
-                MutableBigInteger t1 = new MutableBigInteger();
-                new MutableBigInteger(a1.multiply(m2)).multiply(new MutableBigInteger(y1), t1);
-                MutableBigInteger t2 = new MutableBigInteger();
-                new MutableBigInteger(a2.multiply(m1)).multiply(new MutableBigInteger(y2), t2);
-                t1.add(t2);
-                MutableBigInteger q = new MutableBigInteger();
-                result = t1.divide(new MutableBigInteger(m), q).toBigInteger();
-            )
-        )
+                ;;
+                ; Even modulus. Tear it into an "odd part" (m1) and power of two (m2),
+                ; exponentiate mod m1, manually exponentiate mod m2, and use
+                ; Chinese Remainder Theorem to combine results.
+                ;;
 
-        return invertResult ? result.modInverse(m) #_":" result;
+                ;; tear m apart into odd part (m1) and power of 2 (m2)
+                int p = BigInteger''getLowestSetBit(m); ;; max pow of 2 that divides m
+
+                BigInteger m1 = BigInteger''shiftRight(m, p); ;; m/2**p
+                BigInteger m2 = BigInteger''shiftLeft(BigInteger'ONE, p); ;; 2**p
+
+                ;; calculate new base from m1
+                BigInteger base2 = (this.signum < 0 || this.compareTo(m1) >= 0) ? BigInteger''mod(this, m1) #_":" this;
+
+                ;; caculate (base ** exponent) mod m1
+                BigInteger a1 = m1.equals(BigInteger'ONE) ? BigInteger'ZERO #_":" BigInteger''oddModPow(base2, exponent, m1);
+
+                ;; calculate (this ** exponent) mod m2
+                BigInteger a2 = BigInteger''modPow2(base, exponent, p);
+
+                ;; combine results using Chinese Remainder Theorem
+                BigInteger y1 = BigInteger''modInverse(m2, m1);
+                BigInteger y2 = BigInteger''modInverse(m1, m2);
+
+                if (m.mag.length < BigInteger'MAX_MAG_LENGTH / 2)
+                (§
+                    result = BigInteger''multiply(a1, m2).BigInteger''multiply((§ pipe), y1).BigInteger''add((§ pipe), BigInteger''multiply(a2, m1).BigInteger''multiply((§ pipe), y2)).BigInteger''mod((§ pipe), m);
+                )
+                else
+                (§
+                    MutableBigInteger t1 = MutableBigInteger'new();
+                    MutableBigInteger'new(BigInteger''multiply(a1, m2)).MutableBigInteger''multiply((§ pipe), MutableBigInteger'new(y1), t1);
+                    MutableBigInteger t2 = MutableBigInteger'new();
+                    MutableBigInteger'new(BigInteger''multiply(a2, m1)).MutableBigInteger''multiply((§ pipe), MutableBigInteger'new(y2), t2);
+                    MutableBigInteger''add(t1, t2);
+                    MutableBigInteger q = MutableBigInteger'new();
+                    result = MutableBigInteger''divide-3(t1, MutableBigInteger'new(m), q).MutableBigInteger''toBigInteger-1((§ pipe), );
+                )
+            )
+
+            return invertResult ? BigInteger''modInverse(result, m) #_":" result;
+        )
     )
 
     #_static
@@ -4453,184 +4334,146 @@
      ; Returns a BigInteger whose value is x to the power of y mod z.
      ; Assumes: z is odd && x < z.
      ;;
-    #_private
-    (§ defn #_"BigInteger" oddModPow [#_"BigInteger" y, #_"BigInteger" z])
-    (§
-        ;;
-         ; The algorithm is adapted from Colin Plumb's C library.
-         ;
-         ; The window algorithm:
-         ; The idea is to keep a running product of b1 = n^(high-order bits of exp)
-         ; and then keep appending exponent bits to it. The following patterns
-         ; apply to a 3-bit window (k = 3):
-         ; To append   0: square
-         ; To append   1: square, multiply by n^1
-         ; To append  10: square, multiply by n^1, square
-         ; To append  11: square, square, multiply by n^3
-         ; To append 100: square, multiply by n^1, square, square
-         ; To append 101: square, square, square, multiply by n^5
-         ; To append 110: square, square, multiply by n^3, square
-         ; To append 111: square, square, square, multiply by n^7
-         ;
-         ; Since each pattern involves only one multiply, the longer the pattern
-         ; the better, except that a 0 (no multiplies) can be appended directly.
-         ; We precompute a table of odd powers of n, up to 2^k, and can then
-         ; multiply k bits of exponent at a time. Actually, assuming random
-         ; exponents, there is on average one zero bit between needs to
-         ; multiply (1/2 of the time there's none, 1/4 of the time there's 1,
-         ; 1/8 of the time, there's 2, 1/32 of the time, there's 3, etc.), so
-         ; you have to do one multiply per k+1 bits of exponent.
-         ;
-         ; The loop walks down the exponent, squaring the result buffer as
-         ; it goes. There is a wbits+1 bit lookahead buffer, buf, that is
-         ; filled with the upcoming exponent bits. (What is read after the
-         ; end of the exponent is unimportant, but it is filled with zero here.)
-         ; When the most-significant bit of this buffer becomes set, i.e.
-         ; (buf & tblmask) != 0, we have to decide what pattern to multiply
-         ; by, and when to do it. We decide, remember to do it in future
-         ; after a suitable number of squarings have passed (e.g. a pattern
-         ; of "100" in the buffer requires that we multiply by n^1 immediately;
-         ; a pattern of "110" calls for multiplying by n^3 after one more
-         ; squaring), clear the buffer, and continue.
-         ;
-         ; When we start, there is one more optimization: the result buffer
-         ; is implcitly one, so squaring it or multiplying by it can be
-         ; optimized away. Further, if we start with a pattern like "100"
-         ; in the lookahead window, rather than placing n into the buffer
-         ; and then starting to square it, we have already computed n^2
-         ; to compute the odd-powers table, so we can place that into
-         ; the buffer and save a squaring.
-         ;
-         ; This means that if you have a k-bit window, to compute n^z,
-         ; where z is the high k bits of the exponent, 1/2 of the time
-         ; it requires no squarings. 1/4 of the time, it requires 1
-         ; squaring, ... 1/2^(k-1) of the time, it reqires k-2 squarings.
-         ; And the remaining 1/2^(k-1) of the time, the top k bits are a
-         ; 1 followed by k-1 0 bits, so it again only requires k-2
-         ; squarings, not k-1. The average of these is 1. Add that
-         ; to the one squaring we have to do to compute the table,
-         ; and you'll see that a k-bit window saves k-2 squarings
-         ; as well as reducing the multiplies. (It actually doesn't
-         ; hurt in the case k = 1, either.)
-         ;;
-
-        ;; special case for exponent of one
-        if (y.equals(ONE))
-            return this;
-
-        ;; special case for base of zero
-        if (signum == 0)
-            return ZERO;
-
-        int[] base = mag.clone();
-        int[] exp = y.mag;
-        int[] mod = z.mag;
-        int modLen = mod.length;
-
-        ;; select an appropriate window size
-        int wbits = 0;
-        int ebits = bitLength(exp, exp.length);
-        ;; if exponent is 65537 (0x10001), use minimum window size
-        if ((ebits != 17) || (exp[0] != 65537))
+    #_method
+    (defn- #_"BigInteger" BigInteger''oddModPow [#_"BigInteger" this, #_"BigInteger" y, #_"BigInteger" z]
         (§
-            while (ebits > bnExpModThreshTable[wbits])
+            ;;
+            ; The algorithm is adapted from Colin Plumb's C library.
+            ;
+            ; The window algorithm:
+            ; The idea is to keep a running product of b1 = n^(high-order bits of exp)
+            ; and then keep appending exponent bits to it. The following patterns
+            ; apply to a 3-bit window (k = 3):
+            ; To append   0: square
+            ; To append   1: square, multiply by n^1
+            ; To append  10: square, multiply by n^1, square
+            ; To append  11: square, square, multiply by n^3
+            ; To append 100: square, multiply by n^1, square, square
+            ; To append 101: square, square, square, multiply by n^5
+            ; To append 110: square, square, multiply by n^3, square
+            ; To append 111: square, square, square, multiply by n^7
+            ;
+            ; Since each pattern involves only one multiply, the longer the pattern
+            ; the better, except that a 0 (no multiplies) can be appended directly.
+            ; We precompute a table of odd powers of n, up to 2^k, and can then
+            ; multiply k bits of exponent at a time. Actually, assuming random
+            ; exponents, there is on average one zero bit between needs to
+            ; multiply (1/2 of the time there's none, 1/4 of the time there's 1,
+            ; 1/8 of the time, there's 2, 1/32 of the time, there's 3, etc.), so
+            ; you have to do one multiply per k+1 bits of exponent.
+            ;
+            ; The loop walks down the exponent, squaring the result buffer as
+            ; it goes. There is a wbits+1 bit lookahead buffer, buf, that is
+            ; filled with the upcoming exponent bits. (What is read after the
+            ; end of the exponent is unimportant, but it is filled with zero here.)
+            ; When the most-significant bit of this buffer becomes set, i.e.
+            ; (buf & tblmask) != 0, we have to decide what pattern to multiply
+            ; by, and when to do it. We decide, remember to do it in future
+            ; after a suitable number of squarings have passed (e.g. a pattern
+            ; of "100" in the buffer requires that we multiply by n^1 immediately;
+            ; a pattern of "110" calls for multiplying by n^3 after one more
+            ; squaring), clear the buffer, and continue.
+            ;
+            ; When we start, there is one more optimization: the result buffer
+            ; is implcitly one, so squaring it or multiplying by it can be
+            ; optimized away. Further, if we start with a pattern like "100"
+            ; in the lookahead window, rather than placing n into the buffer
+            ; and then starting to square it, we have already computed n^2
+            ; to compute the odd-powers table, so we can place that into
+            ; the buffer and save a squaring.
+            ;
+            ; This means that if you have a k-bit window, to compute n^z,
+            ; where z is the high k bits of the exponent, 1/2 of the time
+            ; it requires no squarings. 1/4 of the time, it requires 1
+            ; squaring, ... 1/2^(k-1) of the time, it reqires k-2 squarings.
+            ; And the remaining 1/2^(k-1) of the time, the top k bits are a
+            ; 1 followed by k-1 0 bits, so it again only requires k-2
+            ; squarings, not k-1. The average of these is 1. Add that
+            ; to the one squaring we have to do to compute the table,
+            ; and you'll see that a k-bit window saves k-2 squarings
+            ; as well as reducing the multiplies. (It actually doesn't
+            ; hurt in the case k = 1, either.)
+            ;;
+
+            ;; special case for exponent of one
+            if (y.equals(BigInteger'ONE))
+                return this;
+
+            ;; special case for base of zero
+            if (signum == 0)
+                return BigInteger'ZERO;
+
+            int[] base = mag.clone();
+            int[] exp = y.mag;
+            int[] mod = z.mag;
+            int modLen = mod.length;
+
+            ;; select an appropriate window size
+            int wbits = 0;
+            int ebits = BigInteger'bitLength(exp, exp.length);
+            ;; if exponent is 65537 (0x10001), use minimum window size
+            if ((ebits != 17) || (exp[0] != 65537))
             (§
-                wbits++;
+                while (ebits > bnExpModThreshTable[wbits])
+                (§
+                    wbits++;
+                )
             )
-        )
 
-        ;; calculate appropriate table size
-        int tblmask = 1 << wbits;
+            ;; calculate appropriate table size
+            int tblmask = 1 << wbits;
 
-        ;; allocate table for precomputed odd powers of base in Montgomery form
-        int[][] table = new int[tblmask][];
-        for (int i = 0(ß) i < tblmask(ß) i++)
-            table[i] = new int[modLen];
+            ;; allocate table for precomputed odd powers of base in Montgomery form
+            int[][] table = new int[tblmask][];
+            for (int i = 0(§ for) i < tblmask(§ for) i++)
+                table[i] = new int[modLen];
 
-        ;; compute the modular inverse
-        int inv = -MutableBigInteger.inverseMod32(mod[modLen - 1]);
+            ;; compute the modular inverse
+            int inv = -MutableBigInteger'inverseMod32(mod[modLen - 1]);
 
-        ;; convert base to Montgomery form
-        int[] a = leftShift(base, base.length, modLen << 5);
+            ;; convert base to Montgomery form
+            int[] a = BigInteger'leftShift(base, base.length, modLen << 5);
 
-        MutableBigInteger q = new MutableBigInteger();
-        MutableBigInteger a2 = new MutableBigInteger(a);
-        MutableBigInteger b2 = new MutableBigInteger(mod);
+            MutableBigInteger q = MutableBigInteger'new();
+            MutableBigInteger a2 = MutableBigInteger'new(a);
+            MutableBigInteger b2 = MutableBigInteger'new(mod);
 
-        MutableBigInteger r = a2.divide(b2, q);
-        table[0] = r.toIntArray();
+            MutableBigInteger r = MutableBigInteger''divide-3(a2, b2, q);
+            table[0] = MutableBigInteger''toIntArray(r);
 
-        ;; pad table[0] with leading zeros so its length is at least modLen
-        if (table[0].length < modLen)
-        (§
-            int offset = modLen - table[0].length;
-            int[] t2 = new int[modLen];
-            for (int i = 0(ß) i < table[0].length(ß) i++)
-                t2[i + offset] = table[0][i];
-            table[0] = t2;
-        )
-
-        ;; set b to the square of the base
-        int[] b = squareToLen(table[0], modLen, null);
-        b = montReduce(b, mod, modLen, inv);
-
-        ;; set t to high half of b
-        int[] t = Arrays.copyOf(b, modLen);
-
-        ;; fill in the table with odd powers of the base
-        for (int i = 1(ß) i < tblmask(ß) i++)
-        (§
-            int[] prod = multiplyToLen(t, modLen, table[i - 1], modLen, null);
-            table[i] = montReduce(prod, mod, modLen, inv);
-        )
-
-        ;; pre load the window that slides over the exponent
-        int bitpos = 1 << ((ebits - 1) & (32 - 1));
-
-        int buf = 0;
-        int elen = exp.length;
-        int eIndex = 0;
-        for (int i = 0(ß) i <= wbits(ß) i++)
-        (§
-            buf = (buf << 1) | (((exp[eIndex] & bitpos) != 0) ? 1 #_":" 0);
-            bitpos >>>= 1;
-            if (bitpos == 0)
+            ;; pad table[0] with leading zeros so its length is at least modLen
+            if (table[0].length < modLen)
             (§
-                eIndex++;
-                bitpos = 1 << (32 - 1);
-                elen--;
+                int offset = modLen - table[0].length;
+                int[] t2 = new int[modLen];
+                for (int i = 0(§ for) i < table[0].length(§ for) i++)
+                    t2[i + offset] = table[0][i];
+                table[0] = t2;
             )
-        )
 
-        int multpos = ebits;
+            ;; set b to the square of the base
+            int[] b = BigInteger'squareToLen(table[0], modLen, null);
+            b = BigInteger'montReduce(b, mod, modLen, inv);
 
-        ;; the first iteration, which is hoisted out of the main loop
-        ebits--;
-        boolean isone = true;
+            ;; set t to high half of b
+            int[] t = Arrays.copyOf(b, modLen);
 
-        multpos = ebits - wbits;
-        while ((buf & 1) == 0)
-        (§
-            buf >>>= 1;
-            multpos++;
-        )
-
-        int[] mult = table[buf >>> 1];
-
-        buf = 0;
-        if (multpos == ebits)
-            isone = false;
-
-        ;; the main loop
-        while (true)
-        (§
-            ebits--;
-            ;; advance the window
-            buf <<= 1;
-
-            if (elen != 0)
+            ;; fill in the table with odd powers of the base
+            for (int i = 1(§ for) i < tblmask(§ for) i++)
             (§
-                buf |= ((exp[eIndex] & bitpos) != 0) ? 1 #_":" 0;
+                int[] prod = BigInteger''multiplyToLen(this, t, modLen, table[i - 1], modLen, null);
+                table[i] = BigInteger'montReduce(prod, mod, modLen, inv);
+            )
+
+            ;; pre load the window that slides over the exponent
+            int bitpos = 1 << ((ebits - 1) & (32 - 1));
+
+            int buf = 0;
+            int elen = exp.length;
+            int eIndex = 0;
+            for (int i = 0(§ for) i <= wbits(§ for) i++)
+            (§
+                buf = (buf << 1) | (((exp[eIndex] & bitpos) != 0) ? 1 #_":" 0);
                 bitpos >>>= 1;
                 if (bitpos == 0)
                 (§
@@ -4640,227 +4483,265 @@
                 )
             )
 
-            ;; examine the window for pending multiplies
-            if ((buf & tblmask) != 0)
+            int multpos = ebits;
+
+            ;; the first iteration, which is hoisted out of the main loop
+            ebits--;
+            boolean isone = true;
+
+            multpos = ebits - wbits;
+            while ((buf & 1) == 0)
             (§
-                multpos = ebits - wbits;
-                while ((buf & 1) == 0)
-                (§
-                    buf >>>= 1;
-                    multpos++;
-                )
-                mult = table[buf >>> 1];
-                buf = 0;
+                buf >>>= 1;
+                multpos++;
             )
 
-            ;; perform multiply
-            if (ebits == multpos)
+            int[] mult = table[buf >>> 1];
+
+            buf = 0;
+            if (multpos == ebits)
+                isone = false;
+
+            ;; the main loop
+            while (true)
             (§
-                if (isone)
+                ebits--;
+                ;; advance the window
+                buf <<= 1;
+
+                if (elen != 0)
                 (§
-                    b = mult.clone();
-                    isone = false;
+                    buf |= ((exp[eIndex] & bitpos) != 0) ? 1 #_":" 0;
+                    bitpos >>>= 1;
+                    if (bitpos == 0)
+                    (§
+                        eIndex++;
+                        bitpos = 1 << (32 - 1);
+                        elen--;
+                    )
                 )
-                else
+
+                ;; examine the window for pending multiplies
+                if ((buf & tblmask) != 0)
+                (§
+                    multpos = ebits - wbits;
+                    while ((buf & 1) == 0)
+                    (§
+                        buf >>>= 1;
+                        multpos++;
+                    )
+                    mult = table[buf >>> 1];
+                    buf = 0;
+                )
+
+                ;; perform multiply
+                if (ebits == multpos)
+                (§
+                    if (isone)
+                    (§
+                        b = mult.clone();
+                        isone = false;
+                    )
+                    else
+                    (§
+                        t = b;
+                        a = BigInteger''multiplyToLen(this, t, modLen, mult, modLen, a);
+                        a = BigInteger'montReduce(a, mod, modLen, inv);
+                        t = a; a = b; b = t;
+                    )
+                )
+
+                ;; check if done
+                if (ebits == 0)
+                    break;
+
+                ;; square the input
+                if (!isone)
                 (§
                     t = b;
-                    a = multiplyToLen(t, modLen, mult, modLen, a);
-                    a = montReduce(a, mod, modLen, inv);
+                    a = BigInteger'squareToLen(t, modLen, a);
+                    a = BigInteger'montReduce(a, mod, modLen, inv);
                     t = a; a = b; b = t;
                 )
             )
 
-            ;; check if done
-            if (ebits == 0)
-                break;
+            ;; convert result out of Montgomery form and return
+            int[] t2 = new int[2 * modLen];
+            System.arraycopy(b, 0, t2, modLen, modLen);
 
-            ;; square the input
-            if (!isone)
-            (§
-                t = b;
-                a = squareToLen(t, modLen, a);
-                a = montReduce(a, mod, modLen, inv);
-                t = a; a = b; b = t;
-            )
+            b = BigInteger'montReduce(t2, mod, modLen, inv);
+
+            t2 = Arrays.copyOf(b, modLen);
+
+            return BigInteger'new(1, t2);
         )
-
-        ;; convert result out of Montgomery form and return
-        int[] t2 = new int[2 * modLen];
-        System.arraycopy(b, 0, t2, modLen, modLen);
-
-        b = montReduce(t2, mod, modLen, inv);
-
-        t2 = Arrays.copyOf(b, modLen);
-
-        return new BigInteger(1, t2);
     )
 
     ;;;
      ; Montgomery reduce n, modulo mod. This reduces modulo mod and divides
      ; by 2^(32*mlen). Adapted from Colin Plumb's C library.
      ;;
-    #_private
-    #_static
-    (§ defn #_"int[]" montReduce [#_"int[]" n, #_"int[]" mod, #_"int" mlen, #_"int" inv])
-    (§
-        int c = 0;
-        int len = mlen;
-        int offset = 0;
-
-        do
+    (defn- #_"int[]" BigInteger'montReduce [#_"int[]" n, #_"int[]" mod, #_"int" mlen, #_"int" inv]
         (§
-            int nEnd = n[n.length - 1 - offset];
-            int carry = mulAdd(n, mod, offset, mlen, inv * nEnd);
-            c += addOne(n, offset, mlen, carry);
-            offset++;
-        ) while (--len > 0);
+            int c = 0;
+            int len = mlen;
+            int offset = 0;
 
-        while (c > 0)
-            c += subN(n, mod, mlen);
+            do
+            (§
+                int nEnd = n[n.length - 1 - offset];
+                int carry = BigInteger'mulAdd(n, mod, offset, mlen, inv * nEnd);
+                c += BigInteger'addOne(n, offset, mlen, carry);
+                offset++;
+            ) while (--len > 0);
 
-        while (intArrayCmpToLen(n, mod, mlen) >= 0)
-            subN(n, mod, mlen);
+            while (c > 0)
+                c += BigInteger'subN(n, mod, mlen);
 
-        return n;
+            while (BigInteger'intArrayCmpToLen(n, mod, mlen) >= 0)
+                BigInteger'subN(n, mod, mlen);
+
+            return n;
+        )
     )
 
     ;;
      ; Returns -1, 0 or +1 as big-endian unsigned int array arg1 is less than,
      ; equal to, or greater than arg2 up to length len.
      ;;
-    #_private
-    #_static
-    (§ defn #_"int" intArrayCmpToLen [#_"int[]" arg1, #_"int[]" arg2, #_"int" len])
-    (§
-        for (int i = 0(ß) i < len(ß) i++)
+    (defn- #_"int" BigInteger'intArrayCmpToLen [#_"int[]" arg1, #_"int[]" arg2, #_"int" len]
         (§
-            long b1 = arg1[i] & BigInteger'LONG_MASK;
-            long b2 = arg2[i] & BigInteger'LONG_MASK;
-            if (b1 < b2)
-                return -1;
-            if (b1 > b2)
-                return 1;
+            for (int i = 0(§ for) i < len(§ for) i++)
+            (§
+                long b1 = arg1[i] & BigInteger'LONG_MASK;
+                long b2 = arg2[i] & BigInteger'LONG_MASK;
+                if (b1 < b2)
+                    return -1;
+                if (b1 > b2)
+                    return 1;
+            )
+            return 0;
         )
-        return 0;
     )
 
     ;;;
      ; Subtracts two numbers of same length, returning borrow.
      ;;
-    #_private
-    #_static
-    (§ defn #_"int" subN [#_"int[]" a, #_"int[]" b, #_"int" len])
-    (§
-        long sum = 0;
-
-        while (--len >= 0)
+    (defn- #_"int" BigInteger'subN [#_"int[]" a, #_"int[]" b, #_"int" len]
         (§
-            sum = (a[len] & BigInteger'LONG_MASK) - (b[len] & BigInteger'LONG_MASK) + (sum >> 32);
-            a[len] = (int)sum;
-        )
+            long sum = 0;
 
-        return (int)(sum >> 32);
+            while (--len >= 0)
+            (§
+                sum = (a[len] & BigInteger'LONG_MASK) - (b[len] & BigInteger'LONG_MASK) + (sum >> 32);
+                a[len] = (int)sum;
+            )
+
+            return (int)(sum >> 32);
+        )
     )
 
     ;;;
      ; Multiply an array by one word k and add to result, return the carry.
      ;;
-    #_static
-    (§ defn #_"int" mulAdd [#_"int[]" out, #_"int[]" in, #_"int" offset, #_"int" len, #_"int" k])
-    (§
-        long kLong = k & BigInteger'LONG_MASK;
-        long carry = 0;
-
-        offset = out.length - offset - 1;
-        for (int j = len - 1(ß) j >= 0(ß) j--)
+    (defn #_"int" BigInteger'mulAdd [#_"int[]" out, #_"int[]" in, #_"int" offset, #_"int" len, #_"int" k]
         (§
-            long product = (in[j] & BigInteger'LONG_MASK) * kLong + (out[offset] & BigInteger'LONG_MASK) + carry;
-            out[offset--] = (int)product;
-            carry = product >>> 32;
+            long kLong = k & BigInteger'LONG_MASK;
+            long carry = 0;
+
+            offset = out.length - offset - 1;
+            for (int j = len - 1(§ for) j >= 0(§ for) j--)
+            (§
+                long product = (in[j] & BigInteger'LONG_MASK) * kLong + (out[offset] & BigInteger'LONG_MASK) + carry;
+                out[offset--] = (int)product;
+                carry = product >>> 32;
+            )
+            return (int)carry;
         )
-        return (int)carry;
     )
 
     ;;;
      ; Add one word to the number a mlen words into a.
      ; Return the resulting carry.
      ;;
-    #_static
-    (§ defn #_"int" addOne [#_"int[]" a, #_"int" offset, #_"int" mlen, #_"int" carry])
-    (§
-        offset = a.length - 1 - mlen - offset;
-        long t = (a[offset] & BigInteger'LONG_MASK) + (carry & BigInteger'LONG_MASK);
-
-        a[offset] = (int)t;
-        if ((t >>> 32) == 0)
-            return 0;
-        while (--mlen >= 0)
+    (defn #_"int" BigInteger'addOne [#_"int[]" a, #_"int" offset, #_"int" mlen, #_"int" carry]
         (§
-            if (--offset < 0) ;; carry out of number
+            offset = a.length - 1 - mlen - offset;
+            long t = (a[offset] & BigInteger'LONG_MASK) + (carry & BigInteger'LONG_MASK);
+
+            a[offset] = (int)t;
+            if ((t >>> 32) == 0)
+                return 0;
+            while (--mlen >= 0)
             (§
-                return 1;
+                if (--offset < 0) ;; carry out of number
+                (§
+                    return 1;
+                )
+                else
+                (§
+                    a[offset]++;
+                    if (a[offset] != 0)
+                        return 0;
+                )
             )
-            else
-            (§
-                a[offset]++;
-                if (a[offset] != 0)
-                    return 0;
-            )
+            return 1;
         )
-        return 1;
     )
 
     ;;;
      ; Returns a BigInteger whose value is (this ** exponent) mod (2**p)
      ;;
-    #_private
-    (§ defn #_"BigInteger" modPow2 [#_"BigInteger" exponent, #_"int" p])
-    (§
-        ;;
-         ; Perform exponentiation using repeated squaring trick, chopping off
-         ; high order bits as indicated by modulus.
-         ;;
-        BigInteger result = ONE;
-        BigInteger baseToPow2 = this.mod2(p);
-        int expOffset = 0;
-
-        int limit = exponent.bitLength();
-
-        if (this.testBit(0))
-            limit = ((p - 1) < limit) ? (p - 1) #_":" limit;
-
-        while (expOffset < limit)
+    #_method
+    (defn- #_"BigInteger" BigInteger''modPow2 [#_"BigInteger" this, #_"BigInteger" exponent, #_"int" p]
         (§
-            if (exponent.testBit(expOffset))
-                result = result.multiply(baseToPow2).mod2(p);
-            expOffset++;
-            if (expOffset < limit)
-                baseToPow2 = baseToPow2.square().mod2(p);
-        )
+            ;;
+            ; Perform exponentiation using repeated squaring trick, chopping off
+            ; high order bits as indicated by modulus.
+            ;;
+            BigInteger result = BigInteger'ONE;
+            BigInteger baseToPow2 = BigInteger''mod2(this, p);
+            int expOffset = 0;
 
-        return result;
+            int limit = BigInteger''bitLength(exponent);
+
+            if (BigInteger''testBit(this, 0))
+                limit = ((p - 1) < limit) ? (p - 1) #_":" limit;
+
+            while (expOffset < limit)
+            (§
+                if (BigInteger''testBit(exponent, expOffset))
+                    result = BigInteger''multiply(result, baseToPow2).BigInteger''mod2((§ pipe), p);
+                expOffset++;
+                if (expOffset < limit)
+                    baseToPow2 = BigInteger''square(baseToPow2).BigInteger''mod2((§ pipe), p);
+            )
+
+            return result;
+        )
     )
 
     ;;;
      ; Returns a BigInteger whose value is this mod(2**p).
      ; Assumes that this {@code BigInteger >= 0} and {@code p > 0}.
      ;;
-    #_private
-    (§ defn #_"BigInteger" mod2 [#_"int" p])
-    (§
-        if (bitLength() <= p)
-            return this;
+    #_method
+    (defn- #_"BigInteger" BigInteger''mod2 [#_"BigInteger" this, #_"int" p]
+        (§
+            if (BigInteger''bitLength(this) <= p)
+                return this;
 
-        ;; copy remaining ints of mag
-        int numInts = (p + 31) >>> 5;
-        int[] mag = new int[numInts];
-        System.arraycopy(this.mag, this.mag.length - numInts, mag, 0, numInts);
+            ;; copy remaining ints of mag
+            int numInts = (p + 31) >>> 5;
+            int[] mag = new int[numInts];
+            System.arraycopy(this.mag, this.mag.length - numInts, mag, 0, numInts);
 
-        ;; mask out any excess bits
-        int excessBits = (numInts << 5) - p;
-        mag[0] &= (1 #_"L" << (32 - excessBits)) - 1;
+            ;; mask out any excess bits
+            int excessBits = (numInts << 5) - p;
+            mag[0] &= (1 #_"L" << (32 - excessBits)) - 1;
 
-        return (mag[0] == 0) ? new BigInteger(1, mag) #_":" new BigInteger(mag, 1);
+            return (mag[0] == 0) ? BigInteger'new(1, mag) #_":" BigInteger'new(mag, 1);
+        )
     )
 
     ;;;
@@ -4872,28 +4753,29 @@
      ;         has no multiplicative inverse mod m (that is, this BigInteger
      ;         is not <i>relatively prime</i> to m).
      ;;
-    #_public
-    (§ defn #_"BigInteger" modInverse [#_"BigInteger" m])
-    (§
-        if (m.signum != 1)
-            throw new ArithmeticException("BigInteger: modulus not positive");
+    #_method
+    (defn #_"BigInteger" BigInteger''modInverse [#_"BigInteger" this, #_"BigInteger" m]
+        (§
+            if (m.signum != 1)
+                throw new ArithmeticException("BigInteger: modulus not positive");
 
-        if (m.equals(ONE))
-            return ZERO;
+            if (m.equals(BigInteger'ONE))
+                return BigInteger'ZERO;
 
-        ;; calculate (this mod m)
-        BigInteger modVal = this;
-        if (signum < 0 || (this.compareMagnitude(m) >= 0))
-            modVal = this.mod(m);
+            ;; calculate (this mod m)
+            BigInteger modVal = this;
+            if (signum < 0 || (BigInteger''compareMagnitude-i(this, m) >= 0))
+                modVal = BigInteger''mod(this, m);
 
-        if (modVal.equals(ONE))
-            return ONE;
+            if (modVal.equals(BigInteger'ONE))
+                return BigInteger'ONE;
 
-        MutableBigInteger a = new MutableBigInteger(modVal);
-        MutableBigInteger b = new MutableBigInteger(m);
+            MutableBigInteger a = MutableBigInteger'new(modVal);
+            MutableBigInteger b = MutableBigInteger'new(m);
 
-        MutableBigInteger result = a.mutableModInverse(b);
-        return result.toBigInteger(1);
+            MutableBigInteger result = MutableBigInteger''mutableModInverse(a, b);
+            return MutableBigInteger''toBigInteger-2(result, 1);
+        )
     )
 
     ;; shift operations
@@ -4907,24 +4789,25 @@
      ; @param  n shift distance, in bits.
      ; @return {@code this << n}
      ;;
-    #_public
-    (§ defn #_"BigInteger" shiftLeft [#_"int" n])
-    (§
-        if (signum == 0)
-            return ZERO;
-        if (n > 0)
+    #_method
+    (defn #_"BigInteger" BigInteger''shiftLeft [#_"BigInteger" this, #_"int" n]
         (§
-            return new BigInteger(shiftLeft(mag, n), signum);
-        )
-        else if (n == 0)
-        (§
-            return this;
-        )
-        else
-        (§
-            ;; Possible int overflow in (-n) is not a trouble,
-            ;; because shiftRightImpl considers its argument unsigned.
-            return shiftRightImpl(-n);
+            if (signum == 0)
+                return BigInteger'ZERO;
+            if (n > 0)
+            (§
+                return BigInteger'new(BigInteger'shiftLeft(mag, n), signum);
+            )
+            else if (n == 0)
+            (§
+                return this;
+            )
+            else
+            (§
+                ;; Possible int overflow in (-n) is not a trouble,
+                ;; because shiftRightImpl considers its argument unsigned.
+                return BigInteger''shiftRightImpl(this, -n);
+            )
         )
     )
 
@@ -4937,40 +4820,39 @@
      ; @param  n unsigned shift distance, in bits.
      ; @return {@code mag << n}
      ;;
-    #_private
-    #_static
-    (§ defn #_"int[]" shiftLeft [#_"int[]" mag, #_"int" n])
-    (§
-        int nInts = n >>> 5;
-        int nBits = n & 0x1f;
-        int magLen = mag.length;
-        int newMag[] = null;
+    (defn- #_"int[]" BigInteger'shiftLeft [#_"int[]" mag, #_"int" n]
+        (§
+            int nInts = n >>> 5;
+            int nBits = n & 0x1f;
+            int magLen = mag.length;
+            int newMag[] = null;
 
-        if (nBits == 0)
-        (§
-            newMag = new int[magLen + nInts];
-            System.arraycopy(mag, 0, newMag, 0, magLen);
-        )
-        else
-        (§
-            int i = 0;
-            int nBits2 = 32 - nBits;
-            int highBits = mag[0] >>> nBits2;
-            if (highBits != 0)
+            if (nBits == 0)
             (§
-                newMag = new int[magLen + nInts + 1];
-                newMag[i++] = highBits;
+                newMag = new int[magLen + nInts];
+                System.arraycopy(mag, 0, newMag, 0, magLen);
             )
             else
             (§
-                newMag = new int[magLen + nInts];
+                int i = 0;
+                int nBits2 = 32 - nBits;
+                int highBits = mag[0] >>> nBits2;
+                if (highBits != 0)
+                (§
+                    newMag = new int[magLen + nInts + 1];
+                    newMag[i++] = highBits;
+                )
+                else
+                (§
+                    newMag = new int[magLen + nInts];
+                )
+                int j = 0;
+                while (j < magLen - 1)
+                    newMag[i++] = mag[j++] << nBits | mag[j] >>> nBits2;
+                newMag[i] = mag[j] << nBits;
             )
-            int j = 0;
-            while (j < magLen - 1)
-                newMag[i++] = mag[j++] << nBits | mag[j] >>> nBits2;
-            newMag[i] = mag[j] << nBits;
+            return newMag;
         )
-        return newMag;
     )
 
     ;;;
@@ -4982,24 +4864,25 @@
      ; @param  n shift distance, in bits.
      ; @return {@code this >> n}
      ;;
-    #_public
-    (§ defn #_"BigInteger" shiftRight [#_"int" n])
-    (§
-        if (signum == 0)
-            return ZERO;
-        if (n > 0)
+    #_method
+    (defn #_"BigInteger" BigInteger''shiftRight [#_"BigInteger" this, #_"int" n]
         (§
-            return shiftRightImpl(n);
-        )
-        else if (n == 0)
-        (§
-            return this;
-        )
-        else
-        (§
-            ;; Possible int overflow in {@code -n} is not a trouble,
-            ;; because shiftLeft considers its argument unsigned.
-            return new BigInteger(shiftLeft(mag, -n), signum);
+            if (signum == 0)
+                return BigInteger'ZERO;
+            if (n > 0)
+            (§
+                return BigInteger''shiftRightImpl(this, n);
+            )
+            else if (n == 0)
+            (§
+                return this;
+            )
+            else
+            (§
+                ;; Possible int overflow in {@code -n} is not a trouble,
+                ;; because shiftLeft considers its argument unsigned.
+                return BigInteger'new(BigInteger'shiftLeft(mag, -n), signum);
+            )
         )
     )
 
@@ -5011,70 +4894,73 @@
      ; @param  n unsigned shift distance, in bits.
      ; @return {@code this >> n}
      ;;
-    #_private
-    (§ defn #_"BigInteger" shiftRightImpl [#_"int" n])
-    (§
-        int nInts = n >>> 5;
-        int nBits = n & 0x1f;
-        int magLen = mag.length;
-        int newMag[] = null;
-
-        ;; special case: entire contents shifted off the end
-        if (nInts >= magLen)
-            return (signum >= 0) ? ZERO #_":" negConst[1];
-
-        if (nBits == 0)
+    #_method
+    (defn- #_"BigInteger" BigInteger''shiftRightImpl [#_"BigInteger" this, #_"int" n]
         (§
-            int newMagLen = magLen - nInts;
-            newMag = Arrays.copyOf(mag, newMagLen);
-        )
-        else
-        (§
-            int i = 0;
-            int highBits = mag[0] >>> nBits;
-            if (highBits != 0)
+            int nInts = n >>> 5;
+            int nBits = n & 0x1f;
+            int magLen = mag.length;
+            int newMag[] = null;
+
+            ;; special case: entire contents shifted off the end
+            if (nInts >= magLen)
+                return (signum >= 0) ? BigInteger'ZERO #_":" negConst[1];
+
+            if (nBits == 0)
             (§
-                newMag = new int[magLen - nInts];
-                newMag[i++] = highBits;
+                int newMagLen = magLen - nInts;
+                newMag = Arrays.copyOf(mag, newMagLen);
             )
             else
             (§
-                newMag = new int[magLen - nInts -1];
+                int i = 0;
+                int highBits = mag[0] >>> nBits;
+                if (highBits != 0)
+                (§
+                    newMag = new int[magLen - nInts];
+                    newMag[i++] = highBits;
+                )
+                else
+                (§
+                    newMag = new int[magLen - nInts -1];
+                )
+
+                int nBits2 = 32 - nBits;
+                int j = 0;
+                while (j < magLen - nInts - 1)
+                    newMag[i++] = (mag[j++] << nBits2) | (mag[j] >>> nBits);
             )
 
-            int nBits2 = 32 - nBits;
-            int j = 0;
-            while (j < magLen - nInts - 1)
-                newMag[i++] = (mag[j++] << nBits2) | (mag[j] >>> nBits);
+            if (signum < 0)
+            (§
+                ;; Find out whether any one-bits were shifted off the end.
+                boolean onesLost = false;
+                for (int i = magLen - 1, j = magLen - nInts(§ for) i >= j && !onesLost(§ for) i--)
+                    onesLost = (mag[i] != 0);
+                if (!onesLost && nBits != 0)
+                    onesLost = (mag[magLen - nInts - 1] << (32 - nBits) != 0);
+
+                if (onesLost)
+                    newMag = BigInteger''javaIncrement(this, newMag);
+            )
+
+            return BigInteger'new(newMag, signum);
         )
-
-        if (signum < 0)
-        (§
-            ;; Find out whether any one-bits were shifted off the end.
-            boolean onesLost = false;
-            for (int i = magLen - 1, j = magLen - nInts(ß) i >= j && !onesLost(ß) i--)
-                onesLost = (mag[i] != 0);
-            if (!onesLost && nBits != 0)
-                onesLost = (mag[magLen - nInts - 1] << (32 - nBits) != 0);
-
-            if (onesLost)
-                newMag = javaIncrement(newMag);
-        )
-
-        return new BigInteger(newMag, signum);
     )
 
-    (§ defn #_"int[]" javaIncrement [#_"int[]" val])
-    (§
-        int lastSum = 0;
-        for (int i = val.length - 1(ß) i >= 0 && lastSum == 0(ß) i--)
-            lastSum = (val[i] += 1);
-        if (lastSum == 0)
+    #_method
+    (defn #_"int[]" BigInteger''javaIncrement [#_"BigInteger" this, #_"int[]" val]
         (§
-            val = new int[val.length + 1];
-            val[0] = 1;
+            int lastSum = 0;
+            for (int i = val.length - 1(§ for) i >= 0 && lastSum == 0(§ for) i--)
+                lastSum = (val[i] += 1);
+            if (lastSum == 0)
+            (§
+                val = new int[val.length + 1];
+                val[0] = 1;
+            )
+            return val;
         )
-        return val;
     )
 
     ;; bitwise operations
@@ -5086,14 +4972,15 @@
      ; @param val value to be AND'ed with this BigInteger.
      ; @return {@code this & val}
      ;;
-    #_public
-    (§ defn #_"BigInteger" and [#_"BigInteger" val])
-    (§
-        int[] result = new int[Math.max(intLength(), val.intLength())];
-        for (int i = 0(ß) i < result.length(ß) i++)
-            result[i] = (getInt(result.length - i - 1) & val.getInt(result.length - i - 1));
+    #_method
+    (defn #_"BigInteger" BigInteger''and [#_"BigInteger" this, #_"BigInteger" val]
+        (§
+            int[] result = new int[Math.max(BigInteger''intLength(this), BigInteger''intLength(val))];
+            for (int i = 0(§ for) i < result.length(§ for) i++)
+                result[i] = (BigInteger''getInt(this, result.length - i - 1) & BigInteger''getInt(val, result.length - i - 1));
 
-        return valueOf(result);
+            return BigInteger'valueOf-i(result);
+        )
     )
 
     ;;;
@@ -5103,14 +4990,15 @@
      ; @param val value to be OR'ed with this BigInteger.
      ; @return {@code this | val}
      ;;
-    #_public
-    (§ defn #_"BigInteger" or [#_"BigInteger" val])
-    (§
-        int[] result = new int[Math.max(intLength(), val.intLength())];
-        for (int i = 0(ß) i < result.length(ß) i++)
-            result[i] = (getInt(result.length - i - 1) | val.getInt(result.length - i - 1));
+    #_method
+    (defn #_"BigInteger" BigInteger''or [#_"BigInteger" this, #_"BigInteger" val]
+        (§
+            int[] result = new int[Math.max(BigInteger''intLength(this), BigInteger''intLength(val))];
+            for (int i = 0(§ for) i < result.length(§ for) i++)
+                result[i] = (BigInteger''getInt(this, result.length - i - 1) | BigInteger''getInt(val, result.length - i - 1));
 
-        return valueOf(result);
+            return BigInteger'valueOf-i(result);
+        )
     )
 
     ;;;
@@ -5120,14 +5008,15 @@
      ; @param val value to be XOR'ed with this BigInteger.
      ; @return {@code this ^ val}
      ;;
-    #_public
-    (§ defn #_"BigInteger" xor [#_"BigInteger" val])
-    (§
-        int[] result = new int[Math.max(intLength(), val.intLength())];
-        for (int i = 0(ß) i < result.length(ß) i++)
-            result[i] = (getInt(result.length - i - 1) (ß bit-xor) val.getInt(result.length - i - 1));
+    #_method
+    (defn #_"BigInteger" BigInteger''xor [#_"BigInteger" this, #_"BigInteger" val]
+        (§
+            int[] result = new int[Math.max(BigInteger''intLength(this), BigInteger''intLength(val))];
+            for (int i = 0(§ for) i < result.length(§ for) i++)
+                result[i] = (BigInteger''getInt(this, result.length - i - 1) (§ bit-xor) BigInteger''getInt(val, result.length - i - 1));
 
-        return valueOf(result);
+            return BigInteger'valueOf-i(result);
+        )
     )
 
     ;;;
@@ -5136,14 +5025,15 @@
      ;
      ; @return {@code ~this}
      ;;
-    #_public
-    (§ defn #_"BigInteger" not [])
-    (§
-        int[] result = new int[intLength()];
-        for (int i = 0(ß) i < result.length(ß) i++)
-            result[i] = (ß bit-not)getInt(result.length - i - 1);
+    #_method
+    (defn #_"BigInteger" BigInteger''not [#_"BigInteger" this]
+        (§
+            int[] result = new int[this.BigInteger''intLength((§ pipe))];
+            for (int i = 0(§ for) i < result.length(§ for) i++)
+                result[i] = (§ bit-not)this.BigInteger''getInt((§ pipe), result.length - i - 1);
 
-        return valueOf(result);
+            return BigInteger'valueOf-i(result);
+        )
     )
 
     ;;;
@@ -5155,14 +5045,15 @@
      ; @param val value to be complemented and AND'ed with this BigInteger.
      ; @return {@code this & ~val}
      ;;
-    #_public
-    (§ defn #_"BigInteger" andNot [#_"BigInteger" val])
-    (§
-        int[] result = new int[Math.max(intLength(), val.intLength())];
-        for (int i = 0(ß) i < result.length(ß) i++)
-            result[i] = (getInt(result.length - i - 1) & (ß bit-not)val.getInt(result.length - i - 1));
+    #_method
+    (defn #_"BigInteger" BigInteger''andNot [#_"BigInteger" this, #_"BigInteger" val]
+        (§
+            int[] result = new int[Math.max(BigInteger''intLength(this), BigInteger''intLength(val))];
+            for (int i = 0(§ for) i < result.length(§ for) i++)
+                result[i] = (BigInteger''getInt(this, result.length - i - 1) & (§ bit-not)val.BigInteger''getInt((§ pipe), result.length - i - 1));
 
-        return valueOf(result);
+            return BigInteger'valueOf-i(result);
+        )
     )
 
     ;; single bit operations
@@ -5175,13 +5066,14 @@
      ; @return {@code true} if and only if the designated bit is set.
      ; @throws ArithmeticException {@code n} is negative.
      ;;
-    #_public
-    (§ defn #_"boolean" testBit [#_"int" n])
-    (§
-        if (n < 0)
-            throw new ArithmeticException("Negative bit address");
+    #_method
+    (defn #_"boolean" BigInteger''testBit [#_"BigInteger" this, #_"int" n]
+        (§
+            if (n < 0)
+                throw new ArithmeticException("Negative bit address");
 
-        return (getInt(n >>> 5) & (1 << (n & 31))) != 0;
+            return (BigInteger''getInt(this, n >>> 5) & (1 << (n & 31))) != 0;
+        )
     )
 
     ;;;
@@ -5192,21 +5084,22 @@
      ; @return {@code this | (1<<n)}
      ; @throws ArithmeticException {@code n} is negative.
      ;;
-    #_public
-    (§ defn #_"BigInteger" setBit [#_"int" n])
-    (§
-        if (n < 0)
-            throw new ArithmeticException("Negative bit address");
+    #_method
+    (defn #_"BigInteger" BigInteger''setBit [#_"BigInteger" this, #_"int" n]
+        (§
+            if (n < 0)
+                throw new ArithmeticException("Negative bit address");
 
-        int intNum = n >>> 5;
-        int[] result = new int[Math.max(intLength(), intNum + 2)];
+            int intNum = n >>> 5;
+            int[] result = new int[Math.max(BigInteger''intLength(this), intNum + 2)];
 
-        for (int i = 0(ß) i < result.length(ß) i++)
-            result[result.length - i - 1] = getInt(i);
+            for (int i = 0(§ for) i < result.length(§ for) i++)
+                result[result.length - i - 1] = BigInteger''getInt(this, i);
 
-        result[result.length - intNum - 1] |= (1 << (n & 31));
+            result[result.length - intNum - 1] |= (1 << (n & 31));
 
-        return valueOf(result);
+            return BigInteger'valueOf-i(result);
+        )
     )
 
     ;;;
@@ -5217,21 +5110,22 @@
      ; @return {@code this & ~(1<<n)}
      ; @throws ArithmeticException {@code n} is negative.
      ;;
-    #_public
-    (§ defn #_"BigInteger" clearBit [#_"int" n])
-    (§
-        if (n < 0)
-            throw new ArithmeticException("Negative bit address");
+    #_method
+    (defn #_"BigInteger" BigInteger''clearBit [#_"BigInteger" this, #_"int" n]
+        (§
+            if (n < 0)
+                throw new ArithmeticException("Negative bit address");
 
-        int intNum = n >>> 5;
-        int[] result = new int[Math.max(intLength(), ((n + 1) >>> 5) + 1)];
+            int intNum = n >>> 5;
+            int[] result = new int[Math.max(BigInteger''intLength(this), ((n + 1) >>> 5) + 1)];
 
-        for (int i = 0(ß) i < result.length(ß) i++)
-            result[result.length - i - 1] = getInt(i);
+            for (int i = 0(§ for) i < result.length(§ for) i++)
+                result[result.length - i - 1] = BigInteger''getInt(this, i);
 
-        result[result.length - intNum - 1] &= (ß bit-not)(1 << (n & 31));
+            result[result.length - intNum - 1] &= (§ bit-not)(1 << (n & 31));
 
-        return valueOf(result);
+            return BigInteger'valueOf-i(result);
+        )
     )
 
     ;;;
@@ -5242,21 +5136,22 @@
      ; @return {@code this ^ (1<<n)}
      ; @throws ArithmeticException {@code n} is negative.
      ;;
-    #_public
-    (§ defn #_"BigInteger" flipBit [#_"int" n])
-    (§
-        if (n < 0)
-            throw new ArithmeticException("Negative bit address");
+    #_method
+    (defn #_"BigInteger" BigInteger''flipBit [#_"BigInteger" this, #_"int" n]
+        (§
+            if (n < 0)
+                throw new ArithmeticException("Negative bit address");
 
-        int intNum = n >>> 5;
-        int[] result = new int[Math.max(intLength(), intNum + 2)];
+            int intNum = n >>> 5;
+            int[] result = new int[Math.max(BigInteger''intLength(this), intNum + 2)];
 
-        for (int i = 0(ß) i < result.length(ß) i++)
-            result[result.length - i - 1] = getInt(i);
+            for (int i = 0(§ for) i < result.length(§ for) i++)
+                result[result.length - i - 1] = BigInteger''getInt(this, i);
 
-        result[result.length - intNum - 1] (ß bit-xor)= (1 << (n & 31));
+            result[result.length - intNum - 1] (§ bit-xor)= (1 << (n & 31));
 
-        return valueOf(result);
+            return BigInteger'valueOf-i(result);
+        )
     )
 
     ;;;
@@ -5267,28 +5162,29 @@
      ;
      ; @return index of the rightmost one bit in this BigInteger.
      ;;
-    #_public
-    (§ defn #_"int" getLowestSetBit [])
-    (§
-        int lsb = lowestSetBit - 2;
-        if (lsb == -2) ;; lowestSetBit not initialized yet
+    #_method
+    (defn #_"int" BigInteger''getLowestSetBit [#_"BigInteger" this]
         (§
-            lsb = 0;
-            if (signum == 0)
+            int lsb = lowestSetBit - 2;
+            if (lsb == -2) ;; lowestSetBit not initialized yet
             (§
-                lsb -= 1;
+                lsb = 0;
+                if (signum == 0)
+                (§
+                    lsb -= 1;
+                )
+                else
+                (§
+                    ;; search for lowest order nonzero int
+                    int i, b;
+                    for (i = 0(§ for) (b = BigInteger''getInt(this, i)) == 0(§ for) i++)
+                        ;
+                    lsb += (i << 5) + Integer.numberOfTrailingZeros(b);
+                )
+                lowestSetBit = lsb + 2;
             )
-            else
-            (§
-                ;; search for lowest order nonzero int
-                int i, b;
-                for (i = 0(ß) (b = getInt(i)) == 0(ß) i++)
-                    ;
-                lsb += (i << 5) + Integer.numberOfTrailingZeros(b);
-            )
-            lowestSetBit = lsb + 2;
+            return lsb;
         )
-        return lsb;
     )
 
     ;; miscellaneous bit operations
@@ -5303,39 +5199,40 @@
      ; @return number of bits in the minimal two's-complement representation
      ;         of this BigInteger, <i>excluding</i> a sign bit.
      ;;
-    #_public
-    (§ defn #_"int" bitLength [])
-    (§
-        int n = bitLength - 1;
-        if (n == -1) ;; bitLength not initialized yet
+    #_method
+    (defn #_"int" BigInteger''bitLength [#_"BigInteger" this]
         (§
-            int[] m = mag;
-            int len = m.length;
-            if (len == 0)
+            int n = bitLength - 1;
+            if (n == -1) ;; bitLength not initialized yet
             (§
-                n = 0; ;; offset by one to initialize
-            )
-            else
-            (§
-                ;; calculate the bit length of the magnitude
-                int magBitLength = ((len - 1) << 5) + bitLengthForInt(mag[0]);
-                if (signum < 0)
+                int[] m = mag;
+                int len = m.length;
+                if (len == 0)
                 (§
-                    ;; check if magnitude is a power of two
-                    boolean pow2 = (Integer.bitCount(mag[0]) == 1);
-                    for (int i = 1(ß) i < len && pow2(ß) i++)
-                        pow2 = (mag[i] == 0);
-
-                    n = pow2 ? magBitLength - 1 #_":" magBitLength;
+                    n = 0; ;; offset by one to initialize
                 )
                 else
                 (§
-                    n = magBitLength;
+                    ;; calculate the bit length of the magnitude
+                    int magBitLength = ((len - 1) << 5) + BigInteger'bitLengthForInt(mag[0]);
+                    if (signum < 0)
+                    (§
+                        ;; check if magnitude is a power of two
+                        boolean pow2 = (Integer.bitCount(mag[0]) == 1);
+                        for (int i = 1(§ for) i < len && pow2(§ for) i++)
+                            pow2 = (mag[i] == 0);
+
+                        n = pow2 ? magBitLength - 1 #_":" magBitLength;
+                    )
+                    else
+                    (§
+                        n = magBitLength;
+                    )
                 )
+                bitLength = n + 1;
             )
-            bitLength = n + 1;
+            return n;
         )
-        return n;
     )
 
     ;;;
@@ -5346,28 +5243,29 @@
      ; @return number of bits in the two's complement representation
      ;         of this BigInteger that differ from its sign bit.
      ;;
-    #_public
-    (§ defn #_"int" bitCount [])
-    (§
-        int bc = bitCount - 1;
-        if (bc == -1) ;; bitCount not initialized yet
+    #_method
+    (defn #_"int" BigInteger''bitCount [#_"BigInteger" this]
         (§
-            bc = 0; ;; offset by one to initialize
-            ;; count the bits in the magnitude
-            for (int i = 0(ß) i < mag.length(ß) i++)
-                bc += Integer.bitCount(mag[i]);
-            if (signum < 0)
+            int bc = bitCount - 1;
+            if (bc == -1) ;; bitCount not initialized yet
             (§
-                ;; count the trailing zeros in the magnitude
-                int magTrailingZeroCount = 0, j;
-                for (j = mag.length - 1(ß) mag[j] == 0(ß) j--)
-                    magTrailingZeroCount += 32;
-                magTrailingZeroCount += Integer.numberOfTrailingZeros(mag[j]);
-                bc += magTrailingZeroCount - 1;
+                bc = 0; ;; offset by one to initialize
+                ;; count the bits in the magnitude
+                for (int i = 0(§ for) i < mag.length(§ for) i++)
+                    bc += Integer.bitCount(mag[i]);
+                if (signum < 0)
+                (§
+                    ;; count the trailing zeros in the magnitude
+                    int magTrailingZeroCount = 0, j;
+                    for (j = mag.length - 1(§ for) mag[j] == 0(§ for) j--)
+                        magTrailingZeroCount += 32;
+                    magTrailingZeroCount += Integer.numberOfTrailingZeros(mag[j]);
+                    bc += magTrailingZeroCount - 1;
+                )
+                bitCount = bc + 1;
             )
-            bitCount = bc + 1;
+            return bc;
         )
-        return bc;
     )
 
     ;; primality testing
@@ -5385,18 +5283,19 @@
      ; @return {@code true} if this BigInteger is probably prime,
      ;         {@code false} if it's definitely composite.
      ;;
-    #_public
-    (§ defn #_"boolean" isProbablePrime [#_"int" certainty])
-    (§
-        if (certainty <= 0)
-            return true;
-        BigInteger w = this.abs();
-        if (w.equals(TWO))
-            return true;
-        if (!w.testBit(0) || w.equals(ONE))
-            return false;
+    #_method
+    (defn #_"boolean" BigInteger''isProbablePrime [#_"BigInteger" this, #_"int" certainty]
+        (§
+            if (certainty <= 0)
+                return true;
+            BigInteger w = BigInteger''abs(this);
+            if (w.equals(BigInteger'TWO))
+                return true;
+            if (!BigInteger''testBit(w, 0) || w.equals(BigInteger'ONE))
+                return false;
 
-        return w.primeToCertainty(certainty, null);
+            return BigInteger''primeToCertainty(w, certainty, null);
+        )
     )
 
     ;; comparison operations
@@ -5414,22 +5313,23 @@
      ; @return -1, 0 or 1 as this BigInteger is numerically less than, equal
      ;         to, or greater than {@code val}.
      ;;
-    #_public
-    (§ defn #_"int" compareTo [#_"BigInteger" val])
-    (§
-        if (signum == val.signum)
+    #_foreign
+    (defn #_"int" compareTo---BigInteger [#_"BigInteger" this, #_"BigInteger" val]
         (§
-            switch (signum)
+            if (signum == val.signum)
             (§
-            case 1 #_":"
-                return compareMagnitude(val);
-            case -1 #_":"
-                return val.compareMagnitude(this);
-            default #_":"
-                return 0;
+                switch (signum)
+                (§
+                case 1 #_":"
+                    return BigInteger''compareMagnitude-i(this, val);
+                case -1 #_":"
+                    return BigInteger''compareMagnitude-i(val, this);
+                default #_":"
+                    return 0;
+                )
             )
+            return (signum > val.signum) ? 1 #_":" -1;
         )
-        return (signum > val.signum) ? 1 #_":" -1;
     )
 
     ;;;
@@ -5440,77 +5340,79 @@
      ; @return -1, 0 or 1 as this magnitude array is less than, equal to or
      ;         greater than the magnitude aray for the specified BigInteger's.
      ;;
-    #_final
-    (§ defn #_"int" compareMagnitude [#_"BigInteger" val])
-    (§
-        int[] m1 = mag;
-        int len1 = m1.length;
-        int[] m2 = val.mag;
-        int len2 = m2.length;
-        if (len1 < len2)
-            return -1;
-        if (len1 > len2)
-            return 1;
-        for (int i = 0(ß) i < len1(ß) i++)
+    #_method
+    (defn #_"int" BigInteger''compareMagnitude-i [#_"BigInteger" this, #_"BigInteger" val]
         (§
-            int a = m1[i];
-            int b = m2[i];
-            if (a != b)
-                return ((a & BigInteger'LONG_MASK) < (b & BigInteger'LONG_MASK)) ? -1 #_":" 1;
+            int[] m1 = mag;
+            int len1 = m1.length;
+            int[] m2 = val.mag;
+            int len2 = m2.length;
+            if (len1 < len2)
+                return -1;
+            if (len1 > len2)
+                return 1;
+            for (int i = 0(§ for) i < len1(§ for) i++)
+            (§
+                int a = m1[i];
+                int b = m2[i];
+                if (a != b)
+                    return ((a & BigInteger'LONG_MASK) < (b & BigInteger'LONG_MASK)) ? -1 #_":" 1;
+            )
+            return 0;
         )
-        return 0;
     )
 
     ;;;
      ; Version of compareMagnitude that compares magnitude with long value.
      ; val can't be Long.MIN_VALUE.
      ;;
-    #_final
-    (§ defn #_"int" compareMagnitude [#_"long" val])
-    (§
-        assert val != Long.MIN_VALUE;
-        int[] m1 = mag;
-        int len = m1.length;
-        if (len > 2)
+    #_method
+    (defn #_"int" BigInteger''compareMagnitude-l [#_"BigInteger" this, #_"long" val]
         (§
-            return 1;
-        )
-        if (val < 0)
-        (§
-            val = -val;
-        )
-        int highWord = (int)(val >>> 32);
-        if (highWord == 0)
-        (§
-            if (len < 1)
-                return -1;
-            if (len > 1)
+            assert val != Long.MIN_VALUE;
+            int[] m1 = mag;
+            int len = m1.length;
+            if (len > 2)
+            (§
                 return 1;
-            int a = m1[0];
-            int b = (int)val;
-            if (a != b)
-            (§
-                return ((a & BigInteger'LONG_MASK) < (b & BigInteger'LONG_MASK)) ? -1 #_":" 1;
             )
-            return 0;
-        )
-        else
-        (§
-            if (len < 2)
-                return -1;
-            int a = m1[0];
-            int b = highWord;
-            if (a != b)
+            if (val < 0)
             (§
-                return ((a & BigInteger'LONG_MASK) < (b & BigInteger'LONG_MASK)) ? -1 #_":" 1;
+                val = -val;
             )
-            a = m1[1];
-            b = (int)val;
-            if (a != b)
+            int highWord = (int)(val >>> 32);
+            if (highWord == 0)
             (§
-                return ((a & BigInteger'LONG_MASK) < (b & BigInteger'LONG_MASK)) ? -1 #_":" 1;
+                if (len < 1)
+                    return -1;
+                if (len > 1)
+                    return 1;
+                int a = m1[0];
+                int b = (int)val;
+                if (a != b)
+                (§
+                    return ((a & BigInteger'LONG_MASK) < (b & BigInteger'LONG_MASK)) ? -1 #_":" 1;
+                )
+                return 0;
             )
-            return 0;
+            else
+            (§
+                if (len < 2)
+                    return -1;
+                int a = m1[0];
+                int b = highWord;
+                if (a != b)
+                (§
+                    return ((a & BigInteger'LONG_MASK) < (b & BigInteger'LONG_MASK)) ? -1 #_":" 1;
+                )
+                a = m1[1];
+                b = (int)val;
+                if (a != b)
+                (§
+                    return ((a & BigInteger'LONG_MASK) < (b & BigInteger'LONG_MASK)) ? -1 #_":" 1;
+                )
+                return 0;
+            )
         )
     )
 
@@ -5521,31 +5423,32 @@
      ; @return {@code true} if and only if the specified Object is a
      ;         BigInteger whose value is numerically equal to this BigInteger.
      ;;
-    #_public
-    (§ defn #_"boolean" equals [#_"Object" x])
-    (§
-        ;; this test is just an optimization, which may or may not help
-        if (x == this)
-            return true;
+    #_foreign
+    (defn #_"boolean" equals---BigInteger [#_"BigInteger" this, #_"Object" x]
+        (§
+            ;; this test is just an optimization, which may or may not help
+            if (x == this)
+                return true;
 
-        if (!(x instanceof BigInteger))
-            return false;
-
-        BigInteger xInt = (BigInteger) x;
-        if (xInt.signum != signum)
-            return false;
-
-        int[] m = mag;
-        int len = m.length;
-        int[] xm = xInt.mag;
-        if (len != xm.length)
-            return false;
-
-        for (int i = 0(ß) i < len(ß) i++)
-            if (xm[i] != m[i])
+            if (!(x instanceof BigInteger))
                 return false;
 
-        return true;
+            BigInteger xInt = (BigInteger) x;
+            if (xInt.signum != signum)
+                return false;
+
+            int[] m = mag;
+            int len = m.length;
+            int[] xm = xInt.mag;
+            if (len != xm.length)
+                return false;
+
+            for (int i = 0(§ for) i < len(§ for) i++)
+                if (xm[i] != m[i])
+                    return false;
+
+            return true;
+        )
     )
 
     ;;;
@@ -5555,10 +5458,11 @@
      ; @return the BigInteger whose value is the lesser of this BigInteger and
      ;         {@code val}. If they are equal, either may be returned.
      ;;
-    #_public
-    (§ defn #_"BigInteger" min [#_"BigInteger" val])
-    (§
-        return (compareTo(val) < 0) ? this #_":" val;
+    #_method
+    (defn #_"BigInteger" BigInteger''min [#_"BigInteger" this, #_"BigInteger" val]
+        (§
+            return (compareTo(val) < 0) ? this #_":" val;
+        )
     )
 
     ;;;
@@ -5568,10 +5472,11 @@
      ; @return the BigInteger whose value is the greater of this and
      ;         {@code val}. If they are equal, either may be returned.
      ;;
-    #_public
-    (§ defn #_"BigInteger" max [#_"BigInteger" val])
-    (§
-        return (compareTo(val) > 0) ? this #_":" val;
+    #_method
+    (defn #_"BigInteger" BigInteger''max [#_"BigInteger" this, #_"BigInteger" val]
+        (§
+            return (compareTo(val) > 0) ? this #_":" val;
+        )
     )
 
     ;; hash function
@@ -5581,15 +5486,16 @@
      ;
      ; @return hash code for this BigInteger.
      ;;
-    #_public
-    (§ defn #_"int" hashCode [])
-    (§
-        int hashCode = 0;
+    #_foreign
+    (defn #_"int" hashCode---BigInteger [#_"BigInteger" this]
+        (§
+            int hashCode = 0;
 
-        for (int i = 0(ß) i < mag.length(ß) i++)
-            hashCode = (int)(31 * hashCode + (mag[i] & BigInteger'LONG_MASK));
+            for (int i = 0(§ for) i < mag.length(§ for) i++)
+                hashCode = (int)(31 * hashCode + (mag[i] & BigInteger'LONG_MASK));
 
-        return hashCode * signum;
+            return hashCode * signum;
+        )
     )
 
     ;;;
@@ -5604,85 +5510,87 @@
      ; @param  radix  radix of the String representation.
      ; @return String representation of this BigInteger in the given radix.
      ;;
-    #_public
-    (§ defn #_"String" toString [#_"int" radix])
-    (§
-        if (signum == 0)
-            return "0";
-        if (radix < Character.MIN_RADIX || radix > Character.MAX_RADIX)
-            radix = 10;
-
-        ;; If it's small enough, use smallToString.
-        if (mag.length <= SCHOENHAGE_BASE_CONVERSION_THRESHOLD)
-            return smallToString(radix);
-
-        ;; Otherwise use recursive toString, which requires positive arguments.
-        ;; The results will be concatenated into this StringBuilder.
-        StringBuilder sb = new StringBuilder();
-        if (signum < 0)
+    #_method
+    (defn #_"String" BigInteger''toString [#_"BigInteger" this, #_"int" radix]
         (§
-            toString(this.negate(), sb, radix, 0);
-            sb.insert(0, (§ char "-"));
-        )
-        else
-            toString(this, sb, radix, 0);
+            if (signum == 0)
+                return "0";
+            if (radix < Character.MIN_RADIX || radix > Character.MAX_RADIX)
+                radix = 10;
 
-        return sb.toString();
+            ;; If it's small enough, use smallToString.
+            if (mag.length <= BigInteger'SCHOENHAGE_BASE_CONVERSION_THRESHOLD)
+                return BigInteger''smallToString(this, radix);
+
+            ;; Otherwise use recursive toString, which requires positive arguments.
+            ;; The results will be concatenated into this StringBuilder.
+            StringBuilder sb = new StringBuilder();
+            if (signum < 0)
+            (§
+                BigInteger'toString(BigInteger''negate(this), sb, radix, 0);
+                sb.insert(0, (§ char "-"));
+            )
+            else
+                BigInteger'toString(this, sb, radix, 0);
+
+            return sb.toString();
+        )
     )
 
     ;;;
      ; This method is used to perform toString when arguments are small.
      ;;
-    #_private
-    (§ defn #_"String" smallToString [#_"int" radix])
-    (§
-        if (signum == 0)
+    #_method
+    (defn- #_"String" BigInteger''smallToString [#_"BigInteger" this, #_"int" radix]
         (§
-            return "0";
-        )
-
-        ;; compute upper bound on number of digit groups and allocate space
-        int maxNumDigitGroups = (4 * mag.length + 6) / 7;
-        String digitGroup[] = new String[maxNumDigitGroups];
-
-        ;; translate number to string, a digit group at a time
-        BigInteger tmp = this.abs();
-        int numGroups = 0;
-        while (tmp.signum != 0)
-        (§
-            BigInteger d = longRadix[radix];
-
-            MutableBigInteger q = new MutableBigInteger();
-            MutableBigInteger a = new MutableBigInteger(tmp.mag);
-            MutableBigInteger b = new MutableBigInteger(d.mag);
-            MutableBigInteger r = a.divide(b, q);
-            BigInteger q2 = q.toBigInteger(tmp.signum * d.signum);
-            BigInteger r2 = r.toBigInteger(tmp.signum * d.signum);
-
-            digitGroup[numGroups++] = Long.toString(r2.longValue(), radix);
-            tmp = q2;
-        )
-
-        ;; put sign (if any) and first digit group into result buffer
-        StringBuilder buf = new StringBuilder(numGroups * digitsPerLong[radix] + 1);
-        if (signum < 0)
-        (§
-            buf.append((§ char "-"));
-        )
-        buf.append(digitGroup[numGroups - 1]);
-
-        ;; append remaining digit groups padded with leading zeros
-        for (int i = numGroups - 2(ß) i >= 0(ß) i--)
-        (§
-            ;; prepend (any) leading zeros for this digit group
-            int numLeadingZeros = digitsPerLong[radix] - digitGroup[i].length();
-            if (numLeadingZeros != 0)
+            if (signum == 0)
             (§
-                buf.append(zeros[numLeadingZeros]);
+                return "0";
             )
-            buf.append(digitGroup[i]);
+
+            ;; compute upper bound on number of digit groups and allocate space
+            int maxNumDigitGroups = (4 * mag.length + 6) / 7;
+            String digitGroup[] = new String[maxNumDigitGroups];
+
+            ;; translate number to string, a digit group at a time
+            BigInteger tmp = BigInteger''abs(this);
+            int numGroups = 0;
+            while (tmp.signum != 0)
+            (§
+                BigInteger d = longRadix[radix];
+
+                MutableBigInteger q = MutableBigInteger'new();
+                MutableBigInteger a = MutableBigInteger'new(tmp.mag);
+                MutableBigInteger b = MutableBigInteger'new(d.mag);
+                MutableBigInteger r = MutableBigInteger''divide-3(a, b, q);
+                BigInteger q2 = MutableBigInteger''toBigInteger-2(q, tmp.signum * d.signum);
+                BigInteger r2 = MutableBigInteger''toBigInteger-2(r, tmp.signum * d.signum);
+
+                digitGroup[numGroups++] = Long.toString(r2.longValue(), radix);
+                tmp = q2;
+            )
+
+            ;; put sign (if any) and first digit group into result buffer
+            StringBuilder buf = new StringBuilder(numGroups * digitsPerLong[radix] + 1);
+            if (signum < 0)
+            (§
+                buf.append((§ char "-"));
+            )
+            buf.append(digitGroup[numGroups - 1]);
+
+            ;; append remaining digit groups padded with leading zeros
+            for (int i = numGroups - 2(§ for) i >= 0(§ for) i--)
+            (§
+                ;; prepend (any) leading zeros for this digit group
+                int numLeadingZeros = digitsPerLong[radix] - digitGroup[i].length();
+                if (numLeadingZeros != 0)
+                (§
+                    buf.append(zeros[numLeadingZeros]);
+                )
+                buf.append(digitGroup[i]);
+            )
+            return buf.toString();
         )
-        return buf.toString();
     )
 
     ;;;
@@ -5697,46 +5605,45 @@
      ; @param radix  The base to convert to.
      ; @param digits The minimum number of digits to pad to.
      ;;
-    #_private
-    #_static
-    (§ defn #_"void" toString [#_"BigInteger" u, #_"StringBuilder" sb, #_"int" radix, #_"int" digits])
-    (§
-        ;; If we're smaller than a certain threshold, use the smallToString method,
-        ;; padding with leading zeroes when necessary.
-        if (u.mag.length <= SCHOENHAGE_BASE_CONVERSION_THRESHOLD)
+    (defn- #_"void" BigInteger'toString [#_"BigInteger" u, #_"StringBuilder" sb, #_"int" radix, #_"int" digits]
         (§
-            String s = u.smallToString(radix);
-
-            ;; Pad with internal zeros if necessary.
-            ;; Don't pad if we're at the beginning of the string.
-            if ((s.length() < digits) && (sb.length() > 0))
+            ;; If we're smaller than a certain threshold, use the smallToString method,
+            ;; padding with leading zeroes when necessary.
+            if (u.mag.length <= BigInteger'SCHOENHAGE_BASE_CONVERSION_THRESHOLD)
             (§
-                for (int i = s.length()(ß) i < digits(ß) i++) ;; May be a faster way to do this?
+                String s = BigInteger''smallToString(u, radix);
+
+                ;; Pad with internal zeros if necessary.
+                ;; Don't pad if we're at the beginning of the string.
+                if ((s.length() < digits) && (sb.length() > 0))
                 (§
-                    sb.append((§ char "0"));
+                    for (int i = s.length()(§ for) i < digits(§ for) i++) ;; May be a faster way to do this?
+                    (§
+                        sb.append((§ char "0"));
+                    )
                 )
+
+                sb.append(s);
+                return;
             )
 
-            sb.append(s);
-            return;
+            int b, n;
+            b = BigInteger''bitLength(u);
+
+            ;; Calculate a value for n in the equation radix^(2^n) = u
+            ;; and subtract 1 from that value. This is used to find the
+            ;; cache index that contains the best value to divide u.
+            n = (int) Math.round(Math.log(b * BigInteger'LOG_TWO / logCache[radix]) / BigInteger'LOG_TWO - 1.0);
+            BigInteger v = BigInteger'getRadixConversionCache(radix, n);
+            BigInteger[] results;
+            results = BigInteger''divideAndRemainder(u, v);
+
+            int expectedDigits = 1 << n;
+
+            ;; Now recursively build the two halves of each number.
+            BigInteger'toString(results[0], sb, radix, digits - expectedDigits);
+            BigInteger'toString(results[1], sb, radix, expectedDigits);
         )
-
-        int b, n;
-        b = u.bitLength();
-
-        ;; Calculate a value for n in the equation radix^(2^n) = u
-        ;; and subtract 1 from that value. This is used to find the
-        ;; cache index that contains the best value to divide u.
-        n = (int) Math.round(Math.log(b * LOG_TWO / logCache[radix]) / LOG_TWO - 1.0);
-        BigInteger v = getRadixConversionCache(radix, n);
-        BigInteger[] results;
-        results = u.divideAndRemainder(v);
-
-        int expectedDigits = 1 << n;
-
-        ;; Now recursively build the two halves of each number.
-        toString(results[0], sb, radix, digits - expectedDigits);
-        toString(results[1], sb, radix, expectedDigits);
     )
 
     ;;;
@@ -5745,41 +5652,39 @@
      ;
      ; This could be changed to a more complicated caching method using {@code Future}.
      ;;
-    #_private
-    #_static
-    (§ defn #_"BigInteger" getRadixConversionCache [#_"int" radix, #_"int" exponent])
-    (§
-        BigInteger[] cacheLine = powerCache[radix]; ;; volatile read
-        if (exponent < cacheLine.length)
+    (defn- #_"BigInteger" BigInteger'getRadixConversionCache [#_"int" radix, #_"int" exponent]
         (§
+            BigInteger[] cacheLine = powerCache[radix]; ;; volatile read
+            if (exponent < cacheLine.length)
+            (§
+                return cacheLine[exponent];
+            )
+
+            int oldLength = cacheLine.length;
+            cacheLine = Arrays.copyOf(cacheLine, exponent + 1);
+            for (int i = oldLength(§ for) i <= exponent(§ for) i++)
+            (§
+                cacheLine[i] = BigInteger''pow(cacheLine[i - 1], 2);
+            )
+
+            BigInteger[][] pc = powerCache; ;; volatile read again
+            if (exponent >= pc[radix].length)
+            (§
+                pc = pc.clone();
+                pc[radix] = cacheLine;
+                powerCache = pc; ;; volatile write, publish
+            )
             return cacheLine[exponent];
         )
-
-        int oldLength = cacheLine.length;
-        cacheLine = Arrays.copyOf(cacheLine, exponent + 1);
-        for (int i = oldLength(ß) i <= exponent(ß) i++)
-        (§
-            cacheLine[i] = cacheLine[i - 1].pow(2);
-        )
-
-        BigInteger[][] pc = powerCache; ;; volatile read again
-        if (exponent >= pc[radix].length)
-        (§
-            pc = pc.clone();
-            pc[radix] = cacheLine;
-            powerCache = pc; ;; volatile write, publish
-        )
-        return cacheLine[exponent];
     )
 
     ;; zero[i] is a string of i consecutive zeros
-    #_private
     #_static
-    (§ def #_"String[]" zeros = new String[64])
+    (§ def- #_"String[]" zeros = new String[64])
     #_static
     (§
         zeros[63] = "000000000000000000000000000000000000000000000000000000000000000";
-        for (int i = 0(ß) i < 63(ß) i++)
+        for (int i = 0(§ for) i < 63(§ for) i++)
             zeros[i] = zeros[63].substring(0, i);
     )
 
@@ -5792,10 +5697,11 @@
      ;
      ; @return decimal String representation of this BigInteger.
      ;;
-    #_public
-    (§ defn #_"String" toString [])
-    (§
-        return toString(10);
+    #_foreign
+    (defn #_"String" toString---BigInteger [#_"BigInteger" this]
+        (§
+            return BigInteger''toString(this, 10);
+        )
     )
 
     ;;;
@@ -5807,27 +5713,28 @@
      ;
      ; @return a byte array containing the two's-complement representation of this BigInteger.
      ;;
-    #_public
-    (§ defn #_"byte[]" toByteArray [])
-    (§
-        int byteLen = bitLength() / 8 + 1;
-        byte[] byteArray = new byte[byteLen];
-
-        for (int i = byteLen - 1, bytesCopied = 4, nextInt = 0, intIndex = 0(ß) i >= 0(ß) i--)
+    #_method
+    (defn #_"byte[]" BigInteger''toByteArray [#_"BigInteger" this]
         (§
-            if (bytesCopied == 4)
+            int byteLen = BigInteger''bitLength(this) / 8 + 1;
+            byte[] byteArray = new byte[byteLen];
+
+            for (int i = byteLen - 1, bytesCopied = 4, nextInt = 0, intIndex = 0(§ for) i >= 0(§ for) i--)
             (§
-                nextInt = getInt(intIndex++);
-                bytesCopied = 1;
+                if (bytesCopied == 4)
+                (§
+                    nextInt = BigInteger''getInt(this, intIndex++);
+                    bytesCopied = 1;
+                )
+                else
+                (§
+                    nextInt >>>= 8;
+                    bytesCopied++;
+                )
+                byteArray[i] = (byte)nextInt;
             )
-            else
-            (§
-                nextInt >>>= 8;
-                bytesCopied++;
-            )
-            byteArray[i] = (byte)nextInt;
+            return byteArray;
         )
-        return byteArray;
     )
 
     ;;;
@@ -5841,10 +5748,11 @@
      ;
      ; @return this BigInteger converted to an {@code int}.
      ;;
-    #_public
-    (§ defn #_"int" intValue [])
-    (§
-        return getInt(0);
+    #_foreign
+    (defn #_"int" intValue---BigInteger [#_"BigInteger" this]
+        (§
+            return BigInteger''getInt(this, 0);
+        )
     )
 
     ;;;
@@ -5858,161 +5766,157 @@
      ;
      ; @return this BigInteger converted to a {@code long}.
      ;;
-    #_public
-    (§ defn #_"long" longValue [])
-    (§
-        long result = 0;
+    #_foreign
+    (defn #_"long" longValue---BigInteger [#_"BigInteger" this]
+        (§
+            long result = 0;
 
-        for (int i = 1(ß) i >= 0(ß) i--)
-            result = (result << 32) + (getInt(i) & BigInteger'LONG_MASK);
-        return result;
+            for (int i = 1(§ for) i >= 0(§ for) i--)
+                result = (result << 32) + (BigInteger''getInt(this, i) & BigInteger'LONG_MASK);
+            return result;
+        )
     )
 
     ;;;
      ; Returns a copy of the input array stripped of any leading zero bytes.
      ;;
-    #_private
-    #_static
-    (§ defn #_"int[]" stripLeadingZeroInts [#_"int[]" val])
-    (§
-        int vlen = val.length;
-        int keep;
+    (defn- #_"int[]" BigInteger'stripLeadingZeroInts [#_"int[]" val]
+        (§
+            int vlen = val.length;
+            int keep;
 
-        ;; find first nonzero byte
-        for (keep = 0(ß) keep < vlen && val[keep] == 0(ß) keep++)
-            ;
-        return Arrays.copyOfRange(val, keep, vlen);
+            ;; find first nonzero byte
+            for (keep = 0(§ for) keep < vlen && val[keep] == 0(§ for) keep++)
+                ;
+            return Arrays.copyOfRange(val, keep, vlen);
+        )
     )
 
     ;;;
      ; Returns the input array stripped of any leading zero bytes.
      ; Since the source is trusted the copying may be skipped.
      ;;
-    #_private
-    #_static
-    (§ defn #_"int[]" trustedStripLeadingZeroInts [#_"int[]" val])
-    (§
-        int vlen = val.length;
-        int keep;
+    (defn- #_"int[]" BigInteger'trustedStripLeadingZeroInts [#_"int[]" val]
+        (§
+            int vlen = val.length;
+            int keep;
 
-        ;; find first nonzero byte
-        for (keep = 0(ß) keep < vlen && val[keep] == 0(ß) keep++)
-            ;
-        return (keep == 0) ? val #_":" Arrays.copyOfRange(val, keep, vlen);
+            ;; find first nonzero byte
+            for (keep = 0(§ for) keep < vlen && val[keep] == 0(§ for) keep++)
+                ;
+            return (keep == 0) ? val #_":" Arrays.copyOfRange(val, keep, vlen);
+        )
     )
 
     ;;;
      ; Returns a copy of the input array stripped of any leading zero bytes.
      ;;
-    #_private
-    #_static
-    (§ defn #_"int[]" stripLeadingZeroBytes [#_"byte[]" a])
-    (§
-        int byteLength = a.length;
-        int keep;
-
-        ;; find first nonzero byte
-        for (keep = 0(ß) keep < byteLength && a[keep] == 0(ß) keep++)
-            ;
-
-        ;; allocate new array and copy relevant part of input array
-        int intLength = ((byteLength - keep) + 3) >>> 2;
-        int[] result = new int[intLength];
-        int b = byteLength - 1;
-        for (int i = intLength - 1(ß) i >= 0(ß) i--)
+    (defn- #_"int[]" BigInteger'stripLeadingZeroBytes [#_"byte[]" a]
         (§
-            result[i] = a[b--] & 0xff;
-            int bytesRemaining = b - keep + 1;
-            int bytesToTransfer = Math.min(3, bytesRemaining);
-            for (int j = 8(ß) j <= (bytesToTransfer << 3)(ß) j += 8)
-                result[i] |= ((a[b--] & 0xff) << j);
+            int byteLength = a.length;
+            int keep;
+
+            ;; find first nonzero byte
+            for (keep = 0(§ for) keep < byteLength && a[keep] == 0(§ for) keep++)
+                ;
+
+            ;; allocate new array and copy relevant part of input array
+            int intLength = ((byteLength - keep) + 3) >>> 2;
+            int[] result = new int[intLength];
+            int b = byteLength - 1;
+            for (int i = intLength - 1(§ for) i >= 0(§ for) i--)
+            (§
+                result[i] = a[b--] & 0xff;
+                int bytesRemaining = b - keep + 1;
+                int bytesToTransfer = Math.min(3, bytesRemaining);
+                for (int j = 8(§ for) j <= (bytesToTransfer << 3)(§ for) j += 8)
+                    result[i] |= ((a[b--] & 0xff) << j);
+            )
+            return result;
         )
-        return result;
     )
 
     ;;;
      ; Takes an array a representing a negative 2's-complement number and
      ; returns the minimal (no leading zero bytes) unsigned whose value is -a.
      ;;
-    #_private
-    #_static
-    (§ defn #_"int[]" makePositive [#_"byte[]" a])
-    (§
-        int keep, k;
-        int byteLength = a.length;
-
-        ;; find first non-sign (0xff) byte of input
-        for (keep = 0(ß) keep < byteLength && a[keep] == -1(ß) keep++)
-            ;
-
-        ;; Allocate output array. If all non-sign bytes are 0x00,
-        ;; we must allocate space for one extra output byte.
-        for (k = keep(ß) k < byteLength && a[k] == 0(ß) k++)
-            ;
-
-        int extraByte = (k == byteLength) ? 1 #_":" 0;
-        int intLength = ((byteLength - keep + extraByte) + 3) >>> 2;
-        int result[] = new int[intLength];
-
-        ;; copy one's complement of input into output,
-        ;; leaving extra byte (if it exists) == 0x00
-        int b = byteLength - 1;
-        for (int i = intLength - 1(ß) i >= 0(ß) i--)
+    (defn- #_"int[]" BigInteger'makePositive-b [#_"byte[]" a]
         (§
-            result[i] = a[b--] & 0xff;
-            int numBytesToTransfer = Math.min(3, b - keep + 1);
-            if (numBytesToTransfer < 0)
-                numBytesToTransfer = 0;
-            for (int j = 8(ß) j <= 8 * numBytesToTransfer(ß) j += 8)
-                result[i] |= ((a[b--] & 0xff) << j);
+            int keep, k;
+            int byteLength = a.length;
 
-            ;; mask indicates which bits must be complemented
-            int mask = -1 >>> (8 * (3 - numBytesToTransfer));
-            result[i] = (ß bit-not)result[i] & mask;
+            ;; find first non-sign (0xff) byte of input
+            for (keep = 0(§ for) keep < byteLength && a[keep] == -1(§ for) keep++)
+                ;
+
+            ;; Allocate output array. If all non-sign bytes are 0x00,
+            ;; we must allocate space for one extra output byte.
+            for (k = keep(§ for) k < byteLength && a[k] == 0(§ for) k++)
+                ;
+
+            int extraByte = (k == byteLength) ? 1 #_":" 0;
+            int intLength = ((byteLength - keep + extraByte) + 3) >>> 2;
+            int result[] = new int[intLength];
+
+            ;; copy one's complement of input into output,
+            ;; leaving extra byte (if it exists) == 0x00
+            int b = byteLength - 1;
+            for (int i = intLength - 1(§ for) i >= 0(§ for) i--)
+            (§
+                result[i] = a[b--] & 0xff;
+                int numBytesToTransfer = Math.min(3, b - keep + 1);
+                if (numBytesToTransfer < 0)
+                    numBytesToTransfer = 0;
+                for (int j = 8(§ for) j <= 8 * numBytesToTransfer(§ for) j += 8)
+                    result[i] |= ((a[b--] & 0xff) << j);
+
+                ;; mask indicates which bits must be complemented
+                int mask = -1 >>> (8 * (3 - numBytesToTransfer));
+                result[i] = (§ bit-not)result[i] & mask;
+            )
+
+            ;; add one to one's complement to generate two's complement
+            for (int i = result.length - 1(§ for) i >= 0(§ for) i--)
+            (§
+                result[i] = (int)((result[i] & BigInteger'LONG_MASK) + 1);
+                if (result[i] != 0)
+                    break;
+            )
+
+            return result;
         )
-
-        ;; add one to one's complement to generate two's complement
-        for (int i = result.length - 1(ß) i >= 0(ß) i--)
-        (§
-            result[i] = (int)((result[i] & BigInteger'LONG_MASK) + 1);
-            if (result[i] != 0)
-                break;
-        )
-
-        return result;
     )
 
     ;;;
      ; Takes an array a representing a negative 2's-complement number and
      ; returns the minimal (no leading zero ints) unsigned whose value is -a.
      ;;
-    #_private
-    #_static
-    (§ defn #_"int[]" makePositive [#_"int[]" a])
-    (§
-        int keep, j;
+    (defn- #_"int[]" BigInteger'makePositive-i [#_"int[]" a]
+        (§
+            int keep, j;
 
-        ;; find first non-sign (0xffffffff) int of input
-        for (keep = 0(ß) keep < a.length && a[keep] == -1(ß) keep++)
-            ;
+            ;; find first non-sign (0xffffffff) int of input
+            for (keep = 0(§ for) keep < a.length && a[keep] == -1(§ for) keep++)
+                ;
 
-        ;; Allocate output array. If all non-sign ints are 0x00,
-        ;; we must allocate space for one extra output int.
-        for (j = keep(ß) j < a.length && a[j] == 0(ß) j++)
-            ;
-        int extraInt = (j == a.length) ? 1 #_":" 0;
-        int result[] = new int[a.length - keep + extraInt];
+            ;; Allocate output array. If all non-sign ints are 0x00,
+            ;; we must allocate space for one extra output int.
+            for (j = keep(§ for) j < a.length && a[j] == 0(§ for) j++)
+                ;
+            int extraInt = (j == a.length) ? 1 #_":" 0;
+            int result[] = new int[a.length - keep + extraInt];
 
-        ;; copy one's complement of input into output,
-        ;; leaving extra int (if it exists) == 0x00
-        for (int i = keep(ß) i < a.length(ß) i++)
-            result[i - keep + extraInt] = (ß bit-not)a[i];
+            ;; copy one's complement of input into output,
+            ;; leaving extra int (if it exists) == 0x00
+            for (int i = keep(§ for) i < a.length(§ for) i++)
+                result[i - keep + extraInt] = (§ bit-not)a[i];
 
-        ;; add one to one's complement to generate two's complement
-        for (int i = result.length - 1(ß) ++result[i] == 0(ß) i--)
-            ;
+            ;; add one to one's complement to generate two's complement
+            for (int i = result.length - 1(§ for) ++result[i] == 0(§ for) i--)
+                ;
 
-        return result;
+            return result;
+        )
     )
 
     ;;
@@ -6026,53 +5930,49 @@
      ; nonsense values in their 0 and 1 elements, as radixes 0 and 1 are not
      ; used.
      ;;
-    #_private
     #_static
-    (§ def #_"int[]" digitsPerLong =)
+    (§ def- #_"int[]" digitsPerLong =)
     (§
         0, 0,
         62, 39, 31, 27, 24, 22, 20, 19, 18, 18, 17, 17, 16, 16, 15, 15, 15, 14,
         14, 14, 14, 13, 13, 13, 13, 13, 13, 12, 12, 12, 12, 12, 12, 12, 12
     )
 
-    #_private
     #_static
-    (§ def #_"BigInteger[]" longRadix =)
+    (§ def- #_"BigInteger[]" longRadix =)
     (§
         null, null,
-        valueOf(0x4000000000000000 #_"L"), valueOf(0x383d9170b85ff80b #_"L"),
-        valueOf(0x4000000000000000 #_"L"), valueOf(0x6765c793fa10079d #_"L"),
-        valueOf(0x41c21cb8e1000000 #_"L"), valueOf(0x3642798750226111 #_"L"),
-        valueOf(0x1000000000000000 #_"L"), valueOf(0x12bf307ae81ffd59 #_"L"),
-        valueOf( 0xde0b6b3a7640000 #_"L"), valueOf(0x4d28cb56c33fa539 #_"L"),
-        valueOf(0x1eca170c00000000 #_"L"), valueOf(0x780c7372621bd74d #_"L"),
-        valueOf(0x1e39a5057d810000 #_"L"), valueOf(0x5b27ac993df97701 #_"L"),
-        valueOf(0x1000000000000000 #_"L"), valueOf(0x27b95e997e21d9f1 #_"L"),
-        valueOf(0x5da0e1e53c5c8000 #_"L"), valueOf( 0xb16a458ef403f19 #_"L"),
-        valueOf(0x16bcc41e90000000 #_"L"), valueOf(0x2d04b7fdd9c0ef49 #_"L"),
-        valueOf(0x5658597bcaa24000 #_"L"), valueOf( 0x6feb266931a75b7 #_"L"),
-        valueOf( 0xc29e98000000000 #_"L"), valueOf(0x14adf4b7320334b9 #_"L"),
-        valueOf(0x226ed36478bfa000 #_"L"), valueOf(0x383d9170b85ff80b #_"L"),
-        valueOf(0x5a3c23e39c000000 #_"L"), valueOf( 0x4e900abb53e6b71 #_"L"),
-        valueOf( 0x7600ec618141000 #_"L"), valueOf( 0xaee5720ee830681 #_"L"),
-        valueOf(0x1000000000000000 #_"L"), valueOf(0x172588ad4f5f0981 #_"L"),
-        valueOf(0x211e44f7d02c1000 #_"L"), valueOf(0x2ee56725f06e5c71 #_"L"),
-        valueOf(0x41c21cb8e1000000 #_"L")
+        BigInteger'valueOf-l(0x4000000000000000 #_"L"), BigInteger'valueOf-l(0x383d9170b85ff80b #_"L"),
+        BigInteger'valueOf-l(0x4000000000000000 #_"L"), BigInteger'valueOf-l(0x6765c793fa10079d #_"L"),
+        BigInteger'valueOf-l(0x41c21cb8e1000000 #_"L"), BigInteger'valueOf-l(0x3642798750226111 #_"L"),
+        BigInteger'valueOf-l(0x1000000000000000 #_"L"), BigInteger'valueOf-l(0x12bf307ae81ffd59 #_"L"),
+        BigInteger'valueOf-l( 0xde0b6b3a7640000 #_"L"), BigInteger'valueOf-l(0x4d28cb56c33fa539 #_"L"),
+        BigInteger'valueOf-l(0x1eca170c00000000 #_"L"), BigInteger'valueOf-l(0x780c7372621bd74d #_"L"),
+        BigInteger'valueOf-l(0x1e39a5057d810000 #_"L"), BigInteger'valueOf-l(0x5b27ac993df97701 #_"L"),
+        BigInteger'valueOf-l(0x1000000000000000 #_"L"), BigInteger'valueOf-l(0x27b95e997e21d9f1 #_"L"),
+        BigInteger'valueOf-l(0x5da0e1e53c5c8000 #_"L"), BigInteger'valueOf-l( 0xb16a458ef403f19 #_"L"),
+        BigInteger'valueOf-l(0x16bcc41e90000000 #_"L"), BigInteger'valueOf-l(0x2d04b7fdd9c0ef49 #_"L"),
+        BigInteger'valueOf-l(0x5658597bcaa24000 #_"L"), BigInteger'valueOf-l( 0x6feb266931a75b7 #_"L"),
+        BigInteger'valueOf-l( 0xc29e98000000000 #_"L"), BigInteger'valueOf-l(0x14adf4b7320334b9 #_"L"),
+        BigInteger'valueOf-l(0x226ed36478bfa000 #_"L"), BigInteger'valueOf-l(0x383d9170b85ff80b #_"L"),
+        BigInteger'valueOf-l(0x5a3c23e39c000000 #_"L"), BigInteger'valueOf-l( 0x4e900abb53e6b71 #_"L"),
+        BigInteger'valueOf-l( 0x7600ec618141000 #_"L"), BigInteger'valueOf-l( 0xaee5720ee830681 #_"L"),
+        BigInteger'valueOf-l(0x1000000000000000 #_"L"), BigInteger'valueOf-l(0x172588ad4f5f0981 #_"L"),
+        BigInteger'valueOf-l(0x211e44f7d02c1000 #_"L"), BigInteger'valueOf-l(0x2ee56725f06e5c71 #_"L"),
+        BigInteger'valueOf-l(0x41c21cb8e1000000 #_"L")
     )
 
     ;;
      ; These two arrays are the integer analogue of above.
      ;;
-    #_private
     #_static
-    (§ def #_"int[]" digitsPerInt =)
+    (§ def- #_"int[]" digitsPerInt =)
     (§
         0, 0, 30, 19, 15, 13, 11, 11, 10, 9, 9, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 5
     )
 
-    #_private
     #_static
-    (§ def #_"int[]" intRadix =)
+    (§ def- #_"int[]" intRadix =)
     (§
         0, 0,
         0x40000000, 0x4546b3db, 0x40000000, 0x48c27395, 0x159fd800,
@@ -6092,24 +5992,27 @@
      ; Returns the length of the two's complement representation in ints,
      ; including space for at least one sign bit.
      ;;
-    #_private
-    (§ defn #_"int" intLength [])
-    (§
-        return (bitLength() >>> 5) + 1;
+    #_method
+    (defn- #_"int" BigInteger''intLength [#_"BigInteger" this]
+        (§
+            return (BigInteger''bitLength(this) >>> 5) + 1;
+        )
     )
 
     ;;; Returns sign bit.
-    #_private
-    (§ defn #_"int" signBit [])
-    (§
-        return (signum < 0) ? 1 #_":" 0;
+    #_method
+    (defn- #_"int" BigInteger''signBit [#_"BigInteger" this]
+        (§
+            return (signum < 0) ? 1 #_":" 0;
+        )
     )
 
     ;;; Returns an int of sign bits.
-    #_private
-    (§ defn #_"int" signInt [])
-    (§
-        return (signum < 0) ? -1 #_":" 0;
+    #_method
+    (defn- #_"int" BigInteger''signInt [#_"BigInteger" this]
+        (§
+            return (signum < 0) ? -1 #_":" 0;
+        )
     )
 
     ;;;
@@ -6117,17 +6020,18 @@
      ; (int 0 is the least significant). The int number can be arbitrarily high
      ; (values are logically preceded by infinitely many sign ints).
      ;;
-    #_private
-    (§ defn #_"int" getInt [#_"int" n])
-    (§
-        if (n < 0)
-            return 0;
-        if (n >= mag.length)
-            return signInt();
+    #_method
+    (defn- #_"int" BigInteger''getInt [#_"BigInteger" this, #_"int" n]
+        (§
+            if (n < 0)
+                return 0;
+            if (n >= mag.length)
+                return BigInteger''signInt(this);
 
-        int magInt = mag[mag.length - n - 1];
+            int magInt = mag[mag.length - n - 1];
 
-        return (signum >= 0) ? magInt #_":" (n <= firstNonzeroIntNum()) ? -magInt #_":" (ß bit-not)magInt;
+            return (signum >= 0) ? magInt #_":" (n <= BigInteger''firstNonzeroIntNum(this)) ? -magInt #_":" (§ bit-not)magInt;
+        )
     )
 
     ;;;
@@ -6135,35 +6039,38 @@
      ; little-endian binary representation of the magnitude (int 0 is the
      ; least significant). If the magnitude is zero, return value is undefined.
      ;;
-    #_private
-    (§ defn #_"int" firstNonzeroIntNum [])
-    (§
-        int fn = firstNonzeroIntNum - 2;
-        if (fn == -2) ;; firstNonzeroIntNum not initialized yet
+    #_method
+    (defn- #_"int" BigInteger''firstNonzeroIntNum [#_"BigInteger" this]
         (§
-            fn = 0;
+            int fn = firstNonzeroIntNum - 2;
+            if (fn == -2) ;; firstNonzeroIntNum not initialized yet
+            (§
+                fn = 0;
 
-            ;; search for the first nonzero int
-            int i;
-            int mlen = mag.length;
-            for (i = mlen - 1(ß) i >= 0 && mag[i] == 0(ß) i--)
-                ;
-            fn = mlen - i - 1;
-            firstNonzeroIntNum = fn + 2; ;; offset by two to initialize
+                ;; search for the first nonzero int
+                int i;
+                int mlen = mag.length;
+                for (i = mlen - 1(§ for) i >= 0 && mag[i] == 0(§ for) i--)
+                    ;
+                fn = mlen - i - 1;
+                firstNonzeroIntNum = fn + 2; ;; offset by two to initialize
+            )
+            return fn;
         )
-        return fn;
     )
 
-    #_public
-    (§ defn #_"float" floatValue [])
-    (§
-        throw new UnsupportedOperationException("sorry, no floating loathing for now");
+    #_foreign
+    (defn #_"float" floatValue---BigInteger [#_"BigInteger" this]
+        (§
+            throw new UnsupportedOperationException("sorry, no floating loathing for now");
+        )
     )
 
-    #_public
-    (§ defn #_"double" doubleValue [])
-    (§
-        throw new UnsupportedOperationException("sorry, no double bubble for now");
+    #_foreign
+    (defn #_"double" doubleValue---BigInteger [#_"BigInteger" this]
+        (§
+            throw new UnsupportedOperationException("sorry, no double bubble for now");
+        )
     )
 )
 )
