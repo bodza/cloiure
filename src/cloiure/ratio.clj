@@ -1,5 +1,5 @@
 (ns cloiure.ratio
-    (:refer-clojure :only [* *ns* + - < <= = == aget alength and assoc bit-and bit-not bit-or bit-shift-left bit-shift-right byte-array complement cond cons dec declare defmacro defn double-array first if-not import inc int-array let letfn loop make-array next not or rem second some? symbol? unsigned-bit-shift-right vary-meta vec vector? while])
+    (:refer-clojure :only [* *ns* + - -> < <= = == > >= aget alength and assoc bit-and bit-not bit-or bit-shift-left bit-shift-right byte-array complement cond cons dec declare defmacro defn double-array first if-not import inc int int-array let letfn long loop make-array next not or quot rem second some? symbol? unsigned-bit-shift-right vary-meta vec vector? while])
 )
 
 (defmacro § [& _])
@@ -45,6 +45,7 @@
     (defmacro recur-if [? r & s] `(if ~? ~(r' r) ~(=> s)))
 )
 
+(def / quot)
 (def % rem)
 
 (def != (complement ==))
@@ -95,6 +96,7 @@
     (def- #_"BitSieve" BitSieve'smallSieve (§ soon BitSieve'new))
 
     (declare BitSieve''set)
+    (declare BitSieve''sieveSingle)
     (declare BitSieve''sieveSearch)
 
     ;;;
@@ -122,10 +124,10 @@
             ]
                 ;; find primes and remove their multiples from sieve
                 (loop []
-                    (ß BitSieve''sieveSingle(this, (:length this), (ß nextIndex + nextPrime), nextPrime))
-                    (§ ass nextIndex (ß BitSieve''sieveSearch(this, (:length this), (ß nextIndex + 1))))
-                    (§ ass nextPrime (ß (ß 2 * nextIndex) + 1))
-                    (recur-if (and (ß nextIndex > 0) (ß nextPrime < (:length this))) [])
+                    (BitSieve''sieveSingle this, (:length this), (+ nextIndex nextPrime), nextPrime)
+                    (§ ass nextIndex (BitSieve''sieveSearch this, (:length this), (+ nextIndex 1)))
+                    (§ ass nextPrime (+ (* 2 nextIndex) 1))
+                    (recur-if (and (< 0 nextIndex) (< nextPrime (:length this))) [])
                 )
                 this
             )
@@ -156,7 +158,7 @@
                   #_"MutableBigInteger" q (MutableBigInteger'new)
                   #_"int" start 0
                   #_"int" step (BitSieve''sieveSearch BitSieve'smallSieve, (alength BitSieve'smallSieve), start)
-                  #_"int" convertedStep (ß (step * 2) + 1)
+                  #_"int" convertedStep (+ (* step 2) 1)
             ]
                 (loop []
                     ;; calculate base mod convertedStep
@@ -164,14 +166,14 @@
 
                     ;; take each multiple of step out of sieve
                     (§ ass start (- convertedStep start))
-                    (when (ß start % 2 == 0)
+                    (when (== (% start 2) 0)
                         (§ ass start (+ start convertedStep))
                     )
-                    (ß BitSieve''sieveSingle(this, searchLen, (start - 1) / 2, convertedStep))
+                    (BitSieve''sieveSingle this, searchLen, (/ (- start 1) 2), convertedStep)
 
                     ;; find next prime from small sieve
                     (§ ass step (BitSieve''sieveSearch BitSieve'smallSieve, (alength BitSieve'smallSieve), (inc step)))
-                    (§ ass convertedStep (ß (step * 2) + 1))
+                    (§ ass convertedStep (+ (* step 2) 1))
                     (recur-if (< 0 step) [])
                 )
                 this
@@ -183,14 +185,14 @@
      ; Given a bit index return unit index containing it.
      ;;
     (defn- #_"int" BitSieve'unitIndex [#_"int" bitIndex]
-        (ß bitIndex >>> 6)
+        (>>> bitIndex 6)
     )
 
     ;;;
      ; Return a unit that masks the specified bit in its unit.
      ;;
     (defn- #_"long" BitSieve'bit [#_"int" bitIndex]
-        (ß 1 << (ß bitIndex & (ß (ß 1 << 6) - 1)))
+        (<< 1 (& bitIndex (dec (<< 1 6))))
     )
 
     ;;;
@@ -201,7 +203,7 @@
         (let [
               #_"int" unitIndex (BitSieve'unitIndex bitIndex)
         ]
-            (ß (ß (aget (:bits this) unitIndex) & (ß BitSieve'bit(bitIndex))) != 0)
+            (!= (& (aget (:bits this) unitIndex) (BitSieve'bit bitIndex)) 0)
         )
     )
 
@@ -233,11 +235,11 @@
               #_"int" index start
         ]
             (loop []
-                (when (ß !BitSieve''get(this, index))
+                (when-not (BitSieve''get this, index)
                     (§ return index)
                 )
                 (§ ass index (inc index))
-                (recur-if (ß index < limit - 1) [])
+                (recur-if (< index (dec limit)) [])
             )
             -1
         )
@@ -257,6 +259,8 @@
         nil
     )
 
+    (declare BigInteger''add)
+    (declare BigInteger'valueOf-l)
     (declare BigInteger''primeToCertainty)
 
     ;;;
@@ -268,21 +272,21 @@
         (let [
               #_"int" offset 1
         ]
-            (loop-when-recur [#_"int" i 0] (ß i < (alength (:bits this))) [(inc i)]
+            (loop-when-recur [#_"int" i 0] (< i (alength (:bits this))) [(inc i)]
                 (let [
-                      #_"long" nextLong (ß (§ bit-not)(aget (:bits this) i))
+                      #_"long" nextLong (bit-not (aget (:bits this) i))
                 ]
                     (loop-when-recur [#_"int" j 0] (< j 64) [(inc j)]
-                        (when (ß (nextLong & 1) == 1)
+                        (when (== (& nextLong 1) 1)
                             (let [
-                                  #_"BigInteger" candidate (ß BigInteger''add(initValue, BigInteger'valueOf-l(offset)))
+                                  #_"BigInteger" candidate (BigInteger''add initValue, (BigInteger'valueOf-l offset))
                             ]
                                 (when (BigInteger''primeToCertainty candidate, certainty, random)
                                     (§ return candidate)
                                 )
                             )
                         )
-                        (§ ass nextLong (ß nextLong >>> 1))
+                        (§ ass nextLong (>>> nextLong 1))
                         (§ ass offset (+ offset 2))
                     )
                 )
@@ -420,7 +424,7 @@
      ;;
     #_method
     (defn- #_"int[]" MutableBigInteger''getMagnitudeArray [#_"MutableBigInteger" this]
-        (when (or (ß (:offset this) > 0) (ß (alength (:value this)) != (:intLen this)))
+        (when (or (> (:offset this) 0) (!= (alength (:value this)) (:intLen this)))
             (§ return (Arrays/copyOfRange (:value this), (:offset this), (+ (:offset this) (:intLen this))))
         )
         (:value this)
@@ -432,10 +436,10 @@
      ;;
     #_method
     (defn- #_"long" MutableBigInteger''toLong [#_"MutableBigInteger" this]
-        (when (ß (:intLen this) > 2)
+        (when (> (:intLen this) 2)
             (throw! "exceeds the range of long")
         )
-        (when (ß (:intLen this) == 0)
+        (when (== (:intLen this) 0)
             (§ return 0)
         )
         (let [
@@ -445,18 +449,21 @@
         )
     )
 
+    (declare BigInteger'new)
+
     ;;;
      ; Convert this MutableBigInteger to a BigInteger object.
      ;;
     #_method
     (defn #_"BigInteger" MutableBigInteger''toBigInteger-2 [#_"MutableBigInteger" this, #_"int" sign]
-        (when (or (ß (:intLen this) == 0) (ß sign == 0))
+        (when (or (== (:intLen this) 0) (== sign 0))
             (§ return BigInteger'ZERO)
         )
-        (ß BigInteger'new(MutableBigInteger''getMagnitudeArray(this), sign))
+        (BigInteger'new (MutableBigInteger''getMagnitudeArray this), sign)
     )
 
     (declare MutableBigInteger''normalize)
+    (declare MutableBigInteger''isZero)
 
     ;;;
      ; Converts this number to a nonnegative {@code BigInteger}.
@@ -464,7 +471,7 @@
     #_method
     (defn #_"BigInteger" MutableBigInteger''toBigInteger-1 [#_"MutableBigInteger" this]
         (MutableBigInteger''normalize this)
-        (ß MutableBigInteger''toBigInteger-2(this, (if (MutableBigInteger''isZero this) 0 1)))
+        (MutableBigInteger''toBigInteger-2 this, (if (MutableBigInteger''isZero this) 0 1))
     )
 
     ;;;
@@ -504,10 +511,10 @@
         (let [
               #_"int" blen (:intLen b)
         ]
-            (when (ß (:intLen this) < blen)
+            (when (< (:intLen this) blen)
                 (§ return -1)
             )
-            (when (ß (:intLen this) > blen)
+            (when (> (:intLen this) blen)
                 (§ return 1)
             )
 
@@ -515,7 +522,7 @@
             (let [
                   #_"int[]" bval (:value b)
             ]
-                (loop-when-recur [#_"int" i (:offset this) #_"int" j (:offset b)] (ß i < (ß (:intLen this) + (:offset this))) [(inc i) (inc j)]
+                (loop-when-recur [#_"int" i (:offset this) #_"int" j (:offset b)] (< i (+ (:intLen this) (:offset this))) [(inc i) (inc j)]
                     (let [
                           #_"int" b1 (+ (aget (:value this) i) 0x80000000)
                           #_"int" b2 (+ (aget bval j) 0x80000000)
@@ -539,17 +546,18 @@
      ;;
     #_method
     (defn- #_"int" MutableBigInteger''getLowestSetBit [#_"MutableBigInteger" this]
-        (when (ß (:intLen this) == 0)
+        (when (== (:intLen this) 0)
             (§ return -1)
         )
-        (ß #_"int" j, b)
-        (loop-when-recur [j (dec (:intLen this))] (and (ß j > 0) (ß (aget (:value this) (ß j + (:offset this))) == 0)) [(dec j)]
+        (let [
+              #_"int" j (loop-when-recur [j (dec (:intLen this))] (and (< 0 j) (== (aget (:value this) (+ j (:offset this))) 0)) [(dec j)] => j)
+              #_"int" b (aget (:value this) (+ j (:offset this)))
+        ]
+            (when (== b 0)
+                (§ return -1)
+            )
+            (+ (<< (- (:intLen this) 1 j) 5) (Integer/numberOfTrailingZeros b))
         )
-        (§ ass b (aget (:value this) (ß j + (:offset this))))
-        (when (ß b == 0)
-            (§ return -1)
-        )
-        (ß (ß (ß (:intLen this) - 1 - j) << 5) + (ß Integer/numberOfTrailingZeros(b)))
     )
 
     ;;;
@@ -558,7 +566,7 @@
      ;;
     #_method
     (defn- #_"int" MutableBigInteger''getInt [#_"MutableBigInteger" this, #_"int" index]
-        (aget (:value this) (ß (:offset this) + index))
+        (aget (:value this) (+ (:offset this) index))
     )
 
     ;;;
@@ -568,7 +576,7 @@
      ;;
     #_method
     (defn- #_"long" MutableBigInteger''getLong [#_"MutableBigInteger" this, #_"int" index]
-        (ß (aget (:value this) (ß (:offset this) + index)) & BigInteger'LONG_MASK)
+        (& (aget (:value this) (+ (:offset this) index)) BigInteger'LONG_MASK)
     )
 
     ;;;
@@ -578,7 +586,7 @@
      ;;
     #_method
     (defn #_"void" MutableBigInteger''normalize [#_"MutableBigInteger" this]
-        (when (ß (:intLen this) == 0)
+        (when (== (:intLen this) 0)
             (§ ass (:offset this) 0)
             (§ return nil)
         )
@@ -586,23 +594,23 @@
         (let [
               #_"int" index (:offset this)
         ]
-            (when (ß (aget (:value this) index) != 0)
+            (when (!= (aget (:value this) index) 0)
                 (§ return nil)
             )
 
             (let [
-                  #_"int" indexBound (ß index + (:intLen this))
+                  #_"int" indexBound (+ index (:intLen this))
             ]
                 (loop []
                     (§ ass index (inc index))
-                    (recur-if (and (ß index < indexBound) (ß (aget (:value this) index) == 0)) [])
+                    (recur-if (and (< index indexBound) (== (aget (:value this) index) 0)) [])
                 )
 
                 (let [
-                      #_"int" numZeros (ß index - (:offset this))
+                      #_"int" numZeros (- index (:offset this))
                 ]
-                    (§ ass (:intLen this) (ß (:intLen this) - numZeros))
-                    (§ ass (:offset this) (if (ß (:intLen this) == 0) 0 (ß (:offset this) + numZeros)))
+                    (§ ass (:intLen this) (- (:intLen this) numZeros))
+                    (§ ass (:offset this) (if (== (:intLen this) 0) 0 (+ (:offset this) numZeros)))
                 )
             )
         )
@@ -632,8 +640,8 @@
         (let [
               #_"int[]" result (int-array (:intLen this))
         ]
-            (loop-when-recur [#_"int" i 0] (ß i < (:intLen this)) [(inc i)]
-                (§ ass (aget result i) (aget (:value this) (ß (:offset this) + i)))
+            (loop-when-recur [#_"int" i 0] (< i (:intLen this)) [(inc i)]
+                (§ ass (aget result i) (aget (:value this) (+ (:offset this) i)))
             )
             result
         )
@@ -648,7 +656,7 @@
     (defn #_"void" MutableBigInteger''setInt [#_"MutableBigInteger" this, #_"int" index, #_"int" val]
         (let [
         ]
-            (§ ass (aget (:value this) (ß (:offset this) + index)) val)
+            (§ ass (aget (:value this) (+ (:offset this) index)) val)
         )
         nil
     )
@@ -677,7 +685,7 @@
         (let [
               #_"int" len (:intLen src)
         ]
-            (when (ß (alength (:value this)) < len)
+            (when (< (alength (:value this)) len)
                 (§ ass (:value this) (int-array len))
             )
             (System/arraycopy (:value src), (:offset src), (:value this), 0, len)
@@ -696,10 +704,10 @@
         (let [
               #_"int" len (alength val)
         ]
-            (when (ß (alength (:value this)) < len)
+            (when (< (alength (:value this)) len)
                 (§ ass (:value this) (int-array len))
             )
-            (ß System/arraycopy(val, 0, (:value this), 0, len))
+            (System/arraycopy val, 0, (:value this), 0, len)
             (§ ass (:intLen this) len)
             (§ ass (:offset this) 0)
         )
@@ -711,7 +719,7 @@
      ;;
     #_method
     (defn #_"boolean" MutableBigInteger''isOne [#_"MutableBigInteger" this]
-        (and (ß (:intLen this) == 1) (ß (aget (:value this) (:offset this)) == 1))
+        (and (== (:intLen this) 1) (== (aget (:value this) (:offset this)) 1))
     )
 
     ;;;
@@ -719,7 +727,7 @@
      ;;
     #_method
     (defn #_"boolean" MutableBigInteger''isZero [#_"MutableBigInteger" this]
-        (ß (:intLen this) == 0)
+        (== (:intLen this) 0)
     )
 
     ;;;
@@ -727,7 +735,7 @@
      ;;
     #_method
     (defn #_"boolean" MutableBigInteger''isEven [#_"MutableBigInteger" this]
-        (or (ß (:intLen this) == 0) (ß (ß (aget (:value this) (ß (ß (:offset this) + (:intLen this)) - 1)) & 1) == 0))
+        (or (== (:intLen this) 0) (== (& (aget (:value this) (dec (+ (:offset this) (:intLen this)))) 1) 0))
     )
 
     ;;;
@@ -735,7 +743,7 @@
      ;;
     #_method
     (defn #_"boolean" MutableBigInteger''isOdd [#_"MutableBigInteger" this]
-        (if (MutableBigInteger''isZero this) false (ß (ß (aget (:value this) (ß (ß (:offset this) + (:intLen this)) - 1)) & 1) == 1))
+        (if (MutableBigInteger''isZero this) false (== (& (aget (:value this) (dec (+ (:offset this) (:intLen this)))) 1) 1))
     )
 
     ;;;
@@ -745,13 +753,13 @@
      ;;
     #_method
     (defn #_"boolean" MutableBigInteger''isNormal [#_"MutableBigInteger" this]
-        (when (ß (ß (:intLen this) + (:offset this)) > (alength (:value this)))
+        (when (> (+ (:intLen this) (:offset this)) (alength (:value this)))
             (§ return false)
         )
-        (when (ß (:intLen this) == 0)
+        (when (== (:intLen this) 0)
             (§ return true)
         )
-        (ß (aget (:value this) (:offset this)) != 0)
+        (!= (aget (:value this) (:offset this)) 0)
     )
 
     ;;;
@@ -759,11 +767,7 @@
      ;;
     #_foreign
     (defn #_"String" toString---MutableBigInteger [#_"MutableBigInteger" this]
-        (let [
-              #_"BigInteger" b (MutableBigInteger''toBigInteger-2 this, 1)
-        ]
-            (ß b.toString())
-        )
+        (.toString (MutableBigInteger''toBigInteger-2 this, 1))
     )
 
     (declare BigInteger'bitLengthForInt)
@@ -776,15 +780,15 @@
      ;;
     #_method
     (defn #_"void" MutableBigInteger''rightShift [#_"MutableBigInteger" this, #_"int" n]
-        (when (ß (:intLen this) == 0)
+        (when (== (:intLen this) 0)
             (§ return nil)
         )
         (let [
-              #_"int" nInts (ß n >>> 5)
-              #_"int" nBits (ß n & 0x1f)
+              #_"int" nInts (>>> n 5)
+              #_"int" nBits (& n 0x1f)
         ]
-            (§ ass (:intLen this) (ß (:intLen this) - nInts))
-            (when (ß nBits == 0)
+            (§ ass (:intLen this) (- (:intLen this) nInts))
+            (when (== nBits 0)
                 (§ return nil)
             )
             (let [
@@ -793,7 +797,7 @@
                 (cond (<= bitsInHighWord nBits)
                     (do
                         (MutableBigInteger''primitiveLeftShift this, (- 32 nBits))
-                        (§ ass (:intLen this) (ß (:intLen this) - 1))
+                        (§ ass (:intLen this) (- (:intLen this) 1))
                     )
                     :else
                     (do
@@ -816,45 +820,45 @@
          ; ints in the value array is faster to utilize, so the extra space
          ; will be taken from the right if possible.
          ;;
-        (when (ß (:intLen this) == 0)
+        (when (== (:intLen this) 0)
             (§ return nil)
         )
         (let [
-              #_"int" nInts (ß n >>> 5)
-              #_"int" nBits (ß n & 0x1f)
+              #_"int" nInts (>>> n 5)
+              #_"int" nBits (& n 0x1f)
               #_"int" bitsInHighWord (BigInteger'bitLengthForInt (aget (:value this) (:offset this)))
         ]
             ;; if shift can be done without moving words, do so
-            (when (ß n <= (32 - bitsInHighWord))
+            (when (<= n (- 32 bitsInHighWord))
                 (MutableBigInteger''primitiveLeftShift this, nBits)
                 (§ return nil)
             )
 
             (let [
-                  #_"int" newLen (ß (:intLen this) + nInts + 1)
+                  #_"int" newLen (+ (:intLen this) nInts 1)
             ]
-                (when (ß nBits <= (32 - bitsInHighWord))
+                (when (<= nBits (- 32 bitsInHighWord))
                     (§ ass newLen (dec newLen))
                 )
-                (cond (ß (alength (:value this)) < newLen) ;; the array must grow
+                (cond (< (alength (:value this)) newLen) ;; the array must grow
                     (let [
                           #_"int[]" result (int-array newLen)
                     ]
-                        (loop-when-recur [#_"int" i 0] (ß i < (:intLen this)) [(inc i)]
-                            (§ ass (aget result i) (aget (:value this) (ß (:offset this) + i)))
+                        (loop-when-recur [#_"int" i 0] (< i (:intLen this)) [(inc i)]
+                            (§ ass (aget result i) (aget (:value this) (+ (:offset this) i)))
                         )
                         (MutableBigInteger''setValue this, result, newLen)
                     )
-                    (ß (ß (alength (:value this)) - (:offset this)) >= newLen) ;; use space on right
+                    (>= (- (alength (:value this)) (:offset this)) newLen) ;; use space on right
                     (do
-                        (loop-when-recur [#_"int" i 0] (ß i < (ß newLen - (:intLen this))) [(inc i)]
-                            (§ ass (aget (:value this) (ß (:offset this) + (:intLen this) + i)) 0)
+                        (loop-when-recur [#_"int" i 0] (< i (- newLen (:intLen this))) [(inc i)]
+                            (§ ass (aget (:value this) (+ (:offset this) (:intLen this) i)) 0)
                         )
                     )
                     :else ;; must use space on left
                     (do
-                        (loop-when-recur [#_"int" i 0] (ß i < (:intLen this)) [(inc i)]
-                            (§ ass (aget (:value this) i) (aget (:value this) (ß (:offset this) + i)))
+                        (loop-when-recur [#_"int" i 0] (< i (:intLen this)) [(inc i)]
+                            (§ ass (aget (:value this) i) (aget (:value this) (+ (:offset this) i)))
                         )
                         (loop-when-recur [#_"int" i (:intLen this)] (< i newLen) [(inc i)]
                             (§ ass (aget (:value this) i) 0)
@@ -863,10 +867,10 @@
                     )
                 )
                 (§ ass (:intLen this) newLen)
-                (when (ß nBits == 0)
+                (when (== nBits 0)
                     (§ return nil)
                 )
-                (if (ß nBits <= (32 - bitsInHighWord))
+                (if (<= nBits (- 32 bitsInHighWord))
                     (MutableBigInteger''primitiveLeftShift this, nBits)
                     (MutableBigInteger''primitiveRightShift this, (- 32 nBits))
                 )
@@ -885,15 +889,15 @@
         (let [
               #_"long" carry 0
         ]
-            (loop-when-recur [#_"int" j (ß (alength a) - 1)] (<= 0 j) [(dec j)]
+            (loop-when-recur [#_"int" j (- (alength a) 1)] (<= 0 j) [(dec j)]
                 (let [
                       #_"long" sum (+ (& (aget a j) BigInteger'LONG_MASK) (& (aget result (+ j offset)) BigInteger'LONG_MASK) carry)
                 ]
-                    (§ ass (aget result (+ j offset)) (ß (int)sum))
+                    (§ ass (aget result (+ j offset)) (int sum))
                     (§ ass carry (>>> sum 32))
                 )
             )
-            (ß (int)carry)
+            (int carry)
         )
     )
 
@@ -914,12 +918,12 @@
                       #_"long" product (+ (* (& (aget a j) BigInteger'LONG_MASK) xLong) carry)
                       #_"long" difference (- (aget q offset) product)
                 ]
-                    (§ ass (aget q offset) (ß (int)difference))
+                    (§ ass (aget q offset) (int difference))
                     (§ ass offset (dec offset))
-                    (§ ass carry (ß (ß product >>> 32) + (if (ß (ß difference & BigInteger'LONG_MASK) > (ß (ß (§ bit-not)(ß (int)product)) & BigInteger'LONG_MASK)) 1 0)))
+                    (§ ass carry (+ (>>> product 32) (if (< (& (bit-not (int product)) BigInteger'LONG_MASK) (& difference BigInteger'LONG_MASK)) 1 0)))
                 )
             )
-            (ß (int)carry)
+            (int carry)
         )
     )
 
@@ -940,10 +944,10 @@
                       #_"long" difference (- (aget q offset) product)
                 ]
                     (§ ass offset (dec offset))
-                    (§ ass carry (+ (>>> product 32) (if (< (& (bit-not (ß (int)product)) BigInteger'LONG_MASK) (& difference BigInteger'LONG_MASK)) 1 0)))
+                    (§ ass carry (+ (>>> product 32) (if (< (& (bit-not (int product)) BigInteger'LONG_MASK) (& difference BigInteger'LONG_MASK)) 1 0)))
                 )
             )
-            (ß (int)carry)
+            (int carry)
         )
     )
 
@@ -957,7 +961,7 @@
               #_"int[]" val (:value this)
               #_"int" n2 (- 32 n)
         ]
-            (loop-when-recur [#_"int" i (ß (:offset this) + (:intLen this) - 1) #_"int" c (aget val i)] (ß i > (:offset this)) [(dec i) c]
+            (loop-when-recur [#_"int" i (dec (+ (:offset this) (:intLen this))) #_"int" c (aget val i)] (> i (:offset this)) [(dec i) c]
                 (let [
                       #_"int" b c
                 ]
@@ -980,12 +984,12 @@
               #_"int[]" val (:value this)
               #_"int" n2 (- 32 n)
         ]
-            (loop-when-recur [#_"int" i (:offset this) #_"int" c (aget val i) #_"int" m (ß (ß i + (:intLen this)) - 1)] (< i m) [(inc i) c m]
+            (loop-when-recur [#_"int" i (:offset this) #_"int" c (aget val i) #_"int" m (dec (+ i (:intLen this)))] (< i m) [(inc i) c m]
                 (let [
                       #_"int" b c
                 ]
                     (§ ass c (aget val (inc i)))
-                    (§ ass (aget val i) (ß (b << n) | (c >>> n2)))
+                    (§ ass (aget val i) (| (<< b n) (>>> c n2)))
                 )
             )
             (§ ass (aget val (dec (+ (:offset this) (:intLen this)))) (<< (aget val (dec (+ (:offset this) (:intLen this)))) n))
@@ -1003,21 +1007,21 @@
         (let [
               #_"int" x (:intLen this)
               #_"int" y (:intLen addend)
-              #_"int" resultLen (if (ß (:intLen this) > (:intLen addend)) (:intLen this) (:intLen addend))
-              #_"int[]" result (if (ß (alength (:value this)) < resultLen) (int-array resultLen) (:value this))
-              #_"int" rstart (ß (alength result) - 1)
+              #_"int" resultLen (if (> (:intLen this) (:intLen addend)) (:intLen this) (:intLen addend))
+              #_"int[]" result (if (< (alength (:value this)) resultLen) (int-array resultLen) (:value this))
+              #_"int" rstart (- (alength result) 1)
               #_"long" sum (ß )
               #_"long" carry 0
 
         ]
             ;; add common parts of both numbers
-            (while (and (ß x > 0) (ß y > 0))
+            (while (and (> x 0) (> y 0))
                 (§ ass x (dec x))
                 (§ ass y (dec y))
-                (§ ass sum (ß (ß (aget (:value this) (ß x + (:offset this))) & BigInteger'LONG_MASK) + (ß (aget (:value addend) (ß y + (:offset addend))) & BigInteger'LONG_MASK) + carry))
-                (§ ass (aget result rstart) (ß (int)sum))
+                (§ ass sum (+ (& (aget (:value this) (+ x (:offset this))) BigInteger'LONG_MASK) (& (aget (:value addend) (+ y (:offset addend))) BigInteger'LONG_MASK) carry))
+                (§ ass (aget result rstart) (int sum))
                 (§ ass rstart (dec rstart))
-                (§ ass carry (ß sum >>> 32))
+                (§ ass carry (>>> sum 32))
             )
 
             ;; add remainder of the longer number
@@ -1025,34 +1029,34 @@
                 (let [
                 ]
                     (§ ass x (dec x))
-                    (when (and (ß carry == 0) (ß result == (:value this)) (ß rstart == (x + (:offset this))))
+                    (when (and (== carry 0) (== result (:value this)) (== rstart (+ x (:offset this))))
                         (§ return nil)
                     )
-                    (§ ass sum (ß (ß (aget (:value this) (ß x + (:offset this))) & BigInteger'LONG_MASK) + carry))
-                    (§ ass (aget result rstart) (ß (int)sum))
+                    (§ ass sum (+ (& (aget (:value this) (+ x (:offset this))) BigInteger'LONG_MASK) carry))
+                    (§ ass (aget result rstart) (int sum))
                     (§ ass rstart (dec rstart))
-                    (§ ass carry (ß sum >>> 32))
+                    (§ ass carry (>>> sum 32))
                 )
             )
             (while (< 0 y)
                 (§ ass y (dec y))
-                (§ ass sum (ß (ß (aget (:value addend) (ß y + (:offset addend))) & BigInteger'LONG_MASK) + carry))
-                (§ ass (aget result rstart) (ß (int)sum))
+                (§ ass sum (+ (& (aget (:value addend) (+ y (:offset addend))) BigInteger'LONG_MASK) carry))
+                (§ ass (aget result rstart) (int sum))
                 (§ ass rstart (dec rstart))
-                (§ ass carry (ß sum >>> 32))
+                (§ ass carry (>>> sum 32))
             )
 
             (when (< 0 carry) ;; result must grow in length
                 (let [
                 ]
                     (§ ass resultLen (inc resultLen))
-                    (cond (ß (alength result) < resultLen)
+                    (cond (< (alength result) resultLen)
                         (let [
                               #_"int[]" temp (int-array resultLen)
                         ]
                             ;; result one word longer from carry-out,
                             ;; copy low-order bits into new result
-                            (ß System/arraycopy(result, 0, temp, 1, (alength result)))
+                            (System/arraycopy result, 0, temp, 1, (alength result))
                             (§ ass (aget temp 0) 1)
                             (§ ass result temp)
                         )
@@ -1067,7 +1071,7 @@
 
             (§ ass (:value this) result)
             (§ ass (:intLen this) resultLen)
-            (§ ass (:offset this) (ß (alength result) - resultLen))
+            (§ ass (:offset this) (- (alength result) resultLen))
         )
         nil
     )
@@ -1083,7 +1087,7 @@
               #_"int[]" result (:value this)
               #_"int" sign (MutableBigInteger''compare a, b)
         ]
-            (when (ß sign == 0)
+            (when (== sign 0)
                 (MutableBigInteger''reset this)
                 (§ return 0)
             )
@@ -1099,7 +1103,7 @@
             (let [
                   #_"int" resultLen (:intLen a)
             ]
-                (when (ß (alength result) < resultLen)
+                (when (< (alength result) resultLen)
                     (§ ass result (int-array resultLen))
                 )
 
@@ -1107,27 +1111,27 @@
                       #_"long" diff 0
                       #_"int" x (:intLen a)
                       #_"int" y (:intLen b)
-                      #_"int" rstart (ß (alength result) - 1)
+                      #_"int" rstart (- (alength result) 1)
                 ]
                     ;; subtract common parts of both numbers
                     (while (< 0 y)
                         (§ ass x (dec x))
                         (§ ass y (dec y))
-                        (§ ass diff (ß (ß (aget (:value a) (ß x + (:offset a))) & BigInteger'LONG_MASK) - (ß (aget (:value b) (ß y + (:offset b))) & BigInteger'LONG_MASK) - (ß (int)(ß -(ß diff >> 32)))))
-                        (§ ass (aget result rstart) (ß (int)diff))
+                        (§ ass diff (- (& (aget (:value a) (+ x (:offset a))) BigInteger'LONG_MASK) (& (aget (:value b) (+ y (:offset b))) BigInteger'LONG_MASK) (int (- (>> diff 32)))))
+                        (§ ass (aget result rstart) (int diff))
                         (§ ass rstart (dec rstart))
                     )
                     ;; subtract remainder of longer number
                     (while (< 0 x)
                         (§ ass x (dec x))
-                        (§ ass diff (ß (ß (aget (:value a) (ß x + (:offset a))) & BigInteger'LONG_MASK) - (ß (int)(ß -(ß diff >> 32)))))
-                        (§ ass (aget result rstart) (ß (int)diff))
+                        (§ ass diff (- (& (aget (:value a) (+ x (:offset a))) BigInteger'LONG_MASK) (int (- (>> diff 32)))))
+                        (§ ass (aget result rstart) (int diff))
                         (§ ass rstart (dec rstart))
                     )
 
                     (§ ass (:value this) result)
                     (§ ass (:intLen this) resultLen)
-                    (§ ass (:offset this) (ß (alength (:value this)) - resultLen))
+                    (§ ass (:offset this) (- (alength (:value this)) resultLen))
                     (MutableBigInteger''normalize this)
                     sign
                 )
@@ -1145,7 +1149,7 @@
               #_"MutableBigInteger" a this
               #_"int" sign (MutableBigInteger''compare a, b)
         ]
-            (when (ß sign == 0)
+            (when (== sign 0)
                 (§ return 0)
             )
             (when (< sign 0)
@@ -1166,14 +1170,14 @@
                 (while (< 0 y)
                     (§ ass x (dec x))
                     (§ ass y (dec y))
-                    (§ ass diff (ß (ß (aget (:value a) (ß (:offset a) + x)) & BigInteger'LONG_MASK) - (ß (aget (:value b) (ß (:offset b) + y)) & BigInteger'LONG_MASK) - (ß (int)(ß -(ß diff >> 32)))))
-                    (§ ass (aget (:value a) (ß (:offset a) + x)) (ß (int)diff))
+                    (§ ass diff (- (& (aget (:value a) (+ (:offset a) x)) BigInteger'LONG_MASK) (& (aget (:value b) (+ (:offset b) y)) BigInteger'LONG_MASK) (int (- (>> diff 32)))))
+                    (§ ass (aget (:value a) (+ (:offset a) x)) (int diff))
                 )
                 ;; subtract remainder of longer number
                 (while (< 0 x)
                     (§ ass x (dec x))
-                    (§ ass diff (ß (ß (aget (:value a) (ß (:offset a) + x)) & BigInteger'LONG_MASK) - (ß (int)(ß -(ß diff >> 32)))))
-                    (§ ass (aget (:value a) (ß (:offset a) + x)) (ß (int)diff))
+                    (§ ass diff (- (& (aget (:value a) (+ (:offset a) x)) BigInteger'LONG_MASK) (int (- (>> diff 32)))))
+                    (§ ass (aget (:value a) (+ (:offset a) x)) (int diff))
                 )
 
                 (MutableBigInteger''normalize a)
@@ -1194,7 +1198,7 @@
               #_"int" newLen (+ xLen yLen)
         ]
             ;; put z into an appropriate state to receive product
-            (when (ß (alength (:value z)) < newLen)
+            (when (< (alength (:value z)) newLen)
                 (§ ass (:value z) (int-array newLen))
             )
             (§ ass (:offset z) 0)
@@ -1208,11 +1212,11 @@
                     (let [
                           #_"long" product (ß (ß (ß (aget (:value y) (ß j + (:offset y))) & BigInteger'LONG_MASK) * (ß (aget (:value this) (ß xLen - 1 + (:offset this))) & BigInteger'LONG_MASK)) + carry)
                     ]
-                        (§ ass (aget (:value z) k) (ß (int)product))
-                        (§ ass carry (ß product >>> 32))
+                        (§ ass (aget (:value z) k) (int product))
+                        (§ ass carry (>>> product 32))
                     )
                 )
-                (§ ass (aget (:value z) (dec xLen)) (ß (int)carry))
+                (§ ass (aget (:value z) (dec xLen)) (int carry))
 
                 ;; perform the multiplication word by word
                 (loop-when-recur [#_"int" i (- xLen 2)] (<= 0 i) [(dec i)]
@@ -1223,11 +1227,11 @@
                             (let [
                                   #_"long" product (ß (ß (ß (aget (:value y) (ß j + (:offset y))) & BigInteger'LONG_MASK) * (ß (aget (:value this) (ß i + (:offset this))) & BigInteger'LONG_MASK)) + (ß (aget (:value z) k) & BigInteger'LONG_MASK) + carry)
                             ]
-                                (§ ass (aget (:value z) k) (ß (int)product))
-                                (§ ass carry (ß product >>> 32))
+                                (§ ass (aget (:value z) k) (int product))
+                                (§ ass carry (>>> product 32))
                             )
                         )
-                        (§ ass (aget (:value z) i) (ß (int)carry))
+                        (§ ass (aget (:value z) i) (int carry))
                     )
                 )
 
@@ -1244,32 +1248,32 @@
      ;;
     #_method
     (defn #_"void" MutableBigInteger''mul [#_"MutableBigInteger" this, #_"int" y, #_"MutableBigInteger" z]
-        (when (ß y == 1)
+        (when (== y 1)
             (MutableBigInteger''copyValue-m z, this)
             (§ return nil)
         )
 
-        (when (ß y == 0)
+        (when (== y 0)
             (MutableBigInteger''clear z)
             (§ return nil)
         )
 
         ;; perform the multiplication word by word
         (let [
-              #_"long" ylong (ß y & BigInteger'LONG_MASK)
-              #_"int[]" zval (if (ß (alength (:value z)) < (ß (:intLen this) + 1)) (int-array (inc (:intLen this))) (:value z))
+              #_"long" ylong (& y BigInteger'LONG_MASK)
+              #_"int[]" zval (if (ß (alength (:value z)) < (+ (:intLen this) 1)) (int-array (inc (:intLen this))) (:value z))
               #_"long" carry 0
         ]
-            (loop-when-recur [#_"int" i (ß (:intLen this) - 1)] (<= 0 i) [(dec i)]
+            (loop-when-recur [#_"int" i (- (:intLen this) 1)] (<= 0 i) [(dec i)]
                 (let [
                       #_"long" product (ß (ß ylong * (ß (aget (:value this) (ß i + (:offset this))) & BigInteger'LONG_MASK)) + carry)
                 ]
-                    (§ ass (aget zval (inc i)) (ß (int)product))
-                    (§ ass carry (ß product >>> 32))
+                    (§ ass (aget zval (inc i)) (int product))
+                    (§ ass carry (>>> product 32))
                 )
             )
 
-            (cond (ß carry == 0)
+            (cond (== carry 0)
                 (do
                     (§ ass (:offset z) 1)
                     (§ ass (:intLen z) (:intLen this))
@@ -1277,8 +1281,8 @@
                 :else
                 (do
                     (§ ass (:offset z) 0)
-                    (§ ass (:intLen z) (ß (:intLen this) + 1))
-                    (§ ass (aget zval 0) (ß (int)carry))
+                    (§ ass (:intLen z) (+ (:intLen this) 1))
+                    (§ ass (aget zval 0) (int carry))
                 )
             )
             (§ ass (:value z) zval)
@@ -1297,17 +1301,17 @@
     #_method
     (defn #_"int" MutableBigInteger''divideOneWord [#_"MutableBigInteger" this, #_"int" divisor, #_"MutableBigInteger" quotient]
         (let [
-              #_"long" divisorLong (ß divisor & BigInteger'LONG_MASK)
+              #_"long" divisorLong (& divisor BigInteger'LONG_MASK)
         ]
             ;; special case of one word dividend
-            (when (ß (:intLen this) == 1)
+            (when (== (:intLen this) 1)
                 (let [
                       #_"long" dividendValue (ß (aget (:value this) (:offset this)) & BigInteger'LONG_MASK)
-                      #_"int" q (ß (int) (dividendValue / divisorLong))
-                      #_"int" r (ß (int) (dividendValue - (ß q * divisorLong)))
+                      #_"int" q (int (/ dividendValue divisorLong))
+                      #_"int" r (int (- dividendValue (* q divisorLong)))
                 ]
                     (§ ass (aget (:value quotient) 0) q)
-                    (§ ass (:intLen quotient) (if (ß q == 0) 0 1))
+                    (§ ass (:intLen quotient) (if (== q 0) 0 1))
                     (§ ass (:offset quotient) 0)
                     (§ return r)
                 )
@@ -1323,7 +1327,7 @@
             (let [
                   #_"int" shift (Integer/numberOfLeadingZeros divisor)
                   #_"int" rem (aget (:value this) (:offset this))
-                  #_"long" remLong (ß rem & BigInteger'LONG_MASK)
+                  #_"long" remLong (& rem BigInteger'LONG_MASK)
             ]
                 (cond (< remLong divisorLong)
                     (do
@@ -1331,9 +1335,9 @@
                     )
                     :else
                     (do
-                        (§ ass (aget (:value quotient) 0) (ß (int)(ß remLong / divisorLong)))
-                        (§ ass rem (ß (int)(ß remLong - (ß (aget (:value quotient) 0) * divisorLong))))
-                        (§ ass remLong (ß rem & BigInteger'LONG_MASK))
+                        (§ ass (aget (:value quotient) 0) (int (/ remLong divisorLong)))
+                        (§ ass rem (int (ß remLong - (ß (aget (:value quotient) 0) * divisorLong))))
+                        (§ ass remLong (& rem BigInteger'LONG_MASK))
                     )
                 )
                 (let [
@@ -1341,24 +1345,24 @@
                 ]
                     (loop-when-recur [xlen (dec xlen)] (< 0 xlen) [(dec xlen)]
                         (let [
-                              #_"long" dividendEstimate (ß (ß remLong << 32) | (ß (aget (:value this) (ß (ß (:offset this) + (:intLen this)) - xlen)) & BigInteger'LONG_MASK))
+                              #_"long" dividendEstimate (ß (<< remLong 32) | (ß (aget (:value this) (ß (ß (:offset this) + (:intLen this)) - xlen)) & BigInteger'LONG_MASK))
                         ]
                             (ß #_"int" q)
                             (cond (<= 0 dividendEstimate)
                                 (do
-                                    (§ ass q (ß (int) (dividendEstimate / divisorLong)))
-                                    (§ ass rem (ß (int) (dividendEstimate - (ß q * divisorLong))))
+                                    (§ ass q (int (/ dividendEstimate divisorLong)))
+                                    (§ ass rem (int (- dividendEstimate (* q divisorLong))))
                                 )
                                 :else
                                 (let [
                                       #_"long" tmp (MutableBigInteger'divWord dividendEstimate, divisor)
                                 ]
-                                    (§ ass q (ß (int) (tmp & BigInteger'LONG_MASK)))
-                                    (§ ass rem (ß (int) (tmp >>> 32)))
+                                    (§ ass q (int (& tmp BigInteger'LONG_MASK)))
+                                    (§ ass rem (int (>>> tmp 32)))
                                 )
                             )
-                            (§ ass (aget (:value quotient) (ß (:intLen this) - xlen)) q)
-                            (§ ass remLong (ß rem & BigInteger'LONG_MASK))
+                            (§ ass (aget (:value quotient) (- (:intLen this) xlen)) q)
+                            (§ ass remLong (& rem BigInteger'LONG_MASK))
                         )
                     )
 
@@ -1366,7 +1370,7 @@
                     ;; unnormalize
                     (cond (< 0 shift)
                         (do
-                            (§ return (ß rem % divisor))
+                            (§ return (% rem divisor))
                         )
                         :else
                         (do
@@ -1419,7 +1423,7 @@
         )
 
         ;; dividend is zero
-        (when (ß (:intLen this) == 0)
+        (when (== (:intLen this) 0)
             (§ ass (:offset quotient) 0)
             (§ ass (:intLen quotient) 0)
             (§ return (when needRemainder (MutableBigInteger'new)))
@@ -1435,7 +1439,7 @@
                 (§ return (when needRemainder (MutableBigInteger'new this)))
             )
             ;; dividend equal to divisor
-            (when (ß cmp == 0)
+            (when (== cmp 0)
                 (§ ass (:offset quotient) 0)
                 (§ ass (aget (:value quotient) 0) 1)
                 (§ ass (:intLen quotient) 1)
@@ -1450,7 +1454,7 @@
                 ]
                     (cond needRemainder
                         (do
-                            (when (ß r == 0)
+                            (when (== r 0)
                                 (§ return (MutableBigInteger'new))
                             )
                             (§ return (MutableBigInteger'new r))
@@ -1464,9 +1468,9 @@
             )
 
             ;; cancel common powers of two if we're above the KNUTH_POW2_* thresholds
-            (when (ß (:intLen this) >= MutableBigInteger'KNUTH_POW2_THRESH_LEN)
+            (when (>= (:intLen this) MutableBigInteger'KNUTH_POW2_THRESH_LEN)
                 (let [
-                      #_"int" trailingZeroBits (ß Math/min(MutableBigInteger''getLowestSetBit(this), MutableBigInteger''getLowestSetBit(b)))
+                      #_"int" trailingZeroBits (Math/min (MutableBigInteger''getLowestSetBit this), (MutableBigInteger''getLowestSetBit b))
                 ]
                     (when (ß trailingZeroBits >= MutableBigInteger'KNUTH_POW2_THRESH_ZEROS * 32)
                         (let [
@@ -1492,7 +1496,7 @@
 
     #_method
     (defn #_"long" MutableBigInteger''bitLength [#_"MutableBigInteger" this]
-        (when (ß (:intLen this) == 0)
+        (when (== (:intLen this) 0)
             (§ return 0)
         )
         (- (* (:intLen this) 32) (Integer/numberOfLeadingZeros (aget (:value this) (:offset this))))
@@ -1512,7 +1516,7 @@
                     (§ ass (aget dst (+ dstFrom i)) (ß (b << shift) | (c >>> n2)))
                 )
             )
-            (§ ass (aget dst (ß dstFrom + srcLen - 1)) (ß c << shift))
+            (§ ass (aget dst (ß dstFrom + srcLen - 1)) (<< c shift))
         )
         nil
     )
@@ -1556,13 +1560,13 @@
                               #_"int[]" remarr (int-array (+ (:intLen this) 2))
                         ]
                             (§ ass rem (MutableBigInteger'new remarr))
-                            (§ ass (:intLen rem) (ß (:intLen this) + 1))
+                            (§ ass (:intLen rem) (+ (:intLen this) 1))
                             (§ ass (:offset rem) 1)
                             (let [
                                   #_"int" c 0
                                   #_"int" n2 (- 32 shift)
                             ]
-                                (loop-when-recur [#_"int" rFrom (:offset this) #_"int" i 1] (ß i < (ß (:intLen this) + 1)) [(inc rFrom) (inc i)]
+                                (loop-when-recur [#_"int" rFrom (:offset this) #_"int" i 1] (ß i < (+ (:intLen this) 1)) [(inc rFrom) (inc i)]
                                     (let [
                                           #_"int" b c
                                     ]
@@ -1570,7 +1574,7 @@
                                         (§ ass (aget remarr i) (ß (b << shift) | (c >>> n2)))
                                     )
                                 )
-                                (§ ass (aget remarr (ß (:intLen this) + 1)) (ß c << shift))
+                                (§ ass (aget remarr (+ (:intLen this) 1)) (<< c shift))
                             )
                         )
                     )
@@ -1599,15 +1603,15 @@
                       #_"int[]" q (:value quotient)
                 ]
                     ;; must insert leading 0 in rem if its length did not change
-                    (when (ß (:intLen rem) == nlen)
+                    (when (== (:intLen rem) nlen)
                         (§ ass (:offset rem) 0)
                         (§ ass (aget (:value rem) 0) 0)
-                        (§ ass (:intLen rem) (ß (:intLen rem) + 1))
+                        (§ ass (:intLen rem) (+ (:intLen rem) 1))
                     )
 
                     (let [
                           #_"int" dh (§ soon aget divisor 0)
-                          #_"long" dhLong (ß dh & BigInteger'LONG_MASK)
+                          #_"long" dhLong (& dh BigInteger'LONG_MASK)
                           #_"int" dl (§ soon aget divisor 1)
                     ]
                         ;; D2 Initialize j
@@ -1622,49 +1626,49 @@
                                   #_"int" nh2 (+ nh 0x80000000)
                                   #_"int" nm (aget (:value rem) (ß j + 1 + (:offset rem)))
                             ]
-                                (cond (ß nh == dh)
+                                (cond (== nh dh)
                                     (do
                                         (§ ass qhat (ß (§ bit-not)0))
                                         (§ ass qrem (+ nh nm))
-                                        (§ ass skipCorrection (ß (ß qrem + 0x80000000) < nh2))
+                                        (§ ass skipCorrection (< (+ qrem 0x80000000) nh2))
                                     )
                                     :else
                                     (let [
-                                          #_"long" nChunk (ß (ß (ß (long)nh) << 32) | (ß nm & BigInteger'LONG_MASK))
+                                          #_"long" nChunk (ß (ß (long nh) << 32) | (& nm BigInteger'LONG_MASK))
                                     ]
                                         (cond (<= 0 nChunk)
                                             (do
-                                                (§ ass qhat (ß (int) (nChunk / dhLong)))
-                                                (§ ass qrem (ß (int) (nChunk - (qhat * dhLong))))
+                                                (§ ass qhat (int (/ nChunk dhLong)))
+                                                (§ ass qrem (int (- nChunk (* qhat dhLong))))
                                             )
                                             :else
                                             (let [
                                                   #_"long" tmp (MutableBigInteger'divWord nChunk, dh)
                                             ]
-                                                (§ ass qhat (ß (int) (tmp & BigInteger'LONG_MASK)))
-                                                (§ ass qrem (ß (int) (tmp >>> 32)))
+                                                (§ ass qhat (int (& tmp BigInteger'LONG_MASK)))
+                                                (§ ass qrem (int (>>> tmp 32)))
                                             )
                                         )
                                     )
                                 )
 
-                                (when (ß qhat == 0)
+                                (when (== qhat 0)
                                     (§ continue)
                                 )
 
                                 (when (ß !skipCorrection) ;; correct qhat
                                     (let [
                                           #_"long" nl (ß (aget (:value rem) (ß j + 2 + (:offset rem))) & BigInteger'LONG_MASK)
-                                          #_"long" rs (ß (ß (ß qrem & BigInteger'LONG_MASK) << 32) | nl)
-                                          #_"long" estProduct (* (ß dl & BigInteger'LONG_MASK) (ß qhat & BigInteger'LONG_MASK))
+                                          #_"long" rs (ß (<< (& qrem BigInteger'LONG_MASK) 32) | nl)
+                                          #_"long" estProduct (* (& dl BigInteger'LONG_MASK) (& qhat BigInteger'LONG_MASK))
 
                                     ]
                                         (when (MutableBigInteger''unsignedLongCompare this, estProduct, rs)
                                             (§ ass qhat (dec qhat))
-                                            (§ ass qrem (ß (int)(ß (ß qrem & BigInteger'LONG_MASK) + dhLong)))
-                                            (when (ß (ß qrem & BigInteger'LONG_MASK) >= dhLong)
-                                                (§ ass estProduct (ß estProduct - (ß dl & BigInteger'LONG_MASK)))
-                                                (§ ass rs (ß (ß (ß qrem & BigInteger'LONG_MASK) << 32) | nl))
+                                            (§ ass qrem (int (+ (& qrem BigInteger'LONG_MASK) dhLong)))
+                                            (when (>= (& qrem BigInteger'LONG_MASK) dhLong)
+                                                (§ ass estProduct (ß estProduct - (& dl BigInteger'LONG_MASK)))
+                                                (§ ass rs (ß (<< (& qrem BigInteger'LONG_MASK) 32) | nl))
                                                 (when (MutableBigInteger''unsignedLongCompare this, estProduct, rs)
                                                     (§ ass qhat (dec qhat))
                                                 )
@@ -1676,12 +1680,12 @@
                                 ;; D4 Multiply and subtract
                                 (§ ass (aget (:value rem) (+ j (:offset rem))) 0)
                                 (let [
-                                      #_"int" borrow (ß MutableBigInteger''mulsub(this, (:value rem), divisor, qhat, dlen, (ß j + (:offset rem))))
+                                      #_"int" borrow (MutableBigInteger''mulsub this, (:value rem), divisor, qhat, dlen, (+ j (:offset rem)))
                                 ]
                                     ;; D5 Test remainder
-                                    (when (ß (ß borrow + 0x80000000) > nh2)
+                                    (when (> (+ borrow 0x80000000) nh2)
                                         ;; D6 Add back
-                                        (ß MutableBigInteger''divadd(this, divisor, (:value rem), (ß j + 1 + (:offset rem))))
+                                        (MutableBigInteger''divadd this, divisor, (:value rem), (+ j 1 (:offset rem)))
                                         (§ ass qhat (dec qhat))
                                     )
 
@@ -1700,7 +1704,7 @@
                               #_"int" nh2 (+ nh 0x80000000)
                               #_"int" nm (aget (:value rem) (+ limit (:offset rem)))
                         ]
-                            (cond (ß nh == dh)
+                            (cond (== nh dh)
                                 (do
                                     (§ ass qhat (bit-not 0))
                                     (§ ass qrem (+ nh nm))
@@ -1708,36 +1712,36 @@
                                 )
                                 :else
                                 (let [
-                                      #_"long" nChunk (ß (ß (ß (long)nh) << 32) | (ß nm & BigInteger'LONG_MASK))
+                                      #_"long" nChunk (ß (ß (long nh) << 32) | (& nm BigInteger'LONG_MASK))
                                 ]
                                     (cond (<= 0 nChunk)
                                         (do
-                                            (§ ass qhat (ß (int) (nChunk / dhLong)))
-                                            (§ ass qrem (ß (int) (nChunk - (qhat * dhLong))))
+                                            (§ ass qhat (int (/ nChunk dhLong)))
+                                            (§ ass qrem (int (- nChunk (* qhat dhLong))))
                                         )
                                         :else
                                         (let [
                                               #_"long" tmp (MutableBigInteger'divWord nChunk, dh)
                                         ]
-                                            (§ ass qhat (ß (int) (tmp & BigInteger'LONG_MASK)))
-                                            (§ ass qrem (ß (int) (tmp >>> 32)))
+                                            (§ ass qhat (int (& tmp BigInteger'LONG_MASK)))
+                                            (§ ass qrem (int (>>> tmp 32)))
                                         )
                                     )
                                 )
                             )
-                            (when (ß qhat != 0)
+                            (when (!= qhat 0)
                                 (when (ß !skipCorrection) ;; correct qhat
                                     (let [
                                           #_"long" nl (ß (aget (:value rem) (ß limit + 1 + (:offset rem))) & BigInteger'LONG_MASK)
-                                          #_"long" rs (ß (ß (ß qrem & BigInteger'LONG_MASK) << 32) | nl)
-                                          #_"long" estProduct (ß (ß dl & BigInteger'LONG_MASK) * (ß qhat & BigInteger'LONG_MASK))
+                                          #_"long" rs (ß (<< (& qrem BigInteger'LONG_MASK) 32) | nl)
+                                          #_"long" estProduct (ß (& dl BigInteger'LONG_MASK) * (& qhat BigInteger'LONG_MASK))
                                     ]
                                         (when (MutableBigInteger''unsignedLongCompare this, estProduct, rs)
                                             (§ ass qhat (dec qhat))
-                                            (§ ass qrem (ß (int)(ß (ß qrem & BigInteger'LONG_MASK) + dhLong)))
-                                            (when (ß (ß qrem & BigInteger'LONG_MASK) >= dhLong)
-                                                (§ ass estProduct (ß estProduct - (ß dl & BigInteger'LONG_MASK)))
-                                                (§ ass rs (ß (ß (ß qrem & BigInteger'LONG_MASK) << 32) | nl))
+                                            (§ ass qrem (int (+ (& qrem BigInteger'LONG_MASK) dhLong)))
+                                            (when (>= (& qrem BigInteger'LONG_MASK) dhLong)
+                                                (§ ass estProduct (ß estProduct - (& dl BigInteger'LONG_MASK)))
+                                                (§ ass rs (ß (<< (& qrem BigInteger'LONG_MASK) 32) | nl))
                                                 (when (MutableBigInteger''unsignedLongCompare this, estProduct, rs)
                                                     (§ ass qhat (dec qhat))
                                                 )
@@ -1747,29 +1751,32 @@
                                 )
 
                                 ;; D4 Multiply and subtract
-                                (ß #_"int" borrow)
-                                (§ ass (aget (:value rem) (+ (dec limit) (:offset rem))) 0)
-                                (cond needRemainder
-                                    (do
-                                        (§ ass borrow (ß MutableBigInteger''mulsub(this, (:value rem), divisor, qhat, dlen, (ß (ß limit - 1) + (:offset rem)))))
+                                (let [
+                                      #_"int" borrow (ß )
+                                ]
+                                    (§ ass (aget (:value rem) (+ (dec limit) (:offset rem))) 0)
+                                    (cond needRemainder
+                                        (do
+                                            (§ ass borrow (MutableBigInteger''mulsub this, (:value rem), divisor, qhat, dlen, (+ (dec limit) (:offset rem))))
+                                        )
+                                        :else
+                                        (do
+                                            (§ ass borrow (MutableBigInteger''mulsubBorrow this, (:value rem), divisor, qhat, dlen, (+ (dec limit) (:offset rem))))
+                                        )
                                     )
-                                    :else
-                                    (do
-                                        (§ ass borrow (ß MutableBigInteger''mulsubBorrow(this, (:value rem), divisor, qhat, dlen, (ß (ß limit - 1) + (:offset rem)))))
-                                    )
-                                )
 
-                                ;; D5 Test remainder
-                                (when (ß (ß borrow + 0x80000000) > nh2)
-                                    ;; D6 Add back
-                                    (when needRemainder
-                                        (ß MutableBigInteger''divadd(this, divisor, (:value rem), (ß (ß limit - 1) + 1 + (:offset rem))))
+                                    ;; D5 Test remainder
+                                    (when (> (+ borrow 0x80000000) nh2)
+                                        ;; D6 Add back
+                                        (when needRemainder
+                                            (MutableBigInteger''divadd this, divisor, (:value rem), (+ (dec limit) 1 (:offset rem)))
+                                        )
+                                        (§ ass qhat (dec qhat))
                                     )
-                                    (§ ass qhat (dec qhat))
-                                )
 
-                                ;; store the quotient digit
-                                (§ ass (aget q (dec limit)) qhat)
+                                    ;; store the quotient digit
+                                    (§ ass (aget q (dec limit)) qhat)
+                                )
                             )
 
                             (when needRemainder
@@ -1799,12 +1806,12 @@
               #_"long" carry 0
               #_"long" sum (+ (& dl BigInteger'LONG_MASK) (& (aget result (+ 1 offset)) BigInteger'LONG_MASK))
         ]
-            (§ ass (aget result (+ 1 offset)) (ß (int)sum))
+            (§ ass (aget result (+ 1 offset)) (int sum))
 
             (§ ass sum (+ (& dh BigInteger'LONG_MASK) (& (aget result offset) BigInteger'LONG_MASK) carry))
-            (§ ass (aget result offset) (ß (int)sum))
+            (§ ass (aget result offset) (int sum))
             (§ ass carry (>>> sum 32))
-            (ß (int)carry)
+            (int carry)
         )
     )
 
@@ -1821,17 +1828,17 @@
               #_"long" product (* (& dl BigInteger'LONG_MASK) xLong)
               #_"long" difference (- (aget q offset) product)
         ]
-            (§ ass (aget q offset) (ß (int)difference))
+            (§ ass (aget q offset) (int difference))
             (§ ass offset (dec offset))
             (let [
-                  #_"long" carry (+ (>>> product 32) (if (< (& (bit-not (ß (int)product)) BigInteger'LONG_MASK) (& difference BigInteger'LONG_MASK)) 1 0))
+                  #_"long" carry (+ (>>> product 32) (if (< (& (bit-not (int product)) BigInteger'LONG_MASK) (& difference BigInteger'LONG_MASK)) 1 0))
             ]
                 (§ ass product (+ (* (& dh BigInteger'LONG_MASK) xLong) carry))
                 (§ ass difference (- (aget q offset) product))
-                (§ ass (aget q offset) (ß (int)difference))
+                (§ ass (aget q offset) (int difference))
                 (§ ass offset (dec offset))
-                (§ ass carry (+ (>>> product 32) (if (< (& (bit-not (ß (int)product)) BigInteger'LONG_MASK) (& difference BigInteger'LONG_MASK)) 1 0)))
-                (ß (int)carry)
+                (§ ass carry (+ (>>> product 32) (if (< (& (bit-not (int product)) BigInteger'LONG_MASK) (& difference BigInteger'LONG_MASK)) 1 0)))
+                (int carry)
             )
         )
     )
@@ -1854,12 +1861,12 @@
      ;;
     (defn #_"long" MutableBigInteger'divWord [#_"long" n, #_"int" d]
         (let [
-              #_"long" dLong (ß d & BigInteger'LONG_MASK)
+              #_"long" dLong (& d BigInteger'LONG_MASK)
               #_"long" r (ß )
               #_"long" q (ß )
         ]
-            (when (ß dLong == 1)
-                (§ ass q (ß (int)n))
+            (when (== dLong 1)
+                (§ ass q (int n))
                 (§ ass r 0)
                 (§ return (ß (r << 32) | (q & BigInteger'LONG_MASK)))
             )
@@ -1878,7 +1885,7 @@
                 (§ ass q (inc q))
             )
             ;; n - q*dlong == r && 0 <= r < dLong, hence we're done.
-            (ß (ß r << 32) | (ß q & BigInteger'LONG_MASK))
+            (ß (<< r 32) | (& q BigInteger'LONG_MASK))
         )
     )
 
@@ -1893,8 +1900,8 @@
               #_"MutableBigInteger" a this
               #_"MutableBigInteger" q (MutableBigInteger'new)
         ]
-            (while (ß b.intLen != 0)
-                (when (ß Math/abs(a.intLen - b.intLen) < 2)
+            (while (!= (:intLen b) 0)
+                (when (< (Math/abs (- (:intLen a) (:intLen b))) 2)
                     (§ return (MutableBigInteger''binaryGCD a, b))
                 )
 
@@ -1924,7 +1931,7 @@
               #_"int" s2 (MutableBigInteger''getLowestSetBit v)
               #_"int" k (if (< s1 s2) s1 s2)
         ]
-            (when (ß k != 0)
+            (when (!= k 0)
                 (MutableBigInteger''rightShift u, k)
                 (MutableBigInteger''rightShift v, k)
             )
@@ -1969,7 +1976,7 @@
 
                         ;; step B6
                         (§ ass tsign (MutableBigInteger''difference u, v))
-                        (when (ß tsign == 0)
+                        (when (== tsign 0)
                             (§ break)
                         )
                         (§ ass t (if (<= 0 tsign) u v))
@@ -1989,25 +1996,25 @@
      ; Calculate GCD of a and b interpreted as unsigned integers.
      ;;
     (defn #_"int" MutableBigInteger'binaryGcd [#_"int" a, #_"int" b]
-        (when (ß b == 0)
+        (when (== b 0)
             (§ return a)
         )
-        (when (ß a == 0)
+        (when (== a 0)
             (§ return b)
         )
 
         ;; right shift a & b till their last bits equal to 1
         (let [
-              #_"int" aZeros (ß Integer/numberOfTrailingZeros(a))
-              #_"int" bZeros (ß Integer/numberOfTrailingZeros(b))
+              #_"int" aZeros (Integer/numberOfTrailingZeros a)
+              #_"int" bZeros (Integer/numberOfTrailingZeros b)
         ]
-            (§ ass a (ß a >>> aZeros))
-            (§ ass b (ß b >>> bZeros))
+            (§ ass a (>>> a aZeros))
+            (§ ass b (>>> b bZeros))
 
             (let [
                   #_"int" t (if (< aZeros bZeros) aZeros bZeros)
             ]
-                (while (ß a != b)
+                (while (!= a b)
                     (cond (ß (a + 0x80000000) > (b + 0x80000000)) ;; a > b as unsigned
                         (do
                             (§ ass a (- a b))
@@ -2020,7 +2027,7 @@
                         )
                     )
                 )
-                (ß a << t)
+                (<< a t)
             )
         )
     )
@@ -2101,24 +2108,24 @@
               #_"int" t (MutableBigInteger'inverseMod32 (aget (:value this) (ß (ß (:offset this) + (:intLen this)) - 1)))
         ]
             (when (< k 33)
-                (§ ass t (if (ß k == 32) t (ß t & (ß (ß 1 << k) - 1))))
+                (§ ass t (if (== k 32) t (ß t & (- (<< 1 k) 1))))
                 (§ return (MutableBigInteger'new t))
             )
 
             (let [
                   #_"long" pLong (ß (aget (:value this) (ß (ß (:offset this) + (:intLen this)) - 1)) & BigInteger'LONG_MASK)
             ]
-                (when (ß (:intLen this) > 1)
-                    (§ ass pLong (ß pLong | (ß (ß (long)(aget (:value this) (ß (ß (:offset this) + (:intLen this)) - 2))) << 32)))
+                (when (> (:intLen this) 1)
+                    (§ ass pLong (ß pLong | (<< (long (aget (:value this) (- (+ (:offset this) (:intLen this)) 2))) 32)))
                 )
                 (let [
-                      #_"long" tLong (ß t & BigInteger'LONG_MASK)
-                      _ (§ ass tLong (ß tLong * (ß 2 - (ß pLong * tLong)))) ;; 1 more Newton iter step
-                      _ (§ ass tLong (if (ß k == 64) tLong (ß tLong & (ß (ß 1 << k) - 1))))
+                      #_"long" tLong (& t BigInteger'LONG_MASK)
+                      _ (§ ass tLong (ß tLong * (ß 2 - (* pLong tLong)))) ;; 1 more Newton iter step
+                      _ (§ ass tLong (if (== k 64) tLong (ß tLong & (- (<< 1 k) 1))))
                       #_"MutableBigInteger" result (MutableBigInteger'new (int-array 2))
                 ]
-                    (§ ass (aget (:value result) 0) (ß (int)(ß tLong >>> 32)))
-                    (§ ass (aget (:value result) 1) (ß (int)tLong))
+                    (§ ass (aget (:value result) 0) (int (>>> tLong 32)))
+                    (§ ass (aget (:value result) 1) (int tLong))
                     (§ ass (:intLen result) 2)
                     (MutableBigInteger''normalize result)
                     result
@@ -2143,12 +2150,14 @@
         )
     )
 
+    (declare MutableBigInteger'fixup)
+
     ;;;
      ; Calculate the multiplicative inverse of 2^k mod mod, where mod is odd.
      ;;
     (defn #_"MutableBigInteger" MutableBigInteger'modInverseBP2 [#_"MutableBigInteger" mod, #_"int" k]
         ;; copy the mod to protect original
-        (ß MutableBigInteger'fixup(MutableBigInteger'new(1), MutableBigInteger'new(mod), k))
+        (MutableBigInteger'fixup (MutableBigInteger'new 1), (MutableBigInteger'new mod), k)
     )
 
     (declare SignedMutableBigInteger'new)
@@ -2197,7 +2206,7 @@
                 )
 
                 ;; if f < g exchange f, g and c, d
-                (when (ß MutableBigInteger''compare(f, g) < 0)
+                (when (< (MutableBigInteger''compare f, g) 0)
                     (§ ass temp f)
                     (§ ass f g)
                     (§ ass g temp)
@@ -2247,7 +2256,7 @@
               #_"MutableBigInteger" temp (MutableBigInteger'new)
               ;; set r to the multiplicative inverse of p mod 2^32
               #_"int" r (- (MutableBigInteger'inverseMod32 (aget (:value p) (dec (+ (:offset p) (:intLen p))))))
-              #_"int" numWords (ß k >> 5)
+              #_"int" numWords (>> k 5)
         ]
             (loop-when-recur [#_"int" i 0] (< i numWords) [(inc i)]
                 ;; V = R * c (mod 2^j)
@@ -2258,18 +2267,18 @@
                     (MutableBigInteger''mul p, v, temp)
                     (MutableBigInteger''add c, temp)
                     ;; c = c / 2^j
-                    (§ ass (:intLen c) (ß (:intLen c) - 1))
+                    (§ ass (:intLen c) (- (:intLen c) 1))
                 )
             )
             (let [
-                  #_"int" numBits (ß k & 0x1f)
+                  #_"int" numBits (& k 0x1f)
             ]
-                (when (ß numBits != 0)
+                (when (!= numBits 0)
                     ;; V = R * c (mod 2^j)
                     (let [
                           #_"int" v (ß r * (aget (:value c) (ß (ß (:offset c) + (:intLen c)) - 1)))
                     ]
-                        (§ ass v (ß v & (ß (ß 1 << numBits) - 1)))
+                        (§ ass v (ß v & (- (<< 1 numBits) 1)))
                         ;; c = c + (v * p)
                         (MutableBigInteger''mul p, v, temp)
                         (MutableBigInteger''add c, temp)
@@ -2279,7 +2288,7 @@
                 )
 
                 ;; In theory, c may be greater than p at this point (Very rare!)
-                (while (ß MutableBigInteger''compare(c, p) >= 0)
+                (while (>= (MutableBigInteger''compare c, p) 0)
                     (MutableBigInteger''subtract c, p)
                 )
 
@@ -2456,7 +2465,7 @@
      ;;
     #_method
     (defn #_"void" SignedMutableBigInteger''signedAdd-m [#_"SignedMutableBigInteger" this, #_"MutableBigInteger" addend]
-        (cond (ß (:sign this) == 1)
+        (cond (== (:sign this) 1)
             (do
                 (MutableBigInteger''add this, addend)
             )
@@ -2490,7 +2499,7 @@
      ;;
     #_method
     (defn #_"void" SignedMutableBigInteger''signedSubtract-m [#_"SignedMutableBigInteger" this, #_"MutableBigInteger" addend]
-        (cond (ß (:sign this) == 1)
+        (cond (== (:sign this) 1)
             (do
                 (§ ass (:sign this) (ß (:sign this) * MutableBigInteger''subtract(this, addend)))
             )
@@ -2499,7 +2508,7 @@
                 (MutableBigInteger''add this, addend)
             )
         )
-        (when (ß (:intLen this) == 0)
+        (when (== (:intLen this) 0)
             (§ ass (:sign this) 1)
         )
         nil
@@ -2511,7 +2520,7 @@
      ;;
     #_foreign
     (defn #_"String" toString---SignedMutableBigInteger [#_"SignedMutableBigInteger" this]
-        (ß MutableBigInteger''toBigInteger-2(this, this.sign).toString())
+        (.toString (MutableBigInteger''toBigInteger-2 this, (:sign this)))
     )
 )
 
@@ -2769,7 +2778,7 @@
         ]
             (§ ass (:mag this) (BigInteger'stripLeadingZeroBytes magnitude))
 
-            (when (or (ß signum < -1) (ß signum > 1))
+            (when (or (ß signum < -1) (> signum 1))
                 (throw! "invalid signum value")
             )
 
@@ -2779,7 +2788,7 @@
                 )
                 :else
                 (do
-                    (when (ß signum == 0)
+                    (when (== signum 0)
                         (throw! "signum-magnitude mismatch")
                     )
                     (§ ass (:signum this) signum)
@@ -2803,7 +2812,7 @@
         ]
             (§ ass (:mag this) (BigInteger'stripLeadingZeroInts magnitude))
 
-            (when (or (ß signum < -1) (ß signum > 1))
+            (when (or (ß signum < -1) (> signum 1))
                 (throw! "invalid signum value")
             )
 
@@ -2813,7 +2822,7 @@
                 )
                 :else
                 (do
-                    (when (ß signum == 0)
+                    (when (== signum 0)
                         (throw! "signum-magnitude mismatch")
                     )
                     (§ ass (:signum this) signum)
@@ -2855,7 +2864,7 @@
             (when (or (ß radix < Character/MIN_RADIX) (ß radix > Character/MAX_RADIX))
                 (throw! "radix out of range")
             )
-            (when (ß len == 0)
+            (when (== len 0)
                 (throw! "zero length")
             )
 
@@ -2867,7 +2876,7 @@
             ]
                 (cond (<= 0 index1)
                     (do
-                        (when (or (ß index1 != 0) (ß index2 >= 0))
+                        (when (or (!= index1 0) (>= index2 0))
                             (throw! "illegal embedded sign character")
                         )
                         (§ ass sign -1)
@@ -2875,22 +2884,22 @@
                     )
                     (<= 0 index2)
                     (do
-                        (when (ß index2 != 0)
+                        (when (!= index2 0)
                             (throw! "illegal embedded sign character")
                         )
                         (§ ass cursor 1)
                     )
                 )
-                (when (ß cursor == len)
+                (when (== cursor len)
                     (throw! "zero length")
                 )
 
                 ;; skip leading zeros and compute number of digits in magnitude
-                (while (and (ß cursor < len) (ß Character/digit(val.charAt(cursor), radix) == 0))
+                (while (and (< cursor len) (== (Character/digit (.charAt val, cursor), radix) 0))
                     (§ ass cursor (inc cursor))
                 )
 
-                (when (ß cursor == len)
+                (when (== cursor len)
                     (§ ass (:signum this) 0)
                     (§ ass (:mag this) (:mag BigInteger'ZERO))
                     (§ return this)
@@ -2904,16 +2913,16 @@
                 (let [
                       #_"long" numBits (inc (>>> (* numDigits (aget BigInteger'bitsPerDigit radix)) 10))
                 ]
-                    (when (ß (ß numBits + 31) >= (ß 1 << 32))
+                    (when (ß (+ numBits 31) >= (<< 1 32))
                         (throw! "magnitude overflow")
                     )
                     (let [
-                          #_"int" numWords (ß (int) (numBits + 31) >>> 5)
+                          #_"int" numWords (>>> (int (+ numBits 31)) 5)
                           #_"int[]" magnitude (int-array numWords)
                           ;; process first (potentially short) digit group
                           #_"int" firstGroupLen (% numDigits (aget BigInteger'digitsPerInt radix))
                     ]
-                        (when (ß firstGroupLen == 0)
+                        (when (== firstGroupLen 0)
                             (§ ass firstGroupLen (aget BigInteger'digitsPerInt radix))
                         )
                         (let [
@@ -2971,7 +2980,7 @@
             (while (and (< cursor len) (== (Character/digit (aget val cursor), 10) 0))
                 (§ ass cursor (inc cursor))
             )
-            (when (ß cursor == len)
+            (when (== cursor len)
                 (§ ass (:signum this) 0)
                 (§ ass (:mag this) (:mag BigInteger'ZERO))
                 (§ return this)
@@ -2991,10 +3000,10 @@
                     (let [
                           #_"long" numBits (inc (>>> (* numDigits (aget BigInteger'bitsPerDigit 10)) 10))
                     ]
-                        (when (ß (ß numBits + 31) >= (ß 1 << 32))
+                        (when (ß (+ numBits 31) >= (<< 1 32))
                             (throw! "magnitude overflow")
                         )
-                        (§ ass numWords (ß (ß (int)(ß numBits + 31)) >>> 5))
+                        (§ ass numWords (>>> (int (+ numBits 31)) 5))
                     )
                 )
                 (let [
@@ -3002,7 +3011,7 @@
                       ;; process first (potentially short) digit group
                       #_"int" firstGroupLen (% numDigits (aget BigInteger'digitsPerInt 10))
                 ]
-                    (when (ß firstGroupLen == 0)
+                    (when (== firstGroupLen 0)
                         (§ ass firstGroupLen (aget BigInteger'digitsPerInt 10))
                     )
                     (§ ass (aget magnitude (dec numWords)) (BigInteger''parseInt this, val, cursor, (+ cursor firstGroupLen)))
@@ -3047,7 +3056,7 @@
                     (when (ß nextVal == -1)
                         (throw! (String. source))
                     )
-                    (§ ass result (ß (ß 10 * result) + nextVal))
+                    (§ ass result (+ (* 10 result) nextVal))
                 )
             )
 
@@ -3071,8 +3080,8 @@
     (defn- #_"void" BigInteger'destructiveMulAdd [#_"int[]" x, #_"int" y, #_"int" z]
         (let [
               ;; perform the multiplication word by word
-              #_"long" ylong (ß y & BigInteger'LONG_MASK)
-              #_"long" zlong (ß z & BigInteger'LONG_MASK)
+              #_"long" ylong (& y BigInteger'LONG_MASK)
+              #_"long" zlong (& z BigInteger'LONG_MASK)
               #_"int" len (alength x)
 
               #_"long" product 0
@@ -3080,7 +3089,7 @@
         ]
             (loop-when-recur [#_"int" i (dec len)] (<= 0 i) [(dec i)]
                 (§ ass product (+ (* ylong (& (aget x i) BigInteger'LONG_MASK)) carry))
-                (§ ass (aget x i) (ß (int)product))
+                (§ ass (aget x i) (int product))
                 (§ ass carry (>>> product 32))
             )
 
@@ -3088,11 +3097,11 @@
             (let [
                   #_"long" sum (+ (& (aget x (dec len)) BigInteger'LONG_MASK) zlong)
             ]
-                (§ ass (aget x (dec len)) (ß (int)sum))
+                (§ ass (aget x (dec len)) (int sum))
                 (§ ass carry (>>> sum 32))
                 (loop-when-recur [#_"int" i (- len 2)] (<= 0 i) [(dec i)]
                     (§ ass sum (+ (& (aget x i) BigInteger'LONG_MASK) carry))
-                    (§ ass (aget x i) (ß (int)sum))
+                    (§ ass (aget x i) (int sum))
                     (§ ass carry (>>> sum 32))
                 )
             )
@@ -3139,7 +3148,7 @@
         )
 
         (let [
-              #_"int" numBytes (ß (int)(ß (ß (ß (long)numBits) + 7) / 8)) ;; avoid overflow
+              #_"int" numBytes (int (ß (ß (long numBits) + 7) / 8)) ;; avoid overflow
               #_"byte[]" randomBits (byte-array numBytes)
         ]
             ;; generate random bytes and mask out any excess bits
@@ -3211,10 +3220,10 @@
             (throw! "(< bitLength 2)")
         )
 
-        (if (< bitLength BigInteger'SMALL_PRIME_THRESHOLD) (ß BigInteger'smallPrime(bitLength, BigInteger'DEFAULT_PRIME_CERTAINTY, rnd)) (ß BigInteger'largePrime(bitLength, BigInteger'DEFAULT_PRIME_CERTAINTY, rnd)))
+        (if (< bitLength BigInteger'SMALL_PRIME_THRESHOLD) (BigInteger'smallPrime bitLength, BigInteger'DEFAULT_PRIME_CERTAINTY, rnd) (BigInteger'largePrime bitLength, BigInteger'DEFAULT_PRIME_CERTAINTY, rnd))
     )
 
-    (def- #_"BigInteger" BigInteger'SMALL_PRIME_PRODUCT (ß BigInteger'valueOf-l(3 * 5 * 7 * 11 * 13 * 17 * 19 * 23 * 29 * 31 * 37 * 41)))
+    (def- #_"BigInteger" BigInteger'SMALL_PRIME_PRODUCT (§ soon BigInteger'valueOf-l (* 3 5 7 11 13 17 19 23 29 31 37 41)))
 
     ;;;
      ; Find a random number of the specified bitLength that is probably prime.
@@ -3224,10 +3233,10 @@
      ;;
     (defn- #_"BigInteger" BigInteger'smallPrime [#_"int" bitLength, #_"int" certainty, #_"Random" rnd]
         (let [
-              #_"int" magLen (ß (bitLength + 31) >>> 5)
+              #_"int" magLen (>>> (+ bitLength 31) 5)
               #_"int[]" temp (int-array magLen)
-              #_"int" highBit (ß 1 << (ß (ß bitLength + 31) & 0x1f)) ;; high bit of high int
-              #_"int" highMask (ß (highBit << 1) - 1) ;; bits to keep in high int
+              #_"int" highBit (ß 1 << (& (+ bitLength 31) 0x1f)) ;; high bit of high int
+              #_"int" highMask (- (<< highBit 1) 1) ;; bits to keep in high int
         ]
             (§ while true
                 ;; construct a candidate
@@ -3245,7 +3254,7 @@
                     ;; do cheap "pre-test" if applicable
                     (when (< 6 bitLength)
                         (let [
-                              #_"long" r (ß BigInteger''remainder(p, BigInteger'SMALL_PRIME_PRODUCT).longValue())
+                              #_"long" r (.longValue (BigInteger''remainder p, BigInteger'SMALL_PRIME_PRODUCT))
                         ]
                             (when (or (ß r % 3 == 0) (ß r % 5 == 0) (ß r % 7 == 0) (ß r % 11 == 0) (ß r % 13 == 0) (ß r % 17 == 0) (ß r % 19 == 0) (ß r % 23 == 0) (ß r % 29 == 0) (ß r % 31 == 0) (ß r % 37 == 0) (ß r % 41 == 0))
                                 (§ continue) ;; candidate is composite; try another
@@ -3267,7 +3276,9 @@
         )
     )
 
+    (declare BigInteger''setBit)
     (declare BigInteger'getPrimeSearchLen)
+    (declare BigInteger''bitLength)
 
     ;;;
      ; Find a random number of the specified bitLength that is probably prime.
@@ -3276,9 +3287,9 @@
      ;;
     (defn- #_"BigInteger" BigInteger'largePrime [#_"int" bitLength, #_"int" certainty, #_"Random" rnd]
         (let [
-              #_"BigInteger" p (ß BigInteger'new(bitLength, rnd).BigInteger''setBit((§ pipe), (ß bitLength - 1)))
+              #_"BigInteger" p (-> (BigInteger'new bitLength, rnd) (BigInteger''setBit (- bitLength 1)))
         ]
-            (§ ass (aget (:mag p) (ß (alength (:mag p)) - 1)) (ß (ß (aget (:mag p) (ß (alength (:mag p)) - 1)) & 0xfffffffe)))
+            (§ ass (aget (:mag p) (dec (alength (:mag p)))) (& (aget (:mag p) (dec (alength (:mag p)))) 0xfffffffe))
 
             ;; use a sieve length likely to contain the next prime number
             (let [
@@ -3286,12 +3297,12 @@
                   #_"BitSieve" searchSieve (BitSieve'new p, searchLen)
                   #_"BigInteger" candidate (BitSieve''retrieve searchSieve, p, certainty, rnd)
             ]
-                (while (or (ß candidate == nil) (ß BigInteger''bitLength(candidate) != bitLength))
+                (while (or (== candidate nil) (!= (BigInteger''bitLength candidate) bitLength))
                     (let [
                     ]
-                        (§ ass p (ß BigInteger''add(p, BigInteger'valueOf-l(2 * searchLen))))
-                        (when (ß BigInteger''bitLength(p) != bitLength)
-                            (§ ass p (ß BigInteger'new(bitLength, rnd).BigInteger''setBit((§ pipe), (ß bitLength - 1))))
+                        (§ ass p (BigInteger''add p, (BigInteger'valueOf-l (* 2 searchLen))))
+                        (when (!= (BigInteger''bitLength p) bitLength)
+                            (§ ass p (-> (BigInteger'new bitLength, rnd) (BigInteger''setBit (- bitLength 1))))
                         )
                         (§ ass (aget (:mag p) (ß (alength (:mag p)) - 1)) (ß (ß (aget (:mag p) (ß (alength (:mag p)) - 1)) & 0xfffffffe)))
                         (§ ass searchSieve (BitSieve'new p, searchLen))
@@ -3319,70 +3330,70 @@
      ;;
     #_method
     (defn #_"BigInteger" BigInteger''nextProbablePrime [#_"BigInteger" this]
-        (when (ß (:signum this) < 0)
+        (when (< (:signum this) 0)
             (throw! "negative start")
         )
 
         ;; handle trivial cases
-        (when (or (ß (:signum this) == 0) (ß this.equals(BigInteger'ONE)))
+        (when (or (== (:signum this) 0) (ß this.equals(BigInteger'ONE)))
             (§ return BigInteger'TWO)
         )
 
         (let [
-              #_"BigInteger" result (ß BigInteger''add(this, BigInteger'ONE))
+              #_"BigInteger" result (BigInteger''add this, BigInteger'ONE)
         ]
             ;; fastpath for small numbers
-            (when (ß BigInteger''bitLength(result) < BigInteger'SMALL_PRIME_THRESHOLD)
+            (when (< (BigInteger''bitLength result) BigInteger'SMALL_PRIME_THRESHOLD)
                 ;; ensure an odd number
                 (when (ß !BigInteger''testBit(result, 0))
-                    (§ ass result (ß BigInteger''add(result, BigInteger'ONE)))
+                    (§ ass result (BigInteger''add result, BigInteger'ONE))
                 )
 
                 (§ while true
                     ;; do cheap "pre-test" if applicable
-                    (when (ß BigInteger''bitLength(result) > 6)
+                    (when (> (BigInteger''bitLength result) 6)
                         (let [
-                              #_"long" r (ß BigInteger''remainder(result, BigInteger'SMALL_PRIME_PRODUCT).longValue())
+                              #_"long" r (.longValue (BigInteger''remainder result, BigInteger'SMALL_PRIME_PRODUCT))
                         ]
                             (when (or (ß r % 3 == 0) (ß r % 5 == 0) (ß r % 7 == 0) (ß r % 11 == 0) (ß r % 13 == 0) (ß r % 17 == 0) (ß r % 19 == 0) (ß r % 23 == 0) (ß r % 29 == 0) (ß r % 31 == 0) (ß r % 37 == 0) (ß r % 41 == 0))
-                                (§ ass result (ß BigInteger''add(result, BigInteger'TWO)))
+                                (§ ass result (BigInteger''add result, BigInteger'TWO))
                                 (§ continue) ;; candidate is composite; try another
                             )
                         )
                     )
 
                     ;; all candidates of bitLength 2 and 3 are prime by this point
-                    (when (ß BigInteger''bitLength(result) < 4)
+                    (when (< (BigInteger''bitLength result) 4)
                         (§ return result)
                     )
 
                     ;; the expensive test
-                    (when (ß BigInteger''primeToCertainty(result, BigInteger'DEFAULT_PRIME_CERTAINTY, nil))
+                    (when (BigInteger''primeToCertainty result, BigInteger'DEFAULT_PRIME_CERTAINTY, nil)
                         (§ return result)
                     )
 
-                    (§ ass result (ß BigInteger''add(result, BigInteger'TWO)))
+                    (§ ass result (BigInteger''add result, BigInteger'TWO))
                 )
             )
 
             ;; start at previous even number
             (when (BigInteger''testBit result, 0)
-                (§ ass result (ß BigInteger''subtract(result, BigInteger'ONE)))
+                (§ ass result (BigInteger''subtract result, BigInteger'ONE))
             )
 
             ;; looking for the next large prime
             (let [
-                  #_"int" searchLen (ß BigInteger'getPrimeSearchLen(BigInteger''bitLength(result)))
+                  #_"int" searchLen (BigInteger'getPrimeSearchLen (BigInteger''bitLength result))
             ]
                 (§ while true
                     (let [
                           #_"BitSieve" searchSieve (BitSieve'new result, searchLen)
-                          #_"BigInteger" candidate (ß BitSieve''retrieve(searchSieve, result, BigInteger'DEFAULT_PRIME_CERTAINTY, nil))
+                          #_"BigInteger" candidate (BitSieve''retrieve searchSieve, result, BigInteger'DEFAULT_PRIME_CERTAINTY, nil)
                     ]
-                        (when (ß candidate != nil)
+                        (when (!= candidate nil)
                             (§ return candidate)
                         )
-                        (§ ass result (ß BigInteger''add(result, BigInteger'valueOf-l(2 * searchLen))))
+                        (§ ass result (BigInteger''add result, (BigInteger'valueOf-l (* 2 searchLen))))
                     )
                 )
             )
@@ -3395,6 +3406,9 @@
         )
         (ß bitLength / 20 * 64)
     )
+
+    (declare BigInteger''passesMillerRabin)
+    (declare BigInteger''passesLucasLehmer)
 
     ;;;
      ; Returns {@code true} if this BigInteger is probably prime,
@@ -3448,11 +3462,14 @@
             )
             (§ ass rounds (if (< n rounds) n rounds))
 
-            (and (ß BigInteger''passesMillerRabin(this, rounds, random)) (ß BigInteger''passesLucasLehmer(this)))
+            (and (BigInteger''passesMillerRabin this, rounds, random) (BigInteger''passesLucasLehmer this))
         )
     )
 
+    (declare BigInteger'jacobiSymbol)
     (declare BigInteger'lucasLehmerSequence)
+    (declare BigInteger''mod)
+    (declare BigInteger'ZERO)
 
     ;;;
      ; Returns true iff this BigInteger is a Lucas-Lehmer probable prime.
@@ -3463,11 +3480,11 @@
     #_method
     (defn- #_"boolean" BigInteger''passesLucasLehmer [#_"BigInteger" this]
         (let [
-              #_"BigInteger" thisPlusOne (ß BigInteger''add(this, BigInteger'ONE))
+              #_"BigInteger" thisPlusOne (BigInteger''add this, BigInteger'ONE)
               ;; step 1
               #_"int" d 5
         ]
-            (while (ß BigInteger'jacobiSymbol(d, this) != -1)
+            (while (!= (BigInteger'jacobiSymbol d, this) -1)
                 ;; 5, -7, 9, -11, ...
                 (§ ass d (if (< d 0) (+ (Math/abs d) 2) (- (+ d 2))))
             )
@@ -3477,7 +3494,7 @@
                   #_"BigInteger" u (BigInteger'lucasLehmerSequence d, thisPlusOne, this)
             ]
                 ;; step 3
-                (ß BigInteger''mod(u, this).equals(BigInteger'ZERO))
+                (.equals (BigInteger''mod u, this), BigInteger'ZERO)
             )
         )
     )
@@ -3489,7 +3506,7 @@
      ; Assumes n positive, odd, n>=3.
      ;;
     (defn- #_"int" BigInteger'jacobiSymbol [#_"int" p, #_"BigInteger" n]
-        (when (ß p == 0)
+        (when (== p 0)
             (§ return 0)
         )
 
@@ -3502,46 +3519,46 @@
             (when (< p 0)
                 (§ ass p (- p))
                 (let [
-                      #_"int" n8 (ß u & 7)
+                      #_"int" n8 (& u 7)
                 ]
-                    (when (or (ß n8 == 3) (ß n8 == 7))
+                    (when (or (== n8 3) (== n8 7))
                         (§ ass j (- j)) ;; 3 (011) or 7 (111) mod 8
                     )
                 )
             )
 
             ;; get rid of factors of 2 in p
-            (while (ß (p & 3) == 0)
-                (§ ass p (ß p >> 2))
+            (while (== (& p 3) 0)
+                (§ ass p (>> p 2))
             )
-            (when (ß (p & 1) == 0)
-                (§ ass p (ß p >> 1))
-                (when (ß (ß (ß u (§ bit-xor) (ß u >> 1)) & 2) != 0)
+            (when (== (& p 1) 0)
+                (§ ass p (>> p 1))
+                (when (ß (ß (ß u (§ bit-xor) (>> u 1)) & 2) != 0)
                     (§ ass j (- j)) ;; 3 (011) or 5 (101) mod 8
                 )
             )
-            (when (ß p == 1)
+            (when (== p 1)
                 (§ return j)
             )
             ;; then, apply quadratic reciprocity
-            (when (ß (p & u & 2) != 0) ;; p = u = 3 (mod 4)?
+            (when (!= (ß p & u & 2) 0) ;; p = u = 3 (mod 4)?
                 (§ ass j (- j))
             )
             ;; and reduce u mod p
-            (§ ass u (ß BigInteger''mod(n, BigInteger'valueOf-l(p)).intValue()))
+            (§ ass u (.intValue (BigInteger''mod n, (BigInteger'valueOf-l p))))
 
             ;; now compute Jacobi(u,p), u < p
-            (while (ß u != 0)
-                (while (ß (u & 3) == 0)
-                    (§ ass u (ß u >> 2))
+            (while (!= u 0)
+                (while (== (& u 3) 0)
+                    (§ ass u (>> u 2))
                 )
-                (when (ß (u & 1) == 0)
-                    (§ ass u (ß u >> 1))
-                    (when (ß (ß (ß p (§ bit-xor) (ß p >> 1)) & 2) != 0)
+                (when (== (& u 1) 0)
+                    (§ ass u (>> u 1))
+                    (when (ß (ß (ß p (§ bit-xor) (>> p 1)) & 2) != 0)
                         (§ ass j (- j)) ;; 3 (011) or 5 (101) mod 8
                     )
                 )
-                (when (ß u == 1)
+                (when (== u 1)
                     (§ return j)
                 )
                 ;; now both u and p are odd, so use quadratic reciprocity
@@ -3553,16 +3570,18 @@
                       u p
                       p t
                 ]
-                    (when (ß (u & p & 2) != 0) ;; u = p = 3 (mod 4)?
+                    (when (!= (ß u & p & 2) 0) ;; u = p = 3 (mod 4)?
                         (§ ass j (- j))
                     )
                     ;; now u >= p, so it can be reduced
-                    (§ ass u (ß u % p))
+                    (§ ass u (% u p))
                 )
             )
             0
         )
     )
+
+    (declare BigInteger''subtract)
 
     (defn- #_"BigInteger" BigInteger'lucasLehmerSequence [#_"int" z, #_"BigInteger" k, #_"BigInteger" n]
         (let [
@@ -3572,10 +3591,10 @@
               #_"BigInteger" v BigInteger'ONE
               #_"BigInteger" v2 (ß )
         ]
-            (loop-when-recur [#_"int" i (ß BigInteger''bitLength(k) - 2)] (<= 0 i) [(dec i)]
-                (§ ass u2 (ß BigInteger''multiply(u, v).BigInteger''mod((§ pipe), n)))
+            (loop-when-recur [#_"int" i (- (BigInteger''bitLength k) 2)] (<= 0 i) [(dec i)]
+                (§ ass u2 (-> (BigInteger''multiply u, v) (BigInteger''mod n)))
 
-                (§ ass v2 (ß BigInteger''square(v).BigInteger''add((§ pipe), BigInteger''multiply(d, BigInteger''square(u))).BigInteger''mod((§ pipe), n)))
+                (§ ass v2 (-> (BigInteger''square v) (BigInteger''add (BigInteger''multiply d, (BigInteger''square u))) (BigInteger''mod n)))
                 (when (BigInteger''testBit v2, 0)
                     (§ ass v2 (BigInteger''subtract v2, n))
                 )
@@ -3585,13 +3604,13 @@
                 (§ ass u u2)
                 (§ ass v v2)
                 (when (BigInteger''testBit k, i)
-                    (§ ass u2 (ß BigInteger''add(u, v).BigInteger''mod((§ pipe), n)))
+                    (§ ass u2 (-> (BigInteger''add u, v) (BigInteger''mod n)))
                     (when (BigInteger''testBit u2, 0)
                         (§ ass u2 (BigInteger''subtract u2, n))
                     )
 
                     (§ ass u2 (BigInteger''shiftRight u2, 1))
-                    (§ ass v2 (ß BigInteger''add(v, BigInteger''multiply(d, u)).BigInteger''mod((§ pipe), n)))
+                    (§ ass v2 (-> (BigInteger''add v, (BigInteger''multiply d, u)) (BigInteger''mod n)))
                     (when (BigInteger''testBit v2, 0)
                         (§ ass v2 (BigInteger''subtract v2, n))
                     )
@@ -3620,14 +3639,14 @@
     (defn- #_"boolean" BigInteger''passesMillerRabin [#_"BigInteger" this, #_"int" iterations, #_"Random" rnd]
         ;; find a and m such that m is odd and this == 1 + 2**a * m
         (let [
-              #_"BigInteger" thisMinusOne (ß BigInteger''subtract(this, BigInteger'ONE))
+              #_"BigInteger" thisMinusOne (BigInteger''subtract this, BigInteger'ONE)
               #_"BigInteger" m thisMinusOne
               #_"int" a (BigInteger''getLowestSetBit m)
               _ (§ ass m (BigInteger''shiftRight m, a))
         ]
             ;; do the tests
-            (when (ß rnd == nil)
-                (§ ass rnd (ß ThreadLocalRandom/current()))
+            (when (== rnd nil)
+                (§ ass rnd (ThreadLocalRandom/current))
             )
             (loop-when-recur [#_"int" i 0] (< i iterations) [(inc i)]
                 ;; generate a uniform random on (1, this)
@@ -3635,7 +3654,7 @@
                       #_"BigInteger" b (ß )
                 ]
                     (loop []
-                        (§ ass b (ß BigInteger'new(BigInteger''bitLength(this), rnd)))
+                        (§ ass b (BigInteger'new (BigInteger''bitLength this), rnd))
                         (recur-if (or (ß b.compareTo(BigInteger'ONE) <= 0) (ß b.compareTo(this) >= 0)) [])
                     )
 
@@ -3643,15 +3662,15 @@
                         #_"int" j 0
                         #_"BigInteger" z (BigInteger''modPow b, m, this)
                     ]
-                        (while (not (or (and (ß j == 0) (ß z.equals(BigInteger'ONE))) (ß z.equals(thisMinusOne))))
-                            (when (and (ß j > 0) (ß z.equals(BigInteger'ONE)))
+                        (while (not (or (and (== j 0) (ß z.equals(BigInteger'ONE))) (ß z.equals(thisMinusOne))))
+                            (when (and (> j 0) (ß z.equals(BigInteger'ONE)))
                                 (§ return false)
                             )
                             (§ ass j (inc j))
-                            (when (ß j == a)
+                            (when (== j a)
                                 (§ return false)
                             )
-                            (§ ass z (ß BigInteger''modPow(z, BigInteger'TWO, this)))
+                            (§ ass z (BigInteger''modPow z, BigInteger'TWO, this))
                         )
                     )
                 )
@@ -3668,7 +3687,7 @@
     (defn #_"BigInteger" BigInteger'new [#_"int[]" magnitude, #_"int" signum]
         (let [this (§ new)
         ]
-            (§ ass (:signum this) (if (ß (alength magnitude) == 0) 0 signum))
+            (§ ass (:signum this) (if (== (alength magnitude) 0) 0 signum))
             (§ ass (:mag this) magnitude)
             (when (ß (alength (:mag this)) >= BigInteger'MAX_MAG_LENGTH)
                 (BigInteger''checkRange this)
@@ -3684,7 +3703,7 @@
     (defn- #_"BigInteger" BigInteger'new [#_"byte[]" magnitude, #_"int" signum]
         (let [this (§ new)
         ]
-            (§ ass (:signum this) (if (ß (alength magnitude) == 0) 0 signum))
+            (§ ass (:signum this) (if (== (alength magnitude) 0) 0 signum))
             (§ ass (:mag this) (BigInteger'stripLeadingZeroBytes magnitude))
             (when (ß (alength (:mag this)) >= BigInteger'MAX_MAG_LENGTH)
                 (BigInteger''checkRange this)
@@ -3709,6 +3728,8 @@
 
     ;; static factory methods
 
+    (declare BigInteger'MAX_CONSTANT)
+
     ;;;
      ; Returns a BigInteger whose value is equal to that of the specified {@code long}.
      ; This "static factory method" is provided in preference to a ({@code long}) constructor
@@ -3719,16 +3740,16 @@
      ;;
     (defn #_"BigInteger" BigInteger'valueOf [#_"long" val]
         ;; if -MAX_CONSTANT < val < MAX_CONSTANT, return stashed constant
-        (when (ß val == 0)
+        (when (== val 0)
             (§ return BigInteger'ZERO)
         )
-        (cond (and (ß val > 0) (ß val <= BigInteger'MAX_CONSTANT))
+        (cond (and (> val 0) (<= val BigInteger'MAX_CONSTANT))
             (do
-                (§ return (BigInteger'posConst (ß (int)val)))
+                (§ return (BigInteger'posConst (int val)))
             )
-            (and (ß val < 0) (ß val >= (- BigInteger'MAX_CONSTANT)))
+            (and (< val 0) (ß val >= (- BigInteger'MAX_CONSTANT)))
             (do
-                (§ return (BigInteger'negConst (ß (int)(- val))))
+                (§ return (BigInteger'negConst (int (- val))))
             )
         )
 
@@ -3753,18 +3774,18 @@
             )
 
             (let [
-                #_"int" highWord (ß (int)(val >>> 32))
+                #_"int" highWord (int (>>> val 32))
             ]
-                (cond (ß highWord == 0)
+                (cond (== highWord 0)
                     (do
                         (§ ass (:mag this) (int-array 1))
-                        (§ ass (aget (:mag this) 0) (ß (int)val))
+                        (§ ass (aget (:mag this) 0) (int val))
                     )
                     :else
                     (do
                         (§ ass (:mag this) (int-array 2))
                         (§ ass (aget (:mag this) 0) highWord)
-                        (§ ass (aget (:mag this) 1) (ß (int)val))
+                        (§ ass (aget (:mag this) 1) (int val))
                     )
                 )
                 this
@@ -3872,10 +3893,10 @@
      ;;
     #_method
     (defn #_"BigInteger" BigInteger''add [#_"BigInteger" this, #_"BigInteger" val]
-        (when (ß (:signum val) == 0)
+        (when (== (:signum val) 0)
             (§ return this)
         )
-        (when (ß (:signum this) == 0)
+        (when (== (:signum this) 0)
             (§ return val)
         )
         (when (ß (:signum val) == (:signum this))
@@ -3885,14 +3906,14 @@
         (let [
               #_"int" cmp (BigInteger''compareMagnitude-i this, val)
         ]
-            (when (ß cmp == 0)
+            (when (== cmp 0)
                 (§ return BigInteger'ZERO)
             )
             (let [
                   #_"int[]" resultMag (if (< 0 cmp) (BigInteger'subtract (:mag this), (:mag val)) (BigInteger'subtract (:mag val), (:mag this)))
                   _ (§ ass resultMag (BigInteger'trustedStripLeadingZeroInts resultMag))
             ]
-                (ß BigInteger'new(resultMag, (if (ß cmp == (:signum this)) 1 -1)))
+                (BigInteger'new resultMag, (if (== cmp (:signum this)) 1 -1))
             )
         )
     )
@@ -3922,7 +3943,7 @@
                 (do
                     (§ ass xIndex (dec xIndex))
                     (§ ass sum (+ (& (aget x xIndex) BigInteger'LONG_MASK) (& (aget y 0) BigInteger'LONG_MASK)))
-                    (§ ass (aget result xIndex) (ß (int)sum))
+                    (§ ass (aget result xIndex) (int sum))
                 )
                 :else
                 (do
@@ -3931,13 +3952,13 @@
                         (§ ass xIndex (dec xIndex))
                         (§ ass yIndex (dec yIndex))
                         (§ ass sum (+ (& (aget x xIndex) BigInteger'LONG_MASK) (& (aget y yIndex) BigInteger'LONG_MASK) (>>> sum 32)))
-                        (§ ass (aget result xIndex) (ß (int)sum))
+                        (§ ass (aget result xIndex) (int sum))
                     )
                 )
             )
             ;; copy remainder of longer number while carry propagation is required
             (let [
-                  #_"boolean" carry (ß (ß sum >>> 32) != 0)
+                  #_"boolean" carry (!= (>>> sum 32) 0)
             ]
                 (while (and (< 0 xIndex) carry)
                     (§ ass xIndex (dec xIndex))
@@ -3968,27 +3989,27 @@
 
     (defn- #_"int[]" BigInteger'subtract [#_"long" val, #_"int[]" little]
         (let [
-              #_"int" highWord (ß (int)(val >>> 32))
+              #_"int" highWord (int (>>> val 32))
         ]
-            (cond (ß highWord == 0)
+            (cond (== highWord 0)
                 (let [
                       #_"int[]" result (int-array 1)
                 ]
-                    (§ ass (aget result 0) (ß (int)(- val (& (aget little 0) BigInteger'LONG_MASK))))
+                    (§ ass (aget result 0) (int (- val (& (aget little 0) BigInteger'LONG_MASK))))
                     (§ return result)
                 )
                 :else
                 (let [
                       #_"int[]" result (int-array 2)
                 ]
-                    (cond (ß (alength little) == 1)
+                    (cond (== (alength little) 1)
                         (let [
-                              #_"long" difference (- (& (ß (int)val) BigInteger'LONG_MASK) (& (aget little 0) BigInteger'LONG_MASK))
+                              #_"long" difference (- (& (int val) BigInteger'LONG_MASK) (& (aget little 0) BigInteger'LONG_MASK))
                         ]
-                            (§ ass (aget result 1) (ß (int)difference))
+                            (§ ass (aget result 1) (int difference))
                             ;; subtract remainder of longer number while borrow propagates
                             (let [
-                                  #_"boolean" borrow (ß (ß difference >> 32) != 0)
+                                  #_"boolean" borrow (!= (>> difference 32) 0)
                             ]
                                 (cond borrow
                                     (do
@@ -4004,11 +4025,11 @@
                         )
                         :else ;; little.length == 2
                         (let [
-                              #_"long" difference (- (& (ß (int)val) BigInteger'LONG_MASK) (& (aget little 1) BigInteger'LONG_MASK))
+                              #_"long" difference (- (& (int val) BigInteger'LONG_MASK) (& (aget little 1) BigInteger'LONG_MASK))
                         ]
-                            (§ ass (aget result 1) (ß (int)difference))
+                            (§ ass (aget result 1) (int difference))
                             (§ ass difference (+ (- (& highWord BigInteger'LONG_MASK) (& (aget little 0) BigInteger'LONG_MASK)) (>> difference 32)))
-                            (§ ass (aget result 0) (ß (int)difference))
+                            (§ ass (aget result 0) (int difference))
                             (§ return result)
                         )
                     )
@@ -4025,25 +4046,25 @@
      ;;
     (defn- #_"int[]" BigInteger'subtract [#_"int[]" big, #_"long" val]
         (let [
-              #_"int" highWord (ß (int)(ß val >>> 32))
+              #_"int" highWord (int (>>> val 32))
               #_"int" bigIndex (alength big)
               #_"int[]" result (int-array bigIndex)
               #_"long" difference 0
         ]
-            (cond (ß highWord == 0)
+            (cond (== highWord 0)
                 (do
                     (§ ass bigIndex (dec bigIndex))
                     (§ ass difference (- (& (aget big bigIndex) BigInteger'LONG_MASK) val))
-                    (§ ass (aget result bigIndex) (ß (int)difference))
+                    (§ ass (aget result bigIndex) (int difference))
                 )
                 :else
                 (do
                     (§ ass bigIndex (dec bigIndex))
                     (§ ass difference (- (& (aget big bigIndex) BigInteger'LONG_MASK) (& val BigInteger'LONG_MASK)))
-                    (§ ass (aget result bigIndex) (ß (int)difference))
+                    (§ ass (aget result bigIndex) (int difference))
                     (§ ass bigIndex (dec bigIndex))
                     (§ ass difference (+ (- (& (aget big bigIndex) BigInteger'LONG_MASK) (& highWord BigInteger'LONG_MASK)) (>> difference 32)))
-                    (§ ass (aget result bigIndex) (ß (int)difference))
+                    (§ ass (aget result bigIndex) (int difference))
                 )
             )
 
@@ -4051,7 +4072,7 @@
             (let [
                   #_"boolean" borrow (ß (difference >> 32 != 0))
             ]
-                (while (and (ß bigIndex > 0) borrow)
+                (while (and (> bigIndex 0) borrow)
                     (§ ass bigIndex (dec bigIndex))
                     (§ ass (aget result bigIndex) (dec (aget big bigIndex)))
                     (§ ass borrow (== (aget result bigIndex) -1))
@@ -4076,10 +4097,10 @@
      ;;
     #_method
     (defn #_"BigInteger" BigInteger''subtract [#_"BigInteger" this, #_"BigInteger" val]
-        (when (ß (:signum val) == 0)
+        (when (== (:signum val) 0)
             (§ return this)
         )
-        (when (ß (:signum this) == 0)
+        (when (== (:signum this) 0)
             (§ return (BigInteger''negate val))
         )
         (when (ß (:signum val) != (:signum this))
@@ -4089,14 +4110,14 @@
         (let [
               #_"int" cmp (BigInteger''compareMagnitude-i this, val)
         ]
-            (when (ß cmp == 0)
+            (when (== cmp 0)
                 (§ return BigInteger'ZERO)
             )
             (let [
                   #_"int[]" resultMag (if (< 0 cmp) (BigInteger'subtract (:mag this), (:mag val)) (BigInteger'subtract (:mag val), (:mag this)))
                   _ (§ ass resultMag (BigInteger'trustedStripLeadingZeroInts resultMag))
             ]
-                (ß BigInteger'new(resultMag, (if (ß cmp == (:signum this)) 1 -1)))
+                (BigInteger'new resultMag, (if (== cmp (:signum this)) 1 -1))
             )
         )
     )
@@ -4118,14 +4139,14 @@
                 (§ ass bigIndex (dec bigIndex))
                 (§ ass littleIndex (dec littleIndex))
                 (§ ass difference (+ (- (& (aget big bigIndex) BigInteger'LONG_MASK) (& (aget little littleIndex) BigInteger'LONG_MASK)) (>> difference 32)))
-                (§ ass (aget result bigIndex) (ß (int)difference))
+                (§ ass (aget result bigIndex) (int difference))
             )
 
             ;; subtract remainder of longer number while borrow propagates
             (let [
-                  #_"boolean" borrow (ß (ß difference >> 32) != 0)
+                  #_"boolean" borrow (!= (>> difference 32) 0)
             ]
-                (while (and (ß bigIndex > 0) borrow)
+                (while (and (> bigIndex 0) borrow)
                     (§ ass bigIndex (dec bigIndex))
                     (§ ass (aget result bigIndex) (dec (aget big bigIndex)))
                     (§ ass borrow (== (aget result bigIndex) -1))
@@ -4142,6 +4163,9 @@
         )
     )
 
+    (declare BigInteger''multiplyToLen)
+    (declare BigInteger'trustedStripLeadingZeroInts)
+
     ;;;
      ; Returns a BigInteger whose value is {@code (this * val)}.
      ;
@@ -4150,7 +4174,7 @@
      ;;
     #_method
     (defn #_"BigInteger" BigInteger''multiply [#_"BigInteger" this, #_"BigInteger" val]
-        (when (or (ß (:signum val) == 0) (ß (:signum this) == 0))
+        (when (or (== (:signum val) 0) (== (:signum this) 0))
             (§ return BigInteger'ZERO)
         )
 
@@ -4166,7 +4190,7 @@
                 (§ return (BigInteger'multiplyByInt (:mag val), (aget (:mag this) 0), resultSign))
             )
             (let [
-                  #_"int[]" result (ß BigInteger''multiplyToLen(this, (:mag this), xlen, (:mag val), ylen, nil))
+                  #_"int[]" result (BigInteger''multiplyToLen this, (:mag this), xlen, (:mag val), ylen, nil)
                   _ (§ ass result (BigInteger'trustedStripLeadingZeroInts result))
             ]
                 (BigInteger'new result, resultSign)
@@ -4175,32 +4199,32 @@
     )
 
     (defn- #_"BigInteger" BigInteger'multiplyByInt [#_"int[]" x, #_"int" y, #_"int" sign]
-        (when (ß Integer/bitCount(y) == 1)
-            (§ return (ß BigInteger'new(BigInteger'shiftLeft(x, Integer/numberOfTrailingZeros(y)), sign)))
+        (when (== (Integer/bitCount y) 1)
+            (§ return (BigInteger'new (BigInteger'shiftLeft x, (Integer/numberOfTrailingZeros y)), sign))
         )
         (let [
               #_"int" xlen (alength x)
               #_"int[]" rmag (int-array (inc xlen))
               #_"long" carry 0
-              #_"long" yl (ß y & BigInteger'LONG_MASK)
-              #_"int" rstart (ß (alength rmag) - 1)
+              #_"long" yl (& y BigInteger'LONG_MASK)
+              #_"int" rstart (- (alength rmag) 1)
         ]
             (loop-when-recur [#_"int" i (dec xlen)] (<= 0 i) [(dec i)]
                 (let [
                       #_"long" product (+ (* (& (aget x i) BigInteger'LONG_MASK) yl) carry)
                 ]
-                    (§ ass (aget rmag rstart) (ß (int)product))
+                    (§ ass (aget rmag rstart) (int product))
                     (§ ass rstart (dec rstart))
-                    (§ ass carry (ß product >>> 32))
+                    (§ ass carry (>>> product 32))
                 )
             )
-            (cond (ß carry == 0)
+            (cond (== carry 0)
                 (do
-                    (§ ass rmag (ß Arrays/copyOfRange(rmag, 1, (alength rmag))))
+                    (§ ass rmag (Arrays/copyOfRange rmag, 1, (alength rmag)))
                 )
                 :else
                 (do
-                    (§ ass (aget rmag rstart) (ß (int)carry))
+                    (§ ass (aget rmag rstart) (int carry))
                 )
             )
             (BigInteger'new rmag, sign)
@@ -4217,7 +4241,7 @@
               #_"int" xstart (dec xlen)
               #_"int" ystart (dec ylen)
         ]
-            (when (or (ß z == nil) (ß (alength z) < (ß xlen + ylen)))
+            (when (or (== z nil) (ß (alength z) < (+ xlen ylen)))
                 (§ ass z (int-array (+ xlen ylen)))
             )
 
@@ -4228,11 +4252,11 @@
                     (let [
                           #_"long" product (+ (* (& (aget y j) BigInteger'LONG_MASK) (& (aget x xstart) BigInteger'LONG_MASK)) carry)
                     ]
-                        (§ ass (aget z k) (ß (int)product))
-                        (§ ass carry (ß product >>> 32))
+                        (§ ass (aget z k) (int product))
+                        (§ ass carry (>>> product 32))
                     )
                 )
-                (§ ass (aget z xstart) (ß (int)carry))
+                (§ ass (aget z xstart) (int carry))
 
                 (loop-when-recur [#_"int" i (dec xstart)] (<= 0 i) [(dec i)]
                     (let [
@@ -4242,11 +4266,11 @@
                             (let [
                                   #_"long" product (+ (* (& (aget y j) BigInteger'LONG_MASK) (& (aget x i) BigInteger'LONG_MASK)) (& (aget z k) BigInteger'LONG_MASK) carry)
                             ]
-                                (§ ass (aget z k) (ß (int)product))
-                                (§ ass carry (ß product >>> 32))
+                                (§ ass (aget z k) (int product))
+                                (§ ass carry (>>> product 32))
                             )
                         )
-                        (§ ass (aget z i) (ß (int)carry))
+                        (§ ass (aget z i) (int carry))
                     )
                 )
                 z
@@ -4265,14 +4289,14 @@
      ;;
     #_method
     (defn- #_"BigInteger" BigInteger''square [#_"BigInteger" this]
-        (when (ß (:signum this) == 0)
+        (when (== (:signum this) 0)
             (§ return BigInteger'ZERO)
         )
 
         (let [
               #_"int[]" z (BigInteger'squareToLen (:mag this), (alength (:mag this)), nil)
         ]
-            (ß BigInteger'new(BigInteger'trustedStripLeadingZeroInts(z), 1))
+            (BigInteger'new (BigInteger'trustedStripLeadingZeroInts z), 1)
         )
     )
 
@@ -4318,9 +4342,9 @@
      ;;
     (defn- #_"int[]" BigInteger'squareToLen [#_"int[]" x, #_"int" len, #_"int[]" z]
         (let [
-              #_"int" zlen (ß len << 1)
+              #_"int" zlen (<< len 1)
         ]
-            (when (or (ß z == nil) (ß (alength z) < zlen))
+            (when (or (== z nil) (< (alength z) zlen))
                 (§ ass z (int-array zlen))
             )
 
@@ -4335,9 +4359,9 @@
                     ]
                         (§ ass (aget z i) (ß (lastProductLowWord << 31) | (int)(product >>> 33)))
                         (§ ass i (inc i))
-                        (§ ass (aget z i) (ß (int)(product >>> 1)))
+                        (§ ass (aget z i) (int (>>> product 1)))
                         (§ ass i (inc i))
-                        (§ ass lastProductLowWord (ß (int)product))
+                        (§ ass lastProductLowWord (int product))
                     )
                 )
 
@@ -4391,7 +4415,7 @@
               #_"MutableBigInteger" b (MutableBigInteger'new (:mag val))
         ]
             (MutableBigInteger''divideKnuth-4 a, b, q, false)
-            (ß MutableBigInteger''toBigInteger-2(q, (ß (:signum this) * (:signum val))))
+            (MutableBigInteger''toBigInteger-2 q, (* (:signum this) (:signum val)))
         )
     )
 
@@ -4425,8 +4449,8 @@
               #_"MutableBigInteger" b (MutableBigInteger'new (:mag val))
               #_"MutableBigInteger" r (MutableBigInteger''divideKnuth-3 a, b, q)
         ]
-            (§ ass (aget result 0) (ß MutableBigInteger''toBigInteger-2(q, (if (ß (:signum this) == (:signum val)) 1 -1))))
-            (§ ass (aget result 1) (ß MutableBigInteger''toBigInteger-2(r, (:signum this))))
+            (§ ass (aget result 0) (MutableBigInteger''toBigInteger-2 q, (if (== (:signum this) (:signum val)) 1 -1)))
+            (§ ass (aget result 1) (MutableBigInteger''toBigInteger-2 r, (:signum this)))
             result
         )
     )
@@ -4455,13 +4479,14 @@
               #_"MutableBigInteger" a (MutableBigInteger'new (:mag this))
               #_"MutableBigInteger" b (MutableBigInteger'new (:mag val))
         ]
-            (ß MutableBigInteger''divideKnuth-3(a, b, q).MutableBigInteger''toBigInteger-2((§ pipe), (:signum this)))
+            (-> (MutableBigInteger''divideKnuth-3 a, b, q) (MutableBigInteger''toBigInteger-2 (:signum this)))
         )
     )
 
     (declare BigInteger''abs)
     (declare BigInteger''negate)
     (declare BigInteger''shiftRight)
+    (declare BigInteger''shiftLeft)
 
     ;;;
      ; Returns a BigInteger whose value is <tt>(this<sup>exponent</sup>)</tt>.
@@ -4477,8 +4502,8 @@
         (when (< exponent 0)
             (throw! "negative exponent")
         )
-        (when (ß (:signum this) == 0)
-            (§ return (if (ß exponent == 0) BigInteger'ONE this))
+        (when (== (:signum this) 0)
+            (§ return (if (== exponent 0) BigInteger'ONE this))
         )
 
         (let [
@@ -4487,128 +4512,131 @@
               ;; The remaining part can then be exponentiated faster.
               ;; The powers of two will be multiplied back at the end.
               #_"int" powersOfTwo (BigInteger''getLowestSetBit partToSquare)
-              #_"long" bitsToShift (ß (long)powersOfTwo * exponent)
+              #_"long" bitsToShift (* (long powersOfTwo) exponent)
         ]
             (when (ß bitsToShift > Integer/MAX_VALUE)
                 (throw! "magnitude overflow")
             )
 
-            (ß #_"int" remainingBits)
-
-            ;; Factor the powers of two out quickly by shifting right, if needed.
-            (cond (< 0 powersOfTwo)
-                (let [
-                ]
-                    (§ ass partToSquare (BigInteger''shiftRight partToSquare, powersOfTwo))
-                    (§ ass remainingBits (BigInteger''bitLength partToSquare))
-                    (when (ß remainingBits == 1) ;; Nothing left but +/- 1?
-                        (cond (and (ß (:signum this) < 0) (ß (exponent & 1) == 1))
-                            (do
-                                (§ return (ß BigInteger''shiftLeft(BigInteger'NEGATIVE_ONE, powersOfTwo * exponent)))
-                            )
-                            :else
-                            (do
-                                (§ return (ß BigInteger''shiftLeft(BigInteger'ONE, powersOfTwo * exponent)))
-                            )
-                        )
-                    )
-                )
-                :else
-                (let [
-                ]
-                    (§ ass remainingBits (BigInteger''bitLength partToSquare))
-                    (when (ß remainingBits == 1) ;; Nothing left but +/- 1?
-                        (cond (and (ß (:signum this) < 0) (ß (exponent & 1) == 1))
-                            (do
-                                (§ return BigInteger'NEGATIVE_ONE)
-                            )
-                            :else
-                            (do
-                                (§ return BigInteger'ONE)
-                            )
-                        )
-                    )
-                )
-            )
-
-            ;; This is a quick way to approximate the size of the result,
-            ;; similar to doing log2[n] * exponent. This will give an upper bound
-            ;; of how big the result can be, and which algorithm to use.
             (let [
-                  #_"long" scaleFactor (ß (long)remainingBits * exponent)
+                  #_"int" remainingBits (ß )
             ]
-                ;; Use slightly different algorithms for small and large operands.
-                ;; See if the result will safely fit into a long. (Largest 2^63-1)
-                (cond (and (ß (alength (:mag partToSquare)) == 1) (<= scaleFactor 62))
-                    ;; Small number algorithm. Everything fits into a long.
+
+                ;; Factor the powers of two out quickly by shifting right, if needed.
+                (cond (< 0 powersOfTwo)
                     (let [
-                          #_"int" newSign (if (and (ß (:signum this) < 0) (ß (exponent & 1) == 1)) -1 1)
-                          #_"long" result 1
-                          #_"long" baseToPow2 (ß (aget (:mag partToSquare) 0) & BigInteger'LONG_MASK)
-                          #_"int" workingExponent exponent
                     ]
-                        ;; perform exponentiation using repeated squaring trick
-                        (while (ß workingExponent != 0)
-                            (when (ß (workingExponent & 1) == 1)
-                                (§ ass result (* result baseToPow2))
-                            )
-
-                            (§ ass workingExponent (ß workingExponent >>> 1))
-                            (when (ß workingExponent != 0)
-                                (§ ass baseToPow2 (* baseToPow2 baseToPow2))
-                            )
-                        )
-
-                        ;; multiply back the powers of two (quickly, by shifting left)
-                        (cond (< 0 powersOfTwo)
-                            (do
-                                (cond (ß bitsToShift + scaleFactor <= 62) ;; Fits in long?
-                                    (do
-                                        (§ return (BigInteger'valueOf-l (ß (ß result << bitsToShift) * newSign)))
-                                    )
-                                    :else
-                                    (do
-                                        (§ return (ß BigInteger'valueOf-l(result * newSign).BigInteger''shiftLeft((§ pipe), (ß (int)bitsToShift))))
-                                    )
+                        (§ ass partToSquare (BigInteger''shiftRight partToSquare, powersOfTwo))
+                        (§ ass remainingBits (BigInteger''bitLength partToSquare))
+                        (when (== remainingBits 1) ;; Nothing left but +/- 1?
+                            (cond (and (< (:signum this) 0) (== (& exponent 1) 1))
+                                (do
+                                    (§ return (BigInteger''shiftLeft BigInteger'NEGATIVE_ONE, (* powersOfTwo exponent)))
                                 )
-                            )
-                            :else
-                            (do
-                                (§ return (ß BigInteger'valueOf-l(result * newSign)))
+                                :else
+                                (do
+                                    (§ return (BigInteger''shiftLeft BigInteger'ONE, (* powersOfTwo exponent)))
+                                )
                             )
                         )
                     )
                     :else
-                    ;; Large number algorithm. This is basically identical to
-                    ;; the algorithm above, but calls multiply() and square()
-                    ;; which may use more efficient algorithms for large numbers.
                     (let [
-                          #_"BigInteger" answer BigInteger'ONE
-                          #_"int" workingExponent exponent
                     ]
-                        ;; perform exponentiation using repeated squaring trick
-                        (while (ß workingExponent != 0)
-                            (when (ß (workingExponent & 1) == 1)
-                                (§ ass answer (BigInteger''multiply answer, partToSquare))
-                            )
-
-                            (§ ass workingExponent (ß workingExponent >>> 1))
-                            (when (ß workingExponent != 0)
-                                (§ ass partToSquare (BigInteger''square partToSquare))
+                        (§ ass remainingBits (BigInteger''bitLength partToSquare))
+                        (when (== remainingBits 1) ;; Nothing left but +/- 1?
+                            (cond (and (< (:signum this) 0) (== (& exponent 1) 1))
+                                (do
+                                    (§ return BigInteger'NEGATIVE_ONE)
+                                )
+                                :else
+                                (do
+                                    (§ return BigInteger'ONE)
+                                )
                             )
                         )
-                        ;; multiply back the (exponentiated) powers of two (quickly, by shifting left)
-                        (when (< 0 powersOfTwo)
-                            (§ ass answer (ß BigInteger''shiftLeft(answer, powersOfTwo * exponent)))
-                        )
+                    )
+                )
 
-                        (cond (and (ß (:signum this) < 0) (ß (exponent & 1) == 1))
-                            (do
-                                (§ return (BigInteger''negate answer))
+                ;; This is a quick way to approximate the size of the result,
+                ;; similar to doing log2[n] * exponent. This will give an upper bound
+                ;; of how big the result can be, and which algorithm to use.
+                (let [
+                      #_"long" scaleFactor (* (long remainingBits) exponent)
+                ]
+                    ;; Use slightly different algorithms for small and large operands.
+                    ;; See if the result will safely fit into a long. (Largest 2^63-1)
+                    (cond (and (ß (alength (:mag partToSquare)) == 1) (<= scaleFactor 62))
+                        ;; Small number algorithm. Everything fits into a long.
+                        (let [
+                              #_"int" newSign (if (and (< (:signum this) 0) (== (& exponent 1) 1)) -1 1)
+                              #_"long" result 1
+                              #_"long" baseToPow2 (ß (aget (:mag partToSquare) 0) & BigInteger'LONG_MASK)
+                              #_"int" workingExponent exponent
+                        ]
+                            ;; perform exponentiation using repeated squaring trick
+                            (while (!= workingExponent 0)
+                                (when (== (& workingExponent 1) 1)
+                                    (§ ass result (* result baseToPow2))
+                                )
+
+                                (§ ass workingExponent (>>> workingExponent 1))
+                                (when (!= workingExponent 0)
+                                    (§ ass baseToPow2 (* baseToPow2 baseToPow2))
+                                )
                             )
-                            :else
-                            (do
-                                (§ return answer)
+
+                            ;; multiply back the powers of two (quickly, by shifting left)
+                            (cond (< 0 powersOfTwo)
+                                (do
+                                    (cond (ß bitsToShift + scaleFactor <= 62) ;; Fits in long?
+                                        (do
+                                            (§ return (BigInteger'valueOf-l (* (<< result bitsToShift) newSign)))
+                                        )
+                                        :else
+                                        (do
+                                            (§ return (-> (BigInteger'valueOf-l (* result newSign)) (BigInteger''shiftLeft (int bitsToShift))))
+                                        )
+                                    )
+                                )
+                                :else
+                                (do
+                                    (§ return (BigInteger'valueOf-l (* result newSign)))
+                                )
+                            )
+                        )
+                        :else
+                        ;; Large number algorithm. This is basically identical to
+                        ;; the algorithm above, but calls multiply() and square()
+                        ;; which may use more efficient algorithms for large numbers.
+                        (let [
+                              #_"BigInteger" answer BigInteger'ONE
+                              #_"int" workingExponent exponent
+                        ]
+                            ;; perform exponentiation using repeated squaring trick
+                            (while (!= workingExponent 0)
+                                (when (== (& workingExponent 1) 1)
+                                    (§ ass answer (BigInteger''multiply answer, partToSquare))
+                                )
+
+                                (§ ass workingExponent (>>> workingExponent 1))
+                                (when (!= workingExponent 0)
+                                    (§ ass partToSquare (BigInteger''square partToSquare))
+                                )
+                            )
+                            ;; multiply back the (exponentiated) powers of two (quickly, by shifting left)
+                            (when (< 0 powersOfTwo)
+                                (§ ass answer (BigInteger''shiftLeft answer, (* powersOfTwo exponent)))
+                            )
+
+                            (cond (and (< (:signum this) 0) (== (& exponent 1) 1))
+                                (do
+                                    (§ return (BigInteger''negate answer))
+                                )
+                                :else
+                                (do
+                                    (§ return answer)
+                                )
                             )
                         )
                     )
@@ -4631,7 +4659,7 @@
             (do
                 (§ return (BigInteger''abs this))
             )
-            (ß (:signum this) == 0)
+            (== (:signum this) 0)
             (do
                 (§ return (BigInteger''abs val))
             )
@@ -4653,14 +4681,16 @@
         (ß 32 - Integer/numberOfLeadingZeros(n))
     )
 
+    (declare BigInteger'primitiveRightShift)
+
     ;;;
      ; Left shift int array a up to len by n bits. Returns the array that
      ; results from the shift since space may have to be reallocated.
      ;;
     (defn- #_"int[]" BigInteger'leftShift [#_"int[]" a, #_"int" len, #_"int" n]
         (let [
-              #_"int" nInts (ß n >>> 5)
-              #_"int" nBits (ß n & 0x1f)
+              #_"int" nInts (>>> n 5)
+              #_"int" nBits (& n 0x1f)
               #_"int" bitsInHighWord (BigInteger'bitLengthForInt (aget a 0))
         ]
             ;; if shift can be done without recopy, do so
@@ -4675,16 +4705,16 @@
                         (let [
                               #_"int[]" result (int-array (+ nInts len))
                         ]
-                            (ß System/arraycopy(a, 0, result, 0, len))
-                            (ß BigInteger'primitiveLeftShift(result, (alength result), nBits))
+                            (System/arraycopy a, 0, result, 0, len)
+                            (BigInteger'primitiveLeftShift result, (alength result), nBits)
                             (§ return result)
                         )
                         :else
                         (let [
                               #_"int[]" result (int-array (+ nInts len 1))
                         ]
-                            (ß System/arraycopy(a, 0, result, 0, len))
-                            (ß BigInteger'primitiveRightShift(result, (alength result), (ß 32 - nBits)))
+                            (System/arraycopy a, 0, result, 0, len)
+                            (BigInteger'primitiveRightShift result, (alength result), (- 32 nBits))
                             (§ return result)
                         )
                     )
@@ -4713,7 +4743,7 @@
 
     ;; shifts a up to len left n bits assumes no leading zeros, 0 <= n < 32
     (defn #_"void" BigInteger'primitiveLeftShift [#_"int[]" a, #_"int" len, #_"int" n]
-        (when (or (ß len == 0) (ß n == 0))
+        (when (or (== len 0) (== n 0))
             (§ return nil)
         )
 
@@ -4738,10 +4768,10 @@
      ; assuming there are no leading zero ints.
      ;;
     (defn- #_"int" BigInteger'bitLength [#_"int[]" val, #_"int" len]
-        (when (ß len == 0)
+        (when (== len 0)
             (§ return 0)
         )
-        (ß (ß (ß len - 1) << 5) + (BigInteger'bitLengthForInt (aget val 0)))
+        (ß (<< (- len 1) 5) + (BigInteger'bitLengthForInt (aget val 0)))
     )
 
     ;;;
@@ -4751,7 +4781,7 @@
      ;;
     #_method
     (defn #_"BigInteger" BigInteger''abs [#_"BigInteger" this]
-        (if (ß (:signum this) >= 0) this (BigInteger''negate this))
+        (if (>= (:signum this) 0) this (BigInteger''negate this))
     )
 
     ;;;
@@ -4814,12 +4844,12 @@
      ;;
     #_method
     (defn #_"BigInteger" BigInteger''modPow [#_"BigInteger" this, #_"BigInteger" exponent, #_"BigInteger" m]
-        (when (ß (:signum m) <= 0)
+        (when (<= (:signum m) 0)
             (throw! "modulus not positive")
         )
 
         ;; trivial cases
-        (when (ß (:signum exponent) == 0)
+        (when (== (:signum exponent) 0)
             (§ return (if (ß m.equals(BigInteger'ONE)) BigInteger'ZERO BigInteger'ONE))
         )
 
@@ -4827,7 +4857,7 @@
             (§ return (if (ß m.equals(BigInteger'ONE)) BigInteger'ZERO BigInteger'ONE))
         )
 
-        (when (and (ß this.equals(BigInteger'ZERO)) (ß (:signum exponent) >= 0))
+        (when (and (ß this.equals(BigInteger'ZERO)) (>= (:signum exponent) 0))
             (§ return BigInteger'ZERO)
         )
 
@@ -4836,14 +4866,14 @@
         )
 
         (let [
-              #_"boolean" invertResult (ß (:signum exponent) < 0)
+              #_"boolean" invertResult (< (:signum exponent) 0)
         ]
             (when invertResult
                 (§ ass exponent (BigInteger''negate exponent))
             )
 
             (let [
-                  #_"BigInteger" base (if (or (ß (:signum this) < 0) (ß this.compareTo(m) >= 0)) (BigInteger''mod this, m) this)
+                  #_"BigInteger" base (if (or (< (:signum this) 0) (ß this.compareTo(m) >= 0)) (BigInteger''mod this, m) this)
                   #_"BigInteger" result (ß )
             ]
                 (cond (BigInteger''testBit m, 0) ;; odd modulus
@@ -4860,9 +4890,9 @@
                           ;; tear m apart into odd part (m1) and power of 2 (m2)
                           #_"int" p (BigInteger''getLowestSetBit m) ;; max pow of 2 that divides m
                           #_"BigInteger" m1 (BigInteger''shiftRight m, p) ;; m/2**p
-                          #_"BigInteger" m2 (ß BigInteger''shiftLeft(BigInteger'ONE, p)) ;; 2**p
+                          #_"BigInteger" m2 (BigInteger''shiftLeft BigInteger'ONE, p) ;; 2**p
                           ;; calculate new base from m1
-                          #_"BigInteger" base2 (if (or (ß (:signum this) < 0) (ß this.compareTo(m1) >= 0)) (BigInteger''mod this, m1) this)
+                          #_"BigInteger" base2 (if (or (< (:signum this) 0) (ß this.compareTo(m1) >= 0)) (BigInteger''mod this, m1) this)
                           ;; caculate (base ** exponent) mod m1
                           #_"BigInteger" a1 (if (ß m1.equals(BigInteger'ONE)) BigInteger'ZERO (BigInteger''oddModPow base2, exponent, m1))
                           ;; calculate (this ** exponent) mod m2
@@ -4871,22 +4901,22 @@
                           #_"BigInteger" y1 (BigInteger''modInverse m2, m1)
                           #_"BigInteger" y2 (BigInteger''modInverse m1, m2)
                     ]
-                        (cond (ß (alength (:mag m)) < (ß BigInteger'MAX_MAG_LENGTH / 2))
+                        (cond (ß (alength (:mag m)) < (/ BigInteger'MAX_MAG_LENGTH 2))
                             (do
-                                (§ ass result (ß BigInteger''multiply(a1, m2).BigInteger''multiply((§ pipe), y1).BigInteger''add((§ pipe), BigInteger''multiply(a2, m1).BigInteger''multiply((§ pipe), y2)).BigInteger''mod((§ pipe), m)))
+                                (§ ass result (-> (BigInteger''multiply a1, m2) (BigInteger''multiply y1) (BigInteger''add (-> (BigInteger''multiply a2, m1) (BigInteger''multiply y2))) (BigInteger''mod m)))
                             )
                             :else
                             (let [
                                   #_"MutableBigInteger" t1 (MutableBigInteger'new)
                                   #_"MutableBigInteger" t2 (MutableBigInteger'new)
                             ]
-                                (ß MutableBigInteger'new(BigInteger''multiply(a1, m2)).MutableBigInteger''multiply((§ pipe), MutableBigInteger'new(y1), t1))
-                                (ß MutableBigInteger'new(BigInteger''multiply(a2, m1)).MutableBigInteger''multiply((§ pipe), MutableBigInteger'new(y2), t2))
+                                (-> (MutableBigInteger'new (BigInteger''multiply a1, m2)) (MutableBigInteger''multiply (MutableBigInteger'new y1), t1))
+                                (-> (MutableBigInteger'new (BigInteger''multiply a2, m1)) (MutableBigInteger''multiply (MutableBigInteger'new y2), t2))
                                 (MutableBigInteger''add t1, t2)
                                 (let [
                                       #_"MutableBigInteger" q (MutableBigInteger'new)
                                 ]
-                                    (§ ass result (ß MutableBigInteger''divide-3(t1, MutableBigInteger'new(m), q).MutableBigInteger''toBigInteger-1((§ pipe), )))
+                                    (§ ass result (-> (MutableBigInteger''divide-3 t1, (MutableBigInteger'new m), q) (MutableBigInteger''toBigInteger-1)))
                                 )
                             )
                         )
@@ -4968,7 +4998,7 @@
         )
 
         ;; special case for base of zero
-        (when (ß (:signum this) == 0)
+        (when (== (:signum this) 0)
             (§ return BigInteger'ZERO)
         )
 
@@ -4982,7 +5012,7 @@
               #_"int" ebits (BigInteger'bitLength exp, (alength exp))
         ]
             ;; if exponent is 65537 (0x10001), use minimum window size
-            (when (or (ß ebits != 17) (ß (aget exp 0) != 65537))
+            (when (or (!= ebits 17) (!= (aget exp 0) 65537))
                 (while (< (aget BigInteger'bnExpModThreshTable wbits) ebits)
                     (§ ass wbits (inc wbits))
                 )
@@ -4990,7 +5020,7 @@
 
             ;; calculate appropriate table size
             (let [
-                  #_"int" tblmask (ß 1 << wbits)
+                  #_"int" tblmask (<< 1 wbits)
                   ;; allocate table for precomputed odd powers of base in Montgomery form
                   #_"int[][]" table (make-array (Class/forName "[I") tblmask)
             ]
@@ -5002,7 +5032,7 @@
                 (let [
                       #_"int" inv (- (MutableBigInteger'inverseMod32 (aget mod (dec modLen))))
                       ;; convert base to Montgomery form
-                      #_"int[]" a (ß BigInteger'leftShift(base, (alength base), (ß modLen << 5)))
+                      #_"int[]" a (BigInteger'leftShift base, (§ soon alength base), (<< modLen 5))
                       #_"MutableBigInteger" q (MutableBigInteger'new)
                       #_"MutableBigInteger" a2 (MutableBigInteger'new a)
                       #_"MutableBigInteger" b2 (MutableBigInteger'new mod)
@@ -5028,7 +5058,7 @@
                           #_"int[]" b (BigInteger'squareToLen (aget table 0), modLen, nil)
                           _ (§ ass b (BigInteger'montReduce b, mod, modLen, inv))
                           ;; set t to high half of b
-                          #_"int[]" t (ß Arrays/copyOf(b, modLen))
+                          #_"int[]" t (Arrays/copyOf b, modLen)
                     ]
 
                         ;; fill in the table with odd powers of the base
@@ -5052,7 +5082,7 @@
                                 ]
                                     (§ ass buf (| (<< buf 1) (if (== (& (aget exp eIndex) bitpos) 0) 0 1)))
                                     (§ ass bitpos (>>> bitpos 1))
-                                    (when (ß bitpos == 0)
+                                    (when (== bitpos 0)
                                         (§ ass eIndex (inc eIndex))
                                         (§ ass bitpos (<< 1 (dec 32)))
                                         (§ ass elen (dec elen))
@@ -5067,16 +5097,16 @@
                                   #_"boolean" isone true
                                   _ (§ ass multpos (- ebits wbits))
                             ]
-                                (while (ß (buf & 1) == 0)
-                                    (§ ass buf (ß buf >>> 1))
+                                (while (== (& buf 1) 0)
+                                    (§ ass buf (>>> buf 1))
                                     (§ ass multpos (inc multpos))
                                 )
 
                                 (let [
-                                      #_"int[]" mult (§ soon aget table (ß buf >>> 1))
+                                      #_"int[]" mult (§ soon aget table (>>> buf 1))
                                 ]
                                     (§ ass buf 0)
-                                    (when (ß multpos == ebits)
+                                    (when (== multpos ebits)
                                         (§ ass isone false)
                                     )
 
@@ -5086,12 +5116,12 @@
                                         ]
                                             (§ ass ebits (dec ebits))
                                             ;; advance the window
-                                            (§ ass buf (ß buf << 1))
+                                            (§ ass buf (<< buf 1))
 
-                                            (when (ß elen != 0)
+                                            (when (!= elen 0)
                                                 (§ ass buf (| buf (if (== (& (aget exp eIndex) bitpos) 0) 0 1)))
                                                 (§ ass bitpos (>>> bitpos 1))
-                                                (when (ß bitpos == 0)
+                                                (when (== bitpos 0)
                                                     (§ ass eIndex (inc eIndex))
                                                     (§ ass bitpos (<< 1 (dec 32)))
                                                     (§ ass elen (dec elen))
@@ -5099,7 +5129,7 @@
                                             )
 
                                             ;; examine the window for pending multiplies
-                                            (when (ß (buf & tblmask) != 0)
+                                            (when (!= (& buf tblmask) 0)
                                                 (let [
                                                 ]
                                                     (§ ass multpos (- ebits wbits))
@@ -5113,7 +5143,7 @@
                                             )
 
                                             ;; perform multiply
-                                            (when (ß ebits == multpos)
+                                            (when (== ebits multpos)
                                                 (cond isone
                                                     (do
                                                         (§ ass b (ß mult.clone()))
@@ -5132,7 +5162,7 @@
                                             )
 
                                             ;; check if done
-                                            (when (ß ebits == 0)
+                                            (when (== ebits 0)
                                                 (§ break)
                                             )
 
@@ -5152,11 +5182,11 @@
                                     (let [
                                           #_"int[]" t2 (int-array (* 2 modLen))
                                     ]
-                                        (ß System/arraycopy(b, 0, t2, modLen, modLen))
+                                        (System/arraycopy b, 0, t2, modLen, modLen)
 
                                         (§ ass b (BigInteger'montReduce t2, mod, modLen, inv))
 
-                                        (§ ass t2 (ß Arrays/copyOf(b, modLen)))
+                                        (§ ass t2 (Arrays/copyOf b, modLen))
 
                                         (BigInteger'new 1, t2)
                                     )
@@ -5169,7 +5199,9 @@
         )
     )
 
+    (declare BigInteger'mulAdd)
     (declare BigInteger'subN)
+    (declare BigInteger'intArrayCmpToLen)
 
     ;;;
      ; Montgomery reduce n, modulo mod. This reduces modulo mod and divides
@@ -5184,9 +5216,9 @@
             (loop []
                 (let [
                       #_"int" nEnd (aget n (ß (alength n) - 1 - offset))
-                      #_"int" carry (ß BigInteger'mulAdd(n, mod, offset, mlen, inv * nEnd))
+                      #_"int" carry (BigInteger'mulAdd n, mod, offset, mlen, (* inv nEnd))
                 ]
-                    (§ ass c (ß c + BigInteger'addOne(n, offset, mlen, carry)))
+                    (§ ass c (+ c (BigInteger'addOne n, offset, mlen, carry)))
                     (§ ass offset (inc offset))
                     (§ ass len (dec len))
                     (recur-if (< 0 len) [])
@@ -5194,10 +5226,10 @@
             )
 
             (while (< 0 c)
-                (§ ass c (ß c + BigInteger'subN(n, mod, mlen)))
+                (§ ass c (+ c (BigInteger'subN n, mod, mlen)))
             )
 
-            (while (ß BigInteger'intArrayCmpToLen(n, mod, mlen) >= 0)
+            (while (>= (BigInteger'intArrayCmpToLen n, mod, mlen) 0)
                 (BigInteger'subN n, mod, mlen)
             )
 
@@ -5238,10 +5270,10 @@
         ]
             (loop-when-recur [len (dec len)] (<= 0 len) [(dec len)]
                 (§ ass sum (+ (- (& (aget a len) BigInteger'LONG_MASK) (& (aget b len) BigInteger'LONG_MASK)) (>> sum 32)))
-                (§ ass (aget a len) (ß (int)sum))
+                (§ ass (aget a len) (int sum))
             )
 
-            (ß (int)(sum >> 32))
+            (int (>> sum 32))
         )
     )
 
@@ -5250,7 +5282,7 @@
      ;;
     (defn #_"int" BigInteger'mulAdd [#_"int[]" out, #_"int[]" in, #_"int" offset, #_"int" len, #_"int" k]
         (let [
-              #_"long" kLong (ß k & BigInteger'LONG_MASK)
+              #_"long" kLong (& k BigInteger'LONG_MASK)
               #_"long" carry 0
         ]
             (§ ass offset (ß (alength out) - offset - 1))
@@ -5258,12 +5290,12 @@
                 (let [
                       #_"long" product (+ (* (& (aget in j) BigInteger'LONG_MASK) kLong) (& (aget out offset) BigInteger'LONG_MASK) carry)
                 ]
-                    (§ ass (aget out offset) (ß (int)product))
+                    (§ ass (aget out offset) (int product))
                     (§ ass offset (dec offset))
                     (§ ass carry (>>> product 32))
                 )
             )
-            (ß (int)carry)
+            (int carry)
         )
     )
 
@@ -5276,8 +5308,8 @@
               _ (§ ass offset (- (alength a) 1 mlen offset))
               #_"long" t (+ (& (aget a offset) BigInteger'LONG_MASK) (& carry BigInteger'LONG_MASK))
         ]
-            (§ ass (aget a offset) (ß (int)t))
-            (when (ß (t >>> 32) == 0)
+            (§ ass (aget a offset) (int t))
+            (when (== (>>> t 32) 0)
                 (§ return 0)
             )
             (loop-when-recur [mlen (dec mlen)] (<= 0 mlen) [(dec mlen)]
@@ -5320,16 +5352,16 @@
               #_"int" limit (BigInteger''bitLength exponent)
         ]
             (when (BigInteger''testBit this, 0)
-                (§ ass limit (if (ß (p - 1) < limit) (dec p) limit))
+                (§ ass limit (if (< (- p 1) limit) (dec p) limit))
             )
 
             (while (< expOffset limit)
                 (when (BigInteger''testBit exponent, expOffset)
-                    (§ ass result (ß BigInteger''multiply(result, baseToPow2).BigInteger''mod2((§ pipe), p)))
+                    (§ ass result (-> (BigInteger''multiply result, baseToPow2) (BigInteger''mod2 p)))
                 )
                 (§ ass expOffset (inc expOffset))
                 (when (< expOffset limit)
-                    (§ ass baseToPow2 (ß BigInteger''square(baseToPow2).BigInteger''mod2((§ pipe), p)))
+                    (§ ass baseToPow2 (-> (BigInteger''square baseToPow2) (BigInteger''mod2 p)))
                 )
             )
 
@@ -5343,7 +5375,7 @@
      ;;
     #_method
     (defn- #_"BigInteger" BigInteger''mod2 [#_"BigInteger" this, #_"int" p]
-        (when (ß BigInteger''bitLength(this) <= p)
+        (when (<= (BigInteger''bitLength this) p)
             (§ return this)
         )
 
@@ -5388,7 +5420,7 @@
         (let [
               #_"BigInteger" modVal this
         ]
-            (when (or (ß (:signum this) < 0) (ß BigInteger''compareMagnitude-i(this, m) >= 0))
+            (when (or (< (:signum this) 0) (>= (BigInteger''compareMagnitude-i this, m) 0))
                 (§ ass modVal (BigInteger''mod this, m))
             )
 
@@ -5421,14 +5453,14 @@
      ;;
     #_method
     (defn #_"BigInteger" BigInteger''shiftLeft [#_"BigInteger" this, #_"int" n]
-        (when (ß (:signum this) == 0)
+        (when (== (:signum this) 0)
             (§ return BigInteger'ZERO)
         )
         (cond (< 0 n)
             (do
                 (§ return (BigInteger'new (BigInteger'shiftLeft (:mag this), n), (:signum this)))
             )
-            (ß n == 0)
+            (== n 0)
             (do
                 (§ return this)
             )
@@ -5457,10 +5489,10 @@
               #_"int" magLen (alength mag)
               #_"int[]" newMag nil
         ]
-            (cond (ß nBits == 0)
+            (cond (== nBits 0)
                 (do
                     (§ ass newMag (int-array (+ magLen nInts)))
-                    (ß System/arraycopy(mag, 0, newMag, 0, magLen))
+                    (System/arraycopy mag, 0, newMag, 0, magLen)
                 )
                 :else
                 (let [
@@ -5468,7 +5500,7 @@
                       #_"int" nBits2 (- 32 nBits)
                       #_"int" highBits (>>> (aget mag 0) nBits2)
                 ]
-                    (cond (ß highBits != 0)
+                    (cond (!= highBits 0)
                         (do
                             (§ ass newMag (int-array (+ magLen nInts 1)))
                             (§ ass (aget newMag i) highBits)
@@ -5506,14 +5538,14 @@
      ;;
     #_method
     (defn #_"BigInteger" BigInteger''shiftRight [#_"BigInteger" this, #_"int" n]
-        (when (ß (:signum this) == 0)
+        (when (== (:signum this) 0)
             (§ return BigInteger'ZERO)
         )
         (cond (< 0 n)
             (do
                 (BigInteger''shiftRightImpl this, n)
             )
-            (ß n == 0)
+            (== n 0)
             (do
                 this
             )
@@ -5547,7 +5579,7 @@
                 (§ return (if (<= 0 (:signum this)) BigInteger'ZERO (aget BigInteger'negConst 1)))
             )
 
-            (cond (ß nBits == 0)
+            (cond (== nBits 0)
                 (let [
                       #_"int" newMagLen (- magLen nInts)
                 ]
@@ -5558,7 +5590,7 @@
                       #_"int" i 0
                       #_"int" highBits (ß (aget (:mag this) 0) >>> nBits)
                 ]
-                    (cond (ß highBits != 0)
+                    (cond (!= highBits 0)
                         (do
                             (§ ass newMag (int-array (- magLen nInts)))
                             (§ ass (aget newMag i) highBits)
@@ -5575,7 +5607,7 @@
                           #_"int" j 0
                     ]
                         (while (ß j < magLen - nInts - 1)
-                            (§ ass (aget newMag i) (ß (ß (aget (:mag this) j) << nBits2) | (ß (aget (:mag this) (ß j + 1)) >>> nBits)))
+                            (§ ass (aget newMag i) (ß (ß (aget (:mag this) j) << nBits2) | (ß (aget (:mag this) (+ j 1)) >>> nBits)))
                             (§ ass i (inc i))
                             (§ ass j (inc j))
                         )
@@ -5583,17 +5615,17 @@
                 )
             )
 
-            (when (ß (:signum this) < 0)
+            (when (< (:signum this) 0)
                 ;; Find out whether any one-bits were shifted off the end.
                 (let [
                       #_"int" j (- magLen nInts)
                       #_"boolean" onesLost false
                 ]
-                    (loop-when-recur [#_"int" i (dec magLen)] (and (ß i >= j) (ß !onesLost)) [(dec i)]
+                    (loop-when-recur [#_"int" i (dec magLen)] (and (>= i j) (ß !onesLost)) [(dec i)]
                         (§ ass onesLost (ß (aget (:mag this) i) != 0))
                     )
-                    (when (and (ß !onesLost) (ß nBits != 0))
-                        (§ ass onesLost (ß (ß (aget (:mag this) (ß magLen - nInts - 1)) << (ß 32 - nBits)) != 0))
+                    (when (and (ß !onesLost) (!= nBits 0))
+                        (§ ass onesLost (ß (ß (aget (:mag this) (ß magLen - nInts - 1)) << (- 32 nBits)) != 0))
                     )
 
                     (when onesLost
@@ -5602,7 +5634,7 @@
                 )
             )
 
-            (ß BigInteger'new(newMag, this.signum))
+            (BigInteger'new newMag, (:signum this))
         )
     )
 
@@ -5700,7 +5732,7 @@
               #_"int[]" result (int-array (BigInteger''intLength this))
         ]
             (loop-when-recur [#_"int" i 0] (ß i < (alength result)) [(inc i)]
-                (§ ass (aget result i) (ß (§ bit-not)(ß BigInteger''getInt(this, (ß (alength result) - i - 1)))))
+                (§ ass (aget result i) (bit-not (BigInteger''getInt this, (- (alength result) i 1))))
             )
 
             (BigInteger'valueOf-i result)
@@ -5763,7 +5795,7 @@
         )
 
         (let [
-              #_"int" intNum (ß n >>> 5)
+              #_"int" intNum (>>> n 5)
               #_"int[]" result (int-array (Math/max (BigInteger''intLength this), (+ intNum 2)))
         ]
             (loop-when-recur [#_"int" i 0] (ß i < (alength result)) [(inc i)]
@@ -5791,7 +5823,7 @@
         )
 
         (let [
-              #_"int" intNum (ß n >>> 5)
+              #_"int" intNum (>>> n 5)
               #_"int[]" result (int-array (Math/max (BigInteger''intLength this), (inc (>>> (inc n) 5))))
         ]
             (loop-when-recur [#_"int" i 0] (ß i < (alength result)) [(inc i)]
@@ -5819,7 +5851,7 @@
         )
 
         (let [
-              #_"int" intNum (ß n >>> 5)
+              #_"int" intNum (>>> n 5)
               #_"int[]" result (int-array (Math/max (BigInteger''intLength this), (+ intNum 2)))
         ]
             (loop-when-recur [#_"int" i 0] (ß i < (alength result)) [(inc i)]
@@ -5843,13 +5875,13 @@
     #_method
     (defn #_"int" BigInteger''getLowestSetBit [#_"BigInteger" this]
         (let [
-              #_"int" lsb (ß (:lowestSetBit this) - 2)
+              #_"int" lsb (- (:lowestSetBit this) 2)
         ]
             (when (ß lsb == -2) ;; lowestSetBit not initialized yet
                 (let [
                       _ (§ ass lsb 0)
                 ]
-                    (cond (ß (:signum this) == 0)
+                    (cond (== (:signum this) 0)
                         (do
                             (§ ass lsb (dec lsb))
                         )
@@ -5860,7 +5892,7 @@
                               #_"int" b (ß )
                         ]
                             (loop [i 0]
-                                (let-when [_ (§ ass b (BigInteger''getInt this, i))] (ß b == 0)
+                                (let-when [_ (§ ass b (BigInteger''getInt this, i))] (== b 0)
                                     (recur (inc i))
                                 )
                             )
@@ -5889,28 +5921,28 @@
     #_method
     (defn #_"int" BigInteger''bitLength [#_"BigInteger" this]
         (let [
-              #_"int" n (ß (:bitLength this) - 1)
+              #_"int" n (- (:bitLength this) 1)
         ]
             (when (ß n == -1) ;; bitLength not initialized yet
                 (let [
                       #_"int[]" m (:mag this)
                       #_"int" len (alength m)
                 ]
-                    (cond (ß len == 0)
+                    (cond (== len 0)
                         (do
                             (§ ass n 0) ;; offset by one to initialize
                         )
                         :else
                         (let [
                               ;; calculate the bit length of the magnitude
-                              #_"int" magBitLength (ß (ß (ß len - 1) << 5) + (BigInteger'bitLengthForInt (aget (:mag this) 0)))
+                              #_"int" magBitLength (ß (<< (- len 1) 5) + (BigInteger'bitLengthForInt (aget (:mag this) 0)))
                         ]
-                            (cond (ß (:signum this) < 0)
+                            (cond (< (:signum this) 0)
                                 (let [
                                       ;; check if magnitude is a power of two
                                       #_"boolean" pow2 (ß (Integer/bitCount (aget (:mag this) 0)) == 1)
                                 ]
-                                    (loop-when-recur [#_"int" i 1] (and (ß i < len) pow2) [(inc i)]
+                                    (loop-when-recur [#_"int" i 1] (and (< i len) pow2) [(inc i)]
                                         (§ ass pow2 (ß (aget (:mag this) i) == 0))
                                     )
 
@@ -5941,7 +5973,7 @@
     #_method
     (defn #_"int" BigInteger''bitCount [#_"BigInteger" this]
         (let [
-              #_"int" bc (ß (:bitCount this) - 1)
+              #_"int" bc (- (:bitCount this) 1)
         ]
             (when (ß bc == -1) ;; bitCount not initialized yet
                 (let [
@@ -5951,7 +5983,7 @@
                     (loop-when-recur [#_"int" i 0] (< i (alength (:mag this))) [(inc i)]
                         (§ ass bc (+ bc (Integer/bitCount (aget (:mag this) i))))
                     )
-                    (when (ß (:signum this) < 0)
+                    (when (< (:signum this) 0)
                         ;; count the trailing zeros in the magnitude
                         (let [
                               #_"int" magTrailingZeroCount 0
@@ -6062,10 +6094,10 @@
             )
             (loop-when-recur [#_"int" i 0] (< i len1) [(inc i)]
                 (let [
-                      #_"int" a (ß m1[i])
-                      #_"int" b (ß m2[i])
+                      #_"int" a (aget m1 i)
+                      #_"int" b (aget m2 i)
                 ]
-                    (when (ß a != b)
+                    (when (!= a b)
                         (§ return (if (ß (a & BigInteger'LONG_MASK) < (b & BigInteger'LONG_MASK)) -1 1))
                     )
                 )
@@ -6094,9 +6126,9 @@
                 (§ ass val (- val))
             )
             (let [
-                  #_"int" highWord (ß (int)(val >>> 32))
+                  #_"int" highWord (int (>>> val 32))
             ]
-                (cond (ß highWord == 0)
+                (cond (== highWord 0)
                     (do
                         (when (< len 1)
                             (§ return -1)
@@ -6105,10 +6137,10 @@
                             (§ return 1)
                         )
                         (let [
-                              #_"int" a (ß m1[0])
-                              #_"int" b (ß (int)val)
+                              #_"int" a (aget m1 0)
+                              #_"int" b (int val)
                         ]
-                            (when (ß a != b)
+                            (when (!= a b)
                                 (§ return (if (ß (a & BigInteger'LONG_MASK) < (b & BigInteger'LONG_MASK)) -1 1))
                             )
                             (§ return 0)
@@ -6120,15 +6152,15 @@
                             (§ return -1)
                         )
                         (let [
-                              #_"int" a (ß m1[0])
+                              #_"int" a (aget m1 0)
                               #_"int" b highWord
                         ]
-                            (when (ß a != b)
+                            (when (!= a b)
                                 (§ return (if (ß (a & BigInteger'LONG_MASK) < (b & BigInteger'LONG_MASK)) -1 1))
                             )
-                            (§ ass a (ß m1[1]))
-                            (§ ass b (ß (int)val))
-                            (when (ß a != b)
+                            (§ ass a (aget m1 1))
+                            (§ ass b (int val))
+                            (when (!= a b)
                                 (§ return (if (ß (a & BigInteger'LONG_MASK) < (b & BigInteger'LONG_MASK)) -1 1))
                             )
                             (§ return 0)
@@ -6149,7 +6181,7 @@
     #_foreign
     (defn #_"boolean" equals---BigInteger [#_"BigInteger" this, #_"Object" x]
         ;; this test is just an optimization, which may or may not help
-        (when (ß x == this)
+        (when (== x this)
             (§ return true)
         )
 
@@ -6221,7 +6253,7 @@
               #_"int" hashCode 0
         ]
             (loop-when-recur [#_"int" i 0] (ß i < (alength (:mag this))) [(inc i)]
-                (§ ass hashCode (ß (int)(ß (ß 31 * hashCode) + (ß (aget (:mag this) i) & BigInteger'LONG_MASK))))
+                (§ ass hashCode (int (ß (* 31 hashCode) + (ß (aget (:mag this) i) & BigInteger'LONG_MASK))))
             )
 
             (ß hashCode * this.signum)
@@ -6244,15 +6276,15 @@
      ;;
     #_method
     (defn #_"String" BigInteger''toString [#_"BigInteger" this, #_"int" radix]
-        (when (ß (:signum this) == 0)
+        (when (== (:signum this) 0)
             (§ return "0")
         )
-        (when (or (ß radix < Character/MIN_RADIX) (ß radix > Character/MAX_RADIX))
+        (when-not (<= Character/MIN_RADIX radix Character/MAX_RADIX)
             (§ ass radix 10)
         )
 
         ;; If it's small enough, use smallToString.
-        (when (ß (alength (:mag this)) <= BigInteger'SCHOENHAGE_BASE_CONVERSION_THRESHOLD)
+        (when (<= (alength (:mag this)) BigInteger'SCHOENHAGE_BASE_CONVERSION_THRESHOLD)
             (§ return (BigInteger''smallToString this, radix))
         )
 
@@ -6261,10 +6293,10 @@
         (let [
               #_"StringBuilder" sb (StringBuilder.)
         ]
-            (cond (ß (:signum this) < 0)
+            (cond (< (:signum this) 0)
                 (do
-                    (ß BigInteger'toString(BigInteger''negate(this), sb, radix, 0))
-                    (ß sb.insert(0, \-))
+                    (BigInteger'toString (BigInteger''negate this), sb, radix, 0)
+                    (.insert sb, 0, \-)
                 )
                 :else
                 (do
@@ -6272,7 +6304,7 @@
                 )
             )
 
-            (ß sb.toString())
+            (.toString sb)
         )
     )
 
@@ -6285,7 +6317,7 @@
      ;;
     #_method
     (defn- #_"String" BigInteger''smallToString [#_"BigInteger" this, #_"int" radix]
-        (when (ß (:signum this) == 0)
+        (when (== (:signum this) 0)
             (§ return "0")
         )
 
@@ -6298,7 +6330,7 @@
               #_"BigInteger" tmp (BigInteger''abs this)
               #_"int" numGroups 0
         ]
-            (while (ß (:signum tmp) != 0)
+            (while (!= (:signum tmp) 0)
                 (let [
                       #_"BigInteger" d (aget BigInteger'longRadix radix)
                       #_"MutableBigInteger" q (MutableBigInteger'new)
@@ -6329,7 +6361,7 @@
                     (let [
                           #_"int" numLeadingZeros (- (aget BigInteger'digitsPerLong radix) (.length (aget digitGroup i)))
                     ]
-                        (when (ß numLeadingZeros != 0)
+                        (when (!= numLeadingZeros 0)
                             (.append buf, (aget BigInteger'zeros numLeadingZeros))
                         )
                         (.append buf, (aget digitGroup i))
@@ -6379,7 +6411,7 @@
               ;; Calculate a value for n in the equation radix^(2^n) = u
               ;; and subtract 1 from that value. This is used to find the
               ;; cache index that contains the best value to divide u.
-              #_"int" n (ß (int)(Math/round (- (/ (Math/log (/ (* b BigInteger'LOG_TWO) (aget BigInteger'logCache radix))) BigInteger'LOG_TWO) 1.0)))
+              #_"int" n (int (Math/round (- (/ (Math/log (/ (* b BigInteger'LOG_TWO) (aget BigInteger'logCache radix))) BigInteger'LOG_TWO) 1.0)))
               #_"BigInteger" v (BigInteger'getRadixConversionCache radix, n)
               #_"BigInteger[]" results (BigInteger''divideAndRemainder u, v)
               #_"int" expectedDigits (<< 1 n)
@@ -6407,7 +6439,7 @@
 
             (let [
                   #_"int" oldLength (§ soon alength cacheLine)
-                  _ (§ ass cacheLine (ß Arrays/copyOf(cacheLine, exponent + 1)))
+                  _ (§ ass cacheLine (Arrays/copyOf cacheLine, (inc exponent)))
             ]
                 (loop-when-recur [#_"int" i oldLength] (<= i exponent) [(inc i)]
                     (§ ass (aget cacheLine i) (BigInteger''pow (aget cacheLine (dec i)), 2))
@@ -6466,11 +6498,11 @@
     #_method
     (defn #_"byte[]" BigInteger''toByteArray [#_"BigInteger" this]
         (let [
-              #_"int" byteLen (ß BigInteger''bitLength(this) / 8 + 1)
+              #_"int" byteLen (inc (/ (BigInteger''bitLength this) 8))
               #_"byte[]" byteArray (byte-array byteLen)
         ]
             (loop-when-recur [#_"int" bytesCopied 4 #_"int" nextInt 0 #_"int" intIndex 0 #_"int" i (dec byteLen)] (<= 0 i) [bytesCopied nextInt intIndex (dec i)]
-                (cond (ß bytesCopied == 4)
+                (cond (== bytesCopied 4)
                     (do
                         (§ ass nextInt (BigInteger''getInt this, intIndex))
                         (§ ass intIndex (inc intIndex))
@@ -6478,11 +6510,11 @@
                     )
                     :else
                     (do
-                        (§ ass nextInt (ß nextInt >>> 8))
+                        (§ ass nextInt (>>> nextInt 8))
                         (§ ass bytesCopied (inc bytesCopied))
                     )
                 )
-                (§ ass (aget byteArray i) (ß (byte)nextInt))
+                (§ ass (aget byteArray i) (byte nextInt))
             )
             byteArray
         )
@@ -6554,7 +6586,7 @@
             ;; find first nonzero byte
             (loop-when-recur [keep 0] (and (< keep vlen) (== (aget val keep) 0)) [(inc keep)]
             )
-            (if (ß keep == 0) val (ß Arrays/copyOfRange(val, keep, vlen)))
+            (if (== keep 0) val (Arrays/copyOfRange val, keep, vlen))
         )
     )
 
@@ -6646,7 +6678,7 @@
 
                 ;; add one to one's complement to generate two's complement
                 (loop-when-recur [#_"int" i (dec (alength result))] (<= 0 i) [(dec i)]
-                    (§ ass (aget result i) (ß (int)(inc (& (aget result i) BigInteger'LONG_MASK))))
+                    (§ ass (aget result i) (int (inc (& (aget result i) BigInteger'LONG_MASK))))
                     (when (!= (aget result i) 0)
                         (§ break)
                     )
@@ -6777,13 +6809,13 @@
     ;;; Returns sign bit.
     #_method
     (defn- #_"int" BigInteger''signBit [#_"BigInteger" this]
-        (if (ß (:signum this) < 0) 1 0)
+        (if (< (:signum this) 0) 1 0)
     )
 
     ;;; Returns an int of sign bits.
     #_method
     (defn- #_"int" BigInteger''signInt [#_"BigInteger" this]
-        (if (ß (:signum this) < 0) -1 0)
+        (if (< (:signum this) 0) -1 0)
     )
 
     ;;;
@@ -6803,7 +6835,7 @@
         (let [
               #_"int" magInt (aget (:mag this) (ß (alength (:mag this)) - n - 1))
         ]
-            (cond (ß (:signum this) >= 0) magInt (ß n <= BigInteger''firstNonzeroIntNum(this)) (- magInt) :else (bit-not magInt))
+            (cond (>= (:signum this) 0) magInt (ß n <= BigInteger''firstNonzeroIntNum(this)) (- magInt) :else (bit-not magInt))
         )
     )
 
@@ -6815,13 +6847,13 @@
     #_method
     (defn- #_"int" BigInteger''firstNonzeroIntNum [#_"BigInteger" this]
         (let [
-              #_"int" fn (ß (:firstNonzeroIntNum this) - 2)
+              #_"int" fn (- (:firstNonzeroIntNum this) 2)
         ]
             (when (ß fn == -2) ;; firstNonzeroIntNum not initialized yet
                 ;; search for the first nonzero int
                 (let [
                       #_"int" mlen (alength (:mag this))
-                      #_"int" i (loop-when-recur [i (dec mlen)] (and (ß i >= 0) (ß (aget (:mag this) i) == 0)) [(dec i)] => i)
+                      #_"int" i (loop-when-recur [i (dec mlen)] (and (>= i 0) (ß (aget (:mag this) i) == 0)) [(dec i)] => i)
                 ]
                     (§ ass fn (ß mlen - i - 1))
                     (§ ass (:firstNonzeroIntNum this) (+ fn 2)) ;; offset by two to initialize
