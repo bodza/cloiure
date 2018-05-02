@@ -1,5 +1,5 @@
 (ns cloiure.ratio
-    (:refer-clojure :only [* *ns* + - -> / < <= = == > >= aget alength and aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor byte byte-array cast complement cond cons dec declare defmacro defn double-array first if-not import inc instance? int int-array let letfn long long-array loop make-array max min neg? next nil? not or pos? quot rem second some? symbol? unsigned-bit-shift-right vary-meta vec vector? while zero?])
+    (:refer-clojure :only [* *ns* + - -> / < <= = == > >= aget alength and aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor byte byte-array cast complement cond cons dec declare defmacro defn dotimes double-array first if-not import inc instance? int int-array let letfn long long-array loop make-array max min neg? next nil? not or pos? quot rem second some? symbol? unsigned-bit-shift-right update vary-meta vec vector? while zero?])
 )
 
 (defmacro § [& _])
@@ -281,14 +281,6 @@
 
     ;; constants
 
-    (declare MutableBigInteger'new-i)
-
-    ;;;
-     ; MutableBigInteger with one element value array with the value 1. Use
-     ; this constant only when the method is not going to modify this object.
-     ;;
-    (def #_"MutableBigInteger" MutableBigInteger'ONE (§ soon MutableBigInteger'new-i 1))
-
     ;;;
      ; The minimum {@code intLen} for cancelling powers of two before dividing.
      ; If the number of ints is less than this threshold,
@@ -311,9 +303,8 @@
      ;;
     (defn #_"MutableBigInteger" MutableBigInteger'new-0 []
         (let [this (§ new)
-        ]
-            (§ ass this (assoc this :value (int-array 1)))
-            (§ ass this (assoc this :intLen 0))
+              this (assoc this :value (int-array 1))
+              this (assoc this :intLen 0)]
             this
         )
     )
@@ -323,9 +314,8 @@
      ;;
     (defn #_"MutableBigInteger" MutableBigInteger'new-i [#_"int" val]
         (let [this (§ new)
-        ]
-            (§ ass this (assoc this :value (int-array 1)))
-            (§ ass this (assoc this :intLen 1))
+              this (assoc this :value (int-array 1))
+              this (assoc this :intLen 1)]
             (aset (:value this) 0 val)
             this
         )
@@ -337,9 +327,8 @@
      ;;
     (defn #_"MutableBigInteger" MutableBigInteger'new-a [#_"int[]" val]
         (let [this (§ new)
-        ]
-            (§ ass this (assoc this :value val))
-            (§ ass this (assoc this :intLen (alength val)))
+              this (assoc this :value val)
+              this (assoc this :intLen (alength val))]
             this
         )
     )
@@ -350,9 +339,8 @@
      ;;
     (defn #_"MutableBigInteger" MutableBigInteger'new-b [#_"BigInteger" b]
         (let [this (§ new)
-        ]
-            (§ ass this (assoc this :intLen (alength (:mag b))))
-            (§ ass this (assoc this :value (Arrays/copyOf (:mag b), (alength (:mag b)))))
+              this (assoc this :value (Arrays/copyOf (:mag b), (alength (:mag b))))]
+              this (assoc this :intLen (alength (:mag b)))
             this
         )
     )
@@ -363,44 +351,13 @@
      ;;
     (defn #_"MutableBigInteger" MutableBigInteger'new-m [#_"MutableBigInteger" val]
         (let [this (§ new)
-        ]
-            (§ ass this (assoc this :intLen (:intLen val)))
-            (§ ass this (assoc this :value (Arrays/copyOfRange (:value val), (:offset val), (+ (:offset val) (:intLen val)))))
+              this (assoc this :value (Arrays/copyOfRange (:value val), (:offset val), (+ (:offset val) (:intLen val))))
+              this (assoc this :intLen (:intLen val))]
             this
         )
     )
 
-    ;;;
-     ; Internal helper method to return the magnitude array. The caller is not
-     ; supposed to modify the returned array.
-     ;;
-    #_method
-    (defn- #_"int[]" MutableBigInteger''getMagnitudeArray [#_"MutableBigInteger" this]
-        (when (or (pos? (:offset this)) (not (== (alength (:value this)) (:intLen this))))
-            (§ return (Arrays/copyOfRange (:value this), (:offset this), (+ (:offset this) (:intLen this))))
-        )
-        (:value this)
-    )
-
-    ;;;
-     ; Convert this MutableBigInteger to a long value. The caller has to make
-     ; sure this MutableBigInteger can be fit into long.
-     ;;
-    #_method
-    (defn- #_"long" MutableBigInteger''toLong [#_"MutableBigInteger" this]
-        (when (< 2 (:intLen this))
-            (throw! "exceeds the range of long")
-        )
-        (when (zero? (:intLen this))
-            (§ return 0)
-        )
-        (let [
-              #_"long" d (long! (aget (:value this) (:offset this)))
-        ]
-            (if (== (:intLen this) 2) (| (<< d 32) (long! (aget (:value this) (inc (:offset this))))) d)
-        )
-    )
-
+    (declare BigInteger'ZERO)
     (declare BigInteger'new-2ai)
 
     ;;;
@@ -408,10 +365,15 @@
      ;;
     #_method
     (defn #_"BigInteger" MutableBigInteger''toBigInteger-2 [#_"MutableBigInteger" this, #_"int" sign]
-        (when (or (zero? (:intLen this)) (zero? sign))
-            (§ return BigInteger'ZERO)
+        (if (or (zero? (:intLen this)) (zero? sign))
+            BigInteger'ZERO
+            (let [#_"int[]" magnitude
+                    (when (or (pos? (:offset this)) (not (== (alength (:value this)) (:intLen this)))) => (:value this)
+                        (Arrays/copyOfRange (:value this), (:offset this), (+ (:offset this) (:intLen this)))
+                    )]
+                (BigInteger'new-2ai magnitude, sign)
+            )
         )
-        (BigInteger'new-2ai (MutableBigInteger''getMagnitudeArray this), sign)
     )
 
     (declare MutableBigInteger''normalize)
@@ -422,7 +384,7 @@
      ;;
     #_method
     (defn #_"BigInteger" MutableBigInteger''toBigInteger-1 [#_"MutableBigInteger" this]
-        (MutableBigInteger''normalize this)
+        (§ ass this (MutableBigInteger''normalize this))
         (MutableBigInteger''toBigInteger-2 this, (if (MutableBigInteger''isZero this) 0 1))
     )
 
@@ -433,12 +395,8 @@
     (defn #_"void" MutableBigInteger''clear [#_"MutableBigInteger" this]
         (§ ass this (assoc this :intLen 0))
         (§ ass this (assoc this :offset 0))
-        (let [
-              #_"int" n (alength (:value this))
-        ]
-            (loop-when-recur [#_"int" i 0] (< i n) [(inc i)]
-                (aset (:value this) i 0)
-            )
+        (dotimes [#_"int" i (alength (:value this))]
+            (aset (:value this) i 0)
         )
         nil
     )
@@ -456,38 +414,27 @@
     ;;;
      ; Compare the magnitude of two MutableBigIntegers. Returns -1, 0 or 1
      ; as this MutableBigInteger is numerically less than, equal to, or
-     ; greater than <tt>b</tt>.
+     ; greater than <tt>that</tt>.
      ;;
     #_method
-    (defn #_"int" MutableBigInteger''compare [#_"MutableBigInteger" this, #_"MutableBigInteger" b]
-        (let [
-              #_"int" blen (:intLen b)
-        ]
-            (when (< (:intLen this) blen)
-                (§ return -1)
-            )
-            (when (< blen (:intLen this))
-                (§ return 1)
-            )
-
-            ;; Add Integer.MIN_VALUE to make the comparison act as unsigned integer comparison.
-            (let [
-                  #_"int[]" bval (:value b)
-            ]
-                (loop-when-recur [#_"int" i (:offset this) #_"int" j (:offset b)] (< i (+ (:intLen this) (:offset this))) [(inc i) (inc j)]
-                    (let [
-                          #_"int" b1 (+ (aget (:value this) i) 0x80000000)
-                          #_"int" b2 (+ (aget bval j) 0x80000000)
-                    ]
-                        (when (< b1 b2)
-                            (§ return -1)
-                        )
-                        (when (< b2 b1)
-                            (§ return 1)
+    (defn #_"int" MutableBigInteger''compare [#_"MutableBigInteger" this, #_"MutableBigInteger" that]
+        (let [#_"int" cmp (- (:intLen this) (:intLen that))]
+            (cond
+                (neg? cmp) -1
+                (pos? cmp) 1
+                :else ;; add Integer.MIN_VALUE to make the comparison act as unsigned integer comparison
+                    (let [#_"int" n (+ (:offset this) (:intLen this))]
+                        (loop-when [#_"int" i (:offset this) #_"int" j (:offset that)] (< i n) => 0
+                            (let [#_"int" a (+ (aget (:value this) i) 0x80000000)
+                                  #_"int" b (+ (aget (:value that) j) 0x80000000)]
+                                (cond
+                                    (< a b) -1
+                                    (< b a) 1
+                                    :else (recur (inc i) (inc j))
+                                )
+                            )
                         )
                     )
-                )
-                0
             )
         )
     )
@@ -498,17 +445,10 @@
      ;;
     #_method
     (defn- #_"int" MutableBigInteger''getLowestSetBit [#_"MutableBigInteger" this]
-        (when (zero? (:intLen this))
-            (§ return -1)
-        )
-        (let [
-              #_"int" j (loop-when-recur [j (dec (:intLen this))] (and (pos? j) (zero? (aget (:value this) (+ j (:offset this))))) [(dec j)] => j)
-              #_"int" b (aget (:value this) (+ j (:offset this)))
-        ]
-            (when (zero? b)
-                (§ return -1)
+        (loop-when [#_"int" i (:intLen this)] (pos? i) => -1
+            (let [i (dec i) #_"int" b (aget (:value this) (+ (:offset this) i))]
+                (recur-if (zero? b) [i] => (+ (<< (dec (- (:intLen this) i)) 5) (Integer/numberOfTrailingZeros b)))
             )
-            (+ (<< (- (:intLen this) 1 j) 5) (Integer/numberOfTrailingZeros b))
         )
     )
 
@@ -537,50 +477,18 @@
      ; magnitude is zero, then intLen is zero.
      ;;
     #_method
-    (defn #_"void" MutableBigInteger''normalize [#_"MutableBigInteger" this]
-        (when (zero? (:intLen this))
-            (§ ass this (assoc this :offset 0))
-            (§ return nil)
-        )
-
-        (let [
-              #_"int" index (:offset this)
-        ]
-            (when (not (zero? (aget (:value this) index)))
-                (§ return nil)
-            )
-
-            (let [
-                  #_"int" indexBound (+ index (:intLen this))
-            ]
-                (loop []
-                    (§ ass index (inc index))
-                    (recur-if (and (< index indexBound) (zero? (aget (:value this) index))) [])
-                )
-
-                (let [
-                      #_"int" numZeros (- index (:offset this))
-                ]
-                    (§ ass this (assoc this :intLen (- (:intLen this) numZeros)))
-                    (§ ass this (assoc this :offset (if (zero? (:intLen this)) 0 (+ (:offset this) numZeros))))
+    (defn #_"MutableBigInteger" MutableBigInteger''normalize [#_"MutableBigInteger" this]
+        (when (pos? (:intLen this)) => (assoc this :offset 0)
+            (let-when [#_"int" i (:offset this)] (zero? (aget (:value this) i)) => this
+                (let [#_"int" n (+ i (:intLen this))
+                      i (loop-when-recur [i (inc i)] (and (< i n) (zero? (aget (:value this) i))) [(inc i)] => i)
+                      #_"int" n (- i (:offset this))
+                      this (update this :intLen - n)
+                      this (assoc this :offset (if (pos? (:intLen this)) (+ (:offset this) n) 0))]
+                    this
                 )
             )
         )
-        nil
-    )
-
-    ;;;
-     ; If this MutableBigInteger cannot hold len words, increase the size
-     ; of the value array to len words.
-     ;;
-    #_method
-    (defn- #_"void" MutableBigInteger''ensureCapacity [#_"MutableBigInteger" this, #_"int" len]
-        (when (< (alength (:value this)) len)
-            (§ ass this (assoc this :value (int-array len)))
-            (§ ass this (assoc this :offset 0))
-            (§ ass this (assoc this :intLen len))
-        )
-        nil
     )
 
     ;;;
@@ -589,28 +497,12 @@
      ;;
     #_method
     (defn #_"int[]" MutableBigInteger''toIntArray [#_"MutableBigInteger" this]
-        (let [
-              #_"int[]" result (int-array (:intLen this))
-        ]
-            (loop-when-recur [#_"int" i 0] (< i (:intLen this)) [(inc i)]
-                (aset result i (aget (:value this) (+ (:offset this) i)))
+        (let [#_"int[]" a (int-array (:intLen this))]
+            (dotimes [#_"int" i (:intLen this)]
+                (aset a i (aget (:value this) (+ (:offset this) i)))
             )
-            result
+            a
         )
-    )
-
-    ;;;
-     ; Sets the int at index+offset in this MutableBigInteger to val.
-     ; This does not get inlined on all platforms so it is not used
-     ; as often as originally intended.
-     ;;
-    #_method
-    (defn #_"void" MutableBigInteger''setInt [#_"MutableBigInteger" this, #_"int" index, #_"int" val]
-        (let [
-        ]
-            (aset (:value this) (+ (:offset this) index) val)
-        )
-        nil
     )
 
     ;;;
@@ -618,14 +510,8 @@
      ; The intLen is set to the specified length.
      ;;
     #_method
-    (defn #_"void" MutableBigInteger''setValue [#_"MutableBigInteger" this, #_"int[]" val, #_"int" length]
-        (let [
-        ]
-            (§ ass this (assoc this :value val))
-            (§ ass this (assoc this :intLen length))
-            (§ ass this (assoc this :offset 0))
-        )
-        nil
+    (defn #_"MutableBigInteger" MutableBigInteger''setValue [#_"MutableBigInteger" this, #_"int[]" val, #_"int" length]
+        (assoc this :value val :offset 0 :intLen length)
     )
 
     ;;;
@@ -799,7 +685,7 @@
                         (loop-when-recur [#_"int" i 0] (< i (:intLen this)) [(inc i)]
                             (aset result i (aget (:value this) (+ (:offset this) i)))
                         )
-                        (MutableBigInteger''setValue this, result, newLen)
+                        (§ ass this (MutableBigInteger''setValue this, result, newLen))
                     )
                     (<= newLen (- (alength (:value this)) (:offset this))) ;; use space on right
                     (do
@@ -1084,7 +970,7 @@
                     (§ ass this (assoc this :value result))
                     (§ ass this (assoc this :intLen resultLen))
                     (§ ass this (assoc this :offset (- (alength (:value this)) resultLen)))
-                    (MutableBigInteger''normalize this)
+                    (§ ass this (MutableBigInteger''normalize this))
                     sign
                 )
             )
@@ -1132,7 +1018,7 @@
                     (aset (:value a) (+ (:offset a) x) (int diff))
                 )
 
-                (MutableBigInteger''normalize a)
+                (§ ass a (MutableBigInteger''normalize a))
                 sign
             )
         )
@@ -1188,7 +1074,7 @@
                 )
 
                 ;; remove leading zeros from product
-                (MutableBigInteger''normalize z)
+                (§ ass z (MutableBigInteger''normalize z))
             )
         )
         nil
@@ -1318,7 +1204,7 @@
                         )
                     )
 
-                    (MutableBigInteger''normalize quotient)
+                    (§ ass quotient (MutableBigInteger''normalize quotient))
                     ;; unnormalize
                     (cond (pos? shift)
                         (do
@@ -1736,9 +1622,9 @@
                                 (when (pos? shift)
                                     (MutableBigInteger''rightShift rem, shift)
                                 )
-                                (MutableBigInteger''normalize rem)
+                                (§ ass rem (MutableBigInteger''normalize rem))
                             )
-                            (MutableBigInteger''normalize quotient)
+                            (§ ass quotient (MutableBigInteger''normalize quotient))
                             (when needRemainder rem)
                         )
                     )
@@ -2079,7 +1965,7 @@
                     (aset (:value result) 0 (int (>>> tLong 32)))
                     (aset (:value result) 1 (int tLong))
                     (§ ass result (assoc result :intLen 2))
-                    (MutableBigInteger''normalize result)
+                    (§ ass result (MutableBigInteger''normalize result))
                     result
                 )
             )
@@ -3295,7 +3181,6 @@
     (declare BigInteger'jacobiSymbol)
     (declare BigInteger'lucasLehmerSequence)
     (declare BigInteger''mod)
-    (declare BigInteger'ZERO)
 
     ;;;
      ; Returns true iff this BigInteger is a Lucas-Lehmer probable prime.
