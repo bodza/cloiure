@@ -1,5 +1,5 @@
 (ns cloiure.ratio
-    (:refer-clojure :only [* *ns* + - -> / < <= = == > >= aget alength and aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor byte byte-array cast complement cond cons dec declare defmacro defn dotimes double-array first identical? if-not import inc instance? int int-array let letfn long long-array loop make-array max min neg? next nil? not or pos? quot rem second some? symbol? unsigned-bit-shift-right update vary-meta vec vector? while zero?])
+    (:refer-clojure :only [* *ns* + - -> / < <= = == > >= aclone aget alength and aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor byte byte-array case cast complement cond cons dec declare defmacro defn dotimes double-array first identical? if-not import inc instance? int int-array let letfn long long-array loop make-array max min neg? next nil? not or pos? quot rem second some? symbol? unsigned-bit-shift-right update vary-meta vec vector? while zero?])
 )
 
 (defmacro § [& _])
@@ -61,7 +61,7 @@
 ;;;
  ; Obtain the value of an int as if it were unsigned.
  ;;
-(defn #_"long" long! [#_"int" i] (ß i 0xffffffff))
+(defn #_"long" long! [#_"int" i] (& i 0xffffffff))
 
 ;;;
  ; A simple bit sieve used for finding prime number candidates. Allows setting
@@ -73,7 +73,9 @@
  ; represented in the sieve (each bit in the sieve represents an odd number).
  ; The relationship between the index of a bit and the number it represents is
  ; given by
- ; N = offset + (2*index + 1);
+ ;
+ ; N = offset + (2 * index + 1);
+ ;
  ; Where N is the integer represented by a bit in the sieve, offset is some
  ; even integer offset indicating where the sieve begins, and index is the
  ; index of a bit in the sieve array.
@@ -193,16 +195,14 @@
               this (assoc this :bits (long-array (inc (>>> (dec length) 6))))
               this (assoc this :length length)
               ;; construct the large sieve at an even offset specified by base
-              #_"MutableBigInteger" b (MutableBigInteger'new-b base)
-              #_"MutableBigInteger" q (MutableBigInteger'new-0)]
+              #_"MutableBigInteger" b (MutableBigInteger'new-b base)]
             (loop [#_"int" i (BitSieve''sieveSearch BitSieve'smallSieve, 0)]
                 (let [#_"int" p (inc (* i 2))
                       ;; calculate base mod p
-                      #_"int" start (MutableBigInteger''divideOneWord b, p, q)
+                      [_ #_"int" r] (MutableBigInteger''divideOneWord b, p)
                       ;; take each multiple of i out of sieve
-                      start (- p start)
-                      start (if (zero? (% start 2)) (+ start p) start)]
-                    (BitSieve''sieveSingle this, (quot (dec start) 2), p)
+                      r (- p r) r (if (zero? (% r 2)) (+ r p) r)]
+                    (BitSieve''sieveSingle this, (quot (dec r) 2), p)
                     ;; find next prime from small sieve
                     (let [i (BitSieve''sieveSearch BitSieve'smallSieve, (inc i))]
                         (recur-if (pos? i) [i])
@@ -410,8 +410,8 @@
                 :else ;; add Integer.MIN_VALUE to make the comparison act as unsigned integer comparison
                     (let [#_"int" n (+ (:offset this) (:intLen this))]
                         (loop-when [#_"int" i (:offset this) #_"int" j (:offset that)] (< i n) => 0
-                            (let [#_"int" a (+ (aget (:value this) i) 0x80000000)
-                                  #_"int" b (+ (aget (:value that) j) 0x80000000)]
+                            (let [#_"long" a (long! (aget (:value this) i))
+                                  #_"long" b (long! (aget (:value that) j))]
                                 (cond
                                     (< a b) -1
                                     (< b a) 1
@@ -497,19 +497,6 @@
     #_method
     (defn #_"MutableBigInteger" MutableBigInteger''setValue [#_"MutableBigInteger" this, #_"int[]" a, #_"int" n]
         (assoc this :value a :offset 0 :intLen n)
-    )
-
-    ;;;
-     ; Sets this MutableBigInteger's value array to a copy of the specified array.
-     ; The intLen is set to the length of the new array.
-     ;;
-    #_method
-    (defn #_"MutableBigInteger" MutableBigInteger''copyValue [#_"MutableBigInteger" this, #_"MutableBigInteger" from]
-        (let [#_"int" n (:intLen from)
-              #_"int[]" a (:value this) a (if (< (alength a) n) (int-array n) a)]
-            (System/arraycopy (:value from), (:offset from), a, 0, n)
-            (MutableBigInteger''setValue this, a, n)
-        )
     )
 
     ;;;
@@ -689,11 +676,12 @@
      ; A primitive used for division. This method adds in one multiple of the divisor a back to the dividend
      ; b at a specified offset. It is used when qhat was estimated too large, and must be adjusted.
      ;;
-    #_method
-    (defn- #_"int" MutableBigInteger''divadd [#_"MutableBigInteger" this, #_"int[]" a, #_"int[]" b, #_"int" offset]
+    (defn- #_"int" MutableBigInteger'divadd [#_"int[]" a, #_"int[]" b, #_"int" offset, #_"boolean" rem?]
         (loop-when [#_"long" carry 0 #_"int" i (dec (alength a))] (<= 0 i) => (int carry)
             (let [#_"long" sum (+ (long! (aget a i)) (long! (aget b (+ offset i))) carry)]
-                (aset b (+ offset i) (int sum))
+                (when rem?
+                    (aset b (+ offset i) (int sum))
+                )
                 (recur (>>> sum 32) (dec i))
             )
         )
@@ -701,22 +689,16 @@
 
     ;;;
      ; This method is used for division. It multiplies an n word input a by one word input x, and subtracts
-     ; the n word product from q. This is needed when subtracting qhat*divisor from dividend.
+     ; the n word product from q. This is needed when subtracting qhat * divisor from dividend.
      ;;
-    #_method
-    (defn- #_"int" MutableBigInteger''mulsub
-        ([#_"MutableBigInteger" this, #_"int[]" q, #_"int[]" a, #_"int" x, #_"int" offset, #_"int" n]
-            (MutableBigInteger''mulsub this, q, a, x, offset, n, true)
-        )
-        ([#_"MutableBigInteger" this, #_"int[]" q, #_"int[]" a, #_"int" x, #_"int" offset, #_"int" n, #_"boolean" needRemainder]
-            (let [#_"long" lx (long! x)]
-                (loop-when [offset (+ offset n) #_"long" carry 0 #_"int" i (dec n)] (<= 0 i) => (int carry)
-                    (let [#_"long" product (+ (* (long! (aget a i)) lx) carry) #_"long" difference (- (aget q offset) product)]
-                        (when needRemainder
-                            (aset q offset (int difference))
-                        )
-                        (recur (dec offset) (+ (>>> product 32) (if (< (long! (bit-not (int product))) (long! difference)) 1 0)) (dec i))
+    (defn- #_"int" MutableBigInteger'mulsub [#_"int[]" q, #_"int[]" a, #_"int" x, #_"int" offset, #_"boolean" rem?]
+        (let [#_"long" x' (long! x)]
+            (loop-when [offset (+ offset (alength a)) #_"long" carry 0 #_"int" i (dec (alength a))] (<= 0 i) => (int carry)
+                (let [#_"long" mul (+ (* (long! (aget a i)) x') carry) #_"long" sub (- (aget q offset) mul)]
+                    (when rem?
+                        (aset q offset (int sub))
                     )
+                    (recur (dec offset) (+ (>>> mul 32) (if (< (long! (bit-not (int mul))) (long! sub)) 1 0)) (dec i))
                 )
             )
         )
@@ -847,121 +829,68 @@
     )
 
     ;;;
-     ; Multiply the contents of x and y. The product is placed into z. The contents of x and y are not changed.
+     ; Multiply the contents of x by y. The product is placed into z. The contents of x and y are not changed.
      ;;
-    (defn #_"MutableBigInteger" MutableBigInteger'multiply
-        ([#_"MutableBigInteger" x, #_"MutableBigInteger" y] (MutableBigInteger'multiply x, y, nil))
-        ([#_"MutableBigInteger" x, #_"MutableBigInteger" y, #_"MutableBigInteger" z]
-            (let [#_"int[]" xa (:value x) #_"int" xo (:offset x) #_"int" xn (:intLen x)
-                  #_"int[]" ya (:value y) #_"int" yo (:offset y) #_"int" yn (:intLen y)
-                  ;; put z into an appropriate state to receive product
-                  z (or z (MutableBigInteger'new-0))
-                  #_"int[]" za (:value z) #_"int" zn (+ xn yn) za (if (< (alength za) zn) (int-array zn) za)]
-                ;; the first iteration is hoisted out of the loop to avoid extra add
-                (let [#_"int" xi (dec xn)]
-                    (loop-when [#_"long" carry 0 #_"int" yi (dec yn) #_"int" zi (+ yn xi)] (<= 0 yi) => (aset za zi (int carry))
-                        (let [#_"long" product (+ (* (long! (aget ya (+ yo yi))) (long! (aget xa (+ xo xi)))) carry)]
-                            (aset za zi (int product))
-                            (recur (>>> product 32) (dec yi) (dec zi))
-                        )
+    (defn #_"MutableBigInteger" MutableBigInteger'multiply [#_"MutableBigInteger" x, #_"MutableBigInteger" y]
+        (let [#_"int[]" xa (:value x) #_"int" xo (:offset x) #_"int" xn (:intLen x)
+              #_"int[]" ya (:value y) #_"int" yo (:offset y) #_"int" yn (:intLen y)
+              #_"int[]" za (int-array (+ xn yn))]
+            ;; perform the multiplication word by word
+            (loop-when-recur [#_"int" xi (dec xn)] (<= 0 xi) [(dec xi)]
+                (loop-when [#_"long" carry 0 #_"int" yi (dec yn) #_"int" zi (+ yn xi)] (<= 0 yi) => (aset za zi (int carry))
+                    (let [#_"long" product (+ (* (long! (aget ya (+ yo yi))) (long! (aget xa (+ xo xi)))) (long! (aget za zi)) carry)]
+                        (aset za zi (int product))
+                        (recur (>>> product 32) (dec yi) (dec zi))
                     )
                 )
-                ;; perform the multiplication word by word
-                (loop-when-recur [#_"int" xi (dec (dec xn))] (<= 0 xi) [(dec xi)]
-                    (loop-when [#_"long" carry 0 #_"int" yi (dec yn) #_"int" zi (+ yn xi)] (<= 0 yi) => (aset za zi (int carry))
-                        (let [#_"long" product (+ (* (long! (aget ya (+ yo yi))) (long! (aget xa (+ xo xi)))) (long! (aget za zi)) carry)]
-                            (aset za zi (int product))
-                            (recur (>>> product 32) (dec yi) (dec zi))
+            )
+            ;; remove leading zeros from product
+            (MutableBigInteger''normalize (MutableBigInteger'new-a za))
+        )
+    )
+
+    ;;;
+     ; Multiply the contents of MutableBigInteger x by word y. The product is placed into z.
+     ;;
+    (defn #_"MutableBigInteger" MutableBigInteger'mul [#_"MutableBigInteger" x, #_"int" y]
+        (case y
+            0 (MutableBigInteger'new-0)
+            1 (MutableBigInteger'new-m x)
+            ;; perform the multiplication word by word
+            (let [#_"int" n (:intLen x) #_"int[]" a (int-array (inc n))
+                  #_"long" carry
+                    (loop-when [carry 0 #_"int" i (dec n)] (<= 0 i) => carry
+                        (let [#_"long" product (+ (* (long! y) (long! (aget (:value x) (+ (:offset x) i)))) carry)]
+                            (aset a (inc i) (int product))
+                            (recur (>>> product 32) (dec i))
                         )
                     )
+                  #_"MutableBigInteger" z (MutableBigInteger'new-a a)]
+                (if (zero? carry)
+                    (assoc z :offset 1 :intLen n)
+                    (do (aset a 0 (int carry)) z)
                 )
-                ;; remove leading zeros from product
-                (MutableBigInteger''normalize (assoc z :value za :offset 0 :intLen zn))
             )
         )
     )
 
     ;;;
-     ; Multiply the contents of this MutableBigInteger by the word y.
-     ; The result is placed into z.
-     ;;
-    #_method
-    (defn #_"void" MutableBigInteger''mul [#_"MutableBigInteger" this, #_"int" y, #_"MutableBigInteger" z]
-        (when (== y 1)
-            (§ ass z (MutableBigInteger''copyValue z, this))
-            (§ return nil)
-        )
-
-        (when (zero? y)
-            (§ ass z (MutableBigInteger''clear z))
-            (§ return nil)
-        )
-
-        ;; perform the multiplication word by word
-        (let [
-              #_"long" ylong (long! y)
-              #_"int[]" zval (if (< (alength (:value z)) (inc (:intLen this))) (int-array (inc (:intLen this))) (:value z))
-              #_"long" carry 0
-        ]
-            (loop-when-recur [#_"int" i (- (:intLen this) 1)] (<= 0 i) [(dec i)]
-                (let [
-                      #_"long" product (+ (* ylong (long! (aget (:value this) (+ i (:offset this))))) carry)
-                ]
-                    (aset zval (inc i) (int product))
-                    (§ ass carry (>>> product 32))
-                )
-            )
-
-            (cond (zero? carry)
-                (do
-                    (§ ass z (assoc z :offset 1))
-                    (§ ass z (assoc z :intLen (:intLen this)))
-                )
-                :else
-                (do
-                    (§ ass z (assoc z :offset 0))
-                    (§ ass z (assoc z :intLen (inc (:intLen this))))
-                    (aset zval 0 (int carry))
-                )
-            )
-            (§ ass z (assoc z :value zval))
-            nil
-        )
-    )
-
-    ;;;
-     ; This method divides a long quantity by an int to estimate
-     ; qhat for two multi precision numbers.
-     ; It is used when the signed value of n is less than zero.
-     ; Returns long value where high 32 bits contain remainder
-     ; value and low 32 bits contain quotient value.
+     ; This method divides a long quantity by an int to estimate qhat for two multi
+     ; precision numbers. It is used when the signed value of n is less than zero.
+     ; Returns long value with high 32 bits remainder and low 32 bits quotient.
      ;;
     (defn- #_"long" MutableBigInteger'divWord [#_"long" n, #_"int" d]
-        (let [
-              #_"long" dLong (long! d)
-              #_"long" r (ß )
-              #_"long" q (ß )
-        ]
-            (when (== dLong 1)
-                (§ ass q (int n))
-                (§ ass r 0)
-                (§ return (| (<< r 32) (long! q)))
-            )
-
-            ;; approximate the quotient and remainder
-            (§ ass q (quot (>>> n 1) (>>> dLong 1)))
-            (§ ass r (- n (* q dLong)))
-
-            ;; correct the approximation
-            (while (neg? r)
-                (§ ass r (+ r dLong))
-                (§ ass q (dec q))
-            )
-            (while (<= dLong r)
-                (§ ass r (- r dLong))
-                (§ ass q (inc q))
-            )
-            ;; n - q*dlong == r && 0 <= r < dLong, hence we're done.
+        (let [[#_"long" r #_"long" q]
+                (when-not (== d 1) => [0 (int n)]
+                    (let [#_"long" d' (long! d)
+                          ;; approximate the quotient and remainder
+                          q (quot (>>> n 1) (>>> d' 1)) r (- n (* q d'))
+                          ;; correct the approximation
+                          [r q] (loop-when-recur [r r q q] (neg? r) [(+ r d') (dec q)] => [r q])]
+                        ;; when n - q * d' == r, where 0 <= r < d', we're done
+                        (loop-when-recur [r r q q] (<= d' r) [(- r d') (inc q)] => [r q])
+                    )
+                )]
             (| (<< r 32) (long! q))
         )
     )
@@ -970,117 +899,235 @@
      ; This method is used for division of an n word dividend by a one word divisor.
      ; The quotient is placed into quotient. The one word divisor is specified by divisor.
      ;
-     ; @return the remainder of the division is returned.
+     ; @return the remainder of the division.
      ;;
     #_method
-    (defn #_"int" MutableBigInteger''divideOneWord [#_"MutableBigInteger" this, #_"int" divisor, #_"MutableBigInteger" quotient]
-        (let [
-              #_"long" divisorLong (long! divisor)
-        ]
-            ;; special case of one word dividend
-            (when (== (:intLen this) 1)
-                (let [
-                      #_"long" dividendValue (long! (aget (:value this) (:offset this)))
-                      #_"int" q (int (quot dividendValue divisorLong))
-                      #_"int" r (int (- dividendValue (* q divisorLong)))
-                ]
-                    (aset (:value quotient) 0 q)
-                    (§ ass quotient (assoc quotient :intLen (if (zero? q) 0 1)))
-                    (§ ass quotient (assoc quotient :offset 0))
-                    (§ return r)
+    (defn #_"[MutableBigInteger int]" MutableBigInteger''divideOneWord [#_"MutableBigInteger" this, #_"int" divisor]
+        (let [#_"int" n (:intLen this) #_"long" divisor' (long! divisor)]
+            (case n
+                0 [(MutableBigInteger'new-0) 0]
+                1 ;; special case of one word dividend
+                (let [#_"long" dividend (long! (aget (:value this) (:offset this))) #_"int" q (int (quot dividend divisor'))]
+                    [(if (zero? q) (MutableBigInteger'new-0) (MutableBigInteger'new-i q)) (int (- dividend (* q divisor')))]
                 )
-            )
-
-            (when (< (alength (:value quotient)) (:intLen this))
-                (§ ass quotient (assoc quotient :value (int-array (:intLen this))))
-            )
-            (§ ass quotient (assoc quotient :offset 0))
-            (§ ass quotient (assoc quotient :intLen (:intLen this)))
-
-            ;; normalize the divisor
-            (let [
-                  #_"int" shift (Integer/numberOfLeadingZeros divisor)
-                  #_"int" rem (aget (:value this) (:offset this))
-                  #_"long" remLong (long! rem)
-            ]
-                (cond (< remLong divisorLong)
-                    (do
-                        (aset (:value quotient) 0 0)
-                    )
-                    :else
-                    (do
-                        (aset (:value quotient) 0 (int (quot remLong divisorLong)))
-                        (§ ass rem (int (- remLong (* (aget (:value quotient) 0) divisorLong))))
-                        (§ ass remLong (long! rem))
-                    )
-                )
-                (let [
-                      #_"int" xlen (:intLen this)
-                ]
-                    (loop-when-recur [xlen (dec xlen)] (pos? xlen) [(dec xlen)]
-                        (let [
-                              #_"long" dividendEstimate (| (<< remLong 32) (long! (aget (:value this) (- (+ (:offset this) (:intLen this)) xlen))))
-                              #_"int" q (ß )
-                        ]
-                            (cond (<= 0 dividendEstimate)
-                                (do
-                                    (§ ass q (int (quot dividendEstimate divisorLong)))
-                                    (§ ass rem (int (- dividendEstimate (* q divisorLong))))
-                                )
-                                :else
-                                (let [
-                                      #_"long" tmp (MutableBigInteger'divWord dividendEstimate, divisor)
-                                ]
-                                    (§ ass q (int (long! tmp)))
-                                    (§ ass rem (int (>>> tmp 32)))
-                                )
+                (let [#_"int[]" a (:value this) #_"int[]" b (int-array n)
+                      ;; normalize the divisor
+                      #_"int" r (aget a (:offset this))
+                      r (let-when [#_"long" r' (long! r)] (<= divisor' r') => r
+                            (let [#_"int" q (int (quot r' divisor'))]
+                                (aset b 0 q)
+                                (int (- r' (* q divisor')))
                             )
-                            (aset (:value quotient) (- (:intLen this) xlen) q)
-                            (§ ass remLong (long! rem))
                         )
-                    )
-
-                    (§ ass quotient (MutableBigInteger''normalize quotient))
-                    ;; unnormalize
-                    (cond (pos? shift)
-                        (do
-                            (§ return (% rem divisor))
+                      r (loop-when [r r #_"int" i (dec n)] (pos? i) => r
+                            (let [#_"long" dividend (| (<< (long! r) 32) (long! (aget a (+ (:offset this) (- n i)))))
+                                  [r #_"int" q]
+                                    (if (<= 0 dividend)
+                                        (let [q (int (quot dividend divisor'))]
+                                            [(int (- dividend (* q divisor'))) q]
+                                        )
+                                        (let [_ (MutableBigInteger'divWord dividend, divisor)]
+                                            [(int (>>> _ 32)) (int (long! _))]
+                                        )
+                                    )]
+                                (aset b (- n i) q)
+                                (recur r (dec i))
+                            )
                         )
-                        :else
-                        (do
-                            (§ return rem)
-                        )
-                    )
+                      ;; unnormalize the divisor
+                      r (if (pos? (Integer/numberOfLeadingZeros divisor)) (% r divisor) r)]
+                    [(MutableBigInteger''normalize (MutableBigInteger'new-a b)) r]
                 )
             )
         )
     )
 
-    (declare MutableBigInteger''divide-4)
+    (defn- #_"void" MutableBigInteger'copyAndShift [#_"int[]" a, #_"int" ao, #_"int" n, #_"int[]" b, #_"int" bo, #_"int" shift]
+        (let [#_"int" shift' (- 32 shift)]
+            (loop-when [#_"int" ai ao #_"int" c (aget a ai) #_"int" bi 0] (< bi (dec n)) => (aset b (+ bo bi) (<< c shift))
+                (let [#_"int" c' c ai (inc ai) c (aget a ai)]
+                    (aset b (+ bo bi) (| (<< c' shift) (>>> c shift')))
+                    (recur ai c (inc bi))
+                )
+            )
+        )
+        nil
+    )
 
     ;;;
-     ; Calculates the quotient of this div b and places the quotient in the
-     ; provided MutableBigInteger objects and the remainder object is returned.
+     ; Compare two longs as if they were unsigned.
+     ; Returns true iff one is greater than two.
+     ;;
+    (defn- #_"boolean" MutableBigInteger'unsignedLongGreater [#_"long" one, #_"long" two]
+        (> (+ one Long/MIN_VALUE) (+ two Long/MIN_VALUE))
+    )
+
+    ;;;
+     ; Divide this MutableBigInteger by the divisor.
+     ; The quotient will be placed into the provided quotient and the remainder is returned.
      ;;
     #_method
-    (defn #_"MutableBigInteger" MutableBigInteger''divide-3 [#_"MutableBigInteger" this, #_"MutableBigInteger" b, #_"MutableBigInteger" quotient]
-        (MutableBigInteger''divide-4 this, b, quotient, true)
+    (defn- #_"[MutableBigInteger MutableBigInteger]" MutableBigInteger''divideMagnitude [#_"MutableBigInteger" this, #_"MutableBigInteger" divisor, #_"boolean" rem?]
+        (when-not (< (:intLen divisor) 2) => (throw! "(< (:intLen divisor) 2)")
+            ;; D1 normalize the divisor
+            (let [#_"int" shift (Integer/numberOfLeadingZeros (aget (:value divisor) (:offset divisor)))
+                  ;; copy divisor value to protect divisor ;; remainder starts as dividend with space for a leading zero
+                  [#_"int[]" div' #_"int[]" rem']
+                    (if (pos? shift)
+                        (let [#_"int[]" d (int-array (:intLen divisor))]
+                            (MutableBigInteger'copyAndShift (:value divisor), (:offset divisor), (:intLen divisor), d, 0, shift)
+                            (if (<= shift (Integer/numberOfLeadingZeros (aget (:value this) (:offset this))))
+                                (let [#_"int" n (:intLen this) #_"int[]" b (int-array (inc n))]
+                                    (MutableBigInteger'copyAndShift (:value this), (:offset this), n, b, 1, shift)
+                                    [d b]
+                                )
+                                (let [#_"int" n (:intLen this) #_"int[]" b (int-array (+ n 2)) #_"int" shift' (- 32 shift)]
+                                    (loop-when [#_"int" ai (:offset this) #_"int" c 0 #_"int" bi 1] (< bi (inc n)) => (aset b bi (<< c shift))
+                                        (let [#_"int" c' c c (aget (:value this) ai)]
+                                            (aset b bi (| (<< c' shift) (>>> c shift')))
+                                            (recur (inc ai) c (inc bi))
+                                        )
+                                    )
+                                    [d b]
+                                )
+                            )
+                        )
+                        (let [#_"int[]" d (Arrays/copyOfRange (:value divisor), (:offset divisor), (+ (:offset divisor) (:intLen divisor)))
+                              #_"int" n (:intLen this) #_"int[]" b (int-array (inc n))]
+                            (System/arraycopy (:value this), (:offset this), b, 1, n)
+                            [d b]
+                        )
+                    )
+                  ;; set the quotient size
+                  #_"int" n (- (alength rem') (alength div')) #_"int[]" q (int-array (max 1 n))
+                  #_"int" dh (aget div' 0) #_"long" dh' (long! dh) #_"long" dl' (long! (aget div' 1))]
+
+                ;; D2 initialize i ;; D7 loop on i
+                (dotimes [#_"int" i (dec n)]
+                    ;; D3 calculate qhat ;; estimate qhat
+                    (let [#_"int" nh (aget rem' i) #_"long" nh' (long! nh) #_"int" nm (aget rem' (inc i))
+                          [#_"int" qhat #_"int" qrem #_"boolean" skip?]
+                            (if (== nh dh)
+                                (let [qhat (bit-not 0) qrem (+ nh nm)]
+                                    [qhat qrem (< (long! qrem) nh')]
+                                )
+                                (let [#_"long" w (| (<< (long nh) 32) (long! nm))]
+                                    (if (<= 0 w)
+                                        (let [qhat (int (quot w dh')) qrem (int (- w (* qhat dh')))]
+                                            [qhat qrem false]
+                                        )
+                                        (let [_ (MutableBigInteger'divWord w, dh)]
+                                            [(int (long! _)) (int (>>> _ 32)) false]
+                                        )
+                                    )
+                                )
+                            )]
+                        (when-not (zero? qhat)
+                            (let [[qhat qrem] ;; correct qhat
+                                    (when-not skip? => [qhat qrem]
+                                        (let [#_"long" nl (long! (aget rem' (+ i 2)))
+                                              #_"long" rs (| (<< (long! qrem) 32) nl)
+                                              #_"long" product (* dl' (long! qhat))]
+                                            (when (MutableBigInteger'unsignedLongGreater product, rs) => [qhat qrem]
+                                                (let [qhat (dec qhat) qrem (int (+ (long! qrem) dh'))]
+                                                    (when (<= dh' (long! qrem)) => [qhat qrem]
+                                                        (let [product (- product dl') rs (| (<< (long! qrem) 32) nl)]
+                                                            (when (MutableBigInteger'unsignedLongGreater product, rs) => [qhat qrem]
+                                                                [(dec qhat) qrem]
+                                                            )
+                                                        )
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    )]
+                                ;; D4 multiply and subtract
+                                (aset rem' i 0)
+                                (let [#_"int" borrow (MutableBigInteger'mulsub rem', div', qhat, i, true)
+                                      ;; D5 test remainder
+                                      qhat
+                                        (when (< nh' (long! borrow)) => qhat
+                                            ;; D6 add back
+                                            (MutableBigInteger'divadd div', rem', (inc i), true)
+                                            (dec qhat)
+                                        )]
+                                    ;; store the quotient digit
+                                    (aset q i qhat)
+                                )
+                            )
+                        )
+                    )
+                )
+
+                (let [#_"int" i (dec n)]
+                    ;; D3 Calculate qhat ;; estimate qhat
+                    (let [#_"int" nh (aget rem' i) #_"long" nh' (long! nh) #_"int" nm (aget rem' (inc i))
+                          [#_"int" qhat #_"int" qrem #_"boolean" skip?]
+                            (if (== nh dh)
+                                (let [qhat (bit-not 0) qrem (+ nh nm)]
+                                    [qhat qrem (< (long! qrem) nh')]
+                                )
+                                (let [#_"long" w (| (<< (long nh) 32) (long! nm))]
+                                    (if (<= 0 w)
+                                        (let [qhat (int (quot w dh')) qrem (int (- w (* qhat dh')))]
+                                            [qhat qrem false]
+                                        )
+                                        (let [_ (MutableBigInteger'divWord w, dh)]
+                                            [(int (long! _)) (int (>>> _ 32)) false]
+                                        )
+                                    )
+                                )
+                            )]
+                        (when-not (zero? qhat)
+                            (let [[qhat qrem] ;; correct qhat
+                                    (when-not skip? => [qhat qrem]
+                                        (let [#_"long" nl (long! (aget rem' (+ i 2)))
+                                              #_"long" rs (| (<< (long! qrem) 32) nl)
+                                              #_"long" product (* dl' (long! qhat))]
+                                            (when (MutableBigInteger'unsignedLongGreater product, rs) => [qhat qrem]
+                                                (let [qhat (dec qhat) qrem (int (+ (long! qrem) dh'))]
+                                                    (when (<= dh' (long! qrem)) => [qhat qrem]
+                                                        (let [product (- product dl') rs (| (<< (long! qrem) 32) nl)]
+                                                            (when (MutableBigInteger'unsignedLongGreater product, rs) => [qhat qrem]
+                                                                [(dec qhat) qrem]
+                                                            )
+                                                        )
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    )]
+                                ;; D4 multiply and subtract
+                                (aset rem' i 0)
+                                (let [#_"int" borrow (MutableBigInteger'mulsub rem', div', qhat, i, rem?)
+                                      ;; D5 test remainder
+                                      qhat
+                                        (when (< nh' (long! borrow)) => qhat
+                                            ;; D6 add back
+                                            (MutableBigInteger'divadd div', rem', (inc i), rem?)
+                                            (dec qhat)
+                                        )]
+                                    ;; store the quotient digit
+                                    (aset q i qhat)
+                                )
+                            )
+                        )
+                    )
+                )
+
+                (let [#_"MutableBigInteger" rem
+                        (when rem?
+                            (let [rem (MutableBigInteger'new-a rem')
+                                  ;; D8 unnormalize
+                                  rem (if (pos? shift) (MutableBigInteger''rightShift rem, shift) rem)]
+                                (MutableBigInteger''normalize rem)
+                            )
+                        )]
+                    [(MutableBigInteger''normalize (assoc (MutableBigInteger'new-a q) :intLen n)) rem]
+                )
+            )
+        )
     )
-
-    (declare MutableBigInteger''divideKnuth-4)
-
-    #_method
-    (defn #_"MutableBigInteger" MutableBigInteger''divide-4 [#_"MutableBigInteger" this, #_"MutableBigInteger" b, #_"MutableBigInteger" quotient, #_"boolean" needRemainder]
-        (MutableBigInteger''divideKnuth-4 this, b, quotient, needRemainder)
-    )
-
-    #_method
-    (defn #_"MutableBigInteger" MutableBigInteger''divideKnuth-3 [#_"MutableBigInteger" this, #_"MutableBigInteger" b, #_"MutableBigInteger" quotient]
-        (MutableBigInteger''divideKnuth-4 this, b, quotient, true)
-    )
-
-    (declare MutableBigInteger''divideKnuth-3)
-    (declare MutableBigInteger''divideMagnitude)
 
     ;;;
      ; Calculates the quotient of this div b and places the quotient in the
@@ -1091,427 +1138,87 @@
      ; It special cases one word divisors for speed. The content of b is not changed.
      ;;
     #_method
-    (defn #_"MutableBigInteger" MutableBigInteger''divideKnuth-4 [#_"MutableBigInteger" this, #_"MutableBigInteger" b, #_"MutableBigInteger" quotient, #_"boolean" needRemainder]
-        (when (zero? (:intLen b))
-            (throw! "divide by zero")
+    (defn #_"MutableBigInteger" MutableBigInteger''divideKnuth
+        ([#_"MutableBigInteger" this, #_"MutableBigInteger" b, #_"MutableBigInteger" quotient]
+            (MutableBigInteger''divideKnuth this, b, quotient, true)
         )
+        ([#_"MutableBigInteger" this, #_"MutableBigInteger" b, #_"MutableBigInteger" quotient, #_"boolean" rem?]
+            (when (zero? (:intLen b))
+                (throw! "divide by zero")
+            )
 
-        ;; dividend is zero
-        (when (zero? (:intLen this))
-            (§ ass quotient (assoc quotient :offset 0))
-            (§ ass quotient (assoc quotient :intLen 0))
-            (§ return (when needRemainder (MutableBigInteger'new-0)))
-        )
-
-        (let [
-              #_"int" cmp (MutableBigInteger''compare this, b)
-        ]
-            ;; dividend less than divisor
-            (when (neg? cmp)
+            ;; dividend is zero
+            (when (zero? (:intLen this))
                 (§ ass quotient (assoc quotient :offset 0))
                 (§ ass quotient (assoc quotient :intLen 0))
-                (§ return (when needRemainder (MutableBigInteger'new-m this)))
-            )
-            ;; dividend equal to divisor
-            (when (zero? cmp)
-                (§ ass quotient (assoc quotient :offset 0))
-                (aset (:value quotient) 0 1)
-                (§ ass quotient (assoc quotient :intLen 1))
-                (§ return (when needRemainder (MutableBigInteger'new-0)))
-            )
-
-            (§ ass quotient (MutableBigInteger''clear quotient))
-            ;; special case one word divisor
-            (when (== (:intLen b) 1)
-                (let [
-                      #_"int" r (MutableBigInteger''divideOneWord this, (aget (:value b) (:offset b)), quotient)
-                ]
-                    (cond needRemainder
-                        (do
-                            (when (zero? r)
-                                (§ return (MutableBigInteger'new-0))
-                            )
-                            (§ return (MutableBigInteger'new-i r))
-                        )
-                        :else
-                        (do
-                            (§ return nil)
-                        )
-                    )
-                )
-            )
-
-            ;; cancel common powers of two if we're above the KNUTH_POW2_* thresholds
-            (when (<= MutableBigInteger'KNUTH_POW2_THRESH_LEN (:intLen this))
-                (let [
-                      #_"int" trailingZeroBits (Math/min (MutableBigInteger''getLowestSetBit this), (MutableBigInteger''getLowestSetBit b))
-                ]
-                    (when (<= (* MutableBigInteger'KNUTH_POW2_THRESH_ZEROS 32) trailingZeroBits)
-                        (let [
-                              #_"MutableBigInteger" a (MutableBigInteger'new-m this)
-                        ]
-                            (§ ass b (MutableBigInteger'new-m b))
-                            (§ ass a (MutableBigInteger''rightShift a, trailingZeroBits))
-                            (§ ass b (MutableBigInteger''rightShift b, trailingZeroBits))
-                            (let [
-                                  #_"MutableBigInteger" r (MutableBigInteger''divideKnuth-3 a, b, quotient)
-                            ]
-                                (§ ass r (MutableBigInteger''leftShift r, trailingZeroBits))
-                                (§ return r)
-                            )
-                        )
-                    )
-                )
-            )
-
-            (MutableBigInteger''divideMagnitude this, b, quotient, needRemainder)
-        )
-    )
-
-    #_method
-    (defn #_"long" MutableBigInteger''bitLength [#_"MutableBigInteger" this]
-        (when (zero? (:intLen this))
-            (§ return 0)
-        )
-        (- (* (:intLen this) 32) (Integer/numberOfLeadingZeros (aget (:value this) (:offset this))))
-    )
-
-    (defn- #_"void" MutableBigInteger'copyAndShift [#_"int[]" src, #_"int" srcFrom, #_"int" srcLen, #_"int[]" dst, #_"int" dstFrom, #_"int" shift]
-        (let [
-              #_"int" n2 (- 32 shift)
-              #_"int" c (aget src srcFrom)
-        ]
-            (loop-when-recur [#_"int" i 0] (< i (dec srcLen)) [(inc i)]
-                (let [
-                      #_"int" b c
-                ]
-                    (§ ass srcFrom (inc srcFrom))
-                    (§ ass c (aget src srcFrom))
-                    (aset dst (+ dstFrom i) (| (<< b shift) (>>> c n2)))
-                )
-            )
-            (aset dst (dec (+ dstFrom srcLen)) (<< c shift))
-        )
-        nil
-    )
-
-    ;;;
-     ; Compare two longs as if they were unsigned.
-     ; Returns true iff one is bigger than two.
-     ;;
-    (defn- #_"boolean" MutableBigInteger'unsignedLongCompare [#_"long" one, #_"long" two]
-        (> (+ one Long/MIN_VALUE) (+ two Long/MIN_VALUE))
-    )
-
-    ;;;
-     ; Divide this MutableBigInteger by the divisor.
-     ; The quotient will be placed into the provided quotient object &
-     ; the remainder object is returned.
-     ;;
-    #_method
-    (defn- #_"MutableBigInteger" MutableBigInteger''divideMagnitude [#_"MutableBigInteger" this, #_"MutableBigInteger" div, #_"MutableBigInteger" quotient, #_"boolean" needRemainder]
-        (when (< (:intLen div) 2)
-            (throw! "(< (:intLen div) 2)")
-        )
-        ;; D1 normalize the divisor
-        (let [
-              #_"int" shift (Integer/numberOfLeadingZeros (aget (:value div) (:offset div)))
-              ;; copy divisor value to protect divisor
-              #_"int" dlen (:intLen div)
-              #_"int[]" divisor (ß )
-              ;; remainder starts as dividend with space for a leading zero
-              #_"MutableBigInteger" rem (ß )
-        ]
-            (cond (pos? shift)
-                (do
-                    (§ ass divisor (int-array dlen))
-                    (MutableBigInteger'copyAndShift (:value div), (:offset div), dlen, divisor, 0, shift)
-                    (cond (<= shift (Integer/numberOfLeadingZeros (aget (:value this) (:offset this))))
-                        (let [
-                              #_"int[]" remarr (int-array (inc (:intLen this)))
-                        ]
-                            (§ ass rem (MutableBigInteger'new-a remarr))
-                            (§ ass rem (assoc rem :intLen (:intLen this)))
-                            (§ ass rem (assoc rem :offset 1))
-                            (MutableBigInteger'copyAndShift (:value this), (:offset this), (:intLen this), remarr, 1, shift)
-                        )
-                        :else
-                        (let [
-                              #_"int[]" remarr (int-array (+ (:intLen this) 2))
-                        ]
-                            (§ ass rem (MutableBigInteger'new-a remarr))
-                            (§ ass rem (assoc rem :intLen (inc (:intLen this))))
-                            (§ ass rem (assoc rem :offset 1))
-                            (let [
-                                  #_"int" c 0
-                                  #_"int" n2 (- 32 shift)
-                            ]
-                                (loop-when-recur [#_"int" rFrom (:offset this) #_"int" i 1] (< i (inc (:intLen this))) [(inc rFrom) (inc i)]
-                                    (let [
-                                          #_"int" b c
-                                    ]
-                                        (§ ass c (aget (:value this) rFrom))
-                                        (aset remarr i (| (<< b shift) (>>> c n2)))
-                                    )
-                                )
-                                (aset remarr (inc (:intLen this)) (<< c shift))
-                            )
-                        )
-                    )
-                )
-                :else
-                (do
-                    (§ ass divisor (Arrays/copyOfRange (:value div), (:offset div), (+ (:offset div) (:intLen div))))
-                    (§ ass rem (MutableBigInteger'new-a (int-array (inc (:intLen this)))))
-                    (System/arraycopy (:value this), (:offset this), (:value rem), 1, (:intLen this))
-                    (§ ass rem (assoc rem :intLen (:intLen this)))
-                    (§ ass rem (assoc rem :offset 1))
-                )
+                (§ return (when rem? (MutableBigInteger'new-0)))
             )
 
             (let [
-                  #_"int" nlen (:intLen rem)
-                  ;; set the quotient size
-                  #_"int" limit (inc (- nlen dlen))
+                #_"int" cmp (MutableBigInteger''compare this, b)
             ]
-                (when (< (alength (:value quotient)) limit)
-                    (§ ass quotient (assoc quotient :value (int-array limit)))
+                ;; dividend less than divisor
+                (when (neg? cmp)
                     (§ ass quotient (assoc quotient :offset 0))
+                    (§ ass quotient (assoc quotient :intLen 0))
+                    (§ return (when rem? (MutableBigInteger'new-m this)))
                 )
-                (§ ass quotient (assoc quotient :intLen limit))
-                (let [
-                      #_"int[]" q (:value quotient)
-                ]
-                    ;; must insert leading 0 in rem if its length did not change
-                    (when (== (:intLen rem) nlen)
-                        (§ ass rem (assoc rem :offset 0))
-                        (aset (:value rem) 0 0)
-                        (§ ass rem (assoc rem :intLen (inc (:intLen rem))))
-                    )
+                ;; dividend equal to divisor
+                (when (zero? cmp)
+                    (§ ass quotient (assoc quotient :offset 0))
+                    (aset (:value quotient) 0 1)
+                    (§ ass quotient (assoc quotient :intLen 1))
+                    (§ return (when rem? (MutableBigInteger'new-0)))
+                )
 
+                ;; special case one word divisor
+                (when (== (:intLen b) 1)
+                    (§ ass [quotient #_"int" r] (MutableBigInteger''divideOneWord this, (aget (:value b) (:offset b))))
+                    (§ return (when rem? (if (zero? r) (MutableBigInteger'new-0) (MutableBigInteger'new-i r))))
+                )
+
+                (§ ass quotient (MutableBigInteger''clear quotient))
+
+                ;; cancel common powers of two if we're above the KNUTH_POW2_* thresholds
+                (when (<= MutableBigInteger'KNUTH_POW2_THRESH_LEN (:intLen this))
                     (let [
-                          #_"int" dh (§ soon aget divisor 0)
-                          #_"long" dhLong (long! dh)
-                          #_"int" dl (§ soon aget divisor 1)
+                        #_"int" trailingZeroBits (Math/min (MutableBigInteger''getLowestSetBit this), (MutableBigInteger''getLowestSetBit b))
                     ]
-                        ;; D2 Initialize j
-                        (loop-when-recur [#_"int" j 0] (< j (dec limit)) [(inc j)]
-                            ;; D3 Calculate qhat
-                            ;; estimate qhat
+                        (when (<= (* MutableBigInteger'KNUTH_POW2_THRESH_ZEROS 32) trailingZeroBits)
                             (let [
-                                  #_"int" qhat 0
-                                  #_"int" qrem 0
-                                  #_"boolean" skipCorrection false
-                                  #_"int" nh (aget (:value rem) (+ j (:offset rem)))
-                                  #_"int" nh2 (+ nh 0x80000000)
-                                  #_"int" nm (aget (:value rem) (+ j 1 (:offset rem)))
+                                #_"MutableBigInteger" a (MutableBigInteger'new-m this)
                             ]
-                                (cond (== nh dh)
-                                    (do
-                                        (§ ass qhat (bit-not 0))
-                                        (§ ass qrem (+ nh nm))
-                                        (§ ass skipCorrection (< (+ qrem 0x80000000) nh2))
-                                    )
-                                    :else
-                                    (let [
-                                          #_"long" nChunk (| (<< (long nh) 32) (long! nm))
-                                    ]
-                                        (cond (<= 0 nChunk)
-                                            (do
-                                                (§ ass qhat (int (quot nChunk dhLong)))
-                                                (§ ass qrem (int (- nChunk (* qhat dhLong))))
-                                            )
-                                            :else
-                                            (let [
-                                                  #_"long" tmp (MutableBigInteger'divWord nChunk, dh)
-                                            ]
-                                                (§ ass qhat (int (long! tmp)))
-                                                (§ ass qrem (int (>>> tmp 32)))
-                                            )
-                                        )
-                                    )
-                                )
-
-                                (when (zero? qhat)
-                                    (§ continue)
-                                )
-
-                                (when (not skipCorrection) ;; correct qhat
-                                    (let [
-                                          #_"long" nl (long! (aget (:value rem) (+ j 2 (:offset rem))))
-                                          #_"long" rs (| (<< (long! qrem) 32) nl)
-                                          #_"long" estProduct (* (long! dl) (long! qhat))
-
-                                    ]
-                                        (when (MutableBigInteger'unsignedLongCompare estProduct, rs)
-                                            (§ ass qhat (dec qhat))
-                                            (§ ass qrem (int (+ (long! qrem) dhLong)))
-                                            (when (<= dhLong (long! qrem))
-                                                (§ ass estProduct (- estProduct (long! dl)))
-                                                (§ ass rs (| (<< (long! qrem) 32) nl))
-                                                (when (MutableBigInteger'unsignedLongCompare estProduct, rs)
-                                                    (§ ass qhat (dec qhat))
-                                                )
-                                            )
-                                        )
-                                    )
-                                )
-
-                                ;; D4 Multiply and subtract
-                                (aset (:value rem) (+ j (:offset rem)) 0)
+                                (§ ass b (MutableBigInteger'new-m b))
+                                (§ ass a (MutableBigInteger''rightShift a, trailingZeroBits))
+                                (§ ass b (MutableBigInteger''rightShift b, trailingZeroBits))
                                 (let [
-                                      #_"int" borrow (MutableBigInteger''mulsub this, (:value rem), divisor, qhat, (+ j (:offset rem)), dlen)
+                                    #_"MutableBigInteger" r (MutableBigInteger''divideKnuth a, b, quotient)
                                 ]
-                                    ;; D5 Test remainder
-                                    (when (< nh2 (+ borrow 0x80000000))
-                                        ;; D6 Add back
-                                        (MutableBigInteger''divadd this, divisor, (:value rem), (+ j 1 (:offset rem)))
-                                        (§ ass qhat (dec qhat))
-                                    )
-
-                                    ;; store the quotient digit
-                                    (aset q j qhat)
+                                    (§ ass r (MutableBigInteger''leftShift r, trailingZeroBits))
+                                    (§ return r)
                                 )
                             )
-                        ) ;; D7 loop on j
-                        ;; D3 Calculate qhat
-                        ;; estimate qhat
-                        (let [
-                              #_"int" qhat 0
-                              #_"int" qrem 0
-                              #_"boolean" skipCorrection false
-                              #_"int" nh (aget (:value rem) (+ (dec limit) (:offset rem)))
-                              #_"int" nh2 (+ nh 0x80000000)
-                              #_"int" nm (aget (:value rem) (+ limit (:offset rem)))
-                        ]
-                            (cond (== nh dh)
-                                (do
-                                    (§ ass qhat (bit-not 0))
-                                    (§ ass qrem (+ nh nm))
-                                    (§ ass skipCorrection (< (+ qrem 0x80000000) nh2))
-                                )
-                                :else
-                                (let [
-                                      #_"long" nChunk (| (<< (long nh) 32) (long! nm))
-                                ]
-                                    (cond (<= 0 nChunk)
-                                        (do
-                                            (§ ass qhat (int (quot nChunk dhLong)))
-                                            (§ ass qrem (int (- nChunk (* qhat dhLong))))
-                                        )
-                                        :else
-                                        (let [
-                                              #_"long" tmp (MutableBigInteger'divWord nChunk, dh)
-                                        ]
-                                            (§ ass qhat (int (long! tmp)))
-                                            (§ ass qrem (int (>>> tmp 32)))
-                                        )
-                                    )
-                                )
-                            )
-                            (when (not (zero? qhat))
-                                (when (not skipCorrection) ;; correct qhat
-                                    (let [
-                                          #_"long" nl (long! (aget (:value rem) (+ limit 1 (:offset rem))))
-                                          #_"long" rs (| (<< (long! qrem) 32) nl)
-                                          #_"long" estProduct (* (long! dl) (long! qhat))
-                                    ]
-                                        (when (MutableBigInteger'unsignedLongCompare estProduct, rs)
-                                            (§ ass qhat (dec qhat))
-                                            (§ ass qrem (int (+ (long! qrem) dhLong)))
-                                            (when (<= dhLong (long! qrem))
-                                                (§ ass estProduct (- estProduct (long! dl)))
-                                                (§ ass rs (| (<< (long! qrem) 32) nl))
-                                                (when (MutableBigInteger'unsignedLongCompare estProduct, rs)
-                                                    (§ ass qhat (dec qhat))
-                                                )
-                                            )
-                                        )
-                                    )
-                                )
-
-                                ;; D4 Multiply and subtract
-                                (let [
-                                      #_"int" borrow (ß )
-                                ]
-                                    (aset (:value rem) (+ (dec limit) (:offset rem)) 0)
-                                    (§ ass borrow (MutableBigInteger''mulsub this, (:value rem), divisor, qhat, (+ (dec limit) (:offset rem)), dlen, needRemainder))
-
-                                    ;; D5 Test remainder
-                                    (when (< nh2 (+ borrow 0x80000000))
-                                        ;; D6 Add back
-                                        (when needRemainder
-                                            (MutableBigInteger''divadd this, divisor, (:value rem), (+ (dec limit) 1 (:offset rem)))
-                                        )
-                                        (§ ass qhat (dec qhat))
-                                    )
-
-                                    ;; store the quotient digit
-                                    (aset q (dec limit) qhat)
-                                )
-                            )
-
-                            (when needRemainder
-                                ;; D8 Unnormalize
-                                (when (pos? shift)
-                                    (§ ass rem (MutableBigInteger''rightShift rem, shift))
-                                )
-                                (§ ass rem (MutableBigInteger''normalize rem))
-                            )
-                            (§ ass quotient (MutableBigInteger''normalize quotient))
-                            (when needRemainder rem)
                         )
                     )
                 )
+
+                (§ ass [quotient _] (MutableBigInteger''divideMagnitude this, b, rem?))
+                (§ return _)
             )
         )
     )
 
     ;;;
-     ; A primitive used for division by long.
-     ; Specialized version of the method divadd.
-     ; dh is a high part of the divisor, dl is a low part
+     ; Calculates the quotient of this div b and places the quotient in the
+     ; provided MutableBigInteger objects and the remainder object is returned.
      ;;
     #_method
-    (defn- #_"int" MutableBigInteger''divaddLong [#_"MutableBigInteger" this, #_"int" dh, #_"int" dl, #_"int[]" result, #_"int" offset]
-        (let [
-              #_"long" carry 0
-              #_"long" sum (+ (long! dl) (long! (aget result (+ 1 offset))))
-        ]
-            (aset result (+ 1 offset) (int sum))
-
-            (§ ass sum (+ (long! dh) (long! (aget result offset)) carry))
-            (aset result offset (int sum))
-            (§ ass carry (>>> sum 32))
-            (int carry)
+    (defn #_"MutableBigInteger" MutableBigInteger''divide
+        ([#_"MutableBigInteger" this, #_"MutableBigInteger" b, #_"MutableBigInteger" quotient]
+            (MutableBigInteger''divide this, b, quotient, true)
         )
-    )
-
-    ;;;
-     ; This method is used for division by long.
-     ; Specialized version of the method sulsub.
-     ; dh is a high part of the divisor, dl is a low part
-     ;;
-    #_method
-    (defn- #_"int" MutableBigInteger''mulsubLong [#_"MutableBigInteger" this, #_"int[]" q, #_"int" dh, #_"int" dl, #_"int" x, #_"int" offset]
-        (let [
-              #_"long" xLong (long! x)
-              _ (§ ass offset (+ offset 2))
-              #_"long" product (* (long! dl) xLong)
-              #_"long" difference (- (aget q offset) product)
-        ]
-            (aset q offset (int difference))
-            (§ ass offset (dec offset))
-            (let [
-                  #_"long" carry (+ (>>> product 32) (if (< (long! (bit-not (int product))) (long! difference)) 1 0))
-            ]
-                (§ ass product (+ (* (long! dh) xLong) carry))
-                (§ ass difference (- (aget q offset) product))
-                (aset q offset (int difference))
-                (§ ass offset (dec offset))
-                (§ ass carry (+ (>>> product 32) (if (< (long! (bit-not (int product))) (long! difference)) 1 0)))
-                (int carry)
-            )
+        ([#_"MutableBigInteger" this, #_"MutableBigInteger" b, #_"MutableBigInteger" quotient, #_"boolean" rem?]
+            (MutableBigInteger''divideKnuth this, b, quotient, rem?)
         )
     )
 
@@ -1538,7 +1245,7 @@
                   #_"int" t (if (< aZeros bZeros) aZeros bZeros)
             ]
                 (while (not (== a b))
-                    (cond (> (+ a 0x80000000) (+ b 0x80000000)) ;; a > b as unsigned
+                    (cond (> (long! a) (long! b)) ;; a > b as unsigned
                         (do
                             (§ ass a (- a b))
                             (§ ass a (>>> a (Integer/numberOfTrailingZeros a)))
@@ -1648,7 +1355,7 @@
                 )
 
                 (let [
-                      #_"MutableBigInteger" r (MutableBigInteger''divide-3 a, b, q)
+                      #_"MutableBigInteger" r (MutableBigInteger''divide a, b, q)
                       _ (§ ass a b)
                       _ (§ ass b r)
                 ]
@@ -1704,7 +1411,7 @@
                   #_"MutableBigInteger" t2 (MutableBigInteger'multiply t1, y2)
                   _ (§ ass result (MutableBigInteger''add result, t2))
             ]
-                (MutableBigInteger''divide-3 result, p, t1)
+                (MutableBigInteger''divide result, p, t1)
             )
         )
     )
@@ -1893,7 +1600,7 @@
                       #_"int" v (* r (aget (:value c) (dec (+ (:offset c) (:intLen c)))))
                 ]
                     ;; c = c + (v * p)
-                    (MutableBigInteger''mul p, v, temp)
+                    (§ ass temp (MutableBigInteger'mul p, v))
                     (§ ass c (MutableBigInteger''add c, temp))
                     ;; c = c / 2^j
                     (§ ass c (assoc c :intLen (- (:intLen c) 1)))
@@ -1909,7 +1616,7 @@
                     ]
                         (§ ass v (& v (dec (<< 1 numBits))))
                         ;; c = c + (v * p)
-                        (MutableBigInteger''mul p, v, temp)
+                        (§ ass temp (MutableBigInteger'mul p, v))
                         (§ ass c (MutableBigInteger''add c, temp))
                         ;; c = c / 2^j
                         (§ ass c (MutableBigInteger''rightShift c, numBits))
@@ -1941,7 +1648,7 @@
                   #_"MutableBigInteger" mod (MutableBigInteger'new-m b)
                   #_"MutableBigInteger" a (MutableBigInteger'new-m this)
                   #_"MutableBigInteger" q (MutableBigInteger'new-0)
-                  #_"MutableBigInteger" r (MutableBigInteger''divide-3 b, a, q)
+                  #_"MutableBigInteger" r (MutableBigInteger''divide b, a, q)
                   ;; swap b & r
                   #_"MutableBigInteger" swapper b b r r swapper
                   #_"MutableBigInteger" t1 (MutableBigInteger'new-m q)
@@ -1951,7 +1658,7 @@
                 (while (not (MutableBigInteger''isOne b))
                     (let [
                     ]
-                        (§ ass r (MutableBigInteger''divide-3 a, b, q))
+                        (§ ass r (MutableBigInteger''divide a, b, q))
 
                         (when (zero? (:intLen r))
                             (throw! "not invertible")
@@ -1962,11 +1669,11 @@
 
                         (cond (== (:intLen q) 1)
                             (do
-                                (MutableBigInteger''mul t1, (aget (:value q) (:offset q)), temp)
+                                (§ ass temp (MutableBigInteger'mul t1, (aget (:value q) (:offset q))))
                             )
                             :else
                             (do
-                                (§ ass temp (MutableBigInteger'multiply q, t1, temp))
+                                (§ ass temp (MutableBigInteger'multiply q, t1))
                             )
                         )
                         (§ ass swapper q)
@@ -1978,7 +1685,7 @@
                             (§ return t0)
                         )
 
-                        (§ ass r (MutableBigInteger''divide-3 b, a, q))
+                        (§ ass r (MutableBigInteger''divide b, a, q))
 
                         (when (zero? (:intLen r))
                             (throw! "not invertible")
@@ -1989,11 +1696,11 @@
 
                         (cond (== (:intLen q) 1)
                             (do
-                                (MutableBigInteger''mul t0, (aget (:value q) (:offset q)), temp)
+                                (§ ass temp (MutableBigInteger'mul t0, (aget (:value q) (:offset q))))
                             )
                             :else
                             (do
-                                (§ ass temp (MutableBigInteger'multiply q, t0, temp))
+                                (§ ass temp (MutableBigInteger'multiply q, t0))
                             )
                         )
                         (§ ass swapper q)
@@ -3767,7 +3474,7 @@
               #_"MutableBigInteger" a (MutableBigInteger'new-a (:mag this))
               #_"MutableBigInteger" b (MutableBigInteger'new-a (:mag val))
         ]
-            (MutableBigInteger''divideKnuth-4 a, b, q, false)
+            (MutableBigInteger''divideKnuth a, b, q, false)
             (MutableBigInteger''toBigInteger-2 q, (* (:signum this) (:signum val)))
         )
     )
@@ -3800,7 +3507,7 @@
               #_"MutableBigInteger" q (MutableBigInteger'new-0)
               #_"MutableBigInteger" a (MutableBigInteger'new-a (:mag this))
               #_"MutableBigInteger" b (MutableBigInteger'new-a (:mag val))
-              #_"MutableBigInteger" r (MutableBigInteger''divideKnuth-3 a, b, q)
+              #_"MutableBigInteger" r (MutableBigInteger''divideKnuth a, b, q)
         ]
             (aset result 0 (MutableBigInteger''toBigInteger-2 q, (if (== (:signum this) (:signum val)) 1 -1)))
             (aset result 1 (MutableBigInteger''toBigInteger-2 r, (:signum this)))
@@ -3832,7 +3539,7 @@
               #_"MutableBigInteger" a (MutableBigInteger'new-a (:mag this))
               #_"MutableBigInteger" b (MutableBigInteger'new-a (:mag val))
         ]
-            (-> (MutableBigInteger''divideKnuth-3 a, b, q) (MutableBigInteger''toBigInteger-2 (:signum this)))
+            (-> (MutableBigInteger''divideKnuth a, b, q) (MutableBigInteger''toBigInteger-2 (:signum this)))
         )
     )
 
@@ -4241,7 +3948,7 @@
                                 (let [
                                       #_"MutableBigInteger" q (MutableBigInteger'new-0)
                                 ]
-                                    (§ ass result (-> (MutableBigInteger''divide-3 t1, (MutableBigInteger'new-b m), q) (MutableBigInteger''toBigInteger-1)))
+                                    (§ ass result (-> (MutableBigInteger''divide t1, (MutableBigInteger'new-b m), q) (MutableBigInteger''toBigInteger-1)))
                                 )
                             )
                         )
@@ -4330,7 +4037,7 @@
         )
 
         (let [
-              #_"int[]" base (.clone (:mag this))
+              #_"int[]" base (aclone (:mag this))
               #_"int[]" exp (:mag y)
               #_"int[]" mod (:mag z)
               #_"int" modLen (alength mod)
@@ -4363,7 +4070,7 @@
                       #_"MutableBigInteger" q (MutableBigInteger'new-0)
                       #_"MutableBigInteger" a2 (MutableBigInteger'new-a a)
                       #_"MutableBigInteger" b2 (MutableBigInteger'new-a mod)
-                      #_"MutableBigInteger" r (MutableBigInteger''divide-3 a2, b2, q)
+                      #_"MutableBigInteger" r (MutableBigInteger''divide a2, b2, q)
                 ]
                     (aset table 0 (MutableBigInteger''toIntArray r))
 
@@ -4473,7 +4180,7 @@
                                             (when (== ebits multpos)
                                                 (cond isone
                                                     (do
-                                                        (§ ass b (.clone mult))
+                                                        (§ ass b (aclone mult))
                                                         (§ ass isone false)
                                                     )
                                                     :else
@@ -5664,7 +5371,7 @@
                       #_"MutableBigInteger" q (MutableBigInteger'new-0)
                       #_"MutableBigInteger" a (MutableBigInteger'new-a (:mag tmp))
                       #_"MutableBigInteger" b (MutableBigInteger'new-a (:mag d))
-                      #_"MutableBigInteger" r (MutableBigInteger''divide-3 a, b, q)
+                      #_"MutableBigInteger" r (MutableBigInteger''divide a, b, q)
                       #_"BigInteger" q2 (MutableBigInteger''toBigInteger-2 q, (* (:signum tmp) (:signum d)))
                       #_"BigInteger" r2 (MutableBigInteger''toBigInteger-2 r, (* (:signum tmp) (:signum d)))
                 ]
@@ -5777,7 +5484,7 @@
                       #_"BigInteger[][]" pc BigInteger'powerCache ;; volatile read again
                 ]
                     (when (<= (alength (aget pc radix)) exponent)
-                        (§ ass pc (.clone pc))
+                        (§ ass pc (aclone pc))
                         (aset pc radix cacheLine)
                         (§ ass BigInteger'powerCache pc) ;; volatile write, publish
                     )
