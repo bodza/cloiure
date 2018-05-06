@@ -1226,167 +1226,95 @@
     )
 
     ;;;
-     ; Uses the extended Euclidean algorithm to compute the modInverse of base
-     ; mod a modulus that is a power of 2. The modulus is 2^k.
+     ; Extended Euclidean algorithm to compute the multiplicative inverse of a mod 2^k.
      ;;
-    #_method
-    (defn #_"MutableBigInteger" MutableBigInteger''euclidModInverse [#_"MutableBigInteger" this, #_"int" k]
-        (let [
-              #_"MutableBigInteger" b (MutableBigInteger'new-i 1)
-        ]
-            (§ ass b (MutableBigInteger''leftShift b, k))
-
-            (let [
-                  #_"MutableBigInteger" mod (MutableBigInteger'copy b)
-                  #_"MutableBigInteger" a (MutableBigInteger'copy this)
-                  [#_"MutableBigInteger" q #_"MutableBigInteger" r] (MutableBigInteger'divide b, a)
-                  ;; swap b & r
-                  #_"MutableBigInteger" swapper b b r r swapper
-                  #_"MutableBigInteger" t1 (MutableBigInteger'copy q)
-                  #_"MutableBigInteger" t0 (MutableBigInteger'new-i 1)
-                  #_"MutableBigInteger" temp (MutableBigInteger'empty)
-            ]
-                (while (not (MutableBigInteger'isOne b))
-                    (let [
-                    ]
-                        (§ ass [q r] (MutableBigInteger'divide a, b))
-
-                        (when (zero? (:intLen r))
-                            (throw! "not invertible")
+    (defn #_"MutableBigInteger" MutableBigInteger'euclidModInverse [#_"MutableBigInteger" a, #_"int" k]
+        (let [#_"MutableBigInteger" b (MutableBigInteger''leftShift (MutableBigInteger'new-i 1), k)
+              #_"MutableBigInteger" m (MutableBigInteger'copy b)
+              [#_"MutableBigInteger" c b] (MutableBigInteger'divide b, a)
+              #_"MutableBigInteger" d (MutableBigInteger'new-i 1)]
+            (loop-when [a a b b c c d d] (not (MutableBigInteger'isOne b)) => (let [[m _] (MutableBigInteger''subtract m, c)] m)
+                (let-when [[#_"MutableBigInteger" q a] (MutableBigInteger'divide a, b)] (pos? (:intLen a)) => (throw! "not invertible")
+                    (let [q (if (== (:intLen q) 1)
+                                (MutableBigInteger'mul c, (aget (:value q) (:offset q)))
+                                (MutableBigInteger'multiply q, c)
+                            )
+                          d (MutableBigInteger''add d, q)]
+                        (when-not (MutableBigInteger'isOne a) => d
+                            (let-when [[#_"MutableBigInteger" q b] (MutableBigInteger'divide b, a)] (pos? (:intLen b)) => (throw! "not invertible")
+                                (let [q (if (== (:intLen q) 1)
+                                            (MutableBigInteger'mul d, (aget (:value q) (:offset q)))
+                                            (MutableBigInteger'multiply q, d)
+                                        )]
+                                    (recur a b (MutableBigInteger''add c, q) d)
+                                )
+                            )
                         )
-
-                        (§ ass swapper r) (§ ass a swapper)
-
-                        (if (== (:intLen q) 1)
-                            (§ ass temp (MutableBigInteger'mul t1, (aget (:value q) (:offset q))))
-                            (§ ass temp (MutableBigInteger'multiply q, t1))
-                        )
-                        (§ ass swapper q) (§ ass q temp) (§ ass temp swapper)
-                        (§ ass t0 (MutableBigInteger''add t0, q))
-
-                        (when (MutableBigInteger'isOne a)
-                            (§ return t0)
-                        )
-
-                        (§ ass [q r] (MutableBigInteger'divide b, a))
-
-                        (when (zero? (:intLen r))
-                            (throw! "not invertible")
-                        )
-
-                        (§ ass swapper b) (§ ass b r)
-
-                        (if (== (:intLen q) 1)
-                            (§ ass temp (MutableBigInteger'mul t0, (aget (:value q) (:offset q))))
-                            (§ ass temp (MutableBigInteger'multiply q, t0))
-                        )
-
-                        (§ ass swapper q) (§ ass q temp) (§ ass temp swapper)
-
-                        (§ ass t1 (MutableBigInteger''add t1, q))
                     )
                 )
-                (§ ass [mod _] (MutableBigInteger''subtract mod, t1))
-                mod
             )
         )
     )
 
     ;;
-     ; Calculate the multiplicative inverse of this mod 2^k.
+     ; Calculate the multiplicative inverse of x mod 2^k.
      ;;
-    #_method
-    (defn #_"MutableBigInteger" MutableBigInteger''modInverseMP2 [#_"MutableBigInteger" this, #_"int" k]
-        (when (MutableBigInteger'isEven this)
-            (throw! "not invertible (not= gcd 1)")
-        )
-
-        (when (< 64 k)
-            (§ return (MutableBigInteger''euclidModInverse this, k))
-        )
-
-        (let [
-              #_"int" t (MutableBigInteger'inverseMod32 (aget (:value this) (dec (+ (:offset this) (:intLen this)))))
-        ]
-            (when (< k 33)
-                (§ ass t (if (== k 32) t (& t (dec (<< 1 k)))))
-                (§ return (MutableBigInteger'copy t))
-            )
-
-            (let [
-                  #_"long" pLong (long! (aget (:value this) (dec (+ (:offset this) (:intLen this)))))
-            ]
-                (when (< 1 (:intLen this))
-                    (§ ass pLong (| pLong (<< (long (aget (:value this) (- (+ (:offset this) (:intLen this)) 2))) 32)))
-                )
-                (let [
-                      #_"long" tLong (long! t)
-                      _ (§ ass tLong (* tLong (- 2 (* pLong tLong)))) ;; 1 more Newton iteration step
-                      _ (§ ass tLong (if (== k 64) tLong (& tLong (dec (<< 1 k)))))
-                      #_"MutableBigInteger" result (MutableBigInteger'new-a (int-array 2))
-                ]
-                    (aset (:value result) 0 (int (>>> tLong 32)))
-                    (aset (:value result) 1 (int tLong))
-                    (§ ass result (assoc result :intLen 2))
-                    (§ ass result (MutableBigInteger''normalize result))
-                    result
+    (defn #_"MutableBigInteger" MutableBigInteger'modInverseMP2 [#_"MutableBigInteger" x, #_"int" k]
+        (cond
+            (MutableBigInteger'isEven x) (throw! "not invertible (not= gcd 1)")
+            (< 64 k)                     (MutableBigInteger'euclidModInverse x, k)
+            :else
+            (let [#_"int[]" a (:value x) #_"int" n (:intLen x) #_"int" e (dec (+ (:offset x) n)) #_"int" p (aget a e)
+                  #_"int" t (MutableBigInteger'inverseMod32 p)]
+                (when (< 32 k) => (MutableBigInteger'new-i (if (== k 32) t (& t (dec (<< 1 k)))))
+                    (let [#_"long" p' (long! p) p' (if (< 1 n) (| p' (<< (long (aget a (dec e))) 32)) p')
+                          #_"long" t' (long! t) t' (* t' (- 2 (* p' t'))) ;; 1 more Newton iteration step
+                          t' (if (== k 64) t' (& t' (dec (<< 1 k))))]
+                        (MutableBigInteger''normalize (MutableBigInteger'new-a (int-array [(int (>>> t' 32)) (int t')])))
+                    )
                 )
             )
         )
     )
 
     ;;;
-     ; Calculate the multiplicative inverse of 2^k mod mod, where mod is odd.
+     ; Calculate the multiplicative inverse of 2^k mod m, where m is odd.
      ;;
-    (defn #_"MutableBigInteger" MutableBigInteger'modInverseBP2 [#_"MutableBigInteger" mod, #_"int" k]
-        ;; copy the mod to protect original
-        (MutableBigInteger'fixup (MutableBigInteger'new-i 1), (MutableBigInteger'copy mod), k)
+    (defn #_"MutableBigInteger" MutableBigInteger'modInverseBP2 [#_"MutableBigInteger" m, #_"int" k]
+        (MutableBigInteger'fixup (MutableBigInteger'new-i 1), m, k)
     )
 
     ;;;
-     ; Returns the modInverse of this mod p.
-     ; This and p are not affected by the operation.
+     ; Returns the modInverse of x mod p.
+     ; x and p are not affected by the operation.
      ;;
-    #_method
-    (defn #_"MutableBigInteger" MutableBigInteger''mutableModInverse [#_"MutableBigInteger" this, #_"MutableBigInteger" p]
-        ;; modulus is odd, use Schroeppel's algorithm
-        (when-not (MutableBigInteger'isEven p)
-            (§ return (MutableBigInteger''modInverse this, p))
-        )
-
-        ;; base and modulus are even, throw exception
-        (when (MutableBigInteger'isEven this)
-            (throw! "not invertible")
-        )
-
-        (let [
-              ;; get even part of modulus expressed as a power of 2
-              #_"int" powersOf2 (MutableBigInteger'getLowestSetBit p)
-              ;; construct odd part of modulus
-              #_"MutableBigInteger" oddMod (MutableBigInteger'copy p)
-        ]
-            (§ ass oddMod (MutableBigInteger''rightShift oddMod, powersOf2))
-
-            (when (MutableBigInteger'isOne oddMod)
-                (§ return (MutableBigInteger''modInverseMP2 this, powersOf2))
-            )
-
-            (let [
-                  ;; calculate 1/a mod oddMod
-                  #_"MutableBigInteger" oddPart (MutableBigInteger''modInverse this, oddMod)
-                  ;; calculate 1/a mod evenMod
-                  #_"MutableBigInteger" evenPart (MutableBigInteger''modInverseMP2 this, powersOf2)
-                  ;; combine the results using Chinese Remainder Theorem
-                  #_"MutableBigInteger" y1 (MutableBigInteger'modInverseBP2 oddMod, powersOf2)
-                  #_"MutableBigInteger" y2 (MutableBigInteger''modInverseMP2 oddMod, powersOf2)
-                  _ (§ ass oddPart (MutableBigInteger''leftShift oddPart, powersOf2))
-                  #_"MutableBigInteger" result (MutableBigInteger'multiply oddPart, y1)
-                  #_"MutableBigInteger" t1 (MutableBigInteger'multiply evenPart, oddMod)
-                  #_"MutableBigInteger" t2 (MutableBigInteger'multiply t1, y2)
-                  _ (§ ass result (MutableBigInteger''add result, t2))
-            ]
-                (§ ass [_ #_"MutableBigInteger" r] (MutableBigInteger'divide result, p))
-                (§ return r)
+    (defn #_"MutableBigInteger" MutableBigInteger'mutableModInverse [#_"MutableBigInteger" x, #_"MutableBigInteger" p]
+        ;; when modulus is odd, use Schroeppel's algorithm
+        (when (MutableBigInteger'isEven p) => (MutableBigInteger''modInverse x, p)
+            ;; when base and modulus are even, throw exception
+            (when-not (MutableBigInteger'isEven x) => (throw! "not invertible")
+                ;; get even part of modulus expressed as a power of 2
+                (let [#_"int" shift (MutableBigInteger'getLowestSetBit p)
+                      ;; construct odd part of modulus
+                      #_"MutableBigInteger" o (MutableBigInteger''rightShift (MutableBigInteger'copy p), shift)]
+                    (if (MutableBigInteger'isOne o)
+                        (MutableBigInteger'modInverseMP2 x, shift)
+                        ;; calculate 1/a mod oddMod ;; calculate 1/a mod evenMod
+                        (let [#_"MutableBigInteger" odd (MutableBigInteger''leftShift (MutableBigInteger''modInverse x, o), shift)
+                              #_"MutableBigInteger" even (MutableBigInteger'modInverseMP2 x, shift)
+                              ;; combine the results using Chinese Remainder Theorem
+                              [_ #_"MutableBigInteger" r]
+                                (MutableBigInteger'divide
+                                    (MutableBigInteger''add
+                                        (MutableBigInteger'multiply odd, (MutableBigInteger'modInverseBP2 o, shift)),
+                                        (MutableBigInteger'multiply (MutableBigInteger'multiply even, o), (MutableBigInteger'modInverseMP2 o, shift))
+                                    ),
+                                    p
+                                )]
+                            r
+                        )
+                    )
+                )
             )
         )
     )
@@ -4098,7 +4026,7 @@
             (let [
                   #_"MutableBigInteger" a (MutableBigInteger'fromBigInteger modVal)
                   #_"MutableBigInteger" b (MutableBigInteger'fromBigInteger m)
-                  #_"MutableBigInteger" result (MutableBigInteger''mutableModInverse a, b)
+                  #_"MutableBigInteger" result (MutableBigInteger'mutableModInverse a, b)
             ]
                 (MutableBigInteger'toBigInteger result, 1)
             )
