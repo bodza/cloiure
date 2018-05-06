@@ -1,5 +1,5 @@
 (ns cloiure.ratio
-    (:refer-clojure :only [* *ns* + - -> / < <= = == > >= aclone aget alength and aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor byte byte-array case cast complement cond cons dec declare defmacro defn dotimes double-array first identical? if-not import inc instance? int int-array let letfn long long-array loop make-array max min neg? next nil? not or pos? quot rem second some? symbol? unsigned-bit-shift-right update vary-meta vec vector? while zero?])
+    (:refer-clojure :only [* *ns* + - -> / < <= = == > >= aclone aget alength and aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor byte byte-array case cast complement cond cons dec declare defmacro defn dotimes first identical? if-not import inc instance? int int-array let letfn long long-array loop make-array max min neg? next nil? not or pos? quot rem second some? symbol? unsigned-bit-shift-right update vary-meta vec vector? while zero?])
 )
 
 (defmacro § [& _])
@@ -11,7 +11,7 @@
 (clojure.core/doseq [% (clojure.core/keys (clojure.core/ns-imports *ns*))] (clojure.core/ns-unmap *ns* %))
 
 (import
-    [java.lang Character Class Integer Long Math RuntimeException String StringBuilder System]
+    [java.lang Character Class Integer Long RuntimeException String StringBuilder System]
 )
 
 (import
@@ -1321,104 +1321,76 @@
 )
 
 ;;;
- ; Immutable arbitrary-precision integers. All operations behave as if
- ; BigIntegers were represented in two's-complement notation (like Java's
- ; primitive integer types). BigInteger provides analogues to all of Java's
- ; primitive integer operators, and all relevant methods from java.lang.Math.
- ; Additionally, BigInteger provides operations for modular arithmetic, GCD
- ; calculation, primality testing, prime generation, bit manipulation,
- ; and a few other miscellaneous operations.
+ ; Immutable arbitrary-precision integers. All operations behave as if BigIntegers were represented
+ ; in two's-complement notation (like Java's primitive integer types). BigInteger provides analogues
+ ; to all of Java's primitive integer operators, and all relevant methods from java.lang.Math.
+ ; Additionally, BigInteger provides operations for modular arithmetic, GCD calculation, primality
+ ; testing, prime generation, bit manipulation, and a few other miscellaneous operations.
  ;
- ; Semantics of arithmetic operations exactly mimic those of Java's integer
- ; arithmetic operators, as defined in <i>The Java Language Specification</i>.
- ; For example, division by zero throws an {@code ArithmeticException}, and
- ; division of a negative by a positive yields a negative (or zero) remainder.
- ; All of the details in the Spec concerning overflow are ignored, as
- ; BigIntegers are made as large as necessary to accommodate the results of an
- ; operation.
+ ; Semantics of arithmetic operations exactly mimic those of Java's integer arithmetic operators, as
+ ; defined in "The Java Language Specification". For example, division by zero throws an ArithmeticException,
+ ; and division of a negative by a positive yields a negative (or zero) remainder. All of the details
+ ; in the Spec concerning overflow are ignored, as BigIntegers are made as large as necessary to
+ ; accommodate the results of an operation.
  ;
- ; Semantics of shift operations extend those of Java's shift operators
- ; to allow for negative shift distances. A right-shift with a negative
- ; shift distance results in a left shift, and vice-versa. The unsigned
- ; right shift operator ({@code >>>}) is omitted, as this operation makes
- ; little sense in combination with the "infinite word size" abstraction
- ; provided by this class.
+ ; Semantics of shift operations extend those of Java's shift operators to allow for negative shift
+ ; distances. A right-shift with a negative shift distance results in a left shift, and vice-versa.
+ ; The unsigned right shift operator (>>>) is omitted, as this operation makes little sense in combination
+ ; with the "infinite word size" abstraction provided by this class.
  ;
- ; Semantics of bitwise logical operations exactly mimic those of Java's
- ; bitwise integer operators. The binary operators ({@code and},
- ; {@code or}, {@code xor}) implicitly perform sign extension on the shorter
- ; of the two operands prior to performing the operation.
+ ; Semantics of bitwise logical operations exactly mimic those of Java's bitwise integer operators.
+ ; The binary operators (and, or, xor) implicitly perform sign extension on the shorter of
+ ; the two operands prior to performing the operation.
  ;
- ; Comparison operations perform signed integer comparisons, analogous to
- ; those performed by Java's relational and equality operators.
+ ; Comparison operations perform signed integer comparisons, analogous to those
+ ; performed by Java's relational and equality operators.
  ;
- ; Modular arithmetic operations are provided to compute residues, perform
- ; exponentiation, and compute multiplicative inverses. These methods always
- ; return a non-negative result, between {@code 0} and {@code (modulus - 1)},
- ; inclusive.
+ ; Modular arithmetic operations are provided to compute residues, perform exponentiation, and compute
+ ; multiplicative inverses. These methods always return a non-negative result, between 0 and
+ ; (modulus - 1), inclusive.
  ;
- ; Bit operations operate on a single bit of the two's-complement
- ; representation of their operand. If necessary, the operand is sign-
- ; extended so that it contains the designated bit. None of the single-bit
- ; operations can produce a BigInteger with a different sign from the
- ; BigInteger being operated on, as they affect only a single bit, and the
- ; "infinite word size" abstraction provided by this class ensures that there
- ; are infinitely many "virtual sign bits" preceding each BigInteger.
+ ; Bit operations operate on a single bit of the two's-complement representation of their operand.
+ ; If necessary, the operand is sign- extended so that it contains the designated bit. None of the
+ ; single-bit operations can produce a BigInteger with a different sign from the BigInteger being
+ ; operated on, as they affect only a single bit, and the "infinite word size" abstraction provided by
+ ; this class ensures that there are infinitely many "virtual sign bits" preceding each BigInteger.
  ;
- ; For the sake of brevity and clarity, pseudo-code is used throughout the
- ; descriptions of BigInteger methods. The pseudo-code expression
- ; {@code (i + j)} is shorthand for "a BigInteger whose value is
- ; that of the BigInteger {@code i} plus that of the BigInteger {@code j}."
- ; The pseudo-code expression {@code (i == j)} is shorthand for
- ; "{@code true} if and only if the BigInteger {@code i} represents the same
- ; value as the BigInteger {@code j}." Other pseudo-code expressions are
- ; interpreted similarly.
- ;
- ; All methods and constructors in this class throw
- ; {@code NullPointerException} when passed
- ; a null object reference for any input parameter.
+ ; All methods and constructors in this class throw NullPointerException when passed a null
+ ; object reference for any input parameter.
  ;
  ; BigInteger must support values in the range
- ; -2<sup>{@code Integer.MAX_VALUE}</sup> (exclusive) to
- ; +2<sup>{@code Integer.MAX_VALUE}</sup> (exclusive)
+ ; -2<sup>Integer.MAX_VALUE</sup> (exclusive) to +2<sup>Integer.MAX_VALUE</sup> (exclusive)
  ; and may support values outside of that range.
  ;
- ; The range of probable prime values is limited and may be less than
- ; the full supported positive range of {@code BigInteger}.
- ; The range must be at least 1 to 2<sup>500000000</sup>.
+ ; The range of probable prime values is limited and may be less than the full supported positive
+ ; range of BigInteger. The range must be at least 1 to 2<sup>500000000</sup>.
  ;
- ; @implNote
- ; BigInteger constructors and operations throw {@code ArithmeticException} when
- ; the result is out of the supported range of
- ; -2<sup>{@code Integer.MAX_VALUE}</sup> (exclusive) to
- ; +2<sup>{@code Integer.MAX_VALUE}</sup> (exclusive).
+ ; BigInteger constructors and operations throw ArithmeticException when the result is
+ ; out of the supported range of
+ ; -2<sup>Integer.MAX_VALUE</sup> (exclusive) to +2<sup>Integer.MAX_VALUE</sup> (exclusive).
  ;;
 
 (class-ns BigInteger (§ extends #_"Number") (§ implements #_"Comparable<BigInteger>")
     ;;;
-     ; The signum of this BigInteger: -1 for negative, 0 for zero, or
-     ; 1 for positive. Note that the BigInteger zero <i>must</i> have
-     ; a signum of 0. This is necessary to ensures that there is exactly one
-     ; representation for each BigInteger value.
+     ; The signum of this BigInteger: -1 for negative, 0 for zero, or 1 for positive.
+     ; Note that the BigInteger zero <i>must</i> have a signum of 0. This is necessary
+     ; to ensure that there is exactly one representation for each BigInteger value.
      ;;
     #_final
     (§ field #_"int" :signum 0)
 
     ;;;
-     ; The magnitude of this BigInteger, in <i>big-endian</i> order: the
-     ; zeroth element of this array is the most-significant int of the
-     ; magnitude. The magnitude must be "minimal" in that the most-significant
-     ; int ({@code mag[0]}) must be non-zero. This is necessary to
-     ; ensure that there is exactly one representation for each BigInteger
-     ; value. Note that this implies that the BigInteger zero has a
-     ; zero-length mag array.
+     ; The magnitude of this BigInteger, in <i>big-endian</i> order: the zeroth element
+     ; of this array is the most-significant int of the magnitude. The magnitude must be
+     ; "minimal" in that the most-significant int (mag[0]) must be non-zero. This is
+     ; necessary to ensure that there is exactly one representation for each BigInteger
+     ; value. Note that this implies that the BigInteger zero has a zero-length mag array.
      ;;
     #_final
     (§ field #_"int[]" :mag nil)
 
-    ;; These "redundant fields" are initialized with recognizable nonsense
-    ;; values, and cached the first time they are needed (or never, if they
-    ;; aren't needed).
+    ;; These "redundant fields" are initialized with recognizable nonsense values,
+    ;; and cached the first time they are needed (or never, if they aren't needed).
 
     ;;;
      ; One plus the bitCount of this BigInteger. Zeros means unitialized.
@@ -1440,8 +1412,7 @@
     (§ field- #_"int" :bitLength)
 
     ;;;
-     ; Two plus the lowest set bit of this BigInteger, as returned by
-     ; getLowestSetBit().
+     ; Two plus the lowest set bit of this BigInteger, as returned by getLowestSetBit().
      ;
      ; @deprecated Deprecated since logical value is offset from stored
      ; value and correction factor is applied in accessor method.
@@ -1450,10 +1421,11 @@
     (§ field- #_"int" :lowestSetBit)
 
     ;;;
-     ; Two plus the index of the lowest-order int in the magnitude of this
-     ; BigInteger that contains a nonzero int, or -2 (either value is acceptable).
-     ; The least significant int has int-number 0, the next int in order of
-     ; increasing significance has int-number 1, and so forth.
+     ; Two plus the index of the lowest-order int in the magnitude of this BigInteger that
+     ; contains a nonzero int, or -2 (either value is acceptable). The least significant
+     ; int has int-number 0, the next int in order of increasing significance
+     ; has int-number 1, and so forth.
+     ;
      ; @deprecated Deprecated since logical value is offset from stored
      ; value and correction factor is applied in accessor method.
      ;;
@@ -1461,10 +1433,16 @@
     (§ field- #_"int" :firstNonzeroIntNum)
 
     ;;;
-     ; This constant limits {@code mag.length} of BigIntegers to the supported
-     ; range.
+     ; This constant limits {@code mag.length} of BigIntegers to the supported range.
      ;;
     (def- #_"int" BigInteger'MAX_MAG_LENGTH 64)
+
+    (defn- #_"void" BigInteger'checkRange [#_"int[]" a]
+        (when (or (< BigInteger'MAX_MAG_LENGTH (alength a)) (and (== (alength a) BigInteger'MAX_MAG_LENGTH) (neg? (aget a 0))))
+            (throw! "magnitude overflow")
+        )
+        nil
+    )
 
     ;;;
      ; Bit lengths larger than this constant can cause overflow in searchLen
@@ -1472,19 +1450,85 @@
      ;;
     (def- #_"int" BigInteger'PRIME_SEARCH_BIT_LENGTH_LIMIT 500000000)
 
-    ;;;
-     ; The threshold value for using Schoenhage recursive base conversion.
-     ; If the number of ints in the number are larger than this value,
-     ; the Schoenhage algorithm will be used. In practice, it appears that the
-     ; Schoenhage routine is faster for any threshold down to 2, and is
-     ; relatively flat for thresholds between 2-25, so this choice may be
-     ; varied within this range for very small effect.
+    ;;
+     ; The following two arrays are used for fast String conversions. Both
+     ; are indexed by radix. The first is the number of digits of the given
+     ; radix that can fit in a Java long without "going negative", i.e., the
+     ; highest integer n such that radix**n < 2**63. The second is the
+     ; "long radix" that tears each number into "long digits", each of which
+     ; consists of the number of digits in the corresponding element in
+     ; digitsPerLong (longRadix[i] = i**digitPerLong[i]). Both arrays have
+     ; nonsense values in their 0 and 1 elements, as radixes 0 and 1 are not
+     ; used.
      ;;
-    (def- #_"int" BigInteger'SCHOENHAGE_BASE_CONVERSION_THRESHOLD 20)
+    (def- #_"int[]" BigInteger'digitsPerLong
+        (§
+            0, 0,
+            62, 39, 31, 27, 24, 22, 20, 19, 18, 18, 17, 17, 16, 16, 15, 15, 15, 14, 14, 14, 14, 13, 13, 13, 13, 13, 13, 12, 12, 12, 12, 12, 12, 12, 12
+        )
+    )
+
+    (def- #_"BigInteger[]" BigInteger'longRadix
+        (§
+            nil, nil,
+            BigInteger'valueOf-l(0x4000000000000000), BigInteger'valueOf-l(0x383d9170b85ff80b),
+            BigInteger'valueOf-l(0x4000000000000000), BigInteger'valueOf-l(0x6765c793fa10079d),
+            BigInteger'valueOf-l(0x41c21cb8e1000000), BigInteger'valueOf-l(0x3642798750226111),
+            BigInteger'valueOf-l(0x1000000000000000), BigInteger'valueOf-l(0x12bf307ae81ffd59),
+            BigInteger'valueOf-l(0x0de0b6b3a7640000), BigInteger'valueOf-l(0x4d28cb56c33fa539),
+            BigInteger'valueOf-l(0x1eca170c00000000), BigInteger'valueOf-l(0x780c7372621bd74d),
+            BigInteger'valueOf-l(0x1e39a5057d810000), BigInteger'valueOf-l(0x5b27ac993df97701),
+            BigInteger'valueOf-l(0x1000000000000000), BigInteger'valueOf-l(0x27b95e997e21d9f1),
+            BigInteger'valueOf-l(0x5da0e1e53c5c8000), BigInteger'valueOf-l(0x0b16a458ef403f19),
+            BigInteger'valueOf-l(0x16bcc41e90000000), BigInteger'valueOf-l(0x2d04b7fdd9c0ef49),
+            BigInteger'valueOf-l(0x5658597bcaa24000), BigInteger'valueOf-l(0x06feb266931a75b7),
+            BigInteger'valueOf-l(0x0c29e98000000000), BigInteger'valueOf-l(0x14adf4b7320334b9),
+            BigInteger'valueOf-l(0x226ed36478bfa000), BigInteger'valueOf-l(0x383d9170b85ff80b),
+            BigInteger'valueOf-l(0x5a3c23e39c000000), BigInteger'valueOf-l(0x04e900abb53e6b71),
+            BigInteger'valueOf-l(0x07600ec618141000), BigInteger'valueOf-l(0x0aee5720ee830681),
+            BigInteger'valueOf-l(0x1000000000000000), BigInteger'valueOf-l(0x172588ad4f5f0981),
+            BigInteger'valueOf-l(0x211e44f7d02c1000), BigInteger'valueOf-l(0x2ee56725f06e5c71),
+            BigInteger'valueOf-l(0x41c21cb8e1000000)
+        )
+    )
+
+    ;;
+     ; These two arrays are the integer analogue of above.
+     ;;
+    (def- #_"int[]" BigInteger'digitsPerInt
+        (§
+            0, 0,
+            30, 19, 15, 13, 11, 11, 10, 9, 9, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 5
+        )
+    )
+
+    (def- #_"int[]" BigInteger'intRadix
+        (§
+            0, 0,
+            0x40000000, 0x4546b3db, 0x40000000, 0x48c27395, 0x159fd800,
+            0x75db9c97, 0x40000000, 0x17179149, 0x3b9aca00, 0x0cc6db61,
+            0x19a10000, 0x309f1021, 0x57f6c100, 0x0a2f1b6f, 0x10000000,
+            0x18754571, 0x247dbc80, 0x3547667b, 0x4c4b4000, 0x6b5a6e1d,
+            0x06c20a40, 0x08d2d931, 0x0b640000, 0x0e8d4a51, 0x1269ae40,
+            0x17179149, 0x1cb91000, 0x23744899, 0x2b73a840, 0x34e63b41,
+            0x40000000, 0x4cfa3cc1, 0x5c13d840, 0x6d91b519, 0x039aa400
+        )
+    )
+
+    ;; bitsPerDigit in the given radix times 1024
+    ;; Rounded up to avoid underallocation.
+    (def- #_"long[]" BigInteger'bitsPerDigit
+        (§
+            0, 0,
+            1024, 1624, 2048, 2378, 2648, 2875, 3072,
+            3247, 3402, 3543, 3672, 3790, 3899, 4001,
+            4096, 4186, 4271, 4350, 4426, 4498, 4567,
+            4633, 4696, 4756, 4814, 4870, 4923, 4975,
+            5025, 5074, 5120, 5166, 5210, 5253, 5295
+        )
+    )
 
     ;; constructors
-
-    (declare BigInteger''checkRange)
 
     ;;;
      ; Translates a byte array containing the two's-complement binary representation
@@ -1512,9 +1556,7 @@
                     (§ ass this (assoc this :signum (if (zero? (alength (:mag this))) 0 1)))
                 )
             )
-            (when (<= BigInteger'MAX_MAG_LENGTH (alength (:mag this)))
-                (BigInteger''checkRange this)
-            )
+            (BigInteger'checkRange (:mag this))
             this
         )
     )
@@ -1543,9 +1585,7 @@
                     (§ ass this (assoc this :signum (if (zero? (alength (:mag this))) 0 1)))
                 )
             )
-            (when (<= BigInteger'MAX_MAG_LENGTH (alength (:mag this)))
-                (BigInteger''checkRange this)
-            )
+            (BigInteger'checkRange (:mag this))
             this
         )
     )
@@ -1585,9 +1625,7 @@
                     (§ ass this (assoc this :signum signum))
                 )
             )
-            (when (<= BigInteger'MAX_MAG_LENGTH (alength (:mag this)))
-                (BigInteger''checkRange this)
-            )
+            (BigInteger'checkRange (:mag this))
             this
         )
     )
@@ -1619,22 +1657,8 @@
                     (§ ass this (assoc this :signum signum))
                 )
             )
-            (when (<= BigInteger'MAX_MAG_LENGTH (alength (:mag this)))
-                (BigInteger''checkRange this)
-            )
+            (BigInteger'checkRange (:mag this))
             this
-        )
-    )
-
-    ;; bitsPerDigit in the given radix times 1024
-    ;; Rounded up to avoid underallocation.
-    (def- #_"long[]" BigInteger'bitsPerDigit
-        (§
-            0, 0,
-            1024, 1624, 2048, 2378, 2648, 2875, 3072, 3247, 3402, 3543, 3672,
-            3790, 3899, 4001, 4096, 4186, 4271, 4350, 4426, 4498, 4567, 4633,
-            4696, 4756, 4814, 4870, 4923, 4975, 5025, 5074, 5120, 5166, 5210,
-            5253, 5295
         )
     )
 
@@ -1670,9 +1694,6 @@
         )
         nil
     )
-
-    (declare BigInteger'digitsPerInt)
-    (declare BigInteger'intRadix)
 
     ;;;
      ; Translates the String representation of a BigInteger in the
@@ -1787,9 +1808,7 @@
                                 )
                                 ;; required for cases where the array was overallocated
                                 (§ ass this (assoc this :mag (BigInteger'trustedStripLeadingZeroInts magnitude)))
-                                (when (<= BigInteger'MAX_MAG_LENGTH (alength (:mag this)))
-                                    (BigInteger''checkRange this)
-                                )
+                                (BigInteger'checkRange (:mag this))
                                 this
                             )
                         )
@@ -2357,9 +2376,7 @@
         ]
             (§ ass this (assoc this :signum (if (zero? (alength magnitude)) 0 signum)))
             (§ ass this (assoc this :mag magnitude))
-            (when (<= BigInteger'MAX_MAG_LENGTH (alength (:mag this)))
-                (BigInteger''checkRange this)
-            )
+            (BigInteger'checkRange (:mag this))
             this
         )
     )
@@ -2373,25 +2390,9 @@
         ]
             (§ ass this (assoc this :signum (if (zero? (alength magnitude)) 0 signum)))
             (§ ass this (assoc this :mag (BigInteger'stripLeadingZeroBytes magnitude)))
-            (when (<= BigInteger'MAX_MAG_LENGTH (alength (:mag this)))
-                (BigInteger''checkRange this)
-            )
+            (BigInteger'checkRange (:mag this))
             this
         )
-    )
-
-    ;;;
-     ; Throws an {@code ArithmeticException} if the {@code BigInteger} would be
-     ; out of the supported range.
-     ;
-     ; @throws ArithmeticException if {@code this} exceeds the supported range.
-     ;;
-    #_method
-    (defn- #_"void" BigInteger''checkRange [#_"BigInteger" this]
-        (when (or (< BigInteger'MAX_MAG_LENGTH (alength (:mag this))) (and (== (alength (:mag this)) BigInteger'MAX_MAG_LENGTH) (neg? (aget (:mag this) 0))))
-            (throw! "magnitude overflow")
-        )
-        nil
     )
 
     ;; static factory methods
@@ -2484,36 +2485,6 @@
                 (aset BigInteger'posConst i (BigInteger'new-2ai magnitude,  1))
                 (aset BigInteger'negConst i (BigInteger'new-2ai magnitude, -1))
             )
-        )
-    )
-
-    ;;;
-     ; The cache of powers of each radix. This allows us to not have to
-     ; recalculate powers of radix^(2^n) more than once. This speeds
-     ; Schoenhage recursive base conversion significantly.
-     ;;
-    #_volatile
-    (def- #_"BigInteger[][]" BigInteger'powerCache (§ soon make-array (Class/forName "[Lcloiure.ratio.BigInteger;") (inc Character/MAX_RADIX)))
-
-    ;;;
-     ; The cache of logarithms of radices for base conversion.
-     ;;
-    (def- #_"double[]" BigInteger'logCache (double-array (inc Character/MAX_RADIX)))
-
-    ;;;
-     ; The natural log of 2. This is used in computing cache indices.
-     ;;
-    (def- #_"double" BigInteger'LOG_TWO (Math/log 2.0))
-
-    #_static
-    (§
-        ;;
-         ; Initialize the cache of radix^(2^x) values used for base conversion with
-         ; just the very first value. Additional values will be created on demand.
-         ;;
-        (loop-when-recur [#_"int" i Character/MIN_RADIX] (<= i Character/MAX_RADIX) [(inc i)]
-            (aset BigInteger'powerCache i (into-array BigInteger [(BigInteger'valueOf-l i)]))
-            (aset BigInteger'logCache i (Math/log i))
         )
     )
 
@@ -4856,63 +4827,21 @@
         )
     )
 
-    (declare BigInteger'toString)
+    ;; zero[i] is a string of i consecutive zeros
+    (def- #_"String[]" BigInteger'zeros (make-array String 64))
 
-    ;;;
-     ; Returns the String representation of this BigInteger in the given radix.
-     ; If the radix is outside the range from {@link Character#MIN_RADIX}
-     ; to {@link Character#MAX_RADIX} inclusive, it will default to 10 (as is
-     ; the case for {@code Integer.toString}). The digit-to-character mapping
-     ; provided by {@code Character.forDigit} is used, and a minus
-     ; sign is prepended if appropriate. (This representation is compatible with
-     ; the {@link #BigInteger(String, int) (String, int)} constructor.)
-     ;
-     ; @param  radix  radix of the String representation.
-     ; @return String representation of this BigInteger in the given radix.
-     ;;
-    #_method
-    (defn #_"String" BigInteger''toString [#_"BigInteger" this, #_"int" radix]
-        (when (zero? (:signum this))
-            (§ return "0")
-        )
-        (when-not (<= Character/MIN_RADIX radix Character/MAX_RADIX)
-            (§ ass radix 10)
-        )
-
-        ;; If it's small enough, use smallToString.
-        (when (<= (alength (:mag this)) BigInteger'SCHOENHAGE_BASE_CONVERSION_THRESHOLD)
-            (§ return (BigInteger''smallToString this, radix))
-        )
-
-        ;; Otherwise use recursive toString, which requires positive arguments.
-        ;; The results will be concatenated into this StringBuilder.
-        (let [
-              #_"StringBuilder" sb (StringBuilder.)
-        ]
-            (cond (neg? (:signum this))
-                (do
-                    (BigInteger'toString (BigInteger''negate this), sb, radix, 0)
-                    (.insert sb, 0, \-)
-                )
-                :else
-                (do
-                    (BigInteger'toString this, sb, radix, 0)
-                )
-            )
-
-            (.toString sb)
+    #_static
+    (§
+        (aset BigInteger'zeros 63 "000000000000000000000000000000000000000000000000000000000000000")
+        (loop-when-recur [#_"int" i 0] (< i 63) [(inc i)]
+            (aset BigInteger'zeros i (.substring (aget BigInteger'zeros 63), 0, i))
         )
     )
-
-    (declare BigInteger'longRadix)
-    (declare BigInteger'digitsPerLong)
-    (declare BigInteger'zeros)
 
     ;;;
      ; This method is used to perform toString when arguments are small.
      ;;
-    #_method
-    (defn- #_"String" BigInteger''smallToString [#_"BigInteger" this, #_"int" radix]
+    (defn- #_"String" BigInteger'toString [#_"BigInteger" this, #_"int" radix]
         (when (zero? (:signum this))
             (§ return "0")
         )
@@ -4967,101 +4896,28 @@
         )
     )
 
-    (declare BigInteger'getRadixConversionCache)
-
     ;;;
-     ; Converts the specified BigInteger to a string and appends to {@code sb}.
-     ; This implements the recursive Schoenhage algorithm for base conversions.
+     ; Returns the String representation of this BigInteger in the given radix.
+     ; If the radix is outside the range from {@link Character#MIN_RADIX}
+     ; to {@link Character#MAX_RADIX} inclusive, it will default to 10 (as is
+     ; the case for {@code Integer.toString}). The digit-to-character mapping
+     ; provided by {@code Character.forDigit} is used, and a minus
+     ; sign is prepended if appropriate. (This representation is compatible with
+     ; the {@link #BigInteger(String, int) (String, int)} constructor.)
      ;
-     ; See Knuth, Donald, _The Art of Computer Programming_, Vol. 2, Answers to Exercises (4.4) Question 14.
-     ;
-     ; @param u      The number to convert to a string.
-     ; @param sb     The StringBuilder that will be appended to in place.
-     ; @param radix  The base to convert to.
-     ; @param digits The minimum number of digits to pad to.
+     ; @param  radix  radix of the String representation.
+     ; @return String representation of this BigInteger in the given radix.
      ;;
-    (defn- #_"void" BigInteger'toString [#_"BigInteger" u, #_"StringBuilder" sb, #_"int" radix, #_"int" digits]
-        ;; If we're smaller than a certain threshold, use the smallToString method,
-        ;; padding with leading zeroes when necessary.
-        (when (<= (alength (:mag u)) BigInteger'SCHOENHAGE_BASE_CONVERSION_THRESHOLD)
-            (let [
-                  #_"String" s (BigInteger''smallToString u, radix)
-            ]
-                ;; Pad with internal zeros if necessary.
-                ;; Don't pad if we're at the beginning of the string.
-                (when (pos? (.length sb))
-                    (loop-when-recur [#_"int" i (.length s)] (< i digits) [(inc i)] ;; May be a faster way to do this?
-                        (.append sb, \0)
-                    )
-                )
-
-                (.append sb, s)
-                (§ return nil)
-            )
+    #_method
+    (defn #_"String" BigInteger''toString [#_"BigInteger" this, #_"int" radix]
+        (when (zero? (:signum this))
+            (§ return "0")
+        )
+        (when-not (<= Character/MIN_RADIX radix Character/MAX_RADIX)
+            (§ ass radix 10)
         )
 
-        (let [
-              #_"int" b (BigInteger''bitLength u)
-              ;; Calculate a value for n in the equation radix^(2^n) = u
-              ;; and subtract 1 from that value. This is used to find the
-              ;; cache index that contains the best value to divide u.
-              #_"int" n (int (Math/round (- (/ (Math/log (/ (* b BigInteger'LOG_TWO) (aget BigInteger'logCache radix))) BigInteger'LOG_TWO) 1.0)))
-              #_"BigInteger" v (BigInteger'getRadixConversionCache radix, n)
-              #_"BigInteger[]" results (BigInteger''divideAndRemainder u, v)
-              #_"int" expectedDigits (<< 1 n)
-        ]
-            ;; Now recursively build the two halves of each number.
-            (BigInteger'toString (aget results 0), sb, radix, (- digits expectedDigits))
-            (BigInteger'toString (aget results 1), sb, radix, expectedDigits)
-        )
-        nil
-    )
-
-    ;;;
-     ; Returns the value radix^(2^exponent) from the cache.
-     ; If this value doesn't already exist in the cache, it is added.
-     ;
-     ; This could be changed to a more complicated caching method using {@code Future}.
-     ;;
-    (defn- #_"BigInteger" BigInteger'getRadixConversionCache [#_"int" radix, #_"int" exponent]
-        (let [
-              #_"BigInteger[]" cacheLine (aget BigInteger'powerCache radix) ;; volatile read
-        ]
-            (when (< exponent (§ soon alength cacheLine))
-                (§ return (aget cacheLine exponent))
-            )
-
-            (let [
-                  #_"int" oldLength (§ soon alength cacheLine)
-                  _ (§ ass cacheLine (Arrays/copyOf cacheLine, (inc exponent)))
-            ]
-                (loop-when-recur [#_"int" i oldLength] (<= i exponent) [(inc i)]
-                    (aset cacheLine i (BigInteger''pow (aget cacheLine (dec i)), 2))
-                )
-
-                (let [
-                      #_"BigInteger[][]" pc BigInteger'powerCache ;; volatile read again
-                ]
-                    (when (<= (alength (aget pc radix)) exponent)
-                        (§ ass pc (aclone pc))
-                        (aset pc radix cacheLine)
-                        (§ ass BigInteger'powerCache pc) ;; volatile write, publish
-                    )
-                    (§ soon aget cacheLine exponent)
-                )
-            )
-        )
-    )
-
-    ;; zero[i] is a string of i consecutive zeros
-    (def- #_"String[]" BigInteger'zeros (make-array String 64))
-
-    #_static
-    (§
-        (aset BigInteger'zeros 63 "000000000000000000000000000000000000000000000000000000000000000")
-        (loop-when-recur [#_"int" i 0] (< i 63) [(inc i)]
-            (aset BigInteger'zeros i (.substring (aget BigInteger'zeros 63), 0, i))
-        )
+        (§ return (BigInteger'toString this, radix))
     )
 
     ;;;
@@ -5319,71 +5175,6 @@
 
                 result
             )
-        )
-    )
-
-    ;;
-     ; The following two arrays are used for fast String conversions. Both
-     ; are indexed by radix. The first is the number of digits of the given
-     ; radix that can fit in a Java long without "going negative", i.e., the
-     ; highest integer n such that radix**n < 2**63. The second is the
-     ; "long radix" that tears each number into "long digits", each of which
-     ; consists of the number of digits in the corresponding element in
-     ; digitsPerLong (longRadix[i] = i**digitPerLong[i]). Both arrays have
-     ; nonsense values in their 0 and 1 elements, as radixes 0 and 1 are not
-     ; used.
-     ;;
-    (def- #_"int[]" BigInteger'digitsPerLong
-        (§
-            0, 0,
-            62, 39, 31, 27, 24, 22, 20, 19, 18, 18, 17, 17, 16, 16, 15, 15, 15, 14,
-            14, 14, 14, 13, 13, 13, 13, 13, 13, 12, 12, 12, 12, 12, 12, 12, 12
-        )
-    )
-
-    (def- #_"BigInteger[]" BigInteger'longRadix
-        (§
-            nil, nil,
-            BigInteger'valueOf-l(0x4000000000000000), BigInteger'valueOf-l(0x383d9170b85ff80b),
-            BigInteger'valueOf-l(0x4000000000000000), BigInteger'valueOf-l(0x6765c793fa10079d),
-            BigInteger'valueOf-l(0x41c21cb8e1000000), BigInteger'valueOf-l(0x3642798750226111),
-            BigInteger'valueOf-l(0x1000000000000000), BigInteger'valueOf-l(0x12bf307ae81ffd59),
-            BigInteger'valueOf-l(0x0de0b6b3a7640000), BigInteger'valueOf-l(0x4d28cb56c33fa539),
-            BigInteger'valueOf-l(0x1eca170c00000000), BigInteger'valueOf-l(0x780c7372621bd74d),
-            BigInteger'valueOf-l(0x1e39a5057d810000), BigInteger'valueOf-l(0x5b27ac993df97701),
-            BigInteger'valueOf-l(0x1000000000000000), BigInteger'valueOf-l(0x27b95e997e21d9f1),
-            BigInteger'valueOf-l(0x5da0e1e53c5c8000), BigInteger'valueOf-l(0x0b16a458ef403f19),
-            BigInteger'valueOf-l(0x16bcc41e90000000), BigInteger'valueOf-l(0x2d04b7fdd9c0ef49),
-            BigInteger'valueOf-l(0x5658597bcaa24000), BigInteger'valueOf-l(0x06feb266931a75b7),
-            BigInteger'valueOf-l(0x0c29e98000000000), BigInteger'valueOf-l(0x14adf4b7320334b9),
-            BigInteger'valueOf-l(0x226ed36478bfa000), BigInteger'valueOf-l(0x383d9170b85ff80b),
-            BigInteger'valueOf-l(0x5a3c23e39c000000), BigInteger'valueOf-l(0x04e900abb53e6b71),
-            BigInteger'valueOf-l(0x07600ec618141000), BigInteger'valueOf-l(0x0aee5720ee830681),
-            BigInteger'valueOf-l(0x1000000000000000), BigInteger'valueOf-l(0x172588ad4f5f0981),
-            BigInteger'valueOf-l(0x211e44f7d02c1000), BigInteger'valueOf-l(0x2ee56725f06e5c71),
-            BigInteger'valueOf-l(0x41c21cb8e1000000)
-        )
-    )
-
-    ;;
-     ; These two arrays are the integer analogue of above.
-     ;;
-    (def- #_"int[]" BigInteger'digitsPerInt
-        (§
-            0, 0, 30, 19, 15, 13, 11, 11, 10, 9, 9, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 5
-        )
-    )
-
-    (def- #_"int[]" BigInteger'intRadix
-        (§
-            0, 0,
-            0x40000000, 0x4546b3db, 0x40000000, 0x48c27395, 0x159fd800,
-            0x75db9c97, 0x40000000, 0x17179149, 0x3b9aca00, 0x0cc6db61,
-            0x19a10000, 0x309f1021, 0x57f6c100, 0x0a2f1b6f, 0x10000000,
-            0x18754571, 0x247dbc80, 0x3547667b, 0x4c4b4000, 0x6b5a6e1d,
-            0x06c20a40, 0x08d2d931, 0x0b640000, 0x0e8d4a51, 0x1269ae40,
-            0x17179149, 0x1cb91000, 0x23744899, 0x2b73a840, 0x34e63b41,
-            0x40000000, 0x4cfa3cc1, 0x5c13d840, 0x6d91b519, 0x039aa400
         )
     )
 
