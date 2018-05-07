@@ -1,5 +1,5 @@
 (ns cloiure.ratio
-    (:refer-clojure :only [* *ns* + - -> / < <= = == > >= aclone aget alength and aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor byte byte-array case cast complement cond cons dec declare defmacro defn dotimes first identical? if-not import inc instance? int int-array let letfn long long-array loop make-array max min neg? next nil? not or pos? quot rem second some? symbol? unsigned-bit-shift-right update vary-meta vec vector? while zero?])
+    (:refer-clojure :only [* *ns* + - -> / < <= = == > >= aclone aget alength and aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor byte byte-array case cast complement cond cons dec declare defmacro defn dotimes first identical? if-not import inc instance? int int-array into-array let letfn long long-array loop make-array map max min neg? next nil? not or pos? quot rem second some? symbol? unsigned-bit-shift-right update vary-meta vec vector? while zero?])
 )
 
 (defmacro § [& _])
@@ -1192,14 +1192,14 @@
 (class-ns BigInteger (§ extends #_"Number") (§ implements #_"Comparable<BigInteger>")
     ;;;
      ; The signum of this BigInteger: -1 for negative, 0 for zero, or 1 for positive.
-     ; Note that the BigInteger zero <i>must</i> have a signum of 0. This is necessary
+     ; Note that the BigInteger zero *must* have a signum of 0. This is necessary
      ; to ensure that there is exactly one representation for each BigInteger value.
      ;;
     #_final
     (§ field #_"int" :signum 0)
 
     ;;;
-     ; The magnitude of this BigInteger, in <i>big-endian</i> order: the zeroth element
+     ; The magnitude of this BigInteger, in *big-endian* order: the zeroth element
      ; of this array is the most-significant int of the magnitude. The magnitude must be
      ; "minimal" in that the most-significant int (mag[0]) must be non-zero. This is
      ; necessary to ensure that there is exactly one representation for each BigInteger
@@ -1207,49 +1207,6 @@
      ;;
     #_final
     (§ field #_"int[]" :mag nil)
-
-    ;; These "redundant fields" are initialized with recognizable nonsense values,
-    ;; and cached the first time they are needed (or never, if they aren't needed).
-
-    ;;;
-     ; One plus the bitCount of this BigInteger. Zeros means unitialized.
-     ;
-     ; @deprecated Deprecated since logical value is offset from stored
-     ; value and correction factor is applied in accessor method.
-     ;;
-    #_deprecated
-    (§ field- #_"int" :bitCount)
-
-    ;;;
-     ; One plus the bitLength of this BigInteger. Zeros means unitialized.
-     ; (either value is acceptable).
-     ;
-     ; @deprecated Deprecated since logical value is offset from stored
-     ; value and correction factor is applied in accessor method.
-     ;;
-    #_deprecated
-    (§ field- #_"int" :bitLength)
-
-    ;;;
-     ; Two plus the lowest set bit of this BigInteger, as returned by getLowestSetBit().
-     ;
-     ; @deprecated Deprecated since logical value is offset from stored
-     ; value and correction factor is applied in accessor method.
-     ;;
-    #_deprecated
-    (§ field- #_"int" :lowestSetBit)
-
-    ;;;
-     ; Two plus the index of the lowest-order int in the magnitude of this BigInteger that
-     ; contains a nonzero int, or -2 (either value is acceptable). The least significant
-     ; int has int-number 0, the next int in order of increasing significance
-     ; has int-number 1, and so forth.
-     ;
-     ; @deprecated Deprecated since logical value is offset from stored
-     ; value and correction factor is applied in accessor method.
-     ;;
-    #_deprecated
-    (§ field- #_"int" :firstNonzeroIntNum)
 
     ;;;
      ; This constant limits {@code mag.length} of BigIntegers to the supported range.
@@ -1277,44 +1234,34 @@
     )
 
     ;;
-     ; The following two arrays are used for fast String conversions. Both
-     ; are indexed by radix. The first is the number of digits of the given
-     ; radix that can fit in a Java long without "going negative", i.e., the
-     ; highest integer n such that radix**n < 2**63. The second is the
-     ; "long radix" that tears each number into "long digits", each of which
-     ; consists of the number of digits in the corresponding element in
-     ; digitsPerLong (longRadix[i] = i**digitPerLong[i]). Both arrays have
-     ; nonsense values in their 0 and 1 elements, as radixes 0 and 1 are not
-     ; used.
+     ; The following two arrays are used for fast String conversions. Both are indexed by radix.
+     ; The first is the number of digits of the given radix that can fit in a Java long without
+     ; "going negative", i.e., the highest integer n such that radix^n < 2^63. The second is the
+     ; "long radix" that tears each number into "long digits", each of which consists of the number
+     ; of digits in the corresponding element in digitsPerLong (longRadix[i] = i^digitPerLong[i]).
+     ; Both arrays have nonsense values in their 0 and 1 elements, as radixes 0 and 1 are not used.
      ;;
     (def- #_"int[]" BigInteger'digitsPerLong
-        (§
+        (int-array [
             0, 0,
             62, 39, 31, 27, 24, 22, 20, 19, 18, 18, 17, 17, 16, 16, 15, 15, 15, 14, 14, 14, 14, 13, 13, 13, 13, 13, 13, 12, 12, 12, 12, 12, 12, 12, 12
-        )
+        ])
     )
 
+    (declare BigInteger'valueOf-l)
+
     (def- #_"BigInteger[]" BigInteger'longRadix
-        (§
-            nil, nil,
-            BigInteger'valueOf-l(0x4000000000000000), BigInteger'valueOf-l(0x383d9170b85ff80b),
-            BigInteger'valueOf-l(0x4000000000000000), BigInteger'valueOf-l(0x6765c793fa10079d),
-            BigInteger'valueOf-l(0x41c21cb8e1000000), BigInteger'valueOf-l(0x3642798750226111),
-            BigInteger'valueOf-l(0x1000000000000000), BigInteger'valueOf-l(0x12bf307ae81ffd59),
-            BigInteger'valueOf-l(0x0de0b6b3a7640000), BigInteger'valueOf-l(0x4d28cb56c33fa539),
-            BigInteger'valueOf-l(0x1eca170c00000000), BigInteger'valueOf-l(0x780c7372621bd74d),
-            BigInteger'valueOf-l(0x1e39a5057d810000), BigInteger'valueOf-l(0x5b27ac993df97701),
-            BigInteger'valueOf-l(0x1000000000000000), BigInteger'valueOf-l(0x27b95e997e21d9f1),
-            BigInteger'valueOf-l(0x5da0e1e53c5c8000), BigInteger'valueOf-l(0x0b16a458ef403f19),
-            BigInteger'valueOf-l(0x16bcc41e90000000), BigInteger'valueOf-l(0x2d04b7fdd9c0ef49),
-            BigInteger'valueOf-l(0x5658597bcaa24000), BigInteger'valueOf-l(0x06feb266931a75b7),
-            BigInteger'valueOf-l(0x0c29e98000000000), BigInteger'valueOf-l(0x14adf4b7320334b9),
-            BigInteger'valueOf-l(0x226ed36478bfa000), BigInteger'valueOf-l(0x383d9170b85ff80b),
-            BigInteger'valueOf-l(0x5a3c23e39c000000), BigInteger'valueOf-l(0x04e900abb53e6b71),
-            BigInteger'valueOf-l(0x07600ec618141000), BigInteger'valueOf-l(0x0aee5720ee830681),
-            BigInteger'valueOf-l(0x1000000000000000), BigInteger'valueOf-l(0x172588ad4f5f0981),
-            BigInteger'valueOf-l(0x211e44f7d02c1000), BigInteger'valueOf-l(0x2ee56725f06e5c71),
-            BigInteger'valueOf-l(0x41c21cb8e1000000)
+        (into-array #_"BigInteger"
+            (§ soon map BigInteger'valueOf-l [
+                nil, nil,
+                0x4000000000000000, 0x383d9170b85ff80b, 0x4000000000000000, 0x6765c793fa10079d, 0x41c21cb8e1000000,
+                0x3642798750226111, 0x1000000000000000, 0x12bf307ae81ffd59, 0x0de0b6b3a7640000, 0x4d28cb56c33fa539,
+                0x1eca170c00000000, 0x780c7372621bd74d, 0x1e39a5057d810000, 0x5b27ac993df97701, 0x1000000000000000,
+                0x27b95e997e21d9f1, 0x5da0e1e53c5c8000, 0x0b16a458ef403f19, 0x16bcc41e90000000, 0x2d04b7fdd9c0ef49,
+                0x5658597bcaa24000, 0x06feb266931a75b7, 0x0c29e98000000000, 0x14adf4b7320334b9, 0x226ed36478bfa000,
+                0x383d9170b85ff80b, 0x5a3c23e39c000000, 0x04e900abb53e6b71, 0x07600ec618141000, 0x0aee5720ee830681,
+                0x1000000000000000, 0x172588ad4f5f0981, 0x211e44f7d02c1000, 0x2ee56725f06e5c71, 0x41c21cb8e1000000
+            ])
         )
     )
 
@@ -1322,14 +1269,14 @@
      ; These two arrays are the integer analogue of above.
      ;;
     (def- #_"int[]" BigInteger'digitsPerInt
-        (§
+        (int-array [
             0, 0,
             30, 19, 15, 13, 11, 11, 10, 9, 9, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 5
-        )
+        ])
     )
 
     (def- #_"int[]" BigInteger'intRadix
-        (§
+        (int-array [
             0, 0,
             0x40000000, 0x4546b3db, 0x40000000, 0x48c27395, 0x159fd800,
             0x75db9c97, 0x40000000, 0x17179149, 0x3b9aca00, 0x0cc6db61,
@@ -1338,20 +1285,20 @@
             0x06c20a40, 0x08d2d931, 0x0b640000, 0x0e8d4a51, 0x1269ae40,
             0x17179149, 0x1cb91000, 0x23744899, 0x2b73a840, 0x34e63b41,
             0x40000000, 0x4cfa3cc1, 0x5c13d840, 0x6d91b519, 0x039aa400
-        )
+        ])
     )
 
     ;; bitsPerDigit in the given radix times 1024
     ;; Rounded up to avoid underallocation.
     (def- #_"long[]" BigInteger'bitsPerDigit
-        (§
+        (long-array [
             0, 0,
             1024, 1624, 2048, 2378, 2648, 2875, 3072,
             3247, 3402, 3543, 3672, 3790, 3899, 4001,
             4096, 4186, 4271, 4350, 4426, 4498, 4567,
             4633, 4696, 4756, 4814, 4870, 4923, 4975,
             5025, 5074, 5120, 5166, 5210, 5253, 5295
-        )
+        ])
     )
 
     ;; miscellaneous bit operations
@@ -1372,104 +1319,47 @@
     )
 
     ;;;
-     ; Returns the number of bits in the minimal two's-complement
-     ; representation of this BigInteger, <i>excluding</i> a sign bit.
-     ; For positive BigIntegers, this is equivalent to the number of bits
-     ; in the ordinary binary representation.
-     ; (Computes {@code (ceil(log2(this < 0 ? -this : this + 1)))}.)
+     ; Returns the number of bits in the minimal two's-complement representation
+     ; of this BigInteger, *excluding* a sign bit. For positive BigIntegers, this
+     ; is equivalent to the number of bits in the ordinary binary representation.
      ;
-     ; @return number of bits in the minimal two's-complement representation
-     ;         of this BigInteger, <i>excluding</i> a sign bit.
+     ; Computes (ceil (log2 (if (neg? this) (- this) (inc this)))).
      ;;
     #_method
     (defn #_"int" BigInteger''bitLength [#_"BigInteger" this]
-        (let [
-              #_"int" n (- (:bitLength this) 1)
-        ]
-            (when (== n -1) ;; bitLength not initialized yet
-                (let [
-                      #_"int[]" m (:mag this)
-                      #_"int" len (alength m)
-                ]
-                    (cond (zero? len)
-                        (do
-                            (§ ass n 0) ;; offset by one to initialize
-                        )
-                        :else
-                        (let [
-                              ;; calculate the bit length of the magnitude
-                              #_"int" magBitLength (+ (<< (dec len) 5) (BigInteger'bitLengthForInt (aget (:mag this) 0)))
-                        ]
-                            (cond (neg? (:signum this))
-                                (let [
-                                      ;; check if magnitude is a power of two
-                                      #_"boolean" pow2 (== (Integer/bitCount (aget (:mag this) 0)) 1)
-                                ]
-                                    (loop-when-recur [#_"int" i 1] (and (< i len) pow2) [(inc i)]
-                                        (§ ass pow2 (zero? (aget (:mag this) i)))
-                                    )
-
-                                    (§ ass n (if pow2 (dec magBitLength) magBitLength))
-                                )
-                                :else
-                                (do
-                                    (§ ass n magBitLength)
-                                )
-                            )
-                        )
-                    )
-                    (§ ass this (assoc this :bitLength (inc n)))
+        (let-when [#_"int[]" a (:mag this) #_"int" n (alength a)] (pos? n) => 0
+            ;; calculate the bit length of the magnitude
+            (let-when [#_"int" m (+ (<< (dec n) 5) (BigInteger'bitLengthForInt (aget a 0)))] (neg? (:signum this)) => m
+                ;; check if magnitude is a power of two
+                (loop-when-recur [? (== (Integer/bitCount (aget a 0)) 1) #_"int" i 1]
+                                 (and ? (< i n))
+                                 [(zero? (aget a i)) (inc i)]
+                              => (if ? (dec m) m)
                 )
             )
-            n
         )
     )
 
     ;;;
-     ; Returns the number of bits in the two's complement representation
+     ; Returns the number of bits in the two's-complement representation
      ; of this BigInteger that differ from its sign bit. This method is
      ; useful when implementing bit-vector style sets atop BigIntegers.
-     ;
-     ; @return number of bits in the two's complement representation
-     ;         of this BigInteger that differ from its sign bit.
      ;;
     #_method
     (defn #_"int" BigInteger''bitCount [#_"BigInteger" this]
-        (let [
-              #_"int" bc (- (:bitCount this) 1)
-        ]
-            (when (== bc -1) ;; bitCount not initialized yet
-                (let [
-                ]
-                    (§ ass bc 0) ;; offset by one to initialize
-                    ;; count the bits in the magnitude
-                    (loop-when-recur [#_"int" i 0] (< i (alength (:mag this))) [(inc i)]
-                        (§ ass bc (+ bc (Integer/bitCount (aget (:mag this) i))))
-                    )
-                    (when (neg? (:signum this))
-                        ;; count the trailing zeros in the magnitude
-                        (let [
-                              #_"int" magTrailingZeroCount 0
-                              #_"int" j (ß )
-                        ]
-                            (loop-when-recur [j (dec (alength (:mag this)))] (zero? (aget (:mag this) j)) [(dec j)]
-                                (§ ass magTrailingZeroCount (+ magTrailingZeroCount 32))
-                            )
-                            (§ ass magTrailingZeroCount (+ magTrailingZeroCount (Integer/numberOfTrailingZeros (aget (:mag this) j))))
-                            (§ ass bc (dec (+ bc magTrailingZeroCount)))
-                        )
-                    )
-                    (§ ass this (assoc this :bitCount (inc bc)))
-                )
+        (let-when [#_"int[]" a (:mag this) #_"int" n (alength a)] (pos? n) => 0
+            ;; count the bits in the magnitude
+            (let-when [#_"int" c (loop-when-recur [c 0 #_"int" i 0] (< i n) [(+ c (Integer/bitCount (aget a i))) (inc i)] => c)] (neg? (:signum this)) => c
+                ;; count the trailing zeros in the magnitude
+                (loop-when-recur [c c #_"int" i (dec n)] (zero? (aget a i)) [(+ c 32) (dec i)] => (dec (+ c (Integer/numberOfTrailingZeros (aget a i)))))
             )
-            bc
         )
     )
 
-    ;; functions providing access to the two's complement representation of BigIntegers
+    ;; functions providing access to the two's-complement representation of BigIntegers
 
     ;;;
-     ; Returns the length of the two's complement representation in ints,
+     ; Returns the length of the two's-complement representation in ints,
      ; including space for at least one sign bit.
      ;;
     #_method
@@ -1490,104 +1380,60 @@
     )
 
     ;;;
-     ; Returns the index of the int that contains the first nonzero int in the
-     ; little-endian binary representation of the magnitude (int 0 is the
-     ; least significant). If the magnitude is zero, return value is undefined.
+     ; Returns the index of the first nonzero int in the little-endian binary representation of the magnitude
+     ; (int 0 is the least significant). If the magnitude is zero, return value is undefined.
      ;;
     #_method
     (defn- #_"int" BigInteger''firstNonzeroIntNum [#_"BigInteger" this]
-        (let [
-              #_"int" fn (- (:firstNonzeroIntNum this) 2)
-        ]
-            (when (== fn -2) ;; firstNonzeroIntNum not initialized yet
-                ;; search for the first nonzero int
-                (let [
-                      #_"int" mlen (alength (:mag this))
-                      #_"int" i (loop-when-recur [i (dec mlen)] (and (<= 0 i) (zero? (aget (:mag this) i))) [(dec i)] => i)
-                ]
-                    (§ ass fn (- mlen i 1))
-                    (§ ass this (assoc this :firstNonzeroIntNum (+ fn 2))) ;; offset by two to initialize
-                )
-            )
-            fn
+        (let [#_"int[]" a (:mag this) #_"int" n (alength a)]
+            ;; search for the first nonzero int
+            (loop-when-recur [#_"int" i (dec n)] (and (<= 0 i) (zero? (aget a i))) [(dec i)] => (- (dec n) i))
         )
     )
 
     ;;;
-     ; Returns the specified int of the little-endian two's complement representation
-     ; (int 0 is the least significant). The int number can be arbitrarily high
-     ; (values are logically preceded by infinitely many sign ints).
+     ; Returns the i'th int of the little-endian two's-complement representation (int 0 is the least significant).
+     ; The int number can be arbitrarily high (values are logically preceded by infinitely many sign ints).
      ;;
     #_method
-    (defn- #_"int" BigInteger''getInt [#_"BigInteger" this, #_"int" n]
-        (when (neg? n)
-            (§ return 0)
-        )
-        (when (<= (alength (:mag this)) n)
-            (§ return (BigInteger''signInt this))
-        )
-
-        (let [
-              #_"int" magInt (aget (:mag this) (- (alength (:mag this)) n 1))
-        ]
-            (cond (<= 0 (:signum this)) magInt (<= n (BigInteger''firstNonzeroIntNum this)) (- magInt) :else (bit-not magInt))
+    (defn- #_"int" BigInteger''getInt [#_"BigInteger" this, #_"int" i]
+        (let [#_"int[]" a (:mag this) #_"int" n (alength a)]
+            (cond
+                (neg? i) 0
+                (<= n i) (BigInteger''signInt this)
+                :else
+                (let [#_"int" m (aget a (- (dec n) i))]
+                    (cond (<= 0 (:signum this)) m (<= i (BigInteger''firstNonzeroIntNum this)) (- m) :else (bit-not m))
+                )
+            )
         )
     )
 
     ;;;
-     ; Returns the index of the rightmost (lowest-order) one bit in this
-     ; BigInteger (the number of zero bits to the right of the rightmost
-     ; one bit). Returns -1 if this BigInteger contains no one bits.
-     ; (Computes {@code (this == 0? -1 : log2(this & -this))}.)
+     ; Returns the index of the rightmost (lowest-order) one bit in this BigInteger (the number of zero bits
+     ; to the right of the rightmost one bit). Returns -1 if this BigInteger contains no one bits.
      ;
-     ; @return index of the rightmost one bit in this BigInteger.
+     ; Computes (if (zero? this) -1 (log2 (& this (- this)))).
      ;;
     #_method
     (defn #_"int" BigInteger''getLowestSetBit [#_"BigInteger" this]
-        (let [
-              #_"int" lsb (- (:lowestSetBit this) 2)
-        ]
-            (when (== lsb -2) ;; lowestSetBit not initialized yet
-                (let [
-                      _ (§ ass lsb 0)
-                ]
-                    (cond (zero? (:signum this))
-                        (do
-                            (§ ass lsb (dec lsb))
-                        )
-                        :else
-                        ;; search for lowest order nonzero int
-                        (let [
-                              #_"int" i (ß )
-                              #_"int" b (ß )
-                        ]
-                            (loop [i 0]
-                                (let-when [_ (§ ass b (BigInteger''getInt this, i))] (zero? b)
-                                    (recur (inc i))
-                                )
-                            )
-                            (§ ass lsb (+ lsb (<< i 5) (Integer/numberOfTrailingZeros b)))
-                        )
-                    )
-                    (§ ass this (assoc this :lowestSetBit (+ lsb 2)))
+        (when-not (zero? (:signum this)) => -1
+            ;; search for lowest order nonzero int
+            (loop [#_"int" i 0]
+                (let-when [#_"int" b (BigInteger''getInt this, i)] (zero? b) => (+ (<< i 5) (Integer/numberOfTrailingZeros b))
+                    (recur (inc i))
                 )
             )
-            lsb
         )
     )
 
     ;;;
      ; Returns a copy of the input array stripped of any leading zero bytes.
      ;;
-    (defn- #_"int[]" BigInteger'stripLeadingZeroInts [#_"int[]" val]
-        (let [
-              #_"int" vlen (alength val)
-              #_"int" keep (ß )
-        ]
+    (defn- #_"int[]" BigInteger'stripLeadingZeroInts [#_"int[]" a]
+        (let [#_"int" n (alength a)]
             ;; find first nonzero byte
-            (loop-when-recur [keep 0] (and (< keep vlen) (zero? (aget val keep))) [(inc keep)]
-            )
-            (Arrays/copyOfRange val, keep, vlen)
+            (loop-when-recur [#_"int" i 0] (and (< i n) (zero? (aget a i))) [(inc i)] => (Arrays/copyOfRange a, i, n))
         )
     )
 
@@ -1595,153 +1441,88 @@
      ; Returns the input array stripped of any leading zero bytes.
      ; Since the source is trusted the copying may be skipped.
      ;;
-    (defn- #_"int[]" BigInteger'trustedStripLeadingZeroInts [#_"int[]" val]
-        (let [
-              #_"int" vlen (alength val)
-              #_"int" keep (ß )
-        ]
+    (defn- #_"int[]" BigInteger'trustedStripLeadingZeroInts [#_"int[]" a]
+        (let [#_"int" n (alength a)]
             ;; find first nonzero byte
-            (loop-when-recur [keep 0] (and (< keep vlen) (zero? (aget val keep))) [(inc keep)]
-            )
-            (if (zero? keep) val (Arrays/copyOfRange val, keep, vlen))
+            (loop-when-recur [#_"int" i 0] (and (< i n) (zero? (aget a i))) [(inc i)] => (if (zero? i) a (Arrays/copyOfRange a, i, n)))
         )
     )
 
     ;;;
      ; Returns a copy of the input array stripped of any leading zero bytes.
      ;;
-    (defn- #_"int[]" BigInteger'stripLeadingZeroBytes [#_"byte[]" a]
-        (let [
-              #_"int" byteLength (alength a)
-              #_"int" keep (ß )
-        ]
-            ;; find first nonzero byte
-            (loop-when-recur [keep 0] (and (< keep byteLength) (zero? (aget a keep))) [(inc keep)]
-            )
-
-            ;; allocate new array and copy relevant part of input array
-            (let [
-                  #_"int" intLength (>>> (+ (- byteLength keep) 3) 2)
-                  #_"int[]" result (int-array intLength)
-                  #_"int" b (dec byteLength)
-            ]
-                (loop-when-recur [#_"int" i (dec intLength)] (<= 0 i) [(dec i)]
-                    (aset result i (& (aget a b) 0xff))
-                    (§ ass b (dec b))
-                    (let [
-                          #_"int" bytesRemaining (inc (- b keep))
-                          #_"int" bytesToTransfer (min bytesRemaining 3)
-                    ]
-                        (loop-when-recur [#_"int" j 8] (<= j (<< bytesToTransfer 3)) [(+ j 8)]
-                            (aswap result i | (<< (& (aget a b) 0xff) j))
-                            (§ ass b (dec b))
-                        )
-                    )
+    (defn- #_"int[]" BigInteger'stripLeadingZeroBytes [#_"byte[]" b]
+        (let [#_"int" m (alength b)
+              ;; find first nonzero byte
+              #_"int" k (loop-when-recur [k 0] (and (< k m) (zero? (aget b k))) [(inc k)] => k)
+              ;; allocate new array and copy relevant part of input array
+              #_"int" n (>>> (+ (- m k) 3) 2) #_"int[]" a (int-array n)]
+            (loop-when [m (dec m) n (dec n)] (<= 0 n)
+                (aset a n (& (aget b m) 0xff))
+                (let [#_"int" t (* (min (- m k) 3) 8)
+                      m (loop-when-recur [m (dec m) #_"int" i 8] (<= i t) [(dec m) (+ i 8)] => m
+                            (aswap a n | (<< (& (aget b m) 0xff) i))
+                        )]
+                    (recur m (dec n))
                 )
-                result
             )
+            a
         )
     )
 
     ;;;
-     ; Takes an array a representing a negative 2's-complement number and
-     ; returns the minimal (no leading zero bytes) unsigned whose value is -a.
+     ; Takes an array b representing a negative two's-complement number and
+     ; returns the minimal (no leading zero bytes) unsigned whose value is -b.
      ;;
-    (defn- #_"int[]" BigInteger'makePositive-b [#_"byte[]" a]
-        (let [
-              #_"int" keep (ß )
-              #_"int" k (ß )
-              #_"int" byteLength (alength a)
-        ]
-            ;; find first non-sign (0xff) byte of input
-            (loop-when-recur [keep 0] (and (< keep byteLength) (== (aget a keep) -1)) [(inc keep)]
-            )
-
-            ;; Allocate output array. If all non-sign bytes are 0x00,
-            ;; we must allocate space for one extra output byte.
-            (loop-when-recur [k keep] (and (< k byteLength) (zero? (aget a k))) [(inc k)]
-            )
-
-            (let [
-                  #_"int" extraByte (if (== k byteLength) 1 0)
-                  #_"int" intLength (>>> (+ (- byteLength keep) extraByte 3) 2)
-                  #_"int[]" result (int-array intLength)
-                  ;; copy one's complement of input into output,
-                  ;; leaving extra byte (if it exists) == 0x00
-                  #_"int" b (dec byteLength)
-            ]
-                (loop-when-recur [#_"int" i (dec intLength)] (<= 0 i) [(dec i)]
-                    (aset result i (& (aget a b) 0xff))
-                    (§ ass b (dec b))
-                    (let [
-                          #_"int" numBytesToTransfer (min (inc (- b keep)) 3)
-                    ]
-                        (when (neg? numBytesToTransfer)
-                            (§ ass numBytesToTransfer 0)
-                        )
-                        (loop-when-recur [#_"int" j 8] (<= j (* 8 numBytesToTransfer)) [(+ j 8)]
-                            (aswap result i | (<< (& (aget a b) 0xff) j))
-                            (§ ass b (dec b))
-                        )
-
-                        ;; mask indicates which bits must be complemented
-                        (let [
-                              #_"int" mask (>>> -1 (* 8 (- 3 numBytesToTransfer)))
-                        ]
-                            (aswap result i #(& (bit-not %) mask))
-                        )
-                    )
+    (defn- #_"int[]" BigInteger'makePositive-b [#_"byte[]" b]
+        (let [#_"int" m (alength b)
+              ;; find first non-sign (0xff) byte of input
+              #_"int" k (loop-when-recur [k 0] (and (< k m) (== (aget b k) -1)) [(inc k)] => k)
+              ;; if all non-sign bytes are zero, we must allocate space for one extra output byte
+              #_"int" e (loop-when-recur [e k] (and (< e m) (zero? (aget b e))) [(inc e)] => e)
+              #_"int" n (>>> (+ (- m k) 3 (if (== e m) 1 0)) 2) #_"int[]" a (int-array n)]
+            ;; copy one's complement of input into output leaving extra byte (if it exists) zero
+            (loop-when [m (dec m) #_"int" i (dec n)] (<= 0 i)
+                (aset a i (& (aget b m) 0xff))
+                (let [#_"int" t (* (max 0 (min (- m k) 3)) 8)
+                      m (loop-when-recur [m (dec m) #_"int" j 8] (<= j t) [(dec m) (+ j 8)] => m
+                            (aswap a i | (<< (& (aget b m) 0xff) j))
+                        )]
+                    ;; mask indicates which bits must be complemented
+                    (aswap a i #(& (bit-not %) (>>> -1 (* 8 (- 3 t)))))
+                    (recur m (dec i))
                 )
-
-                ;; add one to one's complement to generate two's complement
-                (loop-when-recur [#_"int" i (dec (alength result))] (<= 0 i) [(dec i)]
-                    (aswap result i #(int (inc (long! %))))
-                    (when (not (zero? (aget result i)))
-                        (§ break)
-                    )
-                )
-
-                result
             )
+            ;; add one to one's complement to generate two's-complement
+            (loop-when [#_"int" i (dec n)] (<= 0 i)
+                (aswap a i #(int (inc (long! %))))
+                (recur-if (zero? (aget a i)) [(dec i)])
+            )
+            a
         )
     )
 
     ;;;
-     ; Takes an array a representing a negative 2's-complement number and
+     ; Takes an array a representing a negative two's-complement number and
      ; returns the minimal (no leading zero ints) unsigned whose value is -a.
      ;;
     (defn- #_"int[]" BigInteger'makePositive-i [#_"int[]" a]
-        (let [
-              #_"int" keep (ß )
-              #_"int" j (ß )
-        ]
-            ;; find first non-sign (0xffffffff) int of input
-            (loop-when-recur [keep 0] (and (< keep (alength a)) (== (aget a keep) -1)) [(inc keep)]
+        (let [#_"int" n (alength a)
+              ;; find first non-sign (0xffffffff) int of input
+              #_"int" k (loop-when-recur [k 0] (and (< k n) (== (aget a k) -1)) [(inc k)] => k)
+              ;; if all non-sign ints are zero, we must allocate space for one extra output int
+              #_"int" e (loop-when-recur [e k] (and (< e n) (zero? (aget a e))) [(inc e)] => e)
+              #_"int" n' (+ (- n k) (if (== e n) 1 0)) #_"int[]" a' (int-array n')]
+            ;; copy one's complement of input into output leaving extra int (if it exists) zero
+            (loop-when-recur [#_"int" i k] (< i n) [(inc i)]
+                (aset a' (+ (- i k) (if (== e n) 1 0)) (bit-not (aget a i)))
             )
-
-            ;; Allocate output array. If all non-sign ints are 0x00,
-            ;; we must allocate space for one extra output int.
-            (loop-when-recur [j keep] (and (< j (alength a)) (zero? (aget a j))) [(inc j)]
+            ;; add one to one's complement to generate two's-complement
+            (loop [#_"int" i (dec n')]
+                (aswap a' i inc)
+                (recur-if (zero? (aget a' i)) [(dec i)])
             )
-            (let [
-                  #_"int" extraInt (if (== j (alength a)) 1 0)
-                  #_"int[]" result (int-array (+ (- (alength a) keep) extraInt))
-            ]
-                ;; copy one's complement of input into output,
-                ;; leaving extra int (if it exists) == 0x00
-                (loop-when-recur [#_"int" i keep] (< i (alength a)) [(inc i)]
-                    (aset result (+ (- i keep) extraInt) (bit-not (aget a i)))
-                )
-
-                ;; add one to one's complement to generate two's complement
-                (loop [#_"int" i (dec (alength result))]
-                    (let-when [_ (aswap result i inc)] (zero? (aget result i))
-                        (recur (dec i))
-                    )
-                )
-
-                result
-            )
+            a'
         )
     )
 
@@ -1750,162 +1531,116 @@
     ;;;
      ; Translates a byte array containing the two's-complement binary representation
      ; of a BigInteger into a BigInteger. The input array is assumed to be in
-     ; <i>big-endian</i> byte-order: the most significant byte is in the zeroth element.
+     ; *big-endian* byte-order: the most significant byte is in the zeroth element.
      ;
-     ; @param  val big-endian two's-complement binary representation of BigInteger.
-     ; @throws NumberFormatException {@code val} is zero bytes long.
+     ; @throws NumberFormatException when b is zero bytes long.
      ;;
-    (defn #_"BigInteger" BigInteger'new-b [#_"byte[]" val]
-        (let [this (§ new)
-        ]
-            (when (zero? (alength val))
-                (throw! "zero length")
+    (defn #_"BigInteger" BigInteger'new-b [#_"byte[]" b]
+        (when (pos? (alength b)) => (throw! "zero length")
+            (let [this (§ new)
+                  this
+                    (if (neg? (aget b 0))
+                        (let [#_"int[]" a (BigInteger'makePositive-b b)]
+                            (assoc this :mag a :signum -1)
+                        )
+                        (let [#_"int[]" a (BigInteger'stripLeadingZeroBytes b)]
+                            (assoc this :mag a :signum (if (zero? (alength a)) 0 1))
+                        )
+                    )]
+                (BigInteger'checkRange (:mag this))
+                this
             )
-
-            (cond (neg? (aget val 0))
-                (do
-                    (§ ass this (assoc this :mag (BigInteger'makePositive-b val)))
-                    (§ ass this (assoc this :signum -1))
-                )
-                :else
-                (do
-                    (§ ass this (assoc this :mag (BigInteger'stripLeadingZeroBytes val)))
-                    (§ ass this (assoc this :signum (if (zero? (alength (:mag this))) 0 1)))
-                )
-            )
-            (BigInteger'checkRange (:mag this))
-            this
         )
     )
 
     ;;;
-     ; This private constructor translates an int array containing the
-     ; two's-complement binary representation of a BigInteger into a
-     ; BigInteger. The input array is assumed to be in <i>big-endian</i>
-     ; int-order: the most significant int is in the zeroth element.
+     ; This private constructor translates an int array containing the two's-complement
+     ; binary representation of a BigInteger into a BigInteger. The input array is assumed
+     ; to be in *big-endian* int-order: the most significant int is in the zeroth element.
      ;;
-    (defn- #_"BigInteger" BigInteger'new-a [#_"int[]" val]
-        (let [this (§ new)
-        ]
-            (when (zero? (alength val))
-                (throw! "zero length")
+    (defn- #_"BigInteger" BigInteger'new-a [#_"int[]" a]
+        (when (pos? (alength a)) => (throw! "zero length")
+            (let [this (§ new)
+                  this
+                    (if (neg? (aget a 0))
+                        (let [a (BigInteger'makePositive-i a)]
+                            (assoc this :mag a :signum -1)
+                        )
+                        (let [a (BigInteger'trustedStripLeadingZeroInts a)]
+                            (assoc this :mag a :signum (if (zero? (alength a)) 0 1))
+                        )
+                    )]
+                (BigInteger'checkRange (:mag this))
+                this
             )
-
-            (cond (neg? (aget val 0))
-                (do
-                    (§ ass this (assoc this :mag (BigInteger'makePositive-i val)))
-                    (§ ass this (assoc this :signum -1))
-                )
-                :else
-                (do
-                    (§ ass this (assoc this :mag (BigInteger'trustedStripLeadingZeroInts val)))
-                    (§ ass this (assoc this :signum (if (zero? (alength (:mag this))) 0 1)))
-                )
-            )
-            (BigInteger'checkRange (:mag this))
-            this
         )
     )
 
     ;;;
-     ; Translates the sign-magnitude representation of a BigInteger into a
-     ; BigInteger. The sign is represented as an integer signum value: -1 for
-     ; negative, 0 for zero, or 1 for positive. The magnitude is a byte array
-     ; in <i>big-endian</i> byte-order: the most significant byte is in the
-     ; zeroth element. A zero-length magnitude array is permissible, and will
-     ; result in a BigInteger value of 0, whether signum is -1, 0 or 1.
+     ; Translates the sign-magnitude representation of a BigInteger into a BigInteger.
+     ; The sign is represented as an integer signum value: -1 for negative, 0 for zero,
+     ; or 1 for positive. The magnitude is a byte array in *big-endian* byte-order: the
+     ; most significant byte is in the zeroth element. A zero-length magnitude array is
+     ; permissible, and will result in a BigInteger value of 0, whether signum is -1, 0 or 1.
      ;
-     ; @param  signum signum of the number (-1 for negative, 0 for zero, 1 for positive).
-     ; @param  magnitude big-endian binary representation of the magnitude of the number.
-     ; @throws NumberFormatException {@code signum} is not one of the three
-     ;         legal values (-1, 0, and 1), or {@code signum} is 0 and
-     ;         {@code magnitude} contains one or more non-zero bytes.
+     ; @throws NumberFormatException when signum is not one of the three legal values
+     ;         (-1, 0, and 1), or signum is 0 and magnitude contains one or more non-zero bytes.
      ;;
     (defn #_"BigInteger" BigInteger'new-2ib [#_"int" signum, #_"byte[]" magnitude]
-        (let [this (§ new)
-        ]
-            (§ ass this (assoc this :mag (BigInteger'stripLeadingZeroBytes magnitude)))
-
-            (when-not (<= -1 signum 1)
-                (throw! "invalid signum value")
+        (when (<= -1 signum 1) => (throw! "invalid signum value")
+            (let [this (§ new)
+                  this (assoc this :mag (BigInteger'stripLeadingZeroBytes magnitude))
+                  this
+                    (cond
+                        (zero? (alength (:mag this))) (assoc this :signum 0)
+                        (zero? signum)                (throw! "signum-magnitude mismatch")
+                        :else                         (assoc this :signum signum)
+                    )]
+                (BigInteger'checkRange (:mag this))
+                this
             )
-
-            (cond (zero? (alength (:mag this)))
-                (do
-                    (§ ass this (assoc this :signum 0))
-                )
-                :else
-                (do
-                    (when (zero? signum)
-                        (throw! "signum-magnitude mismatch")
-                    )
-                    (§ ass this (assoc this :signum signum))
-                )
-            )
-            (BigInteger'checkRange (:mag this))
-            this
         )
     )
 
     ;;;
-     ; A constructor for internal use that translates the sign-magnitude
-     ; representation of a BigInteger into a BigInteger. It checks the
-     ; arguments and copies the magnitude so this constructor would be
-     ; safe for external use.
+     ; A constructor for internal use that translates the sign-magnitude representation
+     ; of a BigInteger into a BigInteger. It checks the arguments and copies the magnitude,
+     ; so this constructor would be safe for external use.
      ;;
     (defn- #_"BigInteger" BigInteger'new-2ia [#_"int" signum, #_"int[]" magnitude]
-        (let [this (§ new)
-        ]
-            (§ ass this (assoc this :mag (BigInteger'stripLeadingZeroInts magnitude)))
-
-            (when-not (<= -1 signum 1)
-                (throw! "invalid signum value")
+        (when (<= -1 signum 1) => (throw! "invalid signum value")
+            (let [this (§ new)
+                  this (assoc this :mag (BigInteger'stripLeadingZeroInts magnitude))
+                  this
+                    (cond
+                        (zero? (alength (:mag this))) (assoc this :signum 0)
+                        (zero? signum)                (throw! "signum-magnitude mismatch")
+                        :else                         (assoc this :signum signum)
+                    )]
+                (BigInteger'checkRange (:mag this))
+                this
             )
-
-            (cond (zero? (alength (:mag this)))
-                (do
-                    (§ ass this (assoc this :signum 0))
-                )
-                :else
-                (do
-                    (when (zero? signum)
-                        (throw! "signum-magnitude mismatch")
-                    )
-                    (§ ass this (assoc this :signum signum))
-                )
-            )
-            (BigInteger'checkRange (:mag this))
-            this
         )
     )
 
     ;; multiply x array times word y in place, and add word z
     (defn- #_"void" BigInteger'destructiveMulAdd [#_"int[]" x, #_"int" y, #_"int" z]
-        (let [
-              ;; perform the multiplication word by word
-              #_"long" ylong (long! y)
-              #_"long" zlong (long! z)
-              #_"int" len (alength x)
-
-              #_"long" product 0
-              #_"long" carry 0
-        ]
-            (loop-when-recur [#_"int" i (dec len)] (<= 0 i) [(dec i)]
-                (§ ass product (+ (* ylong (long! (aget x i))) carry))
-                (aset x i (int product))
-                (§ ass carry (>>> product 32))
+        (let [#_"int" n (alength x) #_"long" y' (long! y) #_"long" z' (long! z)]
+            ;; perform the multiplication word by word
+            (loop-when [#_"long" carry 0 #_"int" i (dec n)] (<= 0 i)
+                (let [#_"long" mul (+ (* (long! (aget x i)) y') carry)]
+                    (aset x i (int mul))
+                    (recur (>>> mul 32) (dec i))
+                )
             )
-
             ;; perform the addition
-            (let [
-                  #_"long" sum (+ (long! (aget x (dec len))) zlong)
-            ]
-                (aset x (dec len) (int sum))
-                (§ ass carry (>>> sum 32))
-                (loop-when-recur [#_"int" i (- len 2)] (<= 0 i) [(dec i)]
-                    (§ ass sum (+ (long! (aget x i)) carry))
-                    (aset x i (int sum))
-                    (§ ass carry (>>> sum 32))
+            (let [#_"long" sum (+ (long! (aget x (dec n))) z')]
+                (aset x (dec n) (int sum))
+                (loop-when [carry (>>> sum 32) #_"int" i (- n 2)] (<= 0 i)
+                    (let [sum (+ (long! (aget x i)) carry)]
+                        (aset x i (int sum))
+                        (recur (>>> sum 32) (dec i))
+                    )
                 )
             )
         )
@@ -1913,120 +1648,69 @@
     )
 
     ;;;
-     ; Translates the String representation of a BigInteger in the
-     ; specified radix into a BigInteger. The String representation
-     ; consists of an optional minus or plus sign followed by a sequence
-     ; of one or more digits in the specified radix. The character-to-digit
-     ; mapping is provided by {@code Character.digit}. The String may
-     ; not contain any extraneous characters (whitespace, for example).
+     ; Translates the String representation of a BigInteger in the specified radix into a BigInteger.
+     ; The String representation consists of an optional minus or plus sign followed by a sequence
+     ; of one or more digits in the specified radix. The character-to-digit mapping is provided by
+     ; Character/digit. The String may not contain any extraneous characters (whitespace, for example).
      ;
-     ; @param val String representation of BigInteger.
-     ; @param radix radix to be used in interpreting {@code val}.
-     ; @throws NumberFormatException {@code val} is not a valid representation
-     ;         of a BigInteger in the specified radix, or {@code radix} is
-     ;         outside the range from {@link Character#MIN_RADIX} to
-     ;         {@link Character#MAX_RADIX}, inclusive.
+     ; @throws NumberFormatException when s is not a valid representation of
+     ;         a BigInteger in the given radix, or the radix is outside the range
+     ;         from Character/MIN_RADIX to Character/MAX_RADIX, inclusive.
      ;;
-    (defn #_"BigInteger" BigInteger'new-2s [#_"String" val, #_"int" radix]
-        (let [this (§ new)
-              #_"int" cursor 0
-              #_"int" numDigits (ß )
-              #_"int" len (.length val)
-        ]
-            (when-not (<= Character/MIN_RADIX radix Character/MAX_RADIX)
-                (throw! "radix out of range")
-            )
-            (when (zero? len)
-                (throw! "zero length")
-            )
-
-            ;; check for at most one leading sign
-            (let [
-                  #_"int" sign 1
-                  #_"int" index1 (.lastIndexOf val \-)
-                  #_"int" index2 (.lastIndexOf val \+)
-            ]
-                (cond (<= 0 index1)
-                    (do
-                        (when (or (not (zero? index1)) (<= 0 index2))
-                            (throw! "illegal embedded sign character")
-                        )
-                        (§ ass sign -1)
-                        (§ ass cursor 1)
-                    )
-                    (<= 0 index2)
-                    (do
-                        (when (not (zero? index2))
-                            (throw! "illegal embedded sign character")
-                        )
-                        (§ ass cursor 1)
-                    )
-                )
-                (when (== cursor len)
-                    (throw! "zero length")
-                )
-
-                ;; skip leading zeros and compute number of digits in magnitude
-                (while (and (< cursor len) (zero? (Character/digit (.charAt val, cursor), radix)))
-                    (§ ass cursor (inc cursor))
-                )
-
-                (when (== cursor len)
-                    (§ ass this (assoc this :signum 0))
-                    (§ ass this (assoc this :mag (:mag BigInteger'ZERO)))
-                    (§ return this)
-                )
-
-                (§ ass numDigits (- len cursor))
-                (§ ass this (assoc this :signum sign))
-
-                ;; Pre-allocate array of expected size. May be too large but can
-                ;; never be too small. Typically exact.
-                (let [
-                      #_"long" numBits (inc (>>> (* numDigits (aget BigInteger'bitsPerDigit radix)) 10))
-                ]
-                    (when (<= (<< 1 32) (+ numBits 31))
-                        (throw! "magnitude overflow")
-                    )
-                    (let [
-                          #_"int" numWords (>>> (int (+ numBits 31)) 5)
-                          #_"int[]" magnitude (int-array numWords)
-                          ;; process first (potentially short) digit group
-                          #_"int" firstGroupLen (% numDigits (aget BigInteger'digitsPerInt radix))
-                    ]
-                        (when (zero? firstGroupLen)
-                            (§ ass firstGroupLen (aget BigInteger'digitsPerInt radix))
-                        )
-                        (let [
-                              #_"String" group (.substring val, cursor, (+ cursor firstGroupLen))
-                              _ (§ ass cursor (+ cursor firstGroupLen))
-                        ]
-                            (aset magnitude (dec numWords) (Integer/parseInt group, radix))
-                            (when (neg? (aget magnitude (dec numWords)))
-                                (throw! "illegal digit")
-                            )
-
-                            ;; process remaining digit groups
-                            (let [
-                                  #_"int" superRadix (aget BigInteger'intRadix radix)
-                                  #_"int" groupVal 0
-                            ]
-                                (while (< cursor len)
-                                    (let [
-                                    ]
-                                        (§ ass group (.substring val, cursor, (+ cursor (aget BigInteger'digitsPerInt radix))))
-                                        (§ ass cursor (+ cursor (aget BigInteger'digitsPerInt radix)))
-                                        (§ ass groupVal (Integer/parseInt group, radix))
-                                        (when (neg? groupVal)
-                                            (throw! "illegal digit")
+    (defn #_"BigInteger" BigInteger'new-s
+        ([#_"String" s] (BigInteger'new-s s, 10))
+        ([#_"String" s, #_"int" radix]
+            (when (<= Character/MIN_RADIX radix Character/MAX_RADIX) => (throw! "radix out of range")
+                (let-when [#_"int" n (.length s)] (pos? n) => (throw! "zero length")
+                    ;; check for at most one leading sign
+                    (let [#_"int" minus (.lastIndexOf s (int \-)) #_"int" plus (.lastIndexOf s (int \+))
+                          [#_"int" sign #_"int" i]
+                            (cond
+                                (<= 0 minus)
+                                    (when (and (zero? minus) (neg? plus)) => (throw! "illegal embedded sign character")
+                                        [-1 1]
+                                    )
+                                (<= 0 plus)
+                                    (when (zero? plus) => (throw! "illegal embedded sign character")
+                                        [1 1]
+                                    )
+                                :else
+                                    [1 0]
+                            )]
+                        (when (< i n) => (throw! "zero length")
+                            ;; skip leading zeros and compute number of digits in magnitude
+                            (let [i (loop-when-recur i (and (< i n) (zero? (Character/digit (.charAt s, i), radix))) (inc i) => i)]
+                                (when (< i n) => BigInteger'ZERO
+                                    ;; Allocate an array of the expected size. May be too large, but should never be too small. Typically exact.
+                                    (let [#_"int" nDigits (- n i) #_"long" nBits (inc (>>> (* nDigits (aget BigInteger'bitsPerDigit radix)) 10))]
+                                        (when-not (<= (<< 1 32) (+ nBits 31)) => (throw! "magnitude overflow")
+                                            (let [#_"int" nWords (>>> (int (+ nBits 31)) 5) #_"int[]" a (int-array nWords)
+                                                  ;; process first (potentially short) digit group
+                                                  #_"int" dpi (aget BigInteger'digitsPerInt radix)
+                                                  #_"int" nGroup (% nDigits dpi) nGroup (if (zero? nGroup) dpi nGroup)
+                                                  #_"String" group (.substring s, i, (+ i nGroup)) i (+ i nGroup)]
+                                                (when-not (neg? (aset a (dec nWords) (Integer/parseInt group, radix))) => (throw! "illegal digit")
+                                                    ;; process remaining digit groups
+                                                    (let [#_"int" radix' (aget BigInteger'intRadix radix)]
+                                                        (while (< i n)
+                                                            (let [#_"String" group (.substring s, i, (+ i dpi)) i (+ i dpi)
+                                                                  #_"int" digit (Integer/parseInt group, radix)]
+                                                                (when-not (neg? digit) => (throw! "illegal digit")
+                                                                    (BigInteger'destructiveMulAdd a, radix', digit)
+                                                                )
+                                                            )
+                                                        )
+                                                        ;; required for cases where the array was overallocated
+                                                        (let [this (assoc (§ new) :mag (BigInteger'trustedStripLeadingZeroInts a) :signum sign)]
+                                                            (BigInteger'checkRange (:mag this))
+                                                            this
+                                                        )
+                                                    )
+                                                )
+                                            )
                                         )
-                                        (BigInteger'destructiveMulAdd magnitude, superRadix, groupVal)
                                     )
                                 )
-                                ;; required for cases where the array was overallocated
-                                (§ ass this (assoc this :mag (BigInteger'trustedStripLeadingZeroInts magnitude)))
-                                (BigInteger'checkRange (:mag this))
-                                this
                             )
                         )
                     )
@@ -2035,57 +1719,35 @@
         )
     )
 
-    ;;;
-     ; Translates the decimal String representation of a BigInteger into a
-     ; BigInteger. The String representation consists of an optional minus
-     ; sign followed by a sequence of one or more decimal digits. The
-     ; character-to-digit mapping is provided by {@code Character.digit}.
-     ; The String may not contain any extraneous characters (whitespace, for
-     ; example).
-     ;
-     ; @param val decimal String representation of BigInteger.
-     ; @throws NumberFormatException {@code val} is not a valid representation
-     ;         of a BigInteger.
-     ;;
-    (defn #_"BigInteger" BigInteger'new-1s [#_"String" val]
-        (BigInteger'new-2s val, 10)
-    )
-
-    (defn- #_"byte[]" BigInteger'randomBits [#_"int" numBits, #_"Random" rnd]
-        (when (neg? numBits)
-            (throw! "numBits must be non-negative")
-        )
-
-        (let [
-              #_"int" numBytes (int (quot (+ (long numBits) 7) 8)) ;; avoid overflow
-              #_"byte[]" randomBits (byte-array numBytes)
-        ]
-            ;; generate random bytes and mask out any excess bits
-            (when (pos? numBytes)
-                (.nextBytes rnd, randomBits)
-                (let [
-                      #_"int" excessBits (- (* 8 numBytes) numBits)
-                ]
-                    (aswap randomBits 0 & (dec (<< 1 (- 8 excessBits))))
+    (defn- #_"byte[]" BigInteger'randomBits [#_"int" nBits, #_"Random" rnd]
+        (when-not (neg? nBits) => (throw! "nBits must be non-negative")
+            (let [#_"int" n (int (quot (+ (long nBits) 7) 8)) ;; avoid overflow
+                  #_"byte[]" b (byte-array n)]
+                (when (pos? n) => b
+                    ;; generate random bytes and mask out any excess bits
+                    (.nextBytes rnd, b)
+                    (let [#_"int" e (- (* 8 n) nBits)]
+                        (aswap b 0 & (dec (<< 1 (- 8 e))))
+                        b
+                    )
                 )
             )
-            randomBits
         )
     )
 
     ;;;
      ; Constructs a randomly generated BigInteger, uniformly distributed over
-     ; the range 0 to (2<sup>{@code numBits}</sup> - 1), inclusive.
+     ; the range 0 to 2^nBits - 1, inclusive.
      ; The uniformity of the distribution assumes that a fair source of random
-     ; bits is provided in {@code rnd}. Note that this constructor always
-     ; constructs a non-negative BigInteger.
+     ; bits is provided in rnd. Note that this constructor always constructs
+     ; a non-negative BigInteger.
      ;
-     ; @param  numBits maximum bitLength of the new BigInteger.
+     ; @param  nBits maximum bitLength of the new BigInteger.
      ; @param  rnd source of randomness to be used in computing the new BigInteger.
-     ; @throws IllegalArgumentException {@code numBits} is negative.
+     ; @throws IllegalArgumentException when nBits is negative.
      ;;
-    (defn #_"BigInteger" BigInteger'new-2ir [#_"int" numBits, #_"Random" rnd]
-        (BigInteger'new-2ib 1, (BigInteger'randomBits numBits, rnd))
+    (defn #_"BigInteger" BigInteger'new-2ir [#_"int" nBits, #_"Random" rnd]
+        (BigInteger'new-2ib 1, (BigInteger'randomBits nBits, rnd))
     )
 
     ;;;
@@ -2093,25 +1755,19 @@
      ; with the arguments reversed in two ways: it assumes that its
      ; arguments are correct, and it doesn't copy the magnitude array.
      ;;
-    (defn #_"BigInteger" BigInteger'new-2ai [#_"int[]" magnitude, #_"int" signum]
-        (let [this (§ new)
-        ]
-            (§ ass this (assoc this :signum (if (zero? (alength magnitude)) 0 signum)))
-            (§ ass this (assoc this :mag magnitude))
+    (defn #_"BigInteger" BigInteger'new-2ai [#_"int[]" a, #_"int" signum]
+        (let [this (assoc (§ new) :mag a :signum (if (zero? (alength a)) 0 signum))]
             (BigInteger'checkRange (:mag this))
             this
         )
     )
 
     ;;;
-     ; This private constructor is for internal use and assumes that its
-     ; arguments are correct.
+     ; This private constructor is for internal use and assumes that
+     ; its arguments are correct.
      ;;
-    (defn- #_"BigInteger" BigInteger'new-2bi [#_"byte[]" magnitude, #_"int" signum]
-        (let [this (§ new)
-        ]
-            (§ ass this (assoc this :signum (if (zero? (alength magnitude)) 0 signum)))
-            (§ ass this (assoc this :mag (BigInteger'stripLeadingZeroBytes magnitude)))
+    (defn- #_"BigInteger" BigInteger'new-2bi [#_"byte[]" b, #_"int" signum]
+        (let [this (assoc (§ new) :mag (BigInteger'stripLeadingZeroBytes b) :signum (if (zero? (alength b)) 0 signum))]
             (BigInteger'checkRange (:mag this))
             this
         )
@@ -2120,96 +1776,55 @@
     ;; static factory methods
 
     ;;;
-     ; Constructs a BigInteger with the specified value, which may not be zero.
+     ; The BigInteger constant zero.
      ;;
-    (defn- #_"BigInteger" BigInteger'new-l [#_"long" val]
-        (let [this (§ new)
-        ]
-            (cond (neg? val)
-                (do
-                    (§ ass val (- val))
-                    (§ ass this (assoc this :signum -1))
-                )
-                :else
-                (do
-                    (§ ass this (assoc this :signum 1))
-                )
-            )
-
-            (let [
-                #_"int" highWord (int (>>> val 32))
-            ]
-                (cond (zero? highWord)
-                    (do
-                        (§ ass this (assoc this :mag (int-array 1)))
-                        (aset (:mag this) 0 (int val))
-                    )
-                    :else
-                    (do
-                        (§ ass this (assoc this :mag (int-array 2)))
-                        (aset (:mag this) 0 highWord)
-                        (aset (:mag this) 1 (int val))
-                    )
-                )
-                this
-            )
-        )
-    )
+    (def #_"BigInteger" BigInteger'ZERO (§ soon BigInteger'new-2ai (int-array 0), 0))
 
     (def- #_"int" BigInteger'MAX_CONSTANT 16)
 
     (def- #_"BigInteger[]" BigInteger'posConst (§ soon make-array BigInteger (inc BigInteger'MAX_CONSTANT)))
     (def- #_"BigInteger[]" BigInteger'negConst (§ soon make-array BigInteger (inc BigInteger'MAX_CONSTANT)))
 
-    #_static
-    (§
-        ;;;
-         ; Initialize static constant array when class is loaded.
-         ;;
-        (loop-when-recur [#_"int" i 1] (<= i BigInteger'MAX_CONSTANT) [(inc i)]
-            (let [
-                  #_"int[]" magnitude (int-array 1)
-            ]
-                (aset magnitude 0 i)
-                (aset BigInteger'posConst i (BigInteger'new-2ai magnitude,  1))
-                (aset BigInteger'negConst i (BigInteger'new-2ai magnitude, -1))
-            )
+    (§ soon dotimes [#_"int" i BigInteger'MAX_CONSTANT]
+        (let [i (inc i) #_"int[]" a (int-array [i])]
+            (aset BigInteger'posConst i (BigInteger'new-2ai a,  1))
+            (aset BigInteger'negConst i (BigInteger'new-2ai a, -1))
         )
     )
 
     ;;;
-     ; Returns a BigInteger whose value is equal to that of the specified {@code long}.
-     ; This "static factory method" is provided in preference to a ({@code long}) constructor
+     ; Constructs a BigInteger with the specified value, which may not be zero.
+     ;;
+    (defn- #_"BigInteger" BigInteger'new-l [#_"long" n]
+        (let [[n #_"int" signum] (if (neg? n) [(- n) -1] [n 1]) #_"int" m (int (>>> n 32))]
+            (assoc (§ new) :mag (int-array (if (zero? m) [(int n)] [m (int n)])) :signum signum)
+        )
+    )
+
+    ;;;
+     ; Returns a BigInteger whose value is equal to that of the specified long.
+     ; This "static factory method" is provided in preference to a (long) constructor,
      ; because it allows for reuse of frequently used BigIntegers.
-     ;
-     ; @param  val value of the BigInteger to return.
-     ; @return a BigInteger with the specified value.
      ;;
-    (defn #_"BigInteger" BigInteger'valueOf-l [#_"long" val]
-        ;; if -MAX_CONSTANT < val < MAX_CONSTANT, return stashed constant
+    (defn #_"BigInteger" BigInteger'valueOf-l [#_"long" n]
         (cond
-            (zero? val)                              BigInteger'ZERO
-            (<= 1 val BigInteger'MAX_CONSTANT)      (BigInteger'posConst (int val))
-            (<= (- BigInteger'MAX_CONSTANT) val -1) (BigInteger'negConst (int (- val)))
-            :else                                   (BigInteger'new-l val)
+            (zero? n)                              BigInteger'ZERO
+            (<= 1 n BigInteger'MAX_CONSTANT)      (BigInteger'posConst (int n))
+            (<= (- BigInteger'MAX_CONSTANT) n -1) (BigInteger'negConst (int (- n)))
+            :else                                 (BigInteger'new-l n)
         )
     )
 
     ;;;
-     ; Returns a BigInteger with the given two's complement representation.
-     ; Assumes that the input array will not be modified (the returned
-     ; BigInteger will reference the input array if feasible).
+     ; Returns a BigInteger with the given two's-complement representation.
+     ; Assumes that the input array will not be modified
+     ; (the returned BigInteger will reference the input array, if feasible).
      ;;
-    (defn- #_"BigInteger" BigInteger'valueOf-a [#_"int[]" val]
-        (if (pos? (aget val 0)) (BigInteger'new-2ai val, 1) (BigInteger'new-a val))
+    (defn- #_"BigInteger" BigInteger'valueOf-a [#_"int[]" a]
+        (if (pos? (aget a 0)) (BigInteger'new-2ai a, 1) (BigInteger'new-a a))
     )
 
     ;; constants
-
-    ;;;
-     ; The BigInteger constant zero.
-     ;;
-    (def #_"BigInteger" BigInteger'ZERO (§ soon BigInteger'new-2ai (int-array 0), 0))
 
     ;;;
      ; The BigInteger constant one.
@@ -2229,99 +1844,47 @@
     ;; comparison operations
 
     ;;;
-     ; Compares the magnitude array of this BigInteger with the specified
-     ; BigInteger's. This is the version of compareTo ignoring sign.
+     ; Compares the magnitude array of this BigInteger with of 'that'.
+     ; This is the version of compareTo ignoring sign.
      ;
-     ; @param val BigInteger whose magnitude array to be compared.
-     ; @return -1, 0 or 1 as this magnitude array is less than, equal to or
-     ;         greater than the magnitude aray for the specified BigInteger's.
+     ; @return -1, 0 or 1 as this magnitude array is less than, equal
+     ;         to or greater than the magnitude array for 'that'.
      ;;
-    #_method
-    (defn #_"int" BigInteger''compareMagnitude-i [#_"BigInteger" this, #_"BigInteger" val]
-        (let [
-              #_"int[]" m1 (:mag this)
-              #_"int" len1 (alength m1)
-              #_"int[]" m2 (:mag val)
-              #_"int" len2 (alength m2)
-        ]
-            (when (< len1 len2)
-                (§ return -1)
-            )
-            (when (< len2 len1)
-                (§ return 1)
-            )
-            (loop-when-recur [#_"int" i 0] (< i len1) [(inc i)]
-                (let [
-                      #_"int" a (aget m1 i)
-                      #_"int" b (aget m2 i)
-                ]
-                    (when (not (== a b))
-                        (§ return (if (< (long! a) (long! b)) -1 1))
+    (defn #_"int" BigInteger'compareMagnitude-i [#_"BigInteger" this, #_"BigInteger" that]
+        (let [#_"int[]" a* (:mag this) #_"int" n (alength a*)
+              #_"int[]" b* (:mag that) #_"int" m (alength b*)]
+            (cond (< n m) -1 (< m n) 1
+                :else
+                (loop-when [#_"int" i 0] (< i n) => 0
+                    (let [#_"int" a (aget a* i) #_"int" b (aget b* i)]
+                        (recur-if (== a b) [(inc i)] => (if (< (long! a) (long! b)) -1 1))
                     )
                 )
             )
-            0
         )
     )
 
     ;;;
      ; Version of compareMagnitude that compares magnitude with long value.
-     ; val can't be Long/MIN_VALUE.
+     ; x can't be Long/MIN_VALUE.
      ;;
-    #_method
-    (defn #_"int" BigInteger''compareMagnitude-l [#_"BigInteger" this, #_"long" val]
-        (when (= val Long/MIN_VALUE)
-            (throw! "(= val Long/MIN_VALUE)")
-        )
-        (let [
-              #_"int[]" m1 (:mag this)
-              #_"int" len (alength m1)
-        ]
-            (when (< 2 len)
-                (§ return 1)
-            )
-            (when (neg? val)
-                (§ ass val (- val))
-            )
-            (let [
-                  #_"int" highWord (int (>>> val 32))
-            ]
-                (cond (zero? highWord)
-                    (do
-                        (when (< len 1)
-                            (§ return -1)
-                        )
-                        (when (< 1 len)
-                            (§ return 1)
-                        )
-                        (let [
-                              #_"int" a (aget m1 0)
-                              #_"int" b (int val)
-                        ]
-                            (when (not (== a b))
-                                (§ return (if (< (long! a) (long! b)) -1 1))
+    (defn #_"int" BigInteger'compareMagnitude-l [#_"BigInteger" this, #_"long" x]
+        (when-not (== x Long/MIN_VALUE) => (throw! "(== x Long/MIN_VALUE)")
+            (let-when [#_"int[]" a* (:mag this) #_"int" n (alength a*)] (<= n 2) => 1
+                (let [x (if (neg? x) (- x) x) #_"int" y (int (>>> x 32))]
+                    (if (zero? y)
+                        (cond (< n 1) -1 (< 1 n) 1
+                            :else
+                            (let-when [#_"int" a (aget a* 0) #_"int" b (int x)] (== a b) => (if (< (long! a) (long! b)) -1 1)
+                                0
                             )
-                            (§ return 0)
                         )
-                    )
-                    :else
-                    (do
-                        (when (< len 2)
-                            (§ return -1)
-                        )
-                        (let [
-                              #_"int" a (aget m1 0)
-                              #_"int" b highWord
-                        ]
-                            (when (not (== a b))
-                                (§ return (if (< (long! a) (long! b)) -1 1))
+                        (when (== n 2) => -1
+                            (let-when [#_"int" a (aget a* 0) #_"int" b      y ] (== a b) => (if (< (long! a) (long! b)) -1 1)
+                                (let-when [    a (aget a* 1)         b (int x)] (== a b) => (if (< (long! a) (long! b)) -1 1)
+                                    0
+                                )
                             )
-                            (§ ass a (aget m1 1))
-                            (§ ass b (int val))
-                            (when (not (== a b))
-                                (§ return (if (< (long! a) (long! b)) -1 1))
-                            )
-                            (§ return 0)
                         )
                     )
                 )
@@ -2330,103 +1893,63 @@
     )
 
     ;;;
-     ; Compares this BigInteger with the specified BigInteger.
+     ; Compares this BigInteger with 'that'.
      ; This method is provided in preference to individual methods for
-     ; each of the six boolean comparison operators ({@literal <}, ==,
-     ; {@literal >}, {@literal >=}, !=, {@literal <=}). The suggested
-     ; idiom for performing these comparisons is: {@code
-     ; (x.compareTo(y)} &lt;<i>op</i>&gt; {@code 0)}, where
-     ; &lt;<i>op</i>&gt; is one of the six comparison operators.
+     ; each of the six boolean comparison operators (<, <=, >, >=, ==, !=).
+     ; The suggested idiom for performing these comparisons is:
+     ; (op (.compareTo x, y) 0), where op is one of the six ops above.
      ;
-     ; @param  val BigInteger to which this BigInteger is to be compared.
-     ; @return -1, 0 or 1 as this BigInteger is numerically less than, equal
-     ;         to, or greater than {@code val}.
+     ; @return -1, 0 or 1 as this BigInteger is numerically less than,
+     ;         equal to, or greater than 'that'.
      ;;
     #_foreign
-    (defn #_"int" compareTo---BigInteger [#_"BigInteger" this, #_"BigInteger" val]
-        (when (== (:signum this) (:signum val))
-            (§ switch (:signum this)
-                (§ case 1
-                    (§ return (BigInteger''compareMagnitude-i this, val))
-                )
-                (§ case -1
-                    (§ return (BigInteger''compareMagnitude-i val, this))
-                )
-                (§ default
-                    (§ return 0)
-                )
+    (defn #_"int" compareTo---BigInteger [#_"BigInteger" this, #_"BigInteger" that]
+        (let-when [#_"int" a (:signum this) #_"int" b (:signum that)] (== a b) => (if (< a b) -1 1)
+            (case a
+                -1 (BigInteger'compareMagnitude-i that, this)
+                1 (BigInteger'compareMagnitude-i this, that)
+                0
             )
         )
-        (if (< (:signum val) (:signum this)) 1 -1)
     )
 
     ;;;
-     ; Compares this BigInteger with the specified Object for equality.
+     ; Compares this BigInteger with 'that' for equality.
      ;
-     ; @param  x Object to which this BigInteger is to be compared.
-     ; @return {@code true} if and only if the specified Object is a
-     ;         BigInteger whose value is numerically equal to this BigInteger.
+     ; @return true if and only if 'that' is a BigInteger whose
+     ;         value is numerically equal to this BigInteger.
      ;;
     #_foreign
-    (defn #_"boolean" equals---BigInteger [#_"BigInteger" this, #_"Object" x]
-        ;; this test is just an optimization, which may or may not help
-        (when (== x this)
-            (§ return true)
-        )
-
-        (when-not (§ soon instance? BigInteger x)
-            (§ return false)
-        )
-
-        (let [
-              #_"BigInteger" xInt (§ soon cast BigInteger x)
-        ]
-            (when (not (== (:signum xInt) (:signum this)))
-                (§ return false)
-            )
-
-            (let [
-                  #_"int[]" m (:mag this)
-                  #_"int" len (alength m)
-                  #_"int[]" xm (:mag xInt)
-            ]
-                (when (not (== len (alength xm)))
-                    (§ return false)
-                )
-
-                (loop-when-recur [#_"int" i 0] (< i len) [(inc i)]
-                    (when (not (== (aget xm i) (aget m i)))
-                        (§ return false)
+    (defn #_"boolean" equals---BigInteger [#_"BigInteger" this, #_"Object" that]
+        (or (identical? this that)
+            (and (§ soon instance? BigInteger that) (== (:signum this) (:signum that))
+                (let [#_"int[]" a (:mag this) #_"int[]" b (:mag that) #_"int" n (alength a)]
+                    (and (== n (alength b))
+                        (loop-when [#_"int" i 0] (< i n) => true
+                            (and (== (aget a i) (aget b i))
+                                (recur (inc i))
+                            )
+                        )
                     )
                 )
-
-                true
             )
         )
     )
 
     ;;;
-     ; Returns the minimum of this BigInteger and {@code val}.
-     ;
-     ; @param  val value with which the minimum is to be computed.
-     ; @return the BigInteger whose value is the lesser of this BigInteger and
-     ;         {@code val}. If they are equal, either may be returned.
+     ; Returns the minimum of a and b.
+     ; If they are equal, either may be returned.
      ;;
-    #_method
-    (defn #_"BigInteger" BigInteger''min [#_"BigInteger" this, #_"BigInteger" val]
-        (if (neg? (.compareTo this, val)) this val)
+    (defn #_"BigInteger" BigInteger'min [#_"BigInteger" a, #_"BigInteger" b]
+        (if (neg? (.compareTo a, b)) a b)
     )
 
     ;;;
-     ; Returns the maximum of this BigInteger and {@code val}.
-     ;
-     ; @param  val value with which the maximum is to be computed.
-     ; @return the BigInteger whose value is the greater of this and
-     ;         {@code val}. If they are equal, either may be returned.
+     ; Returns the maximum of a and b.
+     ; If they are equal, either may be returned.
      ;;
-    #_method
-    (defn #_"BigInteger" BigInteger''max [#_"BigInteger" this, #_"BigInteger" val]
-        (if (pos? (.compareTo this, val)) this val)
+    (defn #_"BigInteger" BigInteger'max [#_"BigInteger" a, #_"BigInteger" b]
+        (if (pos? (.compareTo a, b)) a b)
     )
 
     ;; arithmetic operations
@@ -2644,10 +2167,7 @@
     )
 
     ;;;
-     ; Returns a BigInteger whose value is {@code (this + val)}.
-     ;
-     ; @param  val value to be added to this BigInteger.
-     ; @return {@code this + val}
+     ; Returns a BigInteger whose value is (+ this val).
      ;;
     #_method
     (defn #_"BigInteger" BigInteger''add [#_"BigInteger" this, #_"BigInteger" val]
@@ -2662,7 +2182,7 @@
         )
 
         (let [
-              #_"int" cmp (BigInteger''compareMagnitude-i this, val)
+              #_"int" cmp (BigInteger'compareMagnitude-i this, val)
         ]
             (when (zero? cmp)
                 (§ return BigInteger'ZERO)
@@ -2677,9 +2197,7 @@
     )
 
     ;;;
-     ; Returns a BigInteger whose value is {@code (-this)}.
-     ;
-     ; @return {@code -this}
+     ; Returns a BigInteger whose value is (- this).
      ;;
     #_method
     (defn #_"BigInteger" BigInteger''negate [#_"BigInteger" this]
@@ -2687,10 +2205,7 @@
     )
 
     ;;;
-     ; Returns a BigInteger whose value is {@code (this - val)}.
-     ;
-     ; @param  val value to be subtracted from this BigInteger.
-     ; @return {@code this - val}
+     ; Returns a BigInteger whose value is (- this val).
      ;;
     #_method
     (defn #_"BigInteger" BigInteger''subtract [#_"BigInteger" this, #_"BigInteger" val]
@@ -2705,7 +2220,7 @@
         )
 
         (let [
-              #_"int" cmp (BigInteger''compareMagnitude-i this, val)
+              #_"int" cmp (BigInteger'compareMagnitude-i this, val)
         ]
             (when (zero? cmp)
                 (§ return BigInteger'ZERO)
@@ -2721,8 +2236,6 @@
 
     ;;;
      ; Returns a BigInteger whose value is the absolute value of this BigInteger.
-     ;
-     ; @return {@code abs(this)}
      ;;
     #_method
     (defn #_"BigInteger" BigInteger''abs [#_"BigInteger" this]
@@ -2820,10 +2333,7 @@
     )
 
     ;;;
-     ; Returns a BigInteger whose value is {@code (this * val)}.
-     ;
-     ; @param  val value to be multiplied by this BigInteger.
-     ; @return {@code this * val}
+     ; Returns a BigInteger whose value is (* this val).
      ;;
     #_method
     (defn #_"BigInteger" BigInteger''multiply [#_"BigInteger" this, #_"BigInteger" val]
@@ -3687,7 +3197,7 @@
     ;;;
      ; Returns a BigInteger whose value is {@code (this mod m}).
      ; This method differs from {@code remainder} in that it always returns
-     ; a <i>non-negative</i> BigInteger.
+     ; a *non-negative* BigInteger.
      ;
      ; @param  m the modulus.
      ; @return {@code this mod m}
@@ -4108,7 +3618,7 @@
     )
 
     ;;;
-     ; Returns a BigInteger whose value is this mod(2**p).
+     ; Returns a BigInteger whose value is this mod(2^p).
      ; Assumes that this {@code BigInteger >= 0} and {@code p > 0}.
      ;;
     #_method
@@ -4136,7 +3646,7 @@
     )
 
     ;;;
-     ; Returns a BigInteger whose value is (this ** exponent) mod (2**p)
+     ; Returns a BigInteger whose value is (this^exponent) mod (2^p)
      ;;
     #_method
     (defn- #_"BigInteger" BigInteger''modPow2 [#_"BigInteger" this, #_"BigInteger" exponent, #_"int" p]
@@ -4175,7 +3685,7 @@
      ; @return {@code this}<sup>-1</sup> {@code mod m}.
      ; @throws ArithmeticException {@code m} <= 0, or this BigInteger
      ;         has no multiplicative inverse mod m (that is, this BigInteger
-     ;         is not <i>relatively prime</i> to m).
+     ;         is not *relatively prime* to m).
      ;;
     #_method
     (defn #_"BigInteger" BigInteger''modInverse [#_"BigInteger" this, #_"BigInteger" m]
@@ -4191,7 +3701,7 @@
         (let [
               #_"BigInteger" modVal this
         ]
-            (when (or (neg? (:signum this)) (<= 0 (BigInteger''compareMagnitude-i this, m)))
+            (when (or (neg? (:signum this)) (<= 0 (BigInteger'compareMagnitude-i this, m)))
                 (§ ass modVal (BigInteger''mod this, m))
             )
 
@@ -4217,7 +3727,7 @@
      ; @param  m the modulus.
      ; @return <tt>this<sup>exponent</sup> mod m</tt>
      ; @throws ArithmeticException {@code m} <= 0 or the exponent is negative
-     ;         and this BigInteger is not <i>relatively prime</i> to {@code m}.
+     ;         and this BigInteger is not *relatively prime* to {@code m}.
      ;;
     #_method
     (defn #_"BigInteger" BigInteger''modPow [#_"BigInteger" this, #_"BigInteger" exponent, #_"BigInteger" m]
@@ -4266,13 +3776,13 @@
                     (let [
                           ;; tear m apart into odd part (m1) and power of 2 (m2)
                           #_"int" p (BigInteger''getLowestSetBit m) ;; max pow of 2 that divides m
-                          #_"BigInteger" m1 (BigInteger''shiftRight m, p) ;; m/2**p
-                          #_"BigInteger" m2 (BigInteger''shiftLeft BigInteger'ONE, p) ;; 2**p
+                          #_"BigInteger" m1 (BigInteger''shiftRight m, p) ;; m/2^p
+                          #_"BigInteger" m2 (BigInteger''shiftLeft BigInteger'ONE, p) ;; 2^p
                           ;; calculate new base from m1
                           #_"BigInteger" base2 (if (or (neg? (:signum this)) (<= 0 (.compareTo this, m1))) (BigInteger''mod this, m1) this)
-                          ;; caculate (base ** exponent) mod m1
+                          ;; caculate (base^exponent) mod m1
                           #_"BigInteger" a1 (if (.equals m1, BigInteger'ONE) BigInteger'ZERO (BigInteger''oddModPow base2, exponent, m1))
-                          ;; calculate (this ** exponent) mod m2
+                          ;; calculate (this^exponent) mod m2
                           #_"BigInteger" a2 (BigInteger''modPow2 base, exponent, p)
                           ;; combine results using Chinese Remainder Theorem
                           #_"BigInteger" y1 (BigInteger''modInverse m2, m1)
@@ -4429,7 +3939,7 @@
 
     ;;;
      ; Returns a byte array containing the two's-complement representation of this BigInteger.
-     ; The byte array will be in <i>big-endian</i> byte-order: the most significant byte is in the
+     ; The byte array will be in *big-endian* byte-order: the most significant byte is in the
      ; zeroth element. The array will contain the minimum number of bytes required to represent this
      ; BigInteger, including at least one sign bit, which is {@code (ceil((this.bitLength() + 1)/8))}.
      ; (This representation is compatible with the {@link #BigInteger(byte[]) (byte[])} constructor.)
@@ -4463,7 +3973,7 @@
 
     ;;;
      ; Converts this BigInteger to an {@code int}.
-     ; This conversion is analogous to a <i>narrowing primitive conversion</i>
+     ; This conversion is analogous to a *narrowing primitive conversion*
      ; from {@code long} to {@code int} as defined in section 5.1.3 of
      ; <cite>The Java Language Specification</cite>: if this BigInteger
      ; is too big to fit in an {@code int}, only the low-order 32 bits are returned.
@@ -4479,7 +3989,7 @@
 
     ;;;
      ; Converts this BigInteger to a {@code long}.
-     ; This conversion is analogous to a <i>narrowing primitive conversion</i>
+     ; This conversion is analogous to a *narrowing primitive conversion*
      ; from {@code long} to {@code int} as defined in section 5.1.3 of
      ; <cite>The Java Language Specification</cite>: if this BigInteger
      ; is too big to fit in a {@code long}, only the low-order 64 bits are returned.
@@ -4518,11 +4028,11 @@
      ;
      ; The following assumptions are made:
      ; This BigInteger is a positive, odd number greater than 2.
-     ; iterations<=50.
+     ; iterations <= 50.
      ;;
     #_method
     (defn- #_"boolean" BigInteger''passesMillerRabin [#_"BigInteger" this, #_"int" iterations, #_"Random" rnd]
-        ;; find a and m such that m is odd and this == 1 + 2**a * m
+        ;; find a and m such that m is odd and this == 1 + 2^a * m
         (let [
               #_"BigInteger" thisMinusOne (BigInteger''subtract this, BigInteger'ONE)
               #_"BigInteger" m thisMinusOne
