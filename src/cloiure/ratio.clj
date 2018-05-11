@@ -1531,7 +1531,7 @@
     ;;;
      ; Translates a byte array containing the two's-complement binary representation
      ; of a BigInteger into a BigInteger. The input array is assumed to be in
-     ; *big-endian* byte-order: the most significant byte is in the zeroth element.
+     ; *big-endian* byte-order: the most-significant byte is in the zeroth element.
      ;
      ; @throws NumberFormatException when b is zero bytes long.
      ;;
@@ -1556,7 +1556,7 @@
     ;;;
      ; This private constructor translates an int array containing the two's-complement
      ; binary representation of a BigInteger into a BigInteger. The input array is assumed
-     ; to be in *big-endian* int-order: the most significant int is in the zeroth element.
+     ; to be in *big-endian* int-order: the most-significant int is in the zeroth element.
      ;;
     (defn- #_"BigInteger" BigInteger'new-a [#_"int[]" a]
         (when (pos? (alength a)) => (throw! "zero length")
@@ -1580,7 +1580,7 @@
      ; Translates the sign-magnitude representation of a BigInteger into a BigInteger.
      ; The sign is represented as an integer signum value: -1 for negative, 0 for zero,
      ; or 1 for positive. The magnitude is a byte array in *big-endian* byte-order: the
-     ; most significant byte is in the zeroth element. A zero-length magnitude array is
+     ; most-significant byte is in the zeroth element. A zero-length magnitude array is
      ; permissible, and will result in a BigInteger value of 0, whether signum is -1, 0 or 1.
      ;
      ; @throws NumberFormatException when signum is not one of the three legal values
@@ -1839,7 +1839,7 @@
     ;;;
      ; The BigInteger constant -1. (Not exported.)
      ;;
-    (def- #_"BigInteger" BigInteger'NEGATIVE_ONE (§ soon BigInteger'valueOf-l -1))
+    (def- #_"BigInteger" BigInteger'MINUS_ONE (§ soon BigInteger'valueOf-l -1))
 
     ;; comparison operations
 
@@ -2128,12 +2128,12 @@
         (:signum x)
     )
 
-    (declare BigInteger'shiftLeft)
+    (declare BigInteger'shiftLeft-a)
 
     (defn- #_"int[]" BigInteger'multiply-ai [#_"int[]" x*, #_"int" y]
         (case (Integer/bitCount y)
             0   BigInteger'ZERO
-            1   (BigInteger'shiftLeft x*, (Integer/numberOfTrailingZeros y))
+            1   (BigInteger'shiftLeft-a x*, (Integer/numberOfTrailingZeros y))
                 (let [#_"int" n (alength x*) #_"long" y' (long! y) #_"int[]" z* (int-array (inc n))
                       [#_"int" i #_"long" carry]
                         (loop-when [i (dec n) carry 0] (<= 0 i) => [i carry]
@@ -2216,625 +2216,33 @@
         )
     )
 
-    (declare BigInteger'primitiveLeftShift)
-
-    ;;;
-     ; Squares the contents of the int array x. The result is placed into the
-     ; int array z. The contents of x are not changed.
-     ;
-     ; The algorithm used here is adapted from Colin Plumb's C library.
-     ; Technique: Consider the partial products in the multiplication
-     ; of "abcde" by itself:
-     ;
-     ;               a  b  c  d  e
-     ;            *  a  b  c  d  e
-     ;          ==================
-     ;              ae be ce de ee
-     ;           ad bd cd dd de
-     ;        ac bc cc cd ce
-     ;     ab bb bc bd be
-     ;  aa ab ac ad ae
-     ;
-     ; Note that everything above the main diagonal:
-     ;              ae be ce de = (abcd) * e
-     ;           ad bd cd       = (abc) * d
-     ;        ac bc             = (ab) * c
-     ;     ab                   = (a) * b
-     ;
-     ; is a copy of everything below the main diagonal:
-     ;                       de
-     ;                 cd ce
-     ;           bc bd be
-     ;     ab ac ad ae
-     ;
-     ; Thus, the sum is 2 * (off the diagonal) + diagonal.
-     ;
-     ; This is accumulated beginning with the diagonal (which
-     ; consist of the squares of the digits of the input), which is then
-     ; divided by two, the off-diagonal added, and multiplied by two
-     ; again. The low bit is simply a copy of the low bit of the
-     ; input, so it doesn't need special care.
-     ;;
-    (defn- #_"int[]" BigInteger'squareToLen [#_"int[]" x, #_"int" len, #_"int[]" z]
-        (let [
-              #_"int" zlen (<< len 1)
-        ]
-            (when (or (nil? z) (< (alength z) zlen))
-                (§ ass z (int-array zlen))
-            )
-
-            ;; store the squares, right shifted one bit (i.e., divided by 2)
-            (let [
-                  #_"int" lastProductLowWord 0
-            ]
-                (loop-when-recur [#_"int" i 0 #_"int" j 0] (< j len) [i (inc j)]
-                    (let [
-                          #_"long" piece (long! (aget x j))
-                          #_"long" product (* piece piece)
-                    ]
-                        (aset z i (| (<< lastProductLowWord 31) (int (>>> product 33))))
-                        (§ ass i (inc i))
-                        (aset z i (int (>>> product 1)))
-                        (§ ass i (inc i))
-                        (§ ass lastProductLowWord (int product))
-                    )
-                )
-
-                ;; add in off-diagonal sums
-                (loop-when-recur [#_"int" i len #_"int" offset 1] (pos? i) [(dec i) (+ offset 2)]
-                    (let [
-                          #_"int" t (aget x (dec i))
-                    ]
-                        (§ ass t (BigInteger'mulAdd x, (dec i), t, z, offset))
-                        (BigInteger'addOne z, (dec offset), i, t)
-                    )
-                )
-
-                ;; shift back up and set low bit
-                (BigInteger'primitiveLeftShift z, zlen, 1)
-                (aswap z (dec zlen) | (& (aget x (dec len)) 1))
-
-                z
-            )
-        )
-    )
-
-    ;;;
-     ; Returns a BigInteger whose value is {@code (this<sup>2</sup>)}.
-     ;
-     ; @return {@code this<sup>2</sup>}
-     ;;
-    #_method
-    (defn #_"BigInteger" BigInteger''square [#_"BigInteger" this]
-        (when (zero? (:signum this))
-            (§ return BigInteger'ZERO)
-        )
-
-        (let [
-              #_"int[]" z (BigInteger'squareToLen (:mag this), (alength (:mag this)), nil)
-        ]
-            (BigInteger'new-2ai (BigInteger'trustedStripLeadingZeroInts z), 1)
-        )
-    )
-
-    ;; division
-
-    ;;;
-     ; Returns a BigInteger whose value is {@code (this / val)} using an O(n^2) algorithm from Knuth.
-     ;
-     ; @param  val value by which this BigInteger is to be divided.
-     ; @return {@code this / val}
-     ; @throws ArithmeticException if {@code val} is zero.
-     ;;
-    #_method
-    (defn #_"BigInteger" BigInteger''divide [#_"BigInteger" this, #_"BigInteger" val]
-        (let [
-              #_"MutableBigInteger" a (MutableBigInteger'new-a (:mag this))
-              #_"MutableBigInteger" b (MutableBigInteger'new-a (:mag val))
-              [#_"MutableBigInteger" q _] (MutableBigInteger'divide a, b)
-        ]
-            (MutableBigInteger'toBigInteger q, (* (:signum this) (:signum val)))
-        )
-    )
-
-    ;;;
-     ; Returns an array of two BigIntegers containing {@code (this / val)} followed by {@code (this % val)}.
-     ;
-     ; @param  val value by which this BigInteger is to be divided, and the remainder computed.
-     ; @return an array of two BigIntegers:
-     ;         the quotient {@code (this / val)} is the initial element,
-     ;         and the remainder {@code (this % val)} is the final element.
-     ; @throws ArithmeticException if {@code val} is zero.
-     ;;
-    #_method
-    (defn #_"BigInteger[]" BigInteger''divideAndRemainder [#_"BigInteger" this, #_"BigInteger" val]
-        (let [
-              #_"MutableBigInteger" a (MutableBigInteger'new-a (:mag this))
-              #_"MutableBigInteger" b (MutableBigInteger'new-a (:mag val))
-              [#_"MutableBigInteger" q #_"MutableBigInteger" r] (MutableBigInteger'divide a, b)
-              #_"BigInteger[]" result (§ soon make-array BigInteger 2)
-        ]
-            (aset result 0 (MutableBigInteger'toBigInteger q, (if (== (:signum this) (:signum val)) 1 -1)))
-            (aset result 1 (MutableBigInteger'toBigInteger r, (:signum this)))
-            result
-        )
-    )
-
-    ;;;
-     ; Returns a BigInteger whose value is {@code (this % val)}.
-     ;
-     ; @param  val value by which this BigInteger is to be divided, and the remainder computed.
-     ; @return {@code this % val}
-     ; @throws ArithmeticException if {@code val} is zero.
-     ;;
-    #_method
-    (defn #_"BigInteger" BigInteger''remainder [#_"BigInteger" this, #_"BigInteger" val]
-        (let [
-              #_"MutableBigInteger" a (MutableBigInteger'new-a (:mag this))
-              #_"MutableBigInteger" b (MutableBigInteger'new-a (:mag val))
-              [_ #_"MutableBigInteger" r] (MutableBigInteger'divide a, b)
-        ]
-            (MutableBigInteger'toBigInteger r, (:signum this))
-        )
-    )
-
-    ;; bitwise operations
-
-    ;;;
-     ; Returns a BigInteger whose value is {@code (this & val)}.
-     ; (This method returns a negative BigInteger if and only if this and val are both negative.)
-     ;
-     ; @param val value to be AND'ed with this BigInteger.
-     ; @return {@code this & val}
-     ;;
-    #_method
-    (defn #_"BigInteger" BigInteger''and [#_"BigInteger" this, #_"BigInteger" val]
-        (let [
-              #_"int[]" result (int-array (max (BigInteger''intLength this) (BigInteger''intLength val)))
-        ]
-            (loop-when-recur [#_"int" i 0] (< i (alength result)) [(inc i)]
-                (aset result i (& (BigInteger''getInt this, (- (alength result) i 1)) (BigInteger''getInt val, (- (alength result) i 1))))
-            )
-
-            (BigInteger'valueOf-a result)
-        )
-    )
-
-    ;;;
-     ; Returns a BigInteger whose value is {@code (this | val)}.
-     ; (This method returns a negative BigInteger if and only if either this or val is negative.)
-     ;
-     ; @param val value to be OR'ed with this BigInteger.
-     ; @return {@code this | val}
-     ;;
-    #_method
-    (defn #_"BigInteger" BigInteger''or [#_"BigInteger" this, #_"BigInteger" val]
-        (let [
-              #_"int[]" result (int-array (max (BigInteger''intLength this) (BigInteger''intLength val)))
-        ]
-            (loop-when-recur [#_"int" i 0] (< i (alength result)) [(inc i)]
-                (aset result i (| (BigInteger''getInt this, (- (alength result) i 1)) (BigInteger''getInt val, (- (alength result) i 1))))
-            )
-
-            (BigInteger'valueOf-a result)
-        )
-    )
-
-    ;;;
-     ; Returns a BigInteger whose value is {@code (this ^ val)}.
-     ; (This method returns a negative BigInteger if and only if exactly one of this and val are negative.)
-     ;
-     ; @param val value to be XOR'ed with this BigInteger.
-     ; @return {@code this ^ val}
-     ;;
-    #_method
-    (defn #_"BigInteger" BigInteger''xor [#_"BigInteger" this, #_"BigInteger" val]
-        (let [
-              #_"int[]" result (int-array (max (BigInteger''intLength this) (BigInteger''intLength val)))
-        ]
-            (loop-when-recur [#_"int" i 0] (< i (alength result)) [(inc i)]
-                (aset result i (bit-xor (BigInteger''getInt this, (- (alength result) i 1)) (BigInteger''getInt val, (- (alength result) i 1))))
-            )
-
-            (BigInteger'valueOf-a result)
-        )
-    )
-
-    ;;;
-     ; Returns a BigInteger whose value is {@code (~this)}.
-     ; (This method returns a negative value if and only if this BigInteger is non-negative.)
-     ;
-     ; @return {@code ~this}
-     ;;
-    #_method
-    (defn #_"BigInteger" BigInteger''not [#_"BigInteger" this]
-        (let [
-              #_"int[]" result (int-array (BigInteger''intLength this))
-        ]
-            (loop-when-recur [#_"int" i 0] (< i (alength result)) [(inc i)]
-                (aset result i (bit-not (BigInteger''getInt this, (- (alength result) i 1))))
-            )
-
-            (BigInteger'valueOf-a result)
-        )
-    )
-
-    ;;;
-     ; Returns a BigInteger whose value is {@code (this & ~val)}.
-     ; This method, which is equivalent to {@code and(val.not())}, is provided as a
-     ; convenience for masking operations. (This method returns a negative BigInteger
-     ; if and only if {@code this} is negative and {@code val} is positive.)
-     ;
-     ; @param val value to be complemented and AND'ed with this BigInteger.
-     ; @return {@code this & ~val}
-     ;;
-    #_method
-    (defn #_"BigInteger" BigInteger''andNot [#_"BigInteger" this, #_"BigInteger" val]
-        (let [
-              #_"int[]" result (int-array (max (BigInteger''intLength this) (BigInteger''intLength val)))
-        ]
-            (loop-when-recur [#_"int" i 0] (< i (alength result)) [(inc i)]
-                (aset result i (& (BigInteger''getInt this, (- (alength result) i 1)) (bit-not (BigInteger''getInt val, (- (alength result) i 1)))))
-            )
-
-            (BigInteger'valueOf-a result)
-        )
-    )
-
-    ;; single bit operations
-
-    ;;;
-     ; Returns {@code true} if and only if the designated bit is set.
-     ; (Computes {@code ((this & (1<<n)) != 0)}.)
-     ;
-     ; @param  n index of bit to test.
-     ; @return {@code true} if and only if the designated bit is set.
-     ; @throws ArithmeticException {@code n} is negative.
-     ;;
-    #_method
-    (defn #_"boolean" BigInteger''testBit [#_"BigInteger" this, #_"int" n]
-        (when (neg? n)
-            (throw! "negative bit address")
-        )
-
-        (not (zero? (& (BigInteger''getInt this, (>>> n 5)) (<< 1 (& n 31)))))
-    )
-
-    ;;;
-     ; Returns a BigInteger whose value is equivalent to this BigInteger
-     ; with the designated bit set. (Computes {@code (this | (1<<n))}.)
-     ;
-     ; @param  n index of bit to set.
-     ; @return {@code this | (1<<n)}
-     ; @throws ArithmeticException {@code n} is negative.
-     ;;
-    #_method
-    (defn #_"BigInteger" BigInteger''setBit [#_"BigInteger" this, #_"int" n]
-        (when (neg? n)
-            (throw! "negative bit address")
-        )
-
-        (let [
-              #_"int" intNum (>>> n 5)
-              #_"int[]" result (int-array (max (BigInteger''intLength this) (+ intNum 2)))
-        ]
-            (loop-when-recur [#_"int" i 0] (< i (alength result)) [(inc i)]
-                (aset result (- (alength result) i 1) (BigInteger''getInt this, i))
-            )
-
-            (aswap result (- (alength result) intNum 1) | (<< 1 (& n 31)))
-
-            (BigInteger'valueOf-a result)
-        )
-    )
-
-    ;;;
-     ; Returns a BigInteger whose value is equivalent to this BigInteger with the designated bit cleared.
-     ; (Computes {@code (this & ~(1<<n))}.)
-     ;
-     ; @param  n index of bit to clear.
-     ; @return {@code this & ~(1<<n)}
-     ; @throws ArithmeticException {@code n} is negative.
-     ;;
-    #_method
-    (defn #_"BigInteger" BigInteger''clearBit [#_"BigInteger" this, #_"int" n]
-        (when (neg? n)
-            (throw! "negative bit address")
-        )
-
-        (let [
-              #_"int" intNum (>>> n 5)
-              #_"int[]" result (int-array (max (BigInteger''intLength this) (inc (>>> (inc n) 5))))
-        ]
-            (loop-when-recur [#_"int" i 0] (< i (alength result)) [(inc i)]
-                (aset result (- (alength result) i 1) (BigInteger''getInt this, i))
-            )
-
-            (aswap result (- (alength result) intNum 1) & (bit-not (<< 1 (& n 31))))
-
-            (BigInteger'valueOf-a result)
-        )
-    )
-
-    ;;;
-     ; Returns a BigInteger whose value is equivalent to this BigInteger with the designated bit flipped.
-     ; (Computes {@code (this ^ (1<<n))}.)
-     ;
-     ; @param  n index of bit to flip.
-     ; @return {@code this ^ (1<<n)}
-     ; @throws ArithmeticException {@code n} is negative.
-     ;;
-    #_method
-    (defn #_"BigInteger" BigInteger''flipBit [#_"BigInteger" this, #_"int" n]
-        (when (neg? n)
-            (throw! "negative bit address")
-        )
-
-        (let [
-              #_"int" intNum (>>> n 5)
-              #_"int[]" result (int-array (max (BigInteger''intLength this) (+ intNum 2)))
-        ]
-            (loop-when-recur [#_"int" i 0] (< i (alength result)) [(inc i)]
-                (aset result (- (alength result) i 1) (BigInteger''getInt this, i))
-            )
-
-            (aswap result (- (alength result) intNum 1) bit-xor (<< 1 (& n 31)))
-
-            (BigInteger'valueOf-a result)
-        )
-    )
-
-    ;; shift operations
-
-    (defn- #_"int[]" BigInteger'javaIncrement [#_"int[]" val]
-        (let [
-              #_"int" lastSum 0
-        ]
-            (loop-when-recur [#_"int" i (dec (alength val))] (and (<= 0 i) (zero? lastSum)) [(dec i)]
-                (aswap val i inc)
-                (§ ass lastSum (aget val i))
-            )
-            (when (zero? lastSum)
-                (§ ass val (int-array (inc (alength val))))
-                (aset val 0 1)
-            )
-            val
-        )
-    )
-
-    ;;;
-     ; Returns a BigInteger whose value is {@code (this >> n)}.
-     ; The shift distance, {@code n}, is considered unsigned.
-     ; (Computes <tt>floor(this * 2<sup>-n</sup>)</tt>.)
-     ;
-     ; @param  n unsigned shift distance, in bits.
-     ; @return {@code this >> n}
-     ;;
-    #_method
-    (defn- #_"BigInteger" BigInteger''shiftRightImpl [#_"BigInteger" this, #_"int" n]
-        (let [
-              #_"int" nInts (>>> n 5)
-              #_"int" nBits (& n 31)
-              #_"int" magLen (alength (:mag this))
-              #_"int[]" newMag nil
-        ]
-            ;; special case: entire contents shifted off the end
-            (when (<= magLen nInts)
-                (§ return (if (<= 0 (:signum this)) BigInteger'ZERO (aget BigInteger'negConst 1)))
-            )
-
-            (cond (zero? nBits)
-                (let [
-                      #_"int" newMagLen (- magLen nInts)
-                ]
-                    (§ ass newMag (Arrays/copyOf (:mag this), newMagLen))
-                )
-                :else
-                (let [
-                      #_"int" i 0
-                      #_"int" highBits (>>> (aget (:mag this) 0) nBits)
-                ]
-                    (cond (not (zero? highBits))
-                        (do
-                            (§ ass newMag (int-array (- magLen nInts)))
-                            (aset newMag i highBits)
-                            (§ ass i (inc i))
-                        )
-                        :else
-                        (do
-                            (§ ass newMag (int-array (- magLen nInts 1)))
-                        )
-                    )
-
-                    (let [
-                          #_"int" nBits2 (- 32 nBits)
-                          #_"int" j 0
-                    ]
-                        (while (< j (- magLen nInts 1))
-                            (aset newMag i (| (<< (aget (:mag this) j) nBits2) (>>> (aget (:mag this) (inc j)) nBits)))
-                            (§ ass i (inc i))
-                            (§ ass j (inc j))
-                        )
-                    )
-                )
-            )
-
-            (when (neg? (:signum this))
-                ;; Find out whether any one-bits were shifted off the end.
-                (let [
-                      #_"int" j (- magLen nInts)
-                      #_"boolean" onesLost false
-                ]
-                    (loop-when-recur [#_"int" i (dec magLen)] (and (<= j i) (not onesLost)) [(dec i)]
-                        (§ ass onesLost (not (zero? (aget (:mag this) i))))
-                    )
-                    (when (and (not onesLost) (not (zero? nBits)))
-                        (§ ass onesLost (not (zero? (<< (aget (:mag this) (- magLen nInts 1)) (- 32 nBits)))))
-                    )
-
-                    (when onesLost
-                        (§ ass newMag (BigInteger'javaIncrement newMag))
-                    )
-                )
-            )
-
-            (BigInteger'new-2ai newMag, (:signum this))
-        )
-    )
-
-    ;;;
-     ; Returns a magnitude array whose value is {@code (mag << n)}.
-     ; The shift distance, {@code n}, is considered unnsigned.
-     ; (Computes <tt>this * 2<sup>n</sup></tt>.)
-     ;
-     ; @param mag magnitude, the most-significant int ({@code mag[0]}) must be non-zero.
-     ; @param  n unsigned shift distance, in bits.
-     ; @return {@code mag << n}
-     ;;
-    (defn- #_"int[]" BigInteger'shiftLeft [#_"int[]" mag, #_"int" n]
-        (let [
-              #_"int" nInts (>>> n 5)
-              #_"int" nBits (& n 31)
-              #_"int" magLen (alength mag)
-              #_"int[]" newMag nil
-        ]
-            (cond (zero? nBits)
-                (do
-                    (§ ass newMag (int-array (+ magLen nInts)))
-                    (System/arraycopy mag, 0, newMag, 0, magLen)
-                )
-                :else
-                (let [
-                      #_"int" i 0
-                      #_"int" nBits2 (- 32 nBits)
-                      #_"int" highBits (>>> (aget mag 0) nBits2)
-                ]
-                    (cond (not (zero? highBits))
-                        (do
-                            (§ ass newMag (int-array (+ magLen nInts 1)))
-                            (aset newMag i highBits)
-                            (§ ass i (inc i))
-                        )
-                        :else
-                        (do
-                            (§ ass newMag (int-array (+ magLen nInts)))
-                        )
-                    )
-                    (let [
-                          #_"int" j 0
-                    ]
-                        (while (< j (dec magLen))
-                            (aset newMag i (| (<< (aget mag j) nBits) (>>> (aget mag (inc j)) nBits2)))
-                            (§ ass i (inc i))
-                            (§ ass j (inc j))
-                        )
-                        (aset newMag i (<< (aget mag j) nBits))
-                    )
-                )
-            )
-            newMag
-        )
-    )
-
-    ;;;
-     ; Returns a BigInteger whose value is {@code (this << n)}.
-     ; The shift distance, {@code n}, may be negative, in which case
-     ; this method performs a right shift.
-     ; (Computes <tt>floor(this * 2<sup>n</sup>)</tt>.)
-     ;
-     ; @param  n shift distance, in bits.
-     ; @return {@code this << n}
-     ;;
-    #_method
-    (defn #_"BigInteger" BigInteger''shiftLeft [#_"BigInteger" this, #_"int" n]
-        (when (zero? (:signum this))
-            (§ return BigInteger'ZERO)
-        )
-        (cond (pos? n)
-            (do
-                (§ return (BigInteger'new-2ai (BigInteger'shiftLeft (:mag this), n), (:signum this)))
-            )
-            (zero? n)
-            (do
-                (§ return this)
-            )
-            :else
-            (do
-                ;; Possible int overflow in (-n) is not a trouble,
-                ;; because shiftRightImpl considers its argument unsigned.
-                (§ return (BigInteger''shiftRightImpl this, (- n)))
-            )
-        )
-    )
-
-    ;;;
-     ; Returns a BigInteger whose value is {@code (this >> n)}. Sign
-     ; extension is performed. The shift distance, {@code n}, may be
-     ; negative, in which case this method performs a left shift.
-     ; (Computes <tt>floor(this / 2<sup>n</sup>)</tt>.)
-     ;
-     ; @param  n shift distance, in bits.
-     ; @return {@code this >> n}
-     ;;
-    #_method
-    (defn #_"BigInteger" BigInteger''shiftRight [#_"BigInteger" this, #_"int" n]
-        (when (zero? (:signum this))
-            (§ return BigInteger'ZERO)
-        )
-        (cond (pos? n)
-            (do
-                (BigInteger''shiftRightImpl this, n)
-            )
-            (zero? n)
-            (do
-                this
-            )
-            :else
-            (do
-                ;; Possible int overflow in {@code -n} is not a trouble,
-                ;; because shiftLeft considers its argument unsigned.
-                (BigInteger'new-2ai (BigInteger'shiftLeft (:mag this), (- n)), (:signum this))
-            )
-        )
-    )
-
-    ;; shifts a up to len right n bits assumes no leading zeros, 0 < n < 32
-    (defn #_"void" BigInteger'primitiveRightShift [#_"int[]" a, #_"int" len, #_"int" n]
-        (let [#_"int" m (- 32 n)]
-            (loop-when [#_"int" i (dec len) #_"int" c (aget a i)] (pos? i)
-                (let [#_"int" b c c (aget a (dec i))]
-                    (aset a i (| (<< c m) (>>> b n)))
-                    (recur (dec i) c)
-                )
-            )
-            (aswap a 0 >>> n)
-        )
-        nil
-    )
-
-    ;; shifts a up to len left n bits assumes no leading zeros, 0 <= n < 32
-    (defn #_"void" BigInteger'primitiveLeftShift [#_"int[]" a, #_"int" len, #_"int" n]
-        (when (and (pos? len) (pos? n))
-            (let [#_"int" m (- 32 n)]
-                (loop-when [#_"int" i 0 #_"int" c (aget a i)] (< i (dec len))
-                    (let [#_"int" b c c (aget a (inc i))]
-                        (aset a i (| (<< b n) (>>> c m)))
-                        (recur (inc i) c)
-                    )
-                )
-                (aswap a (dec len) << n)
+    ;; right shift int array a up to n ints by shift bits assuming no leading zeros, where 0 < shift < 32
+    (defn- #_"void" BigInteger'primitiveRightShift [#_"int[]" a, #_"int" n, #_"int" shift]
+        (loop-when [#_"int" i (dec n) #_"int" c (aget a i)] (pos? i) => (aswap a i >>> shift)
+            (let [#_"int" b c c (aget a (dec i))]
+                (aset a i (| (<< c (- 32 shift)) (>>> b shift)))
+                (recur (dec i) c)
             )
         )
         nil
     )
 
-    ;;;
-     ; Left shift int array a up to n by shift bits. Returns the array that
-     ; results from the shift since space may have to be reallocated.
-     ;;
-    (defn- #_"int[]" BigInteger'leftShift [#_"int[]" a, #_"int" n, #_"int" shift]
-        (let [#_"int" nInts (>>> shift 5) #_"int" nBits (& shift 31) #_"int" mBits (BigInteger'bitLengthForInt (aget a 0))]
-            ;; if shift can be done without recopy, do so
+    ;; left shift int array a up to n ints by shift bits assuming no leading zeros, where 0 <= shift < 32
+    (defn- #_"void" BigInteger'primitiveLeftShift [#_"int[]" a, #_"int" n, #_"int" shift]
+        (when (and (pos? n) (pos? shift))
+            (loop-when [#_"int" i 0 #_"int" c (aget a i)] (< i (dec n)) => (aswap a i << shift)
+                (let [#_"int" b c c (aget a (inc i))]
+                    (aset a i (| (<< b shift) (>>> c (- 32 shift))))
+                    (recur (inc i) c)
+                )
+            )
+        )
+        nil
+    )
+
+    (defn- #_"int[]" BigInteger'leftShift-a [#_"int[]" a, #_"int" shift]
+        (let [#_"int" n (alength a) #_"int" nInts (>>> shift 5) #_"int" nBits (& shift 31) #_"int" mBits (BigInteger'bitLengthForInt (aget a 0))]
+            ;; if shift can be done without copy, do so
             (if (<= shift (- 32 mBits))
                 (do
                     (BigInteger'primitiveLeftShift a, n, nBits)
@@ -2858,153 +2266,426 @@
     )
 
     ;;;
-     ; Returns a BigInteger whose value is <tt>(this<sup>exponent</sup>)</tt>.
-     ; Note that {@code exponent} is an integer rather than a BigInteger.
+     ; Squares the contents of int array x* into int array z*.
+     ; The contents of x* are not changed.
      ;
-     ; @param  exponent exponent to which this BigInteger is to be raised.
-     ; @return <tt>this<sup>exponent</sup></tt>
-     ; @throws ArithmeticException {@code exponent} is negative. (This would
-     ;         cause the operation to yield a non-integer value.)
+     ; The algorithm used here is adapted from Colin Plumb's C library.
+     ; Technique: Consider the partial products in the multiplication of
+     ; abcde by itself:
+     ;
+     ;               a  b  c  d  e
+     ;            *  a  b  c  d  e
+     ;          ==================
+     ;              ae be ce de ee
+     ;           ad bd cd dd de
+     ;        ac bc cc cd ce
+     ;     ab bb bc bd be
+     ;  aa ab ac ad ae
+     ;
+     ; Note that everything above the main diagonal:
+     ;
+     ;              ae be ce de = (abcd) * e
+     ;           ad bd cd       = (abc) * d
+     ;        ac bc             = (ab) * c
+     ;     ab                   = (a) * b
+     ;
+     ; is a copy of everything below the main diagonal:
+     ;
+     ;                       de
+     ;                 cd ce
+     ;           bc bd be
+     ;     ab ac ad ae
+     ;
+     ; Thus, the sum is 2 * (off the diagonal) + diagonal.
+     ;
+     ; This is accumulated beginning with the diagonal (which consist of the
+     ; squares of the digits of the input), which is then divided by two, the
+     ; off-diagonal added, and multiplied by two again. The low bit is simply
+     ; a copy of the low bit of the input, so it doesn't need special care.
      ;;
-    #_method
-    (defn #_"BigInteger" BigInteger''pow [#_"BigInteger" this, #_"int" exponent]
-        (when (neg? exponent)
-            (throw! "negative exponent")
-        )
-        (when (zero? (:signum this))
-            (§ return (if (zero? exponent) BigInteger'ONE this))
-        )
-
-        (let [
-              #_"BigInteger" partToSquare (BigInteger'abs this)
-              ;; Factor out powers of two from the base, as the exponentiation of these can be done by left shifts only.
-              ;; The remaining part can then be exponentiated faster.
-              ;; The powers of two will be multiplied back at the end.
-              #_"int" powersOfTwo (BigInteger''getLowestSetBit partToSquare)
-              #_"long" bitsToShift (* (long powersOfTwo) exponent)
-        ]
-            (when (< Integer/MAX_VALUE bitsToShift)
-                (throw! "magnitude overflow")
-            )
-
-            (let [
-                  #_"int" remainingBits (ß )
-            ]
-
-                ;; Factor the powers of two out quickly by shifting right, if needed.
-                (cond (pos? powersOfTwo)
-                    (let [
-                    ]
-                        (§ ass partToSquare (BigInteger''shiftRight partToSquare, powersOfTwo))
-                        (§ ass remainingBits (BigInteger''bitLength partToSquare))
-                        (when (== remainingBits 1) ;; Nothing left but +/- 1?
-                            (cond (and (neg? (:signum this)) (== (& exponent 1) 1))
-                                (do
-                                    (§ return (BigInteger''shiftLeft BigInteger'NEGATIVE_ONE, (* powersOfTwo exponent)))
-                                )
-                                :else
-                                (do
-                                    (§ return (BigInteger''shiftLeft BigInteger'ONE, (* powersOfTwo exponent)))
-                                )
-                            )
-                        )
-                    )
-                    :else
-                    (let [
-                    ]
-                        (§ ass remainingBits (BigInteger''bitLength partToSquare))
-                        (when (== remainingBits 1) ;; Nothing left but +/- 1?
-                            (cond (and (neg? (:signum this)) (== (& exponent 1) 1))
-                                (do
-                                    (§ return BigInteger'NEGATIVE_ONE)
-                                )
-                                :else
-                                (do
-                                    (§ return BigInteger'ONE)
-                                )
-                            )
-                        )
+    (defn- #_"int[]" BigInteger'square-a
+        ([#_"int[]" x*] (BigInteger'square-a x*, (alength x*)))
+        ([#_"int[]" x*, #_"int" n]
+            (let [#_"int" m (<< n 1) #_"int[]" z* (int-array m)]
+                ;; store the squares, right shifted one bit (i.e., divided by 2)
+                (loop-when [#_"int" i 0 #_"int" carry 0] (< i n)
+                    (let [#_"long" x' (long! (aget x* i)) #_"long" square (* x' x') #_"int" k (<< i 1)]
+                        (aset z* k (| (<< carry 31) (int (>>> square 33))))
+                        (aset z* (inc k) (int (>>> square 1)))
+                        (recur (inc i) (int square))
                     )
                 )
+                ;; add in off-diagonal sums
+                (loop-when-recur [#_"int" i (dec n) #_"int" k 0] (<= 0 i) [(dec i) (+ k 2)]
+                    (BigInteger'addOne z*, k, (inc i), (BigInteger'mulAdd x*, i, (aget x* i), z*, (inc k)))
+                )
+                ;; shift back up and set low bit
+                (BigInteger'primitiveLeftShift z*, m, 1)
+                (aswap z* (dec m) | (& (aget x* (dec n)) 1))
+                z*
+            )
+        )
+    )
 
-                ;; This is a quick way to approximate the size of the result,
-                ;; similar to doing log2[n] * exponent. This will give an upper bound
-                ;; of how big the result can be, and which algorithm to use.
-                (let [
-                      #_"long" scaleFactor (* (long remainingBits) exponent)
-                ]
-                    ;; Use slightly different algorithms for small and large operands.
-                    ;; See if the result will safely fit into a long. (Largest 2^63-1)
-                    (cond (and (== (alength (:mag partToSquare)) 1) (<= scaleFactor 62))
-                        ;; Small number algorithm. Everything fits into a long.
-                        (let [
-                              #_"int" newSign (if (and (neg? (:signum this)) (== (& exponent 1) 1)) -1 1)
-                              #_"long" result 1
-                              #_"long" baseToPow2 (long! (aget (:mag partToSquare) 0))
-                              #_"int" workingExponent exponent
-                        ]
-                            ;; perform exponentiation using repeated squaring trick
-                            (while (not (zero? workingExponent))
-                                (when (== (& workingExponent 1) 1)
-                                    (§ ass result (* result baseToPow2))
-                                )
+    ;;;
+     ; Returns a BigInteger whose value is (* x x).
+     ;;
+    (defn #_"BigInteger" BigInteger'square [#_"BigInteger" x]
+        (when-not (zero? (:signum x)) => BigInteger'ZERO
+            (BigInteger'new-2ai (BigInteger'trustedStripLeadingZeroInts (BigInteger'square-a (:mag x))), 1)
+        )
+    )
 
-                                (§ ass workingExponent (>>> workingExponent 1))
-                                (when (not (zero? workingExponent))
-                                    (§ ass baseToPow2 (* baseToPow2 baseToPow2))
-                                )
-                            )
+    ;; division
 
-                            ;; multiply back the powers of two (quickly, by shifting left)
-                            (cond (pos? powersOfTwo)
-                                (do
-                                    (cond (<= (+ bitsToShift scaleFactor) 62) ;; Fits in long?
-                                        (do
-                                            (§ return (BigInteger'valueOf-l (* (<< result bitsToShift) newSign)))
+    ;;;
+     ; Returns a BigInteger whose value is (/ x y) using an O(n^2) algorithm from Knuth.
+     ;
+     ; @throws ArithmeticException if y is zero.
+     ;;
+    (defn #_"BigInteger" BigInteger'divide [#_"BigInteger" x, #_"BigInteger" y]
+        (let [[#_"MutableBigInteger" q _] (MutableBigInteger'divide (MutableBigInteger'new-a (:mag x)), (MutableBigInteger'new-a (:mag y)))]
+            (MutableBigInteger'toBigInteger q, (* (:signum x) (:signum y)))
+        )
+    )
+
+    ;;;
+     ; Returns a pair of BigIntegers containing (/ x y) followed by (% x y).
+     ;
+     ; @throws ArithmeticException if y is zero.
+     ;;
+    (defn #_"[BigInteger BigInteger]" BigInteger'divideAndRemainder [#_"BigInteger" x, #_"BigInteger" y]
+        (let [[#_"MutableBigInteger" q #_"MutableBigInteger" r] (MutableBigInteger'divide (MutableBigInteger'new-a (:mag x)), (MutableBigInteger'new-a (:mag y)))]
+            [(MutableBigInteger'toBigInteger q, (if (== (:signum x) (:signum y)) 1 -1)) (MutableBigInteger'toBigInteger r, (:signum x))]
+        )
+    )
+
+    ;;;
+     ; Returns a BigInteger whose value is (% x y).
+     ;
+     ; @throws ArithmeticException if y is zero.
+     ;;
+    (defn #_"BigInteger" BigInteger'remainder [#_"BigInteger" x, #_"BigInteger" y]
+        (let [[_ #_"MutableBigInteger" r] (MutableBigInteger'divide (MutableBigInteger'new-a (:mag x)), (MutableBigInteger'new-a (:mag y)))]
+            (MutableBigInteger'toBigInteger r, (:signum x))
+        )
+    )
+
+    ;; bitwise operations
+
+    ;;;
+     ; Returns a BigInteger whose value is (& x y).
+     ; (Returns a negative BigInteger if and only if x and y are both negative.)
+     ;;
+    (defn #_"BigInteger" BigInteger'and [#_"BigInteger" x, #_"BigInteger" y]
+        (let [#_"int" n (max (BigInteger''intLength x) (BigInteger''intLength y)) #_"int[]" z* (int-array n)]
+            (dotimes [#_"int" i n]
+                (aset z* i (& (BigInteger''getInt x, (- n i 1)) (BigInteger''getInt y, (- n i 1))))
+            )
+            (BigInteger'valueOf-a z*)
+        )
+    )
+
+    ;;;
+     ; Returns a BigInteger whose value is (| x y).
+     ; (Returns a negative BigInteger if and only if either x or y is negative.)
+     ;;
+    (defn #_"BigInteger" BigInteger'or [#_"BigInteger" x, #_"BigInteger" y]
+        (let [#_"int" n (max (BigInteger''intLength x) (BigInteger''intLength y)) #_"int[]" z* (int-array n)]
+            (dotimes [#_"int" i n]
+                (aset z* i (| (BigInteger''getInt x, (- n i 1)) (BigInteger''getInt y, (- n i 1))))
+            )
+            (BigInteger'valueOf-a z*)
+        )
+    )
+
+    ;;;
+     ; Returns a BigInteger whose value is (^ x y).
+     ; (Returns a negative BigInteger if and only if exactly one of x and y are negative.)
+     ;;
+    (defn #_"BigInteger" BigInteger'xor [#_"BigInteger" x, #_"BigInteger" y]
+        (let [#_"int" n (max (BigInteger''intLength x) (BigInteger''intLength y)) #_"int[]" z* (int-array n)]
+            (dotimes [#_"int" i n]
+                (aset z* i (bit-xor (BigInteger''getInt x, (- n i 1)) (BigInteger''getInt y, (- n i 1))))
+            )
+            (BigInteger'valueOf-a z*)
+        )
+    )
+
+    ;;;
+     ; Returns a BigInteger whose value is (~ x).
+     ; (Returns a negative BigInteger if and only if x is non-negative.)
+     ;;
+    (defn #_"BigInteger" BigInteger'not [#_"BigInteger" x]
+        (let [#_"int" n (BigInteger''intLength x) #_"int[]" z* (int-array n)]
+            (dotimes [#_"int" i n]
+                (aset z* i (bit-not (BigInteger''getInt x, (- n i 1))))
+            )
+            (BigInteger'valueOf-a z*)
+        )
+    )
+
+    ;;;
+     ; Returns a BigInteger whose value is (& x (~ y)).
+     ; This method, which is equivalent to (and x (not y)), is provided as a convenience for masking operations.
+     ; (Returns a negative BigInteger if and only if x is negative and y is positive.)
+     ;;
+    (defn #_"BigInteger" BigInteger'andNot [#_"BigInteger" x, #_"BigInteger" y]
+        (let [#_"int" n (max (BigInteger''intLength x) (BigInteger''intLength y)) #_"int[]" z* (int-array n)]
+            (dotimes [#_"int" i n]
+                (aset z* i (& (BigInteger''getInt x, (- n i 1)) (bit-not (BigInteger''getInt y, (- n i 1)))))
+            )
+            (BigInteger'valueOf-a z*)
+        )
+    )
+
+    ;; single bit operations
+
+    ;;;
+     ; Returns true if and only if the designated bit is set.
+     ; Computes (not (zero? (& x (<< 1 n)))).
+     ;
+     ; @throws ArithmeticException if n is negative.
+     ;;
+    (defn #_"boolean" BigInteger'testBit [#_"BigInteger" x, #_"int" n]
+        (when-not (neg? n) => (throw! "negative bit address")
+            (not (zero? (& (BigInteger''getInt x, (>>> n 5)) (<< 1 (& n 31)))))
+        )
+    )
+
+    ;;;
+     ; Returns a BigInteger whose value is equivalent to x with the designated bit set.
+     ; Computes (| x (<< 1 n)).
+     ;
+     ; @throws ArithmeticException if n is negative.
+     ;;
+    (defn #_"BigInteger" BigInteger'setBit [#_"BigInteger" x, #_"int" n]
+        (when-not (neg? n) => (throw! "negative bit address")
+            (let [#_"int" j (>>> n 5) #_"int" m (max (BigInteger''intLength x) (+ j 2)) #_"int[]" a (int-array m)]
+                (dotimes [#_"int" i m]
+                    (aset a (- m i 1) (BigInteger''getInt x, i))
+                )
+                (aswap a (- m j 1) | (<< 1 (& n 31)))
+                (BigInteger'valueOf-a a)
+            )
+        )
+    )
+
+    ;;;
+     ; Returns a BigInteger whose value is equivalent to x with the designated bit cleared.
+     ; Computes (& x (~ (<< 1 n))).
+     ;
+     ; @throws ArithmeticException if n is negative.
+     ;;
+    (defn #_"BigInteger" BigInteger'clearBit [#_"BigInteger" x, #_"int" n]
+        (when-not (neg? n) => (throw! "negative bit address")
+            (let [#_"int" j (>>> n 5) #_"int" m (max (BigInteger''intLength x) (inc (>>> (inc n) 5))) #_"int[]" a (int-array m)]
+                (dotimes [#_"int" i m]
+                    (aset a (- m i 1) (BigInteger''getInt x, i))
+                )
+                (aswap a (- m j 1) & (bit-not (<< 1 (& n 31))))
+                (BigInteger'valueOf-a a)
+            )
+        )
+    )
+
+    ;;;
+     ; Returns a BigInteger whose value is equivalent to x with the designated bit flipped.
+     ; Computes (^ x (<< 1 n)).
+     ;
+     ; @throws ArithmeticException if n is negative.
+     ;;
+    (defn #_"BigInteger" BigInteger'flipBit [#_"BigInteger" x, #_"int" n]
+        (when-not (neg? n) => (throw! "negative bit address")
+            (let [#_"int" j (>>> n 5) #_"int" m (max (BigInteger''intLength x) (+ j 2)) #_"int[]" a (int-array m)]
+                (dotimes [#_"int" i m]
+                    (aset a (- m i 1) (BigInteger''getInt x, i))
+                )
+                (aswap a (- m j 1) bit-xor (<< 1 (& n 31)))
+                (BigInteger'valueOf-a a)
+            )
+        )
+    )
+
+    ;; shift operations
+
+    (defn- #_"int[]" BigInteger'inc-a [#_"int[]" a]
+        (let [#_"int" n (alength a)
+              #_"int" x (loop-when-recur [x 0 #_"int" i (dec n)] (and (<= 0 i) (zero? x)) [(aswap a i inc) (dec i)] => x)]
+            (when (zero? x) => a
+                (let [a (int-array (inc n))]
+                    (aset a 0 1)
+                    a
+                )
+            )
+        )
+    )
+
+    ;;;
+     ; Returns a BigInteger whose value is (>> x shift).
+     ; The shift distance is considered being unsigned.
+     ; Computes (floor (* x (pow 2 (- shift)))).
+     ;;
+    (defn- #_"BigInteger" BigInteger'shiftRight-i [#_"BigInteger" x, #_"int" shift]
+        (let [#_"int[]" a (:mag x) #_"int" n (alength a) #_"int" m (- n (>>> shift 5))]
+            ;; special case: entire contents shifted off the end
+            (when (pos? m) => (if (neg? (:signum x)) BigInteger'MINUS_ONE BigInteger'ZERO)
+                (let [#_"int" bits (& shift 31)
+                      #_"int[]" b
+                        (when (pos? bits) => (Arrays/copyOf a, m)
+                            (let [#_"int" y (>>> (aget a 0) bits)
+                                  [b #_"int" j]
+                                    (when-not (zero? y) => [(int-array (dec m)) 0]
+                                        (let [b (int-array m)]
+                                            (aset b 0 y)
+                                            [b 1]
                                         )
-                                        :else
-                                        (do
-                                            (§ return (-> (BigInteger'valueOf-l (* result newSign)) (BigInteger''shiftLeft (int bitsToShift))))
-                                        )
-                                    )
+                                    )]
+                                (loop-when-recur [j j #_"int" i 0] (< i (dec m)) [(inc j) (inc i)]
+                                    (aset b j (| (<< (aget a i) (- 32 bits)) (>>> (aget a (inc i)) bits)))
                                 )
-                                :else
-                                (do
-                                    (§ return (BigInteger'valueOf-l (* result newSign)))
-                                )
+                                b
                             )
                         )
-                        :else
-                        ;; Large number algorithm. This is basically identical to
-                        ;; the algorithm above, but calls multiply() and square()
-                        ;; which may use more efficient algorithms for large numbers.
-                        (let [
-                              #_"BigInteger" answer BigInteger'ONE
-                              #_"int" workingExponent exponent
-                        ]
-                            ;; perform exponentiation using repeated squaring trick
-                            (while (not (zero? workingExponent))
-                                (when (== (& workingExponent 1) 1)
-                                    (§ ass answer (BigInteger'multiply answer, partToSquare))
-                                )
-
-                                (§ ass workingExponent (>>> workingExponent 1))
-                                (when (not (zero? workingExponent))
-                                    (§ ass partToSquare (BigInteger''square partToSquare))
+                      b (when (neg? (:signum x)) => b
+                            ;; find out whether any one-bits were shifted off the end
+                            (let [? (loop-when [#_"int" i (dec n)] (<= m i) => (and (pos? bits) (not (zero? (<< (aget a i) (- 32 bits)))))
+                                        (or (not (zero? (aget a i))) (recur (dec i)))
+                                    )]
+                                (when ? => b
+                                    (BigInteger'inc-a b)
                                 )
                             )
-                            ;; multiply back the (exponentiated) powers of two (quickly, by shifting left)
-                            (when (pos? powersOfTwo)
-                                (§ ass answer (BigInteger''shiftLeft answer, (* powersOfTwo exponent)))
-                            )
+                        )]
+                    (BigInteger'new-2ai b, (:signum x))
+                )
+            )
+        )
+    )
 
-                            (cond (and (neg? (:signum this)) (== (& exponent 1) 1))
-                                (do
-                                    (§ return (BigInteger'negate answer))
+    ;;;
+     ; Returns a magnitude array whose value is (<< a shift).
+     ; The most-significant int of a (aget a 0) must be non-zero.
+     ; The shift distance is considered being unsigned.
+     ; Computes (* a (pow 2 shift)).
+     ;;
+    (defn- #_"int[]" BigInteger'shiftLeft-a [#_"int[]" a, #_"int" shift]
+        (let [#_"int" n (alength a) #_"int" m (+ n (>>> shift 5)) #_"int" bits (& shift 31)]
+            (if (zero? bits)
+                (let [#_"int[]" b (int-array m)]
+                    (System/arraycopy a, 0, b, 0, n)
+                    b
+                )
+                (let [#_"int" y (>>> (aget a 0) (- 32 bits))
+                      [#_"int[]" b #_"int" j]
+                        (when-not (zero? y) => [(int-array m) 0]
+                            (let [b (int-array (inc m))]
+                                (aset b 0 y)
+                                [b 1]
+                            )
+                        )]
+                    (loop-when-recur [j j #_"int" i 0] (< i (dec n)) [(inc j) (inc i)] => (aset b j (<< (aget a i) bits))
+                        (aset b j (| (<< (aget a i) bits) (>>> (aget a (inc i)) (- 32 bits))))
+                    )
+                    b
+                )
+            )
+        )
+    )
+
+    ;;;
+     ; Returns a BigInteger whose value is (<< x shift).
+     ; The shift distance may be negative, that means a right shift.
+     ; Computes (floor (* x (pow 2 shift))).
+     ;;
+    (defn #_"BigInteger" BigInteger'shiftLeft [#_"BigInteger" x, #_"int" shift]
+        (cond
+            (zero? (:signum x)) BigInteger'ZERO
+            (pos? shift)        (BigInteger'new-2ai (BigInteger'shiftLeft-a (:mag x), shift), (:signum x))
+            (zero? shift)       x
+            ;; possible int overflow in (- shift) is harmless, as considered being unsigned
+            :else               (BigInteger'shiftRight-i x, (- shift))
+        )
+    )
+
+    ;;;
+     ; Returns a BigInteger whose value is (>> x shift).
+     ; Sign extension is performed.
+     ; The shift distance may be negative, that means a left shift.
+     ; Computes (floor (/ x (pow 2 shift))).
+     ;;
+    (defn #_"BigInteger" BigInteger'shiftRight [#_"BigInteger" x, #_"int" shift]
+        (cond
+            (zero? (:signum x)) BigInteger'ZERO
+            (pos? shift)        (BigInteger'shiftRight-i x, shift)
+            (zero? shift)       x
+            ;; possible int overflow in (- shift) is harmless, as considered being unsigned
+            :else               (BigInteger'new-2ai (BigInteger'shiftLeft-a (:mag x), (- shift)), (:signum x))
+        )
+    )
+
+    ;;;
+     ; Returns a BigInteger whose value is (pow x e).
+     ;
+     ; @throws ArithmeticException if exponent is negative, as it would yield a non-integer value.
+     ;;
+    (defn #_"BigInteger" BigInteger'pow [#_"BigInteger" x, #_"int" e]
+        (cond
+            (neg? e)            (throw! "negative exponent")
+            (zero? (:signum x)) (if (zero? e) BigInteger'ONE x)
+            :else
+            ;; Factor out powers of two from the base, as the exponentiation of these can be done by left shifts only.
+            ;; The remaining part can then be exponentiated faster. The powers of two will be multiplied back at the end.
+            (let [#_"BigInteger" a (BigInteger'abs x) #_"int" order (BigInteger''getLowestSetBit a) #_"long" shift (* (long order) e)]
+                (when (<= shift Integer/MAX_VALUE) => (throw! "magnitude overflow")
+                    ;; Factor the powers of two out quickly by shifting right, if needed.
+                    (let [#_"boolean" minus? (and (neg? (:signum x)) (== (& e 1) 1))
+                          [a #_"int" b #_"BigInteger" y]
+                            (if (pos? order)
+                                (let-when [a (BigInteger'shiftRight a, order) b (BigInteger''bitLength a)] (== b 1) => [a b nil]
+                                    [a b (BigInteger'shiftLeft (if minus? BigInteger'MINUS_ONE BigInteger'ONE), (* order e))]
                                 )
-                                :else
-                                (do
-                                    (§ return answer)
+                                (let-when [b (BigInteger''bitLength a)] (== b 1) => [a b nil]
+                                    [a b (if minus? BigInteger'MINUS_ONE BigInteger'ONE)]
+                                )
+                            )]
+                        (when (nil? y) => y
+                            ;; This is a quick way to approximate the size of the result, similar to doing log2[n] * exponent.
+                            ;; This will give an upper bound of how big the result can be, and which algorithm to use.
+                            (let [#_"long" scale (* (long b) e)]
+                                ;; Use slightly different algorithms for small and large operands.
+                                ;; See if the result will safely fit into a long (max 2^63-1).
+                                (cond (and (== (alength (:mag a)) 1) (< scale 63))
+                                    ;; Small number algorithm. Everything fits into a long.
+                                    (let [#_"long" r 1 #_"int" s (if minus? -1 1)
+                                          ;; perform exponentiation using repeated squaring trick
+                                          r (loop-when [r r #_"int" p e #_"long" q (long! (aget (:mag a) 0))] (not (zero? p)) => r
+                                                (let [r (if (== (& p 1) 1) (* r q) r) p (>>> p 1)]
+                                                    (recur r p (if (not (zero? p)) (* q q) q))
+                                                )
+                                            )]
+                                        ;; multiply back the powers of two (quickly, by shifting left)
+                                        (when (pos? order) => (BigInteger'valueOf-l (* r s))
+                                            (if (< (+ shift scale) 63) ;; Fits in long?
+                                                (BigInteger'valueOf-l (* (<< r shift) s))
+                                                (-> (BigInteger'valueOf-l (* r s)) (BigInteger'shiftLeft (int shift)))
+                                            )
+                                        )
+                                    )
+                                    :else
+                                    ;; Large number algorithm. This is basically identical to the above, but
+                                    ;; calls multiply and square, which may be more efficient for large numbers.
+                                    (let [#_"BigInteger" r BigInteger'ONE
+                                          ;; perform exponentiation using repeated squaring trick
+                                          r (loop-when [r r #_"int" p e #_"BigInteger" q a] (not (zero? p)) => r
+                                                (let [r (if (== (& p 1) 1) (BigInteger'multiply r, q) r) p (>>> p 1)]
+                                                    (recur r p (if (not (zero? p)) (BigInteger'square q) q))
+                                                )
+                                            )
+                                          ;; multiply back the (exponentiated) powers of two (quickly, by shifting left)
+                                          r (if (pos? order) (BigInteger'shiftLeft r, (* order e)) r)]
+                                        (if minus? (BigInteger'negate r) r)
+                                    )
                                 )
                             )
                         )
@@ -3015,31 +2696,18 @@
     )
 
     ;;;
-     ; Returns a BigInteger whose value is the greatest common divisor
-     ; of {@code abs(this)} and {@code abs(val)}.
-     ; Returns 0 if {@code this == 0 && val == 0}.
-     ;
-     ; @param  val value with which the GCD is to be computed.
-     ; @return {@code GCD(abs(this), abs(val))}
+     ; Returns a BigInteger whose value is the greatest common divisor of (abs x) and (abs y).
+     ; Returns 0 if (zero? x) and (zero? y).
      ;;
-    #_method
-    (defn #_"BigInteger" BigInteger''gcd [#_"BigInteger" this, #_"BigInteger" val]
-        (cond (zero? (:signum val))
-            (do
-                (§ return (BigInteger'abs this))
+    (defn #_"BigInteger" BigInteger'gcd [#_"BigInteger" x, #_"BigInteger" y]
+        (cond
+            (zero? (:signum y)) (BigInteger'abs x)
+            (zero? (:signum x)) (BigInteger'abs y)
+            :else
+            (let [#_"MutableBigInteger" a (MutableBigInteger'fromBigInteger x)
+                  #_"MutableBigInteger" b (MutableBigInteger'fromBigInteger y)]
+                (MutableBigInteger'toBigInteger (MutableBigInteger'hybridGCD a, b), 1)
             )
-            (zero? (:signum this))
-            (do
-                (§ return (BigInteger'abs val))
-            )
-        )
-
-        (let [
-              #_"MutableBigInteger" a (MutableBigInteger'fromBigInteger this)
-              #_"MutableBigInteger" b (MutableBigInteger'fromBigInteger val)
-              #_"MutableBigInteger" result (MutableBigInteger'hybridGCD a, b)
-        ]
-            (MutableBigInteger'toBigInteger result, 1)
         )
     )
 
@@ -3061,7 +2729,7 @@
         )
 
         (let [
-              #_"BigInteger" result (BigInteger''remainder this, m)
+              #_"BigInteger" result (BigInteger'remainder this, m)
         ]
             (if (<= 0 (:signum result)) result (BigInteger'add result, m))
         )
@@ -3245,7 +2913,7 @@
                 (let [
                       #_"int" inv (- (MutableBigInteger'inverseMod32 (aget mod (dec modLen))))
                       ;; convert base to Montgomery form
-                      #_"int[]" a (BigInteger'leftShift base, (§ soon alength base), (<< modLen 5))
+                      #_"int[]" a (BigInteger'leftShift-a base, (<< modLen 5))
                       #_"MutableBigInteger" a2 (MutableBigInteger'new-a a)
                       #_"MutableBigInteger" b2 (MutableBigInteger'new-a mod)
                       [_ #_"MutableBigInteger" r] (MutableBigInteger'divide a2, b2)
@@ -3267,7 +2935,7 @@
 
                     ;; set b to the square of the base
                     (let [
-                          #_"int[]" b (BigInteger'squareToLen (aget table 0), modLen, nil)
+                          #_"int[]" b (BigInteger'square-a (aget table 0), modLen)
                           _ (§ ass b (BigInteger'montReduce b, mod, modLen, inv))
                           ;; set t to high half of b
                           #_"int[]" t (Arrays/copyOf b, modLen)
@@ -3381,7 +3049,7 @@
                                             ;; square the input
                                             (when (not isone)
                                                 (§ ass t b)
-                                                (§ ass a (BigInteger'squareToLen t, modLen, a))
+                                                (§ ass a (BigInteger'square-a t, modLen))
                                                 (§ ass a (BigInteger'montReduce a, mod, modLen, inv))
                                                 (§ ass t a)
                                                 (§ ass a b)
@@ -3454,17 +3122,17 @@
               #_"int" expOffset 0
               #_"int" limit (BigInteger''bitLength exponent)
         ]
-            (when (BigInteger''testBit this, 0)
+            (when (BigInteger'testBit this, 0)
                 (§ ass limit (min (dec p) limit))
             )
 
             (while (< expOffset limit)
-                (when (BigInteger''testBit exponent, expOffset)
+                (when (BigInteger'testBit exponent, expOffset)
                     (§ ass result (-> (BigInteger'multiply result, baseToPow2) (BigInteger''mod2 p)))
                 )
                 (§ ass expOffset (inc expOffset))
                 (when (< expOffset limit)
-                    (§ ass baseToPow2 (-> (BigInteger''square baseToPow2) (BigInteger''mod2 p)))
+                    (§ ass baseToPow2 (-> (BigInteger'square baseToPow2) (BigInteger''mod2 p)))
                 )
             )
 
@@ -3542,7 +3210,7 @@
             (§ return BigInteger'ZERO)
         )
 
-        (when (and (.equals this, (aget BigInteger'negConst 1)) (not (BigInteger''testBit exponent, 0)))
+        (when (and (.equals this, BigInteger'MINUS_ONE) (not (BigInteger'testBit exponent, 0)))
             (§ return (if (.equals m, BigInteger'ONE) BigInteger'ZERO BigInteger'ONE))
         )
 
@@ -3557,7 +3225,7 @@
                   #_"BigInteger" base (if (or (neg? (:signum this)) (<= 0 (.compareTo this, m))) (BigInteger''mod this, m) this)
                   #_"BigInteger" result (ß )
             ]
-                (cond (BigInteger''testBit m, 0) ;; odd modulus
+                (cond (BigInteger'testBit m, 0) ;; odd modulus
                     (do
                         (§ ass result (BigInteger''oddModPow base, exponent, m))
                     )
@@ -3570,8 +3238,8 @@
                     (let [
                           ;; tear m apart into odd part (m1) and power of 2 (m2)
                           #_"int" p (BigInteger''getLowestSetBit m) ;; max pow of 2 that divides m
-                          #_"BigInteger" m1 (BigInteger''shiftRight m, p) ;; m/2^p
-                          #_"BigInteger" m2 (BigInteger''shiftLeft BigInteger'ONE, p) ;; 2^p
+                          #_"BigInteger" m1 (BigInteger'shiftRight m, p) ;; m/2^p
+                          #_"BigInteger" m2 (BigInteger'shiftLeft BigInteger'ONE, p) ;; 2^p
                           ;; calculate new base from m1
                           #_"BigInteger" base2 (if (or (neg? (:signum this)) (<= 0 (.compareTo this, m1))) (BigInteger''mod this, m1) this)
                           ;; caculate (base^exponent) mod m1
@@ -3733,7 +3401,7 @@
 
     ;;;
      ; Returns a byte array containing the two's-complement representation of this BigInteger.
-     ; The byte array will be in *big-endian* byte-order: the most significant byte is in the
+     ; The byte array will be in *big-endian* byte-order: the most-significant byte is in the
      ; zeroth element. The array will contain the minimum number of bytes required to represent this
      ; BigInteger, including at least one sign bit, which is {@code (ceil((this.bitLength() + 1)/8))}.
      ; (This representation is compatible with the {@link #BigInteger(byte[]) (byte[])} constructor.)
@@ -3831,7 +3499,7 @@
               #_"BigInteger" thisMinusOne (BigInteger'subtract this, BigInteger'ONE)
               #_"BigInteger" m thisMinusOne
               #_"int" a (BigInteger''getLowestSetBit m)
-              _ (§ ass m (BigInteger''shiftRight m, a))
+              _ (§ ass m (BigInteger'shiftRight m, a))
         ]
             ;; do the tests
             (when (nil? rnd)
@@ -3959,27 +3627,27 @@
             (loop-when-recur [#_"int" i (- (BigInteger''bitLength k) 2)] (<= 0 i) [(dec i)]
                 (§ ass u2 (-> (BigInteger'multiply u, v) (BigInteger''mod n)))
 
-                (§ ass v2 (-> (BigInteger''square v) (BigInteger'add (BigInteger'multiply d, (BigInteger''square u))) (BigInteger''mod n)))
-                (when (BigInteger''testBit v2, 0)
+                (§ ass v2 (-> (BigInteger'square v) (BigInteger'add (BigInteger'multiply d, (BigInteger'square u))) (BigInteger''mod n)))
+                (when (BigInteger'testBit v2, 0)
                     (§ ass v2 (BigInteger'subtract v2, n))
                 )
 
-                (§ ass v2 (BigInteger''shiftRight v2, 1))
+                (§ ass v2 (BigInteger'shiftRight v2, 1))
 
                 (§ ass u u2)
                 (§ ass v v2)
-                (when (BigInteger''testBit k, i)
+                (when (BigInteger'testBit k, i)
                     (§ ass u2 (-> (BigInteger'add u, v) (BigInteger''mod n)))
-                    (when (BigInteger''testBit u2, 0)
+                    (when (BigInteger'testBit u2, 0)
                         (§ ass u2 (BigInteger'subtract u2, n))
                     )
 
-                    (§ ass u2 (BigInteger''shiftRight u2, 1))
+                    (§ ass u2 (BigInteger'shiftRight u2, 1))
                     (§ ass v2 (-> (BigInteger'add v, (BigInteger'multiply d, u)) (BigInteger''mod n)))
-                    (when (BigInteger''testBit v2, 0)
+                    (when (BigInteger'testBit v2, 0)
                         (§ ass v2 (BigInteger'subtract v2, n))
                     )
-                    (§ ass v2 (BigInteger''shiftRight v2, 1))
+                    (§ ass v2 (BigInteger'shiftRight v2, 1))
 
                     (§ ass u u2)
                     (§ ass v v2)
@@ -4097,7 +3765,7 @@
             (when (.equals w, BigInteger'TWO)
                 (§ return true)
             )
-            (when (or (not (BigInteger''testBit w, 0)) (.equals w, BigInteger'ONE))
+            (when (or (not (BigInteger'testBit w, 0)) (.equals w, BigInteger'ONE))
                 (§ return false)
             )
 
@@ -4144,7 +3812,7 @@
                     ;; do cheap "pre-test" if applicable
                     (when (< 6 bitLength)
                         (let [
-                              #_"long" r (.longValue (BigInteger''remainder p, BigInteger'SMALL_PRIME_PRODUCT))
+                              #_"long" r (.longValue (BigInteger'remainder p, BigInteger'SMALL_PRIME_PRODUCT))
                         ]
                             (when (or (zero? (% r 3)) (zero? (% r 5)) (zero? (% r 7)) (zero? (% r 11)) (zero? (% r 13)) (zero? (% r 17)) (zero? (% r 19)) (zero? (% r 23)) (zero? (% r 29)) (zero? (% r 31)) (zero? (% r 37)) (zero? (% r 41)))
                                 (§ continue) ;; candidate is composite; try another
@@ -4176,7 +3844,7 @@
      ;;
     (defn- #_"BigInteger" BigInteger'largePrime [#_"int" bitLength, #_"int" certainty, #_"Random" rnd]
         (let [
-              #_"BigInteger" p (-> (BigInteger'new-2ir bitLength, rnd) (BigInteger''setBit (dec bitLength)))
+              #_"BigInteger" p (-> (BigInteger'new-2ir bitLength, rnd) (BigInteger'setBit (dec bitLength)))
         ]
             (aswap (:mag p) (dec (alength (:mag p))) & 0xfffffffe)
 
@@ -4191,7 +3859,7 @@
                     ]
                         (§ ass p (BigInteger'add p, (BigInteger'valueOf-l (* 2 searchLen))))
                         (when (not (== (BigInteger''bitLength p) bitLength))
-                            (§ ass p (-> (BigInteger'new-2ir bitLength, rnd) (BigInteger''setBit (dec bitLength))))
+                            (§ ass p (-> (BigInteger'new-2ir bitLength, rnd) (BigInteger'setBit (dec bitLength))))
                         )
                         (aswap (:mag p) (dec (alength (:mag p))) & 0xfffffffe)
                         (§ ass searchSieve (BitSieve'new-2 p, searchLen))
@@ -4259,7 +3927,7 @@
             ;; fastpath for small numbers
             (when (< (BigInteger''bitLength result) BigInteger'SMALL_PRIME_THRESHOLD)
                 ;; ensure an odd number
-                (when (not (BigInteger''testBit result, 0))
+                (when (not (BigInteger'testBit result, 0))
                     (§ ass result (BigInteger'add result, BigInteger'ONE))
                 )
 
@@ -4267,7 +3935,7 @@
                     ;; do cheap "pre-test" if applicable
                     (when (< 6 (BigInteger''bitLength result))
                         (let [
-                              #_"long" r (.longValue (BigInteger''remainder result, BigInteger'SMALL_PRIME_PRODUCT))
+                              #_"long" r (.longValue (BigInteger'remainder result, BigInteger'SMALL_PRIME_PRODUCT))
                         ]
                             (when (or (zero? (% r 3)) (zero? (% r 5)) (zero? (% r 7)) (zero? (% r 11)) (zero? (% r 13)) (zero? (% r 17)) (zero? (% r 19)) (zero? (% r 23)) (zero? (% r 29)) (zero? (% r 31)) (zero? (% r 37)) (zero? (% r 41)))
                                 (§ ass result (BigInteger'add result, BigInteger'TWO))
@@ -4291,7 +3959,7 @@
             )
 
             ;; start at previous even number
-            (when (BigInteger''testBit result, 0)
+            (when (BigInteger'testBit result, 0)
                 (§ ass result (BigInteger'subtract result, BigInteger'ONE))
             )
 
