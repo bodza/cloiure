@@ -2714,365 +2714,224 @@
     ;; modular arithmetic operations
 
     ;;;
-     ; Returns a BigInteger whose value is {@code (this mod m}).
-     ; This method differs from {@code remainder} in that it always returns
-     ; a *non-negative* BigInteger.
+     ; Returns a BigInteger whose value is (mod x y).
+     ; This method differs from remainder, as it always returns a *non-negative* BigInteger.
      ;
-     ; @param  m the modulus.
-     ; @return {@code this mod m}
-     ; @throws ArithmeticException {@code m} <= 0
+     ; @throws ArithmeticException if (<= y 0).
      ;;
-    #_method
-    (defn #_"BigInteger" BigInteger''mod [#_"BigInteger" this, #_"BigInteger" m]
-        (when (<= (:signum m) 0)
-            (throw! "modulus not positive")
-        )
-
-        (let [
-              #_"BigInteger" result (BigInteger'remainder this, m)
-        ]
-            (if (<= 0 (:signum result)) result (BigInteger'add result, m))
+    (defn #_"BigInteger" BigInteger'mod [#_"BigInteger" x, #_"BigInteger" y]
+        (when (pos? (:signum y)) => (throw! "modulus not positive")
+            (let [#_"BigInteger" r (BigInteger'remainder x, y)]
+                (if (neg? (:signum r)) (BigInteger'add r, y) r)
+            )
         )
     )
 
     ;;;
      ; Subtracts two numbers of same length, returning borrow.
      ;;
-    (defn- #_"int" BigInteger'subN [#_"int[]" a, #_"int[]" b, #_"int" len]
-        (let [
-              #_"long" sum 0
-        ]
-            (loop-when-recur [len (dec len)] (<= 0 len) [(dec len)]
-                (§ ass sum (+ (- (long! (aget a len)) (long! (aget b len))) (>> sum 32)))
-                (aset a len (int sum))
+    (defn- #_"int" BigInteger'subN [#_"int[]" a, #_"int[]" b, #_"int" n]
+        (loop-when [#_"long" sub 0 n (dec n)] (<= 0 n) => (int (>> sub 32))
+            (let [sub (+ (- (long! (aget a n)) (long! (aget b n))) (>> sub 32))]
+                (aset a n (int sub))
+                (recur sub (dec n))
             )
-
-            (int (>> sum 32))
         )
     )
 
     ;;
-     ; Returns -1, 0 or +1 as big-endian unsigned int array arg1 is less than,
-     ; equal to, or greater than arg2 up to length len.
+     ; Returns -1, 0 or +1 as big-endian unsigned int array a is less than,
+     ; equal to, or greater than b up to length n.
      ;;
-    (defn- #_"int" BigInteger'intArrayCmpToLen [#_"int[]" arg1, #_"int[]" arg2, #_"int" len]
-        (let [
-        ]
-            (loop-when-recur [#_"int" i 0] (< i len) [(inc i)]
-                (let [
-                      #_"long" b1 (long! (aget arg1 i))
-                      #_"long" b2 (long! (aget arg2 i))
-                ]
-                    (when (< b1 b2)
-                        (§ return -1)
-                    )
-                    (when (< b2 b1)
-                        (§ return 1)
-                    )
-                )
+    (defn- #_"int" BigInteger'intArrayCmpToLen [#_"int[]" a, #_"int[]" b, #_"int" n]
+        (loop-when [#_"int" i 0] (< i n) => 0
+            (let [#_"long" a' (long! (aget a i)) #_"long" b' (long! (aget b i))]
+                (cond (< a' b') -1 (< b' a') 1 :else (recur (inc i)))
             )
-            0
         )
     )
 
     ;;;
-     ; Montgomery reduce n, modulo mod. This reduces modulo mod and divides
-     ; by 2^(32*mlen). Adapted from Colin Plumb's C library.
+     ; Montgomery reduce a modulo b. This reduces modulo b and divides by (pow 2 (* 32 m)).
+     ; Adapted from Colin Plumb's C library.
      ;;
-    (defn- #_"int[]" BigInteger'montReduce [#_"int[]" n, #_"int[]" mod, #_"int" mlen, #_"int" inv]
-        (let [
-              #_"int" c 0
-              #_"int" len mlen
-              #_"int" offset 0
-        ]
-            (loop []
-                (let [
-                      #_"int" nEnd (aget n (- (alength n) 1 offset))
-                      #_"int" carry (BigInteger'mulAdd mod, mlen, (* inv nEnd), n, offset)
-                ]
-                    (§ ass c (+ c (BigInteger'addOne n, offset, mlen, carry)))
-                    (§ ass offset (inc offset))
-                    (§ ass len (dec len))
-                    (recur-if (pos? len) [])
+    (defn- #_"int[]" BigInteger'montReduce [#_"int[]" a, #_"int[]" b, #_"int" m, #_"int" inv]
+        (let [#_"int" c
+                (loop [c 0 #_"int" i 0 #_"int" n m]
+                    (let [#_"int" end (aget a (- (alength a) 1 i))
+                          #_"int" carry (BigInteger'mulAdd b, m, (* inv end), a, i)
+                          c (+ c (BigInteger'addOne a, i, m, carry)) i (inc i) n (dec n)]
+                        (recur-if (pos? n) [c i n] => c)
+                    )
                 )
+              _ (loop-when-recur c (pos? c) (+ c (BigInteger'subN a, b, m)))]
+            (while (<= 0 (BigInteger'intArrayCmpToLen a, b, m))
+                (BigInteger'subN a, b, m)
             )
-
-            (while (pos? c)
-                (§ ass c (+ c (BigInteger'subN n, mod, mlen)))
-            )
-
-            (while (<= 0 (BigInteger'intArrayCmpToLen n, mod, mlen))
-                (BigInteger'subN n, mod, mlen)
-            )
-
-            n
+            a
         )
     )
 
-    (def #_"int[]" BigInteger'bnExpModThreshTable (§ init 7, 25, 81, 241, 673, 1793, Integer/MAX_VALUE )) ;; sentinel
+    (def #_"int[]" BigInteger'bnExpModThreshTable (int-array [7, 25, 81, 241, 673, 1793, Integer/MAX_VALUE])) ;; sentinel
 
     ;;;
      ; Returns a BigInteger whose value is x to the power of y mod z.
-     ; Assumes: z is odd && x < z.
+     ; Assumes: (and (odd? z) (< x z)).
      ;
      ; The algorithm is adapted from Colin Plumb's C library.
      ;
      ; The window algorithm:
-     ; The idea is to keep a running product of b1 = n^(high-order bits of exp)
-     ; and then keep appending exponent bits to it. The following patterns
-     ; apply to a 3-bit window (k = 3):
-     ; To append   0: square
-     ; To append   1: square, multiply by n^1
-     ; To append  10: square, multiply by n^1, square
-     ; To append  11: square, square, multiply by n^3
-     ; To append 100: square, multiply by n^1, square, square
-     ; To append 101: square, square, square, multiply by n^5
-     ; To append 110: square, square, multiply by n^3, square
-     ; To append 111: square, square, square, multiply by n^7
+     ;
+     ; the idea is to keep a running product of b1 = n^(high-order bits of exp)
+     ; and then keep appending exponent bits to it. The following patterns apply
+     ; to a 3-bit window (k = 3):
+     ;
+     ; to append   0: square
+     ; to append   1: square, multiply by n^1
+     ; to append  10: square, multiply by n^1, square
+     ; to append  11: square, square, multiply by n^3
+     ; to append 100: square, multiply by n^1, square, square
+     ; to append 101: square, square, square, multiply by n^5
+     ; to append 110: square, square, multiply by n^3, square
+     ; to append 111: square, square, square, multiply by n^7
      ;
      ; Since each pattern involves only one multiply, the longer the pattern
      ; the better, except that a 0 (no multiplies) can be appended directly.
      ; We precompute a table of odd powers of n, up to 2^k, and can then
      ; multiply k bits of exponent at a time. Actually, assuming random
-     ; exponents, there is on average one zero bit between needs to
-     ; multiply (1/2 of the time there's none, 1/4 of the time there's 1,
-     ; 1/8 of the time, there's 2, 1/32 of the time, there's 3, etc.), so
-     ; you have to do one multiply per k+1 bits of exponent.
+     ; exponents, there is on average one zero bit between needs to multiply
+     ; (1/2 of the time there's none, 1/4 of the time there's 1,
+     ; 1/8 of the time, there's 2, 1/32 of the time, there's 3, etc.),
+     ; so you have to do one multiply per k+1 bits of exponent.
      ;
-     ; The loop walks down the exponent, squaring the result buffer as
-     ; it goes. There is a wbits+1 bit lookahead buffer, buf, that is
-     ; filled with the upcoming exponent bits. (What is read after the
-     ; end of the exponent is unimportant, but it is filled with zero here.)
-     ; When the most-significant bit of this buffer becomes set, i.e.
-     ; (buf & tblmask) != 0, we have to decide what pattern to multiply
-     ; by, and when to do it. We decide, remember to do it in future
-     ; after a suitable number of squarings have passed (e.g. a pattern
-     ; of "100" in the buffer requires that we multiply by n^1 immediately;
-     ; a pattern of "110" calls for multiplying by n^3 after one more
-     ; squaring), clear the buffer, and continue.
+     ; The loop walks down the exponent, squaring the result buffer as it goes.
+     ; There is a wbits+1 bit lookahead buffer, buf, that is filled with the
+     ; upcoming exponent bits. (What is read after the end of the exponent is
+     ; unimportant, but it is filled with zero here.) When the most-significant
+     ; bit of this buffer becomes set, i.e. (buf & tblmask) != 0, we have to
+     ; decide what pattern to multiply by, and when to do it. We decide,
+     ; remember to do it in future after a suitable number of squarings have
+     ; passed (e.g. a pattern of "100" in the buffer requires that we multiply
+     ; by n^1 immediately; a pattern of "110" calls for multiplying by n^3 after
+     ; one more squaring), clear the buffer, and continue.
      ;
-     ; When we start, there is one more optimization: the result buffer
-     ; is implcitly one, so squaring it or multiplying by it can be
-     ; optimized away. Further, if we start with a pattern like "100"
-     ; in the lookahead window, rather than placing n into the buffer
-     ; and then starting to square it, we have already computed n^2
-     ; to compute the odd-powers table, so we can place that into
-     ; the buffer and save a squaring.
+     ; When we start, there is one more optimization: the result buffer is
+     ; implcitly one, so squaring it or multiplying by it can be optimized away.
+     ; Further, if we start with a pattern like "100" in the lookahead window,
+     ; rather than placing n into the buffer and then starting to square it,
+     ; we have already computed n^2 to compute the odd-powers table, so we
+     ; can place that into the buffer and save a squaring.
      ;
-     ; This means that if you have a k-bit window, to compute n^z,
-     ; where z is the high k bits of the exponent, 1/2 of the time
-     ; it requires no squarings. 1/4 of the time, it requires 1
-     ; squaring, ... 1/2^(k-1) of the time, it reqires k-2 squarings.
-     ; And the remaining 1/2^(k-1) of the time, the top k bits are a
-     ; 1 followed by k-1 0 bits, so it again only requires k-2
-     ; squarings, not k-1. The average of these is 1. Add that
-     ; to the one squaring we have to do to compute the table,
-     ; and you'll see that a k-bit window saves k-2 squarings
-     ; as well as reducing the multiplies. (It actually doesn't
-     ; hurt in the case k = 1, either.)
+     ; This means that if you have a k-bit window, to compute n^z, where z is
+     ; the high k bits of the exponent, 1/2 of the time it requires no squarings.
+     ; 1/4 of the time, it requires 1 squaring, ... 1/2^(k-1) of the time, it
+     ; reqires k-2 squarings. And the remaining 1/2^(k-1) of the time, the top
+     ; k bits are a 1 followed by k-1 0 bits, so it again only requires k-2
+     ; squarings, not k-1. The average of these is 1. Add that to the one
+     ; squaring we have to do to compute the table, and you'll see that a k-bit
+     ; window saves k-2 squarings as well as reducing the multiplies.
+     ; (It actually doesn't hurt in the case k = 1, either.)
      ;;
-    #_method
-    (defn- #_"BigInteger" BigInteger''oddModPow [#_"BigInteger" this, #_"BigInteger" y, #_"BigInteger" z]
-        ;; special case for exponent of one
-        (when (.equals y, BigInteger'ONE)
-            (§ return this)
-        )
-
-        ;; special case for base of zero
-        (when (zero? (:signum this))
-            (§ return BigInteger'ZERO)
-        )
-
-        (let [
-              #_"int[]" base (aclone (:mag this))
-              #_"int[]" exp (:mag y)
-              #_"int[]" mod (:mag z)
-              #_"int" modLen (alength mod)
-              ;; select an appropriate window size
-              #_"int" wbits 0
-              #_"int" ebits (BigInteger'bitLength exp, (alength exp))
-        ]
-            ;; if exponent is 65537 (0x10001), use minimum window size
-            (when (or (not (== ebits 17)) (not (== (aget exp 0) 65537)))
-                (while (< (aget BigInteger'bnExpModThreshTable wbits) ebits)
-                    (§ ass wbits (inc wbits))
-                )
-            )
-
-            ;; calculate appropriate table size
-            (let [
+    (defn- #_"BigInteger" BigInteger'oddModPow [#_"BigInteger" x, #_"BigInteger" y, #_"BigInteger" z]
+        (cond
+            (.equals y, BigInteger'ONE) x ;; special case for exponent of one
+            (zero? (:signum x)) BigInteger'ZERO ;; special case for base of zero
+            :else
+            (let [#_"int[]" base (aclone (:mag x)) #_"int[]" exp (:mag y) #_"int[]" mod (:mag z) #_"int" modLen (alength mod)
+                  ;; select an appropriate window size ;; if exponent is 65537 (0x10001), use minimum window size
+                  #_"int" ebits (BigInteger'bitLength exp, (alength exp))
+                  #_"int" wbits
+                    (when (or (not (== ebits 17)) (not (== (aget exp 0) 65537))) => 0
+                        (loop-when-recur [wbits 0] (< (aget BigInteger'bnExpModThreshTable wbits) ebits) [(inc wbits)] => wbits)
+                    )
+                  ;; calculate appropriate table size
                   #_"int" tblmask (<< 1 wbits)
                   ;; allocate table for precomputed odd powers of base in Montgomery form
                   #_"int[][]" table (make-array (Class/forName "[I") tblmask)
-            ]
-                (loop-when-recur [#_"int" i 0] (< i tblmask) [(inc i)]
-                    (aset table i (int-array modLen))
-                )
-
-                ;; compute the modular inverse
-                (let [
-                      #_"int" inv (- (MutableBigInteger'inverseMod32 (aget mod (dec modLen))))
-                      ;; convert base to Montgomery form
-                      #_"int[]" a (BigInteger'leftShift-a base, (<< modLen 5))
-                      #_"MutableBigInteger" a2 (MutableBigInteger'new-a a)
-                      #_"MutableBigInteger" b2 (MutableBigInteger'new-a mod)
-                      [_ #_"MutableBigInteger" r] (MutableBigInteger'divide a2, b2)
-                ]
-                    (aset table 0 (Arrays/copyOfRange (:value r), (:offset r), (+ (:offset r) (:intLen r))))
-
-                    ;; pad table[0] with leading zeros so its length is at least modLen
-                    (when (< (alength (aget table 0)) modLen)
-                        (let [
-                              #_"int" offset (- modLen (alength (aget table 0)))
-                              #_"int[]" t2 (int-array modLen)
-                        ]
-                            (loop-when-recur [#_"int" i 0] (< i (alength (aget table 0))) [(inc i)]
-                                (aset t2 (+ i offset) (aget table 0 i))
-                            )
-                            (aset table 0 t2)
-                        )
+                  _ (dotimes [#_"int" i tblmask]
+                        (aset table i (int-array modLen))
                     )
-
-                    ;; set b to the square of the base
-                    (let [
-                          #_"int[]" b (BigInteger'square-a (aget table 0), modLen)
-                          _ (§ ass b (BigInteger'montReduce b, mod, modLen, inv))
-                          ;; set t to high half of b
-                          #_"int[]" t (Arrays/copyOf b, modLen)
-                    ]
-
-                        ;; fill in the table with odd powers of the base
-                        (loop-when-recur [#_"int" i 1] (< i tblmask) [(inc i)]
-                            (let [
-                                  #_"int[]" prod (BigInteger'multiply-aa t, modLen, (aget table (dec i)), modLen)
-                            ]
-                                (aset table i (BigInteger'montReduce prod, mod, modLen, inv))
+                  ;; compute the modular inverse
+                  #_"int" inv (- (MutableBigInteger'inverseMod32 (aget mod (dec modLen))))
+                  ;; convert base to Montgomery form
+                  [_ #_"MutableBigInteger" r] (MutableBigInteger'divide (MutableBigInteger'new-a (BigInteger'leftShift-a base, (<< modLen 5))), (MutableBigInteger'new-a mod))]
+                (aset table 0 (Arrays/copyOfRange (:value r), (:offset r), (+ (:offset r) (:intLen r))))
+                ;; pad table[0] with leading zeros so its length is at least modLen
+                (when (< (alength (aget table 0)) modLen)
+                    (let [#_"int" offset (- modLen (alength (aget table 0)))
+                          #_"int[]" a (int-array modLen)]
+                        (dotimes [#_"int" i (alength (aget table 0))]
+                            (aset a (+ i offset) (aget table 0 i))
+                        )
+                        (aset table 0 a)
+                    )
+                )
+                ;; set b to the square of the base
+                (let [#_"int[]" b (BigInteger'montReduce (BigInteger'square-a (aget table 0), modLen), mod, modLen, inv)
+                      ;; set b' to high half of b
+                      #_"int[]" b' (Arrays/copyOf b, modLen)
+                      ;; fill in the table with odd powers of the base
+                      _ (loop-when-recur [#_"int" i 1] (< i tblmask) [(inc i)]
+                            (aset table i (BigInteger'montReduce (BigInteger'multiply-aa b', modLen, (aget table (dec i)), modLen), mod, modLen, inv))
+                        )
+                      ;; pre-load the window that slides over the exponent
+                      [#_"int" buf #_"int" bitpos #_"int" eIndex #_"int" elen]
+                        (loop-when [buf 0 bitpos (<< 1 (& (dec ebits) (dec 32))) eIndex 0 elen (alength exp) #_"int" i 0] (<= i wbits) => [buf bitpos eIndex elen]
+                            (let [buf (| (<< buf 1) (if (zero? (& (aget exp eIndex) bitpos)) 0 1)) bitpos (>>> bitpos 1)
+                                  [eIndex bitpos elen]
+                                    (when (zero? bitpos) => [eIndex bitpos elen]
+                                        [(inc eIndex) (<< 1 (dec 32)) (dec elen)]
+                                    )]
+                                (recur buf bitpos eIndex elen (inc i))
                             )
                         )
-
-                        (let [
-                              ;; pre load the window that slides over the exponent
-                              #_"int" bitpos (<< 1 (& (dec ebits) (dec 32)))
-                              #_"int" buf 0
-                              #_"int" elen (alength exp)
-                              #_"int" eIndex 0
-                        ]
-                            (loop-when-recur [#_"int" i 0] (<= i wbits) [(inc i)]
-                                (let [
-                                ]
-                                    (§ ass buf (| (<< buf 1) (if (zero? (& (aget exp eIndex) bitpos)) 0 1)))
-                                    (§ ass bitpos (>>> bitpos 1))
-                                    (when (zero? bitpos)
-                                        (§ ass eIndex (inc eIndex))
-                                        (§ ass bitpos (<< 1 (dec 32)))
-                                        (§ ass elen (dec elen))
-                                    )
-                                )
-                            )
-
-                            (let [
-                                  #_"int" multpos ebits
-                                  ;; the first iteration, which is hoisted out of the main loop
-                                  _ (§ ass ebits (dec ebits))
-                                  #_"boolean" isone true
-                                  _ (§ ass multpos (- ebits wbits))
-                            ]
-                                (while (zero? (& buf 1))
-                                    (§ ass buf (>>> buf 1))
-                                    (§ ass multpos (inc multpos))
-                                )
-
-                                (let [
-                                      #_"int[]" mult (§ soon aget table (>>> buf 1))
-                                ]
-                                    (§ ass buf 0)
-                                    (when (== multpos ebits)
-                                        (§ ass isone false)
-                                    )
-
-                                    ;; the main loop
-                                    (§ while true
-                                        (let [
-                                        ]
-                                            (§ ass ebits (dec ebits))
-                                            ;; advance the window
-                                            (§ ass buf (<< buf 1))
-
-                                            (when (not (zero? elen))
-                                                (§ ass buf (| buf (if (zero? (& (aget exp eIndex) bitpos)) 0 1)))
-                                                (§ ass bitpos (>>> bitpos 1))
-                                                (when (zero? bitpos)
-                                                    (§ ass eIndex (inc eIndex))
-                                                    (§ ass bitpos (<< 1 (dec 32)))
-                                                    (§ ass elen (dec elen))
-                                                )
-                                            )
-
-                                            ;; examine the window for pending multiplies
-                                            (when (not (zero? (& buf tblmask)))
-                                                (let [
-                                                ]
-                                                    (§ ass multpos (- ebits wbits))
-                                                    (while (zero? (& buf 1))
-                                                        (§ ass buf (>>> buf 1))
-                                                        (§ ass multpos (inc multpos))
-                                                    )
-                                                    (§ ass mult (aget table (>>> buf 1)))
-                                                    (§ ass buf 0)
-                                                )
-                                            )
-
-                                            ;; perform multiply
-                                            (when (== ebits multpos)
-                                                (cond isone
-                                                    (do
-                                                        (§ ass b (aclone mult))
-                                                        (§ ass isone false)
-                                                    )
-                                                    :else
-                                                    (do
-                                                        (§ ass t b)
-                                                        (§ ass a (BigInteger'multiply-aa t, modLen, mult, modLen))
-                                                        (§ ass a (BigInteger'montReduce a, mod, modLen, inv))
-                                                        (§ ass t a)
-                                                        (§ ass a b)
-                                                        (§ ass b t)
-                                                    )
-                                                )
-                                            )
-
-                                            ;; check if done
-                                            (when (zero? ebits)
-                                                (§ break)
-                                            )
-
-                                            ;; square the input
-                                            (when (not isone)
-                                                (§ ass t b)
-                                                (§ ass a (BigInteger'square-a t, modLen))
-                                                (§ ass a (BigInteger'montReduce a, mod, modLen, inv))
-                                                (§ ass t a)
-                                                (§ ass a b)
-                                                (§ ass b t)
-                                            )
+                      ;; the first iteration, which is hoisted out of the main loop
+                      #_"int" multpos ebits ebits (dec ebits)
+                      [buf multpos] (loop-when-recur [buf buf multpos (- ebits wbits)] (zero? (& buf 1)) [(>>> buf 1) (inc multpos)] => [buf multpos])
+                      [#_"int[]" mult buf] [(aget table (>>> buf 1)) 0]
+                      #_"boolean" isone? (not (== multpos ebits))
+                      ;; the main loop
+                      b (loop [b b ebits ebits buf buf bitpos bitpos eIndex eIndex elen elen multpos multpos mult mult isone? isone?]
+                            ;; advance the window
+                            (let [ebits (dec ebits) buf (<< buf 1)
+                                  [buf bitpos eIndex elen]
+                                    (when (not (zero? elen)) => [buf bitpos eIndex elen]
+                                        (let [buf (| buf (if (zero? (& (aget exp eIndex) bitpos)) 0 1)) bitpos (>>> bitpos 1)
+                                              [bitpos eIndex elen]
+                                                (when (zero? bitpos) => [bitpos eIndex elen]
+                                                    [(inc eIndex) (<< 1 (dec 32)) (dec elen)]
+                                                )]
+                                            [buf bitpos eIndex elen]
                                         )
                                     )
-
-                                    ;; convert result out of Montgomery form and return
-                                    (let [
-                                          #_"int[]" t2 (int-array (* 2 modLen))
-                                    ]
-                                        (System/arraycopy b, 0, t2, modLen, modLen)
-
-                                        (§ ass b (BigInteger'montReduce t2, mod, modLen, inv))
-
-                                        (§ ass t2 (Arrays/copyOf b, modLen))
-
-                                        (BigInteger'new-2ia 1, t2)
+                                  ;; examine the window for pending multiplies
+                                  [multpos mult buf]
+                                    (when (not (zero? (& buf tblmask))) => [multpos mult buf]
+                                        (let [[buf multpos] (loop-when-recur [buf buf multpos (- ebits wbits)] (zero? (& buf 1)) [(>>> buf 1) (inc multpos)] => [buf multpos])]
+                                            [multpos (aget table (>>> buf 1)) 0]
+                                        )
+                                    )
+                                  ;; perform multiply
+                                  [b isone?]
+                                    (when (== ebits multpos) => [b isone?]
+                                        (if isone?
+                                            [(aclone mult) false]
+                                            [(BigInteger'montReduce (BigInteger'multiply-aa b, modLen, mult, modLen), mod, modLen, inv) isone?]
+                                        )
+                                    )]
+                                ;; check if done
+                                (when-not (zero? ebits) => b
+                                    ;; square the input
+                                    (let [b (if isone? b (BigInteger'montReduce (BigInteger'square-a b, modLen), mod, modLen, inv))]
+                                        (recur b ebits buf bitpos eIndex elen multpos mult isone?)
                                     )
                                 )
                             )
-                        )
+                        )]
+                    ;; convert result out of Montgomery form and return
+                    (let [#_"int[]" a (int-array (* 2 modLen))]
+                        (System/arraycopy b, 0, a, modLen, modLen)
+                        (BigInteger'new-2ia 1, (Arrays/copyOf (BigInteger'montReduce a, mod, modLen, inv), modLen))
                     )
                 )
             )
@@ -3164,7 +3023,7 @@
               #_"BigInteger" modVal this
         ]
             (when (or (neg? (:signum this)) (<= 0 (BigInteger'compare-aa (:mag this), (:mag m))))
-                (§ ass modVal (BigInteger''mod this, m))
+                (§ ass modVal (BigInteger'mod this, m))
             )
 
             (when (.equals modVal, BigInteger'ONE)
@@ -3222,12 +3081,12 @@
             )
 
             (let [
-                  #_"BigInteger" base (if (or (neg? (:signum this)) (<= 0 (.compareTo this, m))) (BigInteger''mod this, m) this)
+                  #_"BigInteger" base (if (or (neg? (:signum this)) (<= 0 (.compareTo this, m))) (BigInteger'mod this, m) this)
                   #_"BigInteger" result (ß )
             ]
                 (cond (BigInteger'testBit m, 0) ;; odd modulus
                     (do
-                        (§ ass result (BigInteger''oddModPow base, exponent, m))
+                        (§ ass result (BigInteger'oddModPow base, exponent, m))
                     )
                     :else
                     ;;
@@ -3241,9 +3100,9 @@
                           #_"BigInteger" m1 (BigInteger'shiftRight m, p) ;; m/2^p
                           #_"BigInteger" m2 (BigInteger'shiftLeft BigInteger'ONE, p) ;; 2^p
                           ;; calculate new base from m1
-                          #_"BigInteger" base2 (if (or (neg? (:signum this)) (<= 0 (.compareTo this, m1))) (BigInteger''mod this, m1) this)
+                          #_"BigInteger" base2 (if (or (neg? (:signum this)) (<= 0 (.compareTo this, m1))) (BigInteger'mod this, m1) this)
                           ;; caculate (base^exponent) mod m1
-                          #_"BigInteger" a1 (if (.equals m1, BigInteger'ONE) BigInteger'ZERO (BigInteger''oddModPow base2, exponent, m1))
+                          #_"BigInteger" a1 (if (.equals m1, BigInteger'ONE) BigInteger'ZERO (BigInteger'oddModPow base2, exponent, m1))
                           ;; calculate (this^exponent) mod m2
                           #_"BigInteger" a2 (BigInteger''modPow2 base, exponent, p)
                           ;; combine results using Chinese Remainder Theorem
@@ -3252,7 +3111,7 @@
                     ]
                         (cond (< (alength (:mag m)) (quot BigInteger'MAX_MAG_LENGTH 2))
                             (do
-                                (§ ass result (-> (BigInteger'multiply a1, m2) (BigInteger'multiply y1) (BigInteger'add (-> (BigInteger'multiply a2, m1) (BigInteger'multiply y2))) (BigInteger''mod m)))
+                                (§ ass result (-> (BigInteger'multiply a1, m2) (BigInteger'multiply y1) (BigInteger'add (-> (BigInteger'multiply a2, m1) (BigInteger'multiply y2))) (BigInteger'mod m)))
                             )
                             :else
                             (let [
@@ -3580,7 +3439,7 @@
                 (§ ass j (- j))
             )
             ;; and reduce u mod p
-            (§ ass u (.intValue (BigInteger''mod n, (BigInteger'valueOf-l p))))
+            (§ ass u (.intValue (BigInteger'mod n, (BigInteger'valueOf-l p))))
 
             ;; now compute Jacobi(u,p), u < p
             (while (not (zero? u))
@@ -3625,9 +3484,9 @@
               #_"BigInteger" v2 (ß )
         ]
             (loop-when-recur [#_"int" i (- (BigInteger''bitLength k) 2)] (<= 0 i) [(dec i)]
-                (§ ass u2 (-> (BigInteger'multiply u, v) (BigInteger''mod n)))
+                (§ ass u2 (-> (BigInteger'multiply u, v) (BigInteger'mod n)))
 
-                (§ ass v2 (-> (BigInteger'square v) (BigInteger'add (BigInteger'multiply d, (BigInteger'square u))) (BigInteger''mod n)))
+                (§ ass v2 (-> (BigInteger'square v) (BigInteger'add (BigInteger'multiply d, (BigInteger'square u))) (BigInteger'mod n)))
                 (when (BigInteger'testBit v2, 0)
                     (§ ass v2 (BigInteger'subtract v2, n))
                 )
@@ -3637,13 +3496,13 @@
                 (§ ass u u2)
                 (§ ass v v2)
                 (when (BigInteger'testBit k, i)
-                    (§ ass u2 (-> (BigInteger'add u, v) (BigInteger''mod n)))
+                    (§ ass u2 (-> (BigInteger'add u, v) (BigInteger'mod n)))
                     (when (BigInteger'testBit u2, 0)
                         (§ ass u2 (BigInteger'subtract u2, n))
                     )
 
                     (§ ass u2 (BigInteger'shiftRight u2, 1))
-                    (§ ass v2 (-> (BigInteger'add v, (BigInteger'multiply d, u)) (BigInteger''mod n)))
+                    (§ ass v2 (-> (BigInteger'add v, (BigInteger'multiply d, u)) (BigInteger'mod n)))
                     (when (BigInteger'testBit v2, 0)
                         (§ ass v2 (BigInteger'subtract v2, n))
                     )
@@ -3680,7 +3539,7 @@
                   #_"BigInteger" u (BigInteger'lucasLehmerSequence d, thisPlusOne, this)
             ]
                 ;; step 3
-                (.equals (BigInteger''mod u, this), BigInteger'ZERO)
+                (.equals (BigInteger'mod u, this), BigInteger'ZERO)
             )
         )
     )
