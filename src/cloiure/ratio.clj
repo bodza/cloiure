@@ -2939,194 +2939,116 @@
     )
 
     ;;;
-     ; Returns a BigInteger whose value is this mod(2^p).
-     ; Assumes that this {@code BigInteger >= 0} and {@code p > 0}.
+     ; Returns a BigInteger whose value is (mod x (pow 2 p)).
+     ; Assumes that (and (<= 0 x) (pos? p)).
      ;;
-    #_method
-    (defn- #_"BigInteger" BigInteger''mod2 [#_"BigInteger" this, #_"int" p]
-        (when (<= (BigInteger''bitLength this) p)
-            (§ return this)
-        )
-
-        ;; copy remaining ints of mag
-        (let [
-              #_"int" numInts (>>> (+ p 31) 5)
-              #_"int[]" mag (int-array numInts)
-        ]
-            (System/arraycopy (:mag this), (- (alength (:mag this)) numInts), mag, 0, numInts)
-
-            ;; mask out any excess bits
-            (let [
-                  #_"int" excessBits (- (<< numInts 5) p)
-            ]
-                (aswap mag 0 & (dec (<< 1 (- 32 excessBits))))
-
-                (if (zero? (aget mag 0)) (BigInteger'new-2ia 1, mag) (BigInteger'new-2ai mag, 1))
+    (defn- #_"BigInteger" BigInteger'mod2 [#_"BigInteger" x, #_"int" p]
+        (when (< p (BigInteger''bitLength x)) => x
+            ;; copy remaining ints of mag
+            (let [#_"int" n (>>> (+ p 31) 5) #_"int[]" a (int-array n) #_"int" e (- (<< n 5) p)]
+                (System/arraycopy (:mag x), (- (alength (:mag x)) n), a, 0, n)
+                ;; mask out any excess bits
+                (aswap a 0 & (dec (<< 1 (- 32 e))))
+                (if (zero? (aget a 0)) (BigInteger'new-2ia 1, a) (BigInteger'new-2ai a, 1))
             )
         )
     )
 
     ;;;
-     ; Returns a BigInteger whose value is (this^exponent) mod (2^p)
+     ; Returns a BigInteger whose value is (mod (pow x y) (pow 2 p)).
+     ;
+     ; Perform exponentiation using repeated squaring trick, chopping off
+     ; high order bits as indicated by modulus.
      ;;
-    #_method
-    (defn- #_"BigInteger" BigInteger''modPow2 [#_"BigInteger" this, #_"BigInteger" exponent, #_"int" p]
-        ;;
-         ; Perform exponentiation using repeated squaring trick, chopping off
-         ; high order bits as indicated by modulus.
-         ;;
-        (let [
-              #_"BigInteger" result BigInteger'ONE
-              #_"BigInteger" baseToPow2 (BigInteger''mod2 this, p)
-              #_"int" expOffset 0
-              #_"int" limit (BigInteger''bitLength exponent)
-        ]
-            (when (BigInteger'testBit this, 0)
-                (§ ass limit (min (dec p) limit))
-            )
-
-            (while (< expOffset limit)
-                (when (BigInteger'testBit exponent, expOffset)
-                    (§ ass result (-> (BigInteger'multiply result, baseToPow2) (BigInteger''mod2 p)))
-                )
-                (§ ass expOffset (inc expOffset))
-                (when (< expOffset limit)
-                    (§ ass baseToPow2 (-> (BigInteger'square baseToPow2) (BigInteger''mod2 p)))
+    (defn- #_"BigInteger" BigInteger'modPow2 [#_"BigInteger" x, #_"BigInteger" y, #_"int" p]
+        (let [#_"int" n (BigInteger''bitLength y) n (if (BigInteger'testBit x, 0) (min (dec p) n) n)]
+            (loop-when [#_"BigInteger" r BigInteger'ONE #_"BigInteger" m (BigInteger'mod2 x, p) #_"int" i 0] (< i n) => r
+                (let [r (if (BigInteger'testBit y, i) (-> (BigInteger'multiply r, m) (BigInteger'mod2 p)) r)
+                      i (inc i)
+                      m (if (< i n) (-> (BigInteger'square m) (BigInteger'mod2 p)) m)]
+                    (recur r m i)
                 )
             )
-
-            result
         )
     )
 
     ;;;
-     ; Returns a BigInteger whose value is {@code (this}<sup>-1</sup> {@code mod m)}.
+     ; Returns a BigInteger whose value is (mod (pow x -1) m).
      ;
-     ; @param  m the modulus.
-     ; @return {@code this}<sup>-1</sup> {@code mod m}.
-     ; @throws ArithmeticException {@code m} <= 0, or this BigInteger
-     ;         has no multiplicative inverse mod m (that is, this BigInteger
-     ;         is not *relatively prime* to m).
+     ; @throws ArithmeticException if (<= m 0), or x has no multiplicative inverse mod m
+     ;         (that is, x is not *relatively prime* to m).
      ;;
-    #_method
-    (defn #_"BigInteger" BigInteger''modInverse [#_"BigInteger" this, #_"BigInteger" m]
-        (when (not (== (:signum m) 1))
-            (throw! "modulus not positive")
-        )
-
-        (when (.equals m, BigInteger'ONE)
-            (§ return BigInteger'ZERO)
-        )
-
-        ;; calculate (this mod m)
-        (let [
-              #_"BigInteger" modVal this
-        ]
-            (when (or (neg? (:signum this)) (<= 0 (BigInteger'compare-aa (:mag this), (:mag m))))
-                (§ ass modVal (BigInteger'mod this, m))
-            )
-
-            (when (.equals modVal, BigInteger'ONE)
-                (§ return BigInteger'ONE)
-            )
-
-            (let [
-                  #_"MutableBigInteger" a (MutableBigInteger'fromBigInteger modVal)
-                  #_"MutableBigInteger" b (MutableBigInteger'fromBigInteger m)
-                  #_"MutableBigInteger" result (MutableBigInteger'mutableModInverse a, b)
-            ]
-                (MutableBigInteger'toBigInteger result, 1)
-            )
-        )
-    )
-
-    ;;;
-     ; Returns a BigInteger whose value is <tt>(this<sup>exponent</sup> mod m)</tt>.
-     ; (Unlike {@code pow}, this method permits negative exponents.)
-     ;
-     ; @param  exponent the exponent.
-     ; @param  m the modulus.
-     ; @return <tt>this<sup>exponent</sup> mod m</tt>
-     ; @throws ArithmeticException {@code m} <= 0 or the exponent is negative
-     ;         and this BigInteger is not *relatively prime* to {@code m}.
-     ;;
-    #_method
-    (defn #_"BigInteger" BigInteger''modPow [#_"BigInteger" this, #_"BigInteger" exponent, #_"BigInteger" m]
-        (when (<= (:signum m) 0)
-            (throw! "modulus not positive")
-        )
-
-        ;; trivial cases
-        (when (zero? (:signum exponent))
-            (§ return (if (.equals m, BigInteger'ONE) BigInteger'ZERO BigInteger'ONE))
-        )
-
-        (when (.equals this, BigInteger'ONE)
-            (§ return (if (.equals m, BigInteger'ONE) BigInteger'ZERO BigInteger'ONE))
-        )
-
-        (when (and (.equals this, BigInteger'ZERO) (<= 0 (:signum exponent)))
-            (§ return BigInteger'ZERO)
-        )
-
-        (when (and (.equals this, BigInteger'MINUS_ONE) (not (BigInteger'testBit exponent, 0)))
-            (§ return (if (.equals m, BigInteger'ONE) BigInteger'ZERO BigInteger'ONE))
-        )
-
-        (let [
-              #_"boolean" invertResult (neg? (:signum exponent))
-        ]
-            (when invertResult
-                (§ ass exponent (BigInteger'negate exponent))
-            )
-
-            (let [
-                  #_"BigInteger" base (if (or (neg? (:signum this)) (<= 0 (.compareTo this, m))) (BigInteger'mod this, m) this)
-                  #_"BigInteger" result (ß )
-            ]
-                (cond (BigInteger'testBit m, 0) ;; odd modulus
-                    (do
-                        (§ ass result (BigInteger'oddModPow base, exponent, m))
-                    )
-                    :else
-                    ;;
-                     ; Even modulus. Tear it into an "odd part" (m1) and power of two (m2),
-                     ; exponentiate mod m1, manually exponentiate mod m2, and use
-                     ; Chinese Remainder Theorem to combine results.
-                     ;;
-                    (let [
-                          ;; tear m apart into odd part (m1) and power of 2 (m2)
-                          #_"int" p (BigInteger''getLowestSetBit m) ;; max pow of 2 that divides m
-                          #_"BigInteger" m1 (BigInteger'shiftRight m, p) ;; m/2^p
-                          #_"BigInteger" m2 (BigInteger'shiftLeft BigInteger'ONE, p) ;; 2^p
-                          ;; calculate new base from m1
-                          #_"BigInteger" base2 (if (or (neg? (:signum this)) (<= 0 (.compareTo this, m1))) (BigInteger'mod this, m1) this)
-                          ;; caculate (base^exponent) mod m1
-                          #_"BigInteger" a1 (if (.equals m1, BigInteger'ONE) BigInteger'ZERO (BigInteger'oddModPow base2, exponent, m1))
-                          ;; calculate (this^exponent) mod m2
-                          #_"BigInteger" a2 (BigInteger''modPow2 base, exponent, p)
-                          ;; combine results using Chinese Remainder Theorem
-                          #_"BigInteger" y1 (BigInteger''modInverse m2, m1)
-                          #_"BigInteger" y2 (BigInteger''modInverse m1, m2)
-                    ]
-                        (cond (< (alength (:mag m)) (quot BigInteger'MAX_MAG_LENGTH 2))
-                            (do
-                                (§ ass result (-> (BigInteger'multiply a1, m2) (BigInteger'multiply y1) (BigInteger'add (-> (BigInteger'multiply a2, m1) (BigInteger'multiply y2))) (BigInteger'mod m)))
-                            )
-                            :else
-                            (let [
-                                  #_"MutableBigInteger" t1 (-> (MutableBigInteger'fromBigInteger (BigInteger'multiply a1, m2)) (MutableBigInteger'multiply (MutableBigInteger'fromBigInteger y1)))
-                                  #_"MutableBigInteger" t2 (-> (MutableBigInteger'fromBigInteger (BigInteger'multiply a2, m1)) (MutableBigInteger'multiply (MutableBigInteger'fromBigInteger y2)))
-                                  [_ #_"MutableBigInteger" r] (MutableBigInteger'divide (MutableBigInteger''add t1, t2), (MutableBigInteger'fromBigInteger m))
-                                  r (MutableBigInteger''normalize r)
-                            ]
-                                (§ ass result (MutableBigInteger'toBigInteger r, (if (MutableBigInteger'isZero r) 0 1)))
-                            )
-                        )
+    (defn #_"BigInteger" BigInteger'modInverse [#_"BigInteger" x, #_"BigInteger" m]
+        (when (pos? (:signum m)) => (throw! "modulus not positive")
+            (when-not (.equals m, BigInteger'ONE) => BigInteger'ZERO
+                ;; calculate (x mod m)
+                (let [#_"BigInteger" y (if (or (neg? (:signum x)) (<= 0 (BigInteger'compare-aa (:mag x), (:mag m)))) (BigInteger'mod x, m) x)]
+                    (when-not (.equals y, BigInteger'ONE) => BigInteger'ONE
+                        (MutableBigInteger'toBigInteger (MutableBigInteger'mutableModInverse (MutableBigInteger'fromBigInteger y), (MutableBigInteger'fromBigInteger m)), 1)
                     )
                 )
+            )
+        )
+    )
 
-                (if invertResult (BigInteger''modInverse result, m) result)
+    ;;;
+     ; Returns a BigInteger whose value is (mod (pow x y) m).
+     ; (Unlike pow, this method permits negative exponents.)
+     ;
+     ; @throws ArithmeticException if (<= m 0), or y is negative and x is not *relatively prime* to m.
+     ;;
+    (defn #_"BigInteger" BigInteger'modPow [#_"BigInteger" x, #_"BigInteger" y, #_"BigInteger" m]
+        (when (pos? (:signum m)) => (throw! "modulus not positive")
+            ;; trivial cases
+            (cond
+                (zero? (:signum y))                                                     (if (.equals m, BigInteger'ONE) BigInteger'ZERO BigInteger'ONE)
+                (.equals x, BigInteger'ONE)                                             (if (.equals m, BigInteger'ONE) BigInteger'ZERO BigInteger'ONE)
+                (and (.equals x, BigInteger'ZERO) (not (neg? (:signum y))))                                             BigInteger'ZERO
+                (and (.equals x, BigInteger'MINUS_ONE) (not (BigInteger'testBit y, 0))) (if (.equals m, BigInteger'ONE) BigInteger'ZERO BigInteger'ONE)
+                :else
+                (let [#_"boolean" invert? (neg? (:signum y)) y (if invert? (BigInteger'negate y) y)
+                      #_"BigInteger" base (if (or (neg? (:signum x)) (<= 0 (.compareTo x, m))) (BigInteger'mod x, m) x)
+                      #_"BigInteger" r
+                        (when-not (BigInteger'testBit m, 0) => (BigInteger'oddModPow base, y, m) ;; odd modulus
+                            ;;
+                            ; Even modulus. Tear it into an "odd part" (m1) and power of two (m2), exponentiate mod m1,
+                            ; manually exponentiate mod m2, and use Chinese Remainder Theorem to combine results.
+                            ;;
+                            (let [#_"int" p (BigInteger''getLowestSetBit m) ;; max pow of 2 that divides m
+                                  #_"BigInteger" m1 (BigInteger'shiftRight m, p) ;; m/2^p
+                                  #_"BigInteger" m2 (BigInteger'shiftLeft BigInteger'ONE, p) ;; 2^p
+                                  ;; calculate new base from m1
+                                  #_"BigInteger" base2 (if (or (neg? (:signum x)) (<= 0 (.compareTo x, m1))) (BigInteger'mod x, m1) x)
+                                  ;; caculate (base^y) mod m1
+                                  #_"BigInteger" a1 (if (.equals m1, BigInteger'ONE) BigInteger'ZERO (BigInteger'oddModPow base2, y, m1))
+                                  ;; calculate (x^y) mod m2
+                                  #_"BigInteger" a2 (BigInteger'modPow2 base, y, p)
+                                  ;; combine results using Chinese Remainder Theorem
+                                  #_"BigInteger" y1 (BigInteger'modInverse m2, m1)
+                                  #_"BigInteger" y2 (BigInteger'modInverse m1, m2)]
+                                (if (< (alength (:mag m)) (quot BigInteger'MAX_MAG_LENGTH 2))
+                                    (-> (BigInteger'multiply a1, m2)
+                                        (BigInteger'multiply y1)
+                                        (BigInteger'add (-> (BigInteger'multiply a2, m1) (BigInteger'multiply y2)))
+                                        (BigInteger'mod m)
+                                    )
+                                    (let [#_"MutableBigInteger" t1
+                                            (-> (MutableBigInteger'fromBigInteger (BigInteger'multiply a1, m2))
+                                                (MutableBigInteger'multiply (MutableBigInteger'fromBigInteger y1))
+                                            )
+                                          #_"MutableBigInteger" t2
+                                            (-> (MutableBigInteger'fromBigInteger (BigInteger'multiply a2, m1))
+                                                (MutableBigInteger'multiply (MutableBigInteger'fromBigInteger y2))
+                                            )
+                                          [_ #_"MutableBigInteger" r] (MutableBigInteger'divide (MutableBigInteger''add t1, t2), (MutableBigInteger'fromBigInteger m))
+                                          r (MutableBigInteger''normalize r)]
+                                        (MutableBigInteger'toBigInteger r, (if (MutableBigInteger'isZero r) 0 1))
+                                    )
+                                )
+                            )
+                        )]
+                    (if invert? (BigInteger'modInverse r, m) r)
+                )
             )
         )
     )
@@ -3135,30 +3057,24 @@
 
     ;;;
      ; Returns the hash code for this BigInteger.
-     ;
-     ; @return hash code for this BigInteger.
      ;;
     #_foreign
     (defn #_"int" hashCode---BigInteger [#_"BigInteger" this]
-        (let [
-              #_"int" hashCode 0
-        ]
-            (loop-when-recur [#_"int" i 0] (< i (alength (:mag this))) [(inc i)]
-                (§ ass hashCode (int (+ (* 31 hashCode) (long! (aget (:mag this) i)))))
-            )
-
-            (* hashCode (:signum this))
+        (loop-when-recur [#_"int" hash 0 #_"int" i 0]
+                         (< i (alength (:mag this)))
+                         [(int (+ (* 31 hash) (long! (aget (:mag this) i)))) (inc i)]
+                      => (* hash (:signum this))
         )
     )
 
     ;; zero[i] is a string of i consecutive zeros
-    (def- #_"String[]" BigInteger'zeros (make-array String 64))
-
-    #_static
-    (§
-        (aset BigInteger'zeros 63 "000000000000000000000000000000000000000000000000000000000000000")
-        (loop-when-recur [#_"int" i 0] (< i 63) [(inc i)]
-            (aset BigInteger'zeros i (.substring (aget BigInteger'zeros 63), 0, i))
+    (def- #_"String[]" BigInteger'zeros
+        (let [#_"String[]" a (make-array String 64)]
+            (aset a 63 "000000000000000000000000000000000000000000000000000000000000000")
+            (dotimes [#_"int" i 63]
+                (aset a i (.substring (aget a 63), 0, i))
+            )
+            a
         )
     )
 
@@ -3166,92 +3082,69 @@
      ; This method is used to perform toString when arguments are small.
      ;;
     (defn- #_"String" BigInteger'toString [#_"BigInteger" this, #_"int" radix]
-        (when (zero? (:signum this))
-            (§ return "0")
-        )
-
-        ;; compute upper bound on number of digit groups and allocate space
-        (let [
-              #_"int" maxNumDigitGroups (quot (+ (* 4 (alength (:mag this))) 6) 7)
-              #_"String[]" digitGroup (make-array String maxNumDigitGroups)
-
-              ;; translate number to string, a digit group at a time
-              #_"BigInteger" tmp (BigInteger'abs this)
-              #_"int" numGroups 0
-        ]
-            (while (not (zero? (:signum tmp)))
-                (let [
-                      #_"BigInteger" d (aget BigInteger'longRadix radix)
-                      #_"MutableBigInteger" a (MutableBigInteger'new-a (:mag tmp))
-                      #_"MutableBigInteger" b (MutableBigInteger'new-a (:mag d))
-                      [#_"MutableBigInteger" q #_"MutableBigInteger" r] (MutableBigInteger'divide a, b)
-                      #_"BigInteger" q2 (MutableBigInteger'toBigInteger q, (* (:signum tmp) (:signum d)))
-                      #_"BigInteger" r2 (MutableBigInteger'toBigInteger r, (* (:signum tmp) (:signum d)))
-                ]
-                    (aset digitGroup numGroups (Long/toString (.longValue r2), radix))
-                    (§ ass numGroups (inc numGroups))
-                    (§ ass tmp q2)
-                )
-            )
-
-            ;; put sign (if any) and first digit group into result buffer
-            (let [
-                  #_"StringBuilder" buf (StringBuilder. (inc (* numGroups (aget BigInteger'digitsPerLong radix))))
-            ]
-                (when (neg? (:signum this))
-                    (.append buf, \-)
-                )
-                (.append buf, (aget digitGroup (dec numGroups)))
-
-                ;; append remaining digit groups padded with leading zeros
-                (loop-when-recur [#_"int" i (- numGroups 2)] (<= 0 i) [(dec i)]
-                    ;; prepend (any) leading zeros for this digit group
-                    (let [
-                          #_"int" numLeadingZeros (- (aget BigInteger'digitsPerLong radix) (.length (aget digitGroup i)))
-                    ]
-                        (when (not (zero? numLeadingZeros))
-                            (.append buf, (aget BigInteger'zeros numLeadingZeros))
+        (if (zero? (:signum this))
+            "0"
+            ;; compute upper bound on number of digit groups and allocate space
+            (let [#_"String[]" digits (make-array String (quot (+ (* 4 (alength (:mag this))) 6) 7))
+                  ;; translate number to string, a digit group at a time
+                  #_"int" n
+                    (loop-when [n 0 #_"BigInteger" x (BigInteger'abs this)] (not (zero? (:signum x))) => n
+                        (let [#_"BigInteger" y (aget BigInteger'longRadix radix)
+                              [#_"MutableBigInteger" q #_"MutableBigInteger" r]
+                                (MutableBigInteger'divide (MutableBigInteger'new-a (:mag x)), (MutableBigInteger'new-a (:mag y)))
+                              q (MutableBigInteger'toBigInteger q, (* (:signum x) (:signum y)))
+                              r (MutableBigInteger'toBigInteger r, (* (:signum x) (:signum y)))]
+                            (aset digits n (Long/toString (.longValue r), radix))
+                            (recur (inc n) q)
                         )
-                        (.append buf, (aget digitGroup i))
+                    )
+                  ;; put sign (if any) and first digit group into result buffer
+                  #_"StringBuilder" sb (StringBuilder. (inc (* n (aget BigInteger'digitsPerLong radix))))]
+                (when (neg? (:signum this))
+                    (.append sb, \-)
+                )
+                (.append sb, (aget digits (dec n)))
+                ;; append remaining digit groups padded with leading zeros
+                (loop-when-recur [#_"int" i (- n 2)] (<= 0 i) [(dec i)]
+                    ;; prepend (any) leading zeros for this digit group
+                    (let [#_"int" m (- (aget BigInteger'digitsPerLong radix) (.length (aget digits i)))]
+                        (when-not (zero? m)
+                            (.append sb, (aget BigInteger'zeros m))
+                        )
+                        (.append sb, (aget digits i))
                     )
                 )
-                (.toString buf)
+                (.toString sb)
             )
         )
     )
 
     ;;;
      ; Returns the String representation of this BigInteger in the given radix.
-     ; If the radix is outside the range from {@link Character#MIN_RADIX}
-     ; to {@link Character#MAX_RADIX} inclusive, it will default to 10 (as is
-     ; the case for {@code Integer.toString}). The digit-to-character mapping
-     ; provided by {@code Character.forDigit} is used, and a minus
-     ; sign is prepended if appropriate. (This representation is compatible with
-     ; the {@link #BigInteger(String, int) (String, int)} constructor.)
      ;
-     ; @param  radix  radix of the String representation.
-     ; @return String representation of this BigInteger in the given radix.
+     ; If the radix is outside the range from Character/MIN_RADIX to Character/MAX_RADIX inclusive,
+     ; it will default to 10 (as is the case for Integer/toString). The digit-to-character mapping
+     ; provided by Character/forDigit is used, and a minus sign is prepended if appropriate.
+     ;
+     ; (This representation is compatible with the BigInteger(String, int) constructor.)
      ;;
     #_method
     (defn #_"String" BigInteger''toString [#_"BigInteger" this, #_"int" radix]
-        (when (zero? (:signum this))
-            (§ return "0")
+        (if (zero? (:signum this))
+            "0"
+            (let [radix (if (<= Character/MIN_RADIX radix Character/MAX_RADIX) radix 10)]
+                (BigInteger'toString this, radix)
+            )
         )
-        (when-not (<= Character/MIN_RADIX radix Character/MAX_RADIX)
-            (§ ass radix 10)
-        )
-
-        (§ return (BigInteger'toString this, radix))
     )
 
     ;;;
      ; Returns the decimal String representation of this BigInteger.
-     ; The digit-to-character mapping provided by {@code Character.forDigit}
-     ; is used, and a minus sign is prepended if appropriate.
-     ; (This representation is compatible with the {@link #BigInteger(String) (String)}
-     ; constructor, and allows for String concatenation with Java's + operator.)
      ;
-     ; @return decimal String representation of this BigInteger.
+     ; The digit-to-character mapping provided by Character/forDigit is used,
+     ; and a minus sign is prepended if appropriate.
+     ;
+     ; (This representation is compatible with the BigInteger(String) constructor.)
      ;;
     #_foreign
     (defn #_"String" toString---BigInteger [#_"BigInteger" this]
@@ -3259,49 +3152,39 @@
     )
 
     ;;;
-     ; Returns a byte array containing the two's-complement representation of this BigInteger.
-     ; The byte array will be in *big-endian* byte-order: the most-significant byte is in the
-     ; zeroth element. The array will contain the minimum number of bytes required to represent this
-     ; BigInteger, including at least one sign bit, which is {@code (ceil((this.bitLength() + 1)/8))}.
-     ; (This representation is compatible with the {@link #BigInteger(byte[]) (byte[])} constructor.)
+     ; Returns a byte array containing the two's-complement representation of x.
      ;
-     ; @return a byte array containing the two's-complement representation of this BigInteger.
+     ; The byte array will be in *big-endian* byte-order: the most-significant byte is in the
+     ; 0th element. The array will contain the minimum number of bytes required to represent x,
+     ; including at least one sign bit, which is (ceil (/ (inc (.bitLength x)) 8)).
+     ;
+     ; (This representation is compatible with the BigInteger(byte[]) constructor.)
      ;;
-    #_method
-    (defn #_"byte[]" BigInteger''toByteArray [#_"BigInteger" this]
-        (let [
-              #_"int" byteLen (inc (quot (BigInteger''bitLength this) 8))
-              #_"byte[]" byteArray (byte-array byteLen)
-        ]
-            (loop-when-recur [#_"int" bytesCopied 4 #_"int" nextInt 0 #_"int" intIndex 0 #_"int" i (dec byteLen)] (<= 0 i) [bytesCopied nextInt intIndex (dec i)]
-                (cond (== bytesCopied 4)
-                    (do
-                        (§ ass nextInt (BigInteger''getInt this, intIndex))
-                        (§ ass intIndex (inc intIndex))
-                        (§ ass bytesCopied 1)
-                    )
-                    :else
-                    (do
-                        (§ ass nextInt (>>> nextInt 8))
-                        (§ ass bytesCopied (inc bytesCopied))
-                    )
+    (defn #_"byte[]" BigInteger'toByteArray [#_"BigInteger" x]
+        (let [#_"int" n (inc (quot (BigInteger''bitLength x) 8)) #_"byte[]" b (byte-array n)]
+            (loop-when [#_"int" m 4 #_"int" w 0 #_"int" i 0 #_"int" j (dec n)] (<= 0 j)
+                (let [[w i m]
+                        (if (== m 4)
+                            [(BigInteger''getInt x, i) (inc i) 1]
+                            [(>>> w 8) i (inc m)]
+                        )]
+                    (aset b j (byte w))
+                    (recur m w i (dec j))
                 )
-                (aset byteArray i (byte nextInt))
             )
-            byteArray
+            b
         )
     )
 
     ;;;
-     ; Converts this BigInteger to an {@code int}.
-     ; This conversion is analogous to a *narrowing primitive conversion*
-     ; from {@code long} to {@code int} as defined in section 5.1.3 of
-     ; <cite>The Java Language Specification</cite>: if this BigInteger
-     ; is too big to fit in an {@code int}, only the low-order 32 bits are returned.
+     ; Converts this BigInteger to an int.
+     ;
+     ; This conversion is analogous to a *narrowing primitive conversion* from long to
+     ; int as defined in section 5.1.3 of "The Java Language Specification": if this
+     ; BigInteger is too big to fit in an int, only the low-order 32 bits are returned.
+     ;
      ; Note that this conversion can lose information about the overall magnitude
      ; of the BigInteger value as well as return a result with the opposite sign.
-     ;
-     ; @return this BigInteger converted to an {@code int}.
      ;;
     #_foreign
     (defn #_"int" intValue---BigInteger [#_"BigInteger" this]
@@ -3309,26 +3192,18 @@
     )
 
     ;;;
-     ; Converts this BigInteger to a {@code long}.
-     ; This conversion is analogous to a *narrowing primitive conversion*
-     ; from {@code long} to {@code int} as defined in section 5.1.3 of
-     ; <cite>The Java Language Specification</cite>: if this BigInteger
-     ; is too big to fit in a {@code long}, only the low-order 64 bits are returned.
+     ; Converts this BigInteger to a long.
+     ;
+     ; This conversion is analogous to a *narrowing primitive conversion* from long to
+     ; int as defined in section 5.1.3 of "The Java Language Specification": if this
+     ; BigInteger is too big to fit in a long, only the low-order 64 bits are returned.
+     ;
      ; Note that this conversion can lose information about the overall magnitude
      ; of the BigInteger value as well as return a result with the opposite sign.
-     ;
-     ; @return this BigInteger converted to a {@code long}.
      ;;
     #_foreign
     (defn #_"long" longValue---BigInteger [#_"BigInteger" this]
-        (let [
-              #_"long" result 0
-        ]
-            (loop-when-recur [#_"int" i 1] (<= 0 i) [(dec i)]
-                (§ ass result (+ (<< result 32) (long! (BigInteger''getInt this, i))))
-            )
-            result
-        )
+        (loop-when-recur [#_"long" r 0 #_"int" i 1] (<= 0 i) [(+ (<< r 32) (long! (BigInteger''getInt this, i))) (dec i)] => r)
     )
 
     #_foreign
@@ -3344,203 +3219,121 @@
     ;; primality testing
 
     ;;;
-     ; Returns true iff this BigInteger passes the specified number of Miller-Rabin tests.
+     ; Returns true iff x passes the specified number of Miller-Rabin tests.
      ; This test is taken from the DSA spec (NIST FIPS 186-2).
      ;
      ; The following assumptions are made:
-     ; This BigInteger is a positive, odd number greater than 2.
-     ; iterations <= 50.
+     ; x is a positive, odd number greater than 2,
+     ; n <= 50.
      ;;
-    #_method
-    (defn- #_"boolean" BigInteger''passesMillerRabin [#_"BigInteger" this, #_"int" iterations, #_"Random" rnd]
-        ;; find a and m such that m is odd and this == 1 + 2^a * m
-        (let [
-              #_"BigInteger" thisMinusOne (BigInteger'subtract this, BigInteger'ONE)
-              #_"BigInteger" m thisMinusOne
-              #_"int" a (BigInteger''getLowestSetBit m)
-              _ (§ ass m (BigInteger'shiftRight m, a))
-        ]
-            ;; do the tests
-            (when (nil? rnd)
-                (§ ass rnd (ThreadLocalRandom/current))
-            )
-            (loop-when-recur [#_"int" i 0] (< i iterations) [(inc i)]
-                ;; generate a uniform random on (1, this)
-                (let [
-                      #_"BigInteger" b (ß )
-                ]
-                    (loop []
-                        (§ ass b (BigInteger'new-2ir (BigInteger''bitLength this), rnd))
-                        (recur-if (or (<= (.compareTo b, BigInteger'ONE) 0) (<= 0 (.compareTo b, this))) [])
-                    )
-
-                    (let [
-                        #_"int" j 0
-                        #_"BigInteger" z (BigInteger''modPow b, m, this)
-                    ]
-                        (while (not (or (and (zero? j) (.equals z, BigInteger'ONE)) (.equals z, thisMinusOne)))
-                            (when (and (pos? j) (.equals z, BigInteger'ONE))
-                                (§ return false)
+    (defn- #_"boolean" BigInteger'passesMillerRabin [#_"BigInteger" x, #_"int" n, #_"Random" r]
+        ;; find a and m such that m is odd and x == 1 + 2^a * m
+        (let [r (or r (ThreadLocalRandom/current)) #_"BigInteger" x-- (BigInteger'subtract x, BigInteger'ONE)
+              #_"BigInteger" m x-- #_"int" a (BigInteger''getLowestSetBit m) m (BigInteger'shiftRight m, a)]
+            (loop-when [#_"int" i 0] (< i n) => true
+                ;; generate a uniform random on (1, x)
+                (let [#_"BigInteger" b
+                        (loop []
+                            (let [b (BigInteger'new-2ir (BigInteger''bitLength x), r)]
+                                (recur-if (or (<= (.compareTo b, BigInteger'ONE) 0) (<= 0 (.compareTo b, x))) [] => b)
                             )
-                            (§ ass j (inc j))
-                            (when (== j a)
-                                (§ return false)
-                            )
-                            (§ ass z (BigInteger''modPow z, BigInteger'TWO, this))
                         )
-                    )
+                      ? (loop [#_"int" j 0 #_"BigInteger" z (BigInteger'modPow b, m, x)]
+                            (or (and (zero? j) (.equals z, BigInteger'ONE))
+                                (.equals z, x--)
+                                (if (and (pos? j) (.equals z, BigInteger'ONE))
+                                    false
+                                    (let-when [j (inc j)] (== j a) => (recur j (BigInteger'modPow z, BigInteger'TWO, x))
+                                        false
+                                    )
+                                )
+                            )
+                        )]
+                    (recur-if ? [(inc i)] => ?)
                 )
             )
-            true
         )
     )
 
     ;;;
      ; Computes Jacobi(p,n).
-     ; Assumes n positive, odd, n>=3.
+     ; Assumes (and (pos? n) (odd? n) (<= 3 n)).
+     ; Algorithm adapted from Colin Plumb's C library.
      ;;
     (defn- #_"int" BigInteger'jacobiSymbol [#_"int" p, #_"BigInteger" n]
-        (when (zero? p)
-            (§ return 0)
-        )
-
-        ;; Algorithm and comments adapted from Colin Plumb's C library.
-        (let [
-              #_"int" j 1
-              #_"int" u (aget (:mag n) (dec (alength (:mag n))))
-        ]
-            ;; make p positive
-            (when (neg? p)
-                (§ ass p (- p))
-                (let [
-                      #_"int" n8 (& u 7)
-                ]
-                    (when (or (== n8 3) (== n8 7))
-                        (§ ass j (- j)) ;; 3 (011) or 7 (111) mod 8
+        (when-not (zero? p) => 0
+            (let [#_"int" u (aget (:mag n) (dec (alength (:mag n))))
+                  [p #_"int" j]
+                    (when (neg? p) => [p 1]
+                        (let-when [#_"int" n8 (& u 7)] (or (== n8 3) (== n8 7)) => [(- p) 1]
+                            [(- p) -1] ;; 3 (011) or 7 (111) mod 8
+                        )
+                    )
+                  [p j] ;; get rid of factors of 2 in p
+                    (let-when [p (loop-when-recur p (zero? (& p 3)) (>> p 2) => p)] (zero? (& p 1)) => [p j]
+                        [(>> p 1) (if (zero? (& (bit-xor u (>> u 1)) 2)) j (- j))] ;; 3 (011) or 5 (101) mod 8
+                    )]
+                (when-not (== p 1) => j
+                    ;; apply quadratic reciprocity
+                    (let [j (if (zero? (& p u 2)) j (- j)) ;; p = u = 3 (mod 4)?
+                          ;; reduce u mod p
+                          u (.intValue (BigInteger'mod n, (BigInteger'valueOf-l p)))]
+                        ;; compute Jacobi(u,p), u < p
+                        (loop-when [j j u u p p] (not (zero? u)) => 0
+                            (let [[u j] ;; get rid of factors of 2 in u
+                                    (let-when [u (loop-when-recur u (zero? (& u 3)) (>> u 2) => u)] (zero? (& u 1)) => [u j]
+                                        [(>> u 1) (if (zero? (& (bit-xor p (>> p 1)) 2)) j (- j))] ;; 3 (011) or 5 (101) mod 8
+                                    )]
+                                (when-not (== u 1) => j
+                                    ;; both u and p are odd, so use quadratic reciprocity
+                                    (when (< u p) => (throw! "(not (< u p))")
+                                        (let [[u p] [p u]]
+                                            ;; u >= p, so it can be reduced
+                                            (recur (if (zero? (& u p 2)) j (- j)) (% u p) p) ;; u = p = 3 (mod 4)?
+                                        )
+                                    )
+                                )
+                            )
+                        )
                     )
                 )
             )
-
-            ;; get rid of factors of 2 in p
-            (while (zero? (& p 3))
-                (§ ass p (>> p 2))
-            )
-            (when (zero? (& p 1))
-                (§ ass p (>> p 1))
-                (when (not (zero? (& (bit-xor u (>> u 1)) 2)))
-                    (§ ass j (- j)) ;; 3 (011) or 5 (101) mod 8
-                )
-            )
-            (when (== p 1)
-                (§ return j)
-            )
-            ;; then, apply quadratic reciprocity
-            (when (not (zero? (& p u 2))) ;; p = u = 3 (mod 4)?
-                (§ ass j (- j))
-            )
-            ;; and reduce u mod p
-            (§ ass u (.intValue (BigInteger'mod n, (BigInteger'valueOf-l p))))
-
-            ;; now compute Jacobi(u,p), u < p
-            (while (not (zero? u))
-                (while (zero? (& u 3))
-                    (§ ass u (>> u 2))
-                )
-                (when (zero? (& u 1))
-                    (§ ass u (>> u 1))
-                    (when (not (zero? (& (bit-xor p (>> p 1)) 2)))
-                        (§ ass j (- j)) ;; 3 (011) or 5 (101) mod 8
-                    )
-                )
-                (when (== u 1)
-                    (§ return j)
-                )
-                ;; now both u and p are odd, so use quadratic reciprocity
-                (when-not (< u p)
-                    (throw! "(not (< u p))")
-                )
-                (let [
-                      #_"int" t u
-                      u p
-                      p t
-                ]
-                    (when (not (zero? (& u p 2))) ;; u = p = 3 (mod 4)?
-                        (§ ass j (- j))
-                    )
-                    ;; now u >= p, so it can be reduced
-                    (§ ass u (% u p))
-                )
-            )
-            0
         )
     )
 
     (defn- #_"BigInteger" BigInteger'lucasLehmerSequence [#_"int" z, #_"BigInteger" k, #_"BigInteger" n]
-        (let [
-              #_"BigInteger" d (BigInteger'valueOf-l z)
-              #_"BigInteger" u BigInteger'ONE
-              #_"BigInteger" u2 (ß )
-              #_"BigInteger" v BigInteger'ONE
-              #_"BigInteger" v2 (ß )
-        ]
-            (loop-when-recur [#_"int" i (- (BigInteger''bitLength k) 2)] (<= 0 i) [(dec i)]
-                (§ ass u2 (-> (BigInteger'multiply u, v) (BigInteger'mod n)))
-
-                (§ ass v2 (-> (BigInteger'square v) (BigInteger'add (BigInteger'multiply d, (BigInteger'square u))) (BigInteger'mod n)))
-                (when (BigInteger'testBit v2, 0)
-                    (§ ass v2 (BigInteger'subtract v2, n))
-                )
-
-                (§ ass v2 (BigInteger'shiftRight v2, 1))
-
-                (§ ass u u2)
-                (§ ass v v2)
-                (when (BigInteger'testBit k, i)
-                    (§ ass u2 (-> (BigInteger'add u, v) (BigInteger'mod n)))
-                    (when (BigInteger'testBit u2, 0)
-                        (§ ass u2 (BigInteger'subtract u2, n))
-                    )
-
-                    (§ ass u2 (BigInteger'shiftRight u2, 1))
-                    (§ ass v2 (-> (BigInteger'add v, (BigInteger'multiply d, u)) (BigInteger'mod n)))
-                    (when (BigInteger'testBit v2, 0)
-                        (§ ass v2 (BigInteger'subtract v2, n))
-                    )
-                    (§ ass v2 (BigInteger'shiftRight v2, 1))
-
-                    (§ ass u u2)
-                    (§ ass v v2)
+        (let [#_"BigInteger" d (BigInteger'valueOf-l z)]
+            (loop-when [#_"BigInteger" u BigInteger'ONE #_"BigInteger" v BigInteger'ONE #_"int" i (- (BigInteger''bitLength k) 2)] (<= 0 i) => u
+                (let [[u v]
+                        (let [#_"BigInteger" u2 (-> (BigInteger'multiply u, v) (BigInteger'mod n))
+                              #_"BigInteger" v2 (-> (BigInteger'square v) (BigInteger'add (BigInteger'multiply d, (BigInteger'square u))) (BigInteger'mod n))
+                              v2 (BigInteger'shiftRight (if (BigInteger'testBit v2, 0) (BigInteger'subtract v2, n) v2), 1)]
+                            [u2 v2]
+                        )
+                      [u v]
+                        (when (BigInteger'testBit k, i) => [u v]
+                            (let [#_"BigInteger" u2 (-> (BigInteger'add u, v) (BigInteger'mod n))
+                                  u2 (BigInteger'shiftRight (if (BigInteger'testBit u2, 0) (BigInteger'subtract u2, n) u2), 1)
+                                  #_"BigInteger" v2 (-> (BigInteger'add v, (BigInteger'multiply d, u)) (BigInteger'mod n))
+                                  v2 (BigInteger'shiftRight (if (BigInteger'testBit v2, 0) (BigInteger'subtract v2, n) v2), 1)]
+                                [u2 v2]
+                            )
+                        )]
+                    (recur u v (dec i))
                 )
             )
-            u
         )
     )
 
     ;;;
-     ; Returns true iff this BigInteger is a Lucas-Lehmer probable prime.
+     ; Returns true iff x is a Lucas-Lehmer probable prime.
      ;
      ; The following assumptions are made:
-     ; This BigInteger is a positive, odd number.
+     ; x is a positive, odd number.
      ;;
-    #_method
-    (defn- #_"boolean" BigInteger''passesLucasLehmer [#_"BigInteger" this]
-        (let [
-              #_"BigInteger" thisPlusOne (BigInteger'add this, BigInteger'ONE)
-              ;; step 1
-              #_"int" d 5
-        ]
-            (while (not (== (BigInteger'jacobiSymbol d, this) -1))
-                ;; 5, -7, 9, -11, ...
-                (§ ass d (if (neg? d) (+ (abs d) 2) (- (+ d 2))))
-            )
-
-            ;; step 2
-            (let [
-                  #_"BigInteger" u (BigInteger'lucasLehmerSequence d, thisPlusOne, this)
-            ]
-                ;; step 3
-                (.equals (BigInteger'mod u, this), BigInteger'ZERO)
-            )
+    (defn- #_"boolean" BigInteger'passesLucasLehmer [#_"BigInteger" x]
+        (let [#_"int" d (loop-when-recur [d 5] (not (== (BigInteger'jacobiSymbol d, x) -1)) [(- (if (neg? d) 2 -2) d)] => d)] ;; 5, -7, 9, -11, ...
+            (.equals (BigInteger'mod (BigInteger'lucasLehmerSequence d, (BigInteger'add x, BigInteger'ONE), x), x), BigInteger'ZERO)
         )
     )
 
@@ -3570,7 +3363,7 @@
             (when (< sizeInBits 100)
                 (§ ass rounds 50)
                 (§ ass rounds (if (< n rounds) n rounds))
-                (§ return (BigInteger''passesMillerRabin this, rounds, random))
+                (§ return (BigInteger'passesMillerRabin this, rounds, random))
             )
 
             (cond (< sizeInBits 256)
@@ -3596,7 +3389,7 @@
             )
             (§ ass rounds (if (< n rounds) n rounds))
 
-            (and (BigInteger''passesMillerRabin this, rounds, random) (BigInteger''passesLucasLehmer this))
+            (and (BigInteger'passesMillerRabin this, rounds, random) (BigInteger'passesLucasLehmer this))
         )
     )
 
