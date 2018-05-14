@@ -45,7 +45,12 @@
     (defmacro recur-if [? r & s] `(if ~? ~(r' r) ~(=> s)))
 )
 
-(defmacro aswap [a i f & s] `(aset ~a ~i (~f (aget ~a ~i) ~@s)))
+(defmacro any
+    ([f x y] `(~f ~x ~y))
+    ([f x y & s] `(let [f# ~f x# ~x] (or (f# x# ~y) (any f# x# ~@s))))
+)
+
+(defmacro aswap [a i f & s] `(let [a# ~a i# ~i] (aset a# i# (~f (aget a# i#) ~@s))))
 
 (def % rem)
 
@@ -3226,15 +3231,15 @@
      ; x is a positive, odd number greater than 2,
      ; n <= 50.
      ;;
-    (defn- #_"boolean" BigInteger'passesMillerRabin [#_"BigInteger" x, #_"int" n, #_"Random" r]
+    (defn- #_"boolean" BigInteger'passesMillerRabin [#_"BigInteger" x, #_"int" n, #_"Random" rnd]
         ;; find a and m such that m is odd and x == 1 + 2^a * m
-        (let [r (or r (ThreadLocalRandom/current)) #_"BigInteger" x-- (BigInteger'subtract x, BigInteger'ONE)
+        (let [rnd (or rnd (ThreadLocalRandom/current)) #_"BigInteger" x-- (BigInteger'subtract x, BigInteger'ONE)
               #_"BigInteger" m x-- #_"int" a (BigInteger''getLowestSetBit m) m (BigInteger'shiftRight m, a)]
             (loop-when [#_"int" i 0] (< i n) => true
                 ;; generate a uniform random on (1, x)
                 (let [#_"BigInteger" b
                         (loop []
-                            (let [b (BigInteger'new-2ir (BigInteger''bitLength x), r)]
+                            (let [b (BigInteger'new-2ir (BigInteger''bitLength x), rnd)]
                                 (recur-if (or (<= (.compareTo b, BigInteger'ONE) 0) (<= 0 (.compareTo b, x))) [] => b)
                             )
                         )
@@ -3265,9 +3270,7 @@
             (let [#_"int" u (aget (:mag n) (dec (alength (:mag n))))
                   [p #_"int" j]
                     (when (neg? p) => [p 1]
-                        (let-when [#_"int" n8 (& u 7)] (or (== n8 3) (== n8 7)) => [(- p) 1]
-                            [(- p) -1] ;; 3 (011) or 7 (111) mod 8
-                        )
+                        [(- p) (if (any == (& u 7) 3 7) -1 1)] ;; 3 (011) or 7 (111) mod 8
                     )
                   [p j] ;; get rid of factors of 2 in p
                     (let-when [p (loop-when-recur p (zero? (& p 3)) (>> p 2) => p)] (zero? (& p 1)) => [p j]
@@ -3338,90 +3341,44 @@
     )
 
     ;;;
-     ; Returns {@code true} if this BigInteger is probably prime,
-     ; {@code false} if it's definitely composite.
+     ; Returns true if x is probably prime, false if it's definitely composite.
      ;
-     ; This method assumes bitLength > 2.
+     ; (< 2 bitLength) assumed.
      ;
-     ; @param  certainty a measure of the uncertainty that the caller is
-     ;         willing to tolerate: if the call returns {@code true}
-     ;         the probability that this BigInteger is prime exceeds
-     ;         {@code (1 - 1/2<sup>certainty</sup>)}. The execution time of
-     ;         this method is proportional to the value of this parameter.
-     ; @return {@code true} if this BigInteger is probably prime,
-     ;         {@code false} if it's definitely composite.
+     ; @param  certainty is a measure of the uncertainty that the caller is willing to tolerate:
+     ;         if the call returns true, the probability that x is prime exceeds (- 1 (/ 1 (pow 2 certainty))).
+     ;         The execution time of this method is proportional to the value of this parameter.
      ;;
-    #_method
-    (defn #_"boolean" BigInteger''primeToCertainty [#_"BigInteger" this, #_"int" certainty, #_"Random" random]
-        (let [
-              #_"int" rounds 0
-              #_"int" n (quot (inc (min certainty (dec Integer/MAX_VALUE))) 2)
-              ;; The relationship between the certainty and the number of rounds we perform is given in the draft
-              ;; standard ANSI X9.80, "PRIME NUMBER GENERATION, PRIMALITY TESTING, AND PRIMALITY CERTIFICATES".
-              #_"int" sizeInBits (BigInteger''bitLength this)
-        ]
-            (when (< sizeInBits 100)
-                (§ ass rounds 50)
-                (§ ass rounds (if (< n rounds) n rounds))
-                (§ return (BigInteger'passesMillerRabin this, rounds, random))
+    (defn #_"boolean" BigInteger'primeToCertainty [#_"BigInteger" x, #_"int" certainty, #_"Random" rnd]
+        ;; The relationship between the certainty and the number of rounds we perform is given in the draft
+        ;; standard ANSI X9.80, "PRIME NUMBER GENERATION, PRIMALITY TESTING, AND PRIMALITY CERTIFICATES".
+        (let [#_"int" m (BigInteger''bitLength x) #_"int" n (quot (inc (min certainty (dec Integer/MAX_VALUE))) 2)]
+            (if (< m 100)
+                     (BigInteger'passesMillerRabin x, (min n 50), rnd)
+                (and (BigInteger'passesMillerRabin x, (min n (condp > m 256 27, 512 15, 768 8, 1024 4, 2)), rnd) (BigInteger'passesLucasLehmer x))
             )
-
-            (cond (< sizeInBits 256)
-                (do
-                    (§ ass rounds 27)
-                )
-                (< sizeInBits 512)
-                (do
-                    (§ ass rounds 15)
-                )
-                (< sizeInBits 768)
-                (do
-                    (§ ass rounds 8)
-                )
-                (< sizeInBits 1024)
-                (do
-                    (§ ass rounds 4)
-                )
-                :else
-                (do
-                    (§ ass rounds 2)
-                )
-            )
-            (§ ass rounds (if (< n rounds) n rounds))
-
-            (and (BigInteger'passesMillerRabin this, rounds, random) (BigInteger'passesLucasLehmer this))
         )
     )
 
     ;;;
-     ; Returns {@code true} if this BigInteger is probably prime,
-     ; {@code false} if it's definitely composite.
-     ; If {@code certainty} is <= 0, {@code true} is returned.
+     ; Returns true if x is probably prime, false if it's definitely composite.
      ;
-     ; @param  certainty a measure of the uncertainty that the caller is
-     ;         willing to tolerate: if the call returns {@code true}
-     ;         the probability that this BigInteger is prime exceeds
-     ;         (1 - 1/2<sup>{@code certainty}</sup>). The execution time of
-     ;         this method is proportional to the value of this parameter.
-     ; @return {@code true} if this BigInteger is probably prime,
-     ;         {@code false} if it's definitely composite.
+     ; If certainty is <= 0, true is returned.
+     ;
+     ; @param  certainty is a measure of the uncertainty that the caller is willing to tolerate:
+     ;         if the call returns true, the probability that x is prime exceeds (- 1 (/ 1 (pow 2 certainty))).
+     ;         The execution time of this method is proportional to the value of this parameter.
      ;;
-    #_method
-    (defn #_"boolean" BigInteger''isProbablePrime [#_"BigInteger" this, #_"int" certainty]
-        (when (<= certainty 0)
-            (§ return true)
-        )
-        (let [
-              #_"BigInteger" w (BigInteger'abs this)
-        ]
-            (when (.equals w, BigInteger'TWO)
-                (§ return true)
+    (defn #_"boolean" BigInteger'isProbablePrime [#_"BigInteger" x, #_"int" certainty]
+        (when (pos? certainty) => true
+            (let [#_"BigInteger" a (BigInteger'abs x)]
+                (cond
+                    (.equals a, BigInteger'ONE) false
+                    (.equals a, BigInteger'TWO) true
+                    (BigInteger'testBit a, 0)   (BigInteger'primeToCertainty a, certainty, nil)
+                    :else                       false
+                )
             )
-            (when (or (not (BigInteger'testBit w, 0)) (.equals w, BigInteger'ONE))
-                (§ return false)
-            )
-
-            (BigInteger''primeToCertainty w, certainty, nil)
         )
     )
 
@@ -3439,47 +3396,33 @@
      ; Find a random number of the specified bitLength that is probably prime.
      ; This method is used for smaller primes, its performance degrades on larger bitlengths.
      ;
-     ; This method assumes bitLength > 1.
+     ; This method assumes (< 1 bitLength).
      ;;
     (defn- #_"BigInteger" BigInteger'smallPrime [#_"int" bitLength, #_"int" certainty, #_"Random" rnd]
-        (let [
-              #_"int" magLen (>>> (+ bitLength 31) 5)
-              #_"int[]" temp (int-array magLen)
-              #_"int" highBit (<< 1 (& (+ bitLength 31) 31)) ;; high bit of high int
-              #_"int" highMask (- (<< highBit 1) 1) ;; bits to keep in high int
-        ]
-            (§ while true
-                ;; construct a candidate
-                (loop-when-recur [#_"int" i 0] (< i magLen) [(inc i)]
-                    (aset temp i (.nextInt rnd))
+        ;; high bit of high int ;; bits to keep in high int
+        (let [#_"int" b (<< 1 (& (+ bitLength 31) 31)) #_"int" m (dec (<< b 1))
+              #_"int" n (>>> (+ bitLength 31) 5) #_"int[]" a (int-array n)]
+            (loop []
+                (dotimes [#_"int" i n]
+                    (aset a i (.nextInt rnd)) ;; construct a candidate
                 )
-                (aswap temp 0 #(| (& % highMask) highBit)) ;; ensure exact length
+                (aswap a 0 #(| (& % m) b)) ;; ensure exact length
                 (when (< 2 bitLength)
-                    (aswap temp (dec magLen) | 1) ;; make odd if bitlen > 2
+                    (aswap a (dec n) | 1) ;; make odd if (< 2 bitlen)
                 )
-
-                (let [
-                      #_"BigInteger" p (BigInteger'new-2ai temp, 1)
-                ]
-                    ;; do cheap "pre-test" if applicable
-                    (when (< 6 bitLength)
-                        (let [
-                              #_"long" r (.longValue (BigInteger'remainder p, BigInteger'SMALL_PRIME_PRODUCT))
-                        ]
-                            (when (or (zero? (% r 3)) (zero? (% r 5)) (zero? (% r 7)) (zero? (% r 11)) (zero? (% r 13)) (zero? (% r 17)) (zero? (% r 19)) (zero? (% r 23)) (zero? (% r 29)) (zero? (% r 31)) (zero? (% r 37)) (zero? (% r 41)))
-                                (§ continue) ;; candidate is composite; try another
+                (let [#_"BigInteger" p (BigInteger'new-2ai a, 1)
+                      ;; do cheap "pre-test" if applicable
+                      ? (and (< 6 bitLength)
+                            (let [#_"long" r (.longValue (BigInteger'remainder p, BigInteger'SMALL_PRIME_PRODUCT))]
+                                (any == 0 (% r 3) (% r 5) (% r 7) (% r 11) (% r 13) (% r 17) (% r 19) (% r 23) (% r 29) (% r 31) (% r 37) (% r 41))
+                                ;; candidate is composite; try another
                             )
-                        )
-                    )
-
-                    ;; all candidates of bitLength 2 and 3 are prime by this point
-                    (when (< bitLength 4)
-                        (§ return p)
-                    )
-
-                    ;; do expensive test if we survive pre-test (or it's inapplicable)
-                    (when (BigInteger''primeToCertainty p, certainty, rnd)
-                        (§ return p)
+                        )]
+                    (cond
+                        ?                                               (recur)
+                        (< bitLength 4)                                 p ;; all candidates of bitLength 2 and 3 are prime by this point
+                        (BigInteger'primeToCertainty p, certainty, rnd) p ;; do expensive test if we survive pre-test (or it's inapplicable)
+                        :else                                           (recur)
                     )
                 )
             )
@@ -3495,30 +3438,17 @@
      ; a sieve to eliminate most composites before using a more expensive test.
      ;;
     (defn- #_"BigInteger" BigInteger'largePrime [#_"int" bitLength, #_"int" certainty, #_"Random" rnd]
-        (let [
-              #_"BigInteger" p (-> (BigInteger'new-2ir bitLength, rnd) (BigInteger'setBit (dec bitLength)))
-        ]
-            (aswap (:mag p) (dec (alength (:mag p))) & 0xfffffffe)
-
-            ;; use a sieve length likely to contain the next prime number
-            (let [
-                  #_"int" searchLen (BigInteger'getPrimeSearchLen bitLength)
-                  #_"BitSieve" searchSieve (BitSieve'new-2 p, searchLen)
-                  #_"BigInteger" candidate (BitSieve''retrieve searchSieve, p, certainty, rnd)
-            ]
-                (while (or (nil? candidate) (not (== (BigInteger''bitLength candidate) bitLength)))
-                    (let [
-                    ]
-                        (§ ass p (BigInteger'add p, (BigInteger'valueOf-l (* 2 searchLen))))
-                        (when (not (== (BigInteger''bitLength p) bitLength))
-                            (§ ass p (-> (BigInteger'new-2ir bitLength, rnd) (BigInteger'setBit (dec bitLength))))
+        ;; use a sieve length likely to contain the next prime number
+        (let [#_"int" n (BigInteger'getPrimeSearchLen bitLength)]
+            (loop [#_"BigInteger" p (-> (BigInteger'new-2ir bitLength, rnd) (BigInteger'setBit (dec bitLength)))]
+                (aswap (:mag p) (dec (alength (:mag p))) & 0xfffffffe)
+                (let [#_"BigInteger" q (BitSieve''retrieve (BitSieve'new-2 p, n), p, certainty, rnd)]
+                    (when-not (and (some? q) (== (BigInteger''bitLength q) bitLength)) => q
+                        (let [p (BigInteger'add p, (BigInteger'valueOf-l (* 2 n)))]
+                            (recur (if (== (BigInteger''bitLength p) bitLength) p (-> (BigInteger'new-2ir bitLength, rnd) (BigInteger'setBit (dec bitLength)))))
                         )
-                        (aswap (:mag p) (dec (alength (:mag p))) & 0xfffffffe)
-                        (§ ass searchSieve (BitSieve'new-2 p, searchLen))
-                        (§ ass candidate (BitSieve''retrieve searchSieve, p, certainty, rnd))
                     )
                 )
-                candidate
             )
         )
     )
@@ -3526,108 +3456,71 @@
     ;;;
      ; Returns a randomly generated positive BigInteger that is probably prime, with the
      ; specified bitLength. By default, the probability that a BigInteger returned by this
-     ; method is composite does not exceed 2<sup>-100</sup>.
+     ; method is composite does not exceed (pow 2 -100).
      ;
-     ; @param  bitLength bitLength of the returned BigInteger.
-     ; @param  certainty a measure of the uncertainty that the caller is willing to tolerate.
-     ;         The probability that the new BigInteger represents a prime number will exceed
-     ;         (1 - 1/2<sup>{@code certainty}</sup>). The execution time of this function
-     ;         is proportional to the value of this parameter.
-     ; @param  rnd source of random bits used to select candidates to be tested for primality.
+     ; @param  certainty is a measure of the uncertainty that the caller is willing to tolerate:
+     ;         the probability that the new BigInteger represents a prime number will exceed (- 1 (/ 1 (pow 2 certainty))).
+     ;         The execution time of this function is proportional to the value of this parameter.
      ;
-     ; @return a BigInteger of {@code bitLength} bits that is probably prime.
-     ; @throws ArithmeticException {@code bitLength < 2} or {@code bitLength} is too large.
+     ; @throws ArithmeticException if (< bitLength 2) or bitLength is too large.
      ;;
     (defn #_"BigInteger" BigInteger'probablePrime
         ([#_"int" bitLength, #_"Random" rnd] (BigInteger'probablePrime bitLength, BigInteger'DEFAULT_PRIME_CERTAINTY, rnd))
         ([#_"int" bitLength, #_"int" certainty, #_"Random" rnd]
-            (when (< bitLength 2)
-                (throw! "(< bitLength 2)")
-            )
-
-            (if (< bitLength BigInteger'SMALL_PRIME_THRESHOLD)
-                (BigInteger'smallPrime bitLength, certainty, rnd)
-                (BigInteger'largePrime bitLength, certainty, rnd)
+            (when-not (< bitLength 2) => (throw! "(< bitLength 2)")
+                (if (< bitLength BigInteger'SMALL_PRIME_THRESHOLD)
+                    (BigInteger'smallPrime bitLength, certainty, rnd)
+                    (BigInteger'largePrime bitLength, certainty, rnd)
+                )
             )
         )
     )
 
     ;;;
-     ; Returns the first integer greater than this {@code BigInteger} that
-     ; is probably prime. The probability that the number returned by this
-     ; method is composite does not exceed 2<sup>-100</sup>. This method will
-     ; never skip over a prime when searching: if it returns {@code p}, there
-     ; is no prime {@code q} such that {@code this < q < p}.
+     ; Returns the first integer greater than x that is probably prime. The probability
+     ; that the number returned by this method is composite does not exceed (pow 2 -100).
+     ; This method will never skip over a prime when searching: if it returns p, there
+     ; is no prime q such that (< x q p).
      ;
-     ; @return the first integer greater than this {@code BigInteger} that is probably prime.
-     ; @throws ArithmeticException {@code this < 0} or {@code this} is too large.
+     ; @throws ArithmeticException if (neg? x) or x is too large.
      ;;
-    #_method
-    (defn #_"BigInteger" BigInteger''nextProbablePrime [#_"BigInteger" this]
-        (when (neg? (:signum this))
-            (throw! "negative start")
-        )
-
-        ;; handle trivial cases
-        (when (or (zero? (:signum this)) (.equals this, BigInteger'ONE))
-            (§ return BigInteger'TWO)
-        )
-
-        (let [
-              #_"BigInteger" result (BigInteger'add this, BigInteger'ONE)
-        ]
-            ;; fastpath for small numbers
-            (when (< (BigInteger''bitLength result) BigInteger'SMALL_PRIME_THRESHOLD)
-                ;; ensure an odd number
-                (when (not (BigInteger'testBit result, 0))
-                    (§ ass result (BigInteger'add result, BigInteger'ONE))
-                )
-
-                (§ while true
-                    ;; do cheap "pre-test" if applicable
-                    (when (< 6 (BigInteger''bitLength result))
-                        (let [
-                              #_"long" r (.longValue (BigInteger'remainder result, BigInteger'SMALL_PRIME_PRODUCT))
-                        ]
-                            (when (or (zero? (% r 3)) (zero? (% r 5)) (zero? (% r 7)) (zero? (% r 11)) (zero? (% r 13)) (zero? (% r 17)) (zero? (% r 19)) (zero? (% r 23)) (zero? (% r 29)) (zero? (% r 31)) (zero? (% r 37)) (zero? (% r 41)))
-                                (§ ass result (BigInteger'add result, BigInteger'TWO))
-                                (§ continue) ;; candidate is composite; try another
+    (defn #_"BigInteger" BigInteger'nextProbablePrime [#_"BigInteger" x]
+        (cond
+            (neg? (:signum x)) (throw! "negative start")
+            (or (zero? (:signum x)) (.equals x, BigInteger'ONE)) BigInteger'TWO
+            :else
+            (let [#_"BigInteger" p (BigInteger'add x, BigInteger'ONE)
+                  ;; fastpath for small numbers
+                  [p #_"boolean" found?]
+                    (when (< (BigInteger''bitLength p) BigInteger'SMALL_PRIME_THRESHOLD) => [p false]
+                        ;; ensure an odd number
+                        (loop [p (if (BigInteger'testBit p, 0) p (BigInteger'add p, BigInteger'ONE))]
+                            ;; do cheap "pre-test" if applicable
+                            (let [? (and (< 6 (BigInteger''bitLength p))
+                                        (let [#_"long" r (.longValue (BigInteger'remainder p, BigInteger'SMALL_PRIME_PRODUCT))]
+                                            (any == 0 (% r 3) (% r 5) (% r 7) (% r 11) (% r 13) (% r 17) (% r 19) (% r 23) (% r 29) (% r 31) (% r 37) (% r 41))
+                                            ;; candidate is composite; try another
+                                        )
+                                    )]
+                                (cond
+                                    ? (recur (BigInteger'add p, BigInteger'TWO))
+                                    (< (BigInteger''bitLength p) 4) [p true] ;; all candidates of bitLength 2 and 3 are prime by this point
+                                    (BigInteger'primeToCertainty p, BigInteger'DEFAULT_PRIME_CERTAINTY, nil) [p true] ;; the expensive test
+                                    :else (recur (BigInteger'add p, BigInteger'TWO))
+                                )
                             )
                         )
-                    )
-
-                    ;; all candidates of bitLength 2 and 3 are prime by this point
-                    (when (< (BigInteger''bitLength result) 4)
-                        (§ return result)
-                    )
-
-                    ;; the expensive test
-                    (when (BigInteger''primeToCertainty result, BigInteger'DEFAULT_PRIME_CERTAINTY, nil)
-                        (§ return result)
-                    )
-
-                    (§ ass result (BigInteger'add result, BigInteger'TWO))
-                )
-            )
-
-            ;; start at previous even number
-            (when (BigInteger'testBit result, 0)
-                (§ ass result (BigInteger'subtract result, BigInteger'ONE))
-            )
-
-            ;; looking for the next large prime
-            (let [
-                  #_"int" searchLen (BigInteger'getPrimeSearchLen (BigInteger''bitLength result))
-            ]
-                (§ while true
-                    (let [
-                          #_"BitSieve" searchSieve (BitSieve'new-2 result, searchLen)
-                          #_"BigInteger" candidate (BitSieve''retrieve searchSieve, result, BigInteger'DEFAULT_PRIME_CERTAINTY, nil)
-                    ]
-                        (when-not (nil? candidate)
-                            (§ return candidate)
+                    )]
+                (when-not found? => p
+                    ;; start at previous even number
+                    (let [p (if (BigInteger'testBit p, 0) (BigInteger'subtract p, BigInteger'ONE) p)
+                          ;; looking for the next large prime
+                          #_"int" n (BigInteger'getPrimeSearchLen (BigInteger''bitLength p))]
+                        (loop [p p]
+                            (or (BitSieve''retrieve (BitSieve'new-2 p, n), p, BigInteger'DEFAULT_PRIME_CERTAINTY, nil)
+                                (recur (BigInteger'add p, (BigInteger'valueOf-l (* 2 n))))
+                            )
                         )
-                        (§ ass result (BigInteger'add result, (BigInteger'valueOf-l (* 2 searchLen))))
                     )
                 )
             )
@@ -3793,7 +3686,7 @@
                         (loop-when [#_"long" unit (bit-not (aget (:bits this) i)) #_"int" k (inc (* i 64)) #_"int" j 0] (< j 64)
                             (let [p (when (== (& unit 1) 1)
                                         (let [p (BigInteger'add base, (BigInteger'valueOf-l k))]
-                                            (when (BigInteger''primeToCertainty p, certainty, rnd)
+                                            (when (BigInteger'primeToCertainty p, certainty, rnd)
                                                 p
                                             )
                                         )
