@@ -286,37 +286,37 @@
     )
 
     ;;;
-     ; Right shift this MutableBigInteger n bits, where n is less than 32.
-     ; Assumes pos? intLen and pos? n for speed.
+     ; Right shift this MutableBigInteger shift bits, where shift is less than 32.
+     ; Assumes (pos? intLen) and (pos? shift) for speed.
      ;;
     #_method
-    (defn- #_"MutableBigInteger" MutableBigInteger''primitiveRightShift [#_"MutableBigInteger" this, #_"int" n]
-        (let [#_"int[]" a (:value this) #_"int" m (- 32 n)]
+    (defn- #_"MutableBigInteger" MutableBigInteger''primitiveRightShift [#_"MutableBigInteger" this, #_"int" shift]
+        (let [#_"int[]" a (:value this) #_"int" m (- 32 shift)]
             (loop-when [#_"int" i (dec (+ (:offset this) (:intLen this))) #_"int" c (aget a i)] (< (:offset this) i)
                 (let [#_"int" b c c (aget a (dec i))]
-                    (aset a i (| (<< c m) (>>> b n)))
+                    (aset a i (| (<< c m) (>>> b shift)))
                     (recur (dec i) c)
                 )
             )
-            (aswap a (:offset this) >>> n)
+            (aswap a (:offset this) >>> shift)
             this
         )
     )
 
     ;;;
-     ; Left shift this MutableBigInteger n bits, where n is less than 32.
-     ; Assumes pos? intLen and pos? n for speed.
+     ; Left shift this MutableBigInteger shift bits, where shift is less than 32.
+     ; Assumes (pos? intLen) and (pos? shift) for speed.
      ;;
     #_method
-    (defn- #_"MutableBigInteger" MutableBigInteger''primitiveLeftShift [#_"MutableBigInteger" this, #_"int" n]
-        (let [#_"int[]" a (:value this) #_"int" m (- 32 n)]
+    (defn- #_"MutableBigInteger" MutableBigInteger''primitiveLeftShift [#_"MutableBigInteger" this, #_"int" shift]
+        (let [#_"int[]" a (:value this) #_"int" m (- 32 shift)]
             (loop-when [#_"int" i (:offset this) #_"int" c (aget a i)] (< i (dec (+ (:offset this) (:intLen this))))
                 (let [#_"int" b c c (aget a (inc i))]
-                    (aset a i (| (<< b n) (>>> c m)))
+                    (aset a i (| (<< b shift) (>>> c m)))
                     (recur (inc i) c)
                 )
             )
-            (aswap a (dec (+ (:offset this) (:intLen this))) << n)
+            (aswap a (dec (+ (:offset this) (:intLen this))) << shift)
             this
         )
     )
@@ -938,7 +938,7 @@
     )
 
     ;;;
-     ; Returns the multiplicative inverse of i mod 2^32. Assumes i is odd.
+     ; Returns the multiplicative inverse of (mod i (pow 2 32)). Assumes (odd? i).
      ;;
     (defn #_"int" MutableBigInteger'inverseMod32 [#_"int" i]
         ;; Newton's iteration!
@@ -1050,7 +1050,7 @@
     )
 
     ;;;
-     ; Extended Euclidean algorithm to compute the multiplicative inverse of a mod 2^k.
+     ; Extended Euclidean algorithm to compute the multiplicative inverse of (mod a (pow 2 k)).
      ;;
     (defn #_"MutableBigInteger" MutableBigInteger'euclidModInverse [#_"MutableBigInteger" a, #_"int" k]
         (let [#_"MutableBigInteger" b (MutableBigInteger''leftShift (MutableBigInteger'new-i 1), k)
@@ -1081,7 +1081,7 @@
     )
 
     ;;
-     ; Calculate the multiplicative inverse of x mod 2^k.
+     ; Calculate the multiplicative inverse of (mod x (pow 2 k)).
      ;;
     (defn #_"MutableBigInteger" MutableBigInteger'modInverseMP2 [#_"MutableBigInteger" x, #_"int" k]
         (cond
@@ -1102,7 +1102,7 @@
     )
 
     ;;;
-     ; Calculate the multiplicative inverse of 2^k mod m, where m is odd.
+     ; Calculate the multiplicative inverse of (mod (pow 2 k) m), where (odd? m).
      ;;
     (defn #_"MutableBigInteger" MutableBigInteger'modInverseBP2 [#_"MutableBigInteger" m, #_"int" k]
         (MutableBigInteger'fixup (MutableBigInteger'new-i 1), m, k)
@@ -1241,7 +1241,7 @@
     ;;
      ; The following two arrays are used for fast String conversions. Both are indexed by radix.
      ; The first is the number of digits of the given radix that can fit in a Java long without
-     ; "going negative", i.e., the highest integer n such that radix^n < 2^63. The second is the
+     ; "going negative", i.e., the highest integer n such that (< (pow radix n) (pow 2 63)). The second is the
      ; "long radix" that tears each number into "long digits", each of which consists of the number
      ; of digits in the corresponding element in digitsPerLong (longRadix[i] = i^digitPerLong[i]).
      ; Both arrays have nonsense values in their 0 and 1 elements, as radixes 0 and 1 are not used.
@@ -1742,7 +1742,7 @@
 
     ;;;
      ; Constructs a randomly generated BigInteger, uniformly distributed over
-     ; the range 0 to 2^nBits - 1, inclusive.
+     ; the range 0 to (dec (pow 2 nBits)), inclusive.
      ; The uniformity of the distribution assumes that a fair source of random
      ; bits is provided in rnd. Note that this constructor always constructs
      ; a non-negative BigInteger.
@@ -3020,13 +3020,13 @@
                             ; manually exponentiate mod m2, and use Chinese Remainder Theorem to combine results.
                             ;;
                             (let [#_"int" p (BigInteger''getLowestSetBit m) ;; max pow of 2 that divides m
-                                  #_"BigInteger" m1 (BigInteger'shiftRight m, p) ;; m/2^p
-                                  #_"BigInteger" m2 (BigInteger'shiftLeft BigInteger'ONE, p) ;; 2^p
+                                  #_"BigInteger" m1 (BigInteger'shiftRight m, p) ;; (/ m (pow 2 p))
+                                  #_"BigInteger" m2 (BigInteger'shiftLeft BigInteger'ONE, p) ;; (pow 2 p)
                                   ;; calculate new base from m1
                                   #_"BigInteger" base2 (if (or (neg? (:signum x)) (<= 0 (.compareTo x, m1))) (BigInteger'mod x, m1) x)
-                                  ;; caculate (base^y) mod m1
+                                  ;; caculate (mod (pow base y) m1)
                                   #_"BigInteger" a1 (if (.equals m1, BigInteger'ONE) BigInteger'ZERO (BigInteger'oddModPow base2, y, m1))
-                                  ;; calculate (x^y) mod m2
+                                  ;; calculate (mod (pow x y) m2)
                                   #_"BigInteger" a2 (BigInteger'modPow2 base, y, p)
                                   ;; combine results using Chinese Remainder Theorem
                                   #_"BigInteger" y1 (BigInteger'modInverse m2, m1)

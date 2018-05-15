@@ -1,5 +1,5 @@
 (defproject cloiure "x.y.z"
-    :dependencies [[org.clojure/clojure "1.9.0-RC2"]
+    :dependencies [[org.clojure/clojure "1.9.0"]
                    [org.clojure/spec.alpha "0.1.143"]
                    [org.clojure/core.specs.alpha "0.1.24"]
                    [org.openjdk.jol/jol-core "0.9"]
