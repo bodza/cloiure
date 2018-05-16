@@ -14,15 +14,18 @@ import graalvm.compiler.replacements.nodes.MacroStateSplitNode;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 @NodeInfo(size = SIZE_64, cycles = CYCLES_256)
-public class StringIndexOfNode extends MacroStateSplitNode {
+public class StringIndexOfNode extends MacroStateSplitNode
+{
     public static final NodeClass<StringIndexOfNode> TYPE = NodeClass.create(StringIndexOfNode.class);
 
-    public StringIndexOfNode(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, int bci, StampPair returnStamp, ValueNode... arguments) {
+    public StringIndexOfNode(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, int bci, StampPair returnStamp, ValueNode... arguments)
+    {
         super(TYPE, invokeKind, targetMethod, bci, returnStamp, arguments);
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 }

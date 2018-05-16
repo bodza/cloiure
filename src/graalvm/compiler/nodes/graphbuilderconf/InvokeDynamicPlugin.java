@@ -10,8 +10,8 @@ import jdk.vm.ci.meta.JavaConstant;
  * {@link GraphBuilderPlugin} interface for static compilation mode, allowing references to dynamic
  * types.
  */
-public interface InvokeDynamicPlugin extends GraphBuilderPlugin {
-
+public interface InvokeDynamicPlugin extends GraphBuilderPlugin
+{
     /**
      * Checks for a resolved dynamic adapter method at the specified index, resulting from either a
      * resolved invokedynamic or invokevirtual on a signature polymorphic MethodHandle method
@@ -56,5 +56,4 @@ public interface InvokeDynamicPlugin extends GraphBuilderPlugin {
      * @return {@link ValueNode} for appendix constant
      */
     ValueNode genAppendixNode(GraphBuilderContext builder, int cpi, int opcode, JavaConstant appendix, FrameState frameState);
-
 }

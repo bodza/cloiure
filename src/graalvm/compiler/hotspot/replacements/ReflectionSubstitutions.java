@@ -16,15 +16,19 @@ import graalvm.compiler.hotspot.word.KlassPointer;
  * Substitutions for {@link sun.reflect.Reflection} methods.
  */
 @ClassSubstitution(className = {"jdk.internal.reflect.Reflection", "sun.reflect.Reflection"}, optional = true)
-public class ReflectionSubstitutions {
-
+public class ReflectionSubstitutions
+{
     @MethodSubstitution
-    public static int getClassAccessFlags(Class<?> aClass) {
+    public static int getClassAccessFlags(Class<?> aClass)
+    {
         KlassPointer klass = ClassGetHubNode.readClass(GraalDirectives.guardingNonNull(aClass));
-        if (klass.isNull()) {
+        if (klass.isNull())
+        {
             // Class for primitive type
             return Modifier.ABSTRACT | Modifier.FINAL | Modifier.PUBLIC;
-        } else {
+        }
+        else
+        {
             return klass.readInt(klassAccessFlagsOffset(INJECTED_VMCONFIG), KLASS_ACCESS_FLAGS_LOCATION) & jvmAccWrittenFlags(INJECTED_VMCONFIG);
         }
     }

@@ -10,8 +10,8 @@ import static graalvm.compiler.nodeinfo.NodeSize.SIZE_UNSET;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface NodeInfo {
-
+public @interface NodeInfo
+{
     String shortName() default "";
 
     /**

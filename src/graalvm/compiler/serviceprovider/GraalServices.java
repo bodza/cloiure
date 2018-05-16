@@ -16,9 +16,10 @@ import jdk.vm.ci.services.Services;
 /**
  * Interface to functionality that abstracts over which JDK version Graal is running on.
  */
-public final class GraalServices {
-
-    private GraalServices() {
+public final class GraalServices
+{
+    private GraalServices()
+    {
     }
 
     /**
@@ -27,21 +28,27 @@ public final class GraalServices {
      * @throws SecurityException if on JDK8 and a security manager is present and it denies
      *             {@link JVMCIPermission}
      */
-    public static <S> Iterable<S> load(Class<S> service) {
+    public static <S> Iterable<S> load(Class<S> service)
+    {
         assert !service.getName().startsWith("jdk.vm.ci") : "JVMCI services must be loaded via " + Services.class.getName();
         Iterable<S> iterable = ServiceLoader.load(service);
-        return new Iterable<>() {
+        return new Iterable<>()
+        {
             @Override
-            public Iterator<S> iterator() {
+            public Iterator<S> iterator()
+            {
                 Iterator<S> iterator = iterable.iterator();
-                return new Iterator<>() {
+                return new Iterator<>()
+                {
                     @Override
-                    public boolean hasNext() {
+                    public boolean hasNext()
+                    {
                         return iterator.hasNext();
                     }
 
                     @Override
-                    public S next() {
+                    public S next()
+                    {
                         S provider = iterator.next();
                         // Allow Graal extensions to access JVMCI
                         openJVMCITo(provider.getClass());
@@ -49,7 +56,8 @@ public final class GraalServices {
                     }
 
                     @Override
-                    public void remove() {
+                    public void remove()
+                    {
                         iterator.remove();
                     }
                 };
@@ -63,12 +71,16 @@ public final class GraalServices {
      *
      * @param other all JVMCI packages will be opened to the module defining this class
      */
-    static void openJVMCITo(Class<?> other) {
+    static void openJVMCITo(Class<?> other)
+    {
         Module jvmciModule = JVMCI_MODULE;
         Module otherModule = other.getModule();
-        if (jvmciModule != otherModule) {
-            for (String pkg : jvmciModule.getPackages()) {
-                if (!jvmciModule.isOpen(pkg, otherModule)) {
+        if (jvmciModule != otherModule)
+        {
+            for (String pkg : jvmciModule.getPackages())
+            {
+                if (!jvmciModule.isOpen(pkg, otherModule))
+                {
                     jvmciModule.addOpens(pkg, otherModule);
                 }
             }
@@ -85,23 +97,31 @@ public final class GraalServices {
      * @throws SecurityException if on JDK8 and a security manager is present and it denies
      *             {@link JVMCIPermission}
      */
-    public static <S> S loadSingle(Class<S> service, boolean required) {
+    public static <S> S loadSingle(Class<S> service, boolean required)
+    {
         assert !service.getName().startsWith("jdk.vm.ci") : "JVMCI services must be loaded via " + Services.class.getName();
         Iterable<S> providers = load(service);
         S singleProvider = null;
-        try {
-            for (Iterator<S> it = providers.iterator(); it.hasNext();) {
+        try
+        {
+            for (Iterator<S> it = providers.iterator(); it.hasNext();)
+            {
                 singleProvider = it.next();
-                if (it.hasNext()) {
+                if (it.hasNext())
+                {
                     S other = it.next();
                     throw new InternalError(String.format("Multiple %s providers found: %s, %s", service.getName(), singleProvider.getClass().getName(), other.getClass().getName()));
                 }
             }
-        } catch (ServiceConfigurationError e) {
+        }
+        catch (ServiceConfigurationError e)
+        {
             // If the service is required we will bail out below.
         }
-        if (singleProvider == null) {
-            if (required) {
+        if (singleProvider == null)
+        {
+            if (required)
+            {
                 throw new InternalError(String.format("No provider for %s found", service.getName()));
             }
         }
@@ -111,7 +131,8 @@ public final class GraalServices {
     /**
      * Gets the class file bytes for {@code c}.
      */
-    public static InputStream getClassfileAsStream(Class<?> c) throws IOException {
+    public static InputStream getClassfileAsStream(Class<?> c) throws IOException
+    {
         String classfilePath = c.getName().replace('.', '/') + ".class";
         return c.getModule().getResourceAsStream(classfilePath);
     }
@@ -122,7 +143,8 @@ public final class GraalServices {
      * A JVMCI package dynamically exported to trusted modules.
      */
     private static final String JVMCI_RUNTIME_PACKAGE = "jdk.vm.ci.runtime";
-    static {
+    static
+    {
         assert JVMCI_MODULE.getPackages().contains(JVMCI_RUNTIME_PACKAGE);
     }
 
@@ -130,11 +152,13 @@ public final class GraalServices {
      * Determines if invoking {@link Object#toString()} on an instance of {@code c} will only run
      * trusted code.
      */
-    public static boolean isToStringTrusted(Class<?> c) {
+    public static boolean isToStringTrusted(Class<?> c)
+    {
         Module module = c.getModule();
         Module jvmciModule = JVMCI_MODULE;
         assert jvmciModule.getPackages().contains("jdk.vm.ci.runtime");
-        if (module == jvmciModule || jvmciModule.isOpen(JVMCI_RUNTIME_PACKAGE, module)) {
+        if (module == jvmciModule || jvmciModule.isOpen(JVMCI_RUNTIME_PACKAGE, module))
+        {
             // Can access non-statically-exported package in JVMCI
             return true;
         }
@@ -145,7 +169,8 @@ public final class GraalServices {
      * Gets a unique identifier for this execution such as a process ID or a
      * {@linkplain #getGlobalTimeStamp() fixed timestamp}.
      */
-    public static String getExecutionID() {
+    public static String getExecutionID()
+    {
         return Long.toString(ProcessHandle.current().pid());
     }
 
@@ -155,8 +180,10 @@ public final class GraalServices {
      * Gets a time stamp for the current process. This method will always return the same value for
      * the current VM execution.
      */
-    public static long getGlobalTimeStamp() {
-        if (globalTimeStamp.get() == 0) {
+    public static long getGlobalTimeStamp()
+    {
+        if (globalTimeStamp.get() == 0)
+        {
             globalTimeStamp.compareAndSet(0, System.currentTimeMillis());
         }
         return globalTimeStamp.get();
@@ -167,7 +194,8 @@ public final class GraalServices {
      * Using this abstraction enables avoiding a dependency to the {@code java.management} and
      * {@code jdk.management} modules on JDK 9 and later.
      */
-    public abstract static class JMXService {
+    public abstract static class JMXService
+    {
         protected abstract long getThreadAllocatedBytes(long id);
 
         protected abstract long getCurrentThreadCpuTime();
@@ -207,9 +235,11 @@ public final class GraalServices {
      *             {@linkplain #isThreadAllocatedMemorySupported() support} thread memory allocation
      *             measurement.
      */
-    public static long getThreadAllocatedBytes(long id) {
+    public static long getThreadAllocatedBytes(long id)
+    {
         JMXService jmx = JMXService.instance;
-        if (jmx == null) {
+        if (jmx == null)
+        {
             throw new UnsupportedOperationException();
         }
         return jmx.getThreadAllocatedBytes(id);
@@ -219,7 +249,8 @@ public final class GraalServices {
      * Convenience method for calling {@link #getThreadAllocatedBytes(long)} with the id of the
      * current thread.
      */
-    public static long getCurrentThreadAllocatedBytes() {
+    public static long getCurrentThreadAllocatedBytes()
+    {
         return getThreadAllocatedBytes(currentThread().getId());
     }
 
@@ -236,9 +267,11 @@ public final class GraalServices {
      *             {@linkplain #isCurrentThreadCpuTimeSupported() support} CPU time measurement for
      *             the current thread
      */
-    public static long getCurrentThreadCpuTime() {
+    public static long getCurrentThreadCpuTime()
+    {
         JMXService jmx = JMXService.instance;
-        if (jmx == null) {
+        if (jmx == null)
+        {
             throw new UnsupportedOperationException();
         }
         return jmx.getCurrentThreadCpuTime();
@@ -248,9 +281,11 @@ public final class GraalServices {
      * Determines if the Java virtual machine implementation supports thread memory allocation
      * measurement.
      */
-    public static boolean isThreadAllocatedMemorySupported() {
+    public static boolean isThreadAllocatedMemorySupported()
+    {
         JMXService jmx = JMXService.instance;
-        if (jmx == null) {
+        if (jmx == null)
+        {
             return false;
         }
         return jmx.isThreadAllocatedMemorySupported();
@@ -259,9 +294,11 @@ public final class GraalServices {
     /**
      * Determines if the Java virtual machine supports CPU time measurement for the current thread.
      */
-    public static boolean isCurrentThreadCpuTimeSupported() {
+    public static boolean isCurrentThreadCpuTimeSupported()
+    {
         JMXService jmx = JMXService.instance;
-        if (jmx == null) {
+        if (jmx == null)
+        {
             return false;
         }
         return jmx.isCurrentThreadCpuTimeSupported();
@@ -281,9 +318,11 @@ public final class GraalServices {
      *
      * @return the input arguments to the JVM or {@code null} if they are unavailable
      */
-    public static List<String> getInputArguments() {
+    public static List<String> getInputArguments()
+    {
         JMXService jmx = JMXService.instance;
-        if (jmx == null) {
+        if (jmx == null)
+        {
             return null;
         }
         return jmx.getInputArguments();

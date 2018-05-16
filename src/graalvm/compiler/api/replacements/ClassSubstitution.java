@@ -11,8 +11,8 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface ClassSubstitution {
-
+public @interface ClassSubstitution
+{
     /**
      * Specifies the original class.
      * <p>

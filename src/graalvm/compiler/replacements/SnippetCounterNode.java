@@ -43,38 +43,44 @@ import graalvm.util.UnsafeAccess;
  * value of withContext, the name of the root method is added to the counter's name.
  */
 @NodeInfo(cycles = CYCLES_IGNORED, size = SIZE_IGNORED)
-public class SnippetCounterNode extends FixedWithNextNode implements Lowerable {
-
+public class SnippetCounterNode extends FixedWithNextNode implements Lowerable
+{
     public static final NodeClass<SnippetCounterNode> TYPE = NodeClass.create(SnippetCounterNode.class);
 
     @Input protected ValueNode increment;
 
     protected final SnippetCounter counter;
 
-    public SnippetCounterNode(SnippetCounter counter, ValueNode increment) {
+    public SnippetCounterNode(SnippetCounter counter, ValueNode increment)
+    {
         super(TYPE, StampFactory.forVoid());
         this.counter = counter;
         this.increment = increment;
     }
 
-    public SnippetCounter getCounter() {
+    public SnippetCounter getCounter()
+    {
         return counter;
     }
 
-    public ValueNode getIncrement() {
+    public ValueNode getIncrement()
+    {
         return increment;
     }
 
     @NodeIntrinsic
     public static native void add(@ConstantNodeParameter SnippetCounter counter, int increment);
 
-    public static void increment(@ConstantNodeParameter SnippetCounter counter) {
+    public static void increment(@ConstantNodeParameter SnippetCounter counter)
+    {
         add(counter, 1);
     }
 
     @Override
-    public void lower(LoweringTool tool) {
-        if (graph().getGuardsStage().areFrameStatesAtDeopts()) {
+    public void lower(LoweringTool tool)
+    {
+        if (graph().getGuardsStage().areFrameStatesAtDeopts())
+        {
             SnippetCounterSnippets.Templates templates = tool.getReplacements().getSnippetTemplateCache(SnippetCounterSnippets.Templates.class);
             templates.lower(this, tool);
         }
@@ -86,9 +92,12 @@ public class SnippetCounterNode extends FixedWithNextNode implements Lowerable {
      * @param privateLocations
      * @return a copy of privateLocations with any needed locations added
      */
-    public static LocationIdentity[] addSnippetCounters(LocationIdentity[] privateLocations) {
-        for (LocationIdentity location : privateLocations) {
-            if (location.equals(SNIPPET_COUNTER_LOCATION)) {
+    public static LocationIdentity[] addSnippetCounters(LocationIdentity[] privateLocations)
+    {
+        for (LocationIdentity location : privateLocations)
+        {
+            if (location.equals(SNIPPET_COUNTER_LOCATION))
+            {
                 return privateLocations;
             }
         }
@@ -104,32 +113,39 @@ public class SnippetCounterNode extends FixedWithNextNode implements Lowerable {
      */
     public static final LocationIdentity SNIPPET_COUNTER_LOCATION = NamedLocationIdentity.mutable("SnippetCounter");
 
-    static class SnippetCounterSnippets implements Snippets {
-
+    static class SnippetCounterSnippets implements Snippets
+    {
         @Fold
-        static int countOffset() {
-            try {
+        static int countOffset()
+        {
+            try
+            {
                 return (int) UnsafeAccess.UNSAFE.objectFieldOffset(SnippetCounter.class.getDeclaredField("value"));
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 throw new GraalError(e);
             }
         }
 
         @Snippet
-        public static void add(@ConstantParameter SnippetCounter counter, int increment) {
+        public static void add(@ConstantParameter SnippetCounter counter, int increment)
+        {
             long loadedValue = ObjectAccess.readLong(counter, countOffset(), SNIPPET_COUNTER_LOCATION);
             ObjectAccess.writeLong(counter, countOffset(), loadedValue + increment, SNIPPET_COUNTER_LOCATION);
         }
 
-        public static class Templates extends AbstractTemplates {
-
+        public static class Templates extends AbstractTemplates
+        {
             private final SnippetInfo add = snippet(SnippetCounterSnippets.class, "add", SNIPPET_COUNTER_LOCATION);
 
-            Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target) {
+            Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
+            {
                 super(options, factories, providers, snippetReflection, target);
             }
 
-            public void lower(SnippetCounterNode counter, LoweringTool tool) {
+            public void lower(SnippetCounterNode counter, LoweringTool tool)
+            {
                 StructuredGraph graph = counter.graph();
                 Arguments args = new Arguments(add, graph.getGuardsStage(), tool.getLoweringStage());
                 args.addConst("counter", counter.getCounter());

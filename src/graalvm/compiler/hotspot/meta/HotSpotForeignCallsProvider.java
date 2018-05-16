@@ -10,8 +10,8 @@ import jdk.vm.ci.meta.Value;
 /**
  * HotSpot extension of {@link ForeignCallsProvider}.
  */
-public interface HotSpotForeignCallsProvider extends ForeignCallsProvider {
-
+public interface HotSpotForeignCallsProvider extends ForeignCallsProvider
+{
     /**
      * Gets the registers that must be saved across a foreign call into the runtime.
      */

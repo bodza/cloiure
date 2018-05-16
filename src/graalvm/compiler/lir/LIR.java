@@ -17,8 +17,8 @@ import graalvm.compiler.options.OptionValues;
  * This class implements the overall container for the LIR graph and directs its construction,
  * optimization, and finalization.
  */
-public final class LIR extends LIRGenerator.VariableProvider {
-
+public final class LIR extends LIRGenerator.VariableProvider
+{
     private final AbstractControlFlowGraph<?> cfg;
 
     /**
@@ -46,7 +46,8 @@ public final class LIR extends LIRGenerator.VariableProvider {
     /**
      * Creates a new LIR instance for the specified compilation.
      */
-    public LIR(AbstractControlFlowGraph<?> cfg, AbstractBlockBase<?>[] linearScanOrder, AbstractBlockBase<?>[] codeEmittingOrder, OptionValues options, DebugContext debug) {
+    public LIR(AbstractControlFlowGraph<?> cfg, AbstractBlockBase<?>[] linearScanOrder, AbstractBlockBase<?>[] codeEmittingOrder, OptionValues options, DebugContext debug)
+    {
         this.cfg = cfg;
         this.codeEmittingOrder = codeEmittingOrder;
         this.linearScanOrder = linearScanOrder;
@@ -55,25 +56,32 @@ public final class LIR extends LIRGenerator.VariableProvider {
         this.debug = debug;
     }
 
-    public AbstractControlFlowGraph<?> getControlFlowGraph() {
+    public AbstractControlFlowGraph<?> getControlFlowGraph()
+    {
         return cfg;
     }
 
-    public OptionValues getOptions() {
+    public OptionValues getOptions()
+    {
         return options;
     }
 
-    public DebugContext getDebug() {
+    public DebugContext getDebug()
+    {
         return debug;
     }
 
     /**
      * Determines if any instruction in the LIR has debug info associated with it.
      */
-    public boolean hasDebugInfo() {
-        for (AbstractBlockBase<?> b : linearScanOrder()) {
-            for (LIRInstruction op : getLIRforBlock(b)) {
-                if (op.hasState()) {
+    public boolean hasDebugInfo()
+    {
+        for (AbstractBlockBase<?> b : linearScanOrder())
+        {
+            for (LIRInstruction op : getLIRforBlock(b))
+            {
+                if (op.hasState())
+                {
                     return true;
                 }
             }
@@ -81,11 +89,13 @@ public final class LIR extends LIRGenerator.VariableProvider {
         return false;
     }
 
-    public ArrayList<LIRInstruction> getLIRforBlock(AbstractBlockBase<?> block) {
+    public ArrayList<LIRInstruction> getLIRforBlock(AbstractBlockBase<?> block)
+    {
         return lirInstructions.get(block);
     }
 
-    public void setLIRforBlock(AbstractBlockBase<?> block, ArrayList<LIRInstruction> list) {
+    public void setLIRforBlock(AbstractBlockBase<?> block, ArrayList<LIRInstruction> list)
+    {
         assert getLIRforBlock(block) == null : "lir instruction list should only be initialized once";
         lirInstructions.put(block, list);
     }
@@ -95,15 +105,18 @@ public final class LIR extends LIRGenerator.VariableProvider {
      *
      * @return the blocks in linear scan order
      */
-    public AbstractBlockBase<?>[] linearScanOrder() {
+    public AbstractBlockBase<?>[] linearScanOrder()
+    {
         return linearScanOrder;
     }
 
-    public AbstractBlockBase<?>[] codeEmittingOrder() {
+    public AbstractBlockBase<?>[] codeEmittingOrder()
+    {
         return codeEmittingOrder;
     }
 
-    public void setHasArgInCallerFrame() {
+    public void setHasArgInCallerFrame()
+    {
         hasArgInCallerFrame = true;
     }
 
@@ -111,7 +124,8 @@ public final class LIR extends LIRGenerator.VariableProvider {
      * Determines if any of the parameters to the method are passed via the stack where the
      * parameters are located in the caller's frame.
      */
-    public boolean hasArgInCallerFrame() {
+    public boolean hasArgInCallerFrame()
+    {
         return hasArgInCallerFrame;
     }
 
@@ -123,10 +137,13 @@ public final class LIR extends LIRGenerator.VariableProvider {
      * @return the next block in the list that is none {@code null} or {@code null} if there is no
      *         such block
      */
-    public static AbstractBlockBase<?> getNextBlock(AbstractBlockBase<?>[] blocks, int blockIndex) {
-        for (int nextIndex = blockIndex + 1; nextIndex > 0 && nextIndex < blocks.length; nextIndex++) {
+    public static AbstractBlockBase<?> getNextBlock(AbstractBlockBase<?>[] blocks, int blockIndex)
+    {
+        for (int nextIndex = blockIndex + 1; nextIndex > 0 && nextIndex < blocks.length; nextIndex++)
+        {
             AbstractBlockBase<?> nextBlock = blocks[nextIndex];
-            if (nextBlock != null) {
+            if (nextBlock != null)
+            {
                 return nextBlock;
             }
         }
@@ -136,10 +153,13 @@ public final class LIR extends LIRGenerator.VariableProvider {
     /**
      * Gets the exception edge (if any) originating at a given operation.
      */
-    public static LabelRef getExceptionEdge(LIRInstruction op) {
+    public static LabelRef getExceptionEdge(LIRInstruction op)
+    {
         final LabelRef[] exceptionEdge = {null};
-        op.forEachState(state -> {
-            if (state.exceptionEdge != null) {
+        op.forEachState(state ->
+        {
+            if (state.exceptionEdge != null)
+            {
                 assert exceptionEdge[0] == null;
                 exceptionEdge[0] = state.exceptionEdge;
             }
@@ -159,19 +179,23 @@ public final class LIR extends LIRGenerator.VariableProvider {
      */
     public static final int MAX_EXCEPTION_EDGE_OP_DISTANCE_FROM_END = 3;
 
-    public static boolean verifyBlock(LIR lir, AbstractBlockBase<?> block) {
+    public static boolean verifyBlock(LIR lir, AbstractBlockBase<?> block)
+    {
         ArrayList<LIRInstruction> ops = lir.getLIRforBlock(block);
-        if (ops.size() == 0) {
+        if (ops.size() == 0)
+        {
             return false;
         }
         assert ops.get(0) instanceof LabelOp : String.format("Not a Label %s (Block %s)", ops.get(0).getClass(), block);
         LIRInstruction opWithExceptionEdge = null;
         int index = 0;
         int lastIndex = ops.size() - 1;
-        for (LIRInstruction op : ops.subList(0, lastIndex)) {
+        for (LIRInstruction op : ops.subList(0, lastIndex))
+        {
             assert !(op instanceof BlockEndOp) : String.format("BlockEndOp %s (Block %s)", op.getClass(), block);
             LabelRef exceptionEdge = getExceptionEdge(op);
-            if (exceptionEdge != null) {
+            if (exceptionEdge != null)
+            {
                 assert opWithExceptionEdge == null : "multiple ops with an exception edge not allowed";
                 opWithExceptionEdge = op;
                 int distanceFromEnd = lastIndex - index;
@@ -184,36 +208,45 @@ public final class LIR extends LIRGenerator.VariableProvider {
         return true;
     }
 
-    public static boolean verifyBlocks(LIR lir, AbstractBlockBase<?>[] blocks) {
-        for (AbstractBlockBase<?> block : blocks) {
-            if (block == null) {
+    public static boolean verifyBlocks(LIR lir, AbstractBlockBase<?>[] blocks)
+    {
+        for (AbstractBlockBase<?> block : blocks)
+        {
+            if (block == null)
+            {
                 continue;
             }
-            for (AbstractBlockBase<?> sux : block.getSuccessors()) {
+            for (AbstractBlockBase<?> sux : block.getSuccessors())
+            {
                 assert Arrays.asList(blocks).contains(sux) : "missing successor from: " + block + "to: " + sux;
             }
-            for (AbstractBlockBase<?> pred : block.getPredecessors()) {
+            for (AbstractBlockBase<?> pred : block.getPredecessors())
+            {
                 assert Arrays.asList(blocks).contains(pred) : "missing predecessor from: " + block + "to: " + pred;
             }
-            if (!verifyBlock(lir, block)) {
+            if (!verifyBlock(lir, block))
+            {
                 return false;
             }
         }
         return true;
     }
 
-    public void resetLabels() {
-
-        for (AbstractBlockBase<?> block : codeEmittingOrder()) {
-            if (block == null) {
+    public void resetLabels()
+    {
+        for (AbstractBlockBase<?> block : codeEmittingOrder())
+        {
+            if (block == null)
+            {
                 continue;
             }
-            for (LIRInstruction inst : lirInstructions.get(block)) {
-                if (inst instanceof LabelOp) {
+            for (LIRInstruction inst : lirInstructions.get(block))
+            {
+                if (inst instanceof LabelOp)
+                {
                     ((LabelOp) inst).getLabel().reset();
                 }
             }
         }
     }
-
 }

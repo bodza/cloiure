@@ -23,27 +23,32 @@ import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.Value;
 
-public class HotSpotInstructionProfiling extends PostAllocationOptimizationPhase {
+public class HotSpotInstructionProfiling extends PostAllocationOptimizationPhase
+{
     public static final String COUNTER_GROUP = "INSTRUCTION_COUNTER";
     private final String[] instructionsToProfile;
 
-    public HotSpotInstructionProfiling(String instructionsToProfile) {
+    public HotSpotInstructionProfiling(String instructionsToProfile)
+    {
         this.instructionsToProfile = instructionsToProfile.split(",");
     }
 
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, PostAllocationOptimizationContext context) {
+    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, PostAllocationOptimizationContext context)
+    {
         new Analyzer(target, lirGenRes.getCompilationUnitName(), lirGenRes.getLIR(), context.diagnosticLirGenTool).run();
     }
 
-    private class Analyzer {
+    private class Analyzer
+    {
         private final TargetDescription target;
         private final LIR lir;
         private final DiagnosticLIRGeneratorTool diagnosticLirGenTool;
         private final LIRInsertionBuffer buffer;
         private final String compilationUnitName;
 
-        Analyzer(TargetDescription target, String compilationUnitName, LIR lir, DiagnosticLIRGeneratorTool diagnosticLirGenTool) {
+        Analyzer(TargetDescription target, String compilationUnitName, LIR lir, DiagnosticLIRGeneratorTool diagnosticLirGenTool)
+        {
             this.target = target;
             this.lir = lir;
             this.compilationUnitName = compilationUnitName;
@@ -51,13 +56,16 @@ public class HotSpotInstructionProfiling extends PostAllocationOptimizationPhase
             this.buffer = new LIRInsertionBuffer();
         }
 
-        public void run() {
-            for (AbstractBlockBase<?> block : lir.getControlFlowGraph().getBlocks()) {
+        public void run()
+        {
+            for (AbstractBlockBase<?> block : lir.getControlFlowGraph().getBlocks())
+            {
                 doBlock(block);
             }
         }
 
-        public void doBlock(AbstractBlockBase<?> block) {
+        public void doBlock(AbstractBlockBase<?> block)
+        {
             ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
             assert instructions.size() >= 2 : "Malformed block: " + block + ", " + instructions;
             assert instructions.get(instructions.size() - 1) instanceof BlockEndOp : "Not a BlockEndOp: " + instructions.get(instructions.size() - 1);
@@ -67,7 +75,8 @@ public class HotSpotInstructionProfiling extends PostAllocationOptimizationPhase
             String[] names = new String[instructionsToProfile.length];
             String[] groups = new String[instructionsToProfile.length];
             Value[] increments = new Value[instructionsToProfile.length];
-            for (int i = 0; i < instructionsToProfile.length; i++) {
+            for (int i = 0; i < instructionsToProfile.length; i++)
+            {
                 names[i] = compilationUnitName;
                 groups[i] = COUNTER_GROUP + " " + instructionsToProfile[i];
                 // Default is zero; this value is patched to the real instruction count after
@@ -87,18 +96,24 @@ public class HotSpotInstructionProfiling extends PostAllocationOptimizationPhase
      * After assembly the {@link HotSpotBackend#profileInstructions(LIR, CompilationResultBuilder)}
      * calls this method for patching the instruction counts into the counter increment code.
      */
-    public static void countInstructions(LIR lir, Assembler asm) {
+    public static void countInstructions(LIR lir, Assembler asm)
+    {
         InstructionCounterOp lastOp = null;
         InstructionCounter counter = asm.getInstructionCounter();
-        for (AbstractBlockBase<?> block : lir.codeEmittingOrder()) {
-            if (block == null) {
+        for (AbstractBlockBase<?> block : lir.codeEmittingOrder())
+        {
+            if (block == null)
+            {
                 continue;
             }
-            for (LIRInstruction inst : lir.getLIRforBlock(block)) {
-                if (inst instanceof InstructionCounterOp) {
+            for (LIRInstruction inst : lir.getLIRforBlock(block))
+            {
+                if (inst instanceof InstructionCounterOp)
+                {
                     InstructionCounterOp currentOp = (InstructionCounterOp) inst;
 
-                    if (lastOp != null) {
+                    if (lastOp != null)
+                    {
                         int beginPc = lastOp.countOffsetEnd;
                         int endPc = currentOp.countOffsetBegin;
                         int[] instructionCounts = counter.countInstructions(lastOp.instructionsToProfile, beginPc, endPc);
@@ -108,7 +123,8 @@ public class HotSpotInstructionProfiling extends PostAllocationOptimizationPhase
                 }
             }
         }
-        if (lastOp != null) {
+        if (lastOp != null)
+        {
             assert lastOp.countOffsetBegin < asm.position();
             int beginPc = lastOp.countOffsetBegin;
             int endPc = asm.position();
@@ -117,27 +133,31 @@ public class HotSpotInstructionProfiling extends PostAllocationOptimizationPhase
         }
     }
 
-    public static class InstructionCounterOp extends LIRInstruction {
+    public static class InstructionCounterOp extends LIRInstruction
+    {
         public static final LIRInstructionClass<InstructionCounterOp> TYPE = LIRInstructionClass.create(InstructionCounterOp.class);
         private final HotSpotCounterOp delegate;
         private final String[] instructionsToProfile;
         private int countOffsetBegin;
         private int countOffsetEnd;
 
-        public InstructionCounterOp(HotSpotCounterOp delegate, String[] instructionsToProfile) {
+        public InstructionCounterOp(HotSpotCounterOp delegate, String[] instructionsToProfile)
+        {
             super(TYPE);
             this.delegate = delegate;
             this.instructionsToProfile = instructionsToProfile;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb) {
+        public void emitCode(CompilationResultBuilder crb)
+        {
             countOffsetBegin = crb.asm.position();
             this.delegate.emitCode(crb);
             countOffsetEnd = crb.asm.position();
         }
 
-        public String[] getInstructionsToProfile() {
+        public String[] getInstructionsToProfile()
+        {
             return instructionsToProfile;
         }
     }

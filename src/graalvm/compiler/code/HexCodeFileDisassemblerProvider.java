@@ -24,58 +24,72 @@ import graalvm.compiler.serviceprovider.ServiceProvider;
  * {@link HexCodeFile} based implementation of {@link DisassemblerProvider}.
  */
 @ServiceProvider(DisassemblerProvider.class)
-public class HexCodeFileDisassemblerProvider implements DisassemblerProvider {
-
+public class HexCodeFileDisassemblerProvider implements DisassemblerProvider
+{
     @Override
-    public String disassembleCompiledCode(CodeCacheProvider codeCache, CompilationResult compResult) {
+    public String disassembleCompiledCode(CodeCacheProvider codeCache, CompilationResult compResult)
+    {
         assert compResult != null;
         return disassemble(codeCache, compResult, null);
     }
 
     @Override
-    public String getName() {
+    public String getName()
+    {
         return "hcf";
     }
 
     @Override
-    public String disassembleInstalledCode(CodeCacheProvider codeCache, CompilationResult compResult, InstalledCode installedCode) {
+    public String disassembleInstalledCode(CodeCacheProvider codeCache, CompilationResult compResult, InstalledCode installedCode)
+    {
         assert installedCode != null;
         return installedCode.isValid() ? disassemble(codeCache, compResult, installedCode) : null;
     }
 
-    private static String disassemble(CodeCacheProvider codeCache, CompilationResult compResult, InstalledCode installedCode) {
+    private static String disassemble(CodeCacheProvider codeCache, CompilationResult compResult, InstalledCode installedCode)
+    {
         TargetDescription target = codeCache.getTarget();
         RegisterConfig regConfig = codeCache.getRegisterConfig();
         byte[] code = installedCode == null ? Arrays.copyOf(compResult.getTargetCode(), compResult.getTargetCodeSize()) : installedCode.getCode();
-        if (code == null) {
+        if (code == null)
+        {
             // Method was deoptimized/invalidated
             return "";
         }
         long start = installedCode == null ? 0L : installedCode.getStart();
         HexCodeFile hcf = new HexCodeFile(code, start, target.arch.getName(), target.wordSize * 8);
-        if (compResult != null) {
+        if (compResult != null)
+        {
             HexCodeFile.addAnnotations(hcf, compResult.getAnnotations());
             addExceptionHandlersComment(compResult, hcf);
             Register fp = regConfig.getFrameRegister();
             RefMapFormatter slotFormatter = new DefaultRefMapFormatter(target.wordSize, fp, 0);
-            for (Infopoint infopoint : compResult.getInfopoints()) {
-                if (infopoint instanceof Call) {
+            for (Infopoint infopoint : compResult.getInfopoints())
+            {
+                if (infopoint instanceof Call)
+                {
                     Call call = (Call) infopoint;
-                    if (call.debugInfo != null) {
+                    if (call.debugInfo != null)
+                    {
                         hcf.addComment(call.pcOffset + call.size, CodeUtil.append(new StringBuilder(100), call.debugInfo, slotFormatter).toString());
                     }
                     addOperandComment(hcf, call.pcOffset, "{" + codeCache.getTargetName(call) + "}");
-                } else {
-                    if (infopoint.debugInfo != null) {
+                }
+                else
+                {
+                    if (infopoint.debugInfo != null)
+                    {
                         hcf.addComment(infopoint.pcOffset, CodeUtil.append(new StringBuilder(100), infopoint.debugInfo, slotFormatter).toString());
                     }
                     addOperandComment(hcf, infopoint.pcOffset, "{infopoint: " + infopoint.reason + "}");
                 }
             }
-            for (DataPatch site : compResult.getDataPatches()) {
+            for (DataPatch site : compResult.getDataPatches())
+            {
                 hcf.addOperandComment(site.pcOffset, "{" + site.reference.toString() + "}");
             }
-            for (Mark mark : compResult.getMarks()) {
+            for (Mark mark : compResult.getMarks())
+            {
                 hcf.addComment(mark.pcOffset, codeCache.getMarkName(mark));
             }
         }
@@ -83,11 +97,14 @@ public class HexCodeFileDisassemblerProvider implements DisassemblerProvider {
         return HexCodeFileDisTool.tryDisassemble(hcfEmbeddedString);
     }
 
-    private static void addExceptionHandlersComment(CompilationResult compResult, HexCodeFile hcf) {
-        if (!compResult.getExceptionHandlers().isEmpty()) {
+    private static void addExceptionHandlersComment(CompilationResult compResult, HexCodeFile hcf)
+    {
+        if (!compResult.getExceptionHandlers().isEmpty())
+        {
             String nl = HexCodeFile.NEW_LINE;
             StringBuilder buf = new StringBuilder("------ Exception Handlers ------").append(nl);
-            for (ExceptionHandler e : compResult.getExceptionHandlers()) {
+            for (ExceptionHandler e : compResult.getExceptionHandlers())
+            {
                 buf.append("    ").append(e.pcOffset).append(" -> ").append(e.handlerPos).append(nl);
                 hcf.addComment(e.pcOffset, "[exception -> " + e.handlerPos + "]");
                 hcf.addComment(e.handlerPos, "[exception handler for " + e.pcOffset + "]");
@@ -96,7 +113,8 @@ public class HexCodeFileDisassemblerProvider implements DisassemblerProvider {
         }
     }
 
-    private static void addOperandComment(HexCodeFile hcf, int pos, String comment) {
+    private static void addOperandComment(HexCodeFile hcf, int pos, String comment)
+    {
         hcf.addOperandComment(pos, comment);
     }
 
@@ -104,25 +122,35 @@ public class HexCodeFileDisassemblerProvider implements DisassemblerProvider {
      * Interface to the tool for disassembling an {@link HexCodeFile#toEmbeddedString() embedded}
      * {@link HexCodeFile}.
      */
-    static class HexCodeFileDisTool {
+    static class HexCodeFileDisTool
+    {
         static final MethodHandle processMethod;
 
-        static {
+        static
+        {
             MethodHandle toolMethod = null;
-            try {
+            try
+            {
                 Class<?> toolClass = Class.forName("com.oracle.max.hcfdis.HexCodeFileDis", true, ClassLoader.getSystemClassLoader());
                 toolMethod = MethodHandles.lookup().unreflect(toolClass.getDeclaredMethod("processEmbeddedString", String.class));
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 // Tool not available on the class path
             }
             processMethod = toolMethod;
         }
 
-        public static String tryDisassemble(String hcfEmbeddedString) {
-            if (processMethod != null) {
-                try {
+        public static String tryDisassemble(String hcfEmbeddedString)
+        {
+            if (processMethod != null)
+            {
+                try
+                {
                     return (String) processMethod.invokeExact(hcfEmbeddedString);
-                } catch (Throwable e) {
+                }
+                catch (Throwable e)
+                {
                     // If the tool is available, for now let's be noisy when it fails
                     throw new InternalError(e);
                 }
@@ -130,5 +158,4 @@ public class HexCodeFileDisassemblerProvider implements DisassemblerProvider {
             return hcfEmbeddedString;
         }
     }
-
 }

@@ -8,8 +8,8 @@ import jdk.vm.ci.code.ValueKindFactory;
 /**
  * Details about a set of supported {@link ForeignCallDescriptor foreign calls}.
  */
-public interface ForeignCallsProvider extends ValueKindFactory<LIRKind> {
-
+public interface ForeignCallsProvider extends ValueKindFactory<LIRKind>
+{
     /**
      * Determines if a given foreign call is side-effect free. Deoptimization cannot return
      * execution to a point before a foreign call that has a side effect.

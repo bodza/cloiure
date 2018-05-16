@@ -48,8 +48,8 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * information suggests a reasonable amount of different receiver types and different methods. If an
  * unknown type is encountered a deoptimization is triggered.
  */
-public class MultiTypeGuardInlineInfo extends AbstractInlineInfo {
-
+public class MultiTypeGuardInlineInfo extends AbstractInlineInfo
+{
     private final List<ResolvedJavaMethod> concretes;
     private final double[] methodProbabilities;
     private final double maximumMethodProbability;
@@ -58,7 +58,8 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo {
     private final double notRecordedTypeProbability;
     private final Inlineable[] inlineableElements;
 
-    public MultiTypeGuardInlineInfo(Invoke invoke, ArrayList<ResolvedJavaMethod> concretes, ArrayList<ProfiledType> ptypes, ArrayList<Integer> typesToConcretes, double notRecordedTypeProbability) {
+    public MultiTypeGuardInlineInfo(Invoke invoke, ArrayList<ResolvedJavaMethod> concretes, ArrayList<ProfiledType> ptypes, ArrayList<Integer> typesToConcretes, double notRecordedTypeProbability)
+    {
         super(invoke);
         assert concretes.size() > 0 : "must have at least one method";
         assert ptypes.size() == typesToConcretes.size() : "array lengths must match";
@@ -74,17 +75,21 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo {
         assert assertUniqueTypes(ptypes);
     }
 
-    private static boolean assertUniqueTypes(ArrayList<ProfiledType> ptypes) {
+    private static boolean assertUniqueTypes(ArrayList<ProfiledType> ptypes)
+    {
         EconomicSet<ResolvedJavaType> set = EconomicSet.create(Equivalence.DEFAULT);
-        for (ProfiledType ptype : ptypes) {
+        for (ProfiledType ptype : ptypes)
+        {
             set.add(ptype.getType());
         }
         return set.size() == ptypes.size();
     }
 
-    private double[] computeMethodProbabilities() {
+    private double[] computeMethodProbabilities()
+    {
         double[] result = new double[concretes.size()];
-        for (int i = 0; i < typesToConcretes.size(); i++) {
+        for (int i = 0; i < typesToConcretes.size(); i++)
+        {
             int concrete = typesToConcretes.get(i);
             double probability = ptypes.get(i).getProbability();
             result[concrete] += probability;
@@ -92,75 +97,93 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo {
         return result;
     }
 
-    private double maximumMethodProbability() {
+    private double maximumMethodProbability()
+    {
         double max = 0;
-        for (int i = 0; i < methodProbabilities.length; i++) {
+        for (int i = 0; i < methodProbabilities.length; i++)
+        {
             max = Math.max(max, methodProbabilities[i]);
         }
         return max;
     }
 
     @Override
-    public int numberOfMethods() {
+    public int numberOfMethods()
+    {
         return concretes.size();
     }
 
     @Override
-    public ResolvedJavaMethod methodAt(int index) {
+    public ResolvedJavaMethod methodAt(int index)
+    {
         assert index >= 0 && index < concretes.size();
         return concretes.get(index);
     }
 
     @Override
-    public Inlineable inlineableElementAt(int index) {
+    public Inlineable inlineableElementAt(int index)
+    {
         assert index >= 0 && index < concretes.size();
         return inlineableElements[index];
     }
 
     @Override
-    public double probabilityAt(int index) {
+    public double probabilityAt(int index)
+    {
         return methodProbabilities[index];
     }
 
     @Override
-    public double relevanceAt(int index) {
+    public double relevanceAt(int index)
+    {
         return probabilityAt(index) / maximumMethodProbability;
     }
 
     @Override
-    public void setInlinableElement(int index, Inlineable inlineableElement) {
+    public void setInlinableElement(int index, Inlineable inlineableElement)
+    {
         assert index >= 0 && index < concretes.size();
         inlineableElements[index] = inlineableElement;
     }
 
     @Override
-    public EconomicSet<Node> inline(Providers providers, String reason) {
-        if (hasSingleMethod()) {
+    public EconomicSet<Node> inline(Providers providers, String reason)
+    {
+        if (hasSingleMethod())
+        {
             return inlineSingleMethod(graph(), providers.getStampProvider(), providers.getConstantReflection(), reason);
-        } else {
+        }
+        else
+        {
             return inlineMultipleMethods(graph(), providers, reason);
         }
     }
 
     @Override
-    public boolean shouldInline() {
-        for (ResolvedJavaMethod method : concretes) {
-            if (method.shouldBeInlined()) {
+    public boolean shouldInline()
+    {
+        for (ResolvedJavaMethod method : concretes)
+        {
+            if (method.shouldBeInlined())
+            {
                 return true;
             }
         }
         return false;
     }
 
-    private boolean hasSingleMethod() {
+    private boolean hasSingleMethod()
+    {
         return concretes.size() == 1 && !shouldFallbackToInvoke();
     }
 
-    private boolean shouldFallbackToInvoke() {
+    private boolean shouldFallbackToInvoke()
+    {
         return notRecordedTypeProbability > 0;
     }
 
-    private EconomicSet<Node> inlineMultipleMethods(StructuredGraph graph, Providers providers, String reason) {
+    private EconomicSet<Node> inlineMultipleMethods(StructuredGraph graph, Providers providers, String reason)
+    {
         int numberOfMethods = concretes.size();
         FixedNode continuation = invoke.next();
 
@@ -169,13 +192,15 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo {
         returnMerge.setStateAfter(invoke.stateAfter());
 
         PhiNode returnValuePhi = null;
-        if (invoke.asNode().getStackKind() != JavaKind.Void) {
+        if (invoke.asNode().getStackKind() != JavaKind.Void)
+        {
             returnValuePhi = graph.addWithoutUnique(new ValuePhiNode(invoke.asNode().stamp(NodeView.DEFAULT).unrestricted(), returnMerge));
         }
 
         AbstractMergeNode exceptionMerge = null;
         PhiNode exceptionObjectPhi = null;
-        if (invoke instanceof InvokeWithExceptionNode) {
+        if (invoke instanceof InvokeWithExceptionNode)
+        {
             InvokeWithExceptionNode invokeWithException = (InvokeWithExceptionNode) invoke;
             ExceptionObjectNode exceptionEdge = (ExceptionObjectNode) invokeWithException.exceptionEdge();
 
@@ -184,27 +209,31 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo {
             FixedNode exceptionSux = exceptionEdge.next();
             graph.addBeforeFixed(exceptionSux, exceptionMerge);
             exceptionObjectPhi = graph.addWithoutUnique(new ValuePhiNode(StampFactory.forKind(JavaKind.Object), exceptionMerge));
-            exceptionMerge.setStateAfter(exceptionEdge.stateAfter().duplicateModified(invoke.stateAfter().bci, true, JavaKind.Object, new JavaKind[]{JavaKind.Object},
-                            new ValueNode[]{exceptionObjectPhi}));
+            exceptionMerge.setStateAfter(exceptionEdge.stateAfter().duplicateModified(invoke.stateAfter().bci, true, JavaKind.Object, new JavaKind[]{JavaKind.Object}, new ValueNode[]{exceptionObjectPhi}));
         }
 
         // create one separate block for each invoked method
         AbstractBeginNode[] successors = new AbstractBeginNode[numberOfMethods + 1];
-        for (int i = 0; i < numberOfMethods; i++) {
+        for (int i = 0; i < numberOfMethods; i++)
+        {
             successors[i] = createInvocationBlock(graph, invoke, returnMerge, returnValuePhi, exceptionMerge, exceptionObjectPhi, true);
         }
 
         // create the successor for an unknown type
         FixedNode unknownTypeSux;
-        if (shouldFallbackToInvoke()) {
+        if (shouldFallbackToInvoke())
+        {
             unknownTypeSux = createInvocationBlock(graph, invoke, returnMerge, returnValuePhi, exceptionMerge, exceptionObjectPhi, false);
-        } else {
+        }
+        else
+        {
             unknownTypeSux = graph.add(new DeoptimizeNode(DeoptimizationAction.InvalidateReprofile, DeoptimizationReason.TypeCheckedInliningViolated));
         }
         successors[successors.length - 1] = BeginNode.begin(unknownTypeSux);
 
         // replace the invoke exception edge
-        if (invoke instanceof InvokeWithExceptionNode) {
+        if (invoke instanceof InvokeWithExceptionNode)
+        {
             InvokeWithExceptionNode invokeWithExceptionNode = (InvokeWithExceptionNode) invoke;
             ExceptionObjectNode exceptionEdge = (ExceptionObjectNode) invokeWithExceptionNode.exceptionEdge();
             exceptionEdge.replaceAtUsages(exceptionObjectPhi);
@@ -220,7 +249,8 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo {
         assert invoke.next() == continuation;
         invoke.setNext(null);
         returnMerge.setNext(continuation);
-        if (returnValuePhi != null) {
+        if (returnValuePhi != null)
+        {
             invoke.asNode().replaceAtUsages(returnValuePhi);
         }
         invoke.asNode().safeDelete();
@@ -228,14 +258,18 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo {
         ArrayList<PiNode> replacementNodes = new ArrayList<>();
 
         // prepare the anchors for the invokes
-        for (int i = 0; i < numberOfMethods; i++) {
+        for (int i = 0; i < numberOfMethods; i++)
+        {
             AbstractBeginNode node = successors[i];
             Invoke invokeForInlining = (Invoke) node.next();
 
             ResolvedJavaType commonType;
-            if (methodDispatch) {
+            if (methodDispatch)
+            {
                 commonType = concretes.get(i).getDeclaringClass();
-            } else {
+            }
+            else
+            {
                 commonType = getLeastCommonType(i);
             }
 
@@ -247,43 +281,56 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo {
             assert !anchoredReceiver.isDeleted() : anchoredReceiver;
             replacementNodes.add(anchoredReceiver);
         }
-        if (shouldFallbackToInvoke()) {
+        if (shouldFallbackToInvoke())
+        {
             replacementNodes.add(null);
         }
 
         EconomicSet<Node> canonicalizeNodes = EconomicSet.create(Equivalence.DEFAULT);
         // do the actual inlining for every invoke
-        for (int i = 0; i < numberOfMethods; i++) {
+        for (int i = 0; i < numberOfMethods; i++)
+        {
             Invoke invokeForInlining = (Invoke) successors[i].next();
             canonicalizeNodes.addAll(doInline(i, invokeForInlining, reason));
         }
-        if (returnValuePhi != null) {
+        if (returnValuePhi != null)
+        {
             canonicalizeNodes.add(returnValuePhi);
         }
         return canonicalizeNodes;
     }
 
-    protected EconomicSet<Node> doInline(int index, Invoke invokeForInlining, String reason) {
+    protected EconomicSet<Node> doInline(int index, Invoke invokeForInlining, String reason)
+    {
         return inline(invokeForInlining, methodAt(index), inlineableElementAt(index), false, reason);
     }
 
-    private int getTypeCount(int concreteMethodIndex) {
+    private int getTypeCount(int concreteMethodIndex)
+    {
         int count = 0;
-        for (int i = 0; i < typesToConcretes.size(); i++) {
-            if (typesToConcretes.get(i) == concreteMethodIndex) {
+        for (int i = 0; i < typesToConcretes.size(); i++)
+        {
+            if (typesToConcretes.get(i) == concreteMethodIndex)
+            {
                 count++;
             }
         }
         return count;
     }
 
-    private ResolvedJavaType getLeastCommonType(int concreteMethodIndex) {
+    private ResolvedJavaType getLeastCommonType(int concreteMethodIndex)
+    {
         ResolvedJavaType commonType = null;
-        for (int i = 0; i < typesToConcretes.size(); i++) {
-            if (typesToConcretes.get(i) == concreteMethodIndex) {
-                if (commonType == null) {
+        for (int i = 0; i < typesToConcretes.size(); i++)
+        {
+            if (typesToConcretes.get(i) == concreteMethodIndex)
+            {
+                if (commonType == null)
+                {
                     commonType = ptypes.get(i).getType();
-                } else {
+                }
+                else
+                {
                     commonType = commonType.findLeastCommonAncestor(ptypes.get(i).getType());
                 }
             }
@@ -292,15 +339,18 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo {
         return commonType;
     }
 
-    private ResolvedJavaType getLeastCommonType() {
+    private ResolvedJavaType getLeastCommonType()
+    {
         ResolvedJavaType result = getLeastCommonType(0);
-        for (int i = 1; i < concretes.size(); i++) {
+        for (int i = 1; i < concretes.size(); i++)
+        {
             result = result.findLeastCommonAncestor(getLeastCommonType(i));
         }
         return result;
     }
 
-    private EconomicSet<Node> inlineSingleMethod(StructuredGraph graph, StampProvider stampProvider, ConstantReflectionProvider constantReflection, String reason) {
+    private EconomicSet<Node> inlineSingleMethod(StructuredGraph graph, StampProvider stampProvider, ConstantReflectionProvider constantReflection, String reason)
+    {
         assert concretes.size() == 1 && inlineableElements.length == 1 && ptypes.size() > 1 && !shouldFallbackToInvoke() && notRecordedTypeProbability == 0;
 
         AbstractBeginNode calleeEntryNode = graph.add(new BeginNode());
@@ -314,8 +364,8 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo {
         return inline(invoke, methodAt(0), inlineableElementAt(0), false, reason);
     }
 
-    private boolean createDispatchOnTypeBeforeInvoke(StructuredGraph graph, AbstractBeginNode[] successors, boolean invokeIsOnlySuccessor, StampProvider stampProvider,
-                    ConstantReflectionProvider constantReflection) {
+    private boolean createDispatchOnTypeBeforeInvoke(StructuredGraph graph, AbstractBeginNode[] successors, boolean invokeIsOnlySuccessor, StampProvider stampProvider, ConstantReflectionProvider constantReflection)
+    {
         assert ptypes.size() >= 1;
         ValueNode nonNullReceiver = InliningUtil.nonNullReceiver(invoke);
         LoadHubNode hub = graph.unique(new LoadHubNode(stampProvider, nonNullReceiver));
@@ -326,7 +376,8 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo {
         double[] keyProbabilities = new double[ptypes.size() + 1];
         int[] keySuccessors = new int[ptypes.size() + 1];
         double totalProbability = notRecordedTypeProbability;
-        for (int i = 0; i < ptypes.size(); i++) {
+        for (int i = 0; i < ptypes.size(); i++)
+        {
             keys[i] = ptypes.get(i).getType();
             keyProbabilities[i] = ptypes.get(i).getProbability();
             totalProbability += keyProbabilities[i];
@@ -337,7 +388,8 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo {
         keySuccessors[keySuccessors.length - 1] = successors.length - 1;
 
         // Normalize the probabilities.
-        for (int i = 0; i < keyProbabilities.length; i++) {
+        for (int i = 0; i < keyProbabilities.length; i++)
+        {
             keyProbabilities[i] /= totalProbability;
         }
 
@@ -347,8 +399,8 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo {
         return false;
     }
 
-    private static AbstractBeginNode createInvocationBlock(StructuredGraph graph, Invoke invoke, AbstractMergeNode returnMerge, PhiNode returnValuePhi, AbstractMergeNode exceptionMerge,
-                    PhiNode exceptionObjectPhi, boolean useForInlining) {
+    private static AbstractBeginNode createInvocationBlock(StructuredGraph graph, Invoke invoke, AbstractMergeNode returnMerge, PhiNode returnValuePhi, AbstractMergeNode exceptionMerge, PhiNode exceptionObjectPhi, boolean useForInlining)
+    {
         Invoke duplicatedInvoke = duplicateInvokeForInlining(graph, invoke, exceptionMerge, exceptionObjectPhi, useForInlining);
         AbstractBeginNode calleeEntryNode = graph.add(new BeginNode());
         calleeEntryNode.setNext(duplicatedInvoke.asNode());
@@ -357,27 +409,31 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo {
         duplicatedInvoke.setNext(endNode);
         returnMerge.addForwardEnd(endNode);
 
-        if (returnValuePhi != null) {
+        if (returnValuePhi != null)
+        {
             returnValuePhi.addInput(duplicatedInvoke.asNode());
         }
         return calleeEntryNode;
     }
 
-    private static Invoke duplicateInvokeForInlining(StructuredGraph graph, Invoke invoke, AbstractMergeNode exceptionMerge, PhiNode exceptionObjectPhi, boolean useForInlining) {
+    private static Invoke duplicateInvokeForInlining(StructuredGraph graph, Invoke invoke, AbstractMergeNode exceptionMerge, PhiNode exceptionObjectPhi, boolean useForInlining)
+    {
         Invoke result = (Invoke) invoke.asNode().copyWithInputs();
         Node callTarget = result.callTarget().copyWithInputs();
         result.asNode().replaceFirstInput(result.callTarget(), callTarget);
         result.setUseForInlining(useForInlining);
 
         JavaKind kind = invoke.asNode().getStackKind();
-        if (kind != JavaKind.Void) {
+        if (kind != JavaKind.Void)
+        {
             FrameState stateAfter = invoke.stateAfter();
             stateAfter = stateAfter.duplicate(stateAfter.bci);
             stateAfter.replaceFirstInput(invoke.asNode(), result.asNode());
             result.setStateAfter(stateAfter);
         }
 
-        if (invoke instanceof InvokeWithExceptionNode) {
+        if (invoke instanceof InvokeWithExceptionNode)
+        {
             assert exceptionMerge != null && exceptionObjectPhi != null;
 
             InvokeWithExceptionNode invokeWithException = (InvokeWithExceptionNode) invoke;
@@ -399,33 +455,42 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo {
     }
 
     @Override
-    public void tryToDevirtualizeInvoke(Providers providers) {
-        if (hasSingleMethod()) {
+    public void tryToDevirtualizeInvoke(Providers providers)
+    {
+        if (hasSingleMethod())
+        {
             devirtualizeWithTypeSwitch(graph(), InvokeKind.Special, concretes.get(0), providers.getStampProvider(), providers.getConstantReflection());
-        } else {
+        }
+        else
+        {
             tryToDevirtualizeMultipleMethods(graph(), providers.getStampProvider(), providers.getConstantReflection());
         }
     }
 
-    private void tryToDevirtualizeMultipleMethods(StructuredGraph graph, StampProvider stampProvider, ConstantReflectionProvider constantReflection) {
+    private void tryToDevirtualizeMultipleMethods(StructuredGraph graph, StampProvider stampProvider, ConstantReflectionProvider constantReflection)
+    {
         MethodCallTargetNode methodCallTarget = (MethodCallTargetNode) invoke.callTarget();
-        if (methodCallTarget.invokeKind() == InvokeKind.Interface) {
+        if (methodCallTarget.invokeKind() == InvokeKind.Interface)
+        {
             ResolvedJavaMethod targetMethod = methodCallTarget.targetMethod();
             ResolvedJavaType leastCommonType = getLeastCommonType();
             ResolvedJavaType contextType = invoke.getContextType();
             // check if we have a common base type that implements the interface -> in that case
             // we have a vtable entry for the interface method and can use a less expensive
             // virtual call
-            if (!leastCommonType.isInterface() && targetMethod.getDeclaringClass().isAssignableFrom(leastCommonType)) {
+            if (!leastCommonType.isInterface() && targetMethod.getDeclaringClass().isAssignableFrom(leastCommonType))
+            {
                 ResolvedJavaMethod baseClassTargetMethod = leastCommonType.resolveConcreteMethod(targetMethod, contextType);
-                if (baseClassTargetMethod != null) {
+                if (baseClassTargetMethod != null)
+                {
                     devirtualizeWithTypeSwitch(graph, InvokeKind.Virtual, leastCommonType.resolveConcreteMethod(targetMethod, contextType), stampProvider, constantReflection);
                 }
             }
         }
     }
 
-    private void devirtualizeWithTypeSwitch(StructuredGraph graph, InvokeKind kind, ResolvedJavaMethod target, StampProvider stampProvider, ConstantReflectionProvider constantReflection) {
+    private void devirtualizeWithTypeSwitch(StructuredGraph graph, InvokeKind kind, ResolvedJavaMethod target, StampProvider stampProvider, ConstantReflectionProvider constantReflection)
+    {
         AbstractBeginNode invocationEntry = graph.add(new BeginNode());
         AbstractBeginNode unknownTypeSux = createUnknownTypeSuccessor(graph);
         AbstractBeginNode[] successors = new AbstractBeginNode[]{invocationEntry, unknownTypeSux};
@@ -438,23 +503,27 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo {
         InliningUtil.replaceInvokeCallTarget(invoke, graph, kind, target);
     }
 
-    private static AbstractBeginNode createUnknownTypeSuccessor(StructuredGraph graph) {
+    private static AbstractBeginNode createUnknownTypeSuccessor(StructuredGraph graph)
+    {
         return BeginNode.begin(graph.add(new DeoptimizeNode(DeoptimizationAction.InvalidateReprofile, DeoptimizationReason.TypeCheckedInliningViolated)));
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         StringBuilder builder = new StringBuilder(shouldFallbackToInvoke() ? "megamorphic" : "polymorphic");
         builder.append(", ");
         builder.append(concretes.size());
         builder.append(" methods [ ");
-        for (int i = 0; i < concretes.size(); i++) {
+        for (int i = 0; i < concretes.size(); i++)
+        {
             builder.append(concretes.get(i).format("  %H.%n(%p):%r"));
         }
         builder.append(" ], ");
         builder.append(ptypes.size());
         builder.append(" type checks [ ");
-        for (int i = 0; i < ptypes.size(); i++) {
+        for (int i = 0; i < ptypes.size(); i++)
+        {
             builder.append("  ");
             builder.append(ptypes.get(i).getType().getName());
             builder.append(ptypes.get(i).getProbability());

@@ -3,8 +3,8 @@ package graalvm.compiler.core.common.cfg;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Loop<T extends AbstractBlockBase<T>> {
-
+public abstract class Loop<T extends AbstractBlockBase<T>>
+{
     private final Loop<T> parent;
     private final List<Loop<T>> children;
 
@@ -14,11 +14,15 @@ public abstract class Loop<T extends AbstractBlockBase<T>> {
     private final List<T> blocks;
     private final List<T> exits;
 
-    protected Loop(Loop<T> parent, int index, T header) {
+    protected Loop(Loop<T> parent, int index, T header)
+    {
         this.parent = parent;
-        if (parent != null) {
+        if (parent != null)
+        {
             this.depth = parent.getDepth() + 1;
-        } else {
+        }
+        else
+        {
             this.depth = 1;
         }
         this.index = index;
@@ -31,39 +35,48 @@ public abstract class Loop<T extends AbstractBlockBase<T>> {
     public abstract long numBackedges();
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "loop " + index + " depth " + getDepth() + (parent != null ? " outer " + parent.index : "");
     }
 
-    public Loop<T> getParent() {
+    public Loop<T> getParent()
+    {
         return parent;
     }
 
-    public List<Loop<T>> getChildren() {
+    public List<Loop<T>> getChildren()
+    {
         return children;
     }
 
-    public int getDepth() {
+    public int getDepth()
+    {
         return depth;
     }
 
-    public int getIndex() {
+    public int getIndex()
+    {
         return index;
     }
 
-    public T getHeader() {
+    public T getHeader()
+    {
         return header;
     }
 
-    public List<T> getBlocks() {
+    public List<T> getBlocks()
+    {
         return blocks;
     }
 
-    public List<T> getExits() {
+    public List<T> getExits()
+    {
         return exits;
     }
 
-    public void addExit(T t) {
+    public void addExit(T t)
+    {
         exits.add(t);
     }
 
@@ -75,10 +88,13 @@ public abstract class Loop<T extends AbstractBlockBase<T>> {
      * @return {@code true} if parentLoop is a (transitive) parent loop of childLoop, {@code false}
      *         otherwise
      */
-    public static <T extends AbstractBlockBase<T>> boolean transitiveParentLoop(Loop<T> childLoop, Loop<T> parentLoop) {
+    public static <T extends AbstractBlockBase<T>> boolean transitiveParentLoop(Loop<T> childLoop, Loop<T> parentLoop)
+    {
         Loop<T> curr = childLoop;
-        while (curr != null) {
-            if (curr == parentLoop) {
+        while (curr != null)
+        {
+            if (curr == parentLoop)
+            {
                 return true;
             }
             curr = curr.getParent();
@@ -87,7 +103,8 @@ public abstract class Loop<T extends AbstractBlockBase<T>> {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return index + depth * 31;
     }
 }

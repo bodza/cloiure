@@ -30,21 +30,25 @@ import graalvm.compiler.phases.common.LoweringPhase;
 import graalvm.compiler.phases.common.VerifyHeapAtReturnPhase;
 import graalvm.compiler.phases.tiers.MidTierContext;
 
-public class MidTier extends PhaseSuite<MidTierContext> {
-
-    public MidTier(OptionValues options) {
+public class MidTier extends PhaseSuite<MidTierContext>
+{
+    public MidTier(OptionValues options)
+    {
         CanonicalizerPhase canonicalizer = new CanonicalizerPhase();
-        if (ImmutableCode.getValue(options)) {
+        if (ImmutableCode.getValue(options))
+        {
             canonicalizer.disableReadCanonicalization();
         }
 
         appendPhase(new LockEliminationPhase());
 
-        if (OptFloatingReads.getValue(options)) {
+        if (OptFloatingReads.getValue(options))
+        {
             appendPhase(new IncrementalCanonicalizerPhase<>(canonicalizer, new FloatingReadPhase()));
         }
 
-        if (ConditionalElimination.getValue(options)) {
+        if (ConditionalElimination.getValue(options))
+        {
             appendPhase(new IterativeConditionalEliminationPhase(canonicalizer, true));
         }
 
@@ -54,7 +58,8 @@ public class MidTier extends PhaseSuite<MidTierContext> {
 
         appendPhase(new GuardLoweringPhase());
 
-        if (VerifyHeapAtReturn.getValue(options)) {
+        if (VerifyHeapAtReturn.getValue(options))
+        {
             appendPhase(new VerifyHeapAtReturnPhase());
         }
 
@@ -63,23 +68,28 @@ public class MidTier extends PhaseSuite<MidTierContext> {
         appendPhase(new FrameStateAssignmentPhase());
 
         LoopPolicies loopPolicies = createLoopPolicies();
-        if (OptLoopTransform.getValue(options)) {
-            if (PartialUnroll.getValue(options)) {
+        if (OptLoopTransform.getValue(options))
+        {
+            if (PartialUnroll.getValue(options))
+            {
                 appendPhase(new LoopPartialUnrollPhase(loopPolicies, canonicalizer));
             }
         }
-        if (ReassociateInvariants.getValue(options)) {
+        if (ReassociateInvariants.getValue(options))
+        {
             appendPhase(new ReassociateInvariantPhase());
         }
 
-        if (OptDeoptimizationGrouping.getValue(options)) {
+        if (OptDeoptimizationGrouping.getValue(options))
+        {
             appendPhase(new DeoptimizationGroupingPhase());
         }
 
         appendPhase(canonicalizer);
     }
 
-    public LoopPolicies createLoopPolicies() {
+    public LoopPolicies createLoopPolicies()
+    {
         return new DefaultLoopPolicies();
     }
 }

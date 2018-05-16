@@ -12,9 +12,8 @@ import graalvm.compiler.options.OptionKey;
  * Note: This must be a top level class to work around for
  * <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=477597">Eclipse bug 477597</a>.
  */
-public class HotspotSnippetsOptions {
-
-    // @formatter:off
+public class HotspotSnippetsOptions
+{
     @Option(help = "If the probability that a type check will hit one the profiled types (up to " +
                    "TypeCheckMaxHints) is below this value, the type check will be compiled without profiling info", type = OptionType.Expert)
     public static final OptionKey<Double> TypeCheckMinProfileHitProbability = new OptionKey<>(0.5);
@@ -46,5 +45,4 @@ public class HotspotSnippetsOptions {
 
     @Option(help = "Emit extra code to dynamically check monitor operations are balanced.", type = OptionType.Debug)
     public static final OptionKey<Boolean> VerifyBalancedMonitors = new OptionKey<>(false);
-    //@formatter:on
 }

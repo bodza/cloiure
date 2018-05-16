@@ -10,23 +10,27 @@ import org.graalvm.word.LocationIdentity;
 import jdk.vm.ci.meta.JavaKind;
 
 @NodeInfo
-public class GuardedUnsafeLoadNode extends RawLoadNode implements GuardedNode {
+public class GuardedUnsafeLoadNode extends RawLoadNode implements GuardedNode
+{
     public static final NodeClass<GuardedUnsafeLoadNode> TYPE = NodeClass.create(GuardedUnsafeLoadNode.class);
 
     @OptionalInput(Guard) protected GuardingNode guard;
 
-    public GuardedUnsafeLoadNode(ValueNode object, ValueNode offset, JavaKind accessKind, LocationIdentity locationIdentity, GuardingNode guard) {
+    public GuardedUnsafeLoadNode(ValueNode object, ValueNode offset, JavaKind accessKind, LocationIdentity locationIdentity, GuardingNode guard)
+    {
         super(TYPE, object, offset, accessKind, locationIdentity);
         this.guard = guard;
     }
 
     @Override
-    public GuardingNode getGuard() {
+    public GuardingNode getGuard()
+    {
         return guard;
     }
 
     @Override
-    public void setGuard(GuardingNode guard) {
+    public void setGuard(GuardingNode guard)
+    {
         updateUsagesInterface(this.guard, guard);
         this.guard = guard;
     }

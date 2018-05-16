@@ -8,8 +8,8 @@ import graalvm.compiler.phases.PhaseSuite;
  * Main interface providing access to suites used for compilation.
  */
 
-public interface SuitesProvider {
-
+public interface SuitesProvider
+{
     /**
      * Get the default phase suites of this compiler. This will take {@code options} into account,
      * returning an appropriately constructed suite. The returned suite is immutable by default but

@@ -1,7 +1,7 @@
 package graalvm.compiler.core.common.cfg;
 
-public abstract class AbstractBlockBase<T extends AbstractBlockBase<T>> {
-
+public abstract class AbstractBlockBase<T extends AbstractBlockBase<T>>
+{
     protected int id;
     protected int domDepth;
 
@@ -17,58 +17,71 @@ public abstract class AbstractBlockBase<T extends AbstractBlockBase<T>> {
     private boolean align;
     private int linearScanNumber;
 
-    protected AbstractBlockBase() {
+    protected AbstractBlockBase()
+    {
         this.id = AbstractControlFlowGraph.BLOCK_ID_INITIAL;
         this.linearScanNumber = -1;
         this.domNumber = -1;
         this.maxChildDomNumber = -1;
     }
 
-    public void setDominatorNumber(int domNumber) {
+    public void setDominatorNumber(int domNumber)
+    {
         this.domNumber = domNumber;
     }
 
-    public void setMaxChildDomNumber(int maxChildDomNumber) {
+    public void setMaxChildDomNumber(int maxChildDomNumber)
+    {
         this.maxChildDomNumber = maxChildDomNumber;
     }
 
-    public int getDominatorNumber() {
+    public int getDominatorNumber()
+    {
         return domNumber;
     }
 
-    public int getMaxChildDominatorNumber() {
+    public int getMaxChildDominatorNumber()
+    {
         return this.maxChildDomNumber;
     }
 
-    public int getId() {
+    public int getId()
+    {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(int id)
+    {
         this.id = id;
     }
 
-    public T[] getPredecessors() {
+    public T[] getPredecessors()
+    {
         return predecessors;
     }
 
-    public void setPredecessors(T[] predecessors) {
+    public void setPredecessors(T[] predecessors)
+    {
         this.predecessors = predecessors;
     }
 
-    public T[] getSuccessors() {
+    public T[] getSuccessors()
+    {
         return successors;
     }
 
-    public void setSuccessors(T[] successors) {
+    public void setSuccessors(T[] successors)
+    {
         this.successors = successors;
     }
 
-    public T getDominator() {
+    public T getDominator()
+    {
         return dominator;
     }
 
-    public void setDominator(T dominator) {
+    public void setDominator(T dominator)
+    {
         this.dominator = dominator;
         this.domDepth = dominator.domDepth + 1;
     }
@@ -76,52 +89,64 @@ public abstract class AbstractBlockBase<T extends AbstractBlockBase<T>> {
     /**
      * Level in the dominator tree starting with 0 for the start block.
      */
-    public int getDominatorDepth() {
+    public int getDominatorDepth()
+    {
         return domDepth;
     }
 
-    public T getFirstDominated() {
+    public T getFirstDominated()
+    {
         return this.firstDominated;
     }
 
-    public void setFirstDominated(T block) {
+    public void setFirstDominated(T block)
+    {
         this.firstDominated = block;
     }
 
-    public T getDominatedSibling() {
+    public T getDominatedSibling()
+    {
         return this.dominatedSibling;
     }
 
-    public void setDominatedSibling(T block) {
+    public void setDominatedSibling(T block)
+    {
         this.dominatedSibling = block;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "B" + id;
     }
 
-    public int getPredecessorCount() {
+    public int getPredecessorCount()
+    {
         return getPredecessors().length;
     }
 
-    public int getSuccessorCount() {
+    public int getSuccessorCount()
+    {
         return getSuccessors().length;
     }
 
-    public int getLinearScanNumber() {
+    public int getLinearScanNumber()
+    {
         return linearScanNumber;
     }
 
-    public void setLinearScanNumber(int linearScanNumber) {
+    public void setLinearScanNumber(int linearScanNumber)
+    {
         this.linearScanNumber = linearScanNumber;
     }
 
-    public boolean isAligned() {
+    public boolean isAligned()
+    {
         return align;
     }
 
-    public void setAlign(boolean align) {
+    public void setAlign(boolean align)
+    {
         this.align = align;
     }
 
@@ -144,7 +169,8 @@ public abstract class AbstractBlockBase<T extends AbstractBlockBase<T>> {
     public abstract T getDominator(int distance);
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return id;
     }
 }

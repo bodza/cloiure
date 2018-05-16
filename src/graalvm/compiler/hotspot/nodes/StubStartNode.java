@@ -12,17 +12,19 @@ import graalvm.compiler.nodes.StartNode;
  * Start node for a {@link Stub}'s graph.
  */
 @NodeInfo(cycles = CYCLES_0, size = SIZE_0)
-public final class StubStartNode extends StartNode {
-
+public final class StubStartNode extends StartNode
+{
     public static final NodeClass<StubStartNode> TYPE = NodeClass.create(StubStartNode.class);
     protected final Stub stub;
 
-    public StubStartNode(Stub stub) {
+    public StubStartNode(Stub stub)
+    {
         super(TYPE);
         this.stub = stub;
     }
 
-    public Stub getStub() {
+    public Stub getStub()
+    {
         return stub;
     }
 }

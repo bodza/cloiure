@@ -11,17 +11,19 @@ import graalvm.compiler.nodes.spi.ArrayLengthProvider;
  * The {@code AbstractNewArrayNode} is used for all 1-dimensional array allocations.
  */
 @NodeInfo
-public abstract class AbstractNewArrayNode extends AbstractNewObjectNode implements ArrayLengthProvider {
-
+public abstract class AbstractNewArrayNode extends AbstractNewObjectNode implements ArrayLengthProvider
+{
     public static final NodeClass<AbstractNewArrayNode> TYPE = NodeClass.create(AbstractNewArrayNode.class);
     @Input protected ValueNode length;
 
     @Override
-    public ValueNode length() {
+    public ValueNode length()
+    {
         return length;
     }
 
-    protected AbstractNewArrayNode(NodeClass<? extends AbstractNewArrayNode> c, Stamp stamp, ValueNode length, boolean fillContents, FrameState stateBefore) {
+    protected AbstractNewArrayNode(NodeClass<? extends AbstractNewArrayNode> c, Stamp stamp, ValueNode length, boolean fillContents, FrameState stateBefore)
+    {
         super(c, stamp, fillContents, stateBefore);
         this.length = length;
     }
@@ -29,7 +31,8 @@ public abstract class AbstractNewArrayNode extends AbstractNewObjectNode impleme
     /**
      * The list of node which produce input for this instruction.
      */
-    public ValueNode dimension(int index) {
+    public ValueNode dimension(int index)
+    {
         assert index == 0;
         return length();
     }
@@ -37,7 +40,8 @@ public abstract class AbstractNewArrayNode extends AbstractNewObjectNode impleme
     /**
      * The rank of the array allocated by this node, i.e. how many array dimensions.
      */
-    public int dimensionCount() {
+    public int dimensionCount()
+    {
         return 1;
     }
 }

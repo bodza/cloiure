@@ -23,19 +23,24 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 /**
  * Extension of {@link InvocationPlugins} that disables plugins based on runtime configuration.
  */
-final class HotSpotInvocationPlugins extends InvocationPlugins {
+final class HotSpotInvocationPlugins extends InvocationPlugins
+{
     private final GraalHotSpotVMConfig config;
     private final IntrinsificationPredicate intrinsificationPredicate;
 
-    HotSpotInvocationPlugins(GraalHotSpotVMConfig config, CompilerConfiguration compilerConfiguration) {
+    HotSpotInvocationPlugins(GraalHotSpotVMConfig config, CompilerConfiguration compilerConfiguration)
+    {
         this.config = config;
         intrinsificationPredicate = new IntrinsificationPredicate(compilerConfiguration);
     }
 
     @Override
-    public void register(InvocationPlugin plugin, Type declaringClass, String name, Type... argumentTypes) {
-        if (!config.usePopCountInstruction) {
-            if (name.equals("bitCount")) {
+    public void register(InvocationPlugin plugin, Type declaringClass, String name, Type... argumentTypes)
+    {
+        if (!config.usePopCountInstruction)
+        {
+            if (name.equals("bitCount"))
+            {
                 assert declaringClass.equals(Integer.class) || declaringClass.equals(Long.class);
                 return;
             }
@@ -44,25 +49,36 @@ final class HotSpotInvocationPlugins extends InvocationPlugins {
     }
 
     @Override
-    public void checkNewNodes(GraphBuilderContext b, InvocationPlugin plugin, NodeIterable<Node> newNodes) {
-        for (Node node : newNodes) {
-            if (node instanceof MacroNode) {
+    public void checkNewNodes(GraphBuilderContext b, InvocationPlugin plugin, NodeIterable<Node> newNodes)
+    {
+        for (Node node : newNodes)
+        {
+            if (node instanceof MacroNode)
+            {
                 // MacroNode based plugins can only be used for inlining since they
                 // require a valid bci should they need to replace themselves with
                 // an InvokeNode during lowering.
                 assert plugin.inlineOnly() : String.format("plugin that creates a %s (%s) must return true for inlineOnly(): %s", MacroNode.class.getSimpleName(), node, plugin);
             }
         }
-        if (GraalOptions.ImmutableCode.getValue(b.getOptions())) {
-            for (Node node : newNodes) {
-                if (node.hasUsages() && node instanceof ConstantNode) {
+        if (GraalOptions.ImmutableCode.getValue(b.getOptions()))
+        {
+            for (Node node : newNodes)
+            {
+                if (node.hasUsages() && node instanceof ConstantNode)
+                {
                     ConstantNode c = (ConstantNode) node;
-                    if (c.getStackKind() == JavaKind.Object && AheadOfTimeVerificationPhase.isIllegalObjectConstant(c)) {
-                        if (isClass(c)) {
+                    if (c.getStackKind() == JavaKind.Object && AheadOfTimeVerificationPhase.isIllegalObjectConstant(c))
+                    {
+                        if (isClass(c))
+                        {
                             // This will be handled later by LoadJavaMirrorWithKlassPhase
-                        } else {
+                        }
+                        else
+                        {
                             // Tolerate uses in unused FrameStates
-                            if (node.usages().filter((n) -> !(n instanceof FrameState) || n.hasUsages()).isNotEmpty()) {
+                            if (node.usages().filter((n) -> !(n instanceof FrameState) || n.hasUsages()).isNotEmpty())
+                            {
                                 throw new AssertionError("illegal constant node in AOT: " + node);
                             }
                         }
@@ -73,14 +89,17 @@ final class HotSpotInvocationPlugins extends InvocationPlugins {
         super.checkNewNodes(b, plugin, newNodes);
     }
 
-    private static boolean isClass(ConstantNode node) {
+    private static boolean isClass(ConstantNode node)
+    {
         ResolvedJavaType type = StampTool.typeOrNull(node);
         return type != null && "Ljava/lang/Class;".equals(type.getName());
     }
 
     @Override
-    public boolean canBeIntrinsified(ResolvedJavaType declaringClass) {
-        if (declaringClass instanceof HotSpotResolvedJavaType) {
+    public boolean canBeIntrinsified(ResolvedJavaType declaringClass)
+    {
+        if (declaringClass instanceof HotSpotResolvedJavaType)
+        {
             HotSpotResolvedJavaType type = (HotSpotResolvedJavaType) declaringClass;
             return intrinsificationPredicate.apply(type.mirror());
         }

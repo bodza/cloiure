@@ -17,65 +17,77 @@ import graalvm.compiler.phases.BasePhase;
 import graalvm.compiler.phases.common.CanonicalizerPhase;
 import graalvm.compiler.phases.tiers.PhaseContext;
 
-public class PartialEscapePhase extends EffectsPhase<PhaseContext> {
-
-    static class Options {
-        //@formatter:off
+public class PartialEscapePhase extends EffectsPhase<PhaseContext>
+{
+    static class Options
+    {
         @Option(help = "", type = OptionType.Debug)
         public static final OptionKey<Boolean> OptEarlyReadElimination = new OptionKey<>(true);
-        //@formatter:on
     }
 
     private final boolean readElimination;
     private final BasePhase<PhaseContext> cleanupPhase;
 
-    public PartialEscapePhase(boolean iterative, CanonicalizerPhase canonicalizer, OptionValues options) {
+    public PartialEscapePhase(boolean iterative, CanonicalizerPhase canonicalizer, OptionValues options)
+    {
         this(iterative, Options.OptEarlyReadElimination.getValue(options), canonicalizer, null, options);
     }
 
-    public PartialEscapePhase(boolean iterative, CanonicalizerPhase canonicalizer, BasePhase<PhaseContext> cleanupPhase, OptionValues options) {
+    public PartialEscapePhase(boolean iterative, CanonicalizerPhase canonicalizer, BasePhase<PhaseContext> cleanupPhase, OptionValues options)
+    {
         this(iterative, Options.OptEarlyReadElimination.getValue(options), canonicalizer, cleanupPhase, options);
     }
 
-    public PartialEscapePhase(boolean iterative, boolean readElimination, CanonicalizerPhase canonicalizer, BasePhase<PhaseContext> cleanupPhase, OptionValues options) {
+    public PartialEscapePhase(boolean iterative, boolean readElimination, CanonicalizerPhase canonicalizer, BasePhase<PhaseContext> cleanupPhase, OptionValues options)
+    {
         super(iterative ? EscapeAnalysisIterations.getValue(options) : 1, canonicalizer);
         this.readElimination = readElimination;
         this.cleanupPhase = cleanupPhase;
     }
 
     @Override
-    protected void postIteration(StructuredGraph graph, PhaseContext context, EconomicSet<Node> changedNodes) {
+    protected void postIteration(StructuredGraph graph, PhaseContext context, EconomicSet<Node> changedNodes)
+    {
         super.postIteration(graph, context, changedNodes);
-        if (cleanupPhase != null) {
+        if (cleanupPhase != null)
+        {
             cleanupPhase.apply(graph, context);
         }
     }
 
     @Override
-    protected void run(StructuredGraph graph, PhaseContext context) {
-        if (VirtualUtil.matches(graph, EscapeAnalyzeOnly.getValue(graph.getOptions()))) {
-            if (readElimination || graph.hasVirtualizableAllocation()) {
+    protected void run(StructuredGraph graph, PhaseContext context)
+    {
+        if (VirtualUtil.matches(graph, EscapeAnalyzeOnly.getValue(graph.getOptions())))
+        {
+            if (readElimination || graph.hasVirtualizableAllocation())
+            {
                 runAnalysis(graph, context);
             }
         }
     }
 
     @Override
-    protected Closure<?> createEffectsClosure(PhaseContext context, ScheduleResult schedule, ControlFlowGraph cfg) {
-        for (VirtualObjectNode virtual : cfg.graph.getNodes(VirtualObjectNode.TYPE)) {
+    protected Closure<?> createEffectsClosure(PhaseContext context, ScheduleResult schedule, ControlFlowGraph cfg)
+    {
+        for (VirtualObjectNode virtual : cfg.graph.getNodes(VirtualObjectNode.TYPE))
+        {
             virtual.resetObjectId();
         }
         assert schedule != null;
-        if (readElimination) {
+        if (readElimination)
+        {
             return new PEReadEliminationClosure(schedule, context.getMetaAccess(), context.getConstantReflection(), context.getConstantFieldProvider(), context.getLowerer());
-        } else {
+        }
+        else
+        {
             return new PartialEscapeClosure.Final(schedule, context.getMetaAccess(), context.getConstantReflection(), context.getConstantFieldProvider(), context.getLowerer());
         }
     }
 
     @Override
-    public boolean checkContract() {
+    public boolean checkContract()
+    {
         return false;
     }
-
 }

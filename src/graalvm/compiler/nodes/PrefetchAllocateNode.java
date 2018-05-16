@@ -13,18 +13,20 @@ import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 
 @NodeInfo(cycles = CYCLES_2, size = SIZE_2)
-public final class PrefetchAllocateNode extends FixedWithNextNode implements LIRLowerable {
-
+public final class PrefetchAllocateNode extends FixedWithNextNode implements LIRLowerable
+{
     public static final NodeClass<PrefetchAllocateNode> TYPE = NodeClass.create(PrefetchAllocateNode.class);
     @Input(Association) AddressNode address;
 
-    public PrefetchAllocateNode(ValueNode address) {
+    public PrefetchAllocateNode(ValueNode address)
+    {
         super(TYPE, StampFactory.forVoid());
         this.address = (AddressNode) address;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         gen.getLIRGeneratorTool().emitPrefetchAllocate(gen.operand(address));
     }
 

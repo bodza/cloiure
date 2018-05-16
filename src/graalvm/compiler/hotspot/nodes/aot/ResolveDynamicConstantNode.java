@@ -15,33 +15,38 @@ import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
 
 @NodeInfo(cycles = CYCLES_4, size = SIZE_16, allowedUsageTypes = {InputType.Memory})
-public class ResolveDynamicConstantNode extends DeoptimizingFixedWithNextNode implements Lowerable, MemoryCheckpoint.Single {
+public class ResolveDynamicConstantNode extends DeoptimizingFixedWithNextNode implements Lowerable, MemoryCheckpoint.Single
+{
     public static final NodeClass<ResolveDynamicConstantNode> TYPE = NodeClass.create(ResolveDynamicConstantNode.class);
 
     @Input ValueNode value;
 
-    public ResolveDynamicConstantNode(Stamp valueStamp, ValueNode value) {
+    public ResolveDynamicConstantNode(Stamp valueStamp, ValueNode value)
+    {
         super(TYPE, valueStamp);
         this.value = value;
     }
 
-    public ValueNode value() {
+    public ValueNode value()
+    {
         return value;
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
     @Override
-    public boolean canDeoptimize() {
+    public boolean canDeoptimize()
+    {
         return true;
     }
 
     @Override
-    public LocationIdentity getLocationIdentity() {
+    public LocationIdentity getLocationIdentity()
+    {
         return LocationIdentity.any();
     }
-
 }

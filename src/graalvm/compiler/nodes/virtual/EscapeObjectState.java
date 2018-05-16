@@ -9,16 +9,19 @@ import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.VirtualState;
 
 @NodeInfo(cycles = CYCLES_0, size = SIZE_0)
-public abstract class EscapeObjectState extends VirtualState implements ValueNumberable {
+public abstract class EscapeObjectState extends VirtualState implements ValueNumberable
+{
     public static final NodeClass<EscapeObjectState> TYPE = NodeClass.create(EscapeObjectState.class);
 
     @Input protected VirtualObjectNode object;
 
-    public VirtualObjectNode object() {
+    public VirtualObjectNode object()
+    {
         return object;
     }
 
-    public EscapeObjectState(NodeClass<? extends EscapeObjectState> c, VirtualObjectNode object) {
+    public EscapeObjectState(NodeClass<? extends EscapeObjectState> c, VirtualObjectNode object)
+    {
         super(c);
         this.object = object;
     }
@@ -27,12 +30,14 @@ public abstract class EscapeObjectState extends VirtualState implements ValueNum
     public abstract EscapeObjectState duplicateWithVirtualState();
 
     @Override
-    public boolean isPartOfThisState(VirtualState state) {
+    public boolean isPartOfThisState(VirtualState state)
+    {
         return this == state;
     }
 
     @Override
-    public void applyToVirtual(VirtualClosure closure) {
+    public void applyToVirtual(VirtualClosure closure)
+    {
         closure.apply(this);
     }
 }

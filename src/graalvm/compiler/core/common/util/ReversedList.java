@@ -9,28 +9,33 @@ import java.util.RandomAccess;
  *
  * This implementation is made for {@link RandomAccess} lists.
  */
-public class ReversedList<T> extends AbstractList<T> implements RandomAccess {
+public class ReversedList<T> extends AbstractList<T> implements RandomAccess
+{
     private final List<T> original;
 
-    public ReversedList(List<T> original) {
+    public ReversedList(List<T> original)
+    {
         assert original instanceof RandomAccess;
         this.original = original;
     }
 
     @Override
-    public T get(int index) {
+    public T get(int index)
+    {
         return original.get(original.size() - index - 1);
     }
 
     @Override
-    public int size() {
+    public int size()
+    {
         return original.size();
     }
 
     /**
      * Creates a list that is a view on {@code list} in reverse order.
      */
-    public static <T> ReversedList<T> reversed(List<T> list) {
+    public static <T> ReversedList<T> reversed(List<T> list)
+    {
         return new ReversedList<>(list);
     }
 }

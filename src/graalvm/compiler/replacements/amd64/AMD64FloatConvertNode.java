@@ -21,24 +21,28 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
  * fixup code that handles the corner cases that differ between AMD64 and Java.
  */
 @NodeInfo(cycles = CYCLES_8, size = SIZE_1)
-public final class AMD64FloatConvertNode extends UnaryArithmeticNode<FloatConvertOp> implements ArithmeticLIRLowerable {
+public final class AMD64FloatConvertNode extends UnaryArithmeticNode<FloatConvertOp> implements ArithmeticLIRLowerable
+{
     public static final NodeClass<AMD64FloatConvertNode> TYPE = NodeClass.create(AMD64FloatConvertNode.class);
 
     protected final FloatConvert op;
 
-    public AMD64FloatConvertNode(FloatConvert op, ValueNode value) {
+    public AMD64FloatConvertNode(FloatConvert op, ValueNode value)
+    {
         super(TYPE, table -> table.getFloatConvert(op), value);
         this.op = op;
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue) {
+    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    {
         // nothing to do
         return this;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen) {
+    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    {
         nodeValueMap.setResult(this, gen.emitFloatConvert(op, nodeValueMap.operand(getValue())));
     }
 }

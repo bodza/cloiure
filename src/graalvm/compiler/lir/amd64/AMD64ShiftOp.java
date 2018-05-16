@@ -19,7 +19,8 @@ import jdk.vm.ci.meta.AllocatableValue;
  * AMD64 shift/rotate operation. This operation has a single operand for the first input and output.
  * The second input must be in the RCX register.
  */
-public class AMD64ShiftOp extends AMD64LIRInstruction {
+public class AMD64ShiftOp extends AMD64LIRInstruction
+{
     public static final LIRInstructionClass<AMD64ShiftOp> TYPE = LIRInstructionClass.create(AMD64ShiftOp.class);
 
     @Opcode private final AMD64MOp opcode;
@@ -29,7 +30,8 @@ public class AMD64ShiftOp extends AMD64LIRInstruction {
     @Use({REG, STACK}) protected AllocatableValue x;
     @Alive({REG}) protected AllocatableValue y;
 
-    public AMD64ShiftOp(AMD64MOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, AllocatableValue y) {
+    public AMD64ShiftOp(AMD64MOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, AllocatableValue y)
+    {
         super(TYPE);
         this.opcode = opcode;
         this.size = size;
@@ -40,13 +42,15 @@ public class AMD64ShiftOp extends AMD64LIRInstruction {
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
         AMD64Move.move(crb, masm, result, x);
         opcode.emit(masm, size, asRegister(result));
     }
 
     @Override
-    public void verify() {
+    public void verify()
+    {
         assert asRegister(y).equals(AMD64.rcx);
     }
 }

@@ -22,8 +22,8 @@ import jdk.vm.ci.meta.MetaAccessProvider;
  *
  * See also {@link Virtualizable}.
  */
-public interface VirtualizerTool {
-
+public interface VirtualizerTool
+{
     /**
      * @return the {@link MetaAccessProvider} associated with the current compilation.
      */
@@ -79,8 +79,10 @@ public interface VirtualizerTool {
      */
     boolean setVirtualEntry(VirtualObjectNode virtualObject, int index, ValueNode value, JavaKind accessKind, long offset);
 
-    default void setVirtualEntry(VirtualObjectNode virtualObject, int index, ValueNode value) {
-        if (!setVirtualEntry(virtualObject, index, value, null, 0)) {
+    default void setVirtualEntry(VirtualObjectNode virtualObject, int index, ValueNode value)
+    {
+        if (!setVirtualEntry(virtualObject, index, value, null, 0))
+        {
             throw new GraalError("unexpected failure when updating virtual entry");
         }
     }

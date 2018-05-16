@@ -21,12 +21,13 @@ import jdk.vm.ci.meta.JavaType;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.Signature;
 
-class ClassfileConstantPool implements ConstantPool {
-
+class ClassfileConstantPool implements ConstantPool
+{
     final ClassfileConstant[] entries;
     final ClassfileBytecodeProvider context;
 
-    public static class Bytecodes {
+    public static class Bytecodes
+    {
         public static final int GETSTATIC = 178; // 0xB2
         public static final int PUTSTATIC = 179; // 0xB3
         public static final int GETFIELD = 180; // 0xB4
@@ -38,7 +39,8 @@ class ClassfileConstantPool implements ConstantPool {
         public static final int INVOKEDYNAMIC = 186; // 0xBA
     }
 
-    ClassfileConstantPool(DataInputStream stream, ClassfileBytecodeProvider context) throws IOException {
+    ClassfileConstantPool(DataInputStream stream, ClassfileBytecodeProvider context) throws IOException
+    {
         this.context = context;
         byte tag;
 
@@ -46,22 +48,28 @@ class ClassfileConstantPool implements ConstantPool {
         entries = new ClassfileConstant[count];
 
         int i = 1;
-        while (i < count) {
+        while (i < count)
+        {
             entries[i] = readConstant(stream);
             tag = entries[i].tag;
 
-            if ((tag == ClassfileConstant.CONSTANT_Double) || (tag == ClassfileConstant.CONSTANT_Long)) {
+            if ((tag == ClassfileConstant.CONSTANT_Double) || (tag == ClassfileConstant.CONSTANT_Long))
+            {
                 i += 2;
-            } else {
+            }
+            else
+            {
                 i += 1;
             }
         }
     }
 
-    static final ClassfileConstant readConstant(DataInputStream stream) throws IOException {
+    static final ClassfileConstant readConstant(DataInputStream stream) throws IOException
+    {
         byte tag = stream.readByte();
 
-        switch (tag) {
+        switch (tag)
+        {
             case ClassfileConstant.CONSTANT_Class:
                 return new ClassfileConstant.ClassRef(stream);
             case ClassfileConstant.CONSTANT_Fieldref:
@@ -102,58 +110,71 @@ class ClassfileConstantPool implements ConstantPool {
     }
 
     @Override
-    public int length() {
+    public int length()
+    {
         return entries.length;
     }
 
-    <T extends ClassfileConstant> T get(Class<T> c, int index) {
+    <T extends ClassfileConstant> T get(Class<T> c, int index)
+    {
         return c.cast(entries[index]);
     }
 
     @Override
-    public void loadReferencedType(int index, int opcode) {
-        if (opcode == Bytecodes.INVOKEDYNAMIC) {
+    public void loadReferencedType(int index, int opcode)
+    {
+        if (opcode == Bytecodes.INVOKEDYNAMIC)
+        {
             throw new GraalError("INVOKEDYNAMIC not supported by " + ClassfileBytecodeProvider.class.getSimpleName());
         }
         entries[index].loadReferencedType(this, index, opcode);
     }
 
     @Override
-    public JavaField lookupField(int index, ResolvedJavaMethod method, int opcode) {
+    public JavaField lookupField(int index, ResolvedJavaMethod method, int opcode)
+    {
         return get(FieldRef.class, index).resolve(this, opcode);
     }
 
     @Override
-    public JavaMethod lookupMethod(int index, int opcode) {
-        if (opcode == Bytecodes.INVOKEDYNAMIC) {
+    public JavaMethod lookupMethod(int index, int opcode)
+    {
+        if (opcode == Bytecodes.INVOKEDYNAMIC)
+        {
             throw new GraalError("INVOKEDYNAMIC not supported by" + ClassfileBytecodeProvider.class.getSimpleName());
         }
         return get(ExecutableRef.class, index).resolve(this, opcode);
     }
 
     @Override
-    public JavaType lookupType(int index, int opcode) {
+    public JavaType lookupType(int index, int opcode)
+    {
         return get(ClassRef.class, index).resolve(this);
     }
 
     @Override
-    public String lookupUtf8(int index) {
+    public String lookupUtf8(int index)
+    {
         return ((Utf8) entries[index]).value;
     }
 
     @Override
-    public Signature lookupSignature(int index) {
+    public Signature lookupSignature(int index)
+    {
         throw GraalError.shouldNotReachHere();
     }
 
     @Override
-    public Object lookupConstant(int index) {
+    public Object lookupConstant(int index)
+    {
         ClassfileConstant c = entries[index];
-        if (c instanceof Primitive) {
+        if (c instanceof Primitive)
+        {
             Primitive p = (Primitive) c;
             return p.value;
         }
-        switch (c.tag) {
+        switch (c.tag)
+        {
             case CONSTANT_Class:
                 final int opcode = -1;
                 return lookupType(index, opcode);
@@ -165,8 +186,10 @@ class ClassfileConstantPool implements ConstantPool {
     }
 
     @Override
-    public JavaConstant lookupAppendix(int index, int opcode) {
-        if (opcode == Bytecodes.INVOKEVIRTUAL) {
+    public JavaConstant lookupAppendix(int index, int opcode)
+    {
+        if (opcode == Bytecodes.INVOKEVIRTUAL)
+        {
             return null;
         }
         throw GraalError.shouldNotReachHere();

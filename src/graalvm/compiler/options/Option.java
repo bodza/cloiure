@@ -13,8 +13,8 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
-public @interface Option {
-
+public @interface Option
+{
     /**
      * Gets a help message for the option.
      * <p>

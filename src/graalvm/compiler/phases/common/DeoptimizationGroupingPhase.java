@@ -28,26 +28,34 @@ import graalvm.compiler.phases.tiers.MidTierContext;
  * This phase tries to find {@link AbstractDeoptimizeNode DeoptimizeNodes} which use the same
  * {@link FrameState} and merges them together.
  */
-public class DeoptimizationGroupingPhase extends BasePhase<MidTierContext> {
-
+public class DeoptimizationGroupingPhase extends BasePhase<MidTierContext>
+{
     @Override
     @SuppressWarnings("try")
-    protected void run(StructuredGraph graph, MidTierContext context) {
+    protected void run(StructuredGraph graph, MidTierContext context)
+    {
         ControlFlowGraph cfg = null;
-        for (FrameState fs : graph.getNodes(FrameState.TYPE)) {
+        for (FrameState fs : graph.getNodes(FrameState.TYPE))
+        {
             FixedNode target = null;
             PhiNode reasonActionPhi = null;
             PhiNode speculationPhi = null;
             List<AbstractDeoptimizeNode> obsoletes = null;
-            for (AbstractDeoptimizeNode deopt : fs.usages().filter(AbstractDeoptimizeNode.class)) {
-                if (target == null) {
+            for (AbstractDeoptimizeNode deopt : fs.usages().filter(AbstractDeoptimizeNode.class))
+            {
+                if (target == null)
+                {
                     target = deopt;
-                } else {
-                    if (cfg == null) {
+                }
+                else
+                {
+                    if (cfg == null)
+                    {
                         cfg = ControlFlowGraph.compute(graph, true, true, false, false);
                     }
                     AbstractMergeNode merge;
-                    if (target instanceof AbstractDeoptimizeNode) {
+                    if (target instanceof AbstractDeoptimizeNode)
+                    {
                         merge = graph.add(new MergeNode());
                         EndNode firstEnd = graph.add(new EndNode());
                         ValueNode actionAndReason = ((AbstractDeoptimizeNode) target).getActionAndReason(context.getMetaAccess());
@@ -60,13 +68,16 @@ public class DeoptimizationGroupingPhase extends BasePhase<MidTierContext> {
                         target.replaceAtPredecessor(firstEnd);
 
                         exitLoops((AbstractDeoptimizeNode) target, firstEnd, cfg);
-                        try (DebugCloseable position = target.withNodeSourcePosition()) {
+                        try (DebugCloseable position = target.withNodeSourcePosition())
+                        {
                             merge.setNext(graph.add(new DynamicDeoptimizeNode(reasonActionPhi, speculationPhi)));
                         }
                         obsoletes = new LinkedList<>();
                         obsoletes.add((AbstractDeoptimizeNode) target);
                         target = merge;
-                    } else {
+                    }
+                    else
+                    {
                         merge = (AbstractMergeNode) target;
                     }
                     EndNode newEnd = graph.add(new EndNode());
@@ -78,26 +89,31 @@ public class DeoptimizationGroupingPhase extends BasePhase<MidTierContext> {
                     obsoletes.add(deopt);
                 }
             }
-            if (obsoletes != null) {
+            if (obsoletes != null)
+            {
                 ((DynamicDeoptimizeNode) ((AbstractMergeNode) target).next()).setStateBefore(fs);
-                for (AbstractDeoptimizeNode obsolete : obsoletes) {
+                for (AbstractDeoptimizeNode obsolete : obsoletes)
+                {
                     obsolete.safeDelete();
                 }
             }
         }
     }
 
-    private static void exitLoops(AbstractDeoptimizeNode deopt, EndNode end, ControlFlowGraph cfg) {
+    private static void exitLoops(AbstractDeoptimizeNode deopt, EndNode end, ControlFlowGraph cfg)
+    {
         Block block = cfg.blockFor(deopt);
         Loop<Block> loop = block.getLoop();
-        while (loop != null) {
+        while (loop != null)
+        {
             end.graph().addBeforeFixed(end, end.graph().add(new LoopExitNode((LoopBeginNode) loop.getHeader().getBeginNode())));
             loop = loop.getParent();
         }
     }
 
     @Override
-    public float codeSizeIncrease() {
+    public float codeSizeIncrease()
+    {
         return 2.5f;
     }
 }

@@ -20,19 +20,21 @@ import jdk.vm.ci.meta.JavaKind;
  * registers stored on the stack.
  */
 @Opcode("LEAVE_CURRENT_STACK_FRAME")
-final class AMD64HotSpotLeaveCurrentStackFrameOp extends AMD64HotSpotEpilogueOp {
-
+final class AMD64HotSpotLeaveCurrentStackFrameOp extends AMD64HotSpotEpilogueOp
+{
     public static final LIRInstructionClass<AMD64HotSpotLeaveCurrentStackFrameOp> TYPE = LIRInstructionClass.create(AMD64HotSpotLeaveCurrentStackFrameOp.class);
 
     private final SaveRegistersOp saveRegisterOp;
 
-    AMD64HotSpotLeaveCurrentStackFrameOp(SaveRegistersOp saveRegisterOp) {
+    AMD64HotSpotLeaveCurrentStackFrameOp(SaveRegistersOp saveRegisterOp)
+    {
         super(TYPE);
         this.saveRegisterOp = saveRegisterOp;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
         FrameMap frameMap = crb.frameMap;
         RegisterConfig registerConfig = frameMap.getRegisterConfig();
         RegisterSaveLayout registerSaveLayout = saveRegisterOp.getMap(frameMap);

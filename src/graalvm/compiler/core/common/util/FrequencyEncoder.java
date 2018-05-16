@@ -14,14 +14,16 @@ import org.graalvm.collections.Equivalence;
  * Either object {@link #createIdentityEncoder() identity} or object {@link #createEqualityEncoder()
  * equality} can be used to build the array and count the frequency.
  */
-public class FrequencyEncoder<T> {
-
-    static class Entry<T> {
+public class FrequencyEncoder<T>
+{
+    static class Entry<T>
+    {
         protected final T object;
         protected int frequency;
         protected int index;
 
-        protected Entry(T object) {
+        protected Entry(T object)
+        {
             this.object = object;
             this.index = -1;
         }
@@ -33,32 +35,38 @@ public class FrequencyEncoder<T> {
     /**
      * Creates an encoder that uses object identity.
      */
-    public static <T> FrequencyEncoder<T> createIdentityEncoder() {
+    public static <T> FrequencyEncoder<T> createIdentityEncoder()
+    {
         return new FrequencyEncoder<>(EconomicMap.create(Equivalence.IDENTITY_WITH_SYSTEM_HASHCODE));
     }
 
     /**
      * Creates an encoder that uses {@link Object#equals(Object) object equality}.
      */
-    public static <T> FrequencyEncoder<T> createEqualityEncoder() {
+    public static <T> FrequencyEncoder<T> createEqualityEncoder()
+    {
         return new FrequencyEncoder<>(EconomicMap.create(Equivalence.DEFAULT));
     }
 
-    protected FrequencyEncoder(EconomicMap<T, Entry<T>> map) {
+    protected FrequencyEncoder(EconomicMap<T, Entry<T>> map)
+    {
         this.map = map;
     }
 
     /**
      * Adds an object to the array.
      */
-    public void addObject(T object) {
-        if (object == null) {
+    public void addObject(T object)
+    {
+        if (object == null)
+        {
             containsNull = true;
             return;
         }
 
         Entry<T> entry = map.get(object);
-        if (entry == null) {
+        if (entry == null)
+        {
             entry = new Entry<>(object);
             map.put(object, entry);
         }
@@ -69,8 +77,10 @@ public class FrequencyEncoder<T> {
      * Returns the index of an object in the array. The object must have been
      * {@link #addObject(Object) added} before.
      */
-    public int getIndex(T object) {
-        if (object == null) {
+    public int getIndex(T object)
+    {
+        if (object == null)
+        {
             assert containsNull;
             return 0;
         }
@@ -82,7 +92,8 @@ public class FrequencyEncoder<T> {
     /**
      * Returns the number of distinct objects that have been added, i.e., the length of the array.
      */
-    public int getLength() {
+    public int getLength()
+    {
         return map.size() + (containsNull ? 1 : 0);
     }
 
@@ -90,20 +101,24 @@ public class FrequencyEncoder<T> {
      * Fills the provided array with the added objects. The array must have the {@link #getLength()
      * correct length}.
      */
-    public T[] encodeAll(T[] allObjects) {
+    public T[] encodeAll(T[] allObjects)
+    {
         assert allObjects.length == getLength();
         List<Entry<T>> sortedEntries = new ArrayList<>(allObjects.length);
-        for (Entry<T> value : map.getValues()) {
+        for (Entry<T> value : map.getValues())
+        {
             sortedEntries.add(value);
         }
         sortedEntries.sort((e1, e2) -> -Integer.compare(e1.frequency, e2.frequency));
 
         int offset = 0;
-        if (containsNull) {
+        if (containsNull)
+        {
             allObjects[0] = null;
             offset = 1;
         }
-        for (int i = 0; i < sortedEntries.size(); i++) {
+        for (int i = 0; i < sortedEntries.size(); i++)
+        {
             Entry<T> entry = sortedEntries.get(i);
             int index = i + offset;
             entry.index = index;

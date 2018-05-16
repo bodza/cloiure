@@ -16,19 +16,23 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * analysis.
  */
 @NodeInfo
-public class VirtualizableInvokeMacroNode extends MacroStateSplitNode implements Virtualizable {
-
+public class VirtualizableInvokeMacroNode extends MacroStateSplitNode implements Virtualizable
+{
     public static final NodeClass<VirtualizableInvokeMacroNode> TYPE = NodeClass.create(VirtualizableInvokeMacroNode.class);
 
-    public VirtualizableInvokeMacroNode(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, int bci, StampPair returnStamp, ValueNode... arguments) {
+    public VirtualizableInvokeMacroNode(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, int bci, StampPair returnStamp, ValueNode... arguments)
+    {
         super(TYPE, invokeKind, targetMethod, bci, returnStamp, arguments);
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool) {
-        for (ValueNode arg : arguments) {
+    public void virtualize(VirtualizerTool tool)
+    {
+        for (ValueNode arg : arguments)
+        {
             ValueNode alias = tool.getAlias(arg);
-            if (alias instanceof VirtualObjectNode) {
+            if (alias instanceof VirtualObjectNode)
+            {
                 tool.delete();
             }
         }

@@ -9,11 +9,13 @@ import graalvm.compiler.phases.common.CanonicalizerPhase;
 import graalvm.compiler.phases.common.LoweringPhase;
 import graalvm.compiler.phases.tiers.HighTierContext;
 
-public class EconomyHighTier extends PhaseSuite<HighTierContext> {
-
-    public EconomyHighTier(OptionValues options) {
+public class EconomyHighTier extends PhaseSuite<HighTierContext>
+{
+    public EconomyHighTier(OptionValues options)
+    {
         CanonicalizerPhase canonicalizer = new CanonicalizerPhase();
-        if (ImmutableCode.getValue(options)) {
+        if (ImmutableCode.getValue(options))
+        {
             canonicalizer.disableReadCanonicalization();
         }
 

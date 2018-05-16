@@ -16,12 +16,13 @@ import graalvm.compiler.nodes.extended.GuardingNode;
  * live on entry to the loop) and is (potentially) used after the loop.
  */
 @NodeInfo(cycles = CYCLES_0, size = SIZE_0)
-public abstract class ProxyNode extends FloatingNode implements ValueNumberable {
-
+public abstract class ProxyNode extends FloatingNode implements ValueNumberable
+{
     public static final NodeClass<ProxyNode> TYPE = NodeClass.create(ProxyNode.class);
     @Input(Association) LoopExitNode loopExit;
 
-    protected ProxyNode(NodeClass<? extends ProxyNode> c, Stamp stamp, LoopExitNode proxyPoint) {
+    protected ProxyNode(NodeClass<? extends ProxyNode> c, Stamp stamp, LoopExitNode proxyPoint)
+    {
         super(c, stamp);
         assert proxyPoint != null;
         this.loopExit = proxyPoint;
@@ -29,21 +30,25 @@ public abstract class ProxyNode extends FloatingNode implements ValueNumberable 
 
     public abstract ValueNode value();
 
-    public LoopExitNode proxyPoint() {
+    public LoopExitNode proxyPoint()
+    {
         return loopExit;
     }
 
     @Override
-    public boolean verify() {
+    public boolean verify()
+    {
         assert !(value() instanceof ProxyNode) || ((ProxyNode) value()).loopExit != loopExit;
         return super.verify();
     }
 
-    public static ValueProxyNode forValue(ValueNode value, LoopExitNode exit, StructuredGraph graph) {
+    public static ValueProxyNode forValue(ValueNode value, LoopExitNode exit, StructuredGraph graph)
+    {
         return graph.unique(new ValueProxyNode(value, exit));
     }
 
-    public static GuardProxyNode forGuard(GuardingNode value, LoopExitNode exit, StructuredGraph graph) {
+    public static GuardProxyNode forGuard(GuardingNode value, LoopExitNode exit, StructuredGraph graph)
+    {
         return graph.unique(new GuardProxyNode(value, exit));
     }
 }

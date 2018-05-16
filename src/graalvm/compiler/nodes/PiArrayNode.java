@@ -18,24 +18,28 @@ import graalvm.compiler.nodes.util.GraphUtil;
  * this information.
  */
 @NodeInfo
-public final class PiArrayNode extends PiNode implements ArrayLengthProvider {
-
+public final class PiArrayNode extends PiNode implements ArrayLengthProvider
+{
     public static final NodeClass<PiArrayNode> TYPE = NodeClass.create(PiArrayNode.class);
     @Input ValueNode length;
 
     @Override
-    public ValueNode length() {
+    public ValueNode length()
+    {
         return length;
     }
 
-    public PiArrayNode(ValueNode object, ValueNode length, Stamp stamp) {
+    public PiArrayNode(ValueNode object, ValueNode length, Stamp stamp)
+    {
         super(TYPE, object, stamp, null);
         this.length = length;
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool) {
-        if (GraphUtil.arrayLength(object()) != length()) {
+    public Node canonical(CanonicalizerTool tool)
+    {
+        if (GraphUtil.arrayLength(object()) != length())
+        {
             return this;
         }
         return super.canonical(tool);
@@ -53,18 +57,20 @@ public final class PiArrayNode extends PiNode implements ArrayLengthProvider {
      * snippet is instantiated.
      */
     @NodeInfo(cycles = CYCLES_0, size = SIZE_0)
-    public static class Placeholder extends PiNode.Placeholder {
-
+    public static class Placeholder extends PiNode.Placeholder
+    {
         public static final NodeClass<Placeholder> TYPE = NodeClass.create(Placeholder.class);
         @Input ValueNode length;
 
-        protected Placeholder(ValueNode object, ValueNode length) {
+        protected Placeholder(ValueNode object, ValueNode length)
+        {
             super(TYPE, object);
             this.length = length;
         }
 
         @Override
-        public void makeReplacement(Stamp snippetReplaceeStamp) {
+        public void makeReplacement(Stamp snippetReplaceeStamp)
+        {
             PiArrayNode piArray = graph().addOrUnique(new PiArrayNode(object(), length, snippetReplaceeStamp));
             replaceAndDelete(piArray);
         }

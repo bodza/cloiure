@@ -13,38 +13,45 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.nodes.spi.Proxy;
 
 @NodeInfo(allowedUsageTypes = {InputType.Guard}, nameTemplate = "Proxy({i#value})")
-public final class GuardProxyNode extends ProxyNode implements GuardingNode, Proxy, LIRLowerable, Canonicalizable {
-
+public final class GuardProxyNode extends ProxyNode implements GuardingNode, Proxy, LIRLowerable, Canonicalizable
+{
     public static final NodeClass<GuardProxyNode> TYPE = NodeClass.create(GuardProxyNode.class);
     @OptionalInput(InputType.Guard) GuardingNode value;
 
-    public GuardProxyNode(GuardingNode value, LoopExitNode proxyPoint) {
+    public GuardProxyNode(GuardingNode value, LoopExitNode proxyPoint)
+    {
         super(TYPE, StampFactory.forVoid(), proxyPoint);
         this.value = value;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool generator) {
+    public void generate(NodeLIRBuilderTool generator)
+    {
     }
 
-    public void setValue(GuardingNode newValue) {
+    public void setValue(GuardingNode newValue)
+    {
         this.updateUsages(value.asNode(), newValue.asNode());
         this.value = newValue;
     }
 
     @Override
-    public ValueNode value() {
+    public ValueNode value()
+    {
         return (value == null ? null : value.asNode());
     }
 
     @Override
-    public Node getOriginalNode() {
+    public Node getOriginalNode()
+    {
         return (value == null ? null : value.asNode());
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool) {
-        if (value == null) {
+    public Node canonical(CanonicalizerTool tool)
+    {
+        if (value == null)
+        {
             return null;
         }
         return this;

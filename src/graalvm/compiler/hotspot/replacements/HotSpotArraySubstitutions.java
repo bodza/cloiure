@@ -16,15 +16,16 @@ import graalvm.compiler.nodes.java.DynamicNewArrayNode;
  * Substitutions for {@link Array} methods.
  */
 @ClassSubstitution(Array.class)
-public class HotSpotArraySubstitutions {
-
+public class HotSpotArraySubstitutions
+{
     @MethodSubstitution
-    public static Object newInstance(Class<?> componentType, int length) {
-        if (componentType == null || loadKlassFromObject(componentType, arrayKlassOffset(INJECTED_VMCONFIG), CLASS_ARRAY_KLASS_LOCATION).isNull()) {
+    public static Object newInstance(Class<?> componentType, int length)
+    {
+        if (componentType == null || loadKlassFromObject(componentType, arrayKlassOffset(INJECTED_VMCONFIG), CLASS_ARRAY_KLASS_LOCATION).isNull())
+        {
             // Exit the intrinsic here for the case where the array class does not exist
             return newInstance(componentType, length);
         }
         return DynamicNewArrayNode.newArray(GraalDirectives.guardingNonNull(componentType), length);
     }
-
 }

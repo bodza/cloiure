@@ -22,22 +22,25 @@ import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.JavaKind;
 
 @NodeInfo(cycles = CYCLES_2, size = SIZE_1)
-public final class BitCountNode extends UnaryNode implements ArithmeticLIRLowerable {
-
+public final class BitCountNode extends UnaryNode implements ArithmeticLIRLowerable
+{
     public static final NodeClass<BitCountNode> TYPE = NodeClass.create(BitCountNode.class);
 
-    public BitCountNode(ValueNode value) {
+    public BitCountNode(ValueNode value)
+    {
         super(TYPE, computeStamp(value.stamp(NodeView.DEFAULT), value), value);
         assert value.getStackKind() == JavaKind.Int || value.getStackKind() == JavaKind.Long;
     }
 
     @Override
-    public Stamp foldStamp(Stamp newStamp) {
+    public Stamp foldStamp(Stamp newStamp)
+    {
         ValueNode theValue = getValue();
         return computeStamp(newStamp, theValue);
     }
 
-    static Stamp computeStamp(Stamp newStamp, ValueNode theValue) {
+    static Stamp computeStamp(Stamp newStamp, ValueNode theValue)
+    {
         assert newStamp.isCompatible(theValue.stamp(NodeView.DEFAULT));
         IntegerStamp valueStamp = (IntegerStamp) newStamp;
         assert (valueStamp.downMask() & CodeUtil.mask(valueStamp.getBits())) == valueStamp.downMask();
@@ -46,8 +49,10 @@ public final class BitCountNode extends UnaryNode implements ArithmeticLIRLowera
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue) {
-        if (forValue.isConstant()) {
+    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    {
+        if (forValue.isConstant())
+        {
             JavaConstant c = forValue.asJavaConstant();
             return ConstantNode.forInt(forValue.getStackKind() == JavaKind.Int ? Integer.bitCount(c.asInt()) : Long.bitCount(c.asLong()));
         }
@@ -55,7 +60,8 @@ public final class BitCountNode extends UnaryNode implements ArithmeticLIRLowera
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool builder, ArithmeticLIRGeneratorTool gen) {
+    public void generate(NodeLIRBuilderTool builder, ArithmeticLIRGeneratorTool gen)
+    {
         builder.setResult(this, gen.emitBitCount(builder.operand(getValue())));
     }
 }

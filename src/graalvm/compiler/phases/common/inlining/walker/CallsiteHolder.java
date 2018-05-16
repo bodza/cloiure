@@ -8,8 +8,8 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * Information about a graph that will potentially be inlined. This includes tracking the
  * invocations in graph that will subject to inlining themselves.
  */
-public abstract class CallsiteHolder {
-
+public abstract class CallsiteHolder
+{
     /**
      * Gets the method associated with the {@linkplain #graph() graph} represented by this object.
      */
@@ -27,5 +27,4 @@ public abstract class CallsiteHolder {
      * The graph about which this object contains inlining information.
      */
     public abstract StructuredGraph graph();
-
 }

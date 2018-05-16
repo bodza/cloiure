@@ -16,7 +16,8 @@ import jdk.vm.ci.amd64.AMD64;
 import jdk.vm.ci.meta.AllocatableValue;
 
 @Opcode("CDQ")
-public class AMD64SignExtendOp extends AMD64LIRInstruction {
+public class AMD64SignExtendOp extends AMD64LIRInstruction
+{
     public static final LIRInstructionClass<AMD64SignExtendOp> TYPE = LIRInstructionClass.create(AMD64SignExtendOp.class);
 
     private final OperandSize size;
@@ -26,7 +27,8 @@ public class AMD64SignExtendOp extends AMD64LIRInstruction {
 
     @Use({REG}) protected AllocatableValue input;
 
-    public AMD64SignExtendOp(OperandSize size, LIRKind resultKind, AllocatableValue input) {
+    public AMD64SignExtendOp(OperandSize size, LIRKind resultKind, AllocatableValue input)
+    {
         super(TYPE);
         this.size = size;
 
@@ -35,26 +37,33 @@ public class AMD64SignExtendOp extends AMD64LIRInstruction {
         this.input = input;
     }
 
-    public AllocatableValue getHighResult() {
+    public AllocatableValue getHighResult()
+    {
         return highResult;
     }
 
-    public AllocatableValue getLowResult() {
+    public AllocatableValue getLowResult()
+    {
         return lowResult;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
-        if (size == DWORD) {
+    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
+        if (size == DWORD)
+        {
             masm.cdql();
-        } else {
+        }
+        else
+        {
             assert size == QWORD;
             masm.cdqq();
         }
     }
 
     @Override
-    public void verify() {
+    public void verify()
+    {
         assert asRegister(highResult).equals(AMD64.rdx);
         assert asRegister(lowResult).equals(AMD64.rax);
         assert asRegister(input).equals(AMD64.rax);

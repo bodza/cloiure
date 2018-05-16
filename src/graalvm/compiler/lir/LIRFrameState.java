@@ -26,8 +26,8 @@ import jdk.vm.ci.meta.Value;
  * This class represents garbage collection and deoptimization information attached to a LIR
  * instruction.
  */
-public class LIRFrameState {
-
+public class LIRFrameState
+{
     public static final LIRFrameState NO_STATE = new LIRFrameState(null, null, null);
 
     public final BytecodeFrame topFrame;
@@ -37,17 +37,20 @@ public class LIRFrameState {
 
     private IndexedValueMap liveBasePointers;
 
-    public LIRFrameState(BytecodeFrame topFrame, VirtualObject[] virtualObjects, LabelRef exceptionEdge) {
+    public LIRFrameState(BytecodeFrame topFrame, VirtualObject[] virtualObjects, LabelRef exceptionEdge)
+    {
         this.topFrame = topFrame;
         this.virtualObjects = virtualObjects;
         this.exceptionEdge = exceptionEdge;
     }
 
-    public boolean hasDebugInfo() {
+    public boolean hasDebugInfo()
+    {
         return debugInfo != null;
     }
 
-    public DebugInfo debugInfo() {
+    public DebugInfo debugInfo()
+    {
         assert debugInfo != null : "debug info not allocated yet";
         return debugInfo;
     }
@@ -57,16 +60,21 @@ public class LIRFrameState {
      *
      * @param proc The procedure called for variables.
      */
-    public void forEachState(LIRInstruction inst, InstructionValueProcedure proc) {
-        for (BytecodeFrame cur = topFrame; cur != null; cur = cur.caller()) {
+    public void forEachState(LIRInstruction inst, InstructionValueProcedure proc)
+    {
+        for (BytecodeFrame cur = topFrame; cur != null; cur = cur.caller())
+        {
             processValues(inst, cur.values, proc);
         }
-        if (virtualObjects != null) {
-            for (VirtualObject obj : virtualObjects) {
+        if (virtualObjects != null)
+        {
+            for (VirtualObject obj : virtualObjects)
+            {
                 processValues(inst, obj.getValues(), proc);
             }
         }
-        if (liveBasePointers != null) {
+        if (liveBasePointers != null)
+        {
             liveBasePointers.forEach(inst, OperandMode.ALIVE, STATE_FLAGS, proc);
         }
     }
@@ -76,16 +84,21 @@ public class LIRFrameState {
      *
      * @param proc The procedure called for variables.
      */
-    public void visitEachState(LIRInstruction inst, InstructionValueConsumer proc) {
-        for (BytecodeFrame cur = topFrame; cur != null; cur = cur.caller()) {
+    public void visitEachState(LIRInstruction inst, InstructionValueConsumer proc)
+    {
+        for (BytecodeFrame cur = topFrame; cur != null; cur = cur.caller())
+        {
             visitValues(inst, cur.values, proc);
         }
-        if (virtualObjects != null) {
-            for (VirtualObject obj : virtualObjects) {
+        if (virtualObjects != null)
+        {
+            for (VirtualObject obj : virtualObjects)
+            {
                 visitValues(inst, obj.getValues(), proc);
             }
         }
-        if (liveBasePointers != null) {
+        if (liveBasePointers != null)
+        {
             liveBasePointers.visitEach(inst, OperandMode.ALIVE, STATE_FLAGS, proc);
         }
     }
@@ -96,68 +109,98 @@ public class LIRFrameState {
      */
     protected static final EnumSet<OperandFlag> STATE_FLAGS = EnumSet.of(OperandFlag.REG, OperandFlag.STACK);
 
-    protected void processValues(LIRInstruction inst, JavaValue[] values, InstructionValueProcedure proc) {
-        for (int i = 0; i < values.length; i++) {
+    protected void processValues(LIRInstruction inst, JavaValue[] values, InstructionValueProcedure proc)
+    {
+        for (int i = 0; i < values.length; i++)
+        {
             JavaValue value = values[i];
-            if (isIllegalJavaValue(value)) {
+            if (isIllegalJavaValue(value))
+            {
                 continue;
             }
-            if (value instanceof AllocatableValue) {
+            if (value instanceof AllocatableValue)
+            {
                 AllocatableValue allocatable = (AllocatableValue) value;
                 Value result = proc.doValue(inst, allocatable, OperandMode.ALIVE, STATE_FLAGS);
-                if (!allocatable.identityEquals(result)) {
+                if (!allocatable.identityEquals(result))
+                {
                     values[i] = (JavaValue) result;
                 }
-            } else if (value instanceof StackLockValue) {
+            }
+            else if (value instanceof StackLockValue)
+            {
                 StackLockValue monitor = (StackLockValue) value;
                 JavaValue owner = monitor.getOwner();
-                if (owner instanceof AllocatableValue) {
+                if (owner instanceof AllocatableValue)
+                {
                     monitor.setOwner((JavaValue) proc.doValue(inst, (AllocatableValue) owner, OperandMode.ALIVE, STATE_FLAGS));
                 }
                 Value slot = monitor.getSlot();
-                if (isVirtualStackSlot(slot)) {
+                if (isVirtualStackSlot(slot))
+                {
                     monitor.setSlot(asAllocatableValue(proc.doValue(inst, slot, OperandMode.ALIVE, STATE_FLAGS)));
                 }
-            } else {
+            }
+            else
+            {
                 assert unprocessed(value);
             }
         }
     }
 
-    protected void visitValues(LIRInstruction inst, JavaValue[] values, InstructionValueConsumer proc) {
-        for (int i = 0; i < values.length; i++) {
+    protected void visitValues(LIRInstruction inst, JavaValue[] values, InstructionValueConsumer proc)
+    {
+        for (int i = 0; i < values.length; i++)
+        {
             JavaValue value = values[i];
-            if (isIllegalJavaValue(value)) {
+            if (isIllegalJavaValue(value))
+            {
                 continue;
-            } else if (value instanceof AllocatableValue) {
+            }
+            else if (value instanceof AllocatableValue)
+            {
                 proc.visitValue(inst, (AllocatableValue) value, OperandMode.ALIVE, STATE_FLAGS);
-            } else if (value instanceof StackLockValue) {
+            }
+            else if (value instanceof StackLockValue)
+            {
                 StackLockValue monitor = (StackLockValue) value;
                 JavaValue owner = monitor.getOwner();
-                if (owner instanceof AllocatableValue) {
+                if (owner instanceof AllocatableValue)
+                {
                     proc.visitValue(inst, (AllocatableValue) owner, OperandMode.ALIVE, STATE_FLAGS);
                 }
                 Value slot = monitor.getSlot();
-                if (isVirtualStackSlot(slot)) {
+                if (isVirtualStackSlot(slot))
+                {
                     proc.visitValue(inst, slot, OperandMode.ALIVE, STATE_FLAGS);
                 }
-            } else {
+            }
+            else
+            {
                 assert unprocessed(value);
             }
         }
     }
 
-    private boolean unprocessed(JavaValue value) {
-        if (isIllegalJavaValue(value)) {
+    private boolean unprocessed(JavaValue value)
+    {
+        if (isIllegalJavaValue(value))
+        {
             // Ignore dead local variables.
             return true;
-        } else if (isConstantJavaValue(value)) {
+        }
+        else if (isConstantJavaValue(value))
+        {
             // Ignore constants, the register allocator does not need to see them.
             return true;
-        } else if (isVirtualObject(value)) {
+        }
+        else if (isVirtualObject(value))
+        {
             assert Arrays.asList(virtualObjects).contains(value);
             return true;
-        } else {
+        }
+        else
+        {
             return false;
         }
     }
@@ -168,20 +211,24 @@ public class LIRFrameState {
      * @param frameMap The frame map.
      * @param canHaveRegisters True if there can be any register map entries.
      */
-    public void initDebugInfo(FrameMap frameMap, boolean canHaveRegisters) {
+    public void initDebugInfo(FrameMap frameMap, boolean canHaveRegisters)
+    {
         debugInfo = new DebugInfo(topFrame, virtualObjects);
     }
 
-    public IndexedValueMap getLiveBasePointers() {
+    public IndexedValueMap getLiveBasePointers()
+    {
         return liveBasePointers;
     }
 
-    public void setLiveBasePointers(IndexedValueMap liveBasePointers) {
+    public void setLiveBasePointers(IndexedValueMap liveBasePointers)
+    {
         this.liveBasePointers = liveBasePointers;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return debugInfo != null ? debugInfo.toString() : topFrame != null ? topFrame.toString() : "<empty>";
     }
 }

@@ -29,22 +29,25 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
  * inspect in the native debugger when the breakpoint is hit.
  */
 @NodeInfo(cycles = CYCLES_IGNORED, size = SIZE_IGNORED)
-public final class BreakpointNode extends FixedWithNextNode implements LIRLowerable {
-
+public final class BreakpointNode extends FixedWithNextNode implements LIRLowerable
+{
     public static final NodeClass<BreakpointNode> TYPE = NodeClass.create(BreakpointNode.class);
     @Input NodeInputList<ValueNode> arguments;
 
-    public BreakpointNode(ValueNode... arguments) {
+    public BreakpointNode(ValueNode... arguments)
+    {
         super(TYPE, StampFactory.forVoid());
         this.arguments = new NodeInputList<>(this, arguments);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         gen.visitBreakpointNode(this);
     }
 
-    public NodeInputList<ValueNode> arguments() {
+    public NodeInputList<ValueNode> arguments()
+    {
         return arguments;
     }
 

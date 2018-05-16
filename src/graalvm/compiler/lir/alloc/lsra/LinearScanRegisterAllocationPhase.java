@@ -7,24 +7,28 @@ import graalvm.compiler.lir.phases.AllocationPhase.AllocationContext;
 
 import jdk.vm.ci.code.TargetDescription;
 
-public final class LinearScanRegisterAllocationPhase extends LinearScanAllocationPhase {
-
+public final class LinearScanRegisterAllocationPhase extends LinearScanAllocationPhase
+{
     private final LinearScan allocator;
 
-    LinearScanRegisterAllocationPhase(LinearScan allocator) {
+    LinearScanRegisterAllocationPhase(LinearScan allocator)
+    {
         this.allocator = allocator;
     }
 
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult result, AllocationContext context) {
+    protected void run(TargetDescription target, LIRGenerationResult result, AllocationContext context)
+    {
         allocator.printIntervals("Before register allocation");
         allocateRegisters();
         allocator.printIntervals("After register allocation");
     }
 
     @SuppressWarnings("try")
-    void allocateRegisters() {
-        try (Indent indent = allocator.getDebug().logAndIndent("allocate registers")) {
+    void allocateRegisters()
+    {
+        try (Indent indent = allocator.getDebug().logAndIndent("allocate registers"))
+        {
             Interval precoloredIntervals;
             Interval notPrecoloredIntervals;
 
@@ -34,14 +38,16 @@ public final class LinearScanRegisterAllocationPhase extends LinearScanAllocatio
 
             // allocate cpu registers
             LinearScanWalker lsw;
-            if (OptimizingLinearScanWalker.Options.LSRAOptimization.getValue(allocator.getOptions())) {
+            if (OptimizingLinearScanWalker.Options.LSRAOptimization.getValue(allocator.getOptions()))
+            {
                 lsw = new OptimizingLinearScanWalker(allocator, precoloredIntervals, notPrecoloredIntervals);
-            } else {
+            }
+            else
+            {
                 lsw = new LinearScanWalker(allocator, precoloredIntervals, notPrecoloredIntervals);
             }
             lsw.walk();
             lsw.finishAllocation();
         }
     }
-
 }

@@ -6,8 +6,8 @@ import java.net.URI;
  * Provides a path to report information about a high level language source position to the Graph
  * Visualizer.
  */
-public interface SourceLanguagePosition {
-
+public interface SourceLanguagePosition
+{
     /**
      * Produce a compact description of this position suitable for printing.
      */

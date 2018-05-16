@@ -9,31 +9,36 @@ import jdk.vm.ci.meta.Value;
 /**
  * Represents a usage of a constant.
  */
-class UseEntry {
-
+class UseEntry
+{
     private final AbstractBlockBase<?> block;
     private final LIRInstruction instruction;
     private final Value value;
 
-    UseEntry(AbstractBlockBase<?> block, LIRInstruction instruction, Value value) {
+    UseEntry(AbstractBlockBase<?> block, LIRInstruction instruction, Value value)
+    {
         this.block = block;
         this.instruction = instruction;
         this.value = value;
     }
 
-    public LIRInstruction getInstruction() {
+    public LIRInstruction getInstruction()
+    {
         return instruction;
     }
 
-    public AbstractBlockBase<?> getBlock() {
+    public AbstractBlockBase<?> getBlock()
+    {
         return block;
     }
 
-    public void setValue(Value newValue) {
+    public void setValue(Value newValue)
+    {
         replaceValue(instruction, value, newValue);
     }
 
-    private static void replaceValue(LIRInstruction op, Value oldValue, Value newValue) {
+    private static void replaceValue(LIRInstruction op, Value oldValue, Value newValue)
+    {
         ValueProcedure proc = (value, mode, flags) -> value.identityEquals(oldValue) ? newValue : value;
         op.forEachAlive(proc);
         op.forEachInput(proc);
@@ -42,13 +47,14 @@ class UseEntry {
         op.forEachState(proc);
     }
 
-    public Value getValue() {
+    public Value getValue()
+    {
         return value;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Use[" + getValue() + ":" + instruction + ":" + block + "]";
     }
-
 }

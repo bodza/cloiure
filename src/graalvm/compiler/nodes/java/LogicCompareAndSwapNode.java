@@ -24,19 +24,23 @@ import jdk.vm.ci.meta.Value;
  * This version returns a boolean indicating is the CAS was successful or not.
  */
 @NodeInfo(cycles = CYCLES_8, size = SIZE_8)
-public final class LogicCompareAndSwapNode extends AbstractCompareAndSwapNode {
+public final class LogicCompareAndSwapNode extends AbstractCompareAndSwapNode
+{
     public static final NodeClass<LogicCompareAndSwapNode> TYPE = NodeClass.create(LogicCompareAndSwapNode.class);
 
-    public LogicCompareAndSwapNode(ValueNode address, ValueNode expectedValue, ValueNode newValue, LocationIdentity location) {
+    public LogicCompareAndSwapNode(ValueNode address, ValueNode expectedValue, ValueNode newValue, LocationIdentity location)
+    {
         this((AddressNode) address, location, expectedValue, newValue, BarrierType.NONE);
     }
 
-    public LogicCompareAndSwapNode(AddressNode address, LocationIdentity location, ValueNode expectedValue, ValueNode newValue, BarrierType barrierType) {
+    public LogicCompareAndSwapNode(AddressNode address, LocationIdentity location, ValueNode expectedValue, ValueNode newValue, BarrierType barrierType)
+    {
         super(TYPE, address, location, expectedValue, newValue, barrierType, StampFactory.forKind(JavaKind.Boolean.getStackKind()));
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         assert getNewValue().stamp(NodeView.DEFAULT).isCompatible(getExpectedValue().stamp(NodeView.DEFAULT));
         assert !this.canDeoptimize();
         LIRGeneratorTool tool = gen.getLIRGeneratorTool();

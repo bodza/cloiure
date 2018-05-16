@@ -13,26 +13,34 @@ import graalvm.compiler.lir.stackslotalloc.LSStackSlotAllocator;
 import graalvm.compiler.lir.stackslotalloc.SimpleStackSlotAllocator;
 import graalvm.compiler.options.OptionValues;
 
-public class AllocationStage extends LIRPhaseSuite<AllocationContext> {
-
-    public AllocationStage(OptionValues options) {
+public class AllocationStage extends LIRPhaseSuite<AllocationContext>
+{
+    public AllocationStage(OptionValues options)
+    {
         appendPhase(new MarkBasePointersPhase());
-        if (TraceRA.getValue(options)) {
+        if (TraceRA.getValue(options))
+        {
             appendPhase(new TraceRegisterAllocationPhase());
-        } else {
+        }
+        else
+        {
             appendPhase(new LinearScanPhase());
         }
 
         // build frame map
-        if (LSStackSlotAllocator.Options.LIROptLSStackSlotAllocator.getValue(options)) {
+        if (LSStackSlotAllocator.Options.LIROptLSStackSlotAllocator.getValue(options))
+        {
             appendPhase(new LSStackSlotAllocator());
-        } else {
+        }
+        else
+        {
             appendPhase(new SimpleStackSlotAllocator());
         }
         // currently we mark locations only if we do register allocation
         appendPhase(new LocationMarkerPhase());
 
-        if (Assertions.detailedAssertionsEnabled(options)) {
+        if (Assertions.detailedAssertionsEnabled(options))
+        {
             appendPhase(new AllocationStageVerifier());
         }
     }

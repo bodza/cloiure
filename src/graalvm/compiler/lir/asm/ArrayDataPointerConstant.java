@@ -9,16 +9,18 @@ import graalvm.compiler.core.common.type.DataPointerConstant;
 /**
  * Class for chunks of data that go into the data section.
  */
-public class ArrayDataPointerConstant extends DataPointerConstant {
-
+public class ArrayDataPointerConstant extends DataPointerConstant
+{
     private final byte[] data;
 
-    public ArrayDataPointerConstant(byte[] array, int alignment) {
+    public ArrayDataPointerConstant(byte[] array, int alignment)
+    {
         super(alignment);
         data = array.clone();
     }
 
-    public ArrayDataPointerConstant(short[] array, int alignment) {
+    public ArrayDataPointerConstant(short[] array, int alignment)
+    {
         super(alignment);
         ByteBuffer byteBuffer = ByteBuffer.allocate(array.length * 2);
         byteBuffer.order(ByteOrder.nativeOrder());
@@ -26,7 +28,8 @@ public class ArrayDataPointerConstant extends DataPointerConstant {
         data = byteBuffer.array();
     }
 
-    public ArrayDataPointerConstant(int[] array, int alignment) {
+    public ArrayDataPointerConstant(int[] array, int alignment)
+    {
         super(alignment);
         ByteBuffer byteBuffer = ByteBuffer.allocate(array.length * 4);
         byteBuffer.order(ByteOrder.nativeOrder());
@@ -34,7 +37,8 @@ public class ArrayDataPointerConstant extends DataPointerConstant {
         data = byteBuffer.array();
     }
 
-    public ArrayDataPointerConstant(float[] array, int alignment) {
+    public ArrayDataPointerConstant(float[] array, int alignment)
+    {
         super(alignment);
         ByteBuffer byteBuffer = ByteBuffer.allocate(array.length * 4);
         byteBuffer.order(ByteOrder.nativeOrder());
@@ -42,7 +46,8 @@ public class ArrayDataPointerConstant extends DataPointerConstant {
         data = byteBuffer.array();
     }
 
-    public ArrayDataPointerConstant(double[] array, int alignment) {
+    public ArrayDataPointerConstant(double[] array, int alignment)
+    {
         super(alignment);
         ByteBuffer byteBuffer = ByteBuffer.allocate(array.length * 8);
         byteBuffer.order(ByteOrder.nativeOrder());
@@ -50,7 +55,8 @@ public class ArrayDataPointerConstant extends DataPointerConstant {
         data = byteBuffer.array();
     }
 
-    public ArrayDataPointerConstant(long[] array, int alignment) {
+    public ArrayDataPointerConstant(long[] array, int alignment)
+    {
         super(alignment);
         ByteBuffer byteBuffer = ByteBuffer.allocate(array.length * 8);
         byteBuffer.order(ByteOrder.nativeOrder());
@@ -59,22 +65,26 @@ public class ArrayDataPointerConstant extends DataPointerConstant {
     }
 
     @Override
-    public boolean isDefaultForKind() {
+    public boolean isDefaultForKind()
+    {
         return false;
     }
 
     @Override
-    public void serialize(ByteBuffer buffer) {
+    public void serialize(ByteBuffer buffer)
+    {
         buffer.put(data);
     }
 
     @Override
-    public int getSerializedSize() {
+    public int getSerializedSize()
+    {
         return data.length;
     }
 
     @Override
-    public String toValueString() {
+    public String toValueString()
+    {
         return "ArrayDataPointerConstant" + Arrays.toString(data);
     }
 }

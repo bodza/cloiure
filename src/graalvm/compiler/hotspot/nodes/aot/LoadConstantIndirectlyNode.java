@@ -25,22 +25,24 @@ import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.Value;
 
 @NodeInfo(cycles = CYCLES_4, size = SIZE_1)
-public class LoadConstantIndirectlyNode extends FloatingNode implements Canonicalizable, LIRLowerable {
-
+public class LoadConstantIndirectlyNode extends FloatingNode implements Canonicalizable, LIRLowerable
+{
     public static final NodeClass<LoadConstantIndirectlyNode> TYPE = NodeClass.create(LoadConstantIndirectlyNode.class);
 
     @OptionalInput protected ValueNode value;
     protected Constant constant;
     protected HotSpotConstantLoadAction action;
 
-    public LoadConstantIndirectlyNode(ValueNode value) {
+    public LoadConstantIndirectlyNode(ValueNode value)
+    {
         super(TYPE, value.stamp(NodeView.DEFAULT));
         this.value = value;
         this.constant = null;
         this.action = HotSpotConstantLoadAction.RESOLVE;
     }
 
-    public LoadConstantIndirectlyNode(ValueNode value, HotSpotConstantLoadAction action) {
+    public LoadConstantIndirectlyNode(ValueNode value, HotSpotConstantLoadAction action)
+    {
         super(TYPE, value.stamp(NodeView.DEFAULT));
         this.value = value;
         this.constant = null;
@@ -48,22 +50,30 @@ public class LoadConstantIndirectlyNode extends FloatingNode implements Canonica
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool) {
-        if (value != null) {
+    public Node canonical(CanonicalizerTool tool)
+    {
+        if (value != null)
+        {
             constant = GraphUtil.foldIfConstantAndRemove(this, value);
         }
         return this;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         assert constant != null : "Expected the value to fold: " + value;
         Value result;
-        if (constant instanceof HotSpotObjectConstant) {
+        if (constant instanceof HotSpotObjectConstant)
+        {
             result = ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitLoadObjectAddress(constant);
-        } else if (constant instanceof HotSpotMetaspaceConstant) {
+        }
+        else if (constant instanceof HotSpotMetaspaceConstant)
+        {
             result = ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitLoadMetaspaceAddress(constant, action);
-        } else {
+        }
+        else
+        {
             throw new PermanentBailoutException("Unsupported constant type: " + constant);
         }
         gen.setResult(this, result);
@@ -77,5 +87,4 @@ public class LoadConstantIndirectlyNode extends FloatingNode implements Canonica
 
     @NodeIntrinsic
     public static native Object loadObject(Object object);
-
 }

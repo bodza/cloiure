@@ -14,17 +14,19 @@ import graalvm.compiler.nodes.ValueNode;
  * input.
  */
 @NodeInfo(size = SIZE_1)
-public abstract class UnaryNode extends FloatingNode implements Canonicalizable.Unary<ValueNode> {
-
+public abstract class UnaryNode extends FloatingNode implements Canonicalizable.Unary<ValueNode>
+{
     public static final NodeClass<UnaryNode> TYPE = NodeClass.create(UnaryNode.class);
     @Input protected ValueNode value;
 
     @Override
-    public ValueNode getValue() {
+    public ValueNode getValue()
+    {
         return value;
     }
 
-    public void setValue(ValueNode value) {
+    public void setValue(ValueNode value)
+    {
         updateUsages(this.value, value);
         this.value = value;
     }
@@ -35,13 +37,15 @@ public abstract class UnaryNode extends FloatingNode implements Canonicalizable.
      * @param stamp the result type of this instruction
      * @param value the input instruction
      */
-    protected UnaryNode(NodeClass<? extends UnaryNode> c, Stamp stamp, ValueNode value) {
+    protected UnaryNode(NodeClass<? extends UnaryNode> c, Stamp stamp, ValueNode value)
+    {
         super(c, stamp);
         this.value = value;
     }
 
     @Override
-    public boolean inferStamp() {
+    public boolean inferStamp()
+    {
         return updateStamp(foldStamp(value.stamp(NodeView.DEFAULT)));
     }
 
@@ -52,7 +56,8 @@ public abstract class UnaryNode extends FloatingNode implements Canonicalizable.
      *
      * @param newStamp
      */
-    public Stamp foldStamp(Stamp newStamp) {
+    public Stamp foldStamp(Stamp newStamp)
+    {
         return stamp(NodeView.DEFAULT);
     }
 }

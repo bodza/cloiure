@@ -21,8 +21,8 @@ import jdk.vm.ci.meta.AllocatableValue;
  * and jumps to the handler.
  */
 @Opcode("JUMP_TO_EXCEPTION_HANDLER_IN_CALLER")
-final class AMD64HotSpotJumpToExceptionHandlerInCallerOp extends AMD64HotSpotEpilogueBlockEndOp {
-
+final class AMD64HotSpotJumpToExceptionHandlerInCallerOp extends AMD64HotSpotEpilogueBlockEndOp
+{
     public static final LIRInstructionClass<AMD64HotSpotJumpToExceptionHandlerInCallerOp> TYPE = LIRInstructionClass.create(AMD64HotSpotJumpToExceptionHandlerInCallerOp.class);
 
     @Use(REG) AllocatableValue handlerInCallerPc;
@@ -31,7 +31,8 @@ final class AMD64HotSpotJumpToExceptionHandlerInCallerOp extends AMD64HotSpotEpi
     private final Register thread;
     private final int isMethodHandleReturnOffset;
 
-    AMD64HotSpotJumpToExceptionHandlerInCallerOp(AllocatableValue handlerInCallerPc, AllocatableValue exception, AllocatableValue exceptionPc, int isMethodHandleReturnOffset, Register thread) {
+    AMD64HotSpotJumpToExceptionHandlerInCallerOp(AllocatableValue handlerInCallerPc, AllocatableValue exception, AllocatableValue exceptionPc, int isMethodHandleReturnOffset, Register thread)
+    {
         super(TYPE);
         this.handlerInCallerPc = handlerInCallerPc;
         this.exception = exception;
@@ -41,7 +42,8 @@ final class AMD64HotSpotJumpToExceptionHandlerInCallerOp extends AMD64HotSpotEpi
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
         leaveFrameAndRestoreRbp(crb, masm);
 
         // Discard the return address, thus completing restoration of caller frame

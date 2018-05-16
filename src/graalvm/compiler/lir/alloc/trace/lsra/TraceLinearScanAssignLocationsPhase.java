@@ -46,19 +46,21 @@ import jdk.vm.ci.meta.Value;
  * inserts {@link ShadowedRegisterValue}s to describe {@link RegisterValue}s that are also available
  * on the {@link StackSlot stack}.
  */
-final class TraceLinearScanAssignLocationsPhase extends TraceLinearScanAllocationPhase {
-
+final class TraceLinearScanAssignLocationsPhase extends TraceLinearScanAllocationPhase
+{
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, Trace trace, MoveFactory spillMoveFactory, RegisterAllocationConfig registerAllocationConfig,
-                    TraceBuilderResult traceBuilderResult, TraceLinearScan allocator) {
+    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, Trace trace, MoveFactory spillMoveFactory, RegisterAllocationConfig registerAllocationConfig, TraceBuilderResult traceBuilderResult, TraceLinearScan allocator)
+    {
         new Assigner(allocator, spillMoveFactory).assign();
     }
 
-    private static final class Assigner {
+    private static final class Assigner
+    {
         private final TraceLinearScan allocator;
         private final MoveFactory spillMoveFactory;
 
-        private Assigner(TraceLinearScan allocator, MoveFactory spillMoveFactory) {
+        private Assigner(TraceLinearScan allocator, MoveFactory spillMoveFactory)
+        {
             this.allocator = allocator;
             this.spillMoveFactory = spillMoveFactory;
         }
@@ -71,12 +73,14 @@ final class TraceLinearScanAssignLocationsPhase extends TraceLinearScanAllocatio
          * @param mode the usage mode for {@code operand} by the instruction
          * @return the location assigned for the operand
          */
-        private Value colorLirOperand(LIRInstruction op, Variable operand, OperandMode mode) {
+        private Value colorLirOperand(LIRInstruction op, Variable operand, OperandMode mode)
+        {
             int opId = op.id();
             TraceInterval interval = allocator.intervalFor(operand);
             assert interval != null : "interval must exist";
 
-            if (opId != -1) {
+            if (opId != -1)
+            {
                 /*
                  * Operands are not changed when an interval is split during allocation, so search
                  * the right interval here.
@@ -87,9 +91,12 @@ final class TraceLinearScanAssignLocationsPhase extends TraceLinearScanAllocatio
             return getLocation(op, interval, mode);
         }
 
-        private Value getLocation(LIRInstruction op, TraceInterval interval, OperandMode mode) {
-            if (isIllegal(interval.location()) && interval.canMaterialize()) {
-                if (op instanceof LabelOp) {
+        private Value getLocation(LIRInstruction op, TraceInterval interval, OperandMode mode)
+        {
+            if (isIllegal(interval.location()) && interval.canMaterialize())
+            {
+                if (op instanceof LabelOp)
+                {
                     /*
                      * Spilled materialized value in a LabelOp (i.e. incoming): no need for move
                      * resolution so we can ignore it.
@@ -109,14 +116,17 @@ final class TraceLinearScanAssignLocationsPhase extends TraceLinearScanAllocatio
          * @param flags
          * @see InstructionValueProcedure#doValue(LIRInstruction, Value, OperandMode, EnumSet)
          */
-        private Value debugInfoProcedure(LIRInstruction op, Value operand, OperandMode valueMode, EnumSet<OperandFlag> flags) {
-            if (isVirtualStackSlot(operand)) {
+        private Value debugInfoProcedure(LIRInstruction op, Value operand, OperandMode valueMode, EnumSet<OperandFlag> flags)
+        {
+            if (isVirtualStackSlot(operand))
+            {
                 return operand;
             }
             int tempOpId = op.id();
             OperandMode mode = OperandMode.USE;
             AbstractBlockBase<?> block = allocator.blockForId(tempOpId);
-            if (block.getSuccessorCount() == 1 && tempOpId == allocator.getLastLirInstructionId(block)) {
+            if (block.getSuccessorCount() == 1 && tempOpId == allocator.getLastLirInstructionId(block))
+            {
                 /*
                  * Generating debug information for the last instruction of a block. If this
                  * instruction is a branch, spill moves are inserted before this branch and so the
@@ -126,7 +136,8 @@ final class TraceLinearScanAssignLocationsPhase extends TraceLinearScanAllocatio
                  * Solution: use the first opId of the branch target block instead.
                  */
                 final LIRInstruction instr = allocator.getLIR().getLIRforBlock(block).get(allocator.getLIR().getLIRforBlock(block).size() - 1);
-                if (instr instanceof StandardOp.JumpOp) {
+                if (instr instanceof StandardOp.JumpOp)
+                {
                     throw GraalError.unimplemented("DebugInfo on jumps are not supported!");
                 }
             }
@@ -142,36 +153,45 @@ final class TraceLinearScanAssignLocationsPhase extends TraceLinearScanAllocatio
         }
 
         @SuppressWarnings("try")
-        private void assignBlock(AbstractBlockBase<?> block) {
+        private void assignBlock(AbstractBlockBase<?> block)
+        {
             DebugContext debug = allocator.getDebug();
-            try (Indent indent2 = debug.logAndIndent("assign locations in block B%d", block.getId())) {
+            try (Indent indent2 = debug.logAndIndent("assign locations in block B%d", block.getId()))
+            {
                 ArrayList<LIRInstruction> instructions = allocator.getLIR().getLIRforBlock(block);
                 handleBlockBegin(block, instructions);
                 int numInst = instructions.size();
                 boolean hasDead = false;
 
-                for (int j = 0; j < numInst; j++) {
+                for (int j = 0; j < numInst; j++)
+                {
                     final LIRInstruction op = instructions.get(j);
-                    if (op == null) {
+                    if (op == null)
+                    {
                         /*
                          * this can happen when spill-moves are removed in eliminateSpillMoves
                          */
                         hasDead = true;
-                    } else if (assignLocations(op, instructions, j)) {
+                    }
+                    else if (assignLocations(op, instructions, j))
+                    {
                         hasDead = true;
                     }
                 }
                 handleBlockEnd(block, instructions);
 
-                if (hasDead) {
+                if (hasDead)
+                {
                     // Remove null values from the list.
                     instructions.removeAll(Collections.singleton(null));
                 }
             }
         }
 
-        private void handleBlockBegin(AbstractBlockBase<?> block, ArrayList<LIRInstruction> instructions) {
-            if (allocator.hasInterTracePredecessor(block)) {
+        private void handleBlockBegin(AbstractBlockBase<?> block, ArrayList<LIRInstruction> instructions)
+        {
+            if (allocator.hasInterTracePredecessor(block))
+            {
                 /* Only materialize the locations array if there is an incoming inter-trace edge. */
                 assert instructions.equals(allocator.getLIR().getLIRforBlock(block));
                 GlobalLivenessInfo li = allocator.getGlobalLivenessInfo();
@@ -183,8 +203,10 @@ final class TraceLinearScanAssignLocationsPhase extends TraceLinearScanAllocatio
             }
         }
 
-        private void handleBlockEnd(AbstractBlockBase<?> block, ArrayList<LIRInstruction> instructions) {
-            if (allocator.hasInterTraceSuccessor(block)) {
+        private void handleBlockEnd(AbstractBlockBase<?> block, ArrayList<LIRInstruction> instructions)
+        {
+            if (allocator.hasInterTraceSuccessor(block))
+            {
                 /* Only materialize the locations array if there is an outgoing inter-trace edge. */
                 assert instructions.equals(allocator.getLIR().getLIRforBlock(block));
                 GlobalLivenessInfo li = allocator.getGlobalLivenessInfo();
@@ -196,9 +218,11 @@ final class TraceLinearScanAssignLocationsPhase extends TraceLinearScanAllocatio
             }
         }
 
-        private Value[] calculateBlockBoundaryValues(LIRInstruction instruction, int[] live, OperandMode mode) {
+        private Value[] calculateBlockBoundaryValues(LIRInstruction instruction, int[] live, OperandMode mode)
+        {
             Value[] values = new Value[live.length];
-            for (int i = 0; i < live.length; i++) {
+            for (int i = 0; i < live.length; i++)
+            {
                 TraceInterval interval = allocator.intervalFor(live[i]);
                 Value val = valueAtBlockBoundary(instruction, interval, mode);
                 values[i] = val;
@@ -206,37 +230,46 @@ final class TraceLinearScanAssignLocationsPhase extends TraceLinearScanAllocatio
             return values;
         }
 
-        private Value valueAtBlockBoundary(LIRInstruction instruction, TraceInterval interval, OperandMode mode) {
-            if (mode == OperandMode.DEF && interval == null) {
+        private Value valueAtBlockBoundary(LIRInstruction instruction, TraceInterval interval, OperandMode mode)
+        {
+            if (mode == OperandMode.DEF && interval == null)
+            {
                 // not needed in this trace
                 return Value.ILLEGAL;
             }
             assert interval != null : "interval must exist";
             TraceInterval splitInterval = interval.getSplitChildAtOpIdOrNull(instruction.id(), mode);
-            if (splitInterval == null) {
+            if (splitInterval == null)
+            {
                 assert mode == OperandMode.DEF : String.format("Not split child at %d for interval %s", instruction.id(), interval);
                 // not needed in this branch
                 return Value.ILLEGAL;
             }
 
-            if (splitInterval.inMemoryAt(instruction.id()) && isRegister(splitInterval.location())) {
+            if (splitInterval.inMemoryAt(instruction.id()) && isRegister(splitInterval.location()))
+            {
                 return new ShadowedRegisterValue((RegisterValue) splitInterval.location(), splitInterval.spillSlot());
             }
             return getLocation(instruction, splitInterval, mode);
         }
 
-        private final InstructionValueProcedure assignProc = new InstructionValueProcedure() {
+        private final InstructionValueProcedure assignProc = new InstructionValueProcedure()
+        {
             @Override
-            public Value doValue(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags) {
-                if (isVariable(value)) {
+            public Value doValue(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
+            {
+                if (isVariable(value))
+                {
                     return colorLirOperand(instruction, (Variable) value, mode);
                 }
                 return value;
             }
         };
-        private final InstructionValueProcedure debugInfoValueProc = new InstructionValueProcedure() {
+        private final InstructionValueProcedure debugInfoValueProc = new InstructionValueProcedure()
+        {
             @Override
-            public Value doValue(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags) {
+            public Value doValue(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
+            {
                 return debugInfoProcedure(instruction, value, mode, flags);
             }
         };
@@ -249,13 +282,16 @@ final class TraceLinearScanAssignLocationsPhase extends TraceLinearScanAllocatio
          * @param instructions The instructions of the current block.
          * @return {@code true} if the instruction was deleted.
          */
-        private boolean assignLocations(LIRInstruction op, ArrayList<LIRInstruction> instructions, int j) {
+        private boolean assignLocations(LIRInstruction op, ArrayList<LIRInstruction> instructions, int j)
+        {
             assert op != null && instructions.get(j) == op;
 
             // remove useless moves
-            if (MoveOp.isMoveOp(op)) {
+            if (MoveOp.isMoveOp(op))
+            {
                 AllocatableValue result = MoveOp.asMoveOp(op).getResult();
-                if (isVariable(result) && allocator.isMaterialized(asVariable(result), op.id(), OperandMode.DEF)) {
+                if (isVariable(result) && allocator.isMaterialized(asVariable(result), op.id(), OperandMode.DEF))
+                {
                     /*
                      * This happens if a materializable interval is originally not spilled but then
                      * kicked out in LinearScanWalker.splitForSpilling(). When kicking out such an
@@ -275,13 +311,16 @@ final class TraceLinearScanAssignLocationsPhase extends TraceLinearScanAllocatio
             op.forEachState(debugInfoValueProc);
 
             // remove useless moves
-            if (ValueMoveOp.isValueMoveOp(op)) {
+            if (ValueMoveOp.isValueMoveOp(op))
+            {
                 ValueMoveOp move = ValueMoveOp.asValueMoveOp(op);
-                if (move.getInput().equals(move.getResult())) {
+                if (move.getInput().equals(move.getResult()))
+                {
                     instructions.set(j, null);
                     return true;
                 }
-                if (isStackSlotValue(move.getInput()) && isStackSlotValue(move.getResult())) {
+                if (isStackSlotValue(move.getInput()) && isStackSlotValue(move.getResult()))
+                {
                     // rewrite stack to stack moves
                     instructions.set(j, spillMoveFactory.createStackMove(move.getResult(), move.getInput()));
                 }
@@ -290,9 +329,12 @@ final class TraceLinearScanAssignLocationsPhase extends TraceLinearScanAllocatio
         }
 
         @SuppressWarnings("try")
-        private void assign() {
-            try (Indent indent = allocator.getDebug().logAndIndent("assign locations")) {
-                for (AbstractBlockBase<?> block : allocator.sortedBlocks()) {
+        private void assign()
+        {
+            try (Indent indent = allocator.getDebug().logAndIndent("assign locations"))
+            {
+                for (AbstractBlockBase<?> block : allocator.sortedBlocks())
+                {
                     assignBlock(block);
                 }
             }

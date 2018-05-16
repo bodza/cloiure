@@ -7,9 +7,10 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface HotSpotOperation {
-
-    enum HotspotOpcode {
+public @interface HotSpotOperation
+{
+    enum HotspotOpcode
+    {
         FROM_POINTER,
         TO_KLASS_POINTER,
         TO_METHOD_POINTER,

@@ -26,11 +26,13 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * parameters, fields, and return values. They are not checked by the Java verifier.
  *
  */
-public final class TypeReference {
+public final class TypeReference
+{
     private final ResolvedJavaType type;
     private final boolean exactReference;
 
-    private TypeReference(ResolvedJavaType type, boolean exactReference) {
+    private TypeReference(ResolvedJavaType type, boolean exactReference)
+    {
         this.type = type;
         this.exactReference = exactReference;
     }
@@ -38,8 +40,10 @@ public final class TypeReference {
     /**
      * Creates an exact type reference using the given type.
      */
-    public static TypeReference createExactTrusted(ResolvedJavaType type) {
-        if (type == null) {
+    public static TypeReference createExactTrusted(ResolvedJavaType type)
+    {
+        if (type == null)
+        {
             return null;
         }
         return new TypeReference(type, true);
@@ -49,7 +53,8 @@ public final class TypeReference {
      * Creates a type reference using the given type without assumptions and without trusting
      * interface types.
      */
-    public static TypeReference createWithoutAssumptions(ResolvedJavaType type) {
+    public static TypeReference createWithoutAssumptions(ResolvedJavaType type)
+    {
         return create(null, type);
     }
 
@@ -57,7 +62,8 @@ public final class TypeReference {
      * Creates a type reference using the given type without assumptions and trusting interface
      * types.
      */
-    public static TypeReference createTrustedWithoutAssumptions(ResolvedJavaType type) {
+    public static TypeReference createTrustedWithoutAssumptions(ResolvedJavaType type)
+    {
         return createTrusted(null, type);
     }
 
@@ -65,26 +71,32 @@ public final class TypeReference {
      * Creates a type reference using the given type with assumptions and without trusting interface
      * types.
      */
-    public static TypeReference create(Assumptions assumptions, ResolvedJavaType type) {
+    public static TypeReference create(Assumptions assumptions, ResolvedJavaType type)
+    {
         return createTrusted(assumptions, filterInterfaceTypesOut(type));
     }
 
     /**
      * Create a type reference using the given type with assumptions and trusting interface types.
      */
-    public static TypeReference createTrusted(Assumptions assumptions, ResolvedJavaType type) {
-        if (type == null) {
+    public static TypeReference createTrusted(Assumptions assumptions, ResolvedJavaType type)
+    {
+        if (type == null)
+        {
             return null;
         }
         ResolvedJavaType exactType = type.isLeaf() ? type : null;
-        if (exactType == null) {
+        if (exactType == null)
+        {
             Assumptions.AssumptionResult<ResolvedJavaType> leafConcreteSubtype = type.findLeafConcreteSubtype();
-            if (leafConcreteSubtype != null && leafConcreteSubtype.canRecordTo(assumptions)) {
+            if (leafConcreteSubtype != null && leafConcreteSubtype.canRecordTo(assumptions))
+            {
                 leafConcreteSubtype.recordTo(assumptions);
                 exactType = leafConcreteSubtype.getResult();
             }
         }
-        if (exactType == null) {
+        if (exactType == null)
+        {
             return new TypeReference(type, false);
         }
         return new TypeReference(exactType, true);
@@ -93,7 +105,8 @@ public final class TypeReference {
     /**
      * The type this reference refers to.
      */
-    public ResolvedJavaType getType() {
+    public ResolvedJavaType getType()
+    {
         return type;
     }
 
@@ -101,31 +114,39 @@ public final class TypeReference {
      * @return {@code true} if this reference is exact and only refers to the given type and
      *         {@code false} if it also refers to its sub types.
      */
-    public boolean isExact() {
+    public boolean isExact()
+    {
         return exactReference;
     }
 
     /**
      * @return A new reference that is guaranteed to be exact.
      */
-    public TypeReference asExactReference() {
-        if (isExact()) {
+    public TypeReference asExactReference()
+    {
+        if (isExact())
+        {
             return this;
         }
         return new TypeReference(type, true);
     }
 
-    private static ResolvedJavaType filterInterfaceTypesOut(ResolvedJavaType type) {
-        if (type != null) {
-            if (type.isArray()) {
+    private static ResolvedJavaType filterInterfaceTypesOut(ResolvedJavaType type)
+    {
+        if (type != null)
+        {
+            if (type.isArray())
+            {
                 ResolvedJavaType componentType = filterInterfaceTypesOut(type.getComponentType());
-                if (componentType != null) {
+                if (componentType != null)
+                {
                     return componentType.getArrayClass();
                 }
                 // Returns Object[].class
                 return type.getSuperclass().getArrayClass();
             }
-            if (type.isInterface()) {
+            if (type.isInterface())
+            {
                 return null;
             }
         }
@@ -133,7 +154,8 @@ public final class TypeReference {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return (isExact() ? "#" : "") + type;
     }
 }

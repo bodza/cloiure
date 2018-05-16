@@ -27,42 +27,50 @@ import jdk.vm.ci.meta.JavaConstant;
  * The {@code ArrayLength} instruction gets the length of an array.
  */
 @NodeInfo(cycles = CYCLES_2, size = SIZE_1)
-public final class ArrayLengthNode extends FixedWithNextNode implements Canonicalizable.Unary<ValueNode>, Lowerable, Virtualizable {
-
+public final class ArrayLengthNode extends FixedWithNextNode implements Canonicalizable.Unary<ValueNode>, Lowerable, Virtualizable
+{
     public static final NodeClass<ArrayLengthNode> TYPE = NodeClass.create(ArrayLengthNode.class);
     @Input ValueNode array;
 
-    public ValueNode array() {
+    public ValueNode array()
+    {
         return array;
     }
 
     @Override
-    public ValueNode getValue() {
+    public ValueNode getValue()
+    {
         return array;
     }
 
-    public ArrayLengthNode(ValueNode array) {
+    public ArrayLengthNode(ValueNode array)
+    {
         super(TYPE, StampFactory.positiveInt());
         this.array = array;
     }
 
-    public static ValueNode create(ValueNode forValue, ConstantReflectionProvider constantReflection) {
-        if (forValue instanceof NewArrayNode) {
+    public static ValueNode create(ValueNode forValue, ConstantReflectionProvider constantReflection)
+    {
+        if (forValue instanceof NewArrayNode)
+        {
             NewArrayNode newArray = (NewArrayNode) forValue;
             return newArray.length();
         }
 
         ValueNode length = readArrayLengthConstant(forValue, constantReflection);
-        if (length != null) {
+        if (length != null)
+        {
             return length;
         }
         return new ArrayLengthNode(forValue);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue) {
+    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    {
         ValueNode length = readArrayLength(forValue, tool.getConstantReflection());
-        if (length != null) {
+        if (length != null)
+        {
             return length;
         }
         return this;
@@ -75,18 +83,25 @@ public final class ArrayLengthNode extends FixedWithNextNode implements Canonica
      * @param value a value needing proxies
      * @return proxies wrapping {@code value}
      */
-    private static ValueNode reproxyValue(ValueNode originalValue, ValueNode value) {
-        if (value.isConstant()) {
+    private static ValueNode reproxyValue(ValueNode originalValue, ValueNode value)
+    {
+        if (value.isConstant())
+        {
             // No proxy needed
             return value;
         }
-        if (originalValue instanceof ValueProxyNode) {
+        if (originalValue instanceof ValueProxyNode)
+        {
             ValueProxyNode proxy = (ValueProxyNode) originalValue;
             return new ValueProxyNode(reproxyValue(proxy.getOriginalNode(), value), proxy.proxyPoint());
-        } else if (originalValue instanceof ValueProxy) {
+        }
+        else if (originalValue instanceof ValueProxy)
+        {
             ValueProxy proxy = (ValueProxy) originalValue;
             return reproxyValue(proxy.getOriginalNode(), value);
-        } else {
+        }
+        else
+        {
             return value;
         }
     }
@@ -96,22 +111,28 @@ public final class ArrayLengthNode extends FixedWithNextNode implements Canonica
      *
      * @return a node representing the length of {@code array} or null if it is not available
      */
-    public static ValueNode readArrayLength(ValueNode originalArray, ConstantReflectionProvider constantReflection) {
+    public static ValueNode readArrayLength(ValueNode originalArray, ConstantReflectionProvider constantReflection)
+    {
         ValueNode length = GraphUtil.arrayLength(originalArray);
-        if (length != null) {
+        if (length != null)
+        {
             // Ensure that any proxies on the original value end up on the length value
             return reproxyValue(originalArray, length);
         }
         return readArrayLengthConstant(originalArray, constantReflection);
     }
 
-    private static ValueNode readArrayLengthConstant(ValueNode originalArray, ConstantReflectionProvider constantReflection) {
+    private static ValueNode readArrayLengthConstant(ValueNode originalArray, ConstantReflectionProvider constantReflection)
+    {
         ValueNode array = GraphUtil.unproxify(originalArray);
-        if (constantReflection != null && array.isConstant() && !array.isNullConstant()) {
+        if (constantReflection != null && array.isConstant() && !array.isNullConstant())
+        {
             JavaConstant constantValue = array.asJavaConstant();
-            if (constantValue != null && constantValue.isNonNull()) {
+            if (constantValue != null && constantValue.isNonNull())
+            {
                 Integer constantLength = constantReflection.readArrayLength(constantValue);
-                if (constantLength != null) {
+                if (constantLength != null)
+                {
                     return ConstantNode.forInt(constantLength);
                 }
             }
@@ -120,7 +141,8 @@ public final class ArrayLengthNode extends FixedWithNextNode implements Canonica
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
@@ -128,9 +150,11 @@ public final class ArrayLengthNode extends FixedWithNextNode implements Canonica
     public static native int arrayLength(Object array);
 
     @Override
-    public void virtualize(VirtualizerTool tool) {
+    public void virtualize(VirtualizerTool tool)
+    {
         ValueNode alias = tool.getAlias(array());
-        if (alias instanceof VirtualArrayNode) {
+        if (alias instanceof VirtualArrayNode)
+        {
             VirtualArrayNode virtualArray = (VirtualArrayNode) alias;
             tool.replaceWithValue(ConstantNode.forInt(virtualArray.entryCount(), graph()));
         }

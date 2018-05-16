@@ -19,7 +19,6 @@ import javax.management.ObjectName;
 import javax.management.ReflectionException;
 
 import org.graalvm.collections.EconomicMap;
-import graalvm.compiler.core.common.SuppressFBWarnings;
 import graalvm.compiler.debug.TTY;
 import graalvm.compiler.hotspot.HotSpotGraalRuntime;
 import graalvm.compiler.options.OptionDescriptor;
@@ -29,8 +28,8 @@ import graalvm.compiler.options.OptionsParser;
 /**
  * MBean used to access properties and operations of a {@link HotSpotGraalRuntime} instance.
  */
-final class HotSpotGraalRuntimeMBean implements DynamicMBean {
-
+final class HotSpotGraalRuntimeMBean implements DynamicMBean
+{
     /**
      * The runtime instance to which this bean provides a management connection.
      */
@@ -41,46 +40,55 @@ final class HotSpotGraalRuntimeMBean implements DynamicMBean {
      */
     private final ObjectName objectName;
 
-    HotSpotGraalRuntimeMBean(ObjectName objectName, HotSpotGraalRuntime runtime) {
+    HotSpotGraalRuntimeMBean(ObjectName objectName, HotSpotGraalRuntime runtime)
+    {
         this.objectName = objectName;
         this.runtime = runtime;
     }
 
-    ObjectName getObjectName() {
+    ObjectName getObjectName()
+    {
         return objectName;
     }
 
-    HotSpotGraalRuntime getRuntime() {
+    HotSpotGraalRuntime getRuntime()
+    {
         return runtime;
     }
 
     private static final boolean DEBUG = Boolean.getBoolean(HotSpotGraalRuntimeMBean.class.getSimpleName() + ".debug");
 
     @Override
-    public Object getAttribute(String name) throws AttributeNotFoundException {
+    public Object getAttribute(String name) throws AttributeNotFoundException
+    {
         String[] result = runtime.getOptionValues(name);
         String value = result[0];
-        if (value == null) {
+        if (value == null)
+        {
             throw new AttributeNotFoundException(name);
         }
-        if (DEBUG) {
+        if (DEBUG)
+        {
             System.out.printf("getAttribute: %s = %s (type: %s)%n", name, value, value == null ? "null" : value.getClass().getName());
         }
         return result[0];
     }
 
-    @SuppressFBWarnings(value = "ES_COMPARING_STRINGS_WITH_EQ", justification = "reference equality on the receiver is what we want")
     @Override
-    public void setAttribute(Attribute attribute) throws AttributeNotFoundException, InvalidAttributeValueException {
+    public void setAttribute(Attribute attribute) throws AttributeNotFoundException, InvalidAttributeValueException
+    {
         String name = attribute.getName();
         Object value = attribute.getValue();
         String svalue = String.valueOf(value);
-        if (DEBUG) {
+        if (DEBUG)
+        {
             System.out.printf("setAttribute: %s = %s (type: %s)%n", name, svalue, value == null ? "null" : value.getClass().getName());
         }
         String[] result = runtime.setOptionValues(new String[]{name}, new String[]{svalue});
-        if (result[0] != name) {
-            if (result[0] == null) {
+        if (result[0] != name)
+        {
+            if (result[0] == null)
+            {
                 throw new AttributeNotFoundException(name);
             }
             throw new InvalidAttributeValueException(result[0]);
@@ -88,16 +96,22 @@ final class HotSpotGraalRuntimeMBean implements DynamicMBean {
     }
 
     @Override
-    public AttributeList getAttributes(String[] names) {
+    public AttributeList getAttributes(String[] names)
+    {
         String[] values = runtime.getOptionValues(names);
         AttributeList list = new AttributeList();
-        for (int i = 0; i < names.length; i++) {
+        for (int i = 0; i < names.length; i++)
+        {
             String value = values[i];
             String name = names[i];
-            if (value == null) {
+            if (value == null)
+            {
                 TTY.printf("No such option named %s%n", name);
-            } else {
-                if (DEBUG) {
+            }
+            else
+            {
+                if (DEBUG)
+                {
                     System.out.printf("getAttributes: %s = %s (type: %s)%n", name, value, value == null ? "null" : value.getClass().getName());
                 }
                 list.add(new Attribute(name, value));
@@ -106,20 +120,22 @@ final class HotSpotGraalRuntimeMBean implements DynamicMBean {
         return list;
     }
 
-    @SuppressFBWarnings(value = "ES_COMPARING_STRINGS_WITH_EQ", justification = "reference equality on the receiver is what we want")
     @Override
-    public AttributeList setAttributes(AttributeList attributes) {
+    public AttributeList setAttributes(AttributeList attributes)
+    {
         String[] names = new String[attributes.size()];
         String[] values = new String[attributes.size()];
 
         int i = 0;
-        for (Attribute attr : attributes.asList()) {
+        for (Attribute attr : attributes.asList())
+        {
             String name = attr.getName();
             names[i] = name;
             Object value = attr.getValue();
             String svalue = String.valueOf(value);
             values[i] = svalue;
-            if (DEBUG) {
+            if (DEBUG)
+            {
                 System.out.printf("setAttributes: %s = %s (type: %s)%n", name, svalue, value == null ? "null" : value.getClass().getName());
             }
             i++;
@@ -127,12 +143,18 @@ final class HotSpotGraalRuntimeMBean implements DynamicMBean {
         String[] result = runtime.setOptionValues(names, values);
         AttributeList setOk = new AttributeList();
         i = 0;
-        for (Attribute attr : attributes.asList()) {
-            if (names[i] == result[i]) {
+        for (Attribute attr : attributes.asList())
+        {
+            if (names[i] == result[i])
+            {
                 setOk.add(attr);
-            } else if (result[i] == null) {
+            }
+            else if (result[i] == null)
+            {
                 TTY.printf("Error setting %s to %s: unknown option%n", attr.getName(), attr.getValue());
-            } else {
+            }
+            else
+            {
                 TTY.printf("Error setting %s to %s: %s%n", attr.getName(), attr.getValue(), result[i]);
             }
             i++;
@@ -141,40 +163,52 @@ final class HotSpotGraalRuntimeMBean implements DynamicMBean {
     }
 
     @Override
-    public Object invoke(String actionName, Object[] params, String[] signature) throws MBeanException, ReflectionException {
-        try {
-            if (DEBUG) {
+    public Object invoke(String actionName, Object[] params, String[] signature) throws MBeanException, ReflectionException
+    {
+        try
+        {
+            if (DEBUG)
+            {
                 System.out.printf("invoke: %s%s%n", actionName, Arrays.asList(params));
             }
             Object retvalue = runtime.invokeManagementAction(actionName, params);
-            if (DEBUG) {
+            if (DEBUG)
+            {
                 System.out.printf("invoke: %s%s = %s%n", actionName, Arrays.asList(params), retvalue);
             }
             return retvalue;
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             throw new ReflectionException(ex);
         }
     }
 
     @Override
-    public MBeanInfo getMBeanInfo() {
+    public MBeanInfo getMBeanInfo()
+    {
         List<MBeanAttributeInfo> attrs = new ArrayList<>();
-        for (OptionDescriptor option : getOptionDescriptors().getValues()) {
+        for (OptionDescriptor option : getOptionDescriptors().getValues())
+        {
             Class<?> optionValueType = option.getOptionValueType();
-            if (Enum.class.isAssignableFrom(optionValueType)) {
+            if (Enum.class.isAssignableFrom(optionValueType))
+            {
                 // Enum values are passed through
                 // the management interface as Strings.
                 optionValueType = String.class;
             }
             attrs.add(new MBeanAttributeInfo(option.getName(), optionValueType.getName(), option.getHelp(), true, true, false));
         }
-        attrs.sort(new Comparator<MBeanAttributeInfo>() {
+        attrs.sort(new Comparator<MBeanAttributeInfo>()
+        {
             @Override
-            public int compare(MBeanAttributeInfo o1, MBeanAttributeInfo o2) {
+            public int compare(MBeanAttributeInfo o1, MBeanAttributeInfo o2)
+            {
                 return o1.getName().compareTo(o2.getName());
             }
         });
-        MBeanOperationInfo[] ops = {
+        MBeanOperationInfo[] ops =
+        {
                         new MBeanOperationInfo("dumpMethod", "Enable IGV dumps for provided method", new MBeanParameterInfo[]{
                                         new MBeanParameterInfo("className", "java.lang.String", "Class to observe"),
                                         new MBeanParameterInfo("methodName", "java.lang.String", "Method to observe"),
@@ -193,17 +227,16 @@ final class HotSpotGraalRuntimeMBean implements DynamicMBean {
                         }, "void", MBeanOperationInfo.ACTION)
         };
 
-        return new MBeanInfo(
-                        HotSpotGraalRuntimeMBean.class.getName(),
-                        "Graal",
-                        attrs.toArray(new MBeanAttributeInfo[attrs.size()]),
-                        null, ops, null);
+        return new MBeanInfo(HotSpotGraalRuntimeMBean.class.getName(), "Graal", attrs.toArray(new MBeanAttributeInfo[attrs.size()]), null, ops, null);
     }
 
-    private static EconomicMap<String, OptionDescriptor> getOptionDescriptors() {
+    private static EconomicMap<String, OptionDescriptor> getOptionDescriptors()
+    {
         EconomicMap<String, OptionDescriptor> result = EconomicMap.create();
-        for (OptionDescriptors set : OptionsParser.getOptionsLoader()) {
-            for (OptionDescriptor option : set) {
+        for (OptionDescriptors set : OptionsParser.getOptionsLoader())
+        {
+            for (OptionDescriptor option : set)
+            {
                 result.put(option.getName(), option);
             }
         }

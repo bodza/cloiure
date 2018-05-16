@@ -11,28 +11,32 @@ import graalvm.compiler.nodes.ValueNode;
  * The {@code BinaryNode} class is the base of arithmetic and logic operations with two inputs.
  */
 @NodeInfo
-public abstract class BinaryNode extends FloatingNode implements Canonicalizable.Binary<ValueNode> {
-
+public abstract class BinaryNode extends FloatingNode implements Canonicalizable.Binary<ValueNode>
+{
     public static final NodeClass<BinaryNode> TYPE = NodeClass.create(BinaryNode.class);
     @Input protected ValueNode x;
     @Input protected ValueNode y;
 
     @Override
-    public ValueNode getX() {
+    public ValueNode getX()
+    {
         return x;
     }
 
     @Override
-    public ValueNode getY() {
+    public ValueNode getY()
+    {
         return y;
     }
 
-    public void setX(ValueNode x) {
+    public void setX(ValueNode x)
+    {
         updateUsages(this.x, x);
         this.x = x;
     }
 
-    public void setY(ValueNode y) {
+    public void setY(ValueNode y)
+    {
         updateUsages(this.y, y);
         this.y = y;
     }
@@ -44,14 +48,16 @@ public abstract class BinaryNode extends FloatingNode implements Canonicalizable
      * @param x the first input instruction
      * @param y the second input instruction
      */
-    protected BinaryNode(NodeClass<? extends BinaryNode> c, Stamp stamp, ValueNode x, ValueNode y) {
+    protected BinaryNode(NodeClass<? extends BinaryNode> c, Stamp stamp, ValueNode x, ValueNode y)
+    {
         super(c, stamp);
         this.x = x;
         this.y = y;
     }
 
     @Override
-    public boolean inferStamp() {
+    public boolean inferStamp()
+    {
         return updateStamp(foldStamp(getX().stamp(NodeView.DEFAULT), getY().stamp(NodeView.DEFAULT)));
     }
 

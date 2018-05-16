@@ -53,8 +53,8 @@ import jdk.vm.ci.meta.Signature;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface MethodSubstitution {
-
+public @interface MethodSubstitution
+{
     /**
      * Gets the name of the original method.
      * <p>

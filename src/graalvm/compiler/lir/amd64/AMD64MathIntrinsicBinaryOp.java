@@ -23,10 +23,12 @@ import jdk.vm.ci.code.Register;
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.Value;
 
-public final class AMD64MathIntrinsicBinaryOp extends AMD64LIRInstruction {
+public final class AMD64MathIntrinsicBinaryOp extends AMD64LIRInstruction
+{
     public static final LIRInstructionClass<AMD64MathIntrinsicBinaryOp> TYPE = LIRInstructionClass.create(AMD64MathIntrinsicBinaryOp.class);
 
-    public enum BinaryIntrinsicOpcode {
+    public enum BinaryIntrinsicOpcode
+    {
         POW
     }
 
@@ -57,13 +59,15 @@ public final class AMD64MathIntrinsicBinaryOp extends AMD64LIRInstruction {
 
     CompilationResultBuilder internalCrb;
 
-    public AMD64MathIntrinsicBinaryOp(LIRGeneratorTool tool, BinaryIntrinsicOpcode opcode, Value result, Value input, Value alternateInput) {
+    public AMD64MathIntrinsicBinaryOp(LIRGeneratorTool tool, BinaryIntrinsicOpcode opcode, Value result, Value input, Value alternateInput)
+    {
         super(TYPE);
         this.opcode = opcode;
         this.result = result;
         this.input = input;
         this.secondInput = alternateInput;
-        if (opcode == BinaryIntrinsicOpcode.POW) {
+        if (opcode == BinaryIntrinsicOpcode.POW)
+        {
             this.gpr1Temp = tool.newVariable(LIRKind.value(AMD64Kind.QWORD));
             this.gpr2Temp = tool.newVariable(LIRKind.value(AMD64Kind.QWORD));
             this.rcxTemp = AMD64.rcx.asValue(LIRKind.value(AMD64Kind.QWORD));
@@ -86,17 +90,21 @@ public final class AMD64MathIntrinsicBinaryOp extends AMD64LIRInstruction {
         }
     }
 
-    private void setCrb(CompilationResultBuilder crb) {
+    private void setCrb(CompilationResultBuilder crb)
+    {
         internalCrb = crb;
     }
 
-    private AMD64Address externalAddress(ArrayDataPointerConstant curPtr) {
+    private AMD64Address externalAddress(ArrayDataPointerConstant curPtr)
+    {
         return (AMD64Address) internalCrb.recordDataReferenceInCode(curPtr);
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
-        switch (opcode) {
+    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
+        switch (opcode)
+        {
             case POW:
                 powIntrinsic(asRegister(result, AMD64Kind.DOUBLE), asRegister(input, AMD64Kind.DOUBLE), asRegister(secondInput, AMD64Kind.DOUBLE), crb, masm);
                 break;
@@ -141,19 +149,23 @@ public final class AMD64MathIntrinsicBinaryOp extends AMD64LIRInstruction {
      *
      */
 
-    private static int[] highSigMask = {
+    private static int[] highSigMask =
+    {
                     0x00000000, 0xfffff800, 0x00000000, 0xfffff800
     };
 
-    private static int[] logTwoE = {
+    private static int[] logTwoE =
+    {
                     0x00000000, 0x3ff72000, 0x161bb241, 0xbf5dabe1
     };
 
-    private static int[] highmaskY = {
+    private static int[] highmaskY =
+    {
                     0x00000000, 0xfffffff8, 0x00000000, 0xffffffff
     };
 
-    private static int[] tExp = {
+    private static int[] tExp =
+    {
                     0x00000000, 0x3ff00000, 0x00000000, 0x3b700000, 0xfa5abcbf,
                     0x3ff00b1a, 0xa7609f71, 0xbc84f6b2, 0xa9fb3335, 0x3ff0163d,
                     0x9ab8cdb7, 0x3c9b6129, 0x143b0281, 0x3ff02168, 0x0fc54eb6,
@@ -361,25 +373,30 @@ public final class AMD64MathIntrinsicBinaryOp extends AMD64LIRInstruction {
                     0x6b2a23d9, 0x3fffe9d9, 0x7442fde3, 0x3c74a603
     };
 
-    private static int[] eCoeff = {
+    private static int[] eCoeff =
+    {
                     0xe78a6731, 0x3f55d87f, 0xd704a0c0, 0x3fac6b08, 0x6fba4e77,
                     0x3f83b2ab, 0xff82c58f, 0x3fcebfbd, 0xfefa39ef, 0x3fe62e42,
                     0x00000000, 0x00000000
     };
 
-    private static int[] coeffH = {
+    private static int[] coeffH =
+    {
                     0x00000000, 0xbfd61a00, 0x00000000, 0xbf5dabe1
     };
 
-    private static int[] highmaskLogX = {
+    private static int[] highmaskLogX =
+    {
                     0xf8000000, 0xffffffff, 0x00000000, 0xfffff800
     };
 
-    private static int[] halfmask = {
+    private static int[] halfmask =
+    {
                     0xf8000000, 0xffffffff, 0xf8000000, 0xffffffff
     };
 
-    private static int[] coeffPow = {
+    private static int[] coeffPow =
+    {
                     0x6dc96112, 0xbf836578, 0xee241472, 0xbf9b0301, 0x9f95985a,
                     0xbfb528db, 0xb3841d2a, 0xbfd619b6, 0x518775e3, 0x3f9004f2,
                     0xac8349bb, 0x3fa76c9b, 0x486ececc, 0x3fc4635e, 0x161bb241,
@@ -387,7 +404,8 @@ public final class AMD64MathIntrinsicBinaryOp extends AMD64LIRInstruction {
                     0x486ececb, 0x3fc4635e, 0x412055cc, 0xbdd61bb2
     };
 
-    private static int[] lTblPow = {
+    private static int[] lTblPow =
+    {
                     0x00000000, 0x3ff00000, 0x00000000, 0x00000000, 0x20000000,
                     0x3feff00a, 0x96621f95, 0x3e5b1856, 0xe0000000, 0x3fefe019,
                     0xe5916f9e, 0xbe325278, 0x00000000, 0x3fefd02f, 0x859a1062,
@@ -801,11 +819,13 @@ public final class AMD64MathIntrinsicBinaryOp extends AMD64LIRInstruction {
                     0x00000000, 0x80000000
     };
 
-    private static int[] logTwoPow = {
+    private static int[] logTwoPow =
+    {
                     0xfefa39ef, 0x3fe62e42, 0xfefa39ef, 0xbfe62e42
     };
 
-    public void powIntrinsic(Register dest, Register value1, Register value2, CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+    public void powIntrinsic(Register dest, Register value1, Register value2, CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
         ArrayDataPointerConstant highSigMaskPtr = new ArrayDataPointerConstant(highSigMask, 16);
         ArrayDataPointerConstant logTwoEPtr = new ArrayDataPointerConstant(logTwoE, 16);
         ArrayDataPointerConstant highmaskYPtr = new ArrayDataPointerConstant(highmaskY, 16);
@@ -897,7 +917,8 @@ public final class AMD64MathIntrinsicBinaryOp extends AMD64LIRInstruction {
         setCrb(crb);
         masm.movdqu(temp10, value1);
         masm.movsd(temp8, value2);
-        if (dest.encoding != value1.encoding) {
+        if (dest.encoding != value1.encoding)
+        {
             masm.movdqu(dest, value1);
         }
 

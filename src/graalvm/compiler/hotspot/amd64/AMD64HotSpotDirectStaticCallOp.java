@@ -17,13 +17,15 @@ import jdk.vm.ci.meta.Value;
  * inline cache so it's just a patchable call site.
  */
 @Opcode("CALL_DIRECT")
-final class AMD64HotSpotDirectStaticCallOp extends DirectCallOp {
+final class AMD64HotSpotDirectStaticCallOp extends DirectCallOp
+{
     public static final LIRInstructionClass<AMD64HotSpotDirectStaticCallOp> TYPE = LIRInstructionClass.create(AMD64HotSpotDirectStaticCallOp.class);
 
     private final InvokeKind invokeKind;
     private final GraalHotSpotVMConfig config;
 
-    AMD64HotSpotDirectStaticCallOp(ResolvedJavaMethod target, Value result, Value[] parameters, Value[] temps, LIRFrameState state, InvokeKind invokeKind, GraalHotSpotVMConfig config) {
+    AMD64HotSpotDirectStaticCallOp(ResolvedJavaMethod target, Value result, Value[] parameters, Value[] temps, LIRFrameState state, InvokeKind invokeKind, GraalHotSpotVMConfig config)
+    {
         super(TYPE, target, result, parameters, temps, state);
         assert invokeKind.isDirect();
         this.invokeKind = invokeKind;
@@ -31,7 +33,8 @@ final class AMD64HotSpotDirectStaticCallOp extends DirectCallOp {
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
         crb.recordMark(invokeKind == InvokeKind.Static ? config.MARKID_INVOKESTATIC : config.MARKID_INVOKESPECIAL);
         super.emitCode(crb, masm);
     }

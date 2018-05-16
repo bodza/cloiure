@@ -16,26 +16,31 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 @NodeInfo(cycles = CYCLES_4, size = SIZE_4)
-public class LoadMethodCountersNode extends FloatingNode implements LIRLowerable {
+public class LoadMethodCountersNode extends FloatingNode implements LIRLowerable
+{
     public static final NodeClass<LoadMethodCountersNode> TYPE = NodeClass.create(LoadMethodCountersNode.class);
 
     ResolvedJavaMethod method;
 
-    public LoadMethodCountersNode(ResolvedJavaMethod method) {
+    public LoadMethodCountersNode(ResolvedJavaMethod method)
+    {
         super(TYPE, MethodCountersPointerStamp.methodCountersNonNull());
         this.method = method;
     }
 
-    public ResolvedJavaMethod getMethod() {
+    public ResolvedJavaMethod getMethod()
+    {
         return method;
     }
 
-    public static NodeIterable<LoadMethodCountersNode> getLoadMethodCountersNodes(StructuredGraph graph) {
+    public static NodeIterable<LoadMethodCountersNode> getLoadMethodCountersNodes(StructuredGraph graph)
+    {
         return graph.getNodes().filter(LoadMethodCountersNode.class);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool generator) {
+    public void generate(NodeLIRBuilderTool generator)
+    {
         // TODO: With AOT we don't need this, as this node will be replaced.
         // Implement later when profiling is needed in the JIT mode.
         throw GraalError.unimplemented();

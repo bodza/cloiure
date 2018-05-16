@@ -15,13 +15,13 @@ import graalvm.compiler.serviceprovider.GraalServices;
  * {@link LogStream}. The output can be (temporarily) suppressed per thread through use of a
  * {@linkplain Filter filter}.
  */
-public class TTY {
-
+public class TTY
+{
     /**
      * Support for thread-local suppression of {@link TTY}.
      */
-    public static class Filter implements AutoCloseable {
-
+    public static class Filter implements AutoCloseable
+    {
         private LogStream previous;
         private final Thread thread = Thread.currentThread();
 
@@ -39,16 +39,22 @@ public class TTY {
          * @param object an object whose {@linkplain Object#toString() string} value is matched
          *            against {@code filter}
          */
-        public Filter(String filter, Object object) {
+        public Filter(String filter, Object object)
+        {
             boolean suppressed = false;
-            if (filter != null) {
+            if (filter != null)
+            {
                 String input = object.toString();
-                if (filter.startsWith("~")) {
+                if (filter.startsWith("~"))
+                {
                     suppressed = !Pattern.matches(filter.substring(1), input);
-                } else {
+                }
+                else
+                {
                     suppressed = !input.contains(filter);
                 }
-                if (suppressed) {
+                if (suppressed)
+                {
                     previous = out();
                     log.set(LogStream.SINK);
                 }
@@ -60,7 +66,8 @@ public class TTY {
          * suppression state to how it was before this call, the {@link #remove()} method must be
          * called on this filter object.
          */
-        public Filter() {
+        public Filter()
+        {
             previous = out();
             log.set(LogStream.SINK);
         }
@@ -70,7 +77,8 @@ public class TTY {
          * log stream. To revert the overwritten state to how it was before this call, the
          * {@link #remove()} method must be called on this filter object.
          */
-        public Filter(LogStream newStream) {
+        public Filter(LogStream newStream)
+        {
             previous = out();
             log.set(newStream);
         }
@@ -79,15 +87,18 @@ public class TTY {
          * Reverts the suppression state of {@link TTY} to how it was before this object was
          * constructed.
          */
-        public void remove() {
+        public void remove()
+        {
             assert thread == Thread.currentThread();
-            if (previous != null) {
+            if (previous != null)
+            {
                 log.set(previous);
             }
         }
 
         @Override
-        public void close() {
+        public void close()
+        {
             remove();
         }
     }
@@ -96,20 +107,23 @@ public class TTY {
      * The {@link PrintStream} to which all non-suppressed output from {@link TTY} is written.
      */
     public static final PrintStream out;
-    static {
+    static
+    {
         TTYStreamProvider p = GraalServices.loadSingle(TTYStreamProvider.class, false);
         out = p == null ? System.out : p.getStream();
     }
 
-    private static final ThreadLocal<LogStream> log = new ThreadLocal<LogStream>() {
-
+    private static final ThreadLocal<LogStream> log = new ThreadLocal<LogStream>()
+    {
         @Override
-        protected LogStream initialValue() {
+        protected LogStream initialValue()
+        {
             return new LogStream(out);
         }
     };
 
-    public static boolean isSuppressed() {
+    public static boolean isSuppressed()
+    {
         return log.get() == LogStream.SINK;
     }
 
@@ -119,170 +133,209 @@ public class TTY {
      * depending on whether any suppression {@linkplain Filter filters} are in effect for the
      * current thread.
      */
-    public static LogStream out() {
+    public static LogStream out()
+    {
         return log.get();
     }
 
     /**
      * @see LogStream#print(String)
      */
-    public static void print(String s) {
+    public static void print(String s)
+    {
         out().print(s);
     }
 
     /**
      * @see LogStream#print(int)
      */
-    public static void print(int i) {
+    public static void print(int i)
+    {
         out().print(i);
     }
 
     /**
      * @see LogStream#print(long)
      */
-    public static void print(long i) {
+    public static void print(long i)
+    {
         out().print(i);
     }
 
     /**
      * @see LogStream#print(char)
      */
-    public static void print(char c) {
+    public static void print(char c)
+    {
         out().print(c);
     }
 
     /**
      * @see LogStream#print(boolean)
      */
-    public static void print(boolean b) {
+    public static void print(boolean b)
+    {
         out().print(b);
     }
 
     /**
      * @see LogStream#print(double)
      */
-    public static void print(double d) {
+    public static void print(double d)
+    {
         out().print(d);
     }
 
     /**
      * @see LogStream#print(float)
      */
-    public static void print(float f) {
+    public static void print(float f)
+    {
         out().print(f);
     }
 
     /**
      * @see LogStream#println(String)
      */
-    public static void println(String s) {
+    public static void println(String s)
+    {
         out().println(s);
     }
 
     /**
      * @see LogStream#println()
      */
-    public static void println() {
+    public static void println()
+    {
         out().println();
     }
 
     /**
      * @see LogStream#println(int)
      */
-    public static void println(int i) {
+    public static void println(int i)
+    {
         out().println(i);
     }
 
     /**
      * @see LogStream#println(long)
      */
-    public static void println(long l) {
+    public static void println(long l)
+    {
         out().println(l);
     }
 
     /**
      * @see LogStream#println(char)
      */
-    public static void println(char c) {
+    public static void println(char c)
+    {
         out().println(c);
     }
 
     /**
      * @see LogStream#println(boolean)
      */
-    public static void println(boolean b) {
+    public static void println(boolean b)
+    {
         out().println(b);
     }
 
     /**
      * @see LogStream#println(double)
      */
-    public static void println(double d) {
+    public static void println(double d)
+    {
         out().println(d);
     }
 
     /**
      * @see LogStream#println(float)
      */
-    public static void println(float f) {
+    public static void println(float f)
+    {
         out().println(f);
     }
 
-    public static void printf(String format, Object... args) {
+    public static void printf(String format, Object... args)
+    {
         out().printf(format, args);
     }
 
-    public static void println(String format, Object... args) {
+    public static void println(String format, Object... args)
+    {
         out().printf(format + "%n", args);
     }
 
-    public static void fillTo(int i) {
+    public static void fillTo(int i)
+    {
         out().fillTo(i, ' ');
     }
 
-    public static void printFields(Class<?> javaClass) {
+    public static void printFields(Class<?> javaClass)
+    {
         final String className = javaClass.getSimpleName();
         TTY.println(className + " {");
-        for (final Field field : javaClass.getFields()) {
+        for (final Field field : javaClass.getFields())
+        {
             printField(field, false);
         }
         TTY.println("}");
     }
 
-    public static void printField(final Field field, boolean tabbed) {
+    public static void printField(final Field field, boolean tabbed)
+    {
         final String fieldName = String.format("%35s", field.getName());
-        try {
+        try
+        {
             String prefix = tabbed ? "" : "    " + fieldName + " = ";
             String postfix = tabbed ? "\t" : "\n";
-            if (field.getType() == int.class) {
+            if (field.getType() == int.class)
+            {
                 TTY.print(prefix + field.getInt(null) + postfix);
-            } else if (field.getType() == boolean.class) {
+            }
+            else if (field.getType() == boolean.class)
+            {
                 TTY.print(prefix + field.getBoolean(null) + postfix);
-            } else if (field.getType() == float.class) {
+            }
+            else if (field.getType() == float.class)
+            {
                 TTY.print(prefix + field.getFloat(null) + postfix);
-            } else if (field.getType() == String.class) {
-                TTY.print(prefix + field.get(null) + postfix);
-            } else if (field.getType() == Map.class) {
-                Map<?, ?> m = (Map<?, ?>) field.get(null);
-                TTY.print(prefix + printMap(m) + postfix);
-            } else {
+            }
+            else if (field.getType() == String.class)
+            {
                 TTY.print(prefix + field.get(null) + postfix);
             }
-        } catch (IllegalAccessException e) {
+            else if (field.getType() == Map.class)
+            {
+                Map<?, ?> m = (Map<?, ?>) field.get(null);
+                TTY.print(prefix + printMap(m) + postfix);
+            }
+            else
+            {
+                TTY.print(prefix + field.get(null) + postfix);
+            }
+        }
+        catch (IllegalAccessException e)
+        {
             // do nothing.
         }
     }
 
-    private static String printMap(Map<?, ?> m) {
+    private static String printMap(Map<?, ?> m)
+    {
         StringBuilder sb = new StringBuilder();
 
         List<String> keys = new ArrayList<>();
-        for (Object key : m.keySet()) {
+        for (Object key : m.keySet())
+        {
             keys.add((String) key);
         }
         Collections.sort(keys);
 
-        for (String key : keys) {
+        for (String key : keys)
+        {
             sb.append(key);
             sb.append("\t");
             sb.append(m.get(key));
@@ -292,7 +345,8 @@ public class TTY {
         return sb.toString();
     }
 
-    public static void flush() {
+    public static void flush()
+    {
         out().flush();
     }
 }

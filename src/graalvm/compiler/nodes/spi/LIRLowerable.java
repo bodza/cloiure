@@ -1,6 +1,6 @@
 package graalvm.compiler.nodes.spi;
 
-public interface LIRLowerable {
-
+public interface LIRLowerable
+{
     void generate(NodeLIRBuilderTool generator);
 }

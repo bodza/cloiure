@@ -24,35 +24,42 @@ import jdk.vm.ci.hotspot.HotSpotObjectConstant;
 import jdk.vm.ci.meta.JavaConstant;
 
 @NodeInfo(cycles = CYCLES_0, size = SIZE_0)
-public class IdentityHashCodeNode extends FixedWithNextNode implements Canonicalizable, Lowerable, MemoryCheckpoint.Single {
-
+public class IdentityHashCodeNode extends FixedWithNextNode implements Canonicalizable, Lowerable, MemoryCheckpoint.Single
+{
     public static final NodeClass<IdentityHashCodeNode> TYPE = NodeClass.create(IdentityHashCodeNode.class);
 
     @Input ValueNode object;
 
-    public IdentityHashCodeNode(ValueNode object) {
+    public IdentityHashCodeNode(ValueNode object)
+    {
         super(TYPE, StampFactory.forInteger(32));
         this.object = object;
-
     }
 
     @Override
-    public LocationIdentity getLocationIdentity() {
+    public LocationIdentity getLocationIdentity()
+    {
         return HotSpotReplacementsUtil.MARK_WORD_LOCATION;
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool) {
-        if (object.isConstant()) {
+    public Node canonical(CanonicalizerTool tool)
+    {
+        if (object.isConstant())
+        {
             assert object.stamp(NodeView.DEFAULT) instanceof AbstractObjectStamp;
             JavaConstant c = (JavaConstant) object.asConstant();
-            if (ImmutableCode.getValue(tool.getOptions())) {
+            if (ImmutableCode.getValue(tool.getOptions()))
+            {
                 return this;
             }
             JavaConstant identityHashCode = null;
-            if (c.isNull()) {
+            if (c.isNull())
+            {
                 identityHashCode = JavaConstant.forInt(0);
-            } else {
+            }
+            else
+            {
                 identityHashCode = JavaConstant.forInt(((HotSpotObjectConstant) c).getIdentityHashCode());
             }
 
@@ -62,11 +69,11 @@ public class IdentityHashCodeNode extends FixedWithNextNode implements Canonical
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
     @NodeIntrinsic
     public static native int identityHashCode(Object object);
-
 }

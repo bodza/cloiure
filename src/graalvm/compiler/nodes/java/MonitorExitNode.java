@@ -22,8 +22,8 @@ import org.graalvm.word.LocationIdentity;
  * {@link #escapedReturnValue}, so that it will be materialized before releasing the monitor.
  */
 @NodeInfo(cycles = CYCLES_64, size = SIZE_64)
-public final class MonitorExitNode extends AccessMonitorNode implements Virtualizable, Lowerable, IterableNodeType, MonitorExit, MemoryCheckpoint.Single {
-
+public final class MonitorExitNode extends AccessMonitorNode implements Virtualizable, Lowerable, IterableNodeType, MonitorExit, MemoryCheckpoint.Single
+{
     public static final NodeClass<MonitorExitNode> TYPE = NodeClass.create(MonitorExitNode.class);
 
     /**
@@ -32,7 +32,8 @@ public final class MonitorExitNode extends AccessMonitorNode implements Virtuali
      */
     @OptionalInput ValueNode escapedReturnValue;
 
-    public MonitorExitNode(ValueNode object, MonitorIdNode monitorId, ValueNode escapedReturnValue) {
+    public MonitorExitNode(ValueNode object, MonitorIdNode monitorId, ValueNode escapedReturnValue)
+    {
         super(TYPE, object, monitorId);
         this.escapedReturnValue = escapedReturnValue;
     }
@@ -40,27 +41,33 @@ public final class MonitorExitNode extends AccessMonitorNode implements Virtuali
     /**
      * Return value is cleared when a synchronized method graph is inlined.
      */
-    public void clearEscapedReturnValue() {
+    public void clearEscapedReturnValue()
+    {
         updateUsages(escapedReturnValue, null);
         this.escapedReturnValue = null;
     }
 
     @Override
-    public LocationIdentity getLocationIdentity() {
+    public LocationIdentity getLocationIdentity()
+    {
         return LocationIdentity.any();
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool) {
+    public void virtualize(VirtualizerTool tool)
+    {
         ValueNode alias = tool.getAlias(object());
-        if (alias instanceof VirtualObjectNode) {
+        if (alias instanceof VirtualObjectNode)
+        {
             VirtualObjectNode virtual = (VirtualObjectNode) alias;
-            if (virtual.hasIdentity()) {
+            if (virtual.hasIdentity())
+            {
                 MonitorIdNode removedLock = tool.removeLock(virtual);
                 assert removedLock == getMonitorId() : "mismatch at " + this + ": " + removedLock + " vs. " + getMonitorId();
                 tool.delete();

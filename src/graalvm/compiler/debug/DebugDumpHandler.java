@@ -10,8 +10,8 @@ import java.io.Closeable;
  * graph and send it over the network to a tool (e.g., https://github.com/graalvm/visualizer) that
  * can display graphs.
  */
-public interface DebugDumpHandler extends Closeable, DebugHandler {
-
+public interface DebugDumpHandler extends Closeable, DebugHandler
+{
     /**
      * If the type of {@code object} is supported by this dumper, then a representation of
      * {@code object} is sent to some consumer in a format determined by this object.
@@ -30,6 +30,7 @@ public interface DebugDumpHandler extends Closeable, DebugHandler {
      * the handler.
      */
     @Override
-    default void close() {
+    default void close()
+    {
     }
 }

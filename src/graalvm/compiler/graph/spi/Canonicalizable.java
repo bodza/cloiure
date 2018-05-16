@@ -21,8 +21,8 @@ import jdk.vm.ci.meta.MetaAccessProvider;
  * Non-cyclic graphs (DAGs) of newly created nodes (i.e., one newly created node with an input to
  * another newly created node) will be handled correctly.
  */
-public interface Canonicalizable {
-
+public interface Canonicalizable
+{
     /**
      * Implementations of this method can provide local optimizations like constant folding and
      * strength reduction. Implementations should look at the properties and inputs of the current
@@ -53,8 +53,8 @@ public interface Canonicalizable {
      *
      * @param <T> the common supertype of all inputs of this node
      */
-    public interface Unary<T extends Node> extends Canonicalizable {
-
+    public interface Unary<T extends Node> extends Canonicalizable
+    {
         /**
          * Similar to {@link Canonicalizable#canonical(CanonicalizerTool)}, except that
          * implementations should act as if the current input of the node was the given one, i.e.,
@@ -71,7 +71,8 @@ public interface Canonicalizable {
 
         @SuppressWarnings("unchecked")
         @Override
-        default T canonical(CanonicalizerTool tool) {
+        default T canonical(CanonicalizerTool tool)
+        {
             return (T) canonical(tool, getValue());
         }
     }
@@ -84,8 +85,8 @@ public interface Canonicalizable {
      *
      * @param <T> the common supertype of all inputs of this node
      */
-    public interface Binary<T extends Node> extends Canonicalizable {
-
+    public interface Binary<T extends Node> extends Canonicalizable
+    {
         /**
          * Similar to {@link Canonicalizable#canonical(CanonicalizerTool)}, except that
          * implementations should act as if the current input of the node was the given one, i.e.,
@@ -109,7 +110,8 @@ public interface Canonicalizable {
 
         @SuppressWarnings("unchecked")
         @Override
-        default T canonical(CanonicalizerTool tool) {
+        default T canonical(CanonicalizerTool tool)
+        {
             return (T) canonical(tool, getX(), getY());
         }
     }
@@ -119,8 +121,8 @@ public interface Canonicalizable {
      * operation is commutative. It is used to improve GVN by trying to merge nodes with the same
      * inputs in different order.
      */
-    public interface BinaryCommutative<T extends Node> extends Binary<T> {
-
+    public interface BinaryCommutative<T extends Node> extends Binary<T>
+    {
         /**
          * Ensure a canonical ordering of inputs for commutative nodes to improve GVN results. Order
          * the inputs by increasing {@link Node#id} and call {@link Graph#findDuplicate(Node)} on

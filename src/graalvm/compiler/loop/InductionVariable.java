@@ -9,14 +9,17 @@ import graalvm.compiler.nodes.ValueNode;
 /**
  * This class describes a value node that is an induction variable in a counted loop.
  */
-public abstract class InductionVariable {
-
-    public enum Direction {
+public abstract class InductionVariable
+{
+    public enum Direction
+    {
         Up,
         Down;
 
-        public Direction opposite() {
-            switch (this) {
+        public Direction opposite()
+        {
+            switch (this)
+            {
                 case Up:
                     return Down;
                 case Down:
@@ -31,11 +34,13 @@ public abstract class InductionVariable {
 
     protected final LoopEx loop;
 
-    public InductionVariable(LoopEx loop) {
+    public InductionVariable(LoopEx loop)
+    {
         this.loop = loop;
     }
 
-    public LoopEx getLoop() {
+    public LoopEx getLoop()
+    {
         return loop;
     }
 
@@ -71,7 +76,8 @@ public abstract class InductionVariable {
      * loop limit test. It's possible for the loop to exit before this value if
      * {@link CountedLoopInfo#isExactTripCount()} returns false for the containing loop.
      */
-    public ValueNode extremumNode() {
+    public ValueNode extremumNode()
+    {
         return extremumNode(false, valueNode().stamp(NodeView.DEFAULT));
     }
 

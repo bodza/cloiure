@@ -5,23 +5,26 @@ import java.util.NoSuchElementException;
 
 import graalvm.compiler.graph.Node;
 
-public abstract class NodeIterator<T extends Node> implements Iterator<T> {
-
+public abstract class NodeIterator<T extends Node> implements Iterator<T>
+{
     protected T current;
 
     protected abstract void forward();
 
     @Override
-    public boolean hasNext() {
+    public boolean hasNext()
+    {
         forward();
         return current != null;
     }
 
     @Override
-    public T next() {
+    public T next()
+    {
         forward();
         T ret = current;
-        if (current == null) {
+        if (current == null)
+        {
             throw new NoSuchElementException();
         }
         current = null;
@@ -29,7 +32,8 @@ public abstract class NodeIterator<T extends Node> implements Iterator<T> {
     }
 
     @Override
-    public void remove() {
+    public void remove()
+    {
         throw new UnsupportedOperationException();
     }
 }

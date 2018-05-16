@@ -15,8 +15,8 @@ import graalvm.compiler.nodes.spi.ValueProxy;
 import jdk.vm.ci.meta.TriState;
 
 @NodeInfo(cycles = CYCLES_0, size = SIZE_0)
-public final class ShortCircuitOrNode extends LogicNode implements IterableNodeType, Canonicalizable.Binary<LogicNode> {
-
+public final class ShortCircuitOrNode extends LogicNode implements IterableNodeType, Canonicalizable.Binary<LogicNode>
+{
     public static final NodeClass<ShortCircuitOrNode> TYPE = NodeClass.create(ShortCircuitOrNode.class);
     @Input(Condition) LogicNode x;
     @Input(Condition) LogicNode y;
@@ -24,7 +24,8 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
     protected boolean yNegated;
     protected double shortCircuitProbability;
 
-    public ShortCircuitOrNode(LogicNode x, boolean xNegated, LogicNode y, boolean yNegated, double shortCircuitProbability) {
+    public ShortCircuitOrNode(LogicNode x, boolean xNegated, LogicNode y, boolean yNegated, double shortCircuitProbability)
+    {
         super(TYPE);
         this.x = x;
         this.xNegated = xNegated;
@@ -34,20 +35,24 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
     }
 
     @Override
-    public LogicNode getX() {
+    public LogicNode getX()
+    {
         return x;
     }
 
     @Override
-    public LogicNode getY() {
+    public LogicNode getY()
+    {
         return y;
     }
 
-    public boolean isXNegated() {
+    public boolean isXNegated()
+    {
         return xNegated;
     }
 
-    public boolean isYNegated() {
+    public boolean isYNegated()
+    {
         return yNegated;
     }
 
@@ -55,112 +60,155 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
      * Gets the probability that the {@link #getY() y} part of this binary node is <b>not</b>
      * evaluated. This is the probability that this operator will short-circuit its execution.
      */
-    public double getShortCircuitProbability() {
+    public double getShortCircuitProbability()
+    {
         return shortCircuitProbability;
     }
 
-    protected ShortCircuitOrNode canonicalizeNegation(LogicNode forX, LogicNode forY) {
+    protected ShortCircuitOrNode canonicalizeNegation(LogicNode forX, LogicNode forY)
+    {
         LogicNode xCond = forX;
         boolean xNeg = xNegated;
-        while (xCond instanceof LogicNegationNode) {
+        while (xCond instanceof LogicNegationNode)
+        {
             xCond = ((LogicNegationNode) xCond).getValue();
             xNeg = !xNeg;
         }
 
         LogicNode yCond = forY;
         boolean yNeg = yNegated;
-        while (yCond instanceof LogicNegationNode) {
+        while (yCond instanceof LogicNegationNode)
+        {
             yCond = ((LogicNegationNode) yCond).getValue();
             yNeg = !yNeg;
         }
 
-        if (xCond != forX || yCond != forY) {
+        if (xCond != forX || yCond != forY)
+        {
             return new ShortCircuitOrNode(xCond, xNeg, yCond, yNeg, shortCircuitProbability);
-        } else {
+        }
+        else
+        {
             return this;
         }
     }
 
     @Override
-    public LogicNode canonical(CanonicalizerTool tool, LogicNode forX, LogicNode forY) {
+    public LogicNode canonical(CanonicalizerTool tool, LogicNode forX, LogicNode forY)
+    {
         ShortCircuitOrNode ret = canonicalizeNegation(forX, forY);
-        if (ret != this) {
+        if (ret != this)
+        {
             return ret;
         }
 
-        if (forX == forY) {
-            // @formatter:off
+        if (forX == forY)
+        {
             //  a ||  a = a
             //  a || !a = true
             // !a ||  a = true
             // !a || !a = !a
-            // @formatter:on
-            if (isXNegated()) {
-                if (isYNegated()) {
+            if (isXNegated())
+            {
+                if (isYNegated())
+                {
                     // !a || !a = !a
                     return LogicNegationNode.create(forX);
-                } else {
+                }
+                else
+                {
                     // !a || a = true
                     return LogicConstantNode.tautology();
                 }
-            } else {
-                if (isYNegated()) {
+            }
+            else
+            {
+                if (isYNegated())
+                {
                     // a || !a = true
                     return LogicConstantNode.tautology();
-                } else {
+                }
+                else
+                {
                     // a || a = a
                     return forX;
                 }
             }
         }
-        if (forX instanceof LogicConstantNode) {
-            if (((LogicConstantNode) forX).getValue() ^ isXNegated()) {
+        if (forX instanceof LogicConstantNode)
+        {
+            if (((LogicConstantNode) forX).getValue() ^ isXNegated())
+            {
                 return LogicConstantNode.tautology();
-            } else {
-                if (isYNegated()) {
+            }
+            else
+            {
+                if (isYNegated())
+                {
                     return new LogicNegationNode(forY);
-                } else {
+                }
+                else
+                {
                     return forY;
                 }
             }
         }
-        if (forY instanceof LogicConstantNode) {
-            if (((LogicConstantNode) forY).getValue() ^ isYNegated()) {
+        if (forY instanceof LogicConstantNode)
+        {
+            if (((LogicConstantNode) forY).getValue() ^ isYNegated())
+            {
                 return LogicConstantNode.tautology();
-            } else {
-                if (isXNegated()) {
+            }
+            else
+            {
+                if (isXNegated())
+                {
                     return new LogicNegationNode(forX);
-                } else {
+                }
+                else
+                {
                     return forX;
                 }
             }
         }
 
-        if (forX instanceof ShortCircuitOrNode) {
+        if (forX instanceof ShortCircuitOrNode)
+        {
             ShortCircuitOrNode inner = (ShortCircuitOrNode) forX;
-            if (forY == inner.getX()) {
+            if (forY == inner.getX())
+            {
                 return optimizeShortCircuit(inner, this.xNegated, this.yNegated, true);
-            } else if (forY == inner.getY()) {
+            }
+            else if (forY == inner.getY())
+            {
                 return optimizeShortCircuit(inner, this.xNegated, this.yNegated, false);
             }
-        } else if (forY instanceof ShortCircuitOrNode) {
+        }
+        else if (forY instanceof ShortCircuitOrNode)
+        {
             ShortCircuitOrNode inner = (ShortCircuitOrNode) forY;
-            if (inner.getX() == forX) {
+            if (inner.getX() == forX)
+            {
                 return optimizeShortCircuit(inner, this.yNegated, this.xNegated, true);
-            } else if (inner.getY() == forX) {
+            }
+            else if (inner.getY() == forX)
+            {
                 return optimizeShortCircuit(inner, this.yNegated, this.xNegated, false);
             }
         }
 
         // Check whether !X => Y constant
-        if (forX instanceof UnaryOpLogicNode && forY instanceof UnaryOpLogicNode) {
+        if (forX instanceof UnaryOpLogicNode && forY instanceof UnaryOpLogicNode)
+        {
             UnaryOpLogicNode unaryX = (UnaryOpLogicNode) forX;
             UnaryOpLogicNode unaryY = (UnaryOpLogicNode) forY;
-            if (skipThroughPisAndProxies(unaryX.getValue()) == skipThroughPisAndProxies(unaryY.getValue())) {
+            if (skipThroughPisAndProxies(unaryX.getValue()) == skipThroughPisAndProxies(unaryY.getValue()))
+            {
                 // !X => Y is constant
                 Stamp succStamp = unaryX.getSucceedingStampForValue(!isXNegated());
                 TriState fold = unaryY.tryFold(succStamp);
-                if (fold.isKnown()) {
+                if (fold.isKnown())
+                {
                     boolean yResult = fold.toBoolean() ^ isYNegated();
                     return yResult
                                     ? LogicConstantNode.tautology()
@@ -174,41 +222,56 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
         return this;
     }
 
-    private static ValueNode skipThroughPisAndProxies(ValueNode node) {
-        for (ValueNode n = node; n != null;) {
-            if (n instanceof PiNode) {
+    private static ValueNode skipThroughPisAndProxies(ValueNode node)
+    {
+        for (ValueNode n = node; n != null;)
+        {
+            if (n instanceof PiNode)
+            {
                 n = ((PiNode) n).getOriginalNode();
-            } else if (n instanceof ValueProxy) {
+            }
+            else if (n instanceof ValueProxy)
+            {
                 n = ((ValueProxy) n).getOriginalNode();
-            } else {
+            }
+            else
+            {
                 return n;
             }
         }
         return null;
     }
 
-    private static LogicNode optimizeShortCircuit(ShortCircuitOrNode inner, boolean innerNegated, boolean matchNegated, boolean matchIsInnerX) {
+    private static LogicNode optimizeShortCircuit(ShortCircuitOrNode inner, boolean innerNegated, boolean matchNegated, boolean matchIsInnerX)
+    {
         boolean innerMatchNegated;
-        if (matchIsInnerX) {
+        if (matchIsInnerX)
+        {
             innerMatchNegated = inner.isXNegated();
-        } else {
+        }
+        else
+        {
             innerMatchNegated = inner.isYNegated();
         }
-        if (!innerNegated) {
+        if (!innerNegated)
+        {
             // The four digit results of the expression used in the 16 subsequent formula comments
             // correspond to results when using the following truth table for inputs a and b
             // and testing all 4 possible input combinations:
             // _ 1234
             // a 1100
             // b 1010
-            if (innerMatchNegated == matchNegated) {
+            if (innerMatchNegated == matchNegated)
+            {
                 // ( (!a ||!b) ||!a) => 0111 (!a ||!b)
                 // ( (!a || b) ||!a) => 1011 (!a || b)
                 // ( ( a ||!b) || a) => 1101 ( a ||!b)
                 // ( ( a || b) || a) => 1110 ( a || b)
                 // Only the inner or is relevant, the outer or never adds information.
                 return inner;
-            } else {
+            }
+            else
+            {
                 // ( ( a || b) ||!a) => 1111 (true)
                 // ( (!a ||!b) || a) => 1111 (true)
                 // ( (!a || b) || a) => 1111 (true)
@@ -216,8 +279,11 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
                 // The result of the expression is always true.
                 return LogicConstantNode.tautology();
             }
-        } else {
-            if (innerMatchNegated == matchNegated) {
+        }
+        else
+        {
+            if (innerMatchNegated == matchNegated)
+            {
                 // (!(!a ||!b) ||!a) => 1011 (!a || b)
                 // (!(!a || b) ||!a) => 0111 (!a ||!b)
                 // (!( a ||!b) || a) => 1110 ( a || b)
@@ -225,27 +291,36 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
                 boolean newInnerXNegated = inner.isXNegated();
                 boolean newInnerYNegated = inner.isYNegated();
                 double newProbability = inner.getShortCircuitProbability();
-                if (matchIsInnerX) {
+                if (matchIsInnerX)
+                {
                     newInnerYNegated = !newInnerYNegated;
-                } else {
+                }
+                else
+                {
                     newInnerXNegated = !newInnerXNegated;
                     newProbability = 1.0 - newProbability;
                 }
                 // The expression can be transformed into a single or.
                 return new ShortCircuitOrNode(inner.getX(), newInnerXNegated, inner.getY(), newInnerYNegated, newProbability);
-            } else {
+            }
+            else
+            {
                 // (!(!a ||!b) || a) => 1100 (a)
                 // (!(!a || b) || a) => 1100 (a)
                 // (!( a ||!b) ||!a) => 0011 (!a)
                 // (!( a || b) ||!a) => 0011 (!a)
                 LogicNode result = inner.getY();
-                if (matchIsInnerX) {
+                if (matchIsInnerX)
+                {
                     result = inner.getX();
                 }
                 // Only the second part of the outer or is relevant.
-                if (matchNegated) {
+                if (matchNegated)
+                {
                     return LogicNegationNode.create(result);
-                } else {
+                }
+                else
+                {
                     return result;
                 }
             }

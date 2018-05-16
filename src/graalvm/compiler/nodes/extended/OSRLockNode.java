@@ -7,11 +7,12 @@ import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.AbstractLocalNode;
 
 @NodeInfo(nameTemplate = "OSRLock({p#index})")
-public class OSRLockNode extends AbstractLocalNode implements IterableNodeType {
-
+public class OSRLockNode extends AbstractLocalNode implements IterableNodeType
+{
     public static final NodeClass<OSRLockNode> TYPE = NodeClass.create(OSRLockNode.class);
 
-    public OSRLockNode(int index, Stamp stamp) {
+    public OSRLockNode(int index, Stamp stamp)
+    {
         super(TYPE, index, stamp);
     }
 }

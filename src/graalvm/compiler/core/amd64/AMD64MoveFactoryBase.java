@@ -20,34 +20,41 @@ import jdk.vm.ci.code.RegisterConfig;
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.PlatformKind;
 
-public abstract class AMD64MoveFactoryBase implements MoveFactory {
-
+public abstract class AMD64MoveFactoryBase implements MoveFactory
+{
     private final BackupSlotProvider backupSlotProvider;
 
-    private static class RegisterBackupPair {
+    private static class RegisterBackupPair
+    {
         public final Register register;
         public final VirtualStackSlot backupSlot;
 
-        RegisterBackupPair(Register register, VirtualStackSlot backupSlot) {
+        RegisterBackupPair(Register register, VirtualStackSlot backupSlot)
+        {
             this.register = register;
             this.backupSlot = backupSlot;
         }
     }
 
-    public static final class BackupSlotProvider {
-
+    public static final class BackupSlotProvider
+    {
         private final FrameMapBuilder frameMapBuilder;
         private EconomicMap<PlatformKind.Key, RegisterBackupPair> categorized;
 
-        public BackupSlotProvider(FrameMapBuilder frameMapBuilder) {
+        public BackupSlotProvider(FrameMapBuilder frameMapBuilder)
+        {
             this.frameMapBuilder = frameMapBuilder;
         }
 
-        protected RegisterBackupPair getScratchRegister(PlatformKind kind) {
+        protected RegisterBackupPair getScratchRegister(PlatformKind kind)
+        {
             PlatformKind.Key key = kind.getKey();
-            if (categorized == null) {
+            if (categorized == null)
+            {
                 categorized = EconomicMap.create(Equivalence.DEFAULT);
-            } else if (categorized.containsKey(key)) {
+            }
+            else if (categorized.containsKey(key))
+            {
                 return categorized.get(key);
             }
 
@@ -68,14 +75,17 @@ public abstract class AMD64MoveFactoryBase implements MoveFactory {
         }
     }
 
-    public AMD64MoveFactoryBase(BackupSlotProvider backupSlotProvider) {
+    public AMD64MoveFactoryBase(BackupSlotProvider backupSlotProvider)
+    {
         this.backupSlotProvider = backupSlotProvider;
     }
 
     @Override
-    public final AMD64LIRInstruction createStackMove(AllocatableValue result, AllocatableValue input) {
+    public final AMD64LIRInstruction createStackMove(AllocatableValue result, AllocatableValue input)
+    {
         AMD64Kind kind = (AMD64Kind) result.getPlatformKind();
-        switch (kind.getSizeInBytes()) {
+        switch (kind.getSizeInBytes())
+        {
             case 2:
                 return new AMD64PushPopStackMove(WORD, result, input);
             case 8:

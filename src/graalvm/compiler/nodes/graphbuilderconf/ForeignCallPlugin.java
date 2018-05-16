@@ -10,17 +10,20 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 /**
  * {@link InvocationPlugin} for converting a method call directly to a foreign call.
  */
-public final class ForeignCallPlugin implements InvocationPlugin {
+public final class ForeignCallPlugin implements InvocationPlugin
+{
     private final ForeignCallsProvider foreignCalls;
     private final ForeignCallDescriptor descriptor;
 
-    public ForeignCallPlugin(ForeignCallsProvider foreignCalls, ForeignCallDescriptor descriptor) {
+    public ForeignCallPlugin(ForeignCallsProvider foreignCalls, ForeignCallDescriptor descriptor)
+    {
         this.foreignCalls = foreignCalls;
         this.descriptor = descriptor;
     }
 
     @Override
-    public boolean execute(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode[] args) {
+    public boolean execute(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode[] args)
+    {
         ForeignCallNode foreignCall = new ForeignCallNode(foreignCalls, descriptor, args);
         foreignCall.setBci(b.bci());
         b.addPush(targetMethod.getSignature().getReturnKind(), foreignCall);

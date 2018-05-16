@@ -4,7 +4,8 @@ package graalvm.compiler.replacements;
  * A histogram that can (only) be {@linkplain #inc(long) incremented} from within a snippet for
  * gathering snippet specific metrics.
  */
-public final class SnippetIntegerHistogram {
+public final class SnippetIntegerHistogram
+{
     private final SnippetCounter.Group group;
     private final String name;
 
@@ -31,7 +32,8 @@ public final class SnippetIntegerHistogram {
     private final int counter8UpperBound;
     private final int counter9UpperBound;
 
-    public SnippetIntegerHistogram(SnippetCounter.Group group, int log2StepLength, String name, String description) {
+    public SnippetIntegerHistogram(SnippetCounter.Group group, int log2StepLength, String name, String description)
+    {
         assert log2StepLength > 0;
 
         this.group = group;
@@ -81,8 +83,10 @@ public final class SnippetIntegerHistogram {
         counter10 = createCounter(group, name, description, lowerBound, Long.MAX_VALUE);
     }
 
-    private static SnippetCounter createCounter(SnippetCounter.Group group, String name, String description, long lowerBound, long upperBound) {
-        if (group != null) {
+    private static SnippetCounter createCounter(SnippetCounter.Group group, String name, String description, long lowerBound, long upperBound)
+    {
+        if (group != null)
+        {
             SnippetCounter snippetCounter = new SnippetCounter(group, name + "[" + lowerBound + ", " + upperBound + "]", description);
             return snippetCounter;
         }
@@ -93,37 +97,62 @@ public final class SnippetIntegerHistogram {
      * Increments the value of the matching histogram element. This method can only be used in a
      * snippet on a compile-time constant {@link SnippetIntegerHistogram} object.
      */
-    public void inc(long value) {
-        if (group != null) {
-            if (value <= counter0UpperBound) {
+    public void inc(long value)
+    {
+        if (group != null)
+        {
+            if (value <= counter0UpperBound)
+            {
                 counter0.inc();
-            } else if (value <= counter1UpperBound) {
+            }
+            else if (value <= counter1UpperBound)
+            {
                 counter1.inc();
-            } else if (value <= counter2UpperBound) {
+            }
+            else if (value <= counter2UpperBound)
+            {
                 counter2.inc();
-            } else if (value <= counter3UpperBound) {
+            }
+            else if (value <= counter3UpperBound)
+            {
                 counter3.inc();
-            } else if (value <= counter4UpperBound) {
+            }
+            else if (value <= counter4UpperBound)
+            {
                 counter4.inc();
-            } else if (value <= counter5UpperBound) {
+            }
+            else if (value <= counter5UpperBound)
+            {
                 counter5.inc();
-            } else if (value <= counter6UpperBound) {
+            }
+            else if (value <= counter6UpperBound)
+            {
                 counter6.inc();
-            } else if (value <= counter7UpperBound) {
+            }
+            else if (value <= counter7UpperBound)
+            {
                 counter7.inc();
-            } else if (value <= counter8UpperBound) {
+            }
+            else if (value <= counter8UpperBound)
+            {
                 counter8.inc();
-            } else if (value <= counter9UpperBound) {
+            }
+            else if (value <= counter9UpperBound)
+            {
                 counter9.inc();
-            } else {
+            }
+            else
+            {
                 counter10.inc();
             }
         }
     }
 
     @Override
-    public String toString() {
-        if (group != null) {
+    public String toString()
+    {
+        if (group != null)
+        {
             return "SnippetHistogram-" + group.name + ":" + name;
         }
         return super.toString();

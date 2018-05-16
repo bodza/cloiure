@@ -17,8 +17,10 @@ import graalvm.compiler.options.OptionValues;
 
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
-public abstract class HotSpotProfilingPlugin implements ProfilingPlugin {
-    public static class Options {
+public abstract class HotSpotProfilingPlugin implements ProfilingPlugin
+{
+    public static class Options
+    {
         @Option(help = "Emit profiling of invokes", type = OptionType.Expert)//
         public static final OptionKey<Boolean> ProfileInvokes = new OptionKey<>(true);
         @Option(help = "Emit profiling of backedges", type = OptionType.Expert)//
@@ -36,42 +38,52 @@ public abstract class HotSpotProfilingPlugin implements ProfilingPlugin {
     public abstract int backedgeProfilePobabilityLog(OptionValues options);
 
     @Override
-    public boolean shouldProfile(GraphBuilderContext builder, ResolvedJavaMethod method) {
+    public boolean shouldProfile(GraphBuilderContext builder, ResolvedJavaMethod method)
+    {
         return !builder.parsingIntrinsic();
     }
 
     @Override
-    public void profileInvoke(GraphBuilderContext builder, ResolvedJavaMethod method, FrameState frameState) {
+    public void profileInvoke(GraphBuilderContext builder, ResolvedJavaMethod method, FrameState frameState)
+    {
         assert shouldProfile(builder, method);
         OptionValues options = builder.getOptions();
-        if (Options.ProfileInvokes.getValue(options) && !method.isClassInitializer()) {
+        if (Options.ProfileInvokes.getValue(options) && !method.isClassInitializer())
+        {
             ProfileNode p = builder.append(new ProfileInvokeNode(method, invokeNotifyFreqLog(options), invokeProfilePobabilityLog(options)));
             p.setStateBefore(frameState);
         }
     }
 
     @Override
-    public void profileGoto(GraphBuilderContext builder, ResolvedJavaMethod method, int bci, int targetBci, FrameState frameState) {
+    public void profileGoto(GraphBuilderContext builder, ResolvedJavaMethod method, int bci, int targetBci, FrameState frameState)
+    {
         assert shouldProfile(builder, method);
         OptionValues options = builder.getOptions();
-        if (Options.ProfileBackedges.getValue(options) && targetBci <= bci) {
+        if (Options.ProfileBackedges.getValue(options) && targetBci <= bci)
+        {
             ProfileNode p = builder.append(new ProfileBranchNode(method, backedgeNotifyFreqLog(options), backedgeProfilePobabilityLog(options), bci, targetBci));
             p.setStateBefore(frameState);
         }
     }
 
     @Override
-    public void profileIf(GraphBuilderContext builder, ResolvedJavaMethod method, int bci, LogicNode condition, int trueBranchBci, int falseBranchBci, FrameState frameState) {
+    public void profileIf(GraphBuilderContext builder, ResolvedJavaMethod method, int bci, LogicNode condition, int trueBranchBci, int falseBranchBci, FrameState frameState)
+    {
         assert shouldProfile(builder, method);
         OptionValues options = builder.getOptions();
-        if (Options.ProfileBackedges.getValue(options) && (falseBranchBci <= bci || trueBranchBci <= bci)) {
+        if (Options.ProfileBackedges.getValue(options) && (falseBranchBci <= bci || trueBranchBci <= bci))
+        {
             boolean negate = false;
             int targetBci = trueBranchBci;
-            if (falseBranchBci <= bci) {
+            if (falseBranchBci <= bci)
+            {
                 assert trueBranchBci > bci;
                 negate = true;
                 targetBci = falseBranchBci;
-            } else {
+            }
+            else
+            {
                 assert trueBranchBci <= bci && falseBranchBci > bci;
             }
             ValueNode trueValue = builder.append(ConstantNode.forBoolean(!negate));

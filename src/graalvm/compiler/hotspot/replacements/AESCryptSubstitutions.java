@@ -33,8 +33,8 @@ import graalvm.util.UnsafeAccess;
  * Substitutions for {@code com.sun.crypto.provider.AESCrypt} methods.
  */
 @ClassSubstitution(className = "com.sun.crypto.provider.AESCrypt", optional = true)
-public class AESCryptSubstitutions {
-
+public class AESCryptSubstitutions
+{
     static final long kOffset;
     static final long lastKeyOffset;
     static final Class<?> AESCryptClass;
@@ -45,8 +45,10 @@ public class AESCryptSubstitutions {
      */
     static final int AES_BLOCK_SIZE_IN_BYTES = 16;
 
-    static {
-        try {
+    static
+    {
+        try
+        {
             // Need to use the system class loader as com.sun.crypto.provider.AESCrypt
             // is normally loaded by the extension class loader which is not delegated
             // to by the JVMCI class loader.
@@ -54,28 +56,34 @@ public class AESCryptSubstitutions {
             AESCryptClass = Class.forName("com.sun.crypto.provider.AESCrypt", true, cl);
             kOffset = UnsafeAccess.UNSAFE.objectFieldOffset(AESCryptClass.getDeclaredField("K"));
             lastKeyOffset = UnsafeAccess.UNSAFE.objectFieldOffset(AESCryptClass.getDeclaredField("lastKey"));
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             throw new GraalError(ex);
         }
     }
 
     @MethodSubstitution(isStatic = false)
-    static void encryptBlock(Object rcvr, byte[] in, int inOffset, byte[] out, int outOffset) {
+    static void encryptBlock(Object rcvr, byte[] in, int inOffset, byte[] out, int outOffset)
+    {
         crypt(rcvr, in, inOffset, out, outOffset, true, false);
     }
 
     @MethodSubstitution(isStatic = false)
-    static void implEncryptBlock(Object rcvr, byte[] in, int inOffset, byte[] out, int outOffset) {
+    static void implEncryptBlock(Object rcvr, byte[] in, int inOffset, byte[] out, int outOffset)
+    {
         crypt(rcvr, in, inOffset, out, outOffset, true, false);
     }
 
     @MethodSubstitution(isStatic = false)
-    static void decryptBlock(Object rcvr, byte[] in, int inOffset, byte[] out, int outOffset) {
+    static void decryptBlock(Object rcvr, byte[] in, int inOffset, byte[] out, int outOffset)
+    {
         crypt(rcvr, in, inOffset, out, outOffset, false, false);
     }
 
     @MethodSubstitution(isStatic = false)
-    static void implDecryptBlock(Object rcvr, byte[] in, int inOffset, byte[] out, int outOffset) {
+    static void implDecryptBlock(Object rcvr, byte[] in, int inOffset, byte[] out, int outOffset)
+    {
         crypt(rcvr, in, inOffset, out, outOffset, false, false);
     }
 
@@ -84,7 +92,8 @@ public class AESCryptSubstitutions {
      * issues between Java key expansion and hardware crypto instructions.
      */
     @MethodSubstitution(value = "decryptBlock", isStatic = false)
-    static void decryptBlockWithOriginalKey(Object rcvr, byte[] in, int inOffset, byte[] out, int outOffset) {
+    static void decryptBlockWithOriginalKey(Object rcvr, byte[] in, int inOffset, byte[] out, int outOffset)
+    {
         crypt(rcvr, in, inOffset, out, outOffset, false, true);
     }
 
@@ -92,25 +101,33 @@ public class AESCryptSubstitutions {
      * @see #decryptBlockWithOriginalKey(Object, byte[], int, byte[], int)
      */
     @MethodSubstitution(value = "implDecryptBlock", isStatic = false)
-    static void implDecryptBlockWithOriginalKey(Object rcvr, byte[] in, int inOffset, byte[] out, int outOffset) {
+    static void implDecryptBlockWithOriginalKey(Object rcvr, byte[] in, int inOffset, byte[] out, int outOffset)
+    {
         crypt(rcvr, in, inOffset, out, outOffset, false, true);
     }
 
-    private static void crypt(Object rcvr, byte[] in, int inOffset, byte[] out, int outOffset, boolean encrypt, boolean withOriginalKey) {
+    private static void crypt(Object rcvr, byte[] in, int inOffset, byte[] out, int outOffset, boolean encrypt, boolean withOriginalKey)
+    {
         checkArgs(in, inOffset, out, outOffset);
         Object realReceiver = PiNode.piCastNonNull(rcvr, AESCryptClass);
         Object kObject = RawLoadNode.load(realReceiver, kOffset, JavaKind.Object, LocationIdentity.any());
         Pointer kAddr = Word.objectToTrackedPointer(kObject).add(getArrayBaseOffset(JavaKind.Int));
         Word inAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(in, getArrayBaseOffset(JavaKind.Byte) + inOffset));
         Word outAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(out, getArrayBaseOffset(JavaKind.Byte) + outOffset));
-        if (encrypt) {
+        if (encrypt)
+        {
             encryptBlockStub(ENCRYPT_BLOCK, inAddr, outAddr, kAddr);
-        } else {
-            if (withOriginalKey) {
+        }
+        else
+        {
+            if (withOriginalKey)
+            {
                 Object lastKeyObject = RawLoadNode.load(realReceiver, lastKeyOffset, JavaKind.Object, LocationIdentity.any());
                 Pointer lastKeyAddr = Word.objectToTrackedPointer(lastKeyObject).add(getArrayBaseOffset(JavaKind.Byte));
                 decryptBlockWithOriginalKeyStub(DECRYPT_BLOCK_WITH_ORIGINAL_KEY, inAddr, outAddr, kAddr, lastKeyAddr);
-            } else {
+            }
+            else
+            {
                 decryptBlockStub(DECRYPT_BLOCK, inAddr, outAddr, kAddr);
             }
         }
@@ -119,8 +136,10 @@ public class AESCryptSubstitutions {
     /**
      * Perform null and array bounds checks for arguments to a cipher operation.
      */
-    static void checkArgs(byte[] in, int inOffset, byte[] out, int outOffset) {
-        if (probability(VERY_SLOW_PATH_PROBABILITY, inOffset < 0 || in.length - AES_BLOCK_SIZE_IN_BYTES < inOffset || outOffset < 0 || out.length - AES_BLOCK_SIZE_IN_BYTES < outOffset)) {
+    static void checkArgs(byte[] in, int inOffset, byte[] out, int outOffset)
+    {
+        if (probability(VERY_SLOW_PATH_PROBABILITY, inOffset < 0 || in.length - AES_BLOCK_SIZE_IN_BYTES < inOffset || outOffset < 0 || out.length - AES_BLOCK_SIZE_IN_BYTES < outOffset))
+        {
             DeoptimizeNode.deopt(DeoptimizationAction.None, DeoptimizationReason.RuntimeConstraint);
         }
     }

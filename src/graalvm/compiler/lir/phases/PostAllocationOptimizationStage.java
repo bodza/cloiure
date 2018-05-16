@@ -15,9 +15,10 @@ import graalvm.compiler.options.OptionKey;
 import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionValues;
 
-public class PostAllocationOptimizationStage extends LIRPhaseSuite<PostAllocationOptimizationContext> {
-    public static class Options {
-        // @formatter:off
+public class PostAllocationOptimizationStage extends LIRPhaseSuite<PostAllocationOptimizationContext>
+{
+    public static class Options
+    {
         @Option(help = "", type = OptionType.Debug)
         public static final NestedBooleanOptionKey LIROptEdgeMoveOptimizer = new NestedBooleanOptionKey(LIROptimization, true);
         @Option(help = "", type = OptionType.Debug)
@@ -32,26 +33,32 @@ public class PostAllocationOptimizationStage extends LIRPhaseSuite<PostAllocatio
         public static final OptionKey<Boolean> LIRProfileMoves = new OptionKey<>(false);
         @Option(help = "Enables profiling of methods.", type = OptionType.Debug)
         public static final OptionKey<Boolean> LIRProfileMethods = new OptionKey<>(false);
-        // @formatter:on
     }
 
-    public PostAllocationOptimizationStage(OptionValues options) {
-        if (Options.LIROptEdgeMoveOptimizer.getValue(options)) {
+    public PostAllocationOptimizationStage(OptionValues options)
+    {
+        if (Options.LIROptEdgeMoveOptimizer.getValue(options))
+        {
             appendPhase(new EdgeMoveOptimizer());
         }
-        if (Options.LIROptControlFlowOptimizer.getValue(options)) {
+        if (Options.LIROptControlFlowOptimizer.getValue(options))
+        {
             appendPhase(new ControlFlowOptimizer());
         }
-        if (Options.LIROptRedundantMoveElimination.getValue(options)) {
+        if (Options.LIROptRedundantMoveElimination.getValue(options))
+        {
             appendPhase(new RedundantMoveElimination());
         }
-        if (Options.LIROptNullCheckOptimizer.getValue(options)) {
+        if (Options.LIROptNullCheckOptimizer.getValue(options))
+        {
             appendPhase(new NullCheckOptimizer());
         }
-        if (Options.LIRProfileMoves.getValue(options)) {
+        if (Options.LIRProfileMoves.getValue(options))
+        {
             appendPhase(new MoveProfilingPhase());
         }
-        if (Options.LIRProfileMethods.getValue(options)) {
+        if (Options.LIRProfileMethods.getValue(options))
+        {
             appendPhase(new MethodProfilingPhase());
         }
     }

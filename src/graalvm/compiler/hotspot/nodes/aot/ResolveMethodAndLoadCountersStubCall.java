@@ -27,7 +27,8 @@ import jdk.vm.ci.meta.Value;
  * A call to the VM via a regular stub.
  */
 @NodeInfo(cycles = CYCLES_UNKNOWN, size = SIZE_16)
-public class ResolveMethodAndLoadCountersStubCall extends DeoptimizingStubCall implements Canonicalizable, LIRLowerable {
+public class ResolveMethodAndLoadCountersStubCall extends DeoptimizingStubCall implements Canonicalizable, LIRLowerable
+{
     public static final NodeClass<ResolveMethodAndLoadCountersStubCall> TYPE = NodeClass.create(ResolveMethodAndLoadCountersStubCall.class);
 
     @OptionalInput protected ValueNode method;
@@ -35,7 +36,8 @@ public class ResolveMethodAndLoadCountersStubCall extends DeoptimizingStubCall i
     @Input protected ValueNode methodDescription;
     protected Constant methodConstant;
 
-    public ResolveMethodAndLoadCountersStubCall(ValueNode method, ValueNode klassHint, ValueNode methodDescription) {
+    public ResolveMethodAndLoadCountersStubCall(ValueNode method, ValueNode klassHint, ValueNode methodDescription)
+    {
         super(TYPE, MethodCountersPointerStamp.methodCountersNonNull());
         this.klassHint = klassHint;
         this.method = method;
@@ -46,15 +48,18 @@ public class ResolveMethodAndLoadCountersStubCall extends DeoptimizingStubCall i
     public static native MethodCountersPointer resolveMethodAndLoadCounters(MethodPointer method, KlassPointer klassHint, Object methodDescription);
 
     @Override
-    public Node canonical(CanonicalizerTool tool) {
-        if (method != null) {
+    public Node canonical(CanonicalizerTool tool)
+    {
+        if (method != null)
+        {
             methodConstant = GraphUtil.foldIfConstantAndRemove(this, method);
         }
         return this;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         assert methodConstant != null : "Expected method to fold: " + method;
 
         Value methodDescriptionValue = gen.operand(methodDescription);
@@ -66,5 +71,4 @@ public class ResolveMethodAndLoadCountersStubCall extends DeoptimizingStubCall i
 
         gen.setResult(this, result);
     }
-
 }

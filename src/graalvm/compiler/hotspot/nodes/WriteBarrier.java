@@ -8,16 +8,18 @@ import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
 
 @NodeInfo
-public abstract class WriteBarrier extends FixedWithNextNode implements Lowerable {
-
+public abstract class WriteBarrier extends FixedWithNextNode implements Lowerable
+{
     public static final NodeClass<WriteBarrier> TYPE = NodeClass.create(WriteBarrier.class);
 
-    protected WriteBarrier(NodeClass<? extends WriteBarrier> c) {
+    protected WriteBarrier(NodeClass<? extends WriteBarrier> c)
+    {
         super(c, StampFactory.forVoid());
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         assert graph().getGuardsStage().areFrameStatesAtDeopts();
         tool.getLowerer().lower(this, tool);
     }

@@ -20,9 +20,8 @@ import java.lang.reflect.Modifier;
  * <a href= "http://java.sun.com/docs/books/jvms/second_edition/html/VMSpecTOC.doc.html"> Java
  * Virtual Machine Specification</a>.
  */
-public class Bytecodes {
-
-    // @formatter:off
+public class Bytecodes
+{
     public static final int NOP                  =   0; // 0x00
     public static final int ACONST_NULL          =   1; // 0x01
     public static final int ICONST_M1            =   2; // 0x02
@@ -229,7 +228,6 @@ public class Bytecodes {
 
     public static final int ILLEGAL = 255;
     public static final int END = 256;
-    // @formatter:on
 
     /**
      * The last opcode defined by the JVM specification. To iterate over all JVM bytecodes:
@@ -245,8 +243,8 @@ public class Bytecodes {
     /**
      * A collection of flags describing various bytecode attributes.
      */
-    static class Flags {
-
+    static class Flags
+    {
         /**
          * Denotes an instruction that ends a basic block and does not let control flow fall through
          * to its lexical successor.
@@ -303,12 +301,16 @@ public class Bytecodes {
     }
 
     // Performs a sanity check that none of the flags overlap.
-    static {
+    static
+    {
         int allFlags = 0;
-        try {
-            for (Field field : Flags.class.getDeclaredFields()) {
+        try
+        {
+            for (Field field : Flags.class.getDeclaredFields())
+            {
                 int flagsFilter = Modifier.FINAL | Modifier.STATIC;
-                if ((field.getModifiers() & flagsFilter) == flagsFilter && !field.isSynthetic()) {
+                if ((field.getModifiers() & flagsFilter) == flagsFilter && !field.isSynthetic())
+                {
                     assert field.getType() == int.class : "Field is not int : " + field;
                     final int flag = field.getInt(null);
                     assert flag != 0;
@@ -316,7 +318,9 @@ public class Bytecodes {
                     allFlags |= flag;
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             throw new InternalError(e.toString());
         }
     }
@@ -345,9 +349,8 @@ public class Bytecodes {
      */
     private static final int[] stackEffectArray = new int[256];
 
-    // Checkstyle: stop
-    // @formatter:off
-    static {
+    static
+    {
         def(NOP                 , "nop"             , "b"    ,  0);
         def(ACONST_NULL         , "aconst_null"     , "b"    ,  1);
         def(ICONST_M1           , "iconst_m1"       , "b"    ,  1);
@@ -552,8 +555,6 @@ public class Bytecodes {
         def(JSR_W               , "jsr_w"           , "boooo",  0, STOP | BRANCH);
         def(BREAKPOINT          , "breakpoint"      , "b"    ,  0, TRAP);
     }
-    // @formatter:on
-    // Checkstyle: resume
 
     /**
      * Determines if an opcode is commutative.
@@ -561,7 +562,8 @@ public class Bytecodes {
      * @param opcode the opcode to check
      * @return {@code true} iff commutative
      */
-    public static boolean isCommutative(int opcode) {
+    public static boolean isCommutative(int opcode)
+    {
         return (flagsArray[opcode & 0xff] & COMMUTATIVE) != 0;
     }
 
@@ -573,7 +575,8 @@ public class Bytecodes {
      *         illegal instruction or denotes a variable length instruction (e.g.
      *         {@link #TABLESWITCH}), then 0 is returned.
      */
-    public static int lengthOf(int opcode) {
+    public static int lengthOf(int opcode)
+    {
         return lengthArray[opcode & 0xff];
     }
 
@@ -586,7 +589,8 @@ public class Bytecodes {
      *         {@code opcode} is an illegal instruction then 0 is returned. Note that invoke
      *         instructions may pop more arguments so this value is a minimum stack effect.
      */
-    public static int stackEffectOf(int opcode) {
+    public static int stackEffectOf(int opcode)
+    {
         return stackEffectArray[opcode & 0xff];
     }
 
@@ -597,9 +601,11 @@ public class Bytecodes {
      * @return the mnemonic for {@code opcode} or {@code "<illegal opcode: " + opcode + ">"} if
      *         {@code opcode} is not a legal opcode
      */
-    public static String nameOf(int opcode) throws IllegalArgumentException {
+    public static String nameOf(int opcode) throws IllegalArgumentException
+    {
         String name = nameArray[opcode & 0xff];
-        if (name == null) {
+        if (name == null)
+        {
             return "<illegal opcode: " + opcode + ">";
         }
         return name;
@@ -612,9 +618,11 @@ public class Bytecodes {
      * @return the mnemonic for {@code opcode} or {@code "<illegal opcode>"} if {@code opcode} is
      *         not a legal opcode.
      */
-    public static String baseNameOf(int opcode) {
+    public static String baseNameOf(int opcode)
+    {
         String name = nameArray[opcode & 0xff];
-        if (name == null) {
+        if (name == null)
+        {
             return "<illegal opcode>";
         }
         return name;
@@ -627,9 +635,12 @@ public class Bytecodes {
      * @return the opcode corresponding to {@code mnemonic}
      * @throws IllegalArgumentException if {@code name} does not denote a valid opcode
      */
-    public static int valueOf(String name) {
-        for (int opcode = 0; opcode < nameArray.length; ++opcode) {
-            if (name.equalsIgnoreCase(nameArray[opcode])) {
+    public static int valueOf(String name)
+    {
+        for (int opcode = 0; opcode < nameArray.length; ++opcode)
+        {
+            if (name.equalsIgnoreCase(nameArray[opcode]))
+            {
                 return opcode;
             }
         }
@@ -643,7 +654,8 @@ public class Bytecodes {
      * @return {@code true} iff {@code opcode} can cause an implicit exception, {@code false}
      *         otherwise
      */
-    public static boolean canTrap(int opcode) {
+    public static boolean canTrap(int opcode)
+    {
         return (flagsArray[opcode & 0xff] & TRAP) != 0;
     }
 
@@ -655,7 +667,8 @@ public class Bytecodes {
      * @return {@code true} iff {@code opcode} loads a local variable to the operand stack,
      *         {@code false} otherwise
      */
-    public static boolean isLoad(int opcode) {
+    public static boolean isLoad(int opcode)
+    {
         return (flagsArray[opcode & 0xff] & LOAD) != 0;
     }
 
@@ -666,7 +679,8 @@ public class Bytecodes {
      * @param opcode an opcode to test
      * @return {@code true} iff {@code opcode} properly ends a basic block
      */
-    public static boolean isStop(int opcode) {
+    public static boolean isStop(int opcode)
+    {
         return (flagsArray[opcode & 0xff] & STOP) != 0;
     }
 
@@ -678,7 +692,8 @@ public class Bytecodes {
      * @return {@code true} iff {@code opcode} stores a value to a local variable, {@code false}
      *         otherwise
      */
-    public static boolean isInvoke(int opcode) {
+    public static boolean isInvoke(int opcode)
+    {
         return (flagsArray[opcode & 0xff] & INVOKE) != 0;
     }
 
@@ -690,7 +705,8 @@ public class Bytecodes {
      * @return {@code true} iff {@code opcode} stores a value to a local variable, {@code false}
      *         otherwise
      */
-    public static boolean isStore(int opcode) {
+    public static boolean isStore(int opcode)
+    {
         return (flagsArray[opcode & 0xff] & STORE) != 0;
     }
 
@@ -700,7 +716,8 @@ public class Bytecodes {
      * @param opcode an opcode to test
      * @return {@code true} iff {@code opcode} delimits a basic block
      */
-    public static boolean isBlockEnd(int opcode) {
+    public static boolean isBlockEnd(int opcode)
+    {
         return (flagsArray[opcode & 0xff] & (STOP | FALL_THROUGH)) != 0;
     }
 
@@ -712,7 +729,8 @@ public class Bytecodes {
      * @param opcode an opcode to test
      * @return {@code true} iff {@code opcode} is a branch instruction with a single operand
      */
-    public static boolean isBranch(int opcode) {
+    public static boolean isBranch(int opcode)
+    {
         return (flagsArray[opcode & 0xff] & BRANCH) != 0;
     }
 
@@ -722,7 +740,8 @@ public class Bytecodes {
      * @param opcode
      * @return {@code true} iff {@code opcode} is a conditional branch
      */
-    public static boolean isConditionalBranch(int opcode) {
+    public static boolean isConditionalBranch(int opcode)
+    {
         return (flagsArray[opcode & 0xff] & FALL_THROUGH) != 0;
     }
 
@@ -734,9 +753,10 @@ public class Bytecodes {
      * @param op an opcode
      * @return the arithmetic operator name
      */
-    public static String operator(int op) {
-        // Checkstyle: stop
-        switch (op) {
+    public static String operator(int op)
+    {
+        switch (op)
+        {
             // arithmetic ops
             case IADD: // fall through
             case LADD: // fall through
@@ -784,7 +804,6 @@ public class Bytecodes {
             case LXOR:
                 return "^";
         }
-        // Checkstyle: resume
         return nameOf(op);
     }
 
@@ -794,7 +813,8 @@ public class Bytecodes {
      * @param name instruction name (should be lower case)
      * @param format encodes the length of the instruction
      */
-    private static void def(int opcode, String name, String format, int stackEffect) {
+    private static void def(int opcode, String name, String format, int stackEffect)
+    {
         def(opcode, name, format, stackEffect, 0);
     }
 
@@ -805,7 +825,8 @@ public class Bytecodes {
      * @param format encodes the length of the instruction
      * @param flags the set of {@link Flags} associated with the instruction
      */
-    private static void def(int opcode, String name, String format, int stackEffect, int flags) {
+    private static void def(int opcode, String name, String format, int stackEffect, int flags)
+    {
         assert nameArray[opcode] == null : "opcode " + opcode + " is already bound to name " + nameArray[opcode];
         nameArray[opcode] = name;
         int instructionLength = format.length();
@@ -816,8 +837,10 @@ public class Bytecodes {
         assert !isConditionalBranch(opcode) || isBranch(opcode) : "a conditional branch must also be a branch";
     }
 
-    public static boolean isIfBytecode(int bytecode) {
-        switch (bytecode) {
+    public static boolean isIfBytecode(int bytecode)
+    {
+        switch (bytecode)
+        {
             case IFEQ:
             case IFNE:
             case IFLT:

@@ -19,38 +19,45 @@ import graalvm.compiler.nodes.spi.VirtualizerTool;
  * {@link VirtualObjectNode}.
  */
 @NodeInfo(cycles = CYCLES_0, size = SIZE_0)
-public final class AllocatedObjectNode extends FloatingNode implements Virtualizable, ArrayLengthProvider {
-
+public final class AllocatedObjectNode extends FloatingNode implements Virtualizable, ArrayLengthProvider
+{
     public static final NodeClass<AllocatedObjectNode> TYPE = NodeClass.create(AllocatedObjectNode.class);
     @Input VirtualObjectNode virtualObject;
     @Input(Extension) CommitAllocationNode commit;
 
-    public AllocatedObjectNode(VirtualObjectNode virtualObject) {
+    public AllocatedObjectNode(VirtualObjectNode virtualObject)
+    {
         super(TYPE, StampFactory.objectNonNull(TypeReference.createExactTrusted(virtualObject.type())));
         this.virtualObject = virtualObject;
     }
 
-    public VirtualObjectNode getVirtualObject() {
+    public VirtualObjectNode getVirtualObject()
+    {
         return virtualObject;
     }
 
-    public CommitAllocationNode getCommit() {
+    public CommitAllocationNode getCommit()
+    {
         return commit;
     }
 
-    public void setCommit(CommitAllocationNode x) {
+    public void setCommit(CommitAllocationNode x)
+    {
         updateUsages(commit, x);
         commit = x;
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool) {
+    public void virtualize(VirtualizerTool tool)
+    {
         tool.replaceWithVirtual(getVirtualObject());
     }
 
     @Override
-    public ValueNode length() {
-        if (virtualObject instanceof ArrayLengthProvider) {
+    public ValueNode length()
+    {
+        if (virtualObject instanceof ArrayLengthProvider)
+        {
             return ((ArrayLengthProvider) virtualObject).length();
         }
         return null;

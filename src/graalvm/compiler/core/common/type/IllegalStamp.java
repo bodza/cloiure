@@ -16,67 +16,80 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * {@link JavaKind#Long} and {@link JavaKind#Double} values. It can only appear in framestates or
  * virtual objects.
  */
-public final class IllegalStamp extends Stamp {
-
-    private IllegalStamp() {
+public final class IllegalStamp extends Stamp
+{
+    private IllegalStamp()
+    {
     }
 
     @Override
-    public JavaKind getStackKind() {
+    public JavaKind getStackKind()
+    {
         return JavaKind.Illegal;
     }
 
     @Override
-    public LIRKind getLIRKind(LIRKindTool tool) {
+    public LIRKind getLIRKind(LIRKindTool tool)
+    {
         return LIRKind.Illegal;
     }
 
     @Override
-    public Stamp unrestricted() {
+    public Stamp unrestricted()
+    {
         return this;
     }
 
     @Override
-    public boolean isUnrestricted() {
+    public boolean isUnrestricted()
+    {
         return true;
     }
 
     @Override
-    public Stamp empty() {
+    public Stamp empty()
+    {
         return this;
     }
 
     @Override
-    public Stamp constant(Constant c, MetaAccessProvider meta) {
+    public Stamp constant(Constant c, MetaAccessProvider meta)
+    {
         assert ((PrimitiveConstant) c).getJavaKind() == JavaKind.Illegal;
         return this;
     }
 
     @Override
-    public ResolvedJavaType javaType(MetaAccessProvider metaAccess) {
+    public ResolvedJavaType javaType(MetaAccessProvider metaAccess)
+    {
         throw GraalError.shouldNotReachHere("illegal stamp has no Java type");
     }
 
     @Override
-    public Stamp meet(Stamp other) {
+    public Stamp meet(Stamp other)
+    {
         assert other instanceof IllegalStamp;
         return this;
     }
 
     @Override
-    public Stamp join(Stamp other) {
+    public Stamp join(Stamp other)
+    {
         assert other instanceof IllegalStamp;
         return this;
     }
 
     @Override
-    public boolean isCompatible(Stamp stamp) {
+    public boolean isCompatible(Stamp stamp)
+    {
         return stamp instanceof IllegalStamp;
     }
 
     @Override
-    public boolean isCompatible(Constant constant) {
-        if (constant instanceof PrimitiveConstant) {
+    public boolean isCompatible(Constant constant)
+    {
+        if (constant instanceof PrimitiveConstant)
+        {
             PrimitiveConstant prim = (PrimitiveConstant) constant;
             return prim.getJavaKind() == JavaKind.Illegal;
         }
@@ -84,29 +97,34 @@ public final class IllegalStamp extends Stamp {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "ILLEGAL";
     }
 
     @Override
-    public boolean hasValues() {
+    public boolean hasValues()
+    {
         return true;
     }
 
     @Override
-    public Stamp improveWith(Stamp other) {
+    public Stamp improveWith(Stamp other)
+    {
         assert other instanceof IllegalStamp;
         return this;
     }
 
     @Override
-    public Constant readConstant(MemoryAccessProvider provider, Constant base, long displacement) {
+    public Constant readConstant(MemoryAccessProvider provider, Constant base, long displacement)
+    {
         throw GraalError.shouldNotReachHere("can't read values of illegal stamp");
     }
 
     private static final IllegalStamp instance = new IllegalStamp();
 
-    static IllegalStamp getInstance() {
+    static IllegalStamp getInstance()
+    {
         return instance;
     }
 }

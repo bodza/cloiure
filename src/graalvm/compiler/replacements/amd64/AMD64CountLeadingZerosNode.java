@@ -25,31 +25,40 @@ import jdk.vm.ci.meta.JavaKind;
  * Count the number of leading zeros using the {@code lzcntq} or {@code lzcntl} instructions.
  */
 @NodeInfo(cycles = CYCLES_2, size = SIZE_1)
-public final class AMD64CountLeadingZerosNode extends UnaryNode implements ArithmeticLIRLowerable {
+public final class AMD64CountLeadingZerosNode extends UnaryNode implements ArithmeticLIRLowerable
+{
     public static final NodeClass<AMD64CountLeadingZerosNode> TYPE = NodeClass.create(AMD64CountLeadingZerosNode.class);
 
-    public AMD64CountLeadingZerosNode(ValueNode value) {
+    public AMD64CountLeadingZerosNode(ValueNode value)
+    {
         super(TYPE, computeStamp(value.stamp(NodeView.DEFAULT), value), value);
         assert value.getStackKind() == JavaKind.Int || value.getStackKind() == JavaKind.Long;
     }
 
     @Override
-    public Stamp foldStamp(Stamp newStamp) {
+    public Stamp foldStamp(Stamp newStamp)
+    {
         return computeStamp(newStamp, getValue());
     }
 
-    private static Stamp computeStamp(Stamp newStamp, ValueNode theValue) {
+    private static Stamp computeStamp(Stamp newStamp, ValueNode theValue)
+    {
         assert newStamp.isCompatible(theValue.stamp(NodeView.DEFAULT));
         assert theValue.getStackKind() == JavaKind.Int || theValue.getStackKind() == JavaKind.Long;
         return StampTool.stampForLeadingZeros((IntegerStamp) newStamp);
     }
 
-    public static ValueNode tryFold(ValueNode value) {
-        if (value.isConstant()) {
+    public static ValueNode tryFold(ValueNode value)
+    {
+        if (value.isConstant())
+        {
             JavaConstant c = value.asJavaConstant();
-            if (value.getStackKind() == JavaKind.Int) {
+            if (value.getStackKind() == JavaKind.Int)
+            {
                 return ConstantNode.forInt(Integer.numberOfLeadingZeros(c.asInt()));
-            } else {
+            }
+            else
+            {
                 return ConstantNode.forInt(Long.numberOfLeadingZeros(c.asLong()));
             }
         }
@@ -57,13 +66,15 @@ public final class AMD64CountLeadingZerosNode extends UnaryNode implements Arith
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue) {
+    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    {
         ValueNode folded = tryFold(forValue);
         return folded != null ? folded : this;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool builder, ArithmeticLIRGeneratorTool gen) {
+    public void generate(NodeLIRBuilderTool builder, ArithmeticLIRGeneratorTool gen)
+    {
         builder.setResult(this, ((AMD64ArithmeticLIRGeneratorTool) gen).emitCountLeadingZeros(builder.operand(getValue())));
     }
 }

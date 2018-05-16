@@ -21,29 +21,34 @@ import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.PrimitiveConstant;
 
 @NodeInfo(shortName = "^")
-public final class XorNode extends BinaryArithmeticNode<Xor> implements BinaryCommutative<ValueNode>, NarrowableArithmeticNode {
-
+public final class XorNode extends BinaryArithmeticNode<Xor> implements BinaryCommutative<ValueNode>, NarrowableArithmeticNode
+{
     public static final NodeClass<XorNode> TYPE = NodeClass.create(XorNode.class);
 
-    public XorNode(ValueNode x, ValueNode y) {
+    public XorNode(ValueNode x, ValueNode y)
+    {
         super(TYPE, ArithmeticOpTable::getXor, x, y);
         assert x.stamp(NodeView.DEFAULT).isCompatible(y.stamp(NodeView.DEFAULT));
     }
 
-    public static ValueNode create(ValueNode x, ValueNode y, NodeView view) {
+    public static ValueNode create(ValueNode x, ValueNode y, NodeView view)
+    {
         BinaryOp<Xor> op = ArithmeticOpTable.forStamp(x.stamp(view)).getXor();
         Stamp stamp = op.foldStamp(x.stamp(view), y.stamp(view));
         ConstantNode tryConstantFold = tryConstantFold(op, x, y, stamp, view);
-        if (tryConstantFold != null) {
+        if (tryConstantFold != null)
+        {
             return tryConstantFold;
         }
         return canonical(null, op, stamp, x, y, view);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY) {
+    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    {
         ValueNode ret = super.canonical(tool, forX, forY);
-        if (ret != this) {
+        if (ret != this)
+        {
             return ret;
         }
 
@@ -51,23 +56,30 @@ public final class XorNode extends BinaryArithmeticNode<Xor> implements BinaryCo
         return canonical(this, getOp(forX, forY), stamp(NodeView.DEFAULT), forX, forY, view);
     }
 
-    private static ValueNode canonical(XorNode self, BinaryOp<Xor> op, Stamp stamp, ValueNode forX, ValueNode forY, NodeView view) {
-        if (GraphUtil.unproxify(forX) == GraphUtil.unproxify(forY)) {
+    private static ValueNode canonical(XorNode self, BinaryOp<Xor> op, Stamp stamp, ValueNode forX, ValueNode forY, NodeView view)
+    {
+        if (GraphUtil.unproxify(forX) == GraphUtil.unproxify(forY))
+        {
             return ConstantNode.forPrimitive(stamp, op.getZero(forX.stamp(view)));
         }
-        if (forX.isConstant() && !forY.isConstant()) {
+        if (forX.isConstant() && !forY.isConstant())
+        {
             return new XorNode(forY, forX);
         }
-        if (forY.isConstant()) {
+        if (forY.isConstant())
+        {
             Constant c = forY.asConstant();
-            if (op.isNeutral(c)) {
+            if (op.isNeutral(c))
+            {
                 return forX;
             }
 
-            if (c instanceof PrimitiveConstant && ((PrimitiveConstant) c).getJavaKind().isNumericInteger()) {
+            if (c instanceof PrimitiveConstant && ((PrimitiveConstant) c).getJavaKind().isNumericInteger())
+            {
                 long rawY = ((PrimitiveConstant) c).asLong();
                 long mask = CodeUtil.mask(PrimitiveStamp.getBits(stamp));
-                if ((rawY & mask) == mask) {
+                if ((rawY & mask) == mask)
+                {
                     return new NotNode(forX);
                 }
             }
@@ -77,7 +89,8 @@ public final class XorNode extends BinaryArithmeticNode<Xor> implements BinaryCo
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen) {
+    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    {
         nodeValueMap.setResult(this, gen.emitXor(nodeValueMap.operand(getX()), nodeValueMap.operand(getY())));
     }
 }

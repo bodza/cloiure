@@ -21,31 +21,38 @@ import jdk.vm.ci.meta.PrimitiveConstant;
 import jdk.vm.ci.meta.Value;
 
 @NodeInfo(shortName = "|*H|", cycles = CYCLES_2, size = SIZE_2)
-public final class UnsignedMulHighNode extends BinaryArithmeticNode<UMulHigh> implements Canonicalizable.BinaryCommutative<ValueNode> {
+public final class UnsignedMulHighNode extends BinaryArithmeticNode<UMulHigh> implements Canonicalizable.BinaryCommutative<ValueNode>
+{
     public static final NodeClass<UnsignedMulHighNode> TYPE = NodeClass.create(UnsignedMulHighNode.class);
 
-    public UnsignedMulHighNode(ValueNode x, ValueNode y) {
+    public UnsignedMulHighNode(ValueNode x, ValueNode y)
+    {
         super(TYPE, ArithmeticOpTable::getUMulHigh, x, y);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen) {
+    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    {
         Value a = nodeValueMap.operand(getX());
         Value b = nodeValueMap.operand(getY());
         nodeValueMap.setResult(this, gen.emitUMulHigh(a, b));
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY) {
+    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    {
         ValueNode ret = super.canonical(tool, forX, forY);
-        if (ret != this) {
+        if (ret != this)
+        {
             return ret;
         }
 
-        if (forX.isConstant() && !forY.isConstant()) {
+        if (forX.isConstant() && !forY.isConstant())
+        {
             // we try to swap and canonicalize
             ValueNode improvement = canonical(tool, forY, forX);
-            if (improvement != this) {
+            if (improvement != this)
+            {
                 return improvement;
             }
             // if this fails we only swap
@@ -54,12 +61,16 @@ public final class UnsignedMulHighNode extends BinaryArithmeticNode<UMulHigh> im
         return canonical(this, forY);
     }
 
-    private static ValueNode canonical(UnsignedMulHighNode self, ValueNode forY) {
-        if (forY.isConstant()) {
+    private static ValueNode canonical(UnsignedMulHighNode self, ValueNode forY)
+    {
+        if (forY.isConstant())
+        {
             Constant c = forY.asConstant();
-            if (c instanceof PrimitiveConstant && ((PrimitiveConstant) c).getJavaKind().isNumericInteger()) {
+            if (c instanceof PrimitiveConstant && ((PrimitiveConstant) c).getJavaKind().isNumericInteger())
+            {
                 long i = ((PrimitiveConstant) c).asLong();
-                if (i == 0 || i == 1) {
+                if (i == 0 || i == 1)
+                {
                     return ConstantNode.forIntegerStamp(self.stamp(NodeView.DEFAULT), 0);
                 }
             }

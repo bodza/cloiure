@@ -8,24 +8,28 @@ import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.MemoryAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
-public class ObjectStamp extends AbstractObjectStamp {
-
-    public ObjectStamp(ResolvedJavaType type, boolean exactType, boolean nonNull, boolean alwaysNull) {
+public class ObjectStamp extends AbstractObjectStamp
+{
+    public ObjectStamp(ResolvedJavaType type, boolean exactType, boolean nonNull, boolean alwaysNull)
+    {
         super(type, exactType, nonNull, alwaysNull);
     }
 
     @Override
-    protected ObjectStamp copyWith(ResolvedJavaType type, boolean exactType, boolean nonNull, boolean alwaysNull) {
+    protected ObjectStamp copyWith(ResolvedJavaType type, boolean exactType, boolean nonNull, boolean alwaysNull)
+    {
         return new ObjectStamp(type, exactType, nonNull, alwaysNull);
     }
 
     @Override
-    public Stamp unrestricted() {
+    public Stamp unrestricted()
+    {
         return StampFactory.object();
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         StringBuilder str = new StringBuilder();
         str.append('a');
         appendString(str);
@@ -33,34 +37,44 @@ public class ObjectStamp extends AbstractObjectStamp {
     }
 
     @Override
-    public boolean isCompatible(Stamp other) {
-        if (this == other) {
+    public boolean isCompatible(Stamp other)
+    {
+        if (this == other)
+        {
             return true;
         }
-        if (other instanceof ObjectStamp) {
+        if (other instanceof ObjectStamp)
+        {
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean isCompatible(Constant constant) {
-        if (constant instanceof JavaConstant) {
+    public boolean isCompatible(Constant constant)
+    {
+        if (constant instanceof JavaConstant)
+        {
             return ((JavaConstant) constant).getJavaKind().isObject();
         }
         return false;
     }
 
     @Override
-    public LIRKind getLIRKind(LIRKindTool tool) {
+    public LIRKind getLIRKind(LIRKindTool tool)
+    {
         return tool.getObjectKind();
     }
 
     @Override
-    public Constant readConstant(MemoryAccessProvider provider, Constant base, long displacement) {
-        try {
+    public Constant readConstant(MemoryAccessProvider provider, Constant base, long displacement)
+    {
+        try
+        {
             return provider.readObjectConstant(base, displacement);
-        } catch (IllegalArgumentException e) {
+        }
+        catch (IllegalArgumentException e)
+        {
             /*
              * It's possible that the base and displacement aren't valid together so simply return
              * null.

@@ -20,8 +20,8 @@ import graalvm.compiler.nodes.ValueNode;
  * of the value below this node so they will consume this frame state instead of an earlier one.
  */
 @NodeInfo(cycles = CYCLES_0, size = SIZE_0)
-public final class StateSplitProxyNode extends FixedValueAnchorNode implements Canonicalizable, StateSplit {
-
+public final class StateSplitProxyNode extends FixedValueAnchorNode implements Canonicalizable, StateSplit
+{
     public static final NodeClass<StateSplitProxyNode> TYPE = NodeClass.create(StateSplitProxyNode.class);
 
     @OptionalInput(InputType.State) FrameState stateAfter;
@@ -30,38 +30,44 @@ public final class StateSplitProxyNode extends FixedValueAnchorNode implements C
      */
     private final boolean delayElimination;
 
-    public StateSplitProxyNode(ValueNode object) {
+    public StateSplitProxyNode(ValueNode object)
+    {
         this(object, false);
     }
 
-    public StateSplitProxyNode(ValueNode object, boolean delayElimination) {
+    public StateSplitProxyNode(ValueNode object, boolean delayElimination)
+    {
         super(TYPE, object);
         this.delayElimination = delayElimination;
     }
 
     @Override
-    public FrameState stateAfter() {
+    public FrameState stateAfter()
+    {
         return stateAfter;
     }
 
     @Override
-    public void setStateAfter(FrameState x) {
+    public void setStateAfter(FrameState x)
+    {
         assert x == null || x.isAlive() : "frame state must be in a graph";
         updateUsages(stateAfter, x);
         stateAfter = x;
     }
 
     @Override
-    public boolean hasSideEffect() {
+    public boolean hasSideEffect()
+    {
         return true;
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool) {
-        if (object.isConstant() && !delayElimination || stateAfter == null) {
+    public Node canonical(CanonicalizerTool tool)
+    {
+        if (object.isConstant() && !delayElimination || stateAfter == null)
+        {
             return object;
         }
         return this;
     }
-
 }

@@ -5,7 +5,8 @@ import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.memory.address.AddressNode;
 
-public interface ArrayRangeWrite extends NodeInterface {
+public interface ArrayRangeWrite extends NodeInterface
+{
     AddressNode getAddress();
 
     /**

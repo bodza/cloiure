@@ -17,8 +17,8 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * weight is the amortized weight of the additional code - so smaller is better. The level is the
  * number of nested inlinings that lead to this invoke.
  */
-public interface InlineInfo {
-
+public interface InlineInfo
+{
     /**
      * The graph containing the {@link #invoke() invocation} that may be inlined.
      */

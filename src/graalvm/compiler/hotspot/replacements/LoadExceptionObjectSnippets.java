@@ -45,10 +45,11 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * must not cause a deoptimization as the runtime/interpreter would not have a valid location to
  * find the exception object to be rethrown.
  */
-public class LoadExceptionObjectSnippets implements Snippets {
-
+public class LoadExceptionObjectSnippets implements Snippets
+{
     @Snippet
-    public static Object loadException(@ConstantParameter Register threadRegister) {
+    public static Object loadException(@ConstantParameter Register threadRegister)
+    {
         Word thread = registerAsWord(threadRegister);
         Object exception = readExceptionOop(thread);
         writeExceptionOop(thread, null);
@@ -56,19 +57,22 @@ public class LoadExceptionObjectSnippets implements Snippets {
         return piCastToSnippetReplaceeStamp(exception);
     }
 
-    public static class Templates extends AbstractTemplates {
-
+    public static class Templates extends AbstractTemplates
+    {
         private final SnippetInfo loadException = snippet(LoadExceptionObjectSnippets.class, "loadException", EXCEPTION_OOP_LOCATION, EXCEPTION_PC_LOCATION);
         private final HotSpotWordTypes wordTypes;
 
-        public Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, HotSpotProviders providers, TargetDescription target) {
+        public Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, HotSpotProviders providers, TargetDescription target)
+        {
             super(options, factories, providers, providers.getSnippetReflection(), target);
             this.wordTypes = providers.getWordTypes();
         }
 
-        public void lower(LoadExceptionObjectNode loadExceptionObject, HotSpotRegistersProvider registers, LoweringTool tool) {
+        public void lower(LoadExceptionObjectNode loadExceptionObject, HotSpotRegistersProvider registers, LoweringTool tool)
+        {
             StructuredGraph graph = loadExceptionObject.graph();
-            if (LoadExceptionObjectInVM.getValue(graph.getOptions())) {
+            if (LoadExceptionObjectInVM.getValue(graph.getOptions()))
+            {
                 ResolvedJavaType wordType = providers.getMetaAccess().lookupJavaType(Word.class);
                 Stamp stamp = wordTypes.getWordStamp(wordType);
                 ReadRegisterNode thread = graph.add(new ReadRegisterNode(stamp, registers.getThreadRegister(), true, false));
@@ -76,7 +80,9 @@ public class LoadExceptionObjectSnippets implements Snippets {
                 ForeignCallNode loadExceptionC = graph.add(new ForeignCallNode(providers.getForeignCalls(), LOAD_AND_CLEAR_EXCEPTION, thread));
                 loadExceptionC.setStateAfter(loadExceptionObject.stateAfter());
                 graph.replaceFixedWithFixed(loadExceptionObject, loadExceptionC);
-            } else {
+            }
+            else
+            {
                 Arguments args = new Arguments(loadException, loadExceptionObject.graph().getGuardsStage(), tool.getLoweringStage());
                 args.addConst("threadRegister", registers.getThreadRegister());
                 template(loadExceptionObject, args).instantiate(providers.getMetaAccess(), loadExceptionObject, DEFAULT_REPLACER, args);

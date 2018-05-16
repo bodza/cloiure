@@ -7,8 +7,8 @@ import org.graalvm.collections.Pair;
 /**
  * A key for a metric.
  */
-public interface MetricKey {
-
+public interface MetricKey
+{
     /**
      * Converts a given value for this key to a string, scaling it to a more useful unit of
      * measurement and appending a suffix indicating the unit where applicable. This representation
@@ -34,13 +34,13 @@ public interface MetricKey {
     /**
      * Comparator to sort keys by their names.
      */
-    Comparator<MetricKey> NAME_COMPARATOR = new Comparator<MetricKey>() {
-
+    Comparator<MetricKey> NAME_COMPARATOR = new Comparator<MetricKey>()
+    {
         @Override
-        public int compare(MetricKey o1, MetricKey o2) {
+        public int compare(MetricKey o1, MetricKey o2)
+        {
             return o1.getName().compareTo(o2.getName());
         }
-
     };
 
     /**

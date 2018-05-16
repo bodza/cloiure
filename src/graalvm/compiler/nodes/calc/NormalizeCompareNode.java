@@ -25,37 +25,48 @@ import jdk.vm.ci.meta.JavaKind;
  * true.
  */
 @NodeInfo(cycles = NodeCycles.CYCLES_2, size = SIZE_2)
-public final class NormalizeCompareNode extends BinaryNode implements IterableNodeType {
-
+public final class NormalizeCompareNode extends BinaryNode implements IterableNodeType
+{
     public static final NodeClass<NormalizeCompareNode> TYPE = NodeClass.create(NormalizeCompareNode.class);
     protected final boolean isUnorderedLess;
 
-    public NormalizeCompareNode(ValueNode x, ValueNode y, JavaKind kind, boolean isUnorderedLess) {
+    public NormalizeCompareNode(ValueNode x, ValueNode y, JavaKind kind, boolean isUnorderedLess)
+    {
         super(TYPE, StampFactory.forInteger(kind, -1, 1), x, y);
         this.isUnorderedLess = isUnorderedLess;
     }
 
-    public static ValueNode create(ValueNode x, ValueNode y, boolean isUnorderedLess, JavaKind kind, ConstantReflectionProvider constantReflection) {
+    public static ValueNode create(ValueNode x, ValueNode y, boolean isUnorderedLess, JavaKind kind, ConstantReflectionProvider constantReflection)
+    {
         ValueNode result = tryConstantFold(x, y, isUnorderedLess, kind, constantReflection);
-        if (result != null) {
+        if (result != null)
+        {
             return result;
         }
 
         return new NormalizeCompareNode(x, y, kind, isUnorderedLess);
     }
 
-    protected static ValueNode tryConstantFold(ValueNode x, ValueNode y, boolean isUnorderedLess, JavaKind kind, ConstantReflectionProvider constantReflection) {
+    protected static ValueNode tryConstantFold(ValueNode x, ValueNode y, boolean isUnorderedLess, JavaKind kind, ConstantReflectionProvider constantReflection)
+    {
         LogicNode result = CompareNode.tryConstantFold(CanonicalCondition.EQ, x, y, null, false);
-        if (result instanceof LogicConstantNode) {
+        if (result instanceof LogicConstantNode)
+        {
             LogicConstantNode logicConstantNode = (LogicConstantNode) result;
             LogicNode resultLT = CompareNode.tryConstantFold(CanonicalCondition.LT, x, y, constantReflection, isUnorderedLess);
-            if (resultLT instanceof LogicConstantNode) {
+            if (resultLT instanceof LogicConstantNode)
+            {
                 LogicConstantNode logicConstantNodeLT = (LogicConstantNode) resultLT;
-                if (logicConstantNodeLT.getValue()) {
+                if (logicConstantNodeLT.getValue())
+                {
                     return ConstantNode.forIntegerKind(kind, -1);
-                } else if (logicConstantNode.getValue()) {
+                }
+                else if (logicConstantNode.getValue())
+                {
                     return ConstantNode.forIntegerKind(kind, 0);
-                } else {
+                }
+                else
+                {
                     return ConstantNode.forIntegerKind(kind, 1);
                 }
             }
@@ -64,26 +75,31 @@ public final class NormalizeCompareNode extends BinaryNode implements IterableNo
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY) {
+    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    {
         NodeView view = NodeView.from(tool);
         ValueNode result = tryConstantFold(x, y, isUnorderedLess, stamp(view).getStackKind(), tool.getConstantReflection());
-        if (result != null) {
+        if (result != null)
+        {
             return result;
         }
         return this;
     }
 
     @Override
-    public boolean inferStamp() {
+    public boolean inferStamp()
+    {
         return false;
     }
 
     @Override
-    public Stamp foldStamp(Stamp stampX, Stamp stampY) {
+    public Stamp foldStamp(Stamp stampX, Stamp stampY)
+    {
         return stamp(NodeView.DEFAULT);
     }
 
-    public boolean isUnorderedLess() {
+    public boolean isUnorderedLess()
+    {
         return isUnorderedLess;
     }
 }

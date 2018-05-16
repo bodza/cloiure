@@ -8,7 +8,8 @@ import jdk.vm.ci.code.StackSlot;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.Value;
 
-public interface DiagnosticLIRGeneratorTool {
+public interface DiagnosticLIRGeneratorTool
+{
     LIRInstruction createBenchmarkCounter(String name, String group, Value increment);
 
     LIRInstruction createMultiBenchmarkCounter(String[] names, String[] groups, Value[] increments);
@@ -42,7 +43,8 @@ public interface DiagnosticLIRGeneratorTool {
      * {@link DiagnosticLIRGeneratorTool#createZapRegisters() ZapRegisterOp} if assertions are
      * enabled.
      */
-    interface ZapRegistersAfterInstruction {
+    interface ZapRegistersAfterInstruction
+    {
     }
 
     /**
@@ -50,7 +52,8 @@ public interface DiagnosticLIRGeneratorTool {
      * {@link DiagnosticLIRGeneratorTool#zapArgumentSpace ZapArgumentSpaceOp} if assertions are
      * enabled.
      */
-    interface ZapStackArgumentSpaceBeforeInstruction {
+    interface ZapStackArgumentSpaceBeforeInstruction
+    {
     }
 
     LIRInstruction createZapArgumentSpace(StackSlot[] zappedStack, JavaConstant[] zapValues);

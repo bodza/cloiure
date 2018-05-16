@@ -21,8 +21,8 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  *
  * @see InliningData#moveForward()
  */
-public class MethodInvocation {
-
+public class MethodInvocation
+{
     private final InlineInfo callee;
     private final double probability;
     private final double relevance;
@@ -55,7 +55,8 @@ public class MethodInvocation {
 
     private final int sizeFreshArgs;
 
-    public MethodInvocation(InlineInfo info, double probability, double relevance, BitSet freshlyInstantiatedArguments) {
+    public MethodInvocation(InlineInfo info, double probability, double relevance, BitSet freshlyInstantiatedArguments)
+    {
         this.callee = info;
         this.probability = probability;
         this.relevance = relevance;
@@ -63,45 +64,55 @@ public class MethodInvocation {
         this.sizeFreshArgs = freshlyInstantiatedArguments == null ? 0 : freshlyInstantiatedArguments.cardinality();
     }
 
-    public void incrementProcessedGraphs() {
+    public void incrementProcessedGraphs()
+    {
         processedGraphs++;
         assert processedGraphs <= callee.numberOfMethods();
     }
 
-    public int processedGraphs() {
+    public int processedGraphs()
+    {
         assert processedGraphs <= callee.numberOfMethods();
         return processedGraphs;
     }
 
-    public int totalGraphs() {
+    public int totalGraphs()
+    {
         return callee.numberOfMethods();
     }
 
-    public InlineInfo callee() {
+    public InlineInfo callee()
+    {
         return callee;
     }
 
-    public double probability() {
+    public double probability()
+    {
         return probability;
     }
 
-    public double relevance() {
+    public double relevance()
+    {
         return relevance;
     }
 
-    public boolean isRoot() {
+    public boolean isRoot()
+    {
         return callee == null;
     }
 
-    public BitSet getFreshlyInstantiatedArguments() {
+    public BitSet getFreshlyInstantiatedArguments()
+    {
         return freshlyInstantiatedArguments;
     }
 
-    public int getSizeFreshArgs() {
+    public int getSizeFreshArgs()
+    {
         return sizeFreshArgs;
     }
 
-    public CallsiteHolder buildCallsiteHolderForElement(int index) {
+    public CallsiteHolder buildCallsiteHolderForElement(int index)
+    {
         Inlineable elem = callee.inlineableElementAt(index);
         assert elem instanceof InlineableGraph;
         InlineableGraph ig = (InlineableGraph) elem;
@@ -111,15 +122,20 @@ public class MethodInvocation {
     }
 
     @Override
-    public String toString() {
-        if (isRoot()) {
+    public String toString()
+    {
+        if (isRoot())
+        {
             return "<root>";
         }
         CallTargetNode callTarget = callee.invoke().callTarget();
-        if (callTarget instanceof MethodCallTargetNode) {
+        if (callTarget instanceof MethodCallTargetNode)
+        {
             ResolvedJavaMethod calleeMethod = ((MethodCallTargetNode) callTarget).targetMethod();
             return calleeMethod.format("Invoke#%H.%n(%p)");
-        } else {
+        }
+        else
+        {
             return "Invoke#" + callTarget.targetName();
         }
     }

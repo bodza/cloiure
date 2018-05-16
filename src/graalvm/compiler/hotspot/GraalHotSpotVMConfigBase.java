@@ -10,9 +10,10 @@ import jdk.vm.ci.hotspot.HotSpotVMConfigStore;
 /**
  * This is a source with different versions for various JDKs.
  */
-public abstract class GraalHotSpotVMConfigBase extends HotSpotVMConfigAccess {
-
-    GraalHotSpotVMConfigBase(HotSpotVMConfigStore store) {
+public abstract class GraalHotSpotVMConfigBase extends HotSpotVMConfigAccess
+{
+    GraalHotSpotVMConfigBase(HotSpotVMConfigStore store)
+    {
         super(store);
         assert this instanceof GraalHotSpotVMConfig;
         versioned = new GraalHotSpotVMConfigVersioned(store);
@@ -37,9 +38,11 @@ public abstract class GraalHotSpotVMConfigBase extends HotSpotVMConfigAccess {
     /**
      * Gets the host operating system name.
      */
-    private static String getHostOSName() {
+    private static String getHostOSName()
+    {
         String osName = System.getProperty("os.name");
-        switch (osName) {
+        switch (osName)
+        {
             case "Linux":
                 osName = "linux";
                 break;
@@ -51,18 +54,23 @@ public abstract class GraalHotSpotVMConfigBase extends HotSpotVMConfigAccess {
                 break;
             default:
                 // Of course Windows is different...
-                if (osName.startsWith("Windows")) {
+                if (osName.startsWith("Windows"))
+                {
                     osName = "windows";
-                } else {
+                }
+                else
+                {
                     throw new JVMCIError("Unexpected OS name: " + osName);
                 }
         }
         return osName;
     }
 
-    private static String getHostArchitectureName() {
+    private static String getHostArchitectureName()
+    {
         String arch = System.getProperty("os.arch");
-        switch (arch) {
+        switch (arch)
+        {
             case "x86_64":
                 arch = "amd64";
                 break;

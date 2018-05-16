@@ -34,9 +34,10 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 /**
  * This class is a graph container, it contains the set of nodes that belong to this graph.
  */
-public class Graph {
-
-    public static class Options {
+public class Graph
+{
+    public static class Options
+    {
         @Option(help = "Verify graphs often during compilation when assertions are turned on", type = OptionType.Debug)//
         public static final OptionKey<Boolean> VerifyGraalGraphs = new OptionKey<>(true);
         @Option(help = "Perform expensive verification of graph inputs, usages, successors and predecessors", type = OptionType.Debug)//
@@ -45,13 +46,15 @@ public class Graph {
         public static final OptionKey<Integer> GraphCompressionThreshold = new OptionKey<>(70);
     }
 
-    private enum FreezeState {
+    private enum FreezeState
+    {
         Unfrozen,
         TemporaryFreeze,
         DeepFreeze
     }
 
-    public enum SourcePositionTracking {
+    public enum SourcePositionTracking
+    {
         Default,
         Ignore,
         UpdateOnly,
@@ -111,11 +114,13 @@ public class Graph {
      */
     private EconomicMap<Node, Node>[] cachedLeafNodes;
 
-    private static final Equivalence NODE_VALUE_COMPARE = new Equivalence() {
-
+    private static final Equivalence NODE_VALUE_COMPARE = new Equivalence()
+    {
         @Override
-        public boolean equals(Object a, Object b) {
-            if (a == b) {
+        public boolean equals(Object a, Object b)
+        {
+            if (a == b)
+            {
                 return true;
             }
 
@@ -124,7 +129,8 @@ public class Graph {
         }
 
         @Override
-        public int hashCode(Object k) {
+        public int hashCode(Object k)
+        {
             return ((Node) k).getNodeClass().valueNumber((Node) k);
         }
     };
@@ -145,26 +151,31 @@ public class Graph {
      */
     private DebugContext debug;
 
-    private class NodeSourcePositionScope implements DebugCloseable {
+    private class NodeSourcePositionScope implements DebugCloseable
+    {
         private final NodeSourcePosition previous;
 
-        NodeSourcePositionScope(NodeSourcePosition sourcePosition) {
+        NodeSourcePositionScope(NodeSourcePosition sourcePosition)
+        {
             previous = currentNodeSourcePosition;
             currentNodeSourcePosition = sourcePosition;
         }
 
         @Override
-        public DebugContext getDebug() {
+        public DebugContext getDebug()
+        {
             return debug;
         }
 
         @Override
-        public void close() {
+        public void close()
+        {
             currentNodeSourcePosition = previous;
         }
     }
 
-    public NodeSourcePosition currentNodeSourcePosition() {
+    public NodeSourcePosition currentNodeSourcePosition()
+    {
         return currentNodeSourcePosition;
     }
 
@@ -176,7 +187,8 @@ public class Graph {
      * @return a {@link DebugCloseable} for managing the opened scope or {@code null} if no scope
      *         was opened
      */
-    public DebugCloseable withNodeSourcePosition(Node node) {
+    public DebugCloseable withNodeSourcePosition(Node node)
+    {
         return withNodeSourcePosition(node.getNodeSourcePosition());
     }
 
@@ -187,7 +199,8 @@ public class Graph {
      * @return a {@link DebugCloseable} for managing the opened scope or {@code null} if no scope
      *         was opened
      */
-    public DebugCloseable withNodeSourcePosition(NodeSourcePosition sourcePosition) {
+    public DebugCloseable withNodeSourcePosition(NodeSourcePosition sourcePosition)
+    {
         return trackNodeSourcePosition() && sourcePosition != null ? new NodeSourcePositionScope(sourcePosition) : null;
     }
 
@@ -196,7 +209,8 @@ public class Graph {
      *
      * @return a {@link DebugCloseable} for managing the opened scope
      */
-    public DebugCloseable withoutNodeSourcePosition() {
+    public DebugCloseable withoutNodeSourcePosition()
+    {
         return new NodeSourcePositionScope(null);
     }
 
@@ -205,23 +219,29 @@ public class Graph {
      * to short circuit logic for updating those positions after inlining since that requires
      * visiting every node in the graph.
      */
-    public boolean updateNodeSourcePosition() {
+    public boolean updateNodeSourcePosition()
+    {
         return trackNodeSourcePosition == Track || trackNodeSourcePosition == UpdateOnly;
     }
 
-    public boolean trackNodeSourcePosition() {
+    public boolean trackNodeSourcePosition()
+    {
         return trackNodeSourcePosition == Track;
     }
 
-    public void setTrackNodeSourcePosition() {
-        if (trackNodeSourcePosition != Track) {
+    public void setTrackNodeSourcePosition()
+    {
+        if (trackNodeSourcePosition != Track)
+        {
             assert trackNodeSourcePosition == Default : trackNodeSourcePosition;
             trackNodeSourcePosition = Track;
         }
     }
 
-    public static SourcePositionTracking trackNodeSourcePositionDefault(OptionValues options, DebugContext debug) {
-        if (GraalOptions.TrackNodeSourcePosition.getValue(options) || debug.isDumpEnabledForMethod()) {
+    public static SourcePositionTracking trackNodeSourcePositionDefault(OptionValues options, DebugContext debug)
+    {
+        if (GraalOptions.TrackNodeSourcePosition.getValue(options) || debug.isDumpEnabledForMethod())
+        {
             return Track;
         }
         return Default;
@@ -230,7 +250,8 @@ public class Graph {
     /**
      * Creates an empty Graph with no name.
      */
-    public Graph(OptionValues options, DebugContext debug) {
+    public Graph(OptionValues options, DebugContext debug)
+    {
         this(null, options, debug);
     }
 
@@ -239,7 +260,8 @@ public class Graph {
      * {@link Graph} class.
      */
     @SuppressWarnings("all")
-    public static boolean isModificationCountsEnabled() {
+    public static boolean isModificationCountsEnabled()
+    {
         boolean enabled = false;
         assert enabled = true;
         return enabled;
@@ -252,7 +274,8 @@ public class Graph {
      *
      * @param name the name of the graph, used for debugging purposes
      */
-    public Graph(String name, OptionValues options, DebugContext debug) {
+    public Graph(String name, OptionValues options, DebugContext debug)
+    {
         nodes = new Node[INITIAL_NODES_SIZE];
         iterableNodesFirst = new ArrayList<>(NodeClass.allocatedNodeIterabledIds());
         iterableNodesLast = new ArrayList<>(NodeClass.allocatedNodeIterabledIds());
@@ -262,56 +285,73 @@ public class Graph {
         assert debug != null;
         this.debug = debug;
 
-        if (isModificationCountsEnabled()) {
+        if (isModificationCountsEnabled())
+        {
             nodeModCounts = new int[INITIAL_NODES_SIZE];
             nodeUsageModCounts = new int[INITIAL_NODES_SIZE];
         }
     }
 
-    int extractOriginalNodeId(Node node) {
+    int extractOriginalNodeId(Node node)
+    {
         int id = node.id;
-        if (id <= Node.DELETED_ID_START) {
+        if (id <= Node.DELETED_ID_START)
+        {
             id = Node.DELETED_ID_START - id;
         }
         return id;
     }
 
-    int modCount(Node node) {
+    int modCount(Node node)
+    {
         int id = extractOriginalNodeId(node);
-        if (id >= 0 && id < nodeModCounts.length) {
+        if (id >= 0 && id < nodeModCounts.length)
+        {
             return nodeModCounts[id];
         }
         return 0;
     }
 
-    void incModCount(Node node) {
+    void incModCount(Node node)
+    {
         int id = extractOriginalNodeId(node);
-        if (id >= 0) {
-            if (id >= nodeModCounts.length) {
+        if (id >= 0)
+        {
+            if (id >= nodeModCounts.length)
+            {
                 nodeModCounts = Arrays.copyOf(nodeModCounts, id * 2 + 30);
             }
             nodeModCounts[id]++;
-        } else {
+        }
+        else
+        {
             assert false;
         }
     }
 
-    int usageModCount(Node node) {
+    int usageModCount(Node node)
+    {
         int id = extractOriginalNodeId(node);
-        if (id >= 0 && id < nodeUsageModCounts.length) {
+        if (id >= 0 && id < nodeUsageModCounts.length)
+        {
             return nodeUsageModCounts[id];
         }
         return 0;
     }
 
-    void incUsageModCount(Node node) {
+    void incUsageModCount(Node node)
+    {
         int id = extractOriginalNodeId(node);
-        if (id >= 0) {
-            if (id >= nodeUsageModCounts.length) {
+        if (id >= 0)
+        {
+            if (id >= nodeUsageModCounts.length)
+            {
                 nodeUsageModCounts = Arrays.copyOf(nodeUsageModCounts, id * 2 + 30);
             }
             nodeUsageModCounts[id]++;
-        } else {
+        }
+        else
+        {
             assert false;
         }
     }
@@ -323,7 +363,8 @@ public class Graph {
      *            graph if this graph can be accessed from multiple threads (e.g., it's in a cache
      *            accessed by multiple threads).
      */
-    public final Graph copy(DebugContext debugForCopy) {
+    public final Graph copy(DebugContext debugForCopy)
+    {
         return copy(name, null, debugForCopy);
     }
 
@@ -335,7 +376,8 @@ public class Graph {
      *            graph if this graph can be accessed from multiple threads (e.g., it's in a cache
      *            accessed by multiple threads).
      */
-    public final Graph copy(Consumer<UnmodifiableEconomicMap<Node, Node>> duplicationMapCallback, DebugContext debugForCopy) {
+    public final Graph copy(Consumer<UnmodifiableEconomicMap<Node, Node>> duplicationMapCallback, DebugContext debugForCopy)
+    {
         return copy(name, duplicationMapCallback, debugForCopy);
     }
 
@@ -347,7 +389,8 @@ public class Graph {
      *            graph if this graph can be accessed from multiple threads (e.g., it's in a cache
      *            accessed by multiple threads).
      */
-    public final Graph copy(String newName, DebugContext debugForCopy) {
+    public final Graph copy(String newName, DebugContext debugForCopy)
+    {
         return copy(newName, null, debugForCopy);
     }
 
@@ -360,23 +403,28 @@ public class Graph {
      *            graph if this graph can be accessed from multiple threads (e.g., it's in a cache
      *            accessed by multiple threads).
      */
-    protected Graph copy(String newName, Consumer<UnmodifiableEconomicMap<Node, Node>> duplicationMapCallback, DebugContext debugForCopy) {
+    protected Graph copy(String newName, Consumer<UnmodifiableEconomicMap<Node, Node>> duplicationMapCallback, DebugContext debugForCopy)
+    {
         Graph copy = new Graph(newName, options, debugForCopy);
-        if (trackNodeSourcePosition()) {
+        if (trackNodeSourcePosition())
+        {
             copy.setTrackNodeSourcePosition();
         }
         UnmodifiableEconomicMap<Node, Node> duplicates = copy.addDuplicates(getNodes(), this, this.getNodeCount(), (EconomicMap<Node, Node>) null);
-        if (duplicationMapCallback != null) {
+        if (duplicationMapCallback != null)
+        {
             duplicationMapCallback.accept(duplicates);
         }
         return copy;
     }
 
-    public final OptionValues getOptions() {
+    public final OptionValues getOptions()
+    {
         return options;
     }
 
-    public DebugContext getDebug() {
+    public DebugContext getDebug()
+    {
         return debug;
     }
 
@@ -390,13 +438,15 @@ public class Graph {
      * does not have a nested scope open (the top level scope will always be open if scopes are
      * enabled).
      */
-    public void resetDebug(DebugContext newDebug) {
+    public void resetDebug(DebugContext newDebug)
+    {
         assert newDebug == debug || !debug.inNestedScope() : String.format("Cannot reset the debug context for %s while it has the nested scope \"%s\" open", this, debug.getCurrentScopeName());
         this.debug = newDebug;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return name == null ? super.toString() : "Graph " + name;
     }
 
@@ -406,7 +456,8 @@ public class Graph {
      *
      * @return the number of live nodes in this graph
      */
-    public int getNodeCount() {
+    public int getNodeCount()
+    {
         return nodesSize - getNodesDeletedSinceLastCompression();
     }
 
@@ -415,7 +466,8 @@ public class Graph {
      * identifiers are only stable between compressions. To ensure this constraint is observed, any
      * entity relying upon stable node identifiers should use {@link NodeIdAccessor}.
      */
-    public int getCompressions() {
+    public int getCompressions()
+    {
         return compressions;
     }
 
@@ -423,14 +475,16 @@ public class Graph {
      * Gets the number of nodes which have been deleted from this graph since it was last
      * {@linkplain #maybeCompress() compressed}.
      */
-    public int getNodesDeletedSinceLastCompression() {
+    public int getNodesDeletedSinceLastCompression()
+    {
         return nodesDeletedSinceLastCompression;
     }
 
     /**
      * Gets the total number of nodes which have been deleted from this graph.
      */
-    public int getTotalNodesDeleted() {
+    public int getTotalNodesDeleted()
+    {
         return nodesDeletedSinceLastCompression + nodesDeletedBeforeLastCompression;
     }
 
@@ -440,71 +494,89 @@ public class Graph {
      * @param node the node to be added
      * @return the node which was added to the graph
      */
-    public <T extends Node> T add(T node) {
-        if (node.getNodeClass().valueNumberable()) {
+    public <T extends Node> T add(T node)
+    {
+        if (node.getNodeClass().valueNumberable())
+        {
             throw new IllegalStateException("Using add for value numberable node. Consider using either unique or addWithoutUnique.");
         }
         return addHelper(node);
     }
 
-    public <T extends Node> T addWithoutUnique(T node) {
+    public <T extends Node> T addWithoutUnique(T node)
+    {
         return addHelper(node);
     }
 
-    public <T extends Node> T addOrUnique(T node) {
-        if (node.getNodeClass().valueNumberable()) {
+    public <T extends Node> T addOrUnique(T node)
+    {
+        if (node.getNodeClass().valueNumberable())
+        {
             return uniqueHelper(node);
         }
         return add(node);
     }
 
-    public <T extends Node> T maybeAddOrUnique(T node) {
-        if (node.isAlive()) {
+    public <T extends Node> T maybeAddOrUnique(T node)
+    {
+        if (node.isAlive())
+        {
             return node;
         }
         return addOrUnique(node);
     }
 
-    public <T extends Node> T addOrUniqueWithInputs(T node) {
-        if (node.isAlive()) {
+    public <T extends Node> T addOrUniqueWithInputs(T node)
+    {
+        if (node.isAlive())
+        {
             assert node.graph() == this;
             return node;
-        } else {
+        }
+        else
+        {
             assert node.isUnregistered();
             addInputs(node);
-            if (node.getNodeClass().valueNumberable()) {
+            if (node.getNodeClass().valueNumberable())
+            {
                 return uniqueHelper(node);
             }
             return add(node);
         }
     }
 
-    public <T extends Node> T addWithoutUniqueWithInputs(T node) {
+    public <T extends Node> T addWithoutUniqueWithInputs(T node)
+    {
         addInputs(node);
         return addHelper(node);
     }
 
-    private final class AddInputsFilter extends Node.EdgeVisitor {
-
+    private final class AddInputsFilter extends Node.EdgeVisitor
+    {
         @Override
-        public Node apply(Node self, Node input) {
-            if (!input.isAlive()) {
+        public Node apply(Node self, Node input)
+        {
+            if (!input.isAlive())
+            {
                 assert !input.isDeleted();
                 return addOrUniqueWithInputs(input);
-            } else {
+            }
+            else
+            {
                 return input;
             }
         }
-
     }
 
     private AddInputsFilter addInputsFilter = new AddInputsFilter();
 
-    private <T extends Node> void addInputs(T node) {
+    private <T extends Node> void addInputs(T node)
+    {
         node.applyInputs(addInputsFilter);
     }
 
-    private <T extends Node> T addHelper(T node) {
+    private <T extends Node> T addHelper(T node)
+    {
         node.initialize(this);
         return node;
     }
@@ -512,7 +584,8 @@ public class Graph {
     /**
      * The type of events sent to a {@link NodeEventListener}.
      */
-    public enum NodeEvent {
+    public enum NodeEvent
+    {
         /**
          * A node's input is changed.
          */
@@ -537,8 +610,8 @@ public class Graph {
     /**
      * Client interested in one or more node related events.
      */
-    public abstract static class NodeEventListener {
-
+    public abstract static class NodeEventListener
+    {
         /**
          * A method called when a change event occurs.
          *
@@ -548,8 +621,10 @@ public class Graph {
          * @param e an event
          * @param node the node related to {@code e}
          */
-        final void event(NodeEvent e, Node node) {
-            switch (e) {
+        final void event(NodeEvent e, Node node)
+        {
+            switch (e)
+            {
                 case INPUT_CHANGED:
                     inputChanged(node);
                     break;
@@ -572,7 +647,8 @@ public class Graph {
          * @param e an event
          * @param node the node related to {@code e}
          */
-        public void changed(NodeEvent e, Node node) {
+        public void changed(NodeEvent e, Node node)
+        {
         }
 
         /**
@@ -580,7 +656,8 @@ public class Graph {
          *
          * @param node a node who has had one of its inputs changed
          */
-        public void inputChanged(Node node) {
+        public void inputChanged(Node node)
+        {
         }
 
         /**
@@ -588,7 +665,8 @@ public class Graph {
          *
          * @param node a node whose {@link Node#usages()} just became empty
          */
-        public void usagesDroppedToZero(Node node) {
+        public void usagesDroppedToZero(Node node)
+        {
         }
 
         /**
@@ -596,7 +674,8 @@ public class Graph {
          *
          * @param node a node that was just added to the graph
          */
-        public void nodeAdded(Node node) {
+        public void nodeAdded(Node node)
+        {
         }
 
         /**
@@ -604,7 +683,8 @@ public class Graph {
          *
          * @param node
          */
-        public void nodeRemoved(Node node) {
+        public void nodeRemoved(Node node)
+        {
         }
     }
 
@@ -612,62 +692,77 @@ public class Graph {
      * Registers a given {@link NodeEventListener} with the enclosing graph until this object is
      * {@linkplain #close() closed}.
      */
-    public final class NodeEventScope implements AutoCloseable {
-        NodeEventScope(NodeEventListener listener) {
-            if (nodeEventListener == null) {
+    public final class NodeEventScope implements AutoCloseable
+    {
+        NodeEventScope(NodeEventListener listener)
+        {
+            if (nodeEventListener == null)
+            {
                 nodeEventListener = listener;
-            } else {
+            }
+            else
+            {
                 nodeEventListener = new ChainedNodeEventListener(listener, nodeEventListener);
             }
         }
 
         @Override
-        public void close() {
+        public void close()
+        {
             assert nodeEventListener != null;
-            if (nodeEventListener instanceof ChainedNodeEventListener) {
+            if (nodeEventListener instanceof ChainedNodeEventListener)
+            {
                 nodeEventListener = ((ChainedNodeEventListener) nodeEventListener).next;
-            } else {
+            }
+            else
+            {
                 nodeEventListener = null;
             }
         }
     }
 
-    private static class ChainedNodeEventListener extends NodeEventListener {
-
+    private static class ChainedNodeEventListener extends NodeEventListener
+    {
         NodeEventListener head;
         NodeEventListener next;
 
-        ChainedNodeEventListener(NodeEventListener head, NodeEventListener next) {
+        ChainedNodeEventListener(NodeEventListener head, NodeEventListener next)
+        {
             this.head = head;
             this.next = next;
         }
 
         @Override
-        public void nodeAdded(Node node) {
+        public void nodeAdded(Node node)
+        {
             head.event(NodeEvent.NODE_ADDED, node);
             next.event(NodeEvent.NODE_ADDED, node);
         }
 
         @Override
-        public void inputChanged(Node node) {
+        public void inputChanged(Node node)
+        {
             head.event(NodeEvent.INPUT_CHANGED, node);
             next.event(NodeEvent.INPUT_CHANGED, node);
         }
 
         @Override
-        public void usagesDroppedToZero(Node node) {
+        public void usagesDroppedToZero(Node node)
+        {
             head.event(NodeEvent.ZERO_USAGES, node);
             next.event(NodeEvent.ZERO_USAGES, node);
         }
 
         @Override
-        public void nodeRemoved(Node node) {
+        public void nodeRemoved(Node node)
+        {
             head.event(NodeEvent.NODE_REMOVED, node);
             next.event(NodeEvent.NODE_REMOVED, node);
         }
 
         @Override
-        public void changed(NodeEvent e, Node node) {
+        public void changed(NodeEvent e, Node node)
+        {
             head.event(e, node);
             next.event(e, node);
         }
@@ -683,7 +778,8 @@ public class Graph {
      * }
      * </pre>
      */
-    public NodeEventScope trackNodeEvents(NodeEventListener listener) {
+    public NodeEventScope trackNodeEvents(NodeEventListener listener)
+    {
         return new NodeEventScope(listener);
     }
 
@@ -693,63 +789,78 @@ public class Graph {
      *
      * @return a node similar to {@code node} if one exists, otherwise {@code node}
      */
-    public <T extends Node & ValueNumberable> T unique(T node) {
+    public <T extends Node & ValueNumberable> T unique(T node)
+    {
         return uniqueHelper(node);
     }
 
-    <T extends Node> T uniqueHelper(T node) {
+    <T extends Node> T uniqueHelper(T node)
+    {
         assert node.getNodeClass().valueNumberable();
         T other = this.findDuplicate(node);
-        if (other != null) {
-            if (other.getNodeSourcePosition() == null) {
+        if (other != null)
+        {
+            if (other.getNodeSourcePosition() == null)
+            {
                 other.setNodeSourcePosition(node.getNodeSourcePosition());
             }
             return other;
-        } else {
+        }
+        else
+        {
             T result = addHelper(node);
-            if (node.getNodeClass().isLeafNode()) {
+            if (node.getNodeClass().isLeafNode())
+            {
                 putNodeIntoCache(result);
             }
             return result;
         }
     }
 
-    void removeNodeFromCache(Node node) {
+    void removeNodeFromCache(Node node)
+    {
         assert node.graph() == this || node.graph() == null;
         assert node.getNodeClass().valueNumberable();
         assert node.getNodeClass().isLeafNode() : node.getClass();
 
         int leafId = node.getNodeClass().getLeafId();
-        if (cachedLeafNodes != null && cachedLeafNodes.length > leafId && cachedLeafNodes[leafId] != null) {
+        if (cachedLeafNodes != null && cachedLeafNodes.length > leafId && cachedLeafNodes[leafId] != null)
+        {
             cachedLeafNodes[leafId].removeKey(node);
         }
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    void putNodeIntoCache(Node node) {
+    void putNodeIntoCache(Node node)
+    {
         assert node.graph() == this || node.graph() == null;
         assert node.getNodeClass().valueNumberable();
         assert node.getNodeClass().isLeafNode() : node.getClass();
 
         int leafId = node.getNodeClass().getLeafId();
-        if (cachedLeafNodes == null || cachedLeafNodes.length <= leafId) {
+        if (cachedLeafNodes == null || cachedLeafNodes.length <= leafId)
+        {
             EconomicMap[] newLeafNodes = new EconomicMap[leafId + 1];
-            if (cachedLeafNodes != null) {
+            if (cachedLeafNodes != null)
+            {
                 System.arraycopy(cachedLeafNodes, 0, newLeafNodes, 0, cachedLeafNodes.length);
             }
             cachedLeafNodes = newLeafNodes;
         }
 
-        if (cachedLeafNodes[leafId] == null) {
+        if (cachedLeafNodes[leafId] == null)
+        {
             cachedLeafNodes[leafId] = EconomicMap.create(NODE_VALUE_COMPARE);
         }
 
         cachedLeafNodes[leafId].put(node, node);
     }
 
-    Node findNodeInCache(Node node) {
+    Node findNodeInCache(Node node)
+    {
         int leafId = node.getNodeClass().getLeafId();
-        if (cachedLeafNodes == null || cachedLeafNodes.length <= leafId || cachedLeafNodes[leafId] == null) {
+        if (cachedLeafNodes == null || cachedLeafNodes.length <= leafId || cachedLeafNodes[leafId] == null)
+        {
             return null;
         }
 
@@ -763,18 +874,25 @@ public class Graph {
      * duplicate exists.
      */
     @SuppressWarnings("unchecked")
-    public <T extends Node> T findDuplicate(T node) {
+    public <T extends Node> T findDuplicate(T node)
+    {
         NodeClass<?> nodeClass = node.getNodeClass();
         assert nodeClass.valueNumberable();
-        if (nodeClass.isLeafNode()) {
+        if (nodeClass.isLeafNode())
+        {
             // Leaf node: look up in cache
             Node cachedNode = findNodeInCache(node);
-            if (cachedNode != null && cachedNode != node) {
+            if (cachedNode != null && cachedNode != node)
+            {
                 return (T) cachedNode;
-            } else {
+            }
+            else
+            {
                 return null;
             }
-        } else {
+        }
+        else
+        {
             /*
              * Non-leaf node: look for another usage of the node's inputs that has the same data,
              * inputs and successors as the node. To reduce the cost of this computation, only the
@@ -785,19 +903,25 @@ public class Graph {
             final int earlyExitUsageCount = node.graph() != null ? 1 : 0;
             int minCount = Integer.MAX_VALUE;
             Node minCountNode = null;
-            for (Node input : node.inputs()) {
+            for (Node input : node.inputs())
+            {
                 int usageCount = input.getUsageCount();
-                if (usageCount == earlyExitUsageCount) {
+                if (usageCount == earlyExitUsageCount)
+                {
                     return null;
-                } else if (usageCount < minCount) {
+                }
+                else if (usageCount < minCount)
+                {
                     minCount = usageCount;
                     minCountNode = input;
                 }
             }
-            if (minCountNode != null) {
-                for (Node usage : minCountNode.usages()) {
-                    if (usage != node && nodeClass == usage.getNodeClass() && node.valueEquals(usage) && nodeClass.equalInputs(node, usage) &&
-                                    nodeClass.equalSuccessors(node, usage)) {
+            if (minCountNode != null)
+            {
+                for (Node usage : minCountNode.usages())
+                {
+                    if (usage != node && nodeClass == usage.getNodeClass() && node.valueEquals(usage) && nodeClass.equalInputs(node, usage) && nodeClass.equalSuccessors(node, usage))
+                    {
                         return (T) usage;
                     }
                 }
@@ -807,24 +931,29 @@ public class Graph {
         }
     }
 
-    public boolean isNew(Mark mark, Node node) {
+    public boolean isNew(Mark mark, Node node)
+    {
         return node.id >= mark.getValue();
     }
 
     /**
      * A snapshot of the {@linkplain Graph#getNodeCount() live node count} in a graph.
      */
-    public static class Mark extends NodeIdAccessor {
+    public static class Mark extends NodeIdAccessor
+    {
         private final int value;
 
-        Mark(Graph graph) {
+        Mark(Graph graph)
+        {
             super(graph);
             this.value = graph.nodeIdCount();
         }
 
         @Override
-        public boolean equals(Object obj) {
-            if (obj instanceof Mark) {
+        public boolean equals(Object obj)
+        {
+            if (obj instanceof Mark)
+            {
                 Mark other = (Mark) obj;
                 return other.getValue() == getValue() && other.getGraph() == getGraph();
             }
@@ -832,14 +961,16 @@ public class Graph {
         }
 
         @Override
-        public int hashCode() {
+        public int hashCode()
+        {
             return value ^ (epoch + 11);
         }
 
         /**
          * Determines if this mark is positioned at the first live node in the graph.
          */
-        public boolean isStart() {
+        public boolean isStart()
+        {
             return value == 0;
         }
 
@@ -847,7 +978,8 @@ public class Graph {
          * Gets the {@linkplain Graph#getNodeCount() live node count} of the associated graph when
          * this object was created.
          */
-        int getValue() {
+        int getValue()
+        {
             return value;
         }
 
@@ -855,7 +987,8 @@ public class Graph {
          * Determines if this mark still represents the {@linkplain Graph#getNodeCount() live node
          * count} of the graph.
          */
-        public boolean isCurrent() {
+        public boolean isCurrent()
+        {
             return value == graph.nodeIdCount();
         }
     }
@@ -863,7 +996,8 @@ public class Graph {
     /**
      * Gets a mark that can be used with {@link #getNewNodes}.
      */
-    public Mark getMark() {
+    public Mark getMark()
+    {
         return new Mark(this);
     }
 
@@ -871,12 +1005,14 @@ public class Graph {
      * Returns an {@link Iterable} providing all nodes added since the last {@link Graph#getMark()
      * mark}.
      */
-    public NodeIterable<Node> getNewNodes(Mark mark) {
+    public NodeIterable<Node> getNewNodes(Mark mark)
+    {
         final int index = mark == null ? 0 : mark.getValue();
-        return new NodeIterable<Node>() {
-
+        return new NodeIterable<Node>()
+        {
             @Override
-            public Iterator<Node> iterator() {
+            public Iterator<Node> iterator()
+            {
                 return new GraphNodeIterator(Graph.this, index);
             }
         };
@@ -887,16 +1023,19 @@ public class Graph {
      *
      * @return an {@link Iterable} providing all the live nodes.
      */
-    public NodeIterable<Node> getNodes() {
-        return new NodeIterable<Node>() {
-
+    public NodeIterable<Node> getNodes()
+    {
+        return new NodeIterable<Node>()
+        {
             @Override
-            public Iterator<Node> iterator() {
+            public Iterator<Node> iterator()
+            {
                 return new GraphNodeIterator(Graph.this);
             }
 
             @Override
-            public int count() {
+            public int count()
+            {
                 return getNodeCount();
             }
         };
@@ -904,14 +1043,14 @@ public class Graph {
 
     // Fully qualified annotation name is required to satisfy javac
     @graalvm.compiler.nodeinfo.NodeInfo(cycles = CYCLES_IGNORED, size = SIZE_IGNORED)
-    static final class PlaceHolderNode extends Node {
-
+    static final class PlaceHolderNode extends Node
+    {
         public static final NodeClass<PlaceHolderNode> TYPE = NodeClass.create(PlaceHolderNode.class);
 
-        protected PlaceHolderNode() {
+        protected PlaceHolderNode()
+        {
             super(TYPE);
         }
-
     }
 
     private static final CounterKey GraphCompressions = DebugContext.counter("GraphCompressions");
@@ -921,23 +1060,29 @@ public class Graph {
      * of nodes is compressed such that all non-null entries precede all null entries while
      * preserving the ordering between the nodes within the list.
      */
-    public boolean maybeCompress() {
-        if (debug.isDumpEnabledForMethod() || debug.isLogEnabledForMethod()) {
+    public boolean maybeCompress()
+    {
+        if (debug.isDumpEnabledForMethod() || debug.isLogEnabledForMethod())
+        {
             return false;
         }
         int liveNodeCount = getNodeCount();
         int liveNodePercent = liveNodeCount * 100 / nodesSize;
         int compressionThreshold = Options.GraphCompressionThreshold.getValue(options);
-        if (compressionThreshold == 0 || liveNodePercent >= compressionThreshold) {
+        if (compressionThreshold == 0 || liveNodePercent >= compressionThreshold)
+        {
             return false;
         }
         GraphCompressions.increment(debug);
         int nextId = 0;
-        for (int i = 0; nextId < liveNodeCount; i++) {
+        for (int i = 0; nextId < liveNodeCount; i++)
+        {
             Node n = nodes[i];
-            if (n != null) {
+            if (n != null)
+            {
                 assert n.id == i;
-                if (i != nextId) {
+                if (i != nextId)
+                {
                     assert n.id > nextId;
                     n.id = nextId;
                     nodes[nextId] = n;
@@ -946,7 +1091,8 @@ public class Graph {
                 nextId++;
             }
         }
-        if (isModificationCountsEnabled()) {
+        if (isModificationCountsEnabled())
+        {
             // This will cause any current iteration to fail with an assertion
             Arrays.fill(nodeModCounts, 0);
             Arrays.fill(nodeUsageModCounts, 0);
@@ -965,11 +1111,13 @@ public class Graph {
      * @param nodeClass the type of node to return
      * @return an {@link Iterable} providing all the matching nodes
      */
-    public <T extends Node & IterableNodeType> NodeIterable<T> getNodes(final NodeClass<T> nodeClass) {
-        return new NodeIterable<T>() {
-
+    public <T extends Node & IterableNodeType> NodeIterable<T> getNodes(final NodeClass<T> nodeClass)
+    {
+        return new NodeIterable<T>()
+        {
             @Override
-            public Iterator<T> iterator() {
+            public Iterator<T> iterator()
+            {
                 return new TypedGraphNodeIterator<>(nodeClass, Graph.this);
             }
         };
@@ -981,7 +1129,8 @@ public class Graph {
      * @param type the type of node that is checked for occurrence
      * @return whether there is at least one such node
      */
-    public <T extends Node & IterableNodeType> boolean hasNode(final NodeClass<T> type) {
+    public <T extends Node & IterableNodeType> boolean hasNode(final NodeClass<T> type)
+    {
         return getNodes(type).iterator().hasNext();
     }
 
@@ -989,20 +1138,25 @@ public class Graph {
      * @param iterableId
      * @return the first live Node with a matching iterableId
      */
-    Node getIterableNodeStart(int iterableId) {
-        if (iterableNodesFirst.size() <= iterableId) {
+    Node getIterableNodeStart(int iterableId)
+    {
+        if (iterableNodesFirst.size() <= iterableId)
+        {
             return null;
         }
         Node start = iterableNodesFirst.get(iterableId);
-        if (start == null || !start.isDeleted()) {
+        if (start == null || !start.isDeleted())
+        {
             return start;
         }
         return findFirstLiveIterable(iterableId, start);
     }
 
-    private Node findFirstLiveIterable(int iterableId, Node node) {
+    private Node findFirstLiveIterable(int iterableId, Node node)
+    {
         Node start = node;
-        while (start != null && start.isDeleted()) {
+        while (start != null && start.isDeleted())
+        {
             start = start.typeCacheNext;
         }
         /*
@@ -1010,7 +1164,8 @@ public class Graph {
          * race, since all threads update it to the same value.
          */
         iterableNodesFirst.set(iterableId, start);
-        if (start == null) {
+        if (start == null)
+        {
             iterableNodesLast.set(iterableId, start);
         }
         return start;
@@ -1020,93 +1175,113 @@ public class Graph {
      * @param node
      * @return return the first live Node with a matching iterableId starting from {@code node}
      */
-    Node getIterableNodeNext(Node node) {
-        if (node == null) {
+    Node getIterableNodeNext(Node node)
+    {
+        if (node == null)
+        {
             return null;
         }
         Node n = node;
-        if (n == null || !n.isDeleted()) {
+        if (n == null || !n.isDeleted())
+        {
             return n;
         }
 
         return findNextLiveiterable(node);
     }
 
-    private Node findNextLiveiterable(Node start) {
+    private Node findNextLiveiterable(Node start)
+    {
         Node n = start;
-        while (n != null && n.isDeleted()) {
+        while (n != null && n.isDeleted())
+        {
             n = n.typeCacheNext;
         }
-        if (n == null) {
+        if (n == null)
+        {
             // Only dead nodes after this one
             start.typeCacheNext = null;
             int nodeClassId = start.getNodeClass().iterableId();
             assert nodeClassId != Node.NOT_ITERABLE;
             iterableNodesLast.set(nodeClassId, start);
-        } else {
+        }
+        else
+        {
             // Everything in between is dead
             start.typeCacheNext = n;
         }
         return n;
     }
 
-    public NodeBitMap createNodeBitMap() {
+    public NodeBitMap createNodeBitMap()
+    {
         return new NodeBitMap(this);
     }
 
-    public <T> NodeMap<T> createNodeMap() {
+    public <T> NodeMap<T> createNodeMap()
+    {
         return new NodeMap<>(this);
     }
 
-    public NodeFlood createNodeFlood() {
+    public NodeFlood createNodeFlood()
+    {
         return new NodeFlood(this);
     }
 
-    public NodeWorkList createNodeWorkList() {
+    public NodeWorkList createNodeWorkList()
+    {
         return new NodeWorkList.SingletonNodeWorkList(this);
     }
 
-    public NodeWorkList createIterativeNodeWorkList(boolean fill, int iterationLimitPerNode) {
+    public NodeWorkList createIterativeNodeWorkList(boolean fill, int iterationLimitPerNode)
+    {
         return new NodeWorkList.IterativeNodeWorkList(this, fill, iterationLimitPerNode);
     }
 
-    void register(Node node) {
+    void register(Node node)
+    {
         assert !isFrozen();
         assert node.id() == Node.INITIAL_ID;
-        if (nodes.length == nodesSize) {
+        if (nodes.length == nodesSize)
+        {
             grow();
         }
         int id = nodesSize++;
         nodes[id] = node;
         node.id = id;
-        if (currentNodeSourcePosition != null && trackNodeSourcePosition()) {
+        if (currentNodeSourcePosition != null && trackNodeSourcePosition())
+        {
             node.setNodeSourcePosition(currentNodeSourcePosition);
         }
-        if (TrackNodeInsertion.getValue(getOptions())) {
+        if (TrackNodeInsertion.getValue(getOptions()))
+        {
             node.setInsertionPosition(new NodeInsertionStackTrace());
         }
 
         updateNodeCaches(node);
 
-        if (nodeEventListener != null) {
+        if (nodeEventListener != null)
+        {
             nodeEventListener.event(NodeEvent.NODE_ADDED, node);
         }
         afterRegister(node);
     }
 
-    private void grow() {
+    private void grow()
+    {
         Node[] newNodes = new Node[(nodesSize * 2) + 1];
         System.arraycopy(nodes, 0, newNodes, 0, nodesSize);
         nodes = newNodes;
     }
 
     @SuppressWarnings("unused")
-    protected void afterRegister(Node node) {
-
+    protected void afterRegister(Node node)
+    {
     }
 
     @SuppressWarnings("unused")
-    private void postDeserialization() {
+    private void postDeserialization()
+    {
         recomputeIterableNodeLists();
     }
 
@@ -1115,61 +1290,84 @@ public class Graph {
      * serialization where the underlying {@linkplain NodeClass#iterableId() iterable ids} may have
      * changed.
      */
-    private void recomputeIterableNodeLists() {
+    private void recomputeIterableNodeLists()
+    {
         iterableNodesFirst.clear();
         iterableNodesLast.clear();
-        for (Node node : nodes) {
-            if (node != null && node.isAlive()) {
+        for (Node node : nodes)
+        {
+            if (node != null && node.isAlive())
+            {
                 updateNodeCaches(node);
             }
         }
     }
 
-    private void updateNodeCaches(Node node) {
+    private void updateNodeCaches(Node node)
+    {
         int nodeClassId = node.getNodeClass().iterableId();
-        if (nodeClassId != Node.NOT_ITERABLE) {
-            while (iterableNodesFirst.size() <= nodeClassId) {
+        if (nodeClassId != Node.NOT_ITERABLE)
+        {
+            while (iterableNodesFirst.size() <= nodeClassId)
+            {
                 iterableNodesFirst.add(null);
                 iterableNodesLast.add(null);
             }
             Node prev = iterableNodesLast.get(nodeClassId);
-            if (prev != null) {
+            if (prev != null)
+            {
                 prev.typeCacheNext = node;
-            } else {
+            }
+            else
+            {
                 iterableNodesFirst.set(nodeClassId, node);
             }
             iterableNodesLast.set(nodeClassId, node);
         }
     }
 
-    void unregister(Node node) {
+    void unregister(Node node)
+    {
         assert !isFrozen();
         assert !node.isDeleted() : node;
-        if (node.getNodeClass().isLeafNode() && node.getNodeClass().valueNumberable()) {
+        if (node.getNodeClass().isLeafNode() && node.getNodeClass().valueNumberable())
+        {
             removeNodeFromCache(node);
         }
         nodes[node.id] = null;
         nodesDeletedSinceLastCompression++;
 
-        if (nodeEventListener != null) {
+        if (nodeEventListener != null)
+        {
             nodeEventListener.event(NodeEvent.NODE_ADDED, node);
         }
 
         // nodes aren't removed from the type cache here - they will be removed during iteration
     }
 
-    public boolean verify() {
-        if (Options.VerifyGraalGraphs.getValue(options)) {
-            for (Node node : getNodes()) {
-                try {
-                    try {
+    public boolean verify()
+    {
+        if (Options.VerifyGraalGraphs.getValue(options))
+        {
+            for (Node node : getNodes())
+            {
+                try
+                {
+                    try
+                    {
                         assert node.verify();
-                    } catch (AssertionError t) {
-                        throw new GraalError(t);
-                    } catch (RuntimeException t) {
+                    }
+                    catch (AssertionError t)
+                    {
                         throw new GraalError(t);
                     }
-                } catch (GraalError e) {
+                    catch (RuntimeException t)
+                    {
+                        throw new GraalError(t);
+                    }
+                }
+                catch (GraalError e)
+                {
                     throw GraalGraphError.transformAndAddContext(e, node).addContext(this);
                 }
             }
@@ -1177,21 +1375,29 @@ public class Graph {
         return true;
     }
 
-    public boolean verifySourcePositions(boolean performConsistencyCheck) {
-        if (trackNodeSourcePosition()) {
+    public boolean verifySourcePositions(boolean performConsistencyCheck)
+    {
+        if (trackNodeSourcePosition())
+        {
             ResolvedJavaMethod root = null;
-            for (Node node : getNodes()) {
+            for (Node node : getNodes())
+            {
                 NodeSourcePosition pos = node.getNodeSourcePosition();
-                if (pos != null) {
-                    if (root == null) {
+                if (pos != null)
+                {
+                    if (root == null)
+                    {
                         root = pos.getRootMethod();
-                    } else {
+                    }
+                    else
+                    {
                         assert pos.verifyRootMethod(root) : node;
                     }
                 }
 
                 // More strict node-type-specific check
-                if (performConsistencyCheck) {
+                if (performConsistencyCheck)
+                {
                     node.verifySourcePosition();
                 }
             }
@@ -1199,7 +1405,8 @@ public class Graph {
         return true;
     }
 
-    public Node getNode(int id) {
+    public Node getNode(int id)
+    {
         return nodes[id];
     }
 
@@ -1208,7 +1415,8 @@ public class Graph {
      *
      * @return the number of node ids generated so far
      */
-    int nodeIdCount() {
+    int nodeIdCount()
+    {
         return nodesSize;
     }
 
@@ -1223,63 +1431,76 @@ public class Graph {
      * @param replacementsMap the replacement map (can be null if no replacement is to be performed)
      * @return a map which associates the original nodes from {@code nodes} to their duplicates
      */
-    public UnmodifiableEconomicMap<Node, Node> addDuplicates(Iterable<? extends Node> newNodes, final Graph oldGraph, int estimatedNodeCount, EconomicMap<Node, Node> replacementsMap) {
+    public UnmodifiableEconomicMap<Node, Node> addDuplicates(Iterable<? extends Node> newNodes, final Graph oldGraph, int estimatedNodeCount, EconomicMap<Node, Node> replacementsMap)
+    {
         DuplicationReplacement replacements;
-        if (replacementsMap == null) {
+        if (replacementsMap == null)
+        {
             replacements = null;
-        } else {
+        }
+        else
+        {
             replacements = new MapReplacement(replacementsMap);
         }
         return addDuplicates(newNodes, oldGraph, estimatedNodeCount, replacements);
     }
 
-    public interface DuplicationReplacement {
-
+    public interface DuplicationReplacement
+    {
         Node replacement(Node original);
     }
 
-    private static final class MapReplacement implements DuplicationReplacement {
-
+    private static final class MapReplacement implements DuplicationReplacement
+    {
         private final EconomicMap<Node, Node> map;
 
-        MapReplacement(EconomicMap<Node, Node> map) {
+        MapReplacement(EconomicMap<Node, Node> map)
+        {
             this.map = map;
         }
 
         @Override
-        public Node replacement(Node original) {
+        public Node replacement(Node original)
+        {
             Node replacement = map.get(original);
             return replacement != null ? replacement : original;
         }
-
     }
 
     private static final TimerKey DuplicateGraph = DebugContext.timer("DuplicateGraph");
 
     @SuppressWarnings({"all", "try"})
-    public EconomicMap<Node, Node> addDuplicates(Iterable<? extends Node> newNodes, final Graph oldGraph, int estimatedNodeCount, DuplicationReplacement replacements) {
-        try (DebugCloseable s = DuplicateGraph.start(getDebug())) {
+    public EconomicMap<Node, Node> addDuplicates(Iterable<? extends Node> newNodes, final Graph oldGraph, int estimatedNodeCount, DuplicationReplacement replacements)
+    {
+        try (DebugCloseable s = DuplicateGraph.start(getDebug()))
+        {
             return NodeClass.addGraphDuplicate(this, oldGraph, estimatedNodeCount, newNodes, replacements);
         }
     }
 
-    public boolean isFrozen() {
+    public boolean isFrozen()
+    {
         return freezeState != FreezeState.Unfrozen;
     }
 
-    public void freeze() {
+    public void freeze()
+    {
         this.freezeState = FreezeState.DeepFreeze;
     }
 
-    public void temporaryFreeze() {
-        if (this.freezeState == FreezeState.DeepFreeze) {
+    public void temporaryFreeze()
+    {
+        if (this.freezeState == FreezeState.DeepFreeze)
+        {
             throw new GraalError("Graph was permanetly frozen.");
         }
         this.freezeState = FreezeState.TemporaryFreeze;
     }
 
-    public void unfreeze() {
-        if (this.freezeState == FreezeState.DeepFreeze) {
+    public void unfreeze()
+    {
+        if (this.freezeState == FreezeState.DeepFreeze)
+        {
             throw new GraalError("Graph was permanetly frozen.");
         }
         this.freezeState = FreezeState.Unfrozen;

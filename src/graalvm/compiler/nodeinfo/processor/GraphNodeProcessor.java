@@ -27,9 +27,11 @@ import graalvm.compiler.nodeinfo.NodeInfo;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes({"graalvm.compiler.nodeinfo.NodeInfo"})
-public class GraphNodeProcessor extends AbstractProcessor {
+public class GraphNodeProcessor extends AbstractProcessor
+{
     @Override
-    public SourceVersion getSupportedSourceVersion() {
+    public SourceVersion getSupportedSourceVersion()
+    {
         return SourceVersion.latest();
     }
 
@@ -38,37 +40,46 @@ public class GraphNodeProcessor extends AbstractProcessor {
      */
     private Element scope;
 
-    public static boolean isEnclosedIn(Element e, Element scopeElement) {
+    public static boolean isEnclosedIn(Element e, Element scopeElement)
+    {
         List<Element> elementHierarchy = getElementHierarchy(e);
         return elementHierarchy.contains(scopeElement);
     }
 
-    void errorMessage(Element element, String format, Object... args) {
+    void errorMessage(Element element, String format, Object... args)
+    {
         message(Kind.ERROR, element, format, args);
     }
 
-    void message(Kind kind, Element element, String format, Object... args) {
-        if (scope != null && !isEnclosedIn(element, scope)) {
+    void message(Kind kind, Element element, String format, Object... args)
+    {
+        if (scope != null && !isEnclosedIn(element, scope))
+        {
             // See https://bugs.eclipse.org/bugs/show_bug.cgi?id=428357#c1
             List<Element> elementHierarchy = getElementHierarchy(element);
             reverse(elementHierarchy);
             String loc = elementHierarchy.stream().filter(e -> e.getKind() != ElementKind.PACKAGE).map(Object::toString).collect(Collectors.joining("."));
             processingEnv.getMessager().printMessage(kind, String.format(loc + ": " + format, args), scope);
-        } else {
+        }
+        else
+        {
             processingEnv.getMessager().printMessage(kind, String.format(format, args), element);
         }
     }
 
-    private static List<Element> getElementHierarchy(Element e) {
+    private static List<Element> getElementHierarchy(Element e)
+    {
         List<Element> elements = new ArrayList<>();
         elements.add(e);
 
         Element enclosing = e.getEnclosingElement();
-        while (enclosing != null && enclosing.getKind() != ElementKind.PACKAGE) {
+        while (enclosing != null && enclosing.getKind() != ElementKind.PACKAGE)
+        {
             elements.add(enclosing);
             enclosing = enclosing.getEnclosingElement();
         }
-        if (enclosing != null) {
+        if (enclosing != null)
+        {
             elements.add(enclosing);
         }
         return elements;
@@ -78,25 +89,31 @@ public class GraphNodeProcessor extends AbstractProcessor {
      * Bugs in an annotation processor can cause silent failure so try to report any exception
      * throws as errors.
      */
-    private void reportException(Kind kind, Element element, Throwable t) {
+    private void reportException(Kind kind, Element element, Throwable t)
+    {
         StringWriter buf = new StringWriter();
         t.printStackTrace(new PrintWriter(buf));
         message(kind, element, "Exception thrown during processing: %s", buf.toString());
     }
 
-    ProcessingEnvironment getProcessingEnv() {
+    ProcessingEnvironment getProcessingEnv()
+    {
         return processingEnv;
     }
 
-    boolean isNodeType(Element element) {
-        if (element.getKind() != ElementKind.CLASS) {
+    boolean isNodeType(Element element)
+    {
+        if (element.getKind() != ElementKind.CLASS)
+        {
             return false;
         }
         TypeElement type = (TypeElement) element;
         Types types = processingEnv.getTypeUtils();
 
-        while (type != null) {
-            if (type.toString().equals("graalvm.compiler.graph.Node")) {
+        while (type != null)
+        {
+            if (type.toString().equals("graalvm.compiler.graph.Node"))
+            {
                 return true;
             }
             type = (TypeElement) types.asElement(type.getSuperclass());
@@ -105,23 +122,29 @@ public class GraphNodeProcessor extends AbstractProcessor {
     }
 
     @Override
-    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        if (roundEnv.processingOver()) {
+    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv)
+    {
+        if (roundEnv.processingOver())
+        {
             return false;
         }
 
         GraphNodeVerifier verifier = new GraphNodeVerifier(this);
 
-        for (Element element : roundEnv.getElementsAnnotatedWith(NodeInfo.class)) {
+        for (Element element : roundEnv.getElementsAnnotatedWith(NodeInfo.class))
+        {
             scope = element;
-            try {
-                if (!isNodeType(element)) {
+            try
+            {
+                if (!isNodeType(element))
+                {
                     errorMessage(element, "%s can only be applied to Node subclasses", NodeInfo.class.getSimpleName());
                     continue;
                 }
 
                 NodeInfo nodeInfo = element.getAnnotation(NodeInfo.class);
-                if (nodeInfo == null) {
+                if (nodeInfo == null)
+                {
                     errorMessage(element, "Cannot get %s annotation from annotated element", NodeInfo.class.getSimpleName());
                     continue;
                 }
@@ -129,33 +152,45 @@ public class GraphNodeProcessor extends AbstractProcessor {
                 TypeElement typeElement = (TypeElement) element;
 
                 Set<Modifier> modifiers = typeElement.getModifiers();
-                if (!modifiers.contains(Modifier.FINAL) && !modifiers.contains(Modifier.ABSTRACT)) {
+                if (!modifiers.contains(Modifier.FINAL) && !modifiers.contains(Modifier.ABSTRACT))
+                {
                     // TODO(thomaswue): Reenable this check.
                     // errorMessage(element, "%s annotated class must be either final or abstract",
                     // NodeInfo.class.getSimpleName());
                     // continue;
                 }
                 boolean found = false;
-                for (Element e : typeElement.getEnclosedElements()) {
-                    if (e.getKind() == ElementKind.FIELD) {
-                        if (e.getSimpleName().toString().equals("TYPE")) {
+                for (Element e : typeElement.getEnclosedElements())
+                {
+                    if (e.getKind() == ElementKind.FIELD)
+                    {
+                        if (e.getSimpleName().toString().equals("TYPE"))
+                        {
                             found = true;
                             break;
                         }
                     }
                 }
-                if (!found) {
+                if (!found)
+                {
                     errorMessage(element, "%s annotated class must have a field named TYPE", NodeInfo.class.getSimpleName());
                 }
 
-                if (!typeElement.equals(verifier.Node) && !modifiers.contains(Modifier.ABSTRACT)) {
+                if (!typeElement.equals(verifier.Node) && !modifiers.contains(Modifier.ABSTRACT))
+                {
                     verifier.verify(typeElement);
                 }
-            } catch (ElementException ee) {
+            }
+            catch (ElementException ee)
+            {
                 errorMessage(ee.element, ee.getMessage());
-            } catch (Throwable t) {
+            }
+            catch (Throwable t)
+            {
                 reportException(isBug367599(t) ? Kind.NOTE : Kind.ERROR, element, t);
-            } finally {
+            }
+            finally
+            {
                 scope = null;
             }
         }
@@ -166,16 +201,21 @@ public class GraphNodeProcessor extends AbstractProcessor {
      * Determines if a given exception is (most likely) caused by
      * <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=367599">Bug 367599</a>.
      */
-    public static boolean isBug367599(Throwable t) {
-        if (t instanceof FilerException) {
-            for (StackTraceElement ste : t.getStackTrace()) {
-                if (ste.toString().contains("org.eclipse.jdt.internal.apt.pluggable.core.filer.IdeFilerImpl.create")) {
+    public static boolean isBug367599(Throwable t)
+    {
+        if (t instanceof FilerException)
+        {
+            for (StackTraceElement ste : t.getStackTrace())
+            {
+                if (ste.toString().contains("org.eclipse.jdt.internal.apt.pluggable.core.filer.IdeFilerImpl.create"))
+                {
                     // See: https://bugs.eclipse.org/bugs/show_bug.cgi?id=367599
                     return true;
                 }
             }
         }
-        if (t.getCause() != null) {
+        if (t.getCause() != null)
+        {
             return isBug367599(t.getCause());
         }
         return false;

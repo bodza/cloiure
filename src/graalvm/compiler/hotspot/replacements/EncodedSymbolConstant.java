@@ -16,22 +16,26 @@ import jdk.vm.ci.meta.Constant;
 /**
  * Represents an encoded representation of a constant.
  */
-public final class EncodedSymbolConstant extends DataPointerConstant {
+public final class EncodedSymbolConstant extends DataPointerConstant
+{
     private final Constant constant;
     private byte[] bytes;
 
-    public EncodedSymbolConstant(Constant constant) {
+    public EncodedSymbolConstant(Constant constant)
+    {
         super(1);
         this.constant = constant;
     }
 
     @Override
-    public int getSerializedSize() {
+    public int getSerializedSize()
+    {
         return getEncodedConstant().length;
     }
 
     @Override
-    public void serialize(ByteBuffer buffer) {
+    public void serialize(ByteBuffer buffer)
+    {
         buffer.put(getEncodedConstant());
     }
 
@@ -41,28 +45,38 @@ public final class EncodedSymbolConstant extends DataPointerConstant {
      *
      * @param s a java.lang.String in UTF-16
      */
-    private static byte[] toUTF8String(String s) {
-        try (ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
+    private static byte[] toUTF8String(String s)
+    {
+        try (ByteArrayOutputStream bytes = new ByteArrayOutputStream())
+        {
             DataOutputStream stream = new DataOutputStream(bytes);
             stream.writeUTF(s);
             return bytes.toByteArray();
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             throw new PermanentBailoutException(e, "String conversion failed: %s", s);
         }
     }
 
-    private static byte[] encodeConstant(Constant constant) {
+    private static byte[] encodeConstant(Constant constant)
+    {
         assert constant != null;
-        if (constant instanceof HotSpotObjectConstant) {
+        if (constant instanceof HotSpotObjectConstant)
+        {
             return toUTF8String(((HotSpotObjectConstant) constant).asObject(String.class));
-        } else if (constant instanceof HotSpotMetaspaceConstant) {
+        }
+        else if (constant instanceof HotSpotMetaspaceConstant)
+        {
             HotSpotMetaspaceConstant metaspaceConstant = ((HotSpotMetaspaceConstant) constant);
             HotSpotResolvedObjectType klass = metaspaceConstant.asResolvedJavaType();
-            if (klass != null) {
+            if (klass != null)
+            {
                 return toUTF8String(klass.getName());
             }
             HotSpotResolvedJavaMethod method = metaspaceConstant.asResolvedJavaMethod();
-            if (method != null) {
+            if (method != null)
+            {
                 byte[] methodName = toUTF8String(method.getName());
                 byte[] signature = toUTF8String(method.getSignature().toMethodDescriptor());
                 byte[] result = new byte[methodName.length + signature.length];
@@ -74,21 +88,22 @@ public final class EncodedSymbolConstant extends DataPointerConstant {
                 assert resultPos == result.length;
                 return result;
             }
-
         }
         throw new PermanentBailoutException("Encoding of constant %s failed", constant);
     }
 
-    public byte[] getEncodedConstant() {
-        if (bytes == null) {
+    public byte[] getEncodedConstant()
+    {
+        if (bytes == null)
+        {
             bytes = encodeConstant(constant);
         }
         return bytes;
     }
 
     @Override
-    public String toValueString() {
+    public String toValueString()
+    {
         return "encoded symbol\"" + constant.toValueString() + "\"";
     }
-
 }

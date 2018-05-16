@@ -23,38 +23,44 @@ import jdk.vm.ci.meta.JavaKind;
  * barriers, implicit conversions and optionally oop uncompression.
  */
 @NodeInfo(nameTemplate = "JavaRead#{p#location/s}", cycles = CYCLES_2, size = SIZE_1)
-public final class JavaReadNode extends FixedAccessNode implements Lowerable, GuardingNode, Canonicalizable {
-
+public final class JavaReadNode extends FixedAccessNode implements Lowerable, GuardingNode, Canonicalizable
+{
     public static final NodeClass<JavaReadNode> TYPE = NodeClass.create(JavaReadNode.class);
     protected final JavaKind readKind;
     protected final boolean compressible;
 
-    public JavaReadNode(JavaKind readKind, AddressNode address, LocationIdentity location, BarrierType barrierType, boolean compressible) {
+    public JavaReadNode(JavaKind readKind, AddressNode address, LocationIdentity location, BarrierType barrierType, boolean compressible)
+    {
         super(TYPE, address, location, StampFactory.forKind(readKind), barrierType);
         this.readKind = readKind;
         this.compressible = compressible;
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
     @Override
-    public boolean canNullCheck() {
+    public boolean canNullCheck()
+    {
         return true;
     }
 
-    public JavaKind getReadKind() {
+    public JavaKind getReadKind()
+    {
         return readKind;
     }
 
-    public boolean isCompressible() {
+    public boolean isCompressible()
+    {
         return compressible;
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool) {
+    public Node canonical(CanonicalizerTool tool)
+    {
         return ReadNode.canonicalizeRead(this, getAddress(), getLocationIdentity(), tool);
     }
 }

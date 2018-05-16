@@ -35,8 +35,8 @@ import graalvm.compiler.nodes.StructuredGraph;
  *
  * @param <T> the type of {@link MergeableState} handled by this PostOrderNodeIterator
  */
-public abstract class PostOrderNodeIterator<T extends MergeableState<T>> {
-
+public abstract class PostOrderNodeIterator<T extends MergeableState<T>>
+{
     private final NodeBitMap visitedEnds;
     private final Deque<AbstractBeginNode> nodeQueue;
     private final EconomicMap<FixedNode, T> nodeStates;
@@ -44,7 +44,8 @@ public abstract class PostOrderNodeIterator<T extends MergeableState<T>> {
 
     protected T state;
 
-    public PostOrderNodeIterator(FixedNode start, T initialState) {
+    public PostOrderNodeIterator(FixedNode start, T initialState)
+    {
         StructuredGraph graph = start.graph();
         visitedEnds = graph.createNodeBitMap();
         nodeQueue = new ArrayDeque<>();
@@ -53,90 +54,126 @@ public abstract class PostOrderNodeIterator<T extends MergeableState<T>> {
         this.state = initialState;
     }
 
-    public void apply() {
+    public void apply()
+    {
         FixedNode current = start;
 
-        do {
-            if (current instanceof InvokeWithExceptionNode) {
+        do
+        {
+            if (current instanceof InvokeWithExceptionNode)
+            {
                 invoke((Invoke) current);
                 queueSuccessors(current, null);
                 current = nextQueuedNode();
-            } else if (current instanceof LoopBeginNode) {
+            }
+            else if (current instanceof LoopBeginNode)
+            {
                 state.loopBegin((LoopBeginNode) current);
                 nodeStates.put(current, state);
                 state = state.clone();
                 loopBegin((LoopBeginNode) current);
                 current = ((LoopBeginNode) current).next();
                 assert current != null;
-            } else if (current instanceof LoopEndNode) {
+            }
+            else if (current instanceof LoopEndNode)
+            {
                 loopEnd((LoopEndNode) current);
                 finishLoopEnds((LoopEndNode) current);
                 current = nextQueuedNode();
-            } else if (current instanceof AbstractMergeNode) {
+            }
+            else if (current instanceof AbstractMergeNode)
+            {
                 merge((AbstractMergeNode) current);
                 current = ((AbstractMergeNode) current).next();
                 assert current != null;
-            } else if (current instanceof FixedWithNextNode) {
+            }
+            else if (current instanceof FixedWithNextNode)
+            {
                 FixedNode next = ((FixedWithNextNode) current).next();
                 assert next != null : current;
                 node(current);
                 current = next;
-            } else if (current instanceof EndNode) {
+            }
+            else if (current instanceof EndNode)
+            {
                 end((EndNode) current);
                 queueMerge((EndNode) current);
                 current = nextQueuedNode();
-            } else if (current instanceof ControlSinkNode) {
+            }
+            else if (current instanceof ControlSinkNode)
+            {
                 node(current);
                 current = nextQueuedNode();
-            } else if (current instanceof ControlSplitNode) {
+            }
+            else if (current instanceof ControlSplitNode)
+            {
                 Set<Node> successors = controlSplit((ControlSplitNode) current);
                 queueSuccessors(current, successors);
                 current = nextQueuedNode();
-            } else {
+            }
+            else
+            {
                 assert false : current;
             }
         } while (current != null);
         finished();
     }
 
-    private void queueSuccessors(FixedNode x, Set<Node> successors) {
+    private void queueSuccessors(FixedNode x, Set<Node> successors)
+    {
         nodeStates.put(x, state);
-        if (successors != null) {
-            for (Node node : successors) {
-                if (node != null) {
+        if (successors != null)
+        {
+            for (Node node : successors)
+            {
+                if (node != null)
+                {
                     nodeStates.put((FixedNode) node.predecessor(), state);
                     nodeQueue.addFirst((AbstractBeginNode) node);
                 }
             }
-        } else {
-            for (Node node : x.successors()) {
-                if (node != null) {
+        }
+        else
+        {
+            for (Node node : x.successors())
+            {
+                if (node != null)
+                {
                     nodeQueue.addFirst((AbstractBeginNode) node);
                 }
             }
         }
     }
 
-    private FixedNode nextQueuedNode() {
+    private FixedNode nextQueuedNode()
+    {
         int maxIterations = nodeQueue.size();
-        while (maxIterations-- > 0) {
+        while (maxIterations-- > 0)
+        {
             AbstractBeginNode node = nodeQueue.removeFirst();
-            if (node instanceof AbstractMergeNode) {
+            if (node instanceof AbstractMergeNode)
+            {
                 AbstractMergeNode merge = (AbstractMergeNode) node;
                 state = nodeStates.get(merge.forwardEndAt(0)).clone();
                 ArrayList<T> states = new ArrayList<>(merge.forwardEndCount() - 1);
-                for (int i = 1; i < merge.forwardEndCount(); i++) {
+                for (int i = 1; i < merge.forwardEndCount(); i++)
+                {
                     T other = nodeStates.get(merge.forwardEndAt(i));
                     assert other != null;
                     states.add(other);
                 }
                 boolean ready = state.merge(merge, states);
-                if (ready) {
+                if (ready)
+                {
                     return merge;
-                } else {
+                }
+                else
+                {
                     nodeQueue.addLast(merge);
                 }
-            } else {
+            }
+            else
+            {
                 assert node.predecessor() != null;
                 state = nodeStates.get((FixedNode) node.predecessor()).clone();
                 state.afterSplit(node);
@@ -146,77 +183,94 @@ public abstract class PostOrderNodeIterator<T extends MergeableState<T>> {
         return null;
     }
 
-    private void finishLoopEnds(LoopEndNode end) {
+    private void finishLoopEnds(LoopEndNode end)
+    {
         assert !visitedEnds.isMarked(end);
         assert !nodeStates.containsKey(end);
         nodeStates.put(end, state);
         visitedEnds.mark(end);
         LoopBeginNode begin = end.loopBegin();
         boolean endsVisited = true;
-        for (LoopEndNode le : begin.loopEnds()) {
-            if (!visitedEnds.isMarked(le)) {
+        for (LoopEndNode le : begin.loopEnds())
+        {
+            if (!visitedEnds.isMarked(le))
+            {
                 endsVisited = false;
                 break;
             }
         }
-        if (endsVisited) {
+        if (endsVisited)
+        {
             ArrayList<T> states = new ArrayList<>(begin.loopEnds().count());
-            for (LoopEndNode le : begin.orderedLoopEnds()) {
+            for (LoopEndNode le : begin.orderedLoopEnds())
+            {
                 states.add(nodeStates.get(le));
             }
             T loopBeginState = nodeStates.get(begin);
-            if (loopBeginState != null) {
+            if (loopBeginState != null)
+            {
                 loopBeginState.loopEnds(begin, states);
             }
         }
     }
 
-    private void queueMerge(EndNode end) {
+    private void queueMerge(EndNode end)
+    {
         assert !visitedEnds.isMarked(end);
         assert !nodeStates.containsKey(end);
         nodeStates.put(end, state);
         visitedEnds.mark(end);
         AbstractMergeNode merge = end.merge();
         boolean endsVisited = true;
-        for (int i = 0; i < merge.forwardEndCount(); i++) {
-            if (!visitedEnds.isMarked(merge.forwardEndAt(i))) {
+        for (int i = 0; i < merge.forwardEndCount(); i++)
+        {
+            if (!visitedEnds.isMarked(merge.forwardEndAt(i)))
+            {
                 endsVisited = false;
                 break;
             }
         }
-        if (endsVisited) {
+        if (endsVisited)
+        {
             nodeQueue.add(merge);
         }
     }
 
     protected abstract void node(FixedNode node);
 
-    protected void end(EndNode endNode) {
+    protected void end(EndNode endNode)
+    {
         node(endNode);
     }
 
-    protected void merge(AbstractMergeNode merge) {
+    protected void merge(AbstractMergeNode merge)
+    {
         node(merge);
     }
 
-    protected void loopBegin(LoopBeginNode loopBegin) {
+    protected void loopBegin(LoopBeginNode loopBegin)
+    {
         node(loopBegin);
     }
 
-    protected void loopEnd(LoopEndNode loopEnd) {
+    protected void loopEnd(LoopEndNode loopEnd)
+    {
         node(loopEnd);
     }
 
-    protected Set<Node> controlSplit(ControlSplitNode controlSplit) {
+    protected Set<Node> controlSplit(ControlSplitNode controlSplit)
+    {
         node(controlSplit);
         return null;
     }
 
-    protected void invoke(Invoke invoke) {
+    protected void invoke(Invoke invoke)
+    {
         node(invoke.asNode());
     }
 
-    protected void finished() {
+    protected void finished()
+    {
         // nothing to do
     }
 }

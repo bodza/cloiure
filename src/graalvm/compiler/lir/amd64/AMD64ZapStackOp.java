@@ -12,7 +12,8 @@ import jdk.vm.ci.meta.JavaConstant;
  * Writes well known garbage values to stack slots.
  */
 @Opcode("ZAP_STACK")
-public final class AMD64ZapStackOp extends AMD64LIRInstruction {
+public final class AMD64ZapStackOp extends AMD64LIRInstruction
+{
     public static final LIRInstructionClass<AMD64ZapStackOp> TYPE = LIRInstructionClass.create(AMD64ZapStackOp.class);
 
     /**
@@ -25,17 +26,21 @@ public final class AMD64ZapStackOp extends AMD64LIRInstruction {
      */
     protected final JavaConstant[] zapValues;
 
-    public AMD64ZapStackOp(StackSlot[] zappedStack, JavaConstant[] zapValues) {
+    public AMD64ZapStackOp(StackSlot[] zappedStack, JavaConstant[] zapValues)
+    {
         super(TYPE);
         this.zappedStack = zappedStack;
         this.zapValues = zapValues;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
-        for (int i = 0; i < zappedStack.length; i++) {
+    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
+        for (int i = 0; i < zappedStack.length; i++)
+        {
             StackSlot slot = zappedStack[i];
-            if (slot != null) {
+            if (slot != null)
+            {
                 AMD64Move.const2stack(crb, masm, slot, zapValues[i]);
             }
         }

@@ -27,8 +27,8 @@ import graalvm.compiler.nodes.spi.LoweringTool;
  * intended primarily for snippets, so that they can define their fast and slow paths.
  */
 @NodeInfo(cycles = CYCLES_0, cyclesRationale = "Artificial Node", size = SIZE_0)
-public final class BranchProbabilityNode extends FloatingNode implements Simplifiable, Lowerable {
-
+public final class BranchProbabilityNode extends FloatingNode implements Simplifiable, Lowerable
+{
     public static final NodeClass<BranchProbabilityNode> TYPE = NodeClass.create(BranchProbabilityNode.class);
     public static final double LIKELY_PROBABILITY = 0.6;
     public static final double NOT_LIKELY_PROBABILITY = 1 - LIKELY_PROBABILITY;
@@ -45,32 +45,43 @@ public final class BranchProbabilityNode extends FloatingNode implements Simplif
     @Input ValueNode probability;
     @Input ValueNode condition;
 
-    public BranchProbabilityNode(ValueNode probability, ValueNode condition) {
+    public BranchProbabilityNode(ValueNode probability, ValueNode condition)
+    {
         super(TYPE, condition.stamp(NodeView.DEFAULT));
         this.probability = probability;
         this.condition = condition;
     }
 
-    public ValueNode getProbability() {
+    public ValueNode getProbability()
+    {
         return probability;
     }
 
-    public ValueNode getCondition() {
+    public ValueNode getCondition()
+    {
         return condition;
     }
 
     @Override
-    public void simplify(SimplifierTool tool) {
-        if (!hasUsages()) {
+    public void simplify(SimplifierTool tool)
+    {
+        if (!hasUsages())
+        {
             return;
         }
-        if (probability.isConstant()) {
+        if (probability.isConstant())
+        {
             double probabilityValue = probability.asJavaConstant().asDouble();
-            if (probabilityValue < 0.0) {
+            if (probabilityValue < 0.0)
+            {
                 throw new GraalError("A negative probability of " + probabilityValue + " is not allowed!");
-            } else if (probabilityValue > 1.0) {
+            }
+            else if (probabilityValue > 1.0)
+            {
                 throw new GraalError("A probability of more than 1.0 (" + probabilityValue + ") is not allowed!");
-            } else if (Double.isNaN(probabilityValue)) {
+            }
+            else if (Double.isNaN(probabilityValue))
+            {
                 /*
                  * We allow NaN if the node is in unreachable code that will eventually fall away,
                  * or else an error will be thrown during lowering since we keep the node around.
@@ -78,41 +89,53 @@ public final class BranchProbabilityNode extends FloatingNode implements Simplif
                 return;
             }
             boolean usageFound = false;
-            for (IntegerEqualsNode node : this.usages().filter(IntegerEqualsNode.class)) {
+            for (IntegerEqualsNode node : this.usages().filter(IntegerEqualsNode.class))
+            {
                 assert node.condition() == CanonicalCondition.EQ;
                 ValueNode other = node.getX();
-                if (node.getX() == this) {
+                if (node.getX() == this)
+                {
                     other = node.getY();
                 }
-                if (other.isConstant()) {
+                if (other.isConstant())
+                {
                     double probabilityToSet = probabilityValue;
-                    if (other.asJavaConstant().asInt() == 0) {
+                    if (other.asJavaConstant().asInt() == 0)
+                    {
                         probabilityToSet = 1.0 - probabilityToSet;
                     }
-                    for (IfNode ifNodeUsages : node.usages().filter(IfNode.class)) {
+                    for (IfNode ifNodeUsages : node.usages().filter(IfNode.class))
+                    {
                         usageFound = true;
                         ifNodeUsages.setTrueSuccessorProbability(probabilityToSet);
                     }
-                    if (!usageFound) {
+                    if (!usageFound)
+                    {
                         usageFound = node.usages().filter(NodePredicates.isA(FixedGuardNode.class).or(ConditionalNode.class)).isNotEmpty();
                     }
                 }
             }
-            if (usageFound) {
+            if (usageFound)
+            {
                 ValueNode currentCondition = condition;
                 replaceAndDelete(currentCondition);
-                if (tool != null) {
+                if (tool != null)
+                {
                     tool.addToWorkList(currentCondition.usages());
                 }
-            } else {
-                if (!isSubstitutionGraph()) {
+            }
+            else
+            {
+                if (!isSubstitutionGraph())
+                {
                     throw new GraalError("Wrong usage of branch probability injection!");
                 }
             }
         }
     }
 
-    private boolean isSubstitutionGraph() {
+    private boolean isSubstitutionGraph()
+    {
         return hasExactlyOneUsage() && usages().first() instanceof ReturnNode;
     }
 
@@ -131,7 +154,8 @@ public final class BranchProbabilityNode extends FloatingNode implements Simplif
     public static native boolean probability(double probability, boolean condition);
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         throw new GraalError("Branch probability could not be injected, because the probability value did not reduce to a constant value.");
     }
 }

@@ -4,7 +4,8 @@ package graalvm.compiler.options;
  * Classifies Graal options in several categories depending on who this option is relevant for.
  *
  */
-public enum OptionType {
+public enum OptionType
+{
     /**
      * An option common for users to apply.
      */

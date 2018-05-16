@@ -15,22 +15,24 @@ import jdk.vm.ci.code.TargetDescription;
 /**
  * This class performs basic optimizations on the control flow graph after LIR generation.
  */
-public final class ControlFlowOptimizer extends PostAllocationOptimizationPhase {
-
+public final class ControlFlowOptimizer extends PostAllocationOptimizationPhase
+{
     /**
      * Performs control flow optimizations on the given LIR graph.
      */
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, PostAllocationOptimizationContext context) {
+    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, PostAllocationOptimizationContext context)
+    {
         LIR lir = lirGenRes.getLIR();
         new Optimizer(lir).deleteEmptyBlocks(lir.codeEmittingOrder());
     }
 
-    private static final class Optimizer {
-
+    private static final class Optimizer
+    {
         private final LIR lir;
 
-        private Optimizer(LIR lir) {
+        private Optimizer(LIR lir)
+        {
             this.lir = lir;
         }
 
@@ -43,8 +45,10 @@ public final class ControlFlowOptimizer extends PostAllocationOptimizationPhase 
          * @param block the block checked for deletion
          * @return whether the block can be deleted
          */
-        private boolean canDeleteBlock(AbstractBlockBase<?> block) {
-            if (block == null || block.getSuccessorCount() != 1 || block.getPredecessorCount() == 0 || block.getSuccessors()[0] == block) {
+        private boolean canDeleteBlock(AbstractBlockBase<?> block)
+        {
+            if (block == null || block.getSuccessorCount() != 1 || block.getPredecessorCount() == 0 || block.getSuccessors()[0] == block)
+            {
                 return false;
             }
 
@@ -53,15 +57,16 @@ public final class ControlFlowOptimizer extends PostAllocationOptimizationPhase 
             assert instructions.size() >= 2 : "block must have label and branch";
             assert instructions.get(0) instanceof StandardOp.LabelOp : "first instruction must always be a label";
             assert instructions.get(instructions.size() - 1) instanceof StandardOp.JumpOp : "last instruction must always be a branch";
-            assert ((StandardOp.JumpOp) instructions.get(instructions.size() - 1)).destination().label() == ((StandardOp.LabelOp) lir.getLIRforBlock(block.getSuccessors()[0]).get(
-                            0)).getLabel() : "branch target must be the successor";
+            assert ((StandardOp.JumpOp) instructions.get(instructions.size() - 1)).destination().label() == ((StandardOp.LabelOp) lir.getLIRforBlock(block.getSuccessors()[0]).get(0)).getLabel() : "branch target must be the successor";
 
             // Block must have exactly one successor.
             return instructions.size() == 2 && !instructions.get(instructions.size() - 1).hasState() && !block.isExceptionEntry();
         }
 
-        private void alignBlock(AbstractBlockBase<?> block) {
-            if (!block.isAligned()) {
+        private void alignBlock(AbstractBlockBase<?> block)
+        {
+            if (!block.isAligned())
+            {
                 block.setAlign(true);
                 ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
                 assert instructions.get(0) instanceof StandardOp.LabelOp : "first instruction must always be a label";
@@ -70,16 +75,19 @@ public final class ControlFlowOptimizer extends PostAllocationOptimizationPhase 
             }
         }
 
-        private void deleteEmptyBlocks(AbstractBlockBase<?>[] blocks) {
+        private void deleteEmptyBlocks(AbstractBlockBase<?>[] blocks)
+        {
             assert verifyBlocks(lir, blocks);
-            for (int i = 0; i < blocks.length; i++) {
+            for (int i = 0; i < blocks.length; i++)
+            {
                 AbstractBlockBase<?> block = blocks[i];
-                if (canDeleteBlock(block)) {
-
+                if (canDeleteBlock(block))
+                {
                     block.delete();
                     // adjust successor and predecessor lists
                     AbstractBlockBase<?> other = block.getSuccessors()[0];
-                    if (block.isAligned()) {
+                    if (block.isAligned())
+                    {
                         alignBlock(other);
                     }
 

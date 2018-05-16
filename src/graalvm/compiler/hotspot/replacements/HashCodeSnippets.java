@@ -29,46 +29,51 @@ import org.graalvm.word.WordFactory;
 
 import jdk.vm.ci.code.TargetDescription;
 
-public class HashCodeSnippets implements Snippets {
-
+public class HashCodeSnippets implements Snippets
+{
     @Snippet
-    public static int identityHashCodeSnippet(final Object thisObj) {
-        if (probability(NOT_FREQUENT_PROBABILITY, thisObj == null)) {
+    public static int identityHashCodeSnippet(final Object thisObj)
+    {
+        if (probability(NOT_FREQUENT_PROBABILITY, thisObj == null))
+        {
             return 0;
         }
         return computeHashCode(thisObj);
     }
 
-    static int computeHashCode(final Object x) {
+    static int computeHashCode(final Object x)
+    {
         Word mark = loadWordFromObject(x, markOffset(INJECTED_VMCONFIG));
 
         // this code is independent from biased locking (although it does not look that way)
         final Word biasedLock = mark.and(biasedLockMaskInPlace(INJECTED_VMCONFIG));
-        if (probability(FAST_PATH_PROBABILITY, biasedLock.equal(WordFactory.unsigned(unlockedMask(INJECTED_VMCONFIG))))) {
+        if (probability(FAST_PATH_PROBABILITY, biasedLock.equal(WordFactory.unsigned(unlockedMask(INJECTED_VMCONFIG)))))
+        {
             int hash = (int) mark.unsignedShiftRight(identityHashCodeShift(INJECTED_VMCONFIG)).rawValue();
-            if (probability(FAST_PATH_PROBABILITY, hash != uninitializedIdentityHashCodeValue(INJECTED_VMCONFIG))) {
+            if (probability(FAST_PATH_PROBABILITY, hash != uninitializedIdentityHashCodeValue(INJECTED_VMCONFIG)))
+            {
                 return hash;
             }
         }
         return identityHashCode(IDENTITY_HASHCODE, x);
     }
 
-    public static class Templates extends AbstractTemplates {
-
+    public static class Templates extends AbstractTemplates
+    {
         private final SnippetInfo identityHashCodeSnippet = snippet(HashCodeSnippets.class, "identityHashCodeSnippet", HotSpotReplacementsUtil.MARK_WORD_LOCATION);
 
-        public Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, HotSpotProviders providers, TargetDescription target) {
+        public Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, HotSpotProviders providers, TargetDescription target)
+        {
             super(options, factories, providers, providers.getSnippetReflection(), target);
         }
 
-        public void lower(IdentityHashCodeNode node, LoweringTool tool) {
+        public void lower(IdentityHashCodeNode node, LoweringTool tool)
+        {
             StructuredGraph graph = node.graph();
             Arguments args = new Arguments(identityHashCodeSnippet, graph.getGuardsStage(), tool.getLoweringStage());
             args.add("thisObj", node.object);
             SnippetTemplate template = template(node, args);
             template.instantiate(providers.getMetaAccess(), node, SnippetTemplate.DEFAULT_REPLACER, args);
         }
-
     }
-
 }

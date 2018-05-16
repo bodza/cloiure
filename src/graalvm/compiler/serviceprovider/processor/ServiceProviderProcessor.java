@@ -33,18 +33,21 @@ import graalvm.compiler.serviceprovider.ServiceProvider;
  * of {@code S}.
  */
 @SupportedAnnotationTypes("graalvm.compiler.serviceprovider.ServiceProvider")
-public class ServiceProviderProcessor extends AbstractProcessor {
-
+public class ServiceProviderProcessor extends AbstractProcessor
+{
     private final Set<TypeElement> processed = new HashSet<>();
     private final Map<TypeElement, String> serviceProviders = new HashMap<>();
 
     @Override
-    public SourceVersion getSupportedSourceVersion() {
+    public SourceVersion getSupportedSourceVersion()
+    {
         return SourceVersion.latest();
     }
 
-    private boolean verifyAnnotation(TypeMirror serviceInterface, TypeElement serviceProvider) {
-        if (!processingEnv.getTypeUtils().isSubtype(serviceProvider.asType(), serviceInterface)) {
+    private boolean verifyAnnotation(TypeMirror serviceInterface, TypeElement serviceProvider)
+    {
+        if (!processingEnv.getTypeUtils().isSubtype(serviceProvider.asType(), serviceInterface))
+        {
             String msg = String.format("Service provider class %s must implement service interface %s", serviceProvider.getSimpleName(), serviceInterface);
             processingEnv.getMessager().printMessage(Kind.ERROR, msg, serviceProvider);
             return false;
@@ -53,27 +56,37 @@ public class ServiceProviderProcessor extends AbstractProcessor {
         return true;
     }
 
-    private void processElement(TypeElement serviceProvider) {
-        if (processed.contains(serviceProvider)) {
+    private void processElement(TypeElement serviceProvider)
+    {
+        if (processed.contains(serviceProvider))
+        {
             return;
         }
 
         processed.add(serviceProvider);
         ServiceProvider annotation = serviceProvider.getAnnotation(ServiceProvider.class);
-        if (annotation != null) {
-            try {
+        if (annotation != null)
+        {
+            try
+            {
                 annotation.value();
-            } catch (MirroredTypeException ex) {
+            }
+            catch (MirroredTypeException ex)
+            {
                 TypeMirror service = ex.getTypeMirror();
-                if (verifyAnnotation(service, serviceProvider)) {
-                    if (serviceProvider.getNestingKind().isNested()) {
+                if (verifyAnnotation(service, serviceProvider))
+                {
+                    if (serviceProvider.getNestingKind().isNested())
+                    {
                         /*
                          * This is a simplifying constraint that means we don't have to process the
                          * qualified name to insert '$' characters at the relevant positions.
                          */
                         String msg = String.format("Service provider class %s must be a top level class", serviceProvider.getSimpleName());
                         processingEnv.getMessager().printMessage(Kind.ERROR, msg, serviceProvider);
-                    } else {
+                    }
+                    else
+                    {
                         /*
                          * Since the definition of the service class is not necessarily modifiable,
                          * we need to support a non-top-level service class and ensure its name is
@@ -82,17 +95,22 @@ public class ServiceProviderProcessor extends AbstractProcessor {
                         TypeElement serviceElement = (TypeElement) processingEnv.getTypeUtils().asElement(service);
                         String serviceName = serviceElement.getSimpleName().toString();
                         Element enclosing = serviceElement.getEnclosingElement();
-                        while (enclosing != null) {
+                        while (enclosing != null)
+                        {
                             final ElementKind kind = enclosing.getKind();
-                            if (kind == ElementKind.PACKAGE) {
+                            if (kind == ElementKind.PACKAGE)
+                            {
                                 serviceName = ((PackageElement) enclosing).getQualifiedName().toString() + "." + serviceName;
                                 break;
-                            } else if (kind == ElementKind.CLASS || kind == ElementKind.INTERFACE) {
+                            }
+                            else if (kind == ElementKind.CLASS || kind == ElementKind.INTERFACE)
+                            {
                                 serviceName = ((TypeElement) enclosing).getSimpleName().toString() + "$" + serviceName;
                                 enclosing = enclosing.getEnclosingElement();
-                            } else {
-                                String msg = String.format("Cannot generate provider descriptor for service class %s as it is not nested in a package, class or interface",
-                                                serviceElement.getQualifiedName());
+                            }
+                            else
+                            {
+                                String msg = String.format("Cannot generate provider descriptor for service class %s as it is not nested in a package, class or interface", serviceElement.getQualifiedName());
                                 processingEnv.getMessager().printMessage(Kind.ERROR, msg, serviceProvider);
                                 return;
                             }
@@ -104,14 +122,18 @@ public class ServiceProviderProcessor extends AbstractProcessor {
         }
     }
 
-    private void writeProviderFile(TypeElement serviceProvider, String interfaceName) {
+    private void writeProviderFile(TypeElement serviceProvider, String interfaceName)
+    {
         String filename = "META-INF/providers/" + serviceProvider.getQualifiedName();
-        try {
+        try
+        {
             FileObject file = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", filename, serviceProvider);
             PrintWriter writer = new PrintWriter(new OutputStreamWriter(file.openOutputStream(), "UTF-8"));
             writer.println(interfaceName);
             writer.close();
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             processingEnv.getMessager().printMessage(isBug367599(e) ? Kind.NOTE : Kind.ERROR, e.getMessage(), serviceProvider);
         }
     }
@@ -120,10 +142,14 @@ public class ServiceProviderProcessor extends AbstractProcessor {
      * Determines if a given exception is (most likely) caused by
      * <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=367599">Bug 367599</a>.
      */
-    private static boolean isBug367599(Throwable t) {
-        if (t instanceof FilerException) {
-            for (StackTraceElement ste : t.getStackTrace()) {
-                if (ste.toString().contains("org.eclipse.jdt.internal.apt.pluggable.core.filer.IdeFilerImpl.create")) {
+    private static boolean isBug367599(Throwable t)
+    {
+        if (t instanceof FilerException)
+        {
+            for (StackTraceElement ste : t.getStackTrace())
+            {
+                if (ste.toString().contains("org.eclipse.jdt.internal.apt.pluggable.core.filer.IdeFilerImpl.create"))
+                {
                     // See: https://bugs.eclipse.org/bugs/show_bug.cgi?id=367599
                     return true;
                 }
@@ -133,16 +159,20 @@ public class ServiceProviderProcessor extends AbstractProcessor {
     }
 
     @Override
-    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        if (roundEnv.processingOver()) {
-            for (Entry<TypeElement, String> e : serviceProviders.entrySet()) {
+    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv)
+    {
+        if (roundEnv.processingOver())
+        {
+            for (Entry<TypeElement, String> e : serviceProviders.entrySet())
+            {
                 writeProviderFile(e.getKey(), e.getValue());
             }
             serviceProviders.clear();
             return true;
         }
 
-        for (Element element : roundEnv.getElementsAnnotatedWith(ServiceProvider.class)) {
+        for (Element element : roundEnv.getElementsAnnotatedWith(ServiceProvider.class))
+        {
             assert element.getKind().isClass();
             processElement((TypeElement) element);
         }

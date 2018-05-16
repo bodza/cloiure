@@ -34,8 +34,8 @@ import jdk.vm.ci.meta.JavaConstant;
  * control flow would have reached the guarded node (without taking exceptions into account).
  */
 @NodeInfo(nameTemplate = "Guard(!={p#negated}) {p#reason/s}", allowedUsageTypes = {Guard}, size = SIZE_2, cycles = CYCLES_2)
-public class GuardNode extends FloatingAnchoredNode implements Canonicalizable, GuardingNode, DeoptimizingGuard, IterableNodeType {
-
+public class GuardNode extends FloatingAnchoredNode implements Canonicalizable, GuardingNode, DeoptimizingGuard, IterableNodeType
+{
     public static final NodeClass<GuardNode> TYPE = NodeClass.create(GuardNode.class);
     @Input(Condition) protected LogicNode condition;
     protected DeoptimizationReason reason;
@@ -44,13 +44,13 @@ public class GuardNode extends FloatingAnchoredNode implements Canonicalizable, 
     protected boolean negated;
     protected NodeSourcePosition noDeoptSuccessorPosition;
 
-    public GuardNode(LogicNode condition, AnchoringNode anchor, DeoptimizationReason reason, DeoptimizationAction action, boolean negated, JavaConstant speculation,
-                    NodeSourcePosition noDeoptSuccessorPosition) {
+    public GuardNode(LogicNode condition, AnchoringNode anchor, DeoptimizationReason reason, DeoptimizationAction action, boolean negated, JavaConstant speculation, NodeSourcePosition noDeoptSuccessorPosition)
+    {
         this(TYPE, condition, anchor, reason, action, negated, speculation, noDeoptSuccessorPosition);
     }
 
-    protected GuardNode(NodeClass<? extends GuardNode> c, LogicNode condition, AnchoringNode anchor, DeoptimizationReason reason, DeoptimizationAction action, boolean negated,
-                    JavaConstant speculation, NodeSourcePosition noDeoptSuccessorPosition) {
+    protected GuardNode(NodeClass<? extends GuardNode> c, LogicNode condition, AnchoringNode anchor, DeoptimizationReason reason, DeoptimizationAction action, boolean negated, JavaConstant speculation, NodeSourcePosition noDeoptSuccessorPosition)
+    {
         super(c, StampFactory.forVoid(), anchor);
         this.condition = condition;
         this.reason = reason;
@@ -64,90 +64,111 @@ public class GuardNode extends FloatingAnchoredNode implements Canonicalizable, 
      * The instruction that produces the tested boolean value.
      */
     @Override
-    public LogicNode getCondition() {
+    public LogicNode getCondition()
+    {
         return condition;
     }
 
     @Override
-    public void setCondition(LogicNode x, boolean negated) {
+    public void setCondition(LogicNode x, boolean negated)
+    {
         updateUsages(condition, x);
         condition = x;
         this.negated = negated;
     }
 
     @Override
-    public boolean isNegated() {
+    public boolean isNegated()
+    {
         return negated;
     }
 
     @Override
-    public DeoptimizationReason getReason() {
+    public DeoptimizationReason getReason()
+    {
         return reason;
     }
 
     @Override
-    public DeoptimizationAction getAction() {
+    public DeoptimizationAction getAction()
+    {
         return action;
     }
 
     @Override
-    public JavaConstant getSpeculation() {
+    public JavaConstant getSpeculation()
+    {
         return speculation;
     }
 
-    public void setSpeculation(JavaConstant speculation) {
+    public void setSpeculation(JavaConstant speculation)
+    {
         this.speculation = speculation;
     }
 
     @Override
-    public String toString(Verbosity verbosity) {
-        if (verbosity == Verbosity.Name && negated) {
+    public String toString(Verbosity verbosity)
+    {
+        if (verbosity == Verbosity.Name && negated)
+        {
             return "!" + super.toString(verbosity);
-        } else {
+        }
+        else
+        {
             return super.toString(verbosity);
         }
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool) {
-        if (getCondition() instanceof LogicNegationNode) {
+    public Node canonical(CanonicalizerTool tool)
+    {
+        if (getCondition() instanceof LogicNegationNode)
+        {
             LogicNegationNode negation = (LogicNegationNode) getCondition();
             return new GuardNode(negation.getValue(), getAnchor(), reason, action, !negated, speculation, noDeoptSuccessorPosition);
         }
-        if (getCondition() instanceof LogicConstantNode) {
+        if (getCondition() instanceof LogicConstantNode)
+        {
             LogicConstantNode c = (LogicConstantNode) getCondition();
-            if (c.getValue() != negated) {
+            if (c.getValue() != negated)
+            {
                 return null;
             }
         }
         return this;
     }
 
-    public FixedWithNextNode lowerGuard() {
+    public FixedWithNextNode lowerGuard()
+    {
         return null;
     }
 
-    public void negate() {
+    public void negate()
+    {
         negated = !negated;
     }
 
     @Override
-    public void setAction(DeoptimizationAction invalidaterecompile) {
+    public void setAction(DeoptimizationAction invalidaterecompile)
+    {
         this.action = invalidaterecompile;
     }
 
     @Override
-    public void setReason(DeoptimizationReason reason) {
+    public void setReason(DeoptimizationReason reason)
+    {
         this.reason = reason;
     }
 
     @Override
-    public NodeSourcePosition getNoDeoptSuccessorPosition() {
+    public NodeSourcePosition getNoDeoptSuccessorPosition()
+    {
         return noDeoptSuccessorPosition;
     }
 
     @Override
-    public void setNoDeoptSuccessorPosition(NodeSourcePosition noDeoptSuccessorPosition) {
+    public void setNoDeoptSuccessorPosition(NodeSourcePosition noDeoptSuccessorPosition)
+    {
         this.noDeoptSuccessorPosition = noDeoptSuccessorPosition;
     }
 }

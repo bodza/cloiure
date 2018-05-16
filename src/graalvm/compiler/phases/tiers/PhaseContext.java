@@ -9,8 +9,8 @@ import graalvm.compiler.phases.util.Providers;
 import jdk.vm.ci.meta.ConstantReflectionProvider;
 import jdk.vm.ci.meta.MetaAccessProvider;
 
-public class PhaseContext {
-
+public class PhaseContext
+{
     private final MetaAccessProvider metaAccess;
     private final ConstantReflectionProvider constantReflection;
     private final ConstantFieldProvider constantFieldProvider;
@@ -18,8 +18,8 @@ public class PhaseContext {
     private final Replacements replacements;
     private final StampProvider stampProvider;
 
-    public PhaseContext(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, LoweringProvider lowerer, Replacements replacements,
-                    StampProvider stampProvider) {
+    public PhaseContext(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, LoweringProvider lowerer, Replacements replacements, StampProvider stampProvider)
+    {
         this.metaAccess = metaAccess;
         this.constantReflection = constantReflection;
         this.constantFieldProvider = constantFieldProvider;
@@ -28,32 +28,38 @@ public class PhaseContext {
         this.stampProvider = stampProvider;
     }
 
-    public PhaseContext(Providers providers) {
+    public PhaseContext(Providers providers)
+    {
         this(providers.getMetaAccess(), providers.getConstantReflection(), providers.getConstantFieldProvider(), providers.getLowerer(), providers.getReplacements(), providers.getStampProvider());
     }
 
-    public MetaAccessProvider getMetaAccess() {
+    public MetaAccessProvider getMetaAccess()
+    {
         return metaAccess;
     }
 
-    public ConstantReflectionProvider getConstantReflection() {
+    public ConstantReflectionProvider getConstantReflection()
+    {
         return constantReflection;
     }
 
-    public ConstantFieldProvider getConstantFieldProvider() {
+    public ConstantFieldProvider getConstantFieldProvider()
+    {
         return constantFieldProvider;
     }
 
-    public LoweringProvider getLowerer() {
+    public LoweringProvider getLowerer()
+    {
         return lowerer;
     }
 
-    public Replacements getReplacements() {
+    public Replacements getReplacements()
+    {
         return replacements;
     }
 
-    public StampProvider getStampProvider() {
+    public StampProvider getStampProvider()
+    {
         return stampProvider;
     }
-
 }

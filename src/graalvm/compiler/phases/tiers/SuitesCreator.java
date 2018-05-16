@@ -6,7 +6,8 @@ import graalvm.compiler.options.OptionValues;
 /**
  * Interface used for composing {@link SuitesProvider}s.
  */
-public interface SuitesCreator extends SuitesProvider {
+public interface SuitesCreator extends SuitesProvider
+{
     /**
      * Create a new set of phase suites based on {@code options}.
      */

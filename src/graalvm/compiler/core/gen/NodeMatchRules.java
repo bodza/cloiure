@@ -69,16 +69,18 @@ import graalvm.compiler.nodes.memory.WriteNode;
 @MatchableNode(nodeClass = PiNode.class, inputs = {"object"})
 @MatchableNode(nodeClass = LogicCompareAndSwapNode.class, inputs = {"address", "expectedValue", "newValue"})
 @MatchableNode(nodeClass = ValueCompareAndSwapNode.class, inputs = {"address", "expectedValue", "newValue"})
-public abstract class NodeMatchRules {
-
+public abstract class NodeMatchRules
+{
     NodeLIRBuilder lirBuilder;
     protected final LIRGeneratorTool gen;
 
-    protected NodeMatchRules(LIRGeneratorTool gen) {
+    protected NodeMatchRules(LIRGeneratorTool gen)
+    {
         this.gen = gen;
     }
 
-    protected LIRGeneratorTool getLIRGeneratorTool() {
+    protected LIRGeneratorTool getLIRGeneratorTool()
+    {
         return gen;
     }
 
@@ -88,19 +90,23 @@ public abstract class NodeMatchRules {
      * the better approach.
      */
 
-    protected final Value operand(Node node) {
+    protected final Value operand(Node node)
+    {
         return lirBuilder.operand(node);
     }
 
-    protected final LIRFrameState state(DeoptimizingNode deopt) {
+    protected final LIRFrameState state(DeoptimizingNode deopt)
+    {
         return lirBuilder.state(deopt);
     }
 
-    protected final LabelRef getLIRBlock(FixedNode b) {
+    protected final LabelRef getLIRBlock(FixedNode b)
+    {
         return lirBuilder.getLIRBlock(b);
     }
 
-    protected final void append(LIRInstruction op) {
+    protected final void append(LIRInstruction op)
+    {
         lirBuilder.append(op);
     }
 }

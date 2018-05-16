@@ -5,8 +5,8 @@ package graalvm.compiler.hotspot;
  * The MBean will be dynamically created when a JMX client attaches or some other event causes the
  * platform MBean server to be started.
  */
-public interface HotSpotGraalManagementRegistration {
-
+public interface HotSpotGraalManagementRegistration
+{
     /**
      * Completes the initialization of this registration by recording the
      * {@link HotSpotGraalRuntime} the MBean will provide an JMX interface to.

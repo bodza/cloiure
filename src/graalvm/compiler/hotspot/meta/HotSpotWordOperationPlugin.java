@@ -41,30 +41,39 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * Extends {@link WordOperationPlugin} to handle {@linkplain HotSpotOperation HotSpot word
  * operations}.
  */
-class HotSpotWordOperationPlugin extends WordOperationPlugin {
-    HotSpotWordOperationPlugin(SnippetReflectionProvider snippetReflection, WordTypes wordTypes) {
+class HotSpotWordOperationPlugin extends WordOperationPlugin
+{
+    HotSpotWordOperationPlugin(SnippetReflectionProvider snippetReflection, WordTypes wordTypes)
+    {
         super(snippetReflection, wordTypes);
     }
 
     @Override
-    protected LoadIndexedNode createLoadIndexedNode(ValueNode array, ValueNode index) {
+    protected LoadIndexedNode createLoadIndexedNode(ValueNode array, ValueNode index)
+    {
         ResolvedJavaType arrayType = StampTool.typeOrNull(array);
         Stamp componentStamp = wordTypes.getWordStamp(arrayType.getComponentType());
-        if (componentStamp instanceof MetaspacePointerStamp) {
+        if (componentStamp instanceof MetaspacePointerStamp)
+        {
             return new LoadIndexedPointerNode(componentStamp, array, index);
-        } else {
+        }
+        else
+        {
             return super.createLoadIndexedNode(array, index);
         }
     }
 
     @Override
-    public boolean handleInvoke(GraphBuilderContext b, ResolvedJavaMethod method, ValueNode[] args) {
-        if (!wordTypes.isWordOperation(method)) {
+    public boolean handleInvoke(GraphBuilderContext b, ResolvedJavaMethod method, ValueNode[] args)
+    {
+        if (!wordTypes.isWordOperation(method))
+        {
             return false;
         }
 
         HotSpotOperation operation = BridgeMethodUtils.getAnnotation(HotSpotOperation.class, method);
-        if (operation == null) {
+        if (operation == null)
+        {
             processWordOperation(b, args, wordTypes.getWordOperation(method, b.getMethod().getDeclaringClass()));
             return true;
         }
@@ -72,9 +81,11 @@ class HotSpotWordOperationPlugin extends WordOperationPlugin {
         return true;
     }
 
-    protected void processHotSpotWordOperation(GraphBuilderContext b, ResolvedJavaMethod method, ValueNode[] args, HotSpotOperation operation) {
+    protected void processHotSpotWordOperation(GraphBuilderContext b, ResolvedJavaMethod method, ValueNode[] args, HotSpotOperation operation)
+    {
         JavaKind returnKind = method.getSignature().getReturnKind();
-        switch (operation.opcode()) {
+        switch (operation.opcode())
+        {
             case POINTER_EQ:
             case POINTER_NE:
                 assert args.length == 2;
@@ -120,9 +131,12 @@ class HotSpotWordOperationPlugin extends WordOperationPlugin {
                 Stamp readStamp = KlassPointerStamp.klass();
                 AddressNode address = makeAddress(b, args[0], args[1]);
                 LocationIdentity location;
-                if (args.length == 2) {
+                if (args.length == 2)
+                {
                     location = any();
-                } else {
+                }
+                else
+                {
                     assert args[2].isConstant();
                     location = snippetReflection.asObject(LocationIdentity.class, args[2].asJavaConstant());
                 }

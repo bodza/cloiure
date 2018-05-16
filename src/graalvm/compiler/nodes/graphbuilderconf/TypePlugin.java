@@ -9,8 +9,8 @@ import jdk.vm.ci.meta.JavaType;
  * behavior of Java type resolution, e.g. to introduce trusted interface types with special
  * semantics.
  */
-public interface TypePlugin extends GraphBuilderPlugin {
-
+public interface TypePlugin extends GraphBuilderPlugin
+{
     /**
      * Intercept the type of arguments or return values.
      */

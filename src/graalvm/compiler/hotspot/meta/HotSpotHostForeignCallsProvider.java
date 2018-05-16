@@ -113,34 +113,39 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 /**
  * HotSpot implementation of {@link ForeignCallsProvider}.
  */
-public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCallsProviderImpl {
-
+public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCallsProviderImpl
+{
     public static final ForeignCallDescriptor JAVA_TIME_MILLIS = new ForeignCallDescriptor("javaTimeMillis", long.class);
     public static final ForeignCallDescriptor JAVA_TIME_NANOS = new ForeignCallDescriptor("javaTimeNanos", long.class);
 
     public static final ForeignCallDescriptor NOTIFY = new ForeignCallDescriptor("object_notify", boolean.class, Object.class);
     public static final ForeignCallDescriptor NOTIFY_ALL = new ForeignCallDescriptor("object_notifyAll", boolean.class, Object.class);
 
-    public HotSpotHostForeignCallsProvider(HotSpotJVMCIRuntimeProvider jvmciRuntime, HotSpotGraalRuntimeProvider runtime, MetaAccessProvider metaAccess, CodeCacheProvider codeCache,
-                    WordTypes wordTypes) {
+    public HotSpotHostForeignCallsProvider(HotSpotJVMCIRuntimeProvider jvmciRuntime, HotSpotGraalRuntimeProvider runtime, MetaAccessProvider metaAccess, CodeCacheProvider codeCache, WordTypes wordTypes)
+    {
         super(jvmciRuntime, runtime, metaAccess, codeCache, wordTypes);
     }
 
-    protected static void link(Stub stub) {
+    protected static void link(Stub stub)
+    {
         stub.getLinkage().setCompiledStub(stub);
     }
 
-    public static ForeignCallDescriptor lookupCheckcastArraycopyDescriptor(boolean uninit) {
+    public static ForeignCallDescriptor lookupCheckcastArraycopyDescriptor(boolean uninit)
+    {
         return checkcastArraycopyDescriptors[uninit ? 1 : 0];
     }
 
-    public static ForeignCallDescriptor lookupArraycopyDescriptor(JavaKind kind, boolean aligned, boolean disjoint, boolean uninit, boolean killAny) {
-        if (uninit) {
+    public static ForeignCallDescriptor lookupArraycopyDescriptor(JavaKind kind, boolean aligned, boolean disjoint, boolean uninit, boolean killAny)
+    {
+        if (uninit)
+        {
             assert kind == JavaKind.Object;
             assert !killAny : "unsupported";
             return uninitObjectArraycopyDescriptors[aligned ? 1 : 0][disjoint ? 1 : 0];
         }
-        if (killAny) {
+        if (killAny)
+        {
             assert kind == JavaKind.Object;
             return objectArraycopyDescriptorsKillAny[aligned ? 1 : 0][disjoint ? 1 : 0];
         }
@@ -153,30 +158,39 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
     private static final ForeignCallDescriptor[] checkcastArraycopyDescriptors = new ForeignCallDescriptor[2];
     private static ForeignCallDescriptor[][] objectArraycopyDescriptorsKillAny = new ForeignCallDescriptor[2][2];
 
-    static {
+    static
+    {
         // Populate the EnumMap instances
-        for (int i = 0; i < arraycopyDescriptors.length; i++) {
-            for (int j = 0; j < arraycopyDescriptors[i].length; j++) {
+        for (int i = 0; i < arraycopyDescriptors.length; i++)
+        {
+            for (int j = 0; j < arraycopyDescriptors[i].length; j++)
+            {
                 arraycopyDescriptors[i][j] = new EnumMap<>(JavaKind.class);
             }
         }
     }
 
-    private void registerArraycopyDescriptor(EconomicMap<Long, ForeignCallDescriptor> descMap, JavaKind kind, boolean aligned, boolean disjoint, boolean uninit, boolean killAny, long routine) {
+    private void registerArraycopyDescriptor(EconomicMap<Long, ForeignCallDescriptor> descMap, JavaKind kind, boolean aligned, boolean disjoint, boolean uninit, boolean killAny, long routine)
+    {
         ForeignCallDescriptor desc = descMap.get(routine);
-        if (desc == null) {
+        if (desc == null)
+        {
             desc = buildDescriptor(kind, aligned, disjoint, uninit, killAny, routine);
             descMap.put(routine, desc);
         }
-        if (uninit) {
+        if (uninit)
+        {
             assert kind == JavaKind.Object;
             uninitObjectArraycopyDescriptors[aligned ? 1 : 0][disjoint ? 1 : 0] = desc;
-        } else {
+        }
+        else
+        {
             arraycopyDescriptors[aligned ? 1 : 0][disjoint ? 1 : 0].put(kind, desc);
         }
     }
 
-    private ForeignCallDescriptor buildDescriptor(JavaKind kind, boolean aligned, boolean disjoint, boolean uninit, boolean killAny, long routine) {
+    private ForeignCallDescriptor buildDescriptor(JavaKind kind, boolean aligned, boolean disjoint, boolean uninit, boolean killAny, long routine)
+    {
         assert !killAny || kind == JavaKind.Object;
         String name = kind + (aligned ? "Aligned" : "") + (disjoint ? "Disjoint" : "") + (uninit ? "Uninit" : "") + "Arraycopy" + (killAny ? "KillAny" : "");
         ForeignCallDescriptor desc = new ForeignCallDescriptor(name, void.class, Word.class, Word.class, Word.class);
@@ -185,7 +199,8 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
         return desc;
     }
 
-    private void registerCheckcastArraycopyDescriptor(boolean uninit, long routine) {
+    private void registerCheckcastArraycopyDescriptor(boolean uninit, long routine)
+    {
         String name = "Object" + (uninit ? "Uninit" : "") + "Checkcast";
         // Input:
         // c_rarg0 - source array address
@@ -200,11 +215,13 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
         checkcastArraycopyDescriptors[uninit ? 1 : 0] = desc;
     }
 
-    private void registerArrayCopy(JavaKind kind, long routine, long alignedRoutine, long disjointRoutine, long alignedDisjointRoutine) {
+    private void registerArrayCopy(JavaKind kind, long routine, long alignedRoutine, long disjointRoutine, long alignedDisjointRoutine)
+    {
         registerArrayCopy(kind, routine, alignedRoutine, disjointRoutine, alignedDisjointRoutine, false);
     }
 
-    private void registerArrayCopy(JavaKind kind, long routine, long alignedRoutine, long disjointRoutine, long alignedDisjointRoutine, boolean uninit) {
+    private void registerArrayCopy(JavaKind kind, long routine, long alignedRoutine, long disjointRoutine, long alignedDisjointRoutine, boolean uninit)
+    {
         /*
          * Sometimes the same function is used for multiple cases so share them when that's the case
          * but only within the same Kind. For instance short and char are the same copy routines but
@@ -216,7 +233,8 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
         registerArraycopyDescriptor(descMap, kind, false, true, uninit, false, disjointRoutine);
         registerArraycopyDescriptor(descMap, kind, true, true, uninit, false, alignedDisjointRoutine);
 
-        if (kind == JavaKind.Object && !uninit) {
+        if (kind == JavaKind.Object && !uninit)
+        {
             objectArraycopyDescriptorsKillAny[0][0] = buildDescriptor(kind, false, false, uninit, true, routine);
             objectArraycopyDescriptorsKillAny[1][0] = buildDescriptor(kind, true, false, uninit, true, alignedRoutine);
             objectArraycopyDescriptorsKillAny[0][1] = buildDescriptor(kind, false, true, uninit, true, disjointRoutine);
@@ -224,7 +242,8 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
         }
     }
 
-    public void initialize(HotSpotProviders providers, OptionValues options) {
+    public void initialize(HotSpotProviders providers, OptionValues options)
+    {
         GraalHotSpotVMConfig c = runtime.getVMConfig();
         registerForeignCall(DEOPTIMIZATION_HANDLER, c.handleDeoptStub, NativeCall, PRESERVES_REGISTERS, LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
         registerForeignCall(UNCOMMON_TRAP_HANDLER, c.uncommonTrapStub, NativeCall, PRESERVES_REGISTERS, LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
@@ -286,7 +305,8 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
         linkForeignCall(options, providers, G1WBPOSTCALL, c.writeBarrierPostAddress, PREPEND_THREAD, LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
         linkForeignCall(options, providers, VALIDATE_OBJECT, c.validateObject, PREPEND_THREAD, LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
 
-        if (GeneratePIC.getValue(options)) {
+        if (GeneratePIC.getValue(options))
+        {
             registerForeignCall(WRONG_METHOD_HANDLER, c.handleWrongMethodStub, NativeCall, PRESERVES_REGISTERS, LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
             CompilerRuntimeHotSpotVMConfig cr = new CompilerRuntimeHotSpotVMConfig(HotSpotJVMCIRuntime.runtime().getConfigStore());
             linkForeignCall(options, providers, RESOLVE_STRING_BY_SYMBOL, cr.resolveStringBySymbol, PREPEND_THREAD, SAFEPOINT, REEXECUTABLE, TLAB_TOP_LOCATION, TLAB_END_LOCATION);
@@ -320,65 +340,79 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
         registerForeignCall(GENERIC_ARRAYCOPY, c.genericArraycopy, NativeCall, DESTROYS_REGISTERS, LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.any());
         registerForeignCall(UNSAFE_ARRAYCOPY, c.unsafeArraycopy, NativeCall, DESTROYS_REGISTERS, LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.any());
 
-        if (c.useMultiplyToLenIntrinsic()) {
+        if (c.useMultiplyToLenIntrinsic())
+        {
             registerForeignCall(MULTIPLY_TO_LEN, c.multiplyToLen, NativeCall, DESTROYS_REGISTERS, LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Int));
         }
-        if (c.useSHA1Intrinsics()) {
+        if (c.useSHA1Intrinsics())
+        {
             registerForeignCall(SHA_IMPL_COMPRESS, c.sha1ImplCompress, NativeCall, DESTROYS_REGISTERS, LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.any());
         }
-        if (c.useSHA256Intrinsics()) {
+        if (c.useSHA256Intrinsics())
+        {
             registerForeignCall(SHA2_IMPL_COMPRESS, c.sha256ImplCompress, NativeCall, DESTROYS_REGISTERS, LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.any());
         }
-        if (c.useSHA512Intrinsics()) {
+        if (c.useSHA512Intrinsics())
+        {
             registerForeignCall(SHA5_IMPL_COMPRESS, c.sha512ImplCompress, NativeCall, DESTROYS_REGISTERS, LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.any());
         }
-        if (c.useMulAddIntrinsic()) {
+        if (c.useMulAddIntrinsic())
+        {
             registerForeignCall(MUL_ADD, c.mulAdd, NativeCall, DESTROYS_REGISTERS, LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Int));
         }
-        if (c.useMontgomeryMultiplyIntrinsic()) {
+        if (c.useMontgomeryMultiplyIntrinsic())
+        {
             registerForeignCall(MONTGOMERY_MULTIPLY, c.montgomeryMultiply, NativeCall, DESTROYS_REGISTERS, LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Int));
         }
-        if (c.useMontgomerySquareIntrinsic()) {
+        if (c.useMontgomerySquareIntrinsic())
+        {
             registerForeignCall(MONTGOMERY_SQUARE, c.montgomerySquare, NativeCall, DESTROYS_REGISTERS, LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Int));
         }
-        if (c.useSquareToLenIntrinsic()) {
+        if (c.useSquareToLenIntrinsic())
+        {
             registerForeignCall(SQUARE_TO_LEN, c.squareToLen, NativeCall, DESTROYS_REGISTERS, LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Int));
         }
 
-        if (c.useAESIntrinsics) {
+        if (c.useAESIntrinsics)
+        {
             /*
              * When the java.ext.dirs property is modified then the crypto classes might not be
              * found. If that's the case we ignore the ClassNotFoundException and continue since we
              * cannot replace a non-existing method anyway.
              */
-            try {
+            try
+            {
                 // These stubs do callee saving
                 registerForeignCall(ENCRYPT_BLOCK, c.aescryptEncryptBlockStub, NativeCall, PRESERVES_REGISTERS, LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
                 registerForeignCall(DECRYPT_BLOCK, c.aescryptDecryptBlockStub, NativeCall, PRESERVES_REGISTERS, LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
-                registerForeignCall(DECRYPT_BLOCK_WITH_ORIGINAL_KEY, c.aescryptDecryptBlockStub, NativeCall, PRESERVES_REGISTERS, LEAF_NOFP, NOT_REEXECUTABLE,
-                                NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
-            } catch (GraalError e) {
-                if (!(e.getCause() instanceof ClassNotFoundException)) {
+                registerForeignCall(DECRYPT_BLOCK_WITH_ORIGINAL_KEY, c.aescryptDecryptBlockStub, NativeCall, PRESERVES_REGISTERS, LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
+            }
+            catch (GraalError e)
+            {
+                if (!(e.getCause() instanceof ClassNotFoundException))
+                {
                     throw e;
                 }
             }
-            try {
+            try
+            {
                 // These stubs do callee saving
-                registerForeignCall(ENCRYPT, c.cipherBlockChainingEncryptAESCryptStub, NativeCall, PRESERVES_REGISTERS, LEAF_NOFP, NOT_REEXECUTABLE,
-                                NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
-                registerForeignCall(DECRYPT, c.cipherBlockChainingDecryptAESCryptStub, NativeCall, PRESERVES_REGISTERS, LEAF_NOFP, NOT_REEXECUTABLE,
-                                NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
-                registerForeignCall(DECRYPT_WITH_ORIGINAL_KEY, c.cipherBlockChainingDecryptAESCryptStub, NativeCall, PRESERVES_REGISTERS, LEAF_NOFP, NOT_REEXECUTABLE,
-                                NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
-            } catch (GraalError e) {
-                if (!(e.getCause() instanceof ClassNotFoundException)) {
+                registerForeignCall(ENCRYPT, c.cipherBlockChainingEncryptAESCryptStub, NativeCall, PRESERVES_REGISTERS, LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
+                registerForeignCall(DECRYPT, c.cipherBlockChainingDecryptAESCryptStub, NativeCall, PRESERVES_REGISTERS, LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
+                registerForeignCall(DECRYPT_WITH_ORIGINAL_KEY, c.cipherBlockChainingDecryptAESCryptStub, NativeCall, PRESERVES_REGISTERS, LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
+            }
+            catch (GraalError e)
+            {
+                if (!(e.getCause() instanceof ClassNotFoundException))
+                {
                     throw e;
                 }
             }
         }
     }
 
-    public HotSpotForeignCallLinkage getForeignCall(ForeignCallDescriptor descriptor) {
+    public HotSpotForeignCallLinkage getForeignCall(ForeignCallDescriptor descriptor)
+    {
         assert foreignCalls != null : descriptor;
         return foreignCalls.get(descriptor);
     }

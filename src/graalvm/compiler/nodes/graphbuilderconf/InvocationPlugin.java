@@ -14,21 +14,23 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 /**
  * Plugin for handling a specific method invocation.
  */
-public interface InvocationPlugin extends GraphBuilderPlugin {
-
+public interface InvocationPlugin extends GraphBuilderPlugin
+{
     /**
      * The receiver in a non-static method. The class literal for this interface must be used with
      * {@link InvocationPlugins#put(InvocationPlugin, boolean, boolean, Class, String, Class...)} to
      * denote the receiver argument for such a non-static method.
      */
-    public interface Receiver {
+    public interface Receiver
+    {
         /**
          * Gets the receiver value, null checking it first if necessary.
          *
          * @return the receiver value with a {@linkplain StampTool#isPointerNonNull(ValueNode)
          *         non-null} stamp
          */
-        default ValueNode get() {
+        default ValueNode get()
+        {
             return get(true);
         }
 
@@ -40,7 +42,8 @@ public interface InvocationPlugin extends GraphBuilderPlugin {
         /**
          * Determines if the receiver is constant.
          */
-        default boolean isConstant() {
+        default boolean isConstant()
+        {
             return false;
         }
     }
@@ -49,7 +52,8 @@ public interface InvocationPlugin extends GraphBuilderPlugin {
      * Determines if this plugin is for a method with a polymorphic signature (e.g.
      * {@link MethodHandle#invokeExact(Object...)}).
      */
-    default boolean isSignaturePolymorphic() {
+    default boolean isSignaturePolymorphic()
+    {
         return false;
     }
 
@@ -57,7 +61,8 @@ public interface InvocationPlugin extends GraphBuilderPlugin {
      * Determines if this plugin can only be used when inlining the method is it associated with.
      * That is, this plugin cannot be used when the associated method is the compilation root.
      */
-    default boolean inlineOnly() {
+    default boolean inlineOnly()
+    {
         return isSignaturePolymorphic();
     }
 
@@ -66,7 +71,8 @@ public interface InvocationPlugin extends GraphBuilderPlugin {
      * inserts nodes prior to the invocation (e.g. some kind of marker nodes) but still expects the
      * parser to process the invocation further.
      */
-    default boolean isDecorator() {
+    default boolean isDecorator()
+    {
         return false;
     }
 
@@ -78,65 +84,72 @@ public interface InvocationPlugin extends GraphBuilderPlugin {
      *            position 0 if {@code targetMethod} is not static
      * @see #execute
      */
-    default boolean applyPolymorphic(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode... argsIncludingReceiver) {
+    default boolean applyPolymorphic(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode... argsIncludingReceiver)
+    {
         return defaultHandler(b, targetMethod, receiver, argsIncludingReceiver);
     }
 
     /**
      * @see #execute
      */
-    default boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver) {
+    default boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver)
+    {
         return defaultHandler(b, targetMethod, receiver);
     }
 
     /**
      * @see #execute
      */
-    default boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode arg) {
+    default boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode arg)
+    {
         return defaultHandler(b, targetMethod, receiver, arg);
     }
 
     /**
      * @see #execute
      */
-    default boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode arg1, ValueNode arg2) {
+    default boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode arg1, ValueNode arg2)
+    {
         return defaultHandler(b, targetMethod, receiver, arg1, arg2);
     }
 
     /**
      * @see #execute
      */
-    default boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode arg1, ValueNode arg2, ValueNode arg3) {
+    default boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode arg1, ValueNode arg2, ValueNode arg3)
+    {
         return defaultHandler(b, targetMethod, receiver, arg1, arg2, arg3);
     }
 
     /**
      * @see #execute
      */
-    default boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode arg1, ValueNode arg2, ValueNode arg3, ValueNode arg4) {
+    default boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode arg1, ValueNode arg2, ValueNode arg3, ValueNode arg4)
+    {
         return defaultHandler(b, targetMethod, receiver, arg1, arg2, arg3, arg4);
     }
 
     /**
      * @see #execute
      */
-    default boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode arg1, ValueNode arg2, ValueNode arg3, ValueNode arg4, ValueNode arg5) {
+    default boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode arg1, ValueNode arg2, ValueNode arg3, ValueNode arg4, ValueNode arg5)
+    {
         return defaultHandler(b, targetMethod, receiver, arg1, arg2, arg3, arg4, arg5);
     }
 
     /**
      * @see #execute
      */
-    default boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode arg1, ValueNode arg2, ValueNode arg3, ValueNode arg4, ValueNode arg5,
-                    ValueNode arg6) {
+    default boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode arg1, ValueNode arg2, ValueNode arg3, ValueNode arg4, ValueNode arg5, ValueNode arg6)
+    {
         return defaultHandler(b, targetMethod, receiver, arg1, arg2, arg3, arg4, arg5, arg6);
     }
 
     /**
      * @see #execute
      */
-    default boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode arg1, ValueNode arg2, ValueNode arg3, ValueNode arg4, ValueNode arg5,
-                    ValueNode arg6, ValueNode arg7) {
+    default boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode arg1, ValueNode arg2, ValueNode arg3, ValueNode arg4, ValueNode arg5, ValueNode arg6, ValueNode arg7)
+    {
         return defaultHandler(b, targetMethod, receiver, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
     }
 
@@ -157,66 +170,102 @@ public interface InvocationPlugin extends GraphBuilderPlugin {
      *         invocation must not modify the graph being constructed unless it is a
      *         {@linkplain InvocationPlugin#isDecorator() decorator}.
      */
-    default boolean execute(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode[] argsIncludingReceiver) {
-        if (isSignaturePolymorphic()) {
+    default boolean execute(GraphBuilderContext b, ResolvedJavaMethod targetMethod, InvocationPlugin.Receiver receiver, ValueNode[] argsIncludingReceiver)
+    {
+        if (isSignaturePolymorphic())
+        {
             return applyPolymorphic(b, targetMethod, receiver, argsIncludingReceiver);
-        } else if (receiver != null) {
+        }
+        else if (receiver != null)
+        {
             assert !targetMethod.isStatic();
             assert argsIncludingReceiver.length > 0;
-            if (argsIncludingReceiver.length == 1) {
+            if (argsIncludingReceiver.length == 1)
+            {
                 return apply(b, targetMethod, receiver);
-            } else if (argsIncludingReceiver.length == 2) {
+            }
+            else if (argsIncludingReceiver.length == 2)
+            {
                 return apply(b, targetMethod, receiver, argsIncludingReceiver[1]);
-            } else if (argsIncludingReceiver.length == 3) {
+            }
+            else if (argsIncludingReceiver.length == 3)
+            {
                 return apply(b, targetMethod, receiver, argsIncludingReceiver[1], argsIncludingReceiver[2]);
-            } else if (argsIncludingReceiver.length == 4) {
+            }
+            else if (argsIncludingReceiver.length == 4)
+            {
                 return apply(b, targetMethod, receiver, argsIncludingReceiver[1], argsIncludingReceiver[2], argsIncludingReceiver[3]);
-            } else if (argsIncludingReceiver.length == 5) {
+            }
+            else if (argsIncludingReceiver.length == 5)
+            {
                 return apply(b, targetMethod, receiver, argsIncludingReceiver[1], argsIncludingReceiver[2], argsIncludingReceiver[3], argsIncludingReceiver[4]);
-            } else {
+            }
+            else
+            {
                 return defaultHandler(b, targetMethod, receiver, argsIncludingReceiver);
             }
-        } else {
+        }
+        else
+        {
             assert targetMethod.isStatic();
-            if (argsIncludingReceiver.length == 0) {
+            if (argsIncludingReceiver.length == 0)
+            {
                 return apply(b, targetMethod, null);
-            } else if (argsIncludingReceiver.length == 1) {
+            }
+            else if (argsIncludingReceiver.length == 1)
+            {
                 return apply(b, targetMethod, null, argsIncludingReceiver[0]);
-            } else if (argsIncludingReceiver.length == 2) {
+            }
+            else if (argsIncludingReceiver.length == 2)
+            {
                 return apply(b, targetMethod, null, argsIncludingReceiver[0], argsIncludingReceiver[1]);
-            } else if (argsIncludingReceiver.length == 3) {
+            }
+            else if (argsIncludingReceiver.length == 3)
+            {
                 return apply(b, targetMethod, null, argsIncludingReceiver[0], argsIncludingReceiver[1], argsIncludingReceiver[2]);
-            } else if (argsIncludingReceiver.length == 4) {
+            }
+            else if (argsIncludingReceiver.length == 4)
+            {
                 return apply(b, targetMethod, null, argsIncludingReceiver[0], argsIncludingReceiver[1], argsIncludingReceiver[2], argsIncludingReceiver[3]);
-            } else if (argsIncludingReceiver.length == 5) {
+            }
+            else if (argsIncludingReceiver.length == 5)
+            {
                 return apply(b, targetMethod, null, argsIncludingReceiver[0], argsIncludingReceiver[1], argsIncludingReceiver[2], argsIncludingReceiver[3], argsIncludingReceiver[4]);
-            } else if (argsIncludingReceiver.length == 6) {
-                return apply(b, targetMethod, null, argsIncludingReceiver[0], argsIncludingReceiver[1], argsIncludingReceiver[2], argsIncludingReceiver[3], argsIncludingReceiver[4],
-                                argsIncludingReceiver[5]);
-            } else if (argsIncludingReceiver.length == 7) {
-                return apply(b, targetMethod, null, argsIncludingReceiver[0], argsIncludingReceiver[1], argsIncludingReceiver[2], argsIncludingReceiver[3], argsIncludingReceiver[4],
-                                argsIncludingReceiver[5], argsIncludingReceiver[6]);
-            } else {
+            }
+            else if (argsIncludingReceiver.length == 6)
+            {
+                return apply(b, targetMethod, null, argsIncludingReceiver[0], argsIncludingReceiver[1], argsIncludingReceiver[2], argsIncludingReceiver[3], argsIncludingReceiver[4], argsIncludingReceiver[5]);
+            }
+            else if (argsIncludingReceiver.length == 7)
+            {
+                return apply(b, targetMethod, null, argsIncludingReceiver[0], argsIncludingReceiver[1], argsIncludingReceiver[2], argsIncludingReceiver[3], argsIncludingReceiver[4], argsIncludingReceiver[5], argsIncludingReceiver[6]);
+            }
+            else
+            {
                 return defaultHandler(b, targetMethod, receiver, argsIncludingReceiver);
             }
-
         }
     }
 
     /**
      * Handles an invocation when a specific {@code apply} method is not available.
      */
-    default boolean defaultHandler(@SuppressWarnings("unused") GraphBuilderContext b, ResolvedJavaMethod targetMethod, @SuppressWarnings("unused") InvocationPlugin.Receiver receiver,
-                    ValueNode... args) {
+    default boolean defaultHandler(@SuppressWarnings("unused") GraphBuilderContext b, ResolvedJavaMethod targetMethod, @SuppressWarnings("unused") InvocationPlugin.Receiver receiver, ValueNode... args)
+    {
         throw new GraalError("Invocation plugin for %s does not handle invocations with %d arguments", targetMethod.format("%H.%n(%p)"), args.length);
     }
 
-    default StackTraceElement getApplySourceLocation(MetaAccessProvider metaAccess) {
+    default StackTraceElement getApplySourceLocation(MetaAccessProvider metaAccess)
+    {
         Class<?> c = getClass();
-        for (Method m : c.getDeclaredMethods()) {
-            if (m.getName().equals("apply")) {
+        for (Method m : c.getDeclaredMethods())
+        {
+            if (m.getName().equals("apply"))
+            {
                 return metaAccess.lookupJavaMethod(m).asStackTraceElement(0);
-            } else if (m.getName().equals("defaultHandler")) {
+            }
+            else if (m.getName().equals("defaultHandler"))
+            {
                 return metaAccess.lookupJavaMethod(m).asStackTraceElement(0);
             }
         }

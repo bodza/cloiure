@@ -11,8 +11,8 @@ import jdk.vm.ci.meta.Value;
  * Non-modifying version of {@link ValueProcedure}.
  */
 @FunctionalInterface
-public interface ValueConsumer extends InstructionValueConsumer {
-
+public interface ValueConsumer extends InstructionValueConsumer
+{
     /**
      * Iterator method to be overwritten.
      *
@@ -23,7 +23,8 @@ public interface ValueConsumer extends InstructionValueConsumer {
     void visitValue(Value value, OperandMode mode, EnumSet<OperandFlag> flags);
 
     @Override
-    default void visitValue(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags) {
+    default void visitValue(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
+    {
         visitValue(value, mode, flags);
     }
 }

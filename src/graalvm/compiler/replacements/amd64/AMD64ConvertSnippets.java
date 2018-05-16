@@ -24,8 +24,8 @@ import jdk.vm.ci.code.TargetDescription;
  * Snippets used for conversion operations on AMD64 where the AMD64 instruction used does not match
  * the semantics of the JVM specification.
  */
-public class AMD64ConvertSnippets implements Snippets {
-
+public class AMD64ConvertSnippets implements Snippets
+{
     /**
      * Converts a float to an int.
      * <p>
@@ -38,12 +38,17 @@ public class AMD64ConvertSnippets implements Snippets {
      * @param result the result produced by the CVTTSS2SI instruction
      */
     @Snippet
-    public static int f2i(float input, int result) {
-        if (probability(SLOW_PATH_PROBABILITY, result == Integer.MIN_VALUE)) {
-            if (Float.isNaN(input)) {
+    public static int f2i(float input, int result)
+    {
+        if (probability(SLOW_PATH_PROBABILITY, result == Integer.MIN_VALUE))
+        {
+            if (Float.isNaN(input))
+            {
                 // input is NaN -> return 0
                 return 0;
-            } else if (input > 0.0f) {
+            }
+            else if (input > 0.0f)
+            {
                 // input is > 0 -> return max int
                 return Integer.MAX_VALUE;
             }
@@ -63,12 +68,17 @@ public class AMD64ConvertSnippets implements Snippets {
      * @param result the result produced by the CVTTSS2SI instruction
      */
     @Snippet
-    public static long f2l(float input, long result) {
-        if (probability(SLOW_PATH_PROBABILITY, result == Long.MIN_VALUE)) {
-            if (Float.isNaN(input)) {
+    public static long f2l(float input, long result)
+    {
+        if (probability(SLOW_PATH_PROBABILITY, result == Long.MIN_VALUE))
+        {
+            if (Float.isNaN(input))
+            {
                 // input is NaN -> return 0
                 return 0;
-            } else if (input > 0.0f) {
+            }
+            else if (input > 0.0f)
+            {
                 // input is > 0 -> return max int
                 return Long.MAX_VALUE;
             }
@@ -88,12 +98,17 @@ public class AMD64ConvertSnippets implements Snippets {
      * @param result the result produced by the CVTTSS2SI instruction
      */
     @Snippet
-    public static int d2i(double input, int result) {
-        if (probability(SLOW_PATH_PROBABILITY, result == Integer.MIN_VALUE)) {
-            if (Double.isNaN(input)) {
+    public static int d2i(double input, int result)
+    {
+        if (probability(SLOW_PATH_PROBABILITY, result == Integer.MIN_VALUE))
+        {
+            if (Double.isNaN(input))
+            {
                 // input is NaN -> return 0
                 return 0;
-            } else if (input > 0.0d) {
+            }
+            else if (input > 0.0d)
+            {
                 // input is positive -> return maxInt
                 return Integer.MAX_VALUE;
             }
@@ -113,12 +128,17 @@ public class AMD64ConvertSnippets implements Snippets {
      * @param result the result produced by the CVTTSS2SI instruction
      */
     @Snippet
-    public static long d2l(double input, long result) {
-        if (probability(SLOW_PATH_PROBABILITY, result == Long.MIN_VALUE)) {
-            if (Double.isNaN(input)) {
+    public static long d2l(double input, long result)
+    {
+        if (probability(SLOW_PATH_PROBABILITY, result == Long.MIN_VALUE))
+        {
+            if (Double.isNaN(input))
+            {
                 // input is NaN -> return 0
                 return 0;
-            } else if (input > 0.0d) {
+            }
+            else if (input > 0.0d)
+            {
                 // input is positive -> return maxInt
                 return Long.MAX_VALUE;
             }
@@ -126,14 +146,15 @@ public class AMD64ConvertSnippets implements Snippets {
         return result;
     }
 
-    public static class Templates extends AbstractTemplates {
-
+    public static class Templates extends AbstractTemplates
+    {
         private final SnippetInfo f2i;
         private final SnippetInfo f2l;
         private final SnippetInfo d2i;
         private final SnippetInfo d2l;
 
-        public Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target) {
+        public Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
+        {
             super(options, factories, providers, snippetReflection, target);
 
             f2i = snippet(AMD64ConvertSnippets.class, "f2i");
@@ -142,9 +163,11 @@ public class AMD64ConvertSnippets implements Snippets {
             d2l = snippet(AMD64ConvertSnippets.class, "d2l");
         }
 
-        public void lower(FloatConvertNode convert, LoweringTool tool) {
+        public void lower(FloatConvertNode convert, LoweringTool tool)
+        {
             SnippetInfo key;
-            switch (convert.getFloatConvert()) {
+            switch (convert.getFloatConvert())
+            {
                 case F2I:
                     key = f2i;
                     break;

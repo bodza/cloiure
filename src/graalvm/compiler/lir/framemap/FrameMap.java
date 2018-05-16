@@ -25,13 +25,13 @@ import jdk.vm.ci.meta.ValueKind;
  * stack pointer, while spill slots are indexed from the beginning of the frame (and the total frame
  * size has to be added to get the actual offset from the stack pointer).
  */
-public abstract class FrameMap {
-
+public abstract class FrameMap
+{
     private final TargetDescription target;
     private final RegisterConfig registerConfig;
 
-    public interface ReferenceMapBuilderFactory {
-
+    public interface ReferenceMapBuilderFactory
+    {
         ReferenceMapBuilder newReferenceMapBuilder(int totalFrameSize);
     }
 
@@ -81,7 +81,8 @@ public abstract class FrameMap {
      * Creates a new frame map for the specified method. The given registerConfig is optional, in
      * case null is passed the default RegisterConfig from the CodeCacheProvider will be used.
      */
-    public FrameMap(CodeCacheProvider codeCache, RegisterConfig registerConfig, ReferenceMapBuilderFactory referenceMapFactory) {
+    public FrameMap(CodeCacheProvider codeCache, RegisterConfig registerConfig, ReferenceMapBuilderFactory referenceMapFactory)
+    {
         this.target = codeCache.getTarget();
         this.registerConfig = registerConfig == null ? codeCache.getRegisterConfig() : registerConfig;
         this.frameSize = -1;
@@ -90,21 +91,26 @@ public abstract class FrameMap {
         this.referenceMapFactory = referenceMapFactory;
     }
 
-    public RegisterConfig getRegisterConfig() {
+    public RegisterConfig getRegisterConfig()
+    {
         return registerConfig;
     }
 
-    public TargetDescription getTarget() {
+    public TargetDescription getTarget()
+    {
         return target;
     }
 
-    public void addLiveValues(ReferenceMapBuilder refMap) {
-        for (Value value : objectStackSlots) {
+    public void addLiveValues(ReferenceMapBuilder refMap)
+    {
+        for (Value value : objectStackSlots)
+        {
             refMap.addLiveValue(value);
         }
     }
 
-    protected int returnAddressSize() {
+    protected int returnAddressSize()
+    {
         return getTarget().arch.getReturnAddressSize();
     }
 
@@ -112,7 +118,8 @@ public abstract class FrameMap {
      * Determines if an offset to an incoming stack argument was ever returned by
      * {@link #offsetForStackSlot(StackSlot)}.
      */
-    public boolean accessesCallerFrame() {
+    public boolean accessesCallerFrame()
+    {
         return accessesCallerFrame;
     }
 
@@ -122,12 +129,14 @@ public abstract class FrameMap {
      *
      * @return The size of the frame (in bytes).
      */
-    public int frameSize() {
+    public int frameSize()
+    {
         assert frameSize != -1 : "frame size not computed yet";
         return frameSize;
     }
 
-    public int outgoingSize() {
+    public int outgoingSize()
+    {
         return outgoingSize;
     }
 
@@ -135,7 +144,8 @@ public abstract class FrameMap {
      * Determines if any space is used in the frame apart from the
      * {@link Architecture#getReturnAddressSize() return address slot}.
      */
-    public boolean frameNeedsAllocating() {
+    public boolean frameNeedsAllocating()
+    {
         int unalignedFrameSize = spillSize - returnAddressSize();
         return hasOutgoingStackArguments || unalignedFrameSize != 0;
     }
@@ -160,7 +170,8 @@ public abstract class FrameMap {
      * @param size the initial frame size to be aligned
      * @return the aligned frame size
      */
-    protected int alignFrameSize(int size) {
+    protected int alignFrameSize(int size)
+    {
         return NumUtil.roundUp(size, getTarget().stackAlignment);
     }
 
@@ -169,9 +180,11 @@ public abstract class FrameMap {
      * the frame size cannot be called anymore, e.g., no more spill slots or outgoing arguments can
      * be requested.
      */
-    public void finish() {
+    public void finish()
+    {
         frameSize = currentFrameSize();
-        if (frameSize > getRegisterConfig().getMaximumFrameSize()) {
+        if (frameSize > getRegisterConfig().getMaximumFrameSize())
+        {
             throw new PermanentBailoutException("Frame size (%d) exceeded maximum allowed frame size (%d).", frameSize, getRegisterConfig().getMaximumFrameSize());
         }
     }
@@ -182,8 +195,10 @@ public abstract class FrameMap {
      * @param slot a stack slot
      * @return the offset of the stack slot
      */
-    public int offsetForStackSlot(StackSlot slot) {
-        if (slot.isInCallerFrame()) {
+    public int offsetForStackSlot(StackSlot slot)
+    {
+        if (slot.isInCallerFrame())
+        {
             accessesCallerFrame = true;
         }
         return slot.getOffset(totalFrameSize());
@@ -195,7 +210,8 @@ public abstract class FrameMap {
      *
      * @param cc The calling convention for the called method.
      */
-    public void callsMethod(CallingConvention cc) {
+    public void callsMethod(CallingConvention cc)
+    {
         reserveOutgoing(cc.getStackSize());
     }
 
@@ -204,7 +220,8 @@ public abstract class FrameMap {
      *
      * @param argsSize The amount of space (in bytes) to reserve for stack-based outgoing arguments.
      */
-    public void reserveOutgoing(int argsSize) {
+    public void reserveOutgoing(int argsSize)
+    {
         assert frameSize == -1 : "frame size must not yet be fixed";
         outgoingSize = Math.max(outgoingSize, argsSize);
         hasOutgoingStackArguments = hasOutgoingStackArguments || argsSize > 0;
@@ -219,7 +236,8 @@ public abstract class FrameMap {
      * @param additionalOffset
      * @return A spill slot denoting the reserved memory area.
      */
-    protected StackSlot allocateNewSpillSlot(ValueKind<?> kind, int additionalOffset) {
+    protected StackSlot allocateNewSpillSlot(ValueKind<?> kind, int additionalOffset)
+    {
         return StackSlot.get(kind, -spillSize + additionalOffset, true);
     }
 
@@ -230,7 +248,8 @@ public abstract class FrameMap {
      * @param kind the {@link ValueKind} to be stored in the spill slot.
      * @return the size in bytes
      */
-    public int spillSlotSize(ValueKind<?> kind) {
+    public int spillSlotSize(ValueKind<?> kind)
+    {
         return kind.getPlatformKind().getSizeInBytes();
     }
 
@@ -242,7 +261,8 @@ public abstract class FrameMap {
      * @param kind The kind of the spill slot to be reserved.
      * @return A spill slot denoting the reserved memory area.
      */
-    public StackSlot allocateSpillSlot(ValueKind<?> kind) {
+    public StackSlot allocateSpillSlot(ValueKind<?> kind)
+    {
         assert frameSize == -1 : "frame size must not yet be fixed";
         int size = spillSlotSize(kind);
         spillSize = NumUtil.roundUp(spillSize + size, size);
@@ -255,7 +275,8 @@ public abstract class FrameMap {
      * @param slots The number of slots.
      * @return The size in byte
      */
-    public int spillSlotRangeSize(int slots) {
+    public int spillSlotRangeSize(int slots)
+    {
         return slots * getTarget().wordSize;
     }
 
@@ -270,43 +291,55 @@ public abstract class FrameMap {
      *            collector could see garbage object values.
      * @return the first reserved stack slot (i.e., at the lowest address)
      */
-    public StackSlot allocateStackSlots(int slots, BitSet objects) {
+    public StackSlot allocateStackSlots(int slots, BitSet objects)
+    {
         assert frameSize == -1 : "frame size must not yet be fixed";
-        if (slots == 0) {
+        if (slots == 0)
+        {
             return null;
         }
         spillSize += spillSlotRangeSize(slots);
 
-        if (!objects.isEmpty()) {
+        if (!objects.isEmpty())
+        {
             assert objects.length() <= slots;
             StackSlot result = null;
-            for (int slotIndex = 0; slotIndex < slots; slotIndex++) {
+            for (int slotIndex = 0; slotIndex < slots; slotIndex++)
+            {
                 StackSlot objectSlot = null;
-                if (objects.get(slotIndex)) {
+                if (objects.get(slotIndex))
+                {
                     objectSlot = allocateNewSpillSlot(LIRKind.reference(getTarget().arch.getWordKind()), slotIndex * getTarget().wordSize);
                     addObjectStackSlot(objectSlot);
                 }
-                if (slotIndex == 0) {
-                    if (objectSlot != null) {
+                if (slotIndex == 0)
+                {
+                    if (objectSlot != null)
+                    {
                         result = objectSlot;
-                    } else {
+                    }
+                    else
+                    {
                         result = allocateNewSpillSlot(LIRKind.value(getTarget().arch.getWordKind()), 0);
                     }
                 }
             }
             assert result != null;
             return result;
-
-        } else {
+        }
+        else
+        {
             return allocateNewSpillSlot(LIRKind.value(getTarget().arch.getWordKind()), 0);
         }
     }
 
-    protected void addObjectStackSlot(StackSlot objectSlot) {
+    protected void addObjectStackSlot(StackSlot objectSlot)
+    {
         objectStackSlots.add(objectSlot);
     }
 
-    public ReferenceMapBuilder newReferenceMapBuilder() {
+    public ReferenceMapBuilder newReferenceMapBuilder()
+    {
         return referenceMapFactory.newReferenceMapBuilder(totalFrameSize());
     }
 }

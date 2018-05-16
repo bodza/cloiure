@@ -27,8 +27,8 @@ import jdk.vm.ci.meta.Value;
  * This interface defines the contract a HotSpot backend LIR generator needs to fulfill in addition
  * to abstract methods from {@link LIRGenerator} and {@link LIRGeneratorTool}.
  */
-public interface HotSpotLIRGenerator extends LIRGeneratorTool {
-
+public interface HotSpotLIRGenerator extends LIRGeneratorTool
+{
     /**
      * Emits an operation to make a tail call.
      *
@@ -45,7 +45,8 @@ public interface HotSpotLIRGenerator extends LIRGeneratorTool {
      * @param constant
      * @return value of loaded address in register
      */
-    default Value emitLoadObjectAddress(Constant constant) {
+    default Value emitLoadObjectAddress(Constant constant)
+    {
         throw new GraalError("Emitting code to load an object address is not currently supported on %s", target().arch);
     }
 
@@ -56,7 +57,8 @@ public interface HotSpotLIRGenerator extends LIRGeneratorTool {
      * @param action action to perform on the metaspace object
      * @return Value of loaded address in register
      */
-    default Value emitLoadMetaspaceAddress(Constant constant, HotSpotConstantLoadAction action) {
+    default Value emitLoadMetaspaceAddress(Constant constant, HotSpotConstantLoadAction action)
+    {
         throw new GraalError("Emitting code to load a metaspace address is not currently supported on %s", target().arch);
     }
 
@@ -67,7 +69,8 @@ public interface HotSpotLIRGenerator extends LIRGeneratorTool {
      * @param kind type of the value to load
      * @return value of loaded global in register
      */
-    default Value emitLoadConfigValue(int markId, LIRKind kind) {
+    default Value emitLoadConfigValue(int markId, LIRKind kind)
+    {
         throw new GraalError("Emitting code to load a config value is not currently supported on %s", target().arch);
     }
 
@@ -80,7 +83,8 @@ public interface HotSpotLIRGenerator extends LIRGeneratorTool {
      * @param frameState frame state for the runtime call
      * @return the address of the requested constant.
      */
-    default Value emitObjectConstantRetrieval(Constant constant, Value constantDescription, LIRFrameState frameState) {
+    default Value emitObjectConstantRetrieval(Constant constant, Value constantDescription, LIRFrameState frameState)
+    {
         throw new GraalError("Emitting code to resolve an object constant is not currently supported on %s", target().arch);
     }
 
@@ -91,7 +95,8 @@ public interface HotSpotLIRGenerator extends LIRGeneratorTool {
      * @param frameState frame state for the runtime call
      * @return the address of the requested constant.
      */
-    default Value emitResolveDynamicInvoke(Constant constant, LIRFrameState frameState) {
+    default Value emitResolveDynamicInvoke(Constant constant, LIRFrameState frameState)
+    {
         throw new GraalError("Emitting code to resolve a dynamic constant is not currently supported on %s", target().arch);
     }
 
@@ -104,7 +109,8 @@ public interface HotSpotLIRGenerator extends LIRGeneratorTool {
      * @param frameState frame state for the runtime call
      * @return the address of the requested constant.
      */
-    default Value emitMetaspaceConstantRetrieval(Constant constant, Value constantDescription, LIRFrameState frameState) {
+    default Value emitMetaspaceConstantRetrieval(Constant constant, Value constantDescription, LIRFrameState frameState)
+    {
         throw new GraalError("Emitting code to resolve a metaspace constant is not currently supported on %s", target().arch);
     }
 
@@ -120,7 +126,8 @@ public interface HotSpotLIRGenerator extends LIRGeneratorTool {
      * @param frameState frame state for the runtime call
      * @return the address of the requested constant.
      */
-    default Value emitResolveMethodAndLoadCounters(Constant method, Value klassHint, Value methodDescription, LIRFrameState frameState) {
+    default Value emitResolveMethodAndLoadCounters(Constant method, Value klassHint, Value methodDescription, LIRFrameState frameState)
+    {
         throw new GraalError("Emitting code to resolve a method and load counters is not currently supported on %s", target().arch);
     }
 
@@ -135,7 +142,8 @@ public interface HotSpotLIRGenerator extends LIRGeneratorTool {
      * @param frameState frame state for the runtime call
      * @return the address of the requested constant.
      */
-    default Value emitKlassInitializationAndRetrieval(Constant constant, Value constantDescription, LIRFrameState frameState) {
+    default Value emitKlassInitializationAndRetrieval(Constant constant, Value constantDescription, LIRFrameState frameState)
+    {
         throw new GraalError("Emitting code to initialize a class is not currently supported on %s", target().arch);
     }
 
@@ -144,7 +152,8 @@ public interface HotSpotLIRGenerator extends LIRGeneratorTool {
      *
      * @return value of the counter
      */
-    default Value emitRandomSeed() {
+    default Value emitRandomSeed()
+    {
         throw new GraalError("Emitting code to return a random seed is not currently supported on %s", target().arch);
     }
 
@@ -155,5 +164,4 @@ public interface HotSpotLIRGenerator extends LIRGeneratorTool {
 
     @Override
     HotSpotProviders getProviders();
-
 }

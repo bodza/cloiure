@@ -5,8 +5,8 @@ import jdk.vm.ci.code.CompilationRequest;
 /**
  * A {@link CompilationIdentifier} based on a {@link CompilationRequest}.
  */
-public interface CompilationRequestIdentifier extends CompilationIdentifier {
-
+public interface CompilationRequestIdentifier extends CompilationIdentifier
+{
     CompilationRequest getRequest();
 
     /**
@@ -14,8 +14,10 @@ public interface CompilationRequestIdentifier extends CompilationIdentifier {
      * {@link CompilationRequestIdentifier}. Returns {@code null} if the
      * {@link CompilationIdentifier identifier} does not have one.
      */
-    static CompilationRequest asCompilationRequest(CompilationIdentifier compilationId) {
-        if (compilationId instanceof CompilationRequestIdentifier) {
+    static CompilationRequest asCompilationRequest(CompilationIdentifier compilationId)
+    {
+        if (compilationId instanceof CompilationRequestIdentifier)
+        {
             return ((CompilationRequestIdentifier) compilationId).getRequest();
         }
         return null;

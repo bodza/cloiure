@@ -10,8 +10,8 @@ import graalvm.compiler.options.OptionKey;
  * Note: This must be a top level class to work around for
  * <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=477597">Eclipse bug 477597</a>.
  */
-public class BytecodeParserOptions {
-    // @formatter:off
+public class BytecodeParserOptions
+{
     @Option(help = "The trace level for the bytecode parser. A value of 1 enables instruction tracing " +
                    "and any greater value emits a frame state trace just prior to each instruction trace." +
                    "Instruction tracing output from multiple compiler threads will be interleaved so " +
@@ -45,5 +45,4 @@ public class BytecodeParserOptions {
 
     @Option(help = "Use intrinsics guarded by a virtual dispatch test at indirect call sites.", type = OptionType.Debug)
     public static final OptionKey<Boolean> UseGuardedIntrinsics = new OptionKey<>(true);
-    // @formatter:on
 }

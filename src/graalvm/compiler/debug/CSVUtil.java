@@ -5,7 +5,8 @@ import java.io.PrintStream;
 /**
  * Utilities and global definitions for creating CSV output.
  */
-public final class CSVUtil {
+public final class CSVUtil
+{
     public static final char SEPARATOR = ';';
     public static final String SEPARATOR_STR = String.valueOf(SEPARATOR);
     public static final char QUOTE = '"';
@@ -15,64 +16,79 @@ public final class CSVUtil {
     public static final String ESCAPED_QUOTE_STR = ESCAPE_STR + QUOTE_STR;
     public static final String ESCAPED_ESCAPE_STR = ESCAPE_STR + ESCAPE_STR;
 
-    public static String buildFormatString(String format, int num) {
+    public static String buildFormatString(String format, int num)
+    {
         return buildFormatString(format, SEPARATOR, num);
     }
 
-    public static String buildFormatString(String... format) {
+    public static String buildFormatString(String... format)
+    {
         return String.join(SEPARATOR_STR, format);
     }
 
-    public static String buildFormatString(String format, char separator, int num) {
+    public static String buildFormatString(String format, char separator, int num)
+    {
         StringBuilder sb = new StringBuilder(num * (format.length() + 1) - 1);
         sb.append(format);
-        for (int i = 1; i < num; i++) {
+        for (int i = 1; i < num; i++)
+        {
             sb.append(separator).append(format);
         }
         return sb.toString();
     }
 
-    public static final class Escape {
-
-        public static PrintStream println(PrintStream out, String format, Object... args) {
+    public static final class Escape
+    {
+        public static PrintStream println(PrintStream out, String format, Object... args)
+        {
             return println(out, SEPARATOR, QUOTE, ESCAPE, format, args);
         }
 
-        public static LogStream println(LogStream out, String format, Object... args) {
+        public static LogStream println(LogStream out, String format, Object... args)
+        {
             return println(out, SEPARATOR, QUOTE, ESCAPE, format, args);
         }
 
-        public static String escape(String str) {
+        public static String escape(String str)
+        {
             return escape(str, SEPARATOR, QUOTE, ESCAPE);
         }
 
-        public static String escapeRaw(String str) {
+        public static String escapeRaw(String str)
+        {
             return escapeRaw(str, QUOTE, ESCAPE);
         }
 
-        public static PrintStream println(PrintStream out, char separator, char quote, char escape, String format, Object... args) {
+        public static PrintStream println(PrintStream out, char separator, char quote, char escape, String format, Object... args)
+        {
             out.printf(format, escapeArgs(separator, quote, escape, args));
             out.println();
             return out;
         }
 
-        public static LogStream println(LogStream out, char separator, char quote, char escape, String format, Object... args) {
+        public static LogStream println(LogStream out, char separator, char quote, char escape, String format, Object... args)
+        {
             out.printf(format, escapeArgs(separator, quote, escape, args));
             out.println();
             return out;
         }
 
-        public static Object[] escapeArgs(Object... args) {
+        public static Object[] escapeArgs(Object... args)
+        {
             return escapeArgs(SEPARATOR, QUOTE, ESCAPE, args);
         }
 
-        public static Object[] escapeArgs(char separator, char quote, char escape, Object... args) {
+        public static Object[] escapeArgs(char separator, char quote, char escape, Object... args)
+        {
             String separatorStr = String.valueOf(separator);
-            for (int i = 0; i < args.length; i++) {
+            for (int i = 0; i < args.length; i++)
+            {
                 Object obj = args[i];
-                if (obj instanceof String) {
+                if (obj instanceof String)
+                {
                     String str = (String) obj;
-                    if (str.contains(separatorStr)) {
+                    if (str.contains(separatorStr))
+                    {
                         args[i] = escapeRaw(str, quote, escape);
                     }
                 }
@@ -80,15 +96,18 @@ public final class CSVUtil {
             return args;
         }
 
-        public static String escape(String str, char separator, char quote, char escape) {
+        public static String escape(String str, char separator, char quote, char escape)
+        {
             String separatorStr = String.valueOf(separator);
-            if (str.contains(separatorStr)) {
+            if (str.contains(separatorStr))
+            {
                 return escapeRaw(str, quote, escape);
             }
             return str;
         }
 
-        public static String escapeRaw(String str, char quote, char escape) {
+        public static String escapeRaw(String str, char quote, char escape)
+        {
             String quoteStr = String.valueOf(quote);
             String escapeStr = String.valueOf(escape);
             String escapedEscapeStr = escapeStr + escape;

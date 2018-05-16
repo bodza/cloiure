@@ -51,12 +51,14 @@ import jdk.vm.ci.meta.Signature;
  * Node for invocation methods defined on the class {@link MethodHandle}.
  */
 @NodeInfo(cycles = CYCLES_UNKNOWN, size = SIZE_UNKNOWN)
-public final class MethodHandleNode extends MacroStateSplitNode implements Simplifiable {
+public final class MethodHandleNode extends MacroStateSplitNode implements Simplifiable
+{
     public static final NodeClass<MethodHandleNode> TYPE = NodeClass.create(MethodHandleNode.class);
 
     protected final IntrinsicMethod intrinsicMethod;
 
-    public MethodHandleNode(IntrinsicMethod intrinsicMethod, InvokeKind invokeKind, ResolvedJavaMethod targetMethod, int bci, StampPair returnStamp, ValueNode... arguments) {
+    public MethodHandleNode(IntrinsicMethod intrinsicMethod, InvokeKind invokeKind, ResolvedJavaMethod targetMethod, int bci, StampPair returnStamp, ValueNode... arguments)
+    {
         super(TYPE, invokeKind, targetMethod, bci, returnStamp, arguments);
         this.intrinsicMethod = intrinsicMethod;
     }
@@ -73,10 +75,10 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
      * @param arguments arguments to the original {@link MethodHandle} call
      * @return a more direct invocation derived from the {@link MethodHandle} call or null
      */
-    public static InvokeNode tryResolveTargetInvoke(GraphAdder adder, MethodHandleAccessProvider methodHandleAccess, IntrinsicMethod intrinsicMethod,
-                    ResolvedJavaMethod original, int bci,
-                    StampPair returnStamp, ValueNode... arguments) {
-        switch (intrinsicMethod) {
+    public static InvokeNode tryResolveTargetInvoke(GraphAdder adder, MethodHandleAccessProvider methodHandleAccess, IntrinsicMethod intrinsicMethod, ResolvedJavaMethod original, int bci, StampPair returnStamp, ValueNode... arguments)
+    {
+        switch (intrinsicMethod)
+        {
             case INVOKE_BASIC:
                 return getInvokeBasicTarget(adder, intrinsicMethod, methodHandleAccess, original, bci, returnStamp, arguments);
             case LINK_TO_STATIC:
@@ -92,10 +94,12 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
     /**
      * A simple utility class for adding nodes to the graph when building a MethodHandle invoke.
      */
-    public abstract static class GraphAdder {
+    public abstract static class GraphAdder
+    {
         private final StructuredGraph graph;
 
-        public GraphAdder(StructuredGraph graph) {
+        public GraphAdder(StructuredGraph graph)
+        {
             this.graph = graph;
         }
 
@@ -112,33 +116,40 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
          * @return an {@link AnchoringNode} if floating guards should be created, otherwise
          *         {@link FixedGuardNode}s will be used.
          */
-        public AnchoringNode getGuardAnchor() {
+        public AnchoringNode getGuardAnchor()
+        {
             return null;
         }
 
-        public Assumptions getAssumptions() {
+        public Assumptions getAssumptions()
+        {
             return graph.getAssumptions();
         }
     }
 
     @Override
-    public void simplify(SimplifierTool tool) {
+    public void simplify(SimplifierTool tool)
+    {
         MethodHandleAccessProvider methodHandleAccess = tool.getConstantReflection().getMethodHandleAccess();
         ValueNode[] argumentsArray = arguments.toArray(new ValueNode[arguments.size()]);
 
         final FixedNode before = this;
-        GraphAdder adder = new GraphAdder(graph()) {
+        GraphAdder adder = new GraphAdder(graph())
+        {
             @Override
-            public <T extends ValueNode> T add(T node) {
+            public <T extends ValueNode> T add(T node)
+            {
                 T added = graph().addOrUnique(node);
-                if (added instanceof FixedWithNextNode) {
+                if (added instanceof FixedWithNextNode)
+                {
                     graph().addBeforeFixed(before, (FixedWithNextNode) added);
                 }
                 return added;
             }
         };
         InvokeNode invoke = tryResolveTargetInvoke(adder, methodHandleAccess, intrinsicMethod, targetMethod, bci, returnStamp, argumentsArray);
-        if (invoke != null) {
+        if (invoke != null)
+        {
             assert invoke.graph() == null;
             invoke = graph().addOrUniqueWithInputs(invoke);
             invoke.setStateAfter(stateAfter());
@@ -154,7 +165,8 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
      *
      * @return the receiver argument node
      */
-    private static ValueNode getReceiver(ValueNode[] arguments) {
+    private static ValueNode getReceiver(ValueNode[] arguments)
+    {
         return arguments[0];
     }
 
@@ -163,7 +175,8 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
      *
      * @return the MemberName argument node (which is the last argument)
      */
-    private static ValueNode getMemberName(ValueNode[] arguments) {
+    private static ValueNode getMemberName(ValueNode[] arguments)
+    {
         return arguments[arguments.length - 1];
     }
 
@@ -175,12 +188,11 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
      *
      * @return invoke node for the {@link java.lang.invoke.MethodHandle} target
      */
-    private static InvokeNode getInvokeBasicTarget(GraphAdder adder, IntrinsicMethod intrinsicMethod, MethodHandleAccessProvider methodHandleAccess,
-                    ResolvedJavaMethod original,
-                    int bci,
-                    StampPair returnStamp, ValueNode[] arguments) {
+    private static InvokeNode getInvokeBasicTarget(GraphAdder adder, IntrinsicMethod intrinsicMethod, MethodHandleAccessProvider methodHandleAccess, ResolvedJavaMethod original, int bci, StampPair returnStamp, ValueNode[] arguments)
+    {
         ValueNode methodHandleNode = getReceiver(arguments);
-        if (methodHandleNode.isConstant()) {
+        if (methodHandleNode.isConstant())
+        {
             return getTargetInvokeNode(adder, intrinsicMethod, bci, returnStamp, arguments, methodHandleAccess.resolveInvokeBasicTarget(methodHandleNode.asJavaConstant(), true), original);
         }
         return null;
@@ -196,12 +208,11 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
      *
      * @return invoke node for the member name target
      */
-    private static InvokeNode getLinkToTarget(GraphAdder adder, IntrinsicMethod intrinsicMethod, MethodHandleAccessProvider methodHandleAccess,
-                    ResolvedJavaMethod original,
-                    int bci,
-                    StampPair returnStamp, ValueNode[] arguments) {
+    private static InvokeNode getLinkToTarget(GraphAdder adder, IntrinsicMethod intrinsicMethod, MethodHandleAccessProvider methodHandleAccess, ResolvedJavaMethod original, int bci, StampPair returnStamp, ValueNode[] arguments)
+    {
         ValueNode memberNameNode = getMemberName(arguments);
-        if (memberNameNode.isConstant()) {
+        if (memberNameNode.isConstant())
+        {
             return getTargetInvokeNode(adder, intrinsicMethod, bci, returnStamp, arguments, methodHandleAccess.resolveLinkToTarget(memberNameNode.asJavaConstant()), original);
         }
         return null;
@@ -216,9 +227,10 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
      *
      * @return invoke node for the member name target
      */
-    private static InvokeNode getTargetInvokeNode(GraphAdder adder, IntrinsicMethod intrinsicMethod, int bci, StampPair returnStamp, ValueNode[] originalArguments, ResolvedJavaMethod target,
-                    ResolvedJavaMethod original) {
-        if (target == null) {
+    private static InvokeNode getTargetInvokeNode(GraphAdder adder, IntrinsicMethod intrinsicMethod, int bci, StampPair returnStamp, ValueNode[] originalArguments, ResolvedJavaMethod target, ResolvedJavaMethod original)
+    {
+        if (target == null)
+        {
             return null;
         }
 
@@ -232,41 +244,50 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
 
         Assumptions assumptions = adder.getAssumptions();
         ResolvedJavaMethod realTarget = null;
-        if (target.canBeStaticallyBound()) {
+        if (target.canBeStaticallyBound())
+        {
             realTarget = target;
-        } else {
+        }
+        else
+        {
             ResolvedJavaType targetType = target.getDeclaringClass();
             // Try to bind based on the declaredType
             AssumptionResult<ResolvedJavaMethod> concreteMethod = targetType.findUniqueConcreteMethod(target);
-            if (concreteMethod == null) {
+            if (concreteMethod == null)
+            {
                 // Try to get the most accurate receiver type
-                if (intrinsicMethod == IntrinsicMethod.LINK_TO_VIRTUAL || intrinsicMethod == IntrinsicMethod.LINK_TO_INTERFACE) {
+                if (intrinsicMethod == IntrinsicMethod.LINK_TO_VIRTUAL || intrinsicMethod == IntrinsicMethod.LINK_TO_INTERFACE)
+                {
                     ValueNode receiver = getReceiver(originalArguments);
                     TypeReference receiverType = StampTool.typeReferenceOrNull(receiver.stamp(NodeView.DEFAULT));
-                    if (receiverType != null) {
+                    if (receiverType != null)
+                    {
                         concreteMethod = receiverType.getType().findUniqueConcreteMethod(target);
                     }
                 }
-
             }
-            if (concreteMethod != null && concreteMethod.canRecordTo(assumptions)) {
+            if (concreteMethod != null && concreteMethod.canRecordTo(assumptions))
+            {
                 concreteMethod.recordTo(assumptions);
                 realTarget = concreteMethod.getResult();
             }
         }
 
-        if (realTarget != null) {
+        if (realTarget != null)
+        {
             // Don't mutate the passed in arguments
             ValueNode[] arguments = originalArguments.clone();
 
             // Cast receiver to its type.
-            if (!isStatic) {
+            if (!isStatic)
+            {
                 JavaType receiverType = target.getDeclaringClass();
                 maybeCastArgument(adder, arguments, 0, receiverType);
             }
 
             // Cast reference arguments to its type.
-            for (int index = 0; index < signature.getParameterCount(false); index++) {
+            for (int index = 0; index < signature.getParameterCount(false); index++)
+            {
                 JavaType parameterType = signature.getParameterType(index, target.getDeclaringClass());
                 maybeCastArgument(adder, arguments, receiverSkip + index, parameterType);
             }
@@ -285,9 +306,11 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
      * @param index of the argument to be cast
      * @param type the type the argument should be cast to
      */
-    private static void maybeCastArgument(GraphAdder adder, ValueNode[] arguments, int index, JavaType type) {
+    private static void maybeCastArgument(GraphAdder adder, ValueNode[] arguments, int index, JavaType type)
+    {
         ValueNode argument = arguments[index];
-        if (type instanceof ResolvedJavaType && !((ResolvedJavaType) type).isJavaLangObject()) {
+        if (type instanceof ResolvedJavaType && !((ResolvedJavaType) type).isJavaLangObject())
+        {
             Assumptions assumptions = adder.getAssumptions();
             TypeReference targetType = TypeReference.create(assumptions, (ResolvedJavaType) type);
             /*
@@ -295,22 +318,28 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
              * here. Not inserting a PiNode is a safe fallback, and Word types need no additional
              * type information anyway.
              */
-            if (targetType != null && !targetType.getType().isPrimitive() && !argument.getStackKind().isPrimitive()) {
+            if (targetType != null && !targetType.getType().isPrimitive() && !argument.getStackKind().isPrimitive())
+            {
                 ResolvedJavaType argumentType = StampTool.typeOrNull(argument.stamp(NodeView.DEFAULT));
-                if (argumentType == null || (argumentType.isAssignableFrom(targetType.getType()) && !argumentType.equals(targetType.getType()))) {
+                if (argumentType == null || (argumentType.isAssignableFrom(targetType.getType()) && !argumentType.equals(targetType.getType())))
+                {
                     LogicNode inst = InstanceOfNode.createAllowNull(targetType, argument, null, null);
                     assert !inst.isAlive();
-                    if (!inst.isTautology()) {
+                    if (!inst.isTautology())
+                    {
                         inst = adder.add(inst);
                         AnchoringNode guardAnchor = adder.getGuardAnchor();
                         DeoptimizationReason reason = DeoptimizationReason.ClassCastException;
                         DeoptimizationAction action = DeoptimizationAction.InvalidateRecompile;
                         JavaConstant speculation = JavaConstant.NULL_POINTER;
                         GuardingNode guard;
-                        if (guardAnchor == null) {
+                        if (guardAnchor == null)
+                        {
                             FixedGuardNode fixedGuard = adder.add(new FixedGuardNode(inst, reason, action, speculation, false));
                             guard = fixedGuard;
-                        } else {
+                        }
+                        else
+                        {
                             GuardNode newGuard = adder.add(new GuardNode(inst, guardAnchor, reason, action, false, speculation, null));
                             adder.add(new ValueAnchorNode(newGuard));
                             guard = newGuard;
@@ -329,15 +358,16 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
      *
      * @return invoke node for the member name target
      */
-    private static InvokeNode createTargetInvokeNode(Assumptions assumptions, IntrinsicMethod intrinsicMethod, ResolvedJavaMethod target, ResolvedJavaMethod original, int bci, StampPair returnStamp,
-                    ValueNode[] arguments) {
+    private static InvokeNode createTargetInvokeNode(Assumptions assumptions, IntrinsicMethod intrinsicMethod, ResolvedJavaMethod target, ResolvedJavaMethod original, int bci, StampPair returnStamp, ValueNode[] arguments)
+    {
         InvokeKind targetInvokeKind = target.isStatic() ? InvokeKind.Static : InvokeKind.Special;
         JavaType targetReturnType = target.getSignature().getReturnType(null);
 
         // MethodHandleLinkTo* nodes have a trailing MemberName argument which
         // needs to be popped.
         ValueNode[] targetArguments;
-        switch (intrinsicMethod) {
+        switch (intrinsicMethod)
+        {
             case INVOKE_BASIC:
                 targetArguments = arguments;
                 break;
@@ -359,9 +389,12 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
         // we need to use the stamp of the invoker. Note: always using the
         // invoker's stamp would be wrong because it's a less concrete type
         // (usually java.lang.Object).
-        if (returnStamp.getTrustedStamp().getStackKind() == JavaKind.Void) {
+        if (returnStamp.getTrustedStamp().getStackKind() == JavaKind.Void)
+        {
             return new InvokeNode(callTarget, bci, StampFactory.forVoid());
-        } else {
+        }
+        else
+        {
             return new InvokeNode(callTarget, bci);
         }
     }

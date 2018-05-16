@@ -3,8 +3,8 @@ package graalvm.compiler.lir.alloc.trace.lsra;
 /**
  * Represents a range of integers from a start (inclusive) to an end (exclusive).
  */
-final class FixedRange {
-
+final class FixedRange
+{
     public static final FixedRange EndMarker = new FixedRange(Integer.MAX_VALUE, Integer.MAX_VALUE, null);
 
     /**
@@ -22,7 +22,8 @@ final class FixedRange {
      */
     public FixedRange next;
 
-    boolean intersects(TraceInterval i) {
+    boolean intersects(TraceInterval i)
+    {
         return intersectsAt(i) != -1;
     }
 
@@ -33,44 +34,63 @@ final class FixedRange {
      * @param to the end of the range, exclusive
      * @param next link to the next range in a linked list
      */
-    FixedRange(int from, int to, FixedRange next) {
+    FixedRange(int from, int to, FixedRange next)
+    {
         this.from = from;
         this.to = to;
         this.next = next;
     }
 
-    int intersectsAt(TraceInterval other) {
+    int intersectsAt(TraceInterval other)
+    {
         FixedRange range = this;
         assert other != null : "null ranges not allowed";
         assert range != EndMarker && other != TraceInterval.EndMarker : "empty ranges not allowed";
         int intervalFrom = other.from();
         int intervalTo = other.to();
 
-        do {
-            if (range.from < intervalFrom) {
-                if (range.to <= intervalFrom) {
+        do
+        {
+            if (range.from < intervalFrom)
+            {
+                if (range.to <= intervalFrom)
+                {
                     range = range.next;
-                    if (range == EndMarker) {
+                    if (range == EndMarker)
+                    {
                         return -1;
                     }
-                } else {
+                }
+                else
+                {
                     return intervalFrom;
                 }
-            } else {
-                if (intervalFrom < range.from) {
-                    if (intervalTo <= range.from) {
+            }
+            else
+            {
+                if (intervalFrom < range.from)
+                {
+                    if (intervalTo <= range.from)
+                    {
                         return -1;
                     }
                     return range.from;
-                } else {
+                }
+                else
+                {
                     assert range.from == intervalFrom;
-                    if (range.from == range.to) {
+                    if (range.from == range.to)
+                    {
                         range = range.next;
-                        if (range == EndMarker) {
+                        if (range == EndMarker)
+                        {
                             return -1;
                         }
-                    } else {
-                        if (intervalFrom == intervalTo) {
+                    }
+                    else
+                    {
+                        if (intervalFrom == intervalTo)
+                        {
                             return -1;
                         }
                         return range.from;
@@ -81,7 +101,8 @@ final class FixedRange {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "[" + from + ", " + to + "]";
     }
 }

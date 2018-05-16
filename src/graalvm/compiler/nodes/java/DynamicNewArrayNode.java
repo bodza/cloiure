@@ -22,7 +22,8 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * compile-time constant.
  */
 @NodeInfo
-public class DynamicNewArrayNode extends AbstractNewArrayNode implements Canonicalizable {
+public class DynamicNewArrayNode extends AbstractNewArrayNode implements Canonicalizable
+{
     public static final NodeClass<DynamicNewArrayNode> TYPE = NodeClass.create(DynamicNewArrayNode.class);
 
     @Input ValueNode elementType;
@@ -40,48 +41,58 @@ public class DynamicNewArrayNode extends AbstractNewArrayNode implements Canonic
      */
     protected final JavaKind knownElementKind;
 
-    public DynamicNewArrayNode(ValueNode elementType, ValueNode length, boolean fillContents) {
+    public DynamicNewArrayNode(ValueNode elementType, ValueNode length, boolean fillContents)
+    {
         this(TYPE, elementType, length, fillContents, null, null, null);
     }
 
-    public DynamicNewArrayNode(@InjectedNodeParameter MetaAccessProvider metaAccess, ValueNode elementType, ValueNode length, boolean fillContents, JavaKind knownElementKind) {
+    public DynamicNewArrayNode(@InjectedNodeParameter MetaAccessProvider metaAccess, ValueNode elementType, ValueNode length, boolean fillContents, JavaKind knownElementKind)
+    {
         this(TYPE, elementType, length, fillContents, knownElementKind, null, metaAccess);
     }
 
-    private static Stamp computeStamp(JavaKind knownElementKind, MetaAccessProvider metaAccess) {
-        if (knownElementKind != null && metaAccess != null) {
+    private static Stamp computeStamp(JavaKind knownElementKind, MetaAccessProvider metaAccess)
+    {
+        if (knownElementKind != null && metaAccess != null)
+        {
             ResolvedJavaType arrayType = metaAccess.lookupJavaType(knownElementKind == JavaKind.Object ? Object.class : knownElementKind.toJavaClass()).getArrayClass();
             return StampFactory.objectNonNull(TypeReference.createWithoutAssumptions(arrayType));
         }
         return StampFactory.objectNonNull();
     }
 
-    protected DynamicNewArrayNode(NodeClass<? extends DynamicNewArrayNode> c, ValueNode elementType, ValueNode length, boolean fillContents, JavaKind knownElementKind, FrameState stateBefore,
-                    MetaAccessProvider metaAccess) {
+    protected DynamicNewArrayNode(NodeClass<? extends DynamicNewArrayNode> c, ValueNode elementType, ValueNode length, boolean fillContents, JavaKind knownElementKind, FrameState stateBefore, MetaAccessProvider metaAccess)
+    {
         super(c, computeStamp(knownElementKind, metaAccess), length, fillContents, stateBefore);
         this.elementType = elementType;
         this.knownElementKind = knownElementKind;
         assert knownElementKind != JavaKind.Void && knownElementKind != JavaKind.Illegal;
     }
 
-    public ValueNode getElementType() {
+    public ValueNode getElementType()
+    {
         return elementType;
     }
 
-    public JavaKind getKnownElementKind() {
+    public JavaKind getKnownElementKind()
+    {
         return knownElementKind;
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool) {
-        if (elementType.isConstant()) {
-            if (GeneratePIC.getValue(tool.getOptions())) {
+    public Node canonical(CanonicalizerTool tool)
+    {
+        if (elementType.isConstant())
+        {
+            if (GeneratePIC.getValue(tool.getOptions()))
+            {
                 // Can't fold for AOT, because the resulting NewArrayNode will be missing its
                 // ResolveConstantNode for the array class.
                 return this;
             }
             ResolvedJavaType type = tool.getConstantReflection().asJavaType(elementType.asConstant());
-            if (type != null && !throwsIllegalArgumentException(type)) {
+            if (type != null && !throwsIllegalArgumentException(type))
+            {
                 return createNewArrayNode(type);
             }
         }
@@ -89,41 +100,49 @@ public class DynamicNewArrayNode extends AbstractNewArrayNode implements Canonic
     }
 
     /** Hook for subclasses to instantiate a subclass of {@link NewArrayNode}. */
-    protected NewArrayNode createNewArrayNode(ResolvedJavaType type) {
+    protected NewArrayNode createNewArrayNode(ResolvedJavaType type)
+    {
         return new NewArrayNode(type, length(), fillContents(), stateBefore());
     }
 
-    public static boolean throwsIllegalArgumentException(Class<?> elementType, Class<?> voidClass) {
+    public static boolean throwsIllegalArgumentException(Class<?> elementType, Class<?> voidClass)
+    {
         return elementType == voidClass;
     }
 
-    public static boolean throwsIllegalArgumentException(ResolvedJavaType elementType) {
+    public static boolean throwsIllegalArgumentException(ResolvedJavaType elementType)
+    {
         return elementType.getJavaKind() == JavaKind.Void;
     }
 
     @NodeIntrinsic
     private static native Object newArray(Class<?> componentType, int length, @ConstantNodeParameter boolean fillContents);
 
-    public static Object newArray(Class<?> componentType, int length) {
+    public static Object newArray(Class<?> componentType, int length)
+    {
         return newArray(componentType, length, true);
     }
 
     @NodeIntrinsic
     private static native Object newArray(Class<?> componentType, int length, @ConstantNodeParameter boolean fillContents, @ConstantNodeParameter JavaKind knownElementKind);
 
-    public static Object newArray(Class<?> componentType, int length, JavaKind knownElementKind) {
+    public static Object newArray(Class<?> componentType, int length, JavaKind knownElementKind)
+    {
         return newArray(componentType, length, true, knownElementKind);
     }
 
-    public static Object newUninitializedArray(Class<?> componentType, int length, JavaKind knownElementKind) {
+    public static Object newUninitializedArray(Class<?> componentType, int length, JavaKind knownElementKind)
+    {
         return newArray(componentType, length, false, knownElementKind);
     }
 
-    public ValueNode getVoidClass() {
+    public ValueNode getVoidClass()
+    {
         return voidClass;
     }
 
-    public void setVoidClass(ValueNode newVoidClass) {
+    public void setVoidClass(ValueNode newVoidClass)
+    {
         updateUsages(voidClass, newVoidClass);
         voidClass = newVoidClass;
     }

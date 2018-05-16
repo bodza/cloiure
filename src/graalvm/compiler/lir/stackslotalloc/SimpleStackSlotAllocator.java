@@ -22,56 +22,73 @@ import graalvm.compiler.lir.phases.AllocationPhase;
 import jdk.vm.ci.code.StackSlot;
 import jdk.vm.ci.code.TargetDescription;
 
-public class SimpleStackSlotAllocator extends AllocationPhase {
-
+public class SimpleStackSlotAllocator extends AllocationPhase
+{
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context) {
+    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context)
+    {
         allocateStackSlots((FrameMapBuilderTool) lirGenRes.getFrameMapBuilder(), lirGenRes);
         lirGenRes.buildFrameMap();
     }
 
-    public void allocateStackSlots(FrameMapBuilderTool builder, LIRGenerationResult res) {
+    public void allocateStackSlots(FrameMapBuilderTool builder, LIRGenerationResult res)
+    {
         DebugContext debug = res.getLIR().getDebug();
         StackSlot[] mapping = new StackSlot[builder.getNumberOfStackSlots()];
         boolean allocatedFramesizeEnabled = allocatedFramesize.isEnabled(debug);
         long currentFrameSize = allocatedFramesizeEnabled ? builder.getFrameMap().currentFrameSize() : 0;
-        for (VirtualStackSlot virtualSlot : builder.getStackSlots()) {
+        for (VirtualStackSlot virtualSlot : builder.getStackSlots())
+        {
             final StackSlot slot;
-            if (virtualSlot instanceof SimpleVirtualStackSlot) {
+            if (virtualSlot instanceof SimpleVirtualStackSlot)
+            {
                 slot = mapSimpleVirtualStackSlot(builder, (SimpleVirtualStackSlot) virtualSlot);
                 virtualFramesize.add(debug, builder.getFrameMap().spillSlotSize(virtualSlot.getValueKind()));
-            } else if (virtualSlot instanceof VirtualStackSlotRange) {
+            }
+            else if (virtualSlot instanceof VirtualStackSlotRange)
+            {
                 VirtualStackSlotRange slotRange = (VirtualStackSlotRange) virtualSlot;
                 slot = mapVirtualStackSlotRange(builder, slotRange);
                 virtualFramesize.add(debug, builder.getFrameMap().spillSlotRangeSize(slotRange.getSlots()));
-            } else {
+            }
+            else
+            {
                 throw GraalError.shouldNotReachHere("Unknown VirtualStackSlot: " + virtualSlot);
             }
             allocatedSlots.increment(debug);
             mapping[virtualSlot.getId()] = slot;
         }
         updateLIR(res, mapping);
-        if (allocatedFramesizeEnabled) {
+        if (allocatedFramesizeEnabled)
+        {
             allocatedFramesize.add(debug, builder.getFrameMap().currentFrameSize() - currentFrameSize);
         }
     }
 
     @SuppressWarnings("try")
-    protected void updateLIR(LIRGenerationResult res, StackSlot[] mapping) {
+    protected void updateLIR(LIRGenerationResult res, StackSlot[] mapping)
+    {
         DebugContext debug = res.getLIR().getDebug();
-        try (DebugContext.Scope scope = debug.scope("StackSlotMappingLIR")) {
-            ValueProcedure updateProc = (value, mode, flags) -> {
-                if (isVirtualStackSlot(value)) {
+        try (DebugContext.Scope scope = debug.scope("StackSlotMappingLIR"))
+        {
+            ValueProcedure updateProc = (value, mode, flags) ->
+            {
+                if (isVirtualStackSlot(value))
+                {
                     StackSlot stackSlot = mapping[asVirtualStackSlot(value).getId()];
                     debug.log("map %s -> %s", value, stackSlot);
                     return stackSlot;
                 }
                 return value;
             };
-            for (AbstractBlockBase<?> block : res.getLIR().getControlFlowGraph().getBlocks()) {
-                try (Indent indent0 = debug.logAndIndent("block: %s", block)) {
-                    for (LIRInstruction inst : res.getLIR().getLIRforBlock(block)) {
-                        try (Indent indent1 = debug.logAndIndent("Inst: %d: %s", inst.id(), inst)) {
+            for (AbstractBlockBase<?> block : res.getLIR().getControlFlowGraph().getBlocks())
+            {
+                try (Indent indent0 = debug.logAndIndent("block: %s", block))
+                {
+                    for (LIRInstruction inst : res.getLIR().getLIRforBlock(block))
+                    {
+                        try (Indent indent1 = debug.logAndIndent("Inst: %d: %s", inst.id(), inst))
+                        {
                             inst.forEachAlive(updateProc);
                             inst.forEachInput(updateProc);
                             inst.forEachOutput(updateProc);
@@ -84,11 +101,13 @@ public class SimpleStackSlotAllocator extends AllocationPhase {
         }
     }
 
-    protected StackSlot mapSimpleVirtualStackSlot(FrameMapBuilderTool builder, SimpleVirtualStackSlot virtualStackSlot) {
+    protected StackSlot mapSimpleVirtualStackSlot(FrameMapBuilderTool builder, SimpleVirtualStackSlot virtualStackSlot)
+    {
         return builder.getFrameMap().allocateSpillSlot(virtualStackSlot.getValueKind());
     }
 
-    protected StackSlot mapVirtualStackSlotRange(FrameMapBuilderTool builder, VirtualStackSlotRange virtualStackSlot) {
+    protected StackSlot mapVirtualStackSlotRange(FrameMapBuilderTool builder, VirtualStackSlotRange virtualStackSlot)
+    {
         return builder.getFrameMap().allocateStackSlots(virtualStackSlot.getSlots(), virtualStackSlot.getObjects());
     }
 }

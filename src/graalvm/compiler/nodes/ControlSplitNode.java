@@ -10,10 +10,12 @@ import graalvm.compiler.nodeinfo.NodeInfo;
  * (ie. have more than one successor).
  */
 @NodeInfo
-public abstract class ControlSplitNode extends FixedNode implements IterableNodeType {
+public abstract class ControlSplitNode extends FixedNode implements IterableNodeType
+{
     public static final NodeClass<ControlSplitNode> TYPE = NodeClass.create(ControlSplitNode.class);
 
-    protected ControlSplitNode(NodeClass<? extends ControlSplitNode> c, Stamp stamp) {
+    protected ControlSplitNode(NodeClass<? extends ControlSplitNode> c, Stamp stamp)
+    {
         super(c, stamp);
     }
 

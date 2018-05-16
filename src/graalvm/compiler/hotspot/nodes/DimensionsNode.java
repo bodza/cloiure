@@ -24,18 +24,20 @@ import jdk.vm.ci.meta.Value;
  * instruction.
  */
 @NodeInfo(cycles = CYCLES_2, size = SIZE_1)
-public final class DimensionsNode extends FixedWithNextNode implements LIRLowerable {
-
+public final class DimensionsNode extends FixedWithNextNode implements LIRLowerable
+{
     public static final NodeClass<DimensionsNode> TYPE = NodeClass.create(DimensionsNode.class);
     protected final int rank;
 
-    public DimensionsNode(@InjectedNodeParameter WordTypes wordTypes, int rank) {
+    public DimensionsNode(@InjectedNodeParameter WordTypes wordTypes, int rank)
+    {
         super(TYPE, StampFactory.forKind(wordTypes.getWordKind()));
         this.rank = rank;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         LIRGeneratorTool lirGen = gen.getLIRGeneratorTool();
         int size = rank * 4;
         int wordSize = lirGen.target().wordSize;

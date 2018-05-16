@@ -5,9 +5,8 @@ import graalvm.compiler.debug.GraalError;
 /**
  * This error is the graph/node aware extension of {@link GraalError}.
  */
-public class GraalGraphError extends GraalError {
-
-    private static final long serialVersionUID = -989290015525497919L;
+public class GraalGraphError extends GraalError
+{
     private Node node;
     private Graph graph;
 
@@ -20,7 +19,8 @@ public class GraalGraphError extends GraalError {
      * @param args parameters to String.format - parameters that implement {@link Iterable} will be
      *            expanded into a [x, x, ...] representation.
      */
-    public GraalGraphError(String msg, Object... args) {
+    public GraalGraphError(String msg, Object... args)
+    {
         super(msg, args);
     }
 
@@ -29,7 +29,8 @@ public class GraalGraphError extends GraalError {
      *
      * @param cause the original exception that contains additional information on this error
      */
-    public GraalGraphError(Throwable cause) {
+    public GraalGraphError(Throwable cause)
+    {
         super(cause);
     }
 
@@ -38,9 +39,11 @@ public class GraalGraphError extends GraalError {
      *
      * @param e the original GraalError
      */
-    protected GraalGraphError(GraalError e) {
+    protected GraalGraphError(GraalError e)
+    {
         super(e);
-        if (e instanceof GraalGraphError) {
+        if (e instanceof GraalGraphError)
+        {
             node = ((GraalGraphError) e).node;
             graph = ((GraalGraphError) e).graph;
         }
@@ -53,10 +56,13 @@ public class GraalGraphError extends GraalError {
      * @param newGraph the graph which is in a incorrect state, if the verification error was not
      *            caused by a specific node
      */
-    GraalGraphError addContext(Graph newGraph) {
-        if (newGraph != this.graph) {
+    GraalGraphError addContext(Graph newGraph)
+    {
+        if (newGraph != this.graph)
+        {
             addContext("graph", newGraph);
-            if (this.graph == null) {
+            if (this.graph == null)
+            {
                 this.graph = newGraph;
             }
         }
@@ -70,10 +76,13 @@ public class GraalGraphError extends GraalError {
      * @param newNode the node which is in a incorrect state, if the verification error was caused
      *            by a node
      */
-    public GraalGraphError addContext(Node newNode) {
-        if (newNode != this.node) {
+    public GraalGraphError addContext(Node newNode)
+    {
+        if (newNode != this.node)
+        {
             addContext("node", newNode);
-            if (this.node == null) {
+            if (this.node == null)
+            {
                 this.node = newNode;
             }
         }
@@ -87,11 +96,15 @@ public class GraalGraphError extends GraalError {
      * @param newGraph the graph which is in a incorrect state, if the verification error was not
      *            caused by a specific node
      */
-    public static GraalGraphError transformAndAddContext(GraalError e, Graph newGraph) {
+    public static GraalGraphError transformAndAddContext(GraalError e, Graph newGraph)
+    {
         GraalGraphError graphError;
-        if (e instanceof GraalGraphError) {
+        if (e instanceof GraalGraphError)
+        {
             graphError = (GraalGraphError) e;
-        } else {
+        }
+        else
+        {
             graphError = new GraalGraphError(e);
         }
         return graphError.addContext(newGraph);
@@ -104,21 +117,27 @@ public class GraalGraphError extends GraalError {
      * @param newNode the node which is in a incorrect state, if the verification error was caused
      *            by a node
      */
-    public static GraalGraphError transformAndAddContext(GraalError e, Node newNode) {
+    public static GraalGraphError transformAndAddContext(GraalError e, Node newNode)
+    {
         GraalGraphError graphError;
-        if (e instanceof GraalGraphError) {
+        if (e instanceof GraalGraphError)
+        {
             graphError = (GraalGraphError) e;
-        } else {
+        }
+        else
+        {
             graphError = new GraalGraphError(e);
         }
         return graphError.addContext(newNode);
     }
 
-    public Node node() {
+    public Node node()
+    {
         return node;
     }
 
-    public Graph graph() {
+    public Graph graph()
+    {
         return graph;
     }
 }

@@ -36,12 +36,13 @@ import jdk.vm.ci.meta.Value;
 /**
  * Builds {@link LIRFrameState}s from {@link FrameState}s.
  */
-public class DebugInfoBuilder {
-
+public class DebugInfoBuilder
+{
     protected final NodeValueMap nodeValueMap;
     protected final DebugContext debug;
 
-    public DebugInfoBuilder(NodeValueMap nodeValueMap, DebugContext debug) {
+    public DebugInfoBuilder(NodeValueMap nodeValueMap, DebugContext debug)
+    {
         this.nodeValueMap = nodeValueMap;
         this.debug = debug;
     }
@@ -54,18 +55,24 @@ public class DebugInfoBuilder {
 
     protected final Queue<VirtualObjectNode> pendingVirtualObjects = new ArrayDeque<>();
 
-    public LIRFrameState build(FrameState topState, LabelRef exceptionEdge) {
+    public LIRFrameState build(FrameState topState, LabelRef exceptionEdge)
+    {
         assert virtualObjects.size() == 0;
         assert objectStates.size() == 0;
         assert pendingVirtualObjects.size() == 0;
 
         // collect all VirtualObjectField instances:
         FrameState current = topState;
-        do {
-            if (current.virtualObjectMappingCount() > 0) {
-                for (EscapeObjectState state : current.virtualObjectMappings()) {
-                    if (!objectStates.containsKey(state.object())) {
-                        if (!(state instanceof MaterializedObjectState) || ((MaterializedObjectState) state).materializedValue() != state.object()) {
+        do
+        {
+            if (current.virtualObjectMappingCount() > 0)
+            {
+                for (EscapeObjectState state : current.virtualObjectMappings())
+                {
+                    if (!objectStates.containsKey(state.object()))
+                    {
+                        if (!(state instanceof MaterializedObjectState) || ((MaterializedObjectState) state).materializedValue() != state.object())
+                        {
                             objectStates.put(state.object(), state);
                         }
                     }
@@ -77,44 +84,56 @@ public class DebugInfoBuilder {
         BytecodeFrame frame = computeFrameForState(topState);
 
         VirtualObject[] virtualObjectsArray = null;
-        if (virtualObjects.size() != 0) {
+        if (virtualObjects.size() != 0)
+        {
             // fill in the VirtualObject values
             VirtualObjectNode vobjNode;
-            while ((vobjNode = pendingVirtualObjects.poll()) != null) {
+            while ((vobjNode = pendingVirtualObjects.poll()) != null)
+            {
                 VirtualObject vobjValue = virtualObjects.get(vobjNode);
                 assert vobjValue.getValues() == null;
 
                 JavaValue[] values;
                 JavaKind[] slotKinds;
                 int entryCount = vobjNode.entryCount();
-                if (entryCount == 0) {
+                if (entryCount == 0)
+                {
                     values = NO_JAVA_VALUES;
                     slotKinds = NO_JAVA_KINDS;
-                } else {
+                }
+                else
+                {
                     values = new JavaValue[entryCount];
                     slotKinds = new JavaKind[entryCount];
                 }
-                if (values.length > 0) {
+                if (values.length > 0)
+                {
                     VirtualObjectState currentField = (VirtualObjectState) objectStates.get(vobjNode);
                     assert currentField != null;
                     int pos = 0;
-                    for (int i = 0; i < entryCount; i++) {
+                    for (int i = 0; i < entryCount; i++)
+                    {
                         ValueNode value = currentField.values().get(i);
-                        if (value == null) {
+                        if (value == null)
+                        {
                             JavaKind entryKind = vobjNode.entryKind(i);
                             values[pos] = JavaConstant.defaultForKind(entryKind.getStackKind());
                             slotKinds[pos] = entryKind.getStackKind();
                             pos++;
-                        } else if (!value.isConstant() || value.asJavaConstant().getJavaKind() != JavaKind.Illegal) {
+                        }
+                        else if (!value.isConstant() || value.asJavaConstant().getJavaKind() != JavaKind.Illegal)
+                        {
                             values[pos] = toJavaValue(value);
                             slotKinds[pos] = toSlotKind(value);
                             pos++;
-                        } else {
+                        }
+                        else
+                        {
                             assert value.getStackKind() == JavaKind.Illegal;
                             ValueNode previousValue = currentField.values().get(i - 1);
-                            assert (previousValue != null && previousValue.getStackKind().needsTwoSlots()) : vobjNode + " " + i +
-                                            " " + previousValue + " " + currentField.values().snapshot();
-                            if (previousValue == null || !previousValue.getStackKind().needsTwoSlots()) {
+                            assert (previousValue != null && previousValue.getStackKind().needsTwoSlots()) : vobjNode + " " + i + " " + previousValue + " " + currentField.values().snapshot();
+                            if (previousValue == null || !previousValue.getStackKind().needsTwoSlots())
+                            {
                                 // Don't allow the IllegalConstant to leak into the debug info
                                 JavaKind entryKind = vobjNode.entryKind(i);
                                 values[pos] = JavaConstant.defaultForKind(entryKind.getStackKind());
@@ -123,7 +142,8 @@ public class DebugInfoBuilder {
                             }
                         }
                     }
-                    if (pos != entryCount) {
+                    if (pos != entryCount)
+                    {
                         values = Arrays.copyOf(values, pos);
                         slotKinds = Arrays.copyOf(slotKinds, pos);
                     }
@@ -134,7 +154,8 @@ public class DebugInfoBuilder {
 
             virtualObjectsArray = new VirtualObject[virtualObjects.size()];
             int index = 0;
-            for (VirtualObject value : virtualObjects.getValues()) {
+            for (VirtualObject value : virtualObjects.getValues())
+            {
                 virtualObjectsArray[index++] = value;
             }
             virtualObjects.clear();
@@ -144,39 +165,49 @@ public class DebugInfoBuilder {
         return newLIRFrameState(exceptionEdge, frame, virtualObjectsArray);
     }
 
-    private boolean checkValues(ResolvedJavaType type, JavaValue[] values, JavaKind[] slotKinds) {
+    private boolean checkValues(ResolvedJavaType type, JavaValue[] values, JavaKind[] slotKinds)
+    {
         assert (values == null) == (slotKinds == null);
-        if (values != null) {
+        if (values != null)
+        {
             assert values.length == slotKinds.length;
-            if (!type.isArray()) {
+            if (!type.isArray())
+            {
                 ResolvedJavaField[] fields = type.getInstanceFields(true);
                 int fieldIndex = 0;
-                for (int valueIndex = 0; valueIndex < values.length; valueIndex++, fieldIndex++) {
+                for (int valueIndex = 0; valueIndex < values.length; valueIndex++, fieldIndex++)
+                {
                     ResolvedJavaField field = fields[fieldIndex];
                     JavaKind valKind = slotKinds[valueIndex].getStackKind();
                     JavaKind fieldKind = storageKind(field.getType());
-                    if ((valKind == JavaKind.Double || valKind == JavaKind.Long) && fieldKind == JavaKind.Int) {
-                        assert fieldIndex + 1 < fields.length : String.format("Not enough fields for fieldIndex = %d valueIndex = %d %s %s", fieldIndex, valueIndex, Arrays.toString(fields),
-                                        Arrays.toString(values));
-                        assert storageKind(fields[fieldIndex + 1].getType()) == JavaKind.Int : String.format("fieldIndex = %d valueIndex = %d %s %s %s", fieldIndex, valueIndex,
-                                        storageKind(fields[fieldIndex + 1].getType()), Arrays.toString(fields),
-                                        Arrays.toString(values));
+                    if ((valKind == JavaKind.Double || valKind == JavaKind.Long) && fieldKind == JavaKind.Int)
+                    {
+                        assert fieldIndex + 1 < fields.length : String.format("Not enough fields for fieldIndex = %d valueIndex = %d %s %s", fieldIndex, valueIndex, Arrays.toString(fields), Arrays.toString(values));
+                        assert storageKind(fields[fieldIndex + 1].getType()) == JavaKind.Int : String.format("fieldIndex = %d valueIndex = %d %s %s %s", fieldIndex, valueIndex, storageKind(fields[fieldIndex + 1].getType()), Arrays.toString(fields), Arrays.toString(values));
                         fieldIndex++;
-                    } else {
+                    }
+                    else
+                    {
                         assert valKind == fieldKind.getStackKind() : field + ": " + valKind + " != " + fieldKind;
                     }
                 }
                 assert fields.length == fieldIndex : type + ": fields=" + Arrays.toString(fields) + ", field values=" + Arrays.toString(values);
-            } else {
+            }
+            else
+            {
                 JavaKind componentKind = storageKind(type.getComponentType()).getStackKind();
-                if (componentKind == JavaKind.Object) {
-                    for (int i = 0; i < values.length; i++) {
+                if (componentKind == JavaKind.Object)
+                {
+                    for (int i = 0; i < values.length; i++)
+                    {
                         assert slotKinds[i].isObject() : slotKinds[i] + " != " + componentKind;
                     }
-                } else {
-                    for (int i = 0; i < values.length; i++) {
-                        assert slotKinds[i] == componentKind || componentKind.getBitCount() >= slotKinds[i].getBitCount() ||
-                                        (componentKind == JavaKind.Int && slotKinds[i].getBitCount() >= JavaKind.Int.getBitCount()) : slotKinds[i] + " != " + componentKind;
+                }
+                else
+                {
+                    for (int i = 0; i < values.length; i++)
+                    {
+                        assert slotKinds[i] == componentKind || componentKind.getBitCount() >= slotKinds[i].getBitCount() || (componentKind == JavaKind.Int && slotKinds[i].getBitCount() >= JavaKind.Int.getBitCount()) : slotKinds[i] + " != " + componentKind;
                     }
                 }
             }
@@ -189,23 +220,26 @@ public class DebugInfoBuilder {
      * internally stored as a primitive value. We do not know about Word types here, but subclasses
      * do know.
      */
-    protected JavaKind storageKind(JavaType type) {
+    protected JavaKind storageKind(JavaType type)
+    {
         return type.getJavaKind();
     }
 
-    protected LIRFrameState newLIRFrameState(LabelRef exceptionEdge, BytecodeFrame frame, VirtualObject[] virtualObjectsArray) {
+    protected LIRFrameState newLIRFrameState(LabelRef exceptionEdge, BytecodeFrame frame, VirtualObject[] virtualObjectsArray)
+    {
         return new LIRFrameState(frame, virtualObjectsArray, exceptionEdge);
     }
 
-    protected BytecodeFrame computeFrameForState(FrameState state) {
-        try {
+    protected BytecodeFrame computeFrameForState(FrameState state)
+    {
+        try
+        {
             assert state.bci != BytecodeFrame.INVALID_FRAMESTATE_BCI;
             assert state.bci != BytecodeFrame.UNKNOWN_BCI;
             assert state.bci != BytecodeFrame.BEFORE_BCI || state.locksSize() == 0;
             assert state.bci != BytecodeFrame.AFTER_BCI || state.locksSize() == 0;
             assert state.bci != BytecodeFrame.AFTER_EXCEPTION_BCI || state.locksSize() == 0;
-            assert !(state.getMethod().isSynchronized() && state.bci != BytecodeFrame.BEFORE_BCI && state.bci != BytecodeFrame.AFTER_BCI && state.bci != BytecodeFrame.AFTER_EXCEPTION_BCI) ||
-                            state.locksSize() > 0;
+            assert !(state.getMethod().isSynchronized() && state.bci != BytecodeFrame.BEFORE_BCI && state.bci != BytecodeFrame.AFTER_BCI && state.bci != BytecodeFrame.AFTER_EXCEPTION_BCI) || state.locksSize() > 0;
             assert state.verify();
 
             int numLocals = state.localsSize();
@@ -222,46 +256,56 @@ public class DebugInfoBuilder {
             computeLocks(state, values);
 
             BytecodeFrame caller = null;
-            if (state.outerFrameState() != null) {
+            if (state.outerFrameState() != null)
+            {
                 caller = computeFrameForState(state.outerFrameState());
             }
 
-            if (!state.canProduceBytecodeFrame()) {
+            if (!state.canProduceBytecodeFrame())
+            {
                 // This typically means a snippet or intrinsic frame state made it to the backend
                 StackTraceElement ste = state.getCode().asStackTraceElement(state.bci);
-                throw new GraalError("Frame state for %s cannot be converted to a BytecodeFrame since the frame state's code is " +
-                                "not the same as the frame state method's code", ste);
+                throw new GraalError("Frame state for %s cannot be converted to a BytecodeFrame since the frame state's code is " + "not the same as the frame state method's code", ste);
             }
 
             return new BytecodeFrame(caller, state.getMethod(), state.bci, state.rethrowException(), state.duringCall(), values, slotKinds, numLocals, numStack, numLocks);
-        } catch (GraalError e) {
+        }
+        catch (GraalError e)
+        {
             throw e.addContext("FrameState: ", state);
         }
     }
 
-    protected void computeLocals(FrameState state, int numLocals, JavaValue[] values, JavaKind[] slotKinds) {
-        for (int i = 0; i < numLocals; i++) {
+    protected void computeLocals(FrameState state, int numLocals, JavaValue[] values, JavaKind[] slotKinds)
+    {
+        for (int i = 0; i < numLocals; i++)
+        {
             ValueNode local = state.localAt(i);
             values[i] = toJavaValue(local);
             slotKinds[i] = toSlotKind(local);
         }
     }
 
-    protected void computeStack(FrameState state, int numLocals, int numStack, JavaValue[] values, JavaKind[] slotKinds) {
-        for (int i = 0; i < numStack; i++) {
+    protected void computeStack(FrameState state, int numLocals, int numStack, JavaValue[] values, JavaKind[] slotKinds)
+    {
+        for (int i = 0; i < numStack; i++)
+        {
             ValueNode stack = state.stackAt(i);
             values[numLocals + i] = toJavaValue(stack);
             slotKinds[numLocals + i] = toSlotKind(stack);
         }
     }
 
-    protected void computeLocks(FrameState state, JavaValue[] values) {
-        for (int i = 0; i < state.locksSize(); i++) {
+    protected void computeLocks(FrameState state, JavaValue[] values)
+    {
+        for (int i = 0; i < state.locksSize(); i++)
+        {
             values[state.localsSize() + state.stackSize() + i] = computeLockValue(state, i);
         }
     }
 
-    protected JavaValue computeLockValue(FrameState state, int i) {
+    protected JavaValue computeLockValue(FrameState state, int i)
+    {
         return toJavaValue(state.lockAt(i));
     }
 
@@ -270,29 +314,41 @@ public class DebugInfoBuilder {
     private static final CounterKey STATE_VARIABLES = DebugContext.counter("StateVariables");
     private static final CounterKey STATE_CONSTANTS = DebugContext.counter("StateConstants");
 
-    private static JavaKind toSlotKind(ValueNode value) {
-        if (value == null) {
+    private static JavaKind toSlotKind(ValueNode value)
+    {
+        if (value == null)
+        {
             return JavaKind.Illegal;
-        } else {
+        }
+        else
+        {
             return value.getStackKind();
         }
     }
 
-    protected JavaValue toJavaValue(ValueNode value) {
-        try {
-            if (value instanceof VirtualObjectNode) {
+    protected JavaValue toJavaValue(ValueNode value)
+    {
+        try
+        {
+            if (value instanceof VirtualObjectNode)
+            {
                 VirtualObjectNode obj = (VirtualObjectNode) value;
                 EscapeObjectState state = objectStates.get(obj);
-                if (state == null && obj.entryCount() > 0) {
+                if (state == null && obj.entryCount() > 0)
+                {
                     // null states occur for objects with 0 fields
                     throw new GraalError("no mapping found for virtual object %s", obj);
                 }
-                if (state instanceof MaterializedObjectState) {
+                if (state instanceof MaterializedObjectState)
+                {
                     return toJavaValue(((MaterializedObjectState) state).materializedValue());
-                } else {
+                }
+                else
+                {
                     assert obj.entryCount() == 0 || state instanceof VirtualObjectState;
                     VirtualObject vobject = virtualObjects.get(obj);
-                    if (vobject == null) {
+                    if (vobject == null)
+                    {
                         vobject = VirtualObject.get(obj.type(), virtualObjects.size());
                         virtualObjects.put(obj, vobject);
                         pendingVirtualObjects.add(obj);
@@ -300,30 +356,40 @@ public class DebugInfoBuilder {
                     STATE_VIRTUAL_OBJECTS.increment(debug);
                     return vobject;
                 }
-            } else {
+            }
+            else
+            {
                 // Remove proxies from constants so the constant can be directly embedded.
                 ValueNode unproxied = GraphUtil.unproxify(value);
-                if (unproxied instanceof ConstantNode) {
+                if (unproxied instanceof ConstantNode)
+                {
                     STATE_CONSTANTS.increment(debug);
                     return unproxied.asJavaConstant();
-
-                } else if (value != null) {
+                }
+                else if (value != null)
+                {
                     STATE_VARIABLES.increment(debug);
                     Value operand = nodeValueMap.operand(value);
-                    if (operand instanceof ConstantValue && ((ConstantValue) operand).isJavaConstant()) {
+                    if (operand instanceof ConstantValue && ((ConstantValue) operand).isJavaConstant())
+                    {
                         return ((ConstantValue) operand).getJavaConstant();
-                    } else {
+                    }
+                    else
+                    {
                         assert operand instanceof Variable : operand + " for " + value;
                         return (JavaValue) operand;
                     }
-
-                } else {
+                }
+                else
+                {
                     // return a dummy value because real value not needed
                     STATE_ILLEGALS.increment(debug);
                     return Value.ILLEGAL;
                 }
             }
-        } catch (GraalError e) {
+        }
+        catch (GraalError e)
+        {
             throw e.addContext("toValue: ", value);
         }
     }

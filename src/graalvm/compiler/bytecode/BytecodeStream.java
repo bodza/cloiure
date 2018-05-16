@@ -5,8 +5,8 @@ package graalvm.compiler.bytecode;
  * prone. For example, it handles the {@link Bytecodes#WIDE} instruction and wide variants of
  * instructions internally.
  */
-public final class BytecodeStream {
-
+public final class BytecodeStream
+{
     private final byte[] code;
     private int opcode;
     private int curBCI;
@@ -17,7 +17,8 @@ public final class BytecodeStream {
      *
      * @param code the array of bytes that contains the bytecode
      */
-    public BytecodeStream(byte[] code) {
+    public BytecodeStream(byte[] code)
+    {
         assert code != null;
         this.code = code;
         setBCI(0);
@@ -26,7 +27,8 @@ public final class BytecodeStream {
     /**
      * Advances to the next bytecode.
      */
-    public void next() {
+    public void next()
+    {
         setBCI(nextBCI);
     }
 
@@ -35,7 +37,8 @@ public final class BytecodeStream {
      *
      * @return the next bytecode index
      */
-    public int nextBCI() {
+    public int nextBCI()
+    {
         return nextBCI;
     }
 
@@ -44,7 +47,8 @@ public final class BytecodeStream {
      *
      * @return the current bytecode index
      */
-    public int currentBCI() {
+    public int currentBCI()
+    {
         return curBCI;
     }
 
@@ -53,7 +57,8 @@ public final class BytecodeStream {
      *
      * @return the index of the end of the code
      */
-    public int endBCI() {
+    public int endBCI()
+    {
         return code.length;
     }
 
@@ -63,10 +68,14 @@ public final class BytecodeStream {
      *
      * @return the current opcode; {@link Bytecodes#END} if at or beyond the end of the code
      */
-    public int currentBC() {
-        if (opcode == Bytecodes.WIDE) {
+    public int currentBC()
+    {
+        if (opcode == Bytecodes.WIDE)
+        {
             return Bytes.beU1(code, curBCI + 1);
-        } else {
+        }
+        else
+        {
             return opcode;
         }
     }
@@ -77,9 +86,11 @@ public final class BytecodeStream {
      *
      * @return the index of the local variable
      */
-    public int readLocalIndex() {
+    public int readLocalIndex()
+    {
         // read local variable index for load/store
-        if (opcode == Bytecodes.WIDE) {
+        if (opcode == Bytecodes.WIDE)
+        {
             return Bytes.beU2(code, curBCI + 2);
         }
         return Bytes.beU1(code, curBCI + 1);
@@ -90,9 +101,11 @@ public final class BytecodeStream {
      *
      * @return the delta for the {@code IINC}
      */
-    public int readIncrement() {
+    public int readIncrement()
+    {
         // read the delta for the iinc bytecode
-        if (opcode == Bytecodes.WIDE) {
+        if (opcode == Bytecodes.WIDE)
+        {
             return Bytes.beS2(code, curBCI + 4);
         }
         return Bytes.beS1(code, curBCI + 2);
@@ -103,11 +116,15 @@ public final class BytecodeStream {
      *
      * @return the destination bytecode index
      */
-    public int readBranchDest() {
+    public int readBranchDest()
+    {
         // reads the destination for a branch bytecode
-        if (opcode == Bytecodes.GOTO_W || opcode == Bytecodes.JSR_W) {
+        if (opcode == Bytecodes.GOTO_W || opcode == Bytecodes.JSR_W)
+        {
             return curBCI + Bytes.beS4(code, curBCI + 1);
-        } else {
+        }
+        else
+        {
             return curBCI + Bytes.beS2(code, curBCI + 1);
         }
     }
@@ -118,7 +135,8 @@ public final class BytecodeStream {
      * @param bci the bytecode index
      * @return the integer value
      */
-    public int readInt(int bci) {
+    public int readInt(int bci)
+    {
         // reads a 4-byte signed value
         return Bytes.beS4(code, bci);
     }
@@ -129,7 +147,8 @@ public final class BytecodeStream {
      * @param bci the bytecode index
      * @return the byte
      */
-    public int readUByte(int bci) {
+    public int readUByte(int bci)
+    {
         return Bytes.beU1(code, bci);
     }
 
@@ -138,8 +157,10 @@ public final class BytecodeStream {
      *
      * @return the constant pool index
      */
-    public char readCPI() {
-        if (opcode == Bytecodes.LDC) {
+    public char readCPI()
+    {
+        if (opcode == Bytecodes.LDC)
+        {
             return (char) Bytes.beU1(code, curBCI + 1);
         }
         return (char) Bytes.beU2(code, curBCI + 1);
@@ -150,7 +171,8 @@ public final class BytecodeStream {
      *
      * @return the constant pool index
      */
-    public int readCPI4() {
+    public int readCPI4()
+    {
         assert opcode == Bytecodes.INVOKEDYNAMIC;
         return Bytes.beS4(code, curBCI + 1);
     }
@@ -160,7 +182,8 @@ public final class BytecodeStream {
      *
      * @return the byte
      */
-    public byte readByte() {
+    public byte readByte()
+    {
         return code[curBCI + 1];
     }
 
@@ -169,7 +192,8 @@ public final class BytecodeStream {
      *
      * @return the short value
      */
-    public short readShort() {
+    public short readShort()
+    {
         return (short) Bytes.beS2(code, curBCI + 1);
     }
 
@@ -180,13 +204,17 @@ public final class BytecodeStream {
      *
      * @param bci the new bytecode index
      */
-    public void setBCI(int bci) {
+    public void setBCI(int bci)
+    {
         curBCI = bci;
-        if (curBCI < code.length) {
+        if (curBCI < code.length)
+        {
             opcode = Bytes.beU1(code, bci);
             assert opcode < Bytecodes.BREAKPOINT : "illegal bytecode";
             nextBCI = bci + lengthOf();
-        } else {
+        }
+        else
+        {
             opcode = Bytecodes.END;
             nextBCI = curBCI;
         }
@@ -195,23 +223,34 @@ public final class BytecodeStream {
     /**
      * Gets the length of the current bytecode.
      */
-    private int lengthOf() {
+    private int lengthOf()
+    {
         int length = Bytecodes.lengthOf(opcode);
-        if (length == 0) {
-            switch (opcode) {
-                case Bytecodes.TABLESWITCH: {
+        if (length == 0)
+        {
+            switch (opcode)
+            {
+                case Bytecodes.TABLESWITCH:
+                {
                     return new BytecodeTableSwitch(this, curBCI).size();
                 }
-                case Bytecodes.LOOKUPSWITCH: {
+                case Bytecodes.LOOKUPSWITCH:
+                {
                     return new BytecodeLookupSwitch(this, curBCI).size();
                 }
-                case Bytecodes.WIDE: {
+                case Bytecodes.WIDE:
+                {
                     int opc = Bytes.beU1(code, curBCI + 1);
-                    if (opc == Bytecodes.RET) {
+                    if (opc == Bytecodes.RET)
+                    {
                         return 4;
-                    } else if (opc == Bytecodes.IINC) {
+                    }
+                    else if (opc == Bytecodes.IINC)
+                    {
                         return 6;
-                    } else {
+                    }
+                    else
+                    {
                         return 4; // a load or store bytecode
                     }
                 }

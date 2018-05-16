@@ -9,6 +9,7 @@ import graalvm.compiler.core.gen.NodeLIRBuilder;
  * normal evaluation in NodeLIRBuilder for all the simple nodes with the complex nodes evaluated at
  * the proper time.
  */
-public interface ComplexMatchResult {
+public interface ComplexMatchResult
+{
     Value evaluate(NodeLIRBuilder gen);
 }

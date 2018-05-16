@@ -29,13 +29,12 @@ import jdk.vm.ci.hotspot.HotSpotInstalledCode;
 import jdk.vm.ci.hotspot.HotSpotResolvedJavaMethod;
 
 @SuppressWarnings("unused")
-public final class CompilationStatistics {
-
-    public static class Options {
-        // @formatter:off
+public final class CompilationStatistics
+{
+    public static class Options
+    {
         @Option(help = "Enables CompilationStatistics.")
         public static final OptionKey<Boolean> UseCompilationStatistics = new OptionKey<>(false);
-        // @formatter:on
     }
 
     private static final long RESOLUTION = 100000000;
@@ -44,27 +43,31 @@ public final class CompilationStatistics {
 
     private static ConcurrentLinkedDeque<CompilationStatistics> list = new ConcurrentLinkedDeque<>();
 
-    private static final ThreadLocal<Deque<CompilationStatistics>> current = new ThreadLocal<Deque<CompilationStatistics>>() {
-
+    private static final ThreadLocal<Deque<CompilationStatistics>> current = new ThreadLocal<Deque<CompilationStatistics>>()
+    {
         @Override
-        protected Deque<CompilationStatistics> initialValue() {
+        protected Deque<CompilationStatistics> initialValue()
+        {
             return new ArrayDeque<>();
         }
     };
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
-    private static @interface NotReported {
+    private static @interface NotReported
+    {
     }
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
-    private static @interface TimeValue {
+    private static @interface TimeValue
+    {
     }
 
     private static long zeroTime = System.nanoTime();
 
-    private static long getThreadAllocatedBytes() {
+    private static long getThreadAllocatedBytes()
+    {
         return GraalServices.getCurrentThreadAllocatedBytes();
     }
 
@@ -80,16 +83,20 @@ public final class CompilationStatistics {
     private final String name;
     private final String signature;
 
-    private CompilationStatistics(HotSpotResolvedJavaMethod method, boolean osr) {
+    private CompilationStatistics(HotSpotResolvedJavaMethod method, boolean osr)
+    {
         this.osr = osr;
-        if (method != null) {
+        if (method != null)
+        {
             holder = method.getDeclaringClass().getName();
             name = method.getName();
             signature = method.getSignature().toMethodDescriptor();
             startTime = System.nanoTime();
             bytecodeCount = method.getCodeSize();
             threadAllocatedBytesStart = getThreadAllocatedBytes();
-        } else {
+        }
+        else
+        {
             assert DUMMY == null : "only DUMMY has no method";
             holder = "";
             name = "";
@@ -98,40 +105,51 @@ public final class CompilationStatistics {
         }
     }
 
-    public void finish(HotSpotResolvedJavaMethod method, HotSpotInstalledCode code) {
-        if (isEnabled()) {
+    public void finish(HotSpotResolvedJavaMethod method, HotSpotInstalledCode code)
+    {
+        if (isEnabled())
+        {
             duration = System.nanoTime() - startTime;
             codeSize = (int) code.getCodeSize();
             memoryUsed = getThreadAllocatedBytes() - threadAllocatedBytesStart;
-            if (current.get().getLast() != this) {
+            if (current.get().getLast() != this)
+            {
                 throw new RuntimeException("mismatch in finish()");
             }
             current.get().removeLast();
         }
     }
 
-    public static CompilationStatistics current() {
+    public static CompilationStatistics current()
+    {
         return current.get().isEmpty() ? null : current.get().getLast();
     }
 
-    public static CompilationStatistics create(OptionValues options, HotSpotResolvedJavaMethod method, boolean isOSR) {
-        if (Options.UseCompilationStatistics.getValue(options)) {
+    public static CompilationStatistics create(OptionValues options, HotSpotResolvedJavaMethod method, boolean isOSR)
+    {
+        if (Options.UseCompilationStatistics.getValue(options))
+        {
             CompilationStatistics stats = new CompilationStatistics(method, isOSR);
             list.add(stats);
             current.get().addLast(stats);
             return stats;
-        } else {
+        }
+        else
+        {
             return DUMMY;
         }
     }
 
-    public boolean isEnabled() {
+    public boolean isEnabled()
+    {
         return this != DUMMY;
     }
 
     @SuppressWarnings("deprecation")
-    public static void clear(String dumpName) {
-        try {
+    public static void clear(String dumpName)
+    {
+        try
+        {
             ConcurrentLinkedDeque<CompilationStatistics> snapshot = list;
             long snapshotZeroTime = zeroTime;
 
@@ -143,14 +161,16 @@ public final class CompilationStatistics {
 
             dumpCompilations(snapshot, dumpName, dateString);
 
-            try (FileOutputStream fos = new FileOutputStream("timeline_" + dateString + "_" + dumpName + ".csv", true); PrintStream out = new PrintStream(fos)) {
-
+            try (FileOutputStream fos = new FileOutputStream("timeline_" + dateString + "_" + dumpName + ".csv", true); PrintStream out = new PrintStream(fos))
+            {
                 long[] timeSpent = new long[10000];
                 int maxTick = 0;
-                for (CompilationStatistics stats : snapshot) {
+                for (CompilationStatistics stats : snapshot)
+                {
                     long start = stats.startTime - snapshotZeroTime;
                     long duration = stats.duration;
-                    if (start < 0) {
+                    if (start < 0)
+                    {
                         duration -= -start;
                         start = 0;
                     }
@@ -158,8 +178,10 @@ public final class CompilationStatistics {
                     int tick = (int) (start / RESOLUTION);
                     long timeLeft = RESOLUTION - (start % RESOLUTION);
 
-                    while (tick < timeSpent.length && duration > 0) {
-                        if (tick > maxTick) {
+                    while (tick < timeSpent.length && duration > 0)
+                    {
+                        if (tick > maxTick)
+                        {
                             maxTick = tick;
                         }
                         timeSpent[tick] += Math.min(timeLeft, duration);
@@ -169,48 +191,62 @@ public final class CompilationStatistics {
                     }
                 }
                 String timelineName = System.getProperty("stats.timeline.name");
-                if (timelineName != null && !timelineName.isEmpty()) {
+                if (timelineName != null && !timelineName.isEmpty())
+                {
                     out.printf("%s%c", CSVUtil.Escape.escape(timelineName), CSVUtil.SEPARATOR);
                 }
-                for (int i = 0; i < maxTick; i++) {
+                for (int i = 0; i < maxTick; i++)
+                {
                     out.printf("%d%c", normalize(timeSpent[i]), CSVUtil.SEPARATOR);
                 }
                 // print last column
                 out.printf("%d", normalize(timeSpent[maxTick]));
                 out.println();
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             throw new RuntimeException(e);
         }
     }
 
-    private static long normalize(long time) {
+    private static long normalize(long time)
+    {
         return time * 100 / RESOLUTION;
     }
 
-    protected static void dumpCompilations(ConcurrentLinkedDeque<CompilationStatistics> snapshot, String dumpName, String dateString) throws IllegalAccessException, FileNotFoundException {
+    protected static void dumpCompilations(ConcurrentLinkedDeque<CompilationStatistics> snapshot, String dumpName, String dateString) throws IllegalAccessException, FileNotFoundException
+    {
         String fileName = "compilations_" + dateString + "_" + dumpName + ".csv";
         char separator = '\t';
-        try (PrintStream out = new PrintStream(fileName)) {
+        try (PrintStream out = new PrintStream(fileName))
+        {
             // output the list of all compilations
 
             Field[] declaredFields = CompilationStatistics.class.getDeclaredFields();
             ArrayList<Field> fields = new ArrayList<>();
-            for (Field field : declaredFields) {
-                if (!Modifier.isStatic(field.getModifiers()) && !field.isAnnotationPresent(NotReported.class)) {
+            for (Field field : declaredFields)
+            {
+                if (!Modifier.isStatic(field.getModifiers()) && !field.isAnnotationPresent(NotReported.class))
+                {
                     fields.add(field);
                 }
             }
             String format = CSVUtil.buildFormatString("%s", separator, fields.size());
             CSVUtil.Escape.println(out, separator, CSVUtil.QUOTE, CSVUtil.ESCAPE, format, fields.toArray());
-            for (CompilationStatistics stats : snapshot) {
+            for (CompilationStatistics stats : snapshot)
+            {
                 Object[] values = new Object[fields.size()];
-                for (int i = 0; i < fields.size(); i++) {
+                for (int i = 0; i < fields.size(); i++)
+                {
                     Field field = fields.get(i);
-                    if (field.isAnnotationPresent(TimeValue.class)) {
+                    if (field.isAnnotationPresent(TimeValue.class))
+                    {
                         double value = field.getLong(stats) / 1000000d;
                         values[i] = String.format(Locale.ENGLISH, "%.3f", value);
-                    } else {
+                    }
+                    else
+                    {
                         values[i] = field.get(stats);
                     }
                 }

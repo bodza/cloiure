@@ -13,31 +13,37 @@ import graalvm.compiler.phases.tiers.CompilerConfiguration;
  *
  * This version of the class must be used on JDK 9 or later.
  */
-public final class IntrinsificationPredicate {
+public final class IntrinsificationPredicate
+{
     /**
      * Set of modules composed of the module defining the compiler configuration and its transitive
      * dependencies.
      */
     private final EconomicSet<Module> trustedModules;
 
-    IntrinsificationPredicate(CompilerConfiguration compilerConfiguration) {
+    IntrinsificationPredicate(CompilerConfiguration compilerConfiguration)
+    {
         trustedModules = EconomicSet.create();
         Module compilerConfigurationModule = compilerConfiguration.getClass().getModule();
-        if (compilerConfigurationModule.getDescriptor().isAutomatic()) {
-            throw new IllegalArgumentException(String.format("The module '%s' defining the Graal compiler configuration class '%s' must not be an automatic module",
-                            compilerConfigurationModule.getName(), compilerConfiguration.getClass().getName()));
+        if (compilerConfigurationModule.getDescriptor().isAutomatic())
+        {
+            throw new IllegalArgumentException(String.format("The module '%s' defining the Graal compiler configuration class '%s' must not be an automatic module", compilerConfigurationModule.getName(), compilerConfiguration.getClass().getName()));
         }
         trustedModules.add(compilerConfigurationModule);
-        for (Requires require : compilerConfigurationModule.getDescriptor().requires()) {
-            for (Module module : compilerConfigurationModule.getLayer().modules()) {
-                if (module.getName().equals(require.name())) {
+        for (Requires require : compilerConfigurationModule.getDescriptor().requires())
+        {
+            for (Module module : compilerConfigurationModule.getLayer().modules())
+            {
+                if (module.getName().equals(require.name()))
+                {
                     trustedModules.add(module);
                 }
             }
         }
     }
 
-    public boolean apply(Class<?> declaringClass) {
+    public boolean apply(Class<?> declaringClass)
+    {
         Module module = declaringClass.getModule();
         return trustedModules.contains(module);
     }

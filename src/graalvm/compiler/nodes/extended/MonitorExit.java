@@ -5,6 +5,6 @@ import graalvm.compiler.nodes.memory.MemoryCheckpoint;
 /**
  * Denotes monitor unlocking transition.
  */
-public interface MonitorExit extends MemoryCheckpoint {
-
+public interface MonitorExit extends MemoryCheckpoint
+{
 }

@@ -28,17 +28,20 @@ import jdk.vm.ci.meta.JavaKind;
  * case the addition would overflow the 32 bit range.
  */
 @NodeInfo(cycles = CYCLES_2, size = SIZE_2)
-public final class IntegerAddExactNode extends AddNode implements IntegerExactArithmeticNode {
+public final class IntegerAddExactNode extends AddNode implements IntegerExactArithmeticNode
+{
     public static final NodeClass<IntegerAddExactNode> TYPE = NodeClass.create(IntegerAddExactNode.class);
 
-    public IntegerAddExactNode(ValueNode x, ValueNode y) {
+    public IntegerAddExactNode(ValueNode x, ValueNode y)
+    {
         super(TYPE, x, y);
         setStamp(x.stamp(NodeView.DEFAULT).unrestricted());
         assert x.stamp(NodeView.DEFAULT).isCompatible(y.stamp(NodeView.DEFAULT)) && x.stamp(NodeView.DEFAULT) instanceof IntegerStamp;
     }
 
     @Override
-    public boolean inferStamp() {
+    public boolean inferStamp()
+    {
         /*
          * Note: it is not allowed to use the foldStamp method of the regular add node as we do not
          * know the result stamp of this node if we do not know whether we may deopt. If we know we
@@ -49,7 +52,8 @@ public final class IntegerAddExactNode extends AddNode implements IntegerExactAr
     }
 
     @Override
-    public Stamp foldStamp(Stamp stampX, Stamp stampY) {
+    public Stamp foldStamp(Stamp stampX, Stamp stampY)
+    {
         IntegerStamp a = (IntegerStamp) stampX;
         IntegerStamp b = (IntegerStamp) stampY;
 
@@ -71,19 +75,29 @@ public final class IntegerAddExactNode extends AddNode implements IntegerExactAr
         boolean upperOverflowsPositively = addOverflowsPositively(a.upperBound(), b.upperBound(), bits);
         boolean lowerOverflowsNegatively = addOverflowsNegatively(a.lowerBound(), b.lowerBound(), bits);
         boolean upperOverflowsNegatively = addOverflowsNegatively(a.upperBound(), b.upperBound(), bits);
-        if (lowerOverflowsPositively) {
+        if (lowerOverflowsPositively)
+        {
             newLowerBound = CodeUtil.maxValue(bits);
-        } else if (lowerOverflowsNegatively) {
+        }
+        else if (lowerOverflowsNegatively)
+        {
             newLowerBound = CodeUtil.minValue(bits);
-        } else {
+        }
+        else
+        {
             newLowerBound = CodeUtil.signExtend((a.lowerBound() + b.lowerBound()) & defaultMask, bits);
         }
 
-        if (upperOverflowsPositively) {
+        if (upperOverflowsPositively)
+        {
             newUpperBound = CodeUtil.maxValue(bits);
-        } else if (upperOverflowsNegatively) {
+        }
+        else if (upperOverflowsNegatively)
+        {
             newUpperBound = CodeUtil.minValue(bits);
-        } else {
+        }
+        else
+        {
             newUpperBound = CodeUtil.signExtend((a.upperBound() + b.upperBound()) & defaultMask, bits);
         }
 
@@ -96,40 +110,56 @@ public final class IntegerAddExactNode extends AddNode implements IntegerExactAr
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY) {
-        if (forX.isConstant() && !forY.isConstant()) {
+    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    {
+        if (forX.isConstant() && !forY.isConstant())
+        {
             return new IntegerAddExactNode(forY, forX).canonical(tool);
         }
-        if (forX.isConstant()) {
+        if (forX.isConstant())
+        {
             ConstantNode constantNode = canonicalXconstant(forX, forY);
-            if (constantNode != null) {
+            if (constantNode != null)
+            {
                 return constantNode;
             }
-        } else if (forY.isConstant()) {
+        }
+        else if (forY.isConstant())
+        {
             long c = forY.asJavaConstant().asLong();
-            if (c == 0) {
+            if (c == 0)
+            {
                 return forX;
             }
         }
-        if (!IntegerStamp.addCanOverflow((IntegerStamp) forX.stamp(NodeView.DEFAULT), (IntegerStamp) forY.stamp(NodeView.DEFAULT))) {
+        if (!IntegerStamp.addCanOverflow((IntegerStamp) forX.stamp(NodeView.DEFAULT), (IntegerStamp) forY.stamp(NodeView.DEFAULT)))
+        {
             return new AddNode(forX, forY).canonical(tool);
         }
         return this;
     }
 
-    private static ConstantNode canonicalXconstant(ValueNode forX, ValueNode forY) {
+    private static ConstantNode canonicalXconstant(ValueNode forX, ValueNode forY)
+    {
         JavaConstant xConst = forX.asJavaConstant();
         JavaConstant yConst = forY.asJavaConstant();
-        if (xConst != null && yConst != null) {
+        if (xConst != null && yConst != null)
+        {
             assert xConst.getJavaKind() == yConst.getJavaKind();
-            try {
-                if (xConst.getJavaKind() == JavaKind.Int) {
+            try
+            {
+                if (xConst.getJavaKind() == JavaKind.Int)
+                {
                     return ConstantNode.forInt(Math.addExact(xConst.asInt(), yConst.asInt()));
-                } else {
+                }
+                else
+                {
                     assert xConst.getJavaKind() == JavaKind.Long;
                     return ConstantNode.forLong(Math.addExact(xConst.asLong(), yConst.asLong()));
                 }
-            } catch (ArithmeticException ex) {
+            }
+            catch (ArithmeticException ex)
+            {
                 // The operation will result in an overflow exception, so do not canonicalize.
             }
         }
@@ -137,12 +167,14 @@ public final class IntegerAddExactNode extends AddNode implements IntegerExactAr
     }
 
     @Override
-    public IntegerExactArithmeticSplitNode createSplit(AbstractBeginNode next, AbstractBeginNode deopt) {
+    public IntegerExactArithmeticSplitNode createSplit(AbstractBeginNode next, AbstractBeginNode deopt)
+    {
         return graph().add(new IntegerAddExactSplitNode(stamp(NodeView.DEFAULT), getX(), getY(), next, deopt));
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         IntegerExactArithmeticSplitNode.lower(tool, this);
     }
 }

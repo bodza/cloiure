@@ -43,51 +43,66 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * {@link ReadNode#canonicalizeRead(ValueNode, AddressNode, LocationIdentity, CanonicalizerTool)}.
  */
 @NodeInfo(cycles = CYCLES_1, size = SIZE_1)
-public final class ClassGetHubNode extends FloatingNode implements Lowerable, Canonicalizable, ConvertNode {
+public final class ClassGetHubNode extends FloatingNode implements Lowerable, Canonicalizable, ConvertNode
+{
     public static final NodeClass<ClassGetHubNode> TYPE = NodeClass.create(ClassGetHubNode.class);
     @Input protected ValueNode clazz;
 
-    public ClassGetHubNode(ValueNode clazz) {
+    public ClassGetHubNode(ValueNode clazz)
+    {
         super(TYPE, KlassPointerStamp.klass());
         this.clazz = clazz;
     }
 
-    public static ValueNode create(ValueNode clazz, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, boolean allUsagesAvailable) {
+    public static ValueNode create(ValueNode clazz, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, boolean allUsagesAvailable)
+    {
         return canonical(null, metaAccess, constantReflection, allUsagesAvailable, KlassPointerStamp.klass(), clazz);
     }
 
     @SuppressWarnings("unused")
-    public static boolean intrinsify(GraphBuilderContext b, ResolvedJavaMethod method, ValueNode clazz) {
+    public static boolean intrinsify(GraphBuilderContext b, ResolvedJavaMethod method, ValueNode clazz)
+    {
         ValueNode clazzValue = create(clazz, b.getMetaAccess(), b.getConstantReflection(), false);
         b.push(JavaKind.Object, b.append(clazzValue));
         return true;
     }
 
-    public static ValueNode canonical(ClassGetHubNode classGetHubNode, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, boolean allUsagesAvailable, Stamp stamp,
-                    ValueNode clazz) {
+    public static ValueNode canonical(ClassGetHubNode classGetHubNode, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, boolean allUsagesAvailable, Stamp stamp, ValueNode clazz)
+    {
         ClassGetHubNode self = classGetHubNode;
-        if (allUsagesAvailable && self != null && self.hasNoUsages()) {
+        if (allUsagesAvailable && self != null && self.hasNoUsages())
+        {
             return null;
-        } else {
-            if (clazz.isConstant()) {
-                if (metaAccess != null) {
+        }
+        else
+        {
+            if (clazz.isConstant())
+            {
+                if (metaAccess != null)
+                {
                     ResolvedJavaType exactType = constantReflection.asJavaType(clazz.asJavaConstant());
-                    if (exactType.isPrimitive()) {
+                    if (exactType.isPrimitive())
+                    {
                         return ConstantNode.forConstant(stamp, JavaConstant.NULL_POINTER, metaAccess);
-                    } else {
+                    }
+                    else
+                    {
                         return ConstantNode.forConstant(stamp, constantReflection.asObjectHub(exactType), metaAccess);
                     }
                 }
             }
-            if (clazz instanceof GetClassNode) {
+            if (clazz instanceof GetClassNode)
+            {
                 GetClassNode getClass = (GetClassNode) clazz;
                 return new LoadHubNode(KlassPointerStamp.klassNonNull(), getClass.getObject());
             }
-            if (clazz instanceof HubGetClassNode) {
+            if (clazz instanceof HubGetClassNode)
+            {
                 // Replace: _klass._java_mirror._klass -> _klass
                 return ((HubGetClassNode) clazz).getHub();
             }
-            if (self == null) {
+            if (self == null)
+            {
                 self = new ClassGetHubNode(clazz);
             }
             return self;
@@ -95,12 +110,14 @@ public final class ClassGetHubNode extends FloatingNode implements Lowerable, Ca
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool) {
+    public Node canonical(CanonicalizerTool tool)
+    {
         return canonical(this, tool.getMetaAccess(), tool.getConstantReflection(), tool.allUsagesAvailable(), stamp(NodeView.DEFAULT), clazz);
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
@@ -111,29 +128,36 @@ public final class ClassGetHubNode extends FloatingNode implements Lowerable, Ca
     public static native KlassPointer piCastNonNull(Object object, GuardingNode anchor);
 
     @Override
-    public ValueNode getValue() {
+    public ValueNode getValue()
+    {
         return clazz;
     }
 
     @Override
-    public Constant convert(Constant c, ConstantReflectionProvider constantReflection) {
+    public Constant convert(Constant c, ConstantReflectionProvider constantReflection)
+    {
         ResolvedJavaType exactType = constantReflection.asJavaType(c);
-        if (exactType.isPrimitive()) {
+        if (exactType.isPrimitive())
+        {
             return JavaConstant.NULL_POINTER;
-        } else {
+        }
+        else
+        {
             return constantReflection.asObjectHub(exactType);
         }
     }
 
     @Override
-    public Constant reverse(Constant c, ConstantReflectionProvider constantReflection) {
+    public Constant reverse(Constant c, ConstantReflectionProvider constantReflection)
+    {
         assert !c.equals(JavaConstant.NULL_POINTER);
         ResolvedJavaType objectType = constantReflection.asJavaType(c);
         return constantReflection.asJavaClass(objectType);
     }
 
     @Override
-    public boolean isLossless() {
+    public boolean isLossless()
+    {
         return false;
     }
 
@@ -141,15 +165,16 @@ public final class ClassGetHubNode extends FloatingNode implements Lowerable, Ca
      * There is more than one {@link java.lang.Class} value that has a NULL hub.
      */
     @Override
-    public boolean mayNullCheckSkipConversion() {
+    public boolean mayNullCheckSkipConversion()
+    {
         return false;
     }
 
     @Override
-    public boolean preservesOrder(CanonicalCondition op, Constant value, ConstantReflectionProvider constantReflection) {
+    public boolean preservesOrder(CanonicalCondition op, Constant value, ConstantReflectionProvider constantReflection)
+    {
         assert op == CanonicalCondition.EQ;
         ResolvedJavaType exactType = constantReflection.asJavaType(value);
         return !exactType.isPrimitive();
     }
-
 }

@@ -12,8 +12,8 @@ import jdk.vm.ci.meta.Value;
  * {@link InstructionValueProcedure} for a version that can modify values.
  */
 @FunctionalInterface
-public interface InstructionValueConsumer {
-
+public interface InstructionValueConsumer
+{
     /**
      * Iterator method to be overwritten.
      *

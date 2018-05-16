@@ -7,31 +7,37 @@ import graalvm.compiler.debug.DebugContext.DisabledScope;
 
 import jdk.vm.ci.meta.JavaMethod;
 
-public final class ScopeImpl implements DebugContext.Scope {
-
-    private final class IndentImpl implements Indent {
-
+public final class ScopeImpl implements DebugContext.Scope
+{
+    private final class IndentImpl implements Indent
+    {
         private static final String INDENTATION_INCREMENT = "  ";
 
         final String indent;
         final IndentImpl parentIndent;
 
-        boolean isEmitted() {
+        boolean isEmitted()
+        {
             return emitted;
         }
 
         private boolean emitted;
 
-        IndentImpl(IndentImpl parentIndent) {
+        IndentImpl(IndentImpl parentIndent)
+        {
             this.parentIndent = parentIndent;
             this.indent = (parentIndent == null ? "" : parentIndent.indent + INDENTATION_INCREMENT);
         }
 
-        private void printScopeName(StringBuilder str, boolean isCurrent) {
-            if (!emitted) {
+        private void printScopeName(StringBuilder str, boolean isCurrent)
+        {
+            if (!emitted)
+            {
                 boolean mustPrint = true;
-                if (parentIndent != null) {
-                    if (!parentIndent.isEmitted()) {
+                if (parentIndent != null)
+                {
+                    if (!parentIndent.isEmitted())
+                    {
                         parentIndent.printScopeName(str, false);
                         mustPrint = false;
                     }
@@ -40,7 +46,8 @@ public final class ScopeImpl implements DebugContext.Scope {
                  * Always print the current scope, scopes with context and any scope whose parent
                  * didn't print. This ensure the first new scope always shows up.
                  */
-                if (isCurrent || printContext(null) != 0 || mustPrint) {
+                if (isCurrent || printContext(null) != 0 || mustPrint)
+                {
                     str.append(indent).append("[thread:").append(Thread.currentThread().getId()).append("] scope: ").append(getQualifiedName()).append(System.lineSeparator());
                 }
                 printContext(str);
@@ -51,13 +58,18 @@ public final class ScopeImpl implements DebugContext.Scope {
         /**
          * Print or count the context objects for the current scope.
          */
-        private int printContext(StringBuilder str) {
+        private int printContext(StringBuilder str)
+        {
             int count = 0;
-            if (context != null && context.length > 0) {
+            if (context != null && context.length > 0)
+            {
                 // Include some context in the scope output
-                for (Object contextObj : context) {
-                    if (contextObj instanceof JavaMethodContext || contextObj instanceof JavaMethod) {
-                        if (str != null) {
+                for (Object contextObj : context)
+                {
+                    if (contextObj instanceof JavaMethodContext || contextObj instanceof JavaMethod)
+                    {
+                        if (str != null)
+                        {
                             str.append(indent).append("Context: ").append(contextObj).append(System.lineSeparator());
                         }
                         count++;
@@ -67,8 +79,10 @@ public final class ScopeImpl implements DebugContext.Scope {
             return count;
         }
 
-        public void log(int logLevel, String msg, Object... args) {
-            if (isLogEnabled(logLevel)) {
+        public void log(int logLevel, String msg, Object... args)
+        {
+            if (isLogEnabled(logLevel))
+            {
                 StringBuilder str = new StringBuilder();
                 printScopeName(str, true);
                 str.append(indent);
@@ -81,14 +95,17 @@ public final class ScopeImpl implements DebugContext.Scope {
             }
         }
 
-        IndentImpl indent() {
+        IndentImpl indent()
+        {
             lastUsedIndent = new IndentImpl(this);
             return lastUsedIndent;
         }
 
         @Override
-        public void close() {
-            if (parentIndent != null) {
+        public void close()
+        {
+            if (parentIndent != null)
+            {
                 lastUsedIndent = parentIndent;
             }
         }
@@ -99,7 +116,8 @@ public final class ScopeImpl implements DebugContext.Scope {
     private final boolean sandbox;
     private IndentImpl lastUsedIndent;
 
-    private boolean isEmptyScope() {
+    private boolean isEmptyScope()
+    {
         return emptyScope;
     }
 
@@ -123,21 +141,27 @@ public final class ScopeImpl implements DebugContext.Scope {
     private PrintStream output;
     private boolean interceptDisabled;
 
-    ScopeImpl(DebugContext owner, Thread thread) {
+    ScopeImpl(DebugContext owner, Thread thread)
+    {
         this(owner, thread.getName(), null, false);
     }
 
-    private ScopeImpl(DebugContext owner, String unqualifiedName, ScopeImpl parent, boolean sandbox, Object... context) {
+    private ScopeImpl(DebugContext owner, String unqualifiedName, ScopeImpl parent, boolean sandbox, Object... context)
+    {
         this.owner = owner;
         this.parent = parent;
         this.sandbox = sandbox;
         this.context = context;
         this.unqualifiedName = unqualifiedName;
-        if (parent != null) {
+        if (parent != null)
+        {
             emptyScope = unqualifiedName.equals("");
             this.interceptDisabled = parent.interceptDisabled;
-        } else {
-            if (unqualifiedName.isEmpty()) {
+        }
+        else
+        {
+            if (unqualifiedName.isEmpty())
+            {
                 throw new IllegalArgumentException("root scope name must be non-empty");
             }
             emptyScope = false;
@@ -148,73 +172,92 @@ public final class ScopeImpl implements DebugContext.Scope {
     }
 
     @Override
-    public void close() {
+    public void close()
+    {
         owner.currentScope = parent;
         owner.lastClosedScope = this;
     }
 
-    boolean isTopLevel() {
+    boolean isTopLevel()
+    {
         return parent == null;
     }
 
-    boolean isDumpEnabled(int dumpLevel) {
+    boolean isDumpEnabled(int dumpLevel)
+    {
         assert dumpLevel >= 0;
         return currentDumpLevel >= dumpLevel;
     }
 
-    boolean isVerifyEnabled() {
+    boolean isVerifyEnabled()
+    {
         return verifyEnabled;
     }
 
-    boolean isLogEnabled(int logLevel) {
+    boolean isLogEnabled(int logLevel)
+    {
         assert logLevel > 0;
         return currentLogLevel >= logLevel;
     }
 
-    boolean isCountEnabled() {
+    boolean isCountEnabled()
+    {
         return countEnabled;
     }
 
-    boolean isTimeEnabled() {
+    boolean isTimeEnabled()
+    {
         return timeEnabled;
     }
 
-    boolean isMemUseTrackingEnabled() {
+    boolean isMemUseTrackingEnabled()
+    {
         return memUseTrackingEnabled;
     }
 
-    public void log(int logLevel, String msg, Object... args) {
+    public void log(int logLevel, String msg, Object... args)
+    {
         assert owner.checkNoConcurrentAccess();
-        if (isLogEnabled(logLevel)) {
+        if (isLogEnabled(logLevel))
+        {
             getLastUsedIndent().log(logLevel, msg, args);
         }
     }
 
-    public void dump(int dumpLevel, Object object, String formatString, Object... args) {
+    public void dump(int dumpLevel, Object object, String formatString, Object... args)
+    {
         assert isDumpEnabled(dumpLevel);
-        if (isDumpEnabled(dumpLevel)) {
+        if (isDumpEnabled(dumpLevel))
+        {
             DebugConfig config = getConfig();
-            if (config != null) {
-                for (DebugDumpHandler dumpHandler : config.dumpHandlers()) {
+            if (config != null)
+            {
+                for (DebugDumpHandler dumpHandler : config.dumpHandlers())
+                {
                     dumpHandler.dump(owner, object, formatString, args);
                 }
             }
         }
     }
 
-    private DebugConfig getConfig() {
+    private DebugConfig getConfig()
+    {
         return owner.currentConfig;
     }
 
     /**
      * @see DebugContext#verify(Object, String)
      */
-    public void verify(Object object, String formatString, Object... args) {
-        if (isVerifyEnabled()) {
+    public void verify(Object object, String formatString, Object... args)
+    {
+        if (isVerifyEnabled())
+        {
             DebugConfig config = getConfig();
-            if (config != null) {
+            if (config != null)
+            {
                 String message = String.format(formatString, args);
-                for (DebugVerifyHandler handler : config.verifyHandlers()) {
+                for (DebugVerifyHandler handler : config.verifyHandlers())
+                {
                     handler.verify(owner, object, message);
                 }
             }
@@ -231,11 +274,15 @@ public final class ScopeImpl implements DebugContext.Scope {
      * @param newContextObjects objects to be appended to the debug context
      * @return the new scope which will be exited when its {@link #close()} method is called
      */
-    public ScopeImpl scope(CharSequence name, DebugConfig sandboxConfig, Object... newContextObjects) {
+    public ScopeImpl scope(CharSequence name, DebugConfig sandboxConfig, Object... newContextObjects)
+    {
         ScopeImpl newScope = null;
-        if (sandboxConfig != null) {
+        if (sandboxConfig != null)
+        {
             newScope = new ScopeImpl(owner, name.toString(), this, true, newContextObjects);
-        } else {
+        }
+        else
+        {
             newScope = this.createChild(name.toString(), newContextObjects);
         }
         newScope.updateFlags(owner.currentConfig);
@@ -243,24 +290,29 @@ public final class ScopeImpl implements DebugContext.Scope {
     }
 
     @SuppressWarnings({"unchecked", "unused"})
-    private static <E extends Exception> RuntimeException silenceException(Class<E> type, Throwable ex) throws E {
+    private static <E extends Exception> RuntimeException silenceException(Class<E> type, Throwable ex) throws E
+    {
         throw (E) ex;
     }
 
-    public RuntimeException handle(Throwable e) {
-        try {
-            if (owner.lastClosedScope instanceof ScopeImpl) {
+    public RuntimeException handle(Throwable e)
+    {
+        try
+        {
+            if (owner.lastClosedScope instanceof ScopeImpl)
+            {
                 ScopeImpl lastClosed = (ScopeImpl) owner.lastClosedScope;
-                assert lastClosed.parent == this : "DebugContext.handle() used without closing a scope opened by DebugContext.scope(...) or DebugContext.sandbox(...) " +
-                                "or an exception occurred while opening a scope";
-                if (e != owner.lastExceptionThrown) {
+                assert lastClosed.parent == this : "DebugContext.handle() used without closing a scope opened by DebugContext.scope(...) or DebugContext.sandbox(...) " + "or an exception occurred while opening a scope";
+                if (e != owner.lastExceptionThrown)
+                {
                     RuntimeException newException = null;
                     // Make the scope in which the exception was thrown
                     // the current scope again.
                     owner.currentScope = lastClosed;
 
                     // When this try block exits, the above action will be undone
-                    try (ScopeImpl s = lastClosed) {
+                    try (ScopeImpl s = lastClosed)
+                    {
                         newException = s.interceptException(e);
                     }
 
@@ -268,35 +320,47 @@ public final class ScopeImpl implements DebugContext.Scope {
                     assert owner.currentScope == this;
                     assert lastClosed == owner.lastClosedScope;
 
-                    if (newException == null) {
+                    if (newException == null)
+                    {
                         owner.lastExceptionThrown = e;
-                    } else {
+                    }
+                    else
+                    {
                         owner.lastExceptionThrown = newException;
                         throw newException;
                     }
                 }
-            } else if (owner.lastClosedScope == null) {
-                throw new AssertionError("DebugContext.handle() used without closing a scope opened by DebugContext.scope(...) or DebugContext.sandbox(...) " +
-                                "or an exception occurred while opening a scope");
-            } else {
+            }
+            else if (owner.lastClosedScope == null)
+            {
+                throw new AssertionError("DebugContext.handle() used without closing a scope opened by DebugContext.scope(...) or DebugContext.sandbox(...) " + "or an exception occurred while opening a scope");
+            }
+            else
+            {
                 assert owner.lastClosedScope instanceof DisabledScope : owner.lastClosedScope;
             }
-        } catch (Throwable t) {
+        }
+        catch (Throwable t)
+        {
             t.initCause(e);
             throw t;
         }
 
-        if (e instanceof Error) {
+        if (e instanceof Error)
+        {
             throw (Error) e;
         }
-        if (e instanceof RuntimeException) {
+        if (e instanceof RuntimeException)
+        {
             throw (RuntimeException) e;
         }
         throw silenceException(RuntimeException.class, e);
     }
 
-    void updateFlags(DebugConfigImpl config) {
-        if (config == null) {
+    void updateFlags(DebugConfigImpl config)
+    {
+        if (config == null)
+        {
             countEnabled = false;
             memUseTrackingEnabled = false;
             timeEnabled = false;
@@ -305,7 +369,9 @@ public final class ScopeImpl implements DebugContext.Scope {
             // Be pragmatic: provide a default log stream to prevent a crash if the stream is not
             // set while logging
             output = TTY.out;
-        } else if (isEmptyScope()) {
+        }
+        else if (isEmptyScope())
+        {
             countEnabled = parent.countEnabled;
             memUseTrackingEnabled = parent.memUseTrackingEnabled;
             timeEnabled = parent.timeEnabled;
@@ -313,7 +379,9 @@ public final class ScopeImpl implements DebugContext.Scope {
             output = parent.output;
             currentDumpLevel = parent.currentDumpLevel;
             currentLogLevel = parent.currentLogLevel;
-        } else {
+        }
+        else
+        {
             countEnabled = config.isCountEnabled(this);
             memUseTrackingEnabled = config.isMemUseTrackingEnabled(this);
             timeEnabled = config.isTimeEnabled(this);
@@ -324,69 +392,86 @@ public final class ScopeImpl implements DebugContext.Scope {
         }
     }
 
-    DebugCloseable disableIntercept() {
+    DebugCloseable disableIntercept()
+    {
         boolean previous = interceptDisabled;
         interceptDisabled = true;
-        return new DebugCloseable() {
+        return new DebugCloseable()
+        {
             @Override
-            public void close() {
+            public void close()
+            {
                 interceptDisabled = previous;
             }
         };
     }
 
     @SuppressWarnings("try")
-    private RuntimeException interceptException(final Throwable e) {
-        if (!interceptDisabled && owner.currentConfig != null) {
-            try (ScopeImpl s = scope("InterceptException", null, e)) {
+    private RuntimeException interceptException(final Throwable e)
+    {
+        if (!interceptDisabled && owner.currentConfig != null)
+        {
+            try (ScopeImpl s = scope("InterceptException", null, e))
+            {
                 return owner.currentConfig.interceptException(owner, e);
-            } catch (Throwable t) {
+            }
+            catch (Throwable t)
+            {
                 return new RuntimeException("Exception while intercepting exception", t);
             }
         }
         return null;
     }
 
-    private ScopeImpl createChild(String newName, Object[] newContext) {
+    private ScopeImpl createChild(String newName, Object[] newContext)
+    {
         return new ScopeImpl(owner, newName, this, false, newContext);
     }
 
     @Override
-    public Iterable<Object> getCurrentContext() {
+    public Iterable<Object> getCurrentContext()
+    {
         final ScopeImpl scope = this;
-        return new Iterable<Object>() {
-
+        return new Iterable<Object>()
+        {
             @Override
-            public Iterator<Object> iterator() {
-                return new Iterator<Object>() {
-
+            public Iterator<Object> iterator()
+            {
+                return new Iterator<Object>()
+                {
                     ScopeImpl currentScope = scope;
                     int objectIndex;
 
                     @Override
-                    public boolean hasNext() {
+                    public boolean hasNext()
+                    {
                         selectScope();
                         return currentScope != null;
                     }
 
-                    private void selectScope() {
-                        while (currentScope != null && currentScope.context.length <= objectIndex) {
+                    private void selectScope()
+                    {
+                        while (currentScope != null && currentScope.context.length <= objectIndex)
+                        {
                             currentScope = currentScope.sandbox ? null : currentScope.parent;
                             objectIndex = 0;
                         }
                     }
 
                     @Override
-                    public Object next() {
+                    public Object next()
+                    {
                         selectScope();
-                        if (currentScope != null) {
+                        if (currentScope != null)
+                        {
                             return currentScope.context[objectIndex++];
                         }
                         throw new IllegalStateException("May only be called if there is a next element.");
                     }
 
                     @Override
-                    public void remove() {
+                    public void remove()
+                    {
                         throw new UnsupportedOperationException("This iterator is read only.");
                     }
                 };
@@ -395,13 +480,19 @@ public final class ScopeImpl implements DebugContext.Scope {
     }
 
     @Override
-    public String getQualifiedName() {
-        if (qualifiedName == null) {
-            if (parent == null) {
+    public String getQualifiedName()
+    {
+        if (qualifiedName == null)
+        {
+            if (parent == null)
+            {
                 qualifiedName = unqualifiedName;
-            } else {
+            }
+            else
+            {
                 qualifiedName = parent.getQualifiedName();
-                if (!isEmptyScope()) {
+                if (!isEmptyScope())
+                {
                     qualifiedName += SCOPE_SEP + unqualifiedName;
                 }
             }
@@ -409,16 +500,22 @@ public final class ScopeImpl implements DebugContext.Scope {
         return qualifiedName;
     }
 
-    Indent pushIndentLogger() {
+    Indent pushIndentLogger()
+    {
         lastUsedIndent = getLastUsedIndent().indent();
         return lastUsedIndent;
     }
 
-    private IndentImpl getLastUsedIndent() {
-        if (lastUsedIndent == null) {
-            if (parent != null) {
+    private IndentImpl getLastUsedIndent()
+    {
+        if (lastUsedIndent == null)
+        {
+            if (parent != null)
+            {
                 lastUsedIndent = new IndentImpl(parent.getLastUsedIndent());
-            } else {
+            }
+            else
+            {
                 lastUsedIndent = new IndentImpl(null);
             }
         }

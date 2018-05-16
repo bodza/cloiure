@@ -66,9 +66,10 @@ import jdk.vm.ci.runtime.JVMCIBackend;
 /**
  * Singleton class holding the instance of the {@link GraalRuntime}.
  */
-public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider {
-
-    private static boolean checkArrayIndexScaleInvariants() {
+public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider
+{
+    private static boolean checkArrayIndexScaleInvariants()
+    {
         assert getArrayIndexScale(JavaKind.Byte) == 1;
         assert getArrayIndexScale(JavaKind.Boolean) == 1;
         assert getArrayIndexScale(JavaKind.Char) == 2;
@@ -109,20 +110,25 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider {
      *            {@link CompilerConfigurationFactory#selectFactory(String, OptionValues)}
      */
     @SuppressWarnings("try")
-    HotSpotGraalRuntime(String nameQualifier, HotSpotJVMCIRuntime jvmciRuntime, CompilerConfigurationFactory compilerConfigurationFactory, OptionValues initialOptions) {
+    HotSpotGraalRuntime(String nameQualifier, HotSpotJVMCIRuntime jvmciRuntime, CompilerConfigurationFactory compilerConfigurationFactory, OptionValues initialOptions)
+    {
         this.runtimeName = getClass().getSimpleName() + ":" + nameQualifier;
         HotSpotVMConfigStore store = jvmciRuntime.getConfigStore();
         config = GeneratePIC.getValue(initialOptions) ? new AOTGraalHotSpotVMConfig(store) : new GraalHotSpotVMConfig(store);
 
         // Only set HotSpotPrintInlining if it still has its default value (false).
-        if (GraalOptions.HotSpotPrintInlining.getValue(initialOptions) == false && config.printInlining) {
+        if (GraalOptions.HotSpotPrintInlining.getValue(initialOptions) == false && config.printInlining)
+        {
             optionsRef.set(new OptionValues(initialOptions, HotSpotPrintInlining, true));
-        } else {
+        }
+        else
+        {
             optionsRef.set(initialOptions);
         }
         OptionValues options = optionsRef.get();
 
-        if (config.useCMSGC) {
+        if (config.useCMSGC)
+        {
             // Graal doesn't work with the CMS collector (e.g. GR-6777)
             // and is deprecated (http://openjdk.java.net/jeps/291).
             throw new GraalError("Graal does not support the CMS collector");
@@ -136,7 +142,8 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider {
 
         compiler = new HotSpotGraalCompiler(jvmciRuntime, this, options);
         management = GraalServices.loadSingle(HotSpotGraalManagementRegistration.class, false);
-        if (management != null) {
+        if (management != null)
+        {
             management.initialize(this);
         }
 
@@ -144,36 +151,46 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider {
 
         JVMCIBackend hostJvmciBackend = jvmciRuntime.getHostJVMCIBackend();
         Architecture hostArchitecture = hostJvmciBackend.getTarget().arch;
-        try (InitTimer t = timer("create backend:", hostArchitecture)) {
+        try (InitTimer t = timer("create backend:", hostArchitecture))
+        {
             HotSpotBackendFactory factory = backendMap.getBackendFactory(hostArchitecture);
-            if (factory == null) {
+            if (factory == null)
+            {
                 throw new GraalError("No backend available for host architecture \"%s\"", hostArchitecture);
             }
             hostBackend = registerBackend(factory.createBackend(this, compilerConfiguration, jvmciRuntime, null));
         }
 
-        for (JVMCIBackend jvmciBackend : jvmciRuntime.getJVMCIBackends().values()) {
-            if (jvmciBackend == hostJvmciBackend) {
+        for (JVMCIBackend jvmciBackend : jvmciRuntime.getJVMCIBackends().values())
+        {
+            if (jvmciBackend == hostJvmciBackend)
+            {
                 continue;
             }
 
             Architecture gpuArchitecture = jvmciBackend.getTarget().arch;
             HotSpotBackendFactory factory = backendMap.getBackendFactory(gpuArchitecture);
-            if (factory == null) {
+            if (factory == null)
+            {
                 throw new GraalError("No backend available for specified GPU architecture \"%s\"", gpuArchitecture);
             }
-            try (InitTimer t = timer("create backend:", gpuArchitecture)) {
+            try (InitTimer t = timer("create backend:", gpuArchitecture))
+            {
                 registerBackend(factory.createBackend(this, compilerConfiguration, null, hostBackend));
             }
         }
 
         // Complete initialization of backends
-        try (InitTimer st = timer(hostBackend.getTarget().arch.getName(), ".completeInitialization")) {
+        try (InitTimer st = timer(hostBackend.getTarget().arch.getName(), ".completeInitialization"))
+        {
             hostBackend.completeInitialization(jvmciRuntime, options);
         }
-        for (HotSpotBackend backend : backends.getValues()) {
-            if (backend != hostBackend) {
-                try (InitTimer st = timer(backend.getTarget().arch.getName(), ".completeInitialization")) {
+        for (HotSpotBackend backend : backends.getValues())
+        {
+            if (backend != hostBackend)
+            {
+                try (InitTimer st = timer(backend.getTarget().arch.getName(), ".completeInitialization"))
+                {
                     backend.completeInitialization(jvmciRuntime, options);
                 }
             }
@@ -187,7 +204,8 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider {
         bootstrapJVMCI = config.getFlag("BootstrapJVMCI", Boolean.class);
     }
 
-    private HotSpotBackend registerBackend(HotSpotBackend backend) {
+    private HotSpotBackend registerBackend(HotSpotBackend backend)
+    {
         Class<? extends Architecture> arch = backend.getTarget().arch.getClass();
         HotSpotBackend oldValue = backends.put(arch, backend);
         assert oldValue == null : "cannot overwrite existing backend for architecture " + arch.getSimpleName();
@@ -195,28 +213,38 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider {
     }
 
     @Override
-    public HotSpotProviders getHostProviders() {
+    public HotSpotProviders getHostProviders()
+    {
         return getHostBackend().getProviders();
     }
 
     @Override
-    public GraalHotSpotVMConfig getVMConfig() {
+    public GraalHotSpotVMConfig getVMConfig()
+    {
         return config;
     }
 
     @Override
-    public DebugContext openDebugContext(OptionValues compilationOptions, CompilationIdentifier compilationId, Object compilable, Iterable<DebugHandlersFactory> factories) {
-        if (management != null && management.poll(false) != null) {
-            if (compilable instanceof HotSpotResolvedJavaMethod) {
+    public DebugContext openDebugContext(OptionValues compilationOptions, CompilationIdentifier compilationId, Object compilable, Iterable<DebugHandlersFactory> factories)
+    {
+        if (management != null && management.poll(false) != null)
+        {
+            if (compilable instanceof HotSpotResolvedJavaMethod)
+            {
                 HotSpotResolvedObjectType type = ((HotSpotResolvedJavaMethod) compilable).getDeclaringClass();
-                if (type instanceof HotSpotResolvedJavaType) {
+                if (type instanceof HotSpotResolvedJavaType)
+                {
                     Class<?> clazz = ((HotSpotResolvedJavaType) type).mirror();
-                    try {
+                    try
+                    {
                         ClassLoader cl = clazz.getClassLoader();
-                        if (cl != null) {
+                        if (cl != null)
+                        {
                             loaders.add(cl);
                         }
-                    } catch (SecurityException e) {
+                    }
+                    catch (SecurityException e)
+                    {
                         // This loader can obviously not be used for resolving class names
                     }
                 }
@@ -227,13 +255,16 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider {
     }
 
     @Override
-    public OptionValues getOptions() {
+    public OptionValues getOptions()
+    {
         return optionsRef.get();
     }
 
     @Override
-    public Group createSnippetCounterGroup(String groupName) {
-        if (snippetCounterGroups != null) {
+    public Group createSnippetCounterGroup(String groupName)
+    {
+        if (snippetCounterGroups != null)
+        {
             Group group = new Group(groupName);
             snippetCounterGroups.add(group);
             return group;
@@ -242,40 +273,54 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider {
     }
 
     @Override
-    public String getName() {
+    public String getName()
+    {
         return runtimeName;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T getCapability(Class<T> clazz) {
-        if (clazz == RuntimeProvider.class) {
+    public <T> T getCapability(Class<T> clazz)
+    {
+        if (clazz == RuntimeProvider.class)
+        {
             return (T) this;
-        } else if (clazz == OptionValues.class) {
+        }
+        else if (clazz == OptionValues.class)
+        {
             return (T) optionsRef.get();
-        } else if (clazz == StackIntrospection.class) {
+        }
+        else if (clazz == StackIntrospection.class)
+        {
             return (T) this;
-        } else if (clazz == SnippetReflectionProvider.class) {
+        }
+        else if (clazz == SnippetReflectionProvider.class)
+        {
             return (T) getHostProviders().getSnippetReflection();
-        } else if (clazz == StampProvider.class) {
+        }
+        else if (clazz == StampProvider.class)
+        {
             return (T) getHostProviders().getStampProvider();
         }
         return null;
     }
 
     @Override
-    public HotSpotBackend getHostBackend() {
+    public HotSpotBackend getHostBackend()
+    {
         return hostBackend;
     }
 
     @Override
-    public <T extends Architecture> Backend getBackend(Class<T> arch) {
+    public <T extends Architecture> Backend getBackend(Class<T> arch)
+    {
         assert arch != Architecture.class;
         return backends.get(arch);
     }
 
     @Override
-    public String getCompilerConfigurationName() {
+    public String getCompilerConfigurationName()
+    {
         return compilerConfigurationName;
     }
 
@@ -287,20 +332,25 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider {
      *
      * @param phase the execution phase being entered
      */
-    void phaseTransition(String phase) {
-        if (Options.UseCompilationStatistics.getValue(optionsRef.get())) {
+    void phaseTransition(String phase)
+    {
+        if (Options.UseCompilationStatistics.getValue(optionsRef.get()))
+        {
             CompilationStatistics.clear(phase);
         }
     }
 
-    void shutdown() {
+    void shutdown()
+    {
         shutdown = true;
         metricValues.print(optionsRef.get());
 
         phaseTransition("final");
 
-        if (snippetCounterGroups != null) {
-            for (Group group : snippetCounterGroups) {
+        if (snippetCounterGroups != null)
+        {
+            for (Group group : snippetCounterGroups)
+            {
                 TTY.out().out().println(group);
             }
         }
@@ -309,34 +359,40 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider {
         outputDirectory.close();
     }
 
-    void clearMetrics() {
+    void clearMetrics()
+    {
         metricValues.clear();
     }
 
     private final boolean bootstrapJVMCI;
     private boolean bootstrapFinished;
 
-    public void notifyBootstrapFinished() {
+    public void notifyBootstrapFinished()
+    {
         bootstrapFinished = true;
     }
 
     @Override
-    public boolean isBootstrapping() {
+    public boolean isBootstrapping()
+    {
         return bootstrapJVMCI && !bootstrapFinished;
     }
 
     @Override
-    public boolean isShutdown() {
+    public boolean isShutdown()
+    {
         return shutdown;
     }
 
     @Override
-    public DiagnosticsOutputDirectory getOutputDirectory() {
+    public DiagnosticsOutputDirectory getOutputDirectory()
+    {
         return outputDirectory;
     }
 
     @Override
-    public Map<ExceptionAction, Integer> getCompilationProblemsPerAction() {
+    public Map<ExceptionAction, Integer> getCompilationProblemsPerAction()
+    {
         return compilationProblemsPerAction;
     }
 
@@ -347,7 +403,8 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider {
     /**
      * @returns the management object for this runtime or {@code null}
      */
-    public HotSpotGraalManagementRegistration getManagement() {
+    public HotSpotGraalManagementRegistration getManagement()
+    {
         return management;
     }
 
@@ -368,54 +425,74 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider {
      *         denoted option succeeded, {@code null} if the option is unknown otherwise an error
      *         message describing the failure to set the option
      */
-    public String[] setOptionValues(String[] names, String[] values) {
+    public String[] setOptionValues(String[] names, String[] values)
+    {
         EconomicMap<String, OptionDescriptor> optionDescriptors = getOptionDescriptors();
         EconomicMap<OptionKey<?>, Object> newValues = EconomicMap.create(names.length);
         EconomicSet<OptionKey<?>> resetValues = EconomicSet.create(names.length);
         String[] result = new String[names.length];
-        for (int i = 0; i < names.length; i++) {
+        for (int i = 0; i < names.length; i++)
+        {
             String name = names[i];
             OptionDescriptor option = optionDescriptors.get(name);
-            if (option != null) {
+            if (option != null)
+            {
                 String svalue = values[i];
                 Class<?> optionValueType = option.getOptionValueType();
                 OptionKey<?> optionKey = option.getOptionKey();
-                if (svalue == null || svalue.isEmpty() && !(optionKey instanceof EnumOptionKey)) {
+                if (svalue == null || svalue.isEmpty() && !(optionKey instanceof EnumOptionKey))
+                {
                     resetValues.add(optionKey);
                     result[i] = name;
-                } else {
+                }
+                else
+                {
                     String valueToParse;
-                    if (optionValueType == String.class) {
-                        if (svalue.length() < 2 || svalue.charAt(0) != '"' || svalue.charAt(svalue.length() - 1) != '"') {
+                    if (optionValueType == String.class)
+                    {
+                        if (svalue.length() < 2 || svalue.charAt(0) != '"' || svalue.charAt(svalue.length() - 1) != '"')
+                        {
                             result[i] = "Invalid value for String option '" + name + "': must be the empty string or be enclosed in double quotes: " + svalue;
                             continue;
-                        } else {
+                        }
+                        else
+                        {
                             valueToParse = svalue.substring(1, svalue.length() - 1);
                         }
-                    } else {
+                    }
+                    else
+                    {
                         valueToParse = svalue;
                     }
-                    try {
+                    try
+                    {
                         OptionsParser.parseOption(name, valueToParse, newValues, OptionsParser.getOptionsLoader());
                         result[i] = name;
-                    } catch (IllegalArgumentException e) {
+                    }
+                    catch (IllegalArgumentException e)
+                    {
                         result[i] = e.getMessage();
                         continue;
                     }
                 }
-            } else {
+            }
+            else
+            {
                 result[i] = null;
             }
         }
 
         OptionValues currentOptions;
         OptionValues newOptions;
-        do {
+        do
+        {
             currentOptions = optionsRef.get();
             UnmodifiableMapCursor<OptionKey<?>, Object> cursor = currentOptions.getMap().getEntries();
-            while (cursor.advance()) {
+            while (cursor.advance())
+            {
                 OptionKey<?> key = cursor.getKey();
-                if (!resetValues.contains(key) && !newValues.containsKey(key)) {
+                if (!resetValues.contains(key) && !newValues.containsKey(key))
+                {
                     newValues.put(key, OptionValues.decodeNull(cursor.getValue()));
                 }
             }
@@ -434,24 +511,34 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider {
      * @return the values for each named option. If an element in {@code names} does not denote an
      *         existing option, the corresponding element in the returned array will be {@code null}
      */
-    public String[] getOptionValues(String... names) {
+    public String[] getOptionValues(String... names)
+    {
         String[] values = new String[names.length];
         EconomicMap<String, OptionDescriptor> optionDescriptors = getOptionDescriptors();
-        for (int i = 0; i < names.length; i++) {
+        for (int i = 0; i < names.length; i++)
+        {
             OptionDescriptor option = optionDescriptors.get(names[i]);
-            if (option != null) {
+            if (option != null)
+            {
                 OptionKey<?> optionKey = option.getOptionKey();
                 Object value = optionKey.getValue(getOptions());
                 String svalue;
-                if (option.getOptionValueType() == String.class && value != null) {
+                if (option.getOptionValueType() == String.class && value != null)
+                {
                     svalue = "\"" + value + "\"";
-                } else if (value == null) {
+                }
+                else if (value == null)
+                {
                     svalue = "";
-                } else {
+                }
+                else
+                {
                     svalue = String.valueOf(value);
                 }
                 values[i] = svalue;
-            } else {
+            }
+            else
+            {
                 // null denotes the option does not exist
                 values[i] = null;
             }
@@ -459,27 +546,35 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider {
         return values;
     }
 
-    private static EconomicMap<String, OptionDescriptor> getOptionDescriptors() {
+    private static EconomicMap<String, OptionDescriptor> getOptionDescriptors()
+    {
         EconomicMap<String, OptionDescriptor> result = EconomicMap.create();
-        for (OptionDescriptors set : OptionsParser.getOptionsLoader()) {
-            for (OptionDescriptor option : set) {
+        for (OptionDescriptors set : OptionsParser.getOptionsLoader())
+        {
+            for (OptionDescriptor option : set)
+            {
                 result.put(option.getName(), option);
             }
         }
         return result;
     }
 
-    private void dumpMethod(String className, String methodName, String filter, String host, int port) throws Exception {
+    private void dumpMethod(String className, String methodName, String filter, String host, int port) throws Exception
+    {
         EconomicSet<ClassNotFoundException> failures = EconomicSet.create();
         EconomicSet<Class<?>> found = loaders.resolve(className, failures);
-        if (found.isEmpty()) {
+        if (found.isEmpty())
+        {
             ClassNotFoundException cause = failures.isEmpty() ? new ClassNotFoundException(className) : failures.iterator().next();
             throw new Exception("Cannot find class " + className + " to schedule recompilation", cause);
         }
-        for (Class<?> clazz : found) {
+        for (Class<?> clazz : found)
+        {
             ResolvedJavaType type = JVMCI.getRuntime().getHostJVMCIBackend().getMetaAccess().lookupJavaType(clazz);
-            for (ResolvedJavaMethod method : type.getDeclaredMethods()) {
-                if (methodName.equals(method.getName()) && method instanceof HotSpotResolvedJavaMethod) {
+            for (ResolvedJavaMethod method : type.getDeclaredMethods())
+            {
+                if (methodName.equals(method.getName()) && method instanceof HotSpotResolvedJavaMethod)
+                {
                     HotSpotResolvedJavaMethod hotSpotMethod = (HotSpotResolvedJavaMethod) method;
                     dumpMethod(hotSpotMethod, filter, host, port);
                 }
@@ -487,7 +582,8 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider {
         }
     }
 
-    private void dumpMethod(HotSpotResolvedJavaMethod hotSpotMethod, String filter, String host, int port) throws Exception {
+    private void dumpMethod(HotSpotResolvedJavaMethod hotSpotMethod, String filter, String host, int port) throws Exception
+    {
         EconomicMap<OptionKey<?>, Object> extra = EconomicMap.create();
         extra.put(DebugOptions.Dump, filter);
         extra.put(DebugOptions.PrintGraphHost, host);
@@ -496,15 +592,20 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider {
         compiler.compileMethod(new HotSpotCompilationRequest(hotSpotMethod, -1, 0L), false, compileOptions);
     }
 
-    public Object invokeManagementAction(String actionName, Object[] params) throws Exception {
-        if ("dumpMethod".equals(actionName)) {
-            if (params.length != 0 && params[0] instanceof HotSpotResolvedJavaMethod) {
+    public Object invokeManagementAction(String actionName, Object[] params) throws Exception
+    {
+        if ("dumpMethod".equals(actionName))
+        {
+            if (params.length != 0 && params[0] instanceof HotSpotResolvedJavaMethod)
+            {
                 HotSpotResolvedJavaMethod method = param(params, 0, "method", HotSpotResolvedJavaMethod.class, null);
                 String filter = param(params, 1, "filter", String.class, ":3");
                 String host = param(params, 2, "host", String.class, "localhost");
                 Number port = param(params, 3, "port", Number.class, 4445);
                 dumpMethod(method, filter, host, port.intValue());
-            } else {
+            }
+            else
+            {
                 String className = param(params, 0, "className", String.class, null);
                 String methodName = param(params, 1, "methodName", String.class, null);
                 String filter = param(params, 2, "filter", String.class, ":3");
@@ -516,15 +617,19 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider {
         return null;
     }
 
-    private static <T> T param(Object[] arr, int index, String name, Class<T> type, T defaultValue) {
+    private static <T> T param(Object[] arr, int index, String name, Class<T> type, T defaultValue)
+    {
         Object value = arr.length > index ? arr[index] : null;
-        if (value == null || (value instanceof String && ((String) value).isEmpty())) {
-            if (defaultValue == null) {
+        if (value == null || (value instanceof String && ((String) value).isEmpty()))
+        {
+            if (defaultValue == null)
+            {
                 throw new IllegalArgumentException(name + " must be specified");
             }
             value = defaultValue;
         }
-        if (type.isInstance(value)) {
+        if (type.isInstance(value))
+        {
             return type.cast(value);
         }
         throw new IllegalArgumentException("Expecting " + type.getName() + " for " + name + " but was " + value);

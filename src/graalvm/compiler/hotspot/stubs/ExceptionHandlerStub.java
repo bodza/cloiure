@@ -41,9 +41,10 @@ import jdk.vm.ci.code.Register;
  * <p>
  * The descriptor for a call to this stub is {@link HotSpotBackend#EXCEPTION_HANDLER}.
  */
-public class ExceptionHandlerStub extends SnippetStub {
-
-    public ExceptionHandlerStub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage) {
+public class ExceptionHandlerStub extends SnippetStub
+{
+    public ExceptionHandlerStub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    {
         super("exceptionHandler", options, providers, linkage);
     }
 
@@ -53,13 +54,16 @@ public class ExceptionHandlerStub extends SnippetStub {
      * registers as HotSpot uses a caller save convention.
      */
     @Override
-    public boolean preservesRegisters() {
+    public boolean preservesRegisters()
+    {
         return false;
     }
 
     @Override
-    protected Object getConstantParameterValue(int index, String name) {
-        if (index == 2) {
+    protected Object getConstantParameterValue(int index, String name)
+    {
+        if (index == 2)
+        {
             return providers.getRegisters().getThreadRegister();
         }
         assert index == 3;
@@ -67,13 +71,15 @@ public class ExceptionHandlerStub extends SnippetStub {
     }
 
     @Snippet
-    private static void exceptionHandler(Object exception, Word exceptionPc, @ConstantParameter Register threadRegister, @ConstantParameter OptionValues options) {
+    private static void exceptionHandler(Object exception, Word exceptionPc, @ConstantParameter Register threadRegister, @ConstantParameter OptionValues options)
+    {
         Word thread = registerAsWord(threadRegister);
         checkNoExceptionInThread(thread, assertionsEnabled(INJECTED_VMCONFIG));
         checkExceptionNotNull(assertionsEnabled(INJECTED_VMCONFIG), exception);
         writeExceptionOop(thread, exception);
         writeExceptionPc(thread, exceptionPc);
-        if (logging(options)) {
+        if (logging(options))
+        {
             printf("handling exception %p (", Word.objectToTrackedPointer(exception).rawValue());
             decipher(Word.objectToTrackedPointer(exception).rawValue());
             printf(") at %p (", exceptionPc.rawValue());
@@ -86,7 +92,8 @@ public class ExceptionHandlerStub extends SnippetStub {
 
         Word handlerPc = exceptionHandlerForPc(EXCEPTION_HANDLER_FOR_PC, thread);
 
-        if (logging(options)) {
+        if (logging(options))
+        {
             printf("handler for exception %p at %p is at %p (", Word.objectToTrackedPointer(exception).rawValue(), exceptionPc.rawValue(), handlerPc.rawValue());
             decipher(handlerPc.rawValue());
             printf(")\n");
@@ -96,31 +103,39 @@ public class ExceptionHandlerStub extends SnippetStub {
         jumpToExceptionHandler(handlerPc);
     }
 
-    static void checkNoExceptionInThread(Word thread, boolean enabled) {
-        if (enabled) {
+    static void checkNoExceptionInThread(Word thread, boolean enabled)
+    {
+        if (enabled)
+        {
             Object currentException = readExceptionOop(thread);
-            if (currentException != null) {
+            if (currentException != null)
+            {
                 fatal("exception object in thread must be null, not %p", Word.objectToTrackedPointer(currentException).rawValue());
             }
-            if (cAssertionsEnabled(INJECTED_VMCONFIG)) {
+            if (cAssertionsEnabled(INJECTED_VMCONFIG))
+            {
                 // This thread-local is only cleared in DEBUG builds of the VM
                 // (see OptoRuntime::generate_exception_blob)
                 Word currentExceptionPc = readExceptionPc(thread);
-                if (currentExceptionPc.notEqual(WordFactory.zero())) {
+                if (currentExceptionPc.notEqual(WordFactory.zero()))
+                {
                     fatal("exception PC in thread must be zero, not %p", currentExceptionPc.rawValue());
                 }
             }
         }
     }
 
-    static void checkExceptionNotNull(boolean enabled, Object exception) {
-        if (enabled && exception == null) {
+    static void checkExceptionNotNull(boolean enabled, Object exception)
+    {
+        if (enabled && exception == null)
+        {
             fatal("exception must not be null");
         }
     }
 
     @Fold
-    static boolean logging(OptionValues options) {
+    static boolean logging(OptionValues options)
+    {
         return StubOptions.TraceExceptionHandlerStub.getValue(options);
     }
 
@@ -130,7 +145,8 @@ public class ExceptionHandlerStub extends SnippetStub {
      */
     @Fold
     @SuppressWarnings("all")
-    static boolean assertionsEnabled(@InjectedParameter GraalHotSpotVMConfig config) {
+    static boolean assertionsEnabled(@InjectedParameter GraalHotSpotVMConfig config)
+    {
         return Assertions.assertionsEnabled() || cAssertionsEnabled(config);
     }
 

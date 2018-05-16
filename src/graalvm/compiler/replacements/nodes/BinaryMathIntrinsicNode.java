@@ -28,35 +28,42 @@ import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.Value;
 
 @NodeInfo(nameTemplate = "MathIntrinsic#{p#operation/s}", cycles = CYCLES_UNKNOWN, size = SIZE_1)
-public final class BinaryMathIntrinsicNode extends BinaryNode implements ArithmeticLIRLowerable, Lowerable {
-
+public final class BinaryMathIntrinsicNode extends BinaryNode implements ArithmeticLIRLowerable, Lowerable
+{
     public static final NodeClass<BinaryMathIntrinsicNode> TYPE = NodeClass.create(BinaryMathIntrinsicNode.class);
     protected final BinaryOperation operation;
 
-    public enum BinaryOperation {
+    public enum BinaryOperation
+    {
         POW(new ForeignCallDescriptor("arithmeticPow", double.class, double.class, double.class));
 
         public final ForeignCallDescriptor foreignCallDescriptor;
 
-        BinaryOperation(ForeignCallDescriptor foreignCallDescriptor) {
+        BinaryOperation(ForeignCallDescriptor foreignCallDescriptor)
+        {
             this.foreignCallDescriptor = foreignCallDescriptor;
         }
     }
 
-    public BinaryOperation getOperation() {
+    public BinaryOperation getOperation()
+    {
         return operation;
     }
 
-    public static ValueNode create(ValueNode forX, ValueNode forY, BinaryOperation op) {
+    public static ValueNode create(ValueNode forX, ValueNode forY, BinaryOperation op)
+    {
         ValueNode c = tryConstantFold(forX, forY, op);
-        if (c != null) {
+        if (c != null)
+        {
             return c;
         }
         return new BinaryMathIntrinsicNode(forX, forY, op);
     }
 
-    protected static ValueNode tryConstantFold(ValueNode forX, ValueNode forY, BinaryOperation op) {
-        if (forX.isConstant() && forY.isConstant()) {
+    protected static ValueNode tryConstantFold(ValueNode forX, ValueNode forY, BinaryOperation op)
+    {
+        if (forX.isConstant() && forY.isConstant())
+        {
             double ret = doCompute(forX.asJavaConstant().asDouble(), forY.asJavaConstant().asDouble(), op);
             return ConstantNode.forDouble(ret);
         }
@@ -64,11 +71,13 @@ public final class BinaryMathIntrinsicNode extends BinaryNode implements Arithme
     }
 
     @Override
-    public Stamp foldStamp(Stamp stampX, Stamp stampY) {
+    public Stamp foldStamp(Stamp stampX, Stamp stampY)
+    {
         return stamp(NodeView.DEFAULT);
     }
 
-    protected BinaryMathIntrinsicNode(ValueNode forX, ValueNode forY, BinaryOperation op) {
+    protected BinaryMathIntrinsicNode(ValueNode forX, ValueNode forY, BinaryOperation op)
+    {
         super(TYPE, StampFactory.forKind(JavaKind.Double), forX, forY);
         assert forX.stamp(NodeView.DEFAULT) instanceof FloatStamp && PrimitiveStamp.getBits(forX.stamp(NodeView.DEFAULT)) == 64;
         assert forY.stamp(NodeView.DEFAULT) instanceof FloatStamp && PrimitiveStamp.getBits(forY.stamp(NodeView.DEFAULT)) == 64;
@@ -76,16 +85,19 @@ public final class BinaryMathIntrinsicNode extends BinaryNode implements Arithme
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen) {
+    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    {
         Value xValue = nodeValueMap.operand(getX());
         Value yValue = nodeValueMap.operand(getY());
         Value result;
-        switch (getOperation()) {
+        switch (getOperation())
+        {
             case POW:
                 result = gen.emitMathPow(xValue, yValue);
                 break;
@@ -96,41 +108,50 @@ public final class BinaryMathIntrinsicNode extends BinaryNode implements Arithme
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY) {
+    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    {
         NodeView view = NodeView.from(tool);
         ValueNode c = tryConstantFold(forX, forY, getOperation());
-        if (c != null) {
+        if (c != null)
+        {
             return c;
         }
-        if (forY.isConstant()) {
+        if (forY.isConstant())
+        {
             double yValue = forY.asJavaConstant().asDouble();
             // If the second argument is positive or negative zero, then the result is 1.0.
-            if (yValue == 0.0D) {
+            if (yValue == 0.0D)
+            {
                 return ConstantNode.forDouble(1);
             }
 
             // If the second argument is 1.0, then the result is the same as the first argument.
-            if (yValue == 1.0D) {
+            if (yValue == 1.0D)
+            {
                 return x;
             }
 
             // If the second argument is NaN, then the result is NaN.
-            if (Double.isNaN(yValue)) {
+            if (Double.isNaN(yValue))
+            {
                 return ConstantNode.forDouble(Double.NaN);
             }
 
             // x**-1 = 1/x
-            if (yValue == -1.0D) {
+            if (yValue == -1.0D)
+            {
                 return new FloatDivNode(ConstantNode.forDouble(1), x);
             }
 
             // x**2 = x*x
-            if (yValue == 2.0D) {
+            if (yValue == 2.0D)
+            {
                 return new MulNode(x, x);
             }
 
             // x**0.5 = sqrt(x)
-            if (yValue == 0.5D && x.stamp(view) instanceof FloatStamp && ((FloatStamp) x.stamp(view)).lowerBound() >= 0.0D) {
+            if (yValue == 0.5D && x.stamp(view) instanceof FloatStamp && ((FloatStamp) x.stamp(view)).lowerBound() >= 0.0D)
+            {
                 return SqrtNode.create(x, view);
             }
         }
@@ -140,13 +161,14 @@ public final class BinaryMathIntrinsicNode extends BinaryNode implements Arithme
     @NodeIntrinsic
     public static native double compute(double x, double y, @ConstantNodeParameter BinaryOperation op);
 
-    private static double doCompute(double x, double y, BinaryOperation op) {
-        switch (op) {
+    private static double doCompute(double x, double y, BinaryOperation op)
+    {
+        switch (op)
+        {
             case POW:
                 return Math.pow(x, y);
             default:
                 throw new GraalError("unknown op %s", op);
         }
     }
-
 }

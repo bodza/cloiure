@@ -9,11 +9,12 @@ import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.memory.address.AddressNode;
 
 @NodeInfo(cycles = CYCLES_8, size = SIZE_8)
-public final class SerialArrayRangeWriteBarrier extends ArrayRangeWriteBarrier {
+public final class SerialArrayRangeWriteBarrier extends ArrayRangeWriteBarrier
+{
     public static final NodeClass<SerialArrayRangeWriteBarrier> TYPE = NodeClass.create(SerialArrayRangeWriteBarrier.class);
 
-    public SerialArrayRangeWriteBarrier(AddressNode address, ValueNode length, int elementStride) {
+    public SerialArrayRangeWriteBarrier(AddressNode address, ValueNode length, int elementStride)
+    {
         super(TYPE, address, length, elementStride);
     }
-
 }

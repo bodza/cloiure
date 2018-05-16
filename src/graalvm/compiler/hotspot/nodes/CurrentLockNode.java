@@ -20,18 +20,21 @@ import jdk.vm.ci.meta.Value;
  * Intrinsic for getting the lock in the current {@linkplain BeginLockScopeNode lock scope}.
  */
 @NodeInfo(cycles = CYCLES_2, size = SIZE_1)
-public final class CurrentLockNode extends FixedWithNextNode implements LIRLowerable {
+public final class CurrentLockNode extends FixedWithNextNode implements LIRLowerable
+{
     public static final NodeClass<CurrentLockNode> TYPE = NodeClass.create(CurrentLockNode.class);
 
     protected int lockDepth;
 
-    public CurrentLockNode(@InjectedNodeParameter WordTypes wordTypes, int lockDepth) {
+    public CurrentLockNode(@InjectedNodeParameter WordTypes wordTypes, int lockDepth)
+    {
         super(TYPE, StampFactory.forKind(wordTypes.getWordKind()));
         this.lockDepth = lockDepth;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         assert lockDepth != -1;
         HotSpotLIRGenerator hsGen = (HotSpotLIRGenerator) gen.getLIRGeneratorTool();
         VirtualStackSlot slot = hsGen.getLockSlot(lockDepth);

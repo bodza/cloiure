@@ -11,14 +11,16 @@ import graalvm.compiler.options.OptionValues;
 /**
  * Stub called via {@link HotSpotHostForeignCallsProvider#VERIFY_OOP}.
  */
-public class VerifyOopStub extends SnippetStub {
-
-    public VerifyOopStub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage) {
+public class VerifyOopStub extends SnippetStub
+{
+    public VerifyOopStub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    {
         super("verifyOop", options, providers, linkage);
     }
 
     @Snippet
-    private static Object verifyOop(Object object) {
+    private static Object verifyOop(Object object)
+    {
         return verifyObject(object);
     }
 }

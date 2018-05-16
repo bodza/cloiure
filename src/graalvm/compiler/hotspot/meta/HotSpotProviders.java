@@ -17,18 +17,16 @@ import jdk.vm.ci.meta.MetaAccessProvider;
  * Extends {@link Providers} to include a number of extra capabilities used by the HotSpot parts of
  * the compiler.
  */
-public class HotSpotProviders extends Providers {
-
+public class HotSpotProviders extends Providers
+{
     private final SuitesProvider suites;
     private final HotSpotRegistersProvider registers;
     private final SnippetReflectionProvider snippetReflection;
     private final HotSpotWordTypes wordTypes;
     private final Plugins graphBuilderPlugins;
 
-    public HotSpotProviders(MetaAccessProvider metaAccess, HotSpotCodeCacheProvider codeCache, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantField,
-                    HotSpotForeignCallsProvider foreignCalls, LoweringProvider lowerer, Replacements replacements, SuitesProvider suites,
-                    HotSpotRegistersProvider registers,
-                    SnippetReflectionProvider snippetReflection, HotSpotWordTypes wordTypes, Plugins graphBuilderPlugins) {
+    public HotSpotProviders(MetaAccessProvider metaAccess, HotSpotCodeCacheProvider codeCache, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantField, HotSpotForeignCallsProvider foreignCalls, LoweringProvider lowerer, Replacements replacements, SuitesProvider suites, HotSpotRegistersProvider registers, SnippetReflectionProvider snippetReflection, HotSpotWordTypes wordTypes, Plugins graphBuilderPlugins)
+    {
         super(metaAccess, codeCache, constantReflection, constantField, foreignCalls, lowerer, replacements, new HotSpotStampProvider());
         this.suites = suites;
         this.registers = registers;
@@ -38,32 +36,39 @@ public class HotSpotProviders extends Providers {
     }
 
     @Override
-    public HotSpotCodeCacheProvider getCodeCache() {
+    public HotSpotCodeCacheProvider getCodeCache()
+    {
         return (HotSpotCodeCacheProvider) super.getCodeCache();
     }
 
     @Override
-    public HotSpotForeignCallsProvider getForeignCalls() {
+    public HotSpotForeignCallsProvider getForeignCalls()
+    {
         return (HotSpotForeignCallsProvider) super.getForeignCalls();
     }
 
-    public SuitesProvider getSuites() {
+    public SuitesProvider getSuites()
+    {
         return suites;
     }
 
-    public HotSpotRegistersProvider getRegisters() {
+    public HotSpotRegistersProvider getRegisters()
+    {
         return registers;
     }
 
-    public SnippetReflectionProvider getSnippetReflection() {
+    public SnippetReflectionProvider getSnippetReflection()
+    {
         return snippetReflection;
     }
 
-    public Plugins getGraphBuilderPlugins() {
+    public Plugins getGraphBuilderPlugins()
+    {
         return graphBuilderPlugins;
     }
 
-    public HotSpotWordTypes getWordTypes() {
+    public HotSpotWordTypes getWordTypes()
+    {
         return wordTypes;
     }
 }

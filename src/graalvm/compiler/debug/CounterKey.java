@@ -3,8 +3,8 @@ package graalvm.compiler.debug;
 /**
  * A counter for some value of interest.
  */
-public interface CounterKey extends MetricKey {
-
+public interface CounterKey extends MetricKey
+{
     /**
      * Adds 1 to this counter.
      */

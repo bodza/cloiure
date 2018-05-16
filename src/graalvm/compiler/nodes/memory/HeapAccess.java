@@ -3,12 +3,13 @@ package graalvm.compiler.nodes.memory;
 /**
  * Encapsulates properties of a node describing how it accesses the heap.
  */
-public interface HeapAccess {
-
+public interface HeapAccess
+{
     /**
      * The types of (write/read) barriers attached to stores.
      */
-    enum BarrierType {
+    enum BarrierType
+    {
         /**
          * Primitive stores which do not necessitate barriers.
          */

@@ -22,15 +22,18 @@ import jdk.vm.ci.meta.Value;
  * Node that is used to maintain a stack based counter of how many locks are currently held.
  */
 @NodeInfo(cycles = NodeCycles.CYCLES_2, size = SIZE_1)
-public final class MonitorCounterNode extends FloatingNode implements LIRLowerable, Node.ValueNumberable {
+public final class MonitorCounterNode extends FloatingNode implements LIRLowerable, Node.ValueNumberable
+{
     public static final NodeClass<MonitorCounterNode> TYPE = NodeClass.create(MonitorCounterNode.class);
 
-    public MonitorCounterNode(@InjectedNodeParameter WordTypes wordTypes) {
+    public MonitorCounterNode(@InjectedNodeParameter WordTypes wordTypes)
+    {
         super(TYPE, StampFactory.forKind(wordTypes.getWordKind()));
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         assert graph().getNodes().filter(MonitorCounterNode.class).count() == 1 : "monitor counters not canonicalized to single instance";
         VirtualStackSlot counter = gen.getLIRGeneratorTool().getResult().getFrameMapBuilder().allocateStackSlots(1, new BitSet(0), null);
         Value result = gen.getLIRGeneratorTool().emitAddress(counter);

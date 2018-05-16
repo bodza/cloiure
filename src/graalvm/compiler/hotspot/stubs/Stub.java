@@ -54,8 +54,8 @@ import graalvm.compiler.printer.GraalDebugHandlersFactory;
  * and/or a callee saved call to a HotSpot C/C++ runtime function or even a another compiled Java
  * method.
  */
-public abstract class Stub {
-
+public abstract class Stub
+{
     /**
      * The linkage information for a call to this stub from compiled code.
      */
@@ -71,17 +71,21 @@ public abstract class Stub {
      */
     private EconomicSet<Register> destroyedCallerRegisters;
 
-    private static boolean checkRegisterSetEquivalency(EconomicSet<Register> a, EconomicSet<Register> b) {
-        if (a == b) {
+    private static boolean checkRegisterSetEquivalency(EconomicSet<Register> a, EconomicSet<Register> b)
+    {
+        if (a == b)
+        {
             return true;
         }
-        if (a.size() != b.size()) {
+        if (a.size() != b.size())
+        {
             return false;
         }
         return allMatch(a, e -> b.contains(e));
     }
 
-    public void initDestroyedCallerRegisters(EconomicSet<Register> registers) {
+    public void initDestroyedCallerRegisters(EconomicSet<Register> registers)
+    {
         assert registers != null;
         assert destroyedCallerRegisters == null || checkRegisterSetEquivalency(registers, destroyedCallerRegisters) : "cannot redefine";
         destroyedCallerRegisters = registers;
@@ -91,7 +95,8 @@ public abstract class Stub {
      * Gets the registers destroyed by this stub from a caller's perspective. These are the
      * temporaries of this stub and must thus be caller saved by a callers of this stub.
      */
-    public EconomicSet<Register> getDestroyedCallerRegisters() {
+    public EconomicSet<Register> getDestroyedCallerRegisters()
+    {
         assert destroyedCallerRegisters != null : "not yet initialized";
         return destroyedCallerRegisters;
     }
@@ -100,7 +105,8 @@ public abstract class Stub {
      * Determines if this stub preserves all registers apart from those it
      * {@linkplain #getDestroyedCallerRegisters() destroys}.
      */
-    public boolean preservesRegisters() {
+    public boolean preservesRegisters()
+    {
         return true;
     }
 
@@ -112,7 +118,8 @@ public abstract class Stub {
      *
      * @param linkage linkage details for a call to the stub
      */
-    public Stub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage) {
+    public Stub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    {
         this.linkage = linkage;
         this.options = new OptionValues(options, GraalOptions.TraceInlining, GraalOptions.TraceInliningForStubsAndSnippets.getValue(options));
         this.providers = providers;
@@ -121,11 +128,13 @@ public abstract class Stub {
     /**
      * Gets the linkage for a call to this stub from compiled code.
      */
-    public HotSpotForeignCallLinkage getLinkage() {
+    public HotSpotForeignCallLinkage getLinkage()
+    {
         return linkage;
     }
 
-    public RegisterConfig getRegisterConfig() {
+    public RegisterConfig getRegisterConfig()
+    {
         return null;
     }
 
@@ -137,7 +146,8 @@ public abstract class Stub {
     protected abstract StructuredGraph getGraph(DebugContext debug, CompilationIdentifier compilationId);
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Stub<" + linkage.getDescriptor() + ">";
     }
 
@@ -153,8 +163,10 @@ public abstract class Stub {
 
     private static final AtomicInteger nextStubId = new AtomicInteger();
 
-    private DebugContext openDebugContext(DebugContext outer) {
-        if (DebugStubsAndSnippets.getValue(options)) {
+    private DebugContext openDebugContext(DebugContext outer)
+    {
+        if (DebugStubsAndSnippets.getValue(options))
+        {
             Description description = new Description(linkage, "Stub_" + nextStubId.incrementAndGet());
             return DebugContext.create(options, description, outer.getGlobalMetrics(), DEFAULT_LOG_STREAM, singletonList(new GraalDebugHandlersFactory(providers.getSnippetReflection())));
         }
@@ -165,23 +177,31 @@ public abstract class Stub {
      * Gets the code for this stub, compiling it first if necessary.
      */
     @SuppressWarnings("try")
-    public synchronized InstalledCode getCode(final Backend backend) {
-        if (code == null) {
-            try (DebugContext debug = openDebugContext(DebugContext.forCurrentThread())) {
-                try (DebugContext.Scope d = debug.scope("CompilingStub", providers.getCodeCache(), debugScopeContext())) {
+    public synchronized InstalledCode getCode(final Backend backend)
+    {
+        if (code == null)
+        {
+            try (DebugContext debug = openDebugContext(DebugContext.forCurrentThread()))
+            {
+                try (DebugContext.Scope d = debug.scope("CompilingStub", providers.getCodeCache(), debugScopeContext()))
+                {
                     CodeCacheProvider codeCache = providers.getCodeCache();
                     CompilationResult compResult = buildCompilationResult(debug, backend);
-                    try (DebugContext.Scope s = debug.scope("CodeInstall", compResult);
-                                    DebugContext.Activation a = debug.activate()) {
+                    try (DebugContext.Scope s = debug.scope("CodeInstall", compResult); DebugContext.Activation a = debug.activate())
+                    {
                         assert destroyedCallerRegisters != null;
                         // Add a GeneratePIC check here later, we don't want to install
                         // code if we don't have a corresponding VM global symbol.
                         HotSpotCompiledCode compiledCode = HotSpotCompiledCodeBuilder.createCompiledCode(codeCache, null, null, compResult);
                         code = codeCache.installCode(null, compiledCode, null, null, false);
-                    } catch (Throwable e) {
+                    }
+                    catch (Throwable e)
+                    {
                         throw debug.handle(e);
                     }
-                } catch (Throwable e) {
+                }
+                catch (Throwable e)
+                {
                     throw debug.handle(e);
                 }
                 assert code != null : "error installing stub " + this;
@@ -192,7 +212,8 @@ public abstract class Stub {
     }
 
     @SuppressWarnings("try")
-    private CompilationResult buildCompilationResult(DebugContext debug, final Backend backend) {
+    private CompilationResult buildCompilationResult(DebugContext debug, final Backend backend)
+    {
         CompilationIdentifier compilationId = getStubCompilationId();
         final StructuredGraph graph = getGraph(debug, compilationId);
         CompilationResult compResult = new CompilationResult(compilationId, toString(), GeneratePIC.getValue(options));
@@ -200,19 +221,23 @@ public abstract class Stub {
         // Stubs cannot be recompiled so they cannot be compiled with assumptions
         assert graph.getAssumptions() == null;
 
-        if (!(graph.start() instanceof StubStartNode)) {
+        if (!(graph.start() instanceof StubStartNode))
+        {
             StubStartNode newStart = graph.add(new StubStartNode(Stub.this));
             newStart.setStateAfter(graph.start().stateAfter());
             graph.replaceFixed(graph.start(), newStart);
         }
 
-        try (DebugContext.Scope s0 = debug.scope("StubCompilation", graph, providers.getCodeCache())) {
+        try (DebugContext.Scope s0 = debug.scope("StubCompilation", graph, providers.getCodeCache()))
+        {
             Suites suites = createSuites();
             emitFrontEnd(providers, backend, graph, providers.getSuites().getDefaultGraphBuilderSuite(), OptimisticOptimizations.ALL, DefaultProfilingInfo.get(TriState.UNKNOWN), suites);
             LIRSuites lirSuites = createLIRSuites();
             emitBackEnd(graph, Stub.this, getInstalledCodeOwner(), backend, compResult, CompilationResultBuilderFactory.Default, getRegisterConfig(), lirSuites);
             assert checkStubInvariants(compResult);
-        } catch (Throwable e) {
+        }
+        catch (Throwable e)
+        {
             throw debug.handle(e);
         }
         return compResult;
@@ -222,34 +247,44 @@ public abstract class Stub {
      * Gets a {@link CompilationResult} that can be used for code generation. Required for AOT.
      */
     @SuppressWarnings("try")
-    public CompilationResult getCompilationResult(DebugContext debug, final Backend backend) {
-        try (DebugContext.Scope d = debug.scope("CompilingStub", providers.getCodeCache(), debugScopeContext())) {
+    public CompilationResult getCompilationResult(DebugContext debug, final Backend backend)
+    {
+        try (DebugContext.Scope d = debug.scope("CompilingStub", providers.getCodeCache(), debugScopeContext()))
+        {
             return buildCompilationResult(debug, backend);
-        } catch (Throwable e) {
+        }
+        catch (Throwable e)
+        {
             throw debug.handle(e);
         }
     }
 
-    public CompilationIdentifier getStubCompilationId() {
+    public CompilationIdentifier getStubCompilationId()
+    {
         return new StubCompilationIdentifier(this);
     }
 
     /**
      * Checks the conditions a compilation must satisfy to be installed as a RuntimeStub.
      */
-    private boolean checkStubInvariants(CompilationResult compResult) {
+    private boolean checkStubInvariants(CompilationResult compResult)
+    {
         assert compResult.getExceptionHandlers().isEmpty() : this;
 
         // Stubs cannot be recompiled so they cannot be compiled with
         // assumptions and there is no point in recording evol_method dependencies
         assert compResult.getAssumptions() == null : "stubs should not use assumptions: " + this;
 
-        for (DataPatch data : compResult.getDataPatches()) {
-            if (data.reference instanceof ConstantReference) {
+        for (DataPatch data : compResult.getDataPatches())
+        {
+            if (data.reference instanceof ConstantReference)
+            {
                 ConstantReference ref = (ConstantReference) data.reference;
-                if (ref.getConstant() instanceof HotSpotMetaspaceConstant) {
+                if (ref.getConstant() instanceof HotSpotMetaspaceConstant)
+                {
                     HotSpotMetaspaceConstant c = (HotSpotMetaspaceConstant) ref.getConstant();
-                    if (c.asResolvedJavaType() != null && c.asResolvedJavaType().getName().equals("[I")) {
+                    if (c.asResolvedJavaType() != null && c.asResolvedJavaType().getName().equals("[I"))
+                    {
                         // special handling for NewArrayStub
                         // embedding the type '[I' is safe, since it is never unloaded
                         continue;
@@ -259,7 +294,8 @@ public abstract class Stub {
 
             assert !(data.reference instanceof ConstantReference) : this + " cannot have embedded object or metadata constant: " + data.reference;
         }
-        for (Infopoint infopoint : compResult.getInfopoints()) {
+        for (Infopoint infopoint : compResult.getInfopoints())
+        {
             assert infopoint instanceof Call : this + " cannot have non-call infopoint: " + infopoint;
             Call call = (Call) infopoint;
             assert call.target instanceof HotSpotForeignCallLinkage : this + " cannot have non runtime call: " + call.target;
@@ -269,15 +305,18 @@ public abstract class Stub {
         return true;
     }
 
-    protected Suites createSuites() {
+    protected Suites createSuites()
+    {
         Suites defaultSuites = providers.getSuites().getDefaultSuites(options);
         return new Suites(new PhaseSuite<>(), defaultSuites.getMidTier(), defaultSuites.getLowTier());
     }
 
-    protected LIRSuites createLIRSuites() {
+    protected LIRSuites createLIRSuites()
+    {
         LIRSuites lirSuites = new LIRSuites(providers.getSuites().getDefaultLIRSuites(options));
         ListIterator<LIRPhase<PostAllocationOptimizationContext>> moveProfiling = lirSuites.getPostAllocationOptimizationStage().findPhase(MoveProfilingPhase.class);
-        if (moveProfiling != null) {
+        if (moveProfiling != null)
+        {
             moveProfiling.remove();
         }
         return lirSuites;

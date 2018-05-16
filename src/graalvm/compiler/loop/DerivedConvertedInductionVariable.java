@@ -5,83 +5,98 @@ import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.IntegerConvertNode;
 
-public class DerivedConvertedInductionVariable extends DerivedInductionVariable {
-
+public class DerivedConvertedInductionVariable extends DerivedInductionVariable
+{
     private final Stamp stamp;
     private final ValueNode value;
 
-    public DerivedConvertedInductionVariable(LoopEx loop, InductionVariable base, Stamp stamp, ValueNode value) {
+    public DerivedConvertedInductionVariable(LoopEx loop, InductionVariable base, Stamp stamp, ValueNode value)
+    {
         super(loop, base);
         this.stamp = stamp;
         this.value = value;
     }
 
     @Override
-    public ValueNode valueNode() {
+    public ValueNode valueNode()
+    {
         return value;
     }
 
     @Override
-    public Direction direction() {
+    public Direction direction()
+    {
         return base.direction();
     }
 
     @Override
-    public ValueNode initNode() {
+    public ValueNode initNode()
+    {
         return IntegerConvertNode.convert(base.initNode(), stamp, graph(), NodeView.DEFAULT);
     }
 
     @Override
-    public ValueNode strideNode() {
+    public ValueNode strideNode()
+    {
         return IntegerConvertNode.convert(base.strideNode(), stamp, graph(), NodeView.DEFAULT);
     }
 
     @Override
-    public boolean isConstantInit() {
+    public boolean isConstantInit()
+    {
         return base.isConstantInit();
     }
 
     @Override
-    public boolean isConstantStride() {
+    public boolean isConstantStride()
+    {
         return base.isConstantStride();
     }
 
     @Override
-    public long constantInit() {
+    public long constantInit()
+    {
         return base.constantInit();
     }
 
     @Override
-    public long constantStride() {
+    public long constantStride()
+    {
         return base.constantStride();
     }
 
     @Override
-    public ValueNode extremumNode(boolean assumePositiveTripCount, Stamp s) {
+    public ValueNode extremumNode(boolean assumePositiveTripCount, Stamp s)
+    {
         return base.extremumNode(assumePositiveTripCount, s);
     }
 
     @Override
-    public ValueNode exitValueNode() {
+    public ValueNode exitValueNode()
+    {
         return IntegerConvertNode.convert(base.exitValueNode(), stamp, graph(), NodeView.DEFAULT);
     }
 
     @Override
-    public boolean isConstantExtremum() {
+    public boolean isConstantExtremum()
+    {
         return base.isConstantExtremum();
     }
 
     @Override
-    public long constantExtremum() {
+    public long constantExtremum()
+    {
         return base.constantExtremum();
     }
 
     @Override
-    public void deleteUnusedNodes() {
+    public void deleteUnusedNodes()
+    {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return String.format("DerivedConvertedInductionVariable base (%s) %s %s", base, value.getNodeClass().shortName(), stamp);
     }
 }

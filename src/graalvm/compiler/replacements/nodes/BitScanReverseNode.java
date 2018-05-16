@@ -27,27 +27,32 @@ import jdk.vm.ci.meta.JavaKind;
  * input is zero.
  */
 @NodeInfo(cycles = CYCLES_2, size = SIZE_1)
-public final class BitScanReverseNode extends UnaryNode implements ArithmeticLIRLowerable {
-
+public final class BitScanReverseNode extends UnaryNode implements ArithmeticLIRLowerable
+{
     public static final NodeClass<BitScanReverseNode> TYPE = NodeClass.create(BitScanReverseNode.class);
 
-    public BitScanReverseNode(ValueNode value) {
+    public BitScanReverseNode(ValueNode value)
+    {
         super(TYPE, StampFactory.forInteger(JavaKind.Int, 0, ((PrimitiveStamp) value.stamp(NodeView.DEFAULT)).getBits()), value);
         assert value.getStackKind() == JavaKind.Int || value.getStackKind() == JavaKind.Long;
     }
 
     @Override
-    public Stamp foldStamp(Stamp newStamp) {
+    public Stamp foldStamp(Stamp newStamp)
+    {
         assert newStamp.isCompatible(getValue().stamp(NodeView.DEFAULT));
         IntegerStamp valueStamp = (IntegerStamp) newStamp;
         int min;
         int max;
         long mask = CodeUtil.mask(valueStamp.getBits());
         int lastAlwaysSetBit = scan(valueStamp.downMask() & mask);
-        if (lastAlwaysSetBit == -1) {
+        if (lastAlwaysSetBit == -1)
+        {
             int firstMaybeSetBit = BitScanForwardNode.scan(valueStamp.upMask() & mask);
             min = firstMaybeSetBit;
-        } else {
+        }
+        else
+        {
             min = lastAlwaysSetBit;
         }
         int lastMaybeSetBit = scan(valueStamp.upMask() & mask);
@@ -56,10 +61,13 @@ public final class BitScanReverseNode extends UnaryNode implements ArithmeticLIR
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue) {
-        if (forValue.isConstant()) {
+    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    {
+        if (forValue.isConstant())
+        {
             JavaConstant c = forValue.asJavaConstant();
-            if (c.asLong() != 0) {
+            if (c.asLong() != 0)
+            {
                 return ConstantNode.forInt(forValue.getStackKind() == JavaKind.Int ? scan(c.asInt()) : scan(c.asLong()));
             }
         }
@@ -72,7 +80,8 @@ public final class BitScanReverseNode extends UnaryNode implements ArithmeticLIR
      * @param v
      * @return index of first set bit or -1 if {@code v} == 0.
      */
-    public static int scan(long v) {
+    public static int scan(long v)
+    {
         return 63 - Long.numberOfLeadingZeros(v);
     }
 
@@ -82,7 +91,8 @@ public final class BitScanReverseNode extends UnaryNode implements ArithmeticLIR
      * @param v
      * @return index of first set bit or -1 if {@code v} == 0.
      */
-    public static int scan(int v) {
+    public static int scan(int v)
+    {
         return 31 - Integer.numberOfLeadingZeros(v);
     }
 
@@ -105,8 +115,8 @@ public final class BitScanReverseNode extends UnaryNode implements ArithmeticLIR
     public static native int unsafeScan(long v);
 
     @Override
-    public void generate(NodeLIRBuilderTool builder, ArithmeticLIRGeneratorTool gen) {
+    public void generate(NodeLIRBuilderTool builder, ArithmeticLIRGeneratorTool gen)
+    {
         builder.setResult(this, gen.emitBitScanReverse(builder.operand(getValue())));
     }
-
 }

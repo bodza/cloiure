@@ -14,8 +14,8 @@ import graalvm.compiler.options.OptionValues;
 /**
  * Miscellaneous methods for modifying and generating file system paths.
  */
-public class PathUtilities {
-
+public class PathUtilities
+{
     /**
      * Gets a value based on {@code name} that can be passed to {@link Paths#get(String, String...)}
      * without causing an {@link InvalidPathException}.
@@ -23,24 +23,34 @@ public class PathUtilities {
      * @return {@code name} with all characters invalid for the current file system replaced by
      *         {@code '_'}
      */
-    public static String sanitizeFileName(String name) {
-        try {
+    public static String sanitizeFileName(String name)
+    {
+        try
+        {
             Path path = Paths.get(name);
-            if (path.getNameCount() == 0) {
+            if (path.getNameCount() == 0)
+            {
                 return name;
             }
-        } catch (InvalidPathException e) {
+        }
+        catch (InvalidPathException e)
+        {
             // fall through
         }
         StringBuilder buf = new StringBuilder(name.length());
-        for (int i = 0; i < name.length(); i++) {
+        for (int i = 0; i < name.length(); i++)
+        {
             char c = name.charAt(i);
-            if (c != File.separatorChar && c != ' ' && !Character.isISOControl(c)) {
-                try {
+            if (c != File.separatorChar && c != ' ' && !Character.isISOControl(c))
+            {
+                try
+                {
                     Paths.get(String.valueOf(c));
                     buf.append(c);
                     continue;
-                } catch (InvalidPathException e) {
+                }
+                catch (InvalidPathException e)
+                {
                 }
             }
             buf.append('_');
@@ -57,32 +67,44 @@ public class PathUtilities {
 
     private static final String ELLIPSIS = "...";
 
-    static Path createUnique(OptionValues options, OptionKey<String> baseNameOption, String id, String label, String ext, boolean createDirectory) throws IOException {
+    static Path createUnique(OptionValues options, OptionKey<String> baseNameOption, String id, String label, String ext, boolean createDirectory) throws IOException
+    {
         String uniqueTag = "";
         int dumpCounter = 1;
         String prefix;
-        if (id == null) {
+        if (id == null)
+        {
             prefix = baseNameOption.getValue(options);
             int slash = prefix.lastIndexOf(File.separatorChar);
             prefix = prefix.substring(slash + 1);
-        } else {
+        }
+        else
+        {
             prefix = id;
         }
-        for (;;) {
+        for (;;)
+        {
             int fileNameLengthWithoutLabel = uniqueTag.length() + ext.length() + prefix.length() + "[]".length();
             int labelLengthLimit = MAX_FILE_NAME_LENGTH - fileNameLengthWithoutLabel;
             String fileName;
-            if (labelLengthLimit < ELLIPSIS.length()) {
+            if (labelLengthLimit < ELLIPSIS.length())
+            {
                 // This means `id` is very long
                 String suffix = uniqueTag + ext;
                 int idLengthLimit = Math.min(MAX_FILE_NAME_LENGTH - suffix.length(), prefix.length());
                 fileName = sanitizeFileName(prefix.substring(0, idLengthLimit) + suffix);
-            } else {
-                if (label == null) {
+            }
+            else
+            {
+                if (label == null)
+                {
                     fileName = sanitizeFileName(prefix + uniqueTag + ext);
-                } else {
+                }
+                else
+                {
                     String adjustedLabel = label;
-                    if (label.length() > labelLengthLimit) {
+                    if (label.length() > labelLengthLimit)
+                    {
                         adjustedLabel = label.substring(0, labelLengthLimit - ELLIPSIS.length()) + ELLIPSIS;
                     }
                     fileName = sanitizeFileName(prefix + '[' + adjustedLabel + ']' + uniqueTag + ext);
@@ -90,16 +112,21 @@ public class PathUtilities {
             }
             Path dumpDir = DebugOptions.getDumpDirectory(options);
             Path result = Paths.get(dumpDir.toString(), fileName);
-            try {
-                if (createDirectory) {
+            try
+            {
+                if (createDirectory)
+                {
                     return Files.createDirectory(result);
-                } else {
+                }
+                else
+                {
                     return Files.createFile(result);
                 }
-            } catch (FileAlreadyExistsException e) {
+            }
+            catch (FileAlreadyExistsException e)
+            {
                 uniqueTag = "_" + dumpCounter++;
             }
         }
     }
-
 }

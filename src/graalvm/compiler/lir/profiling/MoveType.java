@@ -12,7 +12,8 @@ import graalvm.compiler.lir.StandardOp.ValueMoveOp;
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.Value;
 
-enum MoveType {
+enum MoveType
+{
     REG2REG("Reg", "Reg"),
     STACK2REG("Reg", "Stack"),
     CONST2REG("Reg", "Const"),
@@ -22,37 +23,55 @@ enum MoveType {
 
     private final String name;
 
-    MoveType(String dst, String src) {
+    MoveType(String dst, String src)
+    {
         this.name = src + '2' + dst;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return name;
     }
 
-    public static MoveType get(LIRInstruction inst) {
+    public static MoveType get(LIRInstruction inst)
+    {
         assert MoveOp.isMoveOp(inst);
         AllocatableValue dst = MoveOp.asMoveOp(inst).getResult();
         Value src = null;
-        if (LoadConstantOp.isLoadConstantOp(inst)) {
-            if (isRegister(dst)) {
+        if (LoadConstantOp.isLoadConstantOp(inst))
+        {
+            if (isRegister(dst))
+            {
                 return CONST2REG;
-            } else if (isStackSlot(dst)) {
+            }
+            else if (isStackSlot(dst))
+            {
                 return CONST2STACK;
             }
-        } else if (ValueMoveOp.isValueMoveOp(inst)) {
+        }
+        else if (ValueMoveOp.isValueMoveOp(inst))
+        {
             src = ValueMoveOp.asValueMoveOp(inst).getInput();
-            if (isRegister(dst)) {
-                if (isRegister(src)) {
+            if (isRegister(dst))
+            {
+                if (isRegister(src))
+                {
                     return REG2REG;
-                } else if (isStackSlot(src)) {
+                }
+                else if (isStackSlot(src))
+                {
                     return STACK2REG;
                 }
-            } else if (isStackSlot(dst)) {
-                if (isRegister(src)) {
+            }
+            else if (isStackSlot(dst))
+            {
+                if (isRegister(src))
+                {
                     return REG2STACK;
-                } else if (isStackSlot(src)) {
+                }
+                else if (isStackSlot(src))
+                {
                     return STACK2STACK;
                 }
             }

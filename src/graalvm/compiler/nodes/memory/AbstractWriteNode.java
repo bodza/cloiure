@@ -17,51 +17,59 @@ import graalvm.compiler.nodes.memory.address.AddressNode;
 import org.graalvm.word.LocationIdentity;
 
 @NodeInfo(allowedUsageTypes = {InputType.Memory, InputType.Guard}, cycles = CYCLES_2, size = SIZE_1)
-public abstract class AbstractWriteNode extends FixedAccessNode implements StateSplit, MemoryCheckpoint.Single, MemoryAccess, GuardingNode {
-
+public abstract class AbstractWriteNode extends FixedAccessNode implements StateSplit, MemoryCheckpoint.Single, MemoryAccess, GuardingNode
+{
     public static final NodeClass<AbstractWriteNode> TYPE = NodeClass.create(AbstractWriteNode.class);
     @Input ValueNode value;
     @OptionalInput(InputType.State) FrameState stateAfter;
     @OptionalInput(InputType.Memory) Node lastLocationAccess;
 
     @Override
-    public FrameState stateAfter() {
+    public FrameState stateAfter()
+    {
         return stateAfter;
     }
 
     @Override
-    public void setStateAfter(FrameState x) {
+    public void setStateAfter(FrameState x)
+    {
         assert x == null || x.isAlive() : "frame state must be in a graph";
         updateUsages(stateAfter, x);
         stateAfter = x;
     }
 
     @Override
-    public boolean hasSideEffect() {
+    public boolean hasSideEffect()
+    {
         return true;
     }
 
-    public ValueNode value() {
+    public ValueNode value()
+    {
         return value;
     }
 
-    protected AbstractWriteNode(NodeClass<? extends AbstractWriteNode> c, AddressNode address, LocationIdentity location, ValueNode value, BarrierType barrierType) {
+    protected AbstractWriteNode(NodeClass<? extends AbstractWriteNode> c, AddressNode address, LocationIdentity location, ValueNode value, BarrierType barrierType)
+    {
         super(c, address, location, StampFactory.forVoid(), barrierType);
         this.value = value;
     }
 
     @Override
-    public boolean isAllowedUsageType(InputType type) {
+    public boolean isAllowedUsageType(InputType type)
+    {
         return (type == InputType.Guard && getNullCheck()) ? true : super.isAllowedUsageType(type);
     }
 
     @Override
-    public MemoryNode getLastLocationAccess() {
+    public MemoryNode getLastLocationAccess()
+    {
         return (MemoryNode) lastLocationAccess;
     }
 
     @Override
-    public void setLastLocationAccess(MemoryNode lla) {
+    public void setLastLocationAccess(MemoryNode lla)
+    {
         Node newLla = ValueNodeUtil.asNode(lla);
         updateUsages(lastLocationAccess, newLla);
         lastLocationAccess = newLla;

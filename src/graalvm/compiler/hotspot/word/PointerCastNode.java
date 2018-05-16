@@ -21,22 +21,25 @@ import jdk.vm.ci.meta.Value;
  * {@link HotspotOpcode#TO_KLASS_POINTER} operations.
  */
 @NodeInfo(cycles = CYCLES_0, size = SIZE_0)
-public final class PointerCastNode extends FloatingNode implements LIRLowerable, Node.ValueNumberable {
-
+public final class PointerCastNode extends FloatingNode implements LIRLowerable, Node.ValueNumberable
+{
     public static final NodeClass<PointerCastNode> TYPE = NodeClass.create(PointerCastNode.class);
     @Input ValueNode input;
 
-    public PointerCastNode(Stamp stamp, ValueNode input) {
+    public PointerCastNode(Stamp stamp, ValueNode input)
+    {
         super(TYPE, stamp);
         this.input = input;
     }
 
-    public ValueNode getInput() {
+    public ValueNode getInput()
+    {
         return input;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool generator) {
+    public void generate(NodeLIRBuilderTool generator)
+    {
         Value value = generator.operand(input);
         assert value.getValueKind().equals(generator.getLIRGeneratorTool().getLIRKind(stamp(NodeView.DEFAULT))) : "PointerCastNode shouldn't change the LIRKind";
 

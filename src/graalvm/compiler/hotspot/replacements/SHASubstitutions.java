@@ -18,29 +18,34 @@ import jdk.vm.ci.meta.JavaKind;
 import graalvm.util.UnsafeAccess;
 
 @ClassSubstitution(className = "sun.security.provider.SHA", optional = true)
-public class SHASubstitutions {
-
+public class SHASubstitutions
+{
     static final long stateOffset;
 
     static final Class<?> shaClass;
 
     public static final String implCompressName = "implCompress0";
 
-    static {
-        try {
+    static
+    {
+        try
+        {
             // Need to use the system class loader as com.sun.crypto.provider.AESCrypt
             // is normally loaded by the extension class loader which is not delegated
             // to by the JVMCI class loader.
             ClassLoader cl = ClassLoader.getSystemClassLoader();
             shaClass = Class.forName("sun.security.provider.SHA", true, cl);
             stateOffset = UnsafeAccess.UNSAFE.objectFieldOffset(shaClass.getDeclaredField("state"));
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             throw new GraalError(ex);
         }
     }
 
     @MethodSubstitution(isStatic = false)
-    static void implCompress0(Object receiver, byte[] buf, int ofs) {
+    static void implCompress0(Object receiver, byte[] buf, int ofs)
+    {
         Object realReceiver = PiNode.piCastNonNull(receiver, shaClass);
         Object state = RawLoadNode.load(realReceiver, stateOffset, JavaKind.Object, LocationIdentity.any());
         Word bufAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(buf, getArrayBaseOffset(JavaKind.Byte) + ofs));

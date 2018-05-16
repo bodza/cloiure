@@ -26,31 +26,37 @@ import jdk.vm.ci.meta.Value;
  * {@linkplain Log#printf(String, long) formatted} error message specified.
  */
 @NodeInfo(cycles = CYCLES_UNKNOWN, size = SIZE_UNKNOWN)
-public final class VMErrorNode extends DeoptimizingStubCall implements LIRLowerable {
-
+public final class VMErrorNode extends DeoptimizingStubCall implements LIRLowerable
+{
     public static final NodeClass<VMErrorNode> TYPE = NodeClass.create(VMErrorNode.class);
     protected final String format;
     @Input ValueNode value;
 
-    public VMErrorNode(String format, ValueNode value) {
+    public VMErrorNode(String format, ValueNode value)
+    {
         super(TYPE, StampFactory.forVoid());
         this.format = format;
         this.value = value;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         String whereString;
-        if (stateBefore() != null) {
+        if (stateBefore() != null)
+        {
             String nl = CodeUtil.NEW_LINE;
             StringBuilder sb = new StringBuilder("in compiled code associated with frame state:");
             FrameState fs = stateBefore();
-            while (fs != null) {
+            while (fs != null)
+            {
                 Bytecode.appendLocation(sb.append(nl).append("\t"), fs.getCode(), fs.bci);
                 fs = fs.outerFrameState();
             }
             whereString = sb.toString();
-        } else {
+        }
+        else
+        {
             ResolvedJavaMethod method = graph().method();
             whereString = "in compiled code for " + (method == null ? graph().toString() : method.format("%H.%n(%p)"));
         }

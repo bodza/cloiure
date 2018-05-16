@@ -12,17 +12,21 @@ import java.util.function.Supplier;
  * non-null value.
  * </p>
  */
-public class LazyValue<T> implements Supplier<T> {
+public class LazyValue<T> implements Supplier<T>
+{
     private final Supplier<T> supplier;
     private T value;
 
-    public LazyValue(Supplier<T> supplier) {
+    public LazyValue(Supplier<T> supplier)
+    {
         this.supplier = supplier;
     }
 
     @Override
-    public T get() {
-        if (value == null) {
+    public T get()
+    {
+        if (value == null)
+        {
             value = supplier.get();
         }
         return value;

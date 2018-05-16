@@ -43,8 +43,8 @@ import jdk.vm.ci.meta.Signature;
  * Implementation of {@link GraphBuilderContext} used to produce a graph for a method based on an
  * {@link InvocationPlugin} for the method.
  */
-public class IntrinsicGraphBuilder implements GraphBuilderContext, Receiver {
-
+public class IntrinsicGraphBuilder implements GraphBuilderContext, Receiver
+{
     protected final MetaAccessProvider metaAccess;
     protected final ConstantReflectionProvider constantReflection;
     protected final ConstantFieldProvider constantFieldProvider;
@@ -57,13 +57,13 @@ public class IntrinsicGraphBuilder implements GraphBuilderContext, Receiver {
     protected ValueNode[] arguments;
     protected ValueNode returnValue;
 
-    public IntrinsicGraphBuilder(OptionValues options, DebugContext debug, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider,
-                    StampProvider stampProvider, Bytecode code, int invokeBci) {
+    public IntrinsicGraphBuilder(OptionValues options, DebugContext debug, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, StampProvider stampProvider, Bytecode code, int invokeBci)
+    {
         this(options, debug, metaAccess, constantReflection, constantFieldProvider, stampProvider, code, invokeBci, AllowAssumptions.YES);
     }
 
-    protected IntrinsicGraphBuilder(OptionValues options, DebugContext debug, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider,
-                    StampProvider stampProvider, Bytecode code, int invokeBci, AllowAssumptions allowAssumptions) {
+    protected IntrinsicGraphBuilder(OptionValues options, DebugContext debug, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, StampProvider stampProvider, Bytecode code, int invokeBci, AllowAssumptions allowAssumptions)
+    {
         this.metaAccess = metaAccess;
         this.constantReflection = constantReflection;
         this.constantFieldProvider = constantFieldProvider;
@@ -81,7 +81,8 @@ public class IntrinsicGraphBuilder implements GraphBuilderContext, Receiver {
 
         int javaIndex = 0;
         int index = 0;
-        if (!method.isStatic()) {
+        if (!method.isStatic())
+        {
             // add the receiver
             Stamp receiverStamp = StampFactory.objectNonNull(TypeReference.createWithoutAssumptions(method.getDeclaringClass()));
             ValueNode receiver = graph.addWithoutUnique(new ParameterNode(javaIndex, StampPair.createSingle(receiverStamp)));
@@ -90,13 +91,17 @@ public class IntrinsicGraphBuilder implements GraphBuilderContext, Receiver {
             index = 1;
         }
         ResolvedJavaType accessingClass = method.getDeclaringClass();
-        for (int i = 0; i < max; i++) {
+        for (int i = 0; i < max; i++)
+        {
             JavaType type = sig.getParameterType(i, accessingClass).resolve(accessingClass);
             JavaKind kind = type.getJavaKind();
             Stamp stamp;
-            if (kind == JavaKind.Object && type instanceof ResolvedJavaType) {
+            if (kind == JavaKind.Object && type instanceof ResolvedJavaType)
+            {
                 stamp = StampFactory.object(TypeReference.createWithoutAssumptions((ResolvedJavaType) type));
-            } else {
+            }
+            else
+            {
                 stamp = StampFactory.forKind(kind);
             }
             ValueNode param = graph.addWithoutUnique(new ParameterNode(index, StampPair.createSingle(stamp)));
@@ -106,142 +111,173 @@ public class IntrinsicGraphBuilder implements GraphBuilderContext, Receiver {
         }
     }
 
-    private <T extends ValueNode> void updateLastInstruction(T v) {
-        if (v instanceof FixedNode) {
+    private <T extends ValueNode> void updateLastInstruction(T v)
+    {
+        if (v instanceof FixedNode)
+        {
             FixedNode fixedNode = (FixedNode) v;
             lastInstr.setNext(fixedNode);
-            if (fixedNode instanceof FixedWithNextNode) {
+            if (fixedNode instanceof FixedWithNextNode)
+            {
                 FixedWithNextNode fixedWithNextNode = (FixedWithNextNode) fixedNode;
                 assert fixedWithNextNode.next() == null : "cannot append instruction to instruction which isn't end";
                 lastInstr = fixedWithNextNode;
-            } else {
+            }
+            else
+            {
                 lastInstr = null;
             }
         }
     }
 
     @Override
-    public <T extends ValueNode> T append(T v) {
-        if (v.graph() != null) {
+    public <T extends ValueNode> T append(T v)
+    {
+        if (v.graph() != null)
+        {
             return v;
         }
         T added = graph.addOrUniqueWithInputs(v);
-        if (added == v) {
+        if (added == v)
+        {
             updateLastInstruction(v);
         }
         return added;
     }
 
     @Override
-    public void push(JavaKind kind, ValueNode value) {
+    public void push(JavaKind kind, ValueNode value)
+    {
         assert kind != JavaKind.Void;
         assert returnValue == null;
         returnValue = value;
     }
 
     @Override
-    public void handleReplacedInvoke(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, ValueNode[] args, boolean forceInlineEverything) {
+    public void handleReplacedInvoke(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, ValueNode[] args, boolean forceInlineEverything)
+    {
         throw GraalError.shouldNotReachHere();
     }
 
     @Override
-    public void handleReplacedInvoke(CallTargetNode callTarget, JavaKind resultType) {
+    public void handleReplacedInvoke(CallTargetNode callTarget, JavaKind resultType)
+    {
         throw GraalError.shouldNotReachHere();
     }
 
     @Override
-    public StampProvider getStampProvider() {
+    public StampProvider getStampProvider()
+    {
         return stampProvider;
     }
 
     @Override
-    public MetaAccessProvider getMetaAccess() {
+    public MetaAccessProvider getMetaAccess()
+    {
         return metaAccess;
     }
 
     @Override
-    public ConstantReflectionProvider getConstantReflection() {
+    public ConstantReflectionProvider getConstantReflection()
+    {
         return constantReflection;
     }
 
     @Override
-    public ConstantFieldProvider getConstantFieldProvider() {
+    public ConstantFieldProvider getConstantFieldProvider()
+    {
         return constantFieldProvider;
     }
 
     @Override
-    public StructuredGraph getGraph() {
+    public StructuredGraph getGraph()
+    {
         return graph;
     }
 
     @Override
-    public void setStateAfter(StateSplit sideEffect) {
+    public void setStateAfter(StateSplit sideEffect)
+    {
         assert sideEffect.hasSideEffect();
         FrameState stateAfter = getGraph().add(new FrameState(BytecodeFrame.BEFORE_BCI));
         sideEffect.setStateAfter(stateAfter);
     }
 
     @Override
-    public GraphBuilderContext getParent() {
+    public GraphBuilderContext getParent()
+    {
         return null;
     }
 
     @Override
-    public Bytecode getCode() {
+    public Bytecode getCode()
+    {
         return code;
     }
 
     @Override
-    public ResolvedJavaMethod getMethod() {
+    public ResolvedJavaMethod getMethod()
+    {
         return method;
     }
 
     @Override
-    public int bci() {
+    public int bci()
+    {
         return invokeBci;
     }
 
     @Override
-    public InvokeKind getInvokeKind() {
+    public InvokeKind getInvokeKind()
+    {
         return method.isStatic() ? InvokeKind.Static : InvokeKind.Virtual;
     }
 
     @Override
-    public JavaType getInvokeReturnType() {
+    public JavaType getInvokeReturnType()
+    {
         return method.getSignature().getReturnType(method.getDeclaringClass());
     }
 
     @Override
-    public int getDepth() {
+    public int getDepth()
+    {
         return 0;
     }
 
     @Override
-    public boolean parsingIntrinsic() {
+    public boolean parsingIntrinsic()
+    {
         return true;
     }
 
     @Override
-    public IntrinsicContext getIntrinsic() {
+    public IntrinsicContext getIntrinsic()
+    {
         throw GraalError.shouldNotReachHere();
     }
 
     @Override
-    public BailoutException bailout(String string) {
+    public BailoutException bailout(String string)
+    {
         throw GraalError.shouldNotReachHere();
     }
 
     @Override
-    public ValueNode get(boolean performNullCheck) {
+    public ValueNode get(boolean performNullCheck)
+    {
         return arguments[0];
     }
 
     @SuppressWarnings("try")
-    public StructuredGraph buildGraph(InvocationPlugin plugin) {
+    public StructuredGraph buildGraph(InvocationPlugin plugin)
+    {
         NodeSourcePosition position = graph.trackNodeSourcePosition() ? NodeSourcePosition.placeholder(method) : null;
-        try (DebugCloseable context = graph.withNodeSourcePosition(position)) {
+        try (DebugCloseable context = graph.withNodeSourcePosition(position))
+        {
             Receiver receiver = method.isStatic() ? null : this;
-            if (plugin.execute(this, method, receiver, arguments)) {
+            if (plugin.execute(this, method, receiver, arguments))
+            {
                 assert (returnValue != null) == (method.getSignature().getReturnKind() != JavaKind.Void) : method;
                 append(new ReturnNode(returnValue));
                 return graph;
@@ -251,12 +287,14 @@ public class IntrinsicGraphBuilder implements GraphBuilderContext, Receiver {
     }
 
     @Override
-    public boolean intrinsify(BytecodeProvider bytecodeProvider, ResolvedJavaMethod targetMethod, ResolvedJavaMethod substitute, InvocationPlugin.Receiver receiver, ValueNode[] args) {
+    public boolean intrinsify(BytecodeProvider bytecodeProvider, ResolvedJavaMethod targetMethod, ResolvedJavaMethod substitute, InvocationPlugin.Receiver receiver, ValueNode[] args)
+    {
         throw GraalError.shouldNotReachHere();
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return String.format("%s:intrinsic", method.format("%H.%n(%p)"));
     }
 }

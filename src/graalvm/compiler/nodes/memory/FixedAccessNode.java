@@ -16,7 +16,8 @@ import org.graalvm.word.LocationIdentity;
  * does not include a null check on the object.
  */
 @NodeInfo
-public abstract class FixedAccessNode extends DeoptimizingFixedWithNextNode implements Access, IterableNodeType {
+public abstract class FixedAccessNode extends DeoptimizingFixedWithNextNode implements Access, IterableNodeType
+{
     public static final NodeClass<FixedAccessNode> TYPE = NodeClass.create(FixedAccessNode.class);
 
     @OptionalInput(InputType.Guard) protected GuardingNode guard;
@@ -28,39 +29,46 @@ public abstract class FixedAccessNode extends DeoptimizingFixedWithNextNode impl
     protected BarrierType barrierType;
 
     @Override
-    public AddressNode getAddress() {
+    public AddressNode getAddress()
+    {
         return address;
     }
 
     @Override
-    public void setAddress(AddressNode address) {
+    public void setAddress(AddressNode address)
+    {
         updateUsages(this.address, address);
         this.address = address;
     }
 
     @Override
-    public LocationIdentity getLocationIdentity() {
+    public LocationIdentity getLocationIdentity()
+    {
         return location;
     }
 
-    public boolean getNullCheck() {
+    public boolean getNullCheck()
+    {
         return nullCheck;
     }
 
-    public void setNullCheck(boolean check) {
+    public void setNullCheck(boolean check)
+    {
         this.nullCheck = check;
     }
 
-    protected FixedAccessNode(NodeClass<? extends FixedAccessNode> c, AddressNode address, LocationIdentity location, Stamp stamp) {
+    protected FixedAccessNode(NodeClass<? extends FixedAccessNode> c, AddressNode address, LocationIdentity location, Stamp stamp)
+    {
         this(c, address, location, stamp, BarrierType.NONE);
     }
 
-    protected FixedAccessNode(NodeClass<? extends FixedAccessNode> c, AddressNode address, LocationIdentity location, Stamp stamp, BarrierType barrierType) {
+    protected FixedAccessNode(NodeClass<? extends FixedAccessNode> c, AddressNode address, LocationIdentity location, Stamp stamp, BarrierType barrierType)
+    {
         this(c, address, location, stamp, null, barrierType, false, null);
     }
 
-    protected FixedAccessNode(NodeClass<? extends FixedAccessNode> c, AddressNode address, LocationIdentity location, Stamp stamp, GuardingNode guard, BarrierType barrierType, boolean nullCheck,
-                    FrameState stateBefore) {
+    protected FixedAccessNode(NodeClass<? extends FixedAccessNode> c, AddressNode address, LocationIdentity location, Stamp stamp, GuardingNode guard, BarrierType barrierType, boolean nullCheck, FrameState stateBefore)
+    {
         super(c, stamp, stateBefore);
         this.address = address;
         this.location = location;
@@ -70,23 +78,27 @@ public abstract class FixedAccessNode extends DeoptimizingFixedWithNextNode impl
     }
 
     @Override
-    public boolean canDeoptimize() {
+    public boolean canDeoptimize()
+    {
         return nullCheck;
     }
 
     @Override
-    public GuardingNode getGuard() {
+    public GuardingNode getGuard()
+    {
         return guard;
     }
 
     @Override
-    public void setGuard(GuardingNode guard) {
+    public void setGuard(GuardingNode guard)
+    {
         updateUsagesInterface(this.guard, guard);
         this.guard = guard;
     }
 
     @Override
-    public BarrierType getBarrierType() {
+    public BarrierType getBarrierType()
+    {
         return barrierType;
     }
 }

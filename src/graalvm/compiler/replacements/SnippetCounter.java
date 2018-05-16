@@ -10,13 +10,15 @@ import graalvm.compiler.core.common.GraalOptions;
  * A counter that can (only) be {@linkplain #inc() incremented} from within a snippet for gathering
  * snippet specific metrics.
  */
-public final class SnippetCounter implements Comparable<SnippetCounter> {
+public final class SnippetCounter implements Comparable<SnippetCounter>
+{
     /**
      * A group of related counters.
      */
-    public static class Group {
-
-        public interface Factory {
+    public static class Group
+    {
+        public interface Factory
+        {
             /**
              * If snippet counters are {@linkplain GraalOptions#SnippetCounters enabled}, creates
              * and registers a {@link Group} with the given name. Otherwise, returns null.
@@ -26,10 +28,11 @@ public final class SnippetCounter implements Comparable<SnippetCounter> {
             Group createSnippetCounterGroup(String name);
         }
 
-        public static final Factory NullFactory = new Factory() {
-
+        public static final Factory NullFactory = new Factory()
+        {
             @Override
-            public Group createSnippetCounterGroup(String name) {
+            public Group createSnippetCounterGroup(String name)
+            {
                 return null;
             }
         };
@@ -37,18 +40,21 @@ public final class SnippetCounter implements Comparable<SnippetCounter> {
         final String name;
         final List<SnippetCounter> counters;
 
-        public Group(String name) {
+        public Group(String name)
+        {
             this.name = name;
             this.counters = new ArrayList<>();
         }
 
         @Override
-        public synchronized String toString() {
+        public synchronized String toString()
+        {
             Collections.sort(counters);
 
             long total = 0;
             int maxNameLen = 0;
-            for (SnippetCounter c : counters) {
+            for (SnippetCounter c : counters)
+            {
                 total += c.value;
                 maxNameLen = Math.max(c.name.length(), maxNameLen);
             }
@@ -56,7 +62,8 @@ public final class SnippetCounter implements Comparable<SnippetCounter> {
             StringBuilder buf = new StringBuilder(String.format("Counters: %s%n", name));
 
             String formatString = "  %" + maxNameLen + "s: %6.2f%%%," + (String.format("%,d", total).length() + 2) + "d  // %s%n";
-            for (SnippetCounter c : counters) {
+            for (SnippetCounter c : counters)
+            {
                 double percent = total == 0D ? 0D : ((double) (c.value * 100)) / total;
                 buf.append(String.format(formatString, c.name, percent, c.value, c.description));
             }
@@ -70,7 +77,8 @@ public final class SnippetCounter implements Comparable<SnippetCounter> {
      * Sorts counters in descending order of their {@linkplain #value() values}.
      */
     @Override
-    public int compareTo(SnippetCounter o) {
+    public int compareTo(SnippetCounter o)
+    {
         return Long.signum(o.value - value);
     }
 
@@ -87,17 +95,20 @@ public final class SnippetCounter implements Comparable<SnippetCounter> {
      * @param name the name of the counter
      * @param description a brief comment describing the metric represented by the counter
      */
-    public SnippetCounter(Group group, String name, String description) {
+    public SnippetCounter(Group group, String name, String description)
+    {
         this.group = group;
         this.name = name;
         this.description = description;
-        if (group != null) {
+        if (group != null)
+        {
             List<SnippetCounter> counters = group.counters;
             counters.add(this);
         }
     }
 
-    public Group getGroup() {
+    public Group getGroup()
+    {
         return group;
     }
 
@@ -105,8 +116,10 @@ public final class SnippetCounter implements Comparable<SnippetCounter> {
      * Increments the value of this counter. This method can only be used in a snippet on a
      * compile-time constant {@link SnippetCounter} object.
      */
-    public void inc() {
-        if (group != null) {
+    public void inc()
+    {
+        if (group != null)
+        {
             SnippetCounterNode.increment(this);
         }
     }
@@ -115,8 +128,10 @@ public final class SnippetCounter implements Comparable<SnippetCounter> {
      * Increments the value of this counter. This method can only be used in a snippet on a
      * compile-time constant {@link SnippetCounter} object.
      */
-    public void add(int increment) {
-        if (group != null) {
+    public void add(int increment)
+    {
+        if (group != null)
+        {
             SnippetCounterNode.add(this, increment);
         }
     }
@@ -124,13 +139,16 @@ public final class SnippetCounter implements Comparable<SnippetCounter> {
     /**
      * Gets the value of this counter.
      */
-    public long value() {
+    public long value()
+    {
         return value;
     }
 
     @Override
-    public String toString() {
-        if (group != null) {
+    public String toString()
+    {
+        if (group != null)
+        {
             return "SnippetCounter-" + group.name + ":" + name;
         }
         return super.toString();

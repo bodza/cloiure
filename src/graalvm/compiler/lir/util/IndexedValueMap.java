@@ -11,92 +11,122 @@ import graalvm.compiler.lir.LIRInstruction.OperandMode;
 
 import jdk.vm.ci.meta.Value;
 
-public final class IndexedValueMap {
+public final class IndexedValueMap
+{
     private Value[] values;
 
-    public IndexedValueMap() {
+    public IndexedValueMap()
+    {
         values = Value.NO_VALUES;
     }
 
-    public IndexedValueMap(IndexedValueMap other) {
+    public IndexedValueMap(IndexedValueMap other)
+    {
         int limit = other.values.length;
-        while (limit > 0) {
-            if (other.values[limit - 1] == null) {
+        while (limit > 0)
+        {
+            if (other.values[limit - 1] == null)
+            {
                 limit--;
                 continue;
             }
             break;
         }
-        if (limit == 0) {
+        if (limit == 0)
+        {
             values = Value.NO_VALUES;
-        } else {
+        }
+        else
+        {
             values = new Value[limit];
             System.arraycopy(other.values, 0, values, 0, values.length);
         }
     }
 
-    public Value get(int index) {
+    public Value get(int index)
+    {
         return values[index];
     }
 
-    public void put(int index, Value value) {
-        if (values.length <= index) {
-            if (value == null) {
+    public void put(int index, Value value)
+    {
+        if (values.length <= index)
+        {
+            if (value == null)
+            {
                 return;
             }
             Value[] newValues = new Value[index + 1];
-            if (values.length > 0) {
+            if (values.length > 0)
+            {
                 System.arraycopy(values, 0, newValues, 0, values.length);
             }
             values = newValues;
             values[index] = value;
-        } else {
+        }
+        else
+        {
             values[index] = value;
         }
     }
 
-    public void putAll(IndexedValueMap stack) {
+    public void putAll(IndexedValueMap stack)
+    {
         Value[] otherValues = stack.values;
         int limit = otherValues.length;
-        if (limit > values.length) {
-            while (limit > 0) {
-                if (otherValues[limit - 1] == null) {
+        if (limit > values.length)
+        {
+            while (limit > 0)
+            {
+                if (otherValues[limit - 1] == null)
+                {
                     limit--;
                     continue;
                 }
                 break;
             }
-            if (limit > values.length) {
+            if (limit > values.length)
+            {
                 Value[] newValues = new Value[limit];
                 System.arraycopy(values, 0, newValues, 0, values.length);
                 values = newValues;
             }
         }
-        for (int i = 0; i < limit; i++) {
+        for (int i = 0; i < limit; i++)
+        {
             Value value = otherValues[i];
-            if (value != null) {
+            if (value != null)
+            {
                 values[i] = value;
             }
         }
     }
 
     @Override
-    public boolean equals(Object other) {
-        if (other instanceof IndexedValueMap) {
+    public boolean equals(Object other)
+    {
+        if (other instanceof IndexedValueMap)
+        {
             IndexedValueMap that = (IndexedValueMap) other;
             int limit = Math.min(values.length, that.values.length);
-            for (int i = 0; i < limit; i++) {
-                if (!Objects.equals(values[i], that.values[i])) {
+            for (int i = 0; i < limit; i++)
+            {
+                if (!Objects.equals(values[i], that.values[i]))
+                {
                     return false;
                 }
             }
-            for (int i = limit; i < values.length; i++) {
-                if (values[i] != null) {
+            for (int i = limit; i < values.length; i++)
+            {
+                if (values[i] != null)
+                {
                     return false;
                 }
             }
-            for (int i = limit; i < that.values.length; i++) {
-                if (that.values[i] != null) {
+            for (int i = limit; i < that.values.length; i++)
+            {
+                if (that.values[i] != null)
+                {
                     return false;
                 }
             }
@@ -105,37 +135,50 @@ public final class IndexedValueMap {
         return false;
     }
 
-    public void forEach(LIRInstruction inst, OperandMode mode, EnumSet<OperandFlag> flags, InstructionValueProcedure proc) {
-        for (int i = 0; i < values.length; i++) {
-            if (values[i] != null) {
+    public void forEach(LIRInstruction inst, OperandMode mode, EnumSet<OperandFlag> flags, InstructionValueProcedure proc)
+    {
+        for (int i = 0; i < values.length; i++)
+        {
+            if (values[i] != null)
+            {
                 values[i] = proc.doValue(inst, values[i], mode, flags);
             }
         }
     }
 
-    public void visitEach(LIRInstruction inst, OperandMode mode, EnumSet<OperandFlag> flags, InstructionValueConsumer consumer) {
-        for (Value v : values) {
-            if (v != null) {
+    public void visitEach(LIRInstruction inst, OperandMode mode, EnumSet<OperandFlag> flags, InstructionValueConsumer consumer)
+    {
+        for (Value v : values)
+        {
+            if (v != null)
+            {
                 consumer.visitValue(inst, v, mode, flags);
             }
         }
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         StringBuilder sb = new StringBuilder("[");
         boolean comma = false;
 
-        for (int i = 0; i < values.length; i++) {
-            if (values[i] != null) {
-                if (comma) {
+        for (int i = 0; i < values.length; i++)
+        {
+            if (values[i] != null)
+            {
+                if (comma)
+                {
                     sb.append(", ");
-                } else {
+                }
+                else
+                {
                     comma = true;
                 }
 

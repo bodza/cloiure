@@ -9,17 +9,20 @@ import graalvm.compiler.debug.DebugContext;
 /**
  * Builds traces consisting of a single basic block.
  */
-public final class SingleBlockTraceBuilder {
-
-    public static TraceBuilderResult computeTraces(DebugContext debug, AbstractBlockBase<?> startBlock, AbstractBlockBase<?>[] blocks, TrivialTracePredicate pred) {
+public final class SingleBlockTraceBuilder
+{
+    public static TraceBuilderResult computeTraces(DebugContext debug, AbstractBlockBase<?> startBlock, AbstractBlockBase<?>[] blocks, TrivialTracePredicate pred)
+    {
         return build(debug, startBlock, blocks, pred);
     }
 
-    private static TraceBuilderResult build(DebugContext debug, AbstractBlockBase<?> startBlock, AbstractBlockBase<?>[] blocks, TrivialTracePredicate pred) {
+    private static TraceBuilderResult build(DebugContext debug, AbstractBlockBase<?> startBlock, AbstractBlockBase<?>[] blocks, TrivialTracePredicate pred)
+    {
         Trace[] blockToTrace = new Trace[blocks.length];
         ArrayList<Trace> traces = new ArrayList<>(blocks.length);
 
-        for (AbstractBlockBase<?> block : blocks) {
+        for (AbstractBlockBase<?> block : blocks)
+        {
             Trace trace = new Trace(new AbstractBlockBase<?>[]{block});
             blockToTrace[block.getId()] = trace;
             block.setLinearScanNumber(0);
@@ -30,5 +33,4 @@ public final class SingleBlockTraceBuilder {
         assert traces.get(0).getBlocks()[0].equals(startBlock) : "The first traces always contains the start block";
         return TraceBuilderResult.create(debug, blocks, traces, blockToTrace, pred);
     }
-
 }

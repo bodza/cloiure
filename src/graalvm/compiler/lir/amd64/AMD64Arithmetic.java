@@ -15,11 +15,13 @@ import jdk.vm.ci.amd64.AMD64;
 import jdk.vm.ci.amd64.AMD64Kind;
 import jdk.vm.ci.meta.AllocatableValue;
 
-public enum AMD64Arithmetic {
+public enum AMD64Arithmetic
+{
     FREM,
     DREM;
 
-    public static class FPDivRemOp extends AMD64LIRInstruction {
+    public static class FPDivRemOp extends AMD64LIRInstruction
+    {
         public static final LIRInstructionClass<FPDivRemOp> TYPE = LIRInstructionClass.create(FPDivRemOp.class);
 
         @Opcode private final AMD64Arithmetic opcode;
@@ -28,7 +30,8 @@ public enum AMD64Arithmetic {
         @Use protected AllocatableValue y;
         @Temp protected AllocatableValue raxTemp;
 
-        public FPDivRemOp(AMD64Arithmetic opcode, AllocatableValue result, AllocatableValue x, AllocatableValue y) {
+        public FPDivRemOp(AMD64Arithmetic opcode, AllocatableValue result, AllocatableValue x, AllocatableValue y)
+        {
             super(TYPE);
             this.opcode = opcode;
             this.result = result;
@@ -38,15 +41,19 @@ public enum AMD64Arithmetic {
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        {
             AMD64Address tmp = new AMD64Address(AMD64.rsp);
             masm.subq(AMD64.rsp, 8);
-            if (opcode == FREM) {
+            if (opcode == FREM)
+            {
                 masm.movflt(tmp, asRegister(y));
                 masm.flds(tmp);
                 masm.movflt(tmp, asRegister(x));
                 masm.flds(tmp);
-            } else {
+            }
+            else
+            {
                 assert opcode == DREM;
                 masm.movdbl(tmp, asRegister(y));
                 masm.fldd(tmp);
@@ -64,10 +71,13 @@ public enum AMD64Arithmetic {
             masm.fxch(1);
             masm.fpop();
 
-            if (opcode == FREM) {
+            if (opcode == FREM)
+            {
                 masm.fstps(tmp);
                 masm.movflt(asRegister(result), tmp);
-            } else {
+            }
+            else
+            {
                 masm.fstpd(tmp);
                 masm.movdbl(asRegister(result), tmp);
             }
@@ -75,10 +85,10 @@ public enum AMD64Arithmetic {
         }
 
         @Override
-        public void verify() {
+        public void verify()
+        {
             super.verify();
-            assert (opcode.name().startsWith("F") && result.getPlatformKind() == AMD64Kind.SINGLE && x.getPlatformKind() == AMD64Kind.SINGLE && y.getPlatformKind() == AMD64Kind.SINGLE) ||
-                            (opcode.name().startsWith("D") && result.getPlatformKind() == AMD64Kind.DOUBLE && x.getPlatformKind() == AMD64Kind.DOUBLE && y.getPlatformKind() == AMD64Kind.DOUBLE);
+            assert (opcode.name().startsWith("F") && result.getPlatformKind() == AMD64Kind.SINGLE && x.getPlatformKind() == AMD64Kind.SINGLE && y.getPlatformKind() == AMD64Kind.SINGLE) || (opcode.name().startsWith("D") && result.getPlatformKind() == AMD64Kind.DOUBLE && x.getPlatformKind() == AMD64Kind.DOUBLE && y.getPlatformKind() == AMD64Kind.DOUBLE);
         }
     }
 }

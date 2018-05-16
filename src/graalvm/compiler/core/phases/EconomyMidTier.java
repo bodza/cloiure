@@ -13,11 +13,13 @@ import graalvm.compiler.phases.common.LoweringPhase;
 import graalvm.compiler.phases.common.RemoveValueProxyPhase;
 import graalvm.compiler.phases.tiers.MidTierContext;
 
-public class EconomyMidTier extends PhaseSuite<MidTierContext> {
-
-    public EconomyMidTier(OptionValues options) {
+public class EconomyMidTier extends PhaseSuite<MidTierContext>
+{
+    public EconomyMidTier(OptionValues options)
+    {
         CanonicalizerPhase canonicalizer = new CanonicalizerPhase();
-        if (ImmutableCode.getValue(options)) {
+        if (ImmutableCode.getValue(options))
+        {
             canonicalizer.disableReadCanonicalization();
         }
         appendPhase(new RemoveValueProxyPhase());

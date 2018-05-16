@@ -12,7 +12,8 @@ import jdk.vm.ci.code.StackSlot;
  * slots into {@link StackSlot real} stack slots. This includes changing all occurrences of
  * {@link VirtualStackSlot} in the {@link LIRGenerationResult#getLIR() LIR} to {@link StackSlot}.
  */
-public final class StackSlotAllocatorUtil {
+public final class StackSlotAllocatorUtil
+{
     /**
      * The number of allocated stack slots.
      */

@@ -12,19 +12,18 @@ import graalvm.compiler.options.OptionKey;
 import graalvm.compiler.options.OptionType;
 import graalvm.compiler.phases.Phase;
 
-public class DeadCodeEliminationPhase extends Phase {
-
-    public static class Options {
-
-        // @formatter:off
+public class DeadCodeEliminationPhase extends Phase
+{
+    public static class Options
+    {
         @Option(help = "Disable optional dead code eliminations", type = OptionType.Debug)
         public static final OptionKey<Boolean> ReduceDCE = new OptionKey<>(true);
-        // @formatter:on
     }
 
     private static final CounterKey counterNodesRemoved = DebugContext.counter("NodesRemoved");
 
-    public enum Optionality {
+    public enum Optionality
+    {
         Optional,
         Required;
     }
@@ -33,7 +32,8 @@ public class DeadCodeEliminationPhase extends Phase {
      * Creates a dead code elimination phase that will be run irrespective of
      * {@link Options#ReduceDCE}.
      */
-    public DeadCodeEliminationPhase() {
+    public DeadCodeEliminationPhase()
+    {
         this(Optionality.Required);
     }
 
@@ -41,15 +41,18 @@ public class DeadCodeEliminationPhase extends Phase {
      * Creates a dead code elimination phase that will be run only if it is
      * {@linkplain Optionality#Required non-optional} or {@link Options#ReduceDCE} is false.
      */
-    public DeadCodeEliminationPhase(Optionality optionality) {
+    public DeadCodeEliminationPhase(Optionality optionality)
+    {
         this.optional = optionality == Optionality.Optional;
     }
 
     private final boolean optional;
 
     @Override
-    public void run(StructuredGraph graph) {
-        if (optional && Options.ReduceDCE.getValue(graph.getOptions())) {
+    public void run(StructuredGraph graph)
+    {
+        if (optional && Options.ReduceDCE.getValue(graph.getOptions()))
+        {
             return;
         }
 
@@ -58,20 +61,26 @@ public class DeadCodeEliminationPhase extends Phase {
         flood.add(graph.start());
         iterateSuccessorsAndInputs(flood);
         boolean changed = false;
-        for (GuardNode guard : graph.getNodes(GuardNode.TYPE)) {
-            if (flood.isMarked(guard.getAnchor().asNode())) {
+        for (GuardNode guard : graph.getNodes(GuardNode.TYPE))
+        {
+            if (flood.isMarked(guard.getAnchor().asNode()))
+            {
                 flood.add(guard);
                 changed = true;
             }
         }
-        if (changed) {
+        if (changed)
+        {
             iterateSuccessorsAndInputs(flood);
         }
         int totalMarkedCount = flood.getTotalMarkedCount();
-        if (totalNodeCount == totalMarkedCount) {
+        if (totalNodeCount == totalMarkedCount)
+        {
             // All nodes are live => nothing more to do.
             return;
-        } else {
+        }
+        else
+        {
             // Some nodes are not marked alive and therefore dead => proceed.
             assert totalNodeCount > totalMarkedCount;
         }
@@ -79,32 +88,43 @@ public class DeadCodeEliminationPhase extends Phase {
         deleteNodes(flood, graph);
     }
 
-    private static void iterateSuccessorsAndInputs(NodeFlood flood) {
-        Node.EdgeVisitor consumer = new Node.EdgeVisitor() {
+    private static void iterateSuccessorsAndInputs(NodeFlood flood)
+    {
+        Node.EdgeVisitor consumer = new Node.EdgeVisitor()
+        {
             @Override
-            public Node apply(Node n, Node succOrInput) {
+            public Node apply(Node n, Node succOrInput)
+            {
                 assert succOrInput.isAlive() : "dead successor or input " + succOrInput + " in " + n;
                 flood.add(succOrInput);
                 return succOrInput;
             }
         };
 
-        for (Node current : flood) {
-            if (current instanceof AbstractEndNode) {
+        for (Node current : flood)
+        {
+            if (current instanceof AbstractEndNode)
+            {
                 AbstractEndNode end = (AbstractEndNode) current;
                 flood.add(end.merge());
-            } else {
+            }
+            else
+            {
                 current.applySuccessors(consumer);
                 current.applyInputs(consumer);
             }
         }
     }
 
-    private static void deleteNodes(NodeFlood flood, StructuredGraph graph) {
-        Node.EdgeVisitor consumer = new Node.EdgeVisitor() {
+    private static void deleteNodes(NodeFlood flood, StructuredGraph graph)
+    {
+        Node.EdgeVisitor consumer = new Node.EdgeVisitor()
+        {
             @Override
-            public Node apply(Node n, Node input) {
-                if (input.isAlive() && flood.isMarked(input)) {
+            public Node apply(Node n, Node input)
+            {
+                if (input.isAlive() && flood.isMarked(input))
+                {
                     input.removeUsage(n);
                 }
                 return input;
@@ -112,8 +132,10 @@ public class DeadCodeEliminationPhase extends Phase {
         };
 
         DebugContext debug = graph.getDebug();
-        for (Node node : graph.getNodes()) {
-            if (!flood.isMarked(node)) {
+        for (Node node : graph.getNodes())
+        {
+            if (!flood.isMarked(node))
+            {
                 node.markDeleted();
                 node.applyInputs(consumer);
                 counterNodesRemoved.increment(debug);

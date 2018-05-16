@@ -12,14 +12,15 @@ import jdk.vm.ci.meta.JavaKind;
  * Since JDK 9.
  */
 @ClassSubstitution(className = "java.lang.StringUTF16", optional = true)
-public class AMD64StringUTF16Substitutions {
-
+public class AMD64StringUTF16Substitutions
+{
     /**
      * @param value is char[]
      * @param other is char[]
      */
     @MethodSubstitution
-    public static int compareTo(byte[] value, byte[] other) {
+    public static int compareTo(byte[] value, byte[] other)
+    {
         return ArrayCompareToNode.compareTo(value, other, value.length, other.length, JavaKind.Char, JavaKind.Char);
     }
 
@@ -28,12 +29,12 @@ public class AMD64StringUTF16Substitutions {
      * @param other is byte[]
      */
     @MethodSubstitution
-    public static int compareToLatin1(byte[] value, byte[] other) {
+    public static int compareToLatin1(byte[] value, byte[] other)
+    {
         /*
          * Swapping array arguments because intrinsic expects order to be byte[]/char[] but kind
          * arguments stay in original order.
          */
         return ArrayCompareToNode.compareTo(other, value, other.length, value.length, JavaKind.Char, JavaKind.Byte);
     }
-
 }

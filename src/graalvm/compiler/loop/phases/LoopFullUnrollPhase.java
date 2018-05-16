@@ -9,27 +9,33 @@ import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.phases.common.CanonicalizerPhase;
 import graalvm.compiler.phases.tiers.PhaseContext;
 
-public class LoopFullUnrollPhase extends LoopPhase<LoopPolicies> {
-
+public class LoopFullUnrollPhase extends LoopPhase<LoopPolicies>
+{
     private static final CounterKey FULLY_UNROLLED_LOOPS = DebugContext.counter("FullUnrolls");
     private final CanonicalizerPhase canonicalizer;
 
-    public LoopFullUnrollPhase(CanonicalizerPhase canonicalizer, LoopPolicies policies) {
+    public LoopFullUnrollPhase(CanonicalizerPhase canonicalizer, LoopPolicies policies)
+    {
         super(policies);
         this.canonicalizer = canonicalizer;
     }
 
     @Override
-    protected void run(StructuredGraph graph, PhaseContext context) {
+    protected void run(StructuredGraph graph, PhaseContext context)
+    {
         DebugContext debug = graph.getDebug();
-        if (graph.hasLoops()) {
+        if (graph.hasLoops())
+        {
             boolean peeled;
-            do {
+            do
+            {
                 peeled = false;
                 final LoopsData dataCounted = new LoopsData(graph);
                 dataCounted.detectedCountedLoops();
-                for (LoopEx loop : dataCounted.countedLoops()) {
-                    if (getPolicies().shouldFullUnroll(loop)) {
+                for (LoopEx loop : dataCounted.countedLoops())
+                {
+                    if (getPolicies().shouldFullUnroll(loop))
+                    {
                         debug.log("FullUnroll %s", loop);
                         LoopTransformations.fullUnroll(loop, context, canonicalizer);
                         FULLY_UNROLLED_LOOPS.increment(debug);
@@ -44,7 +50,8 @@ public class LoopFullUnrollPhase extends LoopPhase<LoopPolicies> {
     }
 
     @Override
-    public boolean checkContract() {
+    public boolean checkContract()
+    {
         return false;
     }
 }

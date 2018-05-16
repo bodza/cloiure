@@ -9,9 +9,8 @@ import graalvm.compiler.options.OptionType;
 /**
  * Options related to {@link GraalCompiler}.
  */
-public class GraalCompilerOptions {
-
-    // @formatter:off
+public class GraalCompilerOptions
+{
     @Option(help = "Print an informational line to the console for each completed compilation.", type = OptionType.Debug)
     public static final OptionKey<Boolean> PrintCompilation = new OptionKey<>(false);
     @Option(help = "Pattern for method(s) that will trigger an exception when compiled. " +
@@ -24,11 +23,10 @@ public class GraalCompilerOptions {
     public static final EnumOptionKey<ExceptionAction> CompilationBailoutAction = new EnumOptionKey<>(ExceptionAction.Silent);
     @Option(help = "Specifies the action to take when compilation fails with a bailout exception. " +
                    "The accepted values are the same as for CompilationBailoutAction.", type = OptionType.User)
-     public static final EnumOptionKey<ExceptionAction> CompilationFailureAction = new EnumOptionKey<>(ExceptionAction.Diagnose);
+    public static final EnumOptionKey<ExceptionAction> CompilationFailureAction = new EnumOptionKey<>(ExceptionAction.Diagnose);
     @Option(help = "The maximum number of compilation failures or bailouts to handle with the action specified " +
                    "by CompilationFailureAction or CompilationBailoutAction before changing to a less verbose action.", type = OptionType.User)
     public static final OptionKey<Integer> MaxCompilationProblemsPerAction = new OptionKey<>(2);
     @Option(help = "Alias for CompilationFailureAction=ExitVM.", type = OptionType.User)
     public static final OptionKey<Boolean> ExitVMOnException = new OptionKey<>(false);
-    // @formatter:on
 }

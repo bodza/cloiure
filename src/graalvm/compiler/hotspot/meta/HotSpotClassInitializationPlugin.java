@@ -22,11 +22,15 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 
-public final class HotSpotClassInitializationPlugin implements ClassInitializationPlugin {
+public final class HotSpotClassInitializationPlugin implements ClassInitializationPlugin
+{
     @Override
-    public boolean shouldApply(GraphBuilderContext builder, ResolvedJavaType type) {
-        if (!builder.parsingIntrinsic()) {
-            if (!type.isArray()) {
+    public boolean shouldApply(GraphBuilderContext builder, ResolvedJavaType type)
+    {
+        if (!builder.parsingIntrinsic())
+        {
+            if (!type.isArray())
+            {
                 ResolvedJavaMethod method = builder.getGraph().method();
                 ResolvedJavaType methodHolder = method.getDeclaringClass();
                 // We can elide initialization nodes if type >=: methodHolder.
@@ -40,7 +44,9 @@ public final class HotSpotClassInitializationPlugin implements ClassInitializati
                 // in JLS 12.4.1.
 
                 return !type.isAssignableFrom(methodHolder) || type.isInterface();
-            } else if (!type.getComponentType().isPrimitive()) {
+            }
+            else if (!type.getComponentType().isPrimitive())
+            {
                 // Always apply to object array types
                 return true;
             }
@@ -49,7 +55,8 @@ public final class HotSpotClassInitializationPlugin implements ClassInitializati
     }
 
     @Override
-    public ValueNode apply(GraphBuilderContext builder, ResolvedJavaType type, FrameState frameState) {
+    public ValueNode apply(GraphBuilderContext builder, ResolvedJavaType type, FrameState frameState)
+    {
         assert shouldApply(builder, type);
         Stamp hubStamp = builder.getStampProvider().createHubStamp((ObjectStamp) StampFactory.objectNonNull());
         ConstantNode hub = builder.append(ConstantNode.forConstant(hubStamp, ((HotSpotResolvedObjectType) type).klass(), builder.getMetaAccess(), builder.getGraph()));
@@ -61,43 +68,56 @@ public final class HotSpotClassInitializationPlugin implements ClassInitializati
     private static final Class<? extends ConstantPool> hscp;
     private static final MethodHandle loadReferencedTypeIIZMH;
 
-    static {
+    static
+    {
         MethodHandle m = null;
         Class<? extends ConstantPool> c = null;
-        try {
+        try
+        {
             c = Class.forName("jdk.vm.ci.hotspot.HotSpotConstantPool").asSubclass(ConstantPool.class);
             m = MethodHandles.lookup().findVirtual(c, "loadReferencedType", MethodType.methodType(void.class, int.class, int.class, boolean.class));
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
         }
         loadReferencedTypeIIZMH = m;
         hscp = c;
     }
 
-    private static boolean isHotSpotConstantPool(ConstantPool cp) {
+    private static boolean isHotSpotConstantPool(ConstantPool cp)
+    {
         // jdk.vm.ci.hotspot.HotSpotConstantPool is final, so we can
         // directly compare Classes.
         return cp.getClass() == hscp;
     }
 
     @Override
-    public boolean supportsLazyInitialization(ConstantPool cp) {
-        if (loadReferencedTypeIIZMH != null && isHotSpotConstantPool(cp)) {
+    public boolean supportsLazyInitialization(ConstantPool cp)
+    {
+        if (loadReferencedTypeIIZMH != null && isHotSpotConstantPool(cp))
+        {
             return true;
         }
         return false;
     }
 
     @Override
-    public void loadReferencedType(GraphBuilderContext builder, ConstantPool cp, int cpi, int opcode) {
-        if (loadReferencedTypeIIZMH != null && isHotSpotConstantPool(cp)) {
-            try {
+    public void loadReferencedType(GraphBuilderContext builder, ConstantPool cp, int cpi, int opcode)
+    {
+        if (loadReferencedTypeIIZMH != null && isHotSpotConstantPool(cp))
+        {
+            try
+            {
                 loadReferencedTypeIIZMH.invoke(cp, cpi, opcode, false);
-            } catch (Throwable t) {
+            }
+            catch (Throwable t)
+            {
                 throw GraalError.shouldNotReachHere(t);
             }
-        } else {
+        }
+        else
+        {
             cp.loadReferencedType(cpi, opcode);
         }
     }
-
 }

@@ -9,7 +9,7 @@ package graalvm.compiler.graph.spi;
  * influenced (in terms of simplification and canonicalization) by the actions performed in
  * simplify.
  */
-public interface Simplifiable {
-
+public interface Simplifiable
+{
     void simplify(SimplifierTool tool);
 }

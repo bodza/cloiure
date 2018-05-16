@@ -29,8 +29,8 @@ import graalvm.compiler.options.OptionValues;
 import jdk.vm.ci.code.CallingConvention;
 import jdk.vm.ci.meta.Value;
 
-public interface NodeLIRBuilderTool extends NodeValueMap {
-
+public interface NodeLIRBuilderTool extends NodeValueMap
+{
     // TODO (je) remove and move into the Node
     LIRFrameState state(DeoptimizingNode deopt);
 
@@ -67,7 +67,8 @@ public interface NodeLIRBuilderTool extends NodeValueMap {
 
     void doBlock(Block block, StructuredGraph graph, BlockMap<List<Node>> blockMap);
 
-    default OptionValues getOptions() {
+    default OptionValues getOptions()
+    {
         return getLIRGeneratorTool().getResult().getLIR().getOptions();
     }
 }

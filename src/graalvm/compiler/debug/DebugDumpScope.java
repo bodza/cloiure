@@ -1,7 +1,7 @@
 package graalvm.compiler.debug;
 
-public class DebugDumpScope {
-
+public class DebugDumpScope
+{
     public final String name;
 
     /**
@@ -11,17 +11,20 @@ public class DebugDumpScope {
      */
     public final boolean decorator;
 
-    public DebugDumpScope(String name) {
+    public DebugDumpScope(String name)
+    {
         this(name, false);
     }
 
-    public DebugDumpScope(String name, boolean decorator) {
+    public DebugDumpScope(String name, boolean decorator)
+    {
         this.name = name;
         this.decorator = decorator;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "DebugDumpScope[" + name + "]";
     }
 }

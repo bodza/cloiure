@@ -76,8 +76,8 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  *
  * @see #moveForward()
  */
-public class InliningData {
-
+public class InliningData
+{
     // Counters
     private static final CounterKey counterInliningPerformed = DebugContext.counter("InliningPerformed");
     private static final CounterKey counterInliningRuns = DebugContext.counter("InliningRuns");
@@ -98,7 +98,8 @@ public class InliningData {
 
     private int maxGraphs;
 
-    public InliningData(StructuredGraph rootGraph, HighTierContext context, int maxMethodPerInlining, CanonicalizerPhase canonicalizer, InliningPolicy inliningPolicy, LinkedList<Invoke> rootInvokes) {
+    public InliningData(StructuredGraph rootGraph, HighTierContext context, int maxMethodPerInlining, CanonicalizerPhase canonicalizer, InliningPolicy inliningPolicy, LinkedList<Invoke> rootInvokes)
+    {
         assert rootGraph != null;
         this.context = context;
         this.maxMethodPerInlining = maxMethodPerInlining;
@@ -112,38 +113,60 @@ public class InliningData {
         graphQueue.push(new CallsiteHolderExplorable(rootGraph, 1.0, 1.0, null, rootInvokes));
     }
 
-    public static boolean isFreshInstantiation(ValueNode arg) {
+    public static boolean isFreshInstantiation(ValueNode arg)
+    {
         return (arg instanceof AbstractNewObjectNode) || (arg instanceof AllocatedObjectNode) || (arg instanceof VirtualObjectNode);
     }
 
-    private String checkTargetConditionsHelper(ResolvedJavaMethod method, int invokeBci) {
+    private String checkTargetConditionsHelper(ResolvedJavaMethod method, int invokeBci)
+    {
         OptionValues options = rootGraph.getOptions();
-        if (method == null) {
+        if (method == null)
+        {
             return "the method is not resolved";
-        } else if (method.isNative() && (!Intrinsify.getValue(options) || !InliningUtil.canIntrinsify(context.getReplacements(), method, invokeBci))) {
+        }
+        else if (method.isNative() && (!Intrinsify.getValue(options) || !InliningUtil.canIntrinsify(context.getReplacements(), method, invokeBci)))
+        {
             return "it is a non-intrinsic native method";
-        } else if (method.isAbstract()) {
+        }
+        else if (method.isAbstract())
+        {
             return "it is an abstract method";
-        } else if (!method.getDeclaringClass().isInitialized()) {
+        }
+        else if (!method.getDeclaringClass().isInitialized())
+        {
             return "the method's class is not initialized";
-        } else if (!method.canBeInlined()) {
+        }
+        else if (!method.canBeInlined())
+        {
             return "it is marked non-inlinable";
-        } else if (countRecursiveInlining(method) > MaximumRecursiveInlining.getValue(options)) {
+        }
+        else if (countRecursiveInlining(method) > MaximumRecursiveInlining.getValue(options))
+        {
             return "it exceeds the maximum recursive inlining depth";
-        } else {
-            if (new OptimisticOptimizations(rootGraph.getProfilingInfo(method), options).lessOptimisticThan(context.getOptimisticOptimizations())) {
+        }
+        else
+        {
+            if (new OptimisticOptimizations(rootGraph.getProfilingInfo(method), options).lessOptimisticThan(context.getOptimisticOptimizations()))
+            {
                 return "the callee uses less optimistic optimizations than caller";
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
     }
 
-    private boolean checkTargetConditions(Invoke invoke, ResolvedJavaMethod method) {
+    private boolean checkTargetConditions(Invoke invoke, ResolvedJavaMethod method)
+    {
         final String failureMessage = checkTargetConditionsHelper(method, invoke.bci());
-        if (failureMessage == null) {
+        if (failureMessage == null)
+        {
             return true;
-        } else {
+        }
+        else
+        {
             InliningUtil.traceNotInlinedMethod(invoke, inliningDepth(), method, failureMessage);
             invoke.asNode().graph().getInliningLog().addDecision(invoke, false, "InliningPhase", null, null, failureMessage);
             return false;
@@ -156,69 +179,86 @@ public class InliningData {
      * @param invoke the invoke that should be inlined
      * @return an instance of InlineInfo, or null if no inlining is possible at the given invoke
      */
-    private InlineInfo getInlineInfo(Invoke invoke) {
+    private InlineInfo getInlineInfo(Invoke invoke)
+    {
         final String failureMessage = InliningUtil.checkInvokeConditions(invoke);
-        if (failureMessage != null) {
+        if (failureMessage != null)
+        {
             InliningUtil.logNotInlinedMethod(invoke, failureMessage);
             return null;
         }
         MethodCallTargetNode callTarget = (MethodCallTargetNode) invoke.callTarget();
         ResolvedJavaMethod targetMethod = callTarget.targetMethod();
 
-        if (callTarget.invokeKind() == CallTargetNode.InvokeKind.Special || targetMethod.canBeStaticallyBound()) {
+        if (callTarget.invokeKind() == CallTargetNode.InvokeKind.Special || targetMethod.canBeStaticallyBound())
+        {
             return getExactInlineInfo(invoke, targetMethod);
         }
 
         assert callTarget.invokeKind().isIndirect();
 
         ResolvedJavaType holder = targetMethod.getDeclaringClass();
-        if (!(callTarget.receiver().stamp(NodeView.DEFAULT) instanceof ObjectStamp)) {
+        if (!(callTarget.receiver().stamp(NodeView.DEFAULT) instanceof ObjectStamp))
+        {
             return null;
         }
         ObjectStamp receiverStamp = (ObjectStamp) callTarget.receiver().stamp(NodeView.DEFAULT);
-        if (receiverStamp.alwaysNull()) {
+        if (receiverStamp.alwaysNull())
+        {
             // Don't inline if receiver is known to be null
             return null;
         }
         ResolvedJavaType contextType = invoke.getContextType();
-        if (receiverStamp.type() != null) {
+        if (receiverStamp.type() != null)
+        {
             // the invoke target might be more specific than the holder (happens after inlining:
             // parameters lose their declared type...)
             ResolvedJavaType receiverType = receiverStamp.type();
-            if (receiverType != null && holder.isAssignableFrom(receiverType)) {
+            if (receiverType != null && holder.isAssignableFrom(receiverType))
+            {
                 holder = receiverType;
-                if (receiverStamp.isExactType()) {
+                if (receiverStamp.isExactType())
+                {
                     assert targetMethod.getDeclaringClass().isAssignableFrom(holder) : holder + " subtype of " + targetMethod.getDeclaringClass() + " for " + targetMethod;
                     ResolvedJavaMethod resolvedMethod = holder.resolveConcreteMethod(targetMethod, contextType);
-                    if (resolvedMethod != null) {
+                    if (resolvedMethod != null)
+                    {
                         return getExactInlineInfo(invoke, resolvedMethod);
                     }
                 }
             }
         }
 
-        if (holder.isArray()) {
+        if (holder.isArray())
+        {
             // arrays can be treated as Objects
             ResolvedJavaMethod resolvedMethod = holder.resolveConcreteMethod(targetMethod, contextType);
-            if (resolvedMethod != null) {
+            if (resolvedMethod != null)
+            {
                 return getExactInlineInfo(invoke, resolvedMethod);
             }
         }
 
         AssumptionResult<ResolvedJavaType> leafConcreteSubtype = holder.findLeafConcreteSubtype();
-        if (leafConcreteSubtype != null) {
+        if (leafConcreteSubtype != null)
+        {
             ResolvedJavaMethod resolvedMethod = leafConcreteSubtype.getResult().resolveConcreteMethod(targetMethod, contextType);
-            if (resolvedMethod != null) {
-                if (leafConcreteSubtype.canRecordTo(callTarget.graph().getAssumptions())) {
+            if (resolvedMethod != null)
+            {
+                if (leafConcreteSubtype.canRecordTo(callTarget.graph().getAssumptions()))
+                {
                     return getAssumptionInlineInfo(invoke, resolvedMethod, leafConcreteSubtype);
-                } else {
+                }
+                else
+                {
                     return getTypeCheckedAssumptionInfo(invoke, resolvedMethod, leafConcreteSubtype.getResult());
                 }
             }
         }
 
         AssumptionResult<ResolvedJavaMethod> concrete = holder.findUniqueConcreteMethod(targetMethod);
-        if (concrete != null && concrete.canRecordTo(callTarget.graph().getAssumptions())) {
+        if (concrete != null && concrete.canRecordTo(callTarget.graph().getAssumptions()))
+        {
             return getAssumptionInlineInfo(invoke, concrete.getResult(), concrete);
         }
 
@@ -226,23 +266,28 @@ public class InliningData {
         return getTypeCheckedInlineInfo(invoke, targetMethod);
     }
 
-    private InlineInfo getTypeCheckedAssumptionInfo(Invoke invoke, ResolvedJavaMethod method, ResolvedJavaType type) {
-        if (!checkTargetConditions(invoke, method)) {
+    private InlineInfo getTypeCheckedAssumptionInfo(Invoke invoke, ResolvedJavaMethod method, ResolvedJavaType type)
+    {
+        if (!checkTargetConditions(invoke, method))
+        {
             return null;
         }
         return new TypeGuardInlineInfo(invoke, method, type);
     }
 
-    private InlineInfo getTypeCheckedInlineInfo(Invoke invoke, ResolvedJavaMethod targetMethod) {
+    private InlineInfo getTypeCheckedInlineInfo(Invoke invoke, ResolvedJavaMethod targetMethod)
+    {
         JavaTypeProfile typeProfile = ((MethodCallTargetNode) invoke.callTarget()).getProfile();
-        if (typeProfile == null) {
+        if (typeProfile == null)
+        {
             InliningUtil.traceNotInlinedMethod(invoke, inliningDepth(), targetMethod, "no type profile exists");
             invoke.asNode().graph().getInliningLog().addDecision(invoke, false, "InliningPhase", null, null, "no type profile exists");
             return null;
         }
 
         JavaTypeProfile.ProfiledType[] ptypes = typeProfile.getTypes();
-        if (ptypes == null || ptypes.length <= 0) {
+        if (ptypes == null || ptypes.length <= 0)
+        {
             InliningUtil.traceNotInlinedMethod(invoke, inliningDepth(), targetMethod, "no types in profile");
             invoke.asNode().graph().getInliningLog().addDecision(invoke, false, "InliningPhase", null, null, "no types in profile");
             return null;
@@ -251,8 +296,10 @@ public class InliningData {
         double notRecordedTypeProbability = typeProfile.getNotRecordedProbability();
         final OptimisticOptimizations optimisticOpts = context.getOptimisticOptimizations();
         OptionValues options = invoke.asNode().getOptions();
-        if (ptypes.length == 1 && notRecordedTypeProbability == 0) {
-            if (!optimisticOpts.inlineMonomorphicCalls(options)) {
+        if (ptypes.length == 1 && notRecordedTypeProbability == 0)
+        {
+            if (!optimisticOpts.inlineMonomorphicCalls(options))
+            {
                 InliningUtil.traceNotInlinedMethod(invoke, inliningDepth(), targetMethod, "inlining monomorphic calls is disabled");
                 invoke.asNode().graph().getInliningLog().addDecision(invoke, false, "InliningPhase", null, null, "inlining monomorphic calls is disabled");
                 return null;
@@ -261,66 +308,76 @@ public class InliningData {
             ResolvedJavaType type = ptypes[0].getType();
             assert type.isArray() || type.isConcrete();
             ResolvedJavaMethod concrete = type.resolveConcreteMethod(targetMethod, contextType);
-            if (!checkTargetConditions(invoke, concrete)) {
+            if (!checkTargetConditions(invoke, concrete))
+            {
                 return null;
             }
             return new TypeGuardInlineInfo(invoke, concrete, type);
-        } else {
+        }
+        else
+        {
             invoke.setPolymorphic(true);
 
-            if (!optimisticOpts.inlinePolymorphicCalls(options) && notRecordedTypeProbability == 0) {
+            if (!optimisticOpts.inlinePolymorphicCalls(options) && notRecordedTypeProbability == 0)
+            {
                 InliningUtil.traceNotInlinedMethod(invoke, inliningDepth(), targetMethod, "inlining polymorphic calls is disabled (%d types)", ptypes.length);
                 invoke.asNode().graph().getInliningLog().addDecision(invoke, false, "InliningPhase", null, null, "inlining polymorphic calls is disabled (%d types)", ptypes.length);
                 return null;
             }
-            if (!optimisticOpts.inlineMegamorphicCalls(options) && notRecordedTypeProbability > 0) {
+            if (!optimisticOpts.inlineMegamorphicCalls(options) && notRecordedTypeProbability > 0)
+            {
                 // due to filtering impossible types, notRecordedTypeProbability can be > 0 although
                 // the number of types is lower than what can be recorded in a type profile
-                InliningUtil.traceNotInlinedMethod(invoke, inliningDepth(), targetMethod, "inlining megamorphic calls is disabled (%d types, %f %% not recorded types)", ptypes.length,
-                                notRecordedTypeProbability * 100);
-                invoke.asNode().graph().getInliningLog().addDecision(invoke, false, "InliningPhase", null, null,
-                                "inlining megamorphic calls is disabled (%d types, %f %% not recorded types)", ptypes.length, notRecordedTypeProbability);
+                InliningUtil.traceNotInlinedMethod(invoke, inliningDepth(), targetMethod, "inlining megamorphic calls is disabled (%d types, %f %% not recorded types)", ptypes.length, notRecordedTypeProbability * 100);
+                invoke.asNode().graph().getInliningLog().addDecision(invoke, false, "InliningPhase", null, null, "inlining megamorphic calls is disabled (%d types, %f %% not recorded types)", ptypes.length, notRecordedTypeProbability);
                 return null;
             }
 
             // Find unique methods and their probabilities.
             ArrayList<ResolvedJavaMethod> concreteMethods = new ArrayList<>();
             ArrayList<Double> concreteMethodsProbabilities = new ArrayList<>();
-            for (int i = 0; i < ptypes.length; i++) {
+            for (int i = 0; i < ptypes.length; i++)
+            {
                 ResolvedJavaMethod concrete = ptypes[i].getType().resolveConcreteMethod(targetMethod, contextType);
-                if (concrete == null) {
+                if (concrete == null)
+                {
                     InliningUtil.traceNotInlinedMethod(invoke, inliningDepth(), targetMethod, "could not resolve method");
                     invoke.asNode().graph().getInliningLog().addDecision(invoke, false, "InliningPhase", null, null, "could not resolve method");
                     return null;
                 }
                 int index = concreteMethods.indexOf(concrete);
                 double curProbability = ptypes[i].getProbability();
-                if (index < 0) {
+                if (index < 0)
+                {
                     index = concreteMethods.size();
                     concreteMethods.add(concrete);
                     concreteMethodsProbabilities.add(curProbability);
-                } else {
+                }
+                else
+                {
                     concreteMethodsProbabilities.set(index, concreteMethodsProbabilities.get(index) + curProbability);
                 }
             }
 
             // Clear methods that fall below the threshold.
-            if (notRecordedTypeProbability > 0) {
+            if (notRecordedTypeProbability > 0)
+            {
                 ArrayList<ResolvedJavaMethod> newConcreteMethods = new ArrayList<>();
                 ArrayList<Double> newConcreteMethodsProbabilities = new ArrayList<>();
-                for (int i = 0; i < concreteMethods.size(); ++i) {
-                    if (concreteMethodsProbabilities.get(i) >= MegamorphicInliningMinMethodProbability.getValue(options)) {
+                for (int i = 0; i < concreteMethods.size(); ++i)
+                {
+                    if (concreteMethodsProbabilities.get(i) >= MegamorphicInliningMinMethodProbability.getValue(options))
+                    {
                         newConcreteMethods.add(concreteMethods.get(i));
                         newConcreteMethodsProbabilities.add(concreteMethodsProbabilities.get(i));
                     }
                 }
 
-                if (newConcreteMethods.isEmpty()) {
+                if (newConcreteMethods.isEmpty())
+                {
                     // No method left that is worth inlining.
-                    InliningUtil.traceNotInlinedMethod(invoke, inliningDepth(), targetMethod, "no methods remaining after filtering less frequent methods (%d methods previously)",
-                                    concreteMethods.size());
-                    invoke.asNode().graph().getInliningLog().addDecision(invoke, false, "InliningPhase", null, null,
-                                    "no methods remaining after filtering less frequent methods (%d methods previously)", concreteMethods.size());
+                    InliningUtil.traceNotInlinedMethod(invoke, inliningDepth(), targetMethod, "no methods remaining after filtering less frequent methods (%d methods previously)", concreteMethods.size());
+                    invoke.asNode().graph().getInliningLog().addDecision(invoke, false, "InliningPhase", null, null, "no methods remaining after filtering less frequent methods (%d methods previously)", concreteMethods.size());
                     return null;
                 }
 
@@ -328,7 +385,8 @@ public class InliningData {
                 concreteMethodsProbabilities = newConcreteMethodsProbabilities;
             }
 
-            if (concreteMethods.size() > maxMethodPerInlining) {
+            if (concreteMethods.size() > maxMethodPerInlining)
+            {
                 InliningUtil.traceNotInlinedMethod(invoke, inliningDepth(), targetMethod, "polymorphic call with more than %d target methods", maxMethodPerInlining);
                 invoke.asNode().graph().getInliningLog().addDecision(invoke, false, "InliningPhase", null, null, "polymorphic call with more than %d target methods", maxMethodPerInlining);
                 return null;
@@ -337,31 +395,36 @@ public class InliningData {
             // Clean out types whose methods are no longer available.
             ArrayList<JavaTypeProfile.ProfiledType> usedTypes = new ArrayList<>();
             ArrayList<Integer> typesToConcretes = new ArrayList<>();
-            for (JavaTypeProfile.ProfiledType type : ptypes) {
+            for (JavaTypeProfile.ProfiledType type : ptypes)
+            {
                 ResolvedJavaMethod concrete = type.getType().resolveConcreteMethod(targetMethod, contextType);
                 int index = concreteMethods.indexOf(concrete);
-                if (index == -1) {
+                if (index == -1)
+                {
                     notRecordedTypeProbability += type.getProbability();
-                } else {
+                }
+                else
+                {
                     assert type.getType().isArray() || !type.getType().isAbstract() : type + " " + concrete;
                     usedTypes.add(type);
                     typesToConcretes.add(index);
                 }
             }
 
-            if (usedTypes.isEmpty()) {
+            if (usedTypes.isEmpty())
+            {
                 // No type left that is worth checking for.
                 InliningUtil.traceNotInlinedMethod(invoke, inliningDepth(), targetMethod, "no types remaining after filtering less frequent types (%d types previously)", ptypes.length);
-                invoke.asNode().graph().getInliningLog().addDecision(invoke, false, "InliningPhase", null, null, "no types remaining after filtering less frequent types (%d types previously)",
-                                ptypes.length);
+                invoke.asNode().graph().getInliningLog().addDecision(invoke, false, "InliningPhase", null, null, "no types remaining after filtering less frequent types (%d types previously)", ptypes.length);
                 return null;
             }
 
-            for (ResolvedJavaMethod concrete : concreteMethods) {
-                if (!checkTargetConditions(invoke, concrete)) {
+            for (ResolvedJavaMethod concrete : concreteMethods)
+            {
+                if (!checkTargetConditions(invoke, concrete))
+                {
                     InliningUtil.traceNotInlinedMethod(invoke, inliningDepth(), targetMethod, "it is a polymorphic method call and at least one invoked method cannot be inlined");
-                    invoke.asNode().graph().getInliningLog().addDecision(invoke, false, "InliningPhase", null, null,
-                                    "it is a polymorphic method call and at least one invoked method cannot be inlined");
+                    invoke.asNode().graph().getInliningLog().addDecision(invoke, false, "InliningPhase", null, null, "it is a polymorphic method call and at least one invoked method cannot be inlined");
                     return null;
                 }
             }
@@ -369,28 +432,35 @@ public class InliningData {
         }
     }
 
-    private InlineInfo getAssumptionInlineInfo(Invoke invoke, ResolvedJavaMethod concrete, AssumptionResult<?> takenAssumption) {
+    private InlineInfo getAssumptionInlineInfo(Invoke invoke, ResolvedJavaMethod concrete, AssumptionResult<?> takenAssumption)
+    {
         assert concrete.isConcrete();
-        if (checkTargetConditions(invoke, concrete)) {
+        if (checkTargetConditions(invoke, concrete))
+        {
             return new AssumptionInlineInfo(invoke, concrete, takenAssumption);
         }
         return null;
     }
 
-    private InlineInfo getExactInlineInfo(Invoke invoke, ResolvedJavaMethod targetMethod) {
+    private InlineInfo getExactInlineInfo(Invoke invoke, ResolvedJavaMethod targetMethod)
+    {
         assert targetMethod.isConcrete();
-        if (checkTargetConditions(invoke, targetMethod)) {
+        if (checkTargetConditions(invoke, targetMethod))
+        {
             return new ExactInlineInfo(invoke, targetMethod);
         }
         return null;
     }
 
     @SuppressWarnings("try")
-    private void doInline(CallsiteHolderExplorable callerCallsiteHolder, MethodInvocation calleeInvocation, String reason) {
+    private void doInline(CallsiteHolderExplorable callerCallsiteHolder, MethodInvocation calleeInvocation, String reason)
+    {
         StructuredGraph callerGraph = callerCallsiteHolder.graph();
         InlineInfo calleeInfo = calleeInvocation.callee();
-        try {
-            try (DebugContext.Scope scope = debug.scope("doInline", callerGraph)) {
+        try
+        {
+            try (DebugContext.Scope scope = debug.scope("doInline", callerGraph))
+            {
                 EconomicSet<Node> canonicalizedNodes = EconomicSet.create(Equivalence.IDENTITY);
                 canonicalizedNodes.addAll(calleeInfo.invoke().asNode().usages());
                 EconomicSet<Node> parameterUsages = calleeInfo.inline(new Providers(context), reason);
@@ -403,8 +473,10 @@ public class InliningData {
                 canonicalizer.applyIncremental(callerGraph, context, canonicalizedNodes);
 
                 // process invokes that are possibly created during canonicalization
-                for (Node newNode : callerGraph.getNewNodes(markBeforeCanonicalization)) {
-                    if (newNode instanceof Invoke) {
+                for (Node newNode : callerGraph.getNewNodes(markBeforeCanonicalization))
+                {
+                    if (newNode instanceof Invoke)
+                    {
                         callerCallsiteHolder.pushInvoke((Invoke) newNode);
                     }
                 }
@@ -413,13 +485,21 @@ public class InliningData {
 
                 counterInliningPerformed.increment(debug);
             }
-        } catch (BailoutException bailout) {
+        }
+        catch (BailoutException bailout)
+        {
             throw bailout;
-        } catch (AssertionError | RuntimeException e) {
+        }
+        catch (AssertionError | RuntimeException e)
+        {
             throw new GraalError(e).addContext(calleeInfo.toString());
-        } catch (GraalError e) {
+        }
+        catch (GraalError e)
+        {
             throw e.addContext(calleeInfo.toString());
-        } catch (Throwable e) {
+        }
+        catch (Throwable e)
+        {
             throw debug.handle(e);
         }
     }
@@ -436,19 +516,22 @@ public class InliningData {
      *
      * @return true iff inlining was actually performed
      */
-    private boolean tryToInline(MethodInvocation calleeInvocation, int inliningDepth) {
+    private boolean tryToInline(MethodInvocation calleeInvocation, int inliningDepth)
+    {
         CallsiteHolderExplorable callerCallsiteHolder = (CallsiteHolderExplorable) currentGraph();
         InlineInfo calleeInfo = calleeInvocation.callee();
         assert callerCallsiteHolder.containsInvoke(calleeInfo.invoke());
         counterInliningConsidered.increment(debug);
 
         InliningPolicy.Decision decision = inliningPolicy.isWorthInlining(context.getReplacements(), calleeInvocation, inliningDepth, true);
-        if (decision.shouldInline()) {
+        if (decision.shouldInline())
+        {
             doInline(callerCallsiteHolder, calleeInvocation, decision.getReason());
             return true;
         }
 
-        if (context.getOptimisticOptimizations().devirtualizeInvokes(calleeInfo.graph().getOptions())) {
+        if (context.getOptimisticOptimizations().devirtualizeInvokes(calleeInfo.graph().getOptions()))
+        {
             calleeInfo.tryToDevirtualizeInvoke(new Providers(context));
         }
 
@@ -480,12 +563,14 @@ public class InliningData {
      * {@link InlineInfo#inline(Providers, String)}
      * </p>
      */
-    private void processNextInvoke() {
+    private void processNextInvoke()
+    {
         CallsiteHolderExplorable callsiteHolder = (CallsiteHolderExplorable) currentGraph();
         Invoke invoke = callsiteHolder.popInvoke();
         InlineInfo info = getInlineInfo(invoke);
 
-        if (info != null) {
+        if (info != null)
+        {
             info.populateInlinableElements(context, currentGraph().graph(), canonicalizer, rootGraph.getOptions());
             double invokeProbability = callsiteHolder.invokeProbability(invoke);
             double invokeRelevance = callsiteHolder.invokeRelevance(invoke);
@@ -507,15 +592,19 @@ public class InliningData {
      * @return the positions of freshly instantiated arguments in the argument list of the
      *         <code>invoke</code>, or null if no such positions exist.
      */
-    public static BitSet freshlyInstantiatedArguments(Invoke invoke, EconomicSet<ParameterNode> fixedParams) {
+    public static BitSet freshlyInstantiatedArguments(Invoke invoke, EconomicSet<ParameterNode> fixedParams)
+    {
         assert fixedParams != null;
         assert paramsAndInvokeAreInSameGraph(invoke, fixedParams);
         BitSet result = null;
         int argIdx = 0;
-        for (ValueNode arg : invoke.callTarget().arguments()) {
+        for (ValueNode arg : invoke.callTarget().arguments())
+        {
             assert arg != null;
-            if (isFreshInstantiation(arg) || (arg instanceof ParameterNode && fixedParams.contains((ParameterNode) arg))) {
-                if (result == null) {
+            if (isFreshInstantiation(arg) || (arg instanceof ParameterNode && fixedParams.contains((ParameterNode) arg)))
+            {
+                if (result == null)
+                {
                     result = new BitSet();
                 }
                 result.set(argIdx);
@@ -525,38 +614,48 @@ public class InliningData {
         return result;
     }
 
-    private static boolean paramsAndInvokeAreInSameGraph(Invoke invoke, EconomicSet<ParameterNode> fixedParams) {
-        if (fixedParams.isEmpty()) {
+    private static boolean paramsAndInvokeAreInSameGraph(Invoke invoke, EconomicSet<ParameterNode> fixedParams)
+    {
+        if (fixedParams.isEmpty())
+        {
             return true;
         }
-        for (ParameterNode p : fixedParams) {
-            if (p.graph() != invoke.asNode().graph()) {
+        for (ParameterNode p : fixedParams)
+        {
+            if (p.graph() != invoke.asNode().graph())
+            {
                 return false;
             }
         }
         return true;
     }
 
-    public int graphCount() {
+    public int graphCount()
+    {
         return graphQueue.size();
     }
 
-    public boolean hasUnprocessedGraphs() {
+    public boolean hasUnprocessedGraphs()
+    {
         return !graphQueue.isEmpty();
     }
 
-    private CallsiteHolder currentGraph() {
+    private CallsiteHolder currentGraph()
+    {
         return graphQueue.peek();
     }
 
-    private void popGraph() {
+    private void popGraph()
+    {
         graphQueue.pop();
         assert graphQueue.size() <= maxGraphs;
     }
 
-    private void popGraphs(int count) {
+    private void popGraphs(int count)
+    {
         assert count >= 0;
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++)
+        {
             graphQueue.pop();
         }
     }
@@ -566,28 +665,34 @@ public class InliningData {
     /**
      * Gets the call hierarchy of this inlining from outer most call to inner most callee.
      */
-    private Object[] inliningContext() {
-        if (!debug.isDumpEnabled(DebugContext.INFO_LEVEL)) {
+    private Object[] inliningContext()
+    {
+        if (!debug.isDumpEnabled(DebugContext.INFO_LEVEL))
+        {
             return NO_CONTEXT;
         }
         Object[] result = new Object[graphQueue.size()];
         int i = 0;
-        for (CallsiteHolder g : graphQueue) {
+        for (CallsiteHolder g : graphQueue)
+        {
             result[i++] = g.method();
         }
         return result;
     }
 
-    private MethodInvocation currentInvocation() {
+    private MethodInvocation currentInvocation()
+    {
         return invocationQueue.peekFirst();
     }
 
-    private void pushInvocationAndGraphs(MethodInvocation methodInvocation) {
+    private void pushInvocationAndGraphs(MethodInvocation methodInvocation)
+    {
         invocationQueue.addFirst(methodInvocation);
         InlineInfo info = methodInvocation.callee();
         maxGraphs += info.numberOfMethods();
         assert graphQueue.size() <= maxGraphs;
-        for (int i = 0; i < info.numberOfMethods(); i++) {
+        for (int i = 0; i < info.numberOfMethods(); i++)
+        {
             CallsiteHolder ch = methodInvocation.buildCallsiteHolderForElement(i);
             assert !contains(ch.graph());
             graphQueue.push(ch);
@@ -595,33 +700,41 @@ public class InliningData {
         }
     }
 
-    private void popInvocation() {
+    private void popInvocation()
+    {
         maxGraphs -= invocationQueue.peekFirst().callee().numberOfMethods();
         assert graphQueue.size() <= maxGraphs;
         invocationQueue.removeFirst();
     }
 
-    public int countRecursiveInlining(ResolvedJavaMethod method) {
+    public int countRecursiveInlining(ResolvedJavaMethod method)
+    {
         int count = 0;
-        for (CallsiteHolder callsiteHolder : graphQueue) {
-            if (method.equals(callsiteHolder.method())) {
+        for (CallsiteHolder callsiteHolder : graphQueue)
+        {
+            if (method.equals(callsiteHolder.method()))
+            {
                 count++;
             }
         }
         return count;
     }
 
-    public int inliningDepth() {
+    public int inliningDepth()
+    {
         assert invocationQueue.size() > 0;
         return invocationQueue.size() - 1;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         StringBuilder result = new StringBuilder("Invocations: ");
 
-        for (MethodInvocation invocation : invocationQueue) {
-            if (invocation.callee() != null) {
+        for (MethodInvocation invocation : invocationQueue)
+        {
+            if (invocation.callee() != null)
+            {
                 result.append(invocation.callee().numberOfMethods());
                 result.append("x ");
                 result.append(invocation.callee().invoke());
@@ -630,7 +743,8 @@ public class InliningData {
         }
 
         result.append("\nGraphs: ");
-        for (CallsiteHolder graph : graphQueue) {
+        for (CallsiteHolder graph : graphQueue)
+        {
             result.append(graph.graph());
             result.append("; ");
         }
@@ -641,19 +755,24 @@ public class InliningData {
     /**
      * Gets a stack trace representing the current inlining stack represented by this object.
      */
-    public Collection<StackTraceElement> getInvocationStackTrace() {
+    public Collection<StackTraceElement> getInvocationStackTrace()
+    {
         List<StackTraceElement> result = new ArrayList<>();
-        for (CallsiteHolder graph : graphQueue) {
+        for (CallsiteHolder graph : graphQueue)
+        {
             result.add(graph.method().asStackTraceElement(0));
         }
 
         return result;
     }
 
-    private boolean contains(StructuredGraph graph) {
+    private boolean contains(StructuredGraph graph)
+    {
         assert graph != null;
-        for (CallsiteHolder info : graphQueue) {
-            if (info.graph() == graph) {
+        for (CallsiteHolder info : graphQueue)
+        {
+            if (info.graph() == graph)
+            {
                 return true;
             }
         }
@@ -699,12 +818,13 @@ public class InliningData {
      * @return true iff inlining was actually performed
      */
     @SuppressWarnings("try")
-    public boolean moveForward() {
-
+    public boolean moveForward()
+    {
         final MethodInvocation currentInvocation = currentInvocation();
 
         final boolean backtrack = (!currentInvocation.isRoot() && !inliningPolicy.isWorthInlining(context.getReplacements(), currentInvocation, inliningDepth(), false).shouldInline());
-        if (backtrack) {
+        if (backtrack)
+        {
             int remainingGraphs = currentInvocation.totalGraphs() - currentInvocation.processedGraphs();
             assert remainingGraphs > 0;
             popGraphs(remainingGraphs);
@@ -713,32 +833,39 @@ public class InliningData {
         }
 
         final boolean delve = currentGraph().hasRemainingInvokes() && inliningPolicy.continueInlining(currentGraph().graph());
-        if (delve) {
+        if (delve)
+        {
             processNextInvoke();
             return false;
         }
 
         popGraph();
-        if (currentInvocation.isRoot()) {
+        if (currentInvocation.isRoot())
+        {
             return false;
         }
 
         // try to inline
         assert currentInvocation.callee().invoke().asNode().isAlive();
         currentInvocation.incrementProcessedGraphs();
-        if (currentInvocation.processedGraphs() == currentInvocation.totalGraphs()) {
+        if (currentInvocation.processedGraphs() == currentInvocation.totalGraphs())
+        {
             /*
              * "all of currentInvocation's graphs processed" amounts to
              * "all concrete methods that come into question already had the callees they contain analyzed for inlining"
              */
             popInvocation();
-            try (DebugContext.Scope s = debug.scope("Inlining", inliningContext())) {
-                if (tryToInline(currentInvocation, inliningDepth() + 1)) {
+            try (DebugContext.Scope s = debug.scope("Inlining", inliningContext()))
+            {
+                if (tryToInline(currentInvocation, inliningDepth() + 1))
+                {
                     // Report real progress only if we inline into the root graph
                     return currentGraph().graph() == rootGraph;
                 }
                 return false;
-            } catch (Throwable e) {
+            }
+            catch (Throwable e)
+            {
                 throw debug.handle(e);
             }
         }
@@ -751,21 +878,27 @@ public class InliningData {
      * how many concrete target methods (for it) remain on the {@link #graphQueue}; those targets
      * 'belong' to the current invocation in question.
      */
-    private boolean topGraphsForTopInvocation() {
-        if (invocationQueue.isEmpty()) {
+    private boolean topGraphsForTopInvocation()
+    {
+        if (invocationQueue.isEmpty())
+        {
             assert graphQueue.isEmpty();
             return true;
         }
-        if (currentInvocation().isRoot()) {
-            if (!graphQueue.isEmpty()) {
+        if (currentInvocation().isRoot())
+        {
+            if (!graphQueue.isEmpty())
+            {
                 assert graphQueue.size() == 1;
             }
             return true;
         }
         final int remainingGraphs = currentInvocation().totalGraphs() - currentInvocation().processedGraphs();
         final Iterator<CallsiteHolder> iter = graphQueue.iterator();
-        for (int i = (remainingGraphs - 1); i >= 0; i--) {
-            if (!iter.hasNext()) {
+        for (int i = (remainingGraphs - 1); i >= 0; i--)
+        {
+            if (!iter.hasNext())
+            {
                 assert false;
                 return false;
             }
@@ -781,7 +914,8 @@ public class InliningData {
      * This method checks invariants for this class. Named after shorthand for "internal
      * representation is ok".
      */
-    public boolean repOK() {
+    public boolean repOK()
+    {
         assert topGraphsForTopInvocation();
         return true;
     }

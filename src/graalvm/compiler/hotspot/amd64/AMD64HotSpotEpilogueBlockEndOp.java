@@ -13,20 +13,23 @@ import jdk.vm.ci.meta.AllocatableValue;
 /**
  * @see AMD64HotSpotEpilogueOp
  */
-abstract class AMD64HotSpotEpilogueBlockEndOp extends AMD64BlockEndOp implements AMD64HotSpotRestoreRbpOp {
-
-    protected AMD64HotSpotEpilogueBlockEndOp(LIRInstructionClass<? extends AMD64HotSpotEpilogueBlockEndOp> c) {
+abstract class AMD64HotSpotEpilogueBlockEndOp extends AMD64BlockEndOp implements AMD64HotSpotRestoreRbpOp
+{
+    protected AMD64HotSpotEpilogueBlockEndOp(LIRInstructionClass<? extends AMD64HotSpotEpilogueBlockEndOp> c)
+    {
         super(c);
     }
 
     @Use({REG, STACK}) protected AllocatableValue savedRbp = PLACEHOLDER;
 
-    protected void leaveFrameAndRestoreRbp(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+    protected void leaveFrameAndRestoreRbp(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
         AMD64HotSpotEpilogueOp.leaveFrameAndRestoreRbp(savedRbp, crb, masm);
     }
 
     @Override
-    public void setSavedRbp(AllocatableValue value) {
+    public void setSavedRbp(AllocatableValue value)
+    {
         savedRbp = value;
     }
 }

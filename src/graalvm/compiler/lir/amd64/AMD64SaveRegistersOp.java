@@ -25,7 +25,8 @@ import jdk.vm.ci.meta.AllocatableValue;
  * Saves registers to stack slots.
  */
 @Opcode("SAVE_REGISTER")
-public class AMD64SaveRegistersOp extends AMD64LIRInstruction implements SaveRegistersOp {
+public class AMD64SaveRegistersOp extends AMD64LIRInstruction implements SaveRegistersOp
+{
     public static final LIRInstructionClass<AMD64SaveRegistersOp> TYPE = LIRInstructionClass.create(AMD64SaveRegistersOp.class);
 
     /**
@@ -50,11 +51,13 @@ public class AMD64SaveRegistersOp extends AMD64LIRInstruction implements SaveReg
      * @param savedRegisterLocations the slots to which the registers are saved
      * @param supportsRemove determines if registers can be {@linkplain #remove(EconomicSet) pruned}
      */
-    public AMD64SaveRegistersOp(Register[] savedRegisters, AllocatableValue[] savedRegisterLocations, boolean supportsRemove) {
+    public AMD64SaveRegistersOp(Register[] savedRegisters, AllocatableValue[] savedRegisterLocations, boolean supportsRemove)
+    {
         this(TYPE, savedRegisters, savedRegisterLocations, supportsRemove);
     }
 
-    public AMD64SaveRegistersOp(LIRInstructionClass<? extends AMD64SaveRegistersOp> c, Register[] savedRegisters, AllocatableValue[] savedRegisterLocations, boolean supportsRemove) {
+    public AMD64SaveRegistersOp(LIRInstructionClass<? extends AMD64SaveRegistersOp> c, Register[] savedRegisters, AllocatableValue[] savedRegisterLocations, boolean supportsRemove)
+    {
         super(c);
         assert Arrays.asList(savedRegisterLocations).stream().allMatch(LIRValueUtil::isVirtualStackSlot);
         this.savedRegisters = savedRegisters;
@@ -62,42 +65,54 @@ public class AMD64SaveRegistersOp extends AMD64LIRInstruction implements SaveReg
         this.supportsRemove = supportsRemove;
     }
 
-    protected void saveRegister(CompilationResultBuilder crb, AMD64MacroAssembler masm, StackSlot result, Register input) {
+    protected void saveRegister(CompilationResultBuilder crb, AMD64MacroAssembler masm, StackSlot result, Register input)
+    {
         AMD64Move.reg2stack((AMD64Kind) result.getPlatformKind(), crb, masm, result, input);
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
-        for (int i = 0; i < savedRegisters.length; i++) {
-            if (savedRegisters[i] != null) {
+    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
+        for (int i = 0; i < savedRegisters.length; i++)
+        {
+            if (savedRegisters[i] != null)
+            {
                 assert isStackSlot(slots[i]) : "not a StackSlot: " + slots[i];
                 saveRegister(crb, masm, asStackSlot(slots[i]), savedRegisters[i]);
             }
         }
     }
 
-    public AllocatableValue[] getSlots() {
+    public AllocatableValue[] getSlots()
+    {
         return slots;
     }
 
     @Override
-    public boolean supportsRemove() {
+    public boolean supportsRemove()
+    {
         return supportsRemove;
     }
 
     @Override
-    public int remove(EconomicSet<Register> doNotSave) {
-        if (!supportsRemove) {
+    public int remove(EconomicSet<Register> doNotSave)
+    {
+        if (!supportsRemove)
+        {
             throw new UnsupportedOperationException();
         }
         return prune(doNotSave, savedRegisters);
     }
 
-    static int prune(EconomicSet<Register> toRemove, Register[] registers) {
+    static int prune(EconomicSet<Register> toRemove, Register[] registers)
+    {
         int pruned = 0;
-        for (int i = 0; i < registers.length; i++) {
-            if (registers[i] != null) {
-                if (toRemove.contains(registers[i])) {
+        for (int i = 0; i < registers.length; i++)
+        {
+            if (registers[i] != null)
+            {
+                if (toRemove.contains(registers[i]))
+                {
                     registers[i] = null;
                     pruned++;
                 }
@@ -107,19 +122,25 @@ public class AMD64SaveRegistersOp extends AMD64LIRInstruction implements SaveReg
     }
 
     @Override
-    public RegisterSaveLayout getMap(FrameMap frameMap) {
+    public RegisterSaveLayout getMap(FrameMap frameMap)
+    {
         int total = 0;
-        for (int i = 0; i < savedRegisters.length; i++) {
-            if (savedRegisters[i] != null) {
+        for (int i = 0; i < savedRegisters.length; i++)
+        {
+            if (savedRegisters[i] != null)
+            {
                 total++;
             }
         }
         Register[] keys = new Register[total];
         int[] values = new int[total];
-        if (total != 0) {
+        if (total != 0)
+        {
             int mapIndex = 0;
-            for (int i = 0; i < savedRegisters.length; i++) {
-                if (savedRegisters[i] != null) {
+            for (int i = 0; i < savedRegisters.length; i++)
+            {
+                if (savedRegisters[i] != null)
+                {
                     keys[mapIndex] = savedRegisters[i];
                     assert isStackSlot(slots[i]) : "not a StackSlot: " + slots[i];
                     StackSlot slot = asStackSlot(slots[i]);
@@ -139,7 +160,8 @@ public class AMD64SaveRegistersOp extends AMD64LIRInstruction implements SaveReg
      * @param slot a stack slot
      * @return the index of the stack slot
      */
-    private static int indexForStackSlot(FrameMap frameMap, StackSlot slot) {
+    private static int indexForStackSlot(FrameMap frameMap, StackSlot slot)
+    {
         assert frameMap.offsetForStackSlot(slot) % frameMap.getTarget().wordSize == 0;
         int value = frameMap.offsetForStackSlot(slot) / frameMap.getTarget().wordSize;
         return value;

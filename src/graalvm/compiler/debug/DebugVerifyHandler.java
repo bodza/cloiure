@@ -3,8 +3,8 @@ package graalvm.compiler.debug;
 /**
  * Performs some kind of verification on an object.
  */
-public interface DebugVerifyHandler extends DebugHandler {
-
+public interface DebugVerifyHandler extends DebugHandler
+{
     /**
      * Verifies that a given object satisfies some invariants.
      *

@@ -13,7 +13,8 @@ import graalvm.compiler.lir.asm.CompilationResultBuilder;
 
 import jdk.vm.ci.meta.AllocatableValue;
 
-public class AMD64ClearRegisterOp extends AMD64LIRInstruction {
+public class AMD64ClearRegisterOp extends AMD64LIRInstruction
+{
     public static final LIRInstructionClass<AMD64ClearRegisterOp> TYPE = LIRInstructionClass.create(AMD64ClearRegisterOp.class);
 
     @Opcode private final AMD64RMOp op;
@@ -21,7 +22,8 @@ public class AMD64ClearRegisterOp extends AMD64LIRInstruction {
 
     @Def({REG}) protected AllocatableValue result;
 
-    public AMD64ClearRegisterOp(OperandSize size, AllocatableValue result) {
+    public AMD64ClearRegisterOp(OperandSize size, AllocatableValue result)
+    {
         super(TYPE);
         this.op = XOR.getRMOpcode(size);
         this.size = size;
@@ -29,7 +31,8 @@ public class AMD64ClearRegisterOp extends AMD64LIRInstruction {
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
         op.emit(masm, size, asRegister(result), asRegister(result));
     }
 }

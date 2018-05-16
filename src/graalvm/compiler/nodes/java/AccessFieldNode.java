@@ -20,14 +20,15 @@ import jdk.vm.ci.meta.ResolvedJavaField;
  * The base class of all instructions that access fields.
  */
 @NodeInfo(cycles = CYCLES_2, size = SIZE_1)
-public abstract class AccessFieldNode extends FixedWithNextNode implements Lowerable {
-
+public abstract class AccessFieldNode extends FixedWithNextNode implements Lowerable
+{
     public static final NodeClass<AccessFieldNode> TYPE = NodeClass.create(AccessFieldNode.class);
     @OptionalInput ValueNode object;
 
     protected final ResolvedJavaField field;
 
-    public ValueNode object() {
+    public ValueNode object()
+    {
         return object;
     }
 
@@ -37,7 +38,8 @@ public abstract class AccessFieldNode extends FixedWithNextNode implements Lower
      * @param object the instruction producing the receiver object
      * @param field the compiler interface representation of the field
      */
-    public AccessFieldNode(NodeClass<? extends AccessFieldNode> c, Stamp stamp, ValueNode object, ResolvedJavaField field) {
+    public AccessFieldNode(NodeClass<? extends AccessFieldNode> c, Stamp stamp, ValueNode object, ResolvedJavaField field)
+    {
         super(c, stamp);
         this.object = object;
         this.field = field;
@@ -48,7 +50,8 @@ public abstract class AccessFieldNode extends FixedWithNextNode implements Lower
      *
      * @return the compiler interface field for this field access
      */
-    public ResolvedJavaField field() {
+    public ResolvedJavaField field()
+    {
         return field;
     }
 
@@ -57,7 +60,8 @@ public abstract class AccessFieldNode extends FixedWithNextNode implements Lower
      *
      * @return {@code true} if this field access is to a static field
      */
-    public boolean isStatic() {
+    public boolean isStatic()
+    {
         return field.isStatic();
     }
 
@@ -66,33 +70,42 @@ public abstract class AccessFieldNode extends FixedWithNextNode implements Lower
      *
      * @return {@code true} if the field is resolved and declared volatile
      */
-    public boolean isVolatile() {
+    public boolean isVolatile()
+    {
         return field.isVolatile();
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
     @Override
-    public String toString(Verbosity verbosity) {
-        if (verbosity == Verbosity.Name) {
+    public String toString(Verbosity verbosity)
+    {
+        if (verbosity == Verbosity.Name)
+        {
             return super.toString(verbosity) + "#" + field.getName();
-        } else {
+        }
+        else
+        {
             return super.toString(verbosity);
         }
     }
 
     @Override
-    public boolean verify() {
+    public boolean verify()
+    {
         assertTrue((object == null) == isStatic(), "static field must not have object, instance field must have object");
         return super.verify();
     }
 
     @Override
-    public NodeSize estimatedNodeSize() {
-        if (field.isVolatile()) {
+    public NodeSize estimatedNodeSize()
+    {
+        if (field.isVolatile())
+        {
             return SIZE_2;
         }
         return super.estimatedNodeSize();

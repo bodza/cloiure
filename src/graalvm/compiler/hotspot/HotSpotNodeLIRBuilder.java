@@ -11,11 +11,12 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
  * to abstract methods from {@link LIRGenerator} and {@link NodeLIRBuilderTool}.
  */
 @MatchableNode(nodeClass = CompressionNode.class, inputs = {"value"})
-public interface HotSpotNodeLIRBuilder {
-
+public interface HotSpotNodeLIRBuilder
+{
     void emitPatchReturnAddress(ValueNode address);
 
-    default void emitJumpToExceptionHandler(ValueNode address) {
+    default void emitJumpToExceptionHandler(ValueNode address)
+    {
         emitPatchReturnAddress(address);
     }
 

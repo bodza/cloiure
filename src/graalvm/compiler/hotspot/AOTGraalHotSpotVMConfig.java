@@ -4,11 +4,13 @@ import graalvm.compiler.core.common.CompressEncoding;
 
 import jdk.vm.ci.hotspot.HotSpotVMConfigStore;
 
-public class AOTGraalHotSpotVMConfig extends GraalHotSpotVMConfig {
+public class AOTGraalHotSpotVMConfig extends GraalHotSpotVMConfig
+{
     private final CompressEncoding aotOopEncoding;
     private final CompressEncoding aotKlassEncoding;
 
-    public AOTGraalHotSpotVMConfig(HotSpotVMConfigStore store) {
+    public AOTGraalHotSpotVMConfig(HotSpotVMConfigStore store)
+    {
         super(store);
         // AOT captures VM settings during compilation. For compressed oops this
         // presents a problem for the case when the VM selects a zero-shift mode
@@ -23,12 +25,14 @@ public class AOTGraalHotSpotVMConfig extends GraalHotSpotVMConfig {
     }
 
     @Override
-    public CompressEncoding getOopEncoding() {
+    public CompressEncoding getOopEncoding()
+    {
         return aotOopEncoding;
     }
 
     @Override
-    public CompressEncoding getKlassEncoding() {
+    public CompressEncoding getKlassEncoding()
+    {
         return aotKlassEncoding;
     }
 }

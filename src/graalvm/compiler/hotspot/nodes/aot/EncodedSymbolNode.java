@@ -20,23 +20,27 @@ import graalvm.compiler.word.Word;
 import jdk.vm.ci.meta.Constant;
 
 @NodeInfo(cycles = CYCLES_IGNORED, size = SIZE_IGNORED)
-public final class EncodedSymbolNode extends FloatingNode implements Canonicalizable {
-
+public final class EncodedSymbolNode extends FloatingNode implements Canonicalizable
+{
     public static final NodeClass<EncodedSymbolNode> TYPE = NodeClass.create(EncodedSymbolNode.class);
 
     @OptionalInput protected ValueNode value;
 
-    public EncodedSymbolNode(@InjectedNodeParameter Stamp stamp, ValueNode value) {
+    public EncodedSymbolNode(@InjectedNodeParameter Stamp stamp, ValueNode value)
+    {
         super(TYPE, stamp);
         assert value != null;
         this.value = value;
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool) {
-        if (value != null) {
+    public Node canonical(CanonicalizerTool tool)
+    {
+        if (value != null)
+        {
             Constant constant = GraphUtil.foldIfConstantAndRemove(this, value);
-            if (constant != null) {
+            if (constant != null)
+            {
                 return new ConstantNode(new EncodedSymbolConstant(constant), StampFactory.pointer());
             }
         }

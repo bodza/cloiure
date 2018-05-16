@@ -8,16 +8,19 @@ import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderConfiguration.Plugins
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.tiers.CompilerConfiguration;
 
-public class AMD64HotSpotSuitesCreator extends AMD64SuitesCreator {
-
-    public AMD64HotSpotSuitesCreator(CompilerConfiguration compilerConfiguration, Plugins plugins) {
+public class AMD64HotSpotSuitesCreator extends AMD64SuitesCreator
+{
+    public AMD64HotSpotSuitesCreator(CompilerConfiguration compilerConfiguration, Plugins plugins)
+    {
         super(compilerConfiguration, plugins);
     }
 
     @Override
-    public LIRSuites createLIRSuites(OptionValues options) {
+    public LIRSuites createLIRSuites(OptionValues options)
+    {
         LIRSuites lirSuites = super.createLIRSuites(options);
-        if (Assertions.detailedAssertionsEnabled(options)) {
+        if (Assertions.detailedAssertionsEnabled(options))
+        {
             lirSuites.getPostAllocationOptimizationStage().appendPhase(new HotSpotZapRegistersPhase());
         }
         return lirSuites;

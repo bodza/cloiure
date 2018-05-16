@@ -21,28 +21,32 @@ import jdk.vm.ci.meta.JavaKind;
  * compiled code.
  */
 @NodeInfo(allowedUsageTypes = InputType.Memory, cycles = CYCLES_IGNORED, size = SIZE_IGNORED)
-public final class StringToBytesNode extends FixedWithNextNode implements Lowerable, MemoryCheckpoint.Single {
-
+public final class StringToBytesNode extends FixedWithNextNode implements Lowerable, MemoryCheckpoint.Single
+{
     public static final NodeClass<StringToBytesNode> TYPE = NodeClass.create(StringToBytesNode.class);
 
     private final String value;
 
-    public StringToBytesNode(String value, Stamp stamp) {
+    public StringToBytesNode(String value, Stamp stamp)
+    {
         super(TYPE, stamp);
         this.value = value;
     }
 
-    public String getValue() {
+    public String getValue()
+    {
         return value;
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
     @Override
-    public LocationIdentity getLocationIdentity() {
+    public LocationIdentity getLocationIdentity()
+    {
         return NamedLocationIdentity.getArrayLocation(JavaKind.Byte);
     }
 }

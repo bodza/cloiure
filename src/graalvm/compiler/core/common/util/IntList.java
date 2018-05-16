@@ -7,8 +7,8 @@ import java.util.Arrays;
  *
  * This class avoids the boxing/unboxing incurred by {@code ArrayList<Integer>}.
  */
-public final class IntList {
-
+public final class IntList
+{
     private static final int[] EMPTY_INT_ARRAY = new int[0];
 
     private int[] array;
@@ -19,7 +19,8 @@ public final class IntList {
      *
      * @param initialCapacity
      */
-    public IntList(int initialCapacity) {
+    public IntList(int initialCapacity)
+    {
         array = new int[initialCapacity];
     }
 
@@ -30,7 +31,8 @@ public final class IntList {
      * @param initialSize the initial {@linkplain #size() size} of the list (must be less than or
      *            equal to {@code array.length}
      */
-    public IntList(int[] array, int initialSize) {
+    public IntList(int[] array, int initialSize)
+    {
         assert initialSize <= array.length;
         this.array = array;
         this.size = initialSize;
@@ -44,7 +46,8 @@ public final class IntList {
      * @param length the number of values to copy from {@code other}
      * @return a new int list whose {@linkplain #size() size} and capacity is {@code length}
      */
-    public static IntList copy(IntList other, int startIndex, int length) {
+    public static IntList copy(IntList other, int startIndex, int length)
+    {
         return copy(other, startIndex, length, length);
     }
 
@@ -58,18 +61,23 @@ public final class IntList {
      *            {@code length})
      * @return a new int list whose {@linkplain #size() size} is {@code length}
      */
-    public static IntList copy(IntList other, int startIndex, int length, int initialCapacity) {
+    public static IntList copy(IntList other, int startIndex, int length, int initialCapacity)
+    {
         assert initialCapacity >= length : "initialCapacity < length";
-        if (initialCapacity == 0) {
+        if (initialCapacity == 0)
+        {
             return new IntList(EMPTY_INT_ARRAY, 0);
-        } else {
+        }
+        else
+        {
             int[] array = new int[initialCapacity];
             System.arraycopy(other.array, startIndex, array, 0, length);
             return new IntList(array, length);
         }
     }
 
-    public int size() {
+    public int size()
+    {
         return size;
     }
 
@@ -78,8 +86,10 @@ public final class IntList {
      *
      * @param value the value to append
      */
-    public void add(int value) {
-        if (size == array.length) {
+    public void add(int value)
+    {
+        if (size == array.length)
+        {
             int newSize = (size * 3) / 2 + 1;
             array = Arrays.copyOf(array, newSize);
         }
@@ -92,8 +102,10 @@ public final class IntList {
      * @param index the index of the element to return
      * @throws IndexOutOfBoundsException if {@code index < 0 || index >= size()}
      */
-    public int get(int index) {
-        if (index >= size) {
+    public int get(int index)
+    {
+        if (index >= size)
+        {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
         return array[index];
@@ -102,7 +114,8 @@ public final class IntList {
     /**
      * Sets the size of this list to 0.
      */
-    public void clear() {
+    public void clear()
+    {
         size = 0;
     }
 
@@ -113,8 +126,10 @@ public final class IntList {
      * @param value the new value of the element
      * @throws IndexOutOfBoundsException if {@code index < 0 || index >= size()}
      */
-    public void set(int index, int value) {
-        if (index >= size) {
+    public void set(int index, int value)
+    {
+        if (index >= size)
+        {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
         array[index] = value;
@@ -129,17 +144,23 @@ public final class IntList {
      *
      * @param newSize the new size of this int list
      */
-    public void setSize(int newSize) {
-        if (newSize < size) {
+    public void setSize(int newSize)
+    {
+        if (newSize < size)
+        {
             size = newSize;
-        } else if (newSize > size) {
+        }
+        else if (newSize > size)
+        {
             array = Arrays.copyOf(array, newSize);
         }
     }
 
     @Override
-    public String toString() {
-        if (array.length == size) {
+    public String toString()
+    {
+        if (array.length == size)
+        {
             return Arrays.toString(array);
         }
         return Arrays.toString(Arrays.copyOf(array, size));

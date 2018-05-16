@@ -17,19 +17,19 @@ import graalvm.compiler.options.OptionKey;
 import jdk.vm.ci.code.CompilationRequest;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
-class CompilationCounters {
-
-    public static class Options {
-        // @formatter:off
+class CompilationCounters
+{
+    public static class Options
+    {
         @Option(help = "The number of compilations allowed for any method before " +
                        "the VM exits (a value of 0 means there is no limit).", type = OptionType.Debug)
         public static final OptionKey<Integer> CompilationCountLimit = new OptionKey<>(0);
-        // @formatter:on
     }
 
     private final OptionValues options;
 
-    CompilationCounters(OptionValues options) {
+    CompilationCounters(OptionValues options)
+    {
         TTY.println("Warning: Compilation counters enabled, excessive recompilation of a method will cause a failure!");
         this.options = options;
     }
@@ -43,20 +43,24 @@ class CompilationCounters {
      *
      * @param method the method about to be compiled
      */
-    synchronized void countCompilation(ResolvedJavaMethod method) {
+    synchronized void countCompilation(ResolvedJavaMethod method)
+    {
         Integer val = counters.get(method);
         val = val != null ? val + 1 : 1;
         counters.put(method, val);
-        if (val > Options.CompilationCountLimit.getValue(options)) {
-            TTY.printf("Error. Method %s was compiled too many times. Number of compilations: %d\n", fmt(method),
-                            CompilationCounters.Options.CompilationCountLimit.getValue(options));
+        if (val > Options.CompilationCountLimit.getValue(options))
+        {
+            TTY.printf("Error. Method %s was compiled too many times. Number of compilations: %d\n", fmt(method), CompilationCounters.Options.CompilationCountLimit.getValue(options));
             TTY.println("==================================== High compilation counters ====================================");
             SortedSet<Map.Entry<ResolvedJavaMethod, Integer>> sortedCounters = new TreeSet<>(new CounterComparator());
-            for (Map.Entry<ResolvedJavaMethod, Integer> e : counters.entrySet()) {
+            for (Map.Entry<ResolvedJavaMethod, Integer> e : counters.entrySet())
+            {
                 sortedCounters.add(e);
             }
-            for (Map.Entry<ResolvedJavaMethod, Integer> entry : sortedCounters) {
-                if (entry.getValue() >= Options.CompilationCountLimit.getValue(options) / 2) {
+            for (Map.Entry<ResolvedJavaMethod, Integer> entry : sortedCounters)
+            {
+                if (entry.getValue() >= Options.CompilationCountLimit.getValue(options) / 2)
+                {
                     TTY.out.printf("%d\t%s%n", entry.getValue(), str(entry.getKey()));
                 }
             }
@@ -65,13 +69,17 @@ class CompilationCounters {
         }
     }
 
-    static final class CounterComparator implements Comparator<Map.Entry<ResolvedJavaMethod, Integer>> {
+    static final class CounterComparator implements Comparator<Map.Entry<ResolvedJavaMethod, Integer>>
+    {
         @Override
-        public int compare(Entry<ResolvedJavaMethod, Integer> o1, Entry<ResolvedJavaMethod, Integer> o2) {
-            if (o1.getValue() < o2.getValue()) {
+        public int compare(Entry<ResolvedJavaMethod, Integer> o1, Entry<ResolvedJavaMethod, Integer> o2)
+        {
+            if (o1.getValue() < o2.getValue())
+            {
                 return -1;
             }
-            if (o1.getValue() > o2.getValue()) {
+            if (o1.getValue() > o2.getValue())
+            {
                 return 1;
             }
             return str(o1.getKey()).compareTo(str(o2.getKey()));

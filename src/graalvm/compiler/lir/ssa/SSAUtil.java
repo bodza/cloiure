@@ -50,9 +50,10 @@ import jdk.vm.ci.meta.Value;
  *   ...
  * </pre>
  */
-public final class SSAUtil {
-
-    public interface PhiValueVisitor {
+public final class SSAUtil
+{
+    public interface PhiValueVisitor
+    {
         /**
          * @param phiIn the incoming value at the merge block
          * @param phiOut the outgoing value from the predecessor block
@@ -64,8 +65,10 @@ public final class SSAUtil {
      * Visits each phi value pair of an edge, i.e. the outgoing value from the predecessor and the
      * incoming value to the merge block.
      */
-    public static void forEachPhiValuePair(LIR lir, AbstractBlockBase<?> merge, AbstractBlockBase<?> pred, PhiValueVisitor visitor) {
-        if (merge.getPredecessorCount() < 2) {
+    public static void forEachPhiValuePair(LIR lir, AbstractBlockBase<?> merge, AbstractBlockBase<?> pred, PhiValueVisitor visitor)
+    {
+        if (merge.getPredecessorCount() < 2)
+        {
             return;
         }
         assert Arrays.asList(merge.getPredecessors()).contains(pred) : String.format("%s not in predecessor list: %s", pred, Arrays.toString(merge.getPredecessors()));
@@ -77,12 +80,14 @@ public final class SSAUtil {
 
         assert label.getPhiSize() == jump.getPhiSize() : String.format("Phi In/Out size mismatch: in=%d vs. out=%d", label.getPhiSize(), jump.getPhiSize());
 
-        for (int i = 0; i < label.getPhiSize(); i++) {
+        for (int i = 0; i < label.getPhiSize(); i++)
+        {
             visitor.visit(label.getIncomingValue(i), jump.getOutgoingValue(i));
         }
     }
 
-    public static JumpOp phiOut(LIR lir, AbstractBlockBase<?> block) {
+    public static JumpOp phiOut(LIR lir, AbstractBlockBase<?> block)
+    {
         assert block.getSuccessorCount() == 1;
         ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
         int index = instructions.size() - 1;
@@ -90,14 +95,17 @@ public final class SSAUtil {
         return (JumpOp) op;
     }
 
-    public static JumpOp phiOutOrNull(LIR lir, AbstractBlockBase<?> block) {
-        if (block.getSuccessorCount() != 1) {
+    public static JumpOp phiOutOrNull(LIR lir, AbstractBlockBase<?> block)
+    {
+        if (block.getSuccessorCount() != 1)
+        {
             return null;
         }
         return phiOut(lir, block);
     }
 
-    public static int phiOutIndex(LIR lir, AbstractBlockBase<?> block) {
+    public static int phiOutIndex(LIR lir, AbstractBlockBase<?> block)
+    {
         assert block.getSuccessorCount() == 1;
         ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
         int index = instructions.size() - 1;
@@ -105,80 +113,95 @@ public final class SSAUtil {
         return index;
     }
 
-    public static LabelOp phiIn(LIR lir, AbstractBlockBase<?> block) {
+    public static LabelOp phiIn(LIR lir, AbstractBlockBase<?> block)
+    {
         assert block.getPredecessorCount() > 1;
         LabelOp label = (LabelOp) lir.getLIRforBlock(block).get(0);
         return label;
     }
 
-    public static void removePhiOut(LIR lir, AbstractBlockBase<?> block) {
+    public static void removePhiOut(LIR lir, AbstractBlockBase<?> block)
+    {
         JumpOp jump = phiOut(lir, block);
         jump.clearOutgoingValues();
     }
 
-    public static void removePhiIn(LIR lir, AbstractBlockBase<?> block) {
+    public static void removePhiIn(LIR lir, AbstractBlockBase<?> block)
+    {
         LabelOp label = phiIn(lir, block);
         label.clearIncomingValues();
     }
 
-    public static boolean verifySSAForm(LIR lir) {
+    public static boolean verifySSAForm(LIR lir)
+    {
         return new SSAVerifier(lir).verify();
     }
 
-    public static boolean isMerge(AbstractBlockBase<?> block) {
+    public static boolean isMerge(AbstractBlockBase<?> block)
+    {
         return block.getPredecessorCount() > 1;
     }
 
-    public static void verifyPhi(LIR lir, AbstractBlockBase<?> merge) {
+    public static void verifyPhi(LIR lir, AbstractBlockBase<?> merge)
+    {
         assert merge.getPredecessorCount() > 1;
-        for (AbstractBlockBase<?> pred : merge.getPredecessors()) {
-            forEachPhiValuePair(lir, merge, pred, (phiIn, phiOut) -> {
-                assert phiIn.getValueKind().equals(phiOut.getValueKind()) ||
-                                (phiIn.getPlatformKind().equals(phiOut.getPlatformKind()) && LIRKind.isUnknownReference(phiIn) && LIRKind.isValue(phiOut));
+        for (AbstractBlockBase<?> pred : merge.getPredecessors())
+        {
+            forEachPhiValuePair(lir, merge, pred, (phiIn, phiOut) ->
+            {
+                assert phiIn.getValueKind().equals(phiOut.getValueKind()) || (phiIn.getPlatformKind().equals(phiOut.getPlatformKind()) && LIRKind.isUnknownReference(phiIn) && LIRKind.isValue(phiOut));
             });
         }
     }
 
-    public static void forEachPhiRegisterHint(LIR lir, AbstractBlockBase<?> block, LabelOp label, Value targetValue, OperandMode mode, ValueConsumer valueConsumer) {
+    public static void forEachPhiRegisterHint(LIR lir, AbstractBlockBase<?> block, LabelOp label, Value targetValue, OperandMode mode, ValueConsumer valueConsumer)
+    {
         assert mode == OperandMode.DEF : "Wrong operand mode: " + mode;
         assert lir.getLIRforBlock(block).get(0).equals(label) : String.format("Block %s and Label %s do not match!", block, label);
 
-        if (!label.isPhiIn()) {
+        if (!label.isPhiIn())
+        {
             return;
         }
         int idx = indexOfValue(label, targetValue);
         assert idx >= 0 : String.format("Value %s not in label %s", targetValue, label);
 
-        for (AbstractBlockBase<?> pred : block.getPredecessors()) {
+        for (AbstractBlockBase<?> pred : block.getPredecessors())
+        {
             JumpOp jump = phiOut(lir, pred);
             Value sourceValue = jump.getOutgoingValue(idx);
             valueConsumer.visitValue(jump, sourceValue, null, null);
         }
-
     }
 
-    private static int indexOfValue(LabelOp label, Value value) {
-        for (int i = 0; i < label.getIncomingSize(); i++) {
-            if (label.getIncomingValue(i).equals(value)) {
+    private static int indexOfValue(LabelOp label, Value value)
+    {
+        for (int i = 0; i < label.getIncomingSize(); i++)
+        {
+            if (label.getIncomingValue(i).equals(value))
+            {
                 return i;
             }
         }
         return -1;
     }
 
-    public static int numPhiOut(LIR lir, AbstractBlockBase<?> block) {
-        if (block.getSuccessorCount() != 1) {
+    public static int numPhiOut(LIR lir, AbstractBlockBase<?> block)
+    {
+        if (block.getSuccessorCount() != 1)
+        {
             // cannot be a phi_out block
             return 0;
         }
         return numPhiIn(lir, block.getSuccessors()[0]);
     }
 
-    private static int numPhiIn(LIR lir, AbstractBlockBase<?> block) {
-        if (!isMerge(block)) {
+    private static int numPhiIn(LIR lir, AbstractBlockBase<?> block)
+    {
+        if (!isMerge(block))
+        {
             return 0;
         }
         return phiIn(lir, block).getPhiSize();
     }
-
 }

@@ -54,8 +54,8 @@ import jdk.vm.ci.meta.Signature;
  * {@linkplain StubUtil#handlePendingException(Word, boolean) handles} any exceptions raised during
  * the foreign call.
  */
-public class ForeignCallStub extends Stub {
-
+public class ForeignCallStub extends Stub
+{
     private final HotSpotJVMCIRuntimeProvider jvmciRuntime;
 
     /**
@@ -81,30 +81,29 @@ public class ForeignCallStub extends Stub {
      *            be re-executed.
      * @param killedLocations the memory locations killed by the stub call
      */
-    public ForeignCallStub(OptionValues options, HotSpotJVMCIRuntimeProvider runtime, HotSpotProviders providers, long address, ForeignCallDescriptor descriptor, boolean prependThread,
-                    Transition transition,
-                    boolean reexecutable,
-                    LocationIdentity... killedLocations) {
-        super(options, providers, HotSpotForeignCallLinkageImpl.create(providers.getMetaAccess(), providers.getCodeCache(), providers.getWordTypes(), providers.getForeignCalls(), descriptor, 0L,
-                        PRESERVES_REGISTERS, JavaCall, JavaCallee, transition, reexecutable, killedLocations));
+    public ForeignCallStub(OptionValues options, HotSpotJVMCIRuntimeProvider runtime, HotSpotProviders providers, long address, ForeignCallDescriptor descriptor, boolean prependThread, Transition transition, boolean reexecutable, LocationIdentity... killedLocations)
+    {
+        super(options, providers, HotSpotForeignCallLinkageImpl.create(providers.getMetaAccess(), providers.getCodeCache(), providers.getWordTypes(), providers.getForeignCalls(), descriptor, 0L, PRESERVES_REGISTERS, JavaCall, JavaCallee, transition, reexecutable, killedLocations));
         this.jvmciRuntime = runtime;
         this.prependThread = prependThread;
         Class<?>[] targetParameterTypes = createTargetParameters(descriptor);
         ForeignCallDescriptor targetSig = new ForeignCallDescriptor(descriptor.getName() + ":C", descriptor.getResultType(), targetParameterTypes);
-        target = HotSpotForeignCallLinkageImpl.create(providers.getMetaAccess(), providers.getCodeCache(), providers.getWordTypes(), providers.getForeignCalls(), targetSig, address,
-                        DESTROYS_REGISTERS, NativeCall, NativeCall, transition, reexecutable, killedLocations);
+        target = HotSpotForeignCallLinkageImpl.create(providers.getMetaAccess(), providers.getCodeCache(), providers.getWordTypes(), providers.getForeignCalls(), targetSig, address, DESTROYS_REGISTERS, NativeCall, NativeCall, transition, reexecutable, killedLocations);
     }
 
     /**
      * Gets the linkage information for the call from this stub.
      */
-    public HotSpotForeignCallLinkage getTargetLinkage() {
+    public HotSpotForeignCallLinkage getTargetLinkage()
+    {
         return target;
     }
 
-    private Class<?>[] createTargetParameters(ForeignCallDescriptor descriptor) {
+    private Class<?>[] createTargetParameters(ForeignCallDescriptor descriptor)
+    {
         Class<?>[] parameters = descriptor.getArgumentTypes();
-        if (prependThread) {
+        if (prependThread)
+        {
             Class<?>[] newParameters = new Class<?>[parameters.length + 1];
             System.arraycopy(parameters, 0, newParameters, 1, parameters.length);
             newParameters[0] = Word.class;
@@ -114,48 +113,57 @@ public class ForeignCallStub extends Stub {
     }
 
     @Override
-    protected ResolvedJavaMethod getInstalledCodeOwner() {
+    protected ResolvedJavaMethod getInstalledCodeOwner()
+    {
         return null;
     }
 
-    private class DebugScopeContext implements JavaMethod, JavaMethodContext {
+    private class DebugScopeContext implements JavaMethod, JavaMethodContext
+    {
         @Override
-        public JavaMethod asJavaMethod() {
+        public JavaMethod asJavaMethod()
+        {
             return this;
         }
 
         @Override
-        public Signature getSignature() {
+        public Signature getSignature()
+        {
             ForeignCallDescriptor d = linkage.getDescriptor();
             MetaAccessProvider metaAccess = providers.getMetaAccess();
             Class<?>[] arguments = d.getArgumentTypes();
             ResolvedJavaType[] parameters = new ResolvedJavaType[arguments.length];
-            for (int i = 0; i < arguments.length; i++) {
+            for (int i = 0; i < arguments.length; i++)
+            {
                 parameters[i] = metaAccess.lookupJavaType(arguments[i]);
             }
             return new HotSpotSignature(jvmciRuntime, metaAccess.lookupJavaType(d.getResultType()), parameters);
         }
 
         @Override
-        public String getName() {
+        public String getName()
+        {
             return linkage.getDescriptor().getName();
         }
 
         @Override
-        public JavaType getDeclaringClass() {
+        public JavaType getDeclaringClass()
+        {
             return providers.getMetaAccess().lookupJavaType(ForeignCallStub.class);
         }
 
         @Override
-        public String toString() {
+        public String toString()
+        {
             return format("ForeignCallStub<%n(%p)>");
         }
     }
 
     @Override
-    protected Object debugScopeContext() {
-        return new DebugScopeContext() {
-
+    protected Object debugScopeContext()
+    {
+        return new DebugScopeContext()
+        {
         };
     }
 
@@ -204,12 +212,14 @@ public class ForeignCallStub extends Stub {
      */
     @Override
     @SuppressWarnings("try")
-    protected StructuredGraph getGraph(DebugContext debug, CompilationIdentifier compilationId) {
+    protected StructuredGraph getGraph(DebugContext debug, CompilationIdentifier compilationId)
+    {
         WordTypes wordTypes = providers.getWordTypes();
         Class<?>[] args = linkage.getDescriptor().getArgumentTypes();
         boolean isObjectResult = !LIRKind.isValue(linkage.getOutgoingCallingConvention().getReturn());
 
-        try {
+        try
+        {
             ResolvedJavaMethod thisMethod = providers.getMetaAccess().lookupJavaMethod(ForeignCallStub.class.getDeclaredMethod("getGraph", DebugContext.class, CompilationIdentifier.class));
             GraphKit kit = new GraphKit(debug, thisMethod, providers, wordTypes, providers.getGraphBuilderPlugins(), compilationId, toString());
             StructuredGraph graph = kit.getGraph();
@@ -217,7 +227,8 @@ public class ForeignCallStub extends Stub {
             ReadRegisterNode thread = kit.append(new ReadRegisterNode(providers.getRegisters().getThreadRegister(), wordTypes.getWordKind(), true, false));
             ValueNode result = createTargetCall(kit, params, thread);
             kit.createInvoke(StubUtil.class, "handlePendingException", thread, ConstantNode.forBoolean(isObjectResult, graph));
-            if (isObjectResult) {
+            if (isObjectResult)
+            {
                 InvokeNode object = kit.createInvoke(HotSpotReplacementsUtil.class, "getAndClearObjectResult", thread);
                 result = kit.createInvoke(StubUtil.class, "verifyObject", object);
             }
@@ -229,15 +240,19 @@ public class ForeignCallStub extends Stub {
 
             debug.dump(DebugContext.VERBOSE_LEVEL, graph, "Stub graph before compilation");
             return graph;
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             throw GraalError.shouldNotReachHere(e);
         }
     }
 
-    private ParameterNode[] createParameters(GraphKit kit, Class<?>[] args) {
+    private ParameterNode[] createParameters(GraphKit kit, Class<?>[] args)
+    {
         ParameterNode[] params = new ParameterNode[args.length];
         ResolvedJavaType accessingClass = providers.getMetaAccess().lookupJavaType(getClass());
-        for (int i = 0; i < args.length; i++) {
+        for (int i = 0; i < args.length; i++)
+        {
             ResolvedJavaType type = providers.getMetaAccess().lookupJavaType(args[i]).resolve(accessingClass);
             StampPair stamp = StampFactory.forDeclaredType(kit.getGraph().getAssumptions(), type, false);
             ParameterNode param = kit.unique(new ParameterNode(i, stamp));
@@ -246,14 +261,18 @@ public class ForeignCallStub extends Stub {
         return params;
     }
 
-    private StubForeignCallNode createTargetCall(GraphKit kit, ParameterNode[] params, ReadRegisterNode thread) {
+    private StubForeignCallNode createTargetCall(GraphKit kit, ParameterNode[] params, ReadRegisterNode thread)
+    {
         Stamp stamp = StampFactory.forKind(JavaKind.fromJavaClass(target.getDescriptor().getResultType()));
-        if (prependThread) {
+        if (prependThread)
+        {
             ValueNode[] targetArguments = new ValueNode[1 + params.length];
             targetArguments[0] = thread;
             System.arraycopy(params, 0, targetArguments, 1, params.length);
             return kit.append(new StubForeignCallNode(providers.getForeignCalls(), stamp, target.getDescriptor(), targetArguments));
-        } else {
+        }
+        else
+        {
             return kit.append(new StubForeignCallNode(providers.getForeignCalls(), stamp, target.getDescriptor(), params));
         }
     }

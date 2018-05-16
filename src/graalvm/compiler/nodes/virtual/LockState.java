@@ -10,28 +10,35 @@ import graalvm.compiler.nodes.java.MonitorIdNode;
  * The class implements a simple linked list of MonitorIdNodes, which can be used to describe the
  * current lock state of an object.
  */
-public final class LockState {
-
+public final class LockState
+{
     public final MonitorIdNode monitorId;
     public final LockState next;
 
-    public LockState(MonitorIdNode monitorId, LockState next) {
+    public LockState(MonitorIdNode monitorId, LockState next)
+    {
         this.monitorId = monitorId;
         this.next = next;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return monitorId.getLockDepth() + (next == null ? "" : "," + next);
     }
 
-    public static List<MonitorIdNode> asList(LockState state) {
-        if (state == null) {
+    public static List<MonitorIdNode> asList(LockState state)
+    {
+        if (state == null)
+        {
             return Collections.emptyList();
-        } else {
+        }
+        else
+        {
             ArrayList<MonitorIdNode> result = new ArrayList<>();
             LockState a = state;
-            do {
+            do
+            {
                 result.add(a.monitorId);
                 a = a.next;
             } while (a != null);

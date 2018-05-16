@@ -12,8 +12,8 @@ import jdk.vm.ci.meta.Value;
  * the old value.
  */
 @FunctionalInterface
-public interface InstructionValueProcedure {
-
+public interface InstructionValueProcedure
+{
     /**
      * Iterator method to be overwritten.
      *
@@ -24,5 +24,4 @@ public interface InstructionValueProcedure {
      * @return The new value to replace the value that was passed in.
      */
     Value doValue(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags);
-
 }

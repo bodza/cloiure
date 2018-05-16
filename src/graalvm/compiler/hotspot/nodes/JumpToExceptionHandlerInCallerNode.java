@@ -19,14 +19,15 @@ import graalvm.compiler.word.Word;
  * exception handler in the caller's frame, removes the current frame and jumps to said handler.
  */
 @NodeInfo(cycles = CYCLES_8, size = SIZE_8)
-public final class JumpToExceptionHandlerInCallerNode extends ControlSinkNode implements LIRLowerable {
-
+public final class JumpToExceptionHandlerInCallerNode extends ControlSinkNode implements LIRLowerable
+{
     public static final NodeClass<JumpToExceptionHandlerInCallerNode> TYPE = NodeClass.create(JumpToExceptionHandlerInCallerNode.class);
     @Input ValueNode handlerInCallerPc;
     @Input ValueNode exception;
     @Input ValueNode exceptionPc;
 
-    public JumpToExceptionHandlerInCallerNode(ValueNode handlerInCallerPc, ValueNode exception, ValueNode exceptionPc) {
+    public JumpToExceptionHandlerInCallerNode(ValueNode handlerInCallerPc, ValueNode exception, ValueNode exceptionPc)
+    {
         super(TYPE, StampFactory.forVoid());
         this.handlerInCallerPc = handlerInCallerPc;
         this.exception = exception;
@@ -34,7 +35,8 @@ public final class JumpToExceptionHandlerInCallerNode extends ControlSinkNode im
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         ((HotSpotNodeLIRBuilder) gen).emitJumpToExceptionHandlerInCaller(handlerInCallerPc, exception, exceptionPc);
     }
 

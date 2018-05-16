@@ -2,7 +2,6 @@ package graalvm.compiler.replacements;
 
 import graalvm.compiler.api.replacements.ClassSubstitution;
 import graalvm.compiler.api.replacements.MethodSubstitution;
-import graalvm.compiler.core.common.SuppressFBWarnings;
 import graalvm.compiler.nodes.graphbuilderconf.InvocationPlugin;
 import graalvm.compiler.nodes.java.LoadFieldNode;
 import graalvm.compiler.replacements.nodes.ArrayEqualsNode;
@@ -11,22 +10,26 @@ import graalvm.compiler.replacements.nodes.ArrayEqualsNode;
  * Substitutions for {@link java.lang.String} methods.
  */
 @ClassSubstitution(String.class)
-public class StringSubstitutions {
-
+public class StringSubstitutions
+{
     @MethodSubstitution(isStatic = false)
-    @SuppressFBWarnings(value = "ES_COMPARING_PARAMETER_STRING_WITH_EQ", justification = "reference equality on the receiver is what we want")
-    public static boolean equals(final String thisString, Object obj) {
-        if (thisString == obj) {
+    public static boolean equals(final String thisString, Object obj)
+    {
+        if (thisString == obj)
+        {
             return true;
         }
-        if (!(obj instanceof String)) {
+        if (!(obj instanceof String))
+        {
             return false;
         }
         String thatString = (String) obj;
-        if (thisString.length() != thatString.length()) {
+        if (thisString.length() != thatString.length())
+        {
             return false;
         }
-        if (thisString.length() == 0) {
+        if (thisString.length() == 0)
+        {
             return true;
         }
 

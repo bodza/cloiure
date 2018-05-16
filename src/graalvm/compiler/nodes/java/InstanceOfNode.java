@@ -34,7 +34,8 @@ import java.util.Objects;
  * The {@code InstanceOfNode} represents an instanceof test.
  */
 @NodeInfo(cycles = CYCLES_8, size = SIZE_8)
-public class InstanceOfNode extends UnaryOpLogicNode implements Lowerable, Virtualizable {
+public class InstanceOfNode extends UnaryOpLogicNode implements Lowerable, Virtualizable
+{
     public static final NodeClass<InstanceOfNode> TYPE = NodeClass.create(InstanceOfNode.class);
 
     private ObjectStamp checkedStamp;
@@ -42,11 +43,13 @@ public class InstanceOfNode extends UnaryOpLogicNode implements Lowerable, Virtu
     private JavaTypeProfile profile;
     @OptionalInput(Anchor) protected AnchoringNode anchor;
 
-    private InstanceOfNode(ObjectStamp checkedStamp, ValueNode object, JavaTypeProfile profile, AnchoringNode anchor) {
+    private InstanceOfNode(ObjectStamp checkedStamp, ValueNode object, JavaTypeProfile profile, AnchoringNode anchor)
+    {
         this(TYPE, checkedStamp, object, profile, anchor);
     }
 
-    protected InstanceOfNode(NodeClass<? extends InstanceOfNode> c, ObjectStamp checkedStamp, ValueNode object, JavaTypeProfile profile, AnchoringNode anchor) {
+    protected InstanceOfNode(NodeClass<? extends InstanceOfNode> c, ObjectStamp checkedStamp, ValueNode object, JavaTypeProfile profile, AnchoringNode anchor)
+    {
         super(c, object);
         this.checkedStamp = checkedStamp;
         this.profile = profile;
@@ -55,67 +58,92 @@ public class InstanceOfNode extends UnaryOpLogicNode implements Lowerable, Virtu
         assert checkedStamp != null;
     }
 
-    public static LogicNode createAllowNull(TypeReference type, ValueNode object, JavaTypeProfile profile, AnchoringNode anchor) {
-        if (StampTool.isPointerNonNull(object)) {
+    public static LogicNode createAllowNull(TypeReference type, ValueNode object, JavaTypeProfile profile, AnchoringNode anchor)
+    {
+        if (StampTool.isPointerNonNull(object))
+        {
             return create(type, object, profile, anchor);
         }
         return createHelper(StampFactory.object(type), object, profile, anchor);
     }
 
-    public static LogicNode create(TypeReference type, ValueNode object) {
+    public static LogicNode create(TypeReference type, ValueNode object)
+    {
         return create(type, object, null, null);
     }
 
-    public static LogicNode create(TypeReference type, ValueNode object, JavaTypeProfile profile, AnchoringNode anchor) {
+    public static LogicNode create(TypeReference type, ValueNode object, JavaTypeProfile profile, AnchoringNode anchor)
+    {
         return createHelper(StampFactory.objectNonNull(type), object, profile, anchor);
     }
 
-    public static LogicNode createHelper(ObjectStamp checkedStamp, ValueNode object, JavaTypeProfile profile, AnchoringNode anchor) {
+    public static LogicNode createHelper(ObjectStamp checkedStamp, ValueNode object, JavaTypeProfile profile, AnchoringNode anchor)
+    {
         LogicNode synonym = findSynonym(checkedStamp, object, NodeView.DEFAULT);
-        if (synonym != null) {
+        if (synonym != null)
+        {
             return synonym;
-        } else {
+        }
+        else
+        {
             return new InstanceOfNode(checkedStamp, object, profile, anchor);
         }
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue) {
+    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    {
         NodeView view = NodeView.from(tool);
         LogicNode synonym = findSynonym(checkedStamp, forValue, view);
-        if (synonym != null) {
+        if (synonym != null)
+        {
             return synonym;
-        } else {
+        }
+        else
+        {
             return this;
         }
     }
 
-    public static LogicNode findSynonym(ObjectStamp checkedStamp, ValueNode object, NodeView view) {
+    public static LogicNode findSynonym(ObjectStamp checkedStamp, ValueNode object, NodeView view)
+    {
         ObjectStamp inputStamp = (ObjectStamp) object.stamp(view);
         ObjectStamp joinedStamp = (ObjectStamp) checkedStamp.join(inputStamp);
 
-        if (joinedStamp.isEmpty()) {
+        if (joinedStamp.isEmpty())
+        {
             // The check can never succeed, the intersection of the two stamps is empty.
             return LogicConstantNode.contradiction();
-        } else {
+        }
+        else
+        {
             ObjectStamp meetStamp = (ObjectStamp) checkedStamp.meet(inputStamp);
-            if (checkedStamp.equals(meetStamp)) {
+            if (checkedStamp.equals(meetStamp))
+            {
                 // The check will always succeed, the union of the two stamps is equal to the
                 // checked stamp.
                 return LogicConstantNode.tautology();
-            } else if (checkedStamp.alwaysNull()) {
+            }
+            else if (checkedStamp.alwaysNull())
+            {
                 return IsNullNode.create(object);
-            } else if (Objects.equals(checkedStamp.type(), meetStamp.type()) && checkedStamp.isExactType() == meetStamp.isExactType() && checkedStamp.alwaysNull() == meetStamp.alwaysNull()) {
+            }
+            else if (Objects.equals(checkedStamp.type(), meetStamp.type()) && checkedStamp.isExactType() == meetStamp.isExactType() && checkedStamp.alwaysNull() == meetStamp.alwaysNull())
+            {
                 assert checkedStamp.nonNull() != inputStamp.nonNull();
                 // The only difference makes the null-ness of the value => simplify the check.
-                if (checkedStamp.nonNull()) {
+                if (checkedStamp.nonNull())
+                {
                     return LogicNegationNode.create(IsNullNode.create(object));
-                } else {
+                }
+                else
+                {
                     return IsNullNode.create(object);
                 }
             }
@@ -127,44 +155,58 @@ public class InstanceOfNode extends UnaryOpLogicNode implements Lowerable, Virtu
     /**
      * Gets the type being tested.
      */
-    public TypeReference type() {
+    public TypeReference type()
+    {
         return StampTool.typeReferenceOrNull(checkedStamp);
     }
 
-    public JavaTypeProfile profile() {
+    public JavaTypeProfile profile()
+    {
         return profile;
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool) {
+    public void virtualize(VirtualizerTool tool)
+    {
         ValueNode alias = tool.getAlias(getValue());
         TriState fold = tryFold(alias.stamp(NodeView.DEFAULT));
-        if (fold != TriState.UNKNOWN) {
+        if (fold != TriState.UNKNOWN)
+        {
             tool.replaceWithValue(LogicConstantNode.forBoolean(fold.isTrue(), graph()));
         }
     }
 
     @Override
-    public Stamp getSucceedingStampForValue(boolean negated) {
-        if (negated) {
+    public Stamp getSucceedingStampForValue(boolean negated)
+    {
+        if (negated)
+        {
             return null;
-        } else {
+        }
+        else
+        {
             return checkedStamp;
         }
     }
 
     @Override
-    public TriState tryFold(Stamp valueStamp) {
-        if (valueStamp instanceof ObjectStamp) {
+    public TriState tryFold(Stamp valueStamp)
+    {
+        if (valueStamp instanceof ObjectStamp)
+        {
             ObjectStamp inputStamp = (ObjectStamp) valueStamp;
             ObjectStamp joinedStamp = (ObjectStamp) checkedStamp.join(inputStamp);
 
-            if (joinedStamp.isEmpty()) {
+            if (joinedStamp.isEmpty())
+            {
                 // The check can never succeed, the intersection of the two stamps is empty.
                 return TriState.FALSE;
-            } else {
+            }
+            else
+            {
                 ObjectStamp meetStamp = (ObjectStamp) checkedStamp.meet(inputStamp);
-                if (checkedStamp.equals(meetStamp)) {
+                if (checkedStamp.equals(meetStamp))
+                {
                     // The check will always succeed, the union of the two stamps is equal to the
                     // checked stamp.
                     return TriState.TRUE;
@@ -174,26 +216,31 @@ public class InstanceOfNode extends UnaryOpLogicNode implements Lowerable, Virtu
         return TriState.UNKNOWN;
     }
 
-    public boolean allowsNull() {
+    public boolean allowsNull()
+    {
         return !checkedStamp.nonNull();
     }
 
-    public void setProfile(JavaTypeProfile typeProfile, AnchoringNode anchor) {
+    public void setProfile(JavaTypeProfile typeProfile, AnchoringNode anchor)
+    {
         this.profile = typeProfile;
         updateUsagesInterface(this.anchor, anchor);
         this.anchor = anchor;
         assert (profile == null) || (anchor != null) : "profiles must be anchored";
     }
 
-    public AnchoringNode getAnchor() {
+    public AnchoringNode getAnchor()
+    {
         return anchor;
     }
 
-    public ObjectStamp getCheckedStamp() {
+    public ObjectStamp getCheckedStamp()
+    {
         return checkedStamp;
     }
 
-    public void strengthenCheckedStamp(ObjectStamp newCheckedStamp) {
+    public void strengthenCheckedStamp(ObjectStamp newCheckedStamp)
+    {
         assert this.checkedStamp.join(newCheckedStamp).equals(newCheckedStamp) : "stamp can only improve";
         this.checkedStamp = newCheckedStamp;
     }

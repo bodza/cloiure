@@ -22,19 +22,23 @@ import jdk.vm.ci.meta.PlatformKind;
  * Gets the address of the C++ JavaThread object for the current thread.
  */
 @NodeInfo(cycles = CYCLES_1, size = SIZE_1)
-public final class CurrentJavaThreadNode extends FloatingNode implements LIRLowerable {
+public final class CurrentJavaThreadNode extends FloatingNode implements LIRLowerable
+{
     public static final NodeClass<CurrentJavaThreadNode> TYPE = NodeClass.create(CurrentJavaThreadNode.class);
 
-    public CurrentJavaThreadNode(@InjectedNodeParameter WordTypes wordTypes) {
+    public CurrentJavaThreadNode(@InjectedNodeParameter WordTypes wordTypes)
+    {
         this(wordTypes.getWordKind());
     }
 
-    public CurrentJavaThreadNode(JavaKind wordKind) {
+    public CurrentJavaThreadNode(JavaKind wordKind)
+    {
         super(TYPE, StampFactory.forKind(wordKind));
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         Register rawThread = ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).getProviders().getRegisters().getThreadRegister();
         PlatformKind wordKind = gen.getLIRGeneratorTool().target().arch.getWordKind();
         gen.setResult(this, rawThread.asValue(LIRKind.value(wordKind)));

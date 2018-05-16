@@ -1,6 +1,7 @@
 package graalvm.compiler.nodeinfo;
 
-public enum Verbosity {
+public enum Verbosity
+{
     /**
      * Only the id of the node.
      */

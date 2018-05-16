@@ -10,26 +10,31 @@ import graalvm.compiler.core.common.cfg.AbstractBlockBase;
  * Ensures that an element is only in the worklist once.
  *
  */
-class UniqueWorkList extends ArrayDeque<AbstractBlockBase<?>> {
-    private static final long serialVersionUID = 8009554570990975712L;
+class UniqueWorkList extends ArrayDeque<AbstractBlockBase<?>>
+{
     BitSet valid;
 
-    UniqueWorkList(int size) {
+    UniqueWorkList(int size)
+    {
         this.valid = new BitSet(size);
     }
 
     @Override
-    public AbstractBlockBase<?> poll() {
+    public AbstractBlockBase<?> poll()
+    {
         AbstractBlockBase<?> result = super.poll();
-        if (result != null) {
+        if (result != null)
+        {
             valid.set(result.getId(), false);
         }
         return result;
     }
 
     @Override
-    public boolean add(AbstractBlockBase<?> pred) {
-        if (!valid.get(pred.getId())) {
+    public boolean add(AbstractBlockBase<?> pred)
+    {
+        if (!valid.get(pred.getId()))
+        {
             valid.set(pred.getId(), true);
             return super.add(pred);
         }
@@ -37,10 +42,13 @@ class UniqueWorkList extends ArrayDeque<AbstractBlockBase<?>> {
     }
 
     @Override
-    public boolean addAll(Collection<? extends AbstractBlockBase<?>> collection) {
+    public boolean addAll(Collection<? extends AbstractBlockBase<?>> collection)
+    {
         boolean changed = false;
-        for (AbstractBlockBase<?> element : collection) {
-            if (!valid.get(element.getId())) {
+        for (AbstractBlockBase<?> element : collection)
+        {
+            if (!valid.get(element.getId()))
+            {
                 valid.set(element.getId(), true);
                 super.add(element);
                 changed = true;

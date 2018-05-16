@@ -19,44 +19,53 @@ import graalvm.compiler.nodes.spi.StampInverter;
  * Binary negation of long or integer values.
  */
 @NodeInfo(cycles = CYCLES_1, size = SIZE_1)
-public final class NotNode extends UnaryArithmeticNode<Not> implements ArithmeticLIRLowerable, NarrowableArithmeticNode, StampInverter {
-
+public final class NotNode extends UnaryArithmeticNode<Not> implements ArithmeticLIRLowerable, NarrowableArithmeticNode, StampInverter
+{
     public static final NodeClass<NotNode> TYPE = NodeClass.create(NotNode.class);
 
-    protected NotNode(ValueNode x) {
+    protected NotNode(ValueNode x)
+    {
         super(TYPE, ArithmeticOpTable::getNot, x);
     }
 
-    public static ValueNode create(ValueNode x) {
+    public static ValueNode create(ValueNode x)
+    {
         return canonicalize(null, x);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue) {
+    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    {
         ValueNode ret = super.canonical(tool, forValue);
-        if (ret != this) {
+        if (ret != this)
+        {
             return ret;
         }
         return canonicalize(this, forValue);
     }
 
-    private static ValueNode canonicalize(NotNode node, ValueNode x) {
-        if (x instanceof NotNode) {
+    private static ValueNode canonicalize(NotNode node, ValueNode x)
+    {
+        if (x instanceof NotNode)
+        {
             return ((NotNode) x).getValue();
         }
-        if (node != null) {
+        if (node != null)
+        {
             return node;
         }
         return new NotNode(x);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen) {
+    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    {
         nodeValueMap.setResult(this, gen.emitNot(nodeValueMap.operand(getValue())));
     }
 
     @Override
-    public Stamp invertStamp(Stamp outStamp) {
+    public Stamp invertStamp(Stamp outStamp)
+    {
         return getArithmeticOp().foldStamp(outStamp);
     }
 }

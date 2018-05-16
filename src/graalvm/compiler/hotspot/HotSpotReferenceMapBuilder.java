@@ -21,8 +21,8 @@ import jdk.vm.ci.hotspot.HotSpotReferenceMap;
 import jdk.vm.ci.meta.PlatformKind;
 import jdk.vm.ci.meta.Value;
 
-public final class HotSpotReferenceMapBuilder extends ReferenceMapBuilder {
-
+public final class HotSpotReferenceMapBuilder extends ReferenceMapBuilder
+{
     private int maxRegisterSize;
 
     private final ArrayList<Value> objectValues;
@@ -32,7 +32,8 @@ public final class HotSpotReferenceMapBuilder extends ReferenceMapBuilder {
     private final int maxOopMapStackOffset;
     private final int uncompressedReferenceSize;
 
-    public HotSpotReferenceMapBuilder(int totalFrameSize, int maxOopMapStackOffset, int uncompressedReferenceSize) {
+    public HotSpotReferenceMapBuilder(int totalFrameSize, int maxOopMapStackOffset, int uncompressedReferenceSize)
+    {
         this.uncompressedReferenceSize = uncompressedReferenceSize;
         this.objectValues = new ArrayList<>();
         this.objectCount = 0;
@@ -41,22 +42,30 @@ public final class HotSpotReferenceMapBuilder extends ReferenceMapBuilder {
     }
 
     @Override
-    public void addLiveValue(Value v) {
-        if (isJavaConstant(v)) {
+    public void addLiveValue(Value v)
+    {
+        if (isJavaConstant(v))
+        {
             return;
         }
         LIRKind lirKind = (LIRKind) v.getValueKind();
-        if (!lirKind.isValue()) {
+        if (!lirKind.isValue())
+        {
             objectValues.add(v);
-            if (lirKind.isUnknownReference()) {
+            if (lirKind.isUnknownReference())
+            {
                 objectCount++;
-            } else {
+            }
+            else
+            {
                 objectCount += lirKind.getReferenceCount();
             }
         }
-        if (isRegister(v)) {
+        if (isRegister(v))
+        {
             int size = lirKind.getPlatformKind().getSizeInBytes();
-            if (size > maxRegisterSize) {
+            if (size > maxRegisterSize)
+            {
                 maxRegisterSize = size;
             }
         }
@@ -66,36 +75,47 @@ public final class HotSpotReferenceMapBuilder extends ReferenceMapBuilder {
     private static final int[] NO_SIZES = {};
 
     @Override
-    public ReferenceMap finish(LIRFrameState state) {
+    public ReferenceMap finish(LIRFrameState state)
+    {
         Location[] objects;
         Location[] derivedBase;
         int[] sizeInBytes;
-        if (objectCount == 0) {
+        if (objectCount == 0)
+        {
             objects = NO_LOCATIONS;
             derivedBase = NO_LOCATIONS;
             sizeInBytes = NO_SIZES;
-        } else {
+        }
+        else
+        {
             objects = new Location[objectCount];
             derivedBase = new Location[objectCount];
             sizeInBytes = new int[objectCount];
         }
         int idx = 0;
-        for (Value obj : objectValues) {
+        for (Value obj : objectValues)
+        {
             LIRKind kind = (LIRKind) obj.getValueKind();
             int bytes = bytesPerElement(kind);
-            if (kind.isUnknownReference()) {
+            if (kind.isUnknownReference())
+            {
                 throw GraalError.shouldNotReachHere(String.format("unknown reference alive across safepoint: %s", obj));
-            } else {
+            }
+            else
+            {
                 Location base = null;
-                if (kind.isDerivedReference()) {
+                if (kind.isDerivedReference())
+                {
                     Variable baseVariable = (Variable) kind.getDerivedReferenceBase();
                     Value baseValue = state.getLiveBasePointers().get(baseVariable.index);
                     assert baseValue.getPlatformKind().getVectorLength() == 1 && ((LIRKind) baseValue.getValueKind()).isReference(0) && !((LIRKind) baseValue.getValueKind()).isDerivedReference();
                     base = toLocation(baseValue, 0);
                 }
 
-                for (int i = 0; i < kind.getPlatformKind().getVectorLength(); i++) {
-                    if (kind.isReference(i)) {
+                for (int i = 0; i < kind.getPlatformKind().getVectorLength(); i++)
+                {
+                    if (kind.isReference(i))
+                    {
                         assert kind.isCompressedReference(i) ? (bytes < uncompressedReferenceSize) : (bytes == uncompressedReferenceSize);
                         objects[idx] = toLocation(obj, i * bytes);
                         derivedBase[idx] = base;
@@ -109,18 +129,24 @@ public final class HotSpotReferenceMapBuilder extends ReferenceMapBuilder {
         return new HotSpotReferenceMap(objects, derivedBase, sizeInBytes, maxRegisterSize);
     }
 
-    private static int bytesPerElement(LIRKind kind) {
+    private static int bytesPerElement(LIRKind kind)
+    {
         PlatformKind platformKind = kind.getPlatformKind();
         return platformKind.getSizeInBytes() / platformKind.getVectorLength();
     }
 
-    private Location toLocation(Value v, int offset) {
-        if (isRegister(v)) {
+    private Location toLocation(Value v, int offset)
+    {
+        if (isRegister(v))
+        {
             return Location.subregister(asRegister(v), offset);
-        } else {
+        }
+        else
+        {
             StackSlot s = asStackSlot(v);
             int totalOffset = s.getOffset(totalFrameSize) + offset;
-            if (totalOffset > maxOopMapStackOffset) {
+            if (totalOffset > maxOopMapStackOffset)
+            {
                 throw new PermanentBailoutException("stack offset %d for oopmap is greater than encoding limit %d", totalOffset, maxOopMapStackOffset);
             }
             return Location.stack(totalOffset);

@@ -8,12 +8,14 @@ import graalvm.compiler.graph.Node;
 /**
  * A marker interface for nodes that represent calls to other methods.
  */
-public interface Invokable {
+public interface Invokable
+{
     ResolvedJavaMethod getTargetMethod();
 
     int bci();
 
-    default boolean isAlive() {
+    default boolean isAlive()
+    {
         return asFixedNode().isAlive();
     }
 
@@ -25,11 +27,15 @@ public interface Invokable {
      * To override the default functionality, code that creates an {@link Invokable} should set the
      * updating logic by calling {@link InliningLog#openUpdateScope}.
      */
-    default void updateInliningLogAfterRegister(StructuredGraph newGraph) {
+    default void updateInliningLogAfterRegister(StructuredGraph newGraph)
+    {
         InliningLog log = newGraph.getInliningLog();
-        if (log.getUpdateScope() != null) {
+        if (log.getUpdateScope() != null)
+        {
             log.getUpdateScope().accept(null, this);
-        } else {
+        }
+        else
+        {
             assert !log.containsLeafCallsite(this);
             log.trackNewCallsite(this);
         }
@@ -43,23 +49,30 @@ public interface Invokable {
      * To override the default functionality, code that creates an {@link Invokable} should set the
      * updating logic by calling {@link InliningLog#openUpdateScope}.
      */
-    default void updateInliningLogAfterClone(Node other) {
-        if (GraalOptions.TraceInlining.getValue(asFixedNode().getOptions())) {
+    default void updateInliningLogAfterClone(Node other)
+    {
+        if (GraalOptions.TraceInlining.getValue(asFixedNode().getOptions()))
+        {
             // At this point, the invokable node was already added to the inlining log
             // in the call to updateInliningLogAfterRegister, so we need to remove it.
             InliningLog log = asFixedNode().graph().getInliningLog();
             assert other instanceof Invokable;
-            if (log.getUpdateScope() != null) {
+            if (log.getUpdateScope() != null)
+            {
                 // InliningLog.UpdateScope determines how to update the log.
                 log.getUpdateScope().accept((Invokable) other, this);
-            } else if (other.graph() == this.asFixedNode().graph()) {
+            }
+            else if (other.graph() == this.asFixedNode().graph())
+            {
                 // This node was cloned as part of duplication.
                 // We need to add it as a sibling of the node other.
                 assert log.containsLeafCallsite(this) : "Node " + this + " not contained in the log.";
                 assert log.containsLeafCallsite((Invokable) other) : "Sibling " + other + " not contained in the log.";
                 log.removeLeafCallsite(this);
                 log.trackDuplicatedCallsite((Invokable) other, this);
-            } else {
+            }
+            else
+            {
                 // This node was added from a different graph.
                 // The adder is responsible for providing a context.
                 throw GraalError.shouldNotReachHere("No InliningLog.Update scope provided.");

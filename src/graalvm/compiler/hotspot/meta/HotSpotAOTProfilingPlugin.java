@@ -9,8 +9,10 @@ import graalvm.compiler.options.OptionValues;
 import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
-public class HotSpotAOTProfilingPlugin extends HotSpotProfilingPlugin {
-    public static class Options {
+public class HotSpotAOTProfilingPlugin extends HotSpotProfilingPlugin
+{
+    public static class Options
+    {
         @Option(help = "Do profiling and callbacks to tiered runtime", type = OptionType.User)//
         public static final OptionKey<Boolean> TieredAOT = new OptionKey<>(false);
         @Option(help = "Invocation notification frequency", type = OptionType.Expert)//
@@ -26,32 +28,38 @@ public class HotSpotAOTProfilingPlugin extends HotSpotProfilingPlugin {
     }
 
     @Override
-    public boolean shouldProfile(GraphBuilderContext builder, ResolvedJavaMethod method) {
+    public boolean shouldProfile(GraphBuilderContext builder, ResolvedJavaMethod method)
+    {
         return super.shouldProfile(builder, method) && ((HotSpotResolvedObjectType) method.getDeclaringClass()).getFingerprint() != 0;
     }
 
     @Override
-    public int invokeNotifyFreqLog(OptionValues options) {
+    public int invokeNotifyFreqLog(OptionValues options)
+    {
         return Options.TierAInvokeNotifyFreqLog.getValue(options);
     }
 
     @Override
-    public int invokeInlineeNotifyFreqLog(OptionValues options) {
+    public int invokeInlineeNotifyFreqLog(OptionValues options)
+    {
         return Options.TierAInvokeInlineeNotifyFreqLog.getValue(options);
     }
 
     @Override
-    public int invokeProfilePobabilityLog(OptionValues options) {
+    public int invokeProfilePobabilityLog(OptionValues options)
+    {
         return Options.TierAInvokeProfileProbabilityLog.getValue(options);
     }
 
     @Override
-    public int backedgeNotifyFreqLog(OptionValues options) {
+    public int backedgeNotifyFreqLog(OptionValues options)
+    {
         return Options.TierABackedgeNotifyFreqLog.getValue(options);
     }
 
     @Override
-    public int backedgeProfilePobabilityLog(OptionValues options) {
+    public int backedgeProfilePobabilityLog(OptionValues options)
+    {
         return Options.TierABackedgeProfileProbabilityLog.getValue(options);
     }
 }

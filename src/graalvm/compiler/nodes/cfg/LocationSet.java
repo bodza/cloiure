@@ -6,54 +6,77 @@ import java.util.List;
 
 import org.graalvm.word.LocationIdentity;
 
-public class LocationSet {
+public class LocationSet
+{
     private LocationIdentity firstLocation;
     private List<LocationIdentity> list;
 
-    public LocationSet() {
+    public LocationSet()
+    {
         list = null;
     }
 
-    public LocationSet(LocationSet other) {
+    public LocationSet(LocationSet other)
+    {
         this.firstLocation = other.firstLocation;
-        if (other.list != null && other.list.size() > 0) {
+        if (other.list != null && other.list.size() > 0)
+        {
             list = new ArrayList<>(other.list);
         }
     }
 
-    private void initList() {
-        if (list == null) {
+    private void initList()
+    {
+        if (list == null)
+        {
             list = new ArrayList<>(4);
         }
     }
 
-    public boolean isEmpty() {
+    public boolean isEmpty()
+    {
         return firstLocation == null;
     }
 
-    public boolean isAny() {
+    public boolean isAny()
+    {
         return firstLocation != null && firstLocation.isAny();
     }
 
-    public void add(LocationIdentity location) {
-        if (this.isAny()) {
+    public void add(LocationIdentity location)
+    {
+        if (this.isAny())
+        {
             return;
-        } else if (location.isAny()) {
+        }
+        else if (location.isAny())
+        {
             firstLocation = location;
             list = null;
-        } else if (location.isImmutable()) {
+        }
+        else if (location.isImmutable())
+        {
             return;
-        } else {
+        }
+        else
+        {
             assert location.isMutable() && location.isSingle();
-            if (firstLocation == null) {
+            if (firstLocation == null)
+            {
                 firstLocation = location;
-            } else if (location.equals(firstLocation)) {
+            }
+            else if (location.equals(firstLocation))
+            {
                 return;
-            } else {
+            }
+            else
+            {
                 initList();
-                for (int i = 0; i < list.size(); ++i) {
+                for (int i = 0; i < list.size(); ++i)
+                {
                     LocationIdentity value = list.get(i);
-                    if (location.equals(value)) {
+                    if (location.equals(value))
+                    {
                         return;
                     }
                 }
@@ -62,31 +85,41 @@ public class LocationSet {
         }
     }
 
-    public void addAll(LocationSet other) {
-        if (other.firstLocation != null) {
+    public void addAll(LocationSet other)
+    {
+        if (other.firstLocation != null)
+        {
             add(other.firstLocation);
         }
         List<LocationIdentity> otherList = other.list;
-        if (otherList != null) {
-            for (LocationIdentity l : otherList) {
+        if (otherList != null)
+        {
+            for (LocationIdentity l : otherList)
+            {
                 add(l);
             }
         }
     }
 
-    public boolean contains(LocationIdentity locationIdentity) {
+    public boolean contains(LocationIdentity locationIdentity)
+    {
         assert locationIdentity.isSingle();
         assert locationIdentity.isMutable();
-        if (LocationIdentity.any().equals(firstLocation)) {
+        if (LocationIdentity.any().equals(firstLocation))
+        {
             return true;
         }
-        if (locationIdentity.equals(firstLocation)) {
+        if (locationIdentity.equals(firstLocation))
+        {
             return true;
         }
-        if (list != null) {
-            for (int i = 0; i < list.size(); ++i) {
+        if (list != null)
+        {
+            for (int i = 0; i < list.size(); ++i)
+            {
                 LocationIdentity value = list.get(i);
-                if (locationIdentity.equals(value)) {
+                if (locationIdentity.equals(value))
+                {
                     return true;
                 }
             }
@@ -94,24 +127,33 @@ public class LocationSet {
         return false;
     }
 
-    public List<LocationIdentity> getCopyAsList() {
+    public List<LocationIdentity> getCopyAsList()
+    {
         ArrayList<LocationIdentity> result = new ArrayList<>();
-        if (firstLocation != null) {
+        if (firstLocation != null)
+        {
             result.add(firstLocation);
         }
-        if (list != null) {
+        if (list != null)
+        {
             result.addAll(list);
         }
         return result;
     }
 
     @Override
-    public String toString() {
-        if (this.isAny()) {
+    public String toString()
+    {
+        if (this.isAny())
+        {
             return "ANY";
-        } else if (this.isEmpty()) {
+        }
+        else if (this.isEmpty())
+        {
             return "EMPTY";
-        } else {
+        }
+        else
+        {
             List<LocationIdentity> copyAsList = getCopyAsList();
             return Arrays.toString(copyAsList.toArray(new LocationIdentity[0]));
         }

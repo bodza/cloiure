@@ -10,8 +10,8 @@ package graalvm.compiler.debug;
  * }
  * </pre>
  */
-public interface DebugMemUseTracker {
-
+public interface DebugMemUseTracker
+{
     /**
      * Creates a point from which memory usage will be recorded if memory use tracking is
      * {@linkplain DebugContext#isMemUseTrackingEnabled() enabled}.

@@ -5,14 +5,17 @@ import graalvm.compiler.lir.phases.AllocationPhase;
 /**
  * Marker class for register allocation phases.
  */
-public abstract class RegisterAllocationPhase extends AllocationPhase {
+public abstract class RegisterAllocationPhase extends AllocationPhase
+{
     private boolean neverSpillConstants;
 
-    public void setNeverSpillConstants(boolean neverSpillConstants) {
+    public void setNeverSpillConstants(boolean neverSpillConstants)
+    {
         this.neverSpillConstants = neverSpillConstants;
     }
 
-    public boolean getNeverSpillConstants() {
+    public boolean getNeverSpillConstants()
+    {
         return neverSpillConstants;
     }
 }

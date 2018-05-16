@@ -15,12 +15,13 @@ import jdk.vm.ci.meta.SpeculationLog;
  * A {@link GraphSpeculationLog} must only be used by a single thread and is typically closely
  * coupled with a {@link StructuredGraph} (hence the name).
  */
-public final class GraphSpeculationLog implements SpeculationLog {
-
+public final class GraphSpeculationLog implements SpeculationLog
+{
     private final SpeculationLog log;
     private final EconomicMap<SpeculationReason, JavaConstant> speculations;
 
-    public GraphSpeculationLog(SpeculationLog log) {
+    public GraphSpeculationLog(SpeculationLog log)
+    {
         this.log = log;
         this.speculations = EconomicMap.create();
     }
@@ -28,8 +29,10 @@ public final class GraphSpeculationLog implements SpeculationLog {
     /**
      * Unwraps {@code log} if it is a {@link GraphSpeculationLog}.
      */
-    public static SpeculationLog unwrap(SpeculationLog log) {
-        if (log instanceof GraphSpeculationLog) {
+    public static SpeculationLog unwrap(SpeculationLog log)
+    {
+        if (log instanceof GraphSpeculationLog)
+        {
             return ((GraphSpeculationLog) log).log;
         }
         return log;
@@ -42,14 +45,20 @@ public final class GraphSpeculationLog implements SpeculationLog {
      * equal} to {@code reason} will succeed.
      */
     @Override
-    public boolean maySpeculate(SpeculationReason reason) {
+    public boolean maySpeculate(SpeculationReason reason)
+    {
         JavaConstant speculation = speculations.get(reason);
-        if (speculation == null) {
-            if (log.maySpeculate(reason)) {
-                try {
+        if (speculation == null)
+        {
+            if (log.maySpeculate(reason))
+            {
+                try
+                {
                     speculation = log.speculate(reason);
                     speculations.put(reason, speculation);
-                } catch (IllegalArgumentException e) {
+                }
+                catch (IllegalArgumentException e)
+                {
                     // The speculation was disabled by another thread in between
                     // the call to log.maySpeculate and log.speculate
                     speculation = null;
@@ -60,8 +69,10 @@ public final class GraphSpeculationLog implements SpeculationLog {
     }
 
     @Override
-    public JavaConstant speculate(SpeculationReason reason) {
-        if (maySpeculate(reason)) {
+    public JavaConstant speculate(SpeculationReason reason)
+    {
+        if (maySpeculate(reason))
+        {
             JavaConstant speculation = speculations.get(reason);
             assert speculation != null;
             return speculation;
@@ -70,8 +81,10 @@ public final class GraphSpeculationLog implements SpeculationLog {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof GraphSpeculationLog) {
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof GraphSpeculationLog)
+        {
             GraphSpeculationLog that = (GraphSpeculationLog) obj;
             return this.log == that.log;
         }
@@ -79,12 +92,14 @@ public final class GraphSpeculationLog implements SpeculationLog {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return log.hashCode();
     }
 
     @Override
-    public void collectFailedSpeculations() {
+    public void collectFailedSpeculations()
+    {
         log.collectFailedSpeculations();
     }
 
@@ -95,7 +110,8 @@ public final class GraphSpeculationLog implements SpeculationLog {
      *         this object
      */
     @Override
-    public boolean hasSpeculations() {
+    public boolean hasSpeculations()
+    {
         return !speculations.isEmpty();
     }
 }

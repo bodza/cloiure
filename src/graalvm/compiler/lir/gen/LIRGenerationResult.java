@@ -13,8 +13,8 @@ import graalvm.compiler.lir.framemap.FrameMapBuilder;
 import jdk.vm.ci.code.CallingConvention;
 import jdk.vm.ci.code.RegisterConfig;
 
-public class LIRGenerationResult {
-
+public class LIRGenerationResult
+{
     private final LIR lir;
     private final FrameMapBuilder frameMapBuilder;
     private FrameMap frameMap;
@@ -33,7 +33,8 @@ public class LIRGenerationResult {
      */
     private EconomicMap<LIRInstruction, String> comments;
 
-    public LIRGenerationResult(CompilationIdentifier compilationId, LIR lir, FrameMapBuilder frameMapBuilder, CallingConvention callingConvention) {
+    public LIRGenerationResult(CompilationIdentifier compilationId, LIR lir, FrameMapBuilder frameMapBuilder, CallingConvention callingConvention)
+    {
         this.lir = lir;
         this.frameMapBuilder = frameMapBuilder;
         this.callingConvention = callingConvention;
@@ -43,10 +44,13 @@ public class LIRGenerationResult {
     /**
      * Adds a comment to a {@link LIRInstruction}. Existing comments are replaced.
      */
-    public final void setComment(LIRInstruction op, String comment) {
+    public final void setComment(LIRInstruction op, String comment)
+    {
         DebugContext debug = lir.getDebug();
-        if (debug.isDumpEnabled(DebugContext.BASIC_LEVEL)) {
-            if (comments == null) {
+        if (debug.isDumpEnabled(DebugContext.BASIC_LEVEL))
+        {
+            if (comments == null)
+            {
                 comments = EconomicMap.create(Equivalence.IDENTITY);
             }
             comments.put(op, comment);
@@ -56,8 +60,10 @@ public class LIRGenerationResult {
     /**
      * Gets the comment attached to a {@link LIRInstruction}.
      */
-    public final String getComment(LIRInstruction op) {
-        if (comments == null) {
+    public final String getComment(LIRInstruction op)
+    {
+        if (comments == null)
+        {
             return null;
         }
         return comments.get(op);
@@ -66,7 +72,8 @@ public class LIRGenerationResult {
     /**
      * Returns the incoming calling convention for the parameters of the method that is compiled.
      */
-    public CallingConvention getCallingConvention() {
+    public CallingConvention getCallingConvention()
+    {
         return callingConvention;
     }
 
@@ -76,7 +83,8 @@ public class LIRGenerationResult {
      *
      * This method can only be used prior calling {@link #buildFrameMap}.
      */
-    public final FrameMapBuilder getFrameMapBuilder() {
+    public final FrameMapBuilder getFrameMapBuilder()
+    {
         assert frameMap == null : "getFrameMapBuilder() can only be used before calling buildFrameMap()!";
         return frameMapBuilder;
     }
@@ -87,7 +95,8 @@ public class LIRGenerationResult {
      *
      * @see FrameMapBuilder#buildFrameMap
      */
-    public void buildFrameMap() {
+    public void buildFrameMap()
+    {
         assert frameMap == null : "buildFrameMap() can only be called once!";
         frameMap = frameMapBuilder.buildFrameMap(this);
     }
@@ -97,32 +106,39 @@ public class LIRGenerationResult {
      *
      * This method can only be called after {@link #buildFrameMap}.
      */
-    public FrameMap getFrameMap() {
+    public FrameMap getFrameMap()
+    {
         assert frameMap != null : "getFrameMap() can only be used after calling buildFrameMap()!";
         return frameMap;
     }
 
-    public final RegisterConfig getRegisterConfig() {
+    public final RegisterConfig getRegisterConfig()
+    {
         return frameMapBuilder.getRegisterConfig();
     }
 
-    public LIR getLIR() {
+    public LIR getLIR()
+    {
         return lir;
     }
 
     /**
      * Determines whether the code being generated makes at least one foreign call.
      */
-    public boolean hasForeignCall() {
+    public boolean hasForeignCall()
+    {
         return hasForeignCall;
     }
 
-    public final void setForeignCall(boolean hasForeignCall) {
+    public final void setForeignCall(boolean hasForeignCall)
+    {
         this.hasForeignCall = hasForeignCall;
     }
 
-    public String getCompilationUnitName() {
-        if (compilationId == null || compilationId == CompilationIdentifier.INVALID_COMPILATION_ID) {
+    public String getCompilationUnitName()
+    {
+        if (compilationId == null || compilationId == CompilationIdentifier.INVALID_COMPILATION_ID)
+        {
             return "<unknown>";
         }
         return compilationId.toString(Verbosity.NAME);
@@ -131,7 +147,8 @@ public class LIRGenerationResult {
     /**
      * Returns a unique identifier of the current compilation.
      */
-    public CompilationIdentifier getCompilationId() {
+    public CompilationIdentifier getCompilationId()
+    {
         return compilationId;
     }
 }

@@ -20,8 +20,8 @@ package graalvm.compiler.debug;
  *
  * </pre>
  */
-public interface Indent extends AutoCloseable {
-
+public interface Indent extends AutoCloseable
+{
     /**
      * Closes the current indentation scope.
      */

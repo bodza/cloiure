@@ -7,8 +7,8 @@ import graalvm.compiler.nodes.extended.LoadHubNode;
 /**
  * Provides a capability for creating platform dependent stamps.
  */
-public interface StampProvider {
-
+public interface StampProvider
+{
     /**
      * Create the stamp of the {@link LoadHubNode hub} of an object.
      */

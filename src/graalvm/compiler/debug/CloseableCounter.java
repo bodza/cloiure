@@ -4,15 +4,16 @@ package graalvm.compiler.debug;
  * A helper class for {@link AbstractKey}s that can nest and need to split out accumulated and flat
  * values for some kind of counter-like measurement.
  */
-public abstract class CloseableCounter implements DebugCloseable {
-
+public abstract class CloseableCounter implements DebugCloseable
+{
     protected final DebugContext debug;
     protected final CloseableCounter parent;
     protected final AccumulatedKey counter;
     protected final long start;
     protected long nestedAmountToSubtract;
 
-    CloseableCounter(DebugContext debug, CloseableCounter parent, AccumulatedKey counter) {
+    CloseableCounter(DebugContext debug, CloseableCounter parent, AccumulatedKey counter)
+    {
         this.debug = debug;
         this.parent = parent;
         this.start = getCounterValue();
@@ -20,7 +21,8 @@ public abstract class CloseableCounter implements DebugCloseable {
     }
 
     @Override
-    public DebugContext getDebug() {
+    public DebugContext getDebug()
+    {
         return debug;
     }
 
@@ -31,7 +33,8 @@ public abstract class CloseableCounter implements DebugCloseable {
      *
      * @param difference since the last invocation of this counter flat
      */
-    protected void interceptDifferenceAccm(long difference) {
+    protected void interceptDifferenceAccm(long difference)
+    {
         // hook for subclasses
     }
 
@@ -41,22 +44,28 @@ public abstract class CloseableCounter implements DebugCloseable {
      *
      * @param difference since the last invocation of this counter flat
      */
-    protected void interceptDifferenceFlat(long difference) {
+    protected void interceptDifferenceFlat(long difference)
+    {
         // hook for subclasses
     }
 
     @Override
-    public void close() {
+    public void close()
+    {
         long end = getCounterValue();
         long difference = end - start;
-        if (parent != null) {
-            if (!counter.getName().equals(parent.counter.getName())) {
+        if (parent != null)
+        {
+            if (!counter.getName().equals(parent.counter.getName()))
+            {
                 parent.nestedAmountToSubtract += difference;
                 // Look for our counter in an outer scope and fix up
                 // the adjustment to the flat count
                 CloseableCounter ancestor = parent.parent;
-                while (ancestor != null) {
-                    if (ancestor.counter.getName().equals(counter.getName())) {
+                while (ancestor != null)
+                {
+                    if (ancestor.counter.getName().equals(counter.getName()))
+                    {
                         ancestor.nestedAmountToSubtract -= difference;
                         break;
                     }

@@ -14,8 +14,8 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 /**
  * Used by a {@link GraphBuilderPlugin} to interface with an object that builds a graph.
  */
-public interface GraphBuilderTool {
-
+public interface GraphBuilderTool
+{
     /**
      * Adds the given node to the graph and also adds recursively all referenced inputs.
      *
@@ -28,7 +28,8 @@ public interface GraphBuilderTool {
 
     MetaAccessProvider getMetaAccess();
 
-    default Assumptions getAssumptions() {
+    default Assumptions getAssumptions()
+    {
         return getGraph().getAssumptions();
     }
 
@@ -41,11 +42,13 @@ public interface GraphBuilderTool {
      */
     StructuredGraph getGraph();
 
-    default OptionValues getOptions() {
+    default OptionValues getOptions()
+    {
         return getGraph().getOptions();
     }
 
-    default DebugContext getDebug() {
+    default DebugContext getDebug()
+    {
         return getGraph().getDebug();
     }
 
@@ -56,7 +59,8 @@ public interface GraphBuilderTool {
     boolean parsingIntrinsic();
 
     @SuppressWarnings("unused")
-    default boolean canDeferPlugin(GeneratedInvocationPlugin plugin) {
+    default boolean canDeferPlugin(GeneratedInvocationPlugin plugin)
+    {
         // By default generated plugins must be completely processed during parsing.
         return false;
     }

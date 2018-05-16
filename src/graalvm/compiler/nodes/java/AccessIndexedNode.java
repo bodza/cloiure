@@ -14,13 +14,14 @@ import jdk.vm.ci.meta.JavaKind;
  * of an array.
  */
 @NodeInfo
-public abstract class AccessIndexedNode extends AccessArrayNode implements Lowerable {
-
+public abstract class AccessIndexedNode extends AccessArrayNode implements Lowerable
+{
     public static final NodeClass<AccessIndexedNode> TYPE = NodeClass.create(AccessIndexedNode.class);
     @Input protected ValueNode index;
     protected final JavaKind elementKind;
 
-    public ValueNode index() {
+    public ValueNode index()
+    {
         return index;
     }
 
@@ -32,7 +33,8 @@ public abstract class AccessIndexedNode extends AccessArrayNode implements Lower
      * @param index the instruction producing the index
      * @param elementKind the kind of the elements of the array
      */
-    protected AccessIndexedNode(NodeClass<? extends AccessIndexedNode> c, Stamp stamp, ValueNode array, ValueNode index, JavaKind elementKind) {
+    protected AccessIndexedNode(NodeClass<? extends AccessIndexedNode> c, Stamp stamp, ValueNode array, ValueNode index, JavaKind elementKind)
+    {
         super(c, stamp, array);
         this.index = index;
         this.elementKind = elementKind;
@@ -43,12 +45,14 @@ public abstract class AccessIndexedNode extends AccessArrayNode implements Lower
      *
      * @return the element type
      */
-    public JavaKind elementKind() {
+    public JavaKind elementKind()
+    {
         return elementKind;
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 }

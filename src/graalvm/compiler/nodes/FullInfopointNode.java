@@ -19,31 +19,37 @@ import jdk.vm.ci.code.site.InfopointReason;
  * Nodes of this type are inserted into the graph to denote points of interest to debugging.
  */
 @NodeInfo(cycles = CYCLES_0, size = SIZE_0)
-public final class FullInfopointNode extends FixedWithNextNode implements LIRLowerable, NodeWithState, Simplifiable {
+public final class FullInfopointNode extends FixedWithNextNode implements LIRLowerable, NodeWithState, Simplifiable
+{
     public static final NodeClass<FullInfopointNode> TYPE = NodeClass.create(FullInfopointNode.class);
     protected final InfopointReason reason;
     @Input(State) FrameState state;
     @OptionalInput ValueNode escapedReturnValue;
 
-    public FullInfopointNode(InfopointReason reason, FrameState state, ValueNode escapedReturnValue) {
+    public FullInfopointNode(InfopointReason reason, FrameState state, ValueNode escapedReturnValue)
+    {
         super(TYPE, StampFactory.forVoid());
         this.reason = reason;
         this.state = state;
         this.escapedReturnValue = escapedReturnValue;
     }
 
-    public InfopointReason getReason() {
+    public InfopointReason getReason()
+    {
         return reason;
     }
 
-    private void setEscapedReturnValue(ValueNode x) {
+    private void setEscapedReturnValue(ValueNode x)
+    {
         updateUsages(escapedReturnValue, x);
         escapedReturnValue = x;
     }
 
     @Override
-    public void simplify(SimplifierTool tool) {
-        if (escapedReturnValue != null && state != null && state.outerFrameState() != null) {
+    public void simplify(SimplifierTool tool)
+    {
+        if (escapedReturnValue != null && state != null && state.outerFrameState() != null)
+        {
             ValueNode returnValue = escapedReturnValue;
             setEscapedReturnValue(null);
             tool.removeIfUnused(returnValue);
@@ -51,17 +57,19 @@ public final class FullInfopointNode extends FixedWithNextNode implements LIRLow
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool generator) {
+    public void generate(NodeLIRBuilderTool generator)
+    {
         generator.visitFullInfopointNode(this);
     }
 
-    public FrameState getState() {
+    public FrameState getState()
+    {
         return state;
     }
 
     @Override
-    public boolean verify() {
+    public boolean verify()
+    {
         return state != null && super.verify();
     }
-
 }

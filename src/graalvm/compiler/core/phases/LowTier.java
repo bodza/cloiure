@@ -22,27 +22,27 @@ import graalvm.compiler.phases.schedule.SchedulePhase;
 import graalvm.compiler.phases.schedule.SchedulePhase.SchedulingStrategy;
 import graalvm.compiler.phases.tiers.LowTierContext;
 
-public class LowTier extends PhaseSuite<LowTierContext> {
-
-    static class Options {
-
-        // @formatter:off
+public class LowTier extends PhaseSuite<LowTierContext>
+{
+    static class Options
+    {
         @Option(help = "", type = OptionType.Debug)
         public static final OptionKey<Boolean> ProfileCompiledMethods = new OptionKey<>(false);
-        // @formatter:on
-
     }
 
-    public LowTier(OptionValues options) {
+    public LowTier(OptionValues options)
+    {
         CanonicalizerPhase canonicalizer = new CanonicalizerPhase();
         CanonicalizerPhase canonicalizerWithoutGVN = new CanonicalizerPhase();
         canonicalizerWithoutGVN.disableGVN();
-        if (ImmutableCode.getValue(options)) {
+        if (ImmutableCode.getValue(options))
+        {
             canonicalizer.disableReadCanonicalization();
             canonicalizerWithoutGVN.disableReadCanonicalization();
         }
 
-        if (Options.ProfileCompiledMethods.getValue(options)) {
+        if (Options.ProfileCompiledMethods.getValue(options))
+        {
             appendPhase(new ProfileCompiledMethodsPhase());
         }
 

@@ -18,13 +18,15 @@ import jdk.vm.ci.meta.Value;
  * calls using an inline cache, a MOVE instruction is emitted just prior to the aligned direct call.
  */
 @Opcode("CALL_DIRECT")
-final class AMD64HotspotDirectVirtualCallOp extends DirectCallOp {
+final class AMD64HotspotDirectVirtualCallOp extends DirectCallOp
+{
     public static final LIRInstructionClass<AMD64HotspotDirectVirtualCallOp> TYPE = LIRInstructionClass.create(AMD64HotspotDirectVirtualCallOp.class);
 
     private final InvokeKind invokeKind;
     private final GraalHotSpotVMConfig config;
 
-    AMD64HotspotDirectVirtualCallOp(ResolvedJavaMethod target, Value result, Value[] parameters, Value[] temps, LIRFrameState state, InvokeKind invokeKind, GraalHotSpotVMConfig config) {
+    AMD64HotspotDirectVirtualCallOp(ResolvedJavaMethod target, Value result, Value[] parameters, Value[] temps, LIRFrameState state, InvokeKind invokeKind, GraalHotSpotVMConfig config)
+    {
         super(TYPE, target, result, parameters, temps, state);
         this.invokeKind = invokeKind;
         this.config = config;
@@ -32,7 +34,8 @@ final class AMD64HotspotDirectVirtualCallOp extends DirectCallOp {
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
         // The mark for an invocation that uses an inline cache must be placed at the
         // instruction that loads the Klass from the inline cache.
         crb.recordMark(invokeKind == InvokeKind.Virtual ? config.MARKID_INVOKEVIRTUAL : config.MARKID_INVOKEINTERFACE);

@@ -14,22 +14,27 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import jdk.vm.ci.meta.Value;
 
 @NodeInfo
-public final class IntegerAddExactSplitNode extends IntegerExactArithmeticSplitNode {
+public final class IntegerAddExactSplitNode extends IntegerExactArithmeticSplitNode
+{
     public static final NodeClass<IntegerAddExactSplitNode> TYPE = NodeClass.create(IntegerAddExactSplitNode.class);
 
-    public IntegerAddExactSplitNode(Stamp stamp, ValueNode x, ValueNode y, AbstractBeginNode next, AbstractBeginNode overflowSuccessor) {
+    public IntegerAddExactSplitNode(Stamp stamp, ValueNode x, ValueNode y, AbstractBeginNode next, AbstractBeginNode overflowSuccessor)
+    {
         super(TYPE, stamp, x, y, next, overflowSuccessor);
     }
 
     @Override
-    protected Value generateArithmetic(NodeLIRBuilderTool gen) {
+    protected Value generateArithmetic(NodeLIRBuilderTool gen)
+    {
         return gen.getLIRGeneratorTool().getArithmetic().emitAdd(gen.operand(getX()), gen.operand(getY()), true);
     }
 
     @Override
-    public void simplify(SimplifierTool tool) {
+    public void simplify(SimplifierTool tool)
+    {
         NodeView view = NodeView.from(tool);
-        if (!IntegerStamp.addCanOverflow((IntegerStamp) x.stamp(view), (IntegerStamp) y.stamp(view))) {
+        if (!IntegerStamp.addCanOverflow((IntegerStamp) x.stamp(view), (IntegerStamp) y.stamp(view)))
+        {
             tool.deleteBranch(overflowSuccessor);
             tool.addToWorkList(next);
             AddNode replacement = graph().unique(new AddNode(x, y));

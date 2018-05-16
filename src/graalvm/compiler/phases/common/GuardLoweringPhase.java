@@ -34,34 +34,42 @@ import graalvm.compiler.phases.tiers.MidTierContext;
  * null checks performed by access to the objects that need to be null checked. The second phase
  * does the actual control-flow expansion of the remaining {@link GuardNode GuardNodes}.
  */
-public class GuardLoweringPhase extends BasePhase<MidTierContext> {
-
-    private static class LowerGuards extends ScheduledNodeIterator {
-
+public class GuardLoweringPhase extends BasePhase<MidTierContext>
+{
+    private static class LowerGuards extends ScheduledNodeIterator
+    {
         private final Block block;
         private boolean useGuardIdAsDebugId;
 
-        LowerGuards(Block block, boolean useGuardIdAsDebugId) {
+        LowerGuards(Block block, boolean useGuardIdAsDebugId)
+        {
             this.block = block;
             this.useGuardIdAsDebugId = useGuardIdAsDebugId;
         }
 
         @Override
-        protected void processNode(Node node) {
-            if (node instanceof GuardNode) {
+        protected void processNode(Node node)
+        {
+            if (node instanceof GuardNode)
+            {
                 GuardNode guard = (GuardNode) node;
                 FixedWithNextNode lowered = guard.lowerGuard();
-                if (lowered != null) {
+                if (lowered != null)
+                {
                     replaceCurrent(lowered);
-                } else {
+                }
+                else
+                {
                     lowerToIf(guard);
                 }
             }
         }
 
         @SuppressWarnings("try")
-        private void lowerToIf(GuardNode guard) {
-            try (DebugCloseable position = guard.withNodeSourcePosition()) {
+        private void lowerToIf(GuardNode guard)
+        {
+            try (DebugCloseable position = guard.withNodeSourcePosition())
+            {
                 StructuredGraph graph = guard.graph();
                 AbstractBeginNode fastPath = graph.add(new BeginNode());
                 fastPath.setNodeSourcePosition(guard.getNoDeoptSuccessorPosition());
@@ -72,10 +80,13 @@ public class GuardLoweringPhase extends BasePhase<MidTierContext> {
                 AbstractBeginNode trueSuccessor;
                 AbstractBeginNode falseSuccessor;
                 insertLoopExits(deopt);
-                if (guard.isNegated()) {
+                if (guard.isNegated())
+                {
                     trueSuccessor = deoptBranch;
                     falseSuccessor = fastPath;
-                } else {
+                }
+                else
+                {
                     trueSuccessor = fastPath;
                     falseSuccessor = deoptBranch;
                 }
@@ -85,10 +96,12 @@ public class GuardLoweringPhase extends BasePhase<MidTierContext> {
             }
         }
 
-        private void insertLoopExits(DeoptimizeNode deopt) {
+        private void insertLoopExits(DeoptimizeNode deopt)
+        {
             Loop<Block> loop = block.getLoop();
             StructuredGraph graph = deopt.graph();
-            while (loop != null) {
+            while (loop != null)
+            {
                 LoopExitNode exit = graph.add(new LoopExitNode((LoopBeginNode) loop.getHeader().getBeginNode()));
                 graph.addBeforeFixed(deopt, exit);
                 loop = loop.getParent();
@@ -97,13 +110,16 @@ public class GuardLoweringPhase extends BasePhase<MidTierContext> {
     }
 
     @Override
-    protected void run(StructuredGraph graph, MidTierContext context) {
-        if (graph.getGuardsStage().allowsFloatingGuards()) {
+    protected void run(StructuredGraph graph, MidTierContext context)
+    {
+        if (graph.getGuardsStage().allowsFloatingGuards())
+        {
             SchedulePhase schedulePhase = new SchedulePhase(SchedulingStrategy.EARLIEST_WITH_GUARD_ORDER);
             schedulePhase.apply(graph);
             ScheduleResult schedule = graph.getLastSchedule();
 
-            for (Block block : schedule.getCFG().getBlocks()) {
+            for (Block block : schedule.getCFG().getBlocks())
+            {
                 processBlock(block, schedule);
             }
             graph.setGuardsStage(GuardsStage.FIXED_DEOPTS);
@@ -112,12 +128,14 @@ public class GuardLoweringPhase extends BasePhase<MidTierContext> {
         assert assertNoGuardsLeft(graph);
     }
 
-    private static boolean assertNoGuardsLeft(StructuredGraph graph) {
+    private static boolean assertNoGuardsLeft(StructuredGraph graph)
+    {
         assert graph.getNodes().filter(GuardNode.class).isEmpty();
         return true;
     }
 
-    private static void processBlock(Block block, ScheduleResult schedule) {
+    private static void processBlock(Block block, ScheduleResult schedule)
+    {
         DebugContext debug = block.getBeginNode().getDebug();
         new LowerGuards(block, debug.isDumpEnabledForMethod() || debug.isLogEnabledForMethod()).processNodes(block, schedule);
     }

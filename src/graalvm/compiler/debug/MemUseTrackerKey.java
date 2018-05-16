@@ -12,8 +12,8 @@ import graalvm.compiler.serviceprovider.GraalServices;
  * }
  * </pre>
  */
-public interface MemUseTrackerKey extends MetricKey {
-
+public interface MemUseTrackerKey extends MetricKey
+{
     /**
      * Creates a point from which memory usage will be recorded if memory use tracking is
      * {@linkplain DebugContext#isMemUseTrackingEnabled() enabled}.
@@ -31,7 +31,8 @@ public interface MemUseTrackerKey extends MetricKey {
     @Override
     MemUseTrackerKey doc(String string);
 
-    static long getCurrentThreadAllocatedBytes() {
+    static long getCurrentThreadAllocatedBytes()
+    {
         return GraalServices.getCurrentThreadAllocatedBytes();
     }
 }

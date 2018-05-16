@@ -10,29 +10,34 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import jdk.vm.ci.meta.TriState;
 
 @NodeInfo
-public abstract class UnaryOpLogicNode extends LogicNode implements LIRLowerable, Canonicalizable.Unary<ValueNode> {
-
+public abstract class UnaryOpLogicNode extends LogicNode implements LIRLowerable, Canonicalizable.Unary<ValueNode>
+{
     public static final NodeClass<UnaryOpLogicNode> TYPE = NodeClass.create(UnaryOpLogicNode.class);
     @Input protected ValueNode value;
 
     @Override
-    public ValueNode getValue() {
+    public ValueNode getValue()
+    {
         return value;
     }
 
-    public UnaryOpLogicNode(NodeClass<? extends UnaryOpLogicNode> c, ValueNode value) {
+    public UnaryOpLogicNode(NodeClass<? extends UnaryOpLogicNode> c, ValueNode value)
+    {
         super(c);
         assert value != null;
         this.value = value;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
     }
 
-    public Stamp getSucceedingStampForValue(boolean negated, Stamp valueStamp) {
+    public Stamp getSucceedingStampForValue(boolean negated, Stamp valueStamp)
+    {
         Stamp succStamp = getSucceedingStampForValue(negated);
-        if (succStamp != null) {
+        if (succStamp != null)
+        {
             succStamp = succStamp.join(valueStamp);
         }
         return succStamp;

@@ -8,18 +8,16 @@ import java.nio.channels.WritableByteChannel;
 import java.util.Collection;
 import java.util.Map;
 
-final class ProtocolImpl<Graph, Node, NodeClass, Port, Block, ResolvedJavaMethod, ResolvedJavaField, Signature, NodeSourcePosition, Location>
-                extends GraphProtocol<Graph, Node, NodeClass, Port, Block, ResolvedJavaMethod, ResolvedJavaField, Signature, NodeSourcePosition, Location> {
+final class ProtocolImpl<Graph, Node, NodeClass, Port, Block, ResolvedJavaMethod, ResolvedJavaField, Signature, NodeSourcePosition, Location> extends GraphProtocol<Graph, Node, NodeClass, Port, Block, ResolvedJavaMethod, ResolvedJavaField, Signature, NodeSourcePosition, Location>
+{
     private final GraphStructure<Graph, Node, NodeClass, Port> structure;
     private final GraphTypes types;
     private final GraphBlocks<Graph, Block, Node> blocks;
     private final GraphElements<ResolvedJavaMethod, ResolvedJavaField, Signature, NodeSourcePosition> elements;
     private final GraphLocations<ResolvedJavaMethod, NodeSourcePosition, Location> locations;
 
-    ProtocolImpl(int major, int minor, GraphStructure<Graph, Node, NodeClass, Port> structure, GraphTypes enums, GraphBlocks<Graph, Block, Node> blocks,
-                    GraphElements<ResolvedJavaMethod, ResolvedJavaField, Signature, NodeSourcePosition> elements,
-                    GraphLocations<ResolvedJavaMethod, NodeSourcePosition, Location> locs,
-                    WritableByteChannel channel) throws IOException {
+    ProtocolImpl(int major, int minor, GraphStructure<Graph, Node, NodeClass, Port> structure, GraphTypes enums, GraphBlocks<Graph, Block, Node> blocks, GraphElements<ResolvedJavaMethod, ResolvedJavaField, Signature, NodeSourcePosition> elements, GraphLocations<ResolvedJavaMethod, NodeSourcePosition, Location> locs, WritableByteChannel channel) throws IOException
+    {
         super(channel, major, minor);
         this.structure = structure;
         this.types = enums;
@@ -28,9 +26,8 @@ final class ProtocolImpl<Graph, Node, NodeClass, Port, Block, ResolvedJavaMethod
         this.locations = locs;
     }
 
-    ProtocolImpl(GraphProtocol<?, ?, ?, ?, ?, ?, ?, ?, ?, ?> parent, GraphStructure<Graph, Node, NodeClass, Port> structure, GraphTypes enums, GraphBlocks<Graph, Block, Node> blocks,
-                    GraphElements<ResolvedJavaMethod, ResolvedJavaField, Signature, NodeSourcePosition> elements,
-                    GraphLocations<ResolvedJavaMethod, NodeSourcePosition, Location> locs) {
+    ProtocolImpl(GraphProtocol<?, ?, ?, ?, ?, ?, ?, ?, ?, ?> parent, GraphStructure<Graph, Node, NodeClass, Port> structure, GraphTypes enums, GraphBlocks<Graph, Block, Node> blocks, GraphElements<ResolvedJavaMethod, ResolvedJavaField, Signature, NodeSourcePosition> elements, GraphLocations<ResolvedJavaMethod, NodeSourcePosition, Location> locs)
+    {
         super(parent);
         this.structure = structure;
         this.types = enums;
@@ -40,300 +37,366 @@ final class ProtocolImpl<Graph, Node, NodeClass, Port, Block, ResolvedJavaMethod
     }
 
     @Override
-    protected Graph findGraph(Graph current, Object obj) {
+    protected Graph findGraph(Graph current, Object obj)
+    {
         return structure.graph(current, obj);
     }
 
     @Override
-    protected Node findNode(Object obj) {
+    protected Node findNode(Object obj)
+    {
         return structure.node(obj);
     }
 
     @Override
-    protected NodeClass findNodeClass(Object obj) {
+    protected NodeClass findNodeClass(Object obj)
+    {
         return structure.nodeClass(obj);
     }
 
     @Override
-    protected NodeClass findClassForNode(Node obj) {
+    protected NodeClass findClassForNode(Node obj)
+    {
         NodeClass clazz = structure.classForNode(obj);
-        if (clazz != null && (findNodeClass(clazz) == null || findNode(clazz) != null)) {
+        if (clazz != null && (findNodeClass(clazz) == null || findNode(clazz) != null))
+        {
             throw new IllegalStateException("classForNode method shall return node class representation rather than node: " + clazz);
         }
         return clazz;
     }
 
     @Override
-    protected String findNameTemplate(NodeClass clazz) {
+    protected String findNameTemplate(NodeClass clazz)
+    {
         return structure.nameTemplate(clazz);
     }
 
     @Override
-    protected int findNodeId(Node n) {
+    protected int findNodeId(Node n)
+    {
         return structure.nodeId(n);
     }
 
     @Override
-    protected boolean hasPredecessor(Node node) {
+    protected boolean hasPredecessor(Node node)
+    {
         return structure.nodeHasPredecessor(node);
     }
 
     @Override
-    protected int findNodesCount(Graph info) {
+    protected int findNodesCount(Graph info)
+    {
         return structure.nodesCount(info);
     }
 
     @Override
-    protected Iterable<? extends Node> findNodes(Graph info) {
+    protected Iterable<? extends Node> findNodes(Graph info)
+    {
         return structure.nodes(info);
     }
 
     @Override
-    protected void findNodeProperties(Node node, Map<String, Object> props, Graph info) {
+    protected void findNodeProperties(Node node, Map<String, Object> props, Graph info)
+    {
         structure.nodeProperties(info, node, props);
     }
 
     @Override
-    protected Port findClassEdges(NodeClass nodeClass, boolean dumpInputs) {
-        if (dumpInputs) {
+    protected Port findClassEdges(NodeClass nodeClass, boolean dumpInputs)
+    {
+        if (dumpInputs)
+        {
             return structure.portInputs(nodeClass);
-        } else {
+        }
+        else
+        {
             return structure.portOutputs(nodeClass);
         }
     }
 
     @Override
-    protected int findSize(Port edges) {
+    protected int findSize(Port edges)
+    {
         return structure.portSize(edges);
     }
 
     @Override
-    protected boolean isDirect(Port edges, int i) {
+    protected boolean isDirect(Port edges, int i)
+    {
         return structure.edgeDirect(edges, i);
     }
 
     @Override
-    protected String findName(Port edges, int i) {
+    protected String findName(Port edges, int i)
+    {
         return structure.edgeName(edges, i);
     }
 
     @Override
-    protected Object findType(Port edges, int i) {
+    protected Object findType(Port edges, int i)
+    {
         Object type = structure.edgeType(edges, i);
-        if (findEnumOrdinal(type) < 0) {
+        if (findEnumOrdinal(type) < 0)
+        {
             throw new IllegalStateException("edgeType method shall return an enum! Was: " + type);
         }
         return type;
     }
 
     @Override
-    protected Collection<? extends Node> findNodes(Graph graph, Node node, Port port, int i) {
+    protected Collection<? extends Node> findNodes(Graph graph, Node node, Port port, int i)
+    {
         return structure.edgeNodes(graph, node, port, i);
     }
 
     @Override
-    protected Object findJavaClass(NodeClass clazz) {
+    protected Object findJavaClass(NodeClass clazz)
+    {
         final Object type = structure.nodeClassType(clazz);
-        if (!(type instanceof Class<?>) && findJavaTypeName(type) == null) {
+        if (!(type instanceof Class<?>) && findJavaTypeName(type) == null)
+        {
             throw new IllegalStateException("nodeClassType method shall return a Java class (instance of Class)! Was: " + type);
         }
         return type;
     }
 
     @Override
-    protected Object findEnumClass(Object enumValue) {
+    protected Object findEnumClass(Object enumValue)
+    {
         return types.enumClass(enumValue);
     }
 
     @Override
-    protected int findEnumOrdinal(Object obj) {
+    protected int findEnumOrdinal(Object obj)
+    {
         return types.enumOrdinal(obj);
     }
 
     @Override
-    protected String[] findEnumTypeValues(Object clazz) {
+    protected String[] findEnumTypeValues(Object clazz)
+    {
         return types.enumTypeValues(clazz);
     }
 
     @Override
-    protected String findJavaTypeName(Object obj) {
+    protected String findJavaTypeName(Object obj)
+    {
         return types.typeName(obj);
     }
 
     @Override
-    protected Collection<? extends Node> findBlockNodes(Graph info, Block block) {
+    protected Collection<? extends Node> findBlockNodes(Graph info, Block block)
+    {
         return blocks.blockNodes(info, block);
     }
 
     @Override
-    protected int findBlockId(Block block) {
+    protected int findBlockId(Block block)
+    {
         return blocks.blockId(block);
     }
 
     @Override
-    protected Collection<? extends Block> findBlocks(Graph graph) {
+    protected Collection<? extends Block> findBlocks(Graph graph)
+    {
         return blocks.blocks(graph);
     }
 
     @Override
-    protected Collection<? extends Block> findBlockSuccessors(Block block) {
+    protected Collection<? extends Block> findBlockSuccessors(Block block)
+    {
         return blocks.blockSuccessors(block);
     }
 
     @Override
-    protected ResolvedJavaMethod findMethod(Object obj) {
+    protected ResolvedJavaMethod findMethod(Object obj)
+    {
         return elements == null ? null : elements.method(obj);
     }
 
     @Override
-    protected byte[] findMethodCode(ResolvedJavaMethod method) {
+    protected byte[] findMethodCode(ResolvedJavaMethod method)
+    {
         return elements.methodCode(method);
     }
 
     @Override
-    protected int findMethodModifiers(ResolvedJavaMethod method) {
+    protected int findMethodModifiers(ResolvedJavaMethod method)
+    {
         return elements.methodModifiers(method);
     }
 
     @Override
-    protected Signature findMethodSignature(ResolvedJavaMethod method) {
+    protected Signature findMethodSignature(ResolvedJavaMethod method)
+    {
         return elements.methodSignature(method);
     }
 
     @Override
-    protected String findMethodName(ResolvedJavaMethod method) {
+    protected String findMethodName(ResolvedJavaMethod method)
+    {
         return elements.methodName(method);
     }
 
     @Override
-    protected Object findMethodDeclaringClass(ResolvedJavaMethod method) {
+    protected Object findMethodDeclaringClass(ResolvedJavaMethod method)
+    {
         return elements.methodDeclaringClass(method);
     }
 
     @Override
-    protected int findFieldModifiers(ResolvedJavaField field) {
+    protected int findFieldModifiers(ResolvedJavaField field)
+    {
         return elements.fieldModifiers(field);
     }
 
     @Override
-    protected String findFieldTypeName(ResolvedJavaField field) {
+    protected String findFieldTypeName(ResolvedJavaField field)
+    {
         return elements.fieldTypeName(field);
     }
 
     @Override
-    protected String findFieldName(ResolvedJavaField field) {
+    protected String findFieldName(ResolvedJavaField field)
+    {
         return elements.fieldName(field);
     }
 
     @Override
-    protected Object findFieldDeclaringClass(ResolvedJavaField field) {
+    protected Object findFieldDeclaringClass(ResolvedJavaField field)
+    {
         return elements.fieldDeclaringClass(field);
     }
 
     @Override
-    protected ResolvedJavaField findJavaField(Object object) {
+    protected ResolvedJavaField findJavaField(Object object)
+    {
         return elements == null ? null : elements.field(object);
     }
 
     @Override
-    protected Signature findSignature(Object object) {
+    protected Signature findSignature(Object object)
+    {
         return elements == null ? null : elements.signature(object);
     }
 
     @Override
-    protected int findSignatureParameterCount(Signature signature) {
+    protected int findSignatureParameterCount(Signature signature)
+    {
         return elements.signatureParameterCount(signature);
     }
 
     @Override
-    protected String findSignatureParameterTypeName(Signature signature, int index) {
+    protected String findSignatureParameterTypeName(Signature signature, int index)
+    {
         return elements.signatureParameterTypeName(signature, index);
     }
 
     @Override
-    protected String findSignatureReturnTypeName(Signature signature) {
+    protected String findSignatureReturnTypeName(Signature signature)
+    {
         return elements.signatureReturnTypeName(signature);
     }
 
     @Override
-    protected NodeSourcePosition findNodeSourcePosition(Object object) {
+    protected NodeSourcePosition findNodeSourcePosition(Object object)
+    {
         return elements == null ? null : elements.nodeSourcePosition(object);
     }
 
     @Override
-    protected ResolvedJavaMethod findNodeSourcePositionMethod(NodeSourcePosition pos) {
+    protected ResolvedJavaMethod findNodeSourcePositionMethod(NodeSourcePosition pos)
+    {
         return elements.nodeSourcePositionMethod(pos);
     }
 
     @Override
-    protected NodeSourcePosition findNodeSourcePositionCaller(NodeSourcePosition pos) {
+    protected NodeSourcePosition findNodeSourcePositionCaller(NodeSourcePosition pos)
+    {
         return elements.nodeSourcePositionCaller(pos);
     }
 
     @Override
-    protected int findNodeSourcePositionBCI(NodeSourcePosition pos) {
+    protected int findNodeSourcePositionBCI(NodeSourcePosition pos)
+    {
         return elements.nodeSourcePositionBCI(pos);
     }
 
     @Override
-    protected Iterable<Location> findLocation(ResolvedJavaMethod method, int bci, NodeSourcePosition pos) {
+    protected Iterable<Location> findLocation(ResolvedJavaMethod method, int bci, NodeSourcePosition pos)
+    {
         return locations.methodLocation(method, bci, pos);
     }
 
     @Override
-    protected String findLocationFile(Location loc) throws IOException {
-        if (loc == null) {
+    protected String findLocationFile(Location loc) throws IOException
+    {
+        if (loc == null)
+        {
             return null;
         }
         URI u;
-        try {
+        try
+        {
             u = locations.locationURI(loc);
-        } catch (URISyntaxException ex) {
+        }
+        catch (URISyntaxException ex)
+        {
             throw new IOException(ex);
         }
-        if (u == null) {
+        if (u == null)
+        {
             return null;
         }
-        if (u.getScheme() == null) {
+        if (u.getScheme() == null)
+        {
             return u.getPath();
         }
-        if ("file".equals(u.getScheme())) {
+        if ("file".equals(u.getScheme()))
+        {
             return new File(u).getPath();
         }
         return null;
     }
 
     @Override
-    protected int findLocationLine(Location loc) {
+    protected int findLocationLine(Location loc)
+    {
         return locations.locationLineNumber(loc);
     }
 
     @Override
-    protected URI findLocationURI(Location loc) throws URISyntaxException {
+    protected URI findLocationURI(Location loc) throws URISyntaxException
+    {
         return locations.locationURI(loc);
     }
 
     @Override
-    protected String findLocationLanguage(Location loc) {
+    protected String findLocationLanguage(Location loc)
+    {
         return locations.locationLanguage(loc);
     }
 
     @Override
-    protected int findLocationStart(Location loc) {
+    protected int findLocationStart(Location loc)
+    {
         return locations.locationOffsetStart(loc);
     }
 
     @Override
-    protected int findLocationEnd(Location loc) {
+    protected int findLocationEnd(Location loc)
+    {
         return locations.locationOffsetEnd(loc);
     }
 
     @Override
-    protected void findExtraNodes(Node node, Collection<? super Node> extraNodes) {
+    protected void findExtraNodes(Node node, Collection<? super Node> extraNodes)
+    {
     }
 
     @Override
-    protected String formatTitle(Graph graph, int id, String format, Object... args) {
+    protected String formatTitle(Graph graph, int id, String format, Object... args)
+    {
         return String.format(format, args) + " [" + id + "]";
     }
 }

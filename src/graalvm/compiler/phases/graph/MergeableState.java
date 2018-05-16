@@ -8,8 +8,8 @@ import graalvm.compiler.nodes.ControlSplitNode;
 import graalvm.compiler.nodes.LoopBeginNode;
 import graalvm.compiler.nodes.LoopEndNode;
 
-public abstract class MergeableState<T> {
-
+public abstract class MergeableState<T>
+{
     @Override
     public abstract T clone();
 
@@ -27,7 +27,8 @@ public abstract class MergeableState<T> {
      *
      * @param loopBegin the begin node of the loop
      */
-    public void loopBegin(LoopBeginNode loopBegin) {
+    public void loopBegin(LoopBeginNode loopBegin)
+    {
         // empty default implementation
     }
 
@@ -38,7 +39,8 @@ public abstract class MergeableState<T> {
      * @param loopEndStates the states at the loop ends, sorted according to
      *            {@link LoopBeginNode#orderedLoopEnds()}
      */
-    public void loopEnds(LoopBeginNode loopBegin, List<T> loopEndStates) {
+    public void loopEnds(LoopBeginNode loopBegin, List<T> loopEndStates)
+    {
         // empty default implementation
     }
 
@@ -47,7 +49,8 @@ public abstract class MergeableState<T> {
      *
      * @param node the successor of the control split that is about to be visited
      */
-    public void afterSplit(AbstractBeginNode node) {
+    public void afterSplit(AbstractBeginNode node)
+    {
         // empty default implementation
     }
 }

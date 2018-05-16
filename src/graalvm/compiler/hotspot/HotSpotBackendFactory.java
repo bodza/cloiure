@@ -5,8 +5,8 @@ import graalvm.compiler.phases.tiers.CompilerConfiguration;
 import jdk.vm.ci.code.Architecture;
 import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
 
-public interface HotSpotBackendFactory {
-
+public interface HotSpotBackendFactory
+{
     /**
      * Gets the name of this backend factory. This should not include the {@link #getArchitecture()
      * architecture}. The {@link CompilerConfigurationFactory} can select alternative backends based

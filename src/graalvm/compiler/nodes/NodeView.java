@@ -22,13 +22,15 @@ import graalvm.compiler.graph.spi.CanonicalizerTool;
  * }
  * </pre>
  */
-public interface NodeView {
-
+public interface NodeView
+{
     NodeView DEFAULT = new Default();
 
-    class Default implements NodeView {
+    class Default implements NodeView
+    {
         @Override
-        public Stamp stamp(ValueNode node) {
+        public Stamp stamp(ValueNode node)
+        {
             return node.stamp;
         }
     }
@@ -40,8 +42,10 @@ public interface NodeView {
      */
     Stamp stamp(ValueNode node);
 
-    static NodeView from(CanonicalizerTool tool) {
-        if (tool instanceof NodeView) {
+    static NodeView from(CanonicalizerTool tool)
+    {
+        if (tool instanceof NodeView)
+        {
             return (NodeView) tool;
         }
         return DEFAULT;

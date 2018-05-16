@@ -20,15 +20,17 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * Extends {@link HotSpotConstantFieldProvider} to override the implementation of
  * {@link #readConstantField} with Graal specific semantics.
  */
-public class HotSpotGraalConstantFieldProvider extends HotSpotConstantFieldProvider {
-
-    public HotSpotGraalConstantFieldProvider(GraalHotSpotVMConfig config, MetaAccessProvider metaAccess) {
+public class HotSpotGraalConstantFieldProvider extends HotSpotConstantFieldProvider
+{
+    public HotSpotGraalConstantFieldProvider(GraalHotSpotVMConfig config, MetaAccessProvider metaAccess)
+    {
         super(config, metaAccess);
         this.metaAccess = metaAccess;
     }
 
     @Override
-    protected boolean isStaticFieldConstant(ResolvedJavaField field, OptionValues options) {
+    protected boolean isStaticFieldConstant(ResolvedJavaField field, OptionValues options)
+    {
         return super.isStaticFieldConstant(field, options) && (!ImmutableCode.getValue(options) || isEmbeddableField(field));
     }
 
@@ -38,12 +40,17 @@ public class HotSpotGraalConstantFieldProvider extends HotSpotConstantFieldProvi
      */
     private volatile List<ResolvedJavaField> nonEmbeddableFields;
 
-    protected boolean isEmbeddableField(ResolvedJavaField field) {
-        if (nonEmbeddableFields == null) {
-            synchronized (this) {
-                if (nonEmbeddableFields == null) {
+    protected boolean isEmbeddableField(ResolvedJavaField field)
+    {
+        if (nonEmbeddableFields == null)
+        {
+            synchronized (this)
+            {
+                if (nonEmbeddableFields == null)
+                {
                     List<ResolvedJavaField> fields = new ArrayList<>();
-                    try {
+                    try
+                    {
                         fields.add(metaAccess.lookupJavaField(Boolean.class.getDeclaredField("TRUE")));
                         fields.add(metaAccess.lookupJavaField(Boolean.class.getDeclaredField("FALSE")));
 
@@ -69,7 +76,9 @@ public class HotSpotGraalConstantFieldProvider extends HotSpotConstantFieldProvi
 
                         fields.add(metaAccess.lookupJavaField(Throwable.class.getDeclaredField("UNASSIGNED_STACK")));
                         fields.add(metaAccess.lookupJavaField(Throwable.class.getDeclaredField("SUPPRESSED_SENTINEL")));
-                    } catch (SecurityException | NoSuchFieldException e) {
+                    }
+                    catch (SecurityException | NoSuchFieldException e)
+                    {
                         throw new GraalError(e);
                     }
                     nonEmbeddableFields = fields;
@@ -80,14 +89,18 @@ public class HotSpotGraalConstantFieldProvider extends HotSpotConstantFieldProvi
     }
 
     @Override
-    protected boolean isFinalFieldValueConstant(ResolvedJavaField field, JavaConstant value, ConstantFieldTool<?> tool) {
-        if (super.isFinalFieldValueConstant(field, value, tool)) {
+    protected boolean isFinalFieldValueConstant(ResolvedJavaField field, JavaConstant value, ConstantFieldTool<?> tool)
+    {
+        if (super.isFinalFieldValueConstant(field, value, tool))
+        {
             return true;
         }
 
-        if (!field.isStatic()) {
+        if (!field.isStatic())
+        {
             JavaConstant receiver = tool.getReceiver();
-            if (getSnippetCounterType().isInstance(receiver) || getNodeClassType().isInstance(receiver)) {
+            if (getSnippetCounterType().isInstance(receiver) || getNodeClassType().isInstance(receiver))
+            {
                 return true;
             }
         }
@@ -96,14 +109,18 @@ public class HotSpotGraalConstantFieldProvider extends HotSpotConstantFieldProvi
     }
 
     @Override
-    protected boolean isStableFieldValueConstant(ResolvedJavaField field, JavaConstant value, ConstantFieldTool<?> tool) {
-        if (super.isStableFieldValueConstant(field, value, tool)) {
+    protected boolean isStableFieldValueConstant(ResolvedJavaField field, JavaConstant value, ConstantFieldTool<?> tool)
+    {
+        if (super.isStableFieldValueConstant(field, value, tool))
+        {
             return true;
         }
 
-        if (!field.isStatic()) {
+        if (!field.isStatic())
+        {
             JavaConstant receiver = tool.getReceiver();
-            if (getHotSpotVMConfigType().isInstance(receiver)) {
+            if (getHotSpotVMConfigType().isInstance(receiver))
+            {
                 return true;
             }
         }
@@ -117,22 +134,28 @@ public class HotSpotGraalConstantFieldProvider extends HotSpotConstantFieldProvi
     private ResolvedJavaType cachedSnippetCounterType;
     private ResolvedJavaType cachedNodeClassType;
 
-    private ResolvedJavaType getHotSpotVMConfigType() {
-        if (cachedHotSpotVMConfigType == null) {
+    private ResolvedJavaType getHotSpotVMConfigType()
+    {
+        if (cachedHotSpotVMConfigType == null)
+        {
             cachedHotSpotVMConfigType = metaAccess.lookupJavaType(GraalHotSpotVMConfig.class);
         }
         return cachedHotSpotVMConfigType;
     }
 
-    private ResolvedJavaType getSnippetCounterType() {
-        if (cachedSnippetCounterType == null) {
+    private ResolvedJavaType getSnippetCounterType()
+    {
+        if (cachedSnippetCounterType == null)
+        {
             cachedSnippetCounterType = metaAccess.lookupJavaType(SnippetCounter.class);
         }
         return cachedSnippetCounterType;
     }
 
-    private ResolvedJavaType getNodeClassType() {
-        if (cachedNodeClassType == null) {
+    private ResolvedJavaType getNodeClassType()
+    {
+        if (cachedNodeClassType == null)
+        {
             cachedNodeClassType = metaAccess.lookupJavaType(NodeClass.class);
         }
         return cachedNodeClassType;

@@ -12,9 +12,10 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 /**
  * A stamp is the basis for a type system.
  */
-public abstract class Stamp {
-
-    protected Stamp() {
+public abstract class Stamp
+{
+    protected Stamp()
+    {
     }
 
     /**
@@ -23,7 +24,8 @@ public abstract class Stamp {
      */
     public abstract ResolvedJavaType javaType(MetaAccessProvider metaAccess);
 
-    public boolean alwaysDistinct(Stamp other) {
+    public boolean alwaysDistinct(Stamp other)
+    {
         return join(other).isEmpty();
     }
 
@@ -99,14 +101,16 @@ public abstract class Stamp {
     /**
      * Tests whether this stamp represents an illegal value.
      */
-    public final boolean isEmpty() {
+    public final boolean isEmpty()
+    {
         return !hasValues();
     }
 
     /**
      * Tests whether this stamp represents all values of this kind.
      */
-    public boolean isUnrestricted() {
+    public boolean isUnrestricted()
+    {
         return this.equals(this.unrestricted());
     }
 
@@ -117,7 +121,8 @@ public abstract class Stamp {
      * @return the constant corresponding to the single value of this stamp and null if this stamp
      *         can represent less or more than one value.
      */
-    public Constant asConstant() {
+    public Constant asConstant()
+    {
         return null;
     }
 
@@ -145,17 +150,21 @@ public abstract class Stamp {
      * @param other the stamp that should be used to improve this stamp
      * @return the newly improved stamp or {@code null} if an improvement was not possible
      */
-    public final Stamp tryImproveWith(Stamp other) {
+    public final Stamp tryImproveWith(Stamp other)
+    {
         Stamp improved = improveWith(other);
-        if (improved.equals(this)) {
+        if (improved.equals(this))
+        {
             return null;
         }
         return improved;
     }
 
-    public boolean neverDistinct(Stamp other) {
+    public boolean neverDistinct(Stamp other)
+    {
         Constant constant = this.asConstant();
-        if (constant != null) {
+        if (constant != null)
+        {
             Constant otherConstant = other.asConstant();
             return otherConstant != null && constant.equals(otherConstant);
         }

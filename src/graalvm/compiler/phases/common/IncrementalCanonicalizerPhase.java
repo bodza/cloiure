@@ -11,28 +11,33 @@ import graalvm.compiler.phases.tiers.PhaseContext;
  * A phase suite that applies {@linkplain CanonicalizerPhase canonicalization} to a graph after all
  * phases in the suite have been applied if any of the phases changed the graph.
  */
-public class IncrementalCanonicalizerPhase<C extends PhaseContext> extends PhaseSuite<C> {
-
+public class IncrementalCanonicalizerPhase<C extends PhaseContext> extends PhaseSuite<C>
+{
     private final CanonicalizerPhase canonicalizer;
 
-    public IncrementalCanonicalizerPhase(CanonicalizerPhase canonicalizer) {
+    public IncrementalCanonicalizerPhase(CanonicalizerPhase canonicalizer)
+    {
         this.canonicalizer = canonicalizer;
     }
 
-    public IncrementalCanonicalizerPhase(CanonicalizerPhase canonicalizer, BasePhase<? super C> phase) {
+    public IncrementalCanonicalizerPhase(CanonicalizerPhase canonicalizer, BasePhase<? super C> phase)
+    {
         this.canonicalizer = canonicalizer;
         appendPhase(phase);
     }
 
     @Override
     @SuppressWarnings("try")
-    protected void run(StructuredGraph graph, C context) {
+    protected void run(StructuredGraph graph, C context)
+    {
         HashSetNodeEventListener listener = new HashSetNodeEventListener();
-        try (NodeEventScope nes = graph.trackNodeEvents(listener)) {
+        try (NodeEventScope nes = graph.trackNodeEvents(listener))
+        {
             super.run(graph, context);
         }
 
-        if (!listener.getNodes().isEmpty()) {
+        if (!listener.getNodes().isEmpty())
+        {
             canonicalizer.applyIncremental(graph, context, listener.getNodes(), null, false);
         }
     }

@@ -20,21 +20,22 @@ import graalvm.compiler.nodes.LoopBeginNode;
 import graalvm.compiler.nodes.LoopEndNode;
 import graalvm.compiler.nodes.LoopExitNode;
 
-public final class ReentrantNodeIterator {
-
-    public static class LoopInfo<StateT> {
-
+public final class ReentrantNodeIterator
+{
+    public static class LoopInfo<StateT>
+    {
         public final EconomicMap<LoopEndNode, StateT> endStates;
         public final EconomicMap<LoopExitNode, StateT> exitStates;
 
-        public LoopInfo(int endCount, int exitCount) {
+        public LoopInfo(int endCount, int exitCount)
+        {
             endStates = EconomicMap.create(Equivalence.IDENTITY, endCount);
             exitStates = EconomicMap.create(Equivalence.IDENTITY, exitCount);
         }
     }
 
-    public abstract static class NodeIteratorClosure<StateT> {
-
+    public abstract static class NodeIteratorClosure<StateT>
+    {
         protected abstract StateT processNode(FixedNode node, StateT currentState);
 
         protected abstract StateT merge(AbstractMergeNode merge, List<StateT> states);
@@ -48,84 +49,112 @@ public final class ReentrantNodeIterator {
          *
          * @param currentState
          */
-        protected boolean continueIteration(StateT currentState) {
+        protected boolean continueIteration(StateT currentState)
+        {
             return true;
         }
     }
 
-    private ReentrantNodeIterator() {
+    private ReentrantNodeIterator()
+    {
         // no instances allowed
     }
 
-    public static <StateT> LoopInfo<StateT> processLoop(NodeIteratorClosure<StateT> closure, LoopBeginNode loop, StateT initialState) {
+    public static <StateT> LoopInfo<StateT> processLoop(NodeIteratorClosure<StateT> closure, LoopBeginNode loop, StateT initialState)
+    {
         EconomicMap<FixedNode, StateT> blockEndStates = apply(closure, loop, initialState, loop);
 
         LoopInfo<StateT> info = new LoopInfo<>(loop.loopEnds().count(), loop.loopExits().count());
-        for (LoopEndNode end : loop.loopEnds()) {
-            if (blockEndStates.containsKey(end)) {
+        for (LoopEndNode end : loop.loopEnds())
+        {
+            if (blockEndStates.containsKey(end))
+            {
                 info.endStates.put(end, blockEndStates.get(end));
             }
         }
-        for (LoopExitNode exit : loop.loopExits()) {
-            if (blockEndStates.containsKey(exit)) {
+        for (LoopExitNode exit : loop.loopExits())
+        {
+            if (blockEndStates.containsKey(exit))
+            {
                 info.exitStates.put(exit, blockEndStates.get(exit));
             }
         }
         return info;
     }
 
-    public static <StateT> void apply(NodeIteratorClosure<StateT> closure, FixedNode start, StateT initialState) {
+    public static <StateT> void apply(NodeIteratorClosure<StateT> closure, FixedNode start, StateT initialState)
+    {
         apply(closure, start, initialState, null);
     }
 
-    private static <StateT> EconomicMap<FixedNode, StateT> apply(NodeIteratorClosure<StateT> closure, FixedNode start, StateT initialState, LoopBeginNode boundary) {
+    private static <StateT> EconomicMap<FixedNode, StateT> apply(NodeIteratorClosure<StateT> closure, FixedNode start, StateT initialState, LoopBeginNode boundary)
+    {
         assert start != null;
         Deque<AbstractBeginNode> nodeQueue = new ArrayDeque<>();
         EconomicMap<FixedNode, StateT> blockEndStates = EconomicMap.create(Equivalence.IDENTITY);
 
         StateT state = initialState;
         FixedNode current = start;
-        do {
-            while (current instanceof FixedWithNextNode) {
-                if (boundary != null && current instanceof LoopExitNode && ((LoopExitNode) current).loopBegin() == boundary) {
+        do
+        {
+            while (current instanceof FixedWithNextNode)
+            {
+                if (boundary != null && current instanceof LoopExitNode && ((LoopExitNode) current).loopBegin() == boundary)
+                {
                     blockEndStates.put(current, state);
                     current = null;
-                } else {
+                }
+                else
+                {
                     FixedNode next = ((FixedWithNextNode) current).next();
                     state = closure.processNode(current, state);
                     current = closure.continueIteration(state) ? next : null;
                 }
             }
 
-            if (current != null) {
+            if (current != null)
+            {
                 state = closure.processNode(current, state);
 
-                if (closure.continueIteration(state)) {
+                if (closure.continueIteration(state))
+                {
                     Iterator<Node> successors = current.successors().iterator();
-                    if (!successors.hasNext()) {
-                        if (current instanceof LoopEndNode) {
+                    if (!successors.hasNext())
+                    {
+                        if (current instanceof LoopEndNode)
+                        {
                             blockEndStates.put(current, state);
-                        } else if (current instanceof EndNode) {
+                        }
+                        else if (current instanceof EndNode)
+                        {
                             // add the end node and see if the merge is ready for processing
                             AbstractMergeNode merge = ((EndNode) current).merge();
-                            if (merge instanceof LoopBeginNode) {
+                            if (merge instanceof LoopBeginNode)
+                            {
                                 EconomicMap<LoopExitNode, StateT> loopExitState = closure.processLoop((LoopBeginNode) merge, state);
                                 MapCursor<LoopExitNode, StateT> entry = loopExitState.getEntries();
-                                while (entry.advance()) {
+                                while (entry.advance())
+                                {
                                     blockEndStates.put(entry.getKey(), entry.getValue());
                                     nodeQueue.add(entry.getKey());
                                 }
-                            } else {
+                            }
+                            else
+                            {
                                 boolean endsVisited = true;
-                                for (AbstractEndNode forwardEnd : merge.forwardEnds()) {
-                                    if (forwardEnd != current && !blockEndStates.containsKey(forwardEnd)) {
+                                for (AbstractEndNode forwardEnd : merge.forwardEnds())
+                                {
+                                    if (forwardEnd != current && !blockEndStates.containsKey(forwardEnd))
+                                    {
                                         endsVisited = false;
                                         break;
                                     }
                                 }
-                                if (endsVisited) {
+                                if (endsVisited)
+                                {
                                     ArrayList<StateT> states = new ArrayList<>(merge.forwardEndCount());
-                                    for (int i = 0; i < merge.forwardEndCount(); i++) {
+                                    for (int i = 0; i < merge.forwardEndCount(); i++)
+                                    {
                                         AbstractEndNode forwardEnd = merge.forwardEndAt(i);
                                         assert forwardEnd == current || blockEndStates.containsKey(forwardEnd);
                                         StateT other = forwardEnd == current ? state : blockEndStates.removeKey(forwardEnd);
@@ -134,22 +163,31 @@ public final class ReentrantNodeIterator {
                                     state = closure.merge(merge, states);
                                     current = closure.continueIteration(state) ? merge : null;
                                     continue;
-                                } else {
+                                }
+                                else
+                                {
                                     assert !blockEndStates.containsKey(current);
                                     blockEndStates.put(current, state);
                                 }
                             }
                         }
-                    } else {
+                    }
+                    else
+                    {
                         FixedNode firstSuccessor = (FixedNode) successors.next();
-                        if (!successors.hasNext()) {
+                        if (!successors.hasNext())
+                        {
                             current = firstSuccessor;
                             continue;
-                        } else {
-                            do {
+                        }
+                        else
+                        {
+                            do
+                            {
                                 AbstractBeginNode successor = (AbstractBeginNode) successors.next();
                                 StateT successorState = closure.afterSplit(successor, state);
-                                if (closure.continueIteration(successorState)) {
+                                if (closure.continueIteration(successorState))
+                                {
                                     blockEndStates.put(successor, successorState);
                                     nodeQueue.add(successor);
                                 }
@@ -164,9 +202,12 @@ public final class ReentrantNodeIterator {
             }
 
             // get next queued block
-            if (nodeQueue.isEmpty()) {
+            if (nodeQueue.isEmpty())
+            {
                 return blockEndStates;
-            } else {
+            }
+            else
+            {
                 current = nodeQueue.removeFirst();
                 assert blockEndStates.containsKey(current);
                 state = blockEndStates.removeKey(current);

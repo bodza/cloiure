@@ -16,8 +16,8 @@ import graalvm.compiler.options.OptionValues;
 import jdk.vm.ci.code.BailoutException;
 import jdk.vm.ci.meta.JavaMethod;
 
-final class DebugConfigImpl implements DebugConfig {
-
+final class DebugConfigImpl implements DebugConfig
+{
     private final OptionValues options;
 
     private final DebugFilter countFilter;
@@ -31,13 +31,13 @@ final class DebugConfigImpl implements DebugConfig {
     private final List<DebugVerifyHandler> verifyHandlers;
     private final PrintStream output;
 
-    DebugConfigImpl(OptionValues options) {
+    DebugConfigImpl(OptionValues options)
+    {
         this(options, TTY.out, Collections.emptyList(), Collections.emptyList());
     }
 
-    DebugConfigImpl(OptionValues options, PrintStream output,
-                    List<DebugDumpHandler> dumpHandlers,
-                    List<DebugVerifyHandler> verifyHandlers) {
+    DebugConfigImpl(OptionValues options, PrintStream output, List<DebugDumpHandler> dumpHandlers, List<DebugVerifyHandler> verifyHandlers)
+    {
         this(options, DebugOptions.Log.getValue(options),
                         DebugOptions.Count.getValue(options),
                         DebugOptions.TrackMemUse.getValue(options),
@@ -48,17 +48,8 @@ final class DebugConfigImpl implements DebugConfig {
                         output, dumpHandlers, verifyHandlers);
     }
 
-    DebugConfigImpl(OptionValues options,
-                    String logFilter,
-                    String countFilter,
-                    String trackMemUseFilter,
-                    String timerFilter,
-                    String dumpFilter,
-                    String verifyFilter,
-                    String methodFilter,
-                    PrintStream output,
-                    List<DebugDumpHandler> dumpHandlers,
-                    List<DebugVerifyHandler> verifyHandlers) {
+    DebugConfigImpl(OptionValues options, String logFilter, String countFilter, String trackMemUseFilter, String timerFilter, String dumpFilter, String verifyFilter, String methodFilter, PrintStream output, List<DebugDumpHandler> dumpHandlers, List<DebugVerifyHandler> verifyHandlers)
+    {
         this.options = options;
         this.logFilter = DebugFilter.parse(logFilter);
         this.countFilter = DebugFilter.parse(countFilter);
@@ -66,9 +57,12 @@ final class DebugConfigImpl implements DebugConfig {
         this.timerFilter = DebugFilter.parse(timerFilter);
         this.dumpFilter = DebugFilter.parse(dumpFilter);
         this.verifyFilter = DebugFilter.parse(verifyFilter);
-        if (methodFilter == null || methodFilter.isEmpty()) {
+        if (methodFilter == null || methodFilter.isEmpty())
+        {
             this.methodFilter = null;
-        } else {
+        }
+        else
+        {
             this.methodFilter = graalvm.compiler.debug.MethodFilter.parse(methodFilter);
         }
 
@@ -77,102 +71,132 @@ final class DebugConfigImpl implements DebugConfig {
         this.output = output;
     }
 
-    private static String getVerifyOptionValue(OptionValues values) {
+    private static String getVerifyOptionValue(OptionValues values)
+    {
         return !DebugOptions.Verify.hasBeenSet(values) && Assertions.assertionsEnabled() ? "" : DebugOptions.Verify.getValue(values);
     }
 
     @Override
-    public OptionValues getOptions() {
+    public OptionValues getOptions()
+    {
         return options;
     }
 
     @Override
-    public int getLogLevel(DebugContext.Scope scope) {
+    public int getLogLevel(DebugContext.Scope scope)
+    {
         return getLevel(scope, logFilter);
     }
 
     @Override
-    public boolean isLogEnabledForMethod(DebugContext.Scope scope) {
+    public boolean isLogEnabledForMethod(DebugContext.Scope scope)
+    {
         return isEnabledForMethod(scope, logFilter);
     }
 
     @Override
-    public boolean isCountEnabled(DebugContext.Scope scope) {
+    public boolean isCountEnabled(DebugContext.Scope scope)
+    {
         return isEnabled(scope, countFilter);
     }
 
     @Override
-    public boolean isMemUseTrackingEnabled(DebugContext.Scope scope) {
+    public boolean isMemUseTrackingEnabled(DebugContext.Scope scope)
+    {
         return isEnabled(scope, trackMemUseFilter);
     }
 
     @Override
-    public int getDumpLevel(DebugContext.Scope scope) {
+    public int getDumpLevel(DebugContext.Scope scope)
+    {
         return getLevel(scope, dumpFilter);
     }
 
     @Override
-    public boolean isDumpEnabledForMethod(DebugContext.Scope scope) {
+    public boolean isDumpEnabledForMethod(DebugContext.Scope scope)
+    {
         return isEnabledForMethod(scope, dumpFilter);
     }
 
     @Override
-    public boolean isVerifyEnabled(DebugContext.Scope scope) {
+    public boolean isVerifyEnabled(DebugContext.Scope scope)
+    {
         return isEnabled(scope, verifyFilter);
     }
 
     @Override
-    public boolean isVerifyEnabledForMethod(DebugContext.Scope scope) {
+    public boolean isVerifyEnabledForMethod(DebugContext.Scope scope)
+    {
         return isEnabledForMethod(scope, verifyFilter);
     }
 
     @Override
-    public boolean isTimeEnabled(DebugContext.Scope scope) {
+    public boolean isTimeEnabled(DebugContext.Scope scope)
+    {
         return isEnabled(scope, timerFilter);
     }
 
     @Override
-    public PrintStream output() {
+    public PrintStream output()
+    {
         return output;
     }
 
-    private boolean isEnabled(DebugContext.Scope scope, DebugFilter filter) {
+    private boolean isEnabled(DebugContext.Scope scope, DebugFilter filter)
+    {
         return getLevel(scope, filter) > 0;
     }
 
-    private int getLevel(DebugContext.Scope scope, DebugFilter filter) {
+    private int getLevel(DebugContext.Scope scope, DebugFilter filter)
+    {
         int level;
-        if (filter == null) {
+        if (filter == null)
+        {
             level = 0;
-        } else {
+        }
+        else
+        {
             String currentScope = scope.getQualifiedName();
             level = filter.matchLevel(currentScope);
         }
-        if (level >= 0 && !checkMethodFilter(scope)) {
+        if (level >= 0 && !checkMethodFilter(scope))
+        {
             level = -1;
         }
         return level;
     }
 
-    private boolean isEnabledForMethod(DebugContext.Scope scope, DebugFilter filter) {
+    private boolean isEnabledForMethod(DebugContext.Scope scope, DebugFilter filter)
+    {
         return filter != null && checkMethodFilter(scope);
     }
 
-    private boolean checkMethodFilter(DebugContext.Scope scope) {
-        if (methodFilter == null) {
+    private boolean checkMethodFilter(DebugContext.Scope scope)
+    {
+        if (methodFilter == null)
+        {
             return true;
-        } else {
+        }
+        else
+        {
             JavaMethod lastMethod = null;
             Iterable<Object> context = scope.getCurrentContext();
-            for (Object o : context) {
-                if (methodFilter != null) {
+            for (Object o : context)
+            {
+                if (methodFilter != null)
+                {
                     JavaMethod method = DebugConfig.asJavaMethod(o);
-                    if (method != null) {
-                        if (!DebugOptions.MethodFilterRootOnly.getValue(options)) {
-                            if (graalvm.compiler.debug.MethodFilter.matches(methodFilter, method)) {
+                    if (method != null)
+                    {
+                        if (!DebugOptions.MethodFilterRootOnly.getValue(options))
+                        {
+                            if (graalvm.compiler.debug.MethodFilter.matches(methodFilter, method))
+                            {
                                 return true;
                             }
-                        } else {
+                        }
+                        else
+                        {
                             /*
                              * The context values operate as a stack so if we want MethodFilter to
                              * only apply to the root method we have to check only the last method
@@ -183,7 +207,8 @@ final class DebugConfigImpl implements DebugConfig {
                     }
                 }
             }
-            if (lastMethod != null && graalvm.compiler.debug.MethodFilter.matches(methodFilter, lastMethod)) {
+            if (lastMethod != null && graalvm.compiler.debug.MethodFilter.matches(methodFilter, lastMethod))
+            {
                 return true;
             }
             return false;
@@ -191,7 +216,8 @@ final class DebugConfigImpl implements DebugConfig {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         StringBuilder sb = new StringBuilder();
         sb.append("Debug config:");
         add(sb, "Log", logFilter);
@@ -202,22 +228,29 @@ final class DebugConfigImpl implements DebugConfig {
         return sb.toString();
     }
 
-    private static void add(StringBuilder sb, String name, Object filter) {
-        if (filter != null) {
+    private static void add(StringBuilder sb, String name, Object filter)
+    {
+        if (filter != null)
+        {
             sb.append(' ');
             sb.append(name);
             sb.append('=');
-            if (filter instanceof Object[]) {
+            if (filter instanceof Object[])
+            {
                 sb.append(Arrays.toString((Object[]) filter));
-            } else {
+            }
+            else
+            {
                 sb.append(String.valueOf(filter));
             }
         }
     }
 
     @Override
-    public RuntimeException interceptException(DebugContext debug, Throwable e) {
-        if (e instanceof BailoutException && !DebugOptions.InterceptBailout.getValue(options)) {
+    public RuntimeException interceptException(DebugContext debug, Throwable e)
+    {
+        if (e instanceof BailoutException && !DebugOptions.InterceptBailout.getValue(options))
+        {
             return null;
         }
 
@@ -231,34 +264,42 @@ final class DebugConfigImpl implements DebugConfig {
         DebugConfigImpl config = new DebugConfigImpl(interceptOptions, output, dumpHandlers, verifyHandlers);
         ScopeImpl scope = debug.currentScope;
         scope.updateFlags(config);
-        try {
+        try
+        {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             e.printStackTrace(new PrintStream(baos));
             debug.log("Exception raised in scope %s: %s", debug.getCurrentScopeName(), baos);
             Map<Object, Object> firstSeen = new IdentityHashMap<>();
-            for (Object o : debug.context()) {
+            for (Object o : debug.context())
+            {
                 // Only dump a context object once.
-                if (!firstSeen.containsKey(o)) {
+                if (!firstSeen.containsKey(o))
+                {
                     firstSeen.put(o, o);
-                    if (DebugOptions.DumpOnError.getValue(options) || DebugOptions.Dump.getValue(options) != null) {
+                    if (DebugOptions.DumpOnError.getValue(options) || DebugOptions.Dump.getValue(options) != null)
+                    {
                         debug.dump(DebugContext.BASIC_LEVEL, o, "Exception: %s", e);
                     }
                     debug.log("Context obj %s", o);
                 }
             }
-        } finally {
+        }
+        finally
+        {
             scope.updateFlags(this);
         }
         return null;
     }
 
     @Override
-    public Collection<DebugDumpHandler> dumpHandlers() {
+    public Collection<DebugDumpHandler> dumpHandlers()
+    {
         return dumpHandlers;
     }
 
     @Override
-    public Collection<DebugVerifyHandler> verifyHandlers() {
+    public Collection<DebugVerifyHandler> verifyHandlers()
+    {
         return verifyHandlers;
     }
 }

@@ -13,30 +13,40 @@ import graalvm.compiler.nodes.AbstractBeginNode;
 import graalvm.compiler.nodes.ControlSplitNode;
 import graalvm.compiler.nodes.StructuredGraph;
 
-public class LoopUnswitchingPhase extends ContextlessLoopPhase<LoopPolicies> {
+public class LoopUnswitchingPhase extends ContextlessLoopPhase<LoopPolicies>
+{
     private static final CounterKey UNSWITCHED = DebugContext.counter("Unswitched");
     private static final CounterKey UNSWITCH_CANDIDATES = DebugContext.counter("UnswitchCandidates");
     private static final CounterKey UNSWITCH_EARLY_REJECTS = DebugContext.counter("UnswitchEarlyRejects");
 
-    public LoopUnswitchingPhase(LoopPolicies policies) {
+    public LoopUnswitchingPhase(LoopPolicies policies)
+    {
         super(policies);
     }
 
     @Override
-    protected void run(StructuredGraph graph) {
+    protected void run(StructuredGraph graph)
+    {
         DebugContext debug = graph.getDebug();
-        if (graph.hasLoops()) {
+        if (graph.hasLoops())
+        {
             boolean unswitched;
-            do {
+            do
+            {
                 unswitched = false;
                 final LoopsData dataUnswitch = new LoopsData(graph);
-                for (LoopEx loop : dataUnswitch.outerFirst()) {
-                    if (getPolicies().shouldTryUnswitch(loop)) {
+                for (LoopEx loop : dataUnswitch.outerFirst())
+                {
+                    if (getPolicies().shouldTryUnswitch(loop))
+                    {
                         List<ControlSplitNode> controlSplits = LoopTransformations.findUnswitchable(loop);
-                        if (controlSplits != null) {
+                        if (controlSplits != null)
+                        {
                             UNSWITCH_CANDIDATES.increment(debug);
-                            if (getPolicies().shouldUnswitch(loop, controlSplits)) {
-                                if (debug.isLogEnabled()) {
+                            if (getPolicies().shouldUnswitch(loop, controlSplits))
+                            {
+                                if (debug.isLogEnabled())
+                                {
                                     logUnswitch(loop, controlSplits);
                                 }
                                 LoopTransformations.unswitch(loop, controlSplits);
@@ -46,7 +56,9 @@ public class LoopUnswitchingPhase extends ContextlessLoopPhase<LoopPolicies> {
                                 break;
                             }
                         }
-                    } else {
+                    }
+                    else
+                    {
                         UNSWITCH_EARLY_REJECTS.increment(debug);
                     }
                 }
@@ -54,15 +66,19 @@ public class LoopUnswitchingPhase extends ContextlessLoopPhase<LoopPolicies> {
         }
     }
 
-    private static void logUnswitch(LoopEx loop, List<ControlSplitNode> controlSplits) {
+    private static void logUnswitch(LoopEx loop, List<ControlSplitNode> controlSplits)
+    {
         StringBuilder sb = new StringBuilder("Unswitching ");
         sb.append(loop).append(" at ");
-        for (ControlSplitNode controlSplit : controlSplits) {
+        for (ControlSplitNode controlSplit : controlSplits)
+        {
             sb.append(controlSplit).append(" [");
             Iterator<Node> it = controlSplit.successors().iterator();
-            while (it.hasNext()) {
+            while (it.hasNext())
+            {
                 sb.append(controlSplit.probability((AbstractBeginNode) it.next()));
-                if (it.hasNext()) {
+                if (it.hasNext())
+                {
                     sb.append(", ");
                 }
             }
@@ -72,7 +88,8 @@ public class LoopUnswitchingPhase extends ContextlessLoopPhase<LoopPolicies> {
     }
 
     @Override
-    public float codeSizeIncrease() {
+    public float codeSizeIncrease()
+    {
         return 10.0f;
     }
 }

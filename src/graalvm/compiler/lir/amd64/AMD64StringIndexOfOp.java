@@ -22,7 +22,8 @@ import jdk.vm.ci.meta.Value;
 /**
   */
 @Opcode("AMD64_STRING_INDEX_OF")
-public final class AMD64StringIndexOfOp extends AMD64LIRInstruction {
+public final class AMD64StringIndexOfOp extends AMD64LIRInstruction
+{
     public static final LIRInstructionClass<AMD64StringIndexOfOp> TYPE = LIRInstructionClass.create(AMD64StringIndexOfOp.class);
 
     @Def({REG}) protected Value resultValue;
@@ -39,8 +40,8 @@ public final class AMD64StringIndexOfOp extends AMD64LIRInstruction {
 
     private final int vmPageSize;
 
-    public AMD64StringIndexOfOp(LIRGeneratorTool tool, Value result, Value charPtr1, Value charPtr2, RegisterValue cnt1, RegisterValue cnt2, RegisterValue temp1, RegisterValue vectorTemp1,
-                    int intCnt2, int vmPageSize) {
+    public AMD64StringIndexOfOp(LIRGeneratorTool tool, Value result, Value charPtr1, Value charPtr2, RegisterValue cnt1, RegisterValue cnt2, RegisterValue temp1, RegisterValue vectorTemp1, int intCnt2, int vmPageSize)
+    {
         super(TYPE);
         assert ((AMD64) tool.target().arch).getFeatures().contains(CPUFeature.SSE4_2);
         resultValue = result;
@@ -63,7 +64,8 @@ public final class AMD64StringIndexOfOp extends AMD64LIRInstruction {
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
         Register charPtr1 = asRegister(charPtr1Value);
         Register charPtr2 = asRegister(charPtr2Value);
         Register cnt1 = asRegister(cnt1Value);
@@ -71,9 +73,12 @@ public final class AMD64StringIndexOfOp extends AMD64LIRInstruction {
         Register result = asRegister(resultValue);
         Register vec = asRegister(vectorTemp1);
         Register tmp = asRegister(temp1);
-        if (intCnt2 >= 8) {
+        if (intCnt2 >= 8)
+        {
             masm.stringIndexofC8(charPtr1, charPtr2, cnt1, cnt2, intCnt2, result, vec, tmp);
-        } else {
+        }
+        else
+        {
             masm.stringIndexOf(charPtr1, charPtr2, cnt1, cnt2, intCnt2, result, vec, tmp, vmPageSize);
         }
     }

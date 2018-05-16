@@ -10,8 +10,8 @@ import jdk.vm.ci.meta.JavaKind;
 /**
  * Provides a capability for replacing a higher node with one or more lower level nodes.
  */
-public interface LoweringProvider extends ArrayOffsetProvider {
-
+public interface LoweringProvider extends ArrayOffsetProvider
+{
     void lower(Node n, LoweringTool tool);
 
     /**
@@ -27,7 +27,8 @@ public interface LoweringProvider extends ArrayOffsetProvider {
     /**
      * Indicates the smallest width for comparing an integer value on the target platform.
      */
-    default Integer smallestCompareWidth() {
+    default Integer smallestCompareWidth()
+    {
         // most platforms only support 32 and 64 bit compares
         return 32;
     }

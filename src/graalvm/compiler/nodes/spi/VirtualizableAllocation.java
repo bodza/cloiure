@@ -9,6 +9,6 @@ package graalvm.compiler.nodes.spi;
  * interface can therefore be used for object allocations, for which virtualization introduces new
  * virtualized objects.
  */
-public interface VirtualizableAllocation extends Virtualizable {
-
+public interface VirtualizableAllocation extends Virtualizable
+{
 }

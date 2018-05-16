@@ -30,6 +30,7 @@ import graalvm.compiler.nodes.ConstantNode;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @Repeatable(value = MatchRules.class)
-public @interface MatchRule {
+public @interface MatchRule
+{
     String value();
 }

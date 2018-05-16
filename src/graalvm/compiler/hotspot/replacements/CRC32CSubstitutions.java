@@ -19,16 +19,18 @@ import jdk.vm.ci.meta.JavaKind;
  * Substitutions for java.util.zip.CRC32C.
  */
 @ClassSubstitution(className = "java.util.zip.CRC32C", optional = true)
-public class CRC32CSubstitutions {
-
+public class CRC32CSubstitutions
+{
     @MethodSubstitution
-    static int updateBytes(int crc, byte[] b, int off, int end) {
+    static int updateBytes(int crc, byte[] b, int off, int end)
+    {
         Word bufAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(b, arrayBaseOffset(JavaKind.Byte) + off));
         return updateBytesCRC32(UPDATE_BYTES_CRC32C, crc, bufAddr, end - off);
     }
 
     @MethodSubstitution
-    static int updateDirectByteBuffer(int crc, long addr, int off, int end) {
+    static int updateDirectByteBuffer(int crc, long addr, int off, int end)
+    {
         WordBase bufAddr = WordFactory.unsigned(addr).add(off);
         return updateBytesCRC32(UPDATE_BYTES_CRC32C, crc, bufAddr, end - off);
     }

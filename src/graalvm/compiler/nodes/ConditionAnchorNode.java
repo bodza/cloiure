@@ -18,69 +18,87 @@ import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
 
 @NodeInfo(nameTemplate = "ConditionAnchor(!={p#negated})", allowedUsageTypes = Guard, cycles = CYCLES_0, size = SIZE_0)
-public final class ConditionAnchorNode extends FixedWithNextNode implements Canonicalizable.Unary<Node>, Lowerable, GuardingNode {
-
+public final class ConditionAnchorNode extends FixedWithNextNode implements Canonicalizable.Unary<Node>, Lowerable, GuardingNode
+{
     public static final NodeClass<ConditionAnchorNode> TYPE = NodeClass.create(ConditionAnchorNode.class);
     @Input(Condition) LogicNode condition;
     protected boolean negated;
 
-    public ConditionAnchorNode(LogicNode condition) {
+    public ConditionAnchorNode(LogicNode condition)
+    {
         this(condition, false);
     }
 
-    public ConditionAnchorNode(LogicNode condition, boolean negated) {
+    public ConditionAnchorNode(LogicNode condition, boolean negated)
+    {
         super(TYPE, StampFactory.forVoid());
         this.negated = negated;
         this.condition = condition;
     }
 
-    public LogicNode condition() {
+    public LogicNode condition()
+    {
         return condition;
     }
 
-    public boolean isNegated() {
+    public boolean isNegated()
+    {
         return negated;
     }
 
     @Override
-    public String toString(Verbosity verbosity) {
-        if (verbosity == Verbosity.Name && negated) {
+    public String toString(Verbosity verbosity)
+    {
+        if (verbosity == Verbosity.Name && negated)
+        {
             return "!" + super.toString(verbosity);
-        } else {
+        }
+        else
+        {
             return super.toString(verbosity);
         }
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool, Node forValue) {
-        if (forValue instanceof LogicNegationNode) {
+    public Node canonical(CanonicalizerTool tool, Node forValue)
+    {
+        if (forValue instanceof LogicNegationNode)
+        {
             LogicNegationNode negation = (LogicNegationNode) forValue;
             return new ConditionAnchorNode(negation.getValue(), !negated);
         }
-        if (forValue instanceof LogicConstantNode) {
+        if (forValue instanceof LogicConstantNode)
+        {
             LogicConstantNode c = (LogicConstantNode) forValue;
-            if (c.getValue() != negated) {
+            if (c.getValue() != negated)
+            {
                 return null;
-            } else {
+            }
+            else
+            {
                 return new ValueAnchorNode(null);
             }
         }
-        if (tool.allUsagesAvailable() && this.hasNoUsages()) {
+        if (tool.allUsagesAvailable() && this.hasNoUsages())
+        {
             return null;
         }
         return this;
     }
 
     @Override
-    public void lower(LoweringTool tool) {
-        if (graph().getGuardsStage() == StructuredGraph.GuardsStage.FIXED_DEOPTS) {
+    public void lower(LoweringTool tool)
+    {
+        if (graph().getGuardsStage() == StructuredGraph.GuardsStage.FIXED_DEOPTS)
+        {
             ValueAnchorNode newAnchor = graph().add(new ValueAnchorNode(null));
             graph().replaceFixedWithFixed(this, newAnchor);
         }
     }
 
     @Override
-    public Node getValue() {
+    public Node getValue()
+    {
         return condition;
     }
 }

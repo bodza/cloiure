@@ -3,8 +3,8 @@ package graalvm.compiler.graph;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-class TypedGraphNodeIterator<T extends IterableNodeType> implements Iterator<T> {
-
+class TypedGraphNodeIterator<T extends IterableNodeType> implements Iterator<T>
+{
     private final Graph graph;
     private final int[] ids;
     private final Node[] current;
@@ -12,7 +12,8 @@ class TypedGraphNodeIterator<T extends IterableNodeType> implements Iterator<T> 
     private int currentIdIndex;
     private boolean needsForward;
 
-    TypedGraphNodeIterator(NodeClass<?> clazz, Graph graph) {
+    TypedGraphNodeIterator(NodeClass<?> clazz, Graph graph)
+    {
         this.graph = graph;
         ids = clazz.iterableIds();
         currentIdIndex = 0;
@@ -20,68 +21,91 @@ class TypedGraphNodeIterator<T extends IterableNodeType> implements Iterator<T> 
         needsForward = true;
     }
 
-    private Node findNext() {
-        if (needsForward) {
+    private Node findNext()
+    {
+        if (needsForward)
+        {
             forward();
-        } else {
+        }
+        else
+        {
             Node c = current();
             Node afterDeleted = graph.getIterableNodeNext(c);
-            if (afterDeleted == null) {
+            if (afterDeleted == null)
+            {
                 needsForward = true;
-            } else if (c != afterDeleted) {
+            }
+            else if (c != afterDeleted)
+            {
                 setCurrent(afterDeleted);
             }
         }
-        if (needsForward) {
+        if (needsForward)
+        {
             return null;
         }
         return current();
     }
 
-    private void forward() {
+    private void forward()
+    {
         needsForward = false;
         int startIdx = currentIdIndex;
-        while (true) {
+        while (true)
+        {
             Node next;
-            if (current() == null) {
+            if (current() == null)
+            {
                 next = graph.getIterableNodeStart(ids[currentIdIndex]);
-            } else {
+            }
+            else
+            {
                 next = graph.getIterableNodeNext(current().typeCacheNext);
             }
-            if (next == null) {
+            if (next == null)
+            {
                 currentIdIndex++;
-                if (currentIdIndex >= ids.length) {
+                if (currentIdIndex >= ids.length)
+                {
                     currentIdIndex = 0;
                 }
-                if (currentIdIndex == startIdx) {
+                if (currentIdIndex == startIdx)
+                {
                     needsForward = true;
                     return;
                 }
-            } else {
+            }
+            else
+            {
                 setCurrent(next);
                 break;
             }
         }
     }
 
-    private Node current() {
+    private Node current()
+    {
         return current[currentIdIndex];
     }
 
-    private void setCurrent(Node n) {
+    private void setCurrent(Node n)
+    {
         current[currentIdIndex] = n;
     }
 
     @Override
-    public boolean hasNext() {
+    public boolean hasNext()
+    {
         return findNext() != null;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public T next() {
+    public T next()
+    {
         Node result = findNext();
-        if (result == null) {
+        if (result == null)
+        {
             throw new NoSuchElementException();
         }
         needsForward = true;
@@ -89,7 +113,8 @@ class TypedGraphNodeIterator<T extends IterableNodeType> implements Iterator<T> 
     }
 
     @Override
-    public void remove() {
+    public void remove()
+    {
         throw new UnsupportedOperationException();
     }
 }

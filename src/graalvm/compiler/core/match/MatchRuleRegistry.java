@@ -18,8 +18,8 @@ import graalvm.compiler.graph.Position;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.serviceprovider.GraalServices;
 
-public class MatchRuleRegistry {
-
+public class MatchRuleRegistry
+{
     /**
      * Convert a list of field names into {@link graalvm.compiler.graph.Position} objects that
      * can be used to read them during a match. The names should already have been confirmed to
@@ -29,16 +29,21 @@ public class MatchRuleRegistry {
      * @param names
      * @return an array of Position objects corresponding to the named fields.
      */
-    public static Position[] findPositions(NodeClass<? extends Node> nodeClass, String[] names) {
+    public static Position[] findPositions(NodeClass<? extends Node> nodeClass, String[] names)
+    {
         Position[] result = new Position[names.length];
-        for (int i = 0; i < names.length; i++) {
+        for (int i = 0; i < names.length; i++)
+        {
             Edges edges = nodeClass.getInputEdges();
-            for (int e = 0; e < edges.getDirectCount(); e++) {
-                if (names[i].equals(edges.getName(e))) {
+            for (int e = 0; e < edges.getDirectCount(); e++)
+            {
+                if (names[i].equals(edges.getName(e)))
+                {
                     result[i] = new Position(edges, e, Node.NOT_ITERABLE);
                 }
             }
-            if (result[i] == null) {
+            if (result[i] == null)
+            {
                 throw new GraalError("unknown field \"%s\" in class %s", names[i], nodeClass);
             }
         }
@@ -55,22 +60,28 @@ public class MatchRuleRegistry {
      * @return the set of {@link MatchStatement}s applicable to theClass.
      */
     @SuppressWarnings("try")
-    public static synchronized EconomicMap<Class<? extends Node>, List<MatchStatement>> lookup(Class<? extends NodeMatchRules> theClass, OptionValues options, DebugContext debug) {
+    public static synchronized EconomicMap<Class<? extends Node>, List<MatchStatement>> lookup(Class<? extends NodeMatchRules> theClass, OptionValues options, DebugContext debug)
+    {
         EconomicMap<Class<? extends Node>, List<MatchStatement>> result = registry.get(theClass);
 
-        if (result == null) {
+        if (result == null)
+        {
             EconomicMap<Class<? extends Node>, List<MatchStatement>> rules = createRules(theClass);
             registry.put(theClass, rules);
             assert registry.get(theClass) == rules;
             result = rules;
 
-            if (LogVerbose.getValue(options)) {
-                try (DebugContext.Scope s = debug.scope("MatchComplexExpressions")) {
+            if (LogVerbose.getValue(options))
+            {
+                try (DebugContext.Scope s = debug.scope("MatchComplexExpressions"))
+                {
                     debug.log("Match rules for %s", theClass.getSimpleName());
                     MapCursor<Class<? extends Node>, List<MatchStatement>> cursor = result.getEntries();
-                    while (cursor.advance()) {
+                    while (cursor.advance())
+                    {
                         debug.log("  For node class: %s", cursor.getKey());
-                        for (MatchStatement statement : cursor.getValue()) {
+                        for (MatchStatement statement : cursor.getValue())
+                        {
                             debug.log("    %s", statement.getPattern());
                         }
                     }
@@ -78,7 +89,8 @@ public class MatchRuleRegistry {
             }
         }
 
-        if (result.size() == 0) {
+        if (result.size() == 0)
+        {
             return null;
         }
         return result;
@@ -89,10 +101,12 @@ public class MatchRuleRegistry {
      * lookup and without the default caching behavior.
      */
     @SuppressWarnings("unchecked")
-    public static EconomicMap<Class<? extends Node>, List<MatchStatement>> createRules(Class<? extends NodeMatchRules> theClass) {
+    public static EconomicMap<Class<? extends Node>, List<MatchStatement>> createRules(Class<? extends NodeMatchRules> theClass)
+    {
         EconomicMap<Class<? extends NodeMatchRules>, MatchStatementSet> matchSets = EconomicMap.create(Equivalence.IDENTITY);
         Iterable<MatchStatementSet> sl = GraalServices.load(MatchStatementSet.class);
-        for (MatchStatementSet rules : sl) {
+        for (MatchStatementSet rules : sl)
+        {
             matchSets.put(rules.forClass(), rules);
         }
 
@@ -100,14 +114,18 @@ public class MatchRuleRegistry {
         // rules are first which gives them preference over earlier rules.
         EconomicMap<Class<? extends Node>, List<MatchStatement>> rules = EconomicMap.create(Equivalence.IDENTITY);
         Class<? extends NodeMatchRules> currentClass = theClass;
-        do {
+        do
+        {
             MatchStatementSet matchSet = matchSets.get(currentClass);
-            if (matchSet != null) {
+            if (matchSet != null)
+            {
                 List<MatchStatement> statements = matchSet.statements();
-                for (MatchStatement statement : statements) {
+                for (MatchStatement statement : statements)
+                {
                     Class<? extends Node> nodeClass = statement.getPattern().nodeClass();
                     List<MatchStatement> current = rules.get(nodeClass);
-                    if (current == null) {
+                    if (current == null)
+                    {
                         current = new ArrayList<>();
                         rules.put(nodeClass, current);
                     }

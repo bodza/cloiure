@@ -21,34 +21,41 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
 @NodeInfo(allowedUsageTypes = Extension, cycles = CYCLES_0, size = SIZE_0)
-public abstract class CallTargetNode extends ValueNode implements LIRLowerable {
+public abstract class CallTargetNode extends ValueNode implements LIRLowerable
+{
     public static final NodeClass<CallTargetNode> TYPE = NodeClass.create(CallTargetNode.class);
 
-    public enum InvokeKind {
+    public enum InvokeKind
+    {
         Interface(false),
         Special(true),
         Static(true),
         Virtual(false);
 
-        InvokeKind(boolean direct) {
+        InvokeKind(boolean direct)
+        {
             this.direct = direct;
         }
 
         private final boolean direct;
 
-        public boolean hasReceiver() {
+        public boolean hasReceiver()
+        {
             return this != Static;
         }
 
-        public boolean isDirect() {
+        public boolean isDirect()
+        {
             return direct;
         }
 
-        public boolean isIndirect() {
+        public boolean isIndirect()
+        {
             return !direct;
         }
 
-        public boolean isInterface() {
+        public boolean isInterface()
+        {
             return this == InvokeKind.Interface;
         }
     }
@@ -58,7 +65,8 @@ public abstract class CallTargetNode extends ValueNode implements LIRLowerable {
     protected InvokeKind invokeKind;
     protected final StampPair returnStamp;
 
-    protected CallTargetNode(NodeClass<? extends CallTargetNode> c, ValueNode[] arguments, ResolvedJavaMethod targetMethod, InvokeKind invokeKind, StampPair returnStamp) {
+    protected CallTargetNode(NodeClass<? extends CallTargetNode> c, ValueNode[] arguments, ResolvedJavaMethod targetMethod, InvokeKind invokeKind, StampPair returnStamp)
+    {
         super(c, StampFactory.forVoid());
         this.targetMethod = targetMethod;
         this.invokeKind = invokeKind;
@@ -66,20 +74,26 @@ public abstract class CallTargetNode extends ValueNode implements LIRLowerable {
         this.returnStamp = returnStamp;
     }
 
-    public NodeInputList<ValueNode> arguments() {
+    public NodeInputList<ValueNode> arguments()
+    {
         return arguments;
     }
 
-    public static Stamp createReturnStamp(Assumptions assumptions, JavaType returnType) {
+    public static Stamp createReturnStamp(Assumptions assumptions, JavaType returnType)
+    {
         JavaKind kind = returnType.getJavaKind();
-        if (kind == JavaKind.Object && returnType instanceof ResolvedJavaType) {
+        if (kind == JavaKind.Object && returnType instanceof ResolvedJavaType)
+        {
             return StampFactory.object(TypeReference.create(assumptions, (ResolvedJavaType) returnType));
-        } else {
+        }
+        else
+        {
             return StampFactory.forKind(kind);
         }
     }
 
-    public StampPair returnStamp() {
+    public StampPair returnStamp()
+    {
         return this.returnStamp;
     }
 
@@ -89,11 +103,13 @@ public abstract class CallTargetNode extends ValueNode implements LIRLowerable {
     public abstract String targetName();
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         // nop
     }
 
-    public void setTargetMethod(ResolvedJavaMethod method) {
+    public void setTargetMethod(ResolvedJavaMethod method)
+    {
         targetMethod = method;
     }
 
@@ -102,15 +118,18 @@ public abstract class CallTargetNode extends ValueNode implements LIRLowerable {
      *
      * @return the target method
      */
-    public ResolvedJavaMethod targetMethod() {
+    public ResolvedJavaMethod targetMethod()
+    {
         return targetMethod;
     }
 
-    public InvokeKind invokeKind() {
+    public InvokeKind invokeKind()
+    {
         return invokeKind;
     }
 
-    public void setInvokeKind(InvokeKind kind) {
+    public void setInvokeKind(InvokeKind kind)
+    {
         this.invokeKind = kind;
     }
 }

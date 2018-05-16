@@ -13,15 +13,17 @@ import org.graalvm.collections.Equivalence;
 /**
  * A set of weak references to {@link ClassLoader}s.
  */
-public final class WeakClassLoaderSet {
-
+public final class WeakClassLoaderSet
+{
     /**
      * Copy-on-write set of loaders.
      */
     private volatile AtomicReference<EconomicSet<Reference<ClassLoader>>> loaders = new AtomicReference<>(EconomicSet.create(RefEquivalence.INSTANCE));
 
-    public WeakClassLoaderSet(ClassLoader... initialEntries) {
-        for (ClassLoader loader : initialEntries) {
+    public WeakClassLoaderSet(ClassLoader... initialEntries)
+    {
+        for (ClassLoader loader : initialEntries)
+        {
             loaders.get().add(new WeakReference<>(loader));
         }
     }
@@ -29,13 +31,17 @@ public final class WeakClassLoaderSet {
     /**
      * Adds {@code loader} to this set.
      */
-    public void add(ClassLoader loader) {
+    public void add(ClassLoader loader)
+    {
         Reference<ClassLoader> addNewRef = new WeakReference<>(loader);
         EconomicSet<Reference<ClassLoader>> currentLoaders = loaders.get();
-        if (!currentLoaders.contains(addNewRef)) {
-            this.loaders.getAndUpdate(new UnaryOperator<EconomicSet<Reference<ClassLoader>>>() {
+        if (!currentLoaders.contains(addNewRef))
+        {
+            this.loaders.getAndUpdate(new UnaryOperator<EconomicSet<Reference<ClassLoader>>>()
+            {
                 @Override
-                public EconomicSet<Reference<ClassLoader>> apply(EconomicSet<Reference<ClassLoader>> t) {
+                public EconomicSet<Reference<ClassLoader>> apply(EconomicSet<Reference<ClassLoader>> t)
+                {
                     EconomicSet<Reference<ClassLoader>> newLoaders = EconomicSet.create(RefEquivalence.INSTANCE, t);
                     newLoaders.add(addNewRef);
                     return newLoaders;
@@ -51,34 +57,43 @@ public final class WeakClassLoaderSet {
      * @param resolutionFailures all resolution failures are returned in this set
      * @return the set of classes successfully resolved
      */
-    public EconomicSet<Class<?>> resolve(String className, EconomicSet<ClassNotFoundException> resolutionFailures) {
+    public EconomicSet<Class<?>> resolve(String className, EconomicSet<ClassNotFoundException> resolutionFailures)
+    {
         EconomicSet<Class<?>> found = EconomicSet.create();
         Iterator<Reference<ClassLoader>> it = loaders.get().iterator();
-        while (it.hasNext()) {
+        while (it.hasNext())
+        {
             Reference<ClassLoader> ref = it.next();
             ClassLoader loader = ref.get();
-            if (loader == null) {
+            if (loader == null)
+            {
                 it.remove();
                 continue;
             }
-            try {
+            try
+            {
                 Class<?> clazz = Class.forName(className, false, loader);
                 found.add(clazz);
-            } catch (ClassNotFoundException ex) {
+            }
+            catch (ClassNotFoundException ex)
+            {
                 resolutionFailures.add(ex);
             }
         }
         return found;
     }
 
-    private static final class RefEquivalence extends Equivalence {
+    private static final class RefEquivalence extends Equivalence
+    {
         static final Equivalence INSTANCE = new RefEquivalence();
 
-        private RefEquivalence() {
+        private RefEquivalence()
+        {
         }
 
         @Override
-        public boolean equals(Object a, Object b) {
+        public boolean equals(Object a, Object b)
+        {
             Reference<?> refA = (Reference<?>) a;
             Reference<?> refB = (Reference<?>) b;
             Object referentA = refA.get();
@@ -87,7 +102,8 @@ public final class WeakClassLoaderSet {
         }
 
         @Override
-        public int hashCode(Object o) {
+        public int hashCode(Object o)
+        {
             Reference<?> ref = (Reference<?>) o;
             Object obj = ref.get();
             return obj == null ? 0 : obj.hashCode();

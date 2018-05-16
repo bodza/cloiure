@@ -16,20 +16,23 @@ import jdk.vm.ci.meta.Value;
  * {@link InstalledCode} instance.
  */
 @Opcode("TAILCALL")
-public final class AMD64TailcallOp extends AMD64LIRInstruction {
+public final class AMD64TailcallOp extends AMD64LIRInstruction
+{
     public static final LIRInstructionClass<AMD64TailcallOp> TYPE = LIRInstructionClass.create(AMD64TailcallOp.class);
 
     @Use protected Value target;
     @Alive protected Value[] parameters;
 
-    public AMD64TailcallOp(Value[] parameters, Value target) {
+    public AMD64TailcallOp(Value[] parameters, Value target)
+    {
         super(TYPE);
         this.target = target;
         this.parameters = parameters;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
         // destroy the current frame (now the return address is the top of stack)
         masm.leave();
 

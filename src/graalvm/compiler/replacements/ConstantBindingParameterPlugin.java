@@ -13,7 +13,8 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 /**
  * A {@link ParameterPlugin} that binds constant values to some parameters.
  */
-public class ConstantBindingParameterPlugin implements ParameterPlugin {
+public class ConstantBindingParameterPlugin implements ParameterPlugin
+{
     private final Object[] constantArgs;
     private final MetaAccessProvider metaAccess;
     private final SnippetReflectionProvider snippetReflection;
@@ -23,31 +24,42 @@ public class ConstantBindingParameterPlugin implements ParameterPlugin {
      * equal to that of a non-null object in {@code constantArgs} (from which the
      * {@link ConstantNode} is created if it isn't already a {@link ConstantNode}).
      */
-    public ConstantBindingParameterPlugin(Object[] constantArgs, MetaAccessProvider metaAccess, SnippetReflectionProvider snippetReflection) {
+    public ConstantBindingParameterPlugin(Object[] constantArgs, MetaAccessProvider metaAccess, SnippetReflectionProvider snippetReflection)
+    {
         this.constantArgs = constantArgs;
         this.metaAccess = metaAccess;
         this.snippetReflection = snippetReflection;
     }
 
     @Override
-    public FloatingNode interceptParameter(GraphBuilderTool b, int index, StampPair stamp) {
+    public FloatingNode interceptParameter(GraphBuilderTool b, int index, StampPair stamp)
+    {
         Object arg = constantArgs[index];
-        if (arg != null) {
+        if (arg != null)
+        {
             ConstantNode constantNode;
-            if (arg instanceof ConstantNode) {
+            if (arg instanceof ConstantNode)
+            {
                 ConstantNode otherCon = (ConstantNode) arg;
-                if (otherCon.graph() != b.getGraph()) {
+                if (otherCon.graph() != b.getGraph())
+                {
                     /*
                      * This is a node from another graph, so copy over extra state into a new
                      * ConstantNode.
                      */
                     constantNode = ConstantNode.forConstant(stamp.getTrustedStamp(), otherCon.getValue(), otherCon.getStableDimension(), otherCon.isDefaultStable(), metaAccess);
-                } else {
+                }
+                else
+                {
                     constantNode = otherCon;
                 }
-            } else if (arg instanceof Constant) {
+            }
+            else if (arg instanceof Constant)
+            {
                 constantNode = ConstantNode.forConstant(stamp.getTrustedStamp(), (Constant) arg, metaAccess);
-            } else {
+            }
+            else
+            {
                 constantNode = ConstantNode.forConstant(snippetReflection.forBoxed(stamp.getTrustedStamp().getStackKind(), arg), metaAccess);
             }
             return constantNode;

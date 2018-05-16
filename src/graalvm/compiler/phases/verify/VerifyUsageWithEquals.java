@@ -27,10 +27,11 @@ import jdk.vm.ci.meta.Signature;
  * checks the correct usage of the given type. Equality checks with == or != (except null checks)
  * results in an {@link AssertionError}.
  */
-public class VerifyUsageWithEquals extends VerifyPhase<PhaseContext> {
-
+public class VerifyUsageWithEquals extends VerifyPhase<PhaseContext>
+{
     @Override
-    public boolean checkContract() {
+    public boolean checkContract()
+    {
         return false;
     }
 
@@ -39,16 +40,20 @@ public class VerifyUsageWithEquals extends VerifyPhase<PhaseContext> {
      */
     private final Class<?> restrictedClass;
 
-    public VerifyUsageWithEquals(Class<?> restrictedClass) {
+    public VerifyUsageWithEquals(Class<?> restrictedClass)
+    {
         this.restrictedClass = restrictedClass;
         assert !restrictedClass.isInterface() || isTrustedInterface(restrictedClass);
     }
 
     private static final Class<?>[] trustedInterfaceTypes = {JavaType.class, JavaField.class, JavaMethod.class};
 
-    private static boolean isTrustedInterface(Class<?> cls) {
-        for (Class<?> trusted : trustedInterfaceTypes) {
-            if (trusted.isAssignableFrom(cls)) {
+    private static boolean isTrustedInterface(Class<?> cls)
+    {
+        for (Class<?> trusted : trustedInterfaceTypes)
+        {
+            if (trusted.isAssignableFrom(cls))
+            {
                 return true;
             }
         }
@@ -58,49 +63,61 @@ public class VerifyUsageWithEquals extends VerifyPhase<PhaseContext> {
     /**
      * Determines whether the type of {@code node} is assignable to the {@link #restrictedClass}.
      */
-    private boolean isAssignableToRestrictedType(ValueNode node, MetaAccessProvider metaAccess) {
-        if (node.stamp(NodeView.DEFAULT) instanceof ObjectStamp) {
+    private boolean isAssignableToRestrictedType(ValueNode node, MetaAccessProvider metaAccess)
+    {
+        if (node.stamp(NodeView.DEFAULT) instanceof ObjectStamp)
+        {
             ResolvedJavaType restrictedType = metaAccess.lookupJavaType(restrictedClass);
             ResolvedJavaType nodeType = StampTool.typeOrNull(node);
-            if (nodeType == null && node instanceof LoadFieldNode) {
+            if (nodeType == null && node instanceof LoadFieldNode)
+            {
                 nodeType = (ResolvedJavaType) ((LoadFieldNode) node).field().getType();
             }
-            if (nodeType == null && node instanceof Invoke) {
+            if (nodeType == null && node instanceof Invoke)
+            {
                 ResolvedJavaMethod target = ((Invoke) node).callTarget().targetMethod();
                 nodeType = (ResolvedJavaType) target.getSignature().getReturnType(target.getDeclaringClass());
             }
-            if (nodeType == null && node instanceof UncheckedInterfaceProvider) {
+            if (nodeType == null && node instanceof UncheckedInterfaceProvider)
+            {
                 nodeType = StampTool.typeOrNull(((UncheckedInterfaceProvider) node).uncheckedStamp());
             }
 
-            if (nodeType != null && restrictedType.isAssignableFrom(nodeType)) {
+            if (nodeType != null && restrictedType.isAssignableFrom(nodeType))
+            {
                 return true;
             }
         }
         return false;
     }
 
-    private static boolean isNullConstant(ValueNode node) {
+    private static boolean isNullConstant(ValueNode node)
+    {
         return node.isConstant() && node.isNullConstant();
     }
 
-    private static boolean isEqualsMethod(ResolvedJavaMethod method) {
-        if (method.getName().equals("equals")) {
+    private static boolean isEqualsMethod(ResolvedJavaMethod method)
+    {
+        if (method.getName().equals("equals"))
+        {
             Signature sig = method.getSignature();
-            if (sig.getReturnKind() == JavaKind.Boolean) {
-                if (sig.getParameterCount(false) == 1) {
+            if (sig.getReturnKind() == JavaKind.Boolean)
+            {
+                if (sig.getParameterCount(false) == 1)
+                {
                     ResolvedJavaType ptype = (ResolvedJavaType) sig.getParameterType(0, method.getDeclaringClass());
-                    if (ptype.isJavaLangObject()) {
+                    if (ptype.isJavaLangObject())
+                    {
                         return true;
                     }
-
                 }
             }
         }
         return false;
     }
 
-    private static boolean isThisParameter(ValueNode node) {
+    private static boolean isThisParameter(ValueNode node)
+    {
         return node instanceof ParameterNode && ((ParameterNode) node).index() == 0;
     }
 
@@ -108,9 +125,12 @@ public class VerifyUsageWithEquals extends VerifyPhase<PhaseContext> {
      * Checks whether the type of {@code x} is assignable to the restricted type and that {@code y}
      * is not a null constant.
      */
-    private boolean isIllegalUsage(ResolvedJavaMethod method, ValueNode x, ValueNode y, MetaAccessProvider metaAccess) {
-        if (isAssignableToRestrictedType(x, metaAccess) && !isNullConstant(y)) {
-            if (isEqualsMethod(method) && isThisParameter(x) || isThisParameter(y)) {
+    private boolean isIllegalUsage(ResolvedJavaMethod method, ValueNode x, ValueNode y, MetaAccessProvider metaAccess)
+    {
+        if (isAssignableToRestrictedType(x, metaAccess) && !isNullConstant(y))
+        {
+            if (isEqualsMethod(method) && isThisParameter(x) || isThisParameter(y))
+            {
                 return false;
             }
             return true;
@@ -119,17 +139,21 @@ public class VerifyUsageWithEquals extends VerifyPhase<PhaseContext> {
     }
 
     @Override
-    protected boolean verify(StructuredGraph graph, PhaseContext context) {
-        for (ObjectEqualsNode cn : graph.getNodes().filter(ObjectEqualsNode.class)) {
+    protected boolean verify(StructuredGraph graph, PhaseContext context)
+    {
+        for (ObjectEqualsNode cn : graph.getNodes().filter(ObjectEqualsNode.class))
+        {
             // bail out if we compare an object of type klass with == or != (except null checks)
             ResolvedJavaMethod method = graph.method();
             ResolvedJavaType restrictedType = context.getMetaAccess().lookupJavaType(restrictedClass);
 
-            if (method.getDeclaringClass().equals(restrictedType)) {
+            if (method.getDeclaringClass().equals(restrictedType))
+            {
                 // Allow violation in methods of the restricted type itself.
-            } else if (isIllegalUsage(method, cn.getX(), cn.getY(), context.getMetaAccess()) || isIllegalUsage(method, cn.getY(), cn.getX(), context.getMetaAccess())) {
-                throw new VerificationError("Verification of " + restrictedClass.getName() + " usage failed: Comparing " + cn.getX() + " and " + cn.getY() + " in " + method +
-                                " must use .equals() for object equality, not '==' or '!='");
+            }
+            else if (isIllegalUsage(method, cn.getX(), cn.getY(), context.getMetaAccess()) || isIllegalUsage(method, cn.getY(), cn.getX(), context.getMetaAccess()))
+            {
+                throw new VerificationError("Verification of " + restrictedClass.getName() + " usage failed: Comparing " + cn.getX() + " and " + cn.getY() + " in " + method + " must use .equals() for object equality, not '==' or '!='");
             }
         }
         return true;

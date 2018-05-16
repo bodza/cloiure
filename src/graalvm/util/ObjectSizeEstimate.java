@@ -17,8 +17,8 @@ import org.graalvm.collections.Equivalence;
  * number of bytes occupied. The real number of bytes occupied may vary due to different alignment
  * or different header sizes on different virtual machines.
  */
-public final class ObjectSizeEstimate {
-
+public final class ObjectSizeEstimate
+{
     private static final int UNCOMPRESSED_POINTER_SIZE = 8;
     private static final int UNCOMPRESSED_HEADER_SIZE = 16;
     private static final int COMPRESSED_POINTER_SIZE = 4;
@@ -29,7 +29,8 @@ public final class ObjectSizeEstimate {
      *
      * @param root the starting point of the object graph traversal
      */
-    public static ObjectSizeEstimate forObject(Object root) {
+    public static ObjectSizeEstimate forObject(Object root)
+    {
         return forObject(root, Integer.MAX_VALUE);
     }
 
@@ -39,7 +40,8 @@ public final class ObjectSizeEstimate {
      * @param root the starting point of the object graph traversal
      * @param maxDepth the maximum depth of the traversal
      */
-    public static ObjectSizeEstimate forObject(Object root, int maxDepth) {
+    public static ObjectSizeEstimate forObject(Object root, int maxDepth)
+    {
         return forObjectHelper(root, maxDepth);
     }
 
@@ -47,10 +49,12 @@ public final class ObjectSizeEstimate {
     private int pointerCount;
     private int primitiveByteSize;
 
-    private ObjectSizeEstimate() {
+    private ObjectSizeEstimate()
+    {
     }
 
-    public ObjectSizeEstimate add(ObjectSizeEstimate other) {
+    public ObjectSizeEstimate add(ObjectSizeEstimate other)
+    {
         ObjectSizeEstimate result = new ObjectSizeEstimate();
         result.headerCount = headerCount + other.headerCount;
         result.primitiveByteSize = primitiveByteSize + other.primitiveByteSize;
@@ -58,7 +62,8 @@ public final class ObjectSizeEstimate {
         return result;
     }
 
-    public ObjectSizeEstimate subtract(ObjectSizeEstimate other) {
+    public ObjectSizeEstimate subtract(ObjectSizeEstimate other)
+    {
         ObjectSizeEstimate result = new ObjectSizeEstimate();
         result.headerCount = headerCount - other.headerCount;
         result.primitiveByteSize = primitiveByteSize - other.primitiveByteSize;
@@ -66,45 +71,54 @@ public final class ObjectSizeEstimate {
         return result;
     }
 
-    public int getHeaderCount() {
+    public int getHeaderCount()
+    {
         return headerCount;
     }
 
-    public int getPointerCount() {
+    public int getPointerCount()
+    {
         return pointerCount;
     }
 
-    public int getPrimitiveByteSize() {
+    public int getPrimitiveByteSize()
+    {
         return primitiveByteSize;
     }
 
     @Override
-    public String toString() {
-        return String.format("(#headers=%s, #pointers=%s, #primitiveBytes=%s, totalCompressed=%s, totalNonCompressed=%s)", headerCount, pointerCount, primitiveByteSize,
-                        getCompressedTotalBytes(), getTotalBytes());
+    public String toString()
+    {
+        return String.format("(#headers=%s, #pointers=%s, #primitiveBytes=%s, totalCompressed=%s, totalNonCompressed=%s)", headerCount, pointerCount, primitiveByteSize, getCompressedTotalBytes(), getTotalBytes());
     }
 
-    public int getCompressedTotalBytes() {
+    public int getCompressedTotalBytes()
+    {
         return headerCount * COMPRESSED_HEADER_SIZE + pointerCount * COMPRESSED_POINTER_SIZE + primitiveByteSize;
     }
 
-    public int getTotalBytes() {
+    public int getTotalBytes()
+    {
         return headerCount * UNCOMPRESSED_HEADER_SIZE + pointerCount * UNCOMPRESSED_POINTER_SIZE + primitiveByteSize;
     }
 
-    private void recordHeader() {
+    private void recordHeader()
+    {
         headerCount++;
     }
 
-    private void recordPointer() {
+    private void recordPointer()
+    {
         pointerCount++;
     }
 
-    private void recordPrimitiveBytes(int size) {
+    private void recordPrimitiveBytes(int size)
+    {
         primitiveByteSize += size;
     }
 
-    private static ObjectSizeEstimate forObjectHelper(Object object, int maxDepth) {
+    private static ObjectSizeEstimate forObjectHelper(Object object, int maxDepth)
+    {
         EconomicMap<Object, Object> identityHashMap = EconomicMap.create(Equivalence.IDENTITY_WITH_SYSTEM_HASHCODE);
         ObjectSizeEstimate size = new ObjectSizeEstimate();
 
@@ -114,34 +128,56 @@ public final class ObjectSizeEstimate {
         depthStack.add(0);
         identityHashMap.put(object, object);
 
-        while (!stack.isEmpty()) {
+        while (!stack.isEmpty())
+        {
             Object o = stack.remove(stack.size() - 1);
             int depth = depthStack.remove(depthStack.size() - 1);
             size.recordHeader();
             Class<?> c = o.getClass();
-            if (c.isArray()) {
+            if (c.isArray())
+            {
                 size.recordPrimitiveBytes(Integer.BYTES);
-                if (o instanceof byte[]) {
+                if (o instanceof byte[])
+                {
                     size.recordPrimitiveBytes(Byte.BYTES * ((byte[]) o).length);
-                } else if (o instanceof boolean[]) {
+                }
+                else if (o instanceof boolean[])
+                {
                     size.recordPrimitiveBytes(Byte.BYTES * ((boolean[]) o).length);
-                } else if (o instanceof char[]) {
+                }
+                else if (o instanceof char[])
+                {
                     size.recordPrimitiveBytes(Character.BYTES * ((char[]) o).length);
-                } else if (o instanceof short[]) {
+                }
+                else if (o instanceof short[])
+                {
                     size.recordPrimitiveBytes(Short.BYTES * ((short[]) o).length);
-                } else if (o instanceof int[]) {
+                }
+                else if (o instanceof int[])
+                {
                     size.recordPrimitiveBytes(Integer.BYTES * ((int[]) o).length);
-                } else if (o instanceof long[]) {
+                }
+                else if (o instanceof long[])
+                {
                     size.recordPrimitiveBytes(Long.BYTES * ((long[]) o).length);
-                } else if (o instanceof float[]) {
+                }
+                else if (o instanceof float[])
+                {
                     size.recordPrimitiveBytes(Float.BYTES * ((float[]) o).length);
-                } else if (o instanceof double[]) {
+                }
+                else if (o instanceof double[])
+                {
                     size.recordPrimitiveBytes(Byte.BYTES * ((double[]) o).length);
-                } else {
-                    for (Object element : (Object[]) o) {
+                }
+                else
+                {
+                    for (Object element : (Object[]) o)
+                    {
                         size.recordPointer();
-                        if (element != null) {
-                            if (depth < maxDepth && !identityHashMap.containsKey(element)) {
+                        if (element != null)
+                        {
+                            if (depth < maxDepth && !identityHashMap.containsKey(element))
+                            {
                                 identityHashMap.put(element, null);
                                 stack.add(element);
                                 depthStack.add(depth + 1);
@@ -149,49 +185,82 @@ public final class ObjectSizeEstimate {
                         }
                     }
                 }
-            } else {
-                while (c != null) {
+            }
+            else
+            {
+                while (c != null)
+                {
                     Field[] fields = c.getDeclaredFields();
-                    for (Field f : fields) {
-                        if (!Modifier.isStatic(f.getModifiers())) {
+                    for (Field f : fields)
+                    {
+                        if (!Modifier.isStatic(f.getModifiers()))
+                        {
                             Class<?> type = f.getType();
-                            if (type == Byte.TYPE) {
+                            if (type == Byte.TYPE)
+                            {
                                 size.recordPrimitiveBytes(Byte.BYTES);
-                            } else if (type == Boolean.TYPE) {
+                            }
+                            else if (type == Boolean.TYPE)
+                            {
                                 size.recordPrimitiveBytes(Byte.BYTES);
-                            } else if (type == Character.TYPE) {
+                            }
+                            else if (type == Character.TYPE)
+                            {
                                 size.recordPrimitiveBytes(Character.BYTES);
-                            } else if (type == Short.TYPE) {
+                            }
+                            else if (type == Short.TYPE)
+                            {
                                 size.recordPrimitiveBytes(Short.BYTES);
-                            } else if (type == Integer.TYPE) {
+                            }
+                            else if (type == Integer.TYPE)
+                            {
                                 size.recordPrimitiveBytes(Integer.BYTES);
-                            } else if (type == Long.TYPE) {
+                            }
+                            else if (type == Long.TYPE)
+                            {
                                 size.recordPrimitiveBytes(Long.BYTES);
-                            } else if (type == Float.TYPE) {
+                            }
+                            else if (type == Float.TYPE)
+                            {
                                 size.recordPrimitiveBytes(Float.BYTES);
-                            } else if (type == Double.TYPE) {
+                            }
+                            else if (type == Double.TYPE)
+                            {
                                 size.recordPrimitiveBytes(Double.BYTES);
-                            } else {
+                            }
+                            else
+                            {
                                 size.recordPointer();
-                                if (maxDepth > 1) {
-                                    try {
+                                if (maxDepth > 1)
+                                {
+                                    try
+                                    {
                                         f.setAccessible(true);
                                         Object inner = f.get(o);
-                                        if (inner != null) {
-                                            if (depth < maxDepth && !identityHashMap.containsKey(inner)) {
+                                        if (inner != null)
+                                        {
+                                            if (depth < maxDepth && !identityHashMap.containsKey(inner))
+                                            {
                                                 identityHashMap.put(inner, null);
                                                 stack.add(inner);
                                                 depthStack.add(depth + 1);
                                             }
                                         }
-                                    } catch (IllegalArgumentException | IllegalAccessException e) {
+                                    }
+                                    catch (IllegalArgumentException | IllegalAccessException e)
+                                    {
                                         throw new UnsupportedOperationException("Must have access privileges to traverse object graph");
-                                    } catch (RuntimeException e) {
-                                        if ("java.lang.reflect.InaccessibleObjectException".equals(e.getClass().getName())) {
+                                    }
+                                    catch (RuntimeException e)
+                                    {
+                                        if ("java.lang.reflect.InaccessibleObjectException".equals(e.getClass().getName()))
+                                        {
                                             // This is a newly introduced exception in JDK9 and thus
                                             // cannot be declared in the catch clause.
                                             throw new UnsupportedOperationException("Target class is not exported to the current module.", e);
-                                        } else {
+                                        }
+                                        else
+                                        {
                                             throw e;
                                         }
                                     }
@@ -206,21 +275,27 @@ public final class ObjectSizeEstimate {
         return size;
     }
 
-    public static ObjectSizeEstimate zero() {
+    public static ObjectSizeEstimate zero()
+    {
         return new ObjectSizeEstimate();
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         final int prime = 31;
         return headerCount + prime * (pointerCount + prime * primitiveByteSize);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
             return true;
-        } else if (obj instanceof ObjectSizeEstimate) {
+        }
+        else if (obj instanceof ObjectSizeEstimate)
+        {
             ObjectSizeEstimate other = (ObjectSizeEstimate) obj;
             return headerCount == other.headerCount && pointerCount == other.pointerCount && primitiveByteSize == other.primitiveByteSize;
         }

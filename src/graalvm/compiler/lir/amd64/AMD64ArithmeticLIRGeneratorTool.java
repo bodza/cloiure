@@ -9,13 +9,14 @@ import jdk.vm.ci.meta.Value;
 /**
  * This interface can be used to generate AMD64 LIR for arithmetic operations.
  */
-public interface AMD64ArithmeticLIRGeneratorTool extends ArithmeticLIRGeneratorTool {
-
+public interface AMD64ArithmeticLIRGeneratorTool extends ArithmeticLIRGeneratorTool
+{
     Value emitCountLeadingZeros(Value value);
 
     Value emitCountTrailingZeros(Value value);
 
-    enum RoundingMode {
+    enum RoundingMode
+    {
         NEAREST(0),
         DOWN(1),
         UP(2),
@@ -23,7 +24,8 @@ public interface AMD64ArithmeticLIRGeneratorTool extends ArithmeticLIRGeneratorT
 
         public final int encoding;
 
-        RoundingMode(int encoding) {
+        RoundingMode(int encoding)
+        {
             this.encoding = encoding;
         }
     }

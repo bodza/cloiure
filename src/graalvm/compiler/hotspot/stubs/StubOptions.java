@@ -10,8 +10,8 @@ import graalvm.compiler.options.OptionKey;
  * Note: This must be a top level class to work around for
  * <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=477597">Eclipse bug 477597</a>.
  */
-public class StubOptions {
-    // @formatter:off
+public class StubOptions
+{
     @Option(help = "Trace execution of stub used to handle an exception thrown by a callee.", type = OptionType.Debug)
     static final OptionKey<Boolean> TraceExceptionHandlerStub = new OptionKey<>(false);
 
@@ -26,5 +26,4 @@ public class StubOptions {
 
     @Option(help = "Force non-array object allocation to always use the slow path.", type = OptionType.Debug)
     static final OptionKey<Boolean> ForceUseOfNewInstanceStub = new OptionKey<>(false);
-    //@formatter:on
 }

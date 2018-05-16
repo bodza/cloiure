@@ -6,5 +6,6 @@ package graalvm.compiler.graph;
  * structures {@link Graph}) so only node types for which fast iteration provides a compilation
  * performance benefit should implement this interface.
  */
-public interface IterableNodeType {
+public interface IterableNodeType
+{
 }

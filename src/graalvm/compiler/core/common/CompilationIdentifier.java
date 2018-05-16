@@ -6,9 +6,10 @@ import jdk.vm.ci.code.CompilationRequest;
  * A unique identifier for a compilation. Compiled code can be mapped to a single compilation id.
  * The reverse is not true since the compiler might bailout in which case no code is installed.
  */
-public interface CompilationIdentifier {
-
-    enum Verbosity {
+public interface CompilationIdentifier
+{
+    enum Verbosity
+    {
         /**
          * Only the unique identifier of the compilation.
          */
@@ -23,23 +24,25 @@ public interface CompilationIdentifier {
         DETAILED
     }
 
-    CompilationRequestIdentifier INVALID_COMPILATION_ID = new CompilationRequestIdentifier() {
-
+    CompilationRequestIdentifier INVALID_COMPILATION_ID = new CompilationRequestIdentifier()
+    {
         @Override
-        public String toString() {
+        public String toString()
+        {
             return toString(Verbosity.DETAILED);
         }
 
         @Override
-        public String toString(Verbosity verbosity) {
+        public String toString(Verbosity verbosity)
+        {
             return "InvalidCompilationID";
         }
 
         @Override
-        public CompilationRequest getRequest() {
+        public CompilationRequest getRequest()
+        {
             return null;
         }
-
     };
 
     /**

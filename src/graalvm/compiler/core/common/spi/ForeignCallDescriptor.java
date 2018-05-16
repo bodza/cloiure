@@ -16,13 +16,14 @@ import java.util.Arrays;
  * linking Java calls at arbitrary bytecodes.</li>
  * </ul>
  */
-public class ForeignCallDescriptor {
-
+public class ForeignCallDescriptor
+{
     private final String name;
     private final Class<?> resultType;
     private final Class<?>[] argumentTypes;
 
-    public ForeignCallDescriptor(String name, Class<?> resultType, Class<?>... argumentTypes) {
+    public ForeignCallDescriptor(String name, Class<?> resultType, Class<?>... argumentTypes)
+    {
         this.name = name;
         this.resultType = resultType;
         this.argumentTypes = argumentTypes;
@@ -31,32 +32,38 @@ public class ForeignCallDescriptor {
     /**
      * Gets the name of this foreign call.
      */
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
     /**
      * Gets the return type of this foreign call.
      */
-    public Class<?> getResultType() {
+    public Class<?> getResultType()
+    {
         return resultType;
     }
 
     /**
      * Gets the argument types of this foreign call.
      */
-    public Class<?>[] getArgumentTypes() {
+    public Class<?>[] getArgumentTypes()
+    {
         return argumentTypes.clone();
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return name.hashCode();
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof ForeignCallDescriptor) {
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof ForeignCallDescriptor)
+        {
             ForeignCallDescriptor other = (ForeignCallDescriptor) obj;
             return other.name.equals(name) && other.resultType.equals(resultType) && Arrays.equals(other.argumentTypes, argumentTypes);
         }
@@ -64,10 +71,12 @@ public class ForeignCallDescriptor {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         StringBuilder sb = new StringBuilder(name).append('(');
         String sep = "";
-        for (Class<?> arg : argumentTypes) {
+        for (Class<?> arg : argumentTypes)
+        {
             sb.append(sep).append(arg.getSimpleName());
             sep = ",";
         }

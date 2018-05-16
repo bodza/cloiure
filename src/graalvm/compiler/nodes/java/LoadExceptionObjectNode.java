@@ -11,16 +11,18 @@ import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
 
 @NodeInfo(cycles = CYCLES_8, size = SIZE_8)
-public final class LoadExceptionObjectNode extends AbstractStateSplit implements Lowerable {
-
+public final class LoadExceptionObjectNode extends AbstractStateSplit implements Lowerable
+{
     public static final NodeClass<LoadExceptionObjectNode> TYPE = NodeClass.create(LoadExceptionObjectNode.class);
 
-    public LoadExceptionObjectNode(Stamp stamp) {
+    public LoadExceptionObjectNode(Stamp stamp)
+    {
         super(TYPE, stamp);
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 }

@@ -14,36 +14,45 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.nodes.spi.ValueProxy;
 
 @NodeInfo(cycles = CYCLES_0, size = SIZE_0)
-public class FixedValueAnchorNode extends FixedWithNextNode implements LIRLowerable, ValueProxy, GuardingNode {
+public class FixedValueAnchorNode extends FixedWithNextNode implements LIRLowerable, ValueProxy, GuardingNode
+{
     public static final NodeClass<FixedValueAnchorNode> TYPE = NodeClass.create(FixedValueAnchorNode.class);
 
     @Input ValueNode object;
     private Stamp predefinedStamp;
 
-    public ValueNode object() {
+    public ValueNode object()
+    {
         return object;
     }
 
-    protected FixedValueAnchorNode(NodeClass<? extends FixedValueAnchorNode> c, ValueNode object) {
+    protected FixedValueAnchorNode(NodeClass<? extends FixedValueAnchorNode> c, ValueNode object)
+    {
         super(c, object.stamp(NodeView.DEFAULT));
         this.object = object;
     }
 
-    public FixedValueAnchorNode(ValueNode object) {
+    public FixedValueAnchorNode(ValueNode object)
+    {
         this(TYPE, object);
     }
 
-    public FixedValueAnchorNode(ValueNode object, Stamp predefinedStamp) {
+    public FixedValueAnchorNode(ValueNode object, Stamp predefinedStamp)
+    {
         super(TYPE, predefinedStamp);
         this.object = object;
         this.predefinedStamp = predefinedStamp;
     }
 
     @Override
-    public boolean inferStamp() {
-        if (predefinedStamp == null) {
+    public boolean inferStamp()
+    {
+        if (predefinedStamp == null)
+        {
             return updateStamp(object.stamp(NodeView.DEFAULT));
-        } else {
+        }
+        else
+        {
             return false;
         }
     }
@@ -52,18 +61,20 @@ public class FixedValueAnchorNode extends FixedWithNextNode implements LIRLowera
     public static native Object getObject(Object object);
 
     @Override
-    public void generate(NodeLIRBuilderTool generator) {
+    public void generate(NodeLIRBuilderTool generator)
+    {
         generator.setResult(this, generator.operand(object));
     }
 
     @Override
-    public ValueNode getOriginalNode() {
+    public ValueNode getOriginalNode()
+    {
         return object;
     }
 
     @Override
-    public GuardingNode getGuard() {
+    public GuardingNode getGuard()
+    {
         return this;
     }
-
 }

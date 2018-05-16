@@ -18,39 +18,48 @@ import jdk.vm.ci.meta.AllocatableValue;
 /**
  * Manages the selection of allocation strategies.
  */
-public final class TraceRegisterAllocationPolicy {
-
-    protected abstract class AllocationStrategy {
+public final class TraceRegisterAllocationPolicy
+{
+    protected abstract class AllocationStrategy
+    {
         TraceAllocationPhase<TraceAllocationContext> allocator;
 
-        public final TraceAllocationPhase<TraceAllocationContext> getAllocator() {
-            if (allocator == null) {
+        public final TraceAllocationPhase<TraceAllocationContext> getAllocator()
+        {
+            if (allocator == null)
+            {
                 allocator = initAllocator(target, lirGenRes, spillMoveFactory, registerAllocationConfig, cachedStackSlots, resultTraces, neverSpillConstants, livenessInfo, strategies);
             }
             return allocator;
         }
 
-        protected final LIR getLIR() {
+        protected final LIR getLIR()
+        {
             return lirGenRes.getLIR();
         }
 
-        protected final LIRGenerationResult getLIRGenerationResult() {
+        protected final LIRGenerationResult getLIRGenerationResult()
+        {
             return lirGenRes;
         }
 
-        protected final TraceBuilderResult getTraceBuilderResult() {
+        protected final TraceBuilderResult getTraceBuilderResult()
+        {
             return resultTraces;
         }
 
-        protected final GlobalLivenessInfo getGlobalLivenessInfo() {
+        protected final GlobalLivenessInfo getGlobalLivenessInfo()
+        {
             return livenessInfo;
         }
 
-        protected final RegisterAllocationConfig getRegisterAllocationConfig() {
+        protected final RegisterAllocationConfig getRegisterAllocationConfig()
+        {
             return registerAllocationConfig;
         }
 
-        protected final TargetDescription getTarget() {
+        protected final TargetDescription getTarget()
+        {
             return target;
         }
 
@@ -63,9 +72,7 @@ public final class TraceRegisterAllocationPolicy {
         public abstract boolean shouldApplyTo(Trace trace);
 
         @SuppressWarnings("hiding")
-        protected abstract TraceAllocationPhase<TraceAllocationContext> initAllocator(TargetDescription target, LIRGenerationResult lirGenRes, MoveFactory spillMoveFactory,
-                        RegisterAllocationConfig registerAllocationConfig, AllocatableValue[] cachedStackSlots, TraceBuilderResult resultTraces, boolean neverSpillConstant,
-                        GlobalLivenessInfo livenessInfo, ArrayList<AllocationStrategy> strategies);
+        protected abstract TraceAllocationPhase<TraceAllocationContext> initAllocator(TargetDescription target, LIRGenerationResult lirGenRes, MoveFactory spillMoveFactory, RegisterAllocationConfig registerAllocationConfig, AllocatableValue[] cachedStackSlots, TraceBuilderResult resultTraces, boolean neverSpillConstant, GlobalLivenessInfo livenessInfo, ArrayList<AllocationStrategy> strategies);
     }
 
     private final TargetDescription target;
@@ -79,8 +86,8 @@ public final class TraceRegisterAllocationPolicy {
 
     private final ArrayList<AllocationStrategy> strategies;
 
-    public TraceRegisterAllocationPolicy(TargetDescription target, LIRGenerationResult lirGenRes, MoveFactory spillMoveFactory, RegisterAllocationConfig registerAllocationConfig,
-                    AllocatableValue[] cachedStackSlots, TraceBuilderResult resultTraces, boolean neverSpillConstant, GlobalLivenessInfo livenessInfo) {
+    public TraceRegisterAllocationPolicy(TargetDescription target, LIRGenerationResult lirGenRes, MoveFactory spillMoveFactory, RegisterAllocationConfig registerAllocationConfig, AllocatableValue[] cachedStackSlots, TraceBuilderResult resultTraces, boolean neverSpillConstant, GlobalLivenessInfo livenessInfo)
+    {
         this.target = target;
         this.lirGenRes = lirGenRes;
         this.spillMoveFactory = spillMoveFactory;
@@ -93,21 +100,25 @@ public final class TraceRegisterAllocationPolicy {
         this.strategies = new ArrayList<>(3);
     }
 
-    protected OptionValues getOptions() {
+    protected OptionValues getOptions()
+    {
         return lirGenRes.getLIR().getOptions();
     }
 
-    public void appendStrategy(AllocationStrategy strategy) {
+    public void appendStrategy(AllocationStrategy strategy)
+    {
         strategies.add(strategy);
     }
 
-    public TraceAllocationPhase<TraceAllocationContext> selectStrategy(Trace trace) {
-        for (AllocationStrategy strategy : strategies) {
-            if (strategy.shouldApplyTo(trace)) {
+    public TraceAllocationPhase<TraceAllocationContext> selectStrategy(Trace trace)
+    {
+        for (AllocationStrategy strategy : strategies)
+        {
+            if (strategy.shouldApplyTo(trace))
+            {
                 return strategy.getAllocator();
             }
         }
         throw JVMCIError.shouldNotReachHere("No Allocation Strategy found!");
     }
-
 }

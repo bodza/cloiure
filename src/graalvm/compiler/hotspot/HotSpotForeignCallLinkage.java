@@ -10,14 +10,15 @@ import org.graalvm.word.LocationIdentity;
 /**
  * The details required to link a HotSpot runtime or stub call.
  */
-public interface HotSpotForeignCallLinkage extends ForeignCallLinkage, InvokeTarget {
-
+public interface HotSpotForeignCallLinkage extends ForeignCallLinkage, InvokeTarget
+{
     /**
      * Constants for specifying whether a foreign call destroys or preserves registers. A foreign
      * call will always destroy {@link HotSpotForeignCallLinkage#getOutgoingCallingConvention() its}
      * {@linkplain ForeignCallLinkage#getTemporaries() temporary} registers.
      */
-    enum RegisterEffect {
+    enum RegisterEffect
+    {
         DESTROYS_REGISTERS,
         PRESERVES_REGISTERS
     }
@@ -27,7 +28,8 @@ public interface HotSpotForeignCallLinkage extends ForeignCallLinkage, InvokeTar
      * {@code JavaFrameAnchor} prologue and epilogue is required around the call. A leaf function
      * does not lock, GC or throw exceptions.
      */
-    enum Transition {
+    enum Transition
+    {
         /**
          * A call to a leaf function that is guaranteed to not use floating point registers and will
          * never have its caller stack inspected by the VM. That is, {@code JavaFrameAnchor}

@@ -12,23 +12,26 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import jdk.vm.ci.meta.TriState;
 
 @NodeInfo
-public abstract class BinaryOpLogicNode extends LogicNode implements LIRLowerable, Canonicalizable.Binary<ValueNode> {
-
+public abstract class BinaryOpLogicNode extends LogicNode implements LIRLowerable, Canonicalizable.Binary<ValueNode>
+{
     public static final NodeClass<BinaryOpLogicNode> TYPE = NodeClass.create(BinaryOpLogicNode.class);
     @Input protected ValueNode x;
     @Input protected ValueNode y;
 
     @Override
-    public ValueNode getX() {
+    public ValueNode getX()
+    {
         return x;
     }
 
     @Override
-    public ValueNode getY() {
+    public ValueNode getY()
+    {
         return y;
     }
 
-    public BinaryOpLogicNode(NodeClass<? extends BinaryOpLogicNode> c, ValueNode x, ValueNode y) {
+    public BinaryOpLogicNode(NodeClass<? extends BinaryOpLogicNode> c, ValueNode x, ValueNode y)
+    {
         super(c);
         assert x != null && y != null;
         this.x = x;
@@ -36,12 +39,14 @@ public abstract class BinaryOpLogicNode extends LogicNode implements LIRLowerabl
     }
 
     @Override
-    public boolean verify() {
+    public boolean verify()
+    {
         return super.verify();
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
     }
 
     /**
@@ -52,16 +57,20 @@ public abstract class BinaryOpLogicNode extends LogicNode implements LIRLowerabl
      * @return the original node or another node with the same inputs, ignoring ordering.
      */
     @SuppressWarnings("deprecation")
-    public LogicNode maybeCommuteInputs() {
+    public LogicNode maybeCommuteInputs()
+    {
         assert this instanceof BinaryCommutative;
-        if (!y.isConstant() && (x.isConstant() || x.getId() > y.getId())) {
+        if (!y.isConstant() && (x.isConstant() || x.getId() > y.getId()))
+        {
             ValueNode tmp = x;
             x = y;
             y = tmp;
-            if (graph() != null) {
+            if (graph() != null)
+            {
                 // See if this node already exists
                 LogicNode duplicate = graph().findDuplicate(this);
-                if (duplicate != null) {
+                if (duplicate != null)
+                {
                     return duplicate;
                 }
             }

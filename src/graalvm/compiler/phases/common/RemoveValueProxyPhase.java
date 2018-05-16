@@ -7,18 +7,23 @@ import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.util.GraphUtil;
 import graalvm.compiler.phases.Phase;
 
-public class RemoveValueProxyPhase extends Phase {
-
+public class RemoveValueProxyPhase extends Phase
+{
     @Override
-    protected void run(StructuredGraph graph) {
-        for (LoopExitNode exit : graph.getNodes(LoopExitNode.TYPE)) {
-            for (ProxyNode vpn : exit.proxies().snapshot()) {
+    protected void run(StructuredGraph graph)
+    {
+        for (LoopExitNode exit : graph.getNodes(LoopExitNode.TYPE))
+        {
+            for (ProxyNode vpn : exit.proxies().snapshot())
+            {
                 vpn.replaceAtUsagesAndDelete(vpn.value());
             }
             FrameState stateAfter = exit.stateAfter();
-            if (stateAfter != null) {
+            if (stateAfter != null)
+            {
                 exit.setStateAfter(null);
-                if (stateAfter.hasNoUsages()) {
+                if (stateAfter.hasNoUsages())
+                {
                     GraphUtil.killWithUnusedFloatingInputs(stateAfter);
                 }
             }

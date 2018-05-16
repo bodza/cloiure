@@ -27,8 +27,8 @@ import jdk.vm.ci.meta.DeoptimizationAction;
 import jdk.vm.ci.meta.DeoptimizationReason;
 import jdk.vm.ci.meta.JavaConstant;
 
-public class CountedLoopInfo {
-
+public class CountedLoopInfo
+{
     private final LoopEx loop;
     private InductionVariable iv;
     private ValueNode end;
@@ -36,7 +36,8 @@ public class CountedLoopInfo {
     private AbstractBeginNode body;
     private IfNode ifNode;
 
-    CountedLoopInfo(LoopEx loop, InductionVariable iv, IfNode ifNode, ValueNode end, boolean oneOff, AbstractBeginNode body) {
+    CountedLoopInfo(LoopEx loop, InductionVariable iv, IfNode ifNode, ValueNode end, boolean oneOff, AbstractBeginNode body)
+    {
         this.loop = loop;
         this.iv = iv;
         this.end = end;
@@ -54,7 +55,8 @@ public class CountedLoopInfo {
      *
      * THIS VALUE SHOULD BE TREATED AS UNSIGNED.
      */
-    public ValueNode maxTripCountNode() {
+    public ValueNode maxTripCountNode()
+    {
         return maxTripCountNode(false);
     }
 
@@ -69,7 +71,8 @@ public class CountedLoopInfo {
      *
      * @param assumePositive if true the check that the loop is entered at all will be omitted.
      */
-    public ValueNode maxTripCountNode(boolean assumePositive) {
+    public ValueNode maxTripCountNode(boolean assumePositive)
+    {
         StructuredGraph graph = iv.valueNode().graph();
         Stamp stamp = iv.valueNode().stamp(NodeView.DEFAULT);
 
@@ -77,12 +80,15 @@ public class CountedLoopInfo {
         ValueNode min;
         ValueNode range;
         ValueNode absStride;
-        if (iv.direction() == Direction.Up) {
+        if (iv.direction() == Direction.Up)
+        {
             absStride = iv.strideNode();
             range = sub(graph, end, iv.initNode());
             max = end;
             min = iv.initNode();
-        } else {
+        }
+        else
+        {
             assert iv.direction() == Direction.Down;
             absStride = graph.maybeAddOrUnique(NegateNode.create(iv.strideNode(), NodeView.DEFAULT));
             range = sub(graph, iv.initNode(), end);
@@ -91,14 +97,16 @@ public class CountedLoopInfo {
         }
 
         ConstantNode one = ConstantNode.forIntegerStamp(stamp, 1, graph);
-        if (oneOff) {
+        if (oneOff)
+        {
             range = add(graph, range, one);
         }
         // round-away-from-zero divison: (range + stride -/+ 1) / stride
         ValueNode denominator = add(graph, range, sub(graph, absStride, one));
         ValueNode div = unsignedDivBefore(graph, loop.entryPoint(), denominator, absStride);
 
-        if (assumePositive) {
+        if (assumePositive)
+        {
             return div;
         }
         ConstantNode zero = ConstantNode.forIntegerStamp(stamp, 0, graph);
@@ -108,11 +116,13 @@ public class CountedLoopInfo {
     /**
      * @return true if the loop has constant bounds.
      */
-    public boolean isConstantMaxTripCount() {
+    public boolean isConstantMaxTripCount()
+    {
         return end instanceof ConstantNode && iv.isConstantInit() && iv.isConstantStride();
     }
 
-    public UnsignedLong constantMaxTripCount() {
+    public UnsignedLong constantMaxTripCount()
+    {
         assert isConstantMaxTripCount();
         return new UnsignedLong(rawConstantMaxTripCount());
     }
@@ -120,109 +130,137 @@ public class CountedLoopInfo {
     /**
      * Compute the raw value of the trip count for this loop. THIS IS AN UNSIGNED VALUE;
      */
-    private long rawConstantMaxTripCount() {
+    private long rawConstantMaxTripCount()
+    {
         assert iv.direction() != null;
         long endValue = end.asJavaConstant().asLong();
         long initValue = iv.constantInit();
         long range;
         long absStride;
-        if (iv.direction() == Direction.Up) {
-            if (endValue < initValue) {
+        if (iv.direction() == Direction.Up)
+        {
+            if (endValue < initValue)
+            {
                 return 0;
             }
             range = endValue - iv.constantInit();
             absStride = iv.constantStride();
-        } else {
-            if (initValue < endValue) {
+        }
+        else
+        {
+            if (initValue < endValue)
+            {
                 return 0;
             }
             range = iv.constantInit() - endValue;
             absStride = -iv.constantStride();
         }
-        if (oneOff) {
+        if (oneOff)
+        {
             range += 1;
         }
         long denominator = range + absStride - 1;
         return Long.divideUnsigned(denominator, absStride);
     }
 
-    public boolean isExactTripCount() {
+    public boolean isExactTripCount()
+    {
         return loop.loopBegin().loopExits().count() == 1;
     }
 
-    public ValueNode exactTripCountNode() {
+    public ValueNode exactTripCountNode()
+    {
         assert isExactTripCount();
         return maxTripCountNode();
     }
 
-    public boolean isConstantExactTripCount() {
+    public boolean isConstantExactTripCount()
+    {
         assert isExactTripCount();
         return isConstantMaxTripCount();
     }
 
-    public UnsignedLong constantExactTripCount() {
+    public UnsignedLong constantExactTripCount()
+    {
         assert isExactTripCount();
         return constantMaxTripCount();
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "iv=" + iv + " until " + end + (oneOff ? iv.direction() == Direction.Up ? "+1" : "-1" : "");
     }
 
-    public ValueNode getLimit() {
+    public ValueNode getLimit()
+    {
         return end;
     }
 
-    public IfNode getLimitTest() {
+    public IfNode getLimitTest()
+    {
         return ifNode;
     }
 
-    public ValueNode getStart() {
+    public ValueNode getStart()
+    {
         return iv.initNode();
     }
 
-    public boolean isLimitIncluded() {
+    public boolean isLimitIncluded()
+    {
         return oneOff;
     }
 
-    public AbstractBeginNode getBody() {
+    public AbstractBeginNode getBody()
+    {
         return body;
     }
 
-    public Direction getDirection() {
+    public Direction getDirection()
+    {
         return iv.direction();
     }
 
-    public InductionVariable getCounter() {
+    public InductionVariable getCounter()
+    {
         return iv;
     }
 
-    public GuardingNode getOverFlowGuard() {
+    public GuardingNode getOverFlowGuard()
+    {
         return loop.loopBegin().getOverflowGuard();
     }
 
     @SuppressWarnings("try")
-    public GuardingNode createOverFlowGuard() {
+    public GuardingNode createOverFlowGuard()
+    {
         GuardingNode overflowGuard = getOverFlowGuard();
-        if (overflowGuard != null) {
+        if (overflowGuard != null)
+        {
             return overflowGuard;
         }
-        try (DebugCloseable position = loop.loopBegin().withNodeSourcePosition()) {
+        try (DebugCloseable position = loop.loopBegin().withNodeSourcePosition())
+        {
             IntegerStamp stamp = (IntegerStamp) iv.valueNode().stamp(NodeView.DEFAULT);
             StructuredGraph graph = iv.valueNode().graph();
             CompareNode cond; // we use a negated guard with a < condition to achieve a >=
             ConstantNode one = ConstantNode.forIntegerStamp(stamp, 1, graph);
-            if (iv.direction() == Direction.Up) {
+            if (iv.direction() == Direction.Up)
+            {
                 ValueNode v1 = sub(graph, ConstantNode.forIntegerStamp(stamp, CodeUtil.maxValue(stamp.getBits()), graph), sub(graph, iv.strideNode(), one));
-                if (oneOff) {
+                if (oneOff)
+                {
                     v1 = sub(graph, v1, one);
                 }
                 cond = graph.unique(new IntegerLessThanNode(v1, end));
-            } else {
+            }
+            else
+            {
                 assert iv.direction() == Direction.Down;
                 ValueNode v1 = add(graph, ConstantNode.forIntegerStamp(stamp, CodeUtil.minValue(stamp.getBits()), graph), sub(graph, one, iv.strideNode()));
-                if (oneOff) {
+                if (oneOff)
+                {
                     v1 = add(graph, v1, one);
                 }
                 cond = graph.unique(new IntegerLessThanNode(end, v1));
@@ -235,7 +273,8 @@ public class CountedLoopInfo {
         }
     }
 
-    public IntegerStamp getStamp() {
+    public IntegerStamp getStamp()
+    {
         return (IntegerStamp) iv.valueNode().stamp(NodeView.DEFAULT);
     }
 }

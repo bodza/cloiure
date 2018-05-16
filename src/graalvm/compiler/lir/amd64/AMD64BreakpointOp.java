@@ -14,7 +14,8 @@ import jdk.vm.ci.meta.Value;
  * Emits a breakpoint.
  */
 @Opcode("BREAKPOINT")
-public final class AMD64BreakpointOp extends AMD64LIRInstruction {
+public final class AMD64BreakpointOp extends AMD64LIRInstruction
+{
     public static final LIRInstructionClass<AMD64BreakpointOp> TYPE = LIRInstructionClass.create(AMD64BreakpointOp.class);
 
     /**
@@ -22,13 +23,15 @@ public final class AMD64BreakpointOp extends AMD64LIRInstruction {
      */
     @Use({REG, STACK}) protected Value[] parameters;
 
-    public AMD64BreakpointOp(Value[] parameters) {
+    public AMD64BreakpointOp(Value[] parameters)
+    {
         super(TYPE);
         this.parameters = parameters;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler asm) {
+    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler asm)
+    {
         asm.int3();
     }
 }

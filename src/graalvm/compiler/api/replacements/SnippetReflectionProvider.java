@@ -13,8 +13,8 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * <p>
  * This interface must not be used in Graal code that is not related to snippet processing.
  */
-public interface SnippetReflectionProvider {
-
+public interface SnippetReflectionProvider
+{
     /**
      * Creates a boxed {@link JavaKind#Object object} constant.
      *

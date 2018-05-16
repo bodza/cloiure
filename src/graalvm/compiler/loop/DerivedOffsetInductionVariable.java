@@ -13,95 +13,117 @@ import graalvm.compiler.nodes.calc.IntegerConvertNode;
 import graalvm.compiler.nodes.calc.NegateNode;
 import graalvm.compiler.nodes.calc.SubNode;
 
-public class DerivedOffsetInductionVariable extends DerivedInductionVariable {
-
+public class DerivedOffsetInductionVariable extends DerivedInductionVariable
+{
     private final ValueNode offset;
     private final BinaryArithmeticNode<?> value;
 
-    public DerivedOffsetInductionVariable(LoopEx loop, InductionVariable base, ValueNode offset, BinaryArithmeticNode<?> value) {
+    public DerivedOffsetInductionVariable(LoopEx loop, InductionVariable base, ValueNode offset, BinaryArithmeticNode<?> value)
+    {
         super(loop, base);
         this.offset = offset;
         this.value = value;
     }
 
-    public ValueNode getOffset() {
+    public ValueNode getOffset()
+    {
         return offset;
     }
 
     @Override
-    public Direction direction() {
+    public Direction direction()
+    {
         return base.direction();
     }
 
     @Override
-    public ValueNode valueNode() {
+    public ValueNode valueNode()
+    {
         return value;
     }
 
     @Override
-    public boolean isConstantInit() {
+    public boolean isConstantInit()
+    {
         return offset.isConstant() && base.isConstantInit();
     }
 
     @Override
-    public boolean isConstantStride() {
+    public boolean isConstantStride()
+    {
         return base.isConstantStride();
     }
 
     @Override
-    public long constantInit() {
+    public long constantInit()
+    {
         return op(base.constantInit(), offset.asJavaConstant().asLong());
     }
 
     @Override
-    public long constantStride() {
-        if (value instanceof SubNode && base.valueNode() == value.getY()) {
+    public long constantStride()
+    {
+        if (value instanceof SubNode && base.valueNode() == value.getY())
+        {
             return -base.constantStride();
         }
         return base.constantStride();
     }
 
     @Override
-    public ValueNode initNode() {
+    public ValueNode initNode()
+    {
         return op(base.initNode(), offset);
     }
 
     @Override
-    public ValueNode strideNode() {
-        if (value instanceof SubNode && base.valueNode() == value.getY()) {
+    public ValueNode strideNode()
+    {
+        if (value instanceof SubNode && base.valueNode() == value.getY())
+        {
             return graph().addOrUniqueWithInputs(NegateNode.create(base.strideNode(), NodeView.DEFAULT));
         }
         return base.strideNode();
     }
 
     @Override
-    public ValueNode extremumNode(boolean assumePositiveTripCount, Stamp stamp) {
+    public ValueNode extremumNode(boolean assumePositiveTripCount, Stamp stamp)
+    {
         return op(base.extremumNode(assumePositiveTripCount, stamp), IntegerConvertNode.convert(offset, stamp, graph(), NodeView.DEFAULT));
     }
 
     @Override
-    public ValueNode exitValueNode() {
+    public ValueNode exitValueNode()
+    {
         return op(base.exitValueNode(), offset);
     }
 
     @Override
-    public boolean isConstantExtremum() {
+    public boolean isConstantExtremum()
+    {
         return offset.isConstant() && base.isConstantExtremum();
     }
 
     @Override
-    public long constantExtremum() {
+    public long constantExtremum()
+    {
         return op(base.constantExtremum(), offset.asJavaConstant().asLong());
     }
 
-    private long op(long b, long o) {
-        if (value instanceof AddNode) {
+    private long op(long b, long o)
+    {
+        if (value instanceof AddNode)
+        {
             return b + o;
         }
-        if (value instanceof SubNode) {
-            if (base.valueNode() == value.getX()) {
+        if (value instanceof SubNode)
+        {
+            if (base.valueNode() == value.getX())
+            {
                 return b - o;
-            } else {
+            }
+            else
+            {
                 assert base.valueNode() == value.getY();
                 return o - b;
             }
@@ -109,14 +131,20 @@ public class DerivedOffsetInductionVariable extends DerivedInductionVariable {
         throw GraalError.shouldNotReachHere();
     }
 
-    private ValueNode op(ValueNode b, ValueNode o) {
-        if (value instanceof AddNode) {
+    private ValueNode op(ValueNode b, ValueNode o)
+    {
+        if (value instanceof AddNode)
+        {
             return add(graph(), b, o);
         }
-        if (value instanceof SubNode) {
-            if (base.valueNode() == value.getX()) {
+        if (value instanceof SubNode)
+        {
+            if (base.valueNode() == value.getX())
+            {
                 return sub(graph(), b, o);
-            } else {
+            }
+            else
+            {
                 assert base.valueNode() == value.getY();
                 return sub(graph(), o, b);
             }
@@ -125,11 +153,13 @@ public class DerivedOffsetInductionVariable extends DerivedInductionVariable {
     }
 
     @Override
-    public void deleteUnusedNodes() {
+    public void deleteUnusedNodes()
+    {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return String.format("DerivedOffsetInductionVariable base (%s) %s %s", base, value.getNodeClass().shortName(), offset);
     }
 }

@@ -11,15 +11,17 @@ import graalvm.compiler.nodes.StateSplit;
  * Provides an implementation of {@link StateSplit}.
  */
 @NodeInfo
-public abstract class AbstractMemoryCheckpoint extends AbstractStateSplit implements MemoryCheckpoint {
-
+public abstract class AbstractMemoryCheckpoint extends AbstractStateSplit implements MemoryCheckpoint
+{
     public static final NodeClass<AbstractMemoryCheckpoint> TYPE = NodeClass.create(AbstractMemoryCheckpoint.class);
 
-    protected AbstractMemoryCheckpoint(NodeClass<? extends AbstractMemoryCheckpoint> c, Stamp stamp) {
+    protected AbstractMemoryCheckpoint(NodeClass<? extends AbstractMemoryCheckpoint> c, Stamp stamp)
+    {
         this(c, stamp, null);
     }
 
-    protected AbstractMemoryCheckpoint(NodeClass<? extends AbstractMemoryCheckpoint> c, Stamp stamp, FrameState stateAfter) {
+    protected AbstractMemoryCheckpoint(NodeClass<? extends AbstractMemoryCheckpoint> c, Stamp stamp, FrameState stateAfter)
+    {
         super(c, stamp, stateAfter);
     }
 }

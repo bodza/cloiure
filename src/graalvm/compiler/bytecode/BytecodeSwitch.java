@@ -4,8 +4,8 @@ package graalvm.compiler.bytecode;
  * An abstract class that provides the state and methods common to {@link Bytecodes#LOOKUPSWITCH}
  * and {@link Bytecodes#TABLESWITCH} instructions.
  */
-public abstract class BytecodeSwitch {
-
+public abstract class BytecodeSwitch
+{
     /**
      * The {@link BytecodeStream} containing the bytecode array.
      */
@@ -26,7 +26,8 @@ public abstract class BytecodeSwitch {
      * @param stream the {@code BytecodeStream} containing the switch instruction
      * @param bci the index in the stream of the switch instruction
      */
-    public BytecodeSwitch(BytecodeStream stream, int bci) {
+    public BytecodeSwitch(BytecodeStream stream, int bci)
+    {
         this.stream = stream;
         this.bci = bci;
         this.alignedBci = (bci + 4) & 0xfffffffc;
@@ -37,7 +38,8 @@ public abstract class BytecodeSwitch {
      *
      * @return the current bytecode index
      */
-    public int bci() {
+    public int bci()
+    {
         return bci;
     }
 
@@ -47,7 +49,8 @@ public abstract class BytecodeSwitch {
      * @param i index of the switch target
      * @return the index of the instruction denoted by the {@code i}'th switch target
      */
-    public int targetAt(int i) {
+    public int targetAt(int i)
+    {
         return bci + offsetAt(i);
     }
 
@@ -56,7 +59,8 @@ public abstract class BytecodeSwitch {
      *
      * @return the index of the instruction for the default switch target
      */
-    public int defaultTarget() {
+    public int defaultTarget()
+    {
         return bci + defaultOffset();
     }
 
@@ -65,7 +69,8 @@ public abstract class BytecodeSwitch {
      *
      * @return the offset to the default switch target
      */
-    public int defaultOffset() {
+    public int defaultOffset()
+    {
         return stream.readInt(alignedBci);
     }
 
@@ -98,5 +103,4 @@ public abstract class BytecodeSwitch {
      * @return the total size in bytes of the switch instruction
      */
     public abstract int size();
-
 }

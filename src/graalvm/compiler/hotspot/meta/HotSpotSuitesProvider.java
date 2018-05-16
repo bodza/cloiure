@@ -44,14 +44,15 @@ import graalvm.compiler.phases.tiers.SuitesCreator;
 /**
  * HotSpot implementation of {@link SuitesCreator}.
  */
-public class HotSpotSuitesProvider extends SuitesProviderBase {
-
+public class HotSpotSuitesProvider extends SuitesProviderBase
+{
     protected final GraalHotSpotVMConfig config;
     protected final HotSpotGraalRuntimeProvider runtime;
 
     private final SuitesCreator defaultSuitesCreator;
 
-    public HotSpotSuitesProvider(SuitesCreator defaultSuitesCreator, GraalHotSpotVMConfig config, HotSpotGraalRuntimeProvider runtime) {
+    public HotSpotSuitesProvider(SuitesCreator defaultSuitesCreator, GraalHotSpotVMConfig config, HotSpotGraalRuntimeProvider runtime)
+    {
         this.defaultSuitesCreator = defaultSuitesCreator;
         this.config = config;
         this.runtime = runtime;
@@ -59,27 +60,33 @@ public class HotSpotSuitesProvider extends SuitesProviderBase {
     }
 
     @Override
-    public Suites createSuites(OptionValues options) {
+    public Suites createSuites(OptionValues options)
+    {
         Suites ret = defaultSuitesCreator.createSuites(options);
 
-        if (ImmutableCode.getValue(options)) {
+        if (ImmutableCode.getValue(options))
+        {
             // lowering introduces class constants, therefore it must be after lowering
             ret.getHighTier().appendPhase(new LoadJavaMirrorWithKlassPhase(config));
-            if (VerifyPhases.getValue(options)) {
+            if (VerifyPhases.getValue(options))
+            {
                 ret.getHighTier().appendPhase(new AheadOfTimeVerificationPhase());
             }
-            if (GeneratePIC.getValue(options)) {
+            if (GeneratePIC.getValue(options))
+            {
                 ListIterator<BasePhase<? super HighTierContext>> highTierLowering = ret.getHighTier().findPhase(LoweringPhase.class);
                 highTierLowering.previous();
                 highTierLowering.add(new EliminateRedundantInitializationPhase());
-                if (HotSpotAOTProfilingPlugin.Options.TieredAOT.getValue(options)) {
+                if (HotSpotAOTProfilingPlugin.Options.TieredAOT.getValue(options))
+                {
                     highTierLowering.add(new FinalizeProfileNodesPhase(HotSpotAOTProfilingPlugin.Options.TierAInvokeInlineeNotifyFreqLog.getValue(options)));
                 }
                 ListIterator<BasePhase<? super MidTierContext>> midTierLowering = ret.getMidTier().findPhase(LoweringPhase.class);
                 midTierLowering.add(new ReplaceConstantNodesPhase());
 
                 // Replace inlining policy
-                if (Inline.getValue(options)) {
+                if (Inline.getValue(options))
+                {
                     ListIterator<BasePhase<? super HighTierContext>> iter = ret.getHighTier().findPhase(InliningPhase.class);
                     InliningPhase inlining = (InliningPhase) iter.previous();
                     CanonicalizerPhase canonicalizer = inlining.getCanonicalizer();
@@ -89,14 +96,16 @@ public class HotSpotSuitesProvider extends SuitesProviderBase {
         }
 
         ret.getMidTier().appendPhase(new WriteBarrierAdditionPhase(config));
-        if (VerifyPhases.getValue(options)) {
+        if (VerifyPhases.getValue(options))
+        {
             ret.getMidTier().appendPhase(new WriteBarrierVerificationPhase(config));
         }
 
         return ret;
     }
 
-    protected PhaseSuite<HighTierContext> createGraphBuilderSuite() {
+    protected PhaseSuite<HighTierContext> createGraphBuilderSuite()
+    {
         PhaseSuite<HighTierContext> suite = defaultSuitesCreator.getDefaultGraphBuilderSuite().copy();
         assert appendGraphEncoderTest(suite);
         return suite;
@@ -110,24 +119,28 @@ public class HotSpotSuitesProvider extends SuitesProviderBase {
      * encoding itself}, i.e., performs a decoding without canonicalization and checks the graphs
      * for equality.
      */
-    private boolean appendGraphEncoderTest(PhaseSuite<HighTierContext> suite) {
-        suite.appendPhase(new BasePhase<HighTierContext>() {
+    private boolean appendGraphEncoderTest(PhaseSuite<HighTierContext> suite)
+    {
+        suite.appendPhase(new BasePhase<HighTierContext>()
+        {
             @Override
-            protected void run(StructuredGraph graph, HighTierContext context) {
+            protected void run(StructuredGraph graph, HighTierContext context)
+            {
                 EncodedGraph encodedGraph = GraphEncoder.encodeSingleGraph(graph, runtime.getTarget().arch);
 
                 StructuredGraph targetGraph = new StructuredGraph.Builder(graph.getOptions(), graph.getDebug(), AllowAssumptions.YES).method(graph.method()).build();
-                SimplifyingGraphDecoder graphDecoder = new SimplifyingGraphDecoder(runtime.getTarget().arch, targetGraph, context.getMetaAccess(), context.getConstantReflection(),
-                                context.getConstantFieldProvider(), context.getStampProvider(), !ImmutableCode.getValue(graph.getOptions()));
+                SimplifyingGraphDecoder graphDecoder = new SimplifyingGraphDecoder(runtime.getTarget().arch, targetGraph, context.getMetaAccess(), context.getConstantReflection(), context.getConstantFieldProvider(), context.getStampProvider(), !ImmutableCode.getValue(graph.getOptions()));
 
-                if (graph.trackNodeSourcePosition()) {
+                if (graph.trackNodeSourcePosition())
+                {
                     targetGraph.setTrackNodeSourcePosition();
                 }
                 graphDecoder.decode(encodedGraph);
             }
 
             @Override
-            protected CharSequence getName() {
+            protected CharSequence getName()
+            {
                 return "VerifyEncodingDecoding";
             }
         });
@@ -139,7 +152,8 @@ public class HotSpotSuitesProvider extends SuitesProviderBase {
      *
      * @param gbs the current graph builder suite to modify
      */
-    public static PhaseSuite<HighTierContext> withNodeSourcePosition(PhaseSuite<HighTierContext> gbs) {
+    public static PhaseSuite<HighTierContext> withNodeSourcePosition(PhaseSuite<HighTierContext> gbs)
+    {
         PhaseSuite<HighTierContext> newGbs = gbs.copy();
         GraphBuilderPhase graphBuilderPhase = (GraphBuilderPhase) newGbs.findPhase(GraphBuilderPhase.class).previous();
         GraphBuilderConfiguration graphBuilderConfig = graphBuilderPhase.getGraphBuilderConfig();
@@ -149,13 +163,16 @@ public class HotSpotSuitesProvider extends SuitesProviderBase {
     }
 
     @Override
-    public LIRSuites createLIRSuites(OptionValues options) {
+    public LIRSuites createLIRSuites(OptionValues options)
+    {
         LIRSuites suites = defaultSuitesCreator.createLIRSuites(options);
         String profileInstructions = HotSpotBackend.Options.ASMInstructionProfiling.getValue(options);
-        if (profileInstructions != null) {
+        if (profileInstructions != null)
+        {
             suites.getPostAllocationOptimizationStage().appendPhase(new HotSpotInstructionProfiling(profileInstructions));
         }
-        if (Assertions.detailedAssertionsEnabled(options)) {
+        if (Assertions.detailedAssertionsEnabled(options))
+        {
             suites.getPostAllocationOptimizationStage().appendPhase(new VerifyMaxRegisterSizePhase(config.maxVectorSize));
         }
         return suites;

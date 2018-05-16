@@ -26,21 +26,22 @@ import jdk.vm.ci.amd64.AMD64;
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.Value;
 
-public abstract class AMD64NodeLIRBuilder extends NodeLIRBuilder {
-
-    public static class Options {
-        // @formatter:off
+public abstract class AMD64NodeLIRBuilder extends NodeLIRBuilder
+{
+    public static class Options
+    {
         @Option(help = "AMD64: Emit lfence instructions at the beginning of basic blocks", type = OptionType.Expert)
         public static final OptionKey<Boolean> MitigateSpeculativeExecutionAttacks = new OptionKey<>(false);
-        // @formatter:on
     }
 
-    public AMD64NodeLIRBuilder(StructuredGraph graph, LIRGeneratorTool gen, AMD64NodeMatchRules nodeMatchRules) {
+    public AMD64NodeLIRBuilder(StructuredGraph graph, LIRGeneratorTool gen, AMD64NodeMatchRules nodeMatchRules)
+    {
         super(graph, gen, nodeMatchRules);
     }
 
     @Override
-    protected void emitIndirectCall(IndirectCallTargetNode callTarget, Value result, Value[] parameters, Value[] temps, LIRFrameState callState) {
+    protected void emitIndirectCall(IndirectCallTargetNode callTarget, Value result, Value[] parameters, Value[] temps, LIRFrameState callState)
+    {
         Value targetAddressSrc = operand(callTarget.computedAddress());
         AllocatableValue targetAddress = AMD64.rax.asValue(targetAddressSrc.getValueKind());
         gen.emitMove(targetAddress, targetAddressSrc);
@@ -48,33 +49,48 @@ public abstract class AMD64NodeLIRBuilder extends NodeLIRBuilder {
     }
 
     @Override
-    protected boolean peephole(ValueNode valueNode) {
-        if (valueNode instanceof IntegerDivRemNode) {
+    protected boolean peephole(ValueNode valueNode)
+    {
+        if (valueNode instanceof IntegerDivRemNode)
+        {
             AMD64ArithmeticLIRGenerator arithmeticGen = (AMD64ArithmeticLIRGenerator) gen.getArithmetic();
             IntegerDivRemNode divRem = (IntegerDivRemNode) valueNode;
             FixedNode node = divRem.next();
-            while (true) {
-                if (node instanceof IfNode) {
+            while (true)
+            {
+                if (node instanceof IfNode)
+                {
                     IfNode ifNode = (IfNode) node;
                     double probability = ifNode.getTrueSuccessorProbability();
-                    if (probability == 1.0) {
+                    if (probability == 1.0)
+                    {
                         node = ifNode.trueSuccessor();
-                    } else if (probability == 0.0) {
+                    }
+                    else if (probability == 0.0)
+                    {
                         node = ifNode.falseSuccessor();
-                    } else {
+                    }
+                    else
+                    {
                         break;
                     }
-                } else if (!(node instanceof FixedWithNextNode)) {
+                }
+                else if (!(node instanceof FixedWithNextNode))
+                {
                     break;
                 }
 
                 FixedWithNextNode fixedWithNextNode = (FixedWithNextNode) node;
-                if (fixedWithNextNode instanceof IntegerDivRemNode) {
+                if (fixedWithNextNode instanceof IntegerDivRemNode)
+                {
                     IntegerDivRemNode otherDivRem = (IntegerDivRemNode) fixedWithNextNode;
-                    if (divRem.getOp() != otherDivRem.getOp() && divRem.getType() == otherDivRem.getType()) {
-                        if (otherDivRem.getX() == divRem.getX() && otherDivRem.getY() == divRem.getY() && !hasOperand(otherDivRem)) {
+                    if (divRem.getOp() != otherDivRem.getOp() && divRem.getType() == otherDivRem.getType())
+                    {
+                        if (otherDivRem.getX() == divRem.getX() && otherDivRem.getY() == divRem.getY() && !hasOperand(otherDivRem))
+                        {
                             Value[] results;
-                            switch (divRem.getType()) {
+                            switch (divRem.getType())
+                            {
                                 case SIGNED:
                                     results = arithmeticGen.emitSignedDivRem(operand(divRem.getX()), operand(divRem.getY()), state((DeoptimizingNode) valueNode));
                                     break;
@@ -84,7 +100,8 @@ public abstract class AMD64NodeLIRBuilder extends NodeLIRBuilder {
                                 default:
                                     throw GraalError.shouldNotReachHere();
                             }
-                            switch (divRem.getOp()) {
+                            switch (divRem.getOp())
+                            {
                                 case DIV:
                                     assert otherDivRem.getOp() == Op.REM;
                                     setResult(divRem, results[0]);
@@ -109,22 +126,28 @@ public abstract class AMD64NodeLIRBuilder extends NodeLIRBuilder {
     }
 
     @Override
-    public AMD64LIRGenerator getLIRGeneratorTool() {
+    public AMD64LIRGenerator getLIRGeneratorTool()
+    {
         return (AMD64LIRGenerator) gen;
     }
 
     @Override
-    public void doBlockPrologue(Block block, OptionValues options) {
-        if (MitigateSpeculativeExecutionAttacks.getValue(options)) {
+    public void doBlockPrologue(Block block, OptionValues options)
+    {
+        if (MitigateSpeculativeExecutionAttacks.getValue(options))
+        {
             boolean hasControlSplitPredecessor = false;
-            for (Block b : block.getPredecessors()) {
-                if (b.getSuccessorCount() > 1) {
+            for (Block b : block.getPredecessors())
+            {
+                if (b.getSuccessorCount() > 1)
+                {
                     hasControlSplitPredecessor = true;
                     break;
                 }
             }
             boolean isStartBlock = block.getPredecessorCount() == 0;
-            if (hasControlSplitPredecessor || isStartBlock) {
+            if (hasControlSplitPredecessor || isStartBlock)
+            {
                 getLIRGeneratorTool().emitLFence();
             }
         }

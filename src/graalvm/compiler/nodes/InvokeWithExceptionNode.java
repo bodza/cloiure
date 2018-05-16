@@ -26,7 +26,8 @@ import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_UNKNOWN;
 import static graalvm.compiler.nodeinfo.NodeSize.SIZE_UNKNOWN;
 
 @NodeInfo(nameTemplate = "Invoke!#{p#targetMethod/s}", allowedUsageTypes = {Memory}, cycles = CYCLES_UNKNOWN, size = SIZE_UNKNOWN)
-public final class InvokeWithExceptionNode extends ControlSplitNode implements Invoke, MemoryCheckpoint.Single, LIRLowerable, UncheckedInterfaceProvider {
+public final class InvokeWithExceptionNode extends ControlSplitNode implements Invoke, MemoryCheckpoint.Single, LIRLowerable, UncheckedInterfaceProvider
+{
     public static final NodeClass<InvokeWithExceptionNode> TYPE = NodeClass.create(InvokeWithExceptionNode.class);
 
     private static final double EXCEPTION_PROBA = 1e-5;
@@ -42,7 +43,8 @@ public final class InvokeWithExceptionNode extends ControlSplitNode implements I
     protected boolean useForInlining;
     protected double exceptionProbability;
 
-    public InvokeWithExceptionNode(CallTargetNode callTarget, AbstractBeginNode exceptionEdge, int bci) {
+    public InvokeWithExceptionNode(CallTargetNode callTarget, AbstractBeginNode exceptionEdge, int bci)
+    {
         super(TYPE, callTarget.returnStamp().getTrustedStamp());
         this.exceptionEdge = exceptionEdge;
         this.bci = bci;
@@ -53,140 +55,174 @@ public final class InvokeWithExceptionNode extends ControlSplitNode implements I
     }
 
     @Override
-    protected void afterClone(Node other) {
+    protected void afterClone(Node other)
+    {
         updateInliningLogAfterClone(other);
     }
 
     @Override
-    public FixedNode asFixedNode() {
+    public FixedNode asFixedNode()
+    {
         return this;
     }
 
-    public AbstractBeginNode exceptionEdge() {
+    public AbstractBeginNode exceptionEdge()
+    {
         return exceptionEdge;
     }
 
-    public void setExceptionEdge(AbstractBeginNode x) {
+    public void setExceptionEdge(AbstractBeginNode x)
+    {
         updatePredecessor(exceptionEdge, x);
         exceptionEdge = x;
     }
 
     @Override
-    public AbstractBeginNode next() {
+    public AbstractBeginNode next()
+    {
         return next;
     }
 
-    public void setNext(AbstractBeginNode x) {
+    public void setNext(AbstractBeginNode x)
+    {
         updatePredecessor(next, x);
         next = x;
     }
 
     @Override
-    public CallTargetNode callTarget() {
+    public CallTargetNode callTarget()
+    {
         return callTarget;
     }
 
-    void setCallTarget(CallTargetNode callTarget) {
+    void setCallTarget(CallTargetNode callTarget)
+    {
         updateUsages(this.callTarget, callTarget);
         this.callTarget = callTarget;
     }
 
-    public MethodCallTargetNode methodCallTarget() {
+    public MethodCallTargetNode methodCallTarget()
+    {
         return (MethodCallTargetNode) callTarget;
     }
 
     @Override
-    public boolean isPolymorphic() {
+    public boolean isPolymorphic()
+    {
         return polymorphic;
     }
 
     @Override
-    public void setPolymorphic(boolean value) {
+    public void setPolymorphic(boolean value)
+    {
         this.polymorphic = value;
     }
 
     @Override
-    public boolean useForInlining() {
+    public boolean useForInlining()
+    {
         return useForInlining;
     }
 
     @Override
-    public void setUseForInlining(boolean value) {
+    public void setUseForInlining(boolean value)
+    {
         this.useForInlining = value;
     }
 
     @Override
-    public String toString(Verbosity verbosity) {
-        if (verbosity == Verbosity.Long) {
+    public String toString(Verbosity verbosity)
+    {
+        if (verbosity == Verbosity.Long)
+        {
             return super.toString(Verbosity.Short) + "(bci=" + bci() + ")";
-        } else if (verbosity == Verbosity.Name) {
+        }
+        else if (verbosity == Verbosity.Name)
+        {
             return "Invoke#" + (callTarget == null ? "null" : callTarget().targetName());
-        } else {
+        }
+        else
+        {
             return super.toString(verbosity);
         }
     }
 
     @Override
-    public int bci() {
+    public int bci()
+    {
         return bci;
     }
 
     @Override
-    public void setNext(FixedNode x) {
-        if (x != null) {
+    public void setNext(FixedNode x)
+    {
+        if (x != null)
+        {
             this.setNext(KillingBeginNode.begin(x, getLocationIdentity()));
-        } else {
+        }
+        else
+        {
             this.setNext(null);
         }
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         gen.emitInvoke(this);
     }
 
     @Override
-    public FrameState stateAfter() {
+    public FrameState stateAfter()
+    {
         return stateAfter;
     }
 
     @Override
-    public void setStateAfter(FrameState stateAfter) {
+    public void setStateAfter(FrameState stateAfter)
+    {
         updateUsages(this.stateAfter, stateAfter);
         this.stateAfter = stateAfter;
     }
 
     @Override
-    public boolean hasSideEffect() {
+    public boolean hasSideEffect()
+    {
         return true;
     }
 
     @Override
-    public LocationIdentity getLocationIdentity() {
+    public LocationIdentity getLocationIdentity()
+    {
         return LocationIdentity.any();
     }
 
     @Override
-    public Map<Object, Object> getDebugProperties(Map<Object, Object> map) {
+    public Map<Object, Object> getDebugProperties(Map<Object, Object> map)
+    {
         Map<Object, Object> debugProperties = super.getDebugProperties(map);
-        if (callTarget != null) {
+        if (callTarget != null)
+        {
             debugProperties.put("targetMethod", callTarget.targetName());
         }
         return debugProperties;
     }
 
-    public void killExceptionEdge() {
+    public void killExceptionEdge()
+    {
         AbstractBeginNode edge = exceptionEdge();
         setExceptionEdge(null);
         GraphUtil.killCFG(edge);
     }
 
-    public void replaceWithNewBci(int newBci) {
+    public void replaceWithNewBci(int newBci)
+    {
         AbstractBeginNode nextNode = next();
         AbstractBeginNode exceptionObject = exceptionEdge;
         setExceptionEdge(null);
@@ -203,88 +239,108 @@ public final class InvokeWithExceptionNode extends ControlSplitNode implements I
     }
 
     @Override
-    public void intrinsify(Node node) {
+    public void intrinsify(Node node)
+    {
         assert !(node instanceof ValueNode) || (((ValueNode) node).getStackKind() == JavaKind.Void) == (getStackKind() == JavaKind.Void);
         CallTargetNode call = callTarget;
         FrameState state = stateAfter();
-        if (exceptionEdge != null) {
+        if (exceptionEdge != null)
+        {
             killExceptionEdge();
         }
-        if (node instanceof StateSplit) {
+        if (node instanceof StateSplit)
+        {
             StateSplit stateSplit = (StateSplit) node;
             stateSplit.setStateAfter(state);
         }
-        if (node instanceof ForeignCallNode) {
+        if (node instanceof ForeignCallNode)
+        {
             ForeignCallNode foreign = (ForeignCallNode) node;
             foreign.setBci(bci());
         }
-        if (node == null) {
+        if (node == null)
+        {
             assert getStackKind() == JavaKind.Void && hasNoUsages();
             graph().removeSplit(this, next());
-        } else if (node instanceof ControlSinkNode) {
+        }
+        else if (node instanceof ControlSinkNode)
+        {
             this.replaceAtPredecessor(node);
             this.replaceAtUsages(null);
             GraphUtil.killCFG(this);
             return;
-        } else {
+        }
+        else
+        {
             graph().replaceSplit(this, node, next());
         }
         GraphUtil.killWithUnusedFloatingInputs(call);
-        if (state.hasNoUsages()) {
+        if (state.hasNoUsages())
+        {
             GraphUtil.killWithUnusedFloatingInputs(state);
         }
     }
 
     @Override
-    public double probability(AbstractBeginNode successor) {
+    public double probability(AbstractBeginNode successor)
+    {
         return successor == next ? 1 - exceptionProbability : exceptionProbability;
     }
 
     @Override
-    public boolean canDeoptimize() {
+    public boolean canDeoptimize()
+    {
         return true;
     }
 
     @Override
-    public FrameState stateDuring() {
+    public FrameState stateDuring()
+    {
         return stateDuring;
     }
 
     @Override
-    public void setStateDuring(FrameState stateDuring) {
+    public void setStateDuring(FrameState stateDuring)
+    {
         updateUsages(this.stateDuring, stateDuring);
         this.stateDuring = stateDuring;
     }
 
     @Override
-    public AbstractBeginNode getPrimarySuccessor() {
+    public AbstractBeginNode getPrimarySuccessor()
+    {
         return this.next();
     }
 
     @Override
-    public Stamp uncheckedStamp() {
+    public Stamp uncheckedStamp()
+    {
         return this.callTarget.returnStamp().getUncheckedStamp();
     }
 
     @Override
-    public void setClassInit(ValueNode classInit) {
+    public void setClassInit(ValueNode classInit)
+    {
         this.classInit = classInit;
         updateUsages(null, classInit);
     }
 
     @Override
-    public ValueNode classInit() {
+    public ValueNode classInit()
+    {
         return classInit;
     }
 
     @Override
-    public boolean setProbability(AbstractBeginNode successor, double value) {
+    public boolean setProbability(AbstractBeginNode successor, double value)
+    {
         // Cannot set probability for exception invokes.
         return false;
     }
 
     @Override
-    public int getSuccessorCount() {
+    public int getSuccessorCount()
+    {
         return 2;
     }
 
@@ -292,7 +348,8 @@ public final class InvokeWithExceptionNode extends ControlSplitNode implements I
      * Replaces this InvokeWithExceptionNode with a normal InvokeNode. Kills the exception dispatch
      * code.
      */
-    public InvokeNode replaceWithInvoke() {
+    public InvokeNode replaceWithInvoke()
+    {
         InvokeNode invokeNode = graph().add(new InvokeNode(callTarget, bci));
         AbstractBeginNode oldException = this.exceptionEdge;
         graph().replaceSplitWithFixed(this, invokeNode, this.next());

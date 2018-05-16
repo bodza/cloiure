@@ -17,16 +17,17 @@ import jdk.vm.ci.meta.ValueKind;
  * intended to support addresses and not general arbitrary nesting of composite values. Because of
  * the possibility of sharing of CompositeValues they should be immutable.
  */
-public abstract class CompositeValue extends Value {
-
+public abstract class CompositeValue extends Value
+{
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
-    public static @interface Component {
-
+    public static @interface Component
+    {
         OperandFlag[] value() default OperandFlag.REG;
     }
 
-    public CompositeValue(ValueKind<?> kind) {
+    public CompositeValue(ValueKind<?> kind)
+    {
         super(kind);
         assert CompositeValueClass.get(getClass()) != null;
     }
@@ -53,13 +54,17 @@ public abstract class CompositeValue extends Value {
      * @param flags
      * @return the original {@code values} array or a copy if values changed
      */
-    protected Value[] visitValueArray(LIRInstruction inst, Value[] values, OperandMode mode, InstructionValueProcedure proc, EnumSet<OperandFlag> flags) {
+    protected Value[] visitValueArray(LIRInstruction inst, Value[] values, OperandMode mode, InstructionValueProcedure proc, EnumSet<OperandFlag> flags)
+    {
         Value[] newValues = null;
-        for (int i = 0; i < values.length; i++) {
+        for (int i = 0; i < values.length; i++)
+        {
             Value value = values[i];
             Value newValue = proc.doValue(inst, value, mode, flags);
-            if (!value.identityEquals(newValue)) {
-                if (newValues == null) {
+            if (!value.identityEquals(newValue))
+            {
+                if (newValues == null)
+                {
                     newValues = values.clone();
                 }
                 newValues[i] = value;
@@ -71,18 +76,22 @@ public abstract class CompositeValue extends Value {
     protected abstract void visitEachComponent(LIRInstruction inst, OperandMode mode, InstructionValueConsumer proc);
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return CompositeValueClass.format(this);
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return 53 * super.hashCode();
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof CompositeValue) {
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof CompositeValue)
+        {
             CompositeValue other = (CompositeValue) obj;
             return super.equals(other);
         }

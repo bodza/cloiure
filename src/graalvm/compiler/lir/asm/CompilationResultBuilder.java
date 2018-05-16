@@ -56,19 +56,21 @@ import jdk.vm.ci.meta.Value;
  *
  * @see CompilationResultBuilderFactory
  */
-public class CompilationResultBuilder {
-
-    public static class Options {
+public class CompilationResultBuilder
+{
+    public static class Options
+    {
         @Option(help = "Include the LIR as comments with the final assembly.", type = OptionType.Debug) //
         public static final OptionKey<Boolean> PrintLIRWithAssembly = new OptionKey<>(false);
     }
 
-    private static class ExceptionInfo {
-
+    private static class ExceptionInfo
+    {
         public final int codeOffset;
         public final LabelRef exceptionEdge;
 
-        ExceptionInfo(int pcOffset, LabelRef exceptionEdge) {
+        ExceptionInfo(int pcOffset, LabelRef exceptionEdge)
+        {
             this.codeOffset = pcOffset;
             this.exceptionEdge = exceptionEdge;
         }
@@ -77,22 +79,25 @@ public class CompilationResultBuilder {
     /**
      * Wrapper for a code annotation that was produced by the {@link Assembler}.
      */
-    public static final class AssemblerAnnotation extends CodeAnnotation {
-
+    public static final class AssemblerAnnotation extends CodeAnnotation
+    {
         public final Assembler.CodeAnnotation assemblerCodeAnnotation;
 
-        public AssemblerAnnotation(Assembler.CodeAnnotation assemblerCodeAnnotation) {
+        public AssemblerAnnotation(Assembler.CodeAnnotation assemblerCodeAnnotation)
+        {
             super(assemblerCodeAnnotation.instructionPosition);
             this.assemblerCodeAnnotation = assemblerCodeAnnotation;
         }
 
         @Override
-        public boolean equals(Object obj) {
+        public boolean equals(Object obj)
+        {
             return this == obj;
         }
 
         @Override
-        public String toString() {
+        public String toString()
+        {
             return assemblerCodeAnnotation.toString();
         }
     }
@@ -129,13 +134,13 @@ public class CompilationResultBuilder {
     private Consumer<LIRInstruction> beforeOp;
     private Consumer<LIRInstruction> afterOp;
 
-    public CompilationResultBuilder(CodeCacheProvider codeCache, ForeignCallsProvider foreignCalls, FrameMap frameMap, Assembler asm, DataBuilder dataBuilder, FrameContext frameContext,
-                    OptionValues options, DebugContext debug, CompilationResult compilationResult) {
+    public CompilationResultBuilder(CodeCacheProvider codeCache, ForeignCallsProvider foreignCalls, FrameMap frameMap, Assembler asm, DataBuilder dataBuilder, FrameContext frameContext, OptionValues options, DebugContext debug, CompilationResult compilationResult)
+    {
         this(codeCache, foreignCalls, frameMap, asm, dataBuilder, frameContext, options, debug, compilationResult, EconomicMap.create(Equivalence.DEFAULT));
     }
 
-    public CompilationResultBuilder(CodeCacheProvider codeCache, ForeignCallsProvider foreignCalls, FrameMap frameMap, Assembler asm, DataBuilder dataBuilder, FrameContext frameContext,
-                    OptionValues options, DebugContext debug, CompilationResult compilationResult, EconomicMap<Constant, Data> dataCache) {
+    public CompilationResultBuilder(CodeCacheProvider codeCache, ForeignCallsProvider foreignCalls, FrameMap frameMap, Assembler asm, DataBuilder dataBuilder, FrameContext frameContext, OptionValues options, DebugContext debug, CompilationResult compilationResult, EconomicMap<Constant, Data> dataCache)
+    {
         this.target = codeCache.getTarget();
         this.codeCache = codeCache;
         this.foreignCalls = foreignCalls;
@@ -149,7 +154,8 @@ public class CompilationResultBuilder {
         assert frameContext != null;
         this.dataCache = dataCache;
 
-        if (dataBuilder.needDetailedPatchingInformation() || Assertions.assertionsEnabled()) {
+        if (dataBuilder.needDetailedPatchingInformation() || Assertions.assertionsEnabled())
+        {
             /*
              * Always enabled in debug mode, even when the VM does not request detailed information,
              * to increase test coverage.
@@ -158,19 +164,23 @@ public class CompilationResultBuilder {
         }
     }
 
-    public void setTotalFrameSize(int frameSize) {
+    public void setTotalFrameSize(int frameSize)
+    {
         compilationResult.setTotalFrameSize(frameSize);
     }
 
-    public void setMaxInterpreterFrameSize(int maxInterpreterFrameSize) {
+    public void setMaxInterpreterFrameSize(int maxInterpreterFrameSize)
+    {
         compilationResult.setMaxInterpreterFrameSize(maxInterpreterFrameSize);
     }
 
-    public Mark recordMark(Object id) {
+    public Mark recordMark(Object id)
+    {
         return compilationResult.recordMark(asm.position(), id);
     }
 
-    public void blockComment(String s) {
+    public void blockComment(String s)
+    {
         compilationResult.addAnnotation(new CompilationResult.CodeComment(asm.position(), s));
     }
 
@@ -179,13 +189,16 @@ public class CompilationResultBuilder {
      * {@linkplain CompilationResult#recordExceptionHandler(int, int) exception handler} fields of
      * the compilation result and then {@linkplain #closeCompilationResult() closes} it.
      */
-    public void finish() {
+    public void finish()
+    {
         int position = asm.position();
         compilationResult.setTargetCode(asm.close(false), position);
 
         // Record exception handlers if they exist
-        if (exceptionInfoList != null) {
-            for (ExceptionInfo ei : exceptionInfoList) {
+        if (exceptionInfoList != null)
+        {
+            for (ExceptionInfo ei : exceptionInfoList)
+            {
                 int codeOffset = ei.codeOffset;
                 compilationResult.recordExceptionHandler(codeOffset, ei.exceptionEdge.label().position());
             }
@@ -196,14 +209,19 @@ public class CompilationResultBuilder {
     /**
      * Calls {@link CompilationResult#close()} on {@link #compilationResult}.
      */
-    protected void closeCompilationResult() {
+    protected void closeCompilationResult()
+    {
         compilationResult.close();
     }
 
-    public void recordExceptionHandlers(int pcOffset, LIRFrameState info) {
-        if (info != null) {
-            if (info.exceptionEdge != null) {
-                if (exceptionInfoList == null) {
+    public void recordExceptionHandlers(int pcOffset, LIRFrameState info)
+    {
+        if (info != null)
+        {
+            if (info.exceptionEdge != null)
+            {
+                if (exceptionInfoList == null)
+                {
                     exceptionInfoList = new ArrayList<>(4);
                 }
                 exceptionInfoList.add(new ExceptionInfo(pcOffset, info.exceptionEdge));
@@ -211,54 +229,65 @@ public class CompilationResultBuilder {
         }
     }
 
-    public void recordImplicitException(int pcOffset, LIRFrameState info) {
+    public void recordImplicitException(int pcOffset, LIRFrameState info)
+    {
         compilationResult.recordInfopoint(pcOffset, info.debugInfo(), InfopointReason.IMPLICIT_EXCEPTION);
         assert info.exceptionEdge == null;
     }
 
-    public void recordDirectCall(int posBefore, int posAfter, InvokeTarget callTarget, LIRFrameState info) {
+    public void recordDirectCall(int posBefore, int posAfter, InvokeTarget callTarget, LIRFrameState info)
+    {
         DebugInfo debugInfo = info != null ? info.debugInfo() : null;
         compilationResult.recordCall(posBefore, posAfter - posBefore, callTarget, debugInfo, true);
     }
 
-    public void recordIndirectCall(int posBefore, int posAfter, InvokeTarget callTarget, LIRFrameState info) {
+    public void recordIndirectCall(int posBefore, int posAfter, InvokeTarget callTarget, LIRFrameState info)
+    {
         DebugInfo debugInfo = info != null ? info.debugInfo() : null;
         compilationResult.recordCall(posBefore, posAfter - posBefore, callTarget, debugInfo, false);
     }
 
-    public void recordInfopoint(int pos, LIRFrameState info, InfopointReason reason) {
+    public void recordInfopoint(int pos, LIRFrameState info, InfopointReason reason)
+    {
         // infopoints always need debug info
         DebugInfo debugInfo = info.debugInfo();
         recordInfopoint(pos, debugInfo, reason);
     }
 
-    public void recordInfopoint(int pos, DebugInfo debugInfo, InfopointReason reason) {
+    public void recordInfopoint(int pos, DebugInfo debugInfo, InfopointReason reason)
+    {
         compilationResult.recordInfopoint(pos, debugInfo, reason);
     }
 
-    public void recordSourceMapping(int pcOffset, int endPcOffset, NodeSourcePosition sourcePosition) {
+    public void recordSourceMapping(int pcOffset, int endPcOffset, NodeSourcePosition sourcePosition)
+    {
         compilationResult.recordSourceMapping(pcOffset, endPcOffset, sourcePosition);
     }
 
-    public void recordInlineDataInCode(Constant data) {
+    public void recordInlineDataInCode(Constant data)
+    {
         assert data != null;
         int pos = asm.position();
         debug.log("Inline data in code: pos = %d, data = %s", pos, data);
-        if (data instanceof VMConstant) {
+        if (data instanceof VMConstant)
+        {
             compilationResult.recordDataPatch(pos, new ConstantReference((VMConstant) data));
         }
     }
 
-    public void recordInlineDataInCodeWithNote(Constant data, Object note) {
+    public void recordInlineDataInCodeWithNote(Constant data, Object note)
+    {
         assert data != null;
         int pos = asm.position();
         debug.log("Inline data in code: pos = %d, data = %s, note = %s", pos, data, note);
-        if (data instanceof VMConstant) {
+        if (data instanceof VMConstant)
+        {
             compilationResult.recordDataPatchWithNote(pos, new ConstantReference((VMConstant) data), note);
         }
     }
 
-    public AbstractAddress recordDataSectionReference(Data data) {
+    public AbstractAddress recordDataSectionReference(Data data)
+    {
         assert data != null;
         DataSectionReference reference = compilationResult.getDataSection().insertData(data);
         int instructionStart = asm.position();
@@ -266,11 +295,13 @@ public class CompilationResultBuilder {
         return asm.getPlaceholder(instructionStart);
     }
 
-    public AbstractAddress recordDataReferenceInCode(DataPointerConstant constant) {
+    public AbstractAddress recordDataReferenceInCode(DataPointerConstant constant)
+    {
         return recordDataReferenceInCode(constant, constant.getAlignment());
     }
 
-    public AbstractAddress recordDataReferenceInCode(Constant constant, int alignment) {
+    public AbstractAddress recordDataReferenceInCode(Constant constant, int alignment)
+    {
         assert constant != null;
         debug.log("Constant reference in code: pos = %d, data = %s", asm.position(), constant);
         Data data = createDataItem(constant);
@@ -278,24 +309,29 @@ public class CompilationResultBuilder {
         return recordDataSectionReference(data);
     }
 
-    public AbstractAddress recordDataReferenceInCode(Data data, int alignment) {
+    public AbstractAddress recordDataReferenceInCode(Data data, int alignment)
+    {
         assert data != null;
         data.updateAlignment(alignment);
         return recordDataSectionReference(data);
     }
 
-    public Data createDataItem(Constant constant) {
+    public Data createDataItem(Constant constant)
+    {
         Data data = dataCache.get(constant);
-        if (data == null) {
+        if (data == null)
+        {
             data = dataBuilder.createDataItem(constant);
             dataCache.put(constant, data);
         }
         return data;
     }
 
-    public AbstractAddress recordDataReferenceInCode(byte[] data, int alignment) {
+    public AbstractAddress recordDataReferenceInCode(byte[] data, int alignment)
+    {
         assert data != null;
-        if (debug.isLogEnabled()) {
+        if (debug.isLogEnabled())
+        {
             debug.log("Data reference in code: pos = %d, data = %s", asm.position(), Arrays.toString(data));
         }
         return recordDataSectionReference(new RawData(data, alignment));
@@ -307,7 +343,8 @@ public class CompilationResultBuilder {
      * @param isNegated negation status of the branch's condition.
      */
     @SuppressWarnings("unused")
-    public void recordBranch(int pcOffset, boolean isNegated) {
+    public void recordBranch(int pcOffset, boolean isNegated)
+    {
     }
 
     /**
@@ -317,7 +354,8 @@ public class CompilationResultBuilder {
      * @param nodeSourcePosition source position of the corresponding invoke.
      */
     @SuppressWarnings("unused")
-    public void recordInvokeVirtualOrInterfaceCallOp(int pcOffset, NodeSourcePosition nodeSourcePosition) {
+    public void recordInvokeVirtualOrInterfaceCallOp(int pcOffset, NodeSourcePosition nodeSourcePosition)
+    {
     }
 
     /**
@@ -327,18 +365,21 @@ public class CompilationResultBuilder {
      * @param nodeSourcePosition source position of the corresponding invoke.
      */
     @SuppressWarnings("unused")
-    public void recordInlineInvokeCallOp(int pcOffset, NodeSourcePosition nodeSourcePosition) {
+    public void recordInlineInvokeCallOp(int pcOffset, NodeSourcePosition nodeSourcePosition)
+    {
     }
 
     /**
      * Returns the integer value of any constant that can be represented by a 32-bit integer value,
      * including long constants that fit into the 32-bit range.
      */
-    public int asIntConst(Value value) {
+    public int asIntConst(Value value)
+    {
         assert isJavaConstant(value) && asJavaConstant(value).getJavaKind().isNumericInteger();
         JavaConstant constant = asJavaConstant(value);
         long c = constant.asLong();
-        if (!NumUtil.isInt(c)) {
+        if (!NumUtil.isInt(c))
+        {
             throw GraalError.shouldNotReachHere();
         }
         return (int) c;
@@ -347,7 +388,8 @@ public class CompilationResultBuilder {
     /**
      * Returns the float value of any constant that can be represented by a 32-bit float value.
      */
-    public float asFloatConst(Value value) {
+    public float asFloatConst(Value value)
+    {
         assert isJavaConstant(value) && asJavaConstant(value).getJavaKind() == JavaKind.Float;
         JavaConstant constant = asJavaConstant(value);
         return constant.asFloat();
@@ -356,7 +398,8 @@ public class CompilationResultBuilder {
     /**
      * Returns the long value of any constant that can be represented by a 64-bit long value.
      */
-    public long asLongConst(Value value) {
+    public long asLongConst(Value value)
+    {
         assert isJavaConstant(value) && asJavaConstant(value).getJavaKind() == JavaKind.Long;
         JavaConstant constant = asJavaConstant(value);
         return constant.asLong();
@@ -365,7 +408,8 @@ public class CompilationResultBuilder {
     /**
      * Returns the double value of any constant that can be represented by a 64-bit float value.
      */
-    public double asDoubleConst(Value value) {
+    public double asDoubleConst(Value value)
+    {
         assert isJavaConstant(value) && asJavaConstant(value).getJavaKind() == JavaKind.Double;
         JavaConstant constant = asJavaConstant(value);
         return constant.asDouble();
@@ -374,11 +418,13 @@ public class CompilationResultBuilder {
     /**
      * Returns the address of a float constant that is embedded as a data reference into the code.
      */
-    public AbstractAddress asFloatConstRef(JavaConstant value) {
+    public AbstractAddress asFloatConstRef(JavaConstant value)
+    {
         return asFloatConstRef(value, 4);
     }
 
-    public AbstractAddress asFloatConstRef(JavaConstant value, int alignment) {
+    public AbstractAddress asFloatConstRef(JavaConstant value, int alignment)
+    {
         assert value.getJavaKind() == JavaKind.Float;
         return recordDataReferenceInCode(value, alignment);
     }
@@ -386,11 +432,13 @@ public class CompilationResultBuilder {
     /**
      * Returns the address of a double constant that is embedded as a data reference into the code.
      */
-    public AbstractAddress asDoubleConstRef(JavaConstant value) {
+    public AbstractAddress asDoubleConstRef(JavaConstant value)
+    {
         return asDoubleConstRef(value, 8);
     }
 
-    public AbstractAddress asDoubleConstRef(JavaConstant value, int alignment) {
+    public AbstractAddress asDoubleConstRef(JavaConstant value, int alignment)
+    {
         assert value.getJavaKind() == JavaKind.Double;
         return recordDataReferenceInCode(value, alignment);
     }
@@ -398,7 +446,8 @@ public class CompilationResultBuilder {
     /**
      * Returns the address of a long constant that is embedded as a data reference into the code.
      */
-    public AbstractAddress asLongConstRef(JavaConstant value) {
+    public AbstractAddress asLongConstRef(JavaConstant value)
+    {
         assert value.getJavaKind() == JavaKind.Long;
         return recordDataReferenceInCode(value, 8);
     }
@@ -406,42 +455,50 @@ public class CompilationResultBuilder {
     /**
      * Returns the address of an object constant that is embedded as a data reference into the code.
      */
-    public AbstractAddress asObjectConstRef(JavaConstant value) {
+    public AbstractAddress asObjectConstRef(JavaConstant value)
+    {
         assert value.getJavaKind() == JavaKind.Object;
         return recordDataReferenceInCode(value, 8);
     }
 
-    public AbstractAddress asByteAddr(Value value) {
+    public AbstractAddress asByteAddr(Value value)
+    {
         assert value.getPlatformKind().getSizeInBytes() >= JavaKind.Byte.getByteCount();
         return asAddress(value);
     }
 
-    public AbstractAddress asShortAddr(Value value) {
+    public AbstractAddress asShortAddr(Value value)
+    {
         assert value.getPlatformKind().getSizeInBytes() >= JavaKind.Short.getByteCount();
         return asAddress(value);
     }
 
-    public AbstractAddress asIntAddr(Value value) {
+    public AbstractAddress asIntAddr(Value value)
+    {
         assert value.getPlatformKind().getSizeInBytes() >= JavaKind.Int.getByteCount();
         return asAddress(value);
     }
 
-    public AbstractAddress asLongAddr(Value value) {
+    public AbstractAddress asLongAddr(Value value)
+    {
         assert value.getPlatformKind().getSizeInBytes() >= JavaKind.Long.getByteCount();
         return asAddress(value);
     }
 
-    public AbstractAddress asFloatAddr(Value value) {
+    public AbstractAddress asFloatAddr(Value value)
+    {
         assert value.getPlatformKind().getSizeInBytes() >= JavaKind.Float.getByteCount();
         return asAddress(value);
     }
 
-    public AbstractAddress asDoubleAddr(Value value) {
+    public AbstractAddress asDoubleAddr(Value value)
+    {
         assert value.getPlatformKind().getSizeInBytes() >= JavaKind.Double.getByteCount();
         return asAddress(value);
     }
 
-    public AbstractAddress asAddress(Value value) {
+    public AbstractAddress asAddress(Value value)
+    {
         assert isStackSlot(value);
         StackSlot slot = asStackSlot(value);
         return asm.makeAddress(frameMap.getRegisterConfig().getFrameRegister(), frameMap.offsetForStackSlot(slot));
@@ -451,7 +508,8 @@ public class CompilationResultBuilder {
      * Determines if a given edge from the block currently being emitted goes to its lexical
      * successor.
      */
-    public boolean isSuccessorEdge(LabelRef edge) {
+    public boolean isSuccessorEdge(LabelRef edge)
+    {
         assert lir != null;
         AbstractBlockBase<?>[] order = lir.codeEmittingOrder();
         assert order[currentBlockIndex] == edge.getSourceBlock();
@@ -462,13 +520,15 @@ public class CompilationResultBuilder {
     /**
      * Emits code for {@code lir} in its {@linkplain LIR#codeEmittingOrder() code emitting order}.
      */
-    public void emit(@SuppressWarnings("hiding") LIR lir) {
+    public void emit(@SuppressWarnings("hiding") LIR lir)
+    {
         assert this.lir == null;
         assert currentBlockIndex == 0;
         this.lir = lir;
         this.currentBlockIndex = 0;
         frameContext.enter(this);
-        for (AbstractBlockBase<?> b : lir.codeEmittingOrder()) {
+        for (AbstractBlockBase<?> b : lir.codeEmittingOrder())
+        {
             assert (b == null && lir.codeEmittingOrder()[currentBlockIndex] == null) || lir.codeEmittingOrder()[currentBlockIndex].equals(b);
             emitBlock(b);
             currentBlockIndex++;
@@ -477,66 +537,87 @@ public class CompilationResultBuilder {
         this.currentBlockIndex = 0;
     }
 
-    private void emitBlock(AbstractBlockBase<?> block) {
-        if (block == null) {
+    private void emitBlock(AbstractBlockBase<?> block)
+    {
+        if (block == null)
+        {
             return;
         }
         boolean emitComment = debug.isDumpEnabled(DebugContext.BASIC_LEVEL) || Options.PrintLIRWithAssembly.getValue(getOptions());
-        if (emitComment) {
+        if (emitComment)
+        {
             blockComment(String.format("block B%d %s", block.getId(), block.getLoop()));
         }
 
-        for (LIRInstruction op : lir.getLIRforBlock(block)) {
-            if (emitComment) {
+        for (LIRInstruction op : lir.getLIRforBlock(block))
+        {
+            if (emitComment)
+            {
                 blockComment(String.format("%d %s", op.id(), op));
             }
 
-            try {
-                if (beforeOp != null) {
+            try
+            {
+                if (beforeOp != null)
+                {
                     beforeOp.accept(op);
                 }
                 emitOp(this, op);
-                if (afterOp != null) {
+                if (afterOp != null)
+                {
                     afterOp.accept(op);
                 }
-            } catch (GraalError e) {
+            }
+            catch (GraalError e)
+            {
                 throw e.addContext("lir instruction", block + "@" + op.id() + " " + op.getClass().getName() + " " + op + "\n" + Arrays.toString(lir.codeEmittingOrder()));
             }
         }
     }
 
-    private static void emitOp(CompilationResultBuilder crb, LIRInstruction op) {
-        try {
+    private static void emitOp(CompilationResultBuilder crb, LIRInstruction op)
+    {
+        try
+        {
             int start = crb.asm.position();
             op.emitCode(crb);
-            if (op.getPosition() != null) {
+            if (op.getPosition() != null)
+            {
                 crb.recordSourceMapping(start, crb.asm.position(), op.getPosition());
             }
-        } catch (AssertionError t) {
+        }
+        catch (AssertionError t)
+        {
             throw new GraalError(t);
-        } catch (RuntimeException t) {
+        }
+        catch (RuntimeException t)
+        {
             throw new GraalError(t);
         }
     }
 
-    public void resetForEmittingCode() {
+    public void resetForEmittingCode()
+    {
         asm.reset();
         compilationResult.resetForEmittingCode();
-        if (exceptionInfoList != null) {
+        if (exceptionInfoList != null)
+        {
             exceptionInfoList.clear();
         }
-        if (dataCache != null) {
+        if (dataCache != null)
+        {
             dataCache.clear();
         }
     }
 
-    public void setOpCallback(Consumer<LIRInstruction> beforeOp, Consumer<LIRInstruction> afterOp) {
+    public void setOpCallback(Consumer<LIRInstruction> beforeOp, Consumer<LIRInstruction> afterOp)
+    {
         this.beforeOp = beforeOp;
         this.afterOp = afterOp;
     }
 
-    public OptionValues getOptions() {
+    public OptionValues getOptions()
+    {
         return options;
     }
-
 }

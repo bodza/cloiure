@@ -31,8 +31,8 @@ import jdk.vm.ci.meta.Value;
  * Compares two arrays lexicographically.
  */
 @NodeInfo(cycles = CYCLES_1024, size = SIZE_1024)
-public final class ArrayCompareToNode extends FixedWithNextNode implements LIRLowerable, Canonicalizable, Virtualizable, MemoryAccess {
-
+public final class ArrayCompareToNode extends FixedWithNextNode implements LIRLowerable, Canonicalizable, Virtualizable, MemoryAccess
+{
     public static final NodeClass<ArrayCompareToNode> TYPE = NodeClass.create(ArrayCompareToNode.class);
 
     /** {@link JavaKind} of one array to compare. */
@@ -55,7 +55,8 @@ public final class ArrayCompareToNode extends FixedWithNextNode implements LIRLo
 
     @OptionalInput(Memory) MemoryNode lastLocationAccess;
 
-    public ArrayCompareToNode(ValueNode array1, ValueNode array2, ValueNode length1, ValueNode length2, @ConstantNodeParameter JavaKind kind1, @ConstantNodeParameter JavaKind kind2) {
+    public ArrayCompareToNode(ValueNode array1, ValueNode array2, ValueNode length1, ValueNode length2, @ConstantNodeParameter JavaKind kind1, @ConstantNodeParameter JavaKind kind2)
+    {
         super(TYPE, StampFactory.forKind(JavaKind.Int));
         this.kind1 = kind1;
         this.kind2 = kind2;
@@ -66,23 +67,28 @@ public final class ArrayCompareToNode extends FixedWithNextNode implements LIRLo
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool) {
-        if (tool.allUsagesAvailable() && hasNoUsages()) {
+    public Node canonical(CanonicalizerTool tool)
+    {
+        if (tool.allUsagesAvailable() && hasNoUsages())
+        {
             return null;
         }
         ValueNode a1 = GraphUtil.unproxify(array1);
         ValueNode a2 = GraphUtil.unproxify(array2);
-        if (a1 == a2) {
+        if (a1 == a2)
+        {
             return ConstantNode.forInt(0);
         }
         return this;
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool) {
+    public void virtualize(VirtualizerTool tool)
+    {
         ValueNode alias1 = tool.getAlias(array1);
         ValueNode alias2 = tool.getAlias(array2);
-        if (alias1 == alias2) {
+        if (alias1 == alias2)
+        {
             // the same virtual objects will always have the same contents
             tool.replaceWithValue(ConstantNode.forInt(0, graph()));
         }
@@ -92,23 +98,27 @@ public final class ArrayCompareToNode extends FixedWithNextNode implements LIRLo
     public static native int compareTo(Object array1, Object array2, int length1, int length2, @ConstantNodeParameter JavaKind kind1, @ConstantNodeParameter JavaKind kind2);
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         Value result = gen.getLIRGeneratorTool().emitArrayCompareTo(kind1, kind2, gen.operand(array1), gen.operand(array2), gen.operand(length1), gen.operand(length2));
         gen.setResult(this, result);
     }
 
     @Override
-    public LocationIdentity getLocationIdentity() {
+    public LocationIdentity getLocationIdentity()
+    {
         return NamedLocationIdentity.getArrayLocation(kind1);
     }
 
     @Override
-    public MemoryNode getLastLocationAccess() {
+    public MemoryNode getLastLocationAccess()
+    {
         return lastLocationAccess;
     }
 
     @Override
-    public void setLastLocationAccess(MemoryNode lla) {
+    public void setLastLocationAccess(MemoryNode lla)
+    {
         updateUsages(ValueNodeUtil.asNode(lastLocationAccess), ValueNodeUtil.asNode(lla));
         lastLocationAccess = lla;
     }

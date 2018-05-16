@@ -28,8 +28,8 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.PrimitiveConstant;
 
 @NodeInfo(cycles = CYCLES_1)
-public abstract class CompareNode extends BinaryOpLogicNode implements Canonicalizable.Binary<ValueNode> {
-
+public abstract class CompareNode extends BinaryOpLogicNode implements Canonicalizable.Binary<ValueNode>
+{
     public static final NodeClass<CompareNode> TYPE = NodeClass.create(CompareNode.class);
     protected final CanonicalCondition condition;
     protected final boolean unorderedIsTrue;
@@ -40,7 +40,8 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
      * @param x the instruction producing the first input to the instruction
      * @param y the instruction that produces the second input to this instruction
      */
-    protected CompareNode(NodeClass<? extends CompareNode> c, CanonicalCondition condition, boolean unorderedIsTrue, ValueNode x, ValueNode y) {
+    protected CompareNode(NodeClass<? extends CompareNode> c, CanonicalCondition condition, boolean unorderedIsTrue, ValueNode x, ValueNode y)
+    {
         super(c, x, y);
         this.condition = condition;
         this.unorderedIsTrue = unorderedIsTrue;
@@ -51,7 +52,8 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
      *
      * @return the condition
      */
-    public final CanonicalCondition condition() {
+    public final CanonicalCondition condition()
+    {
         return condition;
     }
 
@@ -60,20 +62,25 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
      *
      * @return {@code true} if unordered inputs produce true
      */
-    public final boolean unorderedIsTrue() {
+    public final boolean unorderedIsTrue()
+    {
         return this.unorderedIsTrue;
     }
 
-    public static LogicNode tryConstantFold(CanonicalCondition condition, ValueNode forX, ValueNode forY, ConstantReflectionProvider constantReflection, boolean unorderedIsTrue) {
-        if (forX.isConstant() && forY.isConstant() && (constantReflection != null || forX.asConstant() instanceof PrimitiveConstant)) {
+    public static LogicNode tryConstantFold(CanonicalCondition condition, ValueNode forX, ValueNode forY, ConstantReflectionProvider constantReflection, boolean unorderedIsTrue)
+    {
+        if (forX.isConstant() && forY.isConstant() && (constantReflection != null || forX.asConstant() instanceof PrimitiveConstant))
+        {
             return LogicConstantNode.forBoolean(condition.foldCondition(forX.asConstant(), forY.asConstant(), constantReflection, unorderedIsTrue));
         }
         return null;
     }
 
     @SuppressWarnings("unused")
-    public static LogicNode tryConstantFoldPrimitive(CanonicalCondition condition, ValueNode forX, ValueNode forY, boolean unorderedIsTrue, NodeView view) {
-        if (forX.asConstant() instanceof PrimitiveConstant && forY.asConstant() instanceof PrimitiveConstant) {
+    public static LogicNode tryConstantFoldPrimitive(CanonicalCondition condition, ValueNode forX, ValueNode forY, boolean unorderedIsTrue, NodeView view)
+    {
+        if (forX.asConstant() instanceof PrimitiveConstant && forY.asConstant() instanceof PrimitiveConstant)
+        {
             return LogicConstantNode.forBoolean(condition.foldCondition((PrimitiveConstant) forX.asConstant(), (PrimitiveConstant) forY.asConstant(), unorderedIsTrue));
         }
         return null;
@@ -85,39 +92,53 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
      *
      * @return true for identity comparisons
      */
-    public boolean isIdentityComparison() {
+    public boolean isIdentityComparison()
+    {
         return condition == CanonicalCondition.EQ;
     }
 
-    public abstract static class CompareOp {
-        public LogicNode canonical(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, CanonicalCondition condition,
-                        boolean unorderedIsTrue, ValueNode forX, ValueNode forY, NodeView view) {
+    public abstract static class CompareOp
+    {
+        public LogicNode canonical(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, CanonicalCondition condition, boolean unorderedIsTrue, ValueNode forX, ValueNode forY, NodeView view)
+        {
             LogicNode constantCondition = tryConstantFold(condition, forX, forY, constantReflection, unorderedIsTrue);
-            if (constantCondition != null) {
+            if (constantCondition != null)
+            {
                 return constantCondition;
             }
             LogicNode result;
-            if (forX.isConstant()) {
-                if ((result = canonicalizeSymmetricConstant(constantReflection, metaAccess, options, smallestCompareWidth, condition, forX.asConstant(), forY, true, unorderedIsTrue, view)) != null) {
+            if (forX.isConstant())
+            {
+                if ((result = canonicalizeSymmetricConstant(constantReflection, metaAccess, options, smallestCompareWidth, condition, forX.asConstant(), forY, true, unorderedIsTrue, view)) != null)
+                {
                     return result;
                 }
-            } else if (forY.isConstant()) {
-                if ((result = canonicalizeSymmetricConstant(constantReflection, metaAccess, options, smallestCompareWidth, condition, forY.asConstant(), forX, false, unorderedIsTrue, view)) != null) {
+            }
+            else if (forY.isConstant())
+            {
+                if ((result = canonicalizeSymmetricConstant(constantReflection, metaAccess, options, smallestCompareWidth, condition, forY.asConstant(), forX, false, unorderedIsTrue, view)) != null)
+                {
                     return result;
                 }
-            } else if (forX instanceof ConvertNode && forY instanceof ConvertNode) {
+            }
+            else if (forX instanceof ConvertNode && forY instanceof ConvertNode)
+            {
                 ConvertNode convertX = (ConvertNode) forX;
                 ConvertNode convertY = (ConvertNode) forY;
-                if (convertX.preservesOrder(condition) && convertY.preservesOrder(condition) && convertX.getValue().stamp(view).isCompatible(convertY.getValue().stamp(view))) {
+                if (convertX.preservesOrder(condition) && convertY.preservesOrder(condition) && convertX.getValue().stamp(view).isCompatible(convertY.getValue().stamp(view)))
+                {
                     boolean supported = true;
-                    if (convertX.getValue().stamp(view) instanceof IntegerStamp) {
+                    if (convertX.getValue().stamp(view) instanceof IntegerStamp)
+                    {
                         IntegerStamp intStamp = (IntegerStamp) convertX.getValue().stamp(view);
                         supported = smallestCompareWidth != null && intStamp.getBits() >= smallestCompareWidth;
                     }
 
-                    if (supported) {
+                    if (supported)
+                    {
                         boolean multiUsage = (convertX.asNode().hasMoreThanOneUsage() || convertY.asNode().hasMoreThanOneUsage());
-                        if ((forX instanceof ZeroExtendNode || forX instanceof SignExtendNode) && multiUsage) {
+                        if ((forX instanceof ZeroExtendNode || forX instanceof SignExtendNode) && multiUsage)
+                        {
                             // Do not perform for zero or sign extend if there are multiple usages
                             // of the value.
                             return null;
@@ -129,37 +150,50 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
             return null;
         }
 
-        protected LogicNode canonicalizeSymmetricConstant(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth,
-                        CanonicalCondition condition, Constant constant, ValueNode nonConstant, boolean mirrored, boolean unorderedIsTrue, NodeView view) {
-            if (nonConstant instanceof ConditionalNode) {
+        protected LogicNode canonicalizeSymmetricConstant(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, CanonicalCondition condition, Constant constant, ValueNode nonConstant, boolean mirrored, boolean unorderedIsTrue, NodeView view)
+        {
+            if (nonConstant instanceof ConditionalNode)
+            {
                 Condition realCondition = condition.asCondition();
-                if (mirrored) {
+                if (mirrored)
+                {
                     realCondition = realCondition.mirror();
                 }
                 return optimizeConditional(constant, (ConditionalNode) nonConstant, constantReflection, realCondition, unorderedIsTrue);
-            } else if (nonConstant instanceof NormalizeCompareNode) {
+            }
+            else if (nonConstant instanceof NormalizeCompareNode)
+            {
                 return optimizeNormalizeCompare(constantReflection, metaAccess, options, smallestCompareWidth, constant, (NormalizeCompareNode) nonConstant, mirrored, view);
-            } else if (nonConstant instanceof ConvertNode) {
+            }
+            else if (nonConstant instanceof ConvertNode)
+            {
                 ConvertNode convert = (ConvertNode) nonConstant;
                 boolean multiUsage = (convert.asNode().hasMoreThanOneUsage() && convert.getValue().hasExactlyOneUsage());
-                if ((convert instanceof ZeroExtendNode || convert instanceof SignExtendNode) && multiUsage) {
+                if ((convert instanceof ZeroExtendNode || convert instanceof SignExtendNode) && multiUsage)
+                {
                     // Do not perform for zero or sign extend if it could introduce
                     // new live values.
                     return null;
                 }
 
                 boolean supported = true;
-                if (convert.getValue().stamp(view) instanceof IntegerStamp) {
+                if (convert.getValue().stamp(view) instanceof IntegerStamp)
+                {
                     IntegerStamp intStamp = (IntegerStamp) convert.getValue().stamp(view);
                     supported = smallestCompareWidth != null && intStamp.getBits() > smallestCompareWidth;
                 }
 
-                if (supported) {
+                if (supported)
+                {
                     ConstantNode newConstant = canonicalConvertConstant(constantReflection, metaAccess, options, condition, convert, constant, view);
-                    if (newConstant != null) {
-                        if (mirrored) {
+                    if (newConstant != null)
+                    {
+                        if (mirrored)
+                        {
                             return duplicateModified(newConstant, convert.getValue(), unorderedIsTrue, view);
-                        } else {
+                        }
+                        else
+                        {
                             return duplicateModified(convert.getValue(), newConstant, unorderedIsTrue, view);
                         }
                     }
@@ -169,12 +203,15 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
             return null;
         }
 
-        private static ConstantNode canonicalConvertConstant(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, CanonicalCondition condition,
-                        ConvertNode convert, Constant constant, NodeView view) {
-            if (convert.preservesOrder(condition, constant, constantReflection)) {
+        private static ConstantNode canonicalConvertConstant(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, CanonicalCondition condition, ConvertNode convert, Constant constant, NodeView view)
+        {
+            if (convert.preservesOrder(condition, constant, constantReflection))
+            {
                 Constant reverseConverted = convert.reverse(constant, constantReflection);
-                if (reverseConverted != null && convert.convert(reverseConverted, constantReflection).equals(constant)) {
-                    if (GeneratePIC.getValue(options)) {
+                if (reverseConverted != null && convert.convert(reverseConverted, constantReflection).equals(constant))
+                {
+                    if (GeneratePIC.getValue(options))
+                    {
                         // We always want uncompressed constants
                         return null;
                     }
@@ -185,29 +222,36 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
         }
 
         @SuppressWarnings("unused")
-        protected LogicNode optimizeNormalizeCompare(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth,
-                        Constant constant, NormalizeCompareNode normalizeNode, boolean mirrored, NodeView view) {
+        protected LogicNode optimizeNormalizeCompare(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, Constant constant, NormalizeCompareNode normalizeNode, boolean mirrored, NodeView view)
+        {
             throw new PermanentBailoutException("NormalizeCompareNode connected to %s (%s %s %s)", this, constant, normalizeNode, mirrored);
         }
 
-        private static LogicNode optimizeConditional(Constant constant, ConditionalNode conditionalNode, ConstantReflectionProvider constantReflection, Condition cond, boolean unorderedIsTrue) {
+        private static LogicNode optimizeConditional(Constant constant, ConditionalNode conditionalNode, ConstantReflectionProvider constantReflection, Condition cond, boolean unorderedIsTrue)
+        {
             Constant trueConstant = conditionalNode.trueValue().asConstant();
             Constant falseConstant = conditionalNode.falseValue().asConstant();
 
-            if (falseConstant != null && trueConstant != null && constantReflection != null) {
+            if (falseConstant != null && trueConstant != null && constantReflection != null)
+            {
                 boolean trueResult = cond.foldCondition(trueConstant, constant, constantReflection, unorderedIsTrue);
                 boolean falseResult = cond.foldCondition(falseConstant, constant, constantReflection, unorderedIsTrue);
 
-                if (trueResult == falseResult) {
+                if (trueResult == falseResult)
+                {
                     return LogicConstantNode.forBoolean(trueResult);
-                } else {
-                    if (trueResult) {
+                }
+                else
+                {
+                    if (trueResult)
+                    {
                         assert falseResult == false;
                         return conditionalNode.condition();
-                    } else {
+                    }
+                    else
+                    {
                         assert falseResult == true;
                         return LogicNegationNode.create(conditionalNode.condition());
-
                     }
                 }
             }
@@ -218,29 +262,41 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
         protected abstract LogicNode duplicateModified(ValueNode newW, ValueNode newY, boolean unorderedIsTrue, NodeView view);
     }
 
-    public static LogicNode createCompareNode(StructuredGraph graph, CanonicalCondition condition, ValueNode x, ValueNode y, ConstantReflectionProvider constantReflection, NodeView view) {
+    public static LogicNode createCompareNode(StructuredGraph graph, CanonicalCondition condition, ValueNode x, ValueNode y, ConstantReflectionProvider constantReflection, NodeView view)
+    {
         LogicNode result = createCompareNode(condition, x, y, constantReflection, view);
         return (result.graph() == null ? graph.addOrUniqueWithInputs(result) : result);
     }
 
-    public static LogicNode createCompareNode(CanonicalCondition condition, ValueNode x, ValueNode y, ConstantReflectionProvider constantReflection, NodeView view) {
+    public static LogicNode createCompareNode(CanonicalCondition condition, ValueNode x, ValueNode y, ConstantReflectionProvider constantReflection, NodeView view)
+    {
         assert x.getStackKind() == y.getStackKind();
         assert !x.getStackKind().isNumericFloat();
 
         LogicNode comparison;
-        if (condition == CanonicalCondition.EQ) {
-            if (x.stamp(view) instanceof AbstractObjectStamp) {
+        if (condition == CanonicalCondition.EQ)
+        {
+            if (x.stamp(view) instanceof AbstractObjectStamp)
+            {
                 comparison = ObjectEqualsNode.create(x, y, constantReflection, view);
-            } else if (x.stamp(view) instanceof AbstractPointerStamp) {
+            }
+            else if (x.stamp(view) instanceof AbstractPointerStamp)
+            {
                 comparison = PointerEqualsNode.create(x, y, view);
-            } else {
+            }
+            else
+            {
                 assert x.getStackKind().isNumericInteger();
                 comparison = IntegerEqualsNode.create(x, y, view);
             }
-        } else if (condition == CanonicalCondition.LT) {
+        }
+        else if (condition == CanonicalCondition.LT)
+        {
             assert x.getStackKind().isNumericInteger();
             comparison = IntegerLessThanNode.create(x, y, view);
-        } else {
+        }
+        else
+        {
             assert condition == CanonicalCondition.BT;
             assert x.getStackKind().isNumericInteger();
             comparison = IntegerBelowNode.create(x, y, view);
@@ -249,32 +305,42 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
         return comparison;
     }
 
-    public static LogicNode createCompareNode(StructuredGraph graph, ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth,
-                    CanonicalCondition condition, ValueNode x, ValueNode y, NodeView view) {
+    public static LogicNode createCompareNode(StructuredGraph graph, ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, CanonicalCondition condition, ValueNode x, ValueNode y, NodeView view)
+    {
         LogicNode result = createCompareNode(constantReflection, metaAccess, options, smallestCompareWidth, condition, x, y, view);
         return (result.graph() == null ? graph.addOrUniqueWithInputs(result) : result);
     }
 
-    public static LogicNode createCompareNode(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth,
-                    CanonicalCondition condition, ValueNode x, ValueNode y, NodeView view) {
+    public static LogicNode createCompareNode(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, CanonicalCondition condition, ValueNode x, ValueNode y, NodeView view)
+    {
         assert x.getStackKind() == y.getStackKind();
         assert !x.getStackKind().isNumericFloat();
 
         LogicNode comparison;
-        if (condition == CanonicalCondition.EQ) {
-            if (x.stamp(view) instanceof AbstractObjectStamp) {
+        if (condition == CanonicalCondition.EQ)
+        {
+            if (x.stamp(view) instanceof AbstractObjectStamp)
+            {
                 assert smallestCompareWidth == null;
                 comparison = ObjectEqualsNode.create(constantReflection, metaAccess, options, x, y, view);
-            } else if (x.stamp(view) instanceof AbstractPointerStamp) {
+            }
+            else if (x.stamp(view) instanceof AbstractPointerStamp)
+            {
                 comparison = PointerEqualsNode.create(x, y, view);
-            } else {
+            }
+            else
+            {
                 assert x.getStackKind().isNumericInteger();
                 comparison = IntegerEqualsNode.create(constantReflection, metaAccess, options, smallestCompareWidth, x, y, view);
             }
-        } else if (condition == CanonicalCondition.LT) {
+        }
+        else if (condition == CanonicalCondition.LT)
+        {
             assert x.getStackKind().isNumericInteger();
             comparison = IntegerLessThanNode.create(constantReflection, metaAccess, options, smallestCompareWidth, x, y, view);
-        } else {
+        }
+        else
+        {
             assert condition == CanonicalCondition.BT;
             assert x.getStackKind().isNumericInteger();
             comparison = IntegerBelowNode.create(constantReflection, metaAccess, options, smallestCompareWidth, x, y, view);

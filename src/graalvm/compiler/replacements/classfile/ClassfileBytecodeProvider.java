@@ -34,8 +34,8 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * avoid this is to have a completely isolated {@code jdk.vm.ci.meta} implementation for parsing
  * snippet/intrinsic bytecodes.
  */
-public final class ClassfileBytecodeProvider implements BytecodeProvider {
-
+public final class ClassfileBytecodeProvider implements BytecodeProvider
+{
     private final ClassLoader loader;
     private final EconomicMap<Class<?>, Classfile> classfiles = EconomicMap.create(Equivalence.IDENTITY);
     private final EconomicMap<String, Class<?>> classes = EconomicMap.create();
@@ -44,32 +44,37 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider {
     final MetaAccessProvider metaAccess;
     final SnippetReflectionProvider snippetReflection;
 
-    public ClassfileBytecodeProvider(MetaAccessProvider metaAccess, SnippetReflectionProvider snippetReflection) {
+    public ClassfileBytecodeProvider(MetaAccessProvider metaAccess, SnippetReflectionProvider snippetReflection)
+    {
         this.metaAccess = metaAccess;
         this.snippetReflection = snippetReflection;
         ClassLoader cl = getClass().getClassLoader();
         this.loader = cl == null ? ClassLoader.getSystemClassLoader() : cl;
     }
 
-    public ClassfileBytecodeProvider(MetaAccessProvider metaAccess, SnippetReflectionProvider snippetReflection, ClassLoader loader) {
+    public ClassfileBytecodeProvider(MetaAccessProvider metaAccess, SnippetReflectionProvider snippetReflection, ClassLoader loader)
+    {
         this.metaAccess = metaAccess;
         this.snippetReflection = snippetReflection;
         this.loader = loader;
     }
 
     @Override
-    public Bytecode getBytecode(ResolvedJavaMethod method) {
+    public Bytecode getBytecode(ResolvedJavaMethod method)
+    {
         Classfile classfile = getClassfile(resolveToClass(method.getDeclaringClass().getName()));
         return classfile.getCode(method.getName(), method.getSignature().toMethodDescriptor());
     }
 
     @Override
-    public boolean supportsInvokedynamic() {
+    public boolean supportsInvokedynamic()
+    {
         return false;
     }
 
     @Override
-    public boolean shouldRecordMethodDependencies() {
+    public boolean shouldRecordMethodDependencies()
+    {
         return false;
     }
 
@@ -78,47 +83,65 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider {
      *
      * @throws NoClassDefFoundError if the class file cannot be found
      */
-    private synchronized Classfile getClassfile(Class<?> c) {
+    private synchronized Classfile getClassfile(Class<?> c)
+    {
         assert !c.isPrimitive() && !c.isArray() : c;
         Classfile classfile = classfiles.get(c);
-        if (classfile == null) {
-            try {
+        if (classfile == null)
+        {
+            try
+            {
                 ResolvedJavaType type = metaAccess.lookupJavaType(c);
                 InputStream in = GraalServices.getClassfileAsStream(c);
-                if (in != null) {
+                if (in != null)
+                {
                     DataInputStream stream = new DataInputStream(in);
                     classfile = new Classfile(type, stream, this);
                     classfiles.put(c, classfile);
                     return classfile;
                 }
                 throw new NoClassDefFoundError(c.getName());
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 throw (NoClassDefFoundError) new NoClassDefFoundError(c.getName()).initCause(e);
             }
         }
         return classfile;
     }
 
-    synchronized Class<?> resolveToClass(String descriptor) {
+    synchronized Class<?> resolveToClass(String descriptor)
+    {
         Class<?> c = classes.get(descriptor);
-        if (c == null) {
-            if (descriptor.length() == 1) {
+        if (c == null)
+        {
+            if (descriptor.length() == 1)
+            {
                 c = JavaKind.fromPrimitiveOrVoidTypeChar(descriptor.charAt(0)).toJavaClass();
-            } else {
+            }
+            else
+            {
                 int dimensions = 0;
-                while (descriptor.charAt(dimensions) == '[') {
+                while (descriptor.charAt(dimensions) == '[')
+                {
                     dimensions++;
                 }
                 String name;
-                if (dimensions == 0 && descriptor.startsWith("L") && descriptor.endsWith(";")) {
+                if (dimensions == 0 && descriptor.startsWith("L") && descriptor.endsWith(";"))
+                {
                     name = descriptor.substring(1, descriptor.length() - 1).replace('/', '.');
-                } else {
+                }
+                else
+                {
                     name = descriptor.replace('/', '.');
                 }
-                try {
+                try
+                {
                     c = Class.forName(name, true, loader);
                     classes.put(descriptor, c);
-                } catch (ClassNotFoundException e) {
+                }
+                catch (ClassNotFoundException e)
+                {
                     throw new NoClassDefFoundError(descriptor);
                 }
             }
@@ -129,23 +152,28 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider {
     /**
      * Name and type of a field.
      */
-    static final class FieldKey {
+    static final class FieldKey
+    {
         final String name;
         final String type;
 
-        FieldKey(String name, String type) {
+        FieldKey(String name, String type)
+        {
             this.name = name;
             this.type = type;
         }
 
         @Override
-        public String toString() {
+        public String toString()
+        {
             return name + ":" + type;
         }
 
         @Override
-        public boolean equals(Object obj) {
-            if (obj instanceof FieldKey) {
+        public boolean equals(Object obj)
+        {
+            if (obj instanceof FieldKey)
+            {
                 FieldKey that = (FieldKey) obj;
                 return that.name.equals(this.name) && that.type.equals(this.type);
             }
@@ -153,7 +181,8 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider {
         }
 
         @Override
-        public int hashCode() {
+        public int hashCode()
+        {
             return name.hashCode() ^ type.hashCode();
         }
     }
@@ -161,23 +190,28 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider {
     /**
      * Name and descriptor of a method.
      */
-    static final class MethodKey {
+    static final class MethodKey
+    {
         final String name;
         final String descriptor;
 
-        MethodKey(String name, String descriptor) {
+        MethodKey(String name, String descriptor)
+        {
             this.name = name;
             this.descriptor = descriptor;
         }
 
         @Override
-        public String toString() {
+        public String toString()
+        {
             return name + ":" + descriptor;
         }
 
         @Override
-        public boolean equals(Object obj) {
-            if (obj instanceof MethodKey) {
+        public boolean equals(Object obj)
+        {
+            if (obj instanceof MethodKey)
+            {
                 MethodKey that = (MethodKey) obj;
                 return that.name.equals(this.name) && that.descriptor.equals(this.descriptor);
             }
@@ -185,7 +219,8 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider {
         }
 
         @Override
-        public int hashCode() {
+        public int hashCode()
+        {
             return name.hashCode() ^ descriptor.hashCode();
         }
     }
@@ -193,27 +228,34 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider {
     /**
      * Method cache for a {@link ResolvedJavaType}.
      */
-    static final class MethodsCache {
-
+    static final class MethodsCache
+    {
         volatile EconomicMap<MethodKey, ResolvedJavaMethod> constructors;
         volatile EconomicMap<MethodKey, ResolvedJavaMethod> methods;
 
-        ResolvedJavaMethod lookup(ResolvedJavaType type, String name, String descriptor) {
+        ResolvedJavaMethod lookup(ResolvedJavaType type, String name, String descriptor)
+        {
             MethodKey key = new MethodKey(name, descriptor);
 
-            if (name.equals("<clinit>")) {
+            if (name.equals("<clinit>"))
+            {
                 // No need to cache <clinit> as it will be looked up at most once
                 return type.getClassInitializer();
             }
-            if (!name.equals("<init>")) {
-                if (methods == null) {
+            if (!name.equals("<init>"))
+            {
+                if (methods == null)
+                {
                     // Racy initialization is safe since `methods` is volatile
                     methods = createMethodMap(type.getDeclaredMethods());
                 }
 
                 return methods.get(key);
-            } else {
-                if (constructors == null) {
+            }
+            else
+            {
+                if (constructors == null)
+                {
                     // Racy initialization is safe since instanceFields is volatile
                     constructors = createMethodMap(type.getDeclaredConstructors());
                 }
@@ -221,9 +263,11 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider {
             }
         }
 
-        private static EconomicMap<MethodKey, ResolvedJavaMethod> createMethodMap(ResolvedJavaMethod[] methodArray) {
+        private static EconomicMap<MethodKey, ResolvedJavaMethod> createMethodMap(ResolvedJavaMethod[] methodArray)
+        {
             EconomicMap<MethodKey, ResolvedJavaMethod> map = EconomicMap.create();
-            for (ResolvedJavaMethod m : methodArray) {
+            for (ResolvedJavaMethod m : methodArray)
+            {
                 map.put(new MethodKey(m.getName(), m.getSignature().toMethodDescriptor()), m);
             }
             return map;
@@ -233,21 +277,27 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider {
     /**
      * Field cache for a {@link ResolvedJavaType}.
      */
-    static final class FieldsCache {
-
+    static final class FieldsCache
+    {
         volatile EconomicMap<FieldKey, ResolvedJavaField> instanceFields;
         volatile EconomicMap<FieldKey, ResolvedJavaField> staticFields;
 
-        ResolvedJavaField lookup(ResolvedJavaType type, String name, String fieldType, boolean isStatic) {
+        ResolvedJavaField lookup(ResolvedJavaType type, String name, String fieldType, boolean isStatic)
+        {
             FieldKey key = new FieldKey(name, fieldType);
-            if (isStatic) {
-                if (staticFields == null) {
+            if (isStatic)
+            {
+                if (staticFields == null)
+                {
                     // Racy initialization is safe since staticFields is volatile
                     staticFields = createFieldMap(type.getStaticFields());
                 }
                 return staticFields.get(key);
-            } else {
-                if (instanceFields == null) {
+            }
+            else
+            {
+                if (instanceFields == null)
+                {
                     // Racy initialization is safe since instanceFields is volatile
                     instanceFields = createFieldMap(type.getInstanceFields(false));
                 }
@@ -255,9 +305,11 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider {
             }
         }
 
-        private static EconomicMap<FieldKey, ResolvedJavaField> createFieldMap(ResolvedJavaField[] fieldArray) {
+        private static EconomicMap<FieldKey, ResolvedJavaField> createFieldMap(ResolvedJavaField[] fieldArray)
+        {
             EconomicMap<FieldKey, ResolvedJavaField> map = EconomicMap.create();
-            for (ResolvedJavaField f : fieldArray) {
+            for (ResolvedJavaField f : fieldArray)
+            {
                 map.put(new FieldKey(f.getName(), f.getType().getName()), f);
             }
             return map;
@@ -269,9 +321,11 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider {
      *
      * Synchronized since the cache is lazily created.
      */
-    private synchronized MethodsCache getMethods(ResolvedJavaType type) {
+    private synchronized MethodsCache getMethods(ResolvedJavaType type)
+    {
         MethodsCache methodsCache = methods.get(type);
-        if (methodsCache == null) {
+        if (methodsCache == null)
+        {
             methodsCache = new MethodsCache();
             methods.put(type, methodsCache);
         }
@@ -283,22 +337,27 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider {
      *
      * Synchronized since the cache is lazily created.
      */
-    private synchronized FieldsCache getFields(ResolvedJavaType type) {
+    private synchronized FieldsCache getFields(ResolvedJavaType type)
+    {
         FieldsCache fieldsCache = fields.get(type);
-        if (fieldsCache == null) {
+        if (fieldsCache == null)
+        {
             fieldsCache = new FieldsCache();
             fields.put(type, fieldsCache);
         }
         return fieldsCache;
     }
 
-    ResolvedJavaField findField(ResolvedJavaType type, String name, String fieldType, boolean isStatic) {
+    ResolvedJavaField findField(ResolvedJavaType type, String name, String fieldType, boolean isStatic)
+    {
         return getFields(type).lookup(type, name, fieldType, isStatic);
     }
 
-    ResolvedJavaMethod findMethod(ResolvedJavaType type, String name, String descriptor, boolean isStatic) {
+    ResolvedJavaMethod findMethod(ResolvedJavaType type, String name, String descriptor, boolean isStatic)
+    {
         ResolvedJavaMethod method = getMethods(type).lookup(type, name, descriptor);
-        if (method != null && method.isStatic() == isStatic) {
+        if (method != null && method.isStatic() == isStatic)
+        {
             return method;
         }
         return null;

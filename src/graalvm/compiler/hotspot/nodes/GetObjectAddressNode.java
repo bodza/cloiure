@@ -23,12 +23,14 @@ import jdk.vm.ci.meta.JavaKind;
  * {@link ComputeObjectAddressNode} should generally be used in preference to this node.
  */
 @NodeInfo(cycles = CYCLES_2, size = SIZE_1)
-public final class GetObjectAddressNode extends FixedWithNextNode implements LIRLowerable {
+public final class GetObjectAddressNode extends FixedWithNextNode implements LIRLowerable
+{
     public static final NodeClass<GetObjectAddressNode> TYPE = NodeClass.create(GetObjectAddressNode.class);
 
     @Input ValueNode object;
 
-    public GetObjectAddressNode(ValueNode obj) {
+    public GetObjectAddressNode(ValueNode obj)
+    {
         super(TYPE, StampFactory.forKind(JavaKind.Long));
         this.object = obj;
     }
@@ -37,14 +39,16 @@ public final class GetObjectAddressNode extends FixedWithNextNode implements LIR
     public static native long get(Object array);
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         AllocatableValue obj = gen.getLIRGeneratorTool().newVariable(LIRKind.unknownReference(gen.getLIRGeneratorTool().target().arch.getWordKind()));
         gen.getLIRGeneratorTool().emitMove(obj, gen.operand(object));
         gen.setResult(this, obj);
     }
 
     @Override
-    public boolean verify() {
+    public boolean verify()
+    {
         assert graph().getGuardsStage().areFrameStatesAtDeopts() || graph().method().getAnnotation(Snippet.class) != null : "GetObjectAddressNode can't be used directly until frame states are fixed";
         return super.verify();
     }

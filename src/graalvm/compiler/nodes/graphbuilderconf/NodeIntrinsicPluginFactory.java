@@ -2,10 +2,10 @@ package graalvm.compiler.nodes.graphbuilderconf;
 
 import graalvm.compiler.core.common.type.Stamp;
 
-public interface NodeIntrinsicPluginFactory {
-
-    public interface InjectionProvider {
-
+public interface NodeIntrinsicPluginFactory
+{
+    public interface InjectionProvider
+    {
         <T> T getInjectedArgument(Class<T> type);
 
         /**

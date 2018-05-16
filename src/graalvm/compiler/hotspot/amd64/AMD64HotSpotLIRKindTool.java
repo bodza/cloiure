@@ -5,14 +5,17 @@ import graalvm.compiler.core.common.LIRKind;
 
 import jdk.vm.ci.amd64.AMD64Kind;
 
-public class AMD64HotSpotLIRKindTool extends AMD64LIRKindTool {
+public class AMD64HotSpotLIRKindTool extends AMD64LIRKindTool
+{
     @Override
-    public LIRKind getNarrowOopKind() {
+    public LIRKind getNarrowOopKind()
+    {
         return LIRKind.compressedReference(AMD64Kind.DWORD);
     }
 
     @Override
-    public LIRKind getNarrowPointerKind() {
+    public LIRKind getNarrowPointerKind()
+    {
         return LIRKind.value(AMD64Kind.DWORD);
     }
 }

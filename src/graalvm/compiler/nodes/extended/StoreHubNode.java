@@ -12,28 +12,32 @@ import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
 
 @NodeInfo(cycles = CYCLES_2, size = SIZE_1)
-public final class StoreHubNode extends FixedWithNextNode implements Lowerable {
-
+public final class StoreHubNode extends FixedWithNextNode implements Lowerable
+{
     public static final NodeClass<StoreHubNode> TYPE = NodeClass.create(StoreHubNode.class);
     @Input ValueNode value;
     @Input ValueNode object;
 
-    public ValueNode getValue() {
+    public ValueNode getValue()
+    {
         return value;
     }
 
-    public ValueNode getObject() {
+    public ValueNode getObject()
+    {
         return object;
     }
 
-    public StoreHubNode(ValueNode object, ValueNode value) {
+    public StoreHubNode(ValueNode object, ValueNode value)
+    {
         super(TYPE, StampFactory.forVoid());
         this.value = value;
         this.object = object;
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 

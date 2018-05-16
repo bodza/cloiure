@@ -24,15 +24,19 @@ import graalvm.compiler.phases.graph.MergeableState;
 import graalvm.compiler.phases.graph.PostOrderNodeIterator;
 import graalvm.compiler.phases.tiers.PhaseContext;
 
-public class EliminateRedundantInitializationPhase extends BasePhase<PhaseContext> {
+public class EliminateRedundantInitializationPhase extends BasePhase<PhaseContext>
+{
     /**
      * Find each {@link Invoke} that has a corresponding {@link InitializeKlassNode}. These
      * {@link InitializeKlassNode} are redundant and are removed.
      *
      */
-    private static void removeInitsAtStaticCalls(StructuredGraph graph) {
-        for (Invoke invoke : graph.getInvokes()) {
-            if (invoke.classInit() != null) {
+    private static void removeInitsAtStaticCalls(StructuredGraph graph)
+    {
+        for (Invoke invoke : graph.getInvokes())
+        {
+            if (invoke.classInit() != null)
+            {
                 Node classInit = invoke.classInit();
                 classInit.replaceAtUsages(null);
                 graph.removeFixed((FixedWithNextNode) classInit);
@@ -46,10 +50,12 @@ public class EliminateRedundantInitializationPhase extends BasePhase<PhaseContex
      *
      * @param graph the program graph
      */
-    private static void removeRedundantInits(StructuredGraph graph) {
+    private static void removeRedundantInits(StructuredGraph graph)
+    {
         // Find and remove redundant nodes from the graph.
         List<FixedWithNextNode> redundantNodes = findRedundantInits(graph);
-        for (FixedWithNextNode n : redundantNodes) {
+        for (FixedWithNextNode n : redundantNodes)
+        {
             graph.removeFixed(n);
         }
     }
@@ -60,7 +66,8 @@ public class EliminateRedundantInitializationPhase extends BasePhase<PhaseContex
      *
      * @param graph the program graph
      */
-    private static List<FixedWithNextNode> findRedundantInits(StructuredGraph graph) {
+    private static List<FixedWithNextNode> findRedundantInits(StructuredGraph graph)
+    {
         EliminateRedundantInitializationIterator i = new EliminateRedundantInitializationIterator(graph.start(), new InitializedTypes());
         i.apply();
         return i.getRedundantNodes();
@@ -69,24 +76,30 @@ public class EliminateRedundantInitializationPhase extends BasePhase<PhaseContex
     /**
      * State for {@link EliminateRedundantInitializationIterator}.
      */
-    private static class InitializedTypes extends MergeableState<InitializedTypes> implements Cloneable {
+    private static class InitializedTypes extends MergeableState<InitializedTypes> implements Cloneable
+    {
         private EconomicSet<ResolvedJavaType> types;
 
-        InitializedTypes() {
+        InitializedTypes()
+        {
             types = EconomicSet.create();
         }
 
-        private InitializedTypes(EconomicSet<ResolvedJavaType> types) {
+        private InitializedTypes(EconomicSet<ResolvedJavaType> types)
+        {
             this.types = types;
         }
 
         @Override
-        public InitializedTypes clone() {
+        public InitializedTypes clone()
+        {
             return new InitializedTypes(EconomicSet.create(types));
         }
 
-        public boolean contains(ResolvedJavaType type) {
-            if (type.isInterface() || type.isArray()) {
+        public boolean contains(ResolvedJavaType type)
+        {
+            if (type.isInterface() || type.isArray())
+            {
                 // Check for exact match for interfaces
                 return types.contains(type);
             }
@@ -94,7 +107,8 @@ public class EliminateRedundantInitializationPhase extends BasePhase<PhaseContex
             return anyMatch(types, t -> type.isAssignableFrom(t));
         }
 
-        public void add(ResolvedJavaType type) {
+        public void add(ResolvedJavaType type)
+        {
             types.add(type);
         }
 
@@ -107,18 +121,26 @@ public class EliminateRedundantInitializationPhase extends BasePhase<PhaseContex
          * @return lowest common type that is initialized if either a or b are initialized, null if
          *         no such type exists.
          */
-        private static ResolvedJavaType merge(ResolvedJavaType a, ResolvedJavaType b) {
+        private static ResolvedJavaType merge(ResolvedJavaType a, ResolvedJavaType b)
+        {
             // We want exact match for interfaces or arrays
-            if (a.isInterface() || b.isInterface() || a.isArray() || b.isArray()) {
-                if (a.equals(b)) {
+            if (a.isInterface() || b.isInterface() || a.isArray() || b.isArray())
+            {
+                if (a.equals(b))
+                {
                     return a;
-                } else {
+                }
+                else
+                {
                     return null;
                 }
-            } else {
+            }
+            else
+            {
                 // And LCA for other types
                 ResolvedJavaType c = a.findLeastCommonAncestor(b);
-                if (c.isJavaLangObject()) {
+                if (c.isJavaLangObject())
+                {
                     // Not a very useful type, always initialized, don't pollute the sets.
                     return null;
                 }
@@ -135,14 +157,19 @@ public class EliminateRedundantInitializationPhase extends BasePhase<PhaseContex
          * @return set of common types that would be initialized if types in either a or b are
          *         initialized
          */
-        private static EconomicSet<ResolvedJavaType> merge(EconomicSet<ResolvedJavaType> a, EconomicSet<ResolvedJavaType> b) {
+        private static EconomicSet<ResolvedJavaType> merge(EconomicSet<ResolvedJavaType> a, EconomicSet<ResolvedJavaType> b)
+        {
             EconomicSet<ResolvedJavaType> c = EconomicSet.create();
-            for (ResolvedJavaType ta : a) {
-                for (ResolvedJavaType tb : b) {
+            for (ResolvedJavaType ta : a)
+            {
+                for (ResolvedJavaType tb : b)
+                {
                     ResolvedJavaType tc = merge(ta, tb);
-                    if (tc != null) {
+                    if (tc != null)
+                    {
                         c.add(tc);
-                        if (tc.isInterface() || tc.isArray()) {
+                        if (tc.isInterface() || tc.isArray())
+                        {
                             // Interfaces and arrays are not going merge with anything else, so bail
                             // out early.
                             break;
@@ -154,21 +181,26 @@ public class EliminateRedundantInitializationPhase extends BasePhase<PhaseContex
         }
 
         @Override
-        public boolean merge(AbstractMergeNode merge, List<InitializedTypes> withStates) {
-            for (InitializedTypes ts : withStates) {
+        public boolean merge(AbstractMergeNode merge, List<InitializedTypes> withStates)
+        {
+            for (InitializedTypes ts : withStates)
+            {
                 types = merge(types, ts.types);
             }
             return true;
         }
 
-        protected static String toString(EconomicSet<ResolvedJavaType> types) {
+        protected static String toString(EconomicSet<ResolvedJavaType> types)
+        {
             StringBuilder b = new StringBuilder();
             b.append("[");
             Iterator<ResolvedJavaType> i = types.iterator();
-            while (i.hasNext()) {
+            while (i.hasNext())
+            {
                 ResolvedJavaType t = i.next();
                 b.append(t.toString());
-                if (i.hasNext()) {
+                if (i.hasNext())
+                {
                     b.append(",");
                 }
             }
@@ -177,7 +209,8 @@ public class EliminateRedundantInitializationPhase extends BasePhase<PhaseContex
         }
 
         @Override
-        public String toString() {
+        public String toString()
+        {
             return toString(types);
         }
     }
@@ -186,50 +219,65 @@ public class EliminateRedundantInitializationPhase extends BasePhase<PhaseContex
      * Do data flow analysis of class initializations and array resolutions. Collect redundant
      * nodes.
      */
-    private static class EliminateRedundantInitializationIterator extends PostOrderNodeIterator<InitializedTypes> {
+    private static class EliminateRedundantInitializationIterator extends PostOrderNodeIterator<InitializedTypes>
+    {
         private List<FixedWithNextNode> redundantNodes = new ArrayList<>();
 
-        public List<FixedWithNextNode> getRedundantNodes() {
+        public List<FixedWithNextNode> getRedundantNodes()
+        {
             return redundantNodes;
         }
 
-        EliminateRedundantInitializationIterator(FixedNode start, InitializedTypes initialState) {
+        EliminateRedundantInitializationIterator(FixedNode start, InitializedTypes initialState)
+        {
             super(start, initialState);
         }
 
-        private void processType(FixedWithNextNode node, Constant c) {
+        private void processType(FixedWithNextNode node, Constant c)
+        {
             HotSpotMetaspaceConstant klass = (HotSpotMetaspaceConstant) c;
             ResolvedJavaType t = klass.asResolvedJavaType();
-            if (t != null) {
-                if (state.contains(t)) {
+            if (t != null)
+            {
+                if (state.contains(t))
+                {
                     redundantNodes.add(node);
-                } else {
+                }
+                else
+                {
                     state.add(t);
                 }
             }
         }
 
         @Override
-        protected void node(FixedNode node) {
-            if (node instanceof InitializeKlassNode) {
+        protected void node(FixedNode node)
+        {
+            if (node instanceof InitializeKlassNode)
+            {
                 InitializeKlassNode i = (InitializeKlassNode) node;
-                if (i.value().isConstant()) {
+                if (i.value().isConstant())
+                {
                     processType(i, i.value().asConstant());
                 }
-            } else if (node instanceof ResolveConstantNode) {
+            }
+            else if (node instanceof ResolveConstantNode)
+            {
                 ResolveConstantNode r = (ResolveConstantNode) node;
-                if (r.hasNoUsages()) {
-                    if (r.value().isConstant()) {
+                if (r.hasNoUsages())
+                {
+                    if (r.value().isConstant())
+                    {
                         processType(r, r.value().asConstant());
                     }
                 }
             }
         }
-
     }
 
     @Override
-    protected void run(StructuredGraph graph, PhaseContext context) {
+    protected void run(StructuredGraph graph, PhaseContext context)
+    {
         removeInitsAtStaticCalls(graph);
         removeRedundantInits(graph);
     }

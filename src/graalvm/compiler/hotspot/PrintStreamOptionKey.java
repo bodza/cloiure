@@ -19,9 +19,10 @@ import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
  * no value is given for the option, the stream will output to HotSpot's
  * {@link HotSpotJVMCIRuntimeProvider#getLogStream() log} stream
  */
-public class PrintStreamOptionKey extends OptionKey<String> {
-
-    public PrintStreamOptionKey() {
+public class PrintStreamOptionKey extends OptionKey<String>
+{
+    public PrintStreamOptionKey()
+    {
         super(null);
     }
 
@@ -29,12 +30,15 @@ public class PrintStreamOptionKey extends OptionKey<String> {
      * @return {@code nameTemplate} with all instances of %p replaced by
      *         {@link GraalServices#getExecutionID()} and %t by {@link System#currentTimeMillis()}
      */
-    private static String makeFilename(String nameTemplate) {
+    private static String makeFilename(String nameTemplate)
+    {
         String name = nameTemplate;
-        if (name.contains("%p")) {
+        if (name.contains("%p"))
+        {
             name = name.replaceAll("%p", GraalServices.getExecutionID());
         }
-        if (name.contains("%t")) {
+        if (name.contains("%t"))
+        {
             name = name.replaceAll("%t", String.valueOf(System.currentTimeMillis()));
         }
         return name;
@@ -46,13 +50,18 @@ public class PrintStreamOptionKey extends OptionKey<String> {
      * IO operation is performed on the stream. This is required to break a deadlock in early JVMCI
      * initialization.
      */
-    static class DelayedOutputStream extends OutputStream {
+    static class DelayedOutputStream extends OutputStream
+    {
         private volatile OutputStream lazy;
 
-        private OutputStream lazy() {
-            if (lazy == null) {
-                synchronized (this) {
-                    if (lazy == null) {
+        private OutputStream lazy()
+        {
+            if (lazy == null)
+            {
+                synchronized (this)
+                {
+                    if (lazy == null)
+                    {
                         lazy = HotSpotJVMCIRuntime.runtime().getLogStream();
                     }
                 }
@@ -61,22 +70,26 @@ public class PrintStreamOptionKey extends OptionKey<String> {
         }
 
         @Override
-        public void write(byte[] b, int off, int len) throws IOException {
+        public void write(byte[] b, int off, int len) throws IOException
+        {
             lazy().write(b, off, len);
         }
 
         @Override
-        public void write(int b) throws IOException {
+        public void write(int b) throws IOException
+        {
             lazy().write(b);
         }
 
         @Override
-        public void flush() throws IOException {
+        public void flush() throws IOException
+        {
             lazy().flush();
         }
 
         @Override
-        public void close() throws IOException {
+        public void close() throws IOException
+        {
             lazy().close();
         }
     }
@@ -85,29 +98,38 @@ public class PrintStreamOptionKey extends OptionKey<String> {
      * Gets the print stream configured by this option. If no file is configured, the print stream
      * will output to HotSpot's {@link HotSpotJVMCIRuntimeProvider#getLogStream() log} stream.
      */
-    public PrintStream getStream(OptionValues options) {
+    public PrintStream getStream(OptionValues options)
+    {
         String nameTemplate = getValue(options);
-        if (nameTemplate != null) {
+        if (nameTemplate != null)
+        {
             String name = makeFilename(nameTemplate);
-            try {
+            try
+            {
                 final boolean enableAutoflush = true;
                 PrintStream ps = new PrintStream(new FileOutputStream(name), enableAutoflush);
                 /*
                  * Add the JVM and Java arguments to the log file to help identity it.
                  */
                 List<String> inputArguments = GraalServices.getInputArguments();
-                if (inputArguments != null) {
+                if (inputArguments != null)
+                {
                     ps.println("VM Arguments: " + String.join(" ", inputArguments));
                 }
                 String cmd = System.getProperty("sun.java.command");
-                if (cmd != null) {
+                if (cmd != null)
+                {
                     ps.println("sun.java.command=" + cmd);
                 }
                 return ps;
-            } catch (FileNotFoundException e) {
+            }
+            catch (FileNotFoundException e)
+            {
                 throw new RuntimeException("couldn't open file: " + name, e);
             }
-        } else {
+        }
+        else
+        {
             return new PrintStream(new DelayedOutputStream());
         }
     }

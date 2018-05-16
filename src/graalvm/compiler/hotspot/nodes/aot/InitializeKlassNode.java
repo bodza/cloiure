@@ -15,32 +15,38 @@ import graalvm.compiler.nodes.spi.LoweringTool;
 import org.graalvm.word.LocationIdentity;
 
 @NodeInfo(cycles = CYCLES_4, size = SIZE_16, allowedUsageTypes = {Memory})
-public class InitializeKlassNode extends DeoptimizingFixedWithNextNode implements Lowerable, MemoryCheckpoint.Single {
+public class InitializeKlassNode extends DeoptimizingFixedWithNextNode implements Lowerable, MemoryCheckpoint.Single
+{
     public static final NodeClass<InitializeKlassNode> TYPE = NodeClass.create(InitializeKlassNode.class);
 
     @Input ValueNode value;
 
-    public InitializeKlassNode(ValueNode value) {
+    public InitializeKlassNode(ValueNode value)
+    {
         super(TYPE, value.stamp(NodeView.DEFAULT));
         this.value = value;
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
-    public ValueNode value() {
+    public ValueNode value()
+    {
         return value;
     }
 
     @Override
-    public boolean canDeoptimize() {
+    public boolean canDeoptimize()
+    {
         return true;
     }
 
     @Override
-    public LocationIdentity getLocationIdentity() {
+    public LocationIdentity getLocationIdentity()
+    {
         return LocationIdentity.any();
     }
 }

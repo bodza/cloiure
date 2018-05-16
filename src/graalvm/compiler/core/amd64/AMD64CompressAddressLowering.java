@@ -19,20 +19,25 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_0;
 import static graalvm.compiler.nodeinfo.NodeSize.SIZE_0;
 
-public abstract class AMD64CompressAddressLowering extends AMD64AddressLowering {
+public abstract class AMD64CompressAddressLowering extends AMD64AddressLowering
+{
     private static final CounterKey counterFoldedUncompressDuringAddressLowering = DebugContext.counter("FoldedUncompressDuringAddressLowering");
 
     @Override
-    protected final boolean improve(StructuredGraph graph, DebugContext debug, AMD64AddressNode addr, boolean isBaseNegated, boolean isIndexNegated) {
-        if (super.improve(graph, debug, addr, isBaseNegated, isIndexNegated)) {
+    protected final boolean improve(StructuredGraph graph, DebugContext debug, AMD64AddressNode addr, boolean isBaseNegated, boolean isIndexNegated)
+    {
+        if (super.improve(graph, debug, addr, isBaseNegated, isIndexNegated))
+        {
             return true;
         }
 
-        if (!isBaseNegated && !isIndexNegated && addr.getScale() == AMD64Address.Scale.Times1) {
+        if (!isBaseNegated && !isIndexNegated && addr.getScale() == AMD64Address.Scale.Times1)
+        {
             ValueNode base = addr.getBase();
             ValueNode index = addr.getIndex();
 
-            if (tryToImproveUncompression(addr, index, base) || tryToImproveUncompression(addr, base, index)) {
+            if (tryToImproveUncompression(addr, index, base) || tryToImproveUncompression(addr, base, index))
+            {
                 counterFoldedUncompressDuringAddressLowering.increment(debug);
                 return true;
             }
@@ -41,10 +46,13 @@ public abstract class AMD64CompressAddressLowering extends AMD64AddressLowering 
         return false;
     }
 
-    private boolean tryToImproveUncompression(AMD64AddressNode addr, ValueNode value, ValueNode other) {
-        if (value instanceof CompressionNode) {
+    private boolean tryToImproveUncompression(AMD64AddressNode addr, ValueNode value, ValueNode other)
+    {
+        if (value instanceof CompressionNode)
+        {
             CompressionNode compression = (CompressionNode) value;
-            if (compression.getOp() == CompressionNode.CompressionOp.Uncompress && improveUncompression(addr, compression, other)) {
+            if (compression.getOp() == CompressionNode.CompressionOp.Uncompress && improveUncompression(addr, compression, other))
+            {
                 return true;
             }
         }
@@ -55,19 +63,21 @@ public abstract class AMD64CompressAddressLowering extends AMD64AddressLowering 
     protected abstract boolean improveUncompression(AMD64AddressNode addr, CompressionNode compression, ValueNode other);
 
     @NodeInfo(cycles = CYCLES_0, size = SIZE_0)
-    public static class HeapBaseNode extends FloatingNode implements LIRLowerable {
-
+    public static class HeapBaseNode extends FloatingNode implements LIRLowerable
+    {
         public static final NodeClass<HeapBaseNode> TYPE = NodeClass.create(HeapBaseNode.class);
 
         private final Register heapBaseRegister;
 
-        public HeapBaseNode(Register heapBaseRegister) {
+        public HeapBaseNode(Register heapBaseRegister)
+        {
             super(TYPE, StampFactory.pointer());
             this.heapBaseRegister = heapBaseRegister;
         }
 
         @Override
-        public void generate(NodeLIRBuilderTool generator) {
+        public void generate(NodeLIRBuilderTool generator)
+        {
             LIRKind kind = generator.getLIRGeneratorTool().getLIRKind(stamp(NodeView.DEFAULT));
             generator.setResult(this, heapBaseRegister.asValue(kind));
         }

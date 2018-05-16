@@ -16,20 +16,22 @@ import jdk.vm.ci.meta.AllocatableValue;
  * Pops a deoptimized stack frame off the stack including the return address.
  */
 @Opcode("LEAVE_DEOPTIMIZED_STACK_FRAME")
-final class AMD64HotSpotLeaveDeoptimizedStackFrameOp extends AMD64HotSpotEpilogueOp {
-
+final class AMD64HotSpotLeaveDeoptimizedStackFrameOp extends AMD64HotSpotEpilogueOp
+{
     public static final LIRInstructionClass<AMD64HotSpotLeaveDeoptimizedStackFrameOp> TYPE = LIRInstructionClass.create(AMD64HotSpotLeaveDeoptimizedStackFrameOp.class);
     @Use(REG) AllocatableValue frameSize;
     @Use(REG) AllocatableValue framePointer;
 
-    AMD64HotSpotLeaveDeoptimizedStackFrameOp(AllocatableValue frameSize, AllocatableValue initialInfo) {
+    AMD64HotSpotLeaveDeoptimizedStackFrameOp(AllocatableValue frameSize, AllocatableValue initialInfo)
+    {
         super(TYPE);
         this.frameSize = frameSize;
         this.framePointer = initialInfo;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
         Register stackPointer = crb.frameMap.getRegisterConfig().getFrameRegister();
         masm.addq(stackPointer, asRegister(frameSize));
 

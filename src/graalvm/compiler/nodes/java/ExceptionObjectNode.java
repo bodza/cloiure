@@ -28,15 +28,18 @@ import static graalvm.compiler.nodeinfo.NodeSize.SIZE_8;
  * throw instruction or implicit exception).
  */
 @NodeInfo(allowedUsageTypes = Memory, cycles = CYCLES_8, size = SIZE_8)
-public final class ExceptionObjectNode extends BeginStateSplitNode implements Lowerable, MemoryCheckpoint.Single {
+public final class ExceptionObjectNode extends BeginStateSplitNode implements Lowerable, MemoryCheckpoint.Single
+{
     public static final NodeClass<ExceptionObjectNode> TYPE = NodeClass.create(ExceptionObjectNode.class);
 
-    public ExceptionObjectNode(MetaAccessProvider metaAccess) {
+    public ExceptionObjectNode(MetaAccessProvider metaAccess)
+    {
         super(TYPE, StampFactory.objectNonNull(TypeReference.createTrustedWithoutAssumptions(metaAccess.lookupJavaType(Throwable.class))));
     }
 
     @Override
-    public LocationIdentity getLocationIdentity() {
+    public LocationIdentity getLocationIdentity()
+    {
         return LocationIdentity.any();
     }
 
@@ -45,13 +48,16 @@ public final class ExceptionObjectNode extends BeginStateSplitNode implements Lo
      * instruction that cannot be re-executed. It therefore needs a frame state.
      */
     @Override
-    public boolean hasSideEffect() {
+    public boolean hasSideEffect()
+    {
         return true;
     }
 
     @Override
-    public void lower(LoweringTool tool) {
-        if (graph().getGuardsStage() == StructuredGraph.GuardsStage.FIXED_DEOPTS) {
+    public void lower(LoweringTool tool)
+    {
+        if (graph().getGuardsStage() == StructuredGraph.GuardsStage.FIXED_DEOPTS)
+        {
             /*
              * Now the lowering to BeginNode+LoadExceptionNode can be performed, since no more
              * deopts can float in between the begin node and the load exception node.
@@ -70,10 +76,10 @@ public final class ExceptionObjectNode extends BeginStateSplitNode implements Lo
     }
 
     @Override
-    public boolean verify() {
+    public boolean verify()
+    {
         assertTrue(stateAfter() != null, "an exception handler needs a frame state");
-        assertTrue(stateAfter().stackSize() == 1 && stateAfter().stackAt(0).stamp(NodeView.DEFAULT).getStackKind() == JavaKind.Object,
-                        "an exception handler's frame state must have only the exception on the stack");
+        assertTrue(stateAfter().stackSize() == 1 && stateAfter().stackAt(0).stamp(NodeView.DEFAULT).getStackKind() == JavaKind.Object, "an exception handler's frame state must have only the exception on the stack");
         return super.verify();
     }
 }

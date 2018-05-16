@@ -11,24 +11,29 @@ import graalvm.compiler.core.common.cfg.AbstractBlockBase;
  * an assumption is no longer valid, this makes it easy (assumed they are used correctly) to find
  * places that need changes.
  */
-final class TraceAssertions {
-
+final class TraceAssertions
+{
     /**
      * Asserts that variable indices are properly sorted.
      */
-    public static boolean liveSetsAreSorted(GlobalLivenessInfo livenessInfo, AbstractBlockBase<?> block) {
+    public static boolean liveSetsAreSorted(GlobalLivenessInfo livenessInfo, AbstractBlockBase<?> block)
+    {
         return isSorted(livenessInfo.getBlockIn(block)) && isSorted(livenessInfo.getBlockOut(block));
     }
 
-    private static boolean isSorted(int[] live) {
-        if (live.length == 0) {
+    private static boolean isSorted(int[] live)
+    {
+        if (live.length == 0)
+        {
             return true;
         }
         int current = live[0];
-        for (int i = 1; i < live.length; i++) {
+        for (int i = 1; i < live.length; i++)
+        {
             int last = current;
             current = live[i];
-            if (current <= last) {
+            if (current <= last)
+            {
                 return false;
             }
         }
@@ -41,7 +46,8 @@ final class TraceAssertions {
      * This is not true for every trace-building algorithm (for example
      * {@link TraceBuilderPhase.TraceBuilder#SingleBlock}).
      */
-    public static boolean singleHeadPredecessor(Trace trace) {
+    public static boolean singleHeadPredecessor(Trace trace)
+    {
         return trace.getBlocks()[0].getPredecessorCount() == 1;
     }
 }

@@ -7,7 +7,8 @@ package graalvm.graphio;
  * {@link GraphOutput.Builder#types(graalvm.graphio.GraphTypes) register} an implementation of
  * this interface to treat them specially.
  */
-public interface GraphTypes {
+public interface GraphTypes
+{
     /**
      * Recognizes an
      * <q>enum</q> object. If the <code>enumValue</code> object represents an enum, then an object

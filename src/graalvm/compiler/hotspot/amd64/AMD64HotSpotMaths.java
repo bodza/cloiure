@@ -19,11 +19,13 @@ import jdk.vm.ci.meta.Value;
  * Lowering of selected {@link Math} routines that depends on the value of
  * {@link Options#GraalArithmeticStubs}.
  */
-public class AMD64HotSpotMaths implements AMD64ArithmeticLIRGenerator.Maths {
-
+public class AMD64HotSpotMaths implements AMD64ArithmeticLIRGenerator.Maths
+{
     @Override
-    public Variable emitLog(LIRGenerator gen, Value input, boolean base10) {
-        if (GraalArithmeticStubs.getValue(gen.getResult().getLIR().getOptions())) {
+    public Variable emitLog(LIRGenerator gen, Value input, boolean base10)
+    {
+        if (GraalArithmeticStubs.getValue(gen.getResult().getLIR().getOptions()))
+        {
             return null;
         }
         Variable result = gen.newVariable(LIRKind.combine(input));
@@ -32,8 +34,10 @@ public class AMD64HotSpotMaths implements AMD64ArithmeticLIRGenerator.Maths {
     }
 
     @Override
-    public Variable emitCos(LIRGenerator gen, Value input) {
-        if (GraalArithmeticStubs.getValue(gen.getResult().getLIR().getOptions())) {
+    public Variable emitCos(LIRGenerator gen, Value input)
+    {
+        if (GraalArithmeticStubs.getValue(gen.getResult().getLIR().getOptions()))
+        {
             return null;
         }
         Variable result = gen.newVariable(LIRKind.combine(input));
@@ -42,8 +46,10 @@ public class AMD64HotSpotMaths implements AMD64ArithmeticLIRGenerator.Maths {
     }
 
     @Override
-    public Variable emitSin(LIRGenerator gen, Value input) {
-        if (GraalArithmeticStubs.getValue(gen.getResult().getLIR().getOptions())) {
+    public Variable emitSin(LIRGenerator gen, Value input)
+    {
+        if (GraalArithmeticStubs.getValue(gen.getResult().getLIR().getOptions()))
+        {
             return null;
         }
         Variable result = gen.newVariable(LIRKind.combine(input));
@@ -52,13 +58,14 @@ public class AMD64HotSpotMaths implements AMD64ArithmeticLIRGenerator.Maths {
     }
 
     @Override
-    public Variable emitTan(LIRGenerator gen, Value input) {
-        if (GraalArithmeticStubs.getValue(gen.getResult().getLIR().getOptions())) {
+    public Variable emitTan(LIRGenerator gen, Value input)
+    {
+        if (GraalArithmeticStubs.getValue(gen.getResult().getLIR().getOptions()))
+        {
             return null;
         }
         Variable result = gen.newVariable(LIRKind.combine(input));
         gen.append(new AMD64HotSpotMathIntrinsicOp(TAN, result, gen.asAllocatable(input)));
         return result;
     }
-
 }

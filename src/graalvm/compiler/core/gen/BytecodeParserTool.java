@@ -5,8 +5,7 @@ import jdk.vm.ci.meta.Value;
 /**
  * visible interface of bytecode parsers.
  */
-public interface BytecodeParserTool {
-
+public interface BytecodeParserTool
+{
     void storeLocal(int i, Value x);
-
 }

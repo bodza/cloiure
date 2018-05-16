@@ -12,9 +12,10 @@ import jdk.vm.ci.hotspot.HotSpotVMConfigStore;
 /**
  * Used to access native configuration details.
  */
-public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase {
-
-    GraalHotSpotVMConfig(HotSpotVMConfigStore store) {
+public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
+{
+    GraalHotSpotVMConfig(HotSpotVMConfigStore store)
+    {
         super(store);
 
         assert narrowKlassShift <= logKlassAlignment;
@@ -28,11 +29,13 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase {
     private final CompressEncoding oopEncoding;
     private final CompressEncoding klassEncoding;
 
-    public CompressEncoding getOopEncoding() {
+    public CompressEncoding getOopEncoding()
+    {
         return oopEncoding;
     }
 
-    public CompressEncoding getKlassEncoding() {
+    public CompressEncoding getKlassEncoding()
+    {
         return klassEncoding;
     }
 
@@ -79,43 +82,53 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase {
      * These are methods because in some JDKs the flags are visible but the stubs themselves haven't
      * been exported so we have to check both if the flag is on and if we have the stub.
      */
-    public boolean useMultiplyToLenIntrinsic() {
+    public boolean useMultiplyToLenIntrinsic()
+    {
         return useMultiplyToLenIntrinsic && multiplyToLen != 0;
     }
 
-    public boolean useSHA1Intrinsics() {
+    public boolean useSHA1Intrinsics()
+    {
         return useSHA1Intrinsics && sha1ImplCompress != 0;
     }
 
-    public boolean useSHA256Intrinsics() {
+    public boolean useSHA256Intrinsics()
+    {
         return useSHA256Intrinsics && sha256ImplCompress != 0;
     }
 
-    public boolean useSHA512Intrinsics() {
+    public boolean useSHA512Intrinsics()
+    {
         return useSHA512Intrinsics && sha512ImplCompress != 0;
     }
 
-    public boolean useMontgomeryMultiplyIntrinsic() {
+    public boolean useMontgomeryMultiplyIntrinsic()
+    {
         return useMontgomeryMultiplyIntrinsic && montgomeryMultiply != 0;
     }
 
-    public boolean useMontgomerySquareIntrinsic() {
+    public boolean useMontgomerySquareIntrinsic()
+    {
         return useMontgomerySquareIntrinsic && montgomerySquare != 0;
     }
 
-    public boolean useMulAddIntrinsic() {
+    public boolean useMulAddIntrinsic()
+    {
         return useMulAddIntrinsic && mulAdd != 0;
     }
 
-    public boolean useSquareToLenIntrinsic() {
+    public boolean useSquareToLenIntrinsic()
+    {
         return useSquareToLenIntrinsic && squareToLen != 0;
     }
 
-    public boolean inlineNotify() {
+    public boolean inlineNotify()
+    {
         return inlineNotify && notifyAddress != 0;
     }
 
-    public boolean inlineNotifyAll() {
+    public boolean inlineNotifyAll()
+    {
         return inlineNotify && notifyAllAddress != 0;
     }
 
@@ -132,7 +145,8 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase {
     private final long universeCollectedHeap = getFieldValue("CompilerToVM::Data::Universe_collectedHeap", Long.class, "CollectedHeap*");
     private final int collectedHeapTotalCollectionsOffset = getFieldOffset("CollectedHeap::_total_collections", Integer.class, "unsigned int");
 
-    public long gcTotalCollectionsAddress() {
+    public long gcTotalCollectionsAddress()
+    {
         return universeCollectedHeap + collectedHeapTotalCollectionsOffset;
     }
 
@@ -146,11 +160,13 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase {
     public final int narrowOopShift = getFieldValue("CompilerToVM::Data::Universe_narrow_oop_shift", Integer.class, "int");
     public final int objectAlignment = getFlag("ObjectAlignmentInBytes", Integer.class);
 
-    public final int minObjAlignment() {
+    public final int minObjAlignment()
+    {
         return objectAlignment / heapWordSize;
     }
 
-    public final int logMinObjAlignment() {
+    public final int logMinObjAlignment()
+    {
         return (int) (Math.log(objectAlignment) / Math.log(2));
     }
 
@@ -181,25 +197,35 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase {
         String name = "Klass::_java_mirror";
         int offset = -1;
         boolean isHandle = false;
-        try {
+        try
+        {
             offset = getFieldOffset(name, Integer.class, "oop");
-        } catch (JVMCIError e) {
-
         }
-        if (offset == -1) {
-            try {
+        catch (JVMCIError e)
+        {
+        }
+        if (offset == -1)
+        {
+            try
+            {
                 offset = getFieldOffset(name, Integer.class, "jobject");
                 isHandle = true;
-            } catch (JVMCIError e) {
-                try {
+            }
+            catch (JVMCIError e)
+            {
+                try
+                {
                     // JDK-8186777
                     offset = getFieldOffset(name, Integer.class, "OopHandle");
                     isHandle = true;
-                } catch (JVMCIError e2) {
+                }
+                catch (JVMCIError e2)
+                {
                 }
             }
         }
-        if (offset == -1) {
+        if (offset == -1)
+        {
             throw new JVMCIError("cannot get offset of field " + name + " with type oop, jobject or OopHandle");
         }
         classMirrorOffset = offset;
@@ -225,7 +251,8 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase {
     /**
      * This filters out the bit that differentiates a type array from an object array.
      */
-    public int layoutHelperElementTypePrimitiveInPlace() {
+    public int layoutHelperElementTypePrimitiveInPlace()
+    {
         return (layoutHelperArrayTagTypeValue & ~layoutHelperArrayTagObjectValue) << layoutHelperArrayTagShift;
     }
 
@@ -248,7 +275,8 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase {
      *
      * See {@code arrayOopDesc::length_offset_in_bytes()}.
      */
-    public final int arrayOopDescLengthOffset() {
+    public final int arrayOopDescLengthOffset()
+    {
         return useCompressedClassPointers ? hubOffset + narrowKlassSize : arrayOopDescSize;
     }
 
@@ -334,20 +362,24 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase {
     private final int javaFrameAnchorLastJavaSpOffset = getFieldOffset("JavaFrameAnchor::_last_Java_sp", Integer.class, "intptr_t*");
     private final int javaFrameAnchorLastJavaPcOffset = getFieldOffset("JavaFrameAnchor::_last_Java_pc", Integer.class, "address");
 
-    public int threadLastJavaSpOffset() {
+    public int threadLastJavaSpOffset()
+    {
         return javaThreadAnchorOffset + javaFrameAnchorLastJavaSpOffset;
     }
 
-    public int threadLastJavaPcOffset() {
+    public int threadLastJavaPcOffset()
+    {
         return javaThreadAnchorOffset + javaFrameAnchorLastJavaPcOffset;
     }
 
-    public int threadLastJavaFpOffset() {
+    public int threadLastJavaFpOffset()
+    {
         assert osArch.equals("aarch64") || osArch.equals("amd64");
         return javaThreadAnchorOffset + getFieldOffset("JavaFrameAnchor::_last_Java_fp", Integer.class, "intptr_t*");
     }
 
-    public int threadJavaFrameAnchorFlagsOffset() {
+    public int threadJavaFrameAnchorFlagsOffset()
+    {
         assert osArch.equals("sparc");
         return javaThreadAnchorOffset + getFieldOffset("JavaFrameAnchor::_flags", Integer.class, "int");
     }
@@ -382,14 +414,16 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase {
     /**
      * See {@code markOopDesc::prototype()}.
      */
-    public long arrayPrototypeMarkWord() {
+    public long arrayPrototypeMarkWord()
+    {
         return markWordNoHashInPlace | markWordNoLockInPlace;
     }
 
     /**
      * See {@code markOopDesc::copy_set_hash()}.
      */
-    public long tlabIntArrayMarkWord() {
+    public long tlabIntArrayMarkWord()
+    {
         long tmp = arrayPrototypeMarkWord() & (~markOopDescHashMaskInPlace);
         tmp |= ((0x2 & markOopDescHashMask) << markOopDescHashShift);
         return tmp;
@@ -428,14 +462,11 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase {
     public final int invocationCounterIncrement = versioned.invocationCounterIncrement;
     public final int invocationCounterShift = versioned.invocationCounterShift;
 
-    public final int nmethodEntryOffset = getFieldOffset("nmethod::_verified_entry_point",
-                    Integer.class, "address");
-    public final int compilationLevelFullOptimization = getConstant("CompLevel_full_optimization",
-                    Integer.class);
+    public final int nmethodEntryOffset = getFieldOffset("nmethod::_verified_entry_point", Integer.class, "address");
+    public final int compilationLevelFullOptimization = getConstant("CompLevel_full_optimization", Integer.class);
 
     public final int constantPoolSize = getFieldValue("CompilerToVM::Data::sizeof_ConstantPool", Integer.class, "int");
-    public final int constantPoolLengthOffset = getFieldOffset("ConstantPool::_length",
-                    Integer.class, "int");
+    public final int constantPoolLengthOffset = getFieldOffset("ConstantPool::_length", Integer.class, "int");
 
     public final int heapWordSize = getConstant("HeapWordSize", Integer.class);
 
@@ -494,39 +525,48 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase {
     private final int threadLocalAllocBufferRefillWasteLimitOffset = getFieldOffset("ThreadLocalAllocBuffer::_refill_waste_limit", Integer.class, "size_t");
     private final int threadLocalAllocBufferDesiredSizeOffset = getFieldOffset("ThreadLocalAllocBuffer::_desired_size", Integer.class, "size_t");
 
-    public int tlabSlowAllocationsOffset() {
+    public int tlabSlowAllocationsOffset()
+    {
         return threadTlabOffset + threadLocalAllocBufferSlowAllocationsOffset;
     }
 
-    public int tlabFastRefillWasteOffset() {
+    public int tlabFastRefillWasteOffset()
+    {
         return threadTlabOffset + threadLocalAllocBufferFastRefillWasteOffset;
     }
 
-    public int tlabNumberOfRefillsOffset() {
+    public int tlabNumberOfRefillsOffset()
+    {
         return threadTlabOffset + threadLocalAllocBufferNumberOfRefillsOffset;
     }
 
-    public int tlabRefillWasteLimitOffset() {
+    public int tlabRefillWasteLimitOffset()
+    {
         return threadTlabOffset + threadLocalAllocBufferRefillWasteLimitOffset;
     }
 
-    public int threadTlabSizeOffset() {
+    public int threadTlabSizeOffset()
+    {
         return threadTlabOffset + threadLocalAllocBufferDesiredSizeOffset;
     }
 
-    public int threadTlabStartOffset() {
+    public int threadTlabStartOffset()
+    {
         return threadTlabOffset + threadLocalAllocBufferStartOffset;
     }
 
-    public int threadTlabEndOffset() {
+    public int threadTlabEndOffset()
+    {
         return threadTlabOffset + threadLocalAllocBufferEndOffset;
     }
 
-    public int threadTlabTopOffset() {
+    public int threadTlabTopOffset()
+    {
         return threadTlabOffset + threadLocalAllocBufferTopOffset;
     }
 
-    public int threadTlabPfTopOffset() {
+    public int threadTlabPfTopOffset()
+    {
         return threadTlabOffset + threadLocalAllocBufferPfTopOffset;
     }
 
@@ -673,7 +713,6 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase {
     public final int deoptimizationUnrollBlockFramePcsOffset = getFieldOffset("Deoptimization::UnrollBlock::_frame_pcs", Integer.class, "address*");
     public final int deoptimizationUnrollBlockInitialInfoOffset = getFieldOffset("Deoptimization::UnrollBlock::_initial_info", Integer.class, "intptr_t");
 
-    // Checkstyle: stop
     public final int MARKID_VERIFIED_ENTRY = getConstant("CodeInstaller::VERIFIED_ENTRY", Integer.class);
     public final int MARKID_UNVERIFIED_ENTRY = getConstant("CodeInstaller::UNVERIFIED_ENTRY", Integer.class);
     public final int MARKID_OSR_ENTRY = getConstant("CodeInstaller::OSR_ENTRY", Integer.class);
@@ -705,12 +744,13 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase {
     public final int MARKID_LOG_OF_HEAP_REGION_GRAIN_BYTES = getConstant("CodeInstaller::LOG_OF_HEAP_REGION_GRAIN_BYTES", Integer.class, 22);
     public final int MARKID_INLINE_CONTIGUOUS_ALLOCATION_SUPPORTED = getConstant("CodeInstaller::INLINE_CONTIGUOUS_ALLOCATION_SUPPORTED", Integer.class, 23);
 
-    // Checkstyle: resume
-
-    protected boolean check() {
-        for (Field f : getClass().getDeclaredFields()) {
+    protected boolean check()
+    {
+        for (Field f : getClass().getDeclaredFields())
+        {
             int modifiers = f.getModifiers();
-            if (Modifier.isPublic(modifiers) && !Modifier.isStatic(modifiers)) {
+            if (Modifier.isPublic(modifiers) && !Modifier.isStatic(modifiers))
+            {
                 assert Modifier.isFinal(modifiers) : "field should be final: " + f;
             }
         }

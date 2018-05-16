@@ -23,8 +23,8 @@ import jdk.vm.ci.meta.Value;
  * the entire execution of the associated method.
  */
 @NodeInfo(cycles = CYCLES_2, size = SIZE_1)
-public final class AllocaNode extends FixedWithNextNode implements LIRLowerable {
-
+public final class AllocaNode extends FixedWithNextNode implements LIRLowerable
+{
     public static final NodeClass<AllocaNode> TYPE = NodeClass.create(AllocaNode.class);
     /**
      * The number of slots in block.
@@ -38,18 +38,21 @@ public final class AllocaNode extends FixedWithNextNode implements LIRLowerable 
      */
     protected final BitSet objects;
 
-    public AllocaNode(@InjectedNodeParameter WordTypes wordTypes, int slots) {
+    public AllocaNode(@InjectedNodeParameter WordTypes wordTypes, int slots)
+    {
         this(slots, wordTypes.getWordKind(), new BitSet());
     }
 
-    public AllocaNode(int slots, JavaKind wordKind, BitSet objects) {
+    public AllocaNode(int slots, JavaKind wordKind, BitSet objects)
+    {
         super(TYPE, StampFactory.forKind(wordKind));
         this.slots = slots;
         this.objects = objects;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         VirtualStackSlot array = gen.getLIRGeneratorTool().getResult().getFrameMapBuilder().allocateStackSlots(slots, objects, null);
         Value result = gen.getLIRGeneratorTool().emitAddress(array);
         gen.setResult(this, result);

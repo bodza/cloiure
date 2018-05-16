@@ -17,7 +17,8 @@ import jdk.vm.ci.meta.AllocatableValue;
  * Manages allocation and re-use of lock slots in a scoped manner. The slots are used in HotSpot's
  * lightweight locking mechanism to store the mark word of an object being locked.
  */
-public class HotSpotLockStack extends LIRInstruction {
+public class HotSpotLockStack extends LIRInstruction
+{
     public static final LIRInstructionClass<HotSpotLockStack> TYPE = LIRInstructionClass.create(HotSpotLockStack.class);
     private static final AllocatableValue[] EMPTY = new AllocatableValue[0];
 
@@ -25,7 +26,8 @@ public class HotSpotLockStack extends LIRInstruction {
     private final FrameMapBuilder frameMapBuilder;
     private final LIRKind slotKind;
 
-    public HotSpotLockStack(FrameMapBuilder frameMapBuilder, LIRKind slotKind) {
+    public HotSpotLockStack(FrameMapBuilder frameMapBuilder, LIRKind slotKind)
+    {
         super(TYPE);
         this.frameMapBuilder = frameMapBuilder;
         this.slotKind = slotKind;
@@ -35,20 +37,26 @@ public class HotSpotLockStack extends LIRInstruction {
     /**
      * Gets a stack slot for a lock at a given lock nesting depth, allocating it first if necessary.
      */
-    public VirtualStackSlot makeLockSlot(int lockDepth) {
-        if (locks == EMPTY) {
+    public VirtualStackSlot makeLockSlot(int lockDepth)
+    {
+        if (locks == EMPTY)
+        {
             locks = new AllocatableValue[lockDepth + 1];
-        } else if (locks.length < lockDepth + 1) {
+        }
+        else if (locks.length < lockDepth + 1)
+        {
             locks = Arrays.copyOf(locks, lockDepth + 1);
         }
-        if (locks[lockDepth] == null) {
+        if (locks[lockDepth] == null)
+        {
             locks[lockDepth] = frameMapBuilder.allocateSpillSlot(slotKind);
         }
         return (VirtualStackSlot) locks[lockDepth];
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb) {
+    public void emitCode(CompilationResultBuilder crb)
+    {
         // do nothing
     }
 }

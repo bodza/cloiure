@@ -27,17 +27,21 @@ import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.Value;
 
-public abstract class AMD64MoveFactory extends AMD64MoveFactoryBase {
-
-    public AMD64MoveFactory(BackupSlotProvider backupSlotProvider) {
+public abstract class AMD64MoveFactory extends AMD64MoveFactoryBase
+{
+    public AMD64MoveFactory(BackupSlotProvider backupSlotProvider)
+    {
         super(backupSlotProvider);
     }
 
     @Override
-    public boolean canInlineConstant(Constant con) {
-        if (con instanceof JavaConstant) {
+    public boolean canInlineConstant(Constant con)
+    {
+        if (con instanceof JavaConstant)
+        {
             JavaConstant c = (JavaConstant) con;
-            switch (c.getJavaKind()) {
+            switch (c.getJavaKind())
+            {
                 case Long:
                     return NumUtil.isInt(c.asLong());
                 case Object:
@@ -50,50 +54,72 @@ public abstract class AMD64MoveFactory extends AMD64MoveFactoryBase {
     }
 
     @Override
-    public boolean allowConstantToStackMove(Constant constant) {
-        if (constant instanceof DataPointerConstant) {
+    public boolean allowConstantToStackMove(Constant constant)
+    {
+        if (constant instanceof DataPointerConstant)
+        {
             return false;
         }
-        if (constant instanceof JavaConstant && !AMD64Move.canMoveConst2Stack(((JavaConstant) constant))) {
+        if (constant instanceof JavaConstant && !AMD64Move.canMoveConst2Stack(((JavaConstant) constant)))
+        {
             return false;
         }
         return true;
     }
 
     @Override
-    public AMD64LIRInstruction createMove(AllocatableValue dst, Value src) {
-        if (src instanceof AMD64AddressValue) {
+    public AMD64LIRInstruction createMove(AllocatableValue dst, Value src)
+    {
+        if (src instanceof AMD64AddressValue)
+        {
             return new LeaOp(dst, (AMD64AddressValue) src, AMD64Assembler.OperandSize.QWORD);
-        } else if (isConstantValue(src)) {
+        }
+        else if (isConstantValue(src))
+        {
             return createLoad(dst, asConstant(src));
-        } else if (isRegister(src) || isStackSlotValue(dst)) {
+        }
+        else if (isRegister(src) || isStackSlotValue(dst))
+        {
             return new MoveFromRegOp((AMD64Kind) dst.getPlatformKind(), dst, (AllocatableValue) src);
-        } else {
+        }
+        else
+        {
             return new MoveToRegOp((AMD64Kind) dst.getPlatformKind(), dst, (AllocatableValue) src);
         }
     }
 
     @Override
-    public AMD64LIRInstruction createStackMove(AllocatableValue result, AllocatableValue input, Register scratchRegister, AllocatableValue backupSlot) {
+    public AMD64LIRInstruction createStackMove(AllocatableValue result, AllocatableValue input, Register scratchRegister, AllocatableValue backupSlot)
+    {
         return new AMD64StackMove(result, input, scratchRegister, backupSlot);
     }
 
     @Override
-    public AMD64LIRInstruction createLoad(AllocatableValue dst, Constant src) {
-        if (src instanceof JavaConstant) {
+    public AMD64LIRInstruction createLoad(AllocatableValue dst, Constant src)
+    {
+        if (src instanceof JavaConstant)
+        {
             return new MoveFromConstOp(dst, (JavaConstant) src);
-        } else if (src instanceof DataPointerConstant) {
+        }
+        else if (src instanceof DataPointerConstant)
+        {
             return new LeaDataOp(dst, (DataPointerConstant) src);
-        } else {
+        }
+        else
+        {
             throw GraalError.shouldNotReachHere(String.format("unsupported constant: %s", src));
         }
     }
 
     @Override
-    public LIRInstruction createStackLoad(AllocatableValue result, Constant input) {
-        if (input instanceof JavaConstant) {
+    public LIRInstruction createStackLoad(AllocatableValue result, Constant input)
+    {
+        if (input instanceof JavaConstant)
+        {
             return new MoveFromConstOp(result, (JavaConstant) input);
-        } else {
+        }
+        else
+        {
             throw GraalError.shouldNotReachHere(String.format("unsupported constant for stack load: %s", input));
         }
     }

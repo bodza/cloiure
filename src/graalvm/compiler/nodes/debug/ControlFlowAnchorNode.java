@@ -13,16 +13,18 @@ import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 
 @NodeInfo(cycles = CYCLES_0, size = SIZE_0)
-public final class ControlFlowAnchorNode extends FixedWithNextNode implements LIRLowerable, ControlFlowAnchored {
-
+public final class ControlFlowAnchorNode extends FixedWithNextNode implements LIRLowerable, ControlFlowAnchored
+{
     public static final NodeClass<ControlFlowAnchorNode> TYPE = NodeClass.create(ControlFlowAnchorNode.class);
 
-    private static class Unique {
+    private static class Unique
+    {
     }
 
     protected Unique unique;
 
-    public ControlFlowAnchorNode() {
+    public ControlFlowAnchorNode()
+    {
         super(TYPE, StampFactory.forVoid());
         this.unique = new Unique();
     }
@@ -30,17 +32,20 @@ public final class ControlFlowAnchorNode extends FixedWithNextNode implements LI
     /**
      * Used by MacroSubstitution.
      */
-    public ControlFlowAnchorNode(@SuppressWarnings("unused") Invoke invoke) {
+    public ControlFlowAnchorNode(@SuppressWarnings("unused") Invoke invoke)
+    {
         this();
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool generator) {
+    public void generate(NodeLIRBuilderTool generator)
+    {
         // do nothing
     }
 
     @Override
-    protected void afterClone(Node other) {
+    protected void afterClone(Node other)
+    {
         assert other.graph() != null && other.graph() != graph() : this + " should never be cloned in the same graph";
     }
 }

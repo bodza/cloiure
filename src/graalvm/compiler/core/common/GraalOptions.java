@@ -7,9 +7,8 @@ import graalvm.compiler.options.OptionType;
 /**
  * This class encapsulates options that control the behavior of the Graal compiler.
  */
-// @formatter:off
-public final class GraalOptions {
-
+public final class GraalOptions
+{
     @Option(help = "Use compiler intrinsifications.", type = OptionType.Debug)
     public static final OptionKey<Boolean> Intrinsify = new OptionKey<>(true);
 

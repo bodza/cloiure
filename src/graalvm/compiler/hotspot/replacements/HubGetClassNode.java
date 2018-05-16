@@ -30,28 +30,37 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * also used by {@link ClassGetHubNode} to eliminate chains of {@code klass._java_mirror._klass}.
  */
 @NodeInfo(cycles = CYCLES_1, size = SIZE_1)
-public final class HubGetClassNode extends FloatingNode implements Lowerable, Canonicalizable, ConvertNode {
+public final class HubGetClassNode extends FloatingNode implements Lowerable, Canonicalizable, ConvertNode
+{
     public static final NodeClass<HubGetClassNode> TYPE = NodeClass.create(HubGetClassNode.class);
     @Input protected ValueNode hub;
 
-    public HubGetClassNode(@InjectedNodeParameter MetaAccessProvider metaAccess, ValueNode hub) {
+    public HubGetClassNode(@InjectedNodeParameter MetaAccessProvider metaAccess, ValueNode hub)
+    {
         super(TYPE, StampFactory.objectNonNull(TypeReference.createWithoutAssumptions(metaAccess.lookupJavaType(Class.class))));
         this.hub = hub;
     }
 
-    public ValueNode getHub() {
+    public ValueNode getHub()
+    {
         return hub;
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool) {
-        if (tool.allUsagesAvailable() && hasNoUsages()) {
+    public Node canonical(CanonicalizerTool tool)
+    {
+        if (tool.allUsagesAvailable() && hasNoUsages())
+        {
             return null;
-        } else {
+        }
+        else
+        {
             MetaAccessProvider metaAccess = tool.getMetaAccess();
-            if (metaAccess != null && hub.isConstant() && !GraalOptions.ImmutableCode.getValue(tool.getOptions())) {
+            if (metaAccess != null && hub.isConstant() && !GraalOptions.ImmutableCode.getValue(tool.getOptions()))
+            {
                 ResolvedJavaType exactType = tool.getConstantReflection().asJavaType(hub.asConstant());
-                if (exactType != null) {
+                if (exactType != null)
+                {
                     return ConstantNode.forConstant(tool.getConstantReflection().asJavaClass(exactType), metaAccess);
                 }
             }
@@ -60,7 +69,8 @@ public final class HubGetClassNode extends FloatingNode implements Lowerable, Ca
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
@@ -68,27 +78,35 @@ public final class HubGetClassNode extends FloatingNode implements Lowerable, Ca
     public static native Class<?> readClass(KlassPointer hub);
 
     @Override
-    public ValueNode getValue() {
+    public ValueNode getValue()
+    {
         return hub;
     }
 
     @Override
-    public Constant convert(Constant c, ConstantReflectionProvider constantReflection) {
-        if (JavaConstant.NULL_POINTER.equals(c)) {
+    public Constant convert(Constant c, ConstantReflectionProvider constantReflection)
+    {
+        if (JavaConstant.NULL_POINTER.equals(c))
+        {
             return c;
         }
         return constantReflection.asJavaClass(constantReflection.asJavaType(c));
     }
 
     @Override
-    public Constant reverse(Constant c, ConstantReflectionProvider constantReflection) {
-        if (JavaConstant.NULL_POINTER.equals(c)) {
+    public Constant reverse(Constant c, ConstantReflectionProvider constantReflection)
+    {
+        if (JavaConstant.NULL_POINTER.equals(c))
+        {
             return c;
         }
         ResolvedJavaType type = constantReflection.asJavaType(c);
-        if (type.isPrimitive()) {
+        if (type.isPrimitive())
+        {
             return JavaConstant.NULL_POINTER;
-        } else {
+        }
+        else
+        {
             return constantReflection.asObjectHub(type);
         }
     }
@@ -97,12 +115,14 @@ public final class HubGetClassNode extends FloatingNode implements Lowerable, Ca
      * Any concrete Klass* has a corresponding {@link java.lang.Class}.
      */
     @Override
-    public boolean isLossless() {
+    public boolean isLossless()
+    {
         return true;
     }
 
     @Override
-    public boolean mayNullCheckSkipConversion() {
+    public boolean mayNullCheckSkipConversion()
+    {
         return true;
     }
 }

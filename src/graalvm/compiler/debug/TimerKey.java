@@ -12,8 +12,8 @@ import java.util.concurrent.TimeUnit;
  * }
  * </pre>
  */
-public interface TimerKey extends MetricKey {
-
+public interface TimerKey extends MetricKey
+{
     /**
      * Starts this timer.
      *
@@ -41,7 +41,8 @@ public interface TimerKey extends MetricKey {
      *
      * @return null if this timer does not support flat timing
      */
-    default TimerKey getFlat() {
+    default TimerKey getFlat()
+    {
         return null;
     }
 }

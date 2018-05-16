@@ -9,8 +9,8 @@ import graalvm.compiler.asm.AbstractAddress;
  * register, an index register, a displacement and a scale. Note that the base and index registers
  * may be a variable that will get a register assigned later by the register allocator.
  */
-public final class AMD64Address extends AbstractAddress {
-
+public final class AMD64Address extends AbstractAddress
+{
     private final Register base;
     private final Register index;
     private final Scale scale;
@@ -28,7 +28,8 @@ public final class AMD64Address extends AbstractAddress {
      *
      * @param base the base register
      */
-    public AMD64Address(Register base) {
+    public AMD64Address(Register base)
+    {
         this(base, Register.None, Scale.Times1, 0);
     }
 
@@ -39,7 +40,8 @@ public final class AMD64Address extends AbstractAddress {
      * @param base the base register
      * @param displacement the displacement
      */
-    public AMD64Address(Register base, int displacement) {
+    public AMD64Address(Register base, int displacement)
+    {
         this(base, Register.None, Scale.Times1, displacement);
     }
 
@@ -51,7 +53,8 @@ public final class AMD64Address extends AbstractAddress {
      * @param index the index register
      * @param scale the scaling factor
      */
-    public AMD64Address(Register base, Register index, Scale scale) {
+    public AMD64Address(Register base, Register index, Scale scale)
+    {
         this(base, index, scale, 0, -1);
     }
 
@@ -64,11 +67,13 @@ public final class AMD64Address extends AbstractAddress {
      * @param scale the scaling factor
      * @param displacement the displacement
      */
-    public AMD64Address(Register base, Register index, Scale scale, int displacement) {
+    public AMD64Address(Register base, Register index, Scale scale, int displacement)
+    {
         this(base, index, scale, displacement, -1);
     }
 
-    AMD64Address(Register base, Register index, Scale scale, int displacement, int instructionStartPosition) {
+    AMD64Address(Register base, Register index, Scale scale, int displacement, int instructionStartPosition)
+    {
         this.base = base;
         this.index = index;
         this.scale = scale;
@@ -81,13 +86,15 @@ public final class AMD64Address extends AbstractAddress {
     /**
      * A scaling factor used in the SIB addressing mode.
      */
-    public enum Scale {
+    public enum Scale
+    {
         Times1(1, 0),
         Times2(2, 1),
         Times4(4, 2),
         Times8(8, 3);
 
-        Scale(int value, int log2) {
+        Scale(int value, int log2)
+        {
             this.value = value;
             this.log2 = log2;
         }
@@ -102,8 +109,10 @@ public final class AMD64Address extends AbstractAddress {
          */
         public final int log2;
 
-        public static Scale fromInt(int scale) {
-            switch (scale) {
+        public static Scale fromInt(int scale)
+        {
+            switch (scale)
+            {
                 case 1:
                     return Times1;
                 case 2:
@@ -117,8 +126,10 @@ public final class AMD64Address extends AbstractAddress {
             }
         }
 
-        public static Scale fromShift(int shift) {
-            switch (shift) {
+        public static Scale fromShift(int shift)
+        {
+            switch (shift)
+            {
                 case 0:
                     return Times1;
                 case 1:
@@ -134,21 +145,27 @@ public final class AMD64Address extends AbstractAddress {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         StringBuilder s = new StringBuilder();
         s.append("[");
         String sep = "";
-        if (!getBase().equals(Register.None)) {
+        if (!getBase().equals(Register.None))
+        {
             s.append(getBase());
             sep = " + ";
         }
-        if (!getIndex().equals(Register.None)) {
+        if (!getIndex().equals(Register.None))
+        {
             s.append(sep).append(getIndex()).append(" * ").append(getScale().value);
             sep = " + ";
         }
-        if (getDisplacement() < 0) {
+        if (getDisplacement() < 0)
+        {
             s.append(" - ").append(-getDisplacement());
-        } else if (getDisplacement() > 0) {
+        }
+        else if (getDisplacement() > 0)
+        {
             s.append(sep).append(getDisplacement());
         }
         s.append("]");
@@ -159,7 +176,8 @@ public final class AMD64Address extends AbstractAddress {
      * @return Base register that defines the start of the address computation. If not present, is
      *         denoted by {@link Register#None}.
      */
-    public Register getBase() {
+    public Register getBase()
+    {
         return base;
     }
 
@@ -167,21 +185,24 @@ public final class AMD64Address extends AbstractAddress {
      * @return Index register, the value of which (possibly scaled by {@link #getScale}) is added to
      *         {@link #getBase}. If not present, is denoted by {@link Register#None}.
      */
-    public Register getIndex() {
+    public Register getIndex()
+    {
         return index;
     }
 
     /**
      * @return Scaling factor for indexing, dependent on target operand size.
      */
-    public Scale getScale() {
+    public Scale getScale()
+    {
         return scale;
     }
 
     /**
      * @return Optional additive displacement.
      */
-    public int getDisplacement() {
+    public int getDisplacement()
+    {
         return displacement;
     }
 }

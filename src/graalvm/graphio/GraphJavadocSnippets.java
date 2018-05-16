@@ -10,134 +10,144 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-final class GraphJavadocSnippets {
-    static GraphStructure<AcmeGraph, AcmeNode, AcmeNodeType, AcmePorts> acmeGraphStructure() {
-        // @formatter:off
-        // BEGIN: graalvm.graphio.GraphJavadocSnippets#acmeGraphStructure
+final class GraphJavadocSnippets
+{
+    static GraphStructure<AcmeGraph, AcmeNode, AcmeNodeType, AcmePorts> acmeGraphStructure()
+    {
         class AcmeGraphStructure implements
-        GraphStructure<AcmeGraph, AcmeNode, AcmeNodeType, AcmePorts> {
-
+        GraphStructure<AcmeGraph, AcmeNode, AcmeNodeType, AcmePorts>
+        {
             @Override
-            public AcmeGraph graph(AcmeGraph currentGraph, Object obj) {
+            public AcmeGraph graph(AcmeGraph currentGraph, Object obj)
+            {
                 return obj instanceof AcmeGraph ? (AcmeGraph) obj : null;
             }
 
             @Override
-            public Iterable<? extends AcmeNode> nodes(AcmeGraph graph) {
+            public Iterable<? extends AcmeNode> nodes(AcmeGraph graph)
+            {
                 return graph.allNodes();
             }
 
             @Override
-            public int nodesCount(AcmeGraph graph) {
+            public int nodesCount(AcmeGraph graph)
+            {
                 return graph.allNodes().size();
             }
 
             @Override
-            public int nodeId(AcmeNode node) {
+            public int nodeId(AcmeNode node)
+            {
                 return node.id;
             }
 
             @Override
-            public boolean nodeHasPredecessor(AcmeNode node) {
+            public boolean nodeHasPredecessor(AcmeNode node)
+            {
                 return node.id > 0;
             }
 
             @Override
-            public void nodeProperties(
-                AcmeGraph graph, AcmeNode node, Map<String, ? super Object> properties
-            ) {
+            public void nodeProperties(AcmeGraph graph, AcmeNode node, Map<String, ? super Object> properties)
+            {
                 properties.put("id", node.id);
             }
 
             @Override
-            public AcmeNodeType nodeClass(Object obj) {
+            public AcmeNodeType nodeClass(Object obj)
+            {
                 return obj instanceof AcmeNodeType ? (AcmeNodeType) obj : null;
             }
 
             @Override
-            public AcmeNode node(Object obj) {
+            public AcmeNode node(Object obj)
+            {
                 return obj instanceof AcmeNode ? (AcmeNode) obj : null;
             }
 
             @Override
-            public AcmeNodeType classForNode(AcmeNode node) {
+            public AcmeNodeType classForNode(AcmeNode node)
+            {
                 // we have only one type of nodes
                 return AcmeNodeType.STANDARD;
             }
 
-
             @Override
-            public String nameTemplate(AcmeNodeType nodeClass) {
+            public String nameTemplate(AcmeNodeType nodeClass)
+            {
                 return "Acme ({p#id})";
             }
 
             @Override
-            public Object nodeClassType(AcmeNodeType nodeClass) {
+            public Object nodeClassType(AcmeNodeType nodeClass)
+            {
                 return nodeClass.getClass();
             }
 
             @Override
-            public AcmePorts portInputs(AcmeNodeType nodeClass) {
+            public AcmePorts portInputs(AcmeNodeType nodeClass)
+            {
                 return AcmePorts.INPUT;
             }
 
             @Override
-            public AcmePorts portOutputs(AcmeNodeType nodeClass) {
+            public AcmePorts portOutputs(AcmeNodeType nodeClass)
+            {
                 return AcmePorts.OUTPUT;
             }
 
             @Override
-            public int portSize(AcmePorts port) {
+            public int portSize(AcmePorts port)
+            {
                 return port == AcmePorts.OUTPUT ? 1 : 0;
             }
 
             @Override
-            public boolean edgeDirect(AcmePorts port, int index) {
+            public boolean edgeDirect(AcmePorts port, int index)
+            {
                 return false;
             }
 
             @Override
-            public String edgeName(AcmePorts port, int index) {
+            public String edgeName(AcmePorts port, int index)
+            {
                 return port.name();
             }
 
             @Override
-            public Object edgeType(AcmePorts port, int index) {
+            public Object edgeType(AcmePorts port, int index)
+            {
                 return port;
             }
 
             @Override
-            public Collection<? extends AcmeNode> edgeNodes(
-                AcmeGraph graph, AcmeNode node, AcmePorts port, int index
-            ) {
-                if (port == AcmePorts.OUTPUT) {
+            public Collection<? extends AcmeNode> edgeNodes(AcmeGraph graph, AcmeNode node, AcmePorts port, int index)
+            {
+                if (port == AcmePorts.OUTPUT)
+                {
                     return node.outgoing.targets;
                 }
                 return null;
             }
         }
 
-        // END: graalvm.graphio.GraphJavadocSnippets#acmeGraphStructure
-
         return new AcmeGraphStructure();
     }
 
-    // BEGIN: graalvm.graphio.GraphJavadocSnippets#buildOutput
     static GraphOutput<AcmeGraph, ?> buildOutput(WritableByteChannel channel)
-    throws IOException {
+    throws IOException
+    {
         return GraphOutput.newBuilder(acmeGraphStructure()).
             // use the latest version; currently 6.0
             protocolVersion(6, 0).
             build(channel);
     }
-    // END: graalvm.graphio.GraphJavadocSnippets#buildOutput
 
-    // BEGIN: graalvm.graphio.GraphJavadocSnippets#buildAll
     static GraphOutput<AcmeGraph, ?> buildAll(WritableByteChannel channel)
-    throws IOException {
+    throws IOException
+    {
         GraphBlocks<AcmeGraph, AcmeBlocks, AcmeNode> graphBlocks = acmeBlocks();
-        GraphElements<AcmeMethod, AcmeField,
-            AcmeSignature, AcmeCodePosition> graphElements = acmeElements();
+        GraphElements<AcmeMethod, AcmeField, AcmeSignature, AcmeCodePosition> graphElements = acmeElements();
         GraphTypes graphTypes = acmeTypes();
 
         return GraphOutput.newBuilder(acmeGraphStructure()).
@@ -147,40 +157,48 @@ final class GraphJavadocSnippets {
             types(graphTypes).
             build(channel);
     }
-    // END: graalvm.graphio.GraphJavadocSnippets#buildAll
 
-    private static GraphTypes acmeTypes() {
+    private static GraphTypes acmeTypes()
+    {
         GraphTypes graphTypes = null;
         // in real world don't return null
         return graphTypes;
     }
 
-    private static GraphElements<AcmeMethod, AcmeField, AcmeSignature, AcmeCodePosition> acmeElements() {
+    private static GraphElements<AcmeMethod, AcmeField, AcmeSignature, AcmeCodePosition> acmeElements()
+    {
         GraphElements<AcmeMethod, AcmeField, AcmeSignature, AcmeCodePosition> graphElements = null;
         // in real world don't return null
         return graphElements;
     }
 
-    private static GraphBlocks<AcmeGraph, AcmeBlocks, AcmeNode> acmeBlocks() {
+    private static GraphBlocks<AcmeGraph, AcmeBlocks, AcmeNode> acmeBlocks()
+    {
         GraphBlocks<AcmeGraph, AcmeBlocks, AcmeNode> graphBlocks = null;
         // in real world don't return null
         return graphBlocks;
     }
 
-    private static class AcmeGraph {
+    private static class AcmeGraph
+    {
         final AcmeNode root;
 
-        AcmeGraph(AcmeNode root) {
+        AcmeGraph(AcmeNode root)
+        {
             this.root = root;
         }
 
-        Set<AcmeNode> allNodes() {
+        Set<AcmeNode> allNodes()
+        {
             return allNodes(root, new LinkedHashSet<>());
         }
 
-        private static Set<AcmeNode> allNodes(AcmeNode node, Set<AcmeNode> collectTo) {
-            if (collectTo.add(node)) {
-                for (AcmeNode target : node.outgoing.targets) {
+        private static Set<AcmeNode> allNodes(AcmeNode node, Set<AcmeNode> collectTo)
+        {
+            if (collectTo.add(node))
+            {
+                for (AcmeNode target : node.outgoing.targets)
+                {
                     allNodes(target, collectTo);
                 }
             }
@@ -188,58 +206,68 @@ final class GraphJavadocSnippets {
         }
     }
 
-    private static class AcmeNode {
+    private static class AcmeNode
+    {
         final int id;
         final AcmeEdges outgoing;
 
-        AcmeNode(int id) {
+        AcmeNode(int id)
+        {
             this.id = id;
             this.outgoing = new AcmeEdges();
         }
 
-        void linkTo(AcmeNode target) {
+        void linkTo(AcmeNode target)
+        {
             outgoing.targets.add(target);
         }
     }
 
-    private enum AcmeNodeType {
+    private enum AcmeNodeType
+    {
         STANDARD
     }
 
-    private enum AcmePorts {
+    private enum AcmePorts
+    {
         INPUT,
         OUTPUT;
     }
 
-    private static class AcmeEdges {
+    private static class AcmeEdges
+    {
         final Set<AcmeNode> targets;
 
-        AcmeEdges() {
+        AcmeEdges()
+        {
             this.targets = new LinkedHashSet<>();
         }
     }
 
-    private static class AcmeBlocks {
+    private static class AcmeBlocks
+    {
     }
 
-    private static class AcmeMethod {
+    private static class AcmeMethod
+    {
     }
 
-    private static class AcmeField {
+    private static class AcmeField
+    {
     }
 
-    private static class AcmeSignature {
+    private static class AcmeSignature
+    {
     }
 
-    private static class AcmeCodePosition {
+    private static class AcmeCodePosition
+    {
     }
 
-    // BEGIN: graalvm.graphio.GraphJavadocSnippets#dump
-    static void dump(File toFile) throws IOException {
-        try (
-            FileChannel ch = new FileOutputStream(toFile).getChannel();
-            GraphOutput<AcmeGraph, ?> output = buildOutput(ch);
-        ) {
+    static void dump(File toFile) throws IOException
+    {
+        try (FileChannel ch = new FileOutputStream(toFile).getChannel(); GraphOutput<AcmeGraph, ?> output = buildOutput(ch);)
+        {
             AcmeNode root = new AcmeNode(0);
             AcmeNode n1 = new AcmeNode(1);
             AcmeNode n2 = new AcmeNode(2);
@@ -257,6 +285,4 @@ final class GraphJavadocSnippets {
             output.endGroup();
         }
     }
-    // END: graalvm.graphio.GraphJavadocSnippets#dump
-
 }

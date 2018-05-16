@@ -23,34 +23,43 @@ import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.Value;
 
 @Opcode("BenchMarkCounter")
-public class AMD64HotSpotCounterOp extends HotSpotCounterOp {
+public class AMD64HotSpotCounterOp extends HotSpotCounterOp
+{
     public static final LIRInstructionClass<AMD64HotSpotCounterOp> TYPE = LIRInstructionClass.create(AMD64HotSpotCounterOp.class);
 
     @Alive({OperandFlag.STACK, OperandFlag.UNINITIALIZED}) private AllocatableValue backupSlot;
 
-    public AMD64HotSpotCounterOp(String name, String group, Value increment, HotSpotRegistersProvider registers, GraalHotSpotVMConfig config, AllocatableValue backupSlot) {
+    public AMD64HotSpotCounterOp(String name, String group, Value increment, HotSpotRegistersProvider registers, GraalHotSpotVMConfig config, AllocatableValue backupSlot)
+    {
         super(TYPE, name, group, increment, registers, config);
         this.backupSlot = backupSlot;
     }
 
-    public AMD64HotSpotCounterOp(String[] names, String[] groups, Value[] increments, HotSpotRegistersProvider registers, GraalHotSpotVMConfig config, AllocatableValue backupSlot) {
+    public AMD64HotSpotCounterOp(String[] names, String[] groups, Value[] increments, HotSpotRegistersProvider registers, GraalHotSpotVMConfig config, AllocatableValue backupSlot)
+    {
         super(TYPE, names, groups, increments, registers, config);
         this.backupSlot = backupSlot;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb) {
+    public void emitCode(CompilationResultBuilder crb)
+    {
         AMD64MacroAssembler masm = (AMD64MacroAssembler) crb.asm;
         TargetDescription target = crb.target;
 
         Register scratch;
         // It can happen that the rax register is the increment register, in this case we do not
         // want to spill it to the stack.
-        if (!contains(increments, rax)) {
+        if (!contains(increments, rax))
+        {
             scratch = rax;
-        } else if (!contains(increments, rbx)) {
+        }
+        else if (!contains(increments, rbx))
+        {
             scratch = rbx;
-        } else {
+        }
+        else
+        {
             // In this case rax and rbx are used as increment. Either we implement a third register
             // or we implement a spillover the value from rax to rbx or vice versa during
             // emitIncrement().
@@ -76,25 +85,31 @@ public class AMD64HotSpotCounterOp extends HotSpotCounterOp {
     /**
      * Tests if the array contains the register.
      */
-    private static boolean contains(Value[] increments, Register register) {
-        for (Value increment : increments) {
-            if (isRegister(increment) && asRegister(increment).equals(register)) {
+    private static boolean contains(Value[] increments, Register register)
+    {
+        for (Value increment : increments)
+        {
+            if (isRegister(increment) && asRegister(increment).equals(register))
+            {
                 return true;
             }
         }
         return false;
     }
 
-    private static void emitIncrement(AMD64MacroAssembler masm, Register countersArrayReg, Value incrementValue, int displacement) {
+    private static void emitIncrement(AMD64MacroAssembler masm, Register countersArrayReg, Value incrementValue, int displacement)
+    {
         // address for counter value
         AMD64Address counterAddr = new AMD64Address(countersArrayReg, displacement);
         // increment counter (in memory)
-        if (isJavaConstant(incrementValue)) {
+        if (isJavaConstant(incrementValue))
+        {
             int increment = asInt(asJavaConstant(incrementValue));
             masm.incrementq(counterAddr, increment);
-        } else {
+        }
+        else
+        {
             masm.addq(counterAddr, asRegister(incrementValue));
         }
-
     }
 }

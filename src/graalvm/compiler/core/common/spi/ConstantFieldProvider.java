@@ -8,10 +8,10 @@ import jdk.vm.ci.meta.ResolvedJavaField;
 /**
  * Implements the logic that decides whether a field read should be constant folded.
  */
-public interface ConstantFieldProvider {
-
-    public interface ConstantFieldTool<T> {
-
+public interface ConstantFieldProvider
+{
+    public interface ConstantFieldTool<T>
+    {
         OptionValues getOptions();
 
         JavaConstant readValue();

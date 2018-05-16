@@ -13,13 +13,13 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * Utility for deriving hint types for a type check instruction (e.g. checkcast or instanceof) based
  * on the target type of the check and any profiling information available for the instruction.
  */
-public class TypeCheckHints {
-
+public class TypeCheckHints
+{
     /**
      * A receiver type profiled in a type check instruction.
      */
-    public static class Hint {
-
+    public static class Hint
+    {
         /**
          * A type seen while profiling a type check instruction.
          */
@@ -30,7 +30,8 @@ public class TypeCheckHints {
          */
         public final boolean positive;
 
-        Hint(ResolvedJavaType type, boolean positive) {
+        Hint(ResolvedJavaType type, boolean positive)
+        {
             this.type = type;
             this.positive = positive;
         }
@@ -72,11 +73,15 @@ public class TypeCheckHints {
      *            will be null
      * @param maxHints the maximum length of {@link #hints}
      */
-    public TypeCheckHints(TypeReference targetType, JavaTypeProfile profile, Assumptions assumptions, double minHintHitProbability, int maxHints) {
+    public TypeCheckHints(TypeReference targetType, JavaTypeProfile profile, Assumptions assumptions, double minHintHitProbability, int maxHints)
+    {
         this.profile = profile;
-        if (targetType != null && targetType.isExact()) {
+        if (targetType != null && targetType.isExact())
+        {
             exact = targetType.getType();
-        } else {
+        }
+        else
+        {
             exact = null;
         }
         Double[] hitProbability = {null};
@@ -84,30 +89,40 @@ public class TypeCheckHints {
         this.hintHitProbability = hitProbability[0];
     }
 
-    private static Hint[] makeHints(TypeReference targetType, JavaTypeProfile profile, double minHintHitProbability, int maxHints, Double[] hitProbability) {
+    private static Hint[] makeHints(TypeReference targetType, JavaTypeProfile profile, double minHintHitProbability, int maxHints, Double[] hitProbability)
+    {
         double hitProb = 0.0d;
         Hint[] hintsBuf = NO_HINTS;
-        if (profile != null) {
+        if (profile != null)
+        {
             double notRecordedTypes = profile.getNotRecordedProbability();
             ProfiledType[] ptypes = profile.getTypes();
-            if (notRecordedTypes < (1D - minHintHitProbability) && ptypes != null && ptypes.length > 0) {
+            if (notRecordedTypes < (1D - minHintHitProbability) && ptypes != null && ptypes.length > 0)
+            {
                 hintsBuf = new Hint[ptypes.length];
                 int hintCount = 0;
-                for (ProfiledType ptype : ptypes) {
-                    if (targetType != null) {
+                for (ProfiledType ptype : ptypes)
+                {
+                    if (targetType != null)
+                    {
                         ResolvedJavaType hintType = ptype.getType();
                         hintsBuf[hintCount++] = new Hint(hintType, targetType.getType().isAssignableFrom(hintType));
                         hitProb += ptype.getProbability();
                     }
-                    if (hintCount == maxHints) {
+                    if (hintCount == maxHints)
+                    {
                         break;
                     }
                 }
-                if (hitProb >= minHintHitProbability) {
-                    if (hintsBuf.length != hintCount || hintCount > maxHints) {
+                if (hitProb >= minHintHitProbability)
+                {
+                    if (hintsBuf.length != hintCount || hintCount > maxHints)
+                    {
                         hintsBuf = Arrays.copyOf(hintsBuf, Math.min(maxHints, hintCount));
                     }
-                } else {
+                }
+                else
+                {
                     hintsBuf = NO_HINTS;
                     hitProb = 0.0d;
                 }

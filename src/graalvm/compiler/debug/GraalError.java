@@ -6,28 +6,32 @@ import java.util.Locale;
 /**
  * Indicates a condition that should never occur during normal operation.
  */
-public class GraalError extends Error {
-
-    private static final long serialVersionUID = 531632331813456233L;
+public class GraalError extends Error
+{
     private final ArrayList<String> context = new ArrayList<>();
 
-    public static RuntimeException unimplemented() {
+    public static RuntimeException unimplemented()
+    {
         throw new GraalError("unimplemented");
     }
 
-    public static RuntimeException unimplemented(String msg) {
+    public static RuntimeException unimplemented(String msg)
+    {
         throw new GraalError("unimplemented: %s", msg);
     }
 
-    public static RuntimeException shouldNotReachHere() {
+    public static RuntimeException shouldNotReachHere()
+    {
         throw new GraalError("should not reach here");
     }
 
-    public static RuntimeException shouldNotReachHere(String msg) {
+    public static RuntimeException shouldNotReachHere(String msg)
+    {
         throw new GraalError("should not reach here: %s", msg);
     }
 
-    public static RuntimeException shouldNotReachHere(Throwable cause) {
+    public static RuntimeException shouldNotReachHere(Throwable cause)
+    {
         throw new GraalError(cause);
     }
 
@@ -40,8 +44,10 @@ public class GraalError extends Error {
      * @param condition the condition to check
      * @param msg the message that will be associated with the error
      */
-    public static void guarantee(boolean condition, String msg) {
-        if (!condition) {
+    public static void guarantee(boolean condition, String msg)
+    {
+        if (!condition)
+        {
             throw new GraalError("failed guarantee: " + msg);
         }
     }
@@ -57,8 +63,10 @@ public class GraalError extends Error {
      *            {@link String#format(String, Object...)} syntax
      * @param arg argument to the format string in {@code msg}
      */
-    public static void guarantee(boolean condition, String msg, Object arg) {
-        if (!condition) {
+    public static void guarantee(boolean condition, String msg, Object arg)
+    {
+        if (!condition)
+        {
             throw new GraalError("failed guarantee: " + msg, arg);
         }
     }
@@ -75,8 +83,10 @@ public class GraalError extends Error {
      * @param arg1 argument to the format string in {@code msg}
      * @param arg2 argument to the format string in {@code msg}
      */
-    public static void guarantee(boolean condition, String msg, Object arg1, Object arg2) {
-        if (!condition) {
+    public static void guarantee(boolean condition, String msg, Object arg1, Object arg2)
+    {
+        if (!condition)
+        {
             throw new GraalError("failed guarantee: " + msg, arg1, arg2);
         }
     }
@@ -94,8 +104,10 @@ public class GraalError extends Error {
      * @param arg2 argument to the format string in {@code msg}
      * @param arg3 argument to the format string in {@code msg}
      */
-    public static void guarantee(boolean condition, String msg, Object arg1, Object arg2, Object arg3) {
-        if (!condition) {
+    public static void guarantee(boolean condition, String msg, Object arg1, Object arg2, Object arg3)
+    {
+        if (!condition)
+        {
             throw new GraalError("failed guarantee: " + msg, arg1, arg2, arg3);
         }
     }
@@ -107,8 +119,10 @@ public class GraalError extends Error {
      * wrapping the Object[] inside of another Object[].
      */
     @Deprecated
-    public static void guarantee(boolean condition, String msg, Object... args) {
-        if (!condition) {
+    public static void guarantee(boolean condition, String msg, Object... args)
+    {
+        if (!condition)
+        {
             throw new GraalError("failed guarantee: " + msg, args);
         }
     }
@@ -118,7 +132,8 @@ public class GraalError extends Error {
      *
      * @param msg the message that will be associated with the error
      */
-    public GraalError(String msg) {
+    public GraalError(String msg)
+    {
         super(msg);
     }
 
@@ -131,7 +146,8 @@ public class GraalError extends Error {
      * @param args parameters to String.format - parameters that implement {@link Iterable} will be
      *            expanded into a [x, x, ...] representation.
      */
-    public GraalError(String msg, Object... args) {
+    public GraalError(String msg, Object... args)
+    {
         super(format(msg, args));
     }
 
@@ -140,7 +156,8 @@ public class GraalError extends Error {
      *
      * @param cause the original exception that contains additional information on this error
      */
-    public GraalError(Throwable cause) {
+    public GraalError(Throwable cause)
+    {
         super(cause);
     }
 
@@ -150,34 +167,43 @@ public class GraalError extends Error {
      *
      * @param e the original {@link GraalError}
      */
-    public GraalError(GraalError e) {
+    public GraalError(GraalError e)
+    {
         super(e);
         context.addAll(e.context);
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         StringBuilder str = new StringBuilder();
         str.append(super.toString());
         str.append(context());
         return str.toString();
     }
 
-    public String context() {
+    public String context()
+    {
         StringBuilder str = new StringBuilder();
-        for (String s : context) {
+        for (String s : context)
+        {
             str.append("\n\tat ").append(s);
         }
         return str.toString();
     }
 
-    private static String format(String msg, Object... args) {
-        if (args != null) {
+    private static String format(String msg, Object... args)
+    {
+        if (args != null)
+        {
             // expand Iterable parameters into a list representation
-            for (int i = 0; i < args.length; i++) {
-                if (args[i] instanceof Iterable<?>) {
+            for (int i = 0; i < args.length; i++)
+            {
+                if (args[i] instanceof Iterable<?>)
+                {
                     ArrayList<Object> list = new ArrayList<>();
-                    for (Object o : (Iterable<?>) args[i]) {
+                    for (Object o : (Iterable<?>) args[i])
+                    {
                         list.add(o);
                     }
                     args[i] = list.toString();
@@ -187,12 +213,14 @@ public class GraalError extends Error {
         return String.format(Locale.ENGLISH, msg, args);
     }
 
-    public GraalError addContext(String newContext) {
+    public GraalError addContext(String newContext)
+    {
         this.context.add(newContext);
         return this;
     }
 
-    public GraalError addContext(String name, Object obj) {
+    public GraalError addContext(String name, Object obj)
+    {
         return addContext(format("%s: %s", name, obj));
     }
 }

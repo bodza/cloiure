@@ -35,24 +35,29 @@ import graalvm.compiler.replacements.Snippets;
 import jdk.vm.ci.code.CodeUtil;
 import jdk.vm.ci.code.TargetDescription;
 
-public class ProfileSnippets implements Snippets {
+public class ProfileSnippets implements Snippets
+{
     @NodeIntrinsic(ForeignCallNode.class)
     public static native void methodInvocationEvent(@ConstantNodeParameter ForeignCallDescriptor descriptor, MethodCountersPointer counters);
 
     @Snippet
-    protected static int notificationMask(int freqLog, int stepLog) {
+    protected static int notificationMask(int freqLog, int stepLog)
+    {
         int stepMask = (1 << stepLog) - 1;
         int frequencyMask = (1 << freqLog) - 1;
         return frequencyMask & ~stepMask;
     }
 
     @Snippet
-    public static void profileMethodEntry(MethodCountersPointer counters, int step, int stepLog, @ConstantParameter int freqLog) {
+    public static void profileMethodEntry(MethodCountersPointer counters, int step, int stepLog, @ConstantParameter int freqLog)
+    {
         int counterValue = counters.readInt(config(INJECTED_VMCONFIG).invocationCounterOffset) + config(INJECTED_VMCONFIG).invocationCounterIncrement * step;
         counters.writeInt(config(INJECTED_VMCONFIG).invocationCounterOffset, counterValue);
-        if (freqLog >= 0) {
+        if (freqLog >= 0)
+        {
             final int mask = notificationMask(freqLog, stepLog);
-            if (probability(SLOW_PATH_PROBABILITY, (counterValue & (mask << config(INJECTED_VMCONFIG).invocationCounterShift)) == 0)) {
+            if (probability(SLOW_PATH_PROBABILITY, (counterValue & (mask << config(INJECTED_VMCONFIG).invocationCounterShift)) == 0))
+            {
                 methodInvocationEvent(HotSpotBackend.INVOCATION_EVENT, counters);
             }
         }
@@ -62,38 +67,46 @@ public class ProfileSnippets implements Snippets {
     public static native void methodBackedgeEvent(@ConstantNodeParameter ForeignCallDescriptor descriptor, MethodCountersPointer counters, int bci, int targetBci);
 
     @Snippet
-    public static void profileBackedge(MethodCountersPointer counters, int step, int stepLog, @ConstantParameter int freqLog, int bci, int targetBci) {
+    public static void profileBackedge(MethodCountersPointer counters, int step, int stepLog, @ConstantParameter int freqLog, int bci, int targetBci)
+    {
         int counterValue = counters.readInt(config(INJECTED_VMCONFIG).backedgeCounterOffset) + config(INJECTED_VMCONFIG).invocationCounterIncrement * step;
         counters.writeInt(config(INJECTED_VMCONFIG).backedgeCounterOffset, counterValue);
         final int mask = notificationMask(freqLog, stepLog);
-        if (probability(SLOW_PATH_PROBABILITY, (counterValue & (mask << config(INJECTED_VMCONFIG).invocationCounterShift)) == 0)) {
+        if (probability(SLOW_PATH_PROBABILITY, (counterValue & (mask << config(INJECTED_VMCONFIG).invocationCounterShift)) == 0))
+        {
             methodBackedgeEvent(HotSpotBackend.BACKEDGE_EVENT, counters, bci, targetBci);
         }
     }
 
     @Snippet
-    public static void profileConditionalBackedge(MethodCountersPointer counters, int step, int stepLog, @ConstantParameter int freqLog, boolean branchCondition, int bci, int targetBci) {
-        if (branchCondition) {
+    public static void profileConditionalBackedge(MethodCountersPointer counters, int step, int stepLog, @ConstantParameter int freqLog, boolean branchCondition, int bci, int targetBci)
+    {
+        if (branchCondition)
+        {
             profileBackedge(counters, step, stepLog, freqLog, bci, targetBci);
         }
     }
 
-    public static class Templates extends AbstractTemplates {
+    public static class Templates extends AbstractTemplates
+    {
         private final SnippetInfo profileMethodEntry = snippet(ProfileSnippets.class, "profileMethodEntry");
         private final SnippetInfo profileBackedge = snippet(ProfileSnippets.class, "profileBackedge");
         private final SnippetInfo profileConditionalBackedge = snippet(ProfileSnippets.class, "profileConditionalBackedge");
 
-        public Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, HotSpotProviders providers, TargetDescription target) {
+        public Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, HotSpotProviders providers, TargetDescription target)
+        {
             super(options, factories, providers, providers.getSnippetReflection(), target);
         }
 
-        public void lower(ProfileNode profileNode, LoweringTool tool) {
+        public void lower(ProfileNode profileNode, LoweringTool tool)
+        {
             StructuredGraph graph = profileNode.graph();
             LoadMethodCountersNode counters = graph.unique(new LoadMethodCountersNode(profileNode.getProfiledMethod()));
             ConstantNode step = ConstantNode.forInt(profileNode.getStep(), graph);
             ConstantNode stepLog = ConstantNode.forInt(CodeUtil.log2(profileNode.getStep()), graph);
 
-            if (profileNode instanceof ProfileBranchNode) {
+            if (profileNode instanceof ProfileBranchNode)
+            {
                 // Backedge event
                 ProfileBranchNode profileBranchNode = (ProfileBranchNode) profileNode;
                 SnippetInfo snippet = profileBranchNode.hasCondition() ? profileConditionalBackedge : profileBackedge;
@@ -104,7 +117,8 @@ public class ProfileSnippets implements Snippets {
                 args.add("step", step);
                 args.add("stepLog", stepLog);
                 args.addConst("freqLog", profileBranchNode.getNotificationFreqLog());
-                if (profileBranchNode.hasCondition()) {
+                if (profileBranchNode.hasCondition())
+                {
                     args.add("branchCondition", profileBranchNode.branchCondition());
                 }
                 args.add("bci", bci);
@@ -112,7 +126,9 @@ public class ProfileSnippets implements Snippets {
 
                 SnippetTemplate template = template(profileNode, args);
                 template.instantiate(providers.getMetaAccess(), profileNode, DEFAULT_REPLACER, args);
-            } else if (profileNode instanceof ProfileInvokeNode) {
+            }
+            else if (profileNode instanceof ProfileInvokeNode)
+            {
                 ProfileInvokeNode profileInvokeNode = (ProfileInvokeNode) profileNode;
                 // Method invocation event
                 Arguments args = new Arguments(profileMethodEntry, graph.getGuardsStage(), tool.getLoweringStage());
@@ -122,12 +138,15 @@ public class ProfileSnippets implements Snippets {
                 args.addConst("freqLog", profileInvokeNode.getNotificationFreqLog());
                 SnippetTemplate template = template(profileNode, args);
                 template.instantiate(providers.getMetaAccess(), profileNode, DEFAULT_REPLACER, args);
-            } else {
+            }
+            else
+            {
                 throw new GraalError("Unsupported profile node type: " + profileNode);
             }
 
             assert profileNode.hasNoUsages();
-            if (!profileNode.isDeleted()) {
+            if (!profileNode.isDeleted())
+            {
                 GraphUtil.killWithUnusedFloatingInputs(profileNode);
             }
         }

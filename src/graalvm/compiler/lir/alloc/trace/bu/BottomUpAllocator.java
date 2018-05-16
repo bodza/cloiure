@@ -69,7 +69,8 @@ import jdk.vm.ci.meta.Value;
  * compiled exception handlers since it might introduce spill code after the {@link LIRInstruction
  * instruction} that triggers the exception.
  */
-public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocationContext> {
+public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocationContext>
+{
     private final TargetDescription target;
     private final LIRGenerationResult lirGenRes;
     private final MoveFactory spillMoveFactory;
@@ -94,8 +95,8 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
 
     private final GlobalLivenessInfo livenessInfo;
 
-    public BottomUpAllocator(TargetDescription target, LIRGenerationResult lirGenRes, MoveFactory spillMoveFactory, RegisterAllocationConfig registerAllocationConfig,
-                    AllocatableValue[] cachedStackSlots, TraceBuilderResult resultTraces, boolean neverSpillConstant, GlobalLivenessInfo livenessInfo) {
+    public BottomUpAllocator(TargetDescription target, LIRGenerationResult lirGenRes, MoveFactory spillMoveFactory, RegisterAllocationConfig registerAllocationConfig, AllocatableValue[] cachedStackSlots, TraceBuilderResult resultTraces, boolean neverSpillConstant, GlobalLivenessInfo livenessInfo)
+    {
         this.target = target;
         this.debug = lirGenRes.getLIR().getDebug();
         this.lirGenRes = lirGenRes;
@@ -112,15 +113,18 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
         this.insertInstructionsBefore = new ArrayList<>(4);
         this.insertInstructionsAfter = new ArrayList<>(4);
 
-        if (TraceRegisterAllocationPhase.Options.TraceRACacheStackSlots.getValue(lirGenRes.getLIR().getOptions())) {
+        if (TraceRegisterAllocationPhase.Options.TraceRACacheStackSlots.getValue(lirGenRes.getLIR().getOptions()))
+        {
             this.stackSlots = cachedStackSlots;
-        } else {
+        }
+        else
+        {
             this.stackSlots = new AllocatableValue[lirGenRes.getLIR().numVariables()];
         }
-
     }
 
-    private LIR getLIR() {
+    private LIR getLIR()
+    {
         return lirGenRes.getLIR();
     }
 
@@ -128,17 +132,20 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
      * Gets an object describing the attributes of a given register according to this register
      * configuration.
      */
-    private RegisterAttributes attributes(Register reg) {
+    private RegisterAttributes attributes(Register reg)
+    {
         return registerAttributes[reg.number];
     }
 
     /**
      * Returns a new spill slot or a cached entry if there is already one for the variable.
      */
-    private AllocatableValue allocateSpillSlot(Variable var) {
+    private AllocatableValue allocateSpillSlot(Variable var)
+    {
         int variableIndex = var.index;
         AllocatableValue cachedStackSlot = stackSlots[variableIndex];
-        if (cachedStackSlot != null) {
+        if (cachedStackSlot != null)
+        {
             TraceRegisterAllocationPhase.globalStackSlots.increment(debug);
             assert cachedStackSlot.getValueKind().equals(var.getValueKind()) : "CachedStackSlot: kind mismatch? " + var.getValueKind() + " vs. " + cachedStackSlot.getValueKind();
             return cachedStackSlot;
@@ -150,59 +157,76 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
     }
 
     @Override
-    protected void run(@SuppressWarnings("hiding") TargetDescription target, @SuppressWarnings("hiding") LIRGenerationResult lirGenRes, Trace trace, TraceAllocationContext context) {
+    protected void run(@SuppressWarnings("hiding") TargetDescription target, @SuppressWarnings("hiding") LIRGenerationResult lirGenRes, Trace trace, TraceAllocationContext context)
+    {
         allocate(trace);
     }
 
-    private void allocate(Trace trace) {
-        if (neverSpillConstants) {
+    private void allocate(Trace trace)
+    {
+        if (neverSpillConstants)
+        {
             throw JVMCIError.unimplemented("NeverSpillConstant not supported!");
         }
         new Allocator().allocateTrace(trace);
         assert verify(trace);
     }
 
-    private boolean verify(Trace trace) {
-        for (AbstractBlockBase<?> block : trace.getBlocks()) {
+    private boolean verify(Trace trace)
+    {
+        for (AbstractBlockBase<?> block : trace.getBlocks())
+        {
             assert LIR.verifyBlock(lirGenRes.getLIR(), block);
         }
         return true;
     }
 
-    private static boolean requiresRegisters(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags) {
+    private static boolean requiresRegisters(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
+    {
         assert isVariable(value) : "Not a variable " + value;
-        if (instruction instanceof LabelOp) {
+        if (instruction instanceof LabelOp)
+        {
             // phi and incoming values do not require a register
             return false;
         }
-        if (mode == OperandMode.DEF || mode == OperandMode.TEMP) {
+        if (mode == OperandMode.DEF || mode == OperandMode.TEMP)
+        {
             return true;
         }
         return !flags.contains(OperandFlag.STACK);
     }
 
-    private void resolveFindInsertPos(AbstractBlockBase<?> fromBlock, AbstractBlockBase<?> toBlock) {
+    private void resolveFindInsertPos(AbstractBlockBase<?> fromBlock, AbstractBlockBase<?> toBlock)
+    {
         LIR lir = lirGenRes.getLIR();
-        if (fromBlock.getSuccessorCount() <= 1) {
-            if (debug.isLogEnabled()) {
+        if (fromBlock.getSuccessorCount() <= 1)
+        {
+            if (debug.isLogEnabled())
+            {
                 debug.log("inserting moves at end of fromBlock B%d", fromBlock.getId());
             }
 
             ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(fromBlock);
             LIRInstruction instr = instructions.get(instructions.size() - 1);
-            if (instr instanceof StandardOp.JumpOp) {
+            if (instr instanceof StandardOp.JumpOp)
+            {
                 // insert moves before branch
                 moveResolver.setInsertPosition(instructions, instructions.size() - 1);
-            } else {
+            }
+            else
+            {
                 moveResolver.setInsertPosition(instructions, instructions.size());
             }
-
-        } else {
-            if (debug.isLogEnabled()) {
+        }
+        else
+        {
+            if (debug.isLogEnabled())
+            {
                 debug.log("inserting moves at beginning of toBlock B%d", toBlock.getId());
             }
 
-            if (Assertions.detailedAssertionsEnabled(getLIR().getOptions())) {
+            if (Assertions.detailedAssertionsEnabled(getLIR().getOptions()))
+            {
                 assert lir.getLIRforBlock(fromBlock).get(0) instanceof StandardOp.LabelOp : "block does not start with a label";
 
                 /*
@@ -210,7 +234,8 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
                  * blocks which are reached by switch statements may have be more than one
                  * predecessor but it will be guaranteed that all predecessors will be the same.
                  */
-                for (AbstractBlockBase<?> predecessor : toBlock.getPredecessors()) {
+                for (AbstractBlockBase<?> predecessor : toBlock.getPredecessors())
+                {
                     assert fromBlock == predecessor : "all critical edges must be broken";
                 }
             }
@@ -219,8 +244,8 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
         }
     }
 
-    private final class Allocator {
-
+    private final class Allocator
+    {
         /**
          * Maps from {@linkplain Register#number register} to the current {@linkplain Variable
          * variable}.
@@ -238,7 +263,8 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
         private int currentInstructionIndex;
         private int currentOpId;
 
-        private Allocator() {
+        private Allocator()
+        {
             RegisterArray registers = target.arch.getRegisters();
             int numRegs = registers.size();
             int numVar = getLIR().numVariables();
@@ -250,73 +276,89 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
             currentOpId = 2;
         }
 
-        private void setCurrentValue(Register reg, AllocatableValue val) {
+        private void setCurrentValue(Register reg, AllocatableValue val)
+        {
             currentRegisterMapping[reg.number] = val;
         }
 
-        private AllocatableValue getCurrentValue(Register reg) {
+        private AllocatableValue getCurrentValue(Register reg)
+        {
             return currentRegisterMapping[reg.number];
         }
 
-        private int getLastRegisterUsage(Register reg) {
+        private int getLastRegisterUsage(Register reg)
+        {
             return lastRegisterUsage[reg.number];
         }
 
-        private void setLastRegisterUsage(Register reg, int pos) {
+        private void setLastRegisterUsage(Register reg, int pos)
+        {
             debug.log("Register %s last used %d", reg, pos);
             lastRegisterUsage[reg.number] = pos;
         }
 
-        private int getLastRegisterKill(Register reg) {
+        private int getLastRegisterKill(Register reg)
+        {
             return lastRegisterKill[reg.number];
         }
 
-        private void setLastRegisterKill(Register reg, int pos) {
+        private void setLastRegisterKill(Register reg, int pos)
+        {
             debug.log("Register %s killed %d", reg, pos);
             lastRegisterKill[reg.number] = pos;
         }
 
-        private void setCurrentLocation(Variable var, AllocatableValue location) {
+        private void setCurrentLocation(Variable var, AllocatableValue location)
+        {
             locations[var.index] = location;
         }
 
-        private AllocatableValue getCurrentLocation(Variable var) {
+        private AllocatableValue getCurrentLocation(Variable var)
+        {
             return locations[var.index];
         }
 
-        private void insertSpillMoveBefore(AllocatableValue dst, Value src) {
+        private void insertSpillMoveBefore(AllocatableValue dst, Value src)
+        {
             LIRInstruction move = spillMoveFactory.createMove(dst, src);
             insertInstructionsBefore.add(move);
             move.setComment(lirGenRes, "BottomUp: spill move before");
             debug.log("insert before %s", move);
         }
 
-        private void insertSpillMoveAfter(AllocatableValue dst, Value src) {
+        private void insertSpillMoveAfter(AllocatableValue dst, Value src)
+        {
             LIRInstruction inst = currentInstructions.get(currentInstructionIndex);
-            if (!(inst instanceof BlockEndOp)) {
+            if (!(inst instanceof BlockEndOp))
+            {
                 LIRInstruction move = spillMoveFactory.createMove(dst, src);
                 insertInstructionsAfter.add(move);
                 move.setComment(lirGenRes, "BottomUp: spill move after");
                 debug.log("insert after %s", move);
-            } else {
+            }
+            else
+            {
                 debug.log("Block end op. No from %s to %s necessary.", src, dst);
                 requireResolution = true;
             }
         }
 
-        private void insertInstructions() {
+        private void insertInstructions()
+        {
             // TODO (je) this is can probably be improved
             currentInstructions.ensureCapacity(currentInstructions.size() + insertInstructionsBefore.size() + insertInstructionsAfter.size());
             LIRInstruction inst = currentInstructions.get(currentInstructionIndex);
             // insert after
-            if (insertInstructionsAfter.size() != 0) {
+            if (insertInstructionsAfter.size() != 0)
+            {
                 Collections.reverse(insertInstructionsAfter);
                 assert !(inst instanceof BlockEndOp) : "Cannot insert instruction after the block end op: " + inst;
                 currentInstructions.addAll(currentInstructionIndex + 1, insertInstructionsAfter);
                 insertInstructionsAfter.clear();
             }
             // insert before
-            if (insertInstructionsBefore.size() != 0) {
+            if (insertInstructionsBefore.size() != 0)
+            {
                 assert !(inst instanceof LabelOp) : "Cannot insert instruction before the label op: " + inst;
                 currentInstructions.addAll(currentInstructionIndex, insertInstructionsBefore);
                 insertInstructionsBefore.clear();
@@ -324,28 +366,34 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
         }
 
         @SuppressWarnings("try")
-        private void allocateTrace(Trace trace) {
-            try (DebugContext.Scope s = debug.scope("BottomUpAllocator", trace.getBlocks()); Indent indent = debug.logAndIndent("%s (Trace%d)", trace, trace.getId())) {
+        private void allocateTrace(Trace trace)
+        {
+            try (DebugContext.Scope s = debug.scope("BottomUpAllocator", trace.getBlocks()); Indent indent = debug.logAndIndent("%s (Trace%d)", trace, trace.getId()))
+            {
                 AbstractBlockBase<?>[] blocks = trace.getBlocks();
                 int lastBlockIdx = blocks.length - 1;
                 AbstractBlockBase<?> successorBlock = blocks[lastBlockIdx];
                 // handle last block
                 allocateBlock(successorBlock);
                 // handle remaining blocks
-                for (int i = lastBlockIdx - 1; i >= 0; i--) {
+                for (int i = lastBlockIdx - 1; i >= 0; i--)
+                {
                     AbstractBlockBase<?> block = blocks[i];
                     // handle PHIs
                     resolvePhis(block, successorBlock);
                     boolean needResolution = allocateBlock(block);
 
-                    if (needResolution) {
+                    if (needResolution)
+                    {
                         // resolve local data flow
                         resolveIntraTraceEdge(block, successorBlock);
                     }
                     successorBlock = block;
                 }
                 resolveLoopBackEdge(trace);
-            } catch (Throwable e) {
+            }
+            catch (Throwable e)
+            {
                 throw debug.handle(e);
             }
         }
@@ -357,17 +405,21 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
          * (which is not yet allocated) to the location of the variable defined by the phi in the
          * successor (which is already allocated). For constant inputs we insert moves.
          */
-        private void resolvePhis(AbstractBlockBase<?> from, AbstractBlockBase<?> to) {
-            if (SSAUtil.isMerge(to)) {
+        private void resolvePhis(AbstractBlockBase<?> from, AbstractBlockBase<?> to)
+        {
+            if (SSAUtil.isMerge(to))
+            {
                 JumpOp jump = SSAUtil.phiOut(getLIR(), from);
                 LabelOp label = SSAUtil.phiIn(getLIR(), to);
 
                 assert phiResolutionMoves.isEmpty();
 
-                for (int i = 0; i < label.getPhiSize(); i++) {
+                for (int i = 0; i < label.getPhiSize(); i++)
+                {
                     visitPhiValuePair(jump.getOutgoingValue(i), label.getIncomingValue(i));
                 }
-                if (!phiResolutionMoves.isEmpty()) {
+                if (!phiResolutionMoves.isEmpty())
+                {
                     ArrayList<LIRInstruction> instructions = getLIR().getLIRforBlock(from);
                     instructions.addAll(instructions.size() - 1, phiResolutionMoves);
                     phiResolutionMoves.clear();
@@ -375,16 +427,20 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
             }
         }
 
-        private void visitPhiValuePair(Value phiOut, Value phiIn) {
+        private void visitPhiValuePair(Value phiOut, Value phiIn)
+        {
             assert isStackSlotValue(phiIn) || isRegister(phiIn) : "PHI defined values is not a register or stack slot: " + phiIn;
             AllocatableValue in = asAllocatableValue(phiIn);
 
             AllocatableValue dest = isRegister(in) ? getCurrentValue(asRegister(in)) : in;
             final LIRInstruction move;
-            if (isConstantValue(phiOut)) {
+            if (isConstantValue(phiOut))
+            {
                 // insert move from constant
                 move = spillMoveFactory.createLoad(dest, LIRValueUtil.asConstant(phiOut));
-            } else {
+            }
+            else
+            {
                 assert isVariable(phiOut) : "Not a variable or constant: " + phiOut;
                 // insert move from variable
                 move = spillMoveFactory.createMove(dest, asVariable(phiOut));
@@ -409,29 +465,35 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
          * Since forward edges are handled locally during bottom-up allocation we only need to check
          * for the second case.
          */
-        private void resolveLoopBackEdge(Trace trace) {
+        private void resolveLoopBackEdge(Trace trace)
+        {
             AbstractBlockBase<?>[] blocks = trace.getBlocks();
             AbstractBlockBase<?> endBlock = blocks[blocks.length - 1];
-            if (endBlock.isLoopEnd()) {
+            if (endBlock.isLoopEnd())
+            {
                 assert endBlock.getSuccessorCount() == 1;
                 AbstractBlockBase<?> targetBlock = endBlock.getSuccessors()[0];
                 assert targetBlock.isLoopHeader() : String.format("Successor %s or loop end %s is not a loop header?", targetBlock, endBlock);
-                if (resultTraces.getTraceForBlock(targetBlock).equals(trace)) {
+                if (resultTraces.getTraceForBlock(targetBlock).equals(trace))
+                {
                     resolveLoopBackEdge(endBlock, targetBlock);
                 }
             }
         }
 
-        private void resolveLoopBackEdge(AbstractBlockBase<?> from, AbstractBlockBase<?> to) {
+        private void resolveLoopBackEdge(AbstractBlockBase<?> from, AbstractBlockBase<?> to)
+        {
             assert resultTraces.getTraceForBlock(from).equals(resultTraces.getTraceForBlock(to)) : "Not on the same trace? " + from + " -> " + to;
             resolveFindInsertPos(from, to);
             LIR lir = getLIR();
 
-            if (SSAUtil.isMerge(to)) {
+            if (SSAUtil.isMerge(to))
+            {
                 JumpOp blockEnd = SSAUtil.phiOut(lir, from);
                 LabelOp label = SSAUtil.phiIn(lir, to);
 
-                for (int i = 0; i < label.getPhiSize(); i++) {
+                for (int i = 0; i < label.getPhiSize(); i++)
+                {
                     Value incomingValue = label.getIncomingValue(i);
                     Value outgoingValue = blockEnd.getOutgoingValue(i);
                     resolveValuePair(incomingValue, outgoingValue);
@@ -441,14 +503,16 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
             moveResolver.resolveAndAppendMoves();
         }
 
-        private void resolveIntraTraceEdge(AbstractBlockBase<?> from, AbstractBlockBase<?> to) {
+        private void resolveIntraTraceEdge(AbstractBlockBase<?> from, AbstractBlockBase<?> to)
+        {
             assert resultTraces.getTraceForBlock(from).equals(resultTraces.getTraceForBlock(to)) : "Not on the same trace? " + from + " -> " + to;
             resolveFindInsertPos(from, to);
             resolveTraceEdge(from, to);
             moveResolver.resolveAndAppendMoves();
         }
 
-        private void resolveTraceEdge(AbstractBlockBase<?> from, AbstractBlockBase<?> to) {
+        private void resolveTraceEdge(AbstractBlockBase<?> from, AbstractBlockBase<?> to)
+        {
             Value[] out = livenessInfo.getOutLocation(from);
             Value[] in = livenessInfo.getInLocation(to);
 
@@ -456,15 +520,18 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
             assert in != null;
             assert out.length == in.length;
 
-            for (int i = 0; i < out.length; i++) {
+            for (int i = 0; i < out.length; i++)
+            {
                 Value incomingValue = in[i];
                 Value outgoingValue = out[i];
                 resolveValuePair(incomingValue, outgoingValue);
             }
         }
 
-        private void resolveValuePair(Value incomingValue, Value outgoingValue) {
-            if (!isIllegal(incomingValue) && !TraceGlobalMoveResolver.isMoveToSelf(outgoingValue, incomingValue)) {
+        private void resolveValuePair(Value incomingValue, Value outgoingValue)
+        {
+            if (!isIllegal(incomingValue) && !TraceGlobalMoveResolver.isMoveToSelf(outgoingValue, incomingValue))
+            {
                 TraceGlobalMoveResolutionPhase.addMapping(moveResolver, outgoingValue, incomingValue);
             }
         }
@@ -473,16 +540,20 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
          * @return {@code true} if the block requires data-flow resolution.
          */
         @SuppressWarnings("try")
-        private boolean allocateBlock(AbstractBlockBase<?> block) {
+        private boolean allocateBlock(AbstractBlockBase<?> block)
+        {
             // might be set in insertSpillMoveAfter
             requireResolution = false;
 
-            try (Indent indent = debug.logAndIndent("handle block %s", block)) {
+            try (Indent indent = debug.logAndIndent("handle block %s", block))
+            {
                 currentInstructions = getLIR().getLIRforBlock(block);
                 final int lastInstIdx = currentInstructions.size() - 1;
-                for (currentInstructionIndex = lastInstIdx; currentInstructionIndex >= 0; currentInstructionIndex--) {
+                for (currentInstructionIndex = lastInstIdx; currentInstructionIndex >= 0; currentInstructionIndex--)
+                {
                     LIRInstruction inst = currentInstructions.get(currentInstructionIndex);
-                    if (inst != null) {
+                    if (inst != null)
+                    {
                         inst.setId(currentOpId);
                         allocateInstruction(inst, block, currentInstructionIndex == 0, currentInstructionIndex == lastInstIdx);
                     }
@@ -493,12 +564,16 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
         }
 
         @SuppressWarnings("try")
-        private void allocateInstruction(LIRInstruction op, AbstractBlockBase<?> block, boolean isLabel, boolean isBlockEnd) {
+        private void allocateInstruction(LIRInstruction op, AbstractBlockBase<?> block, boolean isLabel, boolean isBlockEnd)
+        {
             assert op != null && op.id() == currentOpId;
-            try (Indent indent = debug.logAndIndent("handle inst: %d: %s", op.id(), op)) {
-                try (Indent indent1 = debug.logAndIndent("output pos")) {
+            try (Indent indent = debug.logAndIndent("handle inst: %d: %s", op.id(), op))
+            {
+                try (Indent indent1 = debug.logAndIndent("output pos"))
+                {
                     // spill caller saved registers
-                    if (op.destroysCallerSavedRegisters()) {
+                    if (op.destroysCallerSavedRegisters())
+                    {
                         spillCallerSavedRegisters();
                     }
 
@@ -516,13 +591,14 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
                     // should have
                     op.forEachTemp(allocStackOrRegisterProcedure);
                     op.forEachOutput(allocStackOrRegisterProcedure);
-                    if (isLabel) {
+                    if (isLabel)
+                    {
                         assert op instanceof LabelOp;
                         processIncoming(block, op);
                     }
                 }
-                try (Indent indent1 = debug.logAndIndent("input pos")) {
-
+                try (Indent indent1 = debug.logAndIndent("input pos"))
+                {
                     currentOpId++;
 
                     // fixed
@@ -531,7 +607,8 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
                     op.forEachInput(allocRegisterProcedure);
 
                     op.forEachAlive(allocStackOrRegisterProcedure);
-                    if (isBlockEnd) {
+                    if (isBlockEnd)
+                    {
                         assert op instanceof BlockEndOp;
                         processOutgoing(block, op);
                     }
@@ -545,61 +622,78 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
             }
         }
 
-        private void processIncoming(AbstractBlockBase<?> block, LIRInstruction instruction) {
+        private void processIncoming(AbstractBlockBase<?> block, LIRInstruction instruction)
+        {
             int[] vars = livenessInfo.getBlockIn(block);
             Value[] locs = new Value[vars.length];
-            for (int i = 0; i < vars.length; i++) {
+            for (int i = 0; i < vars.length; i++)
+            {
                 int varNum = vars[i];
-                if (varNum >= 0) {
+                if (varNum >= 0)
+                {
                     locs[i] = allocStackOrRegister(instruction, livenessInfo.getVariable(varNum), OperandMode.DEF, LabelOp.incomingFlags);
                 }
             }
             livenessInfo.setInLocations(block, locs);
         }
 
-        private void processOutgoing(AbstractBlockBase<?> block, LIRInstruction instruction) {
+        private void processOutgoing(AbstractBlockBase<?> block, LIRInstruction instruction)
+        {
             int[] vars = livenessInfo.getBlockOut(block);
             Value[] locs = new Value[vars.length];
-            for (int i = 0; i < vars.length; i++) {
+            for (int i = 0; i < vars.length; i++)
+            {
                 locs[i] = allocStackOrRegister(instruction, livenessInfo.getVariable(vars[i]), OperandMode.ALIVE, JumpOp.outgoingFlags);
             }
             livenessInfo.setOutLocations(block, locs);
         }
 
-        private void spillCallerSavedRegisters() {
-            for (Register reg : callerSaveRegs) {
-                if (attributes(reg).isAllocatable()) {
+        private void spillCallerSavedRegisters()
+        {
+            for (Register reg : callerSaveRegs)
+            {
+                if (attributes(reg).isAllocatable())
+                {
                     evacuateRegisterAndSpill(reg);
                     assert checkRegisterUsage(reg);
                     setLastRegisterUsage(reg, currentOpId);
                 }
             }
-            if (debug.isLogEnabled()) {
+            if (debug.isLogEnabled())
+            {
                 debug.log("operation destroys all caller-save registers");
             }
         }
 
-        private final InstructionValueProcedure allocFixedRegisterProcedure = new InstructionValueProcedure() {
+        private final InstructionValueProcedure allocFixedRegisterProcedure = new InstructionValueProcedure()
+        {
             @Override
-            public Value doValue(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags) {
+            public Value doValue(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
+            {
                 return allocFixedRegister(value);
             }
         };
-        private final InstructionValueProcedure allocRegisterProcedure = new InstructionValueProcedure() {
+        private final InstructionValueProcedure allocRegisterProcedure = new InstructionValueProcedure()
+        {
             @Override
-            public Value doValue(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags) {
+            public Value doValue(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
+            {
                 return allocRegister(instruction, value, mode, flags);
             }
         };
-        private final InstructionValueProcedure allocStackOrRegisterProcedure = new InstructionValueProcedure() {
+        private final InstructionValueProcedure allocStackOrRegisterProcedure = new InstructionValueProcedure()
+        {
             @Override
-            public Value doValue(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags) {
+            public Value doValue(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
+            {
                 return allocStackOrRegister(instruction, value, mode, flags);
             }
         };
 
-        private Value allocFixedRegister(Value value) {
-            if (isRegister(value)) {
+        private Value allocFixedRegister(Value value)
+        {
+            if (isRegister(value))
+            {
                 Register reg = asRegister(value);
                 assert checkRegisterUsage(reg);
                 evacuateRegisterAndSpill(reg);
@@ -608,17 +702,21 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
             return value;
         }
 
-        private Value allocRegister(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags) {
-            if (isVariable(value) && requiresRegisters(instruction, value, mode, flags)) {
+        private Value allocRegister(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
+        {
+            if (isVariable(value) && requiresRegisters(instruction, value, mode, flags))
+            {
                 Variable var = asVariable(value);
                 // check if available
                 AllocatableValue currentLocation = getCurrentLocation(var);
-                if (currentLocation == null) {
+                if (currentLocation == null)
+                {
                     // nothing yet assigned
                     return allocRegister(var, mode);
                 }
                 // already a location assigned
-                if (isRegister(currentLocation)) {
+                if (isRegister(currentLocation))
+                {
                     // register assigned -> nothing todo
                     setLastRegisterUsage(asRegister(currentLocation), currentOpId);
                     return currentLocation;
@@ -626,11 +724,14 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
                 assert isStackSlotValue(currentLocation);
                 // stackSlot assigned but need register -> spill
                 Value allocatedRegister = allocRegister(var, mode);
-                if (mode == OperandMode.USE) {
+                if (mode == OperandMode.USE)
+                {
                     // input might be destroyed at the def position
                     // but it must be available before the instruction
                     insertSpillMoveBefore(currentLocation, allocatedRegister);
-                } else {
+                }
+                else
+                {
                     insertSpillMoveAfter(currentLocation, allocatedRegister);
                 }
                 return allocatedRegister;
@@ -638,13 +739,16 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
             return value;
         }
 
-        private Value allocRegister(Variable var, OperandMode mode) {
+        private Value allocRegister(Variable var, OperandMode mode)
+        {
             PlatformKind platformKind = var.getPlatformKind();
             Register freeRegister = findFreeRegister(platformKind, mode);
-            if (freeRegister == null) {
+            if (freeRegister == null)
+            {
                 // no free register found, looking for a blocked one
                 freeRegister = findLockedRegister(platformKind, mode);
-                if (freeRegister == null) {
+                if (freeRegister == null)
+                {
                     throw new OutOfRegistersException("TraceRA[BottomUp]: no register found");
                 }
             }
@@ -656,23 +760,30 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
             return registerValue;
         }
 
-        private Value allocStackOrRegister(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags) {
-            if (isRegister(value)) {
-                if ((mode == OperandMode.DEF || mode == OperandMode.TEMP) && !(instruction instanceof LabelOp)) {
+        private Value allocStackOrRegister(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
+        {
+            if (isRegister(value))
+            {
+                if ((mode == OperandMode.DEF || mode == OperandMode.TEMP) && !(instruction instanceof LabelOp))
+                {
                     freeRegister(asRegister(value));
                 }
                 return value;
             }
-            if (isVariable(value)) {
+            if (isVariable(value))
+            {
                 assert !requiresRegisters(instruction, value, mode, flags) : "Should have a register already: " + value;
                 Variable var = asVariable(value);
                 // check if available
                 AllocatableValue currentLocation = getCurrentLocation(var);
-                if (currentLocation != null) {
+                if (currentLocation != null)
+                {
                     // already a location assigned -> nothing todo
-                    if (isRegister(currentLocation)) {
+                    if (isRegister(currentLocation))
+                    {
                         Register reg = asRegister(currentLocation);
-                        if (mode == OperandMode.ALIVE && killedAtDef(reg)) {
+                        if (mode == OperandMode.ALIVE && killedAtDef(reg))
+                        {
                             AllocatableValue spillSlot = allocateSpillSlot(var);
                             insertSpillMoveBefore(spillSlot, currentLocation);
                             debug.log("AllocateStackOrReg[%5s] temporary use %s for %s since current location %s is destroyed at def", mode, spillSlot, var, currentLocation);
@@ -687,7 +798,8 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
                 // no location available
                 PlatformKind platformKind = var.getPlatformKind();
                 Register freeRegister = findFreeRegister(platformKind, mode);
-                if (freeRegister == null) {
+                if (freeRegister == null)
+                {
                     // no free register available -> either spill current or free a register
                     AllocatableValue spillSlot = allocateSpillSlot(var);
                     setCurrentLocation(var, spillSlot);
@@ -704,7 +816,8 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
             return value;
         }
 
-        private boolean killedAtDef(Register reg) {
+        private boolean killedAtDef(Register reg)
+        {
             return getLastRegisterKill(reg) == currentOpId - 1;
         }
 
@@ -712,18 +825,24 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
          * Searches for a free register.
          */
         @SuppressWarnings("try")
-        private Register findFreeRegister(PlatformKind kind, OperandMode mode) {
+        private Register findFreeRegister(PlatformKind kind, OperandMode mode)
+        {
             AllocatableRegisters allocatableRegisters = registerAllocationConfig.getAllocatableRegisters(kind);
             Register[] availableRegs = allocatableRegisters.allocatableRegisters;
-            for (Register reg : availableRegs) {
+            for (Register reg : availableRegs)
+            {
                 AllocatableValue currentVal = getCurrentValue(reg);
-                if (currentVal == null && !isCurrentlyUsed(reg, mode)) {
+                if (currentVal == null && !isCurrentlyUsed(reg, mode))
+                {
                     return reg;
                 }
             }
-            if (debug.isLogEnabled()) {
-                try (Indent i = debug.logAndIndent("All Registers occupied:")) {
-                    for (Register reg : availableRegs) {
+            if (debug.isLogEnabled())
+            {
+                try (Indent i = debug.logAndIndent("All Registers occupied:"))
+                {
+                    for (Register reg : availableRegs)
+                    {
                         debug.log("%6s: last used %4d %s", reg, getLastRegisterUsage(reg), getCurrentValue(reg));
                     }
                 }
@@ -735,58 +854,71 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
          * Searches for a occupied register to spill.
          */
         @SuppressWarnings("try")
-        private Register findLockedRegister(PlatformKind kind, OperandMode mode) {
+        private Register findLockedRegister(PlatformKind kind, OperandMode mode)
+        {
             AllocatableRegisters allocatableRegisters = registerAllocationConfig.getAllocatableRegisters(kind);
             Register[] availableRegs = allocatableRegisters.allocatableRegisters;
             // TODO (je): better strategies for spilling
             // TODO (je): we need to ensure that we do not use the register in the current
             // instruction!
             Register lockedReg = null;
-            for (Register reg : availableRegs) {
-                if (!isCurrentlyUsed(reg, mode) && !isActiveFixedRegister(reg)) {
+            for (Register reg : availableRegs)
+            {
+                if (!isCurrentlyUsed(reg, mode) && !isActiveFixedRegister(reg))
+                {
                     lockedReg = reg;
                     break;
                 }
             }
-            if (lockedReg == null) {
+            if (lockedReg == null)
+            {
                 return null;
             }
             evacuateRegisterAndSpill(lockedReg);
             return lockedReg;
         }
 
-        private boolean isActiveFixedRegister(Register reg) {
+        private boolean isActiveFixedRegister(Register reg)
+        {
             return isRegister(getCurrentValue(reg));
         }
 
-        private boolean isCurrentlyUsed(Register reg, OperandMode mode) {
+        private boolean isCurrentlyUsed(Register reg, OperandMode mode)
+        {
             int lastRegUsage = getLastRegisterUsage(reg);
-            if (lastRegUsage == currentOpId) {
+            if (lastRegUsage == currentOpId)
+            {
                 return true;
             }
             return mode == OperandMode.ALIVE && lastRegUsage == (currentOpId & ~1);
         }
 
-        private void freeRegister(Register reg) {
+        private void freeRegister(Register reg)
+        {
             AllocatableValue val = getCurrentValue(reg);
             setCurrentValue(reg, null);
             setLastRegisterKill(reg, currentOpId);
-            if (val != null && isVariable(val)) {
+            if (val != null && isVariable(val))
+            {
                 Variable var = asVariable(val);
                 setCurrentLocation(var, null);
                 debug.log("Free Registers %s (was %s)", reg, var);
-            } else {
+            }
+            else
+            {
                 debug.log("Free Registers %s", reg);
             }
         }
 
-        private void setRegisterUsage(Register reg, AllocatableValue currentValue) {
+        private void setRegisterUsage(Register reg, AllocatableValue currentValue)
+        {
             assert checkRegisterUsage(reg);
             setCurrentValue(reg, currentValue);
             setLastRegisterUsage(reg, currentOpId);
         }
 
-        private boolean checkRegisterUsage(Register reg) {
+        private boolean checkRegisterUsage(Register reg)
+        {
             AllocatableValue currentValue = getCurrentValue(reg);
             assert getLastRegisterUsage(reg) < currentOpId || currentValue == null || isRegister(currentValue) && asRegister(currentValue).equals(reg) : String.format("Register %s is occupied", reg);
             return true;
@@ -797,7 +929,8 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
          *
          * @return The value that currently occupies the register or {@code null} if there is none.
          */
-        private AllocatableValue evacuateRegisterAndSpill(Register reg) {
+        private AllocatableValue evacuateRegisterAndSpill(Register reg)
+        {
             AllocatableValue val = evacuateRegister(reg);
             spillVariable(val, reg);
             return val;
@@ -808,17 +941,21 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
          *
          * @return The value that currently occupies the register or {@code null} if there is none.
          */
-        private AllocatableValue evacuateRegister(Register reg) {
+        private AllocatableValue evacuateRegister(Register reg)
+        {
             AllocatableValue val = getCurrentValue(reg);
-            if (val == null) {
+            if (val == null)
+            {
                 return null;
             }
             setCurrentValue(reg, null);
             return val;
         }
 
-        private void spillVariable(AllocatableValue val, Register reg) {
-            if (val != null && isVariable(val)) {
+        private void spillVariable(AllocatableValue val, Register reg)
+        {
+            if (val != null && isVariable(val))
+            {
                 Variable var = asVariable(val);
                 debug.log("Spill Variable %s from %s", var, reg);
                 // insert reload

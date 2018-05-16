@@ -39,9 +39,10 @@ import jdk.vm.ci.hotspot.HotSpotResolvedJavaMethod;
 import jdk.vm.ci.meta.Assumptions.Assumption;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
-public class HotSpotCompiledCodeBuilder {
-
-    public static HotSpotCompiledCode createCompiledCode(CodeCacheProvider codeCache, ResolvedJavaMethod method, HotSpotCompilationRequest compRequest, CompilationResult compResult) {
+public class HotSpotCompiledCodeBuilder
+{
+    public static HotSpotCompiledCode createCompiledCode(CodeCacheProvider codeCache, ResolvedJavaMethod method, HotSpotCompilationRequest compRequest, CompilationResult compResult)
+    {
         String name = compResult.getName();
 
         byte[] targetCode = compResult.getTargetCode();
@@ -55,17 +56,24 @@ public class HotSpotCompiledCodeBuilder {
 
         List<CodeAnnotation> annotations = compResult.getAnnotations();
         Comment[] comments = new Comment[annotations.size()];
-        if (!annotations.isEmpty()) {
-            for (int i = 0; i < comments.length; i++) {
+        if (!annotations.isEmpty())
+        {
+            for (int i = 0; i < comments.length; i++)
+            {
                 CodeAnnotation annotation = annotations.get(i);
                 String text;
-                if (annotation instanceof CodeComment) {
+                if (annotation instanceof CodeComment)
+                {
                     CodeComment codeComment = (CodeComment) annotation;
                     text = codeComment.value;
-                } else if (annotation instanceof JumpTable) {
+                }
+                else if (annotation instanceof JumpTable)
+                {
                     JumpTable jumpTable = (JumpTable) annotation;
                     text = "JumpTable [" + jumpTable.low + " .. " + jumpTable.high + "]";
-                } else {
+                }
+                else
+                {
                     text = annotation.toString();
                 }
                 comments[i] = new Comment(annotation.position, text);
@@ -77,7 +85,8 @@ public class HotSpotCompiledCodeBuilder {
 
         ByteBuffer buffer = ByteBuffer.wrap(dataSection).order(ByteOrder.nativeOrder());
         Builder<DataPatch> patchBuilder = Stream.builder();
-        data.buildDataSection(buffer, (position, vmConstant) -> {
+        data.buildDataSection(buffer, (position, vmConstant) ->
+        {
             patchBuilder.accept(new DataPatch(position, new ConstantReference(vmConstant)));
         });
 
@@ -88,30 +97,34 @@ public class HotSpotCompiledCodeBuilder {
         StackSlot customStackArea = compResult.getCustomStackArea();
         boolean isImmutablePIC = compResult.isImmutablePIC();
 
-        if (method instanceof HotSpotResolvedJavaMethod) {
+        if (method instanceof HotSpotResolvedJavaMethod)
+        {
             HotSpotResolvedJavaMethod hsMethod = (HotSpotResolvedJavaMethod) method;
             int entryBCI = compResult.getEntryBCI();
             boolean hasUnsafeAccess = compResult.hasUnsafeAccess();
 
             int id;
             long jvmciEnv;
-            if (compRequest != null) {
+            if (compRequest != null)
+            {
                 id = compRequest.getId();
                 jvmciEnv = compRequest.getJvmciEnv();
-            } else {
+            }
+            else
+            {
                 id = hsMethod.allocateCompileId(entryBCI);
                 jvmciEnv = 0L;
             }
-            return new HotSpotCompiledNmethod(name, targetCode, targetCodeSize, sites, assumptions, methods, comments, dataSection, dataSectionAlignment, dataSectionPatches, isImmutablePIC,
-                            totalFrameSize, customStackArea, hsMethod, entryBCI, id, jvmciEnv, hasUnsafeAccess);
-        } else {
-            return new HotSpotCompiledCode(name, targetCode, targetCodeSize, sites, assumptions, methods, comments, dataSection, dataSectionAlignment, dataSectionPatches, isImmutablePIC,
-                            totalFrameSize, customStackArea);
+            return new HotSpotCompiledNmethod(name, targetCode, targetCodeSize, sites, assumptions, methods, comments, dataSection, dataSectionAlignment, dataSectionPatches, isImmutablePIC, totalFrameSize, customStackArea, hsMethod, entryBCI, id, jvmciEnv, hasUnsafeAccess);
+        }
+        else
+        {
+            return new HotSpotCompiledCode(name, targetCode, targetCodeSize, sites, assumptions, methods, comments, dataSection, dataSectionAlignment, dataSectionPatches, isImmutablePIC, totalFrameSize, customStackArea);
         }
     }
 
-    static class SiteComparator implements Comparator<Site> {
-
+    static class SiteComparator implements Comparator<Site>
+    {
         /**
          * Defines an order for sorting {@link Infopoint}s based on their
          * {@linkplain Infopoint#reason reasons}. This is used to choose which infopoint to preserve
@@ -120,7 +133,8 @@ public class HotSpotCompiledCodeBuilder {
          */
         static final Map<InfopointReason, Integer> HOTSPOT_INFOPOINT_SORT_ORDER = new EnumMap<>(InfopointReason.class);
 
-        static {
+        static
+        {
             HOTSPOT_INFOPOINT_SORT_ORDER.put(InfopointReason.SAFEPOINT, -4);
             HOTSPOT_INFOPOINT_SORT_ORDER.put(InfopointReason.CALL, -3);
             HOTSPOT_INFOPOINT_SORT_ORDER.put(InfopointReason.IMPLICIT_EXCEPTION, -2);
@@ -129,14 +143,17 @@ public class HotSpotCompiledCodeBuilder {
             HOTSPOT_INFOPOINT_SORT_ORDER.put(InfopointReason.BYTECODE_POSITION, 4);
         }
 
-        static int ord(Infopoint info) {
+        static int ord(Infopoint info)
+        {
             return HOTSPOT_INFOPOINT_SORT_ORDER.get(info.reason);
         }
 
-        static int checkCollision(Infopoint i1, Infopoint i2) {
+        static int checkCollision(Infopoint i1, Infopoint i2)
+        {
             int o1 = ord(i1);
             int o2 = ord(i2);
-            if (o1 < 0 && o2 < 0) {
+            if (o1 < 0 && o2 < 0)
+            {
                 throw new GraalError("Non optional infopoints cannot collide: %s and %s", i1, i2);
             }
             return o1 - o2;
@@ -148,14 +165,17 @@ public class HotSpotCompiledCodeBuilder {
         boolean sawCollidingInfopoints;
 
         @Override
-        public int compare(Site s1, Site s2) {
-            if (s1.pcOffset == s2.pcOffset) {
+        public int compare(Site s1, Site s2)
+        {
+            if (s1.pcOffset == s2.pcOffset)
+            {
                 // Marks must come first since patching a call site
                 // may need to know the mark denoting the call type
                 // (see uses of CodeInstaller::_next_call_type).
                 boolean s1IsMark = s1 instanceof Mark;
                 boolean s2IsMark = s2 instanceof Mark;
-                if (s1IsMark != s2IsMark) {
+                if (s1IsMark != s2IsMark)
+                {
                     return s1IsMark ? -1 : 1;
                 }
 
@@ -163,11 +183,13 @@ public class HotSpotCompiledCodeBuilder {
                 // other Site types.
                 boolean s1IsInfopoint = s1 instanceof Infopoint;
                 boolean s2IsInfopoint = s2 instanceof Infopoint;
-                if (s1IsInfopoint != s2IsInfopoint) {
+                if (s1IsInfopoint != s2IsInfopoint)
+                {
                     return s1IsInfopoint ? 1 : -1;
                 }
 
-                if (s1IsInfopoint) {
+                if (s1IsInfopoint)
+                {
                     sawCollidingInfopoints = true;
                     return checkCollision((Infopoint) s1, (Infopoint) s2);
                 }
@@ -181,15 +203,16 @@ public class HotSpotCompiledCodeBuilder {
      * {@code DebugInformationRecorder::add_new_pc_offset}). In addition, it expects
      * {@link Infopoint} PCs to be unique.
      */
-    private static Site[] getSortedSites(CodeCacheProvider codeCache, CompilationResult target) {
-        List<Site> sites = new ArrayList<>(
-                        target.getExceptionHandlers().size() + target.getInfopoints().size() + target.getDataPatches().size() + target.getMarks().size() + target.getSourceMappings().size());
+    private static Site[] getSortedSites(CodeCacheProvider codeCache, CompilationResult target)
+    {
+        List<Site> sites = new ArrayList<>(target.getExceptionHandlers().size() + target.getInfopoints().size() + target.getDataPatches().size() + target.getMarks().size() + target.getSourceMappings().size());
         sites.addAll(target.getExceptionHandlers());
         sites.addAll(target.getInfopoints());
         sites.addAll(target.getDataPatches());
         sites.addAll(target.getMarks());
 
-        if (codeCache.shouldDebugNonSafepoints()) {
+        if (codeCache.shouldDebugNonSafepoints())
+        {
             /*
              * Translate the source mapping into appropriate info points. In HotSpot only one
              * position can really be represented and recording the end PC seems to give the best
@@ -197,9 +220,11 @@ public class HotSpotCompiledCodeBuilder {
              * unless -XX:+DebugNonSafepoints is enabled, so don't emit them in that case.
              */
             List<Site> sourcePositionSites = new ArrayList<>();
-            for (SourceMapping source : target.getSourceMappings()) {
+            for (SourceMapping source : target.getSourceMappings())
+            {
                 NodeSourcePosition sourcePosition = source.getSourcePosition();
-                if (sourcePosition.isPlaceholder() || sourcePosition.isSubstitution()) {
+                if (sourcePosition.isPlaceholder() || sourcePosition.isSubstitution())
+                {
                     // HotSpot doesn't understand any of the special positions so just drop them.
                     continue;
                 }
@@ -212,9 +237,9 @@ public class HotSpotCompiledCodeBuilder {
                  * positions that can potentially map to the same pc. To do that make sure that the
                  * source mapping doesn't contain a pc of any important Site.
                  */
-                if (sourcePosition != null && !anyMatch(sites, s -> source.contains(s.pcOffset))) {
+                if (sourcePosition != null && !anyMatch(sites, s -> source.contains(s.pcOffset)))
+                {
                     sourcePositionSites.add(new Infopoint(source.getEndOffset(), new DebugInfo(sourcePosition), InfopointReason.BYTECODE_POSITION));
-
                 }
             }
             sites.addAll(sourcePositionSites);
@@ -222,20 +247,28 @@ public class HotSpotCompiledCodeBuilder {
 
         SiteComparator c = new SiteComparator();
         Collections.sort(sites, c);
-        if (c.sawCollidingInfopoints) {
+        if (c.sawCollidingInfopoints)
+        {
             Infopoint lastInfopoint = null;
             List<Site> copy = new ArrayList<>(sites.size());
-            for (Site site : sites) {
-                if (site instanceof Infopoint) {
+            for (Site site : sites)
+            {
+                if (site instanceof Infopoint)
+                {
                     Infopoint info = (Infopoint) site;
-                    if (lastInfopoint == null || lastInfopoint.pcOffset != info.pcOffset) {
+                    if (lastInfopoint == null || lastInfopoint.pcOffset != info.pcOffset)
+                    {
                         lastInfopoint = info;
                         copy.add(info);
-                    } else {
+                    }
+                    else
+                    {
                         // Omit this colliding infopoint
                         assert lastInfopoint.reason.compareTo(info.reason) <= 0;
                     }
-                } else {
+                }
+                else
+                {
                     copy.add(site);
                 }
             }

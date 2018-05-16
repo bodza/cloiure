@@ -25,8 +25,8 @@ import jdk.vm.ci.meta.TriState;
  * {@linkplain java.lang.instrument.Instrumentation instrumentation} or other rewriting performed on
  * the bytecode.
  */
-public class ClassfileBytecode implements Bytecode {
-
+public class ClassfileBytecode implements Bytecode
+{
     private static final int EXCEPTION_HANDLER_TABLE_SIZE_IN_BYTES = 8;
     private static final int LINE_NUMBER_TABLE_ENTRY_SIZE_IN_BYTES = 4;
     private static final int LOCAL_VARIABLE_TABLE_SIZE_IN_BYTES = 10;
@@ -43,7 +43,8 @@ public class ClassfileBytecode implements Bytecode {
     private byte[] lineNumberTableBytes;
     private byte[] localVariableTableBytes;
 
-    public ClassfileBytecode(ResolvedJavaMethod method, DataInputStream stream, ClassfileConstantPool constantPool) throws IOException {
+    public ClassfileBytecode(ResolvedJavaMethod method, DataInputStream stream, ClassfileConstantPool constantPool) throws IOException
+    {
         this.method = method;
         this.constantPool = constantPool;
         maxStack = stream.readUnsignedShort();
@@ -58,29 +59,36 @@ public class ClassfileBytecode implements Bytecode {
     }
 
     @Override
-    public BytecodeProvider getOrigin() {
+    public BytecodeProvider getOrigin()
+    {
         return constantPool.context;
     }
 
-    private void readCodeAttributes(DataInputStream stream) throws IOException {
+    private void readCodeAttributes(DataInputStream stream) throws IOException
+    {
         int count = stream.readUnsignedShort();
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++)
+        {
             String attributeName = constantPool.get(Utf8.class, stream.readUnsignedShort()).value;
             int attributeLength = stream.readInt();
-            switch (attributeName) {
-                case "LocalVariableTable": {
+            switch (attributeName)
+            {
+                case "LocalVariableTable":
+                {
                     int length = stream.readUnsignedShort();
                     localVariableTableBytes = new byte[length * LOCAL_VARIABLE_TABLE_SIZE_IN_BYTES];
                     stream.readFully(localVariableTableBytes);
                     break;
                 }
-                case "LineNumberTable": {
+                case "LineNumberTable":
+                {
                     int length = stream.readUnsignedShort();
                     lineNumberTableBytes = new byte[length * LINE_NUMBER_TABLE_ENTRY_SIZE_IN_BYTES];
                     stream.readFully(lineNumberTableBytes);
                     break;
                 }
-                default: {
+                default:
+                {
                     Classfile.skipFully(stream, attributeLength);
                     break;
                 }
@@ -89,28 +97,34 @@ public class ClassfileBytecode implements Bytecode {
     }
 
     @Override
-    public byte[] getCode() {
+    public byte[] getCode()
+    {
         return code;
     }
 
     @Override
-    public int getCodeSize() {
+    public int getCodeSize()
+    {
         return code.length;
     }
 
     @Override
-    public int getMaxLocals() {
+    public int getMaxLocals()
+    {
         return maxLocals;
     }
 
     @Override
-    public int getMaxStackSize() {
+    public int getMaxStackSize()
+    {
         return maxStack;
     }
 
     @Override
-    public ExceptionHandler[] getExceptionHandlers() {
-        if (exceptionTableBytes == null) {
+    public ExceptionHandler[] getExceptionHandlers()
+    {
+        if (exceptionTableBytes == null)
+        {
             return new ExceptionHandler[0];
         }
 
@@ -118,28 +132,36 @@ public class ClassfileBytecode implements Bytecode {
         ExceptionHandler[] handlers = new ExceptionHandler[exceptionTableLength];
         DataInputStream stream = new DataInputStream(new ByteArrayInputStream(exceptionTableBytes));
 
-        for (int i = 0; i < exceptionTableLength; i++) {
-            try {
+        for (int i = 0; i < exceptionTableLength; i++)
+        {
+            try
+            {
                 final int startPc = stream.readUnsignedShort();
                 final int endPc = stream.readUnsignedShort();
                 final int handlerPc = stream.readUnsignedShort();
                 int catchTypeIndex = stream.readUnsignedShort();
 
                 JavaType catchType;
-                if (catchTypeIndex == 0) {
+                if (catchTypeIndex == 0)
+                {
                     catchType = null;
-                } else {
+                }
+                else
+                {
                     final int opcode = -1;  // opcode is not used
                     catchType = constantPool.lookupType(catchTypeIndex, opcode);
 
                     // Check for Throwable which catches everything.
-                    if (catchType.toJavaName().equals("java.lang.Throwable")) {
+                    if (catchType.toJavaName().equals("java.lang.Throwable"))
+                    {
                         catchTypeIndex = 0;
                         catchType = null;
                     }
                 }
                 handlers[i] = new ExceptionHandler(startPc, endPc, handlerPc, catchTypeIndex, catchType);
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 throw new GraalError(e);
             }
         }
@@ -148,19 +170,23 @@ public class ClassfileBytecode implements Bytecode {
     }
 
     @Override
-    public StackTraceElement asStackTraceElement(int bci) {
+    public StackTraceElement asStackTraceElement(int bci)
+    {
         int line = getLineNumberTable().getLineNumber(bci);
         return new StackTraceElement(method.getDeclaringClass().toJavaName(), method.getName(), method.getDeclaringClass().getSourceFileName(), line);
     }
 
     @Override
-    public ConstantPool getConstantPool() {
+    public ConstantPool getConstantPool()
+    {
         return constantPool;
     }
 
     @Override
-    public LineNumberTable getLineNumberTable() {
-        if (lineNumberTableBytes == null) {
+    public LineNumberTable getLineNumberTable()
+    {
+        if (lineNumberTableBytes == null)
+        {
             return null;
         }
 
@@ -169,11 +195,15 @@ public class ClassfileBytecode implements Bytecode {
         int[] bci = new int[lineNumberTableLength];
         int[] line = new int[lineNumberTableLength];
 
-        for (int i = 0; i < lineNumberTableLength; i++) {
-            try {
+        for (int i = 0; i < lineNumberTableLength; i++)
+        {
+            try
+            {
                 bci[i] = stream.readUnsignedShort();
                 line[i] = stream.readUnsignedShort();
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 throw new GraalError(e);
             }
         }
@@ -182,8 +212,10 @@ public class ClassfileBytecode implements Bytecode {
     }
 
     @Override
-    public LocalVariableTable getLocalVariableTable() {
-        if (localVariableTableBytes == null) {
+    public LocalVariableTable getLocalVariableTable()
+    {
+        if (localVariableTableBytes == null)
+        {
             return null;
         }
 
@@ -191,8 +223,10 @@ public class ClassfileBytecode implements Bytecode {
         DataInputStream stream = new DataInputStream(new ByteArrayInputStream(localVariableTableBytes));
         Local[] locals = new Local[localVariableTableLength];
 
-        for (int i = 0; i < localVariableTableLength; i++) {
-            try {
+        for (int i = 0; i < localVariableTableLength; i++)
+        {
+            try
+            {
                 final int startBci = stream.readUnsignedShort();
                 final int endBci = startBci + stream.readUnsignedShort();
                 final int nameCpIndex = stream.readUnsignedShort();
@@ -205,7 +239,9 @@ public class ClassfileBytecode implements Bytecode {
                 ClassfileBytecodeProvider context = constantPool.context;
                 Class<?> c = context.resolveToClass(localType);
                 locals[i] = new Local(localName, context.metaAccess.lookupJavaType(c), startBci, endBci, slot);
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 throw new GraalError(e);
             }
         }
@@ -214,17 +250,20 @@ public class ClassfileBytecode implements Bytecode {
     }
 
     @Override
-    public ResolvedJavaMethod getMethod() {
+    public ResolvedJavaMethod getMethod()
+    {
         return method;
     }
 
     @Override
-    public ProfilingInfo getProfilingInfo() {
+    public ProfilingInfo getProfilingInfo()
+    {
         return DefaultProfilingInfo.get(TriState.FALSE);
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return getClass().getName() + method.format("<%H.%n(%p)>");
     }
 }

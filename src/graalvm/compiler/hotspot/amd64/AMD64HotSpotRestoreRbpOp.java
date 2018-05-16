@@ -6,8 +6,8 @@ import graalvm.compiler.lir.Variable;
 import jdk.vm.ci.amd64.AMD64Kind;
 import jdk.vm.ci.meta.AllocatableValue;
 
-public interface AMD64HotSpotRestoreRbpOp {
-
+public interface AMD64HotSpotRestoreRbpOp
+{
     /**
      * The type of location (i.e., stack or register) in which RBP is saved is not known until
      * initial LIR generation is finished. Until then, we use a placeholder variable so that LIR

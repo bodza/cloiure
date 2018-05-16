@@ -15,10 +15,10 @@ import graalvm.compiler.phases.common.inlining.policy.InliningPolicy;
 import graalvm.compiler.phases.common.inlining.walker.InliningData;
 import graalvm.compiler.phases.tiers.HighTierContext;
 
-public class InliningPhase extends AbstractInliningPhase {
-
-    public static class Options {
-
+public class InliningPhase extends AbstractInliningPhase
+{
+    public static class Options
+    {
         @Option(help = "Unconditionally inline intrinsics", type = OptionType.Debug)//
         public static final OptionKey<Boolean> AlwaysInlineIntrinsics = new OptionKey<>(false);
 
@@ -37,33 +37,40 @@ public class InliningPhase extends AbstractInliningPhase {
 
     private int maxMethodPerInlining = Integer.MAX_VALUE;
 
-    public InliningPhase(CanonicalizerPhase canonicalizer) {
+    public InliningPhase(CanonicalizerPhase canonicalizer)
+    {
         this(new GreedyInliningPolicy(null), canonicalizer);
     }
 
-    public InliningPhase(Map<Invoke, Double> hints, CanonicalizerPhase canonicalizer) {
+    public InliningPhase(Map<Invoke, Double> hints, CanonicalizerPhase canonicalizer)
+    {
         this(new GreedyInliningPolicy(hints), canonicalizer);
     }
 
-    public InliningPhase(InliningPolicy policy, CanonicalizerPhase canonicalizer) {
+    public InliningPhase(InliningPolicy policy, CanonicalizerPhase canonicalizer)
+    {
         this.inliningPolicy = policy;
         this.canonicalizer = canonicalizer;
     }
 
-    public CanonicalizerPhase getCanonicalizer() {
+    public CanonicalizerPhase getCanonicalizer()
+    {
         return canonicalizer;
     }
 
     @Override
-    public float codeSizeIncrease() {
+    public float codeSizeIncrease()
+    {
         return 10_000f;
     }
 
-    public void setMaxMethodsPerInlining(int max) {
+    public void setMaxMethodsPerInlining(int max)
+    {
         maxMethodPerInlining = max;
     }
 
-    public void setRootInvokes(LinkedList<Invoke> rootInvokes) {
+    public void setRootInvokes(LinkedList<Invoke> rootInvokes)
+    {
         this.rootInvokes = rootInvokes;
     }
 
@@ -76,18 +83,22 @@ public class InliningPhase extends AbstractInliningPhase {
      *
      */
     @Override
-    protected void run(final StructuredGraph graph, final HighTierContext context) {
+    protected void run(final StructuredGraph graph, final HighTierContext context)
+    {
         final InliningData data = new InliningData(graph, context, maxMethodPerInlining, canonicalizer, inliningPolicy, rootInvokes);
 
         int count = 0;
         assert data.repOK();
         int limit = Options.MethodInlineBailoutLimit.getValue(graph.getOptions());
-        while (data.hasUnprocessedGraphs()) {
+        while (data.hasUnprocessedGraphs())
+        {
             boolean wasInlined = data.moveForward();
             assert data.repOK();
             count++;
-            if (!wasInlined) {
-                if (limit > 0 && count == limit) {
+            if (!wasInlined)
+            {
+                if (limit > 0 && count == limit)
+                {
                     // Limit the amount of exploration which is done
                     break;
                 }
@@ -97,5 +108,4 @@ public class InliningPhase extends AbstractInliningPhase {
         assert data.inliningDepth() == 0 || count == limit;
         assert data.graphCount() == 0 || count == limit;
     }
-
 }

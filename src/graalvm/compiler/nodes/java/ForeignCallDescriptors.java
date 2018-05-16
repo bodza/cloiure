@@ -8,11 +8,10 @@ import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
  * Using a separate class for such descriptors prevents an access from triggering unwanted class
  * initialization during runtime initialization.
  */
-public class ForeignCallDescriptors {
-
+public class ForeignCallDescriptors
+{
     /**
      * @see RegisterFinalizerNode
      */
     public static final ForeignCallDescriptor REGISTER_FINALIZER = new ForeignCallDescriptor("registerFinalizer", void.class, Object.class);
-
 }

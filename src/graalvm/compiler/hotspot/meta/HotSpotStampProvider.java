@@ -6,15 +6,17 @@ import graalvm.compiler.hotspot.nodes.type.KlassPointerStamp;
 import graalvm.compiler.hotspot.nodes.type.MethodPointerStamp;
 import graalvm.compiler.nodes.spi.StampProvider;
 
-public class HotSpotStampProvider implements StampProvider {
-
+public class HotSpotStampProvider implements StampProvider
+{
     @Override
-    public Stamp createHubStamp(ObjectStamp object) {
+    public Stamp createHubStamp(ObjectStamp object)
+    {
         return KlassPointerStamp.klassNonNull();
     }
 
     @Override
-    public Stamp createMethodStamp() {
+    public Stamp createMethodStamp()
+    {
         return MethodPointerStamp.methodNonNull();
     }
 }

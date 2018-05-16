@@ -5,8 +5,8 @@ import graalvm.compiler.lir.VirtualStackSlot;
 import jdk.vm.ci.code.StackSlot;
 import jdk.vm.ci.meta.ValueKind;
 
-public final class StackInterval {
-
+public final class StackInterval
+{
     private static final int INVALID_START = Integer.MAX_VALUE;
     private static final int INVALID_END = Integer.MIN_VALUE;
     private final VirtualStackSlot operand;
@@ -16,78 +16,96 @@ public final class StackInterval {
     private int to = INVALID_END;
     private StackSlot location;
 
-    public StackInterval(VirtualStackSlot operand, ValueKind<?> kind) {
+    public StackInterval(VirtualStackSlot operand, ValueKind<?> kind)
+    {
         this.operand = operand;
         this.kind = kind;
     }
 
-    public boolean verify(int maxOpId) {
+    public boolean verify(int maxOpId)
+    {
         // maxOpId + 1 is the last position in the last block (i.e. the "write position")
         assert 0 <= from && from <= to && to <= maxOpId + 1 : String.format("from %d, to %d, maxOpId %d", from, to, maxOpId);
         return true;
     }
 
-    public VirtualStackSlot getOperand() {
+    public VirtualStackSlot getOperand()
+    {
         return operand;
     }
 
-    public void addTo(int opId) {
-        if (opId >= to) {
+    public void addTo(int opId)
+    {
+        if (opId >= to)
+        {
             to = opId;
         }
     }
 
-    protected void addFrom(int opId) {
-        if (from > opId) {
+    protected void addFrom(int opId)
+    {
+        if (from > opId)
+        {
             from = opId;
             // set opId also as to if it has not yet been set
-            if (to == INVALID_END) {
+            if (to == INVALID_END)
+            {
                 to = opId;
             }
         }
     }
 
-    public ValueKind<?> kind() {
+    public ValueKind<?> kind()
+    {
         return kind;
     }
 
-    public StackSlot location() {
+    public StackSlot location()
+    {
         return location;
     }
 
-    public void setLocation(StackSlot location) {
+    public void setLocation(StackSlot location)
+    {
         this.location = location;
     }
 
-    public int from() {
+    public int from()
+    {
         return from;
     }
 
-    public int to() {
+    public int to()
+    {
         return to;
     }
 
-    public void fixFrom() {
-        if (from == INVALID_START) {
+    public void fixFrom()
+    {
+        if (from == INVALID_START)
+        {
             from = 0;
         }
     }
 
-    public boolean isFixed() {
+    public boolean isFixed()
+    {
         return from == 0;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return String.format("SI[%d-%d] k=%s o=%s l=%s h=%s", from, to, kind, operand, location, hint != null ? hint.getOperand() : "null");
     }
 
-    public void setLocationHint(StackInterval locationHint) {
+    public void setLocationHint(StackInterval locationHint)
+    {
         hint = locationHint;
     }
 
-    public StackInterval locationHint() {
+    public StackInterval locationHint()
+    {
         return hint;
     }
-
 }

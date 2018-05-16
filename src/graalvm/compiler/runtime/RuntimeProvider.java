@@ -7,8 +7,8 @@ import graalvm.compiler.core.target.Backend;
 /**
  * A runtime supporting a host backend as well, zero or more additional backends.
  */
-public interface RuntimeProvider {
-
+public interface RuntimeProvider
+{
     /**
      * Gets the host backend.
      */

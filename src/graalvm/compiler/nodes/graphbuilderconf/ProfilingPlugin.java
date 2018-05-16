@@ -5,7 +5,8 @@ import graalvm.compiler.nodes.LogicNode;
 
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
-public interface ProfilingPlugin extends GraphBuilderPlugin {
+public interface ProfilingPlugin extends GraphBuilderPlugin
+{
     boolean shouldProfile(GraphBuilderContext builder, ResolvedJavaMethod method);
 
     void profileInvoke(GraphBuilderContext builder, ResolvedJavaMethod method, FrameState frameState);
@@ -13,5 +14,4 @@ public interface ProfilingPlugin extends GraphBuilderPlugin {
     void profileGoto(GraphBuilderContext builder, ResolvedJavaMethod method, int bci, int targetBci, FrameState frameState);
 
     void profileIf(GraphBuilderContext builder, ResolvedJavaMethod method, int bci, LogicNode condition, int trueBranchBci, int falseBranchBci, FrameState frameState);
-
 }

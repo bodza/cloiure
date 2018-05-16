@@ -86,8 +86,8 @@ import jdk.vm.ci.code.Architecture;
  * mappings} from this end to the merge node are written. <item>{@link LoopExitNode}: the orderId of
  * all {@link ProxyNode proxy nodes} of the loop exit is written.</li>
  */
-public class GraphEncoder {
-
+public class GraphEncoder
+{
     /** The orderId that always represents {@code null}. */
     public static final int NULL_ORDER_ID = 0;
     /** The orderId of the {@link StructuredGraph#start() start node} of the encoded graph. */
@@ -127,7 +127,8 @@ public class GraphEncoder {
     /**
      * Utility method that does everything necessary to encode a single graph.
      */
-    public static EncodedGraph encodeSingleGraph(StructuredGraph graph, Architecture architecture) {
+    public static EncodedGraph encodeSingleGraph(StructuredGraph graph, Architecture architecture)
+    {
         GraphEncoder encoder = new GraphEncoder(architecture);
         encoder.prepare(graph);
         encoder.finishPrepare();
@@ -135,7 +136,8 @@ public class GraphEncoder {
         return new EncodedGraph(encoder.getEncoding(), startOffset, encoder.getObjects(), encoder.getNodeClasses(), graph);
     }
 
-    public GraphEncoder(Architecture architecture) {
+    public GraphEncoder(Architecture architecture)
+    {
         this.architecture = architecture;
         objects = FrequencyEncoder.createEqualityEncoder();
         nodeClasses = FrequencyEncoder.createIdentityEncoder();
@@ -145,32 +147,40 @@ public class GraphEncoder {
     /**
      * Must be invoked before {@link #finishPrepare()} and {@link #encode}.
      */
-    public void prepare(StructuredGraph graph) {
-        for (Node node : graph.getNodes()) {
+    public void prepare(StructuredGraph graph)
+    {
+        for (Node node : graph.getNodes())
+        {
             NodeClass<? extends Node> nodeClass = node.getNodeClass();
             nodeClasses.addObject(nodeClass);
             objects.addObject(node.getNodeSourcePosition());
-            for (int i = 0; i < nodeClass.getData().getCount(); i++) {
-                if (!nodeClass.getData().getType(i).isPrimitive()) {
+            for (int i = 0; i < nodeClass.getData().getCount(); i++)
+            {
+                if (!nodeClass.getData().getType(i).isPrimitive())
+                {
                     objects.addObject(nodeClass.getData().get(node, i));
                 }
             }
-            if (node instanceof Invoke) {
+            if (node instanceof Invoke)
+            {
                 objects.addObject(((Invoke) node).getContextType());
             }
         }
     }
 
-    public void finishPrepare() {
+    public void finishPrepare()
+    {
         objectsArray = objects.encodeAll(new Object[objects.getLength()]);
         nodeClassesArray = nodeClasses.encodeAll(new NodeClass<?>[nodeClasses.getLength()]);
     }
 
-    public Object[] getObjects() {
+    public Object[] getObjects()
+    {
         return objectsArray;
     }
 
-    public NodeClass<?>[] getNodeClasses() {
+    public NodeClass<?>[] getNodeClasses()
+    {
         return nodeClassesArray;
     }
 
@@ -180,7 +190,8 @@ public class GraphEncoder {
      *
      * @param graph The graph to encode
      */
-    public int encode(StructuredGraph graph) {
+    public int encode(StructuredGraph graph)
+    {
         assert objectsArray != null && nodeClassesArray != null : "finishPrepare() must be called before encode()";
 
         NodeOrder nodeOrder = new NodeOrder(graph);
@@ -190,7 +201,8 @@ public class GraphEncoder {
 
         long[] nodeStartOffsets = new long[nodeCount];
         UnmodifiableMapCursor<Node, Integer> cursor = nodeOrder.orderIds.getEntries();
-        while (cursor.advance()) {
+        while (cursor.advance())
+        {
             Node node = cursor.getKey();
             Integer orderId = cursor.getValue();
 
@@ -206,7 +218,8 @@ public class GraphEncoder {
             writeEdges(node, nodeClass.getEdges(Edges.Type.Successors), nodeOrder);
 
             /* Special handling for some nodes that require additional information for decoding. */
-            if (node instanceof AbstractEndNode) {
+            if (node instanceof AbstractEndNode)
+            {
                 AbstractEndNode end = (AbstractEndNode) node;
                 AbstractMergeNode merge = end.merge();
                 /*
@@ -220,21 +233,25 @@ public class GraphEncoder {
                  * orderId of the phi node.
                  */
                 writer.putUV(merge.phis().count());
-                for (PhiNode phi : merge.phis()) {
+                for (PhiNode phi : merge.phis())
+                {
                     writeOrderId(phi.valueAt(end), nodeOrder);
                     writeOrderId(phi, nodeOrder);
                 }
-
-            } else if (node instanceof LoopExitNode) {
+            }
+            else if (node instanceof LoopExitNode)
+            {
                 LoopExitNode exit = (LoopExitNode) node;
                 writeOrderId(exit.stateAfter(), nodeOrder);
                 /* Write all proxy nodes of the LoopExitNode. */
                 writer.putUV(exit.proxies().count());
-                for (ProxyNode proxy : exit.proxies()) {
+                for (ProxyNode proxy : exit.proxies())
+                {
                     writeOrderId(proxy, nodeOrder);
                 }
-
-            } else if (node instanceof Invoke) {
+            }
+            else if (node instanceof Invoke)
+            {
                 Invoke invoke = (Invoke) node;
                 assert invoke.stateDuring() == null : "stateDuring is not used in high-level graphs";
 
@@ -242,7 +259,8 @@ public class GraphEncoder {
                 writeOrderId(invoke.callTarget(), nodeOrder);
                 writeOrderId(invoke.stateAfter(), nodeOrder);
                 writeOrderId(invoke.next(), nodeOrder);
-                if (invoke instanceof InvokeWithExceptionNode) {
+                if (invoke instanceof InvokeWithExceptionNode)
+                {
                     InvokeWithExceptionNode invokeWithExcpetion = (InvokeWithExceptionNode) invoke;
                     ExceptionObjectNode exceptionEdge = (ExceptionObjectNode) invokeWithExcpetion.exceptionEdge();
 
@@ -261,7 +279,8 @@ public class GraphEncoder {
         int metadataStart = TypeConversion.asS4(writer.getBytesWritten());
         writer.putUV(nodeOrder.maxFixedNodeOrderId);
         writer.putUV(nodeCount);
-        for (int i = 0; i < nodeCount; i++) {
+        for (int i = 0; i < nodeCount; i++)
+        {
             writer.putUV(metadataStart - nodeStartOffsets[i]);
         }
 
@@ -271,47 +290,63 @@ public class GraphEncoder {
         return metadataStart;
     }
 
-    public byte[] getEncoding() {
+    public byte[] getEncoding()
+    {
         return writer.toArray(new byte[TypeConversion.asS4(writer.getBytesWritten())]);
     }
 
-    static class NodeOrder {
+    static class NodeOrder
+    {
         protected final NodeMap<Integer> orderIds;
         protected int nextOrderId;
         protected int maxFixedNodeOrderId;
 
-        NodeOrder(StructuredGraph graph) {
+        NodeOrder(StructuredGraph graph)
+        {
             this.orderIds = new NodeMap<>(graph);
             this.nextOrderId = START_NODE_ORDER_ID;
 
             /* Order the fixed nodes of the graph in reverse postorder. */
             Deque<AbstractBeginNode> nodeQueue = new ArrayDeque<>();
             FixedNode current = graph.start();
-            do {
+            do
+            {
                 add(current);
-                if (current instanceof AbstractBeginNode) {
+                if (current instanceof AbstractBeginNode)
+                {
                     add(((AbstractBeginNode) current).next());
                 }
 
-                if (current instanceof FixedWithNextNode) {
+                if (current instanceof FixedWithNextNode)
+                {
                     current = ((FixedWithNextNode) current).next;
-                } else {
-                    if (current instanceof ControlSplitNode) {
-                        for (Node successor : current.successors()) {
-                            if (successor != null) {
+                }
+                else
+                {
+                    if (current instanceof ControlSplitNode)
+                    {
+                        for (Node successor : current.successors())
+                        {
+                            if (successor != null)
+                            {
                                 nodeQueue.addFirst((AbstractBeginNode) successor);
                             }
                         }
-                    } else if (current instanceof EndNode) {
+                    }
+                    else if (current instanceof EndNode)
+                    {
                         AbstractMergeNode merge = ((AbstractEndNode) current).merge();
                         boolean allForwardEndsVisited = true;
-                        for (int i = 0; i < merge.forwardEndCount(); i++) {
-                            if (orderIds.get(merge.forwardEndAt(i)) == null) {
+                        for (int i = 0; i < merge.forwardEndCount(); i++)
+                        {
+                            if (orderIds.get(merge.forwardEndAt(i)) == null)
+                            {
                                 allForwardEndsVisited = false;
                                 break;
                             }
                         }
-                        if (allForwardEndsVisited) {
+                        if (allForwardEndsVisited)
+                        {
                             nodeQueue.add(merge);
                         }
                     }
@@ -330,48 +365,61 @@ public class GraphEncoder {
              * parsing). This leads to holes in the orderId, i.e., unused orderIds.
              */
             int parameterCount = graph.method().getSignature().getParameterCount(!graph.method().isStatic());
-            for (ParameterNode node : graph.getNodes(ParameterNode.TYPE)) {
+            for (ParameterNode node : graph.getNodes(ParameterNode.TYPE))
+            {
                 assert orderIds.get(node) == null : "Parameter node must not be ordered yet";
                 assert node.index() < parameterCount : "Parameter index out of range";
                 orderIds.set(node, nextOrderId + node.index());
             }
             nextOrderId += parameterCount;
 
-            for (Node node : graph.getNodes()) {
+            for (Node node : graph.getNodes())
+            {
                 assert (node instanceof FixedNode || node instanceof ParameterNode) == (orderIds.get(node) != null) : "all fixed nodes and ParameterNodes must be ordered: " + node;
                 add(node);
             }
         }
 
-        private void add(Node node) {
-            if (orderIds.get(node) == null) {
+        private void add(Node node)
+        {
+            if (orderIds.get(node) == null)
+            {
                 orderIds.set(node, nextOrderId);
                 nextOrderId++;
             }
         }
     }
 
-    protected void writeProperties(Node node, Fields fields) {
+    protected void writeProperties(Node node, Fields fields)
+    {
         writeObjectId(node.getNodeSourcePosition());
-        for (int idx = 0; idx < fields.getCount(); idx++) {
-            if (fields.getType(idx).isPrimitive()) {
+        for (int idx = 0; idx < fields.getCount(); idx++)
+        {
+            if (fields.getType(idx).isPrimitive())
+            {
                 long primitive = fields.getRawPrimitive(node, idx);
                 writer.putSV(primitive);
-            } else {
+            }
+            else
+            {
                 Object property = fields.get(node, idx);
                 writeObjectId(property);
             }
         }
     }
 
-    protected void writeEdges(Node node, Edges edges, NodeOrder nodeOrder) {
-        if (node instanceof PhiNode) {
+    protected void writeEdges(Node node, Edges edges, NodeOrder nodeOrder)
+    {
+        if (node instanceof PhiNode)
+        {
             /* Edges are not needed for decoding, so we must not write it. */
             return;
         }
 
-        for (int idx = 0; idx < edges.getDirectCount(); idx++) {
-            if (GraphDecoder.skipDirectEdge(node, edges, idx)) {
+        for (int idx = 0; idx < edges.getDirectCount(); idx++)
+        {
+            if (GraphDecoder.skipDirectEdge(node, edges, idx))
+            {
                 /* Edge is not needed for decoding, so we must not write it. */
                 continue;
             }
@@ -379,29 +427,38 @@ public class GraphEncoder {
             writeOrderId(edge, nodeOrder);
         }
 
-        if (node instanceof AbstractMergeNode && edges.type() == Edges.Type.Inputs) {
+        if (node instanceof AbstractMergeNode && edges.type() == Edges.Type.Inputs)
+        {
             /* The ends of merge nodes are decoded manually when the ends are processed. */
-        } else {
-            for (int idx = edges.getDirectCount(); idx < edges.getCount(); idx++) {
+        }
+        else
+        {
+            for (int idx = edges.getDirectCount(); idx < edges.getCount(); idx++)
+            {
                 NodeList<Node> edgeList = Edges.getNodeList(node, edges.getOffsets(), idx);
-                if (edgeList == null) {
+                if (edgeList == null)
+                {
                     writer.putSV(-1);
-                } else {
+                }
+                else
+                {
                     writer.putSV(edgeList.size());
-                    for (Node edge : edgeList) {
+                    for (Node edge : edgeList)
+                    {
                         writeOrderId(edge, nodeOrder);
                     }
                 }
             }
         }
-
     }
 
-    protected void writeOrderId(Node node, NodeOrder nodeOrder) {
+    protected void writeOrderId(Node node, NodeOrder nodeOrder)
+    {
         writer.putUV(node == null ? NULL_ORDER_ID : nodeOrder.orderIds.get(node));
     }
 
-    protected void writeObjectId(Object object) {
+    protected void writeObjectId(Object object)
+    {
         writer.putUV(objects.getIndex(object));
     }
 
@@ -410,21 +467,27 @@ public class GraphEncoder {
      * original graph.
      */
     @SuppressWarnings("try")
-    public static boolean verifyEncoding(StructuredGraph originalGraph, EncodedGraph encodedGraph, Architecture architecture) {
+    public static boolean verifyEncoding(StructuredGraph originalGraph, EncodedGraph encodedGraph, Architecture architecture)
+    {
         DebugContext debug = originalGraph.getDebug();
         StructuredGraph decodedGraph = new StructuredGraph.Builder(originalGraph.getOptions(), debug, AllowAssumptions.YES).method(originalGraph.method()).build();
-        if (originalGraph.trackNodeSourcePosition()) {
+        if (originalGraph.trackNodeSourcePosition())
+        {
             decodedGraph.setTrackNodeSourcePosition();
         }
         GraphDecoder decoder = new GraphDecoder(architecture, decodedGraph);
         decoder.decode(encodedGraph);
 
         decodedGraph.verify();
-        try {
+        try
+        {
             GraphComparison.verifyGraphsEqual(originalGraph, decodedGraph);
-        } catch (Throwable ex) {
+        }
+        catch (Throwable ex)
+        {
             originalGraph.getDebug();
-            try (DebugContext.Scope scope = debug.scope("GraphEncoder")) {
+            try (DebugContext.Scope scope = debug.scope("GraphEncoder"))
+            {
                 debug.dump(DebugContext.VERBOSE_LEVEL, originalGraph, "Original Graph");
                 debug.dump(DebugContext.VERBOSE_LEVEL, decodedGraph, "Decoded Graph");
             }
@@ -434,13 +497,16 @@ public class GraphEncoder {
     }
 }
 
-class GraphComparison {
-    public static boolean verifyGraphsEqual(StructuredGraph expectedGraph, StructuredGraph actualGraph) {
+class GraphComparison
+{
+    public static boolean verifyGraphsEqual(StructuredGraph expectedGraph, StructuredGraph actualGraph)
+    {
         NodeMap<Node> nodeMapping = new NodeMap<>(expectedGraph);
         Deque<Pair<Node, Node>> workList = new ArrayDeque<>();
 
         pushToWorklist(expectedGraph.start(), actualGraph.start(), nodeMapping, workList);
-        while (!workList.isEmpty()) {
+        while (!workList.isEmpty())
+        {
             Pair<Node, Node> pair = workList.removeFirst();
             Node expectedNode = pair.getLeft();
             Node actualNode = pair.getRight();
@@ -449,35 +515,46 @@ class GraphComparison {
             NodeClass<?> nodeClass = expectedNode.getNodeClass();
             assert nodeClass == actualNode.getNodeClass();
 
-            if (expectedNode instanceof MergeNode) {
+            if (expectedNode instanceof MergeNode)
+            {
                 /* The order of the ends can be different, so ignore them. */
                 verifyNodesEqual(expectedNode.inputs(), actualNode.inputs(), nodeMapping, workList, true);
-            } else if (expectedNode instanceof PhiNode) {
+            }
+            else if (expectedNode instanceof PhiNode)
+            {
                 verifyPhi((PhiNode) expectedNode, (PhiNode) actualNode, nodeMapping, workList);
-            } else {
+            }
+            else
+            {
                 verifyNodesEqual(expectedNode.inputs(), actualNode.inputs(), nodeMapping, workList, false);
             }
             verifyNodesEqual(expectedNode.successors(), actualNode.successors(), nodeMapping, workList, false);
 
-            if (expectedNode instanceof LoopEndNode) {
+            if (expectedNode instanceof LoopEndNode)
+            {
                 LoopEndNode actualLoopEnd = (LoopEndNode) actualNode;
                 assert actualLoopEnd.loopBegin().loopEnds().snapshot().indexOf(actualLoopEnd) == actualLoopEnd.endIndex();
-            } else {
-                for (int i = 0; i < nodeClass.getData().getCount(); i++) {
+            }
+            else
+            {
+                for (int i = 0; i < nodeClass.getData().getCount(); i++)
+                {
                     Object expectedProperty = nodeClass.getData().get(expectedNode, i);
                     Object actualProperty = nodeClass.getData().get(actualNode, i);
                     assert Objects.equals(expectedProperty, actualProperty);
                 }
             }
 
-            if (expectedNode instanceof EndNode) {
+            if (expectedNode instanceof EndNode)
+            {
                 /* Visit the merge node, which is the one and only usage of the EndNode. */
                 assert expectedNode.usages().count() == 1;
                 assert actualNode.usages().count() == 1;
                 verifyNodesEqual(expectedNode.usages(), actualNode.usages(), nodeMapping, workList, false);
             }
 
-            if (expectedNode instanceof AbstractEndNode) {
+            if (expectedNode instanceof AbstractEndNode)
+            {
                 /* Visit the input values of the merge phi functions for this EndNode. */
                 verifyPhis((AbstractEndNode) expectedNode, (AbstractEndNode) actualNode, nodeMapping, workList);
             }
@@ -486,14 +563,17 @@ class GraphComparison {
         return true;
     }
 
-    protected static void verifyPhi(PhiNode expectedPhi, PhiNode actualPhi, NodeMap<Node> nodeMapping, Deque<Pair<Node, Node>> workList) {
+    protected static void verifyPhi(PhiNode expectedPhi, PhiNode actualPhi, NodeMap<Node> nodeMapping, Deque<Pair<Node, Node>> workList)
+    {
         AbstractMergeNode expectedMergeNode = expectedPhi.merge();
         AbstractMergeNode actualMergeNode = actualPhi.merge();
         assert actualMergeNode == nodeMapping.get(expectedMergeNode);
 
-        for (EndNode expectedEndNode : expectedMergeNode.ends) {
+        for (EndNode expectedEndNode : expectedMergeNode.ends)
+        {
             EndNode actualEndNode = (EndNode) nodeMapping.get(expectedEndNode);
-            if (actualEndNode != null) {
+            if (actualEndNode != null)
+            {
                 ValueNode expectedPhiInput = expectedPhi.valueAt(expectedEndNode);
                 ValueNode actualPhiInput = actualPhi.valueAt(actualEndNode);
                 verifyNodeEqual(expectedPhiInput, actualPhiInput, nodeMapping, workList, false);
@@ -501,14 +581,17 @@ class GraphComparison {
         }
     }
 
-    protected static void verifyPhis(AbstractEndNode expectedEndNode, AbstractEndNode actualEndNode, NodeMap<Node> nodeMapping, Deque<Pair<Node, Node>> workList) {
+    protected static void verifyPhis(AbstractEndNode expectedEndNode, AbstractEndNode actualEndNode, NodeMap<Node> nodeMapping, Deque<Pair<Node, Node>> workList)
+    {
         AbstractMergeNode expectedMergeNode = expectedEndNode.merge();
         AbstractMergeNode actualMergeNode = (AbstractMergeNode) nodeMapping.get(expectedMergeNode);
         assert actualMergeNode != null;
 
-        for (PhiNode expectedPhi : expectedMergeNode.phis()) {
+        for (PhiNode expectedPhi : expectedMergeNode.phis())
+        {
             PhiNode actualPhi = (PhiNode) nodeMapping.get(expectedPhi);
-            if (actualPhi != null) {
+            if (actualPhi != null)
+            {
                 ValueNode expectedPhiInput = expectedPhi.valueAt(expectedEndNode);
                 ValueNode actualPhiInput = actualPhi.valueAt(actualEndNode);
                 verifyNodeEqual(expectedPhiInput, actualPhiInput, nodeMapping, workList, false);
@@ -516,34 +599,45 @@ class GraphComparison {
         }
     }
 
-    private static void verifyNodesEqual(NodeIterable<Node> expectedNodes, NodeIterable<Node> actualNodes, NodeMap<Node> nodeMapping, Deque<Pair<Node, Node>> workList, boolean ignoreEndNode) {
+    private static void verifyNodesEqual(NodeIterable<Node> expectedNodes, NodeIterable<Node> actualNodes, NodeMap<Node> nodeMapping, Deque<Pair<Node, Node>> workList, boolean ignoreEndNode)
+    {
         Iterator<Node> actualIter = actualNodes.iterator();
-        for (Node expectedNode : expectedNodes) {
+        for (Node expectedNode : expectedNodes)
+        {
             verifyNodeEqual(expectedNode, actualIter.next(), nodeMapping, workList, ignoreEndNode);
         }
         assert !actualIter.hasNext();
     }
 
-    protected static void verifyNodeEqual(Node expectedNode, Node actualNode, NodeMap<Node> nodeMapping, Deque<Pair<Node, Node>> workList, boolean ignoreEndNode) {
+    protected static void verifyNodeEqual(Node expectedNode, Node actualNode, NodeMap<Node> nodeMapping, Deque<Pair<Node, Node>> workList, boolean ignoreEndNode)
+    {
         assert expectedNode.getClass() == actualNode.getClass();
-        if (ignoreEndNode && expectedNode instanceof EndNode) {
+        if (ignoreEndNode && expectedNode instanceof EndNode)
+        {
             return;
         }
 
         Node existing = nodeMapping.get(expectedNode);
-        if (existing != null) {
+        if (existing != null)
+        {
             assert existing == actualNode;
-        } else {
+        }
+        else
+        {
             pushToWorklist(expectedNode, actualNode, nodeMapping, workList);
         }
     }
 
-    protected static void pushToWorklist(Node expectedNode, Node actualNode, NodeMap<Node> nodeMapping, Deque<Pair<Node, Node>> workList) {
+    protected static void pushToWorklist(Node expectedNode, Node actualNode, NodeMap<Node> nodeMapping, Deque<Pair<Node, Node>> workList)
+    {
         nodeMapping.set(expectedNode, actualNode);
-        if (expectedNode instanceof AbstractEndNode) {
+        if (expectedNode instanceof AbstractEndNode)
+        {
             /* To ensure phi nodes have been added, we handle everything before block ends. */
             workList.addLast(Pair.create(expectedNode, actualNode));
-        } else {
+        }
+        else
+        {
             workList.addFirst(Pair.create(expectedNode, actualNode));
         }
     }

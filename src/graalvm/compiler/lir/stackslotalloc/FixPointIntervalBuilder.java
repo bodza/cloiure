@@ -29,7 +29,8 @@ import jdk.vm.ci.meta.Value;
 /**
  * Calculates the stack intervals using a worklist-based backwards data-flow analysis.
  */
-final class FixPointIntervalBuilder {
+final class FixPointIntervalBuilder
+{
     private final BlockMap<BitSet> liveInMap;
     private final BlockMap<BitSet> liveOutMap;
     private final LIR lir;
@@ -42,7 +43,8 @@ final class FixPointIntervalBuilder {
      */
     private static final CounterKey uninitializedSlots = DebugContext.counter("StackSlotAllocator[uninitializedSlots]");
 
-    FixPointIntervalBuilder(LIR lir, StackInterval[] stackSlotMap, int maxOpId) {
+    FixPointIntervalBuilder(LIR lir, StackInterval[] stackSlotMap, int maxOpId)
+    {
         this.lir = lir;
         this.stackSlotMap = stackSlotMap;
         this.maxOpId = maxOpId;
@@ -56,16 +58,20 @@ final class FixPointIntervalBuilder {
      * {@link #stackSlotMap} and returns a set of use positions, i.e. instructions that contain
      * virtual stack slots.
      */
-    EconomicSet<LIRInstruction> build() {
+    EconomicSet<LIRInstruction> build()
+    {
         Deque<AbstractBlockBase<?>> worklist = new ArrayDeque<>();
         AbstractBlockBase<?>[] blocks = lir.getControlFlowGraph().getBlocks();
-        for (int i = blocks.length - 1; i >= 0; i--) {
+        for (int i = blocks.length - 1; i >= 0; i--)
+        {
             worklist.add(blocks[i]);
         }
-        for (AbstractBlockBase<?> block : lir.getControlFlowGraph().getBlocks()) {
+        for (AbstractBlockBase<?> block : lir.getControlFlowGraph().getBlocks())
+        {
             liveInMap.put(block, new BitSet(stackSlotMap.length));
         }
-        while (!worklist.isEmpty()) {
+        while (!worklist.isEmpty())
+        {
             AbstractBlockBase<?> block = worklist.poll();
             processBlock(block, worklist);
         }
@@ -75,14 +81,17 @@ final class FixPointIntervalBuilder {
     /**
      * Merge outSet with in-set of successors.
      */
-    private boolean updateOutBlock(AbstractBlockBase<?> block) {
+    private boolean updateOutBlock(AbstractBlockBase<?> block)
+    {
         BitSet union = new BitSet(stackSlotMap.length);
-        for (AbstractBlockBase<?> succ : block.getSuccessors()) {
+        for (AbstractBlockBase<?> succ : block.getSuccessors())
+        {
             union.or(liveInMap.get(succ));
         }
         BitSet outSet = liveOutMap.get(block);
         // check if changed
-        if (outSet == null || !union.equals(outSet)) {
+        if (outSet == null || !union.equals(outSet))
+        {
             liveOutMap.put(block, union);
             return true;
         }
@@ -90,10 +99,13 @@ final class FixPointIntervalBuilder {
     }
 
     @SuppressWarnings("try")
-    private void processBlock(AbstractBlockBase<?> block, Deque<AbstractBlockBase<?>> worklist) {
+    private void processBlock(AbstractBlockBase<?> block, Deque<AbstractBlockBase<?>> worklist)
+    {
         DebugContext debug = lir.getDebug();
-        if (updateOutBlock(block)) {
-            try (Indent indent = debug.logAndIndent("handle block %s", block)) {
+        if (updateOutBlock(block))
+        {
+            try (Indent indent = debug.logAndIndent("handle block %s", block))
+            {
                 ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
                 // get out set and mark intervals
                 BitSet outSet = liveOutMap.get(block);
@@ -102,13 +114,15 @@ final class FixPointIntervalBuilder {
 
                 // process instructions
                 BlockClosure closure = new BlockClosure((BitSet) outSet.clone());
-                for (int i = instructions.size() - 1; i >= 0; i--) {
+                for (int i = instructions.size() - 1; i >= 0; i--)
+                {
                     LIRInstruction inst = instructions.get(i);
                     closure.processInstructionBottomUp(inst);
                 }
 
                 // add predecessors to work list
-                for (AbstractBlockBase<?> b : block.getPredecessors()) {
+                for (AbstractBlockBase<?> b : block.getPredecessors())
+                {
                     worklist.add(b);
                 }
                 // set in set and mark intervals
@@ -121,50 +135,62 @@ final class FixPointIntervalBuilder {
     }
 
     @SuppressWarnings("try")
-    private void printLiveSet(String label, BitSet liveSet) {
+    private void printLiveSet(String label, BitSet liveSet)
+    {
         DebugContext debug = lir.getDebug();
-        if (debug.isLogEnabled()) {
-            try (Indent indent = debug.logAndIndent(label)) {
+        if (debug.isLogEnabled())
+        {
+            try (Indent indent = debug.logAndIndent(label))
+            {
                 debug.log("%s", liveSetToString(liveSet));
             }
         }
     }
 
-    private String liveSetToString(BitSet liveSet) {
+    private String liveSetToString(BitSet liveSet)
+    {
         StringBuilder sb = new StringBuilder();
-        for (int i = liveSet.nextSetBit(0); i >= 0; i = liveSet.nextSetBit(i + 1)) {
+        for (int i = liveSet.nextSetBit(0); i >= 0; i = liveSet.nextSetBit(i + 1))
+        {
             StackInterval interval = getIntervalFromStackId(i);
             sb.append(interval.getOperand()).append(" ");
         }
         return sb.toString();
     }
 
-    private void markOutInterval(BitSet outSet, int blockEndOpId) {
+    private void markOutInterval(BitSet outSet, int blockEndOpId)
+    {
         DebugContext debug = lir.getDebug();
-        for (int i = outSet.nextSetBit(0); i >= 0; i = outSet.nextSetBit(i + 1)) {
+        for (int i = outSet.nextSetBit(0); i >= 0; i = outSet.nextSetBit(i + 1))
+        {
             StackInterval interval = getIntervalFromStackId(i);
             debug.log("mark live operand: %s", interval.getOperand());
             interval.addTo(blockEndOpId);
         }
     }
 
-    private void markInInterval(BitSet inSet, int blockFirstOpId) {
+    private void markInInterval(BitSet inSet, int blockFirstOpId)
+    {
         DebugContext debug = lir.getDebug();
-        for (int i = inSet.nextSetBit(0); i >= 0; i = inSet.nextSetBit(i + 1)) {
+        for (int i = inSet.nextSetBit(0); i >= 0; i = inSet.nextSetBit(i + 1))
+        {
             StackInterval interval = getIntervalFromStackId(i);
             debug.log("mark live operand: %s", interval.getOperand());
             interval.addFrom(blockFirstOpId);
         }
     }
 
-    private final class BlockClosure {
+    private final class BlockClosure
+    {
         private final BitSet currentSet;
 
-        private BlockClosure(BitSet set) {
+        private BlockClosure(BitSet set)
+        {
             currentSet = set;
         }
 
-        private BitSet getCurrentSet() {
+        private BitSet getCurrentSet()
+        {
             return currentSet;
         }
 
@@ -173,9 +199,11 @@ final class FixPointIntervalBuilder {
          * that start or end at the current operation are not included.
          */
         @SuppressWarnings("try")
-        private void processInstructionBottomUp(LIRInstruction op) {
+        private void processInstructionBottomUp(LIRInstruction op)
+        {
             DebugContext debug = lir.getDebug();
-            try (Indent indent = debug.logAndIndent("handle op %d, %s", op.id(), op)) {
+            try (Indent indent = debug.logAndIndent("handle op %d, %s", op.id(), op))
+            {
                 // kills
                 op.visitEachTemp(defConsumer);
                 op.visitEachOutput(defConsumer);
@@ -189,10 +217,13 @@ final class FixPointIntervalBuilder {
             }
         }
 
-        InstructionValueConsumer useConsumer = new InstructionValueConsumer() {
+        InstructionValueConsumer useConsumer = new InstructionValueConsumer()
+        {
             @Override
-            public void visitValue(LIRInstruction inst, Value operand, OperandMode mode, EnumSet<OperandFlag> flags) {
-                if (isVirtualStackSlot(operand)) {
+            public void visitValue(LIRInstruction inst, Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
+            {
+                if (isVirtualStackSlot(operand))
+                {
                     DebugContext debug = lir.getDebug();
                     VirtualStackSlot vslot = asVirtualStackSlot(operand);
                     addUse(vslot, inst, flags);
@@ -204,10 +235,13 @@ final class FixPointIntervalBuilder {
             }
         };
 
-        InstructionValueConsumer defConsumer = new InstructionValueConsumer() {
+        InstructionValueConsumer defConsumer = new InstructionValueConsumer()
+        {
             @Override
-            public void visitValue(LIRInstruction inst, Value operand, OperandMode mode, EnumSet<OperandFlag> flags) {
-                if (isVirtualStackSlot(operand)) {
+            public void visitValue(LIRInstruction inst, Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
+            {
+                if (isVirtualStackSlot(operand))
+                {
                     DebugContext debug = lir.getDebug();
                     VirtualStackSlot vslot = asVirtualStackSlot(operand);
                     addDef(vslot, inst);
@@ -216,48 +250,62 @@ final class FixPointIntervalBuilder {
                     debug.log("clear operand: %s", operand);
                     currentSet.clear(vslot.getId());
                 }
-
             }
         };
 
-        private void addUse(VirtualStackSlot stackSlot, LIRInstruction inst, EnumSet<OperandFlag> flags) {
+        private void addUse(VirtualStackSlot stackSlot, LIRInstruction inst, EnumSet<OperandFlag> flags)
+        {
             StackInterval interval = getOrCreateInterval(stackSlot);
-            if (flags.contains(OperandFlag.UNINITIALIZED)) {
+            if (flags.contains(OperandFlag.UNINITIALIZED))
+            {
                 // Stack slot is marked uninitialized so we have to assume it is live all
                 // the time.
                 DebugContext debug = lir.getDebug();
-                if (debug.isCountEnabled() && !(interval.from() == 0 && interval.to() == maxOpId)) {
+                if (debug.isCountEnabled() && !(interval.from() == 0 && interval.to() == maxOpId))
+                {
                     uninitializedSlots.increment(debug);
                 }
                 interval.addFrom(0);
                 interval.addTo(maxOpId);
-            } else {
+            }
+            else
+            {
                 interval.addTo(inst.id());
             }
         }
 
-        private void addDef(VirtualStackSlot stackSlot, LIRInstruction inst) {
+        private void addDef(VirtualStackSlot stackSlot, LIRInstruction inst)
+        {
             StackInterval interval = getOrCreateInterval(stackSlot);
             interval.addFrom(inst.id());
         }
 
-        void addRegisterHint(final LIRInstruction op, VirtualStackSlot targetValue, OperandMode mode, EnumSet<OperandFlag> flags, final boolean hintAtDef) {
-            if (flags.contains(OperandFlag.HINT)) {
-                InstructionValueProcedure proc = new InstructionValueProcedure() {
+        void addRegisterHint(final LIRInstruction op, VirtualStackSlot targetValue, OperandMode mode, EnumSet<OperandFlag> flags, final boolean hintAtDef)
+        {
+            if (flags.contains(OperandFlag.HINT))
+            {
+                InstructionValueProcedure proc = new InstructionValueProcedure()
+                {
                     @Override
-                    public Value doValue(LIRInstruction instruction, Value registerHint, OperandMode vaueMode, EnumSet<OperandFlag> valueFlags) {
-                        if (isVirtualStackSlot(registerHint)) {
+                    public Value doValue(LIRInstruction instruction, Value registerHint, OperandMode vaueMode, EnumSet<OperandFlag> valueFlags)
+                    {
+                        if (isVirtualStackSlot(registerHint))
+                        {
                             StackInterval from = getOrCreateInterval((VirtualStackSlot) registerHint);
                             StackInterval to = getOrCreateInterval(targetValue);
 
                             // hints always point from def to use
-                            if (hintAtDef) {
+                            if (hintAtDef)
+                            {
                                 to.setLocationHint(from);
-                            } else {
+                            }
+                            else
+                            {
                                 from.setLocationHint(to);
                             }
                             DebugContext debug = lir.getDebug();
-                            if (debug.isLogEnabled()) {
+                            if (debug.isLogEnabled())
+                            {
                                 debug.log("operation %s at opId %d: added hint from interval %s to %s", op, op.id(), from, to);
                             }
 
@@ -269,36 +317,41 @@ final class FixPointIntervalBuilder {
                 op.forEachRegisterHint(targetValue, mode, proc);
             }
         }
-
     }
 
-    private StackInterval get(VirtualStackSlot stackSlot) {
+    private StackInterval get(VirtualStackSlot stackSlot)
+    {
         return stackSlotMap[stackSlot.getId()];
     }
 
-    private void put(VirtualStackSlot stackSlot, StackInterval interval) {
+    private void put(VirtualStackSlot stackSlot, StackInterval interval)
+    {
         stackSlotMap[stackSlot.getId()] = interval;
     }
 
-    private StackInterval getOrCreateInterval(VirtualStackSlot stackSlot) {
+    private StackInterval getOrCreateInterval(VirtualStackSlot stackSlot)
+    {
         StackInterval interval = get(stackSlot);
-        if (interval == null) {
+        if (interval == null)
+        {
             interval = new StackInterval(stackSlot, stackSlot.getValueKind());
             put(stackSlot, interval);
         }
         return interval;
     }
 
-    private StackInterval getIntervalFromStackId(int id) {
+    private StackInterval getIntervalFromStackId(int id)
+    {
         return stackSlotMap[id];
     }
 
-    private static int getBlockBegin(ArrayList<LIRInstruction> instructions) {
+    private static int getBlockBegin(ArrayList<LIRInstruction> instructions)
+    {
         return instructions.get(0).id();
     }
 
-    private static int getBlockEnd(ArrayList<LIRInstruction> instructions) {
+    private static int getBlockEnd(ArrayList<LIRInstruction> instructions)
+    {
         return instructions.get(instructions.size() - 1).id() + 1;
     }
-
 }

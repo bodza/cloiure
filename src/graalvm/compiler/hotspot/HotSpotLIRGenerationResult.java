@@ -13,8 +13,8 @@ import graalvm.compiler.lir.gen.LIRGenerationResult;
 import jdk.vm.ci.code.CallingConvention;
 import jdk.vm.ci.code.StackSlot;
 
-public class HotSpotLIRGenerationResult extends LIRGenerationResult {
-
+public class HotSpotLIRGenerationResult extends LIRGenerationResult
+{
     /**
      * The slot reserved for storing the original return address when a frame is marked for
      * deoptimization. The return address slot in the callee is overwritten with the address of a
@@ -31,32 +31,39 @@ public class HotSpotLIRGenerationResult extends LIRGenerationResult {
      */
     private EconomicMap<LIRFrameState, SaveRegistersOp> calleeSaveInfo = EconomicMap.create(Equivalence.IDENTITY_WITH_SYSTEM_HASHCODE);
 
-    public HotSpotLIRGenerationResult(CompilationIdentifier compilationId, LIR lir, FrameMapBuilder frameMapBuilder, CallingConvention callingConvention, Object stub) {
+    public HotSpotLIRGenerationResult(CompilationIdentifier compilationId, LIR lir, FrameMapBuilder frameMapBuilder, CallingConvention callingConvention, Object stub)
+    {
         super(compilationId, lir, frameMapBuilder, callingConvention);
         this.stub = stub;
     }
 
-    public EconomicMap<LIRFrameState, SaveRegistersOp> getCalleeSaveInfo() {
+    public EconomicMap<LIRFrameState, SaveRegistersOp> getCalleeSaveInfo()
+    {
         return calleeSaveInfo;
     }
 
-    public Stub getStub() {
+    public Stub getStub()
+    {
         return (Stub) stub;
     }
 
-    public StackSlot getDeoptimizationRescueSlot() {
+    public StackSlot getDeoptimizationRescueSlot()
+    {
         return deoptimizationRescueSlot;
     }
 
-    public final void setDeoptimizationRescueSlot(StackSlot stackSlot) {
+    public final void setDeoptimizationRescueSlot(StackSlot stackSlot)
+    {
         this.deoptimizationRescueSlot = stackSlot;
     }
 
-    public void setMaxInterpreterFrameSize(int maxInterpreterFrameSize) {
+    public void setMaxInterpreterFrameSize(int maxInterpreterFrameSize)
+    {
         this.maxInterpreterFrameSize = maxInterpreterFrameSize;
     }
 
-    public int getMaxInterpreterFrameSize() {
+    public int getMaxInterpreterFrameSize()
+    {
         return maxInterpreterFrameSize;
     }
 }

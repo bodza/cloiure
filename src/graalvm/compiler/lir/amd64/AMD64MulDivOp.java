@@ -30,7 +30,8 @@ import jdk.vm.ci.meta.Value;
  * AMD64 mul/div operation. This operation has a single operand for the second input. The first
  * input must be in RAX for mul and in RDX:RAX for div. The result is in RDX:RAX.
  */
-public class AMD64MulDivOp extends AMD64LIRInstruction {
+public class AMD64MulDivOp extends AMD64LIRInstruction
+{
     public static final LIRInstructionClass<AMD64MulDivOp> TYPE = LIRInstructionClass.create(AMD64MulDivOp.class);
 
     @Opcode private final AMD64MOp opcode;
@@ -46,11 +47,13 @@ public class AMD64MulDivOp extends AMD64LIRInstruction {
 
     @State protected LIRFrameState state;
 
-    public AMD64MulDivOp(AMD64MOp opcode, OperandSize size, LIRKind resultKind, AllocatableValue x, AllocatableValue y) {
+    public AMD64MulDivOp(AMD64MOp opcode, OperandSize size, LIRKind resultKind, AllocatableValue x, AllocatableValue y)
+    {
         this(opcode, size, resultKind, Value.ILLEGAL, x, y, null);
     }
 
-    public AMD64MulDivOp(AMD64MOp opcode, OperandSize size, LIRKind resultKind, AllocatableValue highX, AllocatableValue lowX, AllocatableValue y, LIRFrameState state) {
+    public AMD64MulDivOp(AMD64MOp opcode, OperandSize size, LIRKind resultKind, AllocatableValue highX, AllocatableValue lowX, AllocatableValue y, LIRFrameState state)
+    {
         super(TYPE);
         this.opcode = opcode;
         this.size = size;
@@ -66,44 +69,57 @@ public class AMD64MulDivOp extends AMD64LIRInstruction {
         this.state = state;
     }
 
-    public AllocatableValue getHighResult() {
+    public AllocatableValue getHighResult()
+    {
         return highResult;
     }
 
-    public AllocatableValue getLowResult() {
+    public AllocatableValue getLowResult()
+    {
         return lowResult;
     }
 
-    public AllocatableValue getQuotient() {
+    public AllocatableValue getQuotient()
+    {
         return lowResult;
     }
 
-    public AllocatableValue getRemainder() {
+    public AllocatableValue getRemainder()
+    {
         return highResult;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
-        if (state != null) {
+    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
+        if (state != null)
+        {
             crb.recordImplicitException(masm.position(), state);
         }
-        if (isRegister(y)) {
+        if (isRegister(y))
+        {
             opcode.emit(masm, size, asRegister(y));
-        } else {
+        }
+        else
+        {
             assert isStackSlot(y);
             opcode.emit(masm, size, (AMD64Address) crb.asAddress(y));
         }
     }
 
     @Override
-    public void verify() {
+    public void verify()
+    {
         assert asRegister(highResult).equals(AMD64.rdx);
         assert asRegister(lowResult).equals(AMD64.rax);
 
         assert asRegister(lowX).equals(AMD64.rax);
-        if (opcode == DIV || opcode == IDIV) {
+        if (opcode == DIV || opcode == IDIV)
+        {
             assert asRegister(highX).equals(AMD64.rdx);
-        } else if (opcode == MUL || opcode == IMUL) {
+        }
+        else if (opcode == MUL || opcode == IMUL)
+        {
             assert isIllegal(highX);
         }
     }

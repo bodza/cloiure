@@ -10,32 +10,36 @@ import graalvm.compiler.lir.StandardOp.BlockEndOp;
 import graalvm.compiler.lir.StandardOp.LabelOp;
 import graalvm.compiler.lir.StandardOp.MoveOp;
 
-public final class MoveProfiler {
-
-    public static BlockMap<MoveStatistics> profile(LIR lir) {
+public final class MoveProfiler
+{
+    public static BlockMap<MoveStatistics> profile(LIR lir)
+    {
         MoveProfiler profiler = new MoveProfiler(lir);
         profiler.run();
         return profiler.blockMap;
     }
 
-    static class MoveStatistics {
-
+    static class MoveStatistics
+    {
         private final int[] cnt;
 
-        MoveStatistics() {
+        MoveStatistics()
+        {
             cnt = new int[MoveType.values().length];
-
         }
 
-        public void add(MoveType moveType) {
+        public void add(MoveType moveType)
+        {
             cnt[moveType.ordinal()]++;
         }
 
-        public int get(MoveType moveType) {
+        public int get(MoveType moveType)
+        {
             return cnt[moveType.ordinal()];
         }
 
-        public void add(MoveType moveType, int value) {
+        public void add(MoveType moveType, int value)
+        {
             cnt[moveType.ordinal()] += value;
         }
     }
@@ -43,18 +47,22 @@ public final class MoveProfiler {
     private final LIR lir;
     private final BlockMap<MoveStatistics> blockMap;
 
-    private MoveProfiler(LIR lir) {
+    private MoveProfiler(LIR lir)
+    {
         this.lir = lir;
         blockMap = new BlockMap<>(lir.getControlFlowGraph());
     }
 
-    private void run() {
-        for (AbstractBlockBase<?> block : lir.getControlFlowGraph().getBlocks()) {
+    private void run()
+    {
+        for (AbstractBlockBase<?> block : lir.getControlFlowGraph().getBlocks())
+        {
             doBlock(block);
         }
     }
 
-    private void doBlock(AbstractBlockBase<?> block) {
+    private void doBlock(AbstractBlockBase<?> block)
+    {
         ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
         assert instructions.size() >= 2 : "Malformed block: " + block + ", " + instructions;
         assert instructions.get(instructions.size() - 1) instanceof BlockEndOp : "Not a BlockEndOp: " + instructions.get(instructions.size() - 1);
@@ -64,9 +72,12 @@ public final class MoveProfiler {
 
         MoveStatistics stats = null;
         // analysis phase
-        for (LIRInstruction inst : instructions) {
-            if (MoveOp.isMoveOp(inst)) {
-                if (stats == null) {
+        for (LIRInstruction inst : instructions)
+        {
+            if (MoveOp.isMoveOp(inst))
+            {
+                if (stats == null)
+                {
                     stats = new MoveStatistics();
                     blockMap.put(block, stats);
                 }
@@ -74,5 +85,4 @@ public final class MoveProfiler {
             }
         }
     }
-
 }

@@ -26,13 +26,14 @@ import jdk.vm.ci.meta.JavaKind;
  * Substitutions for {@link CRC32}.
  */
 @ClassSubstitution(CRC32.class)
-public class CRC32Substitutions {
-
+public class CRC32Substitutions
+{
     /**
      * Gets the address of {@code StubRoutines::x86::_crc_table} in {@code stubRoutines_x86.hpp}.
      */
     @Fold
-    static long crcTableAddress(@InjectedParameter GraalHotSpotVMConfig config) {
+    static long crcTableAddress(@InjectedParameter GraalHotSpotVMConfig config)
+    {
         return config.crcTableAddress;
     }
 
@@ -40,7 +41,8 @@ public class CRC32Substitutions {
      * Removed in 9.
      */
     @MethodSubstitution(optional = true)
-    static int update(int crc, int b) {
+    static int update(int crc, int b)
+    {
         final Pointer crcTableRawAddress = WordFactory.pointer(GraalHotSpotVMConfigNode.crcTableAddress());
 
         int c = ~crc;
@@ -55,7 +57,8 @@ public class CRC32Substitutions {
      * Removed in 9.
      */
     @MethodSubstitution(optional = true)
-    static int updateBytes(int crc, byte[] buf, int off, int len) {
+    static int updateBytes(int crc, byte[] buf, int off, int len)
+    {
         Word bufAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(buf, arrayBaseOffset(JavaKind.Byte) + off));
         return updateBytesCRC32(UPDATE_BYTES_CRC32, crc, bufAddr, len);
     }
@@ -64,7 +67,8 @@ public class CRC32Substitutions {
      * @since 9
      */
     @MethodSubstitution(optional = true)
-    static int updateBytes0(int crc, byte[] buf, int off, int len) {
+    static int updateBytes0(int crc, byte[] buf, int off, int len)
+    {
         Word bufAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(buf, arrayBaseOffset(JavaKind.Byte) + off));
         return updateBytesCRC32(UPDATE_BYTES_CRC32, crc, bufAddr, len);
     }
@@ -73,7 +77,8 @@ public class CRC32Substitutions {
      * Removed in 9.
      */
     @MethodSubstitution(optional = true)
-    static int updateByteBuffer(int crc, long addr, int off, int len) {
+    static int updateByteBuffer(int crc, long addr, int off, int len)
+    {
         WordBase bufAddr = WordFactory.unsigned(addr).add(off);
         return updateBytesCRC32(UPDATE_BYTES_CRC32, crc, bufAddr, len);
     }
@@ -82,7 +87,8 @@ public class CRC32Substitutions {
      * @since 9
      */
     @MethodSubstitution(optional = true)
-    static int updateByteBuffer0(int crc, long addr, int off, int len) {
+    static int updateByteBuffer0(int crc, long addr, int off, int len)
+    {
         WordBase bufAddr = WordFactory.unsigned(addr).add(off);
         return updateBytesCRC32(UPDATE_BYTES_CRC32, crc, bufAddr, len);
     }

@@ -18,16 +18,18 @@ import jdk.vm.ci.code.TargetDescription;
 /**
  * Configuration information for the HotSpot Graal runtime.
  */
-public interface HotSpotGraalRuntimeProvider extends GraalRuntime, RuntimeProvider, Group.Factory {
-
-    default TargetDescription getTarget() {
+public interface HotSpotGraalRuntimeProvider extends GraalRuntime, RuntimeProvider, Group.Factory
+{
+    default TargetDescription getTarget()
+    {
         return getHostBackend().getTarget();
     }
 
     HotSpotProviders getHostProviders();
 
     @Override
-    default String getName() {
+    default String getName()
+    {
         return getClass().getSimpleName();
     }
 

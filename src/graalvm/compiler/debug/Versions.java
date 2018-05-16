@@ -9,63 +9,81 @@ import java.util.HashMap;
 import java.util.Map;
 
 /** Avoid using directly. Only public for the needs of unit testing. */
-public final class Versions {
+public final class Versions
+{
     static final Versions VERSIONS;
-    static {
+    static
+    {
         String home = System.getProperty("java.home");
         VERSIONS = new Versions(home == null ? null : new File(home).toPath());
     }
 
     private final Map<Object, Object> versions;
 
-    public Versions(Path home) {
+    public Versions(Path home)
+    {
         Map<Object, Object> map = new HashMap<>();
-        ASSIGN: try {
+        ASSIGN: try
+        {
             Path info = findReleaseInfo(home);
-            if (info == null) {
+            if (info == null)
+            {
                 break ASSIGN;
             }
-            for (String line : Files.readAllLines(info)) {
+            for (String line : Files.readAllLines(info))
+            {
                 final String prefix = "SOURCE=";
-                if (line.startsWith(prefix)) {
-                    for (String versionInfo : line.substring(prefix.length()).replace('"', ' ').split(" ")) {
+                if (line.startsWith(prefix))
+                {
+                    for (String versionInfo : line.substring(prefix.length()).replace('"', ' ').split(" "))
+                    {
                         String[] idVersion = versionInfo.split(":");
-                        if (idVersion != null && idVersion.length == 2) {
+                        if (idVersion != null && idVersion.length == 2)
+                        {
                             map.put("version." + idVersion[0], idVersion[1]);
                         }
                     }
                     break ASSIGN;
                 }
             }
-        } catch (IOException ex) {
+        }
+        catch (IOException ex)
+        {
             // no versions file found
         }
         versions = Collections.unmodifiableMap(map);
     }
 
-    public Map<Object, Object> withVersions(Map<Object, Object> properties) {
-        if (properties == null) {
+    public Map<Object, Object> withVersions(Map<Object, Object> properties)
+    {
+        if (properties == null)
+        {
             return versions;
-        } else {
+        }
+        else
+        {
             properties.putAll(versions);
             return properties;
         }
     }
 
-    private static Path findReleaseInfo(Path jreDir) {
-        if (jreDir == null) {
+    private static Path findReleaseInfo(Path jreDir)
+    {
+        if (jreDir == null)
+        {
             return null;
         }
         Path releaseInJre = jreDir.resolve("release");
-        if (Files.exists(releaseInJre)) {
+        if (Files.exists(releaseInJre))
+        {
             return releaseInJre;
         }
         Path jdkDir = jreDir.getParent();
-        if (jdkDir == null) {
+        if (jdkDir == null)
+        {
             return null;
         }
         Path releaseInJdk = jdkDir.resolve("release");
         return Files.exists(releaseInJdk) ? releaseInJdk : null;
     }
-
 }

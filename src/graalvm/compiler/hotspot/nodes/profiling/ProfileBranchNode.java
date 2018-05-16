@@ -10,14 +10,16 @@ import graalvm.compiler.nodes.calc.ConditionalNode;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 @NodeInfo
-public class ProfileBranchNode extends ProfileWithNotificationNode {
+public class ProfileBranchNode extends ProfileWithNotificationNode
+{
     public static final NodeClass<ProfileBranchNode> TYPE = NodeClass.create(ProfileBranchNode.class);
 
     @OptionalInput ValueNode branchCondition;
     protected int bci;
     protected int targetBci;
 
-    public ProfileBranchNode(ResolvedJavaMethod method, int freqLog, int probabilityLog, ConditionalNode branchCondition, int bci, int targetBci) {
+    public ProfileBranchNode(ResolvedJavaMethod method, int freqLog, int probabilityLog, ConditionalNode branchCondition, int bci, int targetBci)
+    {
         super(TYPE, method, freqLog, probabilityLog);
         assert targetBci <= bci;
         this.branchCondition = branchCondition;
@@ -25,7 +27,8 @@ public class ProfileBranchNode extends ProfileWithNotificationNode {
         this.targetBci = targetBci;
     }
 
-    public ProfileBranchNode(ResolvedJavaMethod method, int freqLog, int probabilityLog, int bci, int targetBci) {
+    public ProfileBranchNode(ResolvedJavaMethod method, int freqLog, int probabilityLog, int bci, int targetBci)
+    {
         super(TYPE, method, freqLog, probabilityLog);
         assert targetBci <= bci;
         this.branchCondition = null;
@@ -33,25 +36,31 @@ public class ProfileBranchNode extends ProfileWithNotificationNode {
         this.targetBci = targetBci;
     }
 
-    public int bci() {
+    public int bci()
+    {
         return bci;
     }
 
-    public int targetBci() {
+    public int targetBci()
+    {
         return targetBci;
     }
 
-    public ValueNode branchCondition() {
+    public ValueNode branchCondition()
+    {
         return branchCondition;
     }
 
-    public boolean hasCondition() {
+    public boolean hasCondition()
+    {
         return branchCondition != null;
     }
 
     @Override
-    protected boolean canBeMergedWith(ProfileNode p) {
-        if (p instanceof ProfileBranchNode) {
+    protected boolean canBeMergedWith(ProfileNode p)
+    {
+        if (p instanceof ProfileBranchNode)
+        {
             ProfileBranchNode that = (ProfileBranchNode) p;
             return this.method.equals(that.method) && this.bci == that.bci;
         }
@@ -62,7 +71,8 @@ public class ProfileBranchNode extends ProfileWithNotificationNode {
      * Gathers all the {@link ProfileBranchNode}s that are inputs to the
      * {@linkplain StructuredGraph#getNodes() live nodes} in a given graph.
      */
-    public static NodeIterable<ProfileBranchNode> getProfileBranchNodes(StructuredGraph graph) {
+    public static NodeIterable<ProfileBranchNode> getProfileBranchNodes(StructuredGraph graph)
+    {
         return graph.getNodes().filter(ProfileBranchNode.class);
     }
 }

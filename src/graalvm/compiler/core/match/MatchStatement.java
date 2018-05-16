@@ -20,7 +20,8 @@ import jdk.vm.ci.meta.Value;
  * one or more {@link Node}s with a single {@link Value}.
  */
 
-public class MatchStatement {
+public class MatchStatement
+{
     private static final CounterKey MatchStatementSuccess = DebugContext.counter("MatchStatementSuccess");
 
     /**
@@ -44,7 +45,8 @@ public class MatchStatement {
      */
     private String[] arguments;
 
-    public MatchStatement(String name, MatchPattern pattern, MatchGenerator generator, String[] arguments) {
+    public MatchStatement(String name, MatchPattern pattern, MatchGenerator generator, String[] arguments)
+    {
         this.name = name;
         this.pattern = pattern;
         this.generatorMethod = generator;
@@ -60,21 +62,25 @@ public class MatchStatement {
      * @return true if the statement matched something and set a {@link ComplexMatchResult} to be
      *         evaluated by the NodeLIRBuilder.
      */
-    public boolean generate(NodeLIRBuilder builder, int index, Node node, List<Node> nodes) {
+    public boolean generate(NodeLIRBuilder builder, int index, Node node, List<Node> nodes)
+    {
         DebugContext debug = node.getDebug();
         assert index == nodes.indexOf(node);
         // Check that the basic shape matches
         Result result = pattern.matchShape(node, this);
-        if (result != Result.OK) {
+        if (result != Result.OK)
+        {
             return false;
         }
         // Now ensure that the other safety constraints are matched.
         MatchContext context = new MatchContext(builder, this, index, node, nodes);
         result = pattern.matchUsage(node, context);
-        if (result == Result.OK) {
+        if (result == Result.OK)
+        {
             // Invoke the generator method and set the result if it's non null.
             ComplexMatchResult value = generatorMethod.match(builder.getNodeMatchRules(), buildArgList(context));
-            if (value != null) {
+            if (value != null)
+            {
                 context.setResult(value);
                 MatchStatementSuccess.increment(debug);
                 DebugContext.counter("MatchStatement[%s]", getName()).increment(debug);
@@ -82,12 +88,16 @@ public class MatchStatement {
             }
             // The pattern matched but some other code generation constraint disallowed code
             // generation for the pattern.
-            if (LogVerbose.getValue(node.getOptions())) {
+            if (LogVerbose.getValue(node.getOptions()))
+            {
                 debug.log("while matching %s|%s %s %s returned null", context.getRoot().toString(Verbosity.Id), context.getRoot().getClass().getSimpleName(), getName(), generatorMethod.getName());
                 debug.log("with nodes %s", formatMatch(node));
             }
-        } else {
-            if (LogVerbose.getValue(node.getOptions()) && result.code != MatchResultCode.WRONG_CLASS) {
+        }
+        else
+        {
+            if (LogVerbose.getValue(node.getOptions()) && result.code != MatchResultCode.WRONG_CLASS)
+            {
                 debug.log("while matching %s|%s %s %s", context.getRoot().toString(Verbosity.Id), context.getRoot().getClass().getSimpleName(), getName(), result);
             }
         }
@@ -98,14 +108,20 @@ public class MatchStatement {
      * @param context
      * @return the Nodes captured by the match rule in the order expected by the generatorMethod
      */
-    private Object[] buildArgList(MatchContext context) {
+    private Object[] buildArgList(MatchContext context)
+    {
         Object[] result = new Object[arguments.length];
-        for (int i = 0; i < arguments.length; i++) {
-            if ("root".equals(arguments[i])) {
+        for (int i = 0; i < arguments.length; i++)
+        {
+            if ("root".equals(arguments[i]))
+            {
                 result[i] = context.getRoot();
-            } else {
+            }
+            else
+            {
                 result[i] = context.namedNode(arguments[i]);
-                if (result[i] == null) {
+                if (result[i] == null)
+                {
                     throw new GraalGraphError("Can't find named node %s", arguments[i]);
                 }
             }
@@ -113,20 +129,24 @@ public class MatchStatement {
         return result;
     }
 
-    public String formatMatch(Node root) {
+    public String formatMatch(Node root)
+    {
         return pattern.formatMatch(root);
     }
 
-    public MatchPattern getPattern() {
+    public MatchPattern getPattern()
+    {
         return pattern;
     }
 
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return pattern.toString();
     }
 }

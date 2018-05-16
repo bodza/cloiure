@@ -11,11 +11,13 @@ import graalvm.compiler.phases.common.LoweringPhase;
 import graalvm.compiler.phases.schedule.SchedulePhase;
 import graalvm.compiler.phases.tiers.LowTierContext;
 
-public class EconomyLowTier extends PhaseSuite<LowTierContext> {
-
-    public EconomyLowTier(OptionValues options) {
+public class EconomyLowTier extends PhaseSuite<LowTierContext>
+{
+    public EconomyLowTier(OptionValues options)
+    {
         CanonicalizerPhase canonicalizer = new CanonicalizerPhase();
-        if (ImmutableCode.getValue(options)) {
+        if (ImmutableCode.getValue(options))
+        {
             canonicalizer.disableReadCanonicalization();
         }
 

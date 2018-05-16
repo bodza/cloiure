@@ -19,8 +19,8 @@ import graalvm.compiler.nodes.virtual.VirtualObjectNode;
 /**
  * Container for state captured during a match.
  */
-public class MatchContext {
-
+public class MatchContext
+{
     private final Node root;
 
     private final List<Node> nodes;
@@ -37,17 +37,20 @@ public class MatchContext {
 
     private final NodeLIRBuilder builder;
 
-    private static class NamedNode {
+    private static class NamedNode
+    {
         final Class<? extends Node> type;
         final Node value;
 
-        NamedNode(Class<? extends Node> type, Node value) {
+        NamedNode(Class<? extends Node> type, Node value)
+        {
             this.type = type;
             this.value = value;
         }
     }
 
-    public MatchContext(NodeLIRBuilder builder, MatchStatement rule, int index, Node node, List<Node> nodes) {
+    public MatchContext(NodeLIRBuilder builder, MatchStatement rule, int index, Node node, List<Node> nodes)
+    {
         this.builder = builder;
         this.rule = rule;
         this.root = node;
@@ -57,40 +60,54 @@ public class MatchContext {
         startIndex = endIndex = index;
     }
 
-    public Node getRoot() {
+    public Node getRoot()
+    {
         return root;
     }
 
-    public Result captureNamedValue(String name, Class<? extends Node> type, Node value) {
-        if (namedNodes == null) {
+    public Result captureNamedValue(String name, Class<? extends Node> type, Node value)
+    {
+        if (namedNodes == null)
+        {
             namedNodes = EconomicMap.create(Equivalence.DEFAULT);
         }
         NamedNode current = namedNodes.get(name);
-        if (current == null) {
+        if (current == null)
+        {
             current = new NamedNode(type, value);
             namedNodes.put(name, current);
             return Result.OK;
-        } else {
-            if (current.value != value || current.type != type) {
+        }
+        else
+        {
+            if (current.value != value || current.type != type)
+            {
                 return Result.namedValueMismatch(value, rule.getPattern());
             }
             return Result.OK;
         }
     }
 
-    public Result validate() {
+    public Result validate()
+    {
         // Ensure that there's no unsafe work in between these operations.
-        for (int i = startIndex; i <= endIndex; i++) {
+        for (int i = startIndex; i <= endIndex; i++)
+        {
             Node node = nodes.get(i);
-            if (node instanceof VirtualObjectNode || node instanceof FloatingNode) {
+            if (node instanceof VirtualObjectNode || node instanceof FloatingNode)
+            {
                 // The order of evaluation of these nodes controlled by data dependence so they
                 // don't interfere with this match.
                 continue;
-            } else if ((consumed == null || !consumed.contains(node)) && node != root) {
-                if (LogVerbose.getValue(root.getOptions())) {
+            }
+            else if ((consumed == null || !consumed.contains(node)) && node != root)
+            {
+                if (LogVerbose.getValue(root.getOptions()))
+                {
                     DebugContext debug = root.getDebug();
                     debug.log("unexpected node %s", node);
-                    for (int j = startIndex; j <= endIndex; j++) {
+                    for (int j = startIndex; j <= endIndex; j++)
+                    {
                         Node theNode = nodes.get(j);
                         debug.log("%s(%s) %1s", (consumed != null && consumed.contains(theNode) || theNode == root) ? "*" : " ", theNode.getUsageCount(), theNode);
                     }
@@ -107,15 +124,19 @@ public class MatchContext {
      *
      * @param result
      */
-    public void setResult(ComplexMatchResult result) {
+    public void setResult(ComplexMatchResult result)
+    {
         ComplexMatchValue value = new ComplexMatchValue(result);
         DebugContext debug = root.getDebug();
-        if (debug.isLogEnabled()) {
+        if (debug.isLogEnabled())
+        {
             debug.log("matched %s %s", rule.getName(), rule.getPattern());
             debug.log("with nodes %s", rule.formatMatch(root));
         }
-        if (consumed != null) {
-            for (Node node : consumed) {
+        if (consumed != null)
+        {
+            for (Node node : consumed)
+            {
                 // All the interior nodes should be skipped during the normal doRoot calls in
                 // NodeLIRBuilder so mark them as interior matches. The root of the match will get a
                 // closure which will be evaluated to produce the final LIR.
@@ -130,21 +151,25 @@ public class MatchContext {
      *
      * @return Result.OK if the node can be safely consumed.
      */
-    public Result consume(Node node) {
+    public Result consume(Node node)
+    {
         assert MatchPattern.isSingleValueUser(node) : "should have already been checked";
 
         // Check NOT_IN_BLOCK first since that usually implies ALREADY_USED
         int index = nodes.indexOf(node);
-        if (index == -1) {
+        if (index == -1)
+        {
             return Result.notInBlock(node, rule.getPattern());
         }
 
-        if (builder.hasOperand(node)) {
+        if (builder.hasOperand(node))
+        {
             return Result.alreadyUsed(node, rule.getPattern());
         }
 
         startIndex = Math.min(startIndex, index);
-        if (consumed == null) {
+        if (consumed == null)
+        {
             consumed = new ArrayList<>(2);
         }
         consumed.add(node);
@@ -158,10 +183,13 @@ public class MatchContext {
      * @return the matched node
      * @throws GraalError is the named node doesn't exist.
      */
-    public Node namedNode(String name) {
-        if (namedNodes != null) {
+    public Node namedNode(String name)
+    {
+        if (namedNodes != null)
+        {
             NamedNode value = namedNodes.get(name);
-            if (value != null) {
+            if (value != null)
+            {
                 return value.value;
             }
         }
@@ -169,7 +197,8 @@ public class MatchContext {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return String.format("%s %s (%d, %d) consumed %s", rule, root, startIndex, endIndex, consumed != null ? Arrays.toString(consumed.toArray()) : "");
     }
 }

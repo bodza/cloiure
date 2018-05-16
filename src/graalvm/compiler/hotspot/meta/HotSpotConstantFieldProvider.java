@@ -12,33 +12,40 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 /**
  * Implements the default constant folding semantics for Java fields in the HotSpot VM.
  */
-public class HotSpotConstantFieldProvider extends JavaConstantFieldProvider {
-
+public class HotSpotConstantFieldProvider extends JavaConstantFieldProvider
+{
     private final GraalHotSpotVMConfig config;
 
-    public HotSpotConstantFieldProvider(GraalHotSpotVMConfig config, MetaAccessProvider metaAccess) {
+    public HotSpotConstantFieldProvider(GraalHotSpotVMConfig config, MetaAccessProvider metaAccess)
+    {
         super(metaAccess);
         this.config = config;
     }
 
     @Override
-    protected boolean isStableField(ResolvedJavaField field, ConstantFieldTool<?> tool) {
-        if (!config.foldStableValues) {
+    protected boolean isStableField(ResolvedJavaField field, ConstantFieldTool<?> tool)
+    {
+        if (!config.foldStableValues)
+        {
             return false;
         }
-        if (field.isStatic() && !isStaticFieldConstant(field, tool.getOptions())) {
+        if (field.isStatic() && !isStaticFieldConstant(field, tool.getOptions()))
+        {
             return false;
         }
 
-        if (((HotSpotResolvedJavaField) field).isStable()) {
+        if (((HotSpotResolvedJavaField) field).isStable())
+        {
             return true;
         }
         return super.isStableField(field, tool);
     }
 
     @Override
-    protected boolean isFinalField(ResolvedJavaField field, ConstantFieldTool<?> tool) {
-        if (field.isStatic() && !isStaticFieldConstant(field, tool.getOptions())) {
+    protected boolean isFinalField(ResolvedJavaField field, ConstantFieldTool<?> tool)
+    {
+        if (field.isStatic() && !isStaticFieldConstant(field, tool.getOptions()))
+        {
             return false;
         }
 
@@ -47,7 +54,8 @@ public class HotSpotConstantFieldProvider extends JavaConstantFieldProvider {
 
     private static final String SystemClassName = "Ljava/lang/System;";
 
-    protected boolean isStaticFieldConstant(ResolvedJavaField field, @SuppressWarnings("unused") OptionValues options) {
+    protected boolean isStaticFieldConstant(ResolvedJavaField field, @SuppressWarnings("unused") OptionValues options)
+    {
         ResolvedJavaType declaringClass = field.getDeclaringClass();
         return declaringClass.isInitialized() && !declaringClass.getName().equals(SystemClassName);
     }

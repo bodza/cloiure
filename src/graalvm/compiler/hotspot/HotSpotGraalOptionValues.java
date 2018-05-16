@@ -21,8 +21,8 @@ import jdk.vm.ci.common.InitTimer;
  * The {@link #HOTSPOT_OPTIONS} value contains the options values initialized in a HotSpot VM. The
  * values are set via system properties with the {@value #GRAAL_OPTION_PROPERTY_PREFIX} prefix.
  */
-public class HotSpotGraalOptionValues {
-
+public class HotSpotGraalOptionValues
+{
     /**
      * The name of the system property specifying a file containing extra Graal option settings.
      */
@@ -43,7 +43,8 @@ public class HotSpotGraalOptionValues {
     /**
      * Gets the system property assignment that would set the current value for a given option.
      */
-    public static String asSystemPropertySetting(OptionValues options, OptionKey<?> value) {
+    public static String asSystemPropertySetting(OptionValues options, OptionKey<?> value)
+    {
         return GRAAL_OPTION_PROPERTY_PREFIX + value.getName() + "=" + value.getValue(options);
     }
 
@@ -58,44 +59,61 @@ public class HotSpotGraalOptionValues {
      * file with {@link Properties#load(java.io.Reader)}.
      */
     @SuppressWarnings("try")
-    private static OptionValues initializeOptions() {
+    private static OptionValues initializeOptions()
+    {
         EconomicMap<OptionKey<?>, Object> values = OptionValues.newOptionMap();
-        try (InitTimer t = timer("InitializeOptions")) {
-
+        try (InitTimer t = timer("InitializeOptions"))
+        {
             Iterable<OptionDescriptors> loader = OptionsParser.getOptionsLoader();
             Map<String, String> savedProps = jdk.vm.ci.services.Services.getSavedProperties();
             String optionsFile = savedProps.get(GRAAL_OPTIONS_FILE_PROPERTY_NAME);
 
-            if (optionsFile != null) {
+            if (optionsFile != null)
+            {
                 File graalOptions = new File(optionsFile);
-                if (graalOptions.exists()) {
-                    try (FileReader fr = new FileReader(graalOptions)) {
+                if (graalOptions.exists())
+                {
+                    try (FileReader fr = new FileReader(graalOptions))
+                    {
                         Properties props = new Properties();
                         props.load(fr);
                         EconomicMap<String, String> optionSettings = EconomicMap.create();
-                        for (Map.Entry<Object, Object> e : props.entrySet()) {
+                        for (Map.Entry<Object, Object> e : props.entrySet())
+                        {
                             optionSettings.put((String) e.getKey(), (String) e.getValue());
                         }
-                        try {
+                        try
+                        {
                             OptionsParser.parseOptions(optionSettings, values, loader);
-                        } catch (Throwable e) {
+                        }
+                        catch (Throwable e)
+                        {
                             throw new InternalError("Error parsing an option from " + graalOptions, e);
                         }
-                    } catch (IOException e) {
+                    }
+                    catch (IOException e)
+                    {
                         throw new InternalError("Error reading " + graalOptions, e);
                     }
                 }
             }
 
             EconomicMap<String, String> optionSettings = EconomicMap.create();
-            for (Map.Entry<String, String> e : savedProps.entrySet()) {
+            for (Map.Entry<String, String> e : savedProps.entrySet())
+            {
                 String name = e.getKey();
-                if (name.startsWith(GRAAL_OPTION_PROPERTY_PREFIX)) {
-                    if (name.equals("graal.PrintFlags") || name.equals("graal.ShowFlags")) {
+                if (name.startsWith(GRAAL_OPTION_PROPERTY_PREFIX))
+                {
+                    if (name.equals("graal.PrintFlags") || name.equals("graal.ShowFlags"))
+                    {
                         System.err.println("The " + name + " option has been removed and will be ignored. Use -XX:+JVMCIPrintProperties instead.");
-                    } else if (name.equals(GRAAL_OPTIONS_FILE_PROPERTY_NAME) || name.equals(GRAAL_VERSION_PROPERTY_NAME)) {
+                    }
+                    else if (name.equals(GRAAL_OPTIONS_FILE_PROPERTY_NAME) || name.equals(GRAAL_VERSION_PROPERTY_NAME))
+                    {
                         // Ignore well known properties that do not denote an option
-                    } else {
+                    }
+                    else
+                    {
                         String value = e.getValue();
                         optionSettings.put(name.substring(GRAAL_OPTION_PROPERTY_PREFIX.length()), value);
                     }

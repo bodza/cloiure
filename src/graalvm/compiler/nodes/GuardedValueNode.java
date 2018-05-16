@@ -25,46 +25,58 @@ import jdk.vm.ci.meta.JavaKind;
  * A GuardedValueNode will only go away if its guard is null or {@link StructuredGraph#start()}.
  */
 @NodeInfo(cycles = CYCLES_0, size = SIZE_0)
-public final class GuardedValueNode extends FloatingGuardedNode implements LIRLowerable, Virtualizable, Canonicalizable, ValueProxy {
-
+public final class GuardedValueNode extends FloatingGuardedNode implements LIRLowerable, Virtualizable, Canonicalizable, ValueProxy
+{
     public static final NodeClass<GuardedValueNode> TYPE = NodeClass.create(GuardedValueNode.class);
     @Input ValueNode object;
 
-    public GuardedValueNode(ValueNode object, GuardingNode guard) {
+    public GuardedValueNode(ValueNode object, GuardingNode guard)
+    {
         super(TYPE, object.stamp(NodeView.DEFAULT), guard);
         this.object = object;
     }
 
-    public ValueNode object() {
+    public ValueNode object()
+    {
         return object;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool generator) {
-        if (object.getStackKind() != JavaKind.Void && object.getStackKind() != JavaKind.Illegal) {
+    public void generate(NodeLIRBuilderTool generator)
+    {
+        if (object.getStackKind() != JavaKind.Void && object.getStackKind() != JavaKind.Illegal)
+        {
             generator.setResult(this, generator.operand(object));
         }
     }
 
     @Override
-    public boolean inferStamp() {
+    public boolean inferStamp()
+    {
         return updateStamp(object().stamp(NodeView.DEFAULT));
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool) {
+    public void virtualize(VirtualizerTool tool)
+    {
         ValueNode alias = tool.getAlias(object());
-        if (alias instanceof VirtualObjectNode) {
+        if (alias instanceof VirtualObjectNode)
+        {
             tool.replaceWithVirtual((VirtualObjectNode) alias);
         }
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool) {
-        if (getGuard() == null) {
-            if (stamp(NodeView.DEFAULT).equals(object().stamp(NodeView.DEFAULT))) {
+    public Node canonical(CanonicalizerTool tool)
+    {
+        if (getGuard() == null)
+        {
+            if (stamp(NodeView.DEFAULT).equals(object().stamp(NodeView.DEFAULT)))
+            {
                 return object();
-            } else {
+            }
+            else
+            {
                 return PiNode.create(object(), stamp(NodeView.DEFAULT));
             }
         }
@@ -72,7 +84,8 @@ public final class GuardedValueNode extends FloatingGuardedNode implements LIRLo
     }
 
     @Override
-    public ValueNode getOriginalNode() {
+    public ValueNode getOriginalNode()
+    {
         return object;
     }
 }

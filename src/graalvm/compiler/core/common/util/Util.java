@@ -15,13 +15,14 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * The {@code Util} class contains a motley collection of utility methods used throughout the
  * compiler.
  */
-public class Util {
-
+public class Util
+{
     /**
      * Statically cast an object to an arbitrary Object type. Dynamically checked.
      */
     @SuppressWarnings("unchecked")
-    public static <T> T uncheckedCast(@SuppressWarnings("unused") Class<T> type, Object object) {
+    public static <T> T uncheckedCast(@SuppressWarnings("unused") Class<T> type, Object object)
+    {
         return (T) object;
     }
 
@@ -29,7 +30,8 @@ public class Util {
      * Statically cast an object to an arbitrary Object type. Dynamically checked.
      */
     @SuppressWarnings("unchecked")
-    public static <T> T uncheckedCast(Object object) {
+    public static <T> T uncheckedCast(Object object)
+    {
         return (T) object;
     }
 
@@ -44,9 +46,12 @@ public class Util {
      * @param filler the filler element that is used for the intermediate positions in case the list
      *            is shorter than pos
      */
-    public static <T> void atPutGrow(List<T> list, int pos, T x, T filler) {
-        if (list.size() < pos + 1) {
-            while (list.size() < pos + 1) {
+    public static <T> void atPutGrow(List<T> list, int pos, T x, T filler)
+    {
+        if (list.size() < pos + 1)
+        {
+            while (list.size() < pos + 1)
+            {
                 list.add(filler);
             }
             assert list.size() == pos + 1;
@@ -60,12 +65,15 @@ public class Util {
      * Prepends the String {@code indentation} to every line in String {@code lines}, including a
      * possibly non-empty line following the final newline.
      */
-    public static String indent(String lines, String indentation) {
-        if (lines.length() == 0) {
+    public static String indent(String lines, String indentation)
+    {
+        if (lines.length() == 0)
+        {
             return lines;
         }
         final String newLine = "\n";
-        if (lines.endsWith(newLine)) {
+        if (lines.endsWith(newLine))
+        {
             return indentation + (lines.substring(0, lines.length() - 1)).replace(newLine, newLine + indentation) + newLine;
         }
         return indentation + lines.replace(newLine, newLine + indentation);
@@ -74,8 +82,10 @@ public class Util {
     /**
      * Returns the zero value for a given numeric kind.
      */
-    public static JavaConstant zero(JavaKind kind) {
-        switch (kind) {
+    public static JavaConstant zero(JavaKind kind)
+    {
+        switch (kind)
+        {
             case Boolean:
                 return JavaConstant.FALSE;
             case Byte:
@@ -100,8 +110,10 @@ public class Util {
     /**
      * Returns the one value for a given numeric kind.
      */
-    public static JavaConstant one(JavaKind kind) {
-        switch (kind) {
+    public static JavaConstant one(JavaKind kind)
+    {
+        switch (kind)
+        {
             case Boolean:
                 return JavaConstant.TRUE;
             case Byte:
@@ -126,7 +138,8 @@ public class Util {
     /**
      * Print a HotSpot-style inlining message to the console.
      */
-    public static void printInlining(final ResolvedJavaMethod method, final int bci, final int inliningDepth, final boolean success, final String msg, final Object... args) {
+    public static void printInlining(final ResolvedJavaMethod method, final int bci, final int inliningDepth, final boolean success, final String msg, final Object... args)
+    {
         StringBuilder sb = new StringBuilder();
         // 1234567
         sb.append("        ");     // print timestamp
@@ -136,14 +149,16 @@ public class Util {
         sb.append(String.format("%c%c%c%c%c ", ' ', method.isSynchronized() ? 's' : ' ', ' ', ' ', method.isNative() ? 'n' : ' '));
         sb.append("     ");        // more indent
         sb.append("    ");         // initial inlining indent
-        for (int i = 0; i < inliningDepth; i++) {
+        for (int i = 0; i < inliningDepth; i++)
+        {
             sb.append("  ");
         }
         sb.append(String.format("@ %d  %s   %s%s", bci, methodName(method), success ? "" : "not inlining ", String.format(msg, args)));
         TTY.println(sb.toString());
     }
 
-    private static String methodName(ResolvedJavaMethod method) {
+    private static String methodName(ResolvedJavaMethod method)
+    {
         return method.format("%H.%n(%p):%r") + " (" + method.getCodeSize() + " bytes)";
     }
 
@@ -151,7 +166,8 @@ public class Util {
      * Calls {@link AccessibleObject#setAccessible(boolean)} on {@code field} with the value
      * {@code flag}.
      */
-    public static void setAccessible(Field field, boolean flag) {
+    public static void setAccessible(Field field, boolean flag)
+    {
         field.setAccessible(flag);
     }
 
@@ -159,7 +175,8 @@ public class Util {
      * Calls {@link AccessibleObject#setAccessible(boolean)} on {@code executable} with the value
      * {@code flag}.
      */
-    public static void setAccessible(Executable executable, boolean flag) {
+    public static void setAccessible(Executable executable, boolean flag)
+    {
         executable.setAccessible(flag);
     }
 }

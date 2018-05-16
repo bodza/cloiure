@@ -18,7 +18,8 @@ import jdk.vm.ci.meta.JavaConstant;
  * Writes well known garbage values to registers.
  */
 @Opcode("ZAP_REGISTER")
-public final class AMD64ZapRegistersOp extends AMD64LIRInstruction implements SaveRegistersOp {
+public final class AMD64ZapRegistersOp extends AMD64LIRInstruction implements SaveRegistersOp
+{
     public static final LIRInstructionClass<AMD64ZapRegistersOp> TYPE = LIRInstructionClass.create(AMD64ZapRegistersOp.class);
 
     /**
@@ -31,34 +32,41 @@ public final class AMD64ZapRegistersOp extends AMD64LIRInstruction implements Sa
      */
     protected final JavaConstant[] zapValues;
 
-    public AMD64ZapRegistersOp(Register[] zappedRegisters, JavaConstant[] zapValues) {
+    public AMD64ZapRegistersOp(Register[] zappedRegisters, JavaConstant[] zapValues)
+    {
         super(TYPE);
         this.zappedRegisters = zappedRegisters;
         this.zapValues = zapValues;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
-        for (int i = 0; i < zappedRegisters.length; i++) {
+    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
+        for (int i = 0; i < zappedRegisters.length; i++)
+        {
             Register reg = zappedRegisters[i];
-            if (reg != null) {
+            if (reg != null)
+            {
                 AMD64Move.const2reg(crb, masm, reg, zapValues[i]);
             }
         }
     }
 
     @Override
-    public boolean supportsRemove() {
+    public boolean supportsRemove()
+    {
         return true;
     }
 
     @Override
-    public int remove(EconomicSet<Register> doNotSave) {
+    public int remove(EconomicSet<Register> doNotSave)
+    {
         return prune(doNotSave, zappedRegisters);
     }
 
     @Override
-    public RegisterSaveLayout getMap(FrameMap frameMap) {
+    public RegisterSaveLayout getMap(FrameMap frameMap)
+    {
         return new RegisterSaveLayout(new Register[0], new int[0]);
     }
 }

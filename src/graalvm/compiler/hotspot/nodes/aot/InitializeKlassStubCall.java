@@ -31,7 +31,8 @@ import jdk.vm.ci.meta.Value;
  * A call to the VM via a regular stub.
  */
 @NodeInfo(allowedUsageTypes = {InputType.Memory}, cycles = CYCLES_UNKNOWN, size = SIZE_16)
-public class InitializeKlassStubCall extends AbstractMemoryCheckpoint implements LIRLowerable, Canonicalizable, DeoptimizingNode.DeoptBefore, MemoryCheckpoint.Single {
+public class InitializeKlassStubCall extends AbstractMemoryCheckpoint implements LIRLowerable, Canonicalizable, DeoptimizingNode.DeoptBefore, MemoryCheckpoint.Single
+{
     public static final NodeClass<InitializeKlassStubCall> TYPE = NodeClass.create(InitializeKlassStubCall.class);
 
     @OptionalInput protected ValueNode value;
@@ -39,7 +40,8 @@ public class InitializeKlassStubCall extends AbstractMemoryCheckpoint implements
     @OptionalInput(InputType.State) protected FrameState stateBefore;
     protected Constant constant;
 
-    protected InitializeKlassStubCall(ValueNode value, ValueNode string) {
+    protected InitializeKlassStubCall(ValueNode value, ValueNode string)
+    {
         super(TYPE, value.stamp(NodeView.DEFAULT));
         this.value = value;
         this.string = string;
@@ -49,15 +51,18 @@ public class InitializeKlassStubCall extends AbstractMemoryCheckpoint implements
     public static native KlassPointer initializeKlass(KlassPointer value, Object string);
 
     @Override
-    public Node canonical(CanonicalizerTool tool) {
-        if (value != null) {
+    public Node canonical(CanonicalizerTool tool)
+    {
+        if (value != null)
+        {
             constant = GraphUtil.foldIfConstantAndRemove(this, value);
         }
         return this;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         assert constant != null : "Expected the value to fold: " + value;
         Value stringValue = gen.operand(string);
         LIRFrameState fs = gen.state(this);
@@ -68,22 +73,26 @@ public class InitializeKlassStubCall extends AbstractMemoryCheckpoint implements
     }
 
     @Override
-    public boolean canDeoptimize() {
+    public boolean canDeoptimize()
+    {
         return true;
     }
 
     @Override
-    public LocationIdentity getLocationIdentity() {
+    public LocationIdentity getLocationIdentity()
+    {
         return LocationIdentity.any();
     }
 
     @Override
-    public FrameState stateBefore() {
+    public FrameState stateBefore()
+    {
         return stateBefore;
     }
 
     @Override
-    public void setStateBefore(FrameState f) {
+    public void setStateBefore(FrameState f)
+    {
         updateUsages(stateBefore, f);
         stateBefore = f;
     }

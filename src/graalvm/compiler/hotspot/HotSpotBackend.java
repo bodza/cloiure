@@ -64,16 +64,15 @@ import jdk.vm.ci.runtime.JVMCICompiler;
 /**
  * HotSpot specific backend.
  */
-public abstract class HotSpotBackend extends Backend implements FrameMap.ReferenceMapBuilderFactory {
-
-    public static class Options {
-        // @formatter:off
+public abstract class HotSpotBackend extends Backend implements FrameMap.ReferenceMapBuilderFactory
+{
+    public static class Options
+    {
         @Option(help = "Use Graal arithmetic stubs instead of HotSpot stubs where possible")
         public static final OptionKey<Boolean> GraalArithmeticStubs = new OptionKey<>(false); // GR-8276
         @Option(help = "Enables instruction profiling on assembler level. Valid values are a comma separated list of supported instructions." +
                         " Compare with subclasses of Assembler.InstructionCounter.", type = OptionType.Debug)
         public static final OptionKey<String> ASMInstructionProfiling = new OptionKey<>(null);
-        // @formatter:on
     }
 
     /**
@@ -119,8 +118,7 @@ public abstract class HotSpotBackend extends Backend implements FrameMap.Referen
     /**
      * @see AESCryptSubstitutions#decryptBlockStub(ForeignCallDescriptor, Word, Word, Pointer)
      */
-    public static final ForeignCallDescriptor DECRYPT_BLOCK_WITH_ORIGINAL_KEY = new ForeignCallDescriptor("decrypt_block_with_original_key", void.class, Word.class, Word.class, Pointer.class,
-                    Pointer.class);
+    public static final ForeignCallDescriptor DECRYPT_BLOCK_WITH_ORIGINAL_KEY = new ForeignCallDescriptor("decrypt_block_with_original_key", void.class, Word.class, Word.class, Pointer.class, Pointer.class);
 
     /**
      * @see CipherBlockChainingSubstitutions#crypt
@@ -135,15 +133,15 @@ public abstract class HotSpotBackend extends Backend implements FrameMap.Referen
     /**
      * @see CipherBlockChainingSubstitutions#crypt
      */
-    public static final ForeignCallDescriptor DECRYPT_WITH_ORIGINAL_KEY = new ForeignCallDescriptor("decrypt_with_original_key", void.class, Word.class, Word.class, Pointer.class, Pointer.class,
-                    int.class, Pointer.class);
+    public static final ForeignCallDescriptor DECRYPT_WITH_ORIGINAL_KEY = new ForeignCallDescriptor("decrypt_with_original_key", void.class, Word.class, Word.class, Pointer.class, Pointer.class, int.class, Pointer.class);
 
     /**
      * @see BigIntegerSubstitutions#multiplyToLen
      */
     public static final ForeignCallDescriptor MULTIPLY_TO_LEN = new ForeignCallDescriptor("multiplyToLen", void.class, Word.class, int.class, Word.class, int.class, Word.class, int.class);
 
-    public static void multiplyToLenStub(Word xAddr, int xlen, Word yAddr, int ylen, Word zAddr, int zLen) {
+    public static void multiplyToLenStub(Word xAddr, int xlen, Word yAddr, int ylen, Word zAddr, int zLen)
+    {
         multiplyToLenStub(HotSpotBackend.MULTIPLY_TO_LEN, xAddr, xlen, yAddr, ylen, zAddr, zLen);
     }
 
@@ -155,7 +153,8 @@ public abstract class HotSpotBackend extends Backend implements FrameMap.Referen
      */
     public static final ForeignCallDescriptor MUL_ADD = new ForeignCallDescriptor("mulAdd", int.class, Word.class, Word.class, int.class, int.class, int.class);
 
-    public static int mulAddStub(Word inAddr, Word outAddr, int newOffset, int len, int k) {
+    public static int mulAddStub(Word inAddr, Word outAddr, int newOffset, int len, int k)
+    {
         return mulAddStub(HotSpotBackend.MUL_ADD, inAddr, outAddr, newOffset, len, k);
     }
 
@@ -165,10 +164,10 @@ public abstract class HotSpotBackend extends Backend implements FrameMap.Referen
     /**
      * @see BigIntegerSubstitutions#implMontgomeryMultiply
      */
-    public static final ForeignCallDescriptor MONTGOMERY_MULTIPLY = new ForeignCallDescriptor("implMontgomeryMultiply", void.class, Word.class, Word.class, Word.class, int.class, long.class,
-                    Word.class);
+    public static final ForeignCallDescriptor MONTGOMERY_MULTIPLY = new ForeignCallDescriptor("implMontgomeryMultiply", void.class, Word.class, Word.class, Word.class, int.class, long.class, Word.class);
 
-    public static void implMontgomeryMultiply(Word aAddr, Word bAddr, Word nAddr, int len, long inv, Word productAddr) {
+    public static void implMontgomeryMultiply(Word aAddr, Word bAddr, Word nAddr, int len, long inv, Word productAddr)
+    {
         implMontgomeryMultiply(HotSpotBackend.MONTGOMERY_MULTIPLY, aAddr, bAddr, nAddr, len, inv, productAddr);
     }
 
@@ -180,7 +179,8 @@ public abstract class HotSpotBackend extends Backend implements FrameMap.Referen
      */
     public static final ForeignCallDescriptor MONTGOMERY_SQUARE = new ForeignCallDescriptor("implMontgomerySquare", void.class, Word.class, Word.class, int.class, long.class, Word.class);
 
-    public static void implMontgomerySquare(Word aAddr, Word nAddr, int len, long inv, Word productAddr) {
+    public static void implMontgomerySquare(Word aAddr, Word nAddr, int len, long inv, Word productAddr)
+    {
         implMontgomerySquare(HotSpotBackend.MONTGOMERY_SQUARE, aAddr, nAddr, len, inv, productAddr);
     }
 
@@ -192,7 +192,8 @@ public abstract class HotSpotBackend extends Backend implements FrameMap.Referen
      */
     public static final ForeignCallDescriptor SQUARE_TO_LEN = new ForeignCallDescriptor("implSquareToLen", void.class, Word.class, int.class, Word.class, int.class);
 
-    public static void implSquareToLen(Word xAddr, int len, Word zAddr, int zLen) {
+    public static void implSquareToLen(Word xAddr, int len, Word zAddr, int zLen)
+    {
         implSquareToLen(SQUARE_TO_LEN, xAddr, len, zAddr, zLen);
     }
 
@@ -204,7 +205,8 @@ public abstract class HotSpotBackend extends Backend implements FrameMap.Referen
      */
     public static final ForeignCallDescriptor SHA_IMPL_COMPRESS = new ForeignCallDescriptor("shaImplCompress", void.class, Word.class, Object.class);
 
-    public static void shaImplCompressStub(Word bufAddr, Object state) {
+    public static void shaImplCompressStub(Word bufAddr, Object state)
+    {
         shaImplCompressStub(HotSpotBackend.SHA_IMPL_COMPRESS, bufAddr, state);
     }
 
@@ -216,7 +218,8 @@ public abstract class HotSpotBackend extends Backend implements FrameMap.Referen
      */
     public static final ForeignCallDescriptor SHA2_IMPL_COMPRESS = new ForeignCallDescriptor("sha2ImplCompress", void.class, Word.class, Object.class);
 
-    public static void sha2ImplCompressStub(Word bufAddr, Object state) {
+    public static void sha2ImplCompressStub(Word bufAddr, Object state)
+    {
         sha2ImplCompressStub(HotSpotBackend.SHA2_IMPL_COMPRESS, bufAddr, state);
     }
 
@@ -228,7 +231,8 @@ public abstract class HotSpotBackend extends Backend implements FrameMap.Referen
      */
     public static final ForeignCallDescriptor SHA5_IMPL_COMPRESS = new ForeignCallDescriptor("sha5ImplCompress", void.class, Word.class, Object.class);
 
-    public static void sha5ImplCompressStub(Word bufAddr, Object state) {
+    public static void sha5ImplCompressStub(Word bufAddr, Object state)
+    {
         sha5ImplCompressStub(HotSpotBackend.SHA5_IMPL_COMPRESS, bufAddr, state);
     }
 
@@ -240,7 +244,8 @@ public abstract class HotSpotBackend extends Backend implements FrameMap.Referen
      */
     public static final ForeignCallDescriptor UNSAFE_ARRAYCOPY = new ForeignCallDescriptor("unsafe_arraycopy", void.class, Word.class, Word.class, Word.class);
 
-    public static void unsafeArraycopy(Word srcAddr, Word dstAddr, Word size) {
+    public static void unsafeArraycopy(Word srcAddr, Word dstAddr, Word size)
+    {
         unsafeArraycopyStub(HotSpotBackend.UNSAFE_ARRAYCOPY, srcAddr, dstAddr, size);
     }
 
@@ -292,8 +297,7 @@ public abstract class HotSpotBackend extends Backend implements FrameMap.Referen
     /**
      * @see ResolveConstantStubCall
      */
-    public static final ForeignCallDescriptor RESOLVE_METHOD_BY_SYMBOL_AND_LOAD_COUNTERS = new ForeignCallDescriptor("resolve_method_by_symbol_and_load_counters", Word.class, Word.class, Word.class,
-                    Word.class);
+    public static final ForeignCallDescriptor RESOLVE_METHOD_BY_SYMBOL_AND_LOAD_COUNTERS = new ForeignCallDescriptor("resolve_method_by_symbol_and_load_counters", Word.class, Word.class, Word.class, Word.class);
 
     /**
      * Tiered support.
@@ -301,12 +305,14 @@ public abstract class HotSpotBackend extends Backend implements FrameMap.Referen
     public static final ForeignCallDescriptor INVOCATION_EVENT = new ForeignCallDescriptor("invocation_event", void.class, MethodCountersPointer.class);
     public static final ForeignCallDescriptor BACKEDGE_EVENT = new ForeignCallDescriptor("backedge_event", void.class, MethodCountersPointer.class, int.class, int.class);
 
-    public HotSpotBackend(HotSpotGraalRuntimeProvider runtime, HotSpotProviders providers) {
+    public HotSpotBackend(HotSpotGraalRuntimeProvider runtime, HotSpotProviders providers)
+    {
         super(providers);
         this.runtime = runtime;
     }
 
-    public HotSpotGraalRuntimeProvider getRuntime() {
+    public HotSpotGraalRuntimeProvider getRuntime()
+    {
         return runtime;
     }
 
@@ -317,7 +323,8 @@ public abstract class HotSpotBackend extends Backend implements FrameMap.Referen
      * @param jvmciRuntime
      * @param options
      */
-    public void completeInitialization(HotSpotJVMCIRuntime jvmciRuntime, OptionValues options) {
+    public void completeInitialization(HotSpotJVMCIRuntime jvmciRuntime, OptionValues options)
+    {
     }
 
     /**
@@ -326,26 +333,35 @@ public abstract class HotSpotBackend extends Backend implements FrameMap.Referen
      * @param lir the LIR to examine
      * @return the registers that are defined by or used as temps for any instruction in {@code lir}
      */
-    protected final EconomicSet<Register> gatherDestroyedCallerRegisters(LIR lir) {
+    protected final EconomicSet<Register> gatherDestroyedCallerRegisters(LIR lir)
+    {
         final EconomicSet<Register> destroyedRegisters = EconomicSet.create(Equivalence.IDENTITY);
-        ValueConsumer defConsumer = new ValueConsumer() {
-
+        ValueConsumer defConsumer = new ValueConsumer()
+        {
             @Override
-            public void visitValue(Value value, OperandMode mode, EnumSet<OperandFlag> flags) {
-                if (ValueUtil.isRegister(value)) {
+            public void visitValue(Value value, OperandMode mode, EnumSet<OperandFlag> flags)
+            {
+                if (ValueUtil.isRegister(value))
+                {
                     final Register reg = ValueUtil.asRegister(value);
                     destroyedRegisters.add(reg);
                 }
             }
         };
-        for (AbstractBlockBase<?> block : lir.codeEmittingOrder()) {
-            if (block == null) {
+        for (AbstractBlockBase<?> block : lir.codeEmittingOrder())
+        {
+            if (block == null)
+            {
                 continue;
             }
-            for (LIRInstruction op : lir.getLIRforBlock(block)) {
-                if (op instanceof LabelOp) {
+            for (LIRInstruction op : lir.getLIRforBlock(block))
+            {
+                if (op instanceof LabelOp)
+                {
                     // Don't consider this as a definition
-                } else {
+                }
+                else
+                {
                     op.visitEachTemp(defConsumer);
                     op.visitEachOutput(defConsumer);
                 }
@@ -370,46 +386,57 @@ public abstract class HotSpotBackend extends Backend implements FrameMap.Referen
      * @param frameMap used to {@linkplain FrameMap#offsetForStackSlot(StackSlot) convert} a virtual
      *            slot to a frame slot index
      */
-    protected void updateStub(Stub stub, EconomicSet<Register> destroyedRegisters, EconomicMap<LIRFrameState, SaveRegistersOp> calleeSaveInfo, FrameMap frameMap) {
+    protected void updateStub(Stub stub, EconomicSet<Register> destroyedRegisters, EconomicMap<LIRFrameState, SaveRegistersOp> calleeSaveInfo, FrameMap frameMap)
+    {
         stub.initDestroyedCallerRegisters(destroyedRegisters);
 
         MapCursor<LIRFrameState, SaveRegistersOp> cursor = calleeSaveInfo.getEntries();
-        while (cursor.advance()) {
+        while (cursor.advance())
+        {
             SaveRegistersOp save = cursor.getValue();
-            if (save.supportsRemove()) {
+            if (save.supportsRemove())
+            {
                 save.remove(destroyedRegisters);
             }
-            if (cursor.getKey() != LIRFrameState.NO_STATE) {
+            if (cursor.getKey() != LIRFrameState.NO_STATE)
+            {
                 cursor.getKey().debugInfo().setCalleeSaveInfo(save.getMap(frameMap));
             }
         }
     }
 
     @Override
-    public HotSpotProviders getProviders() {
+    public HotSpotProviders getProviders()
+    {
         return (HotSpotProviders) super.getProviders();
     }
 
     @Override
-    public SuitesProvider getSuites() {
+    public SuitesProvider getSuites()
+    {
         return getProviders().getSuites();
     }
 
-    protected void profileInstructions(LIR lir, CompilationResultBuilder crb) {
-        if (HotSpotBackend.Options.ASMInstructionProfiling.getValue(lir.getOptions()) != null) {
+    protected void profileInstructions(LIR lir, CompilationResultBuilder crb)
+    {
+        if (HotSpotBackend.Options.ASMInstructionProfiling.getValue(lir.getOptions()) != null)
+        {
             HotSpotInstructionProfiling.countInstructions(lir, crb.asm);
         }
     }
 
     @Override
-    public CompiledCode createCompiledCode(ResolvedJavaMethod method, CompilationRequest compilationRequest, CompilationResult compResult) {
+    public CompiledCode createCompiledCode(ResolvedJavaMethod method, CompilationRequest compilationRequest, CompilationResult compResult)
+    {
         HotSpotCompilationRequest compRequest = compilationRequest instanceof HotSpotCompilationRequest ? (HotSpotCompilationRequest) compilationRequest : null;
         return HotSpotCompiledCodeBuilder.createCompiledCode(getCodeCache(), method, compRequest, compResult);
     }
 
     @Override
-    public CompilationIdentifier getCompilationIdentifier(ResolvedJavaMethod resolvedJavaMethod) {
-        if (resolvedJavaMethod instanceof HotSpotResolvedJavaMethod) {
+    public CompilationIdentifier getCompilationIdentifier(ResolvedJavaMethod resolvedJavaMethod)
+    {
+        if (resolvedJavaMethod instanceof HotSpotResolvedJavaMethod)
+        {
             HotSpotCompilationRequest request = new HotSpotCompilationRequest((HotSpotResolvedJavaMethod) resolvedJavaMethod, JVMCICompiler.INVOCATION_ENTRY_BCI, 0L);
             return new HotSpotCompilationIdentifier(request);
         }

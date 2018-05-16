@@ -25,31 +25,40 @@ import jdk.vm.ci.meta.JavaKind;
  * Count the number of trailing zeros using the {@code tzcntq} or {@code tzcntl} instructions.
  */
 @NodeInfo(cycles = CYCLES_2, size = SIZE_1)
-public final class AMD64CountTrailingZerosNode extends UnaryNode implements ArithmeticLIRLowerable {
+public final class AMD64CountTrailingZerosNode extends UnaryNode implements ArithmeticLIRLowerable
+{
     public static final NodeClass<AMD64CountTrailingZerosNode> TYPE = NodeClass.create(AMD64CountTrailingZerosNode.class);
 
-    public AMD64CountTrailingZerosNode(ValueNode value) {
+    public AMD64CountTrailingZerosNode(ValueNode value)
+    {
         super(TYPE, computeStamp(value.stamp(NodeView.DEFAULT), value), value);
         assert value.getStackKind() == JavaKind.Int || value.getStackKind() == JavaKind.Long;
     }
 
     @Override
-    public Stamp foldStamp(Stamp newStamp) {
+    public Stamp foldStamp(Stamp newStamp)
+    {
         return computeStamp(newStamp, getValue());
     }
 
-    static Stamp computeStamp(Stamp newStamp, ValueNode value) {
+    static Stamp computeStamp(Stamp newStamp, ValueNode value)
+    {
         assert newStamp.isCompatible(value.stamp(NodeView.DEFAULT));
         IntegerStamp valueStamp = (IntegerStamp) newStamp;
         return StampTool.stampForTrailingZeros(valueStamp);
     }
 
-    public static ValueNode tryFold(ValueNode value) {
-        if (value.isConstant()) {
+    public static ValueNode tryFold(ValueNode value)
+    {
+        if (value.isConstant())
+        {
             JavaConstant c = value.asJavaConstant();
-            if (value.getStackKind() == JavaKind.Int) {
+            if (value.getStackKind() == JavaKind.Int)
+            {
                 return ConstantNode.forInt(Integer.numberOfTrailingZeros(c.asInt()));
-            } else {
+            }
+            else
+            {
                 return ConstantNode.forInt(Long.numberOfTrailingZeros(c.asLong()));
             }
         }
@@ -57,13 +66,15 @@ public final class AMD64CountTrailingZerosNode extends UnaryNode implements Arit
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue) {
+    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    {
         ValueNode folded = tryFold(forValue);
         return folded != null ? folded : this;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool builder, ArithmeticLIRGeneratorTool gen) {
+    public void generate(NodeLIRBuilderTool builder, ArithmeticLIRGeneratorTool gen)
+    {
         builder.setResult(this, ((AMD64ArithmeticLIRGeneratorTool) gen).emitCountTrailingZeros(builder.operand(getValue())));
     }
 }

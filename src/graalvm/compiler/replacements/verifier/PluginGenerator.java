@@ -25,64 +25,79 @@ import javax.lang.model.type.WildcardType;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
-public class PluginGenerator {
-
+public class PluginGenerator
+{
     private final Map<Element, List<GeneratedPlugin>> plugins;
 
-    public PluginGenerator() {
+    public PluginGenerator()
+    {
         this.plugins = new HashMap<>();
     }
 
-    public void addPlugin(GeneratedPlugin plugin) {
+    public void addPlugin(GeneratedPlugin plugin)
+    {
         Element topLevel = getTopLevelClass(plugin.intrinsicMethod);
         List<GeneratedPlugin> list = plugins.get(topLevel);
-        if (list == null) {
+        if (list == null)
+        {
             list = new ArrayList<>();
             plugins.put(topLevel, list);
         }
         list.add(plugin);
     }
 
-    public void generateAll(ProcessingEnvironment env) {
-        for (Entry<Element, List<GeneratedPlugin>> entry : plugins.entrySet()) {
+    public void generateAll(ProcessingEnvironment env)
+    {
+        for (Entry<Element, List<GeneratedPlugin>> entry : plugins.entrySet())
+        {
             disambiguateNames(entry.getValue());
             createPluginFactory(env, entry.getKey(), entry.getValue());
         }
     }
 
-    private static Element getTopLevelClass(Element element) {
+    private static Element getTopLevelClass(Element element)
+    {
         Element prev = element;
         Element enclosing = element.getEnclosingElement();
-        while (enclosing != null && enclosing.getKind() != ElementKind.PACKAGE) {
+        while (enclosing != null && enclosing.getKind() != ElementKind.PACKAGE)
+        {
             prev = enclosing;
             enclosing = enclosing.getEnclosingElement();
         }
         return prev;
     }
 
-    private static void disambiguateWith(List<GeneratedPlugin> plugins, Function<GeneratedPlugin, String> genName) {
+    private static void disambiguateWith(List<GeneratedPlugin> plugins, Function<GeneratedPlugin, String> genName)
+    {
         plugins.sort(Comparator.comparing(GeneratedPlugin::getPluginName));
 
         GeneratedPlugin current = plugins.get(0);
         String currentName = current.getPluginName();
 
-        for (int i = 1; i < plugins.size(); i++) {
+        for (int i = 1; i < plugins.size(); i++)
+        {
             GeneratedPlugin next = plugins.get(i);
-            if (currentName.equals(next.getPluginName())) {
-                if (current != null) {
+            if (currentName.equals(next.getPluginName()))
+            {
+                if (current != null)
+                {
                     current.setPluginName(genName.apply(current));
                     current = null;
                 }
                 next.setPluginName(genName.apply(next));
-            } else {
+            }
+            else
+            {
                 current = next;
                 currentName = current.getPluginName();
             }
         }
     }
 
-    private static void appendSimpleTypeName(StringBuilder ret, TypeMirror type) {
-        switch (type.getKind()) {
+    private static void appendSimpleTypeName(StringBuilder ret, TypeMirror type)
+    {
+        switch (type.getKind())
+        {
             case DECLARED:
                 DeclaredType declared = (DeclaredType) type;
                 TypeElement element = (TypeElement) declared.asElement();
@@ -103,11 +118,14 @@ public class PluginGenerator {
         }
     }
 
-    private static void disambiguateNames(List<GeneratedPlugin> plugins) {
+    private static void disambiguateNames(List<GeneratedPlugin> plugins)
+    {
         // if we have more than one method with the same name, disambiguate with the argument types
-        disambiguateWith(plugins, plugin -> {
+        disambiguateWith(plugins, plugin ->
+        {
             StringBuilder ret = new StringBuilder(plugin.getPluginName());
-            for (VariableElement param : plugin.intrinsicMethod.getParameters()) {
+            for (VariableElement param : plugin.intrinsicMethod.getParameters())
+            {
                 ret.append('_');
                 appendSimpleTypeName(ret, param.asType());
             }
@@ -115,27 +133,29 @@ public class PluginGenerator {
         });
 
         // since we're using simple names for argument types, we could still have a collision
-        disambiguateWith(plugins, new Function<GeneratedPlugin, String>() {
-
+        disambiguateWith(plugins, new Function<GeneratedPlugin, String>()
+        {
             private int idx = 0;
 
             @Override
-            public String apply(GeneratedPlugin plugin) {
+            public String apply(GeneratedPlugin plugin)
+            {
                 return plugin.getPluginName() + "_" + (idx++);
             }
         });
     }
 
-    private static void createPluginFactory(ProcessingEnvironment env, Element topLevelClass, List<GeneratedPlugin> plugins) {
+    private static void createPluginFactory(ProcessingEnvironment env, Element topLevelClass, List<GeneratedPlugin> plugins)
+    {
         PackageElement pkg = (PackageElement) topLevelClass.getEnclosingElement();
 
         String genClassName = "PluginFactory_" + topLevelClass.getSimpleName();
 
-        try {
+        try
+        {
             JavaFileObject factory = env.getFiler().createSourceFile(pkg.getQualifiedName() + "." + genClassName, topLevelClass);
-            try (PrintWriter out = new PrintWriter(factory.openWriter())) {
-                out.printf("// CheckStyle: stop header check\n");
-                out.printf("// CheckStyle: stop line length check\n");
+            try (PrintWriter out = new PrintWriter(factory.openWriter()))
+            {
                 out.printf("// GENERATED CONTENT - DO NOT EDIT\n");
                 out.printf("// GENERATORS: %s, %s\n", VerifierAnnotationProcessor.class.getName(), PluginGenerator.class.getName());
                 out.printf("package %s;\n", pkg.getQualifiedName());
@@ -144,7 +164,8 @@ public class PluginGenerator {
                 out.printf("\n");
                 out.printf("@ServiceProvider(NodeIntrinsicPluginFactory.class)\n");
                 out.printf("public class %s implements NodeIntrinsicPluginFactory {\n", genClassName);
-                for (GeneratedPlugin plugin : plugins) {
+                for (GeneratedPlugin plugin : plugins)
+                {
                     out.printf("\n");
                     plugin.generate(env, out);
                 }
@@ -152,12 +173,15 @@ public class PluginGenerator {
                 createPluginFactoryMethod(out, plugins);
                 out.printf("}\n");
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             env.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
         }
     }
 
-    protected static void createImports(PrintWriter out, List<GeneratedPlugin> plugins) {
+    protected static void createImports(PrintWriter out, List<GeneratedPlugin> plugins)
+    {
         out.printf("import jdk.vm.ci.meta.ResolvedJavaMethod;\n");
         out.printf("import graalvm.compiler.serviceprovider.ServiceProvider;\n");
         out.printf("\n");
@@ -170,21 +194,26 @@ public class PluginGenerator {
         out.printf("import graalvm.compiler.nodes.graphbuilderconf.NodeIntrinsicPluginFactory;\n");
 
         HashSet<String> extra = new HashSet<>();
-        for (GeneratedPlugin plugin : plugins) {
+        for (GeneratedPlugin plugin : plugins)
+        {
             plugin.extraImports(extra);
         }
-        if (!extra.isEmpty()) {
+        if (!extra.isEmpty())
+        {
             out.printf("\n");
-            for (String i : extra) {
+            for (String i : extra)
+            {
                 out.printf("import %s;\n", i);
             }
         }
     }
 
-    private static void createPluginFactoryMethod(PrintWriter out, List<GeneratedPlugin> plugins) {
+    private static void createPluginFactoryMethod(PrintWriter out, List<GeneratedPlugin> plugins)
+    {
         out.printf("    @Override\n");
         out.printf("    public void registerPlugins(InvocationPlugins plugins, InjectionProvider injection) {\n");
-        for (GeneratedPlugin plugin : plugins) {
+        for (GeneratedPlugin plugin : plugins)
+        {
             plugin.register(out);
         }
         out.printf("    }\n");

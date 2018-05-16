@@ -35,8 +35,8 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * Used by a {@link GraphBuilderPlugin} to interface with an object that parses the bytecode of a
  * single {@linkplain #getMethod() method} as part of building a {@linkplain #getGraph() graph} .
  */
-public interface GraphBuilderContext extends GraphBuilderTool {
-
+public interface GraphBuilderContext extends GraphBuilderTool
+{
     /**
      * Pushes a given value to the frame state stack using an explicit kind. This should be used
      * when {@code value.getJavaKind()} is different from the kind that the bytecode instruction
@@ -57,15 +57,19 @@ public interface GraphBuilderContext extends GraphBuilderTool {
      *            {@code value.getJavaKind()} kind is used when type checking this operation.
      * @return a node equivalent to {@code value} in the graph
      */
-    default <T extends ValueNode> T add(T value) {
-        if (value.graph() != null) {
+    default <T extends ValueNode> T add(T value)
+    {
+        if (value.graph() != null)
+        {
             assert !(value instanceof StateSplit) || ((StateSplit) value).stateAfter() != null;
             return value;
         }
         T equivalentValue = append(value);
-        if (equivalentValue instanceof StateSplit) {
+        if (equivalentValue instanceof StateSplit)
+        {
             StateSplit stateSplit = (StateSplit) equivalentValue;
-            if (stateSplit.stateAfter() == null && stateSplit.hasSideEffect()) {
+            if (stateSplit.stateAfter() == null && stateSplit.hasSideEffect())
+            {
                 setStateAfter(stateSplit);
             }
         }
@@ -81,26 +85,34 @@ public interface GraphBuilderContext extends GraphBuilderTool {
      *            {@code value.getJavaKind()} kind is used when type checking this operation.
      * @return a node equivalent to {@code value} in the graph
      */
-    default <T extends ValueNode> T addWithInputs(T value) {
-        if (value.graph() != null) {
+    default <T extends ValueNode> T addWithInputs(T value)
+    {
+        if (value.graph() != null)
+        {
             assert !(value instanceof StateSplit) || ((StateSplit) value).stateAfter() != null;
             return value;
         }
         T equivalentValue = append(value);
-        if (equivalentValue instanceof StateSplit) {
+        if (equivalentValue instanceof StateSplit)
+        {
             StateSplit stateSplit = (StateSplit) equivalentValue;
-            if (stateSplit.stateAfter() == null && stateSplit.hasSideEffect()) {
+            if (stateSplit.stateAfter() == null && stateSplit.hasSideEffect())
+            {
                 setStateAfter(stateSplit);
             }
         }
         return equivalentValue;
     }
 
-    default ValueNode addNonNullCast(ValueNode value) {
+    default ValueNode addNonNullCast(ValueNode value)
+    {
         AbstractPointerStamp valueStamp = (AbstractPointerStamp) value.stamp(NodeView.DEFAULT);
-        if (valueStamp.nonNull()) {
+        if (valueStamp.nonNull())
+        {
             return value;
-        } else {
+        }
+        else
+        {
             LogicNode isNull = add(IsNullNode.create(value));
             FixedGuardNode fixedGuard = add(new FixedGuardNode(isNull, DeoptimizationReason.NullCheckException, DeoptimizationAction.None, true));
             Stamp newStamp = valueStamp.improveWith(StampFactory.objectNonNull());
@@ -117,12 +129,15 @@ public interface GraphBuilderContext extends GraphBuilderTool {
      * @param value the value to add to the graph and push to the stack
      * @return a node equivalent to {@code value} in the graph
      */
-    default <T extends ValueNode> T addPush(JavaKind kind, T value) {
+    default <T extends ValueNode> T addPush(JavaKind kind, T value)
+    {
         T equivalentValue = value.graph() != null ? value : append(value);
         push(kind, equivalentValue);
-        if (equivalentValue instanceof StateSplit) {
+        if (equivalentValue instanceof StateSplit)
+        {
             StateSplit stateSplit = (StateSplit) equivalentValue;
-            if (stateSplit.stateAfter() == null && stateSplit.hasSideEffect()) {
+            if (stateSplit.stateAfter() == null && stateSplit.hasSideEffect())
+            {
                 setStateAfter(stateSplit);
             }
         }
@@ -176,9 +191,11 @@ public interface GraphBuilderContext extends GraphBuilderTool {
      * Gets the first ancestor parsing context that is not parsing a {@linkplain #parsingIntrinsic()
      * intrinsic}.
      */
-    default GraphBuilderContext getNonIntrinsicAncestor() {
+    default GraphBuilderContext getNonIntrinsicAncestor()
+    {
         GraphBuilderContext ancestor = getParent();
-        while (ancestor != null && ancestor.parsingIntrinsic()) {
+        while (ancestor != null && ancestor.parsingIntrinsic())
+        {
             ancestor = ancestor.getParent();
         }
         return ancestor;
@@ -209,7 +226,8 @@ public interface GraphBuilderContext extends GraphBuilderTool {
      */
     JavaType getInvokeReturnType();
 
-    default StampPair getInvokeReturnStamp(Assumptions assumptions) {
+    default StampPair getInvokeReturnStamp(Assumptions assumptions)
+    {
         JavaType returnType = getInvokeReturnType();
         return StampFactory.forDeclaredType(assumptions, returnType, false);
     }
@@ -218,10 +236,12 @@ public interface GraphBuilderContext extends GraphBuilderTool {
      * Gets the inline depth of this context. A return value of 0 implies that this is the context
      * for the parse root.
      */
-    default int getDepth() {
+    default int getDepth()
+    {
         GraphBuilderContext parent = getParent();
         int result = 0;
-        while (parent != null) {
+        while (parent != null)
+        {
             result++;
             parent = parent.getParent();
         }
@@ -233,7 +253,8 @@ public interface GraphBuilderContext extends GraphBuilderTool {
      * by an intrinsic.
      */
     @Override
-    default boolean parsingIntrinsic() {
+    default boolean parsingIntrinsic()
+    {
         return getIntrinsic() != null;
     }
 
@@ -245,7 +266,8 @@ public interface GraphBuilderContext extends GraphBuilderTool {
 
     BailoutException bailout(String string);
 
-    default ValueNode nullCheckedValue(ValueNode value) {
+    default ValueNode nullCheckedValue(ValueNode value)
+    {
         return nullCheckedValue(value, InvalidateReprofile);
     }
 
@@ -253,8 +275,10 @@ public interface GraphBuilderContext extends GraphBuilderTool {
      * Gets a version of a given value that has a {@linkplain StampTool#isPointerNonNull(ValueNode)
      * non-null} stamp.
      */
-    default ValueNode nullCheckedValue(ValueNode value, DeoptimizationAction action) {
-        if (!StampTool.isPointerNonNull(value)) {
+    default ValueNode nullCheckedValue(ValueNode value, DeoptimizationAction action)
+    {
+        if (!StampTool.isPointerNonNull(value))
+        {
             LogicNode condition = getGraph().unique(IsNullNode.create(value));
             ObjectStamp receiverStamp = (ObjectStamp) value.stamp(NodeView.DEFAULT);
             Stamp stamp = receiverStamp.join(objectNonNull());
@@ -271,8 +295,8 @@ public interface GraphBuilderContext extends GraphBuilderTool {
     }
 
     @SuppressWarnings("unused")
-    default void notifyReplacedCall(ResolvedJavaMethod targetMethod, ConstantNode node) {
-
+    default void notifyReplacedCall(ResolvedJavaMethod targetMethod, ConstantNode node)
+    {
     }
 
     /**
@@ -282,12 +306,13 @@ public interface GraphBuilderContext extends GraphBuilderTool {
      * {@linkplain #getParent()}. Examples of such approaches are partial evaluation and incremental
      * inlining.
      */
-    interface ExternalInliningContext {
+    interface ExternalInliningContext
+    {
         int getInlinedDepth();
     }
 
-    default ExternalInliningContext getExternalInliningContext() {
+    default ExternalInliningContext getExternalInliningContext()
+    {
         return null;
     }
-
 }

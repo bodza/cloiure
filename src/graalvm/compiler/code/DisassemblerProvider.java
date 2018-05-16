@@ -6,8 +6,8 @@ import jdk.vm.ci.code.InstalledCode;
 /**
  * Interface providing capability for disassembling machine code.
  */
-public interface DisassemblerProvider {
-
+public interface DisassemblerProvider
+{
     /**
      * Gets a textual disassembly of a given compilation result.
      *
@@ -16,7 +16,8 @@ public interface DisassemblerProvider {
      * @return a non-zero length string containing a disassembly of {@code compResult} or null it
      *         could not be disassembled
      */
-    default String disassembleCompiledCode(CodeCacheProvider codeCache, CompilationResult compResult) {
+    default String disassembleCompiledCode(CodeCacheProvider codeCache, CompilationResult compResult)
+    {
         return null;
     }
 
@@ -31,7 +32,8 @@ public interface DisassemblerProvider {
      *         {@code installedCode} is {@link InstalledCode#isValid() invalid} or it could not be
      *         disassembled for some other reason
      */
-    default String disassembleInstalledCode(CodeCacheProvider codeCache, CompilationResult compResult, InstalledCode installedCode) {
+    default String disassembleInstalledCode(CodeCacheProvider codeCache, CompilationResult compResult, InstalledCode installedCode)
+    {
         return null;
     }
 

@@ -27,8 +27,8 @@ import jdk.vm.ci.meta.Value;
  * optional.
  */
 @NodeInfo
-public class AMD64AddressNode extends AddressNode implements Simplifiable, LIRLowerable {
-
+public class AMD64AddressNode extends AddressNode implements Simplifiable, LIRLowerable
+{
     public static final NodeClass<AMD64AddressNode> TYPE = NodeClass.create(AMD64AddressNode.class);
 
     @OptionalInput private ValueNode base;
@@ -38,28 +38,36 @@ public class AMD64AddressNode extends AddressNode implements Simplifiable, LIRLo
 
     private int displacement;
 
-    public AMD64AddressNode(ValueNode base) {
+    public AMD64AddressNode(ValueNode base)
+    {
         this(base, null);
     }
 
-    public AMD64AddressNode(ValueNode base, ValueNode index) {
+    public AMD64AddressNode(ValueNode base, ValueNode index)
+    {
         super(TYPE);
         this.base = base;
         this.index = index;
         this.scale = Scale.Times1;
     }
 
-    public void canonicalizeIndex(SimplifierTool tool) {
-        if (index instanceof AddNode && ((IntegerStamp) index.stamp(NodeView.DEFAULT)).getBits() == 64) {
+    public void canonicalizeIndex(SimplifierTool tool)
+    {
+        if (index instanceof AddNode && ((IntegerStamp) index.stamp(NodeView.DEFAULT)).getBits() == 64)
+        {
             AddNode add = (AddNode) index;
             ValueNode valX = add.getX();
-            if (valX instanceof PhiNode) {
+            if (valX instanceof PhiNode)
+            {
                 PhiNode phi = (PhiNode) valX;
-                if (phi.merge() instanceof LoopBeginNode) {
+                if (phi.merge() instanceof LoopBeginNode)
+                {
                     LoopBeginNode loopNode = (LoopBeginNode) phi.merge();
-                    if (!loopNode.isSimpleLoop()) {
+                    if (!loopNode.isSimpleLoop())
+                    {
                         ValueNode valY = add.getY();
-                        if (valY instanceof ConstantNode) {
+                        if (valY instanceof ConstantNode)
+                        {
                             int addBy = valY.asJavaConstant().asInt();
                             displacement = displacement + scale.value * addBy;
                             replaceFirstInput(index, phi);
@@ -72,7 +80,8 @@ public class AMD64AddressNode extends AddressNode implements Simplifiable, LIRLo
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         LIRGeneratorTool tool = gen.getLIRGeneratorTool();
 
         AllocatableValue baseValue = base == null ? Value.ILLEGAL : tool.asAllocatable(gen.operand(base));
@@ -80,14 +89,22 @@ public class AMD64AddressNode extends AddressNode implements Simplifiable, LIRLo
 
         AllocatableValue baseReference = LIRKind.derivedBaseFromValue(baseValue);
         AllocatableValue indexReference;
-        if (index == null) {
+        if (index == null)
+        {
             indexReference = null;
-        } else if (scale.equals(Scale.Times1)) {
+        }
+        else if (scale.equals(Scale.Times1))
+        {
             indexReference = LIRKind.derivedBaseFromValue(indexValue);
-        } else {
-            if (LIRKind.isValue(indexValue)) {
+        }
+        else
+        {
+            if (LIRKind.isValue(indexValue))
+            {
                 indexReference = null;
-            } else {
+            }
+            else
+            {
                 indexReference = Value.ILLEGAL;
             }
         }
@@ -97,54 +114,66 @@ public class AMD64AddressNode extends AddressNode implements Simplifiable, LIRLo
     }
 
     @Override
-    public ValueNode getBase() {
+    public ValueNode getBase()
+    {
         return base;
     }
 
-    public void setBase(ValueNode base) {
+    public void setBase(ValueNode base)
+    {
         // allow modification before inserting into the graph
-        if (isAlive()) {
+        if (isAlive())
+        {
             updateUsages(this.base, base);
         }
         this.base = base;
     }
 
     @Override
-    public ValueNode getIndex() {
+    public ValueNode getIndex()
+    {
         return index;
     }
 
-    public void setIndex(ValueNode index) {
+    public void setIndex(ValueNode index)
+    {
         // allow modification before inserting into the graph
-        if (isAlive()) {
+        if (isAlive())
+        {
             updateUsages(this.index, index);
         }
         this.index = index;
     }
 
-    public Scale getScale() {
+    public Scale getScale()
+    {
         return scale;
     }
 
-    public void setScale(Scale scale) {
+    public void setScale(Scale scale)
+    {
         this.scale = scale;
     }
 
-    public int getDisplacement() {
+    public int getDisplacement()
+    {
         return displacement;
     }
 
-    public void setDisplacement(int displacement) {
+    public void setDisplacement(int displacement)
+    {
         this.displacement = displacement;
     }
 
     @Override
-    public long getMaxConstantDisplacement() {
+    public long getMaxConstantDisplacement()
+    {
         return displacement;
     }
 
     @Override
-    public void simplify(SimplifierTool tool) {
+    public void simplify(SimplifierTool tool)
+    {
         canonicalizeIndex(tool);
     }
 }

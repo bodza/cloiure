@@ -25,34 +25,41 @@ import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.Value;
 
 @NodeInfo(cycles = CYCLES_4, size = SIZE_4)
-public class LoadMethodCountersIndirectlyNode extends FloatingNode implements Canonicalizable, LIRLowerable {
-
+public class LoadMethodCountersIndirectlyNode extends FloatingNode implements Canonicalizable, LIRLowerable
+{
     public static final NodeClass<LoadMethodCountersIndirectlyNode> TYPE = NodeClass.create(LoadMethodCountersIndirectlyNode.class);
 
     @OptionalInput protected ValueNode value;
     protected Constant constant;
 
-    public LoadMethodCountersIndirectlyNode(ValueNode value) {
+    public LoadMethodCountersIndirectlyNode(ValueNode value)
+    {
         super(TYPE, MethodCountersPointerStamp.methodCounters());
         this.value = value;
         this.constant = null;
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool) {
-        if (value != null) {
+    public Node canonical(CanonicalizerTool tool)
+    {
+        if (value != null)
+        {
             constant = GraphUtil.foldIfConstantAndRemove(this, value);
         }
         return this;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         assert constant != null : "Expected the value to fold: " + value;
         Value result;
-        if (constant instanceof HotSpotMetaspaceConstant) {
+        if (constant instanceof HotSpotMetaspaceConstant)
+        {
             result = ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitLoadMetaspaceAddress(constant, HotSpotConstantLoadAction.LOAD_COUNTERS);
-        } else {
+        }
+        else
+        {
             throw new PermanentBailoutException("Unsupported constant type: " + constant);
         }
         gen.setResult(this, result);

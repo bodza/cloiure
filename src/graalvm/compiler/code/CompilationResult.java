@@ -36,28 +36,31 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * Represents the output from compiling a method, including the compiled machine code, associated
  * data and references, relocation information, deoptimization information, etc.
  */
-public class CompilationResult {
-
+public class CompilationResult
+{
     /**
      * Provides extra information about instructions or data at specific positions in
      * {@link CompilationResult#getTargetCode()}. This is optional information that can be used to
      * enhance a disassembly of the code.
      */
-    public abstract static class CodeAnnotation {
-
+    public abstract static class CodeAnnotation
+    {
         public final int position;
 
-        public CodeAnnotation(int position) {
+        public CodeAnnotation(int position)
+        {
             this.position = position;
         }
 
         @Override
-        public final int hashCode() {
+        public final int hashCode()
+        {
             throw new UnsupportedOperationException("hashCode");
         }
 
         @Override
-        public String toString() {
+        public String toString()
+        {
             return identityHashCodeString(this);
         }
 
@@ -68,23 +71,28 @@ public class CompilationResult {
     /**
      * A string comment about one or more instructions at a specific position in the code.
      */
-    public static final class CodeComment extends CodeAnnotation {
-
+    public static final class CodeComment extends CodeAnnotation
+    {
         public final String value;
 
-        public CodeComment(int position, String comment) {
+        public CodeComment(int position, String comment)
+        {
             super(position);
             this.value = comment;
         }
 
         @Override
-        public boolean equals(Object obj) {
-            if (this == obj) {
+        public boolean equals(Object obj)
+        {
+            if (this == obj)
+            {
                 return true;
             }
-            if (obj instanceof CodeComment) {
+            if (obj instanceof CodeComment)
+            {
                 CodeComment that = (CodeComment) obj;
-                if (this.position == that.position && this.value.equals(that.value)) {
+                if (this.position == that.position && this.value.equals(that.value))
+                {
                     return true;
                 }
             }
@@ -92,7 +100,8 @@ public class CompilationResult {
         }
 
         @Override
-        public String toString() {
+        public String toString()
+        {
             return getClass().getSimpleName() + "@" + position + ": " + value;
         }
     }
@@ -106,8 +115,8 @@ public class CompilationResult {
      * The table is indexed by the contiguous range of integers from {@link #low} to {@link #high}
      * inclusive.
      */
-    public static final class JumpTable extends CodeAnnotation {
-
+    public static final class JumpTable extends CodeAnnotation
+    {
         /**
          * The low value in the key range (inclusive).
          */
@@ -123,7 +132,8 @@ public class CompilationResult {
          */
         public final int entrySize;
 
-        public JumpTable(int position, int low, int high, int entrySize) {
+        public JumpTable(int position, int low, int high, int entrySize)
+        {
             super(position);
             this.low = low;
             this.high = high;
@@ -131,13 +141,17 @@ public class CompilationResult {
         }
 
         @Override
-        public boolean equals(Object obj) {
-            if (this == obj) {
+        public boolean equals(Object obj)
+        {
+            if (this == obj)
+            {
                 return true;
             }
-            if (obj instanceof JumpTable) {
+            if (obj instanceof JumpTable)
+            {
                 JumpTable that = (JumpTable) obj;
-                if (this.position == that.position && this.entrySize == that.entrySize && this.low == that.low && this.high == that.high) {
+                if (this.position == that.position && this.entrySize == that.entrySize && this.low == that.low && this.high == that.high)
+                {
                     return true;
                 }
             }
@@ -145,7 +159,8 @@ public class CompilationResult {
         }
 
         @Override
-        public String toString() {
+        public String toString()
+        {
             return getClass().getSimpleName() + "@" + position + ": [" + low + " .. " + high + "]";
         }
     }
@@ -203,50 +218,60 @@ public class CompilationResult {
 
     private boolean isImmutablePIC;
 
-    public CompilationResult(CompilationIdentifier compilationId) {
+    public CompilationResult(CompilationIdentifier compilationId)
+    {
         this(compilationId, compilationId.toString(CompilationIdentifier.Verbosity.NAME), false);
     }
 
-    public CompilationResult(CompilationIdentifier compilationId, String name) {
+    public CompilationResult(CompilationIdentifier compilationId, String name)
+    {
         this(compilationId, name, false);
     }
 
-    public CompilationResult(CompilationIdentifier compilationId, boolean isImmutablePIC) {
+    public CompilationResult(CompilationIdentifier compilationId, boolean isImmutablePIC)
+    {
         this(compilationId, null, isImmutablePIC);
     }
 
-    public CompilationResult(CompilationIdentifier compilationId, String name, boolean isImmutablePIC) {
+    public CompilationResult(CompilationIdentifier compilationId, String name, boolean isImmutablePIC)
+    {
         this.compilationId = compilationId;
         this.name = name;
         this.isImmutablePIC = isImmutablePIC;
     }
 
-    public CompilationResult(String name) {
+    public CompilationResult(String name)
+    {
         this(null, name);
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         // CompilationResult instances should not be used as hash map keys
         throw new UnsupportedOperationException("hashCode");
     }
 
     @Override
-    public String toString() {
-        if (methods != null) {
+    public String toString()
+    {
+        if (methods != null)
+        {
             return getClass().getName() + "[" + methods[0].format("%H.%n(%p)%r") + "]";
         }
         return identityHashCodeString(this);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
             return true;
         }
-        if (obj != null && obj.getClass() == getClass()) {
+        if (obj != null && obj.getClass() == getClass())
+        {
             CompilationResult that = (CompilationResult) obj;
-            // @formatter:off
             if (this.entryBCI == that.entryBCI &&
                 Objects.equals(this.customStackArea, that.customStackArea) &&
                 this.totalFrameSize == that.totalFrameSize &&
@@ -260,10 +285,10 @@ public class CompilationResult {
                 Objects.equals(this.infopoints, that.infopoints) &&
                 Objects.equals(this.marks,  that.marks) &&
                 Arrays.equals(this.assumptions, that.assumptions) &&
-                Arrays.equals(targetCode, that.targetCode)) {
+                Arrays.equals(targetCode, that.targetCode))
+            {
                 return true;
             }
-            // @formatter:on
         }
         return false;
     }
@@ -271,14 +296,16 @@ public class CompilationResult {
     /**
      * @return the entryBCI
      */
-    public int getEntryBCI() {
+    public int getEntryBCI()
+    {
         return entryBCI;
     }
 
     /**
      * @param entryBCI the entryBCI to set
      */
-    public void setEntryBCI(int entryBCI) {
+    public void setEntryBCI(int entryBCI)
+    {
         checkOpen();
         this.entryBCI = entryBCI;
     }
@@ -286,7 +313,8 @@ public class CompilationResult {
     /**
      * Sets the assumptions made during compilation.
      */
-    public void setAssumptions(Assumption[] assumptions) {
+    public void setAssumptions(Assumption[] assumptions)
+    {
         this.assumptions = assumptions;
     }
 
@@ -295,7 +323,8 @@ public class CompilationResult {
      *
      * The caller must not modify the contents of the returned array.
      */
-    public Assumption[] getAssumptions() {
+    public Assumption[] getAssumptions()
+    {
         return assumptions;
     }
 
@@ -305,15 +334,20 @@ public class CompilationResult {
      * @param rootMethod the root method of the compilation
      * @param inlinedMethods the methods inlined during compilation
      */
-    public void setMethods(ResolvedJavaMethod rootMethod, Collection<ResolvedJavaMethod> inlinedMethods) {
+    public void setMethods(ResolvedJavaMethod rootMethod, Collection<ResolvedJavaMethod> inlinedMethods)
+    {
         checkOpen();
         assert rootMethod != null;
         assert inlinedMethods != null;
-        if (inlinedMethods.contains(rootMethod)) {
+        if (inlinedMethods.contains(rootMethod))
+        {
             methods = inlinedMethods.toArray(new ResolvedJavaMethod[inlinedMethods.size()]);
-            for (int i = 0; i < methods.length; i++) {
-                if (methods[i].equals(rootMethod)) {
-                    if (i != 0) {
+            for (int i = 0; i < methods.length; i++)
+            {
+                if (methods[i].equals(rootMethod))
+                {
+                    if (i != 0)
+                    {
                         ResolvedJavaMethod tmp = methods[0];
                         methods[0] = methods[i];
                         methods[i] = tmp;
@@ -321,11 +355,14 @@ public class CompilationResult {
                     break;
                 }
             }
-        } else {
+        }
+        else
+        {
             methods = new ResolvedJavaMethod[1 + inlinedMethods.size()];
             methods[0] = rootMethod;
             int i = 1;
-            for (ResolvedJavaMethod m : inlinedMethods) {
+            for (ResolvedJavaMethod m : inlinedMethods)
+            {
                 methods[i++] = m;
             }
         }
@@ -340,7 +377,8 @@ public class CompilationResult {
      *         methods whose bytecodes were used as input to the compilation with the first element
      *         being the root method of the compilation
      */
-    public ResolvedJavaMethod[] getMethods() {
+    public ResolvedJavaMethod[] getMethods()
+    {
         return methods;
     }
 
@@ -350,8 +388,10 @@ public class CompilationResult {
      *
      * @param accessedFields the collected set of fields accessed during compilation
      */
-    public void setFields(EconomicSet<ResolvedJavaField> accessedFields) {
-        if (accessedFields != null) {
+    public void setFields(EconomicSet<ResolvedJavaField> accessedFields)
+    {
+        if (accessedFields != null)
+        {
             fields = accessedFields.toArray(new ResolvedJavaField[accessedFields.size()]);
         }
     }
@@ -365,20 +405,24 @@ public class CompilationResult {
      * @return {@code null} if the compilation did not record fields dependencies otherwise the
      *         fields that were accessed from bytecodes were used as input to the compilation.
      */
-    public ResolvedJavaField[] getFields() {
+    public ResolvedJavaField[] getFields()
+    {
         return fields;
     }
 
-    public void setBytecodeSize(int bytecodeSize) {
+    public void setBytecodeSize(int bytecodeSize)
+    {
         checkOpen();
         this.bytecodeSize = bytecodeSize;
     }
 
-    public int getBytecodeSize() {
+    public int getBytecodeSize()
+    {
         return bytecodeSize;
     }
 
-    public DataSection getDataSection() {
+    public DataSection getDataSection()
+    {
         return dataSection;
     }
 
@@ -388,7 +432,8 @@ public class CompilationResult {
      *
      * @return the frame size
      */
-    public int getTotalFrameSize() {
+    public int getTotalFrameSize()
+    {
         assert totalFrameSize != -1 : "frame size not yet initialized!";
         return totalFrameSize;
     }
@@ -399,21 +444,25 @@ public class CompilationResult {
      *
      * @param size the size of the frame in bytes
      */
-    public void setTotalFrameSize(int size) {
+    public void setTotalFrameSize(int size)
+    {
         checkOpen();
         totalFrameSize = size;
     }
 
-    public int getMaxInterpreterFrameSize() {
+    public int getMaxInterpreterFrameSize()
+    {
         return maxInterpreterFrameSize;
     }
 
-    public void setMaxInterpreterFrameSize(int maxInterpreterFrameSize) {
+    public void setMaxInterpreterFrameSize(int maxInterpreterFrameSize)
+    {
         checkOpen();
         this.maxInterpreterFrameSize = maxInterpreterFrameSize;
     }
 
-    public boolean isImmutablePIC() {
+    public boolean isImmutablePIC()
+    {
         return this.isImmutablePIC;
     }
 
@@ -423,7 +472,8 @@ public class CompilationResult {
      * @param code the machine code generated
      * @param size the size of the machine code
      */
-    public void setTargetCode(byte[] code, int size) {
+    public void setTargetCode(byte[] code, int size)
+    {
         checkOpen();
         targetCode = code;
         targetCodeSize = size;
@@ -437,7 +487,8 @@ public class CompilationResult {
      * @param codePos the position in the code that needs to be patched
      * @param ref the reference that should be inserted in the code
      */
-    public void recordDataPatch(int codePos, Reference ref) {
+    public void recordDataPatch(int codePos, Reference ref)
+    {
         checkOpen();
         assert codePos >= 0 && ref != null;
         dataPatches.add(new DataPatch(codePos, ref));
@@ -452,7 +503,8 @@ public class CompilationResult {
      * @param ref the reference that should be inserted in the code
      * @param note a note attached to data patch for use by post-processing tools
      */
-    public void recordDataPatchWithNote(int codePos, Reference ref, Object note) {
+    public void recordDataPatchWithNote(int codePos, Reference ref, Object note)
+    {
         assert codePos >= 0 && ref != null;
         dataPatches.add(new DataPatch(codePos, ref, note));
     }
@@ -466,7 +518,8 @@ public class CompilationResult {
      * @param debugInfo the debug info for the call
      * @param direct specifies if this is a {@linkplain Call#direct direct} call
      */
-    public void recordCall(int codePos, int size, InvokeTarget target, DebugInfo debugInfo, boolean direct) {
+    public void recordCall(int codePos, int size, InvokeTarget target, DebugInfo debugInfo, boolean direct)
+    {
         checkOpen();
         final Call call = new Call(target, codePos, size, direct, debugInfo);
         addInfopoint(call);
@@ -478,7 +531,8 @@ public class CompilationResult {
      * @param codePos the position in the code that is covered by the handler
      * @param handlerPos the position of the handler
      */
-    public void recordExceptionHandler(int codePos, int handlerPos) {
+    public void recordExceptionHandler(int codePos, int handlerPos)
+    {
         checkOpen();
         assert validateExceptionHandlerAdd(codePos, handlerPos) : String.format("Duplicate exception handler for pc 0x%x handlerPos 0x%x", codePos, handlerPos);
         exceptionHandlers.add(new ExceptionHandler(codePos, handlerPos));
@@ -491,7 +545,8 @@ public class CompilationResult {
      * @param handlerPos
      * @return true if the validation is successful
      */
-    private boolean validateExceptionHandlerAdd(int codePos, int handlerPos) {
+    private boolean validateExceptionHandlerAdd(int codePos, int handlerPos)
+    {
         ExceptionHandler exHandler = getExceptionHandlerForCodePos(codePos);
         return exHandler == null || exHandler.handlerPos == handlerPos;
     }
@@ -502,9 +557,12 @@ public class CompilationResult {
      * @param codePos position to search for
      * @return first matching ExceptionHandler
      */
-    private ExceptionHandler getExceptionHandlerForCodePos(int codePos) {
-        for (ExceptionHandler h : exceptionHandlers) {
-            if (h.pcOffset == codePos) {
+    private ExceptionHandler getExceptionHandlerForCodePos(int codePos)
+    {
+        for (ExceptionHandler h : exceptionHandlers)
+        {
+            if (h.pcOffset == codePos)
+            {
                 return h;
             }
         }
@@ -517,7 +575,8 @@ public class CompilationResult {
      * @param codePos the position of the infopoint in the code array
      * @param debugInfo the debug info for the infopoint
      */
-    public void recordInfopoint(int codePos, DebugInfo debugInfo, InfopointReason reason) {
+    public void recordInfopoint(int codePos, DebugInfo debugInfo, InfopointReason reason)
+    {
         addInfopoint(new Infopoint(codePos, debugInfo, reason));
     }
 
@@ -529,12 +588,14 @@ public class CompilationResult {
      *
      * @param infopoint the infopoint to record, usually a derived class from {@link Infopoint}
      */
-    public void addInfopoint(Infopoint infopoint) {
+    public void addInfopoint(Infopoint infopoint)
+    {
         checkOpen();
         infopoints.add(infopoint);
     }
 
-    public void recordSourceMapping(int startOffset, int endOffset, NodeSourcePosition sourcePosition) {
+    public void recordSourceMapping(int startOffset, int endOffset, NodeSourcePosition sourcePosition)
+    {
         checkOpen();
         sourceMapping.add(new SourceMapping(startOffset, endOffset, sourcePosition));
     }
@@ -545,7 +606,8 @@ public class CompilationResult {
      * @param codePos the position in the code that is covered by the handler
      * @param markId the identifier for this mark
      */
-    public Mark recordMark(int codePos, Object markId) {
+    public Mark recordMark(int codePos, Object markId)
+    {
         checkOpen();
         Mark mark = new Mark(codePos, markId);
         marks.add(mark);
@@ -557,7 +619,8 @@ public class CompilationResult {
      *
      * @return the first stack slot of the custom stack area
      */
-    public StackSlot getCustomStackArea() {
+    public StackSlot getCustomStackArea()
+    {
         return customStackArea;
     }
 
@@ -565,7 +628,8 @@ public class CompilationResult {
      * @see #getCustomStackArea()
      * @param slot
      */
-    public void setCustomStackAreaOffset(StackSlot slot) {
+    public void setCustomStackAreaOffset(StackSlot slot)
+    {
         checkOpen();
         customStackArea = slot;
     }
@@ -573,31 +637,37 @@ public class CompilationResult {
     /**
      * @return the machine code generated for this method
      */
-    public byte[] getTargetCode() {
+    public byte[] getTargetCode()
+    {
         return targetCode;
     }
 
     /**
      * @return the size of the machine code generated for this method
      */
-    public int getTargetCodeSize() {
+    public int getTargetCodeSize()
+    {
         return targetCodeSize;
     }
 
     /**
      * @return the code annotations or {@code null} if there are none
      */
-    public List<CodeAnnotation> getAnnotations() {
-        if (annotations == null) {
+    public List<CodeAnnotation> getAnnotations()
+    {
+        if (annotations == null)
+        {
             return Collections.emptyList();
         }
         return annotations;
     }
 
-    public void addAnnotation(CodeAnnotation annotation) {
+    public void addAnnotation(CodeAnnotation annotation)
+    {
         checkOpen();
         assert annotation != null;
-        if (annotations == null) {
+        if (annotations == null)
+        {
             annotations = new ArrayList<>();
         }
         annotations.add(annotation);
@@ -606,8 +676,10 @@ public class CompilationResult {
     /**
      * @return the list of infopoints, sorted by {@link Site#pcOffset}
      */
-    public List<Infopoint> getInfopoints() {
-        if (infopoints.isEmpty()) {
+    public List<Infopoint> getInfopoints()
+    {
+        if (infopoints.isEmpty())
+        {
             return emptyList();
         }
         return unmodifiableList(infopoints);
@@ -616,8 +688,10 @@ public class CompilationResult {
     /**
      * @return the list of data references
      */
-    public List<DataPatch> getDataPatches() {
-        if (dataPatches.isEmpty()) {
+    public List<DataPatch> getDataPatches()
+    {
+        if (dataPatches.isEmpty())
+        {
             return emptyList();
         }
         return unmodifiableList(dataPatches);
@@ -626,8 +700,10 @@ public class CompilationResult {
     /**
      * @return the list of exception handlers
      */
-    public List<ExceptionHandler> getExceptionHandlers() {
-        if (exceptionHandlers.isEmpty()) {
+    public List<ExceptionHandler> getExceptionHandlers()
+    {
+        if (exceptionHandlers.isEmpty())
+        {
             return emptyList();
         }
         return unmodifiableList(exceptionHandlers);
@@ -636,8 +712,10 @@ public class CompilationResult {
     /**
      * @return the list of marks
      */
-    public List<Mark> getMarks() {
-        if (marks.isEmpty()) {
+    public List<Mark> getMarks()
+    {
+        if (marks.isEmpty())
+        {
             return emptyList();
         }
         return unmodifiableList(marks);
@@ -646,27 +724,33 @@ public class CompilationResult {
     /**
      * @return the list of {@link SourceMapping}s
      */
-    public List<SourceMapping> getSourceMappings() {
-        if (sourceMapping.isEmpty()) {
+    public List<SourceMapping> getSourceMappings()
+    {
+        if (sourceMapping.isEmpty())
+        {
             return emptyList();
         }
         return unmodifiableList(sourceMapping);
     }
 
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
-    public CompilationIdentifier getCompilationId() {
+    public CompilationIdentifier getCompilationId()
+    {
         return compilationId;
     }
 
-    public void setHasUnsafeAccess(boolean hasUnsafeAccess) {
+    public void setHasUnsafeAccess(boolean hasUnsafeAccess)
+    {
         checkOpen();
         this.hasUnsafeAccess = hasUnsafeAccess;
     }
 
-    public boolean hasUnsafeAccess() {
+    public boolean hasUnsafeAccess()
+    {
         return hasUnsafeAccess;
     }
 
@@ -676,7 +760,8 @@ public class CompilationResult {
      * {@linkplain #getExceptionHandlers() exception handlers}, {@linkplain #getDataPatches() data
      * patches} and {@linkplain #getAnnotations() annotations} recorded in this object are cleared.
      */
-    public void resetForEmittingCode() {
+    public void resetForEmittingCode()
+    {
         checkOpen();
         infopoints.clear();
         sourceMapping.clear();
@@ -684,13 +769,16 @@ public class CompilationResult {
         exceptionHandlers.clear();
         marks.clear();
         dataSection.clear();
-        if (annotations != null) {
+        if (annotations != null)
+        {
             annotations.clear();
         }
     }
 
-    private void checkOpen() {
-        if (closed) {
+    private void checkOpen()
+    {
+        if (closed)
+        {
             throw new IllegalStateException();
         }
     }
@@ -698,8 +786,10 @@ public class CompilationResult {
     /**
      * Closes this compilation result to future updates.
      */
-    public void close() {
-        if (closed) {
+    public void close()
+    {
+        if (closed)
+        {
             throw new IllegalStateException("Cannot re-close compilation result " + this);
         }
         dataSection.close();

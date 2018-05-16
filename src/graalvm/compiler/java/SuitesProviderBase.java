@@ -7,22 +7,25 @@ import graalvm.compiler.phases.tiers.HighTierContext;
 import graalvm.compiler.phases.tiers.Suites;
 import graalvm.compiler.phases.tiers.SuitesCreator;
 
-public abstract class SuitesProviderBase implements SuitesCreator {
-
+public abstract class SuitesProviderBase implements SuitesCreator
+{
     protected PhaseSuite<HighTierContext> defaultGraphBuilderSuite;
 
     @Override
-    public final Suites getDefaultSuites(OptionValues options) {
+    public final Suites getDefaultSuites(OptionValues options)
+    {
         return createSuites(options);
     }
 
     @Override
-    public PhaseSuite<HighTierContext> getDefaultGraphBuilderSuite() {
+    public PhaseSuite<HighTierContext> getDefaultGraphBuilderSuite()
+    {
         return defaultGraphBuilderSuite;
     }
 
     @Override
-    public final LIRSuites getDefaultLIRSuites(OptionValues options) {
+    public final LIRSuites getDefaultLIRSuites(OptionValues options)
+    {
         return createLIRSuites(options);
     }
 

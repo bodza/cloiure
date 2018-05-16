@@ -7,8 +7,8 @@ import graalvm.compiler.nodes.AbstractMergeNode;
  * stack (i.e. first-in / last-out), or as a sorted list, where blocks can be sorted by a supplied
  * number. The latter usage lends itself naturally to iterative dataflow analysis problems.
  */
-public class BlockWorkList {
-
+public class BlockWorkList
+{
     AbstractMergeNode[] workList;
     int[] workListNumbers;
     int workListIndex;
@@ -18,11 +18,15 @@ public class BlockWorkList {
      *
      * @param block the block to add
      */
-    public void add(AbstractMergeNode block) {
-        if (workList == null) {
+    public void add(AbstractMergeNode block)
+    {
+        if (workList == null)
+        {
             // worklist not allocated yet
             allocate();
-        } else if (workListIndex == workList.length) {
+        }
+        else if (workListIndex == workList.length)
+        {
             // need to grow the worklist
             grow();
         }
@@ -37,11 +41,15 @@ public class BlockWorkList {
      * @param block the block to add
      * @param number the number used to sort the block
      */
-    public void addSorted(AbstractMergeNode block, int number) {
-        if (workList == null) {
+    public void addSorted(AbstractMergeNode block, int number)
+    {
+        if (workList == null)
+        {
             // worklist not allocated yet
             allocate();
-        } else if (workListIndex == workList.length) {
+        }
+        else if (workListIndex == workList.length)
+        {
             // need to grow the worklist
             grow();
         }
@@ -51,9 +59,11 @@ public class BlockWorkList {
         workListIndex++;
         int i = workListIndex - 2;
         // push block towards the beginning of the array
-        for (; i >= 0; i--) {
+        for (; i >= 0; i--)
+        {
             int n = workListNumbers[i];
-            if (n >= number) {
+            if (n >= number)
+            {
                 break; // already in the right position
             }
             workList[i + 1] = workList[i]; // bubble b down by one
@@ -70,8 +80,10 @@ public class BlockWorkList {
      *
      * @return the next block in the list
      */
-    public AbstractMergeNode removeFromWorkList() {
-        if (workListIndex != 0) {
+    public AbstractMergeNode removeFromWorkList()
+    {
+        if (workListIndex != 0)
+        {
             return workList[--workListIndex];
         }
         return null;
@@ -82,16 +94,19 @@ public class BlockWorkList {
      *
      * @return {@code true} if this list is empty
      */
-    public boolean isEmpty() {
+    public boolean isEmpty()
+    {
         return workListIndex == 0;
     }
 
-    private void allocate() {
+    private void allocate()
+    {
         workList = new AbstractMergeNode[5];
         workListNumbers = new int[5];
     }
 
-    private void grow() {
+    private void grow()
+    {
         int prevLength = workList.length;
         AbstractMergeNode[] nworkList = new AbstractMergeNode[prevLength * 3];
         System.arraycopy(workList, 0, nworkList, 0, prevLength);

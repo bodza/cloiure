@@ -20,8 +20,8 @@ import jdk.vm.ci.meta.JavaKind;
  * {@link sun.misc.Unsafe#getAndSetInt(Object, long, int)}.
  */
 @NodeInfo(cycles = CYCLES_8, size = SIZE_2)
-public final class AtomicReadAndWriteNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single {
-
+public final class AtomicReadAndWriteNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
+{
     public static final NodeClass<AtomicReadAndWriteNode> TYPE = NodeClass.create(AtomicReadAndWriteNode.class);
     @Input ValueNode object;
     @Input ValueNode offset;
@@ -30,7 +30,8 @@ public final class AtomicReadAndWriteNode extends AbstractMemoryCheckpoint imple
     protected final JavaKind valueKind;
     protected final LocationIdentity locationIdentity;
 
-    public AtomicReadAndWriteNode(ValueNode object, ValueNode offset, ValueNode newValue, JavaKind valueKind, LocationIdentity locationIdentity) {
+    public AtomicReadAndWriteNode(ValueNode object, ValueNode offset, ValueNode newValue, JavaKind valueKind, LocationIdentity locationIdentity)
+    {
         super(TYPE, StampFactory.forKind(newValue.getStackKind()));
         this.object = object;
         this.offset = offset;
@@ -39,29 +40,35 @@ public final class AtomicReadAndWriteNode extends AbstractMemoryCheckpoint imple
         this.locationIdentity = locationIdentity;
     }
 
-    public ValueNode object() {
+    public ValueNode object()
+    {
         return object;
     }
 
-    public ValueNode offset() {
+    public ValueNode offset()
+    {
         return offset;
     }
 
-    public ValueNode newValue() {
+    public ValueNode newValue()
+    {
         return newValue;
     }
 
-    public JavaKind getValueKind() {
+    public JavaKind getValueKind()
+    {
         return valueKind;
     }
 
     @Override
-    public LocationIdentity getLocationIdentity() {
+    public LocationIdentity getLocationIdentity()
+    {
         return locationIdentity;
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 }

@@ -1,7 +1,7 @@
 package graalvm.compiler.core.common;
 
-public abstract class FieldIntrospection<T> {
-
+public abstract class FieldIntrospection<T>
+{
     private final Class<T> clazz;
 
     /**
@@ -9,18 +9,21 @@ public abstract class FieldIntrospection<T> {
      */
     protected Fields data;
 
-    public FieldIntrospection(Class<T> clazz) {
+    public FieldIntrospection(Class<T> clazz)
+    {
         this.clazz = clazz;
     }
 
-    public Class<T> getClazz() {
+    public Class<T> getClazz()
+    {
         return clazz;
     }
 
     /**
      * Gets the fields in {@link #getClazz()} that do long belong to specific category.
      */
-    public Fields getData() {
+    public Fields getData()
+    {
         return data;
     }
 

@@ -34,73 +34,93 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * <p>
  * Constant folding of field loads.
  */
-public final class HotSpotNodePlugin implements NodePlugin, TypePlugin {
+public final class HotSpotNodePlugin implements NodePlugin, TypePlugin
+{
     protected final WordOperationPlugin wordOperationPlugin;
 
-    public HotSpotNodePlugin(WordOperationPlugin wordOperationPlugin) {
+    public HotSpotNodePlugin(WordOperationPlugin wordOperationPlugin)
+    {
         this.wordOperationPlugin = wordOperationPlugin;
     }
 
     @Override
-    public boolean canChangeStackKind(GraphBuilderContext b) {
-        if (b.parsingIntrinsic()) {
+    public boolean canChangeStackKind(GraphBuilderContext b)
+    {
+        if (b.parsingIntrinsic())
+        {
             return wordOperationPlugin.canChangeStackKind(b);
         }
         return false;
     }
 
     @Override
-    public StampPair interceptType(GraphBuilderTool b, JavaType declaredType, boolean nonNull) {
-        if (b.parsingIntrinsic()) {
+    public StampPair interceptType(GraphBuilderTool b, JavaType declaredType, boolean nonNull)
+    {
+        if (b.parsingIntrinsic())
+        {
             return wordOperationPlugin.interceptType(b, declaredType, nonNull);
         }
         return null;
     }
 
     @Override
-    public boolean handleInvoke(GraphBuilderContext b, ResolvedJavaMethod method, ValueNode[] args) {
-        if (b.parsingIntrinsic() && wordOperationPlugin.handleInvoke(b, method, args)) {
+    public boolean handleInvoke(GraphBuilderContext b, ResolvedJavaMethod method, ValueNode[] args)
+    {
+        if (b.parsingIntrinsic() && wordOperationPlugin.handleInvoke(b, method, args))
+        {
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean handleLoadField(GraphBuilderContext b, ValueNode object, ResolvedJavaField field) {
-        if (!ImmutableCode.getValue(b.getOptions()) || b.parsingIntrinsic()) {
-            if (object.isConstant()) {
+    public boolean handleLoadField(GraphBuilderContext b, ValueNode object, ResolvedJavaField field)
+    {
+        if (!ImmutableCode.getValue(b.getOptions()) || b.parsingIntrinsic())
+        {
+            if (object.isConstant())
+            {
                 JavaConstant asJavaConstant = object.asJavaConstant();
-                if (tryReadField(b, field, asJavaConstant)) {
+                if (tryReadField(b, field, asJavaConstant))
+                {
                     return true;
                 }
             }
         }
-        if (b.parsingIntrinsic() && wordOperationPlugin.handleLoadField(b, object, field)) {
+        if (b.parsingIntrinsic() && wordOperationPlugin.handleLoadField(b, object, field))
+        {
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean handleLoadStaticField(GraphBuilderContext b, ResolvedJavaField field) {
-        if (!ImmutableCode.getValue(b.getOptions()) || b.parsingIntrinsic()) {
-            if (tryReadField(b, field, null)) {
+    public boolean handleLoadStaticField(GraphBuilderContext b, ResolvedJavaField field)
+    {
+        if (!ImmutableCode.getValue(b.getOptions()) || b.parsingIntrinsic())
+        {
+            if (tryReadField(b, field, null))
+            {
                 return true;
             }
         }
-        if (b.parsingIntrinsic() && wordOperationPlugin.handleLoadStaticField(b, field)) {
+        if (b.parsingIntrinsic() && wordOperationPlugin.handleLoadStaticField(b, field))
+        {
             return true;
         }
         return false;
     }
 
-    private static boolean tryReadField(GraphBuilderContext b, ResolvedJavaField field, JavaConstant object) {
+    private static boolean tryReadField(GraphBuilderContext b, ResolvedJavaField field, JavaConstant object)
+    {
         return tryConstantFold(b, field, object);
     }
 
-    private static boolean tryConstantFold(GraphBuilderContext b, ResolvedJavaField field, JavaConstant object) {
+    private static boolean tryConstantFold(GraphBuilderContext b, ResolvedJavaField field, JavaConstant object)
+    {
         ConstantNode result = ConstantFoldUtil.tryConstantFold(b.getConstantFieldProvider(), b.getConstantReflection(), b.getMetaAccess(), field, object, b.getOptions());
-        if (result != null) {
+        if (result != null)
+        {
             result = b.getGraph().unique(result);
             b.push(field.getJavaKind(), result);
             return true;
@@ -109,48 +129,60 @@ public final class HotSpotNodePlugin implements NodePlugin, TypePlugin {
     }
 
     @Override
-    public boolean handleStoreField(GraphBuilderContext b, ValueNode object, ResolvedJavaField field, ValueNode value) {
-        if (b.parsingIntrinsic() && wordOperationPlugin.handleStoreField(b, object, field, value)) {
+    public boolean handleStoreField(GraphBuilderContext b, ValueNode object, ResolvedJavaField field, ValueNode value)
+    {
+        if (b.parsingIntrinsic() && wordOperationPlugin.handleStoreField(b, object, field, value))
+        {
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean handleStoreStaticField(GraphBuilderContext b, ResolvedJavaField field, ValueNode value) {
-        if (b.parsingIntrinsic() && wordOperationPlugin.handleStoreStaticField(b, field, value)) {
+    public boolean handleStoreStaticField(GraphBuilderContext b, ResolvedJavaField field, ValueNode value)
+    {
+        if (b.parsingIntrinsic() && wordOperationPlugin.handleStoreStaticField(b, field, value))
+        {
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean handleLoadIndexed(GraphBuilderContext b, ValueNode array, ValueNode index, JavaKind elementKind) {
-        if (b.parsingIntrinsic() && wordOperationPlugin.handleLoadIndexed(b, array, index, elementKind)) {
+    public boolean handleLoadIndexed(GraphBuilderContext b, ValueNode array, ValueNode index, JavaKind elementKind)
+    {
+        if (b.parsingIntrinsic() && wordOperationPlugin.handleLoadIndexed(b, array, index, elementKind))
+        {
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean handleStoreIndexed(GraphBuilderContext b, ValueNode array, ValueNode index, JavaKind elementKind, ValueNode value) {
-        if (b.parsingIntrinsic() && wordOperationPlugin.handleStoreIndexed(b, array, index, elementKind, value)) {
+    public boolean handleStoreIndexed(GraphBuilderContext b, ValueNode array, ValueNode index, JavaKind elementKind, ValueNode value)
+    {
+        if (b.parsingIntrinsic() && wordOperationPlugin.handleStoreIndexed(b, array, index, elementKind, value))
+        {
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean handleCheckCast(GraphBuilderContext b, ValueNode object, ResolvedJavaType type, JavaTypeProfile profile) {
-        if (b.parsingIntrinsic() && wordOperationPlugin.handleCheckCast(b, object, type, profile)) {
+    public boolean handleCheckCast(GraphBuilderContext b, ValueNode object, ResolvedJavaType type, JavaTypeProfile profile)
+    {
+        if (b.parsingIntrinsic() && wordOperationPlugin.handleCheckCast(b, object, type, profile))
+        {
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean handleInstanceOf(GraphBuilderContext b, ValueNode object, ResolvedJavaType type, JavaTypeProfile profile) {
-        if (b.parsingIntrinsic() && wordOperationPlugin.handleInstanceOf(b, object, type, profile)) {
+    public boolean handleInstanceOf(GraphBuilderContext b, ValueNode object, ResolvedJavaType type, JavaTypeProfile profile)
+    {
+        if (b.parsingIntrinsic() && wordOperationPlugin.handleInstanceOf(b, object, type, profile))
+        {
             return true;
         }
         return false;

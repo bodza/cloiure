@@ -15,45 +15,53 @@ import graalvm.compiler.nodes.cfg.Block;
  * While iterating, it is possible to {@link #insert(FixedNode, FixedWithNextNode) insert} and
  * {@link #replaceCurrent(FixedWithNextNode) replace} nodes.
  */
-public abstract class ScheduledNodeIterator {
-
+public abstract class ScheduledNodeIterator
+{
     private FixedWithNextNode lastFixed;
     private FixedWithNextNode reconnect;
     private ListIterator<Node> iterator;
 
-    public void processNodes(Block block, ScheduleResult schedule) {
+    public void processNodes(Block block, ScheduleResult schedule)
+    {
         lastFixed = block.getBeginNode();
         assert lastFixed != null;
         reconnect = null;
         iterator = schedule.nodesFor(block).listIterator();
 
-        while (iterator.hasNext()) {
+        while (iterator.hasNext())
+        {
             Node node = iterator.next();
-            if (!node.isAlive()) {
+            if (!node.isAlive())
+            {
                 continue;
             }
-            if (reconnect != null && node instanceof FixedNode) {
+            if (reconnect != null && node instanceof FixedNode)
+            {
                 reconnect.setNext((FixedNode) node);
                 reconnect = null;
             }
-            if (node instanceof FixedWithNextNode) {
+            if (node instanceof FixedWithNextNode)
+            {
                 lastFixed = (FixedWithNextNode) node;
             }
             processNode(node);
         }
-        if (reconnect != null) {
+        if (reconnect != null)
+        {
             assert block.getSuccessorCount() == 1;
             reconnect.setNext(block.getFirstSuccessor().getBeginNode());
         }
     }
 
-    protected void insert(FixedNode start, FixedWithNextNode end) {
+    protected void insert(FixedNode start, FixedWithNextNode end)
+    {
         this.lastFixed.setNext(start);
         this.lastFixed = end;
         this.reconnect = end;
     }
 
-    protected void replaceCurrent(FixedWithNextNode newNode) {
+    protected void replaceCurrent(FixedWithNextNode newNode)
+    {
         Node current = iterator.previous();
         iterator.next(); // needed because of the previous() call
         current.replaceAndDelete(newNode);

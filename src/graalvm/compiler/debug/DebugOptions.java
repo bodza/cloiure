@@ -15,24 +15,27 @@ import graalvm.compiler.serviceprovider.GraalServices;
 /**
  * Options that configure a {@link DebugContext} and related functionality.
  */
-public class DebugOptions {
-    static class DeprecatedOptionKey<T> extends OptionKey<T> {
+public class DebugOptions
+{
+    static class DeprecatedOptionKey<T> extends OptionKey<T>
+    {
         private final OptionKey<T> replacement;
 
-        DeprecatedOptionKey(OptionKey<T> replacement) {
+        DeprecatedOptionKey(OptionKey<T> replacement)
+        {
             super(replacement.getDefaultValue());
             this.replacement = replacement;
         }
 
         @Override
-        protected void onValueUpdate(EconomicMap<OptionKey<?>, Object> values, T oldValue, T newValue) {
+        protected void onValueUpdate(EconomicMap<OptionKey<?>, Object> values, T oldValue, T newValue)
+        {
             // Ideally we'd use TTY here but it may not yet be initialized.
             System.err.printf("Warning: the %s option is deprecated - use %s instead%n", getName(), replacement.getName());
             replacement.update(values, newValue);
         }
     }
 
-    // @formatter:off
     @Option(help = "Comma separated names of timers that are enabled irrespective of the value for Time option. " +
                    "An empty value enables all timers unconditionally.", type = OptionType.Debug)
     public static final OptionKey<String> Timers = new OptionKey<>(null);
@@ -77,7 +80,7 @@ public class DebugOptions {
                    "will not include metrics for compiler code that is not executed.", type = OptionType.Debug)
     public static final OptionKey<Boolean> ListMetrics = new OptionKey<>(false);
     @Option(help = "file:doc-files/MetricsFileHelp.txt", type = OptionType.Debug)
-     public static final OptionKey<String> MetricsFile = new OptionKey<>(null);
+    public static final OptionKey<String> MetricsFile = new OptionKey<>(null);
     @Option(help = "File to which aggregated metrics are dumped at shutdown. A CSV format is used if the file ends with .csv " +
                     "otherwise a more human readable format is used. If not specified, metrics are dumped to the console.", type = OptionType.Debug)
     public static final OptionKey<String> AggregatedMetricsFile = new OptionKey<>(null);
@@ -149,19 +152,27 @@ public class DebugOptions {
      * @return a path as described above whose directories are guaranteed to exist
      * @throws IOException if there was an error in {@link Files#createDirectories}
      */
-    public static Path getDumpDirectory(OptionValues options) throws IOException {
+    public static Path getDumpDirectory(OptionValues options) throws IOException
+    {
         Path dumpDir;
-        if (DumpPath.hasBeenSet(options)) {
+        if (DumpPath.hasBeenSet(options))
+        {
             dumpDir = Paths.get(DumpPath.getValue(options));
-        } else {
+        }
+        else
+        {
             dumpDir = Paths.get(DumpPath.getValue(options), String.valueOf(GraalServices.getGlobalTimeStamp()));
         }
         dumpDir = dumpDir.toAbsolutePath();
-        if (!Files.exists(dumpDir)) {
-            synchronized (DebugConfigImpl.class) {
-                if (!Files.exists(dumpDir)) {
+        if (!Files.exists(dumpDir))
+        {
+            synchronized (DebugConfigImpl.class)
+            {
+                if (!Files.exists(dumpDir))
+                {
                     Files.createDirectories(dumpDir);
-                    if (ShowDumpFiles.getValue(options)) {
+                    if (ShowDumpFiles.getValue(options))
+                    {
                         TTY.println("Dumping debug output in %s", dumpDir.toString());
                     }
                 }

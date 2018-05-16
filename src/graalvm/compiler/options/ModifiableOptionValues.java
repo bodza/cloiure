@@ -12,13 +12,14 @@ import org.graalvm.collections.UnmodifiableMapCursor;
  * updated. Updates have atomic copy-on-write semantics which means a thread may see an old value
  * when reading but writers will never loose updates.
  */
-public class ModifiableOptionValues extends OptionValues {
-
+public class ModifiableOptionValues extends OptionValues
+{
     private final AtomicReference<UnmodifiableEconomicMap<OptionKey<?>, Object>> v = new AtomicReference<>();
 
     private static final EconomicMap<OptionKey<?>, Object> EMPTY_MAP = newOptionMap();
 
-    public ModifiableOptionValues(UnmodifiableEconomicMap<OptionKey<?>, Object> values) {
+    public ModifiableOptionValues(UnmodifiableEconomicMap<OptionKey<?>, Object> values)
+    {
         super(EMPTY_MAP);
         EconomicMap<OptionKey<?>, Object> map = newOptionMap();
         initMap(map, values);
@@ -37,15 +38,20 @@ public class ModifiableOptionValues extends OptionValues {
      *
      * @see #UNSET_KEY
      */
-    public void update(OptionKey<?> key, Object value) {
+    public void update(OptionKey<?> key, Object value)
+    {
         UnmodifiableEconomicMap<OptionKey<?>, Object> expect;
         EconomicMap<OptionKey<?>, Object> newMap;
-        do {
+        do
+        {
             expect = v.get();
             newMap = EconomicMap.create(Equivalence.IDENTITY, expect);
-            if (value == UNSET_KEY) {
+            if (value == UNSET_KEY)
+            {
                 newMap.removeKey(key);
-            } else {
+            }
+            else
+            {
                 key.update(newMap, value);
                 // Need to do the null encoding here as `key.update()` doesn't do it
                 newMap.put(key, encodeNull(value));
@@ -58,22 +64,29 @@ public class ModifiableOptionValues extends OptionValues {
      *
      * @see #UNSET_KEY
      */
-    public void update(UnmodifiableEconomicMap<OptionKey<?>, Object> values) {
-        if (values.isEmpty()) {
+    public void update(UnmodifiableEconomicMap<OptionKey<?>, Object> values)
+    {
+        if (values.isEmpty())
+        {
             return;
         }
         UnmodifiableEconomicMap<OptionKey<?>, Object> expect;
         EconomicMap<OptionKey<?>, Object> newMap;
-        do {
+        do
+        {
             expect = v.get();
             newMap = EconomicMap.create(Equivalence.IDENTITY, expect);
             UnmodifiableMapCursor<OptionKey<?>, Object> cursor = values.getEntries();
-            while (cursor.advance()) {
+            while (cursor.advance())
+            {
                 OptionKey<?> key = cursor.getKey();
                 Object value = cursor.getValue();
-                if (value == UNSET_KEY) {
+                if (value == UNSET_KEY)
+                {
                     newMap.removeKey(key);
-                } else {
+                }
+                else
+                {
                     key.update(newMap, value);
                     // Need to do the null encoding here as `key.update()` doesn't do it
                     newMap.put(key, encodeNull(value));
@@ -83,17 +96,20 @@ public class ModifiableOptionValues extends OptionValues {
     }
 
     @Override
-    protected <T> T get(OptionKey<T> key) {
+    protected <T> T get(OptionKey<T> key)
+    {
         return OptionValues.get(v.get(), key);
     }
 
     @Override
-    protected boolean containsKey(OptionKey<?> key) {
+    protected boolean containsKey(OptionKey<?> key)
+    {
         return v.get().containsKey(key);
     }
 
     @Override
-    public UnmodifiableEconomicMap<OptionKey<?>, Object> getMap() {
+    public UnmodifiableEconomicMap<OptionKey<?>, Object> getMap()
+    {
         return v.get();
     }
 }

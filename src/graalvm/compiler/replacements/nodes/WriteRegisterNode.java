@@ -19,8 +19,8 @@ import jdk.vm.ci.meta.Value;
  * Changes the value of a specific register.
  */
 @NodeInfo(nameTemplate = "WriteRegister %{p#register}", cycles = CYCLES_2, size = SIZE_1)
-public final class WriteRegisterNode extends FixedWithNextNode implements LIRLowerable {
-
+public final class WriteRegisterNode extends FixedWithNextNode implements LIRLowerable
+{
     public static final NodeClass<WriteRegisterNode> TYPE = NodeClass.create(WriteRegisterNode.class);
     /**
      * The fixed register to access.
@@ -32,23 +32,29 @@ public final class WriteRegisterNode extends FixedWithNextNode implements LIRLow
      */
     @Input ValueNode value;
 
-    public WriteRegisterNode(Register register, ValueNode value) {
+    public WriteRegisterNode(Register register, ValueNode value)
+    {
         super(TYPE, StampFactory.forVoid());
         this.register = register;
         this.value = value;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool generator) {
+    public void generate(NodeLIRBuilderTool generator)
+    {
         Value val = generator.operand(value);
         generator.getLIRGeneratorTool().emitMove(register.asValue(val.getValueKind()), val);
     }
 
     @Override
-    public String toString(Verbosity verbosity) {
-        if (verbosity == Verbosity.Name) {
+    public String toString(Verbosity verbosity)
+    {
+        if (verbosity == Verbosity.Name)
+        {
             return super.toString(Verbosity.Name) + "%" + register;
-        } else {
+        }
+        else
+        {
             return super.toString(verbosity);
         }
     }

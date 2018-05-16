@@ -22,46 +22,51 @@ import org.graalvm.word.LocationIdentity;
  * The {@code RawMonitorEnterNode} represents the acquisition of a monitor. The object needs to
  * already be non-null and the hub is an additional parameter to the node.
  */
-// @formatter:off
 @NodeInfo(cycles = CYCLES_64,
           cyclesRationale = "Rough estimation of the enter operation",
           size = SIZE_64)
-// @formatter:on
-public final class RawMonitorEnterNode extends AccessMonitorNode implements Virtualizable, Lowerable, IterableNodeType, MonitorEnter, MemoryCheckpoint.Single {
-
+public final class RawMonitorEnterNode extends AccessMonitorNode implements Virtualizable, Lowerable, IterableNodeType, MonitorEnter, MemoryCheckpoint.Single
+{
     public static final NodeClass<RawMonitorEnterNode> TYPE = NodeClass.create(RawMonitorEnterNode.class);
 
     @Input ValueNode hub;
 
-    public RawMonitorEnterNode(ValueNode object, ValueNode hub, MonitorIdNode monitorId) {
+    public RawMonitorEnterNode(ValueNode object, ValueNode hub, MonitorIdNode monitorId)
+    {
         super(TYPE, object, monitorId);
         assert ((ObjectStamp) object.stamp(NodeView.DEFAULT)).nonNull();
         this.hub = hub;
     }
 
     @Override
-    public LocationIdentity getLocationIdentity() {
+    public LocationIdentity getLocationIdentity()
+    {
         return LocationIdentity.any();
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool) {
+    public void virtualize(VirtualizerTool tool)
+    {
         ValueNode alias = tool.getAlias(object());
-        if (alias instanceof VirtualObjectNode) {
+        if (alias instanceof VirtualObjectNode)
+        {
             VirtualObjectNode virtual = (VirtualObjectNode) alias;
-            if (virtual.hasIdentity()) {
+            if (virtual.hasIdentity())
+            {
                 tool.addLock(virtual, getMonitorId());
                 tool.delete();
             }
         }
     }
 
-    public ValueNode getHub() {
+    public ValueNode getHub()
+    {
         return hub;
     }
 }

@@ -24,21 +24,23 @@ import java.io.PrintStream;
  * being written. This position can be advanced to a specified position by
  * {@linkplain #fillTo(int, char) filling} this stream with a given character.
  */
-public class LogStream {
-
+public class LogStream
+{
     /**
      * Null output stream that simply swallows any output sent to it.
      */
     public static final LogStream SINK = new LogStream();
 
-    private static final PrintStream SINK_PS = new PrintStream(new OutputStream() {
-
+    private static final PrintStream SINK_PS = new PrintStream(new OutputStream()
+    {
         @Override
-        public void write(int b) throws IOException {
+        public void write(int b) throws IOException
+        {
         }
     });
 
-    private LogStream() {
+    private LogStream()
+    {
         this.ps = null;
         this.lineBuffer = null;
     }
@@ -53,8 +55,10 @@ public class LogStream {
     private char indentation = ' ';
     private boolean indentationDisabled;
 
-    public final PrintStream out() {
-        if (ps == null) {
+    public final PrintStream out()
+    {
+        if (ps == null)
+        {
             return SINK_PS;
         }
         return ps;
@@ -70,7 +74,8 @@ public class LogStream {
      *
      * @param os the underlying output stream to which prints are sent
      */
-    public LogStream(OutputStream os) {
+    public LogStream(OutputStream os)
+    {
         ps = os instanceof PrintStream ? (PrintStream) os : new PrintStream(os);
         lineBuffer = new StringBuilder(100);
     }
@@ -81,7 +86,8 @@ public class LogStream {
      *
      * @param log a LogStream whose output stream is shared with this one
      */
-    public LogStream(LogStream log) {
+    public LogStream(LogStream log)
+    {
         ps = log.ps;
         lineBuffer = new StringBuilder(100);
     }
@@ -90,19 +96,26 @@ public class LogStream {
      * Prepends {@link #indentation} to the current output line until its write position is equal to
      * the current {@linkplain #indentationLevel()} level.
      */
-    private void indent() {
-        if (ps != null) {
-            if (!indentationDisabled && indentationLevel != 0) {
-                while (lineBuffer.length() < indentationLevel) {
+    private void indent()
+    {
+        if (ps != null)
+        {
+            if (!indentationDisabled && indentationLevel != 0)
+            {
+                while (lineBuffer.length() < indentationLevel)
+                {
                     lineBuffer.append(indentation);
                 }
             }
         }
     }
 
-    private LogStream flushLine(boolean withNewline) {
-        if (ps != null) {
-            if (withNewline) {
+    private LogStream flushLine(boolean withNewline)
+    {
+        if (ps != null)
+        {
+            if (withNewline)
+            {
                 lineBuffer.append(LINE_SEPARATOR);
             }
             ps.print(lineBuffer.toString());
@@ -116,9 +129,12 @@ public class LogStream {
      * Flushes the stream. This is done by terminating the current line if it is not at position 0
      * and then flushing the underlying output stream.
      */
-    public void flush() {
-        if (ps != null) {
-            if (lineBuffer.length() != 0) {
+    public void flush()
+    {
+        if (ps != null)
+        {
+            if (lineBuffer.length() != 0)
+            {
                 flushLine(false);
             }
             ps.flush();
@@ -130,9 +146,9 @@ public class LogStream {
      *
      * @return the current column position of this log stream
      */
-    public int position() {
+    public int position()
+    {
         return lineBuffer == null ? 0 : lineBuffer.length();
-
     }
 
     /**
@@ -140,7 +156,8 @@ public class LogStream {
      *
      * @return the current indentation level for this log stream.
      */
-    public int indentationLevel() {
+    public int indentationLevel()
+    {
         return indentationLevel;
     }
 
@@ -149,10 +166,14 @@ public class LogStream {
      *
      * @param delta
      */
-    public void adjustIndentation(int delta) {
-        if (delta < 0) {
+    public void adjustIndentation(int delta)
+    {
+        if (delta < 0)
+        {
             indentationLevel = Math.max(0, indentationLevel + delta);
-        } else {
+        }
+        else
+        {
             indentationLevel += delta;
         }
     }
@@ -160,22 +181,26 @@ public class LogStream {
     /**
      * Gets the current indentation character of this log stream.
      */
-    public char indentation() {
+    public char indentation()
+    {
         return indentation;
     }
 
-    public void disableIndentation() {
+    public void disableIndentation()
+    {
         indentationDisabled = true;
     }
 
-    public void enableIndentation() {
+    public void enableIndentation()
+    {
         indentationDisabled = false;
     }
 
     /**
      * Sets the character used for indentation.
      */
-    public void setIndentation(char c) {
+    public void setIndentation(char c)
+    {
         indentation = c;
     }
 
@@ -186,10 +211,13 @@ public class LogStream {
      * @param position the position to which this stream's position will be advanced
      * @param filler the character used to pad the stream
      */
-    public LogStream fillTo(int position, char filler) {
-        if (ps != null) {
+    public LogStream fillTo(int position, char filler)
+    {
+        if (ps != null)
+        {
             indent();
-            while (lineBuffer.length() < position) {
+            while (lineBuffer.length() < position)
+            {
                 lineBuffer.append(filler);
             }
         }
@@ -202,8 +230,10 @@ public class LogStream {
      * @param b the value to be printed
      * @return this {@link LogStream} instance
      */
-    public LogStream print(boolean b) {
-        if (ps != null) {
+    public LogStream print(boolean b)
+    {
+        if (ps != null)
+        {
             indent();
             lineBuffer.append(b);
         }
@@ -217,8 +247,10 @@ public class LogStream {
      * @param b the value to be printed
      * @return this {@link LogStream} instance
      */
-    public LogStream println(boolean b) {
-        if (ps != null) {
+    public LogStream println(boolean b)
+    {
+        if (ps != null)
+        {
             indent();
             lineBuffer.append(b);
             return flushLine(true);
@@ -232,12 +264,16 @@ public class LogStream {
      * @param c the value to be printed
      * @return this {@link LogStream} instance
      */
-    public LogStream print(char c) {
-        if (ps != null) {
+    public LogStream print(char c)
+    {
+        if (ps != null)
+        {
             indent();
             lineBuffer.append(c);
-            if (c == '\n') {
-                if (lineBuffer.indexOf(LINE_SEPARATOR, lineBuffer.length() - LINE_SEPARATOR.length()) != -1) {
+            if (c == '\n')
+            {
+                if (lineBuffer.indexOf(LINE_SEPARATOR, lineBuffer.length() - LINE_SEPARATOR.length()) != -1)
+                {
                     flushLine(false);
                 }
             }
@@ -252,8 +288,10 @@ public class LogStream {
      * @param c the value to be printed
      * @return this {@link LogStream} instance
      */
-    public LogStream println(char c) {
-        if (ps != null) {
+    public LogStream println(char c)
+    {
+        if (ps != null)
+        {
             indent();
             lineBuffer.append(c);
             flushLine(true);
@@ -267,8 +305,10 @@ public class LogStream {
      * @param i the value to be printed
      * @return this {@link LogStream} instance
      */
-    public LogStream print(int i) {
-        if (ps != null) {
+    public LogStream print(int i)
+    {
+        if (ps != null)
+        {
             indent();
             lineBuffer.append(i);
         }
@@ -281,8 +321,10 @@ public class LogStream {
      * @param i the value to be printed
      * @return this {@link LogStream} instance
      */
-    public LogStream println(int i) {
-        if (ps != null) {
+    public LogStream println(int i)
+    {
+        if (ps != null)
+        {
             indent();
             lineBuffer.append(i);
             return flushLine(true);
@@ -296,8 +338,10 @@ public class LogStream {
      * @param f the value to be printed
      * @return this {@link LogStream} instance
      */
-    public LogStream print(float f) {
-        if (ps != null) {
+    public LogStream print(float f)
+    {
+        if (ps != null)
+        {
             indent();
             lineBuffer.append(f);
         }
@@ -311,8 +355,10 @@ public class LogStream {
      * @param f the value to be printed
      * @return this {@link LogStream} instance
      */
-    public LogStream println(float f) {
-        if (ps != null) {
+    public LogStream println(float f)
+    {
+        if (ps != null)
+        {
             indent();
             lineBuffer.append(f);
             return flushLine(true);
@@ -326,8 +372,10 @@ public class LogStream {
      * @param l the value to be printed
      * @return this {@link LogStream} instance
      */
-    public LogStream print(long l) {
-        if (ps != null) {
+    public LogStream print(long l)
+    {
+        if (ps != null)
+        {
             indent();
             lineBuffer.append(l);
         }
@@ -340,8 +388,10 @@ public class LogStream {
      * @param l the value to be printed
      * @return this {@link LogStream} instance
      */
-    public LogStream println(long l) {
-        if (ps != null) {
+    public LogStream println(long l)
+    {
+        if (ps != null)
+        {
             indent();
             lineBuffer.append(l);
             return flushLine(true);
@@ -355,8 +405,10 @@ public class LogStream {
      * @param d the value to be printed
      * @return this {@link LogStream} instance
      */
-    public LogStream print(double d) {
-        if (ps != null) {
+    public LogStream print(double d)
+    {
+        if (ps != null)
+        {
             indent();
             lineBuffer.append(d);
         }
@@ -370,8 +422,10 @@ public class LogStream {
      * @param d the value to be printed
      * @return this {@link LogStream} instance
      */
-    public LogStream println(double d) {
-        if (ps != null) {
+    public LogStream println(double d)
+    {
+        if (ps != null)
+        {
             indent();
             lineBuffer.append(d);
             return flushLine(true);
@@ -387,9 +441,12 @@ public class LogStream {
      * @param s the value to be printed
      * @return this {@link LogStream} instance
      */
-    public LogStream print(String s) {
-        if (ps != null) {
-            if (s == null) {
+    public LogStream print(String s)
+    {
+        if (ps != null)
+        {
+            if (s == null)
+            {
                 indent();
                 lineBuffer.append(s);
                 return this;
@@ -397,14 +454,18 @@ public class LogStream {
 
             int index = 0;
             int next = s.indexOf(LINE_SEPARATOR, index);
-            while (index < s.length()) {
+            while (index < s.length())
+            {
                 indent();
-                if (next > index || next == 0) {
+                if (next > index || next == 0)
+                {
                     lineBuffer.append(s.substring(index, next));
                     flushLine(true);
                     index = next + LINE_SEPARATOR.length();
                     next = s.indexOf(LINE_SEPARATOR, index);
-                } else {
+                }
+                else
+                {
                     lineBuffer.append(s.substring(index));
                     break;
                 }
@@ -420,8 +481,10 @@ public class LogStream {
      * @param s the value to be printed
      * @return this {@link LogStream} instance
      */
-    public LogStream println(String s) {
-        if (ps != null) {
+    public LogStream println(String s)
+    {
+        if (ps != null)
+        {
             print(s);
             flushLine(true);
         }
@@ -435,8 +498,10 @@ public class LogStream {
      * @param args the arguments to be formatted
      * @return this {@link LogStream} instance
      */
-    public LogStream printf(String format, Object... args) {
-        if (ps != null) {
+    public LogStream printf(String format, Object... args)
+    {
+        if (ps != null)
+        {
             print(String.format(format, args));
         }
         return this;
@@ -447,8 +512,10 @@ public class LogStream {
      *
      * @return this {@code LogStream} instance
      */
-    public LogStream println() {
-        if (ps != null) {
+    public LogStream println()
+    {
+        if (ps != null)
+        {
             indent();
             flushLine(true);
         }

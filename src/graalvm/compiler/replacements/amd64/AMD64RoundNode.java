@@ -25,18 +25,22 @@ import jdk.vm.ci.meta.JavaKind;
  * Round floating-point value.
  */
 @NodeInfo(cycles = CYCLES_1)
-public final class AMD64RoundNode extends UnaryNode implements ArithmeticLIRLowerable {
+public final class AMD64RoundNode extends UnaryNode implements ArithmeticLIRLowerable
+{
     public static final NodeClass<AMD64RoundNode> TYPE = NodeClass.create(AMD64RoundNode.class);
 
     private final RoundingMode mode;
 
-    public AMD64RoundNode(ValueNode value, RoundingMode mode) {
+    public AMD64RoundNode(ValueNode value, RoundingMode mode)
+    {
         super(TYPE, roundStamp((FloatStamp) value.stamp(NodeView.DEFAULT), mode), value);
         this.mode = mode;
     }
 
-    private static double round(RoundingMode mode, double input) {
-        switch (mode) {
+    private static double round(RoundingMode mode, double input)
+    {
+        switch (mode)
+        {
             case DOWN:
                 return Math.floor(input);
             case NEAREST:
@@ -50,7 +54,8 @@ public final class AMD64RoundNode extends UnaryNode implements ArithmeticLIRLowe
         }
     }
 
-    private static FloatStamp roundStamp(FloatStamp stamp, RoundingMode mode) {
+    private static FloatStamp roundStamp(FloatStamp stamp, RoundingMode mode)
+    {
         double min = stamp.lowerBound();
         min = Math.min(min, round(mode, min));
 
@@ -61,17 +66,23 @@ public final class AMD64RoundNode extends UnaryNode implements ArithmeticLIRLowe
     }
 
     @Override
-    public Stamp foldStamp(Stamp newStamp) {
+    public Stamp foldStamp(Stamp newStamp)
+    {
         assert newStamp.isCompatible(getValue().stamp(NodeView.DEFAULT));
         return roundStamp((FloatStamp) newStamp, mode);
     }
 
-    public ValueNode tryFold(ValueNode input) {
-        if (input.isConstant()) {
+    public ValueNode tryFold(ValueNode input)
+    {
+        if (input.isConstant())
+        {
             JavaConstant c = input.asJavaConstant();
-            if (c.getJavaKind() == JavaKind.Double) {
+            if (c.getJavaKind() == JavaKind.Double)
+            {
                 return ConstantNode.forDouble(round(mode, c.asDouble()));
-            } else if (c.getJavaKind() == JavaKind.Float) {
+            }
+            else if (c.getJavaKind() == JavaKind.Float)
+            {
                 return ConstantNode.forFloat((float) round(mode, c.asFloat()));
             }
         }
@@ -79,13 +90,15 @@ public final class AMD64RoundNode extends UnaryNode implements ArithmeticLIRLowe
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue) {
+    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    {
         ValueNode folded = tryFold(forValue);
         return folded != null ? folded : this;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool builder, ArithmeticLIRGeneratorTool gen) {
+    public void generate(NodeLIRBuilderTool builder, ArithmeticLIRGeneratorTool gen)
+    {
         builder.setResult(this, ((AMD64ArithmeticLIRGeneratorTool) gen).emitRound(builder.operand(getValue()), mode));
     }
 }

@@ -18,8 +18,8 @@ import jdk.vm.ci.meta.ValueKind;
  * set, the instruction must set the flags register; if false, the instruction may or may not set
  * the flags register.
  */
-public interface ArithmeticLIRGeneratorTool {
-
+public interface ArithmeticLIRGeneratorTool
+{
     Value emitNegate(Value input);
 
     Value emitAdd(Value a, Value b, boolean setFlags);
@@ -79,33 +79,38 @@ public interface ArithmeticLIRGeneratorTool {
     void emitStore(ValueKind<?> kind, Value address, Value input, LIRFrameState state);
 
     @SuppressWarnings("unused")
-    default Value emitMathLog(Value input, boolean base10) {
+    default Value emitMathLog(Value input, boolean base10)
+    {
         throw GraalError.unimplemented("No specialized implementation available");
     }
 
     @SuppressWarnings("unused")
-    default Value emitMathCos(Value input) {
+    default Value emitMathCos(Value input)
+    {
         throw GraalError.unimplemented("No specialized implementation available");
     }
 
     @SuppressWarnings("unused")
-    default Value emitMathSin(Value input) {
+    default Value emitMathSin(Value input)
+    {
         throw GraalError.unimplemented("No specialized implementation available");
     }
 
     @SuppressWarnings("unused")
-    default Value emitMathTan(Value input) {
+    default Value emitMathTan(Value input)
+    {
         throw GraalError.unimplemented("No specialized implementation available");
     }
 
     @SuppressWarnings("unused")
-    default Value emitMathExp(Value input) {
+    default Value emitMathExp(Value input)
+    {
         throw GraalError.unimplemented("No specialized implementation available");
     }
 
     @SuppressWarnings("unused")
-    default Value emitMathPow(Value x, Value y) {
+    default Value emitMathPow(Value x, Value y)
+    {
         throw GraalError.unimplemented("No specialized implementation available");
     }
-
 }

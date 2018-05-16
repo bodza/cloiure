@@ -8,8 +8,8 @@ import graalvm.compiler.core.common.spi.ConstantFieldProvider;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.options.OptionValues;
 
-public interface CanonicalizerTool {
-
+public interface CanonicalizerTool
+{
     Assumptions getAssumptions();
 
     MetaAccessProvider getMetaAccess();

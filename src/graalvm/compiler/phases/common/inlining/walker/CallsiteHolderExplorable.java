@@ -32,8 +32,8 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  *
  * @see InliningData#moveForward()
  */
-public final class CallsiteHolderExplorable extends CallsiteHolder {
-
+public final class CallsiteHolderExplorable extends CallsiteHolder
+{
     /**
      * Graph in which inlining may be performed at one or more of the callsites containined in
      * {@link #remainingInvokes}.
@@ -52,17 +52,21 @@ public final class CallsiteHolderExplorable extends CallsiteHolder {
     private final ToDoubleFunction<FixedNode> probabilities;
     private final ComputeInliningRelevance computeInliningRelevance;
 
-    public CallsiteHolderExplorable(StructuredGraph graph, double probability, double relevance, BitSet freshlyInstantiatedArguments, LinkedList<Invoke> invokes) {
+    public CallsiteHolderExplorable(StructuredGraph graph, double probability, double relevance, BitSet freshlyInstantiatedArguments, LinkedList<Invoke> invokes)
+    {
         assert graph != null;
         this.graph = graph;
         this.probability = probability;
         this.relevance = relevance;
         this.fixedParams = fixedParamsAt(freshlyInstantiatedArguments);
         remainingInvokes = invokes == null ? new InliningIterator(graph).apply() : invokes;
-        if (remainingInvokes.isEmpty()) {
+        if (remainingInvokes.isEmpty())
+        {
             probabilities = null;
             computeInliningRelevance = null;
-        } else {
+        }
+        else
+        {
             probabilities = new FixedNodeProbabilityCache();
             computeInliningRelevance = new ComputeInliningRelevance(graph, probabilities);
             computeProbabilities();
@@ -73,13 +77,17 @@ public final class CallsiteHolderExplorable extends CallsiteHolder {
     /**
      * @see #getFixedParams()
      */
-    private EconomicSet<ParameterNode> fixedParamsAt(BitSet freshlyInstantiatedArguments) {
-        if (freshlyInstantiatedArguments == null || freshlyInstantiatedArguments.isEmpty()) {
+    private EconomicSet<ParameterNode> fixedParamsAt(BitSet freshlyInstantiatedArguments)
+    {
+        if (freshlyInstantiatedArguments == null || freshlyInstantiatedArguments.isEmpty())
+        {
             return EconomicSet.create(Equivalence.IDENTITY);
         }
         EconomicSet<ParameterNode> result = EconomicSet.create(Equivalence.IDENTITY);
-        for (ParameterNode p : graph.getNodes(ParameterNode.TYPE)) {
-            if (freshlyInstantiatedArguments.get(p.index())) {
+        for (ParameterNode p : graph.getNodes(ParameterNode.TYPE))
+        {
+            if (freshlyInstantiatedArguments.get(p.index()))
+            {
                 result.add(p);
             }
         }
@@ -103,23 +111,30 @@ public final class CallsiteHolderExplorable extends CallsiteHolder {
      * instantiated several levels up in the call-hierarchy)
      * </p>
      */
-    public EconomicSet<ParameterNode> getFixedParams() {
+    public EconomicSet<ParameterNode> getFixedParams()
+    {
         return fixedParams;
     }
 
-    public boolean repOK() {
-        for (Invoke invoke : remainingInvokes) {
-            if (!invoke.asNode().isAlive() || !containsInvoke(invoke)) {
+    public boolean repOK()
+    {
+        for (Invoke invoke : remainingInvokes)
+        {
+            if (!invoke.asNode().isAlive() || !containsInvoke(invoke))
+            {
                 assert false;
                 return false;
             }
-            if (!allArgsNonNull(invoke)) {
+            if (!allArgsNonNull(invoke))
+            {
                 assert false;
                 return false;
             }
         }
-        for (ParameterNode fixedParam : fixedParams) {
-            if (!containsParam(fixedParam)) {
+        for (ParameterNode fixedParam : fixedParams)
+        {
+            if (!containsParam(fixedParam))
+            {
                 assert false;
                 return false;
             }
@@ -128,31 +143,39 @@ public final class CallsiteHolderExplorable extends CallsiteHolder {
     }
 
     @Override
-    public ResolvedJavaMethod method() {
+    public ResolvedJavaMethod method()
+    {
         return graph == null ? null : graph.method();
     }
 
     @Override
-    public boolean hasRemainingInvokes() {
+    public boolean hasRemainingInvokes()
+    {
         return !remainingInvokes.isEmpty();
     }
 
     @Override
-    public StructuredGraph graph() {
+    public StructuredGraph graph()
+    {
         return graph;
     }
 
-    public Invoke popInvoke() {
+    public Invoke popInvoke()
+    {
         return remainingInvokes.removeFirst();
     }
 
-    public void pushInvoke(Invoke invoke) {
+    public void pushInvoke(Invoke invoke)
+    {
         remainingInvokes.push(invoke);
     }
 
-    public static boolean allArgsNonNull(Invoke invoke) {
-        for (ValueNode arg : invoke.callTarget().arguments()) {
-            if (arg == null) {
+    public static boolean allArgsNonNull(Invoke invoke)
+    {
+        for (ValueNode arg : invoke.callTarget().arguments())
+        {
+            if (arg == null)
+            {
                 assert false;
                 return false;
             }
@@ -160,38 +183,48 @@ public final class CallsiteHolderExplorable extends CallsiteHolder {
         return true;
     }
 
-    public boolean containsInvoke(Invoke invoke) {
-        for (Invoke i : graph().getInvokes()) {
-            if (i == invoke) {
+    public boolean containsInvoke(Invoke invoke)
+    {
+        for (Invoke i : graph().getInvokes())
+        {
+            if (i == invoke)
+            {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean containsParam(ParameterNode param) {
-        for (ParameterNode p : graph.getNodes(ParameterNode.TYPE)) {
-            if (p == param) {
+    public boolean containsParam(ParameterNode param)
+    {
+        for (ParameterNode p : graph.getNodes(ParameterNode.TYPE))
+        {
+            if (p == param)
+            {
                 return true;
             }
         }
         return false;
     }
 
-    public void computeProbabilities() {
+    public void computeProbabilities()
+    {
         computeInliningRelevance.compute();
     }
 
-    public double invokeProbability(Invoke invoke) {
+    public double invokeProbability(Invoke invoke)
+    {
         return probability * probabilities.applyAsDouble(invoke.asNode());
     }
 
-    public double invokeRelevance(Invoke invoke) {
+    public double invokeRelevance(Invoke invoke)
+    {
         return Math.min(AbstractInliningPolicy.CapInheritedRelevance, relevance) * computeInliningRelevance.getRelevance(invoke);
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return (graph != null ? method().format("%H.%n(%p)") : "<null method>") + remainingInvokes;
     }
 }

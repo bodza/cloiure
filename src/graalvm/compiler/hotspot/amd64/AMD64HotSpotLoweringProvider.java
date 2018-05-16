@@ -31,18 +31,19 @@ import jdk.vm.ci.code.TargetDescription;
 import jdk.vm.ci.hotspot.HotSpotConstantReflectionProvider;
 import jdk.vm.ci.meta.MetaAccessProvider;
 
-public class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringProvider {
-
+public class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringProvider
+{
     private AMD64ConvertSnippets.Templates convertSnippets;
     private ProbabilisticProfileSnippets.Templates profileSnippets;
 
-    public AMD64HotSpotLoweringProvider(HotSpotGraalRuntimeProvider runtime, MetaAccessProvider metaAccess, ForeignCallsProvider foreignCalls, HotSpotRegistersProvider registers,
-                    HotSpotConstantReflectionProvider constantReflection, TargetDescription target) {
+    public AMD64HotSpotLoweringProvider(HotSpotGraalRuntimeProvider runtime, MetaAccessProvider metaAccess, ForeignCallsProvider foreignCalls, HotSpotRegistersProvider registers, HotSpotConstantReflectionProvider constantReflection, TargetDescription target)
+    {
         super(runtime, metaAccess, foreignCalls, registers, constantReflection, target);
     }
 
     @Override
-    public void initialize(OptionValues options, Iterable<DebugHandlersFactory> factories, HotSpotProviders providers, GraalHotSpotVMConfig config) {
+    public void initialize(OptionValues options, Iterable<DebugHandlersFactory> factories, HotSpotProviders providers, GraalHotSpotVMConfig config)
+    {
         convertSnippets = new AMD64ConvertSnippets.Templates(options, factories, providers, providers.getSnippetReflection(), providers.getCodeCache().getTarget());
         profileSnippets = ProfileNode.Options.ProbabilisticProfiling.getValue(options)
                         ? new ProbabilisticProfileSnippets.Templates(options, factories, providers, providers.getCodeCache().getTarget())
@@ -51,20 +52,29 @@ public class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringProvider
     }
 
     @Override
-    public void lower(Node n, LoweringTool tool) {
-        if (n instanceof FloatConvertNode) {
+    public void lower(Node n, LoweringTool tool)
+    {
+        if (n instanceof FloatConvertNode)
+        {
             convertSnippets.lower((FloatConvertNode) n, tool);
-        } else if (profileSnippets != null && n instanceof ProfileNode) {
+        }
+        else if (profileSnippets != null && n instanceof ProfileNode)
+        {
             profileSnippets.lower((ProfileNode) n, tool);
-        } else {
+        }
+        else
+        {
             super.lower(n, tool);
         }
     }
 
     @Override
-    protected ForeignCallDescriptor toForeignCall(UnaryOperation operation) {
-        if (GraalArithmeticStubs.getValue(runtime.getOptions())) {
-            switch (operation) {
+    protected ForeignCallDescriptor toForeignCall(UnaryOperation operation)
+    {
+        if (GraalArithmeticStubs.getValue(runtime.getOptions()))
+        {
+            switch (operation)
+            {
                 case LOG:
                     return ARITHMETIC_LOG_STUB;
                 case LOG10:
@@ -78,7 +88,9 @@ public class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringProvider
                 case EXP:
                     return ARITHMETIC_EXP_STUB;
             }
-        } else if (operation == UnaryOperation.EXP) {
+        }
+        else if (operation == UnaryOperation.EXP)
+        {
             return operation.foreignCallDescriptor;
         }
         // Lower only using LIRGenerator
@@ -86,13 +98,18 @@ public class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringProvider
     }
 
     @Override
-    protected ForeignCallDescriptor toForeignCall(BinaryOperation operation) {
-        if (GraalArithmeticStubs.getValue(runtime.getOptions())) {
-            switch (operation) {
+    protected ForeignCallDescriptor toForeignCall(BinaryOperation operation)
+    {
+        if (GraalArithmeticStubs.getValue(runtime.getOptions()))
+        {
+            switch (operation)
+            {
                 case POW:
                     return ARITHMETIC_POW_STUB;
             }
-        } else if (operation == BinaryOperation.POW) {
+        }
+        else if (operation == BinaryOperation.POW)
+        {
             return operation.foreignCallDescriptor;
         }
         // Lower only using LIRGenerator
@@ -100,7 +117,8 @@ public class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringProvider
     }
 
     @Override
-    public Integer smallestCompareWidth() {
+    public Integer smallestCompareWidth()
+    {
         return 8;
     }
 }

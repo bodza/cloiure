@@ -14,8 +14,8 @@ import graalvm.compiler.replacements.nodes.UnaryMathIntrinsicNode.UnaryOperation
  * selected input values.
  */
 @ClassSubstitution(Math.class)
-public class AMD64MathSubstitutions {
-
+public class AMD64MathSubstitutions
+{
     private static final double PI_4 = Math.PI / 4;
 
     // NOTE on snippets below:
@@ -25,28 +25,40 @@ public class AMD64MathSubstitutions {
     // a slow path for inputs outside of that interval.
 
     @MethodSubstitution
-    public static double sin(double x) {
-        if (Math.abs(x) < PI_4) {
+    public static double sin(double x)
+    {
+        if (Math.abs(x) < PI_4)
+        {
             return UnaryMathIntrinsicNode.compute(x, UnaryOperation.SIN);
-        } else {
+        }
+        else
+        {
             return callDouble1(UnaryOperation.SIN.foreignCallDescriptor, x);
         }
     }
 
     @MethodSubstitution
-    public static double cos(double x) {
-        if (Math.abs(x) < PI_4) {
+    public static double cos(double x)
+    {
+        if (Math.abs(x) < PI_4)
+        {
             return UnaryMathIntrinsicNode.compute(x, UnaryOperation.COS);
-        } else {
+        }
+        else
+        {
             return callDouble1(UnaryOperation.COS.foreignCallDescriptor, x);
         }
     }
 
     @MethodSubstitution
-    public static double tan(double x) {
-        if (Math.abs(x) < PI_4) {
+    public static double tan(double x)
+    {
+        if (Math.abs(x) < PI_4)
+        {
             return UnaryMathIntrinsicNode.compute(x, UnaryOperation.TAN);
-        } else {
+        }
+        else
+        {
             return callDouble1(UnaryOperation.TAN.foreignCallDescriptor, x);
         }
     }

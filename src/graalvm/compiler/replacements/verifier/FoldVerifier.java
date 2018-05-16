@@ -13,32 +13,39 @@ import javax.tools.Diagnostic.Kind;
 
 import graalvm.compiler.api.replacements.Fold;
 
-public final class FoldVerifier extends AbstractVerifier {
-
-    public FoldVerifier(ProcessingEnvironment env) {
+public final class FoldVerifier extends AbstractVerifier
+{
+    public FoldVerifier(ProcessingEnvironment env)
+    {
         super(env);
     }
 
     @Override
-    public Class<? extends Annotation> getAnnotationClass() {
+    public Class<? extends Annotation> getAnnotationClass()
+    {
         return Fold.class;
     }
 
     @Override
-    public void verify(Element element, AnnotationMirror annotation, PluginGenerator generator) {
-        if (element.getKind() != ElementKind.METHOD) {
+    public void verify(Element element, AnnotationMirror annotation, PluginGenerator generator)
+    {
+        if (element.getKind() != ElementKind.METHOD)
+        {
             assert false : "Element is guaranteed to be a method.";
             return;
         }
 
         ExecutableElement foldMethod = (ExecutableElement) element;
-        if (foldMethod.getReturnType().getKind() == TypeKind.VOID) {
-            env.getMessager().printMessage(Kind.ERROR,
-                            String.format("A @%s method must not be void as it won't yield a compile-time constant (the reason for supporting folding!).", Fold.class.getSimpleName()), element,
-                            annotation);
-        } else if (foldMethod.getModifiers().contains(Modifier.PRIVATE)) {
+        if (foldMethod.getReturnType().getKind() == TypeKind.VOID)
+        {
+            env.getMessager().printMessage(Kind.ERROR, String.format("A @%s method must not be void as it won't yield a compile-time constant (the reason for supporting folding!).", Fold.class.getSimpleName()), element, annotation);
+        }
+        else if (foldMethod.getModifiers().contains(Modifier.PRIVATE))
+        {
             env.getMessager().printMessage(Kind.ERROR, String.format("A @%s method must not be private.", Fold.class.getSimpleName()), element, annotation);
-        } else {
+        }
+        else
+        {
             generator.addPlugin(new GeneratedFoldPlugin(foldMethod));
         }
     }

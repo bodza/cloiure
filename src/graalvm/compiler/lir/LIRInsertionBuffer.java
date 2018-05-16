@@ -16,8 +16,8 @@ import java.util.List;
  * <p>
  * Note: This class does not depend on LIRInstruction, so we could make it a generic utility class.
  */
-public final class LIRInsertionBuffer {
-
+public final class LIRInsertionBuffer
+{
     /**
      * The lir list where ops of this buffer should be inserted later (null when uninitialized).
      */
@@ -36,7 +36,8 @@ public final class LIRInsertionBuffer {
      */
     private final List<LIRInstruction> ops;
 
-    public LIRInsertionBuffer() {
+    public LIRInsertionBuffer()
+    {
         indexAndCount = new int[8];
         ops = new ArrayList<>(4);
     }
@@ -44,17 +45,20 @@ public final class LIRInsertionBuffer {
     /**
      * Initialize this buffer. This method must be called before using {@link #append}.
      */
-    public void init(List<LIRInstruction> newLir) {
+    public void init(List<LIRInstruction> newLir)
+    {
         assert !initialized() : "already initialized";
         assert indexAndCountSize == 0 && ops.size() == 0;
         this.lir = newLir;
     }
 
-    public boolean initialized() {
+    public boolean initialized()
+    {
         return lir != null;
     }
 
-    public List<LIRInstruction> lirList() {
+    public List<LIRInstruction> lirList()
+    {
         return lir;
     }
 
@@ -65,11 +69,15 @@ public final class LIRInsertionBuffer {
      * index, e.g., once an instruction was appended with index 4, subsequent instructions can only
      * be appended with index 4 or higher.
      */
-    public void append(int index, LIRInstruction op) {
+    public void append(int index, LIRInstruction op)
+    {
         int i = numberOfInsertionPoints() - 1;
-        if (i < 0 || indexAt(i) < index) {
+        if (i < 0 || indexAt(i) < index)
+        {
             appendNew(index, 1);
-        } else {
+        }
+        else
+        {
             assert indexAt(i) == index : "can append LIROps in ascending order only";
             assert countAt(i) > 0 : "check";
             setCountAt(i, countAt(i) + 1);
@@ -83,11 +91,14 @@ public final class LIRInsertionBuffer {
      * Append all enqueued instructions to the instruction list. After that, {@link #init(List)} can
      * be called again to re-use this buffer.
      */
-    public void finish() {
-        if (ops.size() > 0) {
+    public void finish()
+    {
+        if (ops.size() > 0)
+        {
             int n = lir.size();
             // increase size of instructions list
-            for (int i = 0; i < ops.size(); i++) {
+            for (int i = 0; i < ops.size(); i++)
+            {
                 lir.add(null);
             }
             // insert ops from buffer into instructions list
@@ -95,14 +106,17 @@ public final class LIRInsertionBuffer {
             int ipIndex = numberOfInsertionPoints() - 1;
             int fromIndex = n - 1;
             int toIndex = lir.size() - 1;
-            while (ipIndex >= 0) {
+            while (ipIndex >= 0)
+            {
                 int index = indexAt(ipIndex);
                 // make room after insertion point
-                while (fromIndex >= index) {
+                while (fromIndex >= index)
+                {
                     lir.set(toIndex--, lir.get(fromIndex--));
                 }
                 // insert ops from buffer
-                for (int i = countAt(ipIndex); i > 0; i--) {
+                for (int i = countAt(ipIndex); i > 0; i--)
+                {
                     lir.set(toIndex--, ops.get(opIndex--));
                 }
                 ipIndex--;
@@ -113,10 +127,12 @@ public final class LIRInsertionBuffer {
         lir = null;
     }
 
-    private void appendNew(int index, int count) {
+    private void appendNew(int index, int count)
+    {
         int oldSize = indexAndCountSize;
         int newSize = oldSize + 2;
-        if (newSize > this.indexAndCount.length) {
+        if (newSize > this.indexAndCount.length)
+        {
             indexAndCount = Arrays.copyOf(indexAndCount, newSize * 2);
         }
         indexAndCount[oldSize] = index;
@@ -124,28 +140,34 @@ public final class LIRInsertionBuffer {
         this.indexAndCountSize = newSize;
     }
 
-    private void setCountAt(int i, int value) {
+    private void setCountAt(int i, int value)
+    {
         indexAndCount[(i << 1) + 1] = value;
     }
 
-    private int numberOfInsertionPoints() {
+    private int numberOfInsertionPoints()
+    {
         assert indexAndCount.length % 2 == 0 : "must have a count for each index";
         return indexAndCountSize >> 1;
     }
 
-    private int indexAt(int i) {
+    private int indexAt(int i)
+    {
         return indexAndCount[(i << 1)];
     }
 
-    private int countAt(int i) {
+    private int countAt(int i)
+    {
         return indexAndCount[(i << 1) + 1];
     }
 
-    private boolean verify() {
+    private boolean verify()
+    {
         int sum = 0;
         int prevIdx = -1;
 
-        for (int i = 0; i < numberOfInsertionPoints(); i++) {
+        for (int i = 0; i < numberOfInsertionPoints(); i++)
+        {
             assert prevIdx < indexAt(i) : "index must be ordered ascending";
             sum += countAt(i);
         }

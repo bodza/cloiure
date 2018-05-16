@@ -32,23 +32,23 @@ import jdk.vm.ci.common.InitTimer;
  * factory must have a unique {@link #name} and {@link #autoSelectionPriority}. The latter imposes a
  * total ordering between factories for the purpose of auto-selecting the factory to use.
  */
-public abstract class CompilerConfigurationFactory implements Comparable<CompilerConfigurationFactory> {
-
-    enum ShowConfigurationLevel {
+public abstract class CompilerConfigurationFactory implements Comparable<CompilerConfigurationFactory>
+{
+    enum ShowConfigurationLevel
+    {
         none,
         info,
         verbose
     }
 
-    static class Options {
-        // @formatter:off
+    static class Options
+    {
         @Option(help = "Names the Graal compiler configuration to use. If ommitted, the compiler configuration " +
                        "with the highest auto-selection priority is used. To see the set of available configurations, " +
                        "supply the value 'help' to this option.", type = OptionType.Expert)
         public static final OptionKey<String> CompilerConfiguration = new OptionKey<>(null);
         @Option(help = "Writes to the VM log information about the Graal compiler configuration selected.", type = OptionType.User)
         public static final OptionKey<ShowConfigurationLevel> ShowConfiguration = new EnumOptionKey<>(ShowConfigurationLevel.none);
-        // @formatter:on
     }
 
     /**
@@ -63,7 +63,8 @@ public abstract class CompilerConfigurationFactory implements Comparable<Compile
      */
     private final int autoSelectionPriority;
 
-    protected CompilerConfigurationFactory(String name, int autoSelectionPriority) {
+    protected CompilerConfigurationFactory(String name, int autoSelectionPriority)
+    {
         this.name = name;
         this.autoSelectionPriority = autoSelectionPriority;
     }
@@ -74,7 +75,8 @@ public abstract class CompilerConfigurationFactory implements Comparable<Compile
      * Collect the set of available {@linkplain HotSpotBackendFactory backends} for this compiler
      * configuration.
      */
-    public BackendMap createBackendMap() {
+    public BackendMap createBackendMap()
+    {
         // default to backend with the same name as the compiler configuration
         return new DefaultBackendMap(name);
     }
@@ -82,23 +84,29 @@ public abstract class CompilerConfigurationFactory implements Comparable<Compile
     /**
      * Returns a name that should uniquely identify this compiler configuration.
      */
-    public final String getName() {
+    public final String getName()
+    {
         return name;
     }
 
-    public interface BackendMap {
+    public interface BackendMap
+    {
         HotSpotBackendFactory getBackendFactory(Architecture arch);
     }
 
-    public static class DefaultBackendMap implements BackendMap {
-
+    public static class DefaultBackendMap implements BackendMap
+    {
         private final EconomicMap<Class<? extends Architecture>, HotSpotBackendFactory> backends = EconomicMap.create();
 
         @SuppressWarnings("try")
-        public DefaultBackendMap(String backendName) {
-            try (InitTimer t = timer("HotSpotBackendFactory.register")) {
-                for (HotSpotBackendFactory backend : GraalServices.load(HotSpotBackendFactory.class)) {
-                    if (backend.getName().equals(backendName)) {
+        public DefaultBackendMap(String backendName)
+        {
+            try (InitTimer t = timer("HotSpotBackendFactory.register"))
+            {
+                for (HotSpotBackendFactory backend : GraalServices.load(HotSpotBackendFactory.class))
+                {
+                    if (backend.getName().equals(backendName))
+                    {
                         Class<? extends Architecture> arch = backend.getArchitecture();
                         HotSpotBackendFactory oldEntry = backends.put(arch, backend);
                         assert oldEntry == null || oldEntry == backend : "duplicate Graal backend";
@@ -108,17 +116,21 @@ public abstract class CompilerConfigurationFactory implements Comparable<Compile
         }
 
         @Override
-        public final HotSpotBackendFactory getBackendFactory(Architecture arch) {
+        public final HotSpotBackendFactory getBackendFactory(Architecture arch)
+        {
             return backends.get(arch.getClass());
         }
     }
 
     @Override
-    public int compareTo(CompilerConfigurationFactory o) {
-        if (autoSelectionPriority > o.autoSelectionPriority) {
+    public int compareTo(CompilerConfigurationFactory o)
+    {
+        if (autoSelectionPriority > o.autoSelectionPriority)
+        {
             return -1;
         }
-        if (autoSelectionPriority < o.autoSelectionPriority) {
+        if (autoSelectionPriority < o.autoSelectionPriority)
+        {
             return 1;
         }
         assert this == o : "distinct compiler configurations cannot have the same auto selection priority";
@@ -129,13 +141,14 @@ public abstract class CompilerConfigurationFactory implements Comparable<Compile
      * Asserts uniqueness of {@link #name} and {@link #autoSelectionPriority} for {@code factory} in
      * {@code factories}.
      */
-    private static boolean checkUnique(CompilerConfigurationFactory factory, List<CompilerConfigurationFactory> factories) {
-        for (CompilerConfigurationFactory other : factories) {
-            if (other != factory) {
+    private static boolean checkUnique(CompilerConfigurationFactory factory, List<CompilerConfigurationFactory> factories)
+    {
+        for (CompilerConfigurationFactory other : factories)
+        {
+            if (other != factory)
+            {
                 assert !other.name.equals(factory.name) : factory.getClass().getName() + " cannot have the same selector as " + other.getClass().getName() + ": " + factory.name;
-                assert other.autoSelectionPriority != factory.autoSelectionPriority : factory.getClass().getName() + " cannot have the same auto-selection priority as " +
-                                other.getClass().getName() +
-                                ": " + factory.autoSelectionPriority;
+                assert other.autoSelectionPriority != factory.autoSelectionPriority : factory.getClass().getName() + " cannot have the same auto-selection priority as " + other.getClass().getName() + ": " + factory.autoSelectionPriority;
             }
         }
         return true;
@@ -144,9 +157,11 @@ public abstract class CompilerConfigurationFactory implements Comparable<Compile
     /**
      * @return sorted list of {@link CompilerConfigurationFactory}s
      */
-    private static List<CompilerConfigurationFactory> getAllCandidates() {
+    private static List<CompilerConfigurationFactory> getAllCandidates()
+    {
         List<CompilerConfigurationFactory> candidates = new ArrayList<>();
-        for (CompilerConfigurationFactory candidate : GraalServices.load(CompilerConfigurationFactory.class)) {
+        for (CompilerConfigurationFactory candidate : GraalServices.load(CompilerConfigurationFactory.class))
+        {
             assert checkUnique(candidate, candidates);
             candidates.add(candidate);
         }
@@ -164,43 +179,58 @@ public abstract class CompilerConfigurationFactory implements Comparable<Compile
      * @param name the name of the compiler configuration to select (optional)
      */
     @SuppressWarnings("try")
-    public static CompilerConfigurationFactory selectFactory(String name, OptionValues options) {
+    public static CompilerConfigurationFactory selectFactory(String name, OptionValues options)
+    {
         CompilerConfigurationFactory factory = null;
-        try (InitTimer t = timer("CompilerConfigurationFactory.selectFactory")) {
+        try (InitTimer t = timer("CompilerConfigurationFactory.selectFactory"))
+        {
             String value = name == null ? Options.CompilerConfiguration.getValue(options) : name;
-            if ("help".equals(value)) {
+            if ("help".equals(value))
+            {
                 System.out.println("The available Graal compiler configurations are:");
-                for (CompilerConfigurationFactory candidate : getAllCandidates()) {
+                for (CompilerConfigurationFactory candidate : getAllCandidates())
+                {
                     System.out.println("    " + candidate.name);
                 }
                 System.exit(0);
-            } else if (value != null) {
-                for (CompilerConfigurationFactory candidate : GraalServices.load(CompilerConfigurationFactory.class)) {
-                    if (candidate.name.equals(value)) {
+            }
+            else if (value != null)
+            {
+                for (CompilerConfigurationFactory candidate : GraalServices.load(CompilerConfigurationFactory.class))
+                {
+                    if (candidate.name.equals(value))
+                    {
                         factory = candidate;
                         break;
                     }
                 }
-                if (factory == null) {
-                    throw new GraalError("Graal compiler configuration '%s' not found. Available configurations are: %s", value,
-                                    getAllCandidates().stream().map(c -> c.name).collect(Collectors.joining(", ")));
+                if (factory == null)
+                {
+                    throw new GraalError("Graal compiler configuration '%s' not found. Available configurations are: %s", value, getAllCandidates().stream().map(c -> c.name).collect(Collectors.joining(", ")));
                 }
-            } else {
+            }
+            else
+            {
                 List<CompilerConfigurationFactory> candidates = getAllCandidates();
-                if (candidates.isEmpty()) {
+                if (candidates.isEmpty())
+                {
                     throw new GraalError("No %s providers found", CompilerConfigurationFactory.class.getName());
                 }
                 factory = candidates.get(0);
             }
         }
         ShowConfigurationLevel level = Options.ShowConfiguration.getValue(options);
-        if (level != ShowConfigurationLevel.none) {
-            switch (level) {
-                case info: {
+        if (level != ShowConfigurationLevel.none)
+        {
+            switch (level)
+            {
+                case info:
+                {
                     printConfigInfo(factory);
                     break;
                 }
-                case verbose: {
+                case verbose:
+                {
                     printConfigInfo(factory);
                     CompilerConfiguration config = factory.createCompilerConfiguration();
                     TTY.println("High tier: " + phaseNames(config.createHighTier(options)));
@@ -217,25 +247,30 @@ public abstract class CompilerConfigurationFactory implements Comparable<Compile
         return factory;
     }
 
-    private static void printConfigInfo(CompilerConfigurationFactory factory) {
+    private static void printConfigInfo(CompilerConfigurationFactory factory)
+    {
         URL location = factory.getClass().getResource(factory.getClass().getSimpleName() + ".class");
         TTY.printf("Using Graal compiler configuration '%s' provided by %s loaded from %s%n", factory.name, factory.getClass().getName(), location);
     }
 
-    private static <C> List<String> phaseNames(PhaseSuite<C> suite) {
+    private static <C> List<String> phaseNames(PhaseSuite<C> suite)
+    {
         Collection<BasePhase<? super C>> phases = suite.getPhases();
         List<String> res = new ArrayList<>(phases.size());
-        for (BasePhase<?> phase : phases) {
+        for (BasePhase<?> phase : phases)
+        {
             res.add(phase.contractorName());
         }
         Collections.sort(res);
         return res;
     }
 
-    private static <C> List<String> phaseNames(LIRPhaseSuite<C> suite) {
+    private static <C> List<String> phaseNames(LIRPhaseSuite<C> suite)
+    {
         List<LIRPhase<C>> phases = suite.getPhases();
         List<String> res = new ArrayList<>(phases.size());
-        for (LIRPhase<?> phase : phases) {
+        for (LIRPhase<?> phase : phases)
+        {
             res.add(phase.getClass().getName());
         }
         Collections.sort(res);

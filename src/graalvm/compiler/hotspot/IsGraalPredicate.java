@@ -6,7 +6,8 @@ import jdk.vm.ci.hotspot.HotSpotJVMCICompilerFactory;
  * Determines if a given class is a JVMCI or Graal class for the purpose of
  * {@link HotSpotGraalCompilerFactory.Options#CompileGraalWithC1Only}.
  */
-public class IsGraalPredicate {
+public class IsGraalPredicate
+{
     /**
      * Module containing {@link HotSpotJVMCICompilerFactory}.
      */
@@ -23,16 +24,19 @@ public class IsGraalPredicate {
      */
     private Module compilerConfigurationModule;
 
-    public IsGraalPredicate() {
+    public IsGraalPredicate()
+    {
         jvmciModule = HotSpotJVMCICompilerFactory.class.getModule();
         graalModule = HotSpotGraalCompilerFactory.class.getModule();
     }
 
-    void onCompilerConfigurationFactorySelection(CompilerConfigurationFactory factory) {
+    void onCompilerConfigurationFactorySelection(CompilerConfigurationFactory factory)
+    {
         compilerConfigurationModule = factory.getClass().getModule();
     }
 
-    boolean apply(Class<?> declaringClass) {
+    boolean apply(Class<?> declaringClass)
+    {
         Module module = declaringClass.getModule();
         return jvmciModule == module || graalModule == module || compilerConfigurationModule == module;
     }

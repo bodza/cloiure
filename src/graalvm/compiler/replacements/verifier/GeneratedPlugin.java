@@ -18,14 +18,15 @@ import javax.lang.model.type.WildcardType;
 import graalvm.compiler.replacements.verifier.InjectedDependencies.Dependency;
 import graalvm.compiler.replacements.verifier.InjectedDependencies.WellKnownDependency;
 
-public abstract class GeneratedPlugin {
-
+public abstract class GeneratedPlugin
+{
     protected final ExecutableElement intrinsicMethod;
     private boolean needInjectionProvider;
 
     private String pluginName;
 
-    public GeneratedPlugin(ExecutableElement intrinsicMethod) {
+    public GeneratedPlugin(ExecutableElement intrinsicMethod)
+    {
         this.intrinsicMethod = intrinsicMethod;
         this.needInjectionProvider = false;
         this.pluginName = intrinsicMethod.getEnclosingElement().getSimpleName() + "_" + intrinsicMethod.getSimpleName();
@@ -33,15 +34,18 @@ public abstract class GeneratedPlugin {
 
     protected abstract Class<? extends Annotation> getAnnotationClass();
 
-    public String getPluginName() {
+    public String getPluginName()
+    {
         return pluginName;
     }
 
-    public void setPluginName(String pluginName) {
+    public void setPluginName(String pluginName)
+    {
         this.pluginName = pluginName;
     }
 
-    public void generate(ProcessingEnvironment env, PrintWriter out) {
+    public void generate(ProcessingEnvironment env, PrintWriter out)
+    {
         out.printf("    //        class: %s\n", intrinsicMethod.getEnclosingElement());
         out.printf("    //       method: %s\n", intrinsicMethod);
         out.printf("    // generated-by: %s\n", getClass().getName());
@@ -61,16 +65,20 @@ public abstract class GeneratedPlugin {
         out.printf("    }\n");
     }
 
-    public void register(PrintWriter out) {
+    public void register(PrintWriter out)
+    {
         out.printf("        plugins.register(new %s(", pluginName);
-        if (needInjectionProvider) {
+        if (needInjectionProvider)
+        {
             out.printf("injection");
         }
         out.printf("), %s.class, \"%s\"", intrinsicMethod.getEnclosingElement(), intrinsicMethod.getSimpleName());
-        if (!intrinsicMethod.getModifiers().contains(Modifier.STATIC)) {
+        if (!intrinsicMethod.getModifiers().contains(Modifier.STATIC))
+        {
             out.printf(", InvocationPlugin.Receiver.class");
         }
-        for (VariableElement arg : intrinsicMethod.getParameters()) {
+        for (VariableElement arg : intrinsicMethod.getParameters())
+        {
             out.printf(", %s.class", getErasedType(arg.asType()));
         }
         out.printf(");\n");
@@ -80,12 +88,15 @@ public abstract class GeneratedPlugin {
 
     protected abstract InjectedDependencies createExecute(ProcessingEnvironment env, PrintWriter out);
 
-    private static TypeMirror resolvedJavaTypeType(ProcessingEnvironment env) {
+    private static TypeMirror resolvedJavaTypeType(ProcessingEnvironment env)
+    {
         return env.getElementUtils().getTypeElement("jdk.vm.ci.meta.ResolvedJavaType").asType();
     }
 
-    static String getErasedType(TypeMirror type) {
-        switch (type.getKind()) {
+    static String getErasedType(TypeMirror type)
+    {
+        switch (type.getKind())
+        {
             case DECLARED:
                 DeclaredType declared = (DeclaredType) type;
                 TypeElement element = (TypeElement) declared.asElement();
@@ -101,8 +112,10 @@ public abstract class GeneratedPlugin {
         }
     }
 
-    static boolean hasRawtypeWarning(TypeMirror type) {
-        switch (type.getKind()) {
+    static boolean hasRawtypeWarning(TypeMirror type)
+    {
+        switch (type.getKind())
+        {
             case DECLARED:
                 DeclaredType declared = (DeclaredType) type;
                 return declared.getTypeArguments().size() > 0;
@@ -117,12 +130,16 @@ public abstract class GeneratedPlugin {
         }
     }
 
-    static boolean hasUncheckedWarning(TypeMirror type) {
-        switch (type.getKind()) {
+    static boolean hasUncheckedWarning(TypeMirror type)
+    {
+        switch (type.getKind())
+        {
             case DECLARED:
                 DeclaredType declared = (DeclaredType) type;
-                for (TypeMirror typeParam : declared.getTypeArguments()) {
-                    if (hasUncheckedWarning(typeParam)) {
+                for (TypeMirror typeParam : declared.getTypeArguments())
+                {
+                    if (hasUncheckedWarning(typeParam))
+                    {
                         return true;
                     }
                 }
@@ -138,16 +155,20 @@ public abstract class GeneratedPlugin {
         }
     }
 
-    private void createPrivateMembers(PrintWriter out, InjectedDependencies deps) {
-        if (!deps.isEmpty()) {
+    private void createPrivateMembers(PrintWriter out, InjectedDependencies deps)
+    {
+        if (!deps.isEmpty())
+        {
             out.printf("\n");
-            for (Dependency dep : deps) {
+            for (Dependency dep : deps)
+            {
                 out.printf("        private final %s %s;\n", dep.type, dep.name);
             }
 
             out.printf("\n");
             out.printf("        private %s(InjectionProvider injection) {\n", pluginName);
-            for (Dependency dep : deps) {
+            for (Dependency dep : deps)
+            {
                 out.printf("            this.%s = %s;\n", dep.name, dep.inject(intrinsicMethod));
             }
             out.printf("        }\n");
@@ -156,8 +177,10 @@ public abstract class GeneratedPlugin {
         }
     }
 
-    protected static String getReturnKind(ExecutableElement method) {
-        switch (method.getReturnType().getKind()) {
+    protected static String getReturnKind(ExecutableElement method)
+    {
+        switch (method.getReturnType().getKind())
+        {
             case BOOLEAN:
             case BYTE:
             case SHORT:
@@ -181,16 +204,22 @@ public abstract class GeneratedPlugin {
         }
     }
 
-    protected static void constantArgument(ProcessingEnvironment env, PrintWriter out, InjectedDependencies deps, int argIdx, TypeMirror type, int nodeIdx) {
-        if (hasRawtypeWarning(type)) {
+    protected static void constantArgument(ProcessingEnvironment env, PrintWriter out, InjectedDependencies deps, int argIdx, TypeMirror type, int nodeIdx)
+    {
+        if (hasRawtypeWarning(type))
+        {
             out.printf("            @SuppressWarnings({\"rawtypes\"})\n");
         }
         out.printf("            %s arg%d;\n", getErasedType(type), argIdx);
         out.printf("            if (args[%d].isConstant()) {\n", nodeIdx);
-        if (type.equals(resolvedJavaTypeType(env))) {
+        if (type.equals(resolvedJavaTypeType(env)))
+        {
             out.printf("                arg%d = %s.asJavaType(args[%d].asConstant());\n", argIdx, deps.use(WellKnownDependency.CONSTANT_REFLECTION), nodeIdx);
-        } else {
-            switch (type.getKind()) {
+        }
+        else
+        {
+            switch (type.getKind())
+            {
                 case BOOLEAN:
                     out.printf("                arg%d = args[%d].asJavaConstant().asInt() != 0;\n", argIdx, nodeIdx);
                     break;

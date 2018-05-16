@@ -37,14 +37,14 @@ import jdk.vm.ci.meta.Value;
  *  r1 := r2           r2 := r3
  * </pre>
  */
-public class PhiResolver {
-
+public class PhiResolver
+{
     /**
      * Tracks a data flow dependency between a source operand and any number of the destination
      * operands.
      */
-    static class PhiResolverNode {
-
+    static class PhiResolverNode
+    {
         /**
          * A source operand whose value flows into the {@linkplain #destinations destination}
          * operands.
@@ -72,17 +72,21 @@ public class PhiResolver {
          */
         boolean startNode;
 
-        PhiResolverNode(Value operand) {
+        PhiResolverNode(Value operand)
+        {
             this.operand = operand;
             destinations = new ArrayList<>(4);
         }
 
         @Override
-        public String toString() {
+        public String toString()
+        {
             StringBuilder buf = new StringBuilder(operand.toString());
-            if (!destinations.isEmpty()) {
+            if (!destinations.isEmpty())
+            {
                 buf.append(" ->");
-                for (PhiResolverNode node : destinations) {
+                for (PhiResolverNode node : destinations)
+                {
                     buf.append(' ').append(node.operand);
                 }
             }
@@ -110,7 +114,8 @@ public class PhiResolver {
      */
     private final EconomicMap<Value, PhiResolverNode> operandToNodeMap = EconomicMap.create(Equivalence.DEFAULT);
 
-    public static PhiResolver create(LIRGeneratorTool gen) {
+    public static PhiResolver create(LIRGeneratorTool gen)
+    {
         AbstractBlockBase<?> block = gen.getCurrentBlock();
         assert block != null;
         ArrayList<LIRInstruction> instructions = gen.getResult().getLIR().getLIRforBlock(block);
@@ -118,11 +123,13 @@ public class PhiResolver {
         return new PhiResolver(gen, new LIRInsertionBuffer(), instructions, instructions.size());
     }
 
-    public static PhiResolver create(LIRGeneratorTool gen, LIRInsertionBuffer buffer, List<LIRInstruction> instructions, int insertBefore) {
+    public static PhiResolver create(LIRGeneratorTool gen, LIRInsertionBuffer buffer, List<LIRInstruction> instructions, int insertBefore)
+    {
         return new PhiResolver(gen, buffer, instructions, insertBefore);
     }
 
-    protected PhiResolver(LIRGeneratorTool gen, LIRInsertionBuffer buffer, List<LIRInstruction> instructions, int insertBefore) {
+    protected PhiResolver(LIRGeneratorTool gen, LIRInsertionBuffer buffer, List<LIRInstruction> instructions, int insertBefore)
+    {
         this.gen = gen;
         moveFactory = gen.getSpillMoveFactory();
         temp = ILLEGAL;
@@ -130,14 +137,16 @@ public class PhiResolver {
         this.buffer = buffer;
         this.buffer.init(instructions);
         this.insertBefore = insertBefore;
-
     }
 
-    public void dispose() {
+    public void dispose()
+    {
         // resolve any cycles in moves from and to variables
-        for (int i = variableOperands.size() - 1; i >= 0; i--) {
+        for (int i = variableOperands.size() - 1; i >= 0; i--)
+        {
             PhiResolverNode node = variableOperands.get(i);
-            if (!node.visited) {
+            if (!node.visited)
+            {
                 loop = null;
                 move(node, null);
                 node.startNode = true;
@@ -146,16 +155,19 @@ public class PhiResolver {
         }
 
         // generate move for move from non variable to arbitrary destination
-        for (int i = otherOperands.size() - 1; i >= 0; i--) {
+        for (int i = otherOperands.size() - 1; i >= 0; i--)
+        {
             PhiResolverNode node = otherOperands.get(i);
-            for (int j = node.destinations.size() - 1; j >= 0; j--) {
+            for (int j = node.destinations.size() - 1; j >= 0; j--)
+            {
                 emitMove(node.destinations.get(j).operand, node.operand);
             }
         }
         buffer.finish();
     }
 
-    public void move(Value dest, Value src) {
+    public void move(Value dest, Value src)
+    {
         assert isVariable(dest) : "destination must be virtual";
         // tty.print("move "); src.print(); tty.print(" to "); dest.print(); tty.cr();
         assert isLegal(src) : "source for phi move is illegal";
@@ -165,23 +177,30 @@ public class PhiResolver {
         srcNode.destinations.add(destNode);
     }
 
-    private PhiResolverNode createNode(Value operand, boolean source) {
+    private PhiResolverNode createNode(Value operand, boolean source)
+    {
         PhiResolverNode node;
-        if (isVariable(operand)) {
+        if (isVariable(operand))
+        {
             node = operandToNodeMap.get(operand);
             assert node == null || node.operand.equals(operand);
-            if (node == null) {
+            if (node == null)
+            {
                 node = new PhiResolverNode(operand);
                 operandToNodeMap.put(operand, node);
             }
             // Make sure that all variables show up in the list when
             // they are used as the source of a move.
-            if (source) {
-                if (!variableOperands.contains(node)) {
+            if (source)
+            {
+                if (!variableOperands.contains(node))
+                {
                     variableOperands.add(node);
                 }
             }
-        } else {
+        }
+        else
+        {
             assert source;
             node = new PhiResolverNode(operand);
             otherOperands.add(node);
@@ -189,11 +208,13 @@ public class PhiResolver {
         return node;
     }
 
-    private PhiResolverNode destinationNode(Value opr) {
+    private PhiResolverNode destinationNode(Value opr)
+    {
         return createNode(opr, false);
     }
 
-    private void emitMove(Value dest, Value src) {
+    private void emitMove(Value dest, Value src)
+    {
         assert isLegal(src);
         assert isLegal(dest);
         LIRInstruction move = moveFactory.createMove((AllocatableValue) dest, src);
@@ -207,13 +228,18 @@ public class PhiResolver {
     // ie. cycle a := b, b := a start with node a
     // Call graph: move(a, NULL) -> move(b, a) -> move(a, b)
     // Generates moves in this order: move b to temp, move a to b, move temp to a
-    private void move(PhiResolverNode dest, PhiResolverNode src) {
-        if (!dest.visited) {
+    private void move(PhiResolverNode dest, PhiResolverNode src)
+    {
+        if (!dest.visited)
+        {
             dest.visited = true;
-            for (int i = dest.destinations.size() - 1; i >= 0; i--) {
+            for (int i = dest.destinations.size() - 1; i >= 0; i--)
+            {
                 move(dest.destinations.get(i), dest);
             }
-        } else if (!dest.startNode) {
+        }
+        else if (!dest.startNode)
+        {
             // cycle in graph detected
             assert loop == null : "only one loop valid!";
             loop = dest;
@@ -221,30 +247,37 @@ public class PhiResolver {
             return;
         } // else dest is a start node
 
-        if (!dest.assigned) {
-            if (loop == dest) {
+        if (!dest.assigned)
+        {
+            if (loop == dest)
+            {
                 moveTempTo(dest.operand);
                 dest.assigned = true;
-            } else if (src != null) {
+            }
+            else if (src != null)
+            {
                 emitMove(dest.operand, src.operand);
                 dest.assigned = true;
             }
         }
     }
 
-    private void moveTempTo(Value dest) {
+    private void moveTempTo(Value dest)
+    {
         assert isLegal(temp);
         emitMove(dest, temp);
         temp = ILLEGAL;
     }
 
-    private void moveToTemp(Value src) {
+    private void moveToTemp(Value src)
+    {
         assert isIllegal(temp);
         temp = gen.newVariable(src.getValueKind());
         emitMove(temp, src);
     }
 
-    private PhiResolverNode sourceNode(Value opr) {
+    private PhiResolverNode sourceNode(Value opr)
+    {
         return createNode(opr, true);
     }
 }

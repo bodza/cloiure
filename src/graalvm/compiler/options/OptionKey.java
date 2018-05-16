@@ -7,20 +7,22 @@ import org.graalvm.collections.EconomicMap;
 /**
  * A key for an option. The value for an option is obtained from an {@link OptionValues} object.
  */
-public class OptionKey<T> {
-
+public class OptionKey<T>
+{
     private final T defaultValue;
 
     private OptionDescriptor descriptor;
 
-    public OptionKey(T defaultValue) {
+    public OptionKey(T defaultValue)
+    {
         this.defaultValue = defaultValue;
     }
 
     /**
      * Sets the descriptor for this option.
      */
-    public final void setDescriptor(OptionDescriptor descriptor) {
+    public final void setDescriptor(OptionDescriptor descriptor)
+    {
         assert this.descriptor == null : "Overwriting existing descriptor";
         this.descriptor = descriptor;
     }
@@ -29,27 +31,26 @@ public class OptionKey<T> {
      * Returns the descriptor for this option, if it has been set by
      * {@link #setDescriptor(OptionDescriptor)}.
      */
-    public final OptionDescriptor getDescriptor() {
+    public final OptionDescriptor getDescriptor()
+    {
         return descriptor;
     }
 
     /**
      * Checks that a descriptor exists for this key after triggering loading of descriptors.
      */
-    protected boolean checkDescriptorExists() {
+    protected boolean checkDescriptorExists()
+    {
         OptionKey.Lazy.init();
-        if (descriptor == null) {
+        if (descriptor == null)
+        {
             Formatter buf = new Formatter();
-            buf.format("Could not find a descriptor for an option key. The most likely cause is " +
-                            "a dependency on the %s annotation without a dependency on the " +
-                            "graalvm.compiler.options.processor.OptionProcessor annotation processor.", Option.class.getName());
+            buf.format("Could not find a descriptor for an option key. The most likely cause is " + "a dependency on the %s annotation without a dependency on the " + "graalvm.compiler.options.processor.OptionProcessor annotation processor.", Option.class.getName());
             StackTraceElement[] stackTrace = new Exception().getStackTrace();
-            if (stackTrace.length > 2 &&
-                            stackTrace[1].getClassName().equals(OptionKey.class.getName()) &&
-                            stackTrace[1].getMethodName().equals("getValue")) {
+            if (stackTrace.length > 2 && stackTrace[1].getClassName().equals(OptionKey.class.getName()) && stackTrace[1].getMethodName().equals("getValue"))
+            {
                 String caller = stackTrace[2].getClassName();
-                buf.format(" In suite.py, add GRAAL_OPTIONS_PROCESSOR to the \"annotationProcessors\" attribute of the project " +
-                                "containing %s.", caller);
+                buf.format(" In suite.py, add GRAAL_OPTIONS_PROCESSOR to the \"annotationProcessors\" attribute of the project " + "containing %s.", caller);
             }
             throw new AssertionError(buf.toString());
         }
@@ -60,16 +61,21 @@ public class OptionKey<T> {
      * Mechanism for lazily loading all available options which has the side effect of assigning
      * names to the options.
      */
-    static class Lazy {
-        static {
-            for (OptionDescriptors opts : OptionsParser.getOptionsLoader()) {
-                for (OptionDescriptor desc : opts) {
+    static class Lazy
+    {
+        static
+        {
+            for (OptionDescriptors opts : OptionsParser.getOptionsLoader())
+            {
+                for (OptionDescriptor desc : opts)
+                {
                     desc.getName();
                 }
             }
         }
 
-        static void init() {
+        static void init()
+        {
             /* Running the static class initializer does all the initialization. */
         }
     }
@@ -79,8 +85,10 @@ public class OptionKey<T> {
      * {@linkplain #setDescriptor(OptionDescriptor) descriptor} is the value of
      * {@link Object#toString()}.
      */
-    public final String getName() {
-        if (descriptor == null) {
+    public final String getName()
+    {
+        if (descriptor == null)
+        {
             // Trigger initialization of OptionsLoader to ensure all option values have
             // a descriptor which is required for them to have meaningful names.
             Lazy.init();
@@ -89,14 +97,16 @@ public class OptionKey<T> {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return getName();
     }
 
     /**
      * The initial value specified in source code.
      */
-    public final T getDefaultValue() {
+    public final T getDefaultValue()
+    {
         return defaultValue;
     }
 
@@ -104,14 +114,16 @@ public class OptionKey<T> {
      * Returns true if the option has been set in any way. Note that this doesn't mean that the
      * current value is different than the default.
      */
-    public boolean hasBeenSet(OptionValues values) {
+    public boolean hasBeenSet(OptionValues values)
+    {
         return values.containsKey(this);
     }
 
     /**
      * Gets the value of this option in {@code values}.
      */
-    public T getValue(OptionValues values) {
+    public T getValue(OptionValues values)
+    {
         assert checkDescriptorExists();
         return values.get(this);
     }
@@ -124,7 +136,8 @@ public class OptionKey<T> {
      * @param v the value to set for this key in {@code map}
      */
     @SuppressWarnings("unchecked")
-    public void update(EconomicMap<OptionKey<?>, Object> values, Object v) {
+    public void update(EconomicMap<OptionKey<?>, Object> values, Object v)
+    {
         T oldValue = (T) values.put(this, v);
         onValueUpdate(values, oldValue, (T) v);
     }
@@ -137,8 +150,10 @@ public class OptionKey<T> {
      * @param v the value to set for this key in {@code map}
      */
     @SuppressWarnings("unchecked")
-    public void putIfAbsent(EconomicMap<OptionKey<?>, Object> values, Object v) {
-        if (!values.containsKey(this)) {
+    public void putIfAbsent(EconomicMap<OptionKey<?>, Object> values, Object v)
+    {
+        if (!values.containsKey(this))
+        {
             T oldValue = (T) values.put(this, v);
             onValueUpdate(values, oldValue, (T) v);
         }
@@ -152,6 +167,7 @@ public class OptionKey<T> {
      * @param oldValue
      * @param newValue
      */
-    protected void onValueUpdate(EconomicMap<OptionKey<?>, Object> values, T oldValue, T newValue) {
+    protected void onValueUpdate(EconomicMap<OptionKey<?>, Object> values, T oldValue, T newValue)
+    {
     }
 }

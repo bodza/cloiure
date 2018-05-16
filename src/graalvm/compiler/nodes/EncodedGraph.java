@@ -14,8 +14,8 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * {@link GraphEncoder} for a description of the encoding format. Use {@link GraphDecoder} for
  * decoding.
  */
-public final class EncodedGraph {
-
+public final class EncodedGraph
+{
     private final byte[] encoding;
     private final int startOffset;
     private final Object[] objects;
@@ -32,13 +32,13 @@ public final class EncodedGraph {
      */
     protected int[] nodeStartOffsets;
 
-    public EncodedGraph(byte[] encoding, int startOffset, Object[] objects, NodeClass<?>[] types, StructuredGraph sourceGraph) {
-        this(encoding, startOffset, objects, types, sourceGraph.getAssumptions(), sourceGraph.getMethods(), sourceGraph.getFields(), sourceGraph.hasUnsafeAccess(),
-                        sourceGraph.trackNodeSourcePosition());
+    public EncodedGraph(byte[] encoding, int startOffset, Object[] objects, NodeClass<?>[] types, StructuredGraph sourceGraph)
+    {
+        this(encoding, startOffset, objects, types, sourceGraph.getAssumptions(), sourceGraph.getMethods(), sourceGraph.getFields(), sourceGraph.hasUnsafeAccess(), sourceGraph.trackNodeSourcePosition());
     }
 
-    public EncodedGraph(byte[] encoding, int startOffset, Object[] objects, NodeClass<?>[] types, Assumptions assumptions, List<ResolvedJavaMethod> inlinedMethods,
-                    EconomicSet<ResolvedJavaField> fields, boolean hasUnsafeAccess, boolean trackNodeSourcePosition) {
+    public EncodedGraph(byte[] encoding, int startOffset, Object[] objects, NodeClass<?>[] types, Assumptions assumptions, List<ResolvedJavaMethod> inlinedMethods, EconomicSet<ResolvedJavaField> fields, boolean hasUnsafeAccess, boolean trackNodeSourcePosition)
+    {
         this.encoding = encoding;
         this.startOffset = startOffset;
         this.objects = objects;
@@ -50,39 +50,48 @@ public final class EncodedGraph {
         this.hasUnsafeAccess = hasUnsafeAccess;
     }
 
-    public byte[] getEncoding() {
+    public byte[] getEncoding()
+    {
         return encoding;
     }
 
-    public int getStartOffset() {
+    public int getStartOffset()
+    {
         return startOffset;
     }
 
-    public Object[] getObjects() {
+    public Object[] getObjects()
+    {
         return objects;
     }
 
-    public NodeClass<?>[] getNodeClasses() {
+    public NodeClass<?>[] getNodeClasses()
+    {
         return types;
     }
 
-    public Assumptions getAssumptions() {
+    public Assumptions getAssumptions()
+    {
         return assumptions;
     }
 
-    public List<ResolvedJavaMethod> getInlinedMethods() {
+    public List<ResolvedJavaMethod> getInlinedMethods()
+    {
         return inlinedMethods;
     }
 
-    public boolean trackNodeSourcePosition() {
+    public boolean trackNodeSourcePosition()
+    {
         return trackNodeSourcePosition;
     }
 
-    public EconomicSet<ResolvedJavaField> getFields() {
+    public EconomicSet<ResolvedJavaField> getFields()
+    {
         return fields;
     }
 
-    public boolean hasUnsafeAccess() {
+    public boolean hasUnsafeAccess()
+    {
         return hasUnsafeAccess;
     }
 }

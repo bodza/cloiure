@@ -8,16 +8,20 @@ import graalvm.compiler.nodes.StructuredGraph;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 @NodeInfo
-public class ProfileInvokeNode extends ProfileWithNotificationNode {
+public class ProfileInvokeNode extends ProfileWithNotificationNode
+{
     public static final NodeClass<ProfileInvokeNode> TYPE = NodeClass.create(ProfileInvokeNode.class);
 
-    public ProfileInvokeNode(ResolvedJavaMethod method, int freqLog, int probabilityLog) {
+    public ProfileInvokeNode(ResolvedJavaMethod method, int freqLog, int probabilityLog)
+    {
         super(TYPE, method, freqLog, probabilityLog);
     }
 
     @Override
-    protected boolean canBeMergedWith(ProfileNode p) {
-        if (p instanceof ProfileInvokeNode) {
+    protected boolean canBeMergedWith(ProfileNode p)
+    {
+        if (p instanceof ProfileInvokeNode)
+        {
             ProfileInvokeNode that = (ProfileInvokeNode) p;
             return this.method.equals(that.method);
         }
@@ -28,7 +32,8 @@ public class ProfileInvokeNode extends ProfileWithNotificationNode {
      * Gathers all the {@link ProfileInvokeNode}s that are inputs to the
      * {@linkplain StructuredGraph#getNodes() live nodes} in a given graph.
      */
-    public static NodeIterable<ProfileInvokeNode> getProfileInvokeNodes(StructuredGraph graph) {
+    public static NodeIterable<ProfileInvokeNode> getProfileInvokeNodes(StructuredGraph graph)
+    {
         return graph.getNodes().filter(ProfileInvokeNode.class);
     }
 }

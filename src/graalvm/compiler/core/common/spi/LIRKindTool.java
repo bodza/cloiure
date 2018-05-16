@@ -5,8 +5,8 @@ import graalvm.compiler.core.common.LIRKind;
 /**
  * This interface can be used to access platform and VM specific kinds.
  */
-public interface LIRKindTool {
-
+public interface LIRKindTool
+{
     /**
      * Get an architecture specific integer kind of a certain size.
      */

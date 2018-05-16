@@ -16,7 +16,8 @@ import java.net.URISyntaxException;
  *
  * @since 0.33 part of GraalVM 0.33
  */
-public interface GraphLocations<M, P, L> {
+public interface GraphLocations<M, P, L>
+{
     /**
      * Stack trace element for a method, index and position. Returns all applicable source locations
      * for given code position. Each provided location is expected to represent location in a

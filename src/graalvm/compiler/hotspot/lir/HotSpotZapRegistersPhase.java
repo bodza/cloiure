@@ -29,52 +29,65 @@ import jdk.vm.ci.meta.AllocatableValue;
  * {@link DiagnosticLIRGeneratorTool#zapArgumentSpace ZapArgumentSpaceOp} after
  * {@link ZapStackArgumentSpaceBeforeInstruction} for all compiles.
  */
-public final class HotSpotZapRegistersPhase extends PostAllocationOptimizationPhase {
-
+public final class HotSpotZapRegistersPhase extends PostAllocationOptimizationPhase
+{
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, PostAllocationOptimizationContext context) {
+    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, PostAllocationOptimizationContext context)
+    {
         Stub stub = ((HotSpotLIRGenerationResult) lirGenRes).getStub();
         boolean zapRegisters = stub != null && !stub.preservesRegisters();
         boolean zapStack = false;
-        for (AllocatableValue arg : lirGenRes.getCallingConvention().getArguments()) {
-            if (isStackSlot(arg)) {
+        for (AllocatableValue arg : lirGenRes.getCallingConvention().getArguments())
+        {
+            if (isStackSlot(arg))
+            {
                 zapStack = true;
                 break;
             }
         }
-        if (zapRegisters || zapStack) {
+        if (zapRegisters || zapStack)
+        {
             LIR lir = lirGenRes.getLIR();
             processLIR(context.diagnosticLirGenTool, (HotSpotLIRGenerationResult) lirGenRes, lir, zapRegisters, zapStack);
         }
     }
 
-    private static void processLIR(DiagnosticLIRGeneratorTool diagnosticLirGenTool, HotSpotLIRGenerationResult res, LIR lir, boolean zapRegisters, boolean zapStack) {
+    private static void processLIR(DiagnosticLIRGeneratorTool diagnosticLirGenTool, HotSpotLIRGenerationResult res, LIR lir, boolean zapRegisters, boolean zapStack)
+    {
         LIRInsertionBuffer buffer = new LIRInsertionBuffer();
-        for (AbstractBlockBase<?> block : lir.codeEmittingOrder()) {
-            if (block != null) {
+        for (AbstractBlockBase<?> block : lir.codeEmittingOrder())
+        {
+            if (block != null)
+            {
                 processBlock(diagnosticLirGenTool, res, lir, buffer, block, zapRegisters, zapStack);
             }
         }
     }
 
     @SuppressWarnings("try")
-    private static void processBlock(DiagnosticLIRGeneratorTool diagnosticLirGenTool, HotSpotLIRGenerationResult res, LIR lir, LIRInsertionBuffer buffer, AbstractBlockBase<?> block,
-                    boolean zapRegisters, boolean zapStack) {
+    private static void processBlock(DiagnosticLIRGeneratorTool diagnosticLirGenTool, HotSpotLIRGenerationResult res, LIR lir, LIRInsertionBuffer buffer, AbstractBlockBase<?> block, boolean zapRegisters, boolean zapStack)
+    {
         DebugContext debug = lir.getDebug();
-        try (Indent indent = debug.logAndIndent("Process block %s", block)) {
+        try (Indent indent = debug.logAndIndent("Process block %s", block))
+        {
             ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
             buffer.init(instructions);
-            for (int index = 0; index < instructions.size(); index++) {
+            for (int index = 0; index < instructions.size(); index++)
+            {
                 LIRInstruction inst = instructions.get(index);
-                if (zapStack && inst instanceof ZapStackArgumentSpaceBeforeInstruction) {
+                if (zapStack && inst instanceof ZapStackArgumentSpaceBeforeInstruction)
+                {
                     LIRInstruction zap = diagnosticLirGenTool.zapArgumentSpace();
-                    if (zap != null) {
+                    if (zap != null)
+                    {
                         buffer.append(index, zap);
                     }
                 }
-                if (zapRegisters && inst instanceof ZapRegistersAfterInstruction) {
+                if (zapRegisters && inst instanceof ZapRegistersAfterInstruction)
+                {
                     LIRFrameState state = getLIRState(inst);
-                    if (state != null) {
+                    if (state != null)
+                    {
                         SaveRegistersOp zap = diagnosticLirGenTool.createZapRegisters();
                         SaveRegistersOp old = res.getCalleeSaveInfo().put(state, zap);
                         assert old == null : "Already another SaveRegisterOp registered! " + old;
@@ -90,14 +103,15 @@ public final class HotSpotZapRegistersPhase extends PostAllocationOptimizationPh
     /**
      * Returns the {@link LIRFrameState} of an instruction.
      */
-    private static LIRFrameState getLIRState(LIRInstruction inst) {
+    private static LIRFrameState getLIRState(LIRInstruction inst)
+    {
         final LIRFrameState[] lirState = {null};
-        inst.forEachState(state -> {
+        inst.forEachState(state ->
+        {
             assert lirState[0] == null : "Multiple states: " + inst;
             lirState[0] = state;
         });
         assert lirState[0] != null : "No state: " + inst;
         return lirState[0];
     }
-
 }

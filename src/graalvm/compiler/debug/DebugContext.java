@@ -54,8 +54,8 @@ import jdk.vm.ci.meta.JavaMethod;
  * taken when such objects can be exposed to multiple threads (e.g., they are in a non-thread-local
  * cache).
  */
-public final class DebugContext implements AutoCloseable {
-
+public final class DebugContext implements AutoCloseable
+{
     public static final Description NO_DESCRIPTION = null;
     public static final GlobalMetrics NO_GLOBAL_METRIC_VALUES = null;
     public static final Iterable<DebugHandlersFactory> NO_CONFIG_CUSTOMIZERS = Collections.emptyList();
@@ -91,15 +91,21 @@ public final class DebugContext implements AutoCloseable {
     /**
      * Determines if dynamic scopes are enabled.
      */
-    public boolean areScopesEnabled() {
+    public boolean areScopesEnabled()
+    {
         return immutable.scopesEnabled;
     }
 
-    public <G, N, M> GraphOutput<G, M> buildOutput(GraphOutput.Builder<G, N, M> builder) throws IOException {
-        if (parentOutput != null) {
+    public <G, N, M> GraphOutput<G, M> buildOutput(GraphOutput.Builder<G, N, M> builder) throws IOException
+    {
+        if (parentOutput != null)
+        {
             return builder.build(parentOutput);
-        } else {
-            if (sharedChannel == null) {
+        }
+        else
+        {
+            if (sharedChannel == null)
+            {
                 sharedChannel = new IgvDumpChannel(() -> getDumpPath(".bgv", false), immutable.options);
             }
             final GraphOutput<G, M> output = builder.build(sharedChannel);
@@ -118,15 +124,16 @@ public final class DebugContext implements AutoCloseable {
      * @return {@code properties} with version properties added or an unmodifiable map containing
      *         the version properties if {@code properties == null}
      */
-    public static Map<Object, Object> addVersionProperties(Map<Object, Object> properties) {
+    public static Map<Object, Object> addVersionProperties(Map<Object, Object> properties)
+    {
         return Versions.VERSIONS.withVersions(properties);
     }
 
     /**
      * The immutable configuration that can be shared between {@link DebugContext} objects.
      */
-    static final class Immutable {
-
+    static final class Immutable
+    {
         private static final Immutable[] CACHE = new Immutable[5];
 
         /**
@@ -159,55 +166,73 @@ public final class DebugContext implements AutoCloseable {
          */
         final EconomicSet<String> unscopedMemUseTrackers;
 
-        private static EconomicSet<String> parseUnscopedMetricSpec(String spec, boolean unconditional, boolean accumulatedKey) {
+        private static EconomicSet<String> parseUnscopedMetricSpec(String spec, boolean unconditional, boolean accumulatedKey)
+        {
             EconomicSet<String> res;
-            if (spec == null) {
-                if (!unconditional) {
+            if (spec == null)
+            {
+                if (!unconditional)
+                {
                     res = null;
-                } else {
+                }
+                else
+                {
                     res = EconomicSet.create();
                 }
-            } else {
+            }
+            else
+            {
                 res = EconomicSet.create();
-                if (!spec.isEmpty()) {
-                    if (!accumulatedKey) {
+                if (!spec.isEmpty())
+                {
+                    if (!accumulatedKey)
+                    {
                         res.addAll(Arrays.asList(spec.split(",")));
-                    } else {
-                        for (String n : spec.split(",")) {
+                    }
+                    else
+                    {
+                        for (String n : spec.split(","))
+                        {
                             res.add(n + AccumulatedKey.ACCUMULATED_KEY_SUFFIX);
                             res.add(n + AccumulatedKey.FLAT_KEY_SUFFIX);
                         }
                     }
-
                 }
             }
             return res;
         }
 
-        static Immutable create(OptionValues options) {
+        static Immutable create(OptionValues options)
+        {
             int i = 0;
-            while (i < CACHE.length) {
+            while (i < CACHE.length)
+            {
                 Immutable immutable = CACHE[i];
-                if (immutable == null) {
+                if (immutable == null)
+                {
                     break;
                 }
-                if (immutable.options == options) {
+                if (immutable.options == options)
+                {
                     return immutable;
                 }
                 i++;
             }
             Immutable immutable = new Immutable(options);
-            if (i < CACHE.length) {
+            if (i < CACHE.length)
+            {
                 CACHE[i] = immutable;
             }
             return immutable;
         }
 
-        private static boolean isNotEmpty(OptionKey<String> option, OptionValues options) {
+        private static boolean isNotEmpty(OptionKey<String> option, OptionValues options)
+        {
             return option.getValue(options) != null && !option.getValue(options).isEmpty();
         }
 
-        private Immutable(OptionValues options) {
+        private Immutable(OptionValues options)
+        {
             this.options = options;
             String timeValue = Time.getValue(options);
             String trackMemUseValue = TrackMemUse.getValue(options);
@@ -215,29 +240,28 @@ public final class DebugContext implements AutoCloseable {
             this.unscopedTimers = parseUnscopedMetricSpec(Timers.getValue(options), "".equals(timeValue), true);
             this.unscopedMemUseTrackers = parseUnscopedMetricSpec(MemUseTrackers.getValue(options), "".equals(trackMemUseValue), true);
 
-            if (unscopedTimers != null || timeValue != null) {
-                if (!GraalServices.isCurrentThreadCpuTimeSupported()) {
+            if (unscopedTimers != null || timeValue != null)
+            {
+                if (!GraalServices.isCurrentThreadCpuTimeSupported())
+                {
                     throw new IllegalArgumentException("Time and Timers options require VM support for querying CPU time");
                 }
             }
 
-            if (unscopedMemUseTrackers != null || trackMemUseValue != null) {
-                if (!GraalServices.isThreadAllocatedMemorySupported()) {
+            if (unscopedMemUseTrackers != null || trackMemUseValue != null)
+            {
+                if (!GraalServices.isThreadAllocatedMemorySupported())
+                {
                     throw new IllegalArgumentException("MemUseTrackers and TrackMemUse options require VM support for querying thread allocated memory");
                 }
             }
 
-            this.scopesEnabled = DumpOnError.getValue(options) ||
-                            Dump.getValue(options) != null ||
-                            Log.getValue(options) != null ||
-                            isNotEmpty(DebugOptions.Count, options) ||
-                            isNotEmpty(DebugOptions.Time, options) ||
-                            isNotEmpty(DebugOptions.TrackMemUse, options) ||
-                            DumpOnPhaseChange.getValue(options) != null;
+            this.scopesEnabled = DumpOnError.getValue(options) || Dump.getValue(options) != null || Log.getValue(options) != null || isNotEmpty(DebugOptions.Count, options) || isNotEmpty(DebugOptions.Time, options) || isNotEmpty(DebugOptions.TrackMemUse, options) || DumpOnPhaseChange.getValue(options) != null;
             this.listMetrics = ListMetrics.getValue(options);
         }
 
-        private Immutable() {
+        private Immutable()
+        {
             this.options = new OptionValues(EconomicMap.create());
             this.unscopedCounters = null;
             this.unscopedTimers = null;
@@ -246,7 +270,8 @@ public final class DebugContext implements AutoCloseable {
             this.listMetrics = false;
         }
 
-        public boolean hasUnscopedMetrics() {
+        public boolean hasUnscopedMetrics()
+        {
             return unscopedCounters != null || unscopedTimers != null || unscopedMemUseTrackers != null;
         }
     }
@@ -254,11 +279,13 @@ public final class DebugContext implements AutoCloseable {
     /**
      * Gets the options this debug context was constructed with.
      */
-    public OptionValues getOptions() {
+    public OptionValues getOptions()
+    {
         return immutable.options;
     }
 
-    static class Activated extends ThreadLocal<DebugContext> {
+    static class Activated extends ThreadLocal<DebugContext>
+    {
     }
 
     private static final Activated activated = new Activated();
@@ -266,15 +293,18 @@ public final class DebugContext implements AutoCloseable {
     /**
      * An object used to undo the changes made by DebugContext#activate().
      */
-    public static class Activation implements AutoCloseable {
+    public static class Activation implements AutoCloseable
+    {
         private final DebugContext parent;
 
-        Activation(DebugContext parent) {
+        Activation(DebugContext parent)
+        {
             this.parent = parent;
         }
 
         @Override
-        public void close() {
+        public void close()
+        {
             activated.set(parent);
         }
     }
@@ -286,7 +316,8 @@ public final class DebugContext implements AutoCloseable {
      * @return an object that will deactivate the debug context for the current thread when
      *         {@link Activation#close()} is called on it
      */
-    public Activation activate() {
+    public Activation activate()
+    {
         Activation res = new Activation(activated.get());
         activated.set(this);
         return res;
@@ -301,9 +332,11 @@ public final class DebugContext implements AutoCloseable {
      * Gets the debug context for the current thread. This should only be used when there is no
      * other reasonable means to get a hold of a debug context.
      */
-    public static DebugContext forCurrentThread() {
+    public static DebugContext forCurrentThread()
+    {
         DebugContext current = activated.get();
-        if (current == null) {
+        if (current == null)
+        {
             return DISABLED;
         }
         return current;
@@ -314,7 +347,8 @@ public final class DebugContext implements AutoCloseable {
     /**
      * Describes the computation associated with a {@link DebugContext}.
      */
-    public static class Description {
+    public static class Description
+    {
         /**
          * The primary input to the computation.
          */
@@ -325,19 +359,23 @@ public final class DebugContext implements AutoCloseable {
          */
         final String identifier;
 
-        public Description(Object compilable, String identifier) {
+        public Description(Object compilable, String identifier)
+        {
             this.compilable = compilable;
             this.identifier = identifier;
         }
 
         @Override
-        public String toString() {
+        public String toString()
+        {
             String compilableName = compilable instanceof JavaMethod ? ((JavaMethod) compilable).format("%H.%n(%p)%R") : String.valueOf(compilable);
             return identifier + ":" + compilableName;
         }
 
-        final String getLabel() {
-            if (compilable instanceof JavaMethod) {
+        final String getLabel()
+        {
+            if (compilable instanceof JavaMethod)
+            {
                 JavaMethod method = (JavaMethod) compilable;
                 return method.format("%h.%n(%p)%r");
             }
@@ -352,7 +390,8 @@ public final class DebugContext implements AutoCloseable {
      *
      * @return {@code null} if no description is available
      */
-    public Description getDescription() {
+    public Description getDescription()
+    {
         return description;
     }
 
@@ -361,14 +400,16 @@ public final class DebugContext implements AutoCloseable {
      *
      * @return {@code null} if no global metrics are available
      */
-    public GlobalMetrics getGlobalMetrics() {
+    public GlobalMetrics getGlobalMetrics()
+    {
         return globalMetrics;
     }
 
     /**
      * Creates a {@link DebugContext} based on a given set of option values and {@code factory}.
      */
-    public static DebugContext create(OptionValues options, DebugHandlersFactory factory) {
+    public static DebugContext create(OptionValues options, DebugHandlersFactory factory)
+    {
         return new DebugContext(NO_DESCRIPTION, NO_GLOBAL_METRIC_VALUES, DEFAULT_LOG_STREAM, Immutable.create(options), Collections.singletonList(factory));
     }
 
@@ -376,30 +417,39 @@ public final class DebugContext implements AutoCloseable {
      * Creates a {@link DebugContext} based on a given set of option values and {@code factories}.
      * The {@link DebugHandlersFactory#LOADER} can be used for the latter.
      */
-    public static DebugContext create(OptionValues options, Iterable<DebugHandlersFactory> factories) {
+    public static DebugContext create(OptionValues options, Iterable<DebugHandlersFactory> factories)
+    {
         return new DebugContext(NO_DESCRIPTION, NO_GLOBAL_METRIC_VALUES, DEFAULT_LOG_STREAM, Immutable.create(options), factories);
     }
 
     /**
      * Creates a {@link DebugContext}.
      */
-    public static DebugContext create(OptionValues options, Description description, GlobalMetrics globalMetrics, PrintStream logStream, Iterable<DebugHandlersFactory> factories) {
+    public static DebugContext create(OptionValues options, Description description, GlobalMetrics globalMetrics, PrintStream logStream, Iterable<DebugHandlersFactory> factories)
+    {
         return new DebugContext(description, globalMetrics, logStream, Immutable.create(options), factories);
     }
 
-    private DebugContext(Description description, GlobalMetrics globalMetrics, PrintStream logStream, Immutable immutable, Iterable<DebugHandlersFactory> factories) {
+    private DebugContext(Description description, GlobalMetrics globalMetrics, PrintStream logStream, Immutable immutable, Iterable<DebugHandlersFactory> factories)
+    {
         this.immutable = immutable;
         this.description = description;
         this.globalMetrics = globalMetrics;
-        if (immutable.scopesEnabled) {
+        if (immutable.scopesEnabled)
+        {
             OptionValues options = immutable.options;
             List<DebugDumpHandler> dumpHandlers = new ArrayList<>();
             List<DebugVerifyHandler> verifyHandlers = new ArrayList<>();
-            for (DebugHandlersFactory factory : factories) {
-                for (DebugHandler handler : factory.createHandlers(options)) {
-                    if (handler instanceof DebugDumpHandler) {
+            for (DebugHandlersFactory factory : factories)
+            {
+                for (DebugHandler handler : factory.createHandlers(options))
+                {
+                    if (handler instanceof DebugDumpHandler)
+                    {
                         dumpHandlers.add((DebugDumpHandler) handler);
-                    } else {
+                    }
+                    else
+                    {
                         assert handler instanceof DebugVerifyHandler;
                         verifyHandlers.add((DebugVerifyHandler) handler);
                     }
@@ -409,21 +459,28 @@ public final class DebugContext implements AutoCloseable {
             currentScope = new ScopeImpl(this, Thread.currentThread());
             currentScope.updateFlags(currentConfig);
             metricsEnabled = true;
-        } else {
+        }
+        else
+        {
             metricsEnabled = immutable.hasUnscopedMetrics() || immutable.listMetrics;
         }
     }
 
-    public Path getDumpPath(String extension, boolean directory) {
-        try {
+    public Path getDumpPath(String extension, boolean directory)
+    {
+        try
+        {
             String id = description == null ? null : description.identifier;
             String label = description == null ? null : description.getLabel();
             Path result = PathUtilities.createUnique(immutable.options, DumpPath, id, label, extension, directory);
-            if (ShowDumpFiles.getValue(immutable.options)) {
+            if (ShowDumpFiles.getValue(immutable.options))
+            {
                 TTY.println("Dumping debug output to %s", result.toAbsolutePath().toString());
             }
             return result;
-        } catch (IOException ex) {
+        }
+        catch (IOException ex)
+        {
             throw rethrowSilently(RuntimeException.class, ex);
         }
     }
@@ -481,7 +538,8 @@ public final class DebugContext implements AutoCloseable {
      */
     public static final int VERY_DETAILED_LEVEL = 5;
 
-    public boolean isDumpEnabled(int dumpLevel) {
+    public boolean isDumpEnabled(int dumpLevel)
+    {
         return currentScope != null && currentScope.isDumpEnabled(dumpLevel);
     }
 
@@ -490,11 +548,14 @@ public final class DebugContext implements AutoCloseable {
      *
      * @see DebugContext#verify(Object, String)
      */
-    public boolean isVerifyEnabledForMethod() {
-        if (currentScope == null) {
+    public boolean isVerifyEnabledForMethod()
+    {
+        if (currentScope == null)
+        {
             return false;
         }
-        if (currentConfig == null) {
+        if (currentConfig == null)
+        {
             return false;
         }
         return currentConfig.isVerifyEnabledForMethod(currentScope);
@@ -505,44 +566,55 @@ public final class DebugContext implements AutoCloseable {
      *
      * @see DebugContext#verify(Object, String)
      */
-    public boolean isVerifyEnabled() {
+    public boolean isVerifyEnabled()
+    {
         return currentScope != null && currentScope.isVerifyEnabled();
     }
 
-    public boolean isCountEnabled() {
+    public boolean isCountEnabled()
+    {
         return currentScope != null && currentScope.isCountEnabled();
     }
 
-    public boolean isTimeEnabled() {
+    public boolean isTimeEnabled()
+    {
         return currentScope != null && currentScope.isTimeEnabled();
     }
 
-    public boolean isMemUseTrackingEnabled() {
+    public boolean isMemUseTrackingEnabled()
+    {
         return currentScope != null && currentScope.isMemUseTrackingEnabled();
     }
 
-    public boolean isDumpEnabledForMethod() {
-        if (currentConfig == null) {
+    public boolean isDumpEnabledForMethod()
+    {
+        if (currentConfig == null)
+        {
             return false;
         }
         return currentConfig.isDumpEnabledForMethod(currentScope);
     }
 
-    public boolean isLogEnabledForMethod() {
-        if (currentScope == null) {
+    public boolean isLogEnabledForMethod()
+    {
+        if (currentScope == null)
+        {
             return false;
         }
-        if (currentConfig == null) {
+        if (currentConfig == null)
+        {
             return false;
         }
         return currentConfig.isLogEnabledForMethod(currentScope);
     }
 
-    public boolean isLogEnabled() {
+    public boolean isLogEnabled()
+    {
         return currentScope != null && isLogEnabled(BASIC_LEVEL);
     }
 
-    public boolean isLogEnabled(int logLevel) {
+    public boolean isLogEnabled(int logLevel)
+    {
         return currentScope != null && currentScope.isLogEnabled(logLevel);
     }
 
@@ -550,10 +622,14 @@ public final class DebugContext implements AutoCloseable {
      * Gets a string composed of the names in the current nesting of debug
      * {@linkplain #scope(Object) scopes} separated by {@code '.'}.
      */
-    public String getCurrentScopeName() {
-        if (currentScope != null) {
+    public String getCurrentScopeName()
+    {
+        if (currentScope != null)
+        {
             return currentScope.getQualifiedName();
-        } else {
+        }
+        else
+        {
             return "";
         }
     }
@@ -589,10 +665,14 @@ public final class DebugContext implements AutoCloseable {
      * @return the scope entered by this method which will be exited when its {@link Scope#close()}
      *         method is called
      */
-    public DebugContext.Scope scope(Object name, Object[] contextObjects) throws Throwable {
-        if (currentScope != null) {
+    public DebugContext.Scope scope(Object name, Object[] contextObjects) throws Throwable
+    {
+        if (currentScope != null)
+        {
             return enterScope(convertFormatArg(name).toString(), null, contextObjects);
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
@@ -603,46 +683,58 @@ public final class DebugContext implements AutoCloseable {
      *
      * @see #scope(Object, Object[])
      */
-    public DebugContext.Scope scope(Object name) {
-        if (currentScope != null) {
+    public DebugContext.Scope scope(Object name)
+    {
+        if (currentScope != null)
+        {
             return enterScope(convertFormatArg(name).toString(), null);
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
 
     private final Invariants invariants = Assertions.assertionsEnabled() ? new Invariants() : null;
 
-    static StackTraceElement[] getStackTrace(Thread thread) {
+    static StackTraceElement[] getStackTrace(Thread thread)
+    {
         return thread.getStackTrace();
     }
 
     /**
      * Utility for enforcing {@link DebugContext} invariants via assertions.
      */
-    static class Invariants {
+    static class Invariants
+    {
         private final Thread thread;
         private final StackTraceElement[] origin;
 
-        Invariants() {
+        Invariants()
+        {
             thread = Thread.currentThread();
             origin = getStackTrace(thread);
         }
 
-        boolean checkNoConcurrentAccess() {
+        boolean checkNoConcurrentAccess()
+        {
             Thread currentThread = Thread.currentThread();
-            if (currentThread != thread) {
+            if (currentThread != thread)
+            {
                 Formatter buf = new Formatter();
-                buf.format("Thread local %s object was created on thread %s but is being accessed by thread %s. The most likely cause is " +
-                                "that the object is being retrieved from a non-thread-local cache.",
-                                DebugContext.class.getName(), thread, currentThread);
+                buf.format("Thread local %s object was created on thread %s but is being accessed by thread %s. The most likely cause is " + "that the object is being retrieved from a non-thread-local cache.", DebugContext.class.getName(), thread, currentThread);
                 int debugContextConstructors = 0;
                 boolean addedHeader = false;
-                for (StackTraceElement e : origin) {
-                    if (e.getMethodName().equals("<init>") && e.getClassName().equals(DebugContext.class.getName())) {
+                for (StackTraceElement e : origin)
+                {
+                    if (e.getMethodName().equals("<init>") && e.getClassName().equals(DebugContext.class.getName()))
+                    {
                         debugContextConstructors++;
-                    } else if (debugContextConstructors != 0) {
-                        if (!addedHeader) {
+                    }
+                    else if (debugContextConstructors != 0)
+                    {
+                        if (!addedHeader)
+                        {
                             addedHeader = true;
                             buf.format(" The object was instantiated here:");
                         }
@@ -651,7 +743,8 @@ public final class DebugContext implements AutoCloseable {
                         buf.format("%n\t\tin %s", e);
                     }
                 }
-                if (addedHeader) {
+                if (addedHeader)
+                {
                     buf.format("%n");
                 }
 
@@ -661,12 +754,14 @@ public final class DebugContext implements AutoCloseable {
         }
     }
 
-    boolean checkNoConcurrentAccess() {
+    boolean checkNoConcurrentAccess()
+    {
         assert invariants == null || invariants.checkNoConcurrentAccess();
         return true;
     }
 
-    private DebugContext.Scope enterScope(CharSequence name, DebugConfig sandboxConfig, Object... newContextObjects) {
+    private DebugContext.Scope enterScope(CharSequence name, DebugConfig sandboxConfig, Object... newContextObjects)
+    {
         assert checkNoConcurrentAccess();
         currentScope = currentScope.scope(name, sandboxConfig, newContextObjects);
         return currentScope;
@@ -676,10 +771,14 @@ public final class DebugContext implements AutoCloseable {
      * @see #scope(Object, Object[])
      * @param context an object to be appended to the {@linkplain #context() current} debug context
      */
-    public DebugContext.Scope scope(Object name, Object context) throws Throwable {
-        if (currentScope != null) {
+    public DebugContext.Scope scope(Object name, Object context) throws Throwable
+    {
+        if (currentScope != null)
+        {
             return enterScope(convertFormatArg(name).toString(), null, context);
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
@@ -691,10 +790,14 @@ public final class DebugContext implements AutoCloseable {
      * @param context2 second object to be appended to the {@linkplain #context() current} debug
      *            context
      */
-    public DebugContext.Scope scope(Object name, Object context1, Object context2) throws Throwable {
-        if (currentScope != null) {
+    public DebugContext.Scope scope(Object name, Object context1, Object context2) throws Throwable
+    {
+        if (currentScope != null)
+        {
             return enterScope(convertFormatArg(name).toString(), null, context1, context2);
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
@@ -708,10 +811,14 @@ public final class DebugContext implements AutoCloseable {
      * @param context3 third object to be appended to the {@linkplain #context() current} debug
      *            context
      */
-    public DebugContext.Scope scope(Object name, Object context1, Object context2, Object context3) throws Throwable {
-        if (currentScope != null) {
+    public DebugContext.Scope scope(Object name, Object context1, Object context2, Object context3) throws Throwable
+    {
+        if (currentScope != null)
+        {
             return enterScope(convertFormatArg(name).toString(), null, context1, context2, context3);
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
@@ -721,10 +828,14 @@ public final class DebugContext implements AutoCloseable {
      *
      * @param context an object to be appended to the {@linkplain #context() current} debug context
      */
-    public DebugContext.Scope withContext(Object context) throws Throwable {
-        if (currentScope != null) {
+    public DebugContext.Scope withContext(Object context) throws Throwable
+    {
+        if (currentScope != null)
+        {
             return enterScope("", null, context);
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
@@ -750,13 +861,18 @@ public final class DebugContext implements AutoCloseable {
      * @return the scope entered by this method which will be exited when its {@link Scope#close()}
      *         method is called
      */
-    public DebugContext.Scope sandbox(CharSequence name, DebugConfig config, Object... context) throws Throwable {
-        if (config == null) {
+    public DebugContext.Scope sandbox(CharSequence name, DebugConfig config, Object... context) throws Throwable
+    {
+        if (config == null)
+        {
             return disable();
         }
-        if (currentScope != null) {
+        if (currentScope != null)
+        {
             return enterScope(name, config, context);
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
@@ -764,9 +880,12 @@ public final class DebugContext implements AutoCloseable {
     /**
      * Determines if scopes are enabled and this context is in a non-top-level scope.
      */
-    public boolean inNestedScope() {
-        if (immutable.scopesEnabled) {
-            if (currentScope == null) {
+    public boolean inNestedScope()
+    {
+        if (immutable.scopesEnabled)
+        {
+            if (currentScope == null)
+            {
                 // In an active DisabledScope
                 return true;
             }
@@ -775,12 +894,14 @@ public final class DebugContext implements AutoCloseable {
         return immutable.scopesEnabled && currentScope == null;
     }
 
-    class DisabledScope implements DebugContext.Scope {
+    class DisabledScope implements DebugContext.Scope
+    {
         final boolean savedMetricsEnabled;
         final ScopeImpl savedScope;
         final DebugConfigImpl savedConfig;
 
-        DisabledScope() {
+        DisabledScope()
+        {
             this.savedMetricsEnabled = metricsEnabled;
             this.savedScope = currentScope;
             this.savedConfig = currentConfig;
@@ -790,17 +911,20 @@ public final class DebugContext implements AutoCloseable {
         }
 
         @Override
-        public String getQualifiedName() {
+        public String getQualifiedName()
+        {
             return "";
         }
 
         @Override
-        public Iterable<Object> getCurrentContext() {
+        public Iterable<Object> getCurrentContext()
+        {
             return Collections.emptyList();
         }
 
         @Override
-        public void close() {
+        public void close()
+        {
             metricsEnabled = savedMetricsEnabled;
             currentScope = savedScope;
             currentConfig = savedConfig;
@@ -812,18 +936,25 @@ public final class DebugContext implements AutoCloseable {
      * Disables all metrics and scope related functionality until {@code close()} is called on the
      * returned object.
      */
-    public DebugContext.Scope disable() {
-        if (currentScope != null) {
+    public DebugContext.Scope disable()
+    {
+        if (currentScope != null)
+        {
             return new DisabledScope();
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
 
-    public DebugContext.Scope forceLog() throws Throwable {
-        if (currentConfig != null) {
+    public DebugContext.Scope forceLog() throws Throwable
+    {
+        if (currentConfig != null)
+        {
             ArrayList<Object> context = new ArrayList<>();
-            for (Object obj : context()) {
+            for (Object obj : context())
+            {
                 context.add(obj);
             }
             DebugConfigImpl config = new DebugConfigImpl(new OptionValues(currentConfig.getOptions(), DebugOptions.Log, ":1000"));
@@ -841,8 +972,10 @@ public final class DebugContext implements AutoCloseable {
      * This is particularly useful to suppress extraneous output in JUnit tests that are expected to
      * throw an exception.
      */
-    public DebugCloseable disableIntercept() {
-        if (currentScope != null) {
+    public DebugCloseable disableIntercept()
+    {
+        if (currentScope != null)
+        {
             return currentScope.disableIntercept();
         }
         return null;
@@ -857,21 +990,28 @@ public final class DebugContext implements AutoCloseable {
      * @see #scope(Object, Object[])
      * @see #sandbox(CharSequence, DebugConfig, Object...)
      */
-    public RuntimeException handle(Throwable exception) {
-        if (currentScope != null) {
+    public RuntimeException handle(Throwable exception)
+    {
+        if (currentScope != null)
+        {
             return currentScope.handle(exception);
-        } else {
-            if (exception instanceof Error) {
+        }
+        else
+        {
+            if (exception instanceof Error)
+            {
                 throw (Error) exception;
             }
-            if (exception instanceof RuntimeException) {
+            if (exception instanceof RuntimeException)
+            {
                 throw (RuntimeException) exception;
             }
             throw new RuntimeException(exception);
         }
     }
 
-    public void log(String msg) {
+    public void log(String msg)
+    {
         log(BASIC_LEVEL, msg);
     }
 
@@ -880,13 +1020,16 @@ public final class DebugContext implements AutoCloseable {
      *
      * @param msg the message to log
      */
-    public void log(int logLevel, String msg) {
-        if (currentScope != null) {
+    public void log(int logLevel, String msg)
+    {
+        if (currentScope != null)
+        {
             currentScope.log(logLevel, msg);
         }
     }
 
-    public void log(String format, Object arg) {
+    public void log(String format, Object arg)
+    {
         log(BASIC_LEVEL, format, arg);
     }
 
@@ -896,13 +1039,16 @@ public final class DebugContext implements AutoCloseable {
      * @param format a format string
      * @param arg the argument referenced by the format specifiers in {@code format}
      */
-    public void log(int logLevel, String format, Object arg) {
-        if (currentScope != null) {
+    public void log(int logLevel, String format, Object arg)
+    {
+        if (currentScope != null)
+        {
             currentScope.log(logLevel, format, arg);
         }
     }
 
-    public void log(String format, int arg) {
+    public void log(String format, int arg)
+    {
         log(BASIC_LEVEL, format, arg);
     }
 
@@ -912,173 +1058,215 @@ public final class DebugContext implements AutoCloseable {
      * @param format a format string
      * @param arg the argument referenced by the format specifiers in {@code format}
      */
-    public void log(int logLevel, String format, int arg) {
-        if (currentScope != null) {
+    public void log(int logLevel, String format, int arg)
+    {
+        if (currentScope != null)
+        {
             currentScope.log(logLevel, format, arg);
         }
     }
 
-    public void log(String format, Object arg1, Object arg2) {
+    public void log(String format, Object arg1, Object arg2)
+    {
         log(BASIC_LEVEL, format, arg1, arg2);
     }
 
     /**
      * @see #log(int, String, Object)
      */
-    public void log(int logLevel, String format, Object arg1, Object arg2) {
-        if (currentScope != null) {
+    public void log(int logLevel, String format, Object arg1, Object arg2)
+    {
+        if (currentScope != null)
+        {
             currentScope.log(logLevel, format, arg1, arg2);
         }
     }
 
-    public void log(String format, int arg1, Object arg2) {
+    public void log(String format, int arg1, Object arg2)
+    {
         log(BASIC_LEVEL, format, arg1, arg2);
     }
 
     /**
      * @see #log(int, String, Object)
      */
-    public void log(int logLevel, String format, int arg1, Object arg2) {
-        if (currentScope != null) {
+    public void log(int logLevel, String format, int arg1, Object arg2)
+    {
+        if (currentScope != null)
+        {
             currentScope.log(logLevel, format, arg1, arg2);
         }
     }
 
-    public void log(String format, Object arg1, int arg2) {
+    public void log(String format, Object arg1, int arg2)
+    {
         log(BASIC_LEVEL, format, arg1, arg2);
     }
 
     /**
      * @see #log(int, String, Object)
      */
-    public void log(int logLevel, String format, Object arg1, int arg2) {
-        if (currentScope != null) {
+    public void log(int logLevel, String format, Object arg1, int arg2)
+    {
+        if (currentScope != null)
+        {
             currentScope.log(logLevel, format, arg1, arg2);
         }
     }
 
-    public void log(String format, int arg1, int arg2) {
+    public void log(String format, int arg1, int arg2)
+    {
         log(BASIC_LEVEL, format, arg1, arg2);
     }
 
     /**
      * @see #log(int, String, Object)
      */
-    public void log(int logLevel, String format, int arg1, int arg2) {
-        if (currentScope != null) {
+    public void log(int logLevel, String format, int arg1, int arg2)
+    {
+        if (currentScope != null)
+        {
             currentScope.log(logLevel, format, arg1, arg2);
         }
     }
 
-    public void log(String format, Object arg1, Object arg2, Object arg3) {
+    public void log(String format, Object arg1, Object arg2, Object arg3)
+    {
         log(BASIC_LEVEL, format, arg1, arg2, arg3);
     }
 
     /**
      * @see #log(int, String, Object)
      */
-    public void log(int logLevel, String format, Object arg1, Object arg2, Object arg3) {
-        if (currentScope != null) {
+    public void log(int logLevel, String format, Object arg1, Object arg2, Object arg3)
+    {
+        if (currentScope != null)
+        {
             currentScope.log(logLevel, format, arg1, arg2, arg3);
         }
     }
 
-    public void log(String format, int arg1, int arg2, int arg3) {
+    public void log(String format, int arg1, int arg2, int arg3)
+    {
         log(BASIC_LEVEL, format, arg1, arg2, arg3);
     }
 
     /**
      * @see #log(int, String, Object)
      */
-    public void log(int logLevel, String format, int arg1, int arg2, int arg3) {
-        if (currentScope != null) {
+    public void log(int logLevel, String format, int arg1, int arg2, int arg3)
+    {
+        if (currentScope != null)
+        {
             currentScope.log(logLevel, format, arg1, arg2, arg3);
         }
     }
 
-    public void log(String format, Object arg1, Object arg2, Object arg3, Object arg4) {
+    public void log(String format, Object arg1, Object arg2, Object arg3, Object arg4)
+    {
         log(BASIC_LEVEL, format, arg1, arg2, arg3, arg4);
     }
 
     /**
      * @see #log(int, String, Object)
      */
-    public void log(int logLevel, String format, Object arg1, Object arg2, Object arg3, Object arg4) {
-        if (currentScope != null) {
+    public void log(int logLevel, String format, Object arg1, Object arg2, Object arg3, Object arg4)
+    {
+        if (currentScope != null)
+        {
             currentScope.log(logLevel, format, arg1, arg2, arg3, arg4);
         }
     }
 
-    public void log(String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5) {
+    public void log(String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5)
+    {
         log(BASIC_LEVEL, format, arg1, arg2, arg3, arg4, arg5);
     }
 
     /**
      * @see #log(int, String, Object)
      */
-    public void log(int logLevel, String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5) {
-        if (currentScope != null) {
+    public void log(int logLevel, String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5)
+    {
+        if (currentScope != null)
+        {
             currentScope.log(logLevel, format, arg1, arg2, arg3, arg4, arg5);
         }
     }
 
-    public void log(String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6) {
+    public void log(String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6)
+    {
         log(BASIC_LEVEL, format, arg1, arg2, arg3, arg4, arg5, arg6);
     }
 
     /**
      * @see #log(int, String, Object)
      */
-    public void log(int logLevel, String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6) {
-        if (currentScope != null) {
+    public void log(int logLevel, String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6)
+    {
+        if (currentScope != null)
+        {
             currentScope.log(logLevel, format, arg1, arg2, arg3, arg4, arg5, arg6);
         }
     }
 
-    public void log(String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7) {
+    public void log(String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7)
+    {
         log(BASIC_LEVEL, format, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
     }
 
-    public void log(String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7, Object arg8) {
+    public void log(String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7, Object arg8)
+    {
         log(BASIC_LEVEL, format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
     }
 
     /**
      * @see #log(int, String, Object)
      */
-    public void log(int logLevel, String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7) {
-        if (currentScope != null) {
+    public void log(int logLevel, String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7)
+    {
+        if (currentScope != null)
+        {
             currentScope.log(logLevel, format, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
         }
     }
 
-    public void log(int logLevel, String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7, Object arg8) {
-        if (currentScope != null) {
+    public void log(int logLevel, String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7, Object arg8)
+    {
+        if (currentScope != null)
+        {
             currentScope.log(logLevel, format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
         }
     }
 
-    public void log(String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7, Object arg8, Object arg9) {
+    public void log(String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7, Object arg8, Object arg9)
+    {
         log(BASIC_LEVEL, format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
     }
 
-    public void log(int logLevel, String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7, Object arg8, Object arg9) {
-        if (currentScope != null) {
+    public void log(int logLevel, String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7, Object arg8, Object arg9)
+    {
+        if (currentScope != null)
+        {
             currentScope.log(logLevel, format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
         }
     }
 
-    public void log(String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7, Object arg8, Object arg9, Object arg10) {
+    public void log(String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7, Object arg8, Object arg9, Object arg10)
+    {
         log(BASIC_LEVEL, format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
     }
 
-    public void log(int logLevel, String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7, Object arg8, Object arg9, Object arg10) {
-        if (currentScope != null) {
+    public void log(int logLevel, String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7, Object arg8, Object arg9, Object arg10)
+    {
+        if (currentScope != null)
+        {
             currentScope.log(logLevel, format, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
         }
     }
 
-    public void logv(String format, Object... args) {
+    public void logv(String format, Object... args)
+    {
         logv(BASIC_LEVEL, format, args);
     }
 
@@ -1091,8 +1279,10 @@ public final class DebugContext implements AutoCloseable {
      * @param format a format string
      * @param args the arguments referenced by the format specifiers in {@code format}
      */
-    public void logv(int logLevel, String format, Object... args) {
-        if (currentScope == null) {
+    public void logv(int logLevel, String format, Object... args)
+    {
+        if (currentScope == null)
+        {
             throw new InternalError("Use of Debug.logv() must be guarded by a test of Debug.isEnabled()");
         }
         currentScope.log(logLevel, format, args);
@@ -1105,7 +1295,8 @@ public final class DebugContext implements AutoCloseable {
      * Object[] inside of another Object[].
      */
     @Deprecated
-    public void log(String format, Object[] args) {
+    public void log(String format, Object[] args)
+    {
         assert false : "shouldn't use this";
         log(BASIC_LEVEL, format, args);
     }
@@ -1117,7 +1308,8 @@ public final class DebugContext implements AutoCloseable {
      * Object[] inside of another Object[].
      */
     @Deprecated
-    public void log(int logLevel, String format, Object[] args) {
+    public void log(int logLevel, String format, Object[] args)
+    {
         assert false : "shouldn't use this";
         logv(logLevel, format, args);
     }
@@ -1126,53 +1318,70 @@ public final class DebugContext implements AutoCloseable {
      * Forces an unconditional dump. This method exists mainly for debugging. It can also be used to
      * force a graph dump from IDEs that support invoking a Java method while at a breakpoint.
      */
-    public void forceDump(Object object, String format, Object... args) {
+    public void forceDump(Object object, String format, Object... args)
+    {
         DebugConfig config = currentConfig;
         Collection<DebugDumpHandler> dumpHandlers;
         boolean closeAfterDump;
-        if (config != null) {
+        if (config != null)
+        {
             dumpHandlers = config.dumpHandlers();
             closeAfterDump = false;
-        } else {
+        }
+        else
+        {
             OptionValues options = getOptions();
             dumpHandlers = new ArrayList<>();
-            for (DebugHandlersFactory factory : DebugHandlersFactory.LOADER) {
-                for (DebugHandler handler : factory.createHandlers(options)) {
-                    if (handler instanceof DebugDumpHandler) {
+            for (DebugHandlersFactory factory : DebugHandlersFactory.LOADER)
+            {
+                for (DebugHandler handler : factory.createHandlers(options))
+                {
+                    if (handler instanceof DebugDumpHandler)
+                    {
                         dumpHandlers.add((DebugDumpHandler) handler);
                     }
                 }
             }
             closeAfterDump = true;
         }
-        for (DebugDumpHandler dumpHandler : dumpHandlers) {
+        for (DebugDumpHandler dumpHandler : dumpHandlers)
+        {
             dumpHandler.dump(this, object, format, args);
-            if (closeAfterDump) {
+            if (closeAfterDump)
+            {
                 dumpHandler.close();
             }
         }
     }
 
-    public void dump(int dumpLevel, Object object, String msg) {
-        if (currentScope != null && currentScope.isDumpEnabled(dumpLevel)) {
+    public void dump(int dumpLevel, Object object, String msg)
+    {
+        if (currentScope != null && currentScope.isDumpEnabled(dumpLevel))
+        {
             currentScope.dump(dumpLevel, object, msg);
         }
     }
 
-    public void dump(int dumpLevel, Object object, String format, Object arg) {
-        if (currentScope != null && currentScope.isDumpEnabled(dumpLevel)) {
+    public void dump(int dumpLevel, Object object, String format, Object arg)
+    {
+        if (currentScope != null && currentScope.isDumpEnabled(dumpLevel))
+        {
             currentScope.dump(dumpLevel, object, format, arg);
         }
     }
 
-    public void dump(int dumpLevel, Object object, String format, Object arg1, Object arg2) {
-        if (currentScope != null && currentScope.isDumpEnabled(dumpLevel)) {
+    public void dump(int dumpLevel, Object object, String format, Object arg1, Object arg2)
+    {
+        if (currentScope != null && currentScope.isDumpEnabled(dumpLevel))
+        {
             currentScope.dump(dumpLevel, object, format, arg1, arg2);
         }
     }
 
-    public void dump(int dumpLevel, Object object, String format, Object arg1, Object arg2, Object arg3) {
-        if (currentScope != null && currentScope.isDumpEnabled(dumpLevel)) {
+    public void dump(int dumpLevel, Object object, String format, Object arg1, Object arg2, Object arg3)
+    {
+        if (currentScope != null && currentScope.isDumpEnabled(dumpLevel))
+        {
             currentScope.dump(dumpLevel, object, format, arg1, arg2, arg3);
         }
     }
@@ -1184,9 +1393,11 @@ public final class DebugContext implements AutoCloseable {
      * Object[] inside of another Object[].
      */
     @Deprecated
-    public void dump(int dumpLevel, Object object, String format, Object[] args) {
+    public void dump(int dumpLevel, Object object, String format, Object[] args)
+    {
         assert false : "shouldn't use this";
-        if (currentScope != null && currentScope.isDumpEnabled(dumpLevel)) {
+        if (currentScope != null && currentScope.isDumpEnabled(dumpLevel))
+        {
             currentScope.dump(dumpLevel, object, format, args);
         }
     }
@@ -1200,8 +1411,10 @@ public final class DebugContext implements AutoCloseable {
      *
      * @see DebugVerifyHandler#verify
      */
-    public void verify(Object object, String message) {
-        if (currentScope != null && currentScope.isVerifyEnabled()) {
+    public void verify(Object object, String message)
+    {
+        if (currentScope != null && currentScope.isVerifyEnabled())
+        {
             currentScope.verify(object, message);
         }
     }
@@ -1216,8 +1429,10 @@ public final class DebugContext implements AutoCloseable {
      *
      * @see DebugVerifyHandler#verify
      */
-    public void verify(Object object, String format, Object arg) {
-        if (currentScope != null && currentScope.isVerifyEnabled()) {
+    public void verify(Object object, String format, Object arg)
+    {
+        if (currentScope != null && currentScope.isVerifyEnabled())
+        {
             currentScope.verify(object, format, arg);
         }
     }
@@ -1229,9 +1444,11 @@ public final class DebugContext implements AutoCloseable {
      * Object[] inside of another Object[].
      */
     @Deprecated
-    public void verify(Object object, String format, Object[] args) {
+    public void verify(Object object, String format, Object[] args)
+    {
         assert false : "shouldn't use this";
-        if (currentScope != null && currentScope.isVerifyEnabled()) {
+        if (currentScope != null && currentScope.isVerifyEnabled())
+        {
             currentScope.verify(object, format, args);
         }
     }
@@ -1245,14 +1462,17 @@ public final class DebugContext implements AutoCloseable {
      * @see #logAndIndent(int, String)
      * @see #logAndIndent(int, String, Object)
      */
-    public Indent indent() {
-        if (currentScope != null) {
+    public Indent indent()
+    {
+        if (currentScope != null)
+        {
             return currentScope.pushIndentLogger();
         }
         return null;
     }
 
-    public Indent logAndIndent(String msg) {
+    public Indent logAndIndent(String msg)
+    {
         return logAndIndent(BASIC_LEVEL, msg);
     }
 
@@ -1263,14 +1483,17 @@ public final class DebugContext implements AutoCloseable {
      * @return an object that reverts to the current indentation level when
      *         {@linkplain Indent#close() closed} or null if debugging is disabled
      */
-    public Indent logAndIndent(int logLevel, String msg) {
-        if (currentScope != null && isLogEnabled(logLevel)) {
+    public Indent logAndIndent(int logLevel, String msg)
+    {
+        if (currentScope != null && isLogEnabled(logLevel))
+        {
             return logvAndIndentInternal(logLevel, msg);
         }
         return null;
     }
 
-    public Indent logAndIndent(String format, Object arg) {
+    public Indent logAndIndent(String format, Object arg)
+    {
         return logAndIndent(BASIC_LEVEL, format, arg);
     }
 
@@ -1282,14 +1505,17 @@ public final class DebugContext implements AutoCloseable {
      * @return an object that reverts to the current indentation level when
      *         {@linkplain Indent#close() closed} or null if debugging is disabled
      */
-    public Indent logAndIndent(int logLevel, String format, Object arg) {
-        if (currentScope != null && isLogEnabled(logLevel)) {
+    public Indent logAndIndent(int logLevel, String format, Object arg)
+    {
+        if (currentScope != null && isLogEnabled(logLevel))
+        {
             return logvAndIndentInternal(logLevel, format, arg);
         }
         return null;
     }
 
-    public Indent logAndIndent(String format, int arg) {
+    public Indent logAndIndent(String format, int arg)
+    {
         return logAndIndent(BASIC_LEVEL, format, arg);
     }
 
@@ -1301,148 +1527,180 @@ public final class DebugContext implements AutoCloseable {
      * @return an object that reverts to the current indentation level when
      *         {@linkplain Indent#close() closed} or null if debugging is disabled
      */
-    public Indent logAndIndent(int logLevel, String format, int arg) {
-        if (currentScope != null && isLogEnabled(logLevel)) {
+    public Indent logAndIndent(int logLevel, String format, int arg)
+    {
+        if (currentScope != null && isLogEnabled(logLevel))
+        {
             return logvAndIndentInternal(logLevel, format, arg);
         }
         return null;
     }
 
-    public Indent logAndIndent(String format, int arg1, Object arg2) {
+    public Indent logAndIndent(String format, int arg1, Object arg2)
+    {
         return logAndIndent(BASIC_LEVEL, format, arg1, arg2);
     }
 
     /**
      * @see #logAndIndent(int, String, Object)
      */
-    public Indent logAndIndent(int logLevel, String format, int arg1, Object arg2) {
-        if (currentScope != null && isLogEnabled(logLevel)) {
+    public Indent logAndIndent(int logLevel, String format, int arg1, Object arg2)
+    {
+        if (currentScope != null && isLogEnabled(logLevel))
+        {
             return logvAndIndentInternal(logLevel, format, arg1, arg2);
         }
         return null;
     }
 
-    public Indent logAndIndent(String format, Object arg1, int arg2) {
+    public Indent logAndIndent(String format, Object arg1, int arg2)
+    {
         return logAndIndent(BASIC_LEVEL, format, arg1, arg2);
     }
 
     /**
      * @see #logAndIndent(int, String, Object)
      */
-    public Indent logAndIndent(int logLevel, String format, Object arg1, int arg2) {
-        if (currentScope != null && isLogEnabled(logLevel)) {
+    public Indent logAndIndent(int logLevel, String format, Object arg1, int arg2)
+    {
+        if (currentScope != null && isLogEnabled(logLevel))
+        {
             return logvAndIndentInternal(logLevel, format, arg1, arg2);
         }
         return null;
     }
 
-    public Indent logAndIndent(String format, int arg1, int arg2) {
+    public Indent logAndIndent(String format, int arg1, int arg2)
+    {
         return logAndIndent(BASIC_LEVEL, format, arg1, arg2);
     }
 
     /**
      * @see #logAndIndent(int, String, Object)
      */
-    public Indent logAndIndent(int logLevel, String format, int arg1, int arg2) {
-        if (currentScope != null && isLogEnabled(logLevel)) {
+    public Indent logAndIndent(int logLevel, String format, int arg1, int arg2)
+    {
+        if (currentScope != null && isLogEnabled(logLevel))
+        {
             return logvAndIndentInternal(logLevel, format, arg1, arg2);
         }
         return null;
     }
 
-    public Indent logAndIndent(String format, Object arg1, Object arg2) {
+    public Indent logAndIndent(String format, Object arg1, Object arg2)
+    {
         return logAndIndent(BASIC_LEVEL, format, arg1, arg2);
     }
 
     /**
      * @see #logAndIndent(int, String, Object)
      */
-    public Indent logAndIndent(int logLevel, String format, Object arg1, Object arg2) {
-        if (currentScope != null && isLogEnabled(logLevel)) {
+    public Indent logAndIndent(int logLevel, String format, Object arg1, Object arg2)
+    {
+        if (currentScope != null && isLogEnabled(logLevel))
+        {
             return logvAndIndentInternal(logLevel, format, arg1, arg2);
         }
         return null;
     }
 
-    public Indent logAndIndent(String format, Object arg1, Object arg2, Object arg3) {
+    public Indent logAndIndent(String format, Object arg1, Object arg2, Object arg3)
+    {
         return logAndIndent(BASIC_LEVEL, format, arg1, arg2, arg3);
     }
 
     /**
      * @see #logAndIndent(int, String, Object)
      */
-    public Indent logAndIndent(int logLevel, String format, Object arg1, Object arg2, Object arg3) {
-        if (currentScope != null && isLogEnabled(logLevel)) {
+    public Indent logAndIndent(int logLevel, String format, Object arg1, Object arg2, Object arg3)
+    {
+        if (currentScope != null && isLogEnabled(logLevel))
+        {
             return logvAndIndentInternal(logLevel, format, arg1, arg2, arg3);
         }
         return null;
     }
 
-    public Indent logAndIndent(String format, int arg1, int arg2, int arg3) {
+    public Indent logAndIndent(String format, int arg1, int arg2, int arg3)
+    {
         return logAndIndent(BASIC_LEVEL, format, arg1, arg2, arg3);
     }
 
     /**
      * @see #logAndIndent(int, String, Object)
      */
-    public Indent logAndIndent(int logLevel, String format, int arg1, int arg2, int arg3) {
-        if (currentScope != null && isLogEnabled(logLevel)) {
+    public Indent logAndIndent(int logLevel, String format, int arg1, int arg2, int arg3)
+    {
+        if (currentScope != null && isLogEnabled(logLevel))
+        {
             return logvAndIndentInternal(logLevel, format, arg1, arg2, arg3);
         }
         return null;
     }
 
-    public Indent logAndIndent(String format, Object arg1, int arg2, int arg3) {
+    public Indent logAndIndent(String format, Object arg1, int arg2, int arg3)
+    {
         return logAndIndent(BASIC_LEVEL, format, arg1, arg2, arg3);
     }
 
     /**
      * @see #logAndIndent(int, String, Object)
      */
-    public Indent logAndIndent(int logLevel, String format, Object arg1, int arg2, int arg3) {
-        if (currentScope != null && isLogEnabled(logLevel)) {
+    public Indent logAndIndent(int logLevel, String format, Object arg1, int arg2, int arg3)
+    {
+        if (currentScope != null && isLogEnabled(logLevel))
+        {
             return logvAndIndentInternal(logLevel, format, arg1, arg2, arg3);
         }
         return null;
     }
 
-    public Indent logAndIndent(String format, Object arg1, Object arg2, Object arg3, Object arg4) {
+    public Indent logAndIndent(String format, Object arg1, Object arg2, Object arg3, Object arg4)
+    {
         return logAndIndent(BASIC_LEVEL, format, arg1, arg2, arg3, arg4);
     }
 
     /**
      * @see #logAndIndent(int, String, Object)
      */
-    public Indent logAndIndent(int logLevel, String format, Object arg1, Object arg2, Object arg3, Object arg4) {
-        if (currentScope != null && isLogEnabled(logLevel)) {
+    public Indent logAndIndent(int logLevel, String format, Object arg1, Object arg2, Object arg3, Object arg4)
+    {
+        if (currentScope != null && isLogEnabled(logLevel))
+        {
             return logvAndIndentInternal(logLevel, format, arg1, arg2, arg3, arg4);
         }
         return null;
     }
 
-    public Indent logAndIndent(String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5) {
+    public Indent logAndIndent(String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5)
+    {
         return logAndIndent(BASIC_LEVEL, format, arg1, arg2, arg3, arg4, arg5);
     }
 
     /**
      * @see #logAndIndent(int, String, Object)
      */
-    public Indent logAndIndent(int logLevel, String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5) {
-        if (currentScope != null && isLogEnabled(logLevel)) {
+    public Indent logAndIndent(int logLevel, String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5)
+    {
+        if (currentScope != null && isLogEnabled(logLevel))
+        {
             return logvAndIndentInternal(logLevel, format, arg1, arg2, arg3, arg4, arg5);
         }
         return null;
     }
 
-    public Indent logAndIndent(String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6) {
+    public Indent logAndIndent(String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6)
+    {
         return logAndIndent(BASIC_LEVEL, format, arg1, arg2, arg3, arg4, arg5, arg6);
     }
 
     /**
      * @see #logAndIndent(int, String, Object)
      */
-    public Indent logAndIndent(int logLevel, String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6) {
-        if (currentScope != null && isLogEnabled(logLevel)) {
+    public Indent logAndIndent(int logLevel, String format, Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6)
+    {
+        if (currentScope != null && isLogEnabled(logLevel))
+        {
             return logvAndIndentInternal(logLevel, format, arg1, arg2, arg3, arg4, arg5, arg6);
         }
         return null;
@@ -1457,9 +1715,12 @@ public final class DebugContext implements AutoCloseable {
      * @return an object that reverts to the current indentation level when
      *         {@linkplain Indent#close() closed} or null if debugging is disabled
      */
-    public Indent logvAndIndent(int logLevel, String format, Object... args) {
-        if (currentScope != null) {
-            if (isLogEnabled(logLevel)) {
+    public Indent logvAndIndent(int logLevel, String format, Object... args)
+    {
+        if (currentScope != null)
+        {
+            if (isLogEnabled(logLevel))
+            {
                 return logvAndIndentInternal(logLevel, format, args);
             }
             return null;
@@ -1467,7 +1728,8 @@ public final class DebugContext implements AutoCloseable {
         throw new InternalError("Use of Debug.logvAndIndent() must be guarded by a test of Debug.isEnabled()");
     }
 
-    private Indent logvAndIndentInternal(int logLevel, String format, Object... args) {
+    private Indent logvAndIndentInternal(int logLevel, String format, Object... args)
+    {
         assert currentScope != null && isLogEnabled(logLevel) : "must have checked Debug.isLogEnabled()";
         currentScope.log(logLevel, format, args);
         return currentScope.pushIndentLogger();
@@ -1480,7 +1742,8 @@ public final class DebugContext implements AutoCloseable {
      * Object[] inside of another Object[].
      */
     @Deprecated
-    public void logAndIndent(String format, Object[] args) {
+    public void logAndIndent(String format, Object[] args)
+    {
         assert false : "shouldn't use this";
         logAndIndent(BASIC_LEVEL, format, args);
     }
@@ -1492,30 +1755,41 @@ public final class DebugContext implements AutoCloseable {
      * Object[] inside of another Object[].
      */
     @Deprecated
-    public void logAndIndent(int logLevel, String format, Object[] args) {
+    public void logAndIndent(int logLevel, String format, Object[] args)
+    {
         assert false : "shouldn't use this";
         logvAndIndent(logLevel, format, args);
     }
 
-    public Iterable<Object> context() {
-        if (currentScope != null) {
+    public Iterable<Object> context()
+    {
+        if (currentScope != null)
+        {
             return currentScope.getCurrentContext();
-        } else {
+        }
+        else
+        {
             return Collections.emptyList();
         }
     }
 
     @SuppressWarnings("unchecked")
-    public <T> List<T> contextSnapshot(Class<T> clazz) {
-        if (currentScope != null) {
+    public <T> List<T> contextSnapshot(Class<T> clazz)
+    {
+        if (currentScope != null)
+        {
             List<T> result = new ArrayList<>();
-            for (Object o : context()) {
-                if (clazz.isInstance(o)) {
+            for (Object o : context())
+            {
+                if (clazz.isInstance(o))
+                {
                     result.add((T) o);
                 }
             }
             return result;
-        } else {
+        }
+        else
+        {
             return Collections.emptyList();
         }
     }
@@ -1525,10 +1799,14 @@ public final class DebugContext implements AutoCloseable {
      * given type. The first such object found is returned.
      */
     @SuppressWarnings("unchecked")
-    public <T> T contextLookup(Class<T> clazz) {
-        if (currentScope != null) {
-            for (Object o : context()) {
-                if (clazz.isInstance(o)) {
+    public <T> T contextLookup(Class<T> clazz)
+    {
+        if (currentScope != null)
+        {
+            for (Object o : context())
+            {
+                if (clazz.isInstance(o))
+                {
                     return ((T) o);
                 }
             }
@@ -1541,11 +1819,15 @@ public final class DebugContext implements AutoCloseable {
      * given type. The first such object found is returned.
      */
     @SuppressWarnings("unchecked")
-    public <T> T contextLookupTopdown(Class<T> clazz) {
-        if (currentScope != null) {
+    public <T> T contextLookupTopdown(Class<T> clazz)
+    {
+        if (currentScope != null)
+        {
             T found = null;
-            for (Object o : context()) {
-                if (clazz.isInstance(o)) {
+            for (Object o : context())
+            {
+                if (clazz.isInstance(o))
+                {
                     found = (T) o;
                 }
             }
@@ -1557,7 +1839,8 @@ public final class DebugContext implements AutoCloseable {
     /**
      * Creates a {@linkplain MemUseTrackerKey memory use tracker}.
      */
-    public static MemUseTrackerKey memUseTracker(CharSequence name) {
+    public static MemUseTrackerKey memUseTracker(CharSequence name)
+    {
         return createMemUseTracker("%s", name, null);
     }
 
@@ -1572,7 +1855,8 @@ public final class DebugContext implements AutoCloseable {
      *
      * @see #counter(String, Object, Object)
      */
-    public static MemUseTrackerKey memUseTracker(String format, Object arg) {
+    public static MemUseTrackerKey memUseTracker(String format, Object arg)
+    {
         return createMemUseTracker(format, arg, null);
     }
 
@@ -1596,18 +1880,21 @@ public final class DebugContext implements AutoCloseable {
      *
      * @see #memUseTracker(CharSequence)
      */
-    public static MemUseTrackerKey memUseTracker(String format, Object arg1, Object arg2) {
+    public static MemUseTrackerKey memUseTracker(String format, Object arg1, Object arg2)
+    {
         return createMemUseTracker(format, arg1, arg2);
     }
 
-    private static MemUseTrackerKey createMemUseTracker(String format, Object arg1, Object arg2) {
+    private static MemUseTrackerKey createMemUseTracker(String format, Object arg1, Object arg2)
+    {
         return new MemUseTrackerKeyImpl(format, arg1, arg2);
     }
 
     /**
      * Creates a {@linkplain CounterKey counter}.
      */
-    public static CounterKey counter(CharSequence name) {
+    public static CounterKey counter(CharSequence name)
+    {
         return createCounter("%s", name, null);
     }
 
@@ -1619,20 +1906,29 @@ public final class DebugContext implements AutoCloseable {
      *         {@code tally} if this context has no metric values or {@code tally} is wide enough to
      *         hold all the metric values in this context otherwise it will be a new array.
      */
-    public long[] addValuesTo(long[] tally) {
-        if (metricValues == null) {
+    public long[] addValuesTo(long[] tally)
+    {
+        if (metricValues == null)
+        {
             return tally;
         }
-        if (tally == null) {
+        if (tally == null)
+        {
             return metricValues.clone();
-        } else if (metricValues.length >= tally.length) {
+        }
+        else if (metricValues.length >= tally.length)
+        {
             long[] newTally = metricValues.clone();
-            for (int i = 0; i < tally.length; i++) {
+            for (int i = 0; i < tally.length; i++)
+            {
                 newTally[i] += tally[i];
             }
             return newTally;
-        } else {
-            for (int i = 0; i < metricValues.length; i++) {
+        }
+        else
+        {
+            for (int i = 0; i < metricValues.length; i++)
+            {
                 tally[i] += metricValues[i];
             }
             return tally;
@@ -1644,62 +1940,81 @@ public final class DebugContext implements AutoCloseable {
      *
      * @param values values for metrics in the {@link KeyRegistry}.
      */
-    public static EconomicMap<MetricKey, Long> convertValuesToKeyValueMap(long[] values) {
+    public static EconomicMap<MetricKey, Long> convertValuesToKeyValueMap(long[] values)
+    {
         List<MetricKey> keys = KeyRegistry.getKeys();
         Collections.sort(keys, MetricKey.NAME_COMPARATOR);
         EconomicMap<MetricKey, Long> res = EconomicMap.create(keys.size());
-        for (MetricKey key : keys) {
+        for (MetricKey key : keys)
+        {
             int index = ((AbstractKey) key).getIndex();
-            if (index >= values.length) {
+            if (index >= values.length)
+            {
                 res.put(key, 0L);
-            } else {
+            }
+            else
+            {
                 res.put(key, values[index]);
             }
         }
         return res;
     }
 
-    void setMetricValue(int keyIndex, long l) {
+    void setMetricValue(int keyIndex, long l)
+    {
         ensureMetricValuesSize(keyIndex);
         metricValues[keyIndex] = l;
     }
 
-    long getMetricValue(int keyIndex) {
-        if (metricValues == null || metricValues.length <= keyIndex) {
+    long getMetricValue(int keyIndex)
+    {
+        if (metricValues == null || metricValues.length <= keyIndex)
+        {
             return 0L;
         }
         return metricValues[keyIndex];
     }
 
-    private void ensureMetricValuesSize(int index) {
-        if (metricValues == null) {
+    private void ensureMetricValuesSize(int index)
+    {
+        if (metricValues == null)
+        {
             metricValues = new long[index + 1];
         }
-        if (metricValues.length <= index) {
+        if (metricValues.length <= index)
+        {
             metricValues = Arrays.copyOf(metricValues, index + 1);
         }
     }
 
-    public static String applyFormattingFlagsAndWidth(String s, int flags, int width) {
-        if (flags == 0 && width < 0) {
+    public static String applyFormattingFlagsAndWidth(String s, int flags, int width)
+    {
+        if (flags == 0 && width < 0)
+        {
             return s;
         }
         StringBuilder sb = new StringBuilder(s);
 
         // apply width and justification
         int len = sb.length();
-        if (len < width) {
-            for (int i = 0; i < width - len; i++) {
-                if ((flags & LEFT_JUSTIFY) == LEFT_JUSTIFY) {
+        if (len < width)
+        {
+            for (int i = 0; i < width - len; i++)
+            {
+                if ((flags & LEFT_JUSTIFY) == LEFT_JUSTIFY)
+                {
                     sb.append(' ');
-                } else {
+                }
+                else
+                {
                     sb.insert(0, ' ');
                 }
             }
         }
 
         String res = sb.toString();
-        if ((flags & UPPERCASE) == UPPERCASE) {
+        if ((flags & UPPERCASE) == UPPERCASE)
+        {
             res = res.toUpperCase();
         }
         return res;
@@ -1716,7 +2031,8 @@ public final class DebugContext implements AutoCloseable {
      *
      * @see #counter(String, Object, Object)
      */
-    public static CounterKey counter(String format, Object arg) {
+    public static CounterKey counter(String format, Object arg)
+    {
         return createCounter(format, arg, null);
     }
 
@@ -1740,15 +2056,18 @@ public final class DebugContext implements AutoCloseable {
      *
      * @see #counter(CharSequence)
      */
-    public static CounterKey counter(String format, Object arg1, Object arg2) {
+    public static CounterKey counter(String format, Object arg1, Object arg2)
+    {
         return createCounter(format, arg1, arg2);
     }
 
-    private static CounterKey createCounter(String format, Object arg1, Object arg2) {
+    private static CounterKey createCounter(String format, Object arg1, Object arg2)
+    {
         return new CounterKeyImpl(format, arg1, arg2);
     }
 
-    public DebugConfig getConfig() {
+    public DebugConfig getConfig()
+    {
         return currentConfig;
     }
 
@@ -1757,7 +2076,8 @@ public final class DebugContext implements AutoCloseable {
      * <p>
      * A disabled timer has virtually no overhead.
      */
-    public static TimerKey timer(CharSequence name) {
+    public static TimerKey timer(CharSequence name)
+    {
         return createTimer("%s", name, null);
     }
 
@@ -1772,7 +2092,8 @@ public final class DebugContext implements AutoCloseable {
      *
      * @see #timer(String, Object, Object)
      */
-    public static TimerKey timer(String format, Object arg) {
+    public static TimerKey timer(String format, Object arg)
+    {
         return createTimer(format, arg, null);
     }
 
@@ -1796,7 +2117,8 @@ public final class DebugContext implements AutoCloseable {
      *
      * @see #timer(CharSequence)
      */
-    public static TimerKey timer(String format, Object arg1, Object arg2) {
+    public static TimerKey timer(String format, Object arg1, Object arg2)
+    {
         return createTimer(format, arg1, arg2);
     }
 
@@ -1804,36 +2126,46 @@ public final class DebugContext implements AutoCloseable {
      * There are paths where construction of formatted class names are common and the code below is
      * surprisingly expensive, so compute it once and cache it.
      */
-    private static final ClassValue<String> formattedClassName = new ClassValue<String>() {
+    private static final ClassValue<String> formattedClassName = new ClassValue<String>()
+    {
         @Override
-        protected String computeValue(Class<?> c) {
+        protected String computeValue(Class<?> c)
+        {
             final String simpleName = c.getSimpleName();
             Class<?> enclosingClass = c.getEnclosingClass();
-            if (enclosingClass != null) {
+            if (enclosingClass != null)
+            {
                 String prefix = "";
-                while (enclosingClass != null) {
+                while (enclosingClass != null)
+                {
                     prefix = enclosingClass.getSimpleName() + "_" + prefix;
                     enclosingClass = enclosingClass.getEnclosingClass();
                 }
                 return prefix + simpleName;
-            } else {
+            }
+            else
+            {
                 return simpleName;
             }
         }
     };
 
-    public static Object convertFormatArg(Object arg) {
-        if (arg instanceof Class) {
+    public static Object convertFormatArg(Object arg)
+    {
+        if (arg instanceof Class)
+        {
             return formattedClassName.get((Class<?>) arg);
         }
         return arg;
     }
 
-    static String formatDebugName(String format, Object arg1, Object arg2) {
+    static String formatDebugName(String format, Object arg1, Object arg2)
+    {
         return String.format(format, convertFormatArg(arg1), convertFormatArg(arg2));
     }
 
-    private static TimerKey createTimer(String format, Object arg1, Object arg2) {
+    private static TimerKey createTimer(String format, Object arg1, Object arg2)
+    {
         return new TimerKeyImpl(format, arg1, arg2);
     }
 
@@ -1842,7 +2174,8 @@ public final class DebugContext implements AutoCloseable {
      * {@link DebugContext#sandbox(CharSequence, DebugConfig, Object...)}. Leaving the scope is
      * achieved via {@link #close()}.
      */
-    public interface Scope extends AutoCloseable {
+    public interface Scope extends AutoCloseable
+    {
         /**
          * Gets the names of this scope and its ancestors separated by {@code '.'}.
          */
@@ -1854,8 +2187,10 @@ public final class DebugContext implements AutoCloseable {
         void close();
     }
 
-    boolean isTimerEnabled(TimerKeyImpl key) {
-        if (!metricsEnabled) {
+    boolean isTimerEnabled(TimerKeyImpl key)
+    {
+        if (!metricsEnabled)
+        {
             // Pulling this common case out of `isTimerEnabledSlow`
             // gives C1 a better chance to inline this method.
             return false;
@@ -1863,11 +2198,14 @@ public final class DebugContext implements AutoCloseable {
         return isTimerEnabledSlow(key);
     }
 
-    private boolean isTimerEnabledSlow(AbstractKey key) {
-        if (currentScope != null && currentScope.isTimeEnabled()) {
+    private boolean isTimerEnabledSlow(AbstractKey key)
+    {
+        if (currentScope != null && currentScope.isTimeEnabled())
+        {
             return true;
         }
-        if (immutable.listMetrics) {
+        if (immutable.listMetrics)
+        {
             key.ensureInitialized();
         }
         assert checkNoConcurrentAccess();
@@ -1878,8 +2216,10 @@ public final class DebugContext implements AutoCloseable {
     /**
      * Determines if a given timer is enabled in the current scope.
      */
-    boolean isCounterEnabled(CounterKeyImpl key) {
-        if (!metricsEnabled) {
+    boolean isCounterEnabled(CounterKeyImpl key)
+    {
+        if (!metricsEnabled)
+        {
             // Pulling this common case out of `isCounterEnabledSlow`
             // gives C1 a better chance to inline this method.
             return false;
@@ -1887,11 +2227,14 @@ public final class DebugContext implements AutoCloseable {
         return isCounterEnabledSlow(key);
     }
 
-    private boolean isCounterEnabledSlow(AbstractKey key) {
-        if (currentScope != null && currentScope.isCountEnabled()) {
+    private boolean isCounterEnabledSlow(AbstractKey key)
+    {
+        if (currentScope != null && currentScope.isCountEnabled())
+        {
             return true;
         }
-        if (immutable.listMetrics) {
+        if (immutable.listMetrics)
+        {
             key.ensureInitialized();
         }
         assert checkNoConcurrentAccess();
@@ -1899,8 +2242,10 @@ public final class DebugContext implements AutoCloseable {
         return unscoped != null && (unscoped.isEmpty() || unscoped.contains(key.getName()));
     }
 
-    boolean isMemUseTrackerEnabled(MemUseTrackerKeyImpl key) {
-        if (!metricsEnabled) {
+    boolean isMemUseTrackerEnabled(MemUseTrackerKeyImpl key)
+    {
+        if (!metricsEnabled)
+        {
             // Pulling this common case out of `isMemUseTrackerEnabledSlow`
             // gives C1 a better chance to inline this method.
             return false;
@@ -1908,11 +2253,14 @@ public final class DebugContext implements AutoCloseable {
         return isMemUseTrackerEnabledSlow(key);
     }
 
-    private boolean isMemUseTrackerEnabledSlow(AbstractKey key) {
-        if (currentScope != null && currentScope.isMemUseTrackingEnabled()) {
+    private boolean isMemUseTrackerEnabledSlow(AbstractKey key)
+    {
+        if (currentScope != null && currentScope.isMemUseTrackingEnabled())
+        {
             return true;
         }
-        if (immutable.listMetrics) {
+        if (immutable.listMetrics)
+        {
             key.ensureInitialized();
         }
         assert checkNoConcurrentAccess();
@@ -1920,31 +2268,41 @@ public final class DebugContext implements AutoCloseable {
         return unscoped != null && (unscoped.isEmpty() || unscoped.contains(key.getName()));
     }
 
-    public boolean areMetricsEnabled() {
+    public boolean areMetricsEnabled()
+    {
         return metricsEnabled;
     }
 
     @Override
-    public void close() {
+    public void close()
+    {
         closeDumpHandlers(false);
-        if (description != null) {
+        if (description != null)
+        {
             printMetrics(description);
         }
-        if (metricsEnabled && metricValues != null && globalMetrics != null) {
+        if (metricsEnabled && metricValues != null && globalMetrics != null)
+        {
             globalMetrics.add(this);
         }
         metricValues = null;
-        if (sharedChannel != null) {
-            try {
+        if (sharedChannel != null)
+        {
+            try
+            {
                 sharedChannel.realClose();
-            } catch (IOException ex) {
+            }
+            catch (IOException ex)
+            {
                 // ignore.
             }
         }
     }
 
-    public void closeDumpHandlers(boolean ignoreErrors) {
-        if (currentConfig != null) {
+    public void closeDumpHandlers(boolean ignoreErrors)
+    {
+        if (currentConfig != null)
+        {
             currentConfig.closeDumpHandlers(ignoreErrors);
         }
     }
@@ -1970,32 +2328,41 @@ public final class DebugContext implements AutoCloseable {
      * Prints metric values in this object to the file (if any) specified by
      * {@link DebugOptions#MetricsFile}.
      */
-    public void printMetrics(Description desc) {
-        if (metricValues == null) {
+    public void printMetrics(Description desc)
+    {
+        if (metricValues == null)
+        {
             return;
         }
         String metricsFile = DebugOptions.MetricsFile.getValue(getOptions());
-        if (metricsFile != null) {
+        if (metricsFile != null)
+        {
             // Use identity to distinguish methods that have been redefined
             // or loaded by different class loaders.
             Object compilable = desc.compilable;
             Integer identity = System.identityHashCode(compilable);
             int compilationNr;
-            synchronized (PRINT_METRICS_LOCK) {
-                if (!metricsFileDeleteCheckPerformed) {
+            synchronized (PRINT_METRICS_LOCK)
+            {
+                if (!metricsFileDeleteCheckPerformed)
+                {
                     metricsFileDeleteCheckPerformed = true;
                     File file = new File(metricsFile);
-                    if (file.exists()) {
+                    if (file.exists())
+                    {
                         // This can return false in case something like /dev/stdout
                         // is specified. If the file is unwriteable, the file open
                         // below will fail.
                         file.delete();
                     }
                 }
-                if (compilations == null) {
+                if (compilations == null)
+                {
                     compilationNr = 0;
                     compilations = EconomicMap.create();
-                } else {
+                }
+                else
+                {
                     Integer value = compilations.get(identity);
                     compilationNr = value == null ? 0 : value + 1;
                 }
@@ -2006,19 +2373,26 @@ public final class DebugContext implements AutoCloseable {
             // This means `compilationNr` fields may show up out of order in the file.
             ByteArrayOutputStream baos = new ByteArrayOutputStream(metricsBufSize);
             PrintStream out = new PrintStream(baos);
-            if (metricsFile.endsWith(".csv") || metricsFile.endsWith(".CSV")) {
+            if (metricsFile.endsWith(".csv") || metricsFile.endsWith(".CSV"))
+            {
                 printMetricsCSV(out, compilable, identity, compilationNr, desc.identifier);
-            } else {
+            }
+            else
+            {
                 printMetrics(out, compilable, identity, compilationNr, desc.identifier);
             }
 
             byte[] content = baos.toByteArray();
             Path path = Paths.get(metricsFile);
-            synchronized (PRINT_METRICS_LOCK) {
+            synchronized (PRINT_METRICS_LOCK)
+            {
                 metricsBufSize = Math.max(metricsBufSize, content.length);
-                try {
+                try
+                {
                     Files.write(path, content, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
-                } catch (IOException e) {
+                }
+                catch (IOException e)
+                {
                 }
             }
         }
@@ -2037,15 +2411,18 @@ public final class DebugContext implements AutoCloseable {
      *            identified by {@code identity}
      * @param compilationId the runtime issued identifier for the compilation
      */
-    private void printMetricsCSV(PrintStream out, Object compilable, Integer identity, int compilationNr, String compilationId) {
+    private void printMetricsCSV(PrintStream out, Object compilable, Integer identity, int compilationNr, String compilationId)
+    {
         String compilableName = compilable instanceof JavaMethod ? ((JavaMethod) compilable).format("%H.%n(%p)%R") : String.valueOf(compilable);
         String csvFormat = CSVUtil.buildFormatString("%s", "%s", "%d", "%s");
         String format = String.format(csvFormat, CSVUtil.Escape.escapeArgs(compilableName, identity, compilationNr, compilationId));
         char sep = CSVUtil.SEPARATOR;
         format += sep + "%s" + sep + "%s" + sep + "%s";
-        for (MetricKey key : KeyRegistry.getKeys()) {
+        for (MetricKey key : KeyRegistry.getKeys())
+        {
             int index = ((AbstractKey) key).getIndex();
-            if (index < metricValues.length) {
+            if (index < metricValues.length)
+            {
                 Pair<String, String> valueAndUnit = key.toCSVFormat(metricValues[index]);
                 CSVUtil.Escape.println(out, format, CSVUtil.Escape.escape(key.getName()), valueAndUnit.getLeft(), valueAndUnit.getRight());
             }
@@ -2060,25 +2437,32 @@ public final class DebugContext implements AutoCloseable {
      *            identified by {@code identity}
      * @param compilationId the runtime issued identifier for the compilation
      */
-    private void printMetrics(PrintStream out, Object compilable, Integer identity, int compilationNr, String compilationId) {
+    private void printMetrics(PrintStream out, Object compilable, Integer identity, int compilationNr, String compilationId)
+    {
         String compilableName = compilable instanceof JavaMethod ? ((JavaMethod) compilable).format("%H.%n(%p)%R") : String.valueOf(compilable);
         int maxKeyWidth = compilableName.length();
         SortedMap<String, String> res = new TreeMap<>();
-        for (MetricKey key : KeyRegistry.getKeys()) {
+        for (MetricKey key : KeyRegistry.getKeys())
+        {
             int index = ((AbstractKey) key).getIndex();
-            if (index < metricValues.length && metricValues[index] != 0) {
+            if (index < metricValues.length && metricValues[index] != 0)
+            {
                 String name = key.getName();
                 long value = metricValues[index];
                 String valueString;
-                if (key instanceof TimerKey) {
+                if (key instanceof TimerKey)
+                {
                     // Report timers in ms
                     TimerKey timer = (TimerKey) key;
                     long ms = timer.getTimeUnit().toMillis(value);
-                    if (ms == 0) {
+                    if (ms == 0)
+                    {
                         continue;
                     }
                     valueString = ms + "ms";
-                } else {
+                }
+                else
+                {
                     valueString = String.valueOf(value);
                 }
                 res.put(name, valueString);
@@ -2091,14 +2475,16 @@ public final class DebugContext implements AutoCloseable {
         out.printf("%s%n", title);
         out.println(new String(new char[title.length()]).replace('\0', '~'));
 
-        for (Map.Entry<String, String> e : res.entrySet()) {
+        for (Map.Entry<String, String> e : res.entrySet())
+        {
             out.printf("%-" + String.valueOf(maxKeyWidth) + "s = %20s%n", e.getKey(), e.getValue());
         }
         out.println();
     }
 
     @SuppressWarnings({"unused", "unchecked"})
-    private static <E extends Exception> E rethrowSilently(Class<E> type, Throwable ex) throws E {
+    private static <E extends Exception> E rethrowSilently(Class<E> type, Throwable ex) throws E
+    {
         throw (E) ex;
     }
 }

@@ -26,10 +26,11 @@ import jdk.vm.ci.meta.Value;
  * Allocates a trivial trace i.e. a trace consisting of a single block with no instructions other
  * than the {@link LabelOp} and the {@link JumpOp}.
  */
-public final class TrivialTraceAllocator extends TraceAllocationPhase<TraceAllocationPhase.TraceAllocationContext> {
-
+public final class TrivialTraceAllocator extends TraceAllocationPhase<TraceAllocationPhase.TraceAllocationContext>
+{
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, Trace trace, TraceAllocationContext context) {
+    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, Trace trace, TraceAllocationContext context)
+    {
         LIR lir = lirGenRes.getLIR();
         assert isTrivialTrace(lir, trace) : "Not a trivial trace! " + trace;
         AbstractBlockBase<?> block = trace.getBlocks()[0];
@@ -40,7 +41,8 @@ public final class TrivialTraceAllocator extends TraceAllocationPhase<TraceAlloc
         allocate(block, pred, livenessInfo, SSAUtil.phiOutOrNull(lir, block));
     }
 
-    public static void allocate(AbstractBlockBase<?> block, AbstractBlockBase<?> pred, GlobalLivenessInfo livenessInfo, LIRInstruction jump) {
+    public static void allocate(AbstractBlockBase<?> block, AbstractBlockBase<?> pred, GlobalLivenessInfo livenessInfo, LIRInstruction jump)
+    {
         // exploit that the live sets are sorted
         assert TraceAssertions.liveSetsAreSorted(livenessInfo, block);
         assert TraceAssertions.liveSetsAreSorted(livenessInfo, pred);
@@ -56,8 +58,10 @@ public final class TrivialTraceAllocator extends TraceAllocationPhase<TraceAlloc
         final Value[] locationOut = new Value[outLength];
 
         assert outLength <= inLenght : "Trivial Trace! There cannot be more outgoing values than incoming.";
-        for (int outIdx = 0, inIdx = 0; outIdx < outLength; inIdx++) {
-            if (blockOut[outIdx] == blockIn[inIdx]) {
+        for (int outIdx = 0, inIdx = 0; outIdx < outLength; inIdx++)
+        {
+            if (blockOut[outIdx] == blockIn[inIdx])
+            {
                 // set the outgoing location to the incoming value
                 locationOut[outIdx++] = predLocOut[inIdx];
             }
@@ -69,17 +73,22 @@ public final class TrivialTraceAllocator extends TraceAllocationPhase<TraceAlloc
          */
         livenessInfo.setInLocations(block, predLocOut);
         livenessInfo.setOutLocations(block, locationOut);
-        if (jump != null) {
+        if (jump != null)
+        {
             handlePhiOut(jump, blockIn, predLocOut);
         }
     }
 
-    private static void handlePhiOut(LIRInstruction jump, int[] varIn, Value[] locIn) {
+    private static void handlePhiOut(LIRInstruction jump, int[] varIn, Value[] locIn)
+    {
         // handle outgoing phi values
-        ValueProcedure outputConsumer = new ValueProcedure() {
+        ValueProcedure outputConsumer = new ValueProcedure()
+        {
             @Override
-            public Value doValue(Value value, OperandMode mode, EnumSet<OperandFlag> flags) {
-                if (isVariable(value)) {
+            public Value doValue(Value value, OperandMode mode, EnumSet<OperandFlag> flags)
+            {
+                if (isVariable(value))
+                {
                     // since incoming variables are sorted, we can do a binary search
                     return locIn[Arrays.binarySearch(varIn, asVariable(value).index)];
                 }
@@ -90,5 +99,4 @@ public final class TrivialTraceAllocator extends TraceAllocationPhase<TraceAlloc
         // Jumps have only alive values (outgoing phi values)
         jump.forEachAlive(outputConsumer);
     }
-
 }

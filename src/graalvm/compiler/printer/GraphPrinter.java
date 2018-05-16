@@ -23,8 +23,8 @@ import jdk.vm.ci.meta.JavaType;
 import jdk.vm.ci.meta.MetaUtil;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
-interface GraphPrinter extends Closeable, JavaConstantFormatter {
-
+interface GraphPrinter extends Closeable, JavaConstantFormatter
+{
     /**
      * Starts a new group of graphs with the given name, short name and method byte code index (BCI)
      * as properties.
@@ -67,14 +67,18 @@ interface GraphPrinter extends Closeable, JavaConstantFormatter {
      * Determines if invoking {@link Object#toString()} on an instance of {@code c} will only run
      * trusted code.
      */
-    static boolean isToStringTrusted(Class<?> c) {
-        if (TRUSTED_CLASSES.contains(c)) {
+    static boolean isToStringTrusted(Class<?> c)
+    {
+        if (TRUSTED_CLASSES.contains(c))
+        {
             return true;
         }
-        if (GraalServices.isToStringTrusted(c)) {
+        if (GraalServices.isToStringTrusted(c))
+        {
             return true;
         }
-        if (c.getClassLoader() == GraphPrinter.class.getClassLoader()) {
+        if (c.getClassLoader() == GraphPrinter.class.getClassLoader())
+        {
             return true;
         }
         return false;
@@ -85,12 +89,16 @@ interface GraphPrinter extends Closeable, JavaConstantFormatter {
      * wrapping trusted types, other just return the results of {@link JavaConstant#toString()}.
      */
     @Override
-    default String format(JavaConstant constant) {
+    default String format(JavaConstant constant)
+    {
         SnippetReflectionProvider snippetReflection = getSnippetReflectionProvider();
-        if (snippetReflection != null) {
-            if (constant.getJavaKind() == JavaKind.Object) {
+        if (snippetReflection != null)
+        {
+            if (constant.getJavaKind() == JavaKind.Object)
+            {
                 Object obj = snippetReflection.asObject(Object.class, constant);
-                if (obj != null) {
+                if (obj != null)
+                {
                     return GraphPrinter.constantToString(obj);
                 }
             }
@@ -103,14 +111,17 @@ interface GraphPrinter extends Closeable, JavaConstantFormatter {
      * {@code cn} if it's a boxed Object value and {@code snippetReflection} can access the raw
      * value.
      */
-    default void updateStringPropertiesForConstant(Map<Object, Object> props, ConstantNode cn) {
-        if (cn.isJavaConstant() && cn.getStackKind().isObject()) {
+    default void updateStringPropertiesForConstant(Map<Object, Object> props, ConstantNode cn)
+    {
+        if (cn.isJavaConstant() && cn.getStackKind().isObject())
+        {
             String toString = format(cn.asJavaConstant());
             String rawvalue = GraphPrinter.truncate(toString);
             // Overwrite the value inserted by
             // ConstantNode.getDebugProperties()
             props.put("rawvalue", rawvalue);
-            if (!rawvalue.equals(toString)) {
+            if (!rawvalue.equals(toString))
+            {
                 props.put("toString", toString);
             }
         }
@@ -123,48 +134,70 @@ interface GraphPrinter extends Closeable, JavaConstantFormatter {
      * @return a copy of {@code args} with the above mentioned substitutions or {@code args} if no
      *         substitutions were performed
      */
-    default Object[] simplifyClassArgs(Object... args) {
+    default Object[] simplifyClassArgs(Object... args)
+    {
         Object[] res = args;
-        for (int i = 0; i < args.length; i++) {
+        for (int i = 0; i < args.length; i++)
+        {
             Object arg = args[i];
-            if (arg instanceof JavaType) {
-                if (args == res) {
+            if (arg instanceof JavaType)
+            {
+                if (args == res)
+                {
                     res = new Object[args.length];
-                    for (int a = 0; a < i; a++) {
+                    for (int a = 0; a < i; a++)
+                    {
                         res[a] = args[a];
                     }
                 }
                 res[i] = ((JavaType) arg).getUnqualifiedName();
-            } else {
+            }
+            else
+            {
                 res[i] = arg;
             }
         }
         return res;
     }
 
-    static String truncate(String s) {
-        if (s.length() > MAX_CONSTANT_TO_STRING_LENGTH) {
+    static String truncate(String s)
+    {
+        if (s.length() > MAX_CONSTANT_TO_STRING_LENGTH)
+        {
             return s.substring(0, MAX_CONSTANT_TO_STRING_LENGTH - 3) + "...";
         }
         return s;
     }
 
-    static String constantToString(Object value) {
+    static String constantToString(Object value)
+    {
         Class<?> c = value.getClass();
         String suffix = "";
-        if (c.isArray()) {
+        if (c.isArray())
+        {
             return constantArrayToString(value);
-        } else if (value instanceof Enum) {
+        }
+        else if (value instanceof Enum)
+        {
             return ((Enum<?>) value).name();
-        } else if (isToStringTrusted(c)) {
-            try {
+        }
+        else if (isToStringTrusted(c))
+        {
+            try
+            {
                 return value.toString();
-            } catch (Throwable t) {
+            }
+            catch (Throwable t)
+            {
                 suffix = "[toString error: " + t.getClass().getName() + "]";
-                if (isToStringTrusted(t.getClass())) {
-                    try {
+                if (isToStringTrusted(t.getClass()))
+                {
+                    try
+                    {
                         suffix = "[toString error: " + t + "]";
-                    } catch (Throwable t2) {
+                    }
+                    catch (Throwable t2)
+                    {
                         // No point in going further
                     }
                 }
@@ -173,21 +206,27 @@ interface GraphPrinter extends Closeable, JavaConstantFormatter {
         return MetaUtil.getSimpleName(c, true) + "@" + Integer.toHexString(System.identityHashCode(value)) + suffix;
     }
 
-    static String constantArrayToString(Object array) {
+    static String constantArrayToString(Object array)
+    {
         Class<?> componentType = array.getClass().getComponentType();
         assert componentType != null;
         int arrayLength = Array.getLength(array);
         StringBuilder buf = new StringBuilder(MetaUtil.getSimpleName(componentType, true)).append('[').append(arrayLength).append("]{");
         int length = arrayLength;
         boolean primitive = componentType.isPrimitive();
-        for (int i = 0; i < length; i++) {
-            if (primitive) {
+        for (int i = 0; i < length; i++)
+        {
+            if (primitive)
+            {
                 buf.append(Array.get(array, i));
-            } else {
+            }
+            else
+            {
                 Object o = ((Object[]) array)[i];
                 buf.append(o == null ? "null" : constantToString(o));
             }
-            if (i != length - 1) {
+            if (i != length - 1)
+            {
                 buf.append(", ");
             }
         }
@@ -195,17 +234,23 @@ interface GraphPrinter extends Closeable, JavaConstantFormatter {
     }
 
     @SuppressWarnings("try")
-    static StructuredGraph.ScheduleResult getScheduleOrNull(Graph graph) {
-        if (graph instanceof StructuredGraph) {
+    static StructuredGraph.ScheduleResult getScheduleOrNull(Graph graph)
+    {
+        if (graph instanceof StructuredGraph)
+        {
             StructuredGraph sgraph = (StructuredGraph) graph;
             StructuredGraph.ScheduleResult scheduleResult = sgraph.getLastSchedule();
-            if (scheduleResult == null) {
+            if (scheduleResult == null)
+            {
                 DebugContext debug = graph.getDebug();
-                try (Scope scope = debug.disable()) {
+                try (Scope scope = debug.disable())
+                {
                     SchedulePhase schedule = new SchedulePhase(graph.getOptions());
                     schedule.apply(sgraph);
                     scheduleResult = sgraph.getLastSchedule();
-                } catch (Throwable t) {
+                }
+                catch (Throwable t)
+                {
                 }
             }
             return scheduleResult;

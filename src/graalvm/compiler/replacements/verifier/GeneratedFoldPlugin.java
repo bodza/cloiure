@@ -21,38 +21,46 @@ import graalvm.compiler.replacements.verifier.InjectedDependencies.WellKnownDepe
 /**
  * Create graph builder plugins for {@link Fold} methods.
  */
-public class GeneratedFoldPlugin extends GeneratedPlugin {
-
-    public GeneratedFoldPlugin(ExecutableElement intrinsicMethod) {
+public class GeneratedFoldPlugin extends GeneratedPlugin
+{
+    public GeneratedFoldPlugin(ExecutableElement intrinsicMethod)
+    {
         super(intrinsicMethod);
     }
 
     @Override
-    protected Class<? extends Annotation> getAnnotationClass() {
+    protected Class<? extends Annotation> getAnnotationClass()
+    {
         return Fold.class;
     }
 
-    private static TypeMirror stringType(ProcessingEnvironment env) {
+    private static TypeMirror stringType(ProcessingEnvironment env)
+    {
         return env.getElementUtils().getTypeElement("java.lang.String").asType();
     }
 
     @Override
-    public void extraImports(Set<String> imports) {
+    public void extraImports(Set<String> imports)
+    {
         imports.add("jdk.vm.ci.meta.JavaConstant");
         imports.add("jdk.vm.ci.meta.JavaKind");
         imports.add("graalvm.compiler.nodes.ConstantNode");
     }
 
     @Override
-    protected InjectedDependencies createExecute(ProcessingEnvironment env, PrintWriter out) {
+    protected InjectedDependencies createExecute(ProcessingEnvironment env, PrintWriter out)
+    {
         InjectedDependencies deps = new InjectedDependencies();
         List<? extends VariableElement> params = intrinsicMethod.getParameters();
 
         int argCount = 0;
         Object receiver;
-        if (intrinsicMethod.getModifiers().contains(Modifier.STATIC)) {
+        if (intrinsicMethod.getModifiers().contains(Modifier.STATIC))
+        {
             receiver = intrinsicMethod.getEnclosingElement();
-        } else {
+        }
+        else
+        {
             receiver = "arg0";
             TypeElement type = (TypeElement) intrinsicMethod.getEnclosingElement();
             constantArgument(env, out, deps, argCount, type.asType(), argCount);
@@ -60,10 +68,14 @@ public class GeneratedFoldPlugin extends GeneratedPlugin {
         }
 
         int firstArg = argCount;
-        for (VariableElement param : params) {
-            if (param.getAnnotation(InjectedParameter.class) == null) {
+        for (VariableElement param : params)
+        {
+            if (param.getAnnotation(InjectedParameter.class) == null)
+            {
                 constantArgument(env, out, deps, argCount, param.asType(), argCount);
-            } else {
+            }
+            else
+            {
                 out.printf("            assert checkInjectedArgument(b, args[%d], targetMethod);\n", argCount);
                 out.printf("            %s arg%d = %s;\n", param.asType(), argCount, deps.use(env, (DeclaredType) param.asType()));
             }
@@ -71,21 +83,27 @@ public class GeneratedFoldPlugin extends GeneratedPlugin {
         }
 
         Set<String> suppressWarnings = new TreeSet<>();
-        if (intrinsicMethod.getAnnotation(Deprecated.class) != null) {
+        if (intrinsicMethod.getAnnotation(Deprecated.class) != null)
+        {
             suppressWarnings.add("deprecation");
         }
-        if (hasRawtypeWarning(intrinsicMethod.getReturnType())) {
+        if (hasRawtypeWarning(intrinsicMethod.getReturnType()))
+        {
             suppressWarnings.add("rawtypes");
         }
-        for (VariableElement param : params) {
-            if (hasUncheckedWarning(param.asType())) {
+        for (VariableElement param : params)
+        {
+            if (hasUncheckedWarning(param.asType()))
+            {
                 suppressWarnings.add("unchecked");
             }
         }
-        if (suppressWarnings.size() > 0) {
+        if (suppressWarnings.size() > 0)
+        {
             out.printf("            @SuppressWarnings({");
             String sep = "";
-            for (String suppressWarning : suppressWarnings) {
+            for (String suppressWarning : suppressWarnings)
+            {
                 out.printf("%s\"%s\"", sep, suppressWarning);
                 sep = ", ";
             }
@@ -93,16 +111,19 @@ public class GeneratedFoldPlugin extends GeneratedPlugin {
         }
 
         out.printf("            %s result = %s.%s(", getErasedType(intrinsicMethod.getReturnType()), receiver, intrinsicMethod.getSimpleName());
-        if (argCount > firstArg) {
+        if (argCount > firstArg)
+        {
             out.printf("arg%d", firstArg);
-            for (int i = firstArg + 1; i < argCount; i++) {
+            for (int i = firstArg + 1; i < argCount; i++)
+            {
                 out.printf(", arg%d", i);
             }
         }
         out.printf(");\n");
 
         TypeMirror returnType = intrinsicMethod.getReturnType();
-        switch (returnType.getKind()) {
+        switch (returnType.getKind())
+        {
             case BOOLEAN:
                 out.printf("            JavaConstant constant = JavaConstant.forInt(result ? 1 : 0);\n");
                 break;
@@ -124,9 +145,12 @@ public class GeneratedFoldPlugin extends GeneratedPlugin {
             case ARRAY:
             case TYPEVAR:
             case DECLARED:
-                if (returnType.equals(stringType(env))) {
+                if (returnType.equals(stringType(env)))
+                {
                     out.printf("            JavaConstant constant = %s.forString(result);\n", deps.use(WellKnownDependency.CONSTANT_REFLECTION));
-                } else {
+                }
+                else
+                {
                     out.printf("            JavaConstant constant = %s.forObject(result);\n", deps.use(WellKnownDependency.SNIPPET_REFLECTION));
                 }
                 break;

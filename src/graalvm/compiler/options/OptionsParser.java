@@ -14,18 +14,22 @@ import graalvm.util.CollectionsUtil;
  * This class contains methods for parsing Graal options and matching them against a set of
  * {@link OptionDescriptors}. The {@link OptionDescriptors} are loaded via a {@link ServiceLoader}.
  */
-public class OptionsParser {
-
+public class OptionsParser
+{
     /**
      * Gets an iterable composed of the {@link ServiceLoader}s to be used when looking for
      * {@link OptionDescriptors} providers.
      */
-    public static Iterable<OptionDescriptors> getOptionsLoader() {
+    public static Iterable<OptionDescriptors> getOptionsLoader()
+    {
         ServiceLoader<OptionDescriptors> graalLoader = ServiceLoader.load(OptionDescriptors.class, OptionDescriptors.class.getClassLoader());
         boolean java8OrEarlier = System.getProperty("java.specification.version").compareTo("1.9") < 0;
-        if (java8OrEarlier) {
+        if (java8OrEarlier)
+        {
             return graalLoader;
-        } else {
+        }
+        else
+        {
             /*
              * The Graal module (i.e., jdk.internal.vm.compiler) is loaded by the platform class
              * loader on JDK 9. Other modules that extend Graal or are Graal dependencies (such as
@@ -45,10 +49,13 @@ public class OptionsParser {
      * @param loader source of the available {@link OptionDescriptors}
      * @throws IllegalArgumentException if there's a problem parsing {@code option}
      */
-    public static void parseOptions(EconomicMap<String, String> optionSettings, EconomicMap<OptionKey<?>, Object> values, Iterable<OptionDescriptors> loader) {
-        if (optionSettings != null && !optionSettings.isEmpty()) {
+    public static void parseOptions(EconomicMap<String, String> optionSettings, EconomicMap<OptionKey<?>, Object> values, Iterable<OptionDescriptors> loader)
+    {
+        if (optionSettings != null && !optionSettings.isEmpty())
+        {
             MapCursor<String, String> cursor = optionSettings.getEntries();
-            while (cursor.advance()) {
+            while (cursor.advance())
+            {
                 parseOption(cursor.getKey(), cursor.getValue(), values, loader);
             }
         }
@@ -59,9 +66,11 @@ public class OptionsParser {
      *
      * @param optionSetting a string matching the pattern {@code <name>=<value>}
      */
-    public static void parseOptionSettingTo(String optionSetting, EconomicMap<String, String> dst) {
+    public static void parseOptionSettingTo(String optionSetting, EconomicMap<String, String> dst)
+    {
         int eqIndex = optionSetting.indexOf('=');
-        if (eqIndex == -1) {
+        if (eqIndex == -1)
+        {
             throw new InternalError("Option setting has does not match the pattern <name>=<value>: " + optionSetting);
         }
         dst.put(optionSetting.substring(0, eqIndex), optionSetting.substring(eqIndex + 1));
@@ -75,10 +84,13 @@ public class OptionsParser {
      * @return the {@link OptionDescriptor} whose name equals {@code name} or null if not such
      *         descriptor is available
      */
-    private static OptionDescriptor lookup(Iterable<OptionDescriptors> loader, String name) {
-        for (OptionDescriptors optionDescriptors : loader) {
+    private static OptionDescriptor lookup(Iterable<OptionDescriptors> loader, String name)
+    {
+        for (OptionDescriptors optionDescriptors : loader)
+        {
             OptionDescriptor desc = optionDescriptors.get(name);
-            if (desc != null) {
+            if (desc != null)
+            {
                 return desc;
             }
         }
@@ -94,16 +106,19 @@ public class OptionsParser {
      * @param loader source of the available {@link OptionDescriptors}
      * @throws IllegalArgumentException if there's a problem parsing {@code option}
      */
-    public static void parseOption(String name, Object uncheckedValue, EconomicMap<OptionKey<?>, Object> values, Iterable<OptionDescriptors> loader) {
-
+    public static void parseOption(String name, Object uncheckedValue, EconomicMap<OptionKey<?>, Object> values, Iterable<OptionDescriptors> loader)
+    {
         OptionDescriptor desc = lookup(loader, name);
-        if (desc == null) {
+        if (desc == null)
+        {
             List<OptionDescriptor> matches = fuzzyMatch(loader, name);
             Formatter msg = new Formatter();
             msg.format("Could not find option %s", name);
-            if (!matches.isEmpty()) {
+            if (!matches.isEmpty())
+            {
                 msg.format("%nDid you mean one of the following?");
-                for (OptionDescriptor match : matches) {
+                for (OptionDescriptor match : matches)
+                {
                     msg.format("%n    %s=<value>", match.getName());
                 }
             }
@@ -112,43 +127,72 @@ public class OptionsParser {
 
         Class<?> optionType = desc.getOptionValueType();
         Object value;
-        if (!(uncheckedValue instanceof String)) {
-            if (optionType != uncheckedValue.getClass()) {
+        if (!(uncheckedValue instanceof String))
+        {
+            if (optionType != uncheckedValue.getClass())
+            {
                 String type = optionType.getSimpleName();
                 throw new IllegalArgumentException(type + " option '" + name + "' must have " + type + " value, not " + uncheckedValue.getClass() + " [toString: " + uncheckedValue + "]");
             }
             value = uncheckedValue;
-        } else {
+        }
+        else
+        {
             String valueString = (String) uncheckedValue;
-            if (optionType == Boolean.class) {
-                if ("true".equals(valueString)) {
+            if (optionType == Boolean.class)
+            {
+                if ("true".equals(valueString))
+                {
                     value = Boolean.TRUE;
-                } else if ("false".equals(valueString)) {
+                }
+                else if ("false".equals(valueString))
+                {
                     value = Boolean.FALSE;
-                } else {
+                }
+                else
+                {
                     throw new IllegalArgumentException("Boolean option '" + name + "' must have value \"true\" or \"false\", not \"" + uncheckedValue + "\"");
                 }
-            } else if (optionType == String.class) {
+            }
+            else if (optionType == String.class)
+            {
                 value = valueString;
-            } else if (Enum.class.isAssignableFrom(optionType)) {
+            }
+            else if (Enum.class.isAssignableFrom(optionType))
+            {
                 value = ((EnumOptionKey<?>) desc.getOptionKey()).valueOf(valueString);
-            } else {
-                if (valueString.isEmpty()) {
+            }
+            else
+            {
+                if (valueString.isEmpty())
+                {
                     throw new IllegalArgumentException("Non empty value required for option '" + name + "'");
                 }
-                try {
-                    if (optionType == Float.class) {
+                try
+                {
+                    if (optionType == Float.class)
+                    {
                         value = Float.parseFloat(valueString);
-                    } else if (optionType == Double.class) {
+                    }
+                    else if (optionType == Double.class)
+                    {
                         value = Double.parseDouble(valueString);
-                    } else if (optionType == Integer.class) {
+                    }
+                    else if (optionType == Integer.class)
+                    {
                         value = Integer.valueOf((int) parseLong(valueString));
-                    } else if (optionType == Long.class) {
+                    }
+                    else if (optionType == Long.class)
+                    {
                         value = Long.valueOf(parseLong(valueString));
-                    } else {
+                    }
+                    else
+                    {
                         throw new IllegalArgumentException("Wrong value for option '" + name + "'");
                     }
-                } catch (NumberFormatException nfe) {
+                }
+                catch (NumberFormatException nfe)
+                {
                     throw new IllegalArgumentException("Value for option '" + name + "' has invalid number format: " + valueString);
                 }
             }
@@ -157,20 +201,29 @@ public class OptionsParser {
         desc.optionKey.update(values, value);
     }
 
-    private static long parseLong(String v) {
+    private static long parseLong(String v)
+    {
         String valueString = v.toLowerCase();
         long scale = 1;
-        if (valueString.endsWith("k")) {
+        if (valueString.endsWith("k"))
+        {
             scale = 1024L;
-        } else if (valueString.endsWith("m")) {
+        }
+        else if (valueString.endsWith("m"))
+        {
             scale = 1024L * 1024L;
-        } else if (valueString.endsWith("g")) {
+        }
+        else if (valueString.endsWith("g"))
+        {
             scale = 1024L * 1024L * 1024L;
-        } else if (valueString.endsWith("t")) {
+        }
+        else if (valueString.endsWith("t"))
+        {
             scale = 1024L * 1024L * 1024L * 1024L;
         }
 
-        if (scale != 1) {
+        if (scale != 1)
+        {
             /* Remove trailing scale character. */
             valueString = valueString.substring(0, valueString.length() - 1);
         }
@@ -183,11 +236,15 @@ public class OptionsParser {
      *
      * Ported from str_similar() in globals.cpp.
      */
-    static float stringSimiliarity(String str1, String str2) {
+    static float stringSimiliarity(String str1, String str2)
+    {
         int hit = 0;
-        for (int i = 0; i < str1.length() - 1; ++i) {
-            for (int j = 0; j < str2.length() - 1; ++j) {
-                if ((str1.charAt(i) == str2.charAt(j)) && (str1.charAt(i + 1) == str2.charAt(j + 1))) {
+        for (int i = 0; i < str1.length() - 1; ++i)
+        {
+            for (int j = 0; j < str2.length() - 1; ++j)
+            {
+                if ((str1.charAt(i) == str2.charAt(j)) && (str1.charAt(i + 1) == str2.charAt(j + 1)))
+                {
                     ++hit;
                     break;
                 }
@@ -201,9 +258,11 @@ public class OptionsParser {
     /**
      * Returns the set of options that fuzzy match a given option name.
      */
-    private static List<OptionDescriptor> fuzzyMatch(Iterable<OptionDescriptors> loader, String optionName) {
+    private static List<OptionDescriptor> fuzzyMatch(Iterable<OptionDescriptors> loader, String optionName)
+    {
         List<OptionDescriptor> matches = new ArrayList<>();
-        for (OptionDescriptors options : loader) {
+        for (OptionDescriptors options : loader)
+        {
             collectFuzzyMatches(options, optionName, matches);
         }
         return matches;
@@ -218,11 +277,14 @@ public class OptionsParser {
      * @param matches the collection to which fuzzy matches of {@code name} will be added
      * @return whether any fuzzy matches were found
      */
-    public static boolean collectFuzzyMatches(Iterable<OptionDescriptor> toSearch, String name, Collection<OptionDescriptor> matches) {
+    public static boolean collectFuzzyMatches(Iterable<OptionDescriptor> toSearch, String name, Collection<OptionDescriptor> matches)
+    {
         boolean found = false;
-        for (OptionDescriptor option : toSearch) {
+        for (OptionDescriptor option : toSearch)
+        {
             float score = stringSimiliarity(option.getName(), name);
-            if (score >= FUZZY_MATCH_THRESHOLD) {
+            if (score >= FUZZY_MATCH_THRESHOLD)
+            {
                 found = true;
                 matches.add(option);
             }

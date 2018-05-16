@@ -6,5 +6,6 @@ import graalvm.compiler.phases.tiers.HighTierContext;
 /**
  * Common superclass for phases that perform inlining.
  */
-public abstract class AbstractInliningPhase extends BasePhase<HighTierContext> {
+public abstract class AbstractInliningPhase extends BasePhase<HighTierContext>
+{
 }

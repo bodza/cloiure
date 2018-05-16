@@ -11,19 +11,21 @@ import graalvm.compiler.nodes.spi.UncheckedInterfaceProvider;
  * The {@code Parameter} instruction is a placeholder for an incoming argument to a function call.
  */
 @NodeInfo(nameTemplate = "P({p#index})")
-public final class ParameterNode extends AbstractLocalNode implements IterableNodeType, UncheckedInterfaceProvider {
-
+public final class ParameterNode extends AbstractLocalNode implements IterableNodeType, UncheckedInterfaceProvider
+{
     public static final NodeClass<ParameterNode> TYPE = NodeClass.create(ParameterNode.class);
 
     private Stamp uncheckedStamp;
 
-    public ParameterNode(int index, StampPair stamp) {
+    public ParameterNode(int index, StampPair stamp)
+    {
         super(TYPE, index, stamp.getTrustedStamp());
         this.uncheckedStamp = stamp.getUncheckedStamp();
     }
 
     @Override
-    public Stamp uncheckedStamp() {
+    public Stamp uncheckedStamp()
+    {
         return uncheckedStamp;
     }
 }

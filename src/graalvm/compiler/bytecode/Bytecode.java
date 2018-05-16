@@ -14,8 +14,8 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * instrumentation and VM rewriting, this indirection can be used to enable access to the original
  * bytecode of a method (i.e., as defined in a class file).
  */
-public interface Bytecode {
-
+public interface Bytecode
+{
     /**
      * Gets the method this object supplies bytecode for.
      */
@@ -46,19 +46,27 @@ public interface Bytecode {
      */
     BytecodeProvider getOrigin();
 
-    static String toLocation(Bytecode bytecode, int bci) {
+    static String toLocation(Bytecode bytecode, int bci)
+    {
         return appendLocation(new StringBuilder(), bytecode, bci).toString();
     }
 
-    static StringBuilder appendLocation(StringBuilder sb, Bytecode bytecode, int bci) {
-        if (bytecode != null) {
+    static StringBuilder appendLocation(StringBuilder sb, Bytecode bytecode, int bci)
+    {
+        if (bytecode != null)
+        {
             StackTraceElement ste = bytecode.asStackTraceElement(bci);
-            if (ste.getFileName() != null && ste.getLineNumber() > 0) {
+            if (ste.getFileName() != null && ste.getLineNumber() > 0)
+            {
                 sb.append(ste);
-            } else {
+            }
+            else
+            {
                 sb.append(bytecode.getMethod().format("%H.%n(%p)"));
             }
-        } else {
+        }
+        else
+        {
             sb.append("Null method");
         }
         return sb.append(" [bci: ").append(bci).append(']');

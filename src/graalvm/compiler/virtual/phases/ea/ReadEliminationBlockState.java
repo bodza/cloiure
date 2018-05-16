@@ -10,16 +10,17 @@ import org.graalvm.word.LocationIdentity;
 /**
  * This class maintains a set of known values, identified by base object, locations and offset.
  */
-public final class ReadEliminationBlockState extends EffectsBlockState<ReadEliminationBlockState> {
-
+public final class ReadEliminationBlockState extends EffectsBlockState<ReadEliminationBlockState>
+{
     final EconomicMap<CacheEntry<?>, ValueNode> readCache;
 
-    abstract static class CacheEntry<T> {
-
+    abstract static class CacheEntry<T>
+    {
         public final ValueNode object;
         public final T identity;
 
-        CacheEntry(ValueNode object, T identity) {
+        CacheEntry(ValueNode object, T identity)
+        {
             this.object = object;
             this.identity = identity;
         }
@@ -27,14 +28,17 @@ public final class ReadEliminationBlockState extends EffectsBlockState<ReadElimi
         public abstract CacheEntry<T> duplicateWithObject(ValueNode newObject);
 
         @Override
-        public int hashCode() {
+        public int hashCode()
+        {
             int result = 31 + ((identity == null) ? 0 : identity.hashCode());
             return 31 * result + ((object == null) ? 0 : object.hashCode());
         }
 
         @Override
-        public boolean equals(Object obj) {
-            if (!(obj instanceof CacheEntry<?>)) {
+        public boolean equals(Object obj)
+        {
+            if (!(obj instanceof CacheEntry<?>))
+            {
                 return false;
             }
             CacheEntry<?> other = (CacheEntry<?>) obj;
@@ -42,7 +46,8 @@ public final class ReadEliminationBlockState extends EffectsBlockState<ReadElimi
         }
 
         @Override
-        public String toString() {
+        public String toString()
+        {
             return object + ":" + identity;
         }
 
@@ -51,24 +56,28 @@ public final class ReadEliminationBlockState extends EffectsBlockState<ReadElimi
         public abstract LocationIdentity getIdentity();
     }
 
-    static final class LoadCacheEntry extends CacheEntry<LocationIdentity> {
-
-        LoadCacheEntry(ValueNode object, LocationIdentity identity) {
+    static final class LoadCacheEntry extends CacheEntry<LocationIdentity>
+    {
+        LoadCacheEntry(ValueNode object, LocationIdentity identity)
+        {
             super(object, identity);
         }
 
         @Override
-        public CacheEntry<LocationIdentity> duplicateWithObject(ValueNode newObject) {
+        public CacheEntry<LocationIdentity> duplicateWithObject(ValueNode newObject)
+        {
             return new LoadCacheEntry(newObject, identity);
         }
 
         @Override
-        public boolean conflicts(LocationIdentity other) {
+        public boolean conflicts(LocationIdentity other)
+        {
             return identity.equals(other);
         }
 
         @Override
-        public LocationIdentity getIdentity() {
+        public LocationIdentity getIdentity()
+        {
             return identity;
         }
     }
@@ -78,34 +87,40 @@ public final class ReadEliminationBlockState extends EffectsBlockState<ReadElimi
      * identity are separate so both must be considered when looking for optimizable memory
      * accesses.
      */
-    static final class UnsafeLoadCacheEntry extends CacheEntry<ValueNode> {
-
+    static final class UnsafeLoadCacheEntry extends CacheEntry<ValueNode>
+    {
         private final LocationIdentity locationIdentity;
 
-        UnsafeLoadCacheEntry(ValueNode object, ValueNode location, LocationIdentity locationIdentity) {
+        UnsafeLoadCacheEntry(ValueNode object, ValueNode location, LocationIdentity locationIdentity)
+        {
             super(object, location);
             assert locationIdentity != null;
             this.locationIdentity = locationIdentity;
         }
 
         @Override
-        public CacheEntry<ValueNode> duplicateWithObject(ValueNode newObject) {
+        public CacheEntry<ValueNode> duplicateWithObject(ValueNode newObject)
+        {
             return new UnsafeLoadCacheEntry(newObject, identity, locationIdentity);
         }
 
         @Override
-        public boolean conflicts(LocationIdentity other) {
+        public boolean conflicts(LocationIdentity other)
+        {
             return locationIdentity.equals(other);
         }
 
         @Override
-        public int hashCode() {
+        public int hashCode()
+        {
             return 31 * super.hashCode() + locationIdentity.hashCode();
         }
 
         @Override
-        public boolean equals(Object obj) {
-            if (obj instanceof UnsafeLoadCacheEntry) {
+        public boolean equals(Object obj)
+        {
+            if (obj instanceof UnsafeLoadCacheEntry)
+            {
                 UnsafeLoadCacheEntry other = (UnsafeLoadCacheEntry) obj;
                 return super.equals(other) && locationIdentity.equals(other.locationIdentity);
             }
@@ -113,57 +128,70 @@ public final class ReadEliminationBlockState extends EffectsBlockState<ReadElimi
         }
 
         @Override
-        public LocationIdentity getIdentity() {
+        public LocationIdentity getIdentity()
+        {
             return locationIdentity;
         }
 
         @Override
-        public String toString() {
+        public String toString()
+        {
             return "UNSAFE:" + super.toString() + " location:" + locationIdentity;
         }
     }
 
-    public ReadEliminationBlockState() {
+    public ReadEliminationBlockState()
+    {
         readCache = EconomicMap.create(Equivalence.DEFAULT);
     }
 
-    public ReadEliminationBlockState(ReadEliminationBlockState other) {
+    public ReadEliminationBlockState(ReadEliminationBlockState other)
+    {
         readCache = EconomicMap.create(Equivalence.DEFAULT, other.readCache);
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return super.toString() + " " + readCache;
     }
 
     @Override
-    public boolean equivalentTo(ReadEliminationBlockState other) {
+    public boolean equivalentTo(ReadEliminationBlockState other)
+    {
         return isSubMapOf(readCache, other.readCache);
     }
 
-    public void addCacheEntry(CacheEntry<?> identifier, ValueNode value) {
+    public void addCacheEntry(CacheEntry<?> identifier, ValueNode value)
+    {
         readCache.put(identifier, value);
     }
 
-    public ValueNode getCacheEntry(CacheEntry<?> identifier) {
+    public ValueNode getCacheEntry(CacheEntry<?> identifier)
+    {
         return readCache.get(identifier);
     }
 
-    public void killReadCache() {
+    public void killReadCache()
+    {
         readCache.clear();
     }
 
-    public void killReadCache(LocationIdentity identity) {
+    public void killReadCache(LocationIdentity identity)
+    {
         Iterator<CacheEntry<?>> iterator = readCache.getKeys().iterator();
-        while (iterator.hasNext()) {
+        while (iterator.hasNext())
+        {
             CacheEntry<?> entry = iterator.next();
-            if (entry.conflicts(identity)) {
+            if (entry.conflicts(identity))
+            {
                 iterator.remove();
             }
         }
     }
 
-    public EconomicMap<CacheEntry<?>, ValueNode> getReadCache() {
+    public EconomicMap<CacheEntry<?>, ValueNode> getReadCache()
+    {
         return readCache;
     }
 }

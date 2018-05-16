@@ -21,55 +21,64 @@ import jdk.vm.ci.meta.Value;
 
 /**
  */
-final class RegisterVerifier {
-
+final class RegisterVerifier
+{
     LinearScan allocator;
     ArrayList<AbstractBlockBase<?>> workList; // all blocks that must be processed
     BlockMap<Interval[]> savedStates; // saved information of previous check
 
     // simplified access to methods of LinearScan
-    Interval intervalAt(Value operand) {
+    Interval intervalAt(Value operand)
+    {
         return allocator.intervalFor(operand);
     }
 
     // currently, only registers are processed
-    int stateSize() {
+    int stateSize()
+    {
         return allocator.maxRegisterNumber() + 1;
     }
 
     // accessors
-    Interval[] stateForBlock(AbstractBlockBase<?> block) {
+    Interval[] stateForBlock(AbstractBlockBase<?> block)
+    {
         return savedStates.get(block);
     }
 
-    void setStateForBlock(AbstractBlockBase<?> block, Interval[] savedState) {
+    void setStateForBlock(AbstractBlockBase<?> block, Interval[] savedState)
+    {
         savedStates.put(block, savedState);
     }
 
-    void addToWorkList(AbstractBlockBase<?> block) {
-        if (!workList.contains(block)) {
+    void addToWorkList(AbstractBlockBase<?> block)
+    {
+        if (!workList.contains(block))
+        {
             workList.add(block);
         }
     }
 
-    RegisterVerifier(LinearScan allocator) {
+    RegisterVerifier(LinearScan allocator)
+    {
         this.allocator = allocator;
         workList = new ArrayList<>(16);
         this.savedStates = new BlockMap<>(allocator.getLIR().getControlFlowGraph());
-
     }
 
     @SuppressWarnings("try")
-    void verify(AbstractBlockBase<?> start) {
+    void verify(AbstractBlockBase<?> start)
+    {
         DebugContext debug = allocator.getDebug();
-        try (DebugContext.Scope s = debug.scope("RegisterVerifier")) {
+        try (DebugContext.Scope s = debug.scope("RegisterVerifier"))
+        {
             // setup input registers (method arguments) for first block
             Interval[] inputState = new Interval[stateSize()];
             setStateForBlock(start, inputState);
             addToWorkList(start);
 
             // main loop for verification
-            do {
+            do
+            {
                 AbstractBlockBase<?> block = workList.get(0);
                 workList.remove(0);
 
@@ -79,57 +88,72 @@ final class RegisterVerifier {
     }
 
     @SuppressWarnings("try")
-    private void processBlock(AbstractBlockBase<?> block) {
+    private void processBlock(AbstractBlockBase<?> block)
+    {
         DebugContext debug = allocator.getDebug();
-        try (Indent indent = debug.logAndIndent("processBlock B%d", block.getId())) {
+        try (Indent indent = debug.logAndIndent("processBlock B%d", block.getId()))
+        {
             // must copy state because it is modified
             Interval[] inputState = copy(stateForBlock(block));
 
-            try (Indent indent2 = debug.logAndIndent("Input-State of intervals:")) {
+            try (Indent indent2 = debug.logAndIndent("Input-State of intervals:"))
+            {
                 printState(inputState);
             }
 
             // process all operations of the block
             processOperations(block, inputState);
 
-            try (Indent indent2 = debug.logAndIndent("Output-State of intervals:")) {
+            try (Indent indent2 = debug.logAndIndent("Output-State of intervals:"))
+            {
                 printState(inputState);
             }
 
             // iterate all successors
-            for (AbstractBlockBase<?> succ : block.getSuccessors()) {
+            for (AbstractBlockBase<?> succ : block.getSuccessors())
+            {
                 processSuccessor(succ, inputState);
             }
         }
     }
 
-    protected void printState(Interval[] inputState) {
+    protected void printState(Interval[] inputState)
+    {
         DebugContext debug = allocator.getDebug();
-        for (int i = 0; i < stateSize(); i++) {
+        for (int i = 0; i < stateSize(); i++)
+        {
             Register reg = allocator.getRegisters().get(i);
             assert reg.number == i;
-            if (inputState[i] != null) {
+            if (inputState[i] != null)
+            {
                 debug.log(" %6s %4d  --  %s", reg, inputState[i].operandNumber, inputState[i]);
-            } else {
+            }
+            else
+            {
                 debug.log(" %6s   __", reg);
             }
         }
     }
 
-    private void processSuccessor(AbstractBlockBase<?> block, Interval[] inputState) {
+    private void processSuccessor(AbstractBlockBase<?> block, Interval[] inputState)
+    {
         DebugContext debug = allocator.getDebug();
         Interval[] savedState = stateForBlock(block);
 
-        if (savedState != null) {
+        if (savedState != null)
+        {
             // this block was already processed before.
             // check if new inputState is consistent with savedState
 
             boolean savedStateCorrect = true;
-            for (int i = 0; i < stateSize(); i++) {
-                if (inputState[i] != savedState[i]) {
+            for (int i = 0; i < stateSize(); i++)
+            {
+                if (inputState[i] != savedState[i])
+                {
                     // current inputState and previous savedState assume a different
                     // interval in this register . assume that this register is invalid
-                    if (savedState[i] != null) {
+                    if (savedState[i] != null)
+                    {
                         // invalidate old calculation only if it assumed that
                         // register was valid. when the register was already invalid,
                         // then the old calculation was correct.
@@ -141,16 +165,20 @@ final class RegisterVerifier {
                 }
             }
 
-            if (savedStateCorrect) {
+            if (savedStateCorrect)
+            {
                 // already processed block with correct inputState
                 debug.log("processSuccessor B%d: previous visit already correct", block.getId());
-            } else {
+            }
+            else
+            {
                 // must re-visit this block
                 debug.log("processSuccessor B%d: must re-visit because input state changed", block.getId());
                 addToWorkList(block);
             }
-
-        } else {
+        }
+        else
+        {
             // block was not processed before, so set initial inputState
             debug.log("processSuccessor B%d: initial visit", block.getId());
 
@@ -159,17 +187,23 @@ final class RegisterVerifier {
         }
     }
 
-    static Interval[] copy(Interval[] inputState) {
+    static Interval[] copy(Interval[] inputState)
+    {
         return inputState.clone();
     }
 
-    static void statePut(DebugContext debug, Interval[] inputState, Value location, Interval interval) {
-        if (location != null && isRegister(location)) {
+    static void statePut(DebugContext debug, Interval[] inputState, Value location, Interval interval)
+    {
+        if (location != null && isRegister(location))
+        {
             Register reg = asRegister(location);
             int regNum = reg.number;
-            if (interval != null) {
+            if (interval != null)
+            {
                 debug.log("%s = %s", reg, interval.operand);
-            } else if (inputState[regNum] != null) {
+            }
+            else if (inputState[regNum] != null)
+            {
                 debug.log("%s = null", reg);
             }
 
@@ -177,28 +211,33 @@ final class RegisterVerifier {
         }
     }
 
-    static boolean checkState(AbstractBlockBase<?> block, LIRInstruction op, Interval[] inputState, Value operand, Value reg, Interval interval) {
-        if (reg != null && isRegister(reg)) {
-            if (inputState[asRegister(reg).number] != interval) {
-                throw new GraalError(
-                                "Error in register allocation: operation (%s) in block %s expected register %s (operand %s) to contain the value of interval %s but data-flow says it contains interval %s",
-                                op, block, reg, operand, interval, inputState[asRegister(reg).number]);
+    static boolean checkState(AbstractBlockBase<?> block, LIRInstruction op, Interval[] inputState, Value operand, Value reg, Interval interval)
+    {
+        if (reg != null && isRegister(reg))
+        {
+            if (inputState[asRegister(reg).number] != interval)
+            {
+                throw new GraalError("Error in register allocation: operation (%s) in block %s expected register %s (operand %s) to contain the value of interval %s but data-flow says it contains interval %s", op, block, reg, operand, interval, inputState[asRegister(reg).number]);
             }
         }
         return true;
     }
 
-    void processOperations(AbstractBlockBase<?> block, final Interval[] inputState) {
+    void processOperations(AbstractBlockBase<?> block, final Interval[] inputState)
+    {
         ArrayList<LIRInstruction> ops = allocator.getLIR().getLIRforBlock(block);
         DebugContext debug = allocator.getDebug();
-        InstructionValueConsumer useConsumer = new InstructionValueConsumer() {
-
+        InstructionValueConsumer useConsumer = new InstructionValueConsumer()
+        {
             @Override
-            public void visitValue(LIRInstruction op, Value operand, OperandMode mode, EnumSet<OperandFlag> flags) {
+            public void visitValue(LIRInstruction op, Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
+            {
                 // we skip spill moves inserted by the spill position optimization
-                if (LinearScan.isVariableOrRegister(operand) && allocator.isProcessed(operand) && op.id() != LinearScan.DOMINATOR_SPILL_MOVE_ID) {
+                if (LinearScan.isVariableOrRegister(operand) && allocator.isProcessed(operand) && op.id() != LinearScan.DOMINATOR_SPILL_MOVE_ID)
+                {
                     Interval interval = intervalAt(operand);
-                    if (op.id() != -1) {
+                    if (op.id() != -1)
+                    {
                         interval = interval.getSplitChildAtOpId(op.id(), mode, allocator);
                     }
 
@@ -207,10 +246,13 @@ final class RegisterVerifier {
             }
         };
 
-        InstructionValueConsumer defConsumer = (op, operand, mode, flags) -> {
-            if (LinearScan.isVariableOrRegister(operand) && allocator.isProcessed(operand)) {
+        InstructionValueConsumer defConsumer = (op, operand, mode, flags) ->
+        {
+            if (LinearScan.isVariableOrRegister(operand) && allocator.isProcessed(operand))
+            {
                 Interval interval = intervalAt(operand);
-                if (op.id() != -1) {
+                if (op.id() != -1)
+                {
                     interval = interval.getSplitChildAtOpId(op.id(), mode, allocator);
                 }
 
@@ -219,18 +261,22 @@ final class RegisterVerifier {
         };
 
         // visit all instructions of the block
-        for (int i = 0; i < ops.size(); i++) {
+        for (int i = 0; i < ops.size(); i++)
+        {
             final LIRInstruction op = ops.get(i);
 
-            if (debug.isLogEnabled()) {
+            if (debug.isLogEnabled())
+            {
                 debug.log("%s", op.toStringWithIdPrefix());
             }
 
             // check if input operands are correct
             op.visitEachInput(useConsumer);
             // invalidate all caller save registers at calls
-            if (op.destroysCallerSavedRegisters()) {
-                for (Register r : allocator.getRegisterAllocationConfig().getRegisterConfig().getCallerSaveRegisters()) {
+            if (op.destroysCallerSavedRegisters())
+            {
+                for (Register r : allocator.getRegisterAllocationConfig().getRegisterConfig().getCallerSaveRegisters())
+                {
                     statePut(debug, inputState, r.asValue(), null);
                 }
             }

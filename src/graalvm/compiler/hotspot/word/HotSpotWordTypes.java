@@ -14,8 +14,8 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 /**
  * Extends {@link WordTypes} with information about HotSpot metaspace pointer types.
  */
-public class HotSpotWordTypes extends WordTypes {
-
+public class HotSpotWordTypes extends WordTypes
+{
     /**
      * Resolved type for {@link MetaspacePointer}.
      */
@@ -36,7 +36,8 @@ public class HotSpotWordTypes extends WordTypes {
      */
     private final ResolvedJavaType methodCountersPointerType;
 
-    public HotSpotWordTypes(MetaAccessProvider metaAccess, JavaKind wordKind) {
+    public HotSpotWordTypes(MetaAccessProvider metaAccess, JavaKind wordKind)
+    {
         super(metaAccess, wordKind);
         this.metaspacePointerType = metaAccess.lookupJavaType(MetaspacePointer.class);
         this.klassPointerType = metaAccess.lookupJavaType(KlassPointer.class);
@@ -45,28 +46,38 @@ public class HotSpotWordTypes extends WordTypes {
     }
 
     @Override
-    public boolean isWord(JavaType type) {
-        if (type instanceof ResolvedJavaType && metaspacePointerType.isAssignableFrom((ResolvedJavaType) type)) {
+    public boolean isWord(JavaType type)
+    {
+        if (type instanceof ResolvedJavaType && metaspacePointerType.isAssignableFrom((ResolvedJavaType) type))
+        {
             return true;
         }
         return super.isWord(type);
     }
 
     @Override
-    public JavaKind asKind(JavaType type) {
-        if (klassPointerType.equals(type) || methodPointerType.equals(type)) {
+    public JavaKind asKind(JavaType type)
+    {
+        if (klassPointerType.equals(type) || methodPointerType.equals(type))
+        {
             return getWordKind();
         }
         return super.asKind(type);
     }
 
     @Override
-    public Stamp getWordStamp(ResolvedJavaType type) {
-        if (type.equals(klassPointerType)) {
+    public Stamp getWordStamp(ResolvedJavaType type)
+    {
+        if (type.equals(klassPointerType))
+        {
             return KlassPointerStamp.klass();
-        } else if (type.equals(methodPointerType)) {
+        }
+        else if (type.equals(methodPointerType))
+        {
             return MethodPointerStamp.method();
-        } else if (type.equals(methodCountersPointerType)) {
+        }
+        else if (type.equals(methodCountersPointerType))
+        {
             return MethodCountersPointerStamp.methodCounters();
         }
         return super.getWordStamp(type);

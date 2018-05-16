@@ -9,8 +9,8 @@ import graalvm.compiler.nodes.type.StampTool;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
-public interface Invoke extends StateSplit, Lowerable, DeoptimizingNode.DeoptDuring, FixedNodeInterface, Invokable {
-
+public interface Invoke extends StateSplit, Lowerable, DeoptimizingNode.DeoptDuring, FixedNodeInterface, Invokable
+{
     FixedNode next();
 
     void setNext(FixedNode x);
@@ -40,7 +40,8 @@ public interface Invoke extends StateSplit, Lowerable, DeoptimizingNode.DeoptDur
     void setPolymorphic(boolean value);
 
     @Override
-    default ResolvedJavaMethod getTargetMethod() {
+    default ResolvedJavaMethod getTargetMethod()
+    {
         return callTarget() != null ? callTarget().targetMethod() : null;
     }
 
@@ -51,9 +52,11 @@ public interface Invoke extends StateSplit, Lowerable, DeoptimizingNode.DeoptDur
      *
      * @return the method from which this invoke is executed.
      */
-    default ResolvedJavaMethod getContextMethod() {
+    default ResolvedJavaMethod getContextMethod()
+    {
         FrameState state = stateAfter();
-        if (state == null) {
+        if (state == null)
+        {
             state = stateDuring();
         }
         return state.getMethod();
@@ -65,34 +68,41 @@ public interface Invoke extends StateSplit, Lowerable, DeoptimizingNode.DeoptDur
      *
      * @return the type from which this invoke is executed.
      */
-    default ResolvedJavaType getContextType() {
+    default ResolvedJavaType getContextType()
+    {
         ResolvedJavaMethod contextMethod = getContextMethod();
-        if (contextMethod == null) {
+        if (contextMethod == null)
+        {
             return null;
         }
         return contextMethod.getDeclaringClass();
     }
 
     @Override
-    default void computeStateDuring(FrameState stateAfter) {
+    default void computeStateDuring(FrameState stateAfter)
+    {
         FrameState newStateDuring = stateAfter.duplicateModifiedDuringCall(bci(), asNode().getStackKind());
         setStateDuring(newStateDuring);
     }
 
-    default ValueNode getReceiver() {
+    default ValueNode getReceiver()
+    {
         assert getInvokeKind().hasReceiver();
         return callTarget().arguments().get(0);
     }
 
-    default ResolvedJavaType getReceiverType() {
+    default ResolvedJavaType getReceiverType()
+    {
         ResolvedJavaType receiverType = StampTool.typeOrNull(getReceiver());
-        if (receiverType == null) {
+        if (receiverType == null)
+        {
             receiverType = ((MethodCallTargetNode) callTarget()).targetMethod().getDeclaringClass();
         }
         return receiverType;
     }
 
-    default InvokeKind getInvokeKind() {
+    default InvokeKind getInvokeKind()
+    {
         return callTarget().invokeKind();
     }
 }

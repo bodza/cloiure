@@ -15,9 +15,10 @@ import java.util.function.Supplier;
 /**
  * This class contains utility methods for commonly used functional patterns for collections.
  */
-public final class CollectionsUtil {
-
-    private CollectionsUtil() {
+public final class CollectionsUtil
+{
+    private CollectionsUtil()
+    {
     }
 
     /**
@@ -26,7 +27,8 @@ public final class CollectionsUtil {
      *
      * @throws NullPointerException if {@code a} or {@code b} is {@code null}
      */
-    public static <T> Iterable<T> concat(Iterable<T> a, Iterable<T> b) {
+    public static <T> Iterable<T> concat(Iterable<T> a, Iterable<T> b)
+    {
         List<Iterable<T>> l = Arrays.asList(a, b);
         return concat(l);
     }
@@ -37,40 +39,49 @@ public final class CollectionsUtil {
      *
      * @throws NullPointerException if {@code iterables} or any of its elements are {@code null}
      */
-    public static <T> Iterable<T> concat(List<Iterable<T>> iterables) {
-        for (Iterable<T> iterable : iterables) {
+    public static <T> Iterable<T> concat(List<Iterable<T>> iterables)
+    {
+        for (Iterable<T> iterable : iterables)
+        {
             Objects.requireNonNull(iterable);
         }
-        return new Iterable<T>() {
+        return new Iterable<T>()
+        {
             @Override
-            public Iterator<T> iterator() {
-                if (iterables.size() == 0) {
+            public Iterator<T> iterator()
+            {
+                if (iterables.size() == 0)
+                {
                     return Collections.emptyIterator();
                 }
-                return new Iterator<T>() {
+                return new Iterator<T>()
+                {
                     Iterator<Iterable<T>> cursor = iterables.iterator();
                     Iterator<T> currentIterator = cursor.next().iterator();
 
-                    private void advance() {
-                        while (!currentIterator.hasNext() && cursor.hasNext()) {
+                    private void advance()
+                    {
+                        while (!currentIterator.hasNext() && cursor.hasNext())
+                        {
                             currentIterator = cursor.next().iterator();
                         }
                     }
 
                     @Override
-                    public boolean hasNext() {
+                    public boolean hasNext()
+                    {
                         advance();
                         return currentIterator.hasNext();
                     }
 
                     @Override
-                    public T next() {
+                    public T next()
+                    {
                         advance();
                         return currentIterator.next();
                     }
                 };
             }
-
         };
     }
 
@@ -82,7 +93,8 @@ public final class CollectionsUtil {
      * @return {@code true} if either all elements in {@code inputs} match {@code predicate} or
      *         {@code inputs} is empty, otherwise {@code false}.
      */
-    public static <T> boolean allMatch(T[] inputs, Predicate<T> predicate) {
+    public static <T> boolean allMatch(T[] inputs, Predicate<T> predicate)
+    {
         return allMatch(Arrays.asList(inputs), predicate);
     }
 
@@ -94,9 +106,12 @@ public final class CollectionsUtil {
      * @return {@code true} if either all elements in {@code inputs} match {@code predicate} or
      *         {@code inputs} is empty, otherwise {@code false}.
      */
-    public static <T> boolean allMatch(Iterable<T> inputs, Predicate<T> predicate) {
-        for (T t : inputs) {
-            if (!predicate.test(t)) {
+    public static <T> boolean allMatch(Iterable<T> inputs, Predicate<T> predicate)
+    {
+        for (T t : inputs)
+        {
+            if (!predicate.test(t))
+            {
                 return false;
             }
         }
@@ -112,7 +127,8 @@ public final class CollectionsUtil {
      * @return {@code true} if any elements in {@code inputs} match {@code predicate}, otherwise
      *         {@code false}.
      */
-    public static <T> boolean anyMatch(T[] inputs, Predicate<T> predicate) {
+    public static <T> boolean anyMatch(T[] inputs, Predicate<T> predicate)
+    {
         return anyMatch(Arrays.asList(inputs), predicate);
     }
 
@@ -125,9 +141,12 @@ public final class CollectionsUtil {
      * @return {@code true} if any elements in {@code inputs} match {@code predicate}, otherwise
      *         {@code false}.
      */
-    public static <T> boolean anyMatch(Iterable<T> inputs, Predicate<T> predicate) {
-        for (T t : inputs) {
-            if (predicate.test(t)) {
+    public static <T> boolean anyMatch(Iterable<T> inputs, Predicate<T> predicate)
+    {
+        for (T t : inputs)
+        {
+            if (predicate.test(t))
+            {
                 return true;
             }
         }
@@ -139,7 +158,8 @@ public final class CollectionsUtil {
      *
      * @return the new list.
      */
-    public static <T> List<T> filterToList(List<T> inputs, Predicate<? super T> predicate) {
+    public static <T> List<T> filterToList(List<T> inputs, Predicate<? super T> predicate)
+    {
         return filterToList(inputs, predicate, ArrayList::new);
     }
 
@@ -149,10 +169,13 @@ public final class CollectionsUtil {
      *
      * @return the list generated by {@code listGenerator}.
      */
-    public static <T> List<T> filterToList(List<T> inputs, Predicate<? super T> predicate, Supplier<List<T>> listGenerator) {
+    public static <T> List<T> filterToList(List<T> inputs, Predicate<? super T> predicate, Supplier<List<T>> listGenerator)
+    {
         List<T> resultList = listGenerator.get();
-        for (T t : inputs) {
-            if (predicate.test(t)) {
+        for (T t : inputs)
+        {
+            if (predicate.test(t))
+            {
                 resultList.add(t);
             }
         }
@@ -165,10 +188,13 @@ public final class CollectionsUtil {
      *
      * @return the array provided by {@code arrayGenerator}.
      */
-    public static <T, R> R[] filterAndMapToArray(T[] inputs, Predicate<? super T> predicate, Function<? super T, ? extends R> mapper, IntFunction<R[]> arrayGenerator) {
+    public static <T, R> R[] filterAndMapToArray(T[] inputs, Predicate<? super T> predicate, Function<? super T, ? extends R> mapper, IntFunction<R[]> arrayGenerator)
+    {
         List<R> resultList = new ArrayList<>();
-        for (T t : inputs) {
-            if (predicate.test(t)) {
+        for (T t : inputs)
+        {
+            if (predicate.test(t))
+            {
                 resultList.add(mapper.apply(t));
             }
         }
@@ -181,7 +207,8 @@ public final class CollectionsUtil {
      *
      * @return the array provided by {@code arrayGenerator}.
      */
-    public static <T, R> R[] mapToArray(T[] inputs, Function<? super T, ? extends R> mapper, IntFunction<R[]> arrayGenerator) {
+    public static <T, R> R[] mapToArray(T[] inputs, Function<? super T, ? extends R> mapper, IntFunction<R[]> arrayGenerator)
+    {
         return mapToArray(Arrays.asList(inputs), mapper, arrayGenerator);
     }
 
@@ -191,10 +218,12 @@ public final class CollectionsUtil {
      *
      * @return the array provided by {@code arrayGenerator}.
      */
-    public static <T, R> R[] mapToArray(Collection<T> inputs, Function<? super T, ? extends R> mapper, IntFunction<R[]> arrayGenerator) {
+    public static <T, R> R[] mapToArray(Collection<T> inputs, Function<? super T, ? extends R> mapper, IntFunction<R[]> arrayGenerator)
+    {
         R[] result = arrayGenerator.apply(inputs.size());
         int idx = 0;
-        for (T t : inputs) {
+        for (T t : inputs)
+        {
             result[idx++] = mapper.apply(t);
         }
         return result;
@@ -206,7 +235,8 @@ public final class CollectionsUtil {
      *
      * @return a new String that is composed from {@code inputs}.
      */
-    public static <T, R> String mapAndJoin(T[] inputs, Function<? super T, ? extends R> mapper, String delimiter) {
+    public static <T, R> String mapAndJoin(T[] inputs, Function<? super T, ? extends R> mapper, String delimiter)
+    {
         return mapAndJoin(Arrays.asList(inputs), mapper, delimiter, "", "");
     }
 
@@ -216,7 +246,8 @@ public final class CollectionsUtil {
      *
      * @return a new String that is composed from {@code inputs}.
      */
-    public static <T, R> String mapAndJoin(T[] inputs, Function<? super T, ? extends R> mapper, String delimiter, String prefix) {
+    public static <T, R> String mapAndJoin(T[] inputs, Function<? super T, ? extends R> mapper, String delimiter, String prefix)
+    {
         return mapAndJoin(Arrays.asList(inputs), mapper, delimiter, prefix, "");
     }
 
@@ -226,7 +257,8 @@ public final class CollectionsUtil {
      *
      * @return a new String that is composed from {@code inputs}.
      */
-    public static <T, R> String mapAndJoin(T[] inputs, Function<? super T, ? extends R> mapper, String delimiter, String prefix, String suffix) {
+    public static <T, R> String mapAndJoin(T[] inputs, Function<? super T, ? extends R> mapper, String delimiter, String prefix, String suffix)
+    {
         return mapAndJoin(Arrays.asList(inputs), mapper, delimiter, prefix, suffix);
     }
 
@@ -236,7 +268,8 @@ public final class CollectionsUtil {
      *
      * @return a new String that is composed from {@code inputs}.
      */
-    public static <T, R> String mapAndJoin(Iterable<T> inputs, Function<? super T, ? extends R> mapper, String delimiter) {
+    public static <T, R> String mapAndJoin(Iterable<T> inputs, Function<? super T, ? extends R> mapper, String delimiter)
+    {
         return mapAndJoin(inputs, mapper, delimiter, "", "");
     }
 
@@ -246,7 +279,8 @@ public final class CollectionsUtil {
      *
      * @return a new String that is composed from {@code inputs}.
      */
-    public static <T, R> String mapAndJoin(Iterable<T> inputs, Function<? super T, ? extends R> mapper, String delimiter, String prefix) {
+    public static <T, R> String mapAndJoin(Iterable<T> inputs, Function<? super T, ? extends R> mapper, String delimiter, String prefix)
+    {
         return mapAndJoin(inputs, mapper, delimiter, prefix, "");
     }
 
@@ -256,14 +290,15 @@ public final class CollectionsUtil {
      *
      * @return a new String that is composed from {@code inputs}.
      */
-    public static <T, R> String mapAndJoin(Iterable<T> inputs, Function<? super T, ? extends R> mapper, String delimiter, String prefix, String suffix) {
+    public static <T, R> String mapAndJoin(Iterable<T> inputs, Function<? super T, ? extends R> mapper, String delimiter, String prefix, String suffix)
+    {
         StringBuilder strb = new StringBuilder();
         String sep = "";
-        for (T t : inputs) {
+        for (T t : inputs)
+        {
             strb.append(sep).append(prefix).append(mapper.apply(t)).append(suffix);
             sep = delimiter;
         }
         return strb.toString();
     }
-
 }

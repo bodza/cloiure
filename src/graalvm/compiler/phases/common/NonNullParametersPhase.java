@@ -12,13 +12,16 @@ import graalvm.compiler.phases.Phase;
  * Modifies the stamp of all object {@linkplain ParameterNode parameters} in a graph to denote they
  * are non-null. This can be used for graphs where the caller null checks all arguments.
  */
-public class NonNullParametersPhase extends Phase {
-
+public class NonNullParametersPhase extends Phase
+{
     @Override
-    protected void run(StructuredGraph graph) {
+    protected void run(StructuredGraph graph)
+    {
         Stamp nonNull = StampFactory.objectNonNull();
-        for (ParameterNode param : graph.getNodes(ParameterNode.TYPE)) {
-            if (param.stamp(NodeView.DEFAULT) instanceof ObjectStamp) {
+        for (ParameterNode param : graph.getNodes(ParameterNode.TYPE))
+        {
+            if (param.stamp(NodeView.DEFAULT) instanceof ObjectStamp)
+            {
                 ObjectStamp paramStamp = (ObjectStamp) param.stamp(NodeView.DEFAULT);
                 param.setStamp(paramStamp.join(nonNull));
             }

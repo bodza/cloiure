@@ -15,8 +15,8 @@ import jdk.vm.ci.meta.ValueKind;
  * A {@link FrameMapBuilder} is used to collect all information necessary to
  * {@linkplain #buildFrameMap create} a {@link FrameMap}.
  */
-public abstract class FrameMapBuilder {
-
+public abstract class FrameMapBuilder
+{
     /**
      * Reserves a spill slot in the frame of the method being compiled. The returned slot is aligned
      * on its natural alignment, i.e., an 8-byte spill slot is aligned at an 8-byte boundary, unless

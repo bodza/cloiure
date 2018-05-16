@@ -10,21 +10,23 @@ import jdk.vm.ci.meta.Value;
  * closure because Value is serializable which is a hassle for the little inner classes which
  * usually occur here.
  */
-public class ComplexMatchValue extends Value {
-
+public class ComplexMatchValue extends Value
+{
     /**
      * This is the Value of a node which was matched as part of a complex match. The value isn't
      * actually useable but this marks it as having been evaluated.
      */
-    public static final Value INTERIOR_MATCH = new Value(LIRKind.Illegal) {
-
+    public static final Value INTERIOR_MATCH = new Value(LIRKind.Illegal)
+    {
         @Override
-        public String toString() {
+        public String toString()
+        {
             return "INTERIOR_MATCH";
         }
 
         @Override
-        public boolean equals(Object other) {
+        public boolean equals(Object other)
+        {
             // This class is a singleton
             return other != null && getClass() == other.getClass();
         }
@@ -32,12 +34,14 @@ public class ComplexMatchValue extends Value {
 
     final ComplexMatchResult result;
 
-    public ComplexMatchValue(ComplexMatchResult result) {
+    public ComplexMatchValue(ComplexMatchResult result)
+    {
         super(LIRKind.Illegal);
         this.result = result;
     }
 
-    public Value evaluate(NodeLIRBuilder builder) {
+    public Value evaluate(NodeLIRBuilder builder)
+    {
         return result.evaluate(builder);
     }
 }

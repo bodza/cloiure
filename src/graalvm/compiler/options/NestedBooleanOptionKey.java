@@ -10,24 +10,29 @@ package graalvm.compiler.options;
  * <li>If {@link #masterOption} is set, this value equals to {@link #initialValue}.
  * <li>Otherwise, if {@link #masterOption} is {@code false}, this option is {@code false}.
  */
-public class NestedBooleanOptionKey extends OptionKey<Boolean> {
+public class NestedBooleanOptionKey extends OptionKey<Boolean>
+{
     private final OptionKey<Boolean> masterOption;
     private final Boolean initialValue;
 
-    public NestedBooleanOptionKey(OptionKey<Boolean> masterOption, Boolean initialValue) {
+    public NestedBooleanOptionKey(OptionKey<Boolean> masterOption, Boolean initialValue)
+    {
         super(null);
         this.masterOption = masterOption;
         this.initialValue = initialValue;
     }
 
-    public OptionKey<Boolean> getMasterOption() {
+    public OptionKey<Boolean> getMasterOption()
+    {
         return masterOption;
     }
 
     @Override
-    public Boolean getValue(OptionValues options) {
+    public Boolean getValue(OptionValues options)
+    {
         Boolean v = super.getValue(options);
-        if (v == null) {
+        if (v == null)
+        {
             return initialValue && masterOption.getValue(options);
         }
         return v;

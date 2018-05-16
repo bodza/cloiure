@@ -31,74 +31,87 @@ import java.util.function.BiConsumer;
  * If there are invokes in the graph at the end of the respective phase, then that phase must call
  * {@link #addDecision} to log negative decisions.
  */
-public class InliningLog {
+public class InliningLog
+{
     private static final String TREE_NODE = "\u251c\u2500\u2500";
     private static final String LAST_TREE_NODE = "\u2514\u2500\u2500";
 
-    public static final class Decision {
+    public static final class Decision
+    {
         private final boolean positive;
         private final String reason;
         private final String phase;
         private final ResolvedJavaMethod target;
 
-        private Decision(boolean positive, String reason, String phase, ResolvedJavaMethod target) {
+        private Decision(boolean positive, String reason, String phase, ResolvedJavaMethod target)
+        {
             this.positive = positive;
             this.reason = reason;
             this.phase = phase;
             this.target = target;
         }
 
-        public boolean isPositive() {
+        public boolean isPositive()
+        {
             return positive;
         }
 
-        public String getReason() {
+        public String getReason()
+        {
             return reason;
         }
 
-        public String getPhase() {
+        public String getPhase()
+        {
             return phase;
         }
 
-        public ResolvedJavaMethod getTarget() {
+        public ResolvedJavaMethod getTarget()
+        {
             return target;
         }
 
         @Override
-        public String toString() {
-            return String.format("<%s> %s: %s, %s", phase, target != null ? target.format("%H.%n(%p)") : "", positive ? "yes" : "no",
-                            reason);
+        public String toString()
+        {
+            return String.format("<%s> %s: %s, %s", phase, target != null ? target.format("%H.%n(%p)") : "", positive ? "yes" : "no", reason);
         }
     }
 
-    private class Callsite {
+    private class Callsite
+    {
         public final List<Decision> decisions;
         public final List<Callsite> children;
         public Callsite parent;
         public ResolvedJavaMethod target;
         public Invokable invoke;
 
-        Callsite(Callsite parent, Invokable originalInvoke) {
+        Callsite(Callsite parent, Invokable originalInvoke)
+        {
             this.parent = parent;
             this.decisions = new ArrayList<>();
             this.children = new ArrayList<>();
             this.invoke = originalInvoke;
         }
 
-        public Callsite addChild(Invokable childInvoke) {
+        public Callsite addChild(Invokable childInvoke)
+        {
             Callsite child = new Callsite(this, childInvoke);
             children.add(child);
             return child;
         }
 
-        public String positionString() {
-            if (parent == null) {
+        public String positionString()
+        {
+            if (parent == null)
+            {
                 return "compilation of " + target.format("%H.%n(%p)");
             }
             return "at " + MetaUtil.appendLocation(new StringBuilder(100), parent.target, getBci()).toString();
         }
 
-        public int getBci() {
+        public int getBci()
+        {
             return invoke != null ? invoke.bci() : -1;
         }
     }
@@ -107,7 +120,8 @@ public class InliningLog {
     private final EconomicMap<Invokable, Callsite> leaves;
     private final boolean enabled;
 
-    public InliningLog(ResolvedJavaMethod rootMethod, boolean enabled) {
+    public InliningLog(ResolvedJavaMethod rootMethod, boolean enabled)
+    {
         this.root = new Callsite(null, null);
         this.root.target = rootMethod;
         this.leaves = EconomicMap.create(Equivalence.IDENTITY_WITH_SYSTEM_HASHCODE);
@@ -121,32 +135,38 @@ public class InliningLog {
      * logged after replacing an {@link Invoke} with a graph. In this case, the node replacement map
      * and the {@link InliningLog} of the inlined graph must be provided.
      */
-    public void addDecision(Invokable invoke, boolean positive, String phase, EconomicMap<Node, Node> replacements, InliningLog calleeLog, String reason, Object... args) {
-        if (!enabled) {
+    public void addDecision(Invokable invoke, boolean positive, String phase, EconomicMap<Node, Node> replacements, InliningLog calleeLog, String reason, Object... args)
+    {
+        if (!enabled)
+        {
             return;
         }
         assert leaves.containsKey(invoke);
-        assert (!positive && replacements == null && calleeLog == null) || (positive && replacements != null && calleeLog != null) ||
-                        (positive && replacements == null && calleeLog == null);
+        assert (!positive && replacements == null && calleeLog == null) || (positive && replacements != null && calleeLog != null) || (positive && replacements == null && calleeLog == null);
         Callsite callsite = leaves.get(invoke);
         callsite.target = callsite.invoke.getTargetMethod();
         Decision decision = new Decision(positive, String.format(reason, args), phase, invoke.getTargetMethod());
         callsite.decisions.add(decision);
-        if (positive) {
+        if (positive)
+        {
             leaves.removeKey(invoke);
-            if (calleeLog == null) {
+            if (calleeLog == null)
+            {
                 return;
             }
             EconomicMap<Callsite, Callsite> mapping = EconomicMap.create(Equivalence.IDENTITY_WITH_SYSTEM_HASHCODE);
-            for (Callsite calleeChild : calleeLog.root.children) {
+            for (Callsite calleeChild : calleeLog.root.children)
+            {
                 Callsite child = callsite.addChild(calleeChild.invoke);
                 copyTree(child, calleeChild, replacements, mapping);
             }
             MapCursor<Invokable, Callsite> entries = calleeLog.leaves.getEntries();
-            while (entries.advance()) {
+            while (entries.advance())
+            {
                 Invokable invokeFromCallee = entries.getKey();
                 Callsite callsiteFromCallee = entries.getValue();
-                if (invokeFromCallee.asFixedNode().isDeleted()) {
+                if (invokeFromCallee.asFixedNode().isDeleted())
+                {
                     // Some invoke nodes could have been removed by optimizations.
                     continue;
                 }
@@ -165,17 +185,21 @@ public class InliningLog {
      *
      * @see InliningLog#addDecision
      */
-    public void addLog(UnmodifiableEconomicMap<Node, Node> replacements, InliningLog replacementLog) {
+    public void addLog(UnmodifiableEconomicMap<Node, Node> replacements, InliningLog replacementLog)
+    {
         EconomicMap<Callsite, Callsite> mapping = EconomicMap.create(Equivalence.IDENTITY_WITH_SYSTEM_HASHCODE);
-        for (Callsite calleeChild : replacementLog.root.children) {
+        for (Callsite calleeChild : replacementLog.root.children)
+        {
             Callsite child = root.addChild(calleeChild.invoke);
             copyTree(child, calleeChild, replacements, mapping);
         }
         MapCursor<Invokable, Callsite> entries = replacementLog.leaves.getEntries();
-        while (entries.advance()) {
+        while (entries.advance())
+        {
             Invokable replacementInvoke = entries.getKey();
             Callsite replacementCallsite = entries.getValue();
-            if (replacementInvoke.asFixedNode().isDeleted()) {
+            if (replacementInvoke.asFixedNode().isDeleted())
+            {
                 // Some invoke nodes could have been removed by optimizations.
                 continue;
             }
@@ -193,14 +217,16 @@ public class InliningLog {
      *
      * @see InliningLog#addDecision
      */
-    public void replaceLog(UnmodifiableEconomicMap<Node, Node> replacements, InliningLog replacementLog) {
+    public void replaceLog(UnmodifiableEconomicMap<Node, Node> replacements, InliningLog replacementLog)
+    {
         assert root.decisions.isEmpty();
         assert root.children.isEmpty();
         assert leaves.isEmpty();
         EconomicMap<Callsite, Callsite> mapping = EconomicMap.create(Equivalence.IDENTITY_WITH_SYSTEM_HASHCODE);
         copyTree(root, replacementLog.root, replacements, mapping);
         MapCursor<Invokable, Callsite> replacementEntries = replacementLog.leaves.getEntries();
-        while (replacementEntries.advance()) {
+        while (replacementEntries.advance())
+        {
             Invokable replacementInvoke = replacementEntries.getKey();
             Callsite replacementSite = replacementEntries.getValue();
             Invokable invoke = (Invokable) replacements.get((Node) replacementInvoke);
@@ -209,34 +235,41 @@ public class InliningLog {
         }
     }
 
-    private void copyTree(Callsite site, Callsite replacementSite, UnmodifiableEconomicMap<Node, Node> replacements, EconomicMap<Callsite, Callsite> mapping) {
+    private void copyTree(Callsite site, Callsite replacementSite, UnmodifiableEconomicMap<Node, Node> replacements, EconomicMap<Callsite, Callsite> mapping)
+    {
         mapping.put(replacementSite, site);
         site.target = replacementSite.target;
         site.decisions.addAll(replacementSite.decisions);
         site.invoke = replacementSite.invoke != null && replacementSite.invoke.isAlive() ? (Invokable) replacements.get(replacementSite.invoke.asFixedNode()) : null;
-        for (Callsite replacementChild : replacementSite.children) {
+        for (Callsite replacementChild : replacementSite.children)
+        {
             Callsite child = new Callsite(site, null);
             site.children.add(child);
             copyTree(child, replacementChild, replacements, mapping);
         }
     }
 
-    public void checkInvariants(StructuredGraph graph) {
-        for (Invoke invoke : graph.getInvokes()) {
+    public void checkInvariants(StructuredGraph graph)
+    {
+        for (Invoke invoke : graph.getInvokes())
+        {
             assert leaves.containsKey(invoke) : "Invoke " + invoke + " not contained in the leaves.";
         }
         assert root.parent == null;
         checkTreeInvariants(root);
     }
 
-    private void checkTreeInvariants(Callsite site) {
-        for (Callsite child : site.children) {
+    private void checkTreeInvariants(Callsite site)
+    {
+        for (Callsite child : site.children)
+        {
             assert site == child.parent : "Callsite " + site + " with child " + child + " has an invalid parent pointer " + site;
             checkTreeInvariants(child);
         }
     }
 
-    private UpdateScope noUpdates = new UpdateScope((oldNode, newNode) -> {
+    private UpdateScope noUpdates = new UpdateScope((oldNode, newNode) ->
+    {
     });
 
     private UpdateScope currentUpdateScope = null;
@@ -245,35 +278,44 @@ public class InliningLog {
      * Used to designate scopes in which {@link Invokable} registration or cloning should be handled
      * differently.
      */
-    public final class UpdateScope implements AutoCloseable {
+    public final class UpdateScope implements AutoCloseable
+    {
         private BiConsumer<Invokable, Invokable> updater;
 
-        private UpdateScope(BiConsumer<Invokable, Invokable> updater) {
+        private UpdateScope(BiConsumer<Invokable, Invokable> updater)
+        {
             this.updater = updater;
         }
 
-        public void activate() {
-            if (currentUpdateScope != null) {
+        public void activate()
+        {
+            if (currentUpdateScope != null)
+            {
                 throw GraalError.shouldNotReachHere("InliningLog updating already set.");
             }
             currentUpdateScope = this;
         }
 
         @Override
-        public void close() {
-            if (enabled) {
+        public void close()
+        {
+            if (enabled)
+            {
                 assert currentUpdateScope != null;
                 currentUpdateScope = null;
             }
         }
 
-        public BiConsumer<Invokable, Invokable> getUpdater() {
+        public BiConsumer<Invokable, Invokable> getUpdater()
+        {
             return updater;
         }
     }
 
-    public BiConsumer<Invokable, Invokable> getUpdateScope() {
-        if (currentUpdateScope == null) {
+    public BiConsumer<Invokable, Invokable> getUpdateScope()
+    {
+        if (currentUpdateScope == null)
+        {
             return null;
         }
         return currentUpdateScope.getUpdater();
@@ -290,12 +332,16 @@ public class InliningLog {
      *            cloned) {@link Invokable}
      * @return a bound {@link UpdateScope} object, or a {@code null} if tracing is disabled
      */
-    public UpdateScope openUpdateScope(BiConsumer<Invokable, Invokable> updater) {
-        if (enabled) {
+    public UpdateScope openUpdateScope(BiConsumer<Invokable, Invokable> updater)
+    {
+        if (enabled)
+        {
             UpdateScope scope = new UpdateScope(updater);
             scope.activate();
             return scope;
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
@@ -309,11 +355,15 @@ public class InliningLog {
      *
      * @see #openUpdateScope
      */
-    public UpdateScope openDefaultUpdateScope() {
-        if (enabled) {
+    public UpdateScope openDefaultUpdateScope()
+    {
+        if (enabled)
+        {
             noUpdates.activate();
             return noUpdates;
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
@@ -333,26 +383,32 @@ public class InliningLog {
      *
      * @see #openRootScope
      */
-    public final class RootScope implements AutoCloseable {
+    public final class RootScope implements AutoCloseable
+    {
         private final RootScope parent;
         private Callsite replacementRoot;
 
-        public RootScope(RootScope parent, Callsite replacementRoot) {
+        public RootScope(RootScope parent, Callsite replacementRoot)
+        {
             this.parent = parent;
             this.replacementRoot = replacementRoot;
         }
 
-        void activate() {
+        void activate()
+        {
             currentRootScope = this;
         }
 
-        public Invokable getInvoke() {
+        public Invokable getInvoke()
+        {
             return replacementRoot.invoke;
         }
 
         @Override
-        public void close() {
-            if (enabled) {
+        public void close()
+        {
+            if (enabled)
+            {
                 assert currentRootScope != null;
                 removeLeafCallsite(replacementRoot.invoke);
                 currentRootScope = parent;
@@ -360,43 +416,53 @@ public class InliningLog {
         }
     }
 
-    public final class PlaceholderInvokable implements Invokable {
+    public final class PlaceholderInvokable implements Invokable
+    {
         private int bci;
         private ResolvedJavaMethod method;
 
-        public PlaceholderInvokable(ResolvedJavaMethod method, int bci) {
+        public PlaceholderInvokable(ResolvedJavaMethod method, int bci)
+        {
             this.method = method;
             this.bci = bci;
         }
 
         @Override
-        public ResolvedJavaMethod getTargetMethod() {
+        public ResolvedJavaMethod getTargetMethod()
+        {
             return method;
         }
 
         @Override
-        public int bci() {
+        public int bci()
+        {
             return bci;
         }
 
         @Override
-        public boolean isAlive() {
+        public boolean isAlive()
+        {
             return false;
         }
 
         @Override
-        public FixedNode asFixedNode() {
+        public FixedNode asFixedNode()
+        {
             throw new UnsupportedOperationException("Parsed invokable is a placeholder, not a concrete node.");
         }
     }
 
-    public RootScope openRootScope(ResolvedJavaMethod target, int bci) {
+    public RootScope openRootScope(ResolvedJavaMethod target, int bci)
+    {
         return openRootScope(new PlaceholderInvokable(target, bci));
     }
 
-    public RootScope openRootScope(Invokable invoke) {
-        if (enabled) {
-            if (!leaves.containsKey(invoke)) {
+    public RootScope openRootScope(Invokable invoke)
+    {
+        if (enabled)
+        {
+            if (!leaves.containsKey(invoke))
+            {
                 // Create the invoke if it was not added to the graph yet.
                 trackNewCallsite(invoke);
             }
@@ -404,20 +470,25 @@ public class InliningLog {
             scope.replacementRoot.target = invoke.getTargetMethod();
             scope.activate();
             return scope;
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
 
-    public boolean containsLeafCallsite(Invokable invokable) {
+    public boolean containsLeafCallsite(Invokable invokable)
+    {
         return leaves.containsKey(invokable);
     }
 
-    public void removeLeafCallsite(Invokable invokable) {
+    public void removeLeafCallsite(Invokable invokable)
+    {
         leaves.removeKey(invokable);
     }
 
-    public void trackNewCallsite(Invokable invoke) {
+    public void trackNewCallsite(Invokable invoke)
+    {
         assert !leaves.containsKey(invoke);
         Callsite currentRoot = findCurrentRoot();
         Callsite callsite = new Callsite(currentRoot, invoke);
@@ -425,18 +496,21 @@ public class InliningLog {
         leaves.put(invoke, callsite);
     }
 
-    private Callsite findCurrentRoot() {
+    private Callsite findCurrentRoot()
+    {
         return currentRootScope != null ? currentRootScope.replacementRoot : root;
     }
 
-    public void trackDuplicatedCallsite(Invokable sibling, Invokable newInvoke) {
+    public void trackDuplicatedCallsite(Invokable sibling, Invokable newInvoke)
+    {
         Callsite siblingCallsite = leaves.get(sibling);
         Callsite parentCallsite = siblingCallsite.parent;
         Callsite callsite = parentCallsite.addChild(newInvoke);
         leaves.put(newInvoke, callsite);
     }
 
-    public void updateExistingCallsite(Invokable previousInvoke, Invokable newInvoke) {
+    public void updateExistingCallsite(Invokable previousInvoke, Invokable newInvoke)
+    {
         Callsite callsite = leaves.get(previousInvoke);
         leaves.removeKey(previousInvoke);
         leaves.put(newInvoke, callsite);
@@ -450,10 +524,12 @@ public class InliningLog {
      *            decisions
      * @return the tree representation of the inlining log
      */
-    public String formatAsTree(boolean nullIfEmpty) {
+    public String formatAsTree(boolean nullIfEmpty)
+    {
         assert root.decisions.isEmpty();
         assert !root.children.isEmpty() || leaves.isEmpty();
-        if (nullIfEmpty && root.children.isEmpty()) {
+        if (nullIfEmpty && root.children.isEmpty())
+        {
             return null;
         }
         StringBuilder builder = new StringBuilder(512);
@@ -461,26 +537,35 @@ public class InliningLog {
         return builder.toString();
     }
 
-    private void formatAsTree(Callsite site, String indent, StringBuilder builder) {
+    private void formatAsTree(Callsite site, String indent, StringBuilder builder)
+    {
         String position = site.positionString();
         builder.append(indent).append(position).append(": ");
-        if (site.decisions.isEmpty()) {
-            if (site.parent != null) {
+        if (site.decisions.isEmpty())
+        {
+            if (site.parent != null)
+            {
                 builder.append("(no decisions made about ").append(site.target != null ? site.target.format("%H.%n(%p)") : "").append(")");
             }
             builder.append(System.lineSeparator());
-        } else if (site.decisions.size() == 1) {
+        }
+        else if (site.decisions.size() == 1)
+        {
             builder.append(site.decisions.get(0).toString());
             builder.append(System.lineSeparator());
-        } else {
+        }
+        else
+        {
             builder.append(System.lineSeparator());
-            for (Decision decision : site.decisions) {
+            for (Decision decision : site.decisions)
+            {
                 String node = (decision == site.decisions.get(site.decisions.size() - 1)) ? LAST_TREE_NODE : TREE_NODE;
                 builder.append(indent + "   " + node).append(decision.toString());
                 builder.append(System.lineSeparator());
             }
         }
-        for (Callsite child : site.children) {
+        for (Callsite child : site.children)
+        {
             formatAsTree(child, indent + "  ", builder);
         }
     }

@@ -10,8 +10,8 @@ import jdk.vm.ci.meta.ConstantReflectionProvider;
 /**
  * Represents a conversion between primitive types.
  */
-public interface ConvertNode extends ValueNodeInterface {
-
+public interface ConvertNode extends ValueNodeInterface
+{
     ValueNode getValue();
 
     Constant convert(Constant c, ConstantReflectionProvider constantReflection);
@@ -39,7 +39,8 @@ public interface ConvertNode extends ValueNodeInterface {
      * @param op a comparison operator
      * @return true iff (c1 op c2) == (convert(c1) op convert(c2)) for all c1, c2
      */
-    default boolean preservesOrder(CanonicalCondition op) {
+    default boolean preservesOrder(CanonicalCondition op)
+    {
         return isLossless();
     }
 
@@ -51,7 +52,8 @@ public interface ConvertNode extends ValueNodeInterface {
      * @param constantReflection
      * @return true iff (c1 op value) == (convert(c1) op convert(value)) for value and all c1
      */
-    default boolean preservesOrder(CanonicalCondition op, Constant value, ConstantReflectionProvider constantReflection) {
+    default boolean preservesOrder(CanonicalCondition op, Constant value, ConstantReflectionProvider constantReflection)
+    {
         return preservesOrder(op);
     }
 }

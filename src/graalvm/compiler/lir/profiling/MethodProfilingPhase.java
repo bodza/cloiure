@@ -18,23 +18,27 @@ import jdk.vm.ci.code.TargetDescription;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.JavaKind;
 
-public class MethodProfilingPhase extends PostAllocationOptimizationPhase {
+public class MethodProfilingPhase extends PostAllocationOptimizationPhase
+{
     public static final String INVOCATION_GROUP = "METHOD_INVOCATION_COUNTER";
     public static final String ITERATION_GROUP = "METHOD_ITERATION_COUNTER";
 
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, PostAllocationOptimizationContext context) {
+    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, PostAllocationOptimizationContext context)
+    {
         new Analyzer(target, lirGenRes.getCompilationUnitName(), lirGenRes.getLIR(), context.diagnosticLirGenTool).run();
     }
 
-    private class Analyzer {
+    private class Analyzer
+    {
         private final LIR lir;
         private final DiagnosticLIRGeneratorTool diagnosticLirGenTool;
         private final LIRInsertionBuffer buffer;
         private final String compilationUnitName;
         private final ConstantValue increment;
 
-        Analyzer(TargetDescription target, String compilationUnitName, LIR lir, DiagnosticLIRGeneratorTool diagnosticLirGenTool) {
+        Analyzer(TargetDescription target, String compilationUnitName, LIR lir, DiagnosticLIRGeneratorTool diagnosticLirGenTool)
+        {
             this.lir = lir;
             this.compilationUnitName = compilationUnitName;
             this.diagnosticLirGenTool = diagnosticLirGenTool;
@@ -42,18 +46,22 @@ public class MethodProfilingPhase extends PostAllocationOptimizationPhase {
             this.increment = new ConstantValue(LIRKind.fromJavaKind(target.arch, JavaKind.Int), JavaConstant.INT_1);
         }
 
-        public void run() {
+        public void run()
+        {
             // insert counter at method entry
             doBlock(lir.getControlFlowGraph().getStartBlock(), INVOCATION_GROUP);
-            for (AbstractBlockBase<?> block : lir.getControlFlowGraph().getBlocks()) {
-                if (block.isLoopHeader()) {
+            for (AbstractBlockBase<?> block : lir.getControlFlowGraph().getBlocks())
+            {
+                if (block.isLoopHeader())
+                {
                     // insert counter at loop header
                     doBlock(block, ITERATION_GROUP);
                 }
             }
         }
 
-        public void doBlock(AbstractBlockBase<?> block, String group) {
+        public void doBlock(AbstractBlockBase<?> block, String group)
+        {
             ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
             assert instructions.size() >= 2 : "Malformed block: " + block + ", " + instructions;
             assert instructions.get(instructions.size() - 1) instanceof BlockEndOp : "Not a BlockEndOp: " + instructions.get(instructions.size() - 1);
@@ -67,5 +75,4 @@ public class MethodProfilingPhase extends PostAllocationOptimizationPhase {
             buffer.finish();
         }
     }
-
 }

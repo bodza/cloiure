@@ -15,8 +15,8 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 /**
  * Interface for managing replacements.
  */
-public interface Replacements {
-
+public interface Replacements
+{
     OptionValues getOptions();
 
     /**

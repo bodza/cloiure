@@ -17,8 +17,8 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 /**
  * Encapsulates information for Java types representing raw words (as opposed to Objects).
  */
-public class WordTypes {
-
+public class WordTypes
+{
     /**
      * Resolved type for {@link WordBase}.
      */
@@ -46,7 +46,8 @@ public class WordTypes {
 
     private final JavaKind wordKind;
 
-    public WordTypes(MetaAccessProvider metaAccess, JavaKind wordKind) {
+    public WordTypes(MetaAccessProvider metaAccess, JavaKind wordKind)
+    {
         this.wordKind = wordKind;
         this.wordBaseType = metaAccess.lookupJavaType(WordBase.class);
         this.wordImplType = metaAccess.lookupJavaType(Word.class);
@@ -61,14 +62,17 @@ public class WordTypes {
     /**
      * Determines if a given method denotes a word operation.
      */
-    public boolean isWordOperation(ResolvedJavaMethod targetMethod) {
+    public boolean isWordOperation(ResolvedJavaMethod targetMethod)
+    {
         final boolean isWordFactory = wordFactoryType.equals(targetMethod.getDeclaringClass());
-        if (isWordFactory) {
+        if (isWordFactory)
+        {
             return true;
         }
         final boolean isObjectAccess = objectAccessType.equals(targetMethod.getDeclaringClass());
         final boolean isBarrieredAccess = barrieredAccessType.equals(targetMethod.getDeclaringClass());
-        if (isObjectAccess || isBarrieredAccess) {
+        if (isObjectAccess || isBarrieredAccess)
+        {
             assert targetMethod.getAnnotation(Operation.class) != null : targetMethod + " should be annotated with @" + Operation.class.getSimpleName();
             return true;
         }
@@ -83,10 +87,12 @@ public class WordTypes {
      *            {@code targetMethod} is invoked
      * @return the {@link Operation} method resolved for {@code targetMethod} if any
      */
-    public ResolvedJavaMethod getWordOperation(ResolvedJavaMethod targetMethod, ResolvedJavaType callingContextType) {
+    public ResolvedJavaMethod getWordOperation(ResolvedJavaMethod targetMethod, ResolvedJavaType callingContextType)
+    {
         final boolean isWordBase = wordBaseType.isAssignableFrom(targetMethod.getDeclaringClass());
         ResolvedJavaMethod wordMethod = targetMethod;
-        if (isWordBase && !targetMethod.isStatic()) {
+        if (isWordBase && !targetMethod.isStatic())
+        {
             assert wordImplType.isLinked();
             wordMethod = wordImplType.resolveConcreteMethod(targetMethod, callingContextType);
         }
@@ -97,14 +103,16 @@ public class WordTypes {
     /**
      * Determines if a given node has a word type.
      */
-    public boolean isWord(ValueNode node) {
+    public boolean isWord(ValueNode node)
+    {
         return isWord(StampTool.typeOrNull(node));
     }
 
     /**
      * Determines if a given type is a word type.
      */
-    public boolean isWord(JavaType type) {
+    public boolean isWord(JavaType type)
+    {
         return type instanceof ResolvedJavaType && wordBaseType.isAssignableFrom((ResolvedJavaType) type);
     }
 
@@ -112,27 +120,34 @@ public class WordTypes {
      * Gets the kind for a given type, returning the {@linkplain #getWordKind() word kind} if
      * {@code type} is a {@linkplain #isWord(JavaType) word type}.
      */
-    public JavaKind asKind(JavaType type) {
-        if (isWord(type)) {
+    public JavaKind asKind(JavaType type)
+    {
+        if (isWord(type))
+        {
             return wordKind;
-        } else {
+        }
+        else
+        {
             return type.getJavaKind();
         }
     }
 
-    public JavaKind getWordKind() {
+    public JavaKind getWordKind()
+    {
         return wordKind;
     }
 
     /**
      * Gets the stamp for a given {@linkplain #isWord(JavaType) word type}.
      */
-    public Stamp getWordStamp(ResolvedJavaType type) {
+    public Stamp getWordStamp(ResolvedJavaType type)
+    {
         assert isWord(type);
         return StampFactory.forKind(wordKind);
     }
 
-    public ResolvedJavaType getWordImplType() {
+    public ResolvedJavaType getWordImplType()
+    {
         return wordImplType;
     }
 }

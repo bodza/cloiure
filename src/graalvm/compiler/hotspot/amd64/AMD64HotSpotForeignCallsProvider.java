@@ -33,8 +33,8 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.PlatformKind;
 import jdk.vm.ci.meta.Value;
 
-public class AMD64HotSpotForeignCallsProvider extends HotSpotHostForeignCallsProvider {
-
+public class AMD64HotSpotForeignCallsProvider extends HotSpotHostForeignCallsProvider
+{
     public static final ForeignCallDescriptor ARITHMETIC_SIN_STUB = new ForeignCallDescriptor("arithmeticSinStub", double.class, double.class);
     public static final ForeignCallDescriptor ARITHMETIC_COS_STUB = new ForeignCallDescriptor("arithmeticCosStub", double.class, double.class);
     public static final ForeignCallDescriptor ARITHMETIC_TAN_STUB = new ForeignCallDescriptor("arithmeticTanStub", double.class, double.class);
@@ -45,14 +45,15 @@ public class AMD64HotSpotForeignCallsProvider extends HotSpotHostForeignCallsPro
 
     private final Value[] nativeABICallerSaveRegisters;
 
-    public AMD64HotSpotForeignCallsProvider(HotSpotJVMCIRuntimeProvider jvmciRuntime, HotSpotGraalRuntimeProvider runtime, MetaAccessProvider metaAccess, CodeCacheProvider codeCache,
-                    WordTypes wordTypes, Value[] nativeABICallerSaveRegisters) {
+    public AMD64HotSpotForeignCallsProvider(HotSpotJVMCIRuntimeProvider jvmciRuntime, HotSpotGraalRuntimeProvider runtime, MetaAccessProvider metaAccess, CodeCacheProvider codeCache, WordTypes wordTypes, Value[] nativeABICallerSaveRegisters)
+    {
         super(jvmciRuntime, runtime, metaAccess, codeCache, wordTypes);
         this.nativeABICallerSaveRegisters = nativeABICallerSaveRegisters;
     }
 
     @Override
-    public void initialize(HotSpotProviders providers, OptionValues options) {
+    public void initialize(HotSpotProviders providers, OptionValues options)
+    {
         GraalHotSpotVMConfig config = runtime.getVMConfig();
         TargetDescription target = providers.getCodeCache().getTarget();
         PlatformKind word = target.arch.getWordKind();
@@ -74,11 +75,13 @@ public class AMD64HotSpotForeignCallsProvider extends HotSpotHostForeignCallsPro
         link(new AMD64MathStub(ARITHMETIC_EXP_STUB, options, providers, registerStubCall(ARITHMETIC_EXP_STUB, REEXECUTABLE, LEAF, NO_LOCATIONS)));
         link(new AMD64MathStub(ARITHMETIC_POW_STUB, options, providers, registerStubCall(ARITHMETIC_POW_STUB, REEXECUTABLE, LEAF, NO_LOCATIONS)));
 
-        if (config.useCRC32Intrinsics) {
+        if (config.useCRC32Intrinsics)
+        {
             // This stub does callee saving
             registerForeignCall(UPDATE_BYTES_CRC32, config.updateBytesCRC32Stub, NativeCall, PRESERVES_REGISTERS, LEAF_NOFP, NOT_REEXECUTABLE, any());
         }
-        if (config.useCRC32CIntrinsics) {
+        if (config.useCRC32CIntrinsics)
+        {
             registerForeignCall(UPDATE_BYTES_CRC32C, config.updateBytesCRC32C, NativeCall, PRESERVES_REGISTERS, LEAF_NOFP, NOT_REEXECUTABLE, any());
         }
 
@@ -86,8 +89,8 @@ public class AMD64HotSpotForeignCallsProvider extends HotSpotHostForeignCallsPro
     }
 
     @Override
-    public Value[] getNativeABICallerSaveRegisters() {
+    public Value[] getNativeABICallerSaveRegisters()
+    {
         return nativeABICallerSaveRegisters;
     }
-
 }

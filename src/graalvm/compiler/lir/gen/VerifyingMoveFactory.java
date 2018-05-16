@@ -19,47 +19,54 @@ import jdk.vm.ci.meta.Value;
  * Wrapper for {@link MoveFactory} that checks that the instructions created adhere to the contract
  * of {@link MoveFactory}.
  */
-public final class VerifyingMoveFactory implements MoveFactory {
-
+public final class VerifyingMoveFactory implements MoveFactory
+{
     private final MoveFactory inner;
 
-    public VerifyingMoveFactory(MoveFactory inner) {
+    public VerifyingMoveFactory(MoveFactory inner)
+    {
         this.inner = inner;
     }
 
     @Override
-    public boolean canInlineConstant(Constant c) {
+    public boolean canInlineConstant(Constant c)
+    {
         return inner.canInlineConstant(c);
     }
 
     @Override
-    public boolean allowConstantToStackMove(Constant constant) {
+    public boolean allowConstantToStackMove(Constant constant)
+    {
         return inner.allowConstantToStackMove(constant);
     }
 
     @Override
-    public LIRInstruction createMove(AllocatableValue result, Value input) {
+    public LIRInstruction createMove(AllocatableValue result, Value input)
+    {
         LIRInstruction inst = inner.createMove(result, input);
         assert checkResult(inst, result, input);
         return inst;
     }
 
     @Override
-    public LIRInstruction createStackMove(AllocatableValue result, AllocatableValue input) {
+    public LIRInstruction createStackMove(AllocatableValue result, AllocatableValue input)
+    {
         LIRInstruction inst = inner.createStackMove(result, input);
         assert checkResult(inst, result, input);
         return inst;
     }
 
     @Override
-    public LIRInstruction createLoad(AllocatableValue result, Constant input) {
+    public LIRInstruction createLoad(AllocatableValue result, Constant input)
+    {
         LIRInstruction inst = inner.createLoad(result, input);
         assert LoadConstantOp.isLoadConstantOp(inst) && checkResult(inst, result, null);
         return inst;
     }
 
     @Override
-    public LIRInstruction createStackLoad(AllocatableValue result, Constant input) {
+    public LIRInstruction createStackLoad(AllocatableValue result, Constant input)
+    {
         LIRInstruction inst = inner.createStackLoad(result, input);
         assert LoadConstantOp.isLoadConstantOp(inst) && checkResult(inst, result, null);
         return inst;
@@ -67,8 +74,8 @@ public final class VerifyingMoveFactory implements MoveFactory {
 
     /** Closure for {@link VerifyingMoveFactory#checkResult}. */
     @SuppressWarnings("unused")
-    private static class CheckClosure {
-
+    private static class CheckClosure
+    {
         private final AllocatableValue result;
         private final Value input;
 
@@ -78,32 +85,38 @@ public final class VerifyingMoveFactory implements MoveFactory {
         private int inputCount = 0;
         private int outputCount = 0;
 
-        CheckClosure(AllocatableValue result, Value input) {
+        CheckClosure(AllocatableValue result, Value input)
+        {
             this.result = result;
             this.input = input;
         }
 
-        void tempProc(LIRInstruction op, Value value, OperandMode mode, EnumSet<OperandFlag> flags) {
+        void tempProc(LIRInstruction op, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
+        {
             assert false : String.format("SpillMoveFactory: Instruction %s is not allowed to contain operand %s of mode %s", op, value, mode);
             tempCount++;
         }
 
-        void stateProc(LIRInstruction op, Value value, OperandMode mode, EnumSet<OperandFlag> flags) {
+        void stateProc(LIRInstruction op, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
+        {
             assert false : String.format("SpillMoveFactory: Instruction %s is not allowed to contain operand %s of mode %s", op, value, mode);
             stateCount++;
         }
 
-        void aliveProc(LIRInstruction op, Value value, OperandMode mode, EnumSet<OperandFlag> flags) {
+        void aliveProc(LIRInstruction op, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
+        {
             assert !isVariable(value) && flags.contains(OperandFlag.UNINITIALIZED) : String.format("SpillMoveFactory: Instruction %s is not allowed to contain operand %s of mode %s", op, value, mode);
             aliveCount++;
         }
 
-        void inputProc(LIRInstruction op, Value value, OperandMode mode, EnumSet<OperandFlag> flags) {
+        void inputProc(LIRInstruction op, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
+        {
             assert value.equals(input) || isJavaConstant(value) : String.format("SpillMoveFactory: Instruction %s can only have %s as input, got %s", op, input, value);
             inputCount++;
         }
 
-        void outputProc(LIRInstruction op, Value value, OperandMode mode, EnumSet<OperandFlag> flags) {
+        void outputProc(LIRInstruction op, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
+        {
             assert value.equals(result) : String.format("SpillMoveFactory: Instruction %s can only have %s as input, got %s", op, input, value);
             outputCount++;
         }
@@ -112,8 +125,8 @@ public final class VerifyingMoveFactory implements MoveFactory {
     /**
      * Checks that the instructions adheres to the contract of {@link MoveFactory}.
      */
-    private static boolean checkResult(LIRInstruction inst, AllocatableValue result, Value input) {
-
+    private static boolean checkResult(LIRInstruction inst, AllocatableValue result, Value input)
+    {
         VerifyingMoveFactory.CheckClosure c = new CheckClosure(result, input);
         inst.visitEachInput(c::inputProc);
         inst.visitEachOutput(c::outputProc);

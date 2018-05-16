@@ -60,13 +60,12 @@ import jdk.vm.ci.meta.ValueKind;
  * <a href="http://doi.acm.org/10.1145/1064979.1064998" > "Optimized Interval Splitting in a Linear
  * Scan Register Allocator"</a> by Christian Wimmer and Hanspeter Moessenboeck.
  */
-public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAllocationContext> {
-
-    public static class Options {
-        // @formatter:off
+public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAllocationContext>
+{
+    public static class Options
+    {
         @Option(help = "Enable spill position optimization", type = OptionType.Debug)
         public static final OptionKey<Boolean> LIROptTraceRAEliminateSpillMoves = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
-        // @formatter:on
     }
 
     private static final TraceLinearScanRegisterAllocationPhase TRACE_LINEAR_SCAN_REGISTER_ALLOCATION_PHASE = new TraceLinearScanRegisterAllocationPhase();
@@ -97,8 +96,8 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
     private final LIRGenerationResult res;
     private final GlobalLivenessInfo livenessInfo;
 
-    public TraceLinearScanPhase(TargetDescription target, LIRGenerationResult res, MoveFactory spillMoveFactory, RegisterAllocationConfig regAllocConfig, TraceBuilderResult traceBuilderResult,
-                    boolean neverSpillConstants, AllocatableValue[] cachedStackSlots, GlobalLivenessInfo livenessInfo) {
+    public TraceLinearScanPhase(TargetDescription target, LIRGenerationResult res, MoveFactory spillMoveFactory, RegisterAllocationConfig regAllocConfig, TraceBuilderResult traceBuilderResult, boolean neverSpillConstants, AllocatableValue[] cachedStackSlots, GlobalLivenessInfo livenessInfo)
+    {
         this.res = res;
         this.moveFactory = spillMoveFactory;
         this.frameMapBuilder = res.getFrameMapBuilder();
@@ -113,55 +112,65 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
         assert livenessInfo != null;
     }
 
-    protected DebugContext getDebug() {
+    protected DebugContext getDebug()
+    {
         return res.getLIR().getDebug();
     }
 
-    public static boolean isVariableOrRegister(Value value) {
+    public static boolean isVariableOrRegister(Value value)
+    {
         return isVariable(value) || isRegister(value);
     }
 
-    abstract static class IntervalPredicate {
-
+    abstract static class IntervalPredicate
+    {
         abstract boolean apply(TraceInterval i);
     }
 
-    static final IntervalPredicate IS_VARIABLE_INTERVAL = new IntervalPredicate() {
-
+    static final IntervalPredicate IS_VARIABLE_INTERVAL = new IntervalPredicate()
+    {
         @Override
-        public boolean apply(TraceInterval i) {
+        public boolean apply(TraceInterval i)
+        {
             // all TraceIntervals are variable intervals
             return !i.preSpilledAllocated();
         }
     };
-    private static final Comparator<TraceInterval> SORT_BY_FROM_COMP = new Comparator<TraceInterval>() {
-
+    private static final Comparator<TraceInterval> SORT_BY_FROM_COMP = new Comparator<TraceInterval>()
+    {
         @Override
-        public int compare(TraceInterval a, TraceInterval b) {
+        public int compare(TraceInterval a, TraceInterval b)
+        {
             return a.from() - b.from();
         }
     };
-    private static final Comparator<TraceInterval> SORT_BY_SPILL_POS_COMP = new Comparator<TraceInterval>() {
-
+    private static final Comparator<TraceInterval> SORT_BY_SPILL_POS_COMP = new Comparator<TraceInterval>()
+    {
         @Override
-        public int compare(TraceInterval a, TraceInterval b) {
+        public int compare(TraceInterval a, TraceInterval b)
+        {
             return a.spillDefinitionPos() - b.spillDefinitionPos();
         }
     };
 
-    public TraceLinearScan createAllocator(Trace trace) {
+    public TraceLinearScan createAllocator(Trace trace)
+    {
         return new TraceLinearScan(trace);
     }
 
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, Trace trace, TraceAllocationContext traceContext) {
+    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, Trace trace, TraceAllocationContext traceContext)
+    {
         createAllocator(trace).allocate(target, lirGenRes, traceContext);
     }
 
-    private static <T extends IntervalHint> boolean isSortedByFrom(T[] intervals) {
+    private static <T extends IntervalHint> boolean isSortedByFrom(T[] intervals)
+    {
         int from = -1;
-        for (T interval : intervals) {
-            if (interval == null) {
+        for (T interval : intervals)
+        {
+            if (interval == null)
+            {
                 continue;
             }
             assert from <= interval.from();
@@ -170,9 +179,11 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
         return true;
     }
 
-    private static boolean isSortedBySpillPos(TraceInterval[] intervals) {
+    private static boolean isSortedBySpillPos(TraceInterval[] intervals)
+    {
         int from = -1;
-        for (TraceInterval interval : intervals) {
+        for (TraceInterval interval : intervals)
+        {
             assert interval != null;
             assert from <= interval.spillDefinitionPos();
             from = interval.spillDefinitionPos();
@@ -180,24 +191,31 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
         return true;
     }
 
-    private static TraceInterval[] sortIntervalsBeforeAllocation(TraceInterval[] intervals, TraceInterval[] sortedList) {
+    private static TraceInterval[] sortIntervalsBeforeAllocation(TraceInterval[] intervals, TraceInterval[] sortedList)
+    {
         int sortedIdx = 0;
         int sortedFromMax = -1;
 
         // special sorting algorithm: the original interval-list is almost sorted,
         // only some intervals are swapped. So this is much faster than a complete QuickSort
-        for (TraceInterval interval : intervals) {
-            if (interval != null) {
+        for (TraceInterval interval : intervals)
+        {
+            if (interval != null)
+            {
                 int from = interval.from();
 
-                if (sortedFromMax <= from) {
+                if (sortedFromMax <= from)
+                {
                     sortedList[sortedIdx++] = interval;
                     sortedFromMax = interval.from();
-                } else {
+                }
+                else
+                {
                     // the assumption that the intervals are already sorted failed,
                     // so this interval must be sorted in manually
                     int j;
-                    for (j = sortedIdx - 1; j >= 0 && from < sortedList[j].from(); j--) {
+                    for (j = sortedIdx - 1; j >= 0 && from < sortedList[j].from(); j--)
+                    {
                         sortedList[j + 1] = sortedList[j];
                     }
                     sortedList[j + 1] = interval;
@@ -208,8 +226,8 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
         return sortedList;
     }
 
-    public final class TraceLinearScan implements IntervalDumper {
-
+    public final class TraceLinearScan implements IntervalDumper
+    {
         /**
          * Intervals sorted by {@link TraceInterval#from()}.
          */
@@ -217,51 +235,60 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
 
         private final Trace trace;
 
-        public TraceLinearScan(Trace trace) {
+        public TraceLinearScan(Trace trace)
+        {
             this.trace = trace;
             this.fixedIntervals = new FixedInterval[registers.size()];
         }
 
-        GlobalLivenessInfo getGlobalLivenessInfo() {
+        GlobalLivenessInfo getGlobalLivenessInfo()
+        {
             return livenessInfo;
         }
 
         /**
          * @return {@link Variable#index}
          */
-        int operandNumber(Variable operand) {
+        int operandNumber(Variable operand)
+        {
             return operand.index;
         }
 
-        OptionValues getOptions() {
+        OptionValues getOptions()
+        {
             return getLIR().getOptions();
         }
 
-        DebugContext getDebug() {
+        DebugContext getDebug()
+        {
             return getLIR().getDebug();
         }
 
         /**
          * Gets the number of operands. This value will increase by 1 for new variable.
          */
-        int operandSize() {
+        int operandSize()
+        {
             return getLIR().numVariables();
         }
 
         /**
          * Gets the number of registers. This value will never change.
          */
-        int numRegisters() {
+        int numRegisters()
+        {
             return registers.size();
         }
 
-        public int getFirstLirInstructionId(AbstractBlockBase<?> block) {
+        public int getFirstLirInstructionId(AbstractBlockBase<?> block)
+        {
             int result = getLIR().getLIRforBlock(block).get(0).id();
             assert result >= 0;
             return result;
         }
 
-        public int getLastLirInstructionId(AbstractBlockBase<?> block) {
+        public int getLastLirInstructionId(AbstractBlockBase<?> block)
+        {
             ArrayList<LIRInstruction> instructions = getLIR().getLIRforBlock(block);
             int result = instructions.get(instructions.size() - 1).id();
             assert result >= 0;
@@ -272,34 +299,44 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
          * Gets an object describing the attributes of a given register according to this register
          * configuration.
          */
-        public RegisterAttributes attributes(Register reg) {
+        public RegisterAttributes attributes(Register reg)
+        {
             return registerAttributes[reg.number];
         }
 
-        public boolean isAllocatable(RegisterValue register) {
+        public boolean isAllocatable(RegisterValue register)
+        {
             return attributes(register.getRegister()).isAllocatable();
         }
 
-        public MoveFactory getSpillMoveFactory() {
+        public MoveFactory getSpillMoveFactory()
+        {
             return moveFactory;
         }
 
-        protected TraceLocalMoveResolver createMoveResolver() {
+        protected TraceLocalMoveResolver createMoveResolver()
+        {
             TraceLocalMoveResolver moveResolver = new TraceLocalMoveResolver(this);
             assert moveResolver.checkEmpty();
             return moveResolver;
         }
 
-        void assignSpillSlot(TraceInterval interval) {
+        void assignSpillSlot(TraceInterval interval)
+        {
             /*
              * Assign the canonical spill slot of the parent (if a part of the interval is already
              * spilled) or allocate a new spill slot.
              */
-            if (interval.canMaterialize()) {
+            if (interval.canMaterialize())
+            {
                 interval.assignLocation(Value.ILLEGAL);
-            } else if (interval.spillSlot() != null) {
+            }
+            else if (interval.spillSlot() != null)
+            {
                 interval.assignLocation(interval.spillSlot());
-            } else {
+            }
+            else
+            {
                 AllocatableValue slot = allocateSpillSlot(interval);
                 interval.setSpillSlot(slot);
                 interval.assignLocation(slot);
@@ -310,20 +347,24 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
          * Returns a new spill slot or a cached entry if there is already one for the
          * {@linkplain TraceInterval variable}.
          */
-        private AllocatableValue allocateSpillSlot(TraceInterval interval) {
+        private AllocatableValue allocateSpillSlot(TraceInterval interval)
+        {
             DebugContext debug = res.getLIR().getDebug();
             int variableIndex = interval.splitParent().operandNumber;
             OptionValues options = getOptions();
-            if (TraceRegisterAllocationPhase.Options.TraceRACacheStackSlots.getValue(options)) {
+            if (TraceRegisterAllocationPhase.Options.TraceRACacheStackSlots.getValue(options))
+            {
                 AllocatableValue cachedStackSlot = cachedStackSlots[variableIndex];
-                if (cachedStackSlot != null) {
+                if (cachedStackSlot != null)
+                {
                     TraceRegisterAllocationPhase.globalStackSlots.increment(debug);
                     assert cachedStackSlot.getValueKind().equals(getKind(interval)) : "CachedStackSlot: kind mismatch? " + getKind(interval) + " vs. " + cachedStackSlot.getValueKind();
                     return cachedStackSlot;
                 }
             }
             VirtualStackSlot slot = frameMapBuilder.allocateSpillSlot(getKind(interval));
-            if (TraceRegisterAllocationPhase.Options.TraceRACacheStackSlots.getValue(options)) {
+            if (TraceRegisterAllocationPhase.Options.TraceRACacheStackSlots.getValue(options))
+            {
                 cachedStackSlots[variableIndex] = slot;
             }
             TraceRegisterAllocationPhase.allocatedStackSlots.increment(debug);
@@ -331,29 +372,35 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
         }
 
         // access to block list (sorted in linear scan order)
-        public int blockCount() {
+        public int blockCount()
+        {
             return sortedBlocks().length;
         }
 
-        public AbstractBlockBase<?> blockAt(int index) {
+        public AbstractBlockBase<?> blockAt(int index)
+        {
             return sortedBlocks()[index];
         }
 
-        int numLoops() {
+        int numLoops()
+        {
             return getLIR().getControlFlowGraph().getLoops().size();
         }
 
-        boolean isBlockBegin(int opId) {
+        boolean isBlockBegin(int opId)
+        {
             return opId == 0 || blockForId(opId) != blockForId(opId - 1);
         }
 
-        boolean isBlockEnd(int opId) {
+        boolean isBlockEnd(int opId)
+        {
             boolean isBlockBegin = isBlockBegin(opId + 2);
             assert isBlockBegin == (instructionForId(opId & (~1)) instanceof BlockEndOp);
             return isBlockBegin;
         }
 
-        boolean coversBlockBegin(int opId1, int opId2) {
+        boolean coversBlockBegin(int opId1, int opId2)
+        {
             return blockForId(opId1) != blockForId(opId2);
         }
 
@@ -364,58 +411,70 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
          * @return {@code true} if the instruction denoted by {@code id} destroys all caller saved
          *         registers.
          */
-        boolean hasCall(int opId) {
+        boolean hasCall(int opId)
+        {
             assert isEven(opId) : "opId not even";
             return instructionForId(opId).destroysCallerSavedRegisters();
         }
 
-        public boolean isProcessed(Value operand) {
+        public boolean isProcessed(Value operand)
+        {
             return !isRegister(operand) || attributes(asRegister(operand)).isAllocatable();
         }
 
         // * Phase 5: actual register allocation
 
-        private TraceInterval addToList(TraceInterval first, TraceInterval prev, TraceInterval interval) {
+        private TraceInterval addToList(TraceInterval first, TraceInterval prev, TraceInterval interval)
+        {
             TraceInterval newFirst = first;
-            if (prev != null) {
+            if (prev != null)
+            {
                 prev.next = interval;
-            } else {
+            }
+            else
+            {
                 newFirst = interval;
             }
             return newFirst;
         }
 
-        TraceInterval createUnhandledListByFrom(IntervalPredicate isList1) {
+        TraceInterval createUnhandledListByFrom(IntervalPredicate isList1)
+        {
             assert isSortedByFrom(sortedIntervals) : "interval list is not sorted";
             return createUnhandledList(isList1);
         }
 
-        TraceInterval createUnhandledListBySpillPos(IntervalPredicate isList1) {
+        TraceInterval createUnhandledListBySpillPos(IntervalPredicate isList1)
+        {
             assert isSortedBySpillPos(sortedIntervals) : "interval list is not sorted";
             return createUnhandledList(isList1);
         }
 
-        private TraceInterval createUnhandledList(IntervalPredicate isList1) {
-
+        private TraceInterval createUnhandledList(IntervalPredicate isList1)
+        {
             TraceInterval list1 = TraceInterval.EndMarker;
 
             TraceInterval list1Prev = null;
             TraceInterval v;
 
             int n = sortedIntervals.length;
-            for (int i = 0; i < n; i++) {
+            for (int i = 0; i < n; i++)
+            {
                 v = sortedIntervals[i];
-                if (v == null) {
+                if (v == null)
+                {
                     continue;
                 }
 
-                if (isList1.apply(v)) {
+                if (isList1.apply(v))
+                {
                     list1 = addToList(list1, list1Prev, v);
                     list1Prev = v;
                 }
             }
 
-            if (list1Prev != null) {
+            if (list1Prev != null)
+            {
                 list1Prev.next = TraceInterval.EndMarker;
             }
 
@@ -424,25 +483,31 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
             return list1;
         }
 
-        private FixedInterval addToList(FixedInterval first, FixedInterval prev, FixedInterval interval) {
+        private FixedInterval addToList(FixedInterval first, FixedInterval prev, FixedInterval interval)
+        {
             FixedInterval newFirst = first;
-            if (prev != null) {
+            if (prev != null)
+            {
                 prev.next = interval;
-            } else {
+            }
+            else
+            {
                 newFirst = interval;
             }
             return newFirst;
         }
 
-        FixedInterval createFixedUnhandledList() {
+        FixedInterval createFixedUnhandledList()
+        {
             assert isSortedByFrom(fixedIntervals) : "interval list is not sorted";
 
             FixedInterval list1 = FixedInterval.EndMarker;
 
             FixedInterval list1Prev = null;
-            for (FixedInterval v : fixedIntervals) {
-
-                if (v == null) {
+            for (FixedInterval v : fixedIntervals)
+            {
+                if (v == null)
+                {
                     continue;
                 }
 
@@ -451,7 +516,8 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
                 list1Prev = v;
             }
 
-            if (list1Prev != null) {
+            if (list1Prev != null)
+            {
                 list1Prev.next = FixedInterval.EndMarker;
             }
 
@@ -462,18 +528,23 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
 
         // SORTING
 
-        protected void sortIntervalsBeforeAllocation() {
+        protected void sortIntervalsBeforeAllocation()
+        {
             int sortedLen = 0;
-            for (TraceInterval interval : intervals()) {
-                if (interval != null) {
+            for (TraceInterval interval : intervals())
+            {
+                if (interval != null)
+                {
                     sortedLen++;
                 }
             }
             sortedIntervals = TraceLinearScanPhase.sortIntervalsBeforeAllocation(intervals(), new TraceInterval[sortedLen]);
         }
 
-        void sortIntervalsAfterAllocation() {
-            if (hasDerivedIntervals()) {
+        void sortIntervalsAfterAllocation()
+        {
+            if (hasDerivedIntervals())
+            {
                 // no intervals have been added during allocation, so sorted list is already up to
                 // date
                 return;
@@ -492,11 +563,15 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
             int oldIdx = 0;
             int newIdx = 0;
 
-            while (oldIdx + newIdx < combinedList.length) {
-                if (newIdx >= newLen || (oldIdx < oldLen && oldList[oldIdx].from() <= newList[newIdx].from())) {
+            while (oldIdx + newIdx < combinedList.length)
+            {
+                if (newIdx >= newLen || (oldIdx < oldLen && oldList[oldIdx].from() <= newList[newIdx].from()))
+                {
                     combinedList[oldIdx + newIdx] = oldList[oldIdx];
                     oldIdx++;
-                } else {
+                }
+                else
+                {
                     combinedList[oldIdx + newIdx] = newList[newIdx];
                     newIdx++;
                 }
@@ -505,7 +580,8 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
             sortedIntervals = combinedList;
         }
 
-        void sortIntervalsBySpillPos() {
+        void sortIntervalsBySpillPos()
+        {
             // TODO (JE): better algorithm?
             // conventional sort-algorithm for new intervals
             Arrays.sort(sortedIntervals, SORT_BY_SPILL_POS_COMP);
@@ -513,11 +589,14 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
 
         // wrapper for Interval.splitChildAtOpId that performs a bailout in product mode
         // instead of returning null
-        public TraceInterval splitChildAtOpId(TraceInterval interval, int opId, LIRInstruction.OperandMode mode) {
+        public TraceInterval splitChildAtOpId(TraceInterval interval, int opId, LIRInstruction.OperandMode mode)
+        {
             TraceInterval result = interval.getSplitChildAtOpId(opId, mode);
 
-            if (result != null) {
-                if (getDebug().isLogEnabled()) {
+            if (result != null)
+            {
+                if (getDebug().isLogEnabled())
+                {
                     getDebug().log("Split child at pos %d of interval %s is %s", opId, interval, result);
                 }
                 return result;
@@ -525,16 +604,19 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
             throw new GraalError("LinearScan: interval is null");
         }
 
-        AllocatableValue canonicalSpillOpr(TraceInterval interval) {
+        AllocatableValue canonicalSpillOpr(TraceInterval interval)
+        {
             assert interval.spillSlot() != null : "canonical spill slot not set";
             return interval.spillSlot();
         }
 
-        boolean isMaterialized(Variable operand, int opId, OperandMode mode) {
+        boolean isMaterialized(Variable operand, int opId, OperandMode mode)
+        {
             TraceInterval interval = intervalFor(operand);
             assert interval != null : "interval must exist";
 
-            if (opId != -1) {
+            if (opId != -1)
+            {
                 /*
                  * Operands are not changed when an interval is split during allocation, so search
                  * the right interval here.
@@ -545,23 +627,26 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
             return isIllegal(interval.location()) && interval.canMaterialize();
         }
 
-        boolean isCallerSave(Value operand) {
+        boolean isCallerSave(Value operand)
+        {
             return attributes(asRegister(operand)).isCallerSave();
         }
 
         @SuppressWarnings("try")
-        protected void allocate(TargetDescription target, LIRGenerationResult lirGenRes, TraceAllocationContext traceContext) {
+        protected void allocate(TargetDescription target, LIRGenerationResult lirGenRes, TraceAllocationContext traceContext)
+        {
             MoveFactory spillMoveFactory = traceContext.spillMoveFactory;
             RegisterAllocationConfig registerAllocationConfig = traceContext.registerAllocationConfig;
             /*
              * This is the point to enable debug logging for the whole register allocation.
              */
             DebugContext debug = res.getLIR().getDebug();
-            try (Indent indent = debug.logAndIndent("LinearScan allocate")) {
+            try (Indent indent = debug.logAndIndent("LinearScan allocate"))
+            {
                 TRACE_LINEAR_SCAN_LIFETIME_ANALYSIS_PHASE.apply(target, lirGenRes, trace, spillMoveFactory, registerAllocationConfig, traceBuilderResult, this, false);
 
-                try (DebugContext.Scope s = debug.scope("AfterLifetimeAnalysis", this)) {
-
+                try (DebugContext.Scope s = debug.scope("AfterLifetimeAnalysis", this))
+                {
                     printLir("After instruction numbering");
                     printIntervals("Before register allocation");
 
@@ -575,28 +660,35 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
 
                     // eliminate spill moves
                     OptionValues options = getOptions();
-                    if (Options.LIROptTraceRAEliminateSpillMoves.getValue(options)) {
+                    if (Options.LIROptTraceRAEliminateSpillMoves.getValue(options))
+                    {
                         TRACE_LINEAR_SCAN_ELIMINATE_SPILL_MOVE_PHASE.apply(target, lirGenRes, trace, spillMoveFactory, registerAllocationConfig, traceBuilderResult, this);
                     }
 
                     TRACE_LINEAR_SCAN_ASSIGN_LOCATIONS_PHASE.apply(target, lirGenRes, trace, spillMoveFactory, registerAllocationConfig, traceBuilderResult, this, false);
 
-                    if (Assertions.detailedAssertionsEnabled(options)) {
+                    if (Assertions.detailedAssertionsEnabled(options))
+                    {
                         verifyIntervals();
                     }
-                } catch (Throwable e) {
+                }
+                catch (Throwable e)
+                {
                     throw debug.handle(e);
                 }
             }
         }
 
-        public void printLir(String label) {
-            if (getDebug().isDumpEnabled(DebugContext.DETAILED_LEVEL)) {
+        public void printLir(String label)
+        {
+            if (getDebug().isDumpEnabled(DebugContext.DETAILED_LEVEL))
+            {
                 getDebug().dump(DebugContext.DETAILED_LEVEL, sortedBlocks(), "%s (Trace%d)", label, trace.getId());
             }
         }
 
-        boolean verify() {
+        boolean verify()
+        {
             // (check that all intervals have a correct register and that no registers are
             // overwritten)
             verifyIntervals();
@@ -609,53 +701,64 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
         }
 
         @SuppressWarnings("try")
-        private void verifyRegisters() {
+        private void verifyRegisters()
+        {
             // Enable this logging to get output for the verification process.
-            try (Indent indent = getDebug().logAndIndent("verifying register allocation")) {
+            try (Indent indent = getDebug().logAndIndent("verifying register allocation"))
+            {
                 RegisterVerifier verifier = new RegisterVerifier(this);
                 verifier.verify(blockAt(0));
             }
         }
 
         @SuppressWarnings("try")
-        protected void verifyIntervals() {
+        protected void verifyIntervals()
+        {
             DebugContext debug = getDebug();
-            try (Indent indent = debug.logAndIndent("verifying intervals")) {
+            try (Indent indent = debug.logAndIndent("verifying intervals"))
+            {
                 int len = intervalsSize();
 
-                for (int i = 0; i < len; i++) {
+                for (int i = 0; i < len; i++)
+                {
                     final TraceInterval i1 = intervals()[i];
-                    if (i1 == null) {
+                    if (i1 == null)
+                    {
                         continue;
                     }
 
                     i1.checkSplitChildren();
 
-                    if (i1.operandNumber != i) {
+                    if (i1.operandNumber != i)
+                    {
                         debug.log("Interval %d is on position %d in list", i1.operandNumber, i);
                         debug.log(i1.logString());
                         throw new GraalError("");
                     }
 
-                    if (getKind(i1).equals(LIRKind.Illegal)) {
+                    if (getKind(i1).equals(LIRKind.Illegal))
+                    {
                         debug.log("Interval %d has no type assigned", i1.operandNumber);
                         debug.log(i1.logString());
                         throw new GraalError("");
                     }
 
-                    if (i1.location() == null) {
+                    if (i1.location() == null)
+                    {
                         debug.log("Interval %d has no register assigned", i1.operandNumber);
                         debug.log(i1.logString());
                         throw new GraalError("");
                     }
 
-                    if (i1.isEmpty()) {
+                    if (i1.isEmpty())
+                    {
                         debug.log("Interval %d has no Range", i1.operandNumber);
                         debug.log(i1.logString());
                         throw new GraalError("");
                     }
 
-                    if (i1.from() >= i1.to()) {
+                    if (i1.from() >= i1.to())
+                    {
                         debug.log("Interval %d has zero length range", i1.operandNumber);
                         debug.log(i1.logString());
                         throw new GraalError("");
@@ -663,38 +766,46 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
 
                     // special intervals that are created in MoveResolver
                     // . ignore them because the range information has no meaning there
-                    if (i1.from() == 1 && i1.to() == 2) {
+                    if (i1.from() == 1 && i1.to() == 2)
+                    {
                         continue;
                     }
                     // check any intervals
-                    for (int j = i + 1; j < len; j++) {
+                    for (int j = i + 1; j < len; j++)
+                    {
                         final TraceInterval i2 = intervals()[j];
-                        if (i2 == null) {
+                        if (i2 == null)
+                        {
                             continue;
                         }
 
                         // special intervals that are created in MoveResolver
                         // . ignore them because the range information has no meaning there
-                        if (i2.from() == 1 && i2.to() == 2) {
+                        if (i2.from() == 1 && i2.to() == 2)
+                        {
                             continue;
                         }
                         Value l1 = i1.location();
                         Value l2 = i2.location();
                         boolean intersects = i1.intersects(i2);
-                        if (intersects && !isIllegal(l1) && (l1.equals(l2))) {
+                        if (intersects && !isIllegal(l1) && (l1.equals(l2)))
+                        {
                             throw GraalError.shouldNotReachHere(String.format("Intervals %s and %s overlap and have the same register assigned\n%s\n%s", i1, i2, i1.logString(), i2.logString()));
                         }
                     }
                     // check fixed intervals
-                    for (FixedInterval i2 : fixedIntervals()) {
-                        if (i2 == null) {
+                    for (FixedInterval i2 : fixedIntervals())
+                    {
+                        if (i2 == null)
+                        {
                             continue;
                         }
 
                         Value l1 = i1.location();
                         Value l2 = i2.location();
                         boolean intersects = i2.intersects(i1);
-                        if (intersects && !isIllegal(l1) && (l1.equals(l2))) {
+                        if (intersects && !isIllegal(l1) && (l1.equals(l2)))
+                        {
                             throw GraalError.shouldNotReachHere(String.format("Intervals %s and %s overlap and have the same register assigned\n%s\n%s", i1, i2, i1.logString(), i2.logString()));
                         }
                     }
@@ -702,31 +813,38 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
             }
         }
 
-        public LIR getLIR() {
+        public LIR getLIR()
+        {
             return res.getLIR();
         }
 
-        public FrameMapBuilder getFrameMapBuilder() {
+        public FrameMapBuilder getFrameMapBuilder()
+        {
             return frameMapBuilder;
         }
 
-        public AbstractBlockBase<?>[] sortedBlocks() {
+        public AbstractBlockBase<?>[] sortedBlocks()
+        {
             return trace.getBlocks();
         }
 
-        public RegisterArray getRegisters() {
+        public RegisterArray getRegisters()
+        {
             return registers;
         }
 
-        public RegisterAllocationConfig getRegisterAllocationConfig() {
+        public RegisterAllocationConfig getRegisterAllocationConfig()
+        {
             return regAllocConfig;
         }
 
-        public boolean callKillsRegisters() {
+        public boolean callKillsRegisters()
+        {
             return regAllocConfig.getRegisterConfig().areAllAllocatableRegistersCallerSaved();
         }
 
-        boolean neverSpillConstants() {
+        boolean neverSpillConstants()
+        {
             return neverSpillConstants;
         }
 
@@ -772,18 +890,21 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
         /**
          * Map from {@linkplain #operandNumber operand numbers} to intervals.
          */
-        TraceInterval[] intervals() {
+        TraceInterval[] intervals()
+        {
             return intervals;
         }
 
         /**
          * Map from {@linkplain Register#number} to fixed intervals.
          */
-        FixedInterval[] fixedIntervals() {
+        FixedInterval[] fixedIntervals()
+        {
             return fixedIntervals;
         }
 
-        void initIntervals() {
+        void initIntervals()
+        {
             intervalsSize = operandSize();
             intervals = new TraceInterval[intervalsSize + (intervalsSize >> SPLIT_INTERVALS_CAPACITY_RIGHT_SHIFT)];
         }
@@ -794,7 +915,8 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
          * @param reg the operand for the interval
          * @return the created interval
          */
-        private FixedInterval createFixedInterval(RegisterValue reg) {
+        private FixedInterval createFixedInterval(RegisterValue reg)
+        {
             FixedInterval interval = new FixedInterval(reg);
             int operandNumber = reg.getRegister().number;
             assert fixedIntervals[operandNumber] == null;
@@ -808,7 +930,8 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
          * @param operand the operand for the interval
          * @return the created interval
          */
-        private TraceInterval createInterval(Variable operand) {
+        private TraceInterval createInterval(Variable operand)
+        {
             assert isLegal(operand);
             int operandNumber = operandNumber(operand);
             assert operand.index == operandNumber;
@@ -825,11 +948,14 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
          * @param source an interval being split of spilled
          * @return a new interval derived from {@code source}
          */
-        TraceInterval createDerivedInterval(TraceInterval source) {
-            if (firstDerivedIntervalIndex == -1) {
+        TraceInterval createDerivedInterval(TraceInterval source)
+        {
+            if (firstDerivedIntervalIndex == -1)
+            {
                 firstDerivedIntervalIndex = intervalsSize;
             }
-            if (intervalsSize == intervals.length) {
+            if (intervalsSize == intervals.length)
+            {
                 intervals = Arrays.copyOf(intervals, intervals.length + (intervals.length >> SPLIT_INTERVALS_CAPACITY_RIGHT_SHIFT) + 1);
             }
             // increments intervalsSize
@@ -846,59 +972,76 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
          * Creates a new variable for a derived interval. Note that the variable is not
          * {@linkplain LIR#numVariables() managed} so it must not be inserted into the {@link LIR}.
          */
-        private Variable createVariable(ValueKind<?> kind) {
+        private Variable createVariable(ValueKind<?> kind)
+        {
             return new Variable(kind, intervalsSize++);
         }
 
-        boolean hasDerivedIntervals() {
+        boolean hasDerivedIntervals()
+        {
             return firstDerivedIntervalIndex != -1;
         }
 
-        int firstDerivedIntervalIndex() {
+        int firstDerivedIntervalIndex()
+        {
             return firstDerivedIntervalIndex;
         }
 
-        public int intervalsSize() {
+        public int intervalsSize()
+        {
             return intervalsSize;
         }
 
-        FixedInterval fixedIntervalFor(RegisterValue reg) {
+        FixedInterval fixedIntervalFor(RegisterValue reg)
+        {
             return fixedIntervals[reg.getRegister().number];
         }
 
-        FixedInterval getOrCreateFixedInterval(RegisterValue reg) {
+        FixedInterval getOrCreateFixedInterval(RegisterValue reg)
+        {
             FixedInterval ret = fixedIntervalFor(reg);
-            if (ret == null) {
+            if (ret == null)
+            {
                 return createFixedInterval(reg);
-            } else {
+            }
+            else
+            {
                 return ret;
             }
         }
 
-        TraceInterval intervalFor(Variable operand) {
+        TraceInterval intervalFor(Variable operand)
+        {
             return intervalFor(operandNumber(operand));
         }
 
-        TraceInterval intervalFor(int operandNumber) {
+        TraceInterval intervalFor(int operandNumber)
+        {
             assert operandNumber < intervalsSize;
             return intervals[operandNumber];
         }
 
-        TraceInterval getOrCreateInterval(Variable operand) {
+        TraceInterval getOrCreateInterval(Variable operand)
+        {
             TraceInterval ret = intervalFor(operand);
-            if (ret == null) {
+            if (ret == null)
+            {
                 return createInterval(operand);
-            } else {
+            }
+            else
+            {
                 return ret;
             }
         }
 
-        void initOpIdMaps(int numInstructions) {
+        void initOpIdMaps(int numInstructions)
+        {
             opIdToInstructionMap = new LIRInstruction[numInstructions];
             opIdToBlockMap = new AbstractBlockBase<?>[numInstructions];
         }
 
-        void putOpIdMaps(int index, LIRInstruction op, AbstractBlockBase<?> block) {
+        void putOpIdMaps(int index, LIRInstruction op, AbstractBlockBase<?> block)
+        {
             opIdToInstructionMap[index] = op;
             opIdToBlockMap[index] = block;
         }
@@ -906,7 +1049,8 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
         /**
          * Gets the highest instruction id allocated by this object.
          */
-        int maxOpId() {
+        int maxOpId()
+        {
             assert opIdToInstructionMap.length > 0 : "no operations";
             return (opIdToInstructionMap.length - 1) << 1;
         }
@@ -916,7 +1060,8 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
          * LIR instructions in a method have an index one greater than their linear-scan order
          * predecessor with the first instruction having an index of 0.
          */
-        private int opIdToIndex(int opId) {
+        private int opIdToIndex(int opId)
+        {
             return opId >> 1;
         }
 
@@ -926,7 +1071,8 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
          * @param opId an instruction {@linkplain LIRInstruction#id id}
          * @return the instruction whose {@linkplain LIRInstruction#id} {@code == id}
          */
-        LIRInstruction instructionForId(int opId) {
+        LIRInstruction instructionForId(int opId)
+        {
             assert isEven(opId) : "opId not even";
             LIRInstruction instr = opIdToInstructionMap[opIdToIndex(opId)];
             assert instr.id() == opId;
@@ -939,31 +1085,42 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
          * @param opId an instruction {@linkplain LIRInstruction#id id}
          * @return the block containing the instruction denoted by {@code opId}
          */
-        AbstractBlockBase<?> blockForId(int opId) {
+        AbstractBlockBase<?> blockForId(int opId)
+        {
             assert opIdToBlockMap.length > 0 && opId >= 0 && opId <= maxOpId() + 1 : "opId out of range: " + opId;
             return opIdToBlockMap[opIdToIndex(opId)];
         }
 
         @SuppressWarnings("try")
-        public void printIntervals(String label) {
+        public void printIntervals(String label)
+        {
             DebugContext debug = getDebug();
-            if (debug.isDumpEnabled(DebugContext.DETAILED_LEVEL)) {
-                if (debug.isLogEnabled()) {
-                    try (Indent indent = debug.logAndIndent("intervals %s", label)) {
-                        for (FixedInterval interval : fixedIntervals) {
-                            if (interval != null) {
+            if (debug.isDumpEnabled(DebugContext.DETAILED_LEVEL))
+            {
+                if (debug.isLogEnabled())
+                {
+                    try (Indent indent = debug.logAndIndent("intervals %s", label))
+                    {
+                        for (FixedInterval interval : fixedIntervals)
+                        {
+                            if (interval != null)
+                            {
                                 debug.log("%s", interval.logString());
                             }
                         }
 
-                        for (TraceInterval interval : intervals) {
-                            if (interval != null) {
+                        for (TraceInterval interval : intervals)
+                        {
+                            if (interval != null)
+                            {
                                 debug.log("%s", interval.logString());
                             }
                         }
 
-                        try (Indent indent2 = debug.logAndIndent("Basic Blocks")) {
-                            for (AbstractBlockBase<?> block : trace.getBlocks()) {
+                        try (Indent indent2 = debug.logAndIndent("Basic Blocks"))
+                        {
+                            for (AbstractBlockBase<?> block : trace.getBlocks())
+                            {
                                 debug.log("B%d [%d, %d, %s] ", block.getId(), getFirstLirInstructionId(block), getLastLirInstructionId(block), block.getLoop());
                             }
                         }
@@ -974,28 +1131,36 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
         }
 
         @Override
-        public void visitIntervals(IntervalVisitor visitor) {
-            for (FixedInterval interval : fixedIntervals) {
-                if (interval != null) {
+        public void visitIntervals(IntervalVisitor visitor)
+        {
+            for (FixedInterval interval : fixedIntervals)
+            {
+                if (interval != null)
+                {
                     printFixedInterval(interval, visitor);
                 }
             }
-            for (TraceInterval interval : intervals) {
-                if (interval != null) {
+            for (TraceInterval interval : intervals)
+            {
+                if (interval != null)
+                {
                     printInterval(interval, visitor);
                 }
             }
         }
 
-        boolean hasInterTracePredecessor(AbstractBlockBase<?> block) {
+        boolean hasInterTracePredecessor(AbstractBlockBase<?> block)
+        {
             return TraceUtil.hasInterTracePredecessor(traceBuilderResult, trace, block);
         }
 
-        boolean hasInterTraceSuccessor(AbstractBlockBase<?> block) {
+        boolean hasInterTraceSuccessor(AbstractBlockBase<?> block)
+        {
             return TraceUtil.hasInterTraceSuccessor(traceBuilderResult, trace, block);
         }
 
-        private void printInterval(TraceInterval interval, IntervalVisitor visitor) {
+        private void printInterval(TraceInterval interval, IntervalVisitor visitor)
+        {
             Value hint = interval.locationHint(false) != null ? interval.locationHint(false).location() : null;
             AllocatableValue operand = getOperand(interval);
             String type = getKind(interval).getPlatformKind().toString();
@@ -1006,7 +1171,8 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
 
             // print use positions
             int prev = -1;
-            for (int i = interval.numUsePos() - 1; i >= 0; --i) {
+            for (int i = interval.numUsePos() - 1; i >= 0; --i)
+            {
                 assert prev < interval.getUsePos(i) : "use positions not sorted";
                 visitor.visitUsePos(interval.getUsePos(i), interval.getUsePosRegisterPriority(i));
                 prev = interval.getUsePos(i);
@@ -1015,29 +1181,35 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
             visitor.visitIntervalEnd(interval.spillState());
         }
 
-        AllocatableValue getOperand(TraceInterval interval) {
+        AllocatableValue getOperand(TraceInterval interval)
+        {
             return interval.operand;
         }
 
-        ValueKind<?> getKind(TraceInterval interval) {
+        ValueKind<?> getKind(TraceInterval interval)
+        {
             return getOperand(interval).getValueKind();
         }
-
     }
 
-    public static boolean verifyEquals(TraceLinearScan a, TraceLinearScan b) {
+    public static boolean verifyEquals(TraceLinearScan a, TraceLinearScan b)
+    {
         assert compareFixed(a.fixedIntervals(), b.fixedIntervals());
         assert compareIntervals(a.intervals(), b.intervals());
         return true;
     }
 
-    private static boolean compareIntervals(TraceInterval[] a, TraceInterval[] b) {
-        for (int i = 0; i < Math.max(a.length, b.length); i++) {
-            if (i >= a.length) {
+    private static boolean compareIntervals(TraceInterval[] a, TraceInterval[] b)
+    {
+        for (int i = 0; i < Math.max(a.length, b.length); i++)
+        {
+            if (i >= a.length)
+            {
                 assert b[i] == null : "missing a interval: " + i + " b: " + b[i];
                 continue;
             }
-            if (i >= b.length) {
+            if (i >= b.length)
+            {
                 assert a[i] == null : "missing b interval: " + i + " a: " + a[i];
                 continue;
             }
@@ -1046,8 +1218,10 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
         return true;
     }
 
-    private static void compareInterval(TraceInterval a, TraceInterval b) {
-        if (a == null) {
+    private static void compareInterval(TraceInterval a, TraceInterval b)
+    {
+        if (a == null)
+        {
             assert b == null : "First interval is null but second is: " + b;
             return;
         }
@@ -1058,8 +1232,10 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
         assert verifyIntervalsEquals(a, b);
     }
 
-    private static boolean verifyIntervalsEquals(TraceInterval a, TraceInterval b) {
-        for (int i = 0; i < Math.max(a.numUsePos(), b.numUsePos()); i++) {
+    private static boolean verifyIntervalsEquals(TraceInterval a, TraceInterval b)
+    {
+        for (int i = 0; i < Math.max(a.numUsePos(), b.numUsePos()); i++)
+        {
             assert i < a.numUsePos() : "missing a usepos: " + i + " b: " + b;
             assert i < b.numUsePos() : "missing b usepos: " + i + " a: " + a;
             int aPos = a.getUsePos(i);
@@ -1072,13 +1248,17 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
         return true;
     }
 
-    private static boolean compareFixed(FixedInterval[] a, FixedInterval[] b) {
-        for (int i = 0; i < Math.max(a.length, b.length); i++) {
-            if (i >= a.length) {
+    private static boolean compareFixed(FixedInterval[] a, FixedInterval[] b)
+    {
+        for (int i = 0; i < Math.max(a.length, b.length); i++)
+        {
+            if (i >= a.length)
+            {
                 assert b[i] == null : "missing a interval: " + i + " b: " + b[i];
                 continue;
             }
-            if (i >= b.length) {
+            if (i >= b.length)
+            {
                 assert a[i] == null : "missing b interval: " + i + " a: " + a[i];
                 continue;
             }
@@ -1087,12 +1267,15 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
         return true;
     }
 
-    private static void compareFixedInterval(FixedInterval a, FixedInterval b) {
-        if (a == null) {
+    private static void compareFixedInterval(FixedInterval a, FixedInterval b)
+    {
+        if (a == null)
+        {
             assert b == null || isEmptyInterval(b) : "First interval is null but second is: " + b;
             return;
         }
-        if (b == null) {
+        if (b == null)
+        {
             assert isEmptyInterval(a) : "Second interval is null but first is: " + a;
             return;
         }
@@ -1102,10 +1285,12 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
         assert verifyFixeEquas(a, b);
     }
 
-    private static boolean verifyFixeEquas(FixedInterval a, FixedInterval b) {
+    private static boolean verifyFixeEquas(FixedInterval a, FixedInterval b)
+    {
         a.rewindRange();
         b.rewindRange();
-        while (!a.currentAtEnd()) {
+        while (!a.currentAtEnd())
+        {
             assert !b.currentAtEnd() : "Fixed range mismatch: " + a + " vs. " + b;
             assert a.currentFrom() == b.currentFrom() : "From range mismatch: " + a + " vs. " + b + " from: " + a.currentFrom() + " vs. " + b.currentFrom();
             assert a.currentTo() == b.currentTo() : "To range mismatch: " + a + " vs. " + b + " from: " + a.currentTo() + " vs. " + b.currentTo();
@@ -1116,25 +1301,26 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
         return true;
     }
 
-    private static boolean isEmptyInterval(FixedInterval fixed) {
+    private static boolean isEmptyInterval(FixedInterval fixed)
+    {
         return fixed.from() == -1 && fixed.to() == 0;
     }
 
-    private static void printFixedInterval(FixedInterval interval, IntervalVisitor visitor) {
+    private static void printFixedInterval(FixedInterval interval, IntervalVisitor visitor)
+    {
         Value hint = null;
         AllocatableValue operand = interval.operand;
         String type = "fixed";
         visitor.visitIntervalStart(operand, operand, operand, hint, type);
 
         // print ranges
-        for (FixedRange range = interval.first(); range != FixedRange.EndMarker; range = range.next) {
+        for (FixedRange range = interval.first(); range != FixedRange.EndMarker; range = range.next)
+        {
             visitor.visitRange(range.from, range.to);
         }
 
         // no use positions
 
         visitor.visitIntervalEnd("NOT_SUPPORTED");
-
     }
-
 }

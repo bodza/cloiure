@@ -24,38 +24,46 @@ import graalvm.compiler.nodes.util.GraphUtil;
  * Denotes the merging of multiple control-flow paths.
  */
 @NodeInfo(allowedUsageTypes = Association, cycles = CYCLES_0, size = SIZE_0)
-public abstract class AbstractMergeNode extends BeginStateSplitNode implements IterableNodeType, Simplifiable, LIRLowerable {
+public abstract class AbstractMergeNode extends BeginStateSplitNode implements IterableNodeType, Simplifiable, LIRLowerable
+{
     public static final NodeClass<AbstractMergeNode> TYPE = NodeClass.create(AbstractMergeNode.class);
 
-    protected AbstractMergeNode(NodeClass<? extends AbstractMergeNode> c) {
+    protected AbstractMergeNode(NodeClass<? extends AbstractMergeNode> c)
+    {
         super(c);
     }
 
     @Input(Association) protected NodeInputList<EndNode> ends = new NodeInputList<>(this);
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         gen.visitMerge(this);
     }
 
-    public int forwardEndIndex(EndNode end) {
+    public int forwardEndIndex(EndNode end)
+    {
         return ends.indexOf(end);
     }
 
-    public void addForwardEnd(EndNode end) {
+    public void addForwardEnd(EndNode end)
+    {
         ends.add(end);
     }
 
-    public final int forwardEndCount() {
+    public final int forwardEndCount()
+    {
         return ends.size();
     }
 
-    public final EndNode forwardEndAt(int index) {
+    public final EndNode forwardEndAt(int index)
+    {
         return ends.get(index);
     }
 
     @Override
-    public NodeIterable<EndNode> cfgPredecessors() {
+    public NodeIterable<EndNode> cfgPredecessors()
+    {
         return ends;
     }
 
@@ -65,7 +73,8 @@ public abstract class AbstractMergeNode extends BeginStateSplitNode implements I
      * @param value the instruction to test
      * @return {@code true} if {@code value} is a phi and its merge is {@code this}
      */
-    public boolean isPhiAtMerge(Node value) {
+    public boolean isPhiAtMerge(Node value)
+    {
         return value instanceof PhiNode && ((PhiNode) value).merge() == this;
     }
 
@@ -75,60 +84,74 @@ public abstract class AbstractMergeNode extends BeginStateSplitNode implements I
      *
      * @param pred the end to remove
      */
-    public void removeEnd(AbstractEndNode pred) {
+    public void removeEnd(AbstractEndNode pred)
+    {
         int predIndex = phiPredecessorIndex(pred);
         assert predIndex != -1;
         deleteEnd(pred);
-        for (PhiNode phi : phis().snapshot()) {
-            if (phi.isDeleted()) {
+        for (PhiNode phi : phis().snapshot())
+        {
+            if (phi.isDeleted())
+            {
                 continue;
             }
             ValueNode removedValue = phi.valueAt(predIndex);
             phi.removeInput(predIndex);
-            if (removedValue != null) {
+            if (removedValue != null)
+            {
                 GraphUtil.tryKillUnused(removedValue);
             }
         }
     }
 
-    protected void deleteEnd(AbstractEndNode end) {
+    protected void deleteEnd(AbstractEndNode end)
+    {
         ends.remove(end);
     }
 
-    public void clearEnds() {
+    public void clearEnds()
+    {
         ends.clear();
     }
 
-    public NodeInputList<EndNode> forwardEnds() {
+    public NodeInputList<EndNode> forwardEnds()
+    {
         return ends;
     }
 
-    public int phiPredecessorCount() {
+    public int phiPredecessorCount()
+    {
         return forwardEndCount();
     }
 
-    public int phiPredecessorIndex(AbstractEndNode pred) {
+    public int phiPredecessorIndex(AbstractEndNode pred)
+    {
         return forwardEndIndex((EndNode) pred);
     }
 
-    public AbstractEndNode phiPredecessorAt(int index) {
+    public AbstractEndNode phiPredecessorAt(int index)
+    {
         return forwardEndAt(index);
     }
 
-    public NodeIterable<PhiNode> phis() {
+    public NodeIterable<PhiNode> phis()
+    {
         return this.usages().filter(PhiNode.class).filter(this::isPhiAtMerge);
     }
 
-    public NodeIterable<ValuePhiNode> valuePhis() {
+    public NodeIterable<ValuePhiNode> valuePhis()
+    {
         return this.usages().filter(ValuePhiNode.class);
     }
 
-    public NodeIterable<MemoryPhiNode> memoryPhis() {
+    public NodeIterable<MemoryPhiNode> memoryPhis()
+    {
         return this.usages().filter(MemoryPhiNode.class);
     }
 
     @Override
-    public NodeIterable<Node> anchored() {
+    public NodeIterable<Node> anchored()
+    {
         return super.anchored().filter(n -> !isPhiAtMerge(n));
     }
 
@@ -138,54 +161,72 @@ public abstract class AbstractMergeNode extends BeginStateSplitNode implements I
      */
     @Override
     @SuppressWarnings("try")
-    public void simplify(SimplifierTool tool) {
+    public void simplify(SimplifierTool tool)
+    {
         FixedNode currentNext = next();
-        if (currentNext instanceof AbstractEndNode) {
+        if (currentNext instanceof AbstractEndNode)
+        {
             AbstractEndNode origLoopEnd = (AbstractEndNode) currentNext;
             AbstractMergeNode merge = origLoopEnd.merge();
-            if (merge instanceof LoopBeginNode && !(origLoopEnd instanceof LoopEndNode)) {
+            if (merge instanceof LoopBeginNode && !(origLoopEnd instanceof LoopEndNode))
+            {
                 return;
             }
             // in order to move anchored values to the other merge we would need to check if the
             // anchors are used by phis of the other merge
-            if (this.anchored().isNotEmpty()) {
+            if (this.anchored().isNotEmpty())
+            {
                 return;
             }
-            if (merge.stateAfter() == null && this.stateAfter() != null) {
+            if (merge.stateAfter() == null && this.stateAfter() != null)
+            {
                 // We hold a state, but the succeeding merge does not => do not combine.
                 return;
             }
-            for (PhiNode phi : phis()) {
-                for (Node usage : phi.usages()) {
-                    if (!(usage instanceof VirtualState) && !merge.isPhiAtMerge(usage)) {
+            for (PhiNode phi : phis())
+            {
+                for (Node usage : phi.usages())
+                {
+                    if (!(usage instanceof VirtualState) && !merge.isPhiAtMerge(usage))
+                    {
                         return;
                     }
                 }
             }
             getDebug().log("Split %s into ends for %s.", this, merge);
             int numEnds = this.forwardEndCount();
-            for (int i = 0; i < numEnds - 1; i++) {
+            for (int i = 0; i < numEnds - 1; i++)
+            {
                 AbstractEndNode end = forwardEndAt(numEnds - 1 - i);
-                if (tool != null) {
+                if (tool != null)
+                {
                     tool.addToWorkList(end);
                 }
                 AbstractEndNode newEnd;
-                try (DebugCloseable position = end.withNodeSourcePosition()) {
-                    if (merge instanceof LoopBeginNode) {
+                try (DebugCloseable position = end.withNodeSourcePosition())
+                {
+                    if (merge instanceof LoopBeginNode)
+                    {
                         newEnd = graph().add(new LoopEndNode((LoopBeginNode) merge));
-                    } else {
+                    }
+                    else
+                    {
                         EndNode tmpEnd = graph().add(new EndNode());
                         merge.addForwardEnd(tmpEnd);
                         newEnd = tmpEnd;
                     }
                 }
-                for (PhiNode phi : merge.phis()) {
+                for (PhiNode phi : merge.phis())
+                {
                     ValueNode v = phi.valueAt(origLoopEnd);
                     ValueNode newInput;
-                    if (isPhiAtMerge(v)) {
+                    if (isPhiAtMerge(v))
+                    {
                         PhiNode endPhi = (PhiNode) v;
                         newInput = endPhi.valueAt(end);
-                    } else {
+                    }
+                    else
+                    {
                         newInput = v;
                     }
                     phi.addInput(newInput);
@@ -193,20 +234,27 @@ public abstract class AbstractMergeNode extends BeginStateSplitNode implements I
                 this.removeEnd(end);
                 end.replaceAtPredecessor(newEnd);
                 end.safeDelete();
-                if (tool != null) {
+                if (tool != null)
+                {
                     tool.addToWorkList(newEnd.predecessor());
                 }
             }
             graph().reduceTrivialMerge(this);
-        } else if (currentNext instanceof ReturnNode) {
+        }
+        else if (currentNext instanceof ReturnNode)
+        {
             ReturnNode returnNode = (ReturnNode) currentNext;
-            if (anchored().isNotEmpty() || returnNode.getMemoryMap() != null) {
+            if (anchored().isNotEmpty() || returnNode.getMemoryMap() != null)
+            {
                 return;
             }
             List<PhiNode> phis = phis().snapshot();
-            for (PhiNode phi : phis) {
-                for (Node usage : phi.usages()) {
-                    if (usage != returnNode && !(usage instanceof FrameState)) {
+            for (PhiNode phi : phis)
+            {
+                for (Node usage : phi.usages())
+                {
+                    if (usage != returnNode && !(usage instanceof FrameState))
+                    {
                         return;
                     }
                 }
@@ -214,21 +262,27 @@ public abstract class AbstractMergeNode extends BeginStateSplitNode implements I
 
             ValuePhiNode returnValuePhi = returnNode.result() == null || !isPhiAtMerge(returnNode.result()) ? null : (ValuePhiNode) returnNode.result();
             List<EndNode> endNodes = forwardEnds().snapshot();
-            for (EndNode end : endNodes) {
-                try (DebugCloseable position = returnNode.withNodeSourcePosition()) {
+            for (EndNode end : endNodes)
+            {
+                try (DebugCloseable position = returnNode.withNodeSourcePosition())
+                {
                     ReturnNode newReturn = graph().add(new ReturnNode(returnValuePhi == null ? returnNode.result() : returnValuePhi.valueAt(end)));
-                    if (tool != null) {
+                    if (tool != null)
+                    {
                         tool.addToWorkList(end.predecessor());
                     }
                     end.replaceAtPredecessor(newReturn);
                 }
             }
             GraphUtil.killCFG(this);
-            for (EndNode end : endNodes) {
+            for (EndNode end : endNodes)
+            {
                 end.safeDelete();
             }
-            for (PhiNode phi : phis) {
-                if (tool.allUsagesAvailable() && phi.isAlive() && phi.hasNoUsages()) {
+            for (PhiNode phi : phis)
+            {
+                if (tool.allUsagesAvailable() && phi.isAlive() && phi.hasNoUsages())
+                {
                     GraphUtil.killWithUnusedFloatingInputs(phi);
                 }
             }

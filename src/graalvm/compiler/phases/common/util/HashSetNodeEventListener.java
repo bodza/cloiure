@@ -15,15 +15,16 @@ import graalvm.compiler.graph.Node.IndirectCanonicalization;
  * A simple {@link NodeEventListener} implementation that accumulates event nodes in a
  * {@link HashSet}.
  */
-public class HashSetNodeEventListener extends NodeEventListener {
-
+public class HashSetNodeEventListener extends NodeEventListener
+{
     private final EconomicSet<Node> nodes;
     private final Set<NodeEvent> filter;
 
     /**
      * Creates a {@link NodeEventListener} that collects nodes from all events.
      */
-    public HashSetNodeEventListener() {
+    public HashSetNodeEventListener()
+    {
         this.nodes = EconomicSet.create(Equivalence.IDENTITY);
         this.filter = EnumSet.allOf(NodeEvent.class);
     }
@@ -32,7 +33,8 @@ public class HashSetNodeEventListener extends NodeEventListener {
      * Creates a {@link NodeEventListener} that collects nodes from all events that match a given
      * filter.
      */
-    public HashSetNodeEventListener(Set<NodeEvent> filter) {
+    public HashSetNodeEventListener(Set<NodeEvent> filter)
+    {
         this.nodes = EconomicSet.create(Equivalence.IDENTITY);
         this.filter = filter;
     }
@@ -40,17 +42,22 @@ public class HashSetNodeEventListener extends NodeEventListener {
     /**
      * Excludes a given event from those for which nodes are collected.
      */
-    public HashSetNodeEventListener exclude(NodeEvent e) {
+    public HashSetNodeEventListener exclude(NodeEvent e)
+    {
         filter.remove(e);
         return this;
     }
 
     @Override
-    public void changed(NodeEvent e, Node node) {
-        if (filter.contains(e)) {
+    public void changed(NodeEvent e, Node node)
+    {
+        if (filter.contains(e))
+        {
             nodes.add(node);
-            if (node instanceof IndirectCanonicalization) {
-                for (Node usage : node.usages()) {
+            if (node instanceof IndirectCanonicalization)
+            {
+                for (Node usage : node.usages())
+                {
                     nodes.add(usage);
                 }
             }
@@ -60,7 +67,8 @@ public class HashSetNodeEventListener extends NodeEventListener {
     /**
      * Gets the set being used to accumulate the nodes communicated to this listener.
      */
-    public EconomicSet<Node> getNodes() {
+    public EconomicSet<Node> getNodes()
+    {
         return nodes;
     }
 }

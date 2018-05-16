@@ -12,14 +12,15 @@ import jdk.vm.ci.meta.JavaKind;
  * Since JDK 9.
  */
 @ClassSubstitution(className = "java.lang.StringLatin1", optional = true)
-public class AMD64StringLatin1Substitutions {
-
+public class AMD64StringLatin1Substitutions
+{
     /**
      * @param value is byte[]
      * @param other is byte[]
      */
     @MethodSubstitution
-    public static int compareTo(byte[] value, byte[] other) {
+    public static int compareTo(byte[] value, byte[] other)
+    {
         return ArrayCompareToNode.compareTo(value, other, value.length, other.length, JavaKind.Byte, JavaKind.Byte);
     }
 
@@ -28,8 +29,8 @@ public class AMD64StringLatin1Substitutions {
      * @param other is char[]
      */
     @MethodSubstitution
-    public static int compareToUTF16(byte[] value, byte[] other) {
+    public static int compareToUTF16(byte[] value, byte[] other)
+    {
         return ArrayCompareToNode.compareTo(value, other, value.length, other.length, JavaKind.Byte, JavaKind.Char);
     }
-
 }

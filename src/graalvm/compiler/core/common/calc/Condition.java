@@ -10,7 +10,8 @@ import jdk.vm.ci.meta.PrimitiveConstant;
 /**
  * Condition codes used in conditionals.
  */
-public enum Condition {
+public enum Condition
+{
     /**
      * Equal.
      */
@@ -63,12 +64,15 @@ public enum Condition {
 
     public final String operator;
 
-    Condition(String operator) {
+    Condition(String operator)
+    {
         this.operator = operator;
     }
 
-    public boolean check(int left, int right) {
-        switch (this) {
+    public boolean check(int left, int right)
+    {
+        switch (this)
+        {
             case EQ:
                 return left == right;
             case NE:
@@ -93,33 +97,40 @@ public enum Condition {
         throw new IllegalArgumentException(this.toString());
     }
 
-    public static final class CanonicalizedCondition {
+    public static final class CanonicalizedCondition
+    {
         private final CanonicalCondition canonicalCondition;
         private final boolean mirror;
         private final boolean negate;
 
-        private CanonicalizedCondition(CanonicalCondition canonicalCondition, boolean mirror, boolean negate) {
+        private CanonicalizedCondition(CanonicalCondition canonicalCondition, boolean mirror, boolean negate)
+        {
             this.canonicalCondition = canonicalCondition;
             this.mirror = mirror;
             this.negate = negate;
         }
 
-        public CanonicalCondition getCanonicalCondition() {
+        public CanonicalCondition getCanonicalCondition()
+        {
             return canonicalCondition;
         }
 
-        public boolean mustMirror() {
+        public boolean mustMirror()
+        {
             return mirror;
         }
 
-        public boolean mustNegate() {
+        public boolean mustNegate()
+        {
             return negate;
         }
     }
 
-    public CanonicalizedCondition canonicalize() {
+    public CanonicalizedCondition canonicalize()
+    {
         CanonicalCondition canonicalCondition;
-        switch (this) {
+        switch (this)
+        {
             case EQ:
             case NE:
                 canonicalCondition = CanonicalCondition.EQ;
@@ -148,8 +159,10 @@ public enum Condition {
      *
      * @return true if this condition is considered to be the canonical form, false otherwise.
      */
-    public boolean isCanonical() {
-        switch (this) {
+    public boolean isCanonical()
+    {
+        switch (this)
+        {
             case EQ:
                 return true;
             case NE:
@@ -178,8 +191,10 @@ public enum Condition {
      * Returns true if the condition needs to be mirrored to get to a canonical condition. The
      * result of the mirroring operation might still need to be negated to achieve a canonical form.
      */
-    private boolean canonicalMirror() {
-        switch (this) {
+    private boolean canonicalMirror()
+    {
+        switch (this)
+        {
             case EQ:
                 return false;
             case NE:
@@ -208,8 +223,10 @@ public enum Condition {
      * Returns true if the condition needs to be negated to get to a canonical condition. The result
      * of the negation might still need to be mirrored to achieve a canonical form.
      */
-    private boolean canonicalNegate() {
-        switch (this) {
+    private boolean canonicalNegate()
+    {
+        switch (this)
+        {
             case EQ:
                 return false;
             case NE:
@@ -239,8 +256,10 @@ public enum Condition {
      *
      * @return the condition that represents the negation
      */
-    public final Condition negate() {
-        switch (this) {
+    public final Condition negate()
+    {
+        switch (this)
+        {
             case EQ:
                 return NE;
             case NE:
@@ -265,11 +284,14 @@ public enum Condition {
         throw new IllegalArgumentException(this.toString());
     }
 
-    public boolean implies(Condition other) {
-        if (other == this) {
+    public boolean implies(Condition other)
+    {
+        if (other == this)
+        {
             return true;
         }
-        switch (this) {
+        switch (this)
+        {
             case EQ:
                 return other == LE || other == GE || other == BE || other == AE;
             case NE:
@@ -299,8 +321,10 @@ public enum Condition {
      *
      * @return the condition representing the equivalent commuted operation
      */
-    public final Condition mirror() {
-        switch (this) {
+    public final Condition mirror()
+    {
+        switch (this)
+        {
             case EQ:
                 return EQ;
             case NE:
@@ -329,7 +353,8 @@ public enum Condition {
      * Returns true if this condition represents an unsigned comparison. EQ and NE are not
      * considered to be unsigned.
      */
-    public final boolean isUnsigned() {
+    public final boolean isUnsigned()
+    {
         return this == Condition.BT || this == Condition.BE || this == Condition.AT || this == Condition.AE;
     }
 
@@ -338,7 +363,8 @@ public enum Condition {
      *
      * @return {@code true} if this operation is commutative
      */
-    public final boolean isCommutative() {
+    public final boolean isCommutative()
+    {
         return this == EQ || this == NE;
     }
 
@@ -351,7 +377,8 @@ public enum Condition {
      * @return {@link Boolean#TRUE} if the comparison is known to be true, {@link Boolean#FALSE} if
      *         the comparison is known to be false
      */
-    public boolean foldCondition(JavaConstant lt, JavaConstant rt, ConstantReflectionProvider constantReflection) {
+    public boolean foldCondition(JavaConstant lt, JavaConstant rt, ConstantReflectionProvider constantReflection)
+    {
         assert !lt.getJavaKind().isNumericFloat() && !rt.getJavaKind().isNumericFloat();
         return foldCondition(lt, rt, constantReflection, false);
     }
@@ -366,17 +393,23 @@ public enum Condition {
      * @return true if the comparison is known to be true, false if the comparison is known to be
      *         false
      */
-    public boolean foldCondition(Constant lt, Constant rt, ConstantReflectionProvider constantReflection, boolean unorderedIsTrue) {
-        if (lt instanceof PrimitiveConstant) {
+    public boolean foldCondition(Constant lt, Constant rt, ConstantReflectionProvider constantReflection, boolean unorderedIsTrue)
+    {
+        if (lt instanceof PrimitiveConstant)
+        {
             PrimitiveConstant lp = (PrimitiveConstant) lt;
             PrimitiveConstant rp = (PrimitiveConstant) rt;
             return foldCondition(lp, rp, unorderedIsTrue);
-        } else {
+        }
+        else
+        {
             Boolean equal = constantReflection.constantEquals(lt, rt);
-            if (equal == null) {
+            if (equal == null)
+            {
                 throw new GraalError("could not fold %s %s %s", lt, this, rt);
             }
-            switch (this) {
+            switch (this)
+            {
                 case EQ:
                     return equal.booleanValue();
                 case NE:
@@ -396,16 +429,20 @@ public enum Condition {
      * @return true if the comparison is known to be true, false if the comparison is known to be
      *         false
      */
-    public boolean foldCondition(PrimitiveConstant lp, PrimitiveConstant rp, boolean unorderedIsTrue) {
-        switch (lp.getJavaKind()) {
+    public boolean foldCondition(PrimitiveConstant lp, PrimitiveConstant rp, boolean unorderedIsTrue)
+    {
+        switch (lp.getJavaKind())
+        {
             case Boolean:
             case Byte:
             case Char:
             case Short:
-            case Int: {
+            case Int:
+            {
                 int x = lp.asInt();
                 int y = rp.asInt();
-                switch (this) {
+                switch (this)
+                {
                     case EQ:
                         return x == y;
                     case NE:
@@ -430,10 +467,12 @@ public enum Condition {
                         throw new GraalError("expected condition: %s", this);
                 }
             }
-            case Long: {
+            case Long:
+            {
                 long x = lp.asLong();
                 long y = rp.asLong();
-                switch (this) {
+                switch (this)
+                {
                     case EQ:
                         return x == y;
                     case NE:
@@ -458,13 +497,16 @@ public enum Condition {
                         throw new GraalError("expected condition: %s", this);
                 }
             }
-            case Float: {
+            case Float:
+            {
                 float x = lp.asFloat();
                 float y = rp.asFloat();
-                if (Float.isNaN(x) || Float.isNaN(y)) {
+                if (Float.isNaN(x) || Float.isNaN(y))
+                {
                     return unorderedIsTrue;
                 }
-                switch (this) {
+                switch (this)
+                {
                     case EQ:
                         return x == y;
                     case NE:
@@ -481,13 +523,16 @@ public enum Condition {
                         throw new GraalError("expected condition: %s", this);
                 }
             }
-            case Double: {
+            case Double:
+            {
                 double x = lp.asDouble();
                 double y = rp.asDouble();
-                if (Double.isNaN(x) || Double.isNaN(y)) {
+                if (Double.isNaN(x) || Double.isNaN(y))
+                {
                     return unorderedIsTrue;
                 }
-                switch (this) {
+                switch (this)
+                {
                     case EQ:
                         return x == y;
                     case NE:
@@ -509,170 +554,268 @@ public enum Condition {
         }
     }
 
-    public Condition join(Condition other) {
-        if (other == this) {
+    public Condition join(Condition other)
+    {
+        if (other == this)
+        {
             return this;
         }
-        switch (this) {
+        switch (this)
+        {
             case EQ:
-                if (other == LE || other == GE || other == BE || other == AE) {
+                if (other == LE || other == GE || other == BE || other == AE)
+                {
                     return EQ;
-                } else {
+                }
+                else
+                {
                     return null;
                 }
             case NE:
-                if (other == LT || other == GT || other == BT || other == AT) {
+                if (other == LT || other == GT || other == BT || other == AT)
+                {
                     return other;
-                } else if (other == LE) {
+                }
+                else if (other == LE)
+                {
                     return LT;
-                } else if (other == GE) {
+                }
+                else if (other == GE)
+                {
                     return GT;
-                } else if (other == BE) {
+                }
+                else if (other == BE)
+                {
                     return BT;
-                } else if (other == AE) {
+                }
+                else if (other == AE)
+                {
                     return AT;
-                } else {
+                }
+                else
+                {
                     return null;
                 }
             case LE:
-                if (other == GE || other == EQ) {
+                if (other == GE || other == EQ)
+                {
                     return EQ;
-                } else if (other == NE || other == LT) {
+                }
+                else if (other == NE || other == LT)
+                {
                     return LT;
-                } else {
+                }
+                else
+                {
                     return null;
                 }
             case LT:
-                if (other == NE || other == LE) {
+                if (other == NE || other == LE)
+                {
                     return LT;
-                } else {
+                }
+                else
+                {
                     return null;
                 }
             case GE:
-                if (other == LE || other == EQ) {
+                if (other == LE || other == EQ)
+                {
                     return EQ;
-                } else if (other == NE || other == GT) {
+                }
+                else if (other == NE || other == GT)
+                {
                     return GT;
-                } else {
+                }
+                else
+                {
                     return null;
                 }
             case GT:
-                if (other == NE || other == GE) {
+                if (other == NE || other == GE)
+                {
                     return GT;
-                } else {
+                }
+                else
+                {
                     return null;
                 }
             case BE:
-                if (other == AE || other == EQ) {
+                if (other == AE || other == EQ)
+                {
                     return EQ;
-                } else if (other == NE || other == BT) {
+                }
+                else if (other == NE || other == BT)
+                {
                     return BT;
-                } else {
+                }
+                else
+                {
                     return null;
                 }
             case BT:
-                if (other == NE || other == BE) {
+                if (other == NE || other == BE)
+                {
                     return BT;
-                } else {
+                }
+                else
+                {
                     return null;
                 }
             case AE:
-                if (other == BE || other == EQ) {
+                if (other == BE || other == EQ)
+                {
                     return EQ;
-                } else if (other == NE || other == AT) {
+                }
+                else if (other == NE || other == AT)
+                {
                     return AT;
-                } else {
+                }
+                else
+                {
                     return null;
                 }
             case AT:
-                if (other == NE || other == AE) {
+                if (other == NE || other == AE)
+                {
                     return AT;
-                } else {
+                }
+                else
+                {
                     return null;
                 }
         }
         throw new IllegalArgumentException(this.toString());
     }
 
-    public Condition meet(Condition other) {
-        if (other == this) {
+    public Condition meet(Condition other)
+    {
+        if (other == this)
+        {
             return this;
         }
-        switch (this) {
+        switch (this)
+        {
             case EQ:
-                if (other == LE || other == GE || other == BE || other == AE) {
+                if (other == LE || other == GE || other == BE || other == AE)
+                {
                     return other;
-                } else if (other == LT) {
+                }
+                else if (other == LT)
+                {
                     return LE;
-                } else if (other == GT) {
+                }
+                else if (other == GT)
+                {
                     return GE;
-                } else if (other == BT) {
+                }
+                else if (other == BT)
+                {
                     return BE;
-                } else if (other == AT) {
+                }
+                else if (other == AT)
+                {
                     return AE;
-                } else {
+                }
+                else
+                {
                     return null;
                 }
             case NE:
-                if (other == LT || other == GT || other == BT || other == AT) {
+                if (other == LT || other == GT || other == BT || other == AT)
+                {
                     return NE;
-                } else {
+                }
+                else
+                {
                     return null;
                 }
             case LE:
-                if (other == EQ || other == LT) {
+                if (other == EQ || other == LT)
+                {
                     return LE;
-                } else {
+                }
+                else
+                {
                     return null;
                 }
             case LT:
-                if (other == EQ || other == LE) {
+                if (other == EQ || other == LE)
+                {
                     return LE;
-                } else if (other == NE || other == GT) {
+                }
+                else if (other == NE || other == GT)
+                {
                     return NE;
-                } else {
+                }
+                else
+                {
                     return null;
                 }
             case GE:
-                if (other == EQ || other == GT) {
+                if (other == EQ || other == GT)
+                {
                     return GE;
-                } else {
+                }
+                else
+                {
                     return null;
                 }
             case GT:
-                if (other == EQ || other == GE) {
+                if (other == EQ || other == GE)
+                {
                     return GE;
-                } else if (other == NE || other == LT) {
+                }
+                else if (other == NE || other == LT)
+                {
                     return NE;
-                } else {
+                }
+                else
+                {
                     return null;
                 }
             case BE:
-                if (other == EQ || other == BT) {
+                if (other == EQ || other == BT)
+                {
                     return BE;
-                } else {
+                }
+                else
+                {
                     return null;
                 }
             case BT:
-                if (other == EQ || other == BE) {
+                if (other == EQ || other == BE)
+                {
                     return BE;
-                } else if (other == NE || other == AT) {
+                }
+                else if (other == NE || other == AT)
+                {
                     return NE;
-                } else {
+                }
+                else
+                {
                     return null;
                 }
             case AE:
-                if (other == EQ || other == AT) {
+                if (other == EQ || other == AT)
+                {
                     return AE;
-                } else {
+                }
+                else
+                {
                     return null;
                 }
             case AT:
-                if (other == EQ || other == AE) {
+                if (other == EQ || other == AE)
+                {
                     return AE;
-                } else if (other == NE || other == BT) {
+                }
+                else if (other == NE || other == BT)
+                {
                     return NE;
-                } else {
+                }
+                else
+                {
                     return null;
                 }
         }

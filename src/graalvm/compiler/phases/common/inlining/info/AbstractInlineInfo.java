@@ -13,26 +13,30 @@ import graalvm.compiler.phases.tiers.HighTierContext;
 
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
-public abstract class AbstractInlineInfo implements InlineInfo {
-
+public abstract class AbstractInlineInfo implements InlineInfo
+{
     protected final Invoke invoke;
 
-    public AbstractInlineInfo(Invoke invoke) {
+    public AbstractInlineInfo(Invoke invoke)
+    {
         this.invoke = invoke;
     }
 
     @Override
-    public StructuredGraph graph() {
+    public StructuredGraph graph()
+    {
         return invoke.asNode().graph();
     }
 
     @Override
-    public Invoke invoke() {
+    public Invoke invoke()
+    {
         return invoke;
     }
 
     @SuppressWarnings("try")
-    protected static EconomicSet<Node> inline(Invoke invoke, ResolvedJavaMethod concrete, Inlineable inlineable, boolean receiverNullCheck, String reason) {
+    protected static EconomicSet<Node> inline(Invoke invoke, ResolvedJavaMethod concrete, Inlineable inlineable, boolean receiverNullCheck, String reason)
+    {
         assert inlineable instanceof InlineableGraph;
         StructuredGraph calleeGraph = ((InlineableGraph) inlineable).getGraph();
         return InliningUtil.inlineForCanonicalization(invoke, calleeGraph, receiverNullCheck, concrete, reason, "InliningPhase");
@@ -40,19 +44,24 @@ public abstract class AbstractInlineInfo implements InlineInfo {
 
     @Override
     @SuppressWarnings("try")
-    public final void populateInlinableElements(HighTierContext context, StructuredGraph caller, CanonicalizerPhase canonicalizer, OptionValues options) {
-        for (int i = 0; i < numberOfMethods(); i++) {
+    public final void populateInlinableElements(HighTierContext context, StructuredGraph caller, CanonicalizerPhase canonicalizer, OptionValues options)
+    {
+        for (int i = 0; i < numberOfMethods(); i++)
+        {
             Inlineable elem = Inlineable.getInlineableElement(methodAt(i), invoke, context, canonicalizer, caller.trackNodeSourcePosition());
             setInlinableElement(i, elem);
         }
     }
 
     @Override
-    public final int determineNodeCount() {
+    public final int determineNodeCount()
+    {
         int nodes = 0;
-        for (int i = 0; i < numberOfMethods(); i++) {
+        for (int i = 0; i < numberOfMethods(); i++)
+        {
             Inlineable elem = inlineableElementAt(i);
-            if (elem != null) {
+            if (elem != null)
+            {
                 nodes += elem.getNodeCount();
             }
         }

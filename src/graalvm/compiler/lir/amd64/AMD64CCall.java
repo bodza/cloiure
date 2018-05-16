@@ -12,7 +12,8 @@ import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.meta.Value;
 
-public final class AMD64CCall extends AMD64LIRInstruction {
+public final class AMD64CCall extends AMD64LIRInstruction
+{
     public static final LIRInstructionClass<AMD64CCall> TYPE = LIRInstructionClass.create(AMD64CCall.class);
 
     @Def({REG, ILLEGAL}) protected Value result;
@@ -20,7 +21,8 @@ public final class AMD64CCall extends AMD64LIRInstruction {
     @Use({REG}) protected Value functionPtr;
     @Use({REG}) protected Value numberOfFloatingPointArguments;
 
-    public AMD64CCall(Value result, Value functionPtr, Value numberOfFloatingPointArguments, Value[] parameters) {
+    public AMD64CCall(Value result, Value functionPtr, Value numberOfFloatingPointArguments, Value[] parameters)
+    {
         super(TYPE);
         this.result = result;
         this.functionPtr = functionPtr;
@@ -29,19 +31,21 @@ public final class AMD64CCall extends AMD64LIRInstruction {
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
         directCall(masm);
     }
 
-    private void directCall(AMD64MacroAssembler masm) {
+    private void directCall(AMD64MacroAssembler masm)
+    {
         Register reg = ValueUtil.asRegister(functionPtr);
         masm.call(reg);
         masm.ensureUniquePC();
     }
 
     @Override
-    public boolean destroysCallerSavedRegisters() {
+    public boolean destroysCallerSavedRegisters()
+    {
         return true;
     }
-
 }

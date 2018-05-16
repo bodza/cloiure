@@ -7,7 +7,8 @@ import graalvm.compiler.nodes.cfg.ControlFlowGraph;
 
 import jdk.vm.ci.meta.MetaAccessProvider;
 
-public interface LoopPolicies {
+public interface LoopPolicies
+{
     boolean shouldPeel(LoopEx loop, ControlFlowGraph cfg, MetaAccessProvider metaAccess);
 
     boolean shouldFullUnroll(LoopEx loop);

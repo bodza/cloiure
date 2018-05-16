@@ -6,9 +6,10 @@ import jdk.vm.ci.hotspot.HotSpotVMConfigStore;
 /**
  * Used to access native configuration details for static compilation support.
  */
-public class CompilerRuntimeHotSpotVMConfig extends HotSpotVMConfigAccess {
-
-    public CompilerRuntimeHotSpotVMConfig(HotSpotVMConfigStore store) {
+public class CompilerRuntimeHotSpotVMConfig extends HotSpotVMConfigAccess
+{
+    public CompilerRuntimeHotSpotVMConfig(HotSpotVMConfigStore store)
+    {
         super(store);
     }
 

@@ -60,15 +60,14 @@ import jdk.vm.ci.meta.ValueKind;
 /**
  * This class traverses the HIR instructions and generates LIR instructions from them.
  */
-public abstract class LIRGenerator implements LIRGeneratorTool {
-
-    public static class Options {
-        // @formatter:off
+public abstract class LIRGenerator implements LIRGeneratorTool
+{
+    public static class Options
+    {
         @Option(help = "Print HIR along side LIR as the latter is generated", type = OptionType.Debug)
         public static final OptionKey<Boolean> PrintIRWithLIR = new OptionKey<>(false);
         @Option(help = "The trace level for the LIR generator", type = OptionType.Debug)
         public static final OptionKey<Integer> TraceLIRGeneratorLevel = new OptionKey<>(0);
-        // @formatter:on
     }
 
     private final LIRKindTool lirKindTool;
@@ -85,7 +84,8 @@ public abstract class LIRGenerator implements LIRGeneratorTool {
     private final boolean printIrWithLir;
     private final int traceLIRGeneratorLevel;
 
-    public LIRGenerator(LIRKindTool lirKindTool, ArithmeticLIRGenerator arithmeticLIRGen, MoveFactory moveFactory, CodeGenProviders providers, LIRGenerationResult res) {
+    public LIRGenerator(LIRKindTool lirKindTool, ArithmeticLIRGenerator arithmeticLIRGen, MoveFactory moveFactory, CodeGenProviders providers, LIRGenerationResult res)
+    {
         this.lirKindTool = lirKindTool;
         this.arithmeticLIRGen = arithmeticLIRGen;
         this.res = res;
@@ -100,25 +100,32 @@ public abstract class LIRGenerator implements LIRGeneratorTool {
     }
 
     @Override
-    public ArithmeticLIRGeneratorTool getArithmetic() {
+    public ArithmeticLIRGeneratorTool getArithmetic()
+    {
         return arithmeticLIRGen;
     }
 
     @Override
-    public MoveFactory getMoveFactory() {
+    public MoveFactory getMoveFactory()
+    {
         return moveFactory;
     }
 
     private MoveFactory spillMoveFactory;
 
     @Override
-    public MoveFactory getSpillMoveFactory() {
-        if (spillMoveFactory == null) {
+    public MoveFactory getSpillMoveFactory()
+    {
+        if (spillMoveFactory == null)
+        {
             boolean verify = false;
             assert (verify = true) == true;
-            if (verify) {
+            if (verify)
+            {
                 spillMoveFactory = new VerifyingMoveFactory(moveFactory);
-            } else {
+            }
+            else
+            {
                 spillMoveFactory = moveFactory;
             }
         }
@@ -126,71 +133,85 @@ public abstract class LIRGenerator implements LIRGeneratorTool {
     }
 
     @Override
-    public LIRKind getValueKind(JavaKind javaKind) {
+    public LIRKind getValueKind(JavaKind javaKind)
+    {
         return LIRKind.fromJavaKind(target().arch, javaKind);
     }
 
     @Override
-    public TargetDescription target() {
+    public TargetDescription target()
+    {
         return getCodeCache().getTarget();
     }
 
     @Override
-    public CodeGenProviders getProviders() {
+    public CodeGenProviders getProviders()
+    {
         return providers;
     }
 
     @Override
-    public MetaAccessProvider getMetaAccess() {
+    public MetaAccessProvider getMetaAccess()
+    {
         return providers.getMetaAccess();
     }
 
     @Override
-    public CodeCacheProvider getCodeCache() {
+    public CodeCacheProvider getCodeCache()
+    {
         return providers.getCodeCache();
     }
 
     @Override
-    public ForeignCallsProvider getForeignCalls() {
+    public ForeignCallsProvider getForeignCalls()
+    {
         return providers.getForeignCalls();
     }
 
-    public LIRKindTool getLIRKindTool() {
+    public LIRKindTool getLIRKindTool()
+    {
         return lirKindTool;
     }
 
     /**
      * Hide {@link #nextVariable()} from other users.
      */
-    public abstract static class VariableProvider {
+    public abstract static class VariableProvider
+    {
         private int numVariables;
 
-        public int numVariables() {
+        public int numVariables()
+        {
             return numVariables;
         }
 
-        private int nextVariable() {
+        private int nextVariable()
+        {
             return numVariables++;
         }
     }
 
     @Override
-    public Variable newVariable(ValueKind<?> valueKind) {
+    public Variable newVariable(ValueKind<?> valueKind)
+    {
         return new Variable(valueKind, ((VariableProvider) res.getLIR()).nextVariable());
     }
 
     @Override
-    public RegisterConfig getRegisterConfig() {
+    public RegisterConfig getRegisterConfig()
+    {
         return res.getRegisterConfig();
     }
 
     @Override
-    public RegisterAttributes attributes(Register register) {
+    public RegisterAttributes attributes(Register register)
+    {
         return getRegisterConfig().getAttributesMap()[register.number];
     }
 
     @Override
-    public Variable emitMove(Value input) {
+    public Variable emitMove(Value input)
+    {
         assert !(input instanceof Variable) : "Creating a copy of a variable via this method is not supported (and potentially a bug): " + input;
         Variable result = newVariable(input.getValueKind());
         emitMove(result, input);
@@ -198,58 +219,76 @@ public abstract class LIRGenerator implements LIRGeneratorTool {
     }
 
     @Override
-    public void emitMove(AllocatableValue dst, Value src) {
+    public void emitMove(AllocatableValue dst, Value src)
+    {
         append(moveFactory.createMove(dst, src));
     }
 
     @Override
-    public void emitMoveConstant(AllocatableValue dst, Constant src) {
+    public void emitMoveConstant(AllocatableValue dst, Constant src)
+    {
         append(moveFactory.createLoad(dst, src));
     }
 
     @Override
-    public Value emitConstant(LIRKind kind, Constant constant) {
-        if (moveFactory.canInlineConstant(constant)) {
+    public Value emitConstant(LIRKind kind, Constant constant)
+    {
+        if (moveFactory.canInlineConstant(constant))
+        {
             return new ConstantValue(toRegisterKind(kind), constant);
-        } else {
+        }
+        else
+        {
             return emitLoadConstant(toRegisterKind(kind), constant);
         }
     }
 
     @Override
-    public Value emitJavaConstant(JavaConstant constant) {
+    public Value emitJavaConstant(JavaConstant constant)
+    {
         return emitConstant(getValueKind(constant.getJavaKind()), constant);
     }
 
     @Override
-    public AllocatableValue emitLoadConstant(ValueKind<?> kind, Constant constant) {
+    public AllocatableValue emitLoadConstant(ValueKind<?> kind, Constant constant)
+    {
         Variable result = newVariable(kind);
         emitMoveConstant(result, constant);
         return result;
     }
 
     @Override
-    public AllocatableValue asAllocatable(Value value) {
-        if (isAllocatableValue(value)) {
+    public AllocatableValue asAllocatable(Value value)
+    {
+        if (isAllocatableValue(value))
+        {
             return asAllocatableValue(value);
-        } else if (isConstantValue(value)) {
+        }
+        else if (isConstantValue(value))
+        {
             return emitLoadConstant(value.getValueKind(), asConstant(value));
-        } else {
+        }
+        else
+        {
             return emitMove(value);
         }
     }
 
     @Override
-    public Variable load(Value value) {
-        if (!isVariable(value)) {
+    public Variable load(Value value)
+    {
+        if (!isVariable(value))
+        {
             return emitMove(value);
         }
         return (Variable) value;
     }
 
     @Override
-    public Value loadNonConst(Value value) {
-        if (isConstantValue(value) && !moveFactory.canInlineConstant(asConstant(value))) {
+    public Value loadNonConst(Value value)
+    {
+        if (isConstantValue(value) && !moveFactory.canInlineConstant(asConstant(value)))
+        {
             return emitMove(value);
         }
         return value;
@@ -259,7 +298,8 @@ public abstract class LIRGenerator implements LIRGeneratorTool {
      * Determines if only oop maps are required for the code generated from the LIR.
      */
     @Override
-    public boolean needOnlyOopMaps() {
+    public boolean needOnlyOopMaps()
+    {
         return false;
     }
 
@@ -272,7 +312,8 @@ public abstract class LIRGenerator implements LIRGeneratorTool {
      *         {@code kind}
      */
     @Override
-    public AllocatableValue resultOperandFor(JavaKind javaKind, ValueKind<?> valueKind) {
+    public AllocatableValue resultOperandFor(JavaKind javaKind, ValueKind<?> valueKind)
+    {
         Register reg = getRegisterConfig().getReturnRegister(javaKind);
         assert target().arch.canStoreValue(reg.getRegisterCategory(), valueKind.getPlatformKind()) : reg.getRegisterCategory() + " " + valueKind.getPlatformKind();
         return reg.asValue(valueKind);
@@ -281,14 +322,17 @@ public abstract class LIRGenerator implements LIRGeneratorTool {
     NodeSourcePosition currentPosition;
 
     @Override
-    public void setSourcePosition(NodeSourcePosition position) {
+    public void setSourcePosition(NodeSourcePosition position)
+    {
         currentPosition = position;
     }
 
     @Override
-    public <I extends LIRInstruction> I append(I op) {
+    public <I extends LIRInstruction> I append(I op)
+    {
         LIR lir = res.getLIR();
-        if (printIrWithLir) {
+        if (printIrWithLir)
+        {
             TTY.println(op.toStringWithIdPrefix());
             TTY.println();
         }
@@ -300,22 +344,27 @@ public abstract class LIRGenerator implements LIRGeneratorTool {
     }
 
     @Override
-    public boolean hasBlockEnd(AbstractBlockBase<?> block) {
+    public boolean hasBlockEnd(AbstractBlockBase<?> block)
+    {
         ArrayList<LIRInstruction> ops = getResult().getLIR().getLIRforBlock(block);
-        if (ops.size() == 0) {
+        if (ops.size() == 0)
+        {
             return false;
         }
         return ops.get(ops.size() - 1) instanceof BlockEndOp;
     }
 
-    private final class BlockScopeImpl extends BlockScope {
-
-        private BlockScopeImpl(AbstractBlockBase<?> block) {
+    private final class BlockScopeImpl extends BlockScope
+    {
+        private BlockScopeImpl(AbstractBlockBase<?> block)
+        {
             currentBlock = block;
         }
 
-        private void doBlockStart() {
-            if (printIrWithLir) {
+        private void doBlockStart()
+        {
+            if (printIrWithLir)
+            {
                 TTY.print(currentBlock.toString());
             }
 
@@ -325,43 +374,50 @@ public abstract class LIRGenerator implements LIRGeneratorTool {
 
             append(new LabelOp(new Label(currentBlock.getId()), currentBlock.isAligned()));
 
-            if (traceLIRGeneratorLevel >= 1) {
+            if (traceLIRGeneratorLevel >= 1)
+            {
                 TTY.println("BEGIN Generating LIR for block B" + currentBlock.getId());
             }
         }
 
-        private void doBlockEnd() {
-            if (traceLIRGeneratorLevel >= 1) {
+        private void doBlockEnd()
+        {
+            if (traceLIRGeneratorLevel >= 1)
+            {
                 TTY.println("END Generating LIR for block B" + currentBlock.getId());
             }
 
-            if (printIrWithLir) {
+            if (printIrWithLir)
+            {
                 TTY.println();
             }
             currentBlock = null;
         }
 
         @Override
-        public AbstractBlockBase<?> getCurrentBlock() {
+        public AbstractBlockBase<?> getCurrentBlock()
+        {
             return currentBlock;
         }
 
         @Override
-        public void close() {
+        public void close()
+        {
             doBlockEnd();
         }
-
     }
 
     @Override
-    public final BlockScope getBlockScope(AbstractBlockBase<?> block) {
+    public final BlockScope getBlockScope(AbstractBlockBase<?> block)
+    {
         BlockScopeImpl blockScope = new BlockScopeImpl(block);
         blockScope.doBlockStart();
         return blockScope;
     }
 
     @Override
-    public void emitIncomingValues(Value[] params) {
+    public void emitIncomingValues(Value[] params)
+    {
         ((LabelOp) res.getLIR().getLIRforBlock(getCurrentBlock()).get(0)).setIncomingValues(params);
     }
 
@@ -369,8 +425,7 @@ public abstract class LIRGenerator implements LIRGeneratorTool {
     public abstract void emitJump(LabelRef label);
 
     @Override
-    public abstract void emitCompareBranch(PlatformKind cmpKind, Value left, Value right, Condition cond, boolean unorderedIsTrue, LabelRef trueDestination, LabelRef falseDestination,
-                    double trueDestinationProbability);
+    public abstract void emitCompareBranch(PlatformKind cmpKind, Value left, Value right, Condition cond, boolean unorderedIsTrue, LabelRef trueDestination, LabelRef falseDestination, double trueDestinationProbability);
 
     @Override
     public abstract void emitOverflowCheckBranch(LabelRef overflow, LabelRef noOverflow, LIRKind cmpKind, double overflowProbability);
@@ -391,12 +446,17 @@ public abstract class LIRGenerator implements LIRGeneratorTool {
     protected abstract void emitForeignCallOp(ForeignCallLinkage linkage, Value result, Value[] arguments, Value[] temps, LIRFrameState info);
 
     @Override
-    public Variable emitForeignCall(ForeignCallLinkage linkage, LIRFrameState frameState, Value... args) {
+    public Variable emitForeignCall(ForeignCallLinkage linkage, LIRFrameState frameState, Value... args)
+    {
         LIRFrameState state = null;
-        if (linkage.needsDebugInfo()) {
-            if (frameState != null) {
+        if (linkage.needsDebugInfo())
+        {
+            if (frameState != null)
+            {
                 state = frameState;
-            } else {
+            }
+            else
+            {
                 assert needOnlyOopMaps();
                 state = new LIRFrameState(null, null, null);
             }
@@ -407,7 +467,8 @@ public abstract class LIRGenerator implements LIRGeneratorTool {
         res.getFrameMapBuilder().callsMethod(linkageCc);
         assert linkageCc.getArgumentCount() == args.length : "argument count mismatch";
         Value[] argLocations = new Value[args.length];
-        for (int i = 0; i < args.length; i++) {
+        for (int i = 0; i < args.length; i++)
+        {
             Value arg = args[i];
             AllocatableValue loc = linkageCc.getArgument(i);
             emitMove(loc, arg);
@@ -416,15 +477,19 @@ public abstract class LIRGenerator implements LIRGeneratorTool {
         res.setForeignCall(true);
         emitForeignCallOp(linkage, linkageCc.getReturn(), argLocations, linkage.getTemporaries(), state);
 
-        if (isLegal(linkageCc.getReturn())) {
+        if (isLegal(linkageCc.getReturn()))
+        {
             return emitMove(linkageCc.getReturn());
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
 
     @Override
-    public void emitStrategySwitch(JavaConstant[] keyConstants, double[] keyProbabilities, LabelRef[] keyTargets, LabelRef defaultTarget, Variable value) {
+    public void emitStrategySwitch(JavaConstant[] keyConstants, double[] keyProbabilities, LabelRef[] keyTargets, LabelRef defaultTarget, Variable value)
+    {
         int keyCount = keyConstants.length;
         SwitchStrategy strategy = SwitchStrategy.getBestStrategy(keyProbabilities, keyConstants, keyTargets);
         long valueRange = keyConstants[keyCount - 1].asLong() - keyConstants[0].asLong() + 1;
@@ -435,16 +500,21 @@ public abstract class LIRGenerator implements LIRGeneratorTool {
          * tableswitch is preferred if better than a certain value that starts at 0.5 and lowers
          * gradually with additional effort.
          */
-        if (strategy.getAverageEffort() < 4 || tableSwitchDensity < (1 / Math.sqrt(strategy.getAverageEffort()))) {
+        if (strategy.getAverageEffort() < 4 || tableSwitchDensity < (1 / Math.sqrt(strategy.getAverageEffort())))
+        {
             emitStrategySwitch(strategy, value, keyTargets, defaultTarget);
-        } else {
+        }
+        else
+        {
             int minValue = keyConstants[0].asInt();
             assert valueRange < Integer.MAX_VALUE;
             LabelRef[] targets = new LabelRef[(int) valueRange];
-            for (int i = 0; i < valueRange; i++) {
+            for (int i = 0; i < valueRange; i++)
+            {
                 targets[i] = defaultTarget;
             }
-            for (int i = 0; i < keyCount; i++) {
+            for (int i = 0; i < keyCount; i++)
+            {
                 targets[keyConstants[i].asInt() - minValue] = keyTargets[i];
             }
             emitTableSwitch(minValue, defaultTarget, targets, value);
@@ -457,7 +527,8 @@ public abstract class LIRGenerator implements LIRGeneratorTool {
     protected abstract void emitTableSwitch(int lowKey, LabelRef defaultTarget, LabelRef[] targets, Value key);
 
     @Override
-    public void beforeRegisterAllocation() {
+    public void beforeRegisterAllocation()
+    {
     }
 
     /**
@@ -466,42 +537,54 @@ public abstract class LIRGenerator implements LIRGeneratorTool {
     protected abstract JavaConstant zapValueForKind(PlatformKind kind);
 
     @Override
-    public LIRKind getLIRKind(Stamp stamp) {
+    public LIRKind getLIRKind(Stamp stamp)
+    {
         return stamp.getLIRKind(lirKindTool);
     }
 
-    protected LIRKind getAddressKind(Value base, long displacement, Value index) {
-        if (LIRKind.isValue(base) && (index.equals(Value.ILLEGAL) || LIRKind.isValue(index))) {
+    protected LIRKind getAddressKind(Value base, long displacement, Value index)
+    {
+        if (LIRKind.isValue(base) && (index.equals(Value.ILLEGAL) || LIRKind.isValue(index)))
+        {
             return LIRKind.value(target().arch.getWordKind());
-        } else if (base.getValueKind() instanceof LIRKind && base.getValueKind(LIRKind.class).isReference(0) && displacement == 0L && index.equals(Value.ILLEGAL)) {
+        }
+        else if (base.getValueKind() instanceof LIRKind && base.getValueKind(LIRKind.class).isReference(0) && displacement == 0L && index.equals(Value.ILLEGAL))
+        {
             return LIRKind.reference(target().arch.getWordKind());
-        } else {
+        }
+        else
+        {
             return LIRKind.unknownReference(target().arch.getWordKind());
         }
     }
 
     @Override
-    public AbstractBlockBase<?> getCurrentBlock() {
+    public AbstractBlockBase<?> getCurrentBlock()
+    {
         return currentBlock;
     }
 
     @Override
-    public LIRGenerationResult getResult() {
+    public LIRGenerationResult getResult()
+    {
         return res;
     }
 
     @Override
-    public void emitBlackhole(Value operand) {
+    public void emitBlackhole(Value operand)
+    {
         append(new StandardOp.BlackholeOp(operand));
     }
 
     @Override
-    public LIRInstruction createBenchmarkCounter(String name, String group, Value increment) {
+    public LIRInstruction createBenchmarkCounter(String name, String group, Value increment)
+    {
         throw GraalError.unimplemented();
     }
 
     @Override
-    public LIRInstruction createMultiBenchmarkCounter(String[] names, String[] groups, Value[] increments) {
+    public LIRInstruction createMultiBenchmarkCounter(String[] names, String[] groups, Value[] increments)
+    {
         throw GraalError.unimplemented();
     }
 
@@ -509,10 +592,12 @@ public abstract class LIRGenerator implements LIRGeneratorTool {
     public abstract SaveRegistersOp createZapRegisters(Register[] zappedRegisters, JavaConstant[] zapValues);
 
     @Override
-    public SaveRegistersOp createZapRegisters() {
+    public SaveRegistersOp createZapRegisters()
+    {
         Register[] zappedRegisters = getResult().getFrameMap().getRegisterConfig().getAllocatableRegisters().toArray();
         JavaConstant[] zapValues = new JavaConstant[zappedRegisters.length];
-        for (int i = 0; i < zappedRegisters.length; i++) {
+        for (int i = 0; i < zappedRegisters.length; i++)
+        {
             PlatformKind kind = target().arch.getLargestStorableKind(zappedRegisters[i].getRegisterCategory());
             zapValues[i] = zapValueForKind(kind);
         }
@@ -523,24 +608,32 @@ public abstract class LIRGenerator implements LIRGeneratorTool {
     public abstract LIRInstruction createZapArgumentSpace(StackSlot[] zappedStack, JavaConstant[] zapValues);
 
     @Override
-    public LIRInstruction zapArgumentSpace() {
+    public LIRInstruction zapArgumentSpace()
+    {
         List<StackSlot> slots = null;
-        for (AllocatableValue arg : res.getCallingConvention().getArguments()) {
-            if (isStackSlot(arg)) {
-                if (slots == null) {
+        for (AllocatableValue arg : res.getCallingConvention().getArguments())
+        {
+            if (isStackSlot(arg))
+            {
+                if (slots == null)
+                {
                     slots = new ArrayList<>();
                 }
                 slots.add((StackSlot) arg);
-            } else {
+            }
+            else
+            {
                 assert !isVirtualStackSlot(arg);
             }
         }
-        if (slots == null) {
+        if (slots == null)
+        {
             return null;
         }
         StackSlot[] zappedStack = slots.toArray(new StackSlot[slots.size()]);
         JavaConstant[] zapValues = new JavaConstant[zappedStack.length];
-        for (int i = 0; i < zappedStack.length; i++) {
+        for (int i = 0; i < zappedStack.length; i++)
+        {
             PlatformKind kind = zappedStack[i].getPlatformKind();
             zapValues[i] = zapValueForKind(kind);
         }

@@ -11,8 +11,8 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface Snippet {
-
+public @interface Snippet
+{
     /**
      * A partial intrinsic exits by (effectively) calling the intrinsified method. Normally, this
      * call must use exactly the same arguments as the call that is being intrinsified. For well
@@ -28,7 +28,8 @@ public @interface Snippet {
      */
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.PARAMETER)
-    public @interface VarargsParameter {
+    public @interface VarargsParameter
+    {
     }
 
     /**
@@ -37,7 +38,8 @@ public @interface Snippet {
      */
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.PARAMETER)
-    public @interface ConstantParameter {
+    public @interface ConstantParameter
+    {
     }
 
     /**
@@ -46,6 +48,7 @@ public @interface Snippet {
      */
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.PARAMETER)
-    public @interface NonNullParameter {
+    public @interface NonNullParameter
+    {
     }
 }

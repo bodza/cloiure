@@ -16,8 +16,8 @@ import org.graalvm.word.WordBase;
 /**
  * Marker type for a metaspace pointer.
  */
-public abstract class MetaspacePointer {
-
+public abstract class MetaspacePointer
+{
     @HotSpotOperation(opcode = IS_NULL)
     public abstract boolean isNull();
 

@@ -61,45 +61,55 @@ import graalvm.compiler.java.BciBlockMapping.BciBlock;
  * Encapsulates the liveness calculation, so that subclasses for locals &le; 64 and locals &gt; 64
  * can be implemented.
  */
-public abstract class LocalLiveness {
+public abstract class LocalLiveness
+{
     protected final BciBlock[] blocks;
 
-    public static LocalLiveness compute(DebugContext debug, BytecodeStream stream, BciBlock[] blocks, int maxLocals, int loopCount) {
+    public static LocalLiveness compute(DebugContext debug, BytecodeStream stream, BciBlock[] blocks, int maxLocals, int loopCount)
+    {
         LocalLiveness liveness = maxLocals <= 64 ? new SmallLocalLiveness(blocks, maxLocals, loopCount) : new LargeLocalLiveness(blocks, maxLocals, loopCount);
         liveness.computeLiveness(debug, stream);
         return liveness;
     }
 
-    protected LocalLiveness(BciBlock[] blocks) {
+    protected LocalLiveness(BciBlock[] blocks)
+    {
         this.blocks = blocks;
     }
 
-    void computeLiveness(DebugContext debug, BytecodeStream stream) {
-        for (BciBlock block : blocks) {
+    void computeLiveness(DebugContext debug, BytecodeStream stream)
+    {
+        for (BciBlock block : blocks)
+        {
             computeLocalLiveness(stream, block);
         }
 
         boolean changed;
         int iteration = 0;
-        do {
+        do
+        {
             assert traceIteration(debug, iteration);
             changed = false;
-            for (int i = blocks.length - 1; i >= 0; i--) {
+            for (int i = blocks.length - 1; i >= 0; i--)
+            {
                 BciBlock block = blocks[i];
                 int blockID = block.getId();
                 assert traceStart(debug, block, blockID);
 
                 boolean blockChanged = (iteration == 0);
-                if (block.getSuccessorCount() > 0) {
+                if (block.getSuccessorCount() > 0)
+                {
                     int oldCardinality = liveOutCardinality(blockID);
-                    for (BciBlock sux : block.getSuccessors()) {
+                    for (BciBlock sux : block.getSuccessors())
+                    {
                         assert traceSuccessor(debug, sux);
                         propagateLiveness(blockID, sux.getId());
                     }
                     blockChanged |= (oldCardinality != liveOutCardinality(blockID));
                 }
 
-                if (blockChanged) {
+                if (blockChanged)
+                {
                     updateLiveness(blockID);
                     assert traceEnd(debug, block, blockID);
                 }
@@ -109,30 +119,35 @@ public abstract class LocalLiveness {
         } while (changed);
     }
 
-    private static boolean traceIteration(DebugContext debug, int iteration) {
+    private static boolean traceIteration(DebugContext debug, int iteration)
+    {
         debug.log("Iteration %d", iteration);
         return true;
     }
 
-    private boolean traceEnd(DebugContext debug, BciBlock block, int blockID) {
-        if (debug.isLogEnabled()) {
-            debug.logv("  end   B%d  [%d, %d]  in: %s  out: %s  gen: %s  kill: %s", block.getId(), block.startBci, block.endBci, debugLiveIn(blockID), debugLiveOut(blockID), debugLiveGen(blockID),
-                            debugLiveKill(blockID));
+    private boolean traceEnd(DebugContext debug, BciBlock block, int blockID)
+    {
+        if (debug.isLogEnabled())
+        {
+            debug.logv("  end   B%d  [%d, %d]  in: %s  out: %s  gen: %s  kill: %s", block.getId(), block.startBci, block.endBci, debugLiveIn(blockID), debugLiveOut(blockID), debugLiveGen(blockID), debugLiveKill(blockID));
         }
         return true;
     }
 
-    private boolean traceSuccessor(DebugContext debug, BciBlock sux) {
-        if (debug.isLogEnabled()) {
+    private boolean traceSuccessor(DebugContext debug, BciBlock sux)
+    {
+        if (debug.isLogEnabled())
+        {
             debug.log("    Successor B%d: %s", sux.getId(), debugLiveIn(sux.getId()));
         }
         return true;
     }
 
-    private boolean traceStart(DebugContext debug, BciBlock block, int blockID) {
-        if (debug.isLogEnabled()) {
-            debug.logv("  start B%d  [%d, %d]  in: %s  out: %s  gen: %s  kill: %s", block.getId(), block.startBci, block.endBci, debugLiveIn(blockID), debugLiveOut(blockID), debugLiveGen(blockID),
-                            debugLiveKill(blockID));
+    private boolean traceStart(DebugContext debug, BciBlock block, int blockID)
+    {
+        if (debug.isLogEnabled())
+        {
+            debug.logv("  start B%d  [%d, %d]  in: %s  out: %s  gen: %s  kill: %s", block.getId(), block.startBci, block.endBci, debugLiveIn(blockID), debugLiveOut(blockID), debugLiveGen(blockID), debugLiveKill(blockID));
         }
         return true;
     }
@@ -197,15 +212,19 @@ public abstract class LocalLiveness {
      */
     protected abstract void storeOne(int blockID, int local);
 
-    private void computeLocalLiveness(BytecodeStream stream, BciBlock block) {
-        if (block.isExceptionDispatch()) {
+    private void computeLocalLiveness(BytecodeStream stream, BciBlock block)
+    {
+        if (block.isExceptionDispatch())
+        {
             return;
         }
         int blockID = block.getId();
         int localIndex;
         stream.setBCI(block.startBci);
-        while (stream.currentBCI() <= block.endBci) {
-            switch (stream.currentBC()) {
+        while (stream.currentBCI() <= block.endBci)
+        {
+            switch (stream.currentBC())
+            {
                 case LLOAD:
                 case DLOAD:
                     loadTwo(blockID, stream.readLocalIndex());
@@ -308,12 +327,14 @@ public abstract class LocalLiveness {
         }
     }
 
-    private void loadTwo(int blockID, int local) {
+    private void loadTwo(int blockID, int local)
+    {
         loadOne(blockID, local);
         loadOne(blockID, local + 1);
     }
 
-    private void storeTwo(int blockID, int local) {
+    private void storeTwo(int blockID, int local)
+    {
         storeOne(blockID, local);
         storeOne(blockID, local + 1);
     }

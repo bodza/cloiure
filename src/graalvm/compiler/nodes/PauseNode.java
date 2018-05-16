@@ -10,20 +10,20 @@ import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 
 /** A node that results in a platform dependent pause instruction being emitted. */
-// @formatter:off
 @NodeInfo(cycles = CYCLES_IGNORED,
           size = NodeSize.SIZE_1)
-// @formatter:on
-public final class PauseNode extends FixedWithNextNode implements LIRLowerable {
-
+public final class PauseNode extends FixedWithNextNode implements LIRLowerable
+{
     public static final NodeClass<PauseNode> TYPE = NodeClass.create(PauseNode.class);
 
-    public PauseNode() {
+    public PauseNode()
+    {
         super(TYPE, StampFactory.forVoid());
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         gen.getLIRGeneratorTool().emitPause();
     }
 

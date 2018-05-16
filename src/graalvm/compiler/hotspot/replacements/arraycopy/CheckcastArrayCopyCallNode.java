@@ -35,8 +35,8 @@ import jdk.vm.ci.code.CodeUtil;
 import jdk.vm.ci.meta.JavaKind;
 
 @NodeInfo(allowedUsageTypes = {InputType.Memory, InputType.Value}, cycles = CYCLES_UNKNOWN, size = SIZE_UNKNOWN)
-public final class CheckcastArrayCopyCallNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single {
-
+public final class CheckcastArrayCopyCallNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
+{
     public static final NodeClass<CheckcastArrayCopyCallNode> TYPE = NodeClass.create(CheckcastArrayCopyCallNode.class);
     @Input ValueNode src;
     @Input ValueNode srcPos;
@@ -50,8 +50,8 @@ public final class CheckcastArrayCopyCallNode extends AbstractMemoryCheckpoint i
 
     protected final HotSpotGraalRuntimeProvider runtime;
 
-    protected CheckcastArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntimeProvider runtime, ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length,
-                    ValueNode superCheckOffset, ValueNode destElemKlass, boolean uninit) {
+    protected CheckcastArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntimeProvider runtime, ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length, ValueNode superCheckOffset, ValueNode destElemKlass, boolean uninit)
+    {
         super(TYPE, StampFactory.forKind(JavaKind.Int));
         this.src = src;
         this.srcPos = srcPos;
@@ -64,51 +64,60 @@ public final class CheckcastArrayCopyCallNode extends AbstractMemoryCheckpoint i
         this.runtime = runtime;
     }
 
-    public ValueNode getSource() {
+    public ValueNode getSource()
+    {
         return src;
     }
 
-    public ValueNode getSourcePosition() {
+    public ValueNode getSourcePosition()
+    {
         return srcPos;
     }
 
-    public ValueNode getDestination() {
+    public ValueNode getDestination()
+    {
         return dest;
     }
 
-    public ValueNode getDestinationPosition() {
+    public ValueNode getDestinationPosition()
+    {
         return destPos;
     }
 
-    public ValueNode getLength() {
+    public ValueNode getLength()
+    {
         return length;
     }
 
-    public boolean isUninit() {
+    public boolean isUninit()
+    {
         return uninit;
     }
 
-    private ValueNode computeBase(ValueNode base, ValueNode pos) {
+    private ValueNode computeBase(ValueNode base, ValueNode pos)
+    {
         FixedWithNextNode basePtr = graph().add(new GetObjectAddressNode(base));
         graph().addBeforeFixed(this, basePtr);
 
         int shift = CodeUtil.log2(getArrayIndexScale(JavaKind.Object));
         ValueNode extendedPos = IntegerConvertNode.convert(pos, StampFactory.forKind(runtime.getTarget().wordJavaKind), graph(), NodeView.DEFAULT);
         ValueNode scaledIndex = graph().unique(new LeftShiftNode(extendedPos, ConstantNode.forInt(shift, graph())));
-        ValueNode offset = graph().unique(
-                        new AddNode(scaledIndex, ConstantNode.forIntegerBits(PrimitiveStamp.getBits(scaledIndex.stamp(NodeView.DEFAULT)), getArrayBaseOffset(JavaKind.Object), graph())));
+        ValueNode offset = graph().unique(new AddNode(scaledIndex, ConstantNode.forIntegerBits(PrimitiveStamp.getBits(scaledIndex.stamp(NodeView.DEFAULT)), getArrayBaseOffset(JavaKind.Object), graph())));
         return graph().unique(new OffsetAddressNode(basePtr, offset));
     }
 
     @Override
-    public void lower(LoweringTool tool) {
-        if (graph().getGuardsStage().areFrameStatesAtDeopts()) {
+    public void lower(LoweringTool tool)
+    {
+        if (graph().getGuardsStage().areFrameStatesAtDeopts())
+        {
             ForeignCallDescriptor desc = HotSpotHostForeignCallsProvider.lookupCheckcastArraycopyDescriptor(isUninit());
             StructuredGraph graph = graph();
             ValueNode srcAddr = computeBase(getSource(), getSourcePosition());
             ValueNode destAddr = computeBase(getDestination(), getDestinationPosition());
             ValueNode len = getLength();
-            if (len.stamp(NodeView.DEFAULT).getStackKind() != runtime.getTarget().wordJavaKind) {
+            if (len.stamp(NodeView.DEFAULT).getStackKind() != runtime.getTarget().wordJavaKind)
+            {
                 len = IntegerConvertNode.convert(len, StampFactory.forKind(runtime.getTarget().wordJavaKind), graph(), NodeView.DEFAULT);
             }
             ForeignCallNode call = graph.add(new ForeignCallNode(runtime.getHostBackend().getForeignCalls(), desc, srcAddr, destAddr, len, superCheckOffset, destElemKlass));
@@ -118,7 +127,8 @@ public final class CheckcastArrayCopyCallNode extends AbstractMemoryCheckpoint i
     }
 
     @Override
-    public LocationIdentity getLocationIdentity() {
+    public LocationIdentity getLocationIdentity()
+    {
         /*
          * Because of restrictions that the memory graph of snippets matches the original node,
          * pretend that we kill any.

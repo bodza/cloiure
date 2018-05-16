@@ -16,22 +16,27 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import jdk.vm.ci.meta.Value;
 
 @NodeInfo(cycles = CYCLES_4, cyclesRationale = "mul + cmp")
-public final class IntegerMulExactSplitNode extends IntegerExactArithmeticSplitNode {
+public final class IntegerMulExactSplitNode extends IntegerExactArithmeticSplitNode
+{
     public static final NodeClass<IntegerMulExactSplitNode> TYPE = NodeClass.create(IntegerMulExactSplitNode.class);
 
-    public IntegerMulExactSplitNode(Stamp stamp, ValueNode x, ValueNode y, AbstractBeginNode next, AbstractBeginNode overflowSuccessor) {
+    public IntegerMulExactSplitNode(Stamp stamp, ValueNode x, ValueNode y, AbstractBeginNode next, AbstractBeginNode overflowSuccessor)
+    {
         super(TYPE, stamp, x, y, next, overflowSuccessor);
     }
 
     @Override
-    protected Value generateArithmetic(NodeLIRBuilderTool gen) {
+    protected Value generateArithmetic(NodeLIRBuilderTool gen)
+    {
         return gen.getLIRGeneratorTool().getArithmetic().emitMul(gen.operand(getX()), gen.operand(getY()), true);
     }
 
     @Override
-    public void simplify(SimplifierTool tool) {
+    public void simplify(SimplifierTool tool)
+    {
         NodeView view = NodeView.from(tool);
-        if (!IntegerStamp.multiplicationCanOverflow((IntegerStamp) x.stamp(view), (IntegerStamp) y.stamp(view))) {
+        if (!IntegerStamp.multiplicationCanOverflow((IntegerStamp) x.stamp(view), (IntegerStamp) y.stamp(view)))
+        {
             tool.deleteBranch(overflowSuccessor);
             tool.addToWorkList(next);
             MulNode replacement = graph().unique(new MulNode(x, y));

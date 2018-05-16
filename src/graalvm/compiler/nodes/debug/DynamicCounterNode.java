@@ -25,14 +25,12 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
  * A unique counter will be created for each unique name passed to the constructor. Depending on the
  * value of withContext, the name of the root method is added to the counter's name.
  */
-//@formatter:off
 @NodeInfo(size = SIZE_IGNORED,
           sizeRationale = "Node is a debugging node that should not be used in production.",
           cycles = CYCLES_IGNORED,
           cyclesRationale = "Node is a debugging node that should not be used in production.")
-//@formatter:on
-public class DynamicCounterNode extends FixedWithNextNode implements LIRLowerable {
-
+public class DynamicCounterNode extends FixedWithNextNode implements LIRLowerable
+{
     public static final NodeClass<DynamicCounterNode> TYPE = NodeClass.create(DynamicCounterNode.class);
     @Input ValueNode increment;
 
@@ -40,11 +38,13 @@ public class DynamicCounterNode extends FixedWithNextNode implements LIRLowerabl
     protected final String group;
     protected final boolean withContext;
 
-    public DynamicCounterNode(String name, String group, ValueNode increment, boolean withContext) {
+    public DynamicCounterNode(String name, String group, ValueNode increment, boolean withContext)
+    {
         this(TYPE, name, group, increment, withContext);
     }
 
-    protected DynamicCounterNode(NodeClass<? extends DynamicCounterNode> c, String name, String group, ValueNode increment, boolean withContext) {
+    protected DynamicCounterNode(NodeClass<? extends DynamicCounterNode> c, String name, String group, ValueNode increment, boolean withContext)
+    {
         super(c, StampFactory.forVoid());
         this.name = name;
         this.group = group;
@@ -52,23 +52,28 @@ public class DynamicCounterNode extends FixedWithNextNode implements LIRLowerabl
         this.withContext = withContext;
     }
 
-    public ValueNode getIncrement() {
+    public ValueNode getIncrement()
+    {
         return increment;
     }
 
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
-    public String getGroup() {
+    public String getGroup()
+    {
         return group;
     }
 
-    public boolean isWithContext() {
+    public boolean isWithContext()
+    {
         return withContext;
     }
 
-    public static void addCounterBefore(String group, String name, long increment, boolean withContext, FixedNode position) {
+    public static void addCounterBefore(String group, String name, long increment, boolean withContext, FixedNode position)
+    {
         StructuredGraph graph = position.graph();
         graph.addBeforeFixed(position, position.graph().add(new DynamicCounterNode(name, group, ConstantNode.forLong(increment, position.graph()), withContext)));
     }
@@ -77,32 +82,42 @@ public class DynamicCounterNode extends FixedWithNextNode implements LIRLowerabl
     public static native void counter(@ConstantNodeParameter String name, @ConstantNodeParameter String group, long increment, @ConstantNodeParameter boolean addContext);
 
     @Override
-    public void generate(NodeLIRBuilderTool generator) {
+    public void generate(NodeLIRBuilderTool generator)
+    {
         LIRGeneratorTool lirGen = generator.getLIRGeneratorTool();
         String nameWithContext;
-        if (isWithContext()) {
+        if (isWithContext())
+        {
             nameWithContext = getName() + " @ ";
-            if (graph().method() != null) {
+            if (graph().method() != null)
+            {
                 StackTraceElement stackTraceElement = graph().method().asStackTraceElement(0);
-                if (stackTraceElement != null) {
+                if (stackTraceElement != null)
+                {
                     nameWithContext += " " + stackTraceElement.toString();
-                } else {
+                }
+                else
+                {
                     nameWithContext += graph().method().format("%h.%n");
                 }
             }
-            if (graph().name != null) {
+            if (graph().name != null)
+            {
                 nameWithContext += " (" + graph().name + ")";
             }
-
-        } else {
+        }
+        else
+        {
             nameWithContext = getName();
         }
         LIRInstruction counterOp = lirGen.createBenchmarkCounter(nameWithContext, getGroup(), generator.operand(increment));
-        if (counterOp != null) {
+        if (counterOp != null)
+        {
             lirGen.append(counterOp);
-        } else {
+        }
+        else
+        {
             throw GraalError.unimplemented("Benchmark counters not enabled or not implemented by the back end.");
         }
     }
-
 }

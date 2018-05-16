@@ -9,53 +9,61 @@ import graalvm.compiler.graph.NodeSourcePosition;
  * {@link NodeSourcePosition} in the original program. Depending on the backend this information may
  * be represented in different ways or not at all.
  */
-public final class SourceMapping {
-
+public final class SourceMapping
+{
     private final int startOffset;
 
     private final int endOffset;
 
     private final NodeSourcePosition sourcePosition;
 
-    public SourceMapping(int startOffset, int endOffset, NodeSourcePosition sourcePosition) {
+    public SourceMapping(int startOffset, int endOffset, NodeSourcePosition sourcePosition)
+    {
         this.startOffset = startOffset;
         this.endOffset = endOffset;
         this.sourcePosition = sourcePosition;
     }
 
-    public int getStartOffset() {
+    public int getStartOffset()
+    {
         return startOffset;
     }
 
-    public int getEndOffset() {
+    public int getEndOffset()
+    {
         return endOffset;
     }
 
-    public NodeSourcePosition getSourcePosition() {
+    public NodeSourcePosition getSourcePosition()
+    {
         return sourcePosition;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return identityHashCodeString(this);
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         throw new UnsupportedOperationException("hashCode");
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof SourceMapping) {
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof SourceMapping)
+        {
             SourceMapping other = (SourceMapping) obj;
             return other.startOffset == startOffset && other.endOffset == endOffset && other.sourcePosition.equals(sourcePosition);
         }
         return false;
     }
 
-    public boolean contains(int offset) {
+    public boolean contains(int offset)
+    {
         return startOffset <= offset && offset < endOffset;
     }
-
 }

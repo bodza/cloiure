@@ -7,14 +7,10 @@ import jdk.vm.ci.code.TargetDescription;
 /**
  * Attributes for instructions for SSE through EVEX, also including address components.
  */
-public class AMD64InstructionAttr {
-    AMD64InstructionAttr(
-                    int inVectorLen,
-                    boolean inRexVexW,
-                    boolean inLegacyMode,
-                    boolean inNoRegMask,
-                    boolean inUsesVl,
-                    TargetDescription target) {
+public class AMD64InstructionAttr
+{
+    AMD64InstructionAttr(int inVectorLen, boolean inRexVexW, boolean inLegacyMode, boolean inNoRegMask, boolean inUsesVl, TargetDescription target)
+    {
         avxVectorLen = inVectorLen;
         rexVexW = inRexVexW;
         this.target = target;
@@ -44,51 +40,63 @@ public class AMD64InstructionAttr {
     private boolean isClearContext;
     private boolean isExtendedContext;
 
-    public int getVectorLen() {
+    public int getVectorLen()
+    {
         return avxVectorLen;
     }
 
-    public boolean isRexVexW() {
+    public boolean isRexVexW()
+    {
         return rexVexW;
     }
 
-    public boolean isRexVexWReverted() {
+    public boolean isRexVexWReverted()
+    {
         return rexVexWReverted;
     }
 
-    public boolean isLegacyMode() {
+    public boolean isLegacyMode()
+    {
         return legacyMode;
     }
 
-    public boolean isNoRegMask() {
+    public boolean isNoRegMask()
+    {
         return noRegMask;
     }
 
-    public boolean usesVl() {
+    public boolean usesVl()
+    {
         return usesVl;
     }
 
-    public int getTupleType() {
+    public int getTupleType()
+    {
         return tupleType;
     }
 
-    public int getInputSize() {
+    public int getInputSize()
+    {
         return inputSizeInBits;
     }
 
-    public boolean isEvexInstruction() {
+    public boolean isEvexInstruction()
+    {
         return isEvexInstruction;
     }
 
-    public int getEvexEncoding() {
+    public int getEvexEncoding()
+    {
         return evexEncoding;
     }
 
-    public boolean isClearContext() {
+    public boolean isClearContext()
+    {
         return isClearContext;
     }
 
-    public boolean isExtendedContext() {
+    public boolean isExtendedContext()
+    {
         return isExtendedContext;
     }
 
@@ -97,14 +105,16 @@ public class AMD64InstructionAttr {
      *
      * @param vectorLen
      */
-    public void setVectorLen(int vectorLen) {
+    public void setVectorLen(int vectorLen)
+    {
         avxVectorLen = vectorLen;
     }
 
     /**
      * In EVEX it is possible in blended code generation to revert the encoding width for AVX.
      */
-    public void setRexVexWReverted() {
+    public void setRexVexWReverted()
+    {
         rexVexWReverted = true;
     }
 
@@ -113,21 +123,24 @@ public class AMD64InstructionAttr {
      *
      * @param state
      */
-    public void setRexVexW(boolean state) {
+    public void setRexVexW(boolean state)
+    {
         rexVexW = state;
     }
 
     /**
      * Alter the current instructions legacy mode. Blended code generation will use this.
      */
-    public void setLegacyMode() {
+    public void setLegacyMode()
+    {
         legacyMode = true;
     }
 
     /**
      * During emit or during definition of an instruction, mark if it is EVEX.
      */
-    public void setIsEvexInstruction() {
+    public void setIsEvexInstruction()
+    {
         isEvexInstruction = true;
     }
 
@@ -136,28 +149,33 @@ public class AMD64InstructionAttr {
      *
      * @param value
      */
-    public void setEvexEncoding(int value) {
+    public void setEvexEncoding(int value)
+    {
         evexEncoding = value;
     }
 
     /**
      * Use clear context for this instruction in EVEX, defaults is merge(false).
      */
-    public void setIsClearContext() {
+    public void setIsClearContext()
+    {
         isClearContext = true;
     }
 
     /**
      * Set the address attributes for configuring displacement calculations in EVEX.
      */
-    public void setAddressAttributes(int inTupleType, int inInputSizeInBits) {
-        if (supports(CPUFeature.AVX512F)) {
+    public void setAddressAttributes(int inTupleType, int inInputSizeInBits)
+    {
+        if (supports(CPUFeature.AVX512F))
+        {
             tupleType = inTupleType;
             inputSizeInBits = inInputSizeInBits;
         }
     }
 
-    private boolean supports(CPUFeature feature) {
+    private boolean supports(CPUFeature feature)
+    {
         return ((AMD64) target.arch).getFeatures().contains(feature);
     }
 }

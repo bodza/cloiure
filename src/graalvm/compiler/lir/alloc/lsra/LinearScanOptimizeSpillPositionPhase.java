@@ -20,34 +20,41 @@ import graalvm.compiler.lir.phases.AllocationPhase.AllocationContext;
 import jdk.vm.ci.code.TargetDescription;
 import jdk.vm.ci.meta.AllocatableValue;
 
-public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAllocationPhase {
-
+public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAllocationPhase
+{
     private static final CounterKey betterSpillPos = DebugContext.counter("BetterSpillPosition");
     private static final CounterKey betterSpillPosWithLowerProbability = DebugContext.counter("BetterSpillPositionWithLowerProbability");
 
     private final LinearScan allocator;
     private DebugContext debug;
 
-    LinearScanOptimizeSpillPositionPhase(LinearScan allocator) {
+    LinearScanOptimizeSpillPositionPhase(LinearScan allocator)
+    {
         this.allocator = allocator;
         this.debug = allocator.getDebug();
     }
 
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context) {
+    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context)
+    {
         optimizeSpillPosition(lirGenRes);
         allocator.printIntervals("After optimize spill position");
     }
 
     @SuppressWarnings("try")
-    private void optimizeSpillPosition(LIRGenerationResult res) {
-        try (Indent indent0 = debug.logAndIndent("OptimizeSpillPositions")) {
+    private void optimizeSpillPosition(LIRGenerationResult res)
+    {
+        try (Indent indent0 = debug.logAndIndent("OptimizeSpillPositions"))
+        {
             LIRInsertionBuffer[] insertionBuffers = new LIRInsertionBuffer[allocator.getLIR().linearScanOrder().length];
-            for (Interval interval : allocator.intervals()) {
+            for (Interval interval : allocator.intervals())
+            {
                 optimizeInterval(insertionBuffers, interval, res);
             }
-            for (LIRInsertionBuffer insertionBuffer : insertionBuffers) {
-                if (insertionBuffer != null) {
+            for (LIRInsertionBuffer insertionBuffer : insertionBuffers)
+            {
+                if (insertionBuffer != null)
+                {
                     assert insertionBuffer.initialized() : "Insertion buffer is nonnull but not initialized!";
                     insertionBuffer.finish();
                 }
@@ -56,28 +63,41 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
     }
 
     @SuppressWarnings("try")
-    private void optimizeInterval(LIRInsertionBuffer[] insertionBuffers, Interval interval, LIRGenerationResult res) {
-        if (interval == null || !interval.isSplitParent() || interval.spillState() != SpillState.SpillInDominator) {
+    private void optimizeInterval(LIRInsertionBuffer[] insertionBuffers, Interval interval, LIRGenerationResult res)
+    {
+        if (interval == null || !interval.isSplitParent() || interval.spillState() != SpillState.SpillInDominator)
+        {
             return;
         }
         AbstractBlockBase<?> defBlock = allocator.blockForId(interval.spillDefinitionPos());
         AbstractBlockBase<?> spillBlock = null;
         Interval firstSpillChild = null;
-        try (Indent indent = debug.logAndIndent("interval %s (%s)", interval, defBlock)) {
-            for (Interval splitChild : interval.getSplitChildren()) {
-                if (isStackSlotValue(splitChild.location())) {
-                    if (firstSpillChild == null || splitChild.from() < firstSpillChild.from()) {
+        try (Indent indent = debug.logAndIndent("interval %s (%s)", interval, defBlock))
+        {
+            for (Interval splitChild : interval.getSplitChildren())
+            {
+                if (isStackSlotValue(splitChild.location()))
+                {
+                    if (firstSpillChild == null || splitChild.from() < firstSpillChild.from())
+                    {
                         firstSpillChild = splitChild;
-                    } else {
+                    }
+                    else
+                    {
                         assert firstSpillChild.from() < splitChild.from();
                     }
                     // iterate all blocks where the interval has use positions
-                    for (AbstractBlockBase<?> splitBlock : blocksForInterval(splitChild)) {
-                        if (dominates(defBlock, splitBlock)) {
+                    for (AbstractBlockBase<?> splitBlock : blocksForInterval(splitChild))
+                    {
+                        if (dominates(defBlock, splitBlock))
+                        {
                             debug.log("Split interval %s, block %s", splitChild, splitBlock);
-                            if (spillBlock == null) {
+                            if (spillBlock == null)
+                            {
                                 spillBlock = splitBlock;
-                            } else {
+                            }
+                            else
+                            {
                                 spillBlock = commonDominator(spillBlock, splitBlock);
                                 assert spillBlock != null;
                             }
@@ -85,7 +105,8 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
                     }
                 }
             }
-            if (spillBlock == null) {
+            if (spillBlock == null)
+            {
                 debug.log("not spill interval found");
                 // no spill interval
                 interval.setSpillState(SpillState.StoreAtDefinition);
@@ -93,7 +114,8 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
             }
             debug.log(DebugContext.VERBOSE_LEVEL, "Spill block candidate (initial): %s", spillBlock);
             // move out of loops
-            if (defBlock.getLoopDepth() < spillBlock.getLoopDepth()) {
+            if (defBlock.getLoopDepth() < spillBlock.getLoopDepth())
+            {
                 spillBlock = moveSpillOutOfLoop(defBlock, spillBlock);
             }
             debug.log(DebugContext.VERBOSE_LEVEL, "Spill block candidate (after loop optimizaton): %s", spillBlock);
@@ -107,14 +129,17 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
              * predecessors. To avoid this we spill in the dominator.
              */
             assert firstSpillChild != null;
-            if (!defBlock.equals(spillBlock) && spillBlock.equals(allocator.blockForId(firstSpillChild.from()))) {
+            if (!defBlock.equals(spillBlock) && spillBlock.equals(allocator.blockForId(firstSpillChild.from())))
+            {
                 AbstractBlockBase<?> dom = spillBlock.getDominator();
-                if (debug.isLogEnabled()) {
+                if (debug.isLogEnabled())
+                {
                     debug.log("Spill block (%s) is the beginning of a spill child -> use dominator (%s)", spillBlock, dom);
                 }
                 spillBlock = dom;
             }
-            if (defBlock.equals(spillBlock)) {
+            if (defBlock.equals(spillBlock))
+            {
                 debug.log(DebugContext.VERBOSE_LEVEL, "Definition is the best choice: %s", defBlock);
                 // definition is the best choice
                 interval.setSpillState(SpillState.StoreAtDefinition);
@@ -122,20 +147,22 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
             }
             assert dominates(defBlock, spillBlock);
             betterSpillPos.increment(debug);
-            if (debug.isLogEnabled()) {
+            if (debug.isLogEnabled())
+            {
                 debug.log("Better spill position found (Block %s)", spillBlock);
             }
 
-            if (defBlock.probability() <= spillBlock.probability()) {
-                debug.log(DebugContext.VERBOSE_LEVEL, "Definition has lower probability %s (%f) is lower than spill block %s (%f)", defBlock, defBlock.probability(), spillBlock,
-                                spillBlock.probability());
+            if (defBlock.probability() <= spillBlock.probability())
+            {
+                debug.log(DebugContext.VERBOSE_LEVEL, "Definition has lower probability %s (%f) is lower than spill block %s (%f)", defBlock, defBlock.probability(), spillBlock, spillBlock.probability());
                 // better spill block has the same probability -> do nothing
                 interval.setSpillState(SpillState.StoreAtDefinition);
                 return;
             }
 
             LIRInsertionBuffer insertionBuffer = insertionBuffers[spillBlock.getId()];
-            if (insertionBuffer == null) {
+            if (insertionBuffer == null)
+            {
                 insertionBuffer = new LIRInsertionBuffer();
                 insertionBuffers[spillBlock.getId()] = insertionBuffer;
                 insertionBuffer.init(allocator.getLIR().getLIRforBlock(spillBlock));
@@ -161,56 +188,72 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
     /**
      * Iterate over all {@link AbstractBlockBase blocks} of an interval.
      */
-    private class IntervalBlockIterator implements Iterator<AbstractBlockBase<?>> {
-
+    private class IntervalBlockIterator implements Iterator<AbstractBlockBase<?>>
+    {
         Range range;
         AbstractBlockBase<?> block;
 
-        IntervalBlockIterator(Interval interval) {
+        IntervalBlockIterator(Interval interval)
+        {
             range = interval.first();
             block = allocator.blockForId(range.from);
         }
 
         @Override
-        public AbstractBlockBase<?> next() {
+        public AbstractBlockBase<?> next()
+        {
             AbstractBlockBase<?> currentBlock = block;
             int nextBlockIndex = block.getLinearScanNumber() + 1;
-            if (nextBlockIndex < allocator.sortedBlocks().length) {
+            if (nextBlockIndex < allocator.sortedBlocks().length)
+            {
                 block = allocator.sortedBlocks()[nextBlockIndex];
-                if (range.to <= allocator.getFirstLirInstructionId(block)) {
+                if (range.to <= allocator.getFirstLirInstructionId(block))
+                {
                     range = range.next;
-                    if (range.isEndMarker()) {
+                    if (range.isEndMarker())
+                    {
                         block = null;
-                    } else {
+                    }
+                    else
+                    {
                         block = allocator.blockForId(range.from);
                     }
                 }
-            } else {
+            }
+            else
+            {
                 block = null;
             }
             return currentBlock;
         }
 
         @Override
-        public boolean hasNext() {
+        public boolean hasNext()
+        {
             return block != null;
         }
     }
 
-    private Iterable<AbstractBlockBase<?>> blocksForInterval(Interval interval) {
-        return new Iterable<AbstractBlockBase<?>>() {
+    private Iterable<AbstractBlockBase<?>> blocksForInterval(Interval interval)
+    {
+        return new Iterable<AbstractBlockBase<?>>()
+        {
             @Override
-            public Iterator<AbstractBlockBase<?>> iterator() {
+            public Iterator<AbstractBlockBase<?>> iterator()
+            {
                 return new IntervalBlockIterator(interval);
             }
         };
     }
 
-    private static AbstractBlockBase<?> moveSpillOutOfLoop(AbstractBlockBase<?> defBlock, AbstractBlockBase<?> spillBlock) {
+    private static AbstractBlockBase<?> moveSpillOutOfLoop(AbstractBlockBase<?> defBlock, AbstractBlockBase<?> spillBlock)
+    {
         int defLoopDepth = defBlock.getLoopDepth();
-        for (AbstractBlockBase<?> block = spillBlock.getDominator(); !defBlock.equals(block); block = block.getDominator()) {
+        for (AbstractBlockBase<?> block = spillBlock.getDominator(); !defBlock.equals(block); block = block.getDominator())
+        {
             assert block != null : "spill block not dominated by definition block?";
-            if (block.getLoopDepth() <= defLoopDepth) {
+            if (block.getLoopDepth() <= defLoopDepth)
+            {
                 assert block.getLoopDepth() == defLoopDepth : "Cannot spill an interval outside of the loop where it is defined!";
                 return block;
             }

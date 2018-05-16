@@ -9,8 +9,8 @@ import org.graalvm.word.Pointer;
 /**
  * Marker type for a metaspace pointer to a method.
  */
-public abstract class MethodPointer extends MetaspacePointer {
-
+public abstract class MethodPointer extends MetaspacePointer
+{
     @HotSpotOperation(opcode = POINTER_EQ)
     public abstract boolean equal(KlassPointer other);
 

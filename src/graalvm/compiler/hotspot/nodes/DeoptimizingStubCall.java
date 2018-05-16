@@ -9,16 +9,18 @@ import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.DeoptimizingFixedWithNextNode;
 
 @NodeInfo(cycles = CYCLES_UNKNOWN, size = SIZE_UNKNOWN)
-public abstract class DeoptimizingStubCall extends DeoptimizingFixedWithNextNode {
-
+public abstract class DeoptimizingStubCall extends DeoptimizingFixedWithNextNode
+{
     public static final NodeClass<DeoptimizingStubCall> TYPE = NodeClass.create(DeoptimizingStubCall.class);
 
-    public DeoptimizingStubCall(NodeClass<? extends DeoptimizingStubCall> c, Stamp stamp) {
+    public DeoptimizingStubCall(NodeClass<? extends DeoptimizingStubCall> c, Stamp stamp)
+    {
         super(c, stamp);
     }
 
     @Override
-    public boolean canDeoptimize() {
+    public boolean canDeoptimize()
+    {
         return true;
     }
 }

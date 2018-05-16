@@ -1,5 +1,6 @@
 package graalvm.compiler.graph;
 
-public interface NodeInterface {
+public interface NodeInterface
+{
     Node asNode();
 }

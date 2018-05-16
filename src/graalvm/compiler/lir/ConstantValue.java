@@ -8,35 +8,42 @@ import jdk.vm.ci.meta.ValueKind;
 /**
  * Represents an inlined {@link Constant} value.
  */
-public class ConstantValue extends Value {
-
+public class ConstantValue extends Value
+{
     private final Constant constant;
 
-    public ConstantValue(ValueKind<?> kind, Constant constant) {
+    public ConstantValue(ValueKind<?> kind, Constant constant)
+    {
         super(kind);
         this.constant = constant;
     }
 
-    public Constant getConstant() {
+    public Constant getConstant()
+    {
         return constant;
     }
 
-    public boolean isJavaConstant() {
+    public boolean isJavaConstant()
+    {
         return constant instanceof JavaConstant;
     }
 
-    public JavaConstant getJavaConstant() {
+    public JavaConstant getJavaConstant()
+    {
         return (JavaConstant) constant;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return constant.toString();
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof ConstantValue) {
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof ConstantValue)
+        {
             ConstantValue other = (ConstantValue) obj;
             return super.equals(other) && this.constant.equals(other.constant);
         }
@@ -44,7 +51,8 @@ public class ConstantValue extends Value {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return constant.hashCode() + super.hashCode();
     }
 }

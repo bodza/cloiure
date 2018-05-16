@@ -31,16 +31,15 @@ import jdk.vm.ci.code.CompilationRequest;
  * better to drain the bootstrap compilation queue at some point that risk triggering timeouts in
  * external harnesses such as integration tests.
  */
-final class BootstrapWatchDog extends Thread {
-
-    public static class Options {
-        // @formatter:off
+final class BootstrapWatchDog extends Thread
+{
+    public static class Options
+    {
         @Option(help = "Ratio of the maximum compilation rate below which the bootstrap compilation rate must not fall " +
                        "(0 or less disables monitoring).", type = OptionType.Debug)
         public static final OptionKey<Double> BootstrapWatchDogCriticalRateRatio = new OptionKey<>(0.25D);
         @Option(help = "Maximum time in minutes to spend bootstrapping (0 to disable this limit).", type = OptionType.Debug)
         public static final OptionKey<Double> BootstrapTimeout = new OptionKey<>(15D);
-        // @formatter:on
     }
 
     /**
@@ -66,14 +65,16 @@ final class BootstrapWatchDog extends Thread {
      * {@link Options#BootstrapWatchDogCriticalRateRatio} is not set to 0 otherwise returns
      * {@code null}.
      */
-    static BootstrapWatchDog maybeCreate(HotSpotGraalRuntimeProvider graalRuntime) {
+    static BootstrapWatchDog maybeCreate(HotSpotGraalRuntimeProvider graalRuntime)
+    {
         OptionValues options = graalRuntime.getOptions();
         int timeout = (int) (Options.BootstrapTimeout.getValue(options) * 60);
         double maxRateDecrease = Options.BootstrapWatchDogCriticalRateRatio.getValue(options);
         return maxRateDecrease <= 0.0D && timeout == 0 ? null : new BootstrapWatchDog(graalRuntime, timeout, maxRateDecrease);
     }
 
-    private BootstrapWatchDog(HotSpotGraalRuntimeProvider graalRuntime, int timeout, double maxRateDecrease) {
+    private BootstrapWatchDog(HotSpotGraalRuntimeProvider graalRuntime, int timeout, double maxRateDecrease)
+    {
         this.setName(getClass().getSimpleName());
         this.start();
         this.graalRuntime = graalRuntime;
@@ -108,57 +109,71 @@ final class BootstrapWatchDog extends Thread {
     private final double maxRateDecrease;
 
     @Override
-    public void run() {
-        if (DEBUG) {
+    public void run()
+    {
+        if (DEBUG)
+        {
             TTY.printf("%nStarted %s%n", this);
         }
         long start = System.currentTimeMillis();
         Map<Thread, Watch> requestsAtTimeout = null;
         Map<Thread, StackTraceElement[]> stacksAtTimeout = null;
-        try {
+        try
+        {
             Thread.sleep(INITIAL_DELAY * 1000);
-            while (true) {
+            while (true)
+            {
                 int currentCompilations = compilations.get();
                 long elapsed = System.currentTimeMillis() - start;
                 double rate = currentCompilations / seconds(elapsed);
-                if (DEBUG) {
+                if (DEBUG)
+                {
                     TTY.printf("%.2f: compilation rate is %.2f/sec%n", seconds(elapsed), rate);
                 }
-                if (rate > maxRate) {
+                if (rate > maxRate)
+                {
                     maxRate = rate;
-                } else if (rate < (maxRate * maxRateDecrease)) {
-                    TTY.printf("%nAfter %.2f seconds bootstrapping, compilation rate is %.2f compilations per second " +
-                                    "which is below %.2f times the max compilation rate of %.2f%n", seconds(elapsed), rate, maxRateDecrease, maxRate);
-                    TTY.printf("To enable monitoring of long running individual compilations, re-run with -D%s%s=%.2f%n",
-                                    GRAAL_OPTION_PROPERTY_PREFIX, CompilationWatchDog.Options.CompilationWatchDogStartDelay.getName(),
-                                    seconds(elapsed) - 5);
+                }
+                else if (rate < (maxRate * maxRateDecrease))
+                {
+                    TTY.printf("%nAfter %.2f seconds bootstrapping, compilation rate is %.2f compilations per second " + "which is below %.2f times the max compilation rate of %.2f%n", seconds(elapsed), rate, maxRateDecrease, maxRate);
+                    TTY.printf("To enable monitoring of long running individual compilations, re-run with -D%s%s=%.2f%n", GRAAL_OPTION_PROPERTY_PREFIX, CompilationWatchDog.Options.CompilationWatchDogStartDelay.getName(), seconds(elapsed) - 5);
                     hitCriticalRateOrTimeout = true;
                     return;
                 }
-                if (elapsed > timeout * 1000) {
-                    if (requestsAtTimeout == null) {
+                if (elapsed > timeout * 1000)
+                {
+                    if (requestsAtTimeout == null)
+                    {
                         requestsAtTimeout = snapshotRequests();
                         stacksAtTimeout = new HashMap<>();
-                        for (Thread t : requestsAtTimeout.keySet()) {
+                        for (Thread t : requestsAtTimeout.keySet())
+                        {
                             stacksAtTimeout.put(t, t.getStackTrace());
                         }
-                    } else {
+                    }
+                    else
+                    {
                         TTY.printf("%nHit bootstrapping timeout after %.2f seconds%n", seconds(elapsed));
                         Map<Thread, Watch> requestsNow = snapshotRequests();
-                        for (Map.Entry<Thread, Watch> e : requestsAtTimeout.entrySet()) {
+                        for (Map.Entry<Thread, Watch> e : requestsAtTimeout.entrySet())
+                        {
                             Thread t = e.getKey();
                             CompilationRequest request1 = requestsAtTimeout.get(t).request;
                             CompilationRequest request2 = requestsNow.get(t).request;
-                            if (request1 != null && request1 == request2) {
+                            if (request1 != null && request1 == request2)
+                            {
                                 StackTraceElement[] stackTraceNow = t.getStackTrace();
-                                TTY.printf("Printing stack trace for current compilation of %s lasting more than %d seconds:%n%s",
-                                                fmt(request1.getMethod()), EPOCH, fmt(stackTraceNow));
-                                if (Arrays.equals(stacksAtTimeout.get(t), stackTraceNow)) {
-                                    TTY.printf("\t** Identical stack trace %d seconds ago, implying a hung compilation **%n",
-                                                    EPOCH);
+                                TTY.printf("Printing stack trace for current compilation of %s lasting more than %d seconds:%n%s", fmt(request1.getMethod()), EPOCH, fmt(stackTraceNow));
+                                if (Arrays.equals(stacksAtTimeout.get(t), stackTraceNow))
+                                {
+                                    TTY.printf("\t** Identical stack trace %d seconds ago, implying a hung compilation **%n", EPOCH);
                                 }
-                            } else {
-                                if (DEBUG) {
+                            }
+                            else
+                            {
+                                if (DEBUG)
+                                {
                                     TTY.printf("%s was compiling %s%n", t, fmt(request1.getMethod()));
                                 }
                             }
@@ -167,31 +182,38 @@ final class BootstrapWatchDog extends Thread {
                         return;
                     }
                 }
-                if (!graalRuntime.isBootstrapping()) {
+                if (!graalRuntime.isBootstrapping())
+                {
                     return;
                 }
 
                 Thread.sleep(EPOCH * 1000);
             }
-        } catch (InterruptedException e) {
+        }
+        catch (InterruptedException e)
+        {
             e.printStackTrace(TTY.out);
         }
     }
 
-    private Map<Thread, Watch> snapshotRequests() {
-        synchronized (requests) {
+    private Map<Thread, Watch> snapshotRequests()
+    {
+        synchronized (requests)
+        {
             return new HashMap<>(requests);
         }
     }
 
-    private static double seconds(long ms) {
+    private static double seconds(long ms)
+    {
         return (double) ms / 1000;
     }
 
     /**
      * Queries whether a critically low compilation rate or {@link #timeout} occurred.
      */
-    boolean hitCriticalCompilationRateOrTimeout() {
+    boolean hitCriticalCompilationRateOrTimeout()
+    {
         return hitCriticalRateOrTimeout;
     }
 
@@ -207,11 +229,14 @@ final class BootstrapWatchDog extends Thread {
      *         is the whole compilation so that leaving the scope will cause {@link Watch#close()}
      *         to be called.
      */
-    Watch watch(CompilationRequest request) {
+    Watch watch(CompilationRequest request)
+    {
         Watch watch = requestForThread.get();
-        if (watch == null) {
+        if (watch == null)
+        {
             watch = new Watch();
-            synchronized (requests) {
+            synchronized (requests)
+            {
                 requests.put(Thread.currentThread(), watch);
             }
         }
@@ -222,16 +247,19 @@ final class BootstrapWatchDog extends Thread {
     /**
      * Object for watching the compilations requests of a single compiler thread.
      */
-    class Watch implements AutoCloseable {
+    class Watch implements AutoCloseable
+    {
         CompilationRequest request;
 
-        void open(CompilationRequest r) {
+        void open(CompilationRequest r)
+        {
             assert this.request == null;
             this.request = r;
         }
 
         @Override
-        public void close() {
+        public void close()
+        {
             compilations.incrementAndGet();
             request = null;
         }

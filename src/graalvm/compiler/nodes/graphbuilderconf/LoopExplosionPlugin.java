@@ -2,9 +2,10 @@ package graalvm.compiler.nodes.graphbuilderconf;
 
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
-public interface LoopExplosionPlugin extends GraphBuilderPlugin {
-
-    enum LoopExplosionKind {
+public interface LoopExplosionPlugin extends GraphBuilderPlugin
+{
+    enum LoopExplosionKind
+    {
         /**
          * No loop explosion.
          */

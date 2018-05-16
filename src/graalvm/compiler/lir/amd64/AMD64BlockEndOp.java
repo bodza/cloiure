@@ -6,16 +6,18 @@ import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.StandardOp.BlockEndOp;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
 
-public abstract class AMD64BlockEndOp extends LIRInstruction implements BlockEndOp {
-
+public abstract class AMD64BlockEndOp extends LIRInstruction implements BlockEndOp
+{
     public static final LIRInstructionClass<AMD64BlockEndOp> TYPE = LIRInstructionClass.create(AMD64BlockEndOp.class);
 
-    protected AMD64BlockEndOp(LIRInstructionClass<? extends AMD64BlockEndOp> c) {
+    protected AMD64BlockEndOp(LIRInstructionClass<? extends AMD64BlockEndOp> c)
+    {
         super(c);
     }
 
     @Override
-    public final void emitCode(CompilationResultBuilder crb) {
+    public final void emitCode(CompilationResultBuilder crb)
+    {
         emitCode(crb, (AMD64MacroAssembler) crb.asm);
     }
 

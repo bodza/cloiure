@@ -16,15 +16,18 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
  * by the graph builder.
  */
 @NodeInfo(allowedUsageTypes = Association, cycles = CYCLES_0, size = SIZE_0)
-public final class EntryMarkerNode extends BeginStateSplitNode implements IterableNodeType, LIRLowerable {
+public final class EntryMarkerNode extends BeginStateSplitNode implements IterableNodeType, LIRLowerable
+{
     public static final NodeClass<EntryMarkerNode> TYPE = NodeClass.create(EntryMarkerNode.class);
 
-    public EntryMarkerNode() {
+    public EntryMarkerNode()
+    {
         super(TYPE);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         throw new GraalError("OnStackReplacementNode should not survive");
     }
 }

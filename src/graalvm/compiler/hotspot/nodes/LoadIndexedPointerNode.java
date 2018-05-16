@@ -9,16 +9,18 @@ import graalvm.compiler.nodes.java.LoadIndexedNode;
 import jdk.vm.ci.meta.JavaKind;
 
 @NodeInfo
-public final class LoadIndexedPointerNode extends LoadIndexedNode {
-
+public final class LoadIndexedPointerNode extends LoadIndexedNode
+{
     public static final NodeClass<LoadIndexedPointerNode> TYPE = NodeClass.create(LoadIndexedPointerNode.class);
 
-    public LoadIndexedPointerNode(Stamp stamp, ValueNode array, ValueNode index) {
+    public LoadIndexedPointerNode(Stamp stamp, ValueNode array, ValueNode index)
+    {
         super(TYPE, stamp, array, index, JavaKind.Illegal);
     }
 
     @Override
-    public boolean inferStamp() {
+    public boolean inferStamp()
+    {
         return false;
     }
 }

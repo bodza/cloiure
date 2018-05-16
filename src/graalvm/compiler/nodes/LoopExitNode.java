@@ -13,8 +13,8 @@ import graalvm.compiler.graph.spi.SimplifierTool;
 import graalvm.compiler.nodeinfo.NodeInfo;
 
 @NodeInfo(allowedUsageTypes = {Association}, cycles = CYCLES_0, size = SIZE_0)
-public final class LoopExitNode extends BeginStateSplitNode implements IterableNodeType, Simplifiable {
-
+public final class LoopExitNode extends BeginStateSplitNode implements IterableNodeType, Simplifiable
+{
     public static final NodeClass<LoopExitNode> TYPE = NodeClass.create(LoopExitNode.class);
 
     /*
@@ -24,20 +24,25 @@ public final class LoopExitNode extends BeginStateSplitNode implements IterableN
      */
     @Input(Association) AbstractBeginNode loopBegin;
 
-    public LoopExitNode(LoopBeginNode loop) {
+    public LoopExitNode(LoopBeginNode loop)
+    {
         super(TYPE);
         assert loop != null;
         loopBegin = loop;
     }
 
-    public LoopBeginNode loopBegin() {
+    public LoopBeginNode loopBegin()
+    {
         return (LoopBeginNode) loopBegin;
     }
 
     @Override
-    public NodeIterable<Node> anchored() {
-        return super.anchored().filter(n -> {
-            if (n instanceof ProxyNode) {
+    public NodeIterable<Node> anchored()
+    {
+        return super.anchored().filter(n ->
+        {
+            if (n instanceof ProxyNode)
+            {
                 ProxyNode proxyNode = (ProxyNode) n;
                 return proxyNode.proxyPoint() != this;
             }
@@ -46,18 +51,24 @@ public final class LoopExitNode extends BeginStateSplitNode implements IterableN
     }
 
     @Override
-    public void prepareDelete(FixedNode evacuateFrom) {
+    public void prepareDelete(FixedNode evacuateFrom)
+    {
         removeProxies();
         super.prepareDelete(evacuateFrom);
     }
 
-    public void removeProxies() {
-        if (this.hasUsages()) {
-            outer: while (true) {
-                for (ProxyNode vpn : proxies().snapshot()) {
+    public void removeProxies()
+    {
+        if (this.hasUsages())
+        {
+            outer: while (true)
+            {
+                for (ProxyNode vpn : proxies().snapshot())
+                {
                     ValueNode value = vpn.value();
                     vpn.replaceAtUsagesAndDelete(value);
-                    if (value == this) {
+                    if (value == this)
+                    {
                         // Guard proxy could have this input as value.
                         continue outer;
                     }
@@ -68,9 +79,12 @@ public final class LoopExitNode extends BeginStateSplitNode implements IterableN
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public NodeIterable<ProxyNode> proxies() {
-        return (NodeIterable) usages().filter(n -> {
-            if (n instanceof ProxyNode) {
+    public NodeIterable<ProxyNode> proxies()
+    {
+        return (NodeIterable) usages().filter(n ->
+        {
+            if (n instanceof ProxyNode)
+            {
                 ProxyNode proxyNode = (ProxyNode) n;
                 return proxyNode.proxyPoint() == this;
             }
@@ -79,9 +93,11 @@ public final class LoopExitNode extends BeginStateSplitNode implements IterableN
     }
 
     @Override
-    public void simplify(SimplifierTool tool) {
+    public void simplify(SimplifierTool tool)
+    {
         Node prev = this.predecessor();
-        while (tool.allUsagesAvailable() && prev instanceof BeginNode && prev.hasNoUsages()) {
+        while (tool.allUsagesAvailable() && prev instanceof BeginNode && prev.hasNoUsages())
+        {
             AbstractBeginNode begin = (AbstractBeginNode) prev;
             this.setNodeSourcePosition(begin.getNodeSourcePosition());
             prev = prev.predecessor();

@@ -7,9 +7,8 @@ import graalvm.compiler.nodes.ValueNode;
  * builder should see through the proxy for doing some checks. Optimizations should not see through
  * this proxy and therefore should only test for {@link ValueProxy}.
  */
-public interface LimitedValueProxy extends Proxy {
-
+public interface LimitedValueProxy extends Proxy
+{
     @Override
     ValueNode getOriginalNode();
-
 }

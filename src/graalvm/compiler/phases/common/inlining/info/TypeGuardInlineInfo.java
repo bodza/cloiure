@@ -28,13 +28,14 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * receiver, but for which the receiver type cannot be proven. A type check guard will be generated
  * if this inlining is performed.
  */
-public class TypeGuardInlineInfo extends AbstractInlineInfo {
-
+public class TypeGuardInlineInfo extends AbstractInlineInfo
+{
     private final ResolvedJavaMethod concrete;
     private final ResolvedJavaType type;
     private Inlineable inlineableElement;
 
-    public TypeGuardInlineInfo(Invoke invoke, ResolvedJavaMethod concrete, ResolvedJavaType type) {
+    public TypeGuardInlineInfo(Invoke invoke, ResolvedJavaMethod concrete, ResolvedJavaType type)
+    {
         super(invoke);
         this.concrete = concrete;
         this.type = type;
@@ -42,55 +43,65 @@ public class TypeGuardInlineInfo extends AbstractInlineInfo {
     }
 
     @Override
-    public int numberOfMethods() {
+    public int numberOfMethods()
+    {
         return 1;
     }
 
     @Override
-    public ResolvedJavaMethod methodAt(int index) {
+    public ResolvedJavaMethod methodAt(int index)
+    {
         assert index == 0;
         return concrete;
     }
 
     @Override
-    public Inlineable inlineableElementAt(int index) {
+    public Inlineable inlineableElementAt(int index)
+    {
         assert index == 0;
         return inlineableElement;
     }
 
     @Override
-    public double probabilityAt(int index) {
+    public double probabilityAt(int index)
+    {
         assert index == 0;
         return 1.0;
     }
 
     @Override
-    public double relevanceAt(int index) {
+    public double relevanceAt(int index)
+    {
         assert index == 0;
         return 1.0;
     }
 
     @Override
-    public void setInlinableElement(int index, Inlineable inlineableElement) {
+    public void setInlinableElement(int index, Inlineable inlineableElement)
+    {
         assert index == 0;
         this.inlineableElement = inlineableElement;
     }
 
     @Override
-    public EconomicSet<Node> inline(Providers providers, String reason) {
+    public EconomicSet<Node> inline(Providers providers, String reason)
+    {
         createGuard(graph(), providers);
         return inline(invoke, concrete, inlineableElement, false, reason);
     }
 
     @Override
-    public void tryToDevirtualizeInvoke(Providers providers) {
+    public void tryToDevirtualizeInvoke(Providers providers)
+    {
         createGuard(graph(), providers);
         InliningUtil.replaceInvokeCallTarget(invoke, graph(), InvokeKind.Special, concrete);
     }
 
     @SuppressWarnings("try")
-    private void createGuard(StructuredGraph graph, Providers providers) {
-        try (DebugCloseable context = invoke.asNode().withNodeSourcePosition()) {
+    private void createGuard(StructuredGraph graph, Providers providers)
+    {
+        try (DebugCloseable context = invoke.asNode().withNodeSourcePosition())
+        {
             ValueNode nonNullReceiver = InliningUtil.nonNullReceiver(invoke);
             LoadHubNode receiverHub = graph.unique(new LoadHubNode(providers.getStampProvider(), nonNullReceiver));
             ConstantNode typeHub = ConstantNode.forConstant(receiverHub.stamp(NodeView.DEFAULT), providers.getConstantReflection().asObjectHub(type), providers.getMetaAccess(), graph);
@@ -107,12 +118,14 @@ public class TypeGuardInlineInfo extends AbstractInlineInfo {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "type-checked with type " + type.getName() + " and method " + concrete.format("%H.%n(%p):%r");
     }
 
     @Override
-    public boolean shouldInline() {
+    public boolean shouldInline()
+    {
         return concrete.shouldBeInlined();
     }
 }

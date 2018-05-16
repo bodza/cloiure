@@ -22,69 +22,85 @@ import graalvm.compiler.replacements.nodes.UnaryMathIntrinsicNode.UnaryOperation
 /**
  * Stub called to support {@link Math}.
  */
-public class AMD64MathStub extends SnippetStub {
-
-    public AMD64MathStub(ForeignCallDescriptor descriptor, OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage) {
+public class AMD64MathStub extends SnippetStub
+{
+    public AMD64MathStub(ForeignCallDescriptor descriptor, OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    {
         super(snippetName(descriptor), options, providers, linkage);
     }
 
-    private static String snippetName(ForeignCallDescriptor descriptor) {
-        if (descriptor == ARITHMETIC_LOG_STUB) {
+    private static String snippetName(ForeignCallDescriptor descriptor)
+    {
+        if (descriptor == ARITHMETIC_LOG_STUB)
+        {
             return "log";
         }
-        if (descriptor == ARITHMETIC_LOG10_STUB) {
+        if (descriptor == ARITHMETIC_LOG10_STUB)
+        {
             return "log10";
         }
-        if (descriptor == ARITHMETIC_SIN_STUB) {
+        if (descriptor == ARITHMETIC_SIN_STUB)
+        {
             return "sin";
         }
-        if (descriptor == ARITHMETIC_COS_STUB) {
+        if (descriptor == ARITHMETIC_COS_STUB)
+        {
             return "cos";
         }
-        if (descriptor == ARITHMETIC_TAN_STUB) {
+        if (descriptor == ARITHMETIC_TAN_STUB)
+        {
             return "tan";
         }
-        if (descriptor == ARITHMETIC_EXP_STUB) {
+        if (descriptor == ARITHMETIC_EXP_STUB)
+        {
             return "exp";
         }
-        if (descriptor == ARITHMETIC_POW_STUB) {
+        if (descriptor == ARITHMETIC_POW_STUB)
+        {
             return "pow";
         }
         throw new InternalError("Unknown operation " + descriptor);
     }
 
     @Snippet
-    private static double log(double value) {
+    private static double log(double value)
+    {
         return UnaryMathIntrinsicNode.compute(value, UnaryOperation.LOG);
     }
 
     @Snippet
-    private static double log10(double value) {
+    private static double log10(double value)
+    {
         return UnaryMathIntrinsicNode.compute(value, UnaryOperation.LOG10);
     }
 
     @Snippet
-    private static double sin(double value) {
+    private static double sin(double value)
+    {
         return UnaryMathIntrinsicNode.compute(value, UnaryOperation.SIN);
     }
 
     @Snippet
-    private static double cos(double value) {
+    private static double cos(double value)
+    {
         return UnaryMathIntrinsicNode.compute(value, UnaryOperation.COS);
     }
 
     @Snippet
-    private static double tan(double value) {
+    private static double tan(double value)
+    {
         return UnaryMathIntrinsicNode.compute(value, UnaryOperation.TAN);
     }
 
     @Snippet
-    private static double exp(double value) {
+    private static double exp(double value)
+    {
         return UnaryMathIntrinsicNode.compute(value, UnaryOperation.EXP);
     }
 
     @Snippet
-    private static double pow(double value1, double value2) {
+    private static double pow(double value1, double value2)
+    {
         return BinaryMathIntrinsicNode.compute(value1, value2, BinaryOperation.POW);
     }
 }

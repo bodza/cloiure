@@ -19,39 +19,46 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
  * {@link MonitorExitNode} and from the {@link FrameState}.
  */
 @NodeInfo(allowedUsageTypes = Association, cycles = CYCLES_0, size = SIZE_0)
-public class MonitorIdNode extends ValueNode implements IterableNodeType, LIRLowerable {
-
+public class MonitorIdNode extends ValueNode implements IterableNodeType, LIRLowerable
+{
     public static final NodeClass<MonitorIdNode> TYPE = NodeClass.create(MonitorIdNode.class);
     protected int lockDepth;
     protected boolean eliminated;
 
-    public MonitorIdNode(int lockDepth) {
+    public MonitorIdNode(int lockDepth)
+    {
         this(TYPE, lockDepth);
     }
 
-    protected MonitorIdNode(NodeClass<? extends MonitorIdNode> c, int lockDepth) {
+    protected MonitorIdNode(NodeClass<? extends MonitorIdNode> c, int lockDepth)
+    {
         super(c, StampFactory.forVoid());
         this.lockDepth = lockDepth;
     }
 
-    public int getLockDepth() {
+    public int getLockDepth()
+    {
         return lockDepth;
     }
 
-    public void setLockDepth(int lockDepth) {
+    public void setLockDepth(int lockDepth)
+    {
         this.lockDepth = lockDepth;
     }
 
-    public boolean isEliminated() {
+    public boolean isEliminated()
+    {
         return eliminated;
     }
 
-    public void setEliminated() {
+    public void setEliminated()
+    {
         eliminated = true;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool generator) {
+    public void generate(NodeLIRBuilderTool generator)
+    {
         // nothing to do
     }
 }

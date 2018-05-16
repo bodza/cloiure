@@ -1,22 +1,28 @@
 package graalvm.graphio;
 
-final class DefaultGraphTypes implements GraphTypes {
+final class DefaultGraphTypes implements GraphTypes
+{
     static final GraphTypes DEFAULT = new DefaultGraphTypes();
 
-    private DefaultGraphTypes() {
+    private DefaultGraphTypes()
+    {
     }
 
     @Override
-    public Class<?> enumClass(Object enumValue) {
-        if (enumValue instanceof Enum<?>) {
+    public Class<?> enumClass(Object enumValue)
+    {
+        if (enumValue instanceof Enum<?>)
+        {
             return enumValue.getClass();
         }
         return null;
     }
 
     @Override
-    public int enumOrdinal(Object obj) {
-        if (obj instanceof Enum<?>) {
+    public int enumOrdinal(Object obj)
+    {
+        if (obj instanceof Enum<?>)
+        {
             return ((Enum<?>) obj).ordinal();
         }
         return -1;
@@ -24,13 +30,17 @@ final class DefaultGraphTypes implements GraphTypes {
 
     @SuppressWarnings("unchecked")
     @Override
-    public String[] enumTypeValues(Object clazz) {
-        if (clazz instanceof Class<?>) {
+    public String[] enumTypeValues(Object clazz)
+    {
+        if (clazz instanceof Class<?>)
+        {
             Class<? extends Enum<?>> enumClass = (Class<? extends Enum<?>>) clazz;
             Enum<?>[] constants = enumClass.getEnumConstants();
-            if (constants != null) {
+            if (constants != null)
+            {
                 String[] names = new String[constants.length];
-                for (int i = 0; i < constants.length; i++) {
+                for (int i = 0; i < constants.length; i++)
+                {
                     names[i] = constants[i].name();
                 }
                 return names;
@@ -40,11 +50,12 @@ final class DefaultGraphTypes implements GraphTypes {
     }
 
     @Override
-    public String typeName(Object clazz) {
-        if (clazz instanceof Class<?>) {
+    public String typeName(Object clazz)
+    {
+        if (clazz instanceof Class<?>)
+        {
             return ((Class<?>) clazz).getName();
         }
         return null;
     }
-
 }

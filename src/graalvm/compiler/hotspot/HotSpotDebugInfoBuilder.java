@@ -26,32 +26,37 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 /**
  * Extends {@link DebugInfoBuilder} to allocate the extra debug information required for locks.
  */
-public class HotSpotDebugInfoBuilder extends DebugInfoBuilder {
-
+public class HotSpotDebugInfoBuilder extends DebugInfoBuilder
+{
     private final HotSpotLockStack lockStack;
 
     private int maxInterpreterFrameSize;
 
     private HotSpotCodeCacheProvider codeCacheProvider;
 
-    public HotSpotDebugInfoBuilder(NodeValueMap nodeValueMap, HotSpotLockStack lockStack, HotSpotLIRGenerator gen) {
+    public HotSpotDebugInfoBuilder(NodeValueMap nodeValueMap, HotSpotLockStack lockStack, HotSpotLIRGenerator gen)
+    {
         super(nodeValueMap, gen.getResult().getLIR().getDebug());
         this.lockStack = lockStack;
         this.codeCacheProvider = gen.getProviders().getCodeCache();
     }
 
-    public HotSpotLockStack lockStack() {
+    public HotSpotLockStack lockStack()
+    {
         return lockStack;
     }
 
-    public int maxInterpreterFrameSize() {
+    public int maxInterpreterFrameSize()
+    {
         return maxInterpreterFrameSize;
     }
 
     @Override
-    protected JavaValue computeLockValue(FrameState state, int lockIndex) {
+    protected JavaValue computeLockValue(FrameState state, int lockIndex)
+    {
         int lockDepth = lockIndex;
-        if (state.outerFrameState() != null) {
+        if (state.outerFrameState() != null)
+        {
             lockDepth += state.outerFrameState().nestedLockDepth();
         }
         VirtualStackSlot slot = lockStack.makeLockSlot(lockDepth);
@@ -63,8 +68,10 @@ public class HotSpotDebugInfoBuilder extends DebugInfoBuilder {
     }
 
     @Override
-    protected BytecodeFrame computeFrameForState(FrameState state) {
-        if (isPlaceholderBci(state.bci) && state.bci != BytecodeFrame.BEFORE_BCI) {
+    protected BytecodeFrame computeFrameForState(FrameState state)
+    {
+        if (isPlaceholderBci(state.bci) && state.bci != BytecodeFrame.BEFORE_BCI)
+        {
             raiseInvalidFrameStateError(state);
         }
         BytecodeFrame result = super.computeFrameForState(state);
@@ -72,19 +79,22 @@ public class HotSpotDebugInfoBuilder extends DebugInfoBuilder {
         return result;
     }
 
-    protected void raiseInvalidFrameStateError(FrameState state) throws GraalGraphError {
+    protected void raiseInvalidFrameStateError(FrameState state) throws GraalGraphError
+    {
         // This is a hard error since an incorrect state could crash hotspot
         NodeSourcePosition sourcePosition = state.getNodeSourcePosition();
         List<String> context = new ArrayList<>();
         ResolvedJavaMethod replacementMethodWithProblematicSideEffect = null;
-        if (sourcePosition != null) {
+        if (sourcePosition != null)
+        {
             NodeSourcePosition pos = sourcePosition;
-            while (pos != null) {
+            while (pos != null)
+            {
                 StringBuilder sb = new StringBuilder("parsing ");
                 ResolvedJavaMethod method = pos.getMethod();
                 MetaUtil.appendLocation(sb, method, pos.getBCI());
-                if (method.getAnnotation(MethodSubstitution.class) != null ||
-                                method.getAnnotation(Snippet.class) != null) {
+                if (method.getAnnotation(MethodSubstitution.class) != null || method.getAnnotation(Snippet.class) != null)
+                {
                     replacementMethodWithProblematicSideEffect = method;
                 }
                 context.add(sb.toString());
@@ -92,11 +102,13 @@ public class HotSpotDebugInfoBuilder extends DebugInfoBuilder {
             }
         }
         String message = "Invalid frame state " + state;
-        if (replacementMethodWithProblematicSideEffect != null) {
+        if (replacementMethodWithProblematicSideEffect != null)
+        {
             message += " associated with a side effect in " + replacementMethodWithProblematicSideEffect.format("%H.%n(%p)") + " at a position that cannot be deoptimized to";
         }
         GraalGraphError error = new GraalGraphError(message);
-        for (String c : context) {
+        for (String c : context)
+        {
             error.addContext(c);
         }
         throw error;

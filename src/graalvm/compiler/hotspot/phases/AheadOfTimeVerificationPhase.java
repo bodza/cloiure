@@ -17,46 +17,58 @@ import jdk.vm.ci.meta.JavaKind;
  *
  * @see LoadJavaMirrorWithKlassPhase
  */
-public class AheadOfTimeVerificationPhase extends VerifyPhase<PhaseContext> {
-
+public class AheadOfTimeVerificationPhase extends VerifyPhase<PhaseContext>
+{
     @Override
-    protected boolean verify(StructuredGraph graph, PhaseContext context) {
-        for (ConstantNode node : getConstantNodes(graph)) {
-            if (isIllegalObjectConstant(node)) {
+    protected boolean verify(StructuredGraph graph, PhaseContext context)
+    {
+        for (ConstantNode node : getConstantNodes(graph))
+        {
+            if (isIllegalObjectConstant(node))
+            {
                 throw new VerificationError("illegal object constant: " + node);
             }
         }
         return true;
     }
 
-    public static boolean isIllegalObjectConstant(ConstantNode node) {
+    public static boolean isIllegalObjectConstant(ConstantNode node)
+    {
         return isObject(node) && !isNullReference(node) && !isInternedString(node) && !isDirectMethodHandle(node) && !isBoundMethodHandle(node);
     }
 
-    private static boolean isObject(ConstantNode node) {
+    private static boolean isObject(ConstantNode node)
+    {
         return node.getStackKind() == JavaKind.Object;
     }
 
-    private static boolean isNullReference(ConstantNode node) {
+    private static boolean isNullReference(ConstantNode node)
+    {
         return isObject(node) && node.isNullConstant();
     }
 
-    private static boolean isDirectMethodHandle(ConstantNode node) {
-        if (!isObject(node)) {
+    private static boolean isDirectMethodHandle(ConstantNode node)
+    {
+        if (!isObject(node))
+        {
             return false;
         }
         return "Ljava/lang/invoke/DirectMethodHandle;".equals(StampTool.typeOrNull(node).getName());
     }
 
-    private static boolean isBoundMethodHandle(ConstantNode node) {
-        if (!isObject(node)) {
+    private static boolean isBoundMethodHandle(ConstantNode node)
+    {
+        if (!isObject(node))
+        {
             return false;
         }
         return StampTool.typeOrNull(node).getName().startsWith("Ljava/lang/invoke/BoundMethodHandle");
     }
 
-    private static boolean isInternedString(ConstantNode node) {
-        if (!isObject(node)) {
+    private static boolean isInternedString(ConstantNode node)
+    {
+        if (!isObject(node))
+        {
             return false;
         }
 

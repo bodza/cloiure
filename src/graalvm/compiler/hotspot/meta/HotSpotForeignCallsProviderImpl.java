@@ -32,8 +32,8 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 /**
  * HotSpot implementation of {@link HotSpotForeignCallsProvider}.
  */
-public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignCallsProvider {
-
+public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignCallsProvider
+{
     public static final ForeignCallDescriptor OSR_MIGRATION_END = new ForeignCallDescriptor("OSR_migration_end", void.class, long.class);
     public static final ForeignCallDescriptor IDENTITY_HASHCODE = new ForeignCallDescriptor("identity_hashcode", int.class, Object.class);
     public static final ForeignCallDescriptor VERIFY_OOP = new ForeignCallDescriptor("verify_oop", Object.class, Object.class);
@@ -49,8 +49,8 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
     protected final CodeCacheProvider codeCache;
     protected final WordTypes wordTypes;
 
-    public HotSpotForeignCallsProviderImpl(HotSpotJVMCIRuntimeProvider jvmciRuntime, HotSpotGraalRuntimeProvider runtime, MetaAccessProvider metaAccess, CodeCacheProvider codeCache,
-                    WordTypes wordTypes) {
+    public HotSpotForeignCallsProviderImpl(HotSpotJVMCIRuntimeProvider jvmciRuntime, HotSpotGraalRuntimeProvider runtime, MetaAccessProvider metaAccess, CodeCacheProvider codeCache, WordTypes wordTypes)
+    {
         this.jvmciRuntime = jvmciRuntime;
         this.runtime = runtime;
         this.metaAccess = metaAccess;
@@ -61,7 +61,8 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
     /**
      * Registers the linkage for a foreign call.
      */
-    public HotSpotForeignCallLinkage register(HotSpotForeignCallLinkage linkage) {
+    public HotSpotForeignCallLinkage register(HotSpotForeignCallLinkage linkage)
+    {
         assert !foreignCalls.containsKey(linkage.getDescriptor()) : "already registered linkage for " + linkage.getDescriptor();
         foreignCalls.put(linkage.getDescriptor(), linkage);
         return linkage;
@@ -70,7 +71,8 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
     /**
      * Return true if the descriptor has already been registered.
      */
-    public boolean isRegistered(ForeignCallDescriptor descriptor) {
+    public boolean isRegistered(ForeignCallDescriptor descriptor)
+    {
         return foreignCalls.containsKey(descriptor);
     }
 
@@ -84,9 +86,9 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
      * @param transition specifies if this is a {@linkplain Transition#LEAF leaf} call
      * @param killedLocations the memory locations killed by the stub call
      */
-    public HotSpotForeignCallLinkage registerStubCall(ForeignCallDescriptor descriptor, boolean reexecutable, Transition transition, LocationIdentity... killedLocations) {
-        return register(HotSpotForeignCallLinkageImpl.create(metaAccess, codeCache, wordTypes, this, descriptor, 0L, PRESERVES_REGISTERS, JavaCall, JavaCallee, transition, reexecutable,
-                        killedLocations));
+    public HotSpotForeignCallLinkage registerStubCall(ForeignCallDescriptor descriptor, boolean reexecutable, Transition transition, LocationIdentity... killedLocations)
+    {
+        return register(HotSpotForeignCallLinkageImpl.create(metaAccess, codeCache, wordTypes, this, descriptor, 0L, PRESERVES_REGISTERS, JavaCall, JavaCallee, transition, reexecutable, killedLocations));
     }
 
     /**
@@ -103,8 +105,8 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
      *            cannot be re-executed.
      * @param killedLocations the memory locations killed by the foreign call
      */
-    public HotSpotForeignCallLinkage registerForeignCall(ForeignCallDescriptor descriptor, long address, CallingConvention.Type outgoingCcType, RegisterEffect effect, Transition transition,
-                    boolean reexecutable, LocationIdentity... killedLocations) {
+    public HotSpotForeignCallLinkage registerForeignCall(ForeignCallDescriptor descriptor, long address, CallingConvention.Type outgoingCcType, RegisterEffect effect, Transition transition, boolean reexecutable, LocationIdentity... killedLocations)
+    {
         Class<?> resultType = descriptor.getResultType();
         assert address != 0;
         assert transition != SAFEPOINT || resultType.isPrimitive() || Word.class.isAssignableFrom(resultType) : "non-leaf foreign calls must return objects in thread local storage: " + descriptor;
@@ -124,8 +126,8 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
      *            cannot be re-executed.
      * @param killedLocations the memory locations killed by the foreign call
      */
-    public void linkForeignCall(OptionValues options, HotSpotProviders providers, ForeignCallDescriptor descriptor, long address, boolean prependThread, Transition transition, boolean reexecutable,
-                    LocationIdentity... killedLocations) {
+    public void linkForeignCall(OptionValues options, HotSpotProviders providers, ForeignCallDescriptor descriptor, long address, boolean prependThread, Transition transition, boolean reexecutable, LocationIdentity... killedLocations)
+    {
         ForeignCallStub stub = new ForeignCallStub(options, jvmciRuntime, providers, address, descriptor, prependThread, transition, reexecutable, killedLocations);
         HotSpotForeignCallLinkage linkage = stub.getLinkage();
         HotSpotForeignCallLinkage targetLinkage = stub.getTargetLinkage();
@@ -143,7 +145,8 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
     public static final LocationIdentity[] NO_LOCATIONS = {};
 
     @Override
-    public HotSpotForeignCallLinkage lookupForeignCall(ForeignCallDescriptor descriptor) {
+    public HotSpotForeignCallLinkage lookupForeignCall(ForeignCallDescriptor descriptor)
+    {
         assert foreignCalls != null : descriptor;
         HotSpotForeignCallLinkage callTarget = foreignCalls.get(descriptor);
         callTarget.finalizeAddress(runtime.getHostBackend());
@@ -151,39 +154,47 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
     }
 
     @Override
-    public boolean isReexecutable(ForeignCallDescriptor descriptor) {
+    public boolean isReexecutable(ForeignCallDescriptor descriptor)
+    {
         assert foreignCalls.containsKey(descriptor) : "unknown foreign call: " + descriptor;
         return foreignCalls.get(descriptor).isReexecutable();
     }
 
     @Override
-    public boolean canDeoptimize(ForeignCallDescriptor descriptor) {
+    public boolean canDeoptimize(ForeignCallDescriptor descriptor)
+    {
         assert foreignCalls.containsKey(descriptor) : "unknown foreign call: " + descriptor;
         return foreignCalls.get(descriptor).needsDebugInfo();
     }
 
     @Override
-    public boolean isGuaranteedSafepoint(ForeignCallDescriptor descriptor) {
+    public boolean isGuaranteedSafepoint(ForeignCallDescriptor descriptor)
+    {
         assert foreignCalls.containsKey(descriptor) : "unknown foreign call: " + descriptor;
         return foreignCalls.get(descriptor).isGuaranteedSafepoint();
     }
 
     @Override
-    public LocationIdentity[] getKilledLocations(ForeignCallDescriptor descriptor) {
+    public LocationIdentity[] getKilledLocations(ForeignCallDescriptor descriptor)
+    {
         assert foreignCalls.containsKey(descriptor) : "unknown foreign call: " + descriptor;
         return foreignCalls.get(descriptor).getKilledLocations();
     }
 
     @Override
-    public LIRKind getValueKind(JavaKind javaKind) {
+    public LIRKind getValueKind(JavaKind javaKind)
+    {
         return LIRKind.fromJavaKind(codeCache.getTarget().arch, javaKind);
     }
 
     @Override
-    public List<Stub> getStubs() {
+    public List<Stub> getStubs()
+    {
         List<Stub> stubs = new ArrayList<>();
-        for (HotSpotForeignCallLinkage linkage : foreignCalls.getValues()) {
-            if (linkage.isCompiledStub()) {
+        for (HotSpotForeignCallLinkage linkage : foreignCalls.getValues())
+        {
+            if (linkage.isCompiledStub())
+            {
                 Stub stub = linkage.getStub();
                 assert stub != null;
                 stubs.add(stub);

@@ -12,9 +12,10 @@ import jdk.vm.ci.hotspot.HotSpotVMConfigStore;
  *
  * JDK Version: 9+
  */
-final class GraalHotSpotVMConfigVersioned extends HotSpotVMConfigAccess {
-
-    GraalHotSpotVMConfigVersioned(HotSpotVMConfigStore store) {
+final class GraalHotSpotVMConfigVersioned extends HotSpotVMConfigAccess
+{
+    GraalHotSpotVMConfigVersioned(HotSpotVMConfigStore store)
+    {
         super(store);
     }
 

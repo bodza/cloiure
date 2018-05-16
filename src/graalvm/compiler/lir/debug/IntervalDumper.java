@@ -5,9 +5,10 @@ import jdk.vm.ci.meta.Value;
 /**
  * Provides abstract access to intervals for dumping.
  */
-public interface IntervalDumper {
-
-    public interface IntervalVisitor {
+public interface IntervalDumper
+{
+    public interface IntervalVisitor
+    {
         void visitIntervalStart(Value parentOperand, Value splitOperand, Value location, Value hint, String typeName);
 
         void visitRange(int from, int to);
@@ -15,7 +16,6 @@ public interface IntervalDumper {
         void visitUsePos(int pos, Object registerPrioObject);
 
         void visitIntervalEnd(Object spillState);
-
     }
 
     /**
@@ -37,5 +37,4 @@ public interface IntervalDumper {
      * </ul>
      */
     void visitIntervals(IntervalVisitor visitor);
-
 }

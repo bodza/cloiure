@@ -4,8 +4,8 @@ package graalvm.compiler.nodeinfo;
  * Constants representing an estimation of of the size needed to represent a compiler node in
  * machine code.
  */
-public enum NodeSize {
-
+public enum NodeSize
+{
     /**
      * The default value of the {@link NodeInfo#size()} property.
      * <p>
@@ -43,37 +43,46 @@ public enum NodeSize {
 
     public final int value;
 
-    NodeSize(int value) {
+    NodeSize(int value)
+    {
         this.value = value;
     }
 
     public static final int IGNORE_SIZE_CONTRACT_FACTOR = 0xFFFF;
 
-    public static NodeSize compute(NodeSize base, int opCount) {
+    public static NodeSize compute(NodeSize base, int opCount)
+    {
         assert opCount >= 0;
-        if (opCount == 0) {
+        if (opCount == 0)
+        {
             return SIZE_0;
         }
         assert base.ordinal() > SIZE_0.ordinal();
         int log2 = log2(base.value * opCount);
         NodeSize[] values = values();
-        for (int i = base.ordinal(); i < values.length; i++) {
-            if (log2(values[i].value) == log2) {
+        for (int i = base.ordinal(); i < values.length; i++)
+        {
+            if (log2(values[i].value) == log2)
+            {
                 return values[i];
             }
         }
         return SIZE_1024;
     }
 
-    public static NodeSize compute(int rawValue) {
+    public static NodeSize compute(int rawValue)
+    {
         assert rawValue >= 0;
-        if (rawValue == 0) {
+        if (rawValue == 0)
+        {
             return SIZE_0;
         }
         assert rawValue > 0;
         NodeSize[] values = values();
-        for (int i = SIZE_0.ordinal(); i < values.length - 1; i++) {
-            if (values[i].value >= rawValue && rawValue <= values[i + 1].value) {
+        for (int i = SIZE_0.ordinal(); i < values.length - 1; i++)
+        {
+            if (values[i].value >= rawValue && rawValue <= values[i + 1].value)
+            {
                 int r1 = values[i].value;
                 int r2 = values[i + 1].value;
                 int diff = r2 - r1;
@@ -83,7 +92,8 @@ public enum NodeSize {
         return SIZE_1024;
     }
 
-    private static int log2(int val) {
+    private static int log2(int val)
+    {
         return (Integer.SIZE - 1) - Integer.numberOfLeadingZeros(val);
     }
 }

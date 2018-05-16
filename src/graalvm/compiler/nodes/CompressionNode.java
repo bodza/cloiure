@@ -26,11 +26,12 @@ import jdk.vm.ci.meta.Value;
  * Compress or uncompress an oop or metaspace pointer.
  */
 @NodeInfo(nameTemplate = "{p#op/s}", cycles = CYCLES_2, size = SIZE_2)
-public abstract class CompressionNode extends UnaryNode implements ConvertNode, LIRLowerable {
-
+public abstract class CompressionNode extends UnaryNode implements ConvertNode, LIRLowerable
+{
     public static final NodeClass<CompressionNode> TYPE = NodeClass.create(CompressionNode.class);
 
-    public enum CompressionOp {
+    public enum CompressionOp
+    {
         Compress,
         Uncompress
     }
@@ -38,14 +39,16 @@ public abstract class CompressionNode extends UnaryNode implements ConvertNode, 
     protected final CompressionOp op;
     protected final CompressEncoding encoding;
 
-    public CompressionNode(NodeClass<? extends UnaryNode> c, CompressionOp op, ValueNode input, Stamp stamp, CompressEncoding encoding) {
+    public CompressionNode(NodeClass<? extends UnaryNode> c, CompressionOp op, ValueNode input, Stamp stamp, CompressEncoding encoding)
+    {
         super(c, stamp, input);
         this.op = op;
         this.encoding = encoding;
     }
 
     @Override
-    public Stamp foldStamp(Stamp newStamp) {
+    public Stamp foldStamp(Stamp newStamp)
+    {
         assert newStamp.isCompatible(getValue().stamp(NodeView.DEFAULT));
         return mkStamp(newStamp);
     }
@@ -55,8 +58,10 @@ public abstract class CompressionNode extends UnaryNode implements ConvertNode, 
     protected abstract Constant uncompress(Constant c);
 
     @Override
-    public Constant convert(Constant c, ConstantReflectionProvider constantReflection) {
-        switch (op) {
+    public Constant convert(Constant c, ConstantReflectionProvider constantReflection)
+    {
+        switch (op)
+        {
             case Compress:
                 return compress(c);
             case Uncompress:
@@ -67,8 +72,10 @@ public abstract class CompressionNode extends UnaryNode implements ConvertNode, 
     }
 
     @Override
-    public Constant reverse(Constant c, ConstantReflectionProvider constantReflection) {
-        switch (op) {
+    public Constant reverse(Constant c, ConstantReflectionProvider constantReflection)
+    {
+        switch (op)
+        {
             case Compress:
                 return uncompress(c);
             case Uncompress:
@@ -79,34 +86,42 @@ public abstract class CompressionNode extends UnaryNode implements ConvertNode, 
     }
 
     @Override
-    public boolean isLossless() {
+    public boolean isLossless()
+    {
         return true;
     }
 
     protected abstract Stamp mkStamp(Stamp input);
 
-    public CompressionOp getOp() {
+    public CompressionOp getOp()
+    {
         return op;
     }
 
-    public CompressEncoding getEncoding() {
+    public CompressEncoding getEncoding()
+    {
         return encoding;
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue) {
-        if (forValue.isConstant()) {
-            if (GeneratePIC.getValue(tool.getOptions())) {
+    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    {
+        if (forValue.isConstant())
+        {
+            if (GeneratePIC.getValue(tool.getOptions()))
+            {
                 // We always want uncompressed constants
                 return this;
             }
 
             ConstantNode constant = (ConstantNode) forValue;
-            return ConstantNode.forConstant(stamp(NodeView.DEFAULT), convert(constant.getValue(), tool.getConstantReflection()), constant.getStableDimension(), constant.isDefaultStable(),
-                            tool.getMetaAccess());
-        } else if (forValue instanceof CompressionNode) {
+            return ConstantNode.forConstant(stamp(NodeView.DEFAULT), convert(constant.getValue(), tool.getConstantReflection()), constant.getStableDimension(), constant.isDefaultStable(), tool.getMetaAccess());
+        }
+        else if (forValue instanceof CompressionNode)
+        {
             CompressionNode other = (CompressionNode) forValue;
-            if (op != other.op && encoding.equals(other.encoding)) {
+            if (op != other.op && encoding.equals(other.encoding))
+            {
                 return other.getValue();
             }
         }
@@ -114,18 +129,23 @@ public abstract class CompressionNode extends UnaryNode implements ConvertNode, 
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         boolean nonNull;
-        if (value.stamp(NodeView.DEFAULT) instanceof AbstractObjectStamp) {
+        if (value.stamp(NodeView.DEFAULT) instanceof AbstractObjectStamp)
+        {
             nonNull = StampTool.isPointerNonNull(value.stamp(NodeView.DEFAULT));
-        } else {
+        }
+        else
+        {
             // metaspace pointers are never null
             nonNull = true;
         }
 
         LIRGeneratorTool tool = gen.getLIRGeneratorTool();
         Value result;
-        switch (op) {
+        switch (op)
+        {
             case Compress:
                 result = tool.emitCompress(gen.operand(value), encoding, nonNull);
                 break;
@@ -140,7 +160,8 @@ public abstract class CompressionNode extends UnaryNode implements ConvertNode, 
     }
 
     @Override
-    public boolean mayNullCheckSkipConversion() {
+    public boolean mayNullCheckSkipConversion()
+    {
         return true;
     }
 }

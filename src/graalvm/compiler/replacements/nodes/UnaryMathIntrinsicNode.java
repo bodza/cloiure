@@ -26,12 +26,13 @@ import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.Value;
 
 @NodeInfo(nameTemplate = "MathIntrinsic#{p#operation/s}", cycles = CYCLES_64, size = SIZE_1)
-public final class UnaryMathIntrinsicNode extends UnaryNode implements ArithmeticLIRLowerable, Lowerable {
-
+public final class UnaryMathIntrinsicNode extends UnaryNode implements ArithmeticLIRLowerable, Lowerable
+{
     public static final NodeClass<UnaryMathIntrinsicNode> TYPE = NodeClass.create(UnaryMathIntrinsicNode.class);
     protected final UnaryOperation operation;
 
-    public enum UnaryOperation {
+    public enum UnaryOperation
+    {
         LOG(new ForeignCallDescriptor("arithmeticLog", double.class, double.class)),
         LOG10(new ForeignCallDescriptor("arithmeticLog10", double.class, double.class)),
         SIN(new ForeignCallDescriptor("arithmeticSin", double.class, double.class)),
@@ -41,12 +42,15 @@ public final class UnaryMathIntrinsicNode extends UnaryNode implements Arithmeti
 
         public final ForeignCallDescriptor foreignCallDescriptor;
 
-        UnaryOperation(ForeignCallDescriptor foreignCallDescriptor) {
+        UnaryOperation(ForeignCallDescriptor foreignCallDescriptor)
+        {
             this.foreignCallDescriptor = foreignCallDescriptor;
         }
 
-        public double compute(double value) {
-            switch (this) {
+        public double compute(double value)
+        {
+            switch (this)
+            {
                 case LOG:
                     return Math.log(value);
                 case LOG10:
@@ -65,82 +69,99 @@ public final class UnaryMathIntrinsicNode extends UnaryNode implements Arithmeti
         }
     }
 
-    public UnaryOperation getOperation() {
+    public UnaryOperation getOperation()
+    {
         return operation;
     }
 
-    public static ValueNode create(ValueNode value, UnaryOperation op) {
+    public static ValueNode create(ValueNode value, UnaryOperation op)
+    {
         ValueNode c = tryConstantFold(value, op);
-        if (c != null) {
+        if (c != null)
+        {
             return c;
         }
         return new UnaryMathIntrinsicNode(value, op);
     }
 
-    protected static ValueNode tryConstantFold(ValueNode value, UnaryOperation op) {
-        if (value.isConstant()) {
+    protected static ValueNode tryConstantFold(ValueNode value, UnaryOperation op)
+    {
+        if (value.isConstant())
+        {
             return ConstantNode.forDouble(op.compute(value.asJavaConstant().asDouble()));
         }
         return null;
     }
 
-    protected UnaryMathIntrinsicNode(ValueNode value, UnaryOperation op) {
+    protected UnaryMathIntrinsicNode(ValueNode value, UnaryOperation op)
+    {
         super(TYPE, computeStamp(value.stamp(NodeView.DEFAULT), op), value);
         assert value.stamp(NodeView.DEFAULT) instanceof FloatStamp && PrimitiveStamp.getBits(value.stamp(NodeView.DEFAULT)) == 64;
         this.operation = op;
     }
 
     @Override
-    public Stamp foldStamp(Stamp valueStamp) {
+    public Stamp foldStamp(Stamp valueStamp)
+    {
         return computeStamp(valueStamp, getOperation());
     }
 
-    static Stamp computeStamp(Stamp valueStamp, UnaryOperation op) {
-        if (valueStamp instanceof FloatStamp) {
+    static Stamp computeStamp(Stamp valueStamp, UnaryOperation op)
+    {
+        if (valueStamp instanceof FloatStamp)
+        {
             FloatStamp floatStamp = (FloatStamp) valueStamp;
-            switch (op) {
+            switch (op)
+            {
                 case COS:
-                case SIN: {
+                case SIN:
+                {
                     boolean nonNaN = floatStamp.lowerBound() != Double.NEGATIVE_INFINITY && floatStamp.upperBound() != Double.POSITIVE_INFINITY && floatStamp.isNonNaN();
                     return StampFactory.forFloat(JavaKind.Double, -1.0, 1.0, nonNaN);
                 }
-                case TAN: {
+                case TAN:
+                {
                     boolean nonNaN = floatStamp.lowerBound() != Double.NEGATIVE_INFINITY && floatStamp.upperBound() != Double.POSITIVE_INFINITY && floatStamp.isNonNaN();
                     return StampFactory.forFloat(JavaKind.Double, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, nonNaN);
                 }
                 case LOG:
-                case LOG10: {
+                case LOG10:
+                {
                     double lowerBound = op.compute(floatStamp.lowerBound());
                     double upperBound = op.compute(floatStamp.upperBound());
-                    if (floatStamp.contains(0.0)) {
+                    if (floatStamp.contains(0.0))
+                    {
                         // 0.0 and -0.0 infinity produces -Inf
                         lowerBound = Double.NEGATIVE_INFINITY;
                     }
                     boolean nonNaN = floatStamp.lowerBound() >= 0.0 && floatStamp.isNonNaN();
                     return StampFactory.forFloat(JavaKind.Double, lowerBound, upperBound, nonNaN);
                 }
-                case EXP: {
+                case EXP:
+                {
                     double lowerBound = Math.exp(floatStamp.lowerBound());
                     double upperBound = Math.exp(floatStamp.upperBound());
                     boolean nonNaN = floatStamp.isNonNaN();
                     return StampFactory.forFloat(JavaKind.Double, lowerBound, upperBound, nonNaN);
                 }
-
             }
         }
         return StampFactory.forKind(JavaKind.Double);
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen) {
+    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    {
         Value input = nodeValueMap.operand(getValue());
         Value result;
-        switch (getOperation()) {
+        switch (getOperation())
+        {
             case LOG:
                 result = gen.emitMathLog(input, false);
                 break;
@@ -166,9 +187,11 @@ public final class UnaryMathIntrinsicNode extends UnaryNode implements Arithmeti
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue) {
+    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    {
         ValueNode c = tryConstantFold(forValue, getOperation());
-        if (c != null) {
+        if (c != null)
+        {
             return c;
         }
         return this;
@@ -176,5 +199,4 @@ public final class UnaryMathIntrinsicNode extends UnaryNode implements Arithmeti
 
     @NodeIntrinsic
     public static native double compute(double value, @ConstantNodeParameter UnaryOperation op);
-
 }

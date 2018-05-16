@@ -19,33 +19,38 @@ import jdk.vm.ci.meta.JavaKind;
  * write barriers, implicit conversions and optionally oop compression.
  */
 @NodeInfo(nameTemplate = "JavaWrite#{p#location/s}")
-public final class JavaWriteNode extends AbstractWriteNode implements Lowerable, StateSplit, MemoryAccess, MemoryCheckpoint.Single {
-
+public final class JavaWriteNode extends AbstractWriteNode implements Lowerable, StateSplit, MemoryAccess, MemoryCheckpoint.Single
+{
     public static final NodeClass<JavaWriteNode> TYPE = NodeClass.create(JavaWriteNode.class);
     protected final JavaKind writeKind;
     protected final boolean compressible;
 
-    public JavaWriteNode(JavaKind writeKind, AddressNode address, LocationIdentity location, ValueNode value, BarrierType barrierType, boolean compressible) {
+    public JavaWriteNode(JavaKind writeKind, AddressNode address, LocationIdentity location, ValueNode value, BarrierType barrierType, boolean compressible)
+    {
         super(TYPE, address, location, value, barrierType);
         this.writeKind = writeKind;
         this.compressible = compressible;
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
     @Override
-    public boolean canNullCheck() {
+    public boolean canNullCheck()
+    {
         return true;
     }
 
-    public JavaKind getWriteKind() {
+    public JavaKind getWriteKind()
+    {
         return writeKind;
     }
 
-    public boolean isCompressible() {
+    public boolean isCompressible()
+    {
         return compressible;
     }
 }

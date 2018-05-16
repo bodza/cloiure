@@ -26,9 +26,10 @@ import jdk.vm.ci.meta.PlatformKind;
 /**
  * Manages the selection of allocation strategies.
  */
-public final class DefaultTraceRegisterAllocationPolicy {
-
-    public enum TraceRAPolicies {
+public final class DefaultTraceRegisterAllocationPolicy
+{
+    public enum TraceRAPolicies
+    {
         Default,
         LinearScanOnly,
         BottomUpOnly,
@@ -43,8 +44,8 @@ public final class DefaultTraceRegisterAllocationPolicy {
         LoopMaxFreq
     }
 
-    public static class Options {
-        // @formatter:off
+    public static class Options
+    {
         @Option(help = "Use special allocator for trivial blocks.", type = OptionType.Debug)
         public static final OptionKey<Boolean> TraceRAtrivialBlockAllocator = new OptionKey<>(true);
         @Option(help = "Use BottomUp if there is only one block with at most this number of instructions", type = OptionType.Debug)
@@ -59,45 +60,51 @@ public final class DefaultTraceRegisterAllocationPolicy {
         public static final OptionKey<Double> TraceRAsumBudget = new OptionKey<>(0.5);
         @Option(help = "TraceRA allocation policy to use.", type = OptionType.Debug)
         public static final EnumOptionKey<TraceRAPolicies> TraceRAPolicy = new EnumOptionKey<>(TraceRAPolicies.Default);
-        // @formatter:on
     }
 
-    public static final class TrivialTraceStrategy extends AllocationStrategy {
-
-        public TrivialTraceStrategy(TraceRegisterAllocationPolicy plan) {
+    public static final class TrivialTraceStrategy extends AllocationStrategy
+    {
+        public TrivialTraceStrategy(TraceRegisterAllocationPolicy plan)
+        {
             plan.super();
         }
 
         @Override
-        public boolean shouldApplyTo(Trace trace) {
+        public boolean shouldApplyTo(Trace trace)
+        {
             return TraceUtil.isTrivialTrace(getLIR(), trace);
         }
 
         @Override
-        protected TraceAllocationPhase<TraceAllocationContext> initAllocator(TargetDescription target, LIRGenerationResult lirGenRes, MoveFactory spillMoveFactory,
-                        RegisterAllocationConfig registerAllocationConfig, AllocatableValue[] cachedStackSlots, TraceBuilderResult resultTraces, boolean neverSpillConstant,
-                        GlobalLivenessInfo livenessInfo, ArrayList<AllocationStrategy> strategies) {
+        protected TraceAllocationPhase<TraceAllocationContext> initAllocator(TargetDescription target, LIRGenerationResult lirGenRes, MoveFactory spillMoveFactory, RegisterAllocationConfig registerAllocationConfig, AllocatableValue[] cachedStackSlots, TraceBuilderResult resultTraces, boolean neverSpillConstant, GlobalLivenessInfo livenessInfo, ArrayList<AllocationStrategy> strategies)
+        {
             return new TrivialTraceAllocator();
         }
     }
 
-    public static class BottomUpStrategy extends AllocationStrategy {
-
-        public BottomUpStrategy(TraceRegisterAllocationPolicy plan) {
+    public static class BottomUpStrategy extends AllocationStrategy
+    {
+        public BottomUpStrategy(TraceRegisterAllocationPolicy plan)
+        {
             // explicitly specify the enclosing instance for the superclass constructor call
             plan.super();
         }
 
         @Override
-        public boolean shouldApplyTo(Trace trace) {
+        public boolean shouldApplyTo(Trace trace)
+        {
             return !containsExceptionEdge(trace);
         }
 
-        private static boolean containsExceptionEdge(Trace trace) {
-            for (AbstractBlockBase<?> block : trace.getBlocks()) {
+        private static boolean containsExceptionEdge(Trace trace)
+        {
+            for (AbstractBlockBase<?> block : trace.getBlocks())
+            {
                 // check if one of the successors is an exception handler
-                for (AbstractBlockBase<?> succ : block.getSuccessors()) {
-                    if (succ.isExceptionEntry()) {
+                for (AbstractBlockBase<?> succ : block.getSuccessors())
+                {
+                    if (succ.isExceptionEntry())
+                    {
                         return true;
                     }
                 }
@@ -106,47 +113,53 @@ public final class DefaultTraceRegisterAllocationPolicy {
         }
 
         @Override
-        protected TraceAllocationPhase<TraceAllocationContext> initAllocator(TargetDescription target, LIRGenerationResult lirGenRes, MoveFactory spillMoveFactory,
-                        RegisterAllocationConfig registerAllocationConfig, AllocatableValue[] cachedStackSlots, TraceBuilderResult resultTraces, boolean neverSpillConstant,
-                        GlobalLivenessInfo livenessInfo, ArrayList<AllocationStrategy> strategies) {
+        protected TraceAllocationPhase<TraceAllocationContext> initAllocator(TargetDescription target, LIRGenerationResult lirGenRes, MoveFactory spillMoveFactory, RegisterAllocationConfig registerAllocationConfig, AllocatableValue[] cachedStackSlots, TraceBuilderResult resultTraces, boolean neverSpillConstant, GlobalLivenessInfo livenessInfo, ArrayList<AllocationStrategy> strategies)
+        {
             return new BottomUpAllocator(target, lirGenRes, spillMoveFactory, registerAllocationConfig, cachedStackSlots, resultTraces, neverSpillConstant, livenessInfo);
         }
     }
 
-    public static final class BottomUpAlmostTrivialStrategy extends BottomUpStrategy {
-
+    public static final class BottomUpAlmostTrivialStrategy extends BottomUpStrategy
+    {
         private final int trivialTraceSize;
 
-        public BottomUpAlmostTrivialStrategy(TraceRegisterAllocationPolicy plan) {
+        public BottomUpAlmostTrivialStrategy(TraceRegisterAllocationPolicy plan)
+        {
             // explicitly specify the enclosing instance for the superclass constructor call
             super(plan);
             trivialTraceSize = Options.TraceRAalmostTrivialSize.getValue(plan.getOptions());
         }
 
         @Override
-        public boolean shouldApplyTo(Trace trace) {
-            if (!super.shouldApplyTo(trace)) {
+        public boolean shouldApplyTo(Trace trace)
+        {
+            if (!super.shouldApplyTo(trace))
+            {
                 return false;
             }
-            if (trace.size() != 1) {
+            if (trace.size() != 1)
+            {
                 return false;
             }
             return getLIR().getLIRforBlock(trace.getBlocks()[0]).size() <= trivialTraceSize;
         }
-
     }
 
-    public static final class BottomUpNumVariablesStrategy extends BottomUpStrategy {
-
+    public static final class BottomUpNumVariablesStrategy extends BottomUpStrategy
+    {
         private final int numVarLimit;
 
-        public BottomUpNumVariablesStrategy(TraceRegisterAllocationPolicy plan) {
+        public BottomUpNumVariablesStrategy(TraceRegisterAllocationPolicy plan)
+        {
             // explicitly specify the enclosing instance for the superclass constructor call
             super(plan);
             Integer value = Options.TraceRAnumVariables.getValue(plan.getOptions());
-            if (value != null) {
+            if (value != null)
+            {
                 numVarLimit = value;
-            } else {
+            }
+            else
+            {
                 /* Default to the number of allocatable word registers. */
                 PlatformKind wordKind = getTarget().arch.getWordKind();
                 int numWordRegisters = getRegisterAllocationConfig().getAllocatableRegisters(wordKind).allocatableRegisters.length;
@@ -155,33 +168,38 @@ public final class DefaultTraceRegisterAllocationPolicy {
         }
 
         @Override
-        public boolean shouldApplyTo(Trace trace) {
-            if (!super.shouldApplyTo(trace)) {
+        public boolean shouldApplyTo(Trace trace)
+        {
+            if (!super.shouldApplyTo(trace))
+            {
                 return false;
             }
             GlobalLivenessInfo livenessInfo = getGlobalLivenessInfo();
             int maxNumVars = livenessInfo.getBlockIn(trace.getBlocks()[0]).length;
-            for (AbstractBlockBase<?> block : trace.getBlocks()) {
+            for (AbstractBlockBase<?> block : trace.getBlocks())
+            {
                 maxNumVars = Math.max(maxNumVars, livenessInfo.getBlockOut(block).length);
             }
             return maxNumVars <= numVarLimit;
         }
-
     }
 
-    public static final class BottomUpRatioStrategy extends BottomUpStrategy {
-
+    public static final class BottomUpRatioStrategy extends BottomUpStrategy
+    {
         private final double ratio;
 
-        public BottomUpRatioStrategy(TraceRegisterAllocationPolicy plan) {
+        public BottomUpRatioStrategy(TraceRegisterAllocationPolicy plan)
+        {
             // explicitly specify the enclosing instance for the superclass constructor call
             super(plan);
             ratio = Options.TraceRAbottomUpRatio.getValue(plan.getOptions());
         }
 
         @Override
-        public boolean shouldApplyTo(Trace trace) {
-            if (!super.shouldApplyTo(trace)) {
+        public boolean shouldApplyTo(Trace trace)
+        {
+            if (!super.shouldApplyTo(trace))
+            {
                 return false;
             }
             double numTraces = getTraceBuilderResult().getTraces().size();
@@ -189,26 +207,31 @@ public final class DefaultTraceRegisterAllocationPolicy {
             assert ratio >= 0 && ratio <= 1.0 : "Ratio out of range: " + ratio;
             return (traceId / numTraces) >= ratio;
         }
-
     }
 
-    public abstract static class BottomUpLoopStrategyBase extends BottomUpStrategy {
-
-        public BottomUpLoopStrategyBase(TraceRegisterAllocationPolicy plan) {
+    public abstract static class BottomUpLoopStrategyBase extends BottomUpStrategy
+    {
+        public BottomUpLoopStrategyBase(TraceRegisterAllocationPolicy plan)
+        {
             // explicitly specify the enclosing instance for the superclass constructor call
             super(plan);
         }
 
         @Override
-        public final boolean shouldApplyTo(Trace trace) {
-            if (!super.shouldApplyTo(trace)) {
+        public final boolean shouldApplyTo(Trace trace)
+        {
+            if (!super.shouldApplyTo(trace))
+            {
                 return false;
             }
-            if (getLIR().getControlFlowGraph().getLoops().isEmpty()) {
+            if (getLIR().getControlFlowGraph().getLoops().isEmpty())
+            {
                 return shouldApplyToNoLoop(trace);
             }
-            for (AbstractBlockBase<?> block : trace.getBlocks()) {
-                if (block.getLoopDepth() > 0) {
+            for (AbstractBlockBase<?> block : trace.getBlocks())
+            {
+                if (block.getLoopDepth() > 0)
+                {
                     return false;
                 }
             }
@@ -216,58 +239,63 @@ public final class DefaultTraceRegisterAllocationPolicy {
         }
 
         protected abstract boolean shouldApplyToNoLoop(Trace trace);
-
     }
 
-    public static final class BottomUpLoopStrategy extends BottomUpLoopStrategyBase {
-
-        public BottomUpLoopStrategy(TraceRegisterAllocationPolicy plan) {
+    public static final class BottomUpLoopStrategy extends BottomUpLoopStrategyBase
+    {
+        public BottomUpLoopStrategy(TraceRegisterAllocationPolicy plan)
+        {
             // explicitly specify the enclosing instance for the superclass constructor call
             super(plan);
         }
 
         @Override
-        protected boolean shouldApplyToNoLoop(Trace trace) {
+        protected boolean shouldApplyToNoLoop(Trace trace)
+        {
             // no loops at all -> use LSRA
             return false;
         }
-
     }
 
-    public static final class BottomUpDelegatingLoopStrategy extends BottomUpLoopStrategyBase {
-
+    public static final class BottomUpDelegatingLoopStrategy extends BottomUpLoopStrategyBase
+    {
         private final BottomUpStrategy delegate;
 
-        public BottomUpDelegatingLoopStrategy(TraceRegisterAllocationPolicy plan, BottomUpStrategy delegate) {
+        public BottomUpDelegatingLoopStrategy(TraceRegisterAllocationPolicy plan, BottomUpStrategy delegate)
+        {
             // explicitly specify the enclosing instance for the superclass constructor call
             super(plan);
             this.delegate = delegate;
         }
 
         @Override
-        protected boolean shouldApplyToNoLoop(Trace trace) {
+        protected boolean shouldApplyToNoLoop(Trace trace)
+        {
             return delegate.shouldApplyTo(trace);
         }
-
     }
 
-    public static final class BottomUpMaxFrequencyStrategy extends BottomUpStrategy {
-
+    public static final class BottomUpMaxFrequencyStrategy extends BottomUpStrategy
+    {
         private final double maxMethodProbability;
         private final double probabilityThreshold;
 
-        public BottomUpMaxFrequencyStrategy(TraceRegisterAllocationPolicy plan) {
+        public BottomUpMaxFrequencyStrategy(TraceRegisterAllocationPolicy plan)
+        {
             // explicitly specify the enclosing instance for the superclass constructor call
             super(plan);
             maxMethodProbability = maxProbability(getLIR().getControlFlowGraph().getBlocks());
             probabilityThreshold = Options.TraceRAprobalilityThreshold.getValue(plan.getOptions());
         }
 
-        private static double maxProbability(AbstractBlockBase<?>[] blocks) {
+        private static double maxProbability(AbstractBlockBase<?>[] blocks)
+        {
             double max = 0;
-            for (AbstractBlockBase<?> block : blocks) {
+            for (AbstractBlockBase<?> block : blocks)
+            {
                 double probability = block.probability();
-                if (probability > max) {
+                if (probability > max)
+                {
                     max = probability;
                 }
             }
@@ -275,21 +303,23 @@ public final class DefaultTraceRegisterAllocationPolicy {
         }
 
         @Override
-        public boolean shouldApplyTo(Trace trace) {
-            if (!super.shouldApplyTo(trace)) {
+        public boolean shouldApplyTo(Trace trace)
+        {
+            if (!super.shouldApplyTo(trace))
+            {
                 return false;
             }
             return maxProbability(trace.getBlocks()) / maxMethodProbability <= probabilityThreshold;
         }
-
     }
 
-    public static final class BottomUpFrequencyBudgetStrategy extends BottomUpStrategy {
-
+    public static final class BottomUpFrequencyBudgetStrategy extends BottomUpStrategy
+    {
         private final double[] cumulativeTraceProbability;
         private final double budget;
 
-        public BottomUpFrequencyBudgetStrategy(TraceRegisterAllocationPolicy plan) {
+        public BottomUpFrequencyBudgetStrategy(TraceRegisterAllocationPolicy plan)
+        {
             // explicitly specify the enclosing instance for the superclass constructor call
             super(plan);
             ArrayList<Trace> traces = getTraceBuilderResult().getTraces();
@@ -298,11 +328,14 @@ public final class DefaultTraceRegisterAllocationPolicy {
             this.budget = sumMethodProbability * Options.TraceRAsumBudget.getValue(plan.getOptions());
         }
 
-        private static double init(ArrayList<Trace> traces, double[] sumTraces) {
+        private static double init(ArrayList<Trace> traces, double[] sumTraces)
+        {
             double sumMethod = 0;
-            for (Trace trace : traces) {
+            for (Trace trace : traces)
+            {
                 double traceSum = 0;
-                for (AbstractBlockBase<?> block : trace.getBlocks()) {
+                for (AbstractBlockBase<?> block : trace.getBlocks())
+                {
                     traceSum += block.probability();
                 }
                 sumMethod += traceSum;
@@ -313,46 +346,47 @@ public final class DefaultTraceRegisterAllocationPolicy {
         }
 
         @Override
-        public boolean shouldApplyTo(Trace trace) {
-            if (!super.shouldApplyTo(trace)) {
+        public boolean shouldApplyTo(Trace trace)
+        {
+            if (!super.shouldApplyTo(trace))
+            {
                 return false;
             }
             double cumTraceProb = cumulativeTraceProbability[trace.getId()];
             return cumTraceProb > budget;
         }
-
     }
 
-    public static final class TraceLinearScanStrategy extends AllocationStrategy {
-
-        public TraceLinearScanStrategy(TraceRegisterAllocationPolicy plan) {
+    public static final class TraceLinearScanStrategy extends AllocationStrategy
+    {
+        public TraceLinearScanStrategy(TraceRegisterAllocationPolicy plan)
+        {
             // explicitly specify the enclosing instance for the superclass constructor call
             plan.super();
         }
 
         @Override
-        public boolean shouldApplyTo(Trace trace) {
+        public boolean shouldApplyTo(Trace trace)
+        {
             return true;
         }
 
         @Override
-        protected TraceAllocationPhase<TraceAllocationContext> initAllocator(TargetDescription target, LIRGenerationResult lirGenRes, MoveFactory spillMoveFactory,
-                        RegisterAllocationConfig registerAllocationConfig, AllocatableValue[] cachedStackSlots, TraceBuilderResult resultTraces, boolean neverSpillConstant,
-                        GlobalLivenessInfo livenessInfo, ArrayList<AllocationStrategy> strategies) {
+        protected TraceAllocationPhase<TraceAllocationContext> initAllocator(TargetDescription target, LIRGenerationResult lirGenRes, MoveFactory spillMoveFactory, RegisterAllocationConfig registerAllocationConfig, AllocatableValue[] cachedStackSlots, TraceBuilderResult resultTraces, boolean neverSpillConstant, GlobalLivenessInfo livenessInfo, ArrayList<AllocationStrategy> strategies)
+        {
             return new TraceLinearScanPhase(target, lirGenRes, spillMoveFactory, registerAllocationConfig, resultTraces, neverSpillConstant, cachedStackSlots, livenessInfo);
         }
-
     }
 
-    public static TraceRegisterAllocationPolicy allocationPolicy(TargetDescription target, LIRGenerationResult lirGenRes, MoveFactory spillMoveFactory,
-                    RegisterAllocationConfig registerAllocationConfig, AllocatableValue[] cachedStackSlots, TraceBuilderResult resultTraces, boolean neverSpillConstant,
-                    GlobalLivenessInfo livenessInfo, OptionValues options) {
-        TraceRegisterAllocationPolicy plan = new TraceRegisterAllocationPolicy(target, lirGenRes, spillMoveFactory, registerAllocationConfig, cachedStackSlots, resultTraces, neverSpillConstant,
-                        livenessInfo);
-        if (Options.TraceRAtrivialBlockAllocator.getValue(options)) {
+    public static TraceRegisterAllocationPolicy allocationPolicy(TargetDescription target, LIRGenerationResult lirGenRes, MoveFactory spillMoveFactory, RegisterAllocationConfig registerAllocationConfig, AllocatableValue[] cachedStackSlots, TraceBuilderResult resultTraces, boolean neverSpillConstant, GlobalLivenessInfo livenessInfo, OptionValues options)
+    {
+        TraceRegisterAllocationPolicy plan = new TraceRegisterAllocationPolicy(target, lirGenRes, spillMoveFactory, registerAllocationConfig, cachedStackSlots, resultTraces, neverSpillConstant, livenessInfo);
+        if (Options.TraceRAtrivialBlockAllocator.getValue(options))
+        {
             plan.appendStrategy(new TrivialTraceStrategy(plan));
         }
-        switch (Options.TraceRAPolicy.getValue(options)) {
+        switch (Options.TraceRAPolicy.getValue(options))
+        {
             case Default:
             case LinearScanOnly:
                 break;

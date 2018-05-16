@@ -13,25 +13,30 @@ import graalvm.compiler.lir.alloc.lsra.Interval;
 import graalvm.compiler.lir.alloc.lsra.LinearScan;
 import graalvm.compiler.lir.alloc.lsra.LinearScanEliminateSpillMovePhase;
 
-public class SSALinearScanEliminateSpillMovePhase extends LinearScanEliminateSpillMovePhase {
-
-    SSALinearScanEliminateSpillMovePhase(LinearScan allocator) {
+public class SSALinearScanEliminateSpillMovePhase extends LinearScanEliminateSpillMovePhase
+{
+    SSALinearScanEliminateSpillMovePhase(LinearScan allocator)
+    {
         super(allocator);
     }
 
     @Override
-    protected int firstInstructionOfInterest() {
+    protected int firstInstructionOfInterest()
+    {
         // also look at Labels as they define PHI values
         return 0;
     }
 
     @Override
-    protected boolean canEliminateSpillMove(AbstractBlockBase<?> block, MoveOp move) {
-        if (super.canEliminateSpillMove(block, move)) {
+    protected boolean canEliminateSpillMove(AbstractBlockBase<?> block, MoveOp move)
+    {
+        if (super.canEliminateSpillMove(block, move))
+        {
             // SSA Linear Scan might introduce moves to stack slots
             Interval curInterval = allocator.intervalFor(move.getResult());
             assert !isRegister(curInterval.location()) && curInterval.alwaysInMemory();
-            if (!isPhiResolutionMove(block, move, curInterval)) {
+            if (!isPhiResolutionMove(block, move, curInterval))
+            {
                 assert isStackSlotValue(curInterval.location()) : "Not a stack slot: " + curInterval.location();
                 return true;
             }
@@ -40,28 +45,35 @@ public class SSALinearScanEliminateSpillMovePhase extends LinearScanEliminateSpi
     }
 
     @SuppressWarnings("try")
-    private boolean isPhiResolutionMove(AbstractBlockBase<?> block, MoveOp move, Interval toInterval) {
-        if (!toInterval.isSplitParent()) {
+    private boolean isPhiResolutionMove(AbstractBlockBase<?> block, MoveOp move, Interval toInterval)
+    {
+        if (!toInterval.isSplitParent())
+        {
             return false;
         }
-        if ((toInterval.from() & 1) == 1) {
+        if ((toInterval.from() & 1) == 1)
+        {
             // phi intervals start at even positions.
             return false;
         }
-        if (block.getSuccessorCount() != 1) {
+        if (block.getSuccessorCount() != 1)
+        {
             return false;
         }
         LIRInstruction op = allocator.instructionForId(toInterval.from());
-        if (!(op instanceof LabelOp)) {
+        if (!(op instanceof LabelOp))
+        {
             return false;
         }
         AbstractBlockBase<?> intStartBlock = allocator.blockForId(toInterval.from());
         assert allocator.getLIR().getLIRforBlock(intStartBlock).get(0).equals(op);
-        if (!block.getSuccessors()[0].equals(intStartBlock)) {
+        if (!block.getSuccessors()[0].equals(intStartBlock))
+        {
             return false;
         }
         DebugContext debug = allocator.getDebug();
-        try (Indent indent = debug.indent()) {
+        try (Indent indent = debug.indent())
+        {
             debug.log("Is a move (%s) to phi interval %s", move, toInterval);
         }
         return true;

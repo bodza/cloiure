@@ -7,10 +7,10 @@ import jdk.vm.ci.meta.ValueKind;
 /**
  * Represents a {@link VirtualStackSlot virtual stack slot} for a specific {@link ValueKind kind}.
  */
-public class SimpleVirtualStackSlot extends VirtualStackSlot {
-
-    public SimpleVirtualStackSlot(int id, ValueKind<?> kind) {
+public class SimpleVirtualStackSlot extends VirtualStackSlot
+{
+    public SimpleVirtualStackSlot(int id, ValueKind<?> kind)
+    {
         super(id, kind);
     }
-
 }

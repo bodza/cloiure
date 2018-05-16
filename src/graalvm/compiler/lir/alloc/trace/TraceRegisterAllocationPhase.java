@@ -25,10 +25,10 @@ import jdk.vm.ci.meta.AllocatableValue;
  * <a href="http://dx.doi.org/10.1145/2972206.2972211">"Trace-based Register Allocation in a JIT
  * Compiler"</a> by Josef Eisl et al.
  */
-public final class TraceRegisterAllocationPhase extends RegisterAllocationPhase {
-
-    public static class Options {
-        // @formatter:off
+public final class TraceRegisterAllocationPhase extends RegisterAllocationPhase
+{
+    public static class Options
+    {
         @Option(help = "Use inter-trace register hints.", type = OptionType.Debug)
         public static final OptionKey<Boolean> TraceRAuseInterTraceHints = new OptionKey<>(true);
         @Option(help = "Share information about spilled values to other traces.", type = OptionType.Debug)
@@ -37,7 +37,6 @@ public final class TraceRegisterAllocationPhase extends RegisterAllocationPhase 
         public static final OptionKey<Boolean> TraceRAreuseStackSlotsForMoveResolutionCycleBreaking = new OptionKey<>(true);
         @Option(help = "Cache stack slots globally (i.e. a variable always gets the same slot in every trace).", type = OptionType.Debug)
         public static final OptionKey<Boolean> TraceRACacheStackSlots = new OptionKey<>(true);
-        // @formatter:on
     }
 
     private static final CounterKey tracesCounter = DebugContext.counter("TraceRA[traces]");
@@ -48,14 +47,16 @@ public final class TraceRegisterAllocationPhase extends RegisterAllocationPhase 
     private final TraceBuilderPhase traceBuilder;
     private final GlobalLivenessAnalysisPhase livenessAnalysis;
 
-    public TraceRegisterAllocationPhase() {
+    public TraceRegisterAllocationPhase()
+    {
         this.traceBuilder = new TraceBuilderPhase();
         this.livenessAnalysis = new GlobalLivenessAnalysisPhase();
     }
 
     @Override
     @SuppressWarnings("try")
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context) {
+    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context)
+    {
         traceBuilder.apply(target, lirGenRes, context);
         livenessAnalysis.apply(target, lirGenRes, context);
 
@@ -72,18 +73,22 @@ public final class TraceRegisterAllocationPhase extends RegisterAllocationPhase 
         boolean neverSpillConstant = getNeverSpillConstants();
         assert !neverSpillConstant : "currently this is not supported";
 
-        final TraceRegisterAllocationPolicy plan = DefaultTraceRegisterAllocationPolicy.allocationPolicy(target, lirGenRes, spillMoveFactory, registerAllocationConfig, cachedStackSlots, resultTraces,
-                        neverSpillConstant, livenessInfo, lir.getOptions());
+        final TraceRegisterAllocationPolicy plan = DefaultTraceRegisterAllocationPolicy.allocationPolicy(target, lirGenRes, spillMoveFactory, registerAllocationConfig, cachedStackSlots, resultTraces, neverSpillConstant, livenessInfo, lir.getOptions());
 
-        try (DebugContext.Scope s0 = debug.scope("AllocateTraces", resultTraces, livenessInfo)) {
-            for (Trace trace : resultTraces.getTraces()) {
+        try (DebugContext.Scope s0 = debug.scope("AllocateTraces", resultTraces, livenessInfo))
+        {
+            for (Trace trace : resultTraces.getTraces())
+            {
                 tracesCounter.increment(debug);
                 TraceAllocationPhase<TraceAllocationContext> allocator = plan.selectStrategy(trace);
-                try (Indent i = debug.logAndIndent("Allocating Trace%d: %s (%s)", trace.getId(), trace, allocator); DebugContext.Scope s = debug.scope("AllocateTrace", trace)) {
+                try (Indent i = debug.logAndIndent("Allocating Trace%d: %s (%s)", trace.getId(), trace, allocator); DebugContext.Scope s = debug.scope("AllocateTrace", trace))
+                {
                     allocator.apply(target, lirGenRes, trace, traceContext);
                 }
             }
-        } catch (Throwable e) {
+        }
+        catch (Throwable e)
+        {
             throw debug.handle(e);
         }
 
@@ -94,15 +99,18 @@ public final class TraceRegisterAllocationPhase extends RegisterAllocationPhase 
     /**
      * Remove Phi In/Out.
      */
-    private static void deconstructSSAForm(LIR lir) {
-        for (AbstractBlockBase<?> block : lir.getControlFlowGraph().getBlocks()) {
-            if (SSAUtil.isMerge(block)) {
+    private static void deconstructSSAForm(LIR lir)
+    {
+        for (AbstractBlockBase<?> block : lir.getControlFlowGraph().getBlocks())
+        {
+            if (SSAUtil.isMerge(block))
+            {
                 SSAUtil.phiIn(lir, block).clearIncomingValues();
-                for (AbstractBlockBase<?> pred : block.getPredecessors()) {
+                for (AbstractBlockBase<?> pred : block.getPredecessors())
+                {
                     SSAUtil.phiOut(lir, pred).clearOutgoingValues();
                 }
             }
         }
     }
-
 }

@@ -11,8 +11,8 @@ import jdk.vm.ci.meta.Value;
 /**
  * Represents a fixed interval.
  */
-final class FixedInterval extends IntervalHint {
-
+final class FixedInterval extends IntervalHint
+{
     /**
      * The fixed operand of this interval.
      */
@@ -36,17 +36,21 @@ final class FixedInterval extends IntervalHint {
 
     private int cachedTo; // cached value: to of last range (-1: not cached)
 
-    public FixedRange first() {
+    public FixedRange first()
+    {
         return first;
     }
 
     @Override
-    public int from() {
+    public int from()
+    {
         return first.from;
     }
 
-    public int to() {
-        if (cachedTo == -1) {
+    public int to()
+    {
+        if (cachedTo == -1)
+        {
             cachedTo = calcTo();
         }
         assert cachedTo == calcTo() : "invalid cached value";
@@ -54,71 +58,89 @@ final class FixedInterval extends IntervalHint {
     }
 
     // test intersection
-    boolean intersects(TraceInterval i) {
+    boolean intersects(TraceInterval i)
+    {
         return first.intersects(i);
     }
 
-    int intersectsAt(TraceInterval i) {
+    int intersectsAt(TraceInterval i)
+    {
         return first.intersectsAt(i);
     }
 
     // range iteration
-    void rewindRange() {
+    void rewindRange()
+    {
         current = first;
     }
 
-    void nextRange() {
+    void nextRange()
+    {
         assert this != EndMarker : "not allowed on sentinel";
         current = current.next;
     }
 
-    int currentFrom() {
+    int currentFrom()
+    {
         return current.from;
     }
 
-    int currentTo() {
+    int currentTo()
+    {
         return current.to;
     }
 
-    boolean currentAtEnd() {
+    boolean currentAtEnd()
+    {
         return current == FixedRange.EndMarker;
     }
 
-    boolean currentIntersects(TraceInterval it) {
+    boolean currentIntersects(TraceInterval it)
+    {
         return current.intersects(it);
     }
 
-    int currentIntersectsAt(TraceInterval it) {
+    int currentIntersectsAt(TraceInterval it)
+    {
         return current.intersectsAt(it);
     }
 
     // range creation
-    public void setFrom(int from) {
+    public void setFrom(int from)
+    {
         assert !isEmpty();
         first().from = from;
     }
 
-    private boolean isEmpty() {
+    private boolean isEmpty()
+    {
         return first() == FixedRange.EndMarker;
     }
 
-    public void addRange(int from, int to) {
-        if (isEmpty()) {
+    public void addRange(int from, int to)
+    {
+        if (isEmpty())
+        {
             first = new FixedRange(from, to, first());
             return;
         }
-        if (to <= to() && from >= from()) {
+        if (to <= to() && from >= from())
+        {
             return;
         }
-        if (from() == to) {
+        if (from() == to)
+        {
             first().from = from;
-        } else {
+        }
+        else
+        {
             first = new FixedRange(from, to, first());
         }
     }
 
     @Override
-    public AllocatableValue location() {
+    public AllocatableValue location()
+    {
         return operand;
     }
 
@@ -127,7 +149,8 @@ final class FixedInterval extends IntervalHint {
      */
     static final FixedInterval EndMarker = new FixedInterval(Value.ILLEGAL);
 
-    FixedInterval(AllocatableValue operand) {
+    FixedInterval(AllocatableValue operand)
+    {
         assert operand != null;
         this.operand = operand;
         this.first = FixedRange.EndMarker;
@@ -136,29 +159,37 @@ final class FixedInterval extends IntervalHint {
         this.cachedTo = -1;
     }
 
-    int calcTo() {
+    int calcTo()
+    {
         assert first != FixedRange.EndMarker : "interval has no range";
 
         FixedRange r = first;
-        while (r.next != FixedRange.EndMarker) {
+        while (r.next != FixedRange.EndMarker)
+        {
             r = r.next;
         }
         return r.to;
     }
 
     // returns true if the opId is inside the interval
-    boolean covers(int opId, LIRInstruction.OperandMode mode) {
+    boolean covers(int opId, LIRInstruction.OperandMode mode)
+    {
         FixedRange cur = first;
 
-        while (cur != FixedRange.EndMarker && cur.to < opId) {
+        while (cur != FixedRange.EndMarker && cur.to < opId)
+        {
             cur = cur.next;
         }
-        if (cur != FixedRange.EndMarker) {
+        if (cur != FixedRange.EndMarker)
+        {
             assert cur.to != cur.next.from : "ranges not separated";
 
-            if (mode == LIRInstruction.OperandMode.DEF) {
+            if (mode == LIRInstruction.OperandMode.DEF)
+            {
                 return cur.from <= opId && opId < cur.to;
-            } else {
+            }
+            else
+            {
                 return cur.from <= opId && opId <= cur.to;
             }
         }
@@ -167,26 +198,35 @@ final class FixedInterval extends IntervalHint {
 
     // returns true if the interval has any hole between holeFrom and holeTo
     // (even if the hole has only the length 1)
-    boolean hasHoleBetween(int holeFrom, int holeTo) {
+    boolean hasHoleBetween(int holeFrom, int holeTo)
+    {
         assert holeFrom < holeTo : "check";
         assert from() <= holeFrom && holeTo <= to() : "index out of interval";
 
         FixedRange cur = first;
-        while (cur != FixedRange.EndMarker) {
+        while (cur != FixedRange.EndMarker)
+        {
             assert cur.to < cur.next.from : "no space between ranges";
 
             // hole-range starts before this range . hole
-            if (holeFrom < cur.from) {
+            if (holeFrom < cur.from)
+            {
                 return true;
 
                 // hole-range completely inside this range . no hole
-            } else {
-                if (holeTo <= cur.to) {
+            }
+            else
+            {
+                if (holeTo <= cur.to)
+                {
                     return false;
 
                     // overlapping of hole-range with this range . hole
-                } else {
-                    if (holeFrom <= cur.to) {
+                }
+                else
+                {
+                    if (holeFrom <= cur.to)
+                    {
                         return true;
                     }
                 }
@@ -199,13 +239,16 @@ final class FixedInterval extends IntervalHint {
     }
 
     @Override
-    public String toString() {
-        if (this == EndMarker) {
+    public String toString()
+    {
+        if (this == EndMarker)
+        {
             return "EndMarker [?,?]";
         }
         String from = "?";
         String to = "?";
-        if (first != null && first != FixedRange.EndMarker) {
+        if (first != null && first != FixedRange.EndMarker)
+        {
             from = String.valueOf(from());
             // to() may cache a computed value, modifying the current object, which is a bad idea
             // for a printing function. Compute it directly instead.
@@ -219,7 +262,8 @@ final class FixedInterval extends IntervalHint {
      * Gets a single line string for logging the details of this interval to a log stream.
      */
     @Override
-    public String logString() {
+    public String logString()
+    {
         StringBuilder buf = new StringBuilder(100);
         buf.append("fix ").append(asRegister(operand).number).append(':').append(operand).append(' ');
 
@@ -227,8 +271,10 @@ final class FixedInterval extends IntervalHint {
 
         // print ranges
         FixedRange cur = first;
-        while (cur != FixedRange.EndMarker) {
-            if (cur != first) {
+        while (cur != FixedRange.EndMarker)
+        {
+            if (cur != first)
+            {
                 buf.append(", ");
             }
             buf.append(cur);
@@ -238,5 +284,4 @@ final class FixedInterval extends IntervalHint {
         buf.append("}");
         return buf.toString();
     }
-
 }

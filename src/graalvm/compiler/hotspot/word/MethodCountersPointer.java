@@ -6,8 +6,8 @@ import static graalvm.compiler.hotspot.word.HotSpotOperation.HotspotOpcode.POINT
 /**
  * Marker type for a metaspace pointer to a method counters.
  */
-public abstract class MethodCountersPointer extends MetaspacePointer {
-
+public abstract class MethodCountersPointer extends MetaspacePointer
+{
     @HotSpotOperation(opcode = POINTER_EQ)
     public abstract boolean equal(MethodCountersPointer other);
 

@@ -6,53 +6,65 @@ import java.util.Iterator;
 
 import graalvm.compiler.graph.iterators.NodeIterable;
 
-class NodeUsageIterable implements NodeIterable<Node> {
-
+class NodeUsageIterable implements NodeIterable<Node>
+{
     private final Node node;
 
-    NodeUsageIterable(Node node) {
+    NodeUsageIterable(Node node)
+    {
         this.node = node;
     }
 
     @Override
-    public NodeUsageIterator iterator() {
-        if (isModificationCountsEnabled()) {
+    public NodeUsageIterator iterator()
+    {
+        if (isModificationCountsEnabled())
+        {
             return new NodeUsageWithModCountIterator(node);
-        } else {
+        }
+        else
+        {
             return new NodeUsageIterator(node);
         }
     }
 
     @Override
-    public Node first() {
+    public Node first()
+    {
         return node.usage0;
     }
 
     @Override
-    public boolean isEmpty() {
+    public boolean isEmpty()
+    {
         return node.usage0 == null;
     }
 
     @Override
-    public boolean isNotEmpty() {
+    public boolean isNotEmpty()
+    {
         return node.usage0 != null;
     }
 
     @Override
-    public int count() {
+    public int count()
+    {
         return node.getUsageCount();
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         StringBuilder sb = new StringBuilder();
         Iterator<Node> iterator = iterator();
         boolean first = true;
         sb.append("usages=");
         sb.append('[');
-        while (iterator.hasNext()) {
+        while (iterator.hasNext())
+        {
             Node input = iterator.next();
-            if (!first) {
+            if (!first)
+            {
                 sb.append(", ");
             }
             sb.append(input);

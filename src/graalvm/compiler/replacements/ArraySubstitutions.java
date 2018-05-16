@@ -14,14 +14,15 @@ import jdk.vm.ci.meta.DeoptimizationReason;
  * Substitutions for {@link java.lang.reflect.Array} methods.
  */
 @ClassSubstitution(Array.class)
-public class ArraySubstitutions {
-
+public class ArraySubstitutions
+{
     @MethodSubstitution
-    public static int getLength(Object array) {
-        if (!array.getClass().isArray()) {
+    public static int getLength(Object array)
+    {
+        if (!array.getClass().isArray())
+        {
             DeoptimizeNode.deopt(DeoptimizationAction.None, DeoptimizationReason.RuntimeConstraint);
         }
         return ArrayLengthNode.arrayLength(array);
     }
-
 }

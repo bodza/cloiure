@@ -5,8 +5,8 @@ import graalvm.compiler.nodes.spi.NodeWithState;
 /**
  * Interface implemented by nodes which may need {@linkplain FrameState deoptimization information}.
  */
-public interface DeoptimizingNode extends NodeWithState {
-
+public interface DeoptimizingNode extends NodeWithState
+{
     /**
      * Determines if this node needs deoptimization information.
      */
@@ -16,8 +16,8 @@ public interface DeoptimizingNode extends NodeWithState {
      * Interface for nodes that need a {@link FrameState} for deoptimizing to a point before their
      * execution.
      */
-    public interface DeoptBefore extends DeoptimizingNode {
-
+    public interface DeoptBefore extends DeoptimizingNode
+    {
         /**
          * Sets the {@link FrameState} describing the program state before the execution of this
          * node.
@@ -31,15 +31,16 @@ public interface DeoptimizingNode extends NodeWithState {
      * Interface for nodes that need a {@link FrameState} for deoptimizing to a point after their
      * execution.
      */
-    public interface DeoptAfter extends DeoptimizingNode, StateSplit {
+    public interface DeoptAfter extends DeoptimizingNode, StateSplit
+    {
     }
 
     /**
      * Interface for nodes that need a special {@link FrameState} for deoptimizing during their
      * execution (e.g. {@link Invoke}).
      */
-    public interface DeoptDuring extends DeoptimizingNode, StateSplit {
-
+    public interface DeoptDuring extends DeoptimizingNode, StateSplit
+    {
         FrameState stateDuring();
 
         /**

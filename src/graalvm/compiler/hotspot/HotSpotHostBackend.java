@@ -30,8 +30,8 @@ import jdk.vm.ci.runtime.JVMCICompiler;
 /**
  * Common functionality of HotSpot host backends.
  */
-public abstract class HotSpotHostBackend extends HotSpotBackend {
-
+public abstract class HotSpotHostBackend extends HotSpotBackend
+{
     /**
      * Descriptor for {@code SharedRuntime::deopt_blob()->unpack()}.
      */
@@ -44,34 +44,41 @@ public abstract class HotSpotHostBackend extends HotSpotBackend {
 
     protected final GraalHotSpotVMConfig config;
 
-    public HotSpotHostBackend(GraalHotSpotVMConfig config, HotSpotGraalRuntimeProvider runtime, HotSpotProviders providers) {
+    public HotSpotHostBackend(GraalHotSpotVMConfig config, HotSpotGraalRuntimeProvider runtime, HotSpotProviders providers)
+    {
         super(runtime, providers);
         this.config = config;
     }
 
     @Override
     @SuppressWarnings("try")
-    public void completeInitialization(HotSpotJVMCIRuntime jvmciRuntime, OptionValues options) {
+    public void completeInitialization(HotSpotJVMCIRuntime jvmciRuntime, OptionValues options)
+    {
         final HotSpotProviders providers = getProviders();
         HotSpotHostForeignCallsProvider foreignCalls = (HotSpotHostForeignCallsProvider) providers.getForeignCalls();
         final HotSpotLoweringProvider lowerer = (HotSpotLoweringProvider) providers.getLowerer();
 
-        try (InitTimer st = timer("foreignCalls.initialize")) {
+        try (InitTimer st = timer("foreignCalls.initialize"))
+        {
             foreignCalls.initialize(providers, options);
         }
-        try (InitTimer st = timer("lowerer.initialize")) {
+        try (InitTimer st = timer("lowerer.initialize"))
+        {
             Iterable<DebugHandlersFactory> factories = Collections.singletonList(new GraalDebugHandlersFactory(providers.getSnippetReflection()));
             lowerer.initialize(options, factories, providers, config);
         }
     }
 
-    protected CallingConvention makeCallingConvention(StructuredGraph graph, Stub stub) {
-        if (stub != null) {
+    protected CallingConvention makeCallingConvention(StructuredGraph graph, Stub stub)
+    {
+        if (stub != null)
+        {
             return stub.getLinkage().getIncomingCallingConvention();
         }
 
         CallingConvention cc = getCallingConvention(getCodeCache(), HotSpotCallingConventionType.JavaCallee, graph.method(), this);
-        if (graph.getEntryBCI() != JVMCICompiler.INVOCATION_ENTRY_BCI) {
+        if (graph.getEntryBCI() != JVMCICompiler.INVOCATION_ENTRY_BCI)
+        {
             // for OSR, only a pointer is passed to the method.
             JavaType[] parameterTypes = new JavaType[]{getMetaAccess().lookupJavaType(long.class)};
             CallingConvention tmp = getCodeCache().getRegisterConfig().getCallingConvention(HotSpotCallingConventionType.JavaCallee, getMetaAccess().lookupJavaType(void.class), parameterTypes, this);
@@ -80,8 +87,10 @@ public abstract class HotSpotHostBackend extends HotSpotBackend {
         return cc;
     }
 
-    public void emitStackOverflowCheck(CompilationResultBuilder crb) {
-        if (config.useStackBanging) {
+    public void emitStackOverflowCheck(CompilationResultBuilder crb)
+    {
+        if (config.useStackBanging)
+        {
             // Each code entry causes one stack bang n pages down the stack where n
             // is configurable by StackShadowPages. The setting depends on the maximum
             // depth of VM call stack or native before going back into java code,
@@ -101,15 +110,18 @@ public abstract class HotSpotHostBackend extends HotSpotBackend {
             int bangEndSafe = bangEnd;
 
             int frameSize = Math.max(crb.frameMap.frameSize(), crb.compilationResult.getMaxInterpreterFrameSize());
-            if (frameSize > pageSize) {
+            if (frameSize > pageSize)
+            {
                 bangEnd += frameSize;
             }
 
             int bangOffset = bangEndSafe;
-            if (bangOffset <= bangEnd) {
+            if (bangOffset <= bangEnd)
+            {
                 crb.blockComment("[stack overflow check]");
             }
-            while (bangOffset <= bangEnd) {
+            while (bangOffset <= bangEnd)
+            {
                 // Need at least one stack bang at end of shadow zone.
                 bangStackWithOffset(crb, bangOffset);
                 bangOffset += pageSize;
@@ -120,9 +132,9 @@ public abstract class HotSpotHostBackend extends HotSpotBackend {
     protected abstract void bangStackWithOffset(CompilationResultBuilder crb, int bangOffset);
 
     @Override
-    public ReferenceMapBuilder newReferenceMapBuilder(int totalFrameSize) {
+    public ReferenceMapBuilder newReferenceMapBuilder(int totalFrameSize)
+    {
         int uncompressedReferenceSize = getTarget().arch.getPlatformKind(JavaKind.Object).getSizeInBytes();
         return new HotSpotReferenceMapBuilder(totalFrameSize, config.maxOopMapStackOffset, uncompressedReferenceSize);
     }
-
 }

@@ -11,18 +11,20 @@ import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;
 
 import jdk.vm.ci.code.TargetDescription;
 
-final class TraceLinearScanRegisterAllocationPhase extends TraceLinearScanAllocationPhase {
-
+final class TraceLinearScanRegisterAllocationPhase extends TraceLinearScanAllocationPhase
+{
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, Trace trace, MoveFactory spillMoveFactory, RegisterAllocationConfig registerAllocationConfig,
-                    TraceBuilderResult traceBuilderResult, TraceLinearScan allocator) {
+    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, Trace trace, MoveFactory spillMoveFactory, RegisterAllocationConfig registerAllocationConfig, TraceBuilderResult traceBuilderResult, TraceLinearScan allocator)
+    {
         allocateRegisters(allocator);
     }
 
     @SuppressWarnings("try")
-    private static void allocateRegisters(TraceLinearScan allocator) {
+    private static void allocateRegisters(TraceLinearScan allocator)
+    {
         DebugContext debug = allocator.getDebug();
-        try (Indent indent = debug.logAndIndent("allocate registers")) {
+        try (Indent indent = debug.logAndIndent("allocate registers"))
+        {
             FixedInterval precoloredIntervals = allocator.createFixedUnhandledList();
             TraceInterval notPrecoloredIntervals = allocator.createUnhandledListByFrom(TraceLinearScanPhase.IS_VARIABLE_INTERVAL);
 
@@ -32,5 +34,4 @@ final class TraceLinearScanRegisterAllocationPhase extends TraceLinearScanAlloca
             lsw.finishAllocation();
         }
     }
-
 }

@@ -7,12 +7,12 @@ import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.AbstractLocalNode;
 
 @NodeInfo(nameTemplate = "OSRLocal({p#index})")
-public final class OSRLocalNode extends AbstractLocalNode implements IterableNodeType {
-
+public final class OSRLocalNode extends AbstractLocalNode implements IterableNodeType
+{
     public static final NodeClass<OSRLocalNode> TYPE = NodeClass.create(OSRLocalNode.class);
 
-    public OSRLocalNode(int index, Stamp stamp) {
+    public OSRLocalNode(int index, Stamp stamp)
+    {
         super(TYPE, index, stamp);
     }
-
 }

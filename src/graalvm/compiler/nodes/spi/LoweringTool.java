@@ -14,8 +14,8 @@ import jdk.vm.ci.meta.DeoptimizationReason;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.MetaAccessProvider;
 
-public interface LoweringTool {
-
+public interface LoweringTool
+{
     MetaAccessProvider getMetaAccess();
 
     LoweringProvider getLowerer();
@@ -30,8 +30,7 @@ public interface LoweringTool {
 
     GuardingNode createGuard(FixedNode before, LogicNode condition, DeoptimizationReason deoptReason, DeoptimizationAction action);
 
-    GuardingNode createGuard(FixedNode before, LogicNode condition, DeoptimizationReason deoptReason, DeoptimizationAction action, JavaConstant speculation, boolean negated,
-                    NodeSourcePosition noDeoptSuccessorPosition);
+    GuardingNode createGuard(FixedNode before, LogicNode condition, DeoptimizationReason deoptReason, DeoptimizationAction action, JavaConstant speculation, boolean negated, NodeSourcePosition noDeoptSuccessorPosition);
 
     /**
      * Gets the closest fixed node preceding the node currently being lowered.
@@ -43,14 +42,16 @@ public interface LoweringTool {
     /**
      * Marker interface lowering stages.
      */
-    interface LoweringStage {
+    interface LoweringStage
+    {
     }
 
     /**
      * The lowering stages used in a standard Graal phase plan. Lowering is called 3 times, during
      * every tier of compilation.
      */
-    enum StandardLoweringStage implements LoweringStage {
+    enum StandardLoweringStage implements LoweringStage
+    {
         HIGH_TIER,
         MID_TIER,
         LOW_TIER

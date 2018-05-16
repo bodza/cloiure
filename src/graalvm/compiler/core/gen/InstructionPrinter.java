@@ -15,13 +15,14 @@ import graalvm.compiler.nodes.ValueNodeUtil;
  * A utility for {@linkplain #printInstruction(ValueNode) printing} a node as an expression or
  * statement.
  */
-public class InstructionPrinter {
-
+public class InstructionPrinter
+{
     /**
      * The columns printed in a tabulated instruction
      * {@linkplain InstructionPrinter#printInstructionListing(ValueNode) listing}.
      */
-    public enum InstructionLineColumn {
+    public enum InstructionLineColumn
+    {
         /**
          * The instruction's bytecode index.
          */
@@ -47,7 +48,8 @@ public class InstructionPrinter {
         final int position;
         final String label;
 
-        InstructionLineColumn(int position, String label) {
+        InstructionLineColumn(int position, String label)
+        {
             this.position = position;
             this.label = label;
         }
@@ -58,7 +60,8 @@ public class InstructionPrinter {
          *
          * @param out the print stream
          */
-        public void printLabel(LogStream out) {
+        public void printLabel(LogStream out)
+        {
             out.fillTo(position + out.indentationLevel(), '_');
             out.print(label);
         }
@@ -69,18 +72,21 @@ public class InstructionPrinter {
          *
          * @param out the print stream
          */
-        public void advance(LogStream out) {
+        public void advance(LogStream out)
+        {
             out.fillTo(position + out.indentationLevel(), ' ');
         }
     }
 
     private final LogStream out;
 
-    public InstructionPrinter(LogStream out) {
+    public InstructionPrinter(LogStream out)
+    {
         this.out = out;
     }
 
-    public LogStream out() {
+    public LogStream out()
+    {
         return out;
     }
 
@@ -88,7 +94,8 @@ public class InstructionPrinter {
      * Prints a header for the tabulated data printed by {@link #printInstructionListing(ValueNode)}
      * .
      */
-    public void printInstructionListingHeader() {
+    public void printInstructionListingHeader()
+    {
         BCI.printLabel(out);
         USE.printLabel(out);
         VALUE.printLabel(out);
@@ -103,19 +110,20 @@ public class InstructionPrinter {
      *
      * @param instruction the instruction to print
      */
-    public void printInstructionListing(ValueNode instruction) {
+    public void printInstructionListing(ValueNode instruction)
+    {
         int indentation = out.indentationLevel();
-        out.fillTo(BCI.position + indentation, ' ').print(0).fillTo(USE.position + indentation, ' ').print("0").fillTo(VALUE.position + indentation, ' ').print(
-                        ValueNodeUtil.valueString(instruction)).fillTo(
-                                        INSTRUCTION.position + indentation, ' ');
+        out.fillTo(BCI.position + indentation, ' ').print(0).fillTo(USE.position + indentation, ' ').print("0").fillTo(VALUE.position + indentation, ' ').print(ValueNodeUtil.valueString(instruction)).fillTo(INSTRUCTION.position + indentation, ' ');
         printInstruction(instruction);
-        if (instruction instanceof StateSplit) {
+        if (instruction instanceof StateSplit)
+        {
             out.print("  [state: " + ((StateSplit) instruction).stateAfter() + "]");
         }
         out.println();
     }
 
-    public void printInstruction(ValueNode node) {
+    public void printInstruction(ValueNode node)
+    {
         out.print(node.toString());
     }
 }

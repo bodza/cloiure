@@ -9,8 +9,8 @@ import graalvm.compiler.serviceprovider.GraalServices;
 /**
  * Factory for creating {@link DebugHandler}s.
  */
-public interface DebugHandlersFactory {
-
+public interface DebugHandlersFactory
+{
     /**
      * Creates {@link DebugHandler}s based on {@code options}.
      *
@@ -22,9 +22,11 @@ public interface DebugHandlersFactory {
     /**
      * Loads {@link DebugHandlersFactory}s on demand via {@link GraalServices#load(Class)}.
      */
-    Iterable<DebugHandlersFactory> LOADER = new Iterable<DebugHandlersFactory>() {
+    Iterable<DebugHandlersFactory> LOADER = new Iterable<DebugHandlersFactory>()
+    {
         @Override
-        public Iterator<DebugHandlersFactory> iterator() {
+        public Iterator<DebugHandlersFactory> iterator()
+        {
             return GraalServices.load(DebugHandlersFactory.class).iterator();
         }
     };

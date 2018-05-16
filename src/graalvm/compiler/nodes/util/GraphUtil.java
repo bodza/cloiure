@@ -69,14 +69,16 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
-public class GraphUtil {
-
-    public static class Options {
+public class GraphUtil
+{
+    public static class Options
+    {
         @Option(help = "Verify that there are no new unused nodes when performing killCFG", type = OptionType.Debug)//
         public static final OptionKey<Boolean> VerifyKillCFGUnusedNodes = new OptionKey<>(false);
     }
 
-    private static void killCFGInner(FixedNode node) {
+    private static void killCFGInner(FixedNode node)
+    {
         EconomicSet<Node> markedNodes = EconomicSet.create();
         EconomicMap<AbstractMergeNode, List<AbstractEndNode>> unmarkedMerges = EconomicMap.create();
 
@@ -94,9 +96,12 @@ public class GraphUtil {
         markUsages(markedNodes);
 
         // Detach marked nodes from non-marked nodes
-        for (Node marked : markedNodes) {
-            for (Node input : marked.inputs()) {
-                if (!markedNodes.contains(input)) {
+        for (Node marked : markedNodes)
+        {
+            for (Node input : marked.inputs())
+            {
+                if (!markedNodes.contains(input))
+                {
                     marked.replaceFirstInput(input, null);
                     tryKillUnused(input);
                 }
@@ -104,53 +109,70 @@ public class GraphUtil {
         }
         debug.dump(DebugContext.VERY_DETAILED_LEVEL, node.graph(), "After disconnecting non-marked inputs (killCFG %s)", node);
         // Kill marked nodes
-        for (Node marked : markedNodes) {
-            if (marked.isAlive()) {
+        for (Node marked : markedNodes)
+        {
+            if (marked.isAlive())
+            {
                 marked.markDeleted();
             }
         }
     }
 
-    private static void markFixedNodes(FixedNode node, EconomicSet<Node> markedNodes, EconomicMap<AbstractMergeNode, List<AbstractEndNode>> unmarkedMerges) {
+    private static void markFixedNodes(FixedNode node, EconomicSet<Node> markedNodes, EconomicMap<AbstractMergeNode, List<AbstractEndNode>> unmarkedMerges)
+    {
         NodeStack workStack = new NodeStack();
         workStack.push(node);
-        while (!workStack.isEmpty()) {
+        while (!workStack.isEmpty())
+        {
             Node fixedNode = workStack.pop();
             markedNodes.add(fixedNode);
-            if (fixedNode instanceof AbstractMergeNode) {
+            if (fixedNode instanceof AbstractMergeNode)
+            {
                 unmarkedMerges.removeKey((AbstractMergeNode) fixedNode);
             }
-            while (fixedNode instanceof FixedWithNextNode) {
+            while (fixedNode instanceof FixedWithNextNode)
+            {
                 fixedNode = ((FixedWithNextNode) fixedNode).next();
-                if (fixedNode != null) {
+                if (fixedNode != null)
+                {
                     markedNodes.add(fixedNode);
                 }
             }
-            if (fixedNode instanceof ControlSplitNode) {
-                for (Node successor : fixedNode.successors()) {
+            if (fixedNode instanceof ControlSplitNode)
+            {
+                for (Node successor : fixedNode.successors())
+                {
                     workStack.push(successor);
                 }
-            } else if (fixedNode instanceof AbstractEndNode) {
+            }
+            else if (fixedNode instanceof AbstractEndNode)
+            {
                 AbstractEndNode end = (AbstractEndNode) fixedNode;
                 AbstractMergeNode merge = end.merge();
-                if (merge != null) {
+                if (merge != null)
+                {
                     assert !markedNodes.contains(merge) || (merge instanceof LoopBeginNode && end instanceof LoopEndNode) : merge;
-                    if (merge instanceof LoopBeginNode) {
-                        if (end == ((LoopBeginNode) merge).forwardEnd()) {
+                    if (merge instanceof LoopBeginNode)
+                    {
+                        if (end == ((LoopBeginNode) merge).forwardEnd())
+                        {
                             workStack.push(merge);
                             continue;
                         }
-                        if (markedNodes.contains(merge)) {
+                        if (markedNodes.contains(merge))
+                        {
                             continue;
                         }
                     }
                     List<AbstractEndNode> endsSeen = unmarkedMerges.get(merge);
-                    if (endsSeen == null) {
+                    if (endsSeen == null)
+                    {
                         endsSeen = new ArrayList<>(merge.forwardEndCount());
                         unmarkedMerges.put(merge, endsSeen);
                     }
                     endsSeen.add(end);
-                    if (!(end instanceof LoopEndNode) && endsSeen.size() == merge.forwardEndCount()) {
+                    if (!(end instanceof LoopEndNode) && endsSeen.size() == merge.forwardEndCount())
+                    {
                         assert merge.forwardEnds().filter(n -> !markedNodes.contains(n)).isEmpty();
                         // all this merge's forward ends are marked: it needs to be killed
                         workStack.push(merge);
@@ -160,19 +182,26 @@ public class GraphUtil {
         }
     }
 
-    private static void fixSurvivingAffectedMerges(EconomicSet<Node> markedNodes, EconomicMap<AbstractMergeNode, List<AbstractEndNode>> unmarkedMerges) {
+    private static void fixSurvivingAffectedMerges(EconomicSet<Node> markedNodes, EconomicMap<AbstractMergeNode, List<AbstractEndNode>> unmarkedMerges)
+    {
         MapCursor<AbstractMergeNode, List<AbstractEndNode>> cursor = unmarkedMerges.getEntries();
-        while (cursor.advance()) {
+        while (cursor.advance())
+        {
             AbstractMergeNode merge = cursor.getKey();
-            for (AbstractEndNode end : cursor.getValue()) {
+            for (AbstractEndNode end : cursor.getValue())
+            {
                 merge.removeEnd(end);
             }
-            if (merge.phiPredecessorCount() == 1) {
-                if (merge instanceof LoopBeginNode) {
+            if (merge.phiPredecessorCount() == 1)
+            {
+                if (merge instanceof LoopBeginNode)
+                {
                     LoopBeginNode loopBegin = (LoopBeginNode) merge;
                     assert merge.forwardEndCount() == 1;
-                    for (LoopExitNode loopExit : loopBegin.loopExits().snapshot()) {
-                        if (markedNodes.contains(loopExit)) {
+                    for (LoopExitNode loopExit : loopBegin.loopExits().snapshot())
+                    {
+                        if (markedNodes.contains(loopExit))
+                        {
                             /*
                              * disconnect from loop begin so that reduceDegenerateLoopBegin doesn't
                              * transform it into a new beginNode
@@ -181,24 +210,33 @@ public class GraphUtil {
                         }
                     }
                     merge.graph().reduceDegenerateLoopBegin(loopBegin);
-                } else {
+                }
+                else
+                {
                     merge.graph().reduceTrivialMerge(merge);
                 }
-            } else {
+            }
+            else
+            {
                 assert merge.phiPredecessorCount() > 1 : merge;
             }
         }
     }
 
-    private static void markUsages(EconomicSet<Node> markedNodes) {
+    private static void markUsages(EconomicSet<Node> markedNodes)
+    {
         NodeStack workStack = new NodeStack(markedNodes.size() + 4);
-        for (Node marked : markedNodes) {
+        for (Node marked : markedNodes)
+        {
             workStack.push(marked);
         }
-        while (!workStack.isEmpty()) {
+        while (!workStack.isEmpty())
+        {
             Node marked = workStack.pop();
-            for (Node usage : marked.usages()) {
-                if (!markedNodes.contains(usage)) {
+            for (Node usage : marked.usages())
+            {
+                if (!markedNodes.contains(usage))
+                {
                     workStack.push(usage);
                     markedNodes.add(usage);
                 }
@@ -207,22 +245,29 @@ public class GraphUtil {
     }
 
     @SuppressWarnings("try")
-    public static void killCFG(FixedNode node) {
+    public static void killCFG(FixedNode node)
+    {
         DebugContext debug = node.getDebug();
-        try (DebugContext.Scope scope = debug.scope("KillCFG", node)) {
+        try (DebugContext.Scope scope = debug.scope("KillCFG", node))
+        {
             EconomicSet<Node> unusedNodes = null;
             EconomicSet<Node> unsafeNodes = null;
             Graph.NodeEventScope nodeEventScope = null;
             OptionValues options = node.getOptions();
-            if (Graph.Options.VerifyGraalGraphEdges.getValue(options)) {
+            if (Graph.Options.VerifyGraalGraphEdges.getValue(options))
+            {
                 unsafeNodes = collectUnsafeNodes(node.graph());
             }
-            if (GraphUtil.Options.VerifyKillCFGUnusedNodes.getValue(options)) {
+            if (GraphUtil.Options.VerifyKillCFGUnusedNodes.getValue(options))
+            {
                 EconomicSet<Node> collectedUnusedNodes = unusedNodes = EconomicSet.create(Equivalence.IDENTITY);
-                nodeEventScope = node.graph().trackNodeEvents(new Graph.NodeEventListener() {
+                nodeEventScope = node.graph().trackNodeEvents(new Graph.NodeEventListener()
+                {
                     @Override
-                    public void changed(Graph.NodeEvent e, Node n) {
-                        if (e == Graph.NodeEvent.ZERO_USAGES && isFloatingNode(n) && !(n instanceof GuardNode)) {
+                    public void changed(Graph.NodeEvent e, Node n)
+                    {
+                        if (e == Graph.NodeEvent.ZERO_USAGES && isFloatingNode(n) && !(n instanceof GuardNode))
+                        {
                             collectedUnusedNodes.add(n);
                         }
                     }
@@ -231,23 +276,29 @@ public class GraphUtil {
             debug.dump(DebugContext.VERY_DETAILED_LEVEL, node.graph(), "Before killCFG %s", node);
             killCFGInner(node);
             debug.dump(DebugContext.VERY_DETAILED_LEVEL, node.graph(), "After killCFG %s", node);
-            if (Graph.Options.VerifyGraalGraphEdges.getValue(options)) {
+            if (Graph.Options.VerifyGraalGraphEdges.getValue(options))
+            {
                 EconomicSet<Node> newUnsafeNodes = collectUnsafeNodes(node.graph());
                 newUnsafeNodes.removeAll(unsafeNodes);
                 assert newUnsafeNodes.isEmpty() : "New unsafe nodes: " + newUnsafeNodes;
             }
-            if (GraphUtil.Options.VerifyKillCFGUnusedNodes.getValue(options)) {
+            if (GraphUtil.Options.VerifyKillCFGUnusedNodes.getValue(options))
+            {
                 nodeEventScope.close();
                 Iterator<Node> iterator = unusedNodes.iterator();
-                while (iterator.hasNext()) {
+                while (iterator.hasNext())
+                {
                     Node curNode = iterator.next();
-                    if (curNode.isDeleted()) {
+                    if (curNode.isDeleted())
+                    {
                         iterator.remove();
                     }
                 }
                 assert unusedNodes.isEmpty() : "New unused nodes: " + unusedNodes;
             }
-        } catch (Throwable t) {
+        }
+        catch (Throwable t)
+        {
             throw debug.handle(t);
         }
     }
@@ -255,13 +306,18 @@ public class GraphUtil {
     /**
      * Collects all node in the graph which have non-optional inputs that are null.
      */
-    private static EconomicSet<Node> collectUnsafeNodes(Graph graph) {
+    private static EconomicSet<Node> collectUnsafeNodes(Graph graph)
+    {
         EconomicSet<Node> unsafeNodes = EconomicSet.create(Equivalence.IDENTITY);
-        for (Node n : graph.getNodes()) {
-            for (Position pos : n.inputPositions()) {
+        for (Node n : graph.getNodes())
+        {
+            for (Position pos : n.inputPositions())
+            {
                 Node input = pos.get(n);
-                if (input == null) {
-                    if (!pos.isInputOptional()) {
+                if (input == null)
+                {
+                    if (!pos.isInputOptional())
+                    {
                         unsafeNodes.add(n);
                     }
                 }
@@ -270,11 +326,13 @@ public class GraphUtil {
         return unsafeNodes;
     }
 
-    public static boolean isFloatingNode(Node n) {
+    public static boolean isFloatingNode(Node n)
+    {
         return !(n instanceof FixedNode);
     }
 
-    private static boolean checkKill(Node node, boolean mayKillGuard) {
+    private static boolean checkKill(Node node, boolean mayKillGuard)
+    {
         node.assertTrue(mayKillGuard || !(node instanceof GuardNode), "must not be a guard node %s", node);
         node.assertTrue(node.isAlive(), "must be alive");
         node.assertTrue(node.hasNoUsages(), "cannot kill node %s because of usages: %s", node, node.usages());
@@ -282,29 +340,43 @@ public class GraphUtil {
         return true;
     }
 
-    public static void killWithUnusedFloatingInputs(Node node) {
+    public static void killWithUnusedFloatingInputs(Node node)
+    {
         killWithUnusedFloatingInputs(node, false);
     }
 
-    public static void killWithUnusedFloatingInputs(Node node, boolean mayKillGuard) {
+    public static void killWithUnusedFloatingInputs(Node node, boolean mayKillGuard)
+    {
         assert checkKill(node, mayKillGuard);
         node.markDeleted();
-        outer: for (Node in : node.inputs()) {
-            if (in.isAlive()) {
+        outer: for (Node in : node.inputs())
+        {
+            if (in.isAlive())
+            {
                 in.removeUsage(node);
-                if (in.hasNoUsages()) {
+                if (in.hasNoUsages())
+                {
                     node.maybeNotifyZeroUsages(in);
                 }
-                if (isFloatingNode(in)) {
-                    if (in.hasNoUsages()) {
-                        if (in instanceof GuardNode) {
+                if (isFloatingNode(in))
+                {
+                    if (in.hasNoUsages())
+                    {
+                        if (in instanceof GuardNode)
+                        {
                             // Guard nodes are only killed if their anchor dies.
-                        } else {
+                        }
+                        else
+                        {
                             killWithUnusedFloatingInputs(in);
                         }
-                    } else if (in instanceof PhiNode) {
-                        for (Node use : in.usages()) {
-                            if (use != in) {
+                    }
+                    else if (in instanceof PhiNode)
+                    {
+                        for (Node use : in.usages())
+                        {
+                            if (use != in)
+                            {
                                 continue outer;
                             }
                         }
@@ -320,37 +392,49 @@ public class GraphUtil {
      * Removes all nodes created after the {@code mark}, assuming no "old" nodes point to "new"
      * nodes.
      */
-    public static void removeNewNodes(Graph graph, Graph.Mark mark) {
+    public static void removeNewNodes(Graph graph, Graph.Mark mark)
+    {
         assert checkNoOldToNewEdges(graph, mark);
-        for (Node n : graph.getNewNodes(mark)) {
+        for (Node n : graph.getNewNodes(mark))
+        {
             n.markDeleted();
-            for (Node in : n.inputs()) {
+            for (Node in : n.inputs())
+            {
                 in.removeUsage(n);
             }
         }
     }
 
-    private static boolean checkNoOldToNewEdges(Graph graph, Graph.Mark mark) {
-        for (Node old : graph.getNodes()) {
-            if (graph.isNew(mark, old)) {
+    private static boolean checkNoOldToNewEdges(Graph graph, Graph.Mark mark)
+    {
+        for (Node old : graph.getNodes())
+        {
+            if (graph.isNew(mark, old))
+            {
                 break;
             }
-            for (Node n : old.successors()) {
+            for (Node n : old.successors())
+            {
                 assert !graph.isNew(mark, n) : old + " -> " + n;
             }
-            for (Node n : old.inputs()) {
+            for (Node n : old.inputs())
+            {
                 assert !graph.isNew(mark, n) : old + " -> " + n;
             }
         }
         return true;
     }
 
-    public static void removeFixedWithUnusedInputs(FixedWithNextNode fixed) {
-        if (fixed instanceof StateSplit) {
+    public static void removeFixedWithUnusedInputs(FixedWithNextNode fixed)
+    {
+        if (fixed instanceof StateSplit)
+        {
             FrameState stateAfter = ((StateSplit) fixed).stateAfter();
-            if (stateAfter != null) {
+            if (stateAfter != null)
+            {
                 ((StateSplit) fixed).setStateAfter(null);
-                if (stateAfter.hasNoUsages()) {
+                if (stateAfter.hasNoUsages())
+                {
                     killWithUnusedFloatingInputs(stateAfter);
                 }
             }
@@ -359,54 +443,68 @@ public class GraphUtil {
         killWithUnusedFloatingInputs(fixed);
     }
 
-    public static void unlinkFixedNode(FixedWithNextNode fixed) {
+    public static void unlinkFixedNode(FixedWithNextNode fixed)
+    {
         assert fixed.next() != null && fixed.predecessor() != null && fixed.isAlive() : fixed;
         FixedNode next = fixed.next();
         fixed.setNext(null);
         fixed.replaceAtPredecessor(next);
     }
 
-    public static void checkRedundantPhi(PhiNode phiNode) {
-        if (phiNode.isDeleted() || phiNode.valueCount() == 1) {
+    public static void checkRedundantPhi(PhiNode phiNode)
+    {
+        if (phiNode.isDeleted() || phiNode.valueCount() == 1)
+        {
             return;
         }
 
         ValueNode singleValue = phiNode.singleValueOrThis();
-        if (singleValue != phiNode) {
+        if (singleValue != phiNode)
+        {
             Collection<PhiNode> phiUsages = phiNode.usages().filter(PhiNode.class).snapshot();
             Collection<ProxyNode> proxyUsages = phiNode.usages().filter(ProxyNode.class).snapshot();
             phiNode.replaceAtUsagesAndDelete(singleValue);
-            for (PhiNode phi : phiUsages) {
+            for (PhiNode phi : phiUsages)
+            {
                 checkRedundantPhi(phi);
             }
-            for (ProxyNode proxy : proxyUsages) {
+            for (ProxyNode proxy : proxyUsages)
+            {
                 checkRedundantProxy(proxy);
             }
         }
     }
 
-    public static void checkRedundantProxy(ProxyNode vpn) {
-        if (vpn.isDeleted()) {
+    public static void checkRedundantProxy(ProxyNode vpn)
+    {
+        if (vpn.isDeleted())
+        {
             return;
         }
         AbstractBeginNode proxyPoint = vpn.proxyPoint();
-        if (proxyPoint instanceof LoopExitNode) {
+        if (proxyPoint instanceof LoopExitNode)
+        {
             LoopExitNode exit = (LoopExitNode) proxyPoint;
             LoopBeginNode loopBegin = exit.loopBegin();
             Node vpnValue = vpn.value();
-            for (ValueNode v : loopBegin.stateAfter().values()) {
+            for (ValueNode v : loopBegin.stateAfter().values())
+            {
                 ValueNode v2 = v;
-                if (loopBegin.isPhiAtMerge(v2)) {
+                if (loopBegin.isPhiAtMerge(v2))
+                {
                     v2 = ((PhiNode) v2).valueAt(loopBegin.forwardEnd());
                 }
-                if (vpnValue == v2) {
+                if (vpnValue == v2)
+                {
                     Collection<PhiNode> phiUsages = vpn.usages().filter(PhiNode.class).snapshot();
                     Collection<ProxyNode> proxyUsages = vpn.usages().filter(ProxyNode.class).snapshot();
                     vpn.replaceAtUsagesAndDelete(vpnValue);
-                    for (PhiNode phi : phiUsages) {
+                    for (PhiNode phi : phiUsages)
+                    {
                         checkRedundantPhi(phi);
                     }
-                    for (ProxyNode proxy : proxyUsages) {
+                    for (ProxyNode proxy : proxyUsages)
+                    {
                         checkRedundantProxy(proxy);
                     }
                     return;
@@ -427,39 +525,51 @@ public class GraphUtil {
      * }
      * </pre>
      */
-    public static void normalizeLoops(StructuredGraph graph) {
+    public static void normalizeLoops(StructuredGraph graph)
+    {
         boolean loopRemoved = false;
-        for (LoopBeginNode begin : graph.getNodes(LoopBeginNode.TYPE)) {
-            if (begin.loopEnds().isEmpty()) {
+        for (LoopBeginNode begin : graph.getNodes(LoopBeginNode.TYPE))
+        {
+            if (begin.loopEnds().isEmpty())
+            {
                 assert begin.forwardEndCount() == 1;
                 graph.reduceDegenerateLoopBegin(begin);
                 loopRemoved = true;
-            } else {
+            }
+            else
+            {
                 normalizeLoopBegin(begin);
             }
         }
 
-        if (loopRemoved) {
+        if (loopRemoved)
+        {
             /*
              * Removing a degenerated loop can make non-loop phi functions unnecessary. Therefore,
              * we re-check all phi functions and remove redundant ones.
              */
-            for (Node node : graph.getNodes()) {
-                if (node instanceof PhiNode) {
+            for (Node node : graph.getNodes())
+            {
+                if (node instanceof PhiNode)
+                {
                     checkRedundantPhi((PhiNode) node);
                 }
             }
         }
     }
 
-    private static void normalizeLoopBegin(LoopBeginNode begin) {
+    private static void normalizeLoopBegin(LoopBeginNode begin)
+    {
         // Delete unnecessary loop phi functions, i.e., phi functions where all inputs are either
         // the same or the phi itself.
-        for (PhiNode phi : begin.phis().snapshot()) {
+        for (PhiNode phi : begin.phis().snapshot())
+        {
             GraphUtil.checkRedundantPhi(phi);
         }
-        for (LoopExitNode exit : begin.loopExits()) {
-            for (ProxyNode vpn : exit.proxies().snapshot()) {
+        for (LoopExitNode exit : begin.loopExits())
+        {
+            for (ProxyNode vpn : exit.proxies().snapshot())
+            {
                 GraphUtil.checkRedundantProxy(vpn);
             }
         }
@@ -470,22 +580,27 @@ public class GraphUtil {
      *
      * @return the StackTraceElements if an approximate source location is found, null otherwise
      */
-    public static StackTraceElement[] approxSourceStackTraceElement(Node node) {
+    public static StackTraceElement[] approxSourceStackTraceElement(Node node)
+    {
         NodeSourcePosition position = node.getNodeSourcePosition();
-        if (position != null) {
+        if (position != null)
+        {
             // use GraphBuilderConfiguration and enable trackNodeSourcePosition to get better source
             // positions.
             return approxSourceStackTraceElement(position);
         }
         ArrayList<StackTraceElement> elements = new ArrayList<>();
         Node n = node;
-        while (n != null) {
-            if (n instanceof MethodCallTargetNode) {
+        while (n != null)
+        {
+            if (n instanceof MethodCallTargetNode)
+            {
                 elements.add(((MethodCallTargetNode) n).targetMethod().asStackTraceElement(-1));
                 n = ((MethodCallTargetNode) n).invoke().asNode();
             }
 
-            if (n instanceof StateSplit) {
+            if (n instanceof StateSplit)
+            {
                 FrameState state = ((StateSplit) n).stateAfter();
                 elements.addAll(Arrays.asList(approxSourceStackTraceElement(state)));
                 break;
@@ -500,12 +615,15 @@ public class GraphUtil {
      *
      * @return the StackTraceElements if an approximate source location is found, null otherwise
      */
-    public static StackTraceElement[] approxSourceStackTraceElement(FrameState frameState) {
+    public static StackTraceElement[] approxSourceStackTraceElement(FrameState frameState)
+    {
         ArrayList<StackTraceElement> elements = new ArrayList<>();
         FrameState state = frameState;
-        while (state != null) {
+        while (state != null)
+        {
             Bytecode code = state.getCode();
-            if (code != null) {
+            if (code != null)
+            {
                 elements.add(code.asStackTraceElement(state.bci - 1));
             }
             state = state.outerFrameState();
@@ -516,12 +634,15 @@ public class GraphUtil {
     /**
      * Gets approximate stack trace elements for a bytecode position.
      */
-    public static StackTraceElement[] approxSourceStackTraceElement(BytecodePosition bytecodePosition) {
+    public static StackTraceElement[] approxSourceStackTraceElement(BytecodePosition bytecodePosition)
+    {
         ArrayList<StackTraceElement> elements = new ArrayList<>();
         BytecodePosition position = bytecodePosition;
-        while (position != null) {
+        while (position != null)
+        {
             ResolvedJavaMethod method = position.getMethod();
-            if (method != null) {
+            if (method != null)
+            {
                 elements.add(method.asStackTraceElement(position.getBCI()));
             }
             position = position.getCaller();
@@ -534,7 +655,8 @@ public class GraphUtil {
      *
      * @return the exception with the location
      */
-    public static RuntimeException approxSourceException(Node node, Throwable cause) {
+    public static RuntimeException approxSourceException(Node node, Throwable cause)
+    {
         final StackTraceElement[] elements = approxSourceStackTraceElement(node);
         return createBailoutException(cause == null ? "" : cause.getMessage(), cause, elements);
     }
@@ -546,7 +668,8 @@ public class GraphUtil {
      * @param elements the stack trace elements
      * @return the exception
      */
-    public static BailoutException createBailoutException(String message, Throwable cause, StackTraceElement[] elements) {
+    public static BailoutException createBailoutException(String message, Throwable cause, StackTraceElement[] elements)
+    {
         return SourceStackTraceBailoutException.create(cause, message, elements);
     }
 
@@ -556,11 +679,14 @@ public class GraphUtil {
      * @return a file name and source line number in stack trace format (e.g. "String.java:32") if
      *         an approximate source location is found, null otherwise
      */
-    public static String approxSourceLocation(Node node) {
+    public static String approxSourceLocation(Node node)
+    {
         StackTraceElement[] stackTraceElements = approxSourceStackTraceElement(node);
-        if (stackTraceElements != null && stackTraceElements.length > 0) {
+        if (stackTraceElements != null && stackTraceElements.length > 0)
+        {
             StackTraceElement top = stackTraceElements[0];
-            if (top.getFileName() != null && top.getLineNumber() >= 0) {
+            if (top.getFileName() != null && top.getLineNumber() >= 0)
+            {
                 return top.getFileName() + ":" + top.getLineNumber();
             }
         }
@@ -573,13 +699,16 @@ public class GraphUtil {
      * @param objects The {@link Iterable} that will be used to iterate over the objects.
      * @return A string of the format "[a, b, ...]".
      */
-    public static String toString(Iterable<?> objects) {
+    public static String toString(Iterable<?> objects)
+    {
         StringBuilder str = new StringBuilder();
         str.append("[");
-        for (Object o : objects) {
+        for (Object o : objects)
+        {
             str.append(o).append(", ");
         }
-        if (str.length() > 1) {
+        if (str.length() > 1)
+        {
             str.setLength(str.length() - 2);
         }
         str.append("]");
@@ -592,10 +721,14 @@ public class GraphUtil {
      * @param value the start value.
      * @return the first non-proxy value encountered
      */
-    public static ValueNode unproxify(ValueNode value) {
-        if (value instanceof ValueProxy) {
+    public static ValueNode unproxify(ValueNode value)
+    {
+        if (value instanceof ValueProxy)
+        {
             return unproxify((ValueProxy) value);
-        } else {
+        }
+        else
+        {
             return value;
         }
     }
@@ -606,35 +739,47 @@ public class GraphUtil {
      * @param value the start value proxy.
      * @return the first non-proxy value encountered
      */
-    public static ValueNode unproxify(ValueProxy value) {
-        if (value != null) {
+    public static ValueNode unproxify(ValueProxy value)
+    {
+        if (value != null)
+        {
             ValueNode result = value.getOriginalNode();
-            while (result instanceof ValueProxy) {
+            while (result instanceof ValueProxy)
+            {
                 result = ((ValueProxy) result).getOriginalNode();
             }
             return result;
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
 
-    public static ValueNode skipPi(ValueNode node) {
+    public static ValueNode skipPi(ValueNode node)
+    {
         ValueNode n = node;
-        while (n instanceof PiNode) {
+        while (n instanceof PiNode)
+        {
             PiNode piNode = (PiNode) n;
             n = piNode.getOriginalNode();
         }
         return n;
     }
 
-    public static ValueNode skipPiWhileNonNull(ValueNode node) {
+    public static ValueNode skipPiWhileNonNull(ValueNode node)
+    {
         ValueNode n = node;
-        while (n instanceof PiNode) {
+        while (n instanceof PiNode)
+        {
             PiNode piNode = (PiNode) n;
             ObjectStamp originalStamp = (ObjectStamp) piNode.getOriginalNode().stamp(NodeView.DEFAULT);
-            if (originalStamp.nonNull()) {
+            if (originalStamp.nonNull())
+            {
                 n = piNode.getOriginalNode();
-            } else {
+            }
+            else
+            {
                 break;
             }
         }
@@ -648,18 +793,25 @@ public class GraphUtil {
      * @param value The start value.
      * @return The array length if one was found, or null otherwise.
      */
-    public static ValueNode arrayLength(ValueNode value) {
+    public static ValueNode arrayLength(ValueNode value)
+    {
         ValueNode current = value;
-        do {
-            if (current instanceof ArrayLengthProvider) {
+        do
+        {
+            if (current instanceof ArrayLengthProvider)
+            {
                 ValueNode length = ((ArrayLengthProvider) current).length();
-                if (length != null) {
+                if (length != null)
+                {
                     return length;
                 }
             }
-            if (current instanceof ValueProxy) {
+            if (current instanceof ValueProxy)
+            {
                 current = ((ValueProxy) current).getOriginalNode();
-            } else {
+            }
+            else
+            {
                 break;
             }
         } while (true);
@@ -674,17 +826,20 @@ public class GraphUtil {
      * @param value The node whose original value should be determined.
      * @return The original value (which might be the input value itself).
      */
-    public static ValueNode originalValue(ValueNode value) {
+    public static ValueNode originalValue(ValueNode value)
+    {
         ValueNode result = originalValueSimple(value);
         assert result != null;
         return result;
     }
 
-    private static ValueNode originalValueSimple(ValueNode value) {
+    private static ValueNode originalValueSimple(ValueNode value)
+    {
         /* The very simple case: look through proxies. */
         ValueNode cur = originalValueForProxy(value);
 
-        while (cur instanceof PhiNode) {
+        while (cur instanceof PhiNode)
+        {
             /*
              * We found a phi function. Check if we can analyze it without allocating temporary data
              * structures.
@@ -693,24 +848,33 @@ public class GraphUtil {
 
             ValueNode phiSingleValue = null;
             int count = phi.valueCount();
-            for (int i = 0; i < count; ++i) {
+            for (int i = 0; i < count; ++i)
+            {
                 ValueNode phiCurValue = originalValueForProxy(phi.valueAt(i));
-                if (phiCurValue == phi) {
+                if (phiCurValue == phi)
+                {
                     /* Simple cycle, we can ignore the input value. */
-                } else if (phiSingleValue == null) {
+                }
+                else if (phiSingleValue == null)
+                {
                     /* The first input. */
                     phiSingleValue = phiCurValue;
-                } else if (phiSingleValue != phiCurValue) {
+                }
+                else if (phiSingleValue != phiCurValue)
+                {
                     /* Another input that is different from the first input. */
 
-                    if (phiSingleValue instanceof PhiNode || phiCurValue instanceof PhiNode) {
+                    if (phiSingleValue instanceof PhiNode || phiCurValue instanceof PhiNode)
+                    {
                         /*
                          * We have two different input values for the phi function, and at least one
                          * of the inputs is another phi function. We need to do a complicated
                          * exhaustive check.
                          */
                         return originalValueForComplicatedPhi(phi, new NodeBitMap(value.graph()));
-                    } else {
+                    }
+                    else
+                    {
                         /*
                          * We have two different input values for the phi function, but none of them
                          * is another phi function. This phi function cannot be reduce any further,
@@ -734,9 +898,11 @@ public class GraphUtil {
         return cur;
     }
 
-    private static ValueNode originalValueForProxy(ValueNode value) {
+    private static ValueNode originalValueForProxy(ValueNode value)
+    {
         ValueNode cur = value;
-        while (cur instanceof LimitedValueProxy) {
+        while (cur instanceof LimitedValueProxy)
+        {
             cur = ((LimitedValueProxy) cur).getOriginalNode();
         }
         return cur;
@@ -746,8 +912,10 @@ public class GraphUtil {
      * Handling for complicated nestings of phi functions. We need to reduce phi functions
      * recursively, and need a temporary map of visited nodes to avoid endless recursion of cycles.
      */
-    private static ValueNode originalValueForComplicatedPhi(PhiNode phi, NodeBitMap visited) {
-        if (visited.isMarked(phi)) {
+    private static ValueNode originalValueForComplicatedPhi(PhiNode phi, NodeBitMap visited)
+    {
+        if (visited.isMarked(phi))
+        {
             /*
              * Found a phi function that was already seen. Either a cycle, or just a second phi
              * input to a path we have already processed.
@@ -758,19 +926,26 @@ public class GraphUtil {
 
         ValueNode phiSingleValue = null;
         int count = phi.valueCount();
-        for (int i = 0; i < count; ++i) {
+        for (int i = 0; i < count; ++i)
+        {
             ValueNode phiCurValue = originalValueForProxy(phi.valueAt(i));
-            if (phiCurValue instanceof PhiNode) {
+            if (phiCurValue instanceof PhiNode)
+            {
                 /* Recursively process a phi function input. */
                 phiCurValue = originalValueForComplicatedPhi((PhiNode) phiCurValue, visited);
             }
 
-            if (phiCurValue == null) {
+            if (phiCurValue == null)
+            {
                 /* Cycle to a phi function that was already seen. We can ignore this input. */
-            } else if (phiSingleValue == null) {
+            }
+            else if (phiSingleValue == null)
+            {
                 /* The first input. */
                 phiSingleValue = phiCurValue;
-            } else if (phiCurValue != phiSingleValue) {
+            }
+            else if (phiCurValue != phiSingleValue)
+            {
                 /*
                  * Another input that is different from the first input. Since we already
                  * recursively looked through other phi functions, we now know that this phi
@@ -782,8 +957,10 @@ public class GraphUtil {
         return phiSingleValue;
     }
 
-    public static boolean tryKillUnused(Node node) {
-        if (node.isAlive() && isFloatingNode(node) && node.hasNoUsages() && !(node instanceof GuardNode)) {
+    public static boolean tryKillUnused(Node node)
+    {
+        if (node.isAlive() && isFloatingNode(node) && node.hasNoUsages() && !(node instanceof GuardNode))
+        {
             killWithUnusedFloatingInputs(node);
             return true;
         }
@@ -796,23 +973,32 @@ public class GraphUtil {
      *
      * @param start the node at which to start iterating
      */
-    public static NodeIterable<FixedNode> predecessorIterable(final FixedNode start) {
-        return new NodeIterable<FixedNode>() {
+    public static NodeIterable<FixedNode> predecessorIterable(final FixedNode start)
+    {
+        return new NodeIterable<FixedNode>()
+        {
             @Override
-            public Iterator<FixedNode> iterator() {
-                return new Iterator<FixedNode>() {
+            public Iterator<FixedNode> iterator()
+            {
+                return new Iterator<FixedNode>()
+                {
                     public FixedNode current = start;
 
                     @Override
-                    public boolean hasNext() {
+                    public boolean hasNext()
+                    {
                         return current != null;
                     }
 
                     @Override
-                    public FixedNode next() {
-                        try {
+                    public FixedNode next()
+                    {
+                        try
+                        {
                             return current;
-                        } finally {
+                        }
+                        finally
+                        {
                             current = (FixedNode) current.predecessor();
                         }
                     }
@@ -821,7 +1007,8 @@ public class GraphUtil {
         };
     }
 
-    private static final class DefaultSimplifierTool implements SimplifierTool {
+    private static final class DefaultSimplifierTool implements SimplifierTool
+    {
         private final MetaAccessProvider metaAccess;
         private final ConstantReflectionProvider constantReflection;
         private final ConstantFieldProvider constantFieldProvider;
@@ -830,8 +1017,8 @@ public class GraphUtil {
         private final OptionValues options;
         private final LoweringProvider loweringProvider;
 
-        DefaultSimplifierTool(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, boolean canonicalizeReads,
-                        Assumptions assumptions, OptionValues options, LoweringProvider loweringProvider) {
+        DefaultSimplifierTool(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, boolean canonicalizeReads, Assumptions assumptions, OptionValues options, LoweringProvider loweringProvider)
+        {
             this.metaAccess = metaAccess;
             this.constantReflection = constantReflection;
             this.constantFieldProvider = constantFieldProvider;
@@ -842,83 +1029,100 @@ public class GraphUtil {
         }
 
         @Override
-        public MetaAccessProvider getMetaAccess() {
+        public MetaAccessProvider getMetaAccess()
+        {
             return metaAccess;
         }
 
         @Override
-        public ConstantReflectionProvider getConstantReflection() {
+        public ConstantReflectionProvider getConstantReflection()
+        {
             return constantReflection;
         }
 
         @Override
-        public ConstantFieldProvider getConstantFieldProvider() {
+        public ConstantFieldProvider getConstantFieldProvider()
+        {
             return constantFieldProvider;
         }
 
         @Override
-        public boolean canonicalizeReads() {
+        public boolean canonicalizeReads()
+        {
             return canonicalizeReads;
         }
 
         @Override
-        public boolean allUsagesAvailable() {
+        public boolean allUsagesAvailable()
+        {
             return true;
         }
 
         @Override
-        public void deleteBranch(Node branch) {
+        public void deleteBranch(Node branch)
+        {
             FixedNode fixedBranch = (FixedNode) branch;
             fixedBranch.predecessor().replaceFirstSuccessor(fixedBranch, null);
             GraphUtil.killCFG(fixedBranch);
         }
 
         @Override
-        public void removeIfUnused(Node node) {
+        public void removeIfUnused(Node node)
+        {
             GraphUtil.tryKillUnused(node);
         }
 
         @Override
-        public void addToWorkList(Node node) {
+        public void addToWorkList(Node node)
+        {
         }
 
         @Override
-        public void addToWorkList(Iterable<? extends Node> nodes) {
+        public void addToWorkList(Iterable<? extends Node> nodes)
+        {
         }
 
         @Override
-        public Assumptions getAssumptions() {
+        public Assumptions getAssumptions()
+        {
             return assumptions;
         }
 
         @Override
-        public OptionValues getOptions() {
+        public OptionValues getOptions()
+        {
             return options;
         }
 
         @Override
-        public Integer smallestCompareWidth() {
-            if (loweringProvider != null) {
+        public Integer smallestCompareWidth()
+        {
+            if (loweringProvider != null)
+            {
                 return loweringProvider.smallestCompareWidth();
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }
     }
 
-    public static SimplifierTool getDefaultSimplifier(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider,
-                    boolean canonicalizeReads, Assumptions assumptions, OptionValues options) {
+    public static SimplifierTool getDefaultSimplifier(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, boolean canonicalizeReads, Assumptions assumptions, OptionValues options)
+    {
         return getDefaultSimplifier(metaAccess, constantReflection, constantFieldProvider, canonicalizeReads, assumptions, options, null);
     }
 
-    public static SimplifierTool getDefaultSimplifier(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider,
-                    boolean canonicalizeReads, Assumptions assumptions, OptionValues options, LoweringProvider loweringProvider) {
+    public static SimplifierTool getDefaultSimplifier(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, boolean canonicalizeReads, Assumptions assumptions, OptionValues options, LoweringProvider loweringProvider)
+    {
         return new DefaultSimplifierTool(metaAccess, constantReflection, constantFieldProvider, canonicalizeReads, assumptions, options, loweringProvider);
     }
 
-    public static Constant foldIfConstantAndRemove(ValueNode node, ValueNode constant) {
+    public static Constant foldIfConstantAndRemove(ValueNode node, ValueNode constant)
+    {
         assert node.inputs().contains(constant);
-        if (constant.isConstant()) {
+        if (constant.isConstant())
+        {
             node.replaceFirstInput(constant, null);
             Constant result = constant.asConstant();
             tryKillUnused(constant);
@@ -941,14 +1145,14 @@ public class GraphUtil {
      * @param virtualArrayProvider a functional provider that returns a new virtual array given the
      *            component type and length
      */
-    public static void virtualizeArrayCopy(VirtualizerTool tool, ValueNode source, ValueNode sourceLength, ValueNode newLength, ValueNode from, ResolvedJavaType newComponentType, JavaKind elementKind,
-                    StructuredGraph graph, BiFunction<ResolvedJavaType, Integer, VirtualArrayNode> virtualArrayProvider) {
-
+    public static void virtualizeArrayCopy(VirtualizerTool tool, ValueNode source, ValueNode sourceLength, ValueNode newLength, ValueNode from, ResolvedJavaType newComponentType, JavaKind elementKind, StructuredGraph graph, BiFunction<ResolvedJavaType, Integer, VirtualArrayNode> virtualArrayProvider)
+    {
         ValueNode sourceAlias = tool.getAlias(source);
         ValueNode replacedSourceLength = tool.getAlias(sourceLength);
         ValueNode replacedNewLength = tool.getAlias(newLength);
         ValueNode replacedFrom = tool.getAlias(from);
-        if (!replacedNewLength.isConstant() || !replacedFrom.isConstant() || !replacedSourceLength.isConstant()) {
+        if (!replacedNewLength.isConstant() || !replacedFrom.isConstant() || !replacedSourceLength.isConstant())
+        {
             return;
         }
 
@@ -957,17 +1161,20 @@ public class GraphUtil {
         int fromInt = replacedFrom.asJavaConstant().asInt();
         int newLengthInt = replacedNewLength.asJavaConstant().asInt();
         int sourceLengthInt = replacedSourceLength.asJavaConstant().asInt();
-        if (sourceAlias instanceof VirtualObjectNode) {
+        if (sourceAlias instanceof VirtualObjectNode)
+        {
             VirtualObjectNode sourceVirtual = (VirtualObjectNode) sourceAlias;
             assert sourceLengthInt == sourceVirtual.entryCount();
         }
 
-        if (fromInt < 0 || newLengthInt < 0 || fromInt > sourceLengthInt) {
+        if (fromInt < 0 || newLengthInt < 0 || fromInt > sourceLengthInt)
+        {
             /* Illegal values for either from index, the new length or the source length. */
             return;
         }
 
-        if (newLengthInt >= tool.getMaximumEntryCount()) {
+        if (newLengthInt >= tool.getMaximumEntryCount())
+        {
             /* The new array size is higher than maximum allowed size of virtualized objects. */
             return;
         }
@@ -975,24 +1182,31 @@ public class GraphUtil {
         ValueNode[] newEntryState = new ValueNode[newLengthInt];
         int readLength = Math.min(newLengthInt, sourceLengthInt - fromInt);
 
-        if (sourceAlias instanceof VirtualObjectNode) {
+        if (sourceAlias instanceof VirtualObjectNode)
+        {
             /* The source array is virtualized, just copy over the values. */
             VirtualObjectNode sourceVirtual = (VirtualObjectNode) sourceAlias;
-            for (int i = 0; i < readLength; i++) {
+            for (int i = 0; i < readLength; i++)
+            {
                 newEntryState[i] = tool.getEntry(sourceVirtual, fromInt + i);
             }
-        } else {
+        }
+        else
+        {
             /* The source array is not virtualized, emit index loads. */
-            for (int i = 0; i < readLength; i++) {
+            for (int i = 0; i < readLength; i++)
+            {
                 LoadIndexedNode load = new LoadIndexedNode(null, sourceAlias, ConstantNode.forInt(i + fromInt, graph), elementKind);
                 tool.addNode(load);
                 newEntryState[i] = load;
             }
         }
-        if (readLength < newLengthInt) {
+        if (readLength < newLengthInt)
+        {
             /* Pad the copy with the default value of its elment kind. */
             ValueNode defaultValue = ConstantNode.defaultForKind(elementKind, graph);
-            for (int i = readLength; i < newLengthInt; i++) {
+            for (int i = readLength; i < newLengthInt; i++)
+            {
                 newEntryState[i] = defaultValue;
             }
         }

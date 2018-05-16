@@ -14,15 +14,18 @@ import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 
 @NodeInfo(cycles = CYCLES_1, size = SIZE_1)
-public class RandomSeedNode extends FloatingNode implements LIRLowerable {
+public class RandomSeedNode extends FloatingNode implements LIRLowerable
+{
     public static final NodeClass<RandomSeedNode> TYPE = NodeClass.create(RandomSeedNode.class);
 
-    public RandomSeedNode() {
+    public RandomSeedNode()
+    {
         super(TYPE, StampFactory.intValue());
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         Value result = ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitRandomSeed();
         gen.setResult(this, result);
     }

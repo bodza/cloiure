@@ -18,8 +18,8 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.nodes.util.GraphUtil;
 
 @NodeInfo
-public final class LoopBeginNode extends AbstractMergeNode implements IterableNodeType, LIRLowerable {
-
+public final class LoopBeginNode extends AbstractMergeNode implements IterableNodeType, LIRLowerable
+{
     public static final NodeClass<LoopBeginNode> TYPE = NodeClass.create(LoopBeginNode.class);
     protected double loopFrequency;
     protected double loopOrigFrequency;
@@ -30,7 +30,8 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
     protected LoopType loopType;
     protected int unrollFactor;
 
-    public enum LoopType {
+    public enum LoopType
+    {
         SIMPLE_LOOP,
         PRE_LOOP,
         MAIN_LOOP,
@@ -42,7 +43,8 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
 
     @OptionalInput(InputType.Guard) GuardingNode overflowGuard;
 
-    public LoopBeginNode() {
+    public LoopBeginNode()
+    {
         super(TYPE);
         loopFrequency = 1;
         loopOrigFrequency = 1;
@@ -53,69 +55,84 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
         unrollFactor = 1;
     }
 
-    public boolean isSimpleLoop() {
+    public boolean isSimpleLoop()
+    {
         return (loopType == LoopType.SIMPLE_LOOP);
     }
 
-    public void setPreLoop() {
+    public void setPreLoop()
+    {
         assert isSimpleLoop();
         loopType = LoopType.PRE_LOOP;
     }
 
-    public boolean isPreLoop() {
+    public boolean isPreLoop()
+    {
         return (loopType == LoopType.PRE_LOOP);
     }
 
-    public void setMainLoop() {
+    public void setMainLoop()
+    {
         assert isSimpleLoop();
         loopType = LoopType.MAIN_LOOP;
     }
 
-    public boolean isMainLoop() {
+    public boolean isMainLoop()
+    {
         return (loopType == LoopType.MAIN_LOOP);
     }
 
-    public void setPostLoop() {
+    public void setPostLoop()
+    {
         assert isSimpleLoop();
         loopType = LoopType.POST_LOOP;
     }
 
-    public boolean isPostLoop() {
+    public boolean isPostLoop()
+    {
         return (loopType == LoopType.POST_LOOP);
     }
 
-    public int getUnrollFactor() {
+    public int getUnrollFactor()
+    {
         return unrollFactor;
     }
 
-    public void setUnrollFactor(int currentUnrollFactor) {
+    public void setUnrollFactor(int currentUnrollFactor)
+    {
         unrollFactor = currentUnrollFactor;
     }
 
     /** Disables safepoint for the whole loop, i.e., for all {@link LoopEndNode loop ends}. */
-    public void disableSafepoint() {
+    public void disableSafepoint()
+    {
         /* Store flag locally in case new loop ends are created later on. */
         this.canEndsSafepoint = false;
         /* Propagate flag to all existing loop ends. */
-        for (LoopEndNode loopEnd : loopEnds()) {
+        for (LoopEndNode loopEnd : loopEnds())
+        {
             loopEnd.disableSafepoint();
         }
     }
 
-    public double loopOrigFrequency() {
+    public double loopOrigFrequency()
+    {
         return loopOrigFrequency;
     }
 
-    public void setLoopOrigFrequency(double loopOrigFrequency) {
+    public void setLoopOrigFrequency(double loopOrigFrequency)
+    {
         assert loopOrigFrequency >= 0;
         this.loopOrigFrequency = loopOrigFrequency;
     }
 
-    public double loopFrequency() {
+    public double loopFrequency()
+    {
         return loopFrequency;
     }
 
-    public void setLoopFrequency(double loopFrequency) {
+    public void setLoopFrequency(double loopFrequency)
+    {
         assert loopFrequency >= 0;
         this.loopFrequency = loopFrequency;
     }
@@ -127,16 +144,19 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
      *
      * @return the set of {@code LoopEndNode} that correspond to back-edges for this loop
      */
-    public NodeIterable<LoopEndNode> loopEnds() {
+    public NodeIterable<LoopEndNode> loopEnds()
+    {
         return usages().filter(LoopEndNode.class);
     }
 
-    public NodeIterable<LoopExitNode> loopExits() {
+    public NodeIterable<LoopExitNode> loopExits()
+    {
         return usages().filter(LoopExitNode.class);
     }
 
     @Override
-    public NodeIterable<Node> anchored() {
+    public NodeIterable<Node> anchored()
+    {
         return super.anchored().filter(isNotA(LoopEndNode.class).nor(LoopExitNode.class));
     }
 
@@ -157,83 +177,106 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
      *
      * @return the set of {@code LoopEndNode} that correspond to back-edges for this loop
      */
-    public LoopEndNode[] orderedLoopEnds() {
+    public LoopEndNode[] orderedLoopEnds()
+    {
         LoopEndNode[] result = new LoopEndNode[this.getLoopEndCount()];
-        for (LoopEndNode end : loopEnds()) {
+        for (LoopEndNode end : loopEnds())
+        {
             result[end.endIndex()] = end;
         }
         return result;
     }
 
-    public boolean isSingleEntryLoop() {
+    public boolean isSingleEntryLoop()
+    {
         return (forwardEndCount() == 1);
     }
 
-    public AbstractEndNode forwardEnd() {
+    public AbstractEndNode forwardEnd()
+    {
         assert forwardEndCount() == 1;
         return forwardEndAt(0);
     }
 
-    public int splits() {
+    public int splits()
+    {
         return splits;
     }
 
-    public void incrementSplits() {
+    public void incrementSplits()
+    {
         splits++;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         // Nothing to emit, since this is node is used for structural purposes only.
     }
 
     @Override
-    protected void deleteEnd(AbstractEndNode end) {
-        if (end instanceof LoopEndNode) {
+    protected void deleteEnd(AbstractEndNode end)
+    {
+        if (end instanceof LoopEndNode)
+        {
             LoopEndNode loopEnd = (LoopEndNode) end;
             loopEnd.setLoopBegin(null);
             int idx = loopEnd.endIndex();
-            for (LoopEndNode le : loopEnds()) {
+            for (LoopEndNode le : loopEnds())
+            {
                 int leIdx = le.endIndex();
                 assert leIdx != idx;
-                if (leIdx > idx) {
+                if (leIdx > idx)
+                {
                     le.setEndIndex(leIdx - 1);
                 }
             }
             nextEndIndex--;
-        } else {
+        }
+        else
+        {
             super.deleteEnd(end);
         }
     }
 
     @Override
-    public int phiPredecessorCount() {
+    public int phiPredecessorCount()
+    {
         return forwardEndCount() + loopEnds().count();
     }
 
     @Override
-    public int phiPredecessorIndex(AbstractEndNode pred) {
-        if (pred instanceof LoopEndNode) {
+    public int phiPredecessorIndex(AbstractEndNode pred)
+    {
+        if (pred instanceof LoopEndNode)
+        {
             LoopEndNode loopEnd = (LoopEndNode) pred;
-            if (loopEnd.loopBegin() == this) {
+            if (loopEnd.loopBegin() == this)
+            {
                 assert loopEnd.endIndex() < loopEnds().count() : "Invalid endIndex : " + loopEnd;
                 return loopEnd.endIndex() + forwardEndCount();
             }
-        } else {
+        }
+        else
+        {
             return super.forwardEndIndex((EndNode) pred);
         }
         throw ValueNodeUtil.shouldNotReachHere("unknown pred : " + pred);
     }
 
     @Override
-    public AbstractEndNode phiPredecessorAt(int index) {
-        if (index < forwardEndCount()) {
+    public AbstractEndNode phiPredecessorAt(int index)
+    {
+        if (index < forwardEndCount())
+        {
             return forwardEndAt(index);
         }
-        for (LoopEndNode end : loopEnds()) {
+        for (LoopEndNode end : loopEnds())
+        {
             int idx = index - forwardEndCount();
             assert idx >= 0;
-            if (end.endIndex() == idx) {
+            if (end.endIndex() == idx)
+            {
                 return end;
             }
         }
@@ -241,73 +284,90 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
     }
 
     @Override
-    public boolean verify() {
+    public boolean verify()
+    {
         assertTrue(loopEnds().isNotEmpty(), "missing loopEnd");
         return super.verify();
     }
 
-    int nextEndIndex() {
+    int nextEndIndex()
+    {
         return nextEndIndex++;
     }
 
-    public int getLoopEndCount() {
+    public int getLoopEndCount()
+    {
         return nextEndIndex;
     }
 
-    public int unswitches() {
+    public int unswitches()
+    {
         return unswitches;
     }
 
-    public void incrementUnswitches() {
+    public void incrementUnswitches()
+    {
         unswitches++;
     }
 
-    public int getInversionCount() {
+    public int getInversionCount()
+    {
         return inversionCount;
     }
 
-    public void setInversionCount(int count) {
+    public void setInversionCount(int count)
+    {
         inversionCount = count;
     }
 
     @Override
-    public void simplify(SimplifierTool tool) {
+    public void simplify(SimplifierTool tool)
+    {
         canonicalizePhis(tool);
     }
 
-    public boolean isLoopExit(AbstractBeginNode begin) {
+    public boolean isLoopExit(AbstractBeginNode begin)
+    {
         return begin instanceof LoopExitNode && ((LoopExitNode) begin).loopBegin() == this;
     }
 
-    public LoopExitNode getSingleLoopExit() {
+    public LoopExitNode getSingleLoopExit()
+    {
         assert loopExits().count() == 1;
         return loopExits().first();
     }
 
-    public LoopEndNode getSingleLoopEnd() {
+    public LoopEndNode getSingleLoopEnd()
+    {
         assert loopEnds().count() == 1;
         return loopEnds().first();
     }
 
     @SuppressWarnings("try")
-    public void removeExits() {
-        for (LoopExitNode loopexit : loopExits().snapshot()) {
-            try (DebugCloseable position = graph().withNodeSourcePosition(loopexit)) {
+    public void removeExits()
+    {
+        for (LoopExitNode loopexit : loopExits().snapshot())
+        {
+            try (DebugCloseable position = graph().withNodeSourcePosition(loopexit))
+            {
                 loopexit.removeProxies();
                 FrameState loopStateAfter = loopexit.stateAfter();
                 graph().replaceFixedWithFixed(loopexit, graph().add(new BeginNode()));
-                if (loopStateAfter != null) {
+                if (loopStateAfter != null)
+                {
                     GraphUtil.tryKillUnused(loopStateAfter);
                 }
             }
         }
     }
 
-    public GuardingNode getOverflowGuard() {
+    public GuardingNode getOverflowGuard()
+    {
         return overflowGuard;
     }
 
-    public void setOverflowGuard(GuardingNode overflowGuard) {
+    public void setOverflowGuard(GuardingNode overflowGuard)
+    {
         updateUsagesInterface(this.overflowGuard, overflowGuard);
         this.overflowGuard = overflowGuard;
     }
@@ -319,22 +379,31 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
      * {@link #NO_INCREMENT} or the increment, i.e., the value by which the phi is incremented in
      * the corresponding branch.
      */
-    private static int[] getSelfIncrements(PhiNode phi) {
+    private static int[] getSelfIncrements(PhiNode phi)
+    {
         int[] selfIncrement = new int[phi.valueCount()];
-        for (int i = 0; i < phi.valueCount(); i++) {
+        for (int i = 0; i < phi.valueCount(); i++)
+        {
             ValueNode input = phi.valueAt(i);
             long increment = NO_INCREMENT;
-            if (input != null && input instanceof AddNode && input.stamp(NodeView.DEFAULT) instanceof IntegerStamp) {
+            if (input != null && input instanceof AddNode && input.stamp(NodeView.DEFAULT) instanceof IntegerStamp)
+            {
                 AddNode add = (AddNode) input;
-                if (add.getX() == phi && add.getY().isConstant()) {
+                if (add.getX() == phi && add.getY().isConstant())
+                {
                     increment = add.getY().asJavaConstant().asLong();
-                } else if (add.getY() == phi && add.getX().isConstant()) {
+                }
+                else if (add.getY() == phi && add.getX().isConstant())
+                {
                     increment = add.getX().asJavaConstant().asLong();
                 }
-            } else if (input == phi) {
+            }
+            else if (input == phi)
+            {
                 increment = 0;
             }
-            if (increment < Integer.MIN_VALUE || increment > Integer.MAX_VALUE || increment == NO_INCREMENT) {
+            if (increment < Integer.MIN_VALUE || increment > Integer.MAX_VALUE || increment == NO_INCREMENT)
+            {
                 increment = NO_INCREMENT;
             }
             selfIncrement[i] = (int) increment;
@@ -346,41 +415,54 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
      * Coalesces loop phis that represent the same value (which is not handled by normal Global
      * Value Numbering).
      */
-    public void canonicalizePhis(SimplifierTool tool) {
+    public void canonicalizePhis(SimplifierTool tool)
+    {
         int phiCount = phis().count();
-        if (phiCount > 1) {
+        if (phiCount > 1)
+        {
             int phiInputCount = phiPredecessorCount();
             int phiIndex = 0;
             int[][] selfIncrement = new int[phiCount][];
             PhiNode[] phis = this.phis().snapshot().toArray(new PhiNode[phiCount]);
 
-            for (phiIndex = 0; phiIndex < phiCount; phiIndex++) {
+            for (phiIndex = 0; phiIndex < phiCount; phiIndex++)
+            {
                 PhiNode phi = phis[phiIndex];
-                if (phi != null) {
-                    nextPhi: for (int otherPhiIndex = phiIndex + 1; otherPhiIndex < phiCount; otherPhiIndex++) {
+                if (phi != null)
+                {
+                    nextPhi: for (int otherPhiIndex = phiIndex + 1; otherPhiIndex < phiCount; otherPhiIndex++)
+                    {
                         PhiNode otherPhi = phis[otherPhiIndex];
-                        if (otherPhi == null || phi.getNodeClass() != otherPhi.getNodeClass() || !phi.valueEquals(otherPhi)) {
+                        if (otherPhi == null || phi.getNodeClass() != otherPhi.getNodeClass() || !phi.valueEquals(otherPhi))
+                        {
                             continue nextPhi;
                         }
-                        if (selfIncrement[phiIndex] == null) {
+                        if (selfIncrement[phiIndex] == null)
+                        {
                             selfIncrement[phiIndex] = getSelfIncrements(phi);
                         }
-                        if (selfIncrement[otherPhiIndex] == null) {
+                        if (selfIncrement[otherPhiIndex] == null)
+                        {
                             selfIncrement[otherPhiIndex] = getSelfIncrements(otherPhi);
                         }
                         int[] phiIncrement = selfIncrement[phiIndex];
                         int[] otherPhiIncrement = selfIncrement[otherPhiIndex];
-                        for (int inputIndex = 0; inputIndex < phiInputCount; inputIndex++) {
-                            if (phiIncrement[inputIndex] == NO_INCREMENT) {
-                                if (phi.valueAt(inputIndex) != otherPhi.valueAt(inputIndex)) {
+                        for (int inputIndex = 0; inputIndex < phiInputCount; inputIndex++)
+                        {
+                            if (phiIncrement[inputIndex] == NO_INCREMENT)
+                            {
+                                if (phi.valueAt(inputIndex) != otherPhi.valueAt(inputIndex))
+                                {
                                     continue nextPhi;
                                 }
                             }
-                            if (phiIncrement[inputIndex] != otherPhiIncrement[inputIndex]) {
+                            if (phiIncrement[inputIndex] != otherPhiIncrement[inputIndex])
+                            {
                                 continue nextPhi;
                             }
                         }
-                        if (tool != null) {
+                        if (tool != null)
+                        {
                             tool.addToWorkList(otherPhi.usages());
                         }
                         otherPhi.replaceAtUsages(phi);

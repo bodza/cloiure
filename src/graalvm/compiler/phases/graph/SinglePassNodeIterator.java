@@ -49,8 +49,8 @@ import graalvm.compiler.nodes.StructuredGraph;
  *
  * @param <T> the type of {@link MergeableState} handled by this SinglePassNodeIterator
  */
-public abstract class SinglePassNodeIterator<T extends MergeableState<T>> {
-
+public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
+{
     private final NodeBitMap visitedEnds;
 
     /**
@@ -105,11 +105,13 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>> {
      * </ul>
      * </p>
      */
-    private static final class PathStart<U> {
+    private static final class PathStart<U>
+    {
         private final AbstractBeginNode node;
         private final U stateOnEntry;
 
-        private PathStart(AbstractBeginNode node, U stateOnEntry) {
+        private PathStart(AbstractBeginNode node, U stateOnEntry)
+        {
             this.node = node;
             this.stateOnEntry = stateOnEntry;
             assert repOK();
@@ -118,18 +120,22 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>> {
         /**
          * @return true iff this instance is internally consistent (ie, its "representation is OK")
          */
-        private boolean repOK() {
-            if (node == null) {
+        private boolean repOK()
+        {
+            if (node == null)
+            {
                 return false;
             }
-            if (node instanceof AbstractMergeNode) {
+            if (node instanceof AbstractMergeNode)
+            {
                 return stateOnEntry == null;
             }
             return (stateOnEntry != null);
         }
     }
 
-    public SinglePassNodeIterator(StartNode start, T initialState) {
+    public SinglePassNodeIterator(StartNode start, T initialState)
+    {
         StructuredGraph graph = start.graph();
         visitedEnds = graph.createNodeBitMap();
         nodeQueue = new ArrayDeque<>();
@@ -147,46 +153,65 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>> {
      * instance will be garbage-collected soon afterwards.
      * </p>
      */
-    public void apply() {
+    public void apply()
+    {
         FixedNode current = start;
 
-        do {
-            if (current instanceof InvokeWithExceptionNode) {
+        do
+        {
+            if (current instanceof InvokeWithExceptionNode)
+            {
                 invoke((Invoke) current);
                 queueSuccessors(current);
                 current = nextQueuedNode();
-            } else if (current instanceof LoopBeginNode) {
+            }
+            else if (current instanceof LoopBeginNode)
+            {
                 state.loopBegin((LoopBeginNode) current);
                 keepForLater(current, state);
                 state = state.clone();
                 loopBegin((LoopBeginNode) current);
                 current = ((LoopBeginNode) current).next();
                 assert current != null;
-            } else if (current instanceof LoopEndNode) {
+            }
+            else if (current instanceof LoopEndNode)
+            {
                 loopEnd((LoopEndNode) current);
                 finishLoopEnds((LoopEndNode) current);
                 current = nextQueuedNode();
-            } else if (current instanceof AbstractMergeNode) {
+            }
+            else if (current instanceof AbstractMergeNode)
+            {
                 merge((AbstractMergeNode) current);
                 current = ((AbstractMergeNode) current).next();
                 assert current != null;
-            } else if (current instanceof FixedWithNextNode) {
+            }
+            else if (current instanceof FixedWithNextNode)
+            {
                 FixedNode next = ((FixedWithNextNode) current).next();
                 assert next != null : current;
                 node(current);
                 current = next;
-            } else if (current instanceof EndNode) {
+            }
+            else if (current instanceof EndNode)
+            {
                 end((EndNode) current);
                 queueMerge((EndNode) current);
                 current = nextQueuedNode();
-            } else if (current instanceof ControlSinkNode) {
+            }
+            else if (current instanceof ControlSinkNode)
+            {
                 node(current);
                 current = nextQueuedNode();
-            } else if (current instanceof ControlSplitNode) {
+            }
+            else if (current instanceof ControlSplitNode)
+            {
                 controlSplit((ControlSplitNode) current);
                 queueSuccessors(current);
                 current = nextQueuedNode();
-            } else {
+            }
+            else
+            {
                 assert false : current;
             }
         } while (current != null);
@@ -204,12 +229,16 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>> {
      * owner-is-mutator access protocol).
      * </p>
      */
-    private void queueSuccessors(FixedNode x) {
+    private void queueSuccessors(FixedNode x)
+    {
         T startState = state;
         T curState = startState;
-        for (Node succ : x.successors()) {
-            if (succ != null) {
-                if (curState == null) {
+        for (Node succ : x.successors())
+        {
+            if (succ != null)
+            {
+                if (curState == null)
+                {
                     // the current state isn't cloned for the first successor
                     // conceptually, the state is handed over to it
                     curState = startState.clone();
@@ -230,23 +259,29 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>> {
      * (ie, the entries associated to forward-ends for that merge-node).
      * </p>
      */
-    private FixedNode nextQueuedNode() {
-        if (nodeQueue.isEmpty()) {
+    private FixedNode nextQueuedNode()
+    {
+        if (nodeQueue.isEmpty())
+        {
             return null;
         }
         PathStart<T> elem = nodeQueue.removeFirst();
-        if (elem.node instanceof AbstractMergeNode) {
+        if (elem.node instanceof AbstractMergeNode)
+        {
             AbstractMergeNode merge = (AbstractMergeNode) elem.node;
             state = pruneEntry(merge.forwardEndAt(0));
             ArrayList<T> states = new ArrayList<>(merge.forwardEndCount() - 1);
-            for (int i = 1; i < merge.forwardEndCount(); i++) {
+            for (int i = 1; i < merge.forwardEndCount(); i++)
+            {
                 T other = pruneEntry(merge.forwardEndAt(i));
                 states.add(other);
             }
             boolean ready = state.merge(merge, states);
             assert ready : "Not a single-pass iterator after all";
             return merge;
-        } else {
+        }
+        else
+        {
             AbstractBeginNode begin = elem.node;
             assert begin.predecessor() != null;
             state = elem.stateOnEntry;
@@ -271,21 +306,26 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>> {
      * </ul>
      * </p>
      */
-    private void finishLoopEnds(LoopEndNode end) {
+    private void finishLoopEnds(LoopEndNode end)
+    {
         assert !visitedEnds.isMarked(end);
         visitedEnds.mark(end);
         keepForLater(end, state);
         LoopBeginNode begin = end.loopBegin();
         boolean endsVisited = true;
-        for (LoopEndNode le : begin.loopEnds()) {
-            if (!visitedEnds.isMarked(le)) {
+        for (LoopEndNode le : begin.loopEnds())
+        {
+            if (!visitedEnds.isMarked(le))
+            {
                 endsVisited = false;
                 break;
             }
         }
-        if (endsVisited) {
+        if (endsVisited)
+        {
             ArrayList<T> states = new ArrayList<>(begin.loopEnds().count());
-            for (LoopEndNode le : begin.orderedLoopEnds()) {
+            for (LoopEndNode le : begin.orderedLoopEnds())
+            {
                 T leState = pruneEntry(le);
                 states.add(leState);
             }
@@ -303,46 +343,56 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>> {
      * the forward-ends inserted by this method.
      * </p>
      */
-    private void queueMerge(EndNode end) {
+    private void queueMerge(EndNode end)
+    {
         assert !visitedEnds.isMarked(end);
         visitedEnds.mark(end);
         keepForLater(end, state);
         AbstractMergeNode merge = end.merge();
         boolean endsVisited = true;
-        for (int i = 0; i < merge.forwardEndCount(); i++) {
-            if (!visitedEnds.isMarked(merge.forwardEndAt(i))) {
+        for (int i = 0; i < merge.forwardEndCount(); i++)
+        {
+            if (!visitedEnds.isMarked(merge.forwardEndAt(i)))
+            {
                 endsVisited = false;
                 break;
             }
         }
-        if (endsVisited) {
+        if (endsVisited)
+        {
             nodeQueue.add(new PathStart<>(merge, null));
         }
     }
 
     protected abstract void node(FixedNode node);
 
-    protected void end(EndNode endNode) {
+    protected void end(EndNode endNode)
+    {
         node(endNode);
     }
 
-    protected void merge(AbstractMergeNode merge) {
+    protected void merge(AbstractMergeNode merge)
+    {
         node(merge);
     }
 
-    protected void loopBegin(LoopBeginNode loopBegin) {
+    protected void loopBegin(LoopBeginNode loopBegin)
+    {
         node(loopBegin);
     }
 
-    protected void loopEnd(LoopEndNode loopEnd) {
+    protected void loopEnd(LoopEndNode loopEnd)
+    {
         node(loopEnd);
     }
 
-    protected void controlSplit(ControlSplitNode controlSplit) {
+    protected void controlSplit(ControlSplitNode controlSplit)
+    {
         node(controlSplit);
     }
 
-    protected void invoke(Invoke invoke) {
+    protected void invoke(Invoke invoke)
+    {
         node(invoke.asNode());
     }
 
@@ -354,19 +404,22 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>> {
      * assertions will be skipped.
      * </p>
      */
-    protected void finished() {
+    protected void finished()
+    {
         assert nodeQueue.isEmpty();
         assert nodeStates.isEmpty();
     }
 
-    private void keepForLater(FixedNode x, T s) {
+    private void keepForLater(FixedNode x, T s)
+    {
         assert !nodeStates.containsKey(x);
         assert (x instanceof LoopBeginNode) || (x instanceof LoopEndNode) || (x instanceof EndNode);
         assert s != null;
         nodeStates.put(x, s);
     }
 
-    private T pruneEntry(FixedNode x) {
+    private T pruneEntry(FixedNode x)
+    {
         T result = nodeStates.removeKey(x);
         assert result != null;
         return result;

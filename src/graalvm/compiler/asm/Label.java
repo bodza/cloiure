@@ -5,8 +5,8 @@ import java.util.ArrayList;
 /**
  * This class represents a label within assembly code.
  */
-public final class Label {
-
+public final class Label
+{
     private int position = -1;
     private int blockId = -1;
 
@@ -21,19 +21,23 @@ public final class Label {
      *
      * @return the position
      */
-    public int position() {
+    public int position()
+    {
         assert position >= 0 : "Unbound label is being referenced";
         return position;
     }
 
-    public Label() {
+    public Label()
+    {
     }
 
-    public Label(int id) {
+    public Label(int id)
+    {
         blockId = id;
     }
 
-    public int getBlockId() {
+    public int getBlockId()
+    {
         return blockId;
     }
 
@@ -42,43 +46,53 @@ public final class Label {
      *
      * @param pos the position
      */
-    protected void bind(int pos) {
+    protected void bind(int pos)
+    {
         this.position = pos;
         assert isBound();
     }
 
-    public boolean isBound() {
+    public boolean isBound()
+    {
         return position >= 0;
     }
 
-    public void addPatchAt(int branchLocation) {
+    public void addPatchAt(int branchLocation)
+    {
         assert !isBound() : "Label is already bound " + this + " " + branchLocation + " at position " + position;
-        if (patchPositions == null) {
+        if (patchPositions == null)
+        {
             patchPositions = new ArrayList<>(2);
         }
         patchPositions.add(branchLocation);
     }
 
-    protected void patchInstructions(Assembler masm) {
+    protected void patchInstructions(Assembler masm)
+    {
         assert isBound() : "Label should be bound";
-        if (patchPositions != null) {
+        if (patchPositions != null)
+        {
             int target = position;
-            for (int i = 0; i < patchPositions.size(); ++i) {
+            for (int i = 0; i < patchPositions.size(); ++i)
+            {
                 int pos = patchPositions.get(i);
                 masm.patchJumpTarget(pos, target);
             }
         }
     }
 
-    public void reset() {
-        if (this.patchPositions != null) {
+    public void reset()
+    {
+        if (this.patchPositions != null)
+        {
             this.patchPositions.clear();
         }
         this.position = -1;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return isBound() ? String.valueOf(position()) : "?";
     }
 }

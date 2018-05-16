@@ -12,11 +12,12 @@ import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.MemoryAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
-public abstract class NarrowOopStamp extends AbstractObjectStamp {
-
+public abstract class NarrowOopStamp extends AbstractObjectStamp
+{
     private final CompressEncoding encoding;
 
-    protected NarrowOopStamp(ResolvedJavaType type, boolean exactType, boolean nonNull, boolean alwaysNull, CompressEncoding encoding) {
+    protected NarrowOopStamp(ResolvedJavaType type, boolean exactType, boolean nonNull, boolean alwaysNull, CompressEncoding encoding)
+    {
         super(type, exactType, nonNull, alwaysNull);
         this.encoding = encoding;
     }
@@ -24,21 +25,25 @@ public abstract class NarrowOopStamp extends AbstractObjectStamp {
     @Override
     protected abstract AbstractObjectStamp copyWith(ResolvedJavaType type, boolean exactType, boolean nonNull, boolean alwaysNull);
 
-    public Stamp uncompressed() {
+    public Stamp uncompressed()
+    {
         return new ObjectStamp(type(), isExactType(), nonNull(), alwaysNull());
     }
 
-    public CompressEncoding getEncoding() {
+    public CompressEncoding getEncoding()
+    {
         return encoding;
     }
 
     @Override
-    public LIRKind getLIRKind(LIRKindTool tool) {
+    public LIRKind getLIRKind(LIRKindTool tool)
+    {
         return tool.getNarrowOopKind();
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         StringBuilder str = new StringBuilder();
         str.append('n');
         appendString(str);
@@ -46,11 +51,14 @@ public abstract class NarrowOopStamp extends AbstractObjectStamp {
     }
 
     @Override
-    public boolean isCompatible(Stamp other) {
-        if (this == other) {
+    public boolean isCompatible(Stamp other)
+    {
+        if (this == other)
+        {
             return true;
         }
-        if (other instanceof NarrowOopStamp) {
+        if (other instanceof NarrowOopStamp)
+        {
             NarrowOopStamp narrow = (NarrowOopStamp) other;
             return encoding.equals(narrow.encoding);
         }
@@ -61,7 +69,8 @@ public abstract class NarrowOopStamp extends AbstractObjectStamp {
     public abstract Constant readConstant(MemoryAccessProvider provider, Constant base, long displacement);
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         final int prime = 31;
         int result = super.hashCode();
         result = prime * result + encoding.hashCode();
@@ -69,15 +78,19 @@ public abstract class NarrowOopStamp extends AbstractObjectStamp {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
             return true;
         }
-        if (obj == null || getClass() != obj.getClass()) {
+        if (obj == null || getClass() != obj.getClass())
+        {
             return false;
         }
         NarrowOopStamp other = (NarrowOopStamp) obj;
-        if (!encoding.equals(other.encoding)) {
+        if (!encoding.equals(other.encoding))
+        {
             return false;
         }
         return super.equals(other);

@@ -5,15 +5,16 @@ package graalvm.compiler.nodes.calc;
  * narrow operation instead of doing the wide operation and applying the {@link NarrowNode} to the
  * result.
  */
-public interface NarrowableArithmeticNode {
-
+public interface NarrowableArithmeticNode
+{
     /**
      * Check whether this operation can be narrowed to {@code resultBits} bit without loss of
      * precision.
      *
      * @param resultBits
      */
-    default boolean isNarrowable(int resultBits) {
+    default boolean isNarrowable(int resultBits)
+    {
         return true;
     }
 }

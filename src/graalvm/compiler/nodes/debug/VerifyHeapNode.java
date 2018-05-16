@@ -16,33 +16,34 @@ import graalvm.compiler.nodes.spi.LoweringTool;
  * A node for platform dependent verification of the Java heap. Intended to be used for debugging
  * heap corruption issues.
  */
-//@formatter:off
 @NodeInfo(size = SIZE_IGNORED,
         sizeRationale = "Node is a debugging node that should not be used in production.",
         cycles = CYCLES_IGNORED,
         cyclesRationale = "Node is a debugging node that should not be used in production.")
-//@formatter:on
-public final class VerifyHeapNode extends FixedWithNextNode implements Lowerable {
-
+public final class VerifyHeapNode extends FixedWithNextNode implements Lowerable
+{
     public static final NodeClass<VerifyHeapNode> TYPE = NodeClass.create(VerifyHeapNode.class);
 
-    public VerifyHeapNode() {
+    public VerifyHeapNode()
+    {
         super(TYPE, StampFactory.forVoid());
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
-    public static void addBefore(FixedNode position) {
+    public static void addBefore(FixedNode position)
+    {
         StructuredGraph graph = position.graph();
         graph.addBeforeFixed(position, graph.add(new VerifyHeapNode()));
     }
 
-    public static void addAfter(FixedWithNextNode position) {
+    public static void addAfter(FixedWithNextNode position)
+    {
         StructuredGraph graph = position.graph();
         graph.addAfterFixed(position, graph.add(new VerifyHeapNode()));
     }
-
 }

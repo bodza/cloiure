@@ -17,29 +17,35 @@ import graalvm.compiler.lir.LIRInstruction.OperandMode;
 /**
  * Checks that no registers exceed the MaxVectorSize flag from the VM config.
  */
-public final class VerifyMaxRegisterSizePhase extends PostAllocationOptimizationPhase {
-
+public final class VerifyMaxRegisterSizePhase extends PostAllocationOptimizationPhase
+{
     private final int maxVectorSize;
 
-    public VerifyMaxRegisterSizePhase(int maxVectorSize) {
+    public VerifyMaxRegisterSizePhase(int maxVectorSize)
+    {
         this.maxVectorSize = maxVectorSize;
     }
 
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, PostAllocationOptimizationContext context) {
+    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, PostAllocationOptimizationContext context)
+    {
         LIR lir = lirGenRes.getLIR();
-        for (AbstractBlockBase<?> block : lir.getControlFlowGraph().getBlocks()) {
+        for (AbstractBlockBase<?> block : lir.getControlFlowGraph().getBlocks())
+        {
             verifyBlock(lir, block);
         }
     }
 
-    protected void verifyBlock(LIR lir, AbstractBlockBase<?> block) {
-        for (LIRInstruction inst : lir.getLIRforBlock(block)) {
+    protected void verifyBlock(LIR lir, AbstractBlockBase<?> block)
+    {
+        for (LIRInstruction inst : lir.getLIRforBlock(block))
+        {
             verifyInstruction(inst);
         }
     }
 
-    protected void verifyInstruction(LIRInstruction inst) {
+    protected void verifyInstruction(LIRInstruction inst)
+    {
         inst.visitEachInput(this::verifyOperands);
         inst.visitEachOutput(this::verifyOperands);
         inst.visitEachAlive(this::verifyOperands);
@@ -47,8 +53,10 @@ public final class VerifyMaxRegisterSizePhase extends PostAllocationOptimization
     }
 
     @SuppressWarnings("unused")
-    protected void verifyOperands(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags) {
-        if (isRegister(value)) {
+    protected void verifyOperands(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
+    {
+        if (isRegister(value))
+        {
             assert value.getPlatformKind().getSizeInBytes() <= maxVectorSize : "value " + value + " exceeds MaxVectorSize " + maxVectorSize;
         }
     }

@@ -8,17 +8,20 @@ import jdk.vm.ci.meta.JavaMethod;
  * Lazily computed debug value name composed of a prefix and a {@linkplain JavaMethod#getName()
  * method name}.
  */
-public class MethodDebugValueName extends LazyName {
+public class MethodDebugValueName extends LazyName
+{
     final String prefix;
     final JavaMethod method;
 
-    public MethodDebugValueName(String prefix, JavaMethod method) {
+    public MethodDebugValueName(String prefix, JavaMethod method)
+    {
         this.prefix = prefix;
         this.method = method;
     }
 
     @Override
-    public String createString() {
+    public String createString()
+    {
         return prefix + "[" + method.getName() + "]";
     }
 }

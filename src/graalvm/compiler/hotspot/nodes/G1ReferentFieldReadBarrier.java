@@ -15,21 +15,25 @@ import graalvm.compiler.nodes.memory.address.AddressNode;
  * read barrier and consequently is added to the SATB queue if the concurrent marker is enabled.
  */
 @NodeInfo(cycles = CYCLES_64, size = SIZE_64)
-public final class G1ReferentFieldReadBarrier extends ObjectWriteBarrier {
+public final class G1ReferentFieldReadBarrier extends ObjectWriteBarrier
+{
     public static final NodeClass<G1ReferentFieldReadBarrier> TYPE = NodeClass.create(G1ReferentFieldReadBarrier.class);
 
     protected final boolean doLoad;
 
-    public G1ReferentFieldReadBarrier(AddressNode address, ValueNode expectedObject, boolean doLoad) {
+    public G1ReferentFieldReadBarrier(AddressNode address, ValueNode expectedObject, boolean doLoad)
+    {
         super(TYPE, address, expectedObject, true);
         this.doLoad = doLoad;
     }
 
-    public ValueNode getExpectedObject() {
+    public ValueNode getExpectedObject()
+    {
         return getValue();
     }
 
-    public boolean doLoad() {
+    public boolean doLoad()
+    {
         return doLoad;
     }
 }

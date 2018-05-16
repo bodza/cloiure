@@ -19,13 +19,15 @@ import jdk.vm.ci.meta.JavaKind;
  * moved next to any uses to avoid creating a derived pointer that is live across a safepoint.
  */
 @NodeInfo(cycles = CYCLES_1, size = NodeSize.SIZE_1)
-public final class ComputeObjectAddressNode extends FixedWithNextNode implements Lowerable, ControlFlowAnchored {
+public final class ComputeObjectAddressNode extends FixedWithNextNode implements Lowerable, ControlFlowAnchored
+{
     public static final NodeClass<ComputeObjectAddressNode> TYPE = NodeClass.create(ComputeObjectAddressNode.class);
 
     @Input ValueNode object;
     @Input ValueNode offset;
 
-    public ComputeObjectAddressNode(ValueNode obj, ValueNode offset) {
+    public ComputeObjectAddressNode(ValueNode obj, ValueNode offset)
+    {
         super(TYPE, StampFactory.forKind(JavaKind.Long));
         this.object = obj;
         this.offset = offset;
@@ -35,15 +37,18 @@ public final class ComputeObjectAddressNode extends FixedWithNextNode implements
     public static native long get(Object array, long offset);
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
-    public ValueNode getObject() {
+    public ValueNode getObject()
+    {
         return object;
     }
 
-    public ValueNode getOffset() {
+    public ValueNode getOffset()
+    {
         return offset;
     }
 }

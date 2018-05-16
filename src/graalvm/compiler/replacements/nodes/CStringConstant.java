@@ -18,36 +18,41 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * Represents a compile-time constant zero-terminated UTF-8 string installed with the generated
  * code.
  */
-public final class CStringConstant extends DataPointerConstant {
-
+public final class CStringConstant extends DataPointerConstant
+{
     private static final Charset UTF8 = Charset.forName("utf8");
 
     private final String string;
 
-    public CStringConstant(String string) {
+    public CStringConstant(String string)
+    {
         super(1);
         assert string != null;
         this.string = string;
     }
 
     @Override
-    public int getSerializedSize() {
+    public int getSerializedSize()
+    {
         return string.getBytes(UTF8).length + 1;
     }
 
     @Override
-    public void serialize(ByteBuffer buffer) {
+    public void serialize(ByteBuffer buffer)
+    {
         byte[] bytes = string.getBytes(UTF8);
         buffer.put(bytes);
         buffer.put((byte) 0);
     }
 
     @Override
-    public String toValueString() {
+    public String toValueString()
+    {
         return "c\"" + string + "\"";
     }
 
-    public static boolean intrinsify(GraphBuilderContext b, @SuppressWarnings("unused") ResolvedJavaMethod targetMethod, String string) {
+    public static boolean intrinsify(GraphBuilderContext b, @SuppressWarnings("unused") ResolvedJavaMethod targetMethod, String string)
+    {
         b.addPush(JavaKind.Object, new ConstantNode(new CStringConstant(string), StampFactory.pointer()));
         return true;
     }

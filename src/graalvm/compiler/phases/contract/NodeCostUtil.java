@@ -17,16 +17,18 @@ import graalvm.compiler.phases.schedule.SchedulePhase;
 
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
-public class NodeCostUtil {
-
+public class NodeCostUtil
+{
     private static final CounterKey sizeComputationCount = DebugContext.counter("GraphCostComputationCount_Size");
     private static final CounterKey sizeVerificationCount = DebugContext.counter("GraphCostVerificationCount_Size");
 
     @SuppressWarnings("try")
-    public static int computeGraphSize(StructuredGraph graph) {
+    public static int computeGraphSize(StructuredGraph graph)
+    {
         sizeComputationCount.increment(graph.getDebug());
         int size = 0;
-        for (Node n : graph.getNodes()) {
+        for (Node n : graph.getNodes())
+        {
             size += n.estimatedNodeSize().value;
         }
         assert size >= 0;
@@ -34,20 +36,26 @@ public class NodeCostUtil {
     }
 
     @SuppressWarnings("try")
-    public static double computeGraphCycles(StructuredGraph graph, boolean fullSchedule) {
+    public static double computeGraphCycles(StructuredGraph graph, boolean fullSchedule)
+    {
         Function<Block, Iterable<? extends Node>> blockToNodes;
         ControlFlowGraph cfg;
-        if (fullSchedule) {
+        if (fullSchedule)
+        {
             SchedulePhase schedule = new SchedulePhase(SchedulePhase.SchedulingStrategy.LATEST_OUT_OF_LOOPS, true);
             schedule.apply(graph);
             cfg = graph.getLastSchedule().getCFG();
             blockToNodes = b -> graph.getLastSchedule().getBlockToNodesMap().get(b);
-        } else {
+        }
+        else
+        {
             cfg = ControlFlowGraph.compute(graph, true, true, false, false);
             BlockMap<List<FixedNode>> nodes = new BlockMap<>(cfg);
-            for (Block b : cfg.getBlocks()) {
+            for (Block b : cfg.getBlocks())
+            {
                 ArrayList<FixedNode> curNodes = new ArrayList<>();
-                for (FixedNode node : b.getNodes()) {
+                for (FixedNode node : b.getNodes())
+                {
                     curNodes.add(node);
                 }
                 nodes.put(b, curNodes);
@@ -56,15 +64,18 @@ public class NodeCostUtil {
         }
         double weightedCycles = 0D;
         DebugContext debug = graph.getDebug();
-        try (DebugContext.Scope s = debug.scope("NodeCostSummary")) {
-            for (Block block : cfg.getBlocks()) {
-                for (Node n : blockToNodes.apply(block)) {
+        try (DebugContext.Scope s = debug.scope("NodeCostSummary"))
+        {
+            for (Block block : cfg.getBlocks())
+            {
+                for (Node n : blockToNodes.apply(block))
+                {
                     double probWeighted = n.estimatedNodeCycles().value * block.probability();
                     assert Double.isFinite(probWeighted);
                     weightedCycles += probWeighted;
-                    if (debug.isLogEnabled()) {
-                        debug.log("Node %s contributes cycles:%f size:%d to graph %s [block prob:%f]", n, n.estimatedNodeCycles().value * block.probability(),
-                                        n.estimatedNodeSize().value, graph, block.probability());
+                    if (debug.isLogEnabled())
+                    {
+                        debug.log("Node %s contributes cycles:%f size:%d to graph %s [block prob:%f]", n, n.estimatedNodeCycles().value * block.probability(), n.estimatedNodeSize().value, graph, block.probability());
                     }
                 }
             }
@@ -74,8 +85,10 @@ public class NodeCostUtil {
         return weightedCycles;
     }
 
-    private static int deltaCompare(double a, double b, double delta) {
-        if (Math.abs(a - b) <= delta) {
+    private static int deltaCompare(double a, double b, double delta)
+    {
+        if (Math.abs(a - b) <= delta)
+        {
             return 0;
         }
         return Double.compare(a, b);
@@ -89,17 +102,16 @@ public class NodeCostUtil {
      */
     private static final double DELTA = 0.001D;
 
-    public static void phaseFulfillsSizeContract(StructuredGraph graph, int codeSizeBefore, int codeSizeAfter, PhaseSizeContract contract) {
+    public static void phaseFulfillsSizeContract(StructuredGraph graph, int codeSizeBefore, int codeSizeAfter, PhaseSizeContract contract)
+    {
         sizeVerificationCount.increment(graph.getDebug());
         final double codeSizeIncrease = contract.codeSizeIncrease();
         final double graphSizeDelta = codeSizeBefore * DELTA;
-        if (deltaCompare(codeSizeAfter, codeSizeBefore * codeSizeIncrease, graphSizeDelta) > 0) {
+        if (deltaCompare(codeSizeAfter, codeSizeBefore * codeSizeIncrease, graphSizeDelta) > 0)
+        {
             ResolvedJavaMethod method = graph.method();
             double increase = (double) codeSizeAfter / (double) codeSizeBefore;
-            throw new VerificationError("Phase %s expects to increase code size by at most a factor of %.2f but an increase of %.2f was seen (code size before: %d, after: %d)%s",
-                            contract.contractorName(), codeSizeIncrease, increase, codeSizeBefore, codeSizeAfter,
-                            method != null ? " when compiling method " + method.format("%H.%n(%p)") + "." : ".");
+            throw new VerificationError("Phase %s expects to increase code size by at most a factor of %.2f but an increase of %.2f was seen (code size before: %d, after: %d)%s", contract.contractorName(), codeSizeIncrease, increase, codeSizeBefore, codeSizeAfter, method != null ? " when compiling method " + method.format("%H.%n(%p)") + "." : ".");
         }
     }
-
 }

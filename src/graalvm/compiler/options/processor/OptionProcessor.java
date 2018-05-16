@@ -48,22 +48,25 @@ import graalvm.compiler.options.OptionType;
  * {@code com.foo.Bar_OptionDescriptors}.
  */
 @SupportedAnnotationTypes({"graalvm.compiler.options.Option"})
-public class OptionProcessor extends AbstractProcessor {
-
+public class OptionProcessor extends AbstractProcessor
+{
     @Override
-    public SourceVersion getSupportedSourceVersion() {
+    public SourceVersion getSupportedSourceVersion()
+    {
         return SourceVersion.latest();
     }
 
     private final Set<Element> processed = new HashSet<>();
 
-    private void processElement(Element element, OptionsInfo info) {
-
-        if (!element.getModifiers().contains(Modifier.STATIC)) {
+    private void processElement(Element element, OptionsInfo info)
+    {
+        if (!element.getModifiers().contains(Modifier.STATIC))
+        {
             processingEnv.getMessager().printMessage(Kind.ERROR, "Option field must be static", element);
             return;
         }
-        if (element.getModifiers().contains(Modifier.PRIVATE)) {
+        if (element.getModifiers().contains(Modifier.PRIVATE))
+        {
             processingEnv.getMessager().printMessage(Kind.ERROR, "Option field cannot be private", element);
             return;
         }
@@ -79,40 +82,47 @@ public class OptionProcessor extends AbstractProcessor {
         Types types = processingEnv.getTypeUtils();
 
         TypeMirror fieldType = field.asType();
-        if (fieldType.getKind() != TypeKind.DECLARED) {
+        if (fieldType.getKind() != TypeKind.DECLARED)
+        {
             processingEnv.getMessager().printMessage(Kind.ERROR, "Option field must be of type " + OptionKey.class.getName(), element);
             return;
         }
         DeclaredType declaredFieldType = (DeclaredType) fieldType;
 
         TypeMirror optionKeyType = elements.getTypeElement(OptionKey.class.getName()).asType();
-        if (!types.isSubtype(fieldType, types.erasure(optionKeyType))) {
+        if (!types.isSubtype(fieldType, types.erasure(optionKeyType)))
+        {
             String msg = String.format("Option field type %s is not a subclass of %s", fieldType, optionKeyType);
             processingEnv.getMessager().printMessage(Kind.ERROR, msg, element);
             return;
         }
 
-        if (!field.getModifiers().contains(Modifier.STATIC)) {
+        if (!field.getModifiers().contains(Modifier.STATIC))
+        {
             processingEnv.getMessager().printMessage(Kind.ERROR, "Option field must be static", element);
             return;
         }
-        if (field.getModifiers().contains(Modifier.PRIVATE)) {
+        if (field.getModifiers().contains(Modifier.PRIVATE))
+        {
             processingEnv.getMessager().printMessage(Kind.ERROR, "Option field cannot be private", element);
             return;
         }
 
         String optionName = annotation.name();
-        if (optionName.equals("")) {
+        if (optionName.equals(""))
+        {
             optionName = fieldName;
         }
 
-        if (!Character.isUpperCase(optionName.charAt(0))) {
+        if (!Character.isUpperCase(optionName.charAt(0)))
+        {
             processingEnv.getMessager().printMessage(Kind.ERROR, "Option name must start with an upper case letter", element);
             return;
         }
 
         DeclaredType declaredOptionKeyType = declaredFieldType;
-        while (!types.isSameType(types.erasure(declaredOptionKeyType), types.erasure(optionKeyType))) {
+        while (!types.isSameType(types.erasure(declaredOptionKeyType), types.erasure(optionKeyType)))
+        {
             List<? extends TypeMirror> directSupertypes = types.directSupertypes(declaredFieldType);
             assert !directSupertypes.isEmpty();
             declaredOptionKeyType = (DeclaredType) directSupertypes.get(0);
@@ -120,7 +130,8 @@ public class OptionProcessor extends AbstractProcessor {
 
         assert !declaredOptionKeyType.getTypeArguments().isEmpty();
         String optionType = declaredOptionKeyType.getTypeArguments().get(0).toString();
-        if (optionType.startsWith("java.lang.")) {
+        if (optionType.startsWith("java.lang."))
+        {
             optionType = optionType.substring("java.lang.".length());
         }
 
@@ -130,9 +141,12 @@ public class OptionProcessor extends AbstractProcessor {
         Set<Element> originatingElementsList = info.originatingElements;
         originatingElementsList.add(field);
         PackageElement enclosingPackage = null;
-        while (enclosing != null) {
-            if (enclosing.getKind() == ElementKind.CLASS || enclosing.getKind() == ElementKind.INTERFACE) {
-                if (enclosing.getModifiers().contains(Modifier.PRIVATE)) {
+        while (enclosing != null)
+        {
+            if (enclosing.getKind() == ElementKind.CLASS || enclosing.getKind() == ElementKind.INTERFACE)
+            {
+                if (enclosing.getModifiers().contains(Modifier.PRIVATE))
+                {
                     String msg = String.format("Option field cannot be declared in a private %s %s", enclosing.getKind().name().toLowerCase(), enclosing);
                     processingEnv.getMessager().printMessage(Kind.ERROR, msg, element);
                     return;
@@ -140,12 +154,15 @@ public class OptionProcessor extends AbstractProcessor {
                 originatingElementsList.add(enclosing);
                 declaringClass = enclosing.getSimpleName() + separator + declaringClass;
                 separator = ".";
-            } else if (enclosing.getKind() == ElementKind.PACKAGE) {
+            }
+            else if (enclosing.getKind() == ElementKind.PACKAGE)
+            {
                 enclosingPackage = (PackageElement) enclosing;
             }
             enclosing = enclosing.getEnclosingElement();
         }
-        if (enclosingPackage == null) {
+        if (enclosingPackage == null)
+        {
             processingEnv.getMessager().printMessage(Kind.ERROR, "Option field cannot be declared in the unnamed package", element);
             return;
         }
@@ -153,45 +170,60 @@ public class OptionProcessor extends AbstractProcessor {
         String help = "";
         String[] extraHelp = {};
 
-        if (helpValue.length == 1) {
+        if (helpValue.length == 1)
+        {
             help = helpValue[0];
-            if (help.startsWith("file:")) {
+            if (help.startsWith("file:"))
+            {
                 String path = help.substring("file:".length());
                 Filer filer = processingEnv.getFiler();
-                try {
+                try
+                {
                     FileObject file;
-                    try {
+                    try
+                    {
                         file = filer.getResource(StandardLocation.SOURCE_PATH, enclosingPackage.getQualifiedName(), path);
-                    } catch (IllegalArgumentException | IOException e) {
+                    }
+                    catch (IllegalArgumentException | IOException e)
+                    {
                         // Handle the case when a compiler doesn't support the SOURCE_PATH location
                         file = filer.getResource(StandardLocation.CLASS_OUTPUT, enclosingPackage.getQualifiedName(), path);
                     }
-                    try (BufferedReader br = new BufferedReader(new InputStreamReader(file.openInputStream()))) {
+                    try (BufferedReader br = new BufferedReader(new InputStreamReader(file.openInputStream())))
+                    {
                         help = br.readLine();
-                        if (help == null) {
+                        if (help == null)
+                        {
                             help = "";
                         }
                         String line = br.readLine();
                         List<String> lines = new ArrayList<>();
-                        while (line != null) {
+                        while (line != null)
+                        {
                             lines.add(line);
                             line = br.readLine();
                         }
                         extraHelp = lines.toArray(new String[lines.size()]);
                     }
-                } catch (IOException e) {
+                }
+                catch (IOException e)
+                {
                     String msg = String.format("Error reading %s containing the help text for option field: %s", path, e);
                     processingEnv.getMessager().printMessage(Kind.ERROR, msg, element);
                     return;
                 }
             }
-        } else if (helpValue.length > 1) {
+        }
+        else if (helpValue.length > 1)
+        {
             help = helpValue[0];
             extraHelp = Arrays.copyOfRange(helpValue, 1, helpValue.length);
         }
-        if (help.length() != 0) {
+        if (help.length() != 0)
+        {
             char firstChar = help.charAt(0);
-            if (!Character.isUpperCase(firstChar)) {
+            if (!Character.isUpperCase(firstChar))
+            {
                 processingEnv.getMessager().printMessage(Kind.ERROR, "Option help text must start with an upper case letter", element);
                 return;
             }
@@ -200,7 +232,8 @@ public class OptionProcessor extends AbstractProcessor {
         info.options.add(new OptionInfo(optionName, annotation.type(), help, extraHelp, optionType, declaringClass, field));
     }
 
-    private void createFiles(OptionsInfo info) {
+    private void createFiles(OptionsInfo info)
+    {
         String pkg = ((PackageElement) info.topDeclaringType.getEnclosingElement()).getQualifiedName().toString();
         Name topDeclaringClass = info.topDeclaringType.getSimpleName();
         Element[] originatingElements = info.originatingElements.toArray(new Element[info.originatingElements.size()]);
@@ -208,14 +241,13 @@ public class OptionProcessor extends AbstractProcessor {
         createOptionsDescriptorsFile(info, pkg, topDeclaringClass, originatingElements);
     }
 
-    private void createOptionsDescriptorsFile(OptionsInfo info, String pkg, Name topDeclaringClass, Element[] originatingElements) {
+    private void createOptionsDescriptorsFile(OptionsInfo info, String pkg, Name topDeclaringClass, Element[] originatingElements)
+    {
         String optionsClassName = topDeclaringClass + "_" + OptionDescriptors.class.getSimpleName();
 
         Filer filer = processingEnv.getFiler();
-        try (PrintWriter out = createSourceFile(pkg, optionsClassName, filer, originatingElements)) {
-
-            out.println("// CheckStyle: stop header check");
-            out.println("// CheckStyle: stop line length check");
+        try (PrintWriter out = createSourceFile(pkg, optionsClassName, filer, originatingElements))
+        {
             out.println("// GENERATED CONTENT - DO NOT EDIT");
             out.println("// Source: " + topDeclaringClass + ".java");
             out.println("package " + pkg + ";");
@@ -233,13 +265,16 @@ public class OptionProcessor extends AbstractProcessor {
             out.println("    @Override");
             out.println("    public OptionDescriptor get(String value) {");
             out.println("        switch (value) {");
-            out.println("        // CheckStyle: stop line length check");
-            for (OptionInfo option : info.options) {
+            for (OptionInfo option : info.options)
+            {
                 String name = option.name;
                 String optionField;
-                if (option.field.getModifiers().contains(Modifier.PRIVATE)) {
+                if (option.field.getModifiers().contains(Modifier.PRIVATE))
+                {
                     throw new InternalError();
-                } else {
+                }
+                else
+                {
                     optionField = option.declaringClass + "." + option.field.getSimpleName();
                 }
                 out.println("        case \"" + name + "\": {");
@@ -254,9 +289,11 @@ public class OptionProcessor extends AbstractProcessor {
                 out.printf("                /*optionType*/ %s.%s,\n", optionType.getDeclaringClass().getSimpleName(), optionType.name());
                 out.printf("                /*optionValueType*/ %s.class,\n", type);
                 out.printf("                /*help*/ \"%s\",\n", help);
-                if (extraHelp.length != 0) {
+                if (extraHelp.length != 0)
+                {
                     out.printf("                /*extraHelp*/ new String[] {\n");
-                    for (String line : extraHelp) {
+                    for (String line : extraHelp)
+                    {
                         out.printf("                         \"%s\",\n", line.replace("\\", "\\\\").replace("\"", "\\\""));
                     }
                     out.printf("                              },\n");
@@ -266,7 +303,6 @@ public class OptionProcessor extends AbstractProcessor {
                 out.printf("                /*option*/ %s);\n", optionField);
                 out.println("        }");
             }
-            out.println("        // CheckStyle: resume line length check");
             out.println("        }");
             out.println("        return null;");
             out.println("    }");
@@ -282,7 +318,8 @@ public class OptionProcessor extends AbstractProcessor {
             out.println("            @Override");
             out.println("            public OptionDescriptor next() {");
             out.println("                switch (i++) {");
-            for (int i = 0; i < info.options.size(); i++) {
+            for (int i = 0; i < info.options.size(); i++)
+            {
                 OptionInfo option = info.options.get(i);
                 out.println("                    case " + i + ": return get(\"" + option.name + "\");");
             }
@@ -295,24 +332,29 @@ public class OptionProcessor extends AbstractProcessor {
         }
     }
 
-    protected PrintWriter createSourceFile(String pkg, String relativeName, Filer filer, Element... originatingElements) {
-        try {
+    protected PrintWriter createSourceFile(String pkg, String relativeName, Filer filer, Element... originatingElements)
+    {
+        try
+        {
             // Ensure Unix line endings to comply with code style guide checked by Checkstyle
             JavaFileObject sourceFile = filer.createSourceFile(pkg + "." + relativeName, originatingElements);
-            return new PrintWriter(sourceFile.openWriter()) {
-
+            return new PrintWriter(sourceFile.openWriter())
+            {
                 @Override
-                public void println() {
+                public void println()
+                {
                     print("\n");
                 }
             };
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             throw new RuntimeException(e);
         }
     }
 
-    static class OptionInfo implements Comparable<OptionInfo> {
-
+    static class OptionInfo implements Comparable<OptionInfo>
+    {
         final String name;
         final OptionType optionType;
         final String help;
@@ -321,7 +363,8 @@ public class OptionProcessor extends AbstractProcessor {
         final String declaringClass;
         final VariableElement field;
 
-        OptionInfo(String name, OptionType optionType, String help, String[] extraHelp, String type, String declaringClass, VariableElement field) {
+        OptionInfo(String name, OptionType optionType, String help, String[] extraHelp, String type, String declaringClass, VariableElement field)
+        {
             this.name = name;
             this.optionType = optionType;
             this.help = help;
@@ -332,30 +375,35 @@ public class OptionProcessor extends AbstractProcessor {
         }
 
         @Override
-        public int compareTo(OptionInfo other) {
+        public int compareTo(OptionInfo other)
+        {
             return name.compareTo(other.name);
         }
 
         @Override
-        public String toString() {
+        public String toString()
+        {
             return declaringClass + "." + field;
         }
     }
 
-    static class OptionsInfo {
-
+    static class OptionsInfo
+    {
         final Element topDeclaringType;
         final List<OptionInfo> options = new ArrayList<>();
         final Set<Element> originatingElements = new HashSet<>();
 
-        OptionsInfo(Element topDeclaringType) {
+        OptionsInfo(Element topDeclaringType)
+        {
             this.topDeclaringType = topDeclaringType;
         }
     }
 
-    private static Element topDeclaringType(Element element) {
+    private static Element topDeclaringType(Element element)
+    {
         Element enclosing = element.getEnclosingElement();
-        if (enclosing == null || enclosing.getKind() == ElementKind.PACKAGE) {
+        if (enclosing == null || enclosing.getKind() == ElementKind.PACKAGE)
+        {
             assert element.getKind() == ElementKind.CLASS || element.getKind() == ElementKind.INTERFACE;
             return element;
         }
@@ -363,22 +411,28 @@ public class OptionProcessor extends AbstractProcessor {
     }
 
     @Override
-    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        if (roundEnv.processingOver()) {
+    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv)
+    {
+        if (roundEnv.processingOver())
+        {
             return true;
         }
 
         Map<Element, OptionsInfo> map = new HashMap<>();
-        for (Element element : roundEnv.getElementsAnnotatedWith(Option.class)) {
-            if (!processed.contains(element)) {
+        for (Element element : roundEnv.getElementsAnnotatedWith(Option.class))
+        {
+            if (!processed.contains(element))
+            {
                 processed.add(element);
                 Element topDeclaringType = topDeclaringType(element);
                 OptionsInfo options = map.get(topDeclaringType);
-                if (options == null) {
+                if (options == null)
+                {
                     options = new OptionsInfo(topDeclaringType);
                     map.put(topDeclaringType, options);
                 }
-                if (!element.getEnclosingElement().getSimpleName().toString().endsWith("Options")) {
+                if (!element.getEnclosingElement().getSimpleName().toString().endsWith("Options"))
+                {
                     processingEnv.getMessager().printMessage(Kind.ERROR, "Option declaring classes must have a name that ends with 'Options'", element.getEnclosingElement());
                 }
                 processElement(element, options);
@@ -387,18 +441,23 @@ public class OptionProcessor extends AbstractProcessor {
 
         boolean ok = true;
         Map<String, OptionInfo> uniqueness = new HashMap<>();
-        for (OptionsInfo info : map.values()) {
-            for (OptionInfo option : info.options) {
+        for (OptionsInfo info : map.values())
+        {
+            for (OptionInfo option : info.options)
+            {
                 OptionInfo conflict = uniqueness.put(option.name, option);
-                if (conflict != null) {
+                if (conflict != null)
+                {
                     processingEnv.getMessager().printMessage(Kind.ERROR, "Duplicate option names for " + option + " and " + conflict, option.field);
                     ok = false;
                 }
             }
         }
 
-        if (ok) {
-            for (OptionsInfo info : map.values()) {
+        if (ok)
+        {
+            for (OptionsInfo info : map.values())
+            {
                 createFiles(info);
             }
         }

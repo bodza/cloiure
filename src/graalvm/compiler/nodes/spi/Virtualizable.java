@@ -6,8 +6,8 @@ package graalvm.compiler.nodes.spi;
  * nodes that have some interaction with virtualized nodes. However, the virtualized nodes might
  * have been re-materialized in the meantime.
  */
-public interface Virtualizable {
-
+public interface Virtualizable
+{
     /**
      * A node class can implement this method to convey information about what its effect would be
      * if some of its inputs were virtualized. All modifications must be made through the supplied

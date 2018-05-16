@@ -66,8 +66,8 @@ import jdk.vm.ci.meta.Signature;
  * subsystems that employ manual graph creation (as opposed to {@linkplain GraphBuilderPhase
  * bytecode parsing} based graph creation).
  */
-public class GraphKit implements GraphBuilderTool {
-
+public class GraphKit implements GraphBuilderTool
+{
     protected final Providers providers;
     protected final StructuredGraph graph;
     protected final WordTypes wordTypes;
@@ -76,20 +76,26 @@ public class GraphKit implements GraphBuilderTool {
 
     private final List<Structure> structures;
 
-    protected abstract static class Structure {
+    protected abstract static class Structure
+    {
     }
 
-    public GraphKit(DebugContext debug, ResolvedJavaMethod stubMethod, Providers providers, WordTypes wordTypes, Plugins graphBuilderPlugins, CompilationIdentifier compilationId, String name) {
+    public GraphKit(DebugContext debug, ResolvedJavaMethod stubMethod, Providers providers, WordTypes wordTypes, Plugins graphBuilderPlugins, CompilationIdentifier compilationId, String name)
+    {
         this.providers = providers;
         StructuredGraph.Builder builder = new StructuredGraph.Builder(debug.getOptions(), debug).compilationId(compilationId);
-        if (name != null) {
+        if (name != null)
+        {
             builder.name(name);
-        } else {
+        }
+        else
+        {
             builder.method(stubMethod);
         }
         this.graph = builder.build();
         graph.disableUnsafeAccessTracking();
-        if (graph.trackNodeSourcePosition()) {
+        if (graph.trackNodeSourcePosition())
+        {
             // Set up a default value that everything constructed by GraphKit will use.
             graph.withNodeSourcePosition(NodeSourcePosition.substitution(stubMethod));
         }
@@ -101,37 +107,42 @@ public class GraphKit implements GraphBuilderTool {
         /*
          * Add a dummy element, so that the access of the last element never leads to an exception.
          */
-        structures.add(new Structure() {
-        });
+        structures.add(new Structure() { });
     }
 
     @Override
-    public StructuredGraph getGraph() {
+    public StructuredGraph getGraph()
+    {
         return graph;
     }
 
     @Override
-    public ConstantReflectionProvider getConstantReflection() {
+    public ConstantReflectionProvider getConstantReflection()
+    {
         return providers.getConstantReflection();
     }
 
     @Override
-    public ConstantFieldProvider getConstantFieldProvider() {
+    public ConstantFieldProvider getConstantFieldProvider()
+    {
         return providers.getConstantFieldProvider();
     }
 
     @Override
-    public MetaAccessProvider getMetaAccess() {
+    public MetaAccessProvider getMetaAccess()
+    {
         return providers.getMetaAccess();
     }
 
     @Override
-    public StampProvider getStampProvider() {
+    public StampProvider getStampProvider()
+    {
         return providers.getStampProvider();
     }
 
     @Override
-    public boolean parsingIntrinsic() {
+    public boolean parsingIntrinsic()
+    {
         return true;
     }
 
@@ -140,42 +151,53 @@ public class GraphKit implements GraphBuilderTool {
      *
      * @return a node similar to {@code node} if one exists, otherwise {@code node}
      */
-    public <T extends FloatingNode & ValueNumberable> T unique(T node) {
+    public <T extends FloatingNode & ValueNumberable> T unique(T node)
+    {
         return graph.unique(changeToWord(node));
     }
 
-    public <T extends ValueNode> T add(T node) {
+    public <T extends ValueNode> T add(T node)
+    {
         return graph.add(changeToWord(node));
     }
 
-    public <T extends ValueNode> T changeToWord(T node) {
-        if (wordTypes != null && wordTypes.isWord(node)) {
+    public <T extends ValueNode> T changeToWord(T node)
+    {
+        if (wordTypes != null && wordTypes.isWord(node))
+        {
             node.setStamp(wordTypes.getWordStamp(StampTool.typeOrNull(node)));
         }
         return node;
     }
 
     @Override
-    public <T extends ValueNode> T append(T node) {
+    public <T extends ValueNode> T append(T node)
+    {
         T result = graph.addOrUniqueWithInputs(changeToWord(node));
-        if (result instanceof FixedNode) {
+        if (result instanceof FixedNode)
+        {
             updateLastFixed((FixedNode) result);
         }
         return result;
     }
 
-    private void updateLastFixed(FixedNode result) {
+    private void updateLastFixed(FixedNode result)
+    {
         assert lastFixedNode != null;
         assert result.predecessor() == null;
         graph.addAfterFixed(lastFixedNode, result);
-        if (result instanceof FixedWithNextNode) {
+        if (result instanceof FixedWithNextNode)
+        {
             lastFixedNode = (FixedWithNextNode) result;
-        } else {
+        }
+        else
+        {
             lastFixedNode = null;
         }
     }
 
-    public InvokeNode createInvoke(Class<?> declaringClass, String name, ValueNode... args) {
+    public InvokeNode createInvoke(Class<?> declaringClass, String name, ValueNode... args)
+    {
         return createInvoke(declaringClass, name, InvokeKind.Static, null, BytecodeFrame.UNKNOWN_BCI, args);
     }
 
@@ -187,16 +209,20 @@ public class GraphKit implements GraphBuilderTool {
      * @param name the name of the invoked method
      * @param args the arguments to the invocation
      */
-    public InvokeNode createInvoke(Class<?> declaringClass, String name, InvokeKind invokeKind, FrameStateBuilder frameStateBuilder, int bci, ValueNode... args) {
+    public InvokeNode createInvoke(Class<?> declaringClass, String name, InvokeKind invokeKind, FrameStateBuilder frameStateBuilder, int bci, ValueNode... args)
+    {
         boolean isStatic = invokeKind == InvokeKind.Static;
         ResolvedJavaMethod method = findMethod(declaringClass, name, isStatic);
         return createInvoke(method, invokeKind, frameStateBuilder, bci, args);
     }
 
-    public ResolvedJavaMethod findMethod(Class<?> declaringClass, String name, boolean isStatic) {
+    public ResolvedJavaMethod findMethod(Class<?> declaringClass, String name, boolean isStatic)
+    {
         ResolvedJavaMethod method = null;
-        for (Method m : declaringClass.getDeclaredMethods()) {
-            if (Modifier.isStatic(m.getModifiers()) == isStatic && m.getName().equals(name)) {
+        for (Method m : declaringClass.getDeclaredMethods())
+        {
+            if (Modifier.isStatic(m.getModifiers()) == isStatic && m.getName().equals(name))
+            {
                 assert method == null : "found more than one method in " + declaringClass + " named " + name;
                 method = providers.getMetaAccess().lookupJavaMethod(m);
             }
@@ -205,11 +231,15 @@ public class GraphKit implements GraphBuilderTool {
         return method;
     }
 
-    public ResolvedJavaMethod findMethod(Class<?> declaringClass, String name, Class<?>... parameterTypes) {
-        try {
+    public ResolvedJavaMethod findMethod(Class<?> declaringClass, String name, Class<?>... parameterTypes)
+    {
+        try
+        {
             Method m = declaringClass.getDeclaredMethod(name, parameterTypes);
             return providers.getMetaAccess().lookupJavaMethod(m);
-        } catch (NoSuchMethodException | SecurityException e) {
+        }
+        catch (NoSuchMethodException | SecurityException e)
+        {
             throw new AssertionError(e);
         }
     }
@@ -219,25 +249,31 @@ public class GraphKit implements GraphBuilderTool {
      * arguments.
      */
     @SuppressWarnings("try")
-    public InvokeNode createInvoke(ResolvedJavaMethod method, InvokeKind invokeKind, FrameStateBuilder frameStateBuilder, int bci, ValueNode... args) {
-        try (DebugCloseable context = graph.withNodeSourcePosition(NodeSourcePosition.substitution(graph.currentNodeSourcePosition(), method))) {
+    public InvokeNode createInvoke(ResolvedJavaMethod method, InvokeKind invokeKind, FrameStateBuilder frameStateBuilder, int bci, ValueNode... args)
+    {
+        try (DebugCloseable context = graph.withNodeSourcePosition(NodeSourcePosition.substitution(graph.currentNodeSourcePosition(), method)))
+        {
             assert method.isStatic() == (invokeKind == InvokeKind.Static);
             Signature signature = method.getSignature();
             JavaType returnType = signature.getReturnType(null);
             assert checkArgs(method, args);
             StampPair returnStamp = graphBuilderPlugins.getOverridingStamp(this, returnType, false);
-            if (returnStamp == null) {
+            if (returnStamp == null)
+            {
                 returnStamp = StampFactory.forDeclaredType(graph.getAssumptions(), returnType, false);
             }
             MethodCallTargetNode callTarget = graph.add(createMethodCallTarget(invokeKind, method, args, returnStamp, bci));
             InvokeNode invoke = append(new InvokeNode(callTarget, bci));
 
-            if (frameStateBuilder != null) {
-                if (invoke.getStackKind() != JavaKind.Void) {
+            if (frameStateBuilder != null)
+            {
+                if (invoke.getStackKind() != JavaKind.Void)
+                {
                     frameStateBuilder.push(invoke.getStackKind(), invoke);
                 }
                 invoke.setStateAfter(frameStateBuilder.create(bci, invoke));
-                if (invoke.getStackKind() != JavaKind.Void) {
+                if (invoke.getStackKind() != JavaKind.Void)
+                {
                     frameStateBuilder.pop(invoke.getStackKind());
                 }
             }
@@ -246,9 +282,10 @@ public class GraphKit implements GraphBuilderTool {
     }
 
     @SuppressWarnings("try")
-    public InvokeWithExceptionNode createInvokeWithExceptionAndUnwind(ResolvedJavaMethod method, InvokeKind invokeKind,
-                    FrameStateBuilder frameStateBuilder, int invokeBci, int exceptionEdgeBci, ValueNode... args) {
-        try (DebugCloseable context = graph.withNodeSourcePosition(NodeSourcePosition.substitution(graph.currentNodeSourcePosition(), method))) {
+    public InvokeWithExceptionNode createInvokeWithExceptionAndUnwind(ResolvedJavaMethod method, InvokeKind invokeKind, FrameStateBuilder frameStateBuilder, int invokeBci, int exceptionEdgeBci, ValueNode... args)
+    {
+        try (DebugCloseable context = graph.withNodeSourcePosition(NodeSourcePosition.substitution(graph.currentNodeSourcePosition(), method)))
+        {
             InvokeWithExceptionNode result = startInvokeWithException(method, invokeKind, frameStateBuilder, invokeBci, exceptionEdgeBci, args);
             exceptionPart();
             ExceptionObjectNode exception = exceptionObject();
@@ -259,8 +296,10 @@ public class GraphKit implements GraphBuilderTool {
     }
 
     @SuppressWarnings("try")
-    public InvokeWithExceptionNode createInvokeWithExceptionAndUnwind(MethodCallTargetNode callTarget, FrameStateBuilder frameStateBuilder, int invokeBci, int exceptionEdgeBci) {
-        try (DebugCloseable context = graph.withNodeSourcePosition(NodeSourcePosition.substitution(graph.currentNodeSourcePosition(), callTarget.targetMethod()))) {
+    public InvokeWithExceptionNode createInvokeWithExceptionAndUnwind(MethodCallTargetNode callTarget, FrameStateBuilder frameStateBuilder, int invokeBci, int exceptionEdgeBci)
+    {
+        try (DebugCloseable context = graph.withNodeSourcePosition(NodeSourcePosition.substitution(graph.currentNodeSourcePosition(), callTarget.targetMethod())))
+        {
             InvokeWithExceptionNode result = startInvokeWithException(callTarget, frameStateBuilder, invokeBci, exceptionEdgeBci);
             exceptionPart();
             ExceptionObjectNode exception = exceptionObject();
@@ -270,11 +309,13 @@ public class GraphKit implements GraphBuilderTool {
         }
     }
 
-    protected MethodCallTargetNode createMethodCallTarget(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, ValueNode[] args, StampPair returnStamp, @SuppressWarnings("unused") int bci) {
+    protected MethodCallTargetNode createMethodCallTarget(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, ValueNode[] args, StampPair returnStamp, @SuppressWarnings("unused") int bci)
+    {
         return new MethodCallTargetNode(invokeKind, targetMethod, args, returnStamp, null);
     }
 
-    protected final JavaKind asKind(JavaType type) {
+    protected final JavaKind asKind(JavaType type)
+    {
         return wordTypes != null ? wordTypes.asKind(type) : type.getJavaKind();
     }
 
@@ -285,22 +326,27 @@ public class GraphKit implements GraphBuilderTool {
      * @throws AssertionError if {@code args} are not compatible with the signature if
      *             {@code method}
      */
-    public boolean checkArgs(ResolvedJavaMethod method, ValueNode... args) {
+    public boolean checkArgs(ResolvedJavaMethod method, ValueNode... args)
+    {
         Signature signature = method.getSignature();
         boolean isStatic = method.isStatic();
-        if (signature.getParameterCount(!isStatic) != args.length) {
+        if (signature.getParameterCount(!isStatic) != args.length)
+        {
             throw new AssertionError(graph + ": wrong number of arguments to " + method);
         }
         int argIndex = 0;
-        if (!isStatic) {
+        if (!isStatic)
+        {
             JavaKind expected = asKind(method.getDeclaringClass());
             JavaKind actual = args[argIndex++].stamp(NodeView.DEFAULT).getStackKind();
             assert expected == actual : graph + ": wrong kind of value for receiver argument of call to " + method + " [" + actual + " != " + expected + "]";
         }
-        for (int i = 0; i != signature.getParameterCount(false); i++) {
+        for (int i = 0; i != signature.getParameterCount(false); i++)
+        {
             JavaKind expected = asKind(signature.getParameterType(i, method.getDeclaringClass())).getStackKind();
             JavaKind actual = args[argIndex++].stamp(NodeView.DEFAULT).getStackKind();
-            if (expected != actual) {
+            if (expected != actual)
+            {
                 throw new AssertionError(graph + ": wrong kind of value for argument " + i + " of call to " + method + " [" + actual + " != " + expected + "]");
             }
         }
@@ -310,9 +356,12 @@ public class GraphKit implements GraphBuilderTool {
     /**
      * Recursively {@linkplain #inline inlines} all invocations currently in the graph.
      */
-    public void inlineInvokes(String reason, String phase) {
-        while (!graph.getNodes().filter(InvokeNode.class).isEmpty()) {
-            for (InvokeNode invoke : graph.getNodes().filter(InvokeNode.class).snapshot()) {
+    public void inlineInvokes(String reason, String phase)
+    {
+        while (!graph.getNodes().filter(InvokeNode.class).isEmpty())
+        {
+            for (InvokeNode invoke : graph.getNodes().filter(InvokeNode.class).snapshot())
+            {
                 inline(invoke, reason, phase);
             }
         }
@@ -325,7 +374,8 @@ public class GraphKit implements GraphBuilderTool {
      * Inlines a given invocation to a method. The graph of the inlined method is processed in the
      * same manner as for snippets and method substitutions.
      */
-    public void inline(InvokeNode invoke, String reason, String phase) {
+    public void inline(InvokeNode invoke, String reason, String phase)
+    {
         ResolvedJavaMethod method = ((MethodCallTargetNode) invoke.callTarget()).targetMethod();
 
         MetaAccessProvider metaAccess = providers.getMetaAccess();
@@ -333,13 +383,12 @@ public class GraphKit implements GraphBuilderTool {
         GraphBuilderConfiguration config = GraphBuilderConfiguration.getSnippetDefault(plugins);
 
         StructuredGraph calleeGraph = new StructuredGraph.Builder(invoke.getOptions(), invoke.getDebug()).method(method).build();
-        if (invoke.graph().trackNodeSourcePosition()) {
+        if (invoke.graph().trackNodeSourcePosition())
+        {
             calleeGraph.setTrackNodeSourcePosition();
         }
         IntrinsicContext initialReplacementContext = new IntrinsicContext(method, method, providers.getReplacements().getDefaultReplacementBytecodeProvider(), INLINE_AFTER_PARSING);
-        GraphBuilderPhase.Instance instance = createGraphBuilderInstance(metaAccess, providers.getStampProvider(), providers.getConstantReflection(), providers.getConstantFieldProvider(), config,
-                        OptimisticOptimizations.NONE,
-                        initialReplacementContext);
+        GraphBuilderPhase.Instance instance = createGraphBuilderInstance(metaAccess, providers.getStampProvider(), providers.getConstantReflection(), providers.getConstantFieldProvider(), config, OptimisticOptimizations.NONE, initialReplacementContext);
         instance.apply(calleeGraph);
 
         // Remove all frame states from inlinee
@@ -349,31 +398,36 @@ public class GraphKit implements GraphBuilderTool {
         InliningUtil.inline(invoke, calleeGraph, false, method, reason, phase);
     }
 
-    protected GraphBuilderPhase.Instance createGraphBuilderInstance(MetaAccessProvider metaAccess, StampProvider stampProvider, ConstantReflectionProvider constantReflection,
-                    ConstantFieldProvider constantFieldProvider, GraphBuilderConfiguration graphBuilderConfig, OptimisticOptimizations optimisticOpts, IntrinsicContext initialIntrinsicContext) {
+    protected GraphBuilderPhase.Instance createGraphBuilderInstance(MetaAccessProvider metaAccess, StampProvider stampProvider, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, GraphBuilderConfiguration graphBuilderConfig, OptimisticOptimizations optimisticOpts, IntrinsicContext initialIntrinsicContext)
+    {
         return new GraphBuilderPhase.Instance(metaAccess, stampProvider, constantReflection, constantFieldProvider, graphBuilderConfig, optimisticOpts, initialIntrinsicContext);
     }
 
-    protected void pushStructure(Structure structure) {
+    protected void pushStructure(Structure structure)
+    {
         structures.add(structure);
     }
 
-    protected <T extends Structure> T getTopStructure(Class<T> expectedClass) {
+    protected <T extends Structure> T getTopStructure(Class<T> expectedClass)
+    {
         return expectedClass.cast(structures.get(structures.size() - 1));
     }
 
-    protected void popStructure() {
+    protected void popStructure()
+    {
         structures.remove(structures.size() - 1);
     }
 
-    protected enum IfState {
+    protected enum IfState
+    {
         CONDITION,
         THEN_PART,
         ELSE_PART,
         FINISHED
     }
 
-    static class IfStructure extends Structure {
+    static class IfStructure extends Structure
+    {
         protected IfState state;
         protected FixedNode thenPart;
         protected FixedNode elsePart;
@@ -389,7 +443,8 @@ public class GraphKit implements GraphBuilderTool {
      * @param trueProbability The estimated probability the condition is true
      * @return the created {@link IfNode}.
      */
-    public IfNode startIf(LogicNode condition, double trueProbability) {
+    public IfNode startIf(LogicNode condition, double trueProbability)
+    {
         AbstractBeginNode thenSuccessor = graph.add(new BeginNode());
         AbstractBeginNode elseSuccessor = graph.add(new BeginNode());
         IfNode node = append(new IfNode(condition, thenSuccessor, elseSuccessor, trueProbability));
@@ -403,9 +458,11 @@ public class GraphKit implements GraphBuilderTool {
         return node;
     }
 
-    private IfStructure saveLastIfNode() {
+    private IfStructure saveLastIfNode()
+    {
         IfStructure s = getTopStructure(IfStructure.class);
-        switch (s.state) {
+        switch (s.state)
+        {
             case CONDITION:
                 assert lastFixedNode == null;
                 break;
@@ -423,13 +480,15 @@ public class GraphKit implements GraphBuilderTool {
         return s;
     }
 
-    public void thenPart() {
+    public void thenPart()
+    {
         IfStructure s = saveLastIfNode();
         lastFixedNode = (FixedWithNextNode) s.thenPart;
         s.state = IfState.THEN_PART;
     }
 
-    public void elsePart() {
+    public void elsePart()
+    {
         IfStructure s = saveLastIfNode();
         lastFixedNode = (FixedWithNextNode) s.elsePart;
         s.state = IfState.ELSE_PART;
@@ -441,14 +500,16 @@ public class GraphKit implements GraphBuilderTool {
      * @return the created merge node, or {@code null} if no merge node was required (for example,
      *         when one part ended with a control sink).
      */
-    public AbstractMergeNode endIf() {
+    public AbstractMergeNode endIf()
+    {
         IfStructure s = saveLastIfNode();
 
         FixedWithNextNode thenPart = s.thenPart instanceof FixedWithNextNode ? (FixedWithNextNode) s.thenPart : null;
         FixedWithNextNode elsePart = s.elsePart instanceof FixedWithNextNode ? (FixedWithNextNode) s.elsePart : null;
         AbstractMergeNode merge = null;
 
-        if (thenPart != null && elsePart != null) {
+        if (thenPart != null && elsePart != null)
+        {
             /* Both parts are alive, we need a real merge. */
             EndNode thenEnd = graph.add(new EndNode());
             graph.addAfterFixed(thenPart, thenEnd);
@@ -460,16 +521,19 @@ public class GraphKit implements GraphBuilderTool {
             merge.addForwardEnd(elseEnd);
 
             lastFixedNode = merge;
-
-        } else if (thenPart != null) {
+        }
+        else if (thenPart != null)
+        {
             /* elsePart ended with a control sink, so we can continue with thenPart. */
             lastFixedNode = thenPart;
-
-        } else if (elsePart != null) {
+        }
+        else if (elsePart != null)
+        {
             /* thenPart ended with a control sink, so we can continue with elsePart. */
             lastFixedNode = elsePart;
-
-        } else {
+        }
+        else
+        {
             /* Both parts ended with a control sink, so no nodes can be added after the if. */
             assert lastFixedNode == null;
         }
@@ -478,8 +542,10 @@ public class GraphKit implements GraphBuilderTool {
         return merge;
     }
 
-    static class InvokeWithExceptionStructure extends Structure {
-        protected enum State {
+    static class InvokeWithExceptionStructure extends Structure
+    {
+        protected enum State
+        {
             INVOKE,
             NO_EXCEPTION_EDGE,
             EXCEPTION_EDGE,
@@ -492,24 +558,26 @@ public class GraphKit implements GraphBuilderTool {
         protected FixedNode exceptionEdge;
     }
 
-    public InvokeWithExceptionNode startInvokeWithException(ResolvedJavaMethod method, InvokeKind invokeKind,
-                    FrameStateBuilder frameStateBuilder, int invokeBci, int exceptionEdgeBci, ValueNode... args) {
-
+    public InvokeWithExceptionNode startInvokeWithException(ResolvedJavaMethod method, InvokeKind invokeKind, FrameStateBuilder frameStateBuilder, int invokeBci, int exceptionEdgeBci, ValueNode... args)
+    {
         assert method.isStatic() == (invokeKind == InvokeKind.Static);
         Signature signature = method.getSignature();
         JavaType returnType = signature.getReturnType(null);
         assert checkArgs(method, args);
         StampPair returnStamp = graphBuilderPlugins.getOverridingStamp(this, returnType, false);
-        if (returnStamp == null) {
+        if (returnStamp == null)
+        {
             returnStamp = StampFactory.forDeclaredType(graph.getAssumptions(), returnType, false);
         }
         MethodCallTargetNode callTarget = graph.add(createMethodCallTarget(invokeKind, method, args, returnStamp, invokeBci));
         return startInvokeWithException(callTarget, frameStateBuilder, invokeBci, exceptionEdgeBci);
     }
 
-    public InvokeWithExceptionNode startInvokeWithException(MethodCallTargetNode callTarget, FrameStateBuilder frameStateBuilder, int invokeBci, int exceptionEdgeBci) {
+    public InvokeWithExceptionNode startInvokeWithException(MethodCallTargetNode callTarget, FrameStateBuilder frameStateBuilder, int invokeBci, int exceptionEdgeBci)
+    {
         ExceptionObjectNode exceptionObject = add(new ExceptionObjectNode(getMetaAccess()));
-        if (frameStateBuilder != null) {
+        if (frameStateBuilder != null)
+        {
             FrameStateBuilder exceptionState = frameStateBuilder.copy();
             exceptionState.clearStack();
             exceptionState.push(JavaKind.Object, exceptionObject);
@@ -519,12 +587,15 @@ public class GraphKit implements GraphBuilderTool {
         InvokeWithExceptionNode invoke = append(new InvokeWithExceptionNode(callTarget, exceptionObject, invokeBci));
         AbstractBeginNode noExceptionEdge = graph.add(KillingBeginNode.create(LocationIdentity.any()));
         invoke.setNext(noExceptionEdge);
-        if (frameStateBuilder != null) {
-            if (invoke.getStackKind() != JavaKind.Void) {
+        if (frameStateBuilder != null)
+        {
+            if (invoke.getStackKind() != JavaKind.Void)
+            {
                 frameStateBuilder.push(invoke.getStackKind(), invoke);
             }
             invoke.setStateAfter(frameStateBuilder.create(invokeBci, invoke));
-            if (invoke.getStackKind() != JavaKind.Void) {
+            if (invoke.getStackKind() != JavaKind.Void)
+            {
                 frameStateBuilder.pop(invoke.getStackKind());
             }
         }
@@ -540,9 +611,11 @@ public class GraphKit implements GraphBuilderTool {
         return invoke;
     }
 
-    private InvokeWithExceptionStructure saveLastInvokeWithExceptionNode() {
+    private InvokeWithExceptionStructure saveLastInvokeWithExceptionNode()
+    {
         InvokeWithExceptionStructure s = getTopStructure(InvokeWithExceptionStructure.class);
-        switch (s.state) {
+        switch (s.state)
+        {
             case INVOKE:
                 assert lastFixedNode == null;
                 break;
@@ -560,19 +633,22 @@ public class GraphKit implements GraphBuilderTool {
         return s;
     }
 
-    public void noExceptionPart() {
+    public void noExceptionPart()
+    {
         InvokeWithExceptionStructure s = saveLastInvokeWithExceptionNode();
         lastFixedNode = (FixedWithNextNode) s.noExceptionEdge;
         s.state = InvokeWithExceptionStructure.State.NO_EXCEPTION_EDGE;
     }
 
-    public void exceptionPart() {
+    public void exceptionPart()
+    {
         InvokeWithExceptionStructure s = saveLastInvokeWithExceptionNode();
         lastFixedNode = (FixedWithNextNode) s.exceptionEdge;
         s.state = InvokeWithExceptionStructure.State.EXCEPTION_EDGE;
     }
 
-    public ExceptionObjectNode exceptionObject() {
+    public ExceptionObjectNode exceptionObject()
+    {
         InvokeWithExceptionStructure s = getTopStructure(InvokeWithExceptionStructure.class);
         return s.exceptionObject;
     }
@@ -583,12 +659,14 @@ public class GraphKit implements GraphBuilderTool {
      * non-exception edge is the first forward end of the merge, the exception edge is the second
      * forward end (relevant for phi nodes).
      */
-    public AbstractMergeNode endInvokeWithException() {
+    public AbstractMergeNode endInvokeWithException()
+    {
         InvokeWithExceptionStructure s = saveLastInvokeWithExceptionNode();
         FixedWithNextNode noExceptionEdge = s.noExceptionEdge instanceof FixedWithNextNode ? (FixedWithNextNode) s.noExceptionEdge : null;
         FixedWithNextNode exceptionEdge = s.exceptionEdge instanceof FixedWithNextNode ? (FixedWithNextNode) s.exceptionEdge : null;
         AbstractMergeNode merge = null;
-        if (noExceptionEdge != null && exceptionEdge != null) {
+        if (noExceptionEdge != null && exceptionEdge != null)
+        {
             EndNode noExceptionEnd = graph.add(new EndNode());
             graph.addAfterFixed(noExceptionEdge, noExceptionEnd);
             EndNode exceptionEnd = graph.add(new EndNode());
@@ -597,11 +675,17 @@ public class GraphKit implements GraphBuilderTool {
             merge.addForwardEnd(noExceptionEnd);
             merge.addForwardEnd(exceptionEnd);
             lastFixedNode = merge;
-        } else if (noExceptionEdge != null) {
+        }
+        else if (noExceptionEdge != null)
+        {
             lastFixedNode = noExceptionEdge;
-        } else if (exceptionEdge != null) {
+        }
+        else if (exceptionEdge != null)
+        {
             lastFixedNode = exceptionEdge;
-        } else {
+        }
+        else
+        {
             assert lastFixedNode == null;
         }
         s.state = InvokeWithExceptionStructure.State.FINISHED;

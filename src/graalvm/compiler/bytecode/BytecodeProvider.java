@@ -7,8 +7,8 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * {@link ResolvedJavaMethod} (i.e., potentially getting bytecode different than
  * {@link ResolvedJavaMethod#getCode()}).
  */
-public interface BytecodeProvider {
-
+public interface BytecodeProvider
+{
     /**
      * Gets a {@link Bytecode} object that supplies bytecode properties for {@code method}.
      */

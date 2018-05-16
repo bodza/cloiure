@@ -8,12 +8,14 @@ import graalvm.compiler.options.OptionValues;
 /**
  * Utility for query whether assertions are enabled.
  */
-public class Assertions {
+public class Assertions
+{
     /**
      * Determines if assertions are enabled. Strictly speaking, this may only be true for the
      * {@link Assertions} class but we assume assertions are enabled/disabled for Graal as a whole.
      */
-    public static boolean assertionsEnabled() {
+    public static boolean assertionsEnabled()
+    {
         boolean enabled = false;
         assert (enabled = true) == true;
         return enabled;
@@ -25,16 +27,14 @@ public class Assertions {
      *
      * @param values the current OptionValues that might define a value for DetailAsserts.
      */
-    public static boolean detailedAssertionsEnabled(OptionValues values) {
+    public static boolean detailedAssertionsEnabled(OptionValues values)
+    {
         return assertionsEnabled() && Options.DetailedAsserts.getValue(values);
     }
 
-    // @formatter:off
-    public static class Options {
-
+    public static class Options
+    {
         @Option(help = "Enable expensive assertions if normal assertions (i.e. -ea or -esa) are enabled.", type = OptionType.Debug)
         public static final OptionKey<Boolean> DetailedAsserts = new OptionKey<>(false);
-
     }
-    // @formatter:on
 }

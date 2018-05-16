@@ -19,15 +19,16 @@ import jdk.vm.ci.meta.JavaKind;
  * Store of a value at a location specified as an absolute address.
  */
 @NodeInfo(cycles = CYCLES_2, size = SIZE_1)
-public class UnsafeMemoryStoreNode extends AbstractStateSplit implements Lowerable, MemoryCheckpoint.Single {
-
+public class UnsafeMemoryStoreNode extends AbstractStateSplit implements Lowerable, MemoryCheckpoint.Single
+{
     public static final NodeClass<UnsafeMemoryStoreNode> TYPE = NodeClass.create(UnsafeMemoryStoreNode.class);
     @Input protected ValueNode value;
     @Input protected ValueNode address;
     protected final JavaKind kind;
     protected final LocationIdentity locationIdentity;
 
-    public UnsafeMemoryStoreNode(ValueNode address, ValueNode value, JavaKind kind, LocationIdentity locationIdentity) {
+    public UnsafeMemoryStoreNode(ValueNode address, ValueNode value, JavaKind kind, LocationIdentity locationIdentity)
+    {
         super(TYPE, StampFactory.forVoid());
         this.address = address;
         this.value = value;
@@ -35,25 +36,30 @@ public class UnsafeMemoryStoreNode extends AbstractStateSplit implements Lowerab
         this.locationIdentity = locationIdentity;
     }
 
-    public ValueNode getValue() {
+    public ValueNode getValue()
+    {
         return value;
     }
 
-    public ValueNode getAddress() {
+    public ValueNode getAddress()
+    {
         return address;
     }
 
-    public JavaKind getKind() {
+    public JavaKind getKind()
+    {
         return kind;
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
     @Override
-    public LocationIdentity getLocationIdentity() {
+    public LocationIdentity getLocationIdentity()
+    {
         return locationIdentity;
     }
 }

@@ -22,25 +22,33 @@ import jdk.vm.ci.meta.TriState;
  * both x and y.
  */
 @NodeInfo(cycles = CYCLES_2, size = SIZE_2)
-public final class IntegerTestNode extends BinaryOpLogicNode implements BinaryCommutative<ValueNode> {
+public final class IntegerTestNode extends BinaryOpLogicNode implements BinaryCommutative<ValueNode>
+{
     public static final NodeClass<IntegerTestNode> TYPE = NodeClass.create(IntegerTestNode.class);
 
-    public IntegerTestNode(ValueNode x, ValueNode y) {
+    public IntegerTestNode(ValueNode x, ValueNode y)
+    {
         super(TYPE, x, y);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY) {
+    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    {
         NodeView view = NodeView.from(tool);
-        if (forX.isConstant() && forY.isConstant()) {
+        if (forX.isConstant() && forY.isConstant())
+        {
             return LogicConstantNode.forBoolean((forX.asJavaConstant().asLong() & forY.asJavaConstant().asLong()) == 0);
         }
-        if (forX.stamp(view) instanceof IntegerStamp && forY.stamp(view) instanceof IntegerStamp) {
+        if (forX.stamp(view) instanceof IntegerStamp && forY.stamp(view) instanceof IntegerStamp)
+        {
             IntegerStamp xStamp = (IntegerStamp) forX.stamp(view);
             IntegerStamp yStamp = (IntegerStamp) forY.stamp(view);
-            if ((xStamp.upMask() & yStamp.upMask()) == 0) {
+            if ((xStamp.upMask() & yStamp.upMask()) == 0)
+            {
                 return LogicConstantNode.tautology();
-            } else if ((xStamp.downMask() & yStamp.downMask()) != 0) {
+            }
+            else if ((xStamp.downMask() & yStamp.downMask()) != 0)
+            {
                 return LogicConstantNode.contradiction();
             }
         }
@@ -48,24 +56,33 @@ public final class IntegerTestNode extends BinaryOpLogicNode implements BinaryCo
     }
 
     @Override
-    public Stamp getSucceedingStampForX(boolean negated, Stamp xStamp, Stamp yStamp) {
+    public Stamp getSucceedingStampForX(boolean negated, Stamp xStamp, Stamp yStamp)
+    {
         return getSucceedingStamp(negated, xStamp, yStamp);
     }
 
-    private static Stamp getSucceedingStamp(boolean negated, Stamp xStampGeneric, Stamp otherStampGeneric) {
-        if (xStampGeneric instanceof IntegerStamp && otherStampGeneric instanceof IntegerStamp) {
+    private static Stamp getSucceedingStamp(boolean negated, Stamp xStampGeneric, Stamp otherStampGeneric)
+    {
+        if (xStampGeneric instanceof IntegerStamp && otherStampGeneric instanceof IntegerStamp)
+        {
             IntegerStamp xStamp = (IntegerStamp) xStampGeneric;
             IntegerStamp otherStamp = (IntegerStamp) otherStampGeneric;
-            if (negated) {
-                if (Long.bitCount(otherStamp.upMask()) == 1) {
+            if (negated)
+            {
+                if (Long.bitCount(otherStamp.upMask()) == 1)
+                {
                     long newDownMask = xStamp.downMask() | otherStamp.upMask();
-                    if (xStamp.downMask() != newDownMask) {
+                    if (xStamp.downMask() != newDownMask)
+                    {
                         return IntegerStamp.stampForMask(xStamp.getBits(), newDownMask, xStamp.upMask()).join(xStamp);
                     }
                 }
-            } else {
+            }
+            else
+            {
                 long restrictedUpMask = ((~otherStamp.downMask()) & xStamp.upMask());
-                if (xStamp.upMask() != restrictedUpMask) {
+                if (xStamp.upMask() != restrictedUpMask)
+                {
                     return IntegerStamp.stampForMask(xStamp.getBits(), xStamp.downMask(), restrictedUpMask).join(xStamp);
                 }
             }
@@ -74,18 +91,24 @@ public final class IntegerTestNode extends BinaryOpLogicNode implements BinaryCo
     }
 
     @Override
-    public Stamp getSucceedingStampForY(boolean negated, Stamp xStamp, Stamp yStamp) {
+    public Stamp getSucceedingStampForY(boolean negated, Stamp xStamp, Stamp yStamp)
+    {
         return getSucceedingStamp(negated, yStamp, xStamp);
     }
 
     @Override
-    public TriState tryFold(Stamp xStampGeneric, Stamp yStampGeneric) {
-        if (xStampGeneric instanceof IntegerStamp && yStampGeneric instanceof IntegerStamp) {
+    public TriState tryFold(Stamp xStampGeneric, Stamp yStampGeneric)
+    {
+        if (xStampGeneric instanceof IntegerStamp && yStampGeneric instanceof IntegerStamp)
+        {
             IntegerStamp xStamp = (IntegerStamp) xStampGeneric;
             IntegerStamp yStamp = (IntegerStamp) yStampGeneric;
-            if ((xStamp.upMask() & yStamp.upMask()) == 0) {
+            if ((xStamp.upMask() & yStamp.upMask()) == 0)
+            {
                 return TriState.TRUE;
-            } else if ((xStamp.downMask() & yStamp.downMask()) != 0) {
+            }
+            else if ((xStamp.downMask() & yStamp.downMask()) != 0)
+            {
                 return TriState.FALSE;
             }
         }

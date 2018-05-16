@@ -12,20 +12,23 @@ import jdk.vm.ci.hotspot.HotSpotCodeCacheProvider;
  * HotSpot implementation of {@link DisassemblerProvider}.
  */
 @ServiceProvider(DisassemblerProvider.class)
-public class HotSpotDisassemblerProvider implements DisassemblerProvider {
-
+public class HotSpotDisassemblerProvider implements DisassemblerProvider
+{
     @Override
-    public String disassembleCompiledCode(CodeCacheProvider codeCache, CompilationResult compResult) {
+    public String disassembleCompiledCode(CodeCacheProvider codeCache, CompilationResult compResult)
+    {
         return null;
     }
 
     @Override
-    public String disassembleInstalledCode(CodeCacheProvider codeCache, CompilationResult compResult, InstalledCode code) {
+    public String disassembleInstalledCode(CodeCacheProvider codeCache, CompilationResult compResult, InstalledCode code)
+    {
         return ((HotSpotCodeCacheProvider) codeCache).disassemble(code);
     }
 
     @Override
-    public String getName() {
+    public String getName()
+    {
         return "hsdis";
     }
 }

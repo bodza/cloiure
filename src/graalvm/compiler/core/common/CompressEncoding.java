@@ -3,38 +3,46 @@ package graalvm.compiler.core.common;
 /**
  * A compact representation of the different encoding strategies for Objects and metadata.
  */
-public final class CompressEncoding {
+public final class CompressEncoding
+{
     private final long base;
     private final int shift;
 
-    public CompressEncoding(long base, int shift) {
+    public CompressEncoding(long base, int shift)
+    {
         this.base = base;
         this.shift = shift;
     }
 
-    public boolean hasBase() {
+    public boolean hasBase()
+    {
         return base != 0;
     }
 
-    public boolean hasShift() {
+    public boolean hasShift()
+    {
         return shift != 0;
     }
 
-    public long getBase() {
+    public long getBase()
+    {
         return base;
     }
 
-    public int getShift() {
+    public int getShift()
+    {
         return shift;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "base: " + base + " shift: " + shift;
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         final int prime = 31;
         int result = 1;
         result = prime * result + (int) (base ^ (base >>> 32));
@@ -43,8 +51,10 @@ public final class CompressEncoding {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof CompressEncoding) {
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof CompressEncoding)
+        {
             CompressEncoding other = (CompressEncoding) obj;
             return base == other.base && shift == other.shift;
         }

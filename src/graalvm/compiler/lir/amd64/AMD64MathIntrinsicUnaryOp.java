@@ -25,10 +25,12 @@ import jdk.vm.ci.code.Register;
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.Value;
 
-public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
+public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction
+{
     public static final LIRInstructionClass<AMD64MathIntrinsicUnaryOp> TYPE = LIRInstructionClass.create(AMD64MathIntrinsicUnaryOp.class);
 
-    public enum UnaryIntrinsicOpcode {
+    public enum UnaryIntrinsicOpcode
+    {
         LOG,
         LOG10,
         SIN,
@@ -64,14 +66,14 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
 
     CompilationResultBuilder internalCrb;
 
-    public AMD64MathIntrinsicUnaryOp(LIRGeneratorTool tool, UnaryIntrinsicOpcode opcode, Value result, Value input, Value stackTemp) {
+    public AMD64MathIntrinsicUnaryOp(LIRGeneratorTool tool, UnaryIntrinsicOpcode opcode, Value result, Value input, Value stackTemp)
+    {
         super(TYPE);
         this.opcode = opcode;
         this.result = result;
         this.input = input;
-        if (opcode == UnaryIntrinsicOpcode.LOG || opcode == UnaryIntrinsicOpcode.LOG10 ||
-                        opcode == UnaryIntrinsicOpcode.SIN || opcode == UnaryIntrinsicOpcode.COS ||
-                        opcode == UnaryIntrinsicOpcode.TAN || opcode == UnaryIntrinsicOpcode.EXP) {
+        if (opcode == UnaryIntrinsicOpcode.LOG || opcode == UnaryIntrinsicOpcode.LOG10 || opcode == UnaryIntrinsicOpcode.SIN || opcode == UnaryIntrinsicOpcode.COS || opcode == UnaryIntrinsicOpcode.TAN || opcode == UnaryIntrinsicOpcode.EXP)
+        {
             this.gpr1Temp = tool.newVariable(LIRKind.value(AMD64Kind.QWORD));
             this.gpr2Temp = tool.newVariable(LIRKind.value(AMD64Kind.QWORD));
             this.rcxTemp = AMD64.rcx.asValue(LIRKind.value(AMD64Kind.QWORD));
@@ -84,14 +86,16 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
             this.xmm6Temp = tool.newVariable(LIRKind.value(AMD64Kind.DOUBLE));
             this.xmm7Temp = tool.newVariable(LIRKind.value(AMD64Kind.DOUBLE));
 
-            if (opcode == UnaryIntrinsicOpcode.EXP) {
+            if (opcode == UnaryIntrinsicOpcode.EXP)
+            {
                 this.gpr5Temp = tool.newVariable(LIRKind.value(AMD64Kind.QWORD));
                 this.xmm8Temp = tool.newVariable(LIRKind.value(AMD64Kind.DOUBLE));
                 this.xmm9Temp = tool.newVariable(LIRKind.value(AMD64Kind.DOUBLE));
                 this.xmm10Temp = tool.newVariable(LIRKind.value(AMD64Kind.DOUBLE));
             }
 
-            if (opcode == UnaryIntrinsicOpcode.TAN) {
+            if (opcode == UnaryIntrinsicOpcode.TAN)
+            {
                 this.gpr5Temp = tool.newVariable(LIRKind.value(AMD64Kind.QWORD));
                 this.gpr6Temp = tool.newVariable(LIRKind.value(AMD64Kind.QWORD));
                 this.gpr7Temp = tool.newVariable(LIRKind.value(AMD64Kind.QWORD));
@@ -100,7 +104,8 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
                 this.gpr10Temp = tool.newVariable(LIRKind.value(AMD64Kind.QWORD));
             }
 
-            if (opcode == UnaryIntrinsicOpcode.SIN || opcode == UnaryIntrinsicOpcode.COS) {
+            if (opcode == UnaryIntrinsicOpcode.SIN || opcode == UnaryIntrinsicOpcode.COS)
+            {
                 this.gpr5Temp = tool.newVariable(LIRKind.value(AMD64Kind.QWORD));
                 this.gpr6Temp = tool.newVariable(LIRKind.value(AMD64Kind.QWORD));
                 this.gpr7Temp = tool.newVariable(LIRKind.value(AMD64Kind.QWORD));
@@ -115,21 +120,26 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
         }
     }
 
-    public AMD64MathIntrinsicUnaryOp(LIRGeneratorTool tool, UnaryIntrinsicOpcode opcode, Value result, Value input) {
+    public AMD64MathIntrinsicUnaryOp(LIRGeneratorTool tool, UnaryIntrinsicOpcode opcode, Value result, Value input)
+    {
         this(tool, opcode, result, input, Value.ILLEGAL);
     }
 
-    private void setCrb(CompilationResultBuilder crb) {
+    private void setCrb(CompilationResultBuilder crb)
+    {
         internalCrb = crb;
     }
 
-    private AMD64Address externalAddress(ArrayDataPointerConstant curPtr) {
+    private AMD64Address externalAddress(ArrayDataPointerConstant curPtr)
+    {
         return (AMD64Address) internalCrb.recordDataReferenceInCode(curPtr);
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
-        switch (opcode) {
+    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
+        switch (opcode)
+        {
             case LOG:
                 logIntrinsic(asRegister(result, AMD64Kind.DOUBLE), asRegister(input, AMD64Kind.DOUBLE), crb, masm);
                 break;
@@ -153,7 +163,8 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
         }
     }
 
-    private static int[] logTwoTable = {
+    private static int[] logTwoTable =
+    {
                     0xfefa3800, 0x3fe62e42, 0x93c76730, 0x3d2ef357, 0xaa241800,
                     0x3fe5ee82, 0x0cda46be, 0x3d220238, 0x5c364800, 0x3fe5af40,
                     0xac10c9fb, 0x3d2dfa63, 0x26bb8c00, 0x3fe5707a, 0xff3303dd,
@@ -260,11 +271,13 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
                     0x80000000
     };
 
-    private static int[] logTwoData = {
+    private static int[] logTwoData =
+    {
                     0xfefa3800, 0x3fa62e42, 0x93c76730, 0x3ceef357
     };
 
-    private static int[] coeffLogTwoData = {
+    private static int[] coeffLogTwoData =
+    {
                     0x92492492, 0x3fc24924, 0x00000000, 0xbfd00000, 0x3d6fb175,
                     0xbfc5555e, 0x55555555, 0x3fd55555, 0x9999999a, 0x3fc99999,
                     0x00000000, 0xbfe00000
@@ -292,7 +305,8 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
      *
      */
 
-    public void logIntrinsic(Register dest, Register value, CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+    public void logIntrinsic(Register dest, Register value, CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
         ArrayDataPointerConstant logTwoTablePtr = new ArrayDataPointerConstant(logTwoTable, 16);
         ArrayDataPointerConstant logTwoDataPtr = new ArrayDataPointerConstant(logTwoData, 16);
         ArrayDataPointerConstant coeffLogTwoDataPtr = new ArrayDataPointerConstant(coeffLogTwoData, 16);
@@ -324,7 +338,8 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
 
         setCrb(crb);
         masm.movdq(stackSlot, value);
-        if (dest.encoding != value.encoding) {
+        if (dest.encoding != value.encoding)
+        {
             masm.movdqu(dest, value);
         }
         masm.movq(gpr1, 0x3ff0000000000000L);
@@ -384,9 +399,12 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
                                                                                               // 0x00000000,
                                                                                               // 0xbfe00000
         masm.mulsd(temp6, temp7);
-        if (masm.supports(CPUFeature.SSE3)) {
+        if (masm.supports(CPUFeature.SSE3))
+        {
             masm.movddup(temp5, temp1);
-        } else {
+        }
+        else
+        {
             masm.movdqu(temp5, temp1);
             masm.movlhps(temp5, temp5);
         }
@@ -397,9 +415,12 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
         masm.addsd(dest, temp6);
         masm.mulpd(temp4, temp5);
         masm.mulpd(temp5, temp5);
-        if (masm.supports(CPUFeature.SSE3)) {
+        if (masm.supports(CPUFeature.SSE3))
+        {
             masm.movddup(temp6, dest);
-        } else {
+        }
+        else
+        {
             masm.movdqu(temp6, dest);
             masm.movlhps(temp6, temp6);
         }
@@ -499,15 +520,18 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
         masm.bind(bb8);
     }
 
-    private static int[] highmaskLogTen = {
+    private static int[] highmaskLogTen =
+    {
                     0xf8000000, 0xffffffff, 0x00000000, 0xffffe000
     };
 
-    private static int[] logTenE = {
+    private static int[] logTenE =
+    {
                     0x00000000, 0x3fdbc000, 0xbf2e4108, 0x3f5a7a6c
     };
 
-    private static int[] logTenTable = {
+    private static int[] logTenTable =
+    {
                     0x509f7800, 0x3fd34413, 0x1f12b358, 0x3d1fef31, 0x80333400,
                     0x3fd32418, 0xc671d9d0, 0xbcf542bf, 0x51195000, 0x3fd30442,
                     0x78a4b0c3, 0x3d18216a, 0x6fc79400, 0x3fd2e490, 0x80fa389d,
@@ -614,11 +638,13 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
                     0x00000000
     };
 
-    private static int[] logTwoLogTenData = {
+    private static int[] logTwoLogTenData =
+    {
                     0x509f7800, 0x3f934413, 0x1f12b358, 0x3cdfef31
     };
 
-    private static int[] coeffLogTenData = {
+    private static int[] coeffLogTenData =
+    {
                     0xc1a5f12e, 0x40358874, 0x64d4ef0d, 0xc0089309, 0x385593b1,
                     0xc025c917, 0xdc963467, 0x3ffc6a02, 0x7f9d3aa1, 0x4016ab9f,
                     0xdc77b115, 0xbff27af2
@@ -645,7 +671,8 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
      *
      */
 
-    public void log10Intrinsic(Register dest, Register value, CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+    public void log10Intrinsic(Register dest, Register value, CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
         ArrayDataPointerConstant highmaskLogTenPtr = new ArrayDataPointerConstant(highmaskLogTen, 16);
         ArrayDataPointerConstant logTenEPtr = new ArrayDataPointerConstant(logTenE, 16);
         ArrayDataPointerConstant logTenTablePtr = new ArrayDataPointerConstant(logTenTable, 16);
@@ -679,7 +706,8 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
 
         setCrb(crb);
         masm.movdq(stackSlot, value);
-        if (dest.encoding != value.encoding) {
+        if (dest.encoding != value.encoding)
+        {
             masm.movdqu(dest, value);
         }
         masm.movdqu(temp5, externalAddress(highmaskLogTenPtr));                               // 0xf8000000,
@@ -969,19 +997,23 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
      *
      */
 
-    public int[] oneHalf = {
+    public int[] oneHalf =
+    {
                     0x00000000, 0x3fe00000, 0x00000000, 0x3fe00000
     };
 
-    public int[] pTwo = {
+    public int[] pTwo =
+    {
                     0x1a600000, 0x3d90b461, 0x1a600000, 0x3d90b461
     };
 
-    public int[] scFour = {
+    public int[] scFour =
+    {
                     0xa556c734, 0x3ec71de3, 0x1a01a01a, 0x3efa01a0
     };
 
-    public int[] cTable = {
+    public int[] cTable =
+    {
                     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
                     0x00000000, 0x00000000, 0x3ff00000, 0x176d6d31, 0xbf73b92e,
                     0xbc29b42c, 0x3fb917a6, 0xe0000000, 0xbc3e2718, 0x00000000,
@@ -1087,19 +1119,23 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
                     0x00000000, 0x3ff00000
     };
 
-    public int[] scTwo = {
+    public int[] scTwo =
+    {
                     0x11111111, 0x3f811111, 0x55555555, 0x3fa55555
     };
 
-    public int[] scThree = {
+    public int[] scThree =
+    {
                     0x1a01a01a, 0xbf2a01a0, 0x16c16c17, 0xbf56c16c
     };
 
-    public int[] scOne = {
+    public int[] scOne =
+    {
                     0x55555555, 0xbfc55555, 0x00000000, 0xbfe00000
     };
 
-    public int[] piInvTable = {
+    public int[] piInvTable =
+    {
                     0x00000000, 0x00000000, 0xa2f9836e, 0x4e441529, 0xfc2757d1,
                     0xf534ddc0, 0xdb629599, 0x3c439041, 0xfe5163ab, 0xdebbc561,
                     0xb7246e3a, 0x424dd2e0, 0x06492eea, 0x09d1921c, 0xfe1deb1c,
@@ -1111,43 +1147,53 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
                     0xf0cfbc21
     };
 
-    public int[] piFour = {
+    public int[] piFour =
+    {
                     0x40000000, 0x3fe921fb, 0x18469899, 0x3e64442d
     };
 
-    public int[] piThirtyTwoInv = {
+    public int[] piThirtyTwoInv =
+    {
                     0x6dc9c883, 0x40245f30
     };
 
-    public int[] shifter = {
+    public int[] shifter =
+    {
                     0x00000000, 0x43380000
     };
 
-    public int[] signMask = {
+    public int[] signMask =
+    {
                     0x00000000, 0x80000000
     };
 
-    public int[] pThree = {
+    public int[] pThree =
+    {
                     0x2e037073, 0x3b63198a
     };
 
-    public int[] allOnes = {
+    public int[] allOnes =
+    {
                     0xffffffff, 0x3fefffff
     };
 
-    public int[] twoPowFiftyFive = {
+    public int[] twoPowFiftyFive =
+    {
                     0x00000000, 0x43600000
     };
 
-    public int[] twoPowFiftyFiveM = {
+    public int[] twoPowFiftyFiveM =
+    {
                     0x00000000, 0x3c800000
     };
 
-    public int[] pOne = {
+    public int[] pOne =
+    {
                     0x54400000, 0x3fb921fb
     };
 
-    public void sinIntrinsic(Register dest, Register value, CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+    public void sinIntrinsic(Register dest, Register value, CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
         ArrayDataPointerConstant oneHalfPtr = new ArrayDataPointerConstant(oneHalf, 16);
         ArrayDataPointerConstant pTwoPtr = new ArrayDataPointerConstant(pTwo, 16);
         ArrayDataPointerConstant scFourPtr = new ArrayDataPointerConstant(scFour, 16);
@@ -1206,7 +1252,8 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
 
         setCrb(crb);
         masm.movsd(stackSlot, value);
-        if (dest.encoding != value.encoding) {
+        if (dest.encoding != value.encoding)
+        {
             masm.movdqu(dest, value);
         }
 
@@ -1246,9 +1293,12 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
                                                                                               // 0x3efa01a0
         masm.pshufd(temp4, dest, 0x44);
         masm.mulsd(temp3, temp1);
-        if (masm.supports(CPUFeature.SSE3)) {
+        if (masm.supports(CPUFeature.SSE3))
+        {
             masm.movddup(temp1, temp1);
-        } else {
+        }
+        else
+        {
             masm.movlhps(temp1, temp1);
         }
         masm.andl(gpr4, 63);
@@ -1261,9 +1311,12 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
                                                                                               // 0x3b63198a
         masm.subsd(temp4, temp3);
         masm.subsd(dest, temp3);
-        if (masm.supports(CPUFeature.SSE3)) {
+        if (masm.supports(CPUFeature.SSE3))
+        {
             masm.movddup(temp3, temp4);
-        } else {
+        }
+        else
+        {
             masm.movdqu(temp3, temp4);
             masm.movlhps(temp3, temp3);
         }
@@ -1804,11 +1857,13 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
      *
      */
 
-    public int[] one = {
+    public int[] one =
+    {
                     0x00000000, 0x3ff00000
     };
 
-    public void cosIntrinsic(Register dest, Register value, CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+    public void cosIntrinsic(Register dest, Register value, CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
         ArrayDataPointerConstant oneHalfPtr = new ArrayDataPointerConstant(oneHalf, 16);
         ArrayDataPointerConstant pTwoPtr = new ArrayDataPointerConstant(pTwo, 16);
         ArrayDataPointerConstant scFourPtr = new ArrayDataPointerConstant(scFour, 16);
@@ -1864,7 +1919,8 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
 
         setCrb(crb);
         masm.movdq(stackSlot, value);
-        if (dest.encoding != value.encoding) {
+        if (dest.encoding != value.encoding)
+        {
             masm.movdqu(dest, value);
         }
 
@@ -2394,35 +2450,43 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
      *
      */
 
-    private static int[] oneHalfTan = {
+    private static int[] oneHalfTan =
+    {
                     0x00000000, 0x3fe00000, 0x00000000, 0x3fe00000
     };
 
-    private static int[] mulSixteen = {
+    private static int[] mulSixteen =
+    {
                     0x00000000, 0x40300000, 0x00000000, 0x3ff00000
     };
 
-    private static int[] signMaskTan = {
+    private static int[] signMaskTan =
+    {
                     0x00000000, 0x80000000, 0x00000000, 0x80000000
     };
 
-    private static int[] piThirtyTwoInvTan = {
+    private static int[] piThirtyTwoInvTan =
+    {
                     0x6dc9c883, 0x3fe45f30, 0x6dc9c883, 0x40245f30
     };
 
-    private static int[] pOneTan = {
+    private static int[] pOneTan =
+    {
                     0x54444000, 0x3fb921fb, 0x54440000, 0x3fb921fb
     };
 
-    private static int[] pTwoTan = {
+    private static int[] pTwoTan =
+    {
                     0x67674000, 0xbd32e7b9, 0x4c4c0000, 0x3d468c23
     };
 
-    private static int[] pThreeTan = {
+    private static int[] pThreeTan =
+    {
                     0x3707344a, 0x3aa8a2e0, 0x03707345, 0x3ae98a2e
     };
 
-    private static int[] cTableTan = {
+    private static int[] cTableTan =
+    {
                     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x882c10fa,
                     0x3f9664f4, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
                     0x00000000, 0x00000000, 0x55e6c23d, 0x3f8226e3, 0x55555555,
@@ -2707,31 +2771,38 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
                     0x00000000, 0x00000000, 0x00000000
     };
 
-    private static int[] maskThirtyFiveTan = {
+    private static int[] maskThirtyFiveTan =
+    {
                     0xfffc0000, 0xffffffff, 0x00000000, 0x00000000
     };
 
-    private static int[] qElevenTan = {
+    private static int[] qElevenTan =
+    {
                     0xb8fe4d77, 0x3f82609a
     };
 
-    private static int[] qNineTan = {
+    private static int[] qNineTan =
+    {
                     0xbf847a43, 0x3f9664a0
     };
 
-    private static int[] qSevenTan = {
+    private static int[] qSevenTan =
+    {
                     0x52c4c8ab, 0x3faba1ba
     };
 
-    private static int[] qFiveTan = {
+    private static int[] qFiveTan =
+    {
                     0x11092746, 0x3fc11111
     };
 
-    private static int[] qThreeTan = {
+    private static int[] qThreeTan =
+    {
                     0x55555612, 0x3fd55555
     };
 
-    private static int[] piInvTableTan = {
+    private static int[] piInvTableTan =
+    {
                     0x00000000, 0x00000000, 0xa2f9836e, 0x4e441529, 0xfc2757d1,
                     0xf534ddc0, 0xdb629599, 0x3c439041, 0xfe5163ab, 0xdebbc561,
                     0xb7246e3a, 0x424dd2e0, 0x06492eea, 0x09d1921c, 0xfe1deb1c,
@@ -2743,23 +2814,28 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
                     0xf0cfbc21
     };
 
-    private static int[] piFourTan = {
+    private static int[] piFourTan =
+    {
                     0x00000000, 0x3fe921fb, 0x4611a626, 0x3e85110b
     };
 
-    private static int[] qqTwoTan = {
+    private static int[] qqTwoTan =
+    {
                     0x676733af, 0x3d32e7b9
     };
 
-    private static int[] twoPowFiftyFiveTan = {
+    private static int[] twoPowFiftyFiveTan =
+    {
                     0x00000000, 0x43600000
     };
 
-    private static int[] twoPowMFiftyFiveTan = {
+    private static int[] twoPowMFiftyFiveTan =
+    {
                     0x00000000, 0x3c800000
     };
 
-    public void tanIntrinsic(Register dest, Register value, CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+    public void tanIntrinsic(Register dest, Register value, CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
         ArrayDataPointerConstant oneHalfTanPtr = new ArrayDataPointerConstant(oneHalfTan, 16);
         ArrayDataPointerConstant mulSixteenPtr = new ArrayDataPointerConstant(mulSixteen, 16);
         ArrayDataPointerConstant signMaskTanPtr = new ArrayDataPointerConstant(signMaskTan, 16);
@@ -2816,7 +2892,8 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
         Register temp7 = asRegister(xmm7Temp, AMD64Kind.DOUBLE);
 
         setCrb(crb);
-        if (dest.encoding != value.encoding) {
+        if (dest.encoding != value.encoding)
+        {
             masm.movdqu(dest, value);
         }
 
@@ -3188,9 +3265,12 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
                                                                                                 // 0x3fe45f30,
                                                                                                 // 0x6dc9c883,
                                                                                                 // 0x40245f30
-        if (masm.supports(CPUFeature.SSE3)) {
+        if (masm.supports(CPUFeature.SSE3))
+        {
             masm.movddup(dest, dest);
-        } else {
+        }
+        else
+        {
             masm.movlhps(dest, dest);
         }
         masm.movdqu(temp4, externalAddress(signMaskTanPtr));                                    // 0x00000000,
@@ -3199,9 +3279,12 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
                                                                                                 // 0x80000000
         masm.andpd(temp4, dest);
         masm.mulpd(temp1, dest);
-        if (masm.supports(CPUFeature.SSE3)) {
+        if (masm.supports(CPUFeature.SSE3))
+        {
             masm.movddup(temp7, temp7);
-        } else {
+        }
+        else
+        {
             masm.movlhps(temp7, temp7);
         }
         masm.movdqu(temp5, externalAddress(oneHalfTanPtr));                                     // 0x00000000,
@@ -3436,7 +3519,8 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
      *
      */
 
-    private static int[] cvExp = {
+    private static int[] cvExp =
+    {
                     0x652b82fe, 0x40571547, 0x652b82fe, 0x40571547, 0xfefa0000,
                     0x3f862e42, 0xfefa0000, 0x3f862e42, 0xbc9e3b3a, 0x3d1cf79a,
                     0xbc9e3b3a, 0x3d1cf79a, 0xfffffffe, 0x3fdfffff, 0xfffffffe,
@@ -3444,19 +3528,23 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
                     0xc090cf0f, 0x3f811115, 0x55548ba1, 0x3fc55555
     };
 
-    private static int[] shifterExp = {
+    private static int[] shifterExp =
+    {
                     0x00000000, 0x43380000, 0x00000000, 0x43380000
     };
 
-    private static int[] mMaskExp = {
+    private static int[] mMaskExp =
+    {
                     0xffffffc0, 0x00000000, 0xffffffc0, 0x00000000
     };
 
-    private static int[] biasExp = {
+    private static int[] biasExp =
+    {
                     0x0000ffc0, 0x00000000, 0x0000ffc0, 0x00000000
     };
 
-    private static int[] tblAddrExp = {
+    private static int[] tblAddrExp =
+    {
                     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x0e03754d,
                     0x3cad7bbf, 0x3e778060, 0x00002c9a, 0x3567f613, 0x3c8cd252,
                     0xd3158574, 0x000059b0, 0x61e6c861, 0x3c60f74e, 0x18759bc8,
@@ -3511,31 +3599,38 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
                     0x000fa7c1
     };
 
-    private static int[] allOnesExp = {
+    private static int[] allOnesExp =
+    {
                     0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff
     };
 
-    private static int[] expBias = {
+    private static int[] expBias =
+    {
                     0x00000000, 0x3ff00000, 0x00000000, 0x3ff00000
     };
 
-    private static int[] xMaxExp = {
+    private static int[] xMaxExp =
+    {
                     0xffffffff, 0x7fefffff
     };
 
-    private static int[] xMinExp = {
+    private static int[] xMinExp =
+    {
                     0x00000000, 0x00100000
     };
 
-    private static int[] infExp = {
+    private static int[] infExp =
+    {
                     0x00000000, 0x7ff00000
     };
 
-    private static int[] zeroExp = {
+    private static int[] zeroExp =
+    {
                     0x00000000, 0x00000000
     };
 
-    public void expIntrinsic(Register dest, Register value, CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+    public void expIntrinsic(Register dest, Register value, CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
         ArrayDataPointerConstant onePtr = new ArrayDataPointerConstant(one, 16);
         ArrayDataPointerConstant cvExpPtr = new ArrayDataPointerConstant(cvExp, 16);
         ArrayDataPointerConstant shifterExpPtr = new ArrayDataPointerConstant(shifterExp, 8);
@@ -3584,7 +3679,8 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction {
 
         setCrb(crb);
         masm.movsd(stackSlot, value);
-        if (dest.encoding != value.encoding) {
+        if (dest.encoding != value.encoding)
+        {
             masm.movdqu(dest, value);
         }
 

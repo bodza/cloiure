@@ -16,10 +16,12 @@ import jdk.vm.ci.meta.Value;
  * This provides the default implementation expected by some HotSpot based lowerings of Math
  * intrinsics. Depending on the release different patterns might be used.
  */
-public final class AMD64HotSpotMathIntrinsicOp extends AMD64LIRInstruction {
+public final class AMD64HotSpotMathIntrinsicOp extends AMD64LIRInstruction
+{
     public static final LIRInstructionClass<AMD64HotSpotMathIntrinsicOp> TYPE = LIRInstructionClass.create(AMD64HotSpotMathIntrinsicOp.class);
 
-    public enum IntrinsicOpcode {
+    public enum IntrinsicOpcode
+    {
         SIN,
         COS,
         TAN,
@@ -31,7 +33,8 @@ public final class AMD64HotSpotMathIntrinsicOp extends AMD64LIRInstruction {
     @Def protected Value result;
     @Use protected Value input;
 
-    public AMD64HotSpotMathIntrinsicOp(IntrinsicOpcode opcode, Value result, Value input) {
+    public AMD64HotSpotMathIntrinsicOp(IntrinsicOpcode opcode, Value result, Value input)
+    {
         super(TYPE);
         this.opcode = opcode;
         this.result = result;
@@ -39,8 +42,10 @@ public final class AMD64HotSpotMathIntrinsicOp extends AMD64LIRInstruction {
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
-        switch (opcode) {
+    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
+        switch (opcode)
+        {
             case LOG:
                 masm.flog(asRegister(result, AMD64Kind.DOUBLE), asRegister(input, AMD64Kind.DOUBLE), false);
                 break;

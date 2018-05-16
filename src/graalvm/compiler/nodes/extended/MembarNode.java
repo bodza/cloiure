@@ -17,29 +17,33 @@ import org.graalvm.word.LocationIdentity;
  * Creates a memory barrier.
  */
 @NodeInfo(nameTemplate = "Membar#{p#location/s}", allowedUsageTypes = Memory, cycles = CYCLES_2, size = SIZE_2)
-public final class MembarNode extends FixedWithNextNode implements LIRLowerable, MemoryCheckpoint.Single {
-
+public final class MembarNode extends FixedWithNextNode implements LIRLowerable, MemoryCheckpoint.Single
+{
     public static final NodeClass<MembarNode> TYPE = NodeClass.create(MembarNode.class);
     protected final int barriers;
     protected final LocationIdentity location;
 
-    public MembarNode(int barriers) {
+    public MembarNode(int barriers)
+    {
         this(barriers, LocationIdentity.any());
     }
 
-    public MembarNode(int barriers, LocationIdentity location) {
+    public MembarNode(int barriers, LocationIdentity location)
+    {
         super(TYPE, StampFactory.forVoid());
         this.barriers = barriers;
         this.location = location;
     }
 
     @Override
-    public LocationIdentity getLocationIdentity() {
+    public LocationIdentity getLocationIdentity()
+    {
         return location;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool generator) {
+    public void generate(NodeLIRBuilderTool generator)
+    {
         generator.getLIRGeneratorTool().emitMembar(barriers);
     }
 

@@ -26,47 +26,68 @@ import graalvm.compiler.nodes.java.MethodCallTargetNode;
  * {@link Invoke} nodes with {@link MethodCallTargetNode}. Such list of callsites is returned by
  * {@link #apply()}
  */
-public class InliningIterator {
-
+public class InliningIterator
+{
     private final StartNode start;
     private final Deque<FixedNode> nodeQueue;
     private final NodeBitMap queuedNodes;
 
-    public InliningIterator(StructuredGraph graph) {
+    public InliningIterator(StructuredGraph graph)
+    {
         this.start = graph.start();
         this.nodeQueue = new ArrayDeque<>();
         this.queuedNodes = graph.createNodeBitMap();
         assert start.isAlive();
     }
 
-    public LinkedList<Invoke> apply() {
+    public LinkedList<Invoke> apply()
+    {
         LinkedList<Invoke> invokes = new LinkedList<>();
         FixedNode current;
         forcedQueue(start);
 
-        while ((current = nextQueuedNode()) != null) {
+        while ((current = nextQueuedNode()) != null)
+        {
             assert current.isAlive();
 
-            if (current instanceof Invoke && ((Invoke) current).callTarget() instanceof MethodCallTargetNode) {
-                if (current != start) {
+            if (current instanceof Invoke && ((Invoke) current).callTarget() instanceof MethodCallTargetNode)
+            {
+                if (current != start)
+                {
                     invokes.addLast((Invoke) current);
                 }
                 queueSuccessors(current);
-            } else if (current instanceof LoopBeginNode) {
+            }
+            else if (current instanceof LoopBeginNode)
+            {
                 queueSuccessors(current);
-            } else if (current instanceof LoopEndNode) {
+            }
+            else if (current instanceof LoopEndNode)
+            {
                 // nothing to do
-            } else if (current instanceof AbstractMergeNode) {
+            }
+            else if (current instanceof AbstractMergeNode)
+            {
                 queueSuccessors(current);
-            } else if (current instanceof FixedWithNextNode) {
+            }
+            else if (current instanceof FixedWithNextNode)
+            {
                 queueSuccessors(current);
-            } else if (current instanceof EndNode) {
+            }
+            else if (current instanceof EndNode)
+            {
                 queueMerge((EndNode) current);
-            } else if (current instanceof ControlSinkNode) {
+            }
+            else if (current instanceof ControlSinkNode)
+            {
                 // nothing to do
-            } else if (current instanceof ControlSplitNode) {
+            }
+            else if (current instanceof ControlSplitNode)
+            {
                 queueSuccessors(current);
-            } else {
+            }
+            else
+            {
                 assert false : current;
             }
         }
@@ -75,25 +96,32 @@ public class InliningIterator {
         return invokes;
     }
 
-    private void queueSuccessors(FixedNode x) {
-        for (Node node : x.successors()) {
+    private void queueSuccessors(FixedNode x)
+    {
+        for (Node node : x.successors())
+        {
             queue(node);
         }
     }
 
-    private void queue(Node node) {
-        if (node != null && !queuedNodes.isMarked(node)) {
+    private void queue(Node node)
+    {
+        if (node != null && !queuedNodes.isMarked(node))
+        {
             forcedQueue(node);
         }
     }
 
-    private void forcedQueue(Node node) {
+    private void forcedQueue(Node node)
+    {
         queuedNodes.mark(node);
         nodeQueue.addFirst((FixedNode) node);
     }
 
-    private FixedNode nextQueuedNode() {
-        if (nodeQueue.isEmpty()) {
+    private FixedNode nextQueuedNode()
+    {
+        if (nodeQueue.isEmpty())
+        {
             return null;
         }
 
@@ -102,27 +130,34 @@ public class InliningIterator {
         return result;
     }
 
-    private void queueMerge(AbstractEndNode end) {
+    private void queueMerge(AbstractEndNode end)
+    {
         AbstractMergeNode merge = end.merge();
-        if (!queuedNodes.isMarked(merge) && visitedAllEnds(merge)) {
+        if (!queuedNodes.isMarked(merge) && visitedAllEnds(merge))
+        {
             queuedNodes.mark(merge);
             nodeQueue.add(merge);
         }
     }
 
-    private boolean visitedAllEnds(AbstractMergeNode merge) {
-        for (int i = 0; i < merge.forwardEndCount(); i++) {
-            if (!queuedNodes.isMarked(merge.forwardEndAt(i))) {
+    private boolean visitedAllEnds(AbstractMergeNode merge)
+    {
+        for (int i = 0; i < merge.forwardEndCount(); i++)
+        {
+            if (!queuedNodes.isMarked(merge.forwardEndAt(i)))
+            {
                 return false;
             }
         }
         return true;
     }
 
-    private static int count(Iterable<Invoke> invokes) {
+    private static int count(Iterable<Invoke> invokes)
+    {
         int count = 0;
         Iterator<Invoke> iterator = invokes.iterator();
-        while (iterator.hasNext()) {
+        while (iterator.hasNext())
+        {
             iterator.next();
             count++;
         }

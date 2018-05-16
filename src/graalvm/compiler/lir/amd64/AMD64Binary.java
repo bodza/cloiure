@@ -33,12 +33,13 @@ import jdk.vm.ci.meta.Value;
 /**
  * AMD64 LIR instructions that have two inputs and one output.
  */
-public class AMD64Binary {
-
+public class AMD64Binary
+{
     /**
      * Instruction that has two {@link AllocatableValue} operands.
      */
-    public static class TwoOp extends AMD64LIRInstruction {
+    public static class TwoOp extends AMD64LIRInstruction
+    {
         public static final LIRInstructionClass<TwoOp> TYPE = LIRInstructionClass.create(TwoOp.class);
 
         @Opcode private final AMD64RMOp opcode;
@@ -52,7 +53,8 @@ public class AMD64Binary {
          */
         @Alive({REG, STACK}) protected AllocatableValue y;
 
-        public TwoOp(AMD64RMOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, AllocatableValue y) {
+        public TwoOp(AMD64RMOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, AllocatableValue y)
+        {
             super(TYPE);
             this.opcode = opcode;
             this.size = size;
@@ -63,11 +65,15 @@ public class AMD64Binary {
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        {
             AMD64Move.move(crb, masm, result, x);
-            if (isRegister(y)) {
+            if (isRegister(y))
+            {
                 opcode.emit(masm, size, asRegister(result), asRegister(y));
-            } else {
+            }
+            else
+            {
                 assert isStackSlot(y);
                 opcode.emit(masm, size, asRegister(result), (AMD64Address) crb.asAddress(y));
             }
@@ -77,7 +83,8 @@ public class AMD64Binary {
     /**
      * Instruction that has three {@link AllocatableValue} operands.
      */
-    public static class ThreeOp extends AMD64LIRInstruction {
+    public static class ThreeOp extends AMD64LIRInstruction
+    {
         public static final LIRInstructionClass<ThreeOp> TYPE = LIRInstructionClass.create(ThreeOp.class);
 
         @Opcode private final AMD64RRMOp opcode;
@@ -87,7 +94,8 @@ public class AMD64Binary {
         @Use({REG}) protected AllocatableValue x;
         @Use({REG, STACK}) protected AllocatableValue y;
 
-        public ThreeOp(AMD64RRMOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, AllocatableValue y) {
+        public ThreeOp(AMD64RRMOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, AllocatableValue y)
+        {
             super(TYPE);
             this.opcode = opcode;
             this.size = size;
@@ -98,10 +106,14 @@ public class AMD64Binary {
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
-            if (isRegister(y)) {
+        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        {
+            if (isRegister(y))
+            {
                 opcode.emit(masm, size, asRegister(result), asRegister(x), asRegister(y));
-            } else {
+            }
+            else
+            {
                 assert isStackSlot(y);
                 opcode.emit(masm, size, asRegister(result), asRegister(x), (AMD64Address) crb.asAddress(y));
             }
@@ -111,7 +123,8 @@ public class AMD64Binary {
     /**
      * Commutative instruction that has two {@link AllocatableValue} operands.
      */
-    public static class CommutativeTwoOp extends AMD64LIRInstruction {
+    public static class CommutativeTwoOp extends AMD64LIRInstruction
+    {
         public static final LIRInstructionClass<CommutativeTwoOp> TYPE = LIRInstructionClass.create(CommutativeTwoOp.class);
 
         @Opcode private final AMD64RMOp opcode;
@@ -121,7 +134,8 @@ public class AMD64Binary {
         @Use({REG, STACK}) protected AllocatableValue x;
         @Use({REG, STACK}) protected AllocatableValue y;
 
-        public CommutativeTwoOp(AMD64RMOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, AllocatableValue y) {
+        public CommutativeTwoOp(AMD64RMOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, AllocatableValue y)
+        {
             super(TYPE);
             this.opcode = opcode;
             this.size = size;
@@ -132,18 +146,25 @@ public class AMD64Binary {
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        {
             AllocatableValue input;
-            if (sameRegister(result, y)) {
+            if (sameRegister(result, y))
+            {
                 input = x;
-            } else {
+            }
+            else
+            {
                 AMD64Move.move(crb, masm, result, x);
                 input = y;
             }
 
-            if (isRegister(input)) {
+            if (isRegister(input))
+            {
                 opcode.emit(masm, size, asRegister(result), asRegister(input));
-            } else {
+            }
+            else
+            {
                 assert isStackSlot(input);
                 opcode.emit(masm, size, asRegister(result), (AMD64Address) crb.asAddress(input));
             }
@@ -153,7 +174,8 @@ public class AMD64Binary {
     /**
      * Commutative instruction that has three {@link AllocatableValue} operands.
      */
-    public static class CommutativeThreeOp extends AMD64LIRInstruction {
+    public static class CommutativeThreeOp extends AMD64LIRInstruction
+    {
         public static final LIRInstructionClass<CommutativeThreeOp> TYPE = LIRInstructionClass.create(CommutativeThreeOp.class);
 
         @Opcode private final AMD64RRMOp opcode;
@@ -163,7 +185,8 @@ public class AMD64Binary {
         @Use({REG}) protected AllocatableValue x;
         @Use({REG, STACK}) protected AllocatableValue y;
 
-        public CommutativeThreeOp(AMD64RRMOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, AllocatableValue y) {
+        public CommutativeThreeOp(AMD64RRMOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, AllocatableValue y)
+        {
             super(TYPE);
             this.opcode = opcode;
             this.size = size;
@@ -174,10 +197,14 @@ public class AMD64Binary {
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
-            if (isRegister(y)) {
+        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        {
+            if (isRegister(y))
+            {
                 opcode.emit(masm, size, asRegister(result), asRegister(x), asRegister(y));
-            } else {
+            }
+            else
+            {
                 assert isStackSlot(y);
                 opcode.emit(masm, size, asRegister(result), asRegister(x), (AMD64Address) crb.asAddress(y));
             }
@@ -187,7 +214,8 @@ public class AMD64Binary {
     /**
      * Instruction that has one {@link AllocatableValue} operand and one 32-bit immediate operand.
      */
-    public static class ConstOp extends AMD64LIRInstruction {
+    public static class ConstOp extends AMD64LIRInstruction
+    {
         public static final LIRInstructionClass<ConstOp> TYPE = LIRInstructionClass.create(ConstOp.class);
 
         @Opcode private final AMD64MIOp opcode;
@@ -197,11 +225,13 @@ public class AMD64Binary {
         @Use({REG}) protected AllocatableValue x;
         private final int y;
 
-        public ConstOp(AMD64BinaryArithmetic opcode, OperandSize size, AllocatableValue result, AllocatableValue x, int y) {
+        public ConstOp(AMD64BinaryArithmetic opcode, OperandSize size, AllocatableValue result, AllocatableValue x, int y)
+        {
             this(opcode.getMIOpcode(size, NumUtil.isByte(y)), size, result, x, y);
         }
 
-        public ConstOp(AMD64MIOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, int y) {
+        public ConstOp(AMD64MIOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, int y)
+        {
             super(TYPE);
             this.opcode = opcode;
             this.size = size;
@@ -212,7 +242,8 @@ public class AMD64Binary {
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        {
             AMD64Move.move(crb, masm, result, x);
             opcode.emit(masm, size, asRegister(result), y);
         }
@@ -222,7 +253,8 @@ public class AMD64Binary {
      * Instruction that has one {@link AllocatableValue} operand and one
      * {@link DataSectionReference} operand.
      */
-    public static class DataTwoOp extends AMD64LIRInstruction {
+    public static class DataTwoOp extends AMD64LIRInstruction
+    {
         public static final LIRInstructionClass<DataTwoOp> TYPE = LIRInstructionClass.create(DataTwoOp.class);
 
         @Opcode private final AMD64RMOp opcode;
@@ -234,11 +266,13 @@ public class AMD64Binary {
 
         private final int alignment;
 
-        public DataTwoOp(AMD64RMOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, JavaConstant y) {
+        public DataTwoOp(AMD64RMOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, JavaConstant y)
+        {
             this(opcode, size, result, x, y, y.getJavaKind().getByteCount());
         }
 
-        public DataTwoOp(AMD64RMOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, JavaConstant y, int alignment) {
+        public DataTwoOp(AMD64RMOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, JavaConstant y, int alignment)
+        {
             super(TYPE);
             this.opcode = opcode;
             this.size = size;
@@ -251,7 +285,8 @@ public class AMD64Binary {
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        {
             AMD64Move.move(crb, masm, result, x);
             opcode.emit(masm, size, asRegister(result), (AMD64Address) crb.recordDataReferenceInCode(y, alignment));
         }
@@ -261,7 +296,8 @@ public class AMD64Binary {
      * Instruction that has two {@link AllocatableValue} operands and one
      * {@link DataSectionReference} operand.
      */
-    public static class DataThreeOp extends AMD64LIRInstruction {
+    public static class DataThreeOp extends AMD64LIRInstruction
+    {
         public static final LIRInstructionClass<DataThreeOp> TYPE = LIRInstructionClass.create(DataThreeOp.class);
 
         @Opcode private final AMD64RRMOp opcode;
@@ -273,11 +309,13 @@ public class AMD64Binary {
 
         private final int alignment;
 
-        public DataThreeOp(AMD64RRMOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, JavaConstant y) {
+        public DataThreeOp(AMD64RRMOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, JavaConstant y)
+        {
             this(opcode, size, result, x, y, y.getJavaKind().getByteCount());
         }
 
-        public DataThreeOp(AMD64RRMOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, JavaConstant y, int alignment) {
+        public DataThreeOp(AMD64RRMOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, JavaConstant y, int alignment)
+        {
             super(TYPE);
             this.opcode = opcode;
             this.size = size;
@@ -290,7 +328,8 @@ public class AMD64Binary {
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        {
             opcode.emit(masm, size, asRegister(result), asRegister(x), (AMD64Address) crb.recordDataReferenceInCode(y, alignment));
         }
     }
@@ -299,7 +338,8 @@ public class AMD64Binary {
      * Instruction that has one {@link AllocatableValue} operand and one {@link AMD64AddressValue
      * memory} operand.
      */
-    public static class MemoryTwoOp extends AMD64LIRInstruction implements ImplicitNullCheck {
+    public static class MemoryTwoOp extends AMD64LIRInstruction implements ImplicitNullCheck
+    {
         public static final LIRInstructionClass<MemoryTwoOp> TYPE = LIRInstructionClass.create(MemoryTwoOp.class);
 
         @Opcode private final AMD64RMOp opcode;
@@ -311,7 +351,8 @@ public class AMD64Binary {
 
         @State protected LIRFrameState state;
 
-        public MemoryTwoOp(AMD64RMOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, AMD64AddressValue y, LIRFrameState state) {
+        public MemoryTwoOp(AMD64RMOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, AMD64AddressValue y, LIRFrameState state)
+        {
             super(TYPE);
             this.opcode = opcode;
             this.size = size;
@@ -324,23 +365,28 @@ public class AMD64Binary {
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        {
             AMD64Move.move(crb, masm, result, x);
-            if (state != null) {
+            if (state != null)
+            {
                 crb.recordImplicitException(masm.position(), state);
             }
             opcode.emit(masm, size, asRegister(result), y.toAddress());
         }
 
         @Override
-        public void verify() {
+        public void verify()
+        {
             super.verify();
             assert differentRegisters(result, y) || sameRegister(x, y);
         }
 
         @Override
-        public boolean makeNullCheckFor(Value value, LIRFrameState nullCheckState, int implicitNullCheckLimit) {
-            if (state == null && y.isValidImplicitNullCheckFor(value, implicitNullCheckLimit)) {
+        public boolean makeNullCheckFor(Value value, LIRFrameState nullCheckState, int implicitNullCheckLimit)
+        {
+            if (state == null && y.isValidImplicitNullCheckFor(value, implicitNullCheckLimit))
+            {
                 state = nullCheckState;
                 return true;
             }
@@ -352,7 +398,8 @@ public class AMD64Binary {
      * Instruction that has one {@link AllocatableValue} operand and one {@link AMD64AddressValue
      * memory} operand.
      */
-    public static class MemoryThreeOp extends AMD64LIRInstruction implements ImplicitNullCheck {
+    public static class MemoryThreeOp extends AMD64LIRInstruction implements ImplicitNullCheck
+    {
         public static final LIRInstructionClass<MemoryThreeOp> TYPE = LIRInstructionClass.create(MemoryThreeOp.class);
 
         @Opcode private final AMD64RRMOp opcode;
@@ -364,7 +411,8 @@ public class AMD64Binary {
 
         @State protected LIRFrameState state;
 
-        public MemoryThreeOp(AMD64RRMOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, AMD64AddressValue y, LIRFrameState state) {
+        public MemoryThreeOp(AMD64RRMOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, AMD64AddressValue y, LIRFrameState state)
+        {
             super(TYPE);
             this.opcode = opcode;
             this.size = size;
@@ -377,22 +425,27 @@ public class AMD64Binary {
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
-            if (state != null) {
+        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        {
+            if (state != null)
+            {
                 crb.recordImplicitException(masm.position(), state);
             }
             opcode.emit(masm, size, asRegister(result), asRegister(x), y.toAddress());
         }
 
         @Override
-        public void verify() {
+        public void verify()
+        {
             super.verify();
             assert differentRegisters(result, y) || sameRegister(x, y);
         }
 
         @Override
-        public boolean makeNullCheckFor(Value value, LIRFrameState nullCheckState, int implicitNullCheckLimit) {
-            if (state == null && y.isValidImplicitNullCheckFor(value, implicitNullCheckLimit)) {
+        public boolean makeNullCheckFor(Value value, LIRFrameState nullCheckState, int implicitNullCheckLimit)
+        {
+            if (state == null && y.isValidImplicitNullCheckFor(value, implicitNullCheckLimit))
+            {
                 state = nullCheckState;
                 return true;
             }
@@ -404,7 +457,8 @@ public class AMD64Binary {
      * Instruction with a separate result operand, one {@link AllocatableValue} input and one 32-bit
      * immediate input.
      */
-    public static class RMIOp extends AMD64LIRInstruction {
+    public static class RMIOp extends AMD64LIRInstruction
+    {
         public static final LIRInstructionClass<RMIOp> TYPE = LIRInstructionClass.create(RMIOp.class);
 
         @Opcode private final AMD64RMIOp opcode;
@@ -414,7 +468,8 @@ public class AMD64Binary {
         @Use({REG, STACK}) protected AllocatableValue x;
         private final int y;
 
-        public RMIOp(AMD64RMIOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, int y) {
+        public RMIOp(AMD64RMIOp opcode, OperandSize size, AllocatableValue result, AllocatableValue x, int y)
+        {
             super(TYPE);
             this.opcode = opcode;
             this.size = size;
@@ -425,10 +480,14 @@ public class AMD64Binary {
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
-            if (isRegister(x)) {
+        public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        {
+            if (isRegister(x))
+            {
                 opcode.emit(masm, size, asRegister(result), asRegister(x), y);
-            } else {
+            }
+            else
+            {
                 assert isStackSlot(x);
                 opcode.emit(masm, size, asRegister(result), (AMD64Address) crb.asAddress(x), y);
             }

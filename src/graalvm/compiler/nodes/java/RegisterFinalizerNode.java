@@ -30,30 +30,31 @@ import jdk.vm.ci.meta.Assumptions.AssumptionResult;
  * This node is used to perform the finalizer registration at the end of the java.lang.Object
  * constructor.
  */
-// @formatter:off
 @NodeInfo(cycles = CYCLES_UNKNOWN,
           cyclesRationale = "We cannot estimate the time of a runtime call.",
           size = SIZE_8,
           sizeRationale = "Rough estimation for register handling & calling")
-// @formatter:on
-public final class RegisterFinalizerNode extends AbstractStateSplit implements Canonicalizable.Unary<ValueNode>, LIRLowerable, Virtualizable, DeoptimizingNode.DeoptAfter {
-
+public final class RegisterFinalizerNode extends AbstractStateSplit implements Canonicalizable.Unary<ValueNode>, LIRLowerable, Virtualizable, DeoptimizingNode.DeoptAfter
+{
     public static final NodeClass<RegisterFinalizerNode> TYPE = NodeClass.create(RegisterFinalizerNode.class);
     @OptionalInput(State) FrameState deoptState;
     @Input ValueNode value;
 
-    public RegisterFinalizerNode(ValueNode value) {
+    public RegisterFinalizerNode(ValueNode value)
+    {
         super(TYPE, StampFactory.forVoid());
         this.value = value;
     }
 
     @Override
-    public ValueNode getValue() {
+    public ValueNode getValue()
+    {
         return value;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         // Note that an unconditional call to the runtime routine is made without
         // checking that the object actually has a finalizer. This requires the
         // runtime routine to do the check.
@@ -65,13 +66,18 @@ public final class RegisterFinalizerNode extends AbstractStateSplit implements C
      * Determines if the compiler should emit code to test whether a given object has a finalizer
      * that must be registered with the runtime upon object initialization.
      */
-    public static boolean mayHaveFinalizer(ValueNode object, Assumptions assumptions) {
+    public static boolean mayHaveFinalizer(ValueNode object, Assumptions assumptions)
+    {
         ObjectStamp objectStamp = (ObjectStamp) object.stamp(NodeView.DEFAULT);
-        if (objectStamp.isExactType()) {
+        if (objectStamp.isExactType())
+        {
             return objectStamp.type().hasFinalizer();
-        } else if (objectStamp.type() != null) {
+        }
+        else if (objectStamp.type() != null)
+        {
             AssumptionResult<Boolean> result = objectStamp.type().hasFinalizableSubclass();
-            if (result.canRecordTo(assumptions)) {
+            if (result.canRecordTo(assumptions))
+            {
                 result.recordTo(assumptions);
                 return result.getResult();
             }
@@ -80,12 +86,15 @@ public final class RegisterFinalizerNode extends AbstractStateSplit implements C
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue) {
+    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    {
         NodeView view = NodeView.from(tool);
-        if (!(forValue.stamp(view) instanceof ObjectStamp)) {
+        if (!(forValue.stamp(view) instanceof ObjectStamp))
+        {
             return this;
         }
-        if (!mayHaveFinalizer(forValue, graph().getAssumptions())) {
+        if (!mayHaveFinalizer(forValue, graph().getAssumptions()))
+        {
             return null;
         }
 
@@ -93,15 +102,18 @@ public final class RegisterFinalizerNode extends AbstractStateSplit implements C
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool) {
+    public void virtualize(VirtualizerTool tool)
+    {
         ValueNode alias = tool.getAlias(getValue());
-        if (alias instanceof VirtualObjectNode && !((VirtualObjectNode) alias).type().hasFinalizer()) {
+        if (alias instanceof VirtualObjectNode && !((VirtualObjectNode) alias).type().hasFinalizer())
+        {
             tool.delete();
         }
     }
 
     @Override
-    public boolean canDeoptimize() {
+    public boolean canDeoptimize()
+    {
         return true;
     }
 

@@ -29,59 +29,79 @@ import jdk.vm.ci.meta.TriState;
  * .
  */
 @NodeInfo(cycles = CYCLES_32, size = SIZE_32)
-public class InstanceOfDynamicNode extends BinaryOpLogicNode implements Canonicalizable.Binary<ValueNode>, Lowerable {
+public class InstanceOfDynamicNode extends BinaryOpLogicNode implements Canonicalizable.Binary<ValueNode>, Lowerable
+{
     public static final NodeClass<InstanceOfDynamicNode> TYPE = NodeClass.create(InstanceOfDynamicNode.class);
 
     private final boolean allowNull;
     private final boolean exact;
 
-    public static LogicNode create(Assumptions assumptions, ConstantReflectionProvider constantReflection, ValueNode mirror, ValueNode object, boolean allowNull, boolean exact) {
+    public static LogicNode create(Assumptions assumptions, ConstantReflectionProvider constantReflection, ValueNode mirror, ValueNode object, boolean allowNull, boolean exact)
+    {
         LogicNode synonym = findSynonym(assumptions, constantReflection, mirror, object, allowNull, exact);
-        if (synonym != null) {
+        if (synonym != null)
+        {
             return synonym;
         }
         return new InstanceOfDynamicNode(mirror, object, allowNull, exact);
     }
 
-    public static LogicNode create(Assumptions assumptions, ConstantReflectionProvider constantReflection, ValueNode mirror, ValueNode object, boolean allowNull) {
+    public static LogicNode create(Assumptions assumptions, ConstantReflectionProvider constantReflection, ValueNode mirror, ValueNode object, boolean allowNull)
+    {
         return create(assumptions, constantReflection, mirror, object, allowNull, false);
     }
 
-    protected InstanceOfDynamicNode(ValueNode mirror, ValueNode object, boolean allowNull, boolean exact) {
+    protected InstanceOfDynamicNode(ValueNode mirror, ValueNode object, boolean allowNull, boolean exact)
+    {
         super(TYPE, mirror, object);
         this.allowNull = allowNull;
         this.exact = exact;
         assert mirror.getStackKind() == JavaKind.Object || mirror.getStackKind() == JavaKind.Illegal : mirror.getStackKind();
     }
 
-    public boolean isMirror() {
+    public boolean isMirror()
+    {
         return getMirrorOrHub().getStackKind() == JavaKind.Object;
     }
 
-    public boolean isHub() {
+    public boolean isHub()
+    {
         return !isMirror();
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
-    private static LogicNode findSynonym(Assumptions assumptions, ConstantReflectionProvider constantReflection, ValueNode forMirror, ValueNode forObject, boolean allowNull, boolean exact) {
-        if (forMirror.isConstant()) {
+    private static LogicNode findSynonym(Assumptions assumptions, ConstantReflectionProvider constantReflection, ValueNode forMirror, ValueNode forObject, boolean allowNull, boolean exact)
+    {
+        if (forMirror.isConstant())
+        {
             ResolvedJavaType t = constantReflection.asJavaType(forMirror.asConstant());
-            if (t != null) {
-                if (t.isPrimitive()) {
-                    if (allowNull) {
+            if (t != null)
+            {
+                if (t.isPrimitive())
+                {
+                    if (allowNull)
+                    {
                         return IsNullNode.create(forObject);
-                    } else {
+                    }
+                    else
+                    {
                         return LogicConstantNode.contradiction();
                     }
-                } else {
+                }
+                else
+                {
                     TypeReference type = exact ? TypeReference.createExactTrusted(t) : TypeReference.createTrusted(assumptions, t);
-                    if (allowNull) {
+                    if (allowNull)
+                    {
                         return InstanceOfNode.createAllowNull(type, forObject, null, null);
-                    } else {
+                    }
+                    else
+                    {
                         return InstanceOfNode.create(type, forObject);
                     }
                 }
@@ -90,48 +110,58 @@ public class InstanceOfDynamicNode extends BinaryOpLogicNode implements Canonica
         return null;
     }
 
-    public ValueNode getMirrorOrHub() {
+    public ValueNode getMirrorOrHub()
+    {
         return this.getX();
     }
 
-    public ValueNode getObject() {
+    public ValueNode getObject()
+    {
         return this.getY();
     }
 
     @Override
-    public LogicNode canonical(CanonicalizerTool tool, ValueNode forMirror, ValueNode forObject) {
+    public LogicNode canonical(CanonicalizerTool tool, ValueNode forMirror, ValueNode forObject)
+    {
         LogicNode result = findSynonym(tool.getAssumptions(), tool.getConstantReflection(), forMirror, forObject, allowNull, exact);
-        if (result != null) {
+        if (result != null)
+        {
             return result;
         }
         return this;
     }
 
-    public void setMirror(ValueNode newObject) {
+    public void setMirror(ValueNode newObject)
+    {
         this.updateUsages(x, newObject);
         this.x = newObject;
     }
 
-    public boolean allowsNull() {
+    public boolean allowsNull()
+    {
         return allowNull;
     }
 
-    public boolean isExact() {
+    public boolean isExact()
+    {
         return exact;
     }
 
     @Override
-    public Stamp getSucceedingStampForX(boolean negated, Stamp xStamp, Stamp yStamp) {
+    public Stamp getSucceedingStampForX(boolean negated, Stamp xStamp, Stamp yStamp)
+    {
         return null;
     }
 
     @Override
-    public Stamp getSucceedingStampForY(boolean negated, Stamp xStamp, Stamp yStamp) {
+    public Stamp getSucceedingStampForY(boolean negated, Stamp xStamp, Stamp yStamp)
+    {
         return null;
     }
 
     @Override
-    public TriState tryFold(Stamp xStamp, Stamp yStamp) {
+    public TriState tryFold(Stamp xStamp, Stamp yStamp)
+    {
         return TriState.UNKNOWN;
     }
 }

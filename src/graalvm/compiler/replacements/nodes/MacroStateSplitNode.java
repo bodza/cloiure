@@ -24,41 +24,49 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * {@link MemoryCheckpoint}.
  */
 @NodeInfo
-public abstract class MacroStateSplitNode extends MacroNode implements StateSplit, MemoryCheckpoint.Single {
-
+public abstract class MacroStateSplitNode extends MacroNode implements StateSplit, MemoryCheckpoint.Single
+{
     public static final NodeClass<MacroStateSplitNode> TYPE = NodeClass.create(MacroStateSplitNode.class);
     @OptionalInput(InputType.State) protected FrameState stateAfter;
 
-    protected MacroStateSplitNode(NodeClass<? extends MacroNode> c, InvokeKind invokeKind, ResolvedJavaMethod targetMethod, int bci, StampPair returnStamp, ValueNode... arguments) {
+    protected MacroStateSplitNode(NodeClass<? extends MacroNode> c, InvokeKind invokeKind, ResolvedJavaMethod targetMethod, int bci, StampPair returnStamp, ValueNode... arguments)
+    {
         super(c, invokeKind, targetMethod, bci, returnStamp, arguments);
     }
 
     @Override
-    public FrameState stateAfter() {
+    public FrameState stateAfter()
+    {
         return stateAfter;
     }
 
     @Override
-    public void setStateAfter(FrameState x) {
+    public void setStateAfter(FrameState x)
+    {
         assert x == null || x.isAlive() : "frame state must be in a graph";
         updateUsages(stateAfter, x);
         stateAfter = x;
     }
 
     @Override
-    public boolean hasSideEffect() {
+    public boolean hasSideEffect()
+    {
         return true;
     }
 
     @Override
-    public LocationIdentity getLocationIdentity() {
+    public LocationIdentity getLocationIdentity()
+    {
         return LocationIdentity.any();
     }
 
-    protected void replaceSnippetInvokes(StructuredGraph snippetGraph) {
-        for (MethodCallTargetNode call : snippetGraph.getNodes(MethodCallTargetNode.TYPE)) {
+    protected void replaceSnippetInvokes(StructuredGraph snippetGraph)
+    {
+        for (MethodCallTargetNode call : snippetGraph.getNodes(MethodCallTargetNode.TYPE))
+        {
             Invoke invoke = call.invoke();
-            if (!call.targetMethod().equals(getTargetMethod())) {
+            if (!call.targetMethod().equals(getTargetMethod()))
+            {
                 throw new GraalError("unexpected invoke %s in snippet", getClass().getSimpleName());
             }
             assert invoke.stateAfter().bci == BytecodeFrame.AFTER_BCI;

@@ -20,8 +20,8 @@ import jdk.vm.ci.meta.JavaKind;
  * instructions.
  */
 @NodeInfo
-public abstract class ValueNode extends graalvm.compiler.graph.Node implements ValueNodeInterface {
-
+public abstract class ValueNode extends graalvm.compiler.graph.Node implements ValueNodeInterface
+{
     public static final NodeClass<ValueNode> TYPE = NodeClass.create(ValueNode.class);
     /**
      * The kind of this value. This is {@link JavaKind#Void} for instructions that produce no value.
@@ -29,22 +29,26 @@ public abstract class ValueNode extends graalvm.compiler.graph.Node implements V
      */
     protected Stamp stamp;
 
-    public ValueNode(NodeClass<? extends ValueNode> c, Stamp stamp) {
+    public ValueNode(NodeClass<? extends ValueNode> c, Stamp stamp)
+    {
         super(c);
         this.stamp = stamp;
     }
 
-    public final Stamp stamp(NodeView view) {
+    public final Stamp stamp(NodeView view)
+    {
         return view.stamp(this);
     }
 
-    public final void setStamp(Stamp stamp) {
+    public final void setStamp(Stamp stamp)
+    {
         this.stamp = stamp;
         assert !isAlive() || !inferStamp() : "setStamp called on a node that overrides inferStamp: " + this;
     }
 
     @Override
-    public final StructuredGraph graph() {
+    public final StructuredGraph graph()
+    {
         return (StructuredGraph) super.graph();
     }
 
@@ -55,10 +59,14 @@ public abstract class ValueNode extends graalvm.compiler.graph.Node implements V
      *
      * @return true if the stamp has changed, false otherwise.
      */
-    protected final boolean updateStamp(Stamp newStamp) {
-        if (newStamp == null || newStamp.equals(stamp)) {
+    protected final boolean updateStamp(Stamp newStamp)
+    {
+        if (newStamp == null || newStamp.equals(stamp))
+        {
             return false;
-        } else {
+        }
+        else
+        {
             stamp = newStamp;
             return true;
         }
@@ -72,11 +80,13 @@ public abstract class ValueNode extends graalvm.compiler.graph.Node implements V
      *
      * @return true if the stamp has changed, false otherwise.
      */
-    public boolean inferStamp() {
+    public boolean inferStamp()
+    {
         return false;
     }
 
-    public final JavaKind getStackKind() {
+    public final JavaKind getStackKind()
+    {
         return stamp(NodeView.DEFAULT).getStackKind();
     }
 
@@ -85,18 +95,22 @@ public abstract class ValueNode extends graalvm.compiler.graph.Node implements V
      *
      * @return {@code true} if this value is a constant
      */
-    public final boolean isConstant() {
+    public final boolean isConstant()
+    {
         return this instanceof ConstantNode;
     }
 
-    private static final NodePredicate IS_CONSTANT = new NodePredicate() {
+    private static final NodePredicate IS_CONSTANT = new NodePredicate()
+    {
         @Override
-        public boolean apply(Node n) {
+        public boolean apply(Node n)
+        {
             return n instanceof ConstantNode;
         }
     };
 
-    public static NodePredicate isConstantPredicate() {
+    public static NodePredicate isConstantPredicate()
+    {
         return IS_CONSTANT;
     }
 
@@ -105,7 +119,8 @@ public abstract class ValueNode extends graalvm.compiler.graph.Node implements V
      *
      * @return {@code true} if this value represents the null constant
      */
-    public final boolean isNullConstant() {
+    public final boolean isNullConstant()
+    {
         JavaConstant value = asJavaConstant();
         return value != null && value.isNull();
     }
@@ -116,37 +131,51 @@ public abstract class ValueNode extends graalvm.compiler.graph.Node implements V
      * @return the {@link JavaConstant} represented by this value if it is a constant; {@code null}
      *         otherwise
      */
-    public final Constant asConstant() {
-        if (this instanceof ConstantNode) {
+    public final Constant asConstant()
+    {
+        if (this instanceof ConstantNode)
+        {
             return ((ConstantNode) this).getValue();
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
 
-    public final boolean isJavaConstant() {
+    public final boolean isJavaConstant()
+    {
         return isConstant() && asConstant() instanceof JavaConstant;
     }
 
-    public final JavaConstant asJavaConstant() {
+    public final JavaConstant asJavaConstant()
+    {
         Constant value = asConstant();
-        if (value instanceof JavaConstant) {
+        if (value instanceof JavaConstant)
+        {
             return (JavaConstant) value;
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
 
     @Override
-    public ValueNode asNode() {
+    public ValueNode asNode()
+    {
         return this;
     }
 
     @Override
-    public boolean isAllowedUsageType(InputType type) {
-        if (getStackKind() != JavaKind.Void && type == InputType.Value) {
+    public boolean isAllowedUsageType(InputType type)
+    {
+        if (getStackKind() != JavaKind.Void && type == InputType.Value)
+        {
             return true;
-        } else {
+        }
+        else
+        {
             return super.isAllowedUsageType(type);
         }
     }
@@ -158,9 +187,12 @@ public abstract class ValueNode extends graalvm.compiler.graph.Node implements V
      * @param nodeValueMap
      * @return true if this node has other usages, false otherwise
      */
-    public boolean hasUsagesOtherThan(ValueNode node, NodeValueMap nodeValueMap) {
-        for (Node usage : usages()) {
-            if (usage != node && usage instanceof ValueNode && nodeValueMap.hasOperand(usage)) {
+    public boolean hasUsagesOtherThan(ValueNode node, NodeValueMap nodeValueMap)
+    {
+        for (Node usage : usages())
+        {
+            if (usage != node && usage instanceof ValueNode && nodeValueMap.hasOperand(usage))
+            {
                 return true;
             }
         }
@@ -168,18 +200,20 @@ public abstract class ValueNode extends graalvm.compiler.graph.Node implements V
     }
 
     @Override
-    protected void replaceAtUsages(Node other, Predicate<Node> filter, Node toBeDeleted) {
+    protected void replaceAtUsages(Node other, Predicate<Node> filter, Node toBeDeleted)
+    {
         super.replaceAtUsages(other, filter, toBeDeleted);
         assert checkReplaceAtUsagesInvariants(other);
     }
 
-    private boolean checkReplaceAtUsagesInvariants(Node other) {
+    private boolean checkReplaceAtUsagesInvariants(Node other)
+    {
         assert other == null || other instanceof ValueNode;
-        if (this.hasUsages() && !this.stamp(NodeView.DEFAULT).isEmpty() && !(other instanceof PhiNode) && other != null) {
+        if (this.hasUsages() && !this.stamp(NodeView.DEFAULT).isEmpty() && !(other instanceof PhiNode) && other != null)
+        {
             assert ((ValueNode) other).stamp(NodeView.DEFAULT).getClass() == stamp(NodeView.DEFAULT).getClass() : "stamp have to be of same class";
             boolean morePrecise = ((ValueNode) other).stamp(NodeView.DEFAULT).join(stamp(NodeView.DEFAULT)).equals(((ValueNode) other).stamp(NodeView.DEFAULT));
-            assert morePrecise : "stamp can only get more precise " + toString(Verbosity.All) + " " +
-                            other.toString(Verbosity.All);
+            assert morePrecise : "stamp can only get more precise " + toString(Verbosity.All) + " " + other.toString(Verbosity.All);
         }
         return true;
     }

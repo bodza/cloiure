@@ -2,8 +2,8 @@ package graalvm.compiler.phases.contract;
 
 import graalvm.compiler.nodeinfo.NodeSize;
 
-public interface PhaseSizeContract {
-
+public interface PhaseSizeContract
+{
     /**
      * Returns a factor {@code >=1} that determines what the final code size in terms of the sum of
      * the node code sizes {@link NodeSize} of all nodes is.
@@ -12,7 +12,8 @@ public interface PhaseSizeContract {
      */
     float codeSizeIncrease();
 
-    default boolean checkContract() {
+    default boolean checkContract()
+    {
         return true;
     }
 

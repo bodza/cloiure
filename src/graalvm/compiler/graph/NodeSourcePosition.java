@@ -16,8 +16,8 @@ import jdk.vm.ci.meta.JavaMethod;
 import jdk.vm.ci.meta.MetaUtil;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
-public class NodeSourcePosition extends BytecodePosition {
-
+public class NodeSourcePosition extends BytecodePosition
+{
     private static final boolean STRICT_SOURCE_POSITION = Boolean.getBoolean("debug.graal.SourcePositionStrictChecks");
     private static final boolean SOURCE_POSITION_BYTECODES = Boolean.getBoolean("debug.graal.SourcePositionDisassemble");
 
@@ -28,101 +28,124 @@ public class NodeSourcePosition extends BytecodePosition {
     /**
      * Remove marker frames.
      */
-    public NodeSourcePosition trim() {
-        if (marker != None) {
+    public NodeSourcePosition trim()
+    {
+        if (marker != None)
+        {
             return null;
         }
         NodeSourcePosition caller = getCaller();
-        if (caller != null) {
+        if (caller != null)
+        {
             caller = caller.trim();
         }
-        if (caller != getCaller()) {
+        if (caller != getCaller())
+        {
             return new NodeSourcePosition(caller, getMethod(), getBCI());
         }
         return this;
     }
 
-    public ResolvedJavaMethod getRootMethod() {
+    public ResolvedJavaMethod getRootMethod()
+    {
         NodeSourcePosition cur = this;
-        while (cur.getCaller() != null) {
+        while (cur.getCaller() != null)
+        {
             cur = cur.getCaller();
         }
         return cur.getMethod();
     }
 
-    public boolean verifyRootMethod(ResolvedJavaMethod root) {
+    public boolean verifyRootMethod(ResolvedJavaMethod root)
+    {
         JavaMethod currentRoot = getRootMethod();
-        assert root.equals(currentRoot) || root.getName().equals(currentRoot.getName()) && root.getSignature().toMethodDescriptor().equals(currentRoot.getSignature().toMethodDescriptor()) &&
-                        root.getDeclaringClass().getName().equals(currentRoot.getDeclaringClass().getName()) : root + " " + currentRoot;
+        assert root.equals(currentRoot) || root.getName().equals(currentRoot.getName()) && root.getSignature().toMethodDescriptor().equals(currentRoot.getSignature().toMethodDescriptor()) && root.getDeclaringClass().getName().equals(currentRoot.getDeclaringClass().getName()) : root + " " + currentRoot;
         return true;
     }
 
-    enum Marker {
+    enum Marker
+    {
         None,
         Placeholder,
         Substitution
     }
 
-    public NodeSourcePosition(NodeSourcePosition caller, ResolvedJavaMethod method, int bci) {
+    public NodeSourcePosition(NodeSourcePosition caller, ResolvedJavaMethod method, int bci)
+    {
         this(caller, method, bci, None);
     }
 
-    public NodeSourcePosition(NodeSourcePosition caller, ResolvedJavaMethod method, int bci, Marker marker) {
+    public NodeSourcePosition(NodeSourcePosition caller, ResolvedJavaMethod method, int bci, Marker marker)
+    {
         this(null, caller, method, bci, marker);
-
     }
 
-    public NodeSourcePosition(SourceLanguagePosition sourceLanguagePosition, NodeSourcePosition caller, ResolvedJavaMethod method, int bci) {
+    public NodeSourcePosition(SourceLanguagePosition sourceLanguagePosition, NodeSourcePosition caller, ResolvedJavaMethod method, int bci)
+    {
         this(sourceLanguagePosition, caller, method, bci, None);
     }
 
-    public NodeSourcePosition(SourceLanguagePosition sourceLanguagePosition, NodeSourcePosition caller, ResolvedJavaMethod method, int bci, Marker marker) {
+    public NodeSourcePosition(SourceLanguagePosition sourceLanguagePosition, NodeSourcePosition caller, ResolvedJavaMethod method, int bci, Marker marker)
+    {
         super(caller, method, bci);
-        if (caller == null) {
+        if (caller == null)
+        {
             this.hashCode = 31 * bci + method.hashCode();
-        } else {
+        }
+        else
+        {
             this.hashCode = caller.hashCode * 7 + 31 * bci + method.hashCode();
         }
         this.marker = marker;
         this.sourceLanguagePosition = sourceLanguagePosition;
     }
 
-    public static NodeSourcePosition placeholder(ResolvedJavaMethod method) {
+    public static NodeSourcePosition placeholder(ResolvedJavaMethod method)
+    {
         return new NodeSourcePosition(null, method, BytecodeFrame.INVALID_FRAMESTATE_BCI, Placeholder);
     }
 
-    public static NodeSourcePosition placeholder(ResolvedJavaMethod method, int bci) {
+    public static NodeSourcePosition placeholder(ResolvedJavaMethod method, int bci)
+    {
         return new NodeSourcePosition(null, method, bci, Placeholder);
     }
 
-    public boolean isPlaceholder() {
+    public boolean isPlaceholder()
+    {
         return marker == Placeholder;
     }
 
-    public static NodeSourcePosition substitution(ResolvedJavaMethod method) {
+    public static NodeSourcePosition substitution(ResolvedJavaMethod method)
+    {
         return substitution(null, method);
     }
 
-    public static NodeSourcePosition substitution(NodeSourcePosition caller, ResolvedJavaMethod method) {
+    public static NodeSourcePosition substitution(NodeSourcePosition caller, ResolvedJavaMethod method)
+    {
         return new NodeSourcePosition(caller, method, BytecodeFrame.INVALID_FRAMESTATE_BCI, Substitution);
     }
 
-    public boolean isSubstitution() {
+    public boolean isSubstitution()
+    {
         return marker == Substitution;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
+    public boolean equals(Object obj)
+    {
+        if (obj == this)
+        {
             return true;
         }
-        if (obj != null && getClass() == obj.getClass()) {
+        if (obj != null && getClass() == obj.getClass())
+        {
             NodeSourcePosition that = (NodeSourcePosition) obj;
-            if (hashCode != that.hashCode) {
+            if (hashCode != that.hashCode)
+            {
                 return false;
             }
-            if (this.getBCI() == that.getBCI() && Objects.equals(this.getMethod(), that.getMethod()) && Objects.equals(this.getCaller(), that.getCaller()) &&
-                            Objects.equals(this.sourceLanguagePosition, that.sourceLanguagePosition)) {
+            if (this.getBCI() == that.getBCI() && Objects.equals(this.getMethod(), that.getMethod()) && Objects.equals(this.getCaller(), that.getCaller()) && Objects.equals(this.sourceLanguagePosition, that.sourceLanguagePosition))
+            {
                 return true;
             }
         }
@@ -130,92 +153,115 @@ public class NodeSourcePosition extends BytecodePosition {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return hashCode;
     }
 
-    public int depth() {
+    public int depth()
+    {
         int d = 0;
         NodeSourcePosition pos = this;
-        while (pos != null) {
+        while (pos != null)
+        {
             d++;
             pos = pos.getCaller();
         }
         return d;
     }
 
-    public SourceLanguagePosition getSourceLanguage() {
+    public SourceLanguagePosition getSourceLanguage()
+    {
         return sourceLanguagePosition;
     }
 
     @Override
-    public NodeSourcePosition getCaller() {
+    public NodeSourcePosition getCaller()
+    {
         return (NodeSourcePosition) super.getCaller();
     }
 
-    public NodeSourcePosition addCaller(SourceLanguagePosition newSourceLanguagePosition, NodeSourcePosition link) {
+    public NodeSourcePosition addCaller(SourceLanguagePosition newSourceLanguagePosition, NodeSourcePosition link)
+    {
         return addCaller(newSourceLanguagePosition, link, false);
     }
 
-    public NodeSourcePosition addCaller(NodeSourcePosition link) {
+    public NodeSourcePosition addCaller(NodeSourcePosition link)
+    {
         return addCaller(null, link, false);
     }
 
-    public NodeSourcePosition addCaller(NodeSourcePosition link, boolean isSubstitution) {
+    public NodeSourcePosition addCaller(NodeSourcePosition link, boolean isSubstitution)
+    {
         return addCaller(null, link, isSubstitution);
     }
 
-    public NodeSourcePosition addCaller(SourceLanguagePosition newSourceLanguagePosition, NodeSourcePosition link, boolean isSubstitution) {
-        if (getCaller() == null) {
-            if (isPlaceholder()) {
+    public NodeSourcePosition addCaller(SourceLanguagePosition newSourceLanguagePosition, NodeSourcePosition link, boolean isSubstitution)
+    {
+        if (getCaller() == null)
+        {
+            if (isPlaceholder())
+            {
                 return new NodeSourcePosition(newSourceLanguagePosition, link, getMethod(), 0);
             }
             assert link == null || isSubstitution || verifyCaller(this, link) : link;
 
             return new NodeSourcePosition(newSourceLanguagePosition, link, getMethod(), getBCI());
-        } else {
+        }
+        else
+        {
             return new NodeSourcePosition(getCaller().addCaller(newSourceLanguagePosition, link, isSubstitution), getMethod(), getBCI());
         }
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         StringBuilder sb = new StringBuilder(100);
         NodeSourcePosition pos = this;
-        while (pos != null) {
+        while (pos != null)
+        {
             format(sb, pos);
-            if (pos.sourceLanguagePosition != null) {
+            if (pos.sourceLanguagePosition != null)
+            {
                 sb.append(" source=" + pos.sourceLanguagePosition.toShortString());
             }
             pos = pos.getCaller();
-            if (pos != null) {
+            if (pos != null)
+            {
                 sb.append(CodeUtil.NEW_LINE);
             }
         }
         return sb.toString();
     }
 
-    private static void format(StringBuilder sb, NodeSourcePosition pos) {
+    private static void format(StringBuilder sb, NodeSourcePosition pos)
+    {
         MetaUtil.appendLocation(sb.append("at "), pos.getMethod(), pos.getBCI());
-        if (SOURCE_POSITION_BYTECODES) {
+        if (SOURCE_POSITION_BYTECODES)
+        {
             String disassembly = BytecodeDisassembler.disassembleOne(pos.getMethod(), pos.getBCI());
-            if (disassembly != null && disassembly.length() > 0) {
+            if (disassembly != null && disassembly.length() > 0)
+            {
                 sb.append(" // ");
                 sb.append(disassembly);
             }
         }
     }
 
-    String shallowToString() {
+    String shallowToString()
+    {
         StringBuilder sb = new StringBuilder(100);
         format(sb, this);
         return sb.toString();
     }
 
-    public boolean verify() {
+    public boolean verify()
+    {
         NodeSourcePosition current = this;
         NodeSourcePosition caller = getCaller();
-        while (caller != null) {
+        while (caller != null)
+        {
             assert verifyCaller(current, caller) : current;
             current = caller;
             caller = caller.getCaller();
@@ -223,11 +269,14 @@ public class NodeSourcePosition extends BytecodePosition {
         return true;
     }
 
-    private static boolean verifyCaller(NodeSourcePosition current, NodeSourcePosition caller) {
-        if (!STRICT_SOURCE_POSITION) {
+    private static boolean verifyCaller(NodeSourcePosition current, NodeSourcePosition caller)
+    {
+        if (!STRICT_SOURCE_POSITION)
+        {
             return true;
         }
-        if (BytecodeFrame.isPlaceholderBci(caller.getBCI())) {
+        if (BytecodeFrame.isPlaceholderBci(caller.getBCI()))
+        {
             return true;
         }
         int opcode = BytecodeDisassembler.getBytecodeAt(caller.getMethod(), caller.getBCI());
@@ -236,13 +285,7 @@ public class NodeSourcePosition extends BytecodePosition {
          * It's not really possible to match the declaring classes since this might be an interface
          * invoke. Matching name and signature probably provides enough accuracy.
          */
-        assert method == null || (method.getName().equals(current.getMethod().getName()) &&
-                        method.getSignature().equals(current.getMethod().getSignature())) ||
-                        caller.getMethod().getName().equals("linkToTargetMethod") ||
-                        opcode == Bytecodes.INVOKEDYNAMIC ||
-                        caller.getMethod().getDeclaringClass().getName().startsWith("Ljava/lang/invoke/LambdaForm$") ||
-                        current.getMethod().getName().equals("callInlined") : "expected " + method + " but found " +
-                                        current.getMethod();
+        assert method == null || (method.getName().equals(current.getMethod().getName()) && method.getSignature().equals(current.getMethod().getSignature())) || caller.getMethod().getName().equals("linkToTargetMethod") || opcode == Bytecodes.INVOKEDYNAMIC || caller.getMethod().getDeclaringClass().getName().startsWith("Ljava/lang/invoke/LambdaForm$") || current.getMethod().getName().equals("callInlined") : "expected " + method + " but found " + current.getMethod();
         return true;
     }
 }

@@ -16,22 +16,26 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
  * biased to the object on the current thread.
  */
 @NodeInfo(cycles = CYCLES_0, size = SIZE_0)
-public final class FastAcquireBiasedLockNode extends FixedWithNextNode implements LIRLowerable {
+public final class FastAcquireBiasedLockNode extends FixedWithNextNode implements LIRLowerable
+{
     public static final NodeClass<FastAcquireBiasedLockNode> TYPE = NodeClass.create(FastAcquireBiasedLockNode.class);
 
     @Input ValueNode object;
 
-    public FastAcquireBiasedLockNode(ValueNode object) {
+    public FastAcquireBiasedLockNode(ValueNode object)
+    {
         super(TYPE, StampFactory.forVoid());
         this.object = object;
     }
 
-    public ValueNode object() {
+    public ValueNode object()
+    {
         return object;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool generator) {
+    public void generate(NodeLIRBuilderTool generator)
+    {
         // This is just a marker node so it generates nothing
     }
 

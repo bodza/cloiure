@@ -14,8 +14,8 @@ import org.graalvm.word.WordBase;
  * checks. However, these methods use read- or write barriers. When the VM uses compressed pointers,
  * then readObject and writeObject methods access compressed pointers.
  */
-public final class BarrieredAccess {
-
+public final class BarrieredAccess
+{
     /**
      * Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      * <p>

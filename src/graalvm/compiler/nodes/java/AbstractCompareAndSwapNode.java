@@ -21,39 +21,45 @@ import org.graalvm.word.LocationIdentity;
  * Low-level atomic compare-and-swap operation.
  */
 @NodeInfo(allowedUsageTypes = {InputType.Value, Memory})
-public abstract class AbstractCompareAndSwapNode extends FixedAccessNode implements StateSplit, LIRLowerableAccess, MemoryCheckpoint.Single {
+public abstract class AbstractCompareAndSwapNode extends FixedAccessNode implements StateSplit, LIRLowerableAccess, MemoryCheckpoint.Single
+{
     public static final NodeClass<AbstractCompareAndSwapNode> TYPE = NodeClass.create(AbstractCompareAndSwapNode.class);
     @Input ValueNode expectedValue;
     @Input ValueNode newValue;
     @OptionalInput(State) FrameState stateAfter;
 
     @Override
-    public FrameState stateAfter() {
+    public FrameState stateAfter()
+    {
         return stateAfter;
     }
 
     @Override
-    public void setStateAfter(FrameState x) {
+    public void setStateAfter(FrameState x)
+    {
         assert x == null || x.isAlive() : "frame state must be in a graph";
         updateUsages(stateAfter, x);
         stateAfter = x;
     }
 
     @Override
-    public boolean hasSideEffect() {
+    public boolean hasSideEffect()
+    {
         return true;
     }
 
-    public ValueNode getExpectedValue() {
+    public ValueNode getExpectedValue()
+    {
         return expectedValue;
     }
 
-    public ValueNode getNewValue() {
+    public ValueNode getNewValue()
+    {
         return newValue;
     }
 
-    public AbstractCompareAndSwapNode(NodeClass<? extends AbstractCompareAndSwapNode> c, AddressNode address, LocationIdentity location, ValueNode expectedValue, ValueNode newValue,
-                    BarrierType barrierType, Stamp stamp) {
+    public AbstractCompareAndSwapNode(NodeClass<? extends AbstractCompareAndSwapNode> c, AddressNode address, LocationIdentity location, ValueNode expectedValue, ValueNode newValue, BarrierType barrierType, Stamp stamp)
+    {
         super(c, address, location, stamp, barrierType);
         assert expectedValue.getStackKind() == newValue.getStackKind();
         this.expectedValue = expectedValue;
@@ -61,12 +67,14 @@ public abstract class AbstractCompareAndSwapNode extends FixedAccessNode impleme
     }
 
     @Override
-    public boolean canNullCheck() {
+    public boolean canNullCheck()
+    {
         return false;
     }
 
     @Override
-    public Stamp getAccessStamp() {
+    public Stamp getAccessStamp()
+    {
         return expectedValue.stamp(NodeView.DEFAULT).meet(newValue.stamp(NodeView.DEFAULT)).unrestricted();
     }
 }

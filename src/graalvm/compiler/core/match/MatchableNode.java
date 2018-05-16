@@ -16,8 +16,8 @@ import graalvm.compiler.nodes.ValueNode;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Repeatable(value = MatchableNodes.class)
-public @interface MatchableNode {
-
+public @interface MatchableNode
+{
     /**
      * The {@link ValueNode} subclass this annotation describes. These annotations might work better
      * if they were directly on the node being described but that may complicate the annotation

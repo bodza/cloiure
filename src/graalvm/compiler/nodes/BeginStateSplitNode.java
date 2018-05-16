@@ -13,26 +13,30 @@ import graalvm.compiler.nodeinfo.NodeInfo;
  * to have frames states.
  */
 @NodeInfo
-public abstract class BeginStateSplitNode extends AbstractBeginNode implements StateSplit {
-
+public abstract class BeginStateSplitNode extends AbstractBeginNode implements StateSplit
+{
     public static final NodeClass<BeginStateSplitNode> TYPE = NodeClass.create(BeginStateSplitNode.class);
     @OptionalInput(InputType.State) protected FrameState stateAfter;
 
-    protected BeginStateSplitNode(NodeClass<? extends BeginStateSplitNode> c) {
+    protected BeginStateSplitNode(NodeClass<? extends BeginStateSplitNode> c)
+    {
         super(c);
     }
 
-    protected BeginStateSplitNode(NodeClass<? extends BeginStateSplitNode> c, Stamp stamp) {
+    protected BeginStateSplitNode(NodeClass<? extends BeginStateSplitNode> c, Stamp stamp)
+    {
         super(c, stamp);
     }
 
     @Override
-    public FrameState stateAfter() {
+    public FrameState stateAfter()
+    {
         return stateAfter;
     }
 
     @Override
-    public void setStateAfter(FrameState x) {
+    public void setStateAfter(FrameState x)
+    {
         assert x == null || x.isAlive() : "frame state must be in a graph";
         updateUsages(stateAfter, x);
         stateAfter = x;
@@ -42,7 +46,8 @@ public abstract class BeginStateSplitNode extends AbstractBeginNode implements S
      * A begin node has no side effect.
      */
     @Override
-    public boolean hasSideEffect() {
+    public boolean hasSideEffect()
+    {
         return false;
     }
 }

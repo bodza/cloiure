@@ -23,8 +23,8 @@ import jdk.vm.ci.meta.JavaKind;
  * value matched the expected value.
  */
 @NodeInfo(allowedUsageTypes = {Value, Memory}, cycles = CYCLES_8, size = SIZE_8)
-public final class UnsafeCompareAndSwapNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single {
-
+public final class UnsafeCompareAndSwapNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
+{
     public static final NodeClass<UnsafeCompareAndSwapNode> TYPE = NodeClass.create(UnsafeCompareAndSwapNode.class);
     @Input ValueNode object;
     @Input ValueNode offset;
@@ -34,7 +34,8 @@ public final class UnsafeCompareAndSwapNode extends AbstractMemoryCheckpoint imp
     private final JavaKind valueKind;
     private final LocationIdentity locationIdentity;
 
-    public UnsafeCompareAndSwapNode(ValueNode object, ValueNode offset, ValueNode expected, ValueNode newValue, JavaKind valueKind, LocationIdentity locationIdentity) {
+    public UnsafeCompareAndSwapNode(ValueNode object, ValueNode offset, ValueNode expected, ValueNode newValue, JavaKind valueKind, LocationIdentity locationIdentity)
+    {
         super(TYPE, StampFactory.forKind(JavaKind.Boolean.getStackKind()));
         assert expected.stamp(NodeView.DEFAULT).isCompatible(newValue.stamp(NodeView.DEFAULT));
         this.object = object;
@@ -45,33 +46,40 @@ public final class UnsafeCompareAndSwapNode extends AbstractMemoryCheckpoint imp
         this.locationIdentity = locationIdentity;
     }
 
-    public ValueNode object() {
+    public ValueNode object()
+    {
         return object;
     }
 
-    public ValueNode offset() {
+    public ValueNode offset()
+    {
         return offset;
     }
 
-    public ValueNode expected() {
+    public ValueNode expected()
+    {
         return expected;
     }
 
-    public ValueNode newValue() {
+    public ValueNode newValue()
+    {
         return newValue;
     }
 
-    public JavaKind getValueKind() {
+    public JavaKind getValueKind()
+    {
         return valueKind;
     }
 
     @Override
-    public LocationIdentity getLocationIdentity() {
+    public LocationIdentity getLocationIdentity()
+    {
         return locationIdentity;
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 }

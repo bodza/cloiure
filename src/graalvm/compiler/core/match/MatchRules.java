@@ -10,6 +10,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface MatchRules {
+public @interface MatchRules
+{
     MatchRule[] value();
 }

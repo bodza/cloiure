@@ -21,29 +21,34 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * The {@code NewMultiArrayNode} represents an allocation of a multi-dimensional object array.
  */
 @NodeInfo(cycles = CYCLES_8, size = SIZE_8)
-public class NewMultiArrayNode extends DeoptimizingFixedWithNextNode implements Lowerable, ArrayLengthProvider {
-
+public class NewMultiArrayNode extends DeoptimizingFixedWithNextNode implements Lowerable, ArrayLengthProvider
+{
     public static final NodeClass<NewMultiArrayNode> TYPE = NodeClass.create(NewMultiArrayNode.class);
     @Input protected NodeInputList<ValueNode> dimensions;
     protected final ResolvedJavaType type;
 
-    public ValueNode dimension(int index) {
+    public ValueNode dimension(int index)
+    {
         return dimensions.get(index);
     }
 
-    public int dimensionCount() {
+    public int dimensionCount()
+    {
         return dimensions.size();
     }
 
-    public NodeList<ValueNode> dimensions() {
+    public NodeList<ValueNode> dimensions()
+    {
         return dimensions;
     }
 
-    public NewMultiArrayNode(ResolvedJavaType type, ValueNode[] dimensions) {
+    public NewMultiArrayNode(ResolvedJavaType type, ValueNode[] dimensions)
+    {
         this(TYPE, type, dimensions);
     }
 
-    protected NewMultiArrayNode(NodeClass<? extends NewMultiArrayNode> c, ResolvedJavaType type, ValueNode[] dimensions) {
+    protected NewMultiArrayNode(NodeClass<? extends NewMultiArrayNode> c, ResolvedJavaType type, ValueNode[] dimensions)
+    {
         super(c, StampFactory.objectNonNull(TypeReference.createExactTrusted(type)));
         this.type = type;
         this.dimensions = new NodeInputList<>(this, dimensions);
@@ -51,21 +56,25 @@ public class NewMultiArrayNode extends DeoptimizingFixedWithNextNode implements 
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
-    public ResolvedJavaType type() {
+    public ResolvedJavaType type()
+    {
         return type;
     }
 
     @Override
-    public boolean canDeoptimize() {
+    public boolean canDeoptimize()
+    {
         return true;
     }
 
     @Override
-    public ValueNode length() {
+    public ValueNode length()
+    {
         return dimension(0);
     }
 }

@@ -4,8 +4,8 @@ import graalvm.compiler.nodes.extended.GuardedNode;
 import graalvm.compiler.nodes.memory.address.AddressNode;
 import org.graalvm.word.LocationIdentity;
 
-public interface Access extends GuardedNode, HeapAccess {
-
+public interface Access extends GuardedNode, HeapAccess
+{
     AddressNode getAddress();
 
     void setAddress(AddressNode address);
@@ -13,5 +13,4 @@ public interface Access extends GuardedNode, HeapAccess {
     LocationIdentity getLocationIdentity();
 
     boolean canNullCheck();
-
 }

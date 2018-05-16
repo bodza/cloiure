@@ -11,82 +11,97 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * Direct access to the bytecode of a {@link ResolvedJavaMethod} that will reflect any
  * instrumentation and rewriting performed on the {@link ResolvedJavaMethod}.
  */
-public class ResolvedJavaMethodBytecode implements Bytecode {
-
+public class ResolvedJavaMethodBytecode implements Bytecode
+{
     private final ResolvedJavaMethod method;
     private final BytecodeProvider origin;
 
-    public ResolvedJavaMethodBytecode(ResolvedJavaMethod method) {
+    public ResolvedJavaMethodBytecode(ResolvedJavaMethod method)
+    {
         this(method, ResolvedJavaMethodBytecodeProvider.INSTANCE);
     }
 
-    public ResolvedJavaMethodBytecode(ResolvedJavaMethod method, BytecodeProvider origin) {
+    public ResolvedJavaMethodBytecode(ResolvedJavaMethod method, BytecodeProvider origin)
+    {
         this.method = method;
         this.origin = origin;
     }
 
     @Override
-    public BytecodeProvider getOrigin() {
+    public BytecodeProvider getOrigin()
+    {
         return origin;
     }
 
     @Override
-    public ResolvedJavaMethod getMethod() {
+    public ResolvedJavaMethod getMethod()
+    {
         return method;
     }
 
     @Override
-    public byte[] getCode() {
+    public byte[] getCode()
+    {
         return method.getCode();
     }
 
     @Override
-    public int getCodeSize() {
+    public int getCodeSize()
+    {
         return method.getCodeSize();
     }
 
     @Override
-    public int getMaxStackSize() {
+    public int getMaxStackSize()
+    {
         return method.getMaxStackSize();
     }
 
     @Override
-    public int getMaxLocals() {
+    public int getMaxLocals()
+    {
         return method.getMaxLocals();
     }
 
     @Override
-    public ConstantPool getConstantPool() {
+    public ConstantPool getConstantPool()
+    {
         return method.getConstantPool();
     }
 
     @Override
-    public LineNumberTable getLineNumberTable() {
+    public LineNumberTable getLineNumberTable()
+    {
         return method.getLineNumberTable();
     }
 
     @Override
-    public LocalVariableTable getLocalVariableTable() {
+    public LocalVariableTable getLocalVariableTable()
+    {
         return method.getLocalVariableTable();
     }
 
     @Override
-    public ExceptionHandler[] getExceptionHandlers() {
+    public ExceptionHandler[] getExceptionHandlers()
+    {
         return method.getExceptionHandlers();
     }
 
     @Override
-    public StackTraceElement asStackTraceElement(int bci) {
+    public StackTraceElement asStackTraceElement(int bci)
+    {
         return method.asStackTraceElement(bci);
     }
 
     @Override
-    public ProfilingInfo getProfilingInfo() {
+    public ProfilingInfo getProfilingInfo()
+    {
         return method.getProfilingInfo();
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return getClass().getSimpleName() + method.format("<%h.%n(%p)>");
     }
 }

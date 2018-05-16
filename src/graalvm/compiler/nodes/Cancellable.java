@@ -8,6 +8,7 @@ import graalvm.compiler.core.common.CancellationBailoutException;
  * {@link #isCancelled} returns true, then the task will promptly terminate by means of throwing a
  * {@link CancellationBailoutException}.
  */
-public interface Cancellable {
+public interface Cancellable
+{
     boolean isCancelled();
 }

@@ -24,36 +24,44 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.TriState;
 
 @NodeInfo(shortName = "==", cycles = CYCLES_2)
-public final class FloatEqualsNode extends CompareNode implements BinaryCommutative<ValueNode> {
+public final class FloatEqualsNode extends CompareNode implements BinaryCommutative<ValueNode>
+{
     public static final NodeClass<FloatEqualsNode> TYPE = NodeClass.create(FloatEqualsNode.class);
     private static final FloatEqualsOp OP = new FloatEqualsOp();
 
-    public FloatEqualsNode(ValueNode x, ValueNode y) {
+    public FloatEqualsNode(ValueNode x, ValueNode y)
+    {
         super(TYPE, CanonicalCondition.EQ, false, x, y);
         assert x.stamp(NodeView.DEFAULT) instanceof FloatStamp && y.stamp(NodeView.DEFAULT) instanceof FloatStamp : x.stamp(NodeView.DEFAULT) + " " + y.stamp(NodeView.DEFAULT);
         assert x.stamp(NodeView.DEFAULT).isCompatible(y.stamp(NodeView.DEFAULT));
     }
 
-    public static LogicNode create(ValueNode x, ValueNode y, NodeView view) {
+    public static LogicNode create(ValueNode x, ValueNode y, NodeView view)
+    {
         LogicNode result = CompareNode.tryConstantFoldPrimitive(CanonicalCondition.EQ, x, y, false, view);
-        if (result != null) {
+        if (result != null)
+        {
             return result;
-        } else {
+        }
+        else
+        {
             return new FloatEqualsNode(x, y).maybeCommuteInputs();
         }
     }
 
-    public static LogicNode create(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth,
-                    ValueNode x, ValueNode y, NodeView view) {
+    public static LogicNode create(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, ValueNode x, ValueNode y, NodeView view)
+    {
         LogicNode value = OP.canonical(constantReflection, metaAccess, options, smallestCompareWidth, CanonicalCondition.EQ, false, x, y, view);
-        if (value != null) {
+        if (value != null)
+        {
             return value;
         }
         return create(x, y, view);
     }
 
     @Override
-    public boolean isIdentityComparison() {
+    public boolean isIdentityComparison()
+    {
         FloatStamp xStamp = (FloatStamp) x.stamp(NodeView.DEFAULT);
         FloatStamp yStamp = (FloatStamp) y.stamp(NodeView.DEFAULT);
         /*
@@ -66,32 +74,39 @@ public final class FloatEqualsNode extends CompareNode implements BinaryCommutat
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY) {
+    public Node canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    {
         NodeView view = NodeView.from(tool);
         ValueNode value = OP.canonical(tool.getConstantReflection(), tool.getMetaAccess(), tool.getOptions(), tool.smallestCompareWidth(), CanonicalCondition.EQ, unorderedIsTrue, forX, forY, view);
-        if (value != null) {
+        if (value != null)
+        {
             return value;
         }
         return this;
     }
 
-    public static class FloatEqualsOp extends CompareOp {
-
+    public static class FloatEqualsOp extends CompareOp
+    {
         @Override
-        public LogicNode canonical(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, CanonicalCondition condition,
-                        boolean unorderedIsTrue, ValueNode forX, ValueNode forY, NodeView view) {
+        public LogicNode canonical(ConstantReflectionProvider constantReflection, MetaAccessProvider metaAccess, OptionValues options, Integer smallestCompareWidth, CanonicalCondition condition, boolean unorderedIsTrue, ValueNode forX, ValueNode forY, NodeView view)
+        {
             LogicNode result = super.canonical(constantReflection, metaAccess, options, smallestCompareWidth, condition, unorderedIsTrue, forX, forY, view);
-            if (result != null) {
+            if (result != null)
+            {
                 return result;
             }
             Stamp xStampGeneric = forX.stamp(view);
             Stamp yStampGeneric = forY.stamp(view);
-            if (xStampGeneric instanceof FloatStamp && yStampGeneric instanceof FloatStamp) {
+            if (xStampGeneric instanceof FloatStamp && yStampGeneric instanceof FloatStamp)
+            {
                 FloatStamp xStamp = (FloatStamp) xStampGeneric;
                 FloatStamp yStamp = (FloatStamp) yStampGeneric;
-                if (GraphUtil.unproxify(forX) == GraphUtil.unproxify(forY) && xStamp.isNonNaN() && yStamp.isNonNaN()) {
+                if (GraphUtil.unproxify(forX) == GraphUtil.unproxify(forY) && xStamp.isNonNaN() && yStamp.isNonNaN())
+                {
                     return LogicConstantNode.tautology();
-                } else if (xStamp.alwaysDistinct(yStamp)) {
+                }
+                else if (xStamp.alwaysDistinct(yStamp))
+                {
                     return LogicConstantNode.contradiction();
                 }
             }
@@ -99,10 +114,14 @@ public final class FloatEqualsNode extends CompareNode implements BinaryCommutat
         }
 
         @Override
-        protected CompareNode duplicateModified(ValueNode newX, ValueNode newY, boolean unorderedIsTrue, NodeView view) {
-            if (newX.stamp(view) instanceof FloatStamp && newY.stamp(view) instanceof FloatStamp) {
+        protected CompareNode duplicateModified(ValueNode newX, ValueNode newY, boolean unorderedIsTrue, NodeView view)
+        {
+            if (newX.stamp(view) instanceof FloatStamp && newY.stamp(view) instanceof FloatStamp)
+            {
                 return new FloatEqualsNode(newX, newY);
-            } else if (newX.stamp(view) instanceof IntegerStamp && newY.stamp(view) instanceof IntegerStamp) {
+            }
+            else if (newX.stamp(view) instanceof IntegerStamp && newY.stamp(view) instanceof IntegerStamp)
+            {
                 return new IntegerEqualsNode(newX, newY);
             }
             throw GraalError.shouldNotReachHere();
@@ -110,29 +129,38 @@ public final class FloatEqualsNode extends CompareNode implements BinaryCommutat
     }
 
     @Override
-    public Stamp getSucceedingStampForX(boolean negated, Stamp xStamp, Stamp yStamp) {
-        if (!negated) {
+    public Stamp getSucceedingStampForX(boolean negated, Stamp xStamp, Stamp yStamp)
+    {
+        if (!negated)
+        {
             return xStamp.join(yStamp);
         }
         return null;
     }
 
     @Override
-    public Stamp getSucceedingStampForY(boolean negated, Stamp xStamp, Stamp yStamp) {
-        if (!negated) {
+    public Stamp getSucceedingStampForY(boolean negated, Stamp xStamp, Stamp yStamp)
+    {
+        if (!negated)
+        {
             return xStamp.join(yStamp);
         }
         return null;
     }
 
     @Override
-    public TriState tryFold(Stamp xStampGeneric, Stamp yStampGeneric) {
-        if (xStampGeneric instanceof FloatStamp && yStampGeneric instanceof FloatStamp) {
+    public TriState tryFold(Stamp xStampGeneric, Stamp yStampGeneric)
+    {
+        if (xStampGeneric instanceof FloatStamp && yStampGeneric instanceof FloatStamp)
+        {
             FloatStamp xStamp = (FloatStamp) xStampGeneric;
             FloatStamp yStamp = (FloatStamp) yStampGeneric;
-            if (xStamp.alwaysDistinct(yStamp)) {
+            if (xStamp.alwaysDistinct(yStamp))
+            {
                 return TriState.FALSE;
-            } else if (xStamp.neverDistinct(yStamp)) {
+            }
+            else if (xStamp.neverDistinct(yStamp))
+            {
                 return TriState.TRUE;
             }
         }

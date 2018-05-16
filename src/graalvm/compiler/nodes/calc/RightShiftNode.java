@@ -16,19 +16,22 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import jdk.vm.ci.code.CodeUtil;
 
 @NodeInfo(shortName = ">>")
-public final class RightShiftNode extends ShiftNode<Shr> {
-
+public final class RightShiftNode extends ShiftNode<Shr>
+{
     public static final NodeClass<RightShiftNode> TYPE = NodeClass.create(RightShiftNode.class);
 
-    public RightShiftNode(ValueNode x, ValueNode y) {
+    public RightShiftNode(ValueNode x, ValueNode y)
+    {
         super(TYPE, ArithmeticOpTable::getShr, x, y);
     }
 
-    public static ValueNode create(ValueNode x, ValueNode y, NodeView view) {
+    public static ValueNode create(ValueNode x, ValueNode y, NodeView view)
+    {
         ArithmeticOpTable.ShiftOp<Shr> op = ArithmeticOpTable.forStamp(x.stamp(view)).getShr();
         Stamp stamp = op.foldStamp(x.stamp(view), (IntegerStamp) y.stamp(view));
         ValueNode value = ShiftNode.canonical(op, stamp, x, y, view);
-        if (value != null) {
+        if (value != null)
+        {
             return value;
         }
 
@@ -36,44 +39,56 @@ public final class RightShiftNode extends ShiftNode<Shr> {
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY) {
+    public ValueNode canonical(CanonicalizerTool tool, ValueNode forX, ValueNode forY)
+    {
         NodeView view = NodeView.from(tool);
         ValueNode ret = super.canonical(tool, forX, forY);
-        if (ret != this) {
+        if (ret != this)
+        {
             return ret;
         }
 
         return canonical(this, getArithmeticOp(), stamp(view), forX, forY, view);
     }
 
-    private static ValueNode canonical(RightShiftNode rightShiftNode, ArithmeticOpTable.ShiftOp<Shr> op, Stamp stamp, ValueNode forX, ValueNode forY, NodeView view) {
+    private static ValueNode canonical(RightShiftNode rightShiftNode, ArithmeticOpTable.ShiftOp<Shr> op, Stamp stamp, ValueNode forX, ValueNode forY, NodeView view)
+    {
         RightShiftNode self = rightShiftNode;
-        if (forX.stamp(view) instanceof IntegerStamp && ((IntegerStamp) forX.stamp(view)).isPositive()) {
+        if (forX.stamp(view) instanceof IntegerStamp && ((IntegerStamp) forX.stamp(view)).isPositive())
+        {
             return new UnsignedRightShiftNode(forX, forY);
         }
 
-        if (forY.isConstant()) {
+        if (forY.isConstant())
+        {
             int amount = forY.asJavaConstant().asInt();
             int originalAmout = amount;
             int mask = op.getShiftAmountMask(stamp);
             amount &= mask;
-            if (amount == 0) {
+            if (amount == 0)
+            {
                 return forX;
             }
-            if (forX instanceof ShiftNode) {
+            if (forX instanceof ShiftNode)
+            {
                 ShiftNode<?> other = (ShiftNode<?>) forX;
-                if (other.getY().isConstant()) {
+                if (other.getY().isConstant())
+                {
                     int otherAmount = other.getY().asJavaConstant().asInt() & mask;
-                    if (other instanceof RightShiftNode) {
+                    if (other instanceof RightShiftNode)
+                    {
                         int total = amount + otherAmount;
-                        if (total != (total & mask)) {
+                        if (total != (total & mask))
+                        {
                             assert other.getX().stamp(view) instanceof IntegerStamp;
                             IntegerStamp istamp = (IntegerStamp) other.getX().stamp(view);
 
-                            if (istamp.isPositive()) {
+                            if (istamp.isPositive())
+                            {
                                 return ConstantNode.forIntegerKind(stamp.getStackKind(), 0);
                             }
-                            if (istamp.isStrictlyNegative()) {
+                            if (istamp.isStrictlyNegative())
+                            {
                                 return ConstantNode.forIntegerKind(stamp.getStackKind(), -1L);
                             }
 
@@ -88,24 +103,29 @@ public final class RightShiftNode extends ShiftNode<Shr> {
                     }
                 }
             }
-            if (originalAmout != amount) {
+            if (originalAmout != amount)
+            {
                 return new RightShiftNode(forX, ConstantNode.forInt(amount));
             }
         }
-        if (self == null) {
+        if (self == null)
+        {
             self = new RightShiftNode(forX, forY);
         }
         return self;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen) {
+    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    {
         nodeValueMap.setResult(this, gen.emitShr(nodeValueMap.operand(getX()), nodeValueMap.operand(getY())));
     }
 
     @Override
-    public boolean isNarrowable(int resultBits) {
-        if (super.isNarrowable(resultBits)) {
+    public boolean isNarrowable(int resultBits)
+    {
+        if (super.isNarrowable(resultBits))
+        {
             /*
              * For signed right shifts, the narrow can be done before the shift if the cut off bits
              * are all equal to the sign bit of the input. That's equivalent to the condition that
@@ -113,7 +133,9 @@ public final class RightShiftNode extends ShiftNode<Shr> {
              */
             IntegerStamp inputStamp = (IntegerStamp) getX().stamp(NodeView.DEFAULT);
             return CodeUtil.minValue(resultBits) <= inputStamp.lowerBound() && inputStamp.upperBound() <= CodeUtil.maxValue(resultBits);
-        } else {
+        }
+        else
+        {
             return false;
         }
     }

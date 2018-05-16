@@ -23,14 +23,15 @@ import graalvm.compiler.serviceprovider.GraalServices;
  * Manages a directory into which diagnostics such crash reports and dumps should be written. The
  * directory is archived and deleted when {@link #close()} is called.
  */
-public class DiagnosticsOutputDirectory {
-
+public class DiagnosticsOutputDirectory
+{
     /**
      * Use an illegal file name to denote that {@link #close()} has been called.
      */
     private static final String CLOSED = "\u0000";
 
-    public DiagnosticsOutputDirectory(OptionValues options) {
+    public DiagnosticsOutputDirectory(OptionValues options)
+    {
         this.options = options;
     }
 
@@ -44,17 +45,22 @@ public class DiagnosticsOutputDirectory {
      *
      * @returns the directory or {@code null} if the could not be created or has been deleted
      */
-    public String getPath() {
+    public String getPath()
+    {
         return getPath(true);
     }
 
-    private synchronized String getPath(boolean createIfNull) {
-        if (path == null && createIfNull) {
+    private synchronized String getPath(boolean createIfNull)
+    {
+        if (path == null && createIfNull)
+        {
             path = createPath();
             File dir = new File(path).getAbsoluteFile();
-            if (!dir.exists()) {
+            if (!dir.exists())
+            {
                 dir.mkdirs();
-                if (!dir.exists()) {
+                if (!dir.exists())
+                {
                     TTY.println("Warning: could not create Graal diagnostic directory " + dir);
                     return null;
                 }
@@ -70,11 +76,15 @@ public class DiagnosticsOutputDirectory {
      *
      * @return the path to be created
      */
-    protected String createPath() {
+    protected String createPath()
+    {
         Path baseDir;
-        try {
+        try
+        {
             baseDir = DebugOptions.getDumpDirectory(options);
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             // Default to current directory if there was a problem creating the
             // directory specified by the DumpPath option.
             baseDir = Paths.get(".");
@@ -85,31 +95,39 @@ public class DiagnosticsOutputDirectory {
     /**
      * Archives and deletes this directory if it exists.
      */
-    public void close() {
+    public void close()
+    {
         archiveAndDelete();
     }
 
     /**
      * Archives and deletes the {@linkplain #getPath() output directory} if it exists.
      */
-    private synchronized void archiveAndDelete() {
+    private synchronized void archiveAndDelete()
+    {
         String outDir = getPath(false);
-        if (outDir != null) {
+        if (outDir != null)
+        {
             // Notify other threads calling getPath() that the directory is deleted.
             // This attempts to mitigate other threads writing to the directory
             // while it is being archived and deleted.
             path = CLOSED;
 
             Path dir = Paths.get(outDir);
-            if (dir.toFile().exists()) {
+            if (dir.toFile().exists())
+            {
                 File zip = new File(outDir + ".zip").getAbsoluteFile();
                 List<Path> toDelete = new ArrayList<>();
-                try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zip))) {
+                try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zip)))
+                {
                     zos.setLevel(Deflater.BEST_COMPRESSION);
-                    Files.walkFileTree(dir, Collections.emptySet(), Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
+                    Files.walkFileTree(dir, Collections.emptySet(), Integer.MAX_VALUE, new SimpleFileVisitor<Path>()
+                    {
                         @Override
-                        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                            if (attrs.isRegularFile()) {
+                        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
+                        {
+                            if (attrs.isRegularFile())
+                            {
                                 String name = dir.relativize(file).toString();
                                 ZipEntry ze = new ZipEntry(name);
                                 zos.putNextEntry(ze);
@@ -121,31 +139,37 @@ public class DiagnosticsOutputDirectory {
                         }
 
                         @Override
-                        public FileVisitResult postVisitDirectory(Path d, IOException exc) throws IOException {
+                        public FileVisitResult postVisitDirectory(Path d, IOException exc) throws IOException
+                        {
                             toDelete.add(d);
                             return FileVisitResult.CONTINUE;
                         }
                     });
                     // Keep this in sync with the catch_files in common.hocon
                     TTY.println("Graal diagnostic output saved in %s", zip);
-                } catch (IOException e) {
-                    TTY.printf("IO error archiving %s:%n%s. The directory will not be deleted and must be " +
-                                    "manually removed once the VM exits.%n", dir, e);
+                }
+                catch (IOException e)
+                {
+                    TTY.printf("IO error archiving %s:%n%s. The directory will not be deleted and must be " + "manually removed once the VM exits.%n", dir, e);
                     toDelete.clear();
                 }
-                if (!toDelete.isEmpty()) {
+                if (!toDelete.isEmpty())
+                {
                     IOException lastDeletionError = null;
-                    for (Path p : toDelete) {
-                        try {
+                    for (Path p : toDelete)
+                    {
+                        try
+                        {
                             Files.delete(p);
-                        } catch (IOException e) {
+                        }
+                        catch (IOException e)
+                        {
                             lastDeletionError = e;
                         }
                     }
-                    if (lastDeletionError != null) {
-                        TTY.printf("IO error deleting %s:%n%s. This is most likely due to a compilation on " +
-                                        "another thread holding a handle to a file within this directory. " +
-                                        "Please delete the directory manually once the VM exits.%n", dir, lastDeletionError);
+                    if (lastDeletionError != null)
+                    {
+                        TTY.printf("IO error deleting %s:%n%s. This is most likely due to a compilation on " + "another thread holding a handle to a file within this directory. " + "Please delete the directory manually once the VM exits.%n", dir, lastDeletionError);
                     }
                 }
             }

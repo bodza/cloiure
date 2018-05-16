@@ -8,25 +8,29 @@ import graalvm.compiler.nodes.DeoptimizingFixedWithNextNode;
 import graalvm.compiler.nodes.ValueNode;
 
 @NodeInfo
-public abstract class FixedBinaryNode extends DeoptimizingFixedWithNextNode implements Canonicalizable.Binary<ValueNode> {
+public abstract class FixedBinaryNode extends DeoptimizingFixedWithNextNode implements Canonicalizable.Binary<ValueNode>
+{
     public static final NodeClass<FixedBinaryNode> TYPE = NodeClass.create(FixedBinaryNode.class);
 
     @Input protected ValueNode x;
     @Input protected ValueNode y;
 
-    public FixedBinaryNode(NodeClass<? extends FixedBinaryNode> c, Stamp stamp, ValueNode x, ValueNode y) {
+    public FixedBinaryNode(NodeClass<? extends FixedBinaryNode> c, Stamp stamp, ValueNode x, ValueNode y)
+    {
         super(c, stamp);
         this.x = x;
         this.y = y;
     }
 
     @Override
-    public ValueNode getX() {
+    public ValueNode getX()
+    {
         return x;
     }
 
     @Override
-    public ValueNode getY() {
+    public ValueNode getY()
+    {
         return y;
     }
 }

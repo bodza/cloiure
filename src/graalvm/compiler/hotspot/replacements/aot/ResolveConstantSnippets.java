@@ -41,63 +41,76 @@ import jdk.vm.ci.hotspot.HotSpotMetaspaceConstant;
 import jdk.vm.ci.hotspot.HotSpotObjectConstant;
 import jdk.vm.ci.meta.Constant;
 
-public class ResolveConstantSnippets implements Snippets {
-
+public class ResolveConstantSnippets implements Snippets
+{
     @Snippet
-    public static Object resolveObjectConstant(Object constant) {
+    public static Object resolveObjectConstant(Object constant)
+    {
         Object result = LoadConstantIndirectlyNode.loadObject(constant);
-        if (probability(VERY_SLOW_PATH_PROBABILITY, result == null)) {
+        if (probability(VERY_SLOW_PATH_PROBABILITY, result == null))
+        {
             result = ResolveConstantStubCall.resolveObject(constant, EncodedSymbolNode.encode(constant));
         }
         return result;
     }
 
     @Snippet
-    public static Object resolveDynamicConstant(Object constant) {
+    public static Object resolveDynamicConstant(Object constant)
+    {
         Object result = LoadConstantIndirectlyNode.loadObject(constant);
-        if (probability(VERY_SLOW_PATH_PROBABILITY, result == null)) {
+        if (probability(VERY_SLOW_PATH_PROBABILITY, result == null))
+        {
             result = ResolveDynamicStubCall.resolveInvoke(constant);
         }
         return result;
     }
 
     @Snippet
-    public static KlassPointer resolveKlassConstant(KlassPointer constant) {
+    public static KlassPointer resolveKlassConstant(KlassPointer constant)
+    {
         KlassPointer result = LoadConstantIndirectlyNode.loadKlass(constant);
-        if (probability(VERY_SLOW_PATH_PROBABILITY, result.isNull())) {
+        if (probability(VERY_SLOW_PATH_PROBABILITY, result.isNull()))
+        {
             result = ResolveConstantStubCall.resolveKlass(constant, EncodedSymbolNode.encode(constant));
         }
         return result;
     }
 
     @Snippet
-    public static MethodCountersPointer resolveMethodAndLoadCounters(MethodPointer method, KlassPointer klassHint) {
+    public static MethodCountersPointer resolveMethodAndLoadCounters(MethodPointer method, KlassPointer klassHint)
+    {
         MethodCountersPointer result = LoadMethodCountersIndirectlyNode.loadMethodCounters(method);
-        if (probability(VERY_SLOW_PATH_PROBABILITY, result.isNull())) {
+        if (probability(VERY_SLOW_PATH_PROBABILITY, result.isNull()))
+        {
             result = ResolveMethodAndLoadCountersStubCall.resolveMethodAndLoadCounters(method, klassHint, EncodedSymbolNode.encode(method));
         }
         return result;
     }
 
     @Snippet
-    public static KlassPointer initializeKlass(KlassPointer constant) {
+    public static KlassPointer initializeKlass(KlassPointer constant)
+    {
         KlassPointer result = LoadConstantIndirectlyNode.loadKlass(constant, HotSpotConstantLoadAction.INITIALIZE);
-        if (probability(VERY_SLOW_PATH_PROBABILITY, result.isNull())) {
+        if (probability(VERY_SLOW_PATH_PROBABILITY, result.isNull()))
+        {
             result = InitializeKlassStubCall.initializeKlass(constant, EncodedSymbolNode.encode(constant));
         }
         return result;
     }
 
     @Snippet
-    public static KlassPointer pureInitializeKlass(KlassPointer constant) {
+    public static KlassPointer pureInitializeKlass(KlassPointer constant)
+    {
         KlassPointer result = LoadConstantIndirectlyNode.loadKlass(constant, HotSpotConstantLoadAction.INITIALIZE);
-        if (probability(VERY_SLOW_PATH_PROBABILITY, result.isNull())) {
+        if (probability(VERY_SLOW_PATH_PROBABILITY, result.isNull()))
+        {
             result = ResolveConstantStubCall.resolveKlass(constant, EncodedSymbolNode.encode(constant), HotSpotConstantLoadAction.INITIALIZE);
         }
         return result;
     }
 
-    public static class Templates extends AbstractTemplates {
+    public static class Templates extends AbstractTemplates
+    {
         private final SnippetInfo resolveObjectConstant = snippet(ResolveConstantSnippets.class, "resolveObjectConstant");
         private final SnippetInfo resolveDynamicConstant = snippet(ResolveConstantSnippets.class, "resolveDynamicConstant");
         private final SnippetInfo resolveKlassConstant = snippet(ResolveConstantSnippets.class, "resolveKlassConstant");
@@ -105,11 +118,13 @@ public class ResolveConstantSnippets implements Snippets {
         private final SnippetInfo initializeKlass = snippet(ResolveConstantSnippets.class, "initializeKlass");
         private final SnippetInfo pureInitializeKlass = snippet(ResolveConstantSnippets.class, "pureInitializeKlass");
 
-        public Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, HotSpotProviders providers, TargetDescription target) {
+        public Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, HotSpotProviders providers, TargetDescription target)
+        {
             super(options, factories, providers, providers.getSnippetReflection(), target);
         }
 
-        public void lower(ResolveDynamicConstantNode resolveConstantNode, LoweringTool tool) {
+        public void lower(ResolveDynamicConstantNode resolveConstantNode, LoweringTool tool)
+        {
             StructuredGraph graph = resolveConstantNode.graph();
 
             ValueNode value = resolveConstantNode.value();
@@ -123,12 +138,14 @@ public class ResolveConstantSnippets implements Snippets {
             template.instantiate(providers.getMetaAccess(), resolveConstantNode, DEFAULT_REPLACER, args);
 
             assert resolveConstantNode.hasNoUsages();
-            if (!resolveConstantNode.isDeleted()) {
+            if (!resolveConstantNode.isDeleted())
+            {
                 GraphUtil.killWithUnusedFloatingInputs(resolveConstantNode);
             }
         }
 
-        public void lower(ResolveConstantNode resolveConstantNode, LoweringTool tool) {
+        public void lower(ResolveConstantNode resolveConstantNode, LoweringTool tool)
+        {
             StructuredGraph graph = resolveConstantNode.graph();
 
             ValueNode value = resolveConstantNode.value();
@@ -136,22 +153,30 @@ public class ResolveConstantSnippets implements Snippets {
             Constant constant = value.asConstant();
             SnippetInfo snippet = null;
 
-            if (constant instanceof HotSpotMetaspaceConstant) {
+            if (constant instanceof HotSpotMetaspaceConstant)
+            {
                 HotSpotMetaspaceConstant hotspotMetaspaceConstant = (HotSpotMetaspaceConstant) constant;
-                if (hotspotMetaspaceConstant.asResolvedJavaType() != null) {
-                    if (resolveConstantNode.action() == HotSpotConstantLoadAction.RESOLVE) {
+                if (hotspotMetaspaceConstant.asResolvedJavaType() != null)
+                {
+                    if (resolveConstantNode.action() == HotSpotConstantLoadAction.RESOLVE)
+                    {
                         snippet = resolveKlassConstant;
-                    } else {
+                    }
+                    else
+                    {
                         assert resolveConstantNode.action() == HotSpotConstantLoadAction.INITIALIZE;
                         snippet = pureInitializeKlass;
                     }
                 }
-            } else if (constant instanceof HotSpotObjectConstant) {
+            }
+            else if (constant instanceof HotSpotObjectConstant)
+            {
                 snippet = resolveObjectConstant;
                 HotSpotObjectConstant hotspotObjectConstant = (HotSpotObjectConstant) constant;
                 assert hotspotObjectConstant.isInternedString();
             }
-            if (snippet == null) {
+            if (snippet == null)
+            {
                 throw new GraalError("Unsupported constant type: " + constant);
             }
 
@@ -162,35 +187,41 @@ public class ResolveConstantSnippets implements Snippets {
             template.instantiate(providers.getMetaAccess(), resolveConstantNode, DEFAULT_REPLACER, args);
 
             assert resolveConstantNode.hasNoUsages();
-            if (!resolveConstantNode.isDeleted()) {
+            if (!resolveConstantNode.isDeleted())
+            {
                 GraphUtil.killWithUnusedFloatingInputs(resolveConstantNode);
             }
         }
 
-        public void lower(InitializeKlassNode initializeKlassNode, LoweringTool tool) {
+        public void lower(InitializeKlassNode initializeKlassNode, LoweringTool tool)
+        {
             StructuredGraph graph = initializeKlassNode.graph();
 
             ValueNode value = initializeKlassNode.value();
             assert value.isConstant() : "Expected a constant: " + value;
             Constant constant = value.asConstant();
 
-            if (constant instanceof HotSpotMetaspaceConstant) {
+            if (constant instanceof HotSpotMetaspaceConstant)
+            {
                 Arguments args = new Arguments(initializeKlass, graph.getGuardsStage(), tool.getLoweringStage());
                 args.add("constant", value);
 
                 SnippetTemplate template = template(initializeKlassNode, args);
                 template.instantiate(providers.getMetaAccess(), initializeKlassNode, DEFAULT_REPLACER, args);
                 assert initializeKlassNode.hasNoUsages();
-                if (!initializeKlassNode.isDeleted()) {
+                if (!initializeKlassNode.isDeleted())
+                {
                     GraphUtil.killWithUnusedFloatingInputs(initializeKlassNode);
                 }
-
-            } else {
+            }
+            else
+            {
                 throw new GraalError("Unsupported constant type: " + constant);
             }
         }
 
-        public void lower(ResolveMethodAndLoadCountersNode resolveMethodAndLoadCountersNode, LoweringTool tool) {
+        public void lower(ResolveMethodAndLoadCountersNode resolveMethodAndLoadCountersNode, LoweringTool tool)
+        {
             StructuredGraph graph = resolveMethodAndLoadCountersNode.graph();
             ConstantNode method = ConstantNode.forConstant(MethodPointerStamp.methodNonNull(), resolveMethodAndLoadCountersNode.getMethod().getEncoding(), tool.getMetaAccess(), graph);
             Arguments args = new Arguments(resolveMethodAndLoadCounters, graph.getGuardsStage(), tool.getLoweringStage());
@@ -200,7 +231,8 @@ public class ResolveConstantSnippets implements Snippets {
             template.instantiate(providers.getMetaAccess(), resolveMethodAndLoadCountersNode, DEFAULT_REPLACER, args);
 
             assert resolveMethodAndLoadCountersNode.hasNoUsages();
-            if (!resolveMethodAndLoadCountersNode.isDeleted()) {
+            if (!resolveMethodAndLoadCountersNode.isDeleted())
+            {
                 GraphUtil.killWithUnusedFloatingInputs(resolveMethodAndLoadCountersNode);
             }
         }

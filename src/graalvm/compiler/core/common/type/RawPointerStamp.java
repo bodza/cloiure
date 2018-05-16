@@ -14,88 +14,106 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * Type describing pointers to raw memory. This stamp is used for example for direct pointers to
  * fields or array elements.
  */
-public class RawPointerStamp extends AbstractPointerStamp {
-
-    protected RawPointerStamp() {
+public class RawPointerStamp extends AbstractPointerStamp
+{
+    protected RawPointerStamp()
+    {
         super(false, false);
     }
 
     @Override
-    public LIRKind getLIRKind(LIRKindTool tool) {
+    public LIRKind getLIRKind(LIRKindTool tool)
+    {
         return tool.getWordKind();
     }
 
     @Override
-    protected AbstractPointerStamp copyWith(boolean newNonNull, boolean newAlwaysNull) {
+    protected AbstractPointerStamp copyWith(boolean newNonNull, boolean newAlwaysNull)
+    {
         // RawPointerStamp is a singleton
         assert newNonNull == nonNull() && newAlwaysNull == alwaysNull();
         return this;
     }
 
     @Override
-    public Stamp meet(Stamp other) {
+    public Stamp meet(Stamp other)
+    {
         assert isCompatible(other);
         return this;
     }
 
     @Override
-    public Stamp improveWith(Stamp other) {
+    public Stamp improveWith(Stamp other)
+    {
         return this;
     }
 
     @Override
-    public Stamp join(Stamp other) {
+    public Stamp join(Stamp other)
+    {
         assert isCompatible(other);
         return this;
     }
 
     @Override
-    public Stamp unrestricted() {
+    public Stamp unrestricted()
+    {
         return this;
     }
 
     @Override
-    public Stamp empty() {
+    public Stamp empty()
+    {
         // there is no empty pointer stamp
         return this;
     }
 
     @Override
-    public boolean hasValues() {
+    public boolean hasValues()
+    {
         return true;
     }
 
     @Override
-    public ResolvedJavaType javaType(MetaAccessProvider metaAccess) {
+    public ResolvedJavaType javaType(MetaAccessProvider metaAccess)
+    {
         throw GraalError.shouldNotReachHere("pointer has no Java type");
     }
 
     @Override
-    public Stamp constant(Constant c, MetaAccessProvider meta) {
+    public Stamp constant(Constant c, MetaAccessProvider meta)
+    {
         return this;
     }
 
     @Override
-    public boolean isCompatible(Stamp other) {
+    public boolean isCompatible(Stamp other)
+    {
         return other instanceof RawPointerStamp;
     }
 
     @Override
-    public boolean isCompatible(Constant constant) {
-        if (constant instanceof PrimitiveConstant) {
+    public boolean isCompatible(Constant constant)
+    {
+        if (constant instanceof PrimitiveConstant)
+        {
             return ((PrimitiveConstant) constant).getJavaKind().isNumericInteger();
-        } else {
+        }
+        else
+        {
             return constant instanceof DataPointerConstant;
         }
     }
 
     @Override
-    public Constant readConstant(MemoryAccessProvider provider, Constant base, long displacement) {
+    public Constant readConstant(MemoryAccessProvider provider, Constant base, long displacement)
+    {
         throw GraalError.shouldNotReachHere("can't read raw pointer");
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "void*";
     }
 }

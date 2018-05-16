@@ -21,19 +21,22 @@ import graalvm.compiler.word.Word;
  * Substitutions for {@link java.lang.Thread} methods.
  */
 @ClassSubstitution(Thread.class)
-public class ThreadSubstitutions {
-
+public class ThreadSubstitutions
+{
     /**
      * hidden in 9.
      */
     @MethodSubstitution(isStatic = false, optional = true)
-    public static boolean isInterrupted(final Thread thisObject, boolean clearInterrupted) {
+    public static boolean isInterrupted(final Thread thisObject, boolean clearInterrupted)
+    {
         Word javaThread = CurrentJavaThreadNode.get();
         Object thread = javaThread.readObject(threadObjectOffset(INJECTED_VMCONFIG), JAVA_THREAD_THREAD_OBJECT_LOCATION);
-        if (thisObject == thread) {
+        if (thisObject == thread)
+        {
             Word osThread = javaThread.readWord(osThreadOffset(INJECTED_VMCONFIG), JAVA_THREAD_OSTHREAD_LOCATION);
             boolean interrupted = osThread.readInt(osThreadInterruptedOffset(INJECTED_VMCONFIG), any()) != 0;
-            if (!interrupted || !clearInterrupted) {
+            if (!interrupted || !clearInterrupted)
+            {
                 return interrupted;
             }
         }

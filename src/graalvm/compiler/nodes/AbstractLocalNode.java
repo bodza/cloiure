@@ -10,12 +10,13 @@ import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.calc.FloatingNode;
 
 @NodeInfo(cycles = CYCLES_0, size = SIZE_1)
-public abstract class AbstractLocalNode extends FloatingNode {
-
+public abstract class AbstractLocalNode extends FloatingNode
+{
     public static final NodeClass<AbstractLocalNode> TYPE = NodeClass.create(AbstractLocalNode.class);
     protected final int index;
 
-    protected AbstractLocalNode(NodeClass<? extends AbstractLocalNode> c, int index, Stamp stamp) {
+    protected AbstractLocalNode(NodeClass<? extends AbstractLocalNode> c, int index, Stamp stamp)
+    {
         super(c, stamp);
         this.index = index;
     }
@@ -25,15 +26,20 @@ public abstract class AbstractLocalNode extends FloatingNode {
      *
      * @return the index
      */
-    public int index() {
+    public int index()
+    {
         return index;
     }
 
     @Override
-    public String toString(Verbosity verbosity) {
-        if (verbosity == Verbosity.Name) {
+    public String toString(Verbosity verbosity)
+    {
+        if (verbosity == Verbosity.Name)
+        {
             return super.toString(Verbosity.Name) + "(" + index + ")";
-        } else {
+        }
+        else
+        {
             return super.toString(verbosity);
         }
     }

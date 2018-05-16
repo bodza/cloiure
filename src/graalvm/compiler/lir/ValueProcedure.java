@@ -11,8 +11,8 @@ import jdk.vm.ci.meta.Value;
  * Similar to {@link InstructionValueProcedure} but without an {@link LIRInstruction} parameter.
  */
 @FunctionalInterface
-public interface ValueProcedure extends InstructionValueProcedure {
-
+public interface ValueProcedure extends InstructionValueProcedure
+{
     /**
      * Iterator method to be overwritten.
      *
@@ -24,7 +24,8 @@ public interface ValueProcedure extends InstructionValueProcedure {
     Value doValue(Value value, OperandMode mode, EnumSet<OperandFlag> flags);
 
     @Override
-    default Value doValue(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags) {
+    default Value doValue(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
+    {
         return doValue(value, mode, flags);
     }
 }

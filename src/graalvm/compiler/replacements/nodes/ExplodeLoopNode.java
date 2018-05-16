@@ -20,24 +20,32 @@ import graalvm.compiler.nodes.LoopBeginNode;
  * @see VarargsParameter
  */
 @NodeInfo(cycles = CYCLES_0, size = SIZE_0)
-public final class ExplodeLoopNode extends FixedWithNextNode {
+public final class ExplodeLoopNode extends FixedWithNextNode
+{
     public static final NodeClass<ExplodeLoopNode> TYPE = NodeClass.create(ExplodeLoopNode.class);
 
-    public ExplodeLoopNode() {
+    public ExplodeLoopNode()
+    {
         super(TYPE, StampFactory.forVoid());
     }
 
-    public LoopBeginNode findLoopBegin() {
+    public LoopBeginNode findLoopBegin()
+    {
         Node currentNext = next();
         ArrayList<Node> succs = new ArrayList<>();
-        while (!(currentNext instanceof LoopBeginNode)) {
+        while (!(currentNext instanceof LoopBeginNode))
+        {
             assert currentNext != null : "cannot find loop after " + this;
-            for (Node n : currentNext.cfgSuccessors()) {
+            for (Node n : currentNext.cfgSuccessors())
+            {
                 succs.add(n);
             }
-            if (succs.size() == 1 && succs.get(0) != currentNext) {
+            if (succs.size() == 1 && succs.get(0) != currentNext)
+            {
                 currentNext = succs.get(0);
-            } else {
+            }
+            else
+            {
                 return null;
             }
         }

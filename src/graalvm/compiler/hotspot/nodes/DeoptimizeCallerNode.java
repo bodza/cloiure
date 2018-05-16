@@ -18,20 +18,22 @@ import jdk.vm.ci.meta.DeoptimizationReason;
  * Removes the current frame and tail calls the uncommon trap routine.
  */
 @NodeInfo(shortName = "DeoptCaller", nameTemplate = "DeoptCaller {p#reason/s}", cycles = CYCLES_8, size = SIZE_8)
-public final class DeoptimizeCallerNode extends ControlSinkNode implements LIRLowerable {
-
+public final class DeoptimizeCallerNode extends ControlSinkNode implements LIRLowerable
+{
     public static final NodeClass<DeoptimizeCallerNode> TYPE = NodeClass.create(DeoptimizeCallerNode.class);
     protected final DeoptimizationAction action;
     protected final DeoptimizationReason reason;
 
-    public DeoptimizeCallerNode(DeoptimizationAction action, DeoptimizationReason reason) {
+    public DeoptimizeCallerNode(DeoptimizationAction action, DeoptimizationReason reason)
+    {
         super(TYPE, StampFactory.forVoid());
         this.action = action;
         this.reason = reason;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitDeoptimizeCaller(action, reason);
     }
 

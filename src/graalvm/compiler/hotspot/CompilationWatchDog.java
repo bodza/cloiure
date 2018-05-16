@@ -27,10 +27,10 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * more than {@value Options#NonFatalIdenticalCompilationSnapshots} contiguous identical stack
  * traces are seen, the watch dog reports a stuck compilation and exits the VM.
  */
-class CompilationWatchDog extends Thread implements AutoCloseable {
-
-    public static class Options {
-        // @formatter:off
+class CompilationWatchDog extends Thread implements AutoCloseable
+{
+    public static class Options
+    {
         @Option(help = "Delay in seconds before watch dog monitoring a compilation (0 disables monitoring).", type = OptionType.Debug)
         public static final OptionKey<Double> CompilationWatchDogStartDelay = new OptionKey<>(0.0D);
         @Option(help = "Interval in seconds between a watch dog reporting stack traces for long running compilations.", type = OptionType.Debug)
@@ -38,10 +38,10 @@ class CompilationWatchDog extends Thread implements AutoCloseable {
         @Option(help = "Number of contiguous identical compiler thread stack traces allowed before the VM exits " +
                        "on the basis of a stuck compilation.", type = OptionType.Debug)
         public static final OptionKey<Integer> NonFatalIdenticalCompilationSnapshots = new OptionKey<>(20);
-        // @formatter:on
     }
 
-    private enum WatchDogState {
+    private enum WatchDogState
+    {
         /**
          * The watch dog thread sleeps currently, either no method is currently compiled, or no
          * method is compiled long enough to be monitored.
@@ -85,7 +85,8 @@ class CompilationWatchDog extends Thread implements AutoCloseable {
     private int numberOfIdenticalStackTraces;
     private StackTraceElement[] lastStackTrace;
 
-    CompilationWatchDog(Thread compilerThread, long startDelayMilliseconds, long stackTraceIntervalMilliseconds, int nonFatalIdenticalCompilationSnapshots) {
+    CompilationWatchDog(Thread compilerThread, long startDelayMilliseconds, long stackTraceIntervalMilliseconds, int nonFatalIdenticalCompilationSnapshots)
+    {
         this.compilerThread = compilerThread;
         this.setName("WatchDog" + getId() + "[" + compilerThread.getName() + "]");
         this.setPriority(Thread.MAX_PRIORITY);
@@ -95,18 +96,21 @@ class CompilationWatchDog extends Thread implements AutoCloseable {
         this.nonFatalIdenticalCompilationSnapshots = nonFatalIdenticalCompilationSnapshots;
     }
 
-    public void startCompilation(ResolvedJavaMethod method, int id) {
+    public void startCompilation(ResolvedJavaMethod method, int id)
+    {
         trace("start %s", fmt(method));
         this.currentMethod = method;
         this.currentId = id;
     }
 
-    public void stopCompilation() {
+    public void stopCompilation()
+    {
         trace(" stop %s", fmt(currentMethod));
         this.currentMethod = null;
     }
 
-    private void reset() {
+    private void reset()
+    {
         elapsed = 0;
         traceIntervals = 0;
         numberOfIdenticalStackTraces = 0;
@@ -115,7 +119,8 @@ class CompilationWatchDog extends Thread implements AutoCloseable {
         state = WatchDogState.SLEEPING;
     }
 
-    private void tick(WatchDogState newState) {
+    private void tick(WatchDogState newState)
+    {
         state = newState;
     }
 
@@ -127,12 +132,15 @@ class CompilationWatchDog extends Thread implements AutoCloseable {
      * @return {@code true} if the stack trace is equal to the last stack trace (or if it is the
      *         first one) and {@code false} if it is not equal to the last one.
      */
-    private boolean recordStackTrace(StackTraceElement[] newStackTrace) {
-        if (lastStackTrace == null) {
+    private boolean recordStackTrace(StackTraceElement[] newStackTrace)
+    {
+        if (lastStackTrace == null)
+        {
             lastStackTrace = newStackTrace;
             return true;
         }
-        if (!Arrays.equals(lastStackTrace, newStackTrace)) {
+        if (!Arrays.equals(lastStackTrace, newStackTrace))
+        {
             lastStackTrace = newStackTrace;
             return false;
         }
@@ -144,93 +152,119 @@ class CompilationWatchDog extends Thread implements AutoCloseable {
      */
     private static final boolean DEBUG = Boolean.getBoolean("debug.graal.CompilationWatchDog");
 
-    private void trace(String format, Object... args) {
-        if (DEBUG) {
+    private void trace(String format, Object... args)
+    {
+        if (DEBUG)
+        {
             TTY.println(this + ": " + String.format(format, args));
         }
     }
 
-    private static long ms(double seconds) {
+    private static long ms(double seconds)
+    {
         return (long) seconds * 1000;
     }
 
-    private static double secs(long ms) {
+    private static double secs(long ms)
+    {
         return (double) ms / 1000;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return getName();
     }
 
     @Override
-    public void run() {
-        try {
+    public void run()
+    {
+        try
+        {
             trace("Started%n", this);
-            while (true) {
+            while (true)
+            {
                 // get a copy of the last set method
                 final ResolvedJavaMethod currentlyCompiling = currentMethod;
-                if (currentlyCompiling == null) {
+                if (currentlyCompiling == null)
+                {
                     // continue sleeping, compilation is either over before starting
                     // to watch the compiler thread or no compilation at all started
                     reset();
-                } else {
-                    switch (state) {
+                }
+                else
+                {
+                    switch (state)
+                    {
                         case SLEEPING:
                             lastWatched = currentlyCompiling;
                             elapsed = 0;
                             tick(WatchDogState.WATCHING_WITHOUT_STACK_INSPECTION);
                             break;
                         case WATCHING_WITHOUT_STACK_INSPECTION:
-                            if (currentlyCompiling.equals(lastWatched)) {
-                                if (elapsed >= startDelayMilliseconds) {
+                            if (currentlyCompiling.equals(lastWatched))
+                            {
+                                if (elapsed >= startDelayMilliseconds)
+                                {
                                     // we looked at the same compilation for a certain time
                                     // so now we start to collect stack traces
                                     tick(WatchDogState.WATCHING_WITH_STACK_INSPECTION);
                                     trace("changes mode to watching with stack traces");
-                                } else {
+                                }
+                                else
+                                {
                                     // we still compile the same method but won't collect traces
                                     // yet
                                     trace("watching without stack traces [%.2f seconds]", secs(elapsed));
                                 }
                                 elapsed += SPIN_TIMEOUT_MS;
-                            } else {
+                            }
+                            else
+                            {
                                 // compilation finished before we exceeded initial watching
                                 // period
                                 reset();
                             }
                             break;
                         case WATCHING_WITH_STACK_INSPECTION:
-                            if (currentlyCompiling.equals(lastWatched)) {
-                                if (elapsed >= startDelayMilliseconds + (traceIntervals * stackTraceIntervalMilliseconds)) {
+                            if (currentlyCompiling.equals(lastWatched))
+                            {
+                                if (elapsed >= startDelayMilliseconds + (traceIntervals * stackTraceIntervalMilliseconds))
+                                {
                                     trace("took a stack trace");
                                     boolean newStackTrace = recordStackTrace(compilerThread.getStackTrace());
-                                    if (!newStackTrace) {
+                                    if (!newStackTrace)
+                                    {
                                         trace("%d identical stack traces in a row", numberOfIdenticalStackTraces);
                                         numberOfIdenticalStackTraces = 0;
                                     }
                                     numberOfIdenticalStackTraces++;
-                                    if (numberOfIdenticalStackTraces > nonFatalIdenticalCompilationSnapshots) {
-                                        synchronized (CompilationWatchDog.class) {
-                                            TTY.printf("======================= WATCH DOG THREAD =======================%n" +
-                                                            "%s took %d identical stack traces, which indicates a stuck compilation (id=%d) of %s%n%sExiting VM%n", this,
-                                                            numberOfIdenticalStackTraces, currentId, fmt(currentMethod), fmt(lastStackTrace));
+                                    if (numberOfIdenticalStackTraces > nonFatalIdenticalCompilationSnapshots)
+                                    {
+                                        synchronized (CompilationWatchDog.class)
+                                        {
+                                            TTY.printf("======================= WATCH DOG THREAD =======================%n" + "%s took %d identical stack traces, which indicates a stuck compilation (id=%d) of %s%n%sExiting VM%n", this, numberOfIdenticalStackTraces, currentId, fmt(currentMethod), fmt(lastStackTrace));
                                             System.exit(-1);
                                         }
-                                    } else if (newStackTrace) {
-                                        synchronized (CompilationWatchDog.class) {
-                                            TTY.printf("======================= WATCH DOG THREAD =======================%n" +
-                                                            "%s detected long running compilation (id=%d) of %s [%.2f seconds]%n%s", this, currentId, fmt(currentMethod),
-                                                            secs(elapsed), fmt(lastStackTrace));
+                                    }
+                                    else if (newStackTrace)
+                                    {
+                                        synchronized (CompilationWatchDog.class)
+                                        {
+                                            TTY.printf("======================= WATCH DOG THREAD =======================%n" + "%s detected long running compilation (id=%d) of %s [%.2f seconds]%n%s", this, currentId, fmt(currentMethod), secs(elapsed), fmt(lastStackTrace));
                                         }
                                     }
                                     traceIntervals++;
-                                } else {
+                                }
+                                else
+                                {
                                     // we still watch the compilation in the same trace interval
                                     trace("watching with stack traces [%.2f seconds]", secs(elapsed));
                                 }
                                 elapsed += SPIN_TIMEOUT_MS;
-                            } else {
+                            }
+                            else
+                            {
                                 // compilation finished before we are able to collect stack
                                 // traces
                                 reset();
@@ -240,20 +274,27 @@ class CompilationWatchDog extends Thread implements AutoCloseable {
                             break;
                     }
                 }
-                try {
+                try
+                {
                     Thread.sleep(SPIN_TIMEOUT_MS);
-                } catch (InterruptedException e) {
+                }
+                catch (InterruptedException e)
+                {
                     // Silently swallow
                 }
             }
-        } catch (VirtualMachineError vmError) {
+        }
+        catch (VirtualMachineError vmError)
+        {
             /*
              * We encounter a VM error. This includes for example OutOfMemoryExceptions. In such a
              * case we silently swallow the error. If it happens again the application thread will
              * most likely encounter the same problem. If not the watchdog thread will no longer
              * monitor the compilation and thus the error cannot happen again.
              */
-        } catch (Throwable t) {
+        }
+        catch (Throwable t)
+        {
             /*
              * A real exception happened on the compilation watchdog. This is unintended behavior
              * and must not happen in any case.
@@ -274,12 +315,15 @@ class CompilationWatchDog extends Thread implements AutoCloseable {
      *         is the whole compilation so that leaving the scope will cause {@link #close()} to be
      *         called.
      */
-    static CompilationWatchDog watch(ResolvedJavaMethod method, int id, OptionValues options) {
+    static CompilationWatchDog watch(ResolvedJavaMethod method, int id, OptionValues options)
+    {
         long startDelayMilliseconds = ms(Options.CompilationWatchDogStartDelay.getValue(options));
-        if (startDelayMilliseconds > 0.0D) {
+        if (startDelayMilliseconds > 0.0D)
+        {
             // Lazily get a watch dog thread for the current compiler thread
             CompilationWatchDog watchDog = WATCH_DOGS.get();
-            if (watchDog == null) {
+            if (watchDog == null)
+            {
                 Thread currentThread = currentThread();
                 long stackTraceIntervalMilliseconds = ms(Options.CompilationWatchDogStackTraceInterval.getValue(options));
                 int nonFatalIdenticalCompilationSnapshots = Options.NonFatalIdenticalCompilationSnapshots.getValue(options);
@@ -294,7 +338,8 @@ class CompilationWatchDog extends Thread implements AutoCloseable {
     }
 
     @Override
-    public void close() {
+    public void close()
+    {
         stopCompilation();
     }
 }

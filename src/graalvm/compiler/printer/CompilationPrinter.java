@@ -29,8 +29,8 @@ import jdk.vm.ci.meta.MetaUtil;
  * output format is such that it can then be fed to the
  * <a href="https://c1visualizer.dev.java.net/">C1 Visualizer</a>.
  */
-public class CompilationPrinter implements Closeable {
-
+public class CompilationPrinter implements Closeable
+{
     public static final String COLUMN_END = " <|@";
     public static final String HOVER_START = "<@";
     public static final String HOVER_SEP = "|@";
@@ -46,12 +46,17 @@ public class CompilationPrinter implements Closeable {
      * @return the global output stream or {@code null} if there was an error opening the file for
      *         writing
      */
-    public static synchronized OutputStream globalOut() {
-        if (globalOut == null) {
+    public static synchronized OutputStream globalOut()
+    {
+        if (globalOut == null)
+        {
             File file = new File("compilations-" + System.currentTimeMillis() + ".cfg");
-            try {
+            try
+            {
                 globalOut = new FileOutputStream(file);
-            } catch (FileNotFoundException e) {
+            }
+            catch (FileNotFoundException e)
+            {
                 TTY.println("WARNING: Could not open " + file.getAbsolutePath());
             }
         }
@@ -65,28 +70,33 @@ public class CompilationPrinter implements Closeable {
      *
      * @param os where the output generated via this printer will be sent
      */
-    public CompilationPrinter(OutputStream os) {
+    public CompilationPrinter(OutputStream os)
+    {
         out = new LogStream(os);
     }
 
     /**
      * Flushes all buffered output to the underlying output stream.
      */
-    public void flush() {
+    public void flush()
+    {
         out.flush();
     }
 
     @Override
-    public void close() {
+    public void close()
+    {
         out.out().close();
     }
 
-    protected void begin(String string) {
+    protected void begin(String string)
+    {
         out.println("begin_" + string);
         out.adjustIndentation(2);
     }
 
-    protected void end(String string) {
+    protected void end(String string)
+    {
         out.adjustIndentation(-2);
         out.println("end_" + string);
     }
@@ -96,7 +106,8 @@ public class CompilationPrinter implements Closeable {
      *
      * @param javaMethod the method for which a timestamp will be printed
      */
-    public void printCompilation(JavaMethod javaMethod) {
+    public void printCompilation(JavaMethod javaMethod)
+    {
         printCompilation(javaMethod.format("%H::%n"), javaMethod.format("%f %r %H.%n(%p)"));
     }
 
@@ -105,11 +116,13 @@ public class CompilationPrinter implements Closeable {
      *
      * @param compilationId the compilation method for which an id will be printed
      */
-    public void printCompilation(CompilationIdentifier compilationId) {
+    public void printCompilation(CompilationIdentifier compilationId)
+    {
         printCompilation(compilationId.toString(CompilationIdentifier.Verbosity.DETAILED), compilationId.toString(CompilationIdentifier.Verbosity.DETAILED));
     }
 
-    private void printCompilation(final String name, String method) {
+    private void printCompilation(final String name, String method)
+    {
         begin("compilation");
         out.print("name \" ").print(name).println('"');
         out.print("method \"").print(method).println('"');
@@ -120,87 +133,106 @@ public class CompilationPrinter implements Closeable {
     /**
      * Formats given debug info as a multi line string.
      */
-    protected String debugInfoToString(BytecodePosition codePos, ReferenceMap refMap, IndexedValueMap liveBasePointers, RegisterSaveLayout calleeSaveInfo) {
+    protected String debugInfoToString(BytecodePosition codePos, ReferenceMap refMap, IndexedValueMap liveBasePointers, RegisterSaveLayout calleeSaveInfo)
+    {
         StringBuilder sb = new StringBuilder();
-        if (refMap != null) {
+        if (refMap != null)
+        {
             sb.append("reference-map: ");
             sb.append(refMap.toString());
             sb.append("\n");
         }
-        if (liveBasePointers != null) {
+        if (liveBasePointers != null)
+        {
             sb.append("live-base-pointers: ");
             sb.append(liveBasePointers);
             sb.append("\n");
         }
 
-        if (calleeSaveInfo != null) {
+        if (calleeSaveInfo != null)
+        {
             sb.append("callee-save-info:");
-            for (Map.Entry<Register, Integer> e : calleeSaveInfo.registersToSlots(true).entrySet()) {
+            for (Map.Entry<Register, Integer> e : calleeSaveInfo.registersToSlots(true).entrySet())
+            {
                 sb.append(" " + e.getKey() + " -> s" + e.getValue());
             }
             sb.append("\n");
         }
 
-        if (codePos != null) {
+        if (codePos != null)
+        {
             BytecodePosition curCodePos = codePos;
             List<VirtualObject> virtualObjects = new ArrayList<>();
-            do {
+            do
+            {
                 sb.append(MetaUtil.toLocation(curCodePos.getMethod(), curCodePos.getBCI()));
                 sb.append('\n');
-                if (curCodePos instanceof BytecodeFrame) {
+                if (curCodePos instanceof BytecodeFrame)
+                {
                     BytecodeFrame frame = (BytecodeFrame) curCodePos;
-                    if (frame.numStack > 0) {
+                    if (frame.numStack > 0)
+                    {
                         sb.append("stack: ");
-                        for (int i = 0; i < frame.numStack; i++) {
+                        for (int i = 0; i < frame.numStack; i++)
+                        {
                             sb.append(valueToString(frame.getStackValue(i), virtualObjects)).append(' ');
                         }
                         sb.append("\n");
                     }
                     sb.append("locals: ");
-                    for (int i = 0; i < frame.numLocals; i++) {
+                    for (int i = 0; i < frame.numLocals; i++)
+                    {
                         sb.append(valueToString(frame.getLocalValue(i), virtualObjects)).append(' ');
                     }
                     sb.append("\n");
-                    if (frame.numLocks > 0) {
+                    if (frame.numLocks > 0)
+                    {
                         sb.append("locks: ");
-                        for (int i = 0; i < frame.numLocks; ++i) {
+                        for (int i = 0; i < frame.numLocks; ++i)
+                        {
                             sb.append(valueToString(frame.getLockValue(i), virtualObjects)).append(' ');
                         }
                         sb.append("\n");
                     }
-
                 }
                 curCodePos = curCodePos.getCaller();
             } while (curCodePos != null);
 
-            for (int i = 0; i < virtualObjects.size(); i++) {
+            for (int i = 0; i < virtualObjects.size(); i++)
+            {
                 VirtualObject obj = virtualObjects.get(i);
                 sb.append(obj).append(" ").append(obj.getType().getName()).append(" ");
-                for (int j = 0; j < obj.getValues().length; j++) {
+                for (int j = 0; j < obj.getValues().length; j++)
+                {
                     sb.append(valueToString(obj.getValues()[j], virtualObjects)).append(' ');
                 }
                 sb.append("\n");
-
             }
         }
         return sb.toString();
     }
 
-    protected String valueToString(JavaValue value, List<VirtualObject> virtualObjects) {
-        if (value == null) {
+    protected String valueToString(JavaValue value, List<VirtualObject> virtualObjects)
+    {
+        if (value == null)
+        {
             return "-";
         }
-        if (value instanceof VirtualObject && !virtualObjects.contains(value)) {
+        if (value instanceof VirtualObject && !virtualObjects.contains(value))
+        {
             virtualObjects.add((VirtualObject) value);
         }
         return value.toString();
     }
 
-    public void printMachineCode(String code, String label) {
-        if (code == null || code.length() == 0) {
+    public void printMachineCode(String code, String label)
+    {
+        if (code == null || code.length() == 0)
+        {
             return;
         }
-        if (label != null) {
+        if (label != null)
+        {
             begin("cfg");
             out.print("name \"").print(label).println('"');
             end("cfg");
@@ -211,8 +243,10 @@ public class CompilationPrinter implements Closeable {
         end("nmethod");
     }
 
-    public void printBytecodes(String code) {
-        if (code == null || code.length() == 0) {
+    public void printBytecodes(String code)
+    {
+        if (code == null || code.length() == 0)
+        {
             return;
         }
         begin("bytecodes");

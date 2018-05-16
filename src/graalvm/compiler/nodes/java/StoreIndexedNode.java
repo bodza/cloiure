@@ -24,49 +24,57 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * The {@code StoreIndexedNode} represents a write to an array element.
  */
 @NodeInfo(cycles = CYCLES_8, size = SIZE_8)
-public final class StoreIndexedNode extends AccessIndexedNode implements StateSplit, Lowerable, Virtualizable {
-
+public final class StoreIndexedNode extends AccessIndexedNode implements StateSplit, Lowerable, Virtualizable
+{
     public static final NodeClass<StoreIndexedNode> TYPE = NodeClass.create(StoreIndexedNode.class);
     @Input ValueNode value;
     @OptionalInput(State) FrameState stateAfter;
 
     @Override
-    public FrameState stateAfter() {
+    public FrameState stateAfter()
+    {
         return stateAfter;
     }
 
     @Override
-    public void setStateAfter(FrameState x) {
+    public void setStateAfter(FrameState x)
+    {
         assert x == null || x.isAlive() : "frame state must be in a graph";
         updateUsages(stateAfter, x);
         stateAfter = x;
     }
 
     @Override
-    public boolean hasSideEffect() {
+    public boolean hasSideEffect()
+    {
         return true;
     }
 
-    public ValueNode value() {
+    public ValueNode value()
+    {
         return value;
     }
 
-    public StoreIndexedNode(ValueNode array, ValueNode index, JavaKind elementKind, ValueNode value) {
+    public StoreIndexedNode(ValueNode array, ValueNode index, JavaKind elementKind, ValueNode value)
+    {
         super(TYPE, StampFactory.forVoid(), array, index, elementKind);
         this.value = value;
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool) {
+    public void virtualize(VirtualizerTool tool)
+    {
         ValueNode alias = tool.getAlias(array());
-        if (alias instanceof VirtualObjectNode) {
+        if (alias instanceof VirtualObjectNode)
+        {
             ValueNode indexValue = tool.getAlias(index());
             int idx = indexValue.isConstant() ? indexValue.asJavaConstant().asInt() : -1;
             VirtualArrayNode virtual = (VirtualArrayNode) alias;
-            if (idx >= 0 && idx < virtual.entryCount()) {
+            if (idx >= 0 && idx < virtual.entryCount())
+            {
                 ResolvedJavaType componentType = virtual.type().getComponentType();
-                if (componentType.isPrimitive() || StampTool.isPointerAlwaysNull(value) || componentType.getSuperclass() == null ||
-                                (StampTool.typeReferenceOrNull(value) != null && componentType.isAssignableFrom(StampTool.typeOrNull(value)))) {
+                if (componentType.isPrimitive() || StampTool.isPointerAlwaysNull(value) || componentType.getSuperclass() == null || (StampTool.typeReferenceOrNull(value) != null && componentType.isAssignableFrom(StampTool.typeOrNull(value))))
+                {
                     tool.setVirtualEntry(virtual, idx, value());
                     tool.delete();
                 }
@@ -74,7 +82,8 @@ public final class StoreIndexedNode extends AccessIndexedNode implements StateSp
         }
     }
 
-    public FrameState getState() {
+    public FrameState getState()
+    {
         return stateAfter;
     }
 }

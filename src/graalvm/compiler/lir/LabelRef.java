@@ -14,8 +14,8 @@ import graalvm.compiler.lir.StandardOp.JumpOp;
  * successor-index-of-B)}. That is, indirectly by storing the index into the successor list of A.
  * Note therefore that the successor list cannot be re-ordered.
  */
-public final class LabelRef {
-
+public final class LabelRef
+{
     private final LIR lir;
     private final AbstractBlockBase<?> block;
     private final int suxIndex;
@@ -27,7 +27,8 @@ public final class LabelRef {
      * @param suxIndex The index of the successor.
      * @return The newly created label reference.
      */
-    public static LabelRef forSuccessor(final LIR lir, final AbstractBlockBase<?> block, final int suxIndex) {
+    public static LabelRef forSuccessor(final LIR lir, final AbstractBlockBase<?> block, final int suxIndex)
+    {
         return new LabelRef(lir, block, suxIndex);
     }
 
@@ -37,26 +38,31 @@ public final class LabelRef {
      * @param block The base block that contains the successor list.
      * @param suxIndex The index of the successor.
      */
-    private LabelRef(final LIR lir, final AbstractBlockBase<?> block, final int suxIndex) {
+    private LabelRef(final LIR lir, final AbstractBlockBase<?> block, final int suxIndex)
+    {
         this.lir = lir;
         this.block = block;
         this.suxIndex = suxIndex;
     }
 
-    public AbstractBlockBase<?> getSourceBlock() {
+    public AbstractBlockBase<?> getSourceBlock()
+    {
         return block;
     }
 
-    public AbstractBlockBase<?> getTargetBlock() {
+    public AbstractBlockBase<?> getTargetBlock()
+    {
         return block.getSuccessors()[suxIndex];
     }
 
-    public Label label() {
+    public Label label()
+    {
         return ((StandardOp.LabelOp) lir.getLIRforBlock(getTargetBlock()).get(0)).getLabel();
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return getSourceBlock() + " -> " + (suxIndex < block.getSuccessors().length ? getTargetBlock() : "?");
     }
 }

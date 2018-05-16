@@ -13,15 +13,17 @@ import jdk.vm.ci.code.TargetDescription;
 /**
  * The platform-independent base class for the assembler.
  */
-public abstract class Assembler {
-
-    public abstract static class CodeAnnotation {
+public abstract class Assembler
+{
+    public abstract static class CodeAnnotation
+    {
         /**
          * The position (bytes from the beginning of the method) of the annotated instruction.
          */
         public final int instructionPosition;
 
-        protected CodeAnnotation(int instructionStartPosition) {
+        protected CodeAnnotation(int instructionStartPosition)
+        {
             this.instructionPosition = instructionStartPosition;
         }
     }
@@ -36,12 +38,14 @@ public abstract class Assembler {
 
     protected Consumer<CodeAnnotation> codePatchingAnnotationConsumer;
 
-    public Assembler(TargetDescription target) {
+    public Assembler(TargetDescription target)
+    {
         this.target = target;
         this.codeBuffer = new Buffer(target.arch.getByteOrder());
     }
 
-    public void setCodePatchingAnnotationConsumer(Consumer<CodeAnnotation> codeAnnotationConsumer) {
+    public void setCodePatchingAnnotationConsumer(Consumer<CodeAnnotation> codeAnnotationConsumer)
+    {
         assert this.codePatchingAnnotationConsumer == null : "overwriting existing value";
         this.codePatchingAnnotationConsumer = codeAnnotationConsumer;
     }
@@ -51,51 +55,63 @@ public abstract class Assembler {
      *
      * @return current position in code buffer
      */
-    public int position() {
+    public int position()
+    {
         return codeBuffer.position();
     }
 
-    public final void emitByte(int x) {
+    public final void emitByte(int x)
+    {
         codeBuffer.emitByte(x);
     }
 
-    public final void emitShort(int x) {
+    public final void emitShort(int x)
+    {
         codeBuffer.emitShort(x);
     }
 
-    public final void emitInt(int x) {
+    public final void emitInt(int x)
+    {
         codeBuffer.emitInt(x);
     }
 
-    public final void emitLong(long x) {
+    public final void emitLong(long x)
+    {
         codeBuffer.emitLong(x);
     }
 
-    public final void emitByte(int b, int pos) {
+    public final void emitByte(int b, int pos)
+    {
         codeBuffer.emitByte(b, pos);
     }
 
-    public final void emitShort(int b, int pos) {
+    public final void emitShort(int b, int pos)
+    {
         codeBuffer.emitShort(b, pos);
     }
 
-    public final void emitInt(int b, int pos) {
+    public final void emitInt(int b, int pos)
+    {
         codeBuffer.emitInt(b, pos);
     }
 
-    public final void emitLong(long b, int pos) {
+    public final void emitLong(long b, int pos)
+    {
         codeBuffer.emitLong(b, pos);
     }
 
-    public final int getByte(int pos) {
+    public final int getByte(int pos)
+    {
         return codeBuffer.getByte(pos);
     }
 
-    public final int getShort(int pos) {
+    public final int getShort(int pos)
+    {
         return codeBuffer.getShort(pos);
     }
 
-    public final int getInt(int pos) {
+    public final int getInt(int pos)
+    {
         return codeBuffer.getInt(pos);
     }
 
@@ -104,18 +120,21 @@ public abstract class Assembler {
     /**
      * Some GPU architectures have a text based encoding.
      */
-    public final void emitString(String x) {
+    public final void emitString(String x)
+    {
         emitString0("\t");  // XXX REMOVE ME pretty-printing
         emitString0(x);
         emitString0(NEWLINE);
     }
 
     // XXX for pretty-printing
-    public final void emitString0(String x) {
+    public final void emitString0(String x)
+    {
         codeBuffer.emitBytes(x.getBytes(), 0, x.length());
     }
 
-    public void emitString(String s, int pos) {
+    public void emitString(String s, int pos)
+    {
         codeBuffer.emitBytes(s.getBytes(), pos);
     }
 
@@ -126,11 +145,13 @@ public abstract class Assembler {
      *            including) {@code position()} is returned
      * @return the data in this buffer or a trimmed copy if {@code trimmedCopy} is {@code true}
      */
-    public byte[] close(boolean trimmedCopy) {
+    public byte[] close(boolean trimmedCopy)
+    {
         return codeBuffer.close(trimmedCopy);
     }
 
-    public void bind(Label l) {
+    public void bind(Label l)
+    {
         assert !l.isBound() : "can bind label only once";
         l.bind(position());
         l.patchInstructions(this);
@@ -151,7 +172,8 @@ public abstract class Assembler {
      * @param id a label identifier that is unique with the scope of this assembler
      * @return a label name in the form of "L123"
      */
-    protected String createLabelName(Label l, int id) {
+    protected String createLabelName(Label l, int id)
+    {
         return "L" + id;
     }
 
@@ -159,12 +181,15 @@ public abstract class Assembler {
      * Gets a name for a label, creating it if it does not yet exist. By default, the returned name
      * is only unique with the scope of this assembler.
      */
-    public String nameOf(Label l) {
-        if (nameMap == null) {
+    public String nameOf(Label l)
+    {
+        if (nameMap == null)
+        {
             nameMap = new HashMap<>();
         }
         String name = nameMap.get(l);
-        if (name == null) {
+        if (name == null)
+        {
             name = createLabelName(l, nameMap.size());
             nameMap.put(l, name);
         }
@@ -190,22 +215,28 @@ public abstract class Assembler {
      */
     public abstract void ensureUniquePC();
 
-    public void reset() {
+    public void reset()
+    {
         codeBuffer.reset();
         captureLabelPositions();
     }
 
-    private void captureLabelPositions() {
-        if (jumpDisplacementHints == null) {
+    private void captureLabelPositions()
+    {
+        if (jumpDisplacementHints == null)
+        {
             return;
         }
-        for (LabelHint request : this.jumpDisplacementHints) {
+        for (LabelHint request : this.jumpDisplacementHints)
+        {
             request.capture();
         }
     }
 
-    public LabelHint requestLabelHint(Label label) {
-        if (jumpDisplacementHints == null) {
+    public LabelHint requestLabelHint(Label label)
+    {
+        if (jumpDisplacementHints == null)
+        {
             jumpDisplacementHints = new ArrayList<>();
         }
         LabelHint hint = new LabelHint(label, position());
@@ -213,36 +244,43 @@ public abstract class Assembler {
         return hint;
     }
 
-    public InstructionCounter getInstructionCounter() {
+    public InstructionCounter getInstructionCounter()
+    {
         throw new UnsupportedOperationException("Instruction counter is not implemented for " + this);
     }
 
-    public static class LabelHint {
+    public static class LabelHint
+    {
         private Label label;
         private int forPosition;
         private int capturedTarget = -1;
 
-        protected LabelHint(Label label, int lastPosition) {
+        protected LabelHint(Label label, int lastPosition)
+        {
             super();
             this.label = label;
             this.forPosition = lastPosition;
         }
 
-        protected void capture() {
+        protected void capture()
+        {
             this.capturedTarget = label.position();
         }
 
-        public int getTarget() {
+        public int getTarget()
+        {
             assert isValid();
             return capturedTarget;
         }
 
-        public int getPosition() {
+        public int getPosition()
+        {
             assert isValid();
             return forPosition;
         }
 
-        public boolean isValid() {
+        public boolean isValid()
+        {
             return capturedTarget >= 0;
         }
     }
@@ -251,7 +289,8 @@ public abstract class Assembler {
      * Instruction counter class which gives the user of the assembler to count different kinds of
      * instructions in the generated assembler code.
      */
-    public interface InstructionCounter {
+    public interface InstructionCounter
+    {
         String[] getSupportedInstructionTypes();
 
         int[] countInstructions(String[] instructionTypes, int beginPc, int endPc);

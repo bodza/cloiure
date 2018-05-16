@@ -19,32 +19,37 @@ import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
 @NodeInfo(cycles = CYCLES_0, size = SIZE_0)
-public abstract class VirtualObjectNode extends ValueNode implements LIRLowerable, IterableNodeType {
-
+public abstract class VirtualObjectNode extends ValueNode implements LIRLowerable, IterableNodeType
+{
     public static final NodeClass<VirtualObjectNode> TYPE = NodeClass.create(VirtualObjectNode.class);
     protected boolean hasIdentity;
     private int objectId = -1;
 
-    protected VirtualObjectNode(NodeClass<? extends VirtualObjectNode> c, ResolvedJavaType type, boolean hasIdentity) {
+    protected VirtualObjectNode(NodeClass<? extends VirtualObjectNode> c, ResolvedJavaType type, boolean hasIdentity)
+    {
         super(c, StampFactory.objectNonNull(TypeReference.createExactTrusted(type)));
         this.hasIdentity = hasIdentity;
     }
 
-    public final int getObjectId() {
+    public final int getObjectId()
+    {
         return objectId;
     }
 
-    public final void resetObjectId() {
+    public final void resetObjectId()
+    {
         this.objectId = -1;
     }
 
-    public final void setObjectId(int objectId) {
+    public final void setObjectId(int objectId)
+    {
         assert objectId != -1;
         this.objectId = objectId;
     }
 
     @Override
-    protected void afterClone(Node other) {
+    protected void afterClone(Node other)
+    {
         super.afterClone(other);
         resetObjectId();
     }
@@ -91,11 +96,13 @@ public abstract class VirtualObjectNode extends ValueNode implements LIRLowerabl
      * Specifies whether this virtual object has an object identity. If not, then the result of a
      * comparison of two virtual objects is determined by comparing their contents.
      */
-    public boolean hasIdentity() {
+    public boolean hasIdentity()
+    {
         return hasIdentity;
     }
 
-    public void setIdentity(boolean identity) {
+    public void setIdentity(boolean identity)
+    {
         this.hasIdentity = identity;
     }
 
@@ -107,7 +114,8 @@ public abstract class VirtualObjectNode extends ValueNode implements LIRLowerabl
     public abstract ValueNode getMaterializedRepresentation(FixedNode fixed, ValueNode[] entries, LockState locks);
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         // nothing to do...
     }
 }

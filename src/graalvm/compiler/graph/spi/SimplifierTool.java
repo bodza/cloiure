@@ -5,8 +5,8 @@ import graalvm.compiler.graph.Node;
 /**
  * @see Simplifiable
  */
-public interface SimplifierTool extends CanonicalizerTool {
-
+public interface SimplifierTool extends CanonicalizerTool
+{
     void deleteBranch(Node branch);
 
     /**

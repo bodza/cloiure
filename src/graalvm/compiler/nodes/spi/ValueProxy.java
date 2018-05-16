@@ -8,6 +8,7 @@ import graalvm.compiler.nodes.extended.GuardingNode;
  *
  * For some algorithms it is necessary or advantageous to see through these proxies.
  */
-public interface ValueProxy extends LimitedValueProxy {
+public interface ValueProxy extends LimitedValueProxy
+{
     GuardingNode getGuard();
 }

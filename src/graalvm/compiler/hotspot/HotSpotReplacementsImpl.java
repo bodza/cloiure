@@ -15,14 +15,16 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * Filters certain method substitutions based on whether there is underlying hardware support for
  * them.
  */
-public class HotSpotReplacementsImpl extends ReplacementsImpl {
-
-    public HotSpotReplacementsImpl(OptionValues options, Providers providers, SnippetReflectionProvider snippetReflection, BytecodeProvider bytecodeProvider, TargetDescription target) {
+public class HotSpotReplacementsImpl extends ReplacementsImpl
+{
+    public HotSpotReplacementsImpl(OptionValues options, Providers providers, SnippetReflectionProvider snippetReflection, BytecodeProvider bytecodeProvider, TargetDescription target)
+    {
         super(options, new GraalDebugHandlersFactory(snippetReflection), providers, snippetReflection, bytecodeProvider, target);
     }
 
     @Override
-    protected boolean hasGenericInvocationPluginAnnotation(ResolvedJavaMethod method) {
+    protected boolean hasGenericInvocationPluginAnnotation(ResolvedJavaMethod method)
+    {
         return method.getAnnotation(HotSpotOperation.class) != null || super.hasGenericInvocationPluginAnnotation(method);
     }
 }

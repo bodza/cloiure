@@ -13,8 +13,8 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
-public @interface ServiceProvider {
-
+public @interface ServiceProvider
+{
     /**
      * The interface or class defining the service implemented by the annotated class.
      */

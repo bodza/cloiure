@@ -35,8 +35,8 @@ import jdk.vm.ci.meta.MetaAccessProvider;
  * during decoding. Additionally, {@link IfNode branches} and {@link IntegerSwitchNode switches}
  * with constant conditions are simplified.
  */
-public class SimplifyingGraphDecoder extends GraphDecoder {
-
+public class SimplifyingGraphDecoder extends GraphDecoder
+{
     protected final MetaAccessProvider metaAccess;
     protected final ConstantReflectionProvider constantReflection;
     protected final ConstantFieldProvider constantFieldProvider;
@@ -44,53 +44,62 @@ public class SimplifyingGraphDecoder extends GraphDecoder {
     protected final boolean canonicalizeReads;
     protected final CanonicalizerTool canonicalizerTool;
 
-    protected class PECanonicalizerTool implements CanonicalizerTool {
-
+    protected class PECanonicalizerTool implements CanonicalizerTool
+    {
         private final Assumptions assumptions;
         private final OptionValues options;
 
-        public PECanonicalizerTool(Assumptions assumptions, OptionValues options) {
+        public PECanonicalizerTool(Assumptions assumptions, OptionValues options)
+        {
             this.assumptions = assumptions;
             this.options = options;
         }
 
         @Override
-        public OptionValues getOptions() {
+        public OptionValues getOptions()
+        {
             return options;
         }
 
         @Override
-        public MetaAccessProvider getMetaAccess() {
+        public MetaAccessProvider getMetaAccess()
+        {
             return metaAccess;
         }
 
         @Override
-        public ConstantReflectionProvider getConstantReflection() {
+        public ConstantReflectionProvider getConstantReflection()
+        {
             return constantReflection;
         }
 
         @Override
-        public ConstantFieldProvider getConstantFieldProvider() {
+        public ConstantFieldProvider getConstantFieldProvider()
+        {
             return constantFieldProvider;
         }
 
         @Override
-        public boolean canonicalizeReads() {
+        public boolean canonicalizeReads()
+        {
             return canonicalizeReads;
         }
 
         @Override
-        public boolean allUsagesAvailable() {
+        public boolean allUsagesAvailable()
+        {
             return false;
         }
 
         @Override
-        public Assumptions getAssumptions() {
+        public Assumptions getAssumptions()
+        {
             return assumptions;
         }
 
         @Override
-        public Integer smallestCompareWidth() {
+        public Integer smallestCompareWidth()
+        {
             // to be safe, just report null here
             // there will be more opportunities for this optimization later
             return null;
@@ -98,22 +107,24 @@ public class SimplifyingGraphDecoder extends GraphDecoder {
     }
 
     @NodeInfo(cycles = CYCLES_IGNORED, size = SIZE_IGNORED, allowedUsageTypes = {Guard})
-    static class CanonicalizeToNullNode extends FloatingNode implements Canonicalizable, GuardingNode {
+    static class CanonicalizeToNullNode extends FloatingNode implements Canonicalizable, GuardingNode
+    {
         public static final NodeClass<CanonicalizeToNullNode> TYPE = NodeClass.create(CanonicalizeToNullNode.class);
 
-        protected CanonicalizeToNullNode(Stamp stamp) {
+        protected CanonicalizeToNullNode(Stamp stamp)
+        {
             super(TYPE, stamp);
         }
 
         @Override
-        public Node canonical(CanonicalizerTool tool) {
+        public Node canonical(CanonicalizerTool tool)
+        {
             return null;
         }
     }
 
-    public SimplifyingGraphDecoder(Architecture architecture, StructuredGraph graph, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection,
-                    ConstantFieldProvider constantFieldProvider, StampProvider stampProvider,
-                    boolean canonicalizeReads) {
+    public SimplifyingGraphDecoder(Architecture architecture, StructuredGraph graph, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, StampProvider stampProvider, boolean canonicalizeReads)
+    {
         super(architecture, graph);
         this.metaAccess = metaAccess;
         this.constantReflection = constantReflection;
@@ -124,31 +135,40 @@ public class SimplifyingGraphDecoder extends GraphDecoder {
     }
 
     @Override
-    protected void cleanupGraph(MethodScope methodScope) {
+    protected void cleanupGraph(MethodScope methodScope)
+    {
         GraphUtil.normalizeLoops(graph);
         super.cleanupGraph(methodScope);
 
-        for (Node node : graph.getNewNodes(methodScope.methodStartMark)) {
-            if (node instanceof MergeNode) {
+        for (Node node : graph.getNewNodes(methodScope.methodStartMark))
+        {
+            if (node instanceof MergeNode)
+            {
                 MergeNode mergeNode = (MergeNode) node;
-                if (mergeNode.forwardEndCount() == 1) {
+                if (mergeNode.forwardEndCount() == 1)
+                {
                     graph.reduceTrivialMerge(mergeNode);
                 }
-            } else if (node instanceof BeginNode || node instanceof KillingBeginNode) {
-                if (!(node.predecessor() instanceof ControlSplitNode) && node.hasNoUsages()) {
+            }
+            else if (node instanceof BeginNode || node instanceof KillingBeginNode)
+            {
+                if (!(node.predecessor() instanceof ControlSplitNode) && node.hasNoUsages())
+                {
                     GraphUtil.unlinkFixedNode((AbstractBeginNode) node);
                     node.safeDelete();
                 }
             }
         }
 
-        for (Node node : graph.getNewNodes(methodScope.methodStartMark)) {
+        for (Node node : graph.getNewNodes(methodScope.methodStartMark))
+        {
             GraphUtil.tryKillUnused(node);
         }
     }
 
     @Override
-    protected boolean allowLazyPhis() {
+    protected boolean allowLazyPhis()
+    {
         /*
          * We do not need to exactly reproduce the encoded graph, so we want to avoid unnecessary
          * phi functions.
@@ -157,20 +177,24 @@ public class SimplifyingGraphDecoder extends GraphDecoder {
     }
 
     @Override
-    protected void handleMergeNode(MergeNode merge) {
+    protected void handleMergeNode(MergeNode merge)
+    {
         /*
          * All inputs of non-loop phi nodes are known by now. We can infer the stamp for the phi, so
          * that parsing continues with more precise type information.
          */
-        for (ValuePhiNode phi : merge.valuePhis()) {
+        for (ValuePhiNode phi : merge.valuePhis())
+        {
             phi.inferStamp();
         }
     }
 
     @Override
-    protected void handleFixedNode(MethodScope methodScope, LoopScope loopScope, int nodeOrderId, FixedNode node) {
+    protected void handleFixedNode(MethodScope methodScope, LoopScope loopScope, int nodeOrderId, FixedNode node)
+    {
         Node canonical = canonicalizeFixedNode(methodScope, node);
-        if (canonical != node) {
+        if (canonical != node)
+        {
             handleCanonicalization(loopScope, nodeOrderId, node, canonical);
         }
     }
@@ -182,31 +206,44 @@ public class SimplifyingGraphDecoder extends GraphDecoder {
      * @param methodScope The current method.
      * @param node The node to be canonicalized.
      */
-    protected Node canonicalizeFixedNode(MethodScope methodScope, Node node) {
-        if (node instanceof LoadFieldNode) {
+    protected Node canonicalizeFixedNode(MethodScope methodScope, Node node)
+    {
+        if (node instanceof LoadFieldNode)
+        {
             LoadFieldNode loadFieldNode = (LoadFieldNode) node;
             return loadFieldNode.canonical(canonicalizerTool);
-        } else if (node instanceof FixedGuardNode) {
+        }
+        else if (node instanceof FixedGuardNode)
+        {
             FixedGuardNode guard = (FixedGuardNode) node;
-            if (guard.getCondition() instanceof LogicConstantNode) {
+            if (guard.getCondition() instanceof LogicConstantNode)
+            {
                 LogicConstantNode condition = (LogicConstantNode) guard.getCondition();
-                if (condition.getValue() == guard.isNegated()) {
+                if (condition.getValue() == guard.isNegated())
+                {
                     DeoptimizeNode deopt = new DeoptimizeNode(guard.getAction(), guard.getReason(), guard.getSpeculation());
-                    if (guard.stateBefore() != null) {
+                    if (guard.stateBefore() != null)
+                    {
                         deopt.setStateBefore(guard.stateBefore());
                     }
                     return deopt;
-                } else {
+                }
+                else
+                {
                     return null;
                 }
             }
             return node;
-        } else if (node instanceof IfNode) {
+        }
+        else if (node instanceof IfNode)
+        {
             IfNode ifNode = (IfNode) node;
-            if (ifNode.condition() instanceof LogicNegationNode) {
+            if (ifNode.condition() instanceof LogicNegationNode)
+            {
                 ifNode.eliminateNegation();
             }
-            if (ifNode.condition() instanceof LogicConstantNode) {
+            if (ifNode.condition() instanceof LogicConstantNode)
+            {
                 boolean condition = ((LogicConstantNode) ifNode.condition()).getValue();
                 AbstractBeginNode survivingSuccessor = ifNode.getSuccessor(condition);
                 AbstractBeginNode deadSuccessor = ifNode.getSuccessor(!condition);
@@ -216,34 +253,47 @@ public class SimplifyingGraphDecoder extends GraphDecoder {
                 deadSuccessor.safeDelete();
             }
             return node;
-        } else if (node instanceof LoadIndexedNode) {
+        }
+        else if (node instanceof LoadIndexedNode)
+        {
             LoadIndexedNode loadIndexedNode = (LoadIndexedNode) node;
             return loadIndexedNode.canonical(canonicalizerTool);
-        } else if (node instanceof ArrayLengthNode) {
+        }
+        else if (node instanceof ArrayLengthNode)
+        {
             ArrayLengthNode arrayLengthNode = (ArrayLengthNode) node;
             return arrayLengthNode.canonical(canonicalizerTool);
-        } else if (node instanceof IntegerSwitchNode && ((IntegerSwitchNode) node).value().isConstant()) {
+        }
+        else if (node instanceof IntegerSwitchNode && ((IntegerSwitchNode) node).value().isConstant())
+        {
             IntegerSwitchNode switchNode = (IntegerSwitchNode) node;
             int value = switchNode.value().asJavaConstant().asInt();
             AbstractBeginNode survivingSuccessor = switchNode.successorAtKey(value);
             List<Node> allSuccessors = switchNode.successors().snapshot();
 
             graph.removeSplit(switchNode, survivingSuccessor);
-            for (Node successor : allSuccessors) {
-                if (successor != survivingSuccessor) {
+            for (Node successor : allSuccessors)
+            {
+                if (successor != survivingSuccessor)
+                {
                     assert ((AbstractBeginNode) successor).next() == null : "must not be parsed yet";
                     successor.safeDelete();
                 }
             }
             return node;
-        } else if (node instanceof Canonicalizable) {
+        }
+        else if (node instanceof Canonicalizable)
+        {
             return ((Canonicalizable) node).canonical(canonicalizerTool);
-        } else {
+        }
+        else
+        {
             return node;
         }
     }
 
-    private static Node canonicalizeFixedNodeToNull(FixedNode node) {
+    private static Node canonicalizeFixedNodeToNull(FixedNode node)
+    {
         /*
          * When a node is unnecessary, we must not remove it right away because there might be nodes
          * that use it as a guard input. Therefore, we replace it with a more lightweight node
@@ -253,28 +303,38 @@ public class SimplifyingGraphDecoder extends GraphDecoder {
     }
 
     @SuppressWarnings("try")
-    private void handleCanonicalization(LoopScope loopScope, int nodeOrderId, FixedNode node, Node c) {
+    private void handleCanonicalization(LoopScope loopScope, int nodeOrderId, FixedNode node, Node c)
+    {
         assert c != node : "unnecessary call";
-        try (DebugCloseable position = graph.withNodeSourcePosition(node)) {
+        try (DebugCloseable position = graph.withNodeSourcePosition(node))
+        {
             Node canonical = c == null ? canonicalizeFixedNodeToNull(node) : c;
-            if (!canonical.isAlive()) {
+            if (!canonical.isAlive())
+            {
                 assert !canonical.isDeleted();
                 canonical = graph.addOrUniqueWithInputs(canonical);
-                if (canonical instanceof FixedWithNextNode) {
+                if (canonical instanceof FixedWithNextNode)
+                {
                     graph.addBeforeFixed(node, (FixedWithNextNode) canonical);
-                } else if (canonical instanceof ControlSinkNode) {
+                }
+                else if (canonical instanceof ControlSinkNode)
+                {
                     FixedWithNextNode predecessor = (FixedWithNextNode) node.predecessor();
                     predecessor.setNext((ControlSinkNode) canonical);
                     List<Node> successorSnapshot = node.successors().snapshot();
                     node.safeDelete();
-                    for (Node successor : successorSnapshot) {
+                    for (Node successor : successorSnapshot)
+                    {
                         successor.safeDelete();
                     }
-                } else {
+                }
+                else
+                {
                     assert !(canonical instanceof FixedNode);
                 }
             }
-            if (!node.isDeleted()) {
+            if (!node.isDeleted())
+            {
                 GraphUtil.unlinkFixedNode((FixedWithNextNode) node);
                 node.replaceAtUsagesAndDelete(canonical);
             }
@@ -285,21 +345,29 @@ public class SimplifyingGraphDecoder extends GraphDecoder {
 
     @Override
     @SuppressWarnings("try")
-    protected Node handleFloatingNodeBeforeAdd(MethodScope methodScope, LoopScope loopScope, Node node) {
-        if (node instanceof ValueNode) {
+    protected Node handleFloatingNodeBeforeAdd(MethodScope methodScope, LoopScope loopScope, Node node)
+    {
+        if (node instanceof ValueNode)
+        {
             ((ValueNode) node).inferStamp();
         }
-        if (node instanceof Canonicalizable) {
-            try (DebugCloseable context = graph.withNodeSourcePosition(node)) {
+        if (node instanceof Canonicalizable)
+        {
+            try (DebugCloseable context = graph.withNodeSourcePosition(node))
+            {
                 Node canonical = ((Canonicalizable) node).canonical(canonicalizerTool);
-                if (canonical == null) {
+                if (canonical == null)
+                {
                     /*
                      * This is a possible return value of canonicalization. However, we might need
                      * to add additional usages later on for which we need a node. Therefore, we
                      * just do nothing and leave the node in place.
                      */
-                } else if (canonical != node) {
-                    if (!canonical.isAlive()) {
+                }
+                else if (canonical != node)
+                {
+                    if (!canonical.isAlive())
+                    {
                         assert !canonical.isDeleted();
                         canonical = graph.addOrUniqueWithInputs(canonical);
                     }
@@ -312,7 +380,8 @@ public class SimplifyingGraphDecoder extends GraphDecoder {
     }
 
     @Override
-    protected Node addFloatingNode(MethodScope methodScope, Node node) {
+    protected Node addFloatingNode(MethodScope methodScope, Node node)
+    {
         /*
          * In contrast to the base class implementation, we do not need to exactly reproduce the
          * encoded graph. Since we do canonicalization, we also want nodes to be unique.

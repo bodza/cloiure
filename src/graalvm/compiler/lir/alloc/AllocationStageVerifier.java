@@ -18,27 +18,32 @@ import jdk.vm.ci.meta.Value;
 /**
  * Verifies that all virtual operands have been replaced by concrete values.
  */
-public class AllocationStageVerifier extends AllocationPhase {
-
+public class AllocationStageVerifier extends AllocationPhase
+{
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context) {
+    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context)
+    {
         verifyLIR(lirGenRes.getLIR());
-
     }
 
-    protected void verifyLIR(LIR lir) {
-        for (AbstractBlockBase<?> block : lir.getControlFlowGraph().getBlocks()) {
+    protected void verifyLIR(LIR lir)
+    {
+        for (AbstractBlockBase<?> block : lir.getControlFlowGraph().getBlocks())
+        {
             verifyBlock(lir, block);
         }
     }
 
-    protected void verifyBlock(LIR lir, AbstractBlockBase<?> block) {
-        for (LIRInstruction inst : lir.getLIRforBlock(block)) {
+    protected void verifyBlock(LIR lir, AbstractBlockBase<?> block)
+    {
+        for (LIRInstruction inst : lir.getLIRforBlock(block))
+        {
             verifyInstruction(inst);
         }
     }
 
-    protected void verifyInstruction(LIRInstruction inst) {
+    protected void verifyInstruction(LIRInstruction inst)
+    {
         inst.visitEachInput(this::verifyOperands);
         inst.visitEachOutput(this::verifyOperands);
         inst.visitEachAlive(this::verifyOperands);
@@ -51,8 +56,8 @@ public class AllocationStageVerifier extends AllocationPhase {
      * @param mode
      * @param flags
      */
-    protected void verifyOperands(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags) {
+    protected void verifyOperands(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
+    {
         assert !isVirtualStackSlot(value) && !isVariable(value) : "Virtual values not allowed after allocation stage: " + value;
     }
-
 }

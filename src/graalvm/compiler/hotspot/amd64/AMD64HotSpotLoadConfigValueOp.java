@@ -14,26 +14,30 @@ import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.amd64.AMD64LIRInstruction;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
 
-public final class AMD64HotSpotLoadConfigValueOp extends AMD64LIRInstruction {
-
+public final class AMD64HotSpotLoadConfigValueOp extends AMD64LIRInstruction
+{
     public static final LIRInstructionClass<AMD64HotSpotLoadConfigValueOp> TYPE = LIRInstructionClass.create(AMD64HotSpotLoadConfigValueOp.class);
 
     @Def({OperandFlag.REG}) protected AllocatableValue result;
     private final int markId;
 
-    public AMD64HotSpotLoadConfigValueOp(int markId, AllocatableValue result) {
+    public AMD64HotSpotLoadConfigValueOp(int markId, AllocatableValue result)
+    {
         super(TYPE);
         this.result = result;
         this.markId = markId;
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
-        if (GeneratePIC.getValue(crb.getOptions())) {
+    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
+        if (GeneratePIC.getValue(crb.getOptions()))
+        {
             AMD64Kind kind = (AMD64Kind) result.getPlatformKind();
             Register reg = asRegister(result);
             AMD64Address placeholder = masm.getPlaceholder(-1);
-            switch (kind) {
+            switch (kind)
+            {
                 case BYTE:
                     masm.movsbl(reg, placeholder);
                     break;
@@ -49,10 +53,11 @@ public final class AMD64HotSpotLoadConfigValueOp extends AMD64LIRInstruction {
                 default:
                     throw GraalError.unimplemented();
             }
-        } else {
+        }
+        else
+        {
             throw GraalError.unimplemented();
         }
         crb.recordMark(markId);
     }
-
 }

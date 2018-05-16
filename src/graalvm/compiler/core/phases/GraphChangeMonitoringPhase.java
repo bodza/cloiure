@@ -22,24 +22,27 @@ import graalvm.compiler.phases.tiers.PhaseContext;
  *
  * @param <C>
  */
-public class GraphChangeMonitoringPhase<C extends PhaseContext> extends PhaseSuite<C> {
-
+public class GraphChangeMonitoringPhase<C extends PhaseContext> extends PhaseSuite<C>
+{
     private final String message;
 
-    public GraphChangeMonitoringPhase(String message, BasePhase<C> phase) {
+    public GraphChangeMonitoringPhase(String message, BasePhase<C> phase)
+    {
         super();
         this.message = message;
         appendPhase(phase);
     }
 
-    public GraphChangeMonitoringPhase(String message) {
+    public GraphChangeMonitoringPhase(String message)
+    {
         super();
         this.message = message;
     }
 
     @Override
     @SuppressWarnings("try")
-    protected void run(StructuredGraph graph, C context) {
+    protected void run(StructuredGraph graph, C context)
+    {
         /*
          * Phase may add nodes but not end up using them so ignore additions. Nodes going dead and
          * having their inputs change are the main interesting differences.
@@ -47,39 +50,54 @@ public class GraphChangeMonitoringPhase<C extends PhaseContext> extends PhaseSui
         HashSetNodeEventListener listener = new HashSetNodeEventListener().exclude(NodeEvent.NODE_ADDED);
         StructuredGraph graphCopy = (StructuredGraph) graph.copy(graph.getDebug());
         DebugContext debug = graph.getDebug();
-        try (NodeEventScope s = graphCopy.trackNodeEvents(listener)) {
-            try (DebugContext.Scope s2 = debug.sandbox("WithoutMonitoring", null)) {
+        try (NodeEventScope s = graphCopy.trackNodeEvents(listener))
+        {
+            try (DebugContext.Scope s2 = debug.sandbox("WithoutMonitoring", null))
+            {
                 super.run(graphCopy, context);
-            } catch (Throwable t) {
+            }
+            catch (Throwable t)
+            {
                 debug.handle(t);
             }
         }
 
         EconomicSet<Node> filteredNodes = EconomicSet.create(Equivalence.IDENTITY);
-        for (Node n : listener.getNodes()) {
-            if (n instanceof LogicConstantNode) {
+        for (Node n : listener.getNodes())
+        {
+            if (n instanceof LogicConstantNode)
+            {
                 // Ignore LogicConstantNode since those are sometimes created and deleted as part of
                 // running a phase.
-            } else {
+            }
+            else
+            {
                 filteredNodes.add(n);
             }
         }
-        if (!filteredNodes.isEmpty()) {
+        if (!filteredNodes.isEmpty())
+        {
             /* rerun it on the real graph in a new Debug scope so Dump and Log can find it. */
             listener = new HashSetNodeEventListener();
-            try (NodeEventScope s = graph.trackNodeEvents(listener)) {
-                try (DebugContext.Scope s2 = debug.scope("WithGraphChangeMonitoring")) {
-                    if (debug.isDumpEnabled(DebugContext.DETAILED_LEVEL)) {
+            try (NodeEventScope s = graph.trackNodeEvents(listener))
+            {
+                try (DebugContext.Scope s2 = debug.scope("WithGraphChangeMonitoring"))
+                {
+                    if (debug.isDumpEnabled(DebugContext.DETAILED_LEVEL))
+                    {
                         debug.dump(DebugContext.DETAILED_LEVEL, graph, "*** Before phase %s", getName());
                     }
                     super.run(graph, context);
-                    if (debug.isDumpEnabled(DebugContext.DETAILED_LEVEL)) {
+                    if (debug.isDumpEnabled(DebugContext.DETAILED_LEVEL))
+                    {
                         debug.dump(DebugContext.DETAILED_LEVEL, graph, "*** After phase %s %s", getName(), filteredNodes);
                     }
                     debug.log("*** %s %s %s\n", message, graph, filteredNodes);
                 }
             }
-        } else {
+        }
+        else
+        {
             // Go ahead and run it normally even though it should have no effect
             super.run(graph, context);
         }

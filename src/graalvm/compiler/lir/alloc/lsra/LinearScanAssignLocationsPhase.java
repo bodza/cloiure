@@ -32,16 +32,18 @@ import jdk.vm.ci.meta.Value;
 /**
  * Phase 7: Assign register numbers back to LIR.
  */
-public class LinearScanAssignLocationsPhase extends LinearScanAllocationPhase {
-
+public class LinearScanAssignLocationsPhase extends LinearScanAllocationPhase
+{
     protected final LinearScan allocator;
 
-    public LinearScanAssignLocationsPhase(LinearScan allocator) {
+    public LinearScanAssignLocationsPhase(LinearScan allocator)
+    {
         this.allocator = allocator;
     }
 
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context) {
+    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context)
+    {
         assignLocations();
     }
 
@@ -53,26 +55,30 @@ public class LinearScanAssignLocationsPhase extends LinearScanAllocationPhase {
      * @param mode the usage mode for {@code operand} by the instruction
      * @return the location assigned for the operand
      */
-    protected Value colorLirOperand(LIRInstruction op, Variable operand, OperandMode mode) {
+    protected Value colorLirOperand(LIRInstruction op, Variable operand, OperandMode mode)
+    {
         int opId = op.id();
         Interval interval = allocator.intervalFor(operand);
         assert interval != null : "interval must exist";
 
-        if (opId != -1) {
-            if (allocator.detailedAsserts) {
+        if (opId != -1)
+        {
+            if (allocator.detailedAsserts)
+            {
                 AbstractBlockBase<?> block = allocator.blockForId(opId);
-                if (block.getSuccessorCount() <= 1 && opId == allocator.getLastLirInstructionId(block)) {
+                if (block.getSuccessorCount() <= 1 && opId == allocator.getLastLirInstructionId(block))
+                {
                     /*
                      * Check if spill moves could have been appended at the end of this block, but
                      * before the branch instruction. So the split child information for this branch
                      * would be incorrect.
                      */
                     LIRInstruction instr = allocator.getLIR().getLIRforBlock(block).get(allocator.getLIR().getLIRforBlock(block).size() - 1);
-                    if (instr instanceof StandardOp.JumpOp) {
-                        if (allocator.getBlockData(block).liveOut.get(allocator.operandNumber(operand))) {
-                            assert false : String.format(
-                                            "can't get split child for the last branch of a block because the information would be incorrect (moves are inserted before the branch in resolveDataFlow) block=%s, instruction=%s, operand=%s",
-                                            block, instr, operand);
+                    if (instr instanceof StandardOp.JumpOp)
+                    {
+                        if (allocator.getBlockData(block).liveOut.get(allocator.operandNumber(operand)))
+                        {
+                            assert false : String.format("can't get split child for the last branch of a block because the information would be incorrect (moves are inserted before the branch in resolveDataFlow) block=%s, instruction=%s, operand=%s", block, instr, operand);
                         }
                     }
                 }
@@ -85,21 +91,25 @@ public class LinearScanAssignLocationsPhase extends LinearScanAllocationPhase {
             interval = allocator.splitChildAtOpId(interval, opId, mode);
         }
 
-        if (isIllegal(interval.location()) && interval.canMaterialize()) {
+        if (isIllegal(interval.location()) && interval.canMaterialize())
+        {
             assert mode != OperandMode.DEF;
             return new ConstantValue(interval.kind(), interval.getMaterializedValue());
         }
         return interval.location();
     }
 
-    private Value debugInfoProcedure(LIRInstruction op, Value operand) {
-        if (isVirtualStackSlot(operand)) {
+    private Value debugInfoProcedure(LIRInstruction op, Value operand)
+    {
+        if (isVirtualStackSlot(operand))
+        {
             return operand;
         }
         int tempOpId = op.id();
         OperandMode mode = OperandMode.USE;
         AbstractBlockBase<?> block = allocator.blockForId(tempOpId);
-        if (block.getSuccessorCount() == 1 && tempOpId == allocator.getLastLirInstructionId(block)) {
+        if (block.getSuccessorCount() == 1 && tempOpId == allocator.getLastLirInstructionId(block))
+        {
             /*
              * Generating debug information for the last instruction of a block. If this instruction
              * is a branch, spill moves are inserted before this branch and so the wrong operand
@@ -109,8 +119,10 @@ public class LinearScanAssignLocationsPhase extends LinearScanAllocationPhase {
              * Solution: use the first opId of the branch target block instead.
              */
             final LIRInstruction instr = allocator.getLIR().getLIRforBlock(block).get(allocator.getLIR().getLIRforBlock(block).size() - 1);
-            if (instr instanceof StandardOp.JumpOp) {
-                if (allocator.getBlockData(block).liveOut.get(allocator.operandNumber(operand))) {
+            if (instr instanceof StandardOp.JumpOp)
+            {
+                if (allocator.getBlockData(block).liveOut.get(allocator.operandNumber(operand)))
+                {
                     tempOpId = allocator.getFirstLirInstructionId(block.getSuccessors()[0]);
                     mode = OperandMode.DEF;
                 }
@@ -127,41 +139,52 @@ public class LinearScanAssignLocationsPhase extends LinearScanAllocationPhase {
         return result;
     }
 
-    private void assignLocations(ArrayList<LIRInstruction> instructions) {
+    private void assignLocations(ArrayList<LIRInstruction> instructions)
+    {
         int numInst = instructions.size();
         boolean hasDead = false;
 
-        for (int j = 0; j < numInst; j++) {
+        for (int j = 0; j < numInst; j++)
+        {
             final LIRInstruction op = instructions.get(j);
-            if (op == null) {
+            if (op == null)
+            {
                 /*
                  * this can happen when spill-moves are removed in eliminateSpillMoves
                  */
                 hasDead = true;
-            } else if (assignLocations(op)) {
+            }
+            else if (assignLocations(op))
+            {
                 instructions.set(j, null);
                 hasDead = true;
             }
         }
 
-        if (hasDead) {
+        if (hasDead)
+        {
             // Remove null values from the list.
             instructions.removeAll(Collections.singleton(null));
         }
     }
 
-    private final InstructionValueProcedure assignProc = new InstructionValueProcedure() {
+    private final InstructionValueProcedure assignProc = new InstructionValueProcedure()
+    {
         @Override
-        public Value doValue(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags) {
-            if (isVariable(value)) {
+        public Value doValue(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
+        {
+            if (isVariable(value))
+            {
                 return colorLirOperand(instruction, (Variable) value, mode);
             }
             return value;
         }
     };
-    private final InstructionValueProcedure debugInfoProc = new InstructionValueProcedure() {
+    private final InstructionValueProcedure debugInfoProc = new InstructionValueProcedure()
+    {
         @Override
-        public Value doValue(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags) {
+        public Value doValue(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
+        {
             return debugInfoProcedure(instruction, value);
         }
     };
@@ -172,13 +195,16 @@ public class LinearScanAssignLocationsPhase extends LinearScanAllocationPhase {
      * @param op The {@link LIRInstruction} that should be colored.
      * @return {@code true} if the instruction should be deleted.
      */
-    protected boolean assignLocations(LIRInstruction op) {
+    protected boolean assignLocations(LIRInstruction op)
+    {
         assert op != null;
 
         // remove useless moves
-        if (MoveOp.isMoveOp(op)) {
+        if (MoveOp.isMoveOp(op))
+        {
             AllocatableValue result = MoveOp.asMoveOp(op).getResult();
-            if (isVariable(result) && allocator.isMaterialized(result, op.id(), OperandMode.DEF)) {
+            if (isVariable(result) && allocator.isMaterialized(result, op.id(), OperandMode.DEF))
+            {
                 /*
                  * This happens if a materializable interval is originally not spilled but then
                  * kicked out in LinearScanWalker.splitForSpilling(). When kicking out such an
@@ -197,9 +223,11 @@ public class LinearScanAssignLocationsPhase extends LinearScanAllocationPhase {
         op.forEachState(debugInfoProc);
 
         // remove useless moves
-        if (ValueMoveOp.isValueMoveOp(op)) {
+        if (ValueMoveOp.isValueMoveOp(op))
+        {
             ValueMoveOp move = ValueMoveOp.asValueMoveOp(op);
-            if (move.getInput().equals(move.getResult())) {
+            if (move.getInput().equals(move.getResult()))
+            {
                 return true;
             }
         }
@@ -207,11 +235,15 @@ public class LinearScanAssignLocationsPhase extends LinearScanAllocationPhase {
     }
 
     @SuppressWarnings("try")
-    private void assignLocations() {
+    private void assignLocations()
+    {
         DebugContext debug = allocator.getDebug();
-        try (Indent indent = debug.logAndIndent("assign locations")) {
-            for (AbstractBlockBase<?> block : allocator.sortedBlocks()) {
-                try (Indent indent2 = debug.logAndIndent("assign locations in block B%d", block.getId())) {
+        try (Indent indent = debug.logAndIndent("assign locations"))
+        {
+            for (AbstractBlockBase<?> block : allocator.sortedBlocks())
+            {
+                try (Indent indent2 = debug.logAndIndent("assign locations in block B%d", block.getId()))
+                {
                     assignLocations(allocator.getLIR().getLIRforBlock(block));
                 }
             }

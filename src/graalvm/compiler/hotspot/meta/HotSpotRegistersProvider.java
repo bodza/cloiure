@@ -5,8 +5,8 @@ import jdk.vm.ci.code.Register;
 /**
  * Special registers reserved by HotSpot for frequently used values.
  */
-public interface HotSpotRegistersProvider {
-
+public interface HotSpotRegistersProvider
+{
     /**
      * Gets the register holding the current thread.
      */

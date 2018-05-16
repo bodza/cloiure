@@ -34,20 +34,23 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * compile time.
  */
 @NodeInfo
-public class NewArrayNode extends AbstractNewArrayNode implements VirtualizableAllocation, Simplifiable {
-
+public class NewArrayNode extends AbstractNewArrayNode implements VirtualizableAllocation, Simplifiable
+{
     public static final NodeClass<NewArrayNode> TYPE = NodeClass.create(NewArrayNode.class);
     private final ResolvedJavaType elementType;
 
-    public NewArrayNode(ResolvedJavaType elementType, ValueNode length, boolean fillContents) {
+    public NewArrayNode(ResolvedJavaType elementType, ValueNode length, boolean fillContents)
+    {
         this(elementType, length, fillContents, null);
     }
 
-    public NewArrayNode(ResolvedJavaType elementType, ValueNode length, boolean fillContents, FrameState stateBefore) {
+    public NewArrayNode(ResolvedJavaType elementType, ValueNode length, boolean fillContents, FrameState stateBefore)
+    {
         this(TYPE, elementType, length, fillContents, stateBefore);
     }
 
-    protected NewArrayNode(NodeClass<? extends NewArrayNode> c, ResolvedJavaType elementType, ValueNode length, boolean fillContents, FrameState stateBefore) {
+    protected NewArrayNode(NodeClass<? extends NewArrayNode> c, ResolvedJavaType elementType, ValueNode length, boolean fillContents, FrameState stateBefore)
+    {
         super(c, StampFactory.objectNonNull(TypeReference.createExactTrusted(elementType.getArrayClass())), length, fillContents, stateBefore);
         this.elementType = elementType;
     }
@@ -55,7 +58,8 @@ public class NewArrayNode extends AbstractNewArrayNode implements VirtualizableA
     @NodeIntrinsic
     private static native Object newArray(@ConstantNodeParameter Class<?> elementType, int length, @ConstantNodeParameter boolean fillContents);
 
-    public static Object newUninitializedArray(Class<?> elementType, int length) {
+    public static Object newUninitializedArray(Class<?> elementType, int length)
+    {
         return newArray(elementType, length, false);
     }
 
@@ -64,19 +68,24 @@ public class NewArrayNode extends AbstractNewArrayNode implements VirtualizableA
      *
      * @return the element type of the array
      */
-    public ResolvedJavaType elementType() {
+    public ResolvedJavaType elementType()
+    {
         return elementType;
     }
 
     @Override
-    public void virtualize(VirtualizerTool tool) {
+    public void virtualize(VirtualizerTool tool)
+    {
         ValueNode lengthAlias = tool.getAlias(length());
-        if (lengthAlias.asConstant() != null) {
+        if (lengthAlias.asConstant() != null)
+        {
             int constantLength = lengthAlias.asJavaConstant().asInt();
-            if (constantLength >= 0 && constantLength < tool.getMaximumEntryCount()) {
+            if (constantLength >= 0 && constantLength < tool.getMaximumEntryCount())
+            {
                 ValueNode[] state = new ValueNode[constantLength];
                 ConstantNode defaultForKind = constantLength == 0 ? null : defaultElementValue();
-                for (int i = 0; i < constantLength; i++) {
+                for (int i = 0; i < constantLength; i++)
+                {
                     state[i] = defaultForKind;
                 }
                 VirtualObjectNode virtualObject = createVirtualArrayNode(constantLength);
@@ -86,32 +95,40 @@ public class NewArrayNode extends AbstractNewArrayNode implements VirtualizableA
         }
     }
 
-    protected VirtualArrayNode createVirtualArrayNode(int constantLength) {
+    protected VirtualArrayNode createVirtualArrayNode(int constantLength)
+    {
         return new VirtualArrayNode(elementType(), constantLength);
     }
 
     /* Factored out in a separate method so that subclasses can override it. */
-    protected ConstantNode defaultElementValue() {
+    protected ConstantNode defaultElementValue()
+    {
         return ConstantNode.defaultForKind(elementType().getJavaKind(), graph());
     }
 
     @Override
     @SuppressWarnings("try")
-    public void simplify(SimplifierTool tool) {
-        if (hasNoUsages()) {
+    public void simplify(SimplifierTool tool)
+    {
+        if (hasNoUsages())
+        {
             NodeView view = NodeView.from(tool);
             Stamp lengthStamp = length().stamp(view);
-            if (lengthStamp instanceof IntegerStamp) {
+            if (lengthStamp instanceof IntegerStamp)
+            {
                 IntegerStamp lengthIntegerStamp = (IntegerStamp) lengthStamp;
-                if (lengthIntegerStamp.isPositive()) {
+                if (lengthIntegerStamp.isPositive())
+                {
                     GraphUtil.removeFixedWithUnusedInputs(this);
                     return;
                 }
             }
             // Should be areFrameStatesAtSideEffects but currently SVM will complain about
             // RuntimeConstraint
-            if (graph().getGuardsStage().allowsFloatingGuards()) {
-                try (DebugCloseable context = this.withNodeSourcePosition()) {
+            if (graph().getGuardsStage().allowsFloatingGuards())
+            {
+                try (DebugCloseable context = this.withNodeSourcePosition())
+                {
                     LogicNode lengthNegativeCondition = CompareNode.createCompareNode(graph(), CanonicalCondition.LT, length(), ConstantNode.forInt(0, graph()), tool.getConstantReflection(), view);
                     // we do not have a non-deopting path for that at the moment so action=None.
                     FixedGuardNode guard = graph().add(new FixedGuardNode(lengthNegativeCondition, DeoptimizationReason.RuntimeConstraint, DeoptimizationAction.None, true));

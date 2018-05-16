@@ -9,17 +9,17 @@ import graalvm.compiler.options.OptionValues;
 /**
  * Utility class that allows the compiler to monitor compilations that take a very long time.
  */
-public final class CompilationAlarm implements AutoCloseable {
-
-    public static class Options {
-        // @formatter:off
+public final class CompilationAlarm implements AutoCloseable
+{
+    public static class Options
+    {
         @Option(help = "Time limit in seconds before a compilation expires (0 to disable the limit). " +
                        "The compilation alarm will be implicitly disabled if assertions are enabled.", type = OptionType.Debug)
         public static final OptionKey<Integer> CompilationExpirationPeriod = new OptionKey<>(300);
-        // @formatter:on
     }
 
-    private CompilationAlarm(long expiration) {
+    private CompilationAlarm(long expiration)
+    {
         this.expiration = expiration;
     }
 
@@ -34,7 +34,8 @@ public final class CompilationAlarm implements AutoCloseable {
      * Gets the current compilation alarm. If there is no current alarm, a non-null value is
      * returned that will always return {@code false} for {@link #hasExpired()}.
      */
-    public static CompilationAlarm current() {
+    public static CompilationAlarm current()
+    {
         CompilationAlarm alarm = currentAlarm.get();
         return alarm == null ? NEVER_EXPIRES : alarm;
     }
@@ -47,13 +48,16 @@ public final class CompilationAlarm implements AutoCloseable {
      *         {@linkplain CompilationAlarm.Options#CompilationExpirationPeriod}, {@code false}
      *         otherwise
      */
-    public boolean hasExpired() {
+    public boolean hasExpired()
+    {
         return this != NEVER_EXPIRES && System.currentTimeMillis() > expiration;
     }
 
     @Override
-    public void close() {
-        if (this != NEVER_EXPIRES) {
+    public void close()
+    {
+        if (this != NEVER_EXPIRES)
+        {
             currentAlarm.set(null);
         }
     }
@@ -73,11 +77,14 @@ public final class CompilationAlarm implements AutoCloseable {
      * @return a {@link CompilationAlarm} if there was no current alarm for the calling thread
      *         before this call otherwise {@code null}
      */
-    public static CompilationAlarm trackCompilationPeriod(OptionValues options) {
+    public static CompilationAlarm trackCompilationPeriod(OptionValues options)
+    {
         int period = Assertions.assertionsEnabled() ? 0 : Options.CompilationExpirationPeriod.getValue(options);
-        if (period > 0) {
+        if (period > 0)
+        {
             CompilationAlarm current = currentAlarm.get();
-            if (current == null) {
+            if (current == null)
+            {
                 long expiration = System.currentTimeMillis() + period * 1000;
                 current = new CompilationAlarm(expiration);
                 currentAlarm.set(current);
@@ -86,5 +93,4 @@ public final class CompilationAlarm implements AutoCloseable {
         }
         return null;
     }
-
 }

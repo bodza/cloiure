@@ -19,27 +19,33 @@ import graalvm.compiler.word.Word;
 
 import jdk.vm.ci.code.TargetDescription;
 
-public class UnsafeLoadSnippets implements Snippets {
-
+public class UnsafeLoadSnippets implements Snippets
+{
     @Snippet
-    public static Object lowerUnsafeLoad(Object object, long offset) {
+    public static Object lowerUnsafeLoad(Object object, long offset)
+    {
         Object fixedObject = FixedValueAnchorNode.getObject(object);
-        if (object instanceof java.lang.ref.Reference && referentOffset() == offset) {
+        if (object instanceof java.lang.ref.Reference && referentOffset() == offset)
+        {
             return Word.objectToTrackedPointer(fixedObject).readObject((int) offset, BarrierType.PRECISE);
-        } else {
+        }
+        else
+        {
             return Word.objectToTrackedPointer(fixedObject).readObject((int) offset, BarrierType.NONE);
         }
     }
 
-    public static class Templates extends AbstractTemplates {
-
+    public static class Templates extends AbstractTemplates
+    {
         private final SnippetInfo unsafeLoad = snippet(UnsafeLoadSnippets.class, "lowerUnsafeLoad");
 
-        public Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, HotSpotProviders providers, TargetDescription target) {
+        public Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, HotSpotProviders providers, TargetDescription target)
+        {
             super(options, factories, providers, providers.getSnippetReflection(), target);
         }
 
-        public void lower(RawLoadNode load, LoweringTool tool) {
+        public void lower(RawLoadNode load, LoweringTool tool)
+        {
             Arguments args = new Arguments(unsafeLoad, load.graph().getGuardsStage(), tool.getLoweringStage());
             args.add("object", load.object());
             args.add("offset", load.offset());

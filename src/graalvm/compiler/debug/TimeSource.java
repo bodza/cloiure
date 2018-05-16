@@ -5,7 +5,8 @@ import graalvm.compiler.serviceprovider.GraalServices;
 /**
  * A consistent source of timing data that should be used by all facilities in the debug package.
  */
-public class TimeSource {
+public class TimeSource
+{
     private static final boolean USING_THREAD_CPU_TIME = GraalServices.isCurrentThreadCpuTimeSupported();
 
     /**
@@ -19,8 +20,8 @@ public class TimeSource {
      *
      * @return the current thread's time in nanoseconds
      */
-    public static long getTimeNS() {
+    public static long getTimeNS()
+    {
         return USING_THREAD_CPU_TIME ? GraalServices.getCurrentThreadCpuTime() : System.nanoTime();
     }
-
 }

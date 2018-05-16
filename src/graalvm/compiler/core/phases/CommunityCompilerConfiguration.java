@@ -17,35 +17,41 @@ import graalvm.compiler.phases.tiers.MidTierContext;
 /**
  * The default configuration for the community edition of Graal.
  */
-public class CommunityCompilerConfiguration implements CompilerConfiguration {
-
+public class CommunityCompilerConfiguration implements CompilerConfiguration
+{
     @Override
-    public PhaseSuite<HighTierContext> createHighTier(OptionValues options) {
+    public PhaseSuite<HighTierContext> createHighTier(OptionValues options)
+    {
         return new HighTier(options);
     }
 
     @Override
-    public PhaseSuite<MidTierContext> createMidTier(OptionValues options) {
+    public PhaseSuite<MidTierContext> createMidTier(OptionValues options)
+    {
         return new MidTier(options);
     }
 
     @Override
-    public PhaseSuite<LowTierContext> createLowTier(OptionValues options) {
+    public PhaseSuite<LowTierContext> createLowTier(OptionValues options)
+    {
         return new LowTier(options);
     }
 
     @Override
-    public LIRPhaseSuite<PreAllocationOptimizationContext> createPreAllocationOptimizationStage(OptionValues options) {
+    public LIRPhaseSuite<PreAllocationOptimizationContext> createPreAllocationOptimizationStage(OptionValues options)
+    {
         return new PreAllocationOptimizationStage(options);
     }
 
     @Override
-    public LIRPhaseSuite<AllocationContext> createAllocationStage(OptionValues options) {
+    public LIRPhaseSuite<AllocationContext> createAllocationStage(OptionValues options)
+    {
         return new AllocationStage(options);
     }
 
     @Override
-    public LIRPhaseSuite<PostAllocationOptimizationContext> createPostAllocationOptimizationStage(OptionValues options) {
+    public LIRPhaseSuite<PostAllocationOptimizationContext> createPostAllocationOptimizationStage(OptionValues options)
+    {
         return new PostAllocationOptimizationStage(options);
     }
 }

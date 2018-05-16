@@ -19,25 +19,30 @@ import org.graalvm.word.LocationIdentity;
  * object.
  */
 @NodeInfo(allowedUsageTypes = Memory, cycles = CYCLES_0, size = SIZE_0)
-public final class EndLockScopeNode extends AbstractMemoryCheckpoint implements LIRLowerable, MonitorExit, MemoryCheckpoint.Single {
+public final class EndLockScopeNode extends AbstractMemoryCheckpoint implements LIRLowerable, MonitorExit, MemoryCheckpoint.Single
+{
     public static final NodeClass<EndLockScopeNode> TYPE = NodeClass.create(EndLockScopeNode.class);
 
-    public EndLockScopeNode() {
+    public EndLockScopeNode()
+    {
         super(TYPE, StampFactory.forVoid());
     }
 
     @Override
-    public boolean hasSideEffect() {
+    public boolean hasSideEffect()
+    {
         return false;
     }
 
     @Override
-    public LocationIdentity getLocationIdentity() {
+    public LocationIdentity getLocationIdentity()
+    {
         return LocationIdentity.any();
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
     }
 
     @NodeIntrinsic

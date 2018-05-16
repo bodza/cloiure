@@ -8,8 +8,8 @@ import graalvm.compiler.options.OptionValues;
 
 import jdk.vm.ci.meta.JavaMethod;
 
-public interface DebugConfig {
-
+public interface DebugConfig
+{
     /**
      * Returns the option values used to configure this object.
      */
@@ -89,12 +89,18 @@ public interface DebugConfig {
      */
     Collection<DebugVerifyHandler> verifyHandlers();
 
-    default void closeDumpHandlers(boolean ignoreErrors) {
-        for (DebugDumpHandler handler : dumpHandlers()) {
-            try {
+    default void closeDumpHandlers(boolean ignoreErrors)
+    {
+        for (DebugDumpHandler handler : dumpHandlers())
+        {
+            try
+            {
                 handler.close();
-            } catch (Throwable e) {
-                if (!ignoreErrors) {
+            }
+            catch (Throwable e)
+            {
+                if (!ignoreErrors)
+                {
                     throw e;
                 }
             }
@@ -106,11 +112,14 @@ public interface DebugConfig {
      *
      * @return the {@link JavaMethod} represented by {@code context} or null
      */
-    static JavaMethod asJavaMethod(Object context) {
-        if (context instanceof JavaMethodContext) {
+    static JavaMethod asJavaMethod(Object context)
+    {
+        if (context instanceof JavaMethodContext)
+        {
             return ((JavaMethodContext) context).asJavaMethod();
         }
-        if (context instanceof JavaMethod) {
+        if (context instanceof JavaMethod)
+        {
             return (JavaMethod) context;
         }
         return null;

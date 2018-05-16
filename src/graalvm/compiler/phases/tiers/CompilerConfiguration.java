@@ -7,8 +7,8 @@ import graalvm.compiler.lir.phases.PreAllocationOptimizationPhase.PreAllocationO
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.PhaseSuite;
 
-public interface CompilerConfiguration {
-
+public interface CompilerConfiguration
+{
     PhaseSuite<HighTierContext> createHighTier(OptionValues options);
 
     PhaseSuite<MidTierContext> createMidTier(OptionValues options);

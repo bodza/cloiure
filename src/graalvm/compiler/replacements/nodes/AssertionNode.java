@@ -24,32 +24,37 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
  * may need to insert a check.
  */
 @NodeInfo(cycles = CYCLES_UNKNOWN, size = SIZE_UNKNOWN)
-public final class AssertionNode extends FixedWithNextNode implements Lowerable, Canonicalizable, LIRLowerable {
-
+public final class AssertionNode extends FixedWithNextNode implements Lowerable, Canonicalizable, LIRLowerable
+{
     public static final NodeClass<AssertionNode> TYPE = NodeClass.create(AssertionNode.class);
     @Input ValueNode condition;
 
     protected final boolean compileTimeAssertion;
     protected final String message;
 
-    public AssertionNode(boolean compileTimeAssertion, ValueNode condition, String message) {
+    public AssertionNode(boolean compileTimeAssertion, ValueNode condition, String message)
+    {
         super(TYPE, StampFactory.forVoid());
         this.condition = condition;
         this.compileTimeAssertion = compileTimeAssertion;
         this.message = message;
     }
 
-    public ValueNode condition() {
+    public ValueNode condition()
+    {
         return condition;
     }
 
-    public String message() {
+    public String message()
+    {
         return message;
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool) {
-        if (condition.isConstant() && condition.asJavaConstant().asInt() != 0) {
+    public Node canonical(CanonicalizerTool tool)
+    {
+        if (condition.isConstant() && condition.asJavaConstant().asInt() != 0)
+        {
             return null;
         }
         /*
@@ -60,29 +65,40 @@ public final class AssertionNode extends FixedWithNextNode implements Lowerable,
     }
 
     @Override
-    public void lower(LoweringTool tool) {
-        if (!compileTimeAssertion) {
-            if (GraalOptions.ImmutableCode.getValue(getOptions())) {
+    public void lower(LoweringTool tool)
+    {
+        if (!compileTimeAssertion)
+        {
+            if (GraalOptions.ImmutableCode.getValue(getOptions()))
+            {
                 // Snippet assertions are disabled for AOT
                 graph().removeFixed(this);
-            } else {
+            }
+            else
+            {
                 tool.getLowerer().lower(this, tool);
             }
         }
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool generator) {
+    public void generate(NodeLIRBuilderTool generator)
+    {
         assert compileTimeAssertion;
-        if (GraalOptions.ImmutableCode.getValue(getOptions())) {
+        if (GraalOptions.ImmutableCode.getValue(getOptions()))
+        {
             // Snippet assertions are disabled for AOT
             return;
         }
-        if (condition.isConstant()) {
-            if (condition.asJavaConstant().asInt() == 0) {
+        if (condition.isConstant())
+        {
+            if (condition.asJavaConstant().asInt() == 0)
+            {
                 throw new GraalError("%s: failed compile-time assertion: %s", this, message);
             }
-        } else {
+        }
+        else
+        {
             throw new GraalError("%s: failed compile-time assertion (value %s): %s", this, condition, message);
         }
     }

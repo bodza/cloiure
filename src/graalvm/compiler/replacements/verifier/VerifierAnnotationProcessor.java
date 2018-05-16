@@ -15,24 +15,30 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 
-public class VerifierAnnotationProcessor extends AbstractProcessor {
-
+public class VerifierAnnotationProcessor extends AbstractProcessor
+{
     private List<AbstractVerifier> verifiers;
 
     @Override
-    public SourceVersion getSupportedSourceVersion() {
+    public SourceVersion getSupportedSourceVersion()
+    {
         return SourceVersion.latest();
     }
 
     @Override
-    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        if (!roundEnv.processingOver()) {
+    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv)
+    {
+        if (!roundEnv.processingOver())
+        {
             PluginGenerator generator = new PluginGenerator();
-            for (AbstractVerifier verifier : getVerifiers()) {
+            for (AbstractVerifier verifier : getVerifiers())
+            {
                 Class<? extends Annotation> annotationClass = verifier.getAnnotationClass();
-                for (Element e : roundEnv.getElementsAnnotatedWith(annotationClass)) {
+                for (Element e : roundEnv.getElementsAnnotatedWith(annotationClass))
+                {
                     AnnotationMirror annotationMirror = findAnnotationMirror(processingEnv, e.getAnnotationMirrors(), annotationClass);
-                    if (annotationMirror == null) {
+                    if (annotationMirror == null)
+                    {
                         assert false : "Annotation mirror always expected.";
                         continue;
                     }
@@ -45,23 +51,28 @@ public class VerifierAnnotationProcessor extends AbstractProcessor {
         return false;
     }
 
-    public static AnnotationMirror findAnnotationMirror(ProcessingEnvironment processingEnv, List<? extends AnnotationMirror> mirrors, Class<?> annotationClass) {
+    public static AnnotationMirror findAnnotationMirror(ProcessingEnvironment processingEnv, List<? extends AnnotationMirror> mirrors, Class<?> annotationClass)
+    {
         TypeElement expectedAnnotationType = processingEnv.getElementUtils().getTypeElement(annotationClass.getCanonicalName());
-        for (AnnotationMirror mirror : mirrors) {
+        for (AnnotationMirror mirror : mirrors)
+        {
             DeclaredType annotationType = mirror.getAnnotationType();
             TypeElement actualAnnotationType = (TypeElement) annotationType.asElement();
-            if (actualAnnotationType.equals(expectedAnnotationType)) {
+            if (actualAnnotationType.equals(expectedAnnotationType))
+            {
                 return mirror;
             }
         }
         return null;
     }
 
-    public List<AbstractVerifier> getVerifiers() {
+    public List<AbstractVerifier> getVerifiers()
+    {
         /*
          * Initialized lazily to fail(CNE) when the processor is invoked and not when it is created.
          */
-        if (verifiers == null) {
+        if (verifiers == null)
+        {
             assert this.processingEnv != null : "ProcessingEnv must be initialized before calling getVerifiers.";
             verifiers = new ArrayList<>();
             verifiers.add(new ClassSubstitutionVerifier(this.processingEnv));
@@ -73,12 +84,13 @@ public class VerifierAnnotationProcessor extends AbstractProcessor {
     }
 
     @Override
-    public Set<String> getSupportedAnnotationTypes() {
+    public Set<String> getSupportedAnnotationTypes()
+    {
         Set<String> annotationTypes = new HashSet<>();
-        for (AbstractVerifier verifier : getVerifiers()) {
+        for (AbstractVerifier verifier : getVerifiers())
+        {
             annotationTypes.add(verifier.getAnnotationClass().getCanonicalName());
         }
         return annotationTypes;
     }
-
 }

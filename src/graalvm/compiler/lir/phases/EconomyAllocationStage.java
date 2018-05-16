@@ -9,11 +9,16 @@ import graalvm.compiler.lir.phases.AllocationPhase.AllocationContext;
 import graalvm.compiler.lir.stackslotalloc.SimpleStackSlotAllocator;
 import graalvm.compiler.options.OptionValues;
 
-public class EconomyAllocationStage extends LIRPhaseSuite<AllocationContext> {
-    public EconomyAllocationStage(OptionValues options) {
-        if (TraceRA.getValue(options)) {
+public class EconomyAllocationStage extends LIRPhaseSuite<AllocationContext>
+{
+    public EconomyAllocationStage(OptionValues options)
+    {
+        if (TraceRA.getValue(options))
+        {
             appendPhase(new TraceRegisterAllocationPhase());
-        } else {
+        }
+        else
+        {
             appendPhase(new LinearScanPhase());
         }
 

@@ -30,34 +30,42 @@ import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.nodes.memory.MemoryCheckpoint;
 import graalvm.compiler.nodes.spi.Virtualizable;
 
-public class NodeCostDumpUtil {
-
+public class NodeCostDumpUtil
+{
     private static final String prefix1 = "com.oracle.";
     private static final String prefix2 = "org.graalvm.";
     private static final String FMT = CSVUtil.buildFormatString("%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s");
 
-    private static String getArgumentRegex(String arg) {
-        if (arg.length() == 0) {
+    private static String getArgumentRegex(String arg)
+    {
+        if (arg.length() == 0)
+        {
             return null;
         }
-        try {
+        try
+        {
             Pattern.compile(arg);
             return arg;
-        } catch (PatternSyntaxException e) {
+        }
+        catch (PatternSyntaxException e)
+        {
             // silently ignore
             System.err.println("Invalid regex given, defaulting to \".*\" regex..");
             return null;
         }
     }
 
-    public static void main(String[] args) {
-        if (args.length != 1) {
+    public static void main(String[] args)
+    {
+        if (args.length != 1)
+        {
             System.err.println("NodeCostDumpUtil expects exactly one argument, the node name regex to match against.");
             System.exit(-1);
         }
         final String pattern = getArgumentRegex(args[0]);
         String version = System.getProperty("java.specification.version");
-        if (version.compareTo("1.9") >= 0) {
+        if (version.compareTo("1.9") >= 0)
+        {
             System.err.printf("NodeCostDumpUtil does not support JDK versions greater than 1.8, current version is %s.\n", version);
             System.exit(-1);
         }
@@ -65,148 +73,200 @@ public class NodeCostDumpUtil {
         String[] primarySuiteCP = System.getProperty("primary.suite.cp").split(File.pathSeparator);
         ClassLoader applicationClassLoader = Thread.currentThread().getContextClassLoader();
         HashSet<Class<?>> classes = new HashSet<>();
-        try {
+        try
+        {
             Set<String> uniquePaths = new HashSet<>(Arrays.asList(primarySuiteCP));
             uniquePaths.addAll(Arrays.asList(jvmciCP));
-            for (String path : uniquePaths) {
-                if (new File(path).exists()) {
-                    if (path.endsWith(".jar")) {
-                        try (FileSystem jarFileSystem = FileSystems.newFileSystem(URI.create("jar:file:" + path), Collections.emptyMap())) {
+            for (String path : uniquePaths)
+            {
+                if (new File(path).exists())
+                {
+                    if (path.endsWith(".jar"))
+                    {
+                        try (FileSystem jarFileSystem = FileSystems.newFileSystem(URI.create("jar:file:" + path), Collections.emptyMap()))
+                        {
                             initAllClasses(jarFileSystem.getPath("/"), applicationClassLoader, classes);
                         }
-                    } else {
+                    }
+                    else
+                    {
                         initAllClasses(FileSystems.getDefault().getPath(path), applicationClassLoader, classes);
                     }
                 }
             }
-        } catch (IOException ex) {
+        }
+        catch (IOException ex)
+        {
             GraalError.shouldNotReachHere();
         }
         System.err.printf("Loaded %d classes...\n", classes.size());
         List<Class<?>> nodeClasses = new ArrayList<>();
-        for (Class<?> loaded : classes) {
-            if (Node.class.isAssignableFrom(loaded) && !loaded.isArray()) {
+        for (Class<?> loaded : classes)
+        {
+            if (Node.class.isAssignableFrom(loaded) && !loaded.isArray())
+            {
                 nodeClasses.add(loaded);
             }
         }
         System.err.printf("Loaded %s node classes...\n", nodeClasses.size());
         List<NodeClass<?>> nc = new ArrayList<>();
-        for (Class<?> c : nodeClasses) {
-            try {
+        for (Class<?> c : nodeClasses)
+        {
+            try
+            {
                 nc.add(NodeClass.get(c));
-            } catch (Throwable t) {
+            }
+            catch (Throwable t)
+            {
                 // Silently ignore problems here
             }
         }
         System.err.printf("Read TYPE field from %s node classes...\n", nc.size());
         nc = nc.stream().filter(x -> x != null).collect(Collectors.toList());
-        nc.sort((x, y) -> {
+        nc.sort((x, y) ->
+        {
             String a = x.getJavaClass().getName();
             String b = y.getJavaClass().getName();
             return a.compareTo(b);
         });
         CSVUtil.Escape.println(System.out, FMT, "NodeName", "Size", "Overrides Size Method", "Cycles", "Overrides Cycles Method", "Canonicalizable", "MemoryCheckPoint", "Virtualizable");
-        for (NodeClass<?> nodeclass : nc) {
+        for (NodeClass<?> nodeclass : nc)
+        {
             String packageStrippedName = null;
-            try {
+            try
+            {
                 packageStrippedName = nodeclass.getJavaClass().getCanonicalName().replace(prefix1, "").replace(prefix2, "");
-            } catch (Throwable t) {
+            }
+            catch (Throwable t)
+            {
                 // do nothing
                 continue;
             }
-            if (pattern != null && !packageStrippedName.matches(pattern)) {
+            if (pattern != null && !packageStrippedName.matches(pattern))
+            {
                 continue;
             }
             boolean overridesSizeMethod = false;
             boolean overridesCyclesMethod = false;
             Class<?> c = nodeclass.getJavaClass();
-            try {
+            try
+            {
                 c.getDeclaredMethod("estimatedNodeSize");
                 overridesSizeMethod = true;
-            } catch (Throwable t) {
+            }
+            catch (Throwable t)
+            {
                 // do nothing
             }
-            try {
+            try
+            {
                 c.getDeclaredMethod("estimatedNodeCycles");
                 overridesCyclesMethod = true;
-            } catch (Throwable t) {
+            }
+            catch (Throwable t)
+            {
                 // do nothing
             }
-            CSVUtil.Escape.println(System.out, FMT, packageStrippedName, nodeclass.size(), overridesSizeMethod, nodeclass.cycles(), overridesCyclesMethod, canonicalizable(c), memoryCheckPoint(c),
-                            virtualizable(c));
+            CSVUtil.Escape.println(System.out, FMT, packageStrippedName, nodeclass.size(), overridesSizeMethod, nodeclass.cycles(), overridesCyclesMethod, canonicalizable(c), memoryCheckPoint(c), virtualizable(c));
         }
     }
 
-    private static boolean canonicalizable(Class<?> c) {
+    private static boolean canonicalizable(Class<?> c)
+    {
         return Canonicalizable.class.isAssignableFrom(c);
     }
 
-    private static boolean virtualizable(Class<?> c) {
+    private static boolean virtualizable(Class<?> c)
+    {
         return Virtualizable.class.isAssignableFrom(c);
     }
 
-    private static boolean memoryCheckPoint(Class<?> c) {
+    private static boolean memoryCheckPoint(Class<?> c)
+    {
         return MemoryCheckpoint.class.isAssignableFrom(c);
     }
 
-    private static void initAllClasses(final Path root, ClassLoader classLoader, HashSet<Class<?>> classes) {
-        try {
-            Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
+    private static void initAllClasses(final Path root, ClassLoader classLoader, HashSet<Class<?>> classes)
+    {
+        try
+        {
+            Files.walkFileTree(root, new SimpleFileVisitor<Path>()
+            {
                 @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
+                {
                     String className = root.relativize(file).toString();
                     ClassLoader c = classLoader;
-                    if (className.endsWith(".class")) {
+                    if (className.endsWith(".class"))
+                    {
                         String prefix = prefixed(className);
-                        if (prefix != null) {
+                        if (prefix != null)
+                        {
                             String stripped = stripClassName(className);
                             c = new URLClassLoader(new URL[]{new File(constructURLPart(stripped, className, prefix)).toURI().toURL()}, classLoader);
                             className = constructClazzPart(stripped, prefix);
-                        } else {
+                        }
+                        else
+                        {
                             String clazzPart = className.replace('/', '.');
                             className = clazzPart.substring(0, clazzPart.length() - ".class".length());
                         }
-                        try {
+                        try
+                        {
                             Class<?> systemClass = Class.forName(className, false, c);
-                            if (systemClass.getEnclosingClass() != null) {
-                                try {
+                            if (systemClass.getEnclosingClass() != null)
+                            {
+                                try
+                                {
                                     classes.add(systemClass.getEnclosingClass());
-                                } catch (Throwable t) {
+                                }
+                                catch (Throwable t)
+                                {
                                     // do nothing
                                 }
                             }
                             classes.add(systemClass);
-                        } catch (Throwable ignored) {
+                        }
+                        catch (Throwable ignored)
+                        {
                         }
                     }
                     return FileVisitResult.CONTINUE;
                 }
             });
-        } catch (IOException ex) {
+        }
+        catch (IOException ex)
+        {
             GraalError.shouldNotReachHere();
         }
     }
 
-    private static String prefixed(String className) {
-        if (className.contains(prefix1) && className.indexOf(prefix1) > 0) {
+    private static String prefixed(String className)
+    {
+        if (className.contains(prefix1) && className.indexOf(prefix1) > 0)
+        {
             return prefix1;
-        } else if (className.contains(prefix2) && className.indexOf(prefix2) > 0) {
+        }
+        else if (className.contains(prefix2) && className.indexOf(prefix2) > 0)
+        {
             return prefix2;
         }
         return null;
     }
 
-    private static String stripClassName(String className) {
+    private static String stripClassName(String className)
+    {
         return className.replace('/', '.');
     }
 
-    private static String constructClazzPart(String stripped, String prefix) {
+    private static String constructClazzPart(String stripped, String prefix)
+    {
         String clazzPart = stripped.substring(stripped.lastIndexOf(prefix), stripped.length());
         return clazzPart.substring(0, clazzPart.length() - ".class".length());
     }
 
-    private static String constructURLPart(String stripped, String className, String prefix) {
+    private static String constructURLPart(String stripped, String className, String prefix)
+    {
         return className.substring(0, stripped.lastIndexOf(prefix));
     }
-
 }

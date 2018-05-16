@@ -24,15 +24,16 @@ import jdk.vm.ci.code.Register;
 import jdk.vm.ci.meta.PlatformKind;
 import jdk.vm.ci.meta.Value;
 
-public abstract class LocationMarker<S extends ValueSet<S>> {
-
+public abstract class LocationMarker<S extends ValueSet<S>>
+{
     private final LIR lir;
     private final BlockMap<S> liveInMap;
     private final BlockMap<S> liveOutMap;
 
     protected final FrameMap frameMap;
 
-    protected LocationMarker(LIR lir, FrameMap frameMap) {
+    protected LocationMarker(LIR lir, FrameMap frameMap)
+    {
         this.lir = lir;
         this.frameMap = frameMap;
         liveInMap = new BlockMap<>(lir.getControlFlowGraph());
@@ -45,16 +46,20 @@ public abstract class LocationMarker<S extends ValueSet<S>> {
 
     protected abstract void processState(LIRInstruction op, LIRFrameState info, S values);
 
-    void build() {
+    void build()
+    {
         AbstractBlockBase<?>[] blocks = lir.getControlFlowGraph().getBlocks();
         UniqueWorkList worklist = new UniqueWorkList(blocks.length);
-        for (int i = blocks.length - 1; i >= 0; i--) {
+        for (int i = blocks.length - 1; i >= 0; i--)
+        {
             worklist.add(blocks[i]);
         }
-        for (AbstractBlockBase<?> block : lir.getControlFlowGraph().getBlocks()) {
+        for (AbstractBlockBase<?> block : lir.getControlFlowGraph().getBlocks())
+        {
             liveInMap.put(block, newLiveValueSet());
         }
-        while (!worklist.isEmpty()) {
+        while (!worklist.isEmpty())
+        {
             AbstractBlockBase<?> block = worklist.poll();
             processBlock(block, worklist);
         }
@@ -63,14 +68,17 @@ public abstract class LocationMarker<S extends ValueSet<S>> {
     /**
      * Merge outSet with in-set of successors.
      */
-    private boolean updateOutBlock(AbstractBlockBase<?> block) {
+    private boolean updateOutBlock(AbstractBlockBase<?> block)
+    {
         S union = newLiveValueSet();
-        for (AbstractBlockBase<?> succ : block.getSuccessors()) {
+        for (AbstractBlockBase<?> succ : block.getSuccessors())
+        {
             union.putAll(liveInMap.get(succ));
         }
         S outSet = liveOutMap.get(block);
         // check if changed
-        if (outSet == null || !union.equals(outSet)) {
+        if (outSet == null || !union.equals(outSet))
+        {
             liveOutMap.put(block, union);
             return true;
         }
@@ -78,19 +86,24 @@ public abstract class LocationMarker<S extends ValueSet<S>> {
     }
 
     @SuppressWarnings("try")
-    private void processBlock(AbstractBlockBase<?> block, UniqueWorkList worklist) {
-        if (updateOutBlock(block)) {
+    private void processBlock(AbstractBlockBase<?> block, UniqueWorkList worklist)
+    {
+        if (updateOutBlock(block))
+        {
             DebugContext debug = lir.getDebug();
-            try (Indent indent = debug.logAndIndent("handle block %s", block)) {
+            try (Indent indent = debug.logAndIndent("handle block %s", block))
+            {
                 currentSet = liveOutMap.get(block).copy();
                 ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
-                for (int i = instructions.size() - 1; i >= 0; i--) {
+                for (int i = instructions.size() - 1; i >= 0; i--)
+                {
                     LIRInstruction inst = instructions.get(i);
                     processInstructionBottomUp(inst);
                 }
                 liveInMap.put(block, currentSet);
                 currentSet = null;
-                for (AbstractBlockBase<?> b : block.getPredecessors()) {
+                for (AbstractBlockBase<?> b : block.getPredecessors())
+                {
                     worklist.add(b);
                 }
             }
@@ -106,15 +119,19 @@ public abstract class LocationMarker<S extends ValueSet<S>> {
      * start or end at the current operation are not included.
      */
     @SuppressWarnings("try")
-    private void processInstructionBottomUp(LIRInstruction op) {
+    private void processInstructionBottomUp(LIRInstruction op)
+    {
         DebugContext debug = lir.getDebug();
-        try (Indent indent = debug.logAndIndent("handle op %d, %s", op.id(), op)) {
+        try (Indent indent = debug.logAndIndent("handle op %d, %s", op.id(), op))
+        {
             // kills
 
             op.visitEachTemp(defConsumer);
             op.visitEachOutput(defConsumer);
-            if (frameMap != null && op.destroysCallerSavedRegisters()) {
-                for (Register reg : frameMap.getRegisterConfig().getCallerSaveRegisters()) {
+            if (frameMap != null && op.destroysCallerSavedRegisters())
+            {
+                for (Register reg : frameMap.getRegisterConfig().getCallerSaveRegisters())
+                {
                     PlatformKind kind = frameMap.getTarget().arch.getLargestStorableKind(reg.getRegisterCategory());
                     defConsumer.visitValue(reg.asValue(LIRKind.value(kind)), OperandMode.TEMP, REGISTER_FLAG_SET);
                 }
@@ -130,20 +147,26 @@ public abstract class LocationMarker<S extends ValueSet<S>> {
         }
     }
 
-    InstructionStateProcedure stateConsumer = new InstructionStateProcedure() {
+    InstructionStateProcedure stateConsumer = new InstructionStateProcedure()
+    {
         @Override
-        public void doState(LIRInstruction inst, LIRFrameState info) {
+        public void doState(LIRInstruction inst, LIRFrameState info)
+        {
             processState(inst, info, currentSet);
         }
     };
 
-    ValueConsumer useConsumer = new ValueConsumer() {
+    ValueConsumer useConsumer = new ValueConsumer()
+    {
         @Override
-        public void visitValue(Value operand, OperandMode mode, EnumSet<OperandFlag> flags) {
-            if (shouldProcessValue(operand)) {
+        public void visitValue(Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
+        {
+            if (shouldProcessValue(operand))
+            {
                 // no need to insert values and derived reference
                 DebugContext debug = lir.getDebug();
-                if (debug.isLogEnabled()) {
+                if (debug.isLogEnabled())
+                {
                     debug.log("set operand: %s", operand);
                 }
                 currentSet.put(operand);
@@ -151,18 +174,23 @@ public abstract class LocationMarker<S extends ValueSet<S>> {
         }
     };
 
-    ValueConsumer defConsumer = new ValueConsumer() {
+    ValueConsumer defConsumer = new ValueConsumer()
+    {
         @Override
-        public void visitValue(Value operand, OperandMode mode, EnumSet<OperandFlag> flags) {
-            if (shouldProcessValue(operand)) {
+        public void visitValue(Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
+        {
+            if (shouldProcessValue(operand))
+            {
                 DebugContext debug = lir.getDebug();
-                if (debug.isLogEnabled()) {
+                if (debug.isLogEnabled())
+                {
                     debug.log("clear operand: %s", operand);
                 }
                 currentSet.remove(operand);
-            } else {
-                assert isIllegal(operand) || !operand.getValueKind().equals(LIRKind.Illegal) || mode == OperandMode.TEMP : String.format("Illegal PlatformKind is only allowed for TEMP mode: %s, %s",
-                                operand, mode);
+            }
+            else
+            {
+                assert isIllegal(operand) || !operand.getValueKind().equals(LIRKind.Illegal) || mode == OperandMode.TEMP : String.format("Illegal PlatformKind is only allowed for TEMP mode: %s, %s", operand, mode);
             }
         }
     };

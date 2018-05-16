@@ -19,39 +19,45 @@ import jdk.vm.ci.code.BailoutException;
  * throws a {@link BailoutException} instead during graph building.
  */
 @NodeInfo(allowedUsageTypes = {InputType.Memory})
-public abstract class AccessMonitorNode extends AbstractMemoryCheckpoint implements MemoryCheckpoint, DeoptimizingNode.DeoptBefore, DeoptimizingNode.DeoptAfter {
-
+public abstract class AccessMonitorNode extends AbstractMemoryCheckpoint implements MemoryCheckpoint, DeoptimizingNode.DeoptBefore, DeoptimizingNode.DeoptAfter
+{
     public static final NodeClass<AccessMonitorNode> TYPE = NodeClass.create(AccessMonitorNode.class);
     @OptionalInput(InputType.State) FrameState stateBefore;
     @Input ValueNode object;
     @Input(InputType.Association) MonitorIdNode monitorId;
 
     @Override
-    public boolean canDeoptimize() {
+    public boolean canDeoptimize()
+    {
         return true;
     }
 
     @Override
-    public FrameState stateBefore() {
+    public FrameState stateBefore()
+    {
         return stateBefore;
     }
 
     @Override
-    public void setStateBefore(FrameState f) {
+    public void setStateBefore(FrameState f)
+    {
         updateUsages(stateBefore, f);
         stateBefore = f;
     }
 
-    public ValueNode object() {
+    public ValueNode object()
+    {
         return object;
     }
 
-    public void setObject(ValueNode lockedObject) {
+    public void setObject(ValueNode lockedObject)
+    {
         updateUsages(this.object, lockedObject);
         this.object = lockedObject;
     }
 
-    public MonitorIdNode getMonitorId() {
+    public MonitorIdNode getMonitorId()
+    {
         return monitorId;
     }
 
@@ -60,7 +66,8 @@ public abstract class AccessMonitorNode extends AbstractMemoryCheckpoint impleme
      *
      * @param object the instruction producing the object
      */
-    protected AccessMonitorNode(NodeClass<? extends AccessMonitorNode> c, ValueNode object, MonitorIdNode monitorId) {
+    protected AccessMonitorNode(NodeClass<? extends AccessMonitorNode> c, ValueNode object, MonitorIdNode monitorId)
+    {
         super(c, StampFactory.forVoid());
         this.object = object;
         this.monitorId = monitorId;

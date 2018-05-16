@@ -18,16 +18,19 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
  * Square root.
  */
 @NodeInfo(cycles = CYCLES_16, size = SIZE_1)
-public final class SqrtNode extends UnaryArithmeticNode<Sqrt> implements ArithmeticLIRLowerable {
-
+public final class SqrtNode extends UnaryArithmeticNode<Sqrt> implements ArithmeticLIRLowerable
+{
     public static final NodeClass<SqrtNode> TYPE = NodeClass.create(SqrtNode.class);
 
-    protected SqrtNode(ValueNode x) {
+    protected SqrtNode(ValueNode x)
+    {
         super(TYPE, ArithmeticOpTable::getSqrt, x);
     }
 
-    public static ValueNode create(ValueNode x, NodeView view) {
-        if (x.isConstant()) {
+    public static ValueNode create(ValueNode x, NodeView view)
+    {
+        if (x.isConstant())
+        {
             ArithmeticOpTable.UnaryOp<Sqrt> op = ArithmeticOpTable.forStamp(x.stamp(view)).getSqrt();
             return ConstantNode.forPrimitive(op.foldStamp(x.stamp(view)), op.foldConstant(x.asConstant()));
         }
@@ -35,7 +38,8 @@ public final class SqrtNode extends UnaryArithmeticNode<Sqrt> implements Arithme
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen) {
+    public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
+    {
         nodeValueMap.setResult(this, gen.emitMathSqrt(nodeValueMap.operand(getValue())));
     }
 }

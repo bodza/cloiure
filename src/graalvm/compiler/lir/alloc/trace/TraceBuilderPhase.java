@@ -25,25 +25,26 @@ import graalvm.compiler.options.OptionValues;
 
 import jdk.vm.ci.code.TargetDescription;
 
-public class TraceBuilderPhase extends AllocationPhase {
-
-    public enum TraceBuilder {
+public class TraceBuilderPhase extends AllocationPhase
+{
+    public enum TraceBuilder
+    {
         UniDirectional,
         BiDirectional,
         SingleBlock
     }
 
-    public static class Options {
-        // @formatter:off
+    public static class Options
+    {
         @Option(help = "Trace building algorithm.", type = OptionType.Debug)
         public static final EnumOptionKey<TraceBuilder> TraceBuilding = new EnumOptionKey<>(TraceBuilder.UniDirectional);
         @Option(help = "Schedule trivial traces as early as possible.", type = OptionType.Debug)
         public static final OptionKey<Boolean> TraceRAScheduleTrivialTracesEarly = new OptionKey<>(true);
-        // @formatter:on
     }
 
     @Override
-    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context) {
+    protected void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context)
+    {
         AbstractBlockBase<?>[] linearScanOrder = lirGenRes.getLIR().linearScanOrder();
         AbstractBlockBase<?> startBlock = linearScanOrder[0];
         LIR lir = lirGenRes.getLIR();
@@ -52,9 +53,11 @@ public class TraceBuilderPhase extends AllocationPhase {
         final TraceBuilderResult traceBuilderResult = getTraceBuilderResult(lir, startBlock, linearScanOrder);
 
         DebugContext debug = lir.getDebug();
-        if (debug.isLogEnabled(DebugContext.BASIC_LEVEL)) {
+        if (debug.isLogEnabled(DebugContext.BASIC_LEVEL))
+        {
             ArrayList<Trace> traces = traceBuilderResult.getTraces();
-            for (int i = 0; i < traces.size(); i++) {
+            for (int i = 0; i < traces.size(); i++)
+            {
                 Trace trace = traces.get(i);
                 debug.log(DebugContext.BASIC_LEVEL, "Trace %5d: %s%s", i, trace, isTrivialTrace(lirGenRes.getLIR(), trace) ? " (trivial)" : "");
             }
@@ -64,14 +67,16 @@ public class TraceBuilderPhase extends AllocationPhase {
         context.contextAdd(traceBuilderResult);
     }
 
-    private static TraceBuilderResult getTraceBuilderResult(LIR lir, AbstractBlockBase<?> startBlock, AbstractBlockBase<?>[] linearScanOrder) {
+    private static TraceBuilderResult getTraceBuilderResult(LIR lir, AbstractBlockBase<?> startBlock, AbstractBlockBase<?>[] linearScanOrder)
+    {
         TraceBuilderResult.TrivialTracePredicate pred = getTrivialTracePredicate(lir);
 
         OptionValues options = lir.getOptions();
         TraceBuilder selectedTraceBuilder = Options.TraceBuilding.getValue(options);
         DebugContext debug = lir.getDebug();
         debug.log(DebugContext.BASIC_LEVEL, "Building Traces using %s", selectedTraceBuilder);
-        switch (Options.TraceBuilding.getValue(options)) {
+        switch (Options.TraceBuilding.getValue(options))
+        {
             case SingleBlock:
                 return SingleBlockTraceBuilder.computeTraces(debug, startBlock, linearScanOrder, pred);
             case BiDirectional:
@@ -82,13 +87,17 @@ public class TraceBuilderPhase extends AllocationPhase {
         throw GraalError.shouldNotReachHere("Unknown trace building algorithm: " + Options.TraceBuilding.getValue(options));
     }
 
-    public static TraceBuilderResult.TrivialTracePredicate getTrivialTracePredicate(LIR lir) {
-        if (!Options.TraceRAScheduleTrivialTracesEarly.getValue(lir.getOptions())) {
+    public static TraceBuilderResult.TrivialTracePredicate getTrivialTracePredicate(LIR lir)
+    {
+        if (!Options.TraceRAScheduleTrivialTracesEarly.getValue(lir.getOptions()))
+        {
             return null;
         }
-        return new TrivialTracePredicate() {
+        return new TrivialTracePredicate()
+        {
             @Override
-            public boolean isTrivialTrace(Trace trace) {
+            public boolean isTrivialTrace(Trace trace)
+            {
                 return TraceUtil.isTrivialTrace(lir, trace);
             }
         };

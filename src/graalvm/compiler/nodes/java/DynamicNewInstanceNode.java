@@ -19,7 +19,8 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
 @NodeInfo
-public class DynamicNewInstanceNode extends AbstractNewObjectNode implements Canonicalizable {
+public class DynamicNewInstanceNode extends AbstractNewObjectNode implements Canonicalizable
+{
     public static final NodeClass<DynamicNewInstanceNode> TYPE = NodeClass.create(DynamicNewInstanceNode.class);
 
     @Input ValueNode clazz;
@@ -31,30 +32,37 @@ public class DynamicNewInstanceNode extends AbstractNewObjectNode implements Can
      */
     @OptionalInput ValueNode classClass;
 
-    public DynamicNewInstanceNode(ValueNode clazz, boolean fillContents) {
+    public DynamicNewInstanceNode(ValueNode clazz, boolean fillContents)
+    {
         this(TYPE, clazz, fillContents, null);
     }
 
-    protected DynamicNewInstanceNode(NodeClass<? extends DynamicNewInstanceNode> c, ValueNode clazz, boolean fillContents, FrameState stateBefore) {
+    protected DynamicNewInstanceNode(NodeClass<? extends DynamicNewInstanceNode> c, ValueNode clazz, boolean fillContents, FrameState stateBefore)
+    {
         super(c, StampFactory.objectNonNull(), fillContents, stateBefore);
         this.clazz = clazz;
         assert ((ObjectStamp) clazz.stamp(NodeView.DEFAULT)).nonNull();
     }
 
-    public ValueNode getInstanceType() {
+    public ValueNode getInstanceType()
+    {
         return clazz;
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool) {
-        if (clazz.isConstant()) {
-            if (GeneratePIC.getValue(tool.getOptions())) {
+    public Node canonical(CanonicalizerTool tool)
+    {
+        if (clazz.isConstant())
+        {
+            if (GeneratePIC.getValue(tool.getOptions()))
+            {
                 // Can't fold for AOT, because the resulting NewInstanceNode will be missing its
                 // InitializeKlassNode.
                 return this;
             }
             ResolvedJavaType type = tool.getConstantReflection().asJavaType(clazz.asConstant());
-            if (type != null && type.isInitialized() && !throwsInstantiationException(type, tool.getMetaAccess())) {
+            if (type != null && type.isInitialized() && !throwsInstantiationException(type, tool.getMetaAccess()))
+            {
                 return createNewInstanceNode(type);
             }
         }
@@ -62,23 +70,28 @@ public class DynamicNewInstanceNode extends AbstractNewObjectNode implements Can
     }
 
     /** Hook for subclasses to instantiate a subclass of {@link NewInstanceNode}. */
-    protected NewInstanceNode createNewInstanceNode(ResolvedJavaType type) {
+    protected NewInstanceNode createNewInstanceNode(ResolvedJavaType type)
+    {
         return new NewInstanceNode(type, fillContents(), stateBefore());
     }
 
-    public static boolean throwsInstantiationException(Class<?> type, Class<?> classClass) {
+    public static boolean throwsInstantiationException(Class<?> type, Class<?> classClass)
+    {
         return type.isPrimitive() || type.isArray() || type.isInterface() || Modifier.isAbstract(type.getModifiers()) || type == classClass;
     }
 
-    public static boolean throwsInstantiationException(ResolvedJavaType type, MetaAccessProvider metaAccess) {
+    public static boolean throwsInstantiationException(ResolvedJavaType type, MetaAccessProvider metaAccess)
+    {
         return type.isPrimitive() || type.isArray() || type.isInterface() || Modifier.isAbstract(type.getModifiers()) || type.equals(metaAccess.lookupJavaType(Class.class));
     }
 
-    public ValueNode getClassClass() {
+    public ValueNode getClassClass()
+    {
         return classClass;
     }
 
-    public void setClassClass(ValueNode newClassClass) {
+    public void setClassClass(ValueNode newClassClass)
+    {
         updateUsages(classClass, newClassClass);
         classClass = newClassClass;
     }

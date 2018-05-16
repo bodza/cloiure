@@ -14,14 +14,15 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface Fold {
-
+public @interface Fold
+{
     /**
      * Annotates a parameter to an {@link Fold}-annotated method. This parameter will be
      * automatically injected by the compiler. The caller should always pass {@code null}.
      */
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.PARAMETER)
-    public @interface InjectedParameter {
+    public @interface InjectedParameter
+    {
     }
 }

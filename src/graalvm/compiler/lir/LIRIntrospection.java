@@ -24,8 +24,8 @@ import jdk.vm.ci.code.RegisterValue;
 import jdk.vm.ci.code.StackSlot;
 import jdk.vm.ci.meta.Value;
 
-abstract class LIRIntrospection<T> extends FieldIntrospection<T> {
-
+abstract class LIRIntrospection<T> extends FieldIntrospection<T>
+{
     private static final Class<Value> VALUE_CLASS = Value.class;
     private static final Class<ConstantValue> CONSTANT_VALUE_CLASS = ConstantValue.class;
     private static final Class<Variable> VARIABLE_CLASS = Variable.class;
@@ -33,49 +33,60 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T> {
     private static final Class<StackSlot> STACK_SLOT_CLASS = StackSlot.class;
     private static final Class<Value[]> VALUE_ARRAY_CLASS = Value[].class;
 
-    LIRIntrospection(Class<T> clazz) {
+    LIRIntrospection(Class<T> clazz)
+    {
         super(clazz);
     }
 
-    protected static class Values extends Fields {
+    protected static class Values extends Fields
+    {
         private final int directCount;
         private final EnumSet<OperandFlag>[] flags;
 
-        public Values(OperandModeAnnotation mode) {
+        public Values(OperandModeAnnotation mode)
+        {
             this(mode.directCount, mode.values);
         }
 
         @SuppressWarnings({"unchecked"})
-        public Values(int directCount, ArrayList<ValueFieldInfo> fields) {
+        public Values(int directCount, ArrayList<ValueFieldInfo> fields)
+        {
             super(fields);
             this.directCount = directCount;
             flags = (EnumSet<OperandFlag>[]) new EnumSet<?>[fields.size()];
-            for (int i = 0; i < fields.size(); i++) {
+            for (int i = 0; i < fields.size(); i++)
+            {
                 flags[i] = fields.get(i).flags;
             }
         }
 
-        public int getDirectCount() {
+        public int getDirectCount()
+        {
             return directCount;
         }
 
-        public EnumSet<OperandFlag> getFlags(int i) {
+        public EnumSet<OperandFlag> getFlags(int i)
+        {
             return flags[i];
         }
 
-        protected Value getValue(Object obj, int index) {
+        protected Value getValue(Object obj, int index)
+        {
             return (Value) getObject(obj, index);
         }
 
-        protected void setValue(Object obj, int index, Value value) {
+        protected void setValue(Object obj, int index, Value value)
+        {
             putObject(obj, index, value);
         }
 
-        protected Value[] getValueArray(Object obj, int index) {
+        protected Value[] getValueArray(Object obj, int index)
+        {
             return (Value[]) getObject(obj, index);
         }
 
-        protected void setValueArray(Object obj, int index, Value[] valueArray) {
+        protected void setValueArray(Object obj, int index, Value[] valueArray)
+        {
             putObject(obj, index, valueArray);
         }
     }
@@ -85,11 +96,12 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T> {
      */
     protected Values values;
 
-    protected static class ValueFieldInfo extends FieldsScanner.FieldInfo {
-
+    protected static class ValueFieldInfo extends FieldsScanner.FieldInfo
+    {
         final EnumSet<OperandFlag> flags;
 
-        public ValueFieldInfo(long offset, String name, Class<?> type, Class<?> declaringClass, EnumSet<OperandFlag> flags) {
+        public ValueFieldInfo(long offset, String name, Class<?> type, Class<?> declaringClass, EnumSet<OperandFlag> flags)
+        {
             super(offset, name, type, declaringClass);
             assert VALUE_ARRAY_CLASS.isAssignableFrom(type) || VALUE_CLASS.isAssignableFrom(type);
             this.flags = flags;
@@ -99,13 +111,19 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T> {
          * Sorts non-array fields before array fields.
          */
         @Override
-        public int compareTo(FieldsScanner.FieldInfo o) {
-            if (VALUE_ARRAY_CLASS.isAssignableFrom(o.type)) {
-                if (!VALUE_ARRAY_CLASS.isAssignableFrom(type)) {
+        public int compareTo(FieldsScanner.FieldInfo o)
+        {
+            if (VALUE_ARRAY_CLASS.isAssignableFrom(o.type))
+            {
+                if (!VALUE_ARRAY_CLASS.isAssignableFrom(type))
+                {
                     return -1;
                 }
-            } else {
-                if (VALUE_ARRAY_CLASS.isAssignableFrom(type)) {
+            }
+            else
+            {
+                if (VALUE_ARRAY_CLASS.isAssignableFrom(type))
+                {
                     return 1;
                 }
             }
@@ -113,13 +131,14 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T> {
         }
 
         @Override
-        public String toString() {
+        public String toString()
+        {
             return super.toString() + flags;
         }
     }
 
-    protected static class OperandModeAnnotation {
-
+    protected static class OperandModeAnnotation
+    {
         /**
          * Number of non-array fields in {@link #values}.
          */
@@ -127,22 +146,26 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T> {
         public final ArrayList<ValueFieldInfo> values = new ArrayList<>();
     }
 
-    protected abstract static class LIRFieldsScanner extends FieldsScanner {
-
+    protected abstract static class LIRFieldsScanner extends FieldsScanner
+    {
         public final EconomicMap<Class<? extends Annotation>, OperandModeAnnotation> valueAnnotations;
         public final ArrayList<FieldsScanner.FieldInfo> states = new ArrayList<>();
 
-        public LIRFieldsScanner(FieldsScanner.CalcOffset calc) {
+        public LIRFieldsScanner(FieldsScanner.CalcOffset calc)
+        {
             super(calc);
             valueAnnotations = EconomicMap.create(Equivalence.DEFAULT);
         }
 
-        protected OperandModeAnnotation getOperandModeAnnotation(Field field) {
+        protected OperandModeAnnotation getOperandModeAnnotation(Field field)
+        {
             OperandModeAnnotation result = null;
             MapCursor<Class<? extends Annotation>, OperandModeAnnotation> cursor = valueAnnotations.getEntries();
-            while (cursor.advance()) {
+            while (cursor.advance())
+            {
                 Annotation annotation = field.getAnnotation(cursor.getKey());
-                if (annotation != null) {
+                if (annotation != null)
+                {
                     assert result == null : "Field has two operand mode annotations: " + field;
                     result = cursor.getValue();
                 }
@@ -153,9 +176,11 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T> {
         protected abstract EnumSet<OperandFlag> getFlags(Field field);
 
         @Override
-        protected void scanField(Field field, long offset) {
+        protected void scanField(Field field, long offset)
+        {
             Class<?> type = field.getType();
-            if (VALUE_CLASS.isAssignableFrom(type) && !CONSTANT_VALUE_CLASS.isAssignableFrom(type)) {
+            if (VALUE_CLASS.isAssignableFrom(type) && !CONSTANT_VALUE_CLASS.isAssignableFrom(type))
+            {
                 assert !Modifier.isFinal(field.getModifiers()) : "Value field must not be declared final because it is modified by register allocator: " + field;
                 OperandModeAnnotation annotation = getOperandModeAnnotation(field);
                 assert annotation != null : "Field must have operand mode annotation: " + field;
@@ -163,61 +188,83 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T> {
                 assert verifyFlags(field, type, flags);
                 annotation.values.add(new ValueFieldInfo(offset, field.getName(), type, field.getDeclaringClass(), flags));
                 annotation.directCount++;
-            } else if (VALUE_ARRAY_CLASS.isAssignableFrom(type)) {
+            }
+            else if (VALUE_ARRAY_CLASS.isAssignableFrom(type))
+            {
                 OperandModeAnnotation annotation = getOperandModeAnnotation(field);
                 assert annotation != null : "Field must have operand mode annotation: " + field;
                 EnumSet<OperandFlag> flags = getFlags(field);
                 assert verifyFlags(field, type.getComponentType(), flags);
                 annotation.values.add(new ValueFieldInfo(offset, field.getName(), type, field.getDeclaringClass(), flags));
-            } else {
+            }
+            else
+            {
                 assert getOperandModeAnnotation(field) == null : "Field must not have operand mode annotation: " + field;
                 assert field.getAnnotation(LIRInstruction.State.class) == null : "Field must not have state annotation: " + field;
                 super.scanField(field, offset);
             }
         }
 
-        private static boolean verifyFlags(Field field, Class<?> type, EnumSet<OperandFlag> flags) {
-            if (flags.contains(REG)) {
+        private static boolean verifyFlags(Field field, Class<?> type, EnumSet<OperandFlag> flags)
+        {
+            if (flags.contains(REG))
+            {
                 assert type.isAssignableFrom(REGISTER_VALUE_CLASS) || type.isAssignableFrom(VARIABLE_CLASS) : "Cannot assign RegisterValue / Variable to field with REG flag:" + field;
             }
-            if (flags.contains(STACK)) {
+            if (flags.contains(STACK))
+            {
                 assert type.isAssignableFrom(STACK_SLOT_CLASS) : "Cannot assign StackSlot to field with STACK flag:" + field;
             }
-            if (flags.contains(CONST)) {
+            if (flags.contains(CONST))
+            {
                 assert type.isAssignableFrom(CONSTANT_VALUE_CLASS) : "Cannot assign Constant to field with CONST flag:" + field;
             }
             return true;
         }
     }
 
-    protected static void forEach(LIRInstruction inst, Values values, OperandMode mode, InstructionValueProcedure proc) {
-        for (int i = 0; i < values.getCount(); i++) {
+    protected static void forEach(LIRInstruction inst, Values values, OperandMode mode, InstructionValueProcedure proc)
+    {
+        for (int i = 0; i < values.getCount(); i++)
+        {
             assert LIRInstruction.ALLOWED_FLAGS.get(mode).containsAll(values.getFlags(i));
 
-            if (i < values.getDirectCount()) {
+            if (i < values.getDirectCount())
+            {
                 Value value = values.getValue(inst, i);
                 Value newValue;
-                if (value instanceof CompositeValue) {
+                if (value instanceof CompositeValue)
+                {
                     CompositeValue composite = (CompositeValue) value;
                     newValue = composite.forEachComponent(inst, mode, proc);
-                } else {
+                }
+                else
+                {
                     newValue = proc.doValue(inst, value, mode, values.getFlags(i));
                 }
-                if (!value.identityEquals(newValue)) {
+                if (!value.identityEquals(newValue))
+                {
                     values.setValue(inst, i, newValue);
                 }
-            } else {
+            }
+            else
+            {
                 Value[] valueArray = values.getValueArray(inst, i);
-                for (int j = 0; j < valueArray.length; j++) {
+                for (int j = 0; j < valueArray.length; j++)
+                {
                     Value value = valueArray[j];
                     Value newValue;
-                    if (value instanceof CompositeValue) {
+                    if (value instanceof CompositeValue)
+                    {
                         CompositeValue composite = (CompositeValue) value;
                         newValue = composite.forEachComponent(inst, mode, proc);
-                    } else {
+                    }
+                    else
+                    {
                         newValue = proc.doValue(inst, value, mode, values.getFlags(i));
                     }
-                    if (!value.identityEquals(newValue)) {
+                    if (!value.identityEquals(newValue))
+                    {
                         valueArray[j] = newValue;
                     }
                 }
@@ -225,26 +272,38 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T> {
         }
     }
 
-    protected static void visitEach(LIRInstruction inst, Values values, OperandMode mode, InstructionValueConsumer proc) {
-        for (int i = 0; i < values.getCount(); i++) {
+    protected static void visitEach(LIRInstruction inst, Values values, OperandMode mode, InstructionValueConsumer proc)
+    {
+        for (int i = 0; i < values.getCount(); i++)
+        {
             assert LIRInstruction.ALLOWED_FLAGS.get(mode).containsAll(values.getFlags(i));
 
-            if (i < values.getDirectCount()) {
+            if (i < values.getDirectCount())
+            {
                 Value value = values.getValue(inst, i);
-                if (value instanceof CompositeValue) {
+                if (value instanceof CompositeValue)
+                {
                     CompositeValue composite = (CompositeValue) value;
                     composite.visitEachComponent(inst, mode, proc);
-                } else {
+                }
+                else
+                {
                     proc.visitValue(inst, value, mode, values.getFlags(i));
                 }
-            } else {
+            }
+            else
+            {
                 Value[] valueArray = values.getValueArray(inst, i);
-                for (int j = 0; j < valueArray.length; j++) {
+                for (int j = 0; j < valueArray.length; j++)
+                {
                     Value value = valueArray[j];
-                    if (value instanceof CompositeValue) {
+                    if (value instanceof CompositeValue)
+                    {
                         CompositeValue composite = (CompositeValue) value;
                         composite.visitEachComponent(inst, mode, proc);
-                    } else {
+                    }
+                    else
+                    {
                         proc.visitValue(inst, value, mode, values.getFlags(i));
                     }
                 }
@@ -252,25 +311,32 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T> {
         }
     }
 
-    protected static void appendValues(StringBuilder sb, Object obj, String start, String end, String startMultiple, String endMultiple, String[] prefix, Fields... fieldsList) {
+    protected static void appendValues(StringBuilder sb, Object obj, String start, String end, String startMultiple, String endMultiple, String[] prefix, Fields... fieldsList)
+    {
         int total = 0;
-        for (Fields fields : fieldsList) {
+        for (Fields fields : fieldsList)
+        {
             total += fields.getCount();
         }
-        if (total == 0) {
+        if (total == 0)
+        {
             return;
         }
 
         sb.append(start);
-        if (total > 1) {
+        if (total > 1)
+        {
             sb.append(startMultiple);
         }
         String sep = "";
         int i = 0;
-        for (Fields fields : fieldsList) {
-            for (int j = 0; j < fields.getCount(); j++) {
+        for (Fields fields : fieldsList)
+        {
+            for (int j = 0; j < fields.getCount(); j++)
+            {
                 sb.append(sep).append(prefix[i]);
-                if (total > 1) {
+                if (total > 1)
+                {
                     sb.append(fields.getName(j)).append(": ");
                 }
                 sb.append(getFieldString(obj, j, fields));
@@ -278,30 +344,43 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T> {
             }
             i++;
         }
-        if (total > 1) {
+        if (total > 1)
+        {
             sb.append(endMultiple);
         }
         sb.append(end);
     }
 
-    protected static String getFieldString(Object obj, int index, Fields fields) {
+    protected static String getFieldString(Object obj, int index, Fields fields)
+    {
         Object value = fields.get(obj, index);
         Class<?> type = fields.getType(index);
-        if (value == null || type.isPrimitive() || !type.isArray()) {
+        if (value == null || type.isPrimitive() || !type.isArray())
+        {
             return String.valueOf(value);
         }
-        if (type == int[].class) {
+        if (type == int[].class)
+        {
             return Arrays.toString((int[]) value);
-        } else if (type == double[].class) {
+        }
+        else if (type == double[].class)
+        {
             return Arrays.toString((double[]) value);
-        } else if (type == byte[].class) {
+        }
+        else if (type == byte[].class)
+        {
             byte[] byteValue = (byte[]) value;
-            if (isPrintableAsciiString(byteValue)) {
+            if (isPrintableAsciiString(byteValue))
+            {
                 return toString(byteValue);
-            } else {
+            }
+            else
+            {
                 return Arrays.toString(byteValue);
             }
-        } else if (!type.getComponentType().isPrimitive()) {
+        }
+        else if (!type.getComponentType().isPrimitive())
+        {
             return Arrays.toString((Object[]) value);
         }
         assert false : "unhandled field type: " + type;
@@ -315,27 +394,39 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T> {
      * @param array
      * @return true if there are only printable ASCII characters and \0, false otherwise
      */
-    private static boolean isPrintableAsciiString(byte[] array) {
-        for (byte b : array) {
+    private static boolean isPrintableAsciiString(byte[] array)
+    {
+        for (byte b : array)
+        {
             char c = (char) b;
-            if (c != 0 && (c < 0x20 || c > 0x7F)) {
+            if (c != 0 && (c < 0x20 || c > 0x7F))
+            {
                 return false;
             }
         }
         return true;
     }
 
-    private static String toString(byte[] bytes) {
+    private static String toString(byte[] bytes)
+    {
         StringBuilder sb = new StringBuilder();
         sb.append('"');
-        for (byte b : bytes) {
-            if (b == 0) {
+        for (byte b : bytes)
+        {
+            if (b == 0)
+            {
                 sb.append("\\0");
-            } else if (b == '"') {
+            }
+            else if (b == '"')
+            {
                 sb.append("\\\"");
-            } else if (b == '\n') {
+            }
+            else if (b == '\n')
+            {
                 sb.append("\\n");
-            } else {
+            }
+            else
+            {
                 sb.append((char) b);
             }
         }

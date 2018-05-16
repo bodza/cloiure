@@ -16,8 +16,8 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 /**
  * A set of providers, some of which may not be present (i.e., null).
  */
-public class Providers implements CodeGenProviders {
-
+public class Providers implements CodeGenProviders
+{
     private final MetaAccessProvider metaAccess;
     private final CodeCacheProvider codeCache;
     private final LoweringProvider lowerer;
@@ -27,8 +27,8 @@ public class Providers implements CodeGenProviders {
     private final Replacements replacements;
     private final StampProvider stampProvider;
 
-    public Providers(MetaAccessProvider metaAccess, CodeCacheProvider codeCache, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider,
-                    ForeignCallsProvider foreignCalls, LoweringProvider lowerer, Replacements replacements, StampProvider stampProvider) {
+    public Providers(MetaAccessProvider metaAccess, CodeCacheProvider codeCache, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, ForeignCallsProvider foreignCalls, LoweringProvider lowerer, Replacements replacements, StampProvider stampProvider)
+    {
         this.metaAccess = metaAccess;
         this.codeCache = codeCache;
         this.constantReflection = constantReflection;
@@ -39,86 +39,103 @@ public class Providers implements CodeGenProviders {
         this.stampProvider = stampProvider;
     }
 
-    public Providers(Providers copyFrom) {
-        this(copyFrom.getMetaAccess(), copyFrom.getCodeCache(), copyFrom.getConstantReflection(), copyFrom.getConstantFieldProvider(), copyFrom.getForeignCalls(), copyFrom.getLowerer(),
-                        copyFrom.getReplacements(), copyFrom.getStampProvider());
+    public Providers(Providers copyFrom)
+    {
+        this(copyFrom.getMetaAccess(), copyFrom.getCodeCache(), copyFrom.getConstantReflection(), copyFrom.getConstantFieldProvider(), copyFrom.getForeignCalls(), copyFrom.getLowerer(), copyFrom.getReplacements(), copyFrom.getStampProvider());
     }
 
-    public Providers(PhaseContext copyFrom) {
-        this(copyFrom.getMetaAccess(), null, copyFrom.getConstantReflection(), copyFrom.getConstantFieldProvider(), null, copyFrom.getLowerer(), copyFrom.getReplacements(),
-                        copyFrom.getStampProvider());
+    public Providers(PhaseContext copyFrom)
+    {
+        this(copyFrom.getMetaAccess(), null, copyFrom.getConstantReflection(), copyFrom.getConstantFieldProvider(), null, copyFrom.getLowerer(), copyFrom.getReplacements(), copyFrom.getStampProvider());
     }
 
     @Override
-    public MetaAccessProvider getMetaAccess() {
+    public MetaAccessProvider getMetaAccess()
+    {
         return metaAccess;
     }
 
     @Override
-    public CodeCacheProvider getCodeCache() {
+    public CodeCacheProvider getCodeCache()
+    {
         return codeCache;
     }
 
     @Override
-    public ForeignCallsProvider getForeignCalls() {
+    public ForeignCallsProvider getForeignCalls()
+    {
         return foreignCalls;
     }
 
-    public LoweringProvider getLowerer() {
+    public LoweringProvider getLowerer()
+    {
         return lowerer;
     }
 
     @Override
-    public ArrayOffsetProvider getArrayOffsetProvider() {
+    public ArrayOffsetProvider getArrayOffsetProvider()
+    {
         return lowerer;
     }
 
     @Override
-    public ConstantReflectionProvider getConstantReflection() {
+    public ConstantReflectionProvider getConstantReflection()
+    {
         return constantReflection;
     }
 
-    public ConstantFieldProvider getConstantFieldProvider() {
+    public ConstantFieldProvider getConstantFieldProvider()
+    {
         return constantFieldProvider;
     }
 
-    public Replacements getReplacements() {
+    public Replacements getReplacements()
+    {
         return replacements;
     }
 
-    public StampProvider getStampProvider() {
+    public StampProvider getStampProvider()
+    {
         return stampProvider;
     }
 
-    public Providers copyWith(MetaAccessProvider substitution) {
+    public Providers copyWith(MetaAccessProvider substitution)
+    {
         return new Providers(substitution, codeCache, constantReflection, constantFieldProvider, foreignCalls, lowerer, replacements, stampProvider);
     }
 
-    public Providers copyWith(CodeCacheProvider substitution) {
+    public Providers copyWith(CodeCacheProvider substitution)
+    {
         return new Providers(metaAccess, substitution, constantReflection, constantFieldProvider, foreignCalls, lowerer, replacements, stampProvider);
     }
 
-    public Providers copyWith(ConstantReflectionProvider substitution) {
+    public Providers copyWith(ConstantReflectionProvider substitution)
+    {
         return new Providers(metaAccess, codeCache, substitution, constantFieldProvider, foreignCalls, lowerer, replacements, stampProvider);
     }
 
-    public Providers copyWith(ConstantFieldProvider substitution) {
+    public Providers copyWith(ConstantFieldProvider substitution)
+    {
         return new Providers(metaAccess, codeCache, constantReflection, substitution, foreignCalls, lowerer, replacements, stampProvider);
     }
 
-    public Providers copyWith(ForeignCallsProvider substitution) {
+    public Providers copyWith(ForeignCallsProvider substitution)
+    {
         return new Providers(metaAccess, codeCache, constantReflection, constantFieldProvider, substitution, lowerer, replacements, stampProvider);
     }
 
-    public Providers copyWith(LoweringProvider substitution) {
+    public Providers copyWith(LoweringProvider substitution)
+    {
         return new Providers(metaAccess, codeCache, constantReflection, constantFieldProvider, foreignCalls, substitution, replacements, stampProvider);
     }
 
-    public Providers copyWith(Replacements substitution) {
+    public Providers copyWith(Replacements substitution)
+    {
         return new Providers(metaAccess, codeCache, constantReflection, constantFieldProvider, foreignCalls, lowerer, substitution, stampProvider);
     }
 
-    public Providers copyWith(StampProvider substitution) {
+    public Providers copyWith(StampProvider substitution)
+    {
         return new Providers(metaAccess, codeCache, constantReflection, constantFieldProvider, foreignCalls, lowerer, replacements, substitution);
     }
 }

@@ -29,8 +29,8 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * Loads a method from the virtual method table of a given hub.
  */
 @NodeInfo(cycles = CYCLES_2, size = SIZE_1)
-public final class LoadMethodNode extends FixedWithNextNode implements Lowerable, Canonicalizable {
-
+public final class LoadMethodNode extends FixedWithNextNode implements Lowerable, Canonicalizable
+{
     public static final NodeClass<LoadMethodNode> TYPE = NodeClass.create(LoadMethodNode.class);
     @Input ValueNode hub;
     protected final ResolvedJavaMethod method;
@@ -41,11 +41,13 @@ public final class LoadMethodNode extends FixedWithNextNode implements Lowerable
      */
     protected final ResolvedJavaType callerType;
 
-    public ValueNode getHub() {
+    public ValueNode getHub()
+    {
         return hub;
     }
 
-    public LoadMethodNode(@InjectedNodeParameter Stamp stamp, ResolvedJavaMethod method, ResolvedJavaType receiverType, ResolvedJavaType callerType, ValueNode hub) {
+    public LoadMethodNode(@InjectedNodeParameter Stamp stamp, ResolvedJavaMethod method, ResolvedJavaType receiverType, ResolvedJavaType callerType, ValueNode hub)
+    {
         super(TYPE, stamp);
         this.receiverType = receiverType;
         this.callerType = callerType;
@@ -53,35 +55,43 @@ public final class LoadMethodNode extends FixedWithNextNode implements Lowerable
         this.method = method;
         assert method.isConcrete() : "Cannot load abstract method from a hub";
         assert method.hasReceiver() : "Cannot load a static method from a hub";
-        if (!method.isInVirtualMethodTable(receiverType)) {
+        if (!method.isInVirtualMethodTable(receiverType))
+        {
             throw new GraalError("%s does not have a vtable entry in type %s", method, receiverType);
         }
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool) {
-        if (hub instanceof LoadHubNode) {
+    public Node canonical(CanonicalizerTool tool)
+    {
+        if (hub instanceof LoadHubNode)
+        {
             ValueNode object = ((LoadHubNode) hub).getValue();
             TypeReference type = StampTool.typeReferenceOrNull(object);
-            if (type != null) {
-                if (type.isExact()) {
+            if (type != null)
+            {
+                if (type.isExact())
+                {
                     return resolveExactMethod(tool, type.getType());
                 }
                 Assumptions assumptions = graph().getAssumptions();
                 AssumptionResult<ResolvedJavaMethod> resolvedMethod = type.getType().findUniqueConcreteMethod(method);
-                if (resolvedMethod != null && resolvedMethod.canRecordTo(assumptions) && !type.getType().isInterface() && method.getDeclaringClass().isAssignableFrom(type.getType())) {
+                if (resolvedMethod != null && resolvedMethod.canRecordTo(assumptions) && !type.getType().isInterface() && method.getDeclaringClass().isAssignableFrom(type.getType()))
+                {
                     NodeView view = NodeView.from(tool);
                     resolvedMethod.recordTo(assumptions);
                     return ConstantNode.forConstant(stamp(view), resolvedMethod.getResult().getEncoding(), tool.getMetaAccess());
                 }
             }
         }
-        if (hub.isConstant()) {
+        if (hub.isConstant())
+        {
             return resolveExactMethod(tool, tool.getConstantReflection().asJavaType(hub.asConstant()));
         }
 
@@ -96,28 +106,35 @@ public final class LoadMethodNode extends FixedWithNextNode implements Lowerable
      * @return the method which would be invoked for {@code type} or null if it doesn't implement
      *         the method
      */
-    private Node resolveExactMethod(CanonicalizerTool tool, ResolvedJavaType type) {
+    private Node resolveExactMethod(CanonicalizerTool tool, ResolvedJavaType type)
+    {
         ResolvedJavaMethod newMethod = type.resolveConcreteMethod(method, callerType);
-        if (newMethod == null) {
+        if (newMethod == null)
+        {
             /*
              * This really represent a misuse of LoadMethod since we're loading from a class which
              * isn't known to implement the original method but for now at least fold it away.
              */
             return ConstantNode.forConstant(stamp(NodeView.DEFAULT), JavaConstant.NULL_POINTER, null);
-        } else {
+        }
+        else
+        {
             return ConstantNode.forConstant(stamp(NodeView.DEFAULT), newMethod.getEncoding(), tool.getMetaAccess());
         }
     }
 
-    public ResolvedJavaMethod getMethod() {
+    public ResolvedJavaMethod getMethod()
+    {
         return method;
     }
 
-    public ResolvedJavaType getReceiverType() {
+    public ResolvedJavaType getReceiverType()
+    {
         return receiverType;
     }
 
-    public ResolvedJavaType getCallerType() {
+    public ResolvedJavaType getCallerType()
+    {
         return callerType;
     }
 }

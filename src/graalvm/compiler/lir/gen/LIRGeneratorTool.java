@@ -31,13 +31,13 @@ import jdk.vm.ci.meta.PlatformKind;
 import jdk.vm.ci.meta.Value;
 import jdk.vm.ci.meta.ValueKind;
 
-public interface LIRGeneratorTool extends DiagnosticLIRGeneratorTool, ValueKindFactory<LIRKind> {
-
+public interface LIRGeneratorTool extends DiagnosticLIRGeneratorTool, ValueKindFactory<LIRKind>
+{
     /**
      * Factory for creating moves.
      */
-    public interface MoveFactory {
-
+    public interface MoveFactory
+    {
         /**
          * Checks whether the supplied constant can be used without loading it into a register for
          * most operations, i.e., for commonly used arithmetic, logical, and comparison operations.
@@ -63,13 +63,12 @@ public interface LIRGeneratorTool extends DiagnosticLIRGeneratorTool, ValueKindF
         LIRInstruction createStackLoad(AllocatableValue result, Constant input);
     }
 
-    abstract class BlockScope implements AutoCloseable {
-
+    abstract class BlockScope implements AutoCloseable
+    {
         public abstract AbstractBlockBase<?> getCurrentBlock();
 
         @Override
         public abstract void close();
-
     }
 
     ArithmeticLIRGeneratorTool getArithmetic();
@@ -130,7 +129,8 @@ public interface LIRGeneratorTool extends DiagnosticLIRGeneratorTool, ValueKindF
      * @param address address of the value to be read and written
      * @param delta the value to be added
      */
-    default Value emitAtomicReadAndAdd(Value address, Value delta) {
+    default Value emitAtomicReadAndAdd(Value address, Value delta)
+    {
         throw GraalError.unimplemented();
     }
 
@@ -140,7 +140,8 @@ public interface LIRGeneratorTool extends DiagnosticLIRGeneratorTool, ValueKindF
      * @param address address of the value to be read and written
      * @param newValue the new value to be written
      */
-    default Value emitAtomicReadAndWrite(Value address, Value newValue) {
+    default Value emitAtomicReadAndWrite(Value address, Value newValue)
+    {
         throw GraalError.unimplemented();
     }
 
@@ -213,8 +214,7 @@ public interface LIRGeneratorTool extends DiagnosticLIRGeneratorTool, ValueKindF
 
     void emitJump(LabelRef label);
 
-    void emitCompareBranch(PlatformKind cmpKind, Value left, Value right, Condition cond, boolean unorderedIsTrue, LabelRef trueDestination, LabelRef falseDestination,
-                    double trueDestinationProbability);
+    void emitCompareBranch(PlatformKind cmpKind, Value left, Value right, Condition cond, boolean unorderedIsTrue, LabelRef trueDestination, LabelRef falseDestination, double trueDestinationProbability);
 
     void emitOverflowCheckBranch(LabelRef overflow, LabelRef noOverflow, LIRKind cmpKind, double overflowProbability);
 
@@ -231,14 +231,16 @@ public interface LIRGeneratorTool extends DiagnosticLIRGeneratorTool, ValueKindF
     Variable emitByteSwap(Value operand);
 
     @SuppressWarnings("unused")
-    default Variable emitArrayCompareTo(JavaKind kind1, JavaKind kind2, Value array1, Value array2, Value length1, Value length2) {
+    default Variable emitArrayCompareTo(JavaKind kind1, JavaKind kind2, Value array1, Value array2, Value length1, Value length2)
+    {
         throw GraalError.unimplemented("String.compareTo substitution is not implemented on this architecture");
     }
 
     Variable emitArrayEquals(JavaKind kind, Value array1, Value array2, Value length);
 
     @SuppressWarnings("unused")
-    default Variable emitStringIndexOf(Value sourcePointer, Value sourceCount, Value targetPointer, Value targetCount, int constantTargetCount) {
+    default Variable emitStringIndexOf(Value sourcePointer, Value sourceCount, Value targetPointer, Value targetCount, int constantTargetCount)
+    {
         throw GraalError.unimplemented("String.indexOf substitution is not implemented on this architecture");
     }
 
@@ -253,5 +255,4 @@ public interface LIRGeneratorTool extends DiagnosticLIRGeneratorTool, ValueKindF
     Value emitCompress(Value pointer, CompressEncoding encoding, boolean nonNull);
 
     Value emitUncompress(Value pointer, CompressEncoding encoding, boolean nonNull);
-
 }

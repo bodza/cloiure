@@ -19,7 +19,8 @@ import jdk.vm.ci.meta.AllocatableValue;
  * Pushes an interpreter frame to the stack.
  */
 @Opcode("PUSH_INTERPRETER_FRAME")
-final class AMD64HotSpotPushInterpreterFrameOp extends AMD64LIRInstruction {
+final class AMD64HotSpotPushInterpreterFrameOp extends AMD64LIRInstruction
+{
     public static final LIRInstructionClass<AMD64HotSpotPushInterpreterFrameOp> TYPE = LIRInstructionClass.create(AMD64HotSpotPushInterpreterFrameOp.class);
 
     @Alive(REG) AllocatableValue frameSize;
@@ -28,7 +29,8 @@ final class AMD64HotSpotPushInterpreterFrameOp extends AMD64LIRInstruction {
     @Alive(REG) AllocatableValue initialInfo;
     private final GraalHotSpotVMConfig config;
 
-    AMD64HotSpotPushInterpreterFrameOp(AllocatableValue frameSize, AllocatableValue framePc, AllocatableValue senderSp, AllocatableValue initialInfo, GraalHotSpotVMConfig config) {
+    AMD64HotSpotPushInterpreterFrameOp(AllocatableValue frameSize, AllocatableValue framePc, AllocatableValue senderSp, AllocatableValue initialInfo, GraalHotSpotVMConfig config)
+    {
         super(TYPE);
         this.frameSize = frameSize;
         this.framePc = framePc;
@@ -38,7 +40,8 @@ final class AMD64HotSpotPushInterpreterFrameOp extends AMD64LIRInstruction {
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
         final Register frameSizeRegister = asRegister(frameSize);
         final Register framePcRegister = asRegister(framePc);
         final Register senderSpRegister = asRegister(senderSp);

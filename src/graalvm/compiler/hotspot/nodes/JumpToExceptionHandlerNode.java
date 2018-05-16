@@ -19,18 +19,20 @@ import graalvm.compiler.word.Word;
  * {@link ExceptionHandlerStub} and should not be used elswhere.
  */
 @NodeInfo(cycles = CYCLES_2, size = SIZE_1)
-public final class JumpToExceptionHandlerNode extends FixedWithNextNode implements LIRLowerable {
-
+public final class JumpToExceptionHandlerNode extends FixedWithNextNode implements LIRLowerable
+{
     public static final NodeClass<JumpToExceptionHandlerNode> TYPE = NodeClass.create(JumpToExceptionHandlerNode.class);
     @Input ValueNode address;
 
-    public JumpToExceptionHandlerNode(ValueNode address) {
+    public JumpToExceptionHandlerNode(ValueNode address)
+    {
         super(TYPE, StampFactory.forVoid());
         this.address = address;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         ((HotSpotNodeLIRBuilder) gen).emitJumpToExceptionHandler(address);
     }
 

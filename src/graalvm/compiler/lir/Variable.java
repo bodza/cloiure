@@ -9,8 +9,8 @@ import jdk.vm.ci.meta.ValueKind;
  * Represents a value that is yet to be bound to a machine location (such as a {@link RegisterValue}
  * or {@link StackSlot}) by a register allocator.
  */
-public final class Variable extends AllocatableValue {
-
+public final class Variable extends AllocatableValue
+{
     /**
      * The identifier of the variable. This is a non-zero index in a contiguous 0-based name space.
      */
@@ -24,37 +24,47 @@ public final class Variable extends AllocatableValue {
      * @param kind
      * @param index
      */
-    public Variable(ValueKind<?> kind, int index) {
+    public Variable(ValueKind<?> kind, int index)
+    {
         super(kind);
         assert index >= 0;
         this.index = index;
     }
 
-    public void setName(String name) {
+    public void setName(String name)
+    {
         this.name = name;
     }
 
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
     @Override
-    public String toString() {
-        if (name != null) {
+    public String toString()
+    {
+        if (name != null)
+        {
             return name;
-        } else {
+        }
+        else
+        {
             return "v" + index + getKindSuffix();
         }
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return 71 * super.hashCode() + index;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof Variable) {
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof Variable)
+        {
             Variable other = (Variable) obj;
             return super.equals(other) && index == other.index;
         }

@@ -8,16 +8,18 @@ import jdk.vm.ci.meta.Value;
 /**
  * Provides information about {@link LIR} generation for debugging purposes.
  */
-public interface LIRGenerationDebugContext {
-
+public interface LIRGenerationDebugContext
+{
     /**
      * Gets an object that represents the source of an {@link LIR} {@link Value operand} in a higher
      * representation.
      */
     Object getSourceForOperand(Value value);
 
-    static LIRGenerationDebugContext getFromDebugContext(DebugContext debug) {
-        if (debug.areScopesEnabled()) {
+    static LIRGenerationDebugContext getFromDebugContext(DebugContext debug)
+    {
+        if (debug.areScopesEnabled())
+        {
             LIRGenerationDebugContext lirGen = debug.contextLookup(LIRGenerationDebugContext.class);
             assert lirGen != null;
             return lirGen;
@@ -25,12 +27,13 @@ public interface LIRGenerationDebugContext {
         return null;
     }
 
-    static Object getSourceForOperandFromDebugContext(DebugContext debug, Value value) {
+    static Object getSourceForOperandFromDebugContext(DebugContext debug, Value value)
+    {
         LIRGenerationDebugContext gen = getFromDebugContext(debug);
-        if (gen != null) {
+        if (gen != null)
+        {
             return gen.getSourceForOperand(value);
         }
         return null;
     }
-
 }

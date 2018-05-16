@@ -14,7 +14,8 @@ import java.util.Map;
  * @param <C> the type of node classes
  * @param <P> the type of node ports
  */
-public interface GraphStructure<G, N, C, P> {
+public interface GraphStructure<G, N, C, P>
+{
     /**
      * Casts {@code obj} to graph, if possible. If the given object <code>obj</code> can be seen as
      * a graph or sub-graph of a graph, then return the properly typed instance. Otherwise return

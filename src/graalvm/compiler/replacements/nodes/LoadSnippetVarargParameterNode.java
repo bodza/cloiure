@@ -19,24 +19,28 @@ import graalvm.compiler.nodes.ValueNode;
  * Implements the semantics of {@link VarargsParameter}.
  */
 @NodeInfo(cycles = CYCLES_0, size = SIZE_0)
-public final class LoadSnippetVarargParameterNode extends FixedWithNextNode implements Canonicalizable {
-
+public final class LoadSnippetVarargParameterNode extends FixedWithNextNode implements Canonicalizable
+{
     public static final NodeClass<LoadSnippetVarargParameterNode> TYPE = NodeClass.create(LoadSnippetVarargParameterNode.class);
     @Input ValueNode index;
 
     @Input NodeInputList<ParameterNode> parameters;
 
-    public LoadSnippetVarargParameterNode(ParameterNode[] locals, ValueNode index, Stamp stamp) {
+    public LoadSnippetVarargParameterNode(ParameterNode[] locals, ValueNode index, Stamp stamp)
+    {
         super(TYPE, stamp);
         this.index = index;
         this.parameters = new NodeInputList<>(this, locals);
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool) {
-        if (index.isConstant()) {
+    public Node canonical(CanonicalizerTool tool)
+    {
+        if (index.isConstant())
+        {
             int indexValue = index.asJavaConstant().asInt();
-            if (indexValue < parameters.size()) {
+            if (indexValue < parameters.size())
+            {
                 return parameters.get(indexValue);
             }
         }

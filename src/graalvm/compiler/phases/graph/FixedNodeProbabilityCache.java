@@ -22,8 +22,8 @@ import graalvm.compiler.nodes.StartNode;
 /**
  * Compute probabilities for fixed nodes on the fly and cache them at {@link AbstractBeginNode}s.
  */
-public class FixedNodeProbabilityCache implements ToDoubleFunction<FixedNode> {
-
+public class FixedNodeProbabilityCache implements ToDoubleFunction<FixedNode>
+{
     private static final CounterKey computeNodeProbabilityCounter = DebugContext.counter("ComputeNodeProbability");
 
     private final EconomicMap<FixedNode, Double> cache = EconomicMap.create(Equivalence.IDENTITY);
@@ -60,31 +60,40 @@ public class FixedNodeProbabilityCache implements ToDoubleFunction<FixedNode> {
      *
      */
     @Override
-    public double applyAsDouble(FixedNode node) {
+    public double applyAsDouble(FixedNode node)
+    {
         assert node != null;
         computeNodeProbabilityCounter.increment(node.getDebug());
 
         FixedNode current = findBegin(node);
-        if (current == null) {
+        if (current == null)
+        {
             // this should only appear for dead code
             return 1D;
         }
 
         assert current instanceof AbstractBeginNode;
         Double cachedValue = cache.get(current);
-        if (cachedValue != null) {
+        if (cachedValue != null)
+        {
             return cachedValue;
         }
 
         double probability = 0.0;
-        if (current.predecessor() == null) {
-            if (current instanceof AbstractMergeNode) {
+        if (current.predecessor() == null)
+        {
+            if (current instanceof AbstractMergeNode)
+            {
                 probability = handleMerge(current, probability);
-            } else {
+            }
+            else
+            {
                 assert current instanceof StartNode;
                 probability = 1D;
             }
-        } else {
+        }
+        else
+        {
             ControlSplitNode split = (ControlSplitNode) current.predecessor();
             probability = multiplyProbabilities(split.probability((AbstractBeginNode) current), applyAsDouble(split));
         }
@@ -93,7 +102,8 @@ public class FixedNodeProbabilityCache implements ToDoubleFunction<FixedNode> {
         return probability;
     }
 
-    private double handleMerge(FixedNode current, double probability) {
+    private double handleMerge(FixedNode current, double probability)
+    {
         double result = probability;
         AbstractMergeNode currentMerge = (AbstractMergeNode) current;
         NodeInputList<EndNode> currentForwardEnds = currentMerge.forwardEnds();
@@ -101,28 +111,38 @@ public class FixedNodeProbabilityCache implements ToDoubleFunction<FixedNode> {
          * Use simple iteration instead of streams, since the stream infrastructure adds many frames
          * which causes the recursion to overflow the stack earlier than it would otherwise.
          */
-        for (AbstractEndNode endNode : currentForwardEnds) {
+        for (AbstractEndNode endNode : currentForwardEnds)
+        {
             result += applyAsDouble(endNode);
         }
-        if (current instanceof LoopBeginNode) {
+        if (current instanceof LoopBeginNode)
+        {
             result = multiplyProbabilities(result, ((LoopBeginNode) current).loopFrequency());
         }
         return result;
     }
 
-    private static FixedNode findBegin(FixedNode node) {
+    private static FixedNode findBegin(FixedNode node)
+    {
         FixedNode current = node;
-        while (true) {
+        while (true)
+        {
             assert current != null;
             Node predecessor = current.predecessor();
-            if (current instanceof AbstractBeginNode) {
-                if (predecessor == null) {
+            if (current instanceof AbstractBeginNode)
+            {
+                if (predecessor == null)
+                {
                     break;
-                } else if (predecessor.successors().count() != 1) {
+                }
+                else if (predecessor.successors().count() != 1)
+                {
                     assert predecessor instanceof ControlSplitNode : "a FixedNode with multiple successors needs to be a ControlSplitNode: " + current + " / " + predecessor;
                     break;
                 }
-            } else if (predecessor == null) {
+            }
+            else if (predecessor == null)
+            {
                 current = null;
                 break;
             }

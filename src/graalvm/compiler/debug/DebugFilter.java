@@ -20,10 +20,12 @@ import graalvm.compiler.debug.DebugContext.Scope;
  * <p>
  * The syntax for a filter is explained <a href="file:doc-files/DumpHelp.txt">here</a>.
  */
-final class DebugFilter {
-
-    public static DebugFilter parse(String spec) {
-        if (spec == null) {
+final class DebugFilter
+{
+    public static DebugFilter parse(String spec)
+    {
+        if (spec == null)
+        {
             return null;
         }
         return new DebugFilter(spec.split(","));
@@ -31,33 +33,49 @@ final class DebugFilter {
 
     private final Term[] terms;
 
-    private DebugFilter(String[] terms) {
-        if (terms.length == 0) {
+    private DebugFilter(String[] terms)
+    {
+        if (terms.length == 0)
+        {
             this.terms = null;
-        } else {
+        }
+        else
+        {
             this.terms = new Term[terms.length];
-            for (int i = 0; i < terms.length; i++) {
+            for (int i = 0; i < terms.length; i++)
+            {
                 String t = terms[i];
                 int idx = t.indexOf(':');
 
                 String pattern;
                 int level;
-                if (idx < 0) {
-                    if (t.startsWith("~")) {
+                if (idx < 0)
+                {
+                    if (t.startsWith("~"))
+                    {
                         pattern = t.substring(1);
                         level = 0;
-                    } else {
+                    }
+                    else
+                    {
                         pattern = t;
                         level = DebugContext.BASIC_LEVEL;
                     }
-                } else {
+                }
+                else
+                {
                     pattern = t.substring(0, idx);
-                    if (idx + 1 < t.length()) {
+                    if (idx + 1 < t.length())
+                    {
                         String levelString = t.substring(idx + 1);
-                        try {
+                        try
+                        {
                             level = Integer.parseInt(levelString);
-                        } catch (NumberFormatException e) {
-                            switch (levelString) {
+                        }
+                        catch (NumberFormatException e)
+                        {
+                            switch (levelString)
+                            {
                                 case "basic":
                                     level = DebugContext.BASIC_LEVEL;
                                     break;
@@ -71,8 +89,9 @@ final class DebugFilter {
                                     throw new IllegalArgumentException("Unknown dump level: \"" + levelString + "\" expected basic, info, verbose or an integer");
                             }
                         }
-
-                    } else {
+                    }
+                    else
+                    {
                         level = DebugContext.BASIC_LEVEL;
                     }
                 }
@@ -85,16 +104,24 @@ final class DebugFilter {
     /**
      * Check whether a given input is matched by this filter, and determine the log level.
      */
-    public int matchLevel(String input) {
-        if (terms == null) {
+    public int matchLevel(String input)
+    {
+        if (terms == null)
+        {
             return DebugContext.BASIC_LEVEL;
-        } else {
+        }
+        else
+        {
             int defaultLevel = 0;
             int level = -1;
-            for (Term t : terms) {
-                if (t.isMatchAny()) {
+            for (Term t : terms)
+            {
+                if (t.isMatchAny())
+                {
                     defaultLevel = t.level;
-                } else if (t.matches(input)) {
+                }
+                else if (t.matches(input))
+                {
                     level = t.level;
                 }
             }
@@ -103,28 +130,38 @@ final class DebugFilter {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         StringBuilder buf = new StringBuilder("DebugFilter");
-        if (terms != null) {
+        if (terms != null)
+        {
             buf.append(Arrays.toString(terms));
-        } else {
+        }
+        else
+        {
             buf.append("[]");
         }
         return buf.toString();
     }
 
-    private static class Term {
-
+    private static class Term
+    {
         private final Pattern pattern;
         public final int level;
 
-        Term(String filter, int level) {
+        Term(String filter, int level)
+        {
             this.level = level;
-            if (filter.isEmpty() || filter.equals("*")) {
+            if (filter.isEmpty() || filter.equals("*"))
+            {
                 this.pattern = null;
-            } else if (filter.contains("*") || filter.contains("?")) {
+            }
+            else if (filter.contains("*") || filter.contains("?"))
+            {
                 this.pattern = Pattern.compile(MethodFilter.createGlobString(filter));
-            } else {
+            }
+            else
+            {
                 this.pattern = Pattern.compile(".*" + MethodFilter.createGlobString(filter) + ".*");
             }
         }
@@ -132,16 +169,19 @@ final class DebugFilter {
         /**
          * Determines if a given input is matched by this filter.
          */
-        public boolean matches(String input) {
+        public boolean matches(String input)
+        {
             return pattern == null || pattern.matcher(input).matches();
         }
 
-        public boolean isMatchAny() {
+        public boolean isMatchAny()
+        {
             return pattern == null;
         }
 
         @Override
-        public String toString() {
+        public String toString()
+        {
             return (pattern == null ? ".*" : pattern.toString()) + ":" + level;
         }
     }

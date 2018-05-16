@@ -8,13 +8,14 @@ import graalvm.compiler.word.Word;
 import org.graalvm.word.WordFactory;
 
 @ClassSubstitution(className = {"jdk.internal.misc.Unsafe", "sun.misc.Unsafe"})
-public class HotSpotUnsafeSubstitutions {
-
+public class HotSpotUnsafeSubstitutions
+{
     public static final String copyMemoryName = "copyMemory0";
 
     @SuppressWarnings("unused")
     @MethodSubstitution(isStatic = false)
-    static void copyMemory(Object receiver, Object srcBase, long srcOffset, Object destBase, long destOffset, long bytes) {
+    static void copyMemory(Object receiver, Object srcBase, long srcOffset, Object destBase, long destOffset, long bytes)
+    {
         Word srcAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(srcBase, srcOffset));
         Word dstAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(destBase, destOffset));
         Word size = WordFactory.signed(bytes);

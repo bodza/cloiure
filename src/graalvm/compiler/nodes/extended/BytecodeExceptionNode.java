@@ -23,46 +23,51 @@ import jdk.vm.ci.meta.MetaAccessProvider;
  * A node that represents an exception thrown implicitly by a Java bytecode. It can be lowered to
  * either a {@linkplain ForeignCallDescriptor foreign} call or a pre-allocated exception object.
  */
-// @formatter:off
 @NodeInfo(cycles = CYCLES_8,
           cyclesRationale = "Node will be lowered to a foreign call.",
           size = SIZE_8)
-// @formatter:on
-public final class BytecodeExceptionNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single {
-
+public final class BytecodeExceptionNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
+{
     public static final NodeClass<BytecodeExceptionNode> TYPE = NodeClass.create(BytecodeExceptionNode.class);
     protected final Class<? extends Throwable> exceptionClass;
     @Input NodeInputList<ValueNode> arguments;
 
-    public BytecodeExceptionNode(MetaAccessProvider metaAccess, Class<? extends Throwable> exceptionClass, ValueNode... arguments) {
+    public BytecodeExceptionNode(MetaAccessProvider metaAccess, Class<? extends Throwable> exceptionClass, ValueNode... arguments)
+    {
         super(TYPE, StampFactory.objectNonNull(TypeReference.createExactTrusted(metaAccess.lookupJavaType(exceptionClass))));
         this.exceptionClass = exceptionClass;
         this.arguments = new NodeInputList<>(this, arguments);
     }
 
-    public Class<? extends Throwable> getExceptionClass() {
+    public Class<? extends Throwable> getExceptionClass()
+    {
         return exceptionClass;
     }
 
     @Override
-    public String toString(Verbosity verbosity) {
-        if (verbosity == Verbosity.Name) {
+    public String toString(Verbosity verbosity)
+    {
+        if (verbosity == Verbosity.Name)
+        {
             return super.toString(verbosity) + "#" + exceptionClass.getSimpleName();
         }
         return super.toString(verbosity);
     }
 
     @Override
-    public LocationIdentity getLocationIdentity() {
+    public LocationIdentity getLocationIdentity()
+    {
         return LocationIdentity.any();
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
-    public NodeInputList<ValueNode> getArguments() {
+    public NodeInputList<ValueNode> getArguments()
+    {
         return arguments;
     }
 }

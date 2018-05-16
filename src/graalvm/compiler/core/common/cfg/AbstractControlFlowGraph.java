@@ -2,8 +2,8 @@ package graalvm.compiler.core.common.cfg;
 
 import java.util.Collection;
 
-public interface AbstractControlFlowGraph<T extends AbstractBlockBase<T>> {
-
+public interface AbstractControlFlowGraph<T extends AbstractBlockBase<T>>
+{
     int BLOCK_ID_INITIAL = -1;
     int BLOCK_ID_VISITED = -2;
 
@@ -24,7 +24,8 @@ public interface AbstractControlFlowGraph<T extends AbstractBlockBase<T>> {
     /**
      * True if block {@code a} is dominated by block {@code b}.
      */
-    static boolean isDominatedBy(AbstractBlockBase<?> a, AbstractBlockBase<?> b) {
+    static boolean isDominatedBy(AbstractBlockBase<?> a, AbstractBlockBase<?> b)
+    {
         int domNumberA = a.getDominatorNumber();
         int domNumberB = b.getDominatorNumber();
         return domNumberA >= domNumberB && domNumberA <= b.getMaxChildDominatorNumber();
@@ -34,14 +35,16 @@ public interface AbstractControlFlowGraph<T extends AbstractBlockBase<T>> {
      * True if block {@code a} dominates block {@code b} and {@code a} is not identical block to
      * {@code b}.
      */
-    static boolean strictlyDominates(AbstractBlockBase<?> a, AbstractBlockBase<?> b) {
+    static boolean strictlyDominates(AbstractBlockBase<?> a, AbstractBlockBase<?> b)
+    {
         return a != b && dominates(a, b);
     }
 
     /**
      * True if block {@code a} dominates block {@code b}.
      */
-    static boolean dominates(AbstractBlockBase<?> a, AbstractBlockBase<?> b) {
+    static boolean dominates(AbstractBlockBase<?> a, AbstractBlockBase<?> b)
+    {
         assert a != null && b != null;
         return isDominatedBy(b, a);
     }
@@ -54,22 +57,33 @@ public interface AbstractControlFlowGraph<T extends AbstractBlockBase<T>> {
      * @see #getBlocks()
      * @see CFGVerifier
      */
-    static AbstractBlockBase<?> commonDominator(AbstractBlockBase<?> a, AbstractBlockBase<?> b) {
-        if (a == null) {
+    static AbstractBlockBase<?> commonDominator(AbstractBlockBase<?> a, AbstractBlockBase<?> b)
+    {
+        if (a == null)
+        {
             return b;
-        } else if (b == null) {
+        }
+        else if (b == null)
+        {
             return a;
-        } else if (a == b) {
+        }
+        else if (a == b)
+        {
             return a;
-        } else {
+        }
+        else
+        {
             int aDomDepth = a.getDominatorDepth();
             int bDomDepth = b.getDominatorDepth();
             AbstractBlockBase<?> aTemp;
             AbstractBlockBase<?> bTemp;
-            if (aDomDepth > bDomDepth) {
+            if (aDomDepth > bDomDepth)
+            {
                 aTemp = a;
                 bTemp = b;
-            } else {
+            }
+            else
+            {
                 aTemp = b;
                 bTemp = a;
             }
@@ -77,13 +91,16 @@ public interface AbstractControlFlowGraph<T extends AbstractBlockBase<T>> {
         }
     }
 
-    static AbstractBlockBase<?> commonDominatorHelper(AbstractBlockBase<?> a, AbstractBlockBase<?> b) {
+    static AbstractBlockBase<?> commonDominatorHelper(AbstractBlockBase<?> a, AbstractBlockBase<?> b)
+    {
         int domNumberA = a.getDominatorNumber();
         AbstractBlockBase<?> result = b;
-        while (domNumberA < result.getDominatorNumber()) {
+        while (domNumberA < result.getDominatorNumber())
+        {
             result = result.getDominator();
         }
-        while (domNumberA > result.getMaxChildDominatorNumber()) {
+        while (domNumberA > result.getMaxChildDominatorNumber())
+        {
             result = result.getDominator();
         }
         return result;
@@ -93,7 +110,8 @@ public interface AbstractControlFlowGraph<T extends AbstractBlockBase<T>> {
      * @see AbstractControlFlowGraph#commonDominator(AbstractBlockBase, AbstractBlockBase)
      */
     @SuppressWarnings("unchecked")
-    static <T extends AbstractBlockBase<T>> T commonDominatorTyped(T a, T b) {
+    static <T extends AbstractBlockBase<T>> T commonDominatorTyped(T a, T b)
+    {
         return (T) commonDominator(a, b);
     }
 }

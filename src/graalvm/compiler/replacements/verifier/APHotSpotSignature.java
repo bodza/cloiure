@@ -13,21 +13,24 @@ import javax.tools.Diagnostic.Kind;
  * Pretty much copied from HotSpotSignature but using a different method for resolving types. This
  * class should be rewritten, its just a quick hack to get signatures working.
  */
-final class APHotSpotSignature {
-
+final class APHotSpotSignature
+{
     private final List<String> arguments = new ArrayList<>();
     private final String returnType;
     private final String originalString;
     private TypeMirror[] argumentTypes;
     private TypeMirror returnTypeCache;
 
-    APHotSpotSignature(String signature) {
+    APHotSpotSignature(String signature)
+    {
         assert signature.length() > 0;
         this.originalString = signature;
 
-        if (signature.charAt(0) == '(') {
+        if (signature.charAt(0) == '(')
+        {
             int cur = 1;
-            while (cur < signature.length() && signature.charAt(cur) != ')') {
+            while (cur < signature.length() && signature.charAt(cur) != ')')
+            {
                 int nextCur = parseSignature(signature, cur);
                 arguments.add(signature.substring(cur, nextCur));
                 cur = nextCur;
@@ -36,24 +39,31 @@ final class APHotSpotSignature {
             cur++;
             int nextCur = parseSignature(signature, cur);
             returnType = signature.substring(cur, nextCur);
-            if (nextCur != signature.length()) {
+            if (nextCur != signature.length())
+            {
                 throw new RuntimeException("Invalid trailing characters.");
             }
-        } else {
+        }
+        else
+        {
             returnType = null;
         }
     }
 
-    private static int parseSignature(String signature, int start) {
+    private static int parseSignature(String signature, int start)
+    {
         int cur = start;
         char first;
-        do {
+        do
+        {
             first = signature.charAt(cur++);
         } while (first == '[');
 
-        switch (first) {
+        switch (first)
+        {
             case 'L':
-                while (signature.charAt(cur) != ';') {
+                while (signature.charAt(cur) != ';')
+                {
                     cur++;
                 }
                 cur++;
@@ -74,54 +84,68 @@ final class APHotSpotSignature {
         return cur;
     }
 
-    public int getParameterCount(boolean withReceiver) {
+    public int getParameterCount(boolean withReceiver)
+    {
         return arguments.size() + (withReceiver ? 1 : 0);
     }
 
-    public TypeMirror getParameterType(ProcessingEnvironment env, int index) {
-        if (argumentTypes == null) {
+    public TypeMirror getParameterType(ProcessingEnvironment env, int index)
+    {
+        if (argumentTypes == null)
+        {
             argumentTypes = new TypeMirror[arguments.size()];
         }
         TypeMirror type = argumentTypes[index];
-        if (arguments.get(index) == null) {
+        if (arguments.get(index) == null)
+        {
             throw new RuntimeException(String.format("Invalid argument at index %s.", index));
         }
 
-        if (type == null) {
+        if (type == null)
+        {
             argumentTypes[index] = lookupType(env, arguments.get(index));
         }
         return argumentTypes[index];
     }
 
-    private static TypeMirror lookupType(ProcessingEnvironment env, String binaryName) {
-        if (binaryName.length() == 1) {
+    private static TypeMirror lookupType(ProcessingEnvironment env, String binaryName)
+    {
+        if (binaryName.length() == 1)
+        {
             TypeKind kind = fromPrimitiveOrVoidTypeChar(binaryName.charAt(0));
-            if (kind.isPrimitive()) {
+            if (kind.isPrimitive())
+            {
                 return env.getTypeUtils().getPrimitiveType(kind);
-            } else if (kind == TypeKind.VOID) {
+            }
+            else if (kind == TypeKind.VOID)
+            {
                 return env.getTypeUtils().getNoType(kind);
             }
         }
 
         String canonicalName = binaryName;
-        if (canonicalName.startsWith("L") && canonicalName.endsWith(";")) {
+        if (canonicalName.startsWith("L") && canonicalName.endsWith(";"))
+        {
             canonicalName = canonicalName.substring(1, canonicalName.length() - 1);
         }
         env.getMessager().printMessage(Kind.ERROR, canonicalName);
 
         int arrayDims = 0;
-        while (canonicalName.startsWith("[")) {
+        while (canonicalName.startsWith("["))
+        {
             canonicalName = canonicalName.substring(1, canonicalName.length());
             arrayDims++;
         }
 
         canonicalName = canonicalName.replaceAll("/", ".");
         TypeElement typeElement = env.getElementUtils().getTypeElement(canonicalName);
-        if (typeElement == null) {
+        if (typeElement == null)
+        {
             throw new RuntimeException(String.format("Type with name %s not found.", canonicalName));
         }
         TypeMirror mirror = typeElement.asType();
-        for (int i = 0; i < arrayDims; i++) {
+        for (int i = 0; i < arrayDims; i++)
+        {
             mirror = env.getTypeUtils().getArrayType(mirror);
         }
         return mirror;
@@ -133,8 +157,10 @@ final class APHotSpotSignature {
      * @param ch the character
      * @return the kind
      */
-    public static TypeKind fromPrimitiveOrVoidTypeChar(char ch) {
-        switch (ch) {
+    public static TypeKind fromPrimitiveOrVoidTypeChar(char ch)
+    {
+        switch (ch)
+        {
             case 'Z':
                 return TypeKind.BOOLEAN;
             case 'C':
@@ -157,9 +183,12 @@ final class APHotSpotSignature {
         throw new IllegalArgumentException("unknown primitive or void type character: " + ch);
     }
 
-    public TypeMirror getReturnType(ProcessingEnvironment env) {
-        if (returnTypeCache == null) {
-            if (returnType == null) {
+    public TypeMirror getReturnType(ProcessingEnvironment env)
+    {
+        if (returnTypeCache == null)
+        {
+            if (returnType == null)
+            {
                 throw new RuntimeException("Invalid return type.");
             }
             returnTypeCache = lookupType(env, returnType);
@@ -168,7 +197,8 @@ final class APHotSpotSignature {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Signature<" + originalString + ">";
     }
 }

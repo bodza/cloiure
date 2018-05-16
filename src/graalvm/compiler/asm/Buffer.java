@@ -9,20 +9,23 @@ import java.util.Arrays;
 /**
  * Code buffer management for the assembler.
  */
-final class Buffer {
-
+final class Buffer
+{
     protected ByteBuffer data;
 
-    Buffer(ByteOrder order) {
+    Buffer(ByteOrder order)
+    {
         data = ByteBuffer.allocate(AsmOptions.InitialCodeBufferSize);
         data.order(order);
     }
 
-    public int position() {
+    public int position()
+    {
         return data.position();
     }
 
-    public void setPosition(int position) {
+    public void setPosition(int position)
+    {
         assert position >= 0 && position <= data.limit();
         data.position(position);
     }
@@ -35,9 +38,11 @@ final class Buffer {
      *            including) {@code position()} is returned
      * @return the data in this buffer or a trimmed copy if {@code trimmedCopy} is {@code true}
      */
-    public byte[] close(boolean trimmedCopy) {
+    public byte[] close(boolean trimmedCopy)
+    {
         byte[] result = data.array();
-        if (trimmedCopy) {
+        if (trimmedCopy)
+        {
             // Make a copy even if result.length == data.position() since
             // the API for trimmedCopy states a copy is always made
             result = Arrays.copyOf(result, data.position());
@@ -46,8 +51,10 @@ final class Buffer {
         return result;
     }
 
-    public byte[] copyData(int start, int end) {
-        if (data == null) {
+    public byte[] copyData(int start, int end)
+    {
+        if (data == null)
+        {
             return null;
         }
         return Arrays.copyOfRange(data.array(), start, end);
@@ -60,12 +67,15 @@ final class Buffer {
      * @param off starting position in {@code dst}
      * @param len number of bytes to copy
      */
-    public void copyInto(byte[] dst, int off, int len) {
+    public void copyInto(byte[] dst, int off, int len)
+    {
         System.arraycopy(data.array(), 0, dst, off, len);
     }
 
-    protected void ensureSize(int length) {
-        if (length >= data.limit()) {
+    protected void ensureSize(int length)
+    {
+        if (length >= data.limit())
+        {
             byte[] newBuf = Arrays.copyOf(data.array(), length * 4);
             ByteBuffer newData = ByteBuffer.wrap(newBuf);
             newData.order(data.order());
@@ -74,34 +84,40 @@ final class Buffer {
         }
     }
 
-    public void emitBytes(byte[] arr, int off, int len) {
+    public void emitBytes(byte[] arr, int off, int len)
+    {
         ensureSize(data.position() + len);
         data.put(arr, off, len);
     }
 
-    public void emitByte(int b) {
+    public void emitByte(int b)
+    {
         assert NumUtil.isUByte(b) || NumUtil.isByte(b);
         ensureSize(data.position() + 1);
         data.put((byte) (b & 0xFF));
     }
 
-    public void emitShort(int b) {
+    public void emitShort(int b)
+    {
         assert NumUtil.isUShort(b) || NumUtil.isShort(b);
         ensureSize(data.position() + 2);
         data.putShort((short) b);
     }
 
-    public void emitInt(int b) {
+    public void emitInt(int b)
+    {
         ensureSize(data.position() + 4);
         data.putInt(b);
     }
 
-    public void emitLong(long b) {
+    public void emitLong(long b)
+    {
         ensureSize(data.position() + 8);
         data.putLong(b);
     }
 
-    public void emitBytes(byte[] arr, int pos) {
+    public void emitBytes(byte[] arr, int pos)
+    {
         final int len = arr.length;
         ensureSize(pos + len);
         // Write directly into the underlying array so as to not
@@ -109,43 +125,51 @@ final class Buffer {
         System.arraycopy(arr, 0, data.array(), pos, len);
     }
 
-    public void emitByte(int b, int pos) {
+    public void emitByte(int b, int pos)
+    {
         assert NumUtil.isUByte(b) || NumUtil.isByte(b);
         ensureSize(pos + 1);
         data.put(pos, (byte) (b & 0xFF));
     }
 
-    public void emitShort(int b, int pos) {
+    public void emitShort(int b, int pos)
+    {
         assert NumUtil.isUShort(b) || NumUtil.isShort(b);
         ensureSize(pos + 2);
         data.putShort(pos, (short) b).position();
     }
 
-    public void emitInt(int b, int pos) {
+    public void emitInt(int b, int pos)
+    {
         ensureSize(pos + 4);
         data.putInt(pos, b).position();
     }
 
-    public void emitLong(long b, int pos) {
+    public void emitLong(long b, int pos)
+    {
         ensureSize(pos + 8);
         data.putLong(pos, b).position();
     }
 
-    public int getByte(int pos) {
+    public int getByte(int pos)
+    {
         int b = data.get(pos);
         return b & 0xff;
     }
 
-    public int getShort(int pos) {
+    public int getShort(int pos)
+    {
         short s = data.getShort(pos);
         return s & 0xffff;
     }
 
-    public int getInt(int pos) {
+    public int getInt(int pos)
+    {
         return data.getInt(pos);
     }
 
-    public void reset() {
+    public void reset()
+    {
         data.clear();
     }
 }

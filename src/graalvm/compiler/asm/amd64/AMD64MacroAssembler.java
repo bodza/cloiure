@@ -20,226 +20,304 @@ import jdk.vm.ci.code.TargetDescription;
 /**
  * This class implements commonly used X86 code patterns.
  */
-public class AMD64MacroAssembler extends AMD64Assembler {
-
-    public AMD64MacroAssembler(TargetDescription target) {
+public class AMD64MacroAssembler extends AMD64Assembler
+{
+    public AMD64MacroAssembler(TargetDescription target)
+    {
         super(target);
     }
 
-    public final void decrementq(Register reg, int value) {
-        if (value == Integer.MIN_VALUE) {
+    public final void decrementq(Register reg, int value)
+    {
+        if (value == Integer.MIN_VALUE)
+        {
             subq(reg, value);
             return;
         }
-        if (value < 0) {
+        if (value < 0)
+        {
             incrementq(reg, -value);
             return;
         }
-        if (value == 0) {
+        if (value == 0)
+        {
             return;
         }
-        if (value == 1 && UseIncDec) {
+        if (value == 1 && UseIncDec)
+        {
             decq(reg);
-        } else {
+        }
+        else
+        {
             subq(reg, value);
         }
     }
 
-    public final void decrementq(AMD64Address dst, int value) {
-        if (value == Integer.MIN_VALUE) {
+    public final void decrementq(AMD64Address dst, int value)
+    {
+        if (value == Integer.MIN_VALUE)
+        {
             subq(dst, value);
             return;
         }
-        if (value < 0) {
+        if (value < 0)
+        {
             incrementq(dst, -value);
             return;
         }
-        if (value == 0) {
+        if (value == 0)
+        {
             return;
         }
-        if (value == 1 && UseIncDec) {
+        if (value == 1 && UseIncDec)
+        {
             decq(dst);
-        } else {
+        }
+        else
+        {
             subq(dst, value);
         }
     }
 
-    public void incrementq(Register reg, int value) {
-        if (value == Integer.MIN_VALUE) {
+    public void incrementq(Register reg, int value)
+    {
+        if (value == Integer.MIN_VALUE)
+        {
             addq(reg, value);
             return;
         }
-        if (value < 0) {
+        if (value < 0)
+        {
             decrementq(reg, -value);
             return;
         }
-        if (value == 0) {
+        if (value == 0)
+        {
             return;
         }
-        if (value == 1 && UseIncDec) {
+        if (value == 1 && UseIncDec)
+        {
             incq(reg);
-        } else {
+        }
+        else
+        {
             addq(reg, value);
         }
     }
 
-    public final void incrementq(AMD64Address dst, int value) {
-        if (value == Integer.MIN_VALUE) {
+    public final void incrementq(AMD64Address dst, int value)
+    {
+        if (value == Integer.MIN_VALUE)
+        {
             addq(dst, value);
             return;
         }
-        if (value < 0) {
+        if (value < 0)
+        {
             decrementq(dst, -value);
             return;
         }
-        if (value == 0) {
+        if (value == 0)
+        {
             return;
         }
-        if (value == 1 && UseIncDec) {
+        if (value == 1 && UseIncDec)
+        {
             incq(dst);
-        } else {
+        }
+        else
+        {
             addq(dst, value);
         }
     }
 
-    public final void movptr(Register dst, AMD64Address src) {
+    public final void movptr(Register dst, AMD64Address src)
+    {
         movq(dst, src);
     }
 
-    public final void movptr(AMD64Address dst, Register src) {
+    public final void movptr(AMD64Address dst, Register src)
+    {
         movq(dst, src);
     }
 
-    public final void movptr(AMD64Address dst, int src) {
+    public final void movptr(AMD64Address dst, int src)
+    {
         movslq(dst, src);
     }
 
-    public final void cmpptr(Register src1, Register src2) {
+    public final void cmpptr(Register src1, Register src2)
+    {
         cmpq(src1, src2);
     }
 
-    public final void cmpptr(Register src1, AMD64Address src2) {
+    public final void cmpptr(Register src1, AMD64Address src2)
+    {
         cmpq(src1, src2);
     }
 
-    public final void decrementl(Register reg) {
+    public final void decrementl(Register reg)
+    {
         decrementl(reg, 1);
     }
 
-    public final void decrementl(Register reg, int value) {
-        if (value == Integer.MIN_VALUE) {
+    public final void decrementl(Register reg, int value)
+    {
+        if (value == Integer.MIN_VALUE)
+        {
             subl(reg, value);
             return;
         }
-        if (value < 0) {
+        if (value < 0)
+        {
             incrementl(reg, -value);
             return;
         }
-        if (value == 0) {
+        if (value == 0)
+        {
             return;
         }
-        if (value == 1 && UseIncDec) {
+        if (value == 1 && UseIncDec)
+        {
             decl(reg);
-        } else {
+        }
+        else
+        {
             subl(reg, value);
         }
     }
 
-    public final void decrementl(AMD64Address dst, int value) {
-        if (value == Integer.MIN_VALUE) {
+    public final void decrementl(AMD64Address dst, int value)
+    {
+        if (value == Integer.MIN_VALUE)
+        {
             subl(dst, value);
             return;
         }
-        if (value < 0) {
+        if (value < 0)
+        {
             incrementl(dst, -value);
             return;
         }
-        if (value == 0) {
+        if (value == 0)
+        {
             return;
         }
-        if (value == 1 && UseIncDec) {
+        if (value == 1 && UseIncDec)
+        {
             decl(dst);
-        } else {
+        }
+        else
+        {
             subl(dst, value);
         }
     }
 
-    public final void incrementl(Register reg, int value) {
-        if (value == Integer.MIN_VALUE) {
+    public final void incrementl(Register reg, int value)
+    {
+        if (value == Integer.MIN_VALUE)
+        {
             addl(reg, value);
             return;
         }
-        if (value < 0) {
+        if (value < 0)
+        {
             decrementl(reg, -value);
             return;
         }
-        if (value == 0) {
+        if (value == 0)
+        {
             return;
         }
-        if (value == 1 && UseIncDec) {
+        if (value == 1 && UseIncDec)
+        {
             incl(reg);
-        } else {
+        }
+        else
+        {
             addl(reg, value);
         }
     }
 
-    public final void incrementl(AMD64Address dst, int value) {
-        if (value == Integer.MIN_VALUE) {
+    public final void incrementl(AMD64Address dst, int value)
+    {
+        if (value == Integer.MIN_VALUE)
+        {
             addl(dst, value);
             return;
         }
-        if (value < 0) {
+        if (value < 0)
+        {
             decrementl(dst, -value);
             return;
         }
-        if (value == 0) {
+        if (value == 0)
+        {
             return;
         }
-        if (value == 1 && UseIncDec) {
+        if (value == 1 && UseIncDec)
+        {
             incl(dst);
-        } else {
+        }
+        else
+        {
             addl(dst, value);
         }
     }
 
-    public void movflt(Register dst, Register src) {
+    public void movflt(Register dst, Register src)
+    {
         assert dst.getRegisterCategory().equals(AMD64.XMM) && src.getRegisterCategory().equals(AMD64.XMM);
-        if (UseXmmRegToRegMoveAll) {
+        if (UseXmmRegToRegMoveAll)
+        {
             movaps(dst, src);
-        } else {
+        }
+        else
+        {
             movss(dst, src);
         }
     }
 
-    public void movflt(Register dst, AMD64Address src) {
+    public void movflt(Register dst, AMD64Address src)
+    {
         assert dst.getRegisterCategory().equals(AMD64.XMM);
         movss(dst, src);
     }
 
-    public void movflt(AMD64Address dst, Register src) {
+    public void movflt(AMD64Address dst, Register src)
+    {
         assert src.getRegisterCategory().equals(AMD64.XMM);
         movss(dst, src);
     }
 
-    public void movdbl(Register dst, Register src) {
+    public void movdbl(Register dst, Register src)
+    {
         assert dst.getRegisterCategory().equals(AMD64.XMM) && src.getRegisterCategory().equals(AMD64.XMM);
-        if (UseXmmRegToRegMoveAll) {
+        if (UseXmmRegToRegMoveAll)
+        {
             movapd(dst, src);
-        } else {
+        }
+        else
+        {
             movsd(dst, src);
         }
     }
 
-    public void movdbl(Register dst, AMD64Address src) {
+    public void movdbl(Register dst, AMD64Address src)
+    {
         assert dst.getRegisterCategory().equals(AMD64.XMM);
-        if (UseXmmLoadAndClearUpper) {
+        if (UseXmmLoadAndClearUpper)
+        {
             movsd(dst, src);
-        } else {
+        }
+        else
+        {
             movlpd(dst, src);
         }
     }
 
-    public void movdbl(AMD64Address dst, Register src) {
+    public void movdbl(AMD64Address dst, Register src)
+    {
         assert src.getRegisterCategory().equals(AMD64.XMM);
         movsd(dst, src);
     }
@@ -248,31 +326,40 @@ public class AMD64MacroAssembler extends AMD64Assembler {
      * Non-atomic write of a 64-bit constant to memory. Do not use if the address might be a
      * volatile field!
      */
-    public final void movlong(AMD64Address dst, long src) {
-        if (NumUtil.isInt(src)) {
+    public final void movlong(AMD64Address dst, long src)
+    {
+        if (NumUtil.isInt(src))
+        {
             AMD64MIOp.MOV.emit(this, OperandSize.QWORD, dst, (int) src);
-        } else {
+        }
+        else
+        {
             AMD64Address high = new AMD64Address(dst.getBase(), dst.getIndex(), dst.getScale(), dst.getDisplacement() + 4);
             movl(dst, (int) (src & 0xFFFFFFFF));
             movl(high, (int) (src >> 32));
         }
-
     }
 
-    public final void setl(ConditionFlag cc, Register dst) {
+    public final void setl(ConditionFlag cc, Register dst)
+    {
         setb(cc, dst);
         movzbl(dst, dst);
     }
 
-    public final void setq(ConditionFlag cc, Register dst) {
+    public final void setq(ConditionFlag cc, Register dst)
+    {
         setb(cc, dst);
         movzbq(dst, dst);
     }
 
-    public final void flog(Register dest, Register value, boolean base10) {
-        if (base10) {
+    public final void flog(Register dest, Register value, boolean base10)
+    {
+        if (base10)
+        {
             fldlg2();
-        } else {
+        }
+        else
+        {
             fldln2();
         }
         AMD64Address tmp = trigPrologue(value);
@@ -280,31 +367,36 @@ public class AMD64MacroAssembler extends AMD64Assembler {
         trigEpilogue(dest, tmp);
     }
 
-    public final void fsin(Register dest, Register value) {
+    public final void fsin(Register dest, Register value)
+    {
         AMD64Address tmp = trigPrologue(value);
         fsin();
         trigEpilogue(dest, tmp);
     }
 
-    public final void fcos(Register dest, Register value) {
+    public final void fcos(Register dest, Register value)
+    {
         AMD64Address tmp = trigPrologue(value);
         fcos();
         trigEpilogue(dest, tmp);
     }
 
-    public final void ftan(Register dest, Register value) {
+    public final void ftan(Register dest, Register value)
+    {
         AMD64Address tmp = trigPrologue(value);
         fptan();
         fstp(0); // ftan pushes 1.0 in addition to the actual result, pop
         trigEpilogue(dest, tmp);
     }
 
-    public final void fpop() {
+    public final void fpop()
+    {
         ffree(0);
         fincstp();
     }
 
-    private AMD64Address trigPrologue(Register value) {
+    private AMD64Address trigPrologue(Register value)
+    {
         assert value.getRegisterCategory().equals(AMD64.XMM);
         AMD64Address tmp = new AMD64Address(AMD64.rsp);
         subq(AMD64.rsp, AMD64Kind.DOUBLE.getSizeInBytes());
@@ -313,7 +405,8 @@ public class AMD64MacroAssembler extends AMD64Assembler {
         return tmp;
     }
 
-    private void trigEpilogue(Register dest, AMD64Address tmp) {
+    private void trigEpilogue(Register dest, AMD64Address tmp)
+    {
         assert dest.getRegisterCategory().equals(AMD64.XMM);
         fstpd(tmp);
         movdbl(dest, tmp);
@@ -322,10 +415,8 @@ public class AMD64MacroAssembler extends AMD64Assembler {
 
     // IndexOf for constant substrings with size >= 8 chars
     // which don't need to be loaded through stack.
-    public void stringIndexofC8(Register str1, Register str2,
-                    Register cnt1, Register cnt2,
-                    int intCnt2, Register result,
-                    Register vec, Register tmp) {
+    public void stringIndexofC8(Register str1, Register str2, Register cnt1, Register cnt2, int intCnt2, Register result, Register vec, Register tmp)
+    {
         // assert(UseSSE42Intrinsics, "SSE4.2 is required");
 
         // This method uses pcmpestri inxtruction with bound registers
@@ -360,7 +451,8 @@ public class AMD64MacroAssembler extends AMD64Assembler {
         movl(cnt2, intCnt2);
         movq(result, str1); // string addr
 
-        if (intCnt2 > 8) {
+        if (intCnt2 > 8)
+        {
             jmpb(scanToSubstr);
 
             // Reload substr for rescan, this code
@@ -386,7 +478,6 @@ public class AMD64MacroAssembler extends AMD64Assembler {
             jccb(ConditionFlag.Negative, retNotFound);  // Left less then substring
 
             addq(result, 2);
-
         } // (int_cnt2 > 8)
 
         // Scan string for start of substr in 16-byte vectors
@@ -403,9 +494,11 @@ public class AMD64MacroAssembler extends AMD64Assembler {
         // Found a potential substr
         bind(foundCandidate);
         // Matched whole vector if first element matched (tmp(rcx) == 0).
-        if (intCnt2 == 8) {
+        if (intCnt2 == 8)
+        {
             jccb(ConditionFlag.Overflow, retFound);    // OF == 1
-        } else { // int_cnt2 > 8
+        }
+        else { // int_cnt2 > 8
             jccb(ConditionFlag.Overflow, foundSubstr);
         }
         // After pcmpestri tmp(rcx) contains matched element index
@@ -415,9 +508,11 @@ public class AMD64MacroAssembler extends AMD64Assembler {
         // Make sure string is still long enough
         subl(cnt1, tmp);
         cmpl(cnt1, cnt2);
-        if (intCnt2 == 8) {
+        if (intCnt2 == 8)
+        {
             jccb(ConditionFlag.GreaterEqual, scanToSubstr);
-        } else { // int_cnt2 > 8
+        }
+        else { // int_cnt2 > 8
             jccb(ConditionFlag.GreaterEqual, matchSubstrHead);
         }
         // Left less then substring.
@@ -426,7 +521,8 @@ public class AMD64MacroAssembler extends AMD64Assembler {
         movl(result, -1);
         jmpb(exit);
 
-        if (intCnt2 > 8) {
+        if (intCnt2 > 8)
+        {
             // This code is optimized for the case when whole substring
             // is matched if its head is matched.
             bind(matchSubstrHead);
@@ -452,10 +548,13 @@ public class AMD64MacroAssembler extends AMD64Assembler {
             movl(cnt2, 8);
             negq(cnt2);
             bind(contScanSubstr);
-            if (intCnt2 < 1024 * 1024 * 1024) {
+            if (intCnt2 < 1024 * 1024 * 1024)
+            {
                 movdqu(vec, new AMD64Address(str2, cnt2, Scale.Times2, intCnt2 * 2));
                 pcmpestri(vec, new AMD64Address(result, cnt2, Scale.Times2, intCnt2 * 2), 0x0d);
-            } else {
+            }
+            else
+            {
                 // calculate index in register to avoid integer overflow (int_cnt2*2)
                 movl(tmp, intCnt2);
                 addq(tmp, cnt2);
@@ -467,7 +566,6 @@ public class AMD64MacroAssembler extends AMD64Assembler {
             addq(cnt2, 8);
             jcc(ConditionFlag.Negative, scanSubstr);
             // Fall through if found full substring
-
         } // (int_cnt2 > 8)
 
         bind(retFound);
@@ -476,14 +574,11 @@ public class AMD64MacroAssembler extends AMD64Assembler {
         subq(result, str1);
         shrl(result, 1); // index
         bind(exit);
-
     } // string_indexofC8
 
     // Small strings are loaded through stack if they cross page boundary.
-    public void stringIndexOf(Register str1, Register str2,
-                    Register cnt1, Register cnt2,
-                    int intCnt2, Register result,
-                    Register vec, Register tmp, int vmPageSize) {
+    public void stringIndexOf(Register str1, Register str2, Register cnt1, Register cnt2, int intCnt2, Register result, Register vec, Register tmp, int vmPageSize)
+    {
         //
         // int_cnt2 is length of small (< 8 chars) constant substring
         // or (-1) for non constant substring in which case its length
@@ -530,18 +625,22 @@ public class AMD64MacroAssembler extends AMD64Assembler {
             if (intCnt2 == 1) {  // One char
                 movzwl(result, new AMD64Address(str2, 0));
                 movdl(vec, result); // move 32 bits
-            } else if (intCnt2 == 2) { // Two chars
+            }
+            else if (intCnt2 == 2) { // Two chars
                 movdl(vec, new AMD64Address(str2, 0)); // move 32 bits
-            } else if (intCnt2 == 4) { // Four chars
+            }
+            else if (intCnt2 == 4) { // Four chars
                 movq(vec, new AMD64Address(str2, 0));  // move 64 bits
-            } else { // cnt2 = { 3, 5, 6, 7 }
+            }
+            else { // cnt2 = { 3, 5, 6, 7 }
                 // Array header size is 12 bytes in 32-bit VM
                 // + 6 bytes for 3 chars == 18 bytes,
                 // enough space to load vec and shift.
                 movdqu(vec, new AMD64Address(str2, (intCnt2 * 2) - 16));
                 psrldq(vec, 16 - (intCnt2 * 2));
             }
-        } else { // not constant substring
+        }
+        else { // not constant substring
             cmpl(cnt2, 8);
             jccb(ConditionFlag.AboveEqual, bigStrings); // Both strings are big enough
 
@@ -604,7 +703,9 @@ public class AMD64MacroAssembler extends AMD64Assembler {
             push(cnt2);       // substr count
             push(str2);       // substr addr
             push(str1);       // string addr
-        } else {
+        }
+        else
+        {
             // Small (< 8 chars) constant substrings are loaded already.
             movl(cnt2, intCnt2);
         }
@@ -688,7 +789,8 @@ public class AMD64MacroAssembler extends AMD64Assembler {
             cmpl(tmp, 8 - intCnt2);
             jccb(ConditionFlag.Greater, adjustStr);
             // Fall through if matched whole substring.
-        } else { // non constant
+        }
+        else { // non constant
             assert intCnt2 == -1 : "should be != 0";
 
             addl(tmp, cnt2);
@@ -746,7 +848,5 @@ public class AMD64MacroAssembler extends AMD64Assembler {
 
         bind(cleanup);
         pop(rsp); // restore SP
-
     }
-
 }

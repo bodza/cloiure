@@ -18,35 +18,40 @@ import jdk.vm.ci.meta.JavaKind;
  * Load of a value at a location specified as an absolute address.
  */
 @NodeInfo(cycles = CYCLES_2, size = SIZE_1)
-public class UnsafeMemoryLoadNode extends FixedWithNextNode implements Lowerable {
-
+public class UnsafeMemoryLoadNode extends FixedWithNextNode implements Lowerable
+{
     public static final NodeClass<UnsafeMemoryLoadNode> TYPE = NodeClass.create(UnsafeMemoryLoadNode.class);
 
     @Input protected ValueNode address;
     protected final JavaKind kind;
     protected final LocationIdentity locationIdentity;
 
-    public UnsafeMemoryLoadNode(ValueNode address, JavaKind kind, LocationIdentity locationIdentity) {
+    public UnsafeMemoryLoadNode(ValueNode address, JavaKind kind, LocationIdentity locationIdentity)
+    {
         super(TYPE, StampFactory.forKind(kind.getStackKind()));
         this.address = address;
         this.kind = kind;
         this.locationIdentity = locationIdentity;
     }
 
-    public ValueNode getAddress() {
+    public ValueNode getAddress()
+    {
         return address;
     }
 
-    public JavaKind getKind() {
+    public JavaKind getKind()
+    {
         return kind;
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
-    public LocationIdentity getLocationIdentity() {
+    public LocationIdentity getLocationIdentity()
+    {
         return locationIdentity;
     }
 }

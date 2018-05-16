@@ -19,11 +19,13 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 /**
  * Helper class that is used to keep all stamp-related operations in one place.
  */
-public class StampTool {
-
-    public static Stamp meet(Iterable<? extends ValueNode> values) {
+public class StampTool
+{
+    public static Stamp meet(Iterable<? extends ValueNode> values)
+    {
         Stamp stamp = meetOrNull(values, null);
-        if (stamp == null) {
+        if (stamp == null)
+        {
             return StampFactory.forVoid();
         }
         return stamp;
@@ -33,15 +35,21 @@ public class StampTool {
      * Meet a collection of {@link ValueNode}s optionally excluding {@code selfValue}. If no values
      * are encountered then return {@code null}.
      */
-    public static Stamp meetOrNull(Iterable<? extends ValueNode> values, ValueNode selfValue) {
+    public static Stamp meetOrNull(Iterable<? extends ValueNode> values, ValueNode selfValue)
+    {
         Iterator<? extends ValueNode> iterator = values.iterator();
         Stamp stamp = null;
-        while (iterator.hasNext()) {
+        while (iterator.hasNext())
+        {
             ValueNode nextValue = iterator.next();
-            if (nextValue != selfValue) {
-                if (stamp == null) {
+            if (nextValue != selfValue)
+            {
+                if (stamp == null)
+                {
                     stamp = nextValue.stamp(NodeView.DEFAULT);
-                } else {
+                }
+                else
+                {
                     stamp = stamp.meet(nextValue.stamp(NodeView.DEFAULT));
                 }
             }
@@ -54,21 +62,27 @@ public class StampTool {
      *
      * @return null if it's can't be true or it nothing useful can be encoded.
      */
-    public static Stamp unsignedCompare(Stamp stamp, Stamp stamp2) {
+    public static Stamp unsignedCompare(Stamp stamp, Stamp stamp2)
+    {
         IntegerStamp x = (IntegerStamp) stamp;
         IntegerStamp y = (IntegerStamp) stamp2;
-        if (x.isUnrestricted() && y.isUnrestricted()) {
+        if (x.isUnrestricted() && y.isUnrestricted())
+        {
             // Don't know anything.
             return null;
         }
         // c <| n, where c is a constant and n is known to be positive.
-        if (x.lowerBound() == x.upperBound()) {
-            if (y.isPositive()) {
-                if (x.lowerBound() == (1 << x.getBits()) - 1) {
+        if (x.lowerBound() == x.upperBound())
+        {
+            if (y.isPositive())
+            {
+                if (x.lowerBound() == (1 << x.getBits()) - 1)
+                {
                     // Constant is MAX_VALUE which must fail.
                     return null;
                 }
-                if (x.lowerBound() <= y.lowerBound()) {
+                if (x.lowerBound() <= y.lowerBound())
+                {
                     // Test will fail. Return illegalStamp instead?
                     return null;
                 }
@@ -79,14 +93,16 @@ public class StampTool {
             return null;
         }
         // n <| c, where c is a strictly positive constant
-        if (y.lowerBound() == y.upperBound() && y.isStrictlyPositive()) {
+        if (y.lowerBound() == y.upperBound() && y.isStrictlyPositive())
+        {
             // The test proves that n is positive and less than c, [0..c-1]
             return StampFactory.forInteger(y.getBits(), 0, y.lowerBound() - 1);
         }
         return null;
     }
 
-    public static Stamp stampForLeadingZeros(IntegerStamp valueStamp) {
+    public static Stamp stampForLeadingZeros(IntegerStamp valueStamp)
+    {
         long mask = CodeUtil.mask(valueStamp.getBits());
         // Don't count zeros from the mask in the result.
         int adjust = Long.numberOfLeadingZeros(mask);
@@ -96,7 +112,8 @@ public class StampTool {
         return StampFactory.forInteger(JavaKind.Int, min, max);
     }
 
-    public static Stamp stampForTrailingZeros(IntegerStamp valueStamp) {
+    public static Stamp stampForTrailingZeros(IntegerStamp valueStamp)
+    {
         long mask = CodeUtil.mask(valueStamp.getBits());
         int min = Long.numberOfTrailingZeros(valueStamp.upMask() & mask);
         int max = Long.numberOfTrailingZeros(valueStamp.downMask() & mask);
@@ -110,7 +127,8 @@ public class StampTool {
      * @param node the node to check
      * @return true if this node represents a legal object value which is known to be always null
      */
-    public static boolean isPointerAlwaysNull(ValueNode node) {
+    public static boolean isPointerAlwaysNull(ValueNode node)
+    {
         return isPointerAlwaysNull(node.stamp(NodeView.DEFAULT));
     }
 
@@ -122,8 +140,10 @@ public class StampTool {
      * @return true if this stamp represents a legal object stamp whose values are known to be
      *         always null
      */
-    public static boolean isPointerAlwaysNull(Stamp stamp) {
-        if (stamp instanceof AbstractPointerStamp && stamp.hasValues()) {
+    public static boolean isPointerAlwaysNull(Stamp stamp)
+    {
+        if (stamp instanceof AbstractPointerStamp && stamp.hasValues())
+        {
             return ((AbstractPointerStamp) stamp).alwaysNull();
         }
         return false;
@@ -136,7 +156,8 @@ public class StampTool {
      * @param node the node to check
      * @return true if this node represents a legal object value which is known to never be null
      */
-    public static boolean isPointerNonNull(ValueNode node) {
+    public static boolean isPointerNonNull(ValueNode node)
+    {
         return isPointerNonNull(node.stamp(NodeView.DEFAULT));
     }
 
@@ -148,8 +169,10 @@ public class StampTool {
      * @return true if this stamp represents a legal object stamp whose values are known to be
      *         always null
      */
-    public static boolean isPointerNonNull(Stamp stamp) {
-        if (stamp instanceof AbstractPointerStamp) {
+    public static boolean isPointerNonNull(Stamp stamp)
+    {
+        if (stamp instanceof AbstractPointerStamp)
+        {
             return ((AbstractPointerStamp) stamp).nonNull();
         }
         return false;
@@ -162,33 +185,42 @@ public class StampTool {
      * @param node the node to check
      * @return the Java type this value has if it is a legal Object type, null otherwise
      */
-    public static TypeReference typeReferenceOrNull(ValueNode node) {
+    public static TypeReference typeReferenceOrNull(ValueNode node)
+    {
         return typeReferenceOrNull(node.stamp(NodeView.DEFAULT));
     }
 
-    public static ResolvedJavaType typeOrNull(ValueNode node) {
+    public static ResolvedJavaType typeOrNull(ValueNode node)
+    {
         return typeOrNull(node.stamp(NodeView.DEFAULT));
     }
 
-    public static ResolvedJavaType typeOrNull(Stamp stamp) {
+    public static ResolvedJavaType typeOrNull(Stamp stamp)
+    {
         TypeReference type = typeReferenceOrNull(stamp);
         return type == null ? null : type.getType();
     }
 
-    public static ResolvedJavaType typeOrNull(Stamp stamp, MetaAccessProvider metaAccess) {
-        if (stamp instanceof AbstractObjectStamp && stamp.hasValues()) {
+    public static ResolvedJavaType typeOrNull(Stamp stamp, MetaAccessProvider metaAccess)
+    {
+        if (stamp instanceof AbstractObjectStamp && stamp.hasValues())
+        {
             AbstractObjectStamp abstractObjectStamp = (AbstractObjectStamp) stamp;
             ResolvedJavaType type = abstractObjectStamp.type();
-            if (type == null) {
+            if (type == null)
+            {
                 return metaAccess.lookupJavaType(Object.class);
-            } else {
+            }
+            else
+            {
                 return type;
             }
         }
         return null;
     }
 
-    public static ResolvedJavaType typeOrNull(ValueNode node, MetaAccessProvider metaAccess) {
+    public static ResolvedJavaType typeOrNull(ValueNode node, MetaAccessProvider metaAccess)
+    {
         return typeOrNull(node.stamp(NodeView.DEFAULT), metaAccess);
     }
 
@@ -199,12 +231,17 @@ public class StampTool {
      * @param stamp the stamp to check
      * @return the Java type this stamp has if it is a legal Object stamp, null otherwise
      */
-    public static TypeReference typeReferenceOrNull(Stamp stamp) {
-        if (stamp instanceof AbstractObjectStamp && stamp.hasValues()) {
+    public static TypeReference typeReferenceOrNull(Stamp stamp)
+    {
+        if (stamp instanceof AbstractObjectStamp && stamp.hasValues())
+        {
             AbstractObjectStamp abstractObjectStamp = (AbstractObjectStamp) stamp;
-            if (abstractObjectStamp.isExactType()) {
+            if (abstractObjectStamp.isExactType())
+            {
                 return TypeReference.createExactTrusted(abstractObjectStamp.type());
-            } else {
+            }
+            else
+            {
                 return TypeReference.createTrustedWithoutAssumptions(abstractObjectStamp.type());
             }
         }
@@ -220,7 +257,8 @@ public class StampTool {
      * @param node the node to check
      * @return true if this node represents a legal object value whose Java type is known exactly
      */
-    public static boolean isExactType(ValueNode node) {
+    public static boolean isExactType(ValueNode node)
+    {
         return isExactType(node.stamp(NodeView.DEFAULT));
     }
 
@@ -233,8 +271,10 @@ public class StampTool {
      * @param stamp the stamp to check
      * @return true if this node represents a legal object stamp whose Java type is known exactly
      */
-    public static boolean isExactType(Stamp stamp) {
-        if (stamp instanceof AbstractObjectStamp && stamp.hasValues()) {
+    public static boolean isExactType(Stamp stamp)
+    {
+        if (stamp instanceof AbstractObjectStamp && stamp.hasValues())
+        {
             return ((AbstractObjectStamp) stamp).isExactType();
         }
         return false;

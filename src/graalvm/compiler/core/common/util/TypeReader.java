@@ -3,8 +3,8 @@ package graalvm.compiler.core.common.util;
 /**
  * Provides low-level read access for signed and unsigned values of size 1, 2, 4, and 8 bytes.
  */
-public interface TypeReader {
-
+public interface TypeReader
+{
     /** Returns the next byte index to be read. */
     long getByteIndex();
 
@@ -36,17 +36,20 @@ public interface TypeReader {
      * Reads a signed value that has been written using {@link TypeWriter#putSV variable byte size
      * encoding}.
      */
-    default long getSV() {
+    default long getSV()
+    {
         long result = 0;
         int shift = 0;
         long b;
-        do {
+        do
+        {
             b = getU1();
             result |= (b & 0x7f) << shift;
             shift += 7;
         } while ((b & 0x80) != 0);
 
-        if ((b & 0x40) != 0 && shift < 64) {
+        if ((b & 0x40) != 0 && shift < 64)
+        {
             result |= -1L << shift;
         }
         return result;
@@ -55,7 +58,8 @@ public interface TypeReader {
     /**
      * Reads a signed variable byte size encoded value that is known to fit into the range of int.
      */
-    default int getSVInt() {
+    default int getSVInt()
+    {
         return TypeConversion.asS4(getSV());
     }
 
@@ -63,11 +67,13 @@ public interface TypeReader {
      * Reads an unsigned value that has been written using {@link TypeWriter#putSV variable byte
      * size encoding}.
      */
-    default long getUV() {
+    default long getUV()
+    {
         long result = 0;
         int shift = 0;
         long b;
-        do {
+        do
+        {
             b = getU1();
             result |= (b & 0x7f) << shift;
             shift += 7;
@@ -80,7 +86,8 @@ public interface TypeReader {
      * Reads an unsigned variable byte size encoded value that is known to fit into the range of
      * int.
      */
-    default int getUVInt() {
+    default int getUVInt()
+    {
         return TypeConversion.asS4(getUV());
     }
 }

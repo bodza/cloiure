@@ -61,40 +61,47 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 /**
  * HotSpot AMD64 specific backend.
  */
-public class AMD64HotSpotBackend extends HotSpotHostBackend {
-
-    public AMD64HotSpotBackend(GraalHotSpotVMConfig config, HotSpotGraalRuntimeProvider runtime, HotSpotProviders providers) {
+public class AMD64HotSpotBackend extends HotSpotHostBackend
+{
+    public AMD64HotSpotBackend(GraalHotSpotVMConfig config, HotSpotGraalRuntimeProvider runtime, HotSpotProviders providers)
+    {
         super(config, runtime, providers);
     }
 
     @Override
-    public FrameMapBuilder newFrameMapBuilder(RegisterConfig registerConfig) {
+    public FrameMapBuilder newFrameMapBuilder(RegisterConfig registerConfig)
+    {
         RegisterConfig registerConfigNonNull = registerConfig == null ? getCodeCache().getRegisterConfig() : registerConfig;
         return new AMD64FrameMapBuilder(newFrameMap(registerConfigNonNull), getCodeCache(), registerConfigNonNull);
     }
 
     @Override
-    public FrameMap newFrameMap(RegisterConfig registerConfig) {
+    public FrameMap newFrameMap(RegisterConfig registerConfig)
+    {
         return new AMD64FrameMap(getCodeCache(), registerConfig, this);
     }
 
     @Override
-    public LIRGeneratorTool newLIRGenerator(LIRGenerationResult lirGenRes) {
+    public LIRGeneratorTool newLIRGenerator(LIRGenerationResult lirGenRes)
+    {
         return new AMD64HotSpotLIRGenerator(getProviders(), config, lirGenRes);
     }
 
     @Override
-    public LIRGenerationResult newLIRGenerationResult(CompilationIdentifier compilationId, LIR lir, FrameMapBuilder frameMapBuilder, StructuredGraph graph, Object stub) {
+    public LIRGenerationResult newLIRGenerationResult(CompilationIdentifier compilationId, LIR lir, FrameMapBuilder frameMapBuilder, StructuredGraph graph, Object stub)
+    {
         return new HotSpotLIRGenerationResult(compilationId, lir, frameMapBuilder, makeCallingConvention(graph, (Stub) stub), stub);
     }
 
     @Override
-    public NodeLIRBuilderTool newNodeLIRBuilder(StructuredGraph graph, LIRGeneratorTool lirGen) {
+    public NodeLIRBuilderTool newNodeLIRBuilder(StructuredGraph graph, LIRGeneratorTool lirGen)
+    {
         return new AMD64HotSpotNodeLIRBuilder(graph, lirGen, new AMD64NodeMatchRules(lirGen));
     }
 
     @Override
-    protected void bangStackWithOffset(CompilationResultBuilder crb, int bangOffset) {
+    protected void bangStackWithOffset(CompilationResultBuilder crb, int bangOffset)
+    {
         AMD64MacroAssembler asm = (AMD64MacroAssembler) crb.asm;
         int pos = asm.position();
         asm.movl(new AMD64Address(rsp, -bangOffset), AMD64.rax);
@@ -112,46 +119,59 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend {
     /**
      * Emits code at the verified entry point and return point(s) of a method.
      */
-    class HotSpotFrameContext implements FrameContext {
-
+    class HotSpotFrameContext implements FrameContext
+    {
         final boolean isStub;
         final boolean omitFrame;
 
-        HotSpotFrameContext(boolean isStub, boolean omitFrame) {
+        HotSpotFrameContext(boolean isStub, boolean omitFrame)
+        {
             this.isStub = isStub;
             this.omitFrame = omitFrame;
         }
 
         @Override
-        public boolean hasFrame() {
+        public boolean hasFrame()
+        {
             return !omitFrame;
         }
 
         @Override
-        public void enter(CompilationResultBuilder crb) {
+        public void enter(CompilationResultBuilder crb)
+        {
             FrameMap frameMap = crb.frameMap;
             int frameSize = frameMap.frameSize();
             AMD64MacroAssembler asm = (AMD64MacroAssembler) crb.asm;
-            if (omitFrame) {
-                if (!isStub) {
+            if (omitFrame)
+            {
+                if (!isStub)
+                {
                     asm.nop(PATCHED_VERIFIED_ENTRY_POINT_INSTRUCTION_SIZE);
                 }
-            } else {
+            }
+            else
+            {
                 int verifiedEntryPointOffset = asm.position();
-                if (!isStub) {
+                if (!isStub)
+                {
                     emitStackOverflowCheck(crb);
                     // assert asm.position() - verifiedEntryPointOffset >=
                     // PATCHED_VERIFIED_ENTRY_POINT_INSTRUCTION_SIZE;
                 }
-                if (!isStub && asm.position() == verifiedEntryPointOffset) {
+                if (!isStub && asm.position() == verifiedEntryPointOffset)
+                {
                     asm.subqWide(rsp, frameSize);
                     assert asm.position() - verifiedEntryPointOffset >= PATCHED_VERIFIED_ENTRY_POINT_INSTRUCTION_SIZE;
-                } else {
+                }
+                else
+                {
                     asm.decrementq(rsp, frameSize);
                 }
-                if (ZapStackOnMethodEntry.getValue(crb.getOptions())) {
+                if (ZapStackOnMethodEntry.getValue(crb.getOptions()))
+                {
                     final int intSize = 4;
-                    for (int i = 0; i < frameSize / intSize; ++i) {
+                    for (int i = 0; i < frameSize / intSize; ++i)
+                    {
                         asm.movl(new AMD64Address(rsp, i * intSize), 0xC1C1C1C1);
                     }
                 }
@@ -160,8 +180,10 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend {
         }
 
         @Override
-        public void leave(CompilationResultBuilder crb) {
-            if (!omitFrame) {
+        public void leave(CompilationResultBuilder crb)
+        {
+            if (!omitFrame)
+            {
                 AMD64MacroAssembler asm = (AMD64MacroAssembler) crb.asm;
                 assert crb.frameMap.getRegisterConfig().getCalleeSaveRegisters() == null;
 
@@ -172,12 +194,14 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend {
     }
 
     @Override
-    protected Assembler createAssembler(FrameMap frameMap) {
+    protected Assembler createAssembler(FrameMap frameMap)
+    {
         return new AMD64MacroAssembler(getTarget());
     }
 
     @Override
-    public CompilationResultBuilder newCompilationResultBuilder(LIRGenerationResult lirGenRen, FrameMap frameMap, CompilationResult compilationResult, CompilationResultBuilderFactory factory) {
+    public CompilationResultBuilder newCompilationResultBuilder(LIRGenerationResult lirGenRen, FrameMap frameMap, CompilationResult compilationResult, CompilationResultBuilderFactory factory)
+    {
         // Omit the frame if the method:
         // - has no spill slots or other slots allocated during register allocation
         // - has no callee-saved registers
@@ -199,11 +223,13 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend {
         crb.setTotalFrameSize(frameMap.totalFrameSize());
         crb.setMaxInterpreterFrameSize(gen.getMaxInterpreterFrameSize());
         StackSlot deoptimizationRescueSlot = gen.getDeoptimizationRescueSlot();
-        if (deoptimizationRescueSlot != null && stub == null) {
+        if (deoptimizationRescueSlot != null && stub == null)
+        {
             crb.compilationResult.setCustomStackAreaOffset(deoptimizationRescueSlot);
         }
 
-        if (stub != null) {
+        if (stub != null)
+        {
             EconomicSet<Register> destroyedCallerRegisters = gatherDestroyedCallerRegisters(lir);
             updateStub(stub, destroyedCallerRegisters, gen.getCalleeSaveInfo(), frameMap);
         }
@@ -212,7 +238,8 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend {
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, LIR lir, ResolvedJavaMethod installedCodeOwner) {
+    public void emitCode(CompilationResultBuilder crb, LIR lir, ResolvedJavaMethod installedCodeOwner)
+    {
         AMD64MacroAssembler asm = (AMD64MacroAssembler) crb.asm;
         FrameMap frameMap = crb.frameMap;
         RegisterConfig regConfig = frameMap.getRegisterConfig();
@@ -236,9 +263,11 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend {
      *
      * @param installedCodeOwner see {@link Backend#emitCode}
      */
-    public void emitCodePrefix(ResolvedJavaMethod installedCodeOwner, CompilationResultBuilder crb, AMD64MacroAssembler asm, RegisterConfig regConfig, Label verifiedEntry) {
+    public void emitCodePrefix(ResolvedJavaMethod installedCodeOwner, CompilationResultBuilder crb, AMD64MacroAssembler asm, RegisterConfig regConfig, Label verifiedEntry)
+    {
         HotSpotProviders providers = getProviders();
-        if (installedCodeOwner != null && !installedCodeOwner.isStatic()) {
+        if (installedCodeOwner != null && !installedCodeOwner.isStatic())
+        {
             crb.recordMark(config.MARKID_UNVERIFIED_ENTRY);
             CallingConvention cc = regConfig.getCallingConvention(HotSpotCallingConventionType.JavaCallee, null, new JavaType[]{providers.getMetaAccess().lookupJavaType(Object.class)}, this);
             Register inlineCacheKlass = rax; // see definition of IC_Klass in
@@ -246,20 +275,27 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend {
             Register receiver = asRegister(cc.getArgument(0));
             AMD64Address src = new AMD64Address(receiver, config.hubOffset);
 
-            if (config.useCompressedClassPointers) {
+            if (config.useCompressedClassPointers)
+            {
                 Register register = r10;
                 AMD64HotSpotMove.decodeKlassPointer(crb, asm, register, providers.getRegisters().getHeapBaseRegister(), src, config);
-                if (GeneratePIC.getValue(crb.getOptions())) {
+                if (GeneratePIC.getValue(crb.getOptions()))
+                {
                     asm.movq(providers.getRegisters().getHeapBaseRegister(), asm.getPlaceholder(-1));
                     crb.recordMark(config.MARKID_NARROW_OOP_BASE_ADDRESS);
-                } else {
-                    if (config.narrowKlassBase != 0) {
+                }
+                else
+                {
+                    if (config.narrowKlassBase != 0)
+                    {
                         // The heap base register was destroyed above, so restore it
                         asm.movq(providers.getRegisters().getHeapBaseRegister(), config.narrowOopBase);
                     }
                 }
                 asm.cmpq(inlineCacheKlass, register);
-            } else {
+            }
+            else
+            {
                 asm.cmpq(inlineCacheKlass, src);
             }
             AMD64Call.directConditionalJmp(crb, asm, getForeignCalls().lookupForeignCall(IC_MISS_HANDLER), ConditionFlag.NotEqual);
@@ -270,10 +306,12 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend {
         asm.bind(verifiedEntry);
         crb.recordMark(config.MARKID_VERIFIED_ENTRY);
 
-        if (GeneratePIC.getValue(crb.getOptions())) {
+        if (GeneratePIC.getValue(crb.getOptions()))
+        {
             // Check for method state
             HotSpotFrameContext frameContext = (HotSpotFrameContext) crb.frameContext;
-            if (!frameContext.isStub) {
+            if (!frameContext.isStub)
+            {
                 crb.recordInlineDataInCodeWithNote(new HotSpotSentinelConstant(LIRKind.value(AMD64Kind.QWORD), JavaKind.Long), HotSpotConstantLoadAction.MAKE_NOT_ENTRANT);
                 asm.movq(AMD64.rax, asm.getPlaceholder(-1));
                 asm.testq(AMD64.rax, AMD64.rax);
@@ -287,27 +325,33 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend {
      *
      * @param installedCodeOwner see {@link Backend#emitCode}
      */
-    public void emitCodeBody(ResolvedJavaMethod installedCodeOwner, CompilationResultBuilder crb, LIR lir) {
+    public void emitCodeBody(ResolvedJavaMethod installedCodeOwner, CompilationResultBuilder crb, LIR lir)
+    {
         crb.emit(lir);
     }
 
     /**
      * @param installedCodeOwner see {@link Backend#emitCode}
      */
-    public void emitCodeSuffix(ResolvedJavaMethod installedCodeOwner, CompilationResultBuilder crb, AMD64MacroAssembler asm, FrameMap frameMap) {
+    public void emitCodeSuffix(ResolvedJavaMethod installedCodeOwner, CompilationResultBuilder crb, AMD64MacroAssembler asm, FrameMap frameMap)
+    {
         HotSpotProviders providers = getProviders();
         HotSpotFrameContext frameContext = (HotSpotFrameContext) crb.frameContext;
-        if (!frameContext.isStub) {
+        if (!frameContext.isStub)
+        {
             HotSpotForeignCallsProvider foreignCalls = providers.getForeignCalls();
             crb.recordMark(config.MARKID_EXCEPTION_HANDLER_ENTRY);
             AMD64Call.directCall(crb, asm, foreignCalls.lookupForeignCall(EXCEPTION_HANDLER), null, false, null);
             crb.recordMark(config.MARKID_DEOPT_HANDLER_ENTRY);
             AMD64Call.directCall(crb, asm, foreignCalls.lookupForeignCall(DEOPTIMIZATION_HANDLER), null, false, null);
-        } else {
+        }
+        else
+        {
             // No need to emit the stubs for entries back into the method since
             // it has no calls that can cause such "return" entries
 
-            if (frameContext.omitFrame) {
+            if (frameContext.omitFrame)
+            {
                 // Cannot access slots in caller's frame if my frame is omitted
                 assert !frameMap.accessesCallerFrame();
             }
@@ -315,13 +359,15 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend {
     }
 
     @Override
-    public RegisterAllocationConfig newRegisterAllocationConfig(RegisterConfig registerConfig, String[] allocationRestrictedTo) {
+    public RegisterAllocationConfig newRegisterAllocationConfig(RegisterConfig registerConfig, String[] allocationRestrictedTo)
+    {
         RegisterConfig registerConfigNonNull = registerConfig == null ? getCodeCache().getRegisterConfig() : registerConfig;
         return new AMD64HotSpotRegisterAllocationConfig(registerConfigNonNull, allocationRestrictedTo);
     }
 
     @Override
-    public EconomicSet<Register> translateToCallerRegisters(EconomicSet<Register> calleeRegisters) {
+    public EconomicSet<Register> translateToCallerRegisters(EconomicSet<Register> calleeRegisters)
+    {
         return calleeRegisters;
     }
 }

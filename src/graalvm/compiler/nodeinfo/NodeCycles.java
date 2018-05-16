@@ -4,8 +4,8 @@ package graalvm.compiler.nodeinfo;
  * Constants representing an estimation of the number of CPU cycles needed to execute a certain
  * compiler node.
  */
-public enum NodeCycles {
-
+public enum NodeCycles
+{
     /**
      * The default value of the {@link NodeInfo#cycles()} property.
      * <p>
@@ -42,40 +42,50 @@ public enum NodeCycles {
 
     public final int value;
 
-    NodeCycles(int value) {
+    NodeCycles(int value)
+    {
         this.value = value;
     }
 
-    public boolean isValueKnown() {
+    public boolean isValueKnown()
+    {
         return this != NodeCycles.CYCLES_UNKNOWN && this != NodeCycles.CYCLES_UNSET;
     }
 
     public static final int IGNORE_CYCLES_CONTRACT_FACTOR = 0xFFFF;
 
-    public static NodeCycles compute(NodeCycles base, int opCount) {
+    public static NodeCycles compute(NodeCycles base, int opCount)
+    {
         assert opCount >= 0;
-        if (opCount == 0) {
+        if (opCount == 0)
+        {
             return CYCLES_0;
         }
         assert base.ordinal() > CYCLES_0.ordinal();
         int log2 = log2(base.value * opCount);
         NodeCycles[] values = values();
-        for (int i = base.ordinal(); i < values.length; i++) {
-            if (log2(values[i].value) == log2) {
+        for (int i = base.ordinal(); i < values.length; i++)
+        {
+            if (log2(values[i].value) == log2)
+            {
                 return values[i];
             }
         }
         return CYCLES_1024;
     }
 
-    public static NodeCycles compute(int rawValue) {
+    public static NodeCycles compute(int rawValue)
+    {
         assert rawValue >= 0;
-        if (rawValue == 0) {
+        if (rawValue == 0)
+        {
             return CYCLES_0;
         }
         NodeCycles[] values = values();
-        for (int i = CYCLES_0.ordinal(); i < values.length - 1; i++) {
-            if (values[i].value >= rawValue && rawValue <= values[i + 1].value) {
+        for (int i = CYCLES_0.ordinal(); i < values.length - 1; i++)
+        {
+            if (values[i].value >= rawValue && rawValue <= values[i + 1].value)
+            {
                 int r1 = values[i].value;
                 int r2 = values[i + 1].value;
                 int diff = r2 - r1;
@@ -85,7 +95,8 @@ public enum NodeCycles {
         return CYCLES_1024;
     }
 
-    private static int log2(int val) {
+    private static int log2(int val)
+    {
         return (Integer.SIZE - 1) - Integer.numberOfLeadingZeros(val);
     }
 }

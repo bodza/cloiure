@@ -16,31 +16,36 @@ import org.graalvm.collections.UnmodifiableMapCursor;
 /**
  * A context for obtaining values for {@link OptionKey}s.
  */
-public class OptionValues {
-
+public class OptionValues
+{
     private final UnmodifiableEconomicMap<OptionKey<?>, Object> values;
 
-    protected boolean containsKey(OptionKey<?> key) {
+    protected boolean containsKey(OptionKey<?> key)
+    {
         return values.containsKey(key);
     }
 
-    public OptionValues(OptionValues initialValues, UnmodifiableEconomicMap<OptionKey<?>, Object> extraPairs) {
+    public OptionValues(OptionValues initialValues, UnmodifiableEconomicMap<OptionKey<?>, Object> extraPairs)
+    {
         EconomicMap<OptionKey<?>, Object> map = newOptionMap();
-        if (initialValues != null) {
+        if (initialValues != null)
+        {
             map.putAll(initialValues.getMap());
         }
         initMap(map, extraPairs);
         this.values = map;
     }
 
-    public OptionValues(OptionValues initialValues, OptionKey<?> key1, Object value1, Object... extraPairs) {
+    public OptionValues(OptionValues initialValues, OptionKey<?> key1, Object value1, Object... extraPairs)
+    {
         this(initialValues, asMap(key1, value1, extraPairs));
     }
 
     /**
      * Creates a new map suitable for using {@link OptionKey}s as keys.
      */
-    public static EconomicMap<OptionKey<?>, Object> newOptionMap() {
+    public static EconomicMap<OptionKey<?>, Object> newOptionMap()
+    {
         return EconomicMap.create(Equivalence.IDENTITY);
     }
 
@@ -48,7 +53,8 @@ public class OptionValues {
      * Gets an immutable view of the key/value pairs in this object. Values read from this view
      * should be {@linkplain #decodeNull(Object) decoded} before being used.
      */
-    public UnmodifiableEconomicMap<OptionKey<?>, Object> getMap() {
+    public UnmodifiableEconomicMap<OptionKey<?>, Object> getMap()
+    {
         return values;
     }
 
@@ -58,10 +64,12 @@ public class OptionValues {
      * @param extraPairs key/value pairs of the form {@code [key1, value1, key2, value2, ...]}
      * @return a map containing the key/value pairs as entries
      */
-    public static EconomicMap<OptionKey<?>, Object> asMap(OptionKey<?> key1, Object value1, Object... extraPairs) {
+    public static EconomicMap<OptionKey<?>, Object> asMap(OptionKey<?> key1, Object value1, Object... extraPairs)
+    {
         EconomicMap<OptionKey<?>, Object> map = newOptionMap();
         map.put(key1, value1);
-        for (int i = 0; i < extraPairs.length; i += 2) {
+        for (int i = 0; i < extraPairs.length; i += 2)
+        {
             OptionKey<?> key = (OptionKey<?>) extraPairs[i];
             Object value = extraPairs[i + 1];
             map.put(key, value);
@@ -69,27 +77,33 @@ public class OptionValues {
         return map;
     }
 
-    public OptionValues(UnmodifiableEconomicMap<OptionKey<?>, Object> values) {
+    public OptionValues(UnmodifiableEconomicMap<OptionKey<?>, Object> values)
+    {
         EconomicMap<OptionKey<?>, Object> map = newOptionMap();
         initMap(map, values);
         this.values = map;
     }
 
-    protected static void initMap(EconomicMap<OptionKey<?>, Object> map, UnmodifiableEconomicMap<OptionKey<?>, Object> values) {
+    protected static void initMap(EconomicMap<OptionKey<?>, Object> map, UnmodifiableEconomicMap<OptionKey<?>, Object> values)
+    {
         UnmodifiableMapCursor<OptionKey<?>, Object> cursor = values.getEntries();
-        while (cursor.advance()) {
+        while (cursor.advance())
+        {
             map.put(cursor.getKey(), encodeNull(cursor.getValue()));
         }
     }
 
-    protected <T> T get(OptionKey<T> key) {
+    protected <T> T get(OptionKey<T> key)
+    {
         return get(values, key);
     }
 
     @SuppressWarnings("unchecked")
-    protected static <T> T get(UnmodifiableEconomicMap<OptionKey<?>, Object> values, OptionKey<T> key) {
+    protected static <T> T get(UnmodifiableEconomicMap<OptionKey<?>, Object> values, OptionKey<T> key)
+    {
         Object value = values.get(key);
-        if (value == null) {
+        if (value == null)
+        {
             return key.getDefaultValue();
         }
         return (T) decodeNull(value);
@@ -97,32 +111,39 @@ public class OptionValues {
 
     private static final Object NULL = new Object();
 
-    protected static Object encodeNull(Object value) {
+    protected static Object encodeNull(Object value)
+    {
         return value == null ? NULL : value;
     }
 
     /**
      * Decodes a value that may be the sentinel value for {@code null} in a map.
      */
-    public static Object decodeNull(Object value) {
+    public static Object decodeNull(Object value)
+    {
         return value == NULL ? null : value;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return toString(getMap());
     }
 
-    public static String toString(UnmodifiableEconomicMap<OptionKey<?>, Object> values) {
-        Comparator<OptionKey<?>> comparator = new Comparator<OptionKey<?>>() {
+    public static String toString(UnmodifiableEconomicMap<OptionKey<?>, Object> values)
+    {
+        Comparator<OptionKey<?>> comparator = new Comparator<OptionKey<?>>()
+        {
             @Override
-            public int compare(OptionKey<?> o1, OptionKey<?> o2) {
+            public int compare(OptionKey<?> o1, OptionKey<?> o2)
+            {
                 return o1.getName().compareTo(o2.getName());
             }
         };
         SortedMap<OptionKey<?>, Object> sorted = new TreeMap<>(comparator);
         UnmodifiableMapCursor<OptionKey<?>, Object> cursor = values.getEntries();
-        while (cursor.advance()) {
+        while (cursor.advance())
+        {
             sorted.put(cursor.getKey(), decodeNull(cursor.getValue()));
         }
         return sorted.toString();
@@ -139,25 +160,33 @@ public class OptionValues {
      *            this value
      * @return {@code text} broken into lines
      */
-    private static List<String> wrap(String text, int width) {
+    private static List<String> wrap(String text, int width)
+    {
         List<String> lines = new ArrayList<>();
-        if (text.length() > width) {
+        if (text.length() > width)
+        {
             String[] chunks = text.split("\\s+");
             StringBuilder line = new StringBuilder();
-            for (String chunk : chunks) {
-                if (line.length() + chunk.length() > width) {
+            for (String chunk : chunks)
+            {
+                if (line.length() + chunk.length() > width)
+                {
                     lines.add(line.toString());
                     line.setLength(0);
                 }
-                if (line.length() != 0) {
+                if (line.length() != 0)
+                {
                     line.append(' ');
                 }
                 line.append(chunk);
             }
-            if (line.length() != 0) {
+            if (line.length() != 0)
+            {
                 lines.add(line.toString());
             }
-        } else {
+        }
+        else
+        {
             lines.add(text);
         }
         return lines;
@@ -172,19 +201,24 @@ public class OptionValues {
      * @param out
      * @param namePrefix
      */
-    public void printHelp(Iterable<OptionDescriptors> loader, PrintStream out, String namePrefix) {
+    public void printHelp(Iterable<OptionDescriptors> loader, PrintStream out, String namePrefix)
+    {
         SortedMap<String, OptionDescriptor> sortedOptions = new TreeMap<>();
-        for (OptionDescriptors opts : loader) {
-            for (OptionDescriptor desc : opts) {
+        for (OptionDescriptors opts : loader)
+        {
+            for (OptionDescriptor desc : opts)
+            {
                 String name = desc.getName();
                 OptionDescriptor existing = sortedOptions.put(name, desc);
                 assert existing == null || existing == desc : "Option named \"" + name + "\" has multiple definitions: " + existing.getLocation() + " and " + desc.getLocation();
             }
         }
-        for (Map.Entry<String, OptionDescriptor> e : sortedOptions.entrySet()) {
+        for (Map.Entry<String, OptionDescriptor> e : sortedOptions.entrySet())
+        {
             OptionDescriptor desc = e.getValue();
             Object value = desc.getOptionKey().getValue(this);
-            if (value instanceof String) {
+            if (value instanceof String)
+            {
                 value = '"' + String.valueOf(value) + '"';
             }
 
@@ -194,21 +228,28 @@ public class OptionValues {
             String linePrefix = String.format("%s %s %s ", name, assign, value);
             int typeStartPos = PROPERTY_LINE_WIDTH - typeName.length();
             int linePad = typeStartPos - linePrefix.length();
-            if (linePad > 0) {
+            if (linePad > 0)
+            {
                 out.printf("%s%-" + linePad + "s[%s]%n", linePrefix, "", typeName);
-            } else {
+            }
+            else
+            {
                 out.printf("%s[%s]%n", linePrefix, typeName);
             }
 
             List<String> helpLines;
             String help = desc.getHelp();
-            if (help.length() != 0) {
+            if (help.length() != 0)
+            {
                 helpLines = wrap(help, PROPERTY_LINE_WIDTH - PROPERTY_HELP_INDENT);
                 helpLines.addAll(desc.getExtraHelp());
-            } else {
+            }
+            else
+            {
                 helpLines = desc.getExtraHelp();
             }
-            for (String line : helpLines) {
+            for (String line : helpLines)
+            {
                 out.printf("%" + PROPERTY_HELP_INDENT + "s%s%n", "", line);
             }
         }

@@ -14,10 +14,12 @@ import java.util.Map;
  * @param <G> the type of graph this instance handles
  * @param <M> the type of methods this instance handles
  */
-public final class GraphOutput<G, M> implements Closeable {
+public final class GraphOutput<G, M> implements Closeable
+{
     private final GraphProtocol<G, ?, ?, ?, ?, M, ?, ?, ?, ?> printer;
 
-    private GraphOutput(GraphProtocol<G, ?, ?, ?, ?, M, ?, ?, ?, ?> p) {
+    private GraphOutput(GraphProtocol<G, ?, ?, ?, ?, M, ?, ?, ?, ?> p)
+    {
         this.printer = p;
     }
 
@@ -32,7 +34,8 @@ public final class GraphOutput<G, M> implements Closeable {
      * @param structure description of the structure of the graph
      * @return the builder to configure
      */
-    public static <G, N, C, P> Builder<G, N, ?> newBuilder(GraphStructure<G, N, C, P> structure) {
+    public static <G, N, C, P> Builder<G, N, ?> newBuilder(GraphStructure<G, N, C, P> structure)
+    {
         return new Builder<>(structure);
     }
 
@@ -47,7 +50,8 @@ public final class GraphOutput<G, M> implements Closeable {
      * @param properties
      * @throws IOException
      */
-    public void beginGroup(G forGraph, String name, String shortName, M method, int bci, Map<? extends Object, ? extends Object> properties) throws IOException {
+    public void beginGroup(G forGraph, String name, String shortName, M method, int bci, Map<? extends Object, ? extends Object> properties) throws IOException
+    {
         printer.beginGroup(forGraph, name, shortName, method, bci, properties);
     }
 
@@ -61,7 +65,8 @@ public final class GraphOutput<G, M> implements Closeable {
      * @param args
      * @throws IOException
      */
-    public void print(G graph, Map<? extends Object, ? extends Object> properties, int id, String format, Object... args) throws IOException {
+    public void print(G graph, Map<? extends Object, ? extends Object> properties, int id, String format, Object... args) throws IOException
+    {
         printer.print(graph, properties, id, format, args);
     }
 
@@ -70,7 +75,8 @@ public final class GraphOutput<G, M> implements Closeable {
      *
      * @throws IOException
      */
-    public void endGroup() throws IOException {
+    public void endGroup() throws IOException
+    {
         printer.endGroup();
     }
 
@@ -78,7 +84,8 @@ public final class GraphOutput<G, M> implements Closeable {
      * Closes the output. Closes allocated resources and associated output channel.
      */
     @Override
-    public void close() {
+    public void close()
+    {
         printer.close();
     }
 
@@ -89,7 +96,8 @@ public final class GraphOutput<G, M> implements Closeable {
      * @param <N> the type of the nodes
      * @param <M> the type of the methods
      */
-    public static final class Builder<G, N, M> {
+    public static final class Builder<G, N, M>
+    {
         private final GraphStructure<G, N, ?, ?> structure;
         private ElementsAndLocations<M, ?, ?> elementsAndLocations;
 
@@ -98,7 +106,8 @@ public final class GraphOutput<G, M> implements Closeable {
         private int major = 4;
         private int minor = 0;
 
-        Builder(GraphStructure<G, N, ?, ?> structure) {
+        Builder(GraphStructure<G, N, ?, ?> structure)
+        {
             this.structure = structure;
         }
 
@@ -112,7 +121,8 @@ public final class GraphOutput<G, M> implements Closeable {
          * @return this builder
          * @since 0.28
          */
-        public Builder<G, N, M> protocolVersion(int majorVersion, int minorVersion) {
+        public Builder<G, N, M> protocolVersion(int majorVersion, int minorVersion)
+        {
             this.major = majorVersion;
             this.minor = minorVersion;
             return this;
@@ -124,7 +134,8 @@ public final class GraphOutput<G, M> implements Closeable {
          * @param graphTypes implementation of types and enum recognition
          * @return this builder
          */
-        public Builder<G, N, M> types(GraphTypes graphTypes) {
+        public Builder<G, N, M> types(GraphTypes graphTypes)
+        {
             this.types = graphTypes;
             return this;
         }
@@ -135,7 +146,8 @@ public final class GraphOutput<G, M> implements Closeable {
          * @param graphBlocks the blocks implementation
          * @return this builder
          */
-        public Builder<G, N, M> blocks(GraphBlocks<G, ?, N> graphBlocks) {
+        public Builder<G, N, M> blocks(GraphBlocks<G, ?, N> graphBlocks)
+        {
             this.blocks = graphBlocks;
             return this;
         }
@@ -146,7 +158,8 @@ public final class GraphOutput<G, M> implements Closeable {
          * @param graphElements the elements implementation
          * @return this builder
          */
-        public <E, P> Builder<G, N, E> elements(GraphElements<E, ?, ?, P> graphElements) {
+        public <E, P> Builder<G, N, E> elements(GraphElements<E, ?, ?, P> graphElements)
+        {
             StackLocations<E, P> loc = new StackLocations<>(graphElements);
             return elementsAndLocations(graphElements, loc);
         }
@@ -161,7 +174,8 @@ public final class GraphOutput<G, M> implements Closeable {
          * @since 0.33 GraalVM 0.33
          */
         @SuppressWarnings({"unchecked", "rawtypes"})
-        public <E, P> Builder<G, N, E> elementsAndLocations(GraphElements<E, ?, ?, P> graphElements, GraphLocations<E, P, ?> graphLocations) {
+        public <E, P> Builder<G, N, E> elementsAndLocations(GraphElements<E, ?, ?, P> graphElements, GraphLocations<E, P, ?> graphLocations)
+        {
             ElementsAndLocations both = new ElementsAndLocations<>(graphElements, graphLocations);
             this.elementsAndLocations = both;
             return (Builder<G, N, E>) this;
@@ -175,7 +189,8 @@ public final class GraphOutput<G, M> implements Closeable {
          * @return new graph output
          * @throws IOException if something goes wrong when writing to the channel
          */
-        public GraphOutput<G, M> build(WritableByteChannel channel) throws IOException {
+        public GraphOutput<G, M> build(WritableByteChannel channel) throws IOException
+        {
             return buildImpl(elementsAndLocations, channel);
         }
 
@@ -195,38 +210,39 @@ public final class GraphOutput<G, M> implements Closeable {
          * @param parent the output to inherit {@code channel} and protocol version from
          * @return new output sharing {@code channel} and other internals with {@code parent}
          */
-        public GraphOutput<G, M> build(GraphOutput<?, ?> parent) {
+        public GraphOutput<G, M> build(GraphOutput<?, ?> parent)
+        {
             return buildImpl(elementsAndLocations, parent);
         }
 
-        private <L, P> GraphOutput<G, M> buildImpl(ElementsAndLocations<M, L, P> e, WritableByteChannel channel) throws IOException {
-            // @formatter:off
+        private <L, P> GraphOutput<G, M> buildImpl(ElementsAndLocations<M, L, P> e, WritableByteChannel channel) throws IOException
+        {
             ProtocolImpl<G, N, ?, ?, ?, M, ?, ?, ?, ?> p = new ProtocolImpl<>(
                 major, minor, structure, types, blocks,
                 e == null ? null : e.elements,
                 e == null ? null : e.locations, channel
             );
-            // @formatter:on
             return new GraphOutput<>(p);
         }
 
-        private <L, P> GraphOutput<G, M> buildImpl(ElementsAndLocations<M, L, P> e, GraphOutput<?, ?> parent) {
-            // @formatter:off
+        private <L, P> GraphOutput<G, M> buildImpl(ElementsAndLocations<M, L, P> e, GraphOutput<?, ?> parent)
+        {
             ProtocolImpl<G, N, ?, ?, ?, M, ?, ?, ?, ?> p = new ProtocolImpl<>(
                 parent.printer, structure, types, blocks,
                 e == null ? null : e.elements,
                 e == null ? null : e.locations
             );
-            // @formatter:on
             return new GraphOutput<>(p);
         }
     }
 
-    private static final class ElementsAndLocations<M, P, L> {
+    private static final class ElementsAndLocations<M, P, L>
+    {
         final GraphElements<M, ?, ?, P> elements;
         final GraphLocations<M, P, L> locations;
 
-        ElementsAndLocations(GraphElements<M, ?, ?, P> elements, GraphLocations<M, P, L> locations) {
+        ElementsAndLocations(GraphElements<M, ?, ?, P> elements, GraphLocations<M, P, L> locations)
+        {
             elements.getClass();
             locations.getClass();
             this.elements = elements;
@@ -234,46 +250,57 @@ public final class GraphOutput<G, M> implements Closeable {
         }
     }
 
-    private static final class StackLocations<M, P> implements GraphLocations<M, P, StackTraceElement> {
+    private static final class StackLocations<M, P> implements GraphLocations<M, P, StackTraceElement>
+    {
         private final GraphElements<M, ?, ?, P> graphElements;
 
-        StackLocations(GraphElements<M, ?, ?, P> graphElements) {
+        StackLocations(GraphElements<M, ?, ?, P> graphElements)
+        {
             this.graphElements = graphElements;
         }
 
         @Override
-        public Iterable<StackTraceElement> methodLocation(M method, int bci, P pos) {
+        public Iterable<StackTraceElement> methodLocation(M method, int bci, P pos)
+        {
             StackTraceElement ste = this.graphElements.methodStackTraceElement(method, bci, pos);
             return Collections.singleton(ste);
         }
 
         @Override
-        public URI locationURI(StackTraceElement location) {
+        public URI locationURI(StackTraceElement location)
+        {
             String path = location.getFileName();
-            try {
+            try
+            {
                 return path == null ? null : new URI(null, null, path, null);
-            } catch (URISyntaxException ex) {
+            }
+            catch (URISyntaxException ex)
+            {
                 throw new IllegalArgumentException(ex);
             }
         }
 
         @Override
-        public int locationLineNumber(StackTraceElement location) {
+        public int locationLineNumber(StackTraceElement location)
+        {
             return location.getLineNumber();
         }
 
         @Override
-        public String locationLanguage(StackTraceElement location) {
+        public String locationLanguage(StackTraceElement location)
+        {
             return "Java";
         }
 
         @Override
-        public int locationOffsetStart(StackTraceElement location) {
+        public int locationOffsetStart(StackTraceElement location)
+        {
             return -1;
         }
 
         @Override
-        public int locationOffsetEnd(StackTraceElement location) {
+        public int locationOffsetEnd(StackTraceElement location)
+        {
             return -1;
         }
     }

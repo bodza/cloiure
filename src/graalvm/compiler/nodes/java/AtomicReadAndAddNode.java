@@ -23,32 +23,36 @@ import jdk.vm.ci.meta.Value;
  * {@link sun.misc.Unsafe#getAndAddInt(Object, long, int)}.
  */
 @NodeInfo(allowedUsageTypes = Memory, cycles = CYCLES_8, size = SIZE_2)
-public final class AtomicReadAndAddNode extends AbstractMemoryCheckpoint implements LIRLowerable, MemoryCheckpoint.Single {
-
+public final class AtomicReadAndAddNode extends AbstractMemoryCheckpoint implements LIRLowerable, MemoryCheckpoint.Single
+{
     public static final NodeClass<AtomicReadAndAddNode> TYPE = NodeClass.create(AtomicReadAndAddNode.class);
     @Input(Association) AddressNode address;
     @Input ValueNode delta;
 
     protected final LocationIdentity locationIdentity;
 
-    public AtomicReadAndAddNode(AddressNode address, ValueNode delta, LocationIdentity locationIdentity) {
+    public AtomicReadAndAddNode(AddressNode address, ValueNode delta, LocationIdentity locationIdentity)
+    {
         super(TYPE, StampFactory.forKind(delta.getStackKind()));
         this.address = address;
         this.delta = delta;
         this.locationIdentity = locationIdentity;
     }
 
-    public ValueNode delta() {
+    public ValueNode delta()
+    {
         return delta;
     }
 
     @Override
-    public LocationIdentity getLocationIdentity() {
+    public LocationIdentity getLocationIdentity()
+    {
         return locationIdentity;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         Value result = gen.getLIRGeneratorTool().emitAtomicReadAndAdd(gen.operand(address), gen.operand(delta));
         gen.setResult(this, result);
     }

@@ -7,25 +7,33 @@ import java.util.Queue;
 
 import graalvm.compiler.debug.DebugContext;
 
-public abstract class NodeWorkList implements Iterable<Node> {
-
+public abstract class NodeWorkList implements Iterable<Node>
+{
     protected final Queue<Node> worklist;
 
-    private NodeWorkList(Graph graph, boolean fill) {
-        if (fill) {
+    private NodeWorkList(Graph graph, boolean fill)
+    {
+        if (fill)
+        {
             ArrayDeque<Node> deque = new ArrayDeque<>(graph.getNodeCount());
-            for (Node node : graph.getNodes()) {
+            for (Node node : graph.getNodes())
+            {
                 deque.add(node);
             }
             worklist = deque;
-        } else {
+        }
+        else
+        {
             worklist = new ArrayDeque<>();
         }
     }
 
-    public void addAll(Iterable<? extends Node> nodes) {
-        for (Node node : nodes) {
-            if (node.isAlive()) {
+    public void addAll(Iterable<? extends Node> nodes)
+    {
+        for (Node node : nodes)
+        {
+            if (node.isAlive())
+            {
                 this.add(node);
             }
         }
@@ -35,21 +43,25 @@ public abstract class NodeWorkList implements Iterable<Node> {
 
     public abstract boolean contains(Node node);
 
-    private abstract class QueueConsumingIterator implements Iterator<Node> {
-
-        protected void dropDeleted() {
-            while (!worklist.isEmpty() && worklist.peek().isDeleted()) {
+    private abstract class QueueConsumingIterator implements Iterator<Node>
+    {
+        protected void dropDeleted()
+        {
+            while (!worklist.isEmpty() && worklist.peek().isDeleted())
+            {
                 worklist.remove();
             }
         }
 
         @Override
-        public void remove() {
+        public void remove()
+        {
             throw new UnsupportedOperationException();
         }
     }
 
-    public static final class IterativeNodeWorkList extends NodeWorkList {
+    public static final class IterativeNodeWorkList extends NodeWorkList
+    {
         private static final int EXPLICIT_BITMAP_THRESHOLD = 10;
         protected NodeBitMap inQueue;
 
@@ -59,7 +71,8 @@ public abstract class NodeWorkList implements Iterable<Node> {
         private Node lastPull;
         private Node lastChain;
 
-        public IterativeNodeWorkList(Graph graph, boolean fill, int iterationLimitPerNode) {
+        public IterativeNodeWorkList(Graph graph, boolean fill, int iterationLimitPerNode)
+        {
             super(graph, fill);
             debug = graph.getDebug();
             assert iterationLimitPerNode > 0;
@@ -68,12 +81,16 @@ public abstract class NodeWorkList implements Iterable<Node> {
         }
 
         @Override
-        public Iterator<Node> iterator() {
-            return new QueueConsumingIterator() {
+        public Iterator<Node> iterator()
+        {
+            return new QueueConsumingIterator()
+            {
                 @Override
-                public boolean hasNext() {
+                public boolean hasNext()
+                {
                     dropDeleted();
-                    if (iterationLimit <= 0) {
+                    if (iterationLimit <= 0)
+                    {
                         debug.log(DebugContext.INFO_LEVEL, "Exceeded iteration limit in IterativeNodeWorkList");
                         return false;
                     }
@@ -81,21 +98,26 @@ public abstract class NodeWorkList implements Iterable<Node> {
                 }
 
                 @Override
-                public Node next() {
-                    if (iterationLimit-- <= 0) {
+                public Node next()
+                {
+                    if (iterationLimit-- <= 0)
+                    {
                         throw new NoSuchElementException();
                     }
                     dropDeleted();
                     Node node = worklist.remove();
                     assert updateInfiniteWork(node);
-                    if (inQueue != null) {
+                    if (inQueue != null)
+                    {
                         inQueue.clearAndGrow(node);
                     }
                     return node;
                 }
 
-                private boolean updateInfiniteWork(Node node) {
-                    if (lastPull != lastChain) {
+                private boolean updateInfiniteWork(Node node)
+                {
+                    if (lastPull != lastChain)
+                    {
                         firstNoChange = null;
                     }
                     lastPull = node;
@@ -105,25 +127,35 @@ public abstract class NodeWorkList implements Iterable<Node> {
         }
 
         @Override
-        public void add(Node node) {
-            if (node != null) {
-                if (inQueue == null && worklist.size() > EXPLICIT_BITMAP_THRESHOLD) {
+        public void add(Node node)
+        {
+            if (node != null)
+            {
+                if (inQueue == null && worklist.size() > EXPLICIT_BITMAP_THRESHOLD)
+                {
                     inflateToBitMap(node.graph());
                 }
 
-                if (inQueue != null) {
-                    if (inQueue.isMarkedAndGrow(node)) {
+                if (inQueue != null)
+                {
+                    if (inQueue.isMarkedAndGrow(node))
+                    {
                         return;
                     }
-                } else {
-                    for (Node queuedNode : worklist) {
-                        if (queuedNode == node) {
+                }
+                else
+                {
+                    for (Node queuedNode : worklist)
+                    {
+                        if (queuedNode == node)
+                        {
                             return;
                         }
                     }
                 }
                 assert checkInfiniteWork(node) : "Re-added " + node;
-                if (inQueue != null) {
+                if (inQueue != null)
+                {
                     inQueue.markAndGrow(node);
                 }
                 worklist.add(node);
@@ -131,12 +163,18 @@ public abstract class NodeWorkList implements Iterable<Node> {
         }
 
         @Override
-        public boolean contains(Node node) {
-            if (inQueue != null) {
+        public boolean contains(Node node)
+        {
+            if (inQueue != null)
+            {
                 return inQueue.isMarked(node);
-            } else {
-                for (Node queuedNode : worklist) {
-                    if (queuedNode == node) {
+            }
+            else
+            {
+                for (Node queuedNode : worklist)
+                {
+                    if (queuedNode == node)
+                    {
                         return true;
                     }
                 }
@@ -144,45 +182,62 @@ public abstract class NodeWorkList implements Iterable<Node> {
             }
         }
 
-        private boolean checkInfiniteWork(Node node) {
-            if (lastPull == node && !node.hasNoUsages()) {
-                if (firstNoChange == null) {
+        private boolean checkInfiniteWork(Node node)
+        {
+            if (lastPull == node && !node.hasNoUsages())
+            {
+                if (firstNoChange == null)
+                {
                     firstNoChange = node;
                     lastChain = node;
-                } else if (node == firstNoChange) {
+                }
+                else if (node == firstNoChange)
+                {
                     return false;
-                } else {
+                }
+                else
+                {
                     lastChain = node;
                 }
-            } else {
+            }
+            else
+            {
                 firstNoChange = null;
             }
             return true;
         }
 
-        private void inflateToBitMap(Graph graph) {
+        private void inflateToBitMap(Graph graph)
+        {
             assert inQueue == null;
             inQueue = graph.createNodeBitMap();
-            for (Node queuedNode : worklist) {
-                if (queuedNode.isAlive()) {
+            for (Node queuedNode : worklist)
+            {
+                if (queuedNode.isAlive())
+                {
                     inQueue.mark(queuedNode);
                 }
             }
         }
     }
 
-    public static final class SingletonNodeWorkList extends NodeWorkList {
+    public static final class SingletonNodeWorkList extends NodeWorkList
+    {
         protected final NodeBitMap visited;
 
-        public SingletonNodeWorkList(Graph graph) {
+        public SingletonNodeWorkList(Graph graph)
+        {
             super(graph, false);
             visited = graph.createNodeBitMap();
         }
 
         @Override
-        public void add(Node node) {
-            if (node != null) {
-                if (!visited.isMarkedAndGrow(node)) {
+        public void add(Node node)
+        {
+            if (node != null)
+            {
+                if (!visited.isMarkedAndGrow(node))
+                {
                     visited.mark(node);
                     worklist.add(node);
                 }
@@ -190,21 +245,26 @@ public abstract class NodeWorkList implements Iterable<Node> {
         }
 
         @Override
-        public boolean contains(Node node) {
+        public boolean contains(Node node)
+        {
             return visited.isMarked(node);
         }
 
         @Override
-        public Iterator<Node> iterator() {
-            return new QueueConsumingIterator() {
+        public Iterator<Node> iterator()
+        {
+            return new QueueConsumingIterator()
+            {
                 @Override
-                public boolean hasNext() {
+                public boolean hasNext()
+                {
                     dropDeleted();
                     return !worklist.isEmpty();
                 }
 
                 @Override
-                public Node next() {
+                public Node next()
+                {
                     dropDeleted();
                     return worklist.remove();
                 }

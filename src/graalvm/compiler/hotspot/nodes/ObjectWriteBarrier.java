@@ -7,29 +7,33 @@ import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.memory.address.AddressNode;
 
 @NodeInfo
-public abstract class ObjectWriteBarrier extends WriteBarrier {
-
+public abstract class ObjectWriteBarrier extends WriteBarrier
+{
     public static final NodeClass<ObjectWriteBarrier> TYPE = NodeClass.create(ObjectWriteBarrier.class);
     @Input(InputType.Association) protected AddressNode address;
     @OptionalInput protected ValueNode value;
     protected final boolean precise;
 
-    protected ObjectWriteBarrier(NodeClass<? extends ObjectWriteBarrier> c, AddressNode address, ValueNode value, boolean precise) {
+    protected ObjectWriteBarrier(NodeClass<? extends ObjectWriteBarrier> c, AddressNode address, ValueNode value, boolean precise)
+    {
         super(c);
         this.address = address;
         this.value = value;
         this.precise = precise;
     }
 
-    public ValueNode getValue() {
+    public ValueNode getValue()
+    {
         return value;
     }
 
-    public AddressNode getAddress() {
+    public AddressNode getAddress()
+    {
         return address;
     }
 
-    public boolean usePrecise() {
+    public boolean usePrecise()
+    {
         return precise;
     }
 }

@@ -44,32 +44,42 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  *
  * @see AheadOfTimeVerificationPhase
  */
-public class LoadJavaMirrorWithKlassPhase extends BasePhase<PhaseContext> {
-
+public class LoadJavaMirrorWithKlassPhase extends BasePhase<PhaseContext>
+{
     private final CompressEncoding oopEncoding;
 
-    public LoadJavaMirrorWithKlassPhase(GraalHotSpotVMConfig config) {
+    public LoadJavaMirrorWithKlassPhase(GraalHotSpotVMConfig config)
+    {
         this.oopEncoding = config.useCompressedOops ? config.getOopEncoding() : null;
     }
 
-    private ValueNode getClassConstantReplacement(StructuredGraph graph, PhaseContext context, JavaConstant constant) {
-        if (constant instanceof HotSpotObjectConstant) {
+    private ValueNode getClassConstantReplacement(StructuredGraph graph, PhaseContext context, JavaConstant constant)
+    {
+        if (constant instanceof HotSpotObjectConstant)
+        {
             ConstantReflectionProvider constantReflection = context.getConstantReflection();
             ResolvedJavaType type = constantReflection.asJavaType(constant);
-            if (type != null) {
+            if (type != null)
+            {
                 MetaAccessProvider metaAccess = context.getMetaAccess();
                 Stamp stamp = StampFactory.objectNonNull(TypeReference.createExactTrusted(metaAccess.lookupJavaType(Class.class)));
 
-                if (type instanceof HotSpotResolvedObjectType) {
+                if (type instanceof HotSpotResolvedObjectType)
+                {
                     ConstantNode klass = ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), ((HotSpotResolvedObjectType) type).klass(), metaAccess, graph);
                     ValueNode getClass = graph.unique(new HubGetClassNode(metaAccess, klass));
 
-                    if (((HotSpotObjectConstant) constant).isCompressed()) {
+                    if (((HotSpotObjectConstant) constant).isCompressed())
+                    {
                         return HotSpotCompressionNode.compress(getClass, oopEncoding);
-                    } else {
+                    }
+                    else
+                    {
                         return getClass;
                     }
-                } else {
+                }
+                else
+                {
                     /*
                      * Primitive classes are more difficult since they don't have a corresponding
                      * Klass* so get them from Class.TYPE for the java box type.
@@ -79,25 +89,32 @@ public class LoadJavaMirrorWithKlassPhase extends BasePhase<PhaseContext> {
                     ConstantNode clazz = ConstantNode.forConstant(context.getConstantReflection().asJavaClass(boxingClass), metaAccess, graph);
                     HotSpotResolvedJavaField[] a = (HotSpotResolvedJavaField[]) boxingClass.getStaticFields();
                     HotSpotResolvedJavaField typeField = null;
-                    for (HotSpotResolvedJavaField f : a) {
-                        if (f.getName().equals("TYPE")) {
+                    for (HotSpotResolvedJavaField f : a)
+                    {
+                        if (f.getName().equals("TYPE"))
+                        {
                             typeField = f;
                             break;
                         }
                     }
-                    if (typeField == null) {
+                    if (typeField == null)
+                    {
                         throw new GraalError("Can't find TYPE field in class");
                     }
 
-                    if (oopEncoding != null) {
+                    if (oopEncoding != null)
+                    {
                         stamp = HotSpotNarrowOopStamp.compressed((AbstractObjectStamp) stamp, oopEncoding);
                     }
                     AddressNode address = graph.unique(new OffsetAddressNode(clazz, ConstantNode.forLong(typeField.offset(), graph)));
                     ValueNode read = graph.unique(new FloatingReadNode(address, FINAL_LOCATION, null, stamp));
 
-                    if (oopEncoding == null || ((HotSpotObjectConstant) constant).isCompressed()) {
+                    if (oopEncoding == null || ((HotSpotObjectConstant) constant).isCompressed())
+                    {
                         return read;
-                    } else {
+                    }
+                    else
+                    {
                         return HotSpotCompressionNode.uncompress(read, oopEncoding);
                     }
                 }
@@ -107,18 +124,22 @@ public class LoadJavaMirrorWithKlassPhase extends BasePhase<PhaseContext> {
     }
 
     @Override
-    protected void run(StructuredGraph graph, PhaseContext context) {
-        for (ConstantNode node : getConstantNodes(graph)) {
+    protected void run(StructuredGraph graph, PhaseContext context)
+    {
+        for (ConstantNode node : getConstantNodes(graph))
+        {
             JavaConstant constant = node.asJavaConstant();
             ValueNode freadNode = getClassConstantReplacement(graph, context, constant);
-            if (freadNode != null) {
+            if (freadNode != null)
+            {
                 node.replace(graph, freadNode);
             }
         }
     }
 
     @Override
-    public float codeSizeIncrease() {
+    public float codeSizeIncrease()
+    {
         return 2.5f;
     }
 }

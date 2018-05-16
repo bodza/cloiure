@@ -32,8 +32,8 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * Observes compilation events and uses {@link BinaryGraphPrinter} to generate a graph
  * representation that can be inspected with the Graph Visualizer.
  */
-public class GraphPrinterDumpHandler implements DebugDumpHandler {
-
+public class GraphPrinterDumpHandler implements DebugDumpHandler
+{
     private static final int FAILURE_LIMIT = 8;
     private final GraphPrinterSupplier printerSupplier;
     protected GraphPrinter printer;
@@ -45,7 +45,8 @@ public class GraphPrinterDumpHandler implements DebugDumpHandler {
     private final String sunJavaCommand;
 
     @FunctionalInterface
-    public interface GraphPrinterSupplier {
+    public interface GraphPrinterSupplier
+    {
         GraphPrinter get(DebugContext ctx, Graph graph) throws IOException;
     }
 
@@ -55,40 +56,51 @@ public class GraphPrinterDumpHandler implements DebugDumpHandler {
      * @param printerSupplier Supplier used to create the GraphPrinter. Should supply an optional or
      *            null in case of failure.
      */
-    public GraphPrinterDumpHandler(GraphPrinterSupplier printerSupplier) {
+    public GraphPrinterDumpHandler(GraphPrinterSupplier printerSupplier)
+    {
         this.printerSupplier = printerSupplier;
         /* Add the JVM and Java arguments to the graph properties to help identify it. */
         this.jvmArguments = jvmArguments();
         this.sunJavaCommand = System.getProperty("sun.java.command");
     }
 
-    private static String jvmArguments() {
+    private static String jvmArguments()
+    {
         List<String> inputArguments = GraalServices.getInputArguments();
-        if (inputArguments != null) {
+        if (inputArguments != null)
+        {
             return String.join(" ", inputArguments);
         }
         return "unknown";
     }
 
-    private void ensureInitialized(DebugContext ctx, Graph graph) {
-        if (printer == null) {
-            if (failuresCount >= FAILURE_LIMIT) {
+    private void ensureInitialized(DebugContext ctx, Graph graph)
+    {
+        if (printer == null)
+        {
+            if (failuresCount >= FAILURE_LIMIT)
+            {
                 return;
             }
             previousInlineContext = new ArrayList<>();
             inlineContextMap = new WeakHashMap<>();
             DebugContext debug = graph.getDebug();
-            try {
+            try
+            {
                 printer = printerSupplier.get(ctx, graph);
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 handleException(debug, e);
             }
         }
     }
 
-    private int nextDumpId() {
+    private int nextDumpId()
+    {
         int depth = previousInlineContext.size();
-        if (dumpIds.length < depth) {
+        if (dumpIds.length < depth)
+        {
             dumpIds = Arrays.copyOf(dumpIds, depth);
         }
         return dumpIds[depth - 1]++;
@@ -96,23 +108,28 @@ public class GraphPrinterDumpHandler implements DebugDumpHandler {
 
     @Override
     @SuppressWarnings("try")
-    public void dump(DebugContext debug, Object object, final String format, Object... arguments) {
+    public void dump(DebugContext debug, Object object, final String format, Object... arguments)
+    {
         OptionValues options = debug.getOptions();
-        if (object instanceof Graph && DebugOptions.PrintGraph.getValue(options)) {
+        if (object instanceof Graph && DebugOptions.PrintGraph.getValue(options))
+        {
             final Graph graph = (Graph) object;
             ensureInitialized(debug, graph);
-            if (printer == null) {
+            if (printer == null)
+            {
                 return;
             }
 
             // Get all current JavaMethod instances in the context.
             List<String> inlineContext = getInlineContext(graph);
 
-            if (inlineContext != previousInlineContext) {
+            if (inlineContext != previousInlineContext)
+            {
                 Map<Object, Object> properties = new HashMap<>();
                 properties.put("graph", graph.toString());
                 addCompilationId(properties, graph);
-                if (inlineContext.equals(previousInlineContext)) {
+                if (inlineContext.equals(previousInlineContext))
+                {
                     /*
                      * two different graphs have the same inline context, so make sure they appear
                      * in different folders by closing and reopening the top scope.
@@ -120,20 +137,28 @@ public class GraphPrinterDumpHandler implements DebugDumpHandler {
                     int inlineDepth = previousInlineContext.size() - 1;
                     closeScope(debug, inlineDepth);
                     openScope(debug, inlineContext.get(inlineDepth), inlineDepth, properties);
-                } else {
+                }
+                else
+                {
                     // Check for method scopes that must be closed since the previous dump.
-                    for (int i = 0; i < previousInlineContext.size(); ++i) {
-                        if (i >= inlineContext.size() || !inlineContext.get(i).equals(previousInlineContext.get(i))) {
-                            for (int inlineDepth = previousInlineContext.size() - 1; inlineDepth >= i; --inlineDepth) {
+                    for (int i = 0; i < previousInlineContext.size(); ++i)
+                    {
+                        if (i >= inlineContext.size() || !inlineContext.get(i).equals(previousInlineContext.get(i)))
+                        {
+                            for (int inlineDepth = previousInlineContext.size() - 1; inlineDepth >= i; --inlineDepth)
+                            {
                                 closeScope(debug, inlineDepth);
                             }
                             break;
                         }
                     }
                     // Check for method scopes that must be opened since the previous dump.
-                    for (int i = 0; i < inlineContext.size(); ++i) {
-                        if (i >= previousInlineContext.size() || !inlineContext.get(i).equals(previousInlineContext.get(i))) {
-                            for (int inlineDepth = i; inlineDepth < inlineContext.size(); ++inlineDepth) {
+                    for (int i = 0; i < inlineContext.size(); ++i)
+                    {
+                        if (i >= previousInlineContext.size() || !inlineContext.get(i).equals(previousInlineContext.get(i)))
+                        {
+                            for (int inlineDepth = i; inlineDepth < inlineContext.size(); ++inlineDepth)
+                            {
                                 openScope(debug, inlineContext.get(inlineDepth), inlineDepth, inlineDepth == inlineContext.size() - 1 ? properties : null);
                             }
                             break;
@@ -147,98 +172,132 @@ public class GraphPrinterDumpHandler implements DebugDumpHandler {
 
             // Capture before creating the sandbox
             String currentScopeName = debug.getCurrentScopeName();
-            try (DebugContext.Scope s = debug.sandbox("PrintingGraph", null)) {
+            try (DebugContext.Scope s = debug.sandbox("PrintingGraph", null))
+            {
                 // Finally, output the graph.
                 Map<Object, Object> properties = new HashMap<>();
                 properties.put("graph", graph.toString());
                 properties.put("scope", currentScopeName);
-                if (graph instanceof StructuredGraph) {
+                if (graph instanceof StructuredGraph)
+                {
                     properties.put("compilationIdentifier", ((StructuredGraph) graph).compilationId());
-                    try {
+                    try
+                    {
                         int size = NodeCostUtil.computeGraphSize((StructuredGraph) graph);
                         properties.put("node-cost graph size", size);
-                    } catch (Throwable t) {
+                    }
+                    catch (Throwable t)
+                    {
                         properties.put("node-cost-exception", t.getMessage());
                     }
                 }
                 printer.print(debug, graph, properties, nextDumpId(), format, arguments);
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 handleException(debug, e);
-            } catch (Throwable e) {
+            }
+            catch (Throwable e)
+            {
                 throw debug.handle(e);
             }
         }
     }
 
-    void handleException(DebugContext debug, IOException e) {
-        if (debug != null && DebugOptions.DumpingErrorsAreFatal.getValue(debug.getOptions())) {
+    void handleException(DebugContext debug, IOException e)
+    {
+        if (debug != null && DebugOptions.DumpingErrorsAreFatal.getValue(debug.getOptions()))
+        {
             throw new GraalError(e);
         }
-        if (e instanceof ClosedByInterruptException) {
+        if (e instanceof ClosedByInterruptException)
+        {
             /*
              * The current dumping was aborted by an interrupt so treat this as a transient failure.
              */
             failuresCount = 0;
-        } else {
+        }
+        else
+        {
             failuresCount++;
         }
         printer = null;
         e.printStackTrace(TTY.out);
-        if (failuresCount > FAILURE_LIMIT) {
+        if (failuresCount > FAILURE_LIMIT)
+        {
             TTY.println("Too many failures with dumping. Disabling dump in thread " + Thread.currentThread());
         }
     }
 
-    private static void addCompilationId(Map<Object, Object> properties, final Graph graph) {
-        if (graph instanceof StructuredGraph) {
+    private static void addCompilationId(Map<Object, Object> properties, final Graph graph)
+    {
+        if (graph instanceof StructuredGraph)
+        {
             properties.put("compilationId", ((StructuredGraph) graph).compilationId());
         }
     }
 
-    private List<String> getInlineContext(Graph graph) {
+    private List<String> getInlineContext(Graph graph)
+    {
         List<String> result = inlineContextMap.get(graph);
-        if (result == null) {
+        if (result == null)
+        {
             result = new ArrayList<>();
             Object lastMethodOrGraph = null;
             boolean graphSeen = false;
             DebugContext debug = graph.getDebug();
-            for (Object o : debug.context()) {
-                if (o == graph) {
+            for (Object o : debug.context())
+            {
+                if (o == graph)
+                {
                     graphSeen = true;
                 }
 
-                if (o instanceof DebugDumpScope) {
+                if (o instanceof DebugDumpScope)
+                {
                     DebugDumpScope debugDumpScope = (DebugDumpScope) o;
-                    if (debugDumpScope.decorator && !result.isEmpty()) {
+                    if (debugDumpScope.decorator && !result.isEmpty())
+                    {
                         result.set(result.size() - 1, debugDumpScope.name + ":" + result.get(result.size() - 1));
-                    } else {
+                    }
+                    else
+                    {
                         result.add(debugDumpScope.name);
                     }
-                } else {
+                }
+                else
+                {
                     addMethodContext(result, o, lastMethodOrGraph);
                 }
-                if (o instanceof JavaMethod || o instanceof Graph) {
+                if (o instanceof JavaMethod || o instanceof Graph)
+                {
                     lastMethodOrGraph = o;
                 }
             }
-            if (result.size() == 2 && result.get(1).startsWith("TruffleGraal")) {
+            if (result.size() == 2 && result.get(1).startsWith("TruffleGraal"))
+            {
                 result.clear();
                 result.add("Graal Graphs");
             }
-            if (result.isEmpty()) {
+            if (result.isEmpty())
+            {
                 result.add(graph.toString());
                 graphSeen = true;
             }
             // Reverse list such that inner method comes after outer method.
             Collections.reverse(result);
-            if (!graphSeen) {
+            if (!graphSeen)
+            {
                 /*
                  * The graph isn't in any context but is being processed within another graph so add
                  * it to the end of the scopes.
                  */
-                if (asJavaMethod(graph) != null) {
+                if (asJavaMethod(graph) != null)
+                {
                     addMethodContext(result, graph, lastMethodOrGraph);
-                } else {
+                }
+                else
+                {
                     result.add(graph.toString());
                 }
             }
@@ -247,19 +306,23 @@ public class GraphPrinterDumpHandler implements DebugDumpHandler {
         return result;
     }
 
-    private static void addMethodContext(List<String> result, Object o, Object lastMethodOrGraph) {
+    private static void addMethodContext(List<String> result, Object o, Object lastMethodOrGraph)
+    {
         JavaMethod method = asJavaMethod(o);
-        if (method != null) {
+        if (method != null)
+        {
             /*
              * Include the current method in the context if there was no previous JavaMethod or
              * JavaMethodContext or if the method is different or if the method is the same but it
              * comes from two different graphs. This ensures that recursive call patterns are
              * handled properly.
              */
-            if (lastMethodOrGraph == null || asJavaMethod(lastMethodOrGraph) == null || !asJavaMethod(lastMethodOrGraph).equals(method) ||
-                            (lastMethodOrGraph != o && lastMethodOrGraph instanceof Graph && o instanceof Graph)) {
+            if (lastMethodOrGraph == null || asJavaMethod(lastMethodOrGraph) == null || !asJavaMethod(lastMethodOrGraph).equals(method) || (lastMethodOrGraph != o && lastMethodOrGraph instanceof Graph && o instanceof Graph))
+            {
                 result.add(method.format("%H.%n(%p)"));
-            } else {
+            }
+            else
+            {
                 /*
                  * This prevents multiple adjacent method context objects for the same method from
                  * resulting in multiple IGV tree levels. This works on the assumption that real
@@ -270,45 +333,61 @@ public class GraphPrinterDumpHandler implements DebugDumpHandler {
         }
     }
 
-    private void openScope(DebugContext debug, String name, int inlineDepth, Map<Object, Object> properties) {
-        try {
+    private void openScope(DebugContext debug, String name, int inlineDepth, Map<Object, Object> properties)
+    {
+        try
+        {
             Map<Object, Object> props = properties;
-            if (inlineDepth == 0) {
+            if (inlineDepth == 0)
+            {
                 /* Include some VM specific properties at the root. */
-                if (props == null) {
+                if (props == null)
+                {
                     props = new HashMap<>();
                 }
                 props.put("jvmArguments", jvmArguments);
-                if (sunJavaCommand != null) {
+                if (sunJavaCommand != null)
+                {
                     props.put("sun.java.command", sunJavaCommand);
                 }
                 props.put("date", new Date().toString());
             }
             printer.beginGroup(debug, name, name, debug.contextLookup(ResolvedJavaMethod.class), -1, props);
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             handleException(debug, e);
         }
     }
 
-    private void closeScope(DebugContext debug, int inlineDepth) {
+    private void closeScope(DebugContext debug, int inlineDepth)
+    {
         dumpIds[inlineDepth] = 0;
-        try {
-            if (printer != null) {
+        try
+        {
+            if (printer != null)
+            {
                 printer.endGroup();
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             handleException(debug, e);
         }
     }
 
     @Override
-    public void close() {
-        if (previousInlineContext != null) {
-            for (int inlineDepth = 0; inlineDepth < previousInlineContext.size(); inlineDepth++) {
+    public void close()
+    {
+        if (previousInlineContext != null)
+        {
+            for (int inlineDepth = 0; inlineDepth < previousInlineContext.size(); inlineDepth++)
+            {
                 closeScope(null, inlineDepth);
             }
         }
-        if (printer != null) {
+        if (printer != null)
+        {
             printer.close();
             printer = null;
         }

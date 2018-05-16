@@ -9,7 +9,8 @@ import java.util.Collection;
  * @param <B> the type that represents the block
  * @param <N> the type of the node
  */
-public interface GraphBlocks<G, B, N> {
+public interface GraphBlocks<G, B, N>
+{
     /**
      * All blocks in the graph.
      *

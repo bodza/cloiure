@@ -14,21 +14,22 @@ import jdk.vm.ci.code.site.DataSectionReference;
 import jdk.vm.ci.meta.SerializableConstant;
 import jdk.vm.ci.meta.VMConstant;
 
-public final class DataSection implements Iterable<Data> {
-
-    public interface Patches {
-
+public final class DataSection implements Iterable<Data>
+{
+    public interface Patches
+    {
         void registerPatch(int position, VMConstant c);
     }
 
-    public abstract static class Data {
-
+    public abstract static class Data
+    {
         private int alignment;
         private final int size;
 
         private DataSectionReference ref;
 
-        protected Data(int alignment, int size) {
+        protected Data(int alignment, int size)
+        {
             this.alignment = alignment;
             this.size = size;
 
@@ -38,41 +39,51 @@ public final class DataSection implements Iterable<Data> {
 
         protected abstract void emit(ByteBuffer buffer, Patches patches);
 
-        public void updateAlignment(int newAlignment) {
-            if (newAlignment == alignment) {
+        public void updateAlignment(int newAlignment)
+        {
+            if (newAlignment == alignment)
+            {
                 return;
             }
             alignment = lcm(alignment, newAlignment);
         }
 
-        public int getAlignment() {
+        public int getAlignment()
+        {
             return alignment;
         }
 
-        public int getSize() {
+        public int getSize()
+        {
             return size;
         }
 
         @Override
-        public int hashCode() {
+        public int hashCode()
+        {
             // Data instances should not be used as hash map keys
             throw new UnsupportedOperationException("hashCode");
         }
 
         @Override
-        public String toString() {
+        public String toString()
+        {
             return identityHashCodeString(this);
         }
 
         @Override
-        public boolean equals(Object obj) {
+        public boolean equals(Object obj)
+        {
             assert ref != null;
-            if (obj == this) {
+            if (obj == this)
+            {
                 return true;
             }
-            if (obj instanceof Data) {
+            if (obj instanceof Data)
+            {
                 Data that = (Data) obj;
-                if (this.alignment == that.alignment && this.size == that.size && this.ref.equals(that.ref)) {
+                if (this.alignment == that.alignment && this.size == that.size && this.ref.equals(that.ref))
+                {
                     return true;
                 }
             }
@@ -80,78 +91,94 @@ public final class DataSection implements Iterable<Data> {
         }
     }
 
-    public static final class RawData extends Data {
-
+    public static final class RawData extends Data
+    {
         private final byte[] data;
 
-        public RawData(byte[] data, int alignment) {
+        public RawData(byte[] data, int alignment)
+        {
             super(alignment, data.length);
             this.data = data;
         }
 
         @Override
-        protected void emit(ByteBuffer buffer, Patches patches) {
+        protected void emit(ByteBuffer buffer, Patches patches)
+        {
             buffer.put(data);
         }
     }
 
-    public static final class SerializableData extends Data {
-
+    public static final class SerializableData extends Data
+    {
         private final SerializableConstant constant;
 
-        public SerializableData(SerializableConstant constant) {
+        public SerializableData(SerializableConstant constant)
+        {
             this(constant, 1);
         }
 
-        public SerializableData(SerializableConstant constant, int alignment) {
+        public SerializableData(SerializableConstant constant, int alignment)
+        {
             super(alignment, constant.getSerializedSize());
             this.constant = constant;
         }
 
         @Override
-        protected void emit(ByteBuffer buffer, Patches patches) {
+        protected void emit(ByteBuffer buffer, Patches patches)
+        {
             int position = buffer.position();
             constant.serialize(buffer);
             assert buffer.position() - position == constant.getSerializedSize() : "wrong number of bytes written";
         }
     }
 
-    public static class ZeroData extends Data {
-
-        protected ZeroData(int alignment, int size) {
+    public static class ZeroData extends Data
+    {
+        protected ZeroData(int alignment, int size)
+        {
             super(alignment, size);
         }
 
-        public static ZeroData create(int alignment, int size) {
-            switch (size) {
+        public static ZeroData create(int alignment, int size)
+        {
+            switch (size)
+            {
                 case 1:
-                    return new ZeroData(alignment, size) {
+                    return new ZeroData(alignment, size)
+                    {
                         @Override
-                        protected void emit(ByteBuffer buffer, Patches patches) {
+                        protected void emit(ByteBuffer buffer, Patches patches)
+                        {
                             buffer.put((byte) 0);
                         }
                     };
 
                 case 2:
-                    return new ZeroData(alignment, size) {
+                    return new ZeroData(alignment, size)
+                    {
                         @Override
-                        protected void emit(ByteBuffer buffer, Patches patches) {
+                        protected void emit(ByteBuffer buffer, Patches patches)
+                        {
                             buffer.putShort((short) 0);
                         }
                     };
 
                 case 4:
-                    return new ZeroData(alignment, size) {
+                    return new ZeroData(alignment, size)
+                    {
                         @Override
-                        protected void emit(ByteBuffer buffer, Patches patches) {
+                        protected void emit(ByteBuffer buffer, Patches patches)
+                        {
                             buffer.putInt(0);
                         }
                     };
 
                 case 8:
-                    return new ZeroData(alignment, size) {
+                    return new ZeroData(alignment, size)
+                    {
                         @Override
-                        protected void emit(ByteBuffer buffer, Patches patches) {
+                        protected void emit(ByteBuffer buffer, Patches patches)
+                        {
                             buffer.putLong(0);
                         }
                     };
@@ -162,32 +189,38 @@ public final class DataSection implements Iterable<Data> {
         }
 
         @Override
-        protected void emit(ByteBuffer buffer, Patches patches) {
+        protected void emit(ByteBuffer buffer, Patches patches)
+        {
             int rest = getSize();
-            while (rest > 8) {
+            while (rest > 8)
+            {
                 buffer.putLong(0L);
                 rest -= 8;
             }
-            while (rest > 0) {
+            while (rest > 0)
+            {
                 buffer.put((byte) 0);
                 rest--;
             }
         }
     }
 
-    public static final class PackedData extends Data {
-
+    public static final class PackedData extends Data
+    {
         private final Data[] nested;
 
-        private PackedData(int alignment, int size, Data[] nested) {
+        private PackedData(int alignment, int size, Data[] nested)
+        {
             super(alignment, size);
             this.nested = nested;
         }
 
-        public static PackedData create(Data[] nested) {
+        public static PackedData create(Data[] nested)
+        {
             int size = 0;
             int alignment = 1;
-            for (int i = 0; i < nested.length; i++) {
+            for (int i = 0; i < nested.length; i++)
+            {
                 assert size % nested[i].getAlignment() == 0 : "invalid alignment in packed constants";
                 alignment = DataSection.lcm(alignment, nested[i].getAlignment());
                 size += nested[i].getSize();
@@ -196,8 +229,10 @@ public final class DataSection implements Iterable<Data> {
         }
 
         @Override
-        protected void emit(ByteBuffer buffer, Patches patches) {
-            for (Data data : nested) {
+        protected void emit(ByteBuffer buffer, Patches patches)
+        {
+            for (Data data : nested)
+            {
                 data.emit(buffer, patches);
             }
         }
@@ -210,24 +245,30 @@ public final class DataSection implements Iterable<Data> {
     private int sectionSize;
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         // DataSection instances should not be used as hash map keys
         throw new UnsupportedOperationException("hashCode");
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return identityHashCodeString(this);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
             return true;
         }
-        if (obj instanceof DataSection) {
+        if (obj instanceof DataSection)
+        {
             DataSection that = (DataSection) obj;
-            if (this.closed == that.closed && this.sectionAlignment == that.sectionAlignment && this.sectionSize == that.sectionSize && Objects.equals(this.dataItems, that.dataItems)) {
+            if (this.closed == that.closed && this.sectionAlignment == that.sectionAlignment && this.sectionSize == that.sectionSize && Objects.equals(this.dataItems, that.dataItems))
+            {
                 return true;
             }
         }
@@ -241,10 +282,13 @@ public final class DataSection implements Iterable<Data> {
      * @param data the {@link Data} item to be inserted
      * @return a unique {@link DataSectionReference} identifying the {@link Data} item
      */
-    public DataSectionReference insertData(Data data) {
+    public DataSectionReference insertData(Data data)
+    {
         checkOpen();
-        synchronized (data) {
-            if (data.ref == null) {
+        synchronized (data)
+        {
+            if (data.ref == null)
+            {
                 data.ref = new DataSectionReference();
                 dataItems.add(data);
             }
@@ -256,11 +300,13 @@ public final class DataSection implements Iterable<Data> {
      * Transfers all {@link Data} from the provided other {@link DataSection} to this
      * {@link DataSection}, and empties the other section.
      */
-    public void addAll(DataSection other) {
+    public void addAll(DataSection other)
+    {
         checkOpen();
         other.checkOpen();
 
-        for (Data data : other.dataItems) {
+        for (Data data : other.dataItems)
+        {
             assert data.ref != null;
             dataItems.add(data);
         }
@@ -270,7 +316,8 @@ public final class DataSection implements Iterable<Data> {
     /**
      * Determines if this object has been {@link #close() closed}.
      */
-    public boolean closed() {
+    public boolean closed()
+    {
         return closed;
     }
 
@@ -279,7 +326,8 @@ public final class DataSection implements Iterable<Data> {
      *
      * This must be called exactly once.
      */
-    public void close() {
+    public void close()
+    {
         checkOpen();
         closed = true;
 
@@ -288,7 +336,8 @@ public final class DataSection implements Iterable<Data> {
 
         int position = 0;
         int alignment = 1;
-        for (Data d : dataItems) {
+        for (Data d : dataItems)
+        {
             alignment = lcm(alignment, d.alignment);
             position = align(position, d.alignment);
 
@@ -305,7 +354,8 @@ public final class DataSection implements Iterable<Data> {
      *
      * This must only be called once this object has been {@linkplain #closed() closed}.
      */
-    public int getSectionSize() {
+    public int getSectionSize()
+    {
         checkClosed();
         return sectionSize;
     }
@@ -315,7 +365,8 @@ public final class DataSection implements Iterable<Data> {
      *
      * This must only be called once this object has been {@linkplain #closed() closed}.
      */
-    public int getSectionAlignment() {
+    public int getSectionAlignment()
+    {
         checkClosed();
         return sectionAlignment;
     }
@@ -330,9 +381,9 @@ public final class DataSection implements Iterable<Data> {
      * @param patch a {@link Patches} instance to receive {@link VMConstant constants} for
      *            relocations in the data section
      */
-    public void buildDataSection(ByteBuffer buffer, Patches patch) {
-        buildDataSection(buffer, patch, (r, s) -> {
-        });
+    public void buildDataSection(ByteBuffer buffer, Patches patch)
+    {
+        buildDataSection(buffer, patch, (r, s) -> { });
     }
 
     /**
@@ -347,11 +398,13 @@ public final class DataSection implements Iterable<Data> {
      * @param onEmit a function that is called before emitting each data item with the
      *            {@link DataSectionReference} and the size of the data.
      */
-    public void buildDataSection(ByteBuffer buffer, Patches patch, BiConsumer<DataSectionReference, Integer> onEmit) {
+    public void buildDataSection(ByteBuffer buffer, Patches patch, BiConsumer<DataSectionReference, Integer> onEmit)
+    {
         checkClosed();
         assert buffer.remaining() >= sectionSize;
         int start = buffer.position();
-        for (Data d : dataItems) {
+        for (Data d : dataItems)
+        {
             buffer.position(start + d.ref.getOffset());
             onEmit.accept(d.ref, d.getSize());
             d.emit(buffer, patch);
@@ -359,34 +412,44 @@ public final class DataSection implements Iterable<Data> {
         buffer.position(start + sectionSize);
     }
 
-    public Data findData(DataSectionReference ref) {
-        for (Data d : dataItems) {
-            if (d.ref == ref) {
+    public Data findData(DataSectionReference ref)
+    {
+        for (Data d : dataItems)
+        {
+            if (d.ref == ref)
+            {
                 return d;
             }
         }
         return null;
     }
 
-    public static void emit(ByteBuffer buffer, Data data, Patches patch) {
+    public static void emit(ByteBuffer buffer, Data data, Patches patch)
+    {
         data.emit(buffer, patch);
     }
 
     @Override
-    public Iterator<Data> iterator() {
+    public Iterator<Data> iterator()
+    {
         return dataItems.iterator();
     }
 
-    private static int lcm(int x, int y) {
-        if (x == 0) {
+    private static int lcm(int x, int y)
+    {
+        if (x == 0)
+        {
             return y;
-        } else if (y == 0) {
+        }
+        else if (y == 0)
+        {
             return x;
         }
 
         int a = Math.max(x, y);
         int b = Math.min(x, y);
-        while (b > 0) {
+        while (b > 0)
+        {
             int tmp = a % b;
             a = b;
             b = tmp;
@@ -396,23 +459,29 @@ public final class DataSection implements Iterable<Data> {
         return x * y / gcd;
     }
 
-    private static int align(int position, int alignment) {
+    private static int align(int position, int alignment)
+    {
         return ((position + alignment - 1) / alignment) * alignment;
     }
 
-    private void checkClosed() {
-        if (!closed) {
+    private void checkClosed()
+    {
+        if (!closed)
+        {
             throw new IllegalStateException();
         }
     }
 
-    private void checkOpen() {
-        if (closed) {
+    private void checkOpen()
+    {
+        if (closed)
+        {
             throw new IllegalStateException();
         }
     }
 
-    public void clear() {
+    public void clear()
+    {
         checkOpen();
         this.dataItems.clear();
         this.sectionAlignment = 0;

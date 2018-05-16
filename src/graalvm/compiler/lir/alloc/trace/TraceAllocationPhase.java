@@ -15,15 +15,17 @@ import graalvm.compiler.lir.phases.LIRPhase.LIRPhaseStatistics;
 
 import jdk.vm.ci.code.TargetDescription;
 
-public abstract class TraceAllocationPhase<C extends TraceAllocationPhase.TraceAllocationContext> {
-
-    public static class TraceAllocationContext {
+public abstract class TraceAllocationPhase<C extends TraceAllocationPhase.TraceAllocationContext>
+{
+    public static class TraceAllocationContext
+    {
         public final MoveFactory spillMoveFactory;
         public final RegisterAllocationConfig registerAllocationConfig;
         public final TraceBuilderResult resultTraces;
         public final GlobalLivenessInfo livenessInfo;
 
-        public TraceAllocationContext(MoveFactory spillMoveFactory, RegisterAllocationConfig registerAllocationConfig, TraceBuilderResult resultTraces, GlobalLivenessInfo livenessInfo) {
+        public TraceAllocationContext(MoveFactory spillMoveFactory, RegisterAllocationConfig registerAllocationConfig, TraceBuilderResult resultTraces, GlobalLivenessInfo livenessInfo)
+        {
             this.spillMoveFactory = spillMoveFactory;
             this.registerAllocationConfig = registerAllocationConfig;
             this.resultTraces = resultTraces;
@@ -46,64 +48,82 @@ public abstract class TraceAllocationPhase<C extends TraceAllocationPhase.TraceA
      */
     private final CounterKey allocatedTraces;
 
-    public static final class AllocationStatistics {
+    public static final class AllocationStatistics
+    {
         private final CounterKey allocatedTraces;
 
-        public AllocationStatistics(Class<?> clazz) {
+        public AllocationStatistics(Class<?> clazz)
+        {
             allocatedTraces = DebugContext.counter("TraceRA[%s]", clazz);
         }
     }
 
-    private static final ClassValue<AllocationStatistics> counterClassValue = new ClassValue<AllocationStatistics>() {
+    private static final ClassValue<AllocationStatistics> counterClassValue = new ClassValue<AllocationStatistics>()
+    {
         @Override
-        protected AllocationStatistics computeValue(Class<?> c) {
+        protected AllocationStatistics computeValue(Class<?> c)
+        {
             return new AllocationStatistics(c);
         }
     };
 
-    private static AllocationStatistics getAllocationStatistics(Class<?> c) {
+    private static AllocationStatistics getAllocationStatistics(Class<?> c)
+    {
         return counterClassValue.get(c);
     }
 
-    public TraceAllocationPhase() {
+    public TraceAllocationPhase()
+    {
         LIRPhaseStatistics statistics = LIRPhase.getLIRPhaseStatistics(getClass());
         timer = statistics.timer;
         memUseTracker = statistics.memUseTracker;
         allocatedTraces = getAllocationStatistics(getClass()).allocatedTraces;
     }
 
-    public final CharSequence getName() {
+    public final CharSequence getName()
+    {
         return LIRPhase.createName(getClass());
     }
 
     @Override
-    public final String toString() {
+    public final String toString()
+    {
         return getName().toString();
     }
 
-    public final void apply(TargetDescription target, LIRGenerationResult lirGenRes, Trace trace, C context) {
+    public final void apply(TargetDescription target, LIRGenerationResult lirGenRes, Trace trace, C context)
+    {
         apply(target, lirGenRes, trace, context, true);
     }
 
     @SuppressWarnings("try")
-    public final void apply(TargetDescription target, LIRGenerationResult lirGenRes, Trace trace, C context, boolean dumpTrace) {
+    public final void apply(TargetDescription target, LIRGenerationResult lirGenRes, Trace trace, C context, boolean dumpTrace)
+    {
         DebugContext debug = lirGenRes.getLIR().getDebug();
-        try (DebugContext.Scope s = debug.scope(getName(), this)) {
-            try (DebugCloseable a = timer.start(debug); DebugCloseable c = memUseTracker.start(debug)) {
-                if (dumpTrace) {
-                    if (debug.isDumpEnabled(DebugContext.DETAILED_LEVEL)) {
+        try (DebugContext.Scope s = debug.scope(getName(), this))
+        {
+            try (DebugCloseable a = timer.start(debug); DebugCloseable c = memUseTracker.start(debug))
+            {
+                if (dumpTrace)
+                {
+                    if (debug.isDumpEnabled(DebugContext.DETAILED_LEVEL))
+                    {
                         debug.dump(DebugContext.DETAILED_LEVEL, trace, "Before %s (Trace%s: %s)", getName(), trace.getId(), trace);
                     }
                 }
                 run(target, lirGenRes, trace, context);
                 allocatedTraces.increment(debug);
-                if (dumpTrace) {
-                    if (debug.isDumpEnabled(DebugContext.VERBOSE_LEVEL)) {
+                if (dumpTrace)
+                {
+                    if (debug.isDumpEnabled(DebugContext.VERBOSE_LEVEL))
+                    {
                         debug.dump(DebugContext.VERBOSE_LEVEL, trace, "After %s (Trace%s: %s)", getName(), trace.getId(), trace);
                     }
                 }
             }
-        } catch (Throwable e) {
+        }
+        catch (Throwable e)
+        {
             throw debug.handle(e);
         }
     }

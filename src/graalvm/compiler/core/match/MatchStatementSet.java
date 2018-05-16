@@ -5,7 +5,8 @@ import java.util.List;
 import graalvm.compiler.core.gen.NodeLIRBuilder;
 import graalvm.compiler.core.gen.NodeMatchRules;
 
-public interface MatchStatementSet {
+public interface MatchStatementSet
+{
     /**
      * @return the {@link NodeLIRBuilder} subclass which defined this set of {@link MatchStatement}
      *         instances.

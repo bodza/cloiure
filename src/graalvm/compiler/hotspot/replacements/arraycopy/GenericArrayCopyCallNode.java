@@ -24,8 +24,8 @@ import org.graalvm.word.LocationIdentity;
 import jdk.vm.ci.meta.JavaKind;
 
 @NodeInfo(allowedUsageTypes = {InputType.Memory, InputType.Value}, cycles = CYCLES_UNKNOWN, size = SIZE_UNKNOWN)
-public final class GenericArrayCopyCallNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single {
-
+public final class GenericArrayCopyCallNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
+{
     public static final NodeClass<GenericArrayCopyCallNode> TYPE = NodeClass.create(GenericArrayCopyCallNode.class);
     @Input ValueNode src;
     @Input ValueNode srcPos;
@@ -35,7 +35,8 @@ public final class GenericArrayCopyCallNode extends AbstractMemoryCheckpoint imp
 
     protected final HotSpotGraalRuntimeProvider runtime;
 
-    protected GenericArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntimeProvider runtime, ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length) {
+    protected GenericArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntimeProvider runtime, ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length)
+    {
         super(TYPE, StampFactory.forKind(JavaKind.Int));
         this.src = src;
         this.srcPos = srcPos;
@@ -45,29 +46,36 @@ public final class GenericArrayCopyCallNode extends AbstractMemoryCheckpoint imp
         this.runtime = runtime;
     }
 
-    public ValueNode getSource() {
+    public ValueNode getSource()
+    {
         return src;
     }
 
-    public ValueNode getSourcePosition() {
+    public ValueNode getSourcePosition()
+    {
         return srcPos;
     }
 
-    public ValueNode getDestination() {
+    public ValueNode getDestination()
+    {
         return dest;
     }
 
-    public ValueNode getDestinationPosition() {
+    public ValueNode getDestinationPosition()
+    {
         return destPos;
     }
 
-    public ValueNode getLength() {
+    public ValueNode getLength()
+    {
         return length;
     }
 
     @Override
-    public void lower(LoweringTool tool) {
-        if (graph().getGuardsStage().areFrameStatesAtDeopts()) {
+    public void lower(LoweringTool tool)
+    {
+        if (graph().getGuardsStage().areFrameStatesAtDeopts())
+        {
             StructuredGraph graph = graph();
             ValueNode srcAddr = objectAddress(getSource());
             ValueNode destAddr = objectAddress(getDestination());
@@ -77,21 +85,25 @@ public final class GenericArrayCopyCallNode extends AbstractMemoryCheckpoint imp
         }
     }
 
-    private ValueNode objectAddress(ValueNode obj) {
+    private ValueNode objectAddress(ValueNode obj)
+    {
         GetObjectAddressNode result = graph().add(new GetObjectAddressNode(obj));
         graph().addBeforeFixed(this, result);
         return result;
     }
 
-    private ValueNode wordValue(ValueNode value) {
-        if (value.stamp(NodeView.DEFAULT).getStackKind() != runtime.getTarget().wordJavaKind) {
+    private ValueNode wordValue(ValueNode value)
+    {
+        if (value.stamp(NodeView.DEFAULT).getStackKind() != runtime.getTarget().wordJavaKind)
+        {
             return IntegerConvertNode.convert(value, StampFactory.forKind(runtime.getTarget().wordJavaKind), graph(), NodeView.DEFAULT);
         }
         return value;
     }
 
     @Override
-    public LocationIdentity getLocationIdentity() {
+    public LocationIdentity getLocationIdentity()
+    {
         return LocationIdentity.any();
     }
 

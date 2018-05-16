@@ -48,14 +48,16 @@ import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
  * If this stub fails to refill the TLAB or allocate the object, it calls out to the HotSpot C++
  * runtime to complete the allocation.
  */
-public class NewArrayStub extends SnippetStub {
-
-    public NewArrayStub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage) {
+public class NewArrayStub extends SnippetStub
+{
+    public NewArrayStub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    {
         super("newArray", options, providers, linkage);
     }
 
     @Override
-    protected Object[] makeConstArgs() {
+    protected Object[] makeConstArgs()
+    {
         HotSpotResolvedObjectType intArrayType = (HotSpotResolvedObjectType) providers.getMetaAccess().lookupJavaType(int[].class);
         int count = method.getSignature().getParameterCount(false);
         Object[] args = new Object[count];
@@ -69,7 +71,8 @@ public class NewArrayStub extends SnippetStub {
     }
 
     @Fold
-    static boolean logging(OptionValues options) {
+    static boolean logging(OptionValues options)
+    {
         return StubOptions.TraceNewArrayStub.getValue(options);
     }
 
@@ -83,14 +86,15 @@ public class NewArrayStub extends SnippetStub {
      * @param intArrayHub the hub for {@code int[].class}
      */
     @Snippet
-    private static Object newArray(KlassPointer hub, int length, boolean fillContents, @ConstantParameter KlassPointer intArrayHub, @ConstantParameter Register threadRegister,
-                    @ConstantParameter OptionValues options) {
+    private static Object newArray(KlassPointer hub, int length, boolean fillContents, @ConstantParameter KlassPointer intArrayHub, @ConstantParameter Register threadRegister, @ConstantParameter OptionValues options)
+    {
         int layoutHelper = readLayoutHelper(hub);
         int log2ElementSize = (layoutHelper >> layoutHelperLog2ElementSizeShift(INJECTED_VMCONFIG)) & layoutHelperLog2ElementSizeMask(INJECTED_VMCONFIG);
         int headerSize = (layoutHelper >> layoutHelperHeaderSizeShift(INJECTED_VMCONFIG)) & layoutHelperHeaderSizeMask(INJECTED_VMCONFIG);
         int elementKind = (layoutHelper >> layoutHelperElementTypeShift(INJECTED_VMCONFIG)) & layoutHelperElementTypeMask(INJECTED_VMCONFIG);
         int sizeInBytes = arrayAllocationSize(length, headerSize, log2ElementSize);
-        if (logging(options)) {
+        if (logging(options))
+        {
             printf("newArray: element kind %d\n", elementKind);
             printf("newArray: array length %d\n", length);
             printf("newArray: array size %d\n", sizeInBytes);
@@ -100,17 +104,20 @@ public class NewArrayStub extends SnippetStub {
         // check that array length is small enough for fast path.
         Word thread = registerAsWord(threadRegister);
         boolean inlineContiguousAllocationSupported = GraalHotSpotVMConfigNode.inlineContiguousAllocationSupported();
-        if (inlineContiguousAllocationSupported && !useCMSIncrementalMode(INJECTED_VMCONFIG) && length >= 0 && length <= MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH) {
+        if (inlineContiguousAllocationSupported && !useCMSIncrementalMode(INJECTED_VMCONFIG) && length >= 0 && length <= MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH)
+        {
             Word memory = refillAllocate(thread, intArrayHub, sizeInBytes, logging(options));
-            if (memory.notEqual(0)) {
-                if (logging(options)) {
+            if (memory.notEqual(0))
+            {
+                if (logging(options))
+                {
                     printf("newArray: allocated new array at %p\n", memory.rawValue());
                 }
-                return verifyObject(
-                                formatArray(hub, sizeInBytes, length, headerSize, memory, WordFactory.unsigned(arrayPrototypeMarkWord(INJECTED_VMCONFIG)), fillContents, false, null));
+                return verifyObject(formatArray(hub, sizeInBytes, length, headerSize, memory, WordFactory.unsigned(arrayPrototypeMarkWord(INJECTED_VMCONFIG)), fillContents, false, null));
             }
         }
-        if (logging(options)) {
+        if (logging(options))
+        {
             printf("newArray: calling new_array_c\n");
         }
 

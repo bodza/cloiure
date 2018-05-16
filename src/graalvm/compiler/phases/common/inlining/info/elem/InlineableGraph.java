@@ -38,13 +38,14 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * @see graalvm.compiler.phases.common.inlining.walker.InliningData#moveForward()
  * @see graalvm.compiler.phases.common.inlining.walker.CallsiteHolderExplorable
  */
-public class InlineableGraph implements Inlineable {
-
+public class InlineableGraph implements Inlineable
+{
     private final StructuredGraph graph;
 
     private FixedNodeProbabilityCache probabilites = new FixedNodeProbabilityCache();
 
-    public InlineableGraph(final ResolvedJavaMethod method, final Invoke invoke, final HighTierContext context, CanonicalizerPhase canonicalizer, boolean trackNodeSourcePosition) {
+    public InlineableGraph(final ResolvedJavaMethod method, final Invoke invoke, final HighTierContext context, CanonicalizerPhase canonicalizer, boolean trackNodeSourcePosition)
+    {
         StructuredGraph original = getOriginalGraph(method, context, canonicalizer, invoke.asNode().graph(), invoke.bci(), trackNodeSourcePosition);
         // TODO copying the graph is only necessary if it is modified or if it contains any invokes
         this.graph = (StructuredGraph) original.copy(invoke.asNode().getDebug());
@@ -56,10 +57,11 @@ public class InlineableGraph implements Inlineable {
      * The graph thus obtained is returned, ie the caller is responsible for cloning before
      * modification.
      */
-    private static StructuredGraph getOriginalGraph(final ResolvedJavaMethod method, final HighTierContext context, CanonicalizerPhase canonicalizer, StructuredGraph caller, int callerBci,
-                    boolean trackNodeSourcePosition) {
+    private static StructuredGraph getOriginalGraph(final ResolvedJavaMethod method, final HighTierContext context, CanonicalizerPhase canonicalizer, StructuredGraph caller, int callerBci, boolean trackNodeSourcePosition)
+    {
         StructuredGraph result = InliningUtil.getIntrinsicGraph(context.getReplacements(), method, callerBci, trackNodeSourcePosition, null);
-        if (result != null) {
+        if (result != null)
+        {
             return result;
         }
         return parseBytecodes(method, context, canonicalizer, caller, trackNodeSourcePosition);
@@ -70,38 +72,47 @@ public class InlineableGraph implements Inlineable {
      *         a constant argument, or an argument with a more specific stamp.
      */
     @SuppressWarnings("try")
-    private boolean specializeGraphToArguments(final Invoke invoke, final HighTierContext context, CanonicalizerPhase canonicalizer) {
+    private boolean specializeGraphToArguments(final Invoke invoke, final HighTierContext context, CanonicalizerPhase canonicalizer)
+    {
         DebugContext debug = graph.getDebug();
-        try (DebugContext.Scope s = debug.scope("InlineGraph", graph)) {
-
+        try (DebugContext.Scope s = debug.scope("InlineGraph", graph))
+        {
             ArrayList<Node> parameterUsages = replaceParamsWithMoreInformativeArguments(invoke, context);
-            if (parameterUsages != null) {
+            if (parameterUsages != null)
+            {
                 assert !parameterUsages.isEmpty() : "The caller didn't have more information about arguments after all";
                 canonicalizer.applyIncremental(graph, context, parameterUsages);
                 return true;
-            } else {
+            }
+            else
+            {
                 // TODO (chaeubl): if args are not more concrete, inlining should be avoided
                 // in most cases or we could at least use the previous graph size + invoke
                 // probability to check the inlining
                 return false;
             }
-
-        } catch (Throwable e) {
+        }
+        catch (Throwable e)
+        {
             throw debug.handle(e);
         }
     }
 
-    private static boolean isArgMoreInformativeThanParam(ValueNode arg, ParameterNode param) {
+    private static boolean isArgMoreInformativeThanParam(ValueNode arg, ParameterNode param)
+    {
         return arg.isConstant() || canStampBeImproved(arg, param);
     }
 
-    private static boolean canStampBeImproved(ValueNode arg, ParameterNode param) {
+    private static boolean canStampBeImproved(ValueNode arg, ParameterNode param)
+    {
         return improvedStamp(arg, param) != null;
     }
 
-    private static Stamp improvedStamp(ValueNode arg, ParameterNode param) {
+    private static Stamp improvedStamp(ValueNode arg, ParameterNode param)
+    {
         Stamp joinedStamp = param.stamp(NodeView.DEFAULT).join(arg.stamp(NodeView.DEFAULT));
-        if (joinedStamp == null || joinedStamp.equals(param.stamp(NodeView.DEFAULT))) {
+        if (joinedStamp == null || joinedStamp.equals(param.stamp(NodeView.DEFAULT)))
+        {
             return null;
         }
         return joinedStamp;
@@ -123,7 +134,8 @@ public class InlineableGraph implements Inlineable {
      * @return null if no incremental canonicalization is need, a list of nodes for such
      *         canonicalization otherwise.
      */
-    private ArrayList<Node> replaceParamsWithMoreInformativeArguments(final Invoke invoke, final HighTierContext context) {
+    private ArrayList<Node> replaceParamsWithMoreInformativeArguments(final Invoke invoke, final HighTierContext context)
+    {
         NodeInputList<ValueNode> args = invoke.callTarget().arguments();
         ArrayList<Node> parameterUsages = null;
         List<ParameterNode> params = graph.getNodes(ParameterNode.TYPE).snapshot();
@@ -134,22 +146,29 @@ public class InlineableGraph implements Inlineable {
          * it's always possible to pair a param-node with its corresponding arg-node using
          * param.index() as index into `args`.
          */
-        for (ParameterNode param : params) {
-            if (param.usages().isNotEmpty()) {
+        for (ParameterNode param : params)
+        {
+            if (param.usages().isNotEmpty())
+            {
                 ValueNode arg = args.get(param.index());
-                if (arg.isConstant()) {
+                if (arg.isConstant())
+                {
                     ConstantNode constant = (ConstantNode) arg;
                     parameterUsages = trackParameterUsages(param, parameterUsages);
                     // collect param usages before replacing the param
-                    param.replaceAtUsagesAndDelete(graph.unique(
-                                    ConstantNode.forConstant(arg.stamp(NodeView.DEFAULT), constant.getValue(), constant.getStableDimension(), constant.isDefaultStable(), context.getMetaAccess())));
+                    param.replaceAtUsagesAndDelete(graph.unique(ConstantNode.forConstant(arg.stamp(NodeView.DEFAULT), constant.getValue(), constant.getStableDimension(), constant.isDefaultStable(), context.getMetaAccess())));
                     // param-node gone, leaving a gap in the sequence given by param.index()
-                } else {
+                }
+                else
+                {
                     Stamp impro = improvedStamp(arg, param);
-                    if (impro != null) {
+                    if (impro != null)
+                    {
                         param.setStamp(impro);
                         parameterUsages = trackParameterUsages(param, parameterUsages);
-                    } else {
+                    }
+                    else
+                    {
                         assert !isArgMoreInformativeThanParam(arg, param);
                     }
                 }
@@ -159,7 +178,8 @@ public class InlineableGraph implements Inlineable {
         return parameterUsages;
     }
 
-    private static ArrayList<Node> trackParameterUsages(ParameterNode param, ArrayList<Node> parameterUsages) {
+    private static ArrayList<Node> trackParameterUsages(ParameterNode param, ArrayList<Node> parameterUsages)
+    {
         ArrayList<Node> result = (parameterUsages == null) ? new ArrayList<>() : parameterUsages;
         param.usages().snapshotTo(result);
         return result;
@@ -172,15 +192,18 @@ public class InlineableGraph implements Inlineable {
      * </p>
      */
     @SuppressWarnings("try")
-    private static StructuredGraph parseBytecodes(ResolvedJavaMethod method, HighTierContext context, CanonicalizerPhase canonicalizer, StructuredGraph caller, boolean trackNodeSourcePosition) {
+    private static StructuredGraph parseBytecodes(ResolvedJavaMethod method, HighTierContext context, CanonicalizerPhase canonicalizer, StructuredGraph caller, boolean trackNodeSourcePosition)
+    {
         DebugContext debug = caller.getDebug();
-        StructuredGraph newGraph = new StructuredGraph.Builder(caller.getOptions(), debug, AllowAssumptions.ifNonNull(caller.getAssumptions())).method(method).trackNodeSourcePosition(
-                        trackNodeSourcePosition).build();
-        try (DebugContext.Scope s = debug.scope("InlineGraph", newGraph)) {
-            if (!caller.isUnsafeAccessTrackingEnabled()) {
+        StructuredGraph newGraph = new StructuredGraph.Builder(caller.getOptions(), debug, AllowAssumptions.ifNonNull(caller.getAssumptions())).method(method).trackNodeSourcePosition(trackNodeSourcePosition).build();
+        try (DebugContext.Scope s = debug.scope("InlineGraph", newGraph))
+        {
+            if (!caller.isUnsafeAccessTrackingEnabled())
+            {
                 newGraph.disableUnsafeAccessTracking();
             }
-            if (context.getGraphBuilderSuite() != null) {
+            if (context.getGraphBuilderSuite() != null)
+            {
                 context.getGraphBuilderSuite().apply(newGraph, context);
             }
             assert newGraph.start().next() != null : "graph needs to be populated by the GraphBuilderSuite " + method + ", " + method.canBeInlined();
@@ -190,27 +213,33 @@ public class InlineableGraph implements Inlineable {
             canonicalizer.apply(newGraph, context);
 
             return newGraph;
-        } catch (Throwable e) {
+        }
+        catch (Throwable e)
+        {
             throw debug.handle(e);
         }
     }
 
     @Override
-    public int getNodeCount() {
+    public int getNodeCount()
+    {
         return InliningUtil.getNodeCount(graph);
     }
 
     @Override
-    public Iterable<Invoke> getInvokes() {
+    public Iterable<Invoke> getInvokes()
+    {
         return graph.getInvokes();
     }
 
     @Override
-    public double getProbability(Invoke invoke) {
+    public double getProbability(Invoke invoke)
+    {
         return probabilites.applyAsDouble(invoke.asNode());
     }
 
-    public StructuredGraph getGraph() {
+    public StructuredGraph getGraph()
+    {
         return graph;
     }
 }

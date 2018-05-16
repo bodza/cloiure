@@ -13,20 +13,23 @@ import jdk.vm.ci.code.Register;
 
 /**
  */
-public class ArrayStoreExceptionStub extends CreateExceptionStub {
-
-    public ArrayStoreExceptionStub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage) {
+public class ArrayStoreExceptionStub extends CreateExceptionStub
+{
+    public ArrayStoreExceptionStub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
+    {
         super("createArrayStoreException", options, providers, linkage);
     }
 
     @Override
-    protected Object getConstantParameterValue(int index, String name) {
+    protected Object getConstantParameterValue(int index, String name)
+    {
         GraalError.guarantee(index == 1, "unknown parameter %s at index %d", name, index);
         return providers.getRegisters().getThreadRegister();
     }
 
     @Snippet
-    private static Object createArrayStoreException(@Snippet.NonNullParameter Object object, @ConstantParameter Register threadRegister) {
+    private static Object createArrayStoreException(@Snippet.NonNullParameter Object object, @ConstantParameter Register threadRegister)
+    {
         KlassPointer klass = HotSpotReplacementsUtil.loadHub(object);
         return createException(threadRegister, ArrayStoreException.class, klass);
     }

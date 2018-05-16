@@ -18,8 +18,8 @@ import jdk.vm.ci.meta.Value;
  * Returns from a function.
  */
 @Opcode("RETURN")
-final class AMD64HotSpotReturnOp extends AMD64HotSpotEpilogueBlockEndOp implements ZapStackArgumentSpaceBeforeInstruction {
-
+final class AMD64HotSpotReturnOp extends AMD64HotSpotEpilogueBlockEndOp implements ZapStackArgumentSpaceBeforeInstruction
+{
     public static final LIRInstructionClass<AMD64HotSpotReturnOp> TYPE = LIRInstructionClass.create(AMD64HotSpotReturnOp.class);
     @Use({REG, ILLEGAL}) protected Value value;
     private final boolean isStub;
@@ -27,7 +27,8 @@ final class AMD64HotSpotReturnOp extends AMD64HotSpotEpilogueBlockEndOp implemen
     private final Register scratchForSafepointOnReturn;
     private final GraalHotSpotVMConfig config;
 
-    AMD64HotSpotReturnOp(Value value, boolean isStub, Register thread, Register scratchForSafepointOnReturn, GraalHotSpotVMConfig config) {
+    AMD64HotSpotReturnOp(Value value, boolean isStub, Register thread, Register scratchForSafepointOnReturn, GraalHotSpotVMConfig config)
+    {
         super(TYPE);
         this.value = value;
         this.isStub = isStub;
@@ -37,9 +38,11 @@ final class AMD64HotSpotReturnOp extends AMD64HotSpotEpilogueBlockEndOp implemen
     }
 
     @Override
-    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+    public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
+    {
         leaveFrameAndRestoreRbp(crb, masm);
-        if (!isStub) {
+        if (!isStub)
+        {
             // Every non-stub compile method must have a poll before the return.
             AMD64HotSpotSafepointOp.emitCode(crb, masm, config, true, null, thread, scratchForSafepointOnReturn);
 
@@ -48,7 +51,8 @@ final class AMD64HotSpotReturnOp extends AMD64HotSpotEpilogueBlockEndOp implemen
              * live value at this point should be the return value in either rax, or in xmm0 with
              * the upper half of the register unused, so we don't destroy any value here.
              */
-            if (masm.supports(CPUFeature.AVX)) {
+            if (masm.supports(CPUFeature.AVX))
+            {
                 masm.vzeroupper();
             }
         }

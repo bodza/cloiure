@@ -18,50 +18,66 @@ import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.SerializableConstant;
 import jdk.vm.ci.meta.VMConstant;
 
-public class HotSpotDataBuilder extends DataBuilder {
-
+public class HotSpotDataBuilder extends DataBuilder
+{
     private final TargetDescription target;
 
-    public HotSpotDataBuilder(TargetDescription target) {
+    public HotSpotDataBuilder(TargetDescription target)
+    {
         this.target = target;
     }
 
     @Override
-    public boolean needDetailedPatchingInformation() {
+    public boolean needDetailedPatchingInformation()
+    {
         /* The HotSpot VM finds operands that need patching by decoding the instruction. */
         return false;
     }
 
     @Override
-    public Data createDataItem(Constant constant) {
-        if (JavaConstant.isNull(constant)) {
+    public Data createDataItem(Constant constant)
+    {
+        if (JavaConstant.isNull(constant))
+        {
             boolean compressed = COMPRESSED_NULL.equals(constant);
             int size = compressed ? 4 : target.wordSize;
             return ZeroData.create(size, size);
-        } else if (constant instanceof VMConstant) {
+        }
+        else if (constant instanceof VMConstant)
+        {
             VMConstant vmConstant = (VMConstant) constant;
-            if (!(constant instanceof HotSpotConstant)) {
+            if (!(constant instanceof HotSpotConstant))
+            {
                 throw new GraalError(String.valueOf(constant));
             }
 
             HotSpotConstant c = (HotSpotConstant) vmConstant;
             int size = c.isCompressed() ? 4 : target.wordSize;
-            return new Data(size, size) {
+            return new Data(size, size)
+            {
                 @Override
-                protected void emit(ByteBuffer buffer, Patches patches) {
+                protected void emit(ByteBuffer buffer, Patches patches)
+                {
                     int position = buffer.position();
-                    if (getSize() == Integer.BYTES) {
+                    if (getSize() == Integer.BYTES)
+                    {
                         buffer.putInt(0xDEADDEAD);
-                    } else {
+                    }
+                    else
+                    {
                         buffer.putLong(0xDEADDEADDEADDEADL);
                     }
                     patches.registerPatch(position, vmConstant);
                 }
             };
-        } else if (constant instanceof SerializableConstant) {
+        }
+        else if (constant instanceof SerializableConstant)
+        {
             SerializableConstant s = (SerializableConstant) constant;
             return new SerializableData(s);
-        } else {
+        }
+        else
+        {
             throw new GraalError(String.valueOf(constant));
         }
     }

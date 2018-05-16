@@ -19,8 +19,8 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
  * {@linkplain #loopBegin() loop header}.
  */
 @NodeInfo(cycles = CYCLES_1, cyclesRationale = "Backedge jmp", size = SIZE_1, sizeRationale = "Backedge jmp")
-public final class LoopEndNode extends AbstractEndNode {
-
+public final class LoopEndNode extends AbstractEndNode
+{
     public static final NodeClass<LoopEndNode> TYPE = NodeClass.create(LoopEndNode.class);
 
     /*
@@ -47,7 +47,8 @@ public final class LoopEndNode extends AbstractEndNode {
      */
     boolean canSafepoint;
 
-    public LoopEndNode(LoopBeginNode begin) {
+    public LoopEndNode(LoopBeginNode begin)
+    {
         super(TYPE);
         int idx = begin.nextEndIndex();
         assert idx >= 0;
@@ -57,15 +58,18 @@ public final class LoopEndNode extends AbstractEndNode {
     }
 
     @Override
-    public AbstractMergeNode merge() {
+    public AbstractMergeNode merge()
+    {
         return loopBegin();
     }
 
-    public LoopBeginNode loopBegin() {
+    public LoopBeginNode loopBegin()
+    {
         return (LoopBeginNode) loopBegin;
     }
 
-    public void setLoopBegin(LoopBeginNode x) {
+    public void setLoopBegin(LoopBeginNode x)
+    {
         updateUsages(this.loopBegin, x);
         this.loopBegin = x;
     }
@@ -74,23 +78,27 @@ public final class LoopEndNode extends AbstractEndNode {
      * Disables safepoints for only this loop end (in contrast to disabling it for
      * {@link LoopBeginNode#disableSafepoint() the whole loop}.
      */
-    public void disableSafepoint() {
+    public void disableSafepoint()
+    {
         this.canSafepoint = false;
     }
 
-    public boolean canSafepoint() {
+    public boolean canSafepoint()
+    {
         assert !canSafepoint || loopBegin().canEndsSafepoint : "When safepoints are disabled for loop begin, safepoints must be disabled for all loop ends";
         return canSafepoint;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         gen.visitLoopEnd(this);
         super.generate(gen);
     }
 
     @Override
-    public boolean verify() {
+    public boolean verify()
+    {
         assertTrue(loopBegin != null, "must have a loop begin");
         assertTrue(hasNoUsages(), "LoopEnds can not be used");
         return super.verify();
@@ -104,22 +112,27 @@ public final class LoopEndNode extends AbstractEndNode {
      * {@link LoopBeginNode#phiPredecessorIndex(AbstractEndNode)} for this purpose.
      *
      */
-    int endIndex() {
+    int endIndex()
+    {
         return endIndex;
     }
 
-    void setEndIndex(int idx) {
+    void setEndIndex(int idx)
+    {
         this.endIndex = idx;
     }
 
     @Override
-    public Iterable<? extends Node> cfgSuccessors() {
+    public Iterable<? extends Node> cfgSuccessors()
+    {
         return Collections.emptyList();
     }
 
     @Override
-    public NodeCycles estimatedNodeCycles() {
-        if (canSafepoint()) {
+    public NodeCycles estimatedNodeCycles()
+    {
+        if (canSafepoint())
+        {
             // jmp+read
             return CYCLES_2;
         }
@@ -127,8 +140,10 @@ public final class LoopEndNode extends AbstractEndNode {
     }
 
     @Override
-    public NodeSize estimatedNodeSize() {
-        if (canSafepoint()) {
+    public NodeSize estimatedNodeSize()
+    {
+        if (canSafepoint())
+        {
             return NodeSize.SIZE_2;
         }
         return super.estimatedNodeSize();

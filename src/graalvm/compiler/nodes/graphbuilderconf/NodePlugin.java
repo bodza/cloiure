@@ -9,7 +9,8 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
 import jdk.vm.ci.meta.Signature;
 
-public interface NodePlugin extends GraphBuilderPlugin {
+public interface NodePlugin extends GraphBuilderPlugin
+{
     /**
      * Handle the parsing of a method invocation bytecode to a method that can be bound statically.
      * If the method returns true, it must {@link GraphBuilderContext#push push} a value as the
@@ -21,7 +22,8 @@ public interface NodePlugin extends GraphBuilderPlugin {
      * @param args the arguments of the method invocation
      * @return true if the plugin handles the invocation, false otherwise
      */
-    default boolean handleInvoke(GraphBuilderContext b, ResolvedJavaMethod method, ValueNode[] args) {
+    default boolean handleInvoke(GraphBuilderContext b, ResolvedJavaMethod method, ValueNode[] args)
+    {
         return false;
     }
 
@@ -35,7 +37,8 @@ public interface NodePlugin extends GraphBuilderPlugin {
      * @param field the accessed field
      * @return true if the plugin handles the field access, false otherwise
      */
-    default boolean handleLoadField(GraphBuilderContext b, ValueNode object, ResolvedJavaField field) {
+    default boolean handleLoadField(GraphBuilderContext b, ValueNode object, ResolvedJavaField field)
+    {
         return false;
     }
 
@@ -48,7 +51,8 @@ public interface NodePlugin extends GraphBuilderPlugin {
      * @param field the accessed field
      * @return true if the plugin handles the field access, false otherwise
      */
-    default boolean handleLoadStaticField(GraphBuilderContext b, ResolvedJavaField field) {
+    default boolean handleLoadStaticField(GraphBuilderContext b, ResolvedJavaField field)
+    {
         return false;
     }
 
@@ -61,7 +65,8 @@ public interface NodePlugin extends GraphBuilderPlugin {
      * @param value the value to be stored into the field
      * @return true if the plugin handles the field access, false otherwise
      */
-    default boolean handleStoreField(GraphBuilderContext b, ValueNode object, ResolvedJavaField field, ValueNode value) {
+    default boolean handleStoreField(GraphBuilderContext b, ValueNode object, ResolvedJavaField field, ValueNode value)
+    {
         return false;
     }
 
@@ -73,7 +78,8 @@ public interface NodePlugin extends GraphBuilderPlugin {
      * @param value the value to be stored into the field
      * @return true if the plugin handles the field access, false otherwise.
      */
-    default boolean handleStoreStaticField(GraphBuilderContext b, ResolvedJavaField field, ValueNode value) {
+    default boolean handleStoreStaticField(GraphBuilderContext b, ResolvedJavaField field, ValueNode value)
+    {
         return false;
     }
 
@@ -87,7 +93,8 @@ public interface NodePlugin extends GraphBuilderPlugin {
      * @param elementKind the element kind of the accessed array
      * @return true if the plugin handles the array access, false otherwise.
      */
-    default boolean handleLoadIndexed(GraphBuilderContext b, ValueNode array, ValueNode index, JavaKind elementKind) {
+    default boolean handleLoadIndexed(GraphBuilderContext b, ValueNode array, ValueNode index, JavaKind elementKind)
+    {
         return false;
     }
 
@@ -101,7 +108,8 @@ public interface NodePlugin extends GraphBuilderPlugin {
      * @param value the value to be stored into the array
      * @return true if the plugin handles the array access, false otherwise.
      */
-    default boolean handleStoreIndexed(GraphBuilderContext b, ValueNode array, ValueNode index, JavaKind elementKind, ValueNode value) {
+    default boolean handleStoreIndexed(GraphBuilderContext b, ValueNode array, ValueNode index, JavaKind elementKind, ValueNode value)
+    {
         return false;
     }
 
@@ -117,7 +125,8 @@ public interface NodePlugin extends GraphBuilderPlugin {
      *            information is available
      * @return true if the plugin handles the cast, false otherwise
      */
-    default boolean handleCheckCast(GraphBuilderContext b, ValueNode object, ResolvedJavaType type, JavaTypeProfile profile) {
+    default boolean handleCheckCast(GraphBuilderContext b, ValueNode object, ResolvedJavaType type, JavaTypeProfile profile)
+    {
         return false;
     }
 
@@ -133,7 +142,8 @@ public interface NodePlugin extends GraphBuilderPlugin {
      *            information is available
      * @return true if the plugin handles the instanceof, false otherwise
      */
-    default boolean handleInstanceOf(GraphBuilderContext b, ValueNode object, ResolvedJavaType type, JavaTypeProfile profile) {
+    default boolean handleInstanceOf(GraphBuilderContext b, ValueNode object, ResolvedJavaType type, JavaTypeProfile profile)
+    {
         return false;
     }
 
@@ -146,7 +156,8 @@ public interface NodePlugin extends GraphBuilderPlugin {
      * @param type the type to be instantiated
      * @return true if the plugin handles the bytecode, false otherwise
      */
-    default boolean handleNewInstance(GraphBuilderContext b, ResolvedJavaType type) {
+    default boolean handleNewInstance(GraphBuilderContext b, ResolvedJavaType type)
+    {
         return false;
     }
 
@@ -160,7 +171,8 @@ public interface NodePlugin extends GraphBuilderPlugin {
      * @param length the length of the new array
      * @return true if the plugin handles the bytecode, false otherwise
      */
-    default boolean handleNewArray(GraphBuilderContext b, ResolvedJavaType elementType, ValueNode length) {
+    default boolean handleNewArray(GraphBuilderContext b, ResolvedJavaType elementType, ValueNode length)
+    {
         return false;
     }
 
@@ -174,7 +186,8 @@ public interface NodePlugin extends GraphBuilderPlugin {
      * @param dimensions the array of lengths for all the dimensions to be instantiated
      * @return true if the plugin handles the bytecode, false otherwise
      */
-    default boolean handleNewMultiArray(GraphBuilderContext b, ResolvedJavaType type, ValueNode[] dimensions) {
+    default boolean handleNewMultiArray(GraphBuilderContext b, ResolvedJavaType type, ValueNode[] dimensions)
+    {
         return false;
     }
 
@@ -185,7 +198,8 @@ public interface NodePlugin extends GraphBuilderPlugin {
      *
      * @param b the context
      */
-    default boolean canChangeStackKind(GraphBuilderContext b) {
+    default boolean canChangeStackKind(GraphBuilderContext b)
+    {
         return false;
     }
 }

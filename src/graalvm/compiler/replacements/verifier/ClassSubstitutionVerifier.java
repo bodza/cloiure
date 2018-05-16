@@ -14,36 +14,42 @@ import javax.tools.Diagnostic.Kind;
 
 import graalvm.compiler.api.replacements.ClassSubstitution;
 
-public final class ClassSubstitutionVerifier extends AbstractVerifier {
-
+public final class ClassSubstitutionVerifier extends AbstractVerifier
+{
     private static final String TYPE_VALUE = "value";
     private static final String STRING_VALUE = "className";
     private static final String OPTIONAL = "optional";
 
-    public ClassSubstitutionVerifier(ProcessingEnvironment env) {
+    public ClassSubstitutionVerifier(ProcessingEnvironment env)
+    {
         super(env);
     }
 
     @Override
-    public Class<? extends Annotation> getAnnotationClass() {
+    public Class<? extends Annotation> getAnnotationClass()
+    {
         return ClassSubstitution.class;
     }
 
     @Override
-    public void verify(Element element, AnnotationMirror classSubstitution, PluginGenerator generator) {
-        if (!element.getKind().isClass()) {
+    public void verify(Element element, AnnotationMirror classSubstitution, PluginGenerator generator)
+    {
+        if (!element.getKind().isClass())
+        {
             assert false : "Element is guaranteed to be a class.";
             return;
         }
         TypeElement type = (TypeElement) element;
 
         TypeElement substitutionType = resolveOriginalType(env, type, classSubstitution);
-        if (substitutionType == null) {
+        if (substitutionType == null)
+        {
             return;
         }
     }
 
-    static TypeElement resolveOriginalType(ProcessingEnvironment env, Element sourceElement, AnnotationMirror classSubstition) {
+    static TypeElement resolveOriginalType(ProcessingEnvironment env, Element sourceElement, AnnotationMirror classSubstition)
+    {
         AnnotationValue typeValue = findAnnotationValue(classSubstition, TYPE_VALUE);
         AnnotationValue stringValue = findAnnotationValue(classSubstition, STRING_VALUE);
         AnnotationValue optionalValue = findAnnotationValue(classSubstition, OPTIONAL);
@@ -54,13 +60,16 @@ public final class ClassSubstitutionVerifier extends AbstractVerifier {
         String[] classNames = resolveAnnotationValue(String[].class, stringValue);
         boolean optional = resolveAnnotationValue(Boolean.class, optionalValue);
 
-        if (type.getKind() != TypeKind.DECLARED) {
+        if (type.getKind() != TypeKind.DECLARED)
+        {
             env.getMessager().printMessage(Kind.ERROR, "The provided class must be a declared type.", sourceElement, classSubstition, typeValue);
             return null;
         }
 
-        if (!classSubstition.getAnnotationType().asElement().equals(((DeclaredType) type).asElement())) {
-            if (classNames.length != 0) {
+        if (!classSubstition.getAnnotationType().asElement().equals(((DeclaredType) type).asElement()))
+        {
+            if (classNames.length != 0)
+            {
                 String msg = "The usage of value and className is exclusive.";
                 env.getMessager().printMessage(Kind.ERROR, msg, sourceElement, classSubstition, stringValue);
                 env.getMessager().printMessage(Kind.ERROR, msg, sourceElement, classSubstition, typeValue);
@@ -69,26 +78,30 @@ public final class ClassSubstitutionVerifier extends AbstractVerifier {
             return (TypeElement) ((DeclaredType) type).asElement();
         }
 
-        if (classNames.length != 0) {
+        if (classNames.length != 0)
+        {
             TypeElement typeElement = null;
-            for (String className : classNames) {
+            for (String className : classNames)
+            {
                 typeElement = env.getElementUtils().getTypeElement(className);
-                if (typeElement != null) {
+                if (typeElement != null)
+                {
                     break;
                 }
             }
-            if (typeElement == null && !optional) {
+            if (typeElement == null && !optional)
+            {
                 env.getMessager().printMessage(Kind.ERROR, String.format("The class '%s' was not found on the classpath.", stringValue), sourceElement, classSubstition, stringValue);
             }
 
             return typeElement;
         }
 
-        if (!optional) {
+        if (!optional)
+        {
             env.getMessager().printMessage(Kind.ERROR, String.format("No value for '%s' or '%s' provided but required.", TYPE_VALUE, STRING_VALUE), sourceElement, classSubstition);
         }
 
         return null;
     }
-
 }

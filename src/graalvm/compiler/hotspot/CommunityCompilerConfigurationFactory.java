@@ -8,8 +8,8 @@ import graalvm.compiler.serviceprovider.ServiceProvider;
  * Factory for creating the default configuration for the community edition of Graal.
  */
 @ServiceProvider(CompilerConfigurationFactory.class)
-public class CommunityCompilerConfigurationFactory extends CompilerConfigurationFactory {
-
+public class CommunityCompilerConfigurationFactory extends CompilerConfigurationFactory
+{
     public static final String NAME = "community";
 
     /**
@@ -17,13 +17,15 @@ public class CommunityCompilerConfigurationFactory extends CompilerConfiguration
      */
     public static final int AUTO_SELECTION_PRIORITY = 2;
 
-    public CommunityCompilerConfigurationFactory() {
+    public CommunityCompilerConfigurationFactory()
+    {
         super(NAME, AUTO_SELECTION_PRIORITY);
         assert AUTO_SELECTION_PRIORITY > EconomyCompilerConfigurationFactory.AUTO_SELECTION_PRIORITY;
     }
 
     @Override
-    public CompilerConfiguration createCompilerConfiguration() {
+    public CompilerConfiguration createCompilerConfiguration()
+    {
         return new CommunityCompilerConfiguration();
     }
 }

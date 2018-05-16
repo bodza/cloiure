@@ -12,23 +12,28 @@ import graalvm.compiler.nodes.extended.ForeignCallNode;
  * Substitutions for {@link java.lang.Object} methods.
  */
 @ClassSubstitution(Object.class)
-public class ObjectSubstitutions {
-
+public class ObjectSubstitutions
+{
     @MethodSubstitution(isStatic = false)
-    public static int hashCode(final Object thisObj) {
+    public static int hashCode(final Object thisObj)
+    {
         return IdentityHashCodeNode.identityHashCode(thisObj);
     }
 
     @MethodSubstitution(isStatic = false)
-    public static void notify(final Object thisObj) {
-        if (!fastNotifyStub(HotSpotHostForeignCallsProvider.NOTIFY, thisObj)) {
+    public static void notify(final Object thisObj)
+    {
+        if (!fastNotifyStub(HotSpotHostForeignCallsProvider.NOTIFY, thisObj))
+        {
             notify(thisObj);
         }
     }
 
     @MethodSubstitution(isStatic = false)
-    public static void notifyAll(final Object thisObj) {
-        if (!fastNotifyStub(HotSpotHostForeignCallsProvider.NOTIFY_ALL, thisObj)) {
+    public static void notifyAll(final Object thisObj)
+    {
+        if (!fastNotifyStub(HotSpotHostForeignCallsProvider.NOTIFY_ALL, thisObj))
+        {
             notifyAll(thisObj);
         }
     }

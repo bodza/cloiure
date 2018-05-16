@@ -33,11 +33,13 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 /**
  * Utilities and common code paths used by the type check snippets.
  */
-public class TypeCheckSnippetUtils {
-
-    static boolean checkSecondarySubType(KlassPointer t, KlassPointer sNonNull, Counters counters) {
+public class TypeCheckSnippetUtils
+{
+    static boolean checkSecondarySubType(KlassPointer t, KlassPointer sNonNull, Counters counters)
+    {
         // if (S.cache == T) return true
-        if (sNonNull.readKlassPointer(secondarySuperCacheOffset(INJECTED_VMCONFIG), SECONDARY_SUPER_CACHE_LOCATION).equal(t)) {
+        if (sNonNull.readKlassPointer(secondarySuperCacheOffset(INJECTED_VMCONFIG), SECONDARY_SUPER_CACHE_LOCATION).equal(t))
+        {
             counters.cacheHit.inc();
             return true;
         }
@@ -45,23 +47,29 @@ public class TypeCheckSnippetUtils {
         return checkSelfAndSupers(t, sNonNull, counters);
     }
 
-    static boolean checkUnknownSubType(KlassPointer t, KlassPointer sNonNull, Counters counters) {
+    static boolean checkUnknownSubType(KlassPointer t, KlassPointer sNonNull, Counters counters)
+    {
         // int off = T.offset
         int superCheckOffset = t.readInt(superCheckOffsetOffset(INJECTED_VMCONFIG), KLASS_SUPER_CHECK_OFFSET_LOCATION);
         boolean primary = superCheckOffset != secondarySuperCacheOffset(INJECTED_VMCONFIG);
 
         // if (T = S[off]) return true
-        if (sNonNull.readKlassPointer(superCheckOffset, PRIMARY_SUPERS_LOCATION).equal(t)) {
-            if (primary) {
+        if (sNonNull.readKlassPointer(superCheckOffset, PRIMARY_SUPERS_LOCATION).equal(t))
+        {
+            if (primary)
+            {
                 counters.cacheHit.inc();
-            } else {
+            }
+            else
+            {
                 counters.displayHit.inc();
             }
             return true;
         }
 
         // if (off != &cache) return false
-        if (primary) {
+        if (primary)
+        {
             counters.displayMiss.inc();
             return false;
         }
@@ -69,9 +77,11 @@ public class TypeCheckSnippetUtils {
         return checkSelfAndSupers(t, sNonNull, counters);
     }
 
-    private static boolean checkSelfAndSupers(KlassPointer t, KlassPointer s, Counters counters) {
+    private static boolean checkSelfAndSupers(KlassPointer t, KlassPointer s, Counters counters)
+    {
         // if (T == S) return true
-        if (s.equal(t)) {
+        if (s.equal(t))
+        {
             counters.equalsSecondary.inc();
             return true;
         }
@@ -79,8 +89,10 @@ public class TypeCheckSnippetUtils {
         // if (S.scan_s_s_array(T)) { S.cache = T; return true; }
         Word secondarySupers = s.readWord(secondarySupersOffset(INJECTED_VMCONFIG), SECONDARY_SUPERS_LOCATION);
         int length = secondarySupers.readInt(metaspaceArrayLengthOffset(INJECTED_VMCONFIG), METASPACE_ARRAY_LENGTH_LOCATION);
-        for (int i = 0; i < length; i++) {
-            if (probability(NOT_LIKELY_PROBABILITY, t.equal(loadSecondarySupersElement(secondarySupers, i)))) {
+        for (int i = 0; i < length; i++)
+        {
+            if (probability(NOT_LIKELY_PROBABILITY, t.equal(loadSecondarySupersElement(secondarySupers, i))))
+            {
                 s.writeKlassPointer(secondarySuperCacheOffset(INJECTED_VMCONFIG), t, SECONDARY_SUPER_CACHE_LOCATION);
                 counters.secondariesHit.inc();
                 return true;
@@ -90,7 +102,8 @@ public class TypeCheckSnippetUtils {
         return false;
     }
 
-    static class Counters {
+    static class Counters
+    {
         final SnippetCounter hintsHit;
         final SnippetCounter hintsMiss;
         final SnippetCounter exactHit;
@@ -103,7 +116,8 @@ public class TypeCheckSnippetUtils {
         final SnippetCounter displayMiss;
         final SnippetCounter equalsSecondary;
 
-        Counters(SnippetCounter.Group.Factory factory) {
+        Counters(SnippetCounter.Group.Factory factory)
+        {
             Group group = factory.createSnippetCounterGroup("TypeCheck");
             hintsHit = new SnippetCounter(group, "hintsHit", "hit a hint type");
             hintsMiss = new SnippetCounter(group, "hintsMiss", "missed a hint type");
@@ -122,8 +136,8 @@ public class TypeCheckSnippetUtils {
     /**
      * A set of type check hints ordered by decreasing probabilities.
      */
-    public static class Hints {
-
+    public static class Hints
+    {
         /**
          * The hubs of the hint types.
          */
@@ -135,24 +149,29 @@ public class TypeCheckSnippetUtils {
          */
         public final boolean[] isPositive;
 
-        Hints(ConstantNode[] hints, boolean[] hintIsPositive) {
+        Hints(ConstantNode[] hints, boolean[] hintIsPositive)
+        {
             this.hubs = hints;
             this.isPositive = hintIsPositive;
         }
     }
 
-    static Hints createHints(TypeCheckHints hints, MetaAccessProvider metaAccess, boolean positiveOnly, StructuredGraph graph) {
+    static Hints createHints(TypeCheckHints hints, MetaAccessProvider metaAccess, boolean positiveOnly, StructuredGraph graph)
+    {
         ConstantNode[] hubs = new ConstantNode[hints.hints.length];
         boolean[] isPositive = new boolean[hints.hints.length];
         int index = 0;
-        for (int i = 0; i < hubs.length; i++) {
-            if (!positiveOnly || hints.hints[i].positive) {
+        for (int i = 0; i < hubs.length; i++)
+        {
+            if (!positiveOnly || hints.hints[i].positive)
+            {
                 hubs[index] = ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), ((HotSpotResolvedObjectType) hints.hints[i].type).klass(), metaAccess, graph);
                 isPositive[index] = hints.hints[i].positive;
                 index++;
             }
         }
-        if (positiveOnly && index != hubs.length) {
+        if (positiveOnly && index != hubs.length)
+        {
             assert index < hubs.length;
             hubs = Arrays.copyOf(hubs, index);
             isPositive = Arrays.copyOf(isPositive, index);
@@ -160,7 +179,8 @@ public class TypeCheckSnippetUtils {
         return new Hints(hubs, isPositive);
     }
 
-    static KlassPointer loadSecondarySupersElement(Word metaspaceArray, int index) {
+    static KlassPointer loadSecondarySupersElement(Word metaspaceArray, int index)
+    {
         return KlassPointer.fromWord(metaspaceArray.readWord(metaspaceArrayBaseOffset(INJECTED_VMCONFIG) + index * wordSize(), SECONDARY_SUPERS_ELEMENT_LOCATION));
     }
 }

@@ -21,19 +21,23 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * Try to ensure that methods which update {@link Input} or {@link OptionalInput} fields also
  * include a call to {@link Node#updateUsages} or {@link Node#updateUsagesInterface}.
  */
-public class VerifyUpdateUsages extends VerifyPhase<PhaseContext> {
-
+public class VerifyUpdateUsages extends VerifyPhase<PhaseContext>
+{
     @Override
-    public boolean checkContract() {
+    public boolean checkContract()
+    {
         return false;
     }
 
-    public VerifyUpdateUsages() {
+    public VerifyUpdateUsages()
+    {
     }
 
     @Override
-    protected boolean verify(StructuredGraph graph, PhaseContext context) {
-        if (graph.method().isConstructor()) {
+    protected boolean verify(StructuredGraph graph, PhaseContext context)
+    {
+        if (graph.method().isConstructor())
+        {
             return true;
         }
         /*
@@ -47,37 +51,51 @@ public class VerifyUpdateUsages extends VerifyPhase<PhaseContext> {
         ResolvedJavaType nodeInputList = context.getMetaAccess().lookupJavaType(NodeInputList.class);
         StoreFieldNode storeField1 = null;
         StoreFieldNode storeField2 = null;
-        for (StoreFieldNode store : stores) {
-            if (isNodeInput(store.field(), declaringClass, nodeInputList)) {
-                if (storeField1 == null) {
+        for (StoreFieldNode store : stores)
+        {
+            if (isNodeInput(store.field(), declaringClass, nodeInputList))
+            {
+                if (storeField1 == null)
+                {
                     storeField1 = store;
-                } else if (storeField2 == null) {
+                }
+                else if (storeField2 == null)
+                {
                     storeField2 = store;
-                } else {
+                }
+                else
+                {
                     return false;
                 }
             }
         }
-        if (storeField1 == null) {
+        if (storeField1 == null)
+        {
             return true;
         }
-        if (storeField2 == null) {
+        if (storeField2 == null)
+        {
             // Single input field update so just check for updateUsages or updateUsagesInterface
             // call
             ResolvedJavaType node = context.getMetaAccess().lookupJavaType(Node.class);
-            for (MethodCallTargetNode call : graph.getNodes().filter(MethodCallTargetNode.class)) {
+            for (MethodCallTargetNode call : graph.getNodes().filter(MethodCallTargetNode.class))
+            {
                 ResolvedJavaMethod callee = call.targetMethod();
-                if (callee.getDeclaringClass().equals(node) && (callee.getName().equals("updateUsages") || callee.getName().equals("updateUsagesInterface"))) {
+                if (callee.getDeclaringClass().equals(node) && (callee.getName().equals("updateUsages") || callee.getName().equals("updateUsagesInterface")))
+                {
                     return true;
                 }
             }
-        } else {
-            if (storeField1.value() instanceof LoadFieldNode && storeField2.value() instanceof LoadFieldNode) {
+        }
+        else
+        {
+            if (storeField1.value() instanceof LoadFieldNode && storeField2.value() instanceof LoadFieldNode)
+            {
                 LoadFieldNode load1 = (LoadFieldNode) storeField1.value();
                 LoadFieldNode load2 = (LoadFieldNode) storeField2.value();
                 // Check for swapping values within the same object
-                if (load1.object() == storeField1.object() && load2.object() == storeField2.object() && storeField1.object() == storeField2.object() &&
-                                load1.field().equals(storeField2.field()) && load2.field().equals(storeField1.field())) {
+                if (load1.object() == storeField1.object() && load2.object() == storeField2.object() && storeField1.object() == storeField2.object() && load1.field().equals(storeField2.field()) && load2.field().equals(storeField1.field()))
+                {
                     return true;
                 }
             }
@@ -85,8 +103,8 @@ public class VerifyUpdateUsages extends VerifyPhase<PhaseContext> {
         return false;
     }
 
-    boolean isNodeInput(ResolvedJavaField field, ResolvedJavaType declaringClass, ResolvedJavaType nodeInputList) {
-        return declaringClass.isAssignableFrom(field.getDeclaringClass()) && (field.getAnnotation(Input.class) != null || field.getAnnotation(OptionalInput.class) != null) &&
-                        !field.getType().equals(nodeInputList);
+    boolean isNodeInput(ResolvedJavaField field, ResolvedJavaType declaringClass, ResolvedJavaType nodeInputList)
+    {
+        return declaringClass.isAssignableFrom(field.getDeclaringClass()) && (field.getAnnotation(Input.class) != null || field.getAnnotation(OptionalInput.class) != null) && !field.getType().equals(nodeInputList);
     }
 }

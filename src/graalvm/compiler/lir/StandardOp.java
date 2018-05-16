@@ -27,29 +27,33 @@ import jdk.vm.ci.meta.Value;
  * A collection of machine-independent LIR operations, as well as interfaces to be implemented for
  * specific kinds or LIR operations.
  */
-public class StandardOp {
-
+public class StandardOp
+{
     /**
      * A block delimiter. Every well formed block must contain exactly one such operation and it
      * must be the last operation in the block.
      */
-    public interface BlockEndOp {
+    public interface BlockEndOp
+    {
     }
 
-    public interface NullCheck {
+    public interface NullCheck
+    {
         Value getCheckedValue();
 
         LIRFrameState getState();
     }
 
-    public interface ImplicitNullCheck {
+    public interface ImplicitNullCheck
+    {
         boolean makeNullCheckFor(Value value, LIRFrameState nullCheckState, int implicitNullCheckLimit);
     }
 
     /**
      * LIR operation that defines the position of a label.
      */
-    public static final class LabelOp extends LIRInstruction {
+    public static final class LabelOp extends LIRInstruction
+    {
         public static final LIRInstructionClass<LabelOp> TYPE = LIRInstructionClass.create(LabelOp.class);
         public static final EnumSet<OperandFlag> incomingFlags = EnumSet.of(REG, STACK);
 
@@ -66,7 +70,8 @@ public class StandardOp {
         private final boolean align;
         private int numbPhis;
 
-        public LabelOp(Label label, boolean align) {
+        public LabelOp(Label label, boolean align)
+        {
             super(TYPE);
             this.label = label;
             this.align = align;
@@ -74,41 +79,50 @@ public class StandardOp {
             this.numbPhis = 0;
         }
 
-        public void setPhiValues(Value[] values) {
+        public void setPhiValues(Value[] values)
+        {
             setIncomingValues(values);
             setNumberOfPhis(values.length);
         }
 
-        private void setNumberOfPhis(int numPhis) {
+        private void setNumberOfPhis(int numPhis)
+        {
             assert numbPhis == 0;
             numbPhis = numPhis;
         }
 
-        public int getPhiSize() {
+        public int getPhiSize()
+        {
             return numbPhis;
         }
 
-        public void setIncomingValues(Value[] values) {
+        public void setIncomingValues(Value[] values)
+        {
             assert this.incomingValues.length == 0;
             assert values != null;
             this.incomingValues = values;
         }
 
-        public int getIncomingSize() {
+        public int getIncomingSize()
+        {
             return incomingValues.length;
         }
 
-        public Value getIncomingValue(int idx) {
+        public Value getIncomingValue(int idx)
+        {
             assert checkRange(idx);
             return incomingValues[idx];
         }
 
-        public void clearIncomingValues() {
+        public void clearIncomingValues()
+        {
             incomingValues = Value.NO_VALUES;
         }
 
-        public void addIncomingValues(Value[] values) {
-            if (incomingValues.length == 0) {
+        public void addIncomingValues(Value[] values)
+        {
+            if (incomingValues.length == 0)
+            {
                 setIncomingValues(values);
                 return;
             }
@@ -119,31 +133,38 @@ public class StandardOp {
             incomingValues = newArray;
         }
 
-        private boolean checkRange(int idx) {
+        private boolean checkRange(int idx)
+        {
             return idx < incomingValues.length;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb) {
-            if (align) {
+        public void emitCode(CompilationResultBuilder crb)
+        {
+            if (align)
+            {
                 crb.asm.align(crb.target.wordSize * 2);
             }
             crb.asm.bind(label);
         }
 
-        public Label getLabel() {
+        public Label getLabel()
+        {
             return label;
         }
 
         /**
          * @return true if this label acts as a PhiIn.
          */
-        public boolean isPhiIn() {
+        public boolean isPhiIn()
+        {
             return getPhiSize() > 0;
         }
 
-        public void forEachIncomingValue(InstructionValueProcedure proc) {
-            for (int i = 0; i < incomingValues.length; i++) {
+        public void forEachIncomingValue(InstructionValueProcedure proc)
+        {
+            for (int i = 0; i < incomingValues.length; i++)
+            {
                 incomingValues[i] = proc.doValue(this, incomingValues[i], OperandMode.DEF, incomingFlags);
             }
         }
@@ -152,7 +173,8 @@ public class StandardOp {
     /**
      * LIR operation that is an unconditional jump to a {@link #destination()}.
      */
-    public static class JumpOp extends LIRInstruction implements BlockEndOp {
+    public static class JumpOp extends LIRInstruction implements BlockEndOp
+    {
         public static final LIRInstructionClass<JumpOp> TYPE = LIRInstructionClass.create(JumpOp.class);
         public static final EnumSet<OperandFlag> outgoingFlags = EnumSet.of(REG, STACK, CONST, OUTGOING);
 
@@ -160,47 +182,57 @@ public class StandardOp {
 
         private final LabelRef destination;
 
-        public JumpOp(LabelRef destination) {
+        public JumpOp(LabelRef destination)
+        {
             this(TYPE, destination);
         }
 
-        protected JumpOp(LIRInstructionClass<? extends JumpOp> c, LabelRef destination) {
+        protected JumpOp(LIRInstructionClass<? extends JumpOp> c, LabelRef destination)
+        {
             super(c);
             this.destination = destination;
             this.outgoingValues = Value.NO_VALUES;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb) {
-            if (!crb.isSuccessorEdge(destination)) {
+        public void emitCode(CompilationResultBuilder crb)
+        {
+            if (!crb.isSuccessorEdge(destination))
+            {
                 crb.asm.jmp(destination.label());
             }
         }
 
-        public LabelRef destination() {
+        public LabelRef destination()
+        {
             return destination;
         }
 
-        public void setPhiValues(Value[] values) {
+        public void setPhiValues(Value[] values)
+        {
             assert this.outgoingValues.length == 0;
             assert values != null;
             this.outgoingValues = values;
         }
 
-        public int getPhiSize() {
+        public int getPhiSize()
+        {
             return outgoingValues.length;
         }
 
-        public Value getOutgoingValue(int idx) {
+        public Value getOutgoingValue(int idx)
+        {
             assert checkRange(idx);
             return outgoingValues[idx];
         }
 
-        public void clearOutgoingValues() {
+        public void clearOutgoingValues()
+        {
             outgoingValues = Value.NO_VALUES;
         }
 
-        private boolean checkRange(int idx) {
+        private boolean checkRange(int idx)
+        {
             return idx < outgoingValues.length;
         }
     }
@@ -208,23 +240,24 @@ public class StandardOp {
     /**
      * Marker interface for a LIR operation that is a conditional jump.
      */
-    public interface BranchOp extends BlockEndOp {
+    public interface BranchOp extends BlockEndOp
+    {
     }
 
     /**
      * Marker interface for a LIR operation that moves a value to {@link #getResult()}.
      */
-    public interface MoveOp {
-
+    public interface MoveOp
+    {
         AllocatableValue getResult();
 
-        // Checkstyle: stop
-        static MoveOp asMoveOp(LIRInstruction op) {
+        static MoveOp asMoveOp(LIRInstruction op)
+        {
             return (MoveOp) op;
         }
-        // Checkstyle: resume
 
-        static boolean isMoveOp(LIRInstruction op) {
+        static boolean isMoveOp(LIRInstruction op)
+        {
             return op.isMoveOp();
         }
     }
@@ -232,17 +265,17 @@ public class StandardOp {
     /**
      * Marker interface for a LIR operation that moves some non-constant value to another location.
      */
-    public interface ValueMoveOp extends MoveOp {
-
+    public interface ValueMoveOp extends MoveOp
+    {
         AllocatableValue getInput();
 
-        // Checkstyle: stop
-        static ValueMoveOp asValueMoveOp(LIRInstruction op) {
+        static ValueMoveOp asValueMoveOp(LIRInstruction op)
+        {
             return (ValueMoveOp) op;
         }
-        // Checkstyle: resume
 
-        static boolean isValueMoveOp(LIRInstruction op) {
+        static boolean isValueMoveOp(LIRInstruction op)
+        {
             return op.isValueMoveOp();
         }
     }
@@ -250,17 +283,17 @@ public class StandardOp {
     /**
      * Marker interface for a LIR operation that loads a {@link #getConstant()}.
      */
-    public interface LoadConstantOp extends MoveOp {
-
+    public interface LoadConstantOp extends MoveOp
+    {
         Constant getConstant();
 
-        // Checkstyle: stop
-        static LoadConstantOp asLoadConstantOp(LIRInstruction op) {
+        static LoadConstantOp asLoadConstantOp(LIRInstruction op)
+        {
             return (LoadConstantOp) op;
         }
-        // Checkstyle: resume
 
-        static boolean isLoadConstantOp(LIRInstruction op) {
+        static boolean isLoadConstantOp(LIRInstruction op)
+        {
             return op.isLoadConstantOp();
         }
     }
@@ -270,8 +303,8 @@ public class StandardOp {
      * {@linkplain #remove(EconomicSet) pruned} and a mapping from registers to the frame slots in
      * which they are saved can be {@linkplain #getMap(FrameMap) retrieved}.
      */
-    public interface SaveRegistersOp {
-
+    public interface SaveRegistersOp
+    {
         /**
          * Determines if the {@link #remove(EconomicSet)} operation is supported for this object.
          */
@@ -295,14 +328,14 @@ public class StandardOp {
          *            virtual slot to a frame slot index
          */
         RegisterSaveLayout getMap(FrameMap frameMap);
-
     }
 
     /**
      * A LIR operation that does nothing. If the operation records its position, it can be
      * subsequently {@linkplain #replace(LIR, LIRInstruction) replaced}.
      */
-    public static final class NoOp extends LIRInstruction {
+    public static final class NoOp extends LIRInstruction
+    {
         public static final LIRInstructionClass<NoOp> TYPE = LIRInstructionClass.create(NoOp.class);
 
         /**
@@ -315,110 +348,129 @@ public class StandardOp {
          */
         final int index;
 
-        public NoOp(AbstractBlockBase<?> block, int index) {
+        public NoOp(AbstractBlockBase<?> block, int index)
+        {
             super(TYPE);
             this.block = block;
             this.index = index;
         }
 
-        public void replace(LIR lir, LIRInstruction replacement) {
+        public void replace(LIR lir, LIRInstruction replacement)
+        {
             ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
             assert instructions.get(index).equals(this) : String.format("Replacing the wrong instruction: %s instead of %s", instructions.get(index), this);
             instructions.set(index, replacement);
         }
 
-        public void remove(LIR lir) {
+        public void remove(LIR lir)
+        {
             ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
             assert instructions.get(index).equals(this) : String.format("Removing the wrong instruction: %s instead of %s", instructions.get(index), this);
             instructions.remove(index);
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb) {
-            if (block != null) {
+        public void emitCode(CompilationResultBuilder crb)
+        {
+            if (block != null)
+            {
                 throw new GraalError(this + " should have been replaced");
             }
         }
     }
 
     @Opcode("BLACKHOLE")
-    public static final class BlackholeOp extends LIRInstruction {
+    public static final class BlackholeOp extends LIRInstruction
+    {
         public static final LIRInstructionClass<BlackholeOp> TYPE = LIRInstructionClass.create(BlackholeOp.class);
 
         @Use({REG, STACK, CONST}) private Value value;
 
-        public BlackholeOp(Value value) {
+        public BlackholeOp(Value value)
+        {
             super(TYPE);
             this.value = value;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb) {
+        public void emitCode(CompilationResultBuilder crb)
+        {
             // do nothing, just keep value alive until at least here
         }
     }
 
-    public static final class BindToRegisterOp extends LIRInstruction {
+    public static final class BindToRegisterOp extends LIRInstruction
+    {
         public static final LIRInstructionClass<BindToRegisterOp> TYPE = LIRInstructionClass.create(BindToRegisterOp.class);
 
         @Use({REG}) private Value value;
 
-        public BindToRegisterOp(Value value) {
+        public BindToRegisterOp(Value value)
+        {
             super(TYPE);
             this.value = value;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb) {
+        public void emitCode(CompilationResultBuilder crb)
+        {
             // do nothing, just keep value alive until at least here
         }
     }
 
     @Opcode("SPILLREGISTERS")
-    public static final class SpillRegistersOp extends LIRInstruction {
+    public static final class SpillRegistersOp extends LIRInstruction
+    {
         public static final LIRInstructionClass<SpillRegistersOp> TYPE = LIRInstructionClass.create(SpillRegistersOp.class);
 
-        public SpillRegistersOp() {
+        public SpillRegistersOp()
+        {
             super(TYPE);
         }
 
         @Override
-        public boolean destroysCallerSavedRegisters() {
+        public boolean destroysCallerSavedRegisters()
+        {
             return true;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb) {
+        public void emitCode(CompilationResultBuilder crb)
+        {
             // do nothing, just keep value alive until at least here
         }
     }
 
-    public static final class StackMove extends LIRInstruction implements ValueMoveOp {
+    public static final class StackMove extends LIRInstruction implements ValueMoveOp
+    {
         public static final LIRInstructionClass<StackMove> TYPE = LIRInstructionClass.create(StackMove.class);
 
         @Def({STACK, HINT}) protected AllocatableValue result;
         @Use({STACK}) protected AllocatableValue input;
 
-        public StackMove(AllocatableValue result, AllocatableValue input) {
+        public StackMove(AllocatableValue result, AllocatableValue input)
+        {
             super(TYPE);
             this.result = result;
             this.input = input;
         }
 
         @Override
-        public void emitCode(CompilationResultBuilder crb) {
+        public void emitCode(CompilationResultBuilder crb)
+        {
             throw new GraalError(this + " should have been removed");
         }
 
         @Override
-        public AllocatableValue getInput() {
+        public AllocatableValue getInput()
+        {
             return input;
         }
 
         @Override
-        public AllocatableValue getResult() {
+        public AllocatableValue getResult()
+        {
             return result;
         }
     }
-
 }

@@ -4,8 +4,8 @@ package graalvm.compiler.core.common.util;
  * Provides low-level sequential write access for signed and unsigned values of size 1, 2, 4, and 8
  * bytes.
  */
-public interface TypeWriter {
-
+public interface TypeWriter
+{
     /**
      * Returns the number of bytes that have been written, i.e., the byte index of the next byte to
      * be written.
@@ -36,10 +36,13 @@ public interface TypeWriter {
     /**
      * Writes a signed value in a variable byte size encoding.
      */
-    default void putSV(long value) {
+    default void putSV(long value)
+    {
         long cur = value;
-        while (true) {
-            if (cur >= -64 && cur < 64) {
+        while (true)
+        {
+            if (cur >= -64 && cur < 64)
+            {
                 putU1(cur & 0x7f);
                 return;
             }
@@ -51,11 +54,14 @@ public interface TypeWriter {
     /**
      * Writes an unsigned value in a variable byte size encoding.
      */
-    default void putUV(long value) {
+    default void putUV(long value)
+    {
         long cur = value;
-        while (true) {
+        while (true)
+        {
             assert cur >= 0;
-            if (cur < 128) {
+            if (cur < 128)
+            {
                 putU1(cur & 0x7f);
                 return;
             }

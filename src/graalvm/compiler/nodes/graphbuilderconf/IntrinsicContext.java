@@ -28,8 +28,8 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * through the JVM state since intrinsics can employ non-Java kinds to represent values such as raw
  * machine words and pointers.
  */
-public class IntrinsicContext {
-
+public class IntrinsicContext
+{
     /**
      * Method being intrinsified.
      */
@@ -49,12 +49,13 @@ public class IntrinsicContext {
 
     final boolean allowPartialIntrinsicArgumentMismatch;
 
-    public IntrinsicContext(ResolvedJavaMethod method, ResolvedJavaMethod intrinsic, BytecodeProvider bytecodeProvider, CompilationContext compilationContext) {
+    public IntrinsicContext(ResolvedJavaMethod method, ResolvedJavaMethod intrinsic, BytecodeProvider bytecodeProvider, CompilationContext compilationContext)
+    {
         this(method, intrinsic, bytecodeProvider, compilationContext, false);
     }
 
-    public IntrinsicContext(ResolvedJavaMethod method, ResolvedJavaMethod intrinsic, BytecodeProvider bytecodeProvider, CompilationContext compilationContext,
-                    boolean allowPartialIntrinsicArgumentMismatch) {
+    public IntrinsicContext(ResolvedJavaMethod method, ResolvedJavaMethod intrinsic, BytecodeProvider bytecodeProvider, CompilationContext compilationContext, boolean allowPartialIntrinsicArgumentMismatch)
+    {
         this.originalMethod = method;
         this.intrinsicMethod = intrinsic;
         this.bytecodeProvider = bytecodeProvider;
@@ -70,28 +71,32 @@ public class IntrinsicContext {
      * call must use exactly the same arguments as the call that is being intrinsified. This allows
      * to override this behavior.
      */
-    public boolean allowPartialIntrinsicArgumentMismatch() {
+    public boolean allowPartialIntrinsicArgumentMismatch()
+    {
         return allowPartialIntrinsicArgumentMismatch;
     }
 
     /**
      * Gets the method being intrinsified.
      */
-    public ResolvedJavaMethod getOriginalMethod() {
+    public ResolvedJavaMethod getOriginalMethod()
+    {
         return originalMethod;
     }
 
     /**
      * Gets the method providing the intrinsic implementation.
      */
-    public ResolvedJavaMethod getIntrinsicMethod() {
+    public ResolvedJavaMethod getIntrinsicMethod()
+    {
         return intrinsicMethod;
     }
 
     /**
      * Gets provider of bytecode to be parsed for a method that is part of an intrinsic.
      */
-    public BytecodeProvider getBytecodeProvider() {
+    public BytecodeProvider getBytecodeProvider()
+    {
         return bytecodeProvider;
     }
 
@@ -100,25 +105,30 @@ public class IntrinsicContext {
      * {@linkplain #getOriginalMethod() original} method. This denotes the path where a partial
      * intrinsification falls back to the original method.
      */
-    public boolean isCallToOriginal(ResolvedJavaMethod targetMethod) {
+    public boolean isCallToOriginal(ResolvedJavaMethod targetMethod)
+    {
         return originalMethod.equals(targetMethod) || intrinsicMethod.equals(targetMethod);
     }
 
     private NodeSourcePosition nodeSourcePosition;
 
-    public boolean isPostParseInlined() {
+    public boolean isPostParseInlined()
+    {
         return compilationContext.equals(INLINE_AFTER_PARSING);
     }
 
-    public boolean isCompilationRoot() {
+    public boolean isCompilationRoot()
+    {
         return compilationContext.equals(ROOT_COMPILATION);
     }
 
-    public NodeSourcePosition getNodeSourcePosition() {
+    public NodeSourcePosition getNodeSourcePosition()
+    {
         return nodeSourcePosition;
     }
 
-    public void setNodeSourcePosition(NodeSourcePosition position) {
+    public void setNodeSourcePosition(NodeSourcePosition position)
+    {
         assert nodeSourcePosition == null : "can only be set once";
         this.nodeSourcePosition = position;
     }
@@ -126,7 +136,8 @@ public class IntrinsicContext {
     /**
      * Denotes the compilation context in which an intrinsic is being parsed.
      */
-    public enum CompilationContext {
+    public enum CompilationContext
+    {
         /**
          * An intrinsic is being processed when parsing an invoke bytecode that calls the
          * intrinsified method.
@@ -148,8 +159,8 @@ public class IntrinsicContext {
      * Models the state of a graph in terms of {@link StateSplit#hasSideEffect() side effects} that
      * are control flow predecessors of the current point in a graph.
      */
-    public interface SideEffectsState {
-
+    public interface SideEffectsState
+    {
         /**
          * Determines if the current program point is preceded by one or more side effects.
          */
@@ -166,50 +177,69 @@ public class IntrinsicContext {
         void addSideEffect(StateSplit sideEffect);
     }
 
-    public FrameState createFrameState(StructuredGraph graph, SideEffectsState sideEffects, StateSplit forStateSplit, NodeSourcePosition sourcePosition) {
+    public FrameState createFrameState(StructuredGraph graph, SideEffectsState sideEffects, StateSplit forStateSplit, NodeSourcePosition sourcePosition)
+    {
         assert forStateSplit != graph.start();
-        if (forStateSplit.hasSideEffect()) {
-            if (sideEffects.isAfterSideEffect()) {
+        if (forStateSplit.hasSideEffect())
+        {
+            if (sideEffects.isAfterSideEffect())
+            {
                 // Only the last side effect on any execution path in a replacement
                 // can inherit the stateAfter of the replaced node
                 FrameState invalid = graph.add(new FrameState(INVALID_FRAMESTATE_BCI));
-                if (graph.trackNodeSourcePosition()) {
+                if (graph.trackNodeSourcePosition())
+                {
                     invalid.setNodeSourcePosition(sourcePosition);
                 }
-                for (StateSplit lastSideEffect : sideEffects.sideEffects()) {
+                for (StateSplit lastSideEffect : sideEffects.sideEffects())
+                {
                     lastSideEffect.setStateAfter(invalid);
                 }
             }
             sideEffects.addSideEffect(forStateSplit);
             FrameState frameState;
-            if (forStateSplit instanceof ExceptionObjectNode) {
+            if (forStateSplit instanceof ExceptionObjectNode)
+            {
                 frameState = graph.add(new FrameState(AFTER_EXCEPTION_BCI, (ExceptionObjectNode) forStateSplit));
-            } else {
+            }
+            else
+            {
                 frameState = graph.add(new FrameState(AFTER_BCI));
             }
-            if (graph.trackNodeSourcePosition()) {
+            if (graph.trackNodeSourcePosition())
+            {
                 frameState.setNodeSourcePosition(sourcePosition);
             }
             return frameState;
-        } else {
-            if (forStateSplit instanceof AbstractMergeNode) {
+        }
+        else
+        {
+            if (forStateSplit instanceof AbstractMergeNode)
+            {
                 // Merge nodes always need a frame state
-                if (sideEffects.isAfterSideEffect()) {
+                if (sideEffects.isAfterSideEffect())
+                {
                     // A merge after one or more side effects
                     FrameState frameState = graph.add(new FrameState(AFTER_BCI));
-                    if (graph.trackNodeSourcePosition()) {
-                        frameState.setNodeSourcePosition(sourcePosition);
-                    }
-                    return frameState;
-                } else {
-                    // A merge before any side effects
-                    FrameState frameState = graph.add(new FrameState(BEFORE_BCI));
-                    if (graph.trackNodeSourcePosition()) {
+                    if (graph.trackNodeSourcePosition())
+                    {
                         frameState.setNodeSourcePosition(sourcePosition);
                     }
                     return frameState;
                 }
-            } else {
+                else
+                {
+                    // A merge before any side effects
+                    FrameState frameState = graph.add(new FrameState(BEFORE_BCI));
+                    if (graph.trackNodeSourcePosition())
+                    {
+                        frameState.setNodeSourcePosition(sourcePosition);
+                    }
+                    return frameState;
+                }
+            }
+            else
+            {
                 // Other non-side-effects do not need a state
                 return null;
             }
@@ -217,7 +247,8 @@ public class IntrinsicContext {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Intrinsic{original: " + originalMethod.format("%H.%n(%p)") + ", intrinsic: " + intrinsicMethod.format("%H.%n(%p)") + ", context: " + compilationContext + "}";
     }
 }

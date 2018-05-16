@@ -11,20 +11,22 @@ import graalvm.compiler.lir.phases.PreAllocationOptimizationPhase.PreAllocationO
 
 import jdk.vm.ci.code.StackSlot;
 
-public class LIRSuites {
-
+public class LIRSuites
+{
     private final LIRPhaseSuite<PreAllocationOptimizationContext> preAllocOptStage;
     private final LIRPhaseSuite<AllocationContext> allocStage;
     private final LIRPhaseSuite<PostAllocationOptimizationContext> postAllocStage;
     private boolean immutable;
 
-    public LIRSuites(LIRPhaseSuite<PreAllocationOptimizationContext> preAllocOptStage, LIRPhaseSuite<AllocationContext> allocStage, LIRPhaseSuite<PostAllocationOptimizationContext> postAllocStage) {
+    public LIRSuites(LIRPhaseSuite<PreAllocationOptimizationContext> preAllocOptStage, LIRPhaseSuite<AllocationContext> allocStage, LIRPhaseSuite<PostAllocationOptimizationContext> postAllocStage)
+    {
         this.preAllocOptStage = preAllocOptStage;
         this.allocStage = allocStage;
         this.postAllocStage = postAllocStage;
     }
 
-    public LIRSuites(LIRSuites other) {
+    public LIRSuites(LIRSuites other)
+    {
         this(other.getPreAllocationOptimizationStage().copy(), other.getAllocationStage().copy(), other.getPostAllocationOptimizationStage().copy());
     }
 
@@ -36,7 +38,8 @@ public class LIRSuites {
      * {@link LIRGeneratorTool#newVariable variables}, {@link LIRGenerationResult#getFrameMap stack
      * slots} and {@link LIRGenerationResult#getFrameMapBuilder virtual stack slots}.
      */
-    public LIRPhaseSuite<PreAllocationOptimizationContext> getPreAllocationOptimizationStage() {
+    public LIRPhaseSuite<PreAllocationOptimizationContext> getPreAllocationOptimizationStage()
+    {
         return preAllocOptStage;
     }
 
@@ -47,7 +50,8 @@ public class LIRSuites {
      * After the {@link AllocationStage} there should be no more {@link Variable}s and
      * {@link VirtualStackSlot}s.
      */
-    public LIRPhaseSuite<AllocationContext> getAllocationStage() {
+    public LIRPhaseSuite<AllocationContext> getAllocationStage()
+    {
         return allocStage;
     }
 
@@ -59,16 +63,20 @@ public class LIRSuites {
      * {@link VirtualStackSlot}s or {@link StackSlot}s. Blocks might be removed from
      * {@link LIR#codeEmittingOrder()} by overwriting them with {@code null}.
      */
-    public LIRPhaseSuite<PostAllocationOptimizationContext> getPostAllocationOptimizationStage() {
+    public LIRPhaseSuite<PostAllocationOptimizationContext> getPostAllocationOptimizationStage()
+    {
         return postAllocStage;
     }
 
-    public boolean isImmutable() {
+    public boolean isImmutable()
+    {
         return immutable;
     }
 
-    public synchronized void setImmutable() {
-        if (!immutable) {
+    public synchronized void setImmutable()
+    {
+        if (!immutable)
+        {
             preAllocOptStage.setImmutable();
             allocStage.setImmutable();
             postAllocStage.setImmutable();
@@ -76,7 +84,8 @@ public class LIRSuites {
         }
     }
 
-    public LIRSuites copy() {
+    public LIRSuites copy()
+    {
         return new LIRSuites(preAllocOptStage.copy(), allocStage.copy(), postAllocStage.copy());
     }
 }

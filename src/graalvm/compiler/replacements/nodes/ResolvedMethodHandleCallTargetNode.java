@@ -28,17 +28,16 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * invocation drops these arguments which means the interpreter won't find them.
  */
 @NodeInfo
-public final class ResolvedMethodHandleCallTargetNode extends MethodCallTargetNode implements Lowerable {
-
+public final class ResolvedMethodHandleCallTargetNode extends MethodCallTargetNode implements Lowerable
+{
     public static final NodeClass<ResolvedMethodHandleCallTargetNode> TYPE = NodeClass.create(ResolvedMethodHandleCallTargetNode.class);
 
     /**
      * Creates a call target for an invocation on a direct target derived by resolving a constant
      * {@link MethodHandle}.
      */
-    public static MethodCallTargetNode create(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, ValueNode[] arguments, StampPair returnStamp,
-                    ResolvedJavaMethod originalTargetMethod,
-                    ValueNode[] originalArguments, StampPair originalReturnStamp) {
+    public static MethodCallTargetNode create(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, ValueNode[] arguments, StampPair returnStamp, ResolvedJavaMethod originalTargetMethod, ValueNode[] originalArguments, StampPair originalReturnStamp)
+    {
         return new ResolvedMethodHandleCallTargetNode(invokeKind, targetMethod, arguments, returnStamp, originalTargetMethod, originalArguments, originalReturnStamp);
     }
 
@@ -46,9 +45,8 @@ public final class ResolvedMethodHandleCallTargetNode extends MethodCallTargetNo
     protected final StampPair originalReturnStamp;
     @Input NodeInputList<ValueNode> originalArguments;
 
-    protected ResolvedMethodHandleCallTargetNode(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, ValueNode[] arguments, StampPair returnStamp,
-                    ResolvedJavaMethod originalTargetMethod,
-                    ValueNode[] originalArguments, StampPair originalReturnStamp) {
+    protected ResolvedMethodHandleCallTargetNode(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, ValueNode[] arguments, StampPair returnStamp, ResolvedJavaMethod originalTargetMethod, ValueNode[] originalArguments, StampPair originalReturnStamp)
+    {
         super(TYPE, invokeKind, targetMethod, arguments, returnStamp, null);
         this.originalTargetMethod = originalTargetMethod;
         this.originalReturnStamp = originalReturnStamp;
@@ -56,17 +54,18 @@ public final class ResolvedMethodHandleCallTargetNode extends MethodCallTargetNo
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         InvokeKind replacementInvokeKind = originalTargetMethod.isStatic() ? InvokeKind.Static : InvokeKind.Special;
-        MethodCallTargetNode replacement = graph().add(
-                        new MethodCallTargetNode(replacementInvokeKind, originalTargetMethod, originalArguments.toArray(new ValueNode[originalArguments.size()]), originalReturnStamp, null));
+        MethodCallTargetNode replacement = graph().add(new MethodCallTargetNode(replacementInvokeKind, originalTargetMethod, originalArguments.toArray(new ValueNode[originalArguments.size()]), originalReturnStamp, null));
 
         // Replace myself...
         this.replaceAndDelete(replacement);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         throw GraalError.shouldNotReachHere("should have replaced itself");
     }
 }

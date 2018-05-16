@@ -6,26 +6,33 @@ import java.util.ListIterator;
 /**
  * Allows storing of arbitrary data.
  */
-public class GenericContext {
-
+public class GenericContext
+{
     private ArrayList<Object> context;
 
-    public GenericContext() {
+    public GenericContext()
+    {
         context = null;
     }
 
-    public <T> void contextAdd(T obj) {
-        if (context == null) {
+    public <T> void contextAdd(T obj)
+    {
+        if (context == null)
+        {
             context = new ArrayList<>();
         }
         context.add(obj);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T contextLookup(Class<T> clazz) {
-        if (context != null) {
-            for (Object e : context) {
-                if (clazz.isInstance(e)) {
+    public <T> T contextLookup(Class<T> clazz)
+    {
+        if (context != null)
+        {
+            for (Object e : context)
+            {
+                if (clazz.isInstance(e))
+                {
                     return (T) e;
                 }
             }
@@ -34,15 +41,20 @@ public class GenericContext {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T contextRemove(Class<T> clazz) {
-        if (context != null) {
+    public <T> T contextRemove(Class<T> clazz)
+    {
+        if (context != null)
+        {
             ListIterator<Object> it = context.listIterator();
-            while (it.hasNext()) {
+            while (it.hasNext())
+            {
                 Object e = it.next();
-                if (clazz.isInstance(e)) {
+                if (clazz.isInstance(e))
+                {
                     // remove entry
                     it.remove();
-                    if (context.isEmpty()) {
+                    if (context.isEmpty())
+                    {
                         context = null;
                     }
                     return (T) e;

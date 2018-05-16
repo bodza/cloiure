@@ -24,56 +24,67 @@ import jdk.vm.ci.meta.JavaKind;
  * integer.
  */
 @NodeInfo(allowedUsageTypes = InputType.Association)
-public class OffsetAddressNode extends AddressNode implements Canonicalizable {
+public class OffsetAddressNode extends AddressNode implements Canonicalizable
+{
     public static final NodeClass<OffsetAddressNode> TYPE = NodeClass.create(OffsetAddressNode.class);
 
     @Input ValueNode base;
     @Input ValueNode offset;
 
-    public OffsetAddressNode(ValueNode base, ValueNode offset) {
+    public OffsetAddressNode(ValueNode base, ValueNode offset)
+    {
         super(TYPE);
         this.base = base;
         this.offset = offset;
 
-        assert base != null && (base.stamp(NodeView.DEFAULT) instanceof AbstractPointerStamp || IntegerStamp.getBits(base.stamp(NodeView.DEFAULT)) == 64) &&
-                        offset != null && IntegerStamp.getBits(offset.stamp(NodeView.DEFAULT)) == 64 : "both values must have 64 bits";
+        assert base != null && (base.stamp(NodeView.DEFAULT) instanceof AbstractPointerStamp || IntegerStamp.getBits(base.stamp(NodeView.DEFAULT)) == 64) && offset != null && IntegerStamp.getBits(offset.stamp(NodeView.DEFAULT)) == 64 : "both values must have 64 bits";
     }
 
-    public static OffsetAddressNode create(ValueNode base) {
+    public static OffsetAddressNode create(ValueNode base)
+    {
         return new OffsetAddressNode(base, ConstantNode.forIntegerBits(PrimitiveStamp.getBits(base.stamp(NodeView.DEFAULT)), 0));
     }
 
     @Override
-    public ValueNode getBase() {
+    public ValueNode getBase()
+    {
         return base;
     }
 
-    public void setBase(ValueNode base) {
+    public void setBase(ValueNode base)
+    {
         updateUsages(this.base, base);
         this.base = base;
         assert base != null && (base.stamp(NodeView.DEFAULT) instanceof AbstractPointerStamp || IntegerStamp.getBits(base.stamp(NodeView.DEFAULT)) == 64);
     }
 
-    public ValueNode getOffset() {
+    public ValueNode getOffset()
+    {
         return offset;
     }
 
-    public void setOffset(ValueNode offset) {
+    public void setOffset(ValueNode offset)
+    {
         updateUsages(this.offset, offset);
         this.offset = offset;
         assert offset != null && IntegerStamp.getBits(offset.stamp(NodeView.DEFAULT)) == 64;
     }
 
     @Override
-    public Node canonical(CanonicalizerTool tool) {
-        if (base instanceof OffsetAddressNode) {
+    public Node canonical(CanonicalizerTool tool)
+    {
+        if (base instanceof OffsetAddressNode)
+        {
             NodeView view = NodeView.from(tool);
             // Rewrite (&base[offset1])[offset2] to base[offset1 + offset2].
             OffsetAddressNode b = (OffsetAddressNode) base;
             return new OffsetAddressNode(b.getBase(), BinaryArithmeticNode.add(b.getOffset(), this.getOffset(), view));
-        } else if (base instanceof AddNode) {
+        }
+        else if (base instanceof AddNode)
+        {
             AddNode add = (AddNode) base;
-            if (add.getY().isConstant()) {
+            if (add.getY().isConstant())
+            {
                 return new OffsetAddressNode(add.getX(), new AddNode(add.getY(), getOffset()));
             }
         }
@@ -84,11 +95,14 @@ public class OffsetAddressNode extends AddressNode implements Canonicalizable {
     public static native Address address(Object base, long offset);
 
     @Override
-    public long getMaxConstantDisplacement() {
+    public long getMaxConstantDisplacement()
+    {
         Stamp curStamp = offset.stamp(NodeView.DEFAULT);
-        if (curStamp instanceof IntegerStamp) {
+        if (curStamp instanceof IntegerStamp)
+        {
             IntegerStamp integerStamp = (IntegerStamp) curStamp;
-            if (integerStamp.lowerBound() >= 0) {
+            if (integerStamp.lowerBound() >= 0)
+            {
                 return integerStamp.upperBound();
             }
         }
@@ -96,7 +110,8 @@ public class OffsetAddressNode extends AddressNode implements Canonicalizable {
     }
 
     @Override
-    public ValueNode getIndex() {
+    public ValueNode getIndex()
+    {
         return null;
     }
 }

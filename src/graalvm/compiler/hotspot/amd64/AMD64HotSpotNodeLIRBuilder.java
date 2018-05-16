@@ -48,36 +48,42 @@ import jdk.vm.ci.meta.Value;
 /**
  * LIR generator specialized for AMD64 HotSpot.
  */
-public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements HotSpotNodeLIRBuilder {
-
-    public AMD64HotSpotNodeLIRBuilder(StructuredGraph graph, LIRGeneratorTool gen, AMD64NodeMatchRules nodeMatchRules) {
+public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements HotSpotNodeLIRBuilder
+{
+    public AMD64HotSpotNodeLIRBuilder(StructuredGraph graph, LIRGeneratorTool gen, AMD64NodeMatchRules nodeMatchRules)
+    {
         super(graph, gen, nodeMatchRules);
         assert gen instanceof AMD64HotSpotLIRGenerator;
         assert getDebugInfoBuilder() instanceof HotSpotDebugInfoBuilder;
         ((AMD64HotSpotLIRGenerator) gen).setDebugInfoBuilder(((HotSpotDebugInfoBuilder) getDebugInfoBuilder()));
     }
 
-    private AMD64HotSpotLIRGenerator getGen() {
+    private AMD64HotSpotLIRGenerator getGen()
+    {
         return (AMD64HotSpotLIRGenerator) gen;
     }
 
     @Override
-    protected DebugInfoBuilder createDebugInfoBuilder(StructuredGraph graph, NodeValueMap nodeValueMap) {
+    protected DebugInfoBuilder createDebugInfoBuilder(StructuredGraph graph, NodeValueMap nodeValueMap)
+    {
         HotSpotLockStack lockStack = new HotSpotLockStack(gen.getResult().getFrameMapBuilder(), LIRKind.value(AMD64Kind.QWORD));
         return new HotSpotDebugInfoBuilder(nodeValueMap, lockStack, (HotSpotLIRGenerator) gen);
     }
 
     @Override
-    protected void emitPrologue(StructuredGraph graph) {
-
+    protected void emitPrologue(StructuredGraph graph)
+    {
         CallingConvention incomingArguments = gen.getResult().getCallingConvention();
 
         Value[] params = new Value[incomingArguments.getArgumentCount() + 1];
-        for (int i = 0; i < params.length - 1; i++) {
+        for (int i = 0; i < params.length - 1; i++)
+        {
             params[i] = incomingArguments.getArgument(i);
-            if (isStackSlot(params[i])) {
+            if (isStackSlot(params[i]))
+            {
                 StackSlot slot = ValueUtil.asStackSlot(params[i]);
-                if (slot.isInCallerFrame() && !gen.getResult().getLIR().hasArgInCallerFrame()) {
+                if (slot.isInCallerFrame() && !gen.getResult().getLIR().hasArgInCallerFrame())
+                {
                     gen.getResult().getLIR().setHasArgInCallerFrame();
                 }
             }
@@ -90,7 +96,8 @@ public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements H
 
         getGen().append(((HotSpotDebugInfoBuilder) getDebugInfoBuilder()).lockStack());
 
-        for (ParameterNode param : graph.getNodes(ParameterNode.TYPE)) {
+        for (ParameterNode param : graph.getNodes(ParameterNode.TYPE))
+        {
             Value paramValue = params[param.index()];
             assert paramValue.getValueKind().equals(getLIRGeneratorTool().getLIRKind(param.stamp(NodeView.DEFAULT))) : paramValue.getValueKind() + " != " + param.stamp(NodeView.DEFAULT);
             setResult(param, gen.emitMove(paramValue));
@@ -98,18 +105,23 @@ public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements H
     }
 
     @Override
-    public void visitSafepointNode(SafepointNode i) {
+    public void visitSafepointNode(SafepointNode i)
+    {
         LIRFrameState info = state(i);
         Register thread = getGen().getProviders().getRegisters().getThreadRegister();
         append(new AMD64HotSpotSafepointOp(info, getGen().config, this, thread));
     }
 
     @Override
-    protected void emitDirectCall(DirectCallTargetNode callTarget, Value result, Value[] parameters, Value[] temps, LIRFrameState callState) {
+    protected void emitDirectCall(DirectCallTargetNode callTarget, Value result, Value[] parameters, Value[] temps, LIRFrameState callState)
+    {
         InvokeKind invokeKind = ((HotSpotDirectCallTargetNode) callTarget).invokeKind();
-        if (invokeKind.isIndirect()) {
+        if (invokeKind.isIndirect())
+        {
             append(new AMD64HotspotDirectVirtualCallOp(callTarget.targetMethod(), result, parameters, temps, callState, invokeKind, getGen().config));
-        } else {
+        }
+        else
+        {
             assert invokeKind.isDirect();
             HotSpotResolvedJavaMethod resolvedMethod = (HotSpotResolvedJavaMethod) callTarget.targetMethod();
             assert resolvedMethod.isConcrete() : "Cannot make direct call to abstract method.";
@@ -118,8 +130,10 @@ public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements H
     }
 
     @Override
-    protected void emitIndirectCall(IndirectCallTargetNode callTarget, Value result, Value[] parameters, Value[] temps, LIRFrameState callState) {
-        if (callTarget instanceof HotSpotIndirectCallTargetNode) {
+    protected void emitIndirectCall(IndirectCallTargetNode callTarget, Value result, Value[] parameters, Value[] temps, LIRFrameState callState)
+    {
+        if (callTarget instanceof HotSpotIndirectCallTargetNode)
+        {
             Value metaspaceMethodSrc = operand(((HotSpotIndirectCallTargetNode) callTarget).metaspaceMethod());
             Value targetAddressSrc = operand(callTarget.computedAddress());
             AllocatableValue metaspaceMethodDst = AMD64.rbx.asValue(metaspaceMethodSrc.getValueKind());
@@ -127,18 +141,22 @@ public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements H
             gen.emitMove(metaspaceMethodDst, metaspaceMethodSrc);
             gen.emitMove(targetAddressDst, targetAddressSrc);
             append(new AMD64IndirectCallOp(callTarget.targetMethod(), result, parameters, temps, metaspaceMethodDst, targetAddressDst, callState, getGen().config));
-        } else {
+        }
+        else
+        {
             super.emitIndirectCall(callTarget, result, parameters, temps, callState);
         }
     }
 
     @Override
-    public void emitPatchReturnAddress(ValueNode address) {
+    public void emitPatchReturnAddress(ValueNode address)
+    {
         append(new AMD64HotSpotPatchReturnAddressOp(gen.load(operand(address))));
     }
 
     @Override
-    public void emitJumpToExceptionHandlerInCaller(ValueNode handlerInCallerPc, ValueNode exception, ValueNode exceptionPc) {
+    public void emitJumpToExceptionHandlerInCaller(ValueNode handlerInCallerPc, ValueNode exception, ValueNode exceptionPc)
+    {
         Variable handler = gen.load(operand(handlerInCallerPc));
         ForeignCallLinkage linkage = gen.getForeignCalls().lookupForeignCall(EXCEPTION_HANDLER_IN_CALLER);
         CallingConvention outgoingCc = linkage.getOutgoingCallingConvention();
@@ -148,24 +166,29 @@ public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements H
         gen.emitMove(exceptionFixed, operand(exception));
         gen.emitMove(exceptionPcFixed, operand(exceptionPc));
         Register thread = getGen().getProviders().getRegisters().getThreadRegister();
-        AMD64HotSpotJumpToExceptionHandlerInCallerOp op = new AMD64HotSpotJumpToExceptionHandlerInCallerOp(handler, exceptionFixed, exceptionPcFixed, getGen().config.threadIsMethodHandleReturnOffset,
-                        thread);
+        AMD64HotSpotJumpToExceptionHandlerInCallerOp op = new AMD64HotSpotJumpToExceptionHandlerInCallerOp(handler, exceptionFixed, exceptionPcFixed, getGen().config.threadIsMethodHandleReturnOffset, thread);
         append(op);
     }
 
     @Override
-    public void visitFullInfopointNode(FullInfopointNode i) {
-        if (i.getState() != null && i.getState().bci == BytecodeFrame.AFTER_BCI) {
+    public void visitFullInfopointNode(FullInfopointNode i)
+    {
+        if (i.getState() != null && i.getState().bci == BytecodeFrame.AFTER_BCI)
+        {
             i.getDebug().log("Ignoring InfopointNode for AFTER_BCI");
-        } else {
+        }
+        else
+        {
             super.visitFullInfopointNode(i);
         }
     }
 
     @Override
-    public void visitBreakpointNode(BreakpointNode node) {
+    public void visitBreakpointNode(BreakpointNode node)
+    {
         JavaType[] sig = new JavaType[node.arguments().size()];
-        for (int i = 0; i < sig.length; i++) {
+        for (int i = 0; i < sig.length; i++)
+        {
             sig[i] = node.arguments().get(i).stamp(NodeView.DEFAULT).javaType(gen.getMetaAccess());
         }
 

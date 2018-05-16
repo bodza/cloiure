@@ -14,36 +14,47 @@ import jdk.vm.ci.hotspot.HotSpotMetaspaceConstant;
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.Value;
 
-final class AMD64HotSpotStrategySwitchOp extends AMD64ControlFlow.StrategySwitchOp {
+final class AMD64HotSpotStrategySwitchOp extends AMD64ControlFlow.StrategySwitchOp
+{
     public static final LIRInstructionClass<AMD64HotSpotStrategySwitchOp> TYPE = LIRInstructionClass.create(AMD64HotSpotStrategySwitchOp.class);
 
-    AMD64HotSpotStrategySwitchOp(SwitchStrategy strategy, LabelRef[] keyTargets, LabelRef defaultTarget, Value key, Value scratch) {
+    AMD64HotSpotStrategySwitchOp(SwitchStrategy strategy, LabelRef[] keyTargets, LabelRef defaultTarget, Value key, Value scratch)
+    {
         super(TYPE, strategy, keyTargets, defaultTarget, key, scratch);
     }
 
     @Override
-    public void emitCode(final CompilationResultBuilder crb, final AMD64MacroAssembler masm) {
+    public void emitCode(final CompilationResultBuilder crb, final AMD64MacroAssembler masm)
+    {
         strategy.run(new HotSpotSwitchClosure(ValueUtil.asRegister(key), crb, masm));
     }
 
-    public class HotSpotSwitchClosure extends SwitchClosure {
-
-        protected HotSpotSwitchClosure(Register keyRegister, CompilationResultBuilder crb, AMD64MacroAssembler masm) {
+    public class HotSpotSwitchClosure extends SwitchClosure
+    {
+        protected HotSpotSwitchClosure(Register keyRegister, CompilationResultBuilder crb, AMD64MacroAssembler masm)
+        {
             super(keyRegister, crb, masm);
         }
 
         @Override
-        protected void emitComparison(Constant c) {
-            if (c instanceof HotSpotMetaspaceConstant) {
+        protected void emitComparison(Constant c)
+        {
+            if (c instanceof HotSpotMetaspaceConstant)
+            {
                 HotSpotMetaspaceConstant meta = (HotSpotMetaspaceConstant) c;
-                if (meta.isCompressed()) {
+                if (meta.isCompressed())
+                {
                     crb.recordInlineDataInCode(meta);
                     masm.cmpl(keyRegister, 0xDEADDEAD);
-                } else {
+                }
+                else
+                {
                     AMD64Address addr = (AMD64Address) crb.recordDataReferenceInCode(meta, 8);
                     masm.cmpq(keyRegister, addr);
                 }
-            } else {
+            }
+            else
+            {
                 super.emitComparison(c);
             }
         }

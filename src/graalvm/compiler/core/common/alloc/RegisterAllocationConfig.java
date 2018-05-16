@@ -14,29 +14,35 @@ import jdk.vm.ci.meta.PlatformKind;
  * Configuration for register allocation. This is different to {@link RegisterConfig} as it only
  * returns registers specified by {@link GraalOptions#RegisterPressure}.
  */
-public class RegisterAllocationConfig {
-
-    public static final class AllocatableRegisters {
+public class RegisterAllocationConfig
+{
+    public static final class AllocatableRegisters
+    {
         public final Register[] allocatableRegisters;
         public final int minRegisterNumber;
         public final int maxRegisterNumber;
 
-        public AllocatableRegisters(RegisterArray allocatableRegisters, int minRegisterNumber, int maxRegisterNumber) {
+        public AllocatableRegisters(RegisterArray allocatableRegisters, int minRegisterNumber, int maxRegisterNumber)
+        {
             this.allocatableRegisters = allocatableRegisters.toArray();
             this.minRegisterNumber = minRegisterNumber;
             this.maxRegisterNumber = maxRegisterNumber;
             assert verify(allocatableRegisters, minRegisterNumber, maxRegisterNumber);
         }
 
-        private static boolean verify(RegisterArray allocatableRegisters, int minRegisterNumber, int maxRegisterNumber) {
+        private static boolean verify(RegisterArray allocatableRegisters, int minRegisterNumber, int maxRegisterNumber)
+        {
             int min = Integer.MAX_VALUE;
             int max = Integer.MIN_VALUE;
-            for (Register reg : allocatableRegisters) {
+            for (Register reg : allocatableRegisters)
+            {
                 int number = reg.number;
-                if (number < min) {
+                if (number < min)
+                {
                     min = number;
                 }
-                if (number > max) {
+                if (number > max)
+                {
                     max = number;
                 }
             }
@@ -48,19 +54,25 @@ public class RegisterAllocationConfig {
 
     public static final String ALL_REGISTERS = "<all>";
 
-    private static Register findRegister(String name, RegisterArray all) {
-        for (Register reg : all) {
-            if (reg.name.equals(name)) {
+    private static Register findRegister(String name, RegisterArray all)
+    {
+        for (Register reg : all)
+        {
+            if (reg.name.equals(name))
+            {
                 return reg;
             }
         }
         throw new IllegalArgumentException("register " + name + " is not allocatable");
     }
 
-    protected RegisterArray initAllocatable(RegisterArray registers) {
-        if (allocationRestrictedTo != null) {
+    protected RegisterArray initAllocatable(RegisterArray registers)
+    {
+        if (allocationRestrictedTo != null)
+        {
             Register[] regs = new Register[allocationRestrictedTo.length];
-            for (int i = 0; i < allocationRestrictedTo.length; i++) {
+            for (int i = 0; i < allocationRestrictedTo.length; i++)
+            {
                 regs[i] = findRegister(allocationRestrictedTo[i], registers);
             }
             return new RegisterArray(regs);
@@ -78,7 +90,8 @@ public class RegisterAllocationConfig {
      * @param allocationRestrictedTo if not {@code null}, register allocation will be restricted to
      *            registers whose names appear in this array
      */
-    public RegisterAllocationConfig(RegisterConfig registerConfig, String[] allocationRestrictedTo) {
+    public RegisterAllocationConfig(RegisterConfig registerConfig, String[] allocationRestrictedTo)
+    {
         assert registerConfig != null;
         this.registerConfig = registerConfig;
         this.allocationRestrictedTo = allocationRestrictedTo;
@@ -88,9 +101,11 @@ public class RegisterAllocationConfig {
      * Gets the set of registers that can be used by the register allocator for a value of a
      * particular kind.
      */
-    public AllocatableRegisters getAllocatableRegisters(PlatformKind kind) {
+    public AllocatableRegisters getAllocatableRegisters(PlatformKind kind)
+    {
         PlatformKind.Key key = kind.getKey();
-        if (categorized.containsKey(key)) {
+        if (categorized.containsKey(key))
+        {
             AllocatableRegisters val = categorized.get(key);
             return val;
         }
@@ -102,40 +117,46 @@ public class RegisterAllocationConfig {
     /**
      * Gets the {@link RegisterCategory} for the given {@link PlatformKind}.
      */
-    public RegisterCategory getRegisterCategory(PlatformKind kind) {
+    public RegisterCategory getRegisterCategory(PlatformKind kind)
+    {
         return getAllocatableRegisters(kind).allocatableRegisters[0].getRegisterCategory();
     }
 
-    protected AllocatableRegisters createAllocatableRegisters(RegisterArray registers) {
+    protected AllocatableRegisters createAllocatableRegisters(RegisterArray registers)
+    {
         int min = Integer.MAX_VALUE;
         int max = Integer.MIN_VALUE;
-        for (Register reg : registers) {
+        for (Register reg : registers)
+        {
             int number = reg.number;
-            if (number < min) {
+            if (number < min)
+            {
                 min = number;
             }
-            if (number > max) {
+            if (number > max)
+            {
                 max = number;
             }
         }
         assert min < max;
         return new AllocatableRegisters(registers, min, max);
-
     }
 
     /**
      * Gets the set of registers that can be used by the register allocator.
      */
-    public RegisterArray getAllocatableRegisters() {
-        if (cachedRegisters == null) {
+    public RegisterArray getAllocatableRegisters()
+    {
+        if (cachedRegisters == null)
+        {
             cachedRegisters = initAllocatable(registerConfig.getAllocatableRegisters());
         }
         assert cachedRegisters != null;
         return cachedRegisters;
     }
 
-    public RegisterConfig getRegisterConfig() {
+    public RegisterConfig getRegisterConfig()
+    {
         return registerConfig;
     }
-
 }

@@ -18,13 +18,15 @@ import graalvm.compiler.options.OptionValues;
 
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
-public final class VirtualUtil {
-
-    private VirtualUtil() {
+public final class VirtualUtil
+{
+    private VirtualUtil()
+    {
         GraalError.shouldNotReachHere();
     }
 
-    public static boolean assertNonReachable(StructuredGraph graph, List<Node> obsoleteNodes) {
+    public static boolean assertNonReachable(StructuredGraph graph, List<Node> obsoleteNodes)
+    {
         // Helper code that determines the paths that keep obsolete nodes alive.
         // Nodes with support for GVN can be kept alive by GVN and are therefore not part of the
         // assertion.
@@ -33,58 +35,79 @@ public final class VirtualUtil {
         NodeFlood flood = graph.createNodeFlood();
         EconomicMap<Node, Node> path = EconomicMap.create(Equivalence.IDENTITY);
         flood.add(graph.start());
-        for (Node current : flood) {
-            if (current instanceof AbstractEndNode) {
+        for (Node current : flood)
+        {
+            if (current instanceof AbstractEndNode)
+            {
                 AbstractEndNode end = (AbstractEndNode) current;
                 flood.add(end.merge());
-                if (!path.containsKey(end.merge())) {
+                if (!path.containsKey(end.merge()))
+                {
                     path.put(end.merge(), end);
                 }
-            } else {
-                for (Node successor : current.successors()) {
+            }
+            else
+            {
+                for (Node successor : current.successors())
+                {
                     flood.add(successor);
-                    if (!path.containsKey(successor)) {
+                    if (!path.containsKey(successor))
+                    {
                         path.put(successor, current);
                     }
                 }
             }
         }
 
-        for (Node node : obsoleteNodes) {
-            if (node instanceof FixedNode && !node.isDeleted()) {
+        for (Node node : obsoleteNodes)
+        {
+            if (node instanceof FixedNode && !node.isDeleted())
+            {
                 assert !flood.isMarked(node) : node;
             }
         }
 
-        for (Node node : graph.getNodes()) {
-            if (flood.isMarked(node)) {
-                for (Node input : node.inputs()) {
+        for (Node node : graph.getNodes())
+        {
+            if (flood.isMarked(node))
+            {
+                for (Node input : node.inputs())
+                {
                     flood.add(input);
-                    if (!path.containsKey(input)) {
+                    if (!path.containsKey(input))
+                    {
                         path.put(input, node);
                     }
                 }
             }
         }
-        for (Node current : flood) {
-            for (Node input : current.inputs()) {
+        for (Node current : flood)
+        {
+            for (Node input : current.inputs())
+            {
                 flood.add(input);
-                if (!path.containsKey(input)) {
+                if (!path.containsKey(input))
+                {
                     path.put(input, current);
                 }
             }
         }
         boolean success = true;
-        for (Node node : obsoleteNodes) {
-            if (!node.isDeleted() && flood.isMarked(node) && !node.getNodeClass().valueNumberable()) {
+        for (Node node : obsoleteNodes)
+        {
+            if (!node.isDeleted() && flood.isMarked(node) && !node.getNodeClass().valueNumberable())
+            {
                 TTY.println("offending node path:");
                 Node current = node;
                 TTY.print(current.toString());
-                while (true) {
+                while (true)
+                {
                     current = path.get(current);
-                    if (current != null) {
+                    if (current != null)
+                    {
                         TTY.print(" -> " + current.toString());
-                        if (current instanceof FixedNode && !obsoleteNodes.contains(current)) {
+                        if (current instanceof FixedNode && !obsoleteNodes.contains(current))
+                        {
                             break;
                         }
                     }
@@ -92,55 +115,72 @@ public final class VirtualUtil {
                 success = false;
             }
         }
-        if (!success) {
+        if (!success)
+        {
             TTY.println();
             debug.forceDump(graph, "assertNonReachable");
         }
         return success;
     }
 
-    public static void trace(OptionValues options, DebugContext debug, String msg) {
-        if (debug.areScopesEnabled() && TraceEscapeAnalysis.getValue(options) && debug.isLogEnabled()) {
+    public static void trace(OptionValues options, DebugContext debug, String msg)
+    {
+        if (debug.areScopesEnabled() && TraceEscapeAnalysis.getValue(options) && debug.isLogEnabled())
+        {
             debug.log(msg);
         }
     }
 
-    public static void trace(OptionValues options, DebugContext debug, String format, Object obj) {
-        if (debug.areScopesEnabled() && TraceEscapeAnalysis.getValue(options) && debug.isLogEnabled()) {
+    public static void trace(OptionValues options, DebugContext debug, String format, Object obj)
+    {
+        if (debug.areScopesEnabled() && TraceEscapeAnalysis.getValue(options) && debug.isLogEnabled())
+        {
             debug.logv(format, obj);
         }
     }
 
-    public static void trace(OptionValues options, DebugContext debug, String format, Object obj, Object obj2) {
-        if (debug.areScopesEnabled() && TraceEscapeAnalysis.getValue(options) && debug.isLogEnabled()) {
+    public static void trace(OptionValues options, DebugContext debug, String format, Object obj, Object obj2)
+    {
+        if (debug.areScopesEnabled() && TraceEscapeAnalysis.getValue(options) && debug.isLogEnabled())
+        {
             debug.logv(format, obj, obj2);
         }
     }
 
-    public static void trace(OptionValues options, DebugContext debug, String format, Object obj, Object obj2, Object obj3) {
-        if (debug.areScopesEnabled() && TraceEscapeAnalysis.getValue(options) && debug.isLogEnabled()) {
+    public static void trace(OptionValues options, DebugContext debug, String format, Object obj, Object obj2, Object obj3)
+    {
+        if (debug.areScopesEnabled() && TraceEscapeAnalysis.getValue(options) && debug.isLogEnabled())
+        {
             debug.logv(format, obj, obj2, obj3);
         }
     }
 
-    public static void trace(OptionValues options, DebugContext debug, String format, Object obj, Object obj2, Object obj3, Object obj4) {
-        if (debug.areScopesEnabled() && TraceEscapeAnalysis.getValue(options) && debug.isLogEnabled()) {
+    public static void trace(OptionValues options, DebugContext debug, String format, Object obj, Object obj2, Object obj3, Object obj4)
+    {
+        if (debug.areScopesEnabled() && TraceEscapeAnalysis.getValue(options) && debug.isLogEnabled())
+        {
             debug.logv(format, obj, obj2, obj3, obj4);
         }
     }
 
-    public static boolean matches(StructuredGraph graph, String filter) {
-        if (filter != null) {
+    public static boolean matches(StructuredGraph graph, String filter)
+    {
+        if (filter != null)
+        {
             return matchesHelper(graph, filter);
         }
         return true;
     }
 
-    private static boolean matchesHelper(StructuredGraph graph, String filter) {
-        if (filter.startsWith("~")) {
+    private static boolean matchesHelper(StructuredGraph graph, String filter)
+    {
+        if (filter.startsWith("~"))
+        {
             ResolvedJavaMethod method = graph.method();
             return method == null || !method.format("%H.%n").contains(filter.substring(1));
-        } else {
+        }
+        else
+        {
             ResolvedJavaMethod method = graph.method();
             return method != null && method.format("%H.%n").contains(filter);
         }

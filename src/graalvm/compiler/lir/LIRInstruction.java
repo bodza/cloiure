@@ -37,11 +37,13 @@ import jdk.vm.ci.meta.Value;
 /**
  * The base class for an {@code LIRInstruction}.
  */
-public abstract class LIRInstruction {
+public abstract class LIRInstruction
+{
     /**
      * Constants denoting how a LIR instruction uses an operand.
      */
-    public enum OperandMode {
+    public enum OperandMode
+    {
         /**
          * The value must have been defined before. It is alive before the instruction until the
          * beginning of the instruction, but not necessarily throughout the instruction. A register
@@ -74,41 +76,43 @@ public abstract class LIRInstruction {
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
-    public static @interface Use {
-
+    public static @interface Use
+    {
         OperandFlag[] value() default OperandFlag.REG;
     }
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
-    public static @interface Alive {
-
+    public static @interface Alive
+    {
         OperandFlag[] value() default OperandFlag.REG;
     }
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
-    public static @interface Temp {
-
+    public static @interface Temp
+    {
         OperandFlag[] value() default OperandFlag.REG;
     }
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
-    public static @interface Def {
-
+    public static @interface Def
+    {
         OperandFlag[] value() default OperandFlag.REG;
     }
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
-    public static @interface State {
+    public static @interface State
+    {
     }
 
     /**
      * Flags for an operand.
      */
-    public enum OperandFlag {
+    public enum OperandFlag
+    {
         /**
          * The value can be a {@link RegisterValue}.
          */
@@ -155,7 +159,8 @@ public abstract class LIRInstruction {
      */
     protected static final EnumMap<OperandMode, EnumSet<OperandFlag>> ALLOWED_FLAGS;
 
-    static {
+    static
+    {
         ALLOWED_FLAGS = new EnumMap<>(OperandMode.class);
         ALLOWED_FLAGS.put(OperandMode.USE, EnumSet.of(REG, STACK, COMPOSITE, CONST, ILLEGAL, HINT, UNINITIALIZED));
         ALLOWED_FLAGS.put(ALIVE, EnumSet.of(REG, STACK, COMPOSITE, CONST, ILLEGAL, HINT, UNINITIALIZED, OUTGOING));
@@ -183,7 +188,8 @@ public abstract class LIRInstruction {
     /**
      * Constructs a new LIR instruction.
      */
-    public LIRInstruction(LIRInstructionClass<? extends LIRInstruction> c) {
+    public LIRInstruction(LIRInstructionClass<? extends LIRInstruction> c)
+    {
         instructionClass = c;
         assert c.getClazz() == this.getClass();
         id = -1;
@@ -191,149 +197,181 @@ public abstract class LIRInstruction {
 
     public abstract void emitCode(CompilationResultBuilder crb);
 
-    public final int id() {
+    public final int id()
+    {
         return id;
     }
 
-    public final void setId(int id) {
+    public final void setId(int id)
+    {
         this.id = id;
     }
 
-    public final NodeSourcePosition getPosition() {
+    public final NodeSourcePosition getPosition()
+    {
         return position;
     }
 
-    public final void setPosition(NodeSourcePosition position) {
+    public final void setPosition(NodeSourcePosition position)
+    {
         this.position = position;
     }
 
-    public final String name() {
+    public final String name()
+    {
         return instructionClass.getOpcode(this);
     }
 
-    public final boolean hasOperands() {
+    public final boolean hasOperands()
+    {
         return instructionClass.hasOperands() || hasState() || destroysCallerSavedRegisters();
     }
 
-    public final boolean hasState() {
+    public final boolean hasState()
+    {
         return instructionClass.hasState(this);
     }
 
-    public boolean destroysCallerSavedRegisters() {
+    public boolean destroysCallerSavedRegisters()
+    {
         return false;
     }
 
     // InstructionValueProcedures
-    public final void forEachInput(InstructionValueProcedure proc) {
+    public final void forEachInput(InstructionValueProcedure proc)
+    {
         instructionClass.forEachUse(this, proc);
     }
 
-    public final void forEachAlive(InstructionValueProcedure proc) {
+    public final void forEachAlive(InstructionValueProcedure proc)
+    {
         instructionClass.forEachAlive(this, proc);
     }
 
-    public final void forEachTemp(InstructionValueProcedure proc) {
+    public final void forEachTemp(InstructionValueProcedure proc)
+    {
         instructionClass.forEachTemp(this, proc);
     }
 
-    public final void forEachOutput(InstructionValueProcedure proc) {
+    public final void forEachOutput(InstructionValueProcedure proc)
+    {
         instructionClass.forEachDef(this, proc);
     }
 
-    public final void forEachState(InstructionValueProcedure proc) {
+    public final void forEachState(InstructionValueProcedure proc)
+    {
         instructionClass.forEachState(this, proc);
     }
 
     // ValueProcedures
-    public final void forEachInput(ValueProcedure proc) {
+    public final void forEachInput(ValueProcedure proc)
+    {
         instructionClass.forEachUse(this, proc);
     }
 
-    public final void forEachAlive(ValueProcedure proc) {
+    public final void forEachAlive(ValueProcedure proc)
+    {
         instructionClass.forEachAlive(this, proc);
     }
 
-    public final void forEachTemp(ValueProcedure proc) {
+    public final void forEachTemp(ValueProcedure proc)
+    {
         instructionClass.forEachTemp(this, proc);
     }
 
-    public final void forEachOutput(ValueProcedure proc) {
+    public final void forEachOutput(ValueProcedure proc)
+    {
         instructionClass.forEachDef(this, proc);
     }
 
-    public final void forEachState(ValueProcedure proc) {
+    public final void forEachState(ValueProcedure proc)
+    {
         instructionClass.forEachState(this, proc);
     }
 
     // States
-    public final void forEachState(InstructionStateProcedure proc) {
+    public final void forEachState(InstructionStateProcedure proc)
+    {
         instructionClass.forEachState(this, proc);
     }
 
-    public final void forEachState(StateProcedure proc) {
+    public final void forEachState(StateProcedure proc)
+    {
         instructionClass.forEachState(this, proc);
     }
 
     // InstructionValueConsumers
-    public final void visitEachInput(InstructionValueConsumer proc) {
+    public final void visitEachInput(InstructionValueConsumer proc)
+    {
         instructionClass.visitEachUse(this, proc);
     }
 
-    public final void visitEachAlive(InstructionValueConsumer proc) {
+    public final void visitEachAlive(InstructionValueConsumer proc)
+    {
         instructionClass.visitEachAlive(this, proc);
     }
 
-    public final void visitEachTemp(InstructionValueConsumer proc) {
+    public final void visitEachTemp(InstructionValueConsumer proc)
+    {
         instructionClass.visitEachTemp(this, proc);
     }
 
-    public final void visitEachOutput(InstructionValueConsumer proc) {
+    public final void visitEachOutput(InstructionValueConsumer proc)
+    {
         instructionClass.visitEachDef(this, proc);
     }
 
-    public final void visitEachState(InstructionValueConsumer proc) {
+    public final void visitEachState(InstructionValueConsumer proc)
+    {
         instructionClass.visitEachState(this, proc);
     }
 
     // ValueConsumers
-    public final void visitEachInput(ValueConsumer proc) {
+    public final void visitEachInput(ValueConsumer proc)
+    {
         instructionClass.visitEachUse(this, proc);
     }
 
-    public final void visitEachAlive(ValueConsumer proc) {
+    public final void visitEachAlive(ValueConsumer proc)
+    {
         instructionClass.visitEachAlive(this, proc);
     }
 
-    public final void visitEachTemp(ValueConsumer proc) {
+    public final void visitEachTemp(ValueConsumer proc)
+    {
         instructionClass.visitEachTemp(this, proc);
     }
 
-    public final void visitEachOutput(ValueConsumer proc) {
+    public final void visitEachOutput(ValueConsumer proc)
+    {
         instructionClass.visitEachDef(this, proc);
     }
 
-    public final void visitEachState(ValueConsumer proc) {
+    public final void visitEachState(ValueConsumer proc)
+    {
         instructionClass.visitEachState(this, proc);
     }
 
     @SuppressWarnings("unused")
-    public final Value forEachRegisterHint(Value value, OperandMode mode, InstructionValueProcedure proc) {
+    public final Value forEachRegisterHint(Value value, OperandMode mode, InstructionValueProcedure proc)
+    {
         return instructionClass.forEachRegisterHint(this, mode, proc);
     }
 
     @SuppressWarnings("unused")
-    public final Value forEachRegisterHint(Value value, OperandMode mode, ValueProcedure proc) {
+    public final Value forEachRegisterHint(Value value, OperandMode mode, ValueProcedure proc)
+    {
         return instructionClass.forEachRegisterHint(this, mode, proc);
     }
 
-    // Checkstyle: stop
     /**
      * Returns {@code true} if the instruction is a {@link MoveOp}.
      *
      * This function is preferred to {@code instanceof MoveOp} since the type check is more
      * expensive than reading a field from {@link LIRInstructionClass}.
      */
-    public final boolean isMoveOp() {
+    public final boolean isMoveOp()
+    {
         return instructionClass.isMoveOp();
     }
 
@@ -343,7 +381,8 @@ public abstract class LIRInstruction {
      * This function is preferred to {@code instanceof ValueMoveOp} since the type check is more
      * expensive than reading a field from {@link LIRInstructionClass}.
      */
-    public final boolean isValueMoveOp() {
+    public final boolean isValueMoveOp()
+    {
         return instructionClass.isValueMoveOp();
     }
 
@@ -353,10 +392,10 @@ public abstract class LIRInstruction {
      * This function is preferred to {@code instanceof LoadConstantOp} since the type check is more
      * expensive than reading a field from {@link LIRInstructionClass}.
      */
-    public final boolean isLoadConstantOp() {
+    public final boolean isLoadConstantOp()
+    {
         return instructionClass.isLoadConstantOp();
     }
-    // Checkstyle: resume
 
     /**
      * Utility method to add stack arguments to a list of temporaries. Useful for modeling calling
@@ -364,19 +403,25 @@ public abstract class LIRInstruction {
      *
      * @return additional temporaries
      */
-    protected static Value[] addStackSlotsToTemporaries(Value[] parameters, Value[] temporaries) {
+    protected static Value[] addStackSlotsToTemporaries(Value[] parameters, Value[] temporaries)
+    {
         int extraTemps = 0;
-        for (Value p : parameters) {
-            if (isStackSlot(p)) {
+        for (Value p : parameters)
+        {
+            if (isStackSlot(p))
+            {
                 extraTemps++;
             }
             assert !isVirtualStackSlot(p) : "only real stack slots in calling convention";
         }
-        if (extraTemps != 0) {
+        if (extraTemps != 0)
+        {
             int index = temporaries.length;
             Value[] newTemporaries = Arrays.copyOf(temporaries, temporaries.length + extraTemps);
-            for (Value p : parameters) {
-                if (isStackSlot(p)) {
+            for (Value p : parameters)
+            {
+                if (isStackSlot(p))
+                {
                     newTemporaries[index++] = p;
                 }
             }
@@ -385,53 +430,64 @@ public abstract class LIRInstruction {
         return temporaries;
     }
 
-    public void verify() {
+    public void verify()
+    {
     }
 
     /**
      * Adds a comment to this instruction.
      */
-    public final void setComment(LIRGenerationResult res, String comment) {
+    public final void setComment(LIRGenerationResult res, String comment)
+    {
         res.setComment(this, comment);
     }
 
     /**
      * Gets the comment attached to this instruction.
      */
-    public final String getComment(LIRGenerationResult res) {
+    public final String getComment(LIRGenerationResult res)
+    {
         return res.getComment(this);
     }
 
-    public final String toStringWithIdPrefix() {
-        if (id != -1) {
+    public final String toStringWithIdPrefix()
+    {
+        if (id != -1)
+        {
             return String.format("%4d %s", id, toString());
         }
         return "     " + toString();
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return instructionClass.toString(this);
     }
 
-    public String toString(LIRGenerationResult res) {
+    public String toString(LIRGenerationResult res)
+    {
         String toString = toString();
-        if (res == null) {
+        if (res == null)
+        {
             return toString;
         }
         String comment = getComment(res);
-        if (comment == null) {
+        if (comment == null)
+        {
             return toString;
         }
         return String.format("%s // %s", toString, comment);
     }
 
-    public LIRInstructionClass<?> getLIRInstructionClass() {
+    public LIRInstructionClass<?> getLIRInstructionClass()
+    {
         return instructionClass;
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return id;
     }
 }

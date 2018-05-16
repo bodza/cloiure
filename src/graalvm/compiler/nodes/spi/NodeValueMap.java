@@ -5,8 +5,8 @@ import graalvm.compiler.nodes.ValueNode;
 
 import jdk.vm.ci.meta.Value;
 
-public interface NodeValueMap {
-
+public interface NodeValueMap
+{
     /**
      * Returns the operand that has been previously initialized by
      * {@link #setResult(ValueNode, Value)} with the result of an instruction. It's a code

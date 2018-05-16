@@ -12,16 +12,19 @@ import jdk.vm.ci.meta.JavaKind.FormatWithToString;
 /**
  * A {@link LocationIdentity} with a name.
  */
-public class NamedLocationIdentity extends LocationIdentity implements FormatWithToString {
-
+public class NamedLocationIdentity extends LocationIdentity implements FormatWithToString
+{
     /**
      * Map for asserting all {@link NamedLocationIdentity} instances have a unique name.
      */
-    static class DB {
+    static class DB
+    {
         private static final EconomicSet<String> map = EconomicSet.create(Equivalence.DEFAULT);
 
-        static boolean checkUnique(String name) {
-            if (!map.add(name)) {
+        static boolean checkUnique(String name)
+        {
+            if (!map.add(name))
+            {
                 throw new AssertionError("identity " + name + " already exists");
             }
             return true;
@@ -46,7 +49,8 @@ public class NamedLocationIdentity extends LocationIdentity implements FormatWit
     private final String name;
     private final boolean immutable;
 
-    protected NamedLocationIdentity(String name, boolean immutable) {
+    protected NamedLocationIdentity(String name, boolean immutable)
+    {
         this.name = name;
         this.immutable = immutable;
         assert DB.checkUnique(name);
@@ -58,7 +62,8 @@ public class NamedLocationIdentity extends LocationIdentity implements FormatWit
      *
      * @param name the name of the new location identity
      */
-    public static NamedLocationIdentity mutable(String name) {
+    public static NamedLocationIdentity mutable(String name)
+    {
         return create(name, false);
     }
 
@@ -69,7 +74,8 @@ public class NamedLocationIdentity extends LocationIdentity implements FormatWit
      *
      * @param name the name of the new location identity
      */
-    public static NamedLocationIdentity immutable(String name) {
+    public static NamedLocationIdentity immutable(String name)
+    {
         return create(name, true);
     }
 
@@ -79,17 +85,20 @@ public class NamedLocationIdentity extends LocationIdentity implements FormatWit
      * @param name the name of the new location identity
      * @param immutable true if the location is immutable
      */
-    private static NamedLocationIdentity create(String name, boolean immutable) {
+    private static NamedLocationIdentity create(String name, boolean immutable)
+    {
         return new NamedLocationIdentity(name, immutable);
     }
 
     @Override
-    public boolean isImmutable() {
+    public boolean isImmutable()
+    {
         return immutable;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return name + (isImmutable() ? ":final" : "");
     }
 
@@ -98,15 +107,18 @@ public class NamedLocationIdentity extends LocationIdentity implements FormatWit
      * the same kind must have the same location identity unless an alias analysis guarantees that
      * two distinct arrays are accessed.
      */
-    public static LocationIdentity getArrayLocation(JavaKind elementKind) {
+    public static LocationIdentity getArrayLocation(JavaKind elementKind)
+    {
         return ARRAY_LOCATIONS.get(elementKind);
     }
 
     private static final EnumMap<JavaKind, LocationIdentity> ARRAY_LOCATIONS = initArrayLocations();
 
-    private static EnumMap<JavaKind, LocationIdentity> initArrayLocations() {
+    private static EnumMap<JavaKind, LocationIdentity> initArrayLocations()
+    {
         EnumMap<JavaKind, LocationIdentity> result = new EnumMap<>(JavaKind.class);
-        for (JavaKind kind : JavaKind.values()) {
+        for (JavaKind kind : JavaKind.values())
+        {
             result.put(kind, NamedLocationIdentity.mutable("Array: " + kind.getJavaName()));
         }
         return result;

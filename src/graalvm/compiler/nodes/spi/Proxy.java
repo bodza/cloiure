@@ -9,8 +9,7 @@ import graalvm.compiler.graph.NodeInterface;
  *
  * For some algorithms it is necessary or advantageous to see through these proxies.
  */
-public interface Proxy extends NodeInterface {
-
+public interface Proxy extends NodeInterface
+{
     Node getOriginalNode();
-
 }

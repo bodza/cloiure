@@ -12,8 +12,8 @@ import jdk.vm.ci.meta.JavaKind;
 /**
  * Provides {@link PrintStream}-like logging facility.
  */
-public final class Log {
-
+public final class Log
+{
     public static final ForeignCallDescriptor LOG_PRIMITIVE = new ForeignCallDescriptor("logPrimitive", void.class, int.class, long.class, boolean.class);
     public static final ForeignCallDescriptor LOG_OBJECT = new ForeignCallDescriptor("logObject", void.class, Object.class, boolean.class, boolean.class);
     public static final ForeignCallDescriptor LOG_PRINTF = new ForeignCallDescriptor("logPrintf", void.class, Object.class, long.class, long.class, long.class);
@@ -27,27 +27,33 @@ public final class Log {
     @NodeIntrinsic(ForeignCallNode.class)
     private static native void printf(@ConstantNodeParameter ForeignCallDescriptor logPrintf, String format, long v1, long v2, long v3);
 
-    public static void print(boolean value) {
+    public static void print(boolean value)
+    {
         log(LOG_PRIMITIVE, JavaKind.Boolean.getTypeChar(), value ? 1L : 0L, false);
     }
 
-    public static void print(byte value) {
+    public static void print(byte value)
+    {
         log(LOG_PRIMITIVE, JavaKind.Byte.getTypeChar(), value, false);
     }
 
-    public static void print(char value) {
+    public static void print(char value)
+    {
         log(LOG_PRIMITIVE, JavaKind.Char.getTypeChar(), value, false);
     }
 
-    public static void print(short value) {
+    public static void print(short value)
+    {
         log(LOG_PRIMITIVE, JavaKind.Short.getTypeChar(), value, false);
     }
 
-    public static void print(int value) {
+    public static void print(int value)
+    {
         log(LOG_PRIMITIVE, JavaKind.Int.getTypeChar(), value, false);
     }
 
-    public static void print(long value) {
+    public static void print(long value)
+    {
         log(LOG_PRIMITIVE, JavaKind.Long.getTypeChar(), value, false);
     }
 
@@ -58,107 +64,153 @@ public final class Log {
      *            (i.e., a sequence of characters starting with '%').
      * @param value the value associated with the conversion specifier
      */
-    public static void printf(String format, long value) {
+    public static void printf(String format, long value)
+    {
         printf(LOG_PRINTF, format, value, 0L, 0L);
     }
 
-    public static void printf(String format, long v1, long v2) {
+    public static void printf(String format, long v1, long v2)
+    {
         printf(LOG_PRINTF, format, v1, v2, 0L);
     }
 
-    public static void printf(String format, long v1, long v2, long v3) {
+    public static void printf(String format, long v1, long v2, long v3)
+    {
         printf(LOG_PRINTF, format, v1, v2, v3);
     }
 
-    public static void print(float value) {
-        if (Float.isNaN(value)) {
+    public static void print(float value)
+    {
+        if (Float.isNaN(value))
+        {
             print("NaN");
-        } else if (value == Float.POSITIVE_INFINITY) {
+        }
+        else if (value == Float.POSITIVE_INFINITY)
+        {
             print("Infinity");
-        } else if (value == Float.NEGATIVE_INFINITY) {
+        }
+        else if (value == Float.NEGATIVE_INFINITY)
+        {
             print("-Infinity");
-        } else {
+        }
+        else
+        {
             log(LOG_PRIMITIVE, JavaKind.Float.getTypeChar(), Float.floatToRawIntBits(value), false);
         }
     }
 
-    public static void print(double value) {
-        if (Double.isNaN(value)) {
+    public static void print(double value)
+    {
+        if (Double.isNaN(value))
+        {
             print("NaN");
-        } else if (value == Double.POSITIVE_INFINITY) {
+        }
+        else if (value == Double.POSITIVE_INFINITY)
+        {
             print("Infinity");
-        } else if (value == Double.NEGATIVE_INFINITY) {
+        }
+        else if (value == Double.NEGATIVE_INFINITY)
+        {
             print("-Infinity");
-        } else {
+        }
+        else
+        {
             log(LOG_PRIMITIVE, JavaKind.Double.getTypeChar(), Double.doubleToRawLongBits(value), false);
         }
     }
 
-    public static void print(String value) {
+    public static void print(String value)
+    {
         log(LOG_OBJECT, value, true, false);
     }
 
-    public static void printObject(Object o) {
+    public static void printObject(Object o)
+    {
         log(LOG_OBJECT, o, false, false);
     }
 
-    public static void println(boolean value) {
+    public static void println(boolean value)
+    {
         log(LOG_PRIMITIVE, JavaKind.Boolean.getTypeChar(), value ? 1L : 0L, true);
     }
 
-    public static void println(byte value) {
+    public static void println(byte value)
+    {
         log(LOG_PRIMITIVE, JavaKind.Byte.getTypeChar(), value, true);
     }
 
-    public static void println(char value) {
+    public static void println(char value)
+    {
         log(LOG_PRIMITIVE, JavaKind.Char.getTypeChar(), value, true);
     }
 
-    public static void println(short value) {
+    public static void println(short value)
+    {
         log(LOG_PRIMITIVE, JavaKind.Short.getTypeChar(), value, true);
     }
 
-    public static void println(int value) {
+    public static void println(int value)
+    {
         log(LOG_PRIMITIVE, JavaKind.Int.getTypeChar(), value, true);
     }
 
-    public static void println(long value) {
+    public static void println(long value)
+    {
         log(LOG_PRIMITIVE, JavaKind.Long.getTypeChar(), value, true);
     }
 
-    public static void println(float value) {
-        if (Float.isNaN(value)) {
+    public static void println(float value)
+    {
+        if (Float.isNaN(value))
+        {
             println("NaN");
-        } else if (value == Float.POSITIVE_INFINITY) {
+        }
+        else if (value == Float.POSITIVE_INFINITY)
+        {
             println("Infinity");
-        } else if (value == Float.NEGATIVE_INFINITY) {
+        }
+        else if (value == Float.NEGATIVE_INFINITY)
+        {
             println("-Infinity");
-        } else {
+        }
+        else
+        {
             log(LOG_PRIMITIVE, JavaKind.Float.getTypeChar(), Float.floatToRawIntBits(value), true);
         }
     }
 
-    public static void println(double value) {
-        if (Double.isNaN(value)) {
+    public static void println(double value)
+    {
+        if (Double.isNaN(value))
+        {
             println("NaN");
-        } else if (value == Double.POSITIVE_INFINITY) {
+        }
+        else if (value == Double.POSITIVE_INFINITY)
+        {
             println("Infinity");
-        } else if (value == Double.NEGATIVE_INFINITY) {
+        }
+        else if (value == Double.NEGATIVE_INFINITY)
+        {
             println("-Infinity");
-        } else {
+        }
+        else
+        {
             log(LOG_PRIMITIVE, JavaKind.Double.getTypeChar(), Double.doubleToRawLongBits(value), true);
         }
     }
 
-    public static void println(String value) {
+    public static void println(String value)
+    {
         log(LOG_OBJECT, value, true, true);
     }
 
-    public static void printlnObject(Object o) {
+    public static void printlnObject(Object o)
+    {
         log(LOG_OBJECT, o, false, true);
     }
 
-    public static void println() {
+    public static void println()
+    {
         println("");
     }
 }

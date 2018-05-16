@@ -28,33 +28,38 @@ import jdk.vm.ci.meta.Value;
  * check on the object.
  */
 @NodeInfo(allowedUsageTypes = Memory, cycles = CYCLES_2, size = SIZE_1)
-public final class BeginLockScopeNode extends AbstractMemoryCheckpoint implements LIRLowerable, MonitorEnter, MemoryCheckpoint.Single {
-
+public final class BeginLockScopeNode extends AbstractMemoryCheckpoint implements LIRLowerable, MonitorEnter, MemoryCheckpoint.Single
+{
     public static final NodeClass<BeginLockScopeNode> TYPE = NodeClass.create(BeginLockScopeNode.class);
     protected int lockDepth;
 
-    public BeginLockScopeNode(@InjectedNodeParameter WordTypes wordTypes, int lockDepth) {
+    public BeginLockScopeNode(@InjectedNodeParameter WordTypes wordTypes, int lockDepth)
+    {
         super(TYPE, StampFactory.forKind(wordTypes.getWordKind()));
         this.lockDepth = lockDepth;
     }
 
-    public BeginLockScopeNode(JavaKind kind, int lockDepth) {
+    public BeginLockScopeNode(JavaKind kind, int lockDepth)
+    {
         super(TYPE, StampFactory.forKind(kind));
         this.lockDepth = lockDepth;
     }
 
     @Override
-    public boolean hasSideEffect() {
+    public boolean hasSideEffect()
+    {
         return false;
     }
 
     @Override
-    public LocationIdentity getLocationIdentity() {
+    public LocationIdentity getLocationIdentity()
+    {
         return LocationIdentity.any();
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         assert lockDepth != -1;
         HotSpotLIRGenerator hsGen = (HotSpotLIRGenerator) gen.getLIRGeneratorTool();
         VirtualStackSlot slot = hsGen.getLockSlot(lockDepth);

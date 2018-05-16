@@ -13,8 +13,8 @@ import org.graalvm.word.Pointer;
 /**
  * Marker type for a metaspace pointer to a type.
  */
-public abstract class KlassPointer extends MetaspacePointer {
-
+public abstract class KlassPointer extends MetaspacePointer
+{
     @HotSpotOperation(opcode = POINTER_EQ)
     public abstract boolean equal(KlassPointer other);
 

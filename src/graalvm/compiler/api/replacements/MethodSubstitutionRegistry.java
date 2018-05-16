@@ -5,8 +5,8 @@ import java.lang.reflect.Type;
 /**
  * A registry for {@link MethodSubstitution}s.
  */
-public interface MethodSubstitutionRegistry {
-
+public interface MethodSubstitutionRegistry
+{
     /**
      * Gets the type representing the receiver (i.e., {@code this}) argument in a non-static method.
      */
@@ -21,7 +21,8 @@ public interface MethodSubstitutionRegistry {
      *            {@link #getReceiverType()} iff the method is non-static. Upon returning, element 0
      *            will have been rewritten to {@code declaringClass}.
      */
-    default void registerMethodSubstitution(Class<?> substituteDeclaringClass, String name, Type... argumentTypes) {
+    default void registerMethodSubstitution(Class<?> substituteDeclaringClass, String name, Type... argumentTypes)
+    {
         registerMethodSubstitution(substituteDeclaringClass, name, name, argumentTypes);
     }
 

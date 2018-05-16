@@ -12,8 +12,8 @@ import graalvm.compiler.nodes.graphbuilderconf.InlineInvokePlugin;
 
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
-public final class InlineDuringParsingPlugin implements InlineInvokePlugin {
-
+public final class InlineDuringParsingPlugin implements InlineInvokePlugin
+{
     /**
      * Budget which when exceeded reduces the effective value of
      * {@link BytecodeParserOptions#InlineDuringParsingMaxDepth} to
@@ -24,40 +24,42 @@ public final class InlineDuringParsingPlugin implements InlineInvokePlugin {
     private static final int MaxDepthAfterBudgetExceeded = Integer.getInteger("InlineDuringParsingPlugin.MaxDepthAfterBudgetExceeded", 3);
 
     @Override
-    public InlineInfo shouldInlineInvoke(GraphBuilderContext b, ResolvedJavaMethod method, ValueNode[] args) {
-        // @formatter:off
-        if (method.hasBytecodes() &&
-            method.getDeclaringClass().isLinked() &&
-            method.canBeInlined()) {
-
+    public InlineInfo shouldInlineInvoke(GraphBuilderContext b, ResolvedJavaMethod method, ValueNode[] args)
+    {
+        if (method.hasBytecodes() && method.getDeclaringClass().isLinked() && method.canBeInlined())
+        {
             // Test force inlining first
-            if (method.shouldBeInlined()) {
+            if (method.shouldBeInlined())
+            {
                 return createStandardInlineInfo(method);
             }
 
-            if (!method.isSynchronized() &&
-                checkSize(method, args, b.getGraph()) &&
-                checkInliningDepth(b)) {
+            if (!method.isSynchronized() && checkSize(method, args, b.getGraph()) && checkInliningDepth(b))
+            {
                 return createStandardInlineInfo(method);
             }
         }
-        // @formatter:on
         return null;
     }
 
-    private static boolean checkInliningDepth(GraphBuilderContext b) {
+    private static boolean checkInliningDepth(GraphBuilderContext b)
+    {
         int nodeCount = b.getGraph().getNodeCount();
         int maxDepth = InlineDuringParsingMaxDepth.getValue(b.getOptions());
-        if (nodeCount > NodeBudget && MaxDepthAfterBudgetExceeded < maxDepth) {
+        if (nodeCount > NodeBudget && MaxDepthAfterBudgetExceeded < maxDepth)
+        {
             maxDepth = MaxDepthAfterBudgetExceeded;
         }
         return b.getDepth() < maxDepth;
     }
 
-    private static boolean checkSize(ResolvedJavaMethod method, ValueNode[] args, StructuredGraph graph) {
+    private static boolean checkSize(ResolvedJavaMethod method, ValueNode[] args, StructuredGraph graph)
+    {
         int bonus = 1;
-        for (ValueNode v : args) {
-            if (v.isConstant()) {
+        for (ValueNode v : args)
+        {
+            if (v.isConstant())
+            {
                 bonus++;
             }
         }

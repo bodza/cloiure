@@ -9,43 +9,52 @@ import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 /**
  * Represents a list of sequentially executed {@code AbstractBlockBase blocks}.
  */
-public class Trace {
+public class Trace
+{
     private final AbstractBlockBase<?>[] blocks;
     private final ArrayList<Trace> successors;
     private int id = -1;
 
-    public Trace(Collection<AbstractBlockBase<?>> blocks) {
+    public Trace(Collection<AbstractBlockBase<?>> blocks)
+    {
         this(blocks.toArray(new AbstractBlockBase<?>[0]));
     }
 
-    public Trace(AbstractBlockBase<?>[] blocks) {
+    public Trace(AbstractBlockBase<?>[] blocks)
+    {
         this.blocks = blocks;
         this.successors = new ArrayList<>();
     }
 
-    public AbstractBlockBase<?>[] getBlocks() {
+    public AbstractBlockBase<?>[] getBlocks()
+    {
         return blocks;
     }
 
-    public ArrayList<Trace> getSuccessors() {
+    public ArrayList<Trace> getSuccessors()
+    {
         return successors;
     }
 
-    public int size() {
+    public int size()
+    {
         return getBlocks().length;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Trace" + Arrays.toString(blocks);
     }
 
-    public int getId() {
+    public int getId()
+    {
         assert id != -1 : "id not initialized!";
         return id;
     }
 
-    void setId(int id) {
+    void setId(int id)
+    {
         this.id = id;
     }
 }

@@ -12,13 +12,13 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * {@link #notifyNotInlined non-inlined} invocations (i.e., those for which an {@link Invoke} node
  * is created).
  */
-public interface InlineInvokePlugin extends GraphBuilderPlugin {
-
+public interface InlineInvokePlugin extends GraphBuilderPlugin
+{
     /**
      * Result of a {@link #shouldInlineInvoke inlining decision}.
      */
-    final class InlineInfo {
-
+    final class InlineInfo
+    {
         /**
          * Denotes a call site that must not be inlined and should be implemented by a node that
          * does not speculate on the call not raising an exception.
@@ -41,15 +41,18 @@ public interface InlineInvokePlugin extends GraphBuilderPlugin {
         private final ResolvedJavaMethod originalMethod;
         private final BytecodeProvider intrinsicBytecodeProvider;
 
-        public static InlineInfo createStandardInlineInfo(ResolvedJavaMethod methodToInline) {
+        public static InlineInfo createStandardInlineInfo(ResolvedJavaMethod methodToInline)
+        {
             return new InlineInfo(methodToInline, null, null);
         }
 
-        public static InlineInfo createIntrinsicInlineInfo(ResolvedJavaMethod methodToInline, ResolvedJavaMethod originalMethod, BytecodeProvider intrinsicBytecodeProvider) {
+        public static InlineInfo createIntrinsicInlineInfo(ResolvedJavaMethod methodToInline, ResolvedJavaMethod originalMethod, BytecodeProvider intrinsicBytecodeProvider)
+        {
             return new InlineInfo(methodToInline, originalMethod, intrinsicBytecodeProvider);
         }
 
-        private InlineInfo(ResolvedJavaMethod methodToInline, ResolvedJavaMethod originalMethod, BytecodeProvider intrinsicBytecodeProvider) {
+        private InlineInfo(ResolvedJavaMethod methodToInline, ResolvedJavaMethod originalMethod, BytecodeProvider intrinsicBytecodeProvider)
+        {
             this.methodToInline = methodToInline;
             this.originalMethod = originalMethod;
             this.intrinsicBytecodeProvider = intrinsicBytecodeProvider;
@@ -58,11 +61,13 @@ public interface InlineInvokePlugin extends GraphBuilderPlugin {
         /**
          * Returns the method to be inlined, or {@code null} if the call site must not be inlined.
          */
-        public ResolvedJavaMethod getMethodToInline() {
+        public ResolvedJavaMethod getMethodToInline()
+        {
             return methodToInline;
         }
 
-        public boolean allowsInlining() {
+        public boolean allowsInlining()
+        {
             return methodToInline != null;
         }
 
@@ -70,7 +75,8 @@ public interface InlineInvokePlugin extends GraphBuilderPlugin {
          * Returns the original method if this is an inline of an intrinsic, or {@code null} if the
          * call site must not be inlined.
          */
-        public ResolvedJavaMethod getOriginalMethod() {
+        public ResolvedJavaMethod getOriginalMethod()
+        {
             return originalMethod;
         }
 
@@ -80,7 +86,8 @@ public interface InlineInvokePlugin extends GraphBuilderPlugin {
          * {@link InlineInvokePlugin#shouldInlineInvoke}). A {@code null} return value indicates
          * that this is not an intrinsic inlining.
          */
-        public BytecodeProvider getIntrinsicBytecodeProvider() {
+        public BytecodeProvider getIntrinsicBytecodeProvider()
+        {
             return intrinsicBytecodeProvider;
         }
     }
@@ -104,7 +111,8 @@ public interface InlineInvokePlugin extends GraphBuilderPlugin {
      * @param method the target method of an invoke
      * @param args the arguments to the invoke
      */
-    default InlineInfo shouldInlineInvoke(GraphBuilderContext b, ResolvedJavaMethod method, ValueNode[] args) {
+    default InlineInfo shouldInlineInvoke(GraphBuilderContext b, ResolvedJavaMethod method, ValueNode[] args)
+    {
         return null;
     }
 
@@ -113,7 +121,8 @@ public interface InlineInvokePlugin extends GraphBuilderPlugin {
      *
      * @param methodToInline the inlined method
      */
-    default void notifyBeforeInline(ResolvedJavaMethod methodToInline) {
+    default void notifyBeforeInline(ResolvedJavaMethod methodToInline)
+    {
     }
 
     /**
@@ -121,7 +130,8 @@ public interface InlineInvokePlugin extends GraphBuilderPlugin {
      *
      * @param methodToInline the inlined method
      */
-    default void notifyAfterInline(ResolvedJavaMethod methodToInline) {
+    default void notifyAfterInline(ResolvedJavaMethod methodToInline)
+    {
     }
 
     /**
@@ -132,6 +142,7 @@ public interface InlineInvokePlugin extends GraphBuilderPlugin {
      * @param method the method that was not inlined
      * @param invoke the invoke node created for the call to {@code method}
      */
-    default void notifyNotInlined(GraphBuilderContext b, ResolvedJavaMethod method, Invoke invoke) {
+    default void notifyNotInlined(GraphBuilderContext b, ResolvedJavaMethod method, Invoke invoke)
+    {
     }
 }

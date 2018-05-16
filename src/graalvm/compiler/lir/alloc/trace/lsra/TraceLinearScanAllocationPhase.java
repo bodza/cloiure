@@ -11,34 +11,36 @@ import graalvm.compiler.lir.phases.LIRPhase;
 
 import jdk.vm.ci.code.TargetDescription;
 
-abstract class TraceLinearScanAllocationPhase {
-
-    final CharSequence getName() {
+abstract class TraceLinearScanAllocationPhase
+{
+    final CharSequence getName()
+    {
         return LIRPhase.createName(getClass());
     }
 
     @Override
-    public final String toString() {
+    public final String toString()
+    {
         return getName().toString();
     }
 
-    final void apply(TargetDescription target, LIRGenerationResult lirGenRes, Trace trace, MoveFactory spillMoveFactory, RegisterAllocationConfig registerAllocationConfig,
-                    TraceBuilderResult traceBuilderResult, TraceLinearScan allocator) {
+    final void apply(TargetDescription target, LIRGenerationResult lirGenRes, Trace trace, MoveFactory spillMoveFactory, RegisterAllocationConfig registerAllocationConfig, TraceBuilderResult traceBuilderResult, TraceLinearScan allocator)
+    {
         apply(target, lirGenRes, trace, spillMoveFactory, registerAllocationConfig, traceBuilderResult, allocator, true);
     }
 
-    final void apply(TargetDescription target, LIRGenerationResult lirGenRes, Trace trace, MoveFactory spillMoveFactory, RegisterAllocationConfig registerAllocationConfig,
-                    TraceBuilderResult traceBuilderResult, TraceLinearScan allocator, boolean dumpLIR) {
+    final void apply(TargetDescription target, LIRGenerationResult lirGenRes, Trace trace, MoveFactory spillMoveFactory, RegisterAllocationConfig registerAllocationConfig, TraceBuilderResult traceBuilderResult, TraceLinearScan allocator, boolean dumpLIR)
+    {
         run(target, lirGenRes, trace, spillMoveFactory, registerAllocationConfig, traceBuilderResult, allocator);
-        if (dumpLIR) {
+        if (dumpLIR)
+        {
             DebugContext debug = lirGenRes.getLIR().getDebug();
-            if (debug.isDumpEnabled(DebugContext.DETAILED_LEVEL)) {
+            if (debug.isDumpEnabled(DebugContext.DETAILED_LEVEL))
+            {
                 debug.dump(DebugContext.DETAILED_LEVEL, trace, "After %s (Trace%s)", getName(), trace.getId());
             }
         }
     }
 
-    abstract void run(TargetDescription target, LIRGenerationResult lirGenRes, Trace trace, MoveFactory spillMoveFactory, RegisterAllocationConfig registerAllocationConfig,
-                    TraceBuilderResult traceBuilderResult, TraceLinearScan allocator);
-
+    abstract void run(TargetDescription target, LIRGenerationResult lirGenRes, Trace trace, MoveFactory spillMoveFactory, RegisterAllocationConfig registerAllocationConfig, TraceBuilderResult traceBuilderResult, TraceLinearScan allocator);
 }

@@ -26,7 +26,8 @@ import jdk.vm.ci.meta.ConstantReflectionProvider;
  * An {@code IntegerConvert} converts an integer to an integer of different width.
  */
 @NodeInfo
-public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements ArithmeticOperation, ConvertNode, ArithmeticLIRLowerable, StampInverter {
+public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements ArithmeticOperation, ConvertNode, ArithmeticLIRLowerable, StampInverter
+{
     @SuppressWarnings("rawtypes") public static final NodeClass<IntegerConvertNode> TYPE = NodeClass.create(IntegerConvertNode.class);
 
     protected final SerializableIntegerConvertFunction<OP> getOp;
@@ -35,11 +36,12 @@ public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements A
     protected final int inputBits;
     protected final int resultBits;
 
-    protected interface SerializableIntegerConvertFunction<T> extends Function<ArithmeticOpTable, IntegerConvertOp<T>>, Serializable {
+    protected interface SerializableIntegerConvertFunction<T> extends Function<ArithmeticOpTable, IntegerConvertOp<T>>, Serializable
+    {
     }
 
-    protected IntegerConvertNode(NodeClass<? extends IntegerConvertNode<OP, REV>> c, SerializableIntegerConvertFunction<OP> getOp, SerializableIntegerConvertFunction<REV> getReverseOp, int inputBits,
-                    int resultBits, ValueNode input) {
+    protected IntegerConvertNode(NodeClass<? extends IntegerConvertNode<OP, REV>> c, SerializableIntegerConvertFunction<OP> getOp, SerializableIntegerConvertFunction<REV> getReverseOp, int inputBits, int resultBits, ValueNode input)
+    {
         super(c, getOp.apply(ArithmeticOpTable.forStamp(input.stamp(NodeView.DEFAULT))).foldStamp(inputBits, resultBits, input.stamp(NodeView.DEFAULT)), input);
         this.getOp = getOp;
         this.getReverseOp = getReverseOp;
@@ -48,97 +50,124 @@ public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements A
         assert ((PrimitiveStamp) input.stamp(NodeView.DEFAULT)).getBits() == inputBits;
     }
 
-    public int getInputBits() {
+    public int getInputBits()
+    {
         return inputBits;
     }
 
-    public int getResultBits() {
+    public int getResultBits()
+    {
         return resultBits;
     }
 
-    protected final IntegerConvertOp<OP> getOp(ValueNode forValue) {
+    protected final IntegerConvertOp<OP> getOp(ValueNode forValue)
+    {
         return getOp.apply(ArithmeticOpTable.forStamp(forValue.stamp(NodeView.DEFAULT)));
     }
 
     @Override
-    public final IntegerConvertOp<OP> getArithmeticOp() {
+    public final IntegerConvertOp<OP> getArithmeticOp()
+    {
         return getOp(getValue());
     }
 
     @Override
-    public Constant convert(Constant c, ConstantReflectionProvider constantReflection) {
+    public Constant convert(Constant c, ConstantReflectionProvider constantReflection)
+    {
         return getArithmeticOp().foldConstant(getInputBits(), getResultBits(), c);
     }
 
     @Override
-    public Constant reverse(Constant c, ConstantReflectionProvider constantReflection) {
+    public Constant reverse(Constant c, ConstantReflectionProvider constantReflection)
+    {
         IntegerConvertOp<REV> reverse = getReverseOp.apply(ArithmeticOpTable.forStamp(stamp(NodeView.DEFAULT)));
         return reverse.foldConstant(getResultBits(), getInputBits(), c);
     }
 
     @Override
-    public Stamp foldStamp(Stamp newStamp) {
+    public Stamp foldStamp(Stamp newStamp)
+    {
         assert newStamp.isCompatible(getValue().stamp(NodeView.DEFAULT));
         return getArithmeticOp().foldStamp(inputBits, resultBits, newStamp);
     }
 
     @Override
-    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue) {
+    public ValueNode canonical(CanonicalizerTool tool, ValueNode forValue)
+    {
         ValueNode synonym = findSynonym(getOp(forValue), forValue, inputBits, resultBits, stamp(NodeView.DEFAULT));
-        if (synonym != null) {
+        if (synonym != null)
+        {
             return synonym;
         }
         return this;
     }
 
-    protected static <T> ValueNode findSynonym(IntegerConvertOp<T> operation, ValueNode value, int inputBits, int resultBits, Stamp stamp) {
-        if (inputBits == resultBits) {
+    protected static <T> ValueNode findSynonym(IntegerConvertOp<T> operation, ValueNode value, int inputBits, int resultBits, Stamp stamp)
+    {
+        if (inputBits == resultBits)
+        {
             return value;
-        } else if (value.isConstant()) {
+        }
+        else if (value.isConstant())
+        {
             return ConstantNode.forPrimitive(stamp, operation.foldConstant(inputBits, resultBits, value.asConstant()));
         }
         return null;
     }
 
-    public static ValueNode convert(ValueNode input, Stamp stamp, NodeView view) {
+    public static ValueNode convert(ValueNode input, Stamp stamp, NodeView view)
+    {
         return convert(input, stamp, false, view);
     }
 
-    public static ValueNode convert(ValueNode input, Stamp stamp, StructuredGraph graph, NodeView view) {
+    public static ValueNode convert(ValueNode input, Stamp stamp, StructuredGraph graph, NodeView view)
+    {
         ValueNode convert = convert(input, stamp, false, view);
-        if (!convert.isAlive()) {
+        if (!convert.isAlive())
+        {
             assert !convert.isDeleted();
             convert = graph.addOrUniqueWithInputs(convert);
         }
         return convert;
     }
 
-    public static ValueNode convertUnsigned(ValueNode input, Stamp stamp, NodeView view) {
+    public static ValueNode convertUnsigned(ValueNode input, Stamp stamp, NodeView view)
+    {
         return convert(input, stamp, true, view);
     }
 
-    public static ValueNode convertUnsigned(ValueNode input, Stamp stamp, StructuredGraph graph, NodeView view) {
+    public static ValueNode convertUnsigned(ValueNode input, Stamp stamp, StructuredGraph graph, NodeView view)
+    {
         ValueNode convert = convert(input, stamp, true, view);
-        if (!convert.isAlive()) {
+        if (!convert.isAlive())
+        {
             assert !convert.isDeleted();
             convert = graph.addOrUniqueWithInputs(convert);
         }
         return convert;
     }
 
-    public static ValueNode convert(ValueNode input, Stamp stamp, boolean zeroExtend, NodeView view) {
+    public static ValueNode convert(ValueNode input, Stamp stamp, boolean zeroExtend, NodeView view)
+    {
         IntegerStamp fromStamp = (IntegerStamp) input.stamp(view);
         IntegerStamp toStamp = (IntegerStamp) stamp;
 
         ValueNode result;
-        if (toStamp.getBits() == fromStamp.getBits()) {
+        if (toStamp.getBits() == fromStamp.getBits())
+        {
             result = input;
-        } else if (toStamp.getBits() < fromStamp.getBits()) {
+        }
+        else if (toStamp.getBits() < fromStamp.getBits())
+        {
             result = new NarrowNode(input, fromStamp.getBits(), toStamp.getBits());
-        } else if (zeroExtend) {
+        }
+        else if (zeroExtend)
+        {
             // toStamp.getBits() > fromStamp.getBits()
             result = ZeroExtendNode.create(input, toStamp.getBits(), view);
-        } else {
+        }
+        else
+        {
             // toStamp.getBits() > fromStamp.getBits()
             result = SignExtendNode.create(input, toStamp.getBits(), view);
         }
@@ -149,7 +178,8 @@ public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements A
     }
 
     @Override
-    public Stamp invertStamp(Stamp outStamp) {
+    public Stamp invertStamp(Stamp outStamp)
+    {
         return getArithmeticOp().invertStamp(inputBits, resultBits, outStamp);
     }
 }

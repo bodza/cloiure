@@ -8,8 +8,8 @@ import jdk.vm.ci.meta.MetaAccessProvider;
  * A set of providers which are required for LIR and/or code generation. Some may not be present
  * (i.e., null).
  */
-public interface CodeGenProviders {
-
+public interface CodeGenProviders
+{
     MetaAccessProvider getMetaAccess();
 
     CodeCacheProvider getCodeCache();

@@ -15,7 +15,8 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
 
-abstract class GraphProtocol<Graph, Node, NodeClass, Edges, Block, ResolvedJavaMethod, ResolvedJavaField, Signature, NodeSourcePosition, Location> implements Closeable {
+abstract class GraphProtocol<Graph, Node, NodeClass, Edges, Block, ResolvedJavaMethod, ResolvedJavaField, Signature, NodeSourcePosition, Location> implements Closeable
+{
     private static final Charset UTF8 = Charset.forName("UTF-8");
 
     private static final int CONSTANT_POOL_MAX_SIZE = 8000;
@@ -57,8 +58,10 @@ abstract class GraphProtocol<Graph, Node, NodeClass, Edges, Block, ResolvedJavaM
     final int versionMajor;
     final int versionMinor;
 
-    GraphProtocol(WritableByteChannel channel, int major, int minor) throws IOException {
-        if (major > 6 || (major == 6 && minor > 0)) {
+    GraphProtocol(WritableByteChannel channel, int major, int minor) throws IOException
+    {
+        if (major > 6 || (major == 6 && minor > 0))
+        {
             throw new IllegalArgumentException("Unrecognized version " + major + "." + minor);
         }
         this.versionMajor = major;
@@ -69,7 +72,8 @@ abstract class GraphProtocol<Graph, Node, NodeClass, Edges, Block, ResolvedJavaM
         writeVersion();
     }
 
-    GraphProtocol(GraphProtocol<?, ?, ?, ?, ?, ?, ?, ?, ?, ?> parent) {
+    GraphProtocol(GraphProtocol<?, ?, ?, ?, ?, ?, ?, ?, ?, ?> parent)
+    {
         this.versionMajor = parent.versionMajor;
         this.versionMinor = parent.versionMinor;
         this.constantPool = parent.constantPool;
@@ -78,23 +82,29 @@ abstract class GraphProtocol<Graph, Node, NodeClass, Edges, Block, ResolvedJavaM
     }
 
     @SuppressWarnings("all")
-    public final void print(Graph graph, Map<? extends Object, ? extends Object> properties, int id, String format, Object... args) throws IOException {
+    public final void print(Graph graph, Map<? extends Object, ? extends Object> properties, int id, String format, Object... args) throws IOException
+    {
         writeByte(BEGIN_GRAPH);
-        if (versionMajor >= 3) {
+        if (versionMajor >= 3)
+        {
             writeInt(id);
             writeString(format);
             writeInt(args.length);
-            for (Object a : args) {
+            for (Object a : args)
+            {
                 writePropertyObject(graph, a);
             }
-        } else {
+        }
+        else
+        {
             writePoolObject(formatTitle(graph, id, format, args));
         }
         writeGraph(graph, properties);
         flush();
     }
 
-    public final void beginGroup(Graph noGraph, String name, String shortName, ResolvedJavaMethod method, int bci, Map<? extends Object, ? extends Object> properties) throws IOException {
+    public final void beginGroup(Graph noGraph, String name, String shortName, ResolvedJavaMethod method, int bci, Map<? extends Object, ? extends Object> properties) throws IOException
+    {
         writeByte(BEGIN_GROUP);
         writePoolObject(name);
         writePoolObject(shortName);
@@ -103,16 +113,21 @@ abstract class GraphProtocol<Graph, Node, NodeClass, Edges, Block, ResolvedJavaM
         writeProperties(noGraph, properties);
     }
 
-    public final void endGroup() throws IOException {
+    public final void endGroup() throws IOException
+    {
         writeByte(CLOSE_GROUP);
     }
 
     @Override
-    public final void close() {
-        try {
+    public final void close()
+    {
+        try
+        {
             flush();
             channel.close();
-        } catch (IOException ex) {
+        }
+        catch (IOException ex)
+        {
             throw new Error(ex);
         }
     }
@@ -250,83 +265,104 @@ abstract class GraphProtocol<Graph, Node, NodeClass, Edges, Block, ResolvedJavaM
 
     protected abstract int findLocationEnd(Location loc);
 
-    private void writeVersion() throws IOException {
+    private void writeVersion() throws IOException
+    {
         writeBytesRaw(MAGIC_BYTES);
         writeByte(versionMajor);
         writeByte(versionMinor);
     }
 
-    private void flush() throws IOException {
+    private void flush() throws IOException
+    {
         buffer.flip();
         /*
          * Try not to let interrupted threads abort the write. There's still a race here but an
          * interrupt that's been pending for a long time shouldn't stop this writing.
          */
         boolean interrupted = Thread.interrupted();
-        try {
+        try
+        {
             channel.write(buffer);
-        } finally {
-            if (interrupted) {
+        }
+        finally
+        {
+            if (interrupted)
+            {
                 Thread.currentThread().interrupt();
             }
         }
         buffer.compact();
     }
 
-    private void ensureAvailable(int i) throws IOException {
+    private void ensureAvailable(int i) throws IOException
+    {
         assert buffer.capacity() >= i : "Can not make " + i + " bytes available, buffer is too small";
-        while (buffer.remaining() < i) {
+        while (buffer.remaining() < i)
+        {
             flush();
         }
     }
 
-    private void writeByte(int b) throws IOException {
+    private void writeByte(int b) throws IOException
+    {
         ensureAvailable(1);
         buffer.put((byte) b);
     }
 
-    private void writeInt(int b) throws IOException {
+    private void writeInt(int b) throws IOException
+    {
         ensureAvailable(4);
         buffer.putInt(b);
     }
 
-    private void writeLong(long b) throws IOException {
+    private void writeLong(long b) throws IOException
+    {
         ensureAvailable(8);
         buffer.putLong(b);
     }
 
-    private void writeDouble(double b) throws IOException {
+    private void writeDouble(double b) throws IOException
+    {
         ensureAvailable(8);
         buffer.putDouble(b);
     }
 
-    private void writeFloat(float b) throws IOException {
+    private void writeFloat(float b) throws IOException
+    {
         ensureAvailable(4);
         buffer.putFloat(b);
     }
 
-    private void writeShort(char b) throws IOException {
+    private void writeShort(char b) throws IOException
+    {
         ensureAvailable(2);
         buffer.putChar(b);
     }
 
-    private void writeString(String str) throws IOException {
+    private void writeString(String str) throws IOException
+    {
         byte[] bytes = str.getBytes(UTF8);
         writeBytes(bytes);
     }
 
-    private void writeBytes(byte[] b) throws IOException {
-        if (b == null) {
+    private void writeBytes(byte[] b) throws IOException
+    {
+        if (b == null)
+        {
             writeInt(-1);
-        } else {
+        }
+        else
+        {
             writeInt(b.length);
             writeBytesRaw(b);
         }
     }
 
-    private void writeBytesRaw(byte[] b) throws IOException {
+    private void writeBytesRaw(byte[] b) throws IOException
+    {
         int bytesWritten = 0;
-        while (bytesWritten < b.length) {
+        while (bytesWritten < b.length)
+        {
             int toWrite = Math.min(b.length - bytesWritten, buffer.capacity());
             ensureAvailable(toWrite);
             buffer.put(b, bytesWritten, toWrite);
@@ -334,10 +370,14 @@ abstract class GraphProtocol<Graph, Node, NodeClass, Edges, Block, ResolvedJavaM
         }
     }
 
-    private void writeInts(int[] b) throws IOException {
-        if (b == null) {
+    private void writeInts(int[] b) throws IOException
+    {
+        if (b == null)
+        {
             writeInt(-1);
-        } else {
+        }
+        else
+        {
             writeInt(b.length);
             int sizeInBytes = b.length * 4;
             ensureAvailable(sizeInBytes);
@@ -346,10 +386,14 @@ abstract class GraphProtocol<Graph, Node, NodeClass, Edges, Block, ResolvedJavaM
         }
     }
 
-    private void writeDoubles(double[] b) throws IOException {
-        if (b == null) {
+    private void writeDoubles(double[] b) throws IOException
+    {
+        if (b == null)
+        {
             writeInt(-1);
-        } else {
+        }
+        else
+        {
             writeInt(b.length);
             int sizeInBytes = b.length * 8;
             ensureAvailable(sizeInBytes);
@@ -358,83 +402,120 @@ abstract class GraphProtocol<Graph, Node, NodeClass, Edges, Block, ResolvedJavaM
         }
     }
 
-    private void writePoolObject(Object obj) throws IOException {
+    private void writePoolObject(Object obj) throws IOException
+    {
         Object object = obj;
-        if (object == null) {
+        if (object == null)
+        {
             writeByte(POOL_NULL);
             return;
         }
         Character id = constantPool.get(object);
-        if (id == null) {
+        if (id == null)
+        {
             addPoolEntry(object);
-        } else {
+        }
+        else
+        {
             int type = findPoolType(object, null);
             writeByte(type);
             writeShort(id.charValue());
         }
     }
 
-    private int findPoolType(Object obj, Object[] found) throws IOException {
+    private int findPoolType(Object obj, Object[] found) throws IOException
+    {
         Object object = obj;
-        if (object == null) {
+        if (object == null)
+        {
             return POOL_NULL;
         }
-        if (isFound(findJavaField(object), found)) {
+        if (isFound(findJavaField(object), found))
+        {
             return POOL_FIELD;
-        } else if (isFound(findSignature(object), found)) {
+        }
+        else if (isFound(findSignature(object), found))
+        {
             return POOL_SIGNATURE;
-        } else if (versionMajor >= 4 && isFound(findNodeSourcePosition(object), found)) {
+        }
+        else if (versionMajor >= 4 && isFound(findNodeSourcePosition(object), found))
+        {
             return POOL_NODE_SOURCE_POSITION;
-        } else {
+        }
+        else
+        {
             final Node node = findNode(object);
-            if (versionMajor == 4 && node != null) {
+            if (versionMajor == 4 && node != null)
+            {
                 object = classForNode(node);
             }
-            if (isFound(findNodeClass(object), found)) {
+            if (isFound(findNodeClass(object), found))
+            {
                 return POOL_NODE_CLASS;
-            } else if (versionMajor >= 5 && isFound(node, found)) {
+            }
+            else if (versionMajor >= 5 && isFound(node, found))
+            {
                 return POOL_NODE;
-            } else if (isFound(findMethod(object), found)) {
+            }
+            else if (isFound(findMethod(object), found))
+            {
                 return POOL_METHOD;
-            } else if (object instanceof Enum<?>) {
-                if (found != null) {
+            }
+            else if (object instanceof Enum<?>)
+            {
+                if (found != null)
+                {
                     found[0] = ((Enum<?>) object).ordinal();
                 }
                 return POOL_ENUM;
-            } else {
+            }
+            else
+            {
                 int val = findEnumOrdinal(object);
-                if (val >= 0) {
-                    if (found != null) {
+                if (val >= 0)
+                {
+                    if (found != null)
+                    {
                         found[0] = val;
                     }
                     return POOL_ENUM;
-                } else if (object instanceof Class<?>) {
-                    if (found != null) {
+                }
+                else if (object instanceof Class<?>)
+                {
+                    if (found != null)
+                    {
                         found[0] = ((Class<?>) object).getName();
                     }
                     return POOL_CLASS;
-                } else if (isFound(findJavaTypeName(object), found)) {
+                }
+                else if (isFound(findJavaTypeName(object), found))
+                {
                     return POOL_CLASS;
-                } else {
+                }
+                else
+                {
                     return POOL_STRING;
                 }
             }
         }
     }
 
-    private void writeGraph(Graph graph, Map<? extends Object, ? extends Object> properties) throws IOException {
+    private void writeGraph(Graph graph, Map<? extends Object, ? extends Object> properties) throws IOException
+    {
         writeProperties(graph, properties);
         writeNodes(graph);
         writeBlocks(findBlocks(graph), graph);
     }
 
-    private void writeNodes(Graph info) throws IOException {
+    private void writeNodes(Graph info) throws IOException
+    {
         Map<String, Object> props = new HashMap<>();
 
         final int size = findNodesCount(info);
         writeInt(size);
         int cnt = 0;
-        for (Node node : findNodes(info)) {
+        for (Node node : findNodes(info))
+        {
             NodeClass nodeClass = classForNode(node);
             findNodeProperties(node, props, info);
 
@@ -448,34 +529,46 @@ abstract class GraphProtocol<Graph, Node, NodeClass, Edges, Block, ResolvedJavaM
             props.clear();
             cnt++;
         }
-        if (size != cnt) {
+        if (size != cnt)
+        {
             throw new IOException("Expecting " + size + " nodes, but found " + cnt);
         }
     }
 
-    private void writeEdges(Graph graph, Node node, boolean dumpInputs) throws IOException {
+    private void writeEdges(Graph graph, Node node, boolean dumpInputs) throws IOException
+    {
         NodeClass clazz = classForNode(node);
         Edges edges = findClassEdges(clazz, dumpInputs);
         int size = findSize(edges);
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++)
+        {
             Collection<? extends Node> list = findNodes(graph, node, edges, i);
-            if (isDirect(edges, i)) {
-                if (list != null && list.size() != 1) {
+            if (isDirect(edges, i))
+            {
+                if (list != null && list.size() != 1)
+                {
                     throw new IOException("Edge " + i + " in " + edges + " is direct, but list isn't singleton: " + list);
                 }
                 Node n = null;
-                if (list != null && !list.isEmpty()) {
+                if (list != null && !list.isEmpty())
+                {
                     n = list.iterator().next();
                 }
                 writeNodeRef(n);
-            } else {
-                if (list == null) {
+            }
+            else
+            {
+                if (list == null)
+                {
                     writeShort((char) 0);
-                } else {
+                }
+                else
+                {
                     int listSize = list.size();
                     assert listSize == ((char) listSize);
                     writeShort((char) listSize);
-                    for (Node edge : list) {
+                    for (Node edge : list)
+                    {
                         writeNodeRef(edge);
                     }
                 }
@@ -483,61 +576,77 @@ abstract class GraphProtocol<Graph, Node, NodeClass, Edges, Block, ResolvedJavaM
         }
     }
 
-    private NodeClass classForNode(Node node) throws IOException {
+    private NodeClass classForNode(Node node) throws IOException
+    {
         NodeClass clazz = findClassForNode(node);
-        if (clazz == null) {
+        if (clazz == null)
+        {
             throw new IOException("No class for " + node);
         }
         return clazz;
     }
 
-    private void writeNodeRef(Node node) throws IOException {
+    private void writeNodeRef(Node node) throws IOException
+    {
         writeInt(findNodeId(node));
     }
 
-    private void writeBlocks(Collection<? extends Block> blocks, Graph info) throws IOException {
-        if (blocks != null) {
-            for (Block block : blocks) {
+    private void writeBlocks(Collection<? extends Block> blocks, Graph info) throws IOException
+    {
+        if (blocks != null)
+        {
+            for (Block block : blocks)
+            {
                 Collection<? extends Node> nodes = findBlockNodes(info, block);
-                if (nodes == null) {
+                if (nodes == null)
+                {
                     writeInt(0);
                     return;
                 }
             }
             writeInt(blocks.size());
-            for (Block block : blocks) {
+            for (Block block : blocks)
+            {
                 Collection<? extends Node> nodes = findBlockNodes(info, block);
                 writeInt(findBlockId(block));
                 writeInt(nodes.size());
-                for (Node node : nodes) {
+                for (Node node : nodes)
+                {
                     writeInt(findNodeId(node));
                 }
                 final Collection<? extends Block> successors = findBlockSuccessors(block);
                 writeInt(successors.size());
-                for (Block sux : successors) {
+                for (Block sux : successors)
+                {
                     writeInt(findBlockId(sux));
                 }
             }
-        } else {
+        }
+        else
+        {
             writeInt(0);
         }
     }
 
-    private void writeEdgesInfo(NodeClass nodeClass, boolean dumpInputs) throws IOException {
+    private void writeEdgesInfo(NodeClass nodeClass, boolean dumpInputs) throws IOException
+    {
         Edges edges = findClassEdges(nodeClass, dumpInputs);
         int size = findSize(edges);
         writeShort((char) size);
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++)
+        {
             writeByte(isDirect(edges, i) ? 0 : 1);
             writePoolObject(findName(edges, i));
-            if (dumpInputs) {
+            if (dumpInputs)
+            {
                 writePoolObject(findType(edges, i));
             }
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void addPoolEntry(Object obj) throws IOException {
+    private void addPoolEntry(Object obj) throws IOException
+    {
         Object object = obj;
         char index = constantPool.add(object);
         writeByte(POOL_NEW);
@@ -546,8 +655,10 @@ abstract class GraphProtocol<Graph, Node, NodeClass, Edges, Block, ResolvedJavaM
         Object[] found = {null};
         int type = findPoolType(object, found);
         writeByte(type);
-        switch (type) {
-            case POOL_FIELD: {
+        switch (type)
+        {
+            case POOL_FIELD:
+            {
                 ResolvedJavaField field = (ResolvedJavaField) found[0];
                 Objects.nonNull(field);
                 writePoolObject(findFieldDeclaringClass(field));
@@ -556,17 +667,20 @@ abstract class GraphProtocol<Graph, Node, NodeClass, Edges, Block, ResolvedJavaM
                 writeInt(findFieldModifiers(field));
                 break;
             }
-            case POOL_SIGNATURE: {
+            case POOL_SIGNATURE:
+            {
                 Signature signature = (Signature) found[0];
                 int args = findSignatureParameterCount(signature);
                 writeShort((char) args);
-                for (int i = 0; i < args; i++) {
+                for (int i = 0; i < args; i++)
+                {
                     writePoolObject(findSignatureParameterTypeName(signature, i));
                 }
                 writePoolObject(findSignatureReturnTypeName(signature));
                 break;
             }
-            case POOL_NODE_SOURCE_POSITION: {
+            case POOL_NODE_SOURCE_POSITION:
+            {
                 NodeSourcePosition pos = (NodeSourcePosition) found[0];
                 Objects.nonNull(pos);
                 ResolvedJavaMethod method = findNodeSourcePositionMethod(pos);
@@ -574,20 +688,27 @@ abstract class GraphProtocol<Graph, Node, NodeClass, Edges, Block, ResolvedJavaM
                 final int bci = findNodeSourcePositionBCI(pos);
                 writeInt(bci);
                 Iterator<Location> ste = findLocation(method, bci, pos).iterator();
-                if (versionMajor >= 6) {
-                    while (ste.hasNext()) {
+                if (versionMajor >= 6)
+                {
+                    while (ste.hasNext())
+                    {
                         Location loc = ste.next();
                         URI uri;
-                        try {
+                        try
+                        {
                             uri = findLocationURI(loc);
-                        } catch (URISyntaxException ex) {
+                        }
+                        catch (URISyntaxException ex)
+                        {
                             throw new IOException(ex);
                         }
-                        if (uri == null) {
+                        if (uri == null)
+                        {
                             throw new IOException("No URI for " + loc);
                         }
                         String l = findLocationLanguage(loc);
-                        if (l == null) {
+                        if (l == null)
+                        {
                             continue;
                         }
                         writePoolObject(uri.toString());
@@ -597,33 +718,43 @@ abstract class GraphProtocol<Graph, Node, NodeClass, Edges, Block, ResolvedJavaM
                         writeInt(findLocationEnd(loc));
                     }
                     writePoolObject(null);
-                } else {
+                }
+                else
+                {
                     Location first = ste.hasNext() ? ste.next() : null;
                     String fileName = first != null ? findLocationFile(first) : null;
-                    if (fileName != null) {
+                    if (fileName != null)
+                    {
                         writePoolObject(fileName);
                         writeInt(findLocationLine(first));
-                    } else {
+                    }
+                    else
+                    {
                         writePoolObject(null);
                     }
                 }
                 writePoolObject(findNodeSourcePositionCaller(pos));
                 break;
             }
-            case POOL_NODE: {
+            case POOL_NODE:
+            {
                 Node node = (Node) found[0];
                 Objects.nonNull(node);
                 writeInt(findNodeId(node));
                 writePoolObject(classForNode(node));
                 break;
             }
-            case POOL_NODE_CLASS: {
+            case POOL_NODE_CLASS:
+            {
                 NodeClass nodeClass = (NodeClass) found[0];
                 final Object clazz = findJavaClass(nodeClass);
-                if (versionMajor >= 3) {
+                if (versionMajor >= 3)
+                {
                     writePoolObject(clazz);
                     writeString(findNameTemplate(nodeClass));
-                } else {
+                }
+                else
+                {
                     writeString(((Class<?>) clazz).getSimpleName());
                     String nameTemplate = findNameTemplate(nodeClass);
                     writeString(nameTemplate);
@@ -632,29 +763,36 @@ abstract class GraphProtocol<Graph, Node, NodeClass, Edges, Block, ResolvedJavaM
                 writeEdgesInfo(nodeClass, false);
                 break;
             }
-            case POOL_CLASS: {
+            case POOL_CLASS:
+            {
                 String typeName = (String) found[0];
                 Objects.nonNull(typeName);
                 writeString(typeName);
                 String[] enumValueNames = findEnumTypeValues(object);
-                if (enumValueNames != null) {
+                if (enumValueNames != null)
+                {
                     writeByte(ENUM_KLASS);
                     writeInt(enumValueNames.length);
-                    for (String o : enumValueNames) {
+                    for (String o : enumValueNames)
+                    {
                         writePoolObject(o);
                     }
-                } else {
+                }
+                else
+                {
                     writeByte(KLASS);
                 }
                 break;
             }
-            case POOL_METHOD: {
+            case POOL_METHOD:
+            {
                 ResolvedJavaMethod method = (ResolvedJavaMethod) found[0];
                 Objects.nonNull(method);
                 writePoolObject(findMethodDeclaringClass(method));
                 writePoolObject(findMethodName(method));
                 final Signature methodSignature = findMethodSignature(method);
-                if (findSignature(methodSignature) == null) {
+                if (findSignature(methodSignature) == null)
+                {
                     throw new IOException("Should be recognized as signature: " + methodSignature + " for " + method);
                 }
                 writePoolObject(methodSignature);
@@ -662,13 +800,15 @@ abstract class GraphProtocol<Graph, Node, NodeClass, Edges, Block, ResolvedJavaM
                 writeBytes(findMethodCode(method));
                 break;
             }
-            case POOL_ENUM: {
+            case POOL_ENUM:
+            {
                 int enumOrdinal = (int) found[0];
                 writePoolObject(findEnumClass(object));
                 writeInt(enumOrdinal);
                 break;
             }
-            case POOL_STRING: {
+            case POOL_STRING:
+            {
                 writeString(object.toString());
                 break;
             }
@@ -677,63 +817,94 @@ abstract class GraphProtocol<Graph, Node, NodeClass, Edges, Block, ResolvedJavaM
         }
     }
 
-    private void writePropertyObject(Graph graph, Object obj) throws IOException {
-        if (obj instanceof Integer) {
+    private void writePropertyObject(Graph graph, Object obj) throws IOException
+    {
+        if (obj instanceof Integer)
+        {
             writeByte(PROPERTY_INT);
             writeInt(((Integer) obj).intValue());
-        } else if (obj instanceof Long) {
+        }
+        else if (obj instanceof Long)
+        {
             writeByte(PROPERTY_LONG);
             writeLong(((Long) obj).longValue());
-        } else if (obj instanceof Double) {
+        }
+        else if (obj instanceof Double)
+        {
             writeByte(PROPERTY_DOUBLE);
             writeDouble(((Double) obj).doubleValue());
-        } else if (obj instanceof Float) {
+        }
+        else if (obj instanceof Float)
+        {
             writeByte(PROPERTY_FLOAT);
             writeFloat(((Float) obj).floatValue());
-        } else if (obj instanceof Boolean) {
-            if (((Boolean) obj).booleanValue()) {
+        }
+        else if (obj instanceof Boolean)
+        {
+            if (((Boolean) obj).booleanValue())
+            {
                 writeByte(PROPERTY_TRUE);
-            } else {
+            }
+            else
+            {
                 writeByte(PROPERTY_FALSE);
             }
-        } else if (obj != null && obj.getClass().isArray()) {
+        }
+        else if (obj != null && obj.getClass().isArray())
+        {
             Class<?> componentType = obj.getClass().getComponentType();
-            if (componentType.isPrimitive()) {
-                if (componentType == Double.TYPE) {
+            if (componentType.isPrimitive())
+            {
+                if (componentType == Double.TYPE)
+                {
                     writeByte(PROPERTY_ARRAY);
                     writeByte(PROPERTY_DOUBLE);
                     writeDoubles((double[]) obj);
-                } else if (componentType == Integer.TYPE) {
+                }
+                else if (componentType == Integer.TYPE)
+                {
                     writeByte(PROPERTY_ARRAY);
                     writeByte(PROPERTY_INT);
                     writeInts((int[]) obj);
-                } else {
+                }
+                else
+                {
                     writeByte(PROPERTY_POOL);
                     writePoolObject(obj);
                 }
-            } else {
+            }
+            else
+            {
                 writeByte(PROPERTY_ARRAY);
                 writeByte(PROPERTY_POOL);
                 Object[] array = (Object[]) obj;
                 writeInt(array.length);
-                for (Object o : array) {
+                for (Object o : array)
+                {
                     writePoolObject(o);
                 }
             }
-        } else {
+        }
+        else
+        {
             Graph g = findGraph(graph, obj);
-            if (g == null) {
+            if (g == null)
+            {
                 writeByte(PROPERTY_POOL);
                 writePoolObject(obj);
-            } else {
+            }
+            else
+            {
                 writeByte(PROPERTY_SUBGRAPH);
                 writeGraph(g, null);
             }
         }
     }
 
-    private void writeProperties(Graph graph, Map<? extends Object, ? extends Object> props) throws IOException {
-        if (props == null) {
+    private void writeProperties(Graph graph, Map<? extends Object, ? extends Object> props) throws IOException
+    {
+        if (props == null)
+        {
             writeShort((char) 0);
             return;
         }
@@ -741,59 +912,68 @@ abstract class GraphProtocol<Graph, Node, NodeClass, Edges, Block, ResolvedJavaM
         // properties
         writeShort((char) size);
         int cnt = 0;
-        for (Map.Entry<? extends Object, ? extends Object> entry : props.entrySet()) {
+        for (Map.Entry<? extends Object, ? extends Object> entry : props.entrySet())
+        {
             String key = entry.getKey().toString();
             writePoolObject(key);
             writePropertyObject(graph, entry.getValue());
             cnt++;
         }
-        if (size != cnt) {
+        if (size != cnt)
+        {
             throw new IOException("Expecting " + size + " properties, but found only " + cnt);
         }
     }
 
-    private static boolean isFound(Object obj, Object[] found) {
-        if (obj == null) {
+    private static boolean isFound(Object obj, Object[] found)
+    {
+        if (obj == null)
+        {
             return false;
         }
-        if (found != null) {
+        if (found != null)
+        {
             found[0] = obj;
         }
         return true;
     }
 
-    private static final class ConstantPool extends LinkedHashMap<Object, Character> {
-
+    private static final class ConstantPool extends LinkedHashMap<Object, Character>
+    {
         private final LinkedList<Character> availableIds;
         private char nextId;
-        private static final long serialVersionUID = -2676889957907285681L;
 
-        ConstantPool() {
+        ConstantPool()
+        {
             super(50, 0.65f);
             availableIds = new LinkedList<>();
         }
 
         @Override
-        protected boolean removeEldestEntry(java.util.Map.Entry<Object, Character> eldest) {
-            if (size() > CONSTANT_POOL_MAX_SIZE) {
+        protected boolean removeEldestEntry(java.util.Map.Entry<Object, Character> eldest)
+        {
+            if (size() > CONSTANT_POOL_MAX_SIZE)
+            {
                 availableIds.addFirst(eldest.getValue());
                 return true;
             }
             return false;
         }
 
-        private Character nextAvailableId() {
-            if (!availableIds.isEmpty()) {
+        private Character nextAvailableId()
+        {
+            if (!availableIds.isEmpty())
+            {
                 return availableIds.removeFirst();
             }
             return nextId++;
         }
 
-        public char add(Object obj) {
+        public char add(Object obj)
+        {
             Character id = nextAvailableId();
             put(obj, id);
             return id;
         }
     }
-
 }

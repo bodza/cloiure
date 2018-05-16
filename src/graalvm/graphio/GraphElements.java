@@ -8,7 +8,8 @@ package graalvm.graphio;
  * @param <S> type representing signature
  * @param <P> type representing source code location
  */
-public interface GraphElements<M, F, S, P> {
+public interface GraphElements<M, F, S, P>
+{
     /**
      * Recognize method. Can the object be seen as a method?
      *
@@ -176,5 +177,4 @@ public interface GraphElements<M, F, S, P> {
      * @return stack trace element for the method, index and position
      */
     StackTraceElement methodStackTraceElement(M method, int bci, P pos);
-
 }

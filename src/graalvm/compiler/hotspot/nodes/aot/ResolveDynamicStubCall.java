@@ -30,14 +30,16 @@ import jdk.vm.ci.meta.Value;
  * A call to the VM via a regular stub.
  */
 @NodeInfo(allowedUsageTypes = {InputType.Memory}, cycles = CYCLES_UNKNOWN, size = SIZE_16)
-public class ResolveDynamicStubCall extends AbstractMemoryCheckpoint implements LIRLowerable, Canonicalizable, DeoptimizingNode.DeoptBefore, MemoryCheckpoint.Single {
+public class ResolveDynamicStubCall extends AbstractMemoryCheckpoint implements LIRLowerable, Canonicalizable, DeoptimizingNode.DeoptBefore, MemoryCheckpoint.Single
+{
     public static final NodeClass<ResolveDynamicStubCall> TYPE = NodeClass.create(ResolveDynamicStubCall.class);
 
     @OptionalInput protected ValueNode value;
     @OptionalInput(InputType.State) protected FrameState stateBefore;
     protected Constant constant;
 
-    public ResolveDynamicStubCall(ValueNode value) {
+    public ResolveDynamicStubCall(ValueNode value)
+    {
         super(TYPE, value.stamp(NodeView.DEFAULT));
         this.value = value;
     }
@@ -46,15 +48,18 @@ public class ResolveDynamicStubCall extends AbstractMemoryCheckpoint implements 
     public static native Object resolveInvoke(Object value);
 
     @Override
-    public Node canonical(CanonicalizerTool tool) {
-        if (value != null) {
+    public Node canonical(CanonicalizerTool tool)
+    {
+        if (value != null)
+        {
             constant = GraphUtil.foldIfConstantAndRemove(this, value);
         }
         return this;
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         assert constant != null : "Expected the value to fold: " + value;
         Value result;
         LIRFrameState fs = gen.state(this);
@@ -64,29 +69,33 @@ public class ResolveDynamicStubCall extends AbstractMemoryCheckpoint implements 
     }
 
     @Override
-    public boolean canDeoptimize() {
+    public boolean canDeoptimize()
+    {
         return true;
     }
 
     @Override
-    public LocationIdentity getLocationIdentity() {
+    public LocationIdentity getLocationIdentity()
+    {
         return LocationIdentity.any();
     }
 
     @Override
-    public FrameState stateBefore() {
+    public FrameState stateBefore()
+    {
         return stateBefore;
     }
 
     @Override
-    public void setStateBefore(FrameState f) {
+    public void setStateBefore(FrameState f)
+    {
         updateUsages(stateBefore, f);
         stateBefore = f;
     }
 
     @Override
-    public void markDeleted() {
+    public void markDeleted()
+    {
         throw GraalError.shouldNotReachHere("ResolveDynamicStubCall node deleted");
     }
-
 }

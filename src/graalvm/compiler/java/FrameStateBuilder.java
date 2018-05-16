@@ -56,8 +56,8 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
 import jdk.vm.ci.meta.Signature;
 
-public final class FrameStateBuilder implements SideEffectsState {
-
+public final class FrameStateBuilder implements SideEffectsState
+{
     private static final ValueNode[] EMPTY_ARRAY = new ValueNode[0];
     private static final MonitorIdNode[] EMPTY_MONITOR_ARRAY = new MonitorIdNode[0];
 
@@ -93,7 +93,8 @@ public final class FrameStateBuilder implements SideEffectsState {
      * @param method the method whose frame is simulated
      * @param graph the target graph of Graal nodes created by the builder
      */
-    public FrameStateBuilder(GraphBuilderTool tool, ResolvedJavaMethod method, StructuredGraph graph) {
+    public FrameStateBuilder(GraphBuilderTool tool, ResolvedJavaMethod method, StructuredGraph graph)
+    {
         this(tool, new ResolvedJavaMethodBytecode(method), graph);
     }
 
@@ -104,11 +105,15 @@ public final class FrameStateBuilder implements SideEffectsState {
      * @param code the bytecode in which the frame exists
      * @param graph the target graph of Graal nodes created by the builder
      */
-    public FrameStateBuilder(GraphBuilderTool tool, Bytecode code, StructuredGraph graph) {
+    public FrameStateBuilder(GraphBuilderTool tool, Bytecode code, StructuredGraph graph)
+    {
         this.tool = tool;
-        if (tool instanceof BytecodeParser) {
+        if (tool instanceof BytecodeParser)
+        {
             this.parser = (BytecodeParser) tool;
-        } else {
+        }
+        else
+        {
             this.parser = null;
         }
         this.code = code;
@@ -124,15 +129,17 @@ public final class FrameStateBuilder implements SideEffectsState {
         this.canVerifyKind = true;
     }
 
-    public void disableKindVerification() {
+    public void disableKindVerification()
+    {
         canVerifyKind = false;
     }
 
-    public void initializeFromArgumentsArray(ValueNode[] arguments) {
-
+    public void initializeFromArgumentsArray(ValueNode[] arguments)
+    {
         int javaIndex = 0;
         int index = 0;
-        if (!getMethod().isStatic()) {
+        if (!getMethod().isStatic())
+        {
             // set the receiver
             locals[javaIndex] = arguments[index];
             javaIndex = 1;
@@ -140,11 +147,13 @@ public final class FrameStateBuilder implements SideEffectsState {
         }
         Signature sig = getMethod().getSignature();
         int max = sig.getParameterCount(false);
-        for (int i = 0; i < max; i++) {
+        for (int i = 0; i < max; i++)
+        {
             JavaKind kind = sig.getParameterKind(i);
             locals[javaIndex] = arguments[index];
             javaIndex++;
-            if (kind.needsTwoSlots()) {
+            if (kind.needsTwoSlots())
+            {
                 locals[javaIndex] = TWO_SLOT_MARKER;
                 javaIndex++;
             }
@@ -152,32 +161,39 @@ public final class FrameStateBuilder implements SideEffectsState {
         }
     }
 
-    public void initializeForMethodStart(Assumptions assumptions, boolean eagerResolve, Plugins plugins) {
-
+    public void initializeForMethodStart(Assumptions assumptions, boolean eagerResolve, Plugins plugins)
+    {
         int javaIndex = 0;
         int index = 0;
         ResolvedJavaMethod method = getMethod();
         ResolvedJavaType originalType = method.getDeclaringClass();
-        if (!method.isStatic()) {
+        if (!method.isStatic())
+        {
             // add the receiver
             FloatingNode receiver = null;
             StampPair receiverStamp = null;
-            if (plugins != null) {
+            if (plugins != null)
+            {
                 receiverStamp = plugins.getOverridingStamp(tool, originalType, true);
             }
-            if (receiverStamp == null) {
+            if (receiverStamp == null)
+            {
                 receiverStamp = StampFactory.forDeclaredType(assumptions, originalType, true);
             }
 
-            if (plugins != null) {
-                for (ParameterPlugin plugin : plugins.getParameterPlugins()) {
+            if (plugins != null)
+            {
+                for (ParameterPlugin plugin : plugins.getParameterPlugins())
+                {
                     receiver = plugin.interceptParameter(tool, index, receiverStamp);
-                    if (receiver != null) {
+                    if (receiver != null)
+                    {
                         break;
                     }
                 }
             }
-            if (receiver == null) {
+            if (receiver == null)
+            {
                 receiver = new ParameterNode(javaIndex, receiverStamp);
             }
 
@@ -188,36 +204,45 @@ public final class FrameStateBuilder implements SideEffectsState {
         Signature sig = method.getSignature();
         int max = sig.getParameterCount(false);
         ResolvedJavaType accessingClass = originalType;
-        for (int i = 0; i < max; i++) {
+        for (int i = 0; i < max; i++)
+        {
             JavaType type = sig.getParameterType(i, accessingClass);
-            if (eagerResolve) {
+            if (eagerResolve)
+            {
                 type = type.resolve(accessingClass);
             }
             JavaKind kind = type.getJavaKind();
             StampPair stamp = null;
-            if (plugins != null) {
+            if (plugins != null)
+            {
                 stamp = plugins.getOverridingStamp(tool, type, false);
             }
-            if (stamp == null) {
+            if (stamp == null)
+            {
                 stamp = StampFactory.forDeclaredType(assumptions, type, false);
             }
 
             FloatingNode param = null;
-            if (plugins != null) {
-                for (ParameterPlugin plugin : plugins.getParameterPlugins()) {
+            if (plugins != null)
+            {
+                for (ParameterPlugin plugin : plugins.getParameterPlugins())
+                {
                     param = plugin.interceptParameter(tool, index, stamp);
-                    if (param != null) {
+                    if (param != null)
+                    {
                         break;
                     }
                 }
             }
-            if (param == null) {
+            if (param == null)
+            {
                 param = new ParameterNode(index, stamp);
             }
 
             locals[javaIndex] = graph.addOrUniqueWithInputs(param);
             javaIndex++;
-            if (kind.needsTwoSlots()) {
+            if (kind.needsTwoSlots())
+            {
                 locals[javaIndex] = TWO_SLOT_MARKER;
                 javaIndex++;
             }
@@ -225,7 +250,8 @@ public final class FrameStateBuilder implements SideEffectsState {
         }
     }
 
-    private FrameStateBuilder(FrameStateBuilder other) {
+    private FrameStateBuilder(FrameStateBuilder other)
+    {
         this.parser = other.parser;
         this.tool = other.tool;
         this.code = other.code;
@@ -249,39 +275,48 @@ public final class FrameStateBuilder implements SideEffectsState {
         assert lockedObjects.length == monitorIds.length;
     }
 
-    private static ValueNode[] allocateArray(int length) {
+    private static ValueNode[] allocateArray(int length)
+    {
         return length == 0 ? EMPTY_ARRAY : new ValueNode[length];
     }
 
-    public ResolvedJavaMethod getMethod() {
+    public ResolvedJavaMethod getMethod()
+    {
         return code.getMethod();
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         StringBuilder sb = new StringBuilder();
         sb.append("[locals: [");
-        for (int i = 0; i < locals.length; i++) {
+        for (int i = 0; i < locals.length; i++)
+        {
             sb.append(i == 0 ? "" : ",").append(locals[i] == null ? "_" : locals[i] == TWO_SLOT_MARKER ? "#" : locals[i].toString(Verbosity.Id));
         }
         sb.append("] stack: [");
-        for (int i = 0; i < stackSize; i++) {
+        for (int i = 0; i < stackSize; i++)
+        {
             sb.append(i == 0 ? "" : ",").append(stack[i] == null ? "_" : stack[i] == TWO_SLOT_MARKER ? "#" : stack[i].toString(Verbosity.Id));
         }
         sb.append("] locks: [");
-        for (int i = 0; i < lockedObjects.length; i++) {
+        for (int i = 0; i < lockedObjects.length; i++)
+        {
             sb.append(i == 0 ? "" : ",").append(lockedObjects[i].toString(Verbosity.Id)).append(" / ").append(monitorIds[i].toString(Verbosity.Id));
         }
         sb.append("]");
-        if (rethrowException) {
+        if (rethrowException)
+        {
             sb.append(" rethrowException");
         }
         sb.append("]");
         return sb.toString();
     }
 
-    public FrameState create(int bci, StateSplit forStateSplit) {
-        if (parser != null && parser.parsingIntrinsic()) {
+    public FrameState create(int bci, StateSplit forStateSplit)
+    {
+        if (parser != null && parser.parsingIntrinsic())
+        {
             NodeSourcePosition sourcePosition = parser.getGraph().trackNodeSourcePosition() ? createBytecodePosition(bci) : null;
             return parser.intrinsicContext.createFrameState(parser.getGraph(), this, forStateSplit, sourcePosition);
         }
@@ -294,30 +329,39 @@ public final class FrameStateBuilder implements SideEffectsState {
      * @param pushedValues if non-null, values to {@link #push(JavaKind, ValueNode)} to the stack
      *            before creating the {@link FrameState}
      */
-    public FrameState create(int bci, BytecodeParser parent, boolean duringCall, JavaKind[] pushedSlotKinds, ValueNode[] pushedValues) {
-        if (outerFrameState == null && parent != null) {
+    public FrameState create(int bci, BytecodeParser parent, boolean duringCall, JavaKind[] pushedSlotKinds, ValueNode[] pushedValues)
+    {
+        if (outerFrameState == null && parent != null)
+        {
             assert !parent.parsingIntrinsic() : "must already have the next non-intrinsic ancestor";
             outerFrameState = parent.getFrameStateBuilder().create(parent.bci(), parent.getNonIntrinsicAncestor(), true, null, null);
         }
-        if (bci == BytecodeFrame.AFTER_EXCEPTION_BCI && parent != null) {
+        if (bci == BytecodeFrame.AFTER_EXCEPTION_BCI && parent != null)
+        {
             FrameState newFrameState = outerFrameState.duplicateModified(outerFrameState.bci, true, false, JavaKind.Void, new JavaKind[]{JavaKind.Object}, new ValueNode[]{stack[0]});
             return newFrameState;
         }
-        if (bci == BytecodeFrame.INVALID_FRAMESTATE_BCI) {
+        if (bci == BytecodeFrame.INVALID_FRAMESTATE_BCI)
+        {
             throw shouldNotReachHere();
         }
 
-        if (pushedValues != null) {
+        if (pushedValues != null)
+        {
             assert pushedSlotKinds.length == pushedValues.length;
             int stackSizeToRestore = stackSize;
-            for (int i = 0; i < pushedValues.length; i++) {
+            for (int i = 0; i < pushedValues.length; i++)
+            {
                 push(pushedSlotKinds[i], pushedValues[i]);
             }
             FrameState res = graph.add(new FrameState(outerFrameState, code, bci, locals, stack, stackSize, lockedObjects, Arrays.asList(monitorIds), rethrowException, duringCall));
             stackSize = stackSizeToRestore;
             return res;
-        } else {
-            if (bci == BytecodeFrame.AFTER_EXCEPTION_BCI) {
+        }
+        else
+        {
+            if (bci == BytecodeFrame.AFTER_EXCEPTION_BCI)
+            {
                 assert outerFrameState == null;
                 clearLocals();
             }
@@ -325,106 +369,143 @@ public final class FrameStateBuilder implements SideEffectsState {
         }
     }
 
-    public NodeSourcePosition createBytecodePosition(int bci) {
+    public NodeSourcePosition createBytecodePosition(int bci)
+    {
         BytecodeParser parent = parser.getParent();
         NodeSourcePosition position = create(bci, parent);
         return position;
     }
 
-    private NodeSourcePosition create(int bci, BytecodeParser parent) {
-        if (outerSourcePosition == null && parent != null) {
+    private NodeSourcePosition create(int bci, BytecodeParser parent)
+    {
+        if (outerSourcePosition == null && parent != null)
+        {
             outerSourcePosition = parent.getFrameStateBuilder().createBytecodePosition(parent.bci());
         }
-        if (bci == BytecodeFrame.AFTER_EXCEPTION_BCI && parent != null) {
+        if (bci == BytecodeFrame.AFTER_EXCEPTION_BCI && parent != null)
+        {
             return FrameState.toSourcePosition(outerFrameState);
         }
-        if (bci == BytecodeFrame.INVALID_FRAMESTATE_BCI) {
+        if (bci == BytecodeFrame.INVALID_FRAMESTATE_BCI)
+        {
             throw shouldNotReachHere();
         }
         return new NodeSourcePosition(outerSourcePosition, code.getMethod(), bci);
     }
 
-    public FrameStateBuilder copy() {
+    public FrameStateBuilder copy()
+    {
         return new FrameStateBuilder(this);
     }
 
-    public boolean isCompatibleWith(FrameStateBuilder other) {
+    public boolean isCompatibleWith(FrameStateBuilder other)
+    {
         assert code.equals(other.code) && graph == other.graph && localsSize() == other.localsSize() : "Can only compare frame states of the same method";
         assert lockedObjects.length == monitorIds.length && other.lockedObjects.length == other.monitorIds.length : "mismatch between lockedObjects and monitorIds";
 
-        if (stackSize() != other.stackSize()) {
+        if (stackSize() != other.stackSize())
+        {
             return false;
         }
-        for (int i = 0; i < stackSize(); i++) {
+        for (int i = 0; i < stackSize(); i++)
+        {
             ValueNode x = stack[i];
             ValueNode y = other.stack[i];
             assert x != null && y != null;
-            if (x != y && (x == TWO_SLOT_MARKER || x.isDeleted() || y == TWO_SLOT_MARKER || y.isDeleted() || x.getStackKind() != y.getStackKind())) {
+            if (x != y && (x == TWO_SLOT_MARKER || x.isDeleted() || y == TWO_SLOT_MARKER || y.isDeleted() || x.getStackKind() != y.getStackKind()))
+            {
                 return false;
             }
         }
-        if (lockedObjects.length != other.lockedObjects.length) {
+        if (lockedObjects.length != other.lockedObjects.length)
+        {
             return false;
         }
-        for (int i = 0; i < lockedObjects.length; i++) {
-            if (GraphUtil.originalValue(lockedObjects[i]) != GraphUtil.originalValue(other.lockedObjects[i]) || monitorIds[i] != other.monitorIds[i]) {
+        for (int i = 0; i < lockedObjects.length; i++)
+        {
+            if (GraphUtil.originalValue(lockedObjects[i]) != GraphUtil.originalValue(other.lockedObjects[i]) || monitorIds[i] != other.monitorIds[i])
+            {
                 throw new PermanentBailoutException("unbalanced monitors");
             }
         }
         return true;
     }
 
-    public void merge(AbstractMergeNode block, FrameStateBuilder other) {
+    public void merge(AbstractMergeNode block, FrameStateBuilder other)
+    {
         assert isCompatibleWith(other);
 
-        for (int i = 0; i < localsSize(); i++) {
+        for (int i = 0; i < localsSize(); i++)
+        {
             locals[i] = merge(locals[i], other.locals[i], block);
         }
-        for (int i = 0; i < stackSize(); i++) {
+        for (int i = 0; i < stackSize(); i++)
+        {
             stack[i] = merge(stack[i], other.stack[i], block);
         }
-        for (int i = 0; i < lockedObjects.length; i++) {
+        for (int i = 0; i < lockedObjects.length; i++)
+        {
             lockedObjects[i] = merge(lockedObjects[i], other.lockedObjects[i], block);
             assert monitorIds[i] == other.monitorIds[i];
         }
 
-        if (sideEffects == null) {
+        if (sideEffects == null)
+        {
             sideEffects = other.sideEffects;
-        } else {
-            if (other.sideEffects != null) {
+        }
+        else
+        {
+            if (other.sideEffects != null)
+            {
                 sideEffects.addAll(other.sideEffects);
             }
         }
     }
 
-    private ValueNode merge(ValueNode currentValue, ValueNode otherValue, AbstractMergeNode block) {
-        if (currentValue == null || currentValue.isDeleted()) {
+    private ValueNode merge(ValueNode currentValue, ValueNode otherValue, AbstractMergeNode block)
+    {
+        if (currentValue == null || currentValue.isDeleted())
+        {
             return null;
-        } else if (block.isPhiAtMerge(currentValue)) {
-            if (otherValue == null || otherValue == TWO_SLOT_MARKER || otherValue.isDeleted() || currentValue.getStackKind() != otherValue.getStackKind()) {
+        }
+        else if (block.isPhiAtMerge(currentValue))
+        {
+            if (otherValue == null || otherValue == TWO_SLOT_MARKER || otherValue.isDeleted() || currentValue.getStackKind() != otherValue.getStackKind())
+            {
                 // This phi must be dead anyway, add input of correct stack kind to keep the graph
                 // invariants.
                 ((PhiNode) currentValue).addInput(ConstantNode.defaultForKind(currentValue.getStackKind(), graph));
-            } else {
+            }
+            else
+            {
                 ((PhiNode) currentValue).addInput(otherValue);
             }
             return currentValue;
-        } else if (currentValue != otherValue) {
-            if (currentValue == TWO_SLOT_MARKER || otherValue == TWO_SLOT_MARKER) {
+        }
+        else if (currentValue != otherValue)
+        {
+            if (currentValue == TWO_SLOT_MARKER || otherValue == TWO_SLOT_MARKER)
+            {
                 return null;
-            } else if (otherValue == null || otherValue.isDeleted() || currentValue.getStackKind() != otherValue.getStackKind()) {
+            }
+            else if (otherValue == null || otherValue.isDeleted() || currentValue.getStackKind() != otherValue.getStackKind())
+            {
                 return null;
             }
             assert !(block instanceof LoopBeginNode) : String.format("Phi functions for loop headers are create eagerly for changed locals and all stack slots: %s != %s", currentValue, otherValue);
             return createValuePhi(currentValue, otherValue, block);
-        } else {
+        }
+        else
+        {
             return currentValue;
         }
     }
 
-    private ValuePhiNode createValuePhi(ValueNode currentValue, ValueNode otherValue, AbstractMergeNode block) {
+    private ValuePhiNode createValuePhi(ValueNode currentValue, ValueNode otherValue, AbstractMergeNode block)
+    {
         ValuePhiNode phi = graph.addWithoutUnique(new ValuePhiNode(currentValue.stamp(NodeView.DEFAULT).unrestricted(), block));
-        for (int i = 0; i < block.phiPredecessorCount(); i++) {
+        for (int i = 0; i < block.phiPredecessorCount(); i++)
+        {
             phi.addInput(currentValue);
         }
         phi.addInput(otherValue);
@@ -432,91 +513,118 @@ public final class FrameStateBuilder implements SideEffectsState {
         return phi;
     }
 
-    public void inferPhiStamps(AbstractMergeNode block) {
-        for (int i = 0; i < localsSize(); i++) {
+    public void inferPhiStamps(AbstractMergeNode block)
+    {
+        for (int i = 0; i < localsSize(); i++)
+        {
             inferPhiStamp(block, locals[i]);
         }
-        for (int i = 0; i < stackSize(); i++) {
+        for (int i = 0; i < stackSize(); i++)
+        {
             inferPhiStamp(block, stack[i]);
         }
-        for (int i = 0; i < lockedObjects.length; i++) {
+        for (int i = 0; i < lockedObjects.length; i++)
+        {
             inferPhiStamp(block, lockedObjects[i]);
         }
     }
 
-    private static void inferPhiStamp(AbstractMergeNode block, ValueNode node) {
-        if (block.isPhiAtMerge(node)) {
+    private static void inferPhiStamp(AbstractMergeNode block, ValueNode node)
+    {
+        if (block.isPhiAtMerge(node))
+        {
             node.inferStamp();
         }
     }
 
-    public void insertLoopPhis(LocalLiveness liveness, int loopId, LoopBeginNode loopBegin, boolean forcePhis, boolean stampFromValueForForcedPhis) {
-        for (int i = 0; i < localsSize(); i++) {
+    public void insertLoopPhis(LocalLiveness liveness, int loopId, LoopBeginNode loopBegin, boolean forcePhis, boolean stampFromValueForForcedPhis)
+    {
+        for (int i = 0; i < localsSize(); i++)
+        {
             boolean changedInLoop = liveness.localIsChangedInLoop(loopId, i);
-            if (forcePhis || changedInLoop) {
+            if (forcePhis || changedInLoop)
+            {
                 locals[i] = createLoopPhi(loopBegin, locals[i], stampFromValueForForcedPhis && !changedInLoop);
             }
         }
-        for (int i = 0; i < stackSize(); i++) {
+        for (int i = 0; i < stackSize(); i++)
+        {
             stack[i] = createLoopPhi(loopBegin, stack[i], false);
         }
-        for (int i = 0; i < lockedObjects.length; i++) {
+        for (int i = 0; i < lockedObjects.length; i++)
+        {
             lockedObjects[i] = createLoopPhi(loopBegin, lockedObjects[i], false);
         }
     }
 
-    public void insertLoopProxies(LoopExitNode loopExit, FrameStateBuilder loopEntryState) {
+    public void insertLoopProxies(LoopExitNode loopExit, FrameStateBuilder loopEntryState)
+    {
         DebugContext debug = graph.getDebug();
-        for (int i = 0; i < localsSize(); i++) {
+        for (int i = 0; i < localsSize(); i++)
+        {
             ValueNode value = locals[i];
-            if (value != null && value != TWO_SLOT_MARKER && (!loopEntryState.contains(value) || loopExit.loopBegin().isPhiAtMerge(value))) {
+            if (value != null && value != TWO_SLOT_MARKER && (!loopEntryState.contains(value) || loopExit.loopBegin().isPhiAtMerge(value)))
+            {
                 debug.log(" inserting proxy for %s", value);
                 locals[i] = ProxyNode.forValue(value, loopExit, graph);
             }
         }
-        for (int i = 0; i < stackSize(); i++) {
+        for (int i = 0; i < stackSize(); i++)
+        {
             ValueNode value = stack[i];
-            if (value != null && value != TWO_SLOT_MARKER && (!loopEntryState.contains(value) || loopExit.loopBegin().isPhiAtMerge(value))) {
+            if (value != null && value != TWO_SLOT_MARKER && (!loopEntryState.contains(value) || loopExit.loopBegin().isPhiAtMerge(value)))
+            {
                 debug.log(" inserting proxy for %s", value);
                 stack[i] = ProxyNode.forValue(value, loopExit, graph);
             }
         }
-        for (int i = 0; i < lockedObjects.length; i++) {
+        for (int i = 0; i < lockedObjects.length; i++)
+        {
             ValueNode value = lockedObjects[i];
-            if (value != null && (!loopEntryState.contains(value) || loopExit.loopBegin().isPhiAtMerge(value))) {
+            if (value != null && (!loopEntryState.contains(value) || loopExit.loopBegin().isPhiAtMerge(value)))
+            {
                 debug.log(" inserting proxy for %s", value);
                 lockedObjects[i] = ProxyNode.forValue(value, loopExit, graph);
             }
         }
     }
 
-    public void insertProxies(Function<ValueNode, ValueNode> proxyFunction) {
+    public void insertProxies(Function<ValueNode, ValueNode> proxyFunction)
+    {
         DebugContext debug = graph.getDebug();
-        for (int i = 0; i < localsSize(); i++) {
+        for (int i = 0; i < localsSize(); i++)
+        {
             ValueNode value = locals[i];
-            if (value != null && value != TWO_SLOT_MARKER) {
+            if (value != null && value != TWO_SLOT_MARKER)
+            {
                 debug.log(" inserting proxy for %s", value);
                 locals[i] = proxyFunction.apply(value);
             }
         }
-        for (int i = 0; i < stackSize(); i++) {
+        for (int i = 0; i < stackSize(); i++)
+        {
             ValueNode value = stack[i];
-            if (value != null && value != TWO_SLOT_MARKER) {
+            if (value != null && value != TWO_SLOT_MARKER)
+            {
                 debug.log(" inserting proxy for %s", value);
                 stack[i] = proxyFunction.apply(value);
             }
         }
-        for (int i = 0; i < lockedObjects.length; i++) {
+        for (int i = 0; i < lockedObjects.length; i++)
+        {
             ValueNode value = lockedObjects[i];
-            if (value != null) {
+            if (value != null)
+            {
                 debug.log(" inserting proxy for %s", value);
                 lockedObjects[i] = proxyFunction.apply(value);
             }
         }
     }
 
-    private ValueNode createLoopPhi(AbstractMergeNode block, ValueNode value, boolean stampFromValue) {
-        if (value == null || value == TWO_SLOT_MARKER) {
+    private ValueNode createLoopPhi(AbstractMergeNode block, ValueNode value, boolean stampFromValue)
+    {
+        if (value == null || value == TWO_SLOT_MARKER)
+        {
             return value;
         }
         assert !block.isPhiAtMerge(value) : "phi function for this block already created";
@@ -531,7 +639,8 @@ public final class FrameStateBuilder implements SideEffectsState {
      *
      * @param object the object whose monitor will be locked.
      */
-    public void pushLock(ValueNode object, MonitorIdNode monitorId) {
+    public void pushLock(ValueNode object, MonitorIdNode monitorId)
+    {
         assert object.isAlive() && object.getStackKind() == JavaKind.Object : "unexpected value: " + object;
         lockedObjects = Arrays.copyOf(lockedObjects, lockedObjects.length + 1);
         monitorIds = Arrays.copyOf(monitorIds, monitorIds.length + 1);
@@ -545,72 +654,95 @@ public final class FrameStateBuilder implements SideEffectsState {
      *
      * @return the object whose monitor was removed from the locks list.
      */
-    public ValueNode popLock() {
-        try {
+    public ValueNode popLock()
+    {
+        try
+        {
             return lockedObjects[lockedObjects.length - 1];
-        } finally {
+        }
+        finally
+        {
             lockedObjects = lockedObjects.length == 1 ? EMPTY_ARRAY : Arrays.copyOf(lockedObjects, lockedObjects.length - 1);
             monitorIds = monitorIds.length == 1 ? EMPTY_MONITOR_ARRAY : Arrays.copyOf(monitorIds, monitorIds.length - 1);
             assert lockedObjects.length == monitorIds.length;
         }
     }
 
-    public MonitorIdNode peekMonitorId() {
+    public MonitorIdNode peekMonitorId()
+    {
         return monitorIds[monitorIds.length - 1];
     }
 
     /**
      * @return the current lock depth
      */
-    public int lockDepth(boolean includeParents) {
+    public int lockDepth(boolean includeParents)
+    {
         int depth = lockedObjects.length;
         assert depth == monitorIds.length;
-        if (includeParents && parser.getParent() != null) {
+        if (includeParents && parser.getParent() != null)
+        {
             depth += parser.getParent().frameState.lockDepth(true);
         }
         return depth;
     }
 
-    public boolean contains(ValueNode value) {
-        for (int i = 0; i < localsSize(); i++) {
-            if (locals[i] == value) {
+    public boolean contains(ValueNode value)
+    {
+        for (int i = 0; i < localsSize(); i++)
+        {
+            if (locals[i] == value)
+            {
                 return true;
             }
         }
-        for (int i = 0; i < stackSize(); i++) {
-            if (stack[i] == value) {
+        for (int i = 0; i < stackSize(); i++)
+        {
+            if (stack[i] == value)
+            {
                 return true;
             }
         }
         assert lockedObjects.length == monitorIds.length;
-        for (int i = 0; i < lockedObjects.length; i++) {
-            if (lockedObjects[i] == value || monitorIds[i] == value) {
+        for (int i = 0; i < lockedObjects.length; i++)
+        {
+            if (lockedObjects[i] == value || monitorIds[i] == value)
+            {
                 return true;
             }
         }
         return false;
     }
 
-    public void clearNonLiveLocals(BciBlock block, LocalLiveness liveness, boolean liveIn) {
+    public void clearNonLiveLocals(BciBlock block, LocalLiveness liveness, boolean liveIn)
+    {
         /*
          * (lstadler) if somebody is tempted to remove/disable this clearing code: it's possible to
          * remove it for normal compilations, but not for OSR compilations - otherwise dead object
          * slots at the OSR entry aren't cleared. it is also not enough to rely on PiNodes with
          * Kind.Illegal, because the conflicting branch might not have been parsed.
          */
-        if (!clearNonLiveLocals) {
+        if (!clearNonLiveLocals)
+        {
             return;
         }
-        if (liveIn) {
-            for (int i = 0; i < locals.length; i++) {
-                if (!liveness.localIsLiveIn(block, i)) {
+        if (liveIn)
+        {
+            for (int i = 0; i < locals.length; i++)
+            {
+                if (!liveness.localIsLiveIn(block, i))
+                {
                     assert locals[i] != TWO_SLOT_MARKER || locals[i - 1] == null : "Clearing of second slot must have cleared the first slot too";
                     locals[i] = null;
                 }
             }
-        } else {
-            for (int i = 0; i < locals.length; i++) {
-                if (!liveness.localIsLiveOut(block, i)) {
+        }
+        else
+        {
+            for (int i = 0; i < locals.length; i++)
+            {
+                if (!liveness.localIsLiveOut(block, i))
+                {
                     assert locals[i] != TWO_SLOT_MARKER || locals[i - 1] == null : "Clearing of second slot must have cleared the first slot too";
                     locals[i] = null;
                 }
@@ -621,8 +753,10 @@ public final class FrameStateBuilder implements SideEffectsState {
     /**
      * Clears all local variables.
      */
-    public void clearLocals() {
-        for (int i = 0; i < locals.length; i++) {
+    public void clearLocals()
+    {
+        for (int i = 0; i < locals.length; i++)
+        {
             locals[i] = null;
         }
     }
@@ -630,14 +764,16 @@ public final class FrameStateBuilder implements SideEffectsState {
     /**
      * @see BytecodeFrame#rethrowException
      */
-    public boolean rethrowException() {
+    public boolean rethrowException()
+    {
         return rethrowException;
     }
 
     /**
      * @see BytecodeFrame#rethrowException
      */
-    public void setRethrowException(boolean b) {
+    public void setRethrowException(boolean b)
+    {
         rethrowException = b;
     }
 
@@ -646,23 +782,27 @@ public final class FrameStateBuilder implements SideEffectsState {
      *
      * @return the size of the local variables
      */
-    public int localsSize() {
+    public int localsSize()
+    {
         return locals.length;
     }
 
     /**
      * Gets the current size (height) of the stack.
      */
-    public int stackSize() {
+    public int stackSize()
+    {
         return stackSize;
     }
 
-    private boolean verifyKind(JavaKind slotKind, ValueNode x) {
+    private boolean verifyKind(JavaKind slotKind, ValueNode x)
+    {
         assert x != null;
         assert x != TWO_SLOT_MARKER;
         assert slotKind.getSlotCount() > 0;
 
-        if (canVerifyKind) {
+        if (canVerifyKind)
+        {
             assert x.getStackKind() == slotKind.getStackKind();
         }
         return true;
@@ -676,7 +816,8 @@ public final class FrameStateBuilder implements SideEffectsState {
      * @param slotKind the kind of the local variable from the point of view of the bytecodes
      * @return the instruction that produced the specified local
      */
-    public ValueNode loadLocal(int i, JavaKind slotKind) {
+    public ValueNode loadLocal(int i, JavaKind slotKind)
+    {
         ValueNode x = locals[i];
         assert verifyKind(slotKind, x);
         assert slotKind.needsTwoSlots() ? locals[i + 1] == TWO_SLOT_MARKER : (i == locals.length - 1 || locals[i + 1] != TWO_SLOT_MARKER);
@@ -691,18 +832,23 @@ public final class FrameStateBuilder implements SideEffectsState {
      * @param slotKind the kind of the local variable from the point of view of the bytecodes
      * @param x the instruction which produces the value for the local
      */
-    public void storeLocal(int i, JavaKind slotKind, ValueNode x) {
+    public void storeLocal(int i, JavaKind slotKind, ValueNode x)
+    {
         assert verifyKind(slotKind, x);
 
-        if (locals[i] == TWO_SLOT_MARKER) {
+        if (locals[i] == TWO_SLOT_MARKER)
+        {
             /* Writing the second slot of a two-slot value invalidates the first slot. */
             locals[i - 1] = null;
         }
         locals[i] = x;
-        if (slotKind.needsTwoSlots()) {
+        if (slotKind.needsTwoSlots())
+        {
             /* Writing a two-slot value: mark the second slot. */
             locals[i + 1] = TWO_SLOT_MARKER;
-        } else if (i < locals.length - 1 && locals[i + 1] == TWO_SLOT_MARKER) {
+        }
+        else if (i < locals.length - 1 && locals[i + 1] == TWO_SLOT_MARKER)
+        {
             /*
              * Writing a one-slot value to an index previously occupied by a two-slot value: clear
              * the old marker of the second slot.
@@ -717,17 +863,21 @@ public final class FrameStateBuilder implements SideEffectsState {
      * @param slotKind the kind of the stack element from the point of view of the bytecodes
      * @param x the instruction to push onto the stack
      */
-    public void push(JavaKind slotKind, ValueNode x) {
+    public void push(JavaKind slotKind, ValueNode x)
+    {
         assert verifyKind(slotKind, x);
 
         xpush(x);
-        if (slotKind.needsTwoSlots()) {
+        if (slotKind.needsTwoSlots())
+        {
             xpush(TWO_SLOT_MARKER);
         }
     }
 
-    public void pushReturn(JavaKind slotKind, ValueNode x) {
-        if (slotKind != JavaKind.Void) {
+    public void pushReturn(JavaKind slotKind, ValueNode x)
+    {
+        if (slotKind != JavaKind.Void)
+        {
             push(slotKind, x);
         }
     }
@@ -738,8 +888,10 @@ public final class FrameStateBuilder implements SideEffectsState {
      * @param slotKind the kind of the stack element from the point of view of the bytecodes
      * @return the instruction on the top of the stack
      */
-    public ValueNode pop(JavaKind slotKind) {
-        if (slotKind.needsTwoSlots()) {
+    public ValueNode pop(JavaKind slotKind)
+    {
+        if (slotKind.needsTwoSlots())
+        {
             ValueNode s = xpop();
             assert s == TWO_SLOT_MARKER;
         }
@@ -748,18 +900,21 @@ public final class FrameStateBuilder implements SideEffectsState {
         return x;
     }
 
-    private void xpush(ValueNode x) {
+    private void xpush(ValueNode x)
+    {
         assert x != null;
         stack[stackSize++] = x;
     }
 
-    private ValueNode xpop() {
+    private ValueNode xpop()
+    {
         ValueNode result = stack[--stackSize];
         assert result != null;
         return result;
     }
 
-    private ValueNode xpeek() {
+    private ValueNode xpeek()
+    {
         ValueNode result = stack[stackSize - 1];
         assert result != null;
         return result;
@@ -771,11 +926,14 @@ public final class FrameStateBuilder implements SideEffectsState {
      *
      * @return an array containing the arguments off of the stack
      */
-    public ValueNode[] popArguments(int argSize) {
+    public ValueNode[] popArguments(int argSize)
+    {
         ValueNode[] result = allocateArray(argSize);
-        for (int i = argSize - 1; i >= 0; i--) {
+        for (int i = argSize - 1; i >= 0; i--)
+        {
             ValueNode x = xpop();
-            if (x == TWO_SLOT_MARKER) {
+            if (x == TWO_SLOT_MARKER)
+            {
                 /* Ignore second slot of two-slot value. */
                 x = xpop();
             }
@@ -788,7 +946,8 @@ public final class FrameStateBuilder implements SideEffectsState {
     /**
      * Clears all values on this stack.
      */
-    public void clearStack() {
+    public void clearStack()
+    {
         stackSize = 0;
     }
 
@@ -797,26 +956,32 @@ public final class FrameStateBuilder implements SideEffectsState {
      *
      * @param opcode The Java bytecode.
      */
-    public void stackOp(int opcode) {
-        switch (opcode) {
-            case POP: {
+    public void stackOp(int opcode)
+    {
+        switch (opcode)
+        {
+            case POP:
+            {
                 ValueNode w1 = xpop();
                 assert w1 != TWO_SLOT_MARKER;
                 break;
             }
-            case POP2: {
+            case POP2:
+            {
                 xpop();
                 ValueNode w2 = xpop();
                 assert w2 != TWO_SLOT_MARKER;
                 break;
             }
-            case DUP: {
+            case DUP:
+            {
                 ValueNode w1 = xpeek();
                 assert w1 != TWO_SLOT_MARKER;
                 xpush(w1);
                 break;
             }
-            case DUP_X1: {
+            case DUP_X1:
+            {
                 ValueNode w1 = xpop();
                 ValueNode w2 = xpop();
                 assert w1 != TWO_SLOT_MARKER;
@@ -825,7 +990,8 @@ public final class FrameStateBuilder implements SideEffectsState {
                 xpush(w1);
                 break;
             }
-            case DUP_X2: {
+            case DUP_X2:
+            {
                 ValueNode w1 = xpop();
                 ValueNode w2 = xpop();
                 ValueNode w3 = xpop();
@@ -836,7 +1002,8 @@ public final class FrameStateBuilder implements SideEffectsState {
                 xpush(w1);
                 break;
             }
-            case DUP2: {
+            case DUP2:
+            {
                 ValueNode w1 = xpop();
                 ValueNode w2 = xpop();
                 xpush(w2);
@@ -845,7 +1012,8 @@ public final class FrameStateBuilder implements SideEffectsState {
                 xpush(w1);
                 break;
             }
-            case DUP2_X1: {
+            case DUP2_X1:
+            {
                 ValueNode w1 = xpop();
                 ValueNode w2 = xpop();
                 ValueNode w3 = xpop();
@@ -856,7 +1024,8 @@ public final class FrameStateBuilder implements SideEffectsState {
                 xpush(w1);
                 break;
             }
-            case DUP2_X2: {
+            case DUP2_X2:
+            {
                 ValueNode w1 = xpop();
                 ValueNode w2 = xpop();
                 ValueNode w3 = xpop();
@@ -869,7 +1038,8 @@ public final class FrameStateBuilder implements SideEffectsState {
                 xpush(w1);
                 break;
             }
-            case SWAP: {
+            case SWAP:
+            {
                 ValueNode w1 = xpop();
                 ValueNode w2 = xpop();
                 assert w1 != TWO_SLOT_MARKER;
@@ -884,25 +1054,31 @@ public final class FrameStateBuilder implements SideEffectsState {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         int result = hashCode(locals, locals.length);
         result *= 13;
         result += hashCode(stack, this.stackSize);
         return result;
     }
 
-    private static int hashCode(Object[] a, int length) {
+    private static int hashCode(Object[] a, int length)
+    {
         int result = 1;
-        for (int i = 0; i < length; ++i) {
+        for (int i = 0; i < length; ++i)
+        {
             Object element = a[i];
             result = 31 * result + (element == null ? 0 : System.identityHashCode(element));
         }
         return result;
     }
 
-    private static boolean equals(ValueNode[] a, ValueNode[] b, int length) {
-        for (int i = 0; i < length; ++i) {
-            if (a[i] != b[i]) {
+    private static boolean equals(ValueNode[] a, ValueNode[] b, int length)
+    {
+        for (int i = 0; i < length; ++i)
+        {
+            if (a[i] != b[i])
+            {
                 return false;
             }
         }
@@ -910,51 +1086,63 @@ public final class FrameStateBuilder implements SideEffectsState {
     }
 
     @Override
-    public boolean equals(Object otherObject) {
-        if (otherObject instanceof FrameStateBuilder) {
+    public boolean equals(Object otherObject)
+    {
+        if (otherObject instanceof FrameStateBuilder)
+        {
             FrameStateBuilder other = (FrameStateBuilder) otherObject;
-            if (!other.code.equals(code)) {
+            if (!other.code.equals(code))
+            {
                 return false;
             }
-            if (other.stackSize != stackSize) {
+            if (other.stackSize != stackSize)
+            {
                 return false;
             }
-            if (other.parser != parser) {
+            if (other.parser != parser)
+            {
                 return false;
             }
-            if (other.tool != tool) {
+            if (other.tool != tool)
+            {
                 return false;
             }
-            if (other.rethrowException != rethrowException) {
+            if (other.rethrowException != rethrowException)
+            {
                 return false;
             }
-            if (other.graph != graph) {
+            if (other.graph != graph)
+            {
                 return false;
             }
-            if (other.locals.length != locals.length) {
+            if (other.locals.length != locals.length)
+            {
                 return false;
             }
-            return equals(other.locals, locals, locals.length) && equals(other.stack, stack, stackSize) && equals(other.lockedObjects, lockedObjects, lockedObjects.length) &&
-                            equals(other.monitorIds, monitorIds, monitorIds.length);
+            return equals(other.locals, locals, locals.length) && equals(other.stack, stack, stackSize) && equals(other.lockedObjects, lockedObjects, lockedObjects.length) && equals(other.monitorIds, monitorIds, monitorIds.length);
         }
         return false;
     }
 
     @Override
-    public boolean isAfterSideEffect() {
+    public boolean isAfterSideEffect()
+    {
         return sideEffects != null;
     }
 
     @Override
-    public Iterable<StateSplit> sideEffects() {
+    public Iterable<StateSplit> sideEffects()
+    {
         return sideEffects;
     }
 
     @Override
-    public void addSideEffect(StateSplit sideEffect) {
+    public void addSideEffect(StateSplit sideEffect)
+    {
         assert sideEffect != null;
         assert sideEffect.hasSideEffect();
-        if (sideEffects == null) {
+        if (sideEffects == null)
+        {
             sideEffects = new ArrayList<>(4);
         }
         sideEffects.add(sideEffect);

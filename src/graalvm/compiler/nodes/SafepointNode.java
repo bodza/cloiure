@@ -14,31 +14,33 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 /**
  * Marks a position in the graph where a safepoint should be emitted.
  */
-// @formatter:off
 @NodeInfo(cycles = CYCLES_2,
           cyclesRationale = "read",
           size = SIZE_1)
-// @formatter:on
-public final class SafepointNode extends DeoptimizingFixedWithNextNode implements Lowerable, LIRLowerable {
-
+public final class SafepointNode extends DeoptimizingFixedWithNextNode implements Lowerable, LIRLowerable
+{
     public static final NodeClass<SafepointNode> TYPE = NodeClass.create(SafepointNode.class);
 
-    public SafepointNode() {
+    public SafepointNode()
+    {
         super(TYPE, StampFactory.forVoid());
     }
 
     @Override
-    public void lower(LoweringTool tool) {
+    public void lower(LoweringTool tool)
+    {
         tool.getLowerer().lower(this, tool);
     }
 
     @Override
-    public void generate(NodeLIRBuilderTool gen) {
+    public void generate(NodeLIRBuilderTool gen)
+    {
         gen.visitSafepointNode(this);
     }
 
     @Override
-    public boolean canDeoptimize() {
+    public boolean canDeoptimize()
+    {
         return true;
     }
 }
