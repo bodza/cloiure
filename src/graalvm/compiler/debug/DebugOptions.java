@@ -117,9 +117,6 @@ public class DebugOptions {
     @Option(help = "Schedule graphs as they are dumped.", type = OptionType.Debug)
     public static final OptionKey<Boolean> PrintGraphWithSchedule = new OptionKey<>(false);
 
-    @Option(help = "Enable dumping Truffle ASTs to the IdealGraphVisualizer.", type = OptionType.Debug)
-    public static final OptionKey<Boolean> PrintTruffleTrees = new OptionKey<>(true);
-
     @Option(help = "Treat any exceptions during dumping as fatal.", type = OptionType.Debug)
     public static final OptionKey<Boolean> DumpingErrorsAreFatal = new OptionKey<>(false);
 

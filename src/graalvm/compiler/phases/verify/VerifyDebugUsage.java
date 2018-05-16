@@ -121,9 +121,6 @@ public class VerifyDebugUsage extends VerifyPhase<PhaseContext> {
                     "graalvm.compiler.phases.BasePhase.dumpAfter",
                     "graalvm.compiler.phases.BasePhase.dumpBefore",
                     "graalvm.compiler.core.GraalCompiler.emitFrontEnd",
-                    "graalvm.compiler.truffle.compiler.PartialEvaluator.fastPartialEvaluation",
-                    "graalvm.compiler.truffle.compiler.PartialEvaluator$PerformanceInformationHandler.reportPerformanceWarnings",
-                    "graalvm.compiler.truffle.compiler.TruffleCompilerImpl.compilePEGraph",
                     "graalvm.compiler.core.test.VerifyDebugUsageTest$ValidDumpUsagePhase.run",
                     "graalvm.compiler.core.test.VerifyDebugUsageTest$InvalidConcatDumpUsagePhase.run",
                     "graalvm.compiler.core.test.VerifyDebugUsageTest$InvalidDumpUsagePhase.run"));

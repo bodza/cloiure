@@ -978,7 +978,6 @@ public class MatchProcessor extends AbstractProcessor {
         processingEnv.getMessager().printMessage(Kind.ERROR, String.format(format, args), element, mirror);
     }
 
-    // TODO borrowed from com.oracle.truffle.dsl.processor.Utils
     @SuppressWarnings("unchecked")
     private static <T> List<T> getAnnotationValueList(Class<T> expectedListType, AnnotationMirror mirror, String name) {
         List<? extends AnnotationValue> values = getAnnotationValue(List.class, mirror, name);
