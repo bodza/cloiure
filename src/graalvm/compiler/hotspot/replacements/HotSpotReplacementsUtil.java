@@ -4,7 +4,7 @@ import static jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider.getArrayBaseOffset;
 import static jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider.getArrayIndexScale;
 import static graalvm.compiler.hotspot.GraalHotSpotVMConfig.INJECTED_VMCONFIG;
 import static graalvm.compiler.hotspot.meta.HotSpotForeignCallsProviderImpl.VERIFY_OOP;
-import static graalvm.compiler.hotspot.replacements.UnsafeAccess.UNSAFE;
+import graalvm.util.UnsafeAccess;
 
 import graalvm.compiler.api.replacements.Fold;
 import graalvm.compiler.api.replacements.Fold.InjectedParameter;
@@ -314,7 +314,7 @@ public class HotSpotReplacementsUtil {
 
     @Fold
     public static int pageSize() {
-        return UNSAFE.pageSize();
+        return UnsafeAccess.UNSAFE.pageSize();
     }
 
     @Fold
@@ -960,7 +960,7 @@ public class HotSpotReplacementsUtil {
     @Fold
     public static long referentOffset() {
         try {
-            return UNSAFE.objectFieldOffset(java.lang.ref.Reference.class.getDeclaredField("referent"));
+            return UnsafeAccess.UNSAFE.objectFieldOffset(java.lang.ref.Reference.class.getDeclaredField("referent"));
         } catch (Exception e) {
             throw new GraalError(e);
         }

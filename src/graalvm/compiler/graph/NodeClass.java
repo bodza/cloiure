@@ -6,7 +6,7 @@ import static graalvm.compiler.graph.Edges.translateInto;
 import static graalvm.compiler.graph.Graph.isModificationCountsEnabled;
 import static graalvm.compiler.graph.InputEdges.translateInto;
 import static graalvm.compiler.graph.Node.WithAllEdges;
-import static graalvm.compiler.graph.UnsafeAccess.UNSAFE;
+import graalvm.util.UnsafeAccess;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -809,7 +809,7 @@ public final class NodeClass<T> extends FieldIntrospection<T> {
     @SuppressWarnings("unchecked")
     public Node allocateInstance() {
         try {
-            Node node = (Node) UNSAFE.allocateInstance(getJavaClass());
+            Node node = (Node) UnsafeAccess.UNSAFE.allocateInstance(getJavaClass());
             node.init((NodeClass<? extends Node>) this);
             return node;
         } catch (InstantiationException ex) {

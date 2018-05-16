@@ -1,7 +1,6 @@
 package graalvm.compiler.hotspot.replacements;
 
 import static jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider.getArrayBaseOffset;
-import static graalvm.compiler.serviceprovider.GraalServices.Java8OrEarlier;
 
 import graalvm.compiler.api.replacements.ClassSubstitution;
 import graalvm.compiler.api.replacements.MethodSubstitution;
@@ -16,6 +15,8 @@ import org.graalvm.word.WordFactory;
 
 import jdk.vm.ci.meta.JavaKind;
 
+import graalvm.util.UnsafeAccess;
+
 @ClassSubstitution(className = "sun.security.provider.SHA5", optional = true)
 public class SHA5Substitutions {
 
@@ -23,7 +24,7 @@ public class SHA5Substitutions {
 
     static final Class<?> shaClass;
 
-    public static final String implCompressName = Java8OrEarlier ? "implCompress" : "implCompress0";
+    public static final String implCompressName = "implCompress0";
 
     static {
         try {

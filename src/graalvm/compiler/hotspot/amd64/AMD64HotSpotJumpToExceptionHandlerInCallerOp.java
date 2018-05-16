@@ -47,13 +47,6 @@ final class AMD64HotSpotJumpToExceptionHandlerInCallerOp extends AMD64HotSpotEpi
         // Discard the return address, thus completing restoration of caller frame
         masm.incrementq(rsp, 8);
 
-        if (GraalServices.JAVA_SPECIFICATION_VERSION < 8) {
-            // Restore rsp from rbp if the exception PC is a method handle call site.
-            AMD64Address dst = new AMD64Address(thread, isMethodHandleReturnOffset);
-            masm.cmpl(dst, 0);
-            masm.cmovq(ConditionFlag.NotEqual, rsp, rbp);
-        }
-
         masm.jmp(asRegister(handlerInCallerPc));
     }
 }

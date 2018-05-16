@@ -3,7 +3,7 @@ package graalvm.compiler.graph;
 import static graalvm.compiler.graph.Edges.Type.Inputs;
 import static graalvm.compiler.graph.Edges.Type.Successors;
 import static graalvm.compiler.graph.Graph.isModificationCountsEnabled;
-import static graalvm.compiler.graph.UnsafeAccess.UNSAFE;
+import graalvm.util.UnsafeAccess;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.RetentionPolicy;
@@ -36,8 +36,6 @@ import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodeinfo.NodeSize;
 import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.options.OptionValues;
-
-import sun.misc.Unsafe;
 
 /**
  * This class is the base class for all nodes. It represents a node that can be inserted in a
@@ -989,7 +987,7 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface {
 
         Node newNode = null;
         try {
-            newNode = (Node) UNSAFE.allocateInstance(getClass());
+            newNode = (Node) UnsafeAccess.UNSAFE.allocateInstance(getClass());
             newNode.nodeClass = nodeClassTmp;
             nodeClassTmp.getData().copy(this, newNode);
             copyOrClearEdgesForClone(newNode, Inputs, edgesToCopy);

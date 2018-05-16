@@ -3,7 +3,7 @@
                    [org.clojure/spec.alpha "0.1.143"]
                    [org.clojure/core.specs.alpha "0.1.24"]
                    [org.graalvm/graal-sdk "1.0.0-rc1"]
-                   [com.oracle.truffle/truffle-api "1.0.0-rc1"]
+;                  [com.oracle.truffle/truffle-api "1.0.0-rc1"]
                    [org.openjdk.jol/jol-core "0.9"]
                    [org.openjdk.jol/jol-cli "0.9"]]
     :plugins [[lein-try "0.4.3"]]

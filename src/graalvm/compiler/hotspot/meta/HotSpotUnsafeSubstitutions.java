@@ -1,7 +1,5 @@
 package graalvm.compiler.hotspot.meta;
 
-import static graalvm.compiler.serviceprovider.GraalServices.Java8OrEarlier;
-
 import graalvm.compiler.api.replacements.ClassSubstitution;
 import graalvm.compiler.api.replacements.MethodSubstitution;
 import graalvm.compiler.hotspot.HotSpotBackend;
@@ -12,7 +10,7 @@ import org.graalvm.word.WordFactory;
 @ClassSubstitution(className = {"jdk.internal.misc.Unsafe", "sun.misc.Unsafe"})
 public class HotSpotUnsafeSubstitutions {
 
-    public static final String copyMemoryName = Java8OrEarlier ? "copyMemory" : "copyMemory0";
+    public static final String copyMemoryName = "copyMemory0";
 
     @SuppressWarnings("unused")
     @MethodSubstitution(isStatic = false)

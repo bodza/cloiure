@@ -1,12 +1,10 @@
 package graalvm.compiler.core.common;
 
-import static graalvm.compiler.core.common.UnsafeAccess.UNSAFE;
+import graalvm.util.UnsafeAccess;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-
-import sun.misc.Unsafe;
 
 /**
  * Scans the fields in a class hierarchy.
@@ -28,7 +26,7 @@ public class FieldsScanner {
 
         @Override
         public long getOffset(Field field) {
-            return UNSAFE.objectFieldOffset(field);
+            return UnsafeAccess.UNSAFE.objectFieldOffset(field);
         }
     }
 

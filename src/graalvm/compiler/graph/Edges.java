@@ -2,7 +2,7 @@ package graalvm.compiler.graph;
 
 import static graalvm.compiler.graph.Graph.isModificationCountsEnabled;
 import static graalvm.compiler.graph.Node.NOT_ITERABLE;
-import static graalvm.compiler.graph.UnsafeAccess.UNSAFE;
+import graalvm.util.UnsafeAccess;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -41,20 +41,20 @@ public abstract class Edges extends Fields {
     }
 
     public static Node getNodeUnsafe(Node node, long offset) {
-        return (Node) UNSAFE.getObject(node, offset);
+        return (Node) UnsafeAccess.UNSAFE.getObject(node, offset);
     }
 
     @SuppressWarnings("unchecked")
     public static NodeList<Node> getNodeListUnsafe(Node node, long offset) {
-        return (NodeList<Node>) UNSAFE.getObject(node, offset);
+        return (NodeList<Node>) UnsafeAccess.UNSAFE.getObject(node, offset);
     }
 
     public static void putNodeUnsafe(Node node, long offset, Node value) {
-        UNSAFE.putObject(node, offset, value);
+        UnsafeAccess.UNSAFE.putObject(node, offset, value);
     }
 
     public static void putNodeListUnsafe(Node node, long offset, NodeList<?> value) {
-        UNSAFE.putObject(node, offset, value);
+        UnsafeAccess.UNSAFE.putObject(node, offset, value);
     }
 
     /**

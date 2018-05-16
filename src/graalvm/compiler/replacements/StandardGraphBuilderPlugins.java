@@ -9,7 +9,6 @@ import static jdk.vm.ci.code.MemoryBarriers.LOAD_STORE;
 import static jdk.vm.ci.code.MemoryBarriers.STORE_LOAD;
 import static jdk.vm.ci.code.MemoryBarriers.STORE_STORE;
 import static graalvm.compiler.nodes.NamedLocationIdentity.OFF_HEAP_LOCATION;
-import static graalvm.compiler.serviceprovider.GraalServices.Java8OrEarlier;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -94,7 +93,6 @@ import jdk.vm.ci.meta.ResolvedJavaField;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
 import jdk.vm.ci.meta.SpeculationLog;
-import sun.misc.Unsafe;
 
 /**
  * Provides non-runtime specific {@link InvocationPlugin}s.
@@ -149,22 +147,6 @@ public class StandardGraphBuilderPlugins {
                 return false;
             }
         });
-
-        if (Java8OrEarlier) {
-            r.registerMethodSubstitution(StringSubstitutions.class, "equals", Receiver.class, Object.class);
-            r.register7("indexOf", char[].class, int.class, int.class, char[].class, int.class, int.class, int.class, new StringIndexOfConstantPlugin());
-
-            Registration sr = new Registration(plugins, StringSubstitutions.class);
-            sr.register1("getValue", String.class, new InvocationPlugin() {
-                @Override
-                public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver receiver, ValueNode value) {
-                    ResolvedJavaField field = b.getMetaAccess().lookupJavaField(STRING_VALUE_FIELD);
-                    b.addPush(JavaKind.Object, LoadFieldNode.create(b.getConstantFieldProvider(), b.getConstantReflection(), b.getMetaAccess(),
-                                    b.getOptions(), b.getAssumptions(), value, field, false, false));
-                    return true;
-                }
-            });
-        }
     }
 
     private static void registerArraysPlugins(InvocationPlugins plugins, BytecodeProvider bytecodeProvider) {
@@ -190,12 +172,7 @@ public class StandardGraphBuilderPlugins {
     }
 
     private static void registerUnsafePlugins(InvocationPlugins plugins, BytecodeProvider bytecodeProvider) {
-        Registration r;
-        if (Java8OrEarlier) {
-            r = new Registration(plugins, Unsafe.class);
-        } else {
-            r = new Registration(plugins, "jdk.internal.misc.Unsafe", bytecodeProvider);
-        }
+        Registration r = new Registration(plugins, "jdk.internal.misc.Unsafe", bytecodeProvider);
 
         for (JavaKind kind : JavaKind.values()) {
             if ((kind.isPrimitive() && kind != JavaKind.Void) || kind == JavaKind.Object) {
@@ -210,13 +187,7 @@ public class StandardGraphBuilderPlugins {
                 r.register3(getName + "Volatile", Receiver.class, Object.class, long.class, new UnsafeGetPlugin(kind, true));
                 r.register4(putName + "Volatile", Receiver.class, Object.class, long.class, javaClass, new UnsafePutPlugin(kind, true));
                 // Ordered object-based accesses
-                if (Java8OrEarlier) {
-                    if (kind == JavaKind.Int || kind == JavaKind.Long || kind == JavaKind.Object) {
-                        r.register4("putOrdered" + kindName, Receiver.class, Object.class, long.class, javaClass, UnsafePutPlugin.putOrdered(kind));
-                    }
-                } else {
-                    r.register4("put" + kindName + "Release", Receiver.class, Object.class, long.class, javaClass, UnsafePutPlugin.putOrdered(kind));
-                }
+                r.register4("put" + kindName + "Release", Receiver.class, Object.class, long.class, javaClass, UnsafePutPlugin.putOrdered(kind));
                 if (kind != JavaKind.Boolean && kind != JavaKind.Object) {
                     // Raw accesses to memory addresses
                     r.register2(getName, Receiver.class, long.class, new UnsafeGetPlugin(kind, false));
@@ -231,13 +202,7 @@ public class StandardGraphBuilderPlugins {
 
         for (JavaKind kind : new JavaKind[]{JavaKind.Int, JavaKind.Long, JavaKind.Object}) {
             Class<?> javaClass = kind == JavaKind.Object ? Object.class : kind.toJavaClass();
-            String casName;
-            if (Java8OrEarlier) {
-                casName = "compareAndSwap";
-            } else {
-                casName = "compareAndSet";
-            }
-            r.register5(casName + kind.name(), Receiver.class, Object.class, long.class, javaClass, javaClass, new InvocationPlugin() {
+            r.register5("compareAndSet" + kind.name(), Receiver.class, Object.class, long.class, javaClass, javaClass, new InvocationPlugin() {
                 @Override
                 public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver unsafe, ValueNode object, ValueNode offset, ValueNode expected, ValueNode x) {
                     // Emits a null-check for the otherwise unused receiver

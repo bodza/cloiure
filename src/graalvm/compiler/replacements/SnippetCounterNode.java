@@ -31,7 +31,8 @@ import graalvm.compiler.word.ObjectAccess;
 import org.graalvm.word.LocationIdentity;
 
 import jdk.vm.ci.code.TargetDescription;
-import sun.misc.Unsafe;
+
+import graalvm.util.UnsafeAccess;
 
 /**
  * This node can be used to add a counter to the code that will estimate the dynamic number of calls
@@ -108,7 +109,7 @@ public class SnippetCounterNode extends FixedWithNextNode implements Lowerable {
         @Fold
         static int countOffset() {
             try {
-                return (int) UNSAFE.objectFieldOffset(SnippetCounter.class.getDeclaredField("value"));
+                return (int) UnsafeAccess.UNSAFE.objectFieldOffset(SnippetCounter.class.getDeclaredField("value"));
             } catch (Exception e) {
                 throw new GraalError(e);
             }
@@ -135,22 +136,6 @@ public class SnippetCounterNode extends FixedWithNextNode implements Lowerable {
                 args.add("increment", counter.getIncrement());
 
                 template(counter, args).instantiate(providers.getMetaAccess(), counter, DEFAULT_REPLACER, args);
-            }
-        }
-    }
-
-    private static final Unsafe UNSAFE = initUnsafe();
-
-    private static Unsafe initUnsafe() {
-        try {
-            return Unsafe.getUnsafe();
-        } catch (SecurityException se) {
-            try {
-                Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
-                theUnsafe.setAccessible(true);
-                return (Unsafe) theUnsafe.get(Unsafe.class);
-            } catch (Exception e) {
-                throw new RuntimeException("exception while trying to get Unsafe", e);
             }
         }
     }

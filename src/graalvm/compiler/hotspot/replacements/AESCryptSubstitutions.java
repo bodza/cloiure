@@ -27,6 +27,8 @@ import jdk.vm.ci.meta.DeoptimizationAction;
 import jdk.vm.ci.meta.DeoptimizationReason;
 import jdk.vm.ci.meta.JavaKind;
 
+import graalvm.util.UnsafeAccess;
+
 /**
  * Substitutions for {@code com.sun.crypto.provider.AESCrypt} methods.
  */

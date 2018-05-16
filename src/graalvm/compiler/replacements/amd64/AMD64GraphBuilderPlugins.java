@@ -7,8 +7,6 @@ import static graalvm.compiler.replacements.nodes.UnaryMathIntrinsicNode.UnaryOp
 import static graalvm.compiler.replacements.nodes.UnaryMathIntrinsicNode.UnaryOperation.LOG10;
 import static graalvm.compiler.replacements.nodes.UnaryMathIntrinsicNode.UnaryOperation.SIN;
 import static graalvm.compiler.replacements.nodes.UnaryMathIntrinsicNode.UnaryOperation.TAN;
-import static graalvm.compiler.serviceprovider.GraalServices.JAVA_SPECIFICATION_VERSION;
-import static graalvm.compiler.serviceprovider.GraalServices.Java8OrEarlier;
 
 import java.util.Arrays;
 
@@ -41,7 +39,6 @@ import jdk.vm.ci.amd64.AMD64;
 import jdk.vm.ci.amd64.AMD64.CPUFeature;
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
-import sun.misc.Unsafe;
 
 public class AMD64GraphBuilderPlugins {
 
@@ -164,43 +161,24 @@ public class AMD64GraphBuilderPlugins {
     }
 
     private static void registerStringPlugins(InvocationPlugins plugins, AMD64 arch, BytecodeProvider replacementsBytecodeProvider) {
-        if (Java8OrEarlier) {
-            Registration r;
-            r = new Registration(plugins, String.class, replacementsBytecodeProvider);
-            r.setAllowOverwrite(true);
-            if (arch.getFeatures().contains(CPUFeature.SSE4_2)) {
-                r.registerMethodSubstitution(AMD64StringSubstitutions.class, "indexOf", char[].class, int.class,
-                                int.class, char[].class, int.class, int.class, int.class);
-            }
-            r.registerMethodSubstitution(AMD64StringSubstitutions.class, "compareTo", Receiver.class, String.class);
-        }
     }
 
     private static void registerStringLatin1Plugins(InvocationPlugins plugins, BytecodeProvider replacementsBytecodeProvider) {
-        if (JAVA_SPECIFICATION_VERSION >= 9) {
-            Registration r = new Registration(plugins, "java.lang.StringLatin1", replacementsBytecodeProvider);
-            r.setAllowOverwrite(true);
-            r.registerMethodSubstitution(AMD64StringLatin1Substitutions.class, "compareTo", byte[].class, byte[].class);
-            r.registerMethodSubstitution(AMD64StringLatin1Substitutions.class, "compareToUTF16", byte[].class, byte[].class);
-        }
+        Registration r = new Registration(plugins, "java.lang.StringLatin1", replacementsBytecodeProvider);
+        r.setAllowOverwrite(true);
+        r.registerMethodSubstitution(AMD64StringLatin1Substitutions.class, "compareTo", byte[].class, byte[].class);
+        r.registerMethodSubstitution(AMD64StringLatin1Substitutions.class, "compareToUTF16", byte[].class, byte[].class);
     }
 
     private static void registerStringUTF16Plugins(InvocationPlugins plugins, BytecodeProvider replacementsBytecodeProvider) {
-        if (JAVA_SPECIFICATION_VERSION >= 9) {
-            Registration r = new Registration(plugins, "java.lang.StringUTF16", replacementsBytecodeProvider);
-            r.setAllowOverwrite(true);
-            r.registerMethodSubstitution(AMD64StringUTF16Substitutions.class, "compareTo", byte[].class, byte[].class);
-            r.registerMethodSubstitution(AMD64StringUTF16Substitutions.class, "compareToLatin1", byte[].class, byte[].class);
-        }
+        Registration r = new Registration(plugins, "java.lang.StringUTF16", replacementsBytecodeProvider);
+        r.setAllowOverwrite(true);
+        r.registerMethodSubstitution(AMD64StringUTF16Substitutions.class, "compareTo", byte[].class, byte[].class);
+        r.registerMethodSubstitution(AMD64StringUTF16Substitutions.class, "compareToLatin1", byte[].class, byte[].class);
     }
 
     private static void registerUnsafePlugins(InvocationPlugins plugins, BytecodeProvider replacementsBytecodeProvider) {
-        Registration r;
-        if (Java8OrEarlier) {
-            r = new Registration(plugins, Unsafe.class);
-        } else {
-            r = new Registration(plugins, "jdk.internal.misc.Unsafe", replacementsBytecodeProvider);
-        }
+        Registration r = new Registration(plugins, "jdk.internal.misc.Unsafe", replacementsBytecodeProvider);
         for (JavaKind kind : new JavaKind[]{JavaKind.Int, JavaKind.Long, JavaKind.Object}) {
             Class<?> javaClass = kind == JavaKind.Object ? Object.class : kind.toJavaClass();
 

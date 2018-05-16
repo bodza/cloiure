@@ -1,6 +1,6 @@
 package graalvm.compiler.word;
 
-import static graalvm.compiler.word.UnsafeAccess.UNSAFE;
+import graalvm.util.UnsafeAccess;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -628,49 +628,49 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer {
     @Override
     @Operation(opcode = Opcode.READ_POINTER)
     public byte readByte(WordBase offset, LocationIdentity locationIdentity) {
-        return UNSAFE.getByte(add((Word) offset).unbox());
+        return UnsafeAccess.UNSAFE.getByte(add((Word) offset).unbox());
     }
 
     @Override
     @Operation(opcode = Opcode.READ_POINTER)
     public char readChar(WordBase offset, LocationIdentity locationIdentity) {
-        return UNSAFE.getChar(add((Word) offset).unbox());
+        return UnsafeAccess.UNSAFE.getChar(add((Word) offset).unbox());
     }
 
     @Override
     @Operation(opcode = Opcode.READ_POINTER)
     public short readShort(WordBase offset, LocationIdentity locationIdentity) {
-        return UNSAFE.getShort(add((Word) offset).unbox());
+        return UnsafeAccess.UNSAFE.getShort(add((Word) offset).unbox());
     }
 
     @Override
     @Operation(opcode = Opcode.READ_POINTER)
     public int readInt(WordBase offset, LocationIdentity locationIdentity) {
-        return UNSAFE.getInt(add((Word) offset).unbox());
+        return UnsafeAccess.UNSAFE.getInt(add((Word) offset).unbox());
     }
 
     @Override
     @Operation(opcode = Opcode.READ_POINTER)
     public long readLong(WordBase offset, LocationIdentity locationIdentity) {
-        return UNSAFE.getLong(add((Word) offset).unbox());
+        return UnsafeAccess.UNSAFE.getLong(add((Word) offset).unbox());
     }
 
     @Override
     @Operation(opcode = Opcode.READ_POINTER)
     public float readFloat(WordBase offset, LocationIdentity locationIdentity) {
-        return UNSAFE.getFloat(add((Word) offset).unbox());
+        return UnsafeAccess.UNSAFE.getFloat(add((Word) offset).unbox());
     }
 
     @Override
     @Operation(opcode = Opcode.READ_POINTER)
     public double readDouble(WordBase offset, LocationIdentity locationIdentity) {
-        return UNSAFE.getDouble(add((Word) offset).unbox());
+        return UnsafeAccess.UNSAFE.getDouble(add((Word) offset).unbox());
     }
 
     @Override
     @Operation(opcode = Opcode.READ_POINTER)
     public <T extends WordBase> T readWord(WordBase offset, LocationIdentity locationIdentity) {
-        return box(UNSAFE.getAddress(add((Word) offset).unbox()));
+        return box(UnsafeAccess.UNSAFE.getAddress(add((Word) offset).unbox()));
     }
 
     @Override
@@ -734,55 +734,55 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer {
     @Override
     @Operation(opcode = Opcode.WRITE_POINTER)
     public void writeByte(WordBase offset, byte val, LocationIdentity locationIdentity) {
-        UNSAFE.putByte(add((Word) offset).unbox(), val);
+        UnsafeAccess.UNSAFE.putByte(add((Word) offset).unbox(), val);
     }
 
     @Override
     @Operation(opcode = Opcode.WRITE_POINTER)
     public void writeChar(WordBase offset, char val, LocationIdentity locationIdentity) {
-        UNSAFE.putChar(add((Word) offset).unbox(), val);
+        UnsafeAccess.UNSAFE.putChar(add((Word) offset).unbox(), val);
     }
 
     @Override
     @Operation(opcode = Opcode.WRITE_POINTER)
     public void writeShort(WordBase offset, short val, LocationIdentity locationIdentity) {
-        UNSAFE.putShort(add((Word) offset).unbox(), val);
+        UnsafeAccess.UNSAFE.putShort(add((Word) offset).unbox(), val);
     }
 
     @Override
     @Operation(opcode = Opcode.WRITE_POINTER)
     public void writeInt(WordBase offset, int val, LocationIdentity locationIdentity) {
-        UNSAFE.putInt(add((Word) offset).unbox(), val);
+        UnsafeAccess.UNSAFE.putInt(add((Word) offset).unbox(), val);
     }
 
     @Override
     @Operation(opcode = Opcode.WRITE_POINTER)
     public void writeLong(WordBase offset, long val, LocationIdentity locationIdentity) {
-        UNSAFE.putLong(add((Word) offset).unbox(), val);
+        UnsafeAccess.UNSAFE.putLong(add((Word) offset).unbox(), val);
     }
 
     @Override
     @Operation(opcode = Opcode.WRITE_POINTER)
     public void writeFloat(WordBase offset, float val, LocationIdentity locationIdentity) {
-        UNSAFE.putFloat(add((Word) offset).unbox(), val);
+        UnsafeAccess.UNSAFE.putFloat(add((Word) offset).unbox(), val);
     }
 
     @Override
     @Operation(opcode = Opcode.WRITE_POINTER)
     public void writeDouble(WordBase offset, double val, LocationIdentity locationIdentity) {
-        UNSAFE.putDouble(add((Word) offset).unbox(), val);
+        UnsafeAccess.UNSAFE.putDouble(add((Word) offset).unbox(), val);
     }
 
     @Override
     @Operation(opcode = Opcode.WRITE_POINTER)
     public void writeWord(WordBase offset, WordBase val, LocationIdentity locationIdentity) {
-        UNSAFE.putAddress(add((Word) offset).unbox(), ((Word) val).unbox());
+        UnsafeAccess.UNSAFE.putAddress(add((Word) offset).unbox(), ((Word) val).unbox());
     }
 
     @Override
     @Operation(opcode = Opcode.INITIALIZE)
     public void initializeLong(WordBase offset, long val, LocationIdentity locationIdentity) {
-        UNSAFE.putLong(add((Word) offset).unbox(), val);
+        UnsafeAccess.UNSAFE.putLong(add((Word) offset).unbox(), val);
     }
 
     @Override
@@ -852,49 +852,49 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer {
     @Override
     @Operation(opcode = Opcode.READ_POINTER)
     public byte readByte(WordBase offset) {
-        return UNSAFE.getByte(add((Word) offset).unbox());
+        return UnsafeAccess.UNSAFE.getByte(add((Word) offset).unbox());
     }
 
     @Override
     @Operation(opcode = Opcode.READ_POINTER)
     public char readChar(WordBase offset) {
-        return UNSAFE.getChar(add((Word) offset).unbox());
+        return UnsafeAccess.UNSAFE.getChar(add((Word) offset).unbox());
     }
 
     @Override
     @Operation(opcode = Opcode.READ_POINTER)
     public short readShort(WordBase offset) {
-        return UNSAFE.getShort(add((Word) offset).unbox());
+        return UnsafeAccess.UNSAFE.getShort(add((Word) offset).unbox());
     }
 
     @Override
     @Operation(opcode = Opcode.READ_POINTER)
     public int readInt(WordBase offset) {
-        return UNSAFE.getInt(add((Word) offset).unbox());
+        return UnsafeAccess.UNSAFE.getInt(add((Word) offset).unbox());
     }
 
     @Override
     @Operation(opcode = Opcode.READ_POINTER)
     public long readLong(WordBase offset) {
-        return UNSAFE.getLong(add((Word) offset).unbox());
+        return UnsafeAccess.UNSAFE.getLong(add((Word) offset).unbox());
     }
 
     @Override
     @Operation(opcode = Opcode.READ_POINTER)
     public float readFloat(WordBase offset) {
-        return UNSAFE.getFloat(add((Word) offset).unbox());
+        return UnsafeAccess.UNSAFE.getFloat(add((Word) offset).unbox());
     }
 
     @Override
     @Operation(opcode = Opcode.READ_POINTER)
     public double readDouble(WordBase offset) {
-        return UNSAFE.getDouble(add((Word) offset).unbox());
+        return UnsafeAccess.UNSAFE.getDouble(add((Word) offset).unbox());
     }
 
     @Override
     @Operation(opcode = Opcode.READ_POINTER)
     public <T extends WordBase> T readWord(WordBase offset) {
-        return box(UNSAFE.getAddress(add((Word) offset).unbox()));
+        return box(UnsafeAccess.UNSAFE.getAddress(add((Word) offset).unbox()));
     }
 
     @Override
@@ -966,43 +966,43 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer {
     @Override
     @Operation(opcode = Opcode.WRITE_POINTER)
     public void writeByte(WordBase offset, byte val) {
-        UNSAFE.putByte(add((Word) offset).unbox(), val);
+        UnsafeAccess.UNSAFE.putByte(add((Word) offset).unbox(), val);
     }
 
     @Override
     @Operation(opcode = Opcode.WRITE_POINTER)
     public void writeChar(WordBase offset, char val) {
-        UNSAFE.putChar(add((Word) offset).unbox(), val);
+        UnsafeAccess.UNSAFE.putChar(add((Word) offset).unbox(), val);
     }
 
     @Override
     @Operation(opcode = Opcode.WRITE_POINTER)
     public void writeShort(WordBase offset, short val) {
-        UNSAFE.putShort(add((Word) offset).unbox(), val);
+        UnsafeAccess.UNSAFE.putShort(add((Word) offset).unbox(), val);
     }
 
     @Override
     @Operation(opcode = Opcode.WRITE_POINTER)
     public void writeInt(WordBase offset, int val) {
-        UNSAFE.putInt(add((Word) offset).unbox(), val);
+        UnsafeAccess.UNSAFE.putInt(add((Word) offset).unbox(), val);
     }
 
     @Override
     @Operation(opcode = Opcode.WRITE_POINTER)
     public void writeLong(WordBase offset, long val) {
-        UNSAFE.putLong(add((Word) offset).unbox(), val);
+        UnsafeAccess.UNSAFE.putLong(add((Word) offset).unbox(), val);
     }
 
     @Override
     @Operation(opcode = Opcode.WRITE_POINTER)
     public void writeFloat(WordBase offset, float val) {
-        UNSAFE.putFloat(add((Word) offset).unbox(), val);
+        UnsafeAccess.UNSAFE.putFloat(add((Word) offset).unbox(), val);
     }
 
     @Override
     @Operation(opcode = Opcode.WRITE_POINTER)
     public void writeDouble(WordBase offset, double val) {
-        UNSAFE.putDouble(add((Word) offset).unbox(), val);
+        UnsafeAccess.UNSAFE.putDouble(add((Word) offset).unbox(), val);
     }
 
     @Override
@@ -1024,13 +1024,13 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer {
     @Override
     @Operation(opcode = Opcode.CAS_POINTER)
     public boolean logicCompareAndSwapInt(WordBase offset, int expectedValue, int newValue, LocationIdentity locationIdentity) {
-        return UNSAFE.compareAndSwapInt(this.toObject(), ((Word) offset).unbox(), expectedValue, newValue);
+        return UnsafeAccess.UNSAFE.compareAndSwapInt(this.toObject(), ((Word) offset).unbox(), expectedValue, newValue);
     }
 
     @Override
     @Operation(opcode = Opcode.CAS_POINTER)
     public boolean logicCompareAndSwapLong(WordBase offset, long expectedValue, long newValue, LocationIdentity locationIdentity) {
-        return UNSAFE.compareAndSwapLong(this.toObject(), ((Word) offset).unbox(), expectedValue, newValue);
+        return UnsafeAccess.UNSAFE.compareAndSwapLong(this.toObject(), ((Word) offset).unbox(), expectedValue, newValue);
     }
 
     @Override
@@ -1040,13 +1040,13 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer {
     @Override
     @Operation(opcode = Opcode.CAS_POINTER)
     public boolean logicCompareAndSwapObject(WordBase offset, Object expectedValue, Object newValue, LocationIdentity locationIdentity) {
-        return UNSAFE.compareAndSwapObject(this.toObject(), ((Word) offset).unbox(), expectedValue, newValue);
+        return UnsafeAccess.UNSAFE.compareAndSwapObject(this.toObject(), ((Word) offset).unbox(), expectedValue, newValue);
     }
 
     @Override
     @Operation(opcode = Opcode.WRITE_POINTER)
     public void writeWord(WordBase offset, WordBase val) {
-        UNSAFE.putAddress(add((Word) offset).unbox(), ((Word) val).unbox());
+        UnsafeAccess.UNSAFE.putAddress(add((Word) offset).unbox(), ((Word) val).unbox());
     }
 
     @Override

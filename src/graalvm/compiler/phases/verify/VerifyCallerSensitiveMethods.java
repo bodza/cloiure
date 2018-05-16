@@ -1,7 +1,5 @@
 package graalvm.compiler.phases.verify;
 
-import static graalvm.compiler.serviceprovider.GraalServices.Java8OrEarlier;
-
 import java.lang.annotation.Annotation;
 
 import graalvm.compiler.nodes.Invoke;
@@ -30,13 +28,8 @@ public class VerifyCallerSensitiveMethods extends VerifyPhase<PhaseContext> {
     public VerifyCallerSensitiveMethods() {
         try {
             ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-            if (Java8OrEarlier) {
-                reflectionClass = classLoader.loadClass("sun.reflect.Reflection");
-                callerSensitiveClass = (Class<? extends Annotation>) classLoader.loadClass("sun.reflect.ConstantPool");
-            } else {
-                reflectionClass = classLoader.loadClass("jdk.internal.reflect.Reflection");
-                callerSensitiveClass = (Class<? extends Annotation>) classLoader.loadClass("jdk.internal.reflect.ConstantPool");
-            }
+            reflectionClass = classLoader.loadClass("jdk.internal.reflect.Reflection");
+            callerSensitiveClass = (Class<? extends Annotation>) classLoader.loadClass("jdk.internal.reflect.ConstantPool");
         } catch (ClassNotFoundException e) {
             throw new AssertionError(e);
         }

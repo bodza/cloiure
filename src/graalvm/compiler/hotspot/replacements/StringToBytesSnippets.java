@@ -1,6 +1,6 @@
 package graalvm.compiler.hotspot.replacements;
 
-import static graalvm.compiler.hotspot.replacements.UnsafeAccess.UNSAFE;
+import graalvm.util.UnsafeAccess;
 import static graalvm.compiler.replacements.SnippetTemplate.DEFAULT_REPLACER;
 
 import graalvm.compiler.api.replacements.Fold;
@@ -34,7 +34,7 @@ public class StringToBytesSnippets implements Snippets {
 
     @Fold
     static long arrayBaseOffset() {
-        return UNSAFE.arrayBaseOffset(char[].class);
+        return UnsafeAccess.UNSAFE.arrayBaseOffset(char[].class);
     }
 
     @Snippet
@@ -44,7 +44,7 @@ public class StringToBytesSnippets implements Snippets {
         Word cArray = CStringConstant.cstring(compilationTimeString);
         while (i-- > 0) {
             // array[i] = cArray.readByte(i);
-            UNSAFE.putByte(array, arrayBaseOffset() + i, cArray.readByte(i, CSTRING_LOCATION));
+            UnsafeAccess.UNSAFE.putByte(array, arrayBaseOffset() + i, cArray.readByte(i, CSTRING_LOCATION));
         }
         return array;
     }

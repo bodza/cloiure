@@ -1,15 +1,15 @@
-package graalvm.compiler.core.common;
+package graalvm.util;
 
 import java.lang.reflect.Field;
 
 import sun.misc.Unsafe;
 
 /**
- * Package private access to the {@link Unsafe} capability.
+ * Public access to the {@link Unsafe} capability.
  */
-class UnsafeAccess {
+public final class UnsafeAccess {
 
-    static final Unsafe UNSAFE = initUnsafe();
+    public static final Unsafe UNSAFE = initUnsafe();
 
     private static Unsafe initUnsafe() {
         try {

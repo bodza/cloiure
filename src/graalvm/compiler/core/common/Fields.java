@@ -1,13 +1,11 @@
 package graalvm.compiler.core.common;
 
-import static graalvm.compiler.core.common.UnsafeAccess.UNSAFE;
+import graalvm.util.UnsafeAccess;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 import graalvm.compiler.debug.GraalError;
-
-import sun.misc.Unsafe;
 
 /**
  * Describes fields in a class, primarily for access via {@link Unsafe}.
@@ -100,27 +98,27 @@ public class Fields {
             Class<?> type = types[index];
             if (type.isPrimitive()) {
                 if (type == Integer.TYPE) {
-                    UNSAFE.putInt(to, offset, UNSAFE.getInt(from, offset));
+                    UnsafeAccess.UNSAFE.putInt(to, offset, UnsafeAccess.UNSAFE.getInt(from, offset));
                 } else if (type == Long.TYPE) {
-                    UNSAFE.putLong(to, offset, UNSAFE.getLong(from, offset));
+                    UnsafeAccess.UNSAFE.putLong(to, offset, UnsafeAccess.UNSAFE.getLong(from, offset));
                 } else if (type == Boolean.TYPE) {
-                    UNSAFE.putBoolean(to, offset, UNSAFE.getBoolean(from, offset));
+                    UnsafeAccess.UNSAFE.putBoolean(to, offset, UnsafeAccess.UNSAFE.getBoolean(from, offset));
                 } else if (type == Float.TYPE) {
-                    UNSAFE.putFloat(to, offset, UNSAFE.getFloat(from, offset));
+                    UnsafeAccess.UNSAFE.putFloat(to, offset, UnsafeAccess.UNSAFE.getFloat(from, offset));
                 } else if (type == Double.TYPE) {
-                    UNSAFE.putDouble(to, offset, UNSAFE.getDouble(from, offset));
+                    UnsafeAccess.UNSAFE.putDouble(to, offset, UnsafeAccess.UNSAFE.getDouble(from, offset));
                 } else if (type == Short.TYPE) {
-                    UNSAFE.putShort(to, offset, UNSAFE.getShort(from, offset));
+                    UnsafeAccess.UNSAFE.putShort(to, offset, UnsafeAccess.UNSAFE.getShort(from, offset));
                 } else if (type == Character.TYPE) {
-                    UNSAFE.putChar(to, offset, UNSAFE.getChar(from, offset));
+                    UnsafeAccess.UNSAFE.putChar(to, offset, UnsafeAccess.UNSAFE.getChar(from, offset));
                 } else if (type == Byte.TYPE) {
-                    UNSAFE.putByte(to, offset, UNSAFE.getByte(from, offset));
+                    UnsafeAccess.UNSAFE.putByte(to, offset, UnsafeAccess.UNSAFE.getByte(from, offset));
                 } else {
                     assert false : "unhandled property type: " + type;
                 }
             } else {
-                Object obj = UNSAFE.getObject(from, offset);
-                UNSAFE.putObject(to, offset, trans == null ? obj : trans.apply(index, obj));
+                Object obj = UnsafeAccess.UNSAFE.getObject(from, offset);
+                UnsafeAccess.UNSAFE.putObject(to, offset, trans == null ? obj : trans.apply(index, obj));
             }
         }
     }
@@ -138,26 +136,26 @@ public class Fields {
         Object value = null;
         if (type.isPrimitive()) {
             if (type == Integer.TYPE) {
-                value = UNSAFE.getInt(object, offset);
+                value = UnsafeAccess.UNSAFE.getInt(object, offset);
             } else if (type == Long.TYPE) {
-                value = UNSAFE.getLong(object, offset);
+                value = UnsafeAccess.UNSAFE.getLong(object, offset);
             } else if (type == Boolean.TYPE) {
-                value = UNSAFE.getBoolean(object, offset);
+                value = UnsafeAccess.UNSAFE.getBoolean(object, offset);
             } else if (type == Float.TYPE) {
-                value = UNSAFE.getFloat(object, offset);
+                value = UnsafeAccess.UNSAFE.getFloat(object, offset);
             } else if (type == Double.TYPE) {
-                value = UNSAFE.getDouble(object, offset);
+                value = UnsafeAccess.UNSAFE.getDouble(object, offset);
             } else if (type == Short.TYPE) {
-                value = UNSAFE.getShort(object, offset);
+                value = UnsafeAccess.UNSAFE.getShort(object, offset);
             } else if (type == Character.TYPE) {
-                value = UNSAFE.getChar(object, offset);
+                value = UnsafeAccess.UNSAFE.getChar(object, offset);
             } else if (type == Byte.TYPE) {
-                value = UNSAFE.getByte(object, offset);
+                value = UnsafeAccess.UNSAFE.getByte(object, offset);
             } else {
                 assert false : "unhandled property type: " + type;
             }
         } else {
-            value = UNSAFE.getObject(object, offset);
+            value = UnsafeAccess.UNSAFE.getObject(object, offset);
         }
         return value;
     }
@@ -174,21 +172,21 @@ public class Fields {
         Class<?> type = types[index];
 
         if (type == Integer.TYPE) {
-            return UNSAFE.getInt(object, offset);
+            return UnsafeAccess.UNSAFE.getInt(object, offset);
         } else if (type == Long.TYPE) {
-            return UNSAFE.getLong(object, offset);
+            return UnsafeAccess.UNSAFE.getLong(object, offset);
         } else if (type == Boolean.TYPE) {
-            return UNSAFE.getBoolean(object, offset) ? 1 : 0;
+            return UnsafeAccess.UNSAFE.getBoolean(object, offset) ? 1 : 0;
         } else if (type == Float.TYPE) {
-            return Float.floatToRawIntBits(UNSAFE.getFloat(object, offset));
+            return Float.floatToRawIntBits(UnsafeAccess.UNSAFE.getFloat(object, offset));
         } else if (type == Double.TYPE) {
-            return Double.doubleToRawLongBits(UNSAFE.getDouble(object, offset));
+            return Double.doubleToRawLongBits(UnsafeAccess.UNSAFE.getDouble(object, offset));
         } else if (type == Short.TYPE) {
-            return UNSAFE.getShort(object, offset);
+            return UnsafeAccess.UNSAFE.getShort(object, offset);
         } else if (type == Character.TYPE) {
-            return UNSAFE.getChar(object, offset);
+            return UnsafeAccess.UNSAFE.getChar(object, offset);
         } else if (type == Byte.TYPE) {
-            return UNSAFE.getByte(object, offset);
+            return UnsafeAccess.UNSAFE.getByte(object, offset);
         } else {
             throw GraalError.shouldNotReachHere();
         }
@@ -245,27 +243,27 @@ public class Fields {
         Class<?> type = types[index];
         if (type.isPrimitive()) {
             if (type == Integer.TYPE) {
-                UNSAFE.putInt(object, offset, (Integer) value);
+                UnsafeAccess.UNSAFE.putInt(object, offset, (Integer) value);
             } else if (type == Long.TYPE) {
-                UNSAFE.putLong(object, offset, (Long) value);
+                UnsafeAccess.UNSAFE.putLong(object, offset, (Long) value);
             } else if (type == Boolean.TYPE) {
-                UNSAFE.putBoolean(object, offset, (Boolean) value);
+                UnsafeAccess.UNSAFE.putBoolean(object, offset, (Boolean) value);
             } else if (type == Float.TYPE) {
-                UNSAFE.putFloat(object, offset, (Float) value);
+                UnsafeAccess.UNSAFE.putFloat(object, offset, (Float) value);
             } else if (type == Double.TYPE) {
-                UNSAFE.putDouble(object, offset, (Double) value);
+                UnsafeAccess.UNSAFE.putDouble(object, offset, (Double) value);
             } else if (type == Short.TYPE) {
-                UNSAFE.putShort(object, offset, (Short) value);
+                UnsafeAccess.UNSAFE.putShort(object, offset, (Short) value);
             } else if (type == Character.TYPE) {
-                UNSAFE.putChar(object, offset, (Character) value);
+                UnsafeAccess.UNSAFE.putChar(object, offset, (Character) value);
             } else if (type == Byte.TYPE) {
-                UNSAFE.putByte(object, offset, (Byte) value);
+                UnsafeAccess.UNSAFE.putByte(object, offset, (Byte) value);
             } else {
                 assert false : "unhandled property type: " + type;
             }
         } else {
             assert checkAssignableFrom(object, index, value);
-            UNSAFE.putObject(object, offset, value);
+            UnsafeAccess.UNSAFE.putObject(object, offset, value);
         }
     }
 
@@ -273,21 +271,21 @@ public class Fields {
         long offset = offsets[index];
         Class<?> type = types[index];
         if (type == Integer.TYPE) {
-            UNSAFE.putInt(object, offset, (int) value);
+            UnsafeAccess.UNSAFE.putInt(object, offset, (int) value);
         } else if (type == Long.TYPE) {
-            UNSAFE.putLong(object, offset, value);
+            UnsafeAccess.UNSAFE.putLong(object, offset, value);
         } else if (type == Boolean.TYPE) {
-            UNSAFE.putBoolean(object, offset, value != 0);
+            UnsafeAccess.UNSAFE.putBoolean(object, offset, value != 0);
         } else if (type == Float.TYPE) {
-            UNSAFE.putFloat(object, offset, Float.intBitsToFloat((int) value));
+            UnsafeAccess.UNSAFE.putFloat(object, offset, Float.intBitsToFloat((int) value));
         } else if (type == Double.TYPE) {
-            UNSAFE.putDouble(object, offset, Double.longBitsToDouble(value));
+            UnsafeAccess.UNSAFE.putDouble(object, offset, Double.longBitsToDouble(value));
         } else if (type == Short.TYPE) {
-            UNSAFE.putShort(object, offset, (short) value);
+            UnsafeAccess.UNSAFE.putShort(object, offset, (short) value);
         } else if (type == Character.TYPE) {
-            UNSAFE.putChar(object, offset, (char) value);
+            UnsafeAccess.UNSAFE.putChar(object, offset, (char) value);
         } else if (type == Byte.TYPE) {
-            UNSAFE.putByte(object, offset, (byte) value);
+            UnsafeAccess.UNSAFE.putByte(object, offset, (byte) value);
         } else {
             throw GraalError.shouldNotReachHere();
         }
@@ -308,51 +306,51 @@ public class Fields {
 
     public boolean getBoolean(Object n, int i) {
         assert types[i] == boolean.class;
-        return UNSAFE.getBoolean(n, offsets[i]);
+        return UnsafeAccess.UNSAFE.getBoolean(n, offsets[i]);
     }
 
     public byte getByte(Object n, int i) {
         assert types[i] == byte.class;
-        return UNSAFE.getByte(n, offsets[i]);
+        return UnsafeAccess.UNSAFE.getByte(n, offsets[i]);
     }
 
     public short getShort(Object n, int i) {
         assert types[i] == short.class;
-        return UNSAFE.getShort(n, offsets[i]);
+        return UnsafeAccess.UNSAFE.getShort(n, offsets[i]);
     }
 
     public char getChar(Object n, int i) {
         assert types[i] == char.class;
-        return UNSAFE.getChar(n, offsets[i]);
+        return UnsafeAccess.UNSAFE.getChar(n, offsets[i]);
     }
 
     public int getInt(Object n, int i) {
         assert types[i] == int.class;
-        return UNSAFE.getInt(n, offsets[i]);
+        return UnsafeAccess.UNSAFE.getInt(n, offsets[i]);
     }
 
     public long getLong(Object n, int i) {
         assert types[i] == long.class;
-        return UNSAFE.getLong(n, offsets[i]);
+        return UnsafeAccess.UNSAFE.getLong(n, offsets[i]);
     }
 
     public float getFloat(Object n, int i) {
         assert types[i] == float.class;
-        return UNSAFE.getFloat(n, offsets[i]);
+        return UnsafeAccess.UNSAFE.getFloat(n, offsets[i]);
     }
 
     public double getDouble(Object n, int i) {
         assert types[i] == double.class;
-        return UNSAFE.getDouble(n, offsets[i]);
+        return UnsafeAccess.UNSAFE.getDouble(n, offsets[i]);
     }
 
     public Object getObject(Object object, int i) {
         assert !types[i].isPrimitive();
-        return UNSAFE.getObject(object, offsets[i]);
+        return UnsafeAccess.UNSAFE.getObject(object, offsets[i]);
     }
 
     public void putObject(Object object, int i, Object value) {
         assert checkAssignableFrom(object, i, value);
-        UNSAFE.putObject(object, offsets[i], value);
+        UnsafeAccess.UNSAFE.putObject(object, offsets[i], value);
     }
 }

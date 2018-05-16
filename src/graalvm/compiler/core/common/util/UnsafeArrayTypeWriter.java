@@ -6,6 +6,8 @@ import static graalvm.compiler.core.common.util.TypeConversion.asS4;
 import static graalvm.compiler.core.common.util.TypeConversion.asU1;
 import static graalvm.compiler.core.common.util.TypeConversion.asU2;
 import static graalvm.compiler.core.common.util.TypeConversion.asU4;
+
+import graalvm.util.UnsafeAccess;
 import sun.misc.Unsafe;
 
 /**

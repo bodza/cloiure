@@ -4,7 +4,6 @@ import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
 import static graalvm.compiler.hotspot.meta.HotSpotAOTProfilingPlugin.Options.TieredAOT;
 import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.JAVA_THREAD_THREAD_OBJECT_LOCATION;
 import static graalvm.compiler.java.BytecodeParserOptions.InlineDuringParsing;
-import static graalvm.compiler.serviceprovider.GraalServices.Java8OrEarlier;
 
 import java.lang.invoke.ConstantCallSite;
 import java.lang.invoke.MutableCallSite;
@@ -89,7 +88,6 @@ import jdk.vm.ci.meta.DeoptimizationReason;
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
-import sun.misc.Unsafe;
 
 /**
  * Defines the {@link Plugins} used when running on HotSpot.
@@ -271,14 +269,8 @@ public class HotSpotGraphBuilderPlugins {
     }
 
     private static void registerUnsafePlugins(InvocationPlugins plugins, BytecodeProvider replacementBytecodeProvider) {
-        Registration r;
-        if (Java8OrEarlier) {
-            r = new Registration(plugins, Unsafe.class, replacementBytecodeProvider);
-        } else {
-            r = new Registration(plugins, "jdk.internal.misc.Unsafe", replacementBytecodeProvider);
-        }
-        r.registerMethodSubstitution(HotSpotUnsafeSubstitutions.class, HotSpotUnsafeSubstitutions.copyMemoryName, "copyMemory", Receiver.class, Object.class, long.class, Object.class, long.class,
-                        long.class);
+        Registration r = new Registration(plugins, "jdk.internal.misc.Unsafe", replacementBytecodeProvider);
+        r.registerMethodSubstitution(HotSpotUnsafeSubstitutions.class, HotSpotUnsafeSubstitutions.copyMemoryName, "copyMemory", Receiver.class, Object.class, long.class, Object.class, long.class, long.class);
     }
 
     private static final LocationIdentity INSTANCE_KLASS_CONSTANTS = NamedLocationIdentity.immutable("InstanceKlass::_constants");
@@ -414,31 +406,13 @@ public class HotSpotGraphBuilderPlugins {
         r.registerMethodSubstitution(ThreadSubstitutions.class, "isInterrupted", Receiver.class, boolean.class);
     }
 
-    public static final String cbcEncryptName;
-    public static final String cbcDecryptName;
-    public static final String aesEncryptName;
-    public static final String aesDecryptName;
+    public static final String cbcEncryptName = "implEncrypt";
+    public static final String cbcDecryptName = "implDecrypt";
+    public static final String aesEncryptName = "implEncryptBlock";
+    public static final String aesDecryptName = "implDecryptBlock";
 
-    public static final String reflectionClass;
-    public static final String constantPoolClass;
-
-    static {
-        if (Java8OrEarlier) {
-            cbcEncryptName = "encrypt";
-            cbcDecryptName = "decrypt";
-            aesEncryptName = "encryptBlock";
-            aesDecryptName = "decryptBlock";
-            reflectionClass = "sun.reflect.Reflection";
-            constantPoolClass = "sun.reflect.ConstantPool";
-        } else {
-            cbcEncryptName = "implEncrypt";
-            cbcDecryptName = "implDecrypt";
-            aesEncryptName = "implEncryptBlock";
-            aesDecryptName = "implDecryptBlock";
-            reflectionClass = "jdk.internal.reflect.Reflection";
-            constantPoolClass = "jdk.internal.reflect.ConstantPool";
-        }
-    }
+    public static final String reflectionClass = "jdk.internal.reflect.Reflection";
+    public static final String constantPoolClass = "jdk.internal.reflect.ConstantPool";
 
     private static void registerAESPlugins(InvocationPlugins plugins, GraalHotSpotVMConfig config, BytecodeProvider bytecodeProvider) {
         if (config.useAESIntrinsics) {
@@ -462,23 +436,7 @@ public class HotSpotGraphBuilderPlugins {
         Registration r = new Registration(plugins, BigInteger.class, bytecodeProvider);
         if (config.useMultiplyToLenIntrinsic()) {
             assert config.multiplyToLen != 0L;
-            if (Java8OrEarlier) {
-                try {
-                    Method m = BigInteger.class.getDeclaredMethod("multiplyToLen", int[].class, int.class, int[].class, int.class, int[].class);
-                    if (Modifier.isStatic(m.getModifiers())) {
-                        r.registerMethodSubstitution(BigIntegerSubstitutions.class, "multiplyToLen", "multiplyToLenStatic", int[].class, int.class, int[].class, int.class,
-                                        int[].class);
-                    } else {
-                        r.registerMethodSubstitution(BigIntegerSubstitutions.class, "multiplyToLen", Receiver.class, int[].class, int.class, int[].class, int.class,
-                                        int[].class);
-                    }
-                } catch (NoSuchMethodException | SecurityException e) {
-                    throw new GraalError(e);
-                }
-            } else {
-                r.registerMethodSubstitution(BigIntegerSubstitutions.class, "implMultiplyToLen", "multiplyToLenStatic", int[].class, int.class, int[].class, int.class,
-                                int[].class);
-            }
+            r.registerMethodSubstitution(BigIntegerSubstitutions.class, "implMultiplyToLen", "multiplyToLenStatic", int[].class, int.class, int[].class, int.class, int[].class);
         }
         if (config.useMulAddIntrinsic()) {
             r.registerMethodSubstitution(BigIntegerSubstitutions.class, "implMulAdd", int[].class, int[].class, int.class, int.class, int.class);
@@ -516,13 +474,8 @@ public class HotSpotGraphBuilderPlugins {
         if (config.useCRC32Intrinsics) {
             Registration r = new Registration(plugins, CRC32.class, bytecodeProvider);
             r.registerMethodSubstitution(CRC32Substitutions.class, "update", int.class, int.class);
-            if (Java8OrEarlier) {
-                r.registerMethodSubstitution(CRC32Substitutions.class, "updateBytes", int.class, byte[].class, int.class, int.class);
-                r.registerMethodSubstitution(CRC32Substitutions.class, "updateByteBuffer", int.class, long.class, int.class, int.class);
-            } else {
-                r.registerMethodSubstitution(CRC32Substitutions.class, "updateBytes0", int.class, byte[].class, int.class, int.class);
-                r.registerMethodSubstitution(CRC32Substitutions.class, "updateByteBuffer0", int.class, long.class, int.class, int.class);
-            }
+            r.registerMethodSubstitution(CRC32Substitutions.class, "updateBytes0", int.class, byte[].class, int.class, int.class);
+            r.registerMethodSubstitution(CRC32Substitutions.class, "updateByteBuffer0", int.class, long.class, int.class, int.class);
         }
     }
 

@@ -3,7 +3,7 @@ package graalvm.compiler.hotspot.replacements;
 import static graalvm.compiler.hotspot.HotSpotBackend.DECRYPT;
 import static graalvm.compiler.hotspot.HotSpotBackend.DECRYPT_WITH_ORIGINAL_KEY;
 import static graalvm.compiler.hotspot.HotSpotBackend.ENCRYPT;
-import static graalvm.compiler.hotspot.replacements.UnsafeAccess.UNSAFE;
+import graalvm.util.UnsafeAccess;
 import static jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider.getArrayBaseOffset;
 
 import graalvm.compiler.api.replacements.ClassSubstitution;
@@ -42,10 +42,10 @@ public class CipherBlockChainingSubstitutions {
             ClassLoader cl = ClassLoader.getSystemClassLoader();
 
             feedbackCipherClass = Class.forName("com.sun.crypto.provider.FeedbackCipher", true, cl);
-            embeddedCipherOffset = UNSAFE.objectFieldOffset(feedbackCipherClass.getDeclaredField("embeddedCipher"));
+            embeddedCipherOffset = UnsafeAccess.UNSAFE.objectFieldOffset(feedbackCipherClass.getDeclaredField("embeddedCipher"));
 
             cipherBlockChainingClass = Class.forName("com.sun.crypto.provider.CipherBlockChaining", true, cl);
-            rOffset = UNSAFE.objectFieldOffset(cipherBlockChainingClass.getDeclaredField("r"));
+            rOffset = UnsafeAccess.UNSAFE.objectFieldOffset(cipherBlockChainingClass.getDeclaredField("r"));
         } catch (Exception ex) {
             throw new GraalError(ex);
         }

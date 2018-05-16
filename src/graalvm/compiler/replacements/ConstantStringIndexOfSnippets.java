@@ -21,6 +21,8 @@ import graalvm.compiler.replacements.nodes.ExplodeLoopNode;
 import jdk.vm.ci.code.TargetDescription;
 import jdk.vm.ci.meta.JavaKind;
 
+import graalvm.util.UnsafeAccess;
+
 public class ConstantStringIndexOfSnippets implements Snippets {
     public static class Templates extends AbstractTemplates {
 
