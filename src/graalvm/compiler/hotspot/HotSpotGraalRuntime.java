@@ -141,11 +141,6 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider
         compilerConfigurationName = compilerConfigurationFactory.getName();
 
         compiler = new HotSpotGraalCompiler(jvmciRuntime, this, options);
-        management = GraalServices.loadSingle(HotSpotGraalManagementRegistration.class, false);
-        if (management != null)
-        {
-            management.initialize(this);
-        }
 
         BackendMap backendMap = compilerConfigurationFactory.createBackendMap();
 
@@ -227,29 +222,6 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider
     @Override
     public DebugContext openDebugContext(OptionValues compilationOptions, CompilationIdentifier compilationId, Object compilable, Iterable<DebugHandlersFactory> factories)
     {
-        if (management != null && management.poll(false) != null)
-        {
-            if (compilable instanceof HotSpotResolvedJavaMethod)
-            {
-                HotSpotResolvedObjectType type = ((HotSpotResolvedJavaMethod) compilable).getDeclaringClass();
-                if (type instanceof HotSpotResolvedJavaType)
-                {
-                    Class<?> clazz = ((HotSpotResolvedJavaType) type).mirror();
-                    try
-                    {
-                        ClassLoader cl = clazz.getClassLoader();
-                        if (cl != null)
-                        {
-                            loaders.add(cl);
-                        }
-                    }
-                    catch (SecurityException e)
-                    {
-                        // This loader can obviously not be used for resolving class names
-                    }
-                }
-            }
-        }
         Description description = new Description(compilable, compilationId.toString(CompilationIdentifier.Verbosity.ID));
         return DebugContext.create(compilationOptions, description, metricValues, DEFAULT_LOG_STREAM, factories);
     }
@@ -396,24 +368,6 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider
         return compilationProblemsPerAction;
     }
 
-    // ------- Management interface ---------
-
-    private final HotSpotGraalManagementRegistration management;
-
-    /**
-     * @returns the management object for this runtime or {@code null}
-     */
-    public HotSpotGraalManagementRegistration getManagement()
-    {
-        return management;
-    }
-
-    /**
-     * Set of weak references to {@link ClassLoader}s available for resolving class names present in
-     * management {@linkplain #invokeManagementAction(String, Object[]) action} arguments.
-     */
-    private final WeakClassLoaderSet loaders = new WeakClassLoaderSet(ClassLoader.getSystemClassLoader());
-
     /**
      * Sets or updates this object's {@linkplain #getOptions() options} from {@code names} and
      * {@code values}.
@@ -557,64 +511,6 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider
             }
         }
         return result;
-    }
-
-    private void dumpMethod(String className, String methodName, String filter, String host, int port) throws Exception
-    {
-        EconomicSet<ClassNotFoundException> failures = EconomicSet.create();
-        EconomicSet<Class<?>> found = loaders.resolve(className, failures);
-        if (found.isEmpty())
-        {
-            ClassNotFoundException cause = failures.isEmpty() ? new ClassNotFoundException(className) : failures.iterator().next();
-            throw new Exception("Cannot find class " + className + " to schedule recompilation", cause);
-        }
-        for (Class<?> clazz : found)
-        {
-            ResolvedJavaType type = JVMCI.getRuntime().getHostJVMCIBackend().getMetaAccess().lookupJavaType(clazz);
-            for (ResolvedJavaMethod method : type.getDeclaredMethods())
-            {
-                if (methodName.equals(method.getName()) && method instanceof HotSpotResolvedJavaMethod)
-                {
-                    HotSpotResolvedJavaMethod hotSpotMethod = (HotSpotResolvedJavaMethod) method;
-                    dumpMethod(hotSpotMethod, filter, host, port);
-                }
-            }
-        }
-    }
-
-    private void dumpMethod(HotSpotResolvedJavaMethod hotSpotMethod, String filter, String host, int port) throws Exception
-    {
-        EconomicMap<OptionKey<?>, Object> extra = EconomicMap.create();
-        extra.put(DebugOptions.Dump, filter);
-        extra.put(DebugOptions.PrintGraphHost, host);
-        extra.put(DebugOptions.PrintBinaryGraphPort, port);
-        OptionValues compileOptions = new OptionValues(getOptions(), extra);
-        compiler.compileMethod(new HotSpotCompilationRequest(hotSpotMethod, -1, 0L), false, compileOptions);
-    }
-
-    public Object invokeManagementAction(String actionName, Object[] params) throws Exception
-    {
-        if ("dumpMethod".equals(actionName))
-        {
-            if (params.length != 0 && params[0] instanceof HotSpotResolvedJavaMethod)
-            {
-                HotSpotResolvedJavaMethod method = param(params, 0, "method", HotSpotResolvedJavaMethod.class, null);
-                String filter = param(params, 1, "filter", String.class, ":3");
-                String host = param(params, 2, "host", String.class, "localhost");
-                Number port = param(params, 3, "port", Number.class, 4445);
-                dumpMethod(method, filter, host, port.intValue());
-            }
-            else
-            {
-                String className = param(params, 0, "className", String.class, null);
-                String methodName = param(params, 1, "methodName", String.class, null);
-                String filter = param(params, 2, "filter", String.class, ":3");
-                String host = param(params, 3, "host", String.class, "localhost");
-                Number port = param(params, 4, "port", Number.class, 4445);
-                dumpMethod(className, methodName, filter, host, port.intValue());
-            }
-        }
-        return null;
     }
 
     private static <T> T param(Object[] arr, int index, String name, Class<T> type, T defaultValue)
