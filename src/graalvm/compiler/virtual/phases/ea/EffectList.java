@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodes.StructuredGraph;
@@ -45,14 +44,11 @@ public class EffectList implements Iterable<EffectList.Effect>
     private static final Effect[] EMPTY_ARRAY = new Effect[0];
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
-    private final DebugContext debug;
     private Effect[] effects = EMPTY_ARRAY;
-    private String[] names = EMPTY_STRING_ARRAY;
     private int size;
 
-    public EffectList(DebugContext debug)
+    public EffectList()
     {
-        this.debug = debug;
     }
 
     private void enlarge(int elements)
@@ -65,10 +61,6 @@ public class EffectList implements Iterable<EffectList.Effect>
                 length = Math.max(length * 2, 4);
             }
             effects = Arrays.copyOf(effects, length);
-            if (debug.isLogEnabled())
-            {
-                names = Arrays.copyOf(names, length);
-            }
         }
     }
 
@@ -79,12 +71,7 @@ public class EffectList implements Iterable<EffectList.Effect>
 
     public void add(String name, Effect effect)
     {
-        assert effect != null;
         enlarge(1);
-        if (debug.isLogEnabled())
-        {
-            names[size] = name;
-        }
         effects[size++] = effect;
     }
 
@@ -92,24 +79,14 @@ public class EffectList implements Iterable<EffectList.Effect>
     {
         enlarge(list.size);
         System.arraycopy(list.effects, 0, effects, size, list.size);
-        if (debug.isLogEnabled())
-        {
-            System.arraycopy(list.names, 0, names, size, list.size);
-        }
         size += list.size;
     }
 
     public void insertAll(EffectList list, int position)
     {
-        assert position >= 0 && position <= size;
         enlarge(list.size);
         System.arraycopy(effects, position, effects, position + list.size, size - position);
         System.arraycopy(list.effects, 0, effects, position, list.size);
-        if (debug.isLogEnabled())
-        {
-            System.arraycopy(names, position, names, position + list.size, size - position);
-            System.arraycopy(list.names, 0, names, position, list.size);
-        }
         size += list.size;
     }
 
@@ -125,7 +102,6 @@ public class EffectList implements Iterable<EffectList.Effect>
 
     public void backtrack(int checkpoint)
     {
-        assert checkpoint <= size;
         size = checkpoint;
     }
 
@@ -187,7 +163,6 @@ public class EffectList implements Iterable<EffectList.Effect>
                 if (!message)
                 {
                     message = true;
-                    debug.log(cfgKills ? " ==== cfg kill effects" : " ==== effects");
                 }
                 try
                 {
@@ -198,12 +173,6 @@ public class EffectList implements Iterable<EffectList.Effect>
                     StringBuilder str = new StringBuilder();
                     toString(str, i);
                     throw new GraalError(t).addContext("effect", str);
-                }
-                if (effect.isVisible() && debug.isLogEnabled())
-                {
-                    StringBuilder str = new StringBuilder();
-                    toString(str, i);
-                    debug.log("    %s", str);
                 }
             }
         }
@@ -263,13 +232,6 @@ public class EffectList implements Iterable<EffectList.Effect>
 
     private String getName(int i)
     {
-        if (debug.isLogEnabled())
-        {
-            return names[i];
-        }
-        else
-        {
-            return "";
-        }
+        return "";
     }
 }

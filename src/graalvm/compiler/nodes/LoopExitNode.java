@@ -27,7 +27,6 @@ public final class LoopExitNode extends BeginStateSplitNode implements IterableN
     public LoopExitNode(LoopBeginNode loop)
     {
         super(TYPE);
-        assert loop != null;
         loopBegin = loop;
     }
 

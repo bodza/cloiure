@@ -24,7 +24,6 @@ import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.TypeReference;
 import graalvm.compiler.core.common.util.Util;
 import graalvm.compiler.debug.DebugCloseable;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.GraalGraphError;
 import graalvm.compiler.graph.Graph.DuplicationReplacement;
@@ -49,7 +48,6 @@ import graalvm.compiler.nodes.FixedGuardNode;
 import graalvm.compiler.nodes.FixedNode;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.FrameState;
-import graalvm.compiler.nodes.InliningLog;
 import graalvm.compiler.nodes.Invoke;
 import graalvm.compiler.nodes.InvokeNode;
 import graalvm.compiler.nodes.InvokeWithExceptionNode;
@@ -172,13 +170,7 @@ public class InliningUtil extends ValueMergeUtil
     {
         if (allowLogging)
         {
-            DebugContext debug = invoke.asNode().getDebug();
             printInlining(method, invoke, inliningDepth, success, msg, args);
-            if (shouldLogMethod(debug))
-            {
-                String methodString = methodName(method, invoke);
-                logMethod(debug, methodString, success, msg, args);
-            }
         }
     }
 
@@ -187,79 +179,6 @@ public class InliningUtil extends ValueMergeUtil
         if (allowLogging)
         {
             printInlining(info, inliningDepth, success, msg, args);
-            DebugContext debug = info.graph().getDebug();
-            if (shouldLogMethod(debug))
-            {
-                logMethod(debug, methodName(info), success, msg, args);
-            }
-        }
-    }
-
-    /**
-     * Output a generic inlining decision to the logging stream (e.g. inlining termination
-     * condition).
-     *
-     * Used for debugging purposes.
-     */
-    public static void logInliningDecision(DebugContext debug, final String msg, final Object... args)
-    {
-        logInlining(debug, msg, args);
-    }
-
-    /**
-     * Output a decision about not inlining a method to the logging stream, for debugging purposes.
-     */
-    public static void logNotInlinedMethod(Invoke invoke, String msg)
-    {
-        DebugContext debug = invoke.asNode().getDebug();
-        if (shouldLogMethod(debug))
-        {
-            String methodString = invoke.toString();
-            if (invoke.callTarget() == null)
-            {
-                methodString += " callTarget=null";
-            }
-            else
-            {
-                String targetName = invoke.callTarget().targetName();
-                if (!methodString.endsWith(targetName))
-                {
-                    methodString += " " + targetName;
-                }
-            }
-            logMethod(debug, methodString, false, msg, new Object[0]);
-        }
-    }
-
-    private static void logMethod(DebugContext debug, final String methodString, final boolean success, final String msg, final Object... args)
-    {
-        String inliningMsg = "inlining " + methodString + ": " + msg;
-        if (!success)
-        {
-            inliningMsg = "not " + inliningMsg;
-        }
-        logInlining(debug, inliningMsg, args);
-    }
-
-    @SuppressWarnings("try")
-    private static void logInlining(DebugContext debug, final String msg, final Object... args)
-    {
-        try (DebugContext.Scope s = debug.scope(inliningDecisionsScopeString))
-        {
-            // Can't use log here since we are varargs
-            if (debug.isLogEnabled())
-            {
-                debug.logv(msg, args);
-            }
-        }
-    }
-
-    @SuppressWarnings("try")
-    private static boolean shouldLogMethod(DebugContext debug)
-    {
-        try (DebugContext.Scope s = debug.scope(inliningDecisionsScopeString))
-        {
-            return debug.isLogEnabled();
         }
     }
 
@@ -341,7 +260,6 @@ public class InliningUtil extends ValueMergeUtil
         {
             return "target method is null";
         }
-        assert invoke.stateAfter() != null : invoke;
         if (!invoke.useForInlining())
         {
             return "the invoke is marked to be not used for inlining";
@@ -391,15 +309,11 @@ public class InliningUtil extends ValueMergeUtil
      * @param reason the reason for inlining, used in tracing
      * @param phase the phase that invoked inlining
      */
-    @SuppressWarnings("try")
     public static UnmodifiableEconomicMap<Node, Node> inline(Invoke invoke, StructuredGraph inlineGraph, boolean receiverNullCheck, ResolvedJavaMethod inlineeMethod, String reason, String phase)
     {
         FixedNode invokeNode = invoke.asNode();
         StructuredGraph graph = invokeNode.graph();
         final NodeInputList<ValueNode> parameters = invoke.callTarget().arguments();
-
-        assert inlineGraph.getGuardsStage().ordinal() >= graph.getGuardsStage().ordinal();
-        assert !invokeNode.graph().isAfterFloatingReadPhase() : "inline isn't handled correctly after floating reads phase";
 
         if (receiverNullCheck && !((MethodCallTargetNode) invoke.callTarget()).isStatic())
         {
@@ -436,13 +350,11 @@ public class InliningUtil extends ValueMergeUtil
                     {
                         ResolvedJavaMethod target1 = inlineeMethod;
                         ResolvedJavaMethod target2 = invokeInInlineGraph.callTarget().targetMethod();
-                        assert target1.equals(target2) : String.format("invoke in inlined method expected to be partial intrinsic exit (i.e., call to %s), not a call to %s", target1.format("%H.%n(%p)"), target2.format("%H.%n(%p)"));
                         partialIntrinsicExits.add(invokeInInlineGraph);
                     }
                 }
                 else if (node instanceof UnwindNode)
                 {
-                    assert unwindNode == null;
                     unwindNode = (UnwindNode) node;
                 }
             }
@@ -466,23 +378,11 @@ public class InliningUtil extends ValueMergeUtil
             }
         };
 
-        assert invokeNode.successors().first() != null : invoke;
-        assert invokeNode.predecessor() != null;
-
         Mark mark = graph.getMark();
         // Instead, attach the inlining log of the child graph to the current inlining log.
-        EconomicMap<Node, Node> duplicates;
-        try (InliningLog.UpdateScope scope = graph.getInliningLog().openDefaultUpdateScope())
-        {
-            duplicates = graph.addDuplicates(nodes, inlineGraph, inlineGraph.getNodeCount(), localReplacement);
-            if (scope != null)
-            {
-                graph.getInliningLog().addDecision(invoke, true, phase, duplicates, inlineGraph.getInliningLog(), reason);
-            }
-        }
+        EconomicMap<Node, Node> duplicates = graph.addDuplicates(nodes, inlineGraph, inlineGraph.getNodeCount(), localReplacement);
 
         FrameState stateAfter = invoke.stateAfter();
-        assert stateAfter == null || stateAfter.isAlive();
 
         FrameState stateAtExceptionEdge = null;
         if (invoke instanceof InvokeWithExceptionNode)
@@ -508,10 +408,6 @@ public class InliningUtil extends ValueMergeUtil
                     processMonitorId(invoke.stateAfter(), monitor);
                 }
             }
-        }
-        else
-        {
-            assert checkContainsOnlyInvalidOrAfterFrameState(duplicates);
         }
 
         firstCFGNode = (FixedNode) duplicates.get(firstCFGNode);
@@ -588,7 +484,6 @@ public class InliningUtil extends ValueMergeUtil
     {
         FixedNode invokeNode = invoke.asNode();
         FrameState stateAfter = invoke.stateAfter();
-        assert stateAfter == null || stateAfter.isAlive();
 
         invokeNode.replaceAtPredecessor(firstNode);
 
@@ -597,8 +492,6 @@ public class InliningUtil extends ValueMergeUtil
             InvokeWithExceptionNode invokeWithException = ((InvokeWithExceptionNode) invoke);
             if (unwindNode != null && unwindNode.isAlive())
             {
-                assert unwindNode.predecessor() != null;
-                assert invokeWithException.exceptionEdge().successors().count() == 1;
                 ExceptionObjectNode obj = (ExceptionObjectNode) invokeWithException.exceptionEdge();
                 obj.replaceAtUsages(unwindNode.exception());
                 Node n = obj.next();
@@ -679,10 +572,6 @@ public class InliningUtil extends ValueMergeUtil
                 assumptions.record(inlinedAssumptions);
             }
         }
-        else
-        {
-            assert inlinedAssumptions == null : String.format("cannot inline graph (%s) which makes assumptions into a graph (%s) that doesn't", inlineGraph, graph);
-        }
 
         // Copy inlined methods from inlinee to caller
         graph.updateMethods(inlineGraph);
@@ -697,7 +586,6 @@ public class InliningUtil extends ValueMergeUtil
         {
             graph.markUnsafeAccess();
         }
-        assert inlineGraph.getSpeculationLog() == null || inlineGraph.getSpeculationLog() == graph.getSpeculationLog() : "Only the root graph should have a speculation log";
 
         return returnValue;
     }
@@ -772,7 +660,6 @@ public class InliningUtil extends ValueMergeUtil
         FixedNode invokeNode = invoke.asNode();
         boolean isSubstitution = isSub || inlineGraph.method().getAnnotation(MethodSubstitution.class) != null || inlineGraph.method().getAnnotation(Snippet.class) != null;
         StructuredGraph invokeGraph = invokeNode.graph();
-        assert !invokeGraph.trackNodeSourcePosition() || inlineGraph.trackNodeSourcePosition() || isSubstitution : String.format("trackNodeSourcePosition mismatch %s %s != %s %s", invokeGraph, invokeGraph.trackNodeSourcePosition(), inlineGraph, inlineGraph.trackNodeSourcePosition());
         if (invokeGraph.trackNodeSourcePosition() && invoke.stateAfter() != null)
         {
             final NodeSourcePosition invokePos = invoke.asNode().getNodeSourcePosition();
@@ -809,14 +696,6 @@ public class InliningUtil extends ValueMergeUtil
                 NodeSourcePosition pos = cursor.getKey().getNodeSourcePosition();
                 if (pos != null)
                 {
-                    if (inlineeRoot == null)
-                    {
-                        assert (inlineeRoot = pos.getRootMethod()) != null;
-                    }
-                    else
-                    {
-                        assert pos.verifyRootMethod(inlineeRoot);
-                    }
                     NodeSourcePosition callerPos = posMap.get(pos);
                     if (callerPos == null)
                     {
@@ -843,7 +722,6 @@ public class InliningUtil extends ValueMergeUtil
                 }
             }
         }
-        assert invokeGraph.verifySourcePositions(false);
     }
 
     public static void processMonitorId(FrameState stateAfter, MonitorIdNode monitorIdNode)
@@ -879,7 +757,6 @@ public class InliningUtil extends ValueMergeUtil
 
     public static FrameState processFrameState(FrameState frameState, Invoke invoke, EconomicMap<Node, Node> replacements, ResolvedJavaMethod inlinedMethod, FrameState stateAtExceptionEdge, FrameState outerFrameState, boolean alwaysDuplicateStateAfter, ResolvedJavaMethod invokeTargetMethod, List<ValueNode> invokeArgsList)
     {
-        assert outerFrameState == null || !outerFrameState.isDeleted() : outerFrameState;
         final FrameState stateAtReturn = invoke.stateAfter();
         JavaKind invokeReturnKind = invoke.asNode().getStackKind();
 
@@ -916,7 +793,6 @@ public class InliningUtil extends ValueMergeUtil
         {
             // This is an intrinsic. Deoptimizing within an intrinsic
             // must re-execute the intrinsified invocation
-            assert frameState.outerFrameState() == null;
             ValueNode[] invokeArgs = invokeArgsList.isEmpty() ? NO_ARGS : invokeArgsList.toArray(new ValueNode[invokeArgsList.size()]);
             FrameState stateBeforeCall = stateAtReturn.duplicateModifiedBeforeCall(invoke.bci(), invokeReturnKind, invokeTargetMethod.getSignature().toParameterKinds(!invokeTargetMethod.isStatic()), invokeArgs);
             frameState.replaceAndDelete(stateBeforeCall);
@@ -927,7 +803,6 @@ public class InliningUtil extends ValueMergeUtil
             // only handle the outermost frame states
             if (frameState.outerFrameState() == null)
             {
-                assert checkInlineeFrameState(invoke, inlinedMethod, frameState);
                 frameState.setOuterFrameState(outerFrameState);
             }
             return frameState;
@@ -957,7 +832,6 @@ public class InliningUtil extends ValueMergeUtil
 
         // pop return kind from invoke's stateAfter and replace with this frameState's return
         // value (top of stack)
-        assert !frameState.rethrowException() : frameState;
         if (frameState.stackSize() > 0 && (alwaysDuplicateStateAfter || stateAfterReturn.stackAt(0) != frameState.stackAt(0)))
         {
             // A non-void return value.
@@ -968,7 +842,6 @@ public class InliningUtil extends ValueMergeUtil
             // A void return value.
             stateAfterReturn = stateAtReturn.duplicate();
         }
-        assert stateAfterReturn.bci != BytecodeFrame.UNKNOWN_BCI;
 
         // Return value does no longer need to be limited by the monitor exit.
         for (MonitorExitNode n : frameState.usages().filter(MonitorExitNode.class))
@@ -978,40 +851,6 @@ public class InliningUtil extends ValueMergeUtil
 
         frameState.replaceAndDelete(stateAfterReturn);
         return stateAfterReturn;
-    }
-
-    static boolean checkInlineeFrameState(Invoke invoke, ResolvedJavaMethod inlinedMethod, FrameState frameState)
-    {
-        assert frameState.bci != BytecodeFrame.AFTER_EXCEPTION_BCI : frameState;
-        assert frameState.bci != BytecodeFrame.BEFORE_BCI : frameState;
-        assert frameState.bci != BytecodeFrame.UNKNOWN_BCI : frameState;
-        if (frameState.bci != BytecodeFrame.INVALID_FRAMESTATE_BCI)
-        {
-            ResolvedJavaMethod method = frameState.getMethod();
-            if (method.equals(inlinedMethod))
-            {
-                // Normal inlining expects all outermost inlinee frame states to
-                // denote the inlinee method
-            }
-            else if (method.equals(invoke.callTarget().targetMethod()))
-            {
-                // This occurs when an intrinsic calls back to the original
-                // method to handle a slow path. During parsing of such a
-                // partial intrinsic, these calls are given frame states
-                // that exclude the outer frame state denoting a position
-                // in the intrinsic code.
-                assert inlinedMethod.getAnnotation(MethodSubstitution.class) != null : "expected an intrinsic when inlinee frame state matches method of call target but does not match the method of the inlinee graph: " + frameState;
-            }
-            else if (method.getName().equals(inlinedMethod.getName()))
-            {
-                // This can happen for method substitutions.
-            }
-            else
-            {
-                throw new AssertionError(String.format("inlinedMethod=%s frameState.method=%s frameState=%s invoke.method=%s", inlinedMethod, method, frameState, invoke.callTarget().targetMethod()));
-            }
-        }
-        return true;
     }
 
     private static final ValueNode[] NO_ARGS = {};
@@ -1101,43 +940,6 @@ public class InliningUtil extends ValueMergeUtil
     }
 
     /**
-     * Ensure that all states are either {@link BytecodeFrame#INVALID_FRAMESTATE_BCI} or one of
-     * {@link BytecodeFrame#AFTER_BCI} or {@link BytecodeFrame#BEFORE_BCI}. Mixing of before and
-     * after isn't allowed.
-     */
-    private static boolean checkContainsOnlyInvalidOrAfterFrameState(UnmodifiableEconomicMap<Node, Node> duplicates)
-    {
-        int okBci = BytecodeFrame.INVALID_FRAMESTATE_BCI;
-        for (Node node : duplicates.getValues())
-        {
-            if (node instanceof FrameState)
-            {
-                FrameState frameState = (FrameState) node;
-                if (frameState.bci == BytecodeFrame.INVALID_FRAMESTATE_BCI)
-                {
-                    continue;
-                }
-                if (frameState.bci == BytecodeFrame.AFTER_BCI || frameState.bci == BytecodeFrame.BEFORE_BCI)
-                {
-                    if (okBci == BytecodeFrame.INVALID_FRAMESTATE_BCI)
-                    {
-                        okBci = frameState.bci;
-                    }
-                    else
-                    {
-                        assert okBci == frameState.bci : node.toString(Verbosity.Debugger);
-                    }
-                }
-                else
-                {
-                    assert false : node.toString(Verbosity.Debugger);
-                }
-            }
-        }
-        return true;
-    }
-
-    /**
      * Gets the receiver for an invoke, adding a guard if necessary to ensure it is non-null, and
      * ensuring that the resulting type is compatible with the method being invoked.
      */
@@ -1147,7 +949,6 @@ public class InliningUtil extends ValueMergeUtil
         try (DebugCloseable position = invoke.asNode().withNodeSourcePosition())
         {
             MethodCallTargetNode callTarget = (MethodCallTargetNode) invoke.callTarget();
-            assert !callTarget.isStatic() : callTarget.targetMethod();
             StructuredGraph graph = callTarget.graph();
             ValueNode oldReceiver = callTarget.arguments().get(0);
             ValueNode newReceiver = oldReceiver;
@@ -1200,7 +1001,6 @@ public class InliningUtil extends ValueMergeUtil
         StructuredGraph graph = invoke.asNode().graph();
         if (!concrete.equals(((MethodCallTargetNode) invoke.callTarget()).targetMethod()))
         {
-            assert ((MethodCallTargetNode) invoke.callTarget()).invokeKind().hasReceiver();
             InliningUtil.replaceInvokeCallTarget(invoke, graph, InvokeKind.Special, concrete);
         }
 

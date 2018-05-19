@@ -249,7 +249,6 @@ public class SimplifyingGraphDecoder extends GraphDecoder
                 AbstractBeginNode deadSuccessor = ifNode.getSuccessor(!condition);
 
                 graph.removeSplit(ifNode, survivingSuccessor);
-                assert deadSuccessor.next() == null : "must not be parsed yet";
                 deadSuccessor.safeDelete();
             }
             return node;
@@ -276,7 +275,6 @@ public class SimplifyingGraphDecoder extends GraphDecoder
             {
                 if (successor != survivingSuccessor)
                 {
-                    assert ((AbstractBeginNode) successor).next() == null : "must not be parsed yet";
                     successor.safeDelete();
                 }
             }
@@ -305,13 +303,11 @@ public class SimplifyingGraphDecoder extends GraphDecoder
     @SuppressWarnings("try")
     private void handleCanonicalization(LoopScope loopScope, int nodeOrderId, FixedNode node, Node c)
     {
-        assert c != node : "unnecessary call";
         try (DebugCloseable position = graph.withNodeSourcePosition(node))
         {
             Node canonical = c == null ? canonicalizeFixedNodeToNull(node) : c;
             if (!canonical.isAlive())
             {
-                assert !canonical.isDeleted();
                 canonical = graph.addOrUniqueWithInputs(canonical);
                 if (canonical instanceof FixedWithNextNode)
                 {
@@ -328,17 +324,12 @@ public class SimplifyingGraphDecoder extends GraphDecoder
                         successor.safeDelete();
                     }
                 }
-                else
-                {
-                    assert !(canonical instanceof FixedNode);
-                }
             }
             if (!node.isDeleted())
             {
                 GraphUtil.unlinkFixedNode((FixedWithNextNode) node);
                 node.replaceAtUsagesAndDelete(canonical);
             }
-            assert lookupNode(loopScope, nodeOrderId) == node;
             registerNode(loopScope, nodeOrderId, canonical, true, false);
         }
     }
@@ -368,10 +359,8 @@ public class SimplifyingGraphDecoder extends GraphDecoder
                 {
                     if (!canonical.isAlive())
                     {
-                        assert !canonical.isDeleted();
                         canonical = graph.addOrUniqueWithInputs(canonical);
                     }
-                    assert node.hasNoUsages();
                     return canonical;
                 }
             }

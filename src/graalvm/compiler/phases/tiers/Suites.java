@@ -45,7 +45,6 @@ public final class Suites
     public static LIRSuites createLIRSuites(CompilerConfiguration config, OptionValues options)
     {
         LIRPhaseSuite<AllocationContext> allocationStage = config.createAllocationStage(options);
-        assert verifyAllocationStage(allocationStage);
         return new LIRSuites(config.createPreAllocationOptimizationStage(options), allocationStage, config.createPostAllocationOptimizationStage(options));
     }
 
@@ -58,13 +57,11 @@ public final class Suites
             {
                 if (allocationPhase)
                 {
-                    assert false : "More than one register allocation phase";
                     return false;
                 }
                 allocationPhase = true;
             }
         }
-        assert allocationPhase : "No register allocation phase";
         return allocationPhase;
     }
 

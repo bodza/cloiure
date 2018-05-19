@@ -1,7 +1,5 @@
 package graalvm.compiler.hotspot;
 
-import static jdk.vm.ci.common.InitTimer.timer;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -62,66 +60,63 @@ public class HotSpotGraalOptionValues
     private static OptionValues initializeOptions()
     {
         EconomicMap<OptionKey<?>, Object> values = OptionValues.newOptionMap();
-        try (InitTimer t = timer("InitializeOptions"))
+        Iterable<OptionDescriptors> loader = OptionsParser.getOptionsLoader();
+        Map<String, String> savedProps = jdk.vm.ci.services.Services.getSavedProperties();
+        String optionsFile = savedProps.get(GRAAL_OPTIONS_FILE_PROPERTY_NAME);
+
+        if (optionsFile != null)
         {
-            Iterable<OptionDescriptors> loader = OptionsParser.getOptionsLoader();
-            Map<String, String> savedProps = jdk.vm.ci.services.Services.getSavedProperties();
-            String optionsFile = savedProps.get(GRAAL_OPTIONS_FILE_PROPERTY_NAME);
-
-            if (optionsFile != null)
+            File graalOptions = new File(optionsFile);
+            if (graalOptions.exists())
             {
-                File graalOptions = new File(optionsFile);
-                if (graalOptions.exists())
+                try (FileReader fr = new FileReader(graalOptions))
                 {
-                    try (FileReader fr = new FileReader(graalOptions))
+                    Properties props = new Properties();
+                    props.load(fr);
+                    EconomicMap<String, String> optionSettings = EconomicMap.create();
+                    for (Map.Entry<Object, Object> e : props.entrySet())
                     {
-                        Properties props = new Properties();
-                        props.load(fr);
-                        EconomicMap<String, String> optionSettings = EconomicMap.create();
-                        for (Map.Entry<Object, Object> e : props.entrySet())
-                        {
-                            optionSettings.put((String) e.getKey(), (String) e.getValue());
-                        }
-                        try
-                        {
-                            OptionsParser.parseOptions(optionSettings, values, loader);
-                        }
-                        catch (Throwable e)
-                        {
-                            throw new InternalError("Error parsing an option from " + graalOptions, e);
-                        }
+                        optionSettings.put((String) e.getKey(), (String) e.getValue());
                     }
-                    catch (IOException e)
+                    try
                     {
-                        throw new InternalError("Error reading " + graalOptions, e);
+                        OptionsParser.parseOptions(optionSettings, values, loader);
+                    }
+                    catch (Throwable e)
+                    {
+                        throw new InternalError("Error parsing an option from " + graalOptions, e);
                     }
                 }
-            }
-
-            EconomicMap<String, String> optionSettings = EconomicMap.create();
-            for (Map.Entry<String, String> e : savedProps.entrySet())
-            {
-                String name = e.getKey();
-                if (name.startsWith(GRAAL_OPTION_PROPERTY_PREFIX))
+                catch (IOException e)
                 {
-                    if (name.equals("graal.PrintFlags") || name.equals("graal.ShowFlags"))
-                    {
-                        System.err.println("The " + name + " option has been removed and will be ignored. Use -XX:+JVMCIPrintProperties instead.");
-                    }
-                    else if (name.equals(GRAAL_OPTIONS_FILE_PROPERTY_NAME) || name.equals(GRAAL_VERSION_PROPERTY_NAME))
-                    {
-                        // Ignore well known properties that do not denote an option
-                    }
-                    else
-                    {
-                        String value = e.getValue();
-                        optionSettings.put(name.substring(GRAAL_OPTION_PROPERTY_PREFIX.length()), value);
-                    }
+                    throw new InternalError("Error reading " + graalOptions, e);
                 }
             }
-
-            OptionsParser.parseOptions(optionSettings, values, loader);
-            return new OptionValues(values);
         }
+
+        EconomicMap<String, String> optionSettings = EconomicMap.create();
+        for (Map.Entry<String, String> e : savedProps.entrySet())
+        {
+            String name = e.getKey();
+            if (name.startsWith(GRAAL_OPTION_PROPERTY_PREFIX))
+            {
+                if (name.equals("graal.PrintFlags") || name.equals("graal.ShowFlags"))
+                {
+                    System.err.println("The " + name + " option has been removed and will be ignored. Use -XX:+JVMCIPrintProperties instead.");
+                }
+                else if (name.equals(GRAAL_OPTIONS_FILE_PROPERTY_NAME) || name.equals(GRAAL_VERSION_PROPERTY_NAME))
+                {
+                    // Ignore well known properties that do not denote an option
+                }
+                else
+                {
+                    String value = e.getValue();
+                    optionSettings.put(name.substring(GRAAL_OPTION_PROPERTY_PREFIX.length()), value);
+                }
+            }
+        }
+
+        OptionsParser.parseOptions(optionSettings, values, loader);
+        return new OptionValues(values);
     }
 }

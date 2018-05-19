@@ -110,7 +110,6 @@ public class HotSpotInvokeDynamicPlugin implements InvokeDynamicPlugin
     @Override
     public void recordDynamicMethod(GraphBuilderContext builder, int index, int opcode, ResolvedJavaMethod target)
     {
-        assert supportsDynamicInvoke(builder, index, opcode);
         HotSpotResolvedJavaMethod method = (HotSpotResolvedJavaMethod) builder.getMethod();
         HotSpotResolvedObjectType methodHolder = method.getDeclaringClass();
 
@@ -125,7 +124,6 @@ public class HotSpotInvokeDynamicPlugin implements InvokeDynamicPlugin
     public ValueNode genAppendixNode(GraphBuilderContext builder, int index, int opcode, JavaConstant appendixConstant, FrameState frameState)
     {
         JavaConstant appendix = appendixConstant;
-        assert supportsDynamicInvoke(builder, index, opcode);
         HotSpotResolvedJavaMethod method = (HotSpotResolvedJavaMethod) builder.getMethod();
         HotSpotResolvedObjectType methodHolder = method.getDeclaringClass();
 
@@ -140,7 +138,6 @@ public class HotSpotInvokeDynamicPlugin implements InvokeDynamicPlugin
         Stamp resolveStamp = treatAppendixAsConstant ? appendixStamp : appendixStamp.unrestricted();
         ResolveDynamicConstantNode resolveNode = new ResolveDynamicConstantNode(resolveStamp, appendixNode);
         ResolveDynamicConstantNode added = builder.append(resolveNode);
-        assert added == resolveNode;
         added.setStateBefore(frameState);
         return resolveNode;
     }

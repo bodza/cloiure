@@ -24,7 +24,6 @@ public abstract class ProxyNode extends FloatingNode implements ValueNumberable
     protected ProxyNode(NodeClass<? extends ProxyNode> c, Stamp stamp, LoopExitNode proxyPoint)
     {
         super(c, stamp);
-        assert proxyPoint != null;
         this.loopExit = proxyPoint;
     }
 
@@ -33,13 +32,6 @@ public abstract class ProxyNode extends FloatingNode implements ValueNumberable
     public LoopExitNode proxyPoint()
     {
         return loopExit;
-    }
-
-    @Override
-    public boolean verify()
-    {
-        assert !(value() instanceof ProxyNode) || ((ProxyNode) value()).loopExit != loopExit;
-        return super.verify();
     }
 
     public static ValueProxyNode forValue(ValueNode value, LoopExitNode exit, StructuredGraph graph)

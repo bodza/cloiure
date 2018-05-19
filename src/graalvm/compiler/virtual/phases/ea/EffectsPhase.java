@@ -4,7 +4,6 @@ import static graalvm.compiler.phases.common.DeadCodeEliminationPhase.Optionalit
 
 import org.graalvm.collections.EconomicSet;
 import graalvm.compiler.core.common.util.CompilationAlarm;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.graph.Graph.NodeEventScope;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.spi.Simplifiable;
@@ -52,74 +51,57 @@ public abstract class EffectsPhase<PhaseContextT extends PhaseContext> extends B
         runAnalysis(graph, context);
     }
 
-    @SuppressWarnings("try")
     public boolean runAnalysis(StructuredGraph graph, PhaseContextT context)
     {
         boolean changed = false;
         CompilationAlarm compilationAlarm = CompilationAlarm.current();
-        DebugContext debug = graph.getDebug();
         for (int iteration = 0; iteration < maxIterations && !compilationAlarm.hasExpired(); iteration++)
         {
-            try (DebugContext.Scope s = debug.scope(debug.areScopesEnabled() ? "iteration " + iteration : null))
+            ScheduleResult schedule;
+            ControlFlowGraph cfg;
+            if (unscheduled)
             {
-                ScheduleResult schedule;
-                ControlFlowGraph cfg;
-                if (unscheduled)
+                schedule = null;
+                cfg = ControlFlowGraph.compute(graph, true, true, false, false);
+            }
+            else
+            {
+                new SchedulePhase(SchedulePhase.SchedulingStrategy.EARLIEST).apply(graph);
+                schedule = graph.getLastSchedule();
+                cfg = schedule.getCFG();
+            }
+            Closure<?> closure = createEffectsClosure(context, schedule, cfg);
+            ReentrantBlockIterator.apply(closure, cfg.getStartBlock());
+
+            if (closure.needsApplyEffects())
+            {
+                // apply the effects collected during this iteration
+                HashSetNodeEventListener listener = new HashSetNodeEventListener();
+                try (NodeEventScope nes = graph.trackNodeEvents(listener))
                 {
-                    schedule = null;
-                    cfg = ControlFlowGraph.compute(graph, true, true, false, false);
+                    closure.applyEffects();
                 }
-                else
+
+                new DeadCodeEliminationPhase(Required).apply(graph);
+
+                EconomicSet<Node> changedNodes = listener.getNodes();
+                for (Node node : graph.getNodes())
                 {
-                    new SchedulePhase(SchedulePhase.SchedulingStrategy.EARLIEST).apply(graph, false);
-                    schedule = graph.getLastSchedule();
-                    cfg = schedule.getCFG();
-                }
-                try (DebugContext.Scope scheduleScope = debug.scope("EffectsPhaseWithSchedule", schedule))
-                {
-                    Closure<?> closure = createEffectsClosure(context, schedule, cfg);
-                    ReentrantBlockIterator.apply(closure, cfg.getStartBlock());
-
-                    if (closure.needsApplyEffects())
+                    if (node instanceof Simplifiable)
                     {
-                        // apply the effects collected during this iteration
-                        HashSetNodeEventListener listener = new HashSetNodeEventListener();
-                        try (NodeEventScope nes = graph.trackNodeEvents(listener))
-                        {
-                            closure.applyEffects();
-                        }
-
-                        if (debug.isDumpEnabled(DebugContext.VERBOSE_LEVEL))
-                        {
-                            debug.dump(DebugContext.VERBOSE_LEVEL, graph, "%s iteration", getName());
-                        }
-
-                        new DeadCodeEliminationPhase(Required).apply(graph);
-
-                        EconomicSet<Node> changedNodes = listener.getNodes();
-                        for (Node node : graph.getNodes())
-                        {
-                            if (node instanceof Simplifiable)
-                            {
-                                changedNodes.add(node);
-                            }
-                        }
-                        postIteration(graph, context, changedNodes);
-                    }
-
-                    if (closure.hasChanged())
-                    {
-                        changed = true;
-                    }
-                    else
-                    {
-                        break;
+                        changedNodes.add(node);
                     }
                 }
-                catch (Throwable t)
-                {
-                    throw debug.handle(t);
-                }
+                postIteration(graph, context, changedNodes);
+            }
+
+            if (closure.hasChanged())
+            {
+                changed = true;
+            }
+            else
+            {
+                break;
             }
         }
         return changed;

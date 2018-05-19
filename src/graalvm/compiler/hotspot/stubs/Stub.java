@@ -4,8 +4,6 @@ import static java.util.Collections.singletonList;
 import static graalvm.compiler.core.GraalCompiler.emitBackEnd;
 import static graalvm.compiler.core.GraalCompiler.emitFrontEnd;
 import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
-import static graalvm.compiler.debug.DebugContext.DEFAULT_LOG_STREAM;
-import static graalvm.compiler.debug.DebugOptions.DebugStubsAndSnippets;
 import static graalvm.compiler.hotspot.HotSpotHostBackend.UNCOMMON_TRAP_HANDLER;
 import static graalvm.util.CollectionsUtil.allMatch;
 
@@ -31,8 +29,6 @@ import graalvm.compiler.code.CompilationResult;
 import graalvm.compiler.core.common.CompilationIdentifier;
 import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.target.Backend;
-import graalvm.compiler.debug.DebugContext;
-import graalvm.compiler.debug.DebugContext.Description;
 import graalvm.compiler.hotspot.HotSpotCompiledCodeBuilder;
 import graalvm.compiler.hotspot.HotSpotForeignCallLinkage;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
@@ -41,13 +37,11 @@ import graalvm.compiler.lir.asm.CompilationResultBuilderFactory;
 import graalvm.compiler.lir.phases.LIRPhase;
 import graalvm.compiler.lir.phases.LIRSuites;
 import graalvm.compiler.lir.phases.PostAllocationOptimizationPhase.PostAllocationOptimizationContext;
-import graalvm.compiler.lir.profiling.MoveProfilingPhase;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.OptimisticOptimizations;
 import graalvm.compiler.phases.PhaseSuite;
 import graalvm.compiler.phases.tiers.Suites;
-import graalvm.compiler.printer.GraalDebugHandlersFactory;
 
 /**
  * Base class for implementing some low level code providing the out-of-line slow path for a snippet
@@ -86,8 +80,6 @@ public abstract class Stub
 
     public void initDestroyedCallerRegisters(EconomicSet<Register> registers)
     {
-        assert registers != null;
-        assert destroyedCallerRegisters == null || checkRegisterSetEquivalency(registers, destroyedCallerRegisters) : "cannot redefine";
         destroyedCallerRegisters = registers;
     }
 
@@ -97,7 +89,6 @@ public abstract class Stub
      */
     public EconomicSet<Register> getDestroyedCallerRegisters()
     {
-        assert destroyedCallerRegisters != null : "not yet initialized";
         return destroyedCallerRegisters;
     }
 
@@ -121,7 +112,7 @@ public abstract class Stub
     public Stub(OptionValues options, HotSpotProviders providers, HotSpotForeignCallLinkage linkage)
     {
         this.linkage = linkage;
-        this.options = new OptionValues(options, GraalOptions.TraceInlining, GraalOptions.TraceInliningForStubsAndSnippets.getValue(options));
+        this.options = options;
         this.providers = providers;
     }
 
@@ -143,7 +134,7 @@ public abstract class Stub
      *
      * @param compilationId unique compilation id for the stub
      */
-    protected abstract StructuredGraph getGraph(DebugContext debug, CompilationIdentifier compilationId);
+    protected abstract StructuredGraph getGraph(CompilationIdentifier compilationId);
 
     @Override
     public String toString()
@@ -157,69 +148,30 @@ public abstract class Stub
     protected abstract ResolvedJavaMethod getInstalledCodeOwner();
 
     /**
-     * Gets a context object for the debug scope created when producing the code for this stub.
-     */
-    protected abstract Object debugScopeContext();
-
-    private static final AtomicInteger nextStubId = new AtomicInteger();
-
-    private DebugContext openDebugContext(DebugContext outer)
-    {
-        if (DebugStubsAndSnippets.getValue(options))
-        {
-            Description description = new Description(linkage, "Stub_" + nextStubId.incrementAndGet());
-            return DebugContext.create(options, description, outer.getGlobalMetrics(), DEFAULT_LOG_STREAM, singletonList(new GraalDebugHandlersFactory(providers.getSnippetReflection())));
-        }
-        return DebugContext.DISABLED;
-    }
-
-    /**
      * Gets the code for this stub, compiling it first if necessary.
      */
-    @SuppressWarnings("try")
     public synchronized InstalledCode getCode(final Backend backend)
     {
         if (code == null)
         {
-            try (DebugContext debug = openDebugContext(DebugContext.forCurrentThread()))
-            {
-                try (DebugContext.Scope d = debug.scope("CompilingStub", providers.getCodeCache(), debugScopeContext()))
-                {
-                    CodeCacheProvider codeCache = providers.getCodeCache();
-                    CompilationResult compResult = buildCompilationResult(debug, backend);
-                    try (DebugContext.Scope s = debug.scope("CodeInstall", compResult); DebugContext.Activation a = debug.activate())
-                    {
-                        assert destroyedCallerRegisters != null;
-                        // Add a GeneratePIC check here later, we don't want to install
-                        // code if we don't have a corresponding VM global symbol.
-                        HotSpotCompiledCode compiledCode = HotSpotCompiledCodeBuilder.createCompiledCode(codeCache, null, null, compResult);
-                        code = codeCache.installCode(null, compiledCode, null, null, false);
-                    }
-                    catch (Throwable e)
-                    {
-                        throw debug.handle(e);
-                    }
-                }
-                catch (Throwable e)
-                {
-                    throw debug.handle(e);
-                }
-                assert code != null : "error installing stub " + this;
-            }
+            CodeCacheProvider codeCache = providers.getCodeCache();
+            CompilationResult compResult = buildCompilationResult(backend);
+            // Add a GeneratePIC check here later, we don't want to install
+            // code if we don't have a corresponding VM global symbol.
+            HotSpotCompiledCode compiledCode = HotSpotCompiledCodeBuilder.createCompiledCode(codeCache, null, null, compResult);
+            code = codeCache.installCode(null, compiledCode, null, null, false);
         }
 
         return code;
     }
 
-    @SuppressWarnings("try")
-    private CompilationResult buildCompilationResult(DebugContext debug, final Backend backend)
+    private CompilationResult buildCompilationResult(final Backend backend)
     {
         CompilationIdentifier compilationId = getStubCompilationId();
-        final StructuredGraph graph = getGraph(debug, compilationId);
+        final StructuredGraph graph = getGraph(compilationId);
         CompilationResult compResult = new CompilationResult(compilationId, toString(), GeneratePIC.getValue(options));
 
         // Stubs cannot be recompiled so they cannot be compiled with assumptions
-        assert graph.getAssumptions() == null;
 
         if (!(graph.start() instanceof StubStartNode))
         {
@@ -228,35 +180,19 @@ public abstract class Stub
             graph.replaceFixed(graph.start(), newStart);
         }
 
-        try (DebugContext.Scope s0 = debug.scope("StubCompilation", graph, providers.getCodeCache()))
-        {
-            Suites suites = createSuites();
-            emitFrontEnd(providers, backend, graph, providers.getSuites().getDefaultGraphBuilderSuite(), OptimisticOptimizations.ALL, DefaultProfilingInfo.get(TriState.UNKNOWN), suites);
-            LIRSuites lirSuites = createLIRSuites();
-            emitBackEnd(graph, Stub.this, getInstalledCodeOwner(), backend, compResult, CompilationResultBuilderFactory.Default, getRegisterConfig(), lirSuites);
-            assert checkStubInvariants(compResult);
-        }
-        catch (Throwable e)
-        {
-            throw debug.handle(e);
-        }
+        Suites suites = createSuites();
+        emitFrontEnd(providers, backend, graph, providers.getSuites().getDefaultGraphBuilderSuite(), OptimisticOptimizations.ALL, DefaultProfilingInfo.get(TriState.UNKNOWN), suites);
+        LIRSuites lirSuites = createLIRSuites();
+        emitBackEnd(graph, Stub.this, getInstalledCodeOwner(), backend, compResult, CompilationResultBuilderFactory.Default, getRegisterConfig(), lirSuites);
         return compResult;
     }
 
     /**
      * Gets a {@link CompilationResult} that can be used for code generation. Required for AOT.
      */
-    @SuppressWarnings("try")
-    public CompilationResult getCompilationResult(DebugContext debug, final Backend backend)
+    public CompilationResult getCompilationResult(final Backend backend)
     {
-        try (DebugContext.Scope d = debug.scope("CompilingStub", providers.getCodeCache(), debugScopeContext()))
-        {
-            return buildCompilationResult(debug, backend);
-        }
-        catch (Throwable e)
-        {
-            throw debug.handle(e);
-        }
+        return buildCompilationResult(backend);
     }
 
     public CompilationIdentifier getStubCompilationId()
@@ -269,11 +205,8 @@ public abstract class Stub
      */
     private boolean checkStubInvariants(CompilationResult compResult)
     {
-        assert compResult.getExceptionHandlers().isEmpty() : this;
-
         // Stubs cannot be recompiled so they cannot be compiled with
         // assumptions and there is no point in recording evol_method dependencies
-        assert compResult.getAssumptions() == null : "stubs should not use assumptions: " + this;
 
         for (DataPatch data : compResult.getDataPatches())
         {
@@ -291,16 +224,11 @@ public abstract class Stub
                     }
                 }
             }
-
-            assert !(data.reference instanceof ConstantReference) : this + " cannot have embedded object or metadata constant: " + data.reference;
         }
         for (Infopoint infopoint : compResult.getInfopoints())
         {
-            assert infopoint instanceof Call : this + " cannot have non-call infopoint: " + infopoint;
             Call call = (Call) infopoint;
-            assert call.target instanceof HotSpotForeignCallLinkage : this + " cannot have non runtime call: " + call.target;
             HotSpotForeignCallLinkage callLinkage = (HotSpotForeignCallLinkage) call.target;
-            assert !callLinkage.isCompiledStub() || callLinkage.getDescriptor().equals(UNCOMMON_TRAP_HANDLER) : this + " cannot call compiled stub " + callLinkage;
         }
         return true;
     }
@@ -313,12 +241,6 @@ public abstract class Stub
 
     protected LIRSuites createLIRSuites()
     {
-        LIRSuites lirSuites = new LIRSuites(providers.getSuites().getDefaultLIRSuites(options));
-        ListIterator<LIRPhase<PostAllocationOptimizationContext>> moveProfiling = lirSuites.getPostAllocationOptimizationStage().findPhase(MoveProfilingPhase.class);
-        if (moveProfiling != null)
-        {
-            moveProfiling.remove();
-        }
-        return lirSuites;
+        return new LIRSuites(providers.getSuites().getDefaultLIRSuites(options));
     }
 }

@@ -34,13 +34,6 @@ public abstract class AbstractEndNode extends FixedNode implements LIRLowerable
     }
 
     @Override
-    public boolean verify()
-    {
-        assertTrue(getUsageCount() <= 1, "at most one usage");
-        return super.verify();
-    }
-
-    @Override
     public Iterable<? extends Node> cfgSuccessors()
     {
         AbstractMergeNode merge = merge();

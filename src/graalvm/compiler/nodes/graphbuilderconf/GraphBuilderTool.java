@@ -1,7 +1,6 @@
 package graalvm.compiler.nodes.graphbuilderconf;
 
 import graalvm.compiler.core.common.spi.ConstantFieldProvider;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.StampProvider;
@@ -45,11 +44,6 @@ public interface GraphBuilderTool
     default OptionValues getOptions()
     {
         return getGraph().getOptions();
-    }
-
-    default DebugContext getDebug()
-    {
-        return getGraph().getDebug();
     }
 
     /**

@@ -29,7 +29,6 @@ public final class UnpackEndianHalfNode extends UnaryNode implements Lowerable
     protected UnpackEndianHalfNode(ValueNode value, boolean firstHalf)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Int), value);
-        assert value.getStackKind() == JavaKind.Double || value.getStackKind() == JavaKind.Long : "unexpected kind " + value.getStackKind();
         this.firstHalf = firstHalf;
     }
 

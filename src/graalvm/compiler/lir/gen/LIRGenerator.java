@@ -29,7 +29,6 @@ import graalvm.compiler.lir.ConstantValue;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRFrameState;
 import graalvm.compiler.lir.LIRInstruction;
-import graalvm.compiler.lir.LIRVerifier;
 import graalvm.compiler.lir.LabelRef;
 import graalvm.compiler.lir.StandardOp;
 import graalvm.compiler.lir.StandardOp.BlockEndOp;
@@ -94,7 +93,6 @@ public abstract class LIRGenerator implements LIRGeneratorTool
         this.printIrWithLir = !TTY.isSuppressed() && Options.PrintIRWithLIR.getValue(options);
         this.traceLIRGeneratorLevel = TTY.isSuppressed() ? 0 : Options.TraceLIRGeneratorLevel.getValue(options);
 
-        assert arithmeticLIRGen.lirGen == null;
         arithmeticLIRGen.lirGen = this;
         this.moveFactory = moveFactory;
     }
@@ -119,7 +117,6 @@ public abstract class LIRGenerator implements LIRGeneratorTool
         if (spillMoveFactory == null)
         {
             boolean verify = false;
-            assert (verify = true) == true;
             if (verify)
             {
                 spillMoveFactory = new VerifyingMoveFactory(moveFactory);
@@ -212,7 +209,6 @@ public abstract class LIRGenerator implements LIRGeneratorTool
     @Override
     public Variable emitMove(Value input)
     {
-        assert !(input instanceof Variable) : "Creating a copy of a variable via this method is not supported (and potentially a bug): " + input;
         Variable result = newVariable(input.getValueKind());
         emitMove(result, input);
         return result;
@@ -315,7 +311,6 @@ public abstract class LIRGenerator implements LIRGeneratorTool
     public AllocatableValue resultOperandFor(JavaKind javaKind, ValueKind<?> valueKind)
     {
         Register reg = getRegisterConfig().getReturnRegister(javaKind);
-        assert target().arch.canStoreValue(reg.getRegisterCategory(), valueKind.getPlatformKind()) : reg.getRegisterCategory() + " " + valueKind.getPlatformKind();
         return reg.asValue(valueKind);
     }
 
@@ -336,7 +331,6 @@ public abstract class LIRGenerator implements LIRGeneratorTool
             TTY.println(op.toStringWithIdPrefix());
             TTY.println();
         }
-        assert LIRVerifier.verify(op);
         ArrayList<LIRInstruction> lirForBlock = lir.getLIRforBlock(getCurrentBlock());
         op.setPosition(currentPosition);
         lirForBlock.add(op);
@@ -369,7 +363,6 @@ public abstract class LIRGenerator implements LIRGeneratorTool
             }
 
             // set up the list of LIR instructions
-            assert res.getLIR().getLIRforBlock(currentBlock) == null : "LIR list already computed for this block";
             res.getLIR().setLIRforBlock(currentBlock, new ArrayList<LIRInstruction>());
 
             append(new LabelOp(new Label(currentBlock.getId()), currentBlock.isAligned()));
@@ -457,7 +450,6 @@ public abstract class LIRGenerator implements LIRGeneratorTool
             }
             else
             {
-                assert needOnlyOopMaps();
                 state = new LIRFrameState(null, null, null);
             }
         }
@@ -465,7 +457,6 @@ public abstract class LIRGenerator implements LIRGeneratorTool
         // move the arguments into the correct location
         CallingConvention linkageCc = linkage.getOutgoingCallingConvention();
         res.getFrameMapBuilder().callsMethod(linkageCc);
-        assert linkageCc.getArgumentCount() == args.length : "argument count mismatch";
         Value[] argLocations = new Value[args.length];
         for (int i = 0; i < args.length; i++)
         {
@@ -507,7 +498,6 @@ public abstract class LIRGenerator implements LIRGeneratorTool
         else
         {
             int minValue = keyConstants[0].asInt();
-            assert valueRange < Integer.MAX_VALUE;
             LabelRef[] targets = new LabelRef[(int) valueRange];
             for (int i = 0; i < valueRange; i++)
             {
@@ -577,18 +567,6 @@ public abstract class LIRGenerator implements LIRGeneratorTool
     }
 
     @Override
-    public LIRInstruction createBenchmarkCounter(String name, String group, Value increment)
-    {
-        throw GraalError.unimplemented();
-    }
-
-    @Override
-    public LIRInstruction createMultiBenchmarkCounter(String[] names, String[] groups, Value[] increments)
-    {
-        throw GraalError.unimplemented();
-    }
-
-    @Override
     public abstract SaveRegistersOp createZapRegisters(Register[] zappedRegisters, JavaConstant[] zapValues);
 
     @Override
@@ -620,10 +598,6 @@ public abstract class LIRGenerator implements LIRGeneratorTool
                     slots = new ArrayList<>();
                 }
                 slots.add((StackSlot) arg);
-            }
-            else
-            {
-                assert !isVirtualStackSlot(arg);
             }
         }
         if (slots == null)

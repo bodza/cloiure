@@ -113,10 +113,7 @@ public final class GraalOptions
     @Option(help = "Stress the code by emitting reads at earliest instead of latest point.", type = OptionType.Debug)
     public static final OptionKey<Boolean> StressTestEarlyReads = new OptionKey<>(false);
 
-    @Option(help = "", type = OptionType.Debug)
-    public static final OptionKey<Boolean> VerifyPhases = new OptionKey<>(false);
-
-    // Debug settings:
+    // Debug settings
     @Option(help = "", type = OptionType.Debug)
     public static final OptionKey<Integer> GCDebugStartCycle = new OptionKey<>(-1);
 
@@ -239,9 +236,6 @@ public final class GraalOptions
     @Option(help = "Track the NodeSourcePosition.", type = OptionType.Debug)
     public static final OptionKey<Boolean> TrackNodeSourcePosition = new OptionKey<>(false);
 
-    @Option(help = "Track source stack trace where a node was inserted into the graph.", type = OptionType.Debug)
-    public static final OptionKey<Boolean> TrackNodeInsertion = new OptionKey<>(false);
-
     @Option(help = "Allow backend to match complex expressions.", type = OptionType.Debug)
     public static final OptionKey<Boolean> MatchExpressions = new OptionKey<>(true);
 
@@ -256,10 +250,4 @@ public final class GraalOptions
 
     @Option(help = "Enable experimental Trace Register Allocation.", type = OptionType.Debug)
     public static final OptionKey<Boolean> TraceRA = new OptionKey<>(false);
-
-    @Option(help = "file:doc-files/TraceInliningHelp.txt", type = OptionType.Debug)
-    public static final OptionKey<Boolean> TraceInlining = new OptionKey<>(false);
-
-    @Option(help = "Enable inlining decision tracing in stubs and snippets.", type = OptionType.Debug)
-    public static final OptionKey<Boolean> TraceInliningForStubsAndSnippets = new OptionKey<>(false);
 }

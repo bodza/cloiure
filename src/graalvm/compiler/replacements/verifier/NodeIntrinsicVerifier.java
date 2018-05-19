@@ -91,7 +91,6 @@ public final class NodeIntrinsicVerifier extends AbstractVerifier
     {
         if (element.getKind() != ElementKind.METHOD)
         {
-            assert false : "Element is guaranteed to be a method.";
             return;
         }
 

@@ -38,7 +38,6 @@ public class ExpandLogicPhase extends Phase
         {
             processBinary(logic);
         }
-        assert graph.getNodes(ShortCircuitOrNode.TYPE).isEmpty();
 
         for (NormalizeCompareNode logic : graph.getNodes(NormalizeCompareNode.TYPE))
         {
@@ -171,7 +170,6 @@ public class ExpandLogicPhase extends Phase
 
     private static boolean doubleEquals(double a, double b)
     {
-        assert !Double.isNaN(a) && !Double.isNaN(b) && !Double.isInfinite(a) && !Double.isInfinite(b);
         return a - EPSILON < b && a + EPSILON > b;
     }
 

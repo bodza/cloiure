@@ -146,7 +146,6 @@ abstract class ClassfileConstant
                 }
                 else
                 {
-                    assert opcode == Bytecodes.INVOKESTATIC;
                     method = resolveMethod(cp.context, cls, name, type, true);
                     if (method == null)
                     {
@@ -191,7 +190,6 @@ abstract class ClassfileConstant
                 NameAndType nameAndType = cp.get(NameAndType.class, nameAndTypeIndex);
                 String name = nameAndType.getName(cp);
                 String type = nameAndType.getType(cp);
-                assert opcode == GETFIELD || opcode == GETSTATIC || opcode == PUTFIELD || opcode == PUTSTATIC : opcode;
                 field = resolveField(cp.context, cls, name, type, opcode == GETSTATIC || opcode == PUTSTATIC);
                 if (field == null)
                 {

@@ -33,7 +33,7 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * Used by a {@link GraphBuilderPlugin} to interface with an object that parses the bytecode of a
- * single {@linkplain #getMethod() method} as part of building a {@linkplain #getGraph() graph} .
+ * single {@linkplain #getMethod() method} as part of building a {@linkplain #getGraph() graph}.
  */
 public interface GraphBuilderContext extends GraphBuilderTool
 {
@@ -61,7 +61,6 @@ public interface GraphBuilderContext extends GraphBuilderTool
     {
         if (value.graph() != null)
         {
-            assert !(value instanceof StateSplit) || ((StateSplit) value).stateAfter() != null;
             return value;
         }
         T equivalentValue = append(value);
@@ -89,7 +88,6 @@ public interface GraphBuilderContext extends GraphBuilderTool
     {
         if (value.graph() != null)
         {
-            assert !(value instanceof StateSplit) || ((StateSplit) value).stateAfter() != null;
             return value;
         }
         T equivalentValue = append(value);

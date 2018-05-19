@@ -26,7 +26,6 @@ import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
 import graalvm.compiler.core.common.CompressEncoding;
 import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
-import graalvm.compiler.debug.DebugHandlersFactory;
 import graalvm.compiler.graph.Node.ConstantNodeParameter;
 import graalvm.compiler.graph.Node.NodeIntrinsic;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
@@ -446,9 +445,9 @@ public class WriteBarrierSnippets implements Snippets
         private final CompressEncoding oopEncoding;
         private final Counters counters;
 
-        public Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, SnippetCounter.Group.Factory factory, HotSpotProviders providers, TargetDescription target, CompressEncoding oopEncoding)
+        public Templates(OptionValues options, SnippetCounter.Group.Factory factory, HotSpotProviders providers, TargetDescription target, CompressEncoding oopEncoding)
         {
-            super(options, factories, providers, providers.getSnippetReflection(), target);
+            super(options, providers, providers.getSnippetReflection(), target);
             this.oopEncoding = oopEncoding;
             this.counters = new Counters(factory);
         }
@@ -497,7 +496,6 @@ public class WriteBarrierSnippets implements Snippets
             ValueNode expected = writeBarrierPre.getExpectedObject();
             if (expected != null && expected.stamp(NodeView.DEFAULT) instanceof NarrowOopStamp)
             {
-                assert oopEncoding != null;
                 expected = HotSpotCompressionNode.uncompress(expected, oopEncoding);
             }
             args.add("expectedObject", expected);
@@ -527,7 +525,6 @@ public class WriteBarrierSnippets implements Snippets
             ValueNode expected = readBarrier.getExpectedObject();
             if (expected != null && expected.stamp(NodeView.DEFAULT) instanceof NarrowOopStamp)
             {
-                assert oopEncoding != null;
                 expected = HotSpotCompressionNode.uncompress(expected, oopEncoding);
             }
 
@@ -557,14 +554,12 @@ public class WriteBarrierSnippets implements Snippets
             }
             else
             {
-                assert writeBarrierPost.usePrecise() : "found imprecise barrier that's not an object access " + writeBarrierPost;
                 args.add("object", null);
             }
 
             ValueNode value = writeBarrierPost.getValue();
             if (value.stamp(NodeView.DEFAULT) instanceof NarrowOopStamp)
             {
-                assert oopEncoding != null;
                 value = HotSpotCompressionNode.uncompress(value, oopEncoding);
             }
             args.add("value", value);

@@ -57,7 +57,6 @@ public final class HotSpotClassInitializationPlugin implements ClassInitializati
     @Override
     public ValueNode apply(GraphBuilderContext builder, ResolvedJavaType type, FrameState frameState)
     {
-        assert shouldApply(builder, type);
         Stamp hubStamp = builder.getStampProvider().createHubStamp((ObjectStamp) StampFactory.objectNonNull());
         ConstantNode hub = builder.append(ConstantNode.forConstant(hubStamp, ((HotSpotResolvedObjectType) type).klass(), builder.getMetaAccess(), builder.getGraph()));
         DeoptimizingFixedWithNextNode result = builder.append(type.isArray() ? new ResolveConstantNode(hub) : new InitializeKlassNode(hub));

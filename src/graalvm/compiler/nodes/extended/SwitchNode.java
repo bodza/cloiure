@@ -57,13 +57,10 @@ public abstract class SwitchNode extends ControlSplitNode
     protected SwitchNode(NodeClass<? extends SwitchNode> c, ValueNode value, AbstractBeginNode[] successors, int[] keySuccessors, double[] keyProbabilities)
     {
         super(c, StampFactory.forVoid());
-        assert value.stamp(NodeView.DEFAULT).getStackKind().isNumericInteger() || value.stamp(NodeView.DEFAULT) instanceof AbstractPointerStamp : value.stamp(NodeView.DEFAULT) + " key not supported by SwitchNode";
-        assert keySuccessors.length == keyProbabilities.length;
         this.successors = new NodeSuccessorList<>(this, successors);
         this.value = value;
         this.keySuccessors = keySuccessors;
         this.keyProbabilities = keyProbabilities;
-        assert assertProbabilities();
     }
 
     private boolean assertProbabilities()
@@ -72,9 +69,7 @@ public abstract class SwitchNode extends ControlSplitNode
         for (double d : keyProbabilities)
         {
             total += d;
-            assert d >= 0.0 : "Cannot have negative probabilities in switch node: " + d;
         }
-        assert total > 0.999 && total < 1.001 : "Total " + total;
         return true;
     }
 
@@ -101,9 +96,6 @@ public abstract class SwitchNode extends ControlSplitNode
     @Override
     public boolean setProbability(AbstractBeginNode successor, double value)
     {
-        assert value <= 1.0 && value >= 0.0 : value;
-        assert assertProbabilities();
-
         double sum = 0;
         double otherSum = 0;
         for (int i = 0; i < keySuccessors.length; i++)
@@ -137,7 +129,6 @@ public abstract class SwitchNode extends ControlSplitNode
                 keyProbabilities[i] = Math.max(0.0, keyProbabilities[i] - (delta * keyProbabilities[i]) / otherSum);
             }
         }
-        assert assertProbabilities();
         return true;
     }
 

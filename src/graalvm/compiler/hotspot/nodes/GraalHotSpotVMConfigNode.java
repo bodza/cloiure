@@ -197,10 +197,6 @@ public class GraalHotSpotVMConfigNode extends FloatingNode implements LIRLowerab
             {
                 return ConstantNode.forBoolean(config.inlineContiguousAllocationSupported);
             }
-            else
-            {
-                assert false;
-            }
         }
         return this;
     }

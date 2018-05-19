@@ -49,7 +49,6 @@ public abstract class CompressionNode extends UnaryNode implements ConvertNode, 
     @Override
     public Stamp foldStamp(Stamp newStamp)
     {
-        assert newStamp.isCompatible(getValue().stamp(NodeView.DEFAULT));
         return mkStamp(newStamp);
     }
 

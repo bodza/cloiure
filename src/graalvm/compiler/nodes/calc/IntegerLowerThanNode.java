@@ -103,7 +103,6 @@ public abstract class IntegerLowerThanNode extends CompareNode
             if (yStampGeneric instanceof IntegerStamp)
             {
                 IntegerStamp yStamp = (IntegerStamp) yStampGeneric;
-                assert yStamp.getBits() == xStamp.getBits();
                 Stamp s = getOp().getSucceedingStampForX(xStamp, yStamp, mirror, strict);
                 if (s != null)
                 {
@@ -283,7 +282,6 @@ public abstract class IntegerLowerThanNode extends CompareNode
                 int bits = succeedingXStamp.getBits();
                 if (compare(lowerBound(succeedingXStamp), minValue(bits)) > 0)
                 {
-                    assert upperBound(succeedingXStamp) == maxValue(bits);
                     // x must be in [L..MAX] <=> x >= L <=> !(x < L)
                     return LogicNegationNode.create(create(forX, ConstantNode.forIntegerStamp(succeedingXStamp, lowerBound(succeedingXStamp)), view));
                 }
@@ -317,7 +315,6 @@ public abstract class IntegerLowerThanNode extends CompareNode
         protected IntegerStamp getSucceedingStampForX(IntegerStamp xStamp, IntegerStamp yStamp, boolean mirror, boolean strict)
         {
             int bits = xStamp.getBits();
-            assert yStamp.getBits() == bits;
             if (mirror)
             {
                 long low = lowerBound(yStamp);

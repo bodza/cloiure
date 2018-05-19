@@ -475,10 +475,6 @@ public class HotSpotGraphBuilderPlugins
     {
         if (config.useAESIntrinsics)
         {
-            assert config.aescryptEncryptBlockStub != 0L;
-            assert config.aescryptDecryptBlockStub != 0L;
-            assert config.cipherBlockChainingEncryptAESCryptStub != 0L;
-            assert config.cipherBlockChainingDecryptAESCryptStub != 0L;
             String arch = config.osArch;
             String decryptSuffix = arch.equals("sparc") ? "WithOriginalKey" : "";
             Registration r = new Registration(plugins, "com.sun.crypto.provider.CipherBlockChaining", bytecodeProvider);
@@ -495,7 +491,6 @@ public class HotSpotGraphBuilderPlugins
         Registration r = new Registration(plugins, BigInteger.class, bytecodeProvider);
         if (config.useMultiplyToLenIntrinsic())
         {
-            assert config.multiplyToLen != 0L;
             r.registerMethodSubstitution(BigIntegerSubstitutions.class, "implMultiplyToLen", "multiplyToLenStatic", int[].class, int.class, int[].class, int.class, int[].class);
         }
         if (config.useMulAddIntrinsic())
@@ -520,19 +515,16 @@ public class HotSpotGraphBuilderPlugins
     {
         if (config.useSHA1Intrinsics())
         {
-            assert config.sha1ImplCompress != 0L;
             Registration r = new Registration(plugins, "sun.security.provider.SHA", bytecodeProvider);
             r.registerMethodSubstitution(SHASubstitutions.class, SHASubstitutions.implCompressName, "implCompress0", Receiver.class, byte[].class, int.class);
         }
         if (config.useSHA256Intrinsics())
         {
-            assert config.sha256ImplCompress != 0L;
             Registration r = new Registration(plugins, "sun.security.provider.SHA2", bytecodeProvider);
             r.registerMethodSubstitution(SHA2Substitutions.class, SHA2Substitutions.implCompressName, "implCompress0", Receiver.class, byte[].class, int.class);
         }
         if (config.useSHA512Intrinsics())
         {
-            assert config.sha512ImplCompress != 0L;
             Registration r = new Registration(plugins, "sun.security.provider.SHA5", bytecodeProvider);
             r.registerMethodSubstitution(SHA5Substitutions.class, SHA5Substitutions.implCompressName, "implCompress0", Receiver.class, byte[].class, int.class);
         }

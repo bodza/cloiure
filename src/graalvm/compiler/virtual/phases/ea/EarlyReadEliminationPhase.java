@@ -36,7 +36,6 @@ public class EarlyReadEliminationPhase extends EffectsPhase<PhaseContext>
     @Override
     protected Closure<?> createEffectsClosure(PhaseContext context, ScheduleResult schedule, ControlFlowGraph cfg)
     {
-        assert schedule == null;
         return new ReadEliminationClosure(cfg, considerGuards);
     }
 

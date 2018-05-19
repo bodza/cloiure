@@ -34,7 +34,6 @@ public class InferStamps
                 ValueNode node = (ValueNode) n;
                 if (node.stamp(NodeView.DEFAULT) instanceof ObjectStamp)
                 {
-                    assert node.stamp(NodeView.DEFAULT).hasValues() : "We assume all Phi and Proxy stamps are legal before the analysis";
                     node.setStamp(node.stamp(NodeView.DEFAULT).empty());
                 }
             }
@@ -65,24 +64,5 @@ public class InferStamps
             }
             ++z;
         } while (stampChanged && z < 10000);
-
-        /*
-         * Check that all the illegal stamps we introduced above are correctly replaced with real
-         * stamps again.
-         */
-        assert checkNoEmptyStamp(graph);
-    }
-
-    private static boolean checkNoEmptyStamp(StructuredGraph graph)
-    {
-        for (Node n : graph.getNodes())
-        {
-            if (n instanceof ValuePhiNode)
-            {
-                ValueNode node = (ValueNode) n;
-                assert node.stamp(NodeView.DEFAULT).hasValues() : "Stamp is empty after analysis. This is not necessarily an error, but a condition that we want to investigate (and then maybe relax or remove the assertion).";
-            }
-        }
-        return true;
     }
 }

@@ -36,7 +36,7 @@ public class HotSpotDebugInfoBuilder extends DebugInfoBuilder
 
     public HotSpotDebugInfoBuilder(NodeValueMap nodeValueMap, HotSpotLockStack lockStack, HotSpotLIRGenerator gen)
     {
-        super(nodeValueMap, gen.getResult().getLIR().getDebug());
+        super(nodeValueMap);
         this.lockStack = lockStack;
         this.codeCacheProvider = gen.getProviders().getCodeCache();
     }
@@ -63,7 +63,6 @@ public class HotSpotDebugInfoBuilder extends DebugInfoBuilder
         ValueNode lock = state.lockAt(lockIndex);
         JavaValue object = toJavaValue(lock);
         boolean eliminated = object instanceof VirtualObject || state.monitorIdAt(lockIndex).isEliminated();
-        assert state.monitorIdAt(lockIndex).getLockDepth() == lockDepth;
         return new StackLockValue(object, slot, eliminated);
     }
 

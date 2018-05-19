@@ -234,7 +234,6 @@ public class Bytecodes
      *
      * <pre>
      * for (int opcode = 0; opcode &lt;= Bytecodes.LAST_JVM_OPCODE; ++opcode) {
-     *     //
      * }
      * </pre>
      */
@@ -311,10 +310,7 @@ public class Bytecodes
                 int flagsFilter = Modifier.FINAL | Modifier.STATIC;
                 if ((field.getModifiers() & flagsFilter) == flagsFilter && !field.isSynthetic())
                 {
-                    assert field.getType() == int.class : "Field is not int : " + field;
                     final int flag = field.getInt(null);
-                    assert flag != 0;
-                    assert (flag & allFlags) == 0 : field.getName() + " has a value conflicting with another flag";
                     allFlags |= flag;
                 }
             }
@@ -827,14 +823,11 @@ public class Bytecodes
      */
     private static void def(int opcode, String name, String format, int stackEffect, int flags)
     {
-        assert nameArray[opcode] == null : "opcode " + opcode + " is already bound to name " + nameArray[opcode];
         nameArray[opcode] = name;
         int instructionLength = format.length();
         lengthArray[opcode] = instructionLength;
         stackEffectArray[opcode] = stackEffect;
         Bytecodes.flagsArray[opcode] = flags;
-
-        assert !isConditionalBranch(opcode) || isBranch(opcode) : "a conditional branch must also be a branch";
     }
 
     public static boolean isIfBytecode(int bytecode)

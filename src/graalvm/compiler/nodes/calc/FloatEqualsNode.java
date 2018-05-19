@@ -32,8 +32,6 @@ public final class FloatEqualsNode extends CompareNode implements BinaryCommutat
     public FloatEqualsNode(ValueNode x, ValueNode y)
     {
         super(TYPE, CanonicalCondition.EQ, false, x, y);
-        assert x.stamp(NodeView.DEFAULT) instanceof FloatStamp && y.stamp(NodeView.DEFAULT) instanceof FloatStamp : x.stamp(NodeView.DEFAULT) + " " + y.stamp(NodeView.DEFAULT);
-        assert x.stamp(NodeView.DEFAULT).isCompatible(y.stamp(NodeView.DEFAULT));
     }
 
     public static LogicNode create(ValueNode x, ValueNode y, NodeView view)

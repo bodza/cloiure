@@ -27,7 +27,6 @@ public final class SignExtendNode extends IntegerConvertNode<SignExtend, Narrow>
     public SignExtendNode(ValueNode input, int resultBits)
     {
         this(input, PrimitiveStamp.getBits(input.stamp(NodeView.DEFAULT)), resultBits);
-        assert 0 < PrimitiveStamp.getBits(input.stamp(NodeView.DEFAULT)) && PrimitiveStamp.getBits(input.stamp(NodeView.DEFAULT)) <= resultBits;
     }
 
     public SignExtendNode(ValueNode input, int inputBits, int resultBits)

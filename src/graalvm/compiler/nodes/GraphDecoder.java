@@ -22,7 +22,6 @@ import graalvm.compiler.core.common.Fields;
 import graalvm.compiler.core.common.PermanentBailoutException;
 import graalvm.compiler.core.common.util.TypeReader;
 import graalvm.compiler.core.common.util.UnsafeArrayTypeReader;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Edges;
 import graalvm.compiler.graph.Graph;
@@ -254,7 +253,6 @@ public class GraphDecoder
 
             FrameState otherState = ((LoopExplosionState) obj).state;
             FrameState thisState = state;
-            assert thisState.outerFrameState() == otherState.outerFrameState();
 
             Iterator<ValueNode> thisIter = thisState.values().iterator();
             Iterator<ValueNode> otherIter = otherState.values().iterator();
@@ -366,7 +364,6 @@ public class GraphDecoder
     /** The target graph where decoded nodes are added to. */
     protected final StructuredGraph graph;
     protected final OptionValues options;
-    protected final DebugContext debug;
 
     private final EconomicMap<NodeClass<?>, ArrayDeque<Node>> reusableFloatingNodes;
 
@@ -375,24 +372,14 @@ public class GraphDecoder
         this.architecture = architecture;
         this.graph = graph;
         this.options = graph.getOptions();
-        this.debug = graph.getDebug();
         reusableFloatingNodes = EconomicMap.create(Equivalence.IDENTITY);
     }
 
-    @SuppressWarnings("try")
     public final void decode(EncodedGraph encodedGraph)
     {
-        try (DebugContext.Scope scope = debug.scope("GraphDecoder", graph))
-        {
-            MethodScope methodScope = new MethodScope(null, graph, encodedGraph, LoopExplosionKind.NONE);
-            decode(createInitialLoopScope(methodScope, null));
-            cleanupGraph(methodScope);
-            assert graph.verify();
-        }
-        catch (Throwable ex)
-        {
-            debug.handle(ex);
-        }
+        MethodScope methodScope = new MethodScope(null, graph, encodedGraph, LoopExplosionKind.NONE);
+        decode(createInitialLoopScope(methodScope, null));
+        cleanupGraph(methodScope);
     }
 
     protected final LoopScope createInitialLoopScope(MethodScope methodScope, FixedWithNextNode startNode)
@@ -446,7 +433,6 @@ public class GraphDecoder
                 if (loopScope.nextIterations != null && !loopScope.nextIterations.isEmpty())
                 {
                     /* Loop explosion: process the loop iteration. */
-                    assert loopScope.nextIterations.peekFirst().loopIteration == loopScope.loopIteration + 1;
                     loopScope = loopScope.nextIterations.removeFirst();
                 }
                 else
@@ -560,7 +546,6 @@ public class GraphDecoder
 
         methodScope.reader.setByteIndex(methodScope.encodedGraph.nodeStartOffsets[nodeOrderId]);
         int typeId = methodScope.reader.getUVInt();
-        assert node.getNodeClass() == methodScope.encodedGraph.getNodeClasses()[typeId];
         makeFixedNodeInputs(methodScope, loopScope, node);
         readProperties(methodScope, node);
         makeSuccessorStubs(methodScope, successorAddScope, node, updatePredecessors);
@@ -607,11 +592,10 @@ public class GraphDecoder
 
                 if (merge instanceof LoopBeginNode)
                 {
-                    assert phiNodeScope == phiInputScope && phiNodeScope == loopScope;
                     resultScope = new LoopScope(methodScope, loopScope, loopScope.loopDepth + 1, 0, mergeOrderId,
                                     methodScope.loopExplosion != LoopExplosionKind.NONE ? Arrays.copyOf(loopScope.createdNodes, loopScope.createdNodes.length) : null,
-                                    methodScope.loopExplosion != LoopExplosionKind.NONE ? Arrays.copyOf(loopScope.createdNodes, loopScope.createdNodes.length) : loopScope.createdNodes, //
-                                    methodScope.loopExplosion != LoopExplosionKind.NONE ? new ArrayDeque<>(2) : null, //
+                                    methodScope.loopExplosion != LoopExplosionKind.NONE ? Arrays.copyOf(loopScope.createdNodes, loopScope.createdNodes.length) : loopScope.createdNodes,
+                                    methodScope.loopExplosion != LoopExplosionKind.NONE ? new ArrayDeque<>(2) : null,
                                     methodScope.loopExplosion == LoopExplosionKind.MERGE_EXPLODE ? EconomicMap.create(Equivalence.DEFAULT) : null);
                     phiInputScope = resultScope;
                     phiNodeScope = resultScope;
@@ -677,7 +661,6 @@ public class GraphDecoder
      */
     protected LoopScope handleInvoke(MethodScope methodScope, LoopScope loopScope, InvokeData invokeData)
     {
-        assert invokeData.invoke.callTarget() == null : "callTarget edge is ignored during decoding of Invoke";
         CallTargetNode callTarget = (CallTargetNode) ensureNodeCreated(methodScope, loopScope, invokeData.callTargetOrderId);
         appendInvoke(methodScope, loopScope, invokeData, callTarget);
         return loopScope;
@@ -694,7 +677,6 @@ public class GraphDecoder
             ((InvokeNode) invokeData.invoke).setCallTarget(callTarget);
         }
 
-        assert invokeData.invoke.stateAfter() == null && invokeData.invoke.stateDuring() == null : "FrameState edges are ignored during decoding of Invoke";
         invokeData.invoke.setStateAfter((FrameState) ensureNodeCreated(methodScope, loopScope, invokeData.stateAfterOrderId));
 
         invokeData.invoke.setNext(makeStubNode(methodScope, loopScope, invokeData.nextOrderId));
@@ -826,7 +808,6 @@ public class GraphDecoder
         loopEnd.replaceAtPredecessor(replacementNode);
         loopEnd.safeDelete();
 
-        assert methodScope.loopExplosion != LoopExplosionKind.NONE;
         if (methodScope.loopExplosion != LoopExplosionKind.FULL_UNROLL || loopScope.nextIterations.isEmpty())
         {
             int nextIterationNumber = loopScope.nextIterations.isEmpty() ? loopScope.loopIteration + 1 : loopScope.nextIterations.getLast().loopIteration + 1;
@@ -853,7 +834,6 @@ public class GraphDecoder
 
     protected void handleProxyNodes(MethodScope methodScope, LoopScope loopScope, LoopExitNode loopExit)
     {
-        assert loopExit.stateAfter() == null;
         int stateAfterOrderId = readOrderId(methodScope);
         loopExit.setStateAfter((FrameState) ensureNodeCreated(methodScope, loopScope, stateAfterOrderId));
 
@@ -875,7 +855,6 @@ public class GraphDecoder
 
     protected void handleLoopExplosionProxyNodes(MethodScope methodScope, LoopScope loopScope, LoopScope outerScope, LoopExitNode loopExit, int loopExitOrderId)
     {
-        assert loopExit.stateAfter() == null;
         int stateAfterOrderId = readOrderId(methodScope);
 
         BeginNode begin = graph.add(new BeginNode());
@@ -1026,7 +1005,6 @@ public class GraphDecoder
             }
         }
         loopExit.safeDelete();
-        assert loopExitSuccessor.predecessor() == null;
         if (merge != null)
         {
             merge.getNodeClass().getSuccessorEdges().update(merge, null, loopExitSuccessor);
@@ -1089,7 +1067,6 @@ public class GraphDecoder
                  * the stale value because it will never be needed to be merged (we are exploding
                  * until we hit a return).
                  */
-                assert methodScope.loopExplosion == LoopExplosionKind.FULL_EXPLODE_UNTIL_RETURN && phiNodeScope.loopIteration > 0;
                 existing = null;
             }
 
@@ -1184,8 +1161,6 @@ public class GraphDecoder
         if (node instanceof AbstractMergeNode)
         {
             /* The ends of merge nodes are filled manually when the ends are processed. */
-            assert edges.getCount() - edges.getDirectCount() == 1 : "MergeNode has one variable size input (the ends)";
-            assert Edges.getNodeList(node, edges.getOffsets(), edges.getDirectCount()) != null : "Input list must have been already created";
         }
         else
         {
@@ -1220,8 +1195,6 @@ public class GraphDecoder
              * The inputs of phi functions are filled manually when the end nodes are processed.
              * However, the values must not be null, so initialize them with an empty list.
              */
-            assert edges.getDirectCount() == 1 : "PhiNode has one direct input (the MergeNode)";
-            assert edges.getCount() - edges.getDirectCount() == 1 : "PhiNode has one variable size input (the values)";
             edges.initializeList(node, edges.getDirectCount(), new NodeInputList<>(node));
         }
         else
@@ -1324,7 +1297,6 @@ public class GraphDecoder
         /* Read the properties of the node. */
         readProperties(methodScope, node);
         /* There must not be any successors to read, since it is a non-fixed node. */
-        assert node.getNodeClass().getEdges(Edges.Type.Successors).getCount() == 0;
 
         methodScope.reader.setByteIndex(readerByteIndex);
         return node;
@@ -1460,22 +1432,18 @@ public class GraphDecoder
     {
         if (node instanceof Invoke)
         {
-            assert node instanceof InvokeNode || node instanceof InvokeWithExceptionNode : "The only two Invoke node classes. Got " + node.getClass();
             if (edges.type() == Edges.Type.Successors)
             {
-                assert edges.getCount() == (node instanceof InvokeWithExceptionNode ? 2 : 1) : "InvokeNode has one successor (next); InvokeWithExceptionNode has two successors (next, exceptionEdge)";
                 return true;
             }
             else
             {
-                assert edges.type() == Edges.Type.Inputs;
                 if (edges.getType(index) == CallTargetNode.class)
                 {
                     return true;
                 }
                 else if (edges.getType(index) == FrameState.class)
                 {
-                    assert edges.get(node, index) == null || edges.get(node, index) == ((Invoke) node).stateAfter() : "Only stateAfter can be a FrameState during encoding";
                     return true;
                 }
             }
@@ -1495,9 +1463,6 @@ public class GraphDecoder
 
     protected void registerNode(LoopScope loopScope, int nodeOrderId, Node node, boolean allowOverwrite, boolean allowNull)
     {
-        assert node == null || node.isAlive();
-        assert allowNull || node != null;
-        assert allowOverwrite || lookupNode(loopScope, nodeOrderId) == null;
         loopScope.createdNodes[nodeOrderId] = node;
     }
 
@@ -1518,37 +1483,6 @@ public class GraphDecoder
      */
     protected void cleanupGraph(MethodScope methodScope)
     {
-        assert verifyEdges();
-    }
-
-    protected boolean verifyEdges()
-    {
-        for (Node node : graph.getNodes())
-        {
-            assert node.isAlive();
-            for (Node i : node.inputs())
-            {
-                assert i.isAlive();
-                assert i.usages().contains(node);
-            }
-            for (Node s : node.successors())
-            {
-                assert s.isAlive();
-                assert s.predecessor() == node;
-            }
-
-            for (Node usage : node.usages())
-            {
-                assert usage.isAlive();
-                assert usage.inputs().contains(node) : node + " / " + usage + " / " + usage.inputs().count();
-            }
-            if (node.predecessor() != null)
-            {
-                assert node.predecessor().isAlive();
-                assert node.predecessor().successors().contains(node);
-            }
-        }
-        return true;
     }
 }
 
@@ -1595,17 +1529,12 @@ class LoopDetector implements Runnable
     @Override
     public void run()
     {
-        DebugContext debug = graph.getDebug();
-        debug.dump(DebugContext.DETAILED_LEVEL, graph, "Before loop detection");
-
         List<Loop> orderedLoops = findLoops();
-        assert orderedLoops.get(orderedLoops.size() - 1) == irreducibleLoopHandler : "outermost loop must be the last element in the list";
 
         for (Loop loop : orderedLoops)
         {
             if (loop.ends.isEmpty())
             {
-                assert loop == irreducibleLoopHandler;
                 continue;
             }
 
@@ -1624,11 +1553,7 @@ class LoopDetector implements Runnable
             {
                 insertLoopNodes(loop);
             }
-            debug.dump(DebugContext.DETAILED_LEVEL, graph, "After handling of loop %s", loop.header);
         }
-
-        logIrreducibleLoops();
-        debug.dump(DebugContext.DETAILED_LEVEL, graph, "After loop detection");
     }
 
     private List<Loop> findLoops()
@@ -1653,7 +1578,6 @@ class LoopDetector implements Runnable
         while (!stack.isEmpty())
         {
             Node current = stack.peek();
-            assert visited.isMarked(current);
 
             if (active.isMarked(current))
             {
@@ -1670,7 +1594,6 @@ class LoopDetector implements Runnable
                          * Since nodes are popped in reverse order that they were pushed, we add
                          * inner loops before outer loops here.
                          */
-                        assert !orderedLoops.contains(loop);
                         orderedLoops.add(loop);
                     }
                 }
@@ -1689,7 +1612,6 @@ class LoopDetector implements Runnable
                     {
                         /* Detected a cycle, i.e., a backward branch of a loop. */
                         Loop loop = findOrCreateLoop(unorderedLoops, (MergeNode) successor);
-                        assert !loop.ends.contains(current);
                         loop.ends.add((EndNode) current);
                     }
                     else if (visited.isMarked(successor))
@@ -1710,7 +1632,6 @@ class LoopDetector implements Runnable
 
     private Loop findOrCreateLoop(EconomicMap<MergeNode, Loop> unorderedLoops, MergeNode loopHeader)
     {
-        assert methodScope.loopExplosionMerges.contains(loopHeader) : loopHeader;
         Loop loop = unorderedLoops.get(loopHeader);
         if (loop == null)
         {
@@ -1825,15 +1746,12 @@ class LoopDetector implements Runnable
             {
                 stack.push(succ);
                 visited.mark(succ);
-                assert !methodScope.loopExplosionMerges.contains(succ);
             }
         }
 
         while (!stack.isEmpty())
         {
             Node current = stack.pop();
-            assert visited.isMarked(current);
-            assert current instanceof ControlSinkNode || current instanceof LoopEndNode || current.cfgSuccessors().iterator().hasNext() : "Must not reach a node that has not been decoded yet";
 
             for (Node successor : current.cfgSuccessors())
             {
@@ -1849,8 +1767,6 @@ class LoopDetector implements Runnable
                      * MergeNode, the current node mus be a AbstractEndNode with only that MergeNode
                      * as the successor.
                      */
-                    assert successor instanceof MergeNode;
-                    assert !loop.exits.contains(current);
                     loop.exits.add((AbstractEndNode) current);
                 }
                 else
@@ -1919,7 +1835,6 @@ class LoopDetector implements Runnable
         for (AbstractEndNode exit : loop.exits)
         {
             AbstractMergeNode loopExplosionMerge = exit.merge();
-            assert methodScope.loopExplosionMerges.contains(loopExplosionMerge);
 
             LoopExitNode loopExit = graph.add(new LoopExitNode(loopBegin));
             exit.replaceAtPredecessor(loopExit);
@@ -1989,7 +1904,6 @@ class LoopDetector implements Runnable
 
         FrameState newState = new FrameState(oldState.outerFrameState(), oldState.getCode(), oldState.bci, newValues, oldState.localsSize(), oldState.stackSize(), oldState.rethrowException(), oldState.duringCall(), oldState.monitorIds(), oldState.virtualObjectMappings());
 
-        assert loopExit.stateAfter() == null;
         loopExit.setStateAfter(graph.add(newState));
     }
 
@@ -2018,14 +1932,10 @@ class LoopDetector implements Runnable
      */
     private void handleIrreducibleLoop(Loop loop)
     {
-        assert loop != irreducibleLoopHandler;
-
         FrameState loopState = loop.header.stateAfter();
         FrameState explosionHeadState = irreducibleLoopHandler.header.stateAfter();
-        assert loopState.outerFrameState() == explosionHeadState.outerFrameState();
         NodeInputList<ValueNode> loopValues = loopState.values();
         NodeInputList<ValueNode> explosionHeadValues = explosionHeadState.values();
-        assert loopValues.size() == explosionHeadValues.size();
 
         /*
          * Find the loop variable, and the value of the loop variable for our loop and the outermost
@@ -2051,7 +1961,6 @@ class LoopDetector implements Runnable
                 explosionHeadValue = curExplosionHeadValue;
             }
         }
-        assert loopVariableIndex != -1;
 
         ValuePhiNode loopVariablePhi;
         SortedMap<Integer, AbstractBeginNode> dispatchTable = new TreeMap<>();
@@ -2062,8 +1971,6 @@ class LoopDetector implements Runnable
              * This is the first irreducible loop. We need to build the initial state machine
              * (dispatch for the loop header of the outermost loop).
              */
-            assert !irreducibleLoopHandler.header.isPhiAtMerge(explosionHeadValue);
-            assert irreducibleLoopHandler.header.phis().isEmpty();
 
             /* The new phi function for the loop variable. */
             loopVariablePhi = graph.addWithoutUnique(new ValuePhiNode(explosionHeadValue.stamp(NodeView.DEFAULT).unrestricted(), irreducibleLoopHandler.header));
@@ -2118,9 +2025,6 @@ class LoopDetector implements Runnable
              * switch node before. We re-create the dispatch state machine of that switch, so that
              * we can extend it with one more branch.
              */
-            assert irreducibleLoopHandler.header.isPhiAtMerge(explosionHeadValue);
-            assert irreducibleLoopHandler.header.phis().count() == 1 && irreducibleLoopHandler.header.phis().first() == explosionHeadValue;
-            assert irreducibleLoopSwitch.value() == explosionHeadValue;
 
             /* We can modify the phi function used by the old switch node. */
             loopVariablePhi = (ValuePhiNode) explosionHeadValue;
@@ -2137,20 +2041,17 @@ class LoopDetector implements Runnable
             unreachableDefaultSuccessor = irreducibleLoopSwitch.defaultSuccessor();
 
             /* Unlink and delete the old switch node, we do not need it anymore. */
-            assert irreducibleLoopHandler.header.next() == irreducibleLoopSwitch;
             irreducibleLoopHandler.header.setNext(null);
             irreducibleLoopSwitch.clearSuccessors();
             irreducibleLoopSwitch.safeDelete();
         }
 
         /* Insert our loop into the dispatch state machine. */
-        assert loop.header.phis().isEmpty();
         BeginNode dispatchBegin = graph.add(new BeginNode());
         EndNode dispatchEnd = graph.add(new EndNode());
         dispatchBegin.setNext(dispatchEnd);
         loop.header.addForwardEnd(dispatchEnd);
         int intLoopValue = asInt(loopValue);
-        assert !dispatchTable.containsKey(intLoopValue);
         dispatchTable.put(intLoopValue, dispatchBegin);
 
         /* Disconnect the ends of our loop and re-connect them to the outermost loop header. */
@@ -2206,28 +2107,5 @@ class LoopDetector implements Runnable
         switchKeySuccessors[idx] = idx;
 
         return new IntegerSwitchNode(switchedValue, switchSuccessors, switchKeys, switchKeyProbabilities, switchKeySuccessors);
-    }
-
-    /**
-     * Print information about irreducible loops, when enabled with -Dgraal.Log=IrreducibleLoops.
-     */
-    @SuppressWarnings("try")
-    private void logIrreducibleLoops()
-    {
-        DebugContext debug = graph.getDebug();
-        try (DebugContext.Scope s = debug.scope("IrreducibleLoops"))
-        {
-            if (debug.isLogEnabled(DebugContext.BASIC_LEVEL) && irreducibleLoopSwitch != null)
-            {
-                StringBuilder msg = new StringBuilder("Inserted state machine to remove irreducible loops. Dispatching to the following states: ");
-                String sep = "";
-                for (int i = 0; i < irreducibleLoopSwitch.keyCount(); i++)
-                {
-                    msg.append(sep).append(irreducibleLoopSwitch.keyAt(i).asInt());
-                    sep = ", ";
-                }
-                debug.log(DebugContext.BASIC_LEVEL, "%s", msg);
-            }
-        }
     }
 }

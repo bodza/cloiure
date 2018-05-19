@@ -54,7 +54,6 @@ public enum AMD64Arithmetic
             }
             else
             {
-                assert opcode == DREM;
                 masm.movdbl(tmp, asRegister(y));
                 masm.fldd(tmp);
                 masm.movdbl(tmp, asRegister(x));
@@ -82,13 +81,6 @@ public enum AMD64Arithmetic
                 masm.movdbl(asRegister(result), tmp);
             }
             masm.addq(AMD64.rsp, 8);
-        }
-
-        @Override
-        public void verify()
-        {
-            super.verify();
-            assert (opcode.name().startsWith("F") && result.getPlatformKind() == AMD64Kind.SINGLE && x.getPlatformKind() == AMD64Kind.SINGLE && y.getPlatformKind() == AMD64Kind.SINGLE) || (opcode.name().startsWith("D") && result.getPlatformKind() == AMD64Kind.DOUBLE && x.getPlatformKind() == AMD64Kind.DOUBLE && y.getPlatformKind() == AMD64Kind.DOUBLE);
         }
     }
 }

@@ -1,6 +1,5 @@
 package graalvm.compiler.hotspot.amd64;
 
-import static jdk.vm.ci.common.InitTimer.timer;
 import static graalvm.compiler.hotspot.HotSpotBackend.Options.GraalArithmeticStubs;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,79 +69,30 @@ public class AMD64HotSpotBackendFactory implements HotSpotBackendFactory
     @SuppressWarnings("try")
     public HotSpotBackend createBackend(HotSpotGraalRuntimeProvider graalRuntime, CompilerConfiguration compilerConfiguration, HotSpotJVMCIRuntimeProvider jvmciRuntime, HotSpotBackend host)
     {
-        assert host == null;
-
         OptionValues options = graalRuntime.getOptions();
         JVMCIBackend jvmci = jvmciRuntime.getHostJVMCIBackend();
         GraalHotSpotVMConfig config = graalRuntime.getVMConfig();
-        HotSpotProviders providers;
-        HotSpotRegistersProvider registers;
         HotSpotCodeCacheProvider codeCache = (HotSpotCodeCacheProvider) jvmci.getCodeCache();
         TargetDescription target = codeCache.getTarget();
-        HotSpotHostForeignCallsProvider foreignCalls;
-        Value[] nativeABICallerSaveRegisters;
         HotSpotMetaAccessProvider metaAccess = (HotSpotMetaAccessProvider) jvmci.getMetaAccess();
         HotSpotConstantReflectionProvider constantReflection = (HotSpotConstantReflectionProvider) jvmci.getConstantReflection();
         ConstantFieldProvider constantFieldProvider = new HotSpotGraalConstantFieldProvider(config, metaAccess);
-        HotSpotLoweringProvider lowerer;
-        HotSpotSnippetReflectionProvider snippetReflection;
-        HotSpotReplacementsImpl replacements;
-        HotSpotSuitesProvider suites;
-        HotSpotWordTypes wordTypes;
-        Plugins plugins;
-        BytecodeProvider bytecodeProvider;
-        try (InitTimer t = timer("create providers"))
-        {
-            try (InitTimer rt = timer("create HotSpotRegisters provider"))
-            {
-                registers = createRegisters();
-            }
-            try (InitTimer rt = timer("create NativeABICallerSaveRegisters"))
-            {
-                nativeABICallerSaveRegisters = createNativeABICallerSaveRegisters(config, codeCache.getRegisterConfig());
-            }
-            try (InitTimer rt = timer("create WordTypes"))
-            {
-                wordTypes = new HotSpotWordTypes(metaAccess, target.wordJavaKind);
-            }
-            try (InitTimer rt = timer("create ForeignCalls provider"))
-            {
-                foreignCalls = createForeignCalls(jvmciRuntime, graalRuntime, metaAccess, codeCache, wordTypes, nativeABICallerSaveRegisters);
-            }
-            try (InitTimer rt = timer("create Lowerer provider"))
-            {
-                lowerer = createLowerer(graalRuntime, metaAccess, foreignCalls, registers, constantReflection, target);
-            }
-            HotSpotStampProvider stampProvider = new HotSpotStampProvider();
-            Providers p = new Providers(metaAccess, codeCache, constantReflection, constantFieldProvider, foreignCalls, lowerer, null, stampProvider);
+        HotSpotRegistersProvider registers = createRegisters();
+        Value[] nativeABICallerSaveRegisters = createNativeABICallerSaveRegisters(config, codeCache.getRegisterConfig());
+        HotSpotWordTypes wordTypes = new HotSpotWordTypes(metaAccess, target.wordJavaKind);
+        HotSpotHostForeignCallsProvider foreignCalls = createForeignCalls(jvmciRuntime, graalRuntime, metaAccess, codeCache, wordTypes, nativeABICallerSaveRegisters);
+        HotSpotLoweringProvider lowerer = createLowerer(graalRuntime, metaAccess, foreignCalls, registers, constantReflection, target);
+        HotSpotStampProvider stampProvider = new HotSpotStampProvider();
+        Providers p = new Providers(metaAccess, codeCache, constantReflection, constantFieldProvider, foreignCalls, lowerer, null, stampProvider);
 
-            try (InitTimer rt = timer("create SnippetReflection provider"))
-            {
-                snippetReflection = createSnippetReflection(graalRuntime, constantReflection, wordTypes);
-            }
-            try (InitTimer rt = timer("create Bytecode provider"))
-            {
-                bytecodeProvider = new ClassfileBytecodeProvider(metaAccess, snippetReflection);
-            }
-            try (InitTimer rt = timer("create Replacements provider"))
-            {
-                replacements = createReplacements(options, p, snippetReflection, bytecodeProvider);
-            }
-            try (InitTimer rt = timer("create GraphBuilderPhase plugins"))
-            {
-                plugins = createGraphBuilderPlugins(compilerConfiguration, config, options, target, constantReflection, foreignCalls, lowerer, metaAccess, snippetReflection, replacements, wordTypes, stampProvider);
-                replacements.setGraphBuilderPlugins(plugins);
-            }
-            try (InitTimer rt = timer("create Suites provider"))
-            {
-                suites = createSuites(config, graalRuntime, compilerConfiguration, plugins, registers, replacements, options);
-            }
-            providers = new HotSpotProviders(metaAccess, codeCache, constantReflection, constantFieldProvider, foreignCalls, lowerer, replacements, suites, registers, snippetReflection, wordTypes, plugins);
-        }
-        try (InitTimer rt = timer("instantiate backend"))
-        {
-            return createBackend(config, graalRuntime, providers);
-        }
+        HotSpotSnippetReflectionProvider snippetReflection = createSnippetReflection(graalRuntime, constantReflection, wordTypes);
+        BytecodeProvider bytecodeProvider = new ClassfileBytecodeProvider(metaAccess, snippetReflection);
+        HotSpotReplacementsImpl replacements = createReplacements(options, p, snippetReflection, bytecodeProvider);
+        Plugins plugins = createGraphBuilderPlugins(compilerConfiguration, config, options, target, constantReflection, foreignCalls, lowerer, metaAccess, snippetReflection, replacements, wordTypes, stampProvider);
+        replacements.setGraphBuilderPlugins(plugins);
+        HotSpotSuitesProvider suites = createSuites(config, graalRuntime, compilerConfiguration, plugins, registers, replacements, options);
+        HotSpotProviders providers = new HotSpotProviders(metaAccess, codeCache, constantReflection, constantFieldProvider, foreignCalls, lowerer, replacements, suites, registers, snippetReflection, wordTypes, plugins);
+        return createBackend(config, graalRuntime, providers);
     }
 
     protected Plugins createGraphBuilderPlugins(CompilerConfiguration compilerConfiguration, GraalHotSpotVMConfig config, OptionValues options, TargetDescription target, HotSpotConstantReflectionProvider constantReflection, HotSpotHostForeignCallsProvider foreignCalls, LoweringProvider lowerer, HotSpotMetaAccessProvider metaAccess, HotSpotSnippetReflectionProvider snippetReflection, HotSpotReplacementsImpl replacements, HotSpotWordTypes wordTypes, HotSpotStampProvider stampProvider)

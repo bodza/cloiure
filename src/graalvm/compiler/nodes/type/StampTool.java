@@ -106,7 +106,6 @@ public class StampTool
         long mask = CodeUtil.mask(valueStamp.getBits());
         // Don't count zeros from the mask in the result.
         int adjust = Long.numberOfLeadingZeros(mask);
-        assert adjust == 0 || adjust == 32;
         int min = Long.numberOfLeadingZeros(valueStamp.upMask() & mask) - adjust;
         int max = Long.numberOfLeadingZeros(valueStamp.downMask() & mask) - adjust;
         return StampFactory.forInteger(JavaKind.Int, min, max);

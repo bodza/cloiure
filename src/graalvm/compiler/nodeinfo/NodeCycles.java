@@ -56,12 +56,10 @@ public enum NodeCycles
 
     public static NodeCycles compute(NodeCycles base, int opCount)
     {
-        assert opCount >= 0;
         if (opCount == 0)
         {
             return CYCLES_0;
         }
-        assert base.ordinal() > CYCLES_0.ordinal();
         int log2 = log2(base.value * opCount);
         NodeCycles[] values = values();
         for (int i = base.ordinal(); i < values.length; i++)
@@ -76,7 +74,6 @@ public enum NodeCycles
 
     public static NodeCycles compute(int rawValue)
     {
-        assert rawValue >= 0;
         if (rawValue == 0)
         {
             return CYCLES_0;

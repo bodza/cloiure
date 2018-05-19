@@ -41,11 +41,7 @@ public final class TypeSwitchNode extends SwitchNode implements LIRLowerable, Si
     public TypeSwitchNode(ValueNode value, AbstractBeginNode[] successors, ResolvedJavaType[] keys, double[] keyProbabilities, int[] keySuccessors, ConstantReflectionProvider constantReflection)
     {
         super(TYPE, value, successors, keySuccessors, keyProbabilities);
-        assert successors.length <= keys.length + 1;
-        assert keySuccessors.length == keyProbabilities.length;
         this.keys = keys;
-        assert value.stamp(NodeView.DEFAULT) instanceof AbstractPointerStamp;
-        assert assertKeys();
 
         hubs = new Constant[keys.length];
         for (int i = 0; i < hubs.length; i++)
@@ -67,7 +63,6 @@ public final class TypeSwitchNode extends SwitchNode implements LIRLowerable, Si
                 {
                     continue;
                 }
-                assert !keys[i].equals(keys[j]);
             }
         }
         return true;

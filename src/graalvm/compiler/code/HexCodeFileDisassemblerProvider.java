@@ -29,7 +29,6 @@ public class HexCodeFileDisassemblerProvider implements DisassemblerProvider
     @Override
     public String disassembleCompiledCode(CodeCacheProvider codeCache, CompilationResult compResult)
     {
-        assert compResult != null;
         return disassemble(codeCache, compResult, null);
     }
 
@@ -42,7 +41,6 @@ public class HexCodeFileDisassemblerProvider implements DisassemblerProvider
     @Override
     public String disassembleInstalledCode(CodeCacheProvider codeCache, CompilationResult compResult, InstalledCode installedCode)
     {
-        assert installedCode != null;
         return installedCode.isValid() ? disassemble(codeCache, compResult, installedCode) : null;
     }
 

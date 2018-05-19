@@ -66,7 +66,6 @@ public class DynamicNewArrayNode extends AbstractNewArrayNode implements Canonic
         super(c, computeStamp(knownElementKind, metaAccess), length, fillContents, stateBefore);
         this.elementType = elementType;
         this.knownElementKind = knownElementKind;
-        assert knownElementKind != JavaKind.Void && knownElementKind != JavaKind.Illegal;
     }
 
     public ValueNode getElementType()

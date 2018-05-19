@@ -90,7 +90,6 @@ public class FloatingReadPhase extends Phase
                 if (lastLocationAccess == null)
                 {
                     lastLocationAccess = lastMemorySnapshot.get(any());
-                    assert lastLocationAccess != null;
                 }
                 return lastLocationAccess;
             }
@@ -248,7 +247,6 @@ public class FloatingReadPhase extends Phase
         }
         if (createFloatingReads)
         {
-            assert !graph.isAfterFloatingReadPhase();
             graph.setAfterFloatingReadPhase(true);
         }
     }
@@ -262,7 +260,6 @@ public class FloatingReadPhase extends Phase
         {
             keys.addAll(other.getLocations());
         }
-        assert checkNoImmutableLocations(keys);
 
         for (LocationIdentity key : keys)
         {
@@ -305,15 +302,6 @@ public class FloatingReadPhase extends Phase
         return newState;
     }
 
-    private static boolean checkNoImmutableLocations(EconomicSet<LocationIdentity> keys)
-    {
-        keys.forEach(t ->
-        {
-            assert t.isMutable();
-        });
-        return true;
-    }
-
     public static class FloatingReadClosure extends NodeIteratorClosure<MemoryMapImpl>
     {
         private final EconomicMap<LoopBeginNode, EconomicSet<LocationIdentity>> modifiedInLoops;
@@ -353,7 +341,6 @@ public class FloatingReadPhase extends Phase
             {
                 processCheckpoint((MemoryCheckpoint.Multi) node, state);
             }
-            assert MemoryCheckpoint.TypeAssertion.correctType(node) : node;
 
             if (createMemoryMapNodes && node instanceof ReturnNode)
             {
@@ -376,7 +363,6 @@ public class FloatingReadPhase extends Phase
                     if (access.getLastLocationAccess() == anchor)
                     {
                         MemoryNode lastLocationAccess = state.getLastLocationAccess(access.getLocationIdentity());
-                        assert lastLocationAccess != null;
                         access.setLastLocationAccess(lastLocationAccess);
                     }
                 }
@@ -430,7 +416,6 @@ public class FloatingReadPhase extends Phase
             LocationIdentity locationIdentity = accessNode.getLocationIdentity();
             if (accessNode.canFloat())
             {
-                assert accessNode.getNullCheck() == false;
                 MemoryNode lastLocationAccess = state.getLastLocationAccess(locationIdentity);
                 try (DebugCloseable position = accessNode.withNodeSourcePosition())
                 {

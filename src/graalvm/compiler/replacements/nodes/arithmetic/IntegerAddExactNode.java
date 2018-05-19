@@ -36,7 +36,6 @@ public final class IntegerAddExactNode extends AddNode implements IntegerExactAr
     {
         super(TYPE, x, y);
         setStamp(x.stamp(NodeView.DEFAULT).unrestricted());
-        assert x.stamp(NodeView.DEFAULT).isCompatible(y.stamp(NodeView.DEFAULT)) && x.stamp(NodeView.DEFAULT) instanceof IntegerStamp;
     }
 
     @Override
@@ -58,7 +57,6 @@ public final class IntegerAddExactNode extends AddNode implements IntegerExactAr
         IntegerStamp b = (IntegerStamp) stampY;
 
         int bits = a.getBits();
-        assert bits == b.getBits();
 
         long defaultMask = CodeUtil.mask(bits);
         long variableBits = (a.downMask() ^ a.upMask()) | (b.downMask() ^ b.upMask());
@@ -145,7 +143,6 @@ public final class IntegerAddExactNode extends AddNode implements IntegerExactAr
         JavaConstant yConst = forY.asJavaConstant();
         if (xConst != null && yConst != null)
         {
-            assert xConst.getJavaKind() == yConst.getJavaKind();
             try
             {
                 if (xConst.getJavaKind() == JavaKind.Int)
@@ -154,7 +151,6 @@ public final class IntegerAddExactNode extends AddNode implements IntegerExactAr
                 }
                 else
                 {
-                    assert xConst.getJavaKind() == JavaKind.Long;
                     return ConstantNode.forLong(Math.addExact(xConst.asLong(), yConst.asLong()));
                 }
             }

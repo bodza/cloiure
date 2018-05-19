@@ -50,7 +50,6 @@ public final class ConditionalNode extends FloatingNode implements Canonicalizab
     public ConditionalNode(LogicNode condition, ValueNode trueValue, ValueNode falseValue)
     {
         super(TYPE, trueValue.stamp(NodeView.DEFAULT).meet(falseValue.stamp(NodeView.DEFAULT)));
-        assert trueValue.stamp(NodeView.DEFAULT).isCompatible(falseValue.stamp(NodeView.DEFAULT));
         this.condition = condition;
         this.trueValue = trueValue;
         this.falseValue = falseValue;
@@ -239,7 +238,6 @@ public final class ConditionalNode extends FloatingNode implements Canonicalizab
                     IntegerTestNode integerTestNode = (IntegerTestNode) condition;
                     if (integerTestNode.getY().isConstant())
                     {
-                        assert integerTestNode.getX().stamp(view) instanceof IntegerStamp;
                         long testY = integerTestNode.getY().asJavaConstant().asLong();
                         if (testY == 1 && constTrueValue == 0 && constFalseValue == 1)
                         {

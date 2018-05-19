@@ -140,13 +140,10 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
     {
         if (uninit)
         {
-            assert kind == JavaKind.Object;
-            assert !killAny : "unsupported";
             return uninitObjectArraycopyDescriptors[aligned ? 1 : 0][disjoint ? 1 : 0];
         }
         if (killAny)
         {
-            assert kind == JavaKind.Object;
             return objectArraycopyDescriptorsKillAny[aligned ? 1 : 0][disjoint ? 1 : 0];
         }
         return arraycopyDescriptors[aligned ? 1 : 0][disjoint ? 1 : 0].get(kind);
@@ -180,7 +177,6 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
         }
         if (uninit)
         {
-            assert kind == JavaKind.Object;
             uninitObjectArraycopyDescriptors[aligned ? 1 : 0][disjoint ? 1 : 0] = desc;
         }
         else
@@ -191,7 +187,6 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
 
     private ForeignCallDescriptor buildDescriptor(JavaKind kind, boolean aligned, boolean disjoint, boolean uninit, boolean killAny, long routine)
     {
-        assert !killAny || kind == JavaKind.Object;
         String name = kind + (aligned ? "Aligned" : "") + (disjoint ? "Disjoint" : "") + (uninit ? "Uninit" : "") + "Arraycopy" + (killAny ? "KillAny" : "");
         ForeignCallDescriptor desc = new ForeignCallDescriptor(name, void.class, Word.class, Word.class, Word.class);
         LocationIdentity killed = killAny ? LocationIdentity.any() : NamedLocationIdentity.getArrayLocation(kind);
@@ -413,7 +408,6 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
 
     public HotSpotForeignCallLinkage getForeignCall(ForeignCallDescriptor descriptor)
     {
-        assert foreignCalls != null : descriptor;
         return foreignCalls.get(descriptor);
     }
 }

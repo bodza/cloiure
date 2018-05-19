@@ -33,7 +33,6 @@ public abstract class AbstractNewArrayNode extends AbstractNewObjectNode impleme
      */
     public ValueNode dimension(int index)
     {
-        assert index == 0;
         return length();
     }
 

@@ -1,6 +1,5 @@
 package graalvm.compiler.graph;
 
-import static graalvm.compiler.core.common.GraalOptions.TrackNodeInsertion;
 import static graalvm.compiler.graph.Graph.SourcePositionTracking.Default;
 import static graalvm.compiler.graph.Graph.SourcePositionTracking.Track;
 import static graalvm.compiler.graph.Graph.SourcePositionTracking.UpdateOnly;
@@ -16,12 +15,8 @@ import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 import org.graalvm.collections.UnmodifiableEconomicMap;
 import graalvm.compiler.core.common.GraalOptions;
-import graalvm.compiler.debug.CounterKey;
 import graalvm.compiler.debug.DebugCloseable;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.debug.TimerKey;
-import graalvm.compiler.graph.Node.NodeInsertionStackTrace;
 import graalvm.compiler.graph.Node.ValueNumberable;
 import graalvm.compiler.graph.iterators.NodeIterable;
 import graalvm.compiler.options.Option;
@@ -38,11 +33,7 @@ public class Graph
 {
     public static class Options
     {
-        @Option(help = "Verify graphs often during compilation when assertions are turned on", type = OptionType.Debug)//
-        public static final OptionKey<Boolean> VerifyGraalGraphs = new OptionKey<>(true);
-        @Option(help = "Perform expensive verification of graph inputs, usages, successors and predecessors", type = OptionType.Debug)//
-        public static final OptionKey<Boolean> VerifyGraalGraphEdges = new OptionKey<>(false);
-        @Option(help = "Graal graph compression is performed when percent of live nodes falls below this value", type = OptionType.Debug)//
+        @Option(help = "Graal graph compression is performed when percent of live nodes falls below this value", type = OptionType.Debug)
         public static final OptionKey<Integer> GraphCompressionThreshold = new OptionKey<>(70);
     }
 
@@ -83,16 +74,6 @@ public class Graph
      */
     int nodesSize;
 
-    /**
-     * Records the modification count for nodes. This is only used in assertions.
-     */
-    private int[] nodeModCounts;
-
-    /**
-     * Records the modification count for nodes' usage lists. This is only used in assertions.
-     */
-    private int[] nodeUsageModCounts;
-
     // these two arrays contain one entry for each NodeClass, indexed by NodeClass.iterableId.
     // they contain the first and last pointer to a linked list of all nodes with this type.
     private final ArrayList<Node> iterableNodesFirst;
@@ -124,7 +105,6 @@ public class Graph
                 return true;
             }
 
-            assert a.getClass() == b.getClass();
             return ((Node) a).valueEquals((Node) b);
         }
 
@@ -146,11 +126,6 @@ public class Graph
      */
     private final OptionValues options;
 
-    /**
-     * The {@link DebugContext} used while compiling this graph.
-     */
-    private DebugContext debug;
-
     private class NodeSourcePositionScope implements DebugCloseable
     {
         private final NodeSourcePosition previous;
@@ -159,12 +134,6 @@ public class Graph
         {
             previous = currentNodeSourcePosition;
             currentNodeSourcePosition = sourcePosition;
-        }
-
-        @Override
-        public DebugContext getDebug()
-        {
-            return debug;
         }
 
         @Override
@@ -233,14 +202,13 @@ public class Graph
     {
         if (trackNodeSourcePosition != Track)
         {
-            assert trackNodeSourcePosition == Default : trackNodeSourcePosition;
             trackNodeSourcePosition = Track;
         }
     }
 
-    public static SourcePositionTracking trackNodeSourcePositionDefault(OptionValues options, DebugContext debug)
+    public static SourcePositionTracking trackNodeSourcePositionDefault(OptionValues options)
     {
-        if (GraalOptions.TrackNodeSourcePosition.getValue(options) || debug.isDumpEnabledForMethod())
+        if (GraalOptions.TrackNodeSourcePosition.getValue(options))
         {
             return Track;
         }
@@ -250,21 +218,9 @@ public class Graph
     /**
      * Creates an empty Graph with no name.
      */
-    public Graph(OptionValues options, DebugContext debug)
+    public Graph(OptionValues options)
     {
-        this(null, options, debug);
-    }
-
-    /**
-     * We only want the expensive modification count tracking when assertions are enabled for the
-     * {@link Graph} class.
-     */
-    @SuppressWarnings("all")
-    public static boolean isModificationCountsEnabled()
-    {
-        boolean enabled = false;
-        assert enabled = true;
-        return enabled;
+        this(null, options);
     }
 
     private static final int INITIAL_NODES_SIZE = 32;
@@ -274,124 +230,42 @@ public class Graph
      *
      * @param name the name of the graph, used for debugging purposes
      */
-    public Graph(String name, OptionValues options, DebugContext debug)
+    public Graph(String name, OptionValues options)
     {
         nodes = new Node[INITIAL_NODES_SIZE];
         iterableNodesFirst = new ArrayList<>(NodeClass.allocatedNodeIterabledIds());
         iterableNodesLast = new ArrayList<>(NodeClass.allocatedNodeIterabledIds());
         this.name = name;
         this.options = options;
-        this.trackNodeSourcePosition = trackNodeSourcePositionDefault(options, debug);
-        assert debug != null;
-        this.debug = debug;
-
-        if (isModificationCountsEnabled())
-        {
-            nodeModCounts = new int[INITIAL_NODES_SIZE];
-            nodeUsageModCounts = new int[INITIAL_NODES_SIZE];
-        }
-    }
-
-    int extractOriginalNodeId(Node node)
-    {
-        int id = node.id;
-        if (id <= Node.DELETED_ID_START)
-        {
-            id = Node.DELETED_ID_START - id;
-        }
-        return id;
-    }
-
-    int modCount(Node node)
-    {
-        int id = extractOriginalNodeId(node);
-        if (id >= 0 && id < nodeModCounts.length)
-        {
-            return nodeModCounts[id];
-        }
-        return 0;
-    }
-
-    void incModCount(Node node)
-    {
-        int id = extractOriginalNodeId(node);
-        if (id >= 0)
-        {
-            if (id >= nodeModCounts.length)
-            {
-                nodeModCounts = Arrays.copyOf(nodeModCounts, id * 2 + 30);
-            }
-            nodeModCounts[id]++;
-        }
-        else
-        {
-            assert false;
-        }
-    }
-
-    int usageModCount(Node node)
-    {
-        int id = extractOriginalNodeId(node);
-        if (id >= 0 && id < nodeUsageModCounts.length)
-        {
-            return nodeUsageModCounts[id];
-        }
-        return 0;
-    }
-
-    void incUsageModCount(Node node)
-    {
-        int id = extractOriginalNodeId(node);
-        if (id >= 0)
-        {
-            if (id >= nodeUsageModCounts.length)
-            {
-                nodeUsageModCounts = Arrays.copyOf(nodeUsageModCounts, id * 2 + 30);
-            }
-            nodeUsageModCounts[id]++;
-        }
-        else
-        {
-            assert false;
-        }
+        this.trackNodeSourcePosition = trackNodeSourcePositionDefault(options);
     }
 
     /**
      * Creates a copy of this graph.
-     *
-     * @param debugForCopy the debug context for the graph copy. This must not be the debug for this
-     *            graph if this graph can be accessed from multiple threads (e.g., it's in a cache
-     *            accessed by multiple threads).
      */
-    public final Graph copy(DebugContext debugForCopy)
+    public final Graph copy()
     {
-        return copy(name, null, debugForCopy);
+        return copy(name, null);
     }
 
     /**
      * Creates a copy of this graph.
      *
      * @param duplicationMapCallback consumer of the duplication map created during the copying
-     * @param debugForCopy the debug context for the graph copy. This must not be the debug for this
-     *            graph if this graph can be accessed from multiple threads (e.g., it's in a cache
-     *            accessed by multiple threads).
      */
-    public final Graph copy(Consumer<UnmodifiableEconomicMap<Node, Node>> duplicationMapCallback, DebugContext debugForCopy)
+    public final Graph copy(Consumer<UnmodifiableEconomicMap<Node, Node>> duplicationMapCallback)
     {
-        return copy(name, duplicationMapCallback, debugForCopy);
+        return copy(name, duplicationMapCallback);
     }
 
     /**
      * Creates a copy of this graph.
      *
      * @param newName the name of the copy, used for debugging purposes (can be null)
-     * @param debugForCopy the debug context for the graph copy. This must not be the debug for this
-     *            graph if this graph can be accessed from multiple threads (e.g., it's in a cache
-     *            accessed by multiple threads).
      */
-    public final Graph copy(String newName, DebugContext debugForCopy)
+    public final Graph copy(String newName)
     {
-        return copy(newName, null, debugForCopy);
+        return copy(newName, null);
     }
 
     /**
@@ -399,13 +273,10 @@ public class Graph
      *
      * @param newName the name of the copy, used for debugging purposes (can be null)
      * @param duplicationMapCallback consumer of the duplication map created during the copying
-     * @param debugForCopy the debug context for the graph copy. This must not be the debug for this
-     *            graph if this graph can be accessed from multiple threads (e.g., it's in a cache
-     *            accessed by multiple threads).
      */
-    protected Graph copy(String newName, Consumer<UnmodifiableEconomicMap<Node, Node>> duplicationMapCallback, DebugContext debugForCopy)
+    protected Graph copy(String newName, Consumer<UnmodifiableEconomicMap<Node, Node>> duplicationMapCallback)
     {
-        Graph copy = new Graph(newName, options, debugForCopy);
+        Graph copy = new Graph(newName, options);
         if (trackNodeSourcePosition())
         {
             copy.setTrackNodeSourcePosition();
@@ -421,27 +292,6 @@ public class Graph
     public final OptionValues getOptions()
     {
         return options;
-    }
-
-    public DebugContext getDebug()
-    {
-        return debug;
-    }
-
-    /**
-     * Resets the {@link DebugContext} for this graph to a new value. This is useful when a graph is
-     * "handed over" from its creating thread to another thread.
-     *
-     * This must only be done when the current thread is no longer using the graph. This is in
-     * general impossible to test due to races and since metrics can be updated at any time. As
-     * such, this method only performs a weak sanity check that at least the current debug context
-     * does not have a nested scope open (the top level scope will always be open if scopes are
-     * enabled).
-     */
-    public void resetDebug(DebugContext newDebug)
-    {
-        assert newDebug == debug || !debug.inNestedScope() : String.format("Cannot reset the debug context for %s while it has the nested scope \"%s\" open", this, debug.getCurrentScopeName());
-        this.debug = newDebug;
     }
 
     @Override
@@ -530,12 +380,10 @@ public class Graph
     {
         if (node.isAlive())
         {
-            assert node.graph() == this;
             return node;
         }
         else
         {
-            assert node.isUnregistered();
             addInputs(node);
             if (node.getNodeClass().valueNumberable())
             {
@@ -558,7 +406,6 @@ public class Graph
         {
             if (!input.isAlive())
             {
-                assert !input.isDeleted();
                 return addOrUniqueWithInputs(input);
             }
             else
@@ -709,7 +556,6 @@ public class Graph
         @Override
         public void close()
         {
-            assert nodeEventListener != null;
             if (nodeEventListener instanceof ChainedNodeEventListener)
             {
                 nodeEventListener = ((ChainedNodeEventListener) nodeEventListener).next;
@@ -796,7 +642,6 @@ public class Graph
 
     <T extends Node> T uniqueHelper(T node)
     {
-        assert node.getNodeClass().valueNumberable();
         T other = this.findDuplicate(node);
         if (other != null)
         {
@@ -819,10 +664,6 @@ public class Graph
 
     void removeNodeFromCache(Node node)
     {
-        assert node.graph() == this || node.graph() == null;
-        assert node.getNodeClass().valueNumberable();
-        assert node.getNodeClass().isLeafNode() : node.getClass();
-
         int leafId = node.getNodeClass().getLeafId();
         if (cachedLeafNodes != null && cachedLeafNodes.length > leafId && cachedLeafNodes[leafId] != null)
         {
@@ -833,10 +674,6 @@ public class Graph
     @SuppressWarnings({"unchecked", "rawtypes"})
     void putNodeIntoCache(Node node)
     {
-        assert node.graph() == this || node.graph() == null;
-        assert node.getNodeClass().valueNumberable();
-        assert node.getNodeClass().isLeafNode() : node.getClass();
-
         int leafId = node.getNodeClass().getLeafId();
         if (cachedLeafNodes == null || cachedLeafNodes.length <= leafId)
         {
@@ -865,7 +702,6 @@ public class Graph
         }
 
         Node result = cachedLeafNodes[leafId].get(node);
-        assert result == null || result.isAlive() : result;
         return result;
     }
 
@@ -877,7 +713,6 @@ public class Graph
     public <T extends Node> T findDuplicate(T node)
     {
         NodeClass<?> nodeClass = node.getNodeClass();
-        assert nodeClass.valueNumberable();
         if (nodeClass.isLeafNode())
         {
             // Leaf node: look up in cache
@@ -1053,8 +888,6 @@ public class Graph
         }
     }
 
-    private static final CounterKey GraphCompressions = DebugContext.counter("GraphCompressions");
-
     /**
      * If the {@linkplain Options#GraphCompressionThreshold compression threshold} is met, the list
      * of nodes is compressed such that all non-null entries precede all null entries while
@@ -1062,10 +895,6 @@ public class Graph
      */
     public boolean maybeCompress()
     {
-        if (debug.isDumpEnabledForMethod() || debug.isLogEnabledForMethod())
-        {
-            return false;
-        }
         int liveNodeCount = getNodeCount();
         int liveNodePercent = liveNodeCount * 100 / nodesSize;
         int compressionThreshold = Options.GraphCompressionThreshold.getValue(options);
@@ -1073,29 +902,20 @@ public class Graph
         {
             return false;
         }
-        GraphCompressions.increment(debug);
         int nextId = 0;
         for (int i = 0; nextId < liveNodeCount; i++)
         {
             Node n = nodes[i];
             if (n != null)
             {
-                assert n.id == i;
                 if (i != nextId)
                 {
-                    assert n.id > nextId;
                     n.id = nextId;
                     nodes[nextId] = n;
                     nodes[i] = null;
                 }
                 nextId++;
             }
-        }
-        if (isModificationCountsEnabled())
-        {
-            // This will cause any current iteration to fail with an assertion
-            Arrays.fill(nodeModCounts, 0);
-            Arrays.fill(nodeUsageModCounts, 0);
         }
         nodesSize = nextId;
         compressions++;
@@ -1202,7 +1022,6 @@ public class Graph
             // Only dead nodes after this one
             start.typeCacheNext = null;
             int nodeClassId = start.getNodeClass().iterableId();
-            assert nodeClassId != Node.NOT_ITERABLE;
             iterableNodesLast.set(nodeClassId, start);
         }
         else
@@ -1240,8 +1059,6 @@ public class Graph
 
     void register(Node node)
     {
-        assert !isFrozen();
-        assert node.id() == Node.INITIAL_ID;
         if (nodes.length == nodesSize)
         {
             grow();
@@ -1252,10 +1069,6 @@ public class Graph
         if (currentNodeSourcePosition != null && trackNodeSourcePosition())
         {
             node.setNodeSourcePosition(currentNodeSourcePosition);
-        }
-        if (TrackNodeInsertion.getValue(getOptions()))
-        {
-            node.setInsertionPosition(new NodeInsertionStackTrace());
         }
 
         updateNodeCaches(node);
@@ -1328,8 +1141,6 @@ public class Graph
 
     void unregister(Node node)
     {
-        assert !isFrozen();
-        assert !node.isDeleted() : node;
         if (node.getNodeClass().isLeafNode() && node.getNodeClass().valueNumberable())
         {
             removeNodeFromCache(node);
@@ -1343,66 +1154,6 @@ public class Graph
         }
 
         // nodes aren't removed from the type cache here - they will be removed during iteration
-    }
-
-    public boolean verify()
-    {
-        if (Options.VerifyGraalGraphs.getValue(options))
-        {
-            for (Node node : getNodes())
-            {
-                try
-                {
-                    try
-                    {
-                        assert node.verify();
-                    }
-                    catch (AssertionError t)
-                    {
-                        throw new GraalError(t);
-                    }
-                    catch (RuntimeException t)
-                    {
-                        throw new GraalError(t);
-                    }
-                }
-                catch (GraalError e)
-                {
-                    throw GraalGraphError.transformAndAddContext(e, node).addContext(this);
-                }
-            }
-        }
-        return true;
-    }
-
-    public boolean verifySourcePositions(boolean performConsistencyCheck)
-    {
-        if (trackNodeSourcePosition())
-        {
-            ResolvedJavaMethod root = null;
-            for (Node node : getNodes())
-            {
-                NodeSourcePosition pos = node.getNodeSourcePosition();
-                if (pos != null)
-                {
-                    if (root == null)
-                    {
-                        root = pos.getRootMethod();
-                    }
-                    else
-                    {
-                        assert pos.verifyRootMethod(root) : node;
-                    }
-                }
-
-                // More strict node-type-specific check
-                if (performConsistencyCheck)
-                {
-                    node.verifySourcePosition();
-                }
-            }
-        }
-        return true;
     }
 
     public Node getNode(int id)
@@ -1467,15 +1218,10 @@ public class Graph
         }
     }
 
-    private static final TimerKey DuplicateGraph = DebugContext.timer("DuplicateGraph");
-
     @SuppressWarnings({"all", "try"})
     public EconomicMap<Node, Node> addDuplicates(Iterable<? extends Node> newNodes, final Graph oldGraph, int estimatedNodeCount, DuplicationReplacement replacements)
     {
-        try (DebugCloseable s = DuplicateGraph.start(getDebug()))
-        {
-            return NodeClass.addGraphDuplicate(this, oldGraph, estimatedNodeCount, newNodes, replacements);
-        }
+        return NodeClass.addGraphDuplicate(this, oldGraph, estimatedNodeCount, newNodes, replacements);
     }
 
     public boolean isFrozen()

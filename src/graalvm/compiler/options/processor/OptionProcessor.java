@@ -72,9 +72,6 @@ public class OptionProcessor extends AbstractProcessor
         }
 
         Option annotation = element.getAnnotation(Option.class);
-        assert annotation != null;
-        assert element instanceof VariableElement;
-        assert element.getKind() == ElementKind.FIELD;
         VariableElement field = (VariableElement) element;
         String fieldName = field.getSimpleName().toString();
 
@@ -124,11 +121,9 @@ public class OptionProcessor extends AbstractProcessor
         while (!types.isSameType(types.erasure(declaredOptionKeyType), types.erasure(optionKeyType)))
         {
             List<? extends TypeMirror> directSupertypes = types.directSupertypes(declaredFieldType);
-            assert !directSupertypes.isEmpty();
             declaredOptionKeyType = (DeclaredType) directSupertypes.get(0);
         }
 
-        assert !declaredOptionKeyType.getTypeArguments().isEmpty();
         String optionType = declaredOptionKeyType.getTypeArguments().get(0).toString();
         if (optionType.startsWith("java.lang."))
         {
@@ -404,7 +399,6 @@ public class OptionProcessor extends AbstractProcessor
         Element enclosing = element.getEnclosingElement();
         if (enclosing == null || enclosing.getKind() == ElementKind.PACKAGE)
         {
-            assert element.getKind() == ElementKind.CLASS || element.getKind() == ElementKind.INTERFACE;
             return element;
         }
         return topDeclaringType(enclosing);

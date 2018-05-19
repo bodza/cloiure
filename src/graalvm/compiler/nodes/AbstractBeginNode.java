@@ -51,7 +51,6 @@ public abstract class AbstractBeginNode extends FixedWithNextNode implements LIR
         if (!hasNoUsages())
         {
             AbstractBeginNode prevBegin = prevBegin(evacuateFrom);
-            assert prevBegin != null;
             for (Node anchored : anchored().snapshot())
             {
                 anchored.replaceFirstInput(this, prevBegin);
@@ -67,13 +66,6 @@ public abstract class AbstractBeginNode extends FixedWithNextNode implements LIR
     public void prepareDelete(FixedNode evacuateFrom)
     {
         evacuateGuards(evacuateFrom);
-    }
-
-    @Override
-    public boolean verify()
-    {
-        assertTrue(predecessor() != null || this == graph().start() || this instanceof AbstractMergeNode, "begin nodes must be connected");
-        return super.verify();
     }
 
     @Override

@@ -15,7 +15,6 @@ public class ReversedList<T> extends AbstractList<T> implements RandomAccess
 
     public ReversedList(List<T> original)
     {
-        assert original instanceof RandomAccess;
         this.original = original;
     }
 

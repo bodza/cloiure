@@ -13,7 +13,6 @@ import graalvm.compiler.core.common.util.TypeConversion;
 import graalvm.compiler.core.common.util.TypeReader;
 import graalvm.compiler.core.common.util.TypeWriter;
 import graalvm.compiler.core.common.util.UnsafeArrayTypeWriter;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.graph.Edges;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
@@ -192,12 +191,8 @@ public class GraphEncoder
      */
     public int encode(StructuredGraph graph)
     {
-        assert objectsArray != null && nodeClassesArray != null : "finishPrepare() must be called before encode()";
-
         NodeOrder nodeOrder = new NodeOrder(graph);
         int nodeCount = nodeOrder.nextOrderId;
-        assert nodeOrder.orderIds.get(graph.start()) == START_NODE_ORDER_ID;
-        assert nodeOrder.orderIds.get(graph.start().next()) == FIRST_NODE_ORDER_ID;
 
         long[] nodeStartOffsets = new long[nodeCount];
         UnmodifiableMapCursor<Node, Integer> cursor = nodeOrder.orderIds.getEntries();
@@ -206,8 +201,6 @@ public class GraphEncoder
             Node node = cursor.getKey();
             Integer orderId = cursor.getValue();
 
-            assert !(node instanceof AbstractBeginNode) || nodeOrder.orderIds.get(((AbstractBeginNode) node).next()) == orderId + BEGIN_NEXT_ORDER_ID_OFFSET;
-            assert nodeStartOffsets[orderId] == 0;
             nodeStartOffsets[orderId] = writer.getBytesWritten();
 
             /* Write out the type, properties, and edges. */
@@ -253,7 +246,6 @@ public class GraphEncoder
             else if (node instanceof Invoke)
             {
                 Invoke invoke = (Invoke) node;
-                assert invoke.stateDuring() == null : "stateDuring is not used in high-level graphs";
 
                 writeObjectId(invoke.getContextType());
                 writeOrderId(invoke.callTarget(), nodeOrder);
@@ -283,9 +275,6 @@ public class GraphEncoder
         {
             writer.putUV(metadataStart - nodeStartOffsets[i]);
         }
-
-        /* Check that the decoding of the encode graph is the same as the input. */
-        assert verifyEncoding(graph, new EncodedGraph(getEncoding(), metadataStart, getObjects(), getNodeClasses(), graph), architecture);
 
         return metadataStart;
     }
@@ -367,15 +356,12 @@ public class GraphEncoder
             int parameterCount = graph.method().getSignature().getParameterCount(!graph.method().isStatic());
             for (ParameterNode node : graph.getNodes(ParameterNode.TYPE))
             {
-                assert orderIds.get(node) == null : "Parameter node must not be ordered yet";
-                assert node.index() < parameterCount : "Parameter index out of range";
                 orderIds.set(node, nextOrderId + node.index());
             }
             nextOrderId += parameterCount;
 
             for (Node node : graph.getNodes())
             {
-                assert (node instanceof FixedNode || node instanceof ParameterNode) == (orderIds.get(node) != null) : "all fixed nodes and ParameterNodes must be ordered: " + node;
                 add(node);
             }
         }
@@ -460,185 +446,5 @@ public class GraphEncoder
     protected void writeObjectId(Object object)
     {
         writer.putUV(objects.getIndex(object));
-    }
-
-    /**
-     * Verification code that checks that the decoding of an encode graph is the same as the
-     * original graph.
-     */
-    @SuppressWarnings("try")
-    public static boolean verifyEncoding(StructuredGraph originalGraph, EncodedGraph encodedGraph, Architecture architecture)
-    {
-        DebugContext debug = originalGraph.getDebug();
-        StructuredGraph decodedGraph = new StructuredGraph.Builder(originalGraph.getOptions(), debug, AllowAssumptions.YES).method(originalGraph.method()).build();
-        if (originalGraph.trackNodeSourcePosition())
-        {
-            decodedGraph.setTrackNodeSourcePosition();
-        }
-        GraphDecoder decoder = new GraphDecoder(architecture, decodedGraph);
-        decoder.decode(encodedGraph);
-
-        decodedGraph.verify();
-        try
-        {
-            GraphComparison.verifyGraphsEqual(originalGraph, decodedGraph);
-        }
-        catch (Throwable ex)
-        {
-            originalGraph.getDebug();
-            try (DebugContext.Scope scope = debug.scope("GraphEncoder"))
-            {
-                debug.dump(DebugContext.VERBOSE_LEVEL, originalGraph, "Original Graph");
-                debug.dump(DebugContext.VERBOSE_LEVEL, decodedGraph, "Decoded Graph");
-            }
-            throw ex;
-        }
-        return true;
-    }
-}
-
-class GraphComparison
-{
-    public static boolean verifyGraphsEqual(StructuredGraph expectedGraph, StructuredGraph actualGraph)
-    {
-        NodeMap<Node> nodeMapping = new NodeMap<>(expectedGraph);
-        Deque<Pair<Node, Node>> workList = new ArrayDeque<>();
-
-        pushToWorklist(expectedGraph.start(), actualGraph.start(), nodeMapping, workList);
-        while (!workList.isEmpty())
-        {
-            Pair<Node, Node> pair = workList.removeFirst();
-            Node expectedNode = pair.getLeft();
-            Node actualNode = pair.getRight();
-            assert expectedNode.getClass() == actualNode.getClass();
-
-            NodeClass<?> nodeClass = expectedNode.getNodeClass();
-            assert nodeClass == actualNode.getNodeClass();
-
-            if (expectedNode instanceof MergeNode)
-            {
-                /* The order of the ends can be different, so ignore them. */
-                verifyNodesEqual(expectedNode.inputs(), actualNode.inputs(), nodeMapping, workList, true);
-            }
-            else if (expectedNode instanceof PhiNode)
-            {
-                verifyPhi((PhiNode) expectedNode, (PhiNode) actualNode, nodeMapping, workList);
-            }
-            else
-            {
-                verifyNodesEqual(expectedNode.inputs(), actualNode.inputs(), nodeMapping, workList, false);
-            }
-            verifyNodesEqual(expectedNode.successors(), actualNode.successors(), nodeMapping, workList, false);
-
-            if (expectedNode instanceof LoopEndNode)
-            {
-                LoopEndNode actualLoopEnd = (LoopEndNode) actualNode;
-                assert actualLoopEnd.loopBegin().loopEnds().snapshot().indexOf(actualLoopEnd) == actualLoopEnd.endIndex();
-            }
-            else
-            {
-                for (int i = 0; i < nodeClass.getData().getCount(); i++)
-                {
-                    Object expectedProperty = nodeClass.getData().get(expectedNode, i);
-                    Object actualProperty = nodeClass.getData().get(actualNode, i);
-                    assert Objects.equals(expectedProperty, actualProperty);
-                }
-            }
-
-            if (expectedNode instanceof EndNode)
-            {
-                /* Visit the merge node, which is the one and only usage of the EndNode. */
-                assert expectedNode.usages().count() == 1;
-                assert actualNode.usages().count() == 1;
-                verifyNodesEqual(expectedNode.usages(), actualNode.usages(), nodeMapping, workList, false);
-            }
-
-            if (expectedNode instanceof AbstractEndNode)
-            {
-                /* Visit the input values of the merge phi functions for this EndNode. */
-                verifyPhis((AbstractEndNode) expectedNode, (AbstractEndNode) actualNode, nodeMapping, workList);
-            }
-        }
-
-        return true;
-    }
-
-    protected static void verifyPhi(PhiNode expectedPhi, PhiNode actualPhi, NodeMap<Node> nodeMapping, Deque<Pair<Node, Node>> workList)
-    {
-        AbstractMergeNode expectedMergeNode = expectedPhi.merge();
-        AbstractMergeNode actualMergeNode = actualPhi.merge();
-        assert actualMergeNode == nodeMapping.get(expectedMergeNode);
-
-        for (EndNode expectedEndNode : expectedMergeNode.ends)
-        {
-            EndNode actualEndNode = (EndNode) nodeMapping.get(expectedEndNode);
-            if (actualEndNode != null)
-            {
-                ValueNode expectedPhiInput = expectedPhi.valueAt(expectedEndNode);
-                ValueNode actualPhiInput = actualPhi.valueAt(actualEndNode);
-                verifyNodeEqual(expectedPhiInput, actualPhiInput, nodeMapping, workList, false);
-            }
-        }
-    }
-
-    protected static void verifyPhis(AbstractEndNode expectedEndNode, AbstractEndNode actualEndNode, NodeMap<Node> nodeMapping, Deque<Pair<Node, Node>> workList)
-    {
-        AbstractMergeNode expectedMergeNode = expectedEndNode.merge();
-        AbstractMergeNode actualMergeNode = (AbstractMergeNode) nodeMapping.get(expectedMergeNode);
-        assert actualMergeNode != null;
-
-        for (PhiNode expectedPhi : expectedMergeNode.phis())
-        {
-            PhiNode actualPhi = (PhiNode) nodeMapping.get(expectedPhi);
-            if (actualPhi != null)
-            {
-                ValueNode expectedPhiInput = expectedPhi.valueAt(expectedEndNode);
-                ValueNode actualPhiInput = actualPhi.valueAt(actualEndNode);
-                verifyNodeEqual(expectedPhiInput, actualPhiInput, nodeMapping, workList, false);
-            }
-        }
-    }
-
-    private static void verifyNodesEqual(NodeIterable<Node> expectedNodes, NodeIterable<Node> actualNodes, NodeMap<Node> nodeMapping, Deque<Pair<Node, Node>> workList, boolean ignoreEndNode)
-    {
-        Iterator<Node> actualIter = actualNodes.iterator();
-        for (Node expectedNode : expectedNodes)
-        {
-            verifyNodeEqual(expectedNode, actualIter.next(), nodeMapping, workList, ignoreEndNode);
-        }
-        assert !actualIter.hasNext();
-    }
-
-    protected static void verifyNodeEqual(Node expectedNode, Node actualNode, NodeMap<Node> nodeMapping, Deque<Pair<Node, Node>> workList, boolean ignoreEndNode)
-    {
-        assert expectedNode.getClass() == actualNode.getClass();
-        if (ignoreEndNode && expectedNode instanceof EndNode)
-        {
-            return;
-        }
-
-        Node existing = nodeMapping.get(expectedNode);
-        if (existing != null)
-        {
-            assert existing == actualNode;
-        }
-        else
-        {
-            pushToWorklist(expectedNode, actualNode, nodeMapping, workList);
-        }
-    }
-
-    protected static void pushToWorklist(Node expectedNode, Node actualNode, NodeMap<Node> nodeMapping, Deque<Pair<Node, Node>> workList)
-    {
-        nodeMapping.set(expectedNode, actualNode);
-        if (expectedNode instanceof AbstractEndNode)
-        {
-            /* To ensure phi nodes have been added, we handle everything before block ends. */
-            workList.addLast(Pair.create(expectedNode, actualNode));
-        }
-        else
-        {
-            workList.addFirst(Pair.create(expectedNode, actualNode));
-        }
     }
 }

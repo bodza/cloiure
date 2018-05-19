@@ -1,6 +1,5 @@
 package graalvm.compiler.graph;
 
-import static graalvm.compiler.graph.Graph.isModificationCountsEnabled;
 import static graalvm.compiler.graph.Node.NOT_ITERABLE;
 import graalvm.util.UnsafeAccess;
 
@@ -166,8 +165,6 @@ public abstract class Edges extends Fields
      */
     public void copy(Node fromNode, Node toNode)
     {
-        assert fromNode != toNode;
-        assert fromNode.getNodeClass().getClazz() == toNode.getNodeClass().getClazz();
         int index = 0;
         final long[] curOffsets = this.offsets;
         final Type curType = this.type;
@@ -239,7 +236,6 @@ public abstract class Edges extends Fields
      */
     public void setNode(Node node, int index, Node value)
     {
-        assert index < directCount;
         Node old = getNodeUnsafe(node, offsets[index]);
         initializeNode(node, index, value);
         update(node, old, value);
@@ -371,44 +367,6 @@ public abstract class Edges extends Fields
         }
     }
 
-    private static final class EdgesWithModCountIterator extends EdgesIterator
-    {
-        private final int modCount;
-
-        private EdgesWithModCountIterator(Node node, Edges edges)
-        {
-            super(node, edges);
-            assert isModificationCountsEnabled();
-            this.modCount = node.modCount();
-        }
-
-        @Override
-        public boolean hasNext()
-        {
-            try
-            {
-                return super.hasNext();
-            }
-            finally
-            {
-                assert modCount == node.modCount() : "must not be modified";
-            }
-        }
-
-        @Override
-        public Position next()
-        {
-            try
-            {
-                return super.next();
-            }
-            finally
-            {
-                assert modCount == node.modCount() : "must not be modified";
-            }
-        }
-    }
-
     public Iterable<Position> getPositionsIterable(final Node node)
     {
         return new Iterable<Position>()
@@ -416,14 +374,7 @@ public abstract class Edges extends Fields
             @Override
             public Iterator<Position> iterator()
             {
-                if (isModificationCountsEnabled())
-                {
-                    return new EdgesWithModCountIterator(node, Edges.this);
-                }
-                else
-                {
-                    return new EdgesIterator(node, Edges.this);
-                }
+                return new EdgesIterator(node, Edges.this);
             }
         };
     }

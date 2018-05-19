@@ -79,8 +79,6 @@ public final class AMD64Address extends AbstractAddress
         this.scale = scale;
         this.displacement = displacement;
         this.instructionStartPosition = instructionStartPosition;
-
-        assert scale != null;
     }
 
     /**

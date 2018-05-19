@@ -33,7 +33,6 @@ public final class ZeroExtendNode extends IntegerConvertNode<ZeroExtend, Narrow>
     public ZeroExtendNode(ValueNode input, int resultBits)
     {
         this(input, PrimitiveStamp.getBits(input.stamp(NodeView.DEFAULT)), resultBits, false);
-        assert 0 < PrimitiveStamp.getBits(input.stamp(NodeView.DEFAULT)) && PrimitiveStamp.getBits(input.stamp(NodeView.DEFAULT)) <= resultBits;
     }
 
     public ZeroExtendNode(ValueNode input, int inputBits, int resultBits, boolean inputAlwaysPositive)
@@ -134,7 +133,6 @@ public final class ZeroExtendNode extends IntegerConvertNode<ZeroExtend, Narrow>
                     }
                     else
                     {
-                        assert istamp.getBits() == resultBits;
                         // Just return the original value.
                         return narrow.getValue();
                     }

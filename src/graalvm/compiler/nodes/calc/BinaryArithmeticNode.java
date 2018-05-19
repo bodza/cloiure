@@ -48,7 +48,6 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
     protected final BinaryOp<OP> getOp(ValueNode forX, ValueNode forY)
     {
         ArithmeticOpTable table = ArithmeticOpTable.forStamp(forX.stamp(NodeView.DEFAULT));
-        assert table.equals(ArithmeticOpTable.forStamp(forY.stamp(NodeView.DEFAULT)));
         return getOp.apply(table);
     }
 
@@ -92,7 +91,6 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
     @Override
     public Stamp foldStamp(Stamp stampX, Stamp stampY)
     {
-        assert stampX.isCompatible(x.stamp(NodeView.DEFAULT)) && stampY.isCompatible(y.stamp(NodeView.DEFAULT));
         return getArithmeticOp().foldStamp(stampX, stampY);
     }
 
@@ -198,7 +196,6 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
      */
     public static ValueNode reassociate(BinaryArithmeticNode<?> node, NodePredicate criterion, ValueNode forX, ValueNode forY, NodeView view)
     {
-        assert node.getOp(forX, forY).isAssociative();
         ReassociateMatch match1 = findReassociate(node, criterion);
         if (match1 == null)
         {
@@ -249,7 +246,6 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
             invertM1 = match1 == ReassociateMatch.y && match2 == ReassociateMatch.x;
             invertM2 = match1 == ReassociateMatch.x && match2 == ReassociateMatch.x;
         }
-        assert !(invertM1 && invertM2) && !(invertA && aSub);
         ValueNode m1 = match1.getValue(node);
         ValueNode m2 = match2.getValue(other);
         ValueNode a = match2.getOtherValue(other);
@@ -311,7 +307,6 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
     @SuppressWarnings("deprecation")
     public BinaryNode maybeCommuteInputs()
     {
-        assert this instanceof BinaryCommutative;
         if (!y.isConstant() && (x.isConstant() || x.getId() > y.getId()))
         {
             ValueNode tmp = x;

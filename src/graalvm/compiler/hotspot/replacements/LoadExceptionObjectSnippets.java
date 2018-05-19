@@ -14,7 +14,6 @@ import static graalvm.compiler.replacements.SnippetTemplate.DEFAULT_REPLACER;
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
 import graalvm.compiler.core.common.type.Stamp;
-import graalvm.compiler.debug.DebugHandlersFactory;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
 import graalvm.compiler.hotspot.meta.HotSpotRegistersProvider;
 import graalvm.compiler.hotspot.word.HotSpotWordTypes;
@@ -62,9 +61,9 @@ public class LoadExceptionObjectSnippets implements Snippets
         private final SnippetInfo loadException = snippet(LoadExceptionObjectSnippets.class, "loadException", EXCEPTION_OOP_LOCATION, EXCEPTION_PC_LOCATION);
         private final HotSpotWordTypes wordTypes;
 
-        public Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, HotSpotProviders providers, TargetDescription target)
+        public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target)
         {
-            super(options, factories, providers, providers.getSnippetReflection(), target);
+            super(options, providers, providers.getSnippetReflection(), target);
             this.wordTypes = providers.getWordTypes();
         }
 

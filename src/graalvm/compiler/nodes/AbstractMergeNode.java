@@ -87,7 +87,6 @@ public abstract class AbstractMergeNode extends BeginStateSplitNode implements I
     public void removeEnd(AbstractEndNode pred)
     {
         int predIndex = phiPredecessorIndex(pred);
-        assert predIndex != -1;
         deleteEnd(pred);
         for (PhiNode phi : phis().snapshot())
         {
@@ -193,7 +192,6 @@ public abstract class AbstractMergeNode extends BeginStateSplitNode implements I
                     }
                 }
             }
-            getDebug().log("Split %s into ends for %s.", this, merge);
             int numEnds = this.forwardEndCount();
             for (int i = 0; i < numEnds - 1; i++)
             {

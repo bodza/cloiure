@@ -17,7 +17,6 @@ public final class BitMap2D
 
     private boolean verifyBitWithinSlotIndex(int index)
     {
-        assert index < bitsPerSlot : "index " + index + " is out of bounds " + bitsPerSlot;
         return true;
     }
 
@@ -40,25 +39,21 @@ public final class BitMap2D
 
     public boolean isValidIndex(int slotIndex, int bitWithinSlotIndex)
     {
-        assert verifyBitWithinSlotIndex(bitWithinSlotIndex);
         return (bitIndex(slotIndex, bitWithinSlotIndex) < sizeInBits());
     }
 
     public boolean at(int slotIndex, int bitWithinSlotIndex)
     {
-        assert verifyBitWithinSlotIndex(bitWithinSlotIndex);
         return map.get(bitIndex(slotIndex, bitWithinSlotIndex));
     }
 
     public void setBit(int slotIndex, int bitWithinSlotIndex)
     {
-        assert verifyBitWithinSlotIndex(bitWithinSlotIndex);
         map.set(bitIndex(slotIndex, bitWithinSlotIndex));
     }
 
     public void clearBit(int slotIndex, int bitWithinSlotIndex)
     {
-        assert verifyBitWithinSlotIndex(bitWithinSlotIndex);
         map.clear(bitIndex(slotIndex, bitWithinSlotIndex));
     }
 

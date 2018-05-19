@@ -9,7 +9,6 @@ import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.EconomicSet;
 import org.graalvm.collections.Equivalence;
 import graalvm.compiler.core.common.cfg.Loop;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.nodes.LoopBeginNode;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.ValueNode;
@@ -22,19 +21,9 @@ public class LoopsData
     private final ControlFlowGraph cfg;
     private final List<LoopEx> loops;
 
-    @SuppressWarnings("try")
     public LoopsData(final StructuredGraph graph)
     {
-        DebugContext debug = graph.getDebug();
-        try (DebugContext.Scope s = debug.scope("ControlFlowGraph"))
-        {
-            cfg = ControlFlowGraph.compute(graph, true, true, true, true);
-        }
-        catch (Throwable e)
-        {
-            throw debug.handle(e);
-        }
-        assert checkLoopOrder(cfg.getLoops());
+        cfg = ControlFlowGraph.compute(graph, true, true, true, true);
         loops = new ArrayList<>(cfg.getLoops().size());
         for (Loop<Block> loop : cfg.getLoops())
         {

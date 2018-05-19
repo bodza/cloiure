@@ -59,11 +59,8 @@ public class IntrinsicContext
         this.originalMethod = method;
         this.intrinsicMethod = intrinsic;
         this.bytecodeProvider = bytecodeProvider;
-        assert bytecodeProvider != null;
         this.compilationContext = compilationContext;
         this.allowPartialIntrinsicArgumentMismatch = allowPartialIntrinsicArgumentMismatch;
-        assert !isCompilationRoot() || method.hasBytecodes() : "Cannot root compile intrinsic for native or abstract method " + method.format("%H.%n(%p)");
-        assert !method.equals(intrinsic) || method.getAnnotation(MethodSubstitution.class) == null : "method and intrinsic must be different: " + method + " " + intrinsic;
     }
 
     /**
@@ -129,7 +126,6 @@ public class IntrinsicContext
 
     public void setNodeSourcePosition(NodeSourcePosition position)
     {
-        assert nodeSourcePosition == null : "can only be set once";
         this.nodeSourcePosition = position;
     }
 
@@ -179,7 +175,6 @@ public class IntrinsicContext
 
     public FrameState createFrameState(StructuredGraph graph, SideEffectsState sideEffects, StateSplit forStateSplit, NodeSourcePosition sourcePosition)
     {
-        assert forStateSplit != graph.start();
         if (forStateSplit.hasSideEffect())
         {
             if (sideEffects.isAfterSideEffect())

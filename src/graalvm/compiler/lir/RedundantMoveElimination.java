@@ -12,9 +12,6 @@ import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
-import graalvm.compiler.debug.CounterKey;
-import graalvm.compiler.debug.DebugContext;
-import graalvm.compiler.debug.Indent;
 import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstruction.OperandMode;
 import graalvm.compiler.lir.StandardOp.MoveOp;
@@ -36,8 +33,6 @@ import jdk.vm.ci.meta.Value;
  */
 public final class RedundantMoveElimination extends PostAllocationOptimizationPhase
 {
-    private static final CounterKey deletedMoves = DebugContext.counter("RedundantMovesEliminated");
-
     @Override
     protected void run(TargetDescription target, LIRGenerationResult lirGenRes, PostAllocationOptimizationContext context)
     {
@@ -116,36 +111,31 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
         /**
          * The main method doing the elimination of redundant moves.
          */
-        @SuppressWarnings("try")
         private void doOptimize(LIR lir)
         {
-            DebugContext debug = lir.getDebug();
-            try (Indent indent = debug.logAndIndent("eliminate redundant moves"))
+            RegisterConfig registerConfig = frameMap.getRegisterConfig();
+            callerSaveRegs = registerConfig.getCallerSaveRegisters();
+
+            initBlockData(lir);
+
+            // Compute a table of the registers which are eligible for move optimization.
+            // Unallocatable registers should never be optimized.
+            eligibleRegs = new int[numRegs];
+            Arrays.fill(eligibleRegs, -1);
+            for (Register reg : registerConfig.getAllocatableRegisters())
             {
-                RegisterConfig registerConfig = frameMap.getRegisterConfig();
-                callerSaveRegs = registerConfig.getCallerSaveRegisters();
-
-                initBlockData(lir);
-
-                // Compute a table of the registers which are eligible for move optimization.
-                // Unallocatable registers should never be optimized.
-                eligibleRegs = new int[numRegs];
-                Arrays.fill(eligibleRegs, -1);
-                for (Register reg : registerConfig.getAllocatableRegisters())
+                if (reg.number < numRegs)
                 {
-                    if (reg.number < numRegs)
-                    {
-                        eligibleRegs[reg.number] = reg.number;
-                    }
+                    eligibleRegs[reg.number] = reg.number;
                 }
-
-                if (!solveDataFlow(lir))
-                {
-                    return;
-                }
-
-                eliminateMoves(lir);
             }
+
+            if (!solveDataFlow(lir))
+            {
+                return;
+            }
+
+            eliminateMoves(lir);
         }
 
         /**
@@ -156,7 +146,6 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
 
         private void initBlockData(LIR lir)
         {
-            DebugContext debug = lir.getDebug();
             AbstractBlockBase<?>[] blocks = lir.linearScanOrder();
             numRegs = 0;
 
@@ -199,7 +188,6 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
              * Now we know the number of locations to optimize, so we can allocate the block states.
              */
             int numLocations = numRegs + stackIndices.size();
-            debug.log("num locations = %d (regs = %d, stack = %d)", numLocations, numRegs, stackIndices.size());
             for (AbstractBlockBase<?> block : blocks)
             {
                 BlockData data = new BlockData(numLocations);
@@ -217,166 +205,140 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
          *
          * @return Returns true on success and false if the control flow is too complex.
          */
-        @SuppressWarnings("try")
         private boolean solveDataFlow(LIR lir)
         {
-            DebugContext debug = lir.getDebug();
-            try (Indent indent = debug.logAndIndent("solve data flow"))
+            AbstractBlockBase<?>[] blocks = lir.linearScanOrder();
+
+            int numIter = 0;
+
+            /*
+             * Iterate until there are no more changes.
+             */
+            int currentValueNum = 1;
+            boolean firstRound = true;
+            boolean changed;
+            do
             {
-                AbstractBlockBase<?>[] blocks = lir.linearScanOrder();
-
-                int numIter = 0;
-
-                /*
-                 * Iterate until there are no more changes.
-                 */
-                int currentValueNum = 1;
-                boolean firstRound = true;
-                boolean changed;
-                do
+                changed = false;
+                for (AbstractBlockBase<?> block : blocks)
                 {
-                    changed = false;
-                    try (Indent indent2 = debug.logAndIndent("new iteration"))
+                    BlockData data = blockData.get(block);
+                    /*
+                     * Initialize the number for global value numbering for this block. It
+                     * is essential that the starting number for a block is consistent at
+                     * all iterations and also in eliminateMoves().
+                     */
+                    if (firstRound)
                     {
-                        for (AbstractBlockBase<?> block : blocks)
-                        {
-                            BlockData data = blockData.get(block);
-                            /*
-                             * Initialize the number for global value numbering for this block. It
-                             * is essential that the starting number for a block is consistent at
-                             * all iterations and also in eliminateMoves().
-                             */
-                            if (firstRound)
-                            {
-                                data.entryValueNum = currentValueNum;
-                            }
-                            int valueNum = data.entryValueNum;
-                            assert valueNum > 0;
-                            boolean newState = false;
-
-                            if (block == blocks[0] || block.isExceptionEntry())
-                            {
-                                /*
-                                 * The entry block has undefined values. And also exception handler
-                                 * blocks: the LinearScan can insert moves at the end of an
-                                 * exception handler predecessor block (after the invoke, which
-                                 * throws the exception), and in reality such moves are not in the
-                                 * control flow in case of an exception. So we assume a save default
-                                 * for exception handler blocks.
-                                 */
-                                debug.log("kill all values at entry of block %d", block.getId());
-                                clearValues(data.entryState, valueNum);
-                            }
-                            else
-                            {
-                                /*
-                                 * Merge the states of predecessor blocks
-                                 */
-                                for (AbstractBlockBase<?> predecessor : block.getPredecessors())
-                                {
-                                    BlockData predData = blockData.get(predecessor);
-                                    newState |= mergeState(data.entryState, predData.exitState, valueNum);
-                                }
-                            }
-                            // Advance by the value numbers which are "consumed" by
-                            // clearValues and mergeState
-                            valueNum += data.entryState.length;
-
-                            if (newState || firstRound)
-                            {
-                                try (Indent indent3 = debug.logAndIndent("update block %d", block.getId()))
-                                {
-                                    /*
-                                     * Derive the exit state from the entry state by iterating
-                                     * through all instructions of the block.
-                                     */
-                                    int[] iterState = data.exitState;
-                                    copyState(iterState, data.entryState);
-                                    ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
-
-                                    for (LIRInstruction op : instructions)
-                                    {
-                                        valueNum = updateState(debug, iterState, op, valueNum);
-                                    }
-                                    changed = true;
-                                }
-                            }
-                            if (firstRound)
-                            {
-                                currentValueNum = valueNum;
-                            }
-                        }
-                        firstRound = false;
+                        data.entryValueNum = currentValueNum;
                     }
-                    numIter++;
+                    int valueNum = data.entryValueNum;
+                    boolean newState = false;
 
-                    if (numIter > 5)
+                    if (block == blocks[0] || block.isExceptionEntry())
                     {
                         /*
-                         * This is _very_ seldom.
+                         * The entry block has undefined values. And also exception handler
+                         * blocks: the LinearScan can insert moves at the end of an
+                         * exception handler predecessor block (after the invoke, which
+                         * throws the exception), and in reality such moves are not in the
+                         * control flow in case of an exception. So we assume a save default
+                         * for exception handler blocks.
                          */
-                        return false;
+                        clearValues(data.entryState, valueNum);
                     }
-                } while (changed);
-            }
+                    else
+                    {
+                        /*
+                         * Merge the states of predecessor blocks
+                         */
+                        for (AbstractBlockBase<?> predecessor : block.getPredecessors())
+                        {
+                            BlockData predData = blockData.get(predecessor);
+                            newState |= mergeState(data.entryState, predData.exitState, valueNum);
+                        }
+                    }
+                    // Advance by the value numbers which are "consumed" by
+                    // clearValues and mergeState
+                    valueNum += data.entryState.length;
+
+                    if (newState || firstRound)
+                    {
+                        /*
+                         * Derive the exit state from the entry state by iterating
+                         * through all instructions of the block.
+                         */
+                        int[] iterState = data.exitState;
+                        copyState(iterState, data.entryState);
+                        ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
+
+                        for (LIRInstruction op : instructions)
+                        {
+                            valueNum = updateState(iterState, op, valueNum);
+                        }
+                        changed = true;
+                    }
+                    if (firstRound)
+                    {
+                        currentValueNum = valueNum;
+                    }
+                }
+                firstRound = false;
+                numIter++;
+
+                if (numIter > 5)
+                {
+                    /*
+                     * This is _very_ seldom.
+                     */
+                    return false;
+                }
+            } while (changed);
 
             return true;
         }
 
         /**
-         * Deletes all move instructions where the target location already contains the source
-         * value.
+         * Deletes all move instructions where the target location already contains the source value.
          */
-        @SuppressWarnings("try")
         private void eliminateMoves(LIR lir)
         {
-            DebugContext debug = lir.getDebug();
+            AbstractBlockBase<?>[] blocks = lir.linearScanOrder();
 
-            try (Indent indent = debug.logAndIndent("eliminate moves"))
+            for (AbstractBlockBase<?> block : blocks)
             {
-                AbstractBlockBase<?>[] blocks = lir.linearScanOrder();
+                ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
+                BlockData data = blockData.get(block);
+                boolean hasDead = false;
 
-                for (AbstractBlockBase<?> block : blocks)
+                // Reuse the entry state for iteration, we don't need it later.
+                int[] iterState = data.entryState;
+
+                // Add the values which are "consumed" by clearValues and
+                // mergeState in solveDataFlow
+                int valueNum = data.entryValueNum + data.entryState.length;
+
+                int numInsts = instructions.size();
+                for (int idx = 0; idx < numInsts; idx++)
                 {
-                    try (Indent indent2 = debug.logAndIndent("eliminate moves in block %d", block.getId()))
+                    LIRInstruction op = instructions.get(idx);
+                    if (isEligibleMove(op))
                     {
-                        ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
-                        BlockData data = blockData.get(block);
-                        boolean hasDead = false;
-
-                        // Reuse the entry state for iteration, we don't need it later.
-                        int[] iterState = data.entryState;
-
-                        // Add the values which are "consumed" by clearValues and
-                        // mergeState in solveDataFlow
-                        int valueNum = data.entryValueNum + data.entryState.length;
-
-                        int numInsts = instructions.size();
-                        for (int idx = 0; idx < numInsts; idx++)
+                        ValueMoveOp moveOp = ValueMoveOp.asValueMoveOp(op);
+                        int sourceIdx = getStateIdx(moveOp.getInput());
+                        int destIdx = getStateIdx(moveOp.getResult());
+                        if (sourceIdx >= 0 && destIdx >= 0 && iterState[sourceIdx] == iterState[destIdx])
                         {
-                            LIRInstruction op = instructions.get(idx);
-                            if (isEligibleMove(op))
-                            {
-                                ValueMoveOp moveOp = ValueMoveOp.asValueMoveOp(op);
-                                int sourceIdx = getStateIdx(moveOp.getInput());
-                                int destIdx = getStateIdx(moveOp.getResult());
-                                if (sourceIdx >= 0 && destIdx >= 0 && iterState[sourceIdx] == iterState[destIdx])
-                                {
-                                    assert iterState[sourceIdx] != INIT_VALUE;
-                                    debug.log("delete move %s", op);
-                                    instructions.set(idx, null);
-                                    hasDead = true;
-                                    deletedMoves.increment(debug);
-                                }
-                            }
-                            // It doesn't harm if updateState is also called for a deleted move
-                            valueNum = updateState(debug, iterState, op, valueNum);
-                        }
-                        if (hasDead)
-                        {
-                            instructions.removeAll(Collections.singleton(null));
+                            instructions.set(idx, null);
+                            hasDead = true;
                         }
                     }
+                    // It doesn't harm if updateState is also called for a deleted move
+                    valueNum = updateState(iterState, op, valueNum);
+                }
+                if (hasDead)
+                {
+                    instructions.removeAll(Collections.singleton(null));
                 }
             }
         }
@@ -384,97 +346,87 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
         /**
          * Updates the state for one instruction.
          */
-        @SuppressWarnings("try")
-        private int updateState(DebugContext debug, final int[] state, LIRInstruction op, int initValueNum)
+        private int updateState(final int[] state, LIRInstruction op, int initValueNum)
         {
-            try (Indent indent = debug.logAndIndent("update state for op %s, initial value num = %d", op, initValueNum))
+            if (isEligibleMove(op))
             {
-                if (isEligibleMove(op))
-                {
-                    /*
-                     * Handle the special case of a move instruction
-                     */
-                    ValueMoveOp moveOp = ValueMoveOp.asValueMoveOp(op);
-                    int sourceIdx = getStateIdx(moveOp.getInput());
-                    int destIdx = getStateIdx(moveOp.getResult());
-                    if (sourceIdx >= 0 && destIdx >= 0)
-                    {
-                        assert isObjectValue(state[sourceIdx]) || LIRKind.isValue(moveOp.getInput()) : "move op moves object but input is not defined as object " + moveOp;
-                        state[destIdx] = state[sourceIdx];
-                        debug.log("move value %d from %d to %d", state[sourceIdx], sourceIdx, destIdx);
-                        return initValueNum;
-                    }
-                }
-
-                int valueNum = initValueNum;
-
-                if (op.destroysCallerSavedRegisters())
-                {
-                    debug.log("kill all caller save regs");
-
-                    for (Register reg : callerSaveRegs)
-                    {
-                        if (reg.number < numRegs)
-                        {
-                            // Kind.Object is the save default
-                            state[reg.number] = encodeValueNum(valueNum++, true);
-                        }
-                    }
-                }
-
                 /*
-                 * Value procedure for the instruction's output and temp values
+                 * Handle the special case of a move instruction
                  */
-                class OutputValueConsumer implements ValueConsumer
+                ValueMoveOp moveOp = ValueMoveOp.asValueMoveOp(op);
+                int sourceIdx = getStateIdx(moveOp.getInput());
+                int destIdx = getStateIdx(moveOp.getResult());
+                if (sourceIdx >= 0 && destIdx >= 0)
                 {
-                    int opValueNum;
-
-                    OutputValueConsumer(int opValueNum)
-                    {
-                        this.opValueNum = opValueNum;
-                    }
-
-                    @Override
-                    public void visitValue(Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
-                    {
-                        int stateIdx = getStateIdx(operand);
-                        if (stateIdx >= 0)
-                        {
-                            /*
-                             * Assign a unique number to the output or temp location.
-                             */
-                            state[stateIdx] = encodeValueNum(opValueNum++, !LIRKind.isValue(operand));
-                            debug.log("set def %d for register %s(%d): %d", opValueNum, operand, stateIdx, state[stateIdx]);
-                        }
-                    }
+                    state[destIdx] = state[sourceIdx];
+                    return initValueNum;
                 }
-
-                OutputValueConsumer outputValueConsumer = new OutputValueConsumer(valueNum);
-
-                op.visitEachTemp(outputValueConsumer);
-                /*
-                 * Semantically the output values are written _after_ the temp values
-                 */
-                op.visitEachOutput(outputValueConsumer);
-
-                valueNum = outputValueConsumer.opValueNum;
-
-                if (op.hasState())
-                {
-                    /*
-                     * All instructions with framestates (mostly method calls), may do garbage
-                     * collection. GC will rewrite all object references which are live at this
-                     * point. So we can't rely on their values. It would be sufficient to just kill
-                     * all values which are referenced in the state (or all values which are not),
-                     * but for simplicity we kill all values.
-                     */
-                    debug.log("kill all object values");
-                    clearValuesOfKindObject(state, valueNum);
-                    valueNum += state.length;
-                }
-
-                return valueNum;
             }
+
+            int valueNum = initValueNum;
+
+            if (op.destroysCallerSavedRegisters())
+            {
+                for (Register reg : callerSaveRegs)
+                {
+                    if (reg.number < numRegs)
+                    {
+                        // Kind.Object is the save default
+                        state[reg.number] = encodeValueNum(valueNum++, true);
+                    }
+                }
+            }
+
+            /*
+             * Value procedure for the instruction's output and temp values
+             */
+            class OutputValueConsumer implements ValueConsumer
+            {
+                int opValueNum;
+
+                OutputValueConsumer(int opValueNum)
+                {
+                    this.opValueNum = opValueNum;
+                }
+
+                @Override
+                public void visitValue(Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
+                {
+                    int stateIdx = getStateIdx(operand);
+                    if (stateIdx >= 0)
+                    {
+                        /*
+                         * Assign a unique number to the output or temp location.
+                         */
+                        state[stateIdx] = encodeValueNum(opValueNum++, !LIRKind.isValue(operand));
+                    }
+                }
+            }
+
+            OutputValueConsumer outputValueConsumer = new OutputValueConsumer(valueNum);
+
+            op.visitEachTemp(outputValueConsumer);
+            /*
+             * Semantically the output values are written _after_ the temp values
+             */
+            op.visitEachOutput(outputValueConsumer);
+
+            valueNum = outputValueConsumer.opValueNum;
+
+            if (op.hasState())
+            {
+                /*
+                 * All instructions with framestates (mostly method calls), may do garbage
+                 * collection. GC will rewrite all object references which are live at this
+                 * point. So we can't rely on their values. It would be sufficient to just kill
+                 * all values which are referenced in the state (or all values which are not),
+                 * but for simplicity we kill all values.
+                 */
+                clearValuesOfKindObject(state, valueNum);
+                valueNum += state.length;
+            }
+
+            return valueNum;
         }
 
         /**
@@ -482,7 +434,6 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
          */
         private static boolean mergeState(int[] dest, int[] source, int defNum)
         {
-            assert dest.length == source.length;
             boolean changed = false;
             for (int idx = 0; idx < source.length; idx++)
             {
@@ -508,7 +459,6 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
 
         private static void copyState(int[] dest, int[] source)
         {
-            assert dest.length == source.length;
             for (int idx = 0; idx < source.length; idx++)
             {
                 dest[idx] = source[idx];
@@ -568,7 +518,6 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
          */
         private static int encodeValueNum(int valueNum, boolean isObjectKind)
         {
-            assert valueNum > 0;
             if (isObjectKind)
             {
                 return -valueNum;

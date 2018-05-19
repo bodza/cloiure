@@ -39,7 +39,6 @@ public class TypeGuardInlineInfo extends AbstractInlineInfo
         super(invoke);
         this.concrete = concrete;
         this.type = type;
-        assert type.isArray() || type.isConcrete() : type;
     }
 
     @Override
@@ -51,35 +50,30 @@ public class TypeGuardInlineInfo extends AbstractInlineInfo
     @Override
     public ResolvedJavaMethod methodAt(int index)
     {
-        assert index == 0;
         return concrete;
     }
 
     @Override
     public Inlineable inlineableElementAt(int index)
     {
-        assert index == 0;
         return inlineableElement;
     }
 
     @Override
     public double probabilityAt(int index)
     {
-        assert index == 0;
         return 1.0;
     }
 
     @Override
     public double relevanceAt(int index)
     {
-        assert index == 0;
         return 1.0;
     }
 
     @Override
     public void setInlinableElement(int index, Inlineable inlineableElement)
     {
-        assert index == 0;
         this.inlineableElement = inlineableElement;
     }
 
@@ -108,7 +102,6 @@ public class TypeGuardInlineInfo extends AbstractInlineInfo
 
             LogicNode typeCheck = CompareNode.createCompareNode(graph, CanonicalCondition.EQ, receiverHub, typeHub, providers.getConstantReflection(), NodeView.DEFAULT);
             FixedGuardNode guard = graph.add(new FixedGuardNode(typeCheck, DeoptimizationReason.TypeCheckedInliningViolated, DeoptimizationAction.InvalidateReprofile));
-            assert invoke.predecessor() != null;
 
             ValueNode anchoredReceiver = InliningUtil.createAnchoredReceiver(graph, guard, type, nonNullReceiver, true);
             invoke.callTarget().replaceFirstInput(nonNullReceiver, anchoredReceiver);

@@ -65,8 +65,6 @@ public final class ReentrantBlockIterator
         }
         for (Block loopExit : loop.getExits())
         {
-            assert loopExit.getPredecessorCount() == 1;
-            assert blockEndStates.containsKey(loopExit.getBeginNode()) : loopExit.getBeginNode() + " " + blockEndStates;
             StateT exitState = blockEndStates.get(loopExit.getBeginNode());
             // make sure all exit states are unique objects
             info.exitStates.add(closure.cloneState(exitState));
@@ -150,7 +148,6 @@ public final class ReentrantBlockIterator
                         }
                         else
                         {
-                            assert !states.containsKey(end);
                             states.put(end, state);
                         }
                     }
@@ -177,8 +174,6 @@ public final class ReentrantBlockIterator
             else
             {
                 current = blockQueue.removeFirst();
-                assert current.getPredecessorCount() == 1;
-                assert states.containsKey(current.getBeginNode());
                 state = states.removeKey(current.getBeginNode());
             }
         }
@@ -198,7 +193,6 @@ public final class ReentrantBlockIterator
 
     private static <StateT> Block processMultipleSuccessors(BlockIteratorClosure<StateT> closure, Deque<Block> blockQueue, EconomicMap<FixedNode, StateT> states, StateT state, Block[] successors)
     {
-        assert successors.length > 1;
         for (int i = 1; i < successors.length; i++)
         {
             Block successor = successors[i];
@@ -213,7 +207,6 @@ public final class ReentrantBlockIterator
         ArrayList<StateT> mergedStates = new ArrayList<>(merge.forwardEndCount());
         for (Block predecessor : successor.getPredecessors())
         {
-            assert predecessor == current || states.containsKey(predecessor.getEndNode());
             StateT endState = predecessor == current ? state : states.removeKey(predecessor.getEndNode());
             mergedStates.add(endState);
         }
@@ -225,12 +218,10 @@ public final class ReentrantBlockIterator
         // recurse into the loop
         Loop<Block> loop = successor.getLoop();
         LoopBeginNode loopBegin = (LoopBeginNode) loop.getHeader().getBeginNode();
-        assert successor.getBeginNode() == loopBegin;
 
         List<StateT> exitStates = closure.processLoop(loop, state);
 
         int i = 0;
-        assert loop.getExits().size() == exitStates.size();
         for (Block exit : loop.getExits())
         {
             states.put(exit.getBeginNode(), exitStates.get(i++));

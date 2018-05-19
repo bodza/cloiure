@@ -33,7 +33,6 @@ public abstract class AbstractWriteNode extends FixedAccessNode implements State
     @Override
     public void setStateAfter(FrameState x)
     {
-        assert x == null || x.isAlive() : "frame state must be in a graph";
         updateUsages(stateAfter, x);
         stateAfter = x;
     }

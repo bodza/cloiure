@@ -1,7 +1,5 @@
 package graalvm.compiler.loop.phases;
 
-import graalvm.compiler.debug.CounterKey;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.loop.LoopEx;
 import graalvm.compiler.loop.LoopPolicies;
 import graalvm.compiler.loop.LoopsData;
@@ -11,7 +9,6 @@ import graalvm.compiler.phases.tiers.PhaseContext;
 
 public class LoopFullUnrollPhase extends LoopPhase<LoopPolicies>
 {
-    private static final CounterKey FULLY_UNROLLED_LOOPS = DebugContext.counter("FullUnrolls");
     private final CanonicalizerPhase canonicalizer;
 
     public LoopFullUnrollPhase(CanonicalizerPhase canonicalizer, LoopPolicies policies)
@@ -23,7 +20,6 @@ public class LoopFullUnrollPhase extends LoopPhase<LoopPolicies>
     @Override
     protected void run(StructuredGraph graph, PhaseContext context)
     {
-        DebugContext debug = graph.getDebug();
         if (graph.hasLoops())
         {
             boolean peeled;
@@ -36,10 +32,7 @@ public class LoopFullUnrollPhase extends LoopPhase<LoopPolicies>
                 {
                     if (getPolicies().shouldFullUnroll(loop))
                     {
-                        debug.log("FullUnroll %s", loop);
                         LoopTransformations.fullUnroll(loop, context, canonicalizer);
-                        FULLY_UNROLLED_LOOPS.increment(debug);
-                        debug.dump(DebugContext.DETAILED_LEVEL, graph, "FullUnroll %s", loop);
                         peeled = true;
                         break;
                     }

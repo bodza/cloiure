@@ -6,8 +6,6 @@ import java.util.Queue;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
-import graalvm.compiler.debug.CounterKey;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.ConstantValue;
 import graalvm.compiler.lir.LIRFrameState;
@@ -39,12 +37,10 @@ import jdk.vm.ci.meta.Value;
 public class DebugInfoBuilder
 {
     protected final NodeValueMap nodeValueMap;
-    protected final DebugContext debug;
 
-    public DebugInfoBuilder(NodeValueMap nodeValueMap, DebugContext debug)
+    public DebugInfoBuilder(NodeValueMap nodeValueMap)
     {
         this.nodeValueMap = nodeValueMap;
-        this.debug = debug;
     }
 
     private static final JavaValue[] NO_JAVA_VALUES = {};
@@ -57,10 +53,6 @@ public class DebugInfoBuilder
 
     public LIRFrameState build(FrameState topState, LabelRef exceptionEdge)
     {
-        assert virtualObjects.size() == 0;
-        assert objectStates.size() == 0;
-        assert pendingVirtualObjects.size() == 0;
-
         // collect all VirtualObjectField instances:
         FrameState current = topState;
         do
@@ -91,7 +83,6 @@ public class DebugInfoBuilder
             while ((vobjNode = pendingVirtualObjects.poll()) != null)
             {
                 VirtualObject vobjValue = virtualObjects.get(vobjNode);
-                assert vobjValue.getValues() == null;
 
                 JavaValue[] values;
                 JavaKind[] slotKinds;
@@ -109,7 +100,6 @@ public class DebugInfoBuilder
                 if (values.length > 0)
                 {
                     VirtualObjectState currentField = (VirtualObjectState) objectStates.get(vobjNode);
-                    assert currentField != null;
                     int pos = 0;
                     for (int i = 0; i < entryCount; i++)
                     {
@@ -129,9 +119,7 @@ public class DebugInfoBuilder
                         }
                         else
                         {
-                            assert value.getStackKind() == JavaKind.Illegal;
                             ValueNode previousValue = currentField.values().get(i - 1);
-                            assert (previousValue != null && previousValue.getStackKind().needsTwoSlots()) : vobjNode + " " + i + " " + previousValue + " " + currentField.values().snapshot();
                             if (previousValue == null || !previousValue.getStackKind().needsTwoSlots())
                             {
                                 // Don't allow the IllegalConstant to leak into the debug info
@@ -148,7 +136,6 @@ public class DebugInfoBuilder
                         slotKinds = Arrays.copyOf(slotKinds, pos);
                     }
                 }
-                assert checkValues(vobjValue.getType(), values, slotKinds);
                 vobjValue.setValues(values, slotKinds);
             }
 
@@ -163,56 +150,6 @@ public class DebugInfoBuilder
         objectStates.clear();
 
         return newLIRFrameState(exceptionEdge, frame, virtualObjectsArray);
-    }
-
-    private boolean checkValues(ResolvedJavaType type, JavaValue[] values, JavaKind[] slotKinds)
-    {
-        assert (values == null) == (slotKinds == null);
-        if (values != null)
-        {
-            assert values.length == slotKinds.length;
-            if (!type.isArray())
-            {
-                ResolvedJavaField[] fields = type.getInstanceFields(true);
-                int fieldIndex = 0;
-                for (int valueIndex = 0; valueIndex < values.length; valueIndex++, fieldIndex++)
-                {
-                    ResolvedJavaField field = fields[fieldIndex];
-                    JavaKind valKind = slotKinds[valueIndex].getStackKind();
-                    JavaKind fieldKind = storageKind(field.getType());
-                    if ((valKind == JavaKind.Double || valKind == JavaKind.Long) && fieldKind == JavaKind.Int)
-                    {
-                        assert fieldIndex + 1 < fields.length : String.format("Not enough fields for fieldIndex = %d valueIndex = %d %s %s", fieldIndex, valueIndex, Arrays.toString(fields), Arrays.toString(values));
-                        assert storageKind(fields[fieldIndex + 1].getType()) == JavaKind.Int : String.format("fieldIndex = %d valueIndex = %d %s %s %s", fieldIndex, valueIndex, storageKind(fields[fieldIndex + 1].getType()), Arrays.toString(fields), Arrays.toString(values));
-                        fieldIndex++;
-                    }
-                    else
-                    {
-                        assert valKind == fieldKind.getStackKind() : field + ": " + valKind + " != " + fieldKind;
-                    }
-                }
-                assert fields.length == fieldIndex : type + ": fields=" + Arrays.toString(fields) + ", field values=" + Arrays.toString(values);
-            }
-            else
-            {
-                JavaKind componentKind = storageKind(type.getComponentType()).getStackKind();
-                if (componentKind == JavaKind.Object)
-                {
-                    for (int i = 0; i < values.length; i++)
-                    {
-                        assert slotKinds[i].isObject() : slotKinds[i] + " != " + componentKind;
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i < values.length; i++)
-                    {
-                        assert slotKinds[i] == componentKind || componentKind.getBitCount() >= slotKinds[i].getBitCount() || (componentKind == JavaKind.Int && slotKinds[i].getBitCount() >= JavaKind.Int.getBitCount()) : slotKinds[i] + " != " + componentKind;
-                    }
-                }
-            }
-        }
-        return true;
     }
 
     /*
@@ -234,14 +171,6 @@ public class DebugInfoBuilder
     {
         try
         {
-            assert state.bci != BytecodeFrame.INVALID_FRAMESTATE_BCI;
-            assert state.bci != BytecodeFrame.UNKNOWN_BCI;
-            assert state.bci != BytecodeFrame.BEFORE_BCI || state.locksSize() == 0;
-            assert state.bci != BytecodeFrame.AFTER_BCI || state.locksSize() == 0;
-            assert state.bci != BytecodeFrame.AFTER_EXCEPTION_BCI || state.locksSize() == 0;
-            assert !(state.getMethod().isSynchronized() && state.bci != BytecodeFrame.BEFORE_BCI && state.bci != BytecodeFrame.AFTER_BCI && state.bci != BytecodeFrame.AFTER_EXCEPTION_BCI) || state.locksSize() > 0;
-            assert state.verify();
-
             int numLocals = state.localsSize();
             int numStack = state.stackSize();
             int numLocks = state.locksSize();
@@ -309,11 +238,6 @@ public class DebugInfoBuilder
         return toJavaValue(state.lockAt(i));
     }
 
-    private static final CounterKey STATE_VIRTUAL_OBJECTS = DebugContext.counter("StateVirtualObjects");
-    private static final CounterKey STATE_ILLEGALS = DebugContext.counter("StateIllegals");
-    private static final CounterKey STATE_VARIABLES = DebugContext.counter("StateVariables");
-    private static final CounterKey STATE_CONSTANTS = DebugContext.counter("StateConstants");
-
     private static JavaKind toSlotKind(ValueNode value)
     {
         if (value == null)
@@ -345,7 +269,6 @@ public class DebugInfoBuilder
                 }
                 else
                 {
-                    assert obj.entryCount() == 0 || state instanceof VirtualObjectState;
                     VirtualObject vobject = virtualObjects.get(obj);
                     if (vobject == null)
                     {
@@ -353,7 +276,6 @@ public class DebugInfoBuilder
                         virtualObjects.put(obj, vobject);
                         pendingVirtualObjects.add(obj);
                     }
-                    STATE_VIRTUAL_OBJECTS.increment(debug);
                     return vobject;
                 }
             }
@@ -363,12 +285,10 @@ public class DebugInfoBuilder
                 ValueNode unproxied = GraphUtil.unproxify(value);
                 if (unproxied instanceof ConstantNode)
                 {
-                    STATE_CONSTANTS.increment(debug);
                     return unproxied.asJavaConstant();
                 }
                 else if (value != null)
                 {
-                    STATE_VARIABLES.increment(debug);
                     Value operand = nodeValueMap.operand(value);
                     if (operand instanceof ConstantValue && ((ConstantValue) operand).isJavaConstant())
                     {
@@ -376,14 +296,12 @@ public class DebugInfoBuilder
                     }
                     else
                     {
-                        assert operand instanceof Variable : operand + " for " + value;
                         return (JavaValue) operand;
                     }
                 }
                 else
                 {
                     // return a dummy value because real value not needed
-                    STATE_ILLEGALS.increment(debug);
                     return Value.ILLEGAL;
                 }
             }

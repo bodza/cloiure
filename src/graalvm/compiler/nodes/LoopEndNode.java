@@ -51,7 +51,6 @@ public final class LoopEndNode extends AbstractEndNode
     {
         super(TYPE);
         int idx = begin.nextEndIndex();
-        assert idx >= 0;
         this.endIndex = idx;
         this.loopBegin = begin;
         this.canSafepoint = begin.canEndsSafepoint;
@@ -85,7 +84,6 @@ public final class LoopEndNode extends AbstractEndNode
 
     public boolean canSafepoint()
     {
-        assert !canSafepoint || loopBegin().canEndsSafepoint : "When safepoints are disabled for loop begin, safepoints must be disabled for all loop ends";
         return canSafepoint;
     }
 
@@ -94,14 +92,6 @@ public final class LoopEndNode extends AbstractEndNode
     {
         gen.visitLoopEnd(this);
         super.generate(gen);
-    }
-
-    @Override
-    public boolean verify()
-    {
-        assertTrue(loopBegin != null, "must have a loop begin");
-        assertTrue(hasNoUsages(), "LoopEnds can not be used");
-        return super.verify();
     }
 
     /**

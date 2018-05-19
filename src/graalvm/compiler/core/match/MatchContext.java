@@ -1,7 +1,5 @@
 package graalvm.compiler.core.match;
 
-import static graalvm.compiler.debug.DebugOptions.LogVerbose;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +8,6 @@ import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 import graalvm.compiler.core.gen.NodeLIRBuilder;
 import graalvm.compiler.core.match.MatchPattern.Result;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodes.calc.FloatingNode;
@@ -55,7 +52,6 @@ public class MatchContext
         this.rule = rule;
         this.root = node;
         this.nodes = nodes;
-        assert index == nodes.indexOf(node);
         // The root should be the last index since all the inputs must be scheduled before it.
         startIndex = endIndex = index;
     }
@@ -102,16 +98,6 @@ public class MatchContext
             }
             else if ((consumed == null || !consumed.contains(node)) && node != root)
             {
-                if (LogVerbose.getValue(root.getOptions()))
-                {
-                    DebugContext debug = root.getDebug();
-                    debug.log("unexpected node %s", node);
-                    for (int j = startIndex; j <= endIndex; j++)
-                    {
-                        Node theNode = nodes.get(j);
-                        debug.log("%s(%s) %1s", (consumed != null && consumed.contains(theNode) || theNode == root) ? "*" : " ", theNode.getUsageCount(), theNode);
-                    }
-                }
                 return Result.notSafe(node, rule.getPattern());
             }
         }
@@ -127,12 +113,6 @@ public class MatchContext
     public void setResult(ComplexMatchResult result)
     {
         ComplexMatchValue value = new ComplexMatchValue(result);
-        DebugContext debug = root.getDebug();
-        if (debug.isLogEnabled())
-        {
-            debug.log("matched %s %s", rule.getName(), rule.getPattern());
-            debug.log("with nodes %s", rule.formatMatch(root));
-        }
         if (consumed != null)
         {
             for (Node node : consumed)
@@ -153,8 +133,6 @@ public class MatchContext
      */
     public Result consume(Node node)
     {
-        assert MatchPattern.isSingleValueUser(node) : "should have already been checked";
-
         // Check NOT_IN_BLOCK first since that usually implies ALREADY_USED
         int index = nodes.indexOf(node);
         if (index == -1)

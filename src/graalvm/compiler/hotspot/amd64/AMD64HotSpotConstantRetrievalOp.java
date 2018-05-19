@@ -63,7 +63,6 @@ public final class AMD64HotSpotConstantRetrievalOp extends AMD64LIRInstruction
         this.constants = constants;
         this.frameState = frameState;
         this.notes = notes;
-        assert constants.length == notes.length;
 
         // call arguments
         CallingConvention callingConvention = callLinkage.getOutgoingCallingConvention();

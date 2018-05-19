@@ -34,7 +34,6 @@ public final class RawMonitorEnterNode extends AccessMonitorNode implements Virt
     public RawMonitorEnterNode(ValueNode object, ValueNode hub, MonitorIdNode monitorId)
     {
         super(TYPE, object, monitorId);
-        assert ((ObjectStamp) object.stamp(NodeView.DEFAULT)).nonNull();
         this.hub = hub;
     }
 

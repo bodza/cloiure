@@ -10,10 +10,6 @@ import jdk.vm.ci.meta.Value;
 
 public interface DiagnosticLIRGeneratorTool
 {
-    LIRInstruction createBenchmarkCounter(String name, String group, Value increment);
-
-    LIRInstruction createMultiBenchmarkCounter(String[] names, String[] groups, Value[] increments);
-
     /**
      * Creates a {@link SaveRegistersOp} that fills a given set of registers with known garbage
      * value.

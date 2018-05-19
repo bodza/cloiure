@@ -8,7 +8,6 @@ import java.util.EnumMap;
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
 import graalvm.compiler.api.replacements.SnippetReflectionProvider;
-import graalvm.compiler.debug.DebugHandlersFactory;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.PiNode;
 import graalvm.compiler.nodes.ValueNode;
@@ -184,9 +183,9 @@ public class BoxingSnippets implements Snippets
         private final SnippetCounter valueOfCounter;
         private final SnippetCounter valueCounter;
 
-        public Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, SnippetCounter.Group.Factory factory, Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
+        public Templates(OptionValues options, SnippetCounter.Group.Factory factory, Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
         {
-            super(options, factories, providers, snippetReflection, target);
+            super(options, providers, snippetReflection, target);
             for (JavaKind kind : new JavaKind[]{JavaKind.Boolean, JavaKind.Byte, JavaKind.Char, JavaKind.Double, JavaKind.Float, JavaKind.Int, JavaKind.Long, JavaKind.Short})
             {
                 boxSnippets.put(kind, snippet(BoxingSnippets.class, kind.getJavaName() + "ValueOf"));
@@ -212,7 +211,6 @@ public class BoxingSnippets implements Snippets
                 args.addConst("valueOfCounter", valueOfCounter);
 
                 SnippetTemplate template = template(box, args);
-                box.getDebug().log("Lowering integerValueOf in %s: node=%s, template=%s, arguments=%s", box.graph(), box, template, args);
                 template.instantiate(providers.getMetaAccess(), box, DEFAULT_REPLACER, args);
             }
         }
@@ -224,7 +222,6 @@ public class BoxingSnippets implements Snippets
             args.addConst("valueCounter", valueCounter);
 
             SnippetTemplate template = template(unbox, args);
-            unbox.getDebug().log("Lowering integerValueOf in %s: node=%s, template=%s, arguments=%s", unbox.graph(), unbox, template, args);
             template.instantiate(providers.getMetaAccess(), unbox, DEFAULT_REPLACER, args);
         }
     }

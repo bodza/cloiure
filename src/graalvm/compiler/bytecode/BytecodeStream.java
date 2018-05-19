@@ -19,7 +19,6 @@ public final class BytecodeStream
      */
     public BytecodeStream(byte[] code)
     {
-        assert code != null;
         this.code = code;
         setBCI(0);
     }
@@ -173,7 +172,6 @@ public final class BytecodeStream
      */
     public int readCPI4()
     {
-        assert opcode == Bytecodes.INVOKEDYNAMIC;
         return Bytes.beS4(code, curBCI + 1);
     }
 
@@ -210,7 +208,6 @@ public final class BytecodeStream
         if (curBCI < code.length)
         {
             opcode = Bytes.beU1(code, bci);
-            assert opcode < Bytecodes.BREAKPOINT : "illegal bytecode";
             nextBCI = bci + lengthOf();
         }
         else

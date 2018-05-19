@@ -91,13 +91,11 @@ public final class HotSpotNarrowOopStamp extends NarrowOopStamp
                 if (input instanceof NarrowOopStamp)
                 {
                     // oop
-                    assert encoding.equals(((NarrowOopStamp) input).getEncoding());
                     return ((NarrowOopStamp) input).uncompressed();
                 }
                 else if (input instanceof KlassPointerStamp)
                 {
                     // metaspace pointer
-                    assert encoding.equals(((KlassPointerStamp) input).getEncoding());
                     return ((KlassPointerStamp) input).uncompressed();
                 }
                 break;

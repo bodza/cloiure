@@ -75,11 +75,6 @@ public abstract class UnsafeArrayTypeReader implements TypeReader
 
     protected static long readOffset(byte[] data, long byteIndex, int numBytes)
     {
-        assert byteIndex >= 0;
-        assert numBytes > 0;
-        assert byteIndex + numBytes <= data.length;
-        assert Unsafe.ARRAY_BYTE_INDEX_SCALE == 1;
-
         return byteIndex + Unsafe.ARRAY_BYTE_BASE_OFFSET;
     }
 
@@ -197,29 +192,29 @@ class AlignedUnsafeArrayTypeReader extends UnsafeArrayTypeReader
     protected static int getS2(byte[] data, long byteIndex)
     {
         long offset = readOffset(data, byteIndex, Short.BYTES);
-        return ((UnsafeAccess.UNSAFE.getByte(data, offset + 0) & 0xFF) << 0) | //
+        return ((UnsafeAccess.UNSAFE.getByte(data, offset + 0) & 0xFF) << 0) |
                         (UnsafeAccess.UNSAFE.getByte(data, offset + 1) << 8);
     }
 
     protected static int getS4(byte[] data, long byteIndex)
     {
         long offset = readOffset(data, byteIndex, Integer.BYTES);
-        return ((UnsafeAccess.UNSAFE.getByte(data, offset + 0) & 0xFF) << 0) | //
-                        ((UnsafeAccess.UNSAFE.getByte(data, offset + 1) & 0xFF) << 8) | //
-                        ((UnsafeAccess.UNSAFE.getByte(data, offset + 2) & 0xFF) << 16) | //
+        return ((UnsafeAccess.UNSAFE.getByte(data, offset + 0) & 0xFF) << 0) |
+                        ((UnsafeAccess.UNSAFE.getByte(data, offset + 1) & 0xFF) << 8) |
+                        ((UnsafeAccess.UNSAFE.getByte(data, offset + 2) & 0xFF) << 16) |
                         (UnsafeAccess.UNSAFE.getByte(data, offset + 3) << 24);
     }
 
     protected static long getS8(byte[] data, long byteIndex)
     {
         long offset = readOffset(data, byteIndex, Long.BYTES);
-        return ((long) ((UnsafeAccess.UNSAFE.getByte(data, offset + 0) & 0xFF)) << 0) | //
-                        ((long) ((UnsafeAccess.UNSAFE.getByte(data, offset + 1) & 0xFF)) << 8) | //
-                        ((long) ((UnsafeAccess.UNSAFE.getByte(data, offset + 2) & 0xFF)) << 16) | //
-                        ((long) ((UnsafeAccess.UNSAFE.getByte(data, offset + 3) & 0xFF)) << 24) | //
-                        ((long) ((UnsafeAccess.UNSAFE.getByte(data, offset + 4) & 0xFF)) << 32) | //
-                        ((long) ((UnsafeAccess.UNSAFE.getByte(data, offset + 5) & 0xFF)) << 40) | //
-                        ((long) ((UnsafeAccess.UNSAFE.getByte(data, offset + 6) & 0xFF)) << 48) | //
+        return ((long) ((UnsafeAccess.UNSAFE.getByte(data, offset + 0) & 0xFF)) << 0) |
+                        ((long) ((UnsafeAccess.UNSAFE.getByte(data, offset + 1) & 0xFF)) << 8) |
+                        ((long) ((UnsafeAccess.UNSAFE.getByte(data, offset + 2) & 0xFF)) << 16) |
+                        ((long) ((UnsafeAccess.UNSAFE.getByte(data, offset + 3) & 0xFF)) << 24) |
+                        ((long) ((UnsafeAccess.UNSAFE.getByte(data, offset + 4) & 0xFF)) << 32) |
+                        ((long) ((UnsafeAccess.UNSAFE.getByte(data, offset + 5) & 0xFF)) << 40) |
+                        ((long) ((UnsafeAccess.UNSAFE.getByte(data, offset + 6) & 0xFF)) << 48) |
                         ((long) (UnsafeAccess.UNSAFE.getByte(data, offset + 7)) << 56);
     }
 

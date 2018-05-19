@@ -74,13 +74,8 @@ public class WriteBarrierAdditionPhase extends Phase
     {
         if (node.getBarrierType() == BarrierType.PRECISE)
         {
-            assert config.useG1GC;
             G1ReferentFieldReadBarrier barrier = graph.add(new G1ReferentFieldReadBarrier(node.getAddress(), node, false));
             graph.addAfterFixed(node, barrier);
-        }
-        else
-        {
-            assert node.getBarrierType() == BarrierType.NONE : "Non precise read barrier has been attached to read node.";
         }
     }
 

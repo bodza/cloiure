@@ -92,7 +92,6 @@ public class StampFactory
      */
     public static Stamp forKind(JavaKind kind)
     {
-        assert stampCache[kind.ordinal()] != null : "unexpected forKind(" + kind + ")";
         return stampCache[kind.ordinal()];
     }
 
@@ -188,7 +187,6 @@ public class StampFactory
 
     public static FloatStamp forFloat(JavaKind kind, double lowerBound, double upperBound, boolean nonNaN)
     {
-        assert kind.isNumericFloat();
         return new FloatStamp(kind.getBitCount(), lowerBound, upperBound, nonNaN);
     }
 
@@ -340,7 +338,6 @@ public class StampFactory
             ResolvedJavaType elementalType = resolvedJavaType.getElementalType();
             if (elementalType.isInterface())
             {
-                assert reference == null || !reference.getType().equals(resolvedJavaType);
                 TypeReference uncheckedType;
                 ResolvedJavaType elementalImplementor = elementalType.getSingleImplementor();
                 if (elementalImplementor != null && !elementalType.equals(elementalImplementor))

@@ -74,7 +74,6 @@ public class PartialEscapePhase extends EffectsPhase<PhaseContext>
         {
             virtual.resetObjectId();
         }
-        assert schedule != null;
         if (readElimination)
         {
             return new PEReadEliminationClosure(schedule, context.getMetaAccess(), context.getConstantReflection(), context.getConstantFieldProvider(), context.getLowerer());

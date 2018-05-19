@@ -61,7 +61,6 @@ public abstract class AMD64MoveFactoryBase implements MoveFactory
             RegisterConfig registerConfig = frameMapBuilder.getRegisterConfig();
 
             RegisterArray availableRegister = registerConfig.filterAllocatableRegisters(kind, registerConfig.getAllocatableRegisters());
-            assert availableRegister != null && availableRegister.size() > 1;
             Register scratchRegister = availableRegister.get(0);
 
             Architecture arch = frameMapBuilder.getCodeCache().getTarget().arch;

@@ -36,7 +36,6 @@ public final class ClassSubstitutionVerifier extends AbstractVerifier
     {
         if (!element.getKind().isClass())
         {
-            assert false : "Element is guaranteed to be a class.";
             return;
         }
         TypeElement type = (TypeElement) element;
@@ -53,8 +52,6 @@ public final class ClassSubstitutionVerifier extends AbstractVerifier
         AnnotationValue typeValue = findAnnotationValue(classSubstition, TYPE_VALUE);
         AnnotationValue stringValue = findAnnotationValue(classSubstition, STRING_VALUE);
         AnnotationValue optionalValue = findAnnotationValue(classSubstition, OPTIONAL);
-
-        assert typeValue != null && stringValue != null && optionalValue != null;
 
         TypeMirror type = resolveAnnotationValue(TypeMirror.class, typeValue);
         String[] classNames = resolveAnnotationValue(String[].class, stringValue);

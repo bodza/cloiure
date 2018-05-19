@@ -14,7 +14,6 @@ public enum CanonicalCondition
 
     CanonicalCondition(Condition condition)
     {
-        assert condition.isCanonical();
         this.condition = condition;
     }
 

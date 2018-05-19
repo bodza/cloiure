@@ -18,9 +18,6 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 public class NodeSourcePosition extends BytecodePosition
 {
-    private static final boolean STRICT_SOURCE_POSITION = Boolean.getBoolean("debug.graal.SourcePositionStrictChecks");
-    private static final boolean SOURCE_POSITION_BYTECODES = Boolean.getBoolean("debug.graal.SourcePositionDisassemble");
-
     private final int hashCode;
     private final Marker marker;
     private final SourceLanguagePosition sourceLanguagePosition;
@@ -59,7 +56,6 @@ public class NodeSourcePosition extends BytecodePosition
     public boolean verifyRootMethod(ResolvedJavaMethod root)
     {
         JavaMethod currentRoot = getRootMethod();
-        assert root.equals(currentRoot) || root.getName().equals(currentRoot.getName()) && root.getSignature().toMethodDescriptor().equals(currentRoot.getSignature().toMethodDescriptor()) && root.getDeclaringClass().getName().equals(currentRoot.getDeclaringClass().getName()) : root + " " + currentRoot;
         return true;
     }
 
@@ -204,7 +200,6 @@ public class NodeSourcePosition extends BytecodePosition
             {
                 return new NodeSourcePosition(newSourceLanguagePosition, link, getMethod(), 0);
             }
-            assert link == null || isSubstitution || verifyCaller(this, link) : link;
 
             return new NodeSourcePosition(newSourceLanguagePosition, link, getMethod(), getBCI());
         }
@@ -238,15 +233,6 @@ public class NodeSourcePosition extends BytecodePosition
     private static void format(StringBuilder sb, NodeSourcePosition pos)
     {
         MetaUtil.appendLocation(sb.append("at "), pos.getMethod(), pos.getBCI());
-        if (SOURCE_POSITION_BYTECODES)
-        {
-            String disassembly = BytecodeDisassembler.disassembleOne(pos.getMethod(), pos.getBCI());
-            if (disassembly != null && disassembly.length() > 0)
-            {
-                sb.append(" // ");
-                sb.append(disassembly);
-            }
-        }
     }
 
     String shallowToString()
@@ -254,38 +240,5 @@ public class NodeSourcePosition extends BytecodePosition
         StringBuilder sb = new StringBuilder(100);
         format(sb, this);
         return sb.toString();
-    }
-
-    public boolean verify()
-    {
-        NodeSourcePosition current = this;
-        NodeSourcePosition caller = getCaller();
-        while (caller != null)
-        {
-            assert verifyCaller(current, caller) : current;
-            current = caller;
-            caller = caller.getCaller();
-        }
-        return true;
-    }
-
-    private static boolean verifyCaller(NodeSourcePosition current, NodeSourcePosition caller)
-    {
-        if (!STRICT_SOURCE_POSITION)
-        {
-            return true;
-        }
-        if (BytecodeFrame.isPlaceholderBci(caller.getBCI()))
-        {
-            return true;
-        }
-        int opcode = BytecodeDisassembler.getBytecodeAt(caller.getMethod(), caller.getBCI());
-        JavaMethod method = BytecodeDisassembler.getInvokedMethodAt(caller.getMethod(), caller.getBCI());
-        /*
-         * It's not really possible to match the declaring classes since this might be an interface
-         * invoke. Matching name and signature probably provides enough accuracy.
-         */
-        assert method == null || (method.getName().equals(current.getMethod().getName()) && method.getSignature().equals(current.getMethod().getSignature())) || caller.getMethod().getName().equals("linkToTargetMethod") || opcode == Bytecodes.INVOKEDYNAMIC || caller.getMethod().getDeclaringClass().getName().startsWith("Ljava/lang/invoke/LambdaForm$") || current.getMethod().getName().equals("callInlined") : "expected " + method + " but found " + current.getMethod();
-        return true;
     }
 }

@@ -27,7 +27,6 @@ final class AMD64HotSpotDirectStaticCallOp extends DirectCallOp
     AMD64HotSpotDirectStaticCallOp(ResolvedJavaMethod target, Value result, Value[] parameters, Value[] temps, LIRFrameState state, InvokeKind invokeKind, GraalHotSpotVMConfig config)
     {
         super(TYPE, target, result, parameters, temps, state);
-        assert invokeKind.isDirect();
         this.invokeKind = invokeKind;
         this.config = config;
     }

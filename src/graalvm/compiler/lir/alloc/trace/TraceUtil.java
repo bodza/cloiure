@@ -16,13 +16,11 @@ public class TraceUtil
 {
     public static boolean isShadowedRegisterValue(Value value)
     {
-        assert value != null;
         return value instanceof ShadowedRegisterValue;
     }
 
     public static ShadowedRegisterValue asShadowedRegisterValue(Value value)
     {
-        assert isShadowedRegisterValue(value);
         return (ShadowedRegisterValue) value;
     }
 
@@ -37,7 +35,6 @@ public class TraceUtil
         {
             return false;
         }
-        assert instructions.get(0) instanceof LabelOp : "First instruction not a LabelOp: " + instructions.get(0);
         if (((LabelOp) instructions.get(0)).isPhiIn())
         {
             /*
@@ -60,7 +57,6 @@ public class TraceUtil
 
     public static boolean hasInterTracePredecessor(TraceBuilderResult result, Trace trace, AbstractBlockBase<?> block)
     {
-        assert result.getTraceForBlock(block).equals(trace);
         if (block.getPredecessorCount() == 0)
         {
             // start block
@@ -75,7 +71,6 @@ public class TraceUtil
 
     public static boolean hasInterTraceSuccessor(TraceBuilderResult result, Trace trace, AbstractBlockBase<?> block)
     {
-        assert result.getTraceForBlock(block).equals(trace);
         if (block.getSuccessorCount() == 0)
         {
             // method end block

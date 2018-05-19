@@ -23,7 +23,6 @@ final class APHotSpotSignature
 
     APHotSpotSignature(String signature)
     {
-        assert signature.length() > 0;
         this.originalString = signature;
 
         if (signature.charAt(0) == '(')

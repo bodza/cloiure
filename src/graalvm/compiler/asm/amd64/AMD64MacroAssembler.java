@@ -267,7 +267,6 @@ public class AMD64MacroAssembler extends AMD64Assembler
 
     public void movflt(Register dst, Register src)
     {
-        assert dst.getRegisterCategory().equals(AMD64.XMM) && src.getRegisterCategory().equals(AMD64.XMM);
         if (UseXmmRegToRegMoveAll)
         {
             movaps(dst, src);
@@ -280,19 +279,16 @@ public class AMD64MacroAssembler extends AMD64Assembler
 
     public void movflt(Register dst, AMD64Address src)
     {
-        assert dst.getRegisterCategory().equals(AMD64.XMM);
         movss(dst, src);
     }
 
     public void movflt(AMD64Address dst, Register src)
     {
-        assert src.getRegisterCategory().equals(AMD64.XMM);
         movss(dst, src);
     }
 
     public void movdbl(Register dst, Register src)
     {
-        assert dst.getRegisterCategory().equals(AMD64.XMM) && src.getRegisterCategory().equals(AMD64.XMM);
         if (UseXmmRegToRegMoveAll)
         {
             movapd(dst, src);
@@ -305,7 +301,6 @@ public class AMD64MacroAssembler extends AMD64Assembler
 
     public void movdbl(Register dst, AMD64Address src)
     {
-        assert dst.getRegisterCategory().equals(AMD64.XMM);
         if (UseXmmLoadAndClearUpper)
         {
             movsd(dst, src);
@@ -318,7 +313,6 @@ public class AMD64MacroAssembler extends AMD64Assembler
 
     public void movdbl(AMD64Address dst, Register src)
     {
-        assert src.getRegisterCategory().equals(AMD64.XMM);
         movsd(dst, src);
     }
 
@@ -397,7 +391,6 @@ public class AMD64MacroAssembler extends AMD64Assembler
 
     private AMD64Address trigPrologue(Register value)
     {
-        assert value.getRegisterCategory().equals(AMD64.XMM);
         AMD64Address tmp = new AMD64Address(AMD64.rsp);
         subq(AMD64.rsp, AMD64Kind.DOUBLE.getSizeInBytes());
         movdbl(tmp, value);
@@ -407,7 +400,6 @@ public class AMD64MacroAssembler extends AMD64Assembler
 
     private void trigEpilogue(Register dest, AMD64Address tmp)
     {
-        assert dest.getRegisterCategory().equals(AMD64.XMM);
         fstpd(tmp);
         movdbl(dest, tmp);
         addq(AMD64.rsp, AMD64Kind.DOUBLE.getSizeInBytes());
@@ -428,7 +420,6 @@ public class AMD64MacroAssembler extends AMD64Assembler
         // 0xd - mode: 1100 (substring search) + 01 (unsigned shorts)
         // outputs:
         // rcx - matched index in string
-        assert cnt1.equals(rdx) && cnt2.equals(rax) && tmp.equals(rcx) : "pcmpestri";
 
         Label reloadSubstr = new Label();
         Label scanToSubstr = new Label();
@@ -444,7 +435,6 @@ public class AMD64MacroAssembler extends AMD64Assembler
         // Note, inline_string_indexOf() generates checks:
         // if (substr.count > string.count) return -1;
         // if (substr.count == 0) return 0;
-        assert intCnt2 >= 8 : "this code isused only for cnt2 >= 8 chars";
 
         // Load substring.
         movdqu(vec, new AMD64Address(str2, 0));
@@ -579,7 +569,6 @@ public class AMD64MacroAssembler extends AMD64Assembler
     // Small strings are loaded through stack if they cross page boundary.
     public void stringIndexOf(Register str1, Register str2, Register cnt1, Register cnt2, int intCnt2, Register result, Register vec, Register tmp, int vmPageSize)
     {
-        //
         // int_cnt2 is length of small (< 8 chars) constant substring
         // or (-1) for non constant substring in which case its length
         // is in cnt2 register.
@@ -587,8 +576,6 @@ public class AMD64MacroAssembler extends AMD64Assembler
         // Note, inline_string_indexOf() generates checks:
         // if (substr.count > string.count) return -1;
         // if (substr.count == 0) return 0;
-        //
-        assert intCnt2 == -1 || (0 < intCnt2 && intCnt2 < 8) : "should be != 0";
 
         // This method uses pcmpestri instruction with bound registers
         // inputs:
@@ -599,7 +586,6 @@ public class AMD64MacroAssembler extends AMD64Assembler
         // 0xd - mode: 1100 (substring search) + 01 (unsigned shorts)
         // outputs:
         // rcx - matched index in string
-        assert cnt1.equals(rdx) && cnt2.equals(rax) && tmp.equals(rcx) : "pcmpestri";
 
         Label reloadSubstr = new Label();
         Label scanToSubstr = new Label();
@@ -646,7 +632,6 @@ public class AMD64MacroAssembler extends AMD64Assembler
 
             // We can read beyond string if str+16 does not cross page boundary
             // since heaps are aligned and mapped by pages.
-            assert vmPageSize < 1024 * 1024 * 1024 : "default page should be small";
             movl(result, str2); // We need only low 32 bits
             andl(result, (vmPageSize - 1));
             cmpl(result, (vmPageSize - 16));
@@ -714,7 +699,6 @@ public class AMD64MacroAssembler extends AMD64Assembler
 
         // ========================================================
         // Start search
-        //
 
         movq(result, str1); // string addr
 
@@ -747,7 +731,6 @@ public class AMD64MacroAssembler extends AMD64Assembler
 
         // Scan string for start of substr in 16-byte vectors
         bind(scanToSubstr);
-        assert cnt1.equals(rdx) && cnt2.equals(rax) && tmp.equals(rcx) : "pcmpestri";
         pcmpestri(vec, new AMD64Address(result, 0), 0x0d);
         jccb(ConditionFlag.Below, foundCandidate);   // CF == 1
         subl(cnt1, 8);
@@ -791,8 +774,6 @@ public class AMD64MacroAssembler extends AMD64Assembler
             // Fall through if matched whole substring.
         }
         else { // non constant
-            assert intCnt2 == -1 : "should be != 0";
-
             addl(tmp, cnt2);
             // Found result if we matched whole substring.
             cmpl(tmp, 8);

@@ -48,20 +48,7 @@ public final class IntegerSwitchNode extends SwitchNode implements LIRLowerable,
     public IntegerSwitchNode(ValueNode value, AbstractBeginNode[] successors, int[] keys, double[] keyProbabilities, int[] keySuccessors)
     {
         super(TYPE, value, successors, keySuccessors, keyProbabilities);
-        assert keySuccessors.length == keys.length + 1;
-        assert keySuccessors.length == keyProbabilities.length;
         this.keys = keys;
-        assert value.stamp(NodeView.DEFAULT) instanceof PrimitiveStamp && value.stamp(NodeView.DEFAULT).getStackKind().isNumericInteger();
-        assert assertSorted();
-    }
-
-    private boolean assertSorted()
-    {
-        for (int i = 1; i < keys.length; i++)
-        {
-            assert keys[i - 1] < keys[i];
-        }
-        return true;
     }
 
     public IntegerSwitchNode(ValueNode value, int successorCount, int[] keys, double[] keyProbabilities, int[] keySuccessors)
@@ -240,7 +227,6 @@ public final class IntegerSwitchNode extends SwitchNode implements LIRLowerable,
              */
             return false;
         }
-        assert loadIndexed.usages().first() == this;
 
         ValueNode newValue = loadIndexed.index();
         JavaConstant arrayConstant = loadIndexed.array().asJavaConstant();
@@ -321,7 +307,6 @@ public final class IntegerSwitchNode extends SwitchNode implements LIRLowerable,
         doReplace(newValue, newKeyDatas, newSuccessors, newDefaultSuccessor, newDefaultProbability);
 
         /* The array load is now unnecessary. */
-        assert loadIndexed.hasNoUsages();
         GraphUtil.removeFixedWithUnusedInputs(loadIndexed);
 
         return true;

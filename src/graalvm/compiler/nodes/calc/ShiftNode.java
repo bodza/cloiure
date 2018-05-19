@@ -46,7 +46,6 @@ public abstract class ShiftNode<OP> extends BinaryNode implements ArithmeticOper
     protected ShiftNode(NodeClass<? extends ShiftNode<OP>> c, SerializableShiftFunction<OP> getOp, ValueNode x, ValueNode s)
     {
         super(c, getOp.apply(ArithmeticOpTable.forStamp(x.stamp(NodeView.DEFAULT))).foldStamp(x.stamp(NodeView.DEFAULT), (IntegerStamp) s.stamp(NodeView.DEFAULT)), x, s);
-        assert ((IntegerStamp) s.stamp(NodeView.DEFAULT)).getBits() == 32;
         this.getOp = getOp;
     }
 
@@ -85,7 +84,6 @@ public abstract class ShiftNode<OP> extends BinaryNode implements ArithmeticOper
         if (forX.isConstant() && forY.isConstant())
         {
             JavaConstant amount = forY.asJavaConstant();
-            assert amount.getJavaKind() == JavaKind.Int;
             return ConstantNode.forPrimitive(stamp, op.foldConstant(forX.asConstant(), amount.asInt()));
         }
         return null;
@@ -99,10 +97,8 @@ public abstract class ShiftNode<OP> extends BinaryNode implements ArithmeticOper
     @Override
     public boolean isNarrowable(int resultBits)
     {
-        assert CodeUtil.isPowerOf2(resultBits);
         int narrowMask = resultBits - 1;
         int wideMask = getShiftAmountMask();
-        assert (wideMask & narrowMask) == narrowMask : String.format("wideMask %x should be wider than narrowMask %x", wideMask, narrowMask);
 
         /*
          * Shifts are special because narrowing them also changes the implicit mask of the shift

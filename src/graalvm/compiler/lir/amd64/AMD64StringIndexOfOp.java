@@ -43,7 +43,6 @@ public final class AMD64StringIndexOfOp extends AMD64LIRInstruction
     public AMD64StringIndexOfOp(LIRGeneratorTool tool, Value result, Value charPtr1, Value charPtr2, RegisterValue cnt1, RegisterValue cnt2, RegisterValue temp1, RegisterValue vectorTemp1, int intCnt2, int vmPageSize)
     {
         super(TYPE);
-        assert ((AMD64) tool.target().arch).getFeatures().contains(CPUFeature.SSE4_2);
         resultValue = result;
         charPtr1Value = charPtr1;
         charPtr2Value = charPtr2;
@@ -55,7 +54,6 @@ public final class AMD64StringIndexOfOp extends AMD64LIRInstruction
         cnt1ValueT = cnt1;
         cnt2Value = cnt2;
         cnt2ValueT = cnt2;
-        assert asRegister(cnt1).equals(rdx) && asRegister(cnt2).equals(rax) && asRegister(temp1).equals(rcx) : "fixed register usage required";
 
         this.temp1 = temp1;
         this.vectorTemp1 = vectorTemp1;

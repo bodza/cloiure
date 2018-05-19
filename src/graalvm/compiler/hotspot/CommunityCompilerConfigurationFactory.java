@@ -20,7 +20,6 @@ public class CommunityCompilerConfigurationFactory extends CompilerConfiguration
     public CommunityCompilerConfigurationFactory()
     {
         super(NAME, AUTO_SELECTION_PRIORITY);
-        assert AUTO_SELECTION_PRIORITY > EconomyCompilerConfigurationFactory.AUTO_SELECTION_PRIORITY;
     }
 
     @Override

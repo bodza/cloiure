@@ -2,7 +2,6 @@ package graalvm.compiler.phases.common;
 
 import graalvm.compiler.core.common.cfg.Loop;
 import graalvm.compiler.debug.DebugCloseable;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodes.AbstractBeginNode;
 import graalvm.compiler.nodes.BeginNode;
@@ -39,12 +38,10 @@ public class GuardLoweringPhase extends BasePhase<MidTierContext>
     private static class LowerGuards extends ScheduledNodeIterator
     {
         private final Block block;
-        private boolean useGuardIdAsDebugId;
 
-        LowerGuards(Block block, boolean useGuardIdAsDebugId)
+        LowerGuards(Block block)
         {
             this.block = block;
-            this.useGuardIdAsDebugId = useGuardIdAsDebugId;
         }
 
         @Override
@@ -73,9 +70,7 @@ public class GuardLoweringPhase extends BasePhase<MidTierContext>
                 StructuredGraph graph = guard.graph();
                 AbstractBeginNode fastPath = graph.add(new BeginNode());
                 fastPath.setNodeSourcePosition(guard.getNoDeoptSuccessorPosition());
-                @SuppressWarnings("deprecation")
-                int debugId = useGuardIdAsDebugId ? guard.getId() : DeoptimizeNode.DEFAULT_DEBUG_ID;
-                DeoptimizeNode deopt = graph.add(new DeoptimizeNode(guard.getAction(), guard.getReason(), debugId, guard.getSpeculation(), null));
+                DeoptimizeNode deopt = graph.add(new DeoptimizeNode(guard.getAction(), guard.getReason(), DeoptimizeNode.DEFAULT_DEBUG_ID, guard.getSpeculation(), null));
                 AbstractBeginNode deoptBranch = BeginNode.begin(deopt);
                 AbstractBeginNode trueSuccessor;
                 AbstractBeginNode falseSuccessor;
@@ -124,19 +119,15 @@ public class GuardLoweringPhase extends BasePhase<MidTierContext>
             }
             graph.setGuardsStage(GuardsStage.FIXED_DEOPTS);
         }
-
-        assert assertNoGuardsLeft(graph);
     }
 
     private static boolean assertNoGuardsLeft(StructuredGraph graph)
     {
-        assert graph.getNodes().filter(GuardNode.class).isEmpty();
         return true;
     }
 
     private static void processBlock(Block block, ScheduleResult schedule)
     {
-        DebugContext debug = block.getBeginNode().getDebug();
-        new LowerGuards(block, debug.isDumpEnabledForMethod() || debug.isLogEnabledForMethod()).processNodes(block, schedule);
+        new LowerGuards(block).processNodes(block, schedule);
     }
 }

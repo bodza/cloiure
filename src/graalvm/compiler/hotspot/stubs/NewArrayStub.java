@@ -61,19 +61,10 @@ public class NewArrayStub extends SnippetStub
         HotSpotResolvedObjectType intArrayType = (HotSpotResolvedObjectType) providers.getMetaAccess().lookupJavaType(int[].class);
         int count = method.getSignature().getParameterCount(false);
         Object[] args = new Object[count];
-        assert checkConstArg(3, "intArrayHub");
-        assert checkConstArg(4, "threadRegister");
-        assert checkConstArg(5, "options");
         args[3] = ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), intArrayType.klass(), null);
         args[4] = providers.getRegisters().getThreadRegister();
         args[5] = options;
         return args;
-    }
-
-    @Fold
-    static boolean logging(OptionValues options)
-    {
-        return StubOptions.TraceNewArrayStub.getValue(options);
     }
 
     /**
@@ -93,32 +84,17 @@ public class NewArrayStub extends SnippetStub
         int headerSize = (layoutHelper >> layoutHelperHeaderSizeShift(INJECTED_VMCONFIG)) & layoutHelperHeaderSizeMask(INJECTED_VMCONFIG);
         int elementKind = (layoutHelper >> layoutHelperElementTypeShift(INJECTED_VMCONFIG)) & layoutHelperElementTypeMask(INJECTED_VMCONFIG);
         int sizeInBytes = arrayAllocationSize(length, headerSize, log2ElementSize);
-        if (logging(options))
-        {
-            printf("newArray: element kind %d\n", elementKind);
-            printf("newArray: array length %d\n", length);
-            printf("newArray: array size %d\n", sizeInBytes);
-            printf("newArray: hub=%p\n", hub.asWord().rawValue());
-        }
 
         // check that array length is small enough for fast path.
         Word thread = registerAsWord(threadRegister);
         boolean inlineContiguousAllocationSupported = GraalHotSpotVMConfigNode.inlineContiguousAllocationSupported();
         if (inlineContiguousAllocationSupported && !useCMSIncrementalMode(INJECTED_VMCONFIG) && length >= 0 && length <= MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH)
         {
-            Word memory = refillAllocate(thread, intArrayHub, sizeInBytes, logging(options));
+            Word memory = refillAllocate(thread, intArrayHub, sizeInBytes);
             if (memory.notEqual(0))
             {
-                if (logging(options))
-                {
-                    printf("newArray: allocated new array at %p\n", memory.rawValue());
-                }
                 return verifyObject(formatArray(hub, sizeInBytes, length, headerSize, memory, WordFactory.unsigned(arrayPrototypeMarkWord(INJECTED_VMCONFIG)), fillContents, false, null));
             }
-        }
-        if (logging(options))
-        {
-            printf("newArray: calling new_array_c\n");
         }
 
         newArrayC(NEW_ARRAY_C, thread, hub, length);

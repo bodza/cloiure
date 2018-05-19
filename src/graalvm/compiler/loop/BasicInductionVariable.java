@@ -76,7 +76,6 @@ public class BasicInductionVariable extends InductionVariable
                 }
                 else
                 {
-                    assert op instanceof SubNode;
                     return dir.opposite();
                 }
             }

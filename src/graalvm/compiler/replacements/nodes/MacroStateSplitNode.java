@@ -43,7 +43,6 @@ public abstract class MacroStateSplitNode extends MacroNode implements StateSpli
     @Override
     public void setStateAfter(FrameState x)
     {
-        assert x == null || x.isAlive() : "frame state must be in a graph";
         updateUsages(stateAfter, x);
         stateAfter = x;
     }
@@ -69,7 +68,6 @@ public abstract class MacroStateSplitNode extends MacroNode implements StateSpli
             {
                 throw new GraalError("unexpected invoke %s in snippet", getClass().getSimpleName());
             }
-            assert invoke.stateAfter().bci == BytecodeFrame.AFTER_BCI;
             // Here we need to fix the bci of the invoke
             InvokeNode newInvoke = snippetGraph.add(new InvokeNode(invoke.callTarget(), bci()));
             newInvoke.setStateAfter(invoke.stateAfter());

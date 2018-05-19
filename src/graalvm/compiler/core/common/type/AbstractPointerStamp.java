@@ -20,7 +20,6 @@ public abstract class AbstractPointerStamp extends Stamp
 
     public boolean nonNull()
     {
-        assert !this.isEmpty() || nonNull;
         return nonNull;
     }
 
@@ -43,7 +42,6 @@ public abstract class AbstractPointerStamp extends Stamp
 
     protected Stamp defaultPointerJoin(Stamp stamp)
     {
-        assert getClass() == stamp.getClass();
         AbstractPointerStamp other = (AbstractPointerStamp) stamp;
         boolean joinNonNull = this.nonNull || other.nonNull;
         boolean joinAlwaysNull = this.alwaysNull || other.alwaysNull;

@@ -269,7 +269,6 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
                 adr_stride2 = 16; // stride << scale2;
             }
 
-            assert result.equals(rax) && cnt2.equals(rdx) && cnt1.equals(rcx) : "pcmpestri";
             // rax and rdx are used by pcmpestri as elements counters
             masm.movl(result, cnt2);
             masm.andl(cnt2, ~(stride2 - 1));   // cnt2 holds the vector count
@@ -487,7 +486,6 @@ public final class AMD64ArrayCompareToOp extends AMD64LIRInstruction
             // + 00 (unsigned bytes) or + 01 (unsigned shorts)
             // outputs:
             // rcx - first mismatched element index
-            assert result.equals(rax) && cnt2.equals(rdx) && cnt1.equals(rcx) : "pcmpestri";
 
             masm.bind(COMPARE_WIDE_VECTORS);
             // if (ae == StrIntrinsicNode::LL || ae == StrIntrinsicNode::UU) {

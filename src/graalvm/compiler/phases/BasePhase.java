@@ -2,12 +2,6 @@ package graalvm.compiler.phases;
 
 import java.util.regex.Pattern;
 
-import graalvm.compiler.debug.CounterKey;
-import graalvm.compiler.debug.DebugCloseable;
-import graalvm.compiler.debug.DebugContext;
-import graalvm.compiler.debug.DebugOptions;
-import graalvm.compiler.debug.MemUseTrackerKey;
-import graalvm.compiler.debug.TimerKey;
 import graalvm.compiler.graph.Graph;
 import graalvm.compiler.graph.Graph.Mark;
 import graalvm.compiler.graph.Graph.NodeEvent;
@@ -35,277 +29,29 @@ public abstract class BasePhase<C> implements PhaseSizeContract
         public static final OptionKey<Boolean> VerifyGraalPhasesSize = new OptionKey<>(false);
     }
 
-    /**
-     * Records time spent in {@link #apply(StructuredGraph, Object, boolean)}.
-     */
-    private final TimerKey timer;
-
-    /**
-     * Counts calls to {@link #apply(StructuredGraph, Object, boolean)}.
-     */
-    private final CounterKey executionCount;
-
-    /**
-     * Accumulates the {@linkplain Graph#getNodeCount() live node count} of all graphs sent to
-     * {@link #apply(StructuredGraph, Object, boolean)}.
-     */
-    private final CounterKey inputNodesCount;
-
-    /**
-     * Records memory usage within {@link #apply(StructuredGraph, Object, boolean)}.
-     */
-    private final MemUseTrackerKey memUseTracker;
-
-    /** Lazy initialization to create pattern only when assertions are enabled. */
-    static class NamePatternHolder
-    {
-        static final Pattern NAME_PATTERN = Pattern.compile("[A-Z][A-Za-z0-9]+");
-    }
-
-    public static class BasePhaseStatistics
-    {
-        /**
-         * Records time spent in {@link BasePhase#apply(StructuredGraph, Object, boolean)}.
-         */
-        private final TimerKey timer;
-
-        /**
-         * Counts calls to {@link BasePhase#apply(StructuredGraph, Object, boolean)}.
-         */
-        private final CounterKey executionCount;
-
-        /**
-         * Accumulates the {@linkplain Graph#getNodeCount() live node count} of all graphs sent to
-         * {@link BasePhase#apply(StructuredGraph, Object, boolean)}.
-         */
-        private final CounterKey inputNodesCount;
-
-        /**
-         * Records memory usage within {@link BasePhase#apply(StructuredGraph, Object, boolean)}.
-         */
-        private final MemUseTrackerKey memUseTracker;
-
-        public BasePhaseStatistics(Class<?> clazz)
-        {
-            timer = DebugContext.timer("PhaseTime_%s", clazz).doc("Time spent in phase.");
-            executionCount = DebugContext.counter("PhaseCount_%s", clazz).doc("Number of phase executions.");
-            memUseTracker = DebugContext.memUseTracker("PhaseMemUse_%s", clazz).doc("Memory allocated in phase.");
-            inputNodesCount = DebugContext.counter("PhaseNodes_%s", clazz).doc("Number of nodes input to phase.");
-        }
-    }
-
-    private static final ClassValue<BasePhaseStatistics> statisticsClassValue = new ClassValue<BasePhaseStatistics>()
-    {
-        @Override
-        protected BasePhaseStatistics computeValue(Class<?> c)
-        {
-            return new BasePhaseStatistics(c);
-        }
-    };
-
-    private static BasePhaseStatistics getBasePhaseStatistics(Class<?> c)
-    {
-        return statisticsClassValue.get(c);
-    }
-
     protected BasePhase()
     {
-        BasePhaseStatistics statistics = getBasePhaseStatistics(getClass());
-        timer = statistics.timer;
-        executionCount = statistics.executionCount;
-        memUseTracker = statistics.memUseTracker;
-        inputNodesCount = statistics.inputNodesCount;
     }
 
     public final void apply(final StructuredGraph graph, final C context)
     {
-        apply(graph, context, true);
-    }
-
-    private BasePhase<?> getEnclosingPhase(DebugContext debug)
-    {
-        for (Object c : debug.context())
-        {
-            if (c != this && c instanceof BasePhase)
-            {
-                if (!(c instanceof PhaseSuite))
-                {
-                    return (BasePhase<?>) c;
-                }
-            }
-        }
-        return null;
-    }
-
-    private boolean dumpBefore(final StructuredGraph graph, final C context, boolean isTopLevel)
-    {
-        DebugContext debug = graph.getDebug();
-        if (isTopLevel && (debug.isDumpEnabled(DebugContext.VERBOSE_LEVEL) || shouldDumpBeforeAtBasicLevel() && debug.isDumpEnabled(DebugContext.BASIC_LEVEL)))
-        {
-            if (shouldDumpBeforeAtBasicLevel())
-            {
-                debug.dump(DebugContext.BASIC_LEVEL, graph, "Before phase %s", getName());
-            }
-            else
-            {
-                debug.dump(DebugContext.VERBOSE_LEVEL, graph, "Before phase %s", getName());
-            }
-        }
-        else if (!isTopLevel && debug.isDumpEnabled(DebugContext.VERBOSE_LEVEL + 1))
-        {
-            debug.dump(DebugContext.VERBOSE_LEVEL + 1, graph, "Before subphase %s", getName());
-        }
-        else if (debug.isDumpEnabled(DebugContext.ENABLED_LEVEL) && shouldDump(graph, context))
-        {
-            debug.dump(DebugContext.ENABLED_LEVEL, graph, "Before %s %s", isTopLevel ? "phase" : "subphase", getName());
-            return true;
-        }
-        return false;
-    }
-
-    protected boolean shouldDumpBeforeAtBasicLevel()
-    {
-        return false;
-    }
-
-    protected boolean shouldDumpAfterAtBasicLevel()
-    {
-        return false;
-    }
-
-    @SuppressWarnings("try")
-    protected final void apply(final StructuredGraph graph, final C context, final boolean dumpGraph)
-    {
         graph.checkCancellation();
-        DebugContext debug = graph.getDebug();
-        try (DebugCloseable a = timer.start(debug); DebugContext.Scope s = debug.scope(getClass(), this); DebugCloseable c = memUseTracker.start(debug))
+        int sizeBefore = 0;
+        Mark before = null;
+        OptionValues options = graph.getOptions();
+        boolean verifySizeContract = PhaseOptions.VerifyGraalPhasesSize.getValue(options) && checkContract();
+        if (verifySizeContract)
         {
-            int sizeBefore = 0;
-            Mark before = null;
-            OptionValues options = graph.getOptions();
-            boolean verifySizeContract = PhaseOptions.VerifyGraalPhasesSize.getValue(options) && checkContract();
-            if (verifySizeContract)
-            {
-                sizeBefore = NodeCostUtil.computeGraphSize(graph);
-                before = graph.getMark();
-            }
-            boolean isTopLevel = getEnclosingPhase(graph.getDebug()) == null;
-            boolean dumpedBefore = false;
-            if (dumpGraph && debug.areScopesEnabled())
-            {
-                dumpedBefore = dumpBefore(graph, context, isTopLevel);
-            }
-            inputNodesCount.add(debug, graph.getNodeCount());
-            this.run(graph, context);
-            executionCount.increment(debug);
-            if (verifySizeContract)
-            {
-                if (!before.isCurrent())
-                {
-                    int sizeAfter = NodeCostUtil.computeGraphSize(graph);
-                    NodeCostUtil.phaseFulfillsSizeContract(graph, sizeBefore, sizeAfter, this);
-                }
-            }
-
-            if (dumpGraph && debug.areScopesEnabled())
-            {
-                dumpAfter(graph, isTopLevel, dumpedBefore);
-            }
-            if (debug.isVerifyEnabled())
-            {
-                debug.verify(graph, "%s", getName());
-            }
-            assert graph.verify();
+            sizeBefore = NodeCostUtil.computeGraphSize(graph);
+            before = graph.getMark();
         }
-        catch (Throwable t)
+        this.run(graph, context);
+        if (verifySizeContract)
         {
-            throw debug.handle(t);
-        }
-    }
-
-    private void dumpAfter(final StructuredGraph graph, boolean isTopLevel, boolean dumpedBefore)
-    {
-        boolean dumped = false;
-        DebugContext debug = graph.getDebug();
-        if (isTopLevel)
-        {
-            if (shouldDumpAfterAtBasicLevel())
+            if (!before.isCurrent())
             {
-                if (debug.isDumpEnabled(DebugContext.BASIC_LEVEL))
-                {
-                    debug.dump(DebugContext.BASIC_LEVEL, graph, "After phase %s", getName());
-                    dumped = true;
-                }
-            }
-            else
-            {
-                if (debug.isDumpEnabled(DebugContext.INFO_LEVEL))
-                {
-                    debug.dump(DebugContext.INFO_LEVEL, graph, "After phase %s", getName());
-                    dumped = true;
-                }
-            }
-        }
-        else
-        {
-            if (debug.isDumpEnabled(DebugContext.INFO_LEVEL + 1))
-            {
-                debug.dump(DebugContext.INFO_LEVEL + 1, graph, "After subphase %s", getName());
-                dumped = true;
-            }
-        }
-        if (!dumped && debug.isDumpEnabled(DebugContext.ENABLED_LEVEL) && dumpedBefore)
-        {
-            debug.dump(DebugContext.ENABLED_LEVEL, graph, "After %s %s", isTopLevel ? "phase" : "subphase", getName());
-        }
-    }
-
-    @SuppressWarnings("try")
-    private boolean shouldDump(StructuredGraph graph, C context)
-    {
-        DebugContext debug = graph.getDebug();
-        String phaseChange = DebugOptions.DumpOnPhaseChange.getValue(graph.getOptions());
-        if (phaseChange != null && Pattern.matches(phaseChange, getClass().getSimpleName()))
-        {
-            StructuredGraph graphCopy = (StructuredGraph) graph.copy(graph.getDebug());
-            GraphChangeListener listener = new GraphChangeListener(graphCopy);
-            try (NodeEventScope s = graphCopy.trackNodeEvents(listener))
-            {
-                try (DebugContext.Scope s2 = debug.sandbox("GraphChangeListener", null))
-                {
-                    run(graphCopy, context);
-                }
-                catch (Throwable t)
-                {
-                    debug.handle(t);
-                }
-            }
-            return listener.changed;
-        }
-        return false;
-    }
-
-    private final class GraphChangeListener extends NodeEventListener
-    {
-        boolean changed;
-        private StructuredGraph graph;
-        private Mark mark;
-
-        GraphChangeListener(StructuredGraph graphCopy)
-        {
-            this.graph = graphCopy;
-            this.mark = graph.getMark();
-        }
-
-        @Override
-        public void changed(NodeEvent e, Node node)
-        {
-            if (!graph.isNew(mark, node) && node.isAlive())
-            {
-                if (e == NodeEvent.INPUT_CHANGED || e == NodeEvent.ZERO_USAGES)
-                {
-                    changed = true;
-                }
+                int sizeAfter = NodeCostUtil.computeGraphSize(graph);
+                NodeCostUtil.phaseFulfillsSizeContract(graph, sizeBefore, sizeAfter, this);
             }
         }
     }

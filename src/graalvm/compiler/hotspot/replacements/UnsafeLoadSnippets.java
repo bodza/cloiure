@@ -4,7 +4,6 @@ import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.refe
 import static graalvm.compiler.replacements.SnippetTemplate.DEFAULT_REPLACER;
 
 import graalvm.compiler.api.replacements.Snippet;
-import graalvm.compiler.debug.DebugHandlersFactory;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
 import graalvm.compiler.nodes.extended.FixedValueAnchorNode;
 import graalvm.compiler.nodes.extended.RawLoadNode;
@@ -39,9 +38,9 @@ public class UnsafeLoadSnippets implements Snippets
     {
         private final SnippetInfo unsafeLoad = snippet(UnsafeLoadSnippets.class, "lowerUnsafeLoad");
 
-        public Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, HotSpotProviders providers, TargetDescription target)
+        public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target)
         {
-            super(options, factories, providers, providers.getSnippetReflection(), target);
+            super(options, providers, providers.getSnippetReflection(), target);
         }
 
         public void lower(RawLoadNode load, LoweringTool tool)

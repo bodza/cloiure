@@ -5,7 +5,6 @@ import static graalvm.compiler.nodes.extended.BranchProbabilityNode.probability;
 import static graalvm.compiler.replacements.SnippetTemplate.DEFAULT_REPLACER;
 
 import graalvm.compiler.api.replacements.Snippet;
-import graalvm.compiler.debug.DebugHandlersFactory;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.hotspot.meta.HotSpotConstantLoadAction;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
@@ -118,9 +117,9 @@ public class ResolveConstantSnippets implements Snippets
         private final SnippetInfo initializeKlass = snippet(ResolveConstantSnippets.class, "initializeKlass");
         private final SnippetInfo pureInitializeKlass = snippet(ResolveConstantSnippets.class, "pureInitializeKlass");
 
-        public Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, HotSpotProviders providers, TargetDescription target)
+        public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target)
         {
-            super(options, factories, providers, providers.getSnippetReflection(), target);
+            super(options, providers, providers.getSnippetReflection(), target);
         }
 
         public void lower(ResolveDynamicConstantNode resolveConstantNode, LoweringTool tool)
@@ -128,7 +127,6 @@ public class ResolveConstantSnippets implements Snippets
             StructuredGraph graph = resolveConstantNode.graph();
 
             ValueNode value = resolveConstantNode.value();
-            assert value.isConstant() : "Expected a constant: " + value;
             SnippetInfo snippet = resolveDynamicConstant;
 
             Arguments args = new Arguments(snippet, graph.getGuardsStage(), tool.getLoweringStage());
@@ -137,7 +135,6 @@ public class ResolveConstantSnippets implements Snippets
             SnippetTemplate template = template(resolveConstantNode, args);
             template.instantiate(providers.getMetaAccess(), resolveConstantNode, DEFAULT_REPLACER, args);
 
-            assert resolveConstantNode.hasNoUsages();
             if (!resolveConstantNode.isDeleted())
             {
                 GraphUtil.killWithUnusedFloatingInputs(resolveConstantNode);
@@ -149,7 +146,6 @@ public class ResolveConstantSnippets implements Snippets
             StructuredGraph graph = resolveConstantNode.graph();
 
             ValueNode value = resolveConstantNode.value();
-            assert value.isConstant() : "Expected a constant: " + value;
             Constant constant = value.asConstant();
             SnippetInfo snippet = null;
 
@@ -164,7 +160,6 @@ public class ResolveConstantSnippets implements Snippets
                     }
                     else
                     {
-                        assert resolveConstantNode.action() == HotSpotConstantLoadAction.INITIALIZE;
                         snippet = pureInitializeKlass;
                     }
                 }
@@ -173,7 +168,6 @@ public class ResolveConstantSnippets implements Snippets
             {
                 snippet = resolveObjectConstant;
                 HotSpotObjectConstant hotspotObjectConstant = (HotSpotObjectConstant) constant;
-                assert hotspotObjectConstant.isInternedString();
             }
             if (snippet == null)
             {
@@ -186,7 +180,6 @@ public class ResolveConstantSnippets implements Snippets
             SnippetTemplate template = template(resolveConstantNode, args);
             template.instantiate(providers.getMetaAccess(), resolveConstantNode, DEFAULT_REPLACER, args);
 
-            assert resolveConstantNode.hasNoUsages();
             if (!resolveConstantNode.isDeleted())
             {
                 GraphUtil.killWithUnusedFloatingInputs(resolveConstantNode);
@@ -198,7 +191,6 @@ public class ResolveConstantSnippets implements Snippets
             StructuredGraph graph = initializeKlassNode.graph();
 
             ValueNode value = initializeKlassNode.value();
-            assert value.isConstant() : "Expected a constant: " + value;
             Constant constant = value.asConstant();
 
             if (constant instanceof HotSpotMetaspaceConstant)
@@ -208,7 +200,6 @@ public class ResolveConstantSnippets implements Snippets
 
                 SnippetTemplate template = template(initializeKlassNode, args);
                 template.instantiate(providers.getMetaAccess(), initializeKlassNode, DEFAULT_REPLACER, args);
-                assert initializeKlassNode.hasNoUsages();
                 if (!initializeKlassNode.isDeleted())
                 {
                     GraphUtil.killWithUnusedFloatingInputs(initializeKlassNode);
@@ -230,7 +221,6 @@ public class ResolveConstantSnippets implements Snippets
             SnippetTemplate template = template(resolveMethodAndLoadCountersNode, args);
             template.instantiate(providers.getMetaAccess(), resolveMethodAndLoadCountersNode, DEFAULT_REPLACER, args);
 
-            assert resolveMethodAndLoadCountersNode.hasNoUsages();
             if (!resolveMethodAndLoadCountersNode.isDeleted())
             {
                 GraphUtil.killWithUnusedFloatingInputs(resolveMethodAndLoadCountersNode);

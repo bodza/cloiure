@@ -47,14 +47,6 @@ public abstract class PhiNode extends FloatingNode implements Canonicalizable
         merge = x;
     }
 
-    @Override
-    public boolean verify()
-    {
-        assertTrue(merge() != null, "missing merge");
-        assertTrue(merge().phiPredecessorCount() == valueCount(), "mismatch between merge predecessor count and phi value count: %d != %d", merge().phiPredecessorCount(), valueCount());
-        return super.verify();
-    }
-
     /**
      * Get the instruction that produces the value associated with the i'th predecessor of the
      * merge.
@@ -150,8 +142,6 @@ public abstract class PhiNode extends FloatingNode implements Canonicalizable
 
     public void addInput(ValueNode x)
     {
-        assert !(x instanceof ValuePhiNode) || ((ValuePhiNode) x).merge() instanceof LoopBeginNode || ((ValuePhiNode) x).merge() != this.merge();
-        assert !(this instanceof ValuePhiNode) || x.stamp(NodeView.DEFAULT).isCompatible(stamp(NodeView.DEFAULT));
         values().add(x);
     }
 
@@ -196,7 +186,6 @@ public abstract class PhiNode extends FloatingNode implements Canonicalizable
     public ValueNode singleBackValueOrThis()
     {
         int valueCount = valueCount();
-        assert merge() instanceof LoopBeginNode && valueCount >= 2;
         // Skip first value, assume second value as single value.
         ValueNode singleValue = valueAt(1);
         for (int i = 2; i < valueCount; ++i)
@@ -216,7 +205,6 @@ public abstract class PhiNode extends FloatingNode implements Canonicalizable
         if (isLoopPhi())
         {
             int valueCount = valueCount();
-            assert valueCount >= 2;
             int i;
             for (i = 1; i < valueCount; ++i)
             {

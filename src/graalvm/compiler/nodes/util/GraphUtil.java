@@ -16,7 +16,6 @@ import graalvm.compiler.bytecode.Bytecode;
 import graalvm.compiler.code.SourceStackTraceBailoutException;
 import graalvm.compiler.core.common.spi.ConstantFieldProvider;
 import graalvm.compiler.core.common.type.ObjectStamp;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.graph.Graph;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeBitMap;
@@ -73,7 +72,7 @@ public class GraphUtil
 {
     public static class Options
     {
-        @Option(help = "Verify that there are no new unused nodes when performing killCFG", type = OptionType.Debug)//
+        @Option(help = "Verify that there are no new unused nodes when performing killCFG", type = OptionType.Debug)
         public static final OptionKey<Boolean> VerifyKillCFGUnusedNodes = new OptionKey<>(false);
     }
 
@@ -88,9 +87,6 @@ public class GraphUtil
         markFixedNodes(node, markedNodes, unmarkedMerges);
 
         fixSurvivingAffectedMerges(markedNodes, unmarkedMerges);
-
-        DebugContext debug = node.getDebug();
-        debug.dump(DebugContext.DETAILED_LEVEL, node.graph(), "After fixing merges (killCFG %s)", node);
 
         // Mark non-fixed nodes
         markUsages(markedNodes);
@@ -107,7 +103,6 @@ public class GraphUtil
                 }
             }
         }
-        debug.dump(DebugContext.VERY_DETAILED_LEVEL, node.graph(), "After disconnecting non-marked inputs (killCFG %s)", node);
         // Kill marked nodes
         for (Node marked : markedNodes)
         {
@@ -151,7 +146,6 @@ public class GraphUtil
                 AbstractMergeNode merge = end.merge();
                 if (merge != null)
                 {
-                    assert !markedNodes.contains(merge) || (merge instanceof LoopBeginNode && end instanceof LoopEndNode) : merge;
                     if (merge instanceof LoopBeginNode)
                     {
                         if (end == ((LoopBeginNode) merge).forwardEnd())
@@ -173,7 +167,6 @@ public class GraphUtil
                     endsSeen.add(end);
                     if (!(end instanceof LoopEndNode) && endsSeen.size() == merge.forwardEndCount())
                     {
-                        assert merge.forwardEnds().filter(n -> !markedNodes.contains(n)).isEmpty();
                         // all this merge's forward ends are marked: it needs to be killed
                         workStack.push(merge);
                     }
@@ -197,7 +190,6 @@ public class GraphUtil
                 if (merge instanceof LoopBeginNode)
                 {
                     LoopBeginNode loopBegin = (LoopBeginNode) merge;
-                    assert merge.forwardEndCount() == 1;
                     for (LoopExitNode loopExit : loopBegin.loopExits().snapshot())
                     {
                         if (markedNodes.contains(loopExit))
@@ -215,10 +207,6 @@ public class GraphUtil
                 {
                     merge.graph().reduceTrivialMerge(merge);
                 }
-            }
-            else
-            {
-                assert merge.phiPredecessorCount() > 1 : merge;
             }
         }
     }
@@ -244,86 +232,41 @@ public class GraphUtil
         }
     }
 
-    @SuppressWarnings("try")
     public static void killCFG(FixedNode node)
     {
-        DebugContext debug = node.getDebug();
-        try (DebugContext.Scope scope = debug.scope("KillCFG", node))
+        EconomicSet<Node> unusedNodes = null;
+        EconomicSet<Node> unsafeNodes = null;
+        Graph.NodeEventScope nodeEventScope = null;
+        OptionValues options = node.getOptions();
+        if (GraphUtil.Options.VerifyKillCFGUnusedNodes.getValue(options))
         {
-            EconomicSet<Node> unusedNodes = null;
-            EconomicSet<Node> unsafeNodes = null;
-            Graph.NodeEventScope nodeEventScope = null;
-            OptionValues options = node.getOptions();
-            if (Graph.Options.VerifyGraalGraphEdges.getValue(options))
+            EconomicSet<Node> collectedUnusedNodes = unusedNodes = EconomicSet.create(Equivalence.IDENTITY);
+            nodeEventScope = node.graph().trackNodeEvents(new Graph.NodeEventListener()
             {
-                unsafeNodes = collectUnsafeNodes(node.graph());
-            }
-            if (GraphUtil.Options.VerifyKillCFGUnusedNodes.getValue(options))
-            {
-                EconomicSet<Node> collectedUnusedNodes = unusedNodes = EconomicSet.create(Equivalence.IDENTITY);
-                nodeEventScope = node.graph().trackNodeEvents(new Graph.NodeEventListener()
+                @Override
+                public void changed(Graph.NodeEvent e, Node n)
                 {
-                    @Override
-                    public void changed(Graph.NodeEvent e, Node n)
+                    if (e == Graph.NodeEvent.ZERO_USAGES && isFloatingNode(n) && !(n instanceof GuardNode))
                     {
-                        if (e == Graph.NodeEvent.ZERO_USAGES && isFloatingNode(n) && !(n instanceof GuardNode))
-                        {
-                            collectedUnusedNodes.add(n);
-                        }
-                    }
-                });
-            }
-            debug.dump(DebugContext.VERY_DETAILED_LEVEL, node.graph(), "Before killCFG %s", node);
-            killCFGInner(node);
-            debug.dump(DebugContext.VERY_DETAILED_LEVEL, node.graph(), "After killCFG %s", node);
-            if (Graph.Options.VerifyGraalGraphEdges.getValue(options))
-            {
-                EconomicSet<Node> newUnsafeNodes = collectUnsafeNodes(node.graph());
-                newUnsafeNodes.removeAll(unsafeNodes);
-                assert newUnsafeNodes.isEmpty() : "New unsafe nodes: " + newUnsafeNodes;
-            }
-            if (GraphUtil.Options.VerifyKillCFGUnusedNodes.getValue(options))
-            {
-                nodeEventScope.close();
-                Iterator<Node> iterator = unusedNodes.iterator();
-                while (iterator.hasNext())
-                {
-                    Node curNode = iterator.next();
-                    if (curNode.isDeleted())
-                    {
-                        iterator.remove();
+                        collectedUnusedNodes.add(n);
                     }
                 }
-                assert unusedNodes.isEmpty() : "New unused nodes: " + unusedNodes;
-            }
+            });
         }
-        catch (Throwable t)
+        killCFGInner(node);
+        if (GraphUtil.Options.VerifyKillCFGUnusedNodes.getValue(options))
         {
-            throw debug.handle(t);
-        }
-    }
-
-    /**
-     * Collects all node in the graph which have non-optional inputs that are null.
-     */
-    private static EconomicSet<Node> collectUnsafeNodes(Graph graph)
-    {
-        EconomicSet<Node> unsafeNodes = EconomicSet.create(Equivalence.IDENTITY);
-        for (Node n : graph.getNodes())
-        {
-            for (Position pos : n.inputPositions())
+            nodeEventScope.close();
+            Iterator<Node> iterator = unusedNodes.iterator();
+            while (iterator.hasNext())
             {
-                Node input = pos.get(n);
-                if (input == null)
+                Node curNode = iterator.next();
+                if (curNode.isDeleted())
                 {
-                    if (!pos.isInputOptional())
-                    {
-                        unsafeNodes.add(n);
-                    }
+                    iterator.remove();
                 }
             }
         }
-        return unsafeNodes;
     }
 
     public static boolean isFloatingNode(Node n)
@@ -347,7 +290,6 @@ public class GraphUtil
 
     public static void killWithUnusedFloatingInputs(Node node, boolean mayKillGuard)
     {
-        assert checkKill(node, mayKillGuard);
         node.markDeleted();
         outer: for (Node in : node.inputs())
         {
@@ -394,7 +336,6 @@ public class GraphUtil
      */
     public static void removeNewNodes(Graph graph, Graph.Mark mark)
     {
-        assert checkNoOldToNewEdges(graph, mark);
         for (Node n : graph.getNewNodes(mark))
         {
             n.markDeleted();
@@ -403,26 +344,6 @@ public class GraphUtil
                 in.removeUsage(n);
             }
         }
-    }
-
-    private static boolean checkNoOldToNewEdges(Graph graph, Graph.Mark mark)
-    {
-        for (Node old : graph.getNodes())
-        {
-            if (graph.isNew(mark, old))
-            {
-                break;
-            }
-            for (Node n : old.successors())
-            {
-                assert !graph.isNew(mark, n) : old + " -> " + n;
-            }
-            for (Node n : old.inputs())
-            {
-                assert !graph.isNew(mark, n) : old + " -> " + n;
-            }
-        }
-        return true;
     }
 
     public static void removeFixedWithUnusedInputs(FixedWithNextNode fixed)
@@ -445,7 +366,6 @@ public class GraphUtil
 
     public static void unlinkFixedNode(FixedWithNextNode fixed)
     {
-        assert fixed.next() != null && fixed.predecessor() != null && fixed.isAlive() : fixed;
         FixedNode next = fixed.next();
         fixed.setNext(null);
         fixed.replaceAtPredecessor(next);
@@ -532,7 +452,6 @@ public class GraphUtil
         {
             if (begin.loopEnds().isEmpty())
             {
-                assert begin.forwardEndCount() == 1;
                 graph.reduceDegenerateLoopBegin(begin);
                 loopRemoved = true;
             }
@@ -829,7 +748,6 @@ public class GraphUtil
     public static ValueNode originalValue(ValueNode value)
     {
         ValueNode result = originalValueSimple(value);
-        assert result != null;
         return result;
     }
 
@@ -889,12 +807,10 @@ public class GraphUtil
              * Successfully reduced the phi function to a single input value. The single input value
              * can itself be a phi function again, so we might take another loop iteration.
              */
-            assert phiSingleValue != null;
             cur = phiSingleValue;
         }
 
         /* We reached a "normal" node, which is the original value. */
-        assert !(cur instanceof LimitedValueProxy) && !(cur instanceof PhiNode);
         return cur;
     }
 
@@ -1120,7 +1036,6 @@ public class GraphUtil
 
     public static Constant foldIfConstantAndRemove(ValueNode node, ValueNode constant)
     {
-        assert node.inputs().contains(constant);
         if (constant.isConstant())
         {
             node.replaceFirstInput(constant, null);
@@ -1156,15 +1071,12 @@ public class GraphUtil
             return;
         }
 
-        assert newComponentType != null : "An array copy can be virtualized only if the real type of the resulting array is known statically.";
-
         int fromInt = replacedFrom.asJavaConstant().asInt();
         int newLengthInt = replacedNewLength.asJavaConstant().asInt();
         int sourceLengthInt = replacedSourceLength.asJavaConstant().asInt();
         if (sourceAlias instanceof VirtualObjectNode)
         {
             VirtualObjectNode sourceVirtual = (VirtualObjectNode) sourceAlias;
-            assert sourceLengthInt == sourceVirtual.entryCount();
         }
 
         if (fromInt < 0 || newLengthInt < 0 || fromInt > sourceLengthInt)

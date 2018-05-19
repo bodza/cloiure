@@ -1,6 +1,5 @@
 package graalvm.compiler.loop.phases;
 
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.loop.LoopEx;
 import graalvm.compiler.loop.LoopsData;
 import graalvm.compiler.nodes.StructuredGraph;
@@ -13,31 +12,21 @@ import graalvm.compiler.phases.Phase;
  */
 public class ReassociateInvariantPhase extends Phase
 {
-    @SuppressWarnings("try")
     @Override
     protected void run(StructuredGraph graph)
     {
         int iterations = 0;
-        DebugContext debug = graph.getDebug();
-        try (DebugContext.Scope s = debug.scope("ReassociateInvariants"))
+        boolean changed = true;
+        while (changed)
         {
-            boolean changed = true;
-            while (changed)
+            changed = false;
+            final LoopsData dataReassociate = new LoopsData(graph);
+            for (LoopEx loop : dataReassociate.loops())
             {
-                changed = false;
-                final LoopsData dataReassociate = new LoopsData(graph);
-                for (LoopEx loop : dataReassociate.loops())
-                {
-                    changed |= loop.reassociateInvariants();
-                }
-                dataReassociate.deleteUnusedNodes();
-                iterations++;
-                debug.dump(DebugContext.VERBOSE_LEVEL, graph, "after iteration %d", iterations);
+                changed |= loop.reassociateInvariants();
             }
-        }
-        catch (Throwable e)
-        {
-            throw debug.handle(e);
+            dataReassociate.deleteUnusedNodes();
+            iterations++;
         }
     }
 }

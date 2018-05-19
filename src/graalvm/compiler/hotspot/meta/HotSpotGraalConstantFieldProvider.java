@@ -55,23 +55,18 @@ public class HotSpotGraalConstantFieldProvider extends HotSpotConstantFieldProvi
                         fields.add(metaAccess.lookupJavaField(Boolean.class.getDeclaredField("FALSE")));
 
                         Class<?> characterCacheClass = Character.class.getDeclaredClasses()[0];
-                        assert "java.lang.Character$CharacterCache".equals(characterCacheClass.getName());
                         fields.add(metaAccess.lookupJavaField(characterCacheClass.getDeclaredField("cache")));
 
                         Class<?> byteCacheClass = Byte.class.getDeclaredClasses()[0];
-                        assert "java.lang.Byte$ByteCache".equals(byteCacheClass.getName());
                         fields.add(metaAccess.lookupJavaField(byteCacheClass.getDeclaredField("cache")));
 
                         Class<?> shortCacheClass = Short.class.getDeclaredClasses()[0];
-                        assert "java.lang.Short$ShortCache".equals(shortCacheClass.getName());
                         fields.add(metaAccess.lookupJavaField(shortCacheClass.getDeclaredField("cache")));
 
                         Class<?> integerCacheClass = Integer.class.getDeclaredClasses()[0];
-                        assert "java.lang.Integer$IntegerCache".equals(integerCacheClass.getName());
                         fields.add(metaAccess.lookupJavaField(integerCacheClass.getDeclaredField("cache")));
 
                         Class<?> longCacheClass = Long.class.getDeclaredClasses()[0];
-                        assert "java.lang.Long$LongCache".equals(longCacheClass.getName());
                         fields.add(metaAccess.lookupJavaField(longCacheClass.getDeclaredField("cache")));
 
                         fields.add(metaAccess.lookupJavaField(Throwable.class.getDeclaredField("UNASSIGNED_STACK")));

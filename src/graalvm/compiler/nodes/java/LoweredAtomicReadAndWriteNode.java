@@ -47,7 +47,6 @@ public final class LoweredAtomicReadAndWriteNode extends FixedAccessNode impleme
     @Override
     public void setStateAfter(FrameState x)
     {
-        assert x == null || x.isAlive() : "frame state must be in a graph";
         updateUsages(stateAfter, x);
         stateAfter = x;
     }

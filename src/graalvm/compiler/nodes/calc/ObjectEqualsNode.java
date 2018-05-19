@@ -38,8 +38,6 @@ public final class ObjectEqualsNode extends PointerEqualsNode implements Virtual
     public ObjectEqualsNode(ValueNode x, ValueNode y)
     {
         super(TYPE, x, y);
-        assert x.stamp(NodeView.DEFAULT) instanceof AbstractObjectStamp;
-        assert y.stamp(NodeView.DEFAULT) instanceof AbstractObjectStamp;
     }
 
     public static LogicNode create(ValueNode x, ValueNode y, ConstantReflectionProvider constantReflection, NodeView view)
@@ -92,7 +90,6 @@ public final class ObjectEqualsNode extends PointerEqualsNode implements Virtual
             {
                 GetClassNode getClassNode = (GetClassNode) nonConstant;
                 ValueNode object = getClassNode.getObject();
-                assert ((ObjectStamp) object.stamp(view)).nonNull();
                 if (!type.isPrimitive() && (type.isConcrete() || type.isArray()))
                 {
                     return InstanceOfNode.create(TypeReference.createExactTrusted(type), object);
@@ -184,8 +181,6 @@ public final class ObjectEqualsNode extends PointerEqualsNode implements Virtual
                     if (type.equals(metaAccess.lookupJavaType(Integer.class)) || type.equals(metaAccess.lookupJavaType(Long.class)))
                     {
                         // both are virtual without identity: check contents
-                        assert xVirtual.entryCount() == 1 && yVirtual.entryCount() == 1;
-                        assert xVirtual.entryKind(0).getStackKind() == JavaKind.Int || xVirtual.entryKind(0) == JavaKind.Long;
                         IntegerEqualsNode equals = new IntegerEqualsNode(tool.getEntry(xVirtual, 0), tool.getEntry(yVirtual, 0));
                         tool.addNode(equals);
                         tool.replaceWithValue(equals);

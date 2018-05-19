@@ -60,7 +60,6 @@ public class LocationSet
         }
         else
         {
-            assert location.isMutable() && location.isSingle();
             if (firstLocation == null)
             {
                 firstLocation = location;
@@ -103,8 +102,6 @@ public class LocationSet
 
     public boolean contains(LocationIdentity locationIdentity)
     {
-        assert locationIdentity.isSingle();
-        assert locationIdentity.isMutable();
         if (LocationIdentity.any().equals(firstLocation))
         {
             return true;

@@ -35,7 +35,6 @@ public final class ExplodeLoopNode extends FixedWithNextNode
         ArrayList<Node> succs = new ArrayList<>();
         while (!(currentNext instanceof LoopBeginNode))
         {
-            assert currentNext != null : "cannot find loop after " + this;
             for (Node n : currentNext.cfgSuccessors())
             {
                 succs.add(n);

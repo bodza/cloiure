@@ -29,7 +29,6 @@ public class NodeMap<T> extends NodeIdAccessor implements EconomicMap<Node, T>
     @SuppressWarnings("unchecked")
     public T get(Node node)
     {
-        assert check(node);
         return (T) values[getNodeId(node)];
     }
 
@@ -46,7 +45,6 @@ public class NodeMap<T> extends NodeIdAccessor implements EconomicMap<Node, T>
         {
             this.values = Arrays.copyOf(values, Math.max(MIN_REALLOC_SIZE, graph.nodeIdCount() * 3 / 2));
         }
-        assert check(node);
     }
 
     @Override
@@ -84,7 +82,6 @@ public class NodeMap<T> extends NodeIdAccessor implements EconomicMap<Node, T>
 
     public void set(Node node, T value)
     {
-        assert check(node);
         values[getNodeId(node)] = value;
     }
 
@@ -117,13 +114,6 @@ public class NodeMap<T> extends NodeIdAccessor implements EconomicMap<Node, T>
     public boolean isNew(Node node)
     {
         return getNodeId(node) >= capacity();
-    }
-
-    private boolean check(Node node)
-    {
-        assert node.graph() == graph : String.format("%s is not part of the graph", node);
-        assert !isNew(node) : "this node was added to the graph after creating the node map : " + node;
-        return true;
     }
 
     @Override
@@ -213,7 +203,6 @@ public class NodeMap<T> extends NodeIdAccessor implements EconomicMap<Node, T>
             @Override
             public void remove()
             {
-                assert NodeMap.this.values[current] != null;
                 NodeMap.this.values[current] = null;
             }
         };

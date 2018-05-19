@@ -21,9 +21,9 @@ public abstract class HotSpotProfilingPlugin implements ProfilingPlugin
 {
     public static class Options
     {
-        @Option(help = "Emit profiling of invokes", type = OptionType.Expert)//
+        @Option(help = "Emit profiling of invokes", type = OptionType.Expert)
         public static final OptionKey<Boolean> ProfileInvokes = new OptionKey<>(true);
-        @Option(help = "Emit profiling of backedges", type = OptionType.Expert)//
+        @Option(help = "Emit profiling of backedges", type = OptionType.Expert)
         public static final OptionKey<Boolean> ProfileBackedges = new OptionKey<>(true);
     }
 
@@ -46,7 +46,6 @@ public abstract class HotSpotProfilingPlugin implements ProfilingPlugin
     @Override
     public void profileInvoke(GraphBuilderContext builder, ResolvedJavaMethod method, FrameState frameState)
     {
-        assert shouldProfile(builder, method);
         OptionValues options = builder.getOptions();
         if (Options.ProfileInvokes.getValue(options) && !method.isClassInitializer())
         {
@@ -58,7 +57,6 @@ public abstract class HotSpotProfilingPlugin implements ProfilingPlugin
     @Override
     public void profileGoto(GraphBuilderContext builder, ResolvedJavaMethod method, int bci, int targetBci, FrameState frameState)
     {
-        assert shouldProfile(builder, method);
         OptionValues options = builder.getOptions();
         if (Options.ProfileBackedges.getValue(options) && targetBci <= bci)
         {
@@ -70,7 +68,6 @@ public abstract class HotSpotProfilingPlugin implements ProfilingPlugin
     @Override
     public void profileIf(GraphBuilderContext builder, ResolvedJavaMethod method, int bci, LogicNode condition, int trueBranchBci, int falseBranchBci, FrameState frameState)
     {
-        assert shouldProfile(builder, method);
         OptionValues options = builder.getOptions();
         if (Options.ProfileBackedges.getValue(options) && (falseBranchBci <= bci || trueBranchBci <= bci))
         {
@@ -78,13 +75,8 @@ public abstract class HotSpotProfilingPlugin implements ProfilingPlugin
             int targetBci = trueBranchBci;
             if (falseBranchBci <= bci)
             {
-                assert trueBranchBci > bci;
                 negate = true;
                 targetBci = falseBranchBci;
-            }
-            else
-            {
-                assert trueBranchBci <= bci && falseBranchBci > bci;
             }
             ValueNode trueValue = builder.append(ConstantNode.forBoolean(!negate));
             ValueNode falseValue = builder.append(ConstantNode.forBoolean(negate));

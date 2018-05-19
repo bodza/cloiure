@@ -11,7 +11,6 @@ import static graalvm.compiler.hotspot.amd64.AMD64HotSpotForeignCallsProvider.AR
 
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.core.common.spi.ForeignCallsProvider;
-import graalvm.compiler.debug.DebugHandlersFactory;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
 import graalvm.compiler.hotspot.HotSpotGraalRuntimeProvider;
@@ -42,13 +41,11 @@ public class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringProvider
     }
 
     @Override
-    public void initialize(OptionValues options, Iterable<DebugHandlersFactory> factories, HotSpotProviders providers, GraalHotSpotVMConfig config)
+    public void initialize(OptionValues options, HotSpotProviders providers, GraalHotSpotVMConfig config)
     {
-        convertSnippets = new AMD64ConvertSnippets.Templates(options, factories, providers, providers.getSnippetReflection(), providers.getCodeCache().getTarget());
-        profileSnippets = ProfileNode.Options.ProbabilisticProfiling.getValue(options)
-                        ? new ProbabilisticProfileSnippets.Templates(options, factories, providers, providers.getCodeCache().getTarget())
-                        : null;
-        super.initialize(options, factories, providers, config);
+        convertSnippets = new AMD64ConvertSnippets.Templates(options, providers, providers.getSnippetReflection(), providers.getCodeCache().getTarget());
+        profileSnippets = ProfileNode.Options.ProbabilisticProfiling.getValue(options) ? new ProbabilisticProfileSnippets.Templates(options, providers, providers.getCodeCache().getTarget()) : null;
+        super.initialize(options, providers, config);
     }
 
     @Override

@@ -2,8 +2,6 @@ package graalvm.compiler.lir.phases;
 
 import static graalvm.compiler.core.common.GraalOptions.TraceRA;
 
-import graalvm.compiler.debug.Assertions;
-import graalvm.compiler.lir.alloc.AllocationStageVerifier;
 import graalvm.compiler.lir.alloc.lsra.LinearScanPhase;
 import graalvm.compiler.lir.alloc.trace.TraceRegisterAllocationPhase;
 import graalvm.compiler.lir.dfa.LocationMarkerPhase;
@@ -38,10 +36,5 @@ public class AllocationStage extends LIRPhaseSuite<AllocationContext>
         }
         // currently we mark locations only if we do register allocation
         appendPhase(new LocationMarkerPhase());
-
-        if (Assertions.detailedAssertionsEnabled(options))
-        {
-            appendPhase(new AllocationStageVerifier());
-        }
     }
 }

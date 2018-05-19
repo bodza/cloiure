@@ -19,7 +19,7 @@ public class InliningPhase extends AbstractInliningPhase
 {
     public static class Options
     {
-        @Option(help = "Unconditionally inline intrinsics", type = OptionType.Debug)//
+        @Option(help = "Unconditionally inline intrinsics", type = OptionType.Debug)
         public static final OptionKey<Boolean> AlwaysInlineIntrinsics = new OptionKey<>(false);
 
         /**
@@ -27,7 +27,7 @@ public class InliningPhase extends AbstractInliningPhase
          * the inlining call tree exploration can be wide enough to prevent inlining from completing
          * in reasonable time.
          */
-        @Option(help = "Per-compilation method inlining exploration limit before giving up (use 0 to disable)", type = OptionType.Debug)//
+        @Option(help = "Per-compilation method inlining exploration limit before giving up (use 0 to disable)", type = OptionType.Debug)
         public static final OptionKey<Integer> MethodInlineBailoutLimit = new OptionKey<>(5000);
     }
 
@@ -88,12 +88,10 @@ public class InliningPhase extends AbstractInliningPhase
         final InliningData data = new InliningData(graph, context, maxMethodPerInlining, canonicalizer, inliningPolicy, rootInvokes);
 
         int count = 0;
-        assert data.repOK();
         int limit = Options.MethodInlineBailoutLimit.getValue(graph.getOptions());
         while (data.hasUnprocessedGraphs())
         {
             boolean wasInlined = data.moveForward();
-            assert data.repOK();
             count++;
             if (!wasInlined)
             {
@@ -104,8 +102,5 @@ public class InliningPhase extends AbstractInliningPhase
                 }
             }
         }
-
-        assert data.inliningDepth() == 0 || count == limit;
-        assert data.graphCount() == 0 || count == limit;
     }
 }

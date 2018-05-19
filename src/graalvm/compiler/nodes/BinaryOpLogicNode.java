@@ -33,15 +33,8 @@ public abstract class BinaryOpLogicNode extends LogicNode implements LIRLowerabl
     public BinaryOpLogicNode(NodeClass<? extends BinaryOpLogicNode> c, ValueNode x, ValueNode y)
     {
         super(c);
-        assert x != null && y != null;
         this.x = x;
         this.y = y;
-    }
-
-    @Override
-    public boolean verify()
-    {
-        return super.verify();
     }
 
     @Override
@@ -59,7 +52,6 @@ public abstract class BinaryOpLogicNode extends LogicNode implements LIRLowerabl
     @SuppressWarnings("deprecation")
     public LogicNode maybeCommuteInputs()
     {
-        assert this instanceof BinaryCommutative;
         if (!y.isConstant() && (x.isConstant() || x.getId() > y.getId()))
         {
             ValueNode tmp = x;

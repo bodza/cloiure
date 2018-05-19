@@ -7,8 +7,6 @@ import java.util.Collections;
 import java.util.List;
 
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
-import graalvm.compiler.debug.CounterKey;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.RedundantMoveElimination;
@@ -40,17 +38,14 @@ public class StackMoveOptimizationPhase extends PostAllocationOptimizationPhase
         public static final NestedBooleanOptionKey LIROptStackMoveOptimizer = new NestedBooleanOptionKey(LIROptimization, true);
     }
 
-    private static final CounterKey eliminatedBackup = DebugContext.counter("StackMoveOptimizer[EliminatedScratchBackupRestore]");
-
     @Override
     protected void run(TargetDescription target, LIRGenerationResult lirGenRes, PostAllocationOptimizationContext context)
     {
         LIR lir = lirGenRes.getLIR();
-        DebugContext debug = lir.getDebug();
         for (AbstractBlockBase<?> block : lir.getControlFlowGraph().getBlocks())
         {
             ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
-            new Closure().process(debug, instructions);
+            new Closure().process(instructions);
         }
     }
 
@@ -65,7 +60,7 @@ public class StackMoveOptimizationPhase extends PostAllocationOptimizationPhase
         private AllocatableValue slot;
         private boolean removed = false;
 
-        public void process(DebugContext debug, List<LIRInstruction> instructions)
+        public void process(List<LIRInstruction> instructions)
         {
             for (int i = 0; i < instructions.size(); i++)
             {
@@ -78,13 +73,12 @@ public class StackMoveOptimizationPhase extends PostAllocationOptimizationPhase
                     if (reg != null && !reg.equals(move.getScratchRegister()))
                     {
                         // end of trace & start of new
-                        replaceStackMoves(debug, instructions);
+                        replaceStackMoves(instructions);
                     }
 
                     // lazy initialize
                     if (dst == null)
                     {
-                        assert src == null;
                         dst = new ArrayList<>();
                         src = new ArrayList<>();
                     }
@@ -103,7 +97,7 @@ public class StackMoveOptimizationPhase extends PostAllocationOptimizationPhase
                 else if (begin != NONE)
                 {
                     // end of trace
-                    replaceStackMoves(debug, instructions);
+                    replaceStackMoves(instructions);
                 }
             }
             // remove instructions
@@ -113,7 +107,7 @@ public class StackMoveOptimizationPhase extends PostAllocationOptimizationPhase
             }
         }
 
-        private void replaceStackMoves(DebugContext debug, List<LIRInstruction> instructions)
+        private void replaceStackMoves(List<LIRInstruction> instructions)
         {
             int size = dst.size();
             if (size > 1)
@@ -125,7 +119,6 @@ public class StackMoveOptimizationPhase extends PostAllocationOptimizationPhase
                 Collections.fill(instructions.subList(begin + 1, begin + size), null);
                 // removed
                 removed = true;
-                eliminatedBackup.add(debug, size - 1);
             }
             // reset
             dst.clear();
@@ -138,7 +131,6 @@ public class StackMoveOptimizationPhase extends PostAllocationOptimizationPhase
 
     private static AMD64StackMove asStackMove(LIRInstruction inst)
     {
-        assert isStackMove(inst);
         return (AMD64StackMove) inst;
     }
 

@@ -80,7 +80,6 @@ public final class RightShiftNode extends ShiftNode<Shr>
                         int total = amount + otherAmount;
                         if (total != (total & mask))
                         {
-                            assert other.getX().stamp(view) instanceof IntegerStamp;
                             IntegerStamp istamp = (IntegerStamp) other.getX().stamp(view);
 
                             if (istamp.isPositive())
@@ -96,7 +95,6 @@ public final class RightShiftNode extends ShiftNode<Shr>
                              * if we cannot replace both shifts with a constant, replace them by a
                              * full shift for this kind
                              */
-                            assert total >= mask;
                             return new RightShiftNode(other.getX(), ConstantNode.forInt(mask));
                         }
                         return new RightShiftNode(other.getX(), ConstantNode.forInt(total));

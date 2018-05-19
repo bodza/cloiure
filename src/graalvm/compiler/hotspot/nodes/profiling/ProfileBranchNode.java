@@ -21,7 +21,6 @@ public class ProfileBranchNode extends ProfileWithNotificationNode
     public ProfileBranchNode(ResolvedJavaMethod method, int freqLog, int probabilityLog, ConditionalNode branchCondition, int bci, int targetBci)
     {
         super(TYPE, method, freqLog, probabilityLog);
-        assert targetBci <= bci;
         this.branchCondition = branchCondition;
         this.bci = bci;
         this.targetBci = targetBci;
@@ -30,7 +29,6 @@ public class ProfileBranchNode extends ProfileWithNotificationNode
     public ProfileBranchNode(ResolvedJavaMethod method, int freqLog, int probabilityLog, int bci, int targetBci)
     {
         super(TYPE, method, freqLog, probabilityLog);
-        assert targetBci <= bci;
         this.branchCondition = null;
         this.bci = bci;
         this.targetBci = targetBci;

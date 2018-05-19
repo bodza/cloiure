@@ -10,7 +10,6 @@ import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.core.common.spi.ForeignCallsProvider;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
 import graalvm.compiler.lir.asm.CompilationResultBuilderFactory;
@@ -140,22 +139,11 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
     protected abstract CompiledCode createCompiledCode(ResolvedJavaMethod method, CompilationRequest compilationRequest, CompilationResult compilationResult);
 
     /**
-     * @see #createInstalledCode(DebugContext, ResolvedJavaMethod, CompilationRequest,
-     *      CompilationResult, SpeculationLog, InstalledCode, boolean, Object[])
+     * @see #createInstalledCode(ResolvedJavaMethod, CompilationRequest, CompilationResult, SpeculationLog, InstalledCode, boolean)
      */
-    public InstalledCode createInstalledCode(DebugContext debug, ResolvedJavaMethod method, CompilationResult compilationResult, SpeculationLog speculationLog, InstalledCode predefinedInstalledCode, boolean isDefault)
+    public InstalledCode createInstalledCode(ResolvedJavaMethod method, CompilationResult compilationResult, SpeculationLog speculationLog, InstalledCode predefinedInstalledCode, boolean isDefault)
     {
-        return createInstalledCode(debug, method, null, compilationResult, speculationLog, predefinedInstalledCode, isDefault, null);
-    }
-
-    /**
-     * @see #createInstalledCode(DebugContext, ResolvedJavaMethod, CompilationRequest,
-     *      CompilationResult, SpeculationLog, InstalledCode, boolean, Object[])
-     */
-    @SuppressWarnings("try")
-    public InstalledCode createInstalledCode(DebugContext debug, ResolvedJavaMethod method, CompilationRequest compilationRequest, CompilationResult compilationResult, SpeculationLog speculationLog, InstalledCode predefinedInstalledCode, boolean isDefault)
-    {
-        return createInstalledCode(debug, method, compilationRequest, compilationResult, speculationLog, predefinedInstalledCode, isDefault, null);
+        return createInstalledCode(method, null, compilationResult, speculationLog, predefinedInstalledCode, isDefault);
     }
 
     /**
@@ -173,14 +161,11 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
      *            {@code compRequest.getMethod()}. The default implementation for a method is the
      *            code executed for standard calls to the method. This argument is ignored if
      *            {@code compRequest == null}.
-     * @param context a custom debug context to use for the code installation
      * @return a reference to the compiled and ready-to-run installed code
      * @throws BailoutException if the code installation failed
      */
-    @SuppressWarnings("try")
-    public InstalledCode createInstalledCode(DebugContext debug, ResolvedJavaMethod method, CompilationRequest compilationRequest, CompilationResult compilationResult, SpeculationLog speculationLog, InstalledCode predefinedInstalledCode, boolean isDefault, Object[] context)
+    public InstalledCode createInstalledCode(ResolvedJavaMethod method, CompilationRequest compilationRequest, CompilationResult compilationResult, SpeculationLog speculationLog, InstalledCode predefinedInstalledCode, boolean isDefault)
     {
-        Object[] debugContext = context != null ? context : new Object[]{getProviders().getCodeCache(), method, compilationResult};
         CodeInstallationTask[] tasks;
         synchronized (this)
         {
@@ -190,30 +175,22 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
                 tasks[i] = codeInstallationTaskFactories.get(i).create();
             }
         }
-        try (DebugContext.Scope s2 = debug.scope("CodeInstall", debugContext); DebugContext.Activation a = debug.activate())
+        InstalledCode installedCode;
+        try
         {
-            InstalledCode installedCode;
-            try
-            {
-                preCodeInstallationTasks(tasks, compilationResult, predefinedInstalledCode);
-                CompiledCode compiledCode = createCompiledCode(method, compilationRequest, compilationResult);
-                installedCode = getProviders().getCodeCache().installCode(method, compiledCode, predefinedInstalledCode, GraphSpeculationLog.unwrap(speculationLog), isDefault);
-                assert predefinedInstalledCode == null || installedCode == predefinedInstalledCode;
-            }
-            catch (Throwable t)
-            {
-                failCodeInstallationTasks(tasks, t);
-                throw t;
-            }
-
-            postCodeInstallationTasks(tasks, installedCode);
-
-            return installedCode;
+            preCodeInstallationTasks(tasks, compilationResult, predefinedInstalledCode);
+            CompiledCode compiledCode = createCompiledCode(method, compilationRequest, compilationResult);
+            installedCode = getProviders().getCodeCache().installCode(method, compiledCode, predefinedInstalledCode, GraphSpeculationLog.unwrap(speculationLog), isDefault);
         }
-        catch (Throwable e)
+        catch (Throwable t)
         {
-            throw debug.handle(e);
+            failCodeInstallationTasks(tasks, t);
+            throw t;
         }
+
+        postCodeInstallationTasks(tasks, installedCode);
+
+        return installedCode;
     }
 
     private static void failCodeInstallationTasks(CodeInstallationTask[] tasks, Throwable t)
@@ -258,9 +235,9 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
      * @return a reference to the compiled and ready-to-run installed code
      * @throws BailoutException if the code installation failed
      */
-    public InstalledCode addInstalledCode(DebugContext debug, ResolvedJavaMethod method, CompilationRequest compilationRequest, CompilationResult compilationResult)
+    public InstalledCode addInstalledCode(ResolvedJavaMethod method, CompilationRequest compilationRequest, CompilationResult compilationResult)
     {
-        return createInstalledCode(debug, method, compilationRequest, compilationResult, null, null, false);
+        return createInstalledCode(method, compilationRequest, compilationResult, null, null, false);
     }
 
     /**
@@ -273,9 +250,9 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
      * @return a reference to the compiled and ready-to-run installed code
      * @throws BailoutException if the code installation failed
      */
-    public InstalledCode createDefaultInstalledCode(DebugContext debug, ResolvedJavaMethod method, CompilationResult compilationResult)
+    public InstalledCode createDefaultInstalledCode(ResolvedJavaMethod method, CompilationResult compilationResult)
     {
-        return createInstalledCode(debug, method, compilationResult, null, null, true);
+        return createInstalledCode(method, compilationResult, null, null, true);
     }
 
     /**

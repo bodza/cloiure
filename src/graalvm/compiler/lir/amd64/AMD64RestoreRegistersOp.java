@@ -43,7 +43,6 @@ public class AMD64RestoreRegistersOp extends AMD64LIRInstruction
     protected AMD64RestoreRegistersOp(LIRInstructionClass<? extends AMD64RestoreRegistersOp> c, AllocatableValue[] values, AMD64SaveRegistersOp save)
     {
         super(c);
-        assert Arrays.asList(values).stream().allMatch(LIRValueUtil::isVirtualStackSlot);
         this.slots = values;
         this.save = save;
     }
@@ -66,7 +65,6 @@ public class AMD64RestoreRegistersOp extends AMD64LIRInstruction
         {
             if (savedRegisters[i] != null)
             {
-                assert isStackSlot(slots[i]) : "not a StackSlot: " + slots[i];
                 restoreRegister(crb, masm, savedRegisters[i], asStackSlot(slots[i]));
             }
         }

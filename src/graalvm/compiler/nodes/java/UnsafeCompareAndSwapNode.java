@@ -37,7 +37,6 @@ public final class UnsafeCompareAndSwapNode extends AbstractMemoryCheckpoint imp
     public UnsafeCompareAndSwapNode(ValueNode object, ValueNode offset, ValueNode expected, ValueNode newValue, JavaKind valueKind, LocationIdentity locationIdentity)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Boolean.getStackKind()));
-        assert expected.stamp(NodeView.DEFAULT).isCompatible(newValue.stamp(NodeView.DEFAULT));
         this.object = object;
         this.offset = offset;
         this.expected = expected;

@@ -34,9 +34,7 @@ public final class ValueCompareAndSwapNode extends AbstractCompareAndSwapNode
     @Override
     public void generate(NodeLIRBuilderTool gen)
     {
-        assert getNewValue().stamp(NodeView.DEFAULT).isCompatible(getExpectedValue().stamp(NodeView.DEFAULT));
         LIRGeneratorTool tool = gen.getLIRGeneratorTool();
-        assert !this.canDeoptimize();
         gen.setResult(this, tool.emitValueCompareAndSwap(gen.operand(getAddress()), gen.operand(getExpectedValue()), gen.operand(getNewValue())));
     }
 }

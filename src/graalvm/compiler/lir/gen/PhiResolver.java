@@ -117,7 +117,6 @@ public class PhiResolver
     public static PhiResolver create(LIRGeneratorTool gen)
     {
         AbstractBlockBase<?> block = gen.getCurrentBlock();
-        assert block != null;
         ArrayList<LIRInstruction> instructions = gen.getResult().getLIR().getLIRforBlock(block);
 
         return new PhiResolver(gen, new LIRInsertionBuffer(), instructions, instructions.size());
@@ -150,7 +149,6 @@ public class PhiResolver
                 loop = null;
                 move(node, null);
                 node.startNode = true;
-                assert isIllegal(temp) : "moveTempTo() call missing";
             }
         }
 
@@ -168,10 +166,7 @@ public class PhiResolver
 
     public void move(Value dest, Value src)
     {
-        assert isVariable(dest) : "destination must be virtual";
         // tty.print("move "); src.print(); tty.print(" to "); dest.print(); tty.cr();
-        assert isLegal(src) : "source for phi move is illegal";
-        assert isLegal(dest) : "destination for phi move is illegal";
         PhiResolverNode srcNode = sourceNode(src);
         PhiResolverNode destNode = destinationNode(dest);
         srcNode.destinations.add(destNode);
@@ -183,7 +178,6 @@ public class PhiResolver
         if (isVariable(operand))
         {
             node = operandToNodeMap.get(operand);
-            assert node == null || node.operand.equals(operand);
             if (node == null)
             {
                 node = new PhiResolverNode(operand);
@@ -201,7 +195,6 @@ public class PhiResolver
         }
         else
         {
-            assert source;
             node = new PhiResolverNode(operand);
             otherOperands.add(node);
         }
@@ -215,8 +208,6 @@ public class PhiResolver
 
     private void emitMove(Value dest, Value src)
     {
-        assert isLegal(src);
-        assert isLegal(dest);
         LIRInstruction move = moveFactory.createMove((AllocatableValue) dest, src);
         buffer.append(insertBefore, move);
     }
@@ -241,7 +232,6 @@ public class PhiResolver
         else if (!dest.startNode)
         {
             // cycle in graph detected
-            assert loop == null : "only one loop valid!";
             loop = dest;
             moveToTemp(src.operand);
             return;
@@ -264,14 +254,12 @@ public class PhiResolver
 
     private void moveTempTo(Value dest)
     {
-        assert isLegal(temp);
         emitMove(dest, temp);
         temp = ILLEGAL;
     }
 
     private void moveToTemp(Value src)
     {
-        assert isIllegal(temp);
         temp = gen.newVariable(src.getValueKind());
         emitMove(temp, src);
     }

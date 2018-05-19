@@ -96,7 +96,6 @@ public final class UnaryMathIntrinsicNode extends UnaryNode implements Arithmeti
     protected UnaryMathIntrinsicNode(ValueNode value, UnaryOperation op)
     {
         super(TYPE, computeStamp(value.stamp(NodeView.DEFAULT), op), value);
-        assert value.stamp(NodeView.DEFAULT) instanceof FloatStamp && PrimitiveStamp.getBits(value.stamp(NodeView.DEFAULT)) == 64;
         this.operation = op;
     }
 

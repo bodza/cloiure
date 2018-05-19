@@ -54,8 +54,6 @@ public class InstanceOfNode extends UnaryOpLogicNode implements Lowerable, Virtu
         this.checkedStamp = checkedStamp;
         this.profile = profile;
         this.anchor = anchor;
-        assert (profile == null) || (anchor != null) : "profiles must be anchored";
-        assert checkedStamp != null;
     }
 
     public static LogicNode createAllowNull(TypeReference type, ValueNode object, JavaTypeProfile profile, AnchoringNode anchor)
@@ -136,7 +134,6 @@ public class InstanceOfNode extends UnaryOpLogicNode implements Lowerable, Virtu
             }
             else if (Objects.equals(checkedStamp.type(), meetStamp.type()) && checkedStamp.isExactType() == meetStamp.isExactType() && checkedStamp.alwaysNull() == meetStamp.alwaysNull())
             {
-                assert checkedStamp.nonNull() != inputStamp.nonNull();
                 // The only difference makes the null-ness of the value => simplify the check.
                 if (checkedStamp.nonNull())
                 {
@@ -147,7 +144,6 @@ public class InstanceOfNode extends UnaryOpLogicNode implements Lowerable, Virtu
                     return IsNullNode.create(object);
                 }
             }
-            assert checkedStamp.type() != null;
         }
         return null;
     }
@@ -226,7 +222,6 @@ public class InstanceOfNode extends UnaryOpLogicNode implements Lowerable, Virtu
         this.profile = typeProfile;
         updateUsagesInterface(this.anchor, anchor);
         this.anchor = anchor;
-        assert (profile == null) || (anchor != null) : "profiles must be anchored";
     }
 
     public AnchoringNode getAnchor()
@@ -241,7 +236,6 @@ public class InstanceOfNode extends UnaryOpLogicNode implements Lowerable, Virtu
 
     public void strengthenCheckedStamp(ObjectStamp newCheckedStamp)
     {
-        assert this.checkedStamp.join(newCheckedStamp).equals(newCheckedStamp) : "stamp can only improve";
         this.checkedStamp = newCheckedStamp;
     }
 }

@@ -32,7 +32,6 @@ public final class AMD64CountLeadingZerosNode extends UnaryNode implements Arith
     public AMD64CountLeadingZerosNode(ValueNode value)
     {
         super(TYPE, computeStamp(value.stamp(NodeView.DEFAULT), value), value);
-        assert value.getStackKind() == JavaKind.Int || value.getStackKind() == JavaKind.Long;
     }
 
     @Override
@@ -43,8 +42,6 @@ public final class AMD64CountLeadingZerosNode extends UnaryNode implements Arith
 
     private static Stamp computeStamp(Stamp newStamp, ValueNode theValue)
     {
-        assert newStamp.isCompatible(theValue.stamp(NodeView.DEFAULT));
-        assert theValue.getStackKind() == JavaKind.Int || theValue.getStackKind() == JavaKind.Long;
         return StampTool.stampForLeadingZeros((IntegerStamp) newStamp);
     }
 

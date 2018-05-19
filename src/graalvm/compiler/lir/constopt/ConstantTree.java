@@ -213,7 +213,6 @@ public class ConstantTree extends PrintableDominatorOptimizationProblem<Constant
 
     public void traverseTreeWhileTrue(AbstractBlockBase<?> block, Predicate<AbstractBlockBase<?>> action)
     {
-        assert block != null : "block must not be null!";
         if (action.test(block))
         {
             AbstractBlockBase<?> dom = block.getFirstDominated();

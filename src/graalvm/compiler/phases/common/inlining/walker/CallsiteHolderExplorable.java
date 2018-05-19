@@ -54,7 +54,6 @@ public final class CallsiteHolderExplorable extends CallsiteHolder
 
     public CallsiteHolderExplorable(StructuredGraph graph, double probability, double relevance, BitSet freshlyInstantiatedArguments, LinkedList<Invoke> invokes)
     {
-        assert graph != null;
         this.graph = graph;
         this.probability = probability;
         this.relevance = relevance;
@@ -71,7 +70,6 @@ public final class CallsiteHolderExplorable extends CallsiteHolder
             computeInliningRelevance = new ComputeInliningRelevance(graph, probabilities);
             computeProbabilities();
         }
-        assert repOK();
     }
 
     /**
@@ -122,12 +120,10 @@ public final class CallsiteHolderExplorable extends CallsiteHolder
         {
             if (!invoke.asNode().isAlive() || !containsInvoke(invoke))
             {
-                assert false;
                 return false;
             }
             if (!allArgsNonNull(invoke))
             {
-                assert false;
                 return false;
             }
         }
@@ -135,7 +131,6 @@ public final class CallsiteHolderExplorable extends CallsiteHolder
         {
             if (!containsParam(fixedParam))
             {
-                assert false;
                 return false;
             }
         }
@@ -176,7 +171,6 @@ public final class CallsiteHolderExplorable extends CallsiteHolder
         {
             if (arg == null)
             {
-                assert false;
                 return false;
             }
         }

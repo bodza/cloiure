@@ -15,8 +15,6 @@ import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.common.alloc.Trace;
 import graalvm.compiler.core.common.alloc.TraceBuilderResult;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
-import graalvm.compiler.debug.DebugContext;
-import graalvm.compiler.debug.Indent;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.StandardOp.JumpOp;
@@ -49,26 +47,19 @@ public final class TraceGlobalMoveResolutionPhase
     public static void resolve(TargetDescription target, LIRGenerationResult lirGenRes, TraceAllocationContext context)
     {
         LIR lir = lirGenRes.getLIR();
-        DebugContext debug = lir.getDebug();
-        debug.dump(DebugContext.VERBOSE_LEVEL, lir, "Before TraceGlobalMoveResultion");
         MoveFactory spillMoveFactory = context.spillMoveFactory;
         resolveGlobalDataFlow(context.resultTraces, lirGenRes, spillMoveFactory, target.arch, context.livenessInfo, context.registerAllocationConfig);
     }
 
-    @SuppressWarnings("try")
     private static void resolveGlobalDataFlow(TraceBuilderResult resultTraces, LIRGenerationResult lirGenRes, MoveFactory spillMoveFactory, Architecture arch, GlobalLivenessInfo livenessInfo, RegisterAllocationConfig registerAllocationConfig)
     {
         LIR lir = lirGenRes.getLIR();
         /* Resolve trace global data-flow mismatch. */
         TraceGlobalMoveResolver moveResolver = new TraceGlobalMoveResolver(lirGenRes, spillMoveFactory, registerAllocationConfig, arch);
 
-        DebugContext debug = lir.getDebug();
-        try (Indent indent = debug.logAndIndent("Trace global move resolution"))
+        for (Trace trace : resultTraces.getTraces())
         {
-            for (Trace trace : resultTraces.getTraces())
-            {
-                resolveTrace(resultTraces, livenessInfo, lir, moveResolver, trace);
-            }
+            resolveTrace(resultTraces, livenessInfo, lir, moveResolver, trace);
         }
     }
 
@@ -94,7 +85,6 @@ public final class TraceGlobalMoveResolutionPhase
             }
         }
         // last block
-        assert nextBlock == traceBlocks[traceLength - 1];
         for (AbstractBlockBase<?> toBlock : nextBlock.getSuccessors())
         {
             if (resultTraces.getTraceForBlock(nextBlock) != resultTraces.getTraceForBlock(toBlock))
@@ -104,36 +94,28 @@ public final class TraceGlobalMoveResolutionPhase
         }
     }
 
-    @SuppressWarnings("try")
     private static void interTraceEdge(TraceBuilderResult resultTraces, GlobalLivenessInfo livenessInfo, LIR lir, TraceGlobalMoveResolver moveResolver, AbstractBlockBase<?> fromBlock, AbstractBlockBase<?> toBlock)
     {
-        DebugContext debug = lir.getDebug();
-        try (Indent indent0 = debug.logAndIndent("Handle trace edge from %s (Trace%d) to %s (Trace%d)", fromBlock, resultTraces.getTraceForBlock(fromBlock).getId(), toBlock, resultTraces.getTraceForBlock(toBlock).getId()))
+        final ArrayList<LIRInstruction> instructions;
+        final int insertIdx;
+        if (fromBlock.getSuccessorCount() == 1)
         {
-            final ArrayList<LIRInstruction> instructions;
-            final int insertIdx;
-            if (fromBlock.getSuccessorCount() == 1)
-            {
-                instructions = lir.getLIRforBlock(fromBlock);
-                insertIdx = instructions.size() - 1;
-            }
-            else
-            {
-                assert toBlock.getPredecessorCount() == 1;
-                instructions = lir.getLIRforBlock(toBlock);
-                insertIdx = 1;
-            }
-
-            moveResolver.setInsertPosition(instructions, insertIdx);
-            resolveEdge(lir, livenessInfo, moveResolver, fromBlock, toBlock);
-            moveResolver.resolveAndAppendMoves();
+            instructions = lir.getLIRforBlock(fromBlock);
+            insertIdx = instructions.size() - 1;
         }
+        else
+        {
+            instructions = lir.getLIRforBlock(toBlock);
+            insertIdx = 1;
+        }
+
+        moveResolver.setInsertPosition(instructions, insertIdx);
+        resolveEdge(lir, livenessInfo, moveResolver, fromBlock, toBlock);
+        moveResolver.resolveAndAppendMoves();
     }
 
     private static void resolveEdge(LIR lir, GlobalLivenessInfo livenessInfo, TraceGlobalMoveResolver moveResolver, AbstractBlockBase<?> fromBlock, AbstractBlockBase<?> toBlock)
     {
-        assert verifyEdge(fromBlock, toBlock);
-
         if (SSAUtil.isMerge(toBlock))
         {
             // PHI
@@ -155,7 +137,6 @@ public final class TraceGlobalMoveResolutionPhase
             // a strategy might reuse the locations array if locations are the same
             return;
         }
-        assert locFrom.length == locTo.length;
 
         for (int i = 0; i < locFrom.length; i++)
         {
@@ -166,14 +147,6 @@ public final class TraceGlobalMoveResolutionPhase
     private static boolean isIllegalDestination(Value to)
     {
         return isIllegal(to) || isConstantValue(to);
-    }
-
-    private static boolean verifyEdge(AbstractBlockBase<?> fromBlock, AbstractBlockBase<?> toBlock)
-    {
-        assert Arrays.asList(toBlock.getPredecessors()).contains(fromBlock) : String.format("%s not in predecessor list: %s", fromBlock, Arrays.toString(toBlock.getPredecessors()));
-        assert fromBlock.getSuccessorCount() == 1 || toBlock.getPredecessorCount() == 1 : String.format("Critical Edge? %s has %d successors and %s has %d predecessors", fromBlock, fromBlock.getSuccessorCount(), toBlock, toBlock.getPredecessorCount());
-        assert Arrays.asList(fromBlock.getSuccessors()).contains(toBlock) : String.format("Predecessor block %s has wrong successor: %s, should contain: %s", fromBlock, Arrays.toString(fromBlock.getSuccessors()), toBlock);
-        return true;
     }
 
     public static void addMapping(MoveResolver moveResolver, Value from, Value to)
@@ -196,7 +169,6 @@ public final class TraceGlobalMoveResolutionPhase
             }
             else
             {
-                assert isStackSlotValue(to) : "Expected stack slot: " + to;
                 addMappingToStackSlot(moveResolver, from, (AllocatableValue) to);
             }
         }

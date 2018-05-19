@@ -16,7 +16,6 @@ public abstract class SourceStackTraceBailoutException extends PermanentBailoutE
             @Override
             public synchronized Throwable fillInStackTrace()
             {
-                assert elements != null;
                 setStackTrace(elements);
                 return this;
             }

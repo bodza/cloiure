@@ -27,7 +27,6 @@ public final class Variable extends AllocatableValue
     public Variable(ValueKind<?> kind, int index)
     {
         super(kind);
-        assert index >= 0;
         this.index = index;
     }
 

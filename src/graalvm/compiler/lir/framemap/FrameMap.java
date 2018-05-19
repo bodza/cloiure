@@ -131,7 +131,6 @@ public abstract class FrameMap
      */
     public int frameSize()
     {
-        assert frameSize != -1 : "frame size not computed yet";
         return frameSize;
     }
 
@@ -222,7 +221,6 @@ public abstract class FrameMap
      */
     public void reserveOutgoing(int argsSize)
     {
-        assert frameSize == -1 : "frame size must not yet be fixed";
         outgoingSize = Math.max(outgoingSize, argsSize);
         hasOutgoingStackArguments = hasOutgoingStackArguments || argsSize > 0;
     }
@@ -263,7 +261,6 @@ public abstract class FrameMap
      */
     public StackSlot allocateSpillSlot(ValueKind<?> kind)
     {
-        assert frameSize == -1 : "frame size must not yet be fixed";
         int size = spillSlotSize(kind);
         spillSize = NumUtil.roundUp(spillSize + size, size);
         return allocateNewSpillSlot(kind, 0);
@@ -293,7 +290,6 @@ public abstract class FrameMap
      */
     public StackSlot allocateStackSlots(int slots, BitSet objects)
     {
-        assert frameSize == -1 : "frame size must not yet be fixed";
         if (slots == 0)
         {
             return null;
@@ -302,7 +298,6 @@ public abstract class FrameMap
 
         if (!objects.isEmpty())
         {
-            assert objects.length() <= slots;
             StackSlot result = null;
             for (int slotIndex = 0; slotIndex < slots; slotIndex++)
             {
@@ -324,7 +319,6 @@ public abstract class FrameMap
                     }
                 }
             }
-            assert result != null;
             return result;
         }
         else

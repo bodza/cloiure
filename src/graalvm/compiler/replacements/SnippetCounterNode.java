@@ -12,7 +12,6 @@ import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
 import graalvm.compiler.api.replacements.SnippetReflectionProvider;
 import graalvm.compiler.core.common.type.StampFactory;
-import graalvm.compiler.debug.DebugHandlersFactory;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodeinfo.NodeInfo;
@@ -39,8 +38,8 @@ import graalvm.util.UnsafeAccess;
  * by adding an increment to the compiled code. This should of course only be used for
  * debugging/testing purposes.
  *
- * A unique counter will be created for each unique name passed to the constructor. Depending on the
- * value of withContext, the name of the root method is added to the counter's name.
+ * A unique counter will be created for each unique name passed to the constructor.
+ * The name of the root method is added to the counter's name.
  */
 @NodeInfo(cycles = CYCLES_IGNORED, size = SIZE_IGNORED)
 public class SnippetCounterNode extends FixedWithNextNode implements Lowerable
@@ -139,9 +138,9 @@ public class SnippetCounterNode extends FixedWithNextNode implements Lowerable
         {
             private final SnippetInfo add = snippet(SnippetCounterSnippets.class, "add", SNIPPET_COUNTER_LOCATION);
 
-            Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
+            Templates(OptionValues options, Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
             {
-                super(options, factories, providers, snippetReflection, target);
+                super(options, providers, snippetReflection, target);
             }
 
             public void lower(SnippetCounterNode counter, LoweringTool tool)

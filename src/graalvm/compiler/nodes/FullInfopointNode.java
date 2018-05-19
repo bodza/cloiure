@@ -66,10 +66,4 @@ public final class FullInfopointNode extends FixedWithNextNode implements LIRLow
     {
         return state;
     }
-
-    @Override
-    public boolean verify()
-    {
-        return state != null && super.verify();
-    }
 }

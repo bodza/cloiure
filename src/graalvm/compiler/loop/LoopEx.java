@@ -10,7 +10,6 @@ import org.graalvm.collections.Equivalence;
 import graalvm.compiler.core.common.calc.Condition;
 import graalvm.compiler.core.common.cfg.Loop;
 import graalvm.compiler.core.common.type.IntegerStamp;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Graph;
 import graalvm.compiler.graph.Node;
@@ -199,13 +198,7 @@ public class LoopEx
             {
                 if (!result.isAlive())
                 {
-                    assert !result.isDeleted();
                     result = graph.addOrUniqueWithInputs(result);
-                }
-                DebugContext debug = graph.getDebug();
-                if (debug.isLogEnabled())
-                {
-                    debug.log("%s : Reassociated %s into %s", graph.method().format("%H::%n"), binary, result);
                 }
                 binary.replaceAtUsages(result);
                 GraphUtil.killWithUnusedFloatingInputs(binary);
@@ -238,10 +231,6 @@ public class LoopEx
             LogicNode ifTest = ifNode.condition();
             if (!(ifTest instanceof IntegerLessThanNode) && !(ifTest instanceof IntegerEqualsNode))
             {
-                if (ifTest instanceof IntegerBelowNode)
-                {
-                    ifTest.getDebug().log("Ignored potential Counted loop at %s with |<|", loopBegin);
-                }
                 return false;
             }
             CompareNode lessThan = (CompareNode) ifTest;
@@ -359,7 +348,6 @@ public class LoopEx
             Block b = work.remove();
             if (loop().getExits().contains(b))
             {
-                assert !exits.contains(b.getBeginNode());
                 exits.add(b.getBeginNode());
             }
             else if (blocks.add(b.getBeginNode()))

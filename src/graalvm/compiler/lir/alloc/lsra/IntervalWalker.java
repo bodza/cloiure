@@ -1,7 +1,5 @@
 package graalvm.compiler.lir.alloc.lsra;
 
-import graalvm.compiler.debug.DebugContext;
-import graalvm.compiler.debug.Indent;
 import graalvm.compiler.lir.alloc.lsra.Interval.RegisterBinding;
 import graalvm.compiler.lir.alloc.lsra.Interval.RegisterBindingLists;
 import graalvm.compiler.lir.alloc.lsra.Interval.State;
@@ -85,14 +83,12 @@ public class IntervalWalker
         }
         else
         {
-            assert interval.state == State.Inactive : "invalid state";
             inactiveLists.remove(RegisterBinding.Any, interval);
         }
     }
 
     private void walkTo(State state, int from)
     {
-        assert state == State.Active || state == State.Inactive : "wrong state";
         for (RegisterBinding binding : RegisterBinding.VALUES)
         {
             walkTo(state, from, binding);
@@ -162,7 +158,6 @@ public class IntervalWalker
                     cur.state = newState;
                     if (prev == cur)
                     {
-                        assert state == newState;
                         prevprev = prev;
                         prev = cur.next;
                     }
@@ -196,9 +191,6 @@ public class IntervalWalker
         {
             // intervals may start at same position . prefer fixed interval
             binding = !fixed.isEndMarker() && fixed.from() <= any.from() ? RegisterBinding.Fixed : RegisterBinding.Any;
-
-            assert binding == RegisterBinding.Fixed && fixed.from() <= any.from() || binding == RegisterBinding.Any && any.from() <= fixed.from() : "wrong interval!!!";
-            assert any.isEndMarker() || fixed.isEndMarker() || any.from() != fixed.from() || binding == RegisterBinding.Fixed : "if fixed and any-Interval start at same position, fixed must be processed first";
         }
         else if (!fixed.isEndMarker())
         {
@@ -229,10 +221,8 @@ public class IntervalWalker
      *                {@link #inactiveLists} are populated and {@link Interval#state}s are up to
      *                date.
      */
-    @SuppressWarnings("try")
     protected void walkTo(int toOpId)
     {
-        assert currentPosition <= toOpId : "can not walk backwards";
         for (Interval currentInterval = nextInterval(toOpId); currentInterval != null; currentInterval = nextInterval(toOpId))
         {
             int opId = currentInterval.from();
@@ -247,15 +237,11 @@ public class IntervalWalker
             walkTo(State.Active, opId);
             walkTo(State.Inactive, opId);
 
-            DebugContext debug = allocator.getDebug();
-            try (Indent indent = debug.logAndIndent("walk to op %d", opId))
+            currentInterval.state = State.Active;
+            if (activateCurrent(currentInterval))
             {
-                currentInterval.state = State.Active;
-                if (activateCurrent(currentInterval))
-                {
-                    activeLists.addToListSortedByCurrentFromPositions(currentBinding, currentInterval);
-                    intervalMoved(currentInterval, State.Unhandled, State.Active);
-                }
+                activeLists.addToListSortedByCurrentFromPositions(currentBinding, currentInterval);
+                intervalMoved(currentInterval, State.Unhandled, State.Active);
             }
         }
         // set currentPosition prior to call of walkTo
@@ -276,11 +262,6 @@ public class IntervalWalker
     {
         // intervalMoved() is called whenever an interval moves from one interval list to another.
         // In the implementation of this method it is prohibited to move the interval to any list.
-        DebugContext debug = allocator.getDebug();
-        if (debug.isLogEnabled())
-        {
-            debug.log("interval moved from %s to %s: %s", from, to, interval.logString(allocator));
-        }
     }
 
     /**

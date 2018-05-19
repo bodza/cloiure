@@ -6,7 +6,6 @@ import static jdk.vm.ci.code.ValueUtil.isRegister;
 import static jdk.vm.ci.code.ValueUtil.isStackSlot;
 import static graalvm.compiler.lir.LIRValueUtil.asVariable;
 import static graalvm.compiler.lir.LIRValueUtil.isVariable;
-import static graalvm.compiler.lir.debug.LIRGenerationDebugContext.getSourceForOperandFromDebugContext;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -20,10 +19,7 @@ import graalvm.compiler.core.common.PermanentBailoutException;
 import graalvm.compiler.core.common.alloc.ComputeBlockOrder;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.core.common.util.BitMap2D;
-import graalvm.compiler.debug.Assertions;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.debug.Indent;
 import graalvm.compiler.lir.InstructionValueConsumer;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LIRInstruction.OperandFlag;
@@ -50,7 +46,6 @@ import jdk.vm.ci.meta.ValueKind;
 public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
 {
     protected final LinearScan allocator;
-    protected final DebugContext debug;
 
     /**
      * @param linearScan
@@ -58,17 +53,15 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
     protected LinearScanLifetimeAnalysisPhase(LinearScan linearScan)
     {
         allocator = linearScan;
-        debug = allocator.getDebug();
     }
 
     @Override
     protected void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context)
     {
         numberInstructions();
-        debug.dump(DebugContext.VERBOSE_LEVEL, lirGenRes.getLIR(), "Before register allocation");
         computeLocalLiveSets();
         computeGlobalLiveSets();
-        buildIntervals(Assertions.detailedAssertionsEnabled(allocator.getOptions()));
+        buildIntervals();
     }
 
     /**
@@ -122,7 +115,6 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
                 op.setId(opId);
 
                 allocator.putOpIdMaps(index, op, block);
-                assert allocator.instructionForId(opId) == op : "must match";
 
                 op.visitEachTemp(setVariableConsumer);
                 op.visitEachOutput(setVariableConsumer);
@@ -131,15 +123,12 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
                 opId += 2; // numbering of lirOps by two
             }
         }
-        assert index == numInstructions : "must match";
-        assert (index << 1) == opId : "must match: " + (index << 1);
     }
 
     /**
      * Computes local live sets (i.e. {@link BlockData#liveGen} and {@link BlockData#liveKill})
      * separately for each block.
      */
-    @SuppressWarnings("try")
     void computeLocalLiveSets()
     {
         int liveSize = allocator.liveSetSize();
@@ -153,112 +142,73 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
             // iterate all blocks
             for (final AbstractBlockBase<?> block : allocator.sortedBlocks())
             {
-                try (Indent indent = debug.logAndIndent("compute local live sets for block %s", block))
+                liveGenScratch.clear();
+                liveKillScratch.clear();
+
+                ArrayList<LIRInstruction> instructions = allocator.getLIR().getLIRforBlock(block);
+                int numInst = instructions.size();
+
+                ValueConsumer useConsumer = (operand, mode, flags) ->
                 {
-                    liveGenScratch.clear();
-                    liveKillScratch.clear();
-
-                    ArrayList<LIRInstruction> instructions = allocator.getLIR().getLIRforBlock(block);
-                    int numInst = instructions.size();
-
-                    ValueConsumer useConsumer = (operand, mode, flags) ->
+                    if (isVariable(operand))
                     {
-                        if (isVariable(operand))
+                        int operandNum = allocator.operandNumber(operand);
+                        if (!liveKillScratch.get(operandNum))
                         {
-                            int operandNum = allocator.operandNumber(operand);
-                            if (!liveKillScratch.get(operandNum))
-                            {
-                                liveGenScratch.set(operandNum);
-                                if (debug.isLogEnabled())
-                                {
-                                    debug.log("liveGen for operand %d(%s)", operandNum, operand);
-                                }
-                            }
-                            if (block.getLoop() != null)
-                            {
-                                intervalInLoop.setBit(operandNum, block.getLoop().getIndex());
-                            }
+                            liveGenScratch.set(operandNum);
                         }
-
-                        if (allocator.detailedAsserts)
+                        if (block.getLoop() != null)
                         {
-                            verifyInput(block, liveKillScratch, operand);
+                            intervalInLoop.setBit(operandNum, block.getLoop().getIndex());
                         }
-                    };
-                    ValueConsumer stateConsumer = (operand, mode, flags) ->
-                    {
-                        if (LinearScan.isVariableOrRegister(operand))
-                        {
-                            int operandNum = allocator.operandNumber(operand);
-                            if (!liveKillScratch.get(operandNum))
-                            {
-                                liveGenScratch.set(operandNum);
-                                if (debug.isLogEnabled())
-                                {
-                                    debug.log("liveGen in state for operand %d(%s)", operandNum, operand);
-                                }
-                            }
-                        }
-                    };
-                    ValueConsumer defConsumer = (operand, mode, flags) ->
-                    {
-                        if (isVariable(operand))
-                        {
-                            int varNum = allocator.operandNumber(operand);
-                            liveKillScratch.set(varNum);
-                            if (debug.isLogEnabled())
-                            {
-                                debug.log("liveKill for operand %d(%s)", varNum, operand);
-                            }
-                            if (block.getLoop() != null)
-                            {
-                                intervalInLoop.setBit(varNum, block.getLoop().getIndex());
-                            }
-                        }
-
-                        if (allocator.detailedAsserts)
-                        {
-                            /*
-                             * Fixed intervals are never live at block boundaries, so they need not
-                             * be processed in live sets. Process them only in debug mode so that
-                             * this can be checked
-                             */
-                            verifyTemp(liveKillScratch, operand);
-                        }
-                    };
-
-                    // iterate all instructions of the block
-                    for (int j = 0; j < numInst; j++)
-                    {
-                        final LIRInstruction op = instructions.get(j);
-
-                        try (Indent indent2 = debug.logAndIndent("handle op %d: %s", op.id(), op))
-                        {
-                            op.visitEachInput(useConsumer);
-                            op.visitEachAlive(useConsumer);
-                            /*
-                             * Add uses of live locals from interpreter's point of view for proper
-                             * debug information generation.
-                             */
-                            op.visitEachState(stateConsumer);
-                            op.visitEachTemp(defConsumer);
-                            op.visitEachOutput(defConsumer);
-                        }
-                    } // end of instruction iteration
-
-                    BlockData blockSets = allocator.getBlockData(block);
-                    blockSets.liveGen = trimClone(liveGenScratch);
-                    blockSets.liveKill = trimClone(liveKillScratch);
-                    // sticky size, will get non-sticky in computeGlobalLiveSets
-                    blockSets.liveIn = new BitSet(0);
-                    blockSets.liveOut = new BitSet(0);
-
-                    if (debug.isLogEnabled())
-                    {
-                        debug.log("liveGen  B%d %s", block.getId(), blockSets.liveGen);
-                        debug.log("liveKill B%d %s", block.getId(), blockSets.liveKill);
                     }
-                }
+                };
+                ValueConsumer stateConsumer = (operand, mode, flags) ->
+                {
+                    if (LinearScan.isVariableOrRegister(operand))
+                    {
+                        int operandNum = allocator.operandNumber(operand);
+                        if (!liveKillScratch.get(operandNum))
+                        {
+                            liveGenScratch.set(operandNum);
+                        }
+                    }
+                };
+                ValueConsumer defConsumer = (operand, mode, flags) ->
+                {
+                    if (isVariable(operand))
+                    {
+                        int varNum = allocator.operandNumber(operand);
+                        liveKillScratch.set(varNum);
+                        if (block.getLoop() != null)
+                        {
+                            intervalInLoop.setBit(varNum, block.getLoop().getIndex());
+                        }
+                    }
+                };
+
+                // iterate all instructions of the block
+                for (int j = 0; j < numInst; j++)
+                {
+                    final LIRInstruction op = instructions.get(j);
+
+                    op.visitEachInput(useConsumer);
+                    op.visitEachAlive(useConsumer);
+                    /*
+                     * Add uses of live locals from interpreter's point of view for proper
+                     * debug information generation.
+                     */
+                    op.visitEachState(stateConsumer);
+                    op.visitEachTemp(defConsumer);
+                    op.visitEachOutput(defConsumer);
+                } // end of instruction iteration
+
+                BlockData blockSets = allocator.getBlockData(block);
+                blockSets.liveGen = trimClone(liveGenScratch);
+                blockSets.liveKill = trimClone(liveKillScratch);
+                // sticky size, will get non-sticky in computeGlobalLiveSets
+                blockSets.liveIn = new BitSet(0);
+                blockSets.liveOut = new BitSet(0);
             } // end of block iteration
         }
         catch (OutOfMemoryError oom)
@@ -267,152 +217,100 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
         }
     }
 
-    private void verifyTemp(BitSet liveKill, Value operand)
-    {
-        /*
-         * Fixed intervals are never live at block boundaries, so they need not be processed in live
-         * sets. Process them only in debug mode so that this can be checked
-         */
-        if (isRegister(operand))
-        {
-            if (allocator.isProcessed(operand))
-            {
-                liveKill.set(allocator.operandNumber(operand));
-            }
-        }
-    }
-
-    private void verifyInput(AbstractBlockBase<?> block, BitSet liveKill, Value operand)
-    {
-        /*
-         * Fixed intervals are never live at block boundaries, so they need not be processed in live
-         * sets. This is checked by these assertions to be sure about it. The entry block may have
-         * incoming values in registers, which is ok.
-         */
-        if (isRegister(operand) && block != allocator.getLIR().getControlFlowGraph().getStartBlock())
-        {
-            if (allocator.isProcessed(operand))
-            {
-                assert liveKill.get(allocator.operandNumber(operand)) : "using fixed register " + asRegister(operand) + " that is not defined in this block " + block;
-            }
-        }
-    }
-
     /**
      * Performs a backward dataflow analysis to compute global live sets (i.e.
      * {@link BlockData#liveIn} and {@link BlockData#liveOut}) for each block.
      */
-    @SuppressWarnings("try")
     protected void computeGlobalLiveSets()
     {
-        try (Indent indent = debug.logAndIndent("compute global live sets"))
+        int numBlocks = allocator.blockCount();
+        boolean changeOccurred;
+        boolean changeOccurredInBlock;
+        int iterationCount = 0;
+        BitSet scratch = new BitSet(allocator.liveSetSize()); // scratch set for calculations
+
+        /*
+         * Perform a backward dataflow analysis to compute liveOut and liveIn for each block.
+         * The loop is executed until a fixpoint is reached (no changes in an iteration).
+         */
+        do
         {
-            int numBlocks = allocator.blockCount();
-            boolean changeOccurred;
-            boolean changeOccurredInBlock;
-            int iterationCount = 0;
-            BitSet scratch = new BitSet(allocator.liveSetSize()); // scratch set for calculations
+            changeOccurred = false;
 
-            /*
-             * Perform a backward dataflow analysis to compute liveOut and liveIn for each block.
-             * The loop is executed until a fixpoint is reached (no changes in an iteration).
-             */
-            do
+            // iterate all blocks in reverse order
+            for (int i = numBlocks - 1; i >= 0; i--)
             {
-                changeOccurred = false;
+                AbstractBlockBase<?> block = allocator.blockAt(i);
+                BlockData blockSets = allocator.getBlockData(block);
 
-                try (Indent indent2 = debug.logAndIndent("new iteration %d", iterationCount))
+                changeOccurredInBlock = false;
+
+                /*
+                 * liveOut(block) is the union of liveIn(sux), for successors sux of block.
+                 */
+                int n = block.getSuccessorCount();
+                if (n > 0)
                 {
-                    // iterate all blocks in reverse order
-                    for (int i = numBlocks - 1; i >= 0; i--)
+                    scratch.clear();
+                    // block has successors
+                    if (n > 0)
                     {
-                        AbstractBlockBase<?> block = allocator.blockAt(i);
-                        BlockData blockSets = allocator.getBlockData(block);
-
-                        changeOccurredInBlock = false;
-
-                        /*
-                         * liveOut(block) is the union of liveIn(sux), for successors sux of block.
-                         */
-                        int n = block.getSuccessorCount();
-                        if (n > 0)
+                        for (AbstractBlockBase<?> successor : block.getSuccessors())
                         {
-                            scratch.clear();
-                            // block has successors
-                            if (n > 0)
-                            {
-                                for (AbstractBlockBase<?> successor : block.getSuccessors())
-                                {
-                                    scratch.or(allocator.getBlockData(successor).liveIn);
-                                }
-                            }
-
-                            if (!blockSets.liveOut.equals(scratch))
-                            {
-                                blockSets.liveOut = trimClone(scratch);
-
-                                changeOccurred = true;
-                                changeOccurredInBlock = true;
-                            }
-                        }
-
-                        if (iterationCount == 0 || changeOccurredInBlock)
-                        {
-                            /*
-                             * liveIn(block) is the union of liveGen(block) with (liveOut(block) &
-                             * !liveKill(block)).
-                             *
-                             * Note: liveIn has to be computed only in first iteration or if liveOut
-                             * has changed!
-                             *
-                             * Note: liveIn set can only grow, never shrink. No need to clear it.
-                             */
-                            BitSet liveIn = blockSets.liveIn;
-                            /*
-                             * BitSet#or will call BitSet#ensureSize (since the bit set is of length
-                             * 0 initially) and set sticky to false
-                             */
-                            liveIn.or(blockSets.liveOut);
-                            liveIn.andNot(blockSets.liveKill);
-                            liveIn.or(blockSets.liveGen);
-
-                            liveIn.clone(); // trimToSize()
-
-                            if (debug.isLogEnabled())
-                            {
-                                debug.log("block %d: livein = %s,  liveout = %s", block.getId(), liveIn, blockSets.liveOut);
-                            }
+                            scratch.or(allocator.getBlockData(successor).liveIn);
                         }
                     }
-                    iterationCount++;
 
-                    if (changeOccurred && iterationCount > 50)
+                    if (!blockSets.liveOut.equals(scratch))
                     {
-                        /*
-                         * Very unlikely, should never happen: If it happens we cannot guarantee it
-                         * won't happen again.
-                         */
-                        throw new PermanentBailoutException("too many iterations in computeGlobalLiveSets");
+                        blockSets.liveOut = trimClone(scratch);
+
+                        changeOccurred = true;
+                        changeOccurredInBlock = true;
                     }
                 }
-            } while (changeOccurred);
 
-            if (Assertions.detailedAssertionsEnabled(allocator.getOptions()))
-            {
-                verifyLiveness();
-            }
-
-            // check that the liveIn set of the first block is empty
-            AbstractBlockBase<?> startBlock = allocator.getLIR().getControlFlowGraph().getStartBlock();
-            if (allocator.getBlockData(startBlock).liveIn.cardinality() != 0)
-            {
-                if (Assertions.detailedAssertionsEnabled(allocator.getOptions()))
+                if (iterationCount == 0 || changeOccurredInBlock)
                 {
-                    reportFailure(numBlocks);
+                    /*
+                     * liveIn(block) is the union of liveGen(block) with (liveOut(block) &
+                     * !liveKill(block)).
+                     *
+                     * Note: liveIn has to be computed only in first iteration or if liveOut
+                     * has changed!
+                     *
+                     * Note: liveIn set can only grow, never shrink. No need to clear it.
+                     */
+                    BitSet liveIn = blockSets.liveIn;
+                    /*
+                     * BitSet#or will call BitSet#ensureSize (since the bit set is of length
+                     * 0 initially) and set sticky to false
+                     */
+                    liveIn.or(blockSets.liveOut);
+                    liveIn.andNot(blockSets.liveKill);
+                    liveIn.or(blockSets.liveGen);
+
+                    liveIn.clone(); // trimToSize()
                 }
-                // bailout if this occurs in product mode.
-                throw new GraalError("liveIn set of first block must be empty: " + allocator.getBlockData(startBlock).liveIn);
             }
+            iterationCount++;
+
+            if (changeOccurred && iterationCount > 50)
+            {
+                /*
+                 * Very unlikely, should never happen: If it happens we cannot guarantee it
+                 * won't happen again.
+                 */
+                throw new PermanentBailoutException("too many iterations in computeGlobalLiveSets");
+            }
+        } while (changeOccurred);
+
+        // check that the liveIn set of the first block is empty
+        AbstractBlockBase<?> startBlock = allocator.getLIR().getControlFlowGraph().getStartBlock();
+        if (allocator.getBlockData(startBlock).liveIn.cardinality() != 0)
+        {
+            // bailout if this occurs in product mode.
+            throw new GraalError("liveIn set of first block must be empty: " + allocator.getBlockData(startBlock).liveIn);
         }
     }
 
@@ -431,138 +329,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
         return trimmedSet;
     }
 
-    @SuppressWarnings("try")
-    protected void reportFailure(int numBlocks)
-    {
-        try (DebugContext.Scope s = debug.forceLog())
-        {
-            try (Indent indent = debug.logAndIndent("report failure"))
-            {
-                BitSet startBlockLiveIn = allocator.getBlockData(allocator.getLIR().getControlFlowGraph().getStartBlock()).liveIn;
-                try (Indent indent2 = debug.logAndIndent("Error: liveIn set of first block must be empty (when this fails, variables are used before they are defined):"))
-                {
-                    for (int operandNum = startBlockLiveIn.nextSetBit(0); operandNum >= 0; operandNum = startBlockLiveIn.nextSetBit(operandNum + 1))
-                    {
-                        Interval interval = allocator.intervalFor(operandNum);
-                        if (interval != null)
-                        {
-                            Value operand = interval.operand;
-                            debug.log("var %d; operand=%s; node=%s", operandNum, operand, getSourceForOperandFromDebugContext(debug, operand));
-                        }
-                        else
-                        {
-                            debug.log("var %d; missing operand", operandNum);
-                        }
-                    }
-                }
-
-                // print some additional information to simplify debugging
-                for (int operandNum = startBlockLiveIn.nextSetBit(0); operandNum >= 0; operandNum = startBlockLiveIn.nextSetBit(operandNum + 1))
-                {
-                    Interval interval = allocator.intervalFor(operandNum);
-                    Value operand = null;
-                    Object valueForOperandFromDebugContext = null;
-                    if (interval != null)
-                    {
-                        operand = interval.operand;
-                        valueForOperandFromDebugContext = getSourceForOperandFromDebugContext(debug, operand);
-                    }
-                    try (Indent indent2 = debug.logAndIndent("---- Detailed information for var %d; operand=%s; node=%s ----", operandNum, operand, valueForOperandFromDebugContext))
-                    {
-                        ArrayDeque<AbstractBlockBase<?>> definedIn = new ArrayDeque<>();
-                        EconomicSet<AbstractBlockBase<?>> usedIn = EconomicSet.create(Equivalence.IDENTITY);
-                        for (AbstractBlockBase<?> block : allocator.sortedBlocks())
-                        {
-                            if (allocator.getBlockData(block).liveGen.get(operandNum))
-                            {
-                                usedIn.add(block);
-                                try (Indent indent3 = debug.logAndIndent("used in block B%d", block.getId()))
-                                {
-                                    for (LIRInstruction ins : allocator.getLIR().getLIRforBlock(block))
-                                    {
-                                        try (Indent indent4 = debug.logAndIndent("%d: %s", ins.id(), ins))
-                                        {
-                                            ins.forEachState((liveStateOperand, mode, flags) ->
-                                            {
-                                                debug.log("operand=%s", liveStateOperand);
-                                                return liveStateOperand;
-                                            });
-                                        }
-                                    }
-                                }
-                            }
-                            if (allocator.getBlockData(block).liveKill.get(operandNum))
-                            {
-                                definedIn.add(block);
-                                try (Indent indent3 = debug.logAndIndent("defined in block B%d", block.getId()))
-                                {
-                                    for (LIRInstruction ins : allocator.getLIR().getLIRforBlock(block))
-                                    {
-                                        debug.log("%d: %s", ins.id(), ins);
-                                    }
-                                }
-                            }
-                        }
-
-                        int[] hitCount = new int[numBlocks];
-
-                        while (!definedIn.isEmpty())
-                        {
-                            AbstractBlockBase<?> block = definedIn.removeFirst();
-                            usedIn.remove(block);
-                            for (AbstractBlockBase<?> successor : block.getSuccessors())
-                            {
-                                if (successor.isLoopHeader())
-                                {
-                                    if (!block.isLoopEnd())
-                                    {
-                                        definedIn.add(successor);
-                                    }
-                                }
-                                else
-                                {
-                                    if (++hitCount[successor.getId()] == successor.getPredecessorCount())
-                                    {
-                                        definedIn.add(successor);
-                                    }
-                                }
-                            }
-                        }
-                        try (Indent indent3 = debug.logAndIndent("**** offending usages are in: "))
-                        {
-                            for (AbstractBlockBase<?> block : usedIn)
-                            {
-                                debug.log("B%d", block.getId());
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        catch (Throwable e)
-        {
-            throw debug.handle(e);
-        }
-    }
-
-    protected void verifyLiveness()
-    {
-        /*
-         * Check that fixed intervals are not live at block boundaries (live set must be empty at
-         * fixed intervals).
-         */
-        for (AbstractBlockBase<?> block : allocator.sortedBlocks())
-        {
-            for (int j = 0; j <= allocator.maxRegisterNumber(); j++)
-            {
-                assert !allocator.getBlockData(block).liveIn.get(j) : "liveIn  set of fixed register must be empty";
-                assert !allocator.getBlockData(block).liveOut.get(j) : "liveOut set of fixed register must be empty";
-                assert !allocator.getBlockData(block).liveGen.get(j) : "liveGen set of fixed register must be empty";
-            }
-        }
-    }
-
-    protected void addUse(AllocatableValue operand, int from, int to, RegisterPriority registerPriority, ValueKind<?> kind, boolean detailedAsserts)
+    protected void addUse(AllocatableValue operand, int from, int to, RegisterPriority registerPriority, ValueKind<?> kind)
     {
         if (!allocator.isProcessed(operand))
         {
@@ -578,15 +345,10 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
         interval.addRange(from, to);
 
         // Register use position at even instruction id.
-        interval.addUsePos(to & ~1, registerPriority, detailedAsserts);
-
-        if (debug.isLogEnabled())
-        {
-            debug.log("add use: %s, from %d to %d (%s)", interval, from, to, registerPriority.name());
-        }
+        interval.addUsePos(to & ~1, registerPriority);
     }
 
-    protected void addTemp(AllocatableValue operand, int tempPos, RegisterPriority registerPriority, ValueKind<?> kind, boolean detailedAsserts)
+    protected void addTemp(AllocatableValue operand, int tempPos, RegisterPriority registerPriority, ValueKind<?> kind)
     {
         if (!allocator.isProcessed(operand))
         {
@@ -600,16 +362,11 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
         }
 
         interval.addRange(tempPos, tempPos + 1);
-        interval.addUsePos(tempPos, registerPriority, detailedAsserts);
+        interval.addUsePos(tempPos, registerPriority);
         interval.addMaterializationValue(null);
-
-        if (debug.isLogEnabled())
-        {
-            debug.log("add temp: %s tempPos %d (%s)", interval, tempPos, RegisterPriority.MustHaveRegister.name());
-        }
     }
 
-    protected void addDef(AllocatableValue operand, LIRInstruction op, RegisterPriority registerPriority, ValueKind<?> kind, boolean detailedAsserts)
+    protected void addDef(AllocatableValue operand, LIRInstruction op, RegisterPriority registerPriority, ValueKind<?> kind)
     {
         if (!allocator.isProcessed(operand))
         {
@@ -631,7 +388,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
              * beginning of the current block until a def is encountered).
              */
             r.from = defPos;
-            interval.addUsePos(defPos, registerPriority, detailedAsserts);
+            interval.addUsePos(defPos, registerPriority);
         }
         else
         {
@@ -639,11 +396,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
              * Dead value - make vacuous interval also add register priority for dead intervals
              */
             interval.addRange(defPos, defPos + 1);
-            interval.addUsePos(defPos, registerPriority, detailedAsserts);
-            if (debug.isLogEnabled())
-            {
-                debug.log("Warning: def of operand %s at %d occurs without use", operand, defPos);
-            }
+            interval.addUsePos(defPos, registerPriority);
         }
 
         changeSpillDefinitionPos(op, operand, interval, defPos);
@@ -653,11 +406,6 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
             interval.setSpillState(SpillState.StartInMemory);
         }
         interval.addMaterializationValue(getMaterializedValue(op, operand, interval));
-
-        if (debug.isLogEnabled())
-        {
-            debug.log("add def: %s defPos %d (%s)", interval, defPos, registerPriority.name());
-        }
     }
 
     /**
@@ -672,17 +420,6 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
             if (optimizeMethodArgument(move.getInput()))
             {
                 StackSlot slot = asStackSlot(move.getInput());
-                if (Assertions.detailedAssertionsEnabled(allocator.getOptions()))
-                {
-                    assert op.id() > 0 : "invalid id";
-                    assert allocator.blockForId(op.id()).getPredecessorCount() == 0 : "move from stack must be in first block";
-                    assert isVariable(move.getResult()) : "result of move must be a variable";
-
-                    if (debug.isLogEnabled())
-                    {
-                        debug.log("found move from stack slot %s to %s", slot, move.getResult());
-                    }
-                }
 
                 Interval interval = allocator.intervalFor(move.getResult());
                 interval.setSpillSlot(slot);
@@ -711,10 +448,6 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
                     {
                         from.setLocationHint(to);
                     }
-                    if (debug.isLogEnabled())
-                    {
-                        debug.log("operation at opId %d: added hint from interval %d to %d", op.id(), from.operandNumber, to.operandNumber);
-                    }
 
                     return registerHint;
                 }
@@ -731,18 +464,14 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
      */
     protected void changeSpillDefinitionPos(LIRInstruction op, AllocatableValue operand, Interval interval, int defPos)
     {
-        assert interval.isSplitParent() : "can only be called for split parents";
-
         switch (interval.spillState())
         {
             case NoDefinitionFound:
-                assert interval.spillDefinitionPos() == -1 : "must no be set before";
                 interval.setSpillDefinitionPos(defPos);
                 interval.setSpillState(SpillState.NoSpillStore);
                 break;
 
             case NoSpillStore:
-                assert defPos <= interval.spillDefinitionPos() : "positions are processed in reverse order when intervals are created";
                 if (defPos < interval.spillDefinitionPos() - 2)
                 {
                     // second definition found, so no spill optimization possible for this interval
@@ -751,7 +480,6 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
                 else
                 {
                     // two consecutive definitions (because of two-operand LIR form)
-                    assert allocator.blockForId(defPos) == allocator.blockForId(interval.spillDefinitionPos()) : "block must be equal";
                 }
                 break;
 
@@ -805,161 +533,139 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
         return RegisterPriority.MustHaveRegister;
     }
 
-    @SuppressWarnings("try")
-    protected void buildIntervals(boolean detailedAsserts)
+    protected void buildIntervals()
     {
-        try (Indent indent = debug.logAndIndent("build intervals"))
+        InstructionValueConsumer outputConsumer = (op, operand, mode, flags) ->
         {
-            InstructionValueConsumer outputConsumer = (op, operand, mode, flags) ->
+            if (LinearScan.isVariableOrRegister(operand))
             {
-                if (LinearScan.isVariableOrRegister(operand))
-                {
-                    addDef((AllocatableValue) operand, op, registerPriorityOfOutputOperand(op), operand.getValueKind(), detailedAsserts);
-                    addRegisterHint(op, operand, mode, flags, true);
-                }
-            };
+                addDef((AllocatableValue) operand, op, registerPriorityOfOutputOperand(op), operand.getValueKind());
+                addRegisterHint(op, operand, mode, flags, true);
+            }
+        };
 
-            InstructionValueConsumer tempConsumer = (op, operand, mode, flags) ->
+        InstructionValueConsumer tempConsumer = (op, operand, mode, flags) ->
+        {
+            if (LinearScan.isVariableOrRegister(operand))
             {
-                if (LinearScan.isVariableOrRegister(operand))
-                {
-                    addTemp((AllocatableValue) operand, op.id(), RegisterPriority.MustHaveRegister, operand.getValueKind(), detailedAsserts);
-                    addRegisterHint(op, operand, mode, flags, false);
-                }
-            };
+                addTemp((AllocatableValue) operand, op.id(), RegisterPriority.MustHaveRegister, operand.getValueKind());
+                addRegisterHint(op, operand, mode, flags, false);
+            }
+        };
 
-            InstructionValueConsumer aliveConsumer = (op, operand, mode, flags) ->
+        InstructionValueConsumer aliveConsumer = (op, operand, mode, flags) ->
+        {
+            if (LinearScan.isVariableOrRegister(operand))
             {
-                if (LinearScan.isVariableOrRegister(operand))
-                {
-                    RegisterPriority p = registerPriorityOfInputOperand(flags);
-                    int opId = op.id();
-                    int blockFrom = allocator.getFirstLirInstructionId((allocator.blockForId(opId)));
-                    addUse((AllocatableValue) operand, blockFrom, opId + 1, p, operand.getValueKind(), detailedAsserts);
-                    addRegisterHint(op, operand, mode, flags, false);
-                }
-            };
+                RegisterPriority p = registerPriorityOfInputOperand(flags);
+                int opId = op.id();
+                int blockFrom = allocator.getFirstLirInstructionId((allocator.blockForId(opId)));
+                addUse((AllocatableValue) operand, blockFrom, opId + 1, p, operand.getValueKind());
+                addRegisterHint(op, operand, mode, flags, false);
+            }
+        };
 
-            InstructionValueConsumer inputConsumer = (op, operand, mode, flags) ->
+        InstructionValueConsumer inputConsumer = (op, operand, mode, flags) ->
+        {
+            if (LinearScan.isVariableOrRegister(operand))
             {
-                if (LinearScan.isVariableOrRegister(operand))
-                {
-                    int opId = op.id();
-                    int blockFrom = allocator.getFirstLirInstructionId((allocator.blockForId(opId)));
-                    RegisterPriority p = registerPriorityOfInputOperand(flags);
-                    addUse((AllocatableValue) operand, blockFrom, opId, p, operand.getValueKind(), detailedAsserts);
-                    addRegisterHint(op, operand, mode, flags, false);
-                }
-            };
+                int opId = op.id();
+                int blockFrom = allocator.getFirstLirInstructionId((allocator.blockForId(opId)));
+                RegisterPriority p = registerPriorityOfInputOperand(flags);
+                addUse((AllocatableValue) operand, blockFrom, opId, p, operand.getValueKind());
+                addRegisterHint(op, operand, mode, flags, false);
+            }
+        };
 
-            InstructionValueConsumer stateProc = (op, operand, mode, flags) ->
+        InstructionValueConsumer stateProc = (op, operand, mode, flags) ->
+        {
+            if (LinearScan.isVariableOrRegister(operand))
             {
-                if (LinearScan.isVariableOrRegister(operand))
-                {
-                    int opId = op.id();
-                    int blockFrom = allocator.getFirstLirInstructionId((allocator.blockForId(opId)));
-                    addUse((AllocatableValue) operand, blockFrom, opId + 1, RegisterPriority.None, operand.getValueKind(), detailedAsserts);
-                }
-            };
+                int opId = op.id();
+                int blockFrom = allocator.getFirstLirInstructionId((allocator.blockForId(opId)));
+                addUse((AllocatableValue) operand, blockFrom, opId + 1, RegisterPriority.None, operand.getValueKind());
+            }
+        };
 
-            // create a list with all caller-save registers (cpu, fpu, xmm)
-            RegisterArray callerSaveRegs = allocator.getRegisterAllocationConfig().getRegisterConfig().getCallerSaveRegisters();
+        // create a list with all caller-save registers (cpu, fpu, xmm)
+        RegisterArray callerSaveRegs = allocator.getRegisterAllocationConfig().getRegisterConfig().getCallerSaveRegisters();
 
-            // iterate all blocks in reverse order
-            for (int i = allocator.blockCount() - 1; i >= 0; i--)
+        // iterate all blocks in reverse order
+        for (int i = allocator.blockCount() - 1; i >= 0; i--)
+        {
+            AbstractBlockBase<?> block = allocator.blockAt(i);
+            ArrayList<LIRInstruction> instructions = allocator.getLIR().getLIRforBlock(block);
+            final int blockFrom = allocator.getFirstLirInstructionId(block);
+            int blockTo = allocator.getLastLirInstructionId(block);
+
+            // Update intervals for operands live at the end of this block;
+            BitSet live = allocator.getBlockData(block).liveOut;
+            for (int operandNum = live.nextSetBit(0); operandNum >= 0; operandNum = live.nextSetBit(operandNum + 1))
             {
-                AbstractBlockBase<?> block = allocator.blockAt(i);
-                try (Indent indent2 = debug.logAndIndent("handle block %d", block.getId()))
+                AllocatableValue operand = allocator.intervalFor(operandNum).operand;
+
+                addUse(operand, blockFrom, blockTo + 2, RegisterPriority.None, LIRKind.Illegal);
+
+                /*
+                 * Add special use positions for loop-end blocks when the interval is used
+                 * anywhere inside this loop. It's possible that the block was part of a
+                 * non-natural loop, so it might have an invalid loop index.
+                 */
+                if (block.isLoopEnd() && block.getLoop() != null && isIntervalInLoop(operandNum, block.getLoop().getIndex()))
                 {
-                    ArrayList<LIRInstruction> instructions = allocator.getLIR().getLIRforBlock(block);
-                    final int blockFrom = allocator.getFirstLirInstructionId(block);
-                    int blockTo = allocator.getLastLirInstructionId(block);
-
-                    assert blockFrom == instructions.get(0).id();
-                    assert blockTo == instructions.get(instructions.size() - 1).id();
-
-                    // Update intervals for operands live at the end of this block;
-                    BitSet live = allocator.getBlockData(block).liveOut;
-                    for (int operandNum = live.nextSetBit(0); operandNum >= 0; operandNum = live.nextSetBit(operandNum + 1))
-                    {
-                        assert live.get(operandNum) : "should not stop here otherwise";
-                        AllocatableValue operand = allocator.intervalFor(operandNum).operand;
-                        if (debug.isLogEnabled())
-                        {
-                            debug.log("live in %d: %s", operandNum, operand);
-                        }
-
-                        addUse(operand, blockFrom, blockTo + 2, RegisterPriority.None, LIRKind.Illegal, detailedAsserts);
-
-                        /*
-                         * Add special use positions for loop-end blocks when the interval is used
-                         * anywhere inside this loop. It's possible that the block was part of a
-                         * non-natural loop, so it might have an invalid loop index.
-                         */
-                        if (block.isLoopEnd() && block.getLoop() != null && isIntervalInLoop(operandNum, block.getLoop().getIndex()))
-                        {
-                            allocator.intervalFor(operandNum).addUsePos(blockTo + 1, RegisterPriority.LiveAtLoopEnd, detailedAsserts);
-                        }
-                    }
-
-                    /*
-                     * Iterate all instructions of the block in reverse order. definitions of
-                     * intervals are processed before uses.
-                     */
-                    for (int j = instructions.size() - 1; j >= 0; j--)
-                    {
-                        final LIRInstruction op = instructions.get(j);
-                        final int opId = op.id();
-
-                        try (Indent indent3 = debug.logAndIndent("handle inst %d: %s", opId, op))
-                        {
-                            // add a temp range for each register if operation destroys
-                            // caller-save registers
-                            if (op.destroysCallerSavedRegisters())
-                            {
-                                for (Register r : callerSaveRegs)
-                                {
-                                    if (allocator.attributes(r).isAllocatable())
-                                    {
-                                        addTemp(r.asValue(), opId, RegisterPriority.None, LIRKind.Illegal, detailedAsserts);
-                                    }
-                                }
-                                if (debug.isLogEnabled())
-                                {
-                                    debug.log("operation destroys all caller-save registers");
-                                }
-                            }
-
-                            op.visitEachOutput(outputConsumer);
-                            op.visitEachTemp(tempConsumer);
-                            op.visitEachAlive(aliveConsumer);
-                            op.visitEachInput(inputConsumer);
-
-                            /*
-                             * Add uses of live locals from interpreter's point of view for proper
-                             * debug information generation. Treat these operands as temp values (if
-                             * the live range is extended to a call site, the value would be in a
-                             * register at the call otherwise).
-                             */
-                            op.visitEachState(stateProc);
-
-                            // special steps for some instructions (especially moves)
-                            handleMethodArguments(op);
-                        }
-                    } // end of instruction iteration
+                    allocator.intervalFor(operandNum).addUsePos(blockTo + 1, RegisterPriority.LiveAtLoopEnd);
                 }
-            } // end of block iteration
+            }
 
             /*
-             * Add the range [0, 1] to all fixed intervals. the register allocator need not handle
-             * unhandled fixed intervals.
+             * Iterate all instructions of the block in reverse order. definitions of
+             * intervals are processed before uses.
              */
-            for (Interval interval : allocator.intervals())
+            for (int j = instructions.size() - 1; j >= 0; j--)
             {
-                if (interval != null && isRegister(interval.operand))
+                final LIRInstruction op = instructions.get(j);
+                final int opId = op.id();
+
+                // add a temp range for each register if operation destroys
+                // caller-save registers
+                if (op.destroysCallerSavedRegisters())
                 {
-                    interval.addRange(0, 1);
+                    for (Register r : callerSaveRegs)
+                    {
+                        if (allocator.attributes(r).isAllocatable())
+                        {
+                            addTemp(r.asValue(), opId, RegisterPriority.None, LIRKind.Illegal);
+                        }
+                    }
                 }
+
+                op.visitEachOutput(outputConsumer);
+                op.visitEachTemp(tempConsumer);
+                op.visitEachAlive(aliveConsumer);
+                op.visitEachInput(inputConsumer);
+
+                /*
+                 * Add uses of live locals from interpreter's point of view for proper
+                 * debug information generation. Treat these operands as temp values (if
+                 * the live range is extended to a call site, the value would be in a
+                 * register at the call otherwise).
+                 */
+                op.visitEachState(stateProc);
+
+                // special steps for some instructions (especially moves)
+                handleMethodArguments(op);
+            } // end of instruction iteration
+        } // end of block iteration
+
+        /*
+         * Add the range [0, 1] to all fixed intervals. The register allocator need not handle
+         * unhandled fixed intervals.
+         */
+        for (Interval interval : allocator.intervals())
+        {
+            if (interval != null && isRegister(interval.operand))
+            {
+                interval.addRange(0, 1);
             }
         }
     }

@@ -1,14 +1,10 @@
 package graalvm.compiler.core.match;
 
-import static graalvm.compiler.debug.DebugOptions.LogVerbose;
-
 import java.util.List;
 
 import graalvm.compiler.core.gen.NodeLIRBuilder;
 import graalvm.compiler.core.match.MatchPattern.MatchResultCode;
 import graalvm.compiler.core.match.MatchPattern.Result;
-import graalvm.compiler.debug.CounterKey;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.graph.GraalGraphError;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodeinfo.Verbosity;
@@ -22,8 +18,6 @@ import jdk.vm.ci.meta.Value;
 
 public class MatchStatement
 {
-    private static final CounterKey MatchStatementSuccess = DebugContext.counter("MatchStatementSuccess");
-
     /**
      * A printable name for this statement. Usually it's just the name of the method doing the
      * emission.
@@ -64,8 +58,6 @@ public class MatchStatement
      */
     public boolean generate(NodeLIRBuilder builder, int index, Node node, List<Node> nodes)
     {
-        DebugContext debug = node.getDebug();
-        assert index == nodes.indexOf(node);
         // Check that the basic shape matches
         Result result = pattern.matchShape(node, this);
         if (result != Result.OK)
@@ -82,23 +74,7 @@ public class MatchStatement
             if (value != null)
             {
                 context.setResult(value);
-                MatchStatementSuccess.increment(debug);
-                DebugContext.counter("MatchStatement[%s]", getName()).increment(debug);
                 return true;
-            }
-            // The pattern matched but some other code generation constraint disallowed code
-            // generation for the pattern.
-            if (LogVerbose.getValue(node.getOptions()))
-            {
-                debug.log("while matching %s|%s %s %s returned null", context.getRoot().toString(Verbosity.Id), context.getRoot().getClass().getSimpleName(), getName(), generatorMethod.getName());
-                debug.log("with nodes %s", formatMatch(node));
-            }
-        }
-        else
-        {
-            if (LogVerbose.getValue(node.getOptions()) && result.code != MatchResultCode.WRONG_CLASS)
-            {
-                debug.log("while matching %s|%s %s %s", context.getRoot().toString(Verbosity.Id), context.getRoot().getClass().getSimpleName(), getName(), result);
             }
         }
         return false;

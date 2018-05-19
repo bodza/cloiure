@@ -95,13 +95,6 @@ public abstract class AccessFieldNode extends FixedWithNextNode implements Lower
     }
 
     @Override
-    public boolean verify()
-    {
-        assertTrue((object == null) == isStatic(), "static field must not have object, instance field must have object");
-        return super.verify();
-    }
-
-    @Override
     public NodeSize estimatedNodeSize()
     {
         if (field.isVolatile())

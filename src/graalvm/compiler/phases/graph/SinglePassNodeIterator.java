@@ -114,7 +114,6 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
         {
             this.node = node;
             this.stateOnEntry = stateOnEntry;
-            assert repOK();
         }
 
         /**
@@ -172,7 +171,6 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
                 state = state.clone();
                 loopBegin((LoopBeginNode) current);
                 current = ((LoopBeginNode) current).next();
-                assert current != null;
             }
             else if (current instanceof LoopEndNode)
             {
@@ -184,12 +182,10 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
             {
                 merge((AbstractMergeNode) current);
                 current = ((AbstractMergeNode) current).next();
-                assert current != null;
             }
             else if (current instanceof FixedWithNextNode)
             {
                 FixedNode next = ((FixedWithNextNode) current).next();
-                assert next != null : current;
                 node(current);
                 current = next;
             }
@@ -209,10 +205,6 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
                 controlSplit((ControlSplitNode) current);
                 queueSuccessors(current);
                 current = nextQueuedNode();
-            }
-            else
-            {
-                assert false : current;
             }
         } while (current != null);
         finished();
@@ -277,13 +269,11 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
                 states.add(other);
             }
             boolean ready = state.merge(merge, states);
-            assert ready : "Not a single-pass iterator after all";
             return merge;
         }
         else
         {
             AbstractBeginNode begin = elem.node;
-            assert begin.predecessor() != null;
             state = elem.stateOnEntry;
             state.afterSplit(begin);
             return begin;
@@ -308,7 +298,6 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
      */
     private void finishLoopEnds(LoopEndNode end)
     {
-        assert !visitedEnds.isMarked(end);
         visitedEnds.mark(end);
         keepForLater(end, state);
         LoopBeginNode begin = end.loopBegin();
@@ -345,7 +334,6 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
      */
     private void queueMerge(EndNode end)
     {
-        assert !visitedEnds.isMarked(end);
         visitedEnds.mark(end);
         keepForLater(end, state);
         AbstractMergeNode merge = end.merge();
@@ -406,22 +394,16 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
      */
     protected void finished()
     {
-        assert nodeQueue.isEmpty();
-        assert nodeStates.isEmpty();
     }
 
     private void keepForLater(FixedNode x, T s)
     {
-        assert !nodeStates.containsKey(x);
-        assert (x instanceof LoopBeginNode) || (x instanceof LoopEndNode) || (x instanceof EndNode);
-        assert s != null;
         nodeStates.put(x, s);
     }
 
     private T pruneEntry(FixedNode x)
     {
         T result = nodeStates.removeKey(x);
-        assert result != null;
         return result;
     }
 }

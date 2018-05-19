@@ -10,7 +10,6 @@ import java.util.List;
 
 import graalvm.compiler.core.common.RetryableBailoutException;
 import graalvm.compiler.core.common.calc.CanonicalCondition;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Graph.Mark;
 import graalvm.compiler.graph.Node;
@@ -95,7 +94,6 @@ public abstract class LoopTransformations
          * structure, which should have been enforced by findUnswitchable.
          */
         Iterator<Position> successors = firstNode.successorPositions().iterator();
-        assert successors.hasNext();
         // original loop is used as first successor
         Position firstPosition = successors.next();
         AbstractBeginNode originalLoopBegin = BeginNode.begin(originalLoop.entryPoint());
@@ -139,9 +137,6 @@ public abstract class LoopTransformations
 
     public static void partialUnroll(LoopEx loop)
     {
-        assert loop.loopBegin().isMainLoop();
-        loop.loopBegin().graph().getDebug().log("LoopPartialUnroll %s", loop);
-
         LoopFragmentInside newSegment = loop.inside().duplicate();
         newSegment.insertWithinAfter(loop);
     }
@@ -214,11 +209,9 @@ public abstract class LoopTransformations
     public static LoopBeginNode insertPrePostLoops(LoopEx loop)
     {
         StructuredGraph graph = loop.loopBegin().graph();
-        graph.getDebug().log("LoopTransformations.insertPrePostLoops %s", loop);
         LoopFragmentWhole preLoop = loop.whole();
         CountedLoopInfo preCounted = loop.counted();
         IfNode preLimit = preCounted.getLimitTest();
-        assert preLimit != null;
         LoopBeginNode preLoopBegin = loop.loopBegin();
         InductionVariable preIv = preCounted.getCounter();
         LoopExitNode preLoopExitNode = preLoopBegin.getSingleLoopExit();
@@ -230,7 +223,6 @@ public abstract class LoopTransformations
         preLoopBegin.incrementSplits();
         preLoopBegin.incrementSplits();
         preLoopBegin.setPreLoop();
-        graph.getDebug().dump(DebugContext.VERBOSE_LEVEL, graph, "After duplication");
         LoopBeginNode mainLoopBegin = mainLoop.getDuplicatedNode(preLoopBegin);
         mainLoopBegin.setMainLoop();
         LoopBeginNode postLoopBegin = postLoop.getDuplicatedNode(preLoopBegin);
@@ -280,7 +272,6 @@ public abstract class LoopTransformations
         {
             graph.removeFixed(safepoint);
         }
-        graph.getDebug().dump(DebugContext.DETAILED_LEVEL, graph, "InsertPrePostLoops %s", loop);
         return mainLoopBegin;
     }
 
@@ -328,7 +319,6 @@ public abstract class LoopTransformations
                 if (preLoop.isOutsideLoop(externalUsage))
                 {
                     Node postUsage = postLoop.getDuplicatedNode(node);
-                    assert postUsage != null;
                     externalUsage.replaceFirstInput(node, postUsage);
                 }
             }
@@ -491,7 +481,6 @@ public abstract class LoopTransformations
         }
         if (((CompareNode) condition).condition() == CanonicalCondition.EQ)
         {
-            condition.getDebug().log(DebugContext.VERBOSE_LEVEL, "isUnrollableLoop %s condition unsupported %s ", loopBegin, ((CompareNode) condition).condition());
             return false;
         }
         if (loopBegin.isMainLoop() || loopBegin.isSimpleLoop())
@@ -503,7 +492,6 @@ public abstract class LoopTransformations
             {
                 return true;
             }
-            condition.getDebug().log(DebugContext.VERBOSE_LEVEL, "isUnrollableLoop %s too large to unroll %s ", loopBegin, loop.loop().getBlocks().size());
         }
         return false;
     }

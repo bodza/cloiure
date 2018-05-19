@@ -43,7 +43,6 @@ public final class ReinterpretNode extends UnaryNode implements ArithmeticLIRLow
     protected ReinterpretNode(Stamp to, ValueNode value)
     {
         super(TYPE, getReinterpretStamp(to, value.stamp(NodeView.DEFAULT)), value);
-        assert to instanceof ArithmeticStamp;
     }
 
     public static ValueNode create(JavaKind to, ValueNode value, NodeView view)
@@ -67,7 +66,6 @@ public final class ReinterpretNode extends UnaryNode implements ArithmeticLIRLow
         buffer.rewind();
         SerializableConstant ret = ((ArithmeticStamp) stamp).deserialize(buffer);
 
-        assert !buffer.hasRemaining();
         return ret;
     }
 
@@ -120,7 +118,6 @@ public final class ReinterpretNode extends UnaryNode implements ArithmeticLIRLow
         }
         else
         {
-            assert bits == 32;
             exponentMask = Float.floatToRawIntBits(Float.POSITIVE_INFINITY);
         }
 
@@ -223,7 +220,6 @@ public final class ReinterpretNode extends UnaryNode implements ArithmeticLIRLow
         }
         else
         {
-            assert bits == 32;
             exponentMask = Float.floatToRawIntBits(Float.POSITIVE_INFINITY);
             minPositive = Float.MIN_VALUE;
             maxPositive = Float.MAX_VALUE;

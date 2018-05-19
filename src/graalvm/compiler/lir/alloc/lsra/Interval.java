@@ -16,7 +16,6 @@ import java.util.List;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.util.IntList;
 import graalvm.compiler.core.common.util.Util;
-import graalvm.compiler.debug.Assertions;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.Variable;
@@ -87,7 +86,6 @@ public final class Interval
          */
         public void set(RegisterBinding binding, Interval list)
         {
-            assert list != null;
             switch (binding)
             {
                 case Any:
@@ -176,7 +174,6 @@ public final class Interval
             Interval cur = list;
             while (cur != i)
             {
-                assert cur != null && !cur.isEndMarker() : "interval has not been found in list: " + i;
                 prev = cur;
                 cur = cur.next;
             }
@@ -413,7 +410,6 @@ public final class Interval
 
         public void add(int usePos, RegisterPriority registerPriority)
         {
-            assert list.size() == 0 || usePos(size() - 1) > usePos;
             list.add(usePos);
             list.add(registerPriority.ordinal());
         }
@@ -562,23 +558,11 @@ public final class Interval
     {
         if (isRegister(newLocation))
         {
-            assert this.location == null : "cannot re-assign location for " + this;
             if (newLocation.getValueKind().equals(LIRKind.Illegal) && !kind.equals(LIRKind.Illegal))
             {
                 this.location = asRegister(newLocation).asValue(kind);
                 return;
             }
-        }
-        else if (isIllegal(newLocation))
-        {
-            assert canMaterialize();
-        }
-        else
-        {
-            assert this.location == null || isRegister(this.location) || (isVirtualStackSlot(this.location) && isStackSlot(newLocation)) : "cannot re-assign location for " + this;
-            assert isStackSlotValue(newLocation);
-            assert !newLocation.getValueKind().equals(LIRKind.Illegal);
-            assert newLocation.getValueKind().equals(this.kind);
         }
         this.location = newLocation;
     }
@@ -600,13 +584,11 @@ public final class Interval
 
     public ValueKind<?> kind()
     {
-        assert !isRegister(operand) : "cannot access type for fixed interval";
         return kind;
     }
 
     public void setKind(ValueKind<?> kind)
     {
-        assert isRegister(operand) || this.kind().equals(LIRKind.Illegal) || this.kind().equals(kind) : "overwriting existing type";
         this.kind = kind;
     }
 
@@ -626,7 +608,6 @@ public final class Interval
         {
             cachedTo = calcTo();
         }
-        assert cachedTo == calcTo() : "invalid cached value";
         return cachedTo;
     }
 
@@ -655,7 +636,6 @@ public final class Interval
      */
     public Interval splitParent()
     {
-        assert splitParent.isSplitParent() : "not a split parent: " + this;
         return splitParent;
     }
 
@@ -669,8 +649,6 @@ public final class Interval
 
     public void setSpillSlot(AllocatableValue slot)
     {
-        assert isStackSlotValue(slot);
-        assert splitParent().spillSlot == null || (isVirtualStackSlot(splitParent().spillSlot) && isStackSlot(slot)) : "connot overwrite existing spill slot";
         splitParent().spillSlot = slot;
     }
 
@@ -707,13 +685,11 @@ public final class Interval
 
     public void setSpillState(SpillState state)
     {
-        assert state.ordinal() >= spillState().ordinal() : "state cannot decrease";
         splitParent().spillState = state;
     }
 
     public void setSpillDefinitionPos(int pos)
     {
-        assert spillState() == SpillState.SpillInDominator || spillState() == SpillState.NoDefinitionFound || spillDefinitionPos() == -1 : "cannot set the position twice";
         splitParent().spillDefinitionPos = pos;
     }
 
@@ -747,7 +723,6 @@ public final class Interval
 
     void nextRange()
     {
-        assert !this.isEndMarker() : "not allowed on sentinel";
         current = current.next;
     }
 
@@ -778,16 +753,11 @@ public final class Interval
 
     Interval(AllocatableValue operand, int operandNumber, Interval intervalEndMarker, Range rangeEndMarker)
     {
-        assert operand != null;
         this.operand = operand;
         this.operandNumber = operandNumber;
         if (isRegister(operand))
         {
             location = operand;
-        }
-        else
-        {
-            assert isIllegal(operand) || isVariable(operand);
         }
         this.kind = LIRKind.Illegal;
         this.first = rangeEndMarker;
@@ -837,51 +807,12 @@ public final class Interval
 
     int calcTo()
     {
-        assert !first.isEndMarker() : "interval has no range";
-
         Range r = first;
         while (!r.next.isEndMarker())
         {
             r = r.next;
         }
         return r.to;
-    }
-
-    // consistency check of split-children
-    boolean checkSplitChildren()
-    {
-        if (!splitChildren.isEmpty())
-        {
-            assert isSplitParent() : "only split parents can have children";
-
-            for (int i = 0; i < splitChildren.size(); i++)
-            {
-                Interval i1 = splitChildren.get(i);
-
-                assert i1.splitParent() == this : "not a split child of this interval";
-                assert i1.kind().equals(kind()) : "must be equal for all split children";
-                assert (i1.spillSlot() == null && spillSlot == null) || i1.spillSlot().equals(spillSlot()) : "must be equal for all split children";
-
-                for (int j = i + 1; j < splitChildren.size(); j++)
-                {
-                    Interval i2 = splitChildren.get(j);
-
-                    assert !i1.operand.equals(i2.operand) : "same register number";
-
-                    if (i1.from() < i2.from())
-                    {
-                        assert i1.to() <= i2.from() && i1.to() < i2.to() : "intervals overlapping";
-                    }
-                    else
-                    {
-                        assert i2.from() < i1.from() : "intervals start at same opId";
-                        assert i2.to() <= i1.from() && i2.to() < i1.to() : "intervals overlapping";
-                    }
-                }
-            }
-        }
-
-        return true;
     }
 
     public Interval locationHint(boolean searchSplitChild)
@@ -893,8 +824,6 @@ public final class Interval
 
         if (locationHint != null)
         {
-            assert locationHint.isSplitParent() : "ony split parents are valid hint registers";
-
             if (locationHint.location != null && isRegister(locationHint.location))
             {
                 return locationHint;
@@ -920,12 +849,8 @@ public final class Interval
 
     Interval getSplitChildAtOpId(int opId, LIRInstruction.OperandMode mode, LinearScan allocator)
     {
-        assert isSplitParent() : "can only be called for split parents";
-        assert opId >= 0 : "invalid opId (method cannot be called for spill moves)";
-
         if (splitChildren.isEmpty())
         {
-            assert this.covers(opId, mode) : this + " does not cover " + opId;
             return this;
         }
         else
@@ -956,7 +881,6 @@ public final class Interval
                 }
             }
 
-            assert checkSplitChild(result, opId, allocator, toOffset, mode);
             return result;
         }
     }
@@ -990,16 +914,12 @@ public final class Interval
                 }
             }
         }
-        assert result.covers(opId, mode) : "opId not covered by interval";
         return true;
     }
 
     // returns the interval that covers the given opId or null if there is none
     Interval getIntervalCoveringOpId(int opId)
     {
-        assert opId >= 0 : "invalid opId";
-        assert opId < to() : "can only look into the past";
-
         if (opId >= from())
         {
             return this;
@@ -1008,7 +928,6 @@ public final class Interval
         Interval parent = splitParent();
         Interval result = null;
 
-        assert !parent.splitChildren.isEmpty() : "no split children available";
         int len = parent.splitChildren.size();
 
         for (int i = len - 1; i >= 0; i--)
@@ -1016,7 +935,6 @@ public final class Interval
             Interval cur = parent.splitChildren.get(i);
             if (cur.from() <= opId && opId < cur.to())
             {
-                assert result == null : "covered by multiple split children " + result + " and " + cur;
                 result = cur;
             }
         }
@@ -1027,12 +945,9 @@ public final class Interval
     // returns the last split child that ends before the given opId
     Interval getSplitChildBeforeOpId(int opId)
     {
-        assert opId >= 0 : "invalid opId";
-
         Interval parent = splitParent();
         Interval result = null;
 
-        assert !parent.splitChildren.isEmpty() : "no split children available";
         int len = parent.splitChildren.size();
 
         for (int i = len - 1; i >= 0; i--)
@@ -1044,16 +959,12 @@ public final class Interval
             }
         }
 
-        assert result != null : "no split child found";
         return result;
     }
 
     // checks if opId is covered by any split child
     boolean splitChildCovers(int opId, LIRInstruction.OperandMode mode)
     {
-        assert isSplitParent() : "can only be called for split parents";
-        assert opId >= 0 : "invalid opId (method can not be called for spill moves)";
-
         if (splitChildren.isEmpty())
         {
             // simple case if interval was not split
@@ -1092,8 +1003,6 @@ public final class Interval
     // Note: use positions are sorted descending . first use has highest index
     int firstUsage(RegisterPriority minRegisterPriority)
     {
-        assert isVariable(operand) : "cannot access use positions for fixed intervals";
-
         for (int i = usePosList.size() - 1; i >= 0; --i)
         {
             RegisterPriority registerPriority = adaptPriority(usePosList.registerPriority(i));
@@ -1107,8 +1016,6 @@ public final class Interval
 
     int nextUsage(RegisterPriority minRegisterPriority, int from)
     {
-        assert isVariable(operand) : "cannot access use positions for fixed intervals";
-
         for (int i = usePosList.size() - 1; i >= 0; --i)
         {
             int usePos = usePosList.usePos(i);
@@ -1122,8 +1029,6 @@ public final class Interval
 
     int nextUsageExact(RegisterPriority exactRegisterPriority, int from)
     {
-        assert isVariable(operand) : "cannot access use positions for fixed intervals";
-
         for (int i = usePosList.size() - 1; i >= 0; --i)
         {
             int usePos = usePosList.usePos(i);
@@ -1137,8 +1042,6 @@ public final class Interval
 
     int previousUsage(RegisterPriority minRegisterPriority, int from)
     {
-        assert isVariable(operand) : "cannot access use positions for fixed intervals";
-
         int prev = -1;
         for (int i = usePosList.size() - 1; i >= 0; --i)
         {
@@ -1155,25 +1058,11 @@ public final class Interval
         return prev;
     }
 
-    public void addUsePos(int pos, RegisterPriority registerPriority, boolean detailedAsserts)
+    public void addUsePos(int pos, RegisterPriority registerPriority)
     {
-        assert covers(pos, LIRInstruction.OperandMode.USE) : String.format("use position %d not covered by live range of interval %s", pos, this);
-
         // do not add use positions for precolored intervals because they are never used
         if (registerPriority != RegisterPriority.None && isVariable(operand))
         {
-            if (detailedAsserts)
-            {
-                for (int i = 0; i < usePosList.size(); i++)
-                {
-                    assert pos <= usePosList.usePos(i) : "already added a use-position with lower position";
-                    if (i > 0)
-                    {
-                        assert usePosList.usePos(i) < usePosList.usePos(i - 1) : "not sorted descending";
-                    }
-                }
-            }
-
             // Note: addUse is called in descending order, so list gets sorted
             // automatically by just appending new use positions
             int len = usePosList.size();
@@ -1183,7 +1072,6 @@ public final class Interval
             }
             else if (usePosList.registerPriority(len - 1).lessThan(registerPriority))
             {
-                assert usePosList.usePos(len - 1) == pos : "list not sorted correctly";
                 usePosList.setRegisterPriority(len - 1, registerPriority);
             }
         }
@@ -1191,13 +1079,8 @@ public final class Interval
 
     public void addRange(int from, int to)
     {
-        assert from < to : "invalid range";
-        assert first().isEndMarker() || to < first().next.from : "not inserting at begin of interval";
-        assert from <= first().to : "not inserting at begin of interval";
-
         if (first.from <= to)
         {
-            assert !first.isEndMarker();
             // join intersecting ranges
             first.from = Math.min(from, first().from);
             first.to = Math.max(to, first().to);
@@ -1222,8 +1105,6 @@ public final class Interval
         // insert new interval in children-list of parent
         if (parent.splitChildren.isEmpty())
         {
-            assert isSplitParent() : "list must be initialized at first split";
-
             // Create new non-shared list
             parent.splitChildren = new ArrayList<>(4);
             parent.splitChildren.add(this);
@@ -1249,8 +1130,6 @@ public final class Interval
      */
     Interval split(int splitPos, LinearScan allocator)
     {
-        assert isVariable(operand) : "cannot split fixed intervals";
-
         // allocate new interval
         Interval result = newSplitChild(allocator);
 
@@ -1262,7 +1141,6 @@ public final class Interval
             prev = cur;
             cur = cur.next;
         }
-        assert !cur.isEndMarker() : "split interval after end of last range";
 
         if (cur.from < splitPos)
         {
@@ -1272,7 +1150,6 @@ public final class Interval
         }
         else
         {
-            assert prev != null : "split before start of first range";
             result.first = cur;
             prev.next = allocator.rangeEndMarker;
         }
@@ -1282,17 +1159,6 @@ public final class Interval
         // split list of use positions
         result.usePosList = usePosList.splitAt(splitPos);
 
-        if (Assertions.detailedAssertionsEnabled(allocator.getOptions()))
-        {
-            for (int i = 0; i < usePosList.size(); i++)
-            {
-                assert usePosList.usePos(i) < splitPos;
-            }
-            for (int i = 0; i < result.usePosList.size(); i++)
-            {
-                assert result.usePosList.usePos(i) >= splitPos;
-            }
-        }
         return result;
     }
 
@@ -1305,11 +1171,6 @@ public final class Interval
      */
     Interval splitFromStart(int splitPos, LinearScan allocator)
     {
-        assert isVariable(operand) : "cannot split fixed intervals";
-        assert splitPos > from() && splitPos < to() : "can only split inside interval";
-        assert splitPos > first.from && splitPos <= first.to : "can only split inside first range";
-        assert firstUsage(RegisterPriority.None) > splitPos : "can not split when use positions are present";
-
         // allocate new interval
         Interval result = newSplitChild(allocator);
 
@@ -1319,7 +1180,6 @@ public final class Interval
 
         if (splitPos == first.to)
         {
-            assert !first.next.isEndMarker() : "must not be at end";
             first = first.next;
         }
         else
@@ -1341,8 +1201,6 @@ public final class Interval
         }
         if (!cur.isEndMarker())
         {
-            assert cur.to != cur.next.from : "ranges not separated";
-
             if (mode == LIRInstruction.OperandMode.DEF)
             {
                 return cur.from <= opId && opId < cur.to;
@@ -1359,14 +1217,9 @@ public final class Interval
     // (even if the hole has only the length 1)
     boolean hasHoleBetween(int holeFrom, int holeTo)
     {
-        assert holeFrom < holeTo : "check";
-        assert from() <= holeFrom && holeTo <= to() : "index out of interval";
-
         Range cur = first;
         while (!cur.isEndMarker())
         {
-            assert cur.to < cur.next.from : "no space between ranges";
-
             // hole-range starts before this range . hole
             if (holeFrom < cur.from)
             {
@@ -1456,7 +1309,6 @@ public final class Interval
             }
             buf.append(cur);
             cur = cur.next;
-            assert cur != null : "range list not closed with range sentinel";
         }
         buf.append("} uses{");
 
@@ -1464,7 +1316,6 @@ public final class Interval
         int prev = -1;
         for (int i = usePosList.size() - 1; i >= 0; --i)
         {
-            assert prev < usePosList.usePos(i) : "use positions not sorted";
             if (i != usePosList.size() - 1)
             {
                 buf.append(", ");

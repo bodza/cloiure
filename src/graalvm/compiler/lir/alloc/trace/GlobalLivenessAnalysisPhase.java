@@ -9,9 +9,7 @@ import java.util.EnumSet;
 
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.core.common.cfg.Loop;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.debug.Indent;
 import graalvm.compiler.lir.InstructionValueConsumer;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRInstruction;
@@ -33,19 +31,15 @@ public final class GlobalLivenessAnalysisPhase extends AllocationPhase
     @Override
     protected void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context)
     {
-        assert SSAUtil.verifySSAForm(lirGenRes.getLIR());
         Analyser ssiBuilder = new Analyser(lirGenRes.getLIR());
         ssiBuilder.build();
         ssiBuilder.finish();
         GlobalLivenessInfo livenessInfo = ssiBuilder.getLivenessInfo();
-        assert livenessInfo.verify(lirGenRes.getLIR());
         context.contextAdd(livenessInfo);
     }
 
     private final class Analyser
     {
-        private static final int LOG_LEVEL = DebugContext.INFO_LEVEL;
-
         /**
          * Bit map specifying which operands are live upon entry to this block. These are values
          * used in this block or any of its successors where such value are not defined in this
@@ -125,66 +119,49 @@ public final class GlobalLivenessAnalysisPhase extends AllocationPhase
         /**
          * Computes live sets for each block.
          */
-        @SuppressWarnings("try")
         private void computeLiveness()
         {
             // iterate all blocks
-            DebugContext debug = lir.getDebug();
             for (int i = blocks.length - 1; i >= 0; i--)
             {
                 final AbstractBlockBase<?> block = blocks[i];
-                try (Indent indent = debug.logAndIndent(LOG_LEVEL, "compute local live sets for block %s", block))
+                final BitSet liveIn = mergeLiveSets(block);
+                setLiveOut(block, (BitSet) liveIn.clone());
+
+                InstructionValueConsumer useConsumer = new InstructionValueConsumer()
                 {
-                    final BitSet liveIn = mergeLiveSets(block);
-                    setLiveOut(block, (BitSet) liveIn.clone());
-
-                    InstructionValueConsumer useConsumer = new InstructionValueConsumer()
+                    @Override
+                    public void visitValue(LIRInstruction op, Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
                     {
-                        @Override
-                        public void visitValue(LIRInstruction op, Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
-                        {
-                            processUse(liveIn, operand);
-                        }
-                    };
-                    InstructionValueConsumer defConsumer = new InstructionValueConsumer()
-                    {
-                        @Override
-                        public void visitValue(LIRInstruction op, Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
-                        {
-                            processDef(liveIn, op, operand);
-                        }
-                    };
-                    if (debug.isLogEnabled())
-                    {
-                        debug.log(LOG_LEVEL, "liveOut B%d %s", block.getId(), getLiveOut(block));
+                        processUse(liveIn, operand);
                     }
-
-                    // iterate all instructions of the block
-                    ArrayList<LIRInstruction> instructions = getLIR().getLIRforBlock(block);
-                    for (int j = instructions.size() - 1; j >= 0; j--)
+                };
+                InstructionValueConsumer defConsumer = new InstructionValueConsumer()
+                {
+                    @Override
+                    public void visitValue(LIRInstruction op, Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
                     {
-                        final LIRInstruction op = instructions.get(j);
-
-                        try (Indent indent2 = debug.logAndIndent(LOG_LEVEL, "handle op %d: %s", op.id(), op))
-                        {
-                            op.visitEachOutput(defConsumer);
-                            op.visitEachTemp(defConsumer);
-                            op.visitEachState(useConsumer);
-                            op.visitEachAlive(useConsumer);
-                            op.visitEachInput(useConsumer);
-                        }
-                    } // end of instruction iteration
-
-                    setLiveIn(block, liveIn);
-                    if (block.isLoopHeader())
-                    {
-                        handleLoopHeader(block.getLoop(), liveIn);
+                        processDef(liveIn, op, operand);
                     }
+                };
 
-                    if (debug.isLogEnabled())
-                    {
-                        debug.log(LOG_LEVEL, "liveIn  B%d %s", block.getId(), getLiveIn(block));
-                    }
+                // iterate all instructions of the block
+                ArrayList<LIRInstruction> instructions = getLIR().getLIRforBlock(block);
+                for (int j = instructions.size() - 1; j >= 0; j--)
+                {
+                    final LIRInstruction op = instructions.get(j);
+
+                    op.visitEachOutput(defConsumer);
+                    op.visitEachTemp(defConsumer);
+                    op.visitEachState(useConsumer);
+                    op.visitEachAlive(useConsumer);
+                    op.visitEachInput(useConsumer);
+                } // end of instruction iteration
+
+                setLiveIn(block, liveIn);
+                if (block.isLoopHeader())
+                {
+                    handleLoopHeader(block.getLoop(), liveIn);
                 }
             } // end of block iteration
         }
@@ -203,7 +180,6 @@ public final class GlobalLivenessAnalysisPhase extends AllocationPhase
 
         private BitSet mergeLiveSets(final AbstractBlockBase<?> block)
         {
-            assert block != null;
             final BitSet liveOut = new BitSet(liveSetSize());
             for (AbstractBlockBase<?> successor : block.getSuccessors())
             {
@@ -211,10 +187,6 @@ public final class GlobalLivenessAnalysisPhase extends AllocationPhase
                 if (succLiveIn != null)
                 {
                     liveOut.or(succLiveIn);
-                }
-                else
-                {
-                    assert successor.isLoopHeader() : "Successor of " + block + " not yet processed and not loop header: " + successor;
                 }
             }
             return liveOut;
@@ -226,11 +198,6 @@ public final class GlobalLivenessAnalysisPhase extends AllocationPhase
             {
                 int operandNum = operandNumber(operand);
                 liveGen.set(operandNum);
-                DebugContext debug = lir.getDebug();
-                if (debug.isLogEnabled())
-                {
-                    debug.log(LOG_LEVEL, "liveGen for operand %d(%s)", operandNum, operand);
-                }
             }
         }
 
@@ -245,11 +212,6 @@ public final class GlobalLivenessAnalysisPhase extends AllocationPhase
                     operands[operandNum] = operand;
                 }
                 liveGen.clear(operandNum);
-                DebugContext debug = lir.getDebug();
-                if (debug.isLogEnabled())
-                {
-                    debug.log(LOG_LEVEL, "liveKill for operand %d(%s)", operandNum, operand);
-                }
             }
         }
 
@@ -270,23 +232,18 @@ public final class GlobalLivenessAnalysisPhase extends AllocationPhase
             }
         }
 
-        @SuppressWarnings("try")
         public void finish()
         {
             // iterate all blocks in reverse order
             for (AbstractBlockBase<?> block : (AbstractBlockBase<?>[]) lir.getControlFlowGraph().getBlocks())
             {
-                try (Indent indent = lir.getDebug().logAndIndent(LOG_LEVEL, "Finish Block %s", block))
-                {
-                    buildIncoming(block);
-                    buildOutgoing(block);
-                }
+                buildIncoming(block);
+                buildOutgoing(block);
             }
         }
 
         public GlobalLivenessInfo getLivenessInfo()
         {
-            assert livenessInfoBuilder != null : "No liveness info collected";
             return livenessInfoBuilder.createLivenessInfo();
         }
 
@@ -294,8 +251,6 @@ public final class GlobalLivenessAnalysisPhase extends AllocationPhase
         {
             if (!GlobalLivenessInfo.storesIncoming(block))
             {
-                assert block.getPredecessorCount() == 1;
-                assert GlobalLivenessInfo.storesOutgoing(block.getPredecessors()[0]) : "No incoming liveness info: " + block;
                 return;
             }
 
@@ -303,7 +258,6 @@ public final class GlobalLivenessAnalysisPhase extends AllocationPhase
             if (block.getPredecessorCount() == 0)
             {
                 // start block
-                assert getLiveIn(block).isEmpty() : "liveIn for start block is not empty? " + getLiveIn(block);
                 liveInArray = livenessInfoBuilder.emptySet;
             }
             else
@@ -330,8 +284,6 @@ public final class GlobalLivenessAnalysisPhase extends AllocationPhase
             BitSet liveOut = getLiveOut(block);
             if (!GlobalLivenessInfo.storesOutgoing(block))
             {
-                assert GlobalLivenessInfo.storesOutgoing(block) || block.getSuccessorCount() == 1;
-                assert GlobalLivenessInfo.storesOutgoing(block) || GlobalLivenessInfo.storesIncoming(block.getSuccessors()[0]) : "No outgoing liveness info: " + block;
                 return;
             }
             int[] liveOutArray = liveOut.isEmpty() ? livenessInfoBuilder.emptySet : bitSetToIntArray(liveOut);

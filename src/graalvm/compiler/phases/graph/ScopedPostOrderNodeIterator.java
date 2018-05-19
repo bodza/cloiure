@@ -52,8 +52,6 @@ public abstract class ScopedPostOrderNodeIterator
 
         while ((current = nextQueuedNode()) != null)
         {
-            assert current.isAlive();
-
             if (current instanceof Invoke)
             {
                 invoke((Invoke) current);
@@ -90,10 +88,6 @@ public abstract class ScopedPostOrderNodeIterator
             else if (current instanceof ControlSplitNode)
             {
                 queueSuccessors(current);
-            }
-            else
-            {
-                assert false : current;
             }
         }
     }
@@ -171,7 +165,6 @@ public abstract class ScopedPostOrderNodeIterator
         }
 
         FixedNode result = nodeQueue.removeFirst();
-        assert queuedNodes.isMarked(result);
         return result;
     }
 

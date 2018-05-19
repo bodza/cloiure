@@ -2,7 +2,6 @@ package graalvm.compiler.loop;
 
 import org.graalvm.collections.EconomicSet;
 import graalvm.compiler.core.common.cfg.Loop;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.graph.Graph;
 import graalvm.compiler.graph.Graph.DuplicationReplacement;
 import graalvm.compiler.graph.Node;
@@ -37,8 +36,6 @@ public class LoopFragmentWhole extends LoopFragment
 
     private void reify()
     {
-        assert this.isDuplicate();
-
         patchNodes(null);
 
         mergeEarlyExits();
@@ -105,7 +102,6 @@ public class LoopFragmentWhole extends LoopFragment
     void cleanupLoopExits()
     {
         LoopBeginNode loopBegin = original().loop().loopBegin();
-        assert nodes == null || nodes.contains(loopBegin);
         StructuredGraph graph = loopBegin.graph();
         if (graph.getGuardsStage() == StructuredGraph.GuardsStage.AFTER_FSA)
         {
@@ -124,7 +120,6 @@ public class LoopFragmentWhole extends LoopFragment
                     {
                         nodes.mark(exitNode);
                     }
-                    graph.getDebug().dump(DebugContext.VERBOSE_LEVEL, graph, "Adjusting loop exit node for %s", loopBegin);
                 }
                 exits.add(exitNode);
             }

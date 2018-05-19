@@ -85,10 +85,6 @@ public class AMD64FrameMap extends FrameMap
     @Override
     public int offsetForStackSlot(StackSlot slot)
     {
-        assert (!slot.getRawAddFrameSize() && slot.getRawOffset() <  outgoingSize) ||
-               (slot.getRawAddFrameSize() && slot.getRawOffset()  <  0 && -slot.getRawOffset() <= spillSize) ||
-               (slot.getRawAddFrameSize() && slot.getRawOffset()  >= 0) :
-                   String.format("RawAddFrameSize: %b RawOffset: 0x%x spillSize: 0x%x outgoingSize: 0x%x", slot.getRawAddFrameSize(), slot.getRawOffset(), spillSize, outgoingSize);
         return super.offsetForStackSlot(slot);
     }
 
@@ -98,22 +94,18 @@ public class AMD64FrameMap extends FrameMap
      */
     StackSlot allocateRBPSpillSlot()
     {
-        assert spillSize == initialSpillSize : "RBP spill slot must be the first allocated stack slots";
         rbpSpillSlot = allocateSpillSlot(LIRKind.value(AMD64Kind.QWORD));
-        assert asStackSlot(rbpSpillSlot).getRawOffset() == -16 : asStackSlot(rbpSpillSlot).getRawOffset();
         return rbpSpillSlot;
     }
 
     void freeRBPSpillSlot()
     {
         int size = spillSlotSize(LIRKind.value(AMD64Kind.QWORD));
-        assert spillSize == NumUtil.roundUp(initialSpillSize + size, size) : "RBP spill slot can not be freed after allocation other stack slots";
         spillSize = initialSpillSize;
     }
 
     public StackSlot allocateDeoptimizationRescueSlot()
     {
-        assert spillSize == initialSpillSize || spillSize == initialSpillSize + spillSlotSize(LIRKind.value(AMD64Kind.QWORD)) : "Deoptimization rescue slot must be the first or second (if there is an RBP spill slot) stack slot";
         return allocateSpillSlot(LIRKind.value(AMD64Kind.QWORD));
     }
 }

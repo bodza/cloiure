@@ -93,7 +93,6 @@ public class ComputeInliningRelevance
         {
             return rootScope.computeInvokeRelevance(invoke);
         }
-        assert nodeRelevances != null : "uninitialized relevance";
         return nodeRelevances.get(invoke.asNode());
     }
 
@@ -127,7 +126,6 @@ public class ComputeInliningRelevance
                     }
                     else
                     {
-                        assert current instanceof MergeNode : current;
                         // follow any path upwards - it doesn't matter which one
                         current = ((AbstractMergeNode) current).forwardEndAt(0);
                     }
@@ -193,7 +191,6 @@ public class ComputeInliningRelevance
             {
                 if (start instanceof LoopBeginNode)
                 {
-                    assert parent != null;
                     double scopeEntryProbability = nodeProbabilities.applyAsDouble(((LoopBeginNode) start).forwardEnd());
 
                     scopeRelevanceWithinParent = scopeEntryProbability / parent.getFastPathMinProbability();
@@ -213,13 +210,10 @@ public class ComputeInliningRelevance
          */
         public void process(NodeWorkList workList)
         {
-            assert !(start instanceof Invoke);
             workList.addAll(start.successors());
 
             for (Node current : workList)
             {
-                assert current.isAlive();
-
                 if (current instanceof Invoke)
                 {
                     // process the invoke and queue its successors
@@ -255,10 +249,6 @@ public class ComputeInliningRelevance
                 {
                     workList.addAll(current.successors());
                 }
-                else
-                {
-                    assert false : current;
-                }
             }
         }
 
@@ -269,10 +259,8 @@ public class ComputeInliningRelevance
         public double computeInvokeRelevance(Invoke invoke)
         {
             double invokeProbability = nodeProbabilities.applyAsDouble(invoke.asNode());
-            assert !Double.isNaN(invokeProbability);
 
             double relevance = (invokeProbability / getFastPathMinProbability()) * Math.min(1.0, getScopeRelevanceWithinParent());
-            assert !Double.isNaN(relevance) : invoke + ": " + relevance + " / " + invokeProbability + " / " + getFastPathMinProbability() + " / " + getScopeRelevanceWithinParent();
             return relevance;
         }
     }
@@ -309,7 +297,6 @@ public class ComputeInliningRelevance
                 }
                 else
                 {
-                    assert current.successors().count() <= 1;
                     current = current.successors().first();
                 }
             } while (current != null);

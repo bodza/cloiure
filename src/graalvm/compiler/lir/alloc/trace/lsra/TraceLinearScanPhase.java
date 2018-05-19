@@ -16,10 +16,7 @@ import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.common.alloc.Trace;
 import graalvm.compiler.core.common.alloc.TraceBuilderResult;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
-import graalvm.compiler.debug.Assertions;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.debug.Indent;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LIRInstruction.OperandMode;
@@ -32,8 +29,6 @@ import graalvm.compiler.lir.alloc.trace.TraceAllocationPhase.TraceAllocationCont
 import graalvm.compiler.lir.alloc.trace.TraceRegisterAllocationPhase;
 import graalvm.compiler.lir.alloc.trace.TraceUtil;
 import graalvm.compiler.lir.alloc.trace.lsra.TraceInterval.RegisterPriority;
-import graalvm.compiler.lir.debug.IntervalDumper;
-import graalvm.compiler.lir.debug.IntervalDumper.IntervalVisitor;
 import graalvm.compiler.lir.framemap.FrameMapBuilder;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;
@@ -109,12 +104,6 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
         this.neverSpillConstants = neverSpillConstants;
         this.cachedStackSlots = cachedStackSlots;
         this.livenessInfo = livenessInfo;
-        assert livenessInfo != null;
-    }
-
-    protected DebugContext getDebug()
-    {
-        return res.getLIR().getDebug();
     }
 
     public static boolean isVariableOrRegister(Value value)
@@ -173,7 +162,6 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
             {
                 continue;
             }
-            assert from <= interval.from();
             from = interval.from();
         }
         return true;
@@ -184,8 +172,6 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
         int from = -1;
         for (TraceInterval interval : intervals)
         {
-            assert interval != null;
-            assert from <= interval.spillDefinitionPos();
             from = interval.spillDefinitionPos();
         }
         return true;
@@ -226,7 +212,7 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
         return sortedList;
     }
 
-    public final class TraceLinearScan implements IntervalDumper
+    public final class TraceLinearScan
     {
         /**
          * Intervals sorted by {@link TraceInterval#from()}.
@@ -259,11 +245,6 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
             return getLIR().getOptions();
         }
 
-        DebugContext getDebug()
-        {
-            return getLIR().getDebug();
-        }
-
         /**
          * Gets the number of operands. This value will increase by 1 for new variable.
          */
@@ -283,7 +264,6 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
         public int getFirstLirInstructionId(AbstractBlockBase<?> block)
         {
             int result = getLIR().getLIRforBlock(block).get(0).id();
-            assert result >= 0;
             return result;
         }
 
@@ -291,7 +271,6 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
         {
             ArrayList<LIRInstruction> instructions = getLIR().getLIRforBlock(block);
             int result = instructions.get(instructions.size() - 1).id();
-            assert result >= 0;
             return result;
         }
 
@@ -317,7 +296,6 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
         protected TraceLocalMoveResolver createMoveResolver()
         {
             TraceLocalMoveResolver moveResolver = new TraceLocalMoveResolver(this);
-            assert moveResolver.checkEmpty();
             return moveResolver;
         }
 
@@ -349,7 +327,6 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
          */
         private AllocatableValue allocateSpillSlot(TraceInterval interval)
         {
-            DebugContext debug = res.getLIR().getDebug();
             int variableIndex = interval.splitParent().operandNumber;
             OptionValues options = getOptions();
             if (TraceRegisterAllocationPhase.Options.TraceRACacheStackSlots.getValue(options))
@@ -357,8 +334,6 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
                 AllocatableValue cachedStackSlot = cachedStackSlots[variableIndex];
                 if (cachedStackSlot != null)
                 {
-                    TraceRegisterAllocationPhase.globalStackSlots.increment(debug);
-                    assert cachedStackSlot.getValueKind().equals(getKind(interval)) : "CachedStackSlot: kind mismatch? " + getKind(interval) + " vs. " + cachedStackSlot.getValueKind();
                     return cachedStackSlot;
                 }
             }
@@ -367,7 +342,6 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
             {
                 cachedStackSlots[variableIndex] = slot;
             }
-            TraceRegisterAllocationPhase.allocatedStackSlots.increment(debug);
             return slot;
         }
 
@@ -395,7 +369,6 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
         boolean isBlockEnd(int opId)
         {
             boolean isBlockBegin = isBlockBegin(opId + 2);
-            assert isBlockBegin == (instructionForId(opId & (~1)) instanceof BlockEndOp);
             return isBlockBegin;
         }
 
@@ -413,7 +386,6 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
          */
         boolean hasCall(int opId)
         {
-            assert isEven(opId) : "opId not even";
             return instructionForId(opId).destroysCallerSavedRegisters();
         }
 
@@ -440,13 +412,11 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
 
         TraceInterval createUnhandledListByFrom(IntervalPredicate isList1)
         {
-            assert isSortedByFrom(sortedIntervals) : "interval list is not sorted";
             return createUnhandledList(isList1);
         }
 
         TraceInterval createUnhandledListBySpillPos(IntervalPredicate isList1)
         {
-            assert isSortedBySpillPos(sortedIntervals) : "interval list is not sorted";
             return createUnhandledList(isList1);
         }
 
@@ -478,8 +448,6 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
                 list1Prev.next = TraceInterval.EndMarker;
             }
 
-            assert list1Prev == null || list1Prev.next == TraceInterval.EndMarker : "linear list ends not with sentinel";
-
             return list1;
         }
 
@@ -499,8 +467,6 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
 
         FixedInterval createFixedUnhandledList()
         {
-            assert isSortedByFrom(fixedIntervals) : "interval list is not sorted";
-
             FixedInterval list1 = FixedInterval.EndMarker;
 
             FixedInterval list1Prev = null;
@@ -520,8 +486,6 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
             {
                 list1Prev.next = FixedInterval.EndMarker;
             }
-
-            assert list1Prev == null || list1Prev.next == FixedInterval.EndMarker : "linear list ends not with sentinel";
 
             return list1;
         }
@@ -595,10 +559,6 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
 
             if (result != null)
             {
-                if (getDebug().isLogEnabled())
-                {
-                    getDebug().log("Split child at pos %d of interval %s is %s", opId, interval, result);
-                }
                 return result;
             }
             throw new GraalError("LinearScan: interval is null");
@@ -606,14 +566,12 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
 
         AllocatableValue canonicalSpillOpr(TraceInterval interval)
         {
-            assert interval.spillSlot() != null : "canonical spill slot not set";
             return interval.spillSlot();
         }
 
         boolean isMaterialized(Variable operand, int opId, OperandMode mode)
         {
             TraceInterval interval = intervalFor(operand);
-            assert interval != null : "interval must exist";
 
             if (opId != -1)
             {
@@ -632,185 +590,27 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
             return attributes(asRegister(operand)).isCallerSave();
         }
 
-        @SuppressWarnings("try")
         protected void allocate(TargetDescription target, LIRGenerationResult lirGenRes, TraceAllocationContext traceContext)
         {
             MoveFactory spillMoveFactory = traceContext.spillMoveFactory;
             RegisterAllocationConfig registerAllocationConfig = traceContext.registerAllocationConfig;
-            /*
-             * This is the point to enable debug logging for the whole register allocation.
-             */
-            DebugContext debug = res.getLIR().getDebug();
-            try (Indent indent = debug.logAndIndent("LinearScan allocate"))
+            TRACE_LINEAR_SCAN_LIFETIME_ANALYSIS_PHASE.apply(target, lirGenRes, trace, spillMoveFactory, registerAllocationConfig, traceBuilderResult, this);
+
+            sortIntervalsBeforeAllocation();
+
+            TRACE_LINEAR_SCAN_REGISTER_ALLOCATION_PHASE.apply(target, lirGenRes, trace, spillMoveFactory, registerAllocationConfig, traceBuilderResult, this);
+
+            // resolve intra-trace data-flow
+            TRACE_LINEAR_SCAN_RESOLVE_DATA_FLOW_PHASE.apply(target, lirGenRes, trace, spillMoveFactory, registerAllocationConfig, traceBuilderResult, this);
+
+            // eliminate spill moves
+            OptionValues options = getOptions();
+            if (Options.LIROptTraceRAEliminateSpillMoves.getValue(options))
             {
-                TRACE_LINEAR_SCAN_LIFETIME_ANALYSIS_PHASE.apply(target, lirGenRes, trace, spillMoveFactory, registerAllocationConfig, traceBuilderResult, this, false);
-
-                try (DebugContext.Scope s = debug.scope("AfterLifetimeAnalysis", this))
-                {
-                    printLir("After instruction numbering");
-                    printIntervals("Before register allocation");
-
-                    sortIntervalsBeforeAllocation();
-
-                    TRACE_LINEAR_SCAN_REGISTER_ALLOCATION_PHASE.apply(target, lirGenRes, trace, spillMoveFactory, registerAllocationConfig, traceBuilderResult, this, false);
-                    printIntervals("After register allocation");
-
-                    // resolve intra-trace data-flow
-                    TRACE_LINEAR_SCAN_RESOLVE_DATA_FLOW_PHASE.apply(target, lirGenRes, trace, spillMoveFactory, registerAllocationConfig, traceBuilderResult, this);
-
-                    // eliminate spill moves
-                    OptionValues options = getOptions();
-                    if (Options.LIROptTraceRAEliminateSpillMoves.getValue(options))
-                    {
-                        TRACE_LINEAR_SCAN_ELIMINATE_SPILL_MOVE_PHASE.apply(target, lirGenRes, trace, spillMoveFactory, registerAllocationConfig, traceBuilderResult, this);
-                    }
-
-                    TRACE_LINEAR_SCAN_ASSIGN_LOCATIONS_PHASE.apply(target, lirGenRes, trace, spillMoveFactory, registerAllocationConfig, traceBuilderResult, this, false);
-
-                    if (Assertions.detailedAssertionsEnabled(options))
-                    {
-                        verifyIntervals();
-                    }
-                }
-                catch (Throwable e)
-                {
-                    throw debug.handle(e);
-                }
+                TRACE_LINEAR_SCAN_ELIMINATE_SPILL_MOVE_PHASE.apply(target, lirGenRes, trace, spillMoveFactory, registerAllocationConfig, traceBuilderResult, this);
             }
-        }
 
-        public void printLir(String label)
-        {
-            if (getDebug().isDumpEnabled(DebugContext.DETAILED_LEVEL))
-            {
-                getDebug().dump(DebugContext.DETAILED_LEVEL, sortedBlocks(), "%s (Trace%d)", label, trace.getId());
-            }
-        }
-
-        boolean verify()
-        {
-            // (check that all intervals have a correct register and that no registers are
-            // overwritten)
-            verifyIntervals();
-
-            verifyRegisters();
-
-            getDebug().log("no errors found");
-
-            return true;
-        }
-
-        @SuppressWarnings("try")
-        private void verifyRegisters()
-        {
-            // Enable this logging to get output for the verification process.
-            try (Indent indent = getDebug().logAndIndent("verifying register allocation"))
-            {
-                RegisterVerifier verifier = new RegisterVerifier(this);
-                verifier.verify(blockAt(0));
-            }
-        }
-
-        @SuppressWarnings("try")
-        protected void verifyIntervals()
-        {
-            DebugContext debug = getDebug();
-            try (Indent indent = debug.logAndIndent("verifying intervals"))
-            {
-                int len = intervalsSize();
-
-                for (int i = 0; i < len; i++)
-                {
-                    final TraceInterval i1 = intervals()[i];
-                    if (i1 == null)
-                    {
-                        continue;
-                    }
-
-                    i1.checkSplitChildren();
-
-                    if (i1.operandNumber != i)
-                    {
-                        debug.log("Interval %d is on position %d in list", i1.operandNumber, i);
-                        debug.log(i1.logString());
-                        throw new GraalError("");
-                    }
-
-                    if (getKind(i1).equals(LIRKind.Illegal))
-                    {
-                        debug.log("Interval %d has no type assigned", i1.operandNumber);
-                        debug.log(i1.logString());
-                        throw new GraalError("");
-                    }
-
-                    if (i1.location() == null)
-                    {
-                        debug.log("Interval %d has no register assigned", i1.operandNumber);
-                        debug.log(i1.logString());
-                        throw new GraalError("");
-                    }
-
-                    if (i1.isEmpty())
-                    {
-                        debug.log("Interval %d has no Range", i1.operandNumber);
-                        debug.log(i1.logString());
-                        throw new GraalError("");
-                    }
-
-                    if (i1.from() >= i1.to())
-                    {
-                        debug.log("Interval %d has zero length range", i1.operandNumber);
-                        debug.log(i1.logString());
-                        throw new GraalError("");
-                    }
-
-                    // special intervals that are created in MoveResolver
-                    // . ignore them because the range information has no meaning there
-                    if (i1.from() == 1 && i1.to() == 2)
-                    {
-                        continue;
-                    }
-                    // check any intervals
-                    for (int j = i + 1; j < len; j++)
-                    {
-                        final TraceInterval i2 = intervals()[j];
-                        if (i2 == null)
-                        {
-                            continue;
-                        }
-
-                        // special intervals that are created in MoveResolver
-                        // . ignore them because the range information has no meaning there
-                        if (i2.from() == 1 && i2.to() == 2)
-                        {
-                            continue;
-                        }
-                        Value l1 = i1.location();
-                        Value l2 = i2.location();
-                        boolean intersects = i1.intersects(i2);
-                        if (intersects && !isIllegal(l1) && (l1.equals(l2)))
-                        {
-                            throw GraalError.shouldNotReachHere(String.format("Intervals %s and %s overlap and have the same register assigned\n%s\n%s", i1, i2, i1.logString(), i2.logString()));
-                        }
-                    }
-                    // check fixed intervals
-                    for (FixedInterval i2 : fixedIntervals())
-                    {
-                        if (i2 == null)
-                        {
-                            continue;
-                        }
-
-                        Value l1 = i1.location();
-                        Value l2 = i2.location();
-                        boolean intersects = i2.intersects(i1);
-                        if (intersects && !isIllegal(l1) && (l1.equals(l2)))
-                        {
-                            throw GraalError.shouldNotReachHere(String.format("Intervals %s and %s overlap and have the same register assigned\n%s\n%s", i1, i2, i1.logString(), i2.logString()));
-                        }
-                    }
-                }
-            }
+            TRACE_LINEAR_SCAN_ASSIGN_LOCATIONS_PHASE.apply(target, lirGenRes, trace, spillMoveFactory, registerAllocationConfig, traceBuilderResult, this);
         }
 
         public LIR getLIR()
@@ -919,7 +719,6 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
         {
             FixedInterval interval = new FixedInterval(reg);
             int operandNumber = reg.getRegister().number;
-            assert fixedIntervals[operandNumber] == null;
             fixedIntervals[operandNumber] = interval;
             return interval;
         }
@@ -932,12 +731,8 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
          */
         private TraceInterval createInterval(Variable operand)
         {
-            assert isLegal(operand);
             int operandNumber = operandNumber(operand);
-            assert operand.index == operandNumber;
             TraceInterval interval = new TraceInterval(operand);
-            assert operandNumber < intervalsSize;
-            assert intervals[operandNumber] == null;
             intervals[operandNumber] = interval;
             return interval;
         }
@@ -961,10 +756,7 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
             // increments intervalsSize
             Variable variable = createVariable(getKind(source));
 
-            assert intervalsSize <= intervals.length;
-
             TraceInterval interval = createInterval(variable);
-            assert intervals[intervalsSize - 1] == interval;
             return interval;
         }
 
@@ -1017,7 +809,6 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
 
         TraceInterval intervalFor(int operandNumber)
         {
-            assert operandNumber < intervalsSize;
             return intervals[operandNumber];
         }
 
@@ -1051,7 +842,6 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
          */
         int maxOpId()
         {
-            assert opIdToInstructionMap.length > 0 : "no operations";
             return (opIdToInstructionMap.length - 1) << 1;
         }
 
@@ -1073,9 +863,7 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
          */
         LIRInstruction instructionForId(int opId)
         {
-            assert isEven(opId) : "opId not even";
             LIRInstruction instr = opIdToInstructionMap[opIdToIndex(opId)];
-            assert instr.id() == opId;
             return instr;
         }
 
@@ -1087,66 +875,7 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
          */
         AbstractBlockBase<?> blockForId(int opId)
         {
-            assert opIdToBlockMap.length > 0 && opId >= 0 && opId <= maxOpId() + 1 : "opId out of range: " + opId;
             return opIdToBlockMap[opIdToIndex(opId)];
-        }
-
-        @SuppressWarnings("try")
-        public void printIntervals(String label)
-        {
-            DebugContext debug = getDebug();
-            if (debug.isDumpEnabled(DebugContext.DETAILED_LEVEL))
-            {
-                if (debug.isLogEnabled())
-                {
-                    try (Indent indent = debug.logAndIndent("intervals %s", label))
-                    {
-                        for (FixedInterval interval : fixedIntervals)
-                        {
-                            if (interval != null)
-                            {
-                                debug.log("%s", interval.logString());
-                            }
-                        }
-
-                        for (TraceInterval interval : intervals)
-                        {
-                            if (interval != null)
-                            {
-                                debug.log("%s", interval.logString());
-                            }
-                        }
-
-                        try (Indent indent2 = debug.logAndIndent("Basic Blocks"))
-                        {
-                            for (AbstractBlockBase<?> block : trace.getBlocks())
-                            {
-                                debug.log("B%d [%d, %d, %s] ", block.getId(), getFirstLirInstructionId(block), getLastLirInstructionId(block), block.getLoop());
-                            }
-                        }
-                    }
-                }
-                debug.dump(DebugContext.DETAILED_LEVEL, this, "%s (Trace%d)", label, trace.getId());
-            }
-        }
-
-        @Override
-        public void visitIntervals(IntervalVisitor visitor)
-        {
-            for (FixedInterval interval : fixedIntervals)
-            {
-                if (interval != null)
-                {
-                    printFixedInterval(interval, visitor);
-                }
-            }
-            for (TraceInterval interval : intervals)
-            {
-                if (interval != null)
-                {
-                    printInterval(interval, visitor);
-                }
-            }
         }
 
         boolean hasInterTracePredecessor(AbstractBlockBase<?> block)
@@ -1159,28 +888,6 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
             return TraceUtil.hasInterTraceSuccessor(traceBuilderResult, trace, block);
         }
 
-        private void printInterval(TraceInterval interval, IntervalVisitor visitor)
-        {
-            Value hint = interval.locationHint(false) != null ? interval.locationHint(false).location() : null;
-            AllocatableValue operand = getOperand(interval);
-            String type = getKind(interval).getPlatformKind().toString();
-            visitor.visitIntervalStart(getOperand(interval.splitParent()), operand, interval.location(), hint, type);
-
-            // print ranges
-            visitor.visitRange(interval.from(), interval.to());
-
-            // print use positions
-            int prev = -1;
-            for (int i = interval.numUsePos() - 1; i >= 0; --i)
-            {
-                assert prev < interval.getUsePos(i) : "use positions not sorted";
-                visitor.visitUsePos(interval.getUsePos(i), interval.getUsePosRegisterPriority(i));
-                prev = interval.getUsePos(i);
-            }
-
-            visitor.visitIntervalEnd(interval.spillState());
-        }
-
         AllocatableValue getOperand(TraceInterval interval)
         {
             return interval.operand;
@@ -1190,137 +897,5 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
         {
             return getOperand(interval).getValueKind();
         }
-    }
-
-    public static boolean verifyEquals(TraceLinearScan a, TraceLinearScan b)
-    {
-        assert compareFixed(a.fixedIntervals(), b.fixedIntervals());
-        assert compareIntervals(a.intervals(), b.intervals());
-        return true;
-    }
-
-    private static boolean compareIntervals(TraceInterval[] a, TraceInterval[] b)
-    {
-        for (int i = 0; i < Math.max(a.length, b.length); i++)
-        {
-            if (i >= a.length)
-            {
-                assert b[i] == null : "missing a interval: " + i + " b: " + b[i];
-                continue;
-            }
-            if (i >= b.length)
-            {
-                assert a[i] == null : "missing b interval: " + i + " a: " + a[i];
-                continue;
-            }
-            compareInterval(a[i], b[i]);
-        }
-        return true;
-    }
-
-    private static void compareInterval(TraceInterval a, TraceInterval b)
-    {
-        if (a == null)
-        {
-            assert b == null : "First interval is null but second is: " + b;
-            return;
-        }
-        assert b != null : "Second interval is null but forst is: " + a;
-        assert a.operandNumber == b.operandNumber : "Operand mismatch: " + a + " vs. " + b;
-        assert a.from() == b.from() : "From mismatch: " + a + " vs. " + b;
-        assert a.to() == b.to() : "To mismatch: " + a + " vs. " + b;
-        assert verifyIntervalsEquals(a, b);
-    }
-
-    private static boolean verifyIntervalsEquals(TraceInterval a, TraceInterval b)
-    {
-        for (int i = 0; i < Math.max(a.numUsePos(), b.numUsePos()); i++)
-        {
-            assert i < a.numUsePos() : "missing a usepos: " + i + " b: " + b;
-            assert i < b.numUsePos() : "missing b usepos: " + i + " a: " + a;
-            int aPos = a.getUsePos(i);
-            int bPos = b.getUsePos(i);
-            assert aPos == bPos : "Use Positions differ: " + aPos + " vs. " + bPos;
-            RegisterPriority aReg = a.getUsePosRegisterPriority(i);
-            RegisterPriority bReg = b.getUsePosRegisterPriority(i);
-            assert aReg == bReg : "Register priority differ: " + aReg + " vs. " + bReg;
-        }
-        return true;
-    }
-
-    private static boolean compareFixed(FixedInterval[] a, FixedInterval[] b)
-    {
-        for (int i = 0; i < Math.max(a.length, b.length); i++)
-        {
-            if (i >= a.length)
-            {
-                assert b[i] == null : "missing a interval: " + i + " b: " + b[i];
-                continue;
-            }
-            if (i >= b.length)
-            {
-                assert a[i] == null : "missing b interval: " + i + " a: " + a[i];
-                continue;
-            }
-            compareFixedInterval(a[i], b[i]);
-        }
-        return true;
-    }
-
-    private static void compareFixedInterval(FixedInterval a, FixedInterval b)
-    {
-        if (a == null)
-        {
-            assert b == null || isEmptyInterval(b) : "First interval is null but second is: " + b;
-            return;
-        }
-        if (b == null)
-        {
-            assert isEmptyInterval(a) : "Second interval is null but first is: " + a;
-            return;
-        }
-        assert a.operand.equals(b.operand) : "Operand mismatch: " + a + " vs. " + b;
-        assert a.from() == b.from() : "From mismatch: " + a + " vs. " + b;
-        assert a.to() == b.to() : "To mismatch: " + a + " vs. " + b;
-        assert verifyFixeEquas(a, b);
-    }
-
-    private static boolean verifyFixeEquas(FixedInterval a, FixedInterval b)
-    {
-        a.rewindRange();
-        b.rewindRange();
-        while (!a.currentAtEnd())
-        {
-            assert !b.currentAtEnd() : "Fixed range mismatch: " + a + " vs. " + b;
-            assert a.currentFrom() == b.currentFrom() : "From range mismatch: " + a + " vs. " + b + " from: " + a.currentFrom() + " vs. " + b.currentFrom();
-            assert a.currentTo() == b.currentTo() : "To range mismatch: " + a + " vs. " + b + " from: " + a.currentTo() + " vs. " + b.currentTo();
-            a.nextRange();
-            b.nextRange();
-        }
-        assert b.currentAtEnd() : "Fixed range mismatch: " + a + " vs. " + b;
-        return true;
-    }
-
-    private static boolean isEmptyInterval(FixedInterval fixed)
-    {
-        return fixed.from() == -1 && fixed.to() == 0;
-    }
-
-    private static void printFixedInterval(FixedInterval interval, IntervalVisitor visitor)
-    {
-        Value hint = null;
-        AllocatableValue operand = interval.operand;
-        String type = "fixed";
-        visitor.visitIntervalStart(operand, operand, operand, hint, type);
-
-        // print ranges
-        for (FixedRange range = interval.first(); range != FixedRange.EndMarker; range = range.next)
-        {
-            visitor.visitRange(range.from, range.to);
-        }
-
-        // no use positions
-
-        visitor.visitIntervalEnd("NOT_SUPPORTED");
     }
 }

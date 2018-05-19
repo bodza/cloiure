@@ -114,7 +114,6 @@ public class FrameStateAssignmentPhase extends Phase
     @Override
     protected void run(StructuredGraph graph)
     {
-        assert !graph.getGuardsStage().allowsFloatingGuards() && !hasFloatingDeopts(graph);
         if (graph.getGuardsStage().areFrameStatesAtSideEffects())
         {
             ReentrantNodeIterator.apply(new FrameStateAssignmentClosure(), graph.start(), null);

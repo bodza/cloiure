@@ -43,7 +43,6 @@ public class StubUtil
     public static ForeignCallDescriptor newDescriptor(Class<?> stubClass, String name, Class<?> resultType, Class<?>... argumentTypes)
     {
         ForeignCallDescriptor d = new ForeignCallDescriptor(name, resultType, argumentTypes);
-        assert descriptorFor(stubClass, name).equals(d) : descriptorFor(stubClass, name) + " != " + d;
         return d;
     }
 
@@ -61,13 +60,10 @@ public class StubUtil
             {
                 if (method.getAnnotation(NodeIntrinsic.class).value().equals(StubForeignCallNode.class))
                 {
-                    assert found == null : "found more than one foreign call named " + name + " in " + stubClass;
-                    assert method.getParameterTypes().length != 0 && method.getParameterTypes()[0] == ForeignCallDescriptor.class : "first parameter of foreign call '" + name + "' in " + stubClass + " must be of type " + ForeignCallDescriptor.class.getSimpleName();
                     found = method;
                 }
             }
         }
-        assert found != null : "could not find foreign call named " + name + " in " + stubClass;
         List<Class<?>> paramList = Arrays.asList(found.getParameterTypes());
         Class<?>[] cCallTypes = paramList.subList(1, paramList.size()).toArray(new Class<?>[paramList.size() - 1]);
         return new ForeignCallDescriptor(name, found.getReturnType(), cCallTypes);
@@ -83,15 +79,6 @@ public class StubUtil
             }
             DeoptimizeCallerNode.deopt(DeoptimizationAction.None, RuntimeConstraint);
         }
-    }
-
-    /**
-     * Determines if this is a HotSpot build where the ASSERT mechanism is enabled.
-     */
-    @Fold
-    public static boolean cAssertionsEnabled(@InjectedParameter GraalHotSpotVMConfig config)
-    {
-        return config.cAssertions;
     }
 
     @NodeIntrinsic(StubForeignCallNode.class)

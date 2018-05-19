@@ -43,7 +43,6 @@ public abstract class VirtualObjectNode extends ValueNode implements LIRLowerabl
 
     public final void setObjectId(int objectId)
     {
-        assert objectId != -1;
         this.objectId = objectId;
     }
 

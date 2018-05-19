@@ -204,7 +204,6 @@ public final class DefaultTraceRegisterAllocationPolicy
             }
             double numTraces = getTraceBuilderResult().getTraces().size();
             double traceId = trace.getId();
-            assert ratio >= 0 && ratio <= 1.0 : "Ratio out of range: " + ratio;
             return (traceId / numTraces) >= ratio;
         }
     }

@@ -13,17 +13,17 @@ public class HotSpotAOTProfilingPlugin extends HotSpotProfilingPlugin
 {
     public static class Options
     {
-        @Option(help = "Do profiling and callbacks to tiered runtime", type = OptionType.User)//
+        @Option(help = "Do profiling and callbacks to tiered runtime", type = OptionType.User)
         public static final OptionKey<Boolean> TieredAOT = new OptionKey<>(false);
-        @Option(help = "Invocation notification frequency", type = OptionType.Expert)//
+        @Option(help = "Invocation notification frequency", type = OptionType.Expert)
         public static final OptionKey<Integer> TierAInvokeNotifyFreqLog = new OptionKey<>(13);
-        @Option(help = "Inlinee invocation notification frequency (-1 means count, but do not notify)", type = OptionType.Expert)//
+        @Option(help = "Inlinee invocation notification frequency (-1 means count, but do not notify)", type = OptionType.Expert)
         public static final OptionKey<Integer> TierAInvokeInlineeNotifyFreqLog = new OptionKey<>(-1);
-        @Option(help = "Invocation profile probability", type = OptionType.Expert)//
+        @Option(help = "Invocation profile probability", type = OptionType.Expert)
         public static final OptionKey<Integer> TierAInvokeProfileProbabilityLog = new OptionKey<>(8);
-        @Option(help = "Backedge notification frequency", type = OptionType.Expert)//
+        @Option(help = "Backedge notification frequency", type = OptionType.Expert)
         public static final OptionKey<Integer> TierABackedgeNotifyFreqLog = new OptionKey<>(16);
-        @Option(help = "Backedge profile probability", type = OptionType.Expert)//
+        @Option(help = "Backedge profile probability", type = OptionType.Expert)
         public static final OptionKey<Integer> TierABackedgeProfileProbabilityLog = new OptionKey<>(12);
     }
 

@@ -33,7 +33,6 @@ public final class IsNullNode extends UnaryOpLogicNode implements LIRLowerable, 
     public IsNullNode(ValueNode object)
     {
         super(TYPE, object);
-        assert object != null;
     }
 
     public static LogicNode create(ValueNode forValue)
@@ -58,14 +57,6 @@ public final class IsNullNode extends UnaryOpLogicNode implements LIRLowerable, 
     public void generate(NodeLIRBuilderTool gen)
     {
         // Nothing to do.
-    }
-
-    @Override
-    public boolean verify()
-    {
-        assertTrue(getValue() != null, "is null input must not be null");
-        assertTrue(getValue().stamp(NodeView.DEFAULT) instanceof AbstractPointerStamp, "input must be a pointer not %s", getValue().stamp(NodeView.DEFAULT));
-        return super.verify();
     }
 
     @Override

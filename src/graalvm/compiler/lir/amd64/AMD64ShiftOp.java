@@ -47,10 +47,4 @@ public class AMD64ShiftOp extends AMD64LIRInstruction
         AMD64Move.move(crb, masm, result, x);
         opcode.emit(masm, size, asRegister(result));
     }
-
-    @Override
-    public void verify()
-    {
-        assert asRegister(y).equals(AMD64.rcx);
-    }
 }

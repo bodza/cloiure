@@ -47,8 +47,6 @@ public final class LIRInsertionBuffer
      */
     public void init(List<LIRInstruction> newLir)
     {
-        assert !initialized() : "already initialized";
-        assert indexAndCountSize == 0 && ops.size() == 0;
         this.lir = newLir;
     }
 
@@ -78,13 +76,9 @@ public final class LIRInsertionBuffer
         }
         else
         {
-            assert indexAt(i) == index : "can append LIROps in ascending order only";
-            assert countAt(i) > 0 : "check";
             setCountAt(i, countAt(i) + 1);
         }
         ops.add(op);
-
-        assert verify();
     }
 
     /**
@@ -147,7 +141,6 @@ public final class LIRInsertionBuffer
 
     private int numberOfInsertionPoints()
     {
-        assert indexAndCount.length % 2 == 0 : "must have a count for each index";
         return indexAndCountSize >> 1;
     }
 
@@ -159,19 +152,5 @@ public final class LIRInsertionBuffer
     private int countAt(int i)
     {
         return indexAndCount[(i << 1) + 1];
-    }
-
-    private boolean verify()
-    {
-        int sum = 0;
-        int prevIdx = -1;
-
-        for (int i = 0; i < numberOfInsertionPoints(); i++)
-        {
-            assert prevIdx < indexAt(i) : "index must be ordered ascending";
-            sum += countAt(i);
-        }
-        assert sum == ops.size() : "wrong total sum";
-        return true;
     }
 }

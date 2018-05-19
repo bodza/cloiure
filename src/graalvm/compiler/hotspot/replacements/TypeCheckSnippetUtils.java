@@ -172,7 +172,6 @@ public class TypeCheckSnippetUtils
         }
         if (positiveOnly && index != hubs.length)
         {
-            assert index < hubs.length;
             hubs = Arrays.copyOf(hubs, index);
             isPositive = Arrays.copyOf(isPositive, index);
         }

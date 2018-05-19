@@ -64,7 +64,6 @@ public class AMD64HotSpotMove
                 }
                 else
                 {
-                    assert isStackSlot(result);
                     if (compressed)
                     {
                         masm.movl((AMD64Address) crb.asAddress(result), 0xDEADDEAD);
@@ -168,7 +167,6 @@ public class AMD64HotSpotMove
             }
             else
             {
-                assert isStackSlot(result);
                 if (compressed)
                 {
                     crb.recordInlineDataInCode(input);
@@ -212,7 +210,6 @@ public class AMD64HotSpotMove
             }
             else
             {
-                assert encoding.getBase() != 0;
                 masm.movq(scratch, encoding.getBase());
             }
             masm.addq(register, scratch);

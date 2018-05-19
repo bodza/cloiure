@@ -104,8 +104,6 @@ public final class KlassPointerStamp extends MetaspacePointerStamp
             }
         }
 
-        assert c instanceof HotSpotMetaspaceConstant;
-        assert ((HotSpotMetaspaceConstant) c).isCompressed() == isCompressed();
         if (nonNull())
         {
             return this;
@@ -158,13 +156,11 @@ public final class KlassPointerStamp extends MetaspacePointerStamp
 
     public KlassPointerStamp compressed(CompressEncoding newEncoding)
     {
-        assert !isCompressed();
         return new KlassPointerStamp(nonNull(), alwaysNull(), newEncoding);
     }
 
     public KlassPointerStamp uncompressed()
     {
-        assert isCompressed();
         return new KlassPointerStamp(nonNull(), alwaysNull());
     }
 

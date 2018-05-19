@@ -69,34 +69,6 @@ public enum Condition
         this.operator = operator;
     }
 
-    public boolean check(int left, int right)
-    {
-        switch (this)
-        {
-            case EQ:
-                return left == right;
-            case NE:
-                return left != right;
-            case LT:
-                return left < right;
-            case LE:
-                return left <= right;
-            case GT:
-                return left > right;
-            case GE:
-                return left >= right;
-            case AE:
-                return UnsignedMath.aboveOrEqual(left, right);
-            case BE:
-                return UnsignedMath.belowOrEqual(left, right);
-            case AT:
-                return UnsignedMath.aboveThan(left, right);
-            case BT:
-                return UnsignedMath.belowThan(left, right);
-        }
-        throw new IllegalArgumentException(this.toString());
-    }
-
     public static final class CanonicalizedCondition
     {
         private final CanonicalCondition canonicalCondition;
@@ -379,7 +351,6 @@ public enum Condition
      */
     public boolean foldCondition(JavaConstant lt, JavaConstant rt, ConstantReflectionProvider constantReflection)
     {
-        assert !lt.getJavaKind().isNumericFloat() && !rt.getJavaKind().isNumericFloat();
         return foldCondition(lt, rt, constantReflection, false);
     }
 

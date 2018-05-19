@@ -9,7 +9,6 @@ import java.util.List;
 
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.InstructionValueConsumer;
 import graalvm.compiler.lir.LIR;
@@ -40,7 +39,6 @@ public class FrameMapBuilderImpl extends FrameMapBuilderTool
 
     public FrameMapBuilderImpl(FrameMap frameMap, CodeCacheProvider codeCache, RegisterConfig registerConfig)
     {
-        assert registerConfig != null : "No register config!";
         this.registerConfig = registerConfig == null ? codeCache.getRegisterConfig() : registerConfig;
         this.codeCache = codeCache;
         this.frameMap = frameMap;
@@ -107,38 +105,12 @@ public class FrameMapBuilderImpl extends FrameMapBuilderTool
     @SuppressWarnings("try")
     public FrameMap buildFrameMap(LIRGenerationResult res)
     {
-        DebugContext debug = res.getLIR().getDebug();
-        if (debug.areScopesEnabled())
-        {
-            verifyStackSlotAllocation(res);
-        }
         for (CallingConvention cc : calls)
         {
             frameMap.callsMethod(cc);
         }
         frameMap.finish();
         return frameMap;
-    }
-
-    private static void verifyStackSlotAllocation(LIRGenerationResult res)
-    {
-        LIR lir = res.getLIR();
-        InstructionValueConsumer verifySlots = (LIRInstruction op, Value value, OperandMode mode, EnumSet<OperandFlag> flags) ->
-        {
-            assert !isVirtualStackSlot(value) : String.format("Instruction %s contains a virtual stack slot %s", op, value);
-        };
-        for (AbstractBlockBase<?> block : lir.getControlFlowGraph().getBlocks())
-        {
-            lir.getLIRforBlock(block).forEach(op ->
-            {
-                op.visitEachInput(verifySlots);
-                op.visitEachAlive(verifySlots);
-                op.visitEachState(verifySlots);
-
-                op.visitEachTemp(verifySlots);
-                op.visitEachOutput(verifySlots);
-            });
-        }
     }
 
     @Override

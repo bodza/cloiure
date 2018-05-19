@@ -47,7 +47,6 @@ public class LIRInstructionClass<T> extends LIRIntrospection<T>
     public LIRInstructionClass(Class<T> clazz, FieldsScanner.CalcOffset calcOffset)
     {
         super(clazz);
-        assert INSTRUCTION_CLASS.isAssignableFrom(clazz);
 
         LIRInstructionFieldsScanner ifs = new LIRInstructionFieldsScanner(calcOffset);
         ifs.scan(clazz);
@@ -171,8 +170,6 @@ public class LIRInstructionClass<T> extends LIRIntrospection<T>
             Class<?> type = field.getType();
             if (STATE_CLASS.isAssignableFrom(type))
             {
-                assert getOperandModeAnnotation(field) == null : "Field must not have operand mode annotation: " + field;
-                assert field.getAnnotation(LIRInstruction.State.class) != null : "Field must have state annotation: " + field;
                 states.add(new FieldsScanner.FieldInfo(offset, field.getName(), type, field.getDeclaringClass()));
             }
             else
@@ -182,8 +179,6 @@ public class LIRInstructionClass<T> extends LIRIntrospection<T>
 
             if (field.getAnnotation(Opcode.class) != null)
             {
-                assert opcodeConstant == null && opcodeField == null : "Can have only one Opcode definition: " + type;
-                assert data.get(data.size() - 1).offset == offset;
                 opcodeField = data.get(data.size() - 1);
             }
         }
@@ -192,7 +187,6 @@ public class LIRInstructionClass<T> extends LIRIntrospection<T>
     @Override
     public Fields[] getAllFields()
     {
-        assert values == null;
         return new Fields[]{data, uses, alives, temps, defs, states};
     }
 
@@ -239,7 +233,6 @@ public class LIRInstructionClass<T> extends LIRIntrospection<T>
         {
             return opcodeConstant;
         }
-        assert opcodeIndex != -1;
         return String.valueOf(data.getObject(obj, opcodeIndex));
     }
 

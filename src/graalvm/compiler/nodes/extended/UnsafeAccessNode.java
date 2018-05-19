@@ -34,8 +34,6 @@ public abstract class UnsafeAccessNode extends FixedWithNextNode implements Cano
     {
         super(c, stamp);
         this.forceAnyLocation = forceAnyLocation;
-        assert accessKind != null;
-        assert locationIdentity != null;
         this.object = object;
         this.offset = offset;
         this.accessKind = accessKind;
@@ -86,7 +84,6 @@ public abstract class UnsafeAccessNode extends FixedWithNextNode implements Cano
                     // never a valid access of an arbitrary address.
                     if (field != null && field.getJavaKind() == this.accessKind())
                     {
-                        assert !graph().isAfterFloatingReadPhase() : "cannot add more precise memory location after floating read phase";
                         return cloneAsFieldAccess(graph().getAssumptions(), field);
                     }
                 }
@@ -96,7 +93,6 @@ public abstract class UnsafeAccessNode extends FixedWithNextNode implements Cano
             if (receiverType != null && receiverType.isArray())
             {
                 LocationIdentity identity = NamedLocationIdentity.getArrayLocation(receiverType.getComponentType().getJavaKind());
-                assert !graph().isAfterFloatingReadPhase() : "cannot add more precise memory location after floating read phase";
                 return cloneAsArrayAccess(offset(), identity);
             }
         }

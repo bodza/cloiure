@@ -42,7 +42,6 @@ public final class ReturnNode extends ControlSinkNode implements LIRLowerable, I
     @Override
     public void generate(NodeLIRBuilderTool gen)
     {
-        assert verifyReturn(gen.getLIRGeneratorTool().target());
         if (result == null)
         {
             gen.getLIRGeneratorTool().emitReturn(JavaKind.Void, null);
@@ -75,7 +74,6 @@ public final class ReturnNode extends ControlSinkNode implements LIRLowerable, I
                 // OK, we're compiling a snippet that returns a Word
                 return true;
             }
-            assert actual == expected : "return kind doesn't match: actual " + actual + ", expected: " + expected;
         }
         return true;
     }

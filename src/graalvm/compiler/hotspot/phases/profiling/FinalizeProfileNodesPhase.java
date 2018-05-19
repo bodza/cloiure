@@ -37,13 +37,13 @@ public class FinalizeProfileNodesPhase extends BasePhase<PhaseContext>
 
     public static class Options
     {
-        @Option(help = "Profile simple methods", type = OptionType.Expert)//
+        @Option(help = "Profile simple methods", type = OptionType.Expert)
         public static final OptionKey<Boolean> ProfileSimpleMethods = new OptionKey<>(true);
-        @Option(help = "Maximum number of nodes in a graph for a simple method", type = OptionType.Expert)//
+        @Option(help = "Maximum number of nodes in a graph for a simple method", type = OptionType.Expert)
         public static final OptionKey<Integer> SimpleMethodGraphSize = new OptionKey<>(256);
-        @Option(help = "Maximum number of calls in a simple method", type = OptionType.Expert)//
+        @Option(help = "Maximum number of calls in a simple method", type = OptionType.Expert)
         public static final OptionKey<Integer> SimpleMethodCalls = new OptionKey<>(1);
-        @Option(help = "Maximum number of indirect calls in a simple moethod", type = OptionType.Expert)//
+        @Option(help = "Maximum number of indirect calls in a simple moethod", type = OptionType.Expert)
         public static final OptionKey<Integer> SimpleMethodIndirectCalls = new OptionKey<>(0);
     }
 

@@ -47,7 +47,6 @@ public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements A
         this.getReverseOp = getReverseOp;
         this.inputBits = inputBits;
         this.resultBits = resultBits;
-        assert ((PrimitiveStamp) input.stamp(NodeView.DEFAULT)).getBits() == inputBits;
     }
 
     public int getInputBits()
@@ -87,7 +86,6 @@ public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements A
     @Override
     public Stamp foldStamp(Stamp newStamp)
     {
-        assert newStamp.isCompatible(getValue().stamp(NodeView.DEFAULT));
         return getArithmeticOp().foldStamp(inputBits, resultBits, newStamp);
     }
 
@@ -125,7 +123,6 @@ public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements A
         ValueNode convert = convert(input, stamp, false, view);
         if (!convert.isAlive())
         {
-            assert !convert.isDeleted();
             convert = graph.addOrUniqueWithInputs(convert);
         }
         return convert;
@@ -141,7 +138,6 @@ public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements A
         ValueNode convert = convert(input, stamp, true, view);
         if (!convert.isAlive())
         {
-            assert !convert.isDeleted();
             convert = graph.addOrUniqueWithInputs(convert);
         }
         return convert;
@@ -173,7 +169,6 @@ public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements A
         }
 
         IntegerStamp resultStamp = (IntegerStamp) result.stamp(view);
-        assert toStamp.getBits() == resultStamp.getBits();
         return result;
     }
 

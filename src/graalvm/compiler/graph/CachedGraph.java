@@ -48,9 +48,7 @@ public final class CachedGraph<G extends Graph>
     {
         if (!hasMutableCopy())
         {
-            // Sharing the debug context with the copy is safe since both graphs are
-            // only used in the current thread.
-            mutableCopy = (G) readonlyCopy.copy(duplicationMapCallback, readonlyCopy.getDebug());
+            mutableCopy = (G) readonlyCopy.copy(duplicationMapCallback);
         }
         return mutableCopy;
     }

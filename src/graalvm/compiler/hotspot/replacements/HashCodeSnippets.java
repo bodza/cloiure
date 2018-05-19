@@ -14,7 +14,6 @@ import static graalvm.compiler.nodes.extended.BranchProbabilityNode.NOT_FREQUENT
 import static graalvm.compiler.nodes.extended.BranchProbabilityNode.probability;
 
 import graalvm.compiler.api.replacements.Snippet;
-import graalvm.compiler.debug.DebugHandlersFactory;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.spi.LoweringTool;
@@ -62,9 +61,9 @@ public class HashCodeSnippets implements Snippets
     {
         private final SnippetInfo identityHashCodeSnippet = snippet(HashCodeSnippets.class, "identityHashCodeSnippet", HotSpotReplacementsUtil.MARK_WORD_LOCATION);
 
-        public Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, HotSpotProviders providers, TargetDescription target)
+        public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target)
         {
-            super(options, factories, providers, providers.getSnippetReflection(), target);
+            super(options, providers, providers.getSnippetReflection(), target);
         }
 
         public void lower(IdentityHashCodeNode node, LoweringTool tool)

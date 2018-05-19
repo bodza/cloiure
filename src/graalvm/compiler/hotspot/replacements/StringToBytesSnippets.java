@@ -6,7 +6,6 @@ import static graalvm.compiler.replacements.SnippetTemplate.DEFAULT_REPLACER;
 import graalvm.compiler.api.replacements.Fold;
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
-import graalvm.compiler.debug.DebugHandlersFactory;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
 import graalvm.compiler.nodes.NamedLocationIdentity;
 import graalvm.compiler.nodes.debug.StringToBytesNode;
@@ -56,9 +55,9 @@ public class StringToBytesSnippets implements Snippets
     {
         private final SnippetInfo create;
 
-        public Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, HotSpotProviders providers, TargetDescription target)
+        public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target)
         {
-            super(options, factories, providers, providers.getSnippetReflection(), target);
+            super(options, providers, providers.getSnippetReflection(), target);
             create = snippet(StringToBytesSnippets.class, "transform", NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
         }
 

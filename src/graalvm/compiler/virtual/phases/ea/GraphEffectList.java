@@ -2,7 +2,6 @@ package graalvm.compiler.virtual.phases.ea;
 
 import java.util.ArrayList;
 
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodes.ControlSinkNode;
 import graalvm.compiler.nodes.FixedNode;
@@ -14,17 +13,15 @@ import graalvm.compiler.nodes.PhiNode;
 import graalvm.compiler.nodes.PiNode;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.ValueNode;
-import graalvm.compiler.nodes.debug.DynamicCounterNode;
-import graalvm.compiler.nodes.debug.WeakCounterNode;
 import graalvm.compiler.nodes.util.GraphUtil;
 import graalvm.compiler.nodes.virtual.EscapeObjectState;
 import graalvm.compiler.phases.common.DeadCodeEliminationPhase;
 
 public final class GraphEffectList extends EffectList
 {
-    public GraphEffectList(DebugContext debug)
+    public GraphEffectList()
     {
-        super(debug);
+        super();
     }
 
     /**
@@ -40,22 +37,6 @@ public final class GraphEffectList extends EffectList
         virtualizationDelta = 0;
     }
 
-    public void addCounterBefore(String group, String name, int increment, boolean addContext, FixedNode position)
-    {
-        add("add counter", graph -> DynamicCounterNode.addCounterBefore(group, name, increment, addContext, position));
-    }
-
-    public void addCounterAfter(String group, String name, int increment, boolean addContext, FixedWithNextNode position)
-    {
-        FixedNode nextPosition = position.next();
-        add("add counter after", graph -> DynamicCounterNode.addCounterBefore(group, name, increment, addContext, nextPosition));
-    }
-
-    public void addWeakCounterCounterBefore(String group, String name, int increment, boolean addContext, ValueNode checkedValue, FixedNode position)
-    {
-        add("add weak counter", graph -> WeakCounterNode.addCounterBefore(group, name, increment, addContext, checkedValue, position));
-    }
-
     /**
      * Adds the given fixed node to the graph's control flow, before position (so that the original
      * predecessor of position will then be node's predecessor).
@@ -67,7 +48,6 @@ public final class GraphEffectList extends EffectList
     {
         add("add fixed node", graph ->
         {
-            assert !node.isAlive() && !node.isDeleted() && position.isAlive();
             graph.addBeforeFixed(position, graph.add(node));
         });
     }
@@ -76,8 +56,6 @@ public final class GraphEffectList extends EffectList
     {
         add("ensure added", graph ->
         {
-            assert position.isAlive();
-            assert node instanceof FixedNode;
             if (!node.isAlive())
             {
                 graph.addOrUniqueWithInputs(node);
@@ -124,7 +102,6 @@ public final class GraphEffectList extends EffectList
     {
         add("set phi input", (graph, obsoleteNodes) ->
         {
-            assert node.isAlive() && index >= 0;
             node.initializeValueAt(index, graph.addOrUniqueWithInputs(value));
         });
     }
@@ -145,7 +122,6 @@ public final class GraphEffectList extends EffectList
             {
                 if (node.isAlive())
                 {
-                    assert !state.isDeleted();
                     FrameState stateAfter = node;
                     for (int i = 0; i < stateAfter.virtualObjectMappingCount(); i++)
                     {
@@ -234,14 +210,9 @@ public final class GraphEffectList extends EffectList
      */
     public void replaceAtUsages(ValueNode node, ValueNode replacement, FixedNode insertBefore)
     {
-        assert node != null && replacement != null : node + " " + replacement;
-        assert node.stamp(NodeView.DEFAULT).isCompatible(replacement.stamp(NodeView.DEFAULT)) : "Replacement node stamp not compatible " + node.stamp(NodeView.DEFAULT) + " vs " + replacement.stamp(NodeView.DEFAULT);
         add("replace at usages", (graph, obsoleteNodes) ->
         {
-            assert node.isAlive();
             ValueNode replacementNode = graph.addOrUniqueWithInputs(replacement);
-            assert replacementNode.isAlive();
-            assert insertBefore != null;
             if (replacementNode instanceof FixedWithNextNode && ((FixedWithNextNode) replacementNode).next() == null)
             {
                 graph.addBeforeFixed(insertBefore, (FixedWithNextNode) replacementNode);
@@ -275,7 +246,6 @@ public final class GraphEffectList extends EffectList
      */
     public void replaceFirstInput(Node node, Node oldInput, Node newInput)
     {
-        assert node.isAlive() && oldInput.isAlive() && !newInput.isDeleted();
         add("replace first input", new Effect()
         {
             @Override
@@ -283,7 +253,6 @@ public final class GraphEffectList extends EffectList
             {
                 if (node.isAlive())
                 {
-                    assert oldInput.isAlive() && newInput.isAlive();
                     node.replaceFirstInput(oldInput, newInput);
                 }
             }

@@ -57,7 +57,6 @@ public abstract class EffectsBlockState<T extends EffectsBlockState<T>>
         {
             K key = cursor.getKey();
             V value = cursor.getValue();
-            assert value != null;
             V otherValue = superMap.get(key);
             if (otherValue != value && !value.equals(otherValue))
             {
@@ -76,11 +75,7 @@ public abstract class EffectsBlockState<T extends EffectsBlockState<T>>
         while (iter.hasNext())
         {
             Map.Entry<U, V> entry = iter.next();
-            if (source.containsKey(entry.getKey()))
-            {
-                assert source.get(entry.getKey()) == entry.getValue();
-            }
-            else
+            if (!source.containsKey(entry.getKey()))
             {
                 iter.remove();
             }

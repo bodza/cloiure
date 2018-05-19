@@ -7,7 +7,6 @@ import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.StampPair;
 import graalvm.compiler.core.common.type.TypeReference;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.debug.DebugCloseable;
 import graalvm.compiler.graph.NodeSourcePosition;
@@ -57,12 +56,12 @@ public class IntrinsicGraphBuilder implements GraphBuilderContext, Receiver
     protected ValueNode[] arguments;
     protected ValueNode returnValue;
 
-    public IntrinsicGraphBuilder(OptionValues options, DebugContext debug, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, StampProvider stampProvider, Bytecode code, int invokeBci)
+    public IntrinsicGraphBuilder(OptionValues options, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, StampProvider stampProvider, Bytecode code, int invokeBci)
     {
-        this(options, debug, metaAccess, constantReflection, constantFieldProvider, stampProvider, code, invokeBci, AllowAssumptions.YES);
+        this(options, metaAccess, constantReflection, constantFieldProvider, stampProvider, code, invokeBci, AllowAssumptions.YES);
     }
 
-    protected IntrinsicGraphBuilder(OptionValues options, DebugContext debug, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, StampProvider stampProvider, Bytecode code, int invokeBci, AllowAssumptions allowAssumptions)
+    protected IntrinsicGraphBuilder(OptionValues options, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, ConstantFieldProvider constantFieldProvider, StampProvider stampProvider, Bytecode code, int invokeBci, AllowAssumptions allowAssumptions)
     {
         this.metaAccess = metaAccess;
         this.constantReflection = constantReflection;
@@ -70,7 +69,7 @@ public class IntrinsicGraphBuilder implements GraphBuilderContext, Receiver
         this.stampProvider = stampProvider;
         this.code = code;
         this.method = code.getMethod();
-        this.graph = new StructuredGraph.Builder(options, debug, allowAssumptions).method(method).build();
+        this.graph = new StructuredGraph.Builder(options, allowAssumptions).method(method).build();
         this.graph.setTrackNodeSourcePosition();
         this.invokeBci = invokeBci;
         this.lastInstr = graph.start();
@@ -120,7 +119,6 @@ public class IntrinsicGraphBuilder implements GraphBuilderContext, Receiver
             if (fixedNode instanceof FixedWithNextNode)
             {
                 FixedWithNextNode fixedWithNextNode = (FixedWithNextNode) fixedNode;
-                assert fixedWithNextNode.next() == null : "cannot append instruction to instruction which isn't end";
                 lastInstr = fixedWithNextNode;
             }
             else
@@ -148,8 +146,6 @@ public class IntrinsicGraphBuilder implements GraphBuilderContext, Receiver
     @Override
     public void push(JavaKind kind, ValueNode value)
     {
-        assert kind != JavaKind.Void;
-        assert returnValue == null;
         returnValue = value;
     }
 
@@ -198,7 +194,6 @@ public class IntrinsicGraphBuilder implements GraphBuilderContext, Receiver
     @Override
     public void setStateAfter(StateSplit sideEffect)
     {
-        assert sideEffect.hasSideEffect();
         FrameState stateAfter = getGraph().add(new FrameState(BytecodeFrame.BEFORE_BCI));
         sideEffect.setStateAfter(stateAfter);
     }
@@ -278,7 +273,6 @@ public class IntrinsicGraphBuilder implements GraphBuilderContext, Receiver
             Receiver receiver = method.isStatic() ? null : this;
             if (plugin.execute(this, method, receiver, arguments))
             {
-                assert (returnValue != null) == (method.getSignature().getReturnKind() != JavaKind.Void) : method;
                 append(new ReturnNode(returnValue));
                 return graph;
             }

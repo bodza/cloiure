@@ -24,7 +24,6 @@ public abstract class UnaryOpLogicNode extends LogicNode implements LIRLowerable
     public UnaryOpLogicNode(NodeClass<? extends UnaryOpLogicNode> c, ValueNode value)
     {
         super(c);
-        assert value != null;
         this.value = value;
     }
 

@@ -32,7 +32,6 @@ public final class AMD64CountTrailingZerosNode extends UnaryNode implements Arit
     public AMD64CountTrailingZerosNode(ValueNode value)
     {
         super(TYPE, computeStamp(value.stamp(NodeView.DEFAULT), value), value);
-        assert value.getStackKind() == JavaKind.Int || value.getStackKind() == JavaKind.Long;
     }
 
     @Override
@@ -43,7 +42,6 @@ public final class AMD64CountTrailingZerosNode extends UnaryNode implements Arit
 
     static Stamp computeStamp(Stamp newStamp, ValueNode value)
     {
-        assert newStamp.isCompatible(value.stamp(NodeView.DEFAULT));
         IntegerStamp valueStamp = (IntegerStamp) newStamp;
         return StampTool.stampForTrailingZeros(valueStamp);
     }

@@ -103,7 +103,6 @@ public class VirtualInstanceNode extends VirtualObjectNode
     @Override
     public JavaKind entryKind(int index)
     {
-        assert index >= 0 && index < fields.length;
         return fields[index].getJavaKind();
     }
 

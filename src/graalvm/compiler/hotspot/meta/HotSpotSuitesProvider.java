@@ -2,21 +2,15 @@ package graalvm.compiler.hotspot.meta;
 
 import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
 import static graalvm.compiler.core.common.GraalOptions.ImmutableCode;
-import static graalvm.compiler.core.common.GraalOptions.VerifyPhases;
 import static graalvm.compiler.core.phases.HighTier.Options.Inline;
 
 import java.util.ListIterator;
-import graalvm.compiler.debug.Assertions;
 
 import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
 import graalvm.compiler.hotspot.HotSpotBackend;
 import graalvm.compiler.hotspot.HotSpotGraalRuntimeProvider;
-import graalvm.compiler.hotspot.HotSpotInstructionProfiling;
-import graalvm.compiler.hotspot.lir.VerifyMaxRegisterSizePhase;
-import graalvm.compiler.hotspot.phases.AheadOfTimeVerificationPhase;
 import graalvm.compiler.hotspot.phases.LoadJavaMirrorWithKlassPhase;
 import graalvm.compiler.hotspot.phases.WriteBarrierAdditionPhase;
-import graalvm.compiler.hotspot.phases.WriteBarrierVerificationPhase;
 import graalvm.compiler.hotspot.phases.aot.AOTInliningPolicy;
 import graalvm.compiler.hotspot.phases.aot.EliminateRedundantInitializationPhase;
 import graalvm.compiler.hotspot.phases.aot.ReplaceConstantNodesPhase;
@@ -68,10 +62,6 @@ public class HotSpotSuitesProvider extends SuitesProviderBase
         {
             // lowering introduces class constants, therefore it must be after lowering
             ret.getHighTier().appendPhase(new LoadJavaMirrorWithKlassPhase(config));
-            if (VerifyPhases.getValue(options))
-            {
-                ret.getHighTier().appendPhase(new AheadOfTimeVerificationPhase());
-            }
             if (GeneratePIC.getValue(options))
             {
                 ListIterator<BasePhase<? super HighTierContext>> highTierLowering = ret.getHighTier().findPhase(LoweringPhase.class);
@@ -96,10 +86,6 @@ public class HotSpotSuitesProvider extends SuitesProviderBase
         }
 
         ret.getMidTier().appendPhase(new WriteBarrierAdditionPhase(config));
-        if (VerifyPhases.getValue(options))
-        {
-            ret.getMidTier().appendPhase(new WriteBarrierVerificationPhase(config));
-        }
 
         return ret;
     }
@@ -107,44 +93,7 @@ public class HotSpotSuitesProvider extends SuitesProviderBase
     protected PhaseSuite<HighTierContext> createGraphBuilderSuite()
     {
         PhaseSuite<HighTierContext> suite = defaultSuitesCreator.getDefaultGraphBuilderSuite().copy();
-        assert appendGraphEncoderTest(suite);
         return suite;
-    }
-
-    /**
-     * When assertions are enabled, we encode and decode every parsed graph, to ensure that the
-     * encoding and decoding process work correctly. The decoding performs canonicalization during
-     * decoding, so the decoded graph can be different than the encoded graph - we cannot check them
-     * for equality here. However, the encoder {@link GraphEncoder#verifyEncoding verifies the
-     * encoding itself}, i.e., performs a decoding without canonicalization and checks the graphs
-     * for equality.
-     */
-    private boolean appendGraphEncoderTest(PhaseSuite<HighTierContext> suite)
-    {
-        suite.appendPhase(new BasePhase<HighTierContext>()
-        {
-            @Override
-            protected void run(StructuredGraph graph, HighTierContext context)
-            {
-                EncodedGraph encodedGraph = GraphEncoder.encodeSingleGraph(graph, runtime.getTarget().arch);
-
-                StructuredGraph targetGraph = new StructuredGraph.Builder(graph.getOptions(), graph.getDebug(), AllowAssumptions.YES).method(graph.method()).build();
-                SimplifyingGraphDecoder graphDecoder = new SimplifyingGraphDecoder(runtime.getTarget().arch, targetGraph, context.getMetaAccess(), context.getConstantReflection(), context.getConstantFieldProvider(), context.getStampProvider(), !ImmutableCode.getValue(graph.getOptions()));
-
-                if (graph.trackNodeSourcePosition())
-                {
-                    targetGraph.setTrackNodeSourcePosition();
-                }
-                graphDecoder.decode(encodedGraph);
-            }
-
-            @Override
-            protected CharSequence getName()
-            {
-                return "VerifyEncodingDecoding";
-            }
-        });
-        return true;
     }
 
     /**
@@ -165,16 +114,6 @@ public class HotSpotSuitesProvider extends SuitesProviderBase
     @Override
     public LIRSuites createLIRSuites(OptionValues options)
     {
-        LIRSuites suites = defaultSuitesCreator.createLIRSuites(options);
-        String profileInstructions = HotSpotBackend.Options.ASMInstructionProfiling.getValue(options);
-        if (profileInstructions != null)
-        {
-            suites.getPostAllocationOptimizationStage().appendPhase(new HotSpotInstructionProfiling(profileInstructions));
-        }
-        if (Assertions.detailedAssertionsEnabled(options))
-        {
-            suites.getPostAllocationOptimizationStage().appendPhase(new VerifyMaxRegisterSizePhase(config.maxVectorSize));
-        }
-        return suites;
+        return defaultSuitesCreator.createLIRSuites(options);
     }
 }

@@ -7,7 +7,6 @@ import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.Stamp;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.nodes.FieldLocationIdentity;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
@@ -69,9 +68,9 @@ public final class PEReadEliminationBlockState extends PartialEscapeBlockState<P
         }
     }
 
-    public PEReadEliminationBlockState(OptionValues options, DebugContext debug)
+    public PEReadEliminationBlockState(OptionValues options)
     {
-        super(options, debug);
+        super(options);
         readCache = EconomicMap.create(Equivalence.DEFAULT);
     }
 
@@ -148,7 +147,6 @@ public final class PEReadEliminationBlockState extends PartialEscapeBlockState<P
         ObjectState obj = closure.getObjectState(this, object);
         if (obj != null)
         {
-            assert !obj.isVirtual();
             cacheObject = obj.getMaterializedValue();
         }
         else
@@ -164,7 +162,6 @@ public final class PEReadEliminationBlockState extends PartialEscapeBlockState<P
         ObjectState obj = closure.getObjectState(this, object);
         if (obj != null)
         {
-            assert !obj.isVirtual() : object;
             cacheObject = obj.getMaterializedValue();
         }
         else
@@ -175,7 +172,6 @@ public final class PEReadEliminationBlockState extends PartialEscapeBlockState<P
         obj = closure.getObjectState(this, cacheValue);
         if (obj != null)
         {
-            assert !obj.isVirtual();
             cacheValue = obj.getMaterializedValue();
         }
         else

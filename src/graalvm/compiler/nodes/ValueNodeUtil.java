@@ -15,7 +15,6 @@ public class ValueNodeUtil
 {
     public static ValueNode assertKind(JavaKind kind, ValueNode x)
     {
-        assert x != null && x.getStackKind() == kind : "kind=" + kind + ", value=" + x + ((x == null) ? "" : ", value.kind=" + x.getStackKind());
         return x;
     }
 
@@ -31,37 +30,27 @@ public class ValueNodeUtil
 
     public static ValueNode assertLong(ValueNode x)
     {
-        assert x != null && (x.getStackKind() == JavaKind.Long);
         return x;
     }
 
     public static ValueNode assertInt(ValueNode x)
     {
-        assert x != null && (x.getStackKind() == JavaKind.Int);
         return x;
     }
 
     public static ValueNode assertFloat(ValueNode x)
     {
-        assert x != null && (x.getStackKind() == JavaKind.Float);
         return x;
     }
 
     public static ValueNode assertObject(ValueNode x)
     {
-        assert x != null && (x.getStackKind() == JavaKind.Object);
         return x;
     }
 
     public static ValueNode assertDouble(ValueNode x)
     {
-        assert x != null && (x.getStackKind() == JavaKind.Double);
         return x;
-    }
-
-    public static void assertHigh(ValueNode x)
-    {
-        assert x == null;
     }
 
     @SuppressWarnings("unchecked")

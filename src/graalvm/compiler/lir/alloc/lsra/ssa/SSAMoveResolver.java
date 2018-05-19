@@ -37,28 +37,6 @@ public final class SSAMoveResolver extends MoveResolver
     }
 
     @Override
-    public boolean checkEmpty()
-    {
-        for (int i = 0; i < stackBlocked.length; i++)
-        {
-            assert stackBlocked[i] == 0 : "stack map must be empty before and after processing";
-        }
-        return super.checkEmpty();
-    }
-
-    @Override
-    protected void checkMultipleReads()
-    {
-        // multiple reads are allowed in SSA LSRA
-    }
-
-    @Override
-    protected void verifyStackSlotMapping()
-    {
-        // relax disjoint stack maps invariant
-    }
-
-    @Override
     protected boolean areMultipleReadsAllowed()
     {
         return true;
@@ -101,9 +79,7 @@ public final class SSAMoveResolver extends MoveResolver
         }
         else
         {
-            assert stackSlot.getRawAddFrameSize() : "Unexpected stack slot: " + stackSlot;
             int offset = -stackSlot.getRawOffset();
-            assert 0 <= offset && offset < firstVirtualStackIndex : String.format("Wrong stack slot offset: %d (first virtual stack slot index: %d", offset, firstVirtualStackIndex);
             stackIdx = offset;
         }
         return stackIdx;
@@ -117,7 +93,6 @@ public final class SSAMoveResolver extends MoveResolver
     @Override
     protected void setValueBlocked(Value location, int direction)
     {
-        assert direction == 1 || direction == -1 : "out of bounds";
         if (isStackSlotValue(location))
         {
             int stackIdx = getStackArrayIndex(location);
@@ -176,7 +151,6 @@ public final class SSAMoveResolver extends MoveResolver
             super.breakCycle(spillCandidate);
             return;
         }
-        assert mappingFromSize() > 1;
         // Arbitrarily select the first entry for spilling.
         int stackSpillCandidate = 0;
         Interval fromInterval = getMappingFrom(stackSpillCandidate);

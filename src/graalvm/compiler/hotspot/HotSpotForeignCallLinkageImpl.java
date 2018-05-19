@@ -100,7 +100,6 @@ public class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarget impl
      */
     public static CallingConvention createCallingConvention(MetaAccessProvider metaAccess, CodeCacheProvider codeCache, WordTypes wordTypes, ValueKindFactory<?> valueKindFactory, ForeignCallDescriptor descriptor, Type ccType)
     {
-        assert ccType != null;
         Class<?>[] argumentTypes = descriptor.getArgumentTypes();
         JavaType[] parameterTypes = new JavaType[argumentTypes.length];
         for (int i = 0; i < parameterTypes.length; ++i)
@@ -129,7 +128,6 @@ public class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarget impl
         this.address = address;
         this.effect = effect;
         this.transition = transition;
-        assert outgoingCallingConvention != null : "only incomingCallingConvention can be null";
         this.outgoingCallingConvention = outgoingCallingConvention;
         this.incomingCallingConvention = incomingCallingConvention != null ? incomingCallingConvention : outgoingCallingConvention;
         this.reexecutable = reexecutable;
@@ -209,7 +207,6 @@ public class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarget impl
     @Override
     public void setCompiledStub(Stub stub)
     {
-        assert address == 0L : "cannot set stub for linkage that already has an address: " + this;
         this.stub = stub;
     }
 
@@ -225,13 +222,11 @@ public class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarget impl
     @Override
     public Stub getStub()
     {
-        assert checkStubCondition();
         return stub;
     }
 
     private boolean checkStubCondition()
     {
-        assert stub != null : "linkage without an address must be a stub - forgot to register a Stub associated with " + descriptor + "?";
         return true;
     }
 
@@ -240,7 +235,6 @@ public class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarget impl
     {
         if (address == 0)
         {
-            assert checkStubCondition();
             InstalledCode code = stub.getCode(backend);
 
             EconomicSet<Register> destroyedRegisters = stub.getDestroyedCallerRegisters();
@@ -261,7 +255,6 @@ public class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarget impl
     @Override
     public long getAddress()
     {
-        assert address != 0L : "address not yet finalized: " + this;
         return address;
     }
 

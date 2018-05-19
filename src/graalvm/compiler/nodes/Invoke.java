@@ -87,7 +87,6 @@ public interface Invoke extends StateSplit, Lowerable, DeoptimizingNode.DeoptDur
 
     default ValueNode getReceiver()
     {
-        assert getInvokeKind().hasReceiver();
         return callTarget().arguments().get(0);
     }
 

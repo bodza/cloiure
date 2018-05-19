@@ -59,7 +59,6 @@ public interface TypeWriter
         long cur = value;
         while (true)
         {
-            assert cur >= 0;
             if (cur < 128)
             {
                 putU1(cur & 0x7f);

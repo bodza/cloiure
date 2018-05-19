@@ -7,9 +7,7 @@ import graalvm.compiler.core.common.PermanentBailoutException;
 import graalvm.compiler.core.common.cfg.Loop;
 import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.Stamp;
-import graalvm.compiler.debug.CounterKey;
 import graalvm.compiler.debug.DebugCloseable;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.iterators.NodeIterable;
@@ -68,8 +66,6 @@ public class OnStackReplacementPhase extends Phase
         public static final OptionKey<Boolean> SupportOSRWithLocks = new OptionKey<>(true);
     }
 
-    private static final CounterKey OsrWithLocksCount = DebugContext.counter("OSRWithLocks");
-
     private static boolean supportOSRWithLocks(OptionValues options)
     {
         return Options.SupportOSRWithLocks.getValue(options);
@@ -79,15 +75,12 @@ public class OnStackReplacementPhase extends Phase
     @SuppressWarnings("try")
     protected void run(StructuredGraph graph)
     {
-        DebugContext debug = graph.getDebug();
         if (graph.getEntryBCI() == JVMCICompiler.INVOCATION_ENTRY_BCI)
         {
             // This happens during inlining in a OSR method, because the same phase plan will be
             // used.
-            assert graph.getNodes(EntryMarkerNode.TYPE).isEmpty();
             return;
         }
-        debug.dump(DebugContext.DETAILED_LEVEL, graph, "OnStackReplacement initial at bci %d", graph.getEntryBCI());
 
         EntryMarkerNode osr;
         int maxIterations = -1;
@@ -146,7 +139,6 @@ public class OnStackReplacementPhase extends Phase
                 proxy.replaceAndDelete(proxy.value());
             }
             GraphUtil.removeFixedWithUnusedInputs(osr);
-            debug.dump(DebugContext.DETAILED_LEVEL, graph, "OnStackReplacement loop peeling result");
         } while (true);
 
         StartNode start = graph.start();
@@ -162,7 +154,6 @@ public class OnStackReplacementPhase extends Phase
             graph.setStart(osrStart);
             osrStart.setStateAfter(osrState);
 
-            debug.dump(DebugContext.DETAILED_LEVEL, graph, "OnStackReplacement after setting OSR start");
             final int localsSize = osrState.localsSize();
             final int locksSize = osrState.locksSize();
 
@@ -214,22 +205,15 @@ public class OnStackReplacementPhase extends Phase
                     }
                     proxy.replaceAndDelete(osrLocal);
                 }
-                else
-                {
-                    assert value == null || value instanceof OSRLocalNode;
-                }
             }
 
             osr.replaceAtUsages(InputType.Guard, osrStart);
         }
-        debug.dump(DebugContext.DETAILED_LEVEL, graph, "OnStackReplacement after replacing entry proxies");
         GraphUtil.killCFG(start);
-        debug.dump(DebugContext.DETAILED_LEVEL, graph, "OnStackReplacement result");
         new DeadCodeEliminationPhase(Required).apply(graph);
 
         if (currentOSRWithLocks)
         {
-            OsrWithLocksCount.increment(debug);
             try (DebugCloseable context = osrStart.withNodeSourcePosition())
             {
                 for (int i = osrState.monitorIdCount() - 1; i >= 0; --i)
@@ -252,7 +236,6 @@ public class OnStackReplacementPhase extends Phase
                 }
             }
 
-            debug.dump(DebugContext.DETAILED_LEVEL, graph, "After inserting OSR monitor enters");
             /*
              * Ensure balanced monitorenter - monitorexit
              *
@@ -270,12 +253,10 @@ public class OnStackReplacementPhase extends Phase
                 }
             }
         }
-        debug.dump(DebugContext.DETAILED_LEVEL, graph, "OnStackReplacement result");
         new DeadCodeEliminationPhase(Required).apply(graph);
         /*
          * There must not be any parameter nodes left after OSR compilation.
          */
-        assert graph.getNodes(ParameterNode.TYPE).count() == 0 : "OSR Compilation contains references to parameters.";
     }
 
     private static EntryMarkerNode getEntryMarker(StructuredGraph graph)

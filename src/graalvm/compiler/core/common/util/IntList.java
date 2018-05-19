@@ -33,7 +33,6 @@ public final class IntList
      */
     public IntList(int[] array, int initialSize)
     {
-        assert initialSize <= array.length;
         this.array = array;
         this.size = initialSize;
     }
@@ -63,7 +62,6 @@ public final class IntList
      */
     public static IntList copy(IntList other, int startIndex, int length, int initialCapacity)
     {
-        assert initialCapacity >= length : "initialCapacity < length";
         if (initialCapacity == 0)
         {
             return new IntList(EMPTY_INT_ARRAY, 0);

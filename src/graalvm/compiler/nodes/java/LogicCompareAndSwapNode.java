@@ -41,8 +41,6 @@ public final class LogicCompareAndSwapNode extends AbstractCompareAndSwapNode
     @Override
     public void generate(NodeLIRBuilderTool gen)
     {
-        assert getNewValue().stamp(NodeView.DEFAULT).isCompatible(getExpectedValue().stamp(NodeView.DEFAULT));
-        assert !this.canDeoptimize();
         LIRGeneratorTool tool = gen.getLIRGeneratorTool();
 
         LIRKind resultKind = tool.getLIRKind(stamp(NodeView.DEFAULT));

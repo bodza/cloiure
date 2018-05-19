@@ -52,7 +52,6 @@ public class LoadMethodCountersIndirectlyNode extends FloatingNode implements Ca
     @Override
     public void generate(NodeLIRBuilderTool gen)
     {
-        assert constant != null : "Expected the value to fold: " + value;
         Value result;
         if (constant instanceof HotSpotMetaspaceConstant)
         {

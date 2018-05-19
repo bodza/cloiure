@@ -36,8 +36,6 @@ public final class IntegerEqualsNode extends CompareNode implements BinaryCommut
     public IntegerEqualsNode(ValueNode x, ValueNode y)
     {
         super(TYPE, CanonicalCondition.EQ, false, x, y);
-        assert !x.getStackKind().isNumericFloat() && x.getStackKind() != JavaKind.Object;
-        assert !y.getStackKind().isNumericFloat() && y.getStackKind() != JavaKind.Object;
     }
 
     public static LogicNode create(ValueNode x, ValueNode y, NodeView view)
@@ -203,7 +201,6 @@ public final class IntegerEqualsNode extends CompareNode implements BinaryCommut
                 }
                 if (v1 != null)
                 {
-                    assert v2 != null;
                     return create(v1, v2, view);
                 }
             }
@@ -253,7 +250,6 @@ public final class IntegerEqualsNode extends CompareNode implements BinaryCommut
                                 }
                                 else
                                 {
-                                    assert shift.getX().getStackKind() == JavaKind.Long;
                                     return new IntegerTestNode(shift.getX(), ConstantNode.forLong(-1L >>> amount));
                                 }
                             }
@@ -271,7 +267,6 @@ public final class IntegerEqualsNode extends CompareNode implements BinaryCommut
                                 }
                                 else
                                 {
-                                    assert shift.getX().getStackKind() == JavaKind.Long;
                                     return new IntegerTestNode(shift.getX(), ConstantNode.forLong(-1L << amount));
                                 }
                             }
@@ -289,7 +284,6 @@ public final class IntegerEqualsNode extends CompareNode implements BinaryCommut
                                 }
                                 else
                                 {
-                                    assert shift.getX().getStackKind() == JavaKind.Long;
                                     return new IntegerTestNode(shift.getX(), ConstantNode.forLong(-1L << amount));
                                 }
                             }

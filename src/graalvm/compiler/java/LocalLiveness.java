@@ -54,7 +54,6 @@ import static graalvm.compiler.bytecode.Bytecodes.LSTORE_3;
 import static graalvm.compiler.bytecode.Bytecodes.RET;
 
 import graalvm.compiler.bytecode.BytecodeStream;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.java.BciBlockMapping.BciBlock;
 
 /**
@@ -65,10 +64,10 @@ public abstract class LocalLiveness
 {
     protected final BciBlock[] blocks;
 
-    public static LocalLiveness compute(DebugContext debug, BytecodeStream stream, BciBlock[] blocks, int maxLocals, int loopCount)
+    public static LocalLiveness compute(BytecodeStream stream, BciBlock[] blocks, int maxLocals, int loopCount)
     {
         LocalLiveness liveness = maxLocals <= 64 ? new SmallLocalLiveness(blocks, maxLocals, loopCount) : new LargeLocalLiveness(blocks, maxLocals, loopCount);
-        liveness.computeLiveness(debug, stream);
+        liveness.computeLiveness(stream);
         return liveness;
     }
 
@@ -77,7 +76,7 @@ public abstract class LocalLiveness
         this.blocks = blocks;
     }
 
-    void computeLiveness(DebugContext debug, BytecodeStream stream)
+    void computeLiveness(BytecodeStream stream)
     {
         for (BciBlock block : blocks)
         {
@@ -88,13 +87,11 @@ public abstract class LocalLiveness
         int iteration = 0;
         do
         {
-            assert traceIteration(debug, iteration);
             changed = false;
             for (int i = blocks.length - 1; i >= 0; i--)
             {
                 BciBlock block = blocks[i];
                 int blockID = block.getId();
-                assert traceStart(debug, block, blockID);
 
                 boolean blockChanged = (iteration == 0);
                 if (block.getSuccessorCount() > 0)
@@ -102,7 +99,6 @@ public abstract class LocalLiveness
                     int oldCardinality = liveOutCardinality(blockID);
                     for (BciBlock sux : block.getSuccessors())
                     {
-                        assert traceSuccessor(debug, sux);
                         propagateLiveness(blockID, sux.getId());
                     }
                     blockChanged |= (oldCardinality != liveOutCardinality(blockID));
@@ -111,45 +107,11 @@ public abstract class LocalLiveness
                 if (blockChanged)
                 {
                     updateLiveness(blockID);
-                    assert traceEnd(debug, block, blockID);
                 }
                 changed |= blockChanged;
             }
             iteration++;
         } while (changed);
-    }
-
-    private static boolean traceIteration(DebugContext debug, int iteration)
-    {
-        debug.log("Iteration %d", iteration);
-        return true;
-    }
-
-    private boolean traceEnd(DebugContext debug, BciBlock block, int blockID)
-    {
-        if (debug.isLogEnabled())
-        {
-            debug.logv("  end   B%d  [%d, %d]  in: %s  out: %s  gen: %s  kill: %s", block.getId(), block.startBci, block.endBci, debugLiveIn(blockID), debugLiveOut(blockID), debugLiveGen(blockID), debugLiveKill(blockID));
-        }
-        return true;
-    }
-
-    private boolean traceSuccessor(DebugContext debug, BciBlock sux)
-    {
-        if (debug.isLogEnabled())
-        {
-            debug.log("    Successor B%d: %s", sux.getId(), debugLiveIn(sux.getId()));
-        }
-        return true;
-    }
-
-    private boolean traceStart(DebugContext debug, BciBlock block, int blockID)
-    {
-        if (debug.isLogEnabled())
-        {
-            debug.logv("  start B%d  [%d, %d]  in: %s  out: %s  gen: %s  kill: %s", block.getId(), block.startBci, block.endBci, debugLiveIn(blockID), debugLiveOut(blockID), debugLiveGen(blockID), debugLiveKill(blockID));
-        }
-        return true;
     }
 
     /**

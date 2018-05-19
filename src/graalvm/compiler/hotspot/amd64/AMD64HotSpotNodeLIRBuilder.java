@@ -53,8 +53,6 @@ public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements H
     public AMD64HotSpotNodeLIRBuilder(StructuredGraph graph, LIRGeneratorTool gen, AMD64NodeMatchRules nodeMatchRules)
     {
         super(graph, gen, nodeMatchRules);
-        assert gen instanceof AMD64HotSpotLIRGenerator;
-        assert getDebugInfoBuilder() instanceof HotSpotDebugInfoBuilder;
         ((AMD64HotSpotLIRGenerator) gen).setDebugInfoBuilder(((HotSpotDebugInfoBuilder) getDebugInfoBuilder()));
     }
 
@@ -99,7 +97,6 @@ public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements H
         for (ParameterNode param : graph.getNodes(ParameterNode.TYPE))
         {
             Value paramValue = params[param.index()];
-            assert paramValue.getValueKind().equals(getLIRGeneratorTool().getLIRKind(param.stamp(NodeView.DEFAULT))) : paramValue.getValueKind() + " != " + param.stamp(NodeView.DEFAULT);
             setResult(param, gen.emitMove(paramValue));
         }
     }
@@ -122,9 +119,7 @@ public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements H
         }
         else
         {
-            assert invokeKind.isDirect();
             HotSpotResolvedJavaMethod resolvedMethod = (HotSpotResolvedJavaMethod) callTarget.targetMethod();
-            assert resolvedMethod.isConcrete() : "Cannot make direct call to abstract method.";
             append(new AMD64HotSpotDirectStaticCallOp(callTarget.targetMethod(), result, parameters, temps, callState, invokeKind, getGen().config));
         }
     }
@@ -160,7 +155,6 @@ public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements H
         Variable handler = gen.load(operand(handlerInCallerPc));
         ForeignCallLinkage linkage = gen.getForeignCalls().lookupForeignCall(EXCEPTION_HANDLER_IN_CALLER);
         CallingConvention outgoingCc = linkage.getOutgoingCallingConvention();
-        assert outgoingCc.getArgumentCount() == 2;
         RegisterValue exceptionFixed = (RegisterValue) outgoingCc.getArgument(0);
         RegisterValue exceptionPcFixed = (RegisterValue) outgoingCc.getArgument(1);
         gen.emitMove(exceptionFixed, operand(exception));
@@ -175,7 +169,6 @@ public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements H
     {
         if (i.getState() != null && i.getState().bci == BytecodeFrame.AFTER_BCI)
         {
-            i.getDebug().log("Ignoring InfopointNode for AFTER_BCI");
         }
         else
         {

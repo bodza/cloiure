@@ -87,7 +87,6 @@ public class StandardOp
 
         private void setNumberOfPhis(int numPhis)
         {
-            assert numbPhis == 0;
             numbPhis = numPhis;
         }
 
@@ -98,8 +97,6 @@ public class StandardOp
 
         public void setIncomingValues(Value[] values)
         {
-            assert this.incomingValues.length == 0;
-            assert values != null;
             this.incomingValues = values;
         }
 
@@ -110,7 +107,6 @@ public class StandardOp
 
         public Value getIncomingValue(int idx)
         {
-            assert checkRange(idx);
             return incomingValues[idx];
         }
 
@@ -210,8 +206,6 @@ public class StandardOp
 
         public void setPhiValues(Value[] values)
         {
-            assert this.outgoingValues.length == 0;
-            assert values != null;
             this.outgoingValues = values;
         }
 
@@ -222,7 +216,6 @@ public class StandardOp
 
         public Value getOutgoingValue(int idx)
         {
-            assert checkRange(idx);
             return outgoingValues[idx];
         }
 
@@ -358,14 +351,12 @@ public class StandardOp
         public void replace(LIR lir, LIRInstruction replacement)
         {
             ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
-            assert instructions.get(index).equals(this) : String.format("Replacing the wrong instruction: %s instead of %s", instructions.get(index), this);
             instructions.set(index, replacement);
         }
 
         public void remove(LIR lir)
         {
             ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
-            assert instructions.get(index).equals(this) : String.format("Removing the wrong instruction: %s instead of %s", instructions.get(index), this);
             instructions.remove(index);
         }
 

@@ -30,7 +30,6 @@ public class AddressLoweringPhase extends Phase
     public AddressLoweringPhase(AddressLowering lowering)
     {
         this.lowering = lowering;
-        assert lowering != null;
     }
 
     @Override

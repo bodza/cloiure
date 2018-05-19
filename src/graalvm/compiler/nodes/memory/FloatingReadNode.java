@@ -48,7 +48,6 @@ public final class FloatingReadNode extends FloatingAccessNode implements LIRLow
         this.lastLocationAccess = lastLocationAccess;
 
         // The input to floating reads must be always non-null or have at least a guard.
-        assert guard != null || !(address.getBase().stamp(NodeView.DEFAULT) instanceof ObjectStamp) || address.getBase() instanceof ValuePhiNode || ((ObjectStamp) address.getBase().stamp(NodeView.DEFAULT)).nonNull() : address.getBase();
     }
 
     @Override
@@ -101,14 +100,6 @@ public final class FloatingReadNode extends FloatingAccessNode implements LIRLow
             result.setGuard(getGuard());
             return result;
         }
-    }
-
-    @Override
-    public boolean verify()
-    {
-        MemoryNode lla = getLastLocationAccess();
-        assert lla != null || getLocationIdentity().isImmutable() : "lastLocationAccess of " + this + " shouldn't be null for mutable location identity " + getLocationIdentity();
-        return super.verify();
     }
 
     @Override

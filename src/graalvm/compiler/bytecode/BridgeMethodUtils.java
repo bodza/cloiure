@@ -33,7 +33,6 @@ public class BridgeMethodUtils
      */
     public static ResolvedJavaMethod getBridgedMethod(ResolvedJavaMethod bridge)
     {
-        assert bridge.isBridge();
         Bytecode code = new ResolvedJavaMethodBytecode(bridge);
         BytecodeStream stream = new BytecodeStream(code.getCode());
         int opcode = stream.currentBC();
@@ -54,12 +53,7 @@ public class BridgeMethodUtils
                     ResolvedJavaMethod method = (ResolvedJavaMethod) cp.lookupMethod(cpi, opcode);
                     if (method.getName().equals(bridge.getName()))
                     {
-                        if (!assertionsEnabled())
-                        {
-                            return method;
-                        }
-                        assert bridged == null || bridged.equals(method) : String.format("Found calls to different methods named %s in bridge method %s%n  callee 1: %s%n  callee 2: %s", bridge.getName(), bridge.format("%R %H.%n(%P)"), bridged.format("%R %H.%n(%P)"), method.format("%R %H.%n(%P)"));
-                        bridged = method;
+                        return method;
                     }
                     else if (method.getName().equals("<init>") && method.getDeclaringClass().getName().equals("Ljava/lang/AbstractMethodError;"))
                     {
@@ -85,14 +79,6 @@ public class BridgeMethodUtils
             throw new InternalError(String.format("Couldn't find method bridged by %s:%n%s", bridge.format("%R %H.%n(%P)"), dis));
         }
         return bridged;
-    }
-
-    @SuppressWarnings("all")
-    private static boolean assertionsEnabled()
-    {
-        boolean enabled = false;
-        assert enabled = true;
-        return enabled;
     }
 
     /**

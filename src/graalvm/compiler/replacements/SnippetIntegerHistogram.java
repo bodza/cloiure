@@ -34,8 +34,6 @@ public final class SnippetIntegerHistogram
 
     public SnippetIntegerHistogram(SnippetCounter.Group group, int log2StepLength, String name, String description)
     {
-        assert log2StepLength > 0;
-
         this.group = group;
         this.name = name;
 

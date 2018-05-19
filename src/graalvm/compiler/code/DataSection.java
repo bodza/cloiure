@@ -74,7 +74,6 @@ public final class DataSection implements Iterable<Data>
         @Override
         public boolean equals(Object obj)
         {
-            assert ref != null;
             if (obj == this)
             {
                 return true;
@@ -128,7 +127,6 @@ public final class DataSection implements Iterable<Data>
         {
             int position = buffer.position();
             constant.serialize(buffer);
-            assert buffer.position() - position == constant.getSerializedSize() : "wrong number of bytes written";
         }
     }
 
@@ -221,7 +219,6 @@ public final class DataSection implements Iterable<Data>
             int alignment = 1;
             for (int i = 0; i < nested.length; i++)
             {
-                assert size % nested[i].getAlignment() == 0 : "invalid alignment in packed constants";
                 alignment = DataSection.lcm(alignment, nested[i].getAlignment());
                 size += nested[i].getSize();
             }
@@ -307,7 +304,6 @@ public final class DataSection implements Iterable<Data>
 
         for (Data data : other.dataItems)
         {
-            assert data.ref != null;
             dataItems.add(data);
         }
         other.dataItems.clear();
@@ -401,7 +397,6 @@ public final class DataSection implements Iterable<Data>
     public void buildDataSection(ByteBuffer buffer, Patches patch, BiConsumer<DataSectionReference, Integer> onEmit)
     {
         checkClosed();
-        assert buffer.remaining() >= sectionSize;
         int start = buffer.position();
         for (Data d : dataItems)
         {

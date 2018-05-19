@@ -67,12 +67,10 @@ public class MethodInvocation
     public void incrementProcessedGraphs()
     {
         processedGraphs++;
-        assert processedGraphs <= callee.numberOfMethods();
     }
 
     public int processedGraphs()
     {
-        assert processedGraphs <= callee.numberOfMethods();
         return processedGraphs;
     }
 
@@ -114,7 +112,6 @@ public class MethodInvocation
     public CallsiteHolder buildCallsiteHolderForElement(int index)
     {
         Inlineable elem = callee.inlineableElementAt(index);
-        assert elem instanceof InlineableGraph;
         InlineableGraph ig = (InlineableGraph) elem;
         final double invokeProbability = probability * callee.probabilityAt(index);
         final double invokeRelevance = relevance * callee.relevanceAt(index);

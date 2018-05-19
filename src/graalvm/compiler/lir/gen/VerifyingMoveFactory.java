@@ -44,7 +44,6 @@ public final class VerifyingMoveFactory implements MoveFactory
     public LIRInstruction createMove(AllocatableValue result, Value input)
     {
         LIRInstruction inst = inner.createMove(result, input);
-        assert checkResult(inst, result, input);
         return inst;
     }
 
@@ -52,7 +51,6 @@ public final class VerifyingMoveFactory implements MoveFactory
     public LIRInstruction createStackMove(AllocatableValue result, AllocatableValue input)
     {
         LIRInstruction inst = inner.createStackMove(result, input);
-        assert checkResult(inst, result, input);
         return inst;
     }
 
@@ -60,7 +58,6 @@ public final class VerifyingMoveFactory implements MoveFactory
     public LIRInstruction createLoad(AllocatableValue result, Constant input)
     {
         LIRInstruction inst = inner.createLoad(result, input);
-        assert LoadConstantOp.isLoadConstantOp(inst) && checkResult(inst, result, null);
         return inst;
     }
 
@@ -68,7 +65,6 @@ public final class VerifyingMoveFactory implements MoveFactory
     public LIRInstruction createStackLoad(AllocatableValue result, Constant input)
     {
         LIRInstruction inst = inner.createStackLoad(result, input);
-        assert LoadConstantOp.isLoadConstantOp(inst) && checkResult(inst, result, null);
         return inst;
     }
 
@@ -93,31 +89,26 @@ public final class VerifyingMoveFactory implements MoveFactory
 
         void tempProc(LIRInstruction op, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
         {
-            assert false : String.format("SpillMoveFactory: Instruction %s is not allowed to contain operand %s of mode %s", op, value, mode);
             tempCount++;
         }
 
         void stateProc(LIRInstruction op, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
         {
-            assert false : String.format("SpillMoveFactory: Instruction %s is not allowed to contain operand %s of mode %s", op, value, mode);
             stateCount++;
         }
 
         void aliveProc(LIRInstruction op, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
         {
-            assert !isVariable(value) && flags.contains(OperandFlag.UNINITIALIZED) : String.format("SpillMoveFactory: Instruction %s is not allowed to contain operand %s of mode %s", op, value, mode);
             aliveCount++;
         }
 
         void inputProc(LIRInstruction op, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
         {
-            assert value.equals(input) || isJavaConstant(value) : String.format("SpillMoveFactory: Instruction %s can only have %s as input, got %s", op, input, value);
             inputCount++;
         }
 
         void outputProc(LIRInstruction op, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
         {
-            assert value.equals(result) : String.format("SpillMoveFactory: Instruction %s can only have %s as input, got %s", op, input, value);
             outputCount++;
         }
     }
@@ -134,8 +125,6 @@ public final class VerifyingMoveFactory implements MoveFactory
         inst.visitEachTemp(c::tempProc);
         inst.visitEachState(c::stateProc);
 
-        assert c.outputCount >= 1 : "no output produced" + inst;
-        assert c.stateCount == 0 : "SpillMoveFactory: instruction must not have a state: " + inst;
         return true;
     }
 }

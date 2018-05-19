@@ -175,8 +175,6 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
      */
     private void emitSSE41Compare(CompilationResultBuilder crb, AMD64MacroAssembler masm, Register result, Register array1, Register array2, Register length, Label trueLabel, Label falseLabel)
     {
-        assert supportsSSE41(crb.target);
-
         Register vector1 = asRegister(vectorTemp1, AMD64Kind.DOUBLE);
         Register vector2 = asRegister(vectorTemp2, AMD64Kind.DOUBLE);
 
@@ -264,8 +262,6 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
 
     private void emitAVXCompare(CompilationResultBuilder crb, AMD64MacroAssembler masm, Register result, Register array1, Register array2, Register length, Label trueLabel, Label falseLabel)
     {
-        assert supportsAVX2(crb.target);
-
         Register vector1 = asRegister(vectorTemp1, AMD64Kind.DOUBLE);
         Register vector2 = asRegister(vectorTemp2, AMD64Kind.DOUBLE);
 
@@ -490,7 +486,6 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
      */
     private void emitNaNCheck(AMD64MacroAssembler masm, AMD64Address src, Label branchIfNonNaN)
     {
-        assert kind.isNumericFloat();
         Register tempXMMReg = asRegister(tempXMM);
         if (kind == JavaKind.Float)
         {
@@ -543,7 +538,6 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
      */
     private void emitFloatCompareWithinRange(CompilationResultBuilder crb, AMD64MacroAssembler masm, Register base1, Register base2, Register index, int offset, Label falseLabel, int range)
     {
-        assert kind.isNumericFloat();
         Label loop = new Label();
         Register i = asRegister(temp5);
 

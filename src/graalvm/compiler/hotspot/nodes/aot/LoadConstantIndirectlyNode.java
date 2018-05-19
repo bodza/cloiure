@@ -62,7 +62,6 @@ public class LoadConstantIndirectlyNode extends FloatingNode implements Canonica
     @Override
     public void generate(NodeLIRBuilderTool gen)
     {
-        assert constant != null : "Expected the value to fold: " + value;
         Value result;
         if (constant instanceof HotSpotObjectConstant)
         {

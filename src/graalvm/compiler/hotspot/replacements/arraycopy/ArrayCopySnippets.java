@@ -23,7 +23,6 @@ import graalvm.compiler.api.directives.GraalDirectives;
 import graalvm.compiler.api.replacements.Fold;
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
-import graalvm.compiler.debug.DebugHandlersFactory;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
@@ -44,7 +43,6 @@ import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.nodes.type.StampTool;
 import graalvm.compiler.nodes.util.GraphUtil;
 import graalvm.compiler.options.OptionValues;
-import graalvm.compiler.replacements.ReplacementsUtil;
 import graalvm.compiler.replacements.SnippetCounter;
 import graalvm.compiler.replacements.SnippetCounter.Group;
 import graalvm.compiler.replacements.SnippetIntegerHistogram;
@@ -283,10 +281,6 @@ public class ArrayCopySnippets implements Snippets
                 DeoptimizeNode.deopt(DeoptimizationAction.None, DeoptimizationReason.RuntimeConstraint);
             }
         }
-        else
-        {
-            ReplacementsUtil.staticAssert(false, "unknown array type check");
-        }
     }
 
     static class Counters
@@ -368,9 +362,9 @@ public class ArrayCopySnippets implements Snippets
         private ResolvedJavaMethod originalArraycopy;
         private final Counters counters;
 
-        public Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, SnippetCounter.Group.Factory factory, HotSpotProviders providers, TargetDescription target)
+        public Templates(OptionValues options, SnippetCounter.Group.Factory factory, HotSpotProviders providers, TargetDescription target)
         {
-            super(options, factories, providers, providers.getSnippetReflection(), target);
+            super(options, providers, providers.getSnippetReflection(), target);
             this.counters = new Counters(factory);
         }
 
@@ -427,7 +421,6 @@ public class ArrayCopySnippets implements Snippets
                     {
                         // one object is an object array, the other one is a primitive array.
                         // this copy will always fail - use the native call right away
-                        assert !srcComponentType.equals(destComponentType) : "must be handled by arraycopy.isExact()";
                         snippetInfo = arraycopyNativeSnippet;
                         arrayTypeCheck = ArrayCopyTypeCheck.UNDEFINED_ARRAY_TYPE_CHECK;
                     }
@@ -478,7 +471,6 @@ public class ArrayCopySnippets implements Snippets
             args.add("length", arraycopy.getLength());
             if (snippetInfo != arraycopyNativeSnippet)
             {
-                assert arrayTypeCheck != ArrayCopyTypeCheck.UNDEFINED_ARRAY_TYPE_CHECK;
                 args.addConst("arrayTypeCheck", arrayTypeCheck);
             }
             if (snippetInfo == arraycopyUnrolledSnippet)
@@ -488,7 +480,6 @@ public class ArrayCopySnippets implements Snippets
             }
             if (snippetInfo == arraycopyExactSnippet)
             {
-                assert elementKind != null;
                 args.addConst("elementKind", elementKind);
                 args.addConst("elementKindCounter", counters.arraycopyCallCounters.get(elementKind));
                 args.addConst("elementKindCopiedCounter", counters.arraycopyCallCopiedCounters.get(elementKind));
@@ -575,7 +566,6 @@ public class ArrayCopySnippets implements Snippets
                 if (originalNode instanceof Invoke)
                 {
                     Invoke invoke = (Invoke) replacements.get(originalNode);
-                    assert invoke.asNode().graph() == graph;
                     CallTargetNode call = invoke.callTarget();
 
                     if (!call.targetMethod().equals(originalArraycopy))
@@ -590,7 +580,6 @@ public class ArrayCopySnippets implements Snippets
                     }
                     else
                     {
-                        assert arraycopy.stateAfter() != null : arraycopy;
                         newInvoke.setStateAfter(arraycopy.stateAfter());
                     }
                     graph.replaceFixedWithFixed((InvokeNode) invoke.asNode(), newInvoke);
@@ -598,8 +587,6 @@ public class ArrayCopySnippets implements Snippets
                 else if (originalNode instanceof ArrayCopyWithSlowPathNode)
                 {
                     ArrayCopyWithSlowPathNode slowPath = (ArrayCopyWithSlowPathNode) replacements.get(originalNode);
-                    assert arraycopy.stateAfter() != null : arraycopy;
-                    assert slowPath.stateAfter() == arraycopy.stateAfter();
                     slowPath.setBci(arraycopy.getBci());
                 }
             }

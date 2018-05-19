@@ -85,7 +85,6 @@ public abstract class LoopFragment
     @SuppressWarnings("unchecked")
     public <New extends Node, Old extends New> New getDuplicatedNode(Old n)
     {
-        assert isDuplicate();
         return (New) duplicationMap.get(n);
     }
 
@@ -139,7 +138,6 @@ public abstract class LoopFragment
     {
         if (isDuplicate() && !nodesReady)
         {
-            assert !original.isDuplicate();
             final DuplicationReplacement cfgFix = original().getDuplicationReplacement();
             DuplicationReplacement dr;
             if (cfgFix == null && dataFix != null)
@@ -160,7 +158,6 @@ public abstract class LoopFragment
                         Node r1 = dataFix.replacement(o);
                         if (r1 != o)
                         {
-                            assert cfgFix.replacement(o) == o;
                             return r1;
                         }
                         Node r2 = cfgFix.replacement(o);
@@ -353,7 +350,6 @@ public abstract class LoopFragment
     private static void pushWorkList(Deque<WorkListEntry> workList, Node node, NodeBitMap loopNodes)
     {
         WorkListEntry entry = new WorkListEntry(node, loopNodes);
-        assert !workList.contains(entry) : "node " + node + " added to worklist twice";
         workList.push(entry);
     }
 
@@ -394,7 +390,6 @@ public abstract class LoopFragment
                      * (gd) this is only OK if we are not going to make loop transforms based on
                      * this
                      */
-                    assert !((GuardNode) current).graph().hasValueProxies();
                     isLoopNode = true;
                 }
                 if (isLoopNode)
@@ -492,7 +487,6 @@ public abstract class LoopFragment
      */
     protected void mergeEarlyExits()
     {
-        assert isDuplicate();
         StructuredGraph graph = graph();
         for (AbstractBeginNode earlyExit : LoopFragment.toHirBlocks(original().loop().loop().getExits()))
         {
@@ -550,7 +544,6 @@ public abstract class LoopFragment
                 }
                 if (vpn.value() == null)
                 {
-                    assert vpn instanceof GuardProxyNode;
                     vpn.replaceAtUsages(null);
                     continue;
                 }

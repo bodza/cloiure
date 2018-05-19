@@ -13,12 +13,7 @@ public abstract class ContextlessLoopPhase<P extends LoopPolicies> extends LoopP
 
     public final void apply(final StructuredGraph graph)
     {
-        apply(graph, true);
-    }
-
-    public final void apply(final StructuredGraph graph, final boolean dumpGraph)
-    {
-        apply(graph, null, dumpGraph);
+        apply(graph, null);
     }
 
     protected abstract void run(StructuredGraph graph);

@@ -23,7 +23,6 @@ public final class Label
      */
     public int position()
     {
-        assert position >= 0 : "Unbound label is being referenced";
         return position;
     }
 
@@ -49,7 +48,6 @@ public final class Label
     protected void bind(int pos)
     {
         this.position = pos;
-        assert isBound();
     }
 
     public boolean isBound()
@@ -59,7 +57,6 @@ public final class Label
 
     public void addPatchAt(int branchLocation)
     {
-        assert !isBound() : "Label is already bound " + this + " " + branchLocation + " at position " + position;
         if (patchPositions == null)
         {
             patchPositions = new ArrayList<>(2);
@@ -69,7 +66,6 @@ public final class Label
 
     protected void patchInstructions(Assembler masm)
     {
-        assert isBound() : "Label should be bound";
         if (patchPositions != null)
         {
             int target = position;

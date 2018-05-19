@@ -63,7 +63,6 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
      */
     public HotSpotForeignCallLinkage register(HotSpotForeignCallLinkage linkage)
     {
-        assert !foreignCalls.containsKey(linkage.getDescriptor()) : "already registered linkage for " + linkage.getDescriptor();
         foreignCalls.put(linkage.getDescriptor(), linkage);
         return linkage;
     }
@@ -108,8 +107,6 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
     public HotSpotForeignCallLinkage registerForeignCall(ForeignCallDescriptor descriptor, long address, CallingConvention.Type outgoingCcType, RegisterEffect effect, Transition transition, boolean reexecutable, LocationIdentity... killedLocations)
     {
         Class<?> resultType = descriptor.getResultType();
-        assert address != 0;
-        assert transition != SAFEPOINT || resultType.isPrimitive() || Word.class.isAssignableFrom(resultType) : "non-leaf foreign calls must return objects in thread local storage: " + descriptor;
         return register(HotSpotForeignCallLinkageImpl.create(metaAccess, codeCache, wordTypes, this, descriptor, address, effect, outgoingCcType, null, transition, reexecutable, killedLocations));
     }
 
@@ -147,7 +144,6 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
     @Override
     public HotSpotForeignCallLinkage lookupForeignCall(ForeignCallDescriptor descriptor)
     {
-        assert foreignCalls != null : descriptor;
         HotSpotForeignCallLinkage callTarget = foreignCalls.get(descriptor);
         callTarget.finalizeAddress(runtime.getHostBackend());
         return callTarget;
@@ -156,28 +152,24 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
     @Override
     public boolean isReexecutable(ForeignCallDescriptor descriptor)
     {
-        assert foreignCalls.containsKey(descriptor) : "unknown foreign call: " + descriptor;
         return foreignCalls.get(descriptor).isReexecutable();
     }
 
     @Override
     public boolean canDeoptimize(ForeignCallDescriptor descriptor)
     {
-        assert foreignCalls.containsKey(descriptor) : "unknown foreign call: " + descriptor;
         return foreignCalls.get(descriptor).needsDebugInfo();
     }
 
     @Override
     public boolean isGuaranteedSafepoint(ForeignCallDescriptor descriptor)
     {
-        assert foreignCalls.containsKey(descriptor) : "unknown foreign call: " + descriptor;
         return foreignCalls.get(descriptor).isGuaranteedSafepoint();
     }
 
     @Override
     public LocationIdentity[] getKilledLocations(ForeignCallDescriptor descriptor)
     {
-        assert foreignCalls.containsKey(descriptor) : "unknown foreign call: " + descriptor;
         return foreignCalls.get(descriptor).getKilledLocations();
     }
 
@@ -196,7 +188,6 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
             if (linkage.isCompiledStub())
             {
                 Stub stub = linkage.getStub();
-                assert stub != null;
                 stubs.add(stub);
             }
         }

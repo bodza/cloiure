@@ -173,7 +173,6 @@ public class ServiceProviderProcessor extends AbstractProcessor
 
         for (Element element : roundEnv.getElementsAnnotatedWith(ServiceProvider.class))
         {
-            assert element.getKind().isClass();
             processElement((TypeElement) element);
         }
 

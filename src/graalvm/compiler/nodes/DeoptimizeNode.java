@@ -1,6 +1,5 @@
 package graalvm.compiler.nodes;
 
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.lir.gen.LIRGeneratorTool;
 import graalvm.compiler.nodeinfo.NodeInfo;
@@ -40,9 +39,6 @@ public final class DeoptimizeNode extends AbstractDeoptimizeNode implements Lowe
     public DeoptimizeNode(DeoptimizationAction action, DeoptimizationReason reason, int debugId, JavaConstant speculation, FrameState stateBefore)
     {
         super(TYPE, stateBefore);
-        assert action != null;
-        assert reason != null;
-        assert speculation.getJavaKind() == JavaKind.Object;
         this.action = action;
         this.reason = reason;
         this.debugId = debugId;
@@ -82,21 +78,11 @@ public final class DeoptimizeNode extends AbstractDeoptimizeNode implements Lowe
     @SuppressWarnings("deprecation")
     public int getDebugId()
     {
-        int deoptDebugId = debugId;
-        if (deoptDebugId == DEFAULT_DEBUG_ID)
-        {
-            DebugContext debug = getDebug();
-            if ((debug.isDumpEnabledForMethod() || debug.isLogEnabledForMethod()))
-            {
-                deoptDebugId = this.getId();
-            }
-        }
-        return deoptDebugId;
+        return debugId;
     }
 
     public void setDebugId(int debugId)
     {
-        assert debugId != DEFAULT_DEBUG_ID;
         this.debugId = debugId;
     }
 

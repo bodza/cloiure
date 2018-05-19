@@ -20,7 +20,6 @@ import graalvm.compiler.core.common.CompilationIdentifier;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.target.Backend;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
 import graalvm.compiler.hotspot.HotSpotDataBuilder;
 import graalvm.compiler.hotspot.HotSpotGraalRuntimeProvider;
@@ -105,7 +104,6 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
         AMD64MacroAssembler asm = (AMD64MacroAssembler) crb.asm;
         int pos = asm.position();
         asm.movl(new AMD64Address(rsp, -bangOffset), AMD64.rax);
-        assert asm.position() - pos >= PATCHED_VERIFIED_ENTRY_POINT_INSTRUCTION_SIZE;
     }
 
     /**
@@ -161,7 +159,6 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
                 if (!isStub && asm.position() == verifiedEntryPointOffset)
                 {
                     asm.subqWide(rsp, frameSize);
-                    assert asm.position() - verifiedEntryPointOffset >= PATCHED_VERIFIED_ENTRY_POINT_INSTRUCTION_SIZE;
                 }
                 else
                 {
@@ -175,7 +172,6 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
                         asm.movl(new AMD64Address(rsp, i * intSize), 0xC1C1C1C1);
                     }
                 }
-                assert frameMap.getRegisterConfig().getCalleeSaveRegisters() == null;
             }
         }
 
@@ -185,7 +181,6 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
             if (!omitFrame)
             {
                 AMD64MacroAssembler asm = (AMD64MacroAssembler) crb.asm;
-                assert crb.frameMap.getRegisterConfig().getCalleeSaveRegisters() == null;
 
                 int frameSize = crb.frameMap.frameSize();
                 asm.incrementq(rsp, frameSize);
@@ -210,16 +205,14 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
         // - makes no foreign calls (which require an aligned stack)
         HotSpotLIRGenerationResult gen = (HotSpotLIRGenerationResult) lirGenRen;
         LIR lir = gen.getLIR();
-        assert gen.getDeoptimizationRescueSlot() == null || frameMap.frameNeedsAllocating() : "method that can deoptimize must have a frame";
         OptionValues options = lir.getOptions();
-        DebugContext debug = lir.getDebug();
         boolean omitFrame = CanOmitFrame.getValue(options) && !frameMap.frameNeedsAllocating() && !lir.hasArgInCallerFrame() && !gen.hasForeignCall();
 
         Stub stub = gen.getStub();
         Assembler masm = createAssembler(frameMap);
         HotSpotFrameContext frameContext = new HotSpotFrameContext(stub != null, omitFrame);
         DataBuilder dataBuilder = new HotSpotDataBuilder(getCodeCache().getTarget());
-        CompilationResultBuilder crb = factory.createBuilder(getCodeCache(), getForeignCalls(), frameMap, masm, dataBuilder, frameContext, options, debug, compilationResult);
+        CompilationResultBuilder crb = factory.createBuilder(getCodeCache(), getForeignCalls(), frameMap, masm, dataBuilder, frameContext, options, compilationResult);
         crb.setTotalFrameSize(frameMap.totalFrameSize());
         crb.setMaxInterpreterFrameSize(gen.getMaxInterpreterFrameSize());
         StackSlot deoptimizationRescueSlot = gen.getDeoptimizationRescueSlot();
@@ -253,9 +246,6 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
 
         // Emit the suffix
         emitCodeSuffix(installedCodeOwner, crb, asm, frameMap);
-
-        // Profile assembler instructions
-        profileInstructions(lir, crb);
     }
 
     /**
@@ -349,12 +339,6 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
         {
             // No need to emit the stubs for entries back into the method since
             // it has no calls that can cause such "return" entries
-
-            if (frameContext.omitFrame)
-            {
-                // Cannot access slots in caller's frame if my frame is omitted
-                assert !frameMap.accessesCallerFrame();
-            }
         }
     }
 

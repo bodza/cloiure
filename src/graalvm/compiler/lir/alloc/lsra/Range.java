@@ -41,7 +41,6 @@ public final class Range
 
     public boolean isEndMarker()
     {
-        assert from != Integer.MAX_VALUE || (to == Integer.MAX_VALUE && next == null);
         return from == Integer.MAX_VALUE;
     }
 
@@ -49,9 +48,6 @@ public final class Range
     {
         Range r1 = this;
         Range r2 = other;
-
-        assert r2 != null : "null ranges not allowed";
-        assert !r1.isEndMarker() && !r2.isEndMarker() : "empty ranges not allowed";
 
         do
         {

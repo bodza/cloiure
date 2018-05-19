@@ -60,10 +60,8 @@ public class ResolveDynamicStubCall extends AbstractMemoryCheckpoint implements 
     @Override
     public void generate(NodeLIRBuilderTool gen)
     {
-        assert constant != null : "Expected the value to fold: " + value;
         Value result;
         LIRFrameState fs = gen.state(this);
-        assert fs != null : "The stateAfter is null";
         result = ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitResolveDynamicInvoke(constant, fs);
         gen.setResult(this, result);
     }

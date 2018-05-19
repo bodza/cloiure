@@ -22,13 +22,6 @@ public final class StackInterval
         this.kind = kind;
     }
 
-    public boolean verify(int maxOpId)
-    {
-        // maxOpId + 1 is the last position in the last block (i.e. the "write position")
-        assert 0 <= from && from <= to && to <= maxOpId + 1 : String.format("from %d, to %d, maxOpId %d", from, to, maxOpId);
-        return true;
-    }
-
     public VirtualStackSlot getOperand()
     {
         return operand;

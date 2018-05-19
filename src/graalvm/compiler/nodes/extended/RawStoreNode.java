@@ -51,7 +51,6 @@ public final class RawStoreNode extends UnsafeAccessNode implements StateSplit, 
         this.value = value;
         this.needsBarrier = needsBarrier;
         this.stateAfter = stateAfter;
-        assert accessKind != JavaKind.Void && accessKind != JavaKind.Illegal;
     }
 
     @NodeIntrinsic
@@ -74,7 +73,6 @@ public final class RawStoreNode extends UnsafeAccessNode implements StateSplit, 
     @Override
     public void setStateAfter(FrameState x)
     {
-        assert x == null || x.isAlive() : "frame state must be in a graph";
         updateUsages(stateAfter, x);
         stateAfter = x;
     }

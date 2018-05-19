@@ -8,7 +8,6 @@ import graalvm.compiler.api.replacements.MethodSubstitution;
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.core.common.type.StampPair;
 import graalvm.compiler.debug.DebugCloseable;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
@@ -68,13 +67,11 @@ public abstract class MacroNode extends FixedWithNextNode implements Lowerable, 
     protected MacroNode(NodeClass<? extends MacroNode> c, InvokeKind invokeKind, ResolvedJavaMethod targetMethod, int bci, StampPair returnStamp, ValueNode... arguments)
     {
         super(c, returnStamp.getTrustedStamp());
-        assert targetMethod.getSignature().getParameterCount(!targetMethod.isStatic()) == arguments.length;
         this.arguments = new NodeInputList<>(this, arguments);
         this.bci = bci;
         this.targetMethod = targetMethod;
         this.returnStamp = returnStamp;
         this.invokeKind = invokeKind;
-        assert !isPlaceholderBci(bci);
     }
 
     public ValueNode getArgument(int i)
@@ -112,7 +109,6 @@ public abstract class MacroNode extends FixedWithNextNode implements Lowerable, 
     @Override
     protected void afterClone(Node other)
     {
-        updateInliningLogAfterClone(other);
     }
 
     @Override
@@ -136,7 +132,6 @@ public abstract class MacroNode extends FixedWithNextNode implements Lowerable, 
      *
      * @param replacementGraph a replacement (i.e., snippet or method substitution) graph
      */
-    @SuppressWarnings("try")
     protected StructuredGraph lowerReplacement(final StructuredGraph replacementGraph, LoweringTool tool)
     {
         final PhaseContext c = new PhaseContext(tool.getMetaAccess(), tool.getConstantReflection(), tool.getConstantFieldProvider(), tool.getLowerer(), tool.getReplacements(), tool.getStampProvider());
@@ -153,15 +148,7 @@ public abstract class MacroNode extends FixedWithNextNode implements Lowerable, 
                 new FrameStateAssignmentPhase().apply(replacementGraph);
             }
         }
-        DebugContext debug = replacementGraph.getDebug();
-        try (DebugContext.Scope s = debug.scope("LoweringSnippetTemplate", replacementGraph))
-        {
-            new LoweringPhase(new CanonicalizerPhase(), tool.getLoweringStage()).apply(replacementGraph, c);
-        }
-        catch (Throwable e)
-        {
-            throw debug.handle(e);
-        }
+        new LoweringPhase(new CanonicalizerPhase(), tool.getLoweringStage()).apply(replacementGraph, c);
         return replacementGraph;
     }
 
@@ -171,7 +158,6 @@ public abstract class MacroNode extends FixedWithNextNode implements Lowerable, 
         StructuredGraph replacementGraph = getLoweredSnippetGraph(tool);
 
         InvokeNode invoke = replaceWithInvoke();
-        assert invoke.verify();
 
         if (replacementGraph != null)
         {
@@ -186,7 +172,6 @@ public abstract class MacroNode extends FixedWithNextNode implements Lowerable, 
                 }
             }
             InliningUtil.inline(invoke, replacementGraph, false, targetMethod, "Replace with graph.", "LoweringPhase");
-            replacementGraph.getDebug().dump(DebugContext.DETAILED_LEVEL, graph(), "After inlining replacement %s", replacementGraph);
         }
         else
         {

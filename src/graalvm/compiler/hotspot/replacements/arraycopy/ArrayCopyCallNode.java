@@ -79,7 +79,6 @@ public final class ArrayCopyCallNode extends AbstractMemoryCheckpoint implements
     protected ArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntimeProvider runtime, ValueNode src, ValueNode srcPos, ValueNode dest, ValueNode destPos, ValueNode length, JavaKind elementKind, LocationIdentity locationIdentity, boolean aligned, boolean disjoint, boolean uninitialized)
     {
         super(TYPE, StampFactory.forVoid());
-        assert elementKind != null;
         this.src = src;
         this.srcPos = srcPos;
         this.dest = dest;

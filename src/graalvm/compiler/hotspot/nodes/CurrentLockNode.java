@@ -35,7 +35,6 @@ public final class CurrentLockNode extends FixedWithNextNode implements LIRLower
     @Override
     public void generate(NodeLIRBuilderTool gen)
     {
-        assert lockDepth != -1;
         HotSpotLIRGenerator hsGen = (HotSpotLIRGenerator) gen.getLIRGeneratorTool();
         VirtualStackSlot slot = hsGen.getLockSlot(lockDepth);
         // The register allocator cannot handle stack -> register moves so we use an LEA here

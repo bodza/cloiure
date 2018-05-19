@@ -28,7 +28,6 @@ import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.StampPair;
 import graalvm.compiler.debug.DebugCloseable;
-import graalvm.compiler.debug.DebugHandlersFactory;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeInputList;
@@ -179,23 +178,22 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
     }
 
     @Override
-    public void initialize(OptionValues options, Iterable<DebugHandlersFactory> factories, HotSpotProviders providers, GraalHotSpotVMConfig config)
+    public void initialize(OptionValues options, HotSpotProviders providers, GraalHotSpotVMConfig config)
     {
-        super.initialize(options, factories, runtime, providers, providers.getSnippetReflection());
+        super.initialize(options, runtime, providers, providers.getSnippetReflection());
 
-        assert target == providers.getCodeCache().getTarget();
-        instanceofSnippets = new InstanceOfSnippets.Templates(options, factories, runtime, providers, target);
-        newObjectSnippets = new NewObjectSnippets.Templates(options, factories, runtime, providers, target, config);
-        monitorSnippets = new MonitorSnippets.Templates(options, factories, runtime, providers, target, config.useFastLocking);
-        writeBarrierSnippets = new WriteBarrierSnippets.Templates(options, factories, runtime, providers, target, config.useCompressedOops ? config.getOopEncoding() : null);
-        exceptionObjectSnippets = new LoadExceptionObjectSnippets.Templates(options, factories, providers, target);
-        unsafeLoadSnippets = new UnsafeLoadSnippets.Templates(options, factories, providers, target);
-        assertionSnippets = new AssertionSnippets.Templates(options, factories, providers, target);
-        arraycopySnippets = new ArrayCopySnippets.Templates(options, factories, runtime, providers, target);
-        stringToBytesSnippets = new StringToBytesSnippets.Templates(options, factories, providers, target);
-        hashCodeSnippets = new HashCodeSnippets.Templates(options, factories, providers, target);
-        resolveConstantSnippets = new ResolveConstantSnippets.Templates(options, factories, providers, target);
-        profileSnippets = new ProfileSnippets.Templates(options, factories, providers, target);
+        instanceofSnippets = new InstanceOfSnippets.Templates(options, runtime, providers, target);
+        newObjectSnippets = new NewObjectSnippets.Templates(options, runtime, providers, target, config);
+        monitorSnippets = new MonitorSnippets.Templates(options, runtime, providers, target, config.useFastLocking);
+        writeBarrierSnippets = new WriteBarrierSnippets.Templates(options, runtime, providers, target, config.useCompressedOops ? config.getOopEncoding() : null);
+        exceptionObjectSnippets = new LoadExceptionObjectSnippets.Templates(options, providers, target);
+        unsafeLoadSnippets = new UnsafeLoadSnippets.Templates(options, providers, target);
+        assertionSnippets = new AssertionSnippets.Templates(options, providers, target);
+        arraycopySnippets = new ArrayCopySnippets.Templates(options, runtime, providers, target);
+        stringToBytesSnippets = new StringToBytesSnippets.Templates(options, providers, target);
+        hashCodeSnippets = new HashCodeSnippets.Templates(options, providers, target);
+        resolveConstantSnippets = new ResolveConstantSnippets.Templates(options, providers, target);
+        profileSnippets = new ProfileSnippets.Templates(options, providers, target);
     }
 
     public MonitorSnippets.Templates getMonitorSnippets()
@@ -509,7 +507,6 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
             return;
         }
         StructuredGraph graph = n.graph();
-        assert !n.getHub().isConstant();
         AddressNode address = createOffsetAddress(graph, n.getHub(), runtime.getVMConfig().klassLayoutHelperOffset);
         n.replaceAtUsagesAndDelete(graph.unique(new FloatingReadNode(address, KLASS_LAYOUT_HELPER_LOCATION, null, n.stamp(NodeView.DEFAULT), null, BarrierType.NONE)));
     }
@@ -524,7 +521,6 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
         ValueNode hub = n.getHub();
         GraalHotSpotVMConfig vmConfig = runtime.getVMConfig();
         StructuredGraph graph = n.graph();
-        assert !hub.isConstant() || GraalOptions.ImmutableCode.getValue(graph.getOptions());
         AddressNode mirrorAddress = createOffsetAddress(graph, hub, vmConfig.classMirrorOffset);
         FloatingReadNode read = graph.unique(new FloatingReadNode(mirrorAddress, CLASS_MIRROR_LOCATION, null, vmConfig.classMirrorIsHandle ? StampFactory.forKind(target.wordJavaKind) : n.stamp(NodeView.DEFAULT), null, BarrierType.NONE));
         if (vmConfig.classMirrorIsHandle)
@@ -543,7 +539,6 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
         }
 
         StructuredGraph graph = n.graph();
-        assert !n.getValue().isConstant();
         AddressNode address = createOffsetAddress(graph, n.getValue(), runtime.getVMConfig().klassOffset);
         FloatingReadNode read = graph.unique(new FloatingReadNode(address, CLASS_KLASS_LOCATION, null, n.stamp(NodeView.DEFAULT), null, BarrierType.NONE));
         n.replaceAtUsagesAndDelete(read);
@@ -854,7 +849,6 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
 
     private ReadNode createReadVirtualMethod(StructuredGraph graph, ValueNode hub, int vtableEntryOffset)
     {
-        assert vtableEntryOffset > 0;
         // We use LocationNode.ANY_LOCATION for the reads that access the vtable
         // entry as HotSpot does not guarantee that this is a final value.
         Stamp methodStamp = MethodPointerStamp.methodNonNull();
@@ -870,7 +864,6 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
         {
             return graph.unique(new LoadHubNode(tool.getStampProvider(), object));
         }
-        assert !object.isConstant() || object.isNullConstant();
 
         KlassPointerStamp hubStamp = KlassPointerStamp.klassNonNull();
         if (runtime.getVMConfig().useCompressedClassPointers)
@@ -893,8 +886,6 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
 
     private WriteNode createWriteHub(StructuredGraph graph, ValueNode object, ValueNode value)
     {
-        assert !object.isConstant() || object.asConstant().isDefaultForKind();
-
         ValueNode writeValue = value;
         if (runtime.getVMConfig().useCompressedClassPointers)
         {

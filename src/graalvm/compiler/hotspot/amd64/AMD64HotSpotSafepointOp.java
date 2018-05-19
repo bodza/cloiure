@@ -86,7 +86,6 @@ public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
 
     private static void emitGlobalPoll(CompilationResultBuilder crb, AMD64MacroAssembler asm, GraalHotSpotVMConfig config, boolean atReturn, LIRFrameState state, Register scratch)
     {
-        assert !atReturn || state == null : "state is unneeded at return";
         if (ImmutableCode.getValue(crb.getOptions()))
         {
             JavaKind hostWordKind = JavaKind.Long;
@@ -137,9 +136,6 @@ public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
 
     private static void emitThreadLocalPoll(CompilationResultBuilder crb, AMD64MacroAssembler asm, GraalHotSpotVMConfig config, boolean atReturn, LIRFrameState state, Register thread, Register scratch)
     {
-        assert !atReturn || state == null : "state is unneeded at return";
-
-        assert config.threadPollingPageOffset >= 0;
         asm.movptr(scratch, new AMD64Address(thread, config.threadPollingPageOffset));
         crb.recordMark(atReturn ? config.MARKID_POLL_RETURN_FAR : config.MARKID_POLL_FAR);
         final int pos = asm.position();

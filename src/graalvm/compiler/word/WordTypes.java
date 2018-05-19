@@ -73,7 +73,6 @@ public class WordTypes
         final boolean isBarrieredAccess = barrieredAccessType.equals(targetMethod.getDeclaringClass());
         if (isObjectAccess || isBarrieredAccess)
         {
-            assert targetMethod.getAnnotation(Operation.class) != null : targetMethod + " should be annotated with @" + Operation.class.getSimpleName();
             return true;
         }
         return isWord(targetMethod.getDeclaringClass());
@@ -93,10 +92,8 @@ public class WordTypes
         ResolvedJavaMethod wordMethod = targetMethod;
         if (isWordBase && !targetMethod.isStatic())
         {
-            assert wordImplType.isLinked();
             wordMethod = wordImplType.resolveConcreteMethod(targetMethod, callingContextType);
         }
-        assert wordMethod != null : targetMethod;
         return wordMethod;
     }
 
@@ -142,7 +139,6 @@ public class WordTypes
      */
     public Stamp getWordStamp(ResolvedJavaType type)
     {
-        assert isWord(type);
         return StampFactory.forKind(wordKind);
     }
 

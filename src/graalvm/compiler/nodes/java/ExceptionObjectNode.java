@@ -74,12 +74,4 @@ public final class ExceptionObjectNode extends BeginStateSplitNode implements Lo
             loadException.lower(tool);
         }
     }
-
-    @Override
-    public boolean verify()
-    {
-        assertTrue(stateAfter() != null, "an exception handler needs a frame state");
-        assertTrue(stateAfter().stackSize() == 1 && stateAfter().stackAt(0).stamp(NodeView.DEFAULT).getStackKind() == JavaKind.Object, "an exception handler's frame state must have only the exception on the stack");
-        return super.verify();
-    }
 }

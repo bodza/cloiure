@@ -2,7 +2,6 @@ package graalvm.compiler.lir.alloc.lsra.ssa;
 
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.lir.alloc.lsra.LinearScan;
 import graalvm.compiler.lir.alloc.lsra.LinearScanEliminateSpillMovePhase;
 import graalvm.compiler.lir.alloc.lsra.LinearScanLifetimeAnalysisPhase;
@@ -25,7 +24,6 @@ public final class SSALinearScan extends LinearScan
     protected MoveResolver createMoveResolver()
     {
         SSAMoveResolver moveResolver = new SSAMoveResolver(this);
-        assert moveResolver.checkEmpty();
         return moveResolver;
     }
 
@@ -48,21 +46,17 @@ public final class SSALinearScan extends LinearScan
     }
 
     @Override
-    @SuppressWarnings("try")
     protected void beforeSpillMoveElimination()
     {
         /*
          * PHI Ins are needed for the RegisterVerifier, otherwise PHIs where the Out and In value
          * matches (ie. there is no resolution move) are falsely detected as errors.
          */
-        try (DebugContext.Scope s1 = debug.scope("Remove Phi In"))
+        for (AbstractBlockBase<?> toBlock : sortedBlocks())
         {
-            for (AbstractBlockBase<?> toBlock : sortedBlocks())
+            if (toBlock.getPredecessorCount() > 1)
             {
-                if (toBlock.getPredecessorCount() > 1)
-                {
-                    SSAUtil.removePhiIn(getLIR(), toBlock);
-                }
+                SSAUtil.removePhiIn(getLIR(), toBlock);
             }
         }
     }

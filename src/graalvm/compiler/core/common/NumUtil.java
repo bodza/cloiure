@@ -93,7 +93,6 @@ public class NumUtil
 
     public static short safeToShort(int v)
     {
-        assert isShort(v);
         return (short) v;
     }
 
@@ -131,19 +130,16 @@ public class NumUtil
 
     public static boolean isUnsignedNbit(int n, int value)
     {
-        assert n > 0 && n < 32;
         return 32 - Integer.numberOfLeadingZeros(value) <= n;
     }
 
     public static boolean isUnsignedNbit(int n, long value)
     {
-        assert n > 0 && n < 64;
         return 64 - Long.numberOfLeadingZeros(value) <= n;
     }
 
     public static boolean isSignedNbit(int n, int value)
     {
-        assert n > 0 && n < 32;
         int min = -(1 << (n - 1));
         int max = (1 << (n - 1)) - 1;
         return value >= min && value <= max;
@@ -151,7 +147,6 @@ public class NumUtil
 
     public static boolean isSignedNbit(int n, long value)
     {
-        assert n > 0 && n < 64;
         long min = -(1L << (n - 1));
         long max = (1L << (n - 1)) - 1;
         return value >= min && value <= max;
@@ -164,7 +159,6 @@ public class NumUtil
      */
     public static int getNbitNumberInt(int n)
     {
-        assert n >= 0 && n <= 32 : "0 <= n <= 32; instead: " + n;
         if (n < 32)
         {
             return (1 << n) - 1;
@@ -182,7 +176,6 @@ public class NumUtil
      */
     public static long getNbitNumberLong(int n)
     {
-        assert n >= 0 && n <= 64;
         if (n < 64)
         {
             return (1L << n) - 1;

@@ -22,7 +22,6 @@ public class ExactInlineInfo extends AbstractInlineInfo
     {
         super(invoke);
         this.concrete = concrete;
-        assert concrete != null;
     }
 
     public void suppressNullCheck()
@@ -51,21 +50,18 @@ public class ExactInlineInfo extends AbstractInlineInfo
     @Override
     public ResolvedJavaMethod methodAt(int index)
     {
-        assert index == 0;
         return concrete;
     }
 
     @Override
     public double probabilityAt(int index)
     {
-        assert index == 0;
         return 1.0;
     }
 
     @Override
     public double relevanceAt(int index)
     {
-        assert index == 0;
         return 1.0;
     }
 
@@ -78,14 +74,12 @@ public class ExactInlineInfo extends AbstractInlineInfo
     @Override
     public Inlineable inlineableElementAt(int index)
     {
-        assert index == 0;
         return inlineableElement;
     }
 
     @Override
     public void setInlinableElement(int index, Inlineable inlineableElement)
     {
-        assert index == 0;
         this.inlineableElement = inlineableElement;
     }
 

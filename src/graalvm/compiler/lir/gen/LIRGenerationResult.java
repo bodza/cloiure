@@ -4,7 +4,6 @@ import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 import graalvm.compiler.core.common.CompilationIdentifier;
 import graalvm.compiler.core.common.CompilationIdentifier.Verbosity;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.framemap.FrameMap;
@@ -46,15 +45,6 @@ public class LIRGenerationResult
      */
     public final void setComment(LIRInstruction op, String comment)
     {
-        DebugContext debug = lir.getDebug();
-        if (debug.isDumpEnabled(DebugContext.BASIC_LEVEL))
-        {
-            if (comments == null)
-            {
-                comments = EconomicMap.create(Equivalence.IDENTITY);
-            }
-            comments.put(op, comment);
-        }
     }
 
     /**
@@ -85,7 +75,6 @@ public class LIRGenerationResult
      */
     public final FrameMapBuilder getFrameMapBuilder()
     {
-        assert frameMap == null : "getFrameMapBuilder() can only be used before calling buildFrameMap()!";
         return frameMapBuilder;
     }
 
@@ -97,7 +86,6 @@ public class LIRGenerationResult
      */
     public void buildFrameMap()
     {
-        assert frameMap == null : "buildFrameMap() can only be called once!";
         frameMap = frameMapBuilder.buildFrameMap(this);
     }
 
@@ -108,7 +96,6 @@ public class LIRGenerationResult
      */
     public FrameMap getFrameMap()
     {
-        assert frameMap != null : "getFrameMap() can only be used after calling buildFrameMap()!";
         return frameMap;
     }
 

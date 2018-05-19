@@ -25,7 +25,6 @@ public abstract class AMD64LIRKindTool implements LIRKindTool
         }
         else
         {
-            assert bits <= 64;
             return LIRKind.value(AMD64Kind.QWORD);
         }
     }

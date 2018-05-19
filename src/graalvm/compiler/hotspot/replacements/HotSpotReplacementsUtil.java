@@ -32,7 +32,6 @@ import graalvm.compiler.nodes.memory.Access;
 import graalvm.compiler.nodes.memory.address.AddressNode;
 import graalvm.compiler.nodes.memory.address.OffsetAddressNode;
 import graalvm.compiler.nodes.type.StampTool;
-import graalvm.compiler.replacements.ReplacementsUtil;
 import graalvm.compiler.replacements.nodes.ReadRegisterNode;
 import graalvm.compiler.replacements.nodes.WriteRegisterNode;
 import graalvm.compiler.word.Word;
@@ -112,7 +111,6 @@ public class HotSpotReplacementsUtil
                     if (address instanceof OffsetAddressNode)
                     {
                         OffsetAddressNode offset = (OffsetAddressNode) address;
-                        assert offset.getBase().stamp(NodeView.DEFAULT).isCompatible(read.stamp(NodeView.DEFAULT));
                         return offset.getBase();
                     }
                 }
@@ -129,7 +127,6 @@ public class HotSpotReplacementsUtil
     @Fold
     public static GraalHotSpotVMConfig config(@InjectedParameter GraalHotSpotVMConfig config)
     {
-        assert config != null;
         return config;
     }
 
@@ -831,19 +828,16 @@ public class HotSpotReplacementsUtil
 
     public static Word loadWordFromObject(Object object, int offset)
     {
-        ReplacementsUtil.staticAssert(offset != hubOffset(INJECTED_VMCONFIG), "Use loadHubIntrinsic instead of loadWordFromObject");
         return loadWordFromObjectIntrinsic(object, offset, LocationIdentity.any(), getWordKind());
     }
 
     public static Word loadWordFromObject(Object object, int offset, LocationIdentity identity)
     {
-        ReplacementsUtil.staticAssert(offset != hubOffset(INJECTED_VMCONFIG), "Use loadHubIntrinsic instead of loadWordFromObject");
         return loadWordFromObjectIntrinsic(object, offset, identity, getWordKind());
     }
 
     public static KlassPointer loadKlassFromObject(Object object, int offset, LocationIdentity identity)
     {
-        ReplacementsUtil.staticAssert(offset != hubOffset(INJECTED_VMCONFIG), "Use loadHubIntrinsic instead of loadWordFromObject");
         return loadKlassFromObjectIntrinsic(object, offset, identity, getWordKind());
     }
 

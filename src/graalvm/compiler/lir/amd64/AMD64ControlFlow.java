@@ -178,8 +178,6 @@ public class AMD64ControlFlow
             this.defaultTarget = defaultTarget;
             this.key = key;
             this.scratch = scratch;
-            assert keyConstants.length == keyTargets.length;
-            assert keyConstants.length == strategy.keyProbabilities.length;
         }
 
         @Override
@@ -209,7 +207,6 @@ public class AMD64ControlFlow
                 {
                     case Int:
                         long lc = jc.asLong();
-                        assert NumUtil.isInt(lc);
                         masm.cmpl(keyRegister, (int) lc);
                         break;
                     case Long:
@@ -442,9 +439,6 @@ public class AMD64ControlFlow
 
     private static void cmove(CompilationResultBuilder crb, AMD64MacroAssembler masm, Value result, boolean isFloat, ConditionFlag condition, boolean unorderedIsTrue, Value trueValue, Value falseValue)
     {
-        // check that we don't overwrite an input operand before it is used.
-        assert !result.equals(trueValue);
-
         AMD64Move.move(crb, masm, result, falseValue);
         cmove(crb, masm, result, condition, trueValue);
 
@@ -465,7 +459,6 @@ public class AMD64ControlFlow
     {
         if (isRegister(other))
         {
-            assert !asRegister(other).equals(asRegister(result)) : "other already overwritten by previous move";
             switch ((AMD64Kind) other.getPlatformKind())
             {
                 case BYTE:

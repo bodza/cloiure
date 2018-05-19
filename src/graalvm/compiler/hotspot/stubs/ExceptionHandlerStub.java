@@ -8,7 +8,6 @@ import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.read
 import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.registerAsWord;
 import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.writeExceptionOop;
 import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.writeExceptionPc;
-import static graalvm.compiler.hotspot.stubs.StubUtil.cAssertionsEnabled;
 import static graalvm.compiler.hotspot.stubs.StubUtil.decipher;
 import static graalvm.compiler.hotspot.stubs.StubUtil.fatal;
 import static graalvm.compiler.hotspot.stubs.StubUtil.newDescriptor;
@@ -19,7 +18,6 @@ import graalvm.compiler.api.replacements.Fold.InjectedParameter;
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
-import graalvm.compiler.debug.Assertions;
 import graalvm.compiler.graph.Node.ConstantNodeParameter;
 import graalvm.compiler.graph.Node.NodeIntrinsic;
 import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
@@ -66,7 +64,6 @@ public class ExceptionHandlerStub extends SnippetStub
         {
             return providers.getRegisters().getThreadRegister();
         }
-        assert index == 3;
         return options;
     }
 
@@ -74,80 +71,16 @@ public class ExceptionHandlerStub extends SnippetStub
     private static void exceptionHandler(Object exception, Word exceptionPc, @ConstantParameter Register threadRegister, @ConstantParameter OptionValues options)
     {
         Word thread = registerAsWord(threadRegister);
-        checkNoExceptionInThread(thread, assertionsEnabled(INJECTED_VMCONFIG));
-        checkExceptionNotNull(assertionsEnabled(INJECTED_VMCONFIG), exception);
         writeExceptionOop(thread, exception);
         writeExceptionPc(thread, exceptionPc);
-        if (logging(options))
-        {
-            printf("handling exception %p (", Word.objectToTrackedPointer(exception).rawValue());
-            decipher(Word.objectToTrackedPointer(exception).rawValue());
-            printf(") at %p (", exceptionPc.rawValue());
-            decipher(exceptionPc.rawValue());
-            printf(")\n");
-        }
 
         // patch throwing pc into return address so that deoptimization finds the right debug info
         patchReturnAddress(exceptionPc);
 
         Word handlerPc = exceptionHandlerForPc(EXCEPTION_HANDLER_FOR_PC, thread);
 
-        if (logging(options))
-        {
-            printf("handler for exception %p at %p is at %p (", Word.objectToTrackedPointer(exception).rawValue(), exceptionPc.rawValue(), handlerPc.rawValue());
-            decipher(handlerPc.rawValue());
-            printf(")\n");
-        }
-
         // patch the return address so that this stub returns to the exception handler
         jumpToExceptionHandler(handlerPc);
-    }
-
-    static void checkNoExceptionInThread(Word thread, boolean enabled)
-    {
-        if (enabled)
-        {
-            Object currentException = readExceptionOop(thread);
-            if (currentException != null)
-            {
-                fatal("exception object in thread must be null, not %p", Word.objectToTrackedPointer(currentException).rawValue());
-            }
-            if (cAssertionsEnabled(INJECTED_VMCONFIG))
-            {
-                // This thread-local is only cleared in DEBUG builds of the VM
-                // (see OptoRuntime::generate_exception_blob)
-                Word currentExceptionPc = readExceptionPc(thread);
-                if (currentExceptionPc.notEqual(WordFactory.zero()))
-                {
-                    fatal("exception PC in thread must be zero, not %p", currentExceptionPc.rawValue());
-                }
-            }
-        }
-    }
-
-    static void checkExceptionNotNull(boolean enabled, Object exception)
-    {
-        if (enabled && exception == null)
-        {
-            fatal("exception must not be null");
-        }
-    }
-
-    @Fold
-    static boolean logging(OptionValues options)
-    {
-        return StubOptions.TraceExceptionHandlerStub.getValue(options);
-    }
-
-    /**
-     * Determines if either Java assertions are enabled for Graal or if this is a HotSpot build
-     * where the ASSERT mechanism is enabled.
-     */
-    @Fold
-    @SuppressWarnings("all")
-    static boolean assertionsEnabled(@InjectedParameter GraalHotSpotVMConfig config)
-    {
-        return Assertions.assertionsEnabled() || cAssertionsEnabled(config);
     }
 
     public static final ForeignCallDescriptor EXCEPTION_HANDLER_FOR_PC = newDescriptor(ExceptionHandlerStub.class, "exceptionHandlerForPc", Word.class, Word.class);

@@ -30,7 +30,6 @@ public final class IntegerMulExactNode extends MulNode implements IntegerExactAr
     {
         super(TYPE, x, y);
         setStamp(x.stamp(NodeView.DEFAULT).unrestricted());
-        assert x.stamp(NodeView.DEFAULT).isCompatible(y.stamp(NodeView.DEFAULT)) && x.stamp(NodeView.DEFAULT) instanceof IntegerStamp;
     }
 
     @Override
@@ -79,7 +78,6 @@ public final class IntegerMulExactNode extends MulNode implements IntegerExactAr
     {
         JavaConstant xConst = forX.asJavaConstant();
         JavaConstant yConst = forY.asJavaConstant();
-        assert xConst.getJavaKind() == yConst.getJavaKind();
         try
         {
             if (xConst.getJavaKind() == JavaKind.Int)
@@ -88,7 +86,6 @@ public final class IntegerMulExactNode extends MulNode implements IntegerExactAr
             }
             else
             {
-                assert xConst.getJavaKind() == JavaKind.Long;
                 return ConstantNode.forLong(Math.multiplyExact(xConst.asLong(), yConst.asLong()));
             }
         }

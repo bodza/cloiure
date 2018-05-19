@@ -13,7 +13,6 @@ public class RegisterMap<T>
 
     public RegisterMap(Architecture arch)
     {
-        assert checkArchitecture(arch);
         this.values = new Object[arch.getRegisters().size()];
         this.architecture = arch;
     }
@@ -50,15 +49,5 @@ public class RegisterMap<T>
     private static int index(Register reg)
     {
         return reg.number;
-    }
-
-    private static boolean checkArchitecture(Architecture arch)
-    {
-        RegisterArray registers = arch.getRegisters();
-        for (int i = 0; i < registers.size(); ++i)
-        {
-            assert registers.get(i).number == i : registers.get(i) + ": " + registers.get(i).number + "!=" + i;
-        }
-        return true;
     }
 }

@@ -6,9 +6,7 @@ import java.util.BitSet;
 import java.util.List;
 
 import graalvm.compiler.core.common.cfg.AbstractControlFlowGraph;
-import graalvm.compiler.core.common.cfg.CFGVerifier;
 import graalvm.compiler.core.common.cfg.Loop;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeMap;
@@ -72,8 +70,6 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
             cfg.computePostdominators();
         }
 
-        // there's not much to verify when connectBlocks == false
-        assert !(connectBlocks || computeLoops || computeDominators || computePostdominators) || CFGVerifier.verify(cfg);
         return cfg;
     }
 
@@ -211,7 +207,6 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
     {
         Loop<Block> outermostExited = b.getDominator().getLoop();
         Loop<Block> exitBlockLoop = b.getLoop();
-        assert outermostExited != null;
         while (outermostExited.getParent() != null && outermostExited.getParent() != exitBlockLoop)
         {
             outermostExited = outermostExited.getParent();
@@ -336,13 +331,11 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
 
     private void computeDominators()
     {
-        assert reversePostOrder[0].getPredecessorCount() == 0 : "start block has no predecessor and therefore no dominator";
         Block[] blocks = reversePostOrder;
         int curMaxDominatorDepth = 0;
         for (int i = 1; i < blocks.length; i++)
         {
             Block block = blocks[i];
-            assert block.getPredecessorCount() > 0;
             Block dominator = null;
             for (Block pred : block.getPredecessors())
             {
@@ -487,8 +480,6 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
         FixedWithNextNode cur = block.getBeginNode();
         while (true)
         {
-            assert !cur.isDeleted();
-            assert nodeToBlock.get(cur) == null;
             nodeToBlock.set(cur, block);
             FixedNode next = cur.next();
             if (next instanceof AbstractBeginNode)
@@ -574,7 +565,6 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
                 }
                 else
                 {
-                    assert !(last instanceof AbstractEndNode) : "Algorithm only supports EndNode and LoopEndNode.";
                     int startTos = tos;
                     Block[] ifPred = new Block[]{block};
                     for (Node suxNode : last.successors())
@@ -623,7 +613,6 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
         } while (tos >= 0);
 
         // Compute reverse postorder and number blocks.
-        assert count == numBlocks : "all blocks must be reachable";
         this.reversePostOrder = stack;
     }
 
@@ -660,7 +649,6 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
                 probability = pred.probability;
                 if (pred.getSuccessorCount() > 1)
                 {
-                    assert pred.getEndNode() instanceof ControlSplitNode;
                     ControlSplitNode controlSplit = (ControlSplitNode) pred.getEndNode();
                     probability = multiplyProbabilities(probability, controlSplit.probability(block.getBeginNode()));
                 }
@@ -724,7 +712,6 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
                         for (LoopExitNode exit : loopBegin.loopExits())
                         {
                             Block exitBlock = nodeToBlock.get(exit);
-                            assert exitBlock.getPredecessorCount() == 1;
                             computeLoopBlocks(exitBlock.getFirstPredecessor(), loop, stack, true);
                             loop.addExit(exitBlock);
                         }
@@ -742,7 +729,6 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
                                     AbstractBeginNode begin = sux.getBeginNode();
                                     if (!(begin instanceof LoopExitNode && ((LoopExitNode) begin).loopBegin() == loopBegin))
                                     {
-                                        graph.getDebug().log(DebugContext.VERBOSE_LEVEL, "Unexpected loop exit with %s, including whole branch in the loop", sux);
                                         computeLoopBlocks(sux, loop, stack, false);
                                     }
                                 }
@@ -794,9 +780,7 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
                                  */
                                 if (succ.getLoop().getParent() != b.getLoop())
                                 {
-                                    assert succ.getLoop().getDepth() < b.getLoop().getDepth();
                                     // b.loop must not be a transitive parent of succ.loop
-                                    assert !Loop.transitiveParentLoop(succ.getLoop(), b.getLoop());
                                     Loop<Block> curr = b.getLoop();
                                     while (curr != null && curr != succ.getLoop())
                                     {
@@ -870,7 +854,6 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
                     continue outer;
                 }
             }
-            assert !Arrays.asList(block.getSuccessors()).contains(postdominator) : "Block " + block + " has a wrong post dominator: " + postdominator;
             block.setPostDominator(postdominator);
         }
     }
@@ -891,7 +874,6 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
             }
             else
             {
-                assert iterB.getId() < iterA.getId();
                 iterB = iterB.getPostdominator();
                 if (iterB == null)
                 {
@@ -913,7 +895,6 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
      */
     public static double multiplyProbabilities(double a, double b)
     {
-        assert !Double.isNaN(a) && !Double.isNaN(b) && Double.isFinite(a) && Double.isFinite(b) : a + " " + b;
         double r = a * b;
         if (r > MAX_PROBABILITY)
         {

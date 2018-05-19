@@ -3,9 +3,6 @@ package graalvm.compiler.lir.phases;
 import java.util.regex.Pattern;
 
 import graalvm.compiler.debug.DebugCloseable;
-import graalvm.compiler.debug.DebugContext;
-import graalvm.compiler.debug.MemUseTrackerKey;
-import graalvm.compiler.debug.TimerKey;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.options.Option;
@@ -26,105 +23,13 @@ public abstract class LIRPhase<C>
         public static final OptionKey<Boolean> LIROptimization = new OptionKey<>(true);
     }
 
-    /**
-     * Records time spent within {@link #apply}.
-     */
-    private final TimerKey timer;
-
-    /**
-     * Records memory usage within {@link #apply}.
-     */
-    private final MemUseTrackerKey memUseTracker;
-
-    public static final class LIRPhaseStatistics
-    {
-        /**
-         * Records time spent within {@link #apply}.
-         */
-        public final TimerKey timer;
-
-        /**
-         * Records memory usage within {@link #apply}.
-         */
-        public final MemUseTrackerKey memUseTracker;
-
-        public LIRPhaseStatistics(Class<?> clazz)
-        {
-            timer = DebugContext.timer("LIRPhaseTime_%s", clazz);
-            memUseTracker = DebugContext.memUseTracker("LIRPhaseMemUse_%s", clazz);
-        }
-    }
-
-    public static final ClassValue<LIRPhaseStatistics> statisticsClassValue = new ClassValue<LIRPhaseStatistics>()
-    {
-        @Override
-        protected LIRPhaseStatistics computeValue(Class<?> c)
-        {
-            return new LIRPhaseStatistics(c);
-        }
-    };
-
-    public static LIRPhaseStatistics getLIRPhaseStatistics(Class<?> c)
-    {
-        return statisticsClassValue.get(c);
-    }
-
-    /** Lazy initialization to create pattern only when assertions are enabled. */
-    static class NamePatternHolder
-    {
-        static final Pattern NAME_PATTERN = Pattern.compile("[A-Z][A-Za-z0-9]+");
-    }
-
-    private static boolean checkName(CharSequence name)
-    {
-        assert name == null || NamePatternHolder.NAME_PATTERN.matcher(name).matches() : "illegal phase name: " + name;
-        return true;
-    }
-
     public LIRPhase()
     {
-        LIRPhaseStatistics statistics = getLIRPhaseStatistics(getClass());
-        timer = statistics.timer;
-        memUseTracker = statistics.memUseTracker;
     }
 
     public final void apply(TargetDescription target, LIRGenerationResult lirGenRes, C context)
     {
-        apply(target, lirGenRes, context, true);
-    }
-
-    @SuppressWarnings("try")
-    public final void apply(TargetDescription target, LIRGenerationResult lirGenRes, C context, boolean dumpLIR)
-    {
-        DebugContext debug = lirGenRes.getLIR().getDebug();
-        try (DebugContext.Scope s = debug.scope(getName(), this))
-        {
-            try (DebugCloseable a = timer.start(debug); DebugCloseable c = memUseTracker.start(debug))
-            {
-                run(target, lirGenRes, context);
-                if (dumpLIR && debug.areScopesEnabled())
-                {
-                    dumpAfter(lirGenRes);
-                }
-            }
-        }
-        catch (Throwable e)
-        {
-            throw debug.handle(e);
-        }
-    }
-
-    private void dumpAfter(LIRGenerationResult lirGenRes)
-    {
-        boolean isStage = this instanceof LIRPhaseSuite;
-        if (!isStage)
-        {
-            DebugContext debug = lirGenRes.getLIR().getDebug();
-            if (debug.isDumpEnabled(DebugContext.INFO_LEVEL))
-            {
-                debug.dump(DebugContext.INFO_LEVEL, lirGenRes.getLIR(), "After %s", getName());
-            }
-        }
+        run(target, lirGenRes, context);
     }
 
     protected abstract void run(TargetDescription target, LIRGenerationResult lirGenRes, C context);
@@ -154,7 +59,6 @@ public abstract class LIRPhase<C>
     public final CharSequence getName()
     {
         CharSequence name = createName();
-        assert checkName(name);
         return name;
     }
 }

@@ -108,7 +108,6 @@ public final class HotSpotReferenceMapBuilder extends ReferenceMapBuilder
                 {
                     Variable baseVariable = (Variable) kind.getDerivedReferenceBase();
                     Value baseValue = state.getLiveBasePointers().get(baseVariable.index);
-                    assert baseValue.getPlatformKind().getVectorLength() == 1 && ((LIRKind) baseValue.getValueKind()).isReference(0) && !((LIRKind) baseValue.getValueKind()).isDerivedReference();
                     base = toLocation(baseValue, 0);
                 }
 
@@ -116,7 +115,6 @@ public final class HotSpotReferenceMapBuilder extends ReferenceMapBuilder
                 {
                     if (kind.isReference(i))
                     {
-                        assert kind.isCompressedReference(i) ? (bytes < uncompressedReferenceSize) : (bytes == uncompressedReferenceSize);
                         objects[idx] = toLocation(obj, i * bytes);
                         derivedBase[idx] = base;
                         sizeInBytes[idx] = bytes;

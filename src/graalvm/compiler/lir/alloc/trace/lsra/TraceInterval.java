@@ -16,7 +16,6 @@ import java.util.List;
 
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.util.Util;
-import graalvm.compiler.debug.Assertions;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.Variable;
@@ -275,16 +274,11 @@ final class TraceInterval extends IntervalHint
 
     private TraceInterval(Variable operand, int operandNumber)
     {
-        assert operand != null;
         this.operand = operand;
         this.operandNumber = operandNumber;
         if (isRegister(operand))
         {
             location = operand;
-        }
-        else
-        {
-            assert isIllegal(operand) || isVariable(operand);
         }
         this.intFrom = Integer.MAX_VALUE;
         this.intTo = Integer.MAX_VALUE;
@@ -298,7 +292,6 @@ final class TraceInterval extends IntervalHint
 
     private boolean splitChildrenEmpty()
     {
-        assert splitChildren == null || !splitChildren.isEmpty();
         return splitChildren == null;
     }
 
@@ -306,23 +299,11 @@ final class TraceInterval extends IntervalHint
     {
         if (isRegister(newLocation))
         {
-            assert this.location == null : "cannot re-assign location for " + this;
             if (newLocation.getValueKind().equals(LIRKind.Illegal) && !kind().equals(LIRKind.Illegal))
             {
                 this.location = asRegister(newLocation).asValue(kind());
                 return;
             }
-        }
-        else if (isIllegal(newLocation))
-        {
-            assert canMaterialize();
-        }
-        else
-        {
-            assert this.location == null || isRegister(this.location) || (isVirtualStackSlot(this.location) && isStackSlot(newLocation)) : "cannot re-assign location for " + this;
-            assert isStackSlotValue(newLocation);
-            assert !newLocation.getValueKind().equals(LIRKind.Illegal);
-            assert newLocation.getValueKind().equals(this.kind());
         }
         this.location = newLocation;
     }
@@ -349,13 +330,11 @@ final class TraceInterval extends IntervalHint
 
     public void setTo(int pos)
     {
-        assert intFrom == Integer.MAX_VALUE || intFrom < pos;
         intTo = pos;
     }
 
     public void setFrom(int pos)
     {
-        assert intTo == Integer.MAX_VALUE || pos < intTo;
         intFrom = pos;
     }
 
@@ -395,7 +374,6 @@ final class TraceInterval extends IntervalHint
      */
     public TraceInterval splitParent()
     {
-        assert splitParent.isSplitParent() : "not a split parent: " + this;
         return splitParent;
     }
 
@@ -409,8 +387,6 @@ final class TraceInterval extends IntervalHint
 
     public void setSpillSlot(AllocatableValue slot)
     {
-        assert isStackSlotValue(slot);
-        assert spillSlot() == null || (isVirtualStackSlot(spillSlot()) && isStackSlot(slot)) : String.format("cannot overwrite existing spill slot %s of interval %s with %s", spillSlot(), this, slot);
         splitParent().spillSlot = slot;
     }
 
@@ -447,15 +423,12 @@ final class TraceInterval extends IntervalHint
 
     public void setSpillState(SpillState state)
     {
-        assert state.ordinal() >= spillState().ordinal() : "state cannot decrease";
         splitParent().spillState = state;
     }
 
     public void setSpillDefinitionPos(int pos)
     {
-        assert spillState() == SpillState.NoDefinitionFound || spillState() == SpillState.NoSpillStore || spillDefinitionPos() == -1 : "cannot set the position twice";
         int to = to();
-        assert pos < to : String.format("Cannot spill %s at %d", this, pos);
         splitParent().spillDefinitionPos = pos;
     }
 
@@ -494,7 +467,6 @@ final class TraceInterval extends IntervalHint
             i1 = this;
             i2 = i;
         }
-        assert i1.from() <= i2.from();
 
         if (i1.to() <= i2.from())
         {
@@ -532,43 +504,6 @@ final class TraceInterval extends IntervalHint
         return splitParent().materializedValue;
     }
 
-    // consistency check of split-children
-    boolean checkSplitChildren()
-    {
-        if (!splitChildrenEmpty())
-        {
-            assert isSplitParent() : "only split parents can have children";
-
-            for (int i = 0; i < splitChildren.size(); i++)
-            {
-                TraceInterval i1 = splitChildren.get(i);
-
-                assert i1.splitParent() == this : "not a split child of this interval";
-                assert i1.kind().equals(kind()) : "must be equal for all split children";
-                assert (i1.spillSlot() == null && spillSlot == null) || i1.spillSlot().equals(spillSlot()) : "must be equal for all split children";
-
-                for (int j = i + 1; j < splitChildren.size(); j++)
-                {
-                    TraceInterval i2 = splitChildren.get(j);
-
-                    assert i1.operandNumber != i2.operandNumber : "same register number";
-
-                    if (i1.from() < i2.from())
-                    {
-                        assert i1.to() <= i2.from() && i1.to() < i2.to() : "intervals overlapping";
-                    }
-                    else
-                    {
-                        assert i2.from() < i1.from() : "intervals start at same opId";
-                        assert i2.to() <= i1.from() && i2.to() < i1.to() : "intervals overlapping";
-                    }
-                }
-            }
-        }
-
-        return true;
-    }
-
     public IntervalHint locationHint(boolean searchSplitChild)
     {
         if (!searchSplitChild)
@@ -578,8 +513,6 @@ final class TraceInterval extends IntervalHint
 
         if (locationHint != null)
         {
-            assert !(locationHint instanceof TraceInterval) || ((TraceInterval) locationHint).isSplitParent() : "ony split parents are valid hint registers";
-
             if (locationHint.location() != null && isRegister(locationHint.location()))
             {
                 return locationHint;
@@ -623,16 +556,12 @@ final class TraceInterval extends IntervalHint
 
     private TraceInterval getSplitChildAtOpIdIntern(int opId, LIRInstruction.OperandMode mode, boolean returnNull)
     {
-        assert isSplitParent() : "can only be called for split parents";
-        assert opId >= 0 : "invalid opId (method cannot be called for spill moves)";
-
         if (splitChildrenEmpty())
         {
             if (returnNull)
             {
                 return covers(opId, mode) ? this : null;
             }
-            assert this.covers(opId, mode) : this + " does not cover " + opId;
             return this;
         }
         else
@@ -663,7 +592,6 @@ final class TraceInterval extends IntervalHint
                 }
             }
 
-            assert returnNull || checkSplitChild(result, opId, toOffset, mode);
             return result;
         }
     }
@@ -697,19 +625,15 @@ final class TraceInterval extends IntervalHint
                 }
             }
         }
-        assert result.covers(opId, mode) : "opId not covered by interval";
         return true;
     }
 
     // returns the last split child that ends before the given opId
     TraceInterval getSplitChildBeforeOpId(int opId)
     {
-        assert opId >= 0 : "invalid opId";
-
         TraceInterval parent = splitParent();
         TraceInterval result = null;
 
-        assert !parent.splitChildrenEmpty() : "no split children available";
         int len = parent.splitChildren.size();
 
         for (int i = len - 1; i >= 0; i--)
@@ -721,7 +645,6 @@ final class TraceInterval extends IntervalHint
             }
         }
 
-        assert result != null : "no split child found";
         return result;
     }
 
@@ -799,23 +722,9 @@ final class TraceInterval extends IntervalHint
 
     public void addUsePos(int pos, RegisterPriority registerPriority, OptionValues options)
     {
-        assert isEmpty() || covers(pos, LIRInstruction.OperandMode.USE) : String.format("use position %d not covered by live range of interval %s", pos, this);
-
         // do not add use positions for precolored intervals because they are never used
         if (registerPriority != RegisterPriority.None)
         {
-            if (Assertions.detailedAssertionsEnabled(options))
-            {
-                for (int i = 0; i < numUsePos(); i++)
-                {
-                    assert pos <= getUsePos(i) : "already added a use-position with lower position";
-                    if (i > 0)
-                    {
-                        assert getUsePos(i) < getUsePos(i - 1) : "not sorted descending";
-                    }
-                }
-            }
-
             // Note: addUse is called in descending order, so list gets sorted
             // automatically by just appending new use positions
             int len = numUsePos();
@@ -825,7 +734,6 @@ final class TraceInterval extends IntervalHint
             }
             else if (getUsePosRegisterPriority(len - 1).lessThan(registerPriority))
             {
-                assert getUsePos(len - 1) == pos : "list not sorted correctly";
                 setUsePosRegisterPriority(len - 1, registerPriority);
             }
         }
@@ -833,8 +741,6 @@ final class TraceInterval extends IntervalHint
 
     public void addRange(int from, int to)
     {
-        assert from < to : "invalid range";
-
         if (from < intFrom)
         {
             setFrom(from);
@@ -857,8 +763,6 @@ final class TraceInterval extends IntervalHint
         // insert new interval in children-list of parent
         if (parent.splitChildrenEmpty())
         {
-            assert isSplitParent() : "list must be initialized at first split";
-
             // Create new non-shared list
             parent.splitChildren = new ArrayList<>(4);
             parent.splitChildren.add(this);
@@ -894,18 +798,6 @@ final class TraceInterval extends IntervalHint
 
         // split list of use positions
         splitUsePosAt(result, splitPos);
-
-        if (Assertions.detailedAssertionsEnabled(allocator.getOptions()))
-        {
-            for (int i = 0; i < numUsePos(); i++)
-            {
-                assert getUsePos(i) < splitPos;
-            }
-            for (int i = 0; i < result.numUsePos(); i++)
-            {
-                assert result.getUsePos(i) >= splitPos;
-            }
-        }
         return result;
     }
 
@@ -965,7 +857,6 @@ final class TraceInterval extends IntervalHint
         int prev = -1;
         for (int i = numUsePos() - 1; i >= 0; --i)
         {
-            assert prev < getUsePos(i) : "use positions not sorted";
             if (i != numUsePos() - 1)
             {
                 buf.append(", ");
@@ -1038,7 +929,6 @@ final class TraceInterval extends IntervalHint
 
     private void usePosAdd(int pos, RegisterPriority registerPriority)
     {
-        assert usePosListSize == 0 || getUsePos(numUsePos() - 1) > pos;
         intListAdd(pos);
         intListAdd(registerPriority.ordinal());
     }
@@ -1058,10 +948,6 @@ final class TraceInterval extends IntervalHint
         if (listSplitIndex < usePosListSize)
         {
             usePosListSize = listSplitIndex;
-        }
-        else
-        {
-            assert listSplitIndex == usePosListSize : "splitting cannot grow the use position array!";
         }
         result.usePosListArray = usePosListArray;
         result.usePosListSize = usePosListSize;

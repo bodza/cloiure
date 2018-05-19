@@ -81,11 +81,9 @@ public class FrequencyEncoder<T>
     {
         if (object == null)
         {
-            assert containsNull;
             return 0;
         }
         Entry<T> entry = map.get(object);
-        assert entry != null && entry.index >= 0;
         return entry.index;
     }
 
@@ -103,7 +101,6 @@ public class FrequencyEncoder<T>
      */
     public T[] encodeAll(T[] allObjects)
     {
-        assert allObjects.length == getLength();
         List<Entry<T>> sortedEntries = new ArrayList<>(allObjects.length);
         for (Entry<T> value : map.getValues())
         {
@@ -123,7 +120,6 @@ public class FrequencyEncoder<T>
             int index = i + offset;
             entry.index = index;
             allObjects[index] = entry.object;
-            assert entry.object != null;
         }
         return allObjects;
     }

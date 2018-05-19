@@ -51,7 +51,6 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
 
     public boolean isMarked(Node node)
     {
-        assert check(node, false);
         return isMarked(getNodeId(node));
     }
 
@@ -76,7 +75,6 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
 
     public boolean isMarkedAndGrow(Node node)
     {
-        assert check(node, true);
         int id = getNodeId(node);
         checkGrow(id);
         return isMarked(id);
@@ -84,14 +82,12 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
 
     public void mark(Node node)
     {
-        assert check(node, false);
         int id = getNodeId(node);
         bits[id >> SHIFT] |= (1L << id);
     }
 
     public void markAndGrow(Node node)
     {
-        assert check(node, true);
         int id = getNodeId(node);
         checkGrow(id);
         bits[id >> SHIFT] |= (1L << id);
@@ -99,14 +95,12 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
 
     public void clear(Node node)
     {
-        assert check(node, false);
         int id = getNodeId(node);
         bits[id >> SHIFT] &= ~(1L << id);
     }
 
     public void clearAndGrow(Node node)
     {
-        assert check(node, true);
         int id = getNodeId(node);
         checkGrow(id);
         bits[id >> SHIFT] &= ~(1L << id);
@@ -134,7 +128,6 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
 
     public void intersect(NodeBitMap other)
     {
-        assert graph() == other.graph();
         int commonLength = Math.min(bits.length, other.bits.length);
         for (int i = commonLength; i < bits.length; i++)
         {
@@ -148,7 +141,6 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
 
     public void subtract(NodeBitMap other)
     {
-        assert graph() == other.graph();
         int commonLength = Math.min(bits.length, other.bits.length);
         for (int i = 0; i < commonLength; i++)
         {
@@ -158,7 +150,6 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
 
     public void union(NodeBitMap other)
     {
-        assert graph() == other.graph();
         grow();
         if (bits.length < other.bits.length)
         {
@@ -189,14 +180,6 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
         }
     }
 
-    private boolean check(Node node, boolean grow)
-    {
-        assert node.graph() == graph() : "this node is not part of the graph: " + node;
-        assert grow || !isNew(node) : "node was added to the graph after creating the node bitmap: " + node;
-        assert node.isAlive() : "node is deleted!" + node;
-        return true;
-    }
-
     public <T extends Node> void markAll(Iterable<T> nodes)
     {
         for (Node node : nodes)
@@ -207,7 +190,6 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
 
     protected Node nextMarkedNode(int fromNodeId)
     {
-        assert fromNodeId >= 0;
         int wordIndex = fromNodeId >> SHIFT;
         int wordsInUse = bits.length;
         if (wordIndex < wordsInUse)
@@ -272,11 +254,9 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
 
         private void forward()
         {
-            assert currentNode == null;
             currentNode = NodeBitMap.this.nextMarkedNode(currentNodeId + 1);
             if (currentNode != null)
             {
-                assert currentNode.isAlive();
                 currentNodeId = getNodeId(currentNode);
             }
             else

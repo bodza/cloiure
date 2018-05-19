@@ -48,13 +48,11 @@ public final class NodeStack
 
     public Node pop()
     {
-        assert tos > 0 : "stack must be non-empty";
         return values[--tos];
     }
 
     public Node peek()
     {
-        assert tos > 0 : "stack must be non-empty";
         return values[tos - 1];
     }
 

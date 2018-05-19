@@ -9,8 +9,6 @@ import java.util.Deque;
 
 import graalvm.compiler.core.common.alloc.TraceBuilderResult.TrivialTracePredicate;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
-import graalvm.compiler.debug.DebugContext;
-import graalvm.compiler.debug.Indent;
 
 /**
  * Computes traces by selecting the unhandled block with the highest execution frequency and going
@@ -18,9 +16,9 @@ import graalvm.compiler.debug.Indent;
  */
 public final class BiDirectionalTraceBuilder
 {
-    public static TraceBuilderResult computeTraces(DebugContext debug, AbstractBlockBase<?> startBlock, AbstractBlockBase<?>[] blocks, TrivialTracePredicate pred)
+    public static TraceBuilderResult computeTraces(AbstractBlockBase<?> startBlock, AbstractBlockBase<?>[] blocks, TrivialTracePredicate pred)
     {
-        return new BiDirectionalTraceBuilder(blocks).build(debug, startBlock, blocks, pred);
+        return new BiDirectionalTraceBuilder(blocks).build(startBlock, blocks, pred);
     }
 
     private final Deque<AbstractBlockBase<?>> worklist;
@@ -51,28 +49,22 @@ public final class BiDirectionalTraceBuilder
         return processed.get(b.getId());
     }
 
-    @SuppressWarnings("try")
-    private TraceBuilderResult build(DebugContext debug, AbstractBlockBase<?> startBlock, AbstractBlockBase<?>[] blocks, TrivialTracePredicate pred)
+    private TraceBuilderResult build(AbstractBlockBase<?> startBlock, AbstractBlockBase<?>[] blocks, TrivialTracePredicate pred)
     {
-        try (Indent indent = debug.logAndIndent("BiDirectionalTraceBuilder: start trace building"))
-        {
-            ArrayList<Trace> traces = buildTraces(debug);
-            assert traces.get(0).getBlocks()[0].equals(startBlock) : "The first traces always contains the start block";
-            return TraceBuilderResult.create(debug, blocks, traces, blockToTrace, pred);
-        }
+        ArrayList<Trace> traces = buildTraces();
+        return TraceBuilderResult.create(blocks, traces, blockToTrace, pred);
     }
 
-    protected ArrayList<Trace> buildTraces(DebugContext debug)
+    protected ArrayList<Trace> buildTraces()
     {
         ArrayList<Trace> traces = new ArrayList<>();
         // process worklist
         while (!worklist.isEmpty())
         {
             AbstractBlockBase<?> block = worklist.pollFirst();
-            assert block != null;
             if (!processed(block))
             {
-                Trace trace = new Trace(findTrace(debug, block));
+                Trace trace = new Trace(findTrace(block));
                 for (AbstractBlockBase<?> traceBlock : trace.getBlocks())
                 {
                     blockToTrace[traceBlock.getId()] = trace;
@@ -86,48 +78,34 @@ public final class BiDirectionalTraceBuilder
 
     /**
      * Build a new trace starting at {@code block}.
-     *
-     * @param debug
      */
-    @SuppressWarnings("try")
-    private Collection<AbstractBlockBase<?>> findTrace(DebugContext debug, AbstractBlockBase<?> initBlock)
+    private Collection<AbstractBlockBase<?>> findTrace(AbstractBlockBase<?> initBlock)
     {
         ArrayDeque<AbstractBlockBase<?>> trace = new ArrayDeque<>();
-        try (Indent i = debug.logAndIndent("StartTrace: %s", initBlock))
+        for (AbstractBlockBase<?> block = initBlock; block != null; block = selectPredecessor(block))
         {
-            try (Indent indentFront = debug.logAndIndent("Head:"))
-            {
-                for (AbstractBlockBase<?> block = initBlock; block != null; block = selectPredecessor(block))
-                {
-                    addBlockToTrace(debug, block);
-                    trace.addFirst(block);
-                }
-            }
-            /* Number head blocks. Can not do this in the loop as we go backwards. */
-            int blockNr = 0;
-            for (AbstractBlockBase<?> b : trace)
-            {
-                b.setLinearScanNumber(blockNr++);
-            }
-
-            try (Indent indentBack = debug.logAndIndent("Tail:"))
-            {
-                for (AbstractBlockBase<?> block = selectSuccessor(initBlock); block != null; block = selectSuccessor(block))
-                {
-                    addBlockToTrace(debug, block);
-                    trace.addLast(block);
-                    /* This time we can number the blocks immediately as we go forwards. */
-                    block.setLinearScanNumber(blockNr++);
-                }
-            }
+            addBlockToTrace(block);
+            trace.addFirst(block);
         }
-        debug.log("Trace: %s", trace);
+        /* Number head blocks. Can not do this in the loop as we go backwards. */
+        int blockNr = 0;
+        for (AbstractBlockBase<?> b : trace)
+        {
+            b.setLinearScanNumber(blockNr++);
+        }
+
+        for (AbstractBlockBase<?> block = selectSuccessor(initBlock); block != null; block = selectSuccessor(block))
+        {
+            addBlockToTrace(block);
+            trace.addLast(block);
+            /* This time we can number the blocks immediately as we go forwards. */
+            block.setLinearScanNumber(blockNr++);
+        }
         return trace;
     }
 
-    private void addBlockToTrace(DebugContext debug, AbstractBlockBase<?> block)
+    private void addBlockToTrace(AbstractBlockBase<?> block)
     {
-        debug.log("add %s (prob: %f)", block, block.probability());
         processed.set(block.getId());
     }
 
@@ -149,7 +127,6 @@ public final class BiDirectionalTraceBuilder
 
     private static boolean isBackEdge(AbstractBlockBase<?> from, AbstractBlockBase<?> to)
     {
-        assert Arrays.asList(from.getSuccessors()).contains(to) : "No edge from " + from + " to " + to;
         return from.isLoopEnd() && to.isLoopHeader() && from.getLoop().equals(to.getLoop());
     }
 

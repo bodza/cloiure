@@ -28,11 +28,4 @@ public final class MergeNode extends AbstractMergeNode
             forwardEnd.markDeleted();
         }
     }
-
-    @Override
-    public boolean verify()
-    {
-        assertTrue(this.forwardEndCount() > 1, "Must merge more than one end.");
-        return true;
-    }
 }

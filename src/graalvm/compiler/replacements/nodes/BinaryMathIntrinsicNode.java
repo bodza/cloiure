@@ -79,8 +79,6 @@ public final class BinaryMathIntrinsicNode extends BinaryNode implements Arithme
     protected BinaryMathIntrinsicNode(ValueNode forX, ValueNode forY, BinaryOperation op)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Double), forX, forY);
-        assert forX.stamp(NodeView.DEFAULT) instanceof FloatStamp && PrimitiveStamp.getBits(forX.stamp(NodeView.DEFAULT)) == 64;
-        assert forY.stamp(NodeView.DEFAULT) instanceof FloatStamp && PrimitiveStamp.getBits(forY.stamp(NodeView.DEFAULT)) == 64;
         this.operation = op;
     }
 

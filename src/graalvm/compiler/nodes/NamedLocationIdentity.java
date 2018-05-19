@@ -15,23 +15,6 @@ import jdk.vm.ci.meta.JavaKind.FormatWithToString;
 public class NamedLocationIdentity extends LocationIdentity implements FormatWithToString
 {
     /**
-     * Map for asserting all {@link NamedLocationIdentity} instances have a unique name.
-     */
-    static class DB
-    {
-        private static final EconomicSet<String> map = EconomicSet.create(Equivalence.DEFAULT);
-
-        static boolean checkUnique(String name)
-        {
-            if (!map.add(name))
-            {
-                throw new AssertionError("identity " + name + " already exists");
-            }
-            return true;
-        }
-    }
-
-    /**
      * Denotes the location of a value that is guaranteed to be unchanging.
      */
     public static final LocationIdentity FINAL_LOCATION = NamedLocationIdentity.immutable("FINAL_LOCATION");
@@ -53,7 +36,6 @@ public class NamedLocationIdentity extends LocationIdentity implements FormatWit
     {
         this.name = name;
         this.immutable = immutable;
-        assert DB.checkUnique(name);
     }
 
     /**

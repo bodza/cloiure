@@ -31,14 +31,12 @@ public class RawPointerStamp extends AbstractPointerStamp
     protected AbstractPointerStamp copyWith(boolean newNonNull, boolean newAlwaysNull)
     {
         // RawPointerStamp is a singleton
-        assert newNonNull == nonNull() && newAlwaysNull == alwaysNull();
         return this;
     }
 
     @Override
     public Stamp meet(Stamp other)
     {
-        assert isCompatible(other);
         return this;
     }
 
@@ -51,7 +49,6 @@ public class RawPointerStamp extends AbstractPointerStamp
     @Override
     public Stamp join(Stamp other)
     {
-        assert isCompatible(other);
         return this;
     }
 

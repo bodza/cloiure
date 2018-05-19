@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import graalvm.compiler.core.common.type.AbstractPointerStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampPair;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.CallTargetNode.InvokeKind;
@@ -55,7 +54,6 @@ public final class ObjectCloneNode extends BasicObjectCloneNode implements Virtu
     }
 
     @Override
-    @SuppressWarnings("try")
     protected StructuredGraph getLoweredSnippetGraph(LoweringTool tool)
     {
         ResolvedJavaType type = StampTool.typeOrNull(getObject());
@@ -69,21 +67,10 @@ public final class ObjectCloneNode extends BasicObjectCloneNode implements Virtu
                     final ResolvedJavaMethod snippetMethod = tool.getMetaAccess().lookupJavaMethod(method);
                     final Replacements replacements = tool.getReplacements();
                     StructuredGraph snippetGraph = null;
-                    DebugContext debug = getDebug();
-                    try (DebugContext.Scope s = debug.scope("ArrayCloneSnippet", snippetMethod))
-                    {
-                        snippetGraph = replacements.getSnippet(snippetMethod, null, graph().trackNodeSourcePosition(), this.getNodeSourcePosition());
-                    }
-                    catch (Throwable e)
-                    {
-                        throw debug.handle(e);
-                    }
+                    snippetGraph = replacements.getSnippet(snippetMethod, null, graph().trackNodeSourcePosition(), this.getNodeSourcePosition());
 
-                    assert snippetGraph != null : "ObjectCloneSnippets should be installed";
-                    assert getConcreteType(stamp(NodeView.DEFAULT)) != null;
-                    return lowerReplacement((StructuredGraph) snippetGraph.copy(getDebug()), tool);
+                    return lowerReplacement((StructuredGraph) snippetGraph.copy(), tool);
                 }
-                assert false : "unhandled array type " + type.getComponentType().getJavaKind();
             }
             else
             {
@@ -91,7 +78,7 @@ public final class ObjectCloneNode extends BasicObjectCloneNode implements Virtu
                 type = getConcreteType(getObject().stamp(NodeView.DEFAULT));
                 if (type != null)
                 {
-                    StructuredGraph newGraph = new StructuredGraph.Builder(graph().getOptions(), graph().getDebug(), AllowAssumptions.ifNonNull(assumptions)).build();
+                    StructuredGraph newGraph = new StructuredGraph.Builder(graph().getOptions(), AllowAssumptions.ifNonNull(assumptions)).build();
                     ParameterNode param = newGraph.addWithoutUnique(new ParameterNode(0, StampPair.createSingle(getObject().stamp(NodeView.DEFAULT))));
                     NewInstanceNode newInstance = newGraph.add(new NewInstanceNode(type, true));
                     newGraph.addAfterFixed(newGraph.start(), newInstance);
@@ -104,12 +91,10 @@ public final class ObjectCloneNode extends BasicObjectCloneNode implements Virtu
                         newGraph.addBeforeFixed(returnNode, load);
                         newGraph.addBeforeFixed(returnNode, newGraph.add(new StoreFieldNode(newInstance, field, load)));
                     }
-                    assert getConcreteType(stamp(NodeView.DEFAULT)) != null;
                     return lowerReplacement(newGraph, tool);
                 }
             }
         }
-        assert getConcreteType(stamp(NodeView.DEFAULT)) == null;
         return null;
     }
 }

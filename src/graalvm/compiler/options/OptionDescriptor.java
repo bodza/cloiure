@@ -28,7 +28,6 @@ public final class OptionDescriptor
 
     public static OptionDescriptor create(String name, OptionType optionType, Class<?> optionValueType, String help, String[] extraHelp, Class<?> declaringClass, String fieldName, OptionKey<?> option)
     {
-        assert option != null : declaringClass + "." + fieldName;
         OptionDescriptor result = option.getDescriptor();
         if (result == null)
         {
@@ -36,7 +35,6 @@ public final class OptionDescriptor
             result = new OptionDescriptor(name, optionType, optionValueType, help, extraHelpList, declaringClass, fieldName, option);
             option.setDescriptor(result);
         }
-        assert result.name.equals(name) && result.optionValueType == optionValueType && result.declaringClass == declaringClass && result.fieldName.equals(fieldName) && result.optionKey == option;
         return result;
     }
 
@@ -50,7 +48,6 @@ public final class OptionDescriptor
         this.optionKey = optionKey;
         this.declaringClass = declaringClass;
         this.fieldName = fieldName;
-        assert !optionValueType.isPrimitive() : "must used boxed optionValueType instead of " + optionValueType;
     }
 
     /**

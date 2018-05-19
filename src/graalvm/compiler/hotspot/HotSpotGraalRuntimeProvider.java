@@ -3,11 +3,7 @@ package graalvm.compiler.hotspot;
 import java.util.Map;
 
 import graalvm.compiler.api.runtime.GraalRuntime;
-import graalvm.compiler.core.CompilationWrapper.ExceptionAction;
 import graalvm.compiler.core.common.CompilationIdentifier;
-import graalvm.compiler.debug.DebugContext;
-import graalvm.compiler.debug.DebugHandlersFactory;
-import graalvm.compiler.debug.DiagnosticsOutputDirectory;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.replacements.SnippetCounter.Group;
@@ -39,16 +35,6 @@ public interface HotSpotGraalRuntimeProvider extends GraalRuntime, RuntimeProvid
     GraalHotSpotVMConfig getVMConfig();
 
     /**
-     * Opens a debug context for compiling {@code compilable}. The {@link DebugContext#close()}
-     * method should be called on the returned object once the compilation is finished.
-     *
-     * @param compilationOptions the options used to configure the compilation debug context
-     * @param compilationId a system wide unique compilation id
-     * @param compilable the input to the compilation
-     */
-    DebugContext openDebugContext(OptionValues compilationOptions, CompilationIdentifier compilationId, Object compilable, Iterable<DebugHandlersFactory> factories);
-
-    /**
      * Gets the option values associated with this runtime.
      */
     OptionValues getOptions();
@@ -62,16 +48,6 @@ public interface HotSpotGraalRuntimeProvider extends GraalRuntime, RuntimeProvid
      * This runtime has been requested to shutdown.
      */
     boolean isShutdown();
-
-    /**
-     * Gets a directory into which diagnostics such crash reports and dumps should be written.
-     */
-    DiagnosticsOutputDirectory getOutputDirectory();
-
-    /**
-     * Gets the map used to count compilation problems at each {@link ExceptionAction} level.
-     */
-    Map<ExceptionAction, Integer> getCompilationProblemsPerAction();
 
     /**
      * Returns the unique compiler configuration name that is in use. Useful for users to find out

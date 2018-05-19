@@ -74,7 +74,6 @@ public class AMD64Binary
             }
             else
             {
-                assert isStackSlot(y);
                 opcode.emit(masm, size, asRegister(result), (AMD64Address) crb.asAddress(y));
             }
         }
@@ -114,7 +113,6 @@ public class AMD64Binary
             }
             else
             {
-                assert isStackSlot(y);
                 opcode.emit(masm, size, asRegister(result), asRegister(x), (AMD64Address) crb.asAddress(y));
             }
         }
@@ -165,7 +163,6 @@ public class AMD64Binary
             }
             else
             {
-                assert isStackSlot(input);
                 opcode.emit(masm, size, asRegister(result), (AMD64Address) crb.asAddress(input));
             }
         }
@@ -205,7 +202,6 @@ public class AMD64Binary
             }
             else
             {
-                assert isStackSlot(y);
                 opcode.emit(masm, size, asRegister(result), asRegister(x), (AMD64Address) crb.asAddress(y));
             }
         }
@@ -376,13 +372,6 @@ public class AMD64Binary
         }
 
         @Override
-        public void verify()
-        {
-            super.verify();
-            assert differentRegisters(result, y) || sameRegister(x, y);
-        }
-
-        @Override
         public boolean makeNullCheckFor(Value value, LIRFrameState nullCheckState, int implicitNullCheckLimit)
         {
             if (state == null && y.isValidImplicitNullCheckFor(value, implicitNullCheckLimit))
@@ -435,13 +424,6 @@ public class AMD64Binary
         }
 
         @Override
-        public void verify()
-        {
-            super.verify();
-            assert differentRegisters(result, y) || sameRegister(x, y);
-        }
-
-        @Override
         public boolean makeNullCheckFor(Value value, LIRFrameState nullCheckState, int implicitNullCheckLimit)
         {
             if (state == null && y.isValidImplicitNullCheckFor(value, implicitNullCheckLimit))
@@ -488,7 +470,6 @@ public class AMD64Binary
             }
             else
             {
-                assert isStackSlot(x);
                 opcode.emit(masm, size, asRegister(result), (AMD64Address) crb.asAddress(x), y);
             }
         }

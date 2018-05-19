@@ -62,7 +62,6 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
 
     public void setPreLoop()
     {
-        assert isSimpleLoop();
         loopType = LoopType.PRE_LOOP;
     }
 
@@ -73,7 +72,6 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
 
     public void setMainLoop()
     {
-        assert isSimpleLoop();
         loopType = LoopType.MAIN_LOOP;
     }
 
@@ -84,7 +82,6 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
 
     public void setPostLoop()
     {
-        assert isSimpleLoop();
         loopType = LoopType.POST_LOOP;
     }
 
@@ -122,7 +119,6 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
 
     public void setLoopOrigFrequency(double loopOrigFrequency)
     {
-        assert loopOrigFrequency >= 0;
         this.loopOrigFrequency = loopOrigFrequency;
     }
 
@@ -133,7 +129,6 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
 
     public void setLoopFrequency(double loopFrequency)
     {
-        assert loopFrequency >= 0;
         this.loopFrequency = loopFrequency;
     }
 
@@ -194,7 +189,6 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
 
     public AbstractEndNode forwardEnd()
     {
-        assert forwardEndCount() == 1;
         return forwardEndAt(0);
     }
 
@@ -225,7 +219,6 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
             for (LoopEndNode le : loopEnds())
             {
                 int leIdx = le.endIndex();
-                assert leIdx != idx;
                 if (leIdx > idx)
                 {
                     le.setEndIndex(leIdx - 1);
@@ -253,7 +246,6 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
             LoopEndNode loopEnd = (LoopEndNode) pred;
             if (loopEnd.loopBegin() == this)
             {
-                assert loopEnd.endIndex() < loopEnds().count() : "Invalid endIndex : " + loopEnd;
                 return loopEnd.endIndex() + forwardEndCount();
             }
         }
@@ -274,20 +266,12 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
         for (LoopEndNode end : loopEnds())
         {
             int idx = index - forwardEndCount();
-            assert idx >= 0;
             if (end.endIndex() == idx)
             {
                 return end;
             }
         }
         throw ValueNodeUtil.shouldNotReachHere();
-    }
-
-    @Override
-    public boolean verify()
-    {
-        assertTrue(loopEnds().isNotEmpty(), "missing loopEnd");
-        return super.verify();
     }
 
     int nextEndIndex()
@@ -333,13 +317,11 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
 
     public LoopExitNode getSingleLoopExit()
     {
-        assert loopExits().count() == 1;
         return loopExits().first();
     }
 
     public LoopEndNode getSingleLoopEnd()
     {
-        assert loopEnds().count() == 1;
         return loopEnds().first();
     }
 

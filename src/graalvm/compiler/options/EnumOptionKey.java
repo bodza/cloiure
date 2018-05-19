@@ -42,6 +42,5 @@ public class EnumOptionKey<T extends Enum<T>> extends OptionKey<T>
     @Override
     protected void onValueUpdate(EconomicMap<OptionKey<?>, Object> values, T oldValue, T newValue)
     {
-        assert enumClass.isInstance(newValue) : newValue + " is not a valid value for " + getName();
     }
 }

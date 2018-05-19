@@ -27,7 +27,6 @@ public final class CStringConstant extends DataPointerConstant
     public CStringConstant(String string)
     {
         super(1);
-        assert string != null;
         this.string = string;
     }
 

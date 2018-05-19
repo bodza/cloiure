@@ -137,7 +137,6 @@ public class AddNode extends BinaryArithmeticNode<Add> implements NarrowableArit
     public void generate(NodeLIRBuilderTool nodeValueMap, ArithmeticLIRGeneratorTool gen)
     {
         Value op1 = nodeValueMap.operand(getX());
-        assert op1 != null : getX() + ", this=" + this;
         Value op2 = nodeValueMap.operand(getY());
         if (shouldSwapInputs(nodeValueMap))
         {

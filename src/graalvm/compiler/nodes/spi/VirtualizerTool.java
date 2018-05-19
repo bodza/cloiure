@@ -3,7 +3,6 @@ package graalvm.compiler.nodes.spi;
 import java.util.List;
 
 import graalvm.compiler.core.common.spi.ArrayOffsetProvider;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodes.ValueNode;
@@ -151,6 +150,4 @@ public interface VirtualizerTool
     boolean ensureMaterialized(VirtualObjectNode virtualObject);
 
     OptionValues getOptions();
-
-    DebugContext getDebug();
 }

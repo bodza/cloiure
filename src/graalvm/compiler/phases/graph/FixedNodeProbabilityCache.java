@@ -6,8 +6,6 @@ import java.util.function.ToDoubleFunction;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
-import graalvm.compiler.debug.CounterKey;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeInputList;
 import graalvm.compiler.nodes.AbstractBeginNode;
@@ -24,8 +22,6 @@ import graalvm.compiler.nodes.StartNode;
  */
 public class FixedNodeProbabilityCache implements ToDoubleFunction<FixedNode>
 {
-    private static final CounterKey computeNodeProbabilityCounter = DebugContext.counter("ComputeNodeProbability");
-
     private final EconomicMap<FixedNode, Double> cache = EconomicMap.create(Equivalence.IDENTITY);
 
     /**
@@ -62,9 +58,6 @@ public class FixedNodeProbabilityCache implements ToDoubleFunction<FixedNode>
     @Override
     public double applyAsDouble(FixedNode node)
     {
-        assert node != null;
-        computeNodeProbabilityCounter.increment(node.getDebug());
-
         FixedNode current = findBegin(node);
         if (current == null)
         {
@@ -72,7 +65,6 @@ public class FixedNodeProbabilityCache implements ToDoubleFunction<FixedNode>
             return 1D;
         }
 
-        assert current instanceof AbstractBeginNode;
         Double cachedValue = cache.get(current);
         if (cachedValue != null)
         {
@@ -88,7 +80,6 @@ public class FixedNodeProbabilityCache implements ToDoubleFunction<FixedNode>
             }
             else
             {
-                assert current instanceof StartNode;
                 probability = 1D;
             }
         }
@@ -97,7 +88,6 @@ public class FixedNodeProbabilityCache implements ToDoubleFunction<FixedNode>
             ControlSplitNode split = (ControlSplitNode) current.predecessor();
             probability = multiplyProbabilities(split.probability((AbstractBeginNode) current), applyAsDouble(split));
         }
-        assert !Double.isNaN(probability) && !Double.isInfinite(probability) : current + " " + probability;
         cache.put(current, probability);
         return probability;
     }
@@ -127,7 +117,6 @@ public class FixedNodeProbabilityCache implements ToDoubleFunction<FixedNode>
         FixedNode current = node;
         while (true)
         {
-            assert current != null;
             Node predecessor = current.predecessor();
             if (current instanceof AbstractBeginNode)
             {
@@ -137,7 +126,6 @@ public class FixedNodeProbabilityCache implements ToDoubleFunction<FixedNode>
                 }
                 else if (predecessor.successors().count() != 1)
                 {
-                    assert predecessor instanceof ControlSplitNode : "a FixedNode with multiple successors needs to be a ControlSplitNode: " + current + " / " + predecessor;
                     break;
                 }
             }

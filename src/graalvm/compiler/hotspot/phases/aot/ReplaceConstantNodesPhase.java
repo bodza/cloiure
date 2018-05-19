@@ -63,23 +63,18 @@ public class ReplaceConstantNodesPhase extends BasePhase<PhaseContext>
         builtIns.add(Boolean.class);
 
         Class<?> characterCacheClass = Character.class.getDeclaredClasses()[0];
-        assert "java.lang.Character$CharacterCache".equals(characterCacheClass.getName());
         builtIns.add(characterCacheClass);
 
         Class<?> byteCacheClass = Byte.class.getDeclaredClasses()[0];
-        assert "java.lang.Byte$ByteCache".equals(byteCacheClass.getName());
         builtIns.add(byteCacheClass);
 
         Class<?> shortCacheClass = Short.class.getDeclaredClasses()[0];
-        assert "java.lang.Short$ShortCache".equals(shortCacheClass.getName());
         builtIns.add(shortCacheClass);
 
         Class<?> integerCacheClass = Integer.class.getDeclaredClasses()[0];
-        assert "java.lang.Integer$IntegerCache".equals(integerCacheClass.getName());
         builtIns.add(integerCacheClass);
 
         Class<?> longCacheClass = Long.class.getDeclaredClasses()[0];
-        assert "java.lang.Long$LongCache".equals(longCacheClass.getName());
         builtIns.add(longCacheClass);
     }
 
@@ -170,7 +165,6 @@ public class ReplaceConstantNodesPhase extends BasePhase<PhaseContext>
                 result = (FixedWithNextNode) n;
             }
         }
-        assert result != null;
         return result;
     }
 
@@ -219,7 +213,6 @@ public class ReplaceConstantNodesPhase extends BasePhase<PhaseContext>
         if (n instanceof FixedWithNextNode)
         {
             FixedWithNextNode fixed = (FixedWithNextNode) n;
-            assert stateMapper.getState(fixed) != null;
             if (!BytecodeFrame.isPlaceholderBci(stateMapper.getState(fixed).bci))
             {
                 return true;
@@ -425,7 +418,6 @@ public class ReplaceConstantNodesPhase extends BasePhase<PhaseContext>
             {
                 throw new GraalError("Type with bad fingerprint: " + type);
             }
-            assert !metaspaceConstant.isCompressed() : "No support for replacing compressed metaspace constants";
             tryToReplaceWithExisting(graph, node);
             if (anyUsagesNeedReplacement(node))
             {
@@ -453,7 +445,6 @@ public class ReplaceConstantNodesPhase extends BasePhase<PhaseContext>
         HotSpotResolvedJavaType type = (HotSpotResolvedJavaType) constant.getType();
         if (type.mirror().equals(String.class))
         {
-            assert !constant.isCompressed() : "No support for replacing compressed oop constants";
             FixedWithNextNode replacement = graph.add(new ResolveConstantNode(node));
             insertReplacement(graph, stateMapper, node, replacement);
             node.replaceAtUsages(replacement, n -> !(n instanceof ResolveConstantNode));
@@ -494,7 +485,7 @@ public class ReplaceConstantNodesPhase extends BasePhase<PhaseContext>
      */
     private static void replaceLoadMethodCounters(StructuredGraph graph, FrameStateMapperClosure stateMapper, PhaseContext context)
     {
-        new SchedulePhase(SchedulingStrategy.LATEST_OUT_OF_LOOPS, true).apply(graph, false);
+        new SchedulePhase(SchedulingStrategy.LATEST_OUT_OF_LOOPS, true).apply(graph);
 
         for (LoadMethodCountersNode node : getLoadMethodCountersNodes(graph))
         {
@@ -513,7 +504,7 @@ public class ReplaceConstantNodesPhase extends BasePhase<PhaseContext>
      */
     private void replaceKlassesAndObjects(StructuredGraph graph, FrameStateMapperClosure stateMapper)
     {
-        new SchedulePhase(SchedulingStrategy.LATEST_OUT_OF_LOOPS, true).apply(graph, false);
+        new SchedulePhase(SchedulingStrategy.LATEST_OUT_OF_LOOPS, true).apply(graph);
 
         for (ConstantNode node : getConstantNodes(graph))
         {

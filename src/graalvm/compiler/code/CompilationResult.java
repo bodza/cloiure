@@ -337,8 +337,6 @@ public class CompilationResult
     public void setMethods(ResolvedJavaMethod rootMethod, Collection<ResolvedJavaMethod> inlinedMethods)
     {
         checkOpen();
-        assert rootMethod != null;
-        assert inlinedMethods != null;
         if (inlinedMethods.contains(rootMethod))
         {
             methods = inlinedMethods.toArray(new ResolvedJavaMethod[inlinedMethods.size()]);
@@ -434,7 +432,6 @@ public class CompilationResult
      */
     public int getTotalFrameSize()
     {
-        assert totalFrameSize != -1 : "frame size not yet initialized!";
         return totalFrameSize;
     }
 
@@ -490,7 +487,6 @@ public class CompilationResult
     public void recordDataPatch(int codePos, Reference ref)
     {
         checkOpen();
-        assert codePos >= 0 && ref != null;
         dataPatches.add(new DataPatch(codePos, ref));
     }
 
@@ -505,7 +501,6 @@ public class CompilationResult
      */
     public void recordDataPatchWithNote(int codePos, Reference ref, Object note)
     {
-        assert codePos >= 0 && ref != null;
         dataPatches.add(new DataPatch(codePos, ref, note));
     }
 
@@ -534,7 +529,6 @@ public class CompilationResult
     public void recordExceptionHandler(int codePos, int handlerPos)
     {
         checkOpen();
-        assert validateExceptionHandlerAdd(codePos, handlerPos) : String.format("Duplicate exception handler for pc 0x%x handlerPos 0x%x", codePos, handlerPos);
         exceptionHandlers.add(new ExceptionHandler(codePos, handlerPos));
     }
 
@@ -665,7 +659,6 @@ public class CompilationResult
     public void addAnnotation(CodeAnnotation annotation)
     {
         checkOpen();
-        assert annotation != null;
         if (annotations == null)
         {
             annotations = new ArrayList<>();

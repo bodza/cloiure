@@ -171,7 +171,6 @@ public final class Block extends AbstractBlockBase<Block>
             {
                 cur = null;
             }
-            assert !(cur instanceof AbstractBeginNode);
             return result;
         }
 
@@ -265,7 +264,6 @@ public final class Block extends AbstractBlockBase<Block>
 
     public void setProbability(double probability)
     {
-        assert probability >= 0 && Double.isFinite(probability);
         this.probability = probability;
     }
 
@@ -340,14 +338,12 @@ public final class Block extends AbstractBlockBase<Block>
             Block stopBlock = getDominator();
             if (this.isLoopHeader())
             {
-                assert stopBlock.getLoopDepth() < this.getLoopDepth();
                 dominatorResult.addAll(((HIRLoop) this.getLoop()).getKillLocations());
             }
             else
             {
                 for (Block b : this.getPredecessors())
                 {
-                    assert !this.isLoopHeader();
                     if (b != stopBlock)
                     {
                         dominatorResult.addAll(b.getKillLocations());
@@ -370,7 +366,6 @@ public final class Block extends AbstractBlockBase<Block>
 
     private void calcKillLocationsBetweenThisAndTarget(LocationSet result, Block stopBlock)
     {
-        assert AbstractControlFlowGraph.dominates(stopBlock, this);
         if (stopBlock == this || result.isAny())
         {
             // We reached the stop block => nothing to do.

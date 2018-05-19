@@ -46,6 +46,5 @@ public final class ControlFlowAnchorNode extends FixedWithNextNode implements LI
     @Override
     protected void afterClone(Node other)
     {
-        assert other.graph() != null && other.graph() != graph() : this + " should never be cloned in the same graph";
     }
 }

@@ -59,7 +59,6 @@ public class AMD64SaveRegistersOp extends AMD64LIRInstruction implements SaveReg
     public AMD64SaveRegistersOp(LIRInstructionClass<? extends AMD64SaveRegistersOp> c, Register[] savedRegisters, AllocatableValue[] savedRegisterLocations, boolean supportsRemove)
     {
         super(c);
-        assert Arrays.asList(savedRegisterLocations).stream().allMatch(LIRValueUtil::isVirtualStackSlot);
         this.savedRegisters = savedRegisters;
         this.slots = savedRegisterLocations;
         this.supportsRemove = supportsRemove;
@@ -77,7 +76,6 @@ public class AMD64SaveRegistersOp extends AMD64LIRInstruction implements SaveReg
         {
             if (savedRegisters[i] != null)
             {
-                assert isStackSlot(slots[i]) : "not a StackSlot: " + slots[i];
                 saveRegister(crb, masm, asStackSlot(slots[i]), savedRegisters[i]);
             }
         }
@@ -142,13 +140,11 @@ public class AMD64SaveRegistersOp extends AMD64LIRInstruction implements SaveReg
                 if (savedRegisters[i] != null)
                 {
                     keys[mapIndex] = savedRegisters[i];
-                    assert isStackSlot(slots[i]) : "not a StackSlot: " + slots[i];
                     StackSlot slot = asStackSlot(slots[i]);
                     values[mapIndex] = indexForStackSlot(frameMap, slot);
                     mapIndex++;
                 }
             }
-            assert mapIndex == total;
         }
         return new RegisterSaveLayout(keys, values);
     }
@@ -162,7 +158,6 @@ public class AMD64SaveRegistersOp extends AMD64LIRInstruction implements SaveReg
      */
     private static int indexForStackSlot(FrameMap frameMap, StackSlot slot)
     {
-        assert frameMap.offsetForStackSlot(slot) % frameMap.getTarget().wordSize == 0;
         int value = frameMap.offsetForStackSlot(slot) / frameMap.getTarget().wordSize;
         return value;
     }

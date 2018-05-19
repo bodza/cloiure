@@ -63,11 +63,8 @@ public class InitializeKlassStubCall extends AbstractMemoryCheckpoint implements
     @Override
     public void generate(NodeLIRBuilderTool gen)
     {
-        assert constant != null : "Expected the value to fold: " + value;
         Value stringValue = gen.operand(string);
         LIRFrameState fs = gen.state(this);
-        assert fs != null : "Frame state should be set";
-        assert constant instanceof HotSpotMetaspaceConstant;
         Value result = ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitKlassInitializationAndRetrieval(constant, stringValue, fs);
         gen.setResult(this, result);
     }

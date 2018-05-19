@@ -76,11 +76,9 @@ public class ResolveConstantStubCall extends DeoptimizingStubCall implements Can
     @Override
     public void generate(NodeLIRBuilderTool gen)
     {
-        assert constant != null : "Expected the value to fold: " + value;
         Value stringValue = gen.operand(string);
         Value result;
         LIRFrameState fs = gen.state(this);
-        assert fs != null : "The stateAfter is null";
         if (constant instanceof HotSpotObjectConstant)
         {
             result = ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitObjectConstantRetrieval(constant, stringValue, fs);
@@ -93,7 +91,6 @@ public class ResolveConstantStubCall extends DeoptimizingStubCall implements Can
             }
             else
             {
-                assert action == HotSpotConstantLoadAction.INITIALIZE;
                 result = ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitKlassInitializationAndRetrieval(constant, stringValue, fs);
             }
         }

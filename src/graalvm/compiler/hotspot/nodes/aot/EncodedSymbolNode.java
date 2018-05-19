@@ -29,7 +29,6 @@ public final class EncodedSymbolNode extends FloatingNode implements Canonicaliz
     public EncodedSymbolNode(@InjectedNodeParameter Stamp stamp, ValueNode value)
     {
         super(TYPE, stamp);
-        assert value != null;
         this.value = value;
     }
 

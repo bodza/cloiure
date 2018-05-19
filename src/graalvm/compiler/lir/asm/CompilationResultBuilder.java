@@ -22,8 +22,6 @@ import graalvm.compiler.core.common.NumUtil;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.core.common.spi.ForeignCallsProvider;
 import graalvm.compiler.core.common.type.DataPointerConstant;
-import graalvm.compiler.debug.Assertions;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.NodeSourcePosition;
 import graalvm.compiler.lir.LIR;
@@ -60,7 +58,7 @@ public class CompilationResultBuilder
 {
     public static class Options
     {
-        @Option(help = "Include the LIR as comments with the final assembly.", type = OptionType.Debug) //
+        @Option(help = "Include the LIR as comments with the final assembly.", type = OptionType.Debug)
         public static final OptionKey<Boolean> PrintLIRWithAssembly = new OptionKey<>(false);
     }
 
@@ -128,18 +126,17 @@ public class CompilationResultBuilder
     private List<ExceptionInfo> exceptionInfoList;
 
     private final OptionValues options;
-    private final DebugContext debug;
     private final EconomicMap<Constant, Data> dataCache;
 
     private Consumer<LIRInstruction> beforeOp;
     private Consumer<LIRInstruction> afterOp;
 
-    public CompilationResultBuilder(CodeCacheProvider codeCache, ForeignCallsProvider foreignCalls, FrameMap frameMap, Assembler asm, DataBuilder dataBuilder, FrameContext frameContext, OptionValues options, DebugContext debug, CompilationResult compilationResult)
+    public CompilationResultBuilder(CodeCacheProvider codeCache, ForeignCallsProvider foreignCalls, FrameMap frameMap, Assembler asm, DataBuilder dataBuilder, FrameContext frameContext, OptionValues options, CompilationResult compilationResult)
     {
-        this(codeCache, foreignCalls, frameMap, asm, dataBuilder, frameContext, options, debug, compilationResult, EconomicMap.create(Equivalence.DEFAULT));
+        this(codeCache, foreignCalls, frameMap, asm, dataBuilder, frameContext, options, compilationResult, EconomicMap.create(Equivalence.DEFAULT));
     }
 
-    public CompilationResultBuilder(CodeCacheProvider codeCache, ForeignCallsProvider foreignCalls, FrameMap frameMap, Assembler asm, DataBuilder dataBuilder, FrameContext frameContext, OptionValues options, DebugContext debug, CompilationResult compilationResult, EconomicMap<Constant, Data> dataCache)
+    public CompilationResultBuilder(CodeCacheProvider codeCache, ForeignCallsProvider foreignCalls, FrameMap frameMap, Assembler asm, DataBuilder dataBuilder, FrameContext frameContext, OptionValues options, CompilationResult compilationResult, EconomicMap<Constant, Data> dataCache)
     {
         this.target = codeCache.getTarget();
         this.codeCache = codeCache;
@@ -150,16 +147,11 @@ public class CompilationResultBuilder
         this.compilationResult = compilationResult;
         this.frameContext = frameContext;
         this.options = options;
-        this.debug = debug;
-        assert frameContext != null;
         this.dataCache = dataCache;
 
-        if (dataBuilder.needDetailedPatchingInformation() || Assertions.assertionsEnabled())
+        if (dataBuilder.needDetailedPatchingInformation())
         {
-            /*
-             * Always enabled in debug mode, even when the VM does not request detailed information,
-             * to increase test coverage.
-             */
+            // Always enabled in debug mode, even when the VM does not request detailed information, to increase test coverage.
             asm.setCodePatchingAnnotationConsumer(assemblerCodeAnnotation -> compilationResult.addAnnotation(new AssemblerAnnotation(assemblerCodeAnnotation)));
         }
     }
@@ -232,7 +224,6 @@ public class CompilationResultBuilder
     public void recordImplicitException(int pcOffset, LIRFrameState info)
     {
         compilationResult.recordInfopoint(pcOffset, info.debugInfo(), InfopointReason.IMPLICIT_EXCEPTION);
-        assert info.exceptionEdge == null;
     }
 
     public void recordDirectCall(int posBefore, int posAfter, InvokeTarget callTarget, LIRFrameState info)
@@ -266,9 +257,7 @@ public class CompilationResultBuilder
 
     public void recordInlineDataInCode(Constant data)
     {
-        assert data != null;
         int pos = asm.position();
-        debug.log("Inline data in code: pos = %d, data = %s", pos, data);
         if (data instanceof VMConstant)
         {
             compilationResult.recordDataPatch(pos, new ConstantReference((VMConstant) data));
@@ -277,9 +266,7 @@ public class CompilationResultBuilder
 
     public void recordInlineDataInCodeWithNote(Constant data, Object note)
     {
-        assert data != null;
         int pos = asm.position();
-        debug.log("Inline data in code: pos = %d, data = %s, note = %s", pos, data, note);
         if (data instanceof VMConstant)
         {
             compilationResult.recordDataPatchWithNote(pos, new ConstantReference((VMConstant) data), note);
@@ -288,7 +275,6 @@ public class CompilationResultBuilder
 
     public AbstractAddress recordDataSectionReference(Data data)
     {
-        assert data != null;
         DataSectionReference reference = compilationResult.getDataSection().insertData(data);
         int instructionStart = asm.position();
         compilationResult.recordDataPatch(instructionStart, reference);
@@ -302,8 +288,6 @@ public class CompilationResultBuilder
 
     public AbstractAddress recordDataReferenceInCode(Constant constant, int alignment)
     {
-        assert constant != null;
-        debug.log("Constant reference in code: pos = %d, data = %s", asm.position(), constant);
         Data data = createDataItem(constant);
         data.updateAlignment(alignment);
         return recordDataSectionReference(data);
@@ -311,7 +295,6 @@ public class CompilationResultBuilder
 
     public AbstractAddress recordDataReferenceInCode(Data data, int alignment)
     {
-        assert data != null;
         data.updateAlignment(alignment);
         return recordDataSectionReference(data);
     }
@@ -329,11 +312,6 @@ public class CompilationResultBuilder
 
     public AbstractAddress recordDataReferenceInCode(byte[] data, int alignment)
     {
-        assert data != null;
-        if (debug.isLogEnabled())
-        {
-            debug.log("Data reference in code: pos = %d, data = %s", asm.position(), Arrays.toString(data));
-        }
         return recordDataSectionReference(new RawData(data, alignment));
     }
 
@@ -375,7 +353,6 @@ public class CompilationResultBuilder
      */
     public int asIntConst(Value value)
     {
-        assert isJavaConstant(value) && asJavaConstant(value).getJavaKind().isNumericInteger();
         JavaConstant constant = asJavaConstant(value);
         long c = constant.asLong();
         if (!NumUtil.isInt(c))
@@ -390,7 +367,6 @@ public class CompilationResultBuilder
      */
     public float asFloatConst(Value value)
     {
-        assert isJavaConstant(value) && asJavaConstant(value).getJavaKind() == JavaKind.Float;
         JavaConstant constant = asJavaConstant(value);
         return constant.asFloat();
     }
@@ -400,7 +376,6 @@ public class CompilationResultBuilder
      */
     public long asLongConst(Value value)
     {
-        assert isJavaConstant(value) && asJavaConstant(value).getJavaKind() == JavaKind.Long;
         JavaConstant constant = asJavaConstant(value);
         return constant.asLong();
     }
@@ -410,7 +385,6 @@ public class CompilationResultBuilder
      */
     public double asDoubleConst(Value value)
     {
-        assert isJavaConstant(value) && asJavaConstant(value).getJavaKind() == JavaKind.Double;
         JavaConstant constant = asJavaConstant(value);
         return constant.asDouble();
     }
@@ -425,7 +399,6 @@ public class CompilationResultBuilder
 
     public AbstractAddress asFloatConstRef(JavaConstant value, int alignment)
     {
-        assert value.getJavaKind() == JavaKind.Float;
         return recordDataReferenceInCode(value, alignment);
     }
 
@@ -439,7 +412,6 @@ public class CompilationResultBuilder
 
     public AbstractAddress asDoubleConstRef(JavaConstant value, int alignment)
     {
-        assert value.getJavaKind() == JavaKind.Double;
         return recordDataReferenceInCode(value, alignment);
     }
 
@@ -448,7 +420,6 @@ public class CompilationResultBuilder
      */
     public AbstractAddress asLongConstRef(JavaConstant value)
     {
-        assert value.getJavaKind() == JavaKind.Long;
         return recordDataReferenceInCode(value, 8);
     }
 
@@ -457,49 +428,41 @@ public class CompilationResultBuilder
      */
     public AbstractAddress asObjectConstRef(JavaConstant value)
     {
-        assert value.getJavaKind() == JavaKind.Object;
         return recordDataReferenceInCode(value, 8);
     }
 
     public AbstractAddress asByteAddr(Value value)
     {
-        assert value.getPlatformKind().getSizeInBytes() >= JavaKind.Byte.getByteCount();
         return asAddress(value);
     }
 
     public AbstractAddress asShortAddr(Value value)
     {
-        assert value.getPlatformKind().getSizeInBytes() >= JavaKind.Short.getByteCount();
         return asAddress(value);
     }
 
     public AbstractAddress asIntAddr(Value value)
     {
-        assert value.getPlatformKind().getSizeInBytes() >= JavaKind.Int.getByteCount();
         return asAddress(value);
     }
 
     public AbstractAddress asLongAddr(Value value)
     {
-        assert value.getPlatformKind().getSizeInBytes() >= JavaKind.Long.getByteCount();
         return asAddress(value);
     }
 
     public AbstractAddress asFloatAddr(Value value)
     {
-        assert value.getPlatformKind().getSizeInBytes() >= JavaKind.Float.getByteCount();
         return asAddress(value);
     }
 
     public AbstractAddress asDoubleAddr(Value value)
     {
-        assert value.getPlatformKind().getSizeInBytes() >= JavaKind.Double.getByteCount();
         return asAddress(value);
     }
 
     public AbstractAddress asAddress(Value value)
     {
-        assert isStackSlot(value);
         StackSlot slot = asStackSlot(value);
         return asm.makeAddress(frameMap.getRegisterConfig().getFrameRegister(), frameMap.offsetForStackSlot(slot));
     }
@@ -510,9 +473,7 @@ public class CompilationResultBuilder
      */
     public boolean isSuccessorEdge(LabelRef edge)
     {
-        assert lir != null;
         AbstractBlockBase<?>[] order = lir.codeEmittingOrder();
-        assert order[currentBlockIndex] == edge.getSourceBlock();
         AbstractBlockBase<?> nextBlock = LIR.getNextBlock(order, currentBlockIndex);
         return nextBlock == edge.getTargetBlock();
     }
@@ -522,14 +483,11 @@ public class CompilationResultBuilder
      */
     public void emit(@SuppressWarnings("hiding") LIR lir)
     {
-        assert this.lir == null;
-        assert currentBlockIndex == 0;
         this.lir = lir;
         this.currentBlockIndex = 0;
         frameContext.enter(this);
         for (AbstractBlockBase<?> b : lir.codeEmittingOrder())
         {
-            assert (b == null && lir.codeEmittingOrder()[currentBlockIndex] == null) || lir.codeEmittingOrder()[currentBlockIndex].equals(b);
             emitBlock(b);
             currentBlockIndex++;
         }
@@ -543,7 +501,7 @@ public class CompilationResultBuilder
         {
             return;
         }
-        boolean emitComment = debug.isDumpEnabled(DebugContext.BASIC_LEVEL) || Options.PrintLIRWithAssembly.getValue(getOptions());
+        boolean emitComment = Options.PrintLIRWithAssembly.getValue(getOptions());
         if (emitComment)
         {
             blockComment(String.format("block B%d %s", block.getId(), block.getLoop()));

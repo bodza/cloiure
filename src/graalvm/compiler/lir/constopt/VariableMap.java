@@ -31,8 +31,6 @@ class VariableMap<T>
 
     public T put(Variable key, T value)
     {
-        assert key != null : "Key cannot be null";
-        assert value != null : "Value cannot be null";
         while (key.index >= content.size())
         {
             content.add(null);
@@ -42,7 +40,6 @@ class VariableMap<T>
 
     public T remove(Variable key)
     {
-        assert key != null : "Key cannot be null";
         if (key.index >= content.size())
         {
             return null;

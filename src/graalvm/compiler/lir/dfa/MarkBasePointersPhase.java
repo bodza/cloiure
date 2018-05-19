@@ -52,7 +52,6 @@ public final class MarkBasePointersPhase extends AllocationPhase
             public void put(Value v)
             {
                 Variable base = (Variable) v.getValueKind(LIRKind.class).getDerivedReferenceBase();
-                assert !base.getValueKind(LIRKind.class).isValue();
                 variables.put(base.index, base);
             }
 
@@ -66,7 +65,6 @@ public final class MarkBasePointersPhase extends AllocationPhase
             public void remove(Value v)
             {
                 Variable base = (Variable) v.getValueKind(LIRKind.class).getDerivedReferenceBase();
-                assert !base.getValueKind(LIRKind.class).isValue();
                 variables.put(base.index, null);
             }
 

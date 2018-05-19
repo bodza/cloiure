@@ -39,7 +39,6 @@ public class NewInstanceNode extends AbstractNewObjectNode implements Virtualiza
     protected NewInstanceNode(NodeClass<? extends NewInstanceNode> c, ResolvedJavaType type, boolean fillContents, FrameState stateBefore)
     {
         super(c, StampFactory.objectNonNull(TypeReference.createExactTrusted(type)), fillContents, stateBefore);
-        assert !type.isArray() && !type.isInterface() && !type.isPrimitive();
         this.instanceClass = type;
     }
 

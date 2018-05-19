@@ -57,8 +57,6 @@ public class ForeignCallNode extends AbstractMemoryCheckpoint implements LIRLowe
         ForeignCallNode node = new ForeignCallNode(foreignCalls, descriptor, arguments);
         node.setStamp(returnStamp);
 
-        assert verifyDescriptor(b, targetMethod, descriptor);
-
         /*
          * Need to update the BCI of a ForeignCallNode so that it gets the stateDuring in the case
          * that the foreign call can deoptimize. As with all deoptimization, we need a state in a
@@ -90,7 +88,6 @@ public class ForeignCallNode extends AbstractMemoryCheckpoint implements LIRLowe
         {
             ResolvedJavaType res = b.getMetaAccess().lookupJavaType(arg);
             ResolvedJavaType parameterType = (ResolvedJavaType) targetMethod.getSignature().getParameterType(parameters, targetMethod.getDeclaringClass());
-            assert parameterType.equals(res) : descriptor + ": parameter " + parameters + " mismatch: " + res + " != " + parameterType;
             parameters++;
         }
         return true;
@@ -107,7 +104,6 @@ public class ForeignCallNode extends AbstractMemoryCheckpoint implements LIRLowe
         this.arguments = new NodeInputList<>(this, arguments);
         this.descriptor = descriptor;
         this.foreignCalls = foreignCalls;
-        assert descriptor.getArgumentTypes().length == this.arguments.size() : "wrong number of arguments to " + this;
     }
 
     public ForeignCallNode(ForeignCallsProvider foreignCalls, ForeignCallDescriptor descriptor, Stamp stamp)
@@ -124,7 +120,6 @@ public class ForeignCallNode extends AbstractMemoryCheckpoint implements LIRLowe
         this.arguments = new NodeInputList<>(this, arguments);
         this.descriptor = descriptor;
         this.foreignCalls = foreignCalls;
-        assert descriptor.getArgumentTypes().length == this.arguments.size() : "wrong number of arguments to " + this;
     }
 
     @Override
@@ -169,7 +164,6 @@ public class ForeignCallNode extends AbstractMemoryCheckpoint implements LIRLowe
     @Override
     public void setStateAfter(FrameState x)
     {
-        assert hasSideEffect() || x == null;
         super.setStateAfter(x);
     }
 
@@ -197,7 +191,6 @@ public class ForeignCallNode extends AbstractMemoryCheckpoint implements LIRLowe
      */
     public void setBci(int bci)
     {
-        assert this.bci == BytecodeFrame.UNKNOWN_BCI || this.bci == bci;
         this.bci = bci;
     }
 
@@ -208,7 +201,6 @@ public class ForeignCallNode extends AbstractMemoryCheckpoint implements LIRLowe
         if ((currentStateAfter.stackSize() > 0 && currentStateAfter.stackAt(currentStateAfter.stackSize() - 1) == this) || (currentStateAfter.stackSize() > 1 && currentStateAfter.stackAt(currentStateAfter.stackSize() - 2) == this))
         {
             // The result of this call is on the top of stack, so roll back to the previous bci.
-            assert bci != BytecodeFrame.UNKNOWN_BCI : this;
             newStateDuring = currentStateAfter.duplicateModifiedDuringCall(bci, this.getStackKind());
         }
         else

@@ -27,28 +27,6 @@ public class RegisterAllocationConfig
             this.allocatableRegisters = allocatableRegisters.toArray();
             this.minRegisterNumber = minRegisterNumber;
             this.maxRegisterNumber = maxRegisterNumber;
-            assert verify(allocatableRegisters, minRegisterNumber, maxRegisterNumber);
-        }
-
-        private static boolean verify(RegisterArray allocatableRegisters, int minRegisterNumber, int maxRegisterNumber)
-        {
-            int min = Integer.MAX_VALUE;
-            int max = Integer.MIN_VALUE;
-            for (Register reg : allocatableRegisters)
-            {
-                int number = reg.number;
-                if (number < min)
-                {
-                    min = number;
-                }
-                if (number > max)
-                {
-                    max = number;
-                }
-            }
-            assert minRegisterNumber == min;
-            assert maxRegisterNumber == max;
-            return true;
         }
     }
 
@@ -92,7 +70,6 @@ public class RegisterAllocationConfig
      */
     public RegisterAllocationConfig(RegisterConfig registerConfig, String[] allocationRestrictedTo)
     {
-        assert registerConfig != null;
         this.registerConfig = registerConfig;
         this.allocationRestrictedTo = allocationRestrictedTo;
     }
@@ -138,7 +115,6 @@ public class RegisterAllocationConfig
                 max = number;
             }
         }
-        assert min < max;
         return new AllocatableRegisters(registers, min, max);
     }
 
@@ -151,7 +127,6 @@ public class RegisterAllocationConfig
         {
             cachedRegisters = initAllocatable(registerConfig.getAllocatableRegisters());
         }
-        assert cachedRegisters != null;
         return cachedRegisters;
     }
 

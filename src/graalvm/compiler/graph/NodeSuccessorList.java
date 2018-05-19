@@ -21,13 +21,11 @@ public final class NodeSuccessorList<T extends Node> extends NodeList<T>
     public NodeSuccessorList(Node self, T[] elements)
     {
         super(self, elements);
-        assert self.hasNoUsages();
     }
 
     public NodeSuccessorList(Node self, List<? extends T> elements)
     {
         super(self, elements);
-        assert self.hasNoUsages();
     }
 
     @Override

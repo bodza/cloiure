@@ -23,7 +23,6 @@ public class LockEliminationPhase extends Phase
             {
                 // should never happen, osr monitor enters are always direct successors of the graph
                 // start
-                assert !(next instanceof OSRMonitorEnterNode);
                 AccessMonitorNode monitorEnterNode = (AccessMonitorNode) next;
                 if (GraphUtil.unproxify(monitorEnterNode.object()) == GraphUtil.unproxify(monitorExitNode.object()))
                 {

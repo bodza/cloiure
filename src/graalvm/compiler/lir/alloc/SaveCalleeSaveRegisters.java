@@ -81,7 +81,6 @@ public class SaveCalleeSaveRegisters extends PreAllocationOptimizationPhase
         int insertionIndex = instructions.size() - 1;
         LIRInsertionBuffer buffer = new LIRInsertionBuffer();
         buffer.init(instructions);
-        assert instructions.get(insertionIndex) instanceof StandardOp.BlockEndOp;
         calleeSaveRegisters.forEach((Register register, Variable saved) ->
         {
             LIRInstruction restore = moveFactory.createMove(register.asValue(saved.getValueKind()), saved);

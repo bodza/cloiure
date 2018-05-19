@@ -150,7 +150,6 @@ public final class ClassGetHubNode extends FloatingNode implements Lowerable, Ca
     @Override
     public Constant reverse(Constant c, ConstantReflectionProvider constantReflection)
     {
-        assert !c.equals(JavaConstant.NULL_POINTER);
         ResolvedJavaType objectType = constantReflection.asJavaType(c);
         return constantReflection.asJavaClass(objectType);
     }
@@ -173,7 +172,6 @@ public final class ClassGetHubNode extends FloatingNode implements Lowerable, Ca
     @Override
     public boolean preservesOrder(CanonicalCondition op, Constant value, ConstantReflectionProvider constantReflection)
     {
-        assert op == CanonicalCondition.EQ;
         ResolvedJavaType exactType = constantReflection.asJavaType(value);
         return !exactType.isPrimitive();
     }

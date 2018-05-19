@@ -94,7 +94,6 @@ public final class ReadEliminationBlockState extends EffectsBlockState<ReadElimi
         UnsafeLoadCacheEntry(ValueNode object, ValueNode location, LocationIdentity locationIdentity)
         {
             super(object, location);
-            assert locationIdentity != null;
             this.locationIdentity = locationIdentity;
         }
 

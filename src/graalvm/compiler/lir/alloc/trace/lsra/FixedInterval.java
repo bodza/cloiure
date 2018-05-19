@@ -53,7 +53,6 @@ final class FixedInterval extends IntervalHint
         {
             cachedTo = calcTo();
         }
-        assert cachedTo == calcTo() : "invalid cached value";
         return cachedTo;
     }
 
@@ -76,7 +75,6 @@ final class FixedInterval extends IntervalHint
 
     void nextRange()
     {
-        assert this != EndMarker : "not allowed on sentinel";
         current = current.next;
     }
 
@@ -108,7 +106,6 @@ final class FixedInterval extends IntervalHint
     // range creation
     public void setFrom(int from)
     {
-        assert !isEmpty();
         first().from = from;
     }
 
@@ -151,7 +148,6 @@ final class FixedInterval extends IntervalHint
 
     FixedInterval(AllocatableValue operand)
     {
-        assert operand != null;
         this.operand = operand;
         this.first = FixedRange.EndMarker;
         this.current = FixedRange.EndMarker;
@@ -161,8 +157,6 @@ final class FixedInterval extends IntervalHint
 
     int calcTo()
     {
-        assert first != FixedRange.EndMarker : "interval has no range";
-
         FixedRange r = first;
         while (r.next != FixedRange.EndMarker)
         {
@@ -182,8 +176,6 @@ final class FixedInterval extends IntervalHint
         }
         if (cur != FixedRange.EndMarker)
         {
-            assert cur.to != cur.next.from : "ranges not separated";
-
             if (mode == LIRInstruction.OperandMode.DEF)
             {
                 return cur.from <= opId && opId < cur.to;
@@ -200,14 +192,9 @@ final class FixedInterval extends IntervalHint
     // (even if the hole has only the length 1)
     boolean hasHoleBetween(int holeFrom, int holeTo)
     {
-        assert holeFrom < holeTo : "check";
-        assert from() <= holeFrom && holeTo <= to() : "index out of interval";
-
         FixedRange cur = first;
         while (cur != FixedRange.EndMarker)
         {
-            assert cur.to < cur.next.from : "no space between ranges";
-
             // hole-range starts before this range . hole
             if (holeFrom < cur.from)
             {
@@ -279,7 +266,6 @@ final class FixedInterval extends IntervalHint
             }
             buf.append(cur);
             cur = cur.next;
-            assert cur != null : "range list not closed with range sentinel";
         }
         buf.append("}");
         return buf.toString();

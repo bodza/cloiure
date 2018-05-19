@@ -91,7 +91,6 @@ public class AMD64Unary
             }
             else
             {
-                assert isStackSlot(value);
                 opcode.emit(masm, size, asRegister(result), (AMD64Address) crb.asAddress(value));
             }
         }
@@ -129,7 +128,6 @@ public class AMD64Unary
             }
             else
             {
-                assert isStackSlot(result);
                 opcode.emit(masm, size, (AMD64Address) crb.asAddress(result), asRegister(value));
             }
         }

@@ -185,7 +185,6 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
     public Variable emitLogicCompareAndSwap(Value address, Value expectedValue, Value newValue, Value trueValue, Value falseValue)
     {
         ValueKind<?> kind = newValue.getValueKind();
-        assert kind.equals(expectedValue.getValueKind());
         AMD64Kind memKind = (AMD64Kind) kind.getPlatformKind();
 
         AMD64AddressValue addressValue = asAddressValue(address);
@@ -193,7 +192,6 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
         emitMove(raxRes, expectedValue);
         append(new CompareAndSwapOp(memKind, raxRes, addressValue, raxRes, asAllocatable(newValue)));
 
-        assert trueValue.getValueKind().equals(falseValue.getValueKind());
         Variable result = newVariable(trueValue.getValueKind());
         append(new CondMoveOp(result, Condition.EQ, asAllocatable(trueValue), falseValue));
         return result;
@@ -203,7 +201,6 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
     public Value emitValueCompareAndSwap(Value address, Value expectedValue, Value newValue)
     {
         ValueKind<?> kind = newValue.getValueKind();
-        assert kind.equals(expectedValue.getValueKind());
         AMD64Kind memKind = (AMD64Kind) kind.getPlatformKind();
 
         AMD64AddressValue addressValue = asAddressValue(address);
@@ -217,9 +214,6 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
 
     public void emitCompareAndSwapBranch(ValueKind<?> kind, AMD64AddressValue address, Value expectedValue, Value newValue, Condition condition, LabelRef trueLabel, LabelRef falseLabel, double trueLabelProbability)
     {
-        assert kind.equals(expectedValue.getValueKind());
-        assert kind.equals(newValue.getValueKind());
-        assert condition == Condition.EQ || condition == Condition.NE;
         AMD64Kind memKind = (AMD64Kind) kind.getPlatformKind();
         RegisterValue raxValue = AMD64.rax.asValue(kind);
         emitMove(raxValue, expectedValue);
@@ -256,7 +250,6 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
     @Override
     public void emitJump(LabelRef label)
     {
-        assert label != null;
         append(new JumpOp(label));
     }
 
@@ -327,7 +320,6 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
                     // negating EQ and NE does not make any sense as we would need to negate
                     // unorderedIsTrue as well (otherwise, we would no longer fulfill the Java
                     // NaN semantics)
-                    assert unorderedIsTrue == AMD64ControlFlow.trueOnUnordered(finalCondition.negate());
                     finalCondition = finalCondition.negate();
                     finalTrueValue = falseValue;
                     finalFalseValue = trueValue;
@@ -396,7 +388,6 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
 
     private void emitIntegerTest(Value a, Value b)
     {
-        assert ((AMD64Kind) a.getPlatformKind()).isInteger();
         OperandSize size = a.getPlatformKind() == AMD64Kind.QWORD ? QWORD : DWORD;
         if (isJavaConstant(b) && NumUtil.is32bit(asJavaConstant(b).asLong()))
         {

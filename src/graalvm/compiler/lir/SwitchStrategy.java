@@ -210,7 +210,6 @@ public abstract class SwitchStrategy
 
     public SwitchStrategy(double[] keyProbabilities)
     {
-        assert keyProbabilities.length >= 2;
         this.keyProbabilities = keyProbabilities;
     }
 
@@ -218,7 +217,6 @@ public abstract class SwitchStrategy
 
     public double getAverageEffort()
     {
-        assert averageEffort >= 0 : "average effort was not calculated yet for this strategy";
         return averageEffort;
     }
 
@@ -269,7 +267,6 @@ public abstract class SwitchStrategy
         public SequentialStrategy(final double[] keyProbabilities, Constant[] keyConstants)
         {
             super(keyProbabilities);
-            assert keyProbabilities.length == keyConstants.length;
 
             this.keyConstants = keyConstants;
             int keyCount = keyConstants.length;
@@ -318,7 +315,6 @@ public abstract class SwitchStrategy
         protected PrimitiveStrategy(double[] keyProbabilities, JavaConstant[] keyConstants)
         {
             super(keyProbabilities);
-            assert keyProbabilities.length == keyConstants.length;
             this.keyConstants = keyConstants;
         }
 
@@ -455,7 +451,6 @@ public abstract class SwitchStrategy
          */
         private void recurseBinarySwitch(SwitchClosure closure, int left, int right, int startDepth)
         {
-            assert startDepth < keyConstants.length * 3 : "runaway recursion in binary switch";
             int depth = startDepth;
             boolean leftBorder = left == 0;
             boolean rightBorder = right == keyConstants.length - 1;
@@ -483,14 +478,12 @@ public abstract class SwitchStrategy
             }
             double probabilityStart = probabilitySums[left];
             double probabilityMiddle = (probabilityStart + probabilitySums[right + 1]) / 2;
-            assert probabilityStart >= probabilityStart;
             int middle = left;
             while (getSliceEnd(closure, middle + 1) < right && probabilitySums[getSliceEnd(closure, middle + 1)] < probabilityMiddle)
             {
                 middle = getSliceEnd(closure, middle + 1);
             }
             middle = getSliceEnd(closure, middle);
-            assert middle < keyConstants.length - 1;
 
             if (getSliceEnd(closure, left) == middle)
             {

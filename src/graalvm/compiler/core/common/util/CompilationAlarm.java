@@ -1,6 +1,5 @@
 package graalvm.compiler.core.common.util;
 
-import graalvm.compiler.debug.Assertions;
 import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
 import graalvm.compiler.options.OptionType;
@@ -79,7 +78,7 @@ public final class CompilationAlarm implements AutoCloseable
      */
     public static CompilationAlarm trackCompilationPeriod(OptionValues options)
     {
-        int period = Assertions.assertionsEnabled() ? 0 : Options.CompilationExpirationPeriod.getValue(options);
+        int period = Options.CompilationExpirationPeriod.getValue(options);
         if (period > 0)
         {
             CompilationAlarm current = currentAlarm.get();

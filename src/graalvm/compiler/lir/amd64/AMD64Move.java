@@ -149,7 +149,6 @@ public class AMD64Move
             }
             else
             {
-                assert isStackSlot(result);
                 const2stack(crb, masm, result, input);
             }
         }
@@ -336,7 +335,6 @@ public class AMD64Move
             }
             else
             {
-                assert size == OperandSize.DWORD;
                 masm.lead(asRegister(result, AMD64Kind.DWORD), address.toAddress());
             }
         }
@@ -375,7 +373,6 @@ public class AMD64Move
             super(TYPE);
             this.result = result;
             this.slot = slot;
-            assert slot instanceof VirtualStackSlot || slot instanceof StackSlot;
         }
 
         @Override
@@ -463,8 +460,6 @@ public class AMD64Move
         @Override
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
-            assert asRegister(cmpValue).equals(AMD64.rax) && asRegister(result).equals(AMD64.rax);
-
             if (crb.target.isMP)
             {
                 masm.lock();
@@ -843,16 +838,13 @@ public class AMD64Move
         switch ((AMD64Kind) result.getPlatformKind())
         {
             case BYTE:
-                assert NumUtil.isByte(imm) : "Is not in byte range: " + imm;
                 AMD64MIOp.MOVB.emit(masm, OperandSize.BYTE, dest, (int) imm);
                 break;
             case WORD:
-                assert NumUtil.isShort(imm) : "Is not in short range: " + imm;
                 AMD64MIOp.MOV.emit(masm, OperandSize.WORD, dest, (int) imm);
                 break;
             case DWORD:
             case SINGLE:
-                assert NumUtil.isInt(imm) : "Is not in int range: " + imm;
                 masm.movl(dest, (int) imm);
                 break;
             case QWORD:

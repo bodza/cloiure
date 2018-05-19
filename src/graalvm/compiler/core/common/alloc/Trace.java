@@ -49,7 +49,6 @@ public class Trace
 
     public int getId()
     {
-        assert id != -1 : "id not initialized!";
         return id;
     }
 

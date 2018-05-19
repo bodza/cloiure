@@ -22,7 +22,6 @@ import graalvm.compiler.api.replacements.Snippet.NonNullParameter;
 import graalvm.compiler.api.replacements.Snippet.VarargsParameter;
 import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.StampFactory;
-import graalvm.compiler.debug.DebugHandlersFactory;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
 import graalvm.compiler.hotspot.nodes.type.KlassPointerStamp;
@@ -266,9 +265,9 @@ public class InstanceOfSnippets implements Snippets
 
         private final Counters counters;
 
-        public Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, SnippetCounter.Group.Factory factory, HotSpotProviders providers, TargetDescription target)
+        public Templates(OptionValues options, SnippetCounter.Group.Factory factory, HotSpotProviders providers, TargetDescription target)
         {
-            super(options, factories, providers, providers.getSnippetReflection(), target);
+            super(options, providers, providers.getSnippetReflection(), target);
             this.counters = new Counters(factory);
         }
 
@@ -353,7 +352,6 @@ public class InstanceOfSnippets implements Snippets
             {
                 ClassIsAssignableFromNode isAssignable = (ClassIsAssignableFromNode) replacer.instanceOf;
                 Arguments args = new Arguments(isAssignableFrom, isAssignable.graph().getGuardsStage(), tool.getLoweringStage());
-                assert ((ObjectStamp) isAssignable.getThisClass().stamp(NodeView.DEFAULT)).nonNull();
                 args.add("thisClassNonNull", isAssignable.getThisClass());
                 args.add("otherClass", isAssignable.getOtherClass());
                 args.add("trueValue", replacer.trueValue);

@@ -57,7 +57,6 @@ public final class InvokeWithExceptionNode extends ControlSplitNode implements I
     @Override
     protected void afterClone(Node other)
     {
-        updateInliningLogAfterClone(other);
     }
 
     @Override
@@ -203,17 +202,6 @@ public final class InvokeWithExceptionNode extends ControlSplitNode implements I
         return LocationIdentity.any();
     }
 
-    @Override
-    public Map<Object, Object> getDebugProperties(Map<Object, Object> map)
-    {
-        Map<Object, Object> debugProperties = super.getDebugProperties(map);
-        if (callTarget != null)
-        {
-            debugProperties.put("targetMethod", callTarget.targetName());
-        }
-        return debugProperties;
-    }
-
     public void killExceptionEdge()
     {
         AbstractBeginNode edge = exceptionEdge();
@@ -233,7 +221,6 @@ public final class InvokeWithExceptionNode extends ControlSplitNode implements I
         this.replaceAtPredecessor(repl);
         repl.setNext(nextNode);
         boolean removed = this.callTarget().removeUsage(this);
-        assert removed;
         this.replaceAtUsages(repl);
         this.markDeleted();
     }
@@ -241,7 +228,6 @@ public final class InvokeWithExceptionNode extends ControlSplitNode implements I
     @Override
     public void intrinsify(Node node)
     {
-        assert !(node instanceof ValueNode) || (((ValueNode) node).getStackKind() == JavaKind.Void) == (getStackKind() == JavaKind.Void);
         CallTargetNode call = callTarget;
         FrameState state = stateAfter();
         if (exceptionEdge != null)
@@ -260,7 +246,6 @@ public final class InvokeWithExceptionNode extends ControlSplitNode implements I
         }
         if (node == null)
         {
-            assert getStackKind() == JavaKind.Void && hasNoUsages();
             graph().removeSplit(this, next());
         }
         else if (node instanceof ControlSinkNode)

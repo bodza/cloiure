@@ -19,9 +19,7 @@ import graalvm.compiler.core.common.calc.Condition;
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
-import graalvm.compiler.debug.CounterKey;
 import graalvm.compiler.debug.DebugCloseable;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
@@ -63,8 +61,6 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 public final class IfNode extends ControlSplitNode implements Simplifiable, LIRLowerable
 {
     public static final NodeClass<IfNode> TYPE = NodeClass.create(IfNode.class);
-
-    private static final CounterKey CORRECTED_PROBABILITIES = DebugContext.counter("CorrectedProbabilities");
 
     @Successor AbstractBeginNode trueSuccessor;
     @Successor AbstractBeginNode falseSuccessor;
@@ -146,7 +142,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
 
     public void setTrueSuccessorProbability(double prob)
     {
-        assert prob >= -0.000000001 && prob <= 1.000000001 : "Probability out of bounds: " + prob;
         trueSuccessorProbability = Math.min(1.0, Math.max(0.0, prob));
     }
 
@@ -160,15 +155,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
     public void generate(NodeLIRBuilderTool gen)
     {
         gen.emitIf(this);
-    }
-
-    @Override
-    public boolean verify()
-    {
-        assertTrue(condition() != null, "missing condition");
-        assertTrue(trueSuccessor() != null, "missing trueSuccessor");
-        assertTrue(falseSuccessor() != null, "missing falseSuccessor");
-        return super.verify();
     }
 
     private boolean compareCallContext(NodeSourcePosition successorPosition)
@@ -248,7 +234,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         {
             if (trueSuccessorProbability != 0)
             {
-                CORRECTED_PROBABILITIES.increment(getDebug());
                 trueSuccessorProbability = 0;
             }
         }
@@ -256,7 +241,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         {
             if (trueSuccessorProbability != 1)
             {
-                CORRECTED_PROBABILITIES.increment(getDebug());
                 trueSuccessorProbability = 1;
             }
         }
@@ -319,7 +303,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                 if (prepareForSwap(tool, condition(), nextIf.condition()))
                 {
                     // Reordering is allowed from (if1 => begin => if2) to (if2 => begin => if1).
-                    assert intermediateBegin.next() == nextIf;
                     AbstractBeginNode bothFalseBegin = nextIf.falseSuccessor();
                     nextIf.setFalseSuccessor(null);
                     intermediateBegin.setNext(null);
@@ -560,7 +543,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
 
     private void pushNodesThroughIf(SimplifierTool tool)
     {
-        assert trueSuccessor().hasNoUsages() && falseSuccessor().hasNoUsages();
         // push similar nodes upwards through the if, thereby deduplicating them
         do
         {
@@ -620,7 +602,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
     @SuppressWarnings("try")
     private boolean checkForUnsignedCompare(SimplifierTool tool)
     {
-        assert trueSuccessor().hasNoUsages() && falseSuccessor().hasNoUsages();
         if (condition() instanceof IntegerLessThanNode)
         {
             NodeView view = NodeView.from(tool);
@@ -746,7 +727,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
 
     private static boolean prepareForSwap(SimplifierTool tool, LogicNode a, LogicNode b)
     {
-        DebugContext debug = a.getDebug();
         if (a instanceof InstanceOfNode)
         {
             InstanceOfNode instanceOfA = (InstanceOfNode) a;
@@ -755,7 +735,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                 IsNullNode isNullNode = (IsNullNode) b;
                 if (isNullNode.getValue() == instanceOfA.getValue())
                 {
-                    debug.log("Can swap instanceof and isnull if");
                     return true;
                 }
             }
@@ -765,7 +744,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                 if (instanceOfA.getValue() == instanceOfB.getValue() && !instanceOfA.type().getType().isInterface() && !instanceOfB.type().getType().isInterface() && !instanceOfA.type().getType().isAssignableFrom(instanceOfB.type().getType()) && !instanceOfB.type().getType().isAssignableFrom(instanceOfA.type().getType()))
                 {
                     // Two instanceof on the same value with mutually exclusive types.
-                    debug.log("Can swap instanceof for types %s and %s", instanceOfA.type(), instanceOfB.type());
                     return true;
                 }
             }
@@ -783,7 +761,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                 CompareNode compareB = (CompareNode) b;
                 if (compareA == compareB)
                 {
-                    debug.log("Same conditions => do not swap and leave the work for global value numbering.");
                     return false;
                 }
                 if (compareB.unorderedIsTrue())
@@ -807,7 +784,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                     if (combined == null)
                     {
                         // The two conditions are disjoint => can reorder.
-                        debug.log("Can swap disjoint coditions on same values: %s and %s", conditionA, comparableCondition);
                         return true;
                     }
                 }
@@ -833,7 +809,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
 
                     if (canSwap)
                     {
-                        debug.log("Can swap equality condition with one shared and one disjoint value.");
                         return true;
                     }
                 }
@@ -867,7 +842,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
      */
     private boolean removeOrMaterializeIf(SimplifierTool tool)
     {
-        assert trueSuccessor().hasNoUsages() && falseSuccessor().hasNoUsages();
         if (trueSuccessor().next() instanceof AbstractEndNode && falseSuccessor().next() instanceof AbstractEndNode)
         {
             AbstractEndNode trueEnd = (AbstractEndNode) trueSuccessor().next();
@@ -964,8 +938,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         {
             if (trueSuccessor instanceof LoopExitNode && falseSuccessor instanceof LoopExitNode)
             {
-                assert ((LoopExitNode) trueSuccessor).loopBegin() == ((LoopExitNode) falseSuccessor).loopBegin();
-                assert trueSuccessor.usages().isEmpty() && falseSuccessor.usages().isEmpty();
                 return this.graph().addOrUnique(new ValueProxyNode(replacement, (LoopExitNode) trueSuccessor));
             }
         }
@@ -1068,7 +1040,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                 }
                 if (lessThan != null)
                 {
-                    assert equals != null;
                     NodeView view = NodeView.from(tool);
                     if ((lessThan.getX() == equals.getX() && lessThan.getY() == equals.getY()) || (lessThan.getX() == equals.getY() && lessThan.getY() == equals.getX()))
                     {
@@ -1143,7 +1114,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         /* Each successor of the if gets a new merge if needed. */
         MergeNode trueMerge = null;
         MergeNode falseMerge = null;
-        assert merge.stateAfter() == null;
 
         for (EndNode end : merge.forwardEnds().snapshot())
         {
@@ -1354,7 +1324,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
             before = begin.anchored().snapshot();
             begin.replaceAtUsages(InputType.Guard, merge);
             begin.replaceAtUsages(InputType.Anchor, merge);
-            assert begin.anchored().isEmpty() : before + " " + begin.anchored().snapshot();
         }
 
         AbstractBeginNode theBegin = begin;
@@ -1469,7 +1438,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         }
 
         List<EndNode> mergePredecessors = merge.cfgPredecessors().snapshot();
-        assert phi.valueCount() == merge.forwardEndCount();
 
         Constant[] xs = constantValues(compare.getX(), merge, false);
         Constant[] ys = constantValues(compare.getY(), merge, false);
@@ -1508,8 +1476,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                 falseEnds.add(end);
             }
         }
-        assert !ends.hasNext();
-        assert falseEnds.size() + trueEnds.size() == xs.length;
 
         connectEnds(falseEnds, phiValues, oldFalseSuccessor, merge, tool);
         connectEnds(trueEnds, phiValues, oldTrueSuccessor, merge, tool);
@@ -1543,11 +1509,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
             GraphUtil.killCFG(oldTrueSuccessor);
         }
         GraphUtil.killCFG(merge);
-
-        assert !merge.isAlive() : merge;
-        assert !phi.isAlive() : phi;
-        assert !compare.isAlive() : compare;
-        assert !this.isAlive() : this;
 
         return true;
     }

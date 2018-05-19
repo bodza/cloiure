@@ -52,12 +52,10 @@ public enum NodeSize
 
     public static NodeSize compute(NodeSize base, int opCount)
     {
-        assert opCount >= 0;
         if (opCount == 0)
         {
             return SIZE_0;
         }
-        assert base.ordinal() > SIZE_0.ordinal();
         int log2 = log2(base.value * opCount);
         NodeSize[] values = values();
         for (int i = base.ordinal(); i < values.length; i++)
@@ -72,12 +70,10 @@ public enum NodeSize
 
     public static NodeSize compute(int rawValue)
     {
-        assert rawValue >= 0;
         if (rawValue == 0)
         {
             return SIZE_0;
         }
-        assert rawValue > 0;
         NodeSize[] values = values();
         for (int i = SIZE_0.ordinal(); i < values.length - 1; i++)
         {

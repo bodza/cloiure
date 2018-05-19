@@ -103,12 +103,10 @@ public abstract class AMD64NodeLIRBuilder extends NodeLIRBuilder
                             switch (divRem.getOp())
                             {
                                 case DIV:
-                                    assert otherDivRem.getOp() == Op.REM;
                                     setResult(divRem, results[0]);
                                     setResult(otherDivRem, results[1]);
                                     break;
                                 case REM:
-                                    assert otherDivRem.getOp() == Op.DIV;
                                     setResult(divRem, results[1]);
                                     setResult(otherDivRem, results[0]);
                                     break;

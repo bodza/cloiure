@@ -37,7 +37,6 @@ public final class MethodCountersPointerStamp extends MetaspacePointerStamp
     {
         if (newNonNull)
         {
-            assert !newAlwaysNull;
             return METHOD_COUNTERS_NON_NULL;
         }
         else if (newAlwaysNull)
@@ -69,7 +68,6 @@ public final class MethodCountersPointerStamp extends MetaspacePointerStamp
         }
         else
         {
-            assert c instanceof HotSpotMetaspaceConstant;
             return METHOD_COUNTERS_NON_NULL;
         }
     }

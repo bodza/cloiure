@@ -43,31 +43,26 @@ public final class WordCastNode extends FixedWithNextNode implements LIRLowerabl
 
     public static WordCastNode wordToObject(ValueNode input, JavaKind wordKind)
     {
-        assert input.getStackKind() == wordKind;
         return new WordCastNode(StampFactory.object(), input);
     }
 
     public static WordCastNode wordToObjectNonNull(ValueNode input, JavaKind wordKind)
     {
-        assert input.getStackKind() == wordKind;
         return new WordCastNode(StampFactory.objectNonNull(), input);
     }
 
     public static WordCastNode addressToWord(ValueNode input, JavaKind wordKind)
     {
-        assert input.stamp(NodeView.DEFAULT) instanceof AbstractPointerStamp;
         return new WordCastNode(StampFactory.forKind(wordKind), input);
     }
 
     public static WordCastNode objectToTrackedPointer(ValueNode input, JavaKind wordKind)
     {
-        assert input.stamp(NodeView.DEFAULT) instanceof ObjectStamp;
         return new WordCastNode(StampFactory.forKind(wordKind), input, true);
     }
 
     public static WordCastNode objectToUntrackedPointer(ValueNode input, JavaKind wordKind)
     {
-        assert input.stamp(NodeView.DEFAULT) instanceof ObjectStamp;
         return new WordCastNode(StampFactory.forKind(wordKind), input, false);
     }
 
@@ -97,7 +92,6 @@ public final class WordCastNode extends FixedWithNextNode implements LIRLowerabl
             return input;
         }
 
-        assert !stamp(NodeView.DEFAULT).isCompatible(input.stamp(NodeView.DEFAULT));
         if (input.isConstant())
         {
             /* Null pointers are uncritical for GC, so they can be constant folded. */
@@ -119,7 +113,6 @@ public final class WordCastNode extends FixedWithNextNode implements LIRLowerabl
     {
         Value value = generator.operand(input);
         ValueKind<?> kind = generator.getLIRGeneratorTool().getLIRKind(stamp(NodeView.DEFAULT));
-        assert kind.getPlatformKind().getSizeInBytes() == value.getPlatformKind().getSizeInBytes();
 
         if (trackedPointer && LIRKind.isValue(kind) && !LIRKind.isValue(value))
         {

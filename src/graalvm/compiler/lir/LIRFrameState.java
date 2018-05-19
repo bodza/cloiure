@@ -51,7 +51,6 @@ public class LIRFrameState
 
     public DebugInfo debugInfo()
     {
-        assert debugInfo != null : "debug info not allocated yet";
         return debugInfo;
     }
 
@@ -141,10 +140,6 @@ public class LIRFrameState
                     monitor.setSlot(asAllocatableValue(proc.doValue(inst, slot, OperandMode.ALIVE, STATE_FLAGS)));
                 }
             }
-            else
-            {
-                assert unprocessed(value);
-            }
         }
     }
 
@@ -175,10 +170,6 @@ public class LIRFrameState
                     proc.visitValue(inst, slot, OperandMode.ALIVE, STATE_FLAGS);
                 }
             }
-            else
-            {
-                assert unprocessed(value);
-            }
         }
     }
 
@@ -196,7 +187,6 @@ public class LIRFrameState
         }
         else if (isVirtualObject(value))
         {
-            assert Arrays.asList(virtualObjects).contains(value);
             return true;
         }
         else

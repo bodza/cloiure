@@ -38,37 +38,31 @@ public class TypeConversion
 
     public static byte asS1(long value)
     {
-        assert isS1(value);
         return (byte) value;
     }
 
     public static byte asU1(long value)
     {
-        assert isU1(value);
         return (byte) value;
     }
 
     public static short asS2(long value)
     {
-        assert isS2(value);
         return (short) value;
     }
 
     public static short asU2(long value)
     {
-        assert isU2(value);
         return (short) value;
     }
 
     public static int asS4(long value)
     {
-        assert isS4(value);
         return (int) value;
     }
 
     public static int asU4(long value)
     {
-        assert isU4(value);
         return (int) value;
     }
 }

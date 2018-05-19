@@ -37,7 +37,6 @@ public abstract class AbstractCompareAndSwapNode extends FixedAccessNode impleme
     @Override
     public void setStateAfter(FrameState x)
     {
-        assert x == null || x.isAlive() : "frame state must be in a graph";
         updateUsages(stateAfter, x);
         stateAfter = x;
     }
@@ -61,7 +60,6 @@ public abstract class AbstractCompareAndSwapNode extends FixedAccessNode impleme
     public AbstractCompareAndSwapNode(NodeClass<? extends AbstractCompareAndSwapNode> c, AddressNode address, LocationIdentity location, ValueNode expectedValue, ValueNode newValue, BarrierType barrierType, Stamp stamp)
     {
         super(c, address, location, stamp, barrierType);
-        assert expectedValue.getStackKind() == newValue.getStackKind();
         this.expectedValue = expectedValue;
         this.newValue = newValue;
     }

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import graalvm.compiler.core.common.type.Stamp;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeInputList;
 import graalvm.compiler.nodes.ConstantNode;
@@ -48,7 +47,7 @@ public class InlineableGraph implements Inlineable
     {
         StructuredGraph original = getOriginalGraph(method, context, canonicalizer, invoke.asNode().graph(), invoke.bci(), trackNodeSourcePosition);
         // TODO copying the graph is only necessary if it is modified or if it contains any invokes
-        this.graph = (StructuredGraph) original.copy(invoke.asNode().getDebug());
+        this.graph = (StructuredGraph) original.copy();
         specializeGraphToArguments(invoke, context, canonicalizer);
     }
 
@@ -71,30 +70,20 @@ public class InlineableGraph implements Inlineable
      * @return true iff one or more parameters <code>newGraph</code> were specialized to account for
      *         a constant argument, or an argument with a more specific stamp.
      */
-    @SuppressWarnings("try")
     private boolean specializeGraphToArguments(final Invoke invoke, final HighTierContext context, CanonicalizerPhase canonicalizer)
     {
-        DebugContext debug = graph.getDebug();
-        try (DebugContext.Scope s = debug.scope("InlineGraph", graph))
+        ArrayList<Node> parameterUsages = replaceParamsWithMoreInformativeArguments(invoke, context);
+        if (parameterUsages != null)
         {
-            ArrayList<Node> parameterUsages = replaceParamsWithMoreInformativeArguments(invoke, context);
-            if (parameterUsages != null)
-            {
-                assert !parameterUsages.isEmpty() : "The caller didn't have more information about arguments after all";
-                canonicalizer.applyIncremental(graph, context, parameterUsages);
-                return true;
-            }
-            else
-            {
-                // TODO (chaeubl): if args are not more concrete, inlining should be avoided
-                // in most cases or we could at least use the previous graph size + invoke
-                // probability to check the inlining
-                return false;
-            }
+            canonicalizer.applyIncremental(graph, context, parameterUsages);
+            return true;
         }
-        catch (Throwable e)
+        else
         {
-            throw debug.handle(e);
+            // TODO (chaeubl): if args are not more concrete, inlining should be avoided
+            // in most cases or we could at least use the previous graph size + invoke
+            // probability to check the inlining
+            return false;
         }
     }
 
@@ -139,7 +128,6 @@ public class InlineableGraph implements Inlineable
         NodeInputList<ValueNode> args = invoke.callTarget().arguments();
         ArrayList<Node> parameterUsages = null;
         List<ParameterNode> params = graph.getNodes(ParameterNode.TYPE).snapshot();
-        assert params.size() <= args.size();
         /*
          * param-nodes that aren't used (eg, as a result of canonicalization) don't occur in
          * `params`. Thus, in general, the sizes of `params` and `args` don't always match. Still,
@@ -167,14 +155,9 @@ public class InlineableGraph implements Inlineable
                         param.setStamp(impro);
                         parameterUsages = trackParameterUsages(param, parameterUsages);
                     }
-                    else
-                    {
-                        assert !isArgMoreInformativeThanParam(arg, param);
-                    }
                 }
             }
         }
-        assert (parameterUsages == null) || (!parameterUsages.isEmpty());
         return parameterUsages;
     }
 
@@ -191,33 +174,23 @@ public class InlineableGraph implements Inlineable
      * for cloning before modification.
      * </p>
      */
-    @SuppressWarnings("try")
     private static StructuredGraph parseBytecodes(ResolvedJavaMethod method, HighTierContext context, CanonicalizerPhase canonicalizer, StructuredGraph caller, boolean trackNodeSourcePosition)
     {
-        DebugContext debug = caller.getDebug();
-        StructuredGraph newGraph = new StructuredGraph.Builder(caller.getOptions(), debug, AllowAssumptions.ifNonNull(caller.getAssumptions())).method(method).trackNodeSourcePosition(trackNodeSourcePosition).build();
-        try (DebugContext.Scope s = debug.scope("InlineGraph", newGraph))
+        StructuredGraph newGraph = new StructuredGraph.Builder(caller.getOptions(), AllowAssumptions.ifNonNull(caller.getAssumptions())).method(method).trackNodeSourcePosition(trackNodeSourcePosition).build();
+        if (!caller.isUnsafeAccessTrackingEnabled())
         {
-            if (!caller.isUnsafeAccessTrackingEnabled())
-            {
-                newGraph.disableUnsafeAccessTracking();
-            }
-            if (context.getGraphBuilderSuite() != null)
-            {
-                context.getGraphBuilderSuite().apply(newGraph, context);
-            }
-            assert newGraph.start().next() != null : "graph needs to be populated by the GraphBuilderSuite " + method + ", " + method.canBeInlined();
-
-            new DeadCodeEliminationPhase(Optional).apply(newGraph);
-
-            canonicalizer.apply(newGraph, context);
-
-            return newGraph;
+            newGraph.disableUnsafeAccessTracking();
         }
-        catch (Throwable e)
+        if (context.getGraphBuilderSuite() != null)
         {
-            throw debug.handle(e);
+            context.getGraphBuilderSuite().apply(newGraph, context);
         }
+
+        new DeadCodeEliminationPhase(Optional).apply(newGraph);
+
+        canonicalizer.apply(newGraph, context);
+
+        return newGraph;
     }
 
     @Override

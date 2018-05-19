@@ -266,13 +266,6 @@ public class MatchProcessor extends AbstractProcessor
         }
     }
 
-    /**
-     * Set to true to enable logging to a local file during annotation processing. There's no normal
-     * channel for any debug messages and debugging annotation processors requires some special
-     * setup.
-     */
-    private static final boolean DEBUG = false;
-
     private PrintWriter log;
 
     /**
@@ -299,45 +292,12 @@ public class MatchProcessor extends AbstractProcessor
         return log;
     }
 
-    private void logMessage(String format, Object... args)
-    {
-        if (!DEBUG)
-        {
-            return;
-        }
-        PrintWriter bw = getLog();
-        if (bw != null)
-        {
-            bw.printf(format, args);
-            bw.flush();
-        }
-    }
-
-    private void logException(Throwable t)
-    {
-        if (!DEBUG)
-        {
-            return;
-        }
-        PrintWriter bw = getLog();
-        if (bw != null)
-        {
-            t.printStackTrace(bw);
-            bw.flush();
-        }
-    }
-
     /**
      * Bugs in an annotation processor can cause silent failure so try to report any exception
      * throws as errors.
      */
     private void reportExceptionThrow(Element element, Throwable t)
     {
-        if (element != null)
-        {
-            logMessage("throw for %s:\n", element);
-        }
-        logException(t);
         errorMessage(element, "Exception throw during processing: %s %s", t, Arrays.toString(Arrays.copyOf(t.getStackTrace(), 4)));
     }
 
@@ -389,7 +349,6 @@ public class MatchProcessor extends AbstractProcessor
             this.inputs = inputs;
             this.commutative = commutative;
             this.shareable = shareable;
-            assert !commutative || inputs.length == 2;
         }
     }
 
@@ -505,7 +464,6 @@ public class MatchProcessor extends AbstractProcessor
             }
             else
             {
-                assert inputs.length == 0;
                 variants.add(prefix + suffix);
             }
 
@@ -558,7 +516,6 @@ public class MatchProcessor extends AbstractProcessor
      */
     private String fullClassName(Element element)
     {
-        assert element.getKind() == ElementKind.CLASS || element.getKind() == ElementKind.INTERFACE : element;
         String pkg = findPackage(element);
         return ((TypeElement) element).getQualifiedName().toString().substring(pkg.length() + 1);
     }
@@ -766,7 +723,6 @@ public class MatchProcessor extends AbstractProcessor
         Element enclosing = element.getEnclosingElement();
         if (enclosing == null || enclosing.getKind() == ElementKind.PACKAGE)
         {
-            assert element.getKind() == ElementKind.CLASS || element.getKind() == ElementKind.INTERFACE;
             return (TypeElement) element;
         }
         return topDeclaringType(enclosing);
@@ -792,7 +748,6 @@ public class MatchProcessor extends AbstractProcessor
             return true;
         }
 
-        logMessage("Starting round %s\n", roundEnv);
         matchRulesTypeMirror = processingEnv.getElementUtils().getTypeElement(MatchRules.class.getCanonicalName()).asType();
         matchRuleTypeMirror = processingEnv.getElementUtils().getTypeElement(MatchRule.class.getCanonicalName()).asType();
 
@@ -804,12 +759,10 @@ public class MatchProcessor extends AbstractProcessor
         {
             for (Element element : roundEnv.getElementsAnnotatedWith(MatchableNode.class))
             {
-                logMessage("%s\n", element);
                 processMatchableNode(element);
             }
             for (Element element : roundEnv.getElementsAnnotatedWith(MatchableNodes.class))
             {
-                logMessage("%s\n", element);
                 processMatchableNode(element);
             }
             // Define a TypeDescriptor for the generic node but don't enter it into the nodeTypes
@@ -886,7 +839,6 @@ public class MatchProcessor extends AbstractProcessor
 
     private void processMatchableNode(Element element, TypeElement topDeclaringType, MatchableNode matchable, AnnotationMirror mirror) throws GraalError
     {
-        logMessage("processMatchableNode %s %s %s\n", topDeclaringType, element, matchable);
         String nodeClass;
         String nodePackage;
         TypeMirror nodeClassMirror = null;
@@ -917,9 +869,7 @@ public class MatchProcessor extends AbstractProcessor
             return;
         }
         nodePackage = findPackage(typeElement);
-        assert nodeClass.startsWith(nodePackage);
         nodeClass = nodeClass.substring(nodePackage.length() + 1);
-        assert nodeClass.endsWith("Node");
         String shortName = nodeClass.substring(0, nodeClass.length() - 4);
 
         Types typeUtils = processingEnv.getTypeUtils();
@@ -959,7 +909,6 @@ public class MatchProcessor extends AbstractProcessor
                 processedMatchRule.add(element);
 
                 // The annotation element type should ensure this is true.
-                assert element instanceof ExecutableElement;
 
                 findMatchableNodes(element);
 
@@ -1029,8 +978,6 @@ public class MatchProcessor extends AbstractProcessor
 
     private void processMethodMatchRule(ExecutableElement method, MatchRuleDescriptor info, MatchRule matchRule, AnnotationMirror mirror)
     {
-        logMessage("processMethodMatchRule %s %s\n", method, mirror);
-
         Types typeUtils = typeUtils();
 
         if (!method.getModifiers().contains(Modifier.PUBLIC))
@@ -1116,10 +1063,6 @@ public class MatchProcessor extends AbstractProcessor
                     originatingElementsList.add(enclosing);
                     declaringClass = enclosing.getSimpleName() + separator + declaringClass;
                     separator = ".";
-                }
-                else
-                {
-                    assert enclosing.getKind() == ElementKind.PACKAGE;
                 }
                 enclosing = enclosing.getEnclosingElement();
             }

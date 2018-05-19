@@ -9,9 +9,7 @@ import org.graalvm.collections.Equivalence;
 import graalvm.compiler.core.common.cfg.BlockMap;
 import graalvm.compiler.core.common.cfg.Loop;
 import graalvm.compiler.core.common.type.Stamp;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.debug.Indent;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeBitMap;
 import graalvm.compiler.graph.NodeMap;
@@ -90,7 +88,6 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
     protected final EconomicMap<Loop<Block>, LoopKillCache> loopLocationKillCache = EconomicMap.create(Equivalence.IDENTITY);
 
     protected boolean changed;
-    protected final DebugContext debug;
 
     public EffectsClosure(ScheduleResult schedule, ControlFlowGraph cfg)
     {
@@ -99,10 +96,9 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
         this.aliases = cfg.graph.createNodeMap();
         this.hasScalarReplacedInputs = cfg.graph.createNodeBitMap();
         this.blockEffects = new BlockMap<>(cfg);
-        this.debug = cfg.graph.getDebug();
         for (Block block : cfg.getBlocks())
         {
-            blockEffects.put(block, new GraphEffectList(debug));
+            blockEffects.put(block, new GraphEffectList());
         }
     }
 
@@ -186,16 +182,10 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
         {
             effects.apply(graph, obsoleteNodes, true);
         }
-        debug.dump(DebugContext.DETAILED_LEVEL, graph, "After applying effects");
-        assert VirtualUtil.assertNonReachable(graph, obsoleteNodes);
         for (Node node : obsoleteNodes)
         {
             if (node.isAlive() && node.hasNoUsages())
             {
-                if (node instanceof FixedWithNextNode)
-                {
-                    assert ((FixedWithNextNode) node).next() == null;
-                }
                 node.replaceAtUsages(null);
                 GraphUtil.killWithUnusedFloatingInputs(node);
             }
@@ -233,7 +223,6 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
             }
 
             OptionValues options = block.getBeginNode().getOptions();
-            VirtualUtil.trace(options, debug, "\nBlock: %s, preds: %s, succ: %s (", block, block.getPredecessors(), block.getSuccessors());
 
             // a lastFixedNode is needed in case we want to insert fixed nodes
             FixedWithNextNode lastFixedNode = null;
@@ -262,7 +251,6 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
                     break;
                 }
             }
-            VirtualUtil.trace(options, debug, ")\n    end state: %s\n", state);
         }
         return state;
     }
@@ -287,7 +275,6 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
     @Override
     protected BlockT merge(Block merge, List<BlockT> states)
     {
-        assert blockEffects.get(merge).isEmpty();
         MergeProcessor processor = createMergeProcessor(merge);
         doMergeWithoutDead(processor, states);
         blockEffects.get(merge).addAll(processor.mergeEffects);
@@ -296,7 +283,6 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
     }
 
     @Override
-    @SuppressWarnings("try")
     protected final List<BlockT> processLoop(Loop<Block> loop, BlockT initialState)
     {
         if (initialState.isDead())
@@ -340,38 +326,29 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
          */
         for (int iteration = 0; iteration < 10; iteration++)
         {
-            try (Indent i = debug.logAndIndent("================== Process Loop Effects Closure: block:%s begin node:%s", loop.getHeader(), loop.getHeader().getBeginNode()))
+            LoopInfo<BlockT> info = ReentrantBlockIterator.processLoop(this, loop, cloneState(lastMergedState));
+
+            List<BlockT> states = new ArrayList<>();
+            states.add(initialStateRemovedKilledLocations);
+            states.addAll(info.endStates);
+            doMergeWithoutDead(mergeProcessor, states);
+
+            if (mergeProcessor.newState.equivalentTo(lastMergedState))
             {
-                LoopInfo<BlockT> info = ReentrantBlockIterator.processLoop(this, loop, cloneState(lastMergedState));
+                blockEffects.get(loop.getHeader()).insertAll(mergeProcessor.mergeEffects, 0);
+                loopMergeEffects.put(loop, mergeProcessor.afterMergeEffects);
 
-                List<BlockT> states = new ArrayList<>();
-                states.add(initialStateRemovedKilledLocations);
-                states.addAll(info.endStates);
-                doMergeWithoutDead(mergeProcessor, states);
+                loopEntryStates.put((LoopBeginNode) loop.getHeader().getBeginNode(), loopEntryState);
 
-                debug.log("MergeProcessor New State: %s", mergeProcessor.newState);
-                debug.log("===== vs.");
-                debug.log("Last Merged State: %s", lastMergedState);
-
-                if (mergeProcessor.newState.equivalentTo(lastMergedState))
+                processKilledLoopLocations(loop, initialStateRemovedKilledLocations, mergeProcessor.newState);
+                return info.exitStates;
+            }
+            else
+            {
+                lastMergedState = mergeProcessor.newState;
+                for (Block block : loop.getBlocks())
                 {
-                    blockEffects.get(loop.getHeader()).insertAll(mergeProcessor.mergeEffects, 0);
-                    loopMergeEffects.put(loop, mergeProcessor.afterMergeEffects);
-
-                    assert info.exitStates.size() == loop.getExits().size();
-                    loopEntryStates.put((LoopBeginNode) loop.getHeader().getBeginNode(), loopEntryState);
-                    assert assertExitStatesNonEmpty(loop, info);
-
-                    processKilledLoopLocations(loop, initialStateRemovedKilledLocations, mergeProcessor.newState);
-                    return info.exitStates;
-                }
-                else
-                {
-                    lastMergedState = mergeProcessor.newState;
-                    for (Block block : loop.getBlocks())
-                    {
-                        blockEffects.get(block).clear();
-                    }
+                    blockEffects.get(block).clear();
                 }
             }
         }
@@ -439,15 +416,6 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
         }
     }
 
-    private boolean assertExitStatesNonEmpty(Loop<Block> loop, LoopInfo<BlockT> info)
-    {
-        for (int i = 0; i < loop.getExits().size(); i++)
-        {
-            assert info.exitStates.get(i) != null : "no loop exit state at " + loop.getExits().get(i) + " / " + loop.getHeader();
-        }
-        return true;
-    }
-
     protected abstract void processLoopExit(LoopExitNode exitNode, BlockT initialState, BlockT exitState, GraphEffectList effects);
 
     protected abstract MergeProcessor createMergeProcessor(Block merge);
@@ -474,8 +442,8 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
         {
             this.mergeBlock = mergeBlock;
             this.merge = (AbstractMergeNode) mergeBlock.getBeginNode();
-            this.mergeEffects = new GraphEffectList(debug);
-            this.afterMergeEffects = new GraphEffectList(debug);
+            this.mergeEffects = new GraphEffectList();
+            this.afterMergeEffects = new GraphEffectList();
         }
 
         /**
@@ -534,7 +502,6 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
 
     public void addScalarAlias(ValueNode node, ValueNode alias)
     {
-        assert !(alias instanceof VirtualObjectNode);
         aliases.set(node, alias);
         for (Node usage : node.usages())
         {
@@ -552,7 +519,6 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
 
     public ValueNode getScalarAlias(ValueNode node)
     {
-        assert !(node instanceof VirtualObjectNode);
         if (node == null || !node.isAlive() || aliases.isNew(node))
         {
             return node;

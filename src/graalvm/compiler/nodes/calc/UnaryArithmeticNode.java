@@ -46,7 +46,6 @@ public abstract class UnaryArithmeticNode<OP> extends UnaryNode implements Arith
     @Override
     public Stamp foldStamp(Stamp newStamp)
     {
-        assert newStamp.isCompatible(getValue().stamp(NodeView.DEFAULT));
         return getOp(getValue()).foldStamp(newStamp);
     }
 

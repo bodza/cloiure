@@ -74,7 +74,6 @@ public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke
     @Override
     protected void afterClone(Node other)
     {
-        updateInliningLogAfterClone(other);
     }
 
     @Override
@@ -137,17 +136,6 @@ public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke
     }
 
     @Override
-    public Map<Object, Object> getDebugProperties(Map<Object, Object> map)
-    {
-        Map<Object, Object> debugProperties = super.getDebugProperties(map);
-        if (callTarget != null)
-        {
-            debugProperties.put("targetMethod", callTarget.targetName());
-        }
-        return debugProperties;
-    }
-
-    @Override
     public LocationIdentity getLocationIdentity()
     {
         return LocationIdentity.any();
@@ -191,7 +179,6 @@ public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke
     @Override
     public void intrinsify(Node node)
     {
-        assert !(node instanceof ValueNode) || node.isAllowedUsageType(InputType.Value) == isAllowedUsageType(InputType.Value) : "replacing " + this + " with " + node;
         CallTargetNode call = callTarget;
         FrameState currentStateAfter = stateAfter();
         if (node instanceof StateSplit)

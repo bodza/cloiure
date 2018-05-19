@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import graalvm.compiler.code.CompilationResult;
-import graalvm.compiler.debug.DebugContext;
-import graalvm.compiler.debug.DebugOptions;
 import graalvm.compiler.serviceprovider.GraalServices;
 
 import jdk.vm.ci.code.CompiledCode;
@@ -37,17 +35,6 @@ public class HotSpotGraalVMEventListener implements HotSpotVMEventListener
     @Override
     public void notifyInstall(HotSpotCodeCacheProvider codeCache, InstalledCode installedCode, CompiledCode compiledCode)
     {
-        DebugContext debug = DebugContext.forCurrentThread();
-        if (debug.isDumpEnabled(DebugContext.BASIC_LEVEL))
-        {
-            CompilationResult compResult = debug.contextLookup(CompilationResult.class);
-            assert compResult != null : "can't dump installed code properly without CompilationResult";
-            debug.dump(DebugContext.BASIC_LEVEL, installedCode, "After code installation");
-        }
-        if (debug.isLogEnabled())
-        {
-            debug.log("%s", codeCache.disassemble(installedCode));
-        }
         for (HotSpotCodeCacheListener listener : listeners)
         {
             listener.notifyInstall(codeCache, installedCode, compiledCode);
@@ -58,9 +45,5 @@ public class HotSpotGraalVMEventListener implements HotSpotVMEventListener
     public void notifyBootstrapFinished()
     {
         runtime.notifyBootstrapFinished();
-        if (DebugOptions.ClearMetricsAfterBootstrap.getValue(runtime.getOptions()))
-        {
-            runtime.clearMetrics();
-        }
     }
 }

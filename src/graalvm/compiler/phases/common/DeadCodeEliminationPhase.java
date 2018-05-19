@@ -1,7 +1,5 @@
 package graalvm.compiler.phases.common;
 
-import graalvm.compiler.debug.CounterKey;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeFlood;
 import graalvm.compiler.nodes.AbstractEndNode;
@@ -19,8 +17,6 @@ public class DeadCodeEliminationPhase extends Phase
         @Option(help = "Disable optional dead code eliminations", type = OptionType.Debug)
         public static final OptionKey<Boolean> ReduceDCE = new OptionKey<>(true);
     }
-
-    private static final CounterKey counterNodesRemoved = DebugContext.counter("NodesRemoved");
 
     public enum Optionality
     {
@@ -82,7 +78,6 @@ public class DeadCodeEliminationPhase extends Phase
         else
         {
             // Some nodes are not marked alive and therefore dead => proceed.
-            assert totalNodeCount > totalMarkedCount;
         }
 
         deleteNodes(flood, graph);
@@ -95,7 +90,6 @@ public class DeadCodeEliminationPhase extends Phase
             @Override
             public Node apply(Node n, Node succOrInput)
             {
-                assert succOrInput.isAlive() : "dead successor or input " + succOrInput + " in " + n;
                 flood.add(succOrInput);
                 return succOrInput;
             }
@@ -131,14 +125,12 @@ public class DeadCodeEliminationPhase extends Phase
             }
         };
 
-        DebugContext debug = graph.getDebug();
         for (Node node : graph.getNodes())
         {
             if (!flood.isMarked(node))
             {
                 node.markDeleted();
                 node.applyInputs(consumer);
-                counterNodesRemoved.increment(debug);
             }
         }
     }

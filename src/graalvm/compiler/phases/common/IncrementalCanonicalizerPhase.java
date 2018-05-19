@@ -38,7 +38,7 @@ public class IncrementalCanonicalizerPhase<C extends PhaseContext> extends Phase
 
         if (!listener.getNodes().isEmpty())
         {
-            canonicalizer.applyIncremental(graph, context, listener.getNodes(), null, false);
+            canonicalizer.applyIncremental(graph, context, listener.getNodes(), null);
         }
     }
 }

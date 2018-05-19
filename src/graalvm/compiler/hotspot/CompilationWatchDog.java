@@ -98,14 +98,12 @@ class CompilationWatchDog extends Thread implements AutoCloseable
 
     public void startCompilation(ResolvedJavaMethod method, int id)
     {
-        trace("start %s", fmt(method));
         this.currentMethod = method;
         this.currentId = id;
     }
 
     public void stopCompilation()
     {
-        trace(" stop %s", fmt(currentMethod));
         this.currentMethod = null;
     }
 
@@ -147,19 +145,6 @@ class CompilationWatchDog extends Thread implements AutoCloseable
         return true;
     }
 
-    /**
-     * Set to true to debug the watch dog.
-     */
-    private static final boolean DEBUG = Boolean.getBoolean("debug.graal.CompilationWatchDog");
-
-    private void trace(String format, Object... args)
-    {
-        if (DEBUG)
-        {
-            TTY.println(this + ": " + String.format(format, args));
-        }
-    }
-
     private static long ms(double seconds)
     {
         return (long) seconds * 1000;
@@ -181,7 +166,6 @@ class CompilationWatchDog extends Thread implements AutoCloseable
     {
         try
         {
-            trace("Started%n", this);
             while (true)
             {
                 // get a copy of the last set method
@@ -209,20 +193,16 @@ class CompilationWatchDog extends Thread implements AutoCloseable
                                     // we looked at the same compilation for a certain time
                                     // so now we start to collect stack traces
                                     tick(WatchDogState.WATCHING_WITH_STACK_INSPECTION);
-                                    trace("changes mode to watching with stack traces");
                                 }
                                 else
                                 {
-                                    // we still compile the same method but won't collect traces
-                                    // yet
-                                    trace("watching without stack traces [%.2f seconds]", secs(elapsed));
+                                    // we still compile the same method but won't collect traces yet
                                 }
                                 elapsed += SPIN_TIMEOUT_MS;
                             }
                             else
                             {
-                                // compilation finished before we exceeded initial watching
-                                // period
+                                // compilation finished before we exceeded initial watching period
                                 reset();
                             }
                             break;
@@ -231,11 +211,9 @@ class CompilationWatchDog extends Thread implements AutoCloseable
                             {
                                 if (elapsed >= startDelayMilliseconds + (traceIntervals * stackTraceIntervalMilliseconds))
                                 {
-                                    trace("took a stack trace");
                                     boolean newStackTrace = recordStackTrace(compilerThread.getStackTrace());
                                     if (!newStackTrace)
                                     {
-                                        trace("%d identical stack traces in a row", numberOfIdenticalStackTraces);
                                         numberOfIdenticalStackTraces = 0;
                                     }
                                     numberOfIdenticalStackTraces++;
@@ -259,7 +237,6 @@ class CompilationWatchDog extends Thread implements AutoCloseable
                                 else
                                 {
                                     // we still watch the compilation in the same trace interval
-                                    trace("watching with stack traces [%.2f seconds]", secs(elapsed));
                                 }
                                 elapsed += SPIN_TIMEOUT_MS;
                             }

@@ -74,7 +74,6 @@ public final class GraphSpeculationLog implements SpeculationLog
         if (maySpeculate(reason))
         {
             JavaConstant speculation = speculations.get(reason);
-            assert speculation != null;
             return speculation;
         }
         throw new IllegalArgumentException("Cannot make speculation with reason " + reason + " as it is known to fail");

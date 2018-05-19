@@ -191,7 +191,6 @@ public abstract class LIRInstruction
     public LIRInstruction(LIRInstructionClass<? extends LIRInstruction> c)
     {
         instructionClass = c;
-        assert c.getClazz() == this.getClass();
         id = -1;
     }
 
@@ -412,7 +411,6 @@ public abstract class LIRInstruction
             {
                 extraTemps++;
             }
-            assert !isVirtualStackSlot(p) : "only real stack slots in calling convention";
         }
         if (extraTemps != 0)
         {
@@ -428,10 +426,6 @@ public abstract class LIRInstruction
             return newTemporaries;
         }
         return temporaries;
-    }
-
-    public void verify()
-    {
     }
 
     /**

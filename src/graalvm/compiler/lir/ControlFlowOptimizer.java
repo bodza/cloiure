@@ -1,12 +1,8 @@
 package graalvm.compiler.lir;
 
-import static graalvm.compiler.lir.LIR.verifyBlocks;
-
 import java.util.ArrayList;
 
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
-import graalvm.compiler.debug.CounterKey;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.phases.PostAllocationOptimizationPhase;
 
@@ -36,8 +32,6 @@ public final class ControlFlowOptimizer extends PostAllocationOptimizationPhase
             this.lir = lir;
         }
 
-        private static final CounterKey BLOCKS_DELETED = DebugContext.counter("BlocksDeleted");
-
         /**
          * Checks whether a block can be deleted. Only blocks with exactly one successor and an
          * unconditional branch to this successor are eligable.
@@ -54,11 +48,6 @@ public final class ControlFlowOptimizer extends PostAllocationOptimizationPhase
 
             ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
 
-            assert instructions.size() >= 2 : "block must have label and branch";
-            assert instructions.get(0) instanceof StandardOp.LabelOp : "first instruction must always be a label";
-            assert instructions.get(instructions.size() - 1) instanceof StandardOp.JumpOp : "last instruction must always be a branch";
-            assert ((StandardOp.JumpOp) instructions.get(instructions.size() - 1)).destination().label() == ((StandardOp.LabelOp) lir.getLIRforBlock(block.getSuccessors()[0]).get(0)).getLabel() : "branch target must be the successor";
-
             // Block must have exactly one successor.
             return instructions.size() == 2 && !instructions.get(instructions.size() - 1).hasState() && !block.isExceptionEntry();
         }
@@ -69,7 +58,6 @@ public final class ControlFlowOptimizer extends PostAllocationOptimizationPhase
             {
                 block.setAlign(true);
                 ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
-                assert instructions.get(0) instanceof StandardOp.LabelOp : "first instruction must always be a label";
                 StandardOp.LabelOp label = (StandardOp.LabelOp) instructions.get(0);
                 instructions.set(0, new StandardOp.LabelOp(label.getLabel(), true));
             }
@@ -77,7 +65,6 @@ public final class ControlFlowOptimizer extends PostAllocationOptimizationPhase
 
         private void deleteEmptyBlocks(AbstractBlockBase<?>[] blocks)
         {
-            assert verifyBlocks(lir, blocks);
             for (int i = 0; i < blocks.length; i++)
             {
                 AbstractBlockBase<?> block = blocks[i];
@@ -91,11 +78,9 @@ public final class ControlFlowOptimizer extends PostAllocationOptimizationPhase
                         alignBlock(other);
                     }
 
-                    BLOCKS_DELETED.increment(lir.getDebug());
                     blocks[i] = null;
                 }
             }
-            assert verifyBlocks(lir, blocks);
         }
     }
 }

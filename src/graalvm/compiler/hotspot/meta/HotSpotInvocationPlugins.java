@@ -6,7 +6,6 @@ import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.iterators.NodeIterable;
 import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
-import graalvm.compiler.hotspot.phases.AheadOfTimeVerificationPhase;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderContext;
@@ -41,52 +40,10 @@ final class HotSpotInvocationPlugins extends InvocationPlugins
         {
             if (name.equals("bitCount"))
             {
-                assert declaringClass.equals(Integer.class) || declaringClass.equals(Long.class);
                 return;
             }
         }
         super.register(plugin, declaringClass, name, argumentTypes);
-    }
-
-    @Override
-    public void checkNewNodes(GraphBuilderContext b, InvocationPlugin plugin, NodeIterable<Node> newNodes)
-    {
-        for (Node node : newNodes)
-        {
-            if (node instanceof MacroNode)
-            {
-                // MacroNode based plugins can only be used for inlining since they
-                // require a valid bci should they need to replace themselves with
-                // an InvokeNode during lowering.
-                assert plugin.inlineOnly() : String.format("plugin that creates a %s (%s) must return true for inlineOnly(): %s", MacroNode.class.getSimpleName(), node, plugin);
-            }
-        }
-        if (GraalOptions.ImmutableCode.getValue(b.getOptions()))
-        {
-            for (Node node : newNodes)
-            {
-                if (node.hasUsages() && node instanceof ConstantNode)
-                {
-                    ConstantNode c = (ConstantNode) node;
-                    if (c.getStackKind() == JavaKind.Object && AheadOfTimeVerificationPhase.isIllegalObjectConstant(c))
-                    {
-                        if (isClass(c))
-                        {
-                            // This will be handled later by LoadJavaMirrorWithKlassPhase
-                        }
-                        else
-                        {
-                            // Tolerate uses in unused FrameStates
-                            if (node.usages().filter((n) -> !(n instanceof FrameState) || n.hasUsages()).isNotEmpty())
-                            {
-                                throw new AssertionError("illegal constant node in AOT: " + node);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        super.checkNewNodes(b, plugin, newNodes);
     }
 
     private static boolean isClass(ConstantNode node)

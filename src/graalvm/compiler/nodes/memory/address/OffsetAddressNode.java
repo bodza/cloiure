@@ -36,8 +36,6 @@ public class OffsetAddressNode extends AddressNode implements Canonicalizable
         super(TYPE);
         this.base = base;
         this.offset = offset;
-
-        assert base != null && (base.stamp(NodeView.DEFAULT) instanceof AbstractPointerStamp || IntegerStamp.getBits(base.stamp(NodeView.DEFAULT)) == 64) && offset != null && IntegerStamp.getBits(offset.stamp(NodeView.DEFAULT)) == 64 : "both values must have 64 bits";
     }
 
     public static OffsetAddressNode create(ValueNode base)
@@ -55,7 +53,6 @@ public class OffsetAddressNode extends AddressNode implements Canonicalizable
     {
         updateUsages(this.base, base);
         this.base = base;
-        assert base != null && (base.stamp(NodeView.DEFAULT) instanceof AbstractPointerStamp || IntegerStamp.getBits(base.stamp(NodeView.DEFAULT)) == 64);
     }
 
     public ValueNode getOffset()
@@ -67,7 +64,6 @@ public class OffsetAddressNode extends AddressNode implements Canonicalizable
     {
         updateUsages(this.offset, offset);
         this.offset = offset;
-        assert offset != null && IntegerStamp.getBits(offset.stamp(NodeView.DEFAULT)) == 64;
     }
 
     @Override

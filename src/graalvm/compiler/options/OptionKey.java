@@ -23,7 +23,6 @@ public class OptionKey<T>
      */
     public final void setDescriptor(OptionDescriptor descriptor)
     {
-        assert this.descriptor == null : "Overwriting existing descriptor";
         this.descriptor = descriptor;
     }
 
@@ -124,7 +123,6 @@ public class OptionKey<T>
      */
     public T getValue(OptionValues values)
     {
-        assert checkDescriptorExists();
         return values.get(this);
     }
 

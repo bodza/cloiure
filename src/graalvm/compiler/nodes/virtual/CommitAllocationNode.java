@@ -77,21 +77,6 @@ public final class CommitAllocationNode extends FixedWithNextNode implements Vir
     }
 
     @Override
-    public boolean verify()
-    {
-        assertTrue(virtualObjects.size() + 1 == lockIndexes.size(), "lockIndexes size doesn't match %s, %s", virtualObjects, lockIndexes);
-        assertTrue(lockIndexes.get(lockIndexes.size() - 1) == locks.size(), "locks size doesn't match %s,%s", lockIndexes, locks);
-        int valueCount = 0;
-        for (VirtualObjectNode virtual : virtualObjects)
-        {
-            valueCount += virtual.entryCount();
-        }
-        assertTrue(values.size() == valueCount, "values size doesn't match");
-        assertTrue(virtualObjects.size() == ensureVirtual.size(), "ensureVirtual size doesn't match");
-        return super.verify();
-    }
-
-    @Override
     public void lower(LoweringTool tool)
     {
         for (int i = 0; i < virtualObjects.size(); i++)
@@ -137,37 +122,6 @@ public final class CommitAllocationNode extends FixedWithNextNode implements Vir
     }
 
     @Override
-    public Map<Object, Object> getDebugProperties(Map<Object, Object> map)
-    {
-        Map<Object, Object> properties = super.getDebugProperties(map);
-        int valuePos = 0;
-        for (int objIndex = 0; objIndex < virtualObjects.size(); objIndex++)
-        {
-            VirtualObjectNode virtual = virtualObjects.get(objIndex);
-            if (virtual == null)
-            {
-                // Could occur in invalid graphs
-                properties.put("object(" + objIndex + ")", "null");
-                continue;
-            }
-            StringBuilder s = new StringBuilder();
-            s.append(virtual.type().toJavaName(false)).append("[");
-            for (int i = 0; i < virtual.entryCount(); i++)
-            {
-                ValueNode value = values.get(valuePos++);
-                s.append(i == 0 ? "" : ",").append(value == null ? "_" : value.toString(Verbosity.Id));
-            }
-            s.append("]");
-            if (!getLocks(objIndex).isEmpty())
-            {
-                s.append(" locked(").append(getLocks(objIndex)).append(")");
-            }
-            properties.put("object(" + virtual.toString(Verbosity.Id) + ")", s.toString());
-        }
-        return properties;
-    }
-
-    @Override
     public void simplify(SimplifierTool tool)
     {
         boolean[] used = new boolean[virtualObjects.size()];
@@ -175,7 +129,6 @@ public final class CommitAllocationNode extends FixedWithNextNode implements Vir
         for (AllocatedObjectNode addObject : usages().filter(AllocatedObjectNode.class))
         {
             int index = virtualObjects.indexOf(addObject.getVirtualObject());
-            assert !used[index];
             used[index] = true;
             usedCount++;
         }

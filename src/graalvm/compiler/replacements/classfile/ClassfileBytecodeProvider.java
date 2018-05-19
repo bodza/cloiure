@@ -85,7 +85,6 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
      */
     private synchronized Classfile getClassfile(Class<?> c)
     {
-        assert !c.isPrimitive() && !c.isArray() : c;
         Classfile classfile = classfiles.get(c);
         if (classfile == null)
         {

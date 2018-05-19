@@ -67,7 +67,6 @@ final class RegStackValueSet extends ValueSet<RegStackValueSet>
         else if (isStackSlot(v))
         {
             int index = frameMap.offsetForStackSlot(asStackSlot(v));
-            assert index >= 0;
             if (index % 4 == 0)
             {
                 stack.put(index / 4, v);
@@ -113,7 +112,6 @@ final class RegStackValueSet extends ValueSet<RegStackValueSet>
         else if (isStackSlot(v))
         {
             int index = frameMap.offsetForStackSlot(asStackSlot(v));
-            assert index >= 0;
             if (index % 4 == 0)
             {
                 stack.put(index / 4, null);

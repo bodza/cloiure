@@ -88,7 +88,6 @@ public class BoxNode extends FixedWithNextNode implements VirtualizableAllocatio
         ValueNode alias = tool.getAlias(getValue());
 
         VirtualBoxingNode newVirtual = createVirtualBoxingNode();
-        assert newVirtual.getFields().length == 1;
 
         tool.createVirtualObject(newVirtual, new ValueNode[]{alias}, Collections.<MonitorIdNode> emptyList(), false);
         tool.replaceWithVirtual(newVirtual);

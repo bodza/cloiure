@@ -150,7 +150,6 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
         InvokeNode invoke = tryResolveTargetInvoke(adder, methodHandleAccess, intrinsicMethod, targetMethod, bci, returnStamp, argumentsArray);
         if (invoke != null)
         {
-            assert invoke.graph() == null;
             invoke = graph().addOrUniqueWithInputs(invoke);
             invoke.setStateAfter(stateAfter());
             FixedNode currentNext = next();
@@ -292,7 +291,6 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
                 maybeCastArgument(adder, arguments, receiverSkip + index, parameterType);
             }
             InvokeNode invoke = createTargetInvokeNode(assumptions, intrinsicMethod, realTarget, original, bci, returnStamp, arguments);
-            assert invoke != null : "graph has been modified so this must result an invoke";
             return invoke;
         }
         return null;
@@ -324,7 +322,6 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
                 if (argumentType == null || (argumentType.isAssignableFrom(targetType.getType()) && !argumentType.equals(targetType.getType())))
                 {
                     LogicNode inst = InstanceOfNode.createAllowNull(targetType, argument, null, null);
-                    assert !inst.isAlive();
                     if (!inst.isTautology())
                     {
                         inst = adder.add(inst);

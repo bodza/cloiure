@@ -2,7 +2,6 @@ package graalvm.compiler.graph;
 
 import static graalvm.compiler.graph.Edges.Type.Inputs;
 import static graalvm.compiler.graph.Edges.Type.Successors;
-import static graalvm.compiler.graph.Graph.isModificationCountsEnabled;
 import graalvm.util.UnsafeAccess;
 
 import java.lang.annotation.ElementType;
@@ -23,7 +22,6 @@ import graalvm.compiler.core.common.Fields;
 import graalvm.compiler.core.common.type.AbstractPointerStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.debug.DebugCloseable;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.graph.Graph.NodeEventListener;
 import graalvm.compiler.graph.Graph.Options;
 import graalvm.compiler.graph.iterators.NodeIterable;
@@ -61,8 +59,6 @@ import graalvm.compiler.options.OptionValues;
 public abstract class Node implements Cloneable, Formattable, NodeInterface
 {
     public static final NodeClass<?> TYPE = null;
-
-    public static final boolean TRACK_CREATION_POSITION = Boolean.getBoolean("debug.graal.TrackNodeCreationPosition");
 
     static final int DELETED_ID_START = -1000000000;
     static final int INITIAL_ID = -1;
@@ -215,49 +211,6 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
     public static final int NODE_LIST = -2;
     public static final int NOT_ITERABLE = -1;
 
-    static class NodeStackTrace
-    {
-        final StackTraceElement[] stackTrace;
-
-        NodeStackTrace()
-        {
-            this.stackTrace = new Throwable().getStackTrace();
-        }
-
-        private String getString(String label)
-        {
-            StringBuilder sb = new StringBuilder();
-            if (label != null)
-            {
-                sb.append(label).append(": ");
-            }
-            for (StackTraceElement ste : stackTrace)
-            {
-                sb.append("at ").append(ste.toString()).append('\n');
-            }
-            return sb.toString();
-        }
-
-        String getStrackTraceString()
-        {
-            return getString(null);
-        }
-
-        @Override
-        public String toString()
-        {
-            return getString(getClass().getSimpleName());
-        }
-    }
-
-    static class NodeCreationStackTrace extends NodeStackTrace
-    {
-    }
-
-    public static class NodeInsertionStackTrace extends NodeStackTrace
-    {
-    }
-
     public Node(NodeClass<? extends Node> c)
     {
         init(c);
@@ -265,14 +218,9 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
 
     final void init(NodeClass<? extends Node> c)
     {
-        assert c.getJavaClass() == this.getClass();
         this.nodeClass = c;
         id = INITIAL_ID;
         extraUsages = NO_NODES;
-        if (TRACK_CREATION_POSITION)
-        {
-            setCreationPosition(new NodeCreationStackTrace());
-        }
     }
 
     final int id()
@@ -300,14 +248,6 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
     public final OptionValues getOptions()
     {
         return graph == null ? null : graph.getOptions();
-    }
-
-    /**
-     * Gets the debug context associated with this node's graph.
-     */
-    public final DebugContext getDebug()
-    {
-        return graph.getDebug();
     }
 
     /**
@@ -365,7 +305,6 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
      */
     public NodeIterable<Node> successors()
     {
-        assert !this.isDeleted() : this;
         return nodeClass.getSuccessorIterable(this);
     }
 
@@ -443,7 +382,6 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
      */
     void addUsage(Node node)
     {
-        incUsageModCount();
         if (usage0 == null)
         {
             usage0 = node;
@@ -481,7 +419,6 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
         }
         else
         {
-            assert destIndex == 0;
             movUsageFromEndToIndexZero();
         }
     }
@@ -523,7 +460,6 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
         }
         else
         {
-            assert usage1 != null;
             usage1 = null;
         }
     }
@@ -536,11 +472,9 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
      */
     public boolean removeUsage(Node node)
     {
-        assert node != null;
         // For large graphs, usage removal is performance critical.
         // Furthermore, it is critical that this method maintains the invariant that the usage list
         // has no null element preceding a non-null element.
-        incUsageModCount();
         if (usage0 == node)
         {
             movUsageFromEndToIndexZero();
@@ -569,36 +503,16 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
 
     public final int modCount()
     {
-        if (isModificationCountsEnabled() && graph != null)
-        {
-            return graph.modCount(this);
-        }
         return 0;
     }
 
     final void incModCount()
     {
-        if (isModificationCountsEnabled() && graph != null)
-        {
-            graph.incModCount(this);
-        }
     }
 
     final int usageModCount()
     {
-        if (isModificationCountsEnabled() && graph != null)
-        {
-            return graph.usageModCount(this);
-        }
         return 0;
-    }
-
-    final void incUsageModCount()
-    {
-        if (isModificationCountsEnabled() && graph != null)
-        {
-            graph.incUsageModCount(this);
-        }
     }
 
     public final boolean isDeleted()
@@ -623,13 +537,11 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
      */
     protected void updateUsages(Node oldInput, Node newInput)
     {
-        assert isAlive() && (newInput == null || newInput.isAlive()) : "adding " + newInput + " to " + this + " instead of " + oldInput;
         if (oldInput != newInput)
         {
             if (oldInput != null)
             {
                 boolean result = removeThisFromUsages(oldInput);
-                assert assertTrue(result, "not found in usages, old input: %s", oldInput);
             }
             maybeNotifyInputChanged(this);
             if (newInput != null)
@@ -655,18 +567,14 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
      */
     protected void updatePredecessor(Node oldSuccessor, Node newSuccessor)
     {
-        assert isAlive() && (newSuccessor == null || newSuccessor.isAlive()) || newSuccessor == null && !isAlive() : "adding " + newSuccessor + " to " + this + " instead of " + oldSuccessor;
-        assert graph == null || !graph.isFrozen();
         if (oldSuccessor != newSuccessor)
         {
             if (oldSuccessor != null)
             {
-                assert assertTrue(newSuccessor == null || oldSuccessor.predecessor == this, "wrong predecessor in old successor (%s): %s, should be %s", oldSuccessor, oldSuccessor.predecessor, this);
                 oldSuccessor.predecessor = null;
             }
             if (newSuccessor != null)
             {
-                assert assertTrue(newSuccessor.predecessor == null, "unexpected non-null predecessor in new successor (%s): %s, this=%s", newSuccessor, newSuccessor.predecessor, this);
                 newSuccessor.predecessor = this;
             }
         }
@@ -674,7 +582,6 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
 
     void initialize(Graph newGraph)
     {
-        assert assertTrue(id == INITIAL_ID, "unexpected id: %d", id);
         this.graph = newGraph;
         newGraph.register(this);
         NodeClass<? extends Node> nc = nodeClass;
@@ -690,7 +597,6 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
 
     private <T> T getNodeInfo(Class<T> clazz)
     {
-        assert clazz != Object[].class;
         if (annotation == null)
         {
             return null;
@@ -715,7 +621,6 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
 
     private <T> void setNodeInfo(Class<T> clazz, T value)
     {
-        assert clazz != Object[].class;
         if (annotation == null || clazz.isInstance(annotation))
         {
             // Replace the current value
@@ -767,26 +672,6 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
     public void clearNodeSourcePosition()
     {
         setNodeInfo(NodeSourcePosition.class, null);
-    }
-
-    public NodeCreationStackTrace getCreationPosition()
-    {
-        return getNodeInfo(NodeCreationStackTrace.class);
-    }
-
-    public void setCreationPosition(NodeCreationStackTrace trace)
-    {
-        setNodeInfo(NodeCreationStackTrace.class, trace);
-    }
-
-    public NodeInsertionStackTrace getInsertionPosition()
-    {
-        return getNodeInfo(NodeInsertionStackTrace.class);
-    }
-
-    public void setInsertionPosition(NodeInsertionStackTrace trace)
-    {
-        setNodeInfo(NodeInsertionStackTrace.class, trace);
     }
 
     /**
@@ -907,7 +792,6 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
     private void replaceAtUsage(Node other, Node toBeDeleted, Node usage)
     {
         boolean result = usage.getNodeClass().replaceFirstInput(usage, this, other);
-        assert assertTrue(result, "not found in inputs, usage: %s", usage);
         /*
          * Don't notify for nodes which are about to be deleted.
          */
@@ -985,7 +869,6 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
     {
         if (graph != null)
         {
-            assert !graph.isFrozen();
             NodeEventListener listener = graph.nodeEventListener;
             if (listener != null)
             {
@@ -998,7 +881,6 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
     {
         if (graph != null)
         {
-            assert !graph.isFrozen();
             NodeEventListener listener = graph.nodeEventListener;
             if (listener != null && node.isAlive())
             {
@@ -1053,7 +935,6 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
 
     public void clearInputs()
     {
-        assert assertFalse(isDeleted(), "cannot clear inputs of deleted node");
         getNodeClass().unregisterAtInputsAsUsage(this);
     }
 
@@ -1064,7 +945,6 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
 
     public void clearSuccessors()
     {
-        assert assertFalse(isDeleted(), "cannot clear successors of deleted node");
         getNodeClass().unregisterAtSuccessorsAsPredecessor(this);
     }
 
@@ -1082,7 +962,6 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
      */
     public void safeDelete()
     {
-        assert checkDeletion();
         this.clearInputs();
         this.clearSuccessors();
         markDeleted();
@@ -1092,7 +971,6 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
     {
         graph.unregister(this);
         id = DELETED_ID_START - id;
-        assert isDeleted();
     }
 
     public final Node copyWithInputs()
@@ -1214,83 +1092,8 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
     {
     }
 
-    protected boolean verifyInputs()
-    {
-        for (Position pos : inputPositions())
-        {
-            Node input = pos.get(this);
-            if (input == null)
-            {
-                assertTrue(pos.isInputOptional(), "non-optional input %s cannot be null in %s (fix nullness or use @OptionalInput)", pos, this);
-            }
-            else
-            {
-                assertFalse(input.isDeleted(), "input was deleted %s", input);
-                assertTrue(input.isAlive(), "input is not alive yet, i.e., it was not yet added to the graph");
-                assertTrue(pos.getInputType() == InputType.Unchecked || input.isAllowedUsageType(pos.getInputType()), "invalid usage type %s %s", input, pos.getInputType());
-            }
-        }
-        return true;
-    }
-
-    public boolean verify()
-    {
-        assertTrue(isAlive(), "cannot verify inactive nodes (id=%d)", id);
-        assertTrue(graph() != null, "null graph");
-        verifyInputs();
-        if (Options.VerifyGraalGraphEdges.getValue(getOptions()))
-        {
-            verifyEdges();
-        }
-        return true;
-    }
-
     public boolean verifySourcePosition()
     {
-        return true;
-    }
-
-    /**
-     * Perform expensive verification of inputs, usages, predecessors and successors.
-     *
-     * @return true
-     */
-    public boolean verifyEdges()
-    {
-        for (Node input : inputs())
-        {
-            assertTrue(input == null || input.usages().contains(this), "missing usage of %s in input %s", this, input);
-        }
-
-        for (Node successor : successors())
-        {
-            assertTrue(successor.predecessor() == this, "missing predecessor in %s (actual: %s)", successor, successor.predecessor());
-            assertTrue(successor.graph() == graph(), "mismatching graph in successor %s", successor);
-        }
-        for (Node usage : usages())
-        {
-            assertFalse(usage.isDeleted(), "usage %s must never be deleted", usage);
-            assertTrue(usage.inputs().contains(this), "missing input in usage %s", usage);
-            boolean foundThis = false;
-            for (Position pos : usage.inputPositions())
-            {
-                if (pos.get(usage) == this)
-                {
-                    foundThis = true;
-                    if (pos.getInputType() != InputType.Unchecked)
-                    {
-                        assertTrue(isAllowedUsageType(pos.getInputType()), "invalid input of type %s from %s to %s (%s)", pos.getInputType(), usage, this, pos.getName());
-                    }
-                }
-            }
-            assertTrue(foundThis, "missing input in usage %s", usage);
-        }
-
-        if (predecessor != null)
-        {
-            assertFalse(predecessor.isDeleted(), "predecessor %s must never be deleted", predecessor);
-            assertTrue(predecessor.successors().contains(this), "missing successor in predecessor %s", predecessor);
-        }
         return true;
     }
 
@@ -1353,7 +1156,6 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
     @Override
     public final int hashCode()
     {
-        assert !this.isUnregistered() : "node not yet constructed";
         if (this.isDeleted())
         {
             return -id + DELETED_ID_START;
@@ -1365,47 +1167,6 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
      * Do not overwrite the equality test of a node in subclasses. Equality tests must rely solely
      * on identity.
      */
-
-    /**
-     * Provides a {@link Map} of properties of this node for use in debugging (e.g., to view in the
-     * ideal graph visualizer).
-     */
-    public final Map<Object, Object> getDebugProperties()
-    {
-        return getDebugProperties(new HashMap<>());
-    }
-
-    /**
-     * Fills a {@link Map} with properties of this node for use in debugging (e.g., to view in the
-     * ideal graph visualizer). Subclasses overriding this method should also fill the map using
-     * their superclass.
-     *
-     * @param map
-     */
-    public Map<Object, Object> getDebugProperties(Map<Object, Object> map)
-    {
-        Fields properties = getNodeClass().getData();
-        for (int i = 0; i < properties.getCount(); i++)
-        {
-            map.put(properties.getName(i), properties.get(this, i));
-        }
-        NodeSourcePosition pos = getNodeSourcePosition();
-        if (pos != null)
-        {
-            map.put("nodeSourcePosition", pos);
-        }
-        NodeCreationStackTrace creation = getCreationPosition();
-        if (creation != null)
-        {
-            map.put("nodeCreationPosition", creation.getStrackTraceString());
-        }
-        NodeInsertionStackTrace insertion = getInsertionPosition();
-        if (insertion != null)
-        {
-            map.put("nodeInsertionPosition", insertion.getStrackTraceString());
-        }
-        return map;
-    }
 
     /**
      * This method is a shortcut for {@link #toString(Verbosity)} with {@link Verbosity#Short}.
@@ -1430,19 +1191,9 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
             case Short:
                 return toString(Verbosity.Id) + "|" + toString(Verbosity.Name);
             case Long:
-                return toString(Verbosity.Short);
             case Debugger:
             case All:
-            {
-                StringBuilder str = new StringBuilder();
-                str.append(toString(Verbosity.Short)).append(" { ");
-                for (Map.Entry<Object, Object> entry : getDebugProperties().entrySet())
-                {
-                    str.append(entry.getKey()).append("=").append(entry.getValue()).append(", ");
-                }
-                str.append(" }");
-                return str.toString();
-            }
+                return toString(Verbosity.Short);
             default:
                 throw new RuntimeException("unknown verbosity: " + verbosity);
         }

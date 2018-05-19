@@ -26,7 +26,6 @@ final class Buffer
 
     public void setPosition(int position)
     {
-        assert position >= 0 && position <= data.limit();
         data.position(position);
     }
 
@@ -92,14 +91,12 @@ final class Buffer
 
     public void emitByte(int b)
     {
-        assert NumUtil.isUByte(b) || NumUtil.isByte(b);
         ensureSize(data.position() + 1);
         data.put((byte) (b & 0xFF));
     }
 
     public void emitShort(int b)
     {
-        assert NumUtil.isUShort(b) || NumUtil.isShort(b);
         ensureSize(data.position() + 2);
         data.putShort((short) b);
     }
@@ -127,14 +124,12 @@ final class Buffer
 
     public void emitByte(int b, int pos)
     {
-        assert NumUtil.isUByte(b) || NumUtil.isByte(b);
         ensureSize(pos + 1);
         data.put(pos, (byte) (b & 0xFF));
     }
 
     public void emitShort(int b, int pos)
     {
-        assert NumUtil.isUShort(b) || NumUtil.isShort(b);
         ensureSize(pos + 2);
         data.putShort(pos, (short) b).position();
     }

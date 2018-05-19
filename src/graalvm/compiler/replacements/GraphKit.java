@@ -12,7 +12,6 @@ import graalvm.compiler.core.common.spi.ConstantFieldProvider;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.StampPair;
 import graalvm.compiler.debug.DebugCloseable;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Graph;
 import graalvm.compiler.graph.Node.ValueNumberable;
@@ -45,6 +44,7 @@ import graalvm.compiler.nodes.java.ExceptionObjectNode;
 import graalvm.compiler.nodes.java.MethodCallTargetNode;
 import graalvm.compiler.nodes.spi.StampProvider;
 import graalvm.compiler.nodes.type.StampTool;
+import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.OptimisticOptimizations;
 import graalvm.compiler.phases.common.DeadCodeEliminationPhase;
 import graalvm.compiler.phases.common.DeadCodeEliminationPhase.Optionality;
@@ -80,10 +80,10 @@ public class GraphKit implements GraphBuilderTool
     {
     }
 
-    public GraphKit(DebugContext debug, ResolvedJavaMethod stubMethod, Providers providers, WordTypes wordTypes, Plugins graphBuilderPlugins, CompilationIdentifier compilationId, String name)
+    public GraphKit(ResolvedJavaMethod stubMethod, Providers providers, WordTypes wordTypes, Plugins graphBuilderPlugins, CompilationIdentifier compilationId, String name)
     {
         this.providers = providers;
-        StructuredGraph.Builder builder = new StructuredGraph.Builder(debug.getOptions(), debug).compilationId(compilationId);
+        StructuredGraph.Builder builder = new StructuredGraph.Builder(new OptionValues(OptionValues.newOptionMap())).compilationId(compilationId);
         if (name != null)
         {
             builder.name(name);
@@ -183,8 +183,6 @@ public class GraphKit implements GraphBuilderTool
 
     private void updateLastFixed(FixedNode result)
     {
-        assert lastFixedNode != null;
-        assert result.predecessor() == null;
         graph.addAfterFixed(lastFixedNode, result);
         if (result instanceof FixedWithNextNode)
         {
@@ -223,7 +221,6 @@ public class GraphKit implements GraphBuilderTool
         {
             if (Modifier.isStatic(m.getModifiers()) == isStatic && m.getName().equals(name))
             {
-                assert method == null : "found more than one method in " + declaringClass + " named " + name;
                 method = providers.getMetaAccess().lookupJavaMethod(m);
             }
         }
@@ -253,10 +250,8 @@ public class GraphKit implements GraphBuilderTool
     {
         try (DebugCloseable context = graph.withNodeSourcePosition(NodeSourcePosition.substitution(graph.currentNodeSourcePosition(), method)))
         {
-            assert method.isStatic() == (invokeKind == InvokeKind.Static);
             Signature signature = method.getSignature();
             JavaType returnType = signature.getReturnType(null);
-            assert checkArgs(method, args);
             StampPair returnStamp = graphBuilderPlugins.getOverridingStamp(this, returnType, false);
             if (returnStamp == null)
             {
@@ -339,7 +334,6 @@ public class GraphKit implements GraphBuilderTool
         {
             JavaKind expected = asKind(method.getDeclaringClass());
             JavaKind actual = args[argIndex++].stamp(NodeView.DEFAULT).getStackKind();
-            assert expected == actual : graph + ": wrong kind of value for receiver argument of call to " + method + " [" + actual + " != " + expected + "]";
         }
         for (int i = 0; i != signature.getParameterCount(false); i++)
         {
@@ -382,7 +376,7 @@ public class GraphKit implements GraphBuilderTool
         Plugins plugins = new Plugins(graphBuilderPlugins);
         GraphBuilderConfiguration config = GraphBuilderConfiguration.getSnippetDefault(plugins);
 
-        StructuredGraph calleeGraph = new StructuredGraph.Builder(invoke.getOptions(), invoke.getDebug()).method(method).build();
+        StructuredGraph calleeGraph = new StructuredGraph.Builder(invoke.getOptions()).method(method).build();
         if (invoke.graph().trackNodeSourcePosition())
         {
             calleeGraph.setTrackNodeSourcePosition();
@@ -464,7 +458,6 @@ public class GraphKit implements GraphBuilderTool
         switch (s.state)
         {
             case CONDITION:
-                assert lastFixedNode == null;
                 break;
             case THEN_PART:
                 s.thenPart = lastFixedNode;
@@ -473,7 +466,6 @@ public class GraphKit implements GraphBuilderTool
                 s.elsePart = lastFixedNode;
                 break;
             case FINISHED:
-                assert false;
                 break;
         }
         lastFixedNode = null;
@@ -535,7 +527,6 @@ public class GraphKit implements GraphBuilderTool
         else
         {
             /* Both parts ended with a control sink, so no nodes can be added after the if. */
-            assert lastFixedNode == null;
         }
         s.state = IfState.FINISHED;
         popStructure();
@@ -560,10 +551,8 @@ public class GraphKit implements GraphBuilderTool
 
     public InvokeWithExceptionNode startInvokeWithException(ResolvedJavaMethod method, InvokeKind invokeKind, FrameStateBuilder frameStateBuilder, int invokeBci, int exceptionEdgeBci, ValueNode... args)
     {
-        assert method.isStatic() == (invokeKind == InvokeKind.Static);
         Signature signature = method.getSignature();
         JavaType returnType = signature.getReturnType(null);
-        assert checkArgs(method, args);
         StampPair returnStamp = graphBuilderPlugins.getOverridingStamp(this, returnType, false);
         if (returnStamp == null)
         {
@@ -617,7 +606,6 @@ public class GraphKit implements GraphBuilderTool
         switch (s.state)
         {
             case INVOKE:
-                assert lastFixedNode == null;
                 break;
             case NO_EXCEPTION_EDGE:
                 s.noExceptionEdge = lastFixedNode;
@@ -626,7 +614,6 @@ public class GraphKit implements GraphBuilderTool
                 s.exceptionEdge = lastFixedNode;
                 break;
             case FINISHED:
-                assert false;
                 break;
         }
         lastFixedNode = null;
@@ -683,10 +670,6 @@ public class GraphKit implements GraphBuilderTool
         else if (exceptionEdge != null)
         {
             lastFixedNode = exceptionEdge;
-        }
-        else
-        {
-            assert lastFixedNode == null;
         }
         s.state = InvokeWithExceptionStructure.State.FINISHED;
         popStructure();

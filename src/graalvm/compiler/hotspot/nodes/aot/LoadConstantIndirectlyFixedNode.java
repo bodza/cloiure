@@ -63,7 +63,6 @@ public class LoadConstantIndirectlyFixedNode extends FixedWithNextNode implement
     @Override
     public void generate(NodeLIRBuilderTool gen)
     {
-        assert constant != null : "Expected the value to fold: " + value;
         Value result;
         if (constant instanceof HotSpotObjectConstant)
         {

@@ -50,7 +50,6 @@ public final class StateSplitProxyNode extends FixedValueAnchorNode implements C
     @Override
     public void setStateAfter(FrameState x)
     {
-        assert x == null || x.isAlive() : "frame state must be in a graph";
         updateUsages(stateAfter, x);
         stateAfter = x;
     }

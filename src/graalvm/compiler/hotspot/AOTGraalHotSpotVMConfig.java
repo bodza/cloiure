@@ -21,7 +21,6 @@ public class AOTGraalHotSpotVMConfig extends GraalHotSpotVMConfig
         aotOopEncoding = new CompressEncoding(vmOopEncoding.getBase(), logMinObjAlignment());
         CompressEncoding vmKlassEncoding = super.getKlassEncoding();
         aotKlassEncoding = new CompressEncoding(vmKlassEncoding.getBase(), logKlassAlignment);
-        assert check();
     }
 
     @Override

@@ -18,12 +18,8 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
     {
         super(store);
 
-        assert narrowKlassShift <= logKlassAlignment;
-        assert narrowOopShift <= logMinObjAlignment();
         oopEncoding = new CompressEncoding(narrowOopBase, narrowOopShift);
         klassEncoding = new CompressEncoding(narrowKlassBase, narrowKlassShift);
-
-        assert check();
     }
 
     private final CompressEncoding oopEncoding;
@@ -38,8 +34,6 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
     {
         return klassEncoding;
     }
-
-    public final boolean cAssertions = getConstant("ASSERT", Boolean.class);
 
     public final int codeEntryAlignment = getFlag("CodeEntryAlignment", Integer.class);
     public final boolean enableContended = getFlag("EnableContended", Boolean.class);
@@ -374,13 +368,11 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
 
     public int threadLastJavaFpOffset()
     {
-        assert osArch.equals("aarch64") || osArch.equals("amd64");
         return javaThreadAnchorOffset + getFieldOffset("JavaFrameAnchor::_last_Java_fp", Integer.class, "intptr_t*");
     }
 
     public int threadJavaFrameAnchorFlagsOffset()
     {
-        assert osArch.equals("sparc");
         return javaThreadAnchorOffset + getFieldOffset("JavaFrameAnchor::_flags", Integer.class, "int");
     }
 
@@ -743,19 +735,4 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
     public final int MARKID_CRC_TABLE_ADDRESS = getConstant("CodeInstaller::CRC_TABLE_ADDRESS", Integer.class, 21);
     public final int MARKID_LOG_OF_HEAP_REGION_GRAIN_BYTES = getConstant("CodeInstaller::LOG_OF_HEAP_REGION_GRAIN_BYTES", Integer.class, 22);
     public final int MARKID_INLINE_CONTIGUOUS_ALLOCATION_SUPPORTED = getConstant("CodeInstaller::INLINE_CONTIGUOUS_ALLOCATION_SUPPORTED", Integer.class, 23);
-
-    protected boolean check()
-    {
-        for (Field f : getClass().getDeclaredFields())
-        {
-            int modifiers = f.getModifiers();
-            if (Modifier.isPublic(modifiers) && !Modifier.isStatic(modifiers))
-            {
-                assert Modifier.isFinal(modifiers) : "field should be final: " + f;
-            }
-        }
-
-        assert codeEntryAlignment > 0 : codeEntryAlignment;
-        return true;
-    }
 }

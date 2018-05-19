@@ -17,7 +17,7 @@ public abstract class JavaConstantFieldProvider implements ConstantFieldProvider
 {
     static class Options
     {
-        @Option(help = "Determines whether to treat final fields with default values as constant.")//
+        @Option(help = "Determines whether to treat final fields with default values as constant.")
         public static final OptionKey<Boolean> TrustFinalDefaultFields = new OptionKey<>(true);
     }
 
@@ -110,7 +110,6 @@ public abstract class JavaConstantFieldProvider implements ConstantFieldProvider
 
     protected boolean isDefaultStableField(ResolvedJavaField field, ConstantFieldTool<?> tool)
     {
-        assert isStableField(field, tool);
         if (isSyntheticEnumSwitchMap(field))
         {
             return true;

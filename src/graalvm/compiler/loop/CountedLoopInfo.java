@@ -89,7 +89,6 @@ public class CountedLoopInfo
         }
         else
         {
-            assert iv.direction() == Direction.Down;
             absStride = graph.maybeAddOrUnique(NegateNode.create(iv.strideNode(), NodeView.DEFAULT));
             range = sub(graph, iv.initNode(), end);
             max = iv.initNode();
@@ -123,7 +122,6 @@ public class CountedLoopInfo
 
     public UnsignedLong constantMaxTripCount()
     {
-        assert isConstantMaxTripCount();
         return new UnsignedLong(rawConstantMaxTripCount());
     }
 
@@ -132,7 +130,6 @@ public class CountedLoopInfo
      */
     private long rawConstantMaxTripCount()
     {
-        assert iv.direction() != null;
         long endValue = end.asJavaConstant().asLong();
         long initValue = iv.constantInit();
         long range;
@@ -170,19 +167,16 @@ public class CountedLoopInfo
 
     public ValueNode exactTripCountNode()
     {
-        assert isExactTripCount();
         return maxTripCountNode();
     }
 
     public boolean isConstantExactTripCount()
     {
-        assert isExactTripCount();
         return isConstantMaxTripCount();
     }
 
     public UnsignedLong constantExactTripCount()
     {
-        assert isExactTripCount();
         return constantMaxTripCount();
     }
 
@@ -257,7 +251,6 @@ public class CountedLoopInfo
             }
             else
             {
-                assert iv.direction() == Direction.Down;
                 ValueNode v1 = add(graph, ConstantNode.forIntegerStamp(stamp, CodeUtil.minValue(stamp.getBits()), graph), sub(graph, one, iv.strideNode()));
                 if (oneOff)
                 {
@@ -265,7 +258,6 @@ public class CountedLoopInfo
                 }
                 cond = graph.unique(new IntegerLessThanNode(end, v1));
             }
-            assert graph.getGuardsStage().allowsFloatingGuards();
             overflowGuard = graph.unique(new GuardNode(cond, AbstractBeginNode.prevBegin(loop.entryPoint()), DeoptimizationReason.LoopLimitCheck, DeoptimizationAction.InvalidateRecompile, true,
                             JavaConstant.NULL_POINTER, null)); // TODO gd: use speculation
             loop.loopBegin().setOverflowGuard(overflowGuard);

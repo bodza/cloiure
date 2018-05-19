@@ -23,7 +23,6 @@ import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.PhaseSuite;
 import graalvm.compiler.phases.common.CanonicalizerPhase;
-import graalvm.compiler.phases.common.NodeCounterPhase;
 import graalvm.compiler.phases.common.ConvertDeoptimizeToGuardPhase;
 import graalvm.compiler.phases.common.DeadCodeEliminationPhase;
 import graalvm.compiler.phases.common.IncrementalCanonicalizerPhase;
@@ -52,11 +51,6 @@ public class HighTier extends PhaseSuite<HighTierContext>
         }
 
         appendPhase(canonicalizer);
-
-        if (NodeCounterPhase.Options.NodeCounters.getValue(options))
-        {
-            appendPhase(new NodeCounterPhase());
-        }
 
         if (Options.Inline.getValue(options))
         {

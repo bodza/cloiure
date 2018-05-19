@@ -1,6 +1,5 @@
 package graalvm.compiler.loop.phases;
 
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.loop.LoopEx;
 import graalvm.compiler.loop.LoopPolicies;
 import graalvm.compiler.loop.LoopsData;
@@ -15,30 +14,19 @@ public class LoopPeelingPhase extends LoopPhase<LoopPolicies>
     }
 
     @Override
-    @SuppressWarnings("try")
     protected void run(StructuredGraph graph, PhaseContext context)
     {
-        DebugContext debug = graph.getDebug();
         if (graph.hasLoops())
         {
             LoopsData data = new LoopsData(graph);
-            try (DebugContext.Scope s = debug.scope("peeling", data.getCFG()))
+            for (LoopEx loop : data.outerFirst())
             {
-                for (LoopEx loop : data.outerFirst())
+                if (getPolicies().shouldPeel(loop, data.getCFG(), context.getMetaAccess()))
                 {
-                    if (getPolicies().shouldPeel(loop, data.getCFG(), context.getMetaAccess()))
-                    {
-                        debug.log("Peeling %s", loop);
-                        LoopTransformations.peel(loop);
-                        debug.dump(DebugContext.DETAILED_LEVEL, graph, "Peeling %s", loop);
-                    }
+                    LoopTransformations.peel(loop);
                 }
-                data.deleteUnusedNodes();
             }
-            catch (Throwable t)
-            {
-                throw debug.handle(t);
-            }
+            data.deleteUnusedNodes();
         }
     }
 

@@ -65,7 +65,6 @@ public class AMD64BinaryConsumer
             }
             else
             {
-                assert isStackSlot(y);
                 opcode.emit(masm, size, asRegister(x), (AMD64Address) crb.asAddress(y));
             }
         }
@@ -113,7 +112,6 @@ public class AMD64BinaryConsumer
             }
             else
             {
-                assert isStackSlot(x);
                 opcode.emit(masm, size, (AMD64Address) crb.asAddress(x), y);
             }
         }

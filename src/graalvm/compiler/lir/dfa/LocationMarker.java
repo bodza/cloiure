@@ -8,8 +8,6 @@ import java.util.EnumSet;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.core.common.cfg.BlockMap;
-import graalvm.compiler.debug.DebugContext;
-import graalvm.compiler.debug.Indent;
 import graalvm.compiler.lir.InstructionStateProcedure;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRFrameState;
@@ -85,27 +83,22 @@ public abstract class LocationMarker<S extends ValueSet<S>>
         return false;
     }
 
-    @SuppressWarnings("try")
     private void processBlock(AbstractBlockBase<?> block, UniqueWorkList worklist)
     {
         if (updateOutBlock(block))
         {
-            DebugContext debug = lir.getDebug();
-            try (Indent indent = debug.logAndIndent("handle block %s", block))
+            currentSet = liveOutMap.get(block).copy();
+            ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
+            for (int i = instructions.size() - 1; i >= 0; i--)
             {
-                currentSet = liveOutMap.get(block).copy();
-                ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(block);
-                for (int i = instructions.size() - 1; i >= 0; i--)
-                {
-                    LIRInstruction inst = instructions.get(i);
-                    processInstructionBottomUp(inst);
-                }
-                liveInMap.put(block, currentSet);
-                currentSet = null;
-                for (AbstractBlockBase<?> b : block.getPredecessors())
-                {
-                    worklist.add(b);
-                }
+                LIRInstruction inst = instructions.get(i);
+                processInstructionBottomUp(inst);
+            }
+            liveInMap.put(block, currentSet);
+            currentSet = null;
+            for (AbstractBlockBase<?> b : block.getPredecessors())
+            {
+                worklist.add(b);
             }
         }
     }
@@ -118,33 +111,27 @@ public abstract class LocationMarker<S extends ValueSet<S>>
      * Process all values of an instruction bottom-up, i.e. definitions before usages. Values that
      * start or end at the current operation are not included.
      */
-    @SuppressWarnings("try")
     private void processInstructionBottomUp(LIRInstruction op)
     {
-        DebugContext debug = lir.getDebug();
-        try (Indent indent = debug.logAndIndent("handle op %d, %s", op.id(), op))
+        // kills
+        op.visitEachTemp(defConsumer);
+        op.visitEachOutput(defConsumer);
+        if (frameMap != null && op.destroysCallerSavedRegisters())
         {
-            // kills
-
-            op.visitEachTemp(defConsumer);
-            op.visitEachOutput(defConsumer);
-            if (frameMap != null && op.destroysCallerSavedRegisters())
+            for (Register reg : frameMap.getRegisterConfig().getCallerSaveRegisters())
             {
-                for (Register reg : frameMap.getRegisterConfig().getCallerSaveRegisters())
-                {
-                    PlatformKind kind = frameMap.getTarget().arch.getLargestStorableKind(reg.getRegisterCategory());
-                    defConsumer.visitValue(reg.asValue(LIRKind.value(kind)), OperandMode.TEMP, REGISTER_FLAG_SET);
-                }
+                PlatformKind kind = frameMap.getTarget().arch.getLargestStorableKind(reg.getRegisterCategory());
+                defConsumer.visitValue(reg.asValue(LIRKind.value(kind)), OperandMode.TEMP, REGISTER_FLAG_SET);
             }
-
-            // gen - values that are considered alive for this state
-            op.visitEachAlive(useConsumer);
-            op.visitEachState(useConsumer);
-            // mark locations
-            op.forEachState(stateConsumer);
-            // gen
-            op.visitEachInput(useConsumer);
         }
+
+        // gen - values that are considered alive for this state
+        op.visitEachAlive(useConsumer);
+        op.visitEachState(useConsumer);
+        // mark locations
+        op.forEachState(stateConsumer);
+        // gen
+        op.visitEachInput(useConsumer);
     }
 
     InstructionStateProcedure stateConsumer = new InstructionStateProcedure()
@@ -164,11 +151,6 @@ public abstract class LocationMarker<S extends ValueSet<S>>
             if (shouldProcessValue(operand))
             {
                 // no need to insert values and derived reference
-                DebugContext debug = lir.getDebug();
-                if (debug.isLogEnabled())
-                {
-                    debug.log("set operand: %s", operand);
-                }
                 currentSet.put(operand);
             }
         }
@@ -181,16 +163,7 @@ public abstract class LocationMarker<S extends ValueSet<S>>
         {
             if (shouldProcessValue(operand))
             {
-                DebugContext debug = lir.getDebug();
-                if (debug.isLogEnabled())
-                {
-                    debug.log("clear operand: %s", operand);
-                }
                 currentSet.remove(operand);
-            }
-            else
-            {
-                assert isIllegal(operand) || !operand.getValueKind().equals(LIRKind.Illegal) || mode == OperandMode.TEMP : String.format("Illegal PlatformKind is only allowed for TEMP mode: %s, %s", operand, mode);
             }
         }
     };

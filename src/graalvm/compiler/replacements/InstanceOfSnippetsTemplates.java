@@ -6,7 +6,6 @@ import java.util.List;
 
 import graalvm.compiler.api.replacements.SnippetReflectionProvider;
 import graalvm.compiler.core.common.calc.CanonicalCondition;
-import graalvm.compiler.debug.DebugHandlersFactory;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodes.ConditionAnchorNode;
 import graalvm.compiler.nodes.ConstantNode;
@@ -50,9 +49,9 @@ import jdk.vm.ci.code.TargetDescription;
  */
 public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
 {
-    public InstanceOfSnippetsTemplates(OptionValues options, Iterable<DebugHandlersFactory> factories, Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
+    public InstanceOfSnippetsTemplates(OptionValues options, Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
     {
-        super(options, factories, providers, snippetReflection, target);
+        super(options, providers, snippetReflection, target);
     }
 
     /**
@@ -62,7 +61,6 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
 
     public void lower(FloatingNode instanceOf, LoweringTool tool)
     {
-        assert instanceOf instanceof InstanceOfNode || instanceOf instanceof InstanceOfDynamicNode || instanceOf instanceof ClassIsAssignableFromNode;
         List<Node> usages = instanceOf.usages().snapshot();
 
         Instantiation instantiation = new Instantiation();
@@ -84,7 +82,6 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
             }
         }
 
-        assert instanceOf.hasNoUsages();
         if (!instanceOf.isDeleted())
         {
             GraphUtil.killWithUnusedFloatingInputs(instanceOf);
@@ -115,7 +112,6 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
         }
         else
         {
-            assert usage instanceof ConditionalNode : "unexpected usage of " + instanceOf + ": " + usage;
             ConditionalNode c = (ConditionalNode) usage;
             replacer = new MaterializationUsageReplacer(instantiation, c.trueValue(), c.falseValue(), instanceOf, c);
         }
@@ -160,7 +156,6 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
 
         void initialize(ValueNode r, ValueNode t, ValueNode f)
         {
-            assert !isInitialized();
             this.result = r;
             this.trueValue = t;
             this.falseValue = f;
@@ -173,10 +168,8 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
          */
         LogicNode asCondition(ValueNode testValue)
         {
-            assert isInitialized();
             if (result.isConstant())
             {
-                assert testValue.isConstant();
                 return LogicConstantNode.forBoolean(result.asConstant().equals(testValue.asConstant()), result.graph());
             }
             if (condition == null || (!(condition instanceof CompareNode)) || ((CompareNode) condition).getY() != testValue)
@@ -195,7 +188,6 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
          */
         ValueNode asMaterialization(StructuredGraph graph, ValueNode t, ValueNode f)
         {
-            assert isInitialized();
             if (t == this.trueValue && f == this.falseValue)
             {
                 // Can simply use the phi result if the same materialized values are expected.
@@ -220,7 +212,6 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
 
         public InstanceOfUsageReplacer(Instantiation instantiation, FloatingNode instanceOf, ValueNode trueValue, ValueNode falseValue)
         {
-            assert instanceOf instanceof InstanceOfNode || instanceOf instanceof InstanceOfDynamicNode || instanceOf instanceof ClassIsAssignableFromNode;
             this.instantiation = instantiation;
             this.instanceOf = instanceOf;
             this.trueValue = trueValue;
@@ -256,8 +247,6 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
         @Override
         public void replace(ValueNode oldNode, ValueNode newNode)
         {
-            assert newNode instanceof PhiNode;
-            assert oldNode == instanceOf;
             newNode.inferStamp();
             instantiation.initialize(newNode, trueValue, falseValue);
             usage.replaceFirstInput(oldNode, instantiation.asCondition(trueValue));
@@ -283,19 +272,15 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
         {
             ValueNode newValue = instantiation.asMaterialization(usage.graph(), trueValue, falseValue);
             usage.replaceAtUsages(newValue);
-            assert usage.hasNoUsages();
             GraphUtil.killWithUnusedFloatingInputs(usage);
         }
 
         @Override
         public void replace(ValueNode oldNode, ValueNode newNode)
         {
-            assert newNode instanceof PhiNode;
-            assert oldNode == instanceOf;
             newNode.inferStamp();
             instantiation.initialize(newNode, trueValue, falseValue);
             usage.replaceAtUsages(newNode);
-            assert usage.hasNoUsages();
             GraphUtil.killWithUnusedFloatingInputs(usage);
         }
     }

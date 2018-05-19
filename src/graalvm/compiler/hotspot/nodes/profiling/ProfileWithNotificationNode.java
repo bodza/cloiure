@@ -37,7 +37,6 @@ public abstract class ProfileWithNotificationNode extends ProfileNode
      */
     public void setNotificationFreqLog(int freqLog)
     {
-        assert freqLog < 32;
         this.freqLog = freqLog;
     }
 

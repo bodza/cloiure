@@ -1,7 +1,5 @@
 package graalvm.compiler.core.match;
 
-import static graalvm.compiler.debug.DebugOptions.LogVerbose;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +7,6 @@ import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 import org.graalvm.collections.MapCursor;
 import graalvm.compiler.core.gen.NodeMatchRules;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Edges;
 import graalvm.compiler.graph.Node;
@@ -60,7 +57,7 @@ public class MatchRuleRegistry
      * @return the set of {@link MatchStatement}s applicable to theClass.
      */
     @SuppressWarnings("try")
-    public static synchronized EconomicMap<Class<? extends Node>, List<MatchStatement>> lookup(Class<? extends NodeMatchRules> theClass, OptionValues options, DebugContext debug)
+    public static synchronized EconomicMap<Class<? extends Node>, List<MatchStatement>> lookup(Class<? extends NodeMatchRules> theClass, OptionValues options)
     {
         EconomicMap<Class<? extends Node>, List<MatchStatement>> result = registry.get(theClass);
 
@@ -68,25 +65,7 @@ public class MatchRuleRegistry
         {
             EconomicMap<Class<? extends Node>, List<MatchStatement>> rules = createRules(theClass);
             registry.put(theClass, rules);
-            assert registry.get(theClass) == rules;
             result = rules;
-
-            if (LogVerbose.getValue(options))
-            {
-                try (DebugContext.Scope s = debug.scope("MatchComplexExpressions"))
-                {
-                    debug.log("Match rules for %s", theClass.getSimpleName());
-                    MapCursor<Class<? extends Node>, List<MatchStatement>> cursor = result.getEntries();
-                    while (cursor.advance())
-                    {
-                        debug.log("  For node class: %s", cursor.getKey());
-                        for (MatchStatement statement : cursor.getValue())
-                        {
-                            debug.log("    %s", statement.getPattern());
-                        }
-                    }
-                }
-            }
         }
 
         if (result.size() == 0)

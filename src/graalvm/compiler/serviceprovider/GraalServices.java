@@ -30,7 +30,6 @@ public final class GraalServices
      */
     public static <S> Iterable<S> load(Class<S> service)
     {
-        assert !service.getName().startsWith("jdk.vm.ci") : "JVMCI services must be loaded via " + Services.class.getName();
         Iterable<S> iterable = ServiceLoader.load(service);
         return new Iterable<>()
         {
@@ -99,7 +98,6 @@ public final class GraalServices
      */
     public static <S> S loadSingle(Class<S> service, boolean required)
     {
-        assert !service.getName().startsWith("jdk.vm.ci") : "JVMCI services must be loaded via " + Services.class.getName();
         Iterable<S> providers = load(service);
         S singleProvider = null;
         try
@@ -143,10 +141,6 @@ public final class GraalServices
      * A JVMCI package dynamically exported to trusted modules.
      */
     private static final String JVMCI_RUNTIME_PACKAGE = "jdk.vm.ci.runtime";
-    static
-    {
-        assert JVMCI_MODULE.getPackages().contains(JVMCI_RUNTIME_PACKAGE);
-    }
 
     /**
      * Determines if invoking {@link Object#toString()} on an instance of {@code c} will only run
@@ -156,7 +150,6 @@ public final class GraalServices
     {
         Module module = c.getModule();
         Module jvmciModule = JVMCI_MODULE;
-        assert jvmciModule.getPackages().contains("jdk.vm.ci.runtime");
         if (module == jvmciModule || jvmciModule.isOpen(JVMCI_RUNTIME_PACKAGE, module))
         {
             // Can access non-statically-exported package in JVMCI

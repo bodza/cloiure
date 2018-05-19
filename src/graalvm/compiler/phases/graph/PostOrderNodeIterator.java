@@ -73,7 +73,6 @@ public abstract class PostOrderNodeIterator<T extends MergeableState<T>>
                 state = state.clone();
                 loopBegin((LoopBeginNode) current);
                 current = ((LoopBeginNode) current).next();
-                assert current != null;
             }
             else if (current instanceof LoopEndNode)
             {
@@ -85,12 +84,10 @@ public abstract class PostOrderNodeIterator<T extends MergeableState<T>>
             {
                 merge((AbstractMergeNode) current);
                 current = ((AbstractMergeNode) current).next();
-                assert current != null;
             }
             else if (current instanceof FixedWithNextNode)
             {
                 FixedNode next = ((FixedWithNextNode) current).next();
-                assert next != null : current;
                 node(current);
                 current = next;
             }
@@ -110,10 +107,6 @@ public abstract class PostOrderNodeIterator<T extends MergeableState<T>>
                 Set<Node> successors = controlSplit((ControlSplitNode) current);
                 queueSuccessors(current, successors);
                 current = nextQueuedNode();
-            }
-            else
-            {
-                assert false : current;
             }
         } while (current != null);
         finished();
@@ -159,7 +152,6 @@ public abstract class PostOrderNodeIterator<T extends MergeableState<T>>
                 for (int i = 1; i < merge.forwardEndCount(); i++)
                 {
                     T other = nodeStates.get(merge.forwardEndAt(i));
-                    assert other != null;
                     states.add(other);
                 }
                 boolean ready = state.merge(merge, states);
@@ -174,7 +166,6 @@ public abstract class PostOrderNodeIterator<T extends MergeableState<T>>
             }
             else
             {
-                assert node.predecessor() != null;
                 state = nodeStates.get((FixedNode) node.predecessor()).clone();
                 state.afterSplit(node);
                 return node;
@@ -185,8 +176,6 @@ public abstract class PostOrderNodeIterator<T extends MergeableState<T>>
 
     private void finishLoopEnds(LoopEndNode end)
     {
-        assert !visitedEnds.isMarked(end);
-        assert !nodeStates.containsKey(end);
         nodeStates.put(end, state);
         visitedEnds.mark(end);
         LoopBeginNode begin = end.loopBegin();
@@ -216,8 +205,6 @@ public abstract class PostOrderNodeIterator<T extends MergeableState<T>>
 
     private void queueMerge(EndNode end)
     {
-        assert !visitedEnds.isMarked(end);
-        assert !nodeStates.containsKey(end);
         nodeStates.put(end, state);
         visitedEnds.mark(end);
         AbstractMergeNode merge = end.merge();

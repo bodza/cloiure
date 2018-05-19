@@ -41,8 +41,6 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  *
  * Lowering can introduce new {@link ConstantNode}s containing a {@link Class} reference, thus this
  * phase must be applied after {@link LoweringPhase}.
- *
- * @see AheadOfTimeVerificationPhase
  */
 public class LoadJavaMirrorWithKlassPhase extends BasePhase<PhaseContext>
 {

@@ -17,25 +17,21 @@ public final class LIRValueUtil
 {
     public static boolean isVariable(Value value)
     {
-        assert value != null;
         return value instanceof Variable;
     }
 
     public static Variable asVariable(Value value)
     {
-        assert value != null;
         return (Variable) value;
     }
 
     public static boolean isConstantValue(Value value)
     {
-        assert value != null;
         return value instanceof ConstantValue;
     }
 
     public static ConstantValue asConstantValue(Value value)
     {
-        assert value != null;
         return (ConstantValue) value;
     }
 
@@ -69,19 +65,16 @@ public final class LIRValueUtil
 
     public static boolean isStackSlotValue(Value value)
     {
-        assert value != null;
         return value instanceof StackSlot || value instanceof VirtualStackSlot;
     }
 
     public static boolean isVirtualStackSlot(Value value)
     {
-        assert value != null;
         return value instanceof VirtualStackSlot;
     }
 
     public static VirtualStackSlot asVirtualStackSlot(Value value)
     {
-        assert value != null;
         return (VirtualStackSlot) value;
     }
 

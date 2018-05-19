@@ -76,9 +76,6 @@ public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
          */
         private static boolean same(LIRInstruction op1, LIRInstruction op2)
         {
-            assert op1 != null;
-            assert op2 != null;
-
             if (ValueMoveOp.isValueMoveOp(op1) && ValueMoveOp.isValueMoveOp(op2))
             {
                 ValueMoveOp move1 = ValueMoveOp.asValueMoveOp(op1);
@@ -121,13 +118,10 @@ public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
             edgeInstructionSeqences.clear();
 
             int numPreds = block.getPredecessorCount();
-            assert numPreds > 1 : "do not call otherwise";
 
             // setup a list with the LIR instructions of all predecessors
             for (AbstractBlockBase<?> pred : block.getPredecessors())
             {
-                assert pred != null;
-                assert ir.getLIRforBlock(pred) != null;
                 ArrayList<LIRInstruction> predInstructions = ir.getLIRforBlock(pred);
 
                 if (pred.getSuccessorCount() != 1)
@@ -136,9 +130,6 @@ public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
                     // the same blocks.
                     return;
                 }
-
-                assert pred.getSuccessors()[0] == block : "invalid control flow";
-                assert predInstructions.get(predInstructions.size() - 1) instanceof StandardOp.JumpOp : "block must end with unconditional jump";
 
                 if (predInstructions.get(predInstructions.size() - 1).hasState())
                 {
@@ -194,8 +185,6 @@ public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
 
             ArrayList<LIRInstruction> instructions = ir.getLIRforBlock(block);
 
-            assert numSux == 2 : "method should not be called otherwise";
-
             LIRInstruction lastInstruction = instructions.get(instructions.size() - 1);
             if (lastInstruction.hasState())
             {
@@ -223,15 +212,12 @@ public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
             {
                 ArrayList<LIRInstruction> suxInstructions = ir.getLIRforBlock(sux);
 
-                assert suxInstructions.get(0) instanceof StandardOp.LabelOp : "block must start with label";
-
                 if (sux.getPredecessorCount() != 1)
                 {
                     // this can happen with switch-statements where multiple edges are between
                     // the same blocks.
                     return;
                 }
-                assert sux.getPredecessors()[0] == block : "invalid control flow";
 
                 // ignore the label at the beginning of the block
                 List<LIRInstruction> seq = suxInstructions.subList(1, suxInstructions.size());

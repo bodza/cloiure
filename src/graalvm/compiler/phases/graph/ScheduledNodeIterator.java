@@ -24,7 +24,6 @@ public abstract class ScheduledNodeIterator
     public void processNodes(Block block, ScheduleResult schedule)
     {
         lastFixed = block.getBeginNode();
-        assert lastFixed != null;
         reconnect = null;
         iterator = schedule.nodesFor(block).listIterator();
 
@@ -48,7 +47,6 @@ public abstract class ScheduledNodeIterator
         }
         if (reconnect != null)
         {
-            assert block.getSuccessorCount() == 1;
             reconnect.setNext(block.getFirstSuccessor().getBeginNode());
         }
     }

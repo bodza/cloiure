@@ -12,9 +12,7 @@ import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.StampPair;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.debug.JavaMethodContext;
 import graalvm.compiler.hotspot.HotSpotForeignCallLinkage;
 import graalvm.compiler.hotspot.HotSpotForeignCallLinkage.Transition;
 import graalvm.compiler.hotspot.HotSpotForeignCallLinkageImpl;
@@ -118,55 +116,6 @@ public class ForeignCallStub extends Stub
         return null;
     }
 
-    private class DebugScopeContext implements JavaMethod, JavaMethodContext
-    {
-        @Override
-        public JavaMethod asJavaMethod()
-        {
-            return this;
-        }
-
-        @Override
-        public Signature getSignature()
-        {
-            ForeignCallDescriptor d = linkage.getDescriptor();
-            MetaAccessProvider metaAccess = providers.getMetaAccess();
-            Class<?>[] arguments = d.getArgumentTypes();
-            ResolvedJavaType[] parameters = new ResolvedJavaType[arguments.length];
-            for (int i = 0; i < arguments.length; i++)
-            {
-                parameters[i] = metaAccess.lookupJavaType(arguments[i]);
-            }
-            return new HotSpotSignature(jvmciRuntime, metaAccess.lookupJavaType(d.getResultType()), parameters);
-        }
-
-        @Override
-        public String getName()
-        {
-            return linkage.getDescriptor().getName();
-        }
-
-        @Override
-        public JavaType getDeclaringClass()
-        {
-            return providers.getMetaAccess().lookupJavaType(ForeignCallStub.class);
-        }
-
-        @Override
-        public String toString()
-        {
-            return format("ForeignCallStub<%n(%p)>");
-        }
-    }
-
-    @Override
-    protected Object debugScopeContext()
-    {
-        return new DebugScopeContext()
-        {
-        };
-    }
-
     /**
      * Creates a graph for this stub.
      * <p>
@@ -212,7 +161,7 @@ public class ForeignCallStub extends Stub
      */
     @Override
     @SuppressWarnings("try")
-    protected StructuredGraph getGraph(DebugContext debug, CompilationIdentifier compilationId)
+    protected StructuredGraph getGraph(CompilationIdentifier compilationId)
     {
         WordTypes wordTypes = providers.getWordTypes();
         Class<?>[] args = linkage.getDescriptor().getArgumentTypes();
@@ -220,8 +169,8 @@ public class ForeignCallStub extends Stub
 
         try
         {
-            ResolvedJavaMethod thisMethod = providers.getMetaAccess().lookupJavaMethod(ForeignCallStub.class.getDeclaredMethod("getGraph", DebugContext.class, CompilationIdentifier.class));
-            GraphKit kit = new GraphKit(debug, thisMethod, providers, wordTypes, providers.getGraphBuilderPlugins(), compilationId, toString());
+            ResolvedJavaMethod thisMethod = providers.getMetaAccess().lookupJavaMethod(ForeignCallStub.class.getDeclaredMethod("getGraph", CompilationIdentifier.class));
+            GraphKit kit = new GraphKit(thisMethod, providers, wordTypes, providers.getGraphBuilderPlugins(), compilationId, toString());
             StructuredGraph graph = kit.getGraph();
             ParameterNode[] params = createParameters(kit, args);
             ReadRegisterNode thread = kit.append(new ReadRegisterNode(providers.getRegisters().getThreadRegister(), wordTypes.getWordKind(), true, false));
@@ -233,12 +182,10 @@ public class ForeignCallStub extends Stub
                 result = kit.createInvoke(StubUtil.class, "verifyObject", object);
             }
             kit.append(new ReturnNode(linkage.getDescriptor().getResultType() == void.class ? null : result));
-            debug.dump(DebugContext.VERBOSE_LEVEL, graph, "Initial stub graph");
 
             kit.inlineInvokes("Foreign call stub.", "Backend");
             new RemoveValueProxyPhase().apply(graph);
 
-            debug.dump(DebugContext.VERBOSE_LEVEL, graph, "Stub graph before compilation");
             return graph;
         }
         catch (Exception e)

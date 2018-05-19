@@ -54,7 +54,6 @@ public abstract class ArithmeticLIRGenerator implements ArithmeticLIRGeneratorTo
         {
             LIRKind aKind = a.getValueKind(LIRKind.class);
             LIRKind bKind = b.getValueKind(LIRKind.class);
-            assert a.getPlatformKind() == b.getPlatformKind() : a.getPlatformKind() + " vs. " + b.getPlatformKind();
 
             if (aKind.isUnknownReference())
             {

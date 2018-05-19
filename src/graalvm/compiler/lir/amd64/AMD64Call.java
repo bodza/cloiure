@@ -44,7 +44,6 @@ public class AMD64Call
             this.parameters = parameters;
             this.state = state;
             this.temps = addStackSlotsToTemporaries(parameters, temps);
-            assert temps != null;
         }
 
         @Override
@@ -117,13 +116,6 @@ public class AMD64Call
         {
             indirectCall(crb, masm, asRegister(targetAddress), callTarget, state);
         }
-
-        @Override
-        public void verify()
-        {
-            super.verify();
-            assert isRegister(targetAddress) : "The current register allocator cannot handle variables to be used at call sites, it must be in a fixed register for now";
-        }
     }
 
     public abstract static class ForeignCallOp extends CallOp implements ZapRegistersAfterInstruction
@@ -177,7 +169,6 @@ public class AMD64Call
              * site, so use a fixed register.
              */
             callTemp = AMD64.rax.asValue(LIRKind.value(AMD64Kind.QWORD));
-            assert differentRegisters(parameters, callTemp);
         }
 
         @Override

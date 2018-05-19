@@ -69,7 +69,6 @@ public final class MonitorExitNode extends AccessMonitorNode implements Virtuali
             if (virtual.hasIdentity())
             {
                 MonitorIdNode removedLock = tool.removeLock(virtual);
-                assert removedLock == getMonitorId() : "mismatch at " + this + ": " + removedLock + " vs. " + getMonitorId();
                 tool.delete();
             }
         }

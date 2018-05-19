@@ -217,7 +217,6 @@ public class LoweringPhase extends BasePhase<PhaseContext>
 
         private void setLastFixedNode(FixedWithNextNode n)
         {
-            assert n.isAlive() : n;
             lastFixedNode = n;
         }
     }
@@ -231,24 +230,16 @@ public class LoweringPhase extends BasePhase<PhaseContext>
         this.loweringStage = loweringStage;
     }
 
-    @Override
-    protected boolean shouldDumpBeforeAtBasicLevel()
-    {
-        return loweringStage == LoweringTool.StandardLoweringStage.HIGH_TIER;
-    }
-
     /**
      * Checks that second lowering of a given graph did not introduce any new nodes.
      *
      * @param graph a graph that was just {@linkplain #lower lowered}
-     * @throws AssertionError if the check fails
      */
     private boolean checkPostLowering(StructuredGraph graph, PhaseContext context)
     {
         Mark expectedMark = graph.getMark();
         lower(graph, context, LoweringMode.VERIFY_LOWERING);
         Mark mark = graph.getMark();
-        assert mark.equals(expectedMark) : graph + ": a second round in the current lowering phase introduced these new nodes: " + graph.getNewNodes(expectedMark).snapshot();
         return true;
     }
 
@@ -256,7 +247,6 @@ public class LoweringPhase extends BasePhase<PhaseContext>
     protected void run(final StructuredGraph graph, PhaseContext context)
     {
         lower(graph, context, LoweringMode.LOWERING);
-        assert checkPostLowering(graph, context);
     }
 
     private void lower(StructuredGraph graph, PhaseContext context, LoweringMode mode)
@@ -264,94 +254,6 @@ public class LoweringPhase extends BasePhase<PhaseContext>
         IncrementalCanonicalizerPhase<PhaseContext> incrementalCanonicalizer = new IncrementalCanonicalizerPhase<>(canonicalizer);
         incrementalCanonicalizer.appendPhase(new Round(context, mode, graph.getOptions()));
         incrementalCanonicalizer.apply(graph, context);
-        assert graph.verify();
-    }
-
-    /**
-     * Checks that lowering of a given node did not introduce any new {@link Lowerable} nodes that
-     * could be lowered in the current {@link LoweringPhase}. Such nodes must be recursively lowered
-     * as part of lowering {@code node}.
-     *
-     * @param node a node that was just lowered
-     * @param preLoweringMark the graph mark before {@code node} was lowered
-     * @param unscheduledUsages set of {@code node}'s usages that were unscheduled before it was
-     *            lowered
-     * @throws AssertionError if the check fails
-     */
-    private static boolean checkPostNodeLowering(Node node, LoweringToolImpl loweringTool, Mark preLoweringMark, Collection<Node> unscheduledUsages)
-    {
-        StructuredGraph graph = (StructuredGraph) node.graph();
-        Mark postLoweringMark = graph.getMark();
-        NodeIterable<Node> newNodesAfterLowering = graph.getNewNodes(preLoweringMark);
-        if (node instanceof FloatingNode)
-        {
-            if (!unscheduledUsages.isEmpty())
-            {
-                for (Node n : newNodesAfterLowering)
-                {
-                    assert !(n instanceof FixedNode) : node.graph() + ": cannot lower floatable node " + node + " as it introduces fixed node(s) but has the following unscheduled usages: " + unscheduledUsages;
-                }
-            }
-        }
-        for (Node n : newNodesAfterLowering)
-        {
-            if (n instanceof Lowerable)
-            {
-                ((Lowerable) n).lower(loweringTool);
-                Mark mark = graph.getMark();
-                assert postLoweringMark.equals(mark) : graph + ": lowering of " + node + " produced lowerable " + n + " that should have been recursively lowered as it introduces these new nodes: " + graph.getNewNodes(postLoweringMark).snapshot();
-            }
-            if (graph.isAfterFloatingReadPhase() && n instanceof MemoryCheckpoint && !(node instanceof MemoryCheckpoint) && !(node instanceof ControlSinkNode))
-            {
-                /*
-                 * The lowering introduced a MemoryCheckpoint but the current node isn't a
-                 * checkpoint. This is only OK if the locations involved don't affect the memory
-                 * graph or if the new kill location doesn't connect into the existing graph.
-                 */
-                boolean isAny = false;
-                if (n instanceof MemoryCheckpoint.Single)
-                {
-                    isAny = ((MemoryCheckpoint.Single) n).getLocationIdentity().isAny();
-                }
-                else
-                {
-                    for (LocationIdentity ident : ((MemoryCheckpoint.Multi) n).getLocationIdentities())
-                    {
-                        if (ident.isAny())
-                        {
-                            isAny = true;
-                        }
-                    }
-                }
-                if (isAny && n instanceof FixedWithNextNode)
-                {
-                    /*
-                     * Check if the next kill location leads directly to a ControlSinkNode in the
-                     * new part of the graph. This is a fairly conservative test that could be made
-                     * more general if required.
-                     */
-                    FixedWithNextNode cur = (FixedWithNextNode) n;
-                    while (cur != null && graph.isNew(preLoweringMark, cur))
-                    {
-                        if (cur.next() instanceof ControlSinkNode)
-                        {
-                            isAny = false;
-                            break;
-                        }
-                        if (cur.next() instanceof FixedWithNextNode)
-                        {
-                            cur = (FixedWithNextNode) cur.next();
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                }
-                assert !isAny : node + " " + n;
-            }
-        }
-        return true;
     }
 
     private enum LoweringMode
@@ -409,7 +311,7 @@ public class LoweringPhase extends BasePhase<PhaseContext>
         @Override
         public void run(StructuredGraph graph)
         {
-            schedulePhase.apply(graph, false);
+            schedulePhase.apply(graph);
             schedule = graph.getLastSchedule();
             schedule.getCFG().computePostdominators();
             Block startBlock = schedule.getCFG().getStartBlock();
@@ -500,7 +402,6 @@ public class LoweringPhase extends BasePhase<PhaseContext>
                 if (node instanceof Lowerable)
                 {
                     Collection<Node> unscheduledUsages = null;
-                    assert (unscheduledUsages = getUnscheduledUsages(node)) != null;
                     Mark preLoweringMark = node.graph().getMark();
                     try (DebugCloseable s = node.graph().withNodeSourcePosition(node))
                     {
@@ -509,10 +410,8 @@ public class LoweringPhase extends BasePhase<PhaseContext>
                     if (loweringTool.guardAnchor.asNode().isDeleted())
                     {
                         // TODO nextNode could be deleted but this is not currently supported
-                        assert nextNode.isAlive();
                         loweringTool.guardAnchor = AbstractBeginNode.prevBegin(nextNode);
                     }
-                    assert checkPostNodeLowering(node, loweringTool, preLoweringMark, unscheduledUsages);
                 }
 
                 if (!nextNode.isAlive())
@@ -657,7 +556,6 @@ public class LoweringPhase extends BasePhase<PhaseContext>
                     else
                     {
                         f = f.enter(n);
-                        assert f.block.getDominator() == f.parent.block;
                         nextState = ST_PROCESS;
                     }
                 }

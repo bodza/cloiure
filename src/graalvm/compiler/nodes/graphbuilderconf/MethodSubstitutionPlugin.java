@@ -165,7 +165,6 @@ public final class MethodSubstitutionPlugin implements InvocationPlugin
         Method m = lookupSubstitute(null);
         if (m != null)
         {
-            assert lookupSubstitute(m) == null : String.format("multiple matches found for %s:%n%s%n%s", this, m, lookupSubstitute(m));
             return m;
         }
         throw new GraalError("No method found specified by %s", this);

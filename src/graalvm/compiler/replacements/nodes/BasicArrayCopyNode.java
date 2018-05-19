@@ -6,7 +6,6 @@ import static graalvm.compiler.nodeinfo.NodeSize.SIZE_64;
 import static org.graalvm.word.LocationIdentity.any;
 
 import graalvm.compiler.core.common.type.StampFactory;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeInputList;
 import graalvm.compiler.nodeinfo.NodeCycles;
@@ -231,11 +230,6 @@ public class BasicArrayCopyNode extends AbstractMemoryCheckpoint implements Virt
                         tool.setVirtualEntry(destVirtual, destPosInt + i, tool.getEntry(srcVirtual, srcPosInt + i));
                     }
                     tool.delete();
-                    DebugContext debug = getDebug();
-                    if (debug.isLogEnabled())
-                    {
-                        debug.log("virtualized arraycopy(%s, %d, %s, %d, %d)", getSource(), srcPosInt, getDestination(), destPosInt, len);
-                    }
                 }
                 else
                 {

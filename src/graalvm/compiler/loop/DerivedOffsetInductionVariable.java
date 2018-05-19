@@ -124,7 +124,6 @@ public class DerivedOffsetInductionVariable extends DerivedInductionVariable
             }
             else
             {
-                assert base.valueNode() == value.getY();
                 return o - b;
             }
         }
@@ -145,7 +144,6 @@ public class DerivedOffsetInductionVariable extends DerivedInductionVariable
             }
             else
             {
-                assert base.valueNode() == value.getY();
                 return sub(graph(), o, b);
             }
         }

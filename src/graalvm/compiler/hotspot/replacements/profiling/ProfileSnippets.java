@@ -9,7 +9,6 @@ import static graalvm.compiler.replacements.SnippetTemplate.DEFAULT_REPLACER;
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
-import graalvm.compiler.debug.DebugHandlersFactory;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node.ConstantNodeParameter;
 import graalvm.compiler.graph.Node.NodeIntrinsic;
@@ -93,9 +92,9 @@ public class ProfileSnippets implements Snippets
         private final SnippetInfo profileBackedge = snippet(ProfileSnippets.class, "profileBackedge");
         private final SnippetInfo profileConditionalBackedge = snippet(ProfileSnippets.class, "profileConditionalBackedge");
 
-        public Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, HotSpotProviders providers, TargetDescription target)
+        public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target)
         {
-            super(options, factories, providers, providers.getSnippetReflection(), target);
+            super(options, providers, providers.getSnippetReflection(), target);
         }
 
         public void lower(ProfileNode profileNode, LoweringTool tool)
@@ -144,7 +143,6 @@ public class ProfileSnippets implements Snippets
                 throw new GraalError("Unsupported profile node type: " + profileNode);
             }
 
-            assert profileNode.hasNoUsages();
             if (!profileNode.isDeleted())
             {
                 GraphUtil.killWithUnusedFloatingInputs(profileNode);

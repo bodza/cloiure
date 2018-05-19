@@ -792,7 +792,6 @@ public class StandardGraphBuilderPlugins
         @Override
         public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver unsafe, ValueNode address, ValueNode value)
         {
-            assert !hasBarrier : "Barriers for address based Unsafe put is not supported.";
             // Emits a null-check for the otherwise unused receiver
             unsafe.get();
             b.add(new UnsafeMemoryStoreNode(address, value, kind, OFF_HEAP_LOCATION));

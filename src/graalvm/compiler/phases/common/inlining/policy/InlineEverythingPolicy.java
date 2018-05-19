@@ -24,6 +24,6 @@ public class InlineEverythingPolicy implements InliningPolicy
     @Override
     public Decision isWorthInlining(Replacements replacements, MethodInvocation invocation, int inliningDepth, boolean fullyProcessed)
     {
-        return Decision.YES.withReason(GraalOptions.TraceInlining.getValue(replacements.getOptions()), "inline everything");
+        return Decision.YES;
     }
 }

@@ -61,7 +61,6 @@ public final class EncodedSymbolConstant extends DataPointerConstant
 
     private static byte[] encodeConstant(Constant constant)
     {
-        assert constant != null;
         if (constant instanceof HotSpotObjectConstant)
         {
             return toUTF8String(((HotSpotObjectConstant) constant).asObject(String.class));
@@ -85,7 +84,6 @@ public final class EncodedSymbolConstant extends DataPointerConstant
                 resultPos += methodName.length;
                 System.arraycopy(signature, 0, result, resultPos, signature.length);
                 resultPos += signature.length;
-                assert resultPos == result.length;
                 return result;
             }
         }

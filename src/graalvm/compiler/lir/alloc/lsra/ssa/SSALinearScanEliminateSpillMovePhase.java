@@ -4,8 +4,6 @@ import static jdk.vm.ci.code.ValueUtil.isRegister;
 import static graalvm.compiler.lir.LIRValueUtil.isStackSlotValue;
 
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
-import graalvm.compiler.debug.DebugContext;
-import graalvm.compiler.debug.Indent;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.StandardOp.LabelOp;
 import graalvm.compiler.lir.StandardOp.MoveOp;
@@ -34,10 +32,8 @@ public class SSALinearScanEliminateSpillMovePhase extends LinearScanEliminateSpi
         {
             // SSA Linear Scan might introduce moves to stack slots
             Interval curInterval = allocator.intervalFor(move.getResult());
-            assert !isRegister(curInterval.location()) && curInterval.alwaysInMemory();
             if (!isPhiResolutionMove(block, move, curInterval))
             {
-                assert isStackSlotValue(curInterval.location()) : "Not a stack slot: " + curInterval.location();
                 return true;
             }
         }
@@ -66,15 +62,9 @@ public class SSALinearScanEliminateSpillMovePhase extends LinearScanEliminateSpi
             return false;
         }
         AbstractBlockBase<?> intStartBlock = allocator.blockForId(toInterval.from());
-        assert allocator.getLIR().getLIRforBlock(intStartBlock).get(0).equals(op);
         if (!block.getSuccessors()[0].equals(intStartBlock))
         {
             return false;
-        }
-        DebugContext debug = allocator.getDebug();
-        try (Indent indent = debug.indent())
-        {
-            debug.log("Is a move (%s) to phi interval %s", move, toInterval);
         }
         return true;
     }

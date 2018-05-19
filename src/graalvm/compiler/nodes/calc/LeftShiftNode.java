@@ -86,7 +86,6 @@ public final class LeftShiftNode extends ShiftNode<Shl>
                         }
                         else
                         {
-                            assert stamp.getStackKind() == JavaKind.Int;
                             return new AndNode(other.getX(), ConstantNode.forInt(-1 << amount));
                         }
                     }

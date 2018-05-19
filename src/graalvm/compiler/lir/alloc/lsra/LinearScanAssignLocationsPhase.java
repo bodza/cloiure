@@ -11,8 +11,6 @@ import java.util.Collections;
 import java.util.EnumSet;
 
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
-import graalvm.compiler.debug.DebugContext;
-import graalvm.compiler.debug.Indent;
 import graalvm.compiler.lir.ConstantValue;
 import graalvm.compiler.lir.InstructionValueProcedure;
 import graalvm.compiler.lir.LIRInstruction;
@@ -59,31 +57,9 @@ public class LinearScanAssignLocationsPhase extends LinearScanAllocationPhase
     {
         int opId = op.id();
         Interval interval = allocator.intervalFor(operand);
-        assert interval != null : "interval must exist";
 
         if (opId != -1)
         {
-            if (allocator.detailedAsserts)
-            {
-                AbstractBlockBase<?> block = allocator.blockForId(opId);
-                if (block.getSuccessorCount() <= 1 && opId == allocator.getLastLirInstructionId(block))
-                {
-                    /*
-                     * Check if spill moves could have been appended at the end of this block, but
-                     * before the branch instruction. So the split child information for this branch
-                     * would be incorrect.
-                     */
-                    LIRInstruction instr = allocator.getLIR().getLIRforBlock(block).get(allocator.getLIR().getLIRforBlock(block).size() - 1);
-                    if (instr instanceof StandardOp.JumpOp)
-                    {
-                        if (allocator.getBlockData(block).liveOut.get(allocator.operandNumber(operand)))
-                        {
-                            assert false : String.format("can't get split child for the last branch of a block because the information would be incorrect (moves are inserted before the branch in resolveDataFlow) block=%s, instruction=%s, operand=%s", block, instr, operand);
-                        }
-                    }
-                }
-            }
-
             /*
              * Operands are not changed when an interval is split during allocation, so search the
              * right interval here.
@@ -93,7 +69,6 @@ public class LinearScanAssignLocationsPhase extends LinearScanAllocationPhase
 
         if (isIllegal(interval.location()) && interval.canMaterialize())
         {
-            assert mode != OperandMode.DEF;
             return new ConstantValue(interval.kind(), interval.getMaterializedValue());
         }
         return interval.location();
@@ -135,7 +110,6 @@ public class LinearScanAssignLocationsPhase extends LinearScanAllocationPhase
          * cause an assert on failure.
          */
         Value result = colorLirOperand(op, (Variable) operand, mode);
-        assert !allocator.hasCall(tempOpId) || isStackSlotValue(result) || isJavaConstant(result) || !allocator.isCallerSave(result) : "cannot have caller-save register operands at calls";
         return result;
     }
 
@@ -197,8 +171,6 @@ public class LinearScanAssignLocationsPhase extends LinearScanAllocationPhase
      */
     protected boolean assignLocations(LIRInstruction op)
     {
-        assert op != null;
-
         // remove useless moves
         if (MoveOp.isMoveOp(op))
         {
@@ -234,19 +206,11 @@ public class LinearScanAssignLocationsPhase extends LinearScanAllocationPhase
         return false;
     }
 
-    @SuppressWarnings("try")
     private void assignLocations()
     {
-        DebugContext debug = allocator.getDebug();
-        try (Indent indent = debug.logAndIndent("assign locations"))
+        for (AbstractBlockBase<?> block : allocator.sortedBlocks())
         {
-            for (AbstractBlockBase<?> block : allocator.sortedBlocks())
-            {
-                try (Indent indent2 = debug.logAndIndent("assign locations in block B%d", block.getId()))
-                {
-                    assignLocations(allocator.getLIR().getLIRforBlock(block));
-                }
-            }
+            assignLocations(allocator.getLIR().getLIRforBlock(block));
         }
     }
 }

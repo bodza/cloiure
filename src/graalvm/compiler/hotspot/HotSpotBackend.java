@@ -70,9 +70,6 @@ public abstract class HotSpotBackend extends Backend implements FrameMap.Referen
     {
         @Option(help = "Use Graal arithmetic stubs instead of HotSpot stubs where possible")
         public static final OptionKey<Boolean> GraalArithmeticStubs = new OptionKey<>(false); // GR-8276
-        @Option(help = "Enables instruction profiling on assembler level. Valid values are a comma separated list of supported instructions." +
-                        " Compare with subclasses of Assembler.InstructionCounter.", type = OptionType.Debug)
-        public static final OptionKey<String> ASMInstructionProfiling = new OptionKey<>(null);
     }
 
     /**
@@ -415,14 +412,6 @@ public abstract class HotSpotBackend extends Backend implements FrameMap.Referen
     public SuitesProvider getSuites()
     {
         return getProviders().getSuites();
-    }
-
-    protected void profileInstructions(LIR lir, CompilationResultBuilder crb)
-    {
-        if (HotSpotBackend.Options.ASMInstructionProfiling.getValue(lir.getOptions()) != null)
-        {
-            HotSpotInstructionProfiling.countInstructions(lir, crb.asm);
-        }
     }
 
     @Override

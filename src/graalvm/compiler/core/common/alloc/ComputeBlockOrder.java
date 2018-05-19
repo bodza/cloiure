@@ -54,7 +54,6 @@ public final class ComputeBlockOrder
         BitSet visitedBlocks = new BitSet(blockCount);
         PriorityQueue<T> worklist = initializeWorklist(startBlock, visitedBlocks);
         computeLinearScanOrder(order, worklist, visitedBlocks);
-        assert checkOrder(order, blockCount);
         return order.toArray(new AbstractBlockBase<?>[0]);
     }
 
@@ -69,7 +68,6 @@ public final class ComputeBlockOrder
         BitSet visitedBlocks = new BitSet(blockCount);
         PriorityQueue<T> worklist = initializeWorklist(startBlock, visitedBlocks);
         computeCodeEmittingOrder(order, worklist, visitedBlocks);
-        assert checkOrder(order, blockCount);
         return order.toArray(new AbstractBlockBase<?>[0]);
     }
 
@@ -197,7 +195,6 @@ public final class ComputeBlockOrder
      */
     private static <T extends AbstractBlockBase<T>> void addBlock(T header, List<T> order)
     {
-        assert !order.contains(header) : "Cannot insert block twice";
         order.add(header);
     }
 
@@ -209,7 +206,6 @@ public final class ComputeBlockOrder
         T result = null;
         for (T successor : block.getSuccessors())
         {
-            assert successor.probability() >= 0.0 : "Probabilities must be positive";
             if (!visitedBlocks.get(successor.getId()) && successor.getLoopDepth() >= block.getLoopDepth() && (result == null || successor.probability() >= result.probability()))
             {
                 result = successor;
@@ -244,15 +240,6 @@ public final class ComputeBlockOrder
     private static <T extends AbstractBlockBase<T>> boolean skipLoopHeader(AbstractBlockBase<T> block)
     {
         return (block.isLoopHeader() && !block.isLoopEnd() && block.getLoop().numBackedges() == 1);
-    }
-
-    /**
-     * Checks that the ordering contains the expected number of blocks.
-     */
-    private static boolean checkOrder(List<? extends AbstractBlockBase<?>> order, int expectedBlockCount)
-    {
-        assert order.size() == expectedBlockCount : String.format("Number of blocks in ordering (%d) does not match expected block count (%d)", order.size(), expectedBlockCount);
-        return true;
     }
 
     /**

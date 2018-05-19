@@ -2,13 +2,11 @@ package graalvm.compiler.hotspot;
 
 import static jdk.vm.ci.code.CodeUtil.K;
 import static jdk.vm.ci.code.CodeUtil.getCallingConvention;
-import static jdk.vm.ci.common.InitTimer.timer;
 
 import java.util.Collections;
 
 import graalvm.compiler.core.common.NumUtil;
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
-import graalvm.compiler.debug.DebugHandlersFactory;
 import graalvm.compiler.hotspot.meta.HotSpotHostForeignCallsProvider;
 import graalvm.compiler.hotspot.meta.HotSpotLoweringProvider;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
@@ -17,7 +15,6 @@ import graalvm.compiler.lir.asm.CompilationResultBuilder;
 import graalvm.compiler.lir.framemap.ReferenceMapBuilder;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.options.OptionValues;
-import graalvm.compiler.printer.GraalDebugHandlersFactory;
 
 import jdk.vm.ci.code.CallingConvention;
 import jdk.vm.ci.common.InitTimer;
@@ -51,22 +48,14 @@ public abstract class HotSpotHostBackend extends HotSpotBackend
     }
 
     @Override
-    @SuppressWarnings("try")
     public void completeInitialization(HotSpotJVMCIRuntime jvmciRuntime, OptionValues options)
     {
         final HotSpotProviders providers = getProviders();
         HotSpotHostForeignCallsProvider foreignCalls = (HotSpotHostForeignCallsProvider) providers.getForeignCalls();
         final HotSpotLoweringProvider lowerer = (HotSpotLoweringProvider) providers.getLowerer();
 
-        try (InitTimer st = timer("foreignCalls.initialize"))
-        {
-            foreignCalls.initialize(providers, options);
-        }
-        try (InitTimer st = timer("lowerer.initialize"))
-        {
-            Iterable<DebugHandlersFactory> factories = Collections.singletonList(new GraalDebugHandlersFactory(providers.getSnippetReflection()));
-            lowerer.initialize(options, factories, providers, config);
-        }
+        foreignCalls.initialize(providers, options);
+        lowerer.initialize(options, providers, config);
     }
 
     protected CallingConvention makeCallingConvention(StructuredGraph graph, Stub stub)

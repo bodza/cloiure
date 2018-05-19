@@ -43,7 +43,6 @@ public abstract class ValueNode extends graalvm.compiler.graph.Node implements V
     public final void setStamp(Stamp stamp)
     {
         this.stamp = stamp;
-        assert !isAlive() || !inferStamp() : "setStamp called on a node that overrides inferStamp: " + this;
     }
 
     @Override
@@ -203,17 +202,13 @@ public abstract class ValueNode extends graalvm.compiler.graph.Node implements V
     protected void replaceAtUsages(Node other, Predicate<Node> filter, Node toBeDeleted)
     {
         super.replaceAtUsages(other, filter, toBeDeleted);
-        assert checkReplaceAtUsagesInvariants(other);
     }
 
     private boolean checkReplaceAtUsagesInvariants(Node other)
     {
-        assert other == null || other instanceof ValueNode;
         if (this.hasUsages() && !this.stamp(NodeView.DEFAULT).isEmpty() && !(other instanceof PhiNode) && other != null)
         {
-            assert ((ValueNode) other).stamp(NodeView.DEFAULT).getClass() == stamp(NodeView.DEFAULT).getClass() : "stamp have to be of same class";
             boolean morePrecise = ((ValueNode) other).stamp(NodeView.DEFAULT).join(stamp(NodeView.DEFAULT)).equals(((ValueNode) other).stamp(NodeView.DEFAULT));
-            assert morePrecise : "stamp can only get more precise " + toString(Verbosity.All) + " " + other.toString(Verbosity.All);
         }
         return true;
     }

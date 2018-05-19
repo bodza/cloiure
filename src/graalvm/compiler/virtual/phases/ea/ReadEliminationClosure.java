@@ -98,7 +98,6 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
                 }
                 else
                 {
-                    assert node instanceof StoreFieldNode;
                     StoreFieldNode store = (StoreFieldNode) node;
                     ValueNode value = getScalarAlias(store.value());
                     if (GraphUtil.unproxify(value) == GraphUtil.unproxify(cachedValue))
@@ -181,7 +180,6 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
                 }
                 else
                 {
-                    assert node instanceof RawStoreNode;
                     RawStoreNode write = (RawStoreNode) node;
                     if (write.getLocationIdentity().isSingle())
                     {
@@ -328,7 +326,6 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
                     for (int i = 0; i < states.size(); i++)
                     {
                         ValueNode v = states.get(i).getCacheEntry(key);
-                        assert phiNode.stamp(NodeView.DEFAULT).isCompatible(v.stamp(NodeView.DEFAULT)) : "Cannot create read elimination phi for inputs with incompatible stamps.";
                         setPhiInput(phiNode, i, v);
                     }
                     newState.addCacheEntry(key, phiNode);
@@ -391,8 +388,6 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
     @Override
     protected void processKilledLoopLocations(Loop<Block> loop, ReadEliminationBlockState initialState, ReadEliminationBlockState mergedStates)
     {
-        assert initialState != null;
-        assert mergedStates != null;
         if (initialState.readCache.size() > 0)
         {
             LoopKillCache loopKilledLocations = loopLocationKillCache.get(loop);
@@ -429,10 +424,6 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
                     for (LocationIdentity location : forwardEndLiveLocations)
                     {
                         loopKilledLocations.rememberLoopKilledLocation(location);
-                    }
-                    if (debug.isLogEnabled() && loopKilledLocations != null)
-                    {
-                        debug.log("[Early Read Elimination] Setting loop killed locations of loop at node %s with %s", loop.getHeader().getBeginNode(), forwardEndLiveLocations);
                     }
                 }
                 // remember the loop visit

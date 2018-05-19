@@ -89,7 +89,6 @@ public final class ReentrantNodeIterator
 
     private static <StateT> EconomicMap<FixedNode, StateT> apply(NodeIteratorClosure<StateT> closure, FixedNode start, StateT initialState, LoopBeginNode boundary)
     {
-        assert start != null;
         Deque<AbstractBeginNode> nodeQueue = new ArrayDeque<>();
         EconomicMap<FixedNode, StateT> blockEndStates = EconomicMap.create(Equivalence.IDENTITY);
 
@@ -156,7 +155,6 @@ public final class ReentrantNodeIterator
                                     for (int i = 0; i < merge.forwardEndCount(); i++)
                                     {
                                         AbstractEndNode forwardEnd = merge.forwardEndAt(i);
-                                        assert forwardEnd == current || blockEndStates.containsKey(forwardEnd);
                                         StateT other = forwardEnd == current ? state : blockEndStates.removeKey(forwardEnd);
                                         states.add(other);
                                     }
@@ -166,7 +164,6 @@ public final class ReentrantNodeIterator
                                 }
                                 else
                                 {
-                                    assert !blockEndStates.containsKey(current);
                                     blockEndStates.put(current, state);
                                 }
                             }
@@ -209,9 +206,7 @@ public final class ReentrantNodeIterator
             else
             {
                 current = nodeQueue.removeFirst();
-                assert blockEndStates.containsKey(current);
                 state = blockEndStates.removeKey(current);
-                assert !(current instanceof AbstractMergeNode) && current instanceof AbstractBeginNode;
             }
         } while (true);
     }

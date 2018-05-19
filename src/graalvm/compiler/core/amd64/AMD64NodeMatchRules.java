@@ -138,7 +138,6 @@ public class AMD64NodeMatchRules extends NodeMatchRules
             }
             if (kind.isXMM())
             {
-                ifNode.getDebug().log("Skipping constant compares for float kinds");
                 return null;
             }
         }
@@ -163,7 +162,6 @@ public class AMD64NodeMatchRules extends NodeMatchRules
                  * Check that patterns which were matched as a constant actually end up seeing a
                  * constant in the LIR.
                  */
-                assert !matchedAsConstantFinal || !LIRValueUtil.isVariable(other) : "expected constant value " + value;
                 AMD64AddressValue address = (AMD64AddressValue) operand(access.getAddress());
                 getLIRGeneratorTool().emitCompareBranchMemory(kind, other, address, getState(access), finalCondition, unorderedIsTrue, trueLabel, falseLabel, trueLabelProbability);
                 return null;
@@ -227,7 +225,6 @@ public class AMD64NodeMatchRules extends NodeMatchRules
 
     private ComplexMatchResult emitSignExtendMemory(Access access, int fromBits, int toBits, ValueKind<?> addressKind)
     {
-        assert fromBits <= toBits && toBits <= 64;
         AMD64Kind kind = null;
         AMD64RMOp op;
         OperandSize size;
@@ -320,7 +317,6 @@ public class AMD64NodeMatchRules extends NodeMatchRules
     @MatchRule("(If (IntegerEquals=compare value ValueCompareAndSwap=cas))")
     public ComplexMatchResult ifCompareValueCas(IfNode root, CompareNode compare, ValueNode value, ValueCompareAndSwapNode cas)
     {
-        assert compare.condition() == CanonicalCondition.EQ;
         if (value == cas.getExpectedValue() && cas.usages().count() == 1)
         {
             return builder ->
@@ -346,7 +342,6 @@ public class AMD64NodeMatchRules extends NodeMatchRules
     public ComplexMatchResult ifCompareLogicCas(IfNode root, CompareNode compare, ValueNode value, LogicCompareAndSwapNode cas)
     {
         JavaConstant constant = value.asJavaConstant();
-        assert compare.condition() == CanonicalCondition.EQ;
         if (constant != null && cas.usages().count() == 1)
         {
             long constantValue = constant.asLong();

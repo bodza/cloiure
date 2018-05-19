@@ -7,7 +7,6 @@ import java.util.List;
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 import graalvm.compiler.debug.DebugCloseable;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Graph.DuplicationReplacement;
 import graalvm.compiler.graph.Node;
@@ -93,7 +92,6 @@ public class LoopFragmentInside extends LoopFragment
     @Override
     public LoopFragmentInside duplicate()
     {
-        assert !isDuplicate();
         return new LoopFragmentInside(this);
     }
 
@@ -112,15 +110,12 @@ public class LoopFragmentInside extends LoopFragment
     @Override
     public LoopEx loop()
     {
-        assert !this.isDuplicate();
         return super.loop();
     }
 
     @Override
     public void insertBefore(LoopEx loop)
     {
-        assert this.isDuplicate() && this.original().loop() == loop;
-
         patchNodes(dataFixBefore);
 
         AbstractBeginNode end = mergeEnds();
@@ -153,8 +148,6 @@ public class LoopFragmentInside extends LoopFragment
      */
     public void insertWithinAfter(LoopEx loop, boolean updateLimit)
     {
-        assert isDuplicate() && original().loop() == loop;
-
         patchNodes(dataFixWithinAfter);
 
         /*
@@ -172,10 +165,6 @@ public class LoopFragmentInside extends LoopFragment
                 {
                     duplicatedNode = ((PhiNode) (mainPhiNode.valueAt(1))).valueAt(1);
                 }
-                else
-                {
-                    assert mainPhiNode.valueAt(1).isConstant() : mainPhiNode.valueAt(1);
-                }
             }
             backedgeValues.add(duplicatedNode);
         }
@@ -192,7 +181,6 @@ public class LoopFragmentInside extends LoopFragment
         placeNewSegmentAndCleanup(loop);
 
         // Remove any safepoints from the original copy leaving only the duplicated one
-        assert loop.whole().nodes().filter(SafepointNode.class).count() == nodes().filter(SafepointNode.class).count();
         for (SafepointNode safepoint : loop.whole().nodes().filter(SafepointNode.class))
         {
             graph().removeFixed(safepoint);
@@ -234,9 +222,6 @@ public class LoopFragmentInside extends LoopFragment
         }
         mainLoopBegin.setUnrollFactor(unrollFactor * 2);
         mainLoopBegin.setLoopFrequency(mainLoopBegin.loopFrequency() / 2);
-        graph.getDebug().dump(DebugContext.DETAILED_LEVEL, graph, "LoopPartialUnroll %s", loop);
-
-        mainLoopBegin.getDebug().dump(DebugContext.VERBOSE_LEVEL, mainLoopBegin.graph(), "After insertWithinAfter %s", mainLoopBegin);
     }
 
     private void placeNewSegmentAndCleanup(LoopEx loop)
@@ -258,7 +243,6 @@ public class LoopFragmentInside extends LoopFragment
         }
         else
         {
-            assert (falseSuccessor == mainCounted.getBody());
             firstNode = falseSuccessor.next();
         }
         trueSuccessor = newSegmentTest.trueSuccessor();
@@ -278,7 +262,6 @@ public class LoopFragmentInside extends LoopFragment
         }
         else
         {
-            graph.getDebug().dump(DebugContext.VERBOSE_LEVEL, mainLoopBegin.graph(), "before");
             startBlockNode = falseSuccessor;
         }
         FixedNode lastNode = getBlockEnd(startBlockNode);
@@ -286,7 +269,6 @@ public class LoopFragmentInside extends LoopFragment
         FixedWithNextNode lastCodeNode = (FixedWithNextNode) loopEndNode.predecessor();
         FixedNode newSegmentFirstNode = getDuplicatedNode(firstNode);
         FixedWithNextNode newSegmentLastNode = getDuplicatedNode(lastCodeNode);
-        graph.getDebug().dump(DebugContext.DETAILED_LEVEL, loopEndNode.graph(), "Before placing segment");
         if (firstNode instanceof LoopEndNode)
         {
             GraphUtil.killCFG(getDuplicatedNode(mainLoopBegin));
@@ -310,7 +292,6 @@ public class LoopFragmentInside extends LoopFragment
             falseSuccessor.safeDelete();
             newSegmentTestStart.safeDelete();
         }
-        graph.getDebug().dump(DebugContext.DETAILED_LEVEL, loopEndNode.graph(), "After placing segment");
     }
 
     private static EndNode getBlockEnd(FixedNode node)
@@ -587,7 +568,6 @@ public class LoopFragmentInside extends LoopFragment
     @Override
     protected ValueNode prim(ValueNode b)
     {
-        assert isDuplicate();
         LoopBeginNode loopBegin = original().loop().loopBegin();
         if (loopBegin.isPhiAtMerge(b))
         {
@@ -611,12 +591,10 @@ public class LoopFragmentInside extends LoopFragment
 
     protected ValueNode primAfter(ValueNode b)
     {
-        assert isDuplicate();
         LoopBeginNode loopBegin = original().loop().loopBegin();
         if (loopBegin.isPhiAtMerge(b))
         {
             PhiNode phi = (PhiNode) b;
-            assert phi.valueCount() == 2;
             return phi.valueAt(1);
         }
         else if (nodesReady)
@@ -637,7 +615,6 @@ public class LoopFragmentInside extends LoopFragment
     @SuppressWarnings("try")
     private AbstractBeginNode mergeEnds()
     {
-        assert isDuplicate();
         List<EndNode> endsToMerge = new LinkedList<>();
         // map peel exits to the corresponding loop exits
         EconomicMap<AbstractEndNode, LoopEndNode> reverseEnds = EconomicMap.create(Equivalence.IDENTITY);
@@ -657,7 +634,6 @@ public class LoopFragmentInside extends LoopFragment
         if (endsToMerge.size() == 1)
         {
             AbstractEndNode end = endsToMerge.get(0);
-            assert end.hasNoUsages();
             try (DebugCloseable position = end.withNodeSourcePosition())
             {
                 newExit = graph.add(new BeginNode());
@@ -667,7 +643,6 @@ public class LoopFragmentInside extends LoopFragment
         }
         else
         {
-            assert endsToMerge.size() > 1;
             AbstractMergeNode newExitMerge = graph.add(new MergeNode());
             newExit = newExitMerge;
             FrameState state = loopBegin.stateAfter();
@@ -693,7 +668,6 @@ public class LoopFragmentInside extends LoopFragment
                 {
                     LoopEndNode loopEnd = reverseEnds.get(end);
                     ValueNode prim = prim(phi.valueAt(loopEnd));
-                    assert prim != null;
                     firstPhi.addInput(prim);
                 }
                 ValueNode initializer = firstPhi;

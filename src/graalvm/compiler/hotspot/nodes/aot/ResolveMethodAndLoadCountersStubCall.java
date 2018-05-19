@@ -60,12 +60,9 @@ public class ResolveMethodAndLoadCountersStubCall extends DeoptimizingStubCall i
     @Override
     public void generate(NodeLIRBuilderTool gen)
     {
-        assert methodConstant != null : "Expected method to fold: " + method;
-
         Value methodDescriptionValue = gen.operand(methodDescription);
         Value klassHintValue = gen.operand(klassHint);
         LIRFrameState fs = gen.state(this);
-        assert fs != null : "The stateAfter is null";
 
         Value result = ((HotSpotLIRGenerator) gen.getLIRGeneratorTool()).emitResolveMethodAndLoadCounters(methodConstant, klassHintValue, methodDescriptionValue, fs);
 

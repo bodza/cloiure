@@ -13,10 +13,6 @@ import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.common.alloc.Trace;
 import graalvm.compiler.core.common.alloc.TraceBuilderResult;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
-import graalvm.compiler.debug.Assertions;
-import graalvm.compiler.debug.CounterKey;
-import graalvm.compiler.debug.DebugContext;
-import graalvm.compiler.debug.Indent;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.StandardOp;
@@ -48,24 +44,17 @@ final class TraceLinearScanResolveDataFlowPhase extends TraceLinearScanAllocatio
     {
         private final TraceLinearScan allocator;
         private final TraceBuilderResult traceBuilderResult;
-        private final DebugContext debug;
 
         private Resolver(TraceLinearScan allocator, TraceBuilderResult traceBuilderResult)
         {
             this.allocator = allocator;
             this.traceBuilderResult = traceBuilderResult;
-            this.debug = allocator.getDebug();
         }
 
         private void resolveFindInsertPos(AbstractBlockBase<?> fromBlock, AbstractBlockBase<?> toBlock, TraceLocalMoveResolver moveResolver)
         {
             if (fromBlock.getSuccessorCount() <= 1)
             {
-                if (debug.isLogEnabled())
-                {
-                    debug.log("inserting moves at end of fromBlock B%d", fromBlock.getId());
-                }
-
                 ArrayList<LIRInstruction> instructions = allocator.getLIR().getLIRforBlock(fromBlock);
                 LIRInstruction instr = instructions.get(instructions.size() - 1);
                 if (instr instanceof StandardOp.JumpOp)
@@ -80,27 +69,6 @@ final class TraceLinearScanResolveDataFlowPhase extends TraceLinearScanAllocatio
             }
             else
             {
-                if (debug.isLogEnabled())
-                {
-                    debug.log("inserting moves at beginning of toBlock B%d", toBlock.getId());
-                }
-
-                if (Assertions.detailedAssertionsEnabled(allocator.getOptions()))
-                {
-                    assert allocator.getLIR().getLIRforBlock(fromBlock).get(0) instanceof StandardOp.LabelOp : "block does not start with a label";
-
-                    /*
-                     * Because the number of predecessor edges matches the number of successor
-                     * edges, blocks which are reached by switch statements may have be more than
-                     * one predecessor but it will be guaranteed that all predecessors will be the
-                     * same.
-                     */
-                    for (AbstractBlockBase<?> predecessor : toBlock.getPredecessors())
-                    {
-                        assert fromBlock == predecessor : "all critical edges must be broken";
-                    }
-                }
-
                 moveResolver.setInsertPosition(allocator.getLIR().getLIRforBlock(toBlock), 1);
             }
         }
@@ -109,7 +77,6 @@ final class TraceLinearScanResolveDataFlowPhase extends TraceLinearScanAllocatio
          * Inserts necessary moves (spilling or reloading) at edges between blocks for intervals
          * that have been split.
          */
-        @SuppressWarnings("try")
         private void resolveDataFlow(Trace currentTrace, AbstractBlockBase<?>[] blocks)
         {
             if (blocks.length < 2)
@@ -117,64 +84,53 @@ final class TraceLinearScanResolveDataFlowPhase extends TraceLinearScanAllocatio
                 // no resolution necessary
                 return;
             }
-            try (Indent indent = debug.logAndIndent("resolve data flow"))
+
+            TraceLocalMoveResolver moveResolver = allocator.createMoveResolver();
+            AbstractBlockBase<?> toBlock = null;
+            for (int i = 0; i < blocks.length - 1; i++)
             {
-                TraceLocalMoveResolver moveResolver = allocator.createMoveResolver();
-                AbstractBlockBase<?> toBlock = null;
-                for (int i = 0; i < blocks.length - 1; i++)
+                AbstractBlockBase<?> fromBlock = blocks[i];
+                toBlock = blocks[i + 1];
+                resolveCollectMappings(fromBlock, toBlock, moveResolver);
+            }
+            if (toBlock.isLoopEnd())
+            {
+                AbstractBlockBase<?> loopHeader = toBlock.getSuccessors()[0];
+                if (containedInTrace(currentTrace, loopHeader))
                 {
-                    AbstractBlockBase<?> fromBlock = blocks[i];
-                    toBlock = blocks[i + 1];
-                    assert containedInTrace(currentTrace, fromBlock) : "Not in Trace: " + fromBlock;
-                    assert containedInTrace(currentTrace, toBlock) : "Not in Trace: " + toBlock;
-                    resolveCollectMappings(fromBlock, toBlock, moveResolver);
-                }
-                assert blocks[blocks.length - 1].equals(toBlock);
-                if (toBlock.isLoopEnd())
-                {
-                    assert toBlock.getSuccessorCount() == 1;
-                    AbstractBlockBase<?> loopHeader = toBlock.getSuccessors()[0];
-                    if (containedInTrace(currentTrace, loopHeader))
-                    {
-                        resolveCollectMappings(toBlock, loopHeader, moveResolver);
-                    }
+                    resolveCollectMappings(toBlock, loopHeader, moveResolver);
                 }
             }
         }
 
-        @SuppressWarnings("try")
         private void resolveCollectMappings(AbstractBlockBase<?> fromBlock, AbstractBlockBase<?> toBlock, TraceLocalMoveResolver moveResolver)
         {
-            try (Indent indent0 = debug.logAndIndent("Edge %s -> %s", fromBlock, toBlock))
+            // collect all intervals that have been split between
+            // fromBlock and toBlock
+            int toId = allocator.getFirstLirInstructionId(toBlock);
+            int fromId = allocator.getLastLirInstructionId(fromBlock);
+            LIR lir = allocator.getLIR();
+            if (SSAUtil.isMerge(toBlock))
             {
-                // collect all intervals that have been split between
-                // fromBlock and toBlock
-                int toId = allocator.getFirstLirInstructionId(toBlock);
-                int fromId = allocator.getLastLirInstructionId(fromBlock);
-                assert fromId >= 0;
-                LIR lir = allocator.getLIR();
-                if (SSAUtil.isMerge(toBlock))
+                JumpOp blockEnd = SSAUtil.phiOut(lir, fromBlock);
+                LabelOp label = SSAUtil.phiIn(lir, toBlock);
+                for (int i = 0; i < label.getPhiSize(); i++)
                 {
-                    JumpOp blockEnd = SSAUtil.phiOut(lir, fromBlock);
-                    LabelOp label = SSAUtil.phiIn(lir, toBlock);
-                    for (int i = 0; i < label.getPhiSize(); i++)
-                    {
-                        addMapping(blockEnd.getOutgoingValue(i), label.getIncomingValue(i), fromId, toId, moveResolver);
-                    }
+                    addMapping(blockEnd.getOutgoingValue(i), label.getIncomingValue(i), fromId, toId, moveResolver);
                 }
-                GlobalLivenessInfo livenessInfo = allocator.getGlobalLivenessInfo();
-                int[] locTo = livenessInfo.getBlockIn(toBlock);
-                for (int i = 0; i < locTo.length; i++)
-                {
-                    TraceInterval interval = allocator.intervalFor(locTo[i]);
-                    addMapping(interval, interval, fromId, toId, moveResolver);
-                }
+            }
+            GlobalLivenessInfo livenessInfo = allocator.getGlobalLivenessInfo();
+            int[] locTo = livenessInfo.getBlockIn(toBlock);
+            for (int i = 0; i < locTo.length; i++)
+            {
+                TraceInterval interval = allocator.intervalFor(locTo[i]);
+                addMapping(interval, interval, fromId, toId, moveResolver);
+            }
 
-                if (moveResolver.hasMappings())
-                {
-                    resolveFindInsertPos(fromBlock, toBlock, moveResolver);
-                    moveResolver.resolveAndAppendMoves();
-                }
+            if (moveResolver.hasMappings())
+            {
+                resolveFindInsertPos(fromBlock, toBlock, moveResolver);
+                moveResolver.resolveAndAppendMoves();
             }
         }
 
@@ -183,14 +139,8 @@ final class TraceLinearScanResolveDataFlowPhase extends TraceLinearScanAllocatio
             return currentTrace.getId() == traceBuilderResult.getTraceForBlock(block).getId();
         }
 
-        private static final CounterKey numResolutionMoves = DebugContext.counter("TraceRA[numTraceLSRAResolutionMoves]");
-        private static final CounterKey numStackToStackMoves = DebugContext.counter("TraceRA[numTraceLSRAStackToStackMoves]");
-
         private void addMapping(Value phiFrom, Value phiTo, int fromId, int toId, TraceLocalMoveResolver moveResolver)
         {
-            assert !isRegister(phiFrom) : "Out is a register: " + phiFrom;
-            assert !isRegister(phiTo) : "In is a register: " + phiTo;
-            assert !Value.ILLEGAL.equals(phiTo) : "The value not needed in this branch? " + phiFrom;
             if (isVirtualStackSlot(phiTo) && isVirtualStackSlot(phiFrom) && phiTo.equals(phiFrom))
             {
                 // no need to handle virtual stack slots
@@ -199,7 +149,6 @@ final class TraceLinearScanResolveDataFlowPhase extends TraceLinearScanAllocatio
             TraceInterval toParent = allocator.intervalFor(asVariable(phiTo));
             if (isConstantValue(phiFrom))
             {
-                numResolutionMoves.increment(debug);
                 TraceInterval toInterval = allocator.splitChildAtOpId(toParent, toId, LIRInstruction.OperandMode.DEF);
                 moveResolver.addMapping(asConstant(phiFrom), toInterval);
             }
@@ -220,11 +169,6 @@ final class TraceLinearScanResolveDataFlowPhase extends TraceLinearScanAllocatio
             }
             if (fromInterval != toInterval)
             {
-                numResolutionMoves.increment(debug);
-                if (isStackSlotValue(toInterval.location()) && isStackSlotValue(fromInterval.location()))
-                {
-                    numStackToStackMoves.increment(debug);
-                }
                 moveResolver.addMapping(fromInterval, toInterval);
             }
         }

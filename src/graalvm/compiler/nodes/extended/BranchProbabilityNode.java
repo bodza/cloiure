@@ -91,7 +91,6 @@ public final class BranchProbabilityNode extends FloatingNode implements Simplif
             boolean usageFound = false;
             for (IntegerEqualsNode node : this.usages().filter(IntegerEqualsNode.class))
             {
-                assert node.condition() == CanonicalCondition.EQ;
                 ValueNode other = node.getX();
                 if (node.getX() == this)
                 {

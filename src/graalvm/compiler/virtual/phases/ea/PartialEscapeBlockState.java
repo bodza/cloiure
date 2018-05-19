@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import graalvm.compiler.debug.DebugCloseable;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeSourcePosition;
 import graalvm.compiler.nodes.FixedNode;
@@ -61,7 +60,6 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
     private RefCount arrayRefCount;
 
     private final OptionValues options;
-    private final DebugContext debug;
 
     /**
      * Final subclass of PartialEscapeBlockState, for performance and to make everything behave
@@ -69,9 +67,9 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
      */
     public static final class Final extends PartialEscapeBlockState<Final>
     {
-        public Final(OptionValues options, DebugContext debug)
+        public Final(OptionValues options)
         {
-            super(options, debug);
+            super(options);
         }
 
         public Final(Final other)
@@ -80,12 +78,11 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
         }
     }
 
-    protected PartialEscapeBlockState(OptionValues options, DebugContext debug)
+    protected PartialEscapeBlockState(OptionValues options)
     {
         objectStates = EMPTY_ARRAY;
         arrayRefCount = new RefCount();
         this.options = options;
-        this.debug = debug;
     }
 
     protected PartialEscapeBlockState(PartialEscapeBlockState<T> other)
@@ -93,13 +90,11 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
         super(other);
         adoptAddObjectStates(other);
         options = other.options;
-        debug = other.debug;
     }
 
     public ObjectState getObjectState(int object)
     {
         ObjectState state = objectStates[object];
-        assert state != null;
         return state;
     }
 
@@ -114,7 +109,6 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
     public ObjectState getObjectState(VirtualObjectNode object)
     {
         ObjectState state = objectStates[object.getObjectId()];
-        assert state != null;
         return state;
     }
 
@@ -193,7 +187,6 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
     @SuppressWarnings("try")
     public void materializeBefore(FixedNode fixed, VirtualObjectNode virtual, GraphEffectList materializeEffects)
     {
-        PartialEscapeClosure.COUNTER_MATERIALIZATIONS.increment(fixed.getDebug());
         List<AllocatedObjectNode> objects = new ArrayList<>(2);
         List<ValueNode> values = new ArrayList<>(8);
         List<List<MonitorIdNode>> locks = new ArrayList<>();
@@ -213,10 +206,6 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
                     if (otherAllocation instanceof FixedWithNextNode)
                     {
                         graph.addBeforeFixed(fixed, (FixedWithNextNode) otherAllocation);
-                    }
-                    else
-                    {
-                        assert otherAllocation instanceof FloatingNode;
                     }
                 }
                 if (!objects.isEmpty())
@@ -250,7 +239,6 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
                     }
                     commit.getEnsureVirtual().addAll(ensureVirtual);
 
-                    assert commit.usages().filter(AllocatedObjectNode.class).count() == commit.getUsageCount();
                     List<AllocatedObjectNode> materializedValues = commit.usages().filter(AllocatedObjectNode.class).snapshot();
                     for (int i = 0; i < commit.getValues().size(); i++)
                     {
@@ -305,15 +293,12 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
         }
         else
         {
-            VirtualUtil.trace(options, debug, "materialized %s as %s", virtual, representation);
             otherAllocations.add(representation);
-            assert obj.getLocks() == null;
         }
     }
 
     protected void objectMaterialized(VirtualObjectNode virtual, AllocatedObjectNode representation, List<ValueNode> values)
     {
-        VirtualUtil.trace(options, debug, "materialized %s as %s with values %s", virtual, representation, values);
     }
 
     public void addObject(int virtual, ObjectState state)

@@ -45,11 +45,4 @@ public final class GetObjectAddressNode extends FixedWithNextNode implements LIR
         gen.getLIRGeneratorTool().emitMove(obj, gen.operand(object));
         gen.setResult(this, obj);
     }
-
-    @Override
-    public boolean verify()
-    {
-        assert graph().getGuardsStage().areFrameStatesAtDeopts() || graph().method().getAnnotation(Snippet.class) != null : "GetObjectAddressNode can't be used directly until frame states are fixed";
-        return super.verify();
-    }
 }

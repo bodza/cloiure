@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.function.Function;
 
 import graalvm.compiler.core.common.cfg.BlockMap;
-import graalvm.compiler.debug.CounterKey;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.VerificationError;
 import graalvm.compiler.nodes.FixedNode;
@@ -19,23 +17,17 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 public class NodeCostUtil
 {
-    private static final CounterKey sizeComputationCount = DebugContext.counter("GraphCostComputationCount_Size");
-    private static final CounterKey sizeVerificationCount = DebugContext.counter("GraphCostVerificationCount_Size");
-
     @SuppressWarnings("try")
     public static int computeGraphSize(StructuredGraph graph)
     {
-        sizeComputationCount.increment(graph.getDebug());
         int size = 0;
         for (Node n : graph.getNodes())
         {
             size += n.estimatedNodeSize().value;
         }
-        assert size >= 0;
         return size;
     }
 
-    @SuppressWarnings("try")
     public static double computeGraphCycles(StructuredGraph graph, boolean fullSchedule)
     {
         Function<Block, Iterable<? extends Node>> blockToNodes;
@@ -63,25 +55,14 @@ public class NodeCostUtil
             blockToNodes = b -> nodes.get(b);
         }
         double weightedCycles = 0D;
-        DebugContext debug = graph.getDebug();
-        try (DebugContext.Scope s = debug.scope("NodeCostSummary"))
+        for (Block block : cfg.getBlocks())
         {
-            for (Block block : cfg.getBlocks())
+            for (Node n : blockToNodes.apply(block))
             {
-                for (Node n : blockToNodes.apply(block))
-                {
-                    double probWeighted = n.estimatedNodeCycles().value * block.probability();
-                    assert Double.isFinite(probWeighted);
-                    weightedCycles += probWeighted;
-                    if (debug.isLogEnabled())
-                    {
-                        debug.log("Node %s contributes cycles:%f size:%d to graph %s [block prob:%f]", n, n.estimatedNodeCycles().value * block.probability(), n.estimatedNodeSize().value, graph, block.probability());
-                    }
-                }
+                double probWeighted = n.estimatedNodeCycles().value * block.probability();
+                weightedCycles += probWeighted;
             }
         }
-        assert weightedCycles >= 0D;
-        assert Double.isFinite(weightedCycles);
         return weightedCycles;
     }
 
@@ -104,7 +85,6 @@ public class NodeCostUtil
 
     public static void phaseFulfillsSizeContract(StructuredGraph graph, int codeSizeBefore, int codeSizeAfter, PhaseSizeContract contract)
     {
-        sizeVerificationCount.increment(graph.getDebug());
         final double codeSizeIncrease = contract.codeSizeIncrease();
         final double graphSizeDelta = codeSizeBefore * DELTA;
         if (deltaCompare(codeSizeAfter, codeSizeBefore * codeSizeIncrease, graphSizeDelta) > 0)

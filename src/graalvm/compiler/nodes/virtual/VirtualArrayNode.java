@@ -114,7 +114,6 @@ public class VirtualArrayNode extends VirtualObjectNode implements ArrayLengthPr
     @Override
     public JavaKind entryKind(int index)
     {
-        assert index >= 0 && index < length;
         return componentType.getJavaKind();
     }
 

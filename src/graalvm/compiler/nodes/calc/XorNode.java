@@ -28,7 +28,6 @@ public final class XorNode extends BinaryArithmeticNode<Xor> implements BinaryCo
     public XorNode(ValueNode x, ValueNode y)
     {
         super(TYPE, ArithmeticOpTable::getXor, x, y);
-        assert x.stamp(NodeView.DEFAULT).isCompatible(y.stamp(NodeView.DEFAULT));
     }
 
     public static ValueNode create(ValueNode x, ValueNode y, NodeView view)

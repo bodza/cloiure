@@ -4,9 +4,6 @@ import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.common.alloc.Trace;
 import graalvm.compiler.core.common.alloc.TraceBuilderResult;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
-import graalvm.compiler.debug.CounterKey;
-import graalvm.compiler.debug.DebugContext;
-import graalvm.compiler.debug.Indent;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.alloc.RegisterAllocationPhase;
 import graalvm.compiler.lir.alloc.trace.TraceAllocationPhase.TraceAllocationContext;
@@ -39,11 +36,6 @@ public final class TraceRegisterAllocationPhase extends RegisterAllocationPhase
         public static final OptionKey<Boolean> TraceRACacheStackSlots = new OptionKey<>(true);
     }
 
-    private static final CounterKey tracesCounter = DebugContext.counter("TraceRA[traces]");
-
-    public static final CounterKey globalStackSlots = DebugContext.counter("TraceRA[GlobalStackSlots]");
-    public static final CounterKey allocatedStackSlots = DebugContext.counter("TraceRA[AllocatedStackSlots]");
-
     private final TraceBuilderPhase traceBuilder;
     private final GlobalLivenessAnalysisPhase livenessAnalysis;
 
@@ -54,7 +46,6 @@ public final class TraceRegisterAllocationPhase extends RegisterAllocationPhase
     }
 
     @Override
-    @SuppressWarnings("try")
     protected void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context)
     {
         traceBuilder.apply(target, lirGenRes, context);
@@ -63,33 +54,19 @@ public final class TraceRegisterAllocationPhase extends RegisterAllocationPhase
         MoveFactory spillMoveFactory = context.spillMoveFactory;
         RegisterAllocationConfig registerAllocationConfig = context.registerAllocationConfig;
         LIR lir = lirGenRes.getLIR();
-        DebugContext debug = lir.getDebug();
         TraceBuilderResult resultTraces = context.contextLookup(TraceBuilderResult.class);
         GlobalLivenessInfo livenessInfo = context.contextLookup(GlobalLivenessInfo.class);
-        assert livenessInfo != null;
         TraceAllocationContext traceContext = new TraceAllocationContext(spillMoveFactory, registerAllocationConfig, resultTraces, livenessInfo);
         AllocatableValue[] cachedStackSlots = Options.TraceRACacheStackSlots.getValue(lir.getOptions()) ? new AllocatableValue[lir.numVariables()] : null;
 
         boolean neverSpillConstant = getNeverSpillConstants();
-        assert !neverSpillConstant : "currently this is not supported";
 
         final TraceRegisterAllocationPolicy plan = DefaultTraceRegisterAllocationPolicy.allocationPolicy(target, lirGenRes, spillMoveFactory, registerAllocationConfig, cachedStackSlots, resultTraces, neverSpillConstant, livenessInfo, lir.getOptions());
 
-        try (DebugContext.Scope s0 = debug.scope("AllocateTraces", resultTraces, livenessInfo))
+        for (Trace trace : resultTraces.getTraces())
         {
-            for (Trace trace : resultTraces.getTraces())
-            {
-                tracesCounter.increment(debug);
-                TraceAllocationPhase<TraceAllocationContext> allocator = plan.selectStrategy(trace);
-                try (Indent i = debug.logAndIndent("Allocating Trace%d: %s (%s)", trace.getId(), trace, allocator); DebugContext.Scope s = debug.scope("AllocateTrace", trace))
-                {
-                    allocator.apply(target, lirGenRes, trace, traceContext);
-                }
-            }
-        }
-        catch (Throwable e)
-        {
-            throw debug.handle(e);
+            TraceAllocationPhase<TraceAllocationContext> allocator = plan.selectStrategy(trace);
+            allocator.apply(target, lirGenRes, trace, traceContext);
         }
 
         TraceGlobalMoveResolutionPhase.resolve(target, lirGenRes, traceContext);

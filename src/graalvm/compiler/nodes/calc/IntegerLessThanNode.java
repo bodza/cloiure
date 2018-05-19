@@ -37,8 +37,6 @@ public final class IntegerLessThanNode extends IntegerLowerThanNode
     public IntegerLessThanNode(ValueNode x, ValueNode y)
     {
         super(TYPE, x, y, OP);
-        assert !x.getStackKind().isNumericFloat() && x.getStackKind() != JavaKind.Object;
-        assert !y.getStackKind().isNumericFloat() && y.getStackKind() != JavaKind.Object;
     }
 
     public static LogicNode create(ValueNode x, ValueNode y, NodeView view)
@@ -160,7 +158,6 @@ public final class IntegerLessThanNode extends IntegerLowerThanNode
             }
             else
             {
-                assert cst >= 2;
                 return LogicConstantNode.tautology();
             }
         }
@@ -201,7 +198,6 @@ public final class IntegerLessThanNode extends IntegerLowerThanNode
                 }
                 if (xx != null)
                 {
-                    assert yy != null;
                     IntegerStamp xStamp = (IntegerStamp) sub.getX().stamp(view);
                     IntegerStamp yStamp = (IntegerStamp) sub.getY().stamp(view);
                     long minValue = CodeUtil.minValue(xStamp.getBits());
@@ -221,9 +217,7 @@ public final class IntegerLessThanNode extends IntegerLowerThanNode
 
             if (forX.stamp(view) instanceof IntegerStamp)
             {
-                assert forY.stamp(view) instanceof IntegerStamp;
                 int bits = ((IntegerStamp) forX.stamp(view)).getBits();
-                assert ((IntegerStamp) forY.stamp(view)).getBits() == bits;
                 long min = OP.minValue(bits);
                 long xResidue = 0;
                 ValueNode left = null;

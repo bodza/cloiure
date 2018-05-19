@@ -39,8 +39,6 @@ public class FloatStamp extends PrimitiveStamp
     public FloatStamp(int bits, double lowerBound, double upperBound, boolean nonNaN)
     {
         super(bits, OPS);
-        assert bits == 64 || (bits == 32 && (Double.isNaN(lowerBound) || (float) lowerBound == lowerBound) && (Double.isNaN(upperBound) || (float) upperBound == upperBound));
-        assert Double.isNaN(lowerBound) == Double.isNaN(upperBound);
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;
         this.nonNaN = nonNaN;
@@ -62,7 +60,6 @@ public class FloatStamp extends PrimitiveStamp
     public Stamp constant(Constant c, MetaAccessProvider meta)
     {
         JavaConstant jc = (JavaConstant) c;
-        assert jc.getJavaKind().isNumericFloat() && jc.getJavaKind().getBitCount() == getBits();
         return StampFactory.forConstant(jc);
     }
 
@@ -230,7 +227,6 @@ public class FloatStamp extends PrimitiveStamp
             return otherStamp;
         }
         FloatStamp other = (FloatStamp) otherStamp;
-        assert getBits() == other.getBits();
         double meetUpperBound = meetBounds(upperBound, other.upperBound, Math::max);
         double meetLowerBound = meetBounds(lowerBound, other.lowerBound, Math::min);
         boolean meetNonNaN = nonNaN && other.nonNaN;
@@ -256,7 +252,6 @@ public class FloatStamp extends PrimitiveStamp
             return this;
         }
         FloatStamp other = (FloatStamp) otherStamp;
-        assert getBits() == other.getBits();
         double joinUpperBound = Math.min(upperBound, other.upperBound);
         double joinLowerBound = Math.max(lowerBound, other.lowerBound);
         boolean joinNonNaN = nonNaN || other.nonNaN;
@@ -429,7 +424,6 @@ public class FloatStamp extends PrimitiveStamp
                 FloatStamp stamp = stampForConstant(folded);
                 if (stamp != null && stamp.isConstant())
                 {
-                    assert stamp.asConstant().equals(folded);
                     return stamp;
                 }
             }
@@ -480,7 +474,6 @@ public class FloatStamp extends PrimitiveStamp
                         {
                             PrimitiveConstant a = (PrimitiveConstant) const1;
                             PrimitiveConstant b = (PrimitiveConstant) const2;
-                            assert a.getJavaKind() == b.getJavaKind();
                             switch (a.getJavaKind())
                             {
                                 case Float:
@@ -536,7 +529,6 @@ public class FloatStamp extends PrimitiveStamp
                         {
                             PrimitiveConstant a = (PrimitiveConstant) const1;
                             PrimitiveConstant b = (PrimitiveConstant) const2;
-                            assert a.getJavaKind() == b.getJavaKind();
                             switch (a.getJavaKind())
                             {
                                 case Float:
@@ -592,7 +584,6 @@ public class FloatStamp extends PrimitiveStamp
                         {
                             PrimitiveConstant a = (PrimitiveConstant) const1;
                             PrimitiveConstant b = (PrimitiveConstant) const2;
-                            assert a.getJavaKind() == b.getJavaKind();
                             switch (a.getJavaKind())
                             {
                                 case Float:
@@ -652,7 +643,6 @@ public class FloatStamp extends PrimitiveStamp
                         {
                             PrimitiveConstant a = (PrimitiveConstant) const1;
                             PrimitiveConstant b = (PrimitiveConstant) const2;
-                            assert a.getJavaKind() == b.getJavaKind();
                             switch (a.getJavaKind())
                             {
                                 case Float:
@@ -710,7 +700,6 @@ public class FloatStamp extends PrimitiveStamp
                         {
                             PrimitiveConstant a = (PrimitiveConstant) const1;
                             PrimitiveConstant b = (PrimitiveConstant) const2;
-                            assert a.getJavaKind() == b.getJavaKind();
                             switch (a.getJavaKind())
                             {
                                 case Float:
@@ -795,7 +784,6 @@ public class FloatStamp extends PrimitiveStamp
                         {
                             PrimitiveConstant a = (PrimitiveConstant) const1;
                             PrimitiveConstant b = (PrimitiveConstant) const2;
-                            assert a.getJavaKind() == b.getJavaKind();
                             switch (a.getJavaKind())
                             {
                                 case Float:
@@ -855,14 +843,12 @@ public class FloatStamp extends PrimitiveStamp
                         {
                             PrimitiveConstant a = (PrimitiveConstant) const1;
                             PrimitiveConstant b = (PrimitiveConstant) const2;
-                            assert a.getJavaKind() == b.getJavaKind();
                             switch (a.getJavaKind())
                             {
                                 case Float:
                                     int fa = Float.floatToRawIntBits(a.asFloat());
                                     int fb = Float.floatToRawIntBits(b.asFloat());
                                     float floatOr = Float.intBitsToFloat(fa | fb);
-                                    assert (fa | fb) == Float.floatToRawIntBits((floatOr));
                                     return JavaConstant.forFloat(floatOr);
                                 case Double:
                                     long da = Double.doubleToRawLongBits(a.asDouble());
@@ -917,7 +903,6 @@ public class FloatStamp extends PrimitiveStamp
                         {
                             PrimitiveConstant a = (PrimitiveConstant) const1;
                             PrimitiveConstant b = (PrimitiveConstant) const2;
-                            assert a.getJavaKind() == b.getJavaKind();
                             switch (a.getJavaKind())
                             {
                                 case Float:
@@ -1063,7 +1048,6 @@ public class FloatStamp extends PrimitiveStamp
                                 return StampFactory.empty(JavaKind.Int);
                             }
                             FloatStamp floatStamp = (FloatStamp) stamp;
-                            assert floatStamp.getBits() == 32;
                             boolean mustHaveZero = !floatStamp.isNonNaN();
                             int lowerBound = (int) floatStamp.lowerBound();
                             int upperBound = (int) floatStamp.upperBound();
@@ -1099,7 +1083,6 @@ public class FloatStamp extends PrimitiveStamp
                                 return StampFactory.empty(JavaKind.Long);
                             }
                             FloatStamp floatStamp = (FloatStamp) stamp;
-                            assert floatStamp.getBits() == 32;
                             boolean mustHaveZero = !floatStamp.isNonNaN();
                             long lowerBound = (long) floatStamp.lowerBound();
                             long upperBound = (long) floatStamp.upperBound();
@@ -1135,7 +1118,6 @@ public class FloatStamp extends PrimitiveStamp
                                 return StampFactory.empty(JavaKind.Int);
                             }
                             FloatStamp floatStamp = (FloatStamp) stamp;
-                            assert floatStamp.getBits() == 64;
                             boolean mustHaveZero = !floatStamp.isNonNaN();
                             int lowerBound = (int) floatStamp.lowerBound();
                             int upperBound = (int) floatStamp.upperBound();
@@ -1171,7 +1153,6 @@ public class FloatStamp extends PrimitiveStamp
                                 return StampFactory.empty(JavaKind.Long);
                             }
                             FloatStamp floatStamp = (FloatStamp) stamp;
-                            assert floatStamp.getBits() == 64;
                             boolean mustHaveZero = !floatStamp.isNonNaN();
                             long lowerBound = (long) floatStamp.lowerBound();
                             long upperBound = (long) floatStamp.upperBound();
@@ -1207,7 +1188,6 @@ public class FloatStamp extends PrimitiveStamp
                                 return StampFactory.empty(JavaKind.Double);
                             }
                             FloatStamp floatStamp = (FloatStamp) stamp;
-                            assert floatStamp.getBits() == 32;
                             return StampFactory.forFloat(JavaKind.Double, floatStamp.lowerBound(), floatStamp.upperBound(), floatStamp.isNonNaN());
                         }
                     },
@@ -1229,7 +1209,6 @@ public class FloatStamp extends PrimitiveStamp
                                 return StampFactory.empty(JavaKind.Float);
                             }
                             FloatStamp floatStamp = (FloatStamp) stamp;
-                            assert floatStamp.getBits() == 64;
                             return StampFactory.forFloat(JavaKind.Float, (float) floatStamp.lowerBound(), (float) floatStamp.upperBound(), floatStamp.isNonNaN());
                         }
                     });

@@ -40,7 +40,6 @@ public final class HotSpotGraalJVMCIServiceLocator extends JVMCIServiceLocator
          */
         void onCompilerCreation(HotSpotGraalCompiler compiler)
         {
-            assert this.graalRuntime == null : "only expect a single JVMCICompiler to be created";
             this.graalRuntime = (HotSpotGraalRuntime) compiler.getGraalRuntime();
         }
     }

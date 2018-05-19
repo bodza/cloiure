@@ -50,7 +50,6 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
             for (int i = 0; i < elements.length; i++)
             {
                 this.nodes[i] = elements[i];
-                assert this.nodes[i] == null || !this.nodes[i].isDeleted() : "Initializing nodelist with deleted element : " + nodes[i];
             }
         }
     }
@@ -72,7 +71,6 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
             for (int i = 0; i < elements.size(); i++)
             {
                 this.nodes[i] = elements.get(i);
-                assert this.nodes[i] == null || !this.nodes[i].isDeleted();
             }
         }
     }
@@ -95,7 +93,6 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
             for (NodeInterface n : elements)
             {
                 this.nodes[i] = n.asNode();
-                assert this.nodes[i] == null || !this.nodes[i].isDeleted();
                 i++;
             }
         }
@@ -143,7 +140,6 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
     @Override
     public boolean add(Node node)
     {
-        assert node == null || !node.isDeleted();
         self.incModCount();
         incModCount();
         int length = nodes.length;
@@ -166,13 +162,11 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
     @SuppressWarnings("unchecked")
     public T get(int index)
     {
-        assert assertInRange(index);
         return (T) nodes[index];
     }
 
     private boolean assertInRange(int index)
     {
-        assert index >= 0 && index < size() : index + " < " + size();
         return true;
     }
 
@@ -187,7 +181,6 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
     {
         incModCount();
         T oldValue = (T) nodes[index];
-        assert assertInRange(index);
         update((T) nodes[index], (T) node);
         nodes[index] = node;
         return oldValue;
@@ -196,7 +189,6 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
     public void initialize(int index, Node node)
     {
         incModCount();
-        assert index < size();
         nodes[index] = node;
     }
 
@@ -463,7 +455,6 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
 
     public SubList<T> subList(int startIndex)
     {
-        assert assertInRange(startIndex);
         return new SubList<>(this, startIndex);
     }
 
@@ -481,7 +472,6 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
         @Override
         public R get(int index)
         {
-            assert index >= 0 : index;
             return list.get(offset + index);
         }
 
@@ -493,7 +483,6 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
 
         public SubList<R> subList(int startIndex)
         {
-            assert startIndex >= 0 && startIndex < size() : startIndex;
             return new SubList<>(this.list, startIndex + offset);
         }
 
@@ -520,7 +509,6 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
         @Override
         public boolean hasNext()
         {
-            assert expectedModCount == list.modCount;
             return index < list.size;
         }
 
@@ -528,7 +516,6 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
         @Override
         public R next()
         {
-            assert expectedModCount == list.modCount;
             return (R) list.nodes[index++];
         }
 

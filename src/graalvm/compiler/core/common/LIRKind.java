@@ -64,9 +64,6 @@ public final class LIRKind extends ValueKind<LIRKind>
         this.referenceMask = referenceMask;
         this.referenceCompressionMask = referenceCompressionMask;
         this.derivedReferenceBase = derivedReferenceBase;
-
-        assert this.referenceCompressionMask == 0 || this.referenceMask == this.referenceCompressionMask : "mixing compressed and uncompressed references is untested";
-        assert derivedReferenceBase == null || !derivedReferenceBase.getValueKind(LIRKind.class).isDerivedReference() : "derived reference can't have another derived reference as base";
     }
 
     /**
@@ -119,7 +116,6 @@ public final class LIRKind extends ValueKind<LIRKind>
     public static LIRKind derivedReference(PlatformKind platformKind, AllocatableValue base, boolean compressed)
     {
         int length = platformKind.getVectorLength();
-        assert 0 < length && length < 32 : "vector of " + length + " references not supported";
         int referenceMask = (1 << length) - 1;
         int referenceCompressionMask = (compressed ? referenceMask : 0);
         return new LIRKind(platformKind, referenceMask, referenceCompressionMask, base);
@@ -143,7 +139,6 @@ public final class LIRKind extends ValueKind<LIRKind>
      */
     public LIRKind makeDerivedReference(AllocatableValue base)
     {
-        assert !isUnknownReference() && derivedReferenceBase == null;
         if (Value.ILLEGAL.equals(base))
         {
             return makeUnknownReference();
@@ -171,7 +166,6 @@ public final class LIRKind extends ValueKind<LIRKind>
      */
     public static LIRKind combine(Value... inputs)
     {
-        assert inputs.length > 0;
         for (Value input : inputs)
         {
             LIRKind kind = input.getValueKind(LIRKind.class);
@@ -258,9 +252,6 @@ public final class LIRKind extends ValueKind<LIRKind>
      */
     public static LIRKind mergeReferenceInformation(LIRKind mergeKind, LIRKind inputKind)
     {
-        assert mergeKind != null;
-        assert inputKind != null;
-
         if (mergeKind.isUnknownReference())
         {
             /**
@@ -342,7 +333,6 @@ public final class LIRKind extends ValueKind<LIRKind>
             int lengthMask = 0xFFFFFFFF >>> (32 - newLength);
             int newReferenceMask = referenceMask & lengthMask;
             int newReferenceCompressionMask = referenceCompressionMask & lengthMask;
-            assert newReferenceMask != UNKNOWN_REFERENCE;
             return new LIRKind(newPlatformKind, newReferenceMask, newReferenceCompressionMask, derivedReferenceBase);
         }
     }
@@ -367,7 +357,6 @@ public final class LIRKind extends ValueKind<LIRKind>
             // reference type
             int oldLength = getPlatformKind().getVectorLength();
             int newLength = newPlatformKind.getVectorLength();
-            assert oldLength <= newLength && newLength < 32 && (newLength % oldLength) == 0;
 
             // repeat reference mask to fill new kind
             int newReferenceMask = 0;
@@ -378,7 +367,6 @@ public final class LIRKind extends ValueKind<LIRKind>
                 newReferenceCompressionMask |= referenceCompressionMask << i;
             }
 
-            assert newReferenceMask != UNKNOWN_REFERENCE;
             return new LIRKind(newPlatformKind, newReferenceMask, newReferenceCompressionMask, derivedReferenceBase);
         }
     }
@@ -413,7 +401,6 @@ public final class LIRKind extends ValueKind<LIRKind>
      */
     public void setDerivedReferenceBase(AllocatableValue derivedReferenceBase)
     {
-        assert isDerivedReference();
         this.derivedReferenceBase = derivedReferenceBase;
     }
 
@@ -445,7 +432,6 @@ public final class LIRKind extends ValueKind<LIRKind>
 
     public int getReferenceCount()
     {
-        assert !isUnknownReference();
         return Integer.bitCount(referenceMask);
     }
 
@@ -458,7 +444,6 @@ public final class LIRKind extends ValueKind<LIRKind>
      */
     public boolean isReference(int idx)
     {
-        assert 0 <= idx && idx < getPlatformKind().getVectorLength() : "invalid index " + idx + " in " + this;
         return !isUnknownReference() && (referenceMask & 1 << idx) != 0;
     }
 
@@ -470,7 +455,6 @@ public final class LIRKind extends ValueKind<LIRKind>
      */
     public boolean isCompressedReference(int idx)
     {
-        assert 0 <= idx && idx < getPlatformKind().getVectorLength() : "invalid index " + idx + " in " + this;
         return !isUnknownReference() && (referenceCompressionMask & (1 << idx)) != 0;
     }
 

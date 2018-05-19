@@ -29,13 +29,11 @@ public final class ReverseBytesNode extends UnaryNode implements LIRLowerable
     public ReverseBytesNode(ValueNode value)
     {
         super(TYPE, StampFactory.forKind(value.getStackKind()), value);
-        assert getStackKind() == JavaKind.Int || getStackKind() == JavaKind.Long;
     }
 
     @Override
     public Stamp foldStamp(Stamp newStamp)
     {
-        assert newStamp.isCompatible(getValue().stamp(NodeView.DEFAULT));
         IntegerStamp valueStamp = (IntegerStamp) newStamp;
         if (getStackKind() == JavaKind.Int)
         {

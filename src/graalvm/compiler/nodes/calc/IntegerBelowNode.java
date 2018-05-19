@@ -26,8 +26,6 @@ public final class IntegerBelowNode extends IntegerLowerThanNode
     public IntegerBelowNode(ValueNode x, ValueNode y)
     {
         super(TYPE, x, y, OP);
-        assert x.stamp(NodeView.DEFAULT) instanceof IntegerStamp;
-        assert y.stamp(NodeView.DEFAULT) instanceof IntegerStamp;
     }
 
     public static LogicNode create(ValueNode x, ValueNode y, NodeView view)
@@ -62,7 +60,6 @@ public final class IntegerBelowNode extends IntegerLowerThanNode
         @Override
         protected CompareNode duplicateModified(ValueNode newX, ValueNode newY, boolean unorderedIsTrue, NodeView view)
         {
-            assert newX.stamp(NodeView.DEFAULT) instanceof IntegerStamp && newY.stamp(NodeView.DEFAULT) instanceof IntegerStamp;
             return new IntegerBelowNode(newX, newY);
         }
 

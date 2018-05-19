@@ -29,7 +29,6 @@ public final class ShadowedRegisterValue extends CompositeValue
     public ShadowedRegisterValue(RegisterValue register, AllocatableValue stackslot)
     {
         super(register.getValueKind());
-        assert (register.getValueKind().equals(stackslot.getValueKind()));
         this.register = register;
         this.stackslot = stackslot;
     }
@@ -79,10 +78,6 @@ public final class ShadowedRegisterValue extends CompositeValue
             return false;
         }
         ShadowedRegisterValue other = (ShadowedRegisterValue) obj;
-        assert register != null;
-        assert stackslot != null;
-        assert other.register != null;
-        assert other.stackslot != null;
         if (!register.equals(other.register))
         {
             return false;

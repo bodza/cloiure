@@ -57,7 +57,6 @@ public class ValueMergeUtil
             merge.addForwardEnd(endNode);
             if (lastInstrFunction == null)
             {
-                assert valueProducer instanceof ReturnNode || valueProducer instanceof UnwindNode;
                 ((ControlSinkNode) valueProducer).replaceAndDelete(endNode);
             }
             else
@@ -69,7 +68,6 @@ public class ValueMergeUtil
 
         if (phiResult != null)
         {
-            assert phiResult.verify();
             phiResult.inferStamp();
             return phiResult;
         }

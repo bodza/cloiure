@@ -31,17 +31,12 @@ import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.useB
 import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.useTLAB;
 import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.verifyOop;
 import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.writeTlabTop;
-import static graalvm.compiler.hotspot.replacements.HotspotSnippetsOptions.ProfileAllocations;
-import static graalvm.compiler.hotspot.replacements.HotspotSnippetsOptions.ProfileAllocationsContext;
 import static graalvm.compiler.nodes.PiArrayNode.piArrayCastToSnippetReplaceeStamp;
 import static graalvm.compiler.nodes.PiNode.piCastToSnippetReplaceeStamp;
 import static graalvm.compiler.nodes.extended.BranchProbabilityNode.FAST_PATH_PROBABILITY;
 import static graalvm.compiler.nodes.extended.BranchProbabilityNode.FREQUENT_PROBABILITY;
 import static graalvm.compiler.nodes.extended.BranchProbabilityNode.SLOW_PATH_PROBABILITY;
 import static graalvm.compiler.nodes.extended.BranchProbabilityNode.probability;
-import static graalvm.compiler.replacements.ReplacementsUtil.REPLACEMENTS_ASSERTIONS_ENABLED;
-import static graalvm.compiler.replacements.ReplacementsUtil.runtimeAssert;
-import static graalvm.compiler.replacements.ReplacementsUtil.staticAssert;
 import static graalvm.compiler.replacements.SnippetTemplate.DEFAULT_REPLACER;
 import static graalvm.compiler.replacements.nodes.CStringConstant.cstring;
 import static graalvm.compiler.replacements.nodes.ExplodeLoopNode.explodeLoop;
@@ -52,7 +47,6 @@ import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
 import graalvm.compiler.api.replacements.Snippet.VarargsParameter;
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.core.common.type.StampFactory;
-import graalvm.compiler.debug.DebugHandlersFactory;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node.ConstantNodeParameter;
 import graalvm.compiler.graph.Node.NodeIntrinsic;
@@ -72,7 +66,6 @@ import graalvm.compiler.nodes.PrefetchAllocateNode;
 import graalvm.compiler.nodes.SnippetAnchorNode;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.ValueNode;
-import graalvm.compiler.nodes.debug.DynamicCounterNode;
 import graalvm.compiler.nodes.debug.VerifyHeapNode;
 import graalvm.compiler.nodes.extended.ForeignCallNode;
 import graalvm.compiler.nodes.extended.MembarNode;
@@ -85,7 +78,6 @@ import graalvm.compiler.nodes.memory.address.OffsetAddressNode;
 import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.nodes.util.GraphUtil;
 import graalvm.compiler.options.OptionValues;
-import graalvm.compiler.replacements.ReplacementsUtil;
 import graalvm.compiler.replacements.SnippetCounter;
 import graalvm.compiler.replacements.SnippetCounter.Group;
 import graalvm.compiler.replacements.SnippetTemplate;
@@ -121,50 +113,6 @@ public class NewObjectSnippets implements Snippets
         AllocatedType,
         AllocatedTypesInMethod,
         Total
-    }
-
-    @Fold
-    static String createName(String path, String typeContext, OptionValues options)
-    {
-        switch (ProfileAllocationsContext.getValue(options))
-        {
-            case AllocatingMethod:
-                return "";
-            case InstanceOrArray:
-                return path;
-            case AllocatedType:
-            case AllocatedTypesInMethod:
-                return typeContext;
-            case Total:
-                return "bytes";
-            default:
-                throw GraalError.shouldNotReachHere();
-        }
-    }
-
-    @Fold
-    static boolean doProfile(OptionValues options)
-    {
-        return ProfileAllocations.getValue(options);
-    }
-
-    @Fold
-    static boolean withContext(OptionValues options)
-    {
-        ProfileContext context = ProfileAllocationsContext.getValue(options);
-        return context == ProfileContext.AllocatingMethod || context == ProfileContext.AllocatedTypesInMethod;
-    }
-
-    protected static void profileAllocation(String path, long size, String typeContext, OptionValues options)
-    {
-        if (doProfile(options))
-        {
-            String name = createName(path, typeContext, options);
-
-            boolean context = withContext(options);
-            DynamicCounterNode.counter(name, "number of bytes allocated", size, context);
-            DynamicCounterNode.counter(name, "number of allocations", 1, context);
-        }
     }
 
     public static void emitPrefetchAllocate(Word address, boolean isArray)
@@ -213,7 +161,6 @@ public class NewObjectSnippets implements Snippets
             }
             result = newInstance(HotSpotBackend.NEW_INSTANCE, hub);
         }
-        profileAllocation("instance", size, typeContext, options);
         return verifyOop(result);
     }
 
@@ -327,7 +274,6 @@ public class NewObjectSnippets implements Snippets
         {
             result = newArray(HotSpotBackend.NEW_ARRAY, hub, length, fillContents);
         }
-        profileAllocation("array", allocationSize, typeContext, options);
         return result;
     }
 
@@ -361,7 +307,6 @@ public class NewObjectSnippets implements Snippets
          * We only need the dynamic check for void when we have no static information from
          * knownElementKind.
          */
-        staticAssert(knownElementKind != JavaKind.Void, "unsupported knownElementKind");
         if (knownElementKind == JavaKind.Illegal && probability(SLOW_PATH_PROBABILITY, elementType == null || DynamicNewArrayNode.throwsIllegalArgumentException(elementType, voidClass)))
         {
             DeoptimizeNode.deopt(DeoptimizationAction.None, DeoptimizationReason.RuntimeConstraint);
@@ -385,7 +330,6 @@ public class NewObjectSnippets implements Snippets
         }
         else
         {
-            runtimeAssert(knownLayoutHelper == readLayoutHelper(nonNullKlass), "layout mismatch");
             layoutHelper = knownLayoutHelper;
         }
         // from src/share/vm/oops/klass.hpp:
@@ -455,17 +399,14 @@ public class NewObjectSnippets implements Snippets
 
     private static void fillMemory(long value, int size, Word memory, boolean constantSize, int startOffset, boolean manualUnroll, Counters counters)
     {
-        ReplacementsUtil.runtimeAssert((size & 0x7) == 0, "unaligned object size");
         int offset = startOffset;
         if ((offset & 0x7) != 0)
         {
             memory.writeInt(offset, (int) value, LocationIdentity.init());
             offset += 4;
         }
-        ReplacementsUtil.runtimeAssert((offset & 0x7) == 0, "unaligned offset");
         if (manualUnroll && ((size - offset) / 8) <= MAX_UNROLLED_OBJECT_ZEROING_STORES)
         {
-            ReplacementsUtil.staticAssert(!constantSize, "size shouldn't be constant at instantiation time");
             // This case handles arrays of constant length. Instead of having a snippet variant for
             // each length, generate a chain of stores of maximum length. Once it's inlined the
             // break statement will trim excess stores.
@@ -511,21 +452,6 @@ public class NewObjectSnippets implements Snippets
     }
 
     /**
-     * Fill uninitialized memory with garbage value in a newly allocated object, unrolling as
-     * necessary and ensuring that stores are aligned.
-     *
-     * @param size number of bytes to zero
-     * @param memory beginning of object which is being zeroed
-     * @param constantSize is {@code  size} known to be constant in the snippet
-     * @param startOffset offset to begin zeroing. May not be word aligned.
-     * @param manualUnroll maximally unroll zeroing
-     */
-    private static void fillWithGarbage(int size, Word memory, boolean constantSize, int startOffset, boolean manualUnroll, Counters counters)
-    {
-        fillMemory(0xfefefefefefefefeL, size, memory, constantSize, startOffset, manualUnroll, counters);
-    }
-
-    /**
      * Formats some allocated memory with an object header and zeroes out the rest. Disables asserts
      * since they can't be compiled in stubs.
      */
@@ -544,10 +470,6 @@ public class NewObjectSnippets implements Snippets
         if (fillContents)
         {
             zeroMemory(size, memory, constantSize, instanceHeaderSize(INJECTED_VMCONFIG), false, counters);
-        }
-        else if (REPLACEMENTS_ASSERTIONS_ENABLED)
-        {
-            fillWithGarbage(size, memory, constantSize, instanceHeaderSize(INJECTED_VMCONFIG), false, counters);
         }
         MembarNode.memoryBarrier(MemoryBarriers.STORE_STORE, LocationIdentity.init());
         return memory.toObjectNonNull();
@@ -582,10 +504,6 @@ public class NewObjectSnippets implements Snippets
         if (fillContents)
         {
             zeroMemory(allocationSize, memory, false, headerSize, maybeUnroll, counters);
-        }
-        else if (REPLACEMENTS_ASSERTIONS_ENABLED)
-        {
-            fillWithGarbage(allocationSize, memory, false, headerSize, maybeUnroll, counters);
         }
         MembarNode.memoryBarrier(MemoryBarriers.STORE_STORE, LocationIdentity.init());
         return memory.toObjectNonNull();
@@ -624,9 +542,9 @@ public class NewObjectSnippets implements Snippets
         private final GraalHotSpotVMConfig config;
         private final Counters counters;
 
-        public Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, SnippetCounter.Group.Factory factory, HotSpotProviders providers, TargetDescription target, GraalHotSpotVMConfig config)
+        public Templates(OptionValues options, SnippetCounter.Group.Factory factory, HotSpotProviders providers, TargetDescription target, GraalHotSpotVMConfig config)
         {
-            super(options, factories, providers, providers.getSnippetReflection(), target);
+            super(options, providers, providers.getSnippetReflection(), target);
             this.config = config;
             counters = new Counters(factory);
         }
@@ -638,7 +556,6 @@ public class NewObjectSnippets implements Snippets
         {
             StructuredGraph graph = newInstanceNode.graph();
             HotSpotResolvedObjectType type = (HotSpotResolvedObjectType) newInstanceNode.instanceClass();
-            assert !type.isArray();
             ConstantNode hub = ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), type.klass(), providers.getMetaAccess(), graph);
             int size = instanceSize(type);
 
@@ -651,12 +568,11 @@ public class NewObjectSnippets implements Snippets
             args.addConst("fillContents", newInstanceNode.fillContents());
             args.addConst("threadRegister", registers.getThreadRegister());
             args.addConst("constantSize", true);
-            args.addConst("typeContext", ProfileAllocations.getValue(localOptions) ? type.toJavaName(false) : "");
+            args.addConst("typeContext", "");
             args.addConst("options", localOptions);
             args.addConst("counters", counters);
 
             SnippetTemplate template = template(newInstanceNode, args);
-            graph.getDebug().log("Lowering allocateInstance in %s: node=%s, template=%s, arguments=%s", graph, newInstanceNode, template, args);
             template.instantiate(providers.getMetaAccess(), newInstanceNode, DEFAULT_REPLACER, args);
         }
 
@@ -695,18 +611,16 @@ public class NewObjectSnippets implements Snippets
             args.add("hub", hub);
             ValueNode length = newArrayNode.length();
             args.add("length", length.isAlive() ? length : graph.addOrUniqueWithInputs(length));
-            assert arrayType.prototypeMarkWord() == lookupArrayClass(tool, JavaKind.Object).prototypeMarkWord() : "all array types are assumed to have the same prototypeMarkWord";
             args.add("prototypeMarkWord", arrayType.prototypeMarkWord());
             args.addConst("headerSize", headerSize);
             args.addConst("log2ElementSize", log2ElementSize);
             args.addConst("fillContents", newArrayNode.fillContents());
             args.addConst("threadRegister", registers.getThreadRegister());
             args.addConst("maybeUnroll", length.isConstant());
-            args.addConst("typeContext", ProfileAllocations.getValue(localOptions) ? arrayType.toJavaName(false) : "");
+            args.addConst("typeContext", "");
             args.addConst("options", localOptions);
             args.addConst("counters", counters);
             SnippetTemplate template = template(newArrayNode, args);
-            graph.getDebug().log("Lowering allocateArray in %s: node=%s, template=%s, arguments=%s", graph, newArrayNode, template, args);
             template.instantiate(providers.getMetaAccess(), newArrayNode, DEFAULT_REPLACER, args);
         }
 
@@ -716,7 +630,6 @@ public class NewObjectSnippets implements Snippets
             OptionValues localOptions = newInstanceNode.getOptions();
             args.add("type", newInstanceNode.getInstanceType());
             ValueNode classClass = newInstanceNode.getClassClass();
-            assert classClass != null;
             args.add("classClass", classClass);
             args.addConst("fillContents", newInstanceNode.fillContents());
             args.addConst("threadRegister", registers.getThreadRegister());
@@ -734,7 +647,6 @@ public class NewObjectSnippets implements Snippets
             Arguments args = new Arguments(allocateArrayDynamic, newArrayNode.graph().getGuardsStage(), tool.getLoweringStage());
             args.add("elementType", newArrayNode.getElementType());
             ValueNode voidClass = newArrayNode.getVoidClass();
-            assert voidClass != null;
             args.add("voidClass", voidClass);
             ValueNode length = newArrayNode.length();
             args.add("length", length.isAlive() ? length : graph.addOrUniqueWithInputs(length));
@@ -789,24 +701,12 @@ public class NewObjectSnippets implements Snippets
         private static int instanceSize(HotSpotResolvedObjectType type)
         {
             int size = type.instanceSize();
-            assert size >= 0;
             return size;
         }
 
         public void lower(VerifyHeapNode verifyHeapNode, HotSpotRegistersProvider registers, LoweringTool tool)
         {
-            if (config.cAssertions)
-            {
-                Arguments args = new Arguments(verifyHeap, verifyHeapNode.graph().getGuardsStage(), tool.getLoweringStage());
-                args.addConst("threadRegister", registers.getThreadRegister());
-
-                SnippetTemplate template = template(verifyHeapNode, args);
-                template.instantiate(providers.getMetaAccess(), verifyHeapNode, DEFAULT_REPLACER, args);
-            }
-            else
-            {
-                GraphUtil.removeFixedWithUnusedInputs(verifyHeapNode);
-            }
+            GraphUtil.removeFixedWithUnusedInputs(verifyHeapNode);
         }
     }
 }

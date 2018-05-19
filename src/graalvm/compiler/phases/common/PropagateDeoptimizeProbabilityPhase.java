@@ -24,8 +24,6 @@ public class PropagateDeoptimizeProbabilityPhase extends BasePhase<PhaseContext>
     @SuppressWarnings("try")
     protected void run(final StructuredGraph graph, PhaseContext context)
     {
-        assert !graph.hasValueProxies() : "ConvertDeoptimizeToGuardPhase always creates proxies";
-
         if (graph.hasNode(AbstractDeoptimizeNode.TYPE))
         {
             NodeStack stack = new NodeStack();

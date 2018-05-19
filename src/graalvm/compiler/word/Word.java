@@ -94,7 +94,6 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer
     {
         static void initialize()
         {
-            assert boxFactory == null : "BoxFactory must be initialized only once.";
             boxFactory = new BoxFactoryImpl();
         }
 

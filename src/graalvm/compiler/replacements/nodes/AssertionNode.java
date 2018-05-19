@@ -84,7 +84,6 @@ public final class AssertionNode extends FixedWithNextNode implements Lowerable,
     @Override
     public void generate(NodeLIRBuilderTool generator)
     {
-        assert compileTimeAssertion;
         if (GraalOptions.ImmutableCode.getValue(getOptions()))
         {
             // Snippet assertions are disabled for AOT

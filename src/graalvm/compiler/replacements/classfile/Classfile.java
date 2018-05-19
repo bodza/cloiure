@@ -40,7 +40,6 @@ public class Classfile
 
         // magic
         int magic = stream.readInt();
-        assert magic == MAGIC;
 
         int minor = stream.readUnsignedShort();
         int major = stream.readUnsignedShort();

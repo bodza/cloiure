@@ -32,9 +32,7 @@ public final class TrivialTraceAllocator extends TraceAllocationPhase<TraceAlloc
     protected void run(TargetDescription target, LIRGenerationResult lirGenRes, Trace trace, TraceAllocationContext context)
     {
         LIR lir = lirGenRes.getLIR();
-        assert isTrivialTrace(lir, trace) : "Not a trivial trace! " + trace;
         AbstractBlockBase<?> block = trace.getBlocks()[0];
-        assert TraceAssertions.singleHeadPredecessor(trace) : "Trace head with more than one predecessor?!" + trace;
         AbstractBlockBase<?> pred = block.getPredecessors()[0];
 
         GlobalLivenessInfo livenessInfo = context.livenessInfo;
@@ -44,8 +42,6 @@ public final class TrivialTraceAllocator extends TraceAllocationPhase<TraceAlloc
     public static void allocate(AbstractBlockBase<?> block, AbstractBlockBase<?> pred, GlobalLivenessInfo livenessInfo, LIRInstruction jump)
     {
         // exploit that the live sets are sorted
-        assert TraceAssertions.liveSetsAreSorted(livenessInfo, block);
-        assert TraceAssertions.liveSetsAreSorted(livenessInfo, pred);
 
         // setup incoming variables/locations
         final int[] blockIn = livenessInfo.getBlockIn(block);
@@ -57,7 +53,6 @@ public final class TrivialTraceAllocator extends TraceAllocationPhase<TraceAlloc
         int outLength = blockOut.length;
         final Value[] locationOut = new Value[outLength];
 
-        assert outLength <= inLenght : "Trivial Trace! There cannot be more outgoing values than incoming.";
         for (int outIdx = 0, inIdx = 0; outIdx < outLength; inIdx++)
         {
             if (blockOut[outIdx] == blockIn[inIdx])

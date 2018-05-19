@@ -3,9 +3,6 @@ package graalvm.compiler.hotspot.stubs;
 import static graalvm.compiler.hotspot.GraalHotSpotVMConfig.INJECTED_VMCONFIG;
 import static graalvm.compiler.hotspot.nodes.JumpToExceptionHandlerInCallerNode.jumpToExceptionHandlerInCaller;
 import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.registerAsWord;
-import static graalvm.compiler.hotspot.stubs.ExceptionHandlerStub.checkExceptionNotNull;
-import static graalvm.compiler.hotspot.stubs.ExceptionHandlerStub.checkNoExceptionInThread;
-import static graalvm.compiler.hotspot.stubs.StubUtil.cAssertionsEnabled;
 import static graalvm.compiler.hotspot.stubs.StubUtil.decipher;
 import static graalvm.compiler.hotspot.stubs.StubUtil.newDescriptor;
 import static graalvm.compiler.hotspot.stubs.StubUtil.printf;
@@ -15,7 +12,6 @@ import graalvm.compiler.api.replacements.Fold.InjectedParameter;
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
-import graalvm.compiler.debug.Assertions;
 import graalvm.compiler.graph.Node.ConstantNodeParameter;
 import graalvm.compiler.graph.Node.NodeIntrinsic;
 import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
@@ -57,7 +53,6 @@ public class UnwindExceptionToCallerStub extends SnippetStub
         {
             return providers.getRegisters().getThreadRegister();
         }
-        assert index == 3;
         return options;
     }
 
@@ -65,45 +60,11 @@ public class UnwindExceptionToCallerStub extends SnippetStub
     private static void unwindExceptionToCaller(Object exception, Word returnAddress, @ConstantParameter Register threadRegister, @ConstantParameter OptionValues options)
     {
         Pointer exceptionOop = Word.objectToTrackedPointer(exception);
-        if (logging(options))
-        {
-            printf("unwinding exception %p (", exceptionOop.rawValue());
-            decipher(exceptionOop.rawValue());
-            printf(") at %p (", returnAddress.rawValue());
-            decipher(returnAddress.rawValue());
-            printf(")\n");
-        }
         Word thread = registerAsWord(threadRegister);
-        checkNoExceptionInThread(thread, assertionsEnabled(INJECTED_VMCONFIG));
-        checkExceptionNotNull(assertionsEnabled(INJECTED_VMCONFIG), exception);
 
         Word handlerInCallerPc = exceptionHandlerForReturnAddress(EXCEPTION_HANDLER_FOR_RETURN_ADDRESS, thread, returnAddress);
 
-        if (logging(options))
-        {
-            printf("handler for exception %p at return address %p is at %p (", exceptionOop.rawValue(), returnAddress.rawValue(), handlerInCallerPc.rawValue());
-            decipher(handlerInCallerPc.rawValue());
-            printf(")\n");
-        }
-
         jumpToExceptionHandlerInCaller(handlerInCallerPc, exception, returnAddress);
-    }
-
-    @Fold
-    static boolean logging(OptionValues options)
-    {
-        return StubOptions.TraceUnwindStub.getValue(options);
-    }
-
-    /**
-     * Determines if either Java assertions are enabled for Graal or if this is a HotSpot build
-     * where the ASSERT mechanism is enabled.
-     */
-    @Fold
-    @SuppressWarnings("all")
-    static boolean assertionsEnabled(@InjectedParameter GraalHotSpotVMConfig config)
-    {
-        return Assertions.assertionsEnabled() || cAssertionsEnabled(config);
     }
 
     public static final ForeignCallDescriptor EXCEPTION_HANDLER_FOR_RETURN_ADDRESS = newDescriptor(UnwindExceptionToCallerStub.class, "exceptionHandlerForReturnAddress", Word.class, Word.class, Word.class);

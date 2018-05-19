@@ -10,10 +10,8 @@ public interface AbstractControlFlowGraph<T extends AbstractBlockBase<T>>
     /**
      * Returns the list blocks contained in this control flow graph.
      *
-     * It is {@linkplain CFGVerifier guaranteed} that the blocks are numbered and ordered according
+     * It is guaranteed that the blocks are numbered and ordered according
      * to a reverse post order traversal of the control flow graph.
-     *
-     * @see CFGVerifier
      */
     T[] getBlocks();
 
@@ -45,7 +43,6 @@ public interface AbstractControlFlowGraph<T extends AbstractBlockBase<T>>
      */
     static boolean dominates(AbstractBlockBase<?> a, AbstractBlockBase<?> b)
     {
-        assert a != null && b != null;
         return isDominatedBy(b, a);
     }
 
@@ -55,7 +52,6 @@ public interface AbstractControlFlowGraph<T extends AbstractBlockBase<T>>
      * Note that this algorithm makes use of special properties regarding the numbering of blocks.
      *
      * @see #getBlocks()
-     * @see CFGVerifier
      */
     static AbstractBlockBase<?> commonDominator(AbstractBlockBase<?> a, AbstractBlockBase<?> b)
     {

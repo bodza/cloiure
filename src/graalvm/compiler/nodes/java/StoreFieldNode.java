@@ -37,7 +37,6 @@ public final class StoreFieldNode extends AccessFieldNode implements StateSplit,
     @Override
     public void setStateAfter(FrameState x)
     {
-        assert x == null || x.isAlive() : "frame state must be in a graph";
         updateUsages(stateAfter, x);
         stateAfter = x;
     }

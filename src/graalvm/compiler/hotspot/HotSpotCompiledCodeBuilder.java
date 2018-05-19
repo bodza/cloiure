@@ -228,7 +228,6 @@ public class HotSpotCompiledCodeBuilder
                     // HotSpot doesn't understand any of the special positions so just drop them.
                     continue;
                 }
-                assert sourcePosition.verify();
                 sourcePosition = sourcePosition.trim();
                 /*
                  * Don't add BYTECODE_POSITION info points that would potentially create conflicts.
@@ -264,7 +263,6 @@ public class HotSpotCompiledCodeBuilder
                     else
                     {
                         // Omit this colliding infopoint
-                        assert lastInfopoint.reason.compareTo(info.reason) <= 0;
                     }
                 }
                 else

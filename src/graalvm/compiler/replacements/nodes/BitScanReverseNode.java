@@ -34,13 +34,11 @@ public final class BitScanReverseNode extends UnaryNode implements ArithmeticLIR
     public BitScanReverseNode(ValueNode value)
     {
         super(TYPE, StampFactory.forInteger(JavaKind.Int, 0, ((PrimitiveStamp) value.stamp(NodeView.DEFAULT)).getBits()), value);
-        assert value.getStackKind() == JavaKind.Int || value.getStackKind() == JavaKind.Long;
     }
 
     @Override
     public Stamp foldStamp(Stamp newStamp)
     {
-        assert newStamp.isCompatible(getValue().stamp(NodeView.DEFAULT));
         IntegerStamp valueStamp = (IntegerStamp) newStamp;
         int min;
         int max;

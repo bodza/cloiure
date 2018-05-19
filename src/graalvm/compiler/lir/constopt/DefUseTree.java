@@ -23,7 +23,6 @@ class DefUseTree
 
     DefUseTree(LIRInstruction instruction, AbstractBlockBase<?> block)
     {
-        assert LoadConstantOp.isLoadConstantOp(instruction) : "Not a LoadConstantOp: " + instruction;
         this.instruction = LoadConstantOp.asLoadConstantOp(instruction);
         this.block = block;
         this.uses = new ArrayList<>();

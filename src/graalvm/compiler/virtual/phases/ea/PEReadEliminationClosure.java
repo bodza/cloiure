@@ -73,7 +73,7 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
     @Override
     protected PEReadEliminationBlockState getInitialState()
     {
-        return new PEReadEliminationBlockState(tool.getOptions(), tool.getDebug());
+        return new PEReadEliminationBlockState(tool.getOptions());
     }
 
     @Override
@@ -118,13 +118,11 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
         }
         else if (node instanceof MemoryCheckpoint.Single)
         {
-            COUNTER_MEMORYCHECKPOINT.increment(node.getDebug());
             LocationIdentity identity = ((MemoryCheckpoint.Single) node).getLocationIdentity();
             processIdentity(state, identity);
         }
         else if (node instanceof MemoryCheckpoint.Multi)
         {
-            COUNTER_MEMORYCHECKPOINT.increment(node.getDebug());
             for (LocationIdentity identity : ((MemoryCheckpoint.Multi) node).getLocationIdentities())
             {
                 processIdentity(state, identity);
@@ -187,7 +185,6 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
                     return true;
             }
         }
-        assert accessKind.isPrimitive() : "Illegal access kind";
         return declaredKind.isPrimitive() ? accessKind.getBitCount() > declaredKind.getBitCount() : true;
     }
 
@@ -205,7 +202,6 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
                 ValueNode object = GraphUtil.unproxify(load.object());
                 LocationIdentity location = NamedLocationIdentity.getArrayLocation(componentKind);
                 ValueNode cachedValue = state.getReadCache(object, location, index, accessKind, this);
-                assert cachedValue == null || load.stamp(NodeView.DEFAULT).isCompatible(cachedValue.stamp(NodeView.DEFAULT)) : "The RawLoadNode's stamp is not compatible with the cached value.";
                 if (cachedValue != null)
                 {
                     effects.replaceAtUsages(load, cachedValue, load);
@@ -418,7 +414,6 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
                 if (initialState.getReadCache().get(entry.getKey()) != entry.getValue())
                 {
                     ValueNode value = exitState.getReadCache(entry.getKey().object, entry.getKey().identity, entry.getKey().index, entry.getKey().kind, this);
-                    assert value != null : "Got null from read cache, entry's value:" + entry.getValue();
                     if (!(value instanceof ProxyNode) || ((ProxyNode) value).proxyPoint() != exitNode)
                     {
                         ProxyNode proxy = new ValueProxyNode(value, exitNode);
@@ -489,7 +484,6 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
                     for (int i = 0; i < states.size(); i++)
                     {
                         ValueNode v = states.get(i).getReadCache(key.object, key.identity, key.index, key.kind, PEReadEliminationClosure.this);
-                        assert phiNode.stamp(NodeView.DEFAULT).isCompatible(v.stamp(NodeView.DEFAULT)) : "Cannot create read elimination phi for inputs with incompatible stamps.";
                         setPhiInput(phiNode, i, v);
                     }
                     newState.readCache.put(key, phiNode);
@@ -550,8 +544,6 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
     @Override
     protected void processKilledLoopLocations(Loop<Block> loop, PEReadEliminationBlockState initialState, PEReadEliminationBlockState mergedStates)
     {
-        assert initialState != null;
-        assert mergedStates != null;
         if (initialState.readCache.size() > 0)
         {
             LoopKillCache loopKilledLocations = loopLocationKillCache.get(loop);
@@ -589,10 +581,6 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
                     for (LocationIdentity location : forwardEndLiveLocations)
                     {
                         loopKilledLocations.rememberLoopKilledLocation(location);
-                    }
-                    if (debug.isLogEnabled() && loopKilledLocations != null)
-                    {
-                        debug.log("[Early Read Elimination] Setting loop killed locations of loop at node %s with %s", beginNode, forwardEndLiveLocations);
                     }
                 }
                 // remember the loop visit

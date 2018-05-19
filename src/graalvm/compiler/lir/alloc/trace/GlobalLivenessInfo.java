@@ -5,7 +5,6 @@ import java.util.BitSet;
 import java.util.EnumSet;
 
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LIRInstruction.OperandFlag;
@@ -51,27 +50,12 @@ public final class GlobalLivenessInfo
 
         public void setIncoming(AbstractBlockBase<?> block, int[] varsIn)
         {
-            assert info.blockToVarIn[block.getId()] == null;
-            assert verifyVars(varsIn);
-            assert storesIncoming(block) || info.blockToVarOut[block.getPredecessors()[0].getId()] == varsIn;
             info.blockToVarIn[block.getId()] = varsIn;
         }
 
         public void setOutgoing(AbstractBlockBase<?> block, int[] varsOut)
         {
-            assert info.blockToVarOut[block.getId()] == null;
-            assert verifyVars(varsOut);
-            assert storesOutgoing(block) || info.blockToVarIn[block.getSuccessors()[0].getId()] == varsOut;
             info.blockToVarOut[block.getId()] = varsOut;
-        }
-
-        private static boolean verifyVars(int[] vars)
-        {
-            for (int var : vars)
-            {
-                assert var >= 0;
-            }
-            return true;
         }
 
         @SuppressWarnings("unused")
@@ -133,77 +117,15 @@ public final class GlobalLivenessInfo
 
     public static boolean storesIncoming(AbstractBlockBase<?> block)
     {
-        assert block.getPredecessorCount() >= 0;
         return block.getPredecessorCount() != 1;
     }
 
     public static boolean storesOutgoing(AbstractBlockBase<?> block)
     {
-        assert block.getSuccessorCount() >= 0;
         /*
          * The second condition handles non-critical empty blocks, introduced, e.g., by two
          * consecutive loop-exits.
          */
         return block.getSuccessorCount() != 1 || block.getSuccessors()[0].getPredecessorCount() == 1;
-    }
-
-    /**
-     * Verifies that the local liveness information is correct, i.e., that all variables used in a
-     * block {@code b} are either defined in {@code b} or in the incoming live set.
-     */
-    @SuppressWarnings("try")
-    public boolean verify(LIR lir)
-    {
-        DebugContext debug = lir.getDebug();
-        try (DebugContext.Scope s = debug.scope("Verify GlobalLivenessInfo", this))
-        {
-            for (AbstractBlockBase<?> block : lir.getControlFlowGraph().getBlocks())
-            {
-                assert verifyBlock(block, lir);
-            }
-        }
-        catch (Throwable e)
-        {
-            throw debug.handle(e);
-        }
-        return true;
-    }
-
-    private boolean verifyBlock(AbstractBlockBase<?> block, LIR lir)
-    {
-        BitSet liveSet = new BitSet(lir.numVariables());
-        int[] liveIn = getBlockIn(block);
-        for (int varNum : liveIn)
-        {
-            liveSet.set(varNum);
-        }
-        ValueConsumer proc = new ValueConsumer()
-        {
-            @Override
-            public void visitValue(Value value, OperandMode mode, EnumSet<OperandFlag> flags)
-            {
-                if (LIRValueUtil.isVariable(value))
-                {
-                    Variable var = LIRValueUtil.asVariable(value);
-                    if (mode == OperandMode.DEF)
-                    {
-                        liveSet.set(var.index);
-                    }
-                    else
-                    {
-                        assert liveSet.get(var.index) : String.format("Variable %s but not defined in block %s (liveIn: %s)", var, block, Arrays.toString(liveIn));
-                    }
-                }
-            }
-        };
-        for (LIRInstruction op : lir.getLIRforBlock(block))
-        {
-            op.visitEachInput(proc);
-            op.visitEachAlive(proc);
-            op.visitEachState(proc);
-            op.visitEachOutput(proc);
-            // no need for checking temp
-        }
-        return true;
     }
 }

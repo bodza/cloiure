@@ -61,8 +61,6 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo
     public MultiTypeGuardInlineInfo(Invoke invoke, ArrayList<ResolvedJavaMethod> concretes, ArrayList<ProfiledType> ptypes, ArrayList<Integer> typesToConcretes, double notRecordedTypeProbability)
     {
         super(invoke);
-        assert concretes.size() > 0 : "must have at least one method";
-        assert ptypes.size() == typesToConcretes.size() : "array lengths must match";
 
         this.concretes = concretes;
         this.ptypes = ptypes;
@@ -71,8 +69,6 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo
         this.inlineableElements = new Inlineable[concretes.size()];
         this.methodProbabilities = computeMethodProbabilities();
         this.maximumMethodProbability = maximumMethodProbability();
-        assert maximumMethodProbability > 0;
-        assert assertUniqueTypes(ptypes);
     }
 
     private static boolean assertUniqueTypes(ArrayList<ProfiledType> ptypes)
@@ -116,14 +112,12 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo
     @Override
     public ResolvedJavaMethod methodAt(int index)
     {
-        assert index >= 0 && index < concretes.size();
         return concretes.get(index);
     }
 
     @Override
     public Inlineable inlineableElementAt(int index)
     {
-        assert index >= 0 && index < concretes.size();
         return inlineableElements[index];
     }
 
@@ -142,7 +136,6 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo
     @Override
     public void setInlinableElement(int index, Inlineable inlineableElement)
     {
-        assert index >= 0 && index < concretes.size();
         inlineableElements[index] = inlineableElement;
     }
 
@@ -241,12 +234,9 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo
             GraphUtil.killCFG(invokeWithExceptionNode.exceptionEdge());
         }
 
-        assert invoke.asNode().isAlive();
-
         // replace the invoke with a switch on the type of the actual receiver
         boolean methodDispatch = createDispatchOnTypeBeforeInvoke(graph, successors, false, providers.getStampProvider(), providers.getConstantReflection());
 
-        assert invoke.next() == continuation;
         invoke.setNext(null);
         returnMerge.setNext(continuation);
         if (returnValuePhi != null)
@@ -278,7 +268,6 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo
             PiNode anchoredReceiver = InliningUtil.createAnchoredReceiver(graph, node, commonType, receiver, exact);
             invokeForInlining.callTarget().replaceFirstInput(receiver, anchoredReceiver);
 
-            assert !anchoredReceiver.isDeleted() : anchoredReceiver;
             replacementNodes.add(anchoredReceiver);
         }
         if (shouldFallbackToInvoke())
@@ -335,7 +324,6 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo
                 }
             }
         }
-        assert commonType != null;
         return commonType;
     }
 
@@ -351,8 +339,6 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo
 
     private EconomicSet<Node> inlineSingleMethod(StructuredGraph graph, StampProvider stampProvider, ConstantReflectionProvider constantReflection, String reason)
     {
-        assert concretes.size() == 1 && inlineableElements.length == 1 && ptypes.size() > 1 && !shouldFallbackToInvoke() && notRecordedTypeProbability == 0;
-
         AbstractBeginNode calleeEntryNode = graph.add(new BeginNode());
 
         AbstractBeginNode unknownTypeSux = createUnknownTypeSuccessor(graph);
@@ -366,11 +352,8 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo
 
     private boolean createDispatchOnTypeBeforeInvoke(StructuredGraph graph, AbstractBeginNode[] successors, boolean invokeIsOnlySuccessor, StampProvider stampProvider, ConstantReflectionProvider constantReflection)
     {
-        assert ptypes.size() >= 1;
         ValueNode nonNullReceiver = InliningUtil.nonNullReceiver(invoke);
         LoadHubNode hub = graph.unique(new LoadHubNode(stampProvider, nonNullReceiver));
-
-        graph.getDebug().log("Type switch with %d types", concretes.size());
 
         ResolvedJavaType[] keys = new ResolvedJavaType[ptypes.size()];
         double[] keyProbabilities = new double[ptypes.size() + 1];
@@ -382,7 +365,6 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo
             keyProbabilities[i] = ptypes.get(i).getProbability();
             totalProbability += keyProbabilities[i];
             keySuccessors[i] = invokeIsOnlySuccessor ? 0 : typesToConcretes.get(i);
-            assert keySuccessors[i] < successors.length - 1 : "last successor is the unknownTypeSux";
         }
         keyProbabilities[keyProbabilities.length - 1] = notRecordedTypeProbability;
         keySuccessors[keySuccessors.length - 1] = successors.length - 1;
@@ -434,8 +416,6 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo
 
         if (invoke instanceof InvokeWithExceptionNode)
         {
-            assert exceptionMerge != null && exceptionObjectPhi != null;
-
             InvokeWithExceptionNode invokeWithException = (InvokeWithExceptionNode) invoke;
             ExceptionObjectNode exceptionEdge = (ExceptionObjectNode) invokeWithException.exceptionEdge();
             FrameState stateAfterException = exceptionEdge.stateAfter();

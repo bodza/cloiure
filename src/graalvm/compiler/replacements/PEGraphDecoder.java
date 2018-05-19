@@ -16,13 +16,11 @@ import graalvm.compiler.api.replacements.Fold;
 import graalvm.compiler.bytecode.Bytecode;
 import graalvm.compiler.bytecode.BytecodeProvider;
 import graalvm.compiler.core.common.PermanentBailoutException;
-import graalvm.compiler.core.common.cfg.CFGVerifier;
 import graalvm.compiler.core.common.spi.ConstantFieldProvider;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.StampPair;
 import graalvm.compiler.debug.DebugCloseable;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.Node.NodeIntrinsic;
@@ -121,13 +119,13 @@ public abstract class PEGraphDecoder extends SimplifyingGraphDecoder
 
     public static class Options
     {
-        @Option(help = "Maximum inlining depth during partial evaluation before reporting an infinite recursion")//
+        @Option(help = "Maximum inlining depth during partial evaluation before reporting an infinite recursion")
         public static final OptionKey<Integer> InliningDepthError = new OptionKey<>(1000);
 
-        @Option(help = "Max number of loop explosions per method.", type = OptionType.Debug)//
+        @Option(help = "Max number of loop explosions per method.", type = OptionType.Debug)
         public static final OptionKey<Integer> MaximumLoopExplosionCount = new OptionKey<>(10000);
 
-        @Option(help = "Do not bail out but throw an exception on failed loop explosion.", type = OptionType.Debug)//
+        @Option(help = "Do not bail out but throw an exception on failed loop explosion.", type = OptionType.Debug)
         public static final OptionKey<Boolean> FailedLoopExplosionIsFatal = new OptionKey<>(false);
     }
 
@@ -183,7 +181,6 @@ public abstract class PEGraphDecoder extends SimplifyingGraphDecoder
                 NodeSourcePosition invokePosition = invokeData.invoke.asNode().getNodeSourcePosition();
                 if (invokePosition == null)
                 {
-                    assert position == null : "should only happen when tracking is disabled";
                     return null;
                 }
                 callerBytecodePosition = invokePosition;
@@ -447,7 +444,6 @@ public abstract class PEGraphDecoder extends SimplifyingGraphDecoder
                 if (fixedNode instanceof FixedWithNextNode)
                 {
                     FixedWithNextNode fixedWithNextNode = (FixedWithNextNode) fixedNode;
-                    assert fixedWithNextNode.next() == null : "cannot append instruction to instruction which isn't end";
                     lastInstr = fixedWithNextNode;
                 }
                 else
@@ -556,19 +552,6 @@ public abstract class PEGraphDecoder extends SimplifyingGraphDecoder
         PEMethodScope methodScope = new PEMethodScope(graph, null, null, lookupEncodedGraph(method, null, null, trackNodeSourcePosition), method, null, 0, loopExplosionPlugin, null);
         decode(createInitialLoopScope(methodScope, null));
         cleanupGraph(methodScope);
-
-        debug.dump(DebugContext.VERBOSE_LEVEL, graph, "After graph cleanup");
-        assert graph.verify();
-
-        try
-        {
-            /* Check that the control flow graph can be computed, to catch problems early. */
-            assert CFGVerifier.verify(ControlFlowGraph.compute(graph, true, true, true, true));
-        }
-        catch (Throwable ex)
-        {
-            throw GraalError.shouldNotReachHere("Control flow graph not valid after partial evaluation");
-        }
     }
 
     @Override
@@ -593,7 +576,6 @@ public abstract class PEGraphDecoder extends SimplifyingGraphDecoder
                 /*
                  * The frameState must be gone now, because it is not a valid deoptimization point.
                  */
-                assert frameState.isDeleted();
             }
         }
     }
@@ -625,7 +607,6 @@ public abstract class PEGraphDecoder extends SimplifyingGraphDecoder
          * Decode the call target, but do not add it to the graph yet. This avoids adding usages for
          * all the arguments, which are expensive to remove again when we can inline the method.
          */
-        assert invokeData.invoke.callTarget() == null : "callTarget edge is ignored during decoding of Invoke";
         CallTargetNode callTarget = (CallTargetNode) decodeFloatingNode(methodScope, loopScope, invokeData.callTargetOrderId);
         if (callTarget instanceof MethodCallTargetNode)
         {
@@ -758,7 +739,6 @@ public abstract class PEGraphDecoder extends SimplifyingGraphDecoder
             }
             else
             {
-                assert graphBuilderContext.pushedNode == null : "Why push a node when the invoke does not return anyway?";
                 invoke.asNode().replaceAtUsages(null);
                 deleteInvoke(invoke);
             }
@@ -831,7 +811,6 @@ public abstract class PEGraphDecoder extends SimplifyingGraphDecoder
             return null;
         }
 
-        assert !graph.trackNodeSourcePosition() || graphToInline.trackNodeSourcePosition() : graph + " " + graphToInline;
         if (methodScope.inliningDepth > Options.InliningDepthError.getValue(options))
         {
             throw tooDeepInlining(methodScope);
@@ -895,10 +874,6 @@ public abstract class PEGraphDecoder extends SimplifyingGraphDecoder
                 assumptions.record(inlinedAssumptions);
             }
         }
-        else
-        {
-            assert inlinedAssumptions == null : String.format("cannot inline graph (%s) which makes assumptions into a graph (%s) that doesn't", inlineMethod, graph);
-        }
 
         // Copy inlined methods from inlinee to caller
         List<ResolvedJavaMethod> inlinedMethods = graphToInline.getInlinedMethods();
@@ -949,7 +924,6 @@ public abstract class PEGraphDecoder extends SimplifyingGraphDecoder
             }
             else if (fixedNode.isAlive())
             {
-                assert fixedNode instanceof UnwindNode;
                 unwindNodeCount++;
             }
         }
@@ -991,9 +965,6 @@ public abstract class PEGraphDecoder extends SimplifyingGraphDecoder
                 unwindMergeNode.setStateAfter(inlineScope.exceptionState.duplicateModified(JavaKind.Object, JavaKind.Object, exceptionValue));
             }
         }
-
-        assert invoke.next() == null;
-        assert !(invoke instanceof InvokeWithExceptionNode) || ((InvokeWithExceptionNode) invoke).exceptionEdge() == null;
 
         ValueNode returnValue;
         if (returnNodeCount == 0)
@@ -1043,7 +1014,6 @@ public abstract class PEGraphDecoder extends SimplifyingGraphDecoder
     {
         if (!hasNonMatchingEntries)
         {
-            assert returnAndUnwindNodes.size() == 1;
             return (T) returnAndUnwindNodes.get(0);
         }
 
@@ -1075,7 +1045,6 @@ public abstract class PEGraphDecoder extends SimplifyingGraphDecoder
                 result.add((T) node);
             }
         }
-        assert result.size() == resultCount;
         return result;
     }
 
@@ -1116,7 +1085,6 @@ public abstract class PEGraphDecoder extends SimplifyingGraphDecoder
 
     public FixedNode nodeAfterInvoke(PEMethodScope methodScope, LoopScope loopScope, InvokeData invokeData, AbstractBeginNode lastBlock)
     {
-        assert lastBlock.isAlive();
         FixedNode n;
         if (invokeData.invoke instanceof InvokeWithExceptionNode)
         {
@@ -1138,7 +1106,6 @@ public abstract class PEGraphDecoder extends SimplifyingGraphDecoder
          */
         FrameState frameState = invoke.stateAfter();
         invoke.asNode().safeDelete();
-        assert invoke.callTarget() == null : "must not have been added to the graph yet";
         if (frameState != null && frameState.hasNoUsages())
         {
             frameState.safeDelete();
@@ -1328,7 +1295,6 @@ public abstract class PEGraphDecoder extends SimplifyingGraphDecoder
             }
             else if (parameterPlugin != null)
             {
-                assert !methodScope.isInlinedMethod();
                 GraphBuilderContext graphBuilderContext = new PENonAppendGraphBuilderContext(methodScope, null);
                 Node result = parameterPlugin.interceptParameter(graphBuilderContext, param.index(), StampPair.create(param.stamp(NodeView.DEFAULT), param.uncheckedStamp()));
                 if (result != null)
@@ -1382,7 +1348,6 @@ public abstract class PEGraphDecoder extends SimplifyingGraphDecoder
         {
             ensureStateAfterDecoded(methodScope);
 
-            assert methodScope.exceptionPlaceholderNode == null;
             methodScope.exceptionPlaceholderNode = graph.add(new ExceptionPlaceholderNode());
             registerNode(methodScope.callerLoopScope, methodScope.invokeData.exceptionOrderId, methodScope.exceptionPlaceholderNode, false, false);
             FrameState exceptionState = (FrameState) ensureNodeCreated(methodScope.caller, methodScope.callerLoopScope, methodScope.invokeData.exceptionStateOrderId);

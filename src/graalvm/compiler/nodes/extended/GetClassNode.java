@@ -41,7 +41,6 @@ public final class GetClassNode extends FloatingNode implements Lowerable, Canon
     {
         super(TYPE, stamp);
         this.object = object;
-        assert ((ObjectStamp) object.stamp(NodeView.DEFAULT)).nonNull();
     }
 
     @Override

@@ -20,9 +20,7 @@ import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
-import graalvm.compiler.debug.CounterKey;
 import graalvm.compiler.debug.DebugCloseable;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeMap;
 import graalvm.compiler.graph.NodeStack;
@@ -79,10 +77,6 @@ import jdk.vm.ci.meta.TriState;
 
 public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
 {
-    private static final CounterKey counterStampsRegistered = DebugContext.counter("StampsRegistered");
-    private static final CounterKey counterStampsFound = DebugContext.counter("StampsFound");
-    private static final CounterKey counterIfsKilled = DebugContext.counter("CE_KilledIfs");
-    private static final CounterKey counterPhiStampsImproved = DebugContext.counter("CE_ImprovedPhis");
     private final boolean fullSchedule;
     private final boolean moveGuards;
 
@@ -98,40 +92,29 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
     }
 
     @Override
-    @SuppressWarnings("try")
     protected void run(StructuredGraph graph, PhaseContext context)
     {
-        try (DebugContext.Scope s = graph.getDebug().scope("DominatorConditionalElimination"))
+        BlockMap<List<Node>> blockToNodes = null;
+        NodeMap<Block> nodeToBlock = null;
+        ControlFlowGraph cfg = ControlFlowGraph.compute(graph, true, true, true, true);
+        if (fullSchedule)
         {
-            BlockMap<List<Node>> blockToNodes = null;
-            NodeMap<Block> nodeToBlock = null;
-            ControlFlowGraph cfg = ControlFlowGraph.compute(graph, true, true, true, true);
-            if (fullSchedule)
+            if (moveGuards)
             {
-                if (moveGuards)
-                {
-                    cfg.visitDominatorTree(new MoveGuardsUpwards(), graph.hasValueProxies());
-                }
-                try (DebugContext.Scope scheduleScope = graph.getDebug().scope(SchedulePhase.class))
-                {
-                    SchedulePhase.run(graph, SchedulingStrategy.EARLIEST_WITH_GUARD_ORDER, cfg);
-                }
-                catch (Throwable t)
-                {
-                    throw graph.getDebug().handle(t);
-                }
-                ScheduleResult r = graph.getLastSchedule();
-                blockToNodes = r.getBlockToNodesMap();
-                nodeToBlock = r.getNodeToBlockMap();
+                cfg.visitDominatorTree(new MoveGuardsUpwards(), graph.hasValueProxies());
             }
-            else
-            {
-                nodeToBlock = cfg.getNodeToBlock();
-                blockToNodes = getBlockToNodes(cfg);
-            }
-            ControlFlowGraph.RecursiveVisitor<?> visitor = createVisitor(graph, cfg, blockToNodes, nodeToBlock, context);
-            cfg.visitDominatorTree(visitor, graph.hasValueProxies());
+            SchedulePhase.run(graph, SchedulingStrategy.EARLIEST_WITH_GUARD_ORDER, cfg);
+            ScheduleResult r = graph.getLastSchedule();
+            blockToNodes = r.getBlockToNodesMap();
+            nodeToBlock = r.getNodeToBlockMap();
         }
+        else
+        {
+            nodeToBlock = cfg.getNodeToBlock();
+            blockToNodes = getBlockToNodes(cfg);
+        }
+        ControlFlowGraph.RecursiveVisitor<?> visitor = createVisitor(graph, cfg, blockToNodes, nodeToBlock, context);
+        cfg.visitDominatorTree(visitor, graph.hasValueProxies());
     }
 
     protected BlockMap<List<Node>> getBlockToNodes(@SuppressWarnings("unused") ControlFlowGraph cfg)
@@ -263,7 +246,6 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         protected final CanonicalizerTool tool;
         protected final NodeStack undoOperations;
         protected final StructuredGraph graph;
-        protected final DebugContext debug;
         protected final EconomicMap<MergeNode, EconomicMap<ValuePhiNode, PhiInfoElement>> mergeMaps;
 
         /**
@@ -274,7 +256,6 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         public Instance(StructuredGraph graph, BlockMap<List<Node>> blockToNodes, NodeMap<Block> nodeToBlock, PhaseContext context)
         {
             this.graph = graph;
-            this.debug = graph.getDebug();
             this.blockToNodes = blockToNodes;
             this.nodeToBlock = nodeToBlock;
             this.undoOperations = new NodeStack();
@@ -344,7 +325,6 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                     node.replaceAtPredecessor(deopt);
                     GraphUtil.killCFG(node);
                 }
-                debug.log("Kill fixed guard guard");
                 return true;
             }))
             {
@@ -361,7 +341,6 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                 survivingSuccessor.replaceAtPredecessor(null);
                 node.replaceAtPredecessor(survivingSuccessor);
                 GraphUtil.killCFG(node);
-                counterIfsKilled.increment(debug);
                 return true;
             });
         }
@@ -370,7 +349,6 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         public Integer enter(Block block)
         {
             int mark = undoOperations.size();
-            debug.log("[Pre Processing block %s]", block);
             // For now conservatively collect guards only within the same block.
             pendingTests.clear();
             processNodes(block);
@@ -399,7 +377,6 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         {
             FixedNode n = block.getBeginNode();
             FixedNode endNode = block.getEndNode();
-            debug.log("[Processing block %s]", block);
             while (n != endNode)
             {
                 if (n.isDeleted() || endNode.isDeleted())
@@ -473,7 +450,6 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                 while (entries.advance())
                 {
                     ValuePhiNode phi = entries.getKey();
-                    assert phi.isAlive() || phi.isDeleted();
                     /*
                      * Phi might have been killed already via a conditional elimination in another
                      * branch.
@@ -562,7 +538,6 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                                 else
                                 {
                                     InfoElement infoElement = phiInfoElements.get(merge.forwardEndAt(i));
-                                    assert infoElement != null;
                                     Stamp curBestStamp = infoElement.getStamp();
                                     ValueNode input = infoElement.getProxifiedInput();
                                     if (input == null)
@@ -574,7 +549,6 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                                 }
                                 newPhi.addInput(valueAt);
                             }
-                            counterPhiStampsImproved.increment(debug);
                             phi.replaceAtUsagesAndDelete(newPhi);
                         }
                     }
@@ -674,7 +648,6 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
             }
             if (guard instanceof DeoptimizingGuard)
             {
-                assert ((DeoptimizingGuard) guard).getCondition() == condition;
                 pendingTests.push((DeoptimizingGuard) guard);
             }
             registerCondition(condition, negated, guard);
@@ -921,7 +894,6 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
 
         protected boolean rewireGuards(GuardingNode guard, boolean result, ValueNode proxifiedInput, Stamp guardedValueStamp, GuardRewirer rewireGuardFunction)
         {
-            counterStampsFound.increment(debug);
             return rewireGuardFunction.rewire(guard, result, guardedValueStamp, proxifiedInput);
         }
 
@@ -1154,9 +1126,6 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
 
         protected void registerNewStamp(ValueNode maybeProxiedValue, Stamp newStamp, GuardingNode guard, boolean propagateThroughPis)
         {
-            assert maybeProxiedValue != null;
-            assert guard != null;
-
             if (newStamp == null || newStamp.isUnrestricted())
             {
                 return;
@@ -1172,9 +1141,6 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                 {
                     proxiedValue = value;
                 }
-                counterStampsRegistered.increment(debug);
-                debug.log("\t Saving stamp for node %s stamp %s guarded by %s", value, stamp, guard);
-                assert value instanceof LogicNode || stamp.isCompatible(value.stamp(NodeView.DEFAULT)) : stamp + " vs. " + value.stamp(NodeView.DEFAULT) + " (" + value + ")";
                 map.setAndGrow(value, new InfoElement(stamp, guard, proxiedValue, map.getAndGrow(value)));
                 undoOperations.push(value);
                 if (propagateThroughPis && value instanceof PiNode)

@@ -57,12 +57,8 @@ public class ConvertDeoptimizeToGuardPhase extends BasePhase<PhaseContext>
     @SuppressWarnings("try")
     protected void run(final StructuredGraph graph, PhaseContext context)
     {
-        assert graph.hasValueProxies() : "ConvertDeoptimizeToGuardPhase always creates proxies";
-        assert !graph.getGuardsStage().areFrameStatesAtDeopts() : graph.getGuardsStage();
-
         for (DeoptimizeNode d : graph.getNodes(DeoptimizeNode.TYPE))
         {
-            assert d.isAlive();
             if (d.getAction() == DeoptimizationAction.None)
             {
                 continue;
@@ -191,7 +187,6 @@ public class ConvertDeoptimizeToGuardPhase extends BasePhase<PhaseContext>
                         AbstractEndNode end = mergeNode.forwardEnds().first();
                         propagateFixed(end, deopt, loweringProvider);
                     }
-                    assert next.isAlive();
                     propagateFixed(next, deopt, loweringProvider);
                     return;
                 }
@@ -226,7 +221,6 @@ public class ConvertDeoptimizeToGuardPhase extends BasePhase<PhaseContext>
                         }
                         survivingSuccessor.replaceAtUsages(InputType.Guard, newGuard);
 
-                        graph.getDebug().log("Converting deopt on %-5s branch of %s to guard for remaining branch %s.", negateGuardCondition, ifNode, survivingSuccessor);
                         FixedNode next = pred.next();
                         pred.setNext(guard);
                         guard.setNext(next);
@@ -237,7 +231,6 @@ public class ConvertDeoptimizeToGuardPhase extends BasePhase<PhaseContext>
                 }
                 else if (current.predecessor() == null || current.predecessor() instanceof ControlSplitNode)
                 {
-                    assert current.predecessor() != null || (current instanceof StartNode && current == ((AbstractBeginNode) current).graph().start());
                     moveAsDeoptAfter((AbstractBeginNode) current, deopt);
                     return;
                 }

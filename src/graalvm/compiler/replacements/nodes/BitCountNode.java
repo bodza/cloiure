@@ -29,7 +29,6 @@ public final class BitCountNode extends UnaryNode implements ArithmeticLIRLowera
     public BitCountNode(ValueNode value)
     {
         super(TYPE, computeStamp(value.stamp(NodeView.DEFAULT), value), value);
-        assert value.getStackKind() == JavaKind.Int || value.getStackKind() == JavaKind.Long;
     }
 
     @Override
@@ -41,10 +40,7 @@ public final class BitCountNode extends UnaryNode implements ArithmeticLIRLowera
 
     static Stamp computeStamp(Stamp newStamp, ValueNode theValue)
     {
-        assert newStamp.isCompatible(theValue.stamp(NodeView.DEFAULT));
         IntegerStamp valueStamp = (IntegerStamp) newStamp;
-        assert (valueStamp.downMask() & CodeUtil.mask(valueStamp.getBits())) == valueStamp.downMask();
-        assert (valueStamp.upMask() & CodeUtil.mask(valueStamp.getBits())) == valueStamp.upMask();
         return StampFactory.forInteger(JavaKind.Int, Long.bitCount(valueStamp.downMask()), Long.bitCount(valueStamp.upMask()));
     }
 

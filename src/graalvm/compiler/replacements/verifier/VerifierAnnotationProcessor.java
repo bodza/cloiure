@@ -39,7 +39,6 @@ public class VerifierAnnotationProcessor extends AbstractProcessor
                     AnnotationMirror annotationMirror = findAnnotationMirror(processingEnv, e.getAnnotationMirrors(), annotationClass);
                     if (annotationMirror == null)
                     {
-                        assert false : "Annotation mirror always expected.";
                         continue;
                     }
                     verifier.verify(e, annotationMirror, generator);
@@ -73,7 +72,6 @@ public class VerifierAnnotationProcessor extends AbstractProcessor
          */
         if (verifiers == null)
         {
-            assert this.processingEnv != null : "ProcessingEnv must be initialized before calling getVerifiers.";
             verifiers = new ArrayList<>();
             verifiers.add(new ClassSubstitutionVerifier(this.processingEnv));
             verifiers.add(new MethodSubstitutionVerifier(this.processingEnv));

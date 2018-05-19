@@ -44,8 +44,6 @@ final class FixedRange
     int intersectsAt(TraceInterval other)
     {
         FixedRange range = this;
-        assert other != null : "null ranges not allowed";
-        assert range != EndMarker && other != TraceInterval.EndMarker : "empty ranges not allowed";
         int intervalFrom = other.from();
         int intervalTo = other.to();
 
@@ -78,7 +76,6 @@ final class FixedRange
                 }
                 else
                 {
-                    assert range.from == intervalFrom;
                     if (range.from == range.to)
                     {
                         range = range.next;

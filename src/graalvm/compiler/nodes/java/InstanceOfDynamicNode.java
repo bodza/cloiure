@@ -56,7 +56,6 @@ public class InstanceOfDynamicNode extends BinaryOpLogicNode implements Canonica
         super(TYPE, mirror, object);
         this.allowNull = allowNull;
         this.exact = exact;
-        assert mirror.getStackKind() == JavaKind.Object || mirror.getStackKind() == JavaKind.Illegal : mirror.getStackKind();
     }
 
     public boolean isMirror()

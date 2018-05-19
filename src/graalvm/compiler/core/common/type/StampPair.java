@@ -11,7 +11,6 @@ public final class StampPair
 
     private StampPair(Stamp trustedStamp, Stamp uncheckedStamp)
     {
-        assert trustedStamp != null;
         this.trustedStamp = trustedStamp;
         this.uncheckedStamp = uncheckedStamp;
     }

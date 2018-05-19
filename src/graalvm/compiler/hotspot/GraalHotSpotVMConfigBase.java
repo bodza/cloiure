@@ -15,7 +15,6 @@ public abstract class GraalHotSpotVMConfigBase extends HotSpotVMConfigAccess
     GraalHotSpotVMConfigBase(HotSpotVMConfigStore store)
     {
         super(store);
-        assert this instanceof GraalHotSpotVMConfig;
         versioned = new GraalHotSpotVMConfigVersioned(store);
     }
 

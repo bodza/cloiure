@@ -178,8 +178,6 @@ public interface InvocationPlugin extends GraphBuilderPlugin
         }
         else if (receiver != null)
         {
-            assert !targetMethod.isStatic();
-            assert argsIncludingReceiver.length > 0;
             if (argsIncludingReceiver.length == 1)
             {
                 return apply(b, targetMethod, receiver);
@@ -207,7 +205,6 @@ public interface InvocationPlugin extends GraphBuilderPlugin
         }
         else
         {
-            assert targetMethod.isStatic();
             if (argsIncludingReceiver.length == 0)
             {
                 return apply(b, targetMethod, null);

@@ -102,25 +102,7 @@ public class AMD64MulDivOp extends AMD64LIRInstruction
         }
         else
         {
-            assert isStackSlot(y);
             opcode.emit(masm, size, (AMD64Address) crb.asAddress(y));
-        }
-    }
-
-    @Override
-    public void verify()
-    {
-        assert asRegister(highResult).equals(AMD64.rdx);
-        assert asRegister(lowResult).equals(AMD64.rax);
-
-        assert asRegister(lowX).equals(AMD64.rax);
-        if (opcode == DIV || opcode == IDIV)
-        {
-            assert asRegister(highX).equals(AMD64.rdx);
-        }
-        else if (opcode == MUL || opcode == IMUL)
-        {
-            assert isIllegal(highX);
         }
     }
 }

@@ -82,29 +82,6 @@ public class MethodCallTargetNode extends CallTargetNode implements IterableNode
     }
 
     @Override
-    public boolean verify()
-    {
-        assert getUsageCount() <= 1 : "call target may only be used by a single invoke";
-        for (Node n : usages())
-        {
-            assertTrue(n instanceof Invoke, "call target can only be used from an invoke (%s)", n);
-        }
-        if (invokeKind().isDirect())
-        {
-            assertTrue(targetMethod().isConcrete(), "special calls or static calls are only allowed for concrete methods (%s)", targetMethod());
-        }
-        if (invokeKind() == InvokeKind.Static)
-        {
-            assertTrue(targetMethod().isStatic(), "static calls are only allowed for static methods (%s)", targetMethod());
-        }
-        else
-        {
-            assertFalse(targetMethod().isStatic(), "static calls are only allowed for non-static methods (%s)", targetMethod());
-        }
-        return super.verify();
-    }
-
-    @Override
     public String toString(Verbosity verbosity)
     {
         if (verbosity == Verbosity.Long)
@@ -171,7 +148,6 @@ public class MethodCallTargetNode extends CallTargetNode implements IterableNode
         if (invoke().getContextMethod() == null)
         {
             // avoid invokes that have placeholder bcis: they do not have a valid contextType
-            assert (invoke().stateAfter() != null && BytecodeFrame.isPlaceholderBci(invoke().stateAfter().bci)) || BytecodeFrame.isPlaceholderBci(invoke().stateDuring().bci);
             return;
         }
         ResolvedJavaType contextType = (invoke().stateAfter() == null && invoke().stateDuring() == null) ? null : invoke().getContextType();

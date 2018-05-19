@@ -46,7 +46,6 @@ public abstract class Assembler
 
     public void setCodePatchingAnnotationConsumer(Consumer<CodeAnnotation> codeAnnotationConsumer)
     {
-        assert this.codePatchingAnnotationConsumer == null : "overwriting existing value";
         this.codePatchingAnnotationConsumer = codeAnnotationConsumer;
     }
 
@@ -152,7 +151,6 @@ public abstract class Assembler
 
     public void bind(Label l)
     {
-        assert !l.isBound() : "can bind label only once";
         l.bind(position());
         l.patchInstructions(this);
     }
@@ -244,11 +242,6 @@ public abstract class Assembler
         return hint;
     }
 
-    public InstructionCounter getInstructionCounter()
-    {
-        throw new UnsupportedOperationException("Instruction counter is not implemented for " + this);
-    }
-
     public static class LabelHint
     {
         private Label label;
@@ -269,13 +262,11 @@ public abstract class Assembler
 
         public int getTarget()
         {
-            assert isValid();
             return capturedTarget;
         }
 
         public int getPosition()
         {
-            assert isValid();
             return forPosition;
         }
 
@@ -283,16 +274,5 @@ public abstract class Assembler
         {
             return capturedTarget >= 0;
         }
-    }
-
-    /**
-     * Instruction counter class which gives the user of the assembler to count different kinds of
-     * instructions in the generated assembler code.
-     */
-    public interface InstructionCounter
-    {
-        String[] getSupportedInstructionTypes();
-
-        int[] countInstructions(String[] instructionTypes, int beginPc, int endPc);
     }
 }

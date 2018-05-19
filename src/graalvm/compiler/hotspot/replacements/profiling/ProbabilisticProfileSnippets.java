@@ -9,7 +9,6 @@ import static graalvm.compiler.replacements.SnippetTemplate.DEFAULT_REPLACER;
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
-import graalvm.compiler.debug.DebugHandlersFactory;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node.ConstantNodeParameter;
 import graalvm.compiler.graph.Node.NodeIntrinsic;
@@ -106,15 +105,13 @@ public class ProbabilisticProfileSnippets implements Snippets
         private final SnippetInfo profileBackedgeWithProbability = snippet(ProbabilisticProfileSnippets.class, "profileBackedgeWithProbability");
         private final SnippetInfo profileConditionalBackedgeWithProbability = snippet(ProbabilisticProfileSnippets.class, "profileConditionalBackedgeWithProbability");
 
-        public Templates(OptionValues options, Iterable<DebugHandlersFactory> factories, HotSpotProviders providers, TargetDescription target)
+        public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target)
         {
-            super(options, factories, providers, providers.getSnippetReflection(), target);
+            super(options, providers, providers.getSnippetReflection(), target);
         }
 
         public void lower(ProfileNode profileNode, LoweringTool tool)
         {
-            assert profileNode.getRandom() != null;
-
             StructuredGraph graph = profileNode.graph();
             LoadMethodCountersNode counters = graph.unique(new LoadMethodCountersNode(profileNode.getProfiledMethod()));
             ConstantNode step = ConstantNode.forInt(profileNode.getStep(), graph);
@@ -165,7 +162,6 @@ public class ProbabilisticProfileSnippets implements Snippets
                 throw new GraalError("Unsupported profile node type: " + profileNode);
             }
 
-            assert profileNode.hasNoUsages();
             if (!profileNode.isDeleted())
             {
                 GraphUtil.killWithUnusedFloatingInputs(profileNode);

@@ -56,16 +56,7 @@ public class AMD64SignExtendOp extends AMD64LIRInstruction
         }
         else
         {
-            assert size == QWORD;
             masm.cdqq();
         }
-    }
-
-    @Override
-    public void verify()
-    {
-        assert asRegister(highResult).equals(AMD64.rdx);
-        assert asRegister(lowResult).equals(AMD64.rax);
-        assert asRegister(input).equals(AMD64.rax);
     }
 }

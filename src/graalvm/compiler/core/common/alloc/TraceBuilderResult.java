@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.BitSet;
 
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
-import graalvm.compiler.debug.DebugContext;
-import graalvm.compiler.debug.Indent;
 
 public final class TraceBuilderResult
 {
@@ -18,13 +16,12 @@ public final class TraceBuilderResult
     private final ArrayList<Trace> traces;
     private final Trace[] blockToTrace;
 
-    static TraceBuilderResult create(DebugContext debug, AbstractBlockBase<?>[] blocks, ArrayList<Trace> traces, Trace[] blockToTrace, TrivialTracePredicate pred)
+    static TraceBuilderResult create(AbstractBlockBase<?>[] blocks, ArrayList<Trace> traces, Trace[] blockToTrace, TrivialTracePredicate pred)
     {
         connect(traces, blockToTrace);
-        ArrayList<Trace> newTraces = reorderTraces(debug, traces, pred);
+        ArrayList<Trace> newTraces = reorderTraces(traces, pred);
         TraceBuilderResult traceBuilderResult = new TraceBuilderResult(newTraces, blockToTrace);
         traceBuilderResult.numberTraces();
-        assert verify(traceBuilderResult, blocks.length);
         return traceBuilderResult;
     }
 
@@ -76,57 +73,6 @@ public final class TraceBuilderResult
         return false;
     }
 
-    public static boolean verify(TraceBuilderResult traceBuilderResult, int expectedLength)
-    {
-        ArrayList<Trace> traces = traceBuilderResult.getTraces();
-        assert verifyAllBlocksScheduled(traceBuilderResult, expectedLength) : "Not all blocks assigned to traces!";
-        for (int i = 0; i < traces.size(); i++)
-        {
-            Trace trace = traces.get(i);
-            assert trace.getId() == i : "Trace number mismatch: " + trace.getId() + " vs. " + i;
-
-            BitSet suxTraces = new BitSet(traces.size());
-            for (Trace suxTrace : trace.getSuccessors())
-            {
-                assert !suxTraces.get(suxTrace.getId()) : "Trace twice successors " + suxTrace;
-                suxTraces.set(suxTrace.getId());
-            }
-
-            AbstractBlockBase<?> last = null;
-            int blockNumber = 0;
-            for (AbstractBlockBase<?> current : trace.getBlocks())
-            {
-                AbstractBlockBase<?> block = current;
-                assert traceBuilderResult.getTraceForBlock(block).getId() == i : "Trace number mismatch for block " + block + ": " + traceBuilderResult.getTraceForBlock(block) + " vs. " + i;
-                assert last == null || Arrays.asList(current.getPredecessors()).contains(last) : "Last block (" + last + ") not a predecessor of " + current;
-                assert current.getLinearScanNumber() == blockNumber : "Blocks not numbered correctly: " + current.getLinearScanNumber() + " vs. " + blockNumber;
-                last = current;
-                blockNumber++;
-                for (AbstractBlockBase<?> sux : block.getSuccessors())
-                {
-                    Trace suxTrace = traceBuilderResult.getTraceForBlock(sux);
-                    assert suxTraces.get(suxTrace.getId()) : "Successor Trace " + suxTrace + " for block " + sux + " not in successor traces of " + trace;
-                }
-            }
-        }
-        return true;
-    }
-
-    private static boolean verifyAllBlocksScheduled(TraceBuilderResult traceBuilderResult, int expectedLength)
-    {
-        ArrayList<Trace> traces = traceBuilderResult.getTraces();
-        BitSet handled = new BitSet(expectedLength);
-        for (Trace trace : traces)
-        {
-            for (AbstractBlockBase<?> block : trace.getBlocks())
-            {
-                assert !handled.get(block.getId()) : "Block added twice: " + block;
-                handled.set(block.getId());
-            }
-        }
-        return handled.cardinality() == expectedLength;
-    }
-
     private void numberTraces()
     {
         for (int i = 0; i < traces.size(); i++)
@@ -143,7 +89,6 @@ public final class TraceBuilderResult
         {
             BitSet added = new BitSet(numTraces);
             ArrayList<Trace> successors = trace.getSuccessors();
-            assert successors.size() == 0 : "Can only connect traces once!";
 
             for (AbstractBlockBase<?> block : trace.getBlocks())
             {
@@ -161,38 +106,31 @@ public final class TraceBuilderResult
         }
     }
 
-    @SuppressWarnings("try")
-    private static ArrayList<Trace> reorderTraces(DebugContext debug, ArrayList<Trace> oldTraces, TrivialTracePredicate pred)
+    private static ArrayList<Trace> reorderTraces(ArrayList<Trace> oldTraces, TrivialTracePredicate pred)
     {
         if (pred == null)
         {
             return oldTraces;
         }
-        try (Indent indent = debug.logAndIndent("ReorderTrace"))
+        ArrayList<Trace> newTraces = new ArrayList<>(oldTraces.size());
+        for (int oldTraceIdx = 0; oldTraceIdx < oldTraces.size(); oldTraceIdx++)
         {
-            ArrayList<Trace> newTraces = new ArrayList<>(oldTraces.size());
-            for (int oldTraceIdx = 0; oldTraceIdx < oldTraces.size(); oldTraceIdx++)
+            Trace currentTrace = oldTraces.get(oldTraceIdx);
+            if (!alreadyProcessed(newTraces, currentTrace))
             {
-                Trace currentTrace = oldTraces.get(oldTraceIdx);
-                if (!alreadyProcessed(newTraces, currentTrace))
+                // add current trace
+                addTrace(newTraces, currentTrace);
+                for (Trace succTrace : currentTrace.getSuccessors())
                 {
-                    assert currentTrace.getId() == oldTraceIdx : "Index mismatch";
-                    // add current trace
-                    addTrace(newTraces, currentTrace);
-                    for (Trace succTrace : currentTrace.getSuccessors())
+                    if (pred.isTrivialTrace(succTrace) && !alreadyProcessed(newTraces, succTrace))
                     {
-                        if (pred.isTrivialTrace(succTrace) && !alreadyProcessed(newTraces, succTrace))
-                        {
-                            debug.log("Moving trivial trace from %d to %d", succTrace.getId(), newTraces.size());
-                            // add trivial successor trace
-                            addTrace(newTraces, succTrace);
-                        }
+                        // add trivial successor trace
+                        addTrace(newTraces, succTrace);
                     }
                 }
             }
-            assert newTraces.size() == oldTraces.size() : "Lost traces? " + oldTraces.size() + " vs. " + newTraces.size();
-            return newTraces;
         }
+        return newTraces;
     }
 
     private static boolean alreadyProcessed(ArrayList<Trace> newTraces, Trace currentTrace)

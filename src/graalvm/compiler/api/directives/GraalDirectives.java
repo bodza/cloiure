@@ -70,7 +70,6 @@ public final class GraalDirectives
      */
     public static boolean injectBranchProbability(double probability, boolean condition)
     {
-        assert probability >= 0.0 && probability <= 1.0;
         return condition;
     }
 

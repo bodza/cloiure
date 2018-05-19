@@ -25,15 +25,6 @@ public class HotspotSnippetsOptions
     @Option(help = "Use a VM runtime call to load and clear the exception object from the thread at the start of a compiled exception handler.", type = OptionType.Debug)
     public static final OptionKey<Boolean> LoadExceptionObjectInVM = new OptionKey<>(false);
 
-    @Option(help = "Enable profiling of allocation sites.", type = OptionType.Debug)
-    public static final OptionKey<Boolean> ProfileAllocations = new OptionKey<>(false);
-
-    @Option(help = "file:doc-files/ProfileAllocationsContextHelp.txt", type = OptionType.Debug)
-    public static final EnumOptionKey<ProfileContext> ProfileAllocationsContext = new EnumOptionKey<>(ProfileContext.AllocatingMethod);
-
-    @Option(help = "Enable profiling of monitor operations.", type = OptionType.Debug)
-    public static final OptionKey<Boolean> ProfileMonitors = new OptionKey<>(false);
-
     @Option(help = "Handle simple cases for inflated monitors in the fast-path.", type = OptionType.Expert)
     public static final OptionKey<Boolean> SimpleFastInflatedLocking = new OptionKey<>(true);
 

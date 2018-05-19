@@ -71,7 +71,6 @@ public final class StubForeignCallNode extends FixedWithNextNode implements LIRL
     @Override
     public void generate(NodeLIRBuilderTool gen)
     {
-        assert graph().start() instanceof StubStartNode;
         ForeignCallLinkage linkage = foreignCalls.lookupForeignCall(descriptor);
         Value[] operands = operands(gen);
         Value result = gen.getLIRGeneratorTool().emitForeignCall(linkage, null, operands);

@@ -3,8 +3,6 @@ package graalvm.compiler.virtual.phases.ea;
 import java.util.Arrays;
 import java.util.List;
 
-import graalvm.compiler.debug.CounterKey;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.java.MonitorIdNode;
 import graalvm.compiler.nodes.virtual.EscapeObjectState;
@@ -22,9 +20,6 @@ import jdk.vm.ci.meta.JavaConstant;
  */
 public class ObjectState
 {
-    public static final CounterKey CREATE_ESCAPED_OBJECT_STATE = DebugContext.counter("CreateEscapeObjectState");
-    public static final CounterKey GET_ESCAPED_OBJECT_STATE = DebugContext.counter("GetEscapeObjectState");
-
     private ValueNode[] entries;
     private ValueNode materializedValue;
     private LockState locks;
@@ -49,7 +44,6 @@ public class ObjectState
 
     public ObjectState(ValueNode[] entries, LockState locks, boolean ensureVirtualized)
     {
-        assert checkIllegalValues(entries);
         this.entries = entries;
         this.locks = locks;
         this.ensureVirtualized = ensureVirtualized;
@@ -57,7 +51,6 @@ public class ObjectState
 
     public ObjectState(ValueNode materializedValue, LockState locks, boolean ensureVirtualized)
     {
-        assert materializedValue != null;
         this.materializedValue = materializedValue;
         this.locks = locks;
         this.ensureVirtualized = ensureVirtualized;
@@ -77,41 +70,10 @@ public class ObjectState
         return new ObjectState(this);
     }
 
-    /**
-     * Ensure that if an {@link JavaConstant#forIllegal() illegal value} is seen that the previous
-     * value is a double word value.
-     */
-    public static boolean checkIllegalValues(ValueNode[] values)
+    public EscapeObjectState createEscapeObjectState(VirtualObjectNode virtual)
     {
-        if (values != null)
-        {
-            for (int v = 1; v < values.length; v++)
-            {
-                checkIllegalValue(values, v);
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Ensure that if an {@link JavaConstant#forIllegal() illegal value} is seen that the previous
-     * value is a double word value.
-     */
-    public static boolean checkIllegalValue(ValueNode[] values, int v)
-    {
-        if (v > 0 && values[v].isConstant() && values[v].asConstant().equals(JavaConstant.forIllegal()))
-        {
-            assert values[v - 1].getStackKind().needsTwoSlots();
-        }
-        return true;
-    }
-
-    public EscapeObjectState createEscapeObjectState(DebugContext debug, VirtualObjectNode virtual)
-    {
-        GET_ESCAPED_OBJECT_STATE.increment(debug);
         if (cachedState == null)
         {
-            CREATE_ESCAPED_OBJECT_STATE.increment(debug);
             if (isVirtual())
             {
                 /*
@@ -140,7 +102,6 @@ public class ObjectState
 
     public boolean isVirtual()
     {
-        assert materializedValue == null ^ entries == null;
         return materializedValue == null;
     }
 
@@ -149,43 +110,34 @@ public class ObjectState
      */
     public ValueNode[] getEntries()
     {
-        assert isVirtual();
         return entries;
     }
 
     public ValueNode getEntry(int index)
     {
-        assert isVirtual();
         return entries[index];
     }
 
     public ValueNode getMaterializedValue()
     {
-        assert !isVirtual();
         return materializedValue;
     }
 
     public void setEntry(int index, ValueNode value)
     {
-        assert isVirtual();
         cachedState = null;
         entries[index] = value;
     }
 
     public void escape(ValueNode materialized)
     {
-        assert isVirtual();
-        assert materialized != null;
         materializedValue = materialized;
         entries = null;
         cachedState = null;
-        assert !isVirtual();
     }
 
     public void updateMaterializedValue(ValueNode value)
     {
-        assert !isVirtual();
-        assert value != null;
         cachedState = null;
         materializedValue = value;
     }

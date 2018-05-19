@@ -331,7 +331,6 @@ public class HexCodeFile
 
         String errorMessage(int offset, String message)
         {
-            assert offset < input.length();
             InputPos inputPos = filePos(offset);
             int lineEnd = input.indexOf(HexCodeFile.NEW_LINE, offset);
             int lineStart = offset - inputPos.col;
@@ -353,7 +352,6 @@ public class HexCodeFile
 
         InputPos filePos(int index)
         {
-            assert input != null;
             int lineStart = input.lastIndexOf(HexCodeFile.NEW_LINE, index) + 1;
 
             String l = input.substring(lineStart, lineStart + 10);
@@ -373,7 +371,6 @@ public class HexCodeFile
 
         void parseSections(int offset, String source)
         {
-            assert input.startsWith(source, offset);
             int index = 0;
             int endIndex = source.indexOf(SECTION_DELIM);
             while (endIndex != -1)
@@ -407,7 +404,6 @@ public class HexCodeFile
             {
                 return;
             }
-            assert input.startsWith(section, offset);
             Matcher m = HexCodeFile.SECTION.matcher(section);
             check(m.matches(), offset, "Section does not match pattern " + HexCodeFile.SECTION);
 

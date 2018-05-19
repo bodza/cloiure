@@ -16,16 +16,15 @@ public final class InlineMethodSubstitutionsPolicy extends InlineEverythingPolic
     @Override
     public Decision isWorthInlining(Replacements replacements, MethodInvocation invocation, int inliningDepth, boolean fullyProcessed)
     {
-        final boolean isTracing = GraalOptions.TraceInlining.getValue(replacements.getOptions());
         CallTargetNode callTarget = invocation.callee().invoke().callTarget();
         if (callTarget instanceof MethodCallTargetNode)
         {
             ResolvedJavaMethod calleeMethod = ((MethodCallTargetNode) callTarget).targetMethod();
             if (replacements.hasSubstitution(calleeMethod, invocation.callee().invoke().bci()))
             {
-                return Decision.YES.withReason(isTracing, "has a method subtitution");
+                return Decision.YES;
             }
         }
-        return Decision.NO.withReason(isTracing, "does not have a method substitution");
+        return Decision.NO;
     }
 }

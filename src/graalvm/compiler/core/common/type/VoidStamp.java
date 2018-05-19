@@ -40,7 +40,6 @@ public final class VoidStamp extends Stamp
     @Override
     public Stamp improveWith(Stamp other)
     {
-        assert other instanceof VoidStamp;
         return this;
     }
 
@@ -71,14 +70,12 @@ public final class VoidStamp extends Stamp
     @Override
     public Stamp meet(Stamp other)
     {
-        assert other instanceof VoidStamp;
         return this;
     }
 
     @Override
     public Stamp join(Stamp other)
     {
-        assert other instanceof VoidStamp;
         return this;
     }
 

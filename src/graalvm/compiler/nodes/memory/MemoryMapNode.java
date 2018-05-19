@@ -31,17 +31,6 @@ public final class MemoryMapNode extends FloatingNode implements MemoryMap, Memo
     protected final List<LocationIdentity> locationIdentities;
     @Input(Memory) NodeInputList<ValueNode> nodes;
 
-    private boolean checkOrder(EconomicMap<LocationIdentity, MemoryNode> mmap)
-    {
-        for (int i = 0; i < locationIdentities.size(); i++)
-        {
-            LocationIdentity locationIdentity = locationIdentities.get(i);
-            ValueNode n = nodes.get(i);
-            assertTrue(mmap.get(locationIdentity) == n, "iteration order of keys differs from values in input map");
-        }
-        return true;
-    }
-
     public MemoryMapNode(EconomicMap<LocationIdentity, MemoryNode> mmap)
     {
         super(TYPE, StampFactory.forVoid());
@@ -56,7 +45,6 @@ public final class MemoryMapNode extends FloatingNode implements MemoryMap, Memo
             nodes.initialize(index, (ValueNode) cursor.getValue());
             index++;
         }
-        assert checkOrder(mmap);
     }
 
     public boolean isEmpty()
@@ -89,7 +77,6 @@ public final class MemoryMapNode extends FloatingNode implements MemoryMap, Memo
             {
                 index = locationIdentities.indexOf(any());
             }
-            assert index != -1;
             return (MemoryNode) nodes.get(index);
         }
     }

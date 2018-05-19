@@ -37,7 +37,6 @@ public class InliningIterator
         this.start = graph.start();
         this.nodeQueue = new ArrayDeque<>();
         this.queuedNodes = graph.createNodeBitMap();
-        assert start.isAlive();
     }
 
     public LinkedList<Invoke> apply()
@@ -48,8 +47,6 @@ public class InliningIterator
 
         while ((current = nextQueuedNode()) != null)
         {
-            assert current.isAlive();
-
             if (current instanceof Invoke && ((Invoke) current).callTarget() instanceof MethodCallTargetNode)
             {
                 if (current != start)
@@ -86,13 +83,8 @@ public class InliningIterator
             {
                 queueSuccessors(current);
             }
-            else
-            {
-                assert false : current;
-            }
         }
 
-        assert invokes.size() == count(start.graph().getInvokes());
         return invokes;
     }
 
@@ -126,7 +118,6 @@ public class InliningIterator
         }
 
         FixedNode result = nodeQueue.removeFirst();
-        assert queuedNodes.isMarked(result);
         return result;
     }
 

@@ -26,21 +26,6 @@ public abstract class DominatorOptimizationProblem<E extends Enum<E>, C>
         this.blocks = cfg.getBlocks();
         flags = new EnumMap<>(flagType);
         costs = new BlockMap<>(cfg);
-        assert verify(blocks);
-    }
-
-    private static boolean verify(AbstractBlockBase<?>[] blocks)
-    {
-        for (int i = 0; i < blocks.length; i++)
-        {
-            AbstractBlockBase<?> block = blocks[i];
-            if (i != block.getId())
-            {
-                assert false : String.format("Id index mismatch @ %d vs. %s.getId()==%d", i, block, block.getId());
-                return false;
-            }
-        }
-        return true;
     }
 
     public final AbstractBlockBase<?>[] getBlocks()
@@ -51,7 +36,6 @@ public abstract class DominatorOptimizationProblem<E extends Enum<E>, C>
     public final AbstractBlockBase<?> getBlockForId(int id)
     {
         AbstractBlockBase<?> block = blocks[id];
-        assert block.getId() == id : "wrong block-to-id mapping";
         return block;
     }
 

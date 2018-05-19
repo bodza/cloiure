@@ -23,7 +23,6 @@ import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.core.common.spi.ForeignCallLinkage;
 import graalvm.compiler.core.common.spi.LIRKindTool;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
 import graalvm.compiler.hotspot.HotSpotBackend;
@@ -32,7 +31,6 @@ import graalvm.compiler.hotspot.HotSpotForeignCallLinkage;
 import graalvm.compiler.hotspot.HotSpotLIRGenerationResult;
 import graalvm.compiler.hotspot.HotSpotLIRGenerator;
 import graalvm.compiler.hotspot.HotSpotLockStack;
-import graalvm.compiler.hotspot.debug.BenchmarkCounters;
 import graalvm.compiler.hotspot.meta.HotSpotConstantLoadAction;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
 import graalvm.compiler.hotspot.stubs.Stub;
@@ -101,7 +99,6 @@ public class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements HotSp
     protected AMD64HotSpotLIRGenerator(LIRKindTool lirKindTool, AMD64ArithmeticLIRGenerator arithmeticLIRGen, MoveFactory moveFactory, HotSpotProviders providers, GraalHotSpotVMConfig config, LIRGenerationResult lirGenRes)
     {
         super(lirKindTool, arithmeticLIRGen, moveFactory, providers, lirGenRes);
-        assert config.basicLockSize == 8;
         this.config = config;
     }
 
@@ -237,7 +234,6 @@ public class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements HotSp
 
     private HotSpotLockStack getLockStack()
     {
-        assert debugInfoBuilder != null && debugInfoBuilder.lockStack() != null;
         return debugInfoBuilder.lockStack();
     }
 
@@ -393,7 +389,6 @@ public class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements HotSp
         if (hotspotLinkage.needsDebugInfo())
         {
             debugInfo = state;
-            assert debugInfo != null || stub != null;
         }
 
         if (hotspotLinkage.needsJavaFrameAnchor())
@@ -420,7 +415,6 @@ public class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements HotSp
                     {
                         key = LIRFrameState.NO_STATE;
                     }
-                    assert !generationResult.getCalleeSaveInfo().containsKey(key);
                     generationResult.getCalleeSaveInfo().put(key, save);
                     emitRestoreRegisters(save);
                 }
@@ -551,7 +545,6 @@ public class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements HotSp
     {
         ForeignCallLinkage linkage = getForeignCalls().lookupForeignCall(HotSpotBackend.UNWIND_EXCEPTION_TO_CALLER);
         CallingConvention outgoingCc = linkage.getOutgoingCallingConvention();
-        assert outgoingCc.getArgumentCount() == 2;
         RegisterValue exceptionParameter = (RegisterValue) outgoingCc.getArgument(0);
         emitMove(exceptionParameter, exception);
         append(new AMD64HotSpotUnwindOp(exceptionParameter));
@@ -604,16 +597,6 @@ public class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements HotSp
         {
             op.setSavedRbp(savedRbp);
         }
-        if (BenchmarkCounters.enabled)
-        {
-            // ensure that the rescue slot is available
-            LIRInstruction op = getOrInitRescueSlotOp();
-            // insert dummy instruction into the start block
-            LIR lir = getResult().getLIR();
-            ArrayList<LIRInstruction> instructions = lir.getLIRforBlock(lir.getControlFlowGraph().getStartBlock());
-            instructions.add(1, op);
-            lir.getDebug().dump(DebugContext.INFO_LEVEL, lir, "created rescue dummy op");
-        }
     }
 
     @Override
@@ -621,7 +604,6 @@ public class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements HotSp
     {
         LIRKind inputKind = pointer.getValueKind(LIRKind.class);
         LIRKindTool lirKindTool = getLIRKindTool();
-        assert inputKind.getPlatformKind() == lirKindTool.getObjectKind().getPlatformKind();
         if (inputKind.isReference(0))
         {
             // oop
@@ -659,7 +641,6 @@ public class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements HotSp
     {
         LIRKind inputKind = pointer.getValueKind(LIRKind.class);
         LIRKindTool lirKindTool = getLIRKindTool();
-        assert inputKind.getPlatformKind() == lirKindTool.getNarrowOopKind().getPlatformKind();
         if (inputKind.isReference(0))
         {
             // oop
@@ -713,26 +694,6 @@ public class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements HotSp
             return;
         }
         super.emitNullCheck(address, state);
-    }
-
-    @Override
-    public LIRInstruction createBenchmarkCounter(String name, String group, Value increment)
-    {
-        if (BenchmarkCounters.enabled)
-        {
-            return new AMD64HotSpotCounterOp(name, group, increment, getProviders().getRegisters(), config, getOrInitRescueSlot());
-        }
-        throw GraalError.shouldNotReachHere("BenchmarkCounters are not enabled!");
-    }
-
-    @Override
-    public LIRInstruction createMultiBenchmarkCounter(String[] names, String[] groups, Value[] increments)
-    {
-        if (BenchmarkCounters.enabled)
-        {
-            return new AMD64HotSpotCounterOp(names, groups, increments, getProviders().getRegisters(), config, getOrInitRescueSlot());
-        }
-        throw GraalError.shouldNotReachHere("BenchmarkCounters are not enabled!");
     }
 
     @Override

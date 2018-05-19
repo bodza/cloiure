@@ -80,12 +80,10 @@ public class AMD64HotSpotMoveFactory extends AMD64MoveFactory
         }
         else if (src instanceof HotSpotObjectConstant)
         {
-            assert ((HotSpotConstant) src).isCompressed();
             return new AMD64HotSpotMove.HotSpotLoadObjectConstantOp(dst, (HotSpotObjectConstant) src);
         }
         else if (src instanceof HotSpotMetaspaceConstant)
         {
-            assert ((HotSpotConstant) src).isCompressed();
             return new AMD64HotSpotMove.HotSpotLoadMetaspaceConstantOp(dst, (HotSpotMetaspaceConstant) src);
         }
         else

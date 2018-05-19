@@ -68,7 +68,6 @@ public final class AMD64RoundNode extends UnaryNode implements ArithmeticLIRLowe
     @Override
     public Stamp foldStamp(Stamp newStamp)
     {
-        assert newStamp.isCompatible(getValue().stamp(NodeView.DEFAULT));
         return roundStamp((FloatStamp) newStamp, mode);
     }
 

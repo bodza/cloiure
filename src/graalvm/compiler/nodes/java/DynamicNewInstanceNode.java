@@ -41,7 +41,6 @@ public class DynamicNewInstanceNode extends AbstractNewObjectNode implements Can
     {
         super(c, StampFactory.objectNonNull(), fillContents, stateBefore);
         this.clazz = clazz;
-        assert ((ObjectStamp) clazz.stamp(NodeView.DEFAULT)).nonNull();
     }
 
     public ValueNode getInstanceType()

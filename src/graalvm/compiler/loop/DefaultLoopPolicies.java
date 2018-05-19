@@ -7,8 +7,6 @@ import static graalvm.compiler.core.common.GraalOptions.MinimumPeelProbability;
 import java.util.List;
 
 import graalvm.compiler.core.common.util.UnsignedLong;
-import graalvm.compiler.debug.CounterKey;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeBitMap;
 import graalvm.compiler.nodes.AbstractBeginNode;
@@ -107,7 +105,6 @@ public class DefaultLoopPolicies implements LoopPolicies
         LoopBeginNode loopBegin = loop.loopBegin();
         if (!loop.isCounted())
         {
-            loopBegin.getDebug().log(DebugContext.VERBOSE_LEVEL, "shouldPartiallyUnroll %s isn't counted", loopBegin);
             return false;
         }
         OptionValues options = loop.entryPoint().getOptions();
@@ -120,7 +117,6 @@ public class DefaultLoopPolicies implements LoopPolicies
             double loopFrequency = loopBegin.loopFrequency();
             if (loopBegin.isSimpleLoop() && loopFrequency < 5.0)
             {
-                loopBegin.getDebug().log(DebugContext.VERBOSE_LEVEL, "shouldPartiallyUnroll %s frequency too low %s ", loopBegin, loopFrequency);
                 return false;
             }
             loopBegin.setLoopOrigFrequency(loopFrequency);
@@ -152,7 +148,6 @@ public class DefaultLoopPolicies implements LoopPolicies
         }
         else
         {
-            loopBegin.getDebug().log(DebugContext.VERBOSE_LEVEL, "shouldPartiallyUnroll %s unrolled loop is too large %s ", loopBegin, size);
             return false;
         }
     }
@@ -181,17 +176,11 @@ public class DefaultLoopPolicies implements LoopPolicies
         }
     }
 
-    private static class IsolatedInitialization
-    {
-        static final CounterKey UNSWITCH_SPLIT_WITH_PHIS = DebugContext.counter("UnswitchSplitWithPhis");
-    }
-
     @Override
     public boolean shouldUnswitch(LoopEx loop, List<ControlSplitNode> controlSplits)
     {
         int phis = 0;
         StructuredGraph graph = loop.loopBegin().graph();
-        DebugContext debug = graph.getDebug();
         NodeBitMap branchNodes = graph.createNodeBitMap();
         for (ControlSplitNode controlSplit : controlSplits)
         {
@@ -204,7 +193,6 @@ public class DefaultLoopPolicies implements LoopPolicies
             Block postDomBlock = loop.loopsData().getCFG().blockFor(controlSplit).getPostdominator();
             if (postDomBlock != null)
             {
-                IsolatedInitialization.UNSWITCH_SPLIT_WITH_PHIS.increment(debug);
                 phis += ((MergeNode) postDomBlock.getBeginNode()).phis().count();
             }
         }
@@ -241,7 +229,6 @@ public class DefaultLoopPolicies implements LoopPolicies
             actualDiff = actualDiff * copies;
         }
 
-        debug.log("shouldUnswitch(%s, %s) : delta=%d (%.2f%% inside of branches), max=%d, f=%.2f, phis=%d -> %b", loop, controlSplits, actualDiff, (double) (inBranchTotal) / loopTotal * 100, maxDiff, loopFrequency, phis, actualDiff <= maxDiff);
         if (actualDiff <= maxDiff)
         {
             // check whether we're allowed to unswitch this loop

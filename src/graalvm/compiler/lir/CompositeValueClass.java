@@ -33,7 +33,6 @@ public final class CompositeValueClass<T> extends FieldIntrospection<T>
         protected CompositeValueClass<?> computeValue(Class<?> type)
         {
             CompositeValueClass<?> compositeValueClass = new CompositeValueClass<>(type);
-            assert compositeValueClass.values.getDirectCount() == compositeValueClass.values.getCount() : "only direct fields are allowed in composites";
             return compositeValueClass;
         }
     };

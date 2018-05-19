@@ -4,8 +4,6 @@ import jdk.vm.ci.code.Register;
 import graalvm.compiler.asm.amd64.AMD64Address;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.type.StampFactory;
-import graalvm.compiler.debug.CounterKey;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.CompressionNode;
@@ -21,12 +19,10 @@ import static graalvm.compiler.nodeinfo.NodeSize.SIZE_0;
 
 public abstract class AMD64CompressAddressLowering extends AMD64AddressLowering
 {
-    private static final CounterKey counterFoldedUncompressDuringAddressLowering = DebugContext.counter("FoldedUncompressDuringAddressLowering");
-
     @Override
-    protected final boolean improve(StructuredGraph graph, DebugContext debug, AMD64AddressNode addr, boolean isBaseNegated, boolean isIndexNegated)
+    protected final boolean improve(StructuredGraph graph, AMD64AddressNode addr, boolean isBaseNegated, boolean isIndexNegated)
     {
-        if (super.improve(graph, debug, addr, isBaseNegated, isIndexNegated))
+        if (super.improve(graph, addr, isBaseNegated, isIndexNegated))
         {
             return true;
         }
@@ -38,7 +34,6 @@ public abstract class AMD64CompressAddressLowering extends AMD64AddressLowering
 
             if (tryToImproveUncompression(addr, index, base) || tryToImproveUncompression(addr, base, index))
             {
-                counterFoldedUncompressDuringAddressLowering.increment(debug);
                 return true;
             }
         }

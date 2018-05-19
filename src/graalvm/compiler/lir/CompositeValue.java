@@ -29,7 +29,6 @@ public abstract class CompositeValue extends Value
     public CompositeValue(ValueKind<?> kind)
     {
         super(kind);
-        assert CompositeValueClass.get(getClass()) != null;
     }
 
     /**

@@ -210,7 +210,6 @@ public class OptionValues
             {
                 String name = desc.getName();
                 OptionDescriptor existing = sortedOptions.put(name, desc);
-                assert existing == null || existing == desc : "Option named \"" + name + "\" has multiple definitions: " + existing.getLocation() + " and " + desc.getLocation();
             }
         }
         for (Map.Entry<String, OptionDescriptor> e : sortedOptions.entrySet())

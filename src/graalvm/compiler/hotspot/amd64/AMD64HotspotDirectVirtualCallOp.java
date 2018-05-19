@@ -30,7 +30,6 @@ final class AMD64HotspotDirectVirtualCallOp extends DirectCallOp
         super(TYPE, target, result, parameters, temps, state);
         this.invokeKind = invokeKind;
         this.config = config;
-        assert invokeKind.isIndirect();
     }
 
     @Override

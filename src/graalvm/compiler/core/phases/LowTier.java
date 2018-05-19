@@ -15,7 +15,6 @@ import graalvm.compiler.phases.common.DeadCodeEliminationPhase;
 import graalvm.compiler.phases.common.ExpandLogicPhase;
 import graalvm.compiler.phases.common.FixReadsPhase;
 import graalvm.compiler.phases.common.LoweringPhase;
-import graalvm.compiler.phases.common.ProfileCompiledMethodsPhase;
 import graalvm.compiler.phases.common.PropagateDeoptimizeProbabilityPhase;
 import graalvm.compiler.phases.common.UseTrappingNullChecksPhase;
 import graalvm.compiler.phases.schedule.SchedulePhase;
@@ -26,8 +25,6 @@ public class LowTier extends PhaseSuite<LowTierContext>
 {
     static class Options
     {
-        @Option(help = "", type = OptionType.Debug)
-        public static final OptionKey<Boolean> ProfileCompiledMethods = new OptionKey<>(false);
     }
 
     public LowTier(OptionValues options)
@@ -39,11 +36,6 @@ public class LowTier extends PhaseSuite<LowTierContext>
         {
             canonicalizer.disableReadCanonicalization();
             canonicalizerWithoutGVN.disableReadCanonicalization();
-        }
-
-        if (Options.ProfileCompiledMethods.getValue(options))
-        {
-            appendPhase(new ProfileCompiledMethodsPhase());
         }
 
         appendPhase(new LoweringPhase(canonicalizer, LoweringTool.StandardLoweringStage.LOW_TIER));

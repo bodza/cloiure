@@ -31,7 +31,6 @@ public class FloatDivNode extends BinaryArithmeticNode<Div>
     protected FloatDivNode(NodeClass<? extends FloatDivNode> c, ValueNode x, ValueNode y)
     {
         super(c, ArithmeticOpTable::getDiv, x, y);
-        assert stamp instanceof FloatStamp;
     }
 
     public static ValueNode create(ValueNode x, ValueNode y, NodeView view)

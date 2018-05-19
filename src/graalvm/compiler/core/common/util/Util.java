@@ -54,10 +54,8 @@ public class Util
             {
                 list.add(filler);
             }
-            assert list.size() == pos + 1;
         }
 
-        assert list.size() >= pos + 1;
         list.set(pos, x);
     }
 

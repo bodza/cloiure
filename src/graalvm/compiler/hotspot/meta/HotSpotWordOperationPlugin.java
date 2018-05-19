@@ -88,13 +88,9 @@ class HotSpotWordOperationPlugin extends WordOperationPlugin
         {
             case POINTER_EQ:
             case POINTER_NE:
-                assert args.length == 2;
                 HotspotOpcode opcode = operation.opcode();
                 ValueNode left = args[0];
                 ValueNode right = args[1];
-                assert left.stamp(NodeView.DEFAULT) instanceof MetaspacePointerStamp : left + " " + left.stamp(NodeView.DEFAULT);
-                assert right.stamp(NodeView.DEFAULT) instanceof MetaspacePointerStamp : right + " " + right.stamp(NodeView.DEFAULT);
-                assert opcode == POINTER_EQ || opcode == POINTER_NE;
 
                 PointerEqualsNode comparison = b.add(new PointerEqualsNode(left, right));
                 ValueNode eqValue = b.add(forBoolean(opcode == POINTER_EQ));
@@ -103,31 +99,25 @@ class HotSpotWordOperationPlugin extends WordOperationPlugin
                 break;
 
             case IS_NULL:
-                assert args.length == 1;
                 ValueNode pointer = args[0];
-                assert pointer.stamp(NodeView.DEFAULT) instanceof MetaspacePointerStamp;
 
                 LogicNode isNull = b.addWithInputs(IsNullNode.create(pointer));
                 b.addPush(returnKind, ConditionalNode.create(isNull, b.add(forBoolean(true)), b.add(forBoolean(false)), NodeView.DEFAULT));
                 break;
 
             case FROM_POINTER:
-                assert args.length == 1;
                 b.addPush(returnKind, new PointerCastNode(StampFactory.forKind(wordKind), args[0]));
                 break;
 
             case TO_KLASS_POINTER:
-                assert args.length == 1;
                 b.addPush(returnKind, new PointerCastNode(KlassPointerStamp.klass(), args[0]));
                 break;
 
             case TO_METHOD_POINTER:
-                assert args.length == 1;
                 b.addPush(returnKind, new PointerCastNode(MethodPointerStamp.method(), args[0]));
                 break;
 
             case READ_KLASS_POINTER:
-                assert args.length == 2 || args.length == 3;
                 Stamp readStamp = KlassPointerStamp.klass();
                 AddressNode address = makeAddress(b, args[0], args[1]);
                 LocationIdentity location;
@@ -137,7 +127,6 @@ class HotSpotWordOperationPlugin extends WordOperationPlugin
                 }
                 else
                 {
-                    assert args[2].isConstant();
                     location = snippetReflection.asObject(LocationIdentity.class, args[2].asJavaConstant());
                 }
                 ReadNode read = b.add(new ReadNode(address, location, readStamp, BarrierType.NONE));

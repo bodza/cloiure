@@ -52,7 +52,6 @@ public class NewMultiArrayNode extends DeoptimizingFixedWithNextNode implements 
         super(c, StampFactory.objectNonNull(TypeReference.createExactTrusted(type)));
         this.type = type;
         this.dimensions = new NodeInputList<>(this, dimensions);
-        assert dimensions.length > 0 && type.isArray();
     }
 
     @Override

@@ -29,7 +29,7 @@ public abstract class ProfileNode extends DeoptimizingFixedWithNextNode implemen
 {
     public static class Options
     {
-        @Option(help = "Control probabilistic profiling on AMD64", type = OptionType.Expert)//
+        @Option(help = "Control probabilistic profiling on AMD64", type = OptionType.Expert)
         public static final OptionKey<Boolean> ProbabilisticProfiling = new OptionKey<>(true);
     }
 

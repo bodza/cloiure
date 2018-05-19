@@ -65,26 +65,9 @@ public class LoopPartialUnrollPhase extends LoopPhase<LoopPolicies>
                         canonicalizer.applyIncremental(graph, context, listener.getNodes());
                         listener.getNodes().clear();
                     }
-
-                    assert !prePostInserted || checkCounted(graph, mark);
                 }
             }
         }
-    }
-
-    private static boolean checkCounted(StructuredGraph graph, Graph.Mark mark)
-    {
-        LoopsData dataCounted;
-        dataCounted = new LoopsData(graph);
-        dataCounted.detectedCountedLoops();
-        for (LoopEx anyLoop : dataCounted.loops())
-        {
-            if (graph.isNew(mark, anyLoop.loopBegin()))
-            {
-                assert anyLoop.isCounted() : "pre/post transformation loses counted loop " + anyLoop.loopBegin();
-            }
-        }
-        return true;
     }
 
     @Override

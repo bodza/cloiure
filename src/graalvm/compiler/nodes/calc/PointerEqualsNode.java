@@ -49,8 +49,6 @@ public class PointerEqualsNode extends CompareNode implements BinaryCommutative<
     protected PointerEqualsNode(NodeClass<? extends PointerEqualsNode> c, ValueNode x, ValueNode y)
     {
         super(c, CanonicalCondition.EQ, false, x, y);
-        assert x.stamp(NodeView.DEFAULT) instanceof AbstractPointerStamp;
-        assert y.stamp(NodeView.DEFAULT) instanceof AbstractPointerStamp;
     }
 
     @Override
@@ -91,7 +89,6 @@ public class PointerEqualsNode extends CompareNode implements BinaryCommutative<
                                 ResolvedJavaMethod override = type.resolveMethod(lm.getMethod(), lm.getCallerType());
                                 if (override != null && !override.equals(lm.getMethod()))
                                 {
-                                    assert declaringClass.isAssignableFrom(override.getDeclaringClass());
                                     return true;
                                 }
                             }

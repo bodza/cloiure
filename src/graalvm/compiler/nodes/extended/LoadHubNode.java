@@ -42,7 +42,6 @@ public final class LoadHubNode extends FloatingNode implements Lowerable, Canoni
 
     private static Stamp hubStamp(StampProvider stampProvider, ValueNode value)
     {
-        assert value.stamp(NodeView.DEFAULT) instanceof ObjectStamp;
         return stampProvider.createHubStamp(((ObjectStamp) value.stamp(NodeView.DEFAULT)));
     }
 

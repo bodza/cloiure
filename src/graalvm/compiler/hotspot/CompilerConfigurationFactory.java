@@ -1,7 +1,5 @@
 package graalvm.compiler.hotspot;
 
-import static jdk.vm.ci.common.InitTimer.timer;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -98,19 +96,14 @@ public abstract class CompilerConfigurationFactory implements Comparable<Compile
     {
         private final EconomicMap<Class<? extends Architecture>, HotSpotBackendFactory> backends = EconomicMap.create();
 
-        @SuppressWarnings("try")
         public DefaultBackendMap(String backendName)
         {
-            try (InitTimer t = timer("HotSpotBackendFactory.register"))
+            for (HotSpotBackendFactory backend : GraalServices.load(HotSpotBackendFactory.class))
             {
-                for (HotSpotBackendFactory backend : GraalServices.load(HotSpotBackendFactory.class))
+                if (backend.getName().equals(backendName))
                 {
-                    if (backend.getName().equals(backendName))
-                    {
-                        Class<? extends Architecture> arch = backend.getArchitecture();
-                        HotSpotBackendFactory oldEntry = backends.put(arch, backend);
-                        assert oldEntry == null || oldEntry == backend : "duplicate Graal backend";
-                    }
+                    Class<? extends Architecture> arch = backend.getArchitecture();
+                    HotSpotBackendFactory oldEntry = backends.put(arch, backend);
                 }
             }
         }
@@ -133,25 +126,7 @@ public abstract class CompilerConfigurationFactory implements Comparable<Compile
         {
             return 1;
         }
-        assert this == o : "distinct compiler configurations cannot have the same auto selection priority";
         return 0;
-    }
-
-    /**
-     * Asserts uniqueness of {@link #name} and {@link #autoSelectionPriority} for {@code factory} in
-     * {@code factories}.
-     */
-    private static boolean checkUnique(CompilerConfigurationFactory factory, List<CompilerConfigurationFactory> factories)
-    {
-        for (CompilerConfigurationFactory other : factories)
-        {
-            if (other != factory)
-            {
-                assert !other.name.equals(factory.name) : factory.getClass().getName() + " cannot have the same selector as " + other.getClass().getName() + ": " + factory.name;
-                assert other.autoSelectionPriority != factory.autoSelectionPriority : factory.getClass().getName() + " cannot have the same auto-selection priority as " + other.getClass().getName() + ": " + factory.autoSelectionPriority;
-            }
-        }
-        return true;
     }
 
     /**
@@ -162,7 +137,6 @@ public abstract class CompilerConfigurationFactory implements Comparable<Compile
         List<CompilerConfigurationFactory> candidates = new ArrayList<>();
         for (CompilerConfigurationFactory candidate : GraalServices.load(CompilerConfigurationFactory.class))
         {
-            assert checkUnique(candidate, candidates);
             candidates.add(candidate);
         }
         Collections.sort(candidates);
@@ -178,46 +152,42 @@ public abstract class CompilerConfigurationFactory implements Comparable<Compile
      *
      * @param name the name of the compiler configuration to select (optional)
      */
-    @SuppressWarnings("try")
     public static CompilerConfigurationFactory selectFactory(String name, OptionValues options)
     {
         CompilerConfigurationFactory factory = null;
-        try (InitTimer t = timer("CompilerConfigurationFactory.selectFactory"))
+        String value = name == null ? Options.CompilerConfiguration.getValue(options) : name;
+        if ("help".equals(value))
         {
-            String value = name == null ? Options.CompilerConfiguration.getValue(options) : name;
-            if ("help".equals(value))
+            System.out.println("The available Graal compiler configurations are:");
+            for (CompilerConfigurationFactory candidate : getAllCandidates())
             {
-                System.out.println("The available Graal compiler configurations are:");
-                for (CompilerConfigurationFactory candidate : getAllCandidates())
-                {
-                    System.out.println("    " + candidate.name);
-                }
-                System.exit(0);
+                System.out.println("    " + candidate.name);
             }
-            else if (value != null)
+            System.exit(0);
+        }
+        else if (value != null)
+        {
+            for (CompilerConfigurationFactory candidate : GraalServices.load(CompilerConfigurationFactory.class))
             {
-                for (CompilerConfigurationFactory candidate : GraalServices.load(CompilerConfigurationFactory.class))
+                if (candidate.name.equals(value))
                 {
-                    if (candidate.name.equals(value))
-                    {
-                        factory = candidate;
-                        break;
-                    }
-                }
-                if (factory == null)
-                {
-                    throw new GraalError("Graal compiler configuration '%s' not found. Available configurations are: %s", value, getAllCandidates().stream().map(c -> c.name).collect(Collectors.joining(", ")));
+                    factory = candidate;
+                    break;
                 }
             }
-            else
+            if (factory == null)
             {
-                List<CompilerConfigurationFactory> candidates = getAllCandidates();
-                if (candidates.isEmpty())
-                {
-                    throw new GraalError("No %s providers found", CompilerConfigurationFactory.class.getName());
-                }
-                factory = candidates.get(0);
+                throw new GraalError("Graal compiler configuration '%s' not found. Available configurations are: %s", value, getAllCandidates().stream().map(c -> c.name).collect(Collectors.joining(", ")));
             }
+        }
+        else
+        {
+            List<CompilerConfigurationFactory> candidates = getAllCandidates();
+            if (candidates.isEmpty())
+            {
+                throw new GraalError("No %s providers found", CompilerConfigurationFactory.class.getName());
+            }
+            factory = candidates.get(0);
         }
         ShowConfigurationLevel level = Options.ShowConfiguration.getValue(options);
         if (level != ShowConfigurationLevel.none)

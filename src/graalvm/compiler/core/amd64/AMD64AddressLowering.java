@@ -4,7 +4,6 @@ import graalvm.compiler.asm.amd64.AMD64Address.Scale;
 import graalvm.compiler.core.common.NumUtil;
 import graalvm.compiler.core.common.type.AbstractPointerStamp;
 import graalvm.compiler.core.common.type.IntegerStamp;
-import graalvm.compiler.debug.DebugContext;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.ValueNode;
@@ -29,11 +28,9 @@ public class AMD64AddressLowering extends AddressLowering
         boolean changed;
         do
         {
-            changed = improve(graph, base.getDebug(), ret, false, false);
+            changed = improve(graph, ret, false, false);
         } while (changed);
 
-        assert checkAddressBitWidth(ret.getBase());
-        assert checkAddressBitWidth(ret.getIndex());
         return graph.unique(ret);
     }
 
@@ -47,7 +44,6 @@ public class AMD64AddressLowering extends AddressLowering
      * (base + index * scale + displacement).
      *
      * @param graph the current graph
-     * @param debug the current debug context
      * @param ret the address that should be optimized
      * @param isBaseNegated determines if the address base is negated. if so, all values that are
      *            extracted from the base will be negated as well
@@ -55,7 +51,7 @@ public class AMD64AddressLowering extends AddressLowering
      *            extracted from the index will be negated as well
      * @return true if the address was modified
      */
-    protected boolean improve(StructuredGraph graph, DebugContext debug, AMD64AddressNode ret, boolean isBaseNegated, boolean isIndexNegated)
+    protected boolean improve(StructuredGraph graph, AMD64AddressNode ret, boolean isBaseNegated, boolean isIndexNegated)
     {
         ValueNode newBase = improveInput(ret, ret.getBase(), 0, isBaseNegated);
         if (newBase != ret.getBase())
@@ -114,10 +110,10 @@ public class AMD64AddressLowering extends AddressLowering
             }
         }
 
-        return improveNegation(graph, debug, ret, isBaseNegated, isIndexNegated);
+        return improveNegation(graph, ret, isBaseNegated, isIndexNegated);
     }
 
-    private boolean improveNegation(StructuredGraph graph, DebugContext debug, AMD64AddressNode ret, boolean originalBaseNegated, boolean originalIndexNegated)
+    private boolean improveNegation(StructuredGraph graph, AMD64AddressNode ret, boolean originalBaseNegated, boolean originalIndexNegated)
     {
         boolean baseNegated = originalBaseNegated;
         boolean indexNegated = originalIndexNegated;
@@ -144,7 +140,7 @@ public class AMD64AddressLowering extends AddressLowering
             ValueNode base = ret.getBase();
             ValueNode index = ret.getIndex();
 
-            boolean improved = improve(graph, debug, ret, baseNegated, indexNegated);
+            boolean improved = improve(graph, ret, baseNegated, indexNegated);
             if (baseNegated != originalBaseNegated)
             {
                 if (base == ret.getBase())
@@ -169,10 +165,6 @@ public class AMD64AddressLowering extends AddressLowering
                 }
             }
             return improved;
-        }
-        else
-        {
-            assert ret.getBase() == originalBase && ret.getIndex() == originalIndex;
         }
         return false;
     }
@@ -202,8 +194,6 @@ public class AMD64AddressLowering extends AddressLowering
         {
             if (node.stamp(NodeView.DEFAULT) instanceof IntegerStamp)
             {
-                assert IntegerStamp.getBits(node.stamp(NodeView.DEFAULT)) == ADDRESS_BITS;
-
                 /*
                  * we can't swallow zero-extends because of multiple reasons:
                  *
