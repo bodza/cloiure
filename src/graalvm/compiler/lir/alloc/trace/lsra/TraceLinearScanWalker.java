@@ -1229,7 +1229,6 @@ final class TraceLinearScanWalker
      * {@link State#Inactive} (and eventually to {@link State#Handled} but handled intervals are not
      * managed).
      */
-    @SuppressWarnings("try")
     private void walkToFixed(State state, int from)
     {
         FixedInterval prevprev = null;
@@ -1311,7 +1310,6 @@ final class TraceLinearScanWalker
      * Trace intervals can switch once from {@link State#Unhandled} to {@link State#Active} and then
      * to {@link State#Handled} but handled intervals are not managed.
      */
-    @SuppressWarnings("try")
     private void walkToAny(int from)
     {
         TraceInterval prevprev = null;

@@ -1,7 +1,5 @@
 package graalvm.compiler.lir.dfa;
 
-import static jdk.vm.ci.code.ValueUtil.isIllegal;
-
 import java.util.ArrayList;
 import java.util.EnumSet;
 

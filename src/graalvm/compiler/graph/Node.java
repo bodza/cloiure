@@ -12,17 +12,12 @@ import java.util.EnumSet;
 import java.util.Formattable;
 import java.util.FormattableFlags;
 import java.util.Formatter;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
-import graalvm.compiler.core.common.Fields;
 import graalvm.compiler.core.common.type.AbstractPointerStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.Graph.NodeEventListener;
-import graalvm.compiler.graph.Graph.Options;
 import graalvm.compiler.graph.iterators.NodeIterable;
 import graalvm.compiler.graph.iterators.NodePredicate;
 import graalvm.compiler.graph.spi.Simplifiable;

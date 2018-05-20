@@ -18,10 +18,8 @@ import static graalvm.compiler.hotspot.replacements.NewObjectSnippets.formatArra
 import static graalvm.compiler.hotspot.stubs.NewInstanceStub.refillAllocate;
 import static graalvm.compiler.hotspot.stubs.StubUtil.handlePendingException;
 import static graalvm.compiler.hotspot.stubs.StubUtil.newDescriptor;
-import static graalvm.compiler.hotspot.stubs.StubUtil.printf;
 import static graalvm.compiler.hotspot.stubs.StubUtil.verifyObject;
 
-import graalvm.compiler.api.replacements.Fold;
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;

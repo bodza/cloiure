@@ -1,8 +1,6 @@
 package graalvm.compiler.replacements.classfile;
 
-import static graalvm.compiler.bytecode.Bytecodes.GETFIELD;
 import static graalvm.compiler.bytecode.Bytecodes.GETSTATIC;
-import static graalvm.compiler.bytecode.Bytecodes.PUTFIELD;
 import static graalvm.compiler.bytecode.Bytecodes.PUTSTATIC;
 
 import java.io.DataInputStream;

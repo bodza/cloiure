@@ -3,9 +3,7 @@ package graalvm.compiler.lir.amd64;
 import static graalvm.compiler.lir.LIRInstruction.OperandFlag.ILLEGAL;
 import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
 import static graalvm.compiler.lir.LIRInstruction.OperandFlag.STACK;
-import static graalvm.compiler.lir.LIRValueUtil.differentRegisters;
 import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
 
 import graalvm.compiler.asm.amd64.AMD64Assembler.ConditionFlag;
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;

@@ -6,9 +6,6 @@ import static jdk.vm.ci.code.ValueUtil.isRegister;
 
 import java.util.ArrayList;
 
-import org.graalvm.collections.EconomicSet;
-import org.graalvm.collections.Equivalence;
-import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.LIRInsertionBuffer;
 import graalvm.compiler.lir.LIRInstruction;

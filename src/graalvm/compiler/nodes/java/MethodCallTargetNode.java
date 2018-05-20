@@ -5,7 +5,6 @@ import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.StampPair;
 import graalvm.compiler.core.common.type.TypeReference;
 import graalvm.compiler.graph.IterableNodeType;
-import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Simplifiable;
 import graalvm.compiler.graph.spi.SimplifierTool;
@@ -23,7 +22,6 @@ import graalvm.compiler.nodes.extended.ValueAnchorNode;
 import graalvm.compiler.nodes.spi.UncheckedInterfaceProvider;
 import graalvm.compiler.nodes.type.StampTool;
 
-import jdk.vm.ci.code.BytecodeFrame;
 import jdk.vm.ci.meta.Assumptions;
 import jdk.vm.ci.meta.Assumptions.AssumptionResult;
 import jdk.vm.ci.meta.DeoptimizationAction;

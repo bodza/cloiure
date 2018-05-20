@@ -34,7 +34,6 @@ public abstract class AbstractInlineInfo implements InlineInfo
         return invoke;
     }
 
-    @SuppressWarnings("try")
     protected static EconomicSet<Node> inline(Invoke invoke, ResolvedJavaMethod concrete, Inlineable inlineable, boolean receiverNullCheck, String reason)
     {
         StructuredGraph calleeGraph = ((InlineableGraph) inlineable).getGraph();
@@ -42,7 +41,6 @@ public abstract class AbstractInlineInfo implements InlineInfo
     }
 
     @Override
-    @SuppressWarnings("try")
     public final void populateInlinableElements(HighTierContext context, StructuredGraph caller, CanonicalizerPhase canonicalizer, OptionValues options)
     {
         for (int i = 0; i < numberOfMethods(); i++)

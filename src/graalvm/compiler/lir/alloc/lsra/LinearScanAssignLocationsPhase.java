@@ -1,8 +1,6 @@
 package graalvm.compiler.lir.alloc.lsra;
 
 import static jdk.vm.ci.code.ValueUtil.isIllegal;
-import static graalvm.compiler.lir.LIRValueUtil.isJavaConstant;
-import static graalvm.compiler.lir.LIRValueUtil.isStackSlotValue;
 import static graalvm.compiler.lir.LIRValueUtil.isVariable;
 import static graalvm.compiler.lir.LIRValueUtil.isVirtualStackSlot;
 

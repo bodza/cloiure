@@ -9,7 +9,6 @@ import java.util.Map;
 
 import graalvm.compiler.core.common.spi.ConstantFieldProvider;
 import graalvm.compiler.core.common.type.IntegerStamp;
-import graalvm.compiler.core.common.type.PrimitiveStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;

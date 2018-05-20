@@ -15,13 +15,11 @@ import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.Canonicalizable.BinaryCommutative;
 import graalvm.compiler.graph.spi.SimplifierTool;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodes.AbstractMergeNode;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.ControlSinkNode;
 import graalvm.compiler.nodes.FixedNode;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.NodeView;
-import graalvm.compiler.nodes.StartNode;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.FloatingNode;
@@ -288,7 +286,6 @@ public class CanonicalizerPhase extends BasePhase<PhaseContext>
             return false;
         }
 
-        @SuppressWarnings("try")
         public boolean tryCanonicalize(final Node node, NodeClass<?> nodeClass)
         {
             if (customCanonicalizer != null)

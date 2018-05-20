@@ -2,12 +2,10 @@ package graalvm.compiler.hotspot;
 
 import graalvm.compiler.core.phases.EconomyCompilerConfiguration;
 import graalvm.compiler.phases.tiers.CompilerConfiguration;
-import graalvm.compiler.serviceprovider.ServiceProvider;
 
 /**
  * Factory that creates a {@link EconomyCompilerConfiguration}.
  */
-@ServiceProvider(CompilerConfigurationFactory.class)
 public class EconomyCompilerConfigurationFactory extends CompilerConfigurationFactory
 {
     public static final String NAME = "economy";

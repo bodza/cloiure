@@ -6,7 +6,6 @@ import static graalvm.compiler.lir.LIRValueUtil.isStackSlotValue;
 
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.alloc.lsra.Interval.RegisterBinding;
-import graalvm.compiler.lir.alloc.lsra.Interval.RegisterBindingLists;
 import graalvm.compiler.lir.alloc.lsra.Interval.RegisterPriority;
 import graalvm.compiler.lir.alloc.lsra.Interval.State;
 import graalvm.compiler.options.Option;
@@ -152,7 +151,6 @@ public class OptimizingLinearScanWalker extends LinearScanWalker
         return true;
     }
 
-    @SuppressWarnings("try")
     private void splitRegisterInterval(Interval interval, Register reg)
     {
         // collect current usage of registers

@@ -11,7 +11,6 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import jdk.vm.ci.meta.DeoptimizationAction;
 import jdk.vm.ci.meta.DeoptimizationReason;
 import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.Value;
 

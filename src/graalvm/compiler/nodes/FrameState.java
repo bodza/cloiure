@@ -12,12 +12,8 @@ import static graalvm.compiler.nodeinfo.NodeSize.SIZE_IGNORED;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
-import graalvm.compiler.api.replacements.MethodSubstitution;
 import graalvm.compiler.bytecode.Bytecode;
-import graalvm.compiler.bytecode.Bytecodes;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.IterableNodeType;
@@ -30,7 +26,6 @@ import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.java.ExceptionObjectNode;
 import graalvm.compiler.nodes.java.MonitorIdNode;
 import graalvm.compiler.nodes.virtual.EscapeObjectState;
-import graalvm.compiler.nodes.virtual.VirtualObjectNode;
 
 import jdk.vm.ci.code.BytecodeFrame;
 import jdk.vm.ci.code.CodeUtil;

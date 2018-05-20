@@ -1,13 +1,10 @@
 package graalvm.compiler.hotspot;
 
 import static jdk.vm.ci.hotspot.HotSpotJVMCIRuntime.runtime;
-import static jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider.getArrayIndexScale;
 import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.graalvm.collections.EconomicMap;
@@ -16,7 +13,6 @@ import org.graalvm.collections.Equivalence;
 import org.graalvm.collections.UnmodifiableMapCursor;
 import graalvm.compiler.api.replacements.SnippetReflectionProvider;
 import graalvm.compiler.api.runtime.GraalRuntime;
-import graalvm.compiler.core.common.CompilationIdentifier;
 import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.target.Backend;
 import graalvm.compiler.debug.GraalError;
@@ -33,21 +29,11 @@ import graalvm.compiler.phases.tiers.CompilerConfiguration;
 import graalvm.compiler.replacements.SnippetCounter;
 import graalvm.compiler.replacements.SnippetCounter.Group;
 import graalvm.compiler.runtime.RuntimeProvider;
-import graalvm.compiler.serviceprovider.GraalServices;
 
 import jdk.vm.ci.code.Architecture;
 import jdk.vm.ci.code.stack.StackIntrospection;
-import jdk.vm.ci.common.InitTimer;
-import jdk.vm.ci.hotspot.HotSpotCompilationRequest;
 import jdk.vm.ci.hotspot.HotSpotJVMCIRuntime;
-import jdk.vm.ci.hotspot.HotSpotResolvedJavaMethod;
-import jdk.vm.ci.hotspot.HotSpotResolvedJavaType;
-import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
 import jdk.vm.ci.hotspot.HotSpotVMConfigStore;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
-import jdk.vm.ci.runtime.JVMCI;
 import jdk.vm.ci.runtime.JVMCIBackend;
 
 /**
@@ -79,7 +65,6 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider
      * @param compilerConfigurationFactory factory for the compiler configuration
      *            {@link CompilerConfigurationFactory#selectFactory(String, OptionValues)}
      */
-    @SuppressWarnings("try")
     HotSpotGraalRuntime(String nameQualifier, HotSpotJVMCIRuntime jvmciRuntime, CompilerConfigurationFactory compilerConfigurationFactory, OptionValues initialOptions)
     {
         this.runtimeName = getClass().getSimpleName() + ":" + nameQualifier;

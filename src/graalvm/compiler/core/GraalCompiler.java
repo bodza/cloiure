@@ -1,14 +1,11 @@
 package graalvm.compiler.core;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.graalvm.collections.EconomicSet;
 import graalvm.compiler.code.CompilationResult;
 import graalvm.compiler.core.LIRGenerationPhase.LIRGenerationContext;
 import graalvm.compiler.core.common.GraalOptions;
-import graalvm.compiler.core.common.PermanentBailoutException;
-import graalvm.compiler.core.common.RetryableBailoutException;
 import graalvm.compiler.core.common.alloc.ComputeBlockOrder;
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
@@ -42,15 +39,10 @@ import graalvm.compiler.phases.util.Providers;
 
 import jdk.vm.ci.code.RegisterConfig;
 import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.code.site.ConstantReference;
-import jdk.vm.ci.code.site.DataPatch;
 import jdk.vm.ci.meta.Assumptions;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.ProfilingInfo;
 import jdk.vm.ci.meta.ResolvedJavaField;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.VMConstant;
 
 /**
  * Static methods for orchestrating the compilation of a {@linkplain StructuredGraph graph}.
@@ -176,7 +168,6 @@ public class GraalCompiler
         }
     }
 
-    @SuppressWarnings("try")
     public static LIRGenerationResult emitLIR(Backend backend, StructuredGraph graph, Object stub, RegisterConfig registerConfig, LIRSuites lirSuites)
     {
         String registerPressure = GraalOptions.RegisterPressure.getValue(graph.getOptions());
@@ -258,7 +249,6 @@ public class GraalCompiler
         return lirGenRes;
     }
 
-    @SuppressWarnings("try")
     public static void emitCode(Backend backend, Assumptions assumptions, ResolvedJavaMethod rootMethod, Collection<ResolvedJavaMethod> inlinedMethods, EconomicSet<ResolvedJavaField> accessedFields, int bytecodeSize, LIRGenerationResult lirGenRes, CompilationResult compilationResult, ResolvedJavaMethod installedCodeOwner, CompilationResultBuilderFactory factory)
     {
         FrameMap frameMap = lirGenRes.getFrameMap();

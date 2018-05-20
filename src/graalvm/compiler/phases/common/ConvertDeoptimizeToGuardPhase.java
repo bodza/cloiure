@@ -23,7 +23,6 @@ import graalvm.compiler.nodes.IfNode;
 import graalvm.compiler.nodes.LogicNode;
 import graalvm.compiler.nodes.LoopExitNode;
 import graalvm.compiler.nodes.ProxyNode;
-import graalvm.compiler.nodes.StartNode;
 import graalvm.compiler.nodes.StaticDeoptimizingNode;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.ValueNode;

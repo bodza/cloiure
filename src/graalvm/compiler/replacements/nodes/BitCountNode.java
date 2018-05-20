@@ -17,7 +17,6 @@ import graalvm.compiler.nodes.calc.UnaryNode;
 import graalvm.compiler.nodes.spi.ArithmeticLIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 
-import jdk.vm.ci.code.CodeUtil;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.JavaKind;
 

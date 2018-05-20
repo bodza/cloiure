@@ -6,7 +6,6 @@ import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
 import static graalvm.compiler.lir.LIRInstruction.OperandFlag.STACK;
 import static jdk.vm.ci.code.ValueUtil.asRegister;
 import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static jdk.vm.ci.code.ValueUtil.isStackSlot;
 
 import graalvm.compiler.asm.amd64.AMD64Address;
 import graalvm.compiler.asm.amd64.AMD64Assembler.AMD64MOp;

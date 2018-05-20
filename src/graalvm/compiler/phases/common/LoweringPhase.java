@@ -20,12 +20,10 @@ import graalvm.compiler.graph.Graph.Mark;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeBitMap;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.graph.iterators.NodeIterable;
 import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.AbstractBeginNode;
 import graalvm.compiler.nodes.BeginNode;
-import graalvm.compiler.nodes.ControlSinkNode;
 import graalvm.compiler.nodes.FixedGuardNode;
 import graalvm.compiler.nodes.FixedNode;
 import graalvm.compiler.nodes.FixedWithNextNode;
@@ -41,7 +39,6 @@ import graalvm.compiler.nodes.cfg.Block;
 import graalvm.compiler.nodes.extended.AnchoringNode;
 import graalvm.compiler.nodes.extended.GuardedNode;
 import graalvm.compiler.nodes.extended.GuardingNode;
-import graalvm.compiler.nodes.memory.MemoryCheckpoint;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringProvider;
 import graalvm.compiler.nodes.spi.LoweringTool;
@@ -52,7 +49,6 @@ import graalvm.compiler.phases.BasePhase;
 import graalvm.compiler.phases.Phase;
 import graalvm.compiler.phases.schedule.SchedulePhase;
 import graalvm.compiler.phases.tiers.PhaseContext;
-import org.graalvm.word.LocationIdentity;
 
 import jdk.vm.ci.meta.ConstantReflectionProvider;
 import jdk.vm.ci.meta.DeoptimizationAction;
@@ -370,7 +366,6 @@ public class LoweringPhase extends BasePhase<PhaseContext>
             }
         }
 
-        @SuppressWarnings("try")
         private AnchoringNode process(final Block b, final NodeBitMap activeGuards, final AnchoringNode startAnchor)
         {
             final LoweringToolImpl loweringTool = new LoweringToolImpl(context, startAnchor, activeGuards, b.getBeginNode());

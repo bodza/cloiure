@@ -1,7 +1,6 @@
 package graalvm.compiler.nodes.cfg;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
 
@@ -11,7 +10,6 @@ import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeMap;
 import graalvm.compiler.nodes.AbstractBeginNode;
-import graalvm.compiler.nodes.AbstractEndNode;
 import graalvm.compiler.nodes.ControlSinkNode;
 import graalvm.compiler.nodes.ControlSplitNode;
 import graalvm.compiler.nodes.EndNode;

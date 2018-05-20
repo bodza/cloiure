@@ -1,7 +1,6 @@
 package graalvm.compiler.core.common.alloc;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.BitSet;
 
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;

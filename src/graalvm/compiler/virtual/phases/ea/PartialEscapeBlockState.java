@@ -9,7 +9,6 @@ import graalvm.compiler.nodes.FixedNode;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.ValueNode;
-import graalvm.compiler.nodes.calc.FloatingNode;
 import graalvm.compiler.nodes.java.MonitorIdNode;
 import graalvm.compiler.nodes.virtual.AllocatedObjectNode;
 import graalvm.compiler.nodes.virtual.CommitAllocationNode;

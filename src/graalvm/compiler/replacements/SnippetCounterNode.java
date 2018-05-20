@@ -4,7 +4,6 @@ import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_IGNORED;
 import static graalvm.compiler.nodeinfo.NodeSize.SIZE_IGNORED;
 import static graalvm.compiler.replacements.SnippetTemplate.DEFAULT_REPLACER;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 
 import graalvm.compiler.api.replacements.Fold;

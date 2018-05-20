@@ -8,7 +8,6 @@ import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.hotspot.word.HotSpotOperation.HotspotOpcode;
 import graalvm.compiler.nodeinfo.NodeInfo;
-import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.FloatingNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;

@@ -3,7 +3,6 @@ package graalvm.compiler.hotspot.nodes;
 import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
 import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
 
-import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;

@@ -1,19 +1,15 @@
 package graalvm.compiler.lir.alloc.lsra;
 
-import static jdk.vm.ci.code.ValueUtil.asRegister;
 import static jdk.vm.ci.code.ValueUtil.asStackSlot;
 import static jdk.vm.ci.code.ValueUtil.isRegister;
 import static jdk.vm.ci.code.ValueUtil.isStackSlot;
 import static graalvm.compiler.lir.LIRValueUtil.asVariable;
 import static graalvm.compiler.lir.LIRValueUtil.isVariable;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.EnumSet;
 
-import org.graalvm.collections.EconomicSet;
-import org.graalvm.collections.Equivalence;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.PermanentBailoutException;
 import graalvm.compiler.core.common.alloc.ComputeBlockOrder;

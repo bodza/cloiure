@@ -3,7 +3,6 @@ package graalvm.compiler.phases.schedule;
 import static org.graalvm.collections.Equivalence.IDENTITY;
 import static graalvm.compiler.core.common.GraalOptions.GuardPriorities;
 import static graalvm.compiler.core.common.GraalOptions.OptScheduleOutOfLoops;
-import static graalvm.compiler.core.common.cfg.AbstractControlFlowGraph.strictlyDominates;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,9 +18,6 @@ import java.util.function.Function;
 import org.graalvm.collections.EconomicSet;
 import graalvm.compiler.core.common.cfg.AbstractControlFlowGraph;
 import graalvm.compiler.core.common.cfg.BlockMap;
-import graalvm.compiler.graph.Graph.NodeEvent;
-import graalvm.compiler.graph.Graph.NodeEventListener;
-import graalvm.compiler.graph.Graph.NodeEventScope;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeBitMap;
 import graalvm.compiler.graph.NodeMap;
@@ -31,7 +27,6 @@ import graalvm.compiler.nodes.AbstractEndNode;
 import graalvm.compiler.nodes.AbstractMergeNode;
 import graalvm.compiler.nodes.ControlSinkNode;
 import graalvm.compiler.nodes.ControlSplitNode;
-import graalvm.compiler.nodes.DeoptimizeNode;
 import graalvm.compiler.nodes.FixedNode;
 import graalvm.compiler.nodes.GuardNode;
 import graalvm.compiler.nodes.IfNode;
@@ -44,10 +39,8 @@ import graalvm.compiler.nodes.StartNode;
 import graalvm.compiler.nodes.StaticDeoptimizingNode;
 import graalvm.compiler.nodes.StaticDeoptimizingNode.GuardPriority;
 import graalvm.compiler.nodes.StructuredGraph;
-import graalvm.compiler.nodes.StructuredGraph.GuardsStage;
 import graalvm.compiler.nodes.StructuredGraph.ScheduleResult;
 import graalvm.compiler.nodes.ValueNode;
-import graalvm.compiler.nodes.VirtualState;
 import graalvm.compiler.nodes.calc.ConvertNode;
 import graalvm.compiler.nodes.calc.IsNullNode;
 import graalvm.compiler.nodes.cfg.Block;
@@ -140,7 +133,6 @@ public final class SchedulePhase extends Phase
             this.cfg = cfg;
         }
 
-        @SuppressWarnings("try")
         public void run(StructuredGraph graph, SchedulingStrategy selectedStrategy, boolean immutableGraph)
         {
             if (this.cfg == null)

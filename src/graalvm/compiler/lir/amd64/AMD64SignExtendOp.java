@@ -1,9 +1,7 @@
 package graalvm.compiler.lir.amd64;
 
 import static graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize.DWORD;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize.QWORD;
 import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
-import static jdk.vm.ci.code.ValueUtil.asRegister;
 
 import graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize;
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;

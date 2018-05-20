@@ -9,8 +9,6 @@ import java.lang.invoke.ConstantCallSite;
 import java.lang.invoke.MutableCallSite;
 import java.lang.invoke.VolatileCallSite;
 import java.lang.reflect.Array;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.math.BigInteger;
 import java.util.zip.CRC32;
 
@@ -20,7 +18,6 @@ import graalvm.compiler.core.common.spi.ForeignCallsProvider;
 import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.TypeReference;
-import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
 import graalvm.compiler.hotspot.nodes.CurrentJavaThreadNode;
 import graalvm.compiler.hotspot.replacements.AESCryptSubstitutions;

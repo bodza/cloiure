@@ -1,6 +1,5 @@
 package graalvm.compiler.nodes.java;
 
-import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.MetaAccessProvider;
 
 import graalvm.compiler.core.common.type.StampFactory;

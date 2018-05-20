@@ -14,7 +14,6 @@ import graalvm.compiler.asm.amd64.AMD64Address.Scale;
 import graalvm.compiler.asm.amd64.AMD64Assembler.ConditionFlag;
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
 import graalvm.compiler.code.CompilationResult.JumpTable;
-import graalvm.compiler.core.common.NumUtil;
 import graalvm.compiler.core.common.calc.Condition;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.LIRInstructionClass;

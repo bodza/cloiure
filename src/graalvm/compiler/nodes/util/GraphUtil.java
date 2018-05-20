@@ -20,7 +20,6 @@ import graalvm.compiler.graph.Graph;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeBitMap;
 import graalvm.compiler.graph.NodeStack;
-import graalvm.compiler.graph.Position;
 import graalvm.compiler.graph.iterators.NodeIterable;
 import graalvm.compiler.graph.spi.SimplifierTool;
 import graalvm.compiler.nodes.AbstractBeginNode;

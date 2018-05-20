@@ -21,8 +21,6 @@ import graalvm.compiler.nodes.spi.UncheckedInterfaceProvider;
 import graalvm.compiler.nodes.util.GraphUtil;
 import org.graalvm.word.LocationIdentity;
 
-import java.util.Map;
-
 import static graalvm.compiler.nodeinfo.InputType.Extension;
 import static graalvm.compiler.nodeinfo.InputType.Memory;
 import static graalvm.compiler.nodeinfo.InputType.State;

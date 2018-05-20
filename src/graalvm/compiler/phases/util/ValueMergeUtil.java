@@ -10,7 +10,6 @@ import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.PhiNode;
 import graalvm.compiler.nodes.ReturnNode;
-import graalvm.compiler.nodes.UnwindNode;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.ValuePhiNode;
 

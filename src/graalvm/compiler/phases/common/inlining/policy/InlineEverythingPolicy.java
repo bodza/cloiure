@@ -2,7 +2,6 @@ package graalvm.compiler.phases.common.inlining.policy;
 
 import static graalvm.compiler.core.common.GraalOptions.MaximumDesiredSize;
 
-import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.PermanentBailoutException;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.spi.Replacements;

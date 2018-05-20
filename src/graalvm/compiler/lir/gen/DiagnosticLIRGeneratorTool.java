@@ -6,7 +6,6 @@ import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.RegisterConfig;
 import jdk.vm.ci.code.StackSlot;
 import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.Value;
 
 public interface DiagnosticLIRGeneratorTool
 {

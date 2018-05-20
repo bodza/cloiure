@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
-import org.graalvm.collections.MapCursor;
 import graalvm.compiler.core.gen.NodeMatchRules;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Edges;
@@ -52,7 +51,6 @@ public class MatchRuleRegistry
      *
      * @return the set of {@link MatchStatement}s applicable to theClass.
      */
-    @SuppressWarnings("try")
     public static synchronized EconomicMap<Class<? extends Node>, List<MatchStatement>> lookup(Class<? extends NodeMatchRules> theClass, OptionValues options)
     {
         EconomicMap<Class<? extends Node>, List<MatchStatement>> result = registry.get(theClass);

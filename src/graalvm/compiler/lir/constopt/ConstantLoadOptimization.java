@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.Deque;
-import java.util.EnumSet;
 import java.util.List;
 
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
@@ -17,10 +16,7 @@ import graalvm.compiler.lir.InstructionValueConsumer;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRInsertionBuffer;
 import graalvm.compiler.lir.LIRInstruction;
-import graalvm.compiler.lir.LIRInstruction.OperandFlag;
-import graalvm.compiler.lir.LIRInstruction.OperandMode;
 import graalvm.compiler.lir.StandardOp.LoadConstantOp;
-import graalvm.compiler.lir.ValueConsumer;
 import graalvm.compiler.lir.Variable;
 import graalvm.compiler.lir.constopt.ConstantTree.Flags;
 import graalvm.compiler.lir.constopt.ConstantTree.NodeCost;
@@ -33,7 +29,6 @@ import graalvm.compiler.options.OptionType;
 
 import jdk.vm.ci.code.TargetDescription;
 import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.Value;
 import jdk.vm.ci.meta.ValueKind;
 
 /**

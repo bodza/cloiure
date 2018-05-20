@@ -1,6 +1,5 @@
 package graalvm.compiler.nodes.memory.address;
 
-import graalvm.compiler.core.common.type.AbstractPointerStamp;
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.PrimitiveStamp;
 import graalvm.compiler.core.common.type.Stamp;

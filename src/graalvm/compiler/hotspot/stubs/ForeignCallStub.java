@@ -34,14 +34,9 @@ import graalvm.compiler.word.WordTypes;
 import org.graalvm.word.LocationIdentity;
 
 import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
-import jdk.vm.ci.hotspot.HotSpotSignature;
 import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.JavaMethod;
-import jdk.vm.ci.meta.JavaType;
-import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
-import jdk.vm.ci.meta.Signature;
 
 /**
  * A {@linkplain #getGraph generated} stub for a {@link Transition non-leaf} foreign call from
@@ -160,7 +155,6 @@ public class ForeignCallStub extends Stub
      * %r15 on AMD64) and is only prepended if {@link #prependThread} is true.
      */
     @Override
-    @SuppressWarnings("try")
     protected StructuredGraph getGraph(CompilationIdentifier compilationId)
     {
         WordTypes wordTypes = providers.getWordTypes();

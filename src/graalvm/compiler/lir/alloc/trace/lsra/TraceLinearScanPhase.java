@@ -1,9 +1,7 @@
 package graalvm.compiler.lir.alloc.trace.lsra;
 
-import static jdk.vm.ci.code.CodeUtil.isEven;
 import static jdk.vm.ci.code.ValueUtil.asRegister;
 import static jdk.vm.ci.code.ValueUtil.isIllegal;
-import static jdk.vm.ci.code.ValueUtil.isLegal;
 import static jdk.vm.ci.code.ValueUtil.isRegister;
 import static graalvm.compiler.lir.LIRValueUtil.isVariable;
 
@@ -11,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.common.alloc.Trace;
 import graalvm.compiler.core.common.alloc.TraceBuilderResult;
@@ -20,7 +17,6 @@ import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LIRInstruction.OperandMode;
-import graalvm.compiler.lir.StandardOp.BlockEndOp;
 import graalvm.compiler.lir.Variable;
 import graalvm.compiler.lir.VirtualStackSlot;
 import graalvm.compiler.lir.alloc.trace.GlobalLivenessInfo;
@@ -28,7 +24,6 @@ import graalvm.compiler.lir.alloc.trace.TraceAllocationPhase;
 import graalvm.compiler.lir.alloc.trace.TraceAllocationPhase.TraceAllocationContext;
 import graalvm.compiler.lir.alloc.trace.TraceRegisterAllocationPhase;
 import graalvm.compiler.lir.alloc.trace.TraceUtil;
-import graalvm.compiler.lir.alloc.trace.lsra.TraceInterval.RegisterPriority;
 import graalvm.compiler.lir.framemap.FrameMapBuilder;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;

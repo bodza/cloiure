@@ -1,23 +1,16 @@
 package graalvm.compiler.replacements.verifier;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic.Kind;
 
 import graalvm.compiler.api.replacements.ClassSubstitution;

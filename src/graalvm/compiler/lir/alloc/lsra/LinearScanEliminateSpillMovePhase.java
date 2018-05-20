@@ -1,8 +1,6 @@
 package graalvm.compiler.lir.alloc.lsra;
 
 import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static graalvm.compiler.lir.LIRValueUtil.isStackSlotValue;
-import static graalvm.compiler.lir.LIRValueUtil.isVariable;
 import static graalvm.compiler.lir.phases.LIRPhase.Options.LIROptimization;
 
 import java.util.ArrayList;
@@ -10,9 +8,7 @@ import java.util.ArrayList;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.LIRInsertionBuffer;
 import graalvm.compiler.lir.LIRInstruction;
-import graalvm.compiler.lir.StandardOp.LoadConstantOp;
 import graalvm.compiler.lir.StandardOp.MoveOp;
-import graalvm.compiler.lir.StandardOp.ValueMoveOp;
 import graalvm.compiler.lir.alloc.lsra.Interval.SpillState;
 import graalvm.compiler.lir.alloc.lsra.LinearScan.IntervalPredicate;
 import graalvm.compiler.lir.gen.LIRGenerationResult;

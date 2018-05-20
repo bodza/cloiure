@@ -17,7 +17,6 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 public class NodeCostUtil
 {
-    @SuppressWarnings("try")
     public static int computeGraphSize(StructuredGraph graph)
     {
         int size = 0;

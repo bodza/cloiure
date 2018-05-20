@@ -1,6 +1,5 @@
 package graalvm.compiler.hotspot;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -11,10 +10,6 @@ import org.graalvm.collections.EconomicMap;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.phases.LIRPhase;
 import graalvm.compiler.lir.phases.LIRPhaseSuite;
-import graalvm.compiler.options.EnumOptionKey;
-import graalvm.compiler.options.Option;
-import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.BasePhase;
 import graalvm.compiler.phases.PhaseSuite;
@@ -22,7 +17,6 @@ import graalvm.compiler.phases.tiers.CompilerConfiguration;
 import graalvm.compiler.serviceprovider.GraalServices;
 
 import jdk.vm.ci.code.Architecture;
-import jdk.vm.ci.common.InitTimer;
 
 /**
  * A factory that creates the {@link CompilerConfiguration} the Graal compiler will use. Each

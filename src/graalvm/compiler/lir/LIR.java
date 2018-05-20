@@ -1,13 +1,11 @@
 package graalvm.compiler.lir;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.core.common.cfg.AbstractControlFlowGraph;
 import graalvm.compiler.core.common.cfg.BlockMap;
-import graalvm.compiler.lir.StandardOp.BlockEndOp;
 import graalvm.compiler.lir.StandardOp.LabelOp;
 import graalvm.compiler.lir.gen.LIRGenerator;
 import graalvm.compiler.options.OptionValues;

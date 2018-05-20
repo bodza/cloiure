@@ -1,6 +1,5 @@
 package graalvm.compiler.core.gen;
 
-import static jdk.vm.ci.code.ValueUtil.asRegister;
 import static jdk.vm.ci.code.ValueUtil.isLegal;
 import static jdk.vm.ci.code.ValueUtil.isRegister;
 import static graalvm.compiler.core.common.GraalOptions.MatchExpressions;
@@ -17,7 +16,6 @@ import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.core.common.cfg.BlockMap;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.match.ComplexMatchValue;
-import graalvm.compiler.core.match.MatchPattern;
 import graalvm.compiler.core.match.MatchRuleRegistry;
 import graalvm.compiler.core.match.MatchStatement;
 import graalvm.compiler.debug.GraalError;
@@ -71,7 +69,6 @@ import graalvm.compiler.nodes.extended.SwitchNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.nodes.spi.NodeValueMap;
-import graalvm.compiler.nodes.virtual.VirtualObjectNode;
 import graalvm.compiler.options.OptionValues;
 
 import jdk.vm.ci.code.CallingConvention;
@@ -383,7 +380,6 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
         }
     }
 
-    @SuppressWarnings("try")
     protected void matchComplexExpressions(List<Node> nodes)
     {
         if (matchRules != null)

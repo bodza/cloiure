@@ -1,16 +1,10 @@
 package graalvm.compiler.lir.amd64;
 
-import static graalvm.compiler.asm.amd64.AMD64Assembler.AMD64MOp.DIV;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.AMD64MOp.IDIV;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.AMD64MOp.IMUL;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.AMD64MOp.MUL;
 import static graalvm.compiler.lir.LIRInstruction.OperandFlag.ILLEGAL;
 import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
 import static graalvm.compiler.lir.LIRInstruction.OperandFlag.STACK;
 import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.isIllegal;
 import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static jdk.vm.ci.code.ValueUtil.isStackSlot;
 
 import graalvm.compiler.asm.amd64.AMD64Address;
 import graalvm.compiler.asm.amd64.AMD64Assembler.AMD64MOp;

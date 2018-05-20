@@ -30,9 +30,6 @@ import static graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize.SD;
 import static graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize.SS;
 import static graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize.WORD;
 import static graalvm.compiler.core.common.NumUtil.isByte;
-import static graalvm.compiler.core.common.NumUtil.isInt;
-import static graalvm.compiler.core.common.NumUtil.isShiftCount;
-import static graalvm.compiler.core.common.NumUtil.isUByte;
 
 import graalvm.compiler.asm.Assembler;
 import graalvm.compiler.asm.Label;

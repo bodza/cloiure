@@ -23,7 +23,6 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.nodes.util.GraphUtil;
 import org.graalvm.word.LocationIdentity;
 
-import jdk.vm.ci.hotspot.HotSpotMetaspaceConstant;
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.Value;
 

@@ -4,7 +4,6 @@ import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ValueNode;
-import graalvm.compiler.nodes.type.StampTool;
 import graalvm.compiler.replacements.SnippetTemplate;
 import graalvm.compiler.replacements.nodes.BasicArrayCopyNode;
 

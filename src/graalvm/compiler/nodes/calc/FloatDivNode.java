@@ -3,7 +3,6 @@ package graalvm.compiler.nodes.calc;
 import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_32;
 
 import graalvm.compiler.core.common.type.ArithmeticOpTable;
-import graalvm.compiler.core.common.type.FloatStamp;
 import graalvm.compiler.core.common.type.ArithmeticOpTable.BinaryOp;
 import graalvm.compiler.core.common.type.ArithmeticOpTable.BinaryOp.Div;
 import graalvm.compiler.core.common.type.Stamp;

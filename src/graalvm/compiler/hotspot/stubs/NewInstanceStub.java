@@ -38,12 +38,10 @@ import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.word
 import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.writeTlabTop;
 import static graalvm.compiler.hotspot.stubs.StubUtil.handlePendingException;
 import static graalvm.compiler.hotspot.stubs.StubUtil.newDescriptor;
-import static graalvm.compiler.hotspot.stubs.StubUtil.printf;
 import static graalvm.compiler.hotspot.stubs.StubUtil.verifyObject;
 import static graalvm.compiler.nodes.extended.BranchProbabilityNode.FAST_PATH_PROBABILITY;
 import static graalvm.compiler.nodes.extended.BranchProbabilityNode.probability;
 
-import graalvm.compiler.api.replacements.Fold;
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;

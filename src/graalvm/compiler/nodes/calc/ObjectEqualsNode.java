@@ -1,7 +1,6 @@
 package graalvm.compiler.nodes.calc;
 
 import graalvm.compiler.core.common.calc.CanonicalCondition;
-import graalvm.compiler.core.common.type.AbstractObjectStamp;
 import graalvm.compiler.core.common.type.AbstractPointerStamp;
 import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.TypeReference;

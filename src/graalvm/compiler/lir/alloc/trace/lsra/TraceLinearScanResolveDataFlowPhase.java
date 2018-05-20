@@ -1,10 +1,8 @@
 package graalvm.compiler.lir.alloc.trace.lsra;
 
-import static jdk.vm.ci.code.ValueUtil.isRegister;
 import static graalvm.compiler.lir.LIRValueUtil.asConstant;
 import static graalvm.compiler.lir.LIRValueUtil.asVariable;
 import static graalvm.compiler.lir.LIRValueUtil.isConstantValue;
-import static graalvm.compiler.lir.LIRValueUtil.isStackSlotValue;
 import static graalvm.compiler.lir.LIRValueUtil.isVirtualStackSlot;
 
 import java.util.ArrayList;

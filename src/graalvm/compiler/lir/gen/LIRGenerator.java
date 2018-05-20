@@ -7,7 +7,6 @@ import static jdk.vm.ci.code.ValueUtil.isStackSlot;
 import static graalvm.compiler.lir.LIRValueUtil.asConstant;
 import static graalvm.compiler.lir.LIRValueUtil.isConstantValue;
 import static graalvm.compiler.lir.LIRValueUtil.isVariable;
-import static graalvm.compiler.lir.LIRValueUtil.isVirtualStackSlot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +21,6 @@ import graalvm.compiler.core.common.spi.ForeignCallLinkage;
 import graalvm.compiler.core.common.spi.ForeignCallsProvider;
 import graalvm.compiler.core.common.spi.LIRKindTool;
 import graalvm.compiler.core.common.type.Stamp;
-import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.ConstantValue;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRFrameState;
@@ -34,9 +32,6 @@ import graalvm.compiler.lir.StandardOp.LabelOp;
 import graalvm.compiler.lir.StandardOp.SaveRegistersOp;
 import graalvm.compiler.lir.SwitchStrategy;
 import graalvm.compiler.lir.Variable;
-import graalvm.compiler.options.Option;
-import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionValues;
 
 import jdk.vm.ci.code.CallingConvention;

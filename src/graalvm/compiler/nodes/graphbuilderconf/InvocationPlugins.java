@@ -19,12 +19,9 @@ import org.graalvm.collections.MapCursor;
 import org.graalvm.collections.Pair;
 import org.graalvm.collections.UnmodifiableEconomicMap;
 import org.graalvm.collections.UnmodifiableMapCursor;
-import graalvm.compiler.api.replacements.MethodSubstitution;
 import graalvm.compiler.api.replacements.MethodSubstitutionRegistry;
 import graalvm.compiler.bytecode.BytecodeProvider;
 import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.graph.Node;
-import graalvm.compiler.graph.iterators.NodeIterable;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.graphbuilderconf.InvocationPlugin.Receiver;
 

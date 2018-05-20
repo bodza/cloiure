@@ -5,9 +5,6 @@ import static graalvm.compiler.phases.common.DeadCodeEliminationPhase.Optionalit
 
 import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.nodes.spi.LoweringTool;
-import graalvm.compiler.options.Option;
-import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.PhaseSuite;
 import graalvm.compiler.phases.common.CanonicalizerPhase;

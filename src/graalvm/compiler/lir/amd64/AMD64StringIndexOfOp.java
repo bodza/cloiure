@@ -1,8 +1,5 @@
 package graalvm.compiler.lir.amd64;
 
-import static jdk.vm.ci.amd64.AMD64.rax;
-import static jdk.vm.ci.amd64.AMD64.rcx;
-import static jdk.vm.ci.amd64.AMD64.rdx;
 import static jdk.vm.ci.code.ValueUtil.asRegister;
 import static graalvm.compiler.lir.LIRInstruction.OperandFlag.ILLEGAL;
 import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
@@ -13,8 +10,6 @@ import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
 import graalvm.compiler.lir.gen.LIRGeneratorTool;
 
-import jdk.vm.ci.amd64.AMD64;
-import jdk.vm.ci.amd64.AMD64.CPUFeature;
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.RegisterValue;
 import jdk.vm.ci.meta.Value;

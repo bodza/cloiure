@@ -9,7 +9,6 @@ import static graalvm.compiler.nodeinfo.NodeSize.SIZE_UNKNOWN;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node;
@@ -20,7 +19,6 @@ import graalvm.compiler.graph.spi.SimplifierTool;
 import graalvm.compiler.nodeinfo.NodeCycles;
 import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodeinfo.NodeSize;
-import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;

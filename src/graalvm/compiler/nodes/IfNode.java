@@ -7,14 +7,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
-import graalvm.compiler.bytecode.BytecodeDisassembler;
-import graalvm.compiler.bytecode.Bytecodes;
-import graalvm.compiler.bytecode.Bytes;
-import graalvm.compiler.bytecode.ResolvedJavaMethodBytecode;
 import graalvm.compiler.core.common.calc.Condition;
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.Stamp;
@@ -48,7 +43,6 @@ import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.PrimitiveConstant;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
@@ -985,7 +979,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
      * where the test would be statically decidable creating a new merge below the approriate side
      * of the IfNode. Any undecidable tests will continue to use the original IfNode.
      */
-    @SuppressWarnings("try")
     private boolean splitIfAtPhi(SimplifierTool tool)
     {
         if (graph().getGuardsStage().areFrameStatesAtSideEffects())

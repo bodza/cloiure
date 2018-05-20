@@ -2,7 +2,6 @@ package graalvm.compiler.lir.alloc.trace;
 
 import static graalvm.compiler.lir.LIRValueUtil.asVariable;
 import static graalvm.compiler.lir.LIRValueUtil.isVariable;
-import static graalvm.compiler.lir.alloc.trace.TraceUtil.isTrivialTrace;
 
 import java.util.Arrays;
 import java.util.EnumSet;

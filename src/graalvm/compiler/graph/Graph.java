@@ -4,14 +4,12 @@ import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_IGNORED;
 import static graalvm.compiler.nodeinfo.NodeSize.SIZE_IGNORED;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.function.Consumer;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 import org.graalvm.collections.UnmodifiableEconomicMap;
-import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node.ValueNumberable;
 import graalvm.compiler.graph.iterators.NodeIterable;
@@ -19,8 +17,6 @@ import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
 import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * This class is a graph container, it contains the set of nodes that belong to this graph.
@@ -1090,7 +1086,6 @@ public class Graph
         }
     }
 
-    @SuppressWarnings({"all", "try"})
     public EconomicMap<Node, Node> addDuplicates(Iterable<? extends Node> newNodes, final Graph oldGraph, int estimatedNodeCount, DuplicationReplacement replacements)
     {
         return NodeClass.addGraphDuplicate(this, oldGraph, estimatedNodeCount, newNodes, replacements);

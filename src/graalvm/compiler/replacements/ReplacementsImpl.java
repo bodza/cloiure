@@ -7,11 +7,8 @@ import static graalvm.compiler.nodes.graphbuilderconf.InlineInvokePlugin.InlineI
 import static graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext.CompilationContext.INLINE_AFTER_PARSING;
 import static graalvm.compiler.phases.common.DeadCodeEliminationPhase.Optionality.Required;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
@@ -182,7 +179,6 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
     }
 
     @Override
-    @SuppressWarnings("try")
     public StructuredGraph getSnippet(ResolvedJavaMethod method, ResolvedJavaMethod recursiveEntry, Object[] args)
     {
         StructuredGraph graph = UseSnippetGraphCache.getValue(options) ? graphs.get(method) : null;

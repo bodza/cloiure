@@ -1,6 +1,5 @@
 package graalvm.compiler.phases.common.inlining.policy;
 
-import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.nodes.CallTargetNode;
 import graalvm.compiler.nodes.java.MethodCallTargetNode;
 import graalvm.compiler.nodes.spi.Replacements;

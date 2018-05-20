@@ -2,12 +2,10 @@ package graalvm.compiler.hotspot;
 
 import graalvm.compiler.core.phases.CommunityCompilerConfiguration;
 import graalvm.compiler.phases.tiers.CompilerConfiguration;
-import graalvm.compiler.serviceprovider.ServiceProvider;
 
 /**
  * Factory for creating the default configuration for the community edition of Graal.
  */
-@ServiceProvider(CompilerConfigurationFactory.class)
 public class CommunityCompilerConfigurationFactory extends CompilerConfigurationFactory
 {
     public static final String NAME = "community";

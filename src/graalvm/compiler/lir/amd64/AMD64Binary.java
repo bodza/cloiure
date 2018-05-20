@@ -4,11 +4,9 @@ import static graalvm.compiler.lir.LIRInstruction.OperandFlag.COMPOSITE;
 import static graalvm.compiler.lir.LIRInstruction.OperandFlag.HINT;
 import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
 import static graalvm.compiler.lir.LIRInstruction.OperandFlag.STACK;
-import static graalvm.compiler.lir.LIRValueUtil.differentRegisters;
 import static graalvm.compiler.lir.LIRValueUtil.sameRegister;
 import static jdk.vm.ci.code.ValueUtil.asRegister;
 import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static jdk.vm.ci.code.ValueUtil.isStackSlot;
 
 import graalvm.compiler.core.common.NumUtil;
 import graalvm.compiler.asm.amd64.AMD64Address;

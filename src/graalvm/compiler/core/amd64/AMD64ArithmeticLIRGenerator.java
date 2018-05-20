@@ -96,7 +96,6 @@ import jdk.vm.ci.code.TargetDescription;
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.PlatformKind;
 import jdk.vm.ci.meta.VMConstant;
 import jdk.vm.ci.meta.Value;
@@ -1142,7 +1141,7 @@ public class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator implemen
             /*
              * Always emit DWORD operations, even if the resultKind is Long. On AMD64, all DWORD
              * operations implicitly set the upper half of the register to 0, which is what we want
-             * anyway. Compared to the QWORD oparations, the encoding of the DWORD operations is
+             * anyway. Compared to the QWORD operations, the encoding of the DWORD operations is
              * sometimes one byte shorter.
              */
             switch (fromBits)

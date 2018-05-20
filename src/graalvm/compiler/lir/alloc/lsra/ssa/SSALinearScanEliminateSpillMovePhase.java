@@ -1,8 +1,5 @@
 package graalvm.compiler.lir.alloc.lsra.ssa;
 
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static graalvm.compiler.lir.LIRValueUtil.isStackSlotValue;
-
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.StandardOp.LabelOp;
@@ -40,7 +37,6 @@ public class SSALinearScanEliminateSpillMovePhase extends LinearScanEliminateSpi
         return false;
     }
 
-    @SuppressWarnings("try")
     private boolean isPhiResolutionMove(AbstractBlockBase<?> block, MoveOp move, Interval toInterval)
     {
         if (!toInterval.isSplitParent())

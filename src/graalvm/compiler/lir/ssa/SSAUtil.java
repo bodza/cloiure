@@ -1,9 +1,7 @@
 package graalvm.compiler.lir.ssa;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRInstruction;

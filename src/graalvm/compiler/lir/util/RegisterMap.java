@@ -4,7 +4,6 @@ import java.util.function.BiConsumer;
 
 import jdk.vm.ci.code.Architecture;
 import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.RegisterArray;
 
 public class RegisterMap<T>
 {

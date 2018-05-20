@@ -1,20 +1,11 @@
 package graalvm.compiler.lir.framemap;
 
-import static graalvm.compiler.lir.LIRValueUtil.isVirtualStackSlot;
-
 import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.EnumSet;
 import java.util.List;
 
 import graalvm.compiler.core.common.LIRKind;
-import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.lir.InstructionValueConsumer;
-import graalvm.compiler.lir.LIR;
-import graalvm.compiler.lir.LIRInstruction;
-import graalvm.compiler.lir.LIRInstruction.OperandFlag;
-import graalvm.compiler.lir.LIRInstruction.OperandMode;
 import graalvm.compiler.lir.VirtualStackSlot;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 
@@ -22,7 +13,6 @@ import jdk.vm.ci.code.CallingConvention;
 import jdk.vm.ci.code.CodeCacheProvider;
 import jdk.vm.ci.code.RegisterConfig;
 import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.Value;
 import jdk.vm.ci.meta.ValueKind;
 
 /**
@@ -102,7 +92,6 @@ public class FrameMapBuilderImpl extends FrameMapBuilderTool
     }
 
     @Override
-    @SuppressWarnings("try")
     public FrameMap buildFrameMap(LIRGenerationResult res)
     {
         for (CallingConvention cc : calls)

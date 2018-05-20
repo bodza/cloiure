@@ -18,15 +18,12 @@ import java.util.Formatter;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Predicate;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.EconomicSet;
 import org.graalvm.collections.Equivalence;
 import org.graalvm.collections.UnmodifiableEconomicMap;
-import graalvm.compiler.api.replacements.Fold;
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
 import graalvm.compiler.api.replacements.Snippet.NonNullParameter;
@@ -40,7 +37,6 @@ import graalvm.compiler.core.common.type.TypeReference;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Graph.Mark;
 import graalvm.compiler.graph.Node;
-import graalvm.compiler.graph.Node.NodeIntrinsic;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.Position;
 import graalvm.compiler.loop.LoopEx;
@@ -72,7 +68,6 @@ import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.ValueNodeUtil;
 import graalvm.compiler.nodes.calc.FloatingNode;
 import graalvm.compiler.nodes.java.LoadIndexedNode;
-import graalvm.compiler.nodes.java.MethodCallTargetNode;
 import graalvm.compiler.nodes.java.StoreIndexedNode;
 import graalvm.compiler.nodes.memory.MemoryAccess;
 import graalvm.compiler.nodes.memory.MemoryAnchorNode;
@@ -100,9 +95,7 @@ import graalvm.compiler.phases.tiers.PhaseContext;
 import graalvm.compiler.phases.util.Providers;
 import graalvm.compiler.replacements.nodes.ExplodeLoopNode;
 import graalvm.compiler.replacements.nodes.LoadSnippetVarargParameterNode;
-import graalvm.util.CollectionsUtil;
 import org.graalvm.word.LocationIdentity;
-import org.graalvm.word.WordBase;
 
 import jdk.vm.ci.code.TargetDescription;
 import jdk.vm.ci.meta.Constant;
@@ -113,7 +106,6 @@ import jdk.vm.ci.meta.LocalVariableTable;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaMethod.Parameter;
-import jdk.vm.ci.meta.ResolvedJavaType;
 import jdk.vm.ci.meta.Signature;
 
 /**
@@ -844,10 +836,10 @@ public class SnippetTemplate
                         else if (usage instanceof StoreIndexedNode)
                         {
                             /*
-                                * The template lowering doesn't really treat this as an array so
-                                * you can't store back into the varargs. Allocate your own array if
-                                * you really need this and EA should eliminate it.
-                                */
+                             * The template lowering doesn't really treat this as an array so
+                             * you can't store back into the varargs. Allocate your own array if
+                             * you really need this and EA should eliminate it.
+                             */
                             throw new GraalError("Can't store into VarargsParameter array");
                         }
                     }
@@ -1462,7 +1454,6 @@ public class SnippetTemplate
      * @param args the arguments to be bound to the flattened positional parameters of the snippet
      * @return the map of duplicated nodes (original -&gt; duplicate)
      */
-    @SuppressWarnings("try")
     public UnmodifiableEconomicMap<Node, Node> instantiate(MetaAccessProvider metaAccess, FixedNode replacee, UsageReplacer replacer, Arguments args)
     {
         return instantiate(metaAccess, replacee, replacer, args, true);

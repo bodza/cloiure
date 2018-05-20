@@ -15,7 +15,6 @@ import graalvm.compiler.nodes.IndirectCallTargetNode;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.IntegerDivRemNode;
-import graalvm.compiler.nodes.calc.IntegerDivRemNode.Op;
 import graalvm.compiler.nodes.cfg.Block;
 import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;

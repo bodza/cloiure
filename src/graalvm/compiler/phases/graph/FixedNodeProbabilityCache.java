@@ -15,7 +15,6 @@ import graalvm.compiler.nodes.ControlSplitNode;
 import graalvm.compiler.nodes.EndNode;
 import graalvm.compiler.nodes.FixedNode;
 import graalvm.compiler.nodes.LoopBeginNode;
-import graalvm.compiler.nodes.StartNode;
 
 /**
  * Compute probabilities for fixed nodes on the fly and cache them at {@link AbstractBeginNode}s.

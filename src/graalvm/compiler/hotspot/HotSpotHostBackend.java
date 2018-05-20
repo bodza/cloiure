@@ -3,8 +3,6 @@ package graalvm.compiler.hotspot;
 import static jdk.vm.ci.code.CodeUtil.K;
 import static jdk.vm.ci.code.CodeUtil.getCallingConvention;
 
-import java.util.Collections;
-
 import graalvm.compiler.core.common.NumUtil;
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.hotspot.meta.HotSpotHostForeignCallsProvider;
@@ -17,7 +15,6 @@ import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.options.OptionValues;
 
 import jdk.vm.ci.code.CallingConvention;
-import jdk.vm.ci.common.InitTimer;
 import jdk.vm.ci.hotspot.HotSpotCallingConventionType;
 import jdk.vm.ci.hotspot.HotSpotJVMCIRuntime;
 import jdk.vm.ci.meta.JavaKind;

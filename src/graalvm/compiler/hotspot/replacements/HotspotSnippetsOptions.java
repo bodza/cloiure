@@ -1,7 +1,5 @@
 package graalvm.compiler.hotspot.replacements;
 
-import graalvm.compiler.hotspot.replacements.NewObjectSnippets.ProfileContext;
-import graalvm.compiler.options.EnumOptionKey;
 import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionKey;

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
-import graalvm.compiler.core.common.cfg.AbstractControlFlowGraph;
 import graalvm.compiler.core.common.cfg.Loop;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodeinfo.Verbosity;

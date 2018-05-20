@@ -2,8 +2,6 @@ package graalvm.compiler.lir.alloc.trace;
 
 import static graalvm.compiler.lir.alloc.trace.TraceUtil.isTrivialTrace;
 
-import java.util.ArrayList;
-
 import graalvm.compiler.core.common.alloc.BiDirectionalTraceBuilder;
 import graalvm.compiler.core.common.alloc.SingleBlockTraceBuilder;
 import graalvm.compiler.core.common.alloc.Trace;

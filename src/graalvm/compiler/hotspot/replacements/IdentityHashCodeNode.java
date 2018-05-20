@@ -4,7 +4,6 @@ import static graalvm.compiler.core.common.GraalOptions.ImmutableCode;
 import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_0;
 import static graalvm.compiler.nodeinfo.NodeSize.SIZE_0;
 
-import graalvm.compiler.core.common.type.AbstractObjectStamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
@@ -13,7 +12,6 @@ import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.FixedWithNextNode;
-import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.memory.MemoryCheckpoint;
 import graalvm.compiler.nodes.spi.Lowerable;

@@ -3,7 +3,6 @@ package graalvm.compiler.lir.alloc.trace;
 import static jdk.vm.ci.code.ValueUtil.asAllocatableValue;
 import static jdk.vm.ci.code.ValueUtil.asRegister;
 import static jdk.vm.ci.code.ValueUtil.asStackSlot;
-import static jdk.vm.ci.code.ValueUtil.isIllegal;
 import static jdk.vm.ci.code.ValueUtil.isRegister;
 import static jdk.vm.ci.code.ValueUtil.isStackSlot;
 import static graalvm.compiler.lir.LIRValueUtil.asVirtualStackSlot;
@@ -14,9 +13,7 @@ import static graalvm.compiler.lir.alloc.trace.TraceUtil.isShadowedRegisterValue
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 
-import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.LIR;

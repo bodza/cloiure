@@ -1,14 +1,10 @@
 package graalvm.compiler.lir.gen;
 
-import static graalvm.compiler.lir.LIRValueUtil.isJavaConstant;
-import static graalvm.compiler.lir.LIRValueUtil.isVariable;
-
 import java.util.EnumSet;
 
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstruction.OperandMode;
-import graalvm.compiler.lir.StandardOp.LoadConstantOp;
 import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;
 
 import jdk.vm.ci.meta.AllocatableValue;

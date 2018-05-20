@@ -5,7 +5,6 @@ import static graalvm.compiler.nodes.ConstantNode.forIntegerKind;
 import static org.graalvm.word.LocationIdentity.any;
 
 import java.lang.reflect.Constructor;
-import java.util.Arrays;
 
 import graalvm.compiler.api.replacements.SnippetReflectionProvider;
 import graalvm.compiler.bytecode.BridgeMethodUtils;

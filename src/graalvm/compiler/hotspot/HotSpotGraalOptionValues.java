@@ -13,8 +13,6 @@ import graalvm.compiler.options.OptionKey;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.options.OptionsParser;
 
-import jdk.vm.ci.common.InitTimer;
-
 /**
  * The {@link #HOTSPOT_OPTIONS} value contains the options values initialized in a HotSpot VM. The
  * values are set via system properties with the {@value #GRAAL_OPTION_PROPERTY_PREFIX} prefix.

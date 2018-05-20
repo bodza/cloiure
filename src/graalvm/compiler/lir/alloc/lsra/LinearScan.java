@@ -1,9 +1,7 @@
 package graalvm.compiler.lir.alloc.lsra;
 
-import static jdk.vm.ci.code.CodeUtil.isEven;
 import static jdk.vm.ci.code.ValueUtil.asRegister;
 import static jdk.vm.ci.code.ValueUtil.isIllegal;
-import static jdk.vm.ci.code.ValueUtil.isLegal;
 import static jdk.vm.ci.code.ValueUtil.isRegister;
 import static graalvm.compiler.lir.LIRValueUtil.isVariable;
 import static graalvm.compiler.lir.phases.LIRPhase.Options.LIROptimization;
@@ -14,7 +12,6 @@ import java.util.BitSet;
 import java.util.EnumSet;
 
 import org.graalvm.collections.Pair;
-import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.core.common.cfg.BlockMap;

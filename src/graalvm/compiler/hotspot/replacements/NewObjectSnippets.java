@@ -41,13 +41,11 @@ import static graalvm.compiler.replacements.SnippetTemplate.DEFAULT_REPLACER;
 import static graalvm.compiler.replacements.nodes.CStringConstant.cstring;
 import static graalvm.compiler.replacements.nodes.ExplodeLoopNode.explodeLoop;
 
-import graalvm.compiler.api.replacements.Fold;
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
 import graalvm.compiler.api.replacements.Snippet.VarargsParameter;
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.core.common.type.StampFactory;
-import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node.ConstantNodeParameter;
 import graalvm.compiler.graph.Node.NodeIntrinsic;
 import graalvm.compiler.hotspot.GraalHotSpotVMConfig;

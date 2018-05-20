@@ -8,7 +8,6 @@ import static graalvm.compiler.nodeinfo.NodeSize.SIZE_8;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodeinfo.NodeInfo;
-import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.memory.AbstractMemoryCheckpoint;
 import graalvm.compiler.nodes.memory.MemoryCheckpoint;

@@ -3,7 +3,6 @@ package graalvm.compiler.hotspot;
 import java.util.ArrayList;
 import java.util.List;
 
-import graalvm.compiler.code.CompilationResult;
 import graalvm.compiler.serviceprovider.GraalServices;
 
 import jdk.vm.ci.code.CompiledCode;

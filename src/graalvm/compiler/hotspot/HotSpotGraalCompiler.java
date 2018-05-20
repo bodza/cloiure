@@ -5,10 +5,8 @@ import static graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext.Compilati
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.Collections;
 import java.util.Formattable;
 import java.util.Formatter;
-import java.util.List;
 
 import graalvm.compiler.api.runtime.GraalJVMCICompiler;
 import graalvm.compiler.bytecode.Bytecode;

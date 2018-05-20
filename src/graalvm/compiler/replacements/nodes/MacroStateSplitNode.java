@@ -16,7 +16,6 @@ import graalvm.compiler.nodes.java.MethodCallTargetNode;
 import graalvm.compiler.nodes.memory.MemoryCheckpoint;
 import org.graalvm.word.LocationIdentity;
 
-import jdk.vm.ci.code.BytecodeFrame;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**

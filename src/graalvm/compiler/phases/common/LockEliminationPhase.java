@@ -2,7 +2,6 @@ package graalvm.compiler.phases.common;
 
 import graalvm.compiler.nodes.FixedNode;
 import graalvm.compiler.nodes.StructuredGraph;
-import graalvm.compiler.nodes.extended.OSRMonitorEnterNode;
 import graalvm.compiler.nodes.java.AccessMonitorNode;
 import graalvm.compiler.nodes.java.MonitorEnterNode;
 import graalvm.compiler.nodes.java.MonitorExitNode;

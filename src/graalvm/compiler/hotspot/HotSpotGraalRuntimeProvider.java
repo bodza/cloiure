@@ -1,9 +1,6 @@
 package graalvm.compiler.hotspot;
 
-import java.util.Map;
-
 import graalvm.compiler.api.runtime.GraalRuntime;
-import graalvm.compiler.core.common.CompilationIdentifier;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.replacements.SnippetCounter.Group;

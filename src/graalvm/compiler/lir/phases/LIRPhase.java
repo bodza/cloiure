@@ -1,7 +1,5 @@
 package graalvm.compiler.lir.phases;
 
-import java.util.regex.Pattern;
-
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.options.Option;

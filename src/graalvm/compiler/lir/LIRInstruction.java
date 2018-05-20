@@ -12,7 +12,6 @@ import static graalvm.compiler.lir.LIRInstruction.OperandFlag.UNINITIALIZED;
 import static graalvm.compiler.lir.LIRInstruction.OperandMode.ALIVE;
 import static graalvm.compiler.lir.LIRInstruction.OperandMode.DEF;
 import static graalvm.compiler.lir.LIRInstruction.OperandMode.TEMP;
-import static graalvm.compiler.lir.LIRValueUtil.isVirtualStackSlot;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

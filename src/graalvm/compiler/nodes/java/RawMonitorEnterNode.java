@@ -3,11 +3,9 @@ package graalvm.compiler.nodes.java;
 import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_64;
 import static graalvm.compiler.nodeinfo.NodeSize.SIZE_64;
 
-import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.graph.IterableNodeType;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodeinfo.NodeInfo;
-import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.extended.MonitorEnter;
 import graalvm.compiler.nodes.memory.MemoryCheckpoint;

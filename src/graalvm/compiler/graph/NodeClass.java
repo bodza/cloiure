@@ -477,7 +477,6 @@ public final class NodeClass<T> extends FieldIntrospection<T>
             }
         }
 
-        @SuppressWarnings("try")
         @Override
         protected void scanField(Field field, long offset)
         {

@@ -8,7 +8,6 @@ import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.iterators.NodePredicate;
 import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodeinfo.NodeInfo;
-import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.spi.NodeValueMap;
 
 import jdk.vm.ci.meta.Constant;

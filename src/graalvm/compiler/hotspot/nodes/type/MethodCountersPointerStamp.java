@@ -1,6 +1,5 @@
 package graalvm.compiler.hotspot.nodes.type;
 
-import jdk.vm.ci.hotspot.HotSpotMetaspaceConstant;
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.MemoryAccessProvider;

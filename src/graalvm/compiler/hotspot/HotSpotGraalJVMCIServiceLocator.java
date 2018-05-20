@@ -1,12 +1,9 @@
 package graalvm.compiler.hotspot;
 
-import graalvm.compiler.serviceprovider.ServiceProvider;
-
 import jdk.vm.ci.hotspot.HotSpotVMEventListener;
 import jdk.vm.ci.runtime.JVMCICompilerFactory;
 import jdk.vm.ci.services.JVMCIServiceLocator;
 
-@ServiceProvider(JVMCIServiceLocator.class)
 public final class HotSpotGraalJVMCIServiceLocator extends JVMCIServiceLocator
 {
     /**

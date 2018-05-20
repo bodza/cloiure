@@ -6,7 +6,6 @@ import static jdk.vm.ci.code.ValueUtil.isIllegal;
 import static jdk.vm.ci.code.ValueUtil.isRegister;
 import static graalvm.compiler.lir.LIRValueUtil.asVariable;
 import static graalvm.compiler.lir.LIRValueUtil.isConstantValue;
-import static graalvm.compiler.lir.LIRValueUtil.isStackSlotValue;
 import static graalvm.compiler.lir.LIRValueUtil.isVariable;
 
 import java.util.ArrayList;
@@ -723,7 +722,6 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
         /**
          * Searches for a free register.
          */
-        @SuppressWarnings("try")
         private Register findFreeRegister(PlatformKind kind, OperandMode mode)
         {
             AllocatableRegisters allocatableRegisters = registerAllocationConfig.getAllocatableRegisters(kind);
@@ -742,7 +740,6 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
         /**
          * Searches for a occupied register to spill.
          */
-        @SuppressWarnings("try")
         private Register findLockedRegister(PlatformKind kind, OperandMode mode)
         {
             AllocatableRegisters allocatableRegisters = registerAllocationConfig.getAllocatableRegisters(kind);

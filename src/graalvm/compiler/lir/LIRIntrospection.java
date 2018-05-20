@@ -1,12 +1,7 @@
 package graalvm.compiler.lir;
 
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.CONST;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.STACK;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;

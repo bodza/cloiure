@@ -20,7 +20,6 @@ import java.lang.ref.Reference;
 
 import graalvm.compiler.api.directives.GraalDirectives;
 import graalvm.compiler.core.common.CompressEncoding;
-import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.core.common.spi.ForeignCallsProvider;
 import graalvm.compiler.core.common.type.ObjectStamp;

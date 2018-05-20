@@ -6,7 +6,6 @@ import java.util.function.Function;
 import graalvm.compiler.core.common.type.ArithmeticOpTable;
 import graalvm.compiler.core.common.type.ArithmeticOpTable.IntegerConvertOp;
 import graalvm.compiler.core.common.type.IntegerStamp;
-import graalvm.compiler.core.common.type.PrimitiveStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.CanonicalizerTool;

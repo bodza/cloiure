@@ -7,21 +7,15 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.EconomicSet;
-import org.graalvm.collections.Equivalence;
 import org.graalvm.collections.UnmodifiableEconomicMap;
-import org.graalvm.collections.UnmodifiableMapCursor;
-import graalvm.compiler.api.replacements.MethodSubstitution;
-import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.TypeReference;
-import graalvm.compiler.core.common.util.Util;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.GraalGraphError;
 import graalvm.compiler.graph.Graph.DuplicationReplacement;
@@ -31,7 +25,6 @@ import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeInputList;
 import graalvm.compiler.graph.NodeMap;
 import graalvm.compiler.graph.NodeWorkList;
-import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.AbstractBeginNode;
 import graalvm.compiler.nodes.AbstractEndNode;
 import graalvm.compiler.nodes.AbstractMergeNode;
@@ -39,7 +32,6 @@ import graalvm.compiler.nodes.BeginNode;
 import graalvm.compiler.nodes.CallTargetNode;
 import graalvm.compiler.nodes.CallTargetNode.InvokeKind;
 import graalvm.compiler.nodes.DeoptimizeNode;
-import graalvm.compiler.nodes.DeoptimizingGuard;
 import graalvm.compiler.nodes.EndNode;
 import graalvm.compiler.nodes.FixedGuardNode;
 import graalvm.compiler.nodes.FixedNode;
@@ -72,7 +64,6 @@ import graalvm.compiler.nodes.java.MonitorIdNode;
 import graalvm.compiler.nodes.spi.Replacements;
 import graalvm.compiler.nodes.type.StampTool;
 import graalvm.compiler.nodes.util.GraphUtil;
-import graalvm.compiler.phases.common.inlining.info.InlineInfo;
 import graalvm.compiler.phases.common.util.HashSetNodeEventListener;
 import graalvm.compiler.phases.util.ValueMergeUtil;
 
@@ -144,7 +135,6 @@ public class InliningUtil extends ValueMergeUtil
      *            false if no such check is required
      * @param inlineeMethod the actual method being inlined. Maybe be null for snippets.
      */
-    @SuppressWarnings("try")
     public static UnmodifiableEconomicMap<Node, Node> inline(Invoke invoke, StructuredGraph inlineGraph, boolean receiverNullCheck, ResolvedJavaMethod inlineeMethod)
     {
         try
@@ -310,7 +300,6 @@ public class InliningUtil extends ValueMergeUtil
      *
      * @return the set of nodes to canonicalize
      */
-    @SuppressWarnings("try")
     public static EconomicSet<Node> inlineForCanonicalization(Invoke invoke, StructuredGraph inlineGraph, boolean receiverNullCheck, ResolvedJavaMethod inlineeMethod, String reason, String phase)
     {
         return inlineForCanonicalization(invoke, inlineGraph, receiverNullCheck, inlineeMethod, null, reason, phase);

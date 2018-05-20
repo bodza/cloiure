@@ -9,7 +9,6 @@ import graalvm.compiler.lir.RedundantMoveElimination;
 import graalvm.compiler.lir.phases.PostAllocationOptimizationPhase.PostAllocationOptimizationContext;
 import graalvm.compiler.options.NestedBooleanOptionKey;
 import graalvm.compiler.options.Option;
-import graalvm.compiler.options.OptionKey;
 import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionValues;
 

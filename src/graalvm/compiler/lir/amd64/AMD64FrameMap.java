@@ -1,7 +1,5 @@
 package graalvm.compiler.lir.amd64;
 
-import static jdk.vm.ci.code.ValueUtil.asStackSlot;
-
 import graalvm.compiler.core.common.NumUtil;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.lir.framemap.FrameMap;

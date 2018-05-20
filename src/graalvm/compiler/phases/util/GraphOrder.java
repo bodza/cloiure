@@ -3,38 +3,18 @@ package graalvm.compiler.phases.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.graalvm.collections.EconomicMap;
-import org.graalvm.collections.Equivalence;
-import graalvm.compiler.core.common.cfg.Loop;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.GraalGraphError;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeBitMap;
-import graalvm.compiler.nodes.AbstractEndNode;
 import graalvm.compiler.nodes.AbstractMergeNode;
-import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.EndNode;
 import graalvm.compiler.nodes.FixedNode;
 import graalvm.compiler.nodes.FrameState;
-import graalvm.compiler.nodes.FullInfopointNode;
-import graalvm.compiler.nodes.LoopBeginNode;
-import graalvm.compiler.nodes.LoopExitNode;
 import graalvm.compiler.nodes.PhiNode;
-import graalvm.compiler.nodes.ProxyNode;
 import graalvm.compiler.nodes.StateSplit;
 import graalvm.compiler.nodes.StructuredGraph;
-import graalvm.compiler.nodes.StructuredGraph.GuardsStage;
-import graalvm.compiler.nodes.StructuredGraph.ScheduleResult;
-import graalvm.compiler.nodes.ValueNode;
-import graalvm.compiler.nodes.VirtualState;
-import graalvm.compiler.nodes.VirtualState.NodeClosure;
-import graalvm.compiler.nodes.cfg.Block;
-import graalvm.compiler.nodes.virtual.VirtualObjectNode;
-import graalvm.compiler.phases.graph.ReentrantBlockIterator;
-import graalvm.compiler.phases.graph.ReentrantBlockIterator.BlockIteratorClosure;
 import graalvm.compiler.phases.graph.StatelessPostOrderNodeIterator;
-import graalvm.compiler.phases.schedule.SchedulePhase;
-import graalvm.compiler.phases.schedule.SchedulePhase.SchedulingStrategy;
 
 public final class GraphOrder
 {

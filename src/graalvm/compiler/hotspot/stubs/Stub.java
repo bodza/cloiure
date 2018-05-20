@@ -1,14 +1,9 @@
 package graalvm.compiler.hotspot.stubs;
 
-import static java.util.Collections.singletonList;
 import static graalvm.compiler.core.GraalCompiler.emitBackEnd;
 import static graalvm.compiler.core.GraalCompiler.emitFrontEnd;
 import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
-import static graalvm.compiler.hotspot.HotSpotHostBackend.UNCOMMON_TRAP_HANDLER;
 import static graalvm.util.CollectionsUtil.allMatch;
-
-import java.util.ListIterator;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import jdk.vm.ci.code.CodeCacheProvider;
 import jdk.vm.ci.code.InstalledCode;
@@ -27,16 +22,13 @@ import jdk.vm.ci.meta.TriState;
 import org.graalvm.collections.EconomicSet;
 import graalvm.compiler.code.CompilationResult;
 import graalvm.compiler.core.common.CompilationIdentifier;
-import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.target.Backend;
 import graalvm.compiler.hotspot.HotSpotCompiledCodeBuilder;
 import graalvm.compiler.hotspot.HotSpotForeignCallLinkage;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
 import graalvm.compiler.hotspot.nodes.StubStartNode;
 import graalvm.compiler.lir.asm.CompilationResultBuilderFactory;
-import graalvm.compiler.lir.phases.LIRPhase;
 import graalvm.compiler.lir.phases.LIRSuites;
-import graalvm.compiler.lir.phases.PostAllocationOptimizationPhase.PostAllocationOptimizationContext;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.OptimisticOptimizations;

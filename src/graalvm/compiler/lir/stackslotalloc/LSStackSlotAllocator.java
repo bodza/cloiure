@@ -6,7 +6,6 @@ import static graalvm.compiler.lir.phases.LIRPhase.Options.LIROptimization;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Deque;
 import java.util.EnumMap;
 import java.util.EnumSet;

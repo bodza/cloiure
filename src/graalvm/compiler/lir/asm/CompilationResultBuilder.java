@@ -1,9 +1,7 @@
 package graalvm.compiler.lir.asm;
 
 import static jdk.vm.ci.code.ValueUtil.asStackSlot;
-import static jdk.vm.ci.code.ValueUtil.isStackSlot;
 import static graalvm.compiler.lir.LIRValueUtil.asJavaConstant;
-import static graalvm.compiler.lir.LIRValueUtil.isJavaConstant;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,7 +42,6 @@ import jdk.vm.ci.code.site.Mark;
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.InvokeTarget;
 import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.VMConstant;
 import jdk.vm.ci.meta.Value;
 

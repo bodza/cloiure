@@ -19,9 +19,7 @@ import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.ArithmeticLIRLowerable;
 
-import jdk.vm.ci.code.CodeUtil;
 import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
 
 /**
  * The {@code ShiftOp} class represents shift operations.

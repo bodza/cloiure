@@ -5,7 +5,6 @@ import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
 import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
 
 import graalvm.compiler.core.common.LIRKind;
-import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
@@ -14,7 +13,6 @@ import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNodeUtil;
-import graalvm.compiler.nodes.ValuePhiNode;
 import graalvm.compiler.nodes.extended.GuardingNode;
 import graalvm.compiler.nodes.memory.address.AddressNode;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;

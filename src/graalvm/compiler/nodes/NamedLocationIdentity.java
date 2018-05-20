@@ -2,8 +2,6 @@ package graalvm.compiler.nodes;
 
 import java.util.EnumMap;
 
-import org.graalvm.collections.EconomicSet;
-import org.graalvm.collections.Equivalence;
 import org.graalvm.word.LocationIdentity;
 
 import jdk.vm.ci.meta.JavaKind;

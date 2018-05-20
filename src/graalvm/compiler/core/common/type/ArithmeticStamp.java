@@ -1,7 +1,6 @@
 package graalvm.compiler.core.common.type;
 
 import java.nio.ByteBuffer;
-import java.util.Objects;
 
 import jdk.vm.ci.meta.SerializableConstant;
 

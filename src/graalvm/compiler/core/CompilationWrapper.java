@@ -1,17 +1,5 @@
 package graalvm.compiler.core;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.Map;
-
-import graalvm.compiler.options.EnumOptionKey;
-import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.code.BailoutException;
-
 /**
  * Wrapper for a compilation that centralizes what action to take when an uncaught exception occurs during compilation.
  */

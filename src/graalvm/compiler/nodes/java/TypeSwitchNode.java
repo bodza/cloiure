@@ -3,7 +3,6 @@ package graalvm.compiler.nodes.java;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import graalvm.compiler.core.common.type.AbstractPointerStamp;
 import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;

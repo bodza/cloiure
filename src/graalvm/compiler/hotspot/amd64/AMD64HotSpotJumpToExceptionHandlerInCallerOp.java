@@ -1,17 +1,13 @@
 package graalvm.compiler.hotspot.amd64;
 
 import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
-import static jdk.vm.ci.amd64.AMD64.rbp;
 import static jdk.vm.ci.amd64.AMD64.rsp;
 import static jdk.vm.ci.code.ValueUtil.asRegister;
 
-import graalvm.compiler.asm.amd64.AMD64Address;
-import graalvm.compiler.asm.amd64.AMD64Assembler.ConditionFlag;
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
-import graalvm.compiler.serviceprovider.GraalServices;
 
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.meta.AllocatableValue;

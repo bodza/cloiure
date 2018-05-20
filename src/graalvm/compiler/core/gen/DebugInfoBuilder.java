@@ -10,7 +10,6 @@ import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.ConstantValue;
 import graalvm.compiler.lir.LIRFrameState;
 import graalvm.compiler.lir.LabelRef;
-import graalvm.compiler.lir.Variable;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.ValueNode;
@@ -27,8 +26,6 @@ import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.JavaType;
 import jdk.vm.ci.meta.JavaValue;
-import jdk.vm.ci.meta.ResolvedJavaField;
-import jdk.vm.ci.meta.ResolvedJavaType;
 import jdk.vm.ci.meta.Value;
 
 /**

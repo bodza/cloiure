@@ -1,13 +1,6 @@
 package graalvm.compiler.phases;
 
-import java.util.regex.Pattern;
-
-import graalvm.compiler.graph.Graph;
 import graalvm.compiler.graph.Graph.Mark;
-import graalvm.compiler.graph.Graph.NodeEvent;
-import graalvm.compiler.graph.Graph.NodeEventListener;
-import graalvm.compiler.graph.Graph.NodeEventScope;
-import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;

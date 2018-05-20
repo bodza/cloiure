@@ -18,7 +18,6 @@ import graalvm.compiler.nodes.Invoke;
 import graalvm.compiler.nodes.LoopBeginNode;
 import graalvm.compiler.nodes.LoopEndNode;
 import graalvm.compiler.nodes.LoopExitNode;
-import graalvm.compiler.nodes.MergeNode;
 import graalvm.compiler.nodes.StartNode;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.phases.common.inlining.InliningUtil;

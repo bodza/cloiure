@@ -3,10 +3,7 @@ package graalvm.compiler.nodes;
 import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_0;
 import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
 
-import java.util.Map;
-
 import graalvm.compiler.core.common.LIRKind;
-import graalvm.compiler.core.common.type.AbstractObjectStamp;
 import graalvm.compiler.core.common.type.FloatStamp;
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.Stamp;

@@ -1,8 +1,5 @@
 package graalvm.compiler.hotspot;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-
 import graalvm.compiler.core.common.CompressEncoding;
 import graalvm.compiler.hotspot.nodes.GraalHotSpotVMConfigNode;
 

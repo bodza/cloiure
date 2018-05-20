@@ -1,16 +1,8 @@
 package graalvm.compiler.lir.alloc.trace;
 
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.EnumSet;
-
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRInstruction;
-import graalvm.compiler.lir.LIRInstruction.OperandFlag;
-import graalvm.compiler.lir.LIRInstruction.OperandMode;
-import graalvm.compiler.lir.LIRValueUtil;
-import graalvm.compiler.lir.ValueConsumer;
 import graalvm.compiler.lir.Variable;
 
 import jdk.vm.ci.meta.Value;

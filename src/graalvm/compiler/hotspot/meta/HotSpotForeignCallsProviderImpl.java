@@ -3,7 +3,6 @@ package graalvm.compiler.hotspot.meta;
 import static jdk.vm.ci.hotspot.HotSpotCallingConventionType.JavaCall;
 import static jdk.vm.ci.hotspot.HotSpotCallingConventionType.JavaCallee;
 import static graalvm.compiler.hotspot.HotSpotForeignCallLinkage.RegisterEffect.PRESERVES_REGISTERS;
-import static graalvm.compiler.hotspot.HotSpotForeignCallLinkage.Transition.SAFEPOINT;
 
 import java.util.ArrayList;
 import java.util.List;

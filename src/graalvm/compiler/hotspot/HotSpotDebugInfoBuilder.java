@@ -2,11 +2,6 @@ package graalvm.compiler.hotspot;
 
 import static jdk.vm.ci.code.BytecodeFrame.isPlaceholderBci;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import graalvm.compiler.api.replacements.MethodSubstitution;
-import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.core.gen.DebugInfoBuilder;
 import graalvm.compiler.graph.GraalGraphError;
 import graalvm.compiler.lir.VirtualStackSlot;
@@ -19,8 +14,6 @@ import jdk.vm.ci.code.StackLockValue;
 import jdk.vm.ci.code.VirtualObject;
 import jdk.vm.ci.hotspot.HotSpotCodeCacheProvider;
 import jdk.vm.ci.meta.JavaValue;
-import jdk.vm.ci.meta.MetaUtil;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * Extends {@link DebugInfoBuilder} to allocate the extra debug information required for locks.

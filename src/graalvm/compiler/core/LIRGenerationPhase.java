@@ -9,7 +9,6 @@ import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.gen.LIRGeneratorTool;
 import graalvm.compiler.lir.phases.LIRPhase;
-import graalvm.compiler.lir.ssa.SSAUtil;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.StructuredGraph.ScheduleResult;
 import graalvm.compiler.nodes.cfg.Block;

@@ -7,7 +7,6 @@ import static jdk.vm.ci.code.BytecodeFrame.INVALID_FRAMESTATE_BCI;
 import static graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext.CompilationContext.INLINE_AFTER_PARSING;
 import static graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext.CompilationContext.ROOT_COMPILATION;
 
-import graalvm.compiler.api.replacements.MethodSubstitution;
 import graalvm.compiler.bytecode.BytecodeProvider;
 import graalvm.compiler.nodes.AbstractMergeNode;
 import graalvm.compiler.nodes.FrameState;

@@ -4,12 +4,10 @@ import static jdk.vm.ci.code.ValueUtil.asRegisterValue;
 import static jdk.vm.ci.code.ValueUtil.isIllegal;
 import static jdk.vm.ci.code.ValueUtil.isRegister;
 import static graalvm.compiler.lir.LIRValueUtil.isConstantValue;
-import static graalvm.compiler.lir.LIRValueUtil.isStackSlotValue;
 import static graalvm.compiler.lir.alloc.trace.TraceUtil.asShadowedRegisterValue;
 import static graalvm.compiler.lir.alloc.trace.TraceUtil.isShadowedRegisterValue;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.common.alloc.Trace;

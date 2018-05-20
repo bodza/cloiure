@@ -1,7 +1,5 @@
 package graalvm.compiler.asm;
 
-import graalvm.compiler.core.common.NumUtil;
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;

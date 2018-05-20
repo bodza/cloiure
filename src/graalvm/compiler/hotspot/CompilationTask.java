@@ -6,12 +6,10 @@ import static graalvm.compiler.java.BytecodeParserOptions.InlineDuringParsing;
 import java.util.List;
 
 import org.graalvm.collections.EconomicMap;
-import graalvm.compiler.api.replacements.SnippetReflectionProvider;
 import graalvm.compiler.code.CompilationResult;
 import graalvm.compiler.core.CompilationWrapper;
 import graalvm.compiler.core.common.CompilationIdentifier;
 import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.options.EnumOptionKey;
 import graalvm.compiler.options.OptionKey;
 import graalvm.compiler.options.OptionValues;
 
@@ -21,7 +19,6 @@ import jdk.vm.ci.hotspot.EventProvider;
 import jdk.vm.ci.hotspot.HotSpotCompilationRequest;
 import jdk.vm.ci.hotspot.HotSpotCompilationRequestResult;
 import jdk.vm.ci.hotspot.HotSpotInstalledCode;
-import jdk.vm.ci.hotspot.HotSpotJVMCICompilerFactory;
 import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
 import jdk.vm.ci.hotspot.HotSpotNmethod;
 import jdk.vm.ci.hotspot.HotSpotResolvedJavaMethod;
@@ -280,7 +277,6 @@ public class CompilationTask
         }
     }
 
-    @SuppressWarnings("try")
     private void installMethod(final CompilationResult compResult)
     {
         final CodeCacheProvider codeCache = jvmciRuntime.getHostJVMCIBackend().getCodeCache();

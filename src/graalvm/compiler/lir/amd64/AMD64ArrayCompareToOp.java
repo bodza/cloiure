@@ -9,7 +9,6 @@ import static graalvm.compiler.lir.LIRInstruction.OperandFlag.ILLEGAL;
 import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.Field;
 import java.util.EnumSet;
 
 import graalvm.compiler.asm.Label;

@@ -1,15 +1,11 @@
 package graalvm.compiler.lir.amd64;
 
 import static jdk.vm.ci.code.ValueUtil.asStackSlot;
-import static jdk.vm.ci.code.ValueUtil.isStackSlot;
 import static graalvm.compiler.lir.LIRInstruction.OperandFlag.STACK;
-
-import java.util.Arrays;
 
 import org.graalvm.collections.EconomicSet;
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
 import graalvm.compiler.lir.LIRInstructionClass;
-import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.StandardOp.SaveRegistersOp;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;

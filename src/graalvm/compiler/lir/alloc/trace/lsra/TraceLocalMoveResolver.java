@@ -11,10 +11,8 @@ import static graalvm.compiler.lir.LIRValueUtil.isVirtualStackSlot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
-import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.LIRInsertionBuffer;
 import graalvm.compiler.lir.LIRInstruction;

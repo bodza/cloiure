@@ -1,7 +1,5 @@
 package graalvm.compiler.hotspot;
 
-import static graalvm.util.CollectionsUtil.anyMatch;
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
@@ -21,7 +19,6 @@ import graalvm.compiler.code.DataSection;
 import graalvm.compiler.debug.GraalError;
 
 import jdk.vm.ci.code.CodeCacheProvider;
-import jdk.vm.ci.code.DebugInfo;
 import jdk.vm.ci.code.StackSlot;
 import jdk.vm.ci.code.site.ConstantReference;
 import jdk.vm.ci.code.site.DataPatch;

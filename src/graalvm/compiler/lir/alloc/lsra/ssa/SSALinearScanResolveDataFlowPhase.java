@@ -1,6 +1,5 @@
 package graalvm.compiler.lir.alloc.lsra.ssa;
 
-import static jdk.vm.ci.code.ValueUtil.isRegister;
 import static graalvm.compiler.lir.LIRValueUtil.asConstant;
 import static graalvm.compiler.lir.LIRValueUtil.isConstantValue;
 import static graalvm.compiler.lir.LIRValueUtil.isStackSlotValue;

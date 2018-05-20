@@ -5,14 +5,12 @@ import static graalvm.compiler.core.common.GraalOptions.TrivialInliningSize;
 
 import java.util.Map;
 
-import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.nodes.Invoke;
 import graalvm.compiler.nodes.spi.Replacements;
 import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
 import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionValues;
-import graalvm.compiler.phases.common.inlining.InliningUtil;
 import graalvm.compiler.phases.common.inlining.info.InlineInfo;
 import graalvm.compiler.phases.common.inlining.policy.GreedyInliningPolicy;
 import graalvm.compiler.phases.common.inlining.policy.InliningPolicy;

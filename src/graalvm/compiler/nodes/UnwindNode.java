@@ -11,8 +11,6 @@ import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 
-import jdk.vm.ci.meta.JavaKind;
-
 /**
  * Unwinds the current frame to an exception handler in the caller frame.
  */

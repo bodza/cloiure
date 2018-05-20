@@ -23,7 +23,6 @@ import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.LogicNode;
 import graalvm.compiler.nodes.LoopBeginNode;
 import graalvm.compiler.nodes.NodeView;
-import graalvm.compiler.nodes.ParameterNode;
 import graalvm.compiler.nodes.PiNode;
 import graalvm.compiler.nodes.StartNode;
 import graalvm.compiler.nodes.StructuredGraph;
@@ -71,7 +70,6 @@ public class OnStackReplacementPhase extends Phase
     }
 
     @Override
-    @SuppressWarnings("try")
     protected void run(StructuredGraph graph)
     {
         if (graph.getEntryBCI() == JVMCICompiler.INVOCATION_ENTRY_BCI)

@@ -3,11 +3,9 @@ package graalvm.compiler.core.match;
 import java.util.List;
 
 import graalvm.compiler.core.gen.NodeLIRBuilder;
-import graalvm.compiler.core.match.MatchPattern.MatchResultCode;
 import graalvm.compiler.core.match.MatchPattern.Result;
 import graalvm.compiler.graph.GraalGraphError;
 import graalvm.compiler.graph.Node;
-import graalvm.compiler.nodeinfo.Verbosity;
 
 import jdk.vm.ci.meta.Value;
 

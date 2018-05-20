@@ -4,8 +4,6 @@ import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_1;
 import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
 
 import graalvm.compiler.core.common.LIRKind;
-import graalvm.compiler.core.common.type.AbstractPointerStamp;
-import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node;

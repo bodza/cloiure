@@ -50,7 +50,6 @@ import graalvm.compiler.core.match.MatchableNodes;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Position;
 import graalvm.compiler.nodes.ValueNode;
-import graalvm.compiler.serviceprovider.ServiceProvider;
 
 /**
  * Processes classes annotated with {@link MatchRule}. A {@link MatchStatementSet} service is
@@ -540,14 +539,12 @@ public class MatchProcessor extends AbstractProcessor
             out.println("import " + MatchStatementSet.class.getPackage().getName() + ".*;");
             out.println("import " + NodeMatchRules.class.getName() + ";");
             out.println("import " + Position.class.getName() + ";");
-            out.println("import " + ServiceProvider.class.getName() + ";");
             for (String p : info.requiredPackages)
             {
                 out.println("import " + p + ".*;");
             }
             out.println("");
 
-            out.println("@" + ServiceProvider.class.getSimpleName() + "(" + MatchStatementSet.class.getSimpleName() + ".class)");
             out.println("public class " + matchStatementClassName + " implements " + MatchStatementSet.class.getSimpleName() + " {");
 
             out.println();

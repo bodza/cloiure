@@ -1,7 +1,6 @@
 package graalvm.compiler.lir.gen;
 
 import org.graalvm.collections.EconomicMap;
-import org.graalvm.collections.Equivalence;
 import graalvm.compiler.core.common.CompilationIdentifier;
 import graalvm.compiler.core.common.CompilationIdentifier.Verbosity;
 import graalvm.compiler.lir.LIR;

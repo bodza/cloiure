@@ -4,7 +4,6 @@ import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
 
 import java.lang.reflect.Modifier;
 
-import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
@@ -12,7 +11,6 @@ import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.FrameState;
-import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 
 import jdk.vm.ci.meta.MetaAccessProvider;

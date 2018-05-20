@@ -2,21 +2,14 @@ package graalvm.compiler.hotspot.meta;
 
 import java.lang.reflect.Type;
 
-import graalvm.compiler.core.common.GraalOptions;
-import graalvm.compiler.graph.Node;
-import graalvm.compiler.graph.iterators.NodeIterable;
 import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
 import graalvm.compiler.nodes.ConstantNode;
-import graalvm.compiler.nodes.FrameState;
-import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderContext;
 import graalvm.compiler.nodes.graphbuilderconf.InvocationPlugin;
 import graalvm.compiler.nodes.graphbuilderconf.InvocationPlugins;
 import graalvm.compiler.nodes.type.StampTool;
 import graalvm.compiler.phases.tiers.CompilerConfiguration;
-import graalvm.compiler.replacements.nodes.MacroNode;
 
 import jdk.vm.ci.hotspot.HotSpotResolvedJavaType;
-import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**

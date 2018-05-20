@@ -18,7 +18,6 @@ import graalvm.compiler.lir.LIRInstruction.OperandMode;
 import graalvm.compiler.lir.Variable;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.phases.AllocationPhase;
-import graalvm.compiler.lir.ssa.SSAUtil;
 
 import jdk.vm.ci.code.TargetDescription;
 import jdk.vm.ci.meta.Value;

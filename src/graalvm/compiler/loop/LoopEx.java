@@ -36,7 +36,6 @@ import graalvm.compiler.nodes.ValuePhiNode;
 import graalvm.compiler.nodes.calc.AddNode;
 import graalvm.compiler.nodes.calc.BinaryArithmeticNode;
 import graalvm.compiler.nodes.calc.CompareNode;
-import graalvm.compiler.nodes.calc.IntegerBelowNode;
 import graalvm.compiler.nodes.calc.IntegerEqualsNode;
 import graalvm.compiler.nodes.calc.IntegerLessThanNode;
 import graalvm.compiler.nodes.calc.LeftShiftNode;

@@ -1,20 +1,14 @@
 package graalvm.compiler.hotspot.stubs;
 
-import static graalvm.compiler.hotspot.GraalHotSpotVMConfig.INJECTED_VMCONFIG;
 import static graalvm.compiler.hotspot.nodes.JumpToExceptionHandlerInCallerNode.jumpToExceptionHandlerInCaller;
 import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.registerAsWord;
-import static graalvm.compiler.hotspot.stubs.StubUtil.decipher;
 import static graalvm.compiler.hotspot.stubs.StubUtil.newDescriptor;
-import static graalvm.compiler.hotspot.stubs.StubUtil.printf;
 
-import graalvm.compiler.api.replacements.Fold;
-import graalvm.compiler.api.replacements.Fold.InjectedParameter;
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.graph.Node.ConstantNodeParameter;
 import graalvm.compiler.graph.Node.NodeIntrinsic;
-import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
 import graalvm.compiler.hotspot.HotSpotForeignCallLinkage;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
 import graalvm.compiler.hotspot.nodes.StubForeignCallNode;

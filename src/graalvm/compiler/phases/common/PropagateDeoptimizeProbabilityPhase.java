@@ -21,7 +21,6 @@ import graalvm.compiler.phases.tiers.PhaseContext;
 public class PropagateDeoptimizeProbabilityPhase extends BasePhase<PhaseContext>
 {
     @Override
-    @SuppressWarnings("try")
     protected void run(final StructuredGraph graph, PhaseContext context)
     {
         if (graph.hasNode(AbstractDeoptimizeNode.TYPE))

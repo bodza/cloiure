@@ -6,7 +6,6 @@ import static jdk.vm.ci.code.ValueUtil.isConstantJavaValue;
 import static jdk.vm.ci.code.ValueUtil.isIllegalJavaValue;
 import static jdk.vm.ci.code.ValueUtil.isVirtualObject;
 
-import java.util.Arrays;
 import java.util.EnumSet;
 
 import graalvm.compiler.lir.LIRInstruction.OperandFlag;

@@ -3,7 +3,6 @@ package graalvm.compiler.nodes.extended;
 import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_0;
 import static graalvm.compiler.nodeinfo.NodeSize.SIZE_0;
 
-import graalvm.compiler.core.common.calc.CanonicalCondition;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.iterators.NodePredicates;

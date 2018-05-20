@@ -4,7 +4,6 @@ import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_UNKNOWN;
 import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.core.common.type.FloatStamp;
-import graalvm.compiler.core.common.type.PrimitiveStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.debug.GraalError;

@@ -1,7 +1,5 @@
 package graalvm.compiler.lir.gen;
 
-import static jdk.vm.ci.code.ValueUtil.isIllegal;
-import static jdk.vm.ci.code.ValueUtil.isLegal;
 import static jdk.vm.ci.meta.Value.ILLEGAL;
 import static graalvm.compiler.lir.LIRValueUtil.isVariable;
 

@@ -162,7 +162,6 @@ public class PluginGenerator
                 out.printf("\n");
                 createImports(out, plugins);
                 out.printf("\n");
-                out.printf("@ServiceProvider(NodeIntrinsicPluginFactory.class)\n");
                 out.printf("public class %s implements NodeIntrinsicPluginFactory {\n", genClassName);
                 for (GeneratedPlugin plugin : plugins)
                 {
@@ -183,7 +182,6 @@ public class PluginGenerator
     protected static void createImports(PrintWriter out, List<GeneratedPlugin> plugins)
     {
         out.printf("import jdk.vm.ci.meta.ResolvedJavaMethod;\n");
-        out.printf("import graalvm.compiler.serviceprovider.ServiceProvider;\n");
         out.printf("\n");
         out.printf("import java.lang.annotation.Annotation;\n");
         out.printf("import graalvm.compiler.nodes.ValueNode;\n");

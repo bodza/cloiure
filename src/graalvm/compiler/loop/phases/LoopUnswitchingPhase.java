@@ -1,13 +1,10 @@
 package graalvm.compiler.loop.phases;
 
-import java.util.Iterator;
 import java.util.List;
 
-import graalvm.compiler.graph.Node;
 import graalvm.compiler.loop.LoopEx;
 import graalvm.compiler.loop.LoopPolicies;
 import graalvm.compiler.loop.LoopsData;
-import graalvm.compiler.nodes.AbstractBeginNode;
 import graalvm.compiler.nodes.ControlSplitNode;
 import graalvm.compiler.nodes.StructuredGraph;
 

@@ -11,7 +11,6 @@ import static graalvm.compiler.nodeinfo.NodeSize.SIZE_UNKNOWN;
 
 import java.util.Arrays;
 
-import graalvm.compiler.core.common.type.AbstractPointerStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.debug.GraalError;
@@ -24,7 +23,6 @@ import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodeinfo.NodeSize;
 import graalvm.compiler.nodes.AbstractBeginNode;
 import graalvm.compiler.nodes.ControlSplitNode;
-import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 
 import jdk.vm.ci.meta.Constant;
