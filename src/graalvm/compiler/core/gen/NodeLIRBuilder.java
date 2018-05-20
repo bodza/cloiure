@@ -21,11 +21,9 @@ import graalvm.compiler.core.match.MatchPattern;
 import graalvm.compiler.core.match.MatchRuleRegistry;
 import graalvm.compiler.core.match.MatchStatement;
 import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.debug.TTY;
 import graalvm.compiler.graph.GraalGraphError;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeMap;
-import graalvm.compiler.graph.NodeSourcePosition;
 import graalvm.compiler.graph.iterators.NodeIterable;
 import graalvm.compiler.lir.FullInfopointOp;
 import graalvm.compiler.lir.LIRFrameState;
@@ -37,7 +35,6 @@ import graalvm.compiler.lir.SwitchStrategy;
 import graalvm.compiler.lir.Variable;
 import graalvm.compiler.lir.framemap.FrameMapBuilder;
 import graalvm.compiler.lir.gen.LIRGenerator;
-import graalvm.compiler.lir.gen.LIRGenerator.Options;
 import graalvm.compiler.lir.gen.LIRGeneratorTool;
 import graalvm.compiler.lir.gen.LIRGeneratorTool.BlockScope;
 import graalvm.compiler.nodes.AbstractBeginNode;
@@ -94,12 +91,10 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
 {
     private final NodeMap<Value> nodeOperands;
     private final DebugInfoBuilder debugInfoBuilder;
-    private final int traceLIRGeneratorLevel;
 
     protected final LIRGenerator gen;
 
     private ValueNode currentInstruction;
-    private ValueNode lastInstructionPrinted; // Debugging only
 
     private final NodeMatchRules nodeMatchRules;
     private EconomicMap<Class<? extends Node>, List<MatchStatement>> matchRules;
@@ -115,7 +110,6 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
         {
             matchRules = MatchRuleRegistry.lookup(nodeMatchRules.getClass(), options);
         }
-        traceLIRGeneratorLevel = TTY.isSuppressed() ? 0 : Options.TraceLIRGeneratorLevel.getValue(options);
 
         nodeMatchRules.lirBuilder = this;
     }
@@ -206,15 +200,6 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
 
     public final void append(LIRInstruction op)
     {
-        if (Options.PrintIRWithLIR.getValue(nodeOperands.graph().getOptions()) && !TTY.isSuppressed())
-        {
-            if (currentInstruction != null && lastInstructionPrinted != currentInstruction)
-            {
-                lastInstructionPrinted = currentInstruction;
-                InstructionPrinter ip = new InstructionPrinter(TTY.out());
-                ip.printInstructionListing(currentInstruction);
-            }
-        }
         gen.append(op);
     }
 
@@ -313,8 +298,6 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
         OptionValues options = graph.getOptions();
         try (BlockScope blockScope = gen.getBlockScope(block))
         {
-            setSourcePosition(null);
-
             if (block == gen.getResult().getLIR().getControlFlowGraph().getStartBlock())
             {
                 emitPrologue(graph);
@@ -328,10 +311,6 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
                     AbstractMergeNode merge = (AbstractMergeNode) begin;
                     LabelOp label = (LabelOp) gen.getResult().getLIR().getLIRforBlock(block).get(0);
                     label.setPhiValues(createPhiIn(merge));
-                    if (Options.PrintIRWithLIR.getValue(options) && !TTY.isSuppressed())
-                    {
-                        TTY.println("Created PhiIn: " + label);
-                    }
                 }
             }
             doBlockPrologue(block, options);
@@ -342,17 +321,12 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
             // of instructions
             matchComplexExpressions(nodes);
 
-            boolean trace = traceLIRGeneratorLevel >= 3;
             for (int i = 0; i < nodes.size(); i++)
             {
                 Node node = nodes.get(i);
                 if (node instanceof ValueNode)
                 {
                     ValueNode valueNode = (ValueNode) node;
-                    if (trace)
-                    {
-                        TTY.println("LIRGen for " + valueNode);
-                    }
                     Value operand = getOperand(valueNode);
                     if (operand == null)
                     {
@@ -443,17 +417,12 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
 
     private void doRoot(ValueNode instr)
     {
-        if (traceLIRGeneratorLevel >= 2)
-        {
-            TTY.println("Emitting LIR for instruction " + instr);
-        }
         currentInstruction = instr;
         emitNode(instr);
     }
 
     protected void emitNode(ValueNode node)
     {
-        setSourcePosition(node.getNodeSourcePosition());
         if (node instanceof LIRLowerable)
         {
             ((LIRLowerable) node).generate(this);
@@ -810,12 +779,6 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
     public void visitFullInfopointNode(FullInfopointNode i)
     {
         append(new FullInfopointOp(stateFor(i.getState()), i.getReason()));
-    }
-
-    @Override
-    public void setSourcePosition(NodeSourcePosition position)
-    {
-        gen.setSourcePosition(position);
     }
 
     @Override

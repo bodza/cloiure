@@ -92,7 +92,6 @@ public class NodeMap<T> extends NodeIdAccessor implements EconomicMap<Node, T>
     }
 
     /**
-     * @param i
      * @return Return the key for the entry at index {@code i}
      */
     protected Node getKey(int i)

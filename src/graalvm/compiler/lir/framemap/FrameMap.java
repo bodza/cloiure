@@ -231,7 +231,6 @@ public abstract class FrameMap
      * boundary.
      *
      * @param kind The kind of the spill slot to be reserved.
-     * @param additionalOffset
      * @return A spill slot denoting the reserved memory area.
      */
     protected StackSlot allocateNewSpillSlot(ValueKind<?> kind, int additionalOffset)

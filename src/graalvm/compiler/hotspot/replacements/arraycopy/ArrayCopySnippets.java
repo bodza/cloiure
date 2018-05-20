@@ -552,9 +552,6 @@ public class ArrayCopySnippets implements Snippets
         /**
          * Instantiate the snippet template and fix up the FrameState of any Invokes of
          * System.arraycopy and propagate the captured bci in the ArrayCopySlowPathNode.
-         *
-         * @param args
-         * @param arraycopy
          */
         private void instantiate(Arguments args, BasicArrayCopyNode arraycopy)
         {

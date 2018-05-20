@@ -109,16 +109,12 @@ public class VirtualInstanceNode extends VirtualObjectNode
     @Override
     public VirtualInstanceNode duplicate()
     {
-        VirtualInstanceNode node = new VirtualInstanceNode(type, fields, super.hasIdentity());
-        node.setNodeSourcePosition(this.getNodeSourcePosition());
-        return node;
+        return new VirtualInstanceNode(type, fields, super.hasIdentity());
     }
 
     @Override
     public ValueNode getMaterializedRepresentation(FixedNode fixed, ValueNode[] entries, LockState locks)
     {
-        AllocatedObjectNode node = new AllocatedObjectNode(this);
-        node.setNodeSourcePosition(this.getNodeSourcePosition());
-        return node;
+        return new AllocatedObjectNode(this);
     }
 }

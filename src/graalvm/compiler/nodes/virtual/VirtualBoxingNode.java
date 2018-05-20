@@ -35,17 +35,13 @@ public class VirtualBoxingNode extends VirtualInstanceNode
     @Override
     public VirtualBoxingNode duplicate()
     {
-        VirtualBoxingNode node = new VirtualBoxingNode(type(), boxingKind);
-        node.setNodeSourcePosition(this.getNodeSourcePosition());
-        return node;
+        return new VirtualBoxingNode(type(), boxingKind);
     }
 
     @Override
     public ValueNode getMaterializedRepresentation(FixedNode fixed, ValueNode[] entries, LockState locks)
     {
-        BoxNode node = new BoxNode(entries[0], type(), boxingKind);
-        node.setNodeSourcePosition(this.getNodeSourcePosition());
-        return node;
+        return new BoxNode(entries[0], type(), boxingKind);
     }
 
     public ValueNode getBoxedValue(VirtualizerTool tool)

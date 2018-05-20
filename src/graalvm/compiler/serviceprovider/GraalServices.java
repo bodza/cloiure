@@ -209,11 +209,11 @@ public final class GraalServices
      * for the thread of the specified ID. The returned value is an approximation because some Java
      * virtual machine implementations may use object allocation mechanisms that result in a delay
      * between the time an object is allocated and the time its size is recorded.
-     * <p>
+     *
      * If the thread of the specified ID is not alive or does not exist, this method returns
      * {@code -1}. If thread memory allocation measurement is disabled, this method returns
      * {@code -1}. A thread is alive if it has been started and has not yet died.
-     * <p>
+     *
      * If thread memory allocation measurement is enabled after the thread has started, the Java
      * virtual machine implementation may choose any time up to and including the time that the
      * capability is enabled as the point where thread memory allocation measurement starts.
@@ -301,11 +301,11 @@ public final class GraalServices
      * Gets the input arguments passed to the Java virtual machine which does not include the
      * arguments to the {@code main} method. This method returns an empty list if there is no input
      * argument to the Java virtual machine.
-     * <p>
+     *
      * Some Java virtual machine implementations may take input arguments from multiple different
      * sources: for examples, arguments passed from the application that launches the Java virtual
      * machine such as the 'java' command, environment variables, configuration files, etc.
-     * <p>
+     *
      * Typically, not all command-line options to the 'java' command are passed to the Java virtual
      * machine. Thus, the returned input arguments may not include all command-line options.
      *

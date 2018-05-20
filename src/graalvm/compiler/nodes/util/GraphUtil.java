@@ -19,7 +19,6 @@ import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.graph.Graph;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeBitMap;
-import graalvm.compiler.graph.NodeSourcePosition;
 import graalvm.compiler.graph.NodeStack;
 import graalvm.compiler.graph.Position;
 import graalvm.compiler.graph.iterators.NodeIterable;
@@ -274,15 +273,6 @@ public class GraphUtil
         return !(n instanceof FixedNode);
     }
 
-    private static boolean checkKill(Node node, boolean mayKillGuard)
-    {
-        node.assertTrue(mayKillGuard || !(node instanceof GuardNode), "must not be a guard node %s", node);
-        node.assertTrue(node.isAlive(), "must be alive");
-        node.assertTrue(node.hasNoUsages(), "cannot kill node %s because of usages: %s", node, node.usages());
-        node.assertTrue(node.predecessor() == null, "cannot kill node %s because of predecessor: %s", node, node.predecessor());
-        return true;
-    }
-
     public static void killWithUnusedFloatingInputs(Node node)
     {
         killWithUnusedFloatingInputs(node, false);
@@ -501,13 +491,6 @@ public class GraphUtil
      */
     public static StackTraceElement[] approxSourceStackTraceElement(Node node)
     {
-        NodeSourcePosition position = node.getNodeSourcePosition();
-        if (position != null)
-        {
-            // use GraphBuilderConfiguration and enable trackNodeSourcePosition to get better source
-            // positions.
-            return approxSourceStackTraceElement(position);
-        }
         ArrayList<StackTraceElement> elements = new ArrayList<>();
         Node n = node;
         while (n != null)
@@ -590,26 +573,6 @@ public class GraphUtil
     public static BailoutException createBailoutException(String message, Throwable cause, StackTraceElement[] elements)
     {
         return SourceStackTraceBailoutException.create(cause, message, elements);
-    }
-
-    /**
-     * Gets an approximate source code location for a node if possible.
-     *
-     * @return a file name and source line number in stack trace format (e.g. "String.java:32") if
-     *         an approximate source location is found, null otherwise
-     */
-    public static String approxSourceLocation(Node node)
-    {
-        StackTraceElement[] stackTraceElements = approxSourceStackTraceElement(node);
-        if (stackTraceElements != null && stackTraceElements.length > 0)
-        {
-            StackTraceElement top = stackTraceElements[0];
-            if (top.getFileName() != null && top.getLineNumber() >= 0)
-            {
-                return top.getFileName() + ":" + top.getLineNumber();
-            }
-        }
-        return null;
     }
 
     /**

@@ -9,7 +9,6 @@ import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.IterableNodeType;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.graph.NodeSourcePosition;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.nodeinfo.NodeInfo;
@@ -42,14 +41,13 @@ public class GuardNode extends FloatingAnchoredNode implements Canonicalizable, 
     protected DeoptimizationAction action;
     protected JavaConstant speculation;
     protected boolean negated;
-    protected NodeSourcePosition noDeoptSuccessorPosition;
 
-    public GuardNode(LogicNode condition, AnchoringNode anchor, DeoptimizationReason reason, DeoptimizationAction action, boolean negated, JavaConstant speculation, NodeSourcePosition noDeoptSuccessorPosition)
+    public GuardNode(LogicNode condition, AnchoringNode anchor, DeoptimizationReason reason, DeoptimizationAction action, boolean negated, JavaConstant speculation)
     {
-        this(TYPE, condition, anchor, reason, action, negated, speculation, noDeoptSuccessorPosition);
+        this(TYPE, condition, anchor, reason, action, negated, speculation);
     }
 
-    protected GuardNode(NodeClass<? extends GuardNode> c, LogicNode condition, AnchoringNode anchor, DeoptimizationReason reason, DeoptimizationAction action, boolean negated, JavaConstant speculation, NodeSourcePosition noDeoptSuccessorPosition)
+    protected GuardNode(NodeClass<? extends GuardNode> c, LogicNode condition, AnchoringNode anchor, DeoptimizationReason reason, DeoptimizationAction action, boolean negated, JavaConstant speculation)
     {
         super(c, StampFactory.forVoid(), anchor);
         this.condition = condition;
@@ -57,7 +55,6 @@ public class GuardNode extends FloatingAnchoredNode implements Canonicalizable, 
         this.action = action;
         this.negated = negated;
         this.speculation = speculation;
-        this.noDeoptSuccessorPosition = noDeoptSuccessorPosition;
     }
 
     /**
@@ -125,7 +122,7 @@ public class GuardNode extends FloatingAnchoredNode implements Canonicalizable, 
         if (getCondition() instanceof LogicNegationNode)
         {
             LogicNegationNode negation = (LogicNegationNode) getCondition();
-            return new GuardNode(negation.getValue(), getAnchor(), reason, action, !negated, speculation, noDeoptSuccessorPosition);
+            return new GuardNode(negation.getValue(), getAnchor(), reason, action, !negated, speculation);
         }
         if (getCondition() instanceof LogicConstantNode)
         {
@@ -158,17 +155,5 @@ public class GuardNode extends FloatingAnchoredNode implements Canonicalizable, 
     public void setReason(DeoptimizationReason reason)
     {
         this.reason = reason;
-    }
-
-    @Override
-    public NodeSourcePosition getNoDeoptSuccessorPosition()
-    {
-        return noDeoptSuccessorPosition;
-    }
-
-    @Override
-    public void setNoDeoptSuccessorPosition(NodeSourcePosition noDeoptSuccessorPosition)
-    {
-        this.noDeoptSuccessorPosition = noDeoptSuccessorPosition;
     }
 }

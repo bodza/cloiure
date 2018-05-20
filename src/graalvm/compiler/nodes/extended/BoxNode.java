@@ -77,9 +77,7 @@ public class BoxNode extends FixedWithNextNode implements VirtualizableAllocatio
 
     protected VirtualBoxingNode createVirtualBoxingNode()
     {
-        VirtualBoxingNode node = new VirtualBoxingNode(StampTool.typeOrNull(stamp(NodeView.DEFAULT)), boxingKind);
-        node.setNodeSourcePosition(getNodeSourcePosition());
-        return node;
+        return new VirtualBoxingNode(StampTool.typeOrNull(stamp(NodeView.DEFAULT)), boxingKind);
     }
 
     @Override

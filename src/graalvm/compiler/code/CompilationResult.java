@@ -13,7 +13,6 @@ import java.util.Objects;
 
 import org.graalvm.collections.EconomicSet;
 import graalvm.compiler.core.common.CompilationIdentifier;
-import graalvm.compiler.graph.NodeSourcePosition;
 
 import jdk.vm.ci.code.DebugInfo;
 import jdk.vm.ci.code.StackSlot;
@@ -172,7 +171,6 @@ public class CompilationResult
     private final DataSection dataSection = new DataSection();
 
     private final List<Infopoint> infopoints = new ArrayList<>();
-    private final List<SourceMapping> sourceMapping = new ArrayList<>();
     private final List<DataPatch> dataPatches = new ArrayList<>();
     private final List<ExceptionHandler> exceptionHandlers = new ArrayList<>();
     private final List<Mark> marks = new ArrayList<>();
@@ -535,8 +533,6 @@ public class CompilationResult
     /**
      * Validate if the exception handler for codePos already exists and handlerPos is different.
      *
-     * @param codePos
-     * @param handlerPos
      * @return true if the validation is successful
      */
     private boolean validateExceptionHandlerAdd(int codePos, int handlerPos)
@@ -588,12 +584,6 @@ public class CompilationResult
         infopoints.add(infopoint);
     }
 
-    public void recordSourceMapping(int startOffset, int endOffset, NodeSourcePosition sourcePosition)
-    {
-        checkOpen();
-        sourceMapping.add(new SourceMapping(startOffset, endOffset, sourcePosition));
-    }
-
     /**
      * Records an instruction mark within this method.
      *
@@ -620,7 +610,6 @@ public class CompilationResult
 
     /**
      * @see #getCustomStackArea()
-     * @param slot
      */
     public void setCustomStackAreaOffset(StackSlot slot)
     {
@@ -714,18 +703,6 @@ public class CompilationResult
         return unmodifiableList(marks);
     }
 
-    /**
-     * @return the list of {@link SourceMapping}s
-     */
-    public List<SourceMapping> getSourceMappings()
-    {
-        if (sourceMapping.isEmpty())
-        {
-            return emptyList();
-        }
-        return unmodifiableList(sourceMapping);
-    }
-
     public String getName()
     {
         return name;
@@ -757,7 +734,6 @@ public class CompilationResult
     {
         checkOpen();
         infopoints.clear();
-        sourceMapping.clear();
         dataPatches.clear();
         exceptionHandlers.clear();
         marks.clear();

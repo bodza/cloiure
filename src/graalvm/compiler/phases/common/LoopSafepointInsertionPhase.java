@@ -2,7 +2,6 @@ package graalvm.compiler.phases.common;
 
 import static graalvm.compiler.core.common.GraalOptions.GenLoopSafepoints;
 
-import graalvm.compiler.debug.DebugCloseable;
 import graalvm.compiler.nodes.LoopBeginNode;
 import graalvm.compiler.nodes.LoopEndNode;
 import graalvm.compiler.nodes.SafepointNode;
@@ -23,7 +22,6 @@ public class LoopSafepointInsertionPhase extends Phase
     }
 
     @Override
-    @SuppressWarnings("try")
     protected void run(StructuredGraph graph)
     {
         if (GenLoopSafepoints.getValue(graph.getOptions()))
@@ -34,11 +32,8 @@ public class LoopSafepointInsertionPhase extends Phase
                 {
                     if (loopEndNode.canSafepoint())
                     {
-                        try (DebugCloseable s = loopEndNode.withNodeSourcePosition())
-                        {
-                            SafepointNode safepointNode = graph.add(new SafepointNode());
-                            graph.addBeforeFixed(loopEndNode, safepointNode);
-                        }
+                        SafepointNode safepointNode = graph.add(new SafepointNode());
+                        graph.addBeforeFixed(loopEndNode, safepointNode);
                     }
                 }
             }

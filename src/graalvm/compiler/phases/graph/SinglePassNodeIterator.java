@@ -35,17 +35,13 @@ import graalvm.compiler.nodes.StructuredGraph;
  * {@link AbstractMergeNode} is a precondition before that merge node can be visited)</li>
  * </ul>
  *
- * <p>
  * For this iterator the CFG is defined by the classical CFG nodes (
  * {@link graalvm.compiler.nodes.ControlSplitNode},
  * {@link graalvm.compiler.nodes.AbstractMergeNode} ...) and the
  * {@link graalvm.compiler.nodes.FixedWithNextNode#next() next} pointers of
  * {@link graalvm.compiler.nodes.FixedWithNextNode}.
- * </p>
  *
- * <p>
  * The lifecycle that single-pass node iterators go through is described in {@link #apply()}
- * </p>
  *
  * @param <T> the type of {@link MergeableState} handled by this SinglePassNodeIterator
  */
@@ -60,12 +56,10 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
 
     /**
      * The keys in this map may be:
-     * <ul>
+     *
      * <li>loop-begins and loop-ends, see {@link #finishLoopEnds(LoopEndNode)}</li>
      * <li>forward-ends of merge-nodes, see {@link #queueMerge(EndNode)}</li>
-     * </ul>
      *
-     * <p>
      * It's tricky to answer whether the state an entry contains is the pre-state or the post-state
      * for the key in question, because states are mutable. Thus an entry may be created to contain
      * a pre-state (at the time, as done for a loop-begin in {@link #apply()}) only to make it a
@@ -73,13 +67,10 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
      * any case, given that keys are limited to the nodes mentioned in the previous paragraph, in
      * all cases an entry can be considered to hold a post-state by the time such entry is
      * retrieved.
-     * </p>
      *
-     * <p>
      * The only method that makes this map grow is {@link #keepForLater(FixedNode, MergeableState)}
      * and the only one that shrinks it is {@link #pruneEntry(FixedNode)}. To make sure no entry is
      * left behind inadvertently, asserts in {@link #finished()} are in place.
-     * </p>
      */
     private final EconomicMap<FixedNode, T> nodeStates;
 
@@ -90,20 +81,16 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
     /**
      * An item queued in {@link #nodeQueue} can be used to continue with the single-pass visit after
      * the previous path can't be followed anymore. Such items are:
-     * <ul>
+     *
      * <li>de-queued via {@link #nextQueuedNode()}</li>
      * <li>en-queued via {@link #queueMerge(EndNode)} and {@link #queueSuccessors(FixedNode)}</li>
-     * </ul>
      *
-     * <p>
      * Correspondingly each item may stand for:
-     * <ul>
+     *
      * <li>a {@link AbstractMergeNode} whose pre-state results from merging those of its
      * forward-ends, see {@link #nextQueuedNode()}</li>
      * <li>a successor of a control-split node, in which case the state on entry to it (the
      * successor) is also stored in the item, see {@link #nextQueuedNode()}</li>
-     * </ul>
-     * </p>
      */
     private static final class PathStart<U>
     {
@@ -146,11 +133,9 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
     /**
      * Performs a single-pass iteration.
      *
-     * <p>
      * After this method has been invoked, the {@link SinglePassNodeIterator} instance can't be used
      * again. This saves clearing up fields in {@link #finished()}, the assumption being that this
      * instance will be garbage-collected soon afterwards.
-     * </p>
      */
     public void apply()
     {
@@ -214,12 +199,10 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
      * Two methods enqueue items in {@link #nodeQueue}. Of them, only this method enqueues items
      * with non-null state (the other method being {@link #queueMerge(EndNode)}).
      *
-     * <p>
      * A space optimization is made: the state is cloned for all successors except the first. Given
      * that right after invoking this method, {@link #nextQueuedNode()} is invoked, that single
      * non-cloned state instance is in effect "handed over" to its next owner (thus realizing an
      * owner-is-mutator access protocol).
-     * </p>
      */
     private void queueSuccessors(FixedNode x)
     {
@@ -246,10 +229,8 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
      * method picks such next-node-to-visit from {@link #nodeQueue} and updates {@link #state} with
      * the pre-state for that node.
      *
-     * <p>
      * Upon reaching a {@link AbstractMergeNode}, some entries are pruned from {@link #nodeStates}
      * (ie, the entries associated to forward-ends for that merge-node).
-     * </p>
      */
     private FixedNode nextQueuedNode()
     {
@@ -282,19 +263,15 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
 
     /**
      * Once all loop-end-nodes for a given loop-node have been visited.
-     * <ul>
+     *
      * <li>the state for that loop-node is updated based on the states of the loop-end-nodes</li>
      * <li>entries in {@link #nodeStates} are pruned for the loop (they aren't going to be looked up
      * again, anyway)</li>
-     * </ul>
      *
-     * <p>
      * The entries removed by this method were inserted:
-     * <ul>
+     *
      * <li>for the loop-begin, by {@link #apply()}</li>
      * <li>for loop-ends, by (previous) invocations of this method</li>
-     * </ul>
-     * </p>
      */
     private void finishLoopEnds(LoopEndNode end)
     {
@@ -327,10 +304,8 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
      * Once all end-nodes for a given merge-node have been visited, that merge-node is added to the
      * {@link #nodeQueue}
      *
-     * <p>
      * {@link #nextQueuedNode()} is in charge of pruning entries (held by {@link #nodeStates}) for
      * the forward-ends inserted by this method.
-     * </p>
      */
     private void queueMerge(EndNode end)
     {
@@ -387,10 +362,8 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
     /**
      * The lifecycle that single-pass node iterators go through is described in {@link #apply()}
      *
-     * <p>
      * When overriding this method don't forget to invoke this implementation, otherwise the
      * assertions will be skipped.
-     * </p>
      */
     protected void finished()
     {

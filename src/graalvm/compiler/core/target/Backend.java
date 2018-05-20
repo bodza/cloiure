@@ -273,8 +273,6 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
     /**
      * Gets the compilation id for a given {@link ResolvedJavaMethod}. Returns
      * {@code CompilationIdentifier#INVALID_COMPILATION_ID} in case there is no such id.
-     *
-     * @param resolvedJavaMethod
      */
     public CompilationIdentifier getCompilationIdentifier(ResolvedJavaMethod resolvedJavaMethod)
     {

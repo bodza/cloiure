@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.EnumSet;
 
-import graalvm.compiler.graph.NodeSourcePosition;
 import graalvm.compiler.lir.StandardOp.LoadConstantOp;
 import graalvm.compiler.lir.StandardOp.MoveOp;
 import graalvm.compiler.lir.StandardOp.ValueMoveOp;
@@ -181,11 +180,6 @@ public abstract class LIRInstruction
     private int id;
 
     /**
-     * The source position of the code that generated this instruction.
-     */
-    private NodeSourcePosition position;
-
-    /**
      * Constructs a new LIR instruction.
      */
     public LIRInstruction(LIRInstructionClass<? extends LIRInstruction> c)
@@ -204,16 +198,6 @@ public abstract class LIRInstruction
     public final void setId(int id)
     {
         this.id = id;
-    }
-
-    public final NodeSourcePosition getPosition()
-    {
-        return position;
-    }
-
-    public final void setPosition(NodeSourcePosition position)
-    {
-        this.position = position;
     }
 
     public final String name()

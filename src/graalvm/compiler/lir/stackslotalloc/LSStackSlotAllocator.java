@@ -36,7 +36,7 @@ import jdk.vm.ci.meta.ValueKind;
 
 /**
  * Linear Scan stack slot allocator.
- * <p>
+ *
  * <b>Remark:</b> The analysis works under the assumption that a stack slot is no longer live after
  * its last usage. If an {@link LIRInstruction instruction} transfers the raw address of the stack
  * slot to another location, e.g. a registers, and this location is referenced later on, the

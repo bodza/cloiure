@@ -328,9 +328,6 @@ public final class TraceLinearScanLifetimeAnalysisPhase extends TraceLinearScanA
 
         /**
          * Eliminates moves from register to stack if the stack slot is known to be correct.
-         *
-         * @param op
-         * @param operand
          */
         private void changeSpillDefinitionPos(LIRInstruction op, AllocatableValue operand, TraceInterval interval, int defPos)
         {

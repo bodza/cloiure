@@ -47,7 +47,7 @@ public abstract class AbstractInlineInfo implements InlineInfo
     {
         for (int i = 0; i < numberOfMethods(); i++)
         {
-            Inlineable elem = Inlineable.getInlineableElement(methodAt(i), invoke, context, canonicalizer, caller.trackNodeSourcePosition());
+            Inlineable elem = Inlineable.getInlineableElement(methodAt(i), invoke, context, canonicalizer);
             setInlinableElement(i, elem);
         }
     }

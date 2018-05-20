@@ -96,11 +96,6 @@ public class HotSpotGraphBuilderPlugins
 {
     /**
      * Creates a {@link Plugins} object that should be used when running on HotSpot.
-     *
-     * @param constantReflection
-     * @param snippetReflection
-     * @param foreignCalls
-     * @param stampProvider
      */
     public static Plugins create(CompilerConfiguration compilerConfiguration, GraalHotSpotVMConfig config, HotSpotWordTypes wordTypes, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection, SnippetReflectionProvider snippetReflection, ForeignCallsProvider foreignCalls, LoweringProvider lowerer, StampProvider stampProvider, ReplacementsImpl replacements)
     {
@@ -172,12 +167,10 @@ public class HotSpotGraphBuilderPlugins
         Registration r = new Registration(plugins, Object.class, bytecodeProvider);
         if (!GeneratePIC.getValue(options))
         {
-            // FIXME: clone() requires speculation and requires a fix in here (to check that
-            // b.getAssumptions() != null), and in ReplacementImpl.getSubstitution() where there is
-            // an instantiation of IntrinsicGraphBuilder using a constructor that sets
-            // AllowAssumptions to YES automatically. The former has to inherit the assumptions
-            // settings from the root compile instead. So, for now, I'm disabling it for
-            // GeneratePIC.
+            // FIXME: clone() requires speculation and requires a fix in here (to check that b.getAssumptions() != null),
+            // and in ReplacementImpl.getSubstitution() where there is an instantiation of IntrinsicGraphBuilder using
+            // a constructor that sets AllowAssumptions to YES automatically. The former has to inherit the assumptions
+            // settings from the root compile instead. So, for now, I'm disabling it for GeneratePIC.
             r.register1("clone", Receiver.class, new InvocationPlugin()
             {
                 @Override

@@ -24,15 +24,11 @@ import graalvm.compiler.phases.tiers.HighTierContext;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
- * <p>
  * Represents a feasible concrete target for inlining, whose graph has been copied already and thus
  * can be modified without affecting the original (usually cached) version.
- * </p>
  *
- * <p>
  * Instances of this class don't make sense in isolation but as part of an
  * {@link graalvm.compiler.phases.common.inlining.info.InlineInfo InlineInfo}.
- * </p>
  *
  * @see graalvm.compiler.phases.common.inlining.walker.InliningData#moveForward()
  * @see graalvm.compiler.phases.common.inlining.walker.CallsiteHolderExplorable
@@ -43,9 +39,9 @@ public class InlineableGraph implements Inlineable
 
     private FixedNodeProbabilityCache probabilites = new FixedNodeProbabilityCache();
 
-    public InlineableGraph(final ResolvedJavaMethod method, final Invoke invoke, final HighTierContext context, CanonicalizerPhase canonicalizer, boolean trackNodeSourcePosition)
+    public InlineableGraph(final ResolvedJavaMethod method, final Invoke invoke, final HighTierContext context, CanonicalizerPhase canonicalizer)
     {
-        StructuredGraph original = getOriginalGraph(method, context, canonicalizer, invoke.asNode().graph(), invoke.bci(), trackNodeSourcePosition);
+        StructuredGraph original = getOriginalGraph(method, context, canonicalizer, invoke.asNode().graph(), invoke.bci());
         // TODO copying the graph is only necessary if it is modified or if it contains any invokes
         this.graph = (StructuredGraph) original.copy();
         specializeGraphToArguments(invoke, context, canonicalizer);
@@ -56,14 +52,14 @@ public class InlineableGraph implements Inlineable
      * The graph thus obtained is returned, ie the caller is responsible for cloning before
      * modification.
      */
-    private static StructuredGraph getOriginalGraph(final ResolvedJavaMethod method, final HighTierContext context, CanonicalizerPhase canonicalizer, StructuredGraph caller, int callerBci, boolean trackNodeSourcePosition)
+    private static StructuredGraph getOriginalGraph(final ResolvedJavaMethod method, final HighTierContext context, CanonicalizerPhase canonicalizer, StructuredGraph caller, int callerBci)
     {
-        StructuredGraph result = InliningUtil.getIntrinsicGraph(context.getReplacements(), method, callerBci, trackNodeSourcePosition, null);
+        StructuredGraph result = InliningUtil.getIntrinsicGraph(context.getReplacements(), method, callerBci);
         if (result != null)
         {
             return result;
         }
-        return parseBytecodes(method, context, canonicalizer, caller, trackNodeSourcePosition);
+        return parseBytecodes(method, context, canonicalizer, caller);
     }
 
     /**
@@ -109,16 +105,13 @@ public class InlineableGraph implements Inlineable
 
     /**
      * This method detects:
-     * <ul>
+     *
      * <li>constants among the arguments to the <code>invoke</code></li>
      * <li>arguments with more precise type than that declared by the corresponding parameter</li>
-     * </ul>
      *
-     * <p>
      * The corresponding parameters are updated to reflect the above information. Before doing so,
      * their usages are added to <code>parameterUsages</code> for later incremental
      * canonicalization.
-     * </p>
      *
      * @return null if no incremental canonicalization is need, a list of nodes for such
      *         canonicalization otherwise.
@@ -174,9 +167,9 @@ public class InlineableGraph implements Inlineable
      * for cloning before modification.
      * </p>
      */
-    private static StructuredGraph parseBytecodes(ResolvedJavaMethod method, HighTierContext context, CanonicalizerPhase canonicalizer, StructuredGraph caller, boolean trackNodeSourcePosition)
+    private static StructuredGraph parseBytecodes(ResolvedJavaMethod method, HighTierContext context, CanonicalizerPhase canonicalizer, StructuredGraph caller)
     {
-        StructuredGraph newGraph = new StructuredGraph.Builder(caller.getOptions(), AllowAssumptions.ifNonNull(caller.getAssumptions())).method(method).trackNodeSourcePosition(trackNodeSourcePosition).build();
+        StructuredGraph newGraph = new StructuredGraph.Builder(caller.getOptions(), AllowAssumptions.ifNonNull(caller.getAssumptions())).method(method).build();
         if (!caller.isUnsafeAccessTrackingEnabled())
         {
             newGraph.disableUnsafeAccessTracking();

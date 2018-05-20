@@ -1,7 +1,6 @@
 package graalvm.compiler.phases.common;
 
 import graalvm.compiler.core.common.cfg.Loop;
-import graalvm.compiler.debug.DebugCloseable;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodes.AbstractBeginNode;
 import graalvm.compiler.nodes.BeginNode;
@@ -27,7 +26,7 @@ import graalvm.compiler.phases.tiers.MidTierContext;
  *
  * This allow to enter the {@link GuardsStage#FIXED_DEOPTS FIXED_DEOPTS} stage of the graph where
  * all node that may cause deoptimization are fixed.
- * <p>
+ *
  * It first makes a schedule in order to know where the control flow should be placed. Then, for
  * each block, it applies two passes. The first one tries to replace null-check guards with implicit
  * null checks performed by access to the objects that need to be null checked. The second phase
@@ -62,33 +61,28 @@ public class GuardLoweringPhase extends BasePhase<MidTierContext>
             }
         }
 
-        @SuppressWarnings("try")
         private void lowerToIf(GuardNode guard)
         {
-            try (DebugCloseable position = guard.withNodeSourcePosition())
+            StructuredGraph graph = guard.graph();
+            AbstractBeginNode fastPath = graph.add(new BeginNode());
+            DeoptimizeNode deopt = graph.add(new DeoptimizeNode(guard.getAction(), guard.getReason(), DeoptimizeNode.DEFAULT_DEBUG_ID, guard.getSpeculation(), null));
+            AbstractBeginNode deoptBranch = BeginNode.begin(deopt);
+            AbstractBeginNode trueSuccessor;
+            AbstractBeginNode falseSuccessor;
+            insertLoopExits(deopt);
+            if (guard.isNegated())
             {
-                StructuredGraph graph = guard.graph();
-                AbstractBeginNode fastPath = graph.add(new BeginNode());
-                fastPath.setNodeSourcePosition(guard.getNoDeoptSuccessorPosition());
-                DeoptimizeNode deopt = graph.add(new DeoptimizeNode(guard.getAction(), guard.getReason(), DeoptimizeNode.DEFAULT_DEBUG_ID, guard.getSpeculation(), null));
-                AbstractBeginNode deoptBranch = BeginNode.begin(deopt);
-                AbstractBeginNode trueSuccessor;
-                AbstractBeginNode falseSuccessor;
-                insertLoopExits(deopt);
-                if (guard.isNegated())
-                {
-                    trueSuccessor = deoptBranch;
-                    falseSuccessor = fastPath;
-                }
-                else
-                {
-                    trueSuccessor = fastPath;
-                    falseSuccessor = deoptBranch;
-                }
-                IfNode ifNode = graph.add(new IfNode(guard.getCondition(), trueSuccessor, falseSuccessor, trueSuccessor == fastPath ? 1 : 0));
-                guard.replaceAndDelete(fastPath);
-                insert(ifNode, fastPath);
+                trueSuccessor = deoptBranch;
+                falseSuccessor = fastPath;
             }
+            else
+            {
+                trueSuccessor = fastPath;
+                falseSuccessor = deoptBranch;
+            }
+            IfNode ifNode = graph.add(new IfNode(guard.getCondition(), trueSuccessor, falseSuccessor, trueSuccessor == fastPath ? 1 : 0));
+            guard.replaceAndDelete(fastPath);
+            insert(ifNode, fastPath);
         }
 
         private void insertLoopExits(DeoptimizeNode deopt)

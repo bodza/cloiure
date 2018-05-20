@@ -3,7 +3,6 @@ package graalvm.compiler.virtual.phases.ea;
 import static graalvm.compiler.phases.common.DeadCodeEliminationPhase.Optionality.Required;
 
 import org.graalvm.collections.EconomicSet;
-import graalvm.compiler.core.common.util.CompilationAlarm;
 import graalvm.compiler.graph.Graph.NodeEventScope;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.spi.Simplifiable;
@@ -54,8 +53,7 @@ public abstract class EffectsPhase<PhaseContextT extends PhaseContext> extends B
     public boolean runAnalysis(StructuredGraph graph, PhaseContextT context)
     {
         boolean changed = false;
-        CompilationAlarm compilationAlarm = CompilationAlarm.current();
-        for (int iteration = 0; iteration < maxIterations && !compilationAlarm.hasExpired(); iteration++)
+        for (int iteration = 0; iteration < maxIterations; iteration++)
         {
             ScheduleResult schedule;
             ControlFlowGraph cfg;

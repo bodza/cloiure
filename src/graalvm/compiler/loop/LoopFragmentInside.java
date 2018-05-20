@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
-import graalvm.compiler.debug.DebugCloseable;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Graph.DuplicationReplacement;
 import graalvm.compiler.graph.Node;
@@ -132,8 +131,6 @@ public class LoopFragmentInside extends LoopFragment
     /**
      * Duplicate the body within the loop after the current copy copy of the body, updating the
      * iteration limit to account for the duplication.
-     *
-     * @param loop
      */
     public void insertWithinAfter(LoopEx loop)
     {
@@ -143,7 +140,6 @@ public class LoopFragmentInside extends LoopFragment
     /**
      * Duplicate the body within the loop after the current copy copy of the body.
      *
-     * @param loop
      * @param updateLimit true if the iteration limit should be adjusted.
      */
     public void insertWithinAfter(LoopEx loop, boolean updateLimit)
@@ -352,7 +348,6 @@ public class LoopFragmentInside extends LoopFragment
     }
 
     @Override
-    @SuppressWarnings("try")
     protected DuplicationReplacement getDuplicationReplacement()
     {
         final LoopBeginNode loopBegin = loop().loopBegin();
@@ -364,43 +359,40 @@ public class LoopFragmentInside extends LoopFragment
             @Override
             public Node replacement(Node original)
             {
-                try (DebugCloseable position = original.withNodeSourcePosition())
+                if (original == loopBegin)
                 {
-                    if (original == loopBegin)
+                    Node value = seenNode.get(original);
+                    if (value != null)
                     {
-                        Node value = seenNode.get(original);
-                        if (value != null)
-                        {
-                            return value;
-                        }
-                        AbstractBeginNode newValue = graph.add(new BeginNode());
-                        seenNode.put(original, newValue);
-                        return newValue;
+                        return value;
                     }
-                    if (original instanceof LoopExitNode && ((LoopExitNode) original).loopBegin() == loopBegin)
-                    {
-                        Node value = seenNode.get(original);
-                        if (value != null)
-                        {
-                            return value;
-                        }
-                        AbstractBeginNode newValue = graph.add(new BeginNode());
-                        seenNode.put(original, newValue);
-                        return newValue;
-                    }
-                    if (original instanceof LoopEndNode && ((LoopEndNode) original).loopBegin() == loopBegin)
-                    {
-                        Node value = seenNode.get(original);
-                        if (value != null)
-                        {
-                            return value;
-                        }
-                        EndNode newValue = graph.add(new EndNode());
-                        seenNode.put(original, newValue);
-                        return newValue;
-                    }
-                    return original;
+                    AbstractBeginNode newValue = graph.add(new BeginNode());
+                    seenNode.put(original, newValue);
+                    return newValue;
                 }
+                if (original instanceof LoopExitNode && ((LoopExitNode) original).loopBegin() == loopBegin)
+                {
+                    Node value = seenNode.get(original);
+                    if (value != null)
+                    {
+                        return value;
+                    }
+                    AbstractBeginNode newValue = graph.add(new BeginNode());
+                    seenNode.put(original, newValue);
+                    return newValue;
+                }
+                if (original instanceof LoopEndNode && ((LoopEndNode) original).loopBegin() == loopBegin)
+                {
+                    Node value = seenNode.get(original);
+                    if (value != null)
+                    {
+                        return value;
+                    }
+                    EndNode newValue = graph.add(new EndNode());
+                    seenNode.put(original, newValue);
+                    return newValue;
+                }
+                return original;
             }
         };
     }
@@ -612,7 +604,6 @@ public class LoopFragmentInside extends LoopFragment
         }
     }
 
-    @SuppressWarnings("try")
     private AbstractBeginNode mergeEnds()
     {
         List<EndNode> endsToMerge = new LinkedList<>();
@@ -634,12 +625,9 @@ public class LoopFragmentInside extends LoopFragment
         if (endsToMerge.size() == 1)
         {
             AbstractEndNode end = endsToMerge.get(0);
-            try (DebugCloseable position = end.withNodeSourcePosition())
-            {
-                newExit = graph.add(new BeginNode());
-                end.replaceAtPredecessor(newExit);
-                end.safeDelete();
-            }
+            newExit = graph.add(new BeginNode());
+            end.replaceAtPredecessor(newExit);
+            end.safeDelete();
         }
         else
         {

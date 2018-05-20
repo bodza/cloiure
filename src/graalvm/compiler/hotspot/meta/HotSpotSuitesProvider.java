@@ -18,9 +18,6 @@ import graalvm.compiler.hotspot.phases.profiling.FinalizeProfileNodesPhase;
 import graalvm.compiler.java.GraphBuilderPhase;
 import graalvm.compiler.java.SuitesProviderBase;
 import graalvm.compiler.lir.phases.LIRSuites;
-import graalvm.compiler.nodes.EncodedGraph;
-import graalvm.compiler.nodes.GraphEncoder;
-import graalvm.compiler.nodes.SimplifyingGraphDecoder;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.StructuredGraph.AllowAssumptions;
 import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderConfiguration;
@@ -94,21 +91,6 @@ public class HotSpotSuitesProvider extends SuitesProviderBase
     {
         PhaseSuite<HighTierContext> suite = defaultSuitesCreator.getDefaultGraphBuilderSuite().copy();
         return suite;
-    }
-
-    /**
-     * Modifies a given {@link GraphBuilderConfiguration} to record per node source information.
-     *
-     * @param gbs the current graph builder suite to modify
-     */
-    public static PhaseSuite<HighTierContext> withNodeSourcePosition(PhaseSuite<HighTierContext> gbs)
-    {
-        PhaseSuite<HighTierContext> newGbs = gbs.copy();
-        GraphBuilderPhase graphBuilderPhase = (GraphBuilderPhase) newGbs.findPhase(GraphBuilderPhase.class).previous();
-        GraphBuilderConfiguration graphBuilderConfig = graphBuilderPhase.getGraphBuilderConfig();
-        GraphBuilderPhase newGraphBuilderPhase = new GraphBuilderPhase(graphBuilderConfig.withNodeSourcePosition(true));
-        newGbs.findPhase(GraphBuilderPhase.class).set(newGraphBuilderPhase);
-        return newGbs;
     }
 
     @Override

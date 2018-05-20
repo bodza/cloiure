@@ -775,7 +775,7 @@ final class TraceInterval extends IntervalHint
     /**
      * Splits this interval at a specified position and returns the remainder as a new <i>child</i>
      * interval of this interval's {@linkplain #splitParent() parent} interval.
-     * <p>
+     *
      * When an interval is split, a bi-directional link is established between the original
      * <i>parent</i> interval and the <i>children</i> intervals that are split off this interval.
      * When a split child is split again, the new created interval is a direct child of the original

@@ -12,7 +12,6 @@ import graalvm.compiler.core.common.RetryableBailoutException;
 import graalvm.compiler.core.common.alloc.ComputeBlockOrder;
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
-import graalvm.compiler.core.common.util.CompilationAlarm;
 import graalvm.compiler.core.target.Backend;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.LIR;
@@ -79,15 +78,6 @@ public class GraalCompiler
          * @param graph the graph to be compiled
          * @param installedCodeOwner the method the compiled code will be associated with once
          *            installed. This argument can be null.
-         * @param providers
-         * @param backend
-         * @param graphBuilderSuite
-         * @param optimisticOpts
-         * @param profilingInfo
-         * @param suites
-         * @param lirSuites
-         * @param compilationResult
-         * @param factory
          */
         public Request(StructuredGraph graph, ResolvedJavaMethod installedCodeOwner, Providers providers, Backend backend, PhaseSuite<HighTierContext> graphBuilderSuite, OptimisticOptimizations optimisticOpts, ProfilingInfo profilingInfo, Suites suites, LIRSuites lirSuites, T compilationResult, CompilationResultBuilderFactory factory)
         {
@@ -133,15 +123,11 @@ public class GraalCompiler
      *
      * @return the result of the compilation
      */
-    @SuppressWarnings("try")
     public static <T extends CompilationResult> T compile(Request<T> r)
     {
-        try (CompilationAlarm alarm = CompilationAlarm.trackCompilationPeriod(r.graph.getOptions()))
-        {
-            emitFrontEnd(r.providers, r.backend, r.graph, r.graphBuilderSuite, r.optimisticOpts, r.profilingInfo, r.suites);
-            emitBackEnd(r.graph, null, r.installedCodeOwner, r.backend, r.compilationResult, r.factory, null, r.lirSuites);
-            return r.compilationResult;
-        }
+        emitFrontEnd(r.providers, r.backend, r.graph, r.graphBuilderSuite, r.optimisticOpts, r.profilingInfo, r.suites);
+        emitBackEnd(r.graph, null, r.installedCodeOwner, r.backend, r.compilationResult, r.factory, null, r.lirSuites);
+        return r.compilationResult;
     }
 
     /**

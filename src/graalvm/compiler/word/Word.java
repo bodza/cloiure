@@ -142,11 +142,11 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer
      * Convert an {@link Object} to a {@link Pointer}, dropping the reference information. If the
      * returned pointer or any value derived from it is alive across a safepoint, it will be treated
      * as a simple integer and not tracked by the garbage collector.
-     * <p>
+     *
      * This is a dangerous operation, the GC could move the object without updating the pointer! Use
      * only in combination with some mechanism to prevent the GC from moving or freeing the object
      * as long as the pointer is in use.
-     * <p>
+     *
      * If the result value should not be alive across a safepoint, it's better to use
      * {@link #objectToTrackedPointer(Object)} instead.
      */

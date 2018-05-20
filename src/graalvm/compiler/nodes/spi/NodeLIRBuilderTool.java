@@ -6,7 +6,6 @@ import java.util.List;
 import graalvm.compiler.core.common.cfg.BlockMap;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.Node;
-import graalvm.compiler.graph.NodeSourcePosition;
 import graalvm.compiler.lir.LIRFrameState;
 import graalvm.compiler.lir.gen.LIRGeneratorTool;
 import graalvm.compiler.nodes.AbstractBeginNode;
@@ -56,8 +55,6 @@ public interface NodeLIRBuilderTool extends NodeValueMap
     void visitBreakpointNode(BreakpointNode i);
 
     void visitFullInfopointNode(FullInfopointNode i);
-
-    void setSourcePosition(NodeSourcePosition position);
 
     LIRGeneratorTool getLIRGeneratorTool();
 

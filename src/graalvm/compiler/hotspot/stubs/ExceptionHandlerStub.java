@@ -36,7 +36,7 @@ import jdk.vm.ci.code.Register;
  * handler entry point} in a compiled method. This entry point is used when returning to a method to
  * handle an exception thrown by a callee. It is not used for routing implicit exceptions.
  * Therefore, it does not need to save any registers as HotSpot uses a caller save convention.
- * <p>
+ *
  * The descriptor for a call to this stub is {@link HotSpotBackend#EXCEPTION_HANDLER}.
  */
 public class ExceptionHandlerStub extends SnippetStub

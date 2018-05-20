@@ -57,7 +57,7 @@ public @interface MethodSubstitution
 {
     /**
      * Gets the name of the original method.
-     * <p>
+     *
      * If the default value is specified for this element, then the name of the original method is
      * same as the substitute method.
      */
@@ -70,7 +70,7 @@ public @interface MethodSubstitution
 
     /**
      * Gets the {@linkplain Signature#toMethodDescriptor signature} of the original method.
-     * <p>
+     *
      * If the default value is specified for this element, then the signature of the original method
      * is the same as the substitute method.
      */

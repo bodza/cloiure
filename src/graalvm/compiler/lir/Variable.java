@@ -20,9 +20,6 @@ public final class Variable extends AllocatableValue
 
     /**
      * Creates a new variable.
-     *
-     * @param kind
-     * @param index
      */
     public Variable(ValueKind<?> kind, int index)
     {

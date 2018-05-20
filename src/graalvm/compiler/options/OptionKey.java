@@ -158,12 +158,7 @@ public class OptionKey<T>
     }
 
     /**
-     * Notifies this object when a value associated with this key is set or updated in
-     * {@code values}.
-     *
-     * @param values
-     * @param oldValue
-     * @param newValue
+     * Notifies this object when a value associated with this key is set or updated in {@code values}.
      */
     protected void onValueUpdate(EconomicMap<OptionKey<?>, Object> values, T oldValue, T newValue)
     {

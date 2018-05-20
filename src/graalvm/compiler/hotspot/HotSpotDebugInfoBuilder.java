@@ -9,7 +9,6 @@ import graalvm.compiler.api.replacements.MethodSubstitution;
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.core.gen.DebugInfoBuilder;
 import graalvm.compiler.graph.GraalGraphError;
-import graalvm.compiler.graph.NodeSourcePosition;
 import graalvm.compiler.lir.VirtualStackSlot;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.ValueNode;
@@ -81,35 +80,6 @@ public class HotSpotDebugInfoBuilder extends DebugInfoBuilder
     protected void raiseInvalidFrameStateError(FrameState state) throws GraalGraphError
     {
         // This is a hard error since an incorrect state could crash hotspot
-        NodeSourcePosition sourcePosition = state.getNodeSourcePosition();
-        List<String> context = new ArrayList<>();
-        ResolvedJavaMethod replacementMethodWithProblematicSideEffect = null;
-        if (sourcePosition != null)
-        {
-            NodeSourcePosition pos = sourcePosition;
-            while (pos != null)
-            {
-                StringBuilder sb = new StringBuilder("parsing ");
-                ResolvedJavaMethod method = pos.getMethod();
-                MetaUtil.appendLocation(sb, method, pos.getBCI());
-                if (method.getAnnotation(MethodSubstitution.class) != null || method.getAnnotation(Snippet.class) != null)
-                {
-                    replacementMethodWithProblematicSideEffect = method;
-                }
-                context.add(sb.toString());
-                pos = pos.getCaller();
-            }
-        }
-        String message = "Invalid frame state " + state;
-        if (replacementMethodWithProblematicSideEffect != null)
-        {
-            message += " associated with a side effect in " + replacementMethodWithProblematicSideEffect.format("%H.%n(%p)") + " at a position that cannot be deoptimized to";
-        }
-        GraalGraphError error = new GraalGraphError(message);
-        for (String c : context)
-        {
-            error.addContext(c);
-        }
-        throw error;
+        throw new GraalGraphError("Invalid frame state " + state);
     }
 }

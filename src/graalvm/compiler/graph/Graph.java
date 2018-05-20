@@ -1,8 +1,5 @@
 package graalvm.compiler.graph;
 
-import static graalvm.compiler.graph.Graph.SourcePositionTracking.Default;
-import static graalvm.compiler.graph.Graph.SourcePositionTracking.Track;
-import static graalvm.compiler.graph.Graph.SourcePositionTracking.UpdateOnly;
 import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_IGNORED;
 import static graalvm.compiler.nodeinfo.NodeSize.SIZE_IGNORED;
 
@@ -15,7 +12,6 @@ import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 import org.graalvm.collections.UnmodifiableEconomicMap;
 import graalvm.compiler.core.common.GraalOptions;
-import graalvm.compiler.debug.DebugCloseable;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node.ValueNumberable;
 import graalvm.compiler.graph.iterators.NodeIterable;
@@ -44,30 +40,12 @@ public class Graph
         DeepFreeze
     }
 
-    public enum SourcePositionTracking
-    {
-        Default,
-        Ignore,
-        UpdateOnly,
-        Track
-    }
-
     public final String name;
 
     /**
      * The set of nodes in the graph, ordered by {@linkplain #register(Node) registration} time.
      */
     Node[] nodes;
-
-    /**
-     * Source information to associate with newly created nodes.
-     */
-    NodeSourcePosition currentNodeSourcePosition;
-
-    /**
-     * Records if updating of node source information is required when performing inlining.
-     */
-    protected SourcePositionTracking trackNodeSourcePosition;
 
     /**
      * The number of valid entries in {@link #nodes}.
@@ -126,95 +104,6 @@ public class Graph
      */
     private final OptionValues options;
 
-    private class NodeSourcePositionScope implements DebugCloseable
-    {
-        private final NodeSourcePosition previous;
-
-        NodeSourcePositionScope(NodeSourcePosition sourcePosition)
-        {
-            previous = currentNodeSourcePosition;
-            currentNodeSourcePosition = sourcePosition;
-        }
-
-        @Override
-        public void close()
-        {
-            currentNodeSourcePosition = previous;
-        }
-    }
-
-    public NodeSourcePosition currentNodeSourcePosition()
-    {
-        return currentNodeSourcePosition;
-    }
-
-    /**
-     * Opens a scope in which the source information from {@code node} is copied into nodes created
-     * within the scope. If {@code node} has no source information information, no scope is opened
-     * and {@code null} is returned.
-     *
-     * @return a {@link DebugCloseable} for managing the opened scope or {@code null} if no scope
-     *         was opened
-     */
-    public DebugCloseable withNodeSourcePosition(Node node)
-    {
-        return withNodeSourcePosition(node.getNodeSourcePosition());
-    }
-
-    /**
-     * Opens a scope in which {@code sourcePosition} is copied into nodes created within the scope.
-     * If {@code sourcePosition == null}, no scope is opened and {@code null} is returned.
-     *
-     * @return a {@link DebugCloseable} for managing the opened scope or {@code null} if no scope
-     *         was opened
-     */
-    public DebugCloseable withNodeSourcePosition(NodeSourcePosition sourcePosition)
-    {
-        return trackNodeSourcePosition() && sourcePosition != null ? new NodeSourcePositionScope(sourcePosition) : null;
-    }
-
-    /**
-     * Opens a scope in which newly created nodes do not get any source information added.
-     *
-     * @return a {@link DebugCloseable} for managing the opened scope
-     */
-    public DebugCloseable withoutNodeSourcePosition()
-    {
-        return new NodeSourcePositionScope(null);
-    }
-
-    /**
-     * Determines if this graph might contain nodes with source information. This is mainly useful
-     * to short circuit logic for updating those positions after inlining since that requires
-     * visiting every node in the graph.
-     */
-    public boolean updateNodeSourcePosition()
-    {
-        return trackNodeSourcePosition == Track || trackNodeSourcePosition == UpdateOnly;
-    }
-
-    public boolean trackNodeSourcePosition()
-    {
-        return trackNodeSourcePosition == Track;
-    }
-
-    public void setTrackNodeSourcePosition()
-    {
-        if (trackNodeSourcePosition != Track)
-        {
-            trackNodeSourcePosition = Track;
-        }
-    }
-
-    public static SourcePositionTracking trackNodeSourcePositionDefault(OptionValues options)
-    {
-        if (GraalOptions.TrackNodeSourcePosition.getValue(options))
-        {
-            return Track;
-        }
-        return Default;
-    }
-
     /**
      * Creates an empty Graph with no name.
      */
@@ -237,7 +126,6 @@ public class Graph
         iterableNodesLast = new ArrayList<>(NodeClass.allocatedNodeIterabledIds());
         this.name = name;
         this.options = options;
-        this.trackNodeSourcePosition = trackNodeSourcePositionDefault(options);
     }
 
     /**
@@ -277,10 +165,6 @@ public class Graph
     protected Graph copy(String newName, Consumer<UnmodifiableEconomicMap<Node, Node>> duplicationMapCallback)
     {
         Graph copy = new Graph(newName, options);
-        if (trackNodeSourcePosition())
-        {
-            copy.setTrackNodeSourcePosition();
-        }
         UnmodifiableEconomicMap<Node, Node> duplicates = copy.addDuplicates(getNodes(), this, this.getNodeCount(), (EconomicMap<Node, Node>) null);
         if (duplicationMapCallback != null)
         {
@@ -527,8 +411,6 @@ public class Graph
 
         /**
          * Notifies this listener of a removed node.
-         *
-         * @param node
          */
         public void nodeRemoved(Node node)
         {
@@ -645,10 +527,6 @@ public class Graph
         T other = this.findDuplicate(node);
         if (other != null)
         {
-            if (other.getNodeSourcePosition() == null)
-            {
-                other.setNodeSourcePosition(node.getNodeSourcePosition());
-            }
             return other;
         }
         else
@@ -955,7 +833,6 @@ public class Graph
     }
 
     /**
-     * @param iterableId
      * @return the first live Node with a matching iterableId
      */
     Node getIterableNodeStart(int iterableId)
@@ -992,7 +869,6 @@ public class Graph
     }
 
     /**
-     * @param node
      * @return return the first live Node with a matching iterableId starting from {@code node}
      */
     Node getIterableNodeNext(Node node)
@@ -1066,10 +942,6 @@ public class Graph
         int id = nodesSize++;
         nodes[id] = node;
         node.id = id;
-        if (currentNodeSourcePosition != null && trackNodeSourcePosition())
-        {
-            node.setNodeSourcePosition(currentNodeSourcePosition);
-        }
 
         updateNodeCaches(node);
 

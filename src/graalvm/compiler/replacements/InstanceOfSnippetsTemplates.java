@@ -39,7 +39,7 @@ import jdk.vm.ci.code.TargetDescription;
  * in such a lowering derives from the fact that {@link InstanceOfNode} is a floating node. A
  * snippet used to lower an {@link InstanceOfNode} will almost always incorporate control flow and
  * replacing a floating node with control flow is not trivial.
- * <p>
+ *
  * The mechanism implemented in this class ensures that the graph for an instanceof snippet is
  * instantiated once per {@link InstanceOfNode} being lowered. The result produced is then re-used
  * by all usages of the node. Additionally, if there is a single usage that is an {@link IfNode},

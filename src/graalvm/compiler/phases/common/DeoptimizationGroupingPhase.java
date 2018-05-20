@@ -5,7 +5,6 @@ import java.util.List;
 
 import graalvm.compiler.core.common.cfg.Loop;
 import graalvm.compiler.core.common.type.StampFactory;
-import graalvm.compiler.debug.DebugCloseable;
 import graalvm.compiler.nodes.AbstractDeoptimizeNode;
 import graalvm.compiler.nodes.AbstractMergeNode;
 import graalvm.compiler.nodes.DynamicDeoptimizeNode;
@@ -31,7 +30,6 @@ import graalvm.compiler.phases.tiers.MidTierContext;
 public class DeoptimizationGroupingPhase extends BasePhase<MidTierContext>
 {
     @Override
-    @SuppressWarnings("try")
     protected void run(StructuredGraph graph, MidTierContext context)
     {
         ControlFlowGraph cfg = null;
@@ -68,10 +66,7 @@ public class DeoptimizationGroupingPhase extends BasePhase<MidTierContext>
                         target.replaceAtPredecessor(firstEnd);
 
                         exitLoops((AbstractDeoptimizeNode) target, firstEnd, cfg);
-                        try (DebugCloseable position = target.withNodeSourcePosition())
-                        {
-                            merge.setNext(graph.add(new DynamicDeoptimizeNode(reasonActionPhi, speculationPhi)));
-                        }
+                        merge.setNext(graph.add(new DynamicDeoptimizeNode(reasonActionPhi, speculationPhi)));
                         obsoletes = new LinkedList<>();
                         obsoletes.add((AbstractDeoptimizeNode) target);
                         target = merge;

@@ -8,7 +8,6 @@ import java.util.List;
 import org.graalvm.collections.EconomicMap;
 import graalvm.compiler.api.replacements.SnippetReflectionProvider;
 import graalvm.compiler.code.CompilationResult;
-import graalvm.compiler.core.CompilationPrinter;
 import graalvm.compiler.core.CompilationWrapper;
 import graalvm.compiler.core.common.CompilationIdentifier;
 import graalvm.compiler.debug.GraalError;
@@ -119,8 +118,6 @@ public class CompilationTask
             HotSpotResolvedJavaMethod method = getMethod();
             int entryBCI = getEntryBCI();
 
-            final CompilationPrinter printer = CompilationPrinter.begin(options, compilationId, method, entryBCI);
-
             try
             {
                 // Begin the compilation event.
@@ -136,8 +133,6 @@ public class CompilationTask
             if (result != null)
             {
                 installMethod(result);
-                // Installation is included in compilation time and memory usage reported by printer
-                printer.finish(result);
                 return HotSpotCompilationRequestResult.success(result.getBytecodeSize() - method.getCodeSize());
             }
             return null;
@@ -203,8 +198,7 @@ public class CompilationTask
     }
 
     /**
-     * @return the compilation id plus a trailing '%' if the compilation is an OSR to match
-     *         PrintCompilation style output
+     * @return the compilation id plus a trailing '%' if the compilation is an OSR
      */
     public String getIdString()
     {

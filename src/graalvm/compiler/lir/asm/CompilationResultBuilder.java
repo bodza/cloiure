@@ -23,7 +23,6 @@ import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.core.common.spi.ForeignCallsProvider;
 import graalvm.compiler.core.common.type.DataPointerConstant;
 import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.graph.NodeSourcePosition;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRFrameState;
 import graalvm.compiler.lir.LIRInstruction;
@@ -250,11 +249,6 @@ public class CompilationResultBuilder
         compilationResult.recordInfopoint(pos, debugInfo, reason);
     }
 
-    public void recordSourceMapping(int pcOffset, int endPcOffset, NodeSourcePosition sourcePosition)
-    {
-        compilationResult.recordSourceMapping(pcOffset, endPcOffset, sourcePosition);
-    }
-
     public void recordInlineDataInCode(Constant data)
     {
         int pos = asm.position();
@@ -328,22 +322,18 @@ public class CompilationResultBuilder
     /**
      * Notifies this object of a call instruction belonging to an INVOKEVIRTUAL or INVOKEINTERFACE
      * at offset {@code pcOffset} in the code.
-     *
-     * @param nodeSourcePosition source position of the corresponding invoke.
      */
     @SuppressWarnings("unused")
-    public void recordInvokeVirtualOrInterfaceCallOp(int pcOffset, NodeSourcePosition nodeSourcePosition)
+    public void recordInvokeVirtualOrInterfaceCallOp(int pcOffset)
     {
     }
 
     /**
      * Notifies this object of a call instruction belonging to an INLINE_INVOKE at offset
      * {@code pcOffset} in the code.
-     *
-     * @param nodeSourcePosition source position of the corresponding invoke.
      */
     @SuppressWarnings("unused")
-    public void recordInlineInvokeCallOp(int pcOffset, NodeSourcePosition nodeSourcePosition)
+    public void recordInlineInvokeCallOp(int pcOffset)
     {
     }
 
@@ -537,12 +527,7 @@ public class CompilationResultBuilder
     {
         try
         {
-            int start = crb.asm.position();
             op.emitCode(crb);
-            if (op.getPosition() != null)
-            {
-                crb.recordSourceMapping(start, crb.asm.position(), op.getPosition());
-            }
         }
         catch (AssertionError t)
         {

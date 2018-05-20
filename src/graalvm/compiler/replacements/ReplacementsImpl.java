@@ -27,7 +27,6 @@ import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.spi.ConstantFieldProvider;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node;
-import graalvm.compiler.graph.NodeSourcePosition;
 import graalvm.compiler.graph.Node.NodeIntrinsic;
 import graalvm.compiler.java.GraphBuilderPhase;
 import graalvm.compiler.java.GraphBuilderPhase.Instance;
@@ -177,19 +176,19 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
     }
 
     @Override
-    public StructuredGraph getSnippet(ResolvedJavaMethod method, Object[] args, boolean trackNodeSourcePosition, NodeSourcePosition replaceePosition)
+    public StructuredGraph getSnippet(ResolvedJavaMethod method, Object[] args)
     {
-        return getSnippet(method, null, args, trackNodeSourcePosition, replaceePosition);
+        return getSnippet(method, null, args);
     }
 
     @Override
     @SuppressWarnings("try")
-    public StructuredGraph getSnippet(ResolvedJavaMethod method, ResolvedJavaMethod recursiveEntry, Object[] args, boolean trackNodeSourcePosition, NodeSourcePosition replaceePosition)
+    public StructuredGraph getSnippet(ResolvedJavaMethod method, ResolvedJavaMethod recursiveEntry, Object[] args)
     {
         StructuredGraph graph = UseSnippetGraphCache.getValue(options) ? graphs.get(method) : null;
-        if (graph == null || (trackNodeSourcePosition && !graph.trackNodeSourcePosition()))
+        if (graph == null)
         {
-            StructuredGraph newGraph = makeGraph(defaultBytecodeProvider, method, args, recursiveEntry, trackNodeSourcePosition, replaceePosition);
+            StructuredGraph newGraph = makeGraph(defaultBytecodeProvider, method, args, recursiveEntry);
             if (!UseSnippetGraphCache.getValue(options) || args != null)
             {
                 return newGraph;
@@ -206,12 +205,6 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
             graph = graphs.get(method);
         }
         return graph;
-    }
-
-    @Override
-    public void registerSnippet(ResolvedJavaMethod method, boolean trackNodeSourcePosition)
-    {
-        // No initialization needed as snippet graphs are created on demand in getSnippet
     }
 
     @Override
@@ -241,7 +234,7 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
     }
 
     @Override
-    public StructuredGraph getSubstitution(ResolvedJavaMethod method, int invokeBci, boolean trackNodeSourcePosition, NodeSourcePosition replaceePosition)
+    public StructuredGraph getSubstitution(ResolvedJavaMethod method, int invokeBci)
     {
         StructuredGraph result;
         InvocationPlugin plugin = graphBuilderPlugins.getInvocationPlugins().lookupInvocation(method);
@@ -253,9 +246,9 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
                 MethodSubstitutionPlugin msPlugin = (MethodSubstitutionPlugin) plugin;
                 ResolvedJavaMethod substitute = msPlugin.getSubstitute(metaAccess);
                 StructuredGraph graph = UseSnippetGraphCache.getValue(options) ? graphs.get(substitute) : null;
-                if (graph == null || graph.trackNodeSourcePosition() != trackNodeSourcePosition)
+                if (graph == null)
                 {
-                    graph = makeGraph(msPlugin.getBytecodeProvider(), substitute, null, method, trackNodeSourcePosition, replaceePosition);
+                    graph = makeGraph(msPlugin.getBytecodeProvider(), substitute, null, method);
                     if (!UseSnippetGraphCache.getValue(options))
                     {
                         return graph;
@@ -287,14 +280,11 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
      *
      * @param bytecodeProvider how to access the bytecode of {@code method}
      * @param method the snippet or method substitution for which a graph will be created
-     * @param args
-     * @param original the original method if {@code method} is a {@linkplain MethodSubstitution
-     *            substitution} otherwise null
-     * @param trackNodeSourcePosition
+     * @param original the original method if {@code method} is a {@linkplain MethodSubstitution substitution} otherwise null
      */
-    public StructuredGraph makeGraph(BytecodeProvider bytecodeProvider, ResolvedJavaMethod method, Object[] args, ResolvedJavaMethod original, boolean trackNodeSourcePosition, NodeSourcePosition replaceePosition)
+    public StructuredGraph makeGraph(BytecodeProvider bytecodeProvider, ResolvedJavaMethod method, Object[] args, ResolvedJavaMethod original)
     {
-        return createGraphMaker(method, original).makeGraph(bytecodeProvider, args, trackNodeSourcePosition, replaceePosition);
+        return createGraphMaker(method, original).makeGraph(bytecodeProvider, args);
     }
 
     /**
@@ -332,9 +322,9 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
             this.substitutedMethod = substitutedMethod;
         }
 
-        public StructuredGraph makeGraph(BytecodeProvider bytecodeProvider, Object[] args, boolean trackNodeSourcePosition, NodeSourcePosition replaceePosition)
+        public StructuredGraph makeGraph(BytecodeProvider bytecodeProvider, Object[] args)
         {
-            StructuredGraph graph = buildInitialGraph(bytecodeProvider, method, args, trackNodeSourcePosition, replaceePosition);
+            StructuredGraph graph = buildInitialGraph(bytecodeProvider, method, args);
 
             finalizeGraph(graph);
 
@@ -367,7 +357,6 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
          * converting deoptimizations to guards. Currently this only allows exception constructors
          * to be eliminated to cover the case when Java assertions are in the inlined code.
          *
-         * @param node
          * @return true for nodes that have side effects and are unsafe to delete
          */
         private boolean hasSideEffect(Node node)
@@ -400,11 +389,11 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
         /**
          * Builds the initial graph for a replacement.
          */
-        protected StructuredGraph buildInitialGraph(BytecodeProvider bytecodeProvider, final ResolvedJavaMethod methodToParse, Object[] args, boolean trackNodeSourcePosition, NodeSourcePosition replaceePosition)
+        protected StructuredGraph buildInitialGraph(BytecodeProvider bytecodeProvider, final ResolvedJavaMethod methodToParse, Object[] args)
         {
             // Replacements cannot have optimistic assumptions since they have
             // to be valid for the entire run of the VM.
-            final StructuredGraph graph = new StructuredGraph.Builder(replacements.options).method(methodToParse).trackNodeSourcePosition(trackNodeSourcePosition).callerContext(replaceePosition).build();
+            final StructuredGraph graph = new StructuredGraph.Builder(replacements.options).method(methodToParse).build();
 
             // Replacements are not user code so they do not participate in unsafe access
             // tracking

@@ -9,7 +9,6 @@ import static graalvm.compiler.bytecode.Bytecodes.DUP_X2;
 import static graalvm.compiler.bytecode.Bytecodes.POP;
 import static graalvm.compiler.bytecode.Bytecodes.POP2;
 import static graalvm.compiler.bytecode.Bytecodes.SWAP;
-import static graalvm.compiler.debug.GraalError.shouldNotReachHere;
 import static graalvm.compiler.nodes.FrameState.TWO_SLOT_MARKER;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.PermanentBailoutException;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.StampPair;
-import graalvm.compiler.graph.NodeSourcePosition;
+import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.java.BciBlockMapping.BciBlock;
 import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.AbstractMergeNode;
@@ -77,7 +76,6 @@ public final class FrameStateBuilder implements SideEffectsState
     private final StructuredGraph graph;
     private final boolean clearNonLiveLocals;
     private FrameState outerFrameState;
-    private NodeSourcePosition outerSourcePosition;
 
     /**
      * The closest {@link StateSplit#hasSideEffect() side-effect} predecessors. There will be more
@@ -298,8 +296,7 @@ public final class FrameStateBuilder implements SideEffectsState
     {
         if (parser != null && parser.parsingIntrinsic())
         {
-            NodeSourcePosition sourcePosition = parser.getGraph().trackNodeSourcePosition() ? createBytecodePosition(bci) : null;
-            return parser.intrinsicContext.createFrameState(parser.getGraph(), this, forStateSplit, sourcePosition);
+            return parser.intrinsicContext.createFrameState(parser.getGraph(), this, forStateSplit);
         }
 
         // Skip intrinsic frames
@@ -323,7 +320,7 @@ public final class FrameStateBuilder implements SideEffectsState
         }
         if (bci == BytecodeFrame.INVALID_FRAMESTATE_BCI)
         {
-            throw shouldNotReachHere();
+            throw GraalError.shouldNotReachHere();
         }
 
         if (pushedValues != null)
@@ -345,30 +342,6 @@ public final class FrameStateBuilder implements SideEffectsState
             }
             return graph.add(new FrameState(outerFrameState, code, bci, locals, stack, stackSize, lockedObjects, Arrays.asList(monitorIds), rethrowException, duringCall));
         }
-    }
-
-    public NodeSourcePosition createBytecodePosition(int bci)
-    {
-        BytecodeParser parent = parser.getParent();
-        NodeSourcePosition position = create(bci, parent);
-        return position;
-    }
-
-    private NodeSourcePosition create(int bci, BytecodeParser parent)
-    {
-        if (outerSourcePosition == null && parent != null)
-        {
-            outerSourcePosition = parent.getFrameStateBuilder().createBytecodePosition(parent.bci());
-        }
-        if (bci == BytecodeFrame.AFTER_EXCEPTION_BCI && parent != null)
-        {
-            return FrameState.toSourcePosition(outerFrameState);
-        }
-        if (bci == BytecodeFrame.INVALID_FRAMESTATE_BCI)
-        {
-            throw shouldNotReachHere();
-        }
-        return new NodeSourcePosition(outerSourcePosition, code.getMethod(), bci);
     }
 
     public FrameStateBuilder copy()
@@ -970,7 +943,7 @@ public final class FrameStateBuilder implements SideEffectsState
                 break;
             }
             default:
-                throw shouldNotReachHere();
+                throw GraalError.shouldNotReachHere();
         }
     }
 

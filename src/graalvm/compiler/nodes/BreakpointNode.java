@@ -15,7 +15,7 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
  * arguments can be associated with such a node for placing values of interest in the Java ABI
  * specified parameter locations corresponding to the kinds of the values. That is, the arguments
  * are set up as if the breakpoint instruction was a call to a compiled Java method.
- * <p>
+ *
  * A breakpoint is usually place by defining a node intrinsic method as follows:
  *
  * <pre>

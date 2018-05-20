@@ -22,8 +22,6 @@ public class MatchRuleRegistry
      * can be used to read them during a match. The names should already have been confirmed to
      * exist in the type.
      *
-     * @param nodeClass
-     * @param names
      * @return an array of Position objects corresponding to the named fields.
      */
     public static Position[] findPositions(NodeClass<? extends Node> nodeClass, String[] names)
@@ -52,8 +50,6 @@ public class MatchRuleRegistry
     /**
      * Collect all the {@link MatchStatement}s defined by the superclass chain of theClass.
      *
-     * @param theClass
-     * @param options
      * @return the set of {@link MatchStatement}s applicable to theClass.
      */
     @SuppressWarnings("try")

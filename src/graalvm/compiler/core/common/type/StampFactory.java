@@ -134,10 +134,6 @@ public class StampFactory
      * appropriate {@link IntegerStamp#upMask} and {@link IntegerStamp#downMask} and incorporating
      * any mask information from {@code maskStamp}.
      *
-     * @param bits
-     * @param newLowerBound
-     * @param newUpperBound
-     * @param maskStamp
      * @return a new stamp with the appropriate bounds and masks
      */
     public static IntegerStamp forIntegerWithMask(int bits, long newLowerBound, long newUpperBound, IntegerStamp maskStamp)

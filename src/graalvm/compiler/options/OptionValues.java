@@ -196,10 +196,6 @@ public class OptionValues
      * Prints a help message to {@code out} describing all options available via {@code loader}. The
      * key/value for each option is separated by {@code :=} if the option has an entry in this
      * object otherwise {@code =} is used as the separator.
-     *
-     * @param loader
-     * @param out
-     * @param namePrefix
      */
     public void printHelp(Iterable<OptionDescriptors> loader, PrintStream out, String namePrefix)
     {

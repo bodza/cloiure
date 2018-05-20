@@ -1,7 +1,6 @@
 package graalvm.compiler.graph;
 
 import static graalvm.compiler.core.common.Fields.translateInto;
-import static graalvm.compiler.debug.GraalError.shouldNotReachHere;
 import static graalvm.compiler.graph.Edges.translateInto;
 import static graalvm.compiler.graph.InputEdges.translateInto;
 import static graalvm.compiler.graph.Node.WithAllEdges;
@@ -25,7 +24,6 @@ import graalvm.compiler.core.common.FieldIntrospection;
 import graalvm.compiler.core.common.Fields;
 import graalvm.compiler.core.common.FieldsScanner;
 import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.debug.TTY;
 import graalvm.compiler.graph.Edges.Type;
 import graalvm.compiler.graph.Graph.DuplicationReplacement;
 import graalvm.compiler.graph.Node.EdgeVisitor;
@@ -94,36 +92,17 @@ public final class NodeClass<T> extends FieldIntrospection<T>
 
     public static <T> NodeClass<T> get(Class<T> clazz)
     {
-        int numTries = 0;
-        while (true)
+        boolean shouldBeInitializedBefore = UnsafeAccess.UNSAFE.shouldBeInitialized(clazz);
+
+        NodeClass<T> result = getUnchecked(clazz);
+        if (result != null || clazz == NODE_CLASS)
         {
-            boolean shouldBeInitializedBefore = UnsafeAccess.UNSAFE.shouldBeInitialized(clazz);
-
-            NodeClass<T> result = getUnchecked(clazz);
-            if (result != null || clazz == NODE_CLASS)
-            {
-                return result;
-            }
-
-            /*
-             * GR-9537: We observed a transient problem with TYPE fields being null. Retry a couple
-             * of times and print something to the log so that we can gather more diagnostic
-             * information without failing gates.
-             */
-            numTries++;
-            boolean shouldBeInitializedAfter = UnsafeAccess.UNSAFE.shouldBeInitialized(clazz);
-            String msg = "GR-9537 Reflective field access of TYPE field returned null. This is probably a bug in HotSpot class initialization. " + " clazz: " + clazz.getTypeName() + ", numTries: " + numTries + ", shouldBeInitializedBefore: " + shouldBeInitializedBefore + ", shouldBeInitializedAfter: " + shouldBeInitializedAfter;
-            if (numTries <= 100)
-            {
-                TTY.println(msg);
-                UnsafeAccess.UNSAFE.ensureClassInitialized(clazz);
-            }
-            else
-            {
-                throw GraalError.shouldNotReachHere(msg);
-            }
             return result;
         }
+
+        boolean shouldBeInitializedAfter = UnsafeAccess.UNSAFE.shouldBeInitialized(clazz);
+        String msg = "GR-9537 Reflective field access of TYPE field returned null. This is probably a bug in HotSpot class initialization. " + " clazz: " + clazz.getTypeName() + ", shouldBeInitializedBefore: " + shouldBeInitializedBefore + ", shouldBeInitializedAfter: " + shouldBeInitializedAfter;
+        throw GraalError.shouldNotReachHere(msg);
     }
 
     private static final Class<?> NODE_CLASS = Node.class;
@@ -624,7 +603,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         }
         else
         {
-            throw shouldNotReachHere();
+            throw GraalError.shouldNotReachHere();
         }
     }
 
@@ -747,7 +726,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         }
         else
         {
-            throw shouldNotReachHere();
+            throw GraalError.shouldNotReachHere();
         }
     }
 
@@ -980,7 +959,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         }
         catch (InstantiationException ex)
         {
-            throw shouldNotReachHere(ex);
+            throw GraalError.shouldNotReachHere(ex);
         }
     }
 

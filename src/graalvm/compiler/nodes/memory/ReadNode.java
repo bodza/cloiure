@@ -6,7 +6,6 @@ import static graalvm.compiler.nodes.NamedLocationIdentity.ARRAY_LENGTH_LOCATION
 
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.type.Stamp;
-import graalvm.compiler.debug.DebugCloseable;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
@@ -76,14 +75,10 @@ public class ReadNode extends FloatableAccessNode implements LIRLowerableAccess,
         }
     }
 
-    @SuppressWarnings("try")
     @Override
     public FloatingAccessNode asFloatingNode(MemoryNode lastLocationAccess)
     {
-        try (DebugCloseable position = withNodeSourcePosition())
-        {
-            return graph().unique(new FloatingReadNode(getAddress(), getLocationIdentity(), lastLocationAccess, stamp(NodeView.DEFAULT), getGuard(), getBarrierType()));
-        }
+        return graph().unique(new FloatingReadNode(getAddress(), getLocationIdentity(), lastLocationAccess, stamp(NodeView.DEFAULT), getGuard(), getBarrierType()));
     }
 
     @Override

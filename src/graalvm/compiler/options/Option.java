@@ -17,13 +17,13 @@ public @interface Option
 {
     /**
      * Gets a help message for the option.
-     * <p>
+     *
      * The first element of the array is the short help message. This part of the help message is
      * subject to line wrapping when printed.
-     * <p>
+     *
      * The remaining elements contain a more detailed expansion of the help message and will be
      * printed as is in a left-aligned block (i.e. leading spaces will be preserved).
-     * <p>
+     *
      * If there is only one element and it starts with {@code "file:"<path>}, then the help message
      * is located in a file located by resolving {@code <path>} against the location of the package
      * in which the option is declared. The first line in the file is the short help message as

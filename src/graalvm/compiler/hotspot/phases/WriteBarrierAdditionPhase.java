@@ -1,6 +1,5 @@
 package graalvm.compiler.hotspot.phases;
 
-import graalvm.compiler.debug.DebugCloseable;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
@@ -33,38 +32,34 @@ public class WriteBarrierAdditionPhase extends Phase
         this.config = config;
     }
 
-    @SuppressWarnings("try")
     @Override
     protected void run(StructuredGraph graph)
     {
         for (Node n : graph.getNodes())
         {
-            try (DebugCloseable scope = n.graph().withNodeSourcePosition(n))
+            if (n instanceof ReadNode)
             {
-                if (n instanceof ReadNode)
+                addReadNodeBarriers((ReadNode) n, graph);
+            }
+            else if (n instanceof WriteNode)
+            {
+                addWriteNodeBarriers((WriteNode) n, graph);
+            }
+            else if (n instanceof LoweredAtomicReadAndWriteNode)
+            {
+                LoweredAtomicReadAndWriteNode loweredAtomicReadAndWriteNode = (LoweredAtomicReadAndWriteNode) n;
+                addAtomicReadWriteNodeBarriers(loweredAtomicReadAndWriteNode, graph);
+            }
+            else if (n instanceof AbstractCompareAndSwapNode)
+            {
+                addCASBarriers((AbstractCompareAndSwapNode) n, graph);
+            }
+            else if (n instanceof ArrayRangeWrite)
+            {
+                ArrayRangeWrite node = (ArrayRangeWrite) n;
+                if (node.writesObjectArray())
                 {
-                    addReadNodeBarriers((ReadNode) n, graph);
-                }
-                else if (n instanceof WriteNode)
-                {
-                    addWriteNodeBarriers((WriteNode) n, graph);
-                }
-                else if (n instanceof LoweredAtomicReadAndWriteNode)
-                {
-                    LoweredAtomicReadAndWriteNode loweredAtomicReadAndWriteNode = (LoweredAtomicReadAndWriteNode) n;
-                    addAtomicReadWriteNodeBarriers(loweredAtomicReadAndWriteNode, graph);
-                }
-                else if (n instanceof AbstractCompareAndSwapNode)
-                {
-                    addCASBarriers((AbstractCompareAndSwapNode) n, graph);
-                }
-                else if (n instanceof ArrayRangeWrite)
-                {
-                    ArrayRangeWrite node = (ArrayRangeWrite) n;
-                    if (node.writesObjectArray())
-                    {
-                        addArrayRangeBarriers(node, graph);
-                    }
+                    addArrayRangeBarriers(node, graph);
                 }
             }
         }

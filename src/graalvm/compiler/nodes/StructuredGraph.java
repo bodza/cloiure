@@ -1,7 +1,5 @@
 package graalvm.compiler.nodes;
 
-import static graalvm.compiler.graph.Graph.SourcePositionTracking.Default;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -17,11 +15,9 @@ import graalvm.compiler.core.common.CompilationIdentifier;
 import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.cfg.BlockMap;
 import graalvm.compiler.core.common.type.Stamp;
-import graalvm.compiler.debug.TTY;
 import graalvm.compiler.graph.Graph;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeMap;
-import graalvm.compiler.graph.NodeSourcePosition;
 import graalvm.compiler.nodes.calc.FloatingNode;
 import graalvm.compiler.nodes.cfg.Block;
 import graalvm.compiler.nodes.cfg.ControlFlowGraph;
@@ -161,10 +157,8 @@ public final class StructuredGraph extends Graph
         private CompilationIdentifier compilationId = CompilationIdentifier.INVALID_COMPILATION_ID;
         private int entryBCI = JVMCICompiler.INVOCATION_ENTRY_BCI;
         private boolean useProfilingInfo = true;
-        private SourcePositionTracking trackNodeSourcePosition = Default;
         private final OptionValues options;
         private Cancellable cancellable = null;
-        private NodeSourcePosition callerContext;
 
         /**
          * Creates a builder for a graph.
@@ -173,7 +167,6 @@ public final class StructuredGraph extends Graph
         {
             this.options = options;
             this.assumptions = allowAssumptions == AllowAssumptions.YES ? new Assumptions() : null;
-            this.trackNodeSourcePosition = Graph.trackNodeSourcePositionDefault(options);
         }
 
         /**
@@ -183,7 +176,6 @@ public final class StructuredGraph extends Graph
         {
             this.options = options;
             this.assumptions = null;
-            this.trackNodeSourcePosition = Graph.trackNodeSourcePositionDefault(options);
         }
 
         public String getName()
@@ -263,30 +255,9 @@ public final class StructuredGraph extends Graph
             return this;
         }
 
-        public Builder trackNodeSourcePosition(SourcePositionTracking tracking)
-        {
-            this.trackNodeSourcePosition = tracking;
-            return this;
-        }
-
-        public Builder trackNodeSourcePosition(boolean flag)
-        {
-            if (flag)
-            {
-                this.trackNodeSourcePosition = SourcePositionTracking.Track;
-            }
-            return this;
-        }
-
-        public Builder callerContext(NodeSourcePosition context)
-        {
-            this.callerContext = context;
-            return this;
-        }
-
         public StructuredGraph build()
         {
-            return new StructuredGraph(name, rootMethod, entryBCI, assumptions, speculationLog, useProfilingInfo, trackNodeSourcePosition, compilationId, options, cancellable, callerContext);
+            return new StructuredGraph(name, rootMethod, entryBCI, assumptions, speculationLog, useProfilingInfo, compilationId, options, cancellable);
         }
     }
 
@@ -315,11 +286,6 @@ public final class StructuredGraph extends Graph
     private ScheduleResult lastSchedule;
 
     /**
-     * Call stack (context) leading to construction of this graph.
-     */
-    private final NodeSourcePosition callerContext;
-
-    /**
      * Records the methods that were used while constructing this graph, one entry for each time a
      * specific method is used.
      */
@@ -344,7 +310,7 @@ public final class StructuredGraph extends Graph
 
     public static final boolean NO_PROFILING_INFO = false;
 
-    private StructuredGraph(String name, ResolvedJavaMethod method, int entryBCI, Assumptions assumptions, SpeculationLog speculationLog, boolean useProfilingInfo, SourcePositionTracking trackNodeSourcePosition, CompilationIdentifier compilationId, OptionValues options, Cancellable cancellable, NodeSourcePosition context)
+    private StructuredGraph(String name, ResolvedJavaMethod method, int entryBCI, Assumptions assumptions, SpeculationLog speculationLog, boolean useProfilingInfo, CompilationIdentifier compilationId, OptionValues options, Cancellable cancellable)
     {
         super(name, options);
         this.setStart(add(new StartNode()));
@@ -362,9 +328,7 @@ public final class StructuredGraph extends Graph
             this.speculationLog = speculationLog;
         }
         this.useProfilingInfo = useProfilingInfo;
-        this.trackNodeSourcePosition = trackNodeSourcePosition;
         this.cancellable = cancellable;
-        this.callerContext = context;
     }
 
     public void setLastSchedule(ScheduleResult result)
@@ -513,7 +477,7 @@ public final class StructuredGraph extends Graph
     private StructuredGraph copy(String newName, Consumer<UnmodifiableEconomicMap<Node, Node>> duplicationMapCallback, CompilationIdentifier newCompilationId)
     {
         AllowAssumptions allowAssumptions = AllowAssumptions.ifNonNull(assumptions);
-        StructuredGraph copy = new StructuredGraph(newName, method(), entryBCI, assumptions == null ? null : new Assumptions(), speculationLog, useProfilingInfo, trackNodeSourcePosition, newCompilationId, getOptions(), null, callerContext);
+        StructuredGraph copy = new StructuredGraph(newName, method(), entryBCI, assumptions == null ? null : new Assumptions(), speculationLog, useProfilingInfo, newCompilationId, getOptions(), null);
         if (allowAssumptions == AllowAssumptions.YES && assumptions != null)
         {
             copy.assumptions.record(assumptions);
@@ -523,7 +487,6 @@ public final class StructuredGraph extends Graph
         copy.isAfterFloatingReadPhase = isAfterFloatingReadPhase;
         copy.hasValueProxies = hasValueProxies;
         copy.isAfterExpandLogic = isAfterExpandLogic;
-        copy.trackNodeSourcePosition = trackNodeSourcePosition;
         EconomicMap<Node, Node> replacements = EconomicMap.create(Equivalence.IDENTITY);
         replacements.put(start, copy.start);
         UnmodifiableEconomicMap<Node, Node> duplicates = copy.addDuplicates(getNodes(), this, this.getNodeCount(), replacements);
@@ -1038,10 +1001,5 @@ public final class StructuredGraph extends Graph
     @Override
     protected void afterRegister(Node node)
     {
-    }
-
-    public NodeSourcePosition getCallerContext()
-    {
-        return callerContext;
     }
 }

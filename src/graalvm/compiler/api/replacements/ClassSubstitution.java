@@ -15,7 +15,7 @@ public @interface ClassSubstitution
 {
     /**
      * Specifies the original class.
-     * <p>
+     *
      * If the default value is specified for this element, then a non-default value must be given
      * for the {@link #className()} element.
      */
@@ -24,10 +24,10 @@ public @interface ClassSubstitution
     /**
      * Specifies the original class or classes if a single class is being used for multiple
      * substitutions.
-     * <p>
+     *
      * This method is provided for cases where the original class is not accessible (according to
      * Java language access control rules).
-     * <p>
+     *
      * If the default value is specified for this element, then a non-default value must be given
      * for the {@link #value()} element.
      */

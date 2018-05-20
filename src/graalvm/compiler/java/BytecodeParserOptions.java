@@ -24,12 +24,6 @@ public class BytecodeParserOptions
     @Option(help = "Inlines intrinsic methods during bytecode parsing.", type = OptionType.Expert)
     public static final OptionKey<Boolean> InlineIntrinsicsDuringParsing = new OptionKey<>(true);
 
-    @Option(help = "Traces inlining performed during bytecode parsing.", type = OptionType.Debug)
-    public static final OptionKey<Boolean> TraceInlineDuringParsing = new OptionKey<>(false);
-
-    @Option(help = "Traces use of plugins during bytecode parsing.", type = OptionType.Debug)
-    public static final OptionKey<Boolean> TraceParserPlugins = new OptionKey<>(false);
-
     @Option(help = "Maximum depth when inlining during bytecode parsing.", type = OptionType.Debug)
     public static final OptionKey<Integer> InlineDuringParsingMaxDepth = new OptionKey<>(10);
 

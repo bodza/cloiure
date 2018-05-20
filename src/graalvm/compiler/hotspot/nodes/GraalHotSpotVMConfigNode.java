@@ -37,8 +37,6 @@ public class GraalHotSpotVMConfigNode extends FloatingNode implements LIRLowerab
 
     /**
      * Constructor for {@link #areConfigValuesConstant()}.
-     *
-     * @param config
      */
     public GraalHotSpotVMConfigNode(@InjectedNodeParameter GraalHotSpotVMConfig config)
     {
@@ -50,7 +48,6 @@ public class GraalHotSpotVMConfigNode extends FloatingNode implements LIRLowerab
     /**
      * Constructor for node intrinsics below.
      *
-     * @param config
      * @param markId id of the config value
      */
     public GraalHotSpotVMConfigNode(@InjectedNodeParameter Stamp stamp, @InjectedNodeParameter GraalHotSpotVMConfig config, int markId)
@@ -63,7 +60,6 @@ public class GraalHotSpotVMConfigNode extends FloatingNode implements LIRLowerab
     /**
      * Constructor with explicit type specification.
      *
-     * @param config
      * @param markId id of the config value
      * @param kind explicit type of the node
      */

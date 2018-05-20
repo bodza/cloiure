@@ -229,7 +229,6 @@ public abstract class SwitchNode extends ControlSplitNode
     /**
      * Delete all other successors except for the one reached by {@code survivingEdge}.
      *
-     * @param tool
      * @param survivingEdge index of the edge in the {@link SwitchNode#successors} list
      */
     protected void killOtherSuccessors(SimplifierTool tool, int survivingEdge)

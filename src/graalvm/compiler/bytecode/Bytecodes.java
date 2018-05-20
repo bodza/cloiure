@@ -733,7 +733,6 @@ public class Bytecodes
     /**
      * Determines if a given opcode denotes a conditional branch.
      *
-     * @param opcode
      * @return {@code true} iff {@code opcode} is a conditional branch
      */
     public static boolean isConditionalBranch(int opcode)

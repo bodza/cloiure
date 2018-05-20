@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 import org.graalvm.collections.EconomicMap;
 import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.debug.TTY;
 import graalvm.compiler.lir.phases.LIRPhase;
 import graalvm.compiler.lir.phases.LIRPhaseSuite;
 import graalvm.compiler.options.EnumOptionKey;
@@ -32,32 +31,13 @@ import jdk.vm.ci.common.InitTimer;
  */
 public abstract class CompilerConfigurationFactory implements Comparable<CompilerConfigurationFactory>
 {
-    enum ShowConfigurationLevel
-    {
-        none,
-        info,
-        verbose
-    }
-
-    static class Options
-    {
-        @Option(help = "Names the Graal compiler configuration to use. If ommitted, the compiler configuration " +
-                       "with the highest auto-selection priority is used. To see the set of available configurations, " +
-                       "supply the value 'help' to this option.", type = OptionType.Expert)
-        public static final OptionKey<String> CompilerConfiguration = new OptionKey<>(null);
-        @Option(help = "Writes to the VM log information about the Graal compiler configuration selected.", type = OptionType.User)
-        public static final OptionKey<ShowConfigurationLevel> ShowConfiguration = new EnumOptionKey<>(ShowConfigurationLevel.none);
-    }
-
     /**
-     * The name of this factory. This must be unique across all factory instances and is used when
-     * selecting a factory based on the value of {@link Options#CompilerConfiguration}.
+     * The name of this factory. This must be unique across all factory instances.
      */
     private final String name;
 
     /**
-     * The priority of this factory. This must be unique across all factory instances and is used
-     * when selecting a factory when {@link Options#CompilerConfiguration} is omitted
+     * The priority of this factory. This must be unique across all factory instances.
      */
     private final int autoSelectionPriority;
 
@@ -144,32 +124,20 @@ public abstract class CompilerConfigurationFactory implements Comparable<Compile
     }
 
     /**
-     * Selects and instantiates a {@link CompilerConfigurationFactory}. The selection algorithm is
-     * as follows: if {@code name} is non-null, then select the factory with the same name else if
-     * {@code Options.CompilerConfiguration.getValue()} is non-null then select the factory whose
-     * name matches the value else select the factory with the highest
-     * {@link #autoSelectionPriority} value.
+     * Selects and instantiates a {@link CompilerConfigurationFactory}. The selection algorithm
+     * is as follows: if {@code name} is non-null, then select the factory with the same name;
+     * else select the factory with the highest {@link #autoSelectionPriority} value.
      *
      * @param name the name of the compiler configuration to select (optional)
      */
     public static CompilerConfigurationFactory selectFactory(String name, OptionValues options)
     {
         CompilerConfigurationFactory factory = null;
-        String value = name == null ? Options.CompilerConfiguration.getValue(options) : name;
-        if ("help".equals(value))
-        {
-            System.out.println("The available Graal compiler configurations are:");
-            for (CompilerConfigurationFactory candidate : getAllCandidates())
-            {
-                System.out.println("    " + candidate.name);
-            }
-            System.exit(0);
-        }
-        else if (value != null)
+        if (name != null)
         {
             for (CompilerConfigurationFactory candidate : GraalServices.load(CompilerConfigurationFactory.class))
             {
-                if (candidate.name.equals(value))
+                if (candidate.name.equals(name))
                 {
                     factory = candidate;
                     break;
@@ -177,7 +145,7 @@ public abstract class CompilerConfigurationFactory implements Comparable<Compile
             }
             if (factory == null)
             {
-                throw new GraalError("Graal compiler configuration '%s' not found. Available configurations are: %s", value, getAllCandidates().stream().map(c -> c.name).collect(Collectors.joining(", ")));
+                throw new GraalError("Graal compiler configuration '%s' not found. Available configurations are: %s", name, getAllCandidates().stream().map(c -> c.name).collect(Collectors.joining(", ")));
             }
         }
         else
@@ -189,38 +157,7 @@ public abstract class CompilerConfigurationFactory implements Comparable<Compile
             }
             factory = candidates.get(0);
         }
-        ShowConfigurationLevel level = Options.ShowConfiguration.getValue(options);
-        if (level != ShowConfigurationLevel.none)
-        {
-            switch (level)
-            {
-                case info:
-                {
-                    printConfigInfo(factory);
-                    break;
-                }
-                case verbose:
-                {
-                    printConfigInfo(factory);
-                    CompilerConfiguration config = factory.createCompilerConfiguration();
-                    TTY.println("High tier: " + phaseNames(config.createHighTier(options)));
-                    TTY.println("Mid tier: " + phaseNames(config.createMidTier(options)));
-                    TTY.println("Low tier: " + phaseNames(config.createLowTier(options)));
-                    TTY.println("Pre regalloc stage: " + phaseNames(config.createPreAllocationOptimizationStage(options)));
-                    TTY.println("Regalloc stage: " + phaseNames(config.createAllocationStage(options)));
-                    TTY.println("Post regalloc stage: " + phaseNames(config.createPostAllocationOptimizationStage(options)));
-                    config.createAllocationStage(options);
-                    break;
-                }
-            }
-        }
         return factory;
-    }
-
-    private static void printConfigInfo(CompilerConfigurationFactory factory)
-    {
-        URL location = factory.getClass().getResource(factory.getClass().getSimpleName() + ".class");
-        TTY.printf("Using Graal compiler configuration '%s' provided by %s loaded from %s%n", factory.name, factory.getClass().getName(), location);
     }
 
     private static <C> List<String> phaseNames(PhaseSuite<C> suite)

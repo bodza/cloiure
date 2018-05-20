@@ -24,14 +24,14 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * This plugin handles the HotSpot-specific customizations of bytecode parsing:
- * <p>
+ *
  * {@link Word}-type rewriting for {@link GraphBuilderContext#parsingIntrinsic intrinsic} functions
  * (snippets and method substitutions), by forwarding to the {@link WordOperationPlugin}. Note that
  * we forward the {@link NodePlugin} and {@link TypePlugin} methods, but not the
  * {@link InlineInvokePlugin} methods implemented by {@link WordOperationPlugin}. The latter is not
  * necessary because HotSpot only uses the {@link Word} type in methods that are force-inlined,
  * i.e., there are never non-inlined invokes that involve the {@link Word} type.
- * <p>
+ *
  * Constant folding of field loads.
  */
 public final class HotSpotNodePlugin implements NodePlugin, TypePlugin

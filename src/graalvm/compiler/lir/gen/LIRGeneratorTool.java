@@ -10,7 +10,6 @@ import graalvm.compiler.core.common.spi.ForeignCallLinkage;
 import graalvm.compiler.core.common.spi.ForeignCallsProvider;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.graph.NodeSourcePosition;
 import graalvm.compiler.lir.LIRFrameState;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LabelRef;
@@ -209,8 +208,6 @@ public interface LIRGeneratorTool extends DiagnosticLIRGeneratorTool, ValueKindF
     AllocatableValue resultOperandFor(JavaKind javaKind, ValueKind<?> valueKind);
 
     <I extends LIRInstruction> I append(I op);
-
-    void setSourcePosition(NodeSourcePosition position);
 
     void emitJump(LabelRef label);
 

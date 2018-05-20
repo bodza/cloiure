@@ -42,7 +42,6 @@ import graalvm.compiler.graph.Graph.Mark;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.Node.NodeIntrinsic;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.graph.NodeSourcePosition;
 import graalvm.compiler.graph.Position;
 import graalvm.compiler.loop.LoopEx;
 import graalvm.compiler.loop.LoopsData;
@@ -666,7 +665,6 @@ public class SnippetTemplate
         {
             Method method = findMethod(declaringClass, methodName, null);
             ResolvedJavaMethod javaMethod = providers.getMetaAccess().lookupJavaMethod(method);
-            providers.getReplacements().registerSnippet(javaMethod, GraalOptions.TrackNodeSourcePosition.getValue(options));
             LocationIdentity[] privateLocations = GraalOptions.SnippetCounters.getValue(options) ? SnippetCounterNode.addSnippetCounters(initialPrivateLocations) : initialPrivateLocations;
             if (GraalOptions.EagerSnippets.getValue(options))
             {
@@ -685,9 +683,9 @@ public class SnippetTemplate
         {
             StructuredGraph graph = replacee.graph();
             SnippetTemplate template = Options.UseSnippetTemplateCache.getValue(options) && args.cacheable ? templates.get(args.cacheKey) : null;
-            if (template == null || (graph.trackNodeSourcePosition() && !template.snippet.trackNodeSourcePosition()))
+            if (template == null)
             {
-                template = new SnippetTemplate(options, providers, snippetReflection, args, graph.trackNodeSourcePosition(), replacee);
+                template = new SnippetTemplate(options, providers, snippetReflection, args, replacee);
                 if (Options.UseSnippetTemplateCache.getValue(options) && args.cacheable)
                 {
                     templates.put(args.cacheKey, template);
@@ -738,13 +736,13 @@ public class SnippetTemplate
     /**
      * Creates a snippet template.
      */
-    protected SnippetTemplate(OptionValues options, final Providers providers, SnippetReflectionProvider snippetReflection, Arguments args, boolean trackNodeSourcePosition, Node replacee)
+    protected SnippetTemplate(OptionValues options, final Providers providers, SnippetReflectionProvider snippetReflection, Arguments args, Node replacee)
     {
         this.snippetReflection = snippetReflection;
         this.info = args.info;
 
         Object[] constantArgs = getConstantArgs(args);
-        StructuredGraph snippetGraph = providers.getReplacements().getSnippet(args.info.method, args.info.original, constantArgs, trackNodeSourcePosition, replacee.getNodeSourcePosition());
+        StructuredGraph snippetGraph = providers.getReplacements().getSnippet(args.info.method, args.info.original, constantArgs);
 
         ResolvedJavaMethod method = snippetGraph.method();
         Signature signature = method.getSignature();
@@ -752,11 +750,7 @@ public class SnippetTemplate
         PhaseContext phaseContext = new PhaseContext(providers);
 
         // Copy snippet graph, replacing constant parameters with given arguments
-        final StructuredGraph snippetCopy = new StructuredGraph.Builder(options).name(snippetGraph.name).method(snippetGraph.method()).trackNodeSourcePosition(snippetGraph.trackNodeSourcePosition()).build();
-        if (providers.getCodeCache() != null && providers.getCodeCache().shouldDebugNonSafepoints())
-        {
-            snippetCopy.setTrackNodeSourcePosition();
-        }
+        final StructuredGraph snippetCopy = new StructuredGraph.Builder(options).name(snippetGraph.name).method(snippetGraph.method()).build();
         if (!snippetGraph.isUnsafeAccessTrackingEnabled())
         {
             snippetCopy.disableUnsafeAccessTracking();
@@ -1463,7 +1457,6 @@ public class SnippetTemplate
     /**
      * Replaces a given fixed node with this specialized snippet.
      *
-     * @param metaAccess
      * @param replacee the node that will be replaced
      * @param replacer object that replaces the usages of {@code replacee}
      * @param args the arguments to be bound to the flattened positional parameters of the snippet
@@ -1478,7 +1471,6 @@ public class SnippetTemplate
     /**
      * Replaces a given fixed node with this specialized snippet.
      *
-     * @param metaAccess
      * @param replacee the node that will be replaced
      * @param replacer object that replaces the usages of {@code replacee}
      * @param args the arguments to be bound to the flattened positional parameters of the snippet
@@ -1607,11 +1599,7 @@ public class SnippetTemplate
 
     private UnmodifiableEconomicMap<Node, Node> inlineSnippet(Node replacee, StructuredGraph replaceeGraph, EconomicMap<Node, Node> replacements)
     {
-        Mark mark = replaceeGraph.getMark();
-        UnmodifiableEconomicMap<Node, Node> duplicates = replaceeGraph.addDuplicates(nodes, snippet, snippet.getNodeCount(), replacements);
-        NodeSourcePosition position = replacee.getNodeSourcePosition();
-        InliningUtil.updateSourcePosition(replaceeGraph, duplicates, mark, position, true);
-        return duplicates;
+        return replaceeGraph.addDuplicates(nodes, snippet, snippet.getNodeCount(), replacements);
     }
 
     private void propagateStamp(Node node)
@@ -1666,7 +1654,6 @@ public class SnippetTemplate
     /**
      * Replaces a given floating node with this specialized snippet.
      *
-     * @param metaAccess
      * @param replacee the node that will be replaced
      * @param replacer object that replaces the usages of {@code replacee}
      * @param tool lowering tool used to insert the snippet into the control-flow
@@ -1709,7 +1696,6 @@ public class SnippetTemplate
      *
      * This snippet must be pure data-flow
      *
-     * @param metaAccess
      * @param replacee the node that will be replaced
      * @param replacer object that replaces the usages of {@code replacee}
      * @param args the arguments to be bound to the flattened positional parameters of the snippet

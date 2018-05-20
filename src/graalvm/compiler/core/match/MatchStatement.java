@@ -81,7 +81,6 @@ public class MatchStatement
     }
 
     /**
-     * @param context
      * @return the Nodes captured by the match rule in the order expected by the generatorMethod
      */
     private Object[] buildArgList(MatchContext context)

@@ -1,13 +1,10 @@
 package graalvm.compiler.virtual.phases.ea;
 
-import static graalvm.compiler.core.common.GraalOptions.TraceEscapeAnalysis;
-
 import java.util.List;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.debug.TTY;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeFlood;
 import graalvm.compiler.nodes.AbstractEndNode;
@@ -22,94 +19,6 @@ public final class VirtualUtil
     private VirtualUtil()
     {
         GraalError.shouldNotReachHere();
-    }
-
-    public static boolean assertNonReachable(StructuredGraph graph, List<Node> obsoleteNodes)
-    {
-        // Helper code that determines the paths that keep obsolete nodes alive.
-        // Nodes with support for GVN can be kept alive by GVN and are therefore not part of the
-        // assertion.
-
-        NodeFlood flood = graph.createNodeFlood();
-        EconomicMap<Node, Node> path = EconomicMap.create(Equivalence.IDENTITY);
-        flood.add(graph.start());
-        for (Node current : flood)
-        {
-            if (current instanceof AbstractEndNode)
-            {
-                AbstractEndNode end = (AbstractEndNode) current;
-                flood.add(end.merge());
-                if (!path.containsKey(end.merge()))
-                {
-                    path.put(end.merge(), end);
-                }
-            }
-            else
-            {
-                for (Node successor : current.successors())
-                {
-                    flood.add(successor);
-                    if (!path.containsKey(successor))
-                    {
-                        path.put(successor, current);
-                    }
-                }
-            }
-        }
-
-        for (Node node : graph.getNodes())
-        {
-            if (flood.isMarked(node))
-            {
-                for (Node input : node.inputs())
-                {
-                    flood.add(input);
-                    if (!path.containsKey(input))
-                    {
-                        path.put(input, node);
-                    }
-                }
-            }
-        }
-        for (Node current : flood)
-        {
-            for (Node input : current.inputs())
-            {
-                flood.add(input);
-                if (!path.containsKey(input))
-                {
-                    path.put(input, current);
-                }
-            }
-        }
-        boolean success = true;
-        for (Node node : obsoleteNodes)
-        {
-            if (!node.isDeleted() && flood.isMarked(node) && !node.getNodeClass().valueNumberable())
-            {
-                TTY.println("offending node path:");
-                Node current = node;
-                TTY.print(current.toString());
-                while (true)
-                {
-                    current = path.get(current);
-                    if (current != null)
-                    {
-                        TTY.print(" -> " + current.toString());
-                        if (current instanceof FixedNode && !obsoleteNodes.contains(current))
-                        {
-                            break;
-                        }
-                    }
-                }
-                success = false;
-            }
-        }
-        if (!success)
-        {
-            TTY.println();
-        }
-        return success;
     }
 
     public static boolean matches(StructuredGraph graph, String filter)

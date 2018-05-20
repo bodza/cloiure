@@ -75,7 +75,7 @@ public abstract class Stamp
     /**
      * If it is possible to represent single value stamps of this kind, this method returns the
      * stamp representing the single value c. stamp.constant(c).asConstant() should be equal to c.
-     * <p>
+     *
      * If it is not possible to represent single value stamps, this method returns a stamp that
      * includes c, and is otherwise as narrow as possible.
      */
@@ -88,8 +88,6 @@ public abstract class Stamp
 
     /**
      * Check that the constant {@code other} is compatible with this stamp.
-     *
-     * @param constant
      */
     public abstract boolean isCompatible(Constant constant);
 

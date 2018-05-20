@@ -2,7 +2,6 @@ package graalvm.compiler.phases.common.inlining;
 
 import static jdk.vm.ci.meta.DeoptimizationAction.InvalidateReprofile;
 import static jdk.vm.ci.meta.DeoptimizationReason.NullCheckException;
-import static graalvm.compiler.core.common.GraalOptions.HotSpotPrintInlining;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayDeque;
@@ -23,7 +22,6 @@ import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.TypeReference;
 import graalvm.compiler.core.common.util.Util;
-import graalvm.compiler.debug.DebugCloseable;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.GraalGraphError;
 import graalvm.compiler.graph.Graph.DuplicationReplacement;
@@ -32,7 +30,6 @@ import graalvm.compiler.graph.Graph.NodeEventScope;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeInputList;
 import graalvm.compiler.graph.NodeMap;
-import graalvm.compiler.graph.NodeSourcePosition;
 import graalvm.compiler.graph.NodeWorkList;
 import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.AbstractBeginNode;
@@ -89,141 +86,6 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 
 public class InliningUtil extends ValueMergeUtil
 {
-    private static final String inliningDecisionsScopeString = "InliningDecisions";
-
-    /**
-     * Print a HotSpot-style inlining message to the console.
-     */
-    private static void printInlining(final InlineInfo info, final int inliningDepth, final boolean success, final String msg, final Object... args)
-    {
-        printInlining(info.methodAt(0), info.invoke(), inliningDepth, success, msg, args);
-    }
-
-    /**
-     * @see #printInlining
-     */
-    private static void printInlining(final ResolvedJavaMethod method, final Invoke invoke, final int inliningDepth, final boolean success, final String msg, final Object... args)
-    {
-        if (HotSpotPrintInlining.getValue(invoke.asNode().getOptions()))
-        {
-            Util.printInlining(method, invoke.bci(), inliningDepth, success, msg, args);
-        }
-    }
-
-    /**
-     * Trace a decision to inline a method.
-     *
-     * This prints a HotSpot-style inlining message to the console, and it also logs the decision to
-     * the logging stream.
-     *
-     * Phases that perform inlining should use this method to trace the inlining decisions, and use
-     * the {@link #traceNotInlinedMethod} methods only for debugging purposes.
-     */
-    public static void traceInlinedMethod(InlineInfo info, int inliningDepth, boolean allowLogging, String msg, Object... args)
-    {
-        traceMethod(info, inliningDepth, allowLogging, true, msg, args);
-    }
-
-    /**
-     * Trace a decision to inline a method.
-     *
-     * This prints a HotSpot-style inlining message to the console, and it also logs the decision to
-     * the logging stream.
-     *
-     * Phases that perform inlining should use this method to trace the inlining decisions, and use
-     * the {@link #traceNotInlinedMethod} methods only for debugging purposes.
-     */
-    public static void traceInlinedMethod(Invoke invoke, int inliningDepth, boolean allowLogging, ResolvedJavaMethod method, String msg, Object... args)
-    {
-        traceMethod(invoke, inliningDepth, allowLogging, true, method, msg, args);
-    }
-
-    /**
-     * Trace a decision to not inline a method.
-     *
-     * This prints a HotSpot-style inlining message to the console, and it also logs the decision to
-     * the logging stream.
-     *
-     * Phases that perform inlining should use this method to trace the inlining decisions, and use
-     * the {@link #traceNotInlinedMethod} methods only for debugging purposes.
-     */
-    public static void traceNotInlinedMethod(InlineInfo info, int inliningDepth, String msg, Object... args)
-    {
-        traceMethod(info, inliningDepth, true, false, msg, args);
-    }
-
-    /**
-     * Trace a decision about not inlining a method.
-     *
-     * This prints a HotSpot-style inlining message to the console, and it also logs the decision to
-     * the logging stream.
-     *
-     * Phases that perform inlining should use this method to trace the inlining decisions, and use
-     * the {@link #traceNotInlinedMethod} methods only for debugging purposes.
-     */
-    public static void traceNotInlinedMethod(Invoke invoke, int inliningDepth, ResolvedJavaMethod method, String msg, Object... args)
-    {
-        traceMethod(invoke, inliningDepth, true, false, method, msg, args);
-    }
-
-    private static void traceMethod(Invoke invoke, int inliningDepth, boolean allowLogging, boolean success, ResolvedJavaMethod method, String msg, Object... args)
-    {
-        if (allowLogging)
-        {
-            printInlining(method, invoke, inliningDepth, success, msg, args);
-        }
-    }
-
-    private static void traceMethod(InlineInfo info, int inliningDepth, boolean allowLogging, boolean success, String msg, final Object... args)
-    {
-        if (allowLogging)
-        {
-            printInlining(info, inliningDepth, success, msg, args);
-        }
-    }
-
-    private static String methodName(ResolvedJavaMethod method, Invoke invoke)
-    {
-        if (invoke != null && invoke.stateAfter() != null)
-        {
-            return methodName(invoke.stateAfter(), invoke.bci()) + ": " + method.format("%H.%n(%p):%r") + " (" + method.getCodeSize() + " bytes)";
-        }
-        else
-        {
-            return method.format("%H.%n(%p):%r") + " (" + method.getCodeSize() + " bytes)";
-        }
-    }
-
-    private static String methodName(InlineInfo info)
-    {
-        if (info == null)
-        {
-            return "null";
-        }
-        else if (info.invoke() != null && info.invoke().stateAfter() != null)
-        {
-            return methodName(info.invoke().stateAfter(), info.invoke().bci()) + ": " + info.toString();
-        }
-        else
-        {
-            return info.toString();
-        }
-    }
-
-    private static String methodName(FrameState frameState, int bci)
-    {
-        StringBuilder sb = new StringBuilder();
-        if (frameState.outerFrameState() != null)
-        {
-            sb.append(methodName(frameState.outerFrameState(), frameState.outerFrameState().bci));
-            sb.append("->");
-        }
-        ResolvedJavaMethod method = frameState.getMethod();
-        sb.append(method != null ? method.format("%h.%n") : "?");
-        sb.append("@").append(bci);
-        return sb.toString();
-    }
-
     public static void replaceInvokeCallTarget(Invoke invoke, StructuredGraph graph, InvokeKind invokeKind, ResolvedJavaMethod targetMethod)
     {
         MethodCallTargetNode oldCallTarget = (MethodCallTargetNode) invoke.callTarget();
@@ -395,7 +257,6 @@ public class InliningUtil extends ValueMergeUtil
             }
         }
 
-        updateSourcePositions(invoke, inlineGraph, duplicates, !Objects.equals(inlineGraph.method(), inlineeMethod), mark);
         if (stateAfter != null)
         {
             processFrameStates(invoke, inlineGraph, duplicates, stateAtExceptionEdge, returnNodes.size() > 1);
@@ -447,10 +308,6 @@ public class InliningUtil extends ValueMergeUtil
      * by the inlining since the current graph and {@code inlineGraph} are expected to already be
      * canonical.
      *
-     * @param invoke
-     * @param inlineGraph
-     * @param receiverNullCheck
-     * @param inlineeMethod
      * @return the set of nodes to canonicalize
      */
     @SuppressWarnings("try")
@@ -479,7 +336,6 @@ public class InliningUtil extends ValueMergeUtil
         return listener.getNodes();
     }
 
-    @SuppressWarnings("try")
     private static ValueNode finishInlining(Invoke invoke, StructuredGraph graph, FixedNode firstNode, List<ReturnNode> returnNodes, UnwindNode unwindNode, Assumptions inlinedAssumptions, StructuredGraph inlineGraph)
     {
         FixedNode invokeNode = invoke.asNode();
@@ -510,24 +366,18 @@ public class InliningUtil extends ValueMergeUtil
             AbstractBeginNode begin = invokeWithException.next();
             if (begin instanceof KillingBeginNode)
             {
-                try (DebugCloseable position = begin.withNodeSourcePosition())
-                {
-                    AbstractBeginNode newBegin = new BeginNode();
-                    graph.addAfterFixed(begin, graph.add(newBegin));
-                    begin.replaceAtUsages(newBegin);
-                    graph.removeFixed(begin);
-                }
+                AbstractBeginNode newBegin = new BeginNode();
+                graph.addAfterFixed(begin, graph.add(newBegin));
+                begin.replaceAtUsages(newBegin);
+                graph.removeFixed(begin);
             }
         }
         else
         {
             if (unwindNode != null && unwindNode.isAlive())
             {
-                try (DebugCloseable position = unwindNode.withNodeSourcePosition())
-                {
-                    DeoptimizeNode deoptimizeNode = addDeoptimizeNode(graph, DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.NotCompiledExceptionHandler);
-                    unwindNode.replaceAndDelete(deoptimizeNode);
-                }
+                DeoptimizeNode deoptimizeNode = addDeoptimizeNode(graph, DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.NotCompiledExceptionHandler);
+                unwindNode.replaceAndDelete(deoptimizeNode);
             }
         }
 
@@ -650,76 +500,6 @@ public class InliningUtil extends ValueMergeUtil
             {
                 workList.push(current.predecessor());
                 valueList.push(currentValue);
-            }
-        }
-    }
-
-    @SuppressWarnings("try")
-    private static void updateSourcePositions(Invoke invoke, StructuredGraph inlineGraph, UnmodifiableEconomicMap<Node, Node> duplicates, boolean isSub, Mark mark)
-    {
-        FixedNode invokeNode = invoke.asNode();
-        boolean isSubstitution = isSub || inlineGraph.method().getAnnotation(MethodSubstitution.class) != null || inlineGraph.method().getAnnotation(Snippet.class) != null;
-        StructuredGraph invokeGraph = invokeNode.graph();
-        if (invokeGraph.trackNodeSourcePosition() && invoke.stateAfter() != null)
-        {
-            final NodeSourcePosition invokePos = invoke.asNode().getNodeSourcePosition();
-            updateSourcePosition(invokeGraph, duplicates, mark, invokePos, isSubstitution);
-        }
-    }
-
-    public static void updateSourcePosition(StructuredGraph invokeGraph, UnmodifiableEconomicMap<Node, Node> duplicates, Mark mark, NodeSourcePosition invokePos, boolean isSubstitution)
-    {
-        /*
-         * Not every duplicate node is newly created, so only update the position of the newly
-         * created nodes.
-         */
-        EconomicSet<Node> newNodes = EconomicSet.create(Equivalence.DEFAULT);
-        newNodes.addAll(invokeGraph.getNewNodes(mark));
-        EconomicMap<NodeSourcePosition, NodeSourcePosition> posMap = EconomicMap.create(Equivalence.DEFAULT);
-        UnmodifiableMapCursor<Node, Node> cursor = duplicates.getEntries();
-        ResolvedJavaMethod inlineeRoot = null;
-        while (cursor.advance())
-        {
-            Node value = cursor.getValue();
-            if (!newNodes.contains(value))
-            {
-                continue;
-            }
-            if (isSubstitution && invokePos == null)
-            {
-                // There's no caller information so the source position for this node will be
-                // invalid, so it should be cleared.
-                value.clearNodeSourcePosition();
-            }
-            else
-            {
-                NodeSourcePosition pos = cursor.getKey().getNodeSourcePosition();
-                if (pos != null)
-                {
-                    NodeSourcePosition callerPos = posMap.get(pos);
-                    if (callerPos == null)
-                    {
-                        callerPos = pos.addCaller(invokePos, isSubstitution);
-                        posMap.put(pos, callerPos);
-                    }
-                    value.setNodeSourcePosition(callerPos);
-
-                    if (value instanceof DeoptimizingGuard)
-                    {
-                        ((DeoptimizingGuard) value).addCallerToNoDeoptSuccessorPosition(callerPos.getCaller());
-                    }
-                }
-                else
-                {
-                    if (isSubstitution)
-                    {
-                        /*
-                         * If no other position is provided at least attribute the substituted node
-                         * to the original invoke.
-                         */
-                        value.setNodeSourcePosition(invokePos);
-                    }
-                }
             }
         }
     }
@@ -860,7 +640,6 @@ public class InliningUtil extends ValueMergeUtil
         return frameState.bci == BytecodeFrame.AFTER_EXCEPTION_BCI || (frameState.bci == BytecodeFrame.UNWIND_BCI && !frameState.getMethod().isSynchronized());
     }
 
-    @SuppressWarnings("try")
     public static FrameState handleMissingAfterExceptionFrameState(FrameState nonReplaceableFrameState, Invoke invoke, EconomicMap<Node, Node> replacements, boolean alwaysDuplicateStateAfter)
     {
         StructuredGraph graph = nonReplaceableFrameState.graph();
@@ -889,12 +668,9 @@ public class InliningUtil extends ValueMergeUtil
                         while (merge.isAlive())
                         {
                             AbstractEndNode end = merge.forwardEnds().first();
-                            try (DebugCloseable position = end.withNodeSourcePosition())
-                            {
-                                DeoptimizeNode deoptimizeNode = addDeoptimizeNode(graph, DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.NotCompiledExceptionHandler);
-                                end.replaceAtPredecessor(deoptimizeNode);
-                                GraphUtil.killCFG(end);
-                            }
+                            DeoptimizeNode deoptimizeNode = addDeoptimizeNode(graph, DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.NotCompiledExceptionHandler);
+                            end.replaceAtPredecessor(deoptimizeNode);
+                            GraphUtil.killCFG(end);
                         }
                     }
                     else if (fixedStateSplit instanceof ExceptionObjectNode)
@@ -916,16 +692,13 @@ public class InliningUtil extends ValueMergeUtil
                     }
                     else
                     {
-                        try (DebugCloseable position = fixedStateSplit.withNodeSourcePosition())
+                        FixedNode deoptimizeNode = addDeoptimizeNode(graph, DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.NotCompiledExceptionHandler);
+                        if (fixedStateSplit instanceof AbstractBeginNode)
                         {
-                            FixedNode deoptimizeNode = addDeoptimizeNode(graph, DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.NotCompiledExceptionHandler);
-                            if (fixedStateSplit instanceof AbstractBeginNode)
-                            {
-                                deoptimizeNode = BeginNode.begin(deoptimizeNode);
-                            }
-                            fixedStateSplit.replaceAtPredecessor(deoptimizeNode);
-                            GraphUtil.killCFG(fixedStateSplit);
+                            deoptimizeNode = BeginNode.begin(deoptimizeNode);
                         }
+                        fixedStateSplit.replaceAtPredecessor(deoptimizeNode);
+                        GraphUtil.killCFG(fixedStateSplit);
                     }
                 }
             }
@@ -943,47 +716,41 @@ public class InliningUtil extends ValueMergeUtil
      * Gets the receiver for an invoke, adding a guard if necessary to ensure it is non-null, and
      * ensuring that the resulting type is compatible with the method being invoked.
      */
-    @SuppressWarnings("try")
     public static ValueNode nonNullReceiver(Invoke invoke)
     {
-        try (DebugCloseable position = invoke.asNode().withNodeSourcePosition())
+        MethodCallTargetNode callTarget = (MethodCallTargetNode) invoke.callTarget();
+        StructuredGraph graph = callTarget.graph();
+        ValueNode oldReceiver = callTarget.arguments().get(0);
+        ValueNode newReceiver = oldReceiver;
+        if (newReceiver.getStackKind() == JavaKind.Object)
         {
-            MethodCallTargetNode callTarget = (MethodCallTargetNode) invoke.callTarget();
-            StructuredGraph graph = callTarget.graph();
-            ValueNode oldReceiver = callTarget.arguments().get(0);
-            ValueNode newReceiver = oldReceiver;
-            if (newReceiver.getStackKind() == JavaKind.Object)
+            if (invoke.getInvokeKind() == InvokeKind.Special)
             {
-                if (invoke.getInvokeKind() == InvokeKind.Special)
+                Stamp paramStamp = newReceiver.stamp(NodeView.DEFAULT);
+                Stamp stamp = paramStamp.join(StampFactory.object(TypeReference.create(graph.getAssumptions(), callTarget.targetMethod().getDeclaringClass())));
+                if (!stamp.equals(paramStamp))
                 {
-                    Stamp paramStamp = newReceiver.stamp(NodeView.DEFAULT);
-                    Stamp stamp = paramStamp.join(StampFactory.object(TypeReference.create(graph.getAssumptions(), callTarget.targetMethod().getDeclaringClass())));
-                    if (!stamp.equals(paramStamp))
-                    {
-                        // The verifier and previous optimizations guarantee unconditionally that
-                        // the
-                        // receiver is at least of the type of the method holder for a special
-                        // invoke.
-                        newReceiver = graph.unique(new PiNode(newReceiver, stamp));
-                    }
-                }
-
-                if (!StampTool.isPointerNonNull(newReceiver))
-                {
-                    LogicNode condition = graph.unique(IsNullNode.create(newReceiver));
-                    FixedGuardNode fixedGuard = graph.add(new FixedGuardNode(condition, NullCheckException, InvalidateReprofile, true));
-                    PiNode nonNullReceiver = graph.unique(new PiNode(newReceiver, StampFactory.objectNonNull(), fixedGuard));
-                    graph.addBeforeFixed(invoke.asNode(), fixedGuard);
-                    newReceiver = nonNullReceiver;
+                    // The verifier and previous optimizations guarantee unconditionally that the
+                    // receiver is at least of the type of the method holder for a special invoke.
+                    newReceiver = graph.unique(new PiNode(newReceiver, stamp));
                 }
             }
 
-            if (newReceiver != oldReceiver)
+            if (!StampTool.isPointerNonNull(newReceiver))
             {
-                callTarget.replaceFirstInput(oldReceiver, newReceiver);
+                LogicNode condition = graph.unique(IsNullNode.create(newReceiver));
+                FixedGuardNode fixedGuard = graph.add(new FixedGuardNode(condition, NullCheckException, InvalidateReprofile, true));
+                PiNode nonNullReceiver = graph.unique(new PiNode(newReceiver, StampFactory.objectNonNull(), fixedGuard));
+                graph.addBeforeFixed(invoke.asNode(), fixedGuard);
+                newReceiver = nonNullReceiver;
             }
-            return newReceiver;
         }
+
+        if (newReceiver != oldReceiver)
+        {
+            callTarget.replaceFirstInput(oldReceiver, newReceiver);
+        }
+        return newReceiver;
     }
 
     public static boolean canIntrinsify(Replacements replacements, ResolvedJavaMethod target, int invokeBci)
@@ -991,9 +758,9 @@ public class InliningUtil extends ValueMergeUtil
         return replacements.hasSubstitution(target, invokeBci);
     }
 
-    public static StructuredGraph getIntrinsicGraph(Replacements replacements, ResolvedJavaMethod target, int invokeBci, boolean trackNodeSourcePosition, NodeSourcePosition replaceePosition)
+    public static StructuredGraph getIntrinsicGraph(Replacements replacements, ResolvedJavaMethod target, int invokeBci)
     {
-        return replacements.getSubstitution(target, invokeBci, trackNodeSourcePosition, replaceePosition);
+        return replacements.getSubstitution(target, invokeBci);
     }
 
     public static FixedWithNextNode inlineMacroNode(Invoke invoke, ResolvedJavaMethod concrete, Class<? extends FixedWithNextNode> macroNodeClass) throws GraalError

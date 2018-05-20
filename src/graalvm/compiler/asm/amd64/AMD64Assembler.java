@@ -375,9 +375,6 @@ public class AMD64Assembler extends Assembler
         /**
          * Emit an immediate of this size. Note that immediate {@link #QWORD} operands are encoded
          * as sign-extended 32-bit values.
-         *
-         * @param asm
-         * @param imm
          */
         protected void emitImmediate(AMD64Assembler asm, int imm)
         {
@@ -543,7 +540,7 @@ public class AMD64Assembler extends Assembler
 
     /**
      * Emit the ModR/M byte for one register operand and an opcode extension in the R field.
-     * <p>
+     *
      * Format: [ 11 reg r/m ]
      */
     protected void emitModRM(int reg, Register rm)
@@ -553,7 +550,7 @@ public class AMD64Assembler extends Assembler
 
     /**
      * Emit the ModR/M byte for two register operands.
-     * <p>
+     *
      * Format: [ 11 reg r/m ]
      */
     protected void emitModRM(Register reg, Register rm)

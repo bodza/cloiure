@@ -106,10 +106,6 @@ final class TraceLinearScanAssignLocationsPhase extends TraceLinearScanAllocatio
         }
 
         /**
-         * @param op
-         * @param operand
-         * @param valueMode
-         * @param flags
          * @see InstructionValueProcedure#doValue(LIRInstruction, Value, OperandMode, EnumSet)
          */
         private Value debugInfoProcedure(LIRInstruction op, Value operand, OperandMode valueMode, EnumSet<OperandFlag> flags)

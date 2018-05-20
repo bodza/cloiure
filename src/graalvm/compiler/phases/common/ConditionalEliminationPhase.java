@@ -20,7 +20,6 @@ import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
-import graalvm.compiler.debug.DebugCloseable;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeMap;
 import graalvm.compiler.graph.NodeStack;
@@ -132,7 +131,6 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         Block anchorBlock;
 
         @Override
-        @SuppressWarnings("try")
         public Block enter(Block b)
         {
             Block oldAnchorBlock = anchorBlock;
@@ -148,12 +146,9 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                 AbstractMergeNode mergeNode = (AbstractMergeNode) beginNode;
                 for (GuardNode guard : mergeNode.guards().snapshot())
                 {
-                    try (DebugCloseable closeable = guard.withNodeSourcePosition())
-                    {
-                        GuardNode newlyCreatedGuard = new GuardNode(guard.getCondition(), anchorBlock.getBeginNode(), guard.getReason(), guard.getAction(), guard.isNegated(), guard.getSpeculation(), guard.getNoDeoptSuccessorPosition());
-                        GuardNode newGuard = mergeNode.graph().unique(newlyCreatedGuard);
-                        guard.replaceAndDelete(newGuard);
-                    }
+                    GuardNode newlyCreatedGuard = new GuardNode(guard.getCondition(), anchorBlock.getBeginNode(), guard.getReason(), guard.getAction(), guard.isNegated(), guard.getSpeculation());
+                    GuardNode newGuard = mergeNode.graph().unique(newlyCreatedGuard);
+                    guard.replaceAndDelete(newGuard);
                 }
             }
 
@@ -191,16 +186,13 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                                 // Cannot optimize due to different speculations.
                                 continue;
                             }
-                            try (DebugCloseable closeable = guard.withNodeSourcePosition())
+                            GuardNode newlyCreatedGuard = new GuardNode(guard.getCondition(), anchorBlock.getBeginNode(), guard.getReason(), guard.getAction(), guard.isNegated(), speculation);
+                            GuardNode newGuard = node.graph().unique(newlyCreatedGuard);
+                            if (otherGuard.isAlive())
                             {
-                                GuardNode newlyCreatedGuard = new GuardNode(guard.getCondition(), anchorBlock.getBeginNode(), guard.getReason(), guard.getAction(), guard.isNegated(), speculation, guard.getNoDeoptSuccessorPosition());
-                                GuardNode newGuard = node.graph().unique(newlyCreatedGuard);
-                                if (otherGuard.isAlive())
-                                {
-                                    otherGuard.replaceAndDelete(newGuard);
-                                }
-                                guard.replaceAndDelete(newGuard);
+                                otherGuard.replaceAndDelete(newGuard);
                             }
+                            guard.replaceAndDelete(newGuard);
                         }
                     }
                 }
@@ -394,50 +386,46 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
             }
         }
 
-        @SuppressWarnings("try")
         protected void processNode(Node node)
         {
-            try (DebugCloseable closeable = node.withNodeSourcePosition())
+            if (node instanceof NodeWithState && !(node instanceof GuardingNode))
             {
-                if (node instanceof NodeWithState && !(node instanceof GuardingNode))
-                {
-                    pendingTests.clear();
-                }
+                pendingTests.clear();
+            }
 
-                if (node instanceof MergeNode)
-                {
-                    introducePisForPhis((MergeNode) node);
-                }
+            if (node instanceof MergeNode)
+            {
+                introducePisForPhis((MergeNode) node);
+            }
 
-                if (node instanceof AbstractBeginNode)
+            if (node instanceof AbstractBeginNode)
+            {
+                if (node instanceof LoopExitNode && graph.hasValueProxies())
                 {
-                    if (node instanceof LoopExitNode && graph.hasValueProxies())
-                    {
-                        // Condition must not be used down this path.
-                        return;
-                    }
-                    processAbstractBegin((AbstractBeginNode) node);
+                    // Condition must not be used down this path.
+                    return;
                 }
-                else if (node instanceof FixedGuardNode)
-                {
-                    processFixedGuard((FixedGuardNode) node);
-                }
-                else if (node instanceof GuardNode)
-                {
-                    processGuard((GuardNode) node);
-                }
-                else if (node instanceof ConditionAnchorNode)
-                {
-                    processConditionAnchor((ConditionAnchorNode) node);
-                }
-                else if (node instanceof IfNode)
-                {
-                    processIf((IfNode) node);
-                }
-                else if (node instanceof EndNode)
-                {
-                    processEnd((EndNode) node);
-                }
+                processAbstractBegin((AbstractBeginNode) node);
+            }
+            else if (node instanceof FixedGuardNode)
+            {
+                processFixedGuard((FixedGuardNode) node);
+            }
+            else if (node instanceof GuardNode)
+            {
+                processGuard((GuardNode) node);
+            }
+            else if (node instanceof ConditionAnchorNode)
+            {
+                processConditionAnchor((ConditionAnchorNode) node);
+            }
+            else if (node instanceof IfNode)
+            {
+                processIf((IfNode) node);
+            }
+            else if (node instanceof EndNode)
+            {
+                processEnd((EndNode) node);
             }
         }
 
@@ -724,9 +712,7 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
          * {@link #getInfoElements(ValueNode)}. It's only safe to use constants and one
          * {@link InfoElement} otherwise more than one guard would be required.
          *
-         * @param node
-         * @return the pair of the @{link InfoElement} used and the stamp produced for the whole
-         *         expression
+         * @return the pair of the @{link InfoElement} used and the stamp produced for the whole expression
          */
         Pair<InfoElement, Stamp> recursiveFoldStampFromInfo(Node node)
         {

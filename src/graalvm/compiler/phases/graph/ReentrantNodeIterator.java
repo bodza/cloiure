@@ -46,8 +46,6 @@ public final class ReentrantNodeIterator
 
         /**
          * Determine whether iteration should continue in the current state.
-         *
-         * @param currentState
          */
         protected boolean continueIteration(StateT currentState)
         {

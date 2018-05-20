@@ -66,8 +66,7 @@ public final class ObjectCloneNode extends BasicObjectCloneNode implements Virtu
                 {
                     final ResolvedJavaMethod snippetMethod = tool.getMetaAccess().lookupJavaMethod(method);
                     final Replacements replacements = tool.getReplacements();
-                    StructuredGraph snippetGraph = null;
-                    snippetGraph = replacements.getSnippet(snippetMethod, null, graph().trackNodeSourcePosition(), this.getNodeSourcePosition());
+                    StructuredGraph snippetGraph = replacements.getSnippet(snippetMethod, null);
 
                     return lowerReplacement((StructuredGraph) snippetGraph.copy(), tool);
                 }

@@ -14,7 +14,7 @@ import jdk.vm.ci.code.BailoutException;
 
 /**
  * The {@code AccessMonitorNode} is the base class of both monitor acquisition and release.
- * <p>
+ *
  * The Java bytecode specification allows non-balanced locking. Graal does not handle such cases and
  * throws a {@link BailoutException} instead during graph building.
  */

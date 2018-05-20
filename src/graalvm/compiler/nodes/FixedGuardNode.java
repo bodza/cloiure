@@ -1,14 +1,11 @@
 package graalvm.compiler.nodes;
 
-import graalvm.compiler.debug.DebugCloseable;
-
 import static graalvm.compiler.nodeinfo.InputType.Guard;
 import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
 import static graalvm.compiler.nodeinfo.NodeSize.SIZE_2;
 
 import graalvm.compiler.graph.IterableNodeType;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.graph.NodeSourcePosition;
 import graalvm.compiler.graph.spi.SimplifierTool;
 import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.spi.Lowerable;
@@ -33,19 +30,9 @@ public final class FixedGuardNode extends AbstractFixedGuardNode implements Lowe
         this(condition, deoptReason, action, JavaConstant.NULL_POINTER, negated);
     }
 
-    public FixedGuardNode(LogicNode condition, DeoptimizationReason deoptReason, DeoptimizationAction action, boolean negated, NodeSourcePosition noDeoptSuccessorPosition)
-    {
-        this(condition, deoptReason, action, JavaConstant.NULL_POINTER, negated, noDeoptSuccessorPosition);
-    }
-
     public FixedGuardNode(LogicNode condition, DeoptimizationReason deoptReason, DeoptimizationAction action, JavaConstant speculation, boolean negated)
     {
         super(TYPE, condition, deoptReason, action, speculation, negated);
-    }
-
-    public FixedGuardNode(LogicNode condition, DeoptimizationReason deoptReason, DeoptimizationAction action, JavaConstant speculation, boolean negated, NodeSourcePosition noDeoptSuccessorPosition)
-    {
-        super(TYPE, condition, deoptReason, action, speculation, negated, noDeoptSuccessorPosition);
     }
 
     @Override
@@ -76,31 +63,27 @@ public final class FixedGuardNode extends AbstractFixedGuardNode implements Lowe
             ShortCircuitOrNode shortCircuitOr = (ShortCircuitOrNode) getCondition();
             if (isNegated() && hasNoUsages())
             {
-                graph().addAfterFixed(this, graph().add(new FixedGuardNode(shortCircuitOr.getY(), getReason(), getAction(), getSpeculation(), !shortCircuitOr.isYNegated(), getNoDeoptSuccessorPosition())));
-                graph().replaceFixedWithFixed(this, graph().add(new FixedGuardNode(shortCircuitOr.getX(), getReason(), getAction(), getSpeculation(), !shortCircuitOr.isXNegated(), getNoDeoptSuccessorPosition())));
+                graph().addAfterFixed(this, graph().add(new FixedGuardNode(shortCircuitOr.getY(), getReason(), getAction(), getSpeculation(), !shortCircuitOr.isYNegated())));
+                graph().replaceFixedWithFixed(this, graph().add(new FixedGuardNode(shortCircuitOr.getX(), getReason(), getAction(), getSpeculation(), !shortCircuitOr.isXNegated())));
             }
         }
     }
 
-    @SuppressWarnings("try")
     @Override
     public void lower(LoweringTool tool)
     {
-        try (DebugCloseable position = this.withNodeSourcePosition())
+        if (graph().getGuardsStage().allowsFloatingGuards())
         {
-            if (graph().getGuardsStage().allowsFloatingGuards())
+            if (getAction() != DeoptimizationAction.None)
             {
-                if (getAction() != DeoptimizationAction.None)
-                {
-                    ValueNode guard = tool.createGuard(this, getCondition(), getReason(), getAction(), getSpeculation(), isNegated(), getNoDeoptSuccessorPosition()).asNode();
-                    this.replaceAtUsages(guard);
-                    graph().removeFixed(this);
-                }
+                ValueNode guard = tool.createGuard(this, getCondition(), getReason(), getAction(), getSpeculation(), isNegated()).asNode();
+                this.replaceAtUsages(guard);
+                graph().removeFixed(this);
             }
-            else
-            {
-                lowerToIf().lower(tool);
-            }
+        }
+        else
+        {
+            lowerToIf().lower(tool);
         }
     }
 

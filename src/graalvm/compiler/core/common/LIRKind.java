@@ -21,22 +21,21 @@ import jdk.vm.ci.meta.ValueKind;
  * {@link PlatformKind} that also contains the correct reference information. {@linkplain LIRKind
  * LIRKinds} should be created as follows:
  *
- * <p>
  * If the result value is created from one or more input values, the {@link LIRKind} should be
  * created with {@link LIRKind#combine}(inputs). If the result has a different {@link PlatformKind}
  * than the inputs, {@link LIRKind#combine}(inputs).{@link #changeType}(resultKind) should be used.
- * <p>
+ *
  * If the result is an exact copy of one of the inputs, {@link Value#getValueKind()} can be used.
  * Note that this is only correct for move-like operations, like conditional move or
  * compare-and-swap. For convert operations, {@link LIRKind#combine} should be used.
- * <p>
+ *
  * If it is known that the result will be a reference (e.g. pointer arithmetic where the end result
  * is a valid oop), {@link #reference} or {@link LIRKind#compressedReference} should be used.
- * <p>
+ *
  * If it is known that the result will neither be a reference nor be derived from a reference,
  * {@link LIRKind#value} can be used. If the operation producing this value has inputs, this is very
  * likely wrong, and {@link LIRKind#combine} should be used instead.
- * <p>
+ *
  * If it is known that the result is derived from a reference in a way that the garbage collector
  * can not track, {@link LIRKind#unknownReference} can be used. In most cases,
  * {@link LIRKind#combine} should be used instead, since it is able to detect this automatically.

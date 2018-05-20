@@ -11,11 +11,9 @@ import graalvm.compiler.core.common.CompilationIdentifier;
 import graalvm.compiler.core.common.spi.ConstantFieldProvider;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.StampPair;
-import graalvm.compiler.debug.DebugCloseable;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Graph;
 import graalvm.compiler.graph.Node.ValueNumberable;
-import graalvm.compiler.graph.NodeSourcePosition;
 import graalvm.compiler.java.FrameStateBuilder;
 import graalvm.compiler.java.GraphBuilderPhase;
 import graalvm.compiler.nodes.AbstractBeginNode;
@@ -94,11 +92,6 @@ public class GraphKit implements GraphBuilderTool
         }
         this.graph = builder.build();
         graph.disableUnsafeAccessTracking();
-        if (graph.trackNodeSourcePosition())
-        {
-            // Set up a default value that everything constructed by GraphKit will use.
-            graph.withNodeSourcePosition(NodeSourcePosition.substitution(stubMethod));
-        }
         this.wordTypes = wordTypes;
         this.graphBuilderPlugins = graphBuilderPlugins;
         this.lastFixedNode = graph.start();
@@ -245,63 +238,51 @@ public class GraphKit implements GraphBuilderTool
      * Creates and appends an {@link InvokeNode} for a call to a given method with a given set of
      * arguments.
      */
-    @SuppressWarnings("try")
     public InvokeNode createInvoke(ResolvedJavaMethod method, InvokeKind invokeKind, FrameStateBuilder frameStateBuilder, int bci, ValueNode... args)
     {
-        try (DebugCloseable context = graph.withNodeSourcePosition(NodeSourcePosition.substitution(graph.currentNodeSourcePosition(), method)))
+        Signature signature = method.getSignature();
+        JavaType returnType = signature.getReturnType(null);
+        StampPair returnStamp = graphBuilderPlugins.getOverridingStamp(this, returnType, false);
+        if (returnStamp == null)
         {
-            Signature signature = method.getSignature();
-            JavaType returnType = signature.getReturnType(null);
-            StampPair returnStamp = graphBuilderPlugins.getOverridingStamp(this, returnType, false);
-            if (returnStamp == null)
-            {
-                returnStamp = StampFactory.forDeclaredType(graph.getAssumptions(), returnType, false);
-            }
-            MethodCallTargetNode callTarget = graph.add(createMethodCallTarget(invokeKind, method, args, returnStamp, bci));
-            InvokeNode invoke = append(new InvokeNode(callTarget, bci));
-
-            if (frameStateBuilder != null)
-            {
-                if (invoke.getStackKind() != JavaKind.Void)
-                {
-                    frameStateBuilder.push(invoke.getStackKind(), invoke);
-                }
-                invoke.setStateAfter(frameStateBuilder.create(bci, invoke));
-                if (invoke.getStackKind() != JavaKind.Void)
-                {
-                    frameStateBuilder.pop(invoke.getStackKind());
-                }
-            }
-            return invoke;
+            returnStamp = StampFactory.forDeclaredType(graph.getAssumptions(), returnType, false);
         }
+        MethodCallTargetNode callTarget = graph.add(createMethodCallTarget(invokeKind, method, args, returnStamp, bci));
+        InvokeNode invoke = append(new InvokeNode(callTarget, bci));
+
+        if (frameStateBuilder != null)
+        {
+            if (invoke.getStackKind() != JavaKind.Void)
+            {
+                frameStateBuilder.push(invoke.getStackKind(), invoke);
+            }
+            invoke.setStateAfter(frameStateBuilder.create(bci, invoke));
+            if (invoke.getStackKind() != JavaKind.Void)
+            {
+                frameStateBuilder.pop(invoke.getStackKind());
+            }
+        }
+        return invoke;
     }
 
-    @SuppressWarnings("try")
     public InvokeWithExceptionNode createInvokeWithExceptionAndUnwind(ResolvedJavaMethod method, InvokeKind invokeKind, FrameStateBuilder frameStateBuilder, int invokeBci, int exceptionEdgeBci, ValueNode... args)
     {
-        try (DebugCloseable context = graph.withNodeSourcePosition(NodeSourcePosition.substitution(graph.currentNodeSourcePosition(), method)))
-        {
-            InvokeWithExceptionNode result = startInvokeWithException(method, invokeKind, frameStateBuilder, invokeBci, exceptionEdgeBci, args);
-            exceptionPart();
-            ExceptionObjectNode exception = exceptionObject();
-            append(new UnwindNode(exception));
-            endInvokeWithException();
-            return result;
-        }
+        InvokeWithExceptionNode result = startInvokeWithException(method, invokeKind, frameStateBuilder, invokeBci, exceptionEdgeBci, args);
+        exceptionPart();
+        ExceptionObjectNode exception = exceptionObject();
+        append(new UnwindNode(exception));
+        endInvokeWithException();
+        return result;
     }
 
-    @SuppressWarnings("try")
     public InvokeWithExceptionNode createInvokeWithExceptionAndUnwind(MethodCallTargetNode callTarget, FrameStateBuilder frameStateBuilder, int invokeBci, int exceptionEdgeBci)
     {
-        try (DebugCloseable context = graph.withNodeSourcePosition(NodeSourcePosition.substitution(graph.currentNodeSourcePosition(), callTarget.targetMethod())))
-        {
-            InvokeWithExceptionNode result = startInvokeWithException(callTarget, frameStateBuilder, invokeBci, exceptionEdgeBci);
-            exceptionPart();
-            ExceptionObjectNode exception = exceptionObject();
-            append(new UnwindNode(exception));
-            endInvokeWithException();
-            return result;
-        }
+        InvokeWithExceptionNode result = startInvokeWithException(callTarget, frameStateBuilder, invokeBci, exceptionEdgeBci);
+        exceptionPart();
+        ExceptionObjectNode exception = exceptionObject();
+        append(new UnwindNode(exception));
+        endInvokeWithException();
+        return result;
     }
 
     protected MethodCallTargetNode createMethodCallTarget(InvokeKind invokeKind, ResolvedJavaMethod targetMethod, ValueNode[] args, StampPair returnStamp, @SuppressWarnings("unused") int bci)
@@ -377,10 +358,6 @@ public class GraphKit implements GraphBuilderTool
         GraphBuilderConfiguration config = GraphBuilderConfiguration.getSnippetDefault(plugins);
 
         StructuredGraph calleeGraph = new StructuredGraph.Builder(invoke.getOptions()).method(method).build();
-        if (invoke.graph().trackNodeSourcePosition())
-        {
-            calleeGraph.setTrackNodeSourcePosition();
-        }
         IntrinsicContext initialReplacementContext = new IntrinsicContext(method, method, providers.getReplacements().getDefaultReplacementBytecodeProvider(), INLINE_AFTER_PARSING);
         GraphBuilderPhase.Instance instance = createGraphBuilderInstance(metaAccess, providers.getStampProvider(), providers.getConstantReflection(), providers.getConstantFieldProvider(), config, OptimisticOptimizations.NONE, initialReplacementContext);
         instance.apply(calleeGraph);

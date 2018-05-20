@@ -95,9 +95,6 @@ public class HotSpotReplacementsUtil
         /**
          * Fold reads that convert from Class -> Hub -> Class or vice versa.
          *
-         * @param read
-         * @param object
-         * @param otherLocation
          * @return an earlier read or the original {@code read}
          */
         protected static ValueNode foldIndirection(ValueNode read, ValueNode object, LocationIdentity otherLocation)

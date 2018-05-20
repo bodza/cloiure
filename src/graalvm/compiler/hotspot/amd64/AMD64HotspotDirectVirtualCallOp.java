@@ -41,6 +41,6 @@ final class AMD64HotspotDirectVirtualCallOp extends DirectCallOp
         // This must be emitted exactly like this to ensure it's patchable
         masm.movq(AMD64.rax, config.nonOopBits);
         int offset = super.emitCall(crb, masm);
-        crb.recordInvokeVirtualOrInterfaceCallOp(offset, getPosition());
+        crb.recordInvokeVirtualOrInterfaceCallOp(offset);
     }
 }

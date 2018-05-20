@@ -13,7 +13,6 @@ import org.graalvm.collections.EconomicSet;
 import org.graalvm.collections.Equivalence;
 import org.graalvm.collections.UnmodifiableMapCursor;
 import graalvm.compiler.core.common.cfg.Loop;
-import graalvm.compiler.debug.DebugCloseable;
 import graalvm.compiler.graph.Graph.NodeEventScope;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodes.AbstractBeginNode;
@@ -409,7 +408,6 @@ public class FloatingReadPhase extends Phase
             }
         }
 
-        @SuppressWarnings("try")
         private static void processFloatable(FloatableAccessNode accessNode, MemoryMapImpl state)
         {
             StructuredGraph graph = accessNode.graph();
@@ -417,11 +415,8 @@ public class FloatingReadPhase extends Phase
             if (accessNode.canFloat())
             {
                 MemoryNode lastLocationAccess = state.getLastLocationAccess(locationIdentity);
-                try (DebugCloseable position = accessNode.withNodeSourcePosition())
-                {
-                    FloatingAccessNode floatingNode = accessNode.asFloatingNode(lastLocationAccess);
-                    graph.replaceFixedWithFloating(accessNode, floatingNode);
-                }
+                FloatingAccessNode floatingNode = accessNode.asFloatingNode(lastLocationAccess);
+                graph.replaceFixedWithFloating(accessNode, floatingNode);
             }
         }
 

@@ -37,7 +37,7 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * Snippet for loading the exception object at the start of an exception dispatcher.
- * <p>
+ *
  * The frame state upon entry to an exception handler is such that it is a
  * {@link BytecodeFrame#rethrowException rethrow exception} state and the stack contains exactly the
  * exception object (per the JVM spec) to rethrow. This means that the code generated for this node

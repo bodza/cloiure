@@ -941,8 +941,6 @@ public class MatchProcessor extends AbstractProcessor
     /**
      * Search the super types of element for MatchableNode definitions. Any superclass or super
      * interface can contain definitions of matchable nodes.
-     *
-     * @param element
      */
     private void findMatchableNodes(Element element)
     {

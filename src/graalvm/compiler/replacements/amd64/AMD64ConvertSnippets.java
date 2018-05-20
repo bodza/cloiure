@@ -27,7 +27,7 @@ public class AMD64ConvertSnippets implements Snippets
 {
     /**
      * Converts a float to an int.
-     * <p>
+     *
      * This snippet accounts for the semantics of the x64 CVTTSS2SI instruction used to do the
      * conversion. If the float value is a NaN, infinity or if the result of the conversion is
      * larger than {@link Integer#MAX_VALUE} then CVTTSS2SI returns {@link Integer#MIN_VALUE} and
@@ -57,7 +57,7 @@ public class AMD64ConvertSnippets implements Snippets
 
     /**
      * Converts a float to a long.
-     * <p>
+     *
      * This snippet accounts for the semantics of the x64 CVTTSS2SI instruction used to do the
      * conversion. If the float value is a NaN or infinity then CVTTSS2SI returns
      * {@link Long#MIN_VALUE} and extra tests are required on the float value to return the correct
@@ -87,7 +87,7 @@ public class AMD64ConvertSnippets implements Snippets
 
     /**
      * Converts a double to an int.
-     * <p>
+     *
      * This snippet accounts for the semantics of the x64 CVTTSD2SI instruction used to do the
      * conversion. If the double value is a NaN, infinity or if the result of the conversion is
      * larger than {@link Integer#MAX_VALUE} then CVTTSD2SI returns {@link Integer#MIN_VALUE} and
@@ -117,7 +117,7 @@ public class AMD64ConvertSnippets implements Snippets
 
     /**
      * Converts a double to a long.
-     * <p>
+     *
      * This snippet accounts for the semantics of the x64 CVTTSD2SI instruction used to do the
      * conversion. If the double value is a NaN, infinity or if the result of the conversion is
      * larger than {@link Long#MAX_VALUE} then CVTTSD2SI returns {@link Long#MIN_VALUE} and extra

@@ -48,8 +48,6 @@ public interface ConvertNode extends ValueNodeInterface
      * Check whether a conversion preserves comparison order against a particular constant value.
      *
      * @param op a comparison operator
-     * @param value
-     * @param constantReflection
      * @return true iff (c1 op value) == (convert(c1) op convert(value)) for value and all c1
      */
     default boolean preservesOrder(CanonicalCondition op, Constant value, ConstantReflectionProvider constantReflection)

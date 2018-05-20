@@ -28,7 +28,6 @@ public final class LogicConstantNode extends LogicNode implements LIRLowerable
      * Returns a node for a boolean constant.
      *
      * @param v the boolean value for which to create the instruction
-     * @param graph
      * @return a node representing the boolean
      */
     public static LogicConstantNode forBoolean(boolean v, Graph graph)

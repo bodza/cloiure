@@ -43,10 +43,6 @@ abstract class ClassfileConstant
 
     /**
      * Loads the type, if any, referenced at a specified entry.
-     *
-     * @param cp
-     * @param index
-     * @param opcode
      */
     public void loadReferencedType(ClassfileConstantPool cp, int index, int opcode)
     {

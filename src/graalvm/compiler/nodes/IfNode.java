@@ -19,11 +19,9 @@ import graalvm.compiler.core.common.calc.Condition;
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
-import graalvm.compiler.debug.DebugCloseable;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.graph.NodeSourcePosition;
 import graalvm.compiler.graph.iterators.NodeIterable;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.Simplifiable;
@@ -157,66 +155,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         gen.emitIf(this);
     }
 
-    private boolean compareCallContext(NodeSourcePosition successorPosition)
-    {
-        NodeSourcePosition position = getNodeSourcePosition();
-        NodeSourcePosition successor = successorPosition;
-        while (position != null)
-        {
-            assertTrue(Objects.equals(position.getMethod(), successor.getMethod()), "method mismatch");
-            position = position.getCaller();
-            successor = successor.getCaller();
-        }
-        assertTrue(successor == null, "successor position has more methods");
-        return true;
-    }
-
-    @Override
-    public boolean verifySourcePosition()
-    {
-        NodeSourcePosition sourcePosition = getNodeSourcePosition();
-        assertTrue(sourcePosition != null, "missing IfNode source position");
-
-        NodeSourcePosition trueSuccessorPosition = trueSuccessor.getNodeSourcePosition();
-        assertTrue(trueSuccessorPosition != null, "missing IfNode true successor source position");
-
-        NodeSourcePosition falseSuccessorPosition = falseSuccessor.getNodeSourcePosition();
-        assertTrue(falseSuccessorPosition != null, "missing IfNode false successor source position");
-
-        int bci = sourcePosition.getBCI();
-        ResolvedJavaMethod method = sourcePosition.getMethod();
-        int bytecode = BytecodeDisassembler.getBytecodeAt(method, bci);
-
-        if (!Bytecodes.isIfBytecode(bytecode))
-        {
-            return true;
-        }
-
-        byte[] code = (new ResolvedJavaMethodBytecode(method)).getCode();
-        int targetBCI = bci + Bytes.beS2(code, bci + 1);
-        int nextBCI = bci + Bytecodes.lengthOf(bytecode);
-
-        // At least one successor should have the correct BCI to indicate any possible negation that
-        // occurred after bytecode parsing
-        boolean matchingSuccessorFound = false;
-        if (trueSuccessorPosition.getBCI() == nextBCI || trueSuccessorPosition.getBCI() == targetBCI)
-        {
-            assertTrue(compareCallContext(trueSuccessorPosition), "call context different from IfNode in trueSuccessor");
-            matchingSuccessorFound = true;
-        }
-
-        if (falseSuccessorPosition.getBCI() == nextBCI || falseSuccessorPosition.getBCI() == targetBCI)
-        {
-            assertTrue(compareCallContext(falseSuccessorPosition), "call context different from IfNode in falseSuccessor");
-            matchingSuccessorFound = true;
-        }
-
-        assertTrue(matchingSuccessorFound, "no matching successor position found in IfNode");
-        assertTrue(trueSuccessorPosition.getBCI() != falseSuccessorPosition.getBCI(), "successor positions same in IfNode");
-
-        return true;
-    }
-
     public void eliminateNegation()
     {
         AbstractBeginNode oldTrueSuccessor = trueSuccessor;
@@ -312,10 +250,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                     nextIf.setFalseSuccessor(intermediateBegin);
                     intermediateBegin.setNext(this);
                     this.setFalseSuccessor(bothFalseBegin);
-
-                    NodeSourcePosition intermediateBeginPosition = intermediateBegin.getNodeSourcePosition();
-                    intermediateBegin.setNodeSourcePosition(bothFalseBegin.getNodeSourcePosition());
-                    bothFalseBegin.setNodeSourcePosition(intermediateBeginPosition);
 
                     nextIf.setTrueSuccessorProbability(probabilityB);
                     if (probabilityB == 1.0)
@@ -596,10 +530,8 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
     /**
      * Recognize a couple patterns that can be merged into an unsigned compare.
      *
-     * @param tool
      * @return true if a replacement was done.
      */
-    @SuppressWarnings("try")
     private boolean checkForUnsignedCompare(SimplifierTool tool)
     {
         if (condition() instanceof IntegerLessThanNode)
@@ -645,21 +577,18 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                     }
                     if (below != null)
                     {
-                        try (DebugCloseable position = ifNode2.withNodeSourcePosition())
-                        {
-                            ifNode2.setTrueSuccessor(null);
-                            ifNode2.setFalseSuccessor(null);
+                        ifNode2.setTrueSuccessor(null);
+                        ifNode2.setFalseSuccessor(null);
 
-                            IfNode newIfNode = graph().add(new IfNode(below, falseSucc, trueSucc, 1 - trueSuccessorProbability));
-                            // Remove the < 0 test.
-                            tool.deleteBranch(trueSuccessor);
-                            graph().removeSplit(this, falseSuccessor);
+                        IfNode newIfNode = graph().add(new IfNode(below, falseSucc, trueSucc, 1 - trueSuccessorProbability));
+                        // Remove the < 0 test.
+                        tool.deleteBranch(trueSuccessor);
+                        graph().removeSplit(this, falseSuccessor);
 
-                            // Replace the second test with the new one.
-                            ifNode2.predecessor().replaceFirstSuccessor(ifNode2, newIfNode);
-                            ifNode2.safeDelete();
-                            return true;
-                        }
+                        // Replace the second test with the new one.
+                        ifNode2.predecessor().replaceFirstSuccessor(ifNode2, newIfNode);
+                        ifNode2.safeDelete();
+                        return true;
                     }
                 }
             }
@@ -1055,8 +984,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
      * Take an if that is immediately dominated by a merge with a single phi and split off any paths
      * where the test would be statically decidable creating a new merge below the approriate side
      * of the IfNode. Any undecidable tests will continue to use the original IfNode.
-     *
-     * @param tool
      */
     @SuppressWarnings("try")
     private boolean splitIfAtPhi(SimplifierTool tool)
@@ -1143,17 +1070,13 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
             {
                 // Build a new IfNode using the new condition
                 BeginNode trueBegin = graph().add(new BeginNode());
-                trueBegin.setNodeSourcePosition(trueSuccessor().getNodeSourcePosition());
                 BeginNode falseBegin = graph().add(new BeginNode());
-                falseBegin.setNodeSourcePosition(falseSuccessor().getNodeSourcePosition());
 
                 if (result.graph() == null)
                 {
                     result = graph().addOrUniqueWithInputs(result);
-                    result.setNodeSourcePosition(condition.getNodeSourcePosition());
                 }
                 IfNode newIfNode = graph().add(new IfNode(result, trueBegin, falseBegin, trueSuccessorProbability));
-                newIfNode.setNodeSourcePosition(getNodeSourcePosition());
                 merge.removeEnd(end);
                 ((FixedWithNextNode) end.predecessor()).setNext(newIfNode);
 
@@ -1186,8 +1109,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
     }
 
     /**
-     * @param condition
-     * @param phi
      * @return true if the passed in {@code condition} uses {@code phi} and the condition is only
      *         used once. Since the phi will go dead the condition using it will also have to be
      *         dead after the optimization.
@@ -1228,10 +1149,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
     /**
      * Canonicalize {@code} condition using {@code value} in place of {@code phi}.
      *
-     * @param tool
-     * @param condition
-     * @param phi
-     * @param value
      * @return an improved LogicNode or the original condition
      */
     @SuppressWarnings("unchecked")
@@ -1314,7 +1231,6 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         }
     }
 
-    @SuppressWarnings("try")
     private MergeNode insertMerge(AbstractBeginNode begin)
     {
         MergeNode merge = graph().add(new MergeNode());
@@ -1330,12 +1246,9 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         if (begin instanceof LoopExitNode)
         {
             // Insert an extra begin to make it easier.
-            try (DebugCloseable position = begin.withNodeSourcePosition())
-            {
-                theBegin = graph().add(new BeginNode());
-                begin.replaceAtPredecessor(theBegin);
-                theBegin.setNext(begin);
-            }
+            theBegin = graph().add(new BeginNode());
+            begin.replaceAtPredecessor(theBegin);
+            theBegin.setNext(begin);
         }
         FixedNode next = theBegin.next();
         next.replaceAtPredecessor(merge);

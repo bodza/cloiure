@@ -64,7 +64,6 @@ public final class ReflectionGetCallerClassNode extends MacroStateSplitNode impl
      * If inlining is deep enough this method returns a {@link ConstantNode} of the caller class by
      * walking the stack.
      *
-     * @param metaAccess
      * @return ConstantNode of the caller class, or null
      */
     private ConstantNode getCallerClassNode(MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection)

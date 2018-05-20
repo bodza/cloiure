@@ -6,7 +6,6 @@ import static graalvm.compiler.nodeinfo.NodeSize.SIZE_0;
 
 import java.util.List;
 
-import graalvm.compiler.debug.DebugCloseable;
 import graalvm.compiler.graph.IterableNodeType;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
@@ -159,7 +158,6 @@ public abstract class AbstractMergeNode extends BeginStateSplitNode implements I
      * canonicalization.
      */
     @Override
-    @SuppressWarnings("try")
     public void simplify(SimplifierTool tool)
     {
         FixedNode currentNext = next();
@@ -201,18 +199,15 @@ public abstract class AbstractMergeNode extends BeginStateSplitNode implements I
                     tool.addToWorkList(end);
                 }
                 AbstractEndNode newEnd;
-                try (DebugCloseable position = end.withNodeSourcePosition())
+                if (merge instanceof LoopBeginNode)
                 {
-                    if (merge instanceof LoopBeginNode)
-                    {
-                        newEnd = graph().add(new LoopEndNode((LoopBeginNode) merge));
-                    }
-                    else
-                    {
-                        EndNode tmpEnd = graph().add(new EndNode());
-                        merge.addForwardEnd(tmpEnd);
-                        newEnd = tmpEnd;
-                    }
+                    newEnd = graph().add(new LoopEndNode((LoopBeginNode) merge));
+                }
+                else
+                {
+                    EndNode tmpEnd = graph().add(new EndNode());
+                    merge.addForwardEnd(tmpEnd);
+                    newEnd = tmpEnd;
                 }
                 for (PhiNode phi : merge.phis())
                 {
@@ -262,15 +257,12 @@ public abstract class AbstractMergeNode extends BeginStateSplitNode implements I
             List<EndNode> endNodes = forwardEnds().snapshot();
             for (EndNode end : endNodes)
             {
-                try (DebugCloseable position = returnNode.withNodeSourcePosition())
+                ReturnNode newReturn = graph().add(new ReturnNode(returnValuePhi == null ? returnNode.result() : returnValuePhi.valueAt(end)));
+                if (tool != null)
                 {
-                    ReturnNode newReturn = graph().add(new ReturnNode(returnValuePhi == null ? returnNode.result() : returnValuePhi.valueAt(end)));
-                    if (tool != null)
-                    {
-                        tool.addToWorkList(end.predecessor());
-                    }
-                    end.replaceAtPredecessor(newReturn);
+                    tool.addToWorkList(end.predecessor());
                 }
+                end.replaceAtPredecessor(newReturn);
             }
             GraphUtil.killCFG(this);
             for (EndNode end : endNodes)

@@ -120,17 +120,6 @@ public final class GraalOptions
     @Option(help = "Perform platform dependent validation of the Java heap at returns", type = OptionType.Debug)
     public static final OptionKey<Boolean> VerifyHeapAtReturn = new OptionKey<>(false);
 
-    // Other printing settings
-    @Option(help = "Print profiling information when parsing a method's bytecode", type = OptionType.Debug)
-    public static final OptionKey<Boolean> PrintProfilingInformation = new OptionKey<>(false);
-
-    @Option(help = "", type = OptionType.Debug)
-    public static final OptionKey<Boolean> TraceEscapeAnalysis = new OptionKey<>(false);
-
-    // HotSpot command line options
-    @Option(help = "Print inlining optimizations", type = OptionType.Debug)
-    public static final OptionKey<Boolean> HotSpotPrintInlining = new OptionKey<>(false);
-
     // Register allocator debugging
     @Option(help = "Comma separated list of registers that register allocation is limited to.", type = OptionType.Debug)
     public static final OptionKey<String> RegisterPressure = new OptionKey<>(null);
@@ -232,9 +221,6 @@ public final class GraalOptions
 
     @Option(help = "", type = OptionType.Debug)
     public static final OptionKey<Boolean> OptDevirtualizeInvokesOptimistically = new OptionKey<>(true);
-
-    @Option(help = "Track the NodeSourcePosition.", type = OptionType.Debug)
-    public static final OptionKey<Boolean> TrackNodeSourcePosition = new OptionKey<>(false);
 
     @Option(help = "Allow backend to match complex expressions.", type = OptionType.Debug)
     public static final OptionKey<Boolean> MatchExpressions = new OptionKey<>(true);

@@ -62,19 +62,16 @@ public class AOTInliningPolicy extends GreedyInliningPolicy
         OptionValues options = info.graph().getOptions();
         if (InlineEverything.getValue(options))
         {
-            InliningUtil.traceInlinedMethod(info, inliningDepth, fullyProcessed, "inline everything");
             return InliningPolicy.Decision.YES;
         }
 
         if (isIntrinsic(replacements, info))
         {
-            InliningUtil.traceInlinedMethod(info, inliningDepth, fullyProcessed, "intrinsic");
             return InliningPolicy.Decision.YES;
         }
 
         if (info.shouldInline())
         {
-            InliningUtil.traceInlinedMethod(info, inliningDepth, fullyProcessed, "forced inlining");
             return InliningPolicy.Decision.YES;
         }
 
@@ -83,18 +80,15 @@ public class AOTInliningPolicy extends GreedyInliningPolicy
 
         if (nodes < TrivialInliningSize.getValue(options) * inliningBonus)
         {
-            InliningUtil.traceInlinedMethod(info, inliningDepth, fullyProcessed, "trivial (relevance=%f, probability=%f, bonus=%f, nodes=%d)", relevance, probability, inliningBonus, nodes);
             return InliningPolicy.Decision.YES;
         }
 
         double maximumNodes = computeMaximumSize(relevance, (int) (maxInliningSize(inliningDepth, options) * inliningBonus));
         if (nodes <= maximumNodes)
         {
-            InliningUtil.traceInlinedMethod(info, inliningDepth, fullyProcessed, "relevance-based (relevance=%f, probability=%f, bonus=%f, nodes=%d <= %f)", relevance, probability, inliningBonus, nodes, maximumNodes);
             return InliningPolicy.Decision.YES;
         }
 
-        InliningUtil.traceNotInlinedMethod(info, inliningDepth, "relevance-based (relevance=%f, probability=%f, bonus=%f, nodes=%d > %f)", relevance, probability, inliningBonus, nodes, maximumNodes);
         return InliningPolicy.Decision.NO;
     }
 }

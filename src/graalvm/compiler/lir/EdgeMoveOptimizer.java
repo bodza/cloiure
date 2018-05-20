@@ -14,18 +14,18 @@ import jdk.vm.ci.code.TargetDescription;
 
 /**
  * This class optimizes moves, particularly those that result from eliminating SSA form.
- * <p>
+ *
  * When a block has more than one predecessor, and all predecessors end with the
  * {@linkplain Optimizer#same(LIRInstruction, LIRInstruction) same} sequence of {@linkplain MoveOp
  * move} instructions, then these sequences can be replaced with a single copy of the sequence at
  * the beginning of the block.
- * <p>
+ *
  * Similarly, when a block has more than one successor, then same sequences of moves at the
  * beginning of the successors can be placed once at the end of the block. But because the moves
  * must be inserted before all branch instructions, this works only when there is exactly one
  * conditional branch at the end of the block (because the moves must be inserted before all
  * branches, but after all compares).
- * <p>
+ *
  * This optimization affects all kind of moves (reg-&gt;reg, reg-&gt;stack and stack-&gt;reg).
  * Because this optimization works best when a block contains only a few moves, it has a huge impact
  * on the number of blocks that are totally empty.

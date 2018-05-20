@@ -25,11 +25,11 @@ import graalvm.compiler.nodes.StructuredGraph;
 /**
  * A PostOrderNodeIterator iterates the fixed nodes of the graph in post order starting from a
  * specified fixed node.
- * <p>
+ *
  * For this iterator the CFG is defined by the classical CFG nodes ({@link ControlSplitNode},
  * {@link AbstractMergeNode}...) and the {@link FixedWithNextNode#next() next} pointers of
  * {@link FixedWithNextNode}.
- * <p>
+ *
  * While iterating it maintains a user-defined state by calling the methods available in
  * {@link MergeableState}.
  *

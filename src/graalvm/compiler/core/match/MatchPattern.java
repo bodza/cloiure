@@ -182,8 +182,6 @@ public class MatchPattern
     /**
      * Match any named nodes and ensure that the consumed nodes can be safely merged.
      *
-     * @param node
-     * @param context
      * @return Result.OK is the pattern can be safely matched.
      */
     Result matchUsage(Node node, MatchContext context)
@@ -233,8 +231,6 @@ public class MatchPattern
      * Recursively match the shape of the tree without worry about named values. Most matches fail
      * at this point so it's performed first.
      *
-     * @param node
-     * @param statement
      * @return Result.OK if the shape of the pattern matches.
      */
     public Result matchShape(Node node, MatchStatement statement)

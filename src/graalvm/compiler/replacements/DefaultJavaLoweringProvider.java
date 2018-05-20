@@ -26,7 +26,6 @@ import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.TypeReference;
-import graalvm.compiler.debug.DebugCloseable;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodeinfo.InputType;
@@ -158,108 +157,104 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
     }
 
     @Override
-    @SuppressWarnings("try")
     public void lower(Node n, LoweringTool tool)
     {
         StructuredGraph graph = (StructuredGraph) n.graph();
-        try (DebugCloseable context = n.withNodeSourcePosition())
+        if (n instanceof LoadFieldNode)
         {
-            if (n instanceof LoadFieldNode)
-            {
-                lowerLoadFieldNode((LoadFieldNode) n, tool);
-            }
-            else if (n instanceof StoreFieldNode)
-            {
-                lowerStoreFieldNode((StoreFieldNode) n, tool);
-            }
-            else if (n instanceof LoadIndexedNode)
-            {
-                lowerLoadIndexedNode((LoadIndexedNode) n, tool);
-            }
-            else if (n instanceof StoreIndexedNode)
-            {
-                lowerStoreIndexedNode((StoreIndexedNode) n, tool);
-            }
-            else if (n instanceof ArrayLengthNode)
-            {
-                lowerArrayLengthNode((ArrayLengthNode) n, tool);
-            }
-            else if (n instanceof LoadHubNode)
-            {
-                lowerLoadHubNode((LoadHubNode) n, tool);
-            }
-            else if (n instanceof MonitorEnterNode)
-            {
-                lowerMonitorEnterNode((MonitorEnterNode) n, tool, graph);
-            }
-            else if (n instanceof UnsafeCompareAndSwapNode)
-            {
-                lowerCompareAndSwapNode((UnsafeCompareAndSwapNode) n);
-            }
-            else if (n instanceof AtomicReadAndWriteNode)
-            {
-                lowerAtomicReadAndWriteNode((AtomicReadAndWriteNode) n);
-            }
-            else if (n instanceof RawLoadNode)
-            {
-                lowerUnsafeLoadNode((RawLoadNode) n, tool);
-            }
-            else if (n instanceof UnsafeMemoryLoadNode)
-            {
-                lowerUnsafeMemoryLoadNode((UnsafeMemoryLoadNode) n);
-            }
-            else if (n instanceof RawStoreNode)
-            {
-                lowerUnsafeStoreNode((RawStoreNode) n);
-            }
-            else if (n instanceof UnsafeMemoryStoreNode)
-            {
-                lowerUnsafeMemoryStoreNode((UnsafeMemoryStoreNode) n);
-            }
-            else if (n instanceof JavaReadNode)
-            {
-                lowerJavaReadNode((JavaReadNode) n);
-            }
-            else if (n instanceof JavaWriteNode)
-            {
-                lowerJavaWriteNode((JavaWriteNode) n);
-            }
-            else if (n instanceof CommitAllocationNode)
-            {
-                lowerCommitAllocationNode((CommitAllocationNode) n, tool);
-            }
-            else if (n instanceof BoxNode)
-            {
-                boxingSnippets.lower((BoxNode) n, tool);
-            }
-            else if (n instanceof UnboxNode)
-            {
-                boxingSnippets.lower((UnboxNode) n, tool);
-            }
-            else if (n instanceof VerifyHeapNode)
-            {
-                lowerVerifyHeap((VerifyHeapNode) n);
-            }
-            else if (n instanceof UnaryMathIntrinsicNode)
-            {
-                lowerUnaryMath((UnaryMathIntrinsicNode) n, tool);
-            }
-            else if (n instanceof BinaryMathIntrinsicNode)
-            {
-                lowerBinaryMath((BinaryMathIntrinsicNode) n, tool);
-            }
-            else if (n instanceof StringIndexOfNode)
-            {
-                lowerIndexOf((StringIndexOfNode) n);
-            }
-            else if (n instanceof UnpackEndianHalfNode)
-            {
-                lowerSecondHalf((UnpackEndianHalfNode) n);
-            }
-            else
-            {
-                throw GraalError.shouldNotReachHere("Node implementing Lowerable not handled: " + n);
-            }
+            lowerLoadFieldNode((LoadFieldNode) n, tool);
+        }
+        else if (n instanceof StoreFieldNode)
+        {
+            lowerStoreFieldNode((StoreFieldNode) n, tool);
+        }
+        else if (n instanceof LoadIndexedNode)
+        {
+            lowerLoadIndexedNode((LoadIndexedNode) n, tool);
+        }
+        else if (n instanceof StoreIndexedNode)
+        {
+            lowerStoreIndexedNode((StoreIndexedNode) n, tool);
+        }
+        else if (n instanceof ArrayLengthNode)
+        {
+            lowerArrayLengthNode((ArrayLengthNode) n, tool);
+        }
+        else if (n instanceof LoadHubNode)
+        {
+            lowerLoadHubNode((LoadHubNode) n, tool);
+        }
+        else if (n instanceof MonitorEnterNode)
+        {
+            lowerMonitorEnterNode((MonitorEnterNode) n, tool, graph);
+        }
+        else if (n instanceof UnsafeCompareAndSwapNode)
+        {
+            lowerCompareAndSwapNode((UnsafeCompareAndSwapNode) n);
+        }
+        else if (n instanceof AtomicReadAndWriteNode)
+        {
+            lowerAtomicReadAndWriteNode((AtomicReadAndWriteNode) n);
+        }
+        else if (n instanceof RawLoadNode)
+        {
+            lowerUnsafeLoadNode((RawLoadNode) n, tool);
+        }
+        else if (n instanceof UnsafeMemoryLoadNode)
+        {
+            lowerUnsafeMemoryLoadNode((UnsafeMemoryLoadNode) n);
+        }
+        else if (n instanceof RawStoreNode)
+        {
+            lowerUnsafeStoreNode((RawStoreNode) n);
+        }
+        else if (n instanceof UnsafeMemoryStoreNode)
+        {
+            lowerUnsafeMemoryStoreNode((UnsafeMemoryStoreNode) n);
+        }
+        else if (n instanceof JavaReadNode)
+        {
+            lowerJavaReadNode((JavaReadNode) n);
+        }
+        else if (n instanceof JavaWriteNode)
+        {
+            lowerJavaWriteNode((JavaWriteNode) n);
+        }
+        else if (n instanceof CommitAllocationNode)
+        {
+            lowerCommitAllocationNode((CommitAllocationNode) n, tool);
+        }
+        else if (n instanceof BoxNode)
+        {
+            boxingSnippets.lower((BoxNode) n, tool);
+        }
+        else if (n instanceof UnboxNode)
+        {
+            boxingSnippets.lower((UnboxNode) n, tool);
+        }
+        else if (n instanceof VerifyHeapNode)
+        {
+            lowerVerifyHeap((VerifyHeapNode) n);
+        }
+        else if (n instanceof UnaryMathIntrinsicNode)
+        {
+            lowerUnaryMath((UnaryMathIntrinsicNode) n, tool);
+        }
+        else if (n instanceof BinaryMathIntrinsicNode)
+        {
+            lowerBinaryMath((BinaryMathIntrinsicNode) n, tool);
+        }
+        else if (n instanceof StringIndexOfNode)
+        {
+            lowerIndexOf((StringIndexOfNode) n);
+        }
+        else if (n instanceof UnpackEndianHalfNode)
+        {
+            lowerSecondHalf((UnpackEndianHalfNode) n);
+        }
+        else
+        {
+            throw GraalError.shouldNotReachHere("Node implementing Lowerable not handled: " + n);
         }
     }
 
@@ -774,7 +769,6 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         memoryWrite.setGuard(write.getGuard());
     }
 
-    @SuppressWarnings("try")
     protected void lowerCommitAllocationNode(CommitAllocationNode commit, LoweringTool tool)
     {
         StructuredGraph graph = commit.graph();
@@ -788,64 +782,61 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
             for (int objIndex = 0; objIndex < commit.getVirtualObjects().size(); objIndex++)
             {
                 VirtualObjectNode virtual = commit.getVirtualObjects().get(objIndex);
-                try (DebugCloseable nsp = graph.withNodeSourcePosition(virtual))
+                int entryCount = virtual.entryCount();
+                AbstractNewObjectNode newObject;
+                if (virtual instanceof VirtualInstanceNode)
                 {
-                    int entryCount = virtual.entryCount();
-                    AbstractNewObjectNode newObject;
-                    if (virtual instanceof VirtualInstanceNode)
-                    {
-                        newObject = graph.add(createNewInstanceFromVirtual(virtual));
-                    }
-                    else
-                    {
-                        newObject = graph.add(createNewArrayFromVirtual(virtual, ConstantNode.forInt(entryCount, graph)));
-                    }
+                    newObject = graph.add(createNewInstanceFromVirtual(virtual));
+                }
+                else
+                {
+                    newObject = graph.add(createNewArrayFromVirtual(virtual, ConstantNode.forInt(entryCount, graph)));
+                }
 
-                    recursiveLowerings.add(newObject);
-                    graph.addBeforeFixed(commit, newObject);
-                    allocations[objIndex] = newObject;
-                    for (int i = 0; i < entryCount; i++)
+                recursiveLowerings.add(newObject);
+                graph.addBeforeFixed(commit, newObject);
+                allocations[objIndex] = newObject;
+                for (int i = 0; i < entryCount; i++)
+                {
+                    ValueNode value = commit.getValues().get(valuePos);
+                    if (value instanceof VirtualObjectNode)
                     {
-                        ValueNode value = commit.getValues().get(valuePos);
-                        if (value instanceof VirtualObjectNode)
-                        {
-                            value = allocations[commit.getVirtualObjects().indexOf(value)];
-                        }
-                        if (value == null)
-                        {
-                            omittedValues.set(valuePos);
-                        }
-                        else if (!(value.isConstant() && value.asConstant().isDefaultForKind()))
-                        {
-                            // Constant.illegal is always the defaultForKind, so it is skipped
-                            JavaKind valueKind = value.getStackKind();
-                            JavaKind entryKind = virtual.entryKind(i);
-
-                            AddressNode address = null;
-                            BarrierType barrierType = null;
-                            if (virtual instanceof VirtualInstanceNode)
-                            {
-                                ResolvedJavaField field = ((VirtualInstanceNode) virtual).field(i);
-                                long offset = fieldOffset(field);
-                                if (offset >= 0)
-                                {
-                                    address = createOffsetAddress(graph, newObject, offset);
-                                    barrierType = fieldInitializationBarrier(entryKind);
-                                }
-                            }
-                            else
-                            {
-                                address = createOffsetAddress(graph, newObject, arrayBaseOffset(entryKind) + i * arrayScalingFactor(entryKind));
-                                barrierType = arrayInitializationBarrier(entryKind);
-                            }
-                            if (address != null)
-                            {
-                                WriteNode write = new WriteNode(address, LocationIdentity.init(), implicitStoreConvert(graph, entryKind, value), barrierType);
-                                graph.addAfterFixed(newObject, graph.add(write));
-                            }
-                        }
-                        valuePos++;
+                        value = allocations[commit.getVirtualObjects().indexOf(value)];
                     }
+                    if (value == null)
+                    {
+                        omittedValues.set(valuePos);
+                    }
+                    else if (!(value.isConstant() && value.asConstant().isDefaultForKind()))
+                    {
+                        // Constant.illegal is always the defaultForKind, so it is skipped
+                        JavaKind valueKind = value.getStackKind();
+                        JavaKind entryKind = virtual.entryKind(i);
+
+                        AddressNode address = null;
+                        BarrierType barrierType = null;
+                        if (virtual instanceof VirtualInstanceNode)
+                        {
+                            ResolvedJavaField field = ((VirtualInstanceNode) virtual).field(i);
+                            long offset = fieldOffset(field);
+                            if (offset >= 0)
+                            {
+                                address = createOffsetAddress(graph, newObject, offset);
+                                barrierType = fieldInitializationBarrier(entryKind);
+                            }
+                        }
+                        else
+                        {
+                            address = createOffsetAddress(graph, newObject, arrayBaseOffset(entryKind) + i * arrayScalingFactor(entryKind));
+                            barrierType = arrayInitializationBarrier(entryKind);
+                        }
+                        if (address != null)
+                        {
+                            WriteNode write = new WriteNode(address, LocationIdentity.init(), implicitStoreConvert(graph, entryKind, value), barrierType);
+                            graph.addAfterFixed(newObject, graph.add(write));
+                        }
+                    }
+                    valuePos++;
                 }
             }
             valuePos = 0;
@@ -853,40 +844,37 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
             for (int objIndex = 0; objIndex < commit.getVirtualObjects().size(); objIndex++)
             {
                 VirtualObjectNode virtual = commit.getVirtualObjects().get(objIndex);
-                try (DebugCloseable nsp = graph.withNodeSourcePosition(virtual))
+                int entryCount = virtual.entryCount();
+                ValueNode newObject = allocations[objIndex];
+                for (int i = 0; i < entryCount; i++)
                 {
-                    int entryCount = virtual.entryCount();
-                    ValueNode newObject = allocations[objIndex];
-                    for (int i = 0; i < entryCount; i++)
+                    if (omittedValues.get(valuePos))
                     {
-                        if (omittedValues.get(valuePos))
+                        ValueNode value = commit.getValues().get(valuePos);
+                        ValueNode allocValue = allocations[commit.getVirtualObjects().indexOf(value)];
+                        if (!(allocValue.isConstant() && allocValue.asConstant().isDefaultForKind()))
                         {
-                            ValueNode value = commit.getValues().get(valuePos);
-                            ValueNode allocValue = allocations[commit.getVirtualObjects().indexOf(value)];
-                            if (!(allocValue.isConstant() && allocValue.asConstant().isDefaultForKind()))
+                            AddressNode address;
+                            BarrierType barrierType;
+                            if (virtual instanceof VirtualInstanceNode)
                             {
-                                AddressNode address;
-                                BarrierType barrierType;
-                                if (virtual instanceof VirtualInstanceNode)
-                                {
-                                    VirtualInstanceNode virtualInstance = (VirtualInstanceNode) virtual;
-                                    address = createFieldAddress(graph, newObject, virtualInstance.field(i));
-                                    barrierType = BarrierType.IMPRECISE;
-                                }
-                                else
-                                {
-                                    address = createArrayAddress(graph, newObject, virtual.entryKind(i), ConstantNode.forInt(i, graph));
-                                    barrierType = BarrierType.PRECISE;
-                                }
-                                if (address != null)
-                                {
-                                    WriteNode write = new WriteNode(address, LocationIdentity.init(), implicitStoreConvert(graph, JavaKind.Object, allocValue), barrierType);
-                                    graph.addBeforeFixed(commit, graph.add(write));
-                                }
+                                VirtualInstanceNode virtualInstance = (VirtualInstanceNode) virtual;
+                                address = createFieldAddress(graph, newObject, virtualInstance.field(i));
+                                barrierType = BarrierType.IMPRECISE;
+                            }
+                            else
+                            {
+                                address = createArrayAddress(graph, newObject, virtual.entryKind(i), ConstantNode.forInt(i, graph));
+                                barrierType = BarrierType.PRECISE;
+                            }
+                            if (address != null)
+                            {
+                                WriteNode write = new WriteNode(address, LocationIdentity.init(), implicitStoreConvert(graph, JavaKind.Object, allocValue), barrierType);
+                                graph.addBeforeFixed(commit, graph.add(write));
                             }
                         }
-                        valuePos++;
                     }
+                    valuePos++;
                 }
             }
 
@@ -1228,7 +1216,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         {
             return null;
         }
-        return tool.createGuard(before, before.graph().unique(IsNullNode.create(object)), NullCheckException, InvalidateReprofile, JavaConstant.NULL_POINTER, true, null);
+        return tool.createGuard(before, before.graph().unique(IsNullNode.create(object)), NullCheckException, InvalidateReprofile, JavaConstant.NULL_POINTER, true);
     }
 
     protected ValueNode createNullCheckedValue(ValueNode object, FixedNode before, LoweringTool tool)

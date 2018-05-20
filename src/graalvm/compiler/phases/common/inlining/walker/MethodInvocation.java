@@ -11,13 +11,10 @@ import graalvm.compiler.phases.common.inlining.info.elem.InlineableGraph;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
- * <p>
  * An instance of this class denotes a callsite being analyzed for inlining.
- * </p>
- * <p>
+ *
  * Each element of the {@link InliningData} stack contains one such instance, the accompanying
  * {@link CallsiteHolder}s in that element represent feasible targets for the callsite in question.
- * </p>
  *
  * @see InliningData#moveForward()
  */
@@ -30,26 +27,19 @@ public class MethodInvocation
     private int processedGraphs;
 
     /**
-     * <p>
      * The immutable positions of freshly instantiated arguments (ie, positions in
      * <code>callee.invoke.callTarget.arguments</code>).
-     * </p>
      *
-     * <p>
      * A freshly instantiated argument is either:
-     * <uL>
+     *
      * <li>an {@link InliningData#isFreshInstantiation(graalvm.compiler.nodes.ValueNode)}</li>
      * <li>a fixed-param of the graph containing the callsite (ie, of <code>callee.graph()</code>
      * that contains <code>callee.invoke</code>)</li>
-     * </uL>
-     * </p>
      *
-     * <p>
      * Given those positions, the
      * {@link graalvm.compiler.phases.common.inlining.walker.CallsiteHolderExplorable}
      * instantiated in {@link #buildCallsiteHolderForElement(int)} can determine which of <i>its</i>
      * parameters are fixed.
-     * </p>
      */
     private final BitSet freshlyInstantiatedArguments;
 

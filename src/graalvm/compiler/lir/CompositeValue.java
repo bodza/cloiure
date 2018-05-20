@@ -32,25 +32,16 @@ public abstract class CompositeValue extends Value
     }
 
     /**
-     * Invoke {@code proc} on each {@link Value} element of this {@link CompositeValue}. If
-     * {@code proc} replaces any value then a new CompositeValue should be returned.
+     * Invoke {@code proc} on each {@link Value} element of this {@link CompositeValue}.
+     * If {@code proc} replaces any value then a new CompositeValue should be returned.
      *
-     * @param inst
-     * @param mode
-     * @param proc
      * @return the original CompositeValue or a copy with any modified values
      */
     public abstract CompositeValue forEachComponent(LIRInstruction inst, OperandMode mode, InstructionValueProcedure proc);
 
     /**
-     * A helper method to visit {@link Value}[] ensuring that a copy of the array is made if it's
-     * needed.
+     * A helper method to visit {@link Value}[] ensuring that a copy of the array is made if it's needed.
      *
-     * @param inst
-     * @param values
-     * @param mode
-     * @param proc
-     * @param flags
      * @return the original {@code values} array or a copy if values changed
      */
     protected Value[] visitValueArray(LIRInstruction inst, Value[] values, OperandMode mode, InstructionValueProcedure proc, EnumSet<OperandFlag> flags)

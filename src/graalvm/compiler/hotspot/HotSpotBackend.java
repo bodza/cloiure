@@ -316,9 +316,6 @@ public abstract class HotSpotBackend extends Backend implements FrameMap.Referen
     /**
      * Performs any remaining initialization that was deferred until the {@linkplain #getRuntime()
      * runtime} object was initialized and this backend was registered with it.
-     *
-     * @param jvmciRuntime
-     * @param options
      */
     public void completeInitialization(HotSpotJVMCIRuntime jvmciRuntime, OptionValues options)
     {
@@ -369,7 +366,7 @@ public abstract class HotSpotBackend extends Backend implements FrameMap.Referen
 
     /**
      * Updates a given stub with respect to the registers it destroys.
-     * <p>
+     *
      * Any entry in {@code calleeSaveInfo} that {@linkplain SaveRegistersOp#supportsRemove()
      * supports} pruning will have {@code destroyedRegisters}
      * {@linkplain SaveRegistersOp#remove(EconomicSet) removed} as these registers are declared as

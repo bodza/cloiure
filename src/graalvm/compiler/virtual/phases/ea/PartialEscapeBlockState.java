@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import graalvm.compiler.debug.DebugCloseable;
 import graalvm.compiler.graph.Node;
-import graalvm.compiler.graph.NodeSourcePosition;
 import graalvm.compiler.nodes.FixedNode;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.StructuredGraph;
@@ -184,7 +182,6 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
      * This transitively also materializes all other virtual objects that are reachable from the
      * entries.
      */
-    @SuppressWarnings("try")
     public void materializeBefore(FixedNode fixed, VirtualObjectNode virtual, GraphEffectList materializeEffects)
     {
         List<AllocatedObjectNode> objects = new ArrayList<>(2);
@@ -217,11 +214,8 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
                     }
                     else
                     {
-                        try (DebugCloseable context = graph.withNodeSourcePosition(NodeSourcePosition.placeholder(graph.method())))
-                        {
-                            commit = graph.add(new CommitAllocationNode());
-                            graph.addBeforeFixed(fixed, commit);
-                        }
+                        commit = graph.add(new CommitAllocationNode());
+                        graph.addBeforeFixed(fixed, commit);
                     }
                     for (AllocatedObjectNode obj : objects)
                     {

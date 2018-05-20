@@ -7,7 +7,6 @@ import graalvm.compiler.core.common.PermanentBailoutException;
 import graalvm.compiler.core.common.cfg.Loop;
 import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.Stamp;
-import graalvm.compiler.debug.DebugCloseable;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.iterators.NodeIterable;
@@ -105,7 +104,7 @@ public class OnStackReplacementPhase extends Phase
             throw new PermanentBailoutException("OSR with locks disabled.");
         }
 
-        do
+        while (true)
         {
             osr = getEntryMarker(graph);
             LoopsData loops = new LoopsData(graph);
@@ -139,101 +138,94 @@ public class OnStackReplacementPhase extends Phase
                 proxy.replaceAndDelete(proxy.value());
             }
             GraphUtil.removeFixedWithUnusedInputs(osr);
-        } while (true);
+        }
 
         StartNode start = graph.start();
         FrameState osrState = osr.stateAfter();
-        OSRStartNode osrStart;
-        try (DebugCloseable context = osr.withNodeSourcePosition())
+        osr.setStateAfter(null);
+        OSRStartNode osrStart = graph.add(new OSRStartNode());
+        FixedNode next = osr.next();
+        osr.setNext(null);
+        osrStart.setNext(next);
+        graph.setStart(osrStart);
+        osrStart.setStateAfter(osrState);
+
+        final int localsSize = osrState.localsSize();
+        final int locksSize = osrState.locksSize();
+
+        for (int i = 0; i < localsSize + locksSize; i++)
         {
-            osr.setStateAfter(null);
-            osrStart = graph.add(new OSRStartNode());
-            FixedNode next = osr.next();
-            osr.setNext(null);
-            osrStart.setNext(next);
-            graph.setStart(osrStart);
-            osrStart.setStateAfter(osrState);
-
-            final int localsSize = osrState.localsSize();
-            final int locksSize = osrState.locksSize();
-
-            for (int i = 0; i < localsSize + locksSize; i++)
+            ValueNode value = null;
+            if (i >= localsSize)
             {
-                ValueNode value = null;
+                value = osrState.lockAt(i - localsSize);
+            }
+            else
+            {
+                value = osrState.localAt(i);
+            }
+            if (value instanceof EntryProxyNode)
+            {
+                EntryProxyNode proxy = (EntryProxyNode) value;
+                /*
+                 * We need to drop the stamp since the types we see during OSR may be too
+                 * precise (if a branch was not parsed for example). In cases when this is
+                 * possible, we insert a guard and narrow the OSRLocal stamp at its usages.
+                 */
+                Stamp narrowedStamp = proxy.value().stamp(NodeView.DEFAULT);
+                Stamp unrestrictedStamp = proxy.stamp(NodeView.DEFAULT).unrestricted();
+                ValueNode osrLocal;
                 if (i >= localsSize)
                 {
-                    value = osrState.lockAt(i - localsSize);
+                    osrLocal = graph.addOrUnique(new OSRLockNode(i - localsSize, unrestrictedStamp));
                 }
                 else
                 {
-                    value = osrState.localAt(i);
+                    osrLocal = graph.addOrUnique(new OSRLocalNode(i, unrestrictedStamp));
                 }
-                if (value instanceof EntryProxyNode)
+                // Speculate on the OSRLocal stamps that could be more precise.
+                OSRLocalSpeculationReason reason = new OSRLocalSpeculationReason(osrState.bci, narrowedStamp, i);
+                if (graph.getSpeculationLog().maySpeculate(reason) && osrLocal instanceof OSRLocalNode && value.getStackKind().equals(JavaKind.Object) && !narrowedStamp.isUnrestricted())
                 {
-                    EntryProxyNode proxy = (EntryProxyNode) value;
-                    /*
-                     * We need to drop the stamp since the types we see during OSR may be too
-                     * precise (if a branch was not parsed for example). In cases when this is
-                     * possible, we insert a guard and narrow the OSRLocal stamp at its usages.
-                     */
-                    Stamp narrowedStamp = proxy.value().stamp(NodeView.DEFAULT);
-                    Stamp unrestrictedStamp = proxy.stamp(NodeView.DEFAULT).unrestricted();
-                    ValueNode osrLocal;
-                    if (i >= localsSize)
-                    {
-                        osrLocal = graph.addOrUnique(new OSRLockNode(i - localsSize, unrestrictedStamp));
-                    }
-                    else
-                    {
-                        osrLocal = graph.addOrUnique(new OSRLocalNode(i, unrestrictedStamp));
-                    }
-                    // Speculate on the OSRLocal stamps that could be more precise.
-                    OSRLocalSpeculationReason reason = new OSRLocalSpeculationReason(osrState.bci, narrowedStamp, i);
-                    if (graph.getSpeculationLog().maySpeculate(reason) && osrLocal instanceof OSRLocalNode && value.getStackKind().equals(JavaKind.Object) && !narrowedStamp.isUnrestricted())
-                    {
-                        // Add guard.
-                        LogicNode check = graph.addOrUniqueWithInputs(InstanceOfNode.createHelper((ObjectStamp) narrowedStamp, osrLocal, null, null));
-                        JavaConstant constant = graph.getSpeculationLog().speculate(reason);
-                        FixedGuardNode guard = graph.add(new FixedGuardNode(check, DeoptimizationReason.OptimizedTypeCheckViolated, DeoptimizationAction.InvalidateRecompile, constant, false));
-                        graph.addAfterFixed(osrStart, guard);
+                    // Add guard.
+                    LogicNode check = graph.addOrUniqueWithInputs(InstanceOfNode.createHelper((ObjectStamp) narrowedStamp, osrLocal, null, null));
+                    JavaConstant constant = graph.getSpeculationLog().speculate(reason);
+                    FixedGuardNode guard = graph.add(new FixedGuardNode(check, DeoptimizationReason.OptimizedTypeCheckViolated, DeoptimizationAction.InvalidateRecompile, constant, false));
+                    graph.addAfterFixed(osrStart, guard);
 
-                        // Replace with a more specific type at usages.
-                        // We know that we are at the root,
-                        // so we need to replace the proxy in the state.
-                        proxy.replaceAtMatchingUsages(osrLocal, n -> n == osrState);
-                        osrLocal = graph.addOrUnique(new PiNode(osrLocal, narrowedStamp, guard));
-                    }
-                    proxy.replaceAndDelete(osrLocal);
+                    // Replace with a more specific type at usages.
+                    // We know that we are at the root,
+                    // so we need to replace the proxy in the state.
+                    proxy.replaceAtMatchingUsages(osrLocal, n -> n == osrState);
+                    osrLocal = graph.addOrUnique(new PiNode(osrLocal, narrowedStamp, guard));
                 }
+                proxy.replaceAndDelete(osrLocal);
             }
-
-            osr.replaceAtUsages(InputType.Guard, osrStart);
         }
+
+        osr.replaceAtUsages(InputType.Guard, osrStart);
         GraphUtil.killCFG(start);
         new DeadCodeEliminationPhase(Required).apply(graph);
 
         if (currentOSRWithLocks)
         {
-            try (DebugCloseable context = osrStart.withNodeSourcePosition())
+            for (int i = osrState.monitorIdCount() - 1; i >= 0; --i)
             {
-                for (int i = osrState.monitorIdCount() - 1; i >= 0; --i)
+                MonitorIdNode id = osrState.monitorIdAt(i);
+                ValueNode lockedObject = osrState.lockAt(i);
+                OSRMonitorEnterNode osrMonitorEnter = graph.add(new OSRMonitorEnterNode(lockedObject, id));
+                for (Node usage : id.usages())
                 {
-                    MonitorIdNode id = osrState.monitorIdAt(i);
-                    ValueNode lockedObject = osrState.lockAt(i);
-                    OSRMonitorEnterNode osrMonitorEnter = graph.add(new OSRMonitorEnterNode(lockedObject, id));
-                    for (Node usage : id.usages())
+                    if (usage instanceof AccessMonitorNode)
                     {
-                        if (usage instanceof AccessMonitorNode)
-                        {
-                            AccessMonitorNode access = (AccessMonitorNode) usage;
-                            access.setObject(lockedObject);
-                        }
+                        AccessMonitorNode access = (AccessMonitorNode) usage;
+                        access.setObject(lockedObject);
                     }
-                    FixedNode oldNext = osrStart.next();
-                    oldNext.replaceAtPredecessor(null);
-                    osrMonitorEnter.setNext(oldNext);
-                    osrStart.setNext(osrMonitorEnter);
                 }
+                FixedNode oldNext = osrStart.next();
+                oldNext.replaceAtPredecessor(null);
+                osrMonitorEnter.setNext(oldNext);
+                osrStart.setNext(osrMonitorEnter);
             }
 
             /*

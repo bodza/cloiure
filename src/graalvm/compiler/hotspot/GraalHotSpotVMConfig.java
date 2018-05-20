@@ -46,7 +46,6 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
     public final boolean ciTimeEach = getFlag("CITimeEach", Boolean.class);
     public final boolean dontCompileHugeMethods = getFlag("DontCompileHugeMethods", Boolean.class);
     public final int hugeMethodLimit = getFlag("HugeMethodLimit", Integer.class);
-    public final boolean printInlining = getFlag("PrintInlining", Boolean.class);
     public final boolean inline = getFlag("Inline", Boolean.class);
     public final boolean inlineNotify = versioned.inlineNotify;
     public final boolean useFastLocking = getFlag("JVMCIUseFastLocking", Boolean.class);

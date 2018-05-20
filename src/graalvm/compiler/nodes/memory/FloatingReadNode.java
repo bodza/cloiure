@@ -7,7 +7,6 @@ import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.Stamp;
-import graalvm.compiler.debug.DebugCloseable;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
@@ -90,16 +89,12 @@ public final class FloatingReadNode extends FloatingAccessNode implements LIRLow
         return this;
     }
 
-    @SuppressWarnings("try")
     @Override
     public FixedAccessNode asFixedNode()
     {
-        try (DebugCloseable position = withNodeSourcePosition())
-        {
-            ReadNode result = graph().add(new ReadNode(getAddress(), getLocationIdentity(), stamp(NodeView.DEFAULT), getBarrierType()));
-            result.setGuard(getGuard());
-            return result;
-        }
+        ReadNode result = graph().add(new ReadNode(getAddress(), getLocationIdentity(), stamp(NodeView.DEFAULT), getBarrierType()));
+        result.setGuard(getGuard());
+        return result;
     }
 
     @Override

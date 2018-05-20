@@ -21,7 +21,6 @@ import java.util.function.Supplier;
 import graalvm.compiler.core.common.Fields;
 import graalvm.compiler.core.common.type.AbstractPointerStamp;
 import graalvm.compiler.core.common.type.Stamp;
-import graalvm.compiler.debug.DebugCloseable;
 import graalvm.compiler.graph.Graph.NodeEventListener;
 import graalvm.compiler.graph.Graph.Options;
 import graalvm.compiler.graph.iterators.NodeIterable;
@@ -38,22 +37,14 @@ import graalvm.compiler.options.OptionValues;
 /**
  * This class is the base class for all nodes. It represents a node that can be inserted in a
  * {@link Graph}.
- * <p>
+ *
  * Once a node has been added to a graph, it has a graph-unique {@link #id()}. Edges in the
  * subclasses are represented with annotated fields. There are two kind of edges : {@link Input} and
  * {@link Successor}. If a field, of a type compatible with {@link Node}, annotated with either
  * {@link Input} and {@link Successor} is not null, then there is an edge from this node to the node
  * this field points to.
- * <p>
+ *
  * Nodes which are be value numberable should implement the {@link ValueNumberable} interface.
- *
- * <h1>Assertions and Verification</h1>
- *
- * The Node class supplies the {@link #assertTrue(boolean, String, Object...)} and
- * {@link #assertFalse(boolean, String, Object...)} methods, which will check the supplied boolean
- * and throw a VerificationError if it has the wrong value. Both methods will always either throw an
- * exception or return true. They can thus be used within an assert statement, so that the check is
- * only performed if assertions are enabled.
  */
 @NodeInfo
 public abstract class Node implements Cloneable, Formattable, NodeInterface
@@ -127,7 +118,7 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
      * Annotates a method that can be replaced by a compiler intrinsic. A (resolved) call to the
      * annotated method will be processed by a generated {@code InvocationPlugin} that calls either
      * a factory method or a constructor corresponding with the annotated method.
-     * <p>
+     *
      * A factory method corresponding to an annotated method is a static method named
      * {@code intrinsify} defined in the class denoted by {@link #value()}. In order, its signature
      * is as follows:
@@ -643,51 +634,8 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
         }
         else
         {
-            this.annotation = new Object[]{this.annotation, value};
+            this.annotation = new Object[] { this.annotation, value };
         }
-    }
-
-    /**
-     * Gets the source position information for this node or null if it doesn't exist.
-     */
-
-    public NodeSourcePosition getNodeSourcePosition()
-    {
-        return getNodeInfo(NodeSourcePosition.class);
-    }
-
-    /**
-     * Set the source position to {@code sourcePosition}. Setting it to null is ignored so that it's
-     * not accidentally cleared. Use {@link #clearNodeSourcePosition()} instead.
-     */
-    public void setNodeSourcePosition(NodeSourcePosition sourcePosition)
-    {
-        if (sourcePosition == null)
-        {
-            return;
-        }
-        setNodeInfo(NodeSourcePosition.class, sourcePosition);
-    }
-
-    public void clearNodeSourcePosition()
-    {
-        setNodeInfo(NodeSourcePosition.class, null);
-    }
-
-    /**
-     * Update the source position only if it is null.
-     */
-    public void updateNodeSourcePosition(Supplier<NodeSourcePosition> sourcePositionSupp)
-    {
-        if (this.getNodeSourcePosition() == null)
-        {
-            setNodeSourcePosition(sourcePositionSupp.get());
-        }
-    }
-
-    public DebugCloseable withNodeSourcePosition()
-    {
-        return graph.withNodeSourcePosition(this);
     }
 
     public final NodeClass<? extends Node> getNodeClass()
@@ -948,14 +896,6 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
         getNodeClass().unregisterAtSuccessorsAsPredecessor(this);
     }
 
-    private boolean checkDeletion()
-    {
-        assertTrue(isAlive(), "must be alive");
-        assertTrue(hasNoUsages(), "cannot delete node %s because of usages: %s", this, usages());
-        assertTrue(predecessor == null, "cannot delete node %s because of predecessor: %s", this, predecessor);
-        return true;
-    }
-
     /**
      * Removes this node from its graph. This node must have no {@linkplain Node#usages() usages}
      * and no {@linkplain #predecessor() predecessor}.
@@ -995,8 +935,6 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
      * Must be overridden by subclasses that implement {@link Simplifiable}. The implementation in
      * {@link Node} exists to obviate the need to cast a node before invoking
      * {@link Simplifiable#simplify(SimplifierTool)}.
-     *
-     * @param tool
      */
     public void simplify(SimplifierTool tool)
     {
@@ -1070,10 +1008,6 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
         }
         newNode.graph = into;
         newNode.id = INITIAL_ID;
-        if (getNodeSourcePosition() != null && (into == null || into.updateNodeSourcePosition()))
-        {
-            newNode.setNodeSourcePosition(getNodeSourcePosition());
-        }
         if (into != null)
         {
             into.register(newNode);
@@ -1090,35 +1024,6 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
 
     protected void afterClone(@SuppressWarnings("unused") Node other)
     {
-    }
-
-    public boolean verifySourcePosition()
-    {
-        return true;
-    }
-
-    public boolean assertTrue(boolean condition, String message, Object... args)
-    {
-        if (condition)
-        {
-            return true;
-        }
-        else
-        {
-            throw fail(message, args);
-        }
-    }
-
-    public boolean assertFalse(boolean condition, String message, Object... args)
-    {
-        if (condition)
-        {
-            throw fail(message, args);
-        }
-        else
-        {
-            return true;
-        }
     }
 
     protected VerificationError fail(String message, Object... args) throws GraalGraphError

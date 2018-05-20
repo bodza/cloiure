@@ -50,27 +50,20 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
- * <p>
  * The space of inlining decisions is explored depth-first with the help of a stack realized by
  * {@link InliningData}. At any point in time, the topmost element of that stack consists of:
- * <ul>
+ *
  * <li>the callsite under consideration is tracked as a {@link MethodInvocation}.</li>
  * <li>one or more {@link CallsiteHolder}s, all of them associated to the callsite above. Why more
  * than one? Depending on the type-profile for the receiver more than one concrete method may be
  * feasible target.</li>
- * </ul>
- * </p>
  *
- * <p>
  * The bottom element in the stack consists of:
- * <ul>
+ *
  * <li>a single {@link MethodInvocation} (the
  * {@link graalvm.compiler.phases.common.inlining.walker.MethodInvocation#isRoot root} one, ie
  * the unknown caller of the root graph)</li>
- * <li>a single {@link CallsiteHolder} (the root one, for the method on which inlining was called)
- * </li>
- * </ul>
- * </p>
+ * <li>a single {@link CallsiteHolder} (the root one, for the method on which inlining was called)</li>
  *
  * @see #moveForward()
  */
@@ -157,7 +150,6 @@ public class InliningData
         }
         else
         {
-            InliningUtil.traceNotInlinedMethod(invoke, inliningDepth(), method, failureMessage);
             return false;
         }
     }
@@ -265,14 +257,12 @@ public class InliningData
         JavaTypeProfile typeProfile = ((MethodCallTargetNode) invoke.callTarget()).getProfile();
         if (typeProfile == null)
         {
-            InliningUtil.traceNotInlinedMethod(invoke, inliningDepth(), targetMethod, "no type profile exists");
             return null;
         }
 
         JavaTypeProfile.ProfiledType[] ptypes = typeProfile.getTypes();
         if (ptypes == null || ptypes.length <= 0)
         {
-            InliningUtil.traceNotInlinedMethod(invoke, inliningDepth(), targetMethod, "no types in profile");
             return null;
         }
         ResolvedJavaType contextType = invoke.getContextType();
@@ -283,7 +273,6 @@ public class InliningData
         {
             if (!optimisticOpts.inlineMonomorphicCalls(options))
             {
-                InliningUtil.traceNotInlinedMethod(invoke, inliningDepth(), targetMethod, "inlining monomorphic calls is disabled");
                 return null;
             }
 
@@ -301,14 +290,12 @@ public class InliningData
 
             if (!optimisticOpts.inlinePolymorphicCalls(options) && notRecordedTypeProbability == 0)
             {
-                InliningUtil.traceNotInlinedMethod(invoke, inliningDepth(), targetMethod, "inlining polymorphic calls is disabled (%d types)", ptypes.length);
                 return null;
             }
             if (!optimisticOpts.inlineMegamorphicCalls(options) && notRecordedTypeProbability > 0)
             {
                 // due to filtering impossible types, notRecordedTypeProbability can be > 0 although
                 // the number of types is lower than what can be recorded in a type profile
-                InliningUtil.traceNotInlinedMethod(invoke, inliningDepth(), targetMethod, "inlining megamorphic calls is disabled (%d types, %f %% not recorded types)", ptypes.length, notRecordedTypeProbability * 100);
                 return null;
             }
 
@@ -320,7 +307,6 @@ public class InliningData
                 ResolvedJavaMethod concrete = ptypes[i].getType().resolveConcreteMethod(targetMethod, contextType);
                 if (concrete == null)
                 {
-                    InliningUtil.traceNotInlinedMethod(invoke, inliningDepth(), targetMethod, "could not resolve method");
                     return null;
                 }
                 int index = concreteMethods.indexOf(concrete);
@@ -354,7 +340,6 @@ public class InliningData
                 if (newConcreteMethods.isEmpty())
                 {
                     // No method left that is worth inlining.
-                    InliningUtil.traceNotInlinedMethod(invoke, inliningDepth(), targetMethod, "no methods remaining after filtering less frequent methods (%d methods previously)", concreteMethods.size());
                     return null;
                 }
 
@@ -364,7 +349,6 @@ public class InliningData
 
             if (concreteMethods.size() > maxMethodPerInlining)
             {
-                InliningUtil.traceNotInlinedMethod(invoke, inliningDepth(), targetMethod, "polymorphic call with more than %d target methods", maxMethodPerInlining);
                 return null;
             }
 
@@ -389,7 +373,6 @@ public class InliningData
             if (usedTypes.isEmpty())
             {
                 // No type left that is worth checking for.
-                InliningUtil.traceNotInlinedMethod(invoke, inliningDepth(), targetMethod, "no types remaining after filtering less frequent types (%d types previously)", ptypes.length);
                 return null;
             }
 
@@ -397,7 +380,6 @@ public class InliningData
             {
                 if (!checkTargetConditions(invoke, concrete))
                 {
-                    InliningUtil.traceNotInlinedMethod(invoke, inliningDepth(), targetMethod, "it is a polymorphic method call and at least one invoked method cannot be inlined");
                     return null;
                 }
             }
@@ -500,25 +482,19 @@ public class InliningData
      * {@link CallsiteHolderExplorable}. Provided the callsite qualifies to be analyzed for
      * inlining, this method prepares a new stack top in {@link InliningData} for such callsite,
      * which comprises:
-     * <ul>
+     *
      * <li>preparing a summary of feasible targets, ie preparing an {@link InlineInfo}</li>
      * <li>based on it, preparing the stack top proper which consists of:</li>
-     * <ul>
+     *
      * <li>one {@link MethodInvocation}</li>
      * <li>a {@link CallsiteHolder} for each feasible target</li>
-     * </ul>
-     * </ul>
      *
-     * <p>
      * The thus prepared "stack top" is needed by {@link #moveForward()} to explore the space of
      * inlining decisions (each decision one of: backtracking, delving, inlining).
-     * </p>
      *
-     * <p>
      * The {@link InlineInfo} used to get things rolling is kept around in the
      * {@link MethodInvocation}, it will be needed in case of inlining, see
      * {@link InlineInfo#inline(Providers, String)}
-     * </p>
      */
     private void processNextInvoke()
     {
@@ -538,13 +514,11 @@ public class InliningData
 
     /**
      * Gets the freshly instantiated arguments.
-     * <p>
+     *
      * A freshly instantiated argument is either:
-     * <uL>
+     *
      * <li>an {@link InliningData#isFreshInstantiation(graalvm.compiler.nodes.ValueNode)}</li>
      * <li>a fixed-param, ie a {@link ParameterNode} receiving a freshly instantiated argument</li>
-     * </uL>
-     * </p>
      *
      * @return the positions of freshly instantiated arguments in the argument list of the
      *         <code>invoke</code>, or null if no such positions exist.

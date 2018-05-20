@@ -102,8 +102,6 @@ public class AMD64InstructionAttr
 
     /**
      * Set the vector length of a given instruction.
-     *
-     * @param vectorLen
      */
     public void setVectorLen(int vectorLen)
     {
@@ -120,8 +118,6 @@ public class AMD64InstructionAttr
 
     /**
      * Alter the current encoding width.
-     *
-     * @param state
      */
     public void setRexVexW(boolean state)
     {
@@ -146,8 +142,6 @@ public class AMD64InstructionAttr
 
     /**
      * Set the current encoding attributes to be used in address calculations for EVEX.
-     *
-     * @param value
      */
     public void setEvexEncoding(int value)
     {

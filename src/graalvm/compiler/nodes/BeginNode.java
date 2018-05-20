@@ -5,7 +5,6 @@ import static graalvm.compiler.nodeinfo.NodeSize.SIZE_0;
 
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
-import graalvm.compiler.debug.DebugCloseable;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Simplifiable;
 import graalvm.compiler.graph.spi.SimplifierTool;
@@ -62,18 +61,14 @@ public final class BeginNode extends AbstractBeginNode implements Simplifiable
         }
     }
 
-    @SuppressWarnings("try")
     public static AbstractBeginNode begin(FixedNode with)
     {
-        try (DebugCloseable position = with.withNodeSourcePosition())
+        if (with instanceof AbstractBeginNode)
         {
-            if (with instanceof AbstractBeginNode)
-            {
-                return (AbstractBeginNode) with;
-            }
-            BeginNode begin = with.graph().add(new BeginNode());
-            begin.setNext(with);
-            return begin;
+            return (AbstractBeginNode) with;
         }
+        BeginNode begin = with.graph().add(new BeginNode());
+        begin.setNext(with);
+        return begin;
     }
 }

@@ -33,7 +33,7 @@ public class LIRSuites
     /**
      * {@link PreAllocationOptimizationPhase}s are executed between {@link LIR} generation and
      * register allocation.
-     * <p>
+     *
      * {@link PreAllocationOptimizationPhase Implementers} can create new
      * {@link LIRGeneratorTool#newVariable variables}, {@link LIRGenerationResult#getFrameMap stack
      * slots} and {@link LIRGenerationResult#getFrameMapBuilder virtual stack slots}.
@@ -46,7 +46,7 @@ public class LIRSuites
     /**
      * {@link AllocationPhase}s are responsible for register allocation and translating
      * {@link VirtualStackSlot}s into {@link StackSlot}s.
-     * <p>
+     *
      * After the {@link AllocationStage} there should be no more {@link Variable}s and
      * {@link VirtualStackSlot}s.
      */
@@ -58,7 +58,7 @@ public class LIRSuites
     /**
      * {@link PostAllocationOptimizationPhase}s are executed after register allocation and before
      * machine code generation.
-     * <p>
+     *
      * A {@link PostAllocationOptimizationPhase} must not introduce new {@link Variable}s,
      * {@link VirtualStackSlot}s or {@link StackSlot}s. Blocks might be removed from
      * {@link LIR#codeEmittingOrder()} by overwriting them with {@code null}.

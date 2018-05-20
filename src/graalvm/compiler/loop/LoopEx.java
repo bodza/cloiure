@@ -379,7 +379,6 @@ public class LoopEx
      * Collect all the basic induction variables for the loop and the find any induction variables
      * which are derived from the basic ones.
      *
-     * @param loop
      * @return a map from node to induction variable
      */
     private static EconomicMap<Node, InductionVariable> findInductionVariables(LoopEx loop)

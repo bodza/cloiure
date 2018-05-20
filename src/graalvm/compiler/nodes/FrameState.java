@@ -23,7 +23,6 @@ import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.IterableNodeType;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeInputList;
-import graalvm.compiler.graph.NodeSourcePosition;
 import graalvm.compiler.graph.iterators.NodeIterable;
 import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodeinfo.NodeInfo;
@@ -217,15 +216,6 @@ public final class FrameState extends VirtualState implements IterableNodeType
     {
         updateUsages(this.outerFrameState, x);
         this.outerFrameState = x;
-    }
-
-    public static NodeSourcePosition toSourcePosition(FrameState fs)
-    {
-        if (fs == null)
-        {
-            return null;
-        }
-        return new NodeSourcePosition(toSourcePosition(fs.outerFrameState()), fs.code.getMethod(), fs.bci);
     }
 
     /**

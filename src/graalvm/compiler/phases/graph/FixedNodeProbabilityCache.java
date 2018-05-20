@@ -49,11 +49,8 @@ public class FixedNodeProbabilityCache implements ToDoubleFunction<FixedNode>
      * </ul>
      * </p>
      *
-     * <p>
      * As an exception to all the above, a probability of 1 is assumed for a {@link FixedNode} that
      * appears to be dead-code (ie, lacks a predecessor).
-     * </p>
-     *
      */
     @Override
     public double applyAsDouble(FixedNode node)

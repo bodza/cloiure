@@ -16,8 +16,6 @@ public final class IntList
 
     /**
      * Creates an int list with a specified initial capacity.
-     *
-     * @param initialCapacity
      */
     public IntList(int initialCapacity)
     {

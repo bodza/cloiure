@@ -134,11 +134,9 @@ final class TraceLinearScanEliminateSpillMovePhase extends TraceLinearScanAlloca
     }
 
     /**
-     * @param allocator
      * @param block The block {@code move} is located in.
      * @param move Spill move.
-     * @param lastOpId The id of last "normal" instruction before the spill move. (Spill moves have
-     *            no valid opId but -1.)
+     * @param lastOpId The id of last "normal" instruction before the spill move. (Spill moves have no valid opId but -1.)
      */
     private static boolean canEliminateSpillMove(TraceLinearScan allocator, AbstractBlockBase<?> block, MoveOp move, int lastOpId)
     {

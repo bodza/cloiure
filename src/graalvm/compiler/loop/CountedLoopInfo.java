@@ -7,7 +7,6 @@ import static graalvm.compiler.loop.MathUtil.unsignedDivBefore;
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.util.UnsignedLong;
-import graalvm.compiler.debug.DebugCloseable;
 import graalvm.compiler.loop.InductionVariable.Direction;
 import graalvm.compiler.nodes.AbstractBeginNode;
 import graalvm.compiler.nodes.ConstantNode;
@@ -226,7 +225,6 @@ public class CountedLoopInfo
         return loop.loopBegin().getOverflowGuard();
     }
 
-    @SuppressWarnings("try")
     public GuardingNode createOverFlowGuard()
     {
         GuardingNode overflowGuard = getOverFlowGuard();
@@ -234,35 +232,31 @@ public class CountedLoopInfo
         {
             return overflowGuard;
         }
-        try (DebugCloseable position = loop.loopBegin().withNodeSourcePosition())
+        IntegerStamp stamp = (IntegerStamp) iv.valueNode().stamp(NodeView.DEFAULT);
+        StructuredGraph graph = iv.valueNode().graph();
+        CompareNode cond; // we use a negated guard with a < condition to achieve a >=
+        ConstantNode one = ConstantNode.forIntegerStamp(stamp, 1, graph);
+        if (iv.direction() == Direction.Up)
         {
-            IntegerStamp stamp = (IntegerStamp) iv.valueNode().stamp(NodeView.DEFAULT);
-            StructuredGraph graph = iv.valueNode().graph();
-            CompareNode cond; // we use a negated guard with a < condition to achieve a >=
-            ConstantNode one = ConstantNode.forIntegerStamp(stamp, 1, graph);
-            if (iv.direction() == Direction.Up)
+            ValueNode v1 = sub(graph, ConstantNode.forIntegerStamp(stamp, CodeUtil.maxValue(stamp.getBits()), graph), sub(graph, iv.strideNode(), one));
+            if (oneOff)
             {
-                ValueNode v1 = sub(graph, ConstantNode.forIntegerStamp(stamp, CodeUtil.maxValue(stamp.getBits()), graph), sub(graph, iv.strideNode(), one));
-                if (oneOff)
-                {
-                    v1 = sub(graph, v1, one);
-                }
-                cond = graph.unique(new IntegerLessThanNode(v1, end));
+                v1 = sub(graph, v1, one);
             }
-            else
-            {
-                ValueNode v1 = add(graph, ConstantNode.forIntegerStamp(stamp, CodeUtil.minValue(stamp.getBits()), graph), sub(graph, one, iv.strideNode()));
-                if (oneOff)
-                {
-                    v1 = add(graph, v1, one);
-                }
-                cond = graph.unique(new IntegerLessThanNode(end, v1));
-            }
-            overflowGuard = graph.unique(new GuardNode(cond, AbstractBeginNode.prevBegin(loop.entryPoint()), DeoptimizationReason.LoopLimitCheck, DeoptimizationAction.InvalidateRecompile, true,
-                            JavaConstant.NULL_POINTER, null)); // TODO gd: use speculation
-            loop.loopBegin().setOverflowGuard(overflowGuard);
-            return overflowGuard;
+            cond = graph.unique(new IntegerLessThanNode(v1, end));
         }
+        else
+        {
+            ValueNode v1 = add(graph, ConstantNode.forIntegerStamp(stamp, CodeUtil.minValue(stamp.getBits()), graph), sub(graph, one, iv.strideNode()));
+            if (oneOff)
+            {
+                v1 = add(graph, v1, one);
+            }
+            cond = graph.unique(new IntegerLessThanNode(end, v1));
+        }
+        overflowGuard = graph.unique(new GuardNode(cond, AbstractBeginNode.prevBegin(loop.entryPoint()), DeoptimizationReason.LoopLimitCheck, DeoptimizationAction.InvalidateRecompile, true, JavaConstant.NULL_POINTER)); // TODO gd: use speculation
+        loop.loopBegin().setOverflowGuard(overflowGuard);
+        return overflowGuard;
     }
 
     public IntegerStamp getStamp()

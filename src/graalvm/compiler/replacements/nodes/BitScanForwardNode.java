@@ -82,7 +82,6 @@ public final class BitScanForwardNode extends UnaryNode implements ArithmeticLIR
     /**
      * Utility method with defined return value for 0.
      *
-     * @param v
      * @return number of trailing zeros or -1 if {@code v} == 0.
      */
     public static int scan(long v)
@@ -97,7 +96,6 @@ public final class BitScanForwardNode extends UnaryNode implements ArithmeticLIR
     /**
      * Utility method with defined return value for 0.
      *
-     * @param v
      * @return number of trailing zeros or -1 if {@code v} == 0.
      */
     public static int scan(int v)
@@ -108,7 +106,6 @@ public final class BitScanForwardNode extends UnaryNode implements ArithmeticLIR
     /**
      * Raw intrinsic for bsf instruction.
      *
-     * @param v
      * @return number of trailing zeros or an undefined value if {@code v} == 0.
      */
     @NodeIntrinsic
@@ -117,7 +114,6 @@ public final class BitScanForwardNode extends UnaryNode implements ArithmeticLIR
     /**
      * Raw intrinsic for bsf instruction.
      *
-     * @param v
      * @return number of trailing zeros or an undefined value if {@code v} == 0.
      */
     @NodeIntrinsic

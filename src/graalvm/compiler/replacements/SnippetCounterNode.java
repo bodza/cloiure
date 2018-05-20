@@ -88,7 +88,6 @@ public class SnippetCounterNode extends FixedWithNextNode implements Lowerable
     /**
      * Add {@link #SNIPPET_COUNTER_LOCATION} to {@code privateLocations} if it isn't already there.
      *
-     * @param privateLocations
      * @return a copy of privateLocations with any needed locations added
      */
     public static LocationIdentity[] addSnippetCounters(LocationIdentity[] privateLocations)

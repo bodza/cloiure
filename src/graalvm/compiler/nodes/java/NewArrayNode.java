@@ -7,7 +7,6 @@ import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.TypeReference;
-import graalvm.compiler.debug.DebugCloseable;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Simplifiable;
 import graalvm.compiler.graph.spi.SimplifierTool;
@@ -107,7 +106,6 @@ public class NewArrayNode extends AbstractNewArrayNode implements VirtualizableA
     }
 
     @Override
-    @SuppressWarnings("try")
     public void simplify(SimplifierTool tool)
     {
         if (hasNoUsages())
@@ -127,13 +125,10 @@ public class NewArrayNode extends AbstractNewArrayNode implements VirtualizableA
             // RuntimeConstraint
             if (graph().getGuardsStage().allowsFloatingGuards())
             {
-                try (DebugCloseable context = this.withNodeSourcePosition())
-                {
-                    LogicNode lengthNegativeCondition = CompareNode.createCompareNode(graph(), CanonicalCondition.LT, length(), ConstantNode.forInt(0, graph()), tool.getConstantReflection(), view);
-                    // we do not have a non-deopting path for that at the moment so action=None.
-                    FixedGuardNode guard = graph().add(new FixedGuardNode(lengthNegativeCondition, DeoptimizationReason.RuntimeConstraint, DeoptimizationAction.None, true));
-                    graph().replaceFixedWithFixed(this, guard);
-                }
+                LogicNode lengthNegativeCondition = CompareNode.createCompareNode(graph(), CanonicalCondition.LT, length(), ConstantNode.forInt(0, graph()), tool.getConstantReflection(), view);
+                // we do not have a non-deopting path for that at the moment so action=None.
+                FixedGuardNode guard = graph().add(new FixedGuardNode(lengthNegativeCondition, DeoptimizationReason.RuntimeConstraint, DeoptimizationAction.None, true));
+                graph().replaceFixedWithFixed(this, guard);
             }
         }
     }

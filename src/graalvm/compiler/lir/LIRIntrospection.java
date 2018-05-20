@@ -360,7 +360,6 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T>
      * Tests if all values in this string are printable ASCII characters or value \0 (b in
      * [0x20,0x7F]) or b == 0.
      *
-     * @param array
      * @return true if there are only printable ASCII characters and \0, false otherwise
      */
     private static boolean isPrintableAsciiString(byte[] array)

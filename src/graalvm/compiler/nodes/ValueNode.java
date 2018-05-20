@@ -183,7 +183,6 @@ public abstract class ValueNode extends graalvm.compiler.graph.Node implements V
      * Checks if this node has usages other than the given node {@code node}.
      *
      * @param node node which is ignored when searching for usages
-     * @param nodeValueMap
      * @return true if this node has other usages, false otherwise
      */
     public boolean hasUsagesOtherThan(ValueNode node, NodeValueMap nodeValueMap)

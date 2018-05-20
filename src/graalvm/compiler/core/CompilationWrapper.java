@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Map;
 
-import graalvm.compiler.debug.TTY;
 import graalvm.compiler.options.EnumOptionKey;
 import graalvm.compiler.options.OptionValues;
 

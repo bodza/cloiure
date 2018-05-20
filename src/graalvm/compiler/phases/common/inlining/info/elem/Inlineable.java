@@ -8,9 +8,9 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 public interface Inlineable
 {
-    static Inlineable getInlineableElement(final ResolvedJavaMethod method, Invoke invoke, HighTierContext context, CanonicalizerPhase canonicalizer, boolean trackNodeSourcePosition)
+    static Inlineable getInlineableElement(final ResolvedJavaMethod method, Invoke invoke, HighTierContext context, CanonicalizerPhase canonicalizer)
     {
-        return new InlineableGraph(method, invoke, context, canonicalizer, trackNodeSourcePosition);
+        return new InlineableGraph(method, invoke, context, canonicalizer);
     }
 
     int getNodeCount();

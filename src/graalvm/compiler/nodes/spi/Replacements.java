@@ -4,7 +4,6 @@ import graalvm.compiler.api.replacements.MethodSubstitution;
 import graalvm.compiler.api.replacements.SnippetTemplateCache;
 import graalvm.compiler.bytecode.Bytecode;
 import graalvm.compiler.bytecode.BytecodeProvider;
-import graalvm.compiler.graph.NodeSourcePosition;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderConfiguration;
 import graalvm.compiler.nodes.graphbuilderconf.InvocationPlugin;
@@ -29,10 +28,9 @@ public interface Replacements
      * Gets the snippet graph derived from a given method.
      *
      * @param args arguments to the snippet if available, otherwise {@code null}
-     * @param trackNodeSourcePosition
      * @return the snippet graph, if any, that is derived from {@code method}
      */
-    StructuredGraph getSnippet(ResolvedJavaMethod method, Object[] args, boolean trackNodeSourcePosition, NodeSourcePosition replaceePosition);
+    StructuredGraph getSnippet(ResolvedJavaMethod method, Object[] args);
 
     /**
      * Gets the snippet graph derived from a given method.
@@ -41,25 +39,18 @@ public interface Replacements
      *            recursive call and won't be processed for {@linkplain MethodSubstitution
      *            substitutions}.
      * @param args arguments to the snippet if available, otherwise {@code null}
-     * @param trackNodeSourcePosition
      * @return the snippet graph, if any, that is derived from {@code method}
      */
-    StructuredGraph getSnippet(ResolvedJavaMethod method, ResolvedJavaMethod recursiveEntry, Object[] args, boolean trackNodeSourcePosition, NodeSourcePosition replaceePosition);
-
-    /**
-     * Registers a method as snippet.
-     */
-    void registerSnippet(ResolvedJavaMethod method, boolean trackNodeSourcePosition);
+    StructuredGraph getSnippet(ResolvedJavaMethod method, ResolvedJavaMethod recursiveEntry, Object[] args);
 
     /**
      * Gets a graph that is a substitution for a given method.
      *
      * @param invokeBci the call site BCI if this request is made for inlining a substitute
      *            otherwise {@code -1}
-     * @param trackNodeSourcePosition
      * @return the graph, if any, that is a substitution for {@code method}
      */
-    StructuredGraph getSubstitution(ResolvedJavaMethod method, int invokeBci, boolean trackNodeSourcePosition, NodeSourcePosition replaceePosition);
+    StructuredGraph getSubstitution(ResolvedJavaMethod method, int invokeBci);
 
     /**
      * Gets the substitute bytecode for a given method.
@@ -71,7 +62,7 @@ public interface Replacements
 
     /**
      * Determines if there may be a
-     * {@linkplain #getSubstitution(ResolvedJavaMethod, int, boolean, NodeSourcePosition)
+     * {@linkplain #getSubstitution(ResolvedJavaMethod, int)
      * substitution graph} for a given method.
      *
      * A call to {@link #getSubstitution} may still return {@code null} for {@code method} and

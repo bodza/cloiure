@@ -1,7 +1,6 @@
 package graalvm.compiler.nodes.spi;
 
 import graalvm.compiler.core.common.spi.ConstantFieldProvider;
-import graalvm.compiler.graph.NodeSourcePosition;
 import graalvm.compiler.nodes.FixedNode;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.LogicNode;
@@ -30,7 +29,7 @@ public interface LoweringTool
 
     GuardingNode createGuard(FixedNode before, LogicNode condition, DeoptimizationReason deoptReason, DeoptimizationAction action);
 
-    GuardingNode createGuard(FixedNode before, LogicNode condition, DeoptimizationReason deoptReason, DeoptimizationAction action, JavaConstant speculation, boolean negated, NodeSourcePosition noDeoptSuccessorPosition);
+    GuardingNode createGuard(FixedNode before, LogicNode condition, DeoptimizationReason deoptReason, DeoptimizationAction action, JavaConstant speculation, boolean negated);
 
     /**
      * Gets the closest fixed node preceding the node currently being lowered.

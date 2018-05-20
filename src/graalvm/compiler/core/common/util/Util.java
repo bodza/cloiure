@@ -5,8 +5,6 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import graalvm.compiler.debug.TTY;
-
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
@@ -131,28 +129,6 @@ public class Util
             default:
                 throw new IllegalArgumentException(kind.toString());
         }
-    }
-
-    /**
-     * Print a HotSpot-style inlining message to the console.
-     */
-    public static void printInlining(final ResolvedJavaMethod method, final int bci, final int inliningDepth, final boolean success, final String msg, final Object... args)
-    {
-        StringBuilder sb = new StringBuilder();
-        // 1234567
-        sb.append("        ");     // print timestamp
-        // 1234
-        sb.append("     ");        // print compilation number
-        // % s ! b n
-        sb.append(String.format("%c%c%c%c%c ", ' ', method.isSynchronized() ? 's' : ' ', ' ', ' ', method.isNative() ? 'n' : ' '));
-        sb.append("     ");        // more indent
-        sb.append("    ");         // initial inlining indent
-        for (int i = 0; i < inliningDepth; i++)
-        {
-            sb.append("  ");
-        }
-        sb.append(String.format("@ %d  %s   %s%s", bci, methodName(method), success ? "" : "not inlining ", String.format(msg, args)));
-        TTY.println(sb.toString());
     }
 
     private static String methodName(ResolvedJavaMethod method)

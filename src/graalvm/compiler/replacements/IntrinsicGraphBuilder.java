@@ -8,8 +8,6 @@ import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.StampPair;
 import graalvm.compiler.core.common.type.TypeReference;
 import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.debug.DebugCloseable;
-import graalvm.compiler.graph.NodeSourcePosition;
 import graalvm.compiler.nodes.CallTargetNode;
 import graalvm.compiler.nodes.CallTargetNode.InvokeKind;
 import graalvm.compiler.nodes.FixedNode;
@@ -70,7 +68,6 @@ public class IntrinsicGraphBuilder implements GraphBuilderContext, Receiver
         this.code = code;
         this.method = code.getMethod();
         this.graph = new StructuredGraph.Builder(options, allowAssumptions).method(method).build();
-        this.graph.setTrackNodeSourcePosition();
         this.invokeBci = invokeBci;
         this.lastInstr = graph.start();
 
@@ -264,20 +261,15 @@ public class IntrinsicGraphBuilder implements GraphBuilderContext, Receiver
         return arguments[0];
     }
 
-    @SuppressWarnings("try")
     public StructuredGraph buildGraph(InvocationPlugin plugin)
     {
-        NodeSourcePosition position = graph.trackNodeSourcePosition() ? NodeSourcePosition.placeholder(method) : null;
-        try (DebugCloseable context = graph.withNodeSourcePosition(position))
+        Receiver receiver = method.isStatic() ? null : this;
+        if (plugin.execute(this, method, receiver, arguments))
         {
-            Receiver receiver = method.isStatic() ? null : this;
-            if (plugin.execute(this, method, receiver, arguments))
-            {
-                append(new ReturnNode(returnValue));
-                return graph;
-            }
-            return null;
+            append(new ReturnNode(returnValue));
+            return graph;
         }
+        return null;
     }
 
     @Override

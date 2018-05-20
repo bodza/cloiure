@@ -107,7 +107,6 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
          * Call {@link StructuredGraph#addOrUnique(graalvm.compiler.graph.Node)} on {@code node}
          * and link any {@link FixedWithNextNode}s into the current control flow.
          *
-         * @param node
          * @return the newly added node
          */
         public abstract <T extends ValueNode> T add(T node);
@@ -183,8 +182,6 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
      * Used for the MethodHandle.invokeBasic method (the {@link IntrinsicMethod#INVOKE_BASIC }
      * method) to get the target {@link InvokeNode} if the method handle receiver is constant.
      *
-     * @param adder
-     *
      * @return invoke node for the {@link java.lang.invoke.MethodHandle} target
      */
     private static InvokeNode getInvokeBasicTarget(GraphAdder adder, IntrinsicMethod intrinsicMethod, MethodHandleAccessProvider methodHandleAccess, ResolvedJavaMethod original, int bci, StampPair returnStamp, ValueNode[] arguments)
@@ -203,8 +200,6 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
      * {@link IntrinsicMethod#LINK_TO_INTERFACE} methods) to get the target {@link InvokeNode} if
      * the member name argument is constant.
      *
-     * @param adder
-     *
      * @return invoke node for the member name target
      */
     private static InvokeNode getLinkToTarget(GraphAdder adder, IntrinsicMethod intrinsicMethod, MethodHandleAccessProvider methodHandleAccess, ResolvedJavaMethod original, int bci, StampPair returnStamp, ValueNode[] arguments)
@@ -221,7 +216,6 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
      * Helper function to get the {@link InvokeNode} for the targetMethod of a
      * java.lang.invoke.MemberName.
      *
-     * @param adder
      * @param target the target, already loaded from the member name node
      *
      * @return invoke node for the member name target
@@ -300,7 +294,6 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
      * Inserts a node to cast the argument at index to the given type if the given type is more
      * concrete than the argument type.
      *
-     * @param adder
      * @param index of the argument to be cast
      * @param type the type the argument should be cast to
      */
@@ -337,7 +330,7 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
                         }
                         else
                         {
-                            GuardNode newGuard = adder.add(new GuardNode(inst, guardAnchor, reason, action, false, speculation, null));
+                            GuardNode newGuard = adder.add(new GuardNode(inst, guardAnchor, reason, action, false, speculation));
                             adder.add(new ValueAnchorNode(newGuard));
                             guard = newGuard;
                         }

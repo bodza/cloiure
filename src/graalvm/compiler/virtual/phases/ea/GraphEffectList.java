@@ -205,7 +205,6 @@ public final class GraphEffectList extends EffectList
      * @param node The node to be replaced.
      * @param replacement The node that should replace the original value. If the replacement is a
      *            non-connected {@link FixedWithNextNode} it will be added to the control flow.
-     * @param insertBefore
      *
      */
     public void replaceAtUsages(ValueNode node, ValueNode replacement, FixedNode insertBefore)

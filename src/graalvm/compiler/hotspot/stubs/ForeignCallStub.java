@@ -118,7 +118,7 @@ public class ForeignCallStub extends Stub
 
     /**
      * Creates a graph for this stub.
-     * <p>
+     *
      * If the stub returns an object, the graph created corresponds to this pseudo code:
      *
      * <pre>

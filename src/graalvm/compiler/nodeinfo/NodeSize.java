@@ -8,14 +8,14 @@ public enum NodeSize
 {
     /**
      * The default value of the {@link NodeInfo#size()} property.
-     * <p>
+     *
      * For further information about the use of {@code SIZE_UNSET} see {@link NodeInfo#size()}.
      */
     SIZE_UNSET(0),
     /**
      * Nodes for which, due to arbitrary reasons, no estimation can be made either (1) statically
      * without inspecting the properties of a node or (2) at all (like e.g. for an invocation).
-     * <p>
+     *
      * Nodes annotated with {@code SIZE_UNKNOWN} should specify the {@link NodeInfo#sizeRationale()}
      * property to clarify why an estimation cannot be done.
      */

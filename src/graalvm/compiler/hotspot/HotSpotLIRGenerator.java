@@ -42,7 +42,6 @@ public interface HotSpotLIRGenerator extends LIRGeneratorTool
     /**
      * Emits code for a {@link LoadConstantIndirectlyNode}.
      *
-     * @param constant
      * @return value of loaded address in register
      */
     default Value emitLoadObjectAddress(Constant constant)

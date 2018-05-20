@@ -47,9 +47,6 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
 {
     protected final LinearScan allocator;
 
-    /**
-     * @param linearScan
-     */
     protected LinearScanLifetimeAnalysisPhase(LinearScan linearScan)
     {
         allocator = linearScan;
@@ -458,9 +455,6 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
 
     /**
      * Eliminates moves from register to stack if the stack slot is known to be correct.
-     *
-     * @param op
-     * @param operand
      */
     protected void changeSpillDefinitionPos(LIRInstruction op, AllocatableValue operand, Interval interval, int defPos)
     {

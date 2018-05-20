@@ -9,7 +9,6 @@ import static graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext.Compilati
 
 import graalvm.compiler.api.replacements.MethodSubstitution;
 import graalvm.compiler.bytecode.BytecodeProvider;
-import graalvm.compiler.graph.NodeSourcePosition;
 import graalvm.compiler.nodes.AbstractMergeNode;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.Invoke;
@@ -107,8 +106,6 @@ public class IntrinsicContext
         return originalMethod.equals(targetMethod) || intrinsicMethod.equals(targetMethod);
     }
 
-    private NodeSourcePosition nodeSourcePosition;
-
     public boolean isPostParseInlined()
     {
         return compilationContext.equals(INLINE_AFTER_PARSING);
@@ -117,16 +114,6 @@ public class IntrinsicContext
     public boolean isCompilationRoot()
     {
         return compilationContext.equals(ROOT_COMPILATION);
-    }
-
-    public NodeSourcePosition getNodeSourcePosition()
-    {
-        return nodeSourcePosition;
-    }
-
-    public void setNodeSourcePosition(NodeSourcePosition position)
-    {
-        this.nodeSourcePosition = position;
     }
 
     /**
@@ -173,7 +160,7 @@ public class IntrinsicContext
         void addSideEffect(StateSplit sideEffect);
     }
 
-    public FrameState createFrameState(StructuredGraph graph, SideEffectsState sideEffects, StateSplit forStateSplit, NodeSourcePosition sourcePosition)
+    public FrameState createFrameState(StructuredGraph graph, SideEffectsState sideEffects, StateSplit forStateSplit)
     {
         if (forStateSplit.hasSideEffect())
         {
@@ -182,10 +169,6 @@ public class IntrinsicContext
                 // Only the last side effect on any execution path in a replacement
                 // can inherit the stateAfter of the replaced node
                 FrameState invalid = graph.add(new FrameState(INVALID_FRAMESTATE_BCI));
-                if (graph.trackNodeSourcePosition())
-                {
-                    invalid.setNodeSourcePosition(sourcePosition);
-                }
                 for (StateSplit lastSideEffect : sideEffects.sideEffects())
                 {
                     lastSideEffect.setStateAfter(invalid);
@@ -201,10 +184,6 @@ public class IntrinsicContext
             {
                 frameState = graph.add(new FrameState(AFTER_BCI));
             }
-            if (graph.trackNodeSourcePosition())
-            {
-                frameState.setNodeSourcePosition(sourcePosition);
-            }
             return frameState;
         }
         else
@@ -215,22 +194,12 @@ public class IntrinsicContext
                 if (sideEffects.isAfterSideEffect())
                 {
                     // A merge after one or more side effects
-                    FrameState frameState = graph.add(new FrameState(AFTER_BCI));
-                    if (graph.trackNodeSourcePosition())
-                    {
-                        frameState.setNodeSourcePosition(sourcePosition);
-                    }
-                    return frameState;
+                    return graph.add(new FrameState(AFTER_BCI));
                 }
                 else
                 {
                     // A merge before any side effects
-                    FrameState frameState = graph.add(new FrameState(BEFORE_BCI));
-                    if (graph.trackNodeSourcePosition())
-                    {
-                        frameState.setNodeSourcePosition(sourcePosition);
-                    }
-                    return frameState;
+                    return graph.add(new FrameState(BEFORE_BCI));
                 }
             }
             else

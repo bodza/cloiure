@@ -13,7 +13,7 @@ public class InferStamps
      * Infer the stamps for all Object nodes in the graph, to make the stamps as precise as
      * possible. For example, this propagates the word-type through phi functions. To handle phi
      * functions at loop headers, the stamp inference is called until a fix point is reached.
-     * <p>
+     *
      * This method can be used when it is needed that stamps are inferred before the first run of
      * the canonicalizer. For example, word type rewriting must run before the first run of the
      * canonicalizer because many nodes are not prepared to see the word type during

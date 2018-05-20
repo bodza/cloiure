@@ -15,13 +15,11 @@ import java.util.List;
 
 import graalvm.compiler.core.common.spi.ConstantFieldProvider;
 import graalvm.compiler.core.common.type.StampFactory;
-import graalvm.compiler.debug.DebugCloseable;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Graph.Mark;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeBitMap;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.graph.NodeSourcePosition;
 import graalvm.compiler.graph.iterators.NodeIterable;
 import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodeinfo.NodeInfo;
@@ -165,7 +163,7 @@ public class LoweringPhase extends BasePhase<PhaseContext>
         @Override
         public GuardingNode createGuard(FixedNode before, LogicNode condition, DeoptimizationReason deoptReason, DeoptimizationAction action)
         {
-            return createGuard(before, condition, deoptReason, action, JavaConstant.NULL_POINTER, false, null);
+            return createGuard(before, condition, deoptReason, action, JavaConstant.NULL_POINTER, false);
         }
 
         @Override
@@ -175,7 +173,7 @@ public class LoweringPhase extends BasePhase<PhaseContext>
         }
 
         @Override
-        public GuardingNode createGuard(FixedNode before, LogicNode condition, DeoptimizationReason deoptReason, DeoptimizationAction action, JavaConstant speculation, boolean negated, NodeSourcePosition noDeoptSucccessorPosition)
+        public GuardingNode createGuard(FixedNode before, LogicNode condition, DeoptimizationReason deoptReason, DeoptimizationAction action, JavaConstant speculation, boolean negated)
         {
             StructuredGraph graph = before.graph();
             if (OptEliminateGuards.getValue(graph.getOptions()))
@@ -190,7 +188,7 @@ public class LoweringPhase extends BasePhase<PhaseContext>
             }
             if (!condition.graph().getGuardsStage().allowsFloatingGuards())
             {
-                FixedGuardNode fixedGuard = graph.add(new FixedGuardNode(condition, deoptReason, action, speculation, negated, noDeoptSucccessorPosition));
+                FixedGuardNode fixedGuard = graph.add(new FixedGuardNode(condition, deoptReason, action, speculation, negated));
                 graph.addBeforeFixed(before, fixedGuard);
                 DummyGuardHandle handle = graph.add(new DummyGuardHandle(fixedGuard));
                 fixedGuard.lower(this);
@@ -200,7 +198,7 @@ public class LoweringPhase extends BasePhase<PhaseContext>
             }
             else
             {
-                GuardNode newGuard = graph.unique(new GuardNode(condition, guardAnchor, deoptReason, action, negated, speculation, noDeoptSucccessorPosition));
+                GuardNode newGuard = graph.unique(new GuardNode(condition, guardAnchor, deoptReason, action, negated, speculation));
                 if (OptEliminateGuards.getValue(graph.getOptions()))
                 {
                     activeGuards.markAndGrow(newGuard);
@@ -401,12 +399,7 @@ public class LoweringPhase extends BasePhase<PhaseContext>
 
                 if (node instanceof Lowerable)
                 {
-                    Collection<Node> unscheduledUsages = null;
-                    Mark preLoweringMark = node.graph().getMark();
-                    try (DebugCloseable s = node.graph().withNodeSourcePosition(node))
-                    {
-                        ((Lowerable) node).lower(loweringTool);
-                    }
+                    ((Lowerable) node).lower(loweringTool);
                     if (loweringTool.guardAnchor.asNode().isDeleted())
                     {
                         // TODO nextNode could be deleted but this is not currently supported
@@ -443,7 +436,7 @@ public class LoweringPhase extends BasePhase<PhaseContext>
 
         /**
          * Gets all usages of a floating, lowerable node that are unscheduled.
-         * <p>
+         *
          * Given that the lowering of such nodes may introduce fixed nodes, they must be lowered in
          * the context of a usage that dominates all other usages. The fixed nodes resulting from
          * lowering are attached to the fixed node context of the dominating usage. This ensures the

@@ -15,8 +15,6 @@ import graalvm.compiler.bytecode.Bytecode;
 import graalvm.compiler.code.CompilationResult;
 import graalvm.compiler.core.GraalCompiler;
 import graalvm.compiler.core.common.CompilationIdentifier;
-import graalvm.compiler.core.common.util.CompilationAlarm;
-import graalvm.compiler.hotspot.CompilationCounters.Options;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
 import graalvm.compiler.hotspot.phases.OnStackReplacementPhase;
 import graalvm.compiler.java.GraphBuilderPhase;
@@ -52,14 +50,11 @@ public class HotSpotGraalCompiler implements GraalJVMCICompiler
 {
     private final HotSpotJVMCIRuntimeProvider jvmciRuntime;
     private final HotSpotGraalRuntimeProvider graalRuntime;
-    private final CompilationCounters compilationCounters;
 
     HotSpotGraalCompiler(HotSpotJVMCIRuntimeProvider jvmciRuntime, HotSpotGraalRuntimeProvider graalRuntime, OptionValues options)
     {
         this.jvmciRuntime = jvmciRuntime;
         this.graalRuntime = graalRuntime;
-        // It is sufficient to have one compilation counter object per Graal compiler object.
-        this.compilationCounters = Options.CompilationCountLimit.getValue(options) > 0 ? new CompilationCounters(options) : null;
     }
 
     @Override
@@ -74,7 +69,6 @@ public class HotSpotGraalCompiler implements GraalJVMCICompiler
         return compileMethod(request, true, graalRuntime.getOptions());
     }
 
-    @SuppressWarnings("try")
     CompilationRequestResult compileMethod(CompilationRequest request, boolean installAsDefault, OptionValues options)
     {
         if (graalRuntime.isShutdown())
@@ -82,18 +76,8 @@ public class HotSpotGraalCompiler implements GraalJVMCICompiler
             return HotSpotCompilationRequestResult.failure(String.format("Shutdown entered"), false);
         }
 
-        ResolvedJavaMethod method = request.getMethod();
-
         HotSpotCompilationRequest hsRequest = (HotSpotCompilationRequest) request;
-        try (CompilationWatchDog w1 = CompilationWatchDog.watch(method, hsRequest.getId(), options); CompilationAlarm alarm = CompilationAlarm.trackCompilationPeriod(options))
-        {
-            if (compilationCounters != null)
-            {
-                compilationCounters.countCompilation(method);
-            }
-            CompilationTask task = new CompilationTask(jvmciRuntime, this, hsRequest, true, installAsDefault, options);
-            return task.runCompilation();
-        }
+        return new CompilationTask(jvmciRuntime, this, hsRequest, true, installAsDefault, options).runCompilation();
     }
 
     public StructuredGraph createGraph(ResolvedJavaMethod method, int entryBCI, boolean useProfilingInfo, CompilationIdentifier compilationId, OptionValues options)
@@ -136,8 +120,7 @@ public class HotSpotGraalCompiler implements GraalJVMCICompiler
         }
 
         result.setEntryBCI(entryBCI);
-        boolean shouldDebugNonSafepoints = providers.getCodeCache().shouldDebugNonSafepoints();
-        PhaseSuite<HighTierContext> graphBuilderSuite = configGraphBuilderSuite(providers.getSuites().getDefaultGraphBuilderSuite(), shouldDebugNonSafepoints, isOSR);
+        PhaseSuite<HighTierContext> graphBuilderSuite = configGraphBuilderSuite(providers.getSuites().getDefaultGraphBuilderSuite(), isOSR);
         GraalCompiler.compileGraph(graph, method, providers, backend, graphBuilderSuite, optimisticOpts, profilingInfo, suites, lirSuites, result, crbf);
 
         if (!isOSR && useProfilingInfo)
@@ -199,35 +182,23 @@ public class HotSpotGraalCompiler implements GraalJVMCICompiler
      * not the default.
      *
      * @param suite the graph builder suite
-     * @param shouldDebugNonSafepoints specifies if extra debug info should be generated (default is
-     *            false)
      * @param isOSR specifies if extra OSR-specific post-processing is required (default is false)
      * @return a new suite derived from {@code suite} if any of the GBS parameters did not have a
      *         default value otherwise {@code suite}
      */
-    protected PhaseSuite<HighTierContext> configGraphBuilderSuite(PhaseSuite<HighTierContext> suite, boolean shouldDebugNonSafepoints, boolean isOSR)
+    protected PhaseSuite<HighTierContext> configGraphBuilderSuite(PhaseSuite<HighTierContext> suite, boolean isOSR)
     {
-        if (shouldDebugNonSafepoints || isOSR)
+        if (isOSR)
         {
             PhaseSuite<HighTierContext> newGbs = suite.copy();
 
-            if (shouldDebugNonSafepoints)
-            {
-                GraphBuilderPhase graphBuilderPhase = (GraphBuilderPhase) newGbs.findPhase(GraphBuilderPhase.class).previous();
-                GraphBuilderConfiguration graphBuilderConfig = graphBuilderPhase.getGraphBuilderConfig();
-                graphBuilderConfig = graphBuilderConfig.withNodeSourcePosition(true);
-                GraphBuilderPhase newGraphBuilderPhase = new GraphBuilderPhase(graphBuilderConfig);
-                newGbs.findPhase(GraphBuilderPhase.class).set(newGraphBuilderPhase);
-            }
-            if (isOSR)
-            {
-                // We must not clear non liveness for OSR compilations.
-                GraphBuilderPhase graphBuilderPhase = (GraphBuilderPhase) newGbs.findPhase(GraphBuilderPhase.class).previous();
-                GraphBuilderConfiguration graphBuilderConfig = graphBuilderPhase.getGraphBuilderConfig();
-                GraphBuilderPhase newGraphBuilderPhase = new GraphBuilderPhase(graphBuilderConfig);
-                newGbs.findPhase(GraphBuilderPhase.class).set(newGraphBuilderPhase);
-                newGbs.appendPhase(new OnStackReplacementPhase());
-            }
+            // We must not clear non liveness for OSR compilations.
+            GraphBuilderPhase graphBuilderPhase = (GraphBuilderPhase) newGbs.findPhase(GraphBuilderPhase.class).previous();
+            GraphBuilderConfiguration graphBuilderConfig = graphBuilderPhase.getGraphBuilderConfig();
+            GraphBuilderPhase newGraphBuilderPhase = new GraphBuilderPhase(graphBuilderConfig);
+            newGbs.findPhase(GraphBuilderPhase.class).set(newGraphBuilderPhase);
+            newGbs.appendPhase(new OnStackReplacementPhase());
+
             return newGbs;
         }
         return suite;

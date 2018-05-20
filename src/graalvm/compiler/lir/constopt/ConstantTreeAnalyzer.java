@@ -123,7 +123,7 @@ public final class ConstantTreeAnalyzer
     /**
      * This is the cost function that decides whether a materialization should be inserted in the
      * current block.
-     * <p>
+     *
      * Note that this function does not take into account if a materialization is required despite
      * the probabilities (e.g. there are usages in the current block).
      *

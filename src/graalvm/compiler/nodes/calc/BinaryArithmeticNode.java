@@ -186,13 +186,10 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
      */
     /**
      * Tries to re-associate values which satisfy the criterion. For example with a constantness
-     * criterion: {@code (a + 2) + 1 => a + (1 + 2)}
-     * <p>
-     * This method accepts only {@linkplain BinaryOp#isAssociative() associative} operations such as
-     * +, -, *, &amp;, | and ^
+     * criterion: {@code (a + 2) + 1 => a + (1 + 2)}.
      *
-     * @param forY
-     * @param forX
+     * This method accepts only {@linkplain BinaryOp#isAssociative() associative} operations such as
+     * +, -, *, &amp;, | and ^.
      */
     public static ValueNode reassociate(BinaryArithmeticNode<?> node, NodePredicate criterion, ValueNode forX, ValueNode forY, NodeView view)
     {
@@ -331,7 +328,6 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
      * use then we try pick an induction variable phi to encourage the phi to live in a single
      * register.
      *
-     * @param nodeValueMap
      * @return true if inputs should be swapped, false otherwise
      */
     protected boolean shouldSwapInputs(NodeValueMap nodeValueMap)

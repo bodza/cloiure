@@ -110,11 +110,6 @@ public class ReplaceConstantNodesPhase extends BasePhase<PhaseContext>
      * Insert the replacement node into the graph. We may need to insert it into a place different
      * than the original {@link FloatingNode} since we need to make sure that replacement will have
      * a valid state assigned.
-     *
-     * @param graph
-     * @param stateMapper
-     * @param node
-     * @param replacement
      */
     private static void insertReplacement(StructuredGraph graph, FrameStateMapperClosure stateMapper, FloatingNode node, FixedWithNextNode replacement)
     {
@@ -127,8 +122,6 @@ public class ReplaceConstantNodesPhase extends BasePhase<PhaseContext>
      * Find a good place to insert a stateful fixed node that is above the given node. A good
      * insertion point should have a valid FrameState reaching it.
      *
-     * @param graph
-     * @param stateMapper
      * @param node start search from this node up
      * @return an insertion point
      */
@@ -143,7 +136,6 @@ public class ReplaceConstantNodesPhase extends BasePhase<PhaseContext>
      * Find the first {@link FixedWithNextNode} that is currently scheduled before the given
      * floating node.
      *
-     * @param graph
      * @param node start search from this node up
      * @return the first {@link FixedWithNextNode}
      */
@@ -172,9 +164,6 @@ public class ReplaceConstantNodesPhase extends BasePhase<PhaseContext>
      * Find first dominating {@link FixedWithNextNode} that has a valid state reaching it starting
      * from the given node.
      *
-     * @param graph
-     * @param stateMapper
-     * @param node
      * @return {@link FixedWithNextNode} that we can use as an insertion point
      */
     private static FixedWithNextNode findFixedWithValidState(StructuredGraph graph, FrameStateMapperClosure stateMapper, FixedWithNextNode node)
@@ -298,9 +287,7 @@ public class ReplaceConstantNodesPhase extends BasePhase<PhaseContext>
     /**
      * Try to find dominating node doing the resolution that can be reused.
      *
-     * @param graph
-     * @param node {@link ConstantNode} containing a {@link HotSpotResolvedJavaType} that needs
-     *            resolution.
+     * @param node {@link ConstantNode} containing a {@link HotSpotResolvedJavaType} that needs resolution.
      */
     private static void tryToReplaceWithExisting(StructuredGraph graph, ConstantNode node)
     {
@@ -356,10 +343,7 @@ public class ReplaceConstantNodesPhase extends BasePhase<PhaseContext>
      * Replace the uses of a constant with either {@link LoadConstantIndirectlyNode} or
      * {@link ResolveConstantNode}.
      *
-     * @param graph
-     * @param stateMapper
-     * @param node {@link ConstantNode} containing a {@link HotSpotResolvedJavaType} that needs
-     *            resolution.
+     * @param node {@link ConstantNode} containing a {@link HotSpotResolvedJavaType} that needs resolution.
      */
     private static void replaceWithResolution(StructuredGraph graph, FrameStateMapperClosure stateMapper, ConstantNode node)
     {
@@ -402,10 +386,7 @@ public class ReplaceConstantNodesPhase extends BasePhase<PhaseContext>
     /**
      * Replace {@link ConstantNode} containing a {@link HotSpotResolvedJavaType} with indirection.
      *
-     * @param graph
-     * @param stateMapper
-     * @param node {@link ConstantNode} containing a {@link HotSpotResolvedJavaType} that needs
-     *            resolution.
+     * @param node {@link ConstantNode} containing a {@link HotSpotResolvedJavaType} that needs resolution.
      */
     private void handleHotSpotMetaspaceConstant(StructuredGraph graph, FrameStateMapperClosure stateMapper, ConstantNode node)
     {
@@ -434,10 +415,7 @@ public class ReplaceConstantNodesPhase extends BasePhase<PhaseContext>
      * Replace an object constant with an indirect load {@link ResolveConstantNode}. Currently we
      * support only strings.
      *
-     * @param graph
-     * @param stateMapper
-     * @param node {@link ConstantNode} containing a {@link HotSpotObjectConstant} that needs
-     *            resolution.
+     * @param node {@link ConstantNode} containing a {@link HotSpotObjectConstant} that needs resolution.
      */
     private static void handleHotSpotObjectConstant(StructuredGraph graph, FrameStateMapperClosure stateMapper, ConstantNode node)
     {
@@ -458,11 +436,6 @@ public class ReplaceConstantNodesPhase extends BasePhase<PhaseContext>
     /**
      * Replace {@link LoadMethodCountersNode} with indirect load
      * {@link ResolveMethodAndLoadCountersNode}, expose a klass constant of the holder.
-     *
-     * @param graph
-     * @param stateMapper
-     * @param node
-     * @param context
      */
     private static void handleLoadMethodCounters(StructuredGraph graph, FrameStateMapperClosure stateMapper, LoadMethodCountersNode node, PhaseContext context)
     {
@@ -478,10 +451,6 @@ public class ReplaceConstantNodesPhase extends BasePhase<PhaseContext>
     /**
      * Replace {@link LoadMethodCountersNode} with {@link ResolveMethodAndLoadCountersNode}, expose
      * klass constants.
-     *
-     * @param graph
-     * @param stateMapper
-     * @param context
      */
     private static void replaceLoadMethodCounters(StructuredGraph graph, FrameStateMapperClosure stateMapper, PhaseContext context)
     {
@@ -498,9 +467,6 @@ public class ReplaceConstantNodesPhase extends BasePhase<PhaseContext>
 
     /**
      * Replace object and klass constants with resolution nodes or reuse preceding initializations.
-     *
-     * @param graph
-     * @param stateMapper
      */
     private void replaceKlassesAndObjects(StructuredGraph graph, FrameStateMapperClosure stateMapper)
     {

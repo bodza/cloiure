@@ -212,7 +212,6 @@ public class GraphBuilderConfiguration
     private final boolean omitAssertions;
     private final ResolvedJavaType[] skippedExceptionTypes;
     private final boolean insertFullInfopoints;
-    private final boolean trackNodeSourcePosition;
     private final Plugins plugins;
 
     public enum BytecodeExceptionMode
@@ -236,14 +235,13 @@ public class GraphBuilderConfiguration
         Profile
     }
 
-    protected GraphBuilderConfiguration(boolean eagerResolving, boolean unresolvedIsError, BytecodeExceptionMode bytecodeExceptionMode, boolean omitAssertions, boolean insertFullInfopoints, boolean trackNodeSourcePosition, ResolvedJavaType[] skippedExceptionTypes, Plugins plugins)
+    protected GraphBuilderConfiguration(boolean eagerResolving, boolean unresolvedIsError, BytecodeExceptionMode bytecodeExceptionMode, boolean omitAssertions, boolean insertFullInfopoints, ResolvedJavaType[] skippedExceptionTypes, Plugins plugins)
     {
         this.eagerResolving = eagerResolving;
         this.unresolvedIsError = unresolvedIsError;
         this.bytecodeExceptionMode = bytecodeExceptionMode;
         this.omitAssertions = omitAssertions;
         this.insertFullInfopoints = insertFullInfopoints;
-        this.trackNodeSourcePosition = trackNodeSourcePosition;
         this.skippedExceptionTypes = skippedExceptionTypes;
         this.plugins = plugins;
     }
@@ -256,7 +254,7 @@ public class GraphBuilderConfiguration
     public GraphBuilderConfiguration copy()
     {
         Plugins newPlugins = new Plugins(plugins);
-        GraphBuilderConfiguration result = new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, bytecodeExceptionMode, omitAssertions, insertFullInfopoints, trackNodeSourcePosition, skippedExceptionTypes, newPlugins);
+        GraphBuilderConfiguration result = new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, bytecodeExceptionMode, omitAssertions, insertFullInfopoints, skippedExceptionTypes, newPlugins);
         return result;
     }
 
@@ -268,39 +266,33 @@ public class GraphBuilderConfiguration
      */
     public GraphBuilderConfiguration withUnresolvedIsError(boolean newUnresolvedIsError)
     {
-        return new GraphBuilderConfiguration(eagerResolving, newUnresolvedIsError, bytecodeExceptionMode, omitAssertions, insertFullInfopoints, trackNodeSourcePosition, skippedExceptionTypes, plugins);
+        return new GraphBuilderConfiguration(eagerResolving, newUnresolvedIsError, bytecodeExceptionMode, omitAssertions, insertFullInfopoints, skippedExceptionTypes, plugins);
     }
 
     public GraphBuilderConfiguration withEagerResolving(boolean newEagerResolving)
     {
-        return new GraphBuilderConfiguration(newEagerResolving, unresolvedIsError, bytecodeExceptionMode, omitAssertions, insertFullInfopoints, trackNodeSourcePosition, skippedExceptionTypes, plugins);
+        return new GraphBuilderConfiguration(newEagerResolving, unresolvedIsError, bytecodeExceptionMode, omitAssertions, insertFullInfopoints, skippedExceptionTypes, plugins);
     }
 
     public GraphBuilderConfiguration withSkippedExceptionTypes(ResolvedJavaType[] newSkippedExceptionTypes)
     {
-        return new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, bytecodeExceptionMode, omitAssertions, insertFullInfopoints, trackNodeSourcePosition, newSkippedExceptionTypes, plugins);
+        return new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, bytecodeExceptionMode, omitAssertions, insertFullInfopoints, newSkippedExceptionTypes, plugins);
     }
 
     public GraphBuilderConfiguration withBytecodeExceptionMode(BytecodeExceptionMode newBytecodeExceptionMode)
     {
-        return new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, newBytecodeExceptionMode, omitAssertions, insertFullInfopoints, trackNodeSourcePosition, skippedExceptionTypes, plugins);
+        return new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, newBytecodeExceptionMode, omitAssertions, insertFullInfopoints, skippedExceptionTypes, plugins);
     }
 
     public GraphBuilderConfiguration withOmitAssertions(boolean newOmitAssertions)
     {
-        return new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, bytecodeExceptionMode, newOmitAssertions, insertFullInfopoints, trackNodeSourcePosition, skippedExceptionTypes, plugins);
+        return new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, bytecodeExceptionMode, newOmitAssertions, insertFullInfopoints, skippedExceptionTypes, plugins);
     }
 
     public GraphBuilderConfiguration withFullInfopoints(boolean newInsertFullInfopoints)
     {
         ResolvedJavaType[] newSkippedExceptionTypes = skippedExceptionTypes == EMPTY ? EMPTY : Arrays.copyOf(skippedExceptionTypes, skippedExceptionTypes.length);
-        return new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, bytecodeExceptionMode, omitAssertions, newInsertFullInfopoints, trackNodeSourcePosition, newSkippedExceptionTypes, plugins);
-    }
-
-    public GraphBuilderConfiguration withNodeSourcePosition(boolean newTrackNodeSourcePosition)
-    {
-        ResolvedJavaType[] newSkippedExceptionTypes = skippedExceptionTypes == EMPTY ? EMPTY : Arrays.copyOf(skippedExceptionTypes, skippedExceptionTypes.length);
-        return new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, bytecodeExceptionMode, omitAssertions, insertFullInfopoints, newTrackNodeSourcePosition, newSkippedExceptionTypes, plugins);
+        return new GraphBuilderConfiguration(eagerResolving, unresolvedIsError, bytecodeExceptionMode, omitAssertions, newInsertFullInfopoints, newSkippedExceptionTypes, plugins);
     }
 
     public ResolvedJavaType[] getSkippedExceptionTypes()
@@ -323,11 +315,6 @@ public class GraphBuilderConfiguration
         return omitAssertions;
     }
 
-    public boolean trackNodeSourcePosition()
-    {
-        return trackNodeSourcePosition;
-    }
-
     public boolean insertFullInfopoints()
     {
         return insertFullInfopoints;
@@ -335,12 +322,12 @@ public class GraphBuilderConfiguration
 
     public static GraphBuilderConfiguration getDefault(Plugins plugins)
     {
-        return new GraphBuilderConfiguration(false, false, BytecodeExceptionMode.Profile, false, false, false, EMPTY, plugins);
+        return new GraphBuilderConfiguration(false, false, BytecodeExceptionMode.Profile, false, false, EMPTY, plugins);
     }
 
     public static GraphBuilderConfiguration getSnippetDefault(Plugins plugins)
     {
-        return new GraphBuilderConfiguration(true, true, BytecodeExceptionMode.OmitAll, false, false, false, EMPTY, plugins);
+        return new GraphBuilderConfiguration(true, true, BytecodeExceptionMode.OmitAll, false, false, EMPTY, plugins);
     }
 
     /** Returns {@code true} if it is an error for a class/field/method resolution to fail. */

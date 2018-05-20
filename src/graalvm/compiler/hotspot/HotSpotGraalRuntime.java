@@ -3,7 +3,6 @@ package graalvm.compiler.hotspot;
 import static jdk.vm.ci.hotspot.HotSpotJVMCIRuntime.runtime;
 import static jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider.getArrayIndexScale;
 import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
-import static graalvm.compiler.core.common.GraalOptions.HotSpotPrintInlining;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -21,7 +20,6 @@ import graalvm.compiler.core.common.CompilationIdentifier;
 import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.target.Backend;
 import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.debug.TTY;
 import graalvm.compiler.hotspot.CompilerConfigurationFactory.BackendMap;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
 import graalvm.compiler.nodes.spi.StampProvider;
@@ -88,15 +86,7 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider
         HotSpotVMConfigStore store = jvmciRuntime.getConfigStore();
         config = GeneratePIC.getValue(initialOptions) ? new AOTGraalHotSpotVMConfig(store) : new GraalHotSpotVMConfig(store);
 
-        // Only set HotSpotPrintInlining if it still has its default value (false).
-        if (GraalOptions.HotSpotPrintInlining.getValue(initialOptions) == false && config.printInlining)
-        {
-            optionsRef.set(new OptionValues(initialOptions, HotSpotPrintInlining, true));
-        }
-        else
-        {
-            optionsRef.set(initialOptions);
-        }
+        optionsRef.set(initialOptions);
         OptionValues options = optionsRef.get();
 
         if (config.useCMSGC)
@@ -259,14 +249,6 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider
         shutdown = true;
 
         phaseTransition("final");
-
-        if (snippetCounterGroups != null)
-        {
-            for (Group group : snippetCounterGroups)
-            {
-                TTY.out().out().println(group);
-            }
-        }
     }
 
     private final boolean bootstrapJVMCI;

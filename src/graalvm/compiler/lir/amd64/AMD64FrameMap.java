@@ -45,7 +45,7 @@ import jdk.vm.ci.code.StackSlot;
  *
  * The spill slot area also includes stack allocated memory blocks (ALLOCA blocks). The size of such
  * a block may be greater than the size of a normal spill slot or the word size.
- * <p>
+ *
  * A runtime can reserve space at the beginning of the overflow argument area. The calling
  * convention can specify that the first overflow stack argument is not at offset 0, but at a
  * specified offset. Use {@link CodeCacheProvider#getMinimumOutgoingSize()} to make sure that

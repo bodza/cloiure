@@ -50,6 +50,6 @@ final class AMD64IndirectCallOp extends IndirectCallOp
         crb.recordMark(config.MARKID_INLINE_INVOKE);
         Register callReg = asRegister(targetAddress);
         int pcOffset = AMD64Call.indirectCall(crb, masm, callReg, callTarget, state);
-        crb.recordInlineInvokeCallOp(pcOffset, getPosition());
+        crb.recordInlineInvokeCallOp(pcOffset);
     }
 }

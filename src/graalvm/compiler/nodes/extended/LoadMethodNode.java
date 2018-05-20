@@ -99,10 +99,8 @@ public final class LoadMethodNode extends FixedWithNextNode implements Lowerable
     /**
      * Find the method which would be loaded.
      *
-     * @param tool
      * @param type the exact type of object being loaded from
-     * @return the method which would be invoked for {@code type} or null if it doesn't implement
-     *         the method
+     * @return the method which would be invoked for {@code type} or null if it doesn't implement the method
      */
     private Node resolveExactMethod(CanonicalizerTool tool, ResolvedJavaType type)
     {

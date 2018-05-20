@@ -27,7 +27,6 @@ public interface DisassemblerProvider
      * @param codeCache the object used for code {@link CodeCacheProvider#addCode code installation}
      * @param compResult a compiled code that was installed to produce {@code installedCode}. This
      *            will be null if not available.
-     * @param installedCode
      * @return a non-zero length string containing a disassembly of {@code installedCode} or null if
      *         {@code installedCode} is {@link InstalledCode#isValid() invalid} or it could not be
      *         disassembled for some other reason

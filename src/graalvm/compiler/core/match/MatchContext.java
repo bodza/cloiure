@@ -107,8 +107,6 @@ public class MatchContext
     /**
      * Mark the interior nodes with INTERIOR_MATCH and set the Value of the root to be the result.
      * During final LIR generation it will be evaluated to produce the actual LIR value.
-     *
-     * @param result
      */
     public void setResult(ComplexMatchResult result)
     {

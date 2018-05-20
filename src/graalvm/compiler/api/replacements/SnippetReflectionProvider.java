@@ -10,7 +10,7 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * Reflection operations on values represented as {@linkplain JavaConstant constants} for the
  * processing of snippets. Snippets need a direct access to the value of object constants, which is
  * not allowed in other parts of Graal to enforce compiler-VM separation.
- * <p>
+ *
  * This interface must not be used in Graal code that is not related to snippet processing.
  */
 public interface SnippetReflectionProvider
