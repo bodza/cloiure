@@ -2,8 +2,6 @@ package graalvm.compiler.nodes;
 
 import static graalvm.compiler.nodeinfo.InputType.Condition;
 import static graalvm.compiler.nodeinfo.InputType.Guard;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_2;
 
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.IterableNodeType;
@@ -11,7 +9,6 @@ import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.extended.AnchoringNode;
 import graalvm.compiler.nodes.extended.GuardingNode;
@@ -32,7 +29,6 @@ import jdk.vm.ci.meta.JavaConstant;
  * maximum flexibility for the guard node and guarantees that deoptimization occurs only if the
  * control flow would have reached the guarded node (without taking exceptions into account).
  */
-@NodeInfo(nameTemplate = "Guard(!={p#negated}) {p#reason/s}", allowedUsageTypes = {Guard}, size = SIZE_2, cycles = CYCLES_2)
 public class GuardNode extends FloatingAnchoredNode implements Canonicalizable, GuardingNode, DeoptimizingGuard, IterableNodeType
 {
     public static final NodeClass<GuardNode> TYPE = NodeClass.create(GuardNode.class);

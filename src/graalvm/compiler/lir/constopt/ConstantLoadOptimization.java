@@ -38,7 +38,7 @@ public final class ConstantLoadOptimization extends PreAllocationOptimizationPha
 {
     public static class Options
     {
-        // "Enable constant load optimization."
+        // Option "Enable constant load optimization."
         public static final NestedBooleanOptionKey LIROptConstantLoadOptimization = new NestedBooleanOptionKey(LIROptimization, true);
     }
 

@@ -7,7 +7,6 @@ import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.iterators.NodePredicate;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.spi.NodeValueMap;
 
 import jdk.vm.ci.meta.Constant;
@@ -18,7 +17,6 @@ import jdk.vm.ci.meta.JavaKind;
  * This class represents a value within the graph, including local variables, phis, and all other
  * instructions.
  */
-@NodeInfo
 public abstract class ValueNode extends graalvm.compiler.graph.Node implements ValueNodeInterface
 {
     public static final NodeClass<ValueNode> TYPE = NodeClass.create(ValueNode.class);

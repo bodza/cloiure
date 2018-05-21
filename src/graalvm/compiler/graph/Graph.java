@@ -1,8 +1,5 @@
 package graalvm.compiler.graph;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_IGNORED;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_IGNORED;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.function.Consumer;
@@ -23,7 +20,7 @@ public class Graph
 {
     public static class Options
     {
-        // "Graal graph compression is performed when percent of live nodes falls below this value."
+        // Option "Graal graph compression is performed when percent of live nodes falls below this value."
         public static final OptionKey<Integer> GraphCompressionThreshold = new OptionKey<>(70);
     }
 
@@ -748,8 +745,6 @@ public class Graph
         };
     }
 
-    // Fully qualified annotation name is required to satisfy javac
-    @graalvm.compiler.nodeinfo.NodeInfo(cycles = CYCLES_IGNORED, size = SIZE_IGNORED)
     static final class PlaceHolderNode extends Node
     {
         public static final NodeClass<PlaceHolderNode> TYPE = NodeClass.create(PlaceHolderNode.class);

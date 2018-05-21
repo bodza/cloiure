@@ -1,8 +1,5 @@
 package graalvm.compiler.hotspot.replacements;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_1;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
-
 import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.TypeReference;
@@ -11,7 +8,6 @@ import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.hotspot.word.KlassPointer;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.ConvertNode;
@@ -29,7 +25,6 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * Read {@code Klass::_java_mirror} and incorporate non-null type information into stamp. This is
  * also used by {@link ClassGetHubNode} to eliminate chains of {@code klass._java_mirror._klass}.
  */
-@NodeInfo(cycles = CYCLES_1, size = SIZE_1)
 public final class HubGetClassNode extends FloatingNode implements Lowerable, Canonicalizable, ConvertNode
 {
     public static final NodeClass<HubGetClassNode> TYPE = NodeClass.create(HubGetClassNode.class);

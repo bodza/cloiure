@@ -1,12 +1,9 @@
 package graalvm.compiler.nodes.extended;
 
 import static graalvm.compiler.nodeinfo.InputType.Memory;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_2;
 
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.memory.MemoryCheckpoint;
 import graalvm.compiler.nodes.spi.LIRLowerable;
@@ -16,7 +13,6 @@ import org.graalvm.word.LocationIdentity;
 /**
  * Creates a memory barrier.
  */
-@NodeInfo(nameTemplate = "Membar#{p#location/s}", allowedUsageTypes = Memory, cycles = CYCLES_2, size = SIZE_2)
 public final class MembarNode extends FixedWithNextNode implements LIRLowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<MembarNode> TYPE = NodeClass.create(MembarNode.class);

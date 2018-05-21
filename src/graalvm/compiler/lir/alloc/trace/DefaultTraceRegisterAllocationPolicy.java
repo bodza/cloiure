@@ -44,19 +44,19 @@ public final class DefaultTraceRegisterAllocationPolicy
 
     public static class Options
     {
-        // "Use special allocator for trivial blocks."
+        // Option "Use special allocator for trivial blocks."
         public static final OptionKey<Boolean> TraceRAtrivialBlockAllocator = new OptionKey<>(true);
-        // "Use BottomUp if there is only one block with at most this number of instructions."
+        // Option "Use BottomUp if there is only one block with at most this number of instructions."
         public static final OptionKey<Integer> TraceRAalmostTrivialSize = new OptionKey<>(2);
-        // "Use BottomUp for traces with low number of variables at block boundaries."
+        // Option "Use BottomUp for traces with low number of variables at block boundaries."
         public static final OptionKey<Integer> TraceRAnumVariables = new OptionKey<>(null);
-        // "Use LSRA / BottomUp ratio."
+        // Option "Use LSRA / BottomUp ratio."
         public static final OptionKey<Double> TraceRAbottomUpRatio = new OptionKey<>(0.0);
-        // "Probability Threshold."
+        // Option "Probability Threshold."
         public static final OptionKey<Double> TraceRAprobalilityThreshold = new OptionKey<>(0.8);
-        // "Sum Probability Budget Threshold."
+        // Option "Sum Probability Budget Threshold."
         public static final OptionKey<Double> TraceRAsumBudget = new OptionKey<>(0.5);
-        // "TraceRA allocation policy to use."
+        // Option "TraceRA allocation policy to use."
         public static final EnumOptionKey<TraceRAPolicies> TraceRAPolicy = new EnumOptionKey<>(TraceRAPolicies.Default);
     }
 

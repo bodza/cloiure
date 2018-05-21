@@ -1,14 +1,10 @@
 package graalvm.compiler.nodes.java;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_32;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_32;
-
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.TypeReference;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.BinaryOpLogicNode;
 import graalvm.compiler.nodes.LogicConstantNode;
 import graalvm.compiler.nodes.LogicNode;
@@ -25,10 +21,8 @@ import jdk.vm.ci.meta.TriState;
 
 /**
  * The {@code InstanceOfDynamicNode} represents a type check where the type being checked is not
- * known at compile time. This is used, for instance, to intrinsify {@link Class#isInstance(Object)}
- * .
+ * known at compile time. This is used, for instance, to intrinsify {@link Class#isInstance(Object)}.
  */
-@NodeInfo(cycles = CYCLES_32, size = SIZE_32)
 public class InstanceOfDynamicNode extends BinaryOpLogicNode implements Canonicalizable.Binary<ValueNode>, Lowerable
 {
     public static final NodeClass<InstanceOfDynamicNode> TYPE = NodeClass.create(InstanceOfDynamicNode.class);

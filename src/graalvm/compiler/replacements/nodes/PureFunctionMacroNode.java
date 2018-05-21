@@ -5,7 +5,6 @@ import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.CallTargetNode.InvokeKind;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.ValueNode;
@@ -18,7 +17,6 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * This node class can be used to create {@link MacroNode}s for simple pure functions like
  * {@link System#identityHashCode(Object)}.
  */
-@NodeInfo
 public abstract class PureFunctionMacroNode extends MacroStateSplitNode implements Canonicalizable
 {
     public static final NodeClass<PureFunctionMacroNode> TYPE = NodeClass.create(PureFunctionMacroNode.class);

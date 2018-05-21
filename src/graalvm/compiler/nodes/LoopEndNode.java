@@ -1,24 +1,17 @@
 package graalvm.compiler.nodes;
 
 import static graalvm.compiler.nodeinfo.InputType.Association;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_1;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
 
 import java.util.Collections;
 
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeCycles;
-import graalvm.compiler.nodeinfo.NodeInfo;
-import graalvm.compiler.nodeinfo.NodeSize;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 
 /**
  * LoopEnd nodes represent a loop back-edge. When a LoopEnd is reached, execution continues at the
  * {@linkplain #loopBegin() loop header}.
  */
-@NodeInfo(cycles = CYCLES_1, cyclesRationale = "Backedge jmp", size = SIZE_1, sizeRationale = "Backedge jmp")
 public final class LoopEndNode extends AbstractEndNode
 {
     public static final NodeClass<LoopEndNode> TYPE = NodeClass.create(LoopEndNode.class);
@@ -116,26 +109,5 @@ public final class LoopEndNode extends AbstractEndNode
     public Iterable<? extends Node> cfgSuccessors()
     {
         return Collections.emptyList();
-    }
-
-    @Override
-    public NodeCycles estimatedNodeCycles()
-    {
-        if (canSafepoint())
-        {
-            // jmp+read
-            return CYCLES_2;
-        }
-        return super.estimatedNodeCycles();
-    }
-
-    @Override
-    public NodeSize estimatedNodeSize()
-    {
-        if (canSafepoint())
-        {
-            return NodeSize.SIZE_2;
-        }
-        return super.estimatedNodeSize();
     }
 }

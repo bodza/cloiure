@@ -1,12 +1,8 @@
 package graalvm.compiler.replacements.nodes;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
-
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.StateSplit;
 import graalvm.compiler.nodes.ValueNode;
@@ -21,7 +17,6 @@ import jdk.vm.ci.meta.Value;
  * A special purpose store node that differs from {@link RawStoreNode} in that it is not a
  * {@link StateSplit} and takes a computed address instead of an object.
  */
-@NodeInfo(cycles = CYCLES_2, size = SIZE_1)
 public final class DirectStoreNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<DirectStoreNode> TYPE = NodeClass.create(DirectStoreNode.class);

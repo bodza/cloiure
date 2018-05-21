@@ -2,8 +2,6 @@ package graalvm.compiler.hotspot.replacements.arraycopy;
 
 import static jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider.getArrayBaseOffset;
 import static jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider.getArrayIndexScale;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_UNKNOWN;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_UNKNOWN;
 
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.core.common.type.PrimitiveStamp;
@@ -13,7 +11,6 @@ import graalvm.compiler.hotspot.HotSpotGraalRuntimeProvider;
 import graalvm.compiler.hotspot.meta.HotSpotHostForeignCallsProvider;
 import graalvm.compiler.hotspot.nodes.GetObjectAddressNode;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.NodeView;
@@ -34,7 +31,6 @@ import org.graalvm.word.LocationIdentity;
 import jdk.vm.ci.code.CodeUtil;
 import jdk.vm.ci.meta.JavaKind;
 
-@NodeInfo(allowedUsageTypes = {InputType.Memory, InputType.Value}, cycles = CYCLES_UNKNOWN, size = SIZE_UNKNOWN)
 public final class CheckcastArrayCopyCallNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<CheckcastArrayCopyCallNode> TYPE = NodeClass.create(CheckcastArrayCopyCallNode.class);

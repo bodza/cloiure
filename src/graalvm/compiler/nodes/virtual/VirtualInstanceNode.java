@@ -2,7 +2,6 @@ package graalvm.compiler.nodes.virtual;
 
 import graalvm.compiler.core.common.spi.ArrayOffsetProvider;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.FixedNode;
 import graalvm.compiler.nodes.ValueNode;
@@ -11,7 +10,6 @@ import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.ResolvedJavaField;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
-@NodeInfo(nameTemplate = "VirtualInstance({p#objectId}) {p#type/s}")
 public class VirtualInstanceNode extends VirtualObjectNode
 {
     public static final NodeClass<VirtualInstanceNode> TYPE = NodeClass.create(VirtualInstanceNode.class);

@@ -2,8 +2,6 @@ package graalvm.compiler.hotspot.nodes;
 
 import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
 import static graalvm.compiler.hotspot.GraalHotSpotVMConfig.INJECTED_VMCONFIG;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_1;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
 
 import graalvm.compiler.api.replacements.Fold;
 import graalvm.compiler.api.replacements.Fold.InjectedParameter;
@@ -15,7 +13,6 @@ import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
 import graalvm.compiler.hotspot.HotSpotLIRGenerator;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.calc.FloatingNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
@@ -27,7 +24,6 @@ import jdk.vm.ci.meta.Value;
 /**
  * Represents {@link GraalHotSpotVMConfig} values that may change after compilation.
  */
-@NodeInfo(cycles = CYCLES_1, size = SIZE_1)
 public class GraalHotSpotVMConfigNode extends FloatingNode implements LIRLowerable, Canonicalizable
 {
     public static final NodeClass<GraalHotSpotVMConfigNode> TYPE = NodeClass.create(GraalHotSpotVMConfigNode.class);

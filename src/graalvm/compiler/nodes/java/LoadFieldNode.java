@@ -1,7 +1,6 @@
 package graalvm.compiler.nodes.java;
 
 import static graalvm.compiler.graph.iterators.NodePredicates.isNotA;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
 
 import graalvm.compiler.core.common.spi.ConstantFieldProvider;
 import graalvm.compiler.core.common.type.Stamp;
@@ -10,8 +9,6 @@ import graalvm.compiler.core.common.type.StampPair;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
-import graalvm.compiler.nodeinfo.NodeCycles;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.DeoptimizeNode;
 import graalvm.compiler.nodes.NodeView;
@@ -38,7 +35,6 @@ import jdk.vm.ci.meta.ResolvedJavaField;
 /**
  * The {@code LoadFieldNode} represents a read of a static or instance field.
  */
-@NodeInfo(nameTemplate = "LoadField#{p#field/s}")
 public final class LoadFieldNode extends AccessFieldNode implements Canonicalizable.Unary<ValueNode>, Virtualizable, UncheckedInterfaceProvider
 {
     public static final NodeClass<LoadFieldNode> TYPE = NodeClass.create(LoadFieldNode.class);
@@ -192,15 +188,5 @@ public final class LoadFieldNode extends AccessFieldNode implements Canonicaliza
     {
         this.updateUsages(object, newObject);
         this.object = newObject;
-    }
-
-    @Override
-    public NodeCycles estimatedNodeCycles()
-    {
-        if (field.isVolatile())
-        {
-            return CYCLES_2;
-        }
-        return super.estimatedNodeCycles();
     }
 }

@@ -1,15 +1,12 @@
 package graalvm.compiler.hotspot.nodes;
 
 import static graalvm.compiler.hotspot.HotSpotBackend.VM_ERROR;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_UNKNOWN;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_UNKNOWN;
 
 import graalvm.compiler.bytecode.Bytecode;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.spi.ForeignCallLinkage;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
@@ -24,7 +21,6 @@ import jdk.vm.ci.meta.Value;
  * Causes the VM to exit with a description of the current Java location and an optional
  * error message specified.
  */
-@NodeInfo(cycles = CYCLES_UNKNOWN, size = SIZE_UNKNOWN)
 public final class VMErrorNode extends DeoptimizingStubCall implements LIRLowerable
 {
     public static final NodeClass<VMErrorNode> TYPE = NodeClass.create(VMErrorNode.class);

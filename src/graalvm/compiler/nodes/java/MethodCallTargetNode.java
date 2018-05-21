@@ -8,7 +8,6 @@ import graalvm.compiler.graph.IterableNodeType;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Simplifiable;
 import graalvm.compiler.graph.spi.SimplifierTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.CallTargetNode;
 import graalvm.compiler.nodes.FixedGuardNode;
@@ -31,7 +30,6 @@ import jdk.vm.ci.meta.JavaTypeProfile;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
-@NodeInfo
 public class MethodCallTargetNode extends CallTargetNode implements IterableNodeType, Simplifiable
 {
     public static final NodeClass<MethodCallTargetNode> TYPE = NodeClass.create(MethodCallTargetNode.class);

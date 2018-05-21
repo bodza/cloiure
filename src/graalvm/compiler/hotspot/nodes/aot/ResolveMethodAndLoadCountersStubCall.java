@@ -1,8 +1,5 @@
 package graalvm.compiler.hotspot.nodes.aot;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_UNKNOWN;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_16;
-
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
@@ -14,7 +11,6 @@ import graalvm.compiler.hotspot.word.KlassPointer;
 import graalvm.compiler.hotspot.word.MethodCountersPointer;
 import graalvm.compiler.hotspot.word.MethodPointer;
 import graalvm.compiler.lir.LIRFrameState;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
@@ -26,7 +22,6 @@ import jdk.vm.ci.meta.Value;
 /**
  * A call to the VM via a regular stub.
  */
-@NodeInfo(cycles = CYCLES_UNKNOWN, size = SIZE_16)
 public class ResolveMethodAndLoadCountersStubCall extends DeoptimizingStubCall implements Canonicalizable, LIRLowerable
 {
     public static final NodeClass<ResolveMethodAndLoadCountersStubCall> TYPE = NodeClass.create(ResolveMethodAndLoadCountersStubCall.class);

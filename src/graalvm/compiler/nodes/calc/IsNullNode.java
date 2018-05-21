@@ -5,8 +5,6 @@ import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
-import graalvm.compiler.nodeinfo.NodeCycles;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.LogicConstantNode;
 import graalvm.compiler.nodes.LogicNode;
 import graalvm.compiler.nodes.NodeView;
@@ -25,7 +23,6 @@ import jdk.vm.ci.meta.TriState;
 /**
  * An IsNullNode will be true if the supplied value is null, and false if it is non-null.
  */
-@NodeInfo(cycles = NodeCycles.CYCLES_2)
 public final class IsNullNode extends UnaryOpLogicNode implements LIRLowerable, Virtualizable
 {
     public static final NodeClass<IsNullNode> TYPE = NodeClass.create(IsNullNode.class);

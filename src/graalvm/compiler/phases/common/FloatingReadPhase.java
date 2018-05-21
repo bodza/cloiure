@@ -124,12 +124,6 @@ public class FloatingReadPhase extends Phase
         this.createMemoryMapNodes = createMemoryMapNodes;
     }
 
-    @Override
-    public float codeSizeIncrease()
-    {
-        return 1.25f;
-    }
-
     /**
      * Removes nodes from a given set that (transitively) have a usage outside the set.
      */

@@ -1,12 +1,8 @@
 package graalvm.compiler.nodes;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_IGNORED;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_IGNORED;
-
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeInputList;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 
@@ -28,7 +24,6 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
  * Note that the signature is arbitrary. It's sole purpose is to capture values you may want to
  * inspect in the native debugger when the breakpoint is hit.
  */
-@NodeInfo(cycles = CYCLES_IGNORED, size = SIZE_IGNORED)
 public final class BreakpointNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<BreakpointNode> TYPE = NodeClass.create(BreakpointNode.class);

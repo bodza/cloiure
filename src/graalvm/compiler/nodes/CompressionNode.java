@@ -1,8 +1,6 @@
 package graalvm.compiler.nodes;
 
 import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_2;
 
 import graalvm.compiler.core.common.CompressEncoding;
 import graalvm.compiler.core.common.type.AbstractObjectStamp;
@@ -11,7 +9,6 @@ import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.lir.gen.LIRGeneratorTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.calc.ConvertNode;
 import graalvm.compiler.nodes.calc.UnaryNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
@@ -25,7 +22,6 @@ import jdk.vm.ci.meta.Value;
 /**
  * Compress or uncompress an oop or metaspace pointer.
  */
-@NodeInfo(nameTemplate = "{p#op/s}", cycles = CYCLES_2, size = SIZE_2)
 public abstract class CompressionNode extends UnaryNode implements ConvertNode, LIRLowerable
 {
     public static final NodeClass<CompressionNode> TYPE = NodeClass.create(CompressionNode.class);

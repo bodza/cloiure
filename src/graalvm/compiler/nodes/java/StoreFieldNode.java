@@ -1,12 +1,8 @@
 package graalvm.compiler.nodes.java;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_8;
-
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeCycles;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.StateSplit;
 import graalvm.compiler.nodes.ValueNode;
@@ -20,7 +16,6 @@ import jdk.vm.ci.meta.ResolvedJavaField;
 /**
  * The {@code StoreFieldNode} represents a write to a static or instance field.
  */
-@NodeInfo(nameTemplate = "StoreField#{p#field/s}")
 public final class StoreFieldNode extends AccessFieldNode implements StateSplit, Virtualizable
 {
     public static final NodeClass<StoreFieldNode> TYPE = NodeClass.create(StoreFieldNode.class);
@@ -84,15 +79,5 @@ public final class StoreFieldNode extends AccessFieldNode implements StateSplit,
     public FrameState getState()
     {
         return stateAfter;
-    }
-
-    @Override
-    public NodeCycles estimatedNodeCycles()
-    {
-        if (field.isVolatile())
-        {
-            return CYCLES_8;
-        }
-        return super.estimatedNodeCycles();
     }
 }

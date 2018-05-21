@@ -30,9 +30,9 @@ public class TraceBuilderPhase extends AllocationPhase
 
     public static class Options
     {
-        // "Trace building algorithm."
+        // Option "Trace building algorithm."
         public static final EnumOptionKey<TraceBuilder> TraceBuilding = new EnumOptionKey<>(TraceBuilder.UniDirectional);
-        // "Schedule trivial traces as early as possible."
+        // Option "Schedule trivial traces as early as possible."
         public static final OptionKey<Boolean> TraceRAScheduleTrivialTracesEarly = new OptionKey<>(true);
     }
 

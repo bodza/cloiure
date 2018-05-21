@@ -178,10 +178,4 @@ public class ExpandLogicPhase extends Phase
         ConditionalNode firstConditional = graph.unique(new ConditionalNode(x, xNegated ? secondConditional : trueTarget, xNegated ? trueTarget : secondConditional));
         conditional.replaceAndDelete(firstConditional);
     }
-
-    @Override
-    public boolean checkContract()
-    {
-        return false;
-    }
 }

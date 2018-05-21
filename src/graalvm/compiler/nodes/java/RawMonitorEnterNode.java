@@ -1,11 +1,7 @@
 package graalvm.compiler.nodes.java;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_64;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_64;
-
 import graalvm.compiler.graph.IterableNodeType;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.extended.MonitorEnter;
 import graalvm.compiler.nodes.memory.MemoryCheckpoint;
@@ -20,9 +16,6 @@ import org.graalvm.word.LocationIdentity;
  * The {@code RawMonitorEnterNode} represents the acquisition of a monitor. The object needs to
  * already be non-null and the hub is an additional parameter to the node.
  */
-@NodeInfo(cycles = CYCLES_64,
-          cyclesRationale = "Rough estimation of the enter operation",
-          size = SIZE_64)
 public final class RawMonitorEnterNode extends AccessMonitorNode implements Virtualizable, Lowerable, IterableNodeType, MonitorEnter, MemoryCheckpoint.Single
 {
     public static final NodeClass<RawMonitorEnterNode> TYPE = NodeClass.create(RawMonitorEnterNode.class);

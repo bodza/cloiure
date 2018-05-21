@@ -10,13 +10,11 @@ import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.iterators.NodeIterable;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.extended.AnchoringNode;
 import graalvm.compiler.nodes.extended.GuardingNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 
-@NodeInfo(allowedUsageTypes = {InputType.Guard, InputType.Anchor})
 public abstract class AbstractBeginNode extends FixedWithNextNode implements LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType
 {
     public static final NodeClass<AbstractBeginNode> TYPE = NodeClass.create(AbstractBeginNode.class);

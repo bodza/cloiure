@@ -8,7 +8,6 @@ import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
@@ -22,7 +21,6 @@ import jdk.vm.ci.meta.JavaKind;
  * {@link JavaKind#Object}, a word-sized integer or another pointer. The offset must be a word-sized
  * integer.
  */
-@NodeInfo(allowedUsageTypes = InputType.Association)
 public class OffsetAddressNode extends AddressNode implements Canonicalizable
 {
     public static final NodeClass<OffsetAddressNode> TYPE = NodeClass.create(OffsetAddressNode.class);

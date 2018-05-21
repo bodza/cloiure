@@ -2,11 +2,9 @@ package graalvm.compiler.hotspot.nodes;
 
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.memory.address.AddressNode;
 
-@NodeInfo
 public abstract class ObjectWriteBarrier extends WriteBarrier
 {
     public static final NodeClass<ObjectWriteBarrier> TYPE = NodeClass.create(ObjectWriteBarrier.class);

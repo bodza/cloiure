@@ -1,14 +1,5 @@
 package graalvm.compiler.nodes.extended;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_64;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_8;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_UNKNOWN;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_2;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_64;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_8;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_UNKNOWN;
-
 import java.util.Arrays;
 
 import graalvm.compiler.core.common.type.Stamp;
@@ -18,9 +9,6 @@ import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeSuccessorList;
 import graalvm.compiler.graph.spi.SimplifierTool;
-import graalvm.compiler.nodeinfo.NodeCycles;
-import graalvm.compiler.nodeinfo.NodeInfo;
-import graalvm.compiler.nodeinfo.NodeSize;
 import graalvm.compiler.nodes.AbstractBeginNode;
 import graalvm.compiler.nodes.ControlSplitNode;
 import graalvm.compiler.nodes.ValueNode;
@@ -30,12 +18,6 @@ import jdk.vm.ci.meta.Constant;
 /**
  * The {@code SwitchNode} class is the base of both lookup and table switches.
  */
-@NodeInfo(cycles = CYCLES_UNKNOWN,
-          cyclesRationale = "We cannot estimate the runtime cost of a switch statement without knowing the number" +
-                            "of case statements and the involved keys.",
-          size = SIZE_UNKNOWN,
-          sizeRationale = "We cannot estimate the code size of a switch statement without knowing the number" +
-                          "of case statements.")
 public abstract class SwitchNode extends ControlSplitNode
 {
     public static final NodeClass<SwitchNode> TYPE = NodeClass.create(SwitchNode.class);
@@ -247,44 +229,4 @@ public abstract class SwitchNode extends ControlSplitNode
     }
 
     public abstract Stamp getValueStampForSuccessor(AbstractBeginNode beginNode);
-
-    @Override
-    public NodeCycles estimatedNodeCycles()
-    {
-        if (keyCount() == 1)
-        {
-            // if
-            return CYCLES_2;
-        }
-        else if (isSorted())
-        {
-            // good heuristic
-            return CYCLES_8;
-        }
-        else
-        {
-            // not so good
-            return CYCLES_64;
-        }
-    }
-
-    @Override
-    public NodeSize estimatedNodeSize()
-    {
-        if (keyCount() == 1)
-        {
-            // if
-            return SIZE_2;
-        }
-        else if (isSorted())
-        {
-            // good heuristic
-            return SIZE_8;
-        }
-        else
-        {
-            // not so good
-            return SIZE_64;
-        }
-    }
 }

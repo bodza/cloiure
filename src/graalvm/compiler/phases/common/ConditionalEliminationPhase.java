@@ -1333,10 +1333,4 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
             return stamp + " -> " + guard;
         }
     }
-
-    @Override
-    public float codeSizeIncrease()
-    {
-        return 1.5f;
-    }
 }

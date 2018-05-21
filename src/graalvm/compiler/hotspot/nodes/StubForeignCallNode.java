@@ -1,8 +1,6 @@
 package graalvm.compiler.hotspot.nodes;
 
 import static graalvm.compiler.nodeinfo.InputType.Memory;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_UNKNOWN;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_UNKNOWN;
 
 import java.util.Arrays;
 
@@ -13,7 +11,6 @@ import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeInputList;
 import graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.ValueNode;
@@ -27,7 +24,6 @@ import jdk.vm.ci.meta.Value;
 /**
  * Node for a {@linkplain ForeignCallDescriptor foreign} call from within a stub.
  */
-@NodeInfo(nameTemplate = "StubForeignCall#{p#descriptor/s}", allowedUsageTypes = Memory, cycles = CYCLES_UNKNOWN, size = SIZE_UNKNOWN)
 public final class StubForeignCallNode extends FixedWithNextNode implements LIRLowerable, MemoryCheckpoint.Multi
 {
     public static final NodeClass<StubForeignCallNode> TYPE = NodeClass.create(StubForeignCallNode.class);

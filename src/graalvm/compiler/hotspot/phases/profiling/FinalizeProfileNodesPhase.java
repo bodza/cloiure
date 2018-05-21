@@ -35,13 +35,13 @@ public class FinalizeProfileNodesPhase extends BasePhase<PhaseContext>
 
     public static class Options
     {
-        // "Profile simple methods."
+        // Option "Profile simple methods."
         public static final OptionKey<Boolean> ProfileSimpleMethods = new OptionKey<>(true);
-        // "Maximum number of nodes in a graph for a simple method."
+        // Option "Maximum number of nodes in a graph for a simple method."
         public static final OptionKey<Integer> SimpleMethodGraphSize = new OptionKey<>(256);
-        // "Maximum number of calls in a simple method."
+        // Option "Maximum number of calls in a simple method."
         public static final OptionKey<Integer> SimpleMethodCalls = new OptionKey<>(1);
-        // "Maximum number of indirect calls in a simple moethod."
+        // Option "Maximum number of indirect calls in a simple moethod."
         public static final OptionKey<Integer> SimpleMethodIndirectCalls = new OptionKey<>(0);
     }
 
@@ -162,11 +162,5 @@ public class FinalizeProfileNodesPhase extends BasePhase<PhaseContext>
         {
             assignRandomSources(graph);
         }
-    }
-
-    @Override
-    public boolean checkContract()
-    {
-        return false;
     }
 }

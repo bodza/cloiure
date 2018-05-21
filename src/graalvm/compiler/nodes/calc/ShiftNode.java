@@ -1,8 +1,5 @@
 package graalvm.compiler.nodes.calc;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_1;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
-
 import java.util.function.Function;
 
 import graalvm.compiler.core.common.type.ArithmeticOpTable;
@@ -11,7 +8,6 @@ import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ArithmeticOperation;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.NodeView;
@@ -23,7 +19,6 @@ import jdk.vm.ci.meta.JavaConstant;
 /**
  * The {@code ShiftOp} class represents shift operations.
  */
-@NodeInfo(cycles = CYCLES_1, size = SIZE_1)
 public abstract class ShiftNode<OP> extends BinaryNode implements ArithmeticOperation, ArithmeticLIRLowerable, NarrowableArithmeticNode
 {
     @SuppressWarnings("rawtypes") public static final NodeClass<ShiftNode> TYPE = NodeClass.create(ShiftNode.class);

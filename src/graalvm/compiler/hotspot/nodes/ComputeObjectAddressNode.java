@@ -1,11 +1,7 @@
 package graalvm.compiler.hotspot.nodes;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_1;
-
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
-import graalvm.compiler.nodeinfo.NodeSize;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.debug.ControlFlowAnchored;
@@ -18,7 +14,6 @@ import jdk.vm.ci.meta.JavaKind;
  * A high-level intrinsic for getting an address inside of an object. During lowering it will be
  * moved next to any uses to avoid creating a derived pointer that is live across a safepoint.
  */
-@NodeInfo(cycles = CYCLES_1, size = NodeSize.SIZE_1)
 public final class ComputeObjectAddressNode extends FixedWithNextNode implements Lowerable, ControlFlowAnchored
 {
     public static final NodeClass<ComputeObjectAddressNode> TYPE = NodeClass.create(ComputeObjectAddressNode.class);

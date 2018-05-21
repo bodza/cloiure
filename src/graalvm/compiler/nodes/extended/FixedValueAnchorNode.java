@@ -1,11 +1,7 @@
 package graalvm.compiler.nodes.extended;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_0;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_0;
-
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
@@ -13,7 +9,6 @@ import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.nodes.spi.ValueProxy;
 
-@NodeInfo(cycles = CYCLES_0, size = SIZE_0)
 public class FixedValueAnchorNode extends FixedWithNextNode implements LIRLowerable, ValueProxy, GuardingNode
 {
     public static final NodeClass<FixedValueAnchorNode> TYPE = NodeClass.create(FixedValueAnchorNode.class);

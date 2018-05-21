@@ -1,14 +1,10 @@
 package graalvm.compiler.nodes.java;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_32;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_32;
-
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.BinaryOpLogicNode;
 import graalvm.compiler.nodes.LogicConstantNode;
 import graalvm.compiler.nodes.ValueNode;
@@ -24,7 +20,6 @@ import jdk.vm.ci.meta.TriState;
  * against instances. This is used, for instance, to intrinsify
  * {@link Class#isAssignableFrom(Class)} .
  */
-@NodeInfo(cycles = CYCLES_32, size = SIZE_32)
 public final class ClassIsAssignableFromNode extends BinaryOpLogicNode implements Canonicalizable.Binary<ValueNode>, Lowerable
 {
     public static final NodeClass<ClassIsAssignableFromNode> TYPE = NodeClass.create(ClassIsAssignableFromNode.class);

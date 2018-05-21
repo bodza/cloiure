@@ -1,11 +1,8 @@
 package graalvm.compiler.nodes.calc;
 
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
-
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 
@@ -13,7 +10,6 @@ import graalvm.compiler.nodes.ValueNode;
  * The {@code UnaryNode} class is the base of arithmetic and bit logic operations with exactly one
  * input.
  */
-@NodeInfo(size = SIZE_1)
 public abstract class UnaryNode extends FloatingNode implements Canonicalizable.Unary<ValueNode>
 {
     public static final NodeClass<UnaryNode> TYPE = NodeClass.create(UnaryNode.class);

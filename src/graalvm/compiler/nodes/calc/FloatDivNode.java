@@ -1,7 +1,5 @@
 package graalvm.compiler.nodes.calc;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_32;
-
 import graalvm.compiler.core.common.type.ArithmeticOpTable;
 import graalvm.compiler.core.common.type.ArithmeticOpTable.BinaryOp;
 import graalvm.compiler.core.common.type.ArithmeticOpTable.BinaryOp.Div;
@@ -9,7 +7,6 @@ import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.lir.gen.ArithmeticLIRGeneratorTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
@@ -17,7 +14,6 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 
 import jdk.vm.ci.meta.Constant;
 
-@NodeInfo(shortName = "/", cycles = CYCLES_32)
 public class FloatDivNode extends BinaryArithmeticNode<Div>
 {
     public static final NodeClass<FloatDivNode> TYPE = NodeClass.create(FloatDivNode.class);

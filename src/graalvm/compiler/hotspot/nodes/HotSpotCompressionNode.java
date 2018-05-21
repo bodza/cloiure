@@ -1,14 +1,10 @@
 package graalvm.compiler.hotspot.nodes;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_2;
-
 import graalvm.compiler.core.common.CompressEncoding;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.hotspot.nodes.type.HotSpotNarrowOopStamp;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.CompressionNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
@@ -18,7 +14,6 @@ import jdk.vm.ci.hotspot.HotSpotConstant;
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.JavaConstant;
 
-@NodeInfo(nameTemplate = "{p#op/s}", cycles = CYCLES_2, size = SIZE_2)
 public final class HotSpotCompressionNode extends CompressionNode
 {
     public static final NodeClass<HotSpotCompressionNode> TYPE = NodeClass.create(HotSpotCompressionNode.class);

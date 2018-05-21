@@ -6,7 +6,6 @@ import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.TypeReference;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.AbstractBeginNode;
 import graalvm.compiler.nodes.BeginStateSplitNode;
 import graalvm.compiler.nodes.InvokeWithExceptionNode;
@@ -19,14 +18,11 @@ import graalvm.compiler.nodes.spi.LoweringTool;
 import org.graalvm.word.LocationIdentity;
 
 import static graalvm.compiler.nodeinfo.InputType.Memory;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_8;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_8;
 
 /**
  * The entry to an exception handler with the exception coming from a call (as opposed to a local
  * throw instruction or implicit exception).
  */
-@NodeInfo(allowedUsageTypes = Memory, cycles = CYCLES_8, size = SIZE_8)
 public final class ExceptionObjectNode extends BeginStateSplitNode implements Lowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<ExceptionObjectNode> TYPE = NodeClass.create(ExceptionObjectNode.class);

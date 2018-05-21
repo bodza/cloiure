@@ -2,7 +2,6 @@ package graalvm.compiler.core.gen;
 
 import jdk.vm.ci.meta.Value;
 
-import graalvm.compiler.core.match.MatchableNode;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.lir.LIRFrameState;
 import graalvm.compiler.lir.LIRInstruction;
@@ -40,35 +39,35 @@ import graalvm.compiler.nodes.memory.FloatingReadNode;
 import graalvm.compiler.nodes.memory.ReadNode;
 import graalvm.compiler.nodes.memory.WriteNode;
 
-@MatchableNode(nodeClass = ConstantNode.class, shareable = true)
-@MatchableNode(nodeClass = FloatConvertNode.class, inputs = {"value"})
-@MatchableNode(nodeClass = FloatingReadNode.class, inputs = {"address"})
-@MatchableNode(nodeClass = IfNode.class, inputs = {"condition"})
-@MatchableNode(nodeClass = SubNode.class, inputs = {"x", "y"})
-@MatchableNode(nodeClass = LeftShiftNode.class, inputs = {"x", "y"})
-@MatchableNode(nodeClass = NarrowNode.class, inputs = {"value"})
-@MatchableNode(nodeClass = ReadNode.class, inputs = {"address"})
-@MatchableNode(nodeClass = ReinterpretNode.class, inputs = {"value"})
-@MatchableNode(nodeClass = SignExtendNode.class, inputs = {"value"})
-@MatchableNode(nodeClass = UnsignedRightShiftNode.class, inputs = {"x", "y"})
-@MatchableNode(nodeClass = WriteNode.class, inputs = {"address", "value"})
-@MatchableNode(nodeClass = ZeroExtendNode.class, inputs = {"value"})
-@MatchableNode(nodeClass = AndNode.class, inputs = {"x", "y"}, commutative = true)
-@MatchableNode(nodeClass = FloatEqualsNode.class, inputs = {"x", "y"}, commutative = true)
-@MatchableNode(nodeClass = FloatLessThanNode.class, inputs = {"x", "y"}, commutative = true)
-@MatchableNode(nodeClass = PointerEqualsNode.class, inputs = {"x", "y"}, commutative = true)
-@MatchableNode(nodeClass = AddNode.class, inputs = {"x", "y"}, commutative = true)
-@MatchableNode(nodeClass = IntegerBelowNode.class, inputs = {"x", "y"}, commutative = true)
-@MatchableNode(nodeClass = IntegerEqualsNode.class, inputs = {"x", "y"}, commutative = true)
-@MatchableNode(nodeClass = IntegerLessThanNode.class, inputs = {"x", "y"}, commutative = true)
-@MatchableNode(nodeClass = MulNode.class, inputs = {"x", "y"}, commutative = true)
-@MatchableNode(nodeClass = IntegerTestNode.class, inputs = {"x", "y"}, commutative = true)
-@MatchableNode(nodeClass = ObjectEqualsNode.class, inputs = {"x", "y"}, commutative = true)
-@MatchableNode(nodeClass = OrNode.class, inputs = {"x", "y"}, commutative = true)
-@MatchableNode(nodeClass = XorNode.class, inputs = {"x", "y"}, commutative = true)
-@MatchableNode(nodeClass = PiNode.class, inputs = {"object"})
-@MatchableNode(nodeClass = LogicCompareAndSwapNode.class, inputs = {"address", "expectedValue", "newValue"})
-@MatchableNode(nodeClass = ValueCompareAndSwapNode.class, inputs = {"address", "expectedValue", "newValue"})
+// MatchableNode nodeClass = ConstantNode.class, shareable = true
+// MatchableNode nodeClass = FloatConvertNode.class, inputs = {"value"}
+// MatchableNode nodeClass = FloatingReadNode.class, inputs = {"address"}
+// MatchableNode nodeClass = IfNode.class, inputs = {"condition"}
+// MatchableNode nodeClass = SubNode.class, inputs = {"x", "y"}
+// MatchableNode nodeClass = LeftShiftNode.class, inputs = {"x", "y"}
+// MatchableNode nodeClass = NarrowNode.class, inputs = {"value"}
+// MatchableNode nodeClass = ReadNode.class, inputs = {"address"}
+// MatchableNode nodeClass = ReinterpretNode.class, inputs = {"value"}
+// MatchableNode nodeClass = SignExtendNode.class, inputs = {"value"}
+// MatchableNode nodeClass = UnsignedRightShiftNode.class, inputs = {"x", "y"}
+// MatchableNode nodeClass = WriteNode.class, inputs = {"address", "value"}
+// MatchableNode nodeClass = ZeroExtendNode.class, inputs = {"value"}
+// MatchableNode nodeClass = AndNode.class, inputs = {"x", "y"}, commutative = true
+// MatchableNode nodeClass = FloatEqualsNode.class, inputs = {"x", "y"}, commutative = true
+// MatchableNode nodeClass = FloatLessThanNode.class, inputs = {"x", "y"}, commutative = true
+// MatchableNode nodeClass = PointerEqualsNode.class, inputs = {"x", "y"}, commutative = true
+// MatchableNode nodeClass = AddNode.class, inputs = {"x", "y"}, commutative = true
+// MatchableNode nodeClass = IntegerBelowNode.class, inputs = {"x", "y"}, commutative = true
+// MatchableNode nodeClass = IntegerEqualsNode.class, inputs = {"x", "y"}, commutative = true
+// MatchableNode nodeClass = IntegerLessThanNode.class, inputs = {"x", "y"}, commutative = true
+// MatchableNode nodeClass = MulNode.class, inputs = {"x", "y"}, commutative = true
+// MatchableNode nodeClass = IntegerTestNode.class, inputs = {"x", "y"}, commutative = true
+// MatchableNode nodeClass = ObjectEqualsNode.class, inputs = {"x", "y"}, commutative = true
+// MatchableNode nodeClass = OrNode.class, inputs = {"x", "y"}, commutative = true
+// MatchableNode nodeClass = XorNode.class, inputs = {"x", "y"}, commutative = true
+// MatchableNode nodeClass = PiNode.class, inputs = {"object"}
+// MatchableNode nodeClass = LogicCompareAndSwapNode.class, inputs = {"address", "expectedValue", "newValue"}
+// MatchableNode nodeClass = ValueCompareAndSwapNode.class, inputs = {"address", "expectedValue", "newValue"}
 public abstract class NodeMatchRules
 {
     NodeLIRBuilder lirBuilder;

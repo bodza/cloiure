@@ -1,8 +1,6 @@
 package graalvm.compiler.phases.common;
 
 import static graalvm.compiler.core.common.GraalOptions.OptEliminateGuards;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_IGNORED;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_IGNORED;
 import static graalvm.compiler.phases.common.LoweringPhase.ProcessBlockState.ST_ENTER;
 import static graalvm.compiler.phases.common.LoweringPhase.ProcessBlockState.ST_ENTER_ALWAYS_REACHED;
 import static graalvm.compiler.phases.common.LoweringPhase.ProcessBlockState.ST_LEAVE;
@@ -21,7 +19,6 @@ import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeBitMap;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.AbstractBeginNode;
 import graalvm.compiler.nodes.BeginNode;
 import graalvm.compiler.nodes.FixedGuardNode;
@@ -61,7 +58,6 @@ import jdk.vm.ci.meta.MetaAccessProvider;
  */
 public class LoweringPhase extends BasePhase<PhaseContext>
 {
-    @NodeInfo(cycles = CYCLES_IGNORED, size = SIZE_IGNORED)
     static final class DummyGuardHandle extends ValueNode implements GuardedNode
     {
         public static final NodeClass<DummyGuardHandle> TYPE = NodeClass.create(DummyGuardHandle.class);
@@ -91,12 +87,6 @@ public class LoweringPhase extends BasePhase<PhaseContext>
         {
             return this;
         }
-    }
-
-    @Override
-    public boolean checkContract()
-    {
-        return false;
     }
 
     final class LoweringToolImpl implements LoweringTool
@@ -290,16 +280,6 @@ public class LoweringPhase extends BasePhase<PhaseContext>
                 default:
                     throw GraalError.shouldNotReachHere();
             }
-        }
-
-        @Override
-        public boolean checkContract()
-        {
-            /*
-             * lowering with snippets cannot be fully built in the node costs of all high level
-             * nodes
-             */
-            return false;
         }
 
         @Override

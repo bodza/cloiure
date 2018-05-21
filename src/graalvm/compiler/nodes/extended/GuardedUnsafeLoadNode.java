@@ -3,13 +3,11 @@ package graalvm.compiler.nodes.extended;
 import static graalvm.compiler.nodeinfo.InputType.Guard;
 
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ValueNode;
 import org.graalvm.word.LocationIdentity;
 
 import jdk.vm.ci.meta.JavaKind;
 
-@NodeInfo
 public class GuardedUnsafeLoadNode extends RawLoadNode implements GuardedNode
 {
     public static final NodeClass<GuardedUnsafeLoadNode> TYPE = NodeClass.create(GuardedUnsafeLoadNode.class);

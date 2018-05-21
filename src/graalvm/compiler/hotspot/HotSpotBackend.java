@@ -64,7 +64,7 @@ public abstract class HotSpotBackend extends Backend implements FrameMap.Referen
 {
     public static class Options
     {
-        // "Use Graal arithmetic stubs instead of HotSpot stubs where possible."
+        // Option "Use Graal arithmetic stubs instead of HotSpot stubs where possible."
         public static final OptionKey<Boolean> GraalArithmeticStubs = new OptionKey<>(false); // GR-8276
     }
 

@@ -1,8 +1,5 @@
 package graalvm.compiler.hotspot.nodes.aot;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_UNKNOWN;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_16;
-
 import graalvm.compiler.core.common.PermanentBailoutException;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
@@ -13,7 +10,6 @@ import graalvm.compiler.hotspot.meta.HotSpotConstantLoadAction;
 import graalvm.compiler.hotspot.nodes.DeoptimizingStubCall;
 import graalvm.compiler.hotspot.word.KlassPointer;
 import graalvm.compiler.lir.LIRFrameState;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
@@ -28,7 +24,6 @@ import jdk.vm.ci.meta.Value;
 /**
  * A call to the VM via a regular stub.
  */
-@NodeInfo(cycles = CYCLES_UNKNOWN, size = SIZE_16)
 public class ResolveConstantStubCall extends DeoptimizingStubCall implements Canonicalizable, LIRLowerable
 {
     public static final NodeClass<ResolveConstantStubCall> TYPE = NodeClass.create(ResolveConstantStubCall.class);

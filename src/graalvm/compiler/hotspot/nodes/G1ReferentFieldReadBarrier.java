@@ -1,10 +1,6 @@
 package graalvm.compiler.hotspot.nodes;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_64;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_64;
-
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.memory.address.AddressNode;
 
@@ -14,7 +10,6 @@ import graalvm.compiler.nodes.memory.address.AddressNode;
  * {@code UnsafeLoadNode}). The return value of the read is passed to the snippet implementing the
  * read barrier and consequently is added to the SATB queue if the concurrent marker is enabled.
  */
-@NodeInfo(cycles = CYCLES_64, size = SIZE_64)
 public final class G1ReferentFieldReadBarrier extends ObjectWriteBarrier
 {
     public static final NodeClass<G1ReferentFieldReadBarrier> TYPE = NodeClass.create(G1ReferentFieldReadBarrier.class);

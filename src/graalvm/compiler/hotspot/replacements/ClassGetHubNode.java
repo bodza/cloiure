@@ -1,8 +1,5 @@
 package graalvm.compiler.hotspot.replacements;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_1;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
-
 import graalvm.compiler.core.common.calc.CanonicalCondition;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.Node;
@@ -11,7 +8,6 @@ import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.hotspot.nodes.type.KlassPointerStamp;
 import graalvm.compiler.hotspot.word.KlassPointer;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.PiNode;
@@ -42,7 +38,6 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * handled by
  * {@link ReadNode#canonicalizeRead(ValueNode, AddressNode, LocationIdentity, CanonicalizerTool)}.
  */
-@NodeInfo(cycles = CYCLES_1, size = SIZE_1)
 public final class ClassGetHubNode extends FloatingNode implements Lowerable, Canonicalizable, ConvertNode
 {
     public static final NodeClass<ClassGetHubNode> TYPE = NodeClass.create(ClassGetHubNode.class);

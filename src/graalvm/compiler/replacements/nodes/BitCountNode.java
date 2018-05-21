@@ -1,15 +1,11 @@
 package graalvm.compiler.replacements.nodes;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
-
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.lir.gen.ArithmeticLIRGeneratorTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
@@ -20,7 +16,6 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.JavaKind;
 
-@NodeInfo(cycles = CYCLES_2, size = SIZE_1)
 public final class BitCountNode extends UnaryNode implements ArithmeticLIRLowerable
 {
     public static final NodeClass<BitCountNode> TYPE = NodeClass.create(BitCountNode.class);

@@ -1,13 +1,9 @@
 package graalvm.compiler.replacements.amd64;
 
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_64;
-
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeInputList;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeCycles;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.NamedLocationIdentity;
 import graalvm.compiler.nodes.ValueNode;
@@ -22,7 +18,6 @@ import org.graalvm.word.Pointer;
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.Value;
 
-@NodeInfo(size = SIZE_64, cycles = NodeCycles.CYCLES_UNKNOWN)
 public class AMD64StringIndexOfNode extends FixedWithNextNode implements LIRLowerable, MemoryAccess
 {
     public static final NodeClass<AMD64StringIndexOfNode> TYPE = NodeClass.create(AMD64StringIndexOfNode.class);

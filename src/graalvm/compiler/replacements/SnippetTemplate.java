@@ -1,8 +1,6 @@
 package graalvm.compiler.replacements;
 
 import static graalvm.compiler.graph.iterators.NodePredicates.isNotA;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_IGNORED;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_IGNORED;
 import static graalvm.compiler.phases.common.DeadCodeEliminationPhase.Optionality.Required;
 import static org.graalvm.word.LocationIdentity.any;
 
@@ -40,7 +38,6 @@ import graalvm.compiler.loop.LoopEx;
 import graalvm.compiler.loop.LoopsData;
 import graalvm.compiler.loop.phases.LoopTransformations;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.AbstractBeginNode;
 import graalvm.compiler.nodes.AbstractMergeNode;
 import graalvm.compiler.nodes.ConstantNode;
@@ -447,7 +444,6 @@ public class SnippetTemplate
         }
     }
 
-    @NodeInfo(cycles = CYCLES_IGNORED, size = SIZE_IGNORED)
     static final class VarargsPlaceholderNode extends FloatingNode implements ArrayLengthProvider
     {
         public static final NodeClass<VarargsPlaceholderNode> TYPE = NodeClass.create(VarargsPlaceholderNode.class);
@@ -524,7 +520,7 @@ public class SnippetTemplate
 
     static class Options
     {
-        // "Use a LRU cache for snippet templates."
+        // Option "Use a LRU cache for snippet templates."
         public static final OptionKey<Boolean> UseSnippetTemplateCache = new OptionKey<>(true);
 
         static final OptionKey<Integer> MaxTemplatesPerSnippet = new OptionKey<>(50);

@@ -2,7 +2,6 @@ package graalvm.compiler.replacements.nodes;
 
 import graalvm.compiler.core.common.type.StampPair;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.CallTargetNode.InvokeKind;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.Virtualizable;
@@ -15,7 +14,6 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * A helper class to allow elimination of byte code instrumentation that could interfere with escape
  * analysis.
  */
-@NodeInfo
 public class VirtualizableInvokeMacroNode extends MacroStateSplitNode implements Virtualizable
 {
     public static final NodeClass<VirtualizableInvokeMacroNode> TYPE = NodeClass.create(VirtualizableInvokeMacroNode.class);

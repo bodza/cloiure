@@ -1,8 +1,6 @@
 package graalvm.compiler.nodes;
 
 import static graalvm.compiler.nodeinfo.InputType.Association;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_0;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_0;
 
 import java.util.List;
 
@@ -13,7 +11,6 @@ import graalvm.compiler.graph.NodeInputList;
 import graalvm.compiler.graph.iterators.NodeIterable;
 import graalvm.compiler.graph.spi.Simplifiable;
 import graalvm.compiler.graph.spi.SimplifierTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.memory.MemoryPhiNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
@@ -22,7 +19,6 @@ import graalvm.compiler.nodes.util.GraphUtil;
 /**
  * Denotes the merging of multiple control-flow paths.
  */
-@NodeInfo(allowedUsageTypes = Association, cycles = CYCLES_0, size = SIZE_0)
 public abstract class AbstractMergeNode extends BeginStateSplitNode implements IterableNodeType, Simplifiable, LIRLowerable
 {
     public static final NodeClass<AbstractMergeNode> TYPE = NodeClass.create(AbstractMergeNode.class);

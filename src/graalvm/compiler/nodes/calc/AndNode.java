@@ -10,7 +10,6 @@ import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable.BinaryCommutative;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.lir.gen.ArithmeticLIRGeneratorTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
@@ -21,7 +20,6 @@ import jdk.vm.ci.code.CodeUtil;
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.PrimitiveConstant;
 
-@NodeInfo(shortName = "&")
 public final class AndNode extends BinaryArithmeticNode<And> implements NarrowableArithmeticNode, BinaryCommutative<ValueNode>
 {
     public static final NodeClass<AndNode> TYPE = NodeClass.create(AndNode.class);

@@ -1,13 +1,10 @@
 package graalvm.compiler.nodes.memory.address;
 
 import static graalvm.compiler.nodeinfo.InputType.Association;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_0;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_0;
 
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node.IndirectCanonicalization;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodeinfo.StructuralInput;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.FloatingNode;
@@ -15,7 +12,6 @@ import graalvm.compiler.nodes.calc.FloatingNode;
 /**
  * Base class for nodes that deal with addressing calculation.
  */
-@NodeInfo(allowedUsageTypes = Association, size = SIZE_0, cycles = CYCLES_0)
 public abstract class AddressNode extends FloatingNode implements IndirectCanonicalization
 {
     public static final NodeClass<AddressNode> TYPE = NodeClass.create(AddressNode.class);

@@ -1,8 +1,5 @@
 package graalvm.compiler.hotspot.nodes.aot;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_UNKNOWN;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_16;
-
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
@@ -11,7 +8,6 @@ import graalvm.compiler.hotspot.HotSpotLIRGenerator;
 import graalvm.compiler.hotspot.word.KlassPointer;
 import graalvm.compiler.lir.LIRFrameState;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.DeoptimizingNode;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.NodeView;
@@ -29,7 +25,6 @@ import jdk.vm.ci.meta.Value;
 /**
  * A call to the VM via a regular stub.
  */
-@NodeInfo(allowedUsageTypes = {InputType.Memory}, cycles = CYCLES_UNKNOWN, size = SIZE_16)
 public class InitializeKlassStubCall extends AbstractMemoryCheckpoint implements LIRLowerable, Canonicalizable, DeoptimizingNode.DeoptBefore, MemoryCheckpoint.Single
 {
     public static final NodeClass<InitializeKlassStubCall> TYPE = NodeClass.create(InitializeKlassStubCall.class);

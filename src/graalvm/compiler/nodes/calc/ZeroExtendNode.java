@@ -1,7 +1,5 @@
 package graalvm.compiler.nodes.calc;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_1;
-
 import graalvm.compiler.core.common.calc.CanonicalCondition;
 import graalvm.compiler.core.common.type.ArithmeticOpTable;
 import graalvm.compiler.core.common.type.ArithmeticOpTable.IntegerConvertOp;
@@ -13,7 +11,6 @@ import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.lir.gen.ArithmeticLIRGeneratorTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
@@ -23,7 +20,6 @@ import jdk.vm.ci.code.CodeUtil;
 /**
  * The {@code ZeroExtendNode} converts an integer to a wider integer using zero extension.
  */
-@NodeInfo(cycles = CYCLES_1)
 public final class ZeroExtendNode extends IntegerConvertNode<ZeroExtend, Narrow>
 {
     public static final NodeClass<ZeroExtendNode> TYPE = NodeClass.create(ZeroExtendNode.class);

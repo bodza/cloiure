@@ -1,8 +1,6 @@
 package graalvm.compiler.replacements.nodes;
 
 import static jdk.vm.ci.code.BytecodeFrame.isPlaceholderBci;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_UNKNOWN;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_UNKNOWN;
 
 import graalvm.compiler.api.replacements.MethodSubstitution;
 import graalvm.compiler.api.replacements.Snippet;
@@ -11,7 +9,6 @@ import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeInputList;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.CallTargetNode.InvokeKind;
 import graalvm.compiler.nodes.FixedNode;
 import graalvm.compiler.nodes.Invokable;
@@ -49,10 +46,6 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * possible if the macro node is a {@link MacroStateSplitNode}.</li>
  * </ul>
  */
-@NodeInfo(cycles = CYCLES_UNKNOWN,
-          cyclesRationale = "If this node is not optimized away it will be lowered to a call, which we cannot estimate",
-          size = SIZE_UNKNOWN,
-          sizeRationale = "If this node is not optimized away it will be lowered to a call, which we cannot estimate")
 public abstract class MacroNode extends FixedWithNextNode implements Lowerable, Invokable
 {
     public static final NodeClass<MacroNode> TYPE = NodeClass.create(MacroNode.class);

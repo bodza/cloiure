@@ -1,15 +1,12 @@
 package graalvm.compiler.replacements.nodes;
 
 import static graalvm.compiler.nodeinfo.InputType.Memory;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_1024;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1024;
 
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.NamedLocationIdentity;
@@ -30,7 +27,6 @@ import jdk.vm.ci.meta.Value;
 /**
  * Compares two arrays lexicographically.
  */
-@NodeInfo(cycles = CYCLES_1024, size = SIZE_1024)
 public final class ArrayCompareToNode extends FixedWithNextNode implements LIRLowerable, Canonicalizable, Virtualizable, MemoryAccess
 {
     public static final NodeClass<ArrayCompareToNode> TYPE = NodeClass.create(ArrayCompareToNode.class);

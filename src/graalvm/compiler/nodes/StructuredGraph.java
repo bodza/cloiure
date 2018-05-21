@@ -10,7 +10,6 @@ import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.EconomicSet;
 import org.graalvm.collections.Equivalence;
 import org.graalvm.collections.UnmodifiableEconomicMap;
-import graalvm.compiler.core.common.CancellationBailoutException;
 import graalvm.compiler.core.common.CompilationIdentifier;
 import graalvm.compiler.core.common.cfg.BlockMap;
 import graalvm.compiler.core.common.type.Stamp;
@@ -156,7 +155,6 @@ public final class StructuredGraph extends Graph
         private int entryBCI = JVMCICompiler.INVOCATION_ENTRY_BCI;
         private boolean useProfilingInfo = true;
         private final OptionValues options;
-        private Cancellable cancellable = null;
 
         /**
          * Creates a builder for a graph.
@@ -220,17 +218,6 @@ public final class StructuredGraph extends Graph
             return this;
         }
 
-        public Cancellable getCancellable()
-        {
-            return cancellable;
-        }
-
-        public Builder cancellable(Cancellable cancel)
-        {
-            this.cancellable = cancel;
-            return this;
-        }
-
         public int getEntryBCI()
         {
             return entryBCI;
@@ -255,7 +242,7 @@ public final class StructuredGraph extends Graph
 
         public StructuredGraph build()
         {
-            return new StructuredGraph(name, rootMethod, entryBCI, assumptions, speculationLog, useProfilingInfo, compilationId, options, cancellable);
+            return new StructuredGraph(name, rootMethod, entryBCI, assumptions, speculationLog, useProfilingInfo, compilationId, options);
         }
     }
 
@@ -273,7 +260,6 @@ public final class StructuredGraph extends Graph
     private boolean hasValueProxies = true;
     private boolean isAfterExpandLogic = false;
     private final boolean useProfilingInfo;
-    private final Cancellable cancellable;
     /**
      * The assumptions made while constructing and transforming this graph.
      */
@@ -308,7 +294,7 @@ public final class StructuredGraph extends Graph
 
     public static final boolean NO_PROFILING_INFO = false;
 
-    private StructuredGraph(String name, ResolvedJavaMethod method, int entryBCI, Assumptions assumptions, SpeculationLog speculationLog, boolean useProfilingInfo, CompilationIdentifier compilationId, OptionValues options, Cancellable cancellable)
+    private StructuredGraph(String name, ResolvedJavaMethod method, int entryBCI, Assumptions assumptions, SpeculationLog speculationLog, boolean useProfilingInfo, CompilationIdentifier compilationId, OptionValues options)
     {
         super(name, options);
         this.setStart(add(new StartNode()));
@@ -326,7 +312,6 @@ public final class StructuredGraph extends Graph
             this.speculationLog = speculationLog;
         }
         this.useProfilingInfo = useProfilingInfo;
-        this.cancellable = cancellable;
     }
 
     public void setLastSchedule(ScheduleResult result)
@@ -424,19 +409,6 @@ public final class StructuredGraph extends Graph
         return entryBCI;
     }
 
-    public Cancellable getCancellable()
-    {
-        return cancellable;
-    }
-
-    public void checkCancellation()
-    {
-        if (cancellable != null && cancellable.isCancelled())
-        {
-            CancellationBailoutException.cancelCompilation();
-        }
-    }
-
     public boolean isOSR()
     {
         return entryBCI != JVMCICompiler.INVOCATION_ENTRY_BCI;
@@ -475,7 +447,7 @@ public final class StructuredGraph extends Graph
     private StructuredGraph copy(String newName, Consumer<UnmodifiableEconomicMap<Node, Node>> duplicationMapCallback, CompilationIdentifier newCompilationId)
     {
         AllowAssumptions allowAssumptions = AllowAssumptions.ifNonNull(assumptions);
-        StructuredGraph copy = new StructuredGraph(newName, method(), entryBCI, assumptions == null ? null : new Assumptions(), speculationLog, useProfilingInfo, newCompilationId, getOptions(), null);
+        StructuredGraph copy = new StructuredGraph(newName, method(), entryBCI, assumptions == null ? null : new Assumptions(), speculationLog, useProfilingInfo, newCompilationId, getOptions());
         if (allowAssumptions == AllowAssumptions.YES && assumptions != null)
         {
             copy.assumptions.record(assumptions);

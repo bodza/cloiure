@@ -1,8 +1,5 @@
 package graalvm.compiler.replacements.nodes;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_UNKNOWN;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_UNKNOWN;
-
 import java.lang.invoke.MethodHandle;
 import java.util.Arrays;
 
@@ -13,7 +10,6 @@ import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Simplifiable;
 import graalvm.compiler.graph.spi.SimplifierTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.CallTargetNode;
 import graalvm.compiler.nodes.CallTargetNode.InvokeKind;
 import graalvm.compiler.nodes.FixedGuardNode;
@@ -50,7 +46,6 @@ import jdk.vm.ci.meta.Signature;
 /**
  * Node for invocation methods defined on the class {@link MethodHandle}.
  */
-@NodeInfo(cycles = CYCLES_UNKNOWN, size = SIZE_UNKNOWN)
 public final class MethodHandleNode extends MacroStateSplitNode implements Simplifiable
 {
     public static final NodeClass<MethodHandleNode> TYPE = NodeClass.create(MethodHandleNode.class);

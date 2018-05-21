@@ -1,15 +1,12 @@
 package graalvm.compiler.nodes;
 
 import static graalvm.compiler.nodeinfo.InputType.Condition;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
 
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node.IndirectCanonicalization;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.calc.FloatingNode;
 
-@NodeInfo(allowedUsageTypes = {Condition}, size = SIZE_1)
 public abstract class LogicNode extends FloatingNode implements IndirectCanonicalization
 {
     public static final NodeClass<LogicNode> TYPE = NodeClass.create(LogicNode.class);

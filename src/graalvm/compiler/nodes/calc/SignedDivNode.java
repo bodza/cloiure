@@ -5,7 +5,6 @@ import graalvm.compiler.core.common.type.PrimitiveStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
@@ -14,7 +13,6 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 
 import jdk.vm.ci.code.CodeUtil;
 
-@NodeInfo(shortName = "/")
 public class SignedDivNode extends IntegerDivRemNode implements LIRLowerable
 {
     public static final NodeClass<SignedDivNode> TYPE = NodeClass.create(SignedDivNode.class);

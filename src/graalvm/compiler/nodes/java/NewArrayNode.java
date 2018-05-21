@@ -10,7 +10,6 @@ import graalvm.compiler.core.common.type.TypeReference;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Simplifiable;
 import graalvm.compiler.graph.spi.SimplifierTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.FixedGuardNode;
 import graalvm.compiler.nodes.FrameState;
@@ -32,7 +31,6 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * The {@code NewArrayNode} is used for all array allocations where the element type is know at
  * compile time.
  */
-@NodeInfo
 public class NewArrayNode extends AbstractNewArrayNode implements VirtualizableAllocation, Simplifiable
 {
     public static final NodeClass<NewArrayNode> TYPE = NodeClass.create(NewArrayNode.class);

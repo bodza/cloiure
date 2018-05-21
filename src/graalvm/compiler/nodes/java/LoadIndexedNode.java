@@ -1,8 +1,5 @@
 package graalvm.compiler.nodes.java;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_8;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_8;
-
 import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
@@ -11,7 +8,6 @@ import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
@@ -31,7 +27,6 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 /**
  * The {@code LoadIndexedNode} represents a read from an element of an array.
  */
-@NodeInfo(cycles = CYCLES_8, size = SIZE_8)
 public class LoadIndexedNode extends AccessIndexedNode implements Virtualizable, Canonicalizable
 {
     public static final NodeClass<LoadIndexedNode> TYPE = NodeClass.create(LoadIndexedNode.class);

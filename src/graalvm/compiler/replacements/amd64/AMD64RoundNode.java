@@ -1,7 +1,5 @@
 package graalvm.compiler.replacements.amd64;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_1;
-
 import graalvm.compiler.core.common.type.FloatStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.debug.GraalError;
@@ -10,7 +8,6 @@ import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.lir.amd64.AMD64ArithmeticLIRGeneratorTool;
 import graalvm.compiler.lir.amd64.AMD64ArithmeticLIRGeneratorTool.RoundingMode;
 import graalvm.compiler.lir.gen.ArithmeticLIRGeneratorTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
@@ -24,7 +21,6 @@ import jdk.vm.ci.meta.JavaKind;
 /**
  * Round floating-point value.
  */
-@NodeInfo(cycles = CYCLES_1)
 public final class AMD64RoundNode extends UnaryNode implements ArithmeticLIRLowerable
 {
     public static final NodeClass<AMD64RoundNode> TYPE = NodeClass.create(AMD64RoundNode.class);

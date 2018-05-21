@@ -1,13 +1,9 @@
 package graalvm.compiler.nodes;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_0;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_0;
-
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.extended.GuardingNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
@@ -24,7 +20,6 @@ import jdk.vm.ci.meta.JavaKind;
  *
  * A GuardedValueNode will only go away if its guard is null or {@link StructuredGraph#start()}.
  */
-@NodeInfo(cycles = CYCLES_0, size = SIZE_0)
 public final class GuardedValueNode extends FloatingGuardedNode implements LIRLowerable, Virtualizable, Canonicalizable, ValueProxy
 {
     public static final NodeClass<GuardedValueNode> TYPE = NodeClass.create(GuardedValueNode.class);

@@ -1,8 +1,5 @@
 package graalvm.compiler.nodes;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_0;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
-
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.type.FloatStamp;
 import graalvm.compiler.core.common.type.IntegerStamp;
@@ -13,7 +10,6 @@ import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.iterators.NodeIterable;
 import graalvm.compiler.lir.ConstantValue;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.calc.FloatingNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
@@ -29,7 +25,6 @@ import jdk.vm.ci.meta.PrimitiveConstant;
 /**
  * The {@code ConstantNode} represents a {@link Constant constant}.
  */
-@NodeInfo(nameTemplate = "C({p#rawvalue}) {p#stampKind}", cycles = CYCLES_0, size = SIZE_1)
 public final class ConstantNode extends FloatingNode implements LIRLowerable
 {
     public static final NodeClass<ConstantNode> TYPE = NodeClass.create(ConstantNode.class);

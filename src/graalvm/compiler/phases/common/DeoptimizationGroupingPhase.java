@@ -105,10 +105,4 @@ public class DeoptimizationGroupingPhase extends BasePhase<MidTierContext>
             loop = loop.getParent();
         }
     }
-
-    @Override
-    public float codeSizeIncrease()
-    {
-        return 2.5f;
-    }
 }

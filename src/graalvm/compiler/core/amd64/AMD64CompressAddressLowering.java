@@ -5,7 +5,6 @@ import graalvm.compiler.asm.amd64.AMD64Address;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.CompressionNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.StructuredGraph;
@@ -13,9 +12,6 @@ import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.FloatingNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_0;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_0;
 
 public abstract class AMD64CompressAddressLowering extends AMD64AddressLowering
 {
@@ -57,7 +53,6 @@ public abstract class AMD64CompressAddressLowering extends AMD64AddressLowering
 
     protected abstract boolean improveUncompression(AMD64AddressNode addr, CompressionNode compression, ValueNode other);
 
-    @NodeInfo(cycles = CYCLES_0, size = SIZE_0)
     public static class HeapBaseNode extends FloatingNode implements LIRLowerable
     {
         public static final NodeClass<HeapBaseNode> TYPE = NodeClass.create(HeapBaseNode.class);

@@ -3,8 +3,6 @@ package graalvm.compiler.nodes.virtual;
 import static graalvm.compiler.nodeinfo.InputType.Association;
 import static graalvm.compiler.nodeinfo.InputType.Extension;
 import static graalvm.compiler.nodeinfo.InputType.Memory;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_UNKNOWN;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_UNKNOWN;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,9 +14,6 @@ import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeInputList;
 import graalvm.compiler.graph.spi.Simplifiable;
 import graalvm.compiler.graph.spi.SimplifierTool;
-import graalvm.compiler.nodeinfo.NodeCycles;
-import graalvm.compiler.nodeinfo.NodeInfo;
-import graalvm.compiler.nodeinfo.NodeSize;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
@@ -32,13 +27,6 @@ import graalvm.compiler.nodes.spi.VirtualizableAllocation;
 import graalvm.compiler.nodes.spi.VirtualizerTool;
 import org.graalvm.word.LocationIdentity;
 
-@NodeInfo(nameTemplate = "Alloc {i#virtualObjects}",
-          allowedUsageTypes = {Extension, Memory},
-          cycles = CYCLES_UNKNOWN,
-          cyclesRationale = "We don't know statically how many, and which, allocations are done.",
-          size = SIZE_UNKNOWN,
-          sizeRationale = "We don't know statically how much code for which allocations has to be generated."
-)
 public final class CommitAllocationNode extends FixedWithNextNode implements VirtualizableAllocation, Lowerable, Simplifiable, MemoryCheckpoint.Single
 {
     public static final NodeClass<CommitAllocationNode> TYPE = NodeClass.create(CommitAllocationNode.class);
@@ -196,33 +184,5 @@ public final class CommitAllocationNode extends FixedWithNextNode implements Vir
             lockIndexes = newLockIndexes;
             ensureVirtual = newEnsureVirtual;
         }
-    }
-
-    @Override
-    public NodeCycles estimatedNodeCycles()
-    {
-        List<VirtualObjectNode> v = getVirtualObjects();
-        int fieldWriteCount = 0;
-        for (int i = 0; i < v.size(); i++)
-        {
-            fieldWriteCount += v.get(i).entryCount();
-        }
-        int rawValueWrites = NodeCycles.compute(WriteNode.TYPE.cycles(), fieldWriteCount).value;
-        int rawValuesTlabBumps = AbstractNewObjectNode.TYPE.cycles().value;
-        return NodeCycles.compute(rawValueWrites + rawValuesTlabBumps);
-    }
-
-    @Override
-    public NodeSize estimatedNodeSize()
-    {
-        List<VirtualObjectNode> v = getVirtualObjects();
-        int fieldWriteCount = 0;
-        for (int i = 0; i < v.size(); i++)
-        {
-            fieldWriteCount += v.get(i).entryCount();
-        }
-        int rawValueWrites = NodeSize.compute(WriteNode.TYPE.size(), fieldWriteCount).value;
-        int rawValuesTlabBumps = AbstractNewObjectNode.TYPE.size().value;
-        return NodeSize.compute(rawValueWrites + rawValuesTlabBumps);
     }
 }

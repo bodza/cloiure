@@ -4,13 +4,11 @@ import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeInputList;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.extended.GuardingNode;
 
 /**
  * Guard {@link PhiNode}s merge guard dependencies at control flow merges.
  */
-@NodeInfo(nameTemplate = "GuardPhi({i#values})", allowedUsageTypes = {InputType.Guard})
 public final class GuardPhiNode extends PhiNode implements GuardingNode
 {
     public static final NodeClass<GuardPhiNode> TYPE = NodeClass.create(GuardPhiNode.class);

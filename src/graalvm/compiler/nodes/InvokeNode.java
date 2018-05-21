@@ -6,9 +6,6 @@ import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeCycles;
-import graalvm.compiler.nodeinfo.NodeInfo;
-import graalvm.compiler.nodeinfo.NodeSize;
 import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.extended.ForeignCallNode;
 import graalvm.compiler.nodes.java.MethodCallTargetNode;
@@ -24,26 +21,10 @@ import org.graalvm.word.LocationIdentity;
 import static graalvm.compiler.nodeinfo.InputType.Extension;
 import static graalvm.compiler.nodeinfo.InputType.Memory;
 import static graalvm.compiler.nodeinfo.InputType.State;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_64;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_8;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_UNKNOWN;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_2;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_64;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_8;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_UNKNOWN;
 
 /**
  * The {@code InvokeNode} represents all kinds of method calls.
  */
-@NodeInfo(nameTemplate = "Invoke#{p#targetMethod/s}",
-          allowedUsageTypes = {Memory},
-          cycles = CYCLES_UNKNOWN,
-          cyclesRationale = "We cannot estimate the runtime cost of a call, it is a blackhole." +
-                            "However, we can estimate, dyanmically, the cost of the call operation itself based on the type of the call.",
-          size = SIZE_UNKNOWN,
-          sizeRationale = "We can only dyanmically, based on the type of the call (special, static, virtual, interface) decide" +
-                          "how much code is generated for the call.")
 public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke, LIRLowerable, MemoryCheckpoint.Single, UncheckedInterfaceProvider
 {
     public static final NodeClass<InvokeNode> TYPE = NodeClass.create(InvokeNode.class);
@@ -247,39 +228,5 @@ public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke
     public ValueNode classInit()
     {
         return classInit;
-    }
-
-    @Override
-    public NodeCycles estimatedNodeCycles()
-    {
-        switch (callTarget().invokeKind())
-        {
-            case Interface:
-                return CYCLES_64;
-            case Special:
-            case Static:
-                return CYCLES_2;
-            case Virtual:
-                return CYCLES_8;
-            default:
-                return CYCLES_UNKNOWN;
-        }
-    }
-
-    @Override
-    public NodeSize estimatedNodeSize()
-    {
-        switch (callTarget().invokeKind())
-        {
-            case Interface:
-                return SIZE_64;
-            case Special:
-            case Static:
-                return SIZE_2;
-            case Virtual:
-                return SIZE_8;
-            default:
-                return SIZE_UNKNOWN;
-        }
     }
 }

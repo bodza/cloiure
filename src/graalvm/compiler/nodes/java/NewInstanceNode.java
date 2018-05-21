@@ -6,7 +6,6 @@ import java.util.Collections;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.TypeReference;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.ValueNode;
@@ -20,7 +19,6 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 /**
  * The {@code NewInstanceNode} represents the allocation of an instance class object.
  */
-@NodeInfo(nameTemplate = "New {p#instanceClass/s}")
 public class NewInstanceNode extends AbstractNewObjectNode implements VirtualizableAllocation
 {
     public static final NodeClass<NewInstanceNode> TYPE = NodeClass.create(NewInstanceNode.class);

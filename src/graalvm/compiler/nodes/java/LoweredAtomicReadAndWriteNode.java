@@ -2,12 +2,9 @@ package graalvm.compiler.nodes.java;
 
 import static graalvm.compiler.nodeinfo.InputType.Memory;
 import static graalvm.compiler.nodeinfo.InputType.State;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_8;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_2;
 
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.StateSplit;
@@ -25,7 +22,6 @@ import jdk.vm.ci.meta.Value;
  * Represents the lowered version of an atomic read-and-write operation like
  * {@link sun.misc.Unsafe#getAndSetInt(Object, long, int)}.
  */
-@NodeInfo(allowedUsageTypes = {Memory}, cycles = CYCLES_8, size = SIZE_2)
 public final class LoweredAtomicReadAndWriteNode extends FixedAccessNode implements StateSplit, LIRLowerableAccess, MemoryCheckpoint.Single
 {
     public static final NodeClass<LoweredAtomicReadAndWriteNode> TYPE = NodeClass.create(LoweredAtomicReadAndWriteNode.class);

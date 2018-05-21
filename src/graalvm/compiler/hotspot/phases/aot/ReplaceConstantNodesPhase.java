@@ -501,12 +501,6 @@ public class ReplaceConstantNodesPhase extends BasePhase<PhaseContext>
         replaceKlassesAndObjects(graph, stateMapper);
     }
 
-    @Override
-    public boolean checkContract()
-    {
-        return false;
-    }
-
     public ReplaceConstantNodesPhase()
     {
         this(true);

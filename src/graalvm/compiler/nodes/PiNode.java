@@ -1,8 +1,5 @@
 package graalvm.compiler.nodes;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_0;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_0;
-
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import graalvm.compiler.core.common.type.AbstractPointerStamp;
@@ -15,7 +12,6 @@ import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.extended.GuardingNode;
 import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderContext;
 import graalvm.compiler.nodes.memory.ReadNode;
@@ -37,7 +33,6 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * input is as narrow or narrower than the {@link PiNode}'s type. The {@link PiNode}, and therefore
  * also the scheduling restriction enforced by the guard, will go away.
  */
-@NodeInfo(cycles = CYCLES_0, size = SIZE_0)
 public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtualizable, IterableNodeType, Canonicalizable, ValueProxy
 {
     public static final NodeClass<PiNode> TYPE = NodeClass.create(PiNode.class);
@@ -303,7 +298,6 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
      * A placeholder node in a snippet that will be replaced with a {@link PiNode} when the snippet
      * is instantiated.
      */
-    @NodeInfo(cycles = CYCLES_0, size = SIZE_0)
     public static class Placeholder extends FloatingGuardedNode
     {
         public static final NodeClass<Placeholder> TYPE = NodeClass.create(Placeholder.class);

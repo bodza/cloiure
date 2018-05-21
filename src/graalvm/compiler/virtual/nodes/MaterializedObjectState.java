@@ -2,7 +2,6 @@ package graalvm.compiler.virtual.nodes;
 
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.virtual.EscapeObjectState;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
@@ -10,7 +9,6 @@ import graalvm.compiler.nodes.virtual.VirtualObjectNode;
 /**
  * This class encapsulated the materialized state of an escape analyzed object.
  */
-@NodeInfo
 public final class MaterializedObjectState extends EscapeObjectState implements Node.ValueNumberable
 {
     public static final NodeClass<MaterializedObjectState> TYPE = NodeClass.create(MaterializedObjectState.class);

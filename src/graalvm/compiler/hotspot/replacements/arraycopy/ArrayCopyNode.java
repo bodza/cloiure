@@ -3,7 +3,6 @@ package graalvm.compiler.hotspot.replacements.arraycopy;
 import static org.graalvm.word.LocationIdentity.any;
 
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.NamedLocationIdentity;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.Lowerable;
@@ -13,7 +12,6 @@ import org.graalvm.word.LocationIdentity;
 
 import jdk.vm.ci.meta.JavaKind;
 
-@NodeInfo
 public final class ArrayCopyNode extends BasicArrayCopyNode implements Lowerable
 {
     public static final NodeClass<ArrayCopyNode> TYPE = NodeClass.create(ArrayCopyNode.class);

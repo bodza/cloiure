@@ -3,7 +3,6 @@ package graalvm.compiler.nodes;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeInputList;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.spi.ArrayLengthProvider;
 import graalvm.compiler.nodes.type.StampTool;
 import graalvm.compiler.nodes.util.GraphUtil;
@@ -11,7 +10,6 @@ import graalvm.compiler.nodes.util.GraphUtil;
 /**
  * Value {@link PhiNode}s merge data flow values at control flow merges.
  */
-@NodeInfo(nameTemplate = "Phi({i#values}, {p#valueDescription})")
 public class ValuePhiNode extends PhiNode implements ArrayLengthProvider
 {
     public static final NodeClass<ValuePhiNode> TYPE = NodeClass.create(ValuePhiNode.class);

@@ -1,8 +1,5 @@
 package graalvm.compiler.nodes.extended;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
-
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.TypeReference;
 import graalvm.compiler.debug.GraalError;
@@ -10,7 +7,6 @@ import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.NodeView;
@@ -28,7 +24,6 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 /**
  * Loads a method from the virtual method table of a given hub.
  */
-@NodeInfo(cycles = CYCLES_2, size = SIZE_1)
 public final class LoadMethodNode extends FixedWithNextNode implements Lowerable, Canonicalizable
 {
     public static final NodeClass<LoadMethodNode> TYPE = NodeClass.create(LoadMethodNode.class);

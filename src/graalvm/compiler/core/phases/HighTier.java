@@ -36,7 +36,7 @@ public class HighTier extends PhaseSuite<HighTierContext>
 {
     public static class Options
     {
-        // "Enable inlining."
+        // Option "Enable inlining."
         public static final OptionKey<Boolean> Inline = new OptionKey<>(true);
     }
 

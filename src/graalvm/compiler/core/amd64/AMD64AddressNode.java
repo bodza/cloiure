@@ -8,7 +8,6 @@ import graalvm.compiler.graph.spi.Simplifiable;
 import graalvm.compiler.graph.spi.SimplifierTool;
 import graalvm.compiler.lir.amd64.AMD64AddressValue;
 import graalvm.compiler.lir.gen.LIRGeneratorTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.LoopBeginNode;
 import graalvm.compiler.nodes.NodeView;
@@ -26,7 +25,6 @@ import jdk.vm.ci.meta.Value;
  * Represents an address of the form [base + index*scale + displacement]. Both base and index are
  * optional.
  */
-@NodeInfo
 public class AMD64AddressNode extends AddressNode implements Simplifiable, LIRLowerable
 {
     public static final NodeClass<AMD64AddressNode> TYPE = NodeClass.create(AMD64AddressNode.class);

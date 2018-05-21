@@ -127,45 +127,31 @@ public class GraalCompiler
      */
     public static void emitFrontEnd(Providers providers, TargetProvider target, StructuredGraph graph, PhaseSuite<HighTierContext> graphBuilderSuite, OptimisticOptimizations optimisticOpts, ProfilingInfo profilingInfo, Suites suites)
     {
-        try
+        HighTierContext highTierContext = new HighTierContext(providers, graphBuilderSuite, optimisticOpts);
+        if (graph.start().next() == null)
         {
-            HighTierContext highTierContext = new HighTierContext(providers, graphBuilderSuite, optimisticOpts);
-            if (graph.start().next() == null)
-            {
-                graphBuilderSuite.apply(graph, highTierContext);
-                new DeadCodeEliminationPhase(DeadCodeEliminationPhase.Optionality.Optional).apply(graph);
-            }
-
-            suites.getHighTier().apply(graph, highTierContext);
-            graph.maybeCompress();
-
-            MidTierContext midTierContext = new MidTierContext(providers, target, optimisticOpts, profilingInfo);
-            suites.getMidTier().apply(graph, midTierContext);
-            graph.maybeCompress();
-
-            LowTierContext lowTierContext = new LowTierContext(providers, target);
-            suites.getLowTier().apply(graph, lowTierContext);
+            graphBuilderSuite.apply(graph, highTierContext);
+            new DeadCodeEliminationPhase(DeadCodeEliminationPhase.Optionality.Optional).apply(graph);
         }
-        finally
-        {
-            graph.checkCancellation();
-        }
+
+        suites.getHighTier().apply(graph, highTierContext);
+        graph.maybeCompress();
+
+        MidTierContext midTierContext = new MidTierContext(providers, target, optimisticOpts, profilingInfo);
+        suites.getMidTier().apply(graph, midTierContext);
+        graph.maybeCompress();
+
+        LowTierContext lowTierContext = new LowTierContext(providers, target);
+        suites.getLowTier().apply(graph, lowTierContext);
     }
 
     public static <T extends CompilationResult> void emitBackEnd(StructuredGraph graph, Object stub, ResolvedJavaMethod installedCodeOwner, Backend backend, T compilationResult, CompilationResultBuilderFactory factory, RegisterConfig registerConfig, LIRSuites lirSuites)
     {
-        try
-        {
-            LIRGenerationResult lirGen = null;
-            lirGen = emitLIR(backend, graph, stub, registerConfig, lirSuites);
-            int bytecodeSize = graph.method() == null ? 0 : graph.getBytecodeSize();
-            compilationResult.setHasUnsafeAccess(graph.hasUnsafeAccess());
-            emitCode(backend, graph.getAssumptions(), graph.method(), graph.getMethods(), graph.getFields(), bytecodeSize, lirGen, compilationResult, installedCodeOwner, factory);
-        }
-        finally
-        {
-            graph.checkCancellation();
-        }
+        LIRGenerationResult lirGen = null;
+        lirGen = emitLIR(backend, graph, stub, registerConfig, lirSuites);
+        int bytecodeSize = graph.method() == null ? 0 : graph.getBytecodeSize();
+        compilationResult.setHasUnsafeAccess(graph.hasUnsafeAccess());
+        emitCode(backend, graph.getAssumptions(), graph.method(), graph.getMethods(), graph.getFields(), bytecodeSize, lirGen, compilationResult, installedCodeOwner, factory);
     }
 
     public static LIRGenerationResult emitLIR(Backend backend, StructuredGraph graph, Object stub, RegisterConfig registerConfig, LIRSuites lirSuites)
@@ -186,39 +172,28 @@ public class GraalCompiler
             /* If the re-execution fails we convert the exception into a "hard" failure */
             throw new GraalError(e);
         }
-        finally
-        {
-            graph.checkCancellation();
-        }
     }
 
     private static LIRGenerationResult emitLIR0(Backend backend, StructuredGraph graph, Object stub, RegisterConfig registerConfig, LIRSuites lirSuites, String[] allocationRestrictedTo)
     {
-        try
-        {
-            ScheduleResult schedule = graph.getLastSchedule();
-            Block[] blocks = schedule.getCFG().getBlocks();
-            Block startBlock = schedule.getCFG().getStartBlock();
+        ScheduleResult schedule = graph.getLastSchedule();
+        Block[] blocks = schedule.getCFG().getBlocks();
+        Block startBlock = schedule.getCFG().getStartBlock();
 
-            AbstractBlockBase<?>[] codeEmittingOrder = ComputeBlockOrder.computeCodeEmittingOrder(blocks.length, startBlock);
-            AbstractBlockBase<?>[] linearScanOrder = ComputeBlockOrder.computeLinearScanOrder(blocks.length, startBlock);
-            LIR lir = new LIR(schedule.getCFG(), linearScanOrder, codeEmittingOrder, graph.getOptions());
+        AbstractBlockBase<?>[] codeEmittingOrder = ComputeBlockOrder.computeCodeEmittingOrder(blocks.length, startBlock);
+        AbstractBlockBase<?>[] linearScanOrder = ComputeBlockOrder.computeLinearScanOrder(blocks.length, startBlock);
+        LIR lir = new LIR(schedule.getCFG(), linearScanOrder, codeEmittingOrder, graph.getOptions());
 
-            FrameMapBuilder frameMapBuilder = backend.newFrameMapBuilder(registerConfig);
-            LIRGenerationResult lirGenRes = backend.newLIRGenerationResult(graph.compilationId(), lir, frameMapBuilder, graph, stub);
-            LIRGeneratorTool lirGen = backend.newLIRGenerator(lirGenRes);
-            NodeLIRBuilderTool nodeLirGen = backend.newNodeLIRBuilder(graph, lirGen);
+        FrameMapBuilder frameMapBuilder = backend.newFrameMapBuilder(registerConfig);
+        LIRGenerationResult lirGenRes = backend.newLIRGenerationResult(graph.compilationId(), lir, frameMapBuilder, graph, stub);
+        LIRGeneratorTool lirGen = backend.newLIRGenerator(lirGenRes);
+        NodeLIRBuilderTool nodeLirGen = backend.newNodeLIRBuilder(graph, lirGen);
 
-            // LIR generation
-            LIRGenerationContext context = new LIRGenerationContext(lirGen, nodeLirGen, graph, schedule);
-            new LIRGenerationPhase().apply(backend.getTarget(), lirGenRes, context);
+        // LIR generation
+        LIRGenerationContext context = new LIRGenerationContext(lirGen, nodeLirGen, graph, schedule);
+        new LIRGenerationPhase().apply(backend.getTarget(), lirGenRes, context);
 
-            return emitLowLevel(backend.getTarget(), lirGenRes, lirGen, lirSuites, backend.newRegisterAllocationConfig(registerConfig, allocationRestrictedTo));
-        }
-        finally
-        {
-            graph.checkCancellation();
-        }
+        return emitLowLevel(backend.getTarget(), lirGenRes, lirGen, lirSuites, backend.newRegisterAllocationConfig(registerConfig, allocationRestrictedTo));
     }
 
     protected static <T extends CompilationResult> String getCompilationUnitName(StructuredGraph graph, T compilationResult)

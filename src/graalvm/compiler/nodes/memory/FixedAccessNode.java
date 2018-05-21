@@ -4,7 +4,6 @@ import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.IterableNodeType;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.DeoptimizingFixedWithNextNode;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.extended.GuardingNode;
@@ -15,7 +14,6 @@ import org.graalvm.word.LocationIdentity;
  * Accesses a value at an memory address specified by an {@linkplain #address address}. The access
  * does not include a null check on the object.
  */
-@NodeInfo
 public abstract class FixedAccessNode extends DeoptimizingFixedWithNextNode implements Access, IterableNodeType
 {
     public static final NodeClass<FixedAccessNode> TYPE = NodeClass.create(FixedAccessNode.class);

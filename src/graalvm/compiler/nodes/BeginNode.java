@@ -1,16 +1,11 @@
 package graalvm.compiler.nodes;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_0;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_0;
-
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Simplifiable;
 import graalvm.compiler.graph.spi.SimplifierTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 
-@NodeInfo(cycles = CYCLES_0, size = SIZE_0)
 public final class BeginNode extends AbstractBeginNode implements Simplifiable
 {
     public static final NodeClass<BeginNode> TYPE = NodeClass.create(BeginNode.class);

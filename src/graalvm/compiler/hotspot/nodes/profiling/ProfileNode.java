@@ -1,7 +1,5 @@
 package graalvm.compiler.hotspot.nodes.profiling;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_IGNORED;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_IGNORED;
 import static graalvm.compiler.nodes.util.GraphUtil.removeFixedWithUnusedInputs;
 
 import graalvm.compiler.core.common.type.StampFactory;
@@ -10,7 +8,6 @@ import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.iterators.NodeIterable;
 import graalvm.compiler.graph.spi.Simplifiable;
 import graalvm.compiler.graph.spi.SimplifierTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.AbstractMergeNode;
 import graalvm.compiler.nodes.ControlSplitNode;
 import graalvm.compiler.nodes.DeoptimizingFixedWithNextNode;
@@ -22,12 +19,11 @@ import graalvm.compiler.options.OptionKey;
 
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
-@NodeInfo(cycles = CYCLES_IGNORED, cyclesRationale = "profiling should be ignored", size = SIZE_IGNORED, sizeRationale = "profiling should be ignored")
 public abstract class ProfileNode extends DeoptimizingFixedWithNextNode implements Simplifiable, Lowerable
 {
     public static class Options
     {
-        // "Control probabilistic profiling on AMD64."
+        // Option "Control probabilistic profiling on AMD64."
         public static final OptionKey<Boolean> ProbabilisticProfiling = new OptionKey<>(true);
     }
 

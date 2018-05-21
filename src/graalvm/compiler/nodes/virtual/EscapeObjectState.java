@@ -1,14 +1,9 @@
 package graalvm.compiler.nodes.virtual;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_0;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_0;
-
 import graalvm.compiler.graph.Node.ValueNumberable;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.VirtualState;
 
-@NodeInfo(cycles = CYCLES_0, size = SIZE_0)
 public abstract class EscapeObjectState extends VirtualState implements ValueNumberable
 {
     public static final NodeClass<EscapeObjectState> TYPE = NodeClass.create(EscapeObjectState.class);

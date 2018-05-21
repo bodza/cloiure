@@ -1,14 +1,10 @@
 package graalvm.compiler.replacements.amd64;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_8;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
-
 import graalvm.compiler.core.common.calc.FloatConvert;
 import graalvm.compiler.core.common.type.ArithmeticOpTable.FloatConvertOp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.lir.gen.ArithmeticLIRGeneratorTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.FloatConvertNode;
 import graalvm.compiler.nodes.calc.UnaryArithmeticNode;
@@ -20,7 +16,6 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
  * of the {@link FloatConvertNode} which, on AMD64 needs a {@link AMD64FloatConvertNode} plus some
  * fixup code that handles the corner cases that differ between AMD64 and Java.
  */
-@NodeInfo(cycles = CYCLES_8, size = SIZE_1)
 public final class AMD64FloatConvertNode extends UnaryArithmeticNode<FloatConvertOp> implements ArithmeticLIRLowerable
 {
     public static final NodeClass<AMD64FloatConvertNode> TYPE = NodeClass.create(AMD64FloatConvertNode.class);

@@ -80,10 +80,4 @@ public class PartialEscapePhase extends EffectsPhase<PhaseContext>
             return new PartialEscapeClosure.Final(schedule, context.getMetaAccess(), context.getConstantReflection(), context.getConstantFieldProvider(), context.getLowerer());
         }
     }
-
-    @Override
-    public boolean checkContract()
-    {
-        return false;
-    }
 }

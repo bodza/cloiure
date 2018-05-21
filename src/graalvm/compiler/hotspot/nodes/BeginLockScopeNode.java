@@ -1,14 +1,11 @@
 package graalvm.compiler.hotspot.nodes;
 
 import static graalvm.compiler.nodeinfo.InputType.Memory;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
 
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.hotspot.HotSpotLIRGenerator;
 import graalvm.compiler.lir.VirtualStackSlot;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.extended.MonitorEnter;
 import graalvm.compiler.nodes.memory.AbstractMemoryCheckpoint;
 import graalvm.compiler.nodes.memory.MemoryCheckpoint;
@@ -27,7 +24,6 @@ import jdk.vm.ci.meta.Value;
  * is locked (ensuring the GC sees and updates the object) so it must come after any null pointer
  * check on the object.
  */
-@NodeInfo(allowedUsageTypes = Memory, cycles = CYCLES_2, size = SIZE_1)
 public final class BeginLockScopeNode extends AbstractMemoryCheckpoint implements LIRLowerable, MonitorEnter, MemoryCheckpoint.Single
 {
     public static final NodeClass<BeginLockScopeNode> TYPE = NodeClass.create(BeginLockScopeNode.class);

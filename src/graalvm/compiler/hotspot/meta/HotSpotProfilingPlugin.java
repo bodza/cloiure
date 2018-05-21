@@ -19,9 +19,9 @@ public abstract class HotSpotProfilingPlugin implements ProfilingPlugin
 {
     public static class Options
     {
-        // "Emit profiling of invokes."
+        // Option "Emit profiling of invokes."
         public static final OptionKey<Boolean> ProfileInvokes = new OptionKey<>(true);
-        // "Emit profiling of backedges."
+        // Option "Emit profiling of backedges."
         public static final OptionKey<Boolean> ProfileBackedges = new OptionKey<>(true);
     }
 

@@ -27,7 +27,7 @@ public abstract class AMD64NodeLIRBuilder extends NodeLIRBuilder
 {
     public static class Options
     {
-        // "AMD64: Emit lfence instructions at the beginning of basic blocks."
+        // Option "AMD64: Emit lfence instructions at the beginning of basic blocks."
         public static final OptionKey<Boolean> MitigateSpeculativeExecutionAttacks = new OptionKey<>(false);
     }
 

@@ -38,10 +38,4 @@ public class EarlyReadEliminationPhase extends EffectsPhase<PhaseContext>
     {
         return new ReadEliminationClosure(cfg, considerGuards);
     }
-
-    @Override
-    public float codeSizeIncrease()
-    {
-        return 2f;
-    }
 }

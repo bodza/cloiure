@@ -1,7 +1,5 @@
 package graalvm.compiler.nodes.calc;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
-
 import graalvm.compiler.core.common.calc.CanonicalCondition;
 import graalvm.compiler.core.common.type.FloatStamp;
 import graalvm.compiler.core.common.type.IntegerStamp;
@@ -10,7 +8,6 @@ import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.LogicConstantNode;
 import graalvm.compiler.nodes.LogicNode;
 import graalvm.compiler.nodes.NodeView;
@@ -22,7 +19,6 @@ import jdk.vm.ci.meta.ConstantReflectionProvider;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.TriState;
 
-@NodeInfo(shortName = "<", cycles = CYCLES_2)
 public final class FloatLessThanNode extends CompareNode
 {
     public static final NodeClass<FloatLessThanNode> TYPE = NodeClass.create(FloatLessThanNode.class);

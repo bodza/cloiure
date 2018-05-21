@@ -1,7 +1,5 @@
 package graalvm.compiler.replacements;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_IGNORED;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_IGNORED;
 import static graalvm.compiler.replacements.SnippetTemplate.DEFAULT_REPLACER;
 
 import java.util.Arrays;
@@ -13,7 +11,6 @@ import graalvm.compiler.api.replacements.SnippetReflectionProvider;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.NamedLocationIdentity;
 import graalvm.compiler.nodes.StructuredGraph;
@@ -40,7 +37,6 @@ import graalvm.util.UnsafeAccess;
  * A unique counter will be created for each unique name passed to the constructor.
  * The name of the root method is added to the counter's name.
  */
-@NodeInfo(cycles = CYCLES_IGNORED, size = SIZE_IGNORED)
 public class SnippetCounterNode extends FixedWithNextNode implements Lowerable
 {
     public static final NodeClass<SnippetCounterNode> TYPE = NodeClass.create(SnippetCounterNode.class);

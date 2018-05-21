@@ -1,8 +1,5 @@
 package graalvm.compiler.nodes.extended;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
-
 import graalvm.compiler.core.common.type.PrimitiveStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
@@ -10,7 +7,6 @@ import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
@@ -35,7 +31,6 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * Load of a value from a location specified as an offset relative to an object. No null check is
  * performed before the load.
  */
-@NodeInfo(cycles = CYCLES_2, size = SIZE_1)
 public class RawLoadNode extends UnsafeAccessNode implements Lowerable, Virtualizable, Canonicalizable
 {
     public static final NodeClass<RawLoadNode> TYPE = NodeClass.create(RawLoadNode.class);

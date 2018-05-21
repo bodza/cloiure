@@ -1,12 +1,8 @@
 package graalvm.compiler.replacements.nodes.arithmetic;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_2;
-
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Simplifiable;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.AbstractBeginNode;
 import graalvm.compiler.nodes.BeginNode;
 import graalvm.compiler.nodes.ControlSplitNode;
@@ -24,7 +20,6 @@ import jdk.vm.ci.meta.DeoptimizationAction;
 import jdk.vm.ci.meta.DeoptimizationReason;
 import jdk.vm.ci.meta.Value;
 
-@NodeInfo(cycles = CYCLES_2, cyclesRationale = "add+cmp", size = SIZE_2)
 public abstract class IntegerExactArithmeticSplitNode extends ControlSplitNode implements Simplifiable, LIRLowerable
 {
     public static final NodeClass<IntegerExactArithmeticSplitNode> TYPE = NodeClass.create(IntegerExactArithmeticSplitNode.class);

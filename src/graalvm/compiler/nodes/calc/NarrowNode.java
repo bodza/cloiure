@@ -1,7 +1,5 @@
 package graalvm.compiler.nodes.calc;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_1;
-
 import graalvm.compiler.core.common.type.ArithmeticOpTable;
 import graalvm.compiler.core.common.type.ArithmeticOpTable.IntegerConvertOp;
 import graalvm.compiler.core.common.type.ArithmeticOpTable.IntegerConvertOp.Narrow;
@@ -11,7 +9,6 @@ import graalvm.compiler.core.common.type.PrimitiveStamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.lir.gen.ArithmeticLIRGeneratorTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
@@ -21,7 +18,6 @@ import jdk.vm.ci.code.CodeUtil;
 /**
  * The {@code NarrowNode} converts an integer to a narrower integer.
  */
-@NodeInfo(cycles = CYCLES_1)
 public final class NarrowNode extends IntegerConvertNode<Narrow, SignExtend>
 {
     public static final NodeClass<NarrowNode> TYPE = NodeClass.create(NarrowNode.class);

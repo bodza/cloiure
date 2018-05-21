@@ -3,13 +3,11 @@ package graalvm.compiler.nodes;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.IterableNodeType;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 
 /**
  * The {@code ControlSplitNode} is a base class for all instructions that split the control flow
  * (ie. have more than one successor).
  */
-@NodeInfo
 public abstract class ControlSplitNode extends FixedNode implements IterableNodeType
 {
     public static final NodeClass<ControlSplitNode> TYPE = NodeClass.create(ControlSplitNode.class);

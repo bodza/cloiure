@@ -2,12 +2,10 @@ package graalvm.compiler.hotspot.nodes;
 
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.memory.address.AddressNode;
 import graalvm.compiler.nodes.spi.Lowerable;
 
-@NodeInfo
 public abstract class ArrayRangeWriteBarrier extends WriteBarrier implements Lowerable
 {
     public static final NodeClass<ArrayRangeWriteBarrier> TYPE = NodeClass.create(ArrayRangeWriteBarrier.class);

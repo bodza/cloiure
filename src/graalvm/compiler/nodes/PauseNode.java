@@ -1,17 +1,13 @@
 package graalvm.compiler.nodes;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_IGNORED;
-
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
-import graalvm.compiler.nodeinfo.NodeSize;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 
-/** A node that results in a platform dependent pause instruction being emitted. */
-@NodeInfo(cycles = CYCLES_IGNORED,
-          size = NodeSize.SIZE_1)
+/**
+ * A node that results in a platform dependent pause instruction being emitted.
+ */
 public final class PauseNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<PauseNode> TYPE = NodeClass.create(PauseNode.class);

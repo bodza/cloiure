@@ -1,13 +1,9 @@
 package graalvm.compiler.nodes;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_0;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_0;
-
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.java.ArrayLengthNode;
 import graalvm.compiler.nodes.spi.ArrayLengthProvider;
 import graalvm.compiler.nodes.util.GraphUtil;
@@ -17,7 +13,6 @@ import graalvm.compiler.nodes.util.GraphUtil;
  * that reads the array length, such as an {@link ArrayLengthNode}, can be canonicalized based on
  * this information.
  */
-@NodeInfo
 public final class PiArrayNode extends PiNode implements ArrayLengthProvider
 {
     public static final NodeClass<PiArrayNode> TYPE = NodeClass.create(PiArrayNode.class);
@@ -56,7 +51,6 @@ public final class PiArrayNode extends PiNode implements ArrayLengthProvider
      * A placeholder node in a snippet that will be replaced with a {@link PiArrayNode} when the
      * snippet is instantiated.
      */
-    @NodeInfo(cycles = CYCLES_0, size = SIZE_0)
     public static class Placeholder extends PiNode.Placeholder
     {
         public static final NodeClass<Placeholder> TYPE = NodeClass.create(Placeholder.class);

@@ -1,15 +1,11 @@
 package graalvm.compiler.hotspot.nodes;
 
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
-
 import java.util.BitSet;
 
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.lir.VirtualStackSlot;
-import graalvm.compiler.nodeinfo.NodeCycles;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.calc.FloatingNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
@@ -21,7 +17,6 @@ import jdk.vm.ci.meta.Value;
 /**
  * Node that is used to maintain a stack based counter of how many locks are currently held.
  */
-@NodeInfo(cycles = NodeCycles.CYCLES_2, size = SIZE_1)
 public final class MonitorCounterNode extends FloatingNode implements LIRLowerable, Node.ValueNumberable
 {
     public static final NodeClass<MonitorCounterNode> TYPE = NodeClass.create(MonitorCounterNode.class);

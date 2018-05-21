@@ -2,8 +2,6 @@ package graalvm.compiler.nodes.memory;
 
 import static graalvm.compiler.nodeinfo.InputType.Extension;
 import static graalvm.compiler.nodeinfo.InputType.Memory;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_0;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_0;
 import static org.graalvm.word.LocationIdentity.any;
 
 import java.util.ArrayList;
@@ -16,7 +14,6 @@ import org.graalvm.collections.MapCursor;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeInputList;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.StartNode;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.FloatingNode;
@@ -24,7 +21,6 @@ import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import org.graalvm.word.LocationIdentity;
 
-@NodeInfo(allowedUsageTypes = {Extension, Memory}, cycles = CYCLES_0, size = SIZE_0)
 public final class MemoryMapNode extends FloatingNode implements MemoryMap, MemoryNode, LIRLowerable
 {
     public static final NodeClass<MemoryMapNode> TYPE = NodeClass.create(MemoryMapNode.class);

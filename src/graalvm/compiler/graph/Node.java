@@ -20,9 +20,6 @@ import graalvm.compiler.graph.iterators.NodePredicate;
 import graalvm.compiler.graph.spi.Simplifiable;
 import graalvm.compiler.graph.spi.SimplifierTool;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeCycles;
-import graalvm.compiler.nodeinfo.NodeInfo;
-import graalvm.compiler.nodeinfo.NodeSize;
 import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.options.OptionValues;
 
@@ -38,7 +35,6 @@ import graalvm.compiler.options.OptionValues;
  *
  * Nodes which are be value numberable should implement the {@link ValueNumberable} interface.
  */
-@NodeInfo
 public abstract class Node implements Cloneable, NodeInterface
 {
     public static final NodeClass<?> TYPE = null;
@@ -1130,15 +1126,5 @@ public abstract class Node implements Cloneable, NodeInterface
     public final void pushInputs(NodeStack stack)
     {
         getNodeClass().pushInputs(this, stack);
-    }
-
-    public NodeSize estimatedNodeSize()
-    {
-        return nodeClass.size();
-    }
-
-    public NodeCycles estimatedNodeCycles()
-    {
-        return nodeClass.cycles();
     }
 }

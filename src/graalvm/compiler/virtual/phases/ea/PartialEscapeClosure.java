@@ -854,8 +854,7 @@ public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockStat
                                         Block predecessor = getPredecessor(i);
                                         if (!ensureVirtual && obj.isVirtual())
                                         {
-                                            // we can materialize if not all inputs are
-                                            // "ensureVirtualized"
+                                            // we can materialize if not all inputs are "ensureVirtualized"
                                             obj.setEnsureVirtualized(false);
                                         }
                                         materialized |= ensureMaterialized(states[i], object, predecessor.getEndNode(), blockEffects.get(predecessor));

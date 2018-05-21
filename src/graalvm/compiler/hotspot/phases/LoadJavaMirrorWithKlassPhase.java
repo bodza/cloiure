@@ -134,10 +134,4 @@ public class LoadJavaMirrorWithKlassPhase extends BasePhase<PhaseContext>
             }
         }
     }
-
-    @Override
-    public float codeSizeIncrease()
-    {
-        return 2.5f;
-    }
 }

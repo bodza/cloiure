@@ -6,8 +6,6 @@ import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
-import graalvm.compiler.nodeinfo.NodeCycles;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
@@ -19,7 +17,6 @@ import jdk.vm.ci.meta.JavaKind;
 /**
  * Produces the platform dependent first or second half of a long or double value as an int.
  */
-@NodeInfo(cycles = NodeCycles.CYCLES_2)
 public final class UnpackEndianHalfNode extends UnaryNode implements Lowerable
 {
     public static final NodeClass<UnpackEndianHalfNode> TYPE = NodeClass.create(UnpackEndianHalfNode.class);

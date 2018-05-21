@@ -2,7 +2,6 @@ package graalvm.compiler.nodes.memory;
 
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.extended.GuardingNode;
 import graalvm.compiler.nodes.memory.address.AddressNode;
@@ -11,7 +10,6 @@ import org.graalvm.word.LocationIdentity;
 /**
  * An {@link FixedAccessNode} that can be converted to a {@link FloatingAccessNode}.
  */
-@NodeInfo
 public abstract class FloatableAccessNode extends FixedAccessNode
 {
     public static final NodeClass<FloatableAccessNode> TYPE = NodeClass.create(FloatableAccessNode.class);

@@ -52,7 +52,7 @@ public class CompilationResultBuilder
 {
     public static class Options
     {
-        // "Include the LIR as comments with the final assembly."
+        // Option "Include the LIR as comments with the final assembly."
         public static final OptionKey<Boolean> PrintLIRWithAssembly = new OptionKey<>(false);
     }
 

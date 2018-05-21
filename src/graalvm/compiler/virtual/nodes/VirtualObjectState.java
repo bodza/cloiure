@@ -5,7 +5,6 @@ import java.util.List;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeInputList;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.virtual.EscapeObjectState;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
@@ -13,7 +12,6 @@ import graalvm.compiler.nodes.virtual.VirtualObjectNode;
 /**
  * This class encapsulated the virtual state of an escape analyzed object.
  */
-@NodeInfo
 public final class VirtualObjectState extends EscapeObjectState implements Node.ValueNumberable
 {
     public static final NodeClass<VirtualObjectState> TYPE = NodeClass.create(VirtualObjectState.class);

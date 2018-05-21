@@ -69,10 +69,4 @@ public class LoopPartialUnrollPhase extends LoopPhase<LoopPolicies>
             }
         }
     }
-
-    @Override
-    public boolean checkContract()
-    {
-        return false;
-    }
 }

@@ -1,14 +1,10 @@
 package graalvm.compiler.hotspot.nodes;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
-
 import java.util.BitSet;
 
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.lir.VirtualStackSlot;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
@@ -22,7 +18,6 @@ import jdk.vm.ci.meta.Value;
  * Reserves a block of memory in the stack frame of a method. The block is reserved in the frame for
  * the entire execution of the associated method.
  */
-@NodeInfo(cycles = CYCLES_2, size = SIZE_1)
 public final class AllocaNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<AllocaNode> TYPE = NodeClass.create(AllocaNode.class);

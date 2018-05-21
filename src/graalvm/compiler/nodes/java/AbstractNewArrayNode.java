@@ -2,7 +2,6 @@ package graalvm.compiler.nodes.java;
 
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.ArrayLengthProvider;
@@ -10,7 +9,6 @@ import graalvm.compiler.nodes.spi.ArrayLengthProvider;
 /**
  * The {@code AbstractNewArrayNode} is used for all 1-dimensional array allocations.
  */
-@NodeInfo
 public abstract class AbstractNewArrayNode extends AbstractNewObjectNode implements ArrayLengthProvider
 {
     public static final NodeClass<AbstractNewArrayNode> TYPE = NodeClass.create(AbstractNewArrayNode.class);

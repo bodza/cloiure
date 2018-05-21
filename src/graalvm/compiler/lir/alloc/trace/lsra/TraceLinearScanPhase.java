@@ -52,7 +52,7 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
 {
     public static class Options
     {
-        // "Enable spill position optimization."
+        // Option "Enable spill position optimization."
         public static final OptionKey<Boolean> LIROptTraceRAEliminateSpillMoves = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
     }
 

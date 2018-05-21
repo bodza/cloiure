@@ -35,9 +35,6 @@ import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.Canonicalizable.BinaryCommutative;
 import graalvm.compiler.graph.spi.Simplifiable;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeCycles;
-import graalvm.compiler.nodeinfo.NodeInfo;
-import graalvm.compiler.nodeinfo.NodeSize;
 import graalvm.compiler.nodeinfo.Verbosity;
 
 /**
@@ -118,7 +115,6 @@ public final class NodeClass<T> extends FieldIntrospection<T>
 
     private final boolean canGVN;
     private final int startGVNNumber;
-    private final String nameTemplate;
     private final int iterableId;
     private final EnumSet<InputType> allowedUsageTypes;
     private int[] iterableIds;
@@ -181,22 +177,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         canGVN = Node.ValueNumberable.class.isAssignableFrom(clazz);
         startGVNNumber = clazz.getName().hashCode();
 
-        NodeInfo info = getAnnotationTimed(clazz, NodeInfo.class);
-        if (!info.nameTemplate().isEmpty())
-        {
-            this.nameTemplate = info.nameTemplate();
-        }
-        else if (!info.shortName().isEmpty())
-        {
-            this.nameTemplate = info.shortName();
-        }
-        else
-        {
-            this.nameTemplate = "";
-        }
-
         allowedUsageTypes = superNodeClass == null ? EnumSet.noneOf(InputType.class) : superNodeClass.allowedUsageTypes.clone();
-        allowedUsageTypes.addAll(Arrays.asList(info.allowedUsageTypes()));
 
         if (presetIterableIds != null)
         {
@@ -221,48 +202,6 @@ public final class NodeClass<T> extends FieldIntrospection<T>
             this.iterableId = Node.NOT_ITERABLE;
             this.iterableIds = null;
         }
-
-        /*
-         * Note: We do not check for the existence of the node cost annotations during
-         * construction as not every node needs to have them set. However if costs are queried,
-         * after the construction of the node class, they must be properly set. This is
-         * important as we can not trust our cost model if there are unspecified nodes. Nodes
-         * that do not need cost annotations are e.g. abstractions like FixedNode or
-         * FloatingNode or ValueNode. Sub classes where costs are not specified will ask the
-         * superclass for their costs during node class initialization. Therefore getters for
-         * cycles and size can omit verification during creation.
-         */
-        NodeCycles c = info.cycles();
-        if (c == NodeCycles.CYCLES_UNSET)
-        {
-            cycles = superNodeClass != null ? superNodeClass.cycles : NodeCycles.CYCLES_UNSET;
-        }
-        else
-        {
-            cycles = c;
-        }
-        NodeSize s = info.size();
-        if (s == NodeSize.SIZE_UNSET)
-        {
-            size = superNodeClass != null ? superNodeClass.size : NodeSize.SIZE_UNSET;
-        }
-        else
-        {
-            size = s;
-        }
-    }
-
-    private final NodeCycles cycles;
-    private final NodeSize size;
-
-    public NodeCycles cycles()
-    {
-        return cycles;
-    }
-
-    public NodeSize size()
-    {
-        return size;
     }
 
     public static long computeIterationMask(Type type, int directCount, long[] offsets)
@@ -325,22 +264,14 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     {
         if (shortName == null)
         {
-            NodeInfo info = getClazz().getAnnotation(NodeInfo.class);
-            if (!info.shortName().isEmpty())
+            String localShortName = getClazz().getSimpleName();
+            if (localShortName.endsWith("Node") && !localShortName.equals("StartNode") && !localShortName.equals("EndNode"))
             {
-                shortName = info.shortName();
+                shortName = localShortName.substring(0, localShortName.length() - 4);
             }
             else
             {
-                String localShortName = getClazz().getSimpleName();
-                if (localShortName.endsWith("Node") && !localShortName.equals("StartNode") && !localShortName.equals("EndNode"))
-                {
-                    shortName = localShortName.substring(0, localShortName.length() - 4);
-                }
-                else
-                {
-                    shortName = localShortName;
-                }
+                shortName = localShortName;
             }
         }
         return shortName;
@@ -965,17 +896,6 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     public Class<T> getJavaClass()
     {
         return getClazz();
-    }
-
-    /**
-     * The template used to build the {@link Verbosity#Name} version. Variable parts are specified
-     * using &#123;i#inputName&#125; or &#123;p#propertyName&#125;. If no
-     * {@link NodeInfo#nameTemplate() template} is specified, it uses {@link NodeInfo#shortName()}.
-     * If none of the two is specified, it returns an empty string.
-     */
-    public String getNameTemplate()
-    {
-        return nameTemplate;
     }
 
     interface InplaceUpdateClosure

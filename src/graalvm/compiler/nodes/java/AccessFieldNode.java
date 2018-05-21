@@ -1,13 +1,7 @@
 package graalvm.compiler.nodes.java;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_2;
-
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
-import graalvm.compiler.nodeinfo.NodeSize;
 import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.ValueNode;
@@ -19,7 +13,6 @@ import jdk.vm.ci.meta.ResolvedJavaField;
 /**
  * The base class of all instructions that access fields.
  */
-@NodeInfo(cycles = CYCLES_2, size = SIZE_1)
 public abstract class AccessFieldNode extends FixedWithNextNode implements Lowerable
 {
     public static final NodeClass<AccessFieldNode> TYPE = NodeClass.create(AccessFieldNode.class);
@@ -92,15 +85,5 @@ public abstract class AccessFieldNode extends FixedWithNextNode implements Lower
         {
             return super.toString(verbosity);
         }
-    }
-
-    @Override
-    public NodeSize estimatedNodeSize()
-    {
-        if (field.isVolatile())
-        {
-            return SIZE_2;
-        }
-        return super.estimatedNodeSize();
     }
 }

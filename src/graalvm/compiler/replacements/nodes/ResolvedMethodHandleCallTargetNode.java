@@ -6,7 +6,6 @@ import graalvm.compiler.core.common.type.StampPair;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeInputList;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.java.MethodCallTargetNode;
 import graalvm.compiler.nodes.spi.Lowerable;
@@ -27,7 +26,6 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * methods. An {@linkplain MethodHandleNode#tryResolveTargetInvoke resolved} {@link MethodHandle}
  * invocation drops these arguments which means the interpreter won't find them.
  */
-@NodeInfo
 public final class ResolvedMethodHandleCallTargetNode extends MethodCallTargetNode implements Lowerable
 {
     public static final NodeClass<ResolvedMethodHandleCallTargetNode> TYPE = NodeClass.create(ResolvedMethodHandleCallTargetNode.class);

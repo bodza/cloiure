@@ -44,10 +44,4 @@ public class LoopUnswitchingPhase extends ContextlessLoopPhase<LoopPolicies>
             } while (unswitched);
         }
     }
-
-    @Override
-    public float codeSizeIncrease()
-    {
-        return 10.0f;
-    }
 }

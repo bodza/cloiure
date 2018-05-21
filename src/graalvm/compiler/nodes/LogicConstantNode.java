@@ -1,18 +1,13 @@
 package graalvm.compiler.nodes;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_0;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_0;
-
 import graalvm.compiler.graph.Graph;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 
 /**
  * The {@code LogicConstantNode} represents a boolean constant.
  */
-@NodeInfo(nameTemplate = "{p#value}", cycles = CYCLES_0, size = SIZE_0)
 public final class LogicConstantNode extends LogicNode implements LIRLowerable
 {
     public static final NodeClass<LogicConstantNode> TYPE = NodeClass.create(LogicConstantNode.class);

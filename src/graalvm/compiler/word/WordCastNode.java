@@ -1,8 +1,5 @@
 package graalvm.compiler.word;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_1;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
-
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
@@ -11,7 +8,6 @@ import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.lir.ConstantValue;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.NodeView;
@@ -31,7 +27,6 @@ import jdk.vm.ci.meta.ValueKind;
  * {@link Word#toObject()} operations. It has an impact on the pointer maps for the GC, so it must
  * not be scheduled or optimized away.
  */
-@NodeInfo(cycles = CYCLES_1, size = SIZE_1)
 public final class WordCastNode extends FixedWithNextNode implements LIRLowerable, Canonicalizable
 {
     public static final NodeClass<WordCastNode> TYPE = NodeClass.create(WordCastNode.class);

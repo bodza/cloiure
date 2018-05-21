@@ -3,14 +3,12 @@ package graalvm.compiler.nodes.calc;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 
 /**
  * The {@code BinaryNode} class is the base of arithmetic and logic operations with two inputs.
  */
-@NodeInfo
 public abstract class BinaryNode extends FloatingNode implements Canonicalizable.Binary<ValueNode>
 {
     public static final NodeClass<BinaryNode> TYPE = NodeClass.create(BinaryNode.class);

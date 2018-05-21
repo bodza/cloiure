@@ -12,7 +12,7 @@ public class DeadCodeEliminationPhase extends Phase
 {
     public static class Options
     {
-        // "Disable optional dead code eliminations."
+        // Option "Disable optional dead code eliminations."
         public static final OptionKey<Boolean> ReduceDCE = new OptionKey<>(true);
     }
 

@@ -3,7 +3,6 @@ package graalvm.compiler.nodes;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeInfo;
 
 /**
  * Base class for {@link AbstractBeginNode}s that are associated with a frame state.
@@ -12,7 +11,6 @@ import graalvm.compiler.nodeinfo.NodeInfo;
  * {@link StateSplit} which is not possible until loop peeling works without requiring begin nodes
  * to have frames states.
  */
-@NodeInfo
 public abstract class BeginStateSplitNode extends AbstractBeginNode implements StateSplit
 {
     public static final NodeClass<BeginStateSplitNode> TYPE = NodeClass.create(BeginStateSplitNode.class);

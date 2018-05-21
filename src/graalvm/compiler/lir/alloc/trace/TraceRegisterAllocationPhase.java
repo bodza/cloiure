@@ -24,13 +24,13 @@ public final class TraceRegisterAllocationPhase extends RegisterAllocationPhase
 {
     public static class Options
     {
-        // "Use inter-trace register hints."
+        // Option "Use inter-trace register hints."
         public static final OptionKey<Boolean> TraceRAuseInterTraceHints = new OptionKey<>(true);
-        // "Share information about spilled values to other traces."
+        // Option "Share information about spilled values to other traces."
         public static final OptionKey<Boolean> TraceRAshareSpillInformation = new OptionKey<>(true);
-        // "Reuse spill slots for global move resolution cycle breaking."
+        // Option "Reuse spill slots for global move resolution cycle breaking."
         public static final OptionKey<Boolean> TraceRAreuseStackSlotsForMoveResolutionCycleBreaking = new OptionKey<>(true);
-        // "Cache stack slots globally (i.e. a variable always gets the same slot in every trace)."
+        // Option "Cache stack slots globally (i.e. a variable always gets the same slot in every trace)."
         public static final OptionKey<Boolean> TraceRACacheStackSlots = new OptionKey<>(true);
     }
 

@@ -1,13 +1,10 @@
 package graalvm.compiler.nodes.java;
 
 import static graalvm.compiler.nodeinfo.InputType.Association;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_0;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_0;
 
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.IterableNodeType;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
@@ -18,7 +15,6 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
  * states together. It is thus referenced from the {@link MonitorEnterNode}, from the
  * {@link MonitorExitNode} and from the {@link FrameState}.
  */
-@NodeInfo(allowedUsageTypes = Association, cycles = CYCLES_0, size = SIZE_0)
 public class MonitorIdNode extends ValueNode implements IterableNodeType, LIRLowerable
 {
     public static final NodeClass<MonitorIdNode> TYPE = NodeClass.create(MonitorIdNode.class);

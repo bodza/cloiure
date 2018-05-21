@@ -3,13 +3,11 @@ package graalvm.compiler.nodes;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeInfo;
 
 /**
  * Base class for nodes that contain "virtual" state, like FrameState and VirtualObjectState.
  * Subclasses of this class will be treated in a special way by the scheduler.
  */
-@NodeInfo(allowedUsageTypes = {InputType.State})
 public abstract class VirtualState extends Node
 {
     protected VirtualState(NodeClass<? extends VirtualState> c)

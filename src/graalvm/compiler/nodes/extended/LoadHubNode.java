@@ -2,16 +2,12 @@ package graalvm.compiler.nodes.extended;
 
 import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
-
 import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.TypeReference;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
@@ -29,7 +25,6 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 /**
  * Loads an object's hub. The object is not null-checked by this operation.
  */
-@NodeInfo(cycles = CYCLES_2, size = SIZE_1)
 public final class LoadHubNode extends FloatingNode implements Lowerable, Canonicalizable, Virtualizable
 {
     public static final NodeClass<LoadHubNode> TYPE = NodeClass.create(LoadHubNode.class);

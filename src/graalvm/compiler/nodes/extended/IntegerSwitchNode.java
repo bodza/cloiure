@@ -14,7 +14,6 @@ import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Simplifiable;
 import graalvm.compiler.graph.spi.SimplifierTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.AbstractBeginNode;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.FixedGuardNode;
@@ -37,7 +36,6 @@ import jdk.vm.ci.meta.JavaKind;
  * The {@code IntegerSwitchNode} represents a switch on integer keys, with a sorted array of key
  * values. The actual implementation of the switch will be decided by the backend.
  */
-@NodeInfo
 public final class IntegerSwitchNode extends SwitchNode implements LIRLowerable, Simplifiable
 {
     public static final NodeClass<IntegerSwitchNode> TYPE = NodeClass.create(IntegerSwitchNode.class);

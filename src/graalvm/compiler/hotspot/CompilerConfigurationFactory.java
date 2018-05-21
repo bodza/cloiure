@@ -153,28 +153,4 @@ public abstract class CompilerConfigurationFactory implements Comparable<Compile
         }
         return factory;
     }
-
-    private static <C> List<String> phaseNames(PhaseSuite<C> suite)
-    {
-        Collection<BasePhase<? super C>> phases = suite.getPhases();
-        List<String> res = new ArrayList<>(phases.size());
-        for (BasePhase<?> phase : phases)
-        {
-            res.add(phase.contractorName());
-        }
-        Collections.sort(res);
-        return res;
-    }
-
-    private static <C> List<String> phaseNames(LIRPhaseSuite<C> suite)
-    {
-        List<LIRPhase<C>> phases = suite.getPhases();
-        List<String> res = new ArrayList<>(phases.size());
-        for (LIRPhase<?> phase : phases)
-        {
-            res.add(phase.getClass().getName());
-        }
-        Collections.sort(res);
-        return res;
-    }
 }

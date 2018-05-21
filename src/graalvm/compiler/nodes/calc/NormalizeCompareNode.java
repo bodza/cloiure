@@ -1,15 +1,11 @@
 package graalvm.compiler.nodes.calc;
 
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_2;
-
 import graalvm.compiler.core.common.calc.CanonicalCondition;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.IterableNodeType;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
-import graalvm.compiler.nodeinfo.NodeCycles;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.LogicConstantNode;
 import graalvm.compiler.nodes.LogicNode;
@@ -24,7 +20,6 @@ import jdk.vm.ci.meta.JavaKind;
  * of the inputs is NaN), the result is 1 if isUnorderedLess is false and -1 if isUnorderedLess is
  * true.
  */
-@NodeInfo(cycles = NodeCycles.CYCLES_2, size = SIZE_2)
 public final class NormalizeCompareNode extends BinaryNode implements IterableNodeType
 {
     public static final NodeClass<NormalizeCompareNode> TYPE = NodeClass.create(NormalizeCompareNode.class);

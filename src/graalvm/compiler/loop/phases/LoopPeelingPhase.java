@@ -29,10 +29,4 @@ public class LoopPeelingPhase extends LoopPhase<LoopPolicies>
             data.deleteUnusedNodes();
         }
     }
-
-    @Override
-    public float codeSizeIncrease()
-    {
-        return 5.0f;
-    }
 }

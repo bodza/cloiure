@@ -2,7 +2,6 @@ package graalvm.compiler.nodes.java;
 
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
@@ -13,7 +12,6 @@ import jdk.vm.ci.meta.JavaKind;
  * The {@code AccessIndexedNode} class is the base class of instructions that read or write elements
  * of an array.
  */
-@NodeInfo
 public abstract class AccessIndexedNode extends AccessArrayNode implements Lowerable
 {
     public static final NodeClass<AccessIndexedNode> TYPE = NodeClass.create(AccessIndexedNode.class);

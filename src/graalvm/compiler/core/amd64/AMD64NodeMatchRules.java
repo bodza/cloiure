@@ -25,7 +25,6 @@ import graalvm.compiler.core.common.calc.Condition;
 import graalvm.compiler.core.gen.NodeLIRBuilder;
 import graalvm.compiler.core.gen.NodeMatchRules;
 import graalvm.compiler.core.match.ComplexMatchResult;
-import graalvm.compiler.core.match.MatchRule;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.LIRFrameState;
 import graalvm.compiler.lir.LabelRef;
@@ -283,36 +282,36 @@ public class AMD64NodeMatchRules extends NodeMatchRules
         return getArithmeticLIRGenerator().emitLoad(to, address, state);
     }
 
-    @MatchRule("(If (IntegerTest Read=access value))")
-    @MatchRule("(If (IntegerTest FloatingRead=access value))")
+    // MatchRule "(If (IntegerTest Read=access value))"
+    // MatchRule "(If (IntegerTest FloatingRead=access value))"
     public ComplexMatchResult integerTestBranchMemory(IfNode root, LIRLowerableAccess access, ValueNode value)
     {
         return emitIntegerTestBranchMemory(root, value, access);
     }
 
-    @MatchRule("(If (IntegerEquals=compare value Read=access))")
-    @MatchRule("(If (IntegerLessThan=compare value Read=access))")
-    @MatchRule("(If (IntegerBelow=compare value Read=access))")
-    @MatchRule("(If (IntegerEquals=compare value FloatingRead=access))")
-    @MatchRule("(If (IntegerLessThan=compare value FloatingRead=access))")
-    @MatchRule("(If (IntegerBelow=compare value FloatingRead=access))")
-    @MatchRule("(If (FloatEquals=compare value Read=access))")
-    @MatchRule("(If (FloatEquals=compare value FloatingRead=access))")
-    @MatchRule("(If (FloatLessThan=compare value Read=access))")
-    @MatchRule("(If (FloatLessThan=compare value FloatingRead=access))")
-    @MatchRule("(If (PointerEquals=compare value Read=access))")
-    @MatchRule("(If (PointerEquals=compare value FloatingRead=access))")
-    @MatchRule("(If (ObjectEquals=compare value Read=access))")
-    @MatchRule("(If (ObjectEquals=compare value FloatingRead=access))")
+    // MatchRule "(If (IntegerEquals=compare value Read=access))"
+    // MatchRule "(If (IntegerLessThan=compare value Read=access))"
+    // MatchRule "(If (IntegerBelow=compare value Read=access))"
+    // MatchRule "(If (IntegerEquals=compare value FloatingRead=access))"
+    // MatchRule "(If (IntegerLessThan=compare value FloatingRead=access))"
+    // MatchRule "(If (IntegerBelow=compare value FloatingRead=access))"
+    // MatchRule "(If (FloatEquals=compare value Read=access))"
+    // MatchRule "(If (FloatEquals=compare value FloatingRead=access))"
+    // MatchRule "(If (FloatLessThan=compare value Read=access))"
+    // MatchRule "(If (FloatLessThan=compare value FloatingRead=access))"
+    // MatchRule "(If (PointerEquals=compare value Read=access))"
+    // MatchRule "(If (PointerEquals=compare value FloatingRead=access))"
+    // MatchRule "(If (ObjectEquals=compare value Read=access))"
+    // MatchRule "(If (ObjectEquals=compare value FloatingRead=access))"
     public ComplexMatchResult ifCompareMemory(IfNode root, CompareNode compare, ValueNode value, LIRLowerableAccess access)
     {
         return emitCompareBranchMemory(root, compare, value, access);
     }
 
-    @MatchRule("(If (ObjectEquals=compare value ValueCompareAndSwap=cas))")
-    @MatchRule("(If (PointerEquals=compare value ValueCompareAndSwap=cas))")
-    @MatchRule("(If (FloatEquals=compare value ValueCompareAndSwap=cas))")
-    @MatchRule("(If (IntegerEquals=compare value ValueCompareAndSwap=cas))")
+    // MatchRule "(If (ObjectEquals=compare value ValueCompareAndSwap=cas))"
+    // MatchRule "(If (PointerEquals=compare value ValueCompareAndSwap=cas))"
+    // MatchRule "(If (FloatEquals=compare value ValueCompareAndSwap=cas))"
+    // MatchRule "(If (IntegerEquals=compare value ValueCompareAndSwap=cas))"
     public ComplexMatchResult ifCompareValueCas(IfNode root, CompareNode compare, ValueNode value, ValueCompareAndSwapNode cas)
     {
         if (value == cas.getExpectedValue() && cas.usages().count() == 1)
@@ -333,10 +332,10 @@ public class AMD64NodeMatchRules extends NodeMatchRules
         return null;
     }
 
-    @MatchRule("(If (ObjectEquals=compare value LogicCompareAndSwap=cas))")
-    @MatchRule("(If (PointerEquals=compare value LogicCompareAndSwap=cas))")
-    @MatchRule("(If (FloatEquals=compare value LogicCompareAndSwap=cas))")
-    @MatchRule("(If (IntegerEquals=compare value LogicCompareAndSwap=cas))")
+    // MatchRule "(If (ObjectEquals=compare value LogicCompareAndSwap=cas))"
+    // MatchRule "(If (PointerEquals=compare value LogicCompareAndSwap=cas))"
+    // MatchRule "(If (FloatEquals=compare value LogicCompareAndSwap=cas))"
+    // MatchRule "(If (IntegerEquals=compare value LogicCompareAndSwap=cas))"
     public ComplexMatchResult ifCompareLogicCas(IfNode root, CompareNode compare, ValueNode value, LogicCompareAndSwapNode cas)
     {
         JavaConstant constant = value.asJavaConstant();
@@ -373,13 +372,13 @@ public class AMD64NodeMatchRules extends NodeMatchRules
         return null;
     }
 
-    @MatchRule("(If (ObjectEquals=compare value FloatingRead=access))")
+    // MatchRule "(If (ObjectEquals=compare value FloatingRead=access))"
     public ComplexMatchResult ifLogicCas(IfNode root, CompareNode compare, ValueNode value, LIRLowerableAccess access)
     {
         return emitCompareBranchMemory(root, compare, value, access);
     }
 
-    @MatchRule("(Or (LeftShift=lshift value Constant) (UnsignedRightShift=rshift value Constant))")
+    // MatchRule "(Or (LeftShift=lshift value Constant) (UnsignedRightShift=rshift value Constant))"
     public ComplexMatchResult rotateLeftConstant(LeftShiftNode lshift, UnsignedRightShiftNode rshift)
     {
         if ((lshift.getShiftAmountMask() & (lshift.getY().asJavaConstant().asInt() + rshift.getY().asJavaConstant().asInt())) == 0)
@@ -389,7 +388,7 @@ public class AMD64NodeMatchRules extends NodeMatchRules
         return null;
     }
 
-    @MatchRule("(Or (LeftShift value (Sub Constant=delta shiftAmount)) (UnsignedRightShift value shiftAmount))")
+    // MatchRule "(Or (LeftShift value (Sub Constant=delta shiftAmount)) (UnsignedRightShift value shiftAmount))"
     public ComplexMatchResult rotateRightVariable(ValueNode value, ConstantNode delta, ValueNode shiftAmount)
     {
         if (delta.asJavaConstant().asLong() == 0 || delta.asJavaConstant().asLong() == 32)
@@ -399,7 +398,7 @@ public class AMD64NodeMatchRules extends NodeMatchRules
         return null;
     }
 
-    @MatchRule("(Or (LeftShift value shiftAmount) (UnsignedRightShift value (Sub Constant=delta shiftAmount)))")
+    // MatchRule "(Or (LeftShift value shiftAmount) (UnsignedRightShift value (Sub Constant=delta shiftAmount)))"
     public ComplexMatchResult rotateLeftVariable(ValueNode value, ValueNode shiftAmount, ConstantNode delta)
     {
         if (delta.asJavaConstant().asLong() == 0 || delta.asJavaConstant().asLong() == 32)
@@ -419,8 +418,8 @@ public class AMD64NodeMatchRules extends NodeMatchRules
         return builder -> getArithmeticLIRGenerator().emitBinaryMemory(op, size, getLIRGeneratorTool().asAllocatable(operand(value)), (AMD64AddressValue) operand(access.getAddress()), getState(access));
     }
 
-    @MatchRule("(Add value Read=access)")
-    @MatchRule("(Add value FloatingRead=access)")
+    // MatchRule "(Add value Read=access)"
+    // MatchRule "(Add value FloatingRead=access)"
     public ComplexMatchResult addMemory(ValueNode value, LIRLowerableAccess access)
     {
         OperandSize size = getMemorySize(access);
@@ -443,8 +442,8 @@ public class AMD64NodeMatchRules extends NodeMatchRules
         }
     }
 
-    @MatchRule("(Sub value Read=access)")
-    @MatchRule("(Sub value FloatingRead=access)")
+    // MatchRule "(Sub value Read=access)"
+    // MatchRule "(Sub value FloatingRead=access)"
     public ComplexMatchResult subMemory(ValueNode value, LIRLowerableAccess access)
     {
         OperandSize size = getMemorySize(access);
@@ -467,8 +466,8 @@ public class AMD64NodeMatchRules extends NodeMatchRules
         }
     }
 
-    @MatchRule("(Mul value Read=access)")
-    @MatchRule("(Mul value FloatingRead=access)")
+    // MatchRule "(Mul value Read=access)"
+    // MatchRule "(Mul value FloatingRead=access)"
     public ComplexMatchResult mulMemory(ValueNode value, LIRLowerableAccess access)
     {
         OperandSize size = getMemorySize(access);
@@ -491,8 +490,8 @@ public class AMD64NodeMatchRules extends NodeMatchRules
         }
     }
 
-    @MatchRule("(And value Read=access)")
-    @MatchRule("(And value FloatingRead=access)")
+    // MatchRule "(And value Read=access)"
+    // MatchRule "(And value FloatingRead=access)"
     public ComplexMatchResult andMemory(ValueNode value, LIRLowerableAccess access)
     {
         OperandSize size = getMemorySize(access);
@@ -506,8 +505,8 @@ public class AMD64NodeMatchRules extends NodeMatchRules
         }
     }
 
-    @MatchRule("(Or value Read=access)")
-    @MatchRule("(Or value FloatingRead=access)")
+    // MatchRule "(Or value Read=access)"
+    // MatchRule "(Or value FloatingRead=access)"
     public ComplexMatchResult orMemory(ValueNode value, LIRLowerableAccess access)
     {
         OperandSize size = getMemorySize(access);
@@ -521,8 +520,8 @@ public class AMD64NodeMatchRules extends NodeMatchRules
         }
     }
 
-    @MatchRule("(Xor value Read=access)")
-    @MatchRule("(Xor value FloatingRead=access)")
+    // MatchRule "(Xor value Read=access)"
+    // MatchRule "(Xor value FloatingRead=access)"
     public ComplexMatchResult xorMemory(ValueNode value, LIRLowerableAccess access)
     {
         OperandSize size = getMemorySize(access);
@@ -536,7 +535,7 @@ public class AMD64NodeMatchRules extends NodeMatchRules
         }
     }
 
-    @MatchRule("(Write object Narrow=narrow)")
+    // MatchRule "(Write object Narrow=narrow)"
     public ComplexMatchResult writeNarrow(WriteNode root, NarrowNode narrow)
     {
         return builder ->
@@ -547,23 +546,23 @@ public class AMD64NodeMatchRules extends NodeMatchRules
         };
     }
 
-    @MatchRule("(SignExtend Read=access)")
-    @MatchRule("(SignExtend FloatingRead=access)")
+    // MatchRule "(SignExtend Read=access)"
+    // MatchRule "(SignExtend FloatingRead=access)"
     public ComplexMatchResult signExtend(SignExtendNode root, LIRLowerableAccess access)
     {
         return emitSignExtendMemory(access, root.getInputBits(), root.getResultBits(), null);
     }
 
-    @MatchRule("(ZeroExtend Read=access)")
-    @MatchRule("(ZeroExtend FloatingRead=access)")
+    // MatchRule "(ZeroExtend Read=access)"
+    // MatchRule "(ZeroExtend FloatingRead=access)"
     public ComplexMatchResult zeroExtend(ZeroExtendNode root, LIRLowerableAccess access)
     {
         AMD64Kind memoryKind = getMemoryKind(access);
         return builder -> getArithmeticLIRGenerator().emitZeroExtendMemory(memoryKind, root.getResultBits(), (AMD64AddressValue) operand(access.getAddress()), getState(access));
     }
 
-    @MatchRule("(Narrow Read=access)")
-    @MatchRule("(Narrow FloatingRead=access)")
+    // MatchRule "(Narrow Read=access)"
+    // MatchRule "(Narrow FloatingRead=access)"
     public ComplexMatchResult narrowRead(NarrowNode root, LIRLowerableAccess access)
     {
         return new ComplexMatchResult()
@@ -580,16 +579,16 @@ public class AMD64NodeMatchRules extends NodeMatchRules
         };
     }
 
-    @MatchRule("(SignExtend (Narrow=narrow Read=access))")
-    @MatchRule("(SignExtend (Narrow=narrow FloatingRead=access))")
+    // MatchRule "(SignExtend (Narrow=narrow Read=access))"
+    // MatchRule "(SignExtend (Narrow=narrow FloatingRead=access))"
     public ComplexMatchResult signExtendNarrowRead(SignExtendNode root, NarrowNode narrow, LIRLowerableAccess access)
     {
         LIRKind kind = getLIRGeneratorTool().getLIRKind(narrow.stamp(NodeView.DEFAULT));
         return emitSignExtendMemory(access, narrow.getResultBits(), root.getResultBits(), kind);
     }
 
-    @MatchRule("(FloatConvert Read=access)")
-    @MatchRule("(FloatConvert FloatingRead=access)")
+    // MatchRule "(FloatConvert Read=access)"
+    // MatchRule "(FloatConvert FloatingRead=access)"
     public ComplexMatchResult floatConvert(FloatConvertNode root, LIRLowerableAccess access)
     {
         switch (root.getFloatConvert())
@@ -619,8 +618,8 @@ public class AMD64NodeMatchRules extends NodeMatchRules
         }
     }
 
-    @MatchRule("(Reinterpret Read=access)")
-    @MatchRule("(Reinterpret FloatingRead=access)")
+    // MatchRule "(Reinterpret Read=access)"
+    // MatchRule "(Reinterpret FloatingRead=access)"
     public ComplexMatchResult reinterpret(ReinterpretNode root, LIRLowerableAccess access)
     {
         return builder ->
@@ -630,7 +629,7 @@ public class AMD64NodeMatchRules extends NodeMatchRules
         };
     }
 
-    @MatchRule("(Write object Reinterpret=reinterpret)")
+    // MatchRule "(Write object Reinterpret=reinterpret)"
     public ComplexMatchResult writeReinterpret(WriteNode root, ReinterpretNode reinterpret)
     {
         return builder ->

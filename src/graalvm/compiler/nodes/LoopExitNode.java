@@ -1,8 +1,6 @@
 package graalvm.compiler.nodes;
 
 import static graalvm.compiler.nodeinfo.InputType.Association;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_0;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_0;
 
 import graalvm.compiler.graph.IterableNodeType;
 import graalvm.compiler.graph.Node;
@@ -10,9 +8,7 @@ import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.iterators.NodeIterable;
 import graalvm.compiler.graph.spi.Simplifiable;
 import graalvm.compiler.graph.spi.SimplifierTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 
-@NodeInfo(allowedUsageTypes = {Association}, cycles = CYCLES_0, size = SIZE_0)
 public final class LoopExitNode extends BeginStateSplitNode implements IterableNodeType, Simplifiable
 {
     public static final NodeClass<LoopExitNode> TYPE = NodeClass.create(LoopExitNode.class);

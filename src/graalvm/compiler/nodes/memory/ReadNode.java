@@ -1,7 +1,5 @@
 package graalvm.compiler.nodes.memory;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
 import static graalvm.compiler.nodes.NamedLocationIdentity.ARRAY_LENGTH_LOCATION;
 
 import graalvm.compiler.core.common.LIRKind;
@@ -12,7 +10,6 @@ import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.CanonicalizableLocation;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.FrameState;
@@ -33,7 +30,6 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 /**
  * Reads an {@linkplain FixedAccessNode accessed} value.
  */
-@NodeInfo(nameTemplate = "Read#{p#location/s}", cycles = CYCLES_2, size = SIZE_1)
 public class ReadNode extends FloatableAccessNode implements LIRLowerableAccess, Canonicalizable, Virtualizable, GuardingNode
 {
     public static final NodeClass<ReadNode> TYPE = NodeClass.create(ReadNode.class);

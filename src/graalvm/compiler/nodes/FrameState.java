@@ -4,10 +4,6 @@ import static jdk.vm.ci.code.BytecodeFrame.getPlaceholderBciName;
 import static jdk.vm.ci.code.BytecodeFrame.isPlaceholderBci;
 import static graalvm.compiler.nodeinfo.InputType.Association;
 import static graalvm.compiler.nodeinfo.InputType.State;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_0;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_IGNORED;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_IGNORED;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,7 +17,6 @@ import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeInputList;
 import graalvm.compiler.graph.iterators.NodeIterable;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.java.ExceptionObjectNode;
 import graalvm.compiler.nodes.java.MonitorIdNode;
@@ -38,7 +33,6 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  *
  * This can be used as debug or deoptimization information.
  */
-@NodeInfo(nameTemplate = "@{p#code/s}:{p#bci}", cycles = CYCLES_0, size = SIZE_1)
 public final class FrameState extends VirtualState implements IterableNodeType
 {
     public static final NodeClass<FrameState> TYPE = NodeClass.create(FrameState.class);
@@ -50,7 +44,6 @@ public final class FrameState extends VirtualState implements IterableNodeType
      */
     public static final ValueNode TWO_SLOT_MARKER = new TwoSlotMarker();
 
-    @NodeInfo(cycles = CYCLES_IGNORED, size = SIZE_IGNORED)
     private static final class TwoSlotMarker extends ValueNode
     {
         public static final NodeClass<TwoSlotMarker> TYPE = NodeClass.create(TwoSlotMarker.class);

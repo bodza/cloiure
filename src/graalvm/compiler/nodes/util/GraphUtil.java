@@ -68,7 +68,7 @@ public class GraphUtil
 {
     public static class Options
     {
-        // "Verify that there are no new unused nodes when performing killCFG."
+        // Option "Verify that there are no new unused nodes when performing killCFG."
         public static final OptionKey<Boolean> VerifyKillCFGUnusedNodes = new OptionKey<>(false);
     }
 

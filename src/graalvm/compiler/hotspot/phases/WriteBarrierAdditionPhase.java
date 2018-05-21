@@ -199,10 +199,4 @@ public class WriteBarrierAdditionPhase extends Phase
             graph.addAfterFixed(write.asNode(), serialArrayRangeWriteBarrier);
         }
     }
-
-    @Override
-    public boolean checkContract()
-    {
-        return false;
-    }
 }

@@ -49,7 +49,7 @@ public class LinearScan
 {
     public static class Options
     {
-        // "Enable spill position optimization."
+        // Option "Enable spill position optimization."
         public static final OptionKey<Boolean> LIROptLSRAOptimizeSpillPosition = new NestedBooleanOptionKey(LIROptimization, true);
     }
 

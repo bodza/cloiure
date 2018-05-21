@@ -4,7 +4,6 @@ import graalvm.compiler.core.common.type.StampPair;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.CallTargetNode.InvokeKind;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.Invoke;
@@ -22,7 +21,6 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
  * This is an extension of {@link MacroNode} that is a {@link StateSplit} and a
  * {@link MemoryCheckpoint}.
  */
-@NodeInfo
 public abstract class MacroStateSplitNode extends MacroNode implements StateSplit, MemoryCheckpoint.Single
 {
     public static final NodeClass<MacroStateSplitNode> TYPE = NodeClass.create(MacroStateSplitNode.class);

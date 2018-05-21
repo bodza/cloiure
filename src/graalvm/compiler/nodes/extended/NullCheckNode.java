@@ -1,18 +1,14 @@
 package graalvm.compiler.nodes.extended;
 
 import static graalvm.compiler.nodeinfo.InputType.Guard;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_2;
 
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.DeoptimizingFixedWithNextNode;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 
-@NodeInfo(allowedUsageTypes = Guard, cycles = CYCLES_2, size = SIZE_2)
 public final class NullCheckNode extends DeoptimizingFixedWithNextNode implements LIRLowerable, GuardingNode
 {
     public static final NodeClass<NullCheckNode> TYPE = NodeClass.create(NullCheckNode.class);

@@ -1,8 +1,6 @@
 package graalvm.compiler.nodes.java;
 
 import static graalvm.compiler.nodeinfo.InputType.State;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_UNKNOWN;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_8;
 import static graalvm.compiler.nodes.java.ForeignCallDescriptors.REGISTER_FINALIZER;
 
 import graalvm.compiler.core.common.spi.ForeignCallLinkage;
@@ -11,7 +9,6 @@ import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.AbstractStateSplit;
 import graalvm.compiler.nodes.DeoptimizingNode;
 import graalvm.compiler.nodes.FrameState;
@@ -30,10 +27,6 @@ import jdk.vm.ci.meta.Assumptions.AssumptionResult;
  * This node is used to perform the finalizer registration at the end of the java.lang.Object
  * constructor.
  */
-@NodeInfo(cycles = CYCLES_UNKNOWN,
-          cyclesRationale = "We cannot estimate the time of a runtime call.",
-          size = SIZE_8,
-          sizeRationale = "Rough estimation for register handling & calling")
 public final class RegisterFinalizerNode extends AbstractStateSplit implements Canonicalizable.Unary<ValueNode>, LIRLowerable, Virtualizable, DeoptimizingNode.DeoptAfter
 {
     public static final NodeClass<RegisterFinalizerNode> TYPE = NodeClass.create(RegisterFinalizerNode.class);

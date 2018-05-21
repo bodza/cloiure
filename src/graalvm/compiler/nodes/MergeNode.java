@@ -1,12 +1,10 @@
 package graalvm.compiler.nodes;
 
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 
 /**
  * Denotes the merging of multiple control-flow paths.
  */
-@NodeInfo
 public final class MergeNode extends AbstractMergeNode
 {
     public static final NodeClass<MergeNode> TYPE = NodeClass.create(MergeNode.class);

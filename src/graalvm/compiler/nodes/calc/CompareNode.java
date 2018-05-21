@@ -1,7 +1,6 @@
 package graalvm.compiler.nodes.calc;
 
 import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_1;
 
 import graalvm.compiler.core.common.PermanentBailoutException;
 import graalvm.compiler.core.common.calc.CanonicalCondition;
@@ -11,7 +10,6 @@ import graalvm.compiler.core.common.type.AbstractPointerStamp;
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.BinaryOpLogicNode;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.LogicConstantNode;
@@ -27,7 +25,6 @@ import jdk.vm.ci.meta.ConstantReflectionProvider;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.PrimitiveConstant;
 
-@NodeInfo(cycles = CYCLES_1)
 public abstract class CompareNode extends BinaryOpLogicNode implements Canonicalizable.Binary<ValueNode>
 {
     public static final NodeClass<CompareNode> TYPE = NodeClass.create(CompareNode.class);

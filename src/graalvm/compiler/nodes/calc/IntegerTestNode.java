@@ -1,14 +1,10 @@
 package graalvm.compiler.nodes.calc;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_2;
-
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable.BinaryCommutative;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.BinaryOpLogicNode;
 import graalvm.compiler.nodes.LogicConstantNode;
 import graalvm.compiler.nodes.NodeView;
@@ -21,7 +17,6 @@ import jdk.vm.ci.meta.TriState;
  * expression "(x &amp; y) == 0", meaning that it will return true if (and only if) no bit is set in
  * both x and y.
  */
-@NodeInfo(cycles = CYCLES_2, size = SIZE_2)
 public final class IntegerTestNode extends BinaryOpLogicNode implements BinaryCommutative<ValueNode>
 {
     public static final NodeClass<IntegerTestNode> TYPE = NodeClass.create(IntegerTestNode.class);

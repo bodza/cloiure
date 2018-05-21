@@ -4,7 +4,6 @@ import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeInputList;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.AbstractMergeNode;
 import graalvm.compiler.nodes.PhiNode;
 import graalvm.compiler.nodes.ValueNode;
@@ -13,7 +12,6 @@ import org.graalvm.word.LocationIdentity;
 /**
  * Memory {@code PhiNode}s merge memory dependencies at control flow merges.
  */
-@NodeInfo(nameTemplate = "Phi({i#values}) {p#locationIdentity/s}", allowedUsageTypes = {InputType.Memory})
 public final class MemoryPhiNode extends PhiNode implements MemoryNode
 {
     public static final NodeClass<MemoryPhiNode> TYPE = NodeClass.create(MemoryPhiNode.class);

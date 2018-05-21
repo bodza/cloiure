@@ -1,8 +1,5 @@
 package graalvm.compiler.nodes.calc;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
-
 import graalvm.compiler.core.common.type.ArithmeticOpTable;
 import graalvm.compiler.core.common.type.ArithmeticOpTable.UnaryOp.Neg;
 import graalvm.compiler.core.common.type.FloatStamp;
@@ -10,7 +7,6 @@ import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.lir.gen.ArithmeticLIRGeneratorTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
@@ -19,7 +15,6 @@ import graalvm.compiler.nodes.spi.StampInverter;
 /**
  * The {@code NegateNode} node negates its operand.
  */
-@NodeInfo(cycles = CYCLES_2, size = SIZE_1)
 public final class NegateNode extends UnaryArithmeticNode<Neg> implements NarrowableArithmeticNode, StampInverter
 {
     public static final NodeClass<NegateNode> TYPE = NodeClass.create(NegateNode.class);

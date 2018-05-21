@@ -1,14 +1,10 @@
 package graalvm.compiler.nodes.extended;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_8;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_8;
-
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.TypeReference;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeInputList;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.memory.AbstractMemoryCheckpoint;
@@ -23,9 +19,6 @@ import jdk.vm.ci.meta.MetaAccessProvider;
  * A node that represents an exception thrown implicitly by a Java bytecode. It can be lowered to
  * either a {@linkplain ForeignCallDescriptor foreign} call or a pre-allocated exception object.
  */
-@NodeInfo(cycles = CYCLES_8,
-          cyclesRationale = "Node will be lowered to a foreign call.",
-          size = SIZE_8)
 public final class BytecodeExceptionNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
 {
     public static final NodeClass<BytecodeExceptionNode> TYPE = NodeClass.create(BytecodeExceptionNode.class);

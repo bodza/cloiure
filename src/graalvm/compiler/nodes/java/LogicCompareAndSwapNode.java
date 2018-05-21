@@ -1,13 +1,9 @@
 package graalvm.compiler.nodes.java;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_8;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_8;
-
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.lir.gen.LIRGeneratorTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.memory.address.AddressNode;
@@ -23,7 +19,6 @@ import jdk.vm.ci.meta.Value;
  *
  * This version returns a boolean indicating is the CAS was successful or not.
  */
-@NodeInfo(cycles = CYCLES_8, size = SIZE_8)
 public final class LogicCompareAndSwapNode extends AbstractCompareAndSwapNode
 {
     public static final NodeClass<LogicCompareAndSwapNode> TYPE = NodeClass.create(LogicCompareAndSwapNode.class);

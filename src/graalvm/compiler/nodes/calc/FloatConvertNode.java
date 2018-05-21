@@ -1,7 +1,5 @@
 package graalvm.compiler.nodes.calc;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_8;
-
 import java.util.EnumMap;
 
 import graalvm.compiler.core.common.calc.FloatConvert;
@@ -10,7 +8,6 @@ import graalvm.compiler.core.common.type.ArithmeticOpTable.FloatConvertOp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.lir.gen.ArithmeticLIRGeneratorTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.ArithmeticLIRLowerable;
@@ -25,7 +22,6 @@ import jdk.vm.ci.meta.ConstantReflectionProvider;
  * A {@code FloatConvert} converts between integers and floating point numbers according to Java
  * semantics.
  */
-@NodeInfo(cycles = CYCLES_8)
 public final class FloatConvertNode extends UnaryArithmeticNode<FloatConvertOp> implements ConvertNode, Lowerable, ArithmeticLIRLowerable
 {
     public static final NodeClass<FloatConvertNode> TYPE = NodeClass.create(FloatConvertNode.class);

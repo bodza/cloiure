@@ -8,8 +8,7 @@ import graalvm.compiler.core.gen.NodeMatchRules;
 public interface MatchStatementSet
 {
     /**
-     * @return the {@link NodeLIRBuilder} subclass which defined this set of {@link MatchStatement}
-     *         instances.
+     * @return the {@link NodeLIRBuilder} subclass which defined this set of {@link MatchStatement} instances.
      */
     Class<? extends NodeMatchRules> forClass();
 

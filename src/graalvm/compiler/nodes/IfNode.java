@@ -1,8 +1,5 @@
 package graalvm.compiler.nodes;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_1;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_2;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -22,7 +19,6 @@ import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.Simplifiable;
 import graalvm.compiler.graph.spi.SimplifierTool;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.calc.CompareNode;
 import graalvm.compiler.nodes.calc.ConditionalNode;
 import graalvm.compiler.nodes.calc.IntegerBelowNode;
@@ -49,7 +45,6 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * The {@code IfNode} represents a branch that can go one of two directions depending on the outcome
  * of a comparison.
  */
-@NodeInfo(cycles = CYCLES_1, size = SIZE_2, sizeRationale = "2 jmps")
 public final class IfNode extends ControlSplitNode implements Simplifiable, LIRLowerable
 {
     public static final NodeClass<IfNode> TYPE = NodeClass.create(IfNode.class);

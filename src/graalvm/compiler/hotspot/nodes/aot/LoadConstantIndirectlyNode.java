@@ -1,8 +1,5 @@
 package graalvm.compiler.hotspot.nodes.aot;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_4;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
-
 import graalvm.compiler.core.common.PermanentBailoutException;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
@@ -11,7 +8,6 @@ import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.hotspot.HotSpotLIRGenerator;
 import graalvm.compiler.hotspot.meta.HotSpotConstantLoadAction;
 import graalvm.compiler.hotspot.word.KlassPointer;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.FloatingNode;
@@ -24,7 +20,6 @@ import jdk.vm.ci.hotspot.HotSpotObjectConstant;
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.Value;
 
-@NodeInfo(cycles = CYCLES_4, size = SIZE_1)
 public class LoadConstantIndirectlyNode extends FloatingNode implements Canonicalizable, LIRLowerable
 {
     public static final NodeClass<LoadConstantIndirectlyNode> TYPE = NodeClass.create(LoadConstantIndirectlyNode.class);

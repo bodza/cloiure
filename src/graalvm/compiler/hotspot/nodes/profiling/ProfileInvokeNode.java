@@ -2,12 +2,10 @@ package graalvm.compiler.hotspot.nodes.profiling;
 
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.iterators.NodeIterable;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.StructuredGraph;
 
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
-@NodeInfo
 public class ProfileInvokeNode extends ProfileWithNotificationNode
 {
     public static final NodeClass<ProfileInvokeNode> TYPE = NodeClass.create(ProfileInvokeNode.class);

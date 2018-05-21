@@ -10,7 +10,6 @@ import graalvm.compiler.core.common.type.TypeReference;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Simplifiable;
 import graalvm.compiler.graph.spi.SimplifierTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.AbstractBeginNode;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.FixedWithNextNode;
@@ -30,7 +29,6 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * The {@code TypeSwitchNode} performs a lookup based on the type of the input value. The type
  * comparison is an exact type comparison, not an instanceof.
  */
-@NodeInfo
 public final class TypeSwitchNode extends SwitchNode implements LIRLowerable, Simplifiable
 {
     public static final NodeClass<TypeSwitchNode> TYPE = NodeClass.create(TypeSwitchNode.class);

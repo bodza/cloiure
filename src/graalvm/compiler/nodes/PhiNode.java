@@ -1,8 +1,6 @@
 package graalvm.compiler.nodes;
 
 import static graalvm.compiler.nodeinfo.InputType.Association;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_0;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
 
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.Node;
@@ -11,7 +9,6 @@ import graalvm.compiler.graph.NodeInputList;
 import graalvm.compiler.graph.iterators.NodeIterable;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.calc.FloatingNode;
 
@@ -22,7 +19,6 @@ import graalvm.compiler.nodes.calc.FloatingNode;
  * corresponds to the loop's predecessor, while the rest of the values correspond to the
  * {@link LoopEndNode}s.
  */
-@NodeInfo(cycles = CYCLES_0, size = SIZE_1)
 public abstract class PhiNode extends FloatingNode implements Canonicalizable
 {
     public static final NodeClass<PhiNode> TYPE = NodeClass.create(PhiNode.class);

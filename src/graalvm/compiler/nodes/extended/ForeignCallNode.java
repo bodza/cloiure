@@ -2,8 +2,6 @@ package graalvm.compiler.nodes.extended;
 
 import static graalvm.compiler.nodeinfo.InputType.Memory;
 import static graalvm.compiler.nodeinfo.InputType.State;
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_2;
 
 import java.util.List;
 
@@ -14,7 +12,6 @@ import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeInputList;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.DeoptimizingNode;
 import graalvm.compiler.nodes.FrameState;
@@ -35,12 +32,6 @@ import jdk.vm.ci.meta.Value;
 /**
  * Node for a {@linkplain ForeignCallDescriptor foreign} call.
  */
-@NodeInfo(nameTemplate = "ForeignCall#{p#descriptor/s}",
-          allowedUsageTypes = Memory,
-          cycles = CYCLES_2,
-          cyclesRationale = "Rough estimation of the call operation itself.",
-          size = SIZE_2,
-          sizeRationale = "Rough estimation of the call operation itself.")
 public class ForeignCallNode extends AbstractMemoryCheckpoint implements LIRLowerable, DeoptimizingNode.DeoptDuring, MemoryCheckpoint.Multi
 {
     public static final NodeClass<ForeignCallNode> TYPE = NodeClass.create(ForeignCallNode.class);

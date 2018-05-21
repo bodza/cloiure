@@ -1,15 +1,11 @@
 package graalvm.compiler.replacements.amd64;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
-
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.lir.amd64.AMD64ArithmeticLIRGeneratorTool;
 import graalvm.compiler.lir.gen.ArithmeticLIRGeneratorTool;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
@@ -24,7 +20,6 @@ import jdk.vm.ci.meta.JavaKind;
 /**
  * Count the number of leading zeros using the {@code lzcntq} or {@code lzcntl} instructions.
  */
-@NodeInfo(cycles = CYCLES_2, size = SIZE_1)
 public final class AMD64CountLeadingZerosNode extends UnaryNode implements ArithmeticLIRLowerable
 {
     public static final NodeClass<AMD64CountLeadingZerosNode> TYPE = NodeClass.create(AMD64CountLeadingZerosNode.class);

@@ -11,17 +11,17 @@ public class HotSpotAOTProfilingPlugin extends HotSpotProfilingPlugin
 {
     public static class Options
     {
-        // "Do profiling and callbacks to tiered runtime."
+        // Option "Do profiling and callbacks to tiered runtime."
         public static final OptionKey<Boolean> TieredAOT = new OptionKey<>(false);
-        // "Invocation notification frequency."
+        // Option "Invocation notification frequency."
         public static final OptionKey<Integer> TierAInvokeNotifyFreqLog = new OptionKey<>(13);
-        // "Inlinee invocation notification frequency (-1 means count, but do not notify)."
+        // Option "Inlinee invocation notification frequency (-1 means count, but do not notify)."
         public static final OptionKey<Integer> TierAInvokeInlineeNotifyFreqLog = new OptionKey<>(-1);
-        // "Invocation profile probability."
+        // Option "Invocation profile probability."
         public static final OptionKey<Integer> TierAInvokeProfileProbabilityLog = new OptionKey<>(8);
-        // "Backedge notification frequency."
+        // Option "Backedge notification frequency."
         public static final OptionKey<Integer> TierABackedgeNotifyFreqLog = new OptionKey<>(16);
-        // "Backedge profile probability."
+        // Option "Backedge profile probability."
         public static final OptionKey<Integer> TierABackedgeProfileProbabilityLog = new OptionKey<>(12);
     }
 

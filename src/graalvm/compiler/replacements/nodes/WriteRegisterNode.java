@@ -1,11 +1,7 @@
 package graalvm.compiler.replacements.nodes;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_2;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
-
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.ValueNode;
@@ -18,7 +14,6 @@ import jdk.vm.ci.meta.Value;
 /**
  * Changes the value of a specific register.
  */
-@NodeInfo(nameTemplate = "WriteRegister %{p#register}", cycles = CYCLES_2, size = SIZE_1)
 public final class WriteRegisterNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<WriteRegisterNode> TYPE = NodeClass.create(WriteRegisterNode.class);

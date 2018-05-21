@@ -1,7 +1,5 @@
 package graalvm.compiler.nodes.calc;
 
-import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_1;
-import static graalvm.compiler.nodeinfo.NodeSize.SIZE_2;
 import static graalvm.compiler.nodes.calc.CompareNode.createCompareNode;
 
 import graalvm.compiler.core.common.calc.CanonicalCondition;
@@ -12,7 +10,6 @@ import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.nodeinfo.InputType;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.LogicConstantNode;
 import graalvm.compiler.nodes.LogicNegationNode;
@@ -29,7 +26,6 @@ import jdk.vm.ci.meta.JavaConstant;
  * The {@code ConditionalNode} class represents a comparison that yields one of two (eagerly
  * evaluated) values.
  */
-@NodeInfo(cycles = CYCLES_1, size = SIZE_2)
 public final class ConditionalNode extends FloatingNode implements Canonicalizable, LIRLowerable
 {
     public static final NodeClass<ConditionalNode> TYPE = NodeClass.create(ConditionalNode.class);

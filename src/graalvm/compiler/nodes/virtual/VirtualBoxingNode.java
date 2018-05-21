@@ -1,7 +1,6 @@
 package graalvm.compiler.nodes.virtual;
 
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.FixedNode;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.extended.BoxNode;
@@ -10,7 +9,6 @@ import graalvm.compiler.nodes.spi.VirtualizerTool;
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
-@NodeInfo
 public class VirtualBoxingNode extends VirtualInstanceNode
 {
     public static final NodeClass<VirtualBoxingNode> TYPE = NodeClass.create(VirtualBoxingNode.class);

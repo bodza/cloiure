@@ -12,7 +12,7 @@ public abstract class BailoutAndRestartBackendException extends PermanentBailout
 {
     public static class Options
     {
-        // "Unlock backend restart feature."
+        // Option "Unlock backend restart feature."
         public static final OptionKey<Boolean> LIRUnlockBackendRestart = new OptionKey<>(false);
     }
 

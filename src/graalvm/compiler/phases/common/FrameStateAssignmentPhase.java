@@ -154,11 +154,4 @@ public class FrameStateAssignmentPhase extends Phase
         }
         return null;
     }
-
-    @Override
-    public boolean checkContract()
-    {
-        // TODO GR-1409
-        return false;
-    }
 }

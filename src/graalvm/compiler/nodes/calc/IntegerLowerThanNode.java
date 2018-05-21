@@ -6,7 +6,6 @@ import graalvm.compiler.core.common.calc.CanonicalCondition;
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.NodeInfo;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.LogicConstantNode;
 import graalvm.compiler.nodes.LogicNegationNode;
@@ -24,7 +23,6 @@ import jdk.vm.ci.meta.TriState;
  * Common super-class for "a < b" comparisons both {@linkplain IntegerLowerThanNode signed} and
  * {@linkplain IntegerBelowNode unsigned}.
  */
-@NodeInfo()
 public abstract class IntegerLowerThanNode extends CompareNode
 {
     public static final NodeClass<IntegerLowerThanNode> TYPE = NodeClass.create(IntegerLowerThanNode.class);

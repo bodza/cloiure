@@ -17,7 +17,7 @@ public class InliningPhase extends AbstractInliningPhase
 {
     public static class Options
     {
-        // "Unconditionally inline intrinsics."
+        // Option "Unconditionally inline intrinsics."
         public static final OptionKey<Boolean> AlwaysInlineIntrinsics = new OptionKey<>(false);
 
         /**
@@ -25,7 +25,7 @@ public class InliningPhase extends AbstractInliningPhase
          * the inlining call tree exploration can be wide enough to prevent inlining from completing
          * in reasonable time.
          */
-        // "Per-compilation method inlining exploration limit before giving up (use 0 to disable)."
+        // Option "Per-compilation method inlining exploration limit before giving up (use 0 to disable)."
         public static final OptionKey<Integer> MethodInlineBailoutLimit = new OptionKey<>(5000);
     }
 
@@ -54,12 +54,6 @@ public class InliningPhase extends AbstractInliningPhase
     public CanonicalizerPhase getCanonicalizer()
     {
         return canonicalizer;
-    }
-
-    @Override
-    public float codeSizeIncrease()
-    {
-        return 10_000f;
     }
 
     public void setMaxMethodsPerInlining(int max)
