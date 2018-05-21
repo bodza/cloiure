@@ -8,7 +8,10 @@
                    [org.openjdk.jol/jol-cli "0.9"]]
     :plugins [[lein-try "0.4.3"]]
 ;   :global-vars {*warn-on-reflection* true}
-    :jvm-opts ["-Xmx12g"]
+    :jvm-opts ["-Xmx12g"
+               "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.services=ALL-UNNAMED"
+               "-XX:+UnlockExperimentalVMOptions"
+               "-XX:+EnableJVMCI"]
     :javac-options ["-g"
                     "--add-modules=jdk.internal.vm.ci"
                     "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.amd64=ALL-UNNAMED"

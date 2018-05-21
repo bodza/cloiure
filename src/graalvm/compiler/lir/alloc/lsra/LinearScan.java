@@ -29,9 +29,7 @@ import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;
 import graalvm.compiler.lir.phases.AllocationPhase.AllocationContext;
 import graalvm.compiler.options.NestedBooleanOptionKey;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionValues;
 
 import jdk.vm.ci.code.Register;
@@ -51,7 +49,7 @@ public class LinearScan
 {
     public static class Options
     {
-        @Option(help = "Enable spill position optimization", type = OptionType.Debug)
+        // "Enable spill position optimization."
         public static final OptionKey<Boolean> LIROptLSRAOptimizeSpillPosition = new NestedBooleanOptionKey(LIROptimization, true);
     }
 

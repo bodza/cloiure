@@ -20,10 +20,6 @@ import graalvm.compiler.phases.tiers.LowTierContext;
 
 public class LowTier extends PhaseSuite<LowTierContext>
 {
-    static class Options
-    {
-    }
-
     public LowTier(OptionValues options)
     {
         CanonicalizerPhase canonicalizer = new CanonicalizerPhase();

@@ -1,10 +1,6 @@
 package graalvm.compiler.options;
 
-import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -137,7 +133,7 @@ public class OptionValues
             @Override
             public int compare(OptionKey<?> o1, OptionKey<?> o2)
             {
-                return o1.getName().compareTo(o2.getName());
+                return o1.toString().compareTo(o2.toString());
             }
         };
         SortedMap<OptionKey<?>, Object> sorted = new TreeMap<>(comparator);
@@ -147,106 +143,5 @@ public class OptionValues
             sorted.put(cursor.getKey(), decodeNull(cursor.getValue()));
         }
         return sorted.toString();
-    }
-
-    private static final int PROPERTY_LINE_WIDTH = 80;
-    private static final int PROPERTY_HELP_INDENT = 10;
-
-    /**
-     * Wraps some given text to one or more lines of a given maximum width.
-     *
-     * @param text text to wrap
-     * @param width maximum width of an output line, exception for words in {@code text} longer than
-     *            this value
-     * @return {@code text} broken into lines
-     */
-    private static List<String> wrap(String text, int width)
-    {
-        List<String> lines = new ArrayList<>();
-        if (text.length() > width)
-        {
-            String[] chunks = text.split("\\s+");
-            StringBuilder line = new StringBuilder();
-            for (String chunk : chunks)
-            {
-                if (line.length() + chunk.length() > width)
-                {
-                    lines.add(line.toString());
-                    line.setLength(0);
-                }
-                if (line.length() != 0)
-                {
-                    line.append(' ');
-                }
-                line.append(chunk);
-            }
-            if (line.length() != 0)
-            {
-                lines.add(line.toString());
-            }
-        }
-        else
-        {
-            lines.add(text);
-        }
-        return lines;
-    }
-
-    /**
-     * Prints a help message to {@code out} describing all options available via {@code loader}. The
-     * key/value for each option is separated by {@code :=} if the option has an entry in this
-     * object otherwise {@code =} is used as the separator.
-     */
-    public void printHelp(Iterable<OptionDescriptors> loader, PrintStream out, String namePrefix)
-    {
-        SortedMap<String, OptionDescriptor> sortedOptions = new TreeMap<>();
-        for (OptionDescriptors opts : loader)
-        {
-            for (OptionDescriptor desc : opts)
-            {
-                String name = desc.getName();
-                OptionDescriptor existing = sortedOptions.put(name, desc);
-            }
-        }
-        for (Map.Entry<String, OptionDescriptor> e : sortedOptions.entrySet())
-        {
-            OptionDescriptor desc = e.getValue();
-            Object value = desc.getOptionKey().getValue(this);
-            if (value instanceof String)
-            {
-                value = '"' + String.valueOf(value) + '"';
-            }
-
-            String name = namePrefix + e.getKey();
-            String assign = containsKey(desc.optionKey) ? ":=" : "=";
-            String typeName = desc.getOptionKey() instanceof EnumOptionKey ? "String" : desc.getOptionValueType().getSimpleName();
-            String linePrefix = String.format("%s %s %s ", name, assign, value);
-            int typeStartPos = PROPERTY_LINE_WIDTH - typeName.length();
-            int linePad = typeStartPos - linePrefix.length();
-            if (linePad > 0)
-            {
-                out.printf("%s%-" + linePad + "s[%s]%n", linePrefix, "", typeName);
-            }
-            else
-            {
-                out.printf("%s[%s]%n", linePrefix, typeName);
-            }
-
-            List<String> helpLines;
-            String help = desc.getHelp();
-            if (help.length() != 0)
-            {
-                helpLines = wrap(help, PROPERTY_LINE_WIDTH - PROPERTY_HELP_INDENT);
-                helpLines.addAll(desc.getExtraHelp());
-            }
-            else
-            {
-                helpLines = desc.getExtraHelp();
-            }
-            for (String line : helpLines)
-            {
-                out.printf("%" + PROPERTY_HELP_INDENT + "s%s%n", "", line);
-            }
-        }
     }
 }

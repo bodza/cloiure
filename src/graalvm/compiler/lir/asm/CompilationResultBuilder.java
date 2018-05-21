@@ -26,9 +26,7 @@ import graalvm.compiler.lir.LIRFrameState;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LabelRef;
 import graalvm.compiler.lir.framemap.FrameMap;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionValues;
 
 import jdk.vm.ci.code.CodeCacheProvider;
@@ -54,7 +52,7 @@ public class CompilationResultBuilder
 {
     public static class Options
     {
-        @Option(help = "Include the LIR as comments with the final assembly.", type = OptionType.Debug)
+        // "Include the LIR as comments with the final assembly."
         public static final OptionKey<Boolean> PrintLIRWithAssembly = new OptionKey<>(false);
     }
 

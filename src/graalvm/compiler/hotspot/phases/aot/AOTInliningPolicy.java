@@ -7,9 +7,7 @@ import java.util.Map;
 
 import graalvm.compiler.nodes.Invoke;
 import graalvm.compiler.nodes.spi.Replacements;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.common.inlining.info.InlineInfo;
 import graalvm.compiler.phases.common.inlining.policy.GreedyInliningPolicy;
@@ -22,11 +20,8 @@ public class AOTInliningPolicy extends GreedyInliningPolicy
 {
     public static class Options
     {
-        @Option(help = "", type = OptionType.Expert)
         public static final OptionKey<Double> AOTInliningDepthToSizeRate = new OptionKey<>(2.5);
-        @Option(help = "", type = OptionType.Expert)
         public static final OptionKey<Integer> AOTInliningSizeMaximum = new OptionKey<>(300);
-        @Option(help = "", type = OptionType.Expert)
         public static final OptionKey<Integer> AOTInliningSizeMinimum = new OptionKey<>(50);
     }
 

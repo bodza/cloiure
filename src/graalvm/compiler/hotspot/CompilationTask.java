@@ -194,21 +194,6 @@ public class CompilationTask
         return getRequest().getEntryBCI();
     }
 
-    /**
-     * @return the compilation id plus a trailing '%' if the compilation is an OSR
-     */
-    public String getIdString()
-    {
-        if (getEntryBCI() != JVMCICompiler.INVOCATION_ENTRY_BCI)
-        {
-            return getId() + "%";
-        }
-        else
-        {
-            return Integer.toString(getId());
-        }
-    }
-
     public HotSpotInstalledCode getInstalledCode()
     {
         return installedCode;

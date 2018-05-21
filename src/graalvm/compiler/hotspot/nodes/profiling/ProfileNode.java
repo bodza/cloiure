@@ -18,9 +18,7 @@ import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
@@ -29,7 +27,7 @@ public abstract class ProfileNode extends DeoptimizingFixedWithNextNode implemen
 {
     public static class Options
     {
-        @Option(help = "Control probabilistic profiling on AMD64", type = OptionType.Expert)
+        // "Control probabilistic profiling on AMD64."
         public static final OptionKey<Boolean> ProbabilisticProfiling = new OptionKey<>(true);
     }
 

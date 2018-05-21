@@ -35,7 +35,7 @@ public class EnumOptionKey<T extends Enum<T>> extends OptionKey<T>
         }
         catch (IllegalArgumentException e)
         {
-            throw new IllegalArgumentException("\"" + name + "\" is not a valid option for " + getName() + ". Valid values are " + getAllValues());
+            throw new IllegalArgumentException("\"" + name + "\" is not a valid option for " + this + ". Valid values are " + getAllValues());
         }
     }
 

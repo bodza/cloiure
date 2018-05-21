@@ -55,7 +55,6 @@ import graalvm.compiler.nodes.memory.address.OffsetAddressNode;
 import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.nodes.type.NarrowOopStamp;
 import graalvm.compiler.options.OptionValues;
-import graalvm.compiler.replacements.Log;
 import graalvm.compiler.replacements.SnippetCounter;
 import graalvm.compiler.replacements.SnippetCounter.Group;
 import graalvm.compiler.replacements.SnippetTemplate.AbstractTemplates;
@@ -163,16 +162,6 @@ public class WriteBarrierSnippets implements Snippets
         Pointer previousOop = Word.objectToTrackedPointer(fixedExpectedObject);
         byte markingValue = thread.readByte(g1SATBQueueMarkingOffset(INJECTED_VMCONFIG));
         int gcCycle = 0;
-        if (trace)
-        {
-            Pointer gcTotalCollectionsAddress = WordFactory.pointer(HotSpotReplacementsUtil.gcTotalCollectionsAddress(INJECTED_VMCONFIG));
-            gcCycle = (int) gcTotalCollectionsAddress.readLong(0);
-            log(trace, "[%d] G1-Pre Thread %p Object %p\n", gcCycle, thread.rawValue(), Word.objectToTrackedPointer(object).rawValue());
-            log(trace, "[%d] G1-Pre Thread %p Expected Object %p\n", gcCycle, thread.rawValue(), Word.objectToTrackedPointer(fixedExpectedObject).rawValue());
-            log(trace, "[%d] G1-Pre Thread %p Field %p\n", gcCycle, thread.rawValue(), field.rawValue());
-            log(trace, "[%d] G1-Pre Thread %p Marking %d\n", gcCycle, thread.rawValue(), markingValue);
-            log(trace, "[%d] G1-Pre Thread %p DoLoad %d\n", gcCycle, thread.rawValue(), doLoad ? 1L : 0L);
-        }
         counters.g1AttemptedPreWriteBarrierCounter.inc();
         // If the concurrent marker is enabled, the barrier is issued.
         if (probability(NOT_FREQUENT_PROBABILITY, markingValue != (byte) 0))
@@ -182,11 +171,6 @@ public class WriteBarrierSnippets implements Snippets
             if (probability(LIKELY_PROBABILITY, doLoad))
             {
                 previousOop = Word.objectToTrackedPointer(field.readObject(0, BarrierType.NONE));
-                if (trace)
-                {
-                    log(trace, "[%d] G1-Pre Thread %p Previous Object %p\n ", gcCycle, thread.rawValue(), previousOop.rawValue());
-                    verifyOop(previousOop.toObject());
-                }
             }
             counters.g1EffectivePreWriteBarrierCounter.inc();
             // If the previous value is null the barrier should not be issued.
@@ -232,13 +216,6 @@ public class WriteBarrierSnippets implements Snippets
             oop = Word.objectToTrackedPointer(object);
         }
         int gcCycle = 0;
-        if (trace)
-        {
-            Pointer gcTotalCollectionsAddress = WordFactory.pointer(HotSpotReplacementsUtil.gcTotalCollectionsAddress(INJECTED_VMCONFIG));
-            gcCycle = (int) gcTotalCollectionsAddress.readLong(0);
-            log(trace, "[%d] G1-Post Thread: %p Object: %p\n", gcCycle, thread.rawValue(), Word.objectToTrackedPointer(object).rawValue());
-            log(trace, "[%d] G1-Post Thread: %p Field: %p\n", gcCycle, thread.rawValue(), oop.rawValue());
-        }
         Pointer writtenValue = Word.objectToTrackedPointer(fixedValue);
         // The result of the xor reveals whether the installed pointer crosses heap regions.
         // In case it does the write barrier has to be issued.
@@ -278,7 +255,6 @@ public class WriteBarrierSnippets implements Snippets
                     byte cardByteReload = cardAddress.readByte(0, GC_CARD_LOCATION);
                     if (probability(NOT_FREQUENT_PROBABILITY, cardByteReload != dirtyCardValue(INJECTED_VMCONFIG)))
                     {
-                        log(trace, "[%d] G1-Post Thread: %p Card: %p \n", gcCycle, thread.rawValue(), WordFactory.unsigned((int) cardByte).rawValue());
                         cardAddress.writeByte(0, (byte) 0, GC_CARD_LOCATION);
                         counters.g1ExecutedPostWriteBarrierCounter.inc();
 
@@ -592,33 +568,6 @@ public class WriteBarrierSnippets implements Snippets
         }
     }
 
-    /**
-     * Log method of debugging purposes.
-     */
-    public static void log(boolean enabled, String format, long value)
-    {
-        if (enabled)
-        {
-            Log.printf(format, value);
-        }
-    }
-
-    public static void log(boolean enabled, String format, long value1, long value2)
-    {
-        if (enabled)
-        {
-            Log.printf(format, value1, value2);
-        }
-    }
-
-    public static void log(boolean enabled, String format, long value1, long value2, long value3)
-    {
-        if (enabled)
-        {
-            Log.printf(format, value1, value2, value3);
-        }
-    }
-
     public static boolean traceBarrier(StructuredGraph graph)
     {
         return GraalOptions.GCDebugStartCycle.getValue(graph.getOptions()) > 0 && ((int) ((Pointer) WordFactory.pointer(HotSpotReplacementsUtil.gcTotalCollectionsAddress(INJECTED_VMCONFIG))).readLong(0) > GraalOptions.GCDebugStartCycle.getValue(graph.getOptions()));
@@ -634,7 +583,6 @@ public class WriteBarrierSnippets implements Snippets
     {
         if (verifyOops(INJECTED_VMCONFIG) && child != null && !validateOop(VALIDATE_OBJECT, parent, child))
         {
-            log(true, "Verification ERROR, Parent: %p Child: %p\n", Word.objectToTrackedPointer(parent).rawValue(), Word.objectToTrackedPointer(child).rawValue());
             VMErrorNode.vmError("Verification ERROR, Parent: %p\n", Word.objectToTrackedPointer(parent).rawValue());
         }
     }

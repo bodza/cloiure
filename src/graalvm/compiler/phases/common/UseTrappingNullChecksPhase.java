@@ -26,9 +26,7 @@ import graalvm.compiler.nodes.extended.NullCheckNode;
 import graalvm.compiler.nodes.memory.FixedAccessNode;
 import graalvm.compiler.nodes.memory.address.AddressNode;
 import graalvm.compiler.nodes.util.GraphUtil;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 import graalvm.compiler.phases.BasePhase;
 import graalvm.compiler.phases.tiers.LowTierContext;
 
@@ -40,7 +38,7 @@ public class UseTrappingNullChecksPhase extends BasePhase<LowTierContext>
 {
     public static class Options
     {
-        @Option(help = "Use traps for null checks instead of explicit null-checks", type = OptionType.Expert)
+        // "Use traps for null checks instead of explicit null-checks."
         public static final OptionKey<Boolean> UseTrappingNullChecks = new OptionKey<>(true);
     }
 

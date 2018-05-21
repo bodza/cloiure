@@ -11,7 +11,6 @@ import graalvm.compiler.core.target.Backend;
 import graalvm.compiler.graph.Node.ConstantNodeParameter;
 import graalvm.compiler.graph.Node.NodeIntrinsic;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
-import graalvm.compiler.hotspot.nodes.VMErrorNode;
 import graalvm.compiler.hotspot.nodes.aot.ResolveConstantStubCall;
 import graalvm.compiler.hotspot.replacements.AESCryptSubstitutions;
 import graalvm.compiler.hotspot.replacements.BigIntegerSubstitutions;
@@ -35,7 +34,6 @@ import graalvm.compiler.lir.ValueConsumer;
 import graalvm.compiler.lir.framemap.FrameMap;
 import graalvm.compiler.nodes.UnwindNode;
 import graalvm.compiler.nodes.extended.ForeignCallNode;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.tiers.SuitesProvider;
@@ -66,7 +64,7 @@ public abstract class HotSpotBackend extends Backend implements FrameMap.Referen
 {
     public static class Options
     {
-        @Option(help = "Use Graal arithmetic stubs instead of HotSpot stubs where possible")
+        // "Use Graal arithmetic stubs instead of HotSpot stubs where possible."
         public static final OptionKey<Boolean> GraalArithmeticStubs = new OptionKey<>(false); // GR-8276
     }
 

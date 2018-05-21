@@ -1,6 +1,5 @@
 package graalvm.compiler.nodes.calc;
 
-import java.io.Serializable;
 import java.util.function.Function;
 
 import graalvm.compiler.core.common.type.ArithmeticOpTable;
@@ -20,7 +19,7 @@ public abstract class UnaryArithmeticNode<OP> extends UnaryNode implements Arith
 {
     @SuppressWarnings("rawtypes") public static final NodeClass<UnaryArithmeticNode> TYPE = NodeClass.create(UnaryArithmeticNode.class);
 
-    protected interface SerializableUnaryFunction<T> extends Function<ArithmeticOpTable, UnaryOp<T>>, Serializable
+    protected interface SerializableUnaryFunction<T> extends Function<ArithmeticOpTable, UnaryOp<T>>
     {
     }
 

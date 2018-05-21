@@ -17,9 +17,7 @@ import graalvm.compiler.loop.phases.LoopFullUnrollPhase;
 import graalvm.compiler.loop.phases.LoopPeelingPhase;
 import graalvm.compiler.loop.phases.LoopUnswitchingPhase;
 import graalvm.compiler.nodes.spi.LoweringTool;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.PhaseSuite;
 import graalvm.compiler.phases.common.CanonicalizerPhase;
@@ -38,7 +36,7 @@ public class HighTier extends PhaseSuite<HighTierContext>
 {
     public static class Options
     {
-        @Option(help = "Enable inlining", type = OptionType.Expert)
+        // "Enable inlining."
         public static final OptionKey<Boolean> Inline = new OptionKey<>(true);
     }
 

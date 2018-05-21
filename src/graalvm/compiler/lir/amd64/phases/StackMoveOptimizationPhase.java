@@ -15,8 +15,6 @@ import graalvm.compiler.lir.amd64.AMD64Move.AMD64StackMove;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.phases.PostAllocationOptimizationPhase;
 import graalvm.compiler.options.NestedBooleanOptionKey;
-import graalvm.compiler.options.Option;
-import graalvm.compiler.options.OptionType;
 
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.TargetDescription;
@@ -34,7 +32,6 @@ public class StackMoveOptimizationPhase extends PostAllocationOptimizationPhase
 {
     public static class Options
     {
-        @Option(help = "", type = OptionType.Debug)
         public static final NestedBooleanOptionKey LIROptStackMoveOptimizer = new NestedBooleanOptionKey(LIROptimization, true);
     }
 

@@ -16,9 +16,7 @@ import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.IntegerDivRemNode;
 import graalvm.compiler.nodes.cfg.Block;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionValues;
 
 import jdk.vm.ci.amd64.AMD64;
@@ -29,7 +27,7 @@ public abstract class AMD64NodeLIRBuilder extends NodeLIRBuilder
 {
     public static class Options
     {
-        @Option(help = "AMD64: Emit lfence instructions at the beginning of basic blocks", type = OptionType.Expert)
+        // "AMD64: Emit lfence instructions at the beginning of basic blocks."
         public static final OptionKey<Boolean> MitigateSpeculativeExecutionAttacks = new OptionKey<>(false);
     }
 

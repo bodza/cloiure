@@ -5,16 +5,14 @@ import graalvm.compiler.graph.NodeFlood;
 import graalvm.compiler.nodes.AbstractEndNode;
 import graalvm.compiler.nodes.GuardNode;
 import graalvm.compiler.nodes.StructuredGraph;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 import graalvm.compiler.phases.Phase;
 
 public class DeadCodeEliminationPhase extends Phase
 {
     public static class Options
     {
-        @Option(help = "Disable optional dead code eliminations", type = OptionType.Debug)
+        // "Disable optional dead code eliminations."
         public static final OptionKey<Boolean> ReduceDCE = new OptionKey<>(true);
     }
 

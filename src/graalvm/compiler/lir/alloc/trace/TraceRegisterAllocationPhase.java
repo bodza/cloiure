@@ -10,9 +10,7 @@ import graalvm.compiler.lir.alloc.trace.TraceAllocationPhase.TraceAllocationCont
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;
 import graalvm.compiler.lir.ssa.SSAUtil;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 
 import jdk.vm.ci.code.TargetDescription;
 import jdk.vm.ci.meta.AllocatableValue;
@@ -26,13 +24,13 @@ public final class TraceRegisterAllocationPhase extends RegisterAllocationPhase
 {
     public static class Options
     {
-        @Option(help = "Use inter-trace register hints.", type = OptionType.Debug)
+        // "Use inter-trace register hints."
         public static final OptionKey<Boolean> TraceRAuseInterTraceHints = new OptionKey<>(true);
-        @Option(help = "Share information about spilled values to other traces.", type = OptionType.Debug)
+        // "Share information about spilled values to other traces."
         public static final OptionKey<Boolean> TraceRAshareSpillInformation = new OptionKey<>(true);
-        @Option(help = "Reuse spill slots for global move resolution cycle breaking.", type = OptionType.Debug)
+        // "Reuse spill slots for global move resolution cycle breaking."
         public static final OptionKey<Boolean> TraceRAreuseStackSlotsForMoveResolutionCycleBreaking = new OptionKey<>(true);
-        @Option(help = "Cache stack slots globally (i.e. a variable always gets the same slot in every trace).", type = OptionType.Debug)
+        // "Cache stack slots globally (i.e. a variable always gets the same slot in every trace)."
         public static final OptionKey<Boolean> TraceRACacheStackSlots = new OptionKey<>(true);
     }
 

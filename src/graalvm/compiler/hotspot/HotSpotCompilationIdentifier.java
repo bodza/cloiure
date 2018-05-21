@@ -8,8 +8,7 @@ import jdk.vm.ci.hotspot.HotSpotCompilationRequest;
 import jdk.vm.ci.runtime.JVMCICompiler;
 
 /**
- * {@link CompilationIdentifier} for a {@linkplain HotSpotCompilationRequest hotspot compilation
- * request}.
+ * {@link CompilationIdentifier} for a {@linkplain HotSpotCompilationRequest hotspot compilation request}.
  */
 public class HotSpotCompilationIdentifier implements CompilationRequestIdentifier
 {

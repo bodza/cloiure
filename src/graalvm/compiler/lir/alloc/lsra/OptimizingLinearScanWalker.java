@@ -8,9 +8,7 @@ import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.alloc.lsra.Interval.RegisterBinding;
 import graalvm.compiler.lir.alloc.lsra.Interval.RegisterPriority;
 import graalvm.compiler.lir.alloc.lsra.Interval.State;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.meta.AllocatableValue;
@@ -19,9 +17,9 @@ public class OptimizingLinearScanWalker extends LinearScanWalker
 {
     public static class Options
     {
-        @Option(help = "Enable LSRA optimization", type = OptionType.Debug)
+        // "Enable LSRA optimization."
         public static final OptionKey<Boolean> LSRAOptimization = new OptionKey<>(false);
-        @Option(help = "LSRA optimization: Only split but do not reassign", type = OptionType.Debug)
+        // "LSRA optimization: Only split but do not reassign."
         public static final OptionKey<Boolean> LSRAOptSplitOnly = new OptionKey<>(false);
     }
 

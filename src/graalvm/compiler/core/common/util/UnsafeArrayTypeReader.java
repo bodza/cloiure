@@ -1,7 +1,6 @@
 package graalvm.compiler.core.common.util;
 
 import graalvm.util.UnsafeAccess;
-import sun.misc.Unsafe;
 
 /**
  * Provides low-level read access from a byte[] array for signed and unsigned values of size 1, 2,
@@ -75,7 +74,7 @@ public abstract class UnsafeArrayTypeReader implements TypeReader
 
     protected static long readOffset(byte[] data, long byteIndex, int numBytes)
     {
-        return byteIndex + Unsafe.ARRAY_BYTE_BASE_OFFSET;
+        return byteIndex + UnsafeAccess.UNSAFE.ARRAY_BYTE_BASE_OFFSET;
     }
 
     public static UnsafeArrayTypeReader create(byte[] data, long byteIndex, boolean supportsUnalignedMemoryAccess)

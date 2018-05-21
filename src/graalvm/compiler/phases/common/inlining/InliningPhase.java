@@ -5,8 +5,6 @@ import java.util.Map;
 
 import graalvm.compiler.nodes.Invoke;
 import graalvm.compiler.nodes.StructuredGraph;
-import graalvm.compiler.options.Option;
-import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionKey;
 import graalvm.compiler.phases.common.AbstractInliningPhase;
 import graalvm.compiler.phases.common.CanonicalizerPhase;
@@ -19,7 +17,7 @@ public class InliningPhase extends AbstractInliningPhase
 {
     public static class Options
     {
-        @Option(help = "Unconditionally inline intrinsics", type = OptionType.Debug)
+        // "Unconditionally inline intrinsics."
         public static final OptionKey<Boolean> AlwaysInlineIntrinsics = new OptionKey<>(false);
 
         /**
@@ -27,7 +25,7 @@ public class InliningPhase extends AbstractInliningPhase
          * the inlining call tree exploration can be wide enough to prevent inlining from completing
          * in reasonable time.
          */
-        @Option(help = "Per-compilation method inlining exploration limit before giving up (use 0 to disable)", type = OptionType.Debug)
+        // "Per-compilation method inlining exploration limit before giving up (use 0 to disable)."
         public static final OptionKey<Integer> MethodInlineBailoutLimit = new OptionKey<>(5000);
     }
 

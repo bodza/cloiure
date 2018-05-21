@@ -13,9 +13,7 @@ import graalvm.compiler.lir.alloc.trace.lsra.TraceLinearScanPhase;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;
 import graalvm.compiler.options.EnumOptionKey;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionValues;
 
 import jdk.vm.ci.code.TargetDescription;
@@ -46,19 +44,19 @@ public final class DefaultTraceRegisterAllocationPolicy
 
     public static class Options
     {
-        @Option(help = "Use special allocator for trivial blocks.", type = OptionType.Debug)
+        // "Use special allocator for trivial blocks."
         public static final OptionKey<Boolean> TraceRAtrivialBlockAllocator = new OptionKey<>(true);
-        @Option(help = "Use BottomUp if there is only one block with at most this number of instructions", type = OptionType.Debug)
+        // "Use BottomUp if there is only one block with at most this number of instructions."
         public static final OptionKey<Integer> TraceRAalmostTrivialSize = new OptionKey<>(2);
-        @Option(help = "Use BottomUp for traces with low number of variables at block boundaries", type = OptionType.Debug)
+        // "Use BottomUp for traces with low number of variables at block boundaries."
         public static final OptionKey<Integer> TraceRAnumVariables = new OptionKey<>(null);
-        @Option(help = "Use LSRA / BottomUp ratio", type = OptionType.Debug)
+        // "Use LSRA / BottomUp ratio."
         public static final OptionKey<Double> TraceRAbottomUpRatio = new OptionKey<>(0.0);
-        @Option(help = "Probability Threshold", type = OptionType.Debug)
+        // "Probability Threshold."
         public static final OptionKey<Double> TraceRAprobalilityThreshold = new OptionKey<>(0.8);
-        @Option(help = "Sum Probability Budget Threshold", type = OptionType.Debug)
+        // "Sum Probability Budget Threshold."
         public static final OptionKey<Double> TraceRAsumBudget = new OptionKey<>(0.5);
-        @Option(help = "TraceRA allocation policy to use.", type = OptionType.Debug)
+        // "TraceRA allocation policy to use."
         public static final EnumOptionKey<TraceRAPolicies> TraceRAPolicy = new EnumOptionKey<>(TraceRAPolicies.Default);
     }
 

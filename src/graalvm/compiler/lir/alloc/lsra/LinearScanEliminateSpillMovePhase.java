@@ -14,9 +14,7 @@ import graalvm.compiler.lir.alloc.lsra.LinearScan.IntervalPredicate;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.phases.AllocationPhase.AllocationContext;
 import graalvm.compiler.options.NestedBooleanOptionKey;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 
 import jdk.vm.ci.code.TargetDescription;
 import jdk.vm.ci.meta.AllocatableValue;
@@ -25,7 +23,7 @@ public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
 {
     public static class Options
     {
-        @Option(help = "Enable spill move elimination.", type = OptionType.Debug)
+        // "Enable spill move elimination."
         public static final OptionKey<Boolean> LIROptLSRAEliminateSpillMoves = new NestedBooleanOptionKey(LIROptimization, true);
     }
 

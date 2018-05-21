@@ -29,9 +29,7 @@ import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;
 import graalvm.compiler.lir.phases.LIRPhase;
 import graalvm.compiler.options.NestedBooleanOptionKey;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionValues;
 
 import jdk.vm.ci.code.Register;
@@ -54,7 +52,7 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
 {
     public static class Options
     {
-        @Option(help = "Enable spill position optimization", type = OptionType.Debug)
+        // "Enable spill position optimization."
         public static final OptionKey<Boolean> LIROptTraceRAEliminateSpillMoves = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
     }
 

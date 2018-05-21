@@ -8,7 +8,6 @@ import static graalvm.compiler.core.common.util.TypeConversion.asU2;
 import static graalvm.compiler.core.common.util.TypeConversion.asU4;
 
 import graalvm.util.UnsafeAccess;
-import sun.misc.Unsafe;
 
 /**
  * Provides low-level sequential write access to a byte[] array for signed and unsigned values of
@@ -114,7 +113,7 @@ public abstract class UnsafeArrayTypeWriter implements TypeWriter
             writeChunk = newChunk;
         }
 
-        long result = writeChunk.size + Unsafe.ARRAY_BYTE_BASE_OFFSET;
+        long result = writeChunk.size + UnsafeAccess.UNSAFE.ARRAY_BYTE_BASE_OFFSET;
 
         totalSize += writeBytes;
         writeChunk.size += writeBytes;

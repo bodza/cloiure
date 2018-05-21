@@ -9,9 +9,7 @@ import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.StructuredGraph.ScheduleResult;
 import graalvm.compiler.nodes.cfg.ControlFlowGraph;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.BasePhase;
 import graalvm.compiler.phases.common.CanonicalizerPhase;
@@ -21,7 +19,6 @@ public class PartialEscapePhase extends EffectsPhase<PhaseContext>
 {
     static class Options
     {
-        @Option(help = "", type = OptionType.Debug)
         public static final OptionKey<Boolean> OptEarlyReadElimination = new OptionKey<>(true);
     }
 

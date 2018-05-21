@@ -24,9 +24,7 @@ import graalvm.compiler.nodes.cfg.Block;
 import graalvm.compiler.nodes.cfg.ControlFlowGraph;
 import graalvm.compiler.nodes.debug.ControlFlowAnchorNode;
 import graalvm.compiler.nodes.java.TypeSwitchNode;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionValues;
 
 import jdk.vm.ci.meta.MetaAccessProvider;
@@ -35,16 +33,16 @@ public class DefaultLoopPolicies implements LoopPolicies
 {
     public static class Options
     {
-        @Option(help = "", type = OptionType.Expert) public static final OptionKey<Integer> LoopUnswitchMaxIncrease = new OptionKey<>(500);
-        @Option(help = "", type = OptionType.Expert) public static final OptionKey<Integer> LoopUnswitchTrivial = new OptionKey<>(10);
-        @Option(help = "", type = OptionType.Expert) public static final OptionKey<Double> LoopUnswitchFrequencyBoost = new OptionKey<>(10.0);
+        public static final OptionKey<Integer> LoopUnswitchMaxIncrease = new OptionKey<>(500);
+        public static final OptionKey<Integer> LoopUnswitchTrivial = new OptionKey<>(10);
+        public static final OptionKey<Double> LoopUnswitchFrequencyBoost = new OptionKey<>(10.0);
 
-        @Option(help = "", type = OptionType.Expert) public static final OptionKey<Integer> FullUnrollMaxNodes = new OptionKey<>(300);
-        @Option(help = "", type = OptionType.Expert) public static final OptionKey<Integer> FullUnrollMaxIterations = new OptionKey<>(600);
-        @Option(help = "", type = OptionType.Expert) public static final OptionKey<Integer> ExactFullUnrollMaxNodes = new OptionKey<>(1200);
-        @Option(help = "", type = OptionType.Expert) public static final OptionKey<Integer> ExactPartialUnrollMaxNodes = new OptionKey<>(200);
+        public static final OptionKey<Integer> FullUnrollMaxNodes = new OptionKey<>(300);
+        public static final OptionKey<Integer> FullUnrollMaxIterations = new OptionKey<>(600);
+        public static final OptionKey<Integer> ExactFullUnrollMaxNodes = new OptionKey<>(1200);
+        public static final OptionKey<Integer> ExactPartialUnrollMaxNodes = new OptionKey<>(200);
 
-        @Option(help = "", type = OptionType.Expert) public static final OptionKey<Integer> UnrollMaxIterations = new OptionKey<>(16);
+        public static final OptionKey<Integer> UnrollMaxIterations = new OptionKey<>(16);
     }
 
     @Override

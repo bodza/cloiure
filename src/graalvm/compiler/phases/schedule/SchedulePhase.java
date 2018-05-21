@@ -5,10 +5,8 @@ import static graalvm.compiler.core.common.GraalOptions.GuardPriorities;
 import static graalvm.compiler.core.common.GraalOptions.OptScheduleOutOfLoops;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.EnumMap;
-import java.util.Formatter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
@@ -1258,65 +1256,6 @@ public final class SchedulePhase extends Phase
         private static boolean isFixedEnd(FixedNode endNode)
         {
             return endNode instanceof ControlSplitNode || endNode instanceof ControlSinkNode || endNode instanceof AbstractEndNode;
-        }
-
-        public String printScheduleHelper(String desc)
-        {
-            Formatter buf = new Formatter();
-            buf.format("=== %s / %s ===%n", getCFG().getStartBlock().getBeginNode().graph(), desc);
-            for (Block b : getCFG().getBlocks())
-            {
-                buf.format("==== b: %s (loopDepth: %s). ", b, b.getLoopDepth());
-                buf.format("dom: %s. ", b.getDominator());
-                buf.format("preds: %s. ", Arrays.toString(b.getPredecessors()));
-                buf.format("succs: %s ====%n", Arrays.toString(b.getSuccessors()));
-
-                if (blockToNodesMap.get(b) != null)
-                {
-                    for (Node n : nodesFor(b))
-                    {
-                        printNode(n);
-                    }
-                }
-                else
-                {
-                    for (Node n : b.getNodes())
-                    {
-                        printNode(n);
-                    }
-                }
-            }
-            buf.format("%n");
-            return buf.toString();
-        }
-
-        private static void printNode(Node n)
-        {
-            Formatter buf = new Formatter();
-            buf.format("%s", n);
-            if (n instanceof MemoryCheckpoint.Single)
-            {
-                buf.format(" // kills %s", ((MemoryCheckpoint.Single) n).getLocationIdentity());
-            }
-            else if (n instanceof MemoryCheckpoint.Multi)
-            {
-                buf.format(" // kills ");
-                for (LocationIdentity locid : ((MemoryCheckpoint.Multi) n).getLocationIdentities())
-                {
-                    buf.format("%s, ", locid);
-                }
-            }
-            else if (n instanceof FloatingReadNode)
-            {
-                FloatingReadNode frn = (FloatingReadNode) n;
-                buf.format(" // from %s", frn.getLocationIdentity());
-                buf.format(", lastAccess: %s", frn.getLastLocationAccess());
-                buf.format(", address: %s", frn.getAddress());
-            }
-            else if (n instanceof GuardNode)
-            {
-                buf.format(", anchor: %s", ((GuardNode) n).getAnchor());
-            }
         }
 
         public ControlFlowGraph getCFG()

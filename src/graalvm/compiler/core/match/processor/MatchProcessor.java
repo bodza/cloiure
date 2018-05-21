@@ -63,8 +63,7 @@ import graalvm.compiler.nodes.ValueNode;
  *     }
  * </pre>
  */
-@SupportedAnnotationTypes({"graalvm.compiler.core.match.MatchRule", "graalvm.compiler.core.match.MatchRules", "graalvm.compiler.core.match.MatchableNode",
-                "graalvm.compiler.core.match.MatchableNodes"})
+@SupportedAnnotationTypes({"graalvm.compiler.core.match.MatchRule", "graalvm.compiler.core.match.MatchRules", "graalvm.compiler.core.match.MatchableNode", "graalvm.compiler.core.match.MatchableNodes"})
 public class MatchProcessor extends AbstractProcessor
 {
     public MatchProcessor()
@@ -263,32 +262,6 @@ public class MatchProcessor extends AbstractProcessor
         {
             return capturedNames;
         }
-    }
-
-    private PrintWriter log;
-
-    /**
-     * Logging facility for debugging the annotation processor.
-     */
-
-    private PrintWriter getLog()
-    {
-        if (log == null)
-        {
-            try
-            {
-                // Create the log file within the generated source directory so it's easy to find.
-                // /tmp isn't platform independent and java.io.tmpdir can map anywhere, particularly
-                // on the mac.
-                FileObject file = processingEnv.getFiler().createResource(StandardLocation.SOURCE_OUTPUT, "", getClass().getSimpleName() + "log");
-                log = new PrintWriter(new FileWriter(file.toUri().getPath(), true));
-            }
-            catch (IOException e)
-            {
-                // Do nothing
-            }
-        }
-        return log;
     }
 
     /**

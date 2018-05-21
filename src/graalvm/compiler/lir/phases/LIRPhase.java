@@ -2,9 +2,7 @@ package graalvm.compiler.lir.phases;
 
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 
 import jdk.vm.ci.code.TargetDescription;
 
@@ -16,7 +14,7 @@ public abstract class LIRPhase<C>
 {
     public static class Options
     {
-        @Option(help = "Enable LIR level optimiztations.", type = OptionType.Debug)
+        // "Enable LIR level optimiztations."
         public static final OptionKey<Boolean> LIROptimization = new OptionKey<>(true);
     }
 

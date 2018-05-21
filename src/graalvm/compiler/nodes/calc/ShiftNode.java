@@ -3,7 +3,6 @@ package graalvm.compiler.nodes.calc;
 import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_1;
 import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
 
-import java.io.Serializable;
 import java.util.function.Function;
 
 import graalvm.compiler.core.common.type.ArithmeticOpTable;
@@ -29,7 +28,7 @@ public abstract class ShiftNode<OP> extends BinaryNode implements ArithmeticOper
 {
     @SuppressWarnings("rawtypes") public static final NodeClass<ShiftNode> TYPE = NodeClass.create(ShiftNode.class);
 
-    protected interface SerializableShiftFunction<T> extends Function<ArithmeticOpTable, ShiftOp<T>>, Serializable
+    protected interface SerializableShiftFunction<T> extends Function<ArithmeticOpTable, ShiftOp<T>>
     {
     }
 

@@ -3,11 +3,6 @@ package graalvm.compiler.hotspot;
 import static graalvm.compiler.core.common.GraalOptions.OptAssumptions;
 import static graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext.CompilationContext.ROOT_COMPILATION;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.util.Formattable;
-import java.util.Formatter;
-
 import graalvm.compiler.api.runtime.GraalJVMCICompiler;
 import graalvm.compiler.bytecode.Bytecode;
 import graalvm.compiler.code.CompilationResult;
@@ -209,40 +204,5 @@ public class HotSpotGraalCompiler implements GraalJVMCICompiler
     static String str(JavaMethod method)
     {
         return method.format("%H.%n(%p)");
-    }
-
-    /**
-     * Wraps {@code obj} in a {@link Formatter} that standardizes formatting for certain objects.
-     */
-    static Formattable fmt(Object obj)
-    {
-        return new Formattable()
-        {
-            @Override
-            public void formatTo(Formatter buf, int flags, int width, int precision)
-            {
-                if (obj instanceof Throwable)
-                {
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    ((Throwable) obj).printStackTrace(new PrintStream(baos));
-                    buf.format("%s", baos.toString());
-                }
-                else if (obj instanceof StackTraceElement[])
-                {
-                    for (StackTraceElement e : (StackTraceElement[]) obj)
-                    {
-                        buf.format("\t%s%n", e);
-                    }
-                }
-                else if (obj instanceof JavaMethod)
-                {
-                    buf.format("%s", str((JavaMethod) obj));
-                }
-                else
-                {
-                    buf.format("%s", obj);
-                }
-            }
-        };
     }
 }

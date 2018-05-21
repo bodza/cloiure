@@ -8,21 +8,15 @@ import graalvm.compiler.lir.NullCheckOptimizer;
 import graalvm.compiler.lir.RedundantMoveElimination;
 import graalvm.compiler.lir.phases.PostAllocationOptimizationPhase.PostAllocationOptimizationContext;
 import graalvm.compiler.options.NestedBooleanOptionKey;
-import graalvm.compiler.options.Option;
-import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionValues;
 
 public class PostAllocationOptimizationStage extends LIRPhaseSuite<PostAllocationOptimizationContext>
 {
     public static class Options
     {
-        @Option(help = "", type = OptionType.Debug)
         public static final NestedBooleanOptionKey LIROptEdgeMoveOptimizer = new NestedBooleanOptionKey(LIROptimization, true);
-        @Option(help = "", type = OptionType.Debug)
         public static final NestedBooleanOptionKey LIROptControlFlowOptimizer = new NestedBooleanOptionKey(LIROptimization, true);
-        @Option(help = "", type = OptionType.Debug)
         public static final NestedBooleanOptionKey LIROptRedundantMoveElimination = new NestedBooleanOptionKey(LIROptimization, true);
-        @Option(help = "", type = OptionType.Debug)
         public static final NestedBooleanOptionKey LIROptNullCheckOptimizer = new NestedBooleanOptionKey(LIROptimization, true);
     }
 

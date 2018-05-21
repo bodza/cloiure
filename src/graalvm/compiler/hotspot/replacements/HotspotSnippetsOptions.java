@@ -1,37 +1,30 @@
 package graalvm.compiler.hotspot.replacements;
 
-import graalvm.compiler.options.Option;
-import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionKey;
 
 /**
  * Options related to HotSpot snippets in this package.
- *
- * Note: This must be a top level class to work around for
- * <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=477597">Eclipse bug 477597</a>.
  */
 public class HotspotSnippetsOptions
 {
-    @Option(help = "If the probability that a type check will hit one the profiled types (up to " +
-                   "TypeCheckMaxHints) is below this value, the type check will be compiled without profiling info", type = OptionType.Expert)
+    // "If the probability that a type check will hit one the profiled types (up to TypeCheckMaxHints) is below this value, the type check will be compiled without profiling info."
     public static final OptionKey<Double> TypeCheckMinProfileHitProbability = new OptionKey<>(0.5);
 
-    @Option(help = "The maximum number of profiled types that will be used when compiling a profiled type check. " +
-                    "Note that TypeCheckMinProfileHitProbability also influences whether profiling info is used in compiled type checks.", type = OptionType.Expert)
+    // "The maximum number of profiled types that will be used when compiling a profiled type check. Note that TypeCheckMinProfileHitProbability also influences whether profiling info is used in compiled type checks."
     public static final OptionKey<Integer> TypeCheckMaxHints = new OptionKey<>(2);
 
-    @Option(help = "Use a VM runtime call to load and clear the exception object from the thread at the start of a compiled exception handler.", type = OptionType.Debug)
+    // "Use a VM runtime call to load and clear the exception object from the thread at the start of a compiled exception handler."
     public static final OptionKey<Boolean> LoadExceptionObjectInVM = new OptionKey<>(false);
 
-    @Option(help = "Handle simple cases for inflated monitors in the fast-path.", type = OptionType.Expert)
+    // "Handle simple cases for inflated monitors in the fast-path."
     public static final OptionKey<Boolean> SimpleFastInflatedLocking = new OptionKey<>(true);
 
-    @Option(help = "Trace monitor operations on objects whose type contains this substring.", type = OptionType.Debug)
+    // "Trace monitor operations on objects whose type contains this substring."
     public static final OptionKey<String> TraceMonitorsTypeFilter = new OptionKey<>(null);
 
-    @Option(help = "Trace monitor operations in methods whose fully qualified name contains this substring.", type = OptionType.Debug)
+    // "Trace monitor operations in methods whose fully qualified name contains this substring."
     public static final OptionKey<String> TraceMonitorsMethodFilter = new OptionKey<>(null);
 
-    @Option(help = "Emit extra code to dynamically check monitor operations are balanced.", type = OptionType.Debug)
+    // "Emit extra code to dynamically check monitor operations are balanced."
     public static final OptionKey<Boolean> VerifyBalancedMonitors = new OptionKey<>(false);
 }

@@ -1,6 +1,5 @@
 package graalvm.compiler.nodes.calc;
 
-import java.io.Serializable;
 import java.util.function.Function;
 
 import graalvm.compiler.core.common.type.ArithmeticOpTable;
@@ -35,7 +34,7 @@ public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements A
     protected final int inputBits;
     protected final int resultBits;
 
-    protected interface SerializableIntegerConvertFunction<T> extends Function<ArithmeticOpTable, IntegerConvertOp<T>>, Serializable
+    protected interface SerializableIntegerConvertFunction<T> extends Function<ArithmeticOpTable, IntegerConvertOp<T>>
     {
     }
 

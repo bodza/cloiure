@@ -51,9 +51,7 @@ import graalvm.compiler.nodes.spi.ValueProxy;
 import graalvm.compiler.nodes.spi.VirtualizerTool;
 import graalvm.compiler.nodes.virtual.VirtualArrayNode;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionValues;
 
 import jdk.vm.ci.code.BailoutException;
@@ -70,7 +68,7 @@ public class GraphUtil
 {
     public static class Options
     {
-        @Option(help = "Verify that there are no new unused nodes when performing killCFG", type = OptionType.Debug)
+        // "Verify that there are no new unused nodes when performing killCFG."
         public static final OptionKey<Boolean> VerifyKillCFGUnusedNodes = new OptionKey<>(false);
     }
 

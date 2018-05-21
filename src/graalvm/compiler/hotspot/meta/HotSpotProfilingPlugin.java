@@ -10,9 +10,7 @@ import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.ConditionalNode;
 import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderContext;
 import graalvm.compiler.nodes.graphbuilderconf.ProfilingPlugin;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionValues;
 
 import jdk.vm.ci.meta.ResolvedJavaMethod;
@@ -21,9 +19,9 @@ public abstract class HotSpotProfilingPlugin implements ProfilingPlugin
 {
     public static class Options
     {
-        @Option(help = "Emit profiling of invokes", type = OptionType.Expert)
+        // "Emit profiling of invokes."
         public static final OptionKey<Boolean> ProfileInvokes = new OptionKey<>(true);
-        @Option(help = "Emit profiling of backedges", type = OptionType.Expert)
+        // "Emit profiling of backedges."
         public static final OptionKey<Boolean> ProfileBackedges = new OptionKey<>(true);
     }
 

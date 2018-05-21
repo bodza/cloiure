@@ -21,12 +21,10 @@ import graalvm.compiler.graph.Node.NodeIntrinsic;
 import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
 import graalvm.compiler.hotspot.nodes.DeoptimizeCallerNode;
 import graalvm.compiler.hotspot.nodes.StubForeignCallNode;
-import graalvm.compiler.hotspot.nodes.VMErrorNode;
 import graalvm.compiler.hotspot.word.KlassPointer;
 import graalvm.compiler.nodes.PiNode;
 import graalvm.compiler.nodes.SnippetAnchorNode;
 import graalvm.compiler.nodes.extended.GuardingNode;
-import graalvm.compiler.replacements.Log;
 import graalvm.compiler.word.Word;
 import org.graalvm.word.Pointer;
 import org.graalvm.word.WordFactory;
@@ -87,8 +85,6 @@ public class StubUtil
     /**
      * Prints a message to the log stream.
      *
-     * <b>Stubs must use this instead of {@link Log#printf(String, long)} to avoid an object constant in a RuntimeStub.</b>
-     *
      * @param message a message string
      */
     public static void printf(String message)
@@ -98,8 +94,6 @@ public class StubUtil
 
     /**
      * Prints a message to the log stream.
-     *
-     * <b>Stubs must use this instead of {@link Log#printf(String, long)} to avoid an object constant in a RuntimeStub.</b>
      *
      * @param format a C style printf format value
      * @param value the value associated with the first conversion specifier in {@code format}
@@ -112,8 +106,6 @@ public class StubUtil
     /**
      * Prints a message to the log stream.
      *
-     * <b>Stubs must use this instead of {@link Log#printf(String, long, long)} to avoid an object constant in a RuntimeStub.</b>
-     *
      * @param format a C style printf format value
      * @param v1 the value associated with the first conversion specifier in {@code format}
      * @param v2 the value associated with the second conversion specifier in {@code format}
@@ -125,8 +117,6 @@ public class StubUtil
 
     /**
      * Prints a message to the log stream.
-     *
-     * <b>Stubs must use this instead of {@link Log#printf(String, long, long, long)} to avoid an object constant in a RuntimeStub.</b>
      *
      * @param format a C style printf format value
      * @param v1 the value associated with the first conversion specifier in {@code format}
@@ -149,8 +139,6 @@ public class StubUtil
     /**
      * Exits the VM with a given error message.
      *
-     * <b>Stubs must use this instead of {@link VMErrorNode#vmError(String, long)} to avoid an object constant in a RuntimeStub.</b>
-     *
      * @param message an error message
      */
     public static void fatal(String message)
@@ -160,8 +148,6 @@ public class StubUtil
 
     /**
      * Exits the VM with a given error message.
-     *
-     * <b>Stubs must use this instead of {@link Log#printf(String, long, long, long)} to avoid an object constant in a RuntimeStub.</b>
      *
      * @param format a C style printf format value
      * @param value the value associated with the first conversion specifier in {@code format}
@@ -174,8 +160,6 @@ public class StubUtil
     /**
      * Exits the VM with a given error message.
      *
-     * <b>Stubs must use this instead of {@link Log#printf(String, long, long, long)} to avoid an object constant in a RuntimeStub.</b>
-     *
      * @param format a C style printf format value
      * @param v1 the value associated with the first conversion specifier in {@code format}
      * @param v2 the value associated with the second conversion specifier in {@code format}
@@ -187,8 +171,6 @@ public class StubUtil
 
     /**
      * Exits the VM with a given error message.
-     *
-     * <b>Stubs must use this instead of {@link Log#printf(String, long, long, long)} to avoid an object constant in a RuntimeStub.</b>
      *
      * @param format a C style printf format value
      * @param v1 the value associated with the first conversion specifier in {@code format}

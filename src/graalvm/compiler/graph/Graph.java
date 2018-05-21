@@ -13,9 +13,7 @@ import org.graalvm.collections.UnmodifiableEconomicMap;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node.ValueNumberable;
 import graalvm.compiler.graph.iterators.NodeIterable;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionValues;
 
 /**
@@ -25,7 +23,7 @@ public class Graph
 {
     public static class Options
     {
-        @Option(help = "Graal graph compression is performed when percent of live nodes falls below this value", type = OptionType.Debug)
+        // "Graal graph compression is performed when percent of live nodes falls below this value."
         public static final OptionKey<Integer> GraphCompressionThreshold = new OptionKey<>(70);
     }
 

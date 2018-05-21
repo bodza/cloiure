@@ -23,9 +23,7 @@ import graalvm.compiler.nodes.calc.MulNode;
 import graalvm.compiler.nodes.cfg.Block;
 import graalvm.compiler.nodes.cfg.ControlFlowGraph;
 import graalvm.compiler.nodes.util.GraphUtil;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 import graalvm.compiler.phases.BasePhase;
 import graalvm.compiler.phases.tiers.PhaseContext;
 
@@ -37,13 +35,13 @@ public class FinalizeProfileNodesPhase extends BasePhase<PhaseContext>
 
     public static class Options
     {
-        @Option(help = "Profile simple methods", type = OptionType.Expert)
+        // "Profile simple methods."
         public static final OptionKey<Boolean> ProfileSimpleMethods = new OptionKey<>(true);
-        @Option(help = "Maximum number of nodes in a graph for a simple method", type = OptionType.Expert)
+        // "Maximum number of nodes in a graph for a simple method."
         public static final OptionKey<Integer> SimpleMethodGraphSize = new OptionKey<>(256);
-        @Option(help = "Maximum number of calls in a simple method", type = OptionType.Expert)
+        // "Maximum number of calls in a simple method."
         public static final OptionKey<Integer> SimpleMethodCalls = new OptionKey<>(1);
-        @Option(help = "Maximum number of indirect calls in a simple moethod", type = OptionType.Expert)
+        // "Maximum number of indirect calls in a simple moethod."
         public static final OptionKey<Integer> SimpleMethodIndirectCalls = new OptionKey<>(0);
     }
 

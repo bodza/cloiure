@@ -1,7 +1,6 @@
 package graalvm.compiler.core.common.spi;
 
 import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
 
 import jdk.vm.ci.meta.JavaConstant;
@@ -17,7 +16,7 @@ public abstract class JavaConstantFieldProvider implements ConstantFieldProvider
 {
     static class Options
     {
-        @Option(help = "Determines whether to treat final fields with default values as constant.")
+        // "Determines whether to treat final fields with default values as constant."
         public static final OptionKey<Boolean> TrustFinalDefaultFields = new OptionKey<>(true);
     }
 

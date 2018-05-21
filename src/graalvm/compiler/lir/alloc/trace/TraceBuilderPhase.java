@@ -14,9 +14,7 @@ import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.phases.AllocationPhase;
 import graalvm.compiler.options.EnumOptionKey;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionValues;
 
 import jdk.vm.ci.code.TargetDescription;
@@ -32,9 +30,9 @@ public class TraceBuilderPhase extends AllocationPhase
 
     public static class Options
     {
-        @Option(help = "Trace building algorithm.", type = OptionType.Debug)
+        // "Trace building algorithm."
         public static final EnumOptionKey<TraceBuilder> TraceBuilding = new EnumOptionKey<>(TraceBuilder.UniDirectional);
-        @Option(help = "Schedule trivial traces as early as possible.", type = OptionType.Debug)
+        // "Schedule trivial traces as early as possible."
         public static final OptionKey<Boolean> TraceRAScheduleTrivialTracesEarly = new OptionKey<>(true);
     }
 

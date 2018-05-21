@@ -652,9 +652,6 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
     public final long throwAndPostJvmtiExceptionAddress = getAddress("JVMCIRuntime::throw_and_post_jvmti_exception");
     public final long throwKlassExternalNameExceptionAddress = getAddress("JVMCIRuntime::throw_klass_external_name_exception");
     public final long throwClassCastExceptionAddress = getAddress("JVMCIRuntime::throw_class_cast_exception");
-    public final long logPrimitiveAddress = getAddress("JVMCIRuntime::log_primitive");
-    public final long logObjectAddress = getAddress("JVMCIRuntime::log_object");
-    public final long logPrintfAddress = getAddress("JVMCIRuntime::log_printf");
     public final long vmErrorAddress = getAddress("JVMCIRuntime::vm_error");
     public final long loadAndClearExceptionAddress = getAddress("JVMCIRuntime::load_and_clear_exception");
     public final long writeBarrierPreAddress = getAddress("JVMCIRuntime::write_barrier_pre");

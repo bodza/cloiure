@@ -38,9 +38,7 @@ import graalvm.compiler.nodes.java.MonitorEnterNode;
 import graalvm.compiler.nodes.java.MonitorExitNode;
 import graalvm.compiler.nodes.java.MonitorIdNode;
 import graalvm.compiler.nodes.util.GraphUtil;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.Phase;
 import graalvm.compiler.phases.common.DeadCodeEliminationPhase;
@@ -55,12 +53,9 @@ public class OnStackReplacementPhase extends Phase
 {
     public static class Options
     {
-        @Option(help = "Deoptimize OSR compiled code when the OSR entry loop is finished " +
-                       "if there is no mature profile available for the rest of the method.", type = OptionType.Debug)
+        // "Deoptimize OSR compiled code when the OSR entry loop is finished if there is no mature profile available for the rest of the method."
         public static final OptionKey<Boolean> DeoptAfterOSR = new OptionKey<>(true);
-        @Option(help = "Support OSR compilations with locks. If DeoptAfterOSR is true we can per definition not have " +
-                       "unbalaced enter/extis mappings. If DeoptAfterOSR is false insert artificial monitor enters after " +
-                       "the OSRStart to have balanced enter/exits in the graph.", type = OptionType.Debug)
+        // "Support OSR compilations with locks. If DeoptAfterOSR is true we can per definition not have unbalaced enter/extis mappings. If DeoptAfterOSR is false insert artificial monitor enters after the OSRStart to have balanced enter/exits in the graph."
         public static final OptionKey<Boolean> SupportOSRWithLocks = new OptionKey<>(true);
     }
 

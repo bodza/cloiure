@@ -76,8 +76,7 @@ public class ObjectStamp extends AbstractObjectStamp
         catch (IllegalArgumentException e)
         {
             /*
-             * It's possible that the base and displacement aren't valid together so simply return
-             * null.
+             * It's possible that the base and displacement aren't valid together so simply return null.
              */
             return null;
         }

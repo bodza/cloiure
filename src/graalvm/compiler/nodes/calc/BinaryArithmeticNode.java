@@ -3,7 +3,6 @@ package graalvm.compiler.nodes.calc;
 import static graalvm.compiler.nodeinfo.NodeCycles.CYCLES_1;
 import static graalvm.compiler.nodeinfo.NodeSize.SIZE_1;
 
-import java.io.Serializable;
 import java.util.function.Function;
 
 import graalvm.compiler.core.common.type.ArithmeticOpTable;
@@ -33,7 +32,7 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
 {
     @SuppressWarnings("rawtypes") public static final NodeClass<BinaryArithmeticNode> TYPE = NodeClass.create(BinaryArithmeticNode.class);
 
-    protected interface SerializableBinaryFunction<T> extends Function<ArithmeticOpTable, BinaryOp<T>>, Serializable
+    protected interface SerializableBinaryFunction<T> extends Function<ArithmeticOpTable, BinaryOp<T>>
     {
     }
 

@@ -2,9 +2,7 @@ package graalvm.compiler.phases;
 
 import graalvm.compiler.graph.Graph.Mark;
 import graalvm.compiler.nodes.StructuredGraph;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionType;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.contract.NodeCostUtil;
 import graalvm.compiler.phases.contract.PhaseSizeContract;
@@ -18,7 +16,7 @@ public abstract class BasePhase<C> implements PhaseSizeContract
 {
     public static class PhaseOptions
     {
-        @Option(help = "Verify before - after relation of the relative, computed, code size of a graph", type = OptionType.Debug)
+        // "Verify before - after relation of the relative, computed, code size of a graph."
         public static final OptionKey<Boolean> VerifyGraalPhasesSize = new OptionKey<>(false);
     }
 

@@ -12,9 +12,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Formattable;
-import java.util.FormattableFlags;
-import java.util.Formatter;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +77,6 @@ import graalvm.compiler.nodes.spi.ArrayLengthProvider;
 import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.nodes.spi.MemoryProxy;
 import graalvm.compiler.nodes.util.GraphUtil;
-import graalvm.compiler.options.Option;
 import graalvm.compiler.options.OptionKey;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.common.CanonicalizerPhase;
@@ -303,7 +299,7 @@ public class SnippetTemplate
      * {@link SnippetTemplate#instantiate instantiated}
      * </ul>
      */
-    public static class Arguments implements Formattable
+    public static class Arguments
     {
         protected final SnippetInfo info;
         protected final CacheKey cacheKey;
@@ -380,79 +376,6 @@ public class SnippetTemplate
             }
             result.append(">");
             return result.toString();
-        }
-
-        @Override
-        public void formatTo(Formatter formatter, int flags, int width, int precision)
-        {
-            if ((flags & FormattableFlags.ALTERNATE) == 0)
-            {
-                formatter.format(applyFormattingFlagsAndWidth(toString(), flags, width));
-            }
-            else
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.append(info.method.getName()).append('(');
-                String sep = "";
-                for (int i = 0; i < info.getParameterCount(); i++)
-                {
-                    if (info.isConstantParameter(i))
-                    {
-                        sb.append(sep);
-                        if (info.getParameterName(i) != null)
-                        {
-                            sb.append(info.getParameterName(i));
-                        }
-                        else
-                        {
-                            sb.append(i);
-                        }
-                        sb.append('=').append(values[i]);
-                        sep = ", ";
-                    }
-                }
-                sb.append(")");
-                String string = sb.toString();
-                if (string.indexOf('%') != -1)
-                {
-                    // Quote any % signs
-                    string = string.replace("%", "%%");
-                }
-                formatter.format(applyFormattingFlagsAndWidth(string, flags & ~FormattableFlags.ALTERNATE, width));
-            }
-        }
-
-        private static String applyFormattingFlagsAndWidth(String s, int flags, int width)
-        {
-            if (flags == 0 && width < 0)
-            {
-                return s;
-            }
-            StringBuilder sb = new StringBuilder(s);
-
-            // apply width and justification
-            int len = sb.length();
-            if (len < width)
-            {
-                for (int i = 0; i < width - len; i++)
-                {
-                    if ((flags & FormattableFlags.LEFT_JUSTIFY) == FormattableFlags.LEFT_JUSTIFY)
-                    {
-                        sb.append(' ');
-                    }
-                    else
-                    {
-                        sb.insert(0, ' ');
-                    }
-                }
-            }
-
-            String res = sb.toString();
-            if ((flags & FormattableFlags.UPPERCASE) == FormattableFlags.UPPERCASE)
-            {
-                res = res.toUpperCase();
-            }
-            return res;
         }
     }
 
@@ -601,10 +524,9 @@ public class SnippetTemplate
 
     static class Options
     {
-        @Option(help = "Use a LRU cache for snippet templates.")
+        // "Use a LRU cache for snippet templates."
         public static final OptionKey<Boolean> UseSnippetTemplateCache = new OptionKey<>(true);
 
-        @Option(help = "")
         static final OptionKey<Integer> MaxTemplatesPerSnippet = new OptionKey<>(50);
     }
 

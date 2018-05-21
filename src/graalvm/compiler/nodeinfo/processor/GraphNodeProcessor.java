@@ -14,7 +14,6 @@ import javax.annotation.processing.FilerException;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -25,7 +24,6 @@ import javax.tools.Diagnostic.Kind;
 
 import graalvm.compiler.nodeinfo.NodeInfo;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes({"graalvm.compiler.nodeinfo.NodeInfo"})
 public class GraphNodeProcessor extends AbstractProcessor
 {

@@ -9,9 +9,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.Formattable;
-import java.util.FormattableFlags;
-import java.util.Formatter;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -42,7 +39,7 @@ import graalvm.compiler.options.OptionValues;
  * Nodes which are be value numberable should implement the {@link ValueNumberable} interface.
  */
 @NodeInfo
-public abstract class Node implements Cloneable, Formattable, NodeInterface
+public abstract class Node implements Cloneable, NodeInterface
 {
     public static final NodeClass<?> TYPE = null;
 
@@ -1103,81 +1100,6 @@ public abstract class Node implements Cloneable, Formattable, NodeInterface
     public int getId()
     {
         return id;
-    }
-
-    @Override
-    public void formatTo(Formatter formatter, int flags, int width, int precision)
-    {
-        if ((flags & FormattableFlags.ALTERNATE) == FormattableFlags.ALTERNATE)
-        {
-            formatter.format("%s", toString(Verbosity.Id));
-        }
-        else if ((flags & FormattableFlags.UPPERCASE) == FormattableFlags.UPPERCASE)
-        {
-            // Use All here since Long is only slightly longer than Short.
-            formatter.format("%s", toString(Verbosity.All));
-        }
-        else
-        {
-            formatter.format("%s", toString(Verbosity.Short));
-        }
-
-        boolean neighborsAlternate = ((flags & FormattableFlags.LEFT_JUSTIFY) == FormattableFlags.LEFT_JUSTIFY);
-        int neighborsFlags = (neighborsAlternate ? FormattableFlags.ALTERNATE | FormattableFlags.LEFT_JUSTIFY : 0);
-        if (width > 0)
-        {
-            if (this.predecessor != null)
-            {
-                formatter.format(" pred={");
-                this.predecessor.formatTo(formatter, neighborsFlags, width - 1, 0);
-                formatter.format("}");
-            }
-
-            for (Position position : this.inputPositions())
-            {
-                Node input = position.get(this);
-                if (input != null)
-                {
-                    formatter.format(" ");
-                    formatter.format(position.getName());
-                    formatter.format("={");
-                    input.formatTo(formatter, neighborsFlags, width - 1, 0);
-                    formatter.format("}");
-                }
-            }
-        }
-
-        if (precision > 0)
-        {
-            if (!hasNoUsages())
-            {
-                formatter.format(" usages={");
-                int z = 0;
-                for (Node usage : usages())
-                {
-                    if (z != 0)
-                    {
-                        formatter.format(", ");
-                    }
-                    usage.formatTo(formatter, neighborsFlags, 0, precision - 1);
-                    ++z;
-                }
-                formatter.format("}");
-            }
-
-            for (Position position : this.successorPositions())
-            {
-                Node successor = position.get(this);
-                if (successor != null)
-                {
-                    formatter.format(" ");
-                    formatter.format(position.getName());
-                    formatter.format("={");
-                    successor.formatTo(formatter, neighborsFlags, 0, precision - 1);
-                    formatter.format("}");
-                }
-            }
-        }
     }
 
     /**
