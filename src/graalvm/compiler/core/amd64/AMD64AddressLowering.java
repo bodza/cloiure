@@ -1,5 +1,7 @@
 package graalvm.compiler.core.amd64;
 
+import jdk.vm.ci.meta.JavaConstant;
+
 import graalvm.compiler.asm.amd64.AMD64Address.Scale;
 import graalvm.compiler.core.common.NumUtil;
 import graalvm.compiler.core.common.type.AbstractPointerStamp;
@@ -12,8 +14,6 @@ import graalvm.compiler.nodes.calc.LeftShiftNode;
 import graalvm.compiler.nodes.calc.NegateNode;
 import graalvm.compiler.nodes.memory.address.AddressNode;
 import graalvm.compiler.phases.common.AddressLoweringPhase.AddressLowering;
-
-import jdk.vm.ci.meta.JavaConstant;
 
 public class AMD64AddressLowering extends AddressLowering
 {

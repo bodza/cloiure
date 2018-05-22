@@ -3,6 +3,8 @@ package graalvm.compiler.hotspot.replacements;
 import java.lang.reflect.Method;
 import java.util.EnumMap;
 
+import jdk.vm.ci.meta.JavaKind;
+
 import graalvm.compiler.api.directives.GraalDirectives;
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.debug.GraalError;
@@ -10,8 +12,6 @@ import graalvm.compiler.hotspot.replacements.arraycopy.ArrayCopyCallNode;
 import graalvm.compiler.nodes.java.DynamicNewArrayNode;
 import graalvm.compiler.nodes.java.NewArrayNode;
 import graalvm.compiler.replacements.Snippets;
-
-import jdk.vm.ci.meta.JavaKind;
 
 public class ObjectCloneSnippets implements Snippets
 {

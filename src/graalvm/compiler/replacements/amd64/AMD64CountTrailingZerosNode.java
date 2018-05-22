@@ -1,5 +1,8 @@
 package graalvm.compiler.replacements.amd64;
 
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.JavaKind;
+
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
@@ -13,9 +16,6 @@ import graalvm.compiler.nodes.calc.UnaryNode;
 import graalvm.compiler.nodes.spi.ArithmeticLIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.nodes.type.StampTool;
-
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
 
 /**
  * Count the number of trailing zeros using the {@code tzcntq} or {@code tzcntl} instructions.

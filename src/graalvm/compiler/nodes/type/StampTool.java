@@ -2,6 +2,11 @@ package graalvm.compiler.nodes.type;
 
 import java.util.Iterator;
 
+import jdk.vm.ci.code.CodeUtil;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import graalvm.compiler.core.common.type.AbstractObjectStamp;
 import graalvm.compiler.core.common.type.AbstractPointerStamp;
 import graalvm.compiler.core.common.type.IntegerStamp;
@@ -10,11 +15,6 @@ import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.TypeReference;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
-
-import jdk.vm.ci.code.CodeUtil;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * Helper class that is used to keep all stamp-related operations in one place.

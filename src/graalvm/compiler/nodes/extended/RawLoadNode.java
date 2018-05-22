@@ -1,5 +1,14 @@
 package graalvm.compiler.nodes.extended;
 
+import jdk.vm.ci.meta.Assumptions;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.ResolvedJavaField;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.core.common.type.PrimitiveStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
@@ -18,14 +27,6 @@ import graalvm.compiler.nodes.spi.Virtualizable;
 import graalvm.compiler.nodes.spi.VirtualizerTool;
 import graalvm.compiler.nodes.type.StampTool;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.meta.Assumptions;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.ResolvedJavaField;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * Load of a value from a location specified as an offset relative to an object. No null check is

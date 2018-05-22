@@ -1,10 +1,10 @@
 package graalvm.compiler.core.amd64;
 
+import jdk.vm.ci.amd64.AMD64Kind;
+
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.spi.LIRKindTool;
 import graalvm.compiler.debug.GraalError;
-
-import jdk.vm.ci.amd64.AMD64Kind;
 
 public abstract class AMD64LIRKindTool implements LIRKindTool
 {

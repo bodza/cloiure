@@ -1,5 +1,8 @@
 package graalvm.compiler.nodes.calc;
 
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.JavaKind;
+
 import graalvm.compiler.core.common.calc.CanonicalCondition;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
@@ -11,9 +14,6 @@ import graalvm.compiler.nodes.LogicConstantNode;
 import graalvm.compiler.nodes.LogicNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
-
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.JavaKind;
 
 /**
  * Returns -1, 0, or 1 if either x &lt; y, x == y, or x &gt; y. If the comparison is undecided (one

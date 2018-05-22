@@ -1,10 +1,9 @@
 package graalvm.compiler.hotspot.phases.profiling;
 
-import static graalvm.compiler.hotspot.nodes.profiling.ProfileInvokeNode.getProfileInvokeNodes;
-import static graalvm.compiler.hotspot.nodes.profiling.ProfileNode.getProfileNodes;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 import graalvm.compiler.core.common.cfg.Loop;
 import graalvm.compiler.hotspot.nodes.profiling.ProfileInvokeNode;
@@ -26,8 +25,6 @@ import graalvm.compiler.nodes.util.GraphUtil;
 import graalvm.compiler.options.OptionKey;
 import graalvm.compiler.phases.BasePhase;
 import graalvm.compiler.phases.tiers.PhaseContext;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 public class FinalizeProfileNodesPhase extends BasePhase<PhaseContext>
 {
@@ -52,12 +49,12 @@ public class FinalizeProfileNodesPhase extends BasePhase<PhaseContext>
 
     private static void removeAllProfilingNodes(StructuredGraph graph)
     {
-        getProfileNodes(graph).forEach((n) -> GraphUtil.removeFixedWithUnusedInputs(n));
+        ProfileNode.getProfileNodes(graph).forEach((n) -> GraphUtil.removeFixedWithUnusedInputs(n));
     }
 
     private void assignInlineeInvokeFrequencies(StructuredGraph graph)
     {
-        for (ProfileInvokeNode node : getProfileInvokeNodes(graph))
+        for (ProfileInvokeNode node : ProfileInvokeNode.getProfileInvokeNodes(graph))
         {
             ResolvedJavaMethod profiledMethod = node.getProfiledMethod();
             if (!profiledMethod.equals(graph.method()))
@@ -110,7 +107,7 @@ public class FinalizeProfileNodesPhase extends BasePhase<PhaseContext>
         ControlFlowGraph cfg = ControlFlowGraph.compute(graph, false, true, false, false);
         Map<LoopBeginNode, ValueNode> loopRandomValueCache = new HashMap<>();
 
-        for (ProfileNode node : getProfileNodes(graph))
+        for (ProfileNode node : ProfileNode.getProfileNodes(graph))
         {
             ValueNode random;
             Block block = cfg.blockFor(node);

@@ -1,10 +1,9 @@
 package graalvm.compiler.nodes.virtual;
 
-import static graalvm.compiler.nodeinfo.InputType.Extension;
-
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.TypeReference;
 import graalvm.compiler.graph.NodeClass;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.FloatingNode;
 import graalvm.compiler.nodes.spi.ArrayLengthProvider;
@@ -19,7 +18,7 @@ public final class AllocatedObjectNode extends FloatingNode implements Virtualiz
 {
     public static final NodeClass<AllocatedObjectNode> TYPE = NodeClass.create(AllocatedObjectNode.class);
     @Input VirtualObjectNode virtualObject;
-    @Input(Extension) CommitAllocationNode commit;
+    @Input(InputType.Extension) CommitAllocationNode commit;
 
     public AllocatedObjectNode(VirtualObjectNode virtualObject)
     {

@@ -1,7 +1,11 @@
 package graalvm.compiler.replacements;
 
-import static graalvm.compiler.core.common.GraalOptions.MaximumRecursiveInlining;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.MethodHandleAccessProvider;
+import jdk.vm.ci.meta.MethodHandleAccessProvider.IntrinsicMethod;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
 
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.type.StampPair;
 import graalvm.compiler.graph.NodeInputList;
 import graalvm.compiler.nodes.CallTargetNode;
@@ -11,11 +15,6 @@ import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderContext;
 import graalvm.compiler.nodes.graphbuilderconf.NodePlugin;
 import graalvm.compiler.replacements.nodes.MethodHandleNode;
-
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.MethodHandleAccessProvider;
-import jdk.vm.ci.meta.MethodHandleAccessProvider.IntrinsicMethod;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 public class MethodHandlePlugin implements NodePlugin
 {
@@ -99,7 +98,7 @@ public class MethodHandlePlugin implements NodePlugin
                 }
 
                 int recursionDepth = countRecursiveInlining(b, targetMethod);
-                int maxRecursionDepth = MaximumRecursiveInlining.getValue(b.getOptions());
+                int maxRecursionDepth = GraalOptions.MaximumRecursiveInlining.getValue(b.getOptions());
                 if (recursionDepth > maxRecursionDepth)
                 {
                     return false;

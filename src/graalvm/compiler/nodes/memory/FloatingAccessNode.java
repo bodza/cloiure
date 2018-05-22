@@ -1,12 +1,13 @@
 package graalvm.compiler.nodes.memory;
 
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.FloatingGuardedNode;
 import graalvm.compiler.nodes.extended.GuardingNode;
 import graalvm.compiler.nodes.memory.address.AddressNode;
-import org.graalvm.word.LocationIdentity;
 
 public abstract class FloatingAccessNode extends FloatingGuardedNode implements Access, MemoryAccess
 {

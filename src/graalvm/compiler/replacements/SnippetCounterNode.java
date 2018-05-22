@@ -1,8 +1,10 @@
 package graalvm.compiler.replacements;
 
-import static graalvm.compiler.replacements.SnippetTemplate.DEFAULT_REPLACER;
-
 import java.util.Arrays;
+
+import jdk.vm.ci.code.TargetDescription;
+
+import org.graalvm.word.LocationIdentity;
 
 import graalvm.compiler.api.replacements.Fold;
 import graalvm.compiler.api.replacements.Snippet;
@@ -19,14 +21,11 @@ import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.util.Providers;
+import graalvm.compiler.replacements.SnippetTemplate;
 import graalvm.compiler.replacements.SnippetTemplate.AbstractTemplates;
 import graalvm.compiler.replacements.SnippetTemplate.Arguments;
 import graalvm.compiler.replacements.SnippetTemplate.SnippetInfo;
 import graalvm.compiler.word.ObjectAccess;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.code.TargetDescription;
-
 import graalvm.util.UnsafeAccess;
 
 /**
@@ -144,7 +143,7 @@ public class SnippetCounterNode extends FixedWithNextNode implements Lowerable
                 args.addConst("counter", counter.getCounter());
                 args.add("increment", counter.getIncrement());
 
-                template(counter, args).instantiate(providers.getMetaAccess(), counter, DEFAULT_REPLACER, args);
+                template(counter, args).instantiate(providers.getMetaAccess(), counter, SnippetTemplate.DEFAULT_REPLACER, args);
             }
         }
     }

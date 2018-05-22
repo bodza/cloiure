@@ -1,10 +1,10 @@
 package graalvm.compiler.replacements.amd64;
 
+import jdk.vm.ci.meta.JavaKind;
+
 import graalvm.compiler.api.replacements.ClassSubstitution;
 import graalvm.compiler.api.replacements.MethodSubstitution;
 import graalvm.compiler.replacements.nodes.ArrayCompareToNode;
-
-import jdk.vm.ci.meta.JavaKind;
 
 /**
  * Substitutions for {@code java.lang.StringUTF16} methods.

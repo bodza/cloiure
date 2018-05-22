@@ -1,5 +1,7 @@
 package graalvm.compiler.nodes.java;
 
+import jdk.vm.ci.meta.ResolvedJavaField;
+
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodeinfo.InputType;
@@ -10,8 +12,6 @@ import graalvm.compiler.nodes.spi.Virtualizable;
 import graalvm.compiler.nodes.spi.VirtualizerTool;
 import graalvm.compiler.nodes.virtual.VirtualInstanceNode;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
-
-import jdk.vm.ci.meta.ResolvedJavaField;
 
 /**
  * The {@code StoreFieldNode} represents a write to a static or instance field.

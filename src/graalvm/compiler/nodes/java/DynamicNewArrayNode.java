@@ -1,7 +1,10 @@
 package graalvm.compiler.nodes.java;
 
-import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaType;
 
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.TypeReference;
@@ -11,10 +14,6 @@ import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.ValueNode;
-
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * The {@code DynamicNewArrayNode} is used for allocation of arrays when the type is not a
@@ -81,7 +80,7 @@ public class DynamicNewArrayNode extends AbstractNewArrayNode implements Canonic
     {
         if (elementType.isConstant())
         {
-            if (GeneratePIC.getValue(tool.getOptions()))
+            if (GraalOptions.GeneratePIC.getValue(tool.getOptions()))
             {
                 // Can't fold for AOT, because the resulting NewArrayNode will be missing its
                 // ResolveConstantNode for the array class.

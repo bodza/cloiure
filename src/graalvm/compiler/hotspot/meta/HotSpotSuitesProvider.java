@@ -1,11 +1,9 @@
 package graalvm.compiler.hotspot.meta;
 
-import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
-import static graalvm.compiler.core.common.GraalOptions.ImmutableCode;
-import static graalvm.compiler.core.phases.HighTier.Options.Inline;
-
 import java.util.ListIterator;
 
+import graalvm.compiler.core.common.GraalOptions;
+import graalvm.compiler.core.phases.HighTier.Options;
 import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
 import graalvm.compiler.hotspot.HotSpotGraalRuntimeProvider;
 import graalvm.compiler.hotspot.phases.LoadJavaMirrorWithKlassPhase;
@@ -50,11 +48,11 @@ public class HotSpotSuitesProvider extends SuitesProviderBase
     {
         Suites ret = defaultSuitesCreator.createSuites(options);
 
-        if (ImmutableCode.getValue(options))
+        if (GraalOptions.ImmutableCode.getValue(options))
         {
             // lowering introduces class constants, therefore it must be after lowering
             ret.getHighTier().appendPhase(new LoadJavaMirrorWithKlassPhase(config));
-            if (GeneratePIC.getValue(options))
+            if (GraalOptions.GeneratePIC.getValue(options))
             {
                 ListIterator<BasePhase<? super HighTierContext>> highTierLowering = ret.getHighTier().findPhase(LoweringPhase.class);
                 highTierLowering.previous();
@@ -67,7 +65,7 @@ public class HotSpotSuitesProvider extends SuitesProviderBase
                 midTierLowering.add(new ReplaceConstantNodesPhase());
 
                 // Replace inlining policy
-                if (Inline.getValue(options))
+                if (Options.Inline.getValue(options))
                 {
                     ListIterator<BasePhase<? super HighTierContext>> iter = ret.getHighTier().findPhase(InliningPhase.class);
                     InliningPhase inlining = (InliningPhase) iter.previous();

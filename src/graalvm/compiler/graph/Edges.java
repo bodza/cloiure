@@ -1,14 +1,13 @@
 package graalvm.compiler.graph;
 
-import static graalvm.compiler.graph.Node.NOT_ITERABLE;
-import graalvm.util.UnsafeAccess;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import graalvm.compiler.core.common.Fields;
 import graalvm.compiler.core.common.FieldsScanner;
+import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass.EdgeInfo;
+import graalvm.util.UnsafeAccess;
 
 /**
  * Describes {@link Node} fields representing the set of inputs for the node or the set of the
@@ -287,7 +286,7 @@ public abstract class Edges extends Fields
         {
             this.node = node;
             this.edges = edges;
-            index = NOT_ITERABLE;
+            index = Node.NOT_ITERABLE;
             subIndex = 0;
             needsForward = true;
             this.directCount = edges.getDirectCount();
@@ -352,7 +351,7 @@ public abstract class Edges extends Fields
             needsForward = true;
             if (index < directCount)
             {
-                return new Position(edges, index, NOT_ITERABLE);
+                return new Position(edges, index, Node.NOT_ITERABLE);
             }
             else
             {

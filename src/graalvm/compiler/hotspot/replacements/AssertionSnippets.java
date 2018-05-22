@@ -1,7 +1,6 @@
 package graalvm.compiler.hotspot.replacements;
 
-import static graalvm.compiler.replacements.SnippetTemplate.DEFAULT_REPLACER;
-import static graalvm.compiler.replacements.nodes.CStringConstant.cstring;
+import jdk.vm.ci.code.TargetDescription;
 
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
@@ -14,14 +13,14 @@ import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.extended.ForeignCallNode;
 import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.options.OptionValues;
+import graalvm.compiler.replacements.SnippetTemplate;
 import graalvm.compiler.replacements.SnippetTemplate.AbstractTemplates;
 import graalvm.compiler.replacements.SnippetTemplate.Arguments;
 import graalvm.compiler.replacements.SnippetTemplate.SnippetInfo;
 import graalvm.compiler.replacements.Snippets;
 import graalvm.compiler.replacements.nodes.AssertionNode;
+import graalvm.compiler.replacements.nodes.CStringConstant;
 import graalvm.compiler.word.Word;
-
-import jdk.vm.ci.code.TargetDescription;
 
 public class AssertionSnippets implements Snippets
 {
@@ -36,7 +35,7 @@ public class AssertionSnippets implements Snippets
     {
         if (!condition)
         {
-            vmMessageC(ASSERTION_VM_MESSAGE_C, true, cstring(message), 0L, 0L, 0L);
+            vmMessageC(ASSERTION_VM_MESSAGE_C, true, CStringConstant.cstring(message), 0L, 0L, 0L);
         }
     }
 
@@ -45,7 +44,7 @@ public class AssertionSnippets implements Snippets
     {
         if (!condition)
         {
-            vmMessageC(ASSERTION_VM_MESSAGE_C, true, cstring(message), 0L, 0L, 0L);
+            vmMessageC(ASSERTION_VM_MESSAGE_C, true, CStringConstant.cstring(message), 0L, 0L, 0L);
         }
     }
 
@@ -69,7 +68,7 @@ public class AssertionSnippets implements Snippets
             args.add("condition", assertionNode.condition());
             args.addConst("message", "failed runtime assertion in snippet/stub: " + assertionNode.message() + " (" + graph.method() + ")");
 
-            template(assertionNode, args).instantiate(providers.getMetaAccess(), assertionNode, DEFAULT_REPLACER, args);
+            template(assertionNode, args).instantiate(providers.getMetaAccess(), assertionNode, SnippetTemplate.DEFAULT_REPLACER, args);
         }
     }
 }

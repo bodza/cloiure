@@ -1,9 +1,5 @@
 package graalvm.compiler.lir.stackslotalloc;
 
-import static graalvm.compiler.lir.LIRValueUtil.asVirtualStackSlot;
-import static graalvm.compiler.lir.LIRValueUtil.isVirtualStackSlot;
-import static graalvm.compiler.lir.phases.LIRPhase.Options.LIROptimization;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -11,12 +7,19 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.PriorityQueue;
 
+import jdk.vm.ci.code.StackSlot;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.meta.Value;
+import jdk.vm.ci.meta.ValueKind;
+
 import org.graalvm.collections.EconomicSet;
+
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstruction.OperandMode;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.ValueProcedure;
 import graalvm.compiler.lir.VirtualStackSlot;
 import graalvm.compiler.lir.framemap.FrameMapBuilderTool;
@@ -24,12 +27,8 @@ import graalvm.compiler.lir.framemap.SimpleVirtualStackSlot;
 import graalvm.compiler.lir.framemap.VirtualStackSlotRange;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.phases.AllocationPhase;
+import graalvm.compiler.lir.phases.LIRPhase;
 import graalvm.compiler.options.NestedBooleanOptionKey;
-
-import jdk.vm.ci.code.StackSlot;
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.Value;
-import jdk.vm.ci.meta.ValueKind;
 
 /**
  * Linear Scan stack slot allocator.
@@ -46,7 +45,7 @@ public final class LSStackSlotAllocator extends AllocationPhase
     public static class Options
     {
         // Option "Use linear scan stack slot allocation."
-        public static final NestedBooleanOptionKey LIROptLSStackSlotAllocator = new NestedBooleanOptionKey(LIROptimization, true);
+        public static final NestedBooleanOptionKey LIROptLSStackSlotAllocator = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
     }
 
     @Override
@@ -354,9 +353,9 @@ public final class LSStackSlotAllocator extends AllocationPhase
             @Override
             public Value doValue(Value value, OperandMode mode, EnumSet<OperandFlag> flags)
             {
-                if (isVirtualStackSlot(value))
+                if (LIRValueUtil.isVirtualStackSlot(value))
                 {
-                    VirtualStackSlot slot = asVirtualStackSlot(value);
+                    VirtualStackSlot slot = LIRValueUtil.asVirtualStackSlot(value);
                     StackInterval interval = get(slot);
                     return interval.location();
                 }

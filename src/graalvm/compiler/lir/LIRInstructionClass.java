@@ -4,6 +4,9 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.EnumSet;
 
+import jdk.vm.ci.code.BytecodeFrame;
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.core.common.Fields;
 import graalvm.compiler.core.common.FieldsScanner;
 import graalvm.compiler.debug.GraalError;
@@ -12,9 +15,6 @@ import graalvm.compiler.lir.LIRInstruction.OperandMode;
 import graalvm.compiler.lir.StandardOp.LoadConstantOp;
 import graalvm.compiler.lir.StandardOp.MoveOp;
 import graalvm.compiler.lir.StandardOp.ValueMoveOp;
-
-import jdk.vm.ci.code.BytecodeFrame;
-import jdk.vm.ci.meta.Value;
 
 public class LIRInstructionClass<T> extends LIRIntrospection<T>
 {

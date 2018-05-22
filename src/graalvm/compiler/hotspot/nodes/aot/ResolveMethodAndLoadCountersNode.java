@@ -1,13 +1,13 @@
 package graalvm.compiler.hotspot.nodes.aot;
 
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.hotspot.nodes.type.MethodCountersPointerStamp;
 import graalvm.compiler.nodes.DeoptimizingFixedWithNextNode;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 public class ResolveMethodAndLoadCountersNode extends DeoptimizingFixedWithNextNode implements Lowerable
 {

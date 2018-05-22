@@ -1,5 +1,9 @@
 package graalvm.compiler.nodes.extended;
 
+import jdk.vm.ci.meta.JavaKind;
+
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodes.StateSplit;
 import graalvm.compiler.nodes.ValueNode;
@@ -9,9 +13,6 @@ import graalvm.compiler.nodes.memory.MemoryCheckpoint;
 import graalvm.compiler.nodes.memory.address.AddressNode;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.meta.JavaKind;
 
 /**
  * Write a raw memory location according to Java field or array write semantics. It will perform

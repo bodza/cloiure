@@ -1,11 +1,18 @@
 package graalvm.compiler.word;
 
-import graalvm.util.UnsafeAccess;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import org.graalvm.word.ComparableWord;
+import org.graalvm.word.LocationIdentity;
+import org.graalvm.word.Pointer;
+import org.graalvm.word.SignedWord;
+import org.graalvm.word.UnsignedWord;
+import org.graalvm.word.WordBase;
+import org.graalvm.word.WordFactory;
+import org.graalvm.word.impl.WordBoxFactory;
 
 import graalvm.compiler.core.common.calc.Condition;
 import graalvm.compiler.core.common.calc.UnsignedMath;
@@ -26,14 +33,7 @@ import graalvm.compiler.nodes.calc.UnsignedRightShiftNode;
 import graalvm.compiler.nodes.calc.XorNode;
 import graalvm.compiler.nodes.memory.HeapAccess.BarrierType;
 import graalvm.compiler.nodes.memory.address.AddressNode.Address;
-import org.graalvm.word.ComparableWord;
-import org.graalvm.word.LocationIdentity;
-import org.graalvm.word.Pointer;
-import org.graalvm.word.SignedWord;
-import org.graalvm.word.UnsignedWord;
-import org.graalvm.word.WordBase;
-import org.graalvm.word.WordFactory;
-import org.graalvm.word.impl.WordBoxFactory;
+import graalvm.util.UnsafeAccess;
 
 public abstract class Word implements SignedWord, UnsignedWord, Pointer
 {

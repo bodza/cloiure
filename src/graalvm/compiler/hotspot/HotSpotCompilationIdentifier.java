@@ -1,11 +1,11 @@
 package graalvm.compiler.hotspot;
 
+import jdk.vm.ci.hotspot.HotSpotCompilationRequest;
+import jdk.vm.ci.runtime.JVMCICompiler;
+
 import graalvm.compiler.core.common.CompilationIdentifier;
 import graalvm.compiler.core.common.CompilationRequestIdentifier;
 import graalvm.compiler.debug.GraalError;
-
-import jdk.vm.ci.hotspot.HotSpotCompilationRequest;
-import jdk.vm.ci.runtime.JVMCICompiler;
 
 /**
  * {@link CompilationIdentifier} for a {@linkplain HotSpotCompilationRequest hotspot compilation request}.

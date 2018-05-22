@@ -1,5 +1,8 @@
 package graalvm.compiler.core.amd64;
 
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.asm.amd64.AMD64Address.Scale;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.type.IntegerStamp;
@@ -17,9 +20,6 @@ import graalvm.compiler.nodes.calc.AddNode;
 import graalvm.compiler.nodes.memory.address.AddressNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Represents an address of the form [base + index*scale + displacement]. Both base and index are

@@ -1,31 +1,28 @@
 package graalvm.compiler.hotspot.replacements.arraycopy;
 
-import static graalvm.compiler.hotspot.GraalHotSpotVMConfig.INJECTED_VMCONFIG;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.KLASS_SUPER_CHECK_OFFSET_LOCATION;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.OBJ_ARRAY_KLASS_ELEMENT_KLASS_LOCATION;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.arrayBaseOffset;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.arrayClassElementOffset;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.arrayIndexScale;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.loadHub;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.readLayoutHelper;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.superCheckOffsetOffset;
-import static graalvm.compiler.nodes.extended.BranchProbabilityNode.FREQUENT_PROBABILITY;
-import static graalvm.compiler.nodes.extended.BranchProbabilityNode.LIKELY_PROBABILITY;
-import static graalvm.compiler.nodes.extended.BranchProbabilityNode.NOT_FREQUENT_PROBABILITY;
-import static graalvm.compiler.nodes.extended.BranchProbabilityNode.SLOW_PATH_PROBABILITY;
-import static graalvm.compiler.nodes.extended.BranchProbabilityNode.probability;
-
 import java.lang.reflect.Method;
 import java.util.EnumMap;
 
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.meta.DeoptimizationAction;
+import jdk.vm.ci.meta.DeoptimizationReason;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import org.graalvm.collections.UnmodifiableEconomicMap;
+import org.graalvm.word.LocationIdentity;
+import org.graalvm.word.WordFactory;
+
 import graalvm.compiler.api.directives.GraalDirectives;
 import graalvm.compiler.api.replacements.Fold;
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node;
+import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
+import graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil;
 import graalvm.compiler.hotspot.word.KlassPointer;
 import graalvm.compiler.nodes.CallTargetNode;
 import graalvm.compiler.nodes.DeoptimizeNode;
@@ -36,6 +33,7 @@ import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.PiNode;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.ValueNode;
+import graalvm.compiler.nodes.extended.BranchProbabilityNode;
 import graalvm.compiler.nodes.extended.RawLoadNode;
 import graalvm.compiler.nodes.extended.RawStoreNode;
 import graalvm.compiler.nodes.java.ArrayLengthNode;
@@ -53,15 +51,6 @@ import graalvm.compiler.replacements.Snippets;
 import graalvm.compiler.replacements.nodes.BasicArrayCopyNode;
 import graalvm.compiler.replacements.nodes.ExplodeLoopNode;
 import graalvm.compiler.word.Word;
-import org.graalvm.word.LocationIdentity;
-import org.graalvm.word.WordFactory;
-
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.DeoptimizationAction;
-import jdk.vm.ci.meta.DeoptimizationReason;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 public class ArrayCopySnippets implements Snippets
 {
@@ -156,15 +145,15 @@ public class ArrayCopySnippets implements Snippets
 
     private static void unrolledArraycopyWork(Object nonNullSrc, int srcPos, Object nonNullDest, int destPos, int length, JavaKind elementKind)
     {
-        int scale = arrayIndexScale(elementKind);
-        int arrayBaseOffset = arrayBaseOffset(elementKind);
+        int scale = HotSpotReplacementsUtil.arrayIndexScale(elementKind);
+        int arrayBaseOffset = HotSpotReplacementsUtil.arrayBaseOffset(elementKind);
         LocationIdentity arrayLocation = getArrayLocation(elementKind);
 
         long sourceOffset = arrayBaseOffset + (long) srcPos * scale;
         long destOffset = arrayBaseOffset + (long) destPos * scale;
         long position = 0;
         long delta = scale;
-        if (probability(NOT_FREQUENT_PROBABILITY, nonNullSrc == nonNullDest && srcPos < destPos))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_FREQUENT_PROBABILITY, nonNullSrc == nonNullDest && srcPos < destPos))
         {
             // bad aliased case so we need to copy the array from back to front
             position = (long) (length - 1) * scale;
@@ -184,13 +173,13 @@ public class ArrayCopySnippets implements Snippets
     @Snippet(allowPartialIntrinsicArgumentMismatch = true)
     public static void checkcastArraycopyWithSlowPathWork(Object src, int srcPos, Object dest, int destPos, int length, @ConstantParameter Counters counters)
     {
-        if (probability(FREQUENT_PROBABILITY, length > 0))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, length > 0))
         {
             Object nonNullSrc = PiNode.asNonNullObject(src);
             Object nonNullDest = PiNode.asNonNullObject(dest);
-            KlassPointer srcKlass = loadHub(nonNullSrc);
-            KlassPointer destKlass = loadHub(nonNullDest);
-            if (probability(LIKELY_PROBABILITY, srcKlass == destKlass))
+            KlassPointer srcKlass = HotSpotReplacementsUtil.loadHub(nonNullSrc);
+            KlassPointer destKlass = HotSpotReplacementsUtil.loadHub(nonNullDest);
+            if (BranchProbabilityNode.probability(BranchProbabilityNode.LIKELY_PROBABILITY, srcKlass == destKlass))
             {
                 // no storecheck required.
                 counters.objectCheckcastSameTypeCounter.inc();
@@ -199,14 +188,14 @@ public class ArrayCopySnippets implements Snippets
             }
             else
             {
-                KlassPointer destElemKlass = destKlass.readKlassPointer(arrayClassElementOffset(INJECTED_VMCONFIG), OBJ_ARRAY_KLASS_ELEMENT_KLASS_LOCATION);
-                Word superCheckOffset = WordFactory.signed(destElemKlass.readInt(superCheckOffsetOffset(INJECTED_VMCONFIG), KLASS_SUPER_CHECK_OFFSET_LOCATION));
+                KlassPointer destElemKlass = destKlass.readKlassPointer(HotSpotReplacementsUtil.arrayClassElementOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.OBJ_ARRAY_KLASS_ELEMENT_KLASS_LOCATION);
+                Word superCheckOffset = WordFactory.signed(destElemKlass.readInt(HotSpotReplacementsUtil.superCheckOffsetOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.KLASS_SUPER_CHECK_OFFSET_LOCATION));
 
                 counters.objectCheckcastDifferentTypeCounter.inc();
                 counters.objectCheckcastDifferentTypeCopiedCounter.add(length);
 
                 int copiedElements = CheckcastArrayCopyCallNode.checkcastArraycopy(nonNullSrc, srcPos, nonNullDest, destPos, length, superCheckOffset, destElemKlass, false);
-                if (probability(SLOW_PATH_PROBABILITY, copiedElements != 0))
+                if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, copiedElements != 0))
                 {
                     /*
                      * the stub doesn't throw the ArrayStoreException, but returns the number of
@@ -227,7 +216,7 @@ public class ArrayCopySnippets implements Snippets
         counters.genericArraycopyDifferentTypeCounter.inc();
         counters.genericArraycopyDifferentTypeCopiedCounter.add(length);
         int copiedElements = GenericArrayCopyCallNode.genericArraycopy(src, srcPos, dest, destPos, length);
-        if (probability(SLOW_PATH_PROBABILITY, copiedElements != 0))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, copiedElements != 0))
         {
             /*
              * the stub doesn't throw the ArrayStoreException, but returns the number of copied
@@ -245,11 +234,11 @@ public class ArrayCopySnippets implements Snippets
 
     private static void checkLimits(Object src, int srcPos, Object dest, int destPos, int length, Counters counters)
     {
-        if (probability(SLOW_PATH_PROBABILITY, srcPos < 0) ||
-                        probability(SLOW_PATH_PROBABILITY, destPos < 0) ||
-                        probability(SLOW_PATH_PROBABILITY, length < 0) ||
-                        probability(SLOW_PATH_PROBABILITY, srcPos > ArrayLengthNode.arrayLength(src) - length) ||
-                        probability(SLOW_PATH_PROBABILITY, destPos > ArrayLengthNode.arrayLength(dest) - length))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, srcPos < 0) ||
+                        BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, destPos < 0) ||
+                        BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, length < 0) ||
+                        BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, srcPos > ArrayLengthNode.arrayLength(src) - length) ||
+                        BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, destPos > ArrayLengthNode.arrayLength(dest) - length))
         {
             counters.checkAIOOBECounter.inc();
             DeoptimizeNode.deopt(DeoptimizationAction.None, DeoptimizationReason.RuntimeConstraint);
@@ -265,18 +254,18 @@ public class ArrayCopySnippets implements Snippets
         }
         else if (arrayTypeCheck == ArrayCopyTypeCheck.HUB_BASED_ARRAY_TYPE_CHECK)
         {
-            KlassPointer srcHub = loadHub(nonNullSrc);
-            KlassPointer destHub = loadHub(nonNullDest);
-            if (probability(SLOW_PATH_PROBABILITY, srcHub != destHub))
+            KlassPointer srcHub = HotSpotReplacementsUtil.loadHub(nonNullSrc);
+            KlassPointer destHub = HotSpotReplacementsUtil.loadHub(nonNullDest);
+            if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, srcHub != destHub))
             {
                 DeoptimizeNode.deopt(DeoptimizationAction.None, DeoptimizationReason.RuntimeConstraint);
             }
         }
         else if (arrayTypeCheck == ArrayCopyTypeCheck.LAYOUT_HELPER_BASED_ARRAY_TYPE_CHECK)
         {
-            KlassPointer srcHub = loadHub(nonNullSrc);
-            KlassPointer destHub = loadHub(nonNullDest);
-            if (probability(SLOW_PATH_PROBABILITY, readLayoutHelper(srcHub) != readLayoutHelper(destHub)))
+            KlassPointer srcHub = HotSpotReplacementsUtil.loadHub(nonNullSrc);
+            KlassPointer destHub = HotSpotReplacementsUtil.loadHub(nonNullDest);
+            if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, HotSpotReplacementsUtil.readLayoutHelper(srcHub) != HotSpotReplacementsUtil.readLayoutHelper(destHub)))
             {
                 DeoptimizeNode.deopt(DeoptimizationAction.None, DeoptimizationReason.RuntimeConstraint);
             }

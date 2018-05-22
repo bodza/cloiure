@@ -4,9 +4,12 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import jdk.vm.ci.code.BytecodeFrame;
+
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.EconomicSet;
 import org.graalvm.collections.Equivalence;
+
 import graalvm.compiler.core.common.calc.Condition;
 import graalvm.compiler.core.common.cfg.Loop;
 import graalvm.compiler.core.common.type.IntegerStamp;
@@ -49,8 +52,6 @@ import graalvm.compiler.nodes.cfg.ControlFlowGraph;
 import graalvm.compiler.nodes.debug.ControlFlowAnchored;
 import graalvm.compiler.nodes.extended.ValueAnchorNode;
 import graalvm.compiler.nodes.util.GraphUtil;
-
-import jdk.vm.ci.code.BytecodeFrame;
 
 public class LoopEx
 {

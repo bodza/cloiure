@@ -1,18 +1,5 @@
 package graalvm.compiler.lir;
 
-import static jdk.vm.ci.code.ValueUtil.isStackSlot;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.COMPOSITE;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.CONST;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.HINT;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.ILLEGAL;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.OUTGOING;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.STACK;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.UNINITIALIZED;
-import static graalvm.compiler.lir.LIRInstruction.OperandMode.ALIVE;
-import static graalvm.compiler.lir.LIRInstruction.OperandMode.DEF;
-import static graalvm.compiler.lir.LIRInstruction.OperandMode.TEMP;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -21,16 +8,19 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.EnumSet;
 
+import jdk.vm.ci.code.RegisterValue;
+import jdk.vm.ci.code.StackSlot;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.Value;
+
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
+import graalvm.compiler.lir.LIRInstruction.OperandMode;
 import graalvm.compiler.lir.StandardOp.LoadConstantOp;
 import graalvm.compiler.lir.StandardOp.MoveOp;
 import graalvm.compiler.lir.StandardOp.ValueMoveOp;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
-
-import jdk.vm.ci.code.RegisterValue;
-import jdk.vm.ci.code.StackSlot;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.Value;
 
 /**
  * The base class for an {@code LIRInstruction}.
@@ -160,16 +150,16 @@ public abstract class LIRInstruction
     static
     {
         ALLOWED_FLAGS = new EnumMap<>(OperandMode.class);
-        ALLOWED_FLAGS.put(OperandMode.USE, EnumSet.of(REG, STACK, COMPOSITE, CONST, ILLEGAL, HINT, UNINITIALIZED));
-        ALLOWED_FLAGS.put(ALIVE, EnumSet.of(REG, STACK, COMPOSITE, CONST, ILLEGAL, HINT, UNINITIALIZED, OUTGOING));
-        ALLOWED_FLAGS.put(TEMP, EnumSet.of(REG, STACK, COMPOSITE, ILLEGAL, HINT));
-        ALLOWED_FLAGS.put(DEF, EnumSet.of(REG, STACK, COMPOSITE, ILLEGAL, HINT));
+        ALLOWED_FLAGS.put(OperandMode.USE, EnumSet.of(OperandFlag.REG, OperandFlag.STACK, OperandFlag.COMPOSITE, OperandFlag.CONST, OperandFlag.ILLEGAL, OperandFlag.HINT, OperandFlag.UNINITIALIZED));
+        ALLOWED_FLAGS.put(OperandMode.ALIVE, EnumSet.of(OperandFlag.REG, OperandFlag.STACK, OperandFlag.COMPOSITE, OperandFlag.CONST, OperandFlag.ILLEGAL, OperandFlag.HINT, OperandFlag.UNINITIALIZED, OperandFlag.OUTGOING));
+        ALLOWED_FLAGS.put(OperandMode.TEMP, EnumSet.of(OperandFlag.REG, OperandFlag.STACK, OperandFlag.COMPOSITE, OperandFlag.ILLEGAL, OperandFlag.HINT));
+        ALLOWED_FLAGS.put(OperandMode.DEF, EnumSet.of(OperandFlag.REG, OperandFlag.STACK, OperandFlag.COMPOSITE, OperandFlag.ILLEGAL, OperandFlag.HINT));
     }
 
     /**
      * The flags of the base and index value of an address.
      */
-    protected static final EnumSet<OperandFlag> ADDRESS_FLAGS = EnumSet.of(REG, ILLEGAL);
+    protected static final EnumSet<OperandFlag> ADDRESS_FLAGS = EnumSet.of(OperandFlag.REG, OperandFlag.ILLEGAL);
 
     private final LIRInstructionClass<?> instructionClass;
 
@@ -390,7 +380,7 @@ public abstract class LIRInstruction
         int extraTemps = 0;
         for (Value p : parameters)
         {
-            if (isStackSlot(p))
+            if (ValueUtil.isStackSlot(p))
             {
                 extraTemps++;
             }
@@ -401,7 +391,7 @@ public abstract class LIRInstruction
             Value[] newTemporaries = Arrays.copyOf(temporaries, temporaries.length + extraTemps);
             for (Value p : parameters)
             {
-                if (isStackSlot(p))
+                if (ValueUtil.isStackSlot(p))
                 {
                     newTemporaries[index++] = p;
                 }

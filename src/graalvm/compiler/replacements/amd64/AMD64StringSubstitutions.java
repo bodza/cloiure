@@ -1,5 +1,9 @@
 package graalvm.compiler.replacements.amd64;
 
+import jdk.vm.ci.meta.JavaKind;
+
+import org.graalvm.word.Pointer;
+
 import graalvm.compiler.api.replacements.ClassSubstitution;
 import graalvm.compiler.api.replacements.Fold;
 import graalvm.compiler.api.replacements.Fold.InjectedParameter;
@@ -9,9 +13,6 @@ import graalvm.compiler.graph.Node.ConstantNodeParameter;
 import graalvm.compiler.replacements.StringSubstitutions;
 import graalvm.compiler.replacements.nodes.ArrayCompareToNode;
 import graalvm.compiler.word.Word;
-import org.graalvm.word.Pointer;
-
-import jdk.vm.ci.meta.JavaKind;
 
 /**
  * Substitutions for {@link java.lang.String} methods.

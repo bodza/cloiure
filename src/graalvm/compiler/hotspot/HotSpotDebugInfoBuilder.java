@@ -1,6 +1,10 @@
 package graalvm.compiler.hotspot;
 
-import static jdk.vm.ci.code.BytecodeFrame.isPlaceholderBci;
+import jdk.vm.ci.code.BytecodeFrame;
+import jdk.vm.ci.code.StackLockValue;
+import jdk.vm.ci.code.VirtualObject;
+import jdk.vm.ci.hotspot.HotSpotCodeCacheProvider;
+import jdk.vm.ci.meta.JavaValue;
 
 import graalvm.compiler.core.gen.DebugInfoBuilder;
 import graalvm.compiler.graph.GraalGraphError;
@@ -8,12 +12,6 @@ import graalvm.compiler.lir.VirtualStackSlot;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.NodeValueMap;
-
-import jdk.vm.ci.code.BytecodeFrame;
-import jdk.vm.ci.code.StackLockValue;
-import jdk.vm.ci.code.VirtualObject;
-import jdk.vm.ci.hotspot.HotSpotCodeCacheProvider;
-import jdk.vm.ci.meta.JavaValue;
 
 /**
  * Extends {@link DebugInfoBuilder} to allocate the extra debug information required for locks.
@@ -61,7 +59,7 @@ public class HotSpotDebugInfoBuilder extends DebugInfoBuilder
     @Override
     protected BytecodeFrame computeFrameForState(FrameState state)
     {
-        if (isPlaceholderBci(state.bci) && state.bci != BytecodeFrame.BEFORE_BCI)
+        if (BytecodeFrame.isPlaceholderBci(state.bci) && state.bci != BytecodeFrame.BEFORE_BCI)
         {
             raiseInvalidFrameStateError(state);
         }

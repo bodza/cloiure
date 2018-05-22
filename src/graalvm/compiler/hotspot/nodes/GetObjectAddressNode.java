@@ -1,5 +1,8 @@
 package graalvm.compiler.hotspot.nodes;
 
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.JavaKind;
+
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
@@ -7,9 +10,6 @@ import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.JavaKind;
 
 /**
  * Intrinsification for getting the address of an object. The code path(s) between a call to

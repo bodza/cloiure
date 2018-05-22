@@ -1,18 +1,18 @@
 package graalvm.compiler.nodes.extended;
 
-import static graalvm.compiler.nodeinfo.InputType.Guard;
+import jdk.vm.ci.meta.JavaKind;
 
-import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodes.ValueNode;
 import org.graalvm.word.LocationIdentity;
 
-import jdk.vm.ci.meta.JavaKind;
+import graalvm.compiler.graph.NodeClass;
+import graalvm.compiler.nodeinfo.InputType;
+import graalvm.compiler.nodes.ValueNode;
 
 public class GuardedUnsafeLoadNode extends RawLoadNode implements GuardedNode
 {
     public static final NodeClass<GuardedUnsafeLoadNode> TYPE = NodeClass.create(GuardedUnsafeLoadNode.class);
 
-    @OptionalInput(Guard) protected GuardingNode guard;
+    @OptionalInput(InputType.Guard) protected GuardingNode guard;
 
     public GuardedUnsafeLoadNode(ValueNode object, ValueNode offset, JavaKind accessKind, LocationIdentity locationIdentity, GuardingNode guard)
     {

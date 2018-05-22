@@ -1,5 +1,7 @@
 package graalvm.compiler.replacements.nodes.arithmetic;
 
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
@@ -9,8 +11,6 @@ import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.MulNode;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
-import jdk.vm.ci.meta.Value;
 
 public final class IntegerMulExactSplitNode extends IntegerExactArithmeticSplitNode
 {

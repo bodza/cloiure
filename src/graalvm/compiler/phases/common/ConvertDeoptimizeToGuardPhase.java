@@ -1,8 +1,9 @@
 package graalvm.compiler.phases.common;
 
-import static graalvm.compiler.phases.common.DeadCodeEliminationPhase.Optionality.Optional;
-
 import java.util.List;
+
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.DeoptimizationAction;
 
 import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.graph.Node;
@@ -31,10 +32,8 @@ import graalvm.compiler.nodes.calc.CompareNode;
 import graalvm.compiler.nodes.spi.LoweringProvider;
 import graalvm.compiler.nodes.util.GraphUtil;
 import graalvm.compiler.phases.BasePhase;
+import graalvm.compiler.phases.common.DeadCodeEliminationPhase.Optionality;
 import graalvm.compiler.phases.tiers.PhaseContext;
-
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.DeoptimizationAction;
 
 /**
  * This phase will find branches which always end with a {@link DeoptimizeNode} and replace their
@@ -70,7 +69,7 @@ public class ConvertDeoptimizeToGuardPhase extends BasePhase<PhaseContext>
             }
         }
 
-        new DeadCodeEliminationPhase(Optional).apply(graph);
+        new DeadCodeEliminationPhase(Optionality.Optional).apply(graph);
     }
 
     private void trySplitFixedGuard(FixedGuardNode fixedGuard, PhaseContext context)

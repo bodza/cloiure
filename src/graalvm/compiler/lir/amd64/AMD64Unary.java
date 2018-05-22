@@ -1,11 +1,8 @@
 package graalvm.compiler.lir.amd64;
 
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.COMPOSITE;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.HINT;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.STACK;
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.asm.amd64.AMD64Address;
 import graalvm.compiler.asm.amd64.AMD64Assembler.AMD64MOp;
@@ -14,13 +11,11 @@ import graalvm.compiler.asm.amd64.AMD64Assembler.AMD64RMOp;
 import graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize;
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
 import graalvm.compiler.lir.LIRFrameState;
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.StandardOp.ImplicitNullCheck;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
-
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Value;
 
 /**
  * AMD64 LIR instructions that have one input and one output.
@@ -37,8 +32,8 @@ public class AMD64Unary
         @Opcode private final AMD64MOp opcode;
         private final OperandSize size;
 
-        @Def({REG, HINT}) protected AllocatableValue result;
-        @Use({REG, STACK}) protected AllocatableValue value;
+        @Def({OperandFlag.REG, OperandFlag.HINT}) protected AllocatableValue result;
+        @Use({OperandFlag.REG, OperandFlag.STACK}) protected AllocatableValue value;
 
         public MOp(AMD64MOp opcode, OperandSize size, AllocatableValue result, AllocatableValue value)
         {
@@ -54,7 +49,7 @@ public class AMD64Unary
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
             AMD64Move.move(crb, masm, result, value);
-            opcode.emit(masm, size, asRegister(result));
+            opcode.emit(masm, size, ValueUtil.asRegister(result));
         }
     }
 
@@ -68,8 +63,8 @@ public class AMD64Unary
         @Opcode private final AMD64RMOp opcode;
         private final OperandSize size;
 
-        @Def({REG}) protected AllocatableValue result;
-        @Use({REG, STACK}) protected AllocatableValue value;
+        @Def({OperandFlag.REG}) protected AllocatableValue result;
+        @Use({OperandFlag.REG, OperandFlag.STACK}) protected AllocatableValue value;
 
         public RMOp(AMD64RMOp opcode, OperandSize size, AllocatableValue result, AllocatableValue value)
         {
@@ -84,13 +79,13 @@ public class AMD64Unary
         @Override
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
-            if (isRegister(value))
+            if (ValueUtil.isRegister(value))
             {
-                opcode.emit(masm, size, asRegister(result), asRegister(value));
+                opcode.emit(masm, size, ValueUtil.asRegister(result), ValueUtil.asRegister(value));
             }
             else
             {
-                opcode.emit(masm, size, asRegister(result), (AMD64Address) crb.asAddress(value));
+                opcode.emit(masm, size, ValueUtil.asRegister(result), (AMD64Address) crb.asAddress(value));
             }
         }
     }
@@ -105,8 +100,8 @@ public class AMD64Unary
         @Opcode private final AMD64MROp opcode;
         private final OperandSize size;
 
-        @Def({REG, STACK}) protected AllocatableValue result;
-        @Use({REG}) protected AllocatableValue value;
+        @Def({OperandFlag.REG, OperandFlag.STACK}) protected AllocatableValue result;
+        @Use({OperandFlag.REG}) protected AllocatableValue value;
 
         public MROp(AMD64MROp opcode, OperandSize size, AllocatableValue result, AllocatableValue value)
         {
@@ -121,13 +116,13 @@ public class AMD64Unary
         @Override
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
-            if (isRegister(result))
+            if (ValueUtil.isRegister(result))
             {
-                opcode.emit(masm, size, asRegister(result), asRegister(value));
+                opcode.emit(masm, size, ValueUtil.asRegister(result), ValueUtil.asRegister(value));
             }
             else
             {
-                opcode.emit(masm, size, (AMD64Address) crb.asAddress(result), asRegister(value));
+                opcode.emit(masm, size, (AMD64Address) crb.asAddress(result), ValueUtil.asRegister(value));
             }
         }
     }
@@ -142,8 +137,8 @@ public class AMD64Unary
         @Opcode private final AMD64RMOp opcode;
         private final OperandSize size;
 
-        @Def({REG}) protected AllocatableValue result;
-        @Use({COMPOSITE}) protected AMD64AddressValue input;
+        @Def({OperandFlag.REG}) protected AllocatableValue result;
+        @Use({OperandFlag.COMPOSITE}) protected AMD64AddressValue input;
 
         @State protected LIRFrameState state;
 
@@ -166,7 +161,7 @@ public class AMD64Unary
             {
                 crb.recordImplicitException(masm.position(), state);
             }
-            opcode.emit(masm, size, asRegister(result), input.toAddress());
+            opcode.emit(masm, size, ValueUtil.asRegister(result), input.toAddress());
         }
 
         @Override

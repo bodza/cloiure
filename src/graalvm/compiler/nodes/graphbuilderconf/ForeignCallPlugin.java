@@ -1,11 +1,11 @@
 package graalvm.compiler.nodes.graphbuilderconf;
 
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.core.common.spi.ForeignCallsProvider;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.extended.ForeignCallNode;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * {@link InvocationPlugin} for converting a method call directly to a foreign call.

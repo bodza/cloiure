@@ -1,12 +1,12 @@
 package graalvm.compiler.lir.amd64;
 
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
 import jdk.vm.ci.amd64.AMD64;
 import jdk.vm.ci.amd64.AMD64Kind;
 import jdk.vm.ci.meta.AllocatableValue;
 
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
 import graalvm.compiler.core.common.LIRKind;
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
@@ -19,8 +19,8 @@ public class AMD64ReadTimestampCounter extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64ReadTimestampCounter> TYPE = LIRInstructionClass.create(AMD64ReadTimestampCounter.class);
 
-    @Def({REG}) protected AllocatableValue highResult;
-    @Def({REG}) protected AllocatableValue lowResult;
+    @Def({OperandFlag.REG}) protected AllocatableValue highResult;
+    @Def({OperandFlag.REG}) protected AllocatableValue lowResult;
 
     public AMD64ReadTimestampCounter()
     {

@@ -1,9 +1,10 @@
 package graalvm.compiler.hotspot.nodes;
 
-import static graalvm.compiler.core.common.NumUtil.roundUp;
-
 import java.util.BitSet;
 
+import jdk.vm.ci.meta.Value;
+
+import graalvm.compiler.core.common.NumUtil;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.lir.VirtualStackSlot;
@@ -13,8 +14,6 @@ import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.word.Word;
 import graalvm.compiler.word.WordTypes;
-
-import jdk.vm.ci.meta.Value;
 
 /**
  * Intrinsic for allocating an on-stack array of integers to hold the dimensions of a multianewarray
@@ -37,7 +36,7 @@ public final class DimensionsNode extends FixedWithNextNode implements LIRLowera
         LIRGeneratorTool lirGen = gen.getLIRGeneratorTool();
         int size = rank * 4;
         int wordSize = lirGen.target().wordSize;
-        int slots = roundUp(size, wordSize) / wordSize;
+        int slots = NumUtil.roundUp(size, wordSize) / wordSize;
         VirtualStackSlot array = lirGen.getResult().getFrameMapBuilder().allocateStackSlots(slots, new BitSet(0), null);
         Value result = lirGen.emitAddress(array);
         gen.setResult(this, result);

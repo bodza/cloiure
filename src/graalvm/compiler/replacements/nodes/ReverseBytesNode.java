@@ -1,5 +1,10 @@
 package graalvm.compiler.replacements.nodes;
 
+import jdk.vm.ci.code.CodeUtil;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
@@ -11,11 +16,6 @@ import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.UnaryNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
-import jdk.vm.ci.code.CodeUtil;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.Value;
 
 public final class ReverseBytesNode extends UnaryNode implements LIRLowerable
 {

@@ -1,5 +1,8 @@
 package graalvm.compiler.replacements.nodes;
 
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.core.common.type.FloatStamp;
 import graalvm.compiler.core.common.type.Stamp;
@@ -19,9 +22,6 @@ import graalvm.compiler.nodes.spi.ArithmeticLIRLowerable;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.Value;
 
 public final class BinaryMathIntrinsicNode extends BinaryNode implements ArithmeticLIRLowerable, Lowerable
 {

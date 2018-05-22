@@ -1,9 +1,9 @@
 package graalvm.compiler.lir.framemap;
 
-import graalvm.compiler.lir.LIRFrameState;
-
 import jdk.vm.ci.code.ReferenceMap;
 import jdk.vm.ci.meta.Value;
+
+import graalvm.compiler.lir.LIRFrameState;
 
 public abstract class ReferenceMapBuilder
 {

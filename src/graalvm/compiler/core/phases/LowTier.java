@@ -1,14 +1,12 @@
 package graalvm.compiler.core.phases;
 
-import static graalvm.compiler.core.common.GraalOptions.ImmutableCode;
-import static graalvm.compiler.phases.common.DeadCodeEliminationPhase.Optionality.Required;
-
 import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.PhaseSuite;
 import graalvm.compiler.phases.common.CanonicalizerPhase;
 import graalvm.compiler.phases.common.DeadCodeEliminationPhase;
+import graalvm.compiler.phases.common.DeadCodeEliminationPhase.Optionality;
 import graalvm.compiler.phases.common.ExpandLogicPhase;
 import graalvm.compiler.phases.common.FixReadsPhase;
 import graalvm.compiler.phases.common.LoweringPhase;
@@ -25,7 +23,7 @@ public class LowTier extends PhaseSuite<LowTierContext>
         CanonicalizerPhase canonicalizer = new CanonicalizerPhase();
         CanonicalizerPhase canonicalizerWithoutGVN = new CanonicalizerPhase();
         canonicalizerWithoutGVN.disableGVN();
-        if (ImmutableCode.getValue(options))
+        if (GraalOptions.ImmutableCode.getValue(options))
         {
             canonicalizer.disableReadCanonicalization();
             canonicalizerWithoutGVN.disableReadCanonicalization();
@@ -41,7 +39,7 @@ public class LowTier extends PhaseSuite<LowTierContext>
 
         appendPhase(new UseTrappingNullChecksPhase());
 
-        appendPhase(new DeadCodeEliminationPhase(Required));
+        appendPhase(new DeadCodeEliminationPhase(Optionality.Required));
 
         appendPhase(new PropagateDeoptimizeProbabilityPhase());
 

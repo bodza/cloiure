@@ -1,8 +1,5 @@
 package graalvm.compiler.nodes.graphbuilderconf;
 
-import static java.lang.String.format;
-import static graalvm.compiler.nodes.graphbuilderconf.InvocationPlugins.LateClassPlugins.CLOSED_LATE_CLASS_PLUGIN;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -13,22 +10,24 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import jdk.vm.ci.meta.MetaUtil;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+import jdk.vm.ci.meta.Signature;
+
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 import org.graalvm.collections.MapCursor;
 import org.graalvm.collections.Pair;
 import org.graalvm.collections.UnmodifiableEconomicMap;
 import org.graalvm.collections.UnmodifiableMapCursor;
+
 import graalvm.compiler.api.replacements.MethodSubstitutionRegistry;
 import graalvm.compiler.bytecode.BytecodeProvider;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.graphbuilderconf.InvocationPlugin.Receiver;
-
-import jdk.vm.ci.meta.MetaUtil;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
-import jdk.vm.ci.meta.Signature;
+import graalvm.compiler.nodes.graphbuilderconf.InvocationPlugins.LateClassPlugins;
 
 /**
  * Manages a set of {@link InvocationPlugin}s.
@@ -641,6 +640,7 @@ public class InvocationPlugins
     static class LateClassPlugins extends ClassPlugins
     {
         static final String CLOSED_LATE_CLASS_PLUGIN = "-----";
+
         private final String className;
         private final LateClassPlugins next;
 
@@ -939,9 +939,9 @@ public class InvocationPlugins
 
     private synchronized boolean closeLateRegistrations()
     {
-        if (lateRegistrations == null || lateRegistrations.className != CLOSED_LATE_CLASS_PLUGIN)
+        if (lateRegistrations == null || lateRegistrations.className != LateClassPlugins.CLOSED_LATE_CLASS_PLUGIN)
         {
-            lateRegistrations = new LateClassPlugins(lateRegistrations, CLOSED_LATE_CLASS_PLUGIN);
+            lateRegistrations = new LateClassPlugins(lateRegistrations, LateClassPlugins.CLOSED_LATE_CLASS_PLUGIN);
         }
         return true;
     }

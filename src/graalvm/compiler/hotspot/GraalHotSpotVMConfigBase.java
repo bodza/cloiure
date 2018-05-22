@@ -1,11 +1,11 @@
 package graalvm.compiler.hotspot;
 
-import graalvm.compiler.api.replacements.Fold;
-import graalvm.compiler.api.replacements.Fold.InjectedParameter;
-
 import jdk.vm.ci.common.JVMCIError;
 import jdk.vm.ci.hotspot.HotSpotVMConfigAccess;
 import jdk.vm.ci.hotspot.HotSpotVMConfigStore;
+
+import graalvm.compiler.api.replacements.Fold;
+import graalvm.compiler.api.replacements.Fold.InjectedParameter;
 
 /**
  * This is a source with different versions for various JDKs.

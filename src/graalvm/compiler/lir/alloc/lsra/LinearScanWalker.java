@@ -1,30 +1,27 @@
 package graalvm.compiler.lir.alloc.lsra;
 
-import static jdk.vm.ci.code.CodeUtil.isOdd;
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static graalvm.compiler.lir.LIRValueUtil.isStackSlotValue;
-import static graalvm.compiler.lir.LIRValueUtil.isVariable;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import jdk.vm.ci.code.CodeUtil;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig.AllocatableRegisters;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.core.common.util.Util;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.LIRInstruction;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.StandardOp.ValueMoveOp;
 import graalvm.compiler.lir.alloc.OutOfRegistersException;
 import graalvm.compiler.lir.alloc.lsra.Interval.RegisterBinding;
 import graalvm.compiler.lir.alloc.lsra.Interval.RegisterPriority;
 import graalvm.compiler.lir.alloc.lsra.Interval.SpillState;
 import graalvm.compiler.lir.alloc.lsra.Interval.State;
-
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.meta.Value;
 
 /**
  */
@@ -114,7 +111,7 @@ class LinearScanWalker extends IntervalWalker
     void excludeFromUse(Interval i)
     {
         Value location = i.location();
-        int i1 = asRegister(location).number;
+        int i1 = ValueUtil.asRegister(location).number;
         if (isRegisterInRange(i1))
         {
             usePos[i1] = 0;
@@ -125,7 +122,7 @@ class LinearScanWalker extends IntervalWalker
     {
         if (usePos != -1)
         {
-            int i = asRegister(interval.location()).number;
+            int i = ValueUtil.asRegister(interval.location()).number;
             if (isRegisterInRange(i))
             {
                 if (this.usePos[i] > usePos)
@@ -150,7 +147,7 @@ class LinearScanWalker extends IntervalWalker
     {
         if (blockPos != -1)
         {
-            int reg = asRegister(i.location()).number;
+            int reg = ValueUtil.asRegister(i.location()).number;
             if (isRegisterInRange(reg))
             {
                 if (this.blockPos[reg] > blockPos)
@@ -487,7 +484,7 @@ class LinearScanWalker extends IntervalWalker
             {
                 parent = parent.getSplitChildBeforeOpId(parent.from());
 
-                if (isRegister(parent.location()))
+                if (ValueUtil.isRegister(parent.location()))
                 {
                     if (parent.firstUsage(RegisterPriority.ShouldHaveRegister) == Integer.MAX_VALUE)
                     {
@@ -665,9 +662,9 @@ class LinearScanWalker extends IntervalWalker
 
         Register hint = null;
         Interval locationHint = interval.locationHint(true);
-        if (locationHint != null && locationHint.location() != null && isRegister(locationHint.location()))
+        if (locationHint != null && locationHint.location() != null && ValueUtil.isRegister(locationHint.location()))
         {
-            hint = asRegister(locationHint.location());
+            hint = ValueUtil.asRegister(locationHint.location());
         }
 
         // the register must be free at least until this position
@@ -766,7 +763,7 @@ class LinearScanWalker extends IntervalWalker
             spillCollectInactiveAny(interval);
 
             reg = null;
-            ignore = interval.location() != null && isRegister(interval.location()) ? asRegister(interval.location()) : null;
+            ignore = interval.location() != null && ValueUtil.isRegister(interval.location()) ? ValueUtil.asRegister(interval.location()) : null;
 
             for (Register availableReg : availableRegs)
             {
@@ -845,7 +842,7 @@ class LinearScanWalker extends IntervalWalker
             // check if this interval is the result of a split operation
             // (an interval got a register until this position)
             int pos = interval.from();
-            if (isOdd(pos))
+            if (CodeUtil.isOdd(pos))
             {
                 // the current instruction is a call that blocks all registers
                 if (pos < allocator.maxOpId() && allocator.hasCall(pos + 1) && interval.to() > pos + 1)
@@ -870,7 +867,7 @@ class LinearScanWalker extends IntervalWalker
         if (ValueMoveOp.isValueMoveOp(op))
         {
             ValueMoveOp move = ValueMoveOp.asValueMoveOp(op);
-            if (isVariable(move.getInput()) && isVariable(move.getResult()))
+            if (LIRValueUtil.isVariable(move.getInput()) && LIRValueUtil.isVariable(move.getResult()))
             {
                 return move.getInput() != null && move.getInput().equals(from.operand) && move.getResult() != null && move.getResult().equals(to.operand);
             }
@@ -904,7 +901,7 @@ class LinearScanWalker extends IntervalWalker
 
         int beginPos = interval.from();
         int endPos = interval.to();
-        if (endPos > allocator.maxOpId() || isOdd(beginPos) || isOdd(endPos))
+        if (endPos > allocator.maxOpId() || CodeUtil.isOdd(beginPos) || CodeUtil.isOdd(endPos))
         {
             // safety check that lirOpWithId is allowed
             return;
@@ -924,7 +921,7 @@ class LinearScanWalker extends IntervalWalker
             return;
         }
 
-        if (isRegister(beginHint.location()))
+        if (ValueUtil.isRegister(beginHint.location()))
         {
             // registerHint is not spilled at beginPos : so it would not be benefitial to
             // immediately spill cur
@@ -944,7 +941,7 @@ class LinearScanWalker extends IntervalWalker
     {
         boolean result = true;
         final Value operand = interval.operand;
-        if (interval.location() != null && isStackSlotValue(interval.location()))
+        if (interval.location() != null && LIRValueUtil.isStackSlotValue(interval.location()))
         {
             // activating an interval that has a stack slot assigned . split it at first use
             // position
@@ -971,7 +968,7 @@ class LinearScanWalker extends IntervalWalker
                 }
 
                 // spilled intervals need not be move to active-list
-                if (!isRegister(interval.location()))
+                if (!ValueUtil.isRegister(interval.location()))
                 {
                     result = false;
                 }

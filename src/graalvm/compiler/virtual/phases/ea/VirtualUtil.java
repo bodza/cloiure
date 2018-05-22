@@ -1,9 +1,9 @@
 package graalvm.compiler.virtual.phases.ea;
 
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.nodes.StructuredGraph;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 public final class VirtualUtil
 {

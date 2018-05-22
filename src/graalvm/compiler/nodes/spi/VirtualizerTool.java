@@ -2,6 +2,11 @@ package graalvm.compiler.nodes.spi;
 
 import java.util.List;
 
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.MetaAccessProvider;
+
 import graalvm.compiler.core.common.spi.ArrayOffsetProvider;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node;
@@ -9,11 +14,6 @@ import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.java.MonitorIdNode;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.MetaAccessProvider;
 
 /**
  * This tool can be used to query the current state (normal/virtualized/re-materialized) of values

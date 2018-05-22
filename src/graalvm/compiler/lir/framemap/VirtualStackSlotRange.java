@@ -2,10 +2,10 @@ package graalvm.compiler.lir.framemap;
 
 import java.util.BitSet;
 
+import jdk.vm.ci.code.TargetDescription;
+
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.lir.VirtualStackSlot;
-
-import jdk.vm.ci.code.TargetDescription;
 
 /**
  * Represents a {@link #getSlots() numbered} range of {@link VirtualStackSlot virtual stack slot} of

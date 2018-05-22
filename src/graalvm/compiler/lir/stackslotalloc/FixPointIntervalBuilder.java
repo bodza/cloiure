@@ -1,16 +1,16 @@
 package graalvm.compiler.lir.stackslotalloc;
 
-import static graalvm.compiler.lir.LIRValueUtil.asVirtualStackSlot;
-import static graalvm.compiler.lir.LIRValueUtil.isVirtualStackSlot;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Deque;
 import java.util.EnumSet;
 
+import jdk.vm.ci.meta.Value;
+
 import org.graalvm.collections.EconomicSet;
 import org.graalvm.collections.Equivalence;
+
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.core.common.cfg.BlockMap;
 import graalvm.compiler.lir.InstructionValueConsumer;
@@ -19,9 +19,8 @@ import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstruction.OperandMode;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.VirtualStackSlot;
-
-import jdk.vm.ci.meta.Value;
 
 /**
  * Calculates the stack intervals using a worklist-based backwards data-flow analysis.
@@ -185,9 +184,9 @@ final class FixPointIntervalBuilder
             @Override
             public void visitValue(LIRInstruction inst, Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
             {
-                if (isVirtualStackSlot(operand))
+                if (LIRValueUtil.isVirtualStackSlot(operand))
                 {
-                    VirtualStackSlot vslot = asVirtualStackSlot(operand);
+                    VirtualStackSlot vslot = LIRValueUtil.asVirtualStackSlot(operand);
                     addUse(vslot, inst, flags);
                     addRegisterHint(inst, vslot, mode, flags, false);
                     usePos.add(inst);
@@ -201,9 +200,9 @@ final class FixPointIntervalBuilder
             @Override
             public void visitValue(LIRInstruction inst, Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
             {
-                if (isVirtualStackSlot(operand))
+                if (LIRValueUtil.isVirtualStackSlot(operand))
                 {
-                    VirtualStackSlot vslot = asVirtualStackSlot(operand);
+                    VirtualStackSlot vslot = LIRValueUtil.asVirtualStackSlot(operand);
                     addDef(vslot, inst);
                     addRegisterHint(inst, vslot, mode, flags, true);
                     usePos.add(inst);
@@ -242,7 +241,7 @@ final class FixPointIntervalBuilder
                     @Override
                     public Value doValue(LIRInstruction instruction, Value registerHint, OperandMode vaueMode, EnumSet<OperandFlag> valueFlags)
                     {
-                        if (isVirtualStackSlot(registerHint))
+                        if (LIRValueUtil.isVirtualStackSlot(registerHint))
                         {
                             StackInterval from = getOrCreateInterval((VirtualStackSlot) registerHint);
                             StackInterval to = getOrCreateInterval(targetValue);

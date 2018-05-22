@@ -2,6 +2,25 @@ package graalvm.compiler.hotspot;
 
 import java.util.EnumSet;
 
+import jdk.vm.ci.code.CompilationRequest;
+import jdk.vm.ci.code.CompiledCode;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.RegisterSaveLayout;
+import jdk.vm.ci.code.StackSlot;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.hotspot.HotSpotCompilationRequest;
+import jdk.vm.ci.hotspot.HotSpotJVMCIRuntime;
+import jdk.vm.ci.hotspot.HotSpotResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.Value;
+import jdk.vm.ci.runtime.JVMCICompiler;
+
+import org.graalvm.collections.EconomicMap;
+import org.graalvm.collections.EconomicSet;
+import org.graalvm.collections.Equivalence;
+import org.graalvm.collections.MapCursor;
+import org.graalvm.word.Pointer;
+
 import graalvm.compiler.code.CompilationResult;
 import graalvm.compiler.core.common.CompilationIdentifier;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
@@ -38,24 +57,6 @@ import graalvm.compiler.options.OptionKey;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.tiers.SuitesProvider;
 import graalvm.compiler.word.Word;
-import org.graalvm.collections.EconomicMap;
-import org.graalvm.collections.EconomicSet;
-import org.graalvm.collections.Equivalence;
-import org.graalvm.collections.MapCursor;
-import org.graalvm.word.Pointer;
-
-import jdk.vm.ci.code.CompilationRequest;
-import jdk.vm.ci.code.CompiledCode;
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.RegisterSaveLayout;
-import jdk.vm.ci.code.StackSlot;
-import jdk.vm.ci.code.ValueUtil;
-import jdk.vm.ci.hotspot.HotSpotCompilationRequest;
-import jdk.vm.ci.hotspot.HotSpotJVMCIRuntime;
-import jdk.vm.ci.hotspot.HotSpotResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.Value;
-import jdk.vm.ci.runtime.JVMCICompiler;
 
 /**
  * HotSpot specific backend.

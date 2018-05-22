@@ -3,6 +3,9 @@ package graalvm.compiler.replacements.nodes;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import graalvm.compiler.core.common.type.DataPointerConstant;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node.ConstantNodeParameter;
@@ -10,9 +13,6 @@ import graalvm.compiler.graph.Node.NodeIntrinsic;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderContext;
 import graalvm.compiler.word.Word;
-
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * Represents a compile-time constant zero-terminated UTF-8 string installed with the generated

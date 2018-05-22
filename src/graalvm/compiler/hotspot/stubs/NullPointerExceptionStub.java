@@ -1,13 +1,13 @@
 package graalvm.compiler.hotspot.stubs;
 
+import jdk.vm.ci.code.Register;
+
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.hotspot.HotSpotForeignCallLinkage;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.code.Register;
 
 /**
  * Stub to allocate a {@link NullPointerException} thrown by a bytecode.

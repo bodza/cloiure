@@ -1,10 +1,9 @@
 package graalvm.compiler.nodes.java;
 
-import static graalvm.compiler.nodeinfo.InputType.Association;
-
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.IterableNodeType;
 import graalvm.compiler.graph.NodeClass;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;

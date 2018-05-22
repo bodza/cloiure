@@ -1,17 +1,6 @@
 package graalvm.compiler.hotspot;
 
-import static graalvm.compiler.core.phases.HighTier.Options.Inline;
-import static graalvm.compiler.java.BytecodeParserOptions.InlineDuringParsing;
-
 import java.util.List;
-
-import org.graalvm.collections.EconomicMap;
-import graalvm.compiler.code.CompilationResult;
-import graalvm.compiler.core.CompilationWrapper;
-import graalvm.compiler.core.common.CompilationIdentifier;
-import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.options.OptionKey;
-import graalvm.compiler.options.OptionValues;
 
 import jdk.vm.ci.code.BailoutException;
 import jdk.vm.ci.code.CodeCacheProvider;
@@ -24,6 +13,17 @@ import jdk.vm.ci.hotspot.HotSpotNmethod;
 import jdk.vm.ci.hotspot.HotSpotResolvedJavaMethod;
 import jdk.vm.ci.runtime.JVMCICompiler;
 import jdk.vm.ci.services.JVMCIServiceLocator;
+
+import org.graalvm.collections.EconomicMap;
+
+import graalvm.compiler.code.CompilationResult;
+import graalvm.compiler.core.CompilationWrapper;
+import graalvm.compiler.core.common.CompilationIdentifier;
+import graalvm.compiler.core.phases.HighTier.Options;
+import graalvm.compiler.debug.GraalError;
+import graalvm.compiler.java.BytecodeParserOptions;
+import graalvm.compiler.options.OptionKey;
+import graalvm.compiler.options.OptionValues;
 
 public class CompilationTask
 {
@@ -153,13 +153,13 @@ public class CompilationTask
         if (!config.inline)
         {
             EconomicMap<OptionKey<?>, Object> m = OptionValues.newOptionMap();
-            if (Inline.getValue(options) && !Inline.hasBeenSet(options))
+            if (Options.Inline.getValue(options) && !Options.Inline.hasBeenSet(options))
             {
-                m.put(Inline, false);
+                m.put(Options.Inline, false);
             }
-            if (InlineDuringParsing.getValue(options) && !InlineDuringParsing.hasBeenSet(options))
+            if (BytecodeParserOptions.InlineDuringParsing.getValue(options) && !BytecodeParserOptions.InlineDuringParsing.hasBeenSet(options))
             {
-                m.put(InlineDuringParsing, false);
+                m.put(BytecodeParserOptions.InlineDuringParsing, false);
             }
             if (!m.isEmpty())
             {

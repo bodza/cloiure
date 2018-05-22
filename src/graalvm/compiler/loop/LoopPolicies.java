@@ -2,10 +2,10 @@ package graalvm.compiler.loop;
 
 import java.util.List;
 
+import jdk.vm.ci.meta.MetaAccessProvider;
+
 import graalvm.compiler.nodes.ControlSplitNode;
 import graalvm.compiler.nodes.cfg.ControlFlowGraph;
-
-import jdk.vm.ci.meta.MetaAccessProvider;
 
 public interface LoopPolicies
 {

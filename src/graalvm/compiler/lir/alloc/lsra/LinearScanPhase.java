@@ -1,12 +1,12 @@
 package graalvm.compiler.lir.alloc.lsra;
 
+import jdk.vm.ci.code.TargetDescription;
+
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.lir.alloc.RegisterAllocationPhase;
 import graalvm.compiler.lir.alloc.lsra.ssa.SSALinearScan;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;
-
-import jdk.vm.ci.code.TargetDescription;
 
 public final class LinearScanPhase extends RegisterAllocationPhase
 {

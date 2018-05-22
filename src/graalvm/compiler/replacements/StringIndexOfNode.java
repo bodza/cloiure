@@ -1,13 +1,13 @@
 package graalvm.compiler.replacements;
 
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import graalvm.compiler.core.common.type.StampPair;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodes.CallTargetNode.InvokeKind;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.replacements.nodes.MacroStateSplitNode;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 public class StringIndexOfNode extends MacroStateSplitNode
 {

@@ -3,14 +3,14 @@ package graalvm.compiler.nodes.graphbuilderconf;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import graalvm.compiler.api.replacements.Fold;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node.NodeIntrinsic;
 import graalvm.compiler.nodes.ValueNode;
-
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * Abstract class for a plugin generated for a method annotated by {@link NodeIntrinsic} or

@@ -1,20 +1,23 @@
 package graalvm.compiler.replacements;
 
-import static jdk.vm.ci.code.MemoryBarriers.JMM_POST_VOLATILE_READ;
-import static jdk.vm.ci.code.MemoryBarriers.JMM_POST_VOLATILE_WRITE;
-import static jdk.vm.ci.code.MemoryBarriers.JMM_PRE_VOLATILE_READ;
-import static jdk.vm.ci.code.MemoryBarriers.JMM_PRE_VOLATILE_WRITE;
-import static jdk.vm.ci.meta.DeoptimizationAction.InvalidateReprofile;
-import static jdk.vm.ci.meta.DeoptimizationReason.BoundsCheckException;
-import static jdk.vm.ci.meta.DeoptimizationReason.NullCheckException;
-import static graalvm.compiler.nodes.NamedLocationIdentity.ARRAY_LENGTH_LOCATION;
-import static graalvm.compiler.nodes.java.ArrayLengthNode.readArrayLength;
-import static graalvm.compiler.nodes.util.GraphUtil.skipPiWhileNonNull;
-
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
+
+import jdk.vm.ci.code.CodeUtil;
+import jdk.vm.ci.code.MemoryBarriers;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.meta.DeoptimizationAction;
+import jdk.vm.ci.meta.DeoptimizationReason;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaField;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
+import org.graalvm.word.LocationIdentity;
 
 import graalvm.compiler.api.directives.GraalDirectives;
 import graalvm.compiler.api.replacements.Snippet;
@@ -108,19 +111,6 @@ import graalvm.compiler.replacements.nodes.BinaryMathIntrinsicNode;
 import graalvm.compiler.replacements.nodes.BinaryMathIntrinsicNode.BinaryOperation;
 import graalvm.compiler.replacements.nodes.UnaryMathIntrinsicNode;
 import graalvm.compiler.replacements.nodes.UnaryMathIntrinsicNode.UnaryOperation;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.code.CodeUtil;
-import jdk.vm.ci.code.MemoryBarriers;
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.DeoptimizationAction;
-import jdk.vm.ci.meta.DeoptimizationReason;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaField;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * VM-independent lowerings for standard Java nodes. VM-specific methods are abstract and must be
@@ -409,9 +399,9 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
 
         if (loadField.isVolatile())
         {
-            MembarNode preMembar = graph.add(new MembarNode(JMM_PRE_VOLATILE_READ));
+            MembarNode preMembar = graph.add(new MembarNode(MemoryBarriers.JMM_PRE_VOLATILE_READ));
             graph.addBeforeFixed(memoryRead, preMembar);
-            MembarNode postMembar = graph.add(new MembarNode(JMM_POST_VOLATILE_READ));
+            MembarNode postMembar = graph.add(new MembarNode(MemoryBarriers.JMM_POST_VOLATILE_READ));
             graph.addAfterFixed(memoryRead, postMembar);
         }
     }
@@ -431,9 +421,9 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
 
         if (storeField.isVolatile())
         {
-            MembarNode preMembar = graph.add(new MembarNode(JMM_PRE_VOLATILE_WRITE));
+            MembarNode preMembar = graph.add(new MembarNode(MemoryBarriers.JMM_PRE_VOLATILE_WRITE));
             graph.addBeforeFixed(memoryWrite, preMembar);
-            MembarNode postMembar = graph.add(new MembarNode(JMM_POST_VOLATILE_WRITE));
+            MembarNode postMembar = graph.add(new MembarNode(MemoryBarriers.JMM_POST_VOLATILE_WRITE));
             graph.addAfterFixed(memoryWrite, postMembar);
         }
     }
@@ -555,9 +545,9 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
     protected ReadNode createReadArrayLength(ValueNode array, FixedNode before, LoweringTool tool)
     {
         StructuredGraph graph = array.graph();
-        ValueNode canonicalArray = this.createNullCheckedValue(skipPiWhileNonNull(array), before, tool);
+        ValueNode canonicalArray = this.createNullCheckedValue(GraphUtil.skipPiWhileNonNull(array), before, tool);
         AddressNode address = createOffsetAddress(graph, canonicalArray, arrayLengthOffset());
-        ReadNode readArrayLength = graph.add(new ReadNode(address, ARRAY_LENGTH_LOCATION, StampFactory.positiveInt(), BarrierType.NONE));
+        ReadNode readArrayLength = graph.add(new ReadNode(address, NamedLocationIdentity.ARRAY_LENGTH_LOCATION, StampFactory.positiveInt(), BarrierType.NONE));
         graph.addBeforeFixed(before, readArrayLength);
         return readArrayLength;
     }
@@ -1192,7 +1182,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
     protected GuardingNode getBoundsCheck(AccessIndexedNode n, ValueNode array, LoweringTool tool)
     {
         StructuredGraph graph = n.graph();
-        ValueNode arrayLength = readArrayLength(array, tool.getConstantReflection());
+        ValueNode arrayLength = ArrayLengthNode.readArrayLength(array, tool.getConstantReflection());
         if (arrayLength == null)
         {
             arrayLength = createReadArrayLength(array, n, tool);
@@ -1207,7 +1197,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         {
             return null;
         }
-        return tool.createGuard(n, graph.addOrUniqueWithInputs(boundsCheck), BoundsCheckException, InvalidateReprofile);
+        return tool.createGuard(n, graph.addOrUniqueWithInputs(boundsCheck), DeoptimizationReason.BoundsCheckException, DeoptimizationAction.InvalidateReprofile);
     }
 
     protected GuardingNode createNullCheck(ValueNode object, FixedNode before, LoweringTool tool)
@@ -1216,7 +1206,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         {
             return null;
         }
-        return tool.createGuard(before, before.graph().unique(IsNullNode.create(object)), NullCheckException, InvalidateReprofile, JavaConstant.NULL_POINTER, true);
+        return tool.createGuard(before, before.graph().unique(IsNullNode.create(object)), DeoptimizationReason.NullCheckException, DeoptimizationAction.InvalidateReprofile, JavaConstant.NULL_POINTER, true);
     }
 
     protected ValueNode createNullCheckedValue(ValueNode object, FixedNode before, LoweringTool tool)

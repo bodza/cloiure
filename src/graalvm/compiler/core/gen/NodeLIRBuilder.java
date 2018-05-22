@@ -1,15 +1,23 @@
 package graalvm.compiler.core.gen;
 
-import static jdk.vm.ci.code.ValueUtil.isLegal;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static graalvm.compiler.core.common.GraalOptions.MatchExpressions;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import jdk.vm.ci.code.CallingConvention;
+import jdk.vm.ci.code.StackSlot;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.PlatformKind;
+import jdk.vm.ci.meta.Value;
+
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.UnmodifiableMapCursor;
+
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.calc.Condition;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
@@ -71,16 +79,6 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.nodes.spi.NodeValueMap;
 import graalvm.compiler.options.OptionValues;
 
-import jdk.vm.ci.code.CallingConvention;
-import jdk.vm.ci.code.StackSlot;
-import jdk.vm.ci.code.ValueUtil;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.PlatformKind;
-import jdk.vm.ci.meta.Value;
-
 /**
  * This class traverses the HIR instructions and generates LIR instructions from them.
  */
@@ -103,7 +101,7 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
         this.nodeOperands = graph.createNodeMap();
         this.debugInfoBuilder = createDebugInfoBuilder(graph, this);
         OptionValues options = graph.getOptions();
-        if (MatchExpressions.getValue(options))
+        if (GraalOptions.MatchExpressions.getValue(options))
         {
             matchRules = MatchRuleRegistry.lookup(nodeMatchRules.getClass(), options);
         }
@@ -260,7 +258,7 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
         {
             ValueNode node = phi.valueAt(pred);
             Value value = operand(node);
-            if (isRegister(value))
+            if (ValueUtil.isRegister(value))
             {
                 /*
                  * Fixed register intervals are not allowed at block boundaries so we introduce a
@@ -611,7 +609,7 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
             throw GraalError.shouldNotReachHere();
         }
 
-        if (isLegal(result))
+        if (ValueUtil.isLegal(result))
         {
             setResult(x.asNode(), gen.emitMove(result));
         }

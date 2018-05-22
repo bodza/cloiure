@@ -1,10 +1,9 @@
 package graalvm.compiler.nodes.memory.address;
 
-import static graalvm.compiler.nodeinfo.InputType.Association;
-
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node.IndirectCanonicalization;
 import graalvm.compiler.graph.NodeClass;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodeinfo.StructuralInput;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.FloatingNode;

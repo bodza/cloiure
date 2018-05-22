@@ -1,13 +1,12 @@
 package graalvm.compiler.nodes;
 
-import static graalvm.compiler.nodeinfo.InputType.Association;
-
 import graalvm.compiler.graph.IterableNodeType;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.iterators.NodeIterable;
 import graalvm.compiler.graph.spi.Simplifiable;
 import graalvm.compiler.graph.spi.SimplifierTool;
+import graalvm.compiler.nodeinfo.InputType;
 
 public final class LoopExitNode extends BeginStateSplitNode implements IterableNodeType, Simplifiable
 {
@@ -18,7 +17,7 @@ public final class LoopExitNode extends BeginStateSplitNode implements IterableN
      * evaluation can temporarily assign a non-loop begin. This node will then be deleted shortly
      * after - but we still must not have type system violations for that short amount of time.
      */
-    @Input(Association) AbstractBeginNode loopBegin;
+    @Input(InputType.Association) AbstractBeginNode loopBegin;
 
     public LoopExitNode(LoopBeginNode loop)
     {

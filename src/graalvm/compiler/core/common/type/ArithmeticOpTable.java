@@ -1,13 +1,12 @@
 package graalvm.compiler.core.common.type;
 
-import static jdk.vm.ci.meta.MetaUtil.getSimpleName;
-
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Function;
 
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.MetaUtil;
 
 import graalvm.compiler.core.common.calc.FloatConvert;
 import graalvm.compiler.core.common.type.ArithmeticOpTable.BinaryOp.Add;
@@ -364,7 +363,7 @@ public final class ArithmeticOpTable
 
     public static String toString(Op... ops)
     {
-        return CollectionsUtil.mapAndJoin(ops, o -> o == null ? "null" : o.operator + "{" + getSimpleName(o.getClass(), false) + "}", ",");
+        return CollectionsUtil.mapAndJoin(ops, o -> o == null ? "null" : o.operator + "{" + MetaUtil.getSimpleName(o.getClass(), false) + "}", ",");
     }
 
     private boolean opsEquals(ArithmeticOpTable that)

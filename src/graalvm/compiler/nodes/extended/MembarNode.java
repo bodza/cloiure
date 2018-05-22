@@ -1,14 +1,14 @@
 package graalvm.compiler.nodes.extended;
 
-import static graalvm.compiler.nodeinfo.InputType.Memory;
+import org.graalvm.word.LocationIdentity;
 
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.memory.MemoryCheckpoint;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-import org.graalvm.word.LocationIdentity;
 
 /**
  * Creates a memory barrier.

@@ -1,13 +1,10 @@
 package graalvm.compiler.loop;
 
-import static graalvm.compiler.loop.MathUtil.add;
-import static graalvm.compiler.loop.MathUtil.mul;
-import static graalvm.compiler.loop.MathUtil.sub;
-
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.util.UnsignedLong;
 import graalvm.compiler.debug.GraalError;
+import graalvm.compiler.loop.MathUtil;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.StructuredGraph;
@@ -158,7 +155,7 @@ public class BasicInductionVariable extends InductionVariable
         {
             maxTripCount = IntegerConvertNode.convert(maxTripCount, stamp, graph(), NodeView.DEFAULT);
         }
-        return add(graph, mul(graph, stride, sub(graph, maxTripCount, ConstantNode.forIntegerStamp(stamp, 1, graph))), initNode);
+        return MathUtil.add(graph, MathUtil.mul(graph, stride, MathUtil.sub(graph, maxTripCount, ConstantNode.forIntegerStamp(stamp, 1, graph))), initNode);
     }
 
     @Override
@@ -170,7 +167,7 @@ public class BasicInductionVariable extends InductionVariable
         {
             maxTripCount = IntegerConvertNode.convert(maxTripCount, stamp, graph(), NodeView.DEFAULT);
         }
-        return add(graph(), mul(graph(), strideNode(), maxTripCount), initNode());
+        return MathUtil.add(graph(), MathUtil.mul(graph(), strideNode(), maxTripCount), initNode());
     }
 
     @Override

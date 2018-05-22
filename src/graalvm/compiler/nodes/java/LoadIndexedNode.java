@@ -1,5 +1,12 @@
 package graalvm.compiler.nodes.java;
 
+import jdk.vm.ci.meta.Assumptions;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
@@ -16,13 +23,6 @@ import graalvm.compiler.nodes.spi.VirtualizerTool;
 import graalvm.compiler.nodes.type.StampTool;
 import graalvm.compiler.nodes.virtual.VirtualArrayNode;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
-
-import jdk.vm.ci.meta.Assumptions;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * The {@code LoadIndexedNode} represents a read from an element of an array.

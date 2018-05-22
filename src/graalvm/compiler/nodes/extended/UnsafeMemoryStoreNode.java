@@ -1,5 +1,9 @@
 package graalvm.compiler.nodes.extended;
 
+import jdk.vm.ci.meta.JavaKind;
+
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodes.AbstractStateSplit;
@@ -7,9 +11,6 @@ import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.memory.MemoryCheckpoint;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.meta.JavaKind;
 
 /**
  * Store of a value at a location specified as an absolute address.

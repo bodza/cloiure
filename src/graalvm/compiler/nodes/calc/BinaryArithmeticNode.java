@@ -2,6 +2,8 @@ package graalvm.compiler.nodes.calc;
 
 import java.util.function.Function;
 
+import jdk.vm.ci.meta.Constant;
+
 import graalvm.compiler.core.common.type.ArithmeticOpTable;
 import graalvm.compiler.core.common.type.ArithmeticOpTable.BinaryOp;
 import graalvm.compiler.core.common.type.Stamp;
@@ -20,8 +22,6 @@ import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.ValuePhiNode;
 import graalvm.compiler.nodes.spi.ArithmeticLIRLowerable;
 import graalvm.compiler.nodes.spi.NodeValueMap;
-
-import jdk.vm.ci.meta.Constant;
 
 public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements ArithmeticOperation, ArithmeticLIRLowerable, Canonicalizable.Binary<ValueNode>
 {

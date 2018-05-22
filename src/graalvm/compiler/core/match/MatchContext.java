@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
+
 import graalvm.compiler.core.gen.NodeLIRBuilder;
 import graalvm.compiler.core.match.MatchPattern.Result;
 import graalvm.compiler.debug.GraalError;

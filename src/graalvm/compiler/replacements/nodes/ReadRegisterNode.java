@@ -1,5 +1,9 @@
 package graalvm.compiler.replacements.nodes;
 
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
@@ -9,10 +13,6 @@ import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Access the value of a specific register.

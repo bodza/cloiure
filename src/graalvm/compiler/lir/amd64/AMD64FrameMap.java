@@ -1,13 +1,13 @@
 package graalvm.compiler.lir.amd64;
 
-import graalvm.compiler.core.common.NumUtil;
-import graalvm.compiler.core.common.LIRKind;
-import graalvm.compiler.lir.framemap.FrameMap;
-
 import jdk.vm.ci.amd64.AMD64Kind;
 import jdk.vm.ci.code.CodeCacheProvider;
 import jdk.vm.ci.code.RegisterConfig;
 import jdk.vm.ci.code.StackSlot;
+
+import graalvm.compiler.core.common.LIRKind;
+import graalvm.compiler.core.common.NumUtil;
+import graalvm.compiler.lir.framemap.FrameMap;
 
 /**
  * AMD64 specific frame map.

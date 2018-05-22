@@ -1,5 +1,7 @@
 package graalvm.compiler.nodes;
 
+import jdk.vm.ci.meta.JavaKind;
+
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
@@ -11,8 +13,6 @@ import graalvm.compiler.nodes.spi.ValueProxy;
 import graalvm.compiler.nodes.spi.Virtualizable;
 import graalvm.compiler.nodes.spi.VirtualizerTool;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
-
-import jdk.vm.ci.meta.JavaKind;
 
 /**
  * A node that changes the type of its input, usually narrowing it. For example, a GuardedValueNode

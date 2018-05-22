@@ -1,9 +1,8 @@
 package graalvm.compiler.lir.amd64;
 
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.COMPOSITE;
-
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
 import graalvm.compiler.debug.GraalError;
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
 
@@ -12,7 +11,7 @@ public final class AMD64PrefetchOp extends AMD64LIRInstruction
     public static final LIRInstructionClass<AMD64PrefetchOp> TYPE = LIRInstructionClass.create(AMD64PrefetchOp.class);
 
     private final int instr;  // AllocatePrefetchInstr
-    @Alive({COMPOSITE}) protected AMD64AddressValue address;
+    @Alive({OperandFlag.COMPOSITE}) protected AMD64AddressValue address;
 
     public AMD64PrefetchOp(AMD64AddressValue address, int instr)
     {

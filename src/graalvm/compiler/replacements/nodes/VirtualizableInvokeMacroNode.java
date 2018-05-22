@@ -1,5 +1,7 @@
 package graalvm.compiler.replacements.nodes;
 
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import graalvm.compiler.core.common.type.StampPair;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodes.CallTargetNode.InvokeKind;
@@ -7,8 +9,6 @@ import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.Virtualizable;
 import graalvm.compiler.nodes.spi.VirtualizerTool;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * A helper class to allow elimination of byte code instrumentation that could interfere with escape

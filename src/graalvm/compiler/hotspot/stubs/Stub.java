@@ -1,10 +1,5 @@
 package graalvm.compiler.hotspot.stubs;
 
-import static graalvm.compiler.core.GraalCompiler.emitBackEnd;
-import static graalvm.compiler.core.GraalCompiler.emitFrontEnd;
-import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
-import static graalvm.util.CollectionsUtil.allMatch;
-
 import jdk.vm.ci.code.CodeCacheProvider;
 import jdk.vm.ci.code.InstalledCode;
 import jdk.vm.ci.code.Register;
@@ -20,8 +15,11 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.TriState;
 
 import org.graalvm.collections.EconomicSet;
+
 import graalvm.compiler.code.CompilationResult;
+import graalvm.compiler.core.GraalCompiler;
 import graalvm.compiler.core.common.CompilationIdentifier;
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.target.Backend;
 import graalvm.compiler.hotspot.HotSpotCompiledCodeBuilder;
 import graalvm.compiler.hotspot.HotSpotForeignCallLinkage;
@@ -34,6 +32,7 @@ import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.OptimisticOptimizations;
 import graalvm.compiler.phases.PhaseSuite;
 import graalvm.compiler.phases.tiers.Suites;
+import graalvm.util.CollectionsUtil;
 
 /**
  * Base class for implementing some low level code providing the out-of-line slow path for a snippet
@@ -67,7 +66,7 @@ public abstract class Stub
         {
             return false;
         }
-        return allMatch(a, e -> b.contains(e));
+        return CollectionsUtil.allMatch(a, e -> b.contains(e));
     }
 
     public void initDestroyedCallerRegisters(EconomicSet<Register> registers)
@@ -161,7 +160,7 @@ public abstract class Stub
     {
         CompilationIdentifier compilationId = getStubCompilationId();
         final StructuredGraph graph = getGraph(compilationId);
-        CompilationResult compResult = new CompilationResult(compilationId, toString(), GeneratePIC.getValue(options));
+        CompilationResult compResult = new CompilationResult(compilationId, toString(), GraalOptions.GeneratePIC.getValue(options));
 
         // Stubs cannot be recompiled so they cannot be compiled with assumptions
 
@@ -173,9 +172,9 @@ public abstract class Stub
         }
 
         Suites suites = createSuites();
-        emitFrontEnd(providers, backend, graph, providers.getSuites().getDefaultGraphBuilderSuite(), OptimisticOptimizations.ALL, DefaultProfilingInfo.get(TriState.UNKNOWN), suites);
+        GraalCompiler.emitFrontEnd(providers, backend, graph, providers.getSuites().getDefaultGraphBuilderSuite(), OptimisticOptimizations.ALL, DefaultProfilingInfo.get(TriState.UNKNOWN), suites);
         LIRSuites lirSuites = createLIRSuites();
-        emitBackEnd(graph, Stub.this, getInstalledCodeOwner(), backend, compResult, CompilationResultBuilderFactory.Default, getRegisterConfig(), lirSuites);
+        GraalCompiler.emitBackEnd(graph, Stub.this, getInstalledCodeOwner(), backend, compResult, CompilationResultBuilderFactory.Default, getRegisterConfig(), lirSuites);
         return compResult;
     }
 

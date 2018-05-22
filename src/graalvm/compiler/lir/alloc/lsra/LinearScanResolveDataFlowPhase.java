@@ -3,13 +3,13 @@ package graalvm.compiler.lir.alloc.lsra;
 import java.util.ArrayList;
 import java.util.BitSet;
 
+import jdk.vm.ci.code.TargetDescription;
+
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.StandardOp;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.phases.AllocationPhase.AllocationContext;
-
-import jdk.vm.ci.code.TargetDescription;
 
 /**
  * Phase 6: resolve data flow

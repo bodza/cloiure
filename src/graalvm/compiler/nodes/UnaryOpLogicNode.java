@@ -1,12 +1,12 @@
 package graalvm.compiler.nodes;
 
+import jdk.vm.ci.meta.TriState;
+
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
-import jdk.vm.ci.meta.TriState;
 
 public abstract class UnaryOpLogicNode extends LogicNode implements LIRLowerable, Canonicalizable.Unary<ValueNode>
 {

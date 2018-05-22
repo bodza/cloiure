@@ -1,25 +1,22 @@
 package graalvm.compiler.lir.amd64;
 
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.ILLEGAL;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.STACK;
-
-import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
-import graalvm.compiler.lir.LIRInstructionClass;
-import graalvm.compiler.lir.asm.CompilationResultBuilder;
-
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.meta.Value;
+
+import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
+import graalvm.compiler.lir.LIRInstructionClass;
+import graalvm.compiler.lir.asm.CompilationResultBuilder;
 
 public final class AMD64CCall extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64CCall> TYPE = LIRInstructionClass.create(AMD64CCall.class);
 
-    @Def({REG, ILLEGAL}) protected Value result;
-    @Use({REG, STACK}) protected Value[] parameters;
-    @Use({REG}) protected Value functionPtr;
-    @Use({REG}) protected Value numberOfFloatingPointArguments;
+    @Def({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value result;
+    @Use({OperandFlag.REG, OperandFlag.STACK}) protected Value[] parameters;
+    @Use({OperandFlag.REG}) protected Value functionPtr;
+    @Use({OperandFlag.REG}) protected Value numberOfFloatingPointArguments;
 
     public AMD64CCall(Value result, Value functionPtr, Value numberOfFloatingPointArguments, Value[] parameters)
     {

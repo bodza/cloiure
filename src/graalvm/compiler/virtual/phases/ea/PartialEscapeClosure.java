@@ -6,9 +6,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.IntUnaryOperator;
 
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.MetaAccessProvider;
+
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.EconomicSet;
 import org.graalvm.collections.Equivalence;
+
 import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.cfg.Loop;
 import graalvm.compiler.core.common.spi.ConstantFieldProvider;
@@ -47,11 +53,6 @@ import graalvm.compiler.nodes.spi.VirtualizerTool;
 import graalvm.compiler.nodes.virtual.AllocatedObjectNode;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
 import graalvm.compiler.virtual.nodes.VirtualObjectState;
-
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.MetaAccessProvider;
 
 public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockState<BlockT>> extends EffectsClosure<BlockT>
 {

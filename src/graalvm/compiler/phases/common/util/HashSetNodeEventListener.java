@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.graalvm.collections.EconomicSet;
 import org.graalvm.collections.Equivalence;
+
 import graalvm.compiler.graph.Graph.NodeEvent;
 import graalvm.compiler.graph.Graph.NodeEventListener;
 import graalvm.compiler.graph.Node;

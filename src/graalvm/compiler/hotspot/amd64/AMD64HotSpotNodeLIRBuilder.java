@@ -1,14 +1,25 @@
 package graalvm.compiler.hotspot.amd64;
 
-import static jdk.vm.ci.amd64.AMD64.rbp;
-import static jdk.vm.ci.code.ValueUtil.isStackSlot;
-import static graalvm.compiler.hotspot.HotSpotBackend.EXCEPTION_HANDLER_IN_CALLER;
+import jdk.vm.ci.amd64.AMD64;
+import jdk.vm.ci.amd64.AMD64Kind;
+import jdk.vm.ci.code.BytecodeFrame;
+import jdk.vm.ci.code.CallingConvention;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.RegisterValue;
+import jdk.vm.ci.code.StackSlot;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.hotspot.HotSpotCallingConventionType;
+import jdk.vm.ci.hotspot.HotSpotResolvedJavaMethod;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.JavaType;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.core.amd64.AMD64NodeLIRBuilder;
 import graalvm.compiler.core.amd64.AMD64NodeMatchRules;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.spi.ForeignCallLinkage;
 import graalvm.compiler.core.gen.DebugInfoBuilder;
+import graalvm.compiler.hotspot.HotSpotBackend;
 import graalvm.compiler.hotspot.HotSpotDebugInfoBuilder;
 import graalvm.compiler.hotspot.HotSpotLIRGenerator;
 import graalvm.compiler.hotspot.HotSpotLockStack;
@@ -30,20 +41,6 @@ import graalvm.compiler.nodes.SafepointNode;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.NodeValueMap;
-
-import jdk.vm.ci.amd64.AMD64;
-import jdk.vm.ci.amd64.AMD64Kind;
-import jdk.vm.ci.code.BytecodeFrame;
-import jdk.vm.ci.code.CallingConvention;
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.RegisterValue;
-import jdk.vm.ci.code.StackSlot;
-import jdk.vm.ci.code.ValueUtil;
-import jdk.vm.ci.hotspot.HotSpotCallingConventionType;
-import jdk.vm.ci.hotspot.HotSpotResolvedJavaMethod;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.JavaType;
-import jdk.vm.ci.meta.Value;
 
 /**
  * LIR generator specialized for AMD64 HotSpot.
@@ -77,7 +74,7 @@ public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements H
         for (int i = 0; i < params.length - 1; i++)
         {
             params[i] = incomingArguments.getArgument(i);
-            if (isStackSlot(params[i]))
+            if (ValueUtil.isStackSlot(params[i]))
             {
                 StackSlot slot = ValueUtil.asStackSlot(params[i]);
                 if (slot.isInCallerFrame() && !gen.getResult().getLIR().hasArgInCallerFrame())
@@ -86,7 +83,7 @@ public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements H
                 }
             }
         }
-        params[params.length - 1] = rbp.asValue(LIRKind.value(AMD64Kind.QWORD));
+        params[params.length - 1] = AMD64.rbp.asValue(LIRKind.value(AMD64Kind.QWORD));
 
         gen.emitIncomingValues(params);
 
@@ -153,7 +150,7 @@ public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements H
     public void emitJumpToExceptionHandlerInCaller(ValueNode handlerInCallerPc, ValueNode exception, ValueNode exceptionPc)
     {
         Variable handler = gen.load(operand(handlerInCallerPc));
-        ForeignCallLinkage linkage = gen.getForeignCalls().lookupForeignCall(EXCEPTION_HANDLER_IN_CALLER);
+        ForeignCallLinkage linkage = gen.getForeignCalls().lookupForeignCall(HotSpotBackend.EXCEPTION_HANDLER_IN_CALLER);
         CallingConvention outgoingCc = linkage.getOutgoingCallingConvention();
         RegisterValue exceptionFixed = (RegisterValue) outgoingCc.getArgument(0);
         RegisterValue exceptionPcFixed = (RegisterValue) outgoingCc.getArgument(1);

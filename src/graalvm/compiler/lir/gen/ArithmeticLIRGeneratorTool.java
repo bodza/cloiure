@@ -1,13 +1,13 @@
 package graalvm.compiler.lir.gen;
 
+import jdk.vm.ci.meta.Value;
+import jdk.vm.ci.meta.ValueKind;
+
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.calc.FloatConvert;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.LIRFrameState;
 import graalvm.compiler.lir.Variable;
-
-import jdk.vm.ci.meta.Value;
-import jdk.vm.ci.meta.ValueKind;
 
 /**
  * This interface can be used to generate LIR for arithmetic and simple memory access operations.

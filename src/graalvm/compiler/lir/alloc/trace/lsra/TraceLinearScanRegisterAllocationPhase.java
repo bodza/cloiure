@@ -1,13 +1,13 @@
 package graalvm.compiler.lir.alloc.trace.lsra;
 
+import jdk.vm.ci.code.TargetDescription;
+
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.common.alloc.Trace;
 import graalvm.compiler.core.common.alloc.TraceBuilderResult;
 import graalvm.compiler.lir.alloc.trace.lsra.TraceLinearScanPhase.TraceLinearScan;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;
-
-import jdk.vm.ci.code.TargetDescription;
 
 final class TraceLinearScanRegisterAllocationPhase extends TraceLinearScanAllocationPhase
 {

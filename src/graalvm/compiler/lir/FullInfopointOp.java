@@ -1,8 +1,8 @@
 package graalvm.compiler.lir;
 
-import graalvm.compiler.lir.asm.CompilationResultBuilder;
-
 import jdk.vm.ci.code.site.InfopointReason;
+
+import graalvm.compiler.lir.asm.CompilationResultBuilder;
 
 /**
  * Emits an infopoint (only mark the position).

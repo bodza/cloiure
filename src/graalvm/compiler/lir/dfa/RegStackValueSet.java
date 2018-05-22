@@ -1,14 +1,12 @@
 package graalvm.compiler.lir.dfa;
 
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.asStackSlot;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static jdk.vm.ci.code.ValueUtil.isStackSlot;
-
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.lir.LIRInstruction.OperandFlag;
@@ -18,8 +16,6 @@ import graalvm.compiler.lir.framemap.FrameMap;
 import graalvm.compiler.lir.framemap.ReferenceMapBuilder;
 import graalvm.compiler.lir.util.IndexedValueMap;
 import graalvm.compiler.lir.util.ValueSet;
-
-import jdk.vm.ci.meta.Value;
 
 final class RegStackValueSet extends ValueSet<RegStackValueSet>
 {
@@ -59,14 +55,14 @@ final class RegStackValueSet extends ValueSet<RegStackValueSet>
         {
             return;
         }
-        if (isRegister(v))
+        if (ValueUtil.isRegister(v))
         {
-            int index = asRegister(v).number;
+            int index = ValueUtil.asRegister(v).number;
             registers.put(index, v);
         }
-        else if (isStackSlot(v))
+        else if (ValueUtil.isStackSlot(v))
         {
-            int index = frameMap.offsetForStackSlot(asStackSlot(v));
+            int index = frameMap.offsetForStackSlot(ValueUtil.asStackSlot(v));
             if (index % 4 == 0)
             {
                 stack.put(index / 4, v);
@@ -104,14 +100,14 @@ final class RegStackValueSet extends ValueSet<RegStackValueSet>
         {
             return;
         }
-        if (isRegister(v))
+        if (ValueUtil.isRegister(v))
         {
-            int index = asRegister(v).number;
+            int index = ValueUtil.asRegister(v).number;
             registers.put(index, null);
         }
-        else if (isStackSlot(v))
+        else if (ValueUtil.isStackSlot(v))
         {
-            int index = frameMap.offsetForStackSlot(asStackSlot(v));
+            int index = frameMap.offsetForStackSlot(ValueUtil.asStackSlot(v));
             if (index % 4 == 0)
             {
                 stack.put(index / 4, null);
@@ -149,7 +145,7 @@ final class RegStackValueSet extends ValueSet<RegStackValueSet>
          * We always process registers because we have to track the largest register size that is
          * alive across safepoints in order to save and restore them.
          */
-        return isRegister(v) || !LIRKind.isValue(v);
+        return ValueUtil.isRegister(v) || !LIRKind.isValue(v);
     }
 
     public void addLiveValues(ReferenceMapBuilder refMap)

@@ -1,9 +1,9 @@
 package graalvm.compiler.nodes.graphbuilderconf;
 
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.LogicNode;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 public interface ProfilingPlugin extends GraphBuilderPlugin
 {

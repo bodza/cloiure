@@ -1,10 +1,10 @@
 package graalvm.compiler.hotspot.amd64;
 
-import graalvm.compiler.core.common.LIRKind;
-import graalvm.compiler.lir.Variable;
-
 import jdk.vm.ci.amd64.AMD64Kind;
 import jdk.vm.ci.meta.AllocatableValue;
+
+import graalvm.compiler.core.common.LIRKind;
+import graalvm.compiler.lir.Variable;
 
 public interface AMD64HotSpotRestoreRbpOp
 {

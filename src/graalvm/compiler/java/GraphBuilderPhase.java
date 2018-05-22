@@ -1,5 +1,9 @@
 package graalvm.compiler.java;
 
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import graalvm.compiler.core.common.spi.ConstantFieldProvider;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderConfiguration;
@@ -8,10 +12,6 @@ import graalvm.compiler.nodes.spi.StampProvider;
 import graalvm.compiler.phases.BasePhase;
 import graalvm.compiler.phases.OptimisticOptimizations;
 import graalvm.compiler.phases.tiers.HighTierContext;
-
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * Parses the bytecodes of a method and builds the IR graph.

@@ -1,8 +1,7 @@
 package graalvm.compiler.virtual.phases.ea;
 
-import static graalvm.compiler.phases.common.DeadCodeEliminationPhase.Optionality.Required;
-
 import org.graalvm.collections.EconomicSet;
+
 import graalvm.compiler.graph.Graph.NodeEventScope;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.spi.Simplifiable;
@@ -12,6 +11,7 @@ import graalvm.compiler.nodes.cfg.ControlFlowGraph;
 import graalvm.compiler.phases.BasePhase;
 import graalvm.compiler.phases.common.CanonicalizerPhase;
 import graalvm.compiler.phases.common.DeadCodeEliminationPhase;
+import graalvm.compiler.phases.common.DeadCodeEliminationPhase.Optionality;
 import graalvm.compiler.phases.common.util.HashSetNodeEventListener;
 import graalvm.compiler.phases.graph.ReentrantBlockIterator;
 import graalvm.compiler.phases.schedule.SchedulePhase;
@@ -80,7 +80,7 @@ public abstract class EffectsPhase<PhaseContextT extends PhaseContext> extends B
                     closure.applyEffects();
                 }
 
-                new DeadCodeEliminationPhase(Required).apply(graph);
+                new DeadCodeEliminationPhase(Optionality.Required).apply(graph);
 
                 EconomicSet<Node> changedNodes = listener.getNodes();
                 for (Node node : graph.getNodes())

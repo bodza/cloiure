@@ -1,15 +1,18 @@
 package graalvm.compiler.virtual.phases.ea;
 
-import static graalvm.compiler.core.common.GraalOptions.ReadEliminationMaxLoopVisits;
-import static org.graalvm.word.LocationIdentity.any;
-
 import java.util.Iterator;
 import java.util.List;
+
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.ResolvedJavaType;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.EconomicSet;
 import org.graalvm.collections.Equivalence;
 import org.graalvm.collections.MapCursor;
+import org.graalvm.word.LocationIdentity;
+
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.cfg.Loop;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.Node;
@@ -41,10 +44,6 @@ import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.virtual.phases.ea.ReadEliminationBlockState.CacheEntry;
 import graalvm.compiler.virtual.phases.ea.ReadEliminationBlockState.LoadCacheEntry;
 import graalvm.compiler.virtual.phases.ea.ReadEliminationBlockState.UnsafeLoadCacheEntry;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * This closure initially handled a set of nodes that is disjunct from
@@ -76,7 +75,7 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
             AccessFieldNode access = (AccessFieldNode) node;
             if (access.isVolatile())
             {
-                processIdentity(state, any());
+                processIdentity(state, LocationIdentity.any());
             }
             else
             {
@@ -401,7 +400,7 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
             else
             {
                 OptionValues options = loop.getHeader().getBeginNode().getOptions();
-                if (loopKilledLocations.visits() > ReadEliminationMaxLoopVisits.getValue(options))
+                if (loopKilledLocations.visits() > GraalOptions.ReadEliminationMaxLoopVisits.getValue(options))
                 {
                     // we have processed the loop too many times, kill all locations so the inner
                     // loop will never be processed more than once again on visit

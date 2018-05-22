@@ -1,8 +1,11 @@
 package graalvm.compiler.lir.amd64;
 
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.ILLEGAL;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
-import static jdk.vm.ci.code.ValueUtil.asRegister;
+import jdk.vm.ci.amd64.AMD64;
+import jdk.vm.ci.amd64.AMD64Kind;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.asm.Label;
 import graalvm.compiler.asm.amd64.AMD64Address;
@@ -11,17 +14,12 @@ import graalvm.compiler.asm.amd64.AMD64Assembler.ConditionFlag;
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.debug.GraalError;
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.asm.ArrayDataPointerConstant;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
 import graalvm.compiler.lir.gen.LIRGeneratorTool;
-
-import jdk.vm.ci.amd64.AMD64;
-import jdk.vm.ci.amd64.AMD64Kind;
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Value;
 
 public final class AMD64MathIntrinsicBinaryOp extends AMD64LIRInstruction
 {
@@ -36,26 +34,26 @@ public final class AMD64MathIntrinsicBinaryOp extends AMD64LIRInstruction
     @Def protected Value result;
     @Use protected Value input;
     @Use protected Value secondInput;
-    @Temp({REG, ILLEGAL}) protected Value xmm1Temp = Value.ILLEGAL;
-    @Temp({REG, ILLEGAL}) protected Value xmm2Temp = Value.ILLEGAL;
-    @Temp({REG, ILLEGAL}) protected Value xmm3Temp = Value.ILLEGAL;
-    @Temp({REG, ILLEGAL}) protected Value xmm4Temp = Value.ILLEGAL;
-    @Temp({REG, ILLEGAL}) protected Value xmm5Temp = Value.ILLEGAL;
-    @Temp({REG, ILLEGAL}) protected Value xmm6Temp = Value.ILLEGAL;
-    @Temp({REG, ILLEGAL}) protected Value xmm7Temp = Value.ILLEGAL;
-    @Temp({REG, ILLEGAL}) protected Value xmm8Temp = Value.ILLEGAL;
-    @Temp({REG, ILLEGAL}) protected Value xmm9Temp = Value.ILLEGAL;
-    @Temp({REG, ILLEGAL}) protected Value xmm10Temp = Value.ILLEGAL;
-    @Temp({REG, ILLEGAL}) protected Value gpr1Temp = Value.ILLEGAL;
-    @Temp({REG, ILLEGAL}) protected Value gpr2Temp = Value.ILLEGAL;
+    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value xmm1Temp = Value.ILLEGAL;
+    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value xmm2Temp = Value.ILLEGAL;
+    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value xmm3Temp = Value.ILLEGAL;
+    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value xmm4Temp = Value.ILLEGAL;
+    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value xmm5Temp = Value.ILLEGAL;
+    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value xmm6Temp = Value.ILLEGAL;
+    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value xmm7Temp = Value.ILLEGAL;
+    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value xmm8Temp = Value.ILLEGAL;
+    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value xmm9Temp = Value.ILLEGAL;
+    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value xmm10Temp = Value.ILLEGAL;
+    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value gpr1Temp = Value.ILLEGAL;
+    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value gpr2Temp = Value.ILLEGAL;
     @Temp protected AllocatableValue rcxTemp;
-    @Temp({REG, ILLEGAL}) protected Value gpr4Temp = Value.ILLEGAL;
-    @Temp({REG, ILLEGAL}) protected Value gpr5Temp = Value.ILLEGAL;
-    @Temp({REG, ILLEGAL}) protected Value gpr6Temp = Value.ILLEGAL;
-    @Temp({REG, ILLEGAL}) protected Value gpr7Temp = Value.ILLEGAL;
-    @Temp({REG, ILLEGAL}) protected Value gpr8Temp = Value.ILLEGAL;
-    @Temp({REG, ILLEGAL}) protected Value gpr9Temp = Value.ILLEGAL;
-    @Temp({REG, ILLEGAL}) protected Value gpr10Temp = Value.ILLEGAL;
+    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value gpr4Temp = Value.ILLEGAL;
+    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value gpr5Temp = Value.ILLEGAL;
+    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value gpr6Temp = Value.ILLEGAL;
+    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value gpr7Temp = Value.ILLEGAL;
+    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value gpr8Temp = Value.ILLEGAL;
+    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value gpr9Temp = Value.ILLEGAL;
+    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value gpr10Temp = Value.ILLEGAL;
 
     CompilationResultBuilder internalCrb;
 
@@ -106,7 +104,7 @@ public final class AMD64MathIntrinsicBinaryOp extends AMD64LIRInstruction
         switch (opcode)
         {
             case POW:
-                powIntrinsic(asRegister(result, AMD64Kind.DOUBLE), asRegister(input, AMD64Kind.DOUBLE), asRegister(secondInput, AMD64Kind.DOUBLE), crb, masm);
+                powIntrinsic(ValueUtil.asRegister(result, AMD64Kind.DOUBLE), ValueUtil.asRegister(input, AMD64Kind.DOUBLE), ValueUtil.asRegister(secondInput, AMD64Kind.DOUBLE), crb, masm);
                 break;
             default:
                 throw GraalError.shouldNotReachHere();
@@ -894,25 +892,25 @@ public final class AMD64MathIntrinsicBinaryOp extends AMD64LIRInstruction
         Label bb55 = new Label();
         Label bb56 = new Label();
 
-        Register gpr1 = asRegister(gpr1Temp, AMD64Kind.QWORD);
-        Register gpr2 = asRegister(gpr2Temp, AMD64Kind.QWORD);
-        Register gpr3 = asRegister(rcxTemp, AMD64Kind.QWORD);
-        Register gpr4 = asRegister(gpr4Temp, AMD64Kind.QWORD);
-        Register gpr5 = asRegister(gpr5Temp, AMD64Kind.QWORD);
-        Register gpr6 = asRegister(gpr6Temp, AMD64Kind.QWORD);
-        Register gpr7 = asRegister(gpr7Temp, AMD64Kind.QWORD);
-        Register gpr8 = asRegister(gpr8Temp, AMD64Kind.QWORD);
+        Register gpr1 = ValueUtil.asRegister(gpr1Temp, AMD64Kind.QWORD);
+        Register gpr2 = ValueUtil.asRegister(gpr2Temp, AMD64Kind.QWORD);
+        Register gpr3 = ValueUtil.asRegister(rcxTemp, AMD64Kind.QWORD);
+        Register gpr4 = ValueUtil.asRegister(gpr4Temp, AMD64Kind.QWORD);
+        Register gpr5 = ValueUtil.asRegister(gpr5Temp, AMD64Kind.QWORD);
+        Register gpr6 = ValueUtil.asRegister(gpr6Temp, AMD64Kind.QWORD);
+        Register gpr7 = ValueUtil.asRegister(gpr7Temp, AMD64Kind.QWORD);
+        Register gpr8 = ValueUtil.asRegister(gpr8Temp, AMD64Kind.QWORD);
 
-        Register temp1 = asRegister(xmm1Temp, AMD64Kind.DOUBLE);
-        Register temp2 = asRegister(xmm2Temp, AMD64Kind.DOUBLE);
-        Register temp3 = asRegister(xmm3Temp, AMD64Kind.DOUBLE);
-        Register temp4 = asRegister(xmm4Temp, AMD64Kind.DOUBLE);
-        Register temp5 = asRegister(xmm5Temp, AMD64Kind.DOUBLE);
-        Register temp6 = asRegister(xmm6Temp, AMD64Kind.DOUBLE);
-        Register temp7 = asRegister(xmm7Temp, AMD64Kind.DOUBLE);
-        Register temp8 = asRegister(xmm8Temp, AMD64Kind.DOUBLE);
-        Register temp9 = asRegister(xmm9Temp, AMD64Kind.DOUBLE);
-        Register temp10 = asRegister(xmm10Temp, AMD64Kind.DOUBLE);
+        Register temp1 = ValueUtil.asRegister(xmm1Temp, AMD64Kind.DOUBLE);
+        Register temp2 = ValueUtil.asRegister(xmm2Temp, AMD64Kind.DOUBLE);
+        Register temp3 = ValueUtil.asRegister(xmm3Temp, AMD64Kind.DOUBLE);
+        Register temp4 = ValueUtil.asRegister(xmm4Temp, AMD64Kind.DOUBLE);
+        Register temp5 = ValueUtil.asRegister(xmm5Temp, AMD64Kind.DOUBLE);
+        Register temp6 = ValueUtil.asRegister(xmm6Temp, AMD64Kind.DOUBLE);
+        Register temp7 = ValueUtil.asRegister(xmm7Temp, AMD64Kind.DOUBLE);
+        Register temp8 = ValueUtil.asRegister(xmm8Temp, AMD64Kind.DOUBLE);
+        Register temp9 = ValueUtil.asRegister(xmm9Temp, AMD64Kind.DOUBLE);
+        Register temp10 = ValueUtil.asRegister(xmm10Temp, AMD64Kind.DOUBLE);
 
         setCrb(crb);
         masm.movdqu(temp10, value1);

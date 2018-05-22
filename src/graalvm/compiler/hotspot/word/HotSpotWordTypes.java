@@ -1,15 +1,15 @@
 package graalvm.compiler.hotspot.word;
 
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.JavaType;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.hotspot.nodes.type.KlassPointerStamp;
 import graalvm.compiler.hotspot.nodes.type.MethodCountersPointerStamp;
 import graalvm.compiler.hotspot.nodes.type.MethodPointerStamp;
 import graalvm.compiler.word.WordTypes;
-
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.JavaType;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * Extends {@link WordTypes} with information about HotSpot metaspace pointer types.

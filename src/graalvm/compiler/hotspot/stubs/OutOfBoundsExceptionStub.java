@@ -1,5 +1,7 @@
 package graalvm.compiler.hotspot.stubs;
 
+import jdk.vm.ci.code.Register;
+
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
 import graalvm.compiler.debug.GraalError;
@@ -8,8 +10,6 @@ import graalvm.compiler.hotspot.meta.HotSpotProviders;
 import graalvm.compiler.hotspot.nodes.AllocaNode;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.word.Word;
-
-import jdk.vm.ci.code.Register;
 
 /**
  * Stub to allocate an {@link ArrayIndexOutOfBoundsException} thrown by a bytecode.

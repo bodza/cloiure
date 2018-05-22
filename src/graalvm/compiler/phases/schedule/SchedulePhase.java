@@ -1,9 +1,5 @@
 package graalvm.compiler.phases.schedule;
 
-import static org.graalvm.collections.Equivalence.IDENTITY;
-import static graalvm.compiler.core.common.GraalOptions.GuardPriorities;
-import static graalvm.compiler.core.common.GraalOptions.OptScheduleOutOfLoops;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumMap;
@@ -14,6 +10,10 @@ import java.util.TreeSet;
 import java.util.function.Function;
 
 import org.graalvm.collections.EconomicSet;
+import org.graalvm.collections.Equivalence;
+import org.graalvm.word.LocationIdentity;
+
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.cfg.AbstractControlFlowGraph;
 import graalvm.compiler.core.common.cfg.BlockMap;
 import graalvm.compiler.graph.Node;
@@ -50,7 +50,6 @@ import graalvm.compiler.nodes.memory.MemoryCheckpoint;
 import graalvm.compiler.nodes.spi.ValueProxy;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.Phase;
-import org.graalvm.word.LocationIdentity;
 
 public final class SchedulePhase extends Phase
 {
@@ -84,7 +83,7 @@ public final class SchedulePhase extends Phase
 
     public SchedulePhase(boolean immutableGraph, OptionValues options)
     {
-        this(OptScheduleOutOfLoops.getValue(options) ? SchedulingStrategy.LATEST_OUT_OF_LOOPS : SchedulingStrategy.LATEST, immutableGraph);
+        this(GraalOptions.OptScheduleOutOfLoops.getValue(options) ? SchedulingStrategy.LATEST_OUT_OF_LOOPS : SchedulingStrategy.LATEST, immutableGraph);
     }
 
     public SchedulePhase(SchedulingStrategy strategy)
@@ -820,7 +819,7 @@ public final class SchedulePhase extends Phase
             if (graph.getGuardsStage().allowsFloatingGuards() && graph.getNodes(GuardNode.TYPE).isNotEmpty())
             {
                 // Now process guards.
-                if (GuardPriorities.getValue(graph.getOptions()) && withGuardOrder)
+                if (GraalOptions.GuardPriorities.getValue(graph.getOptions()) && withGuardOrder)
                 {
                     EnumMap<GuardPriority, List<GuardNode>> guardsByPriority = new EnumMap<>(GuardPriority.class);
                     for (GuardNode guard : graph.getNodes(GuardNode.TYPE))
@@ -1050,7 +1049,7 @@ public final class SchedulePhase extends Phase
              */
             private static void resortGuards(StructuredGraph graph, NodeMap<MicroBlock> entries, NodeStack stack)
             {
-                EconomicSet<MicroBlock> blocksWithGuards = EconomicSet.create(IDENTITY);
+                EconomicSet<MicroBlock> blocksWithGuards = EconomicSet.create(Equivalence.IDENTITY);
                 for (GuardNode guard : graph.getNodes(GuardNode.TYPE))
                 {
                     MicroBlock block = entries.get(guard);

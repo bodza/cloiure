@@ -1,9 +1,8 @@
 package graalvm.compiler.nodes.extended;
 
-import static graalvm.compiler.nodeinfo.InputType.Guard;
-
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.DeoptimizingFixedWithNextNode;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;

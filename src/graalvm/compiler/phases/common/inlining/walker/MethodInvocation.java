@@ -2,13 +2,13 @@ package graalvm.compiler.phases.common.inlining.walker;
 
 import java.util.BitSet;
 
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import graalvm.compiler.nodes.CallTargetNode;
 import graalvm.compiler.nodes.java.MethodCallTargetNode;
 import graalvm.compiler.phases.common.inlining.info.InlineInfo;
 import graalvm.compiler.phases.common.inlining.info.elem.Inlineable;
 import graalvm.compiler.phases.common.inlining.info.elem.InlineableGraph;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * An instance of this class denotes a callsite being analyzed for inlining.

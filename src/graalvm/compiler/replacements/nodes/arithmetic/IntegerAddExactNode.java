@@ -1,8 +1,8 @@
 package graalvm.compiler.replacements.nodes.arithmetic;
 
-import static graalvm.compiler.core.common.type.IntegerStamp.addOverflowsNegatively;
-import static graalvm.compiler.core.common.type.IntegerStamp.addOverflowsPositively;
-import static graalvm.compiler.core.common.type.IntegerStamp.carryBits;
+import jdk.vm.ci.code.CodeUtil;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.JavaKind;
 
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.Stamp;
@@ -15,10 +15,6 @@ import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.AddNode;
 import graalvm.compiler.nodes.spi.LoweringTool;
-
-import jdk.vm.ci.code.CodeUtil;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
 
 /**
  * Node representing an exact integer addition that will throw an {@link ArithmeticException} in
@@ -56,7 +52,7 @@ public final class IntegerAddExactNode extends AddNode implements IntegerExactAr
 
         long defaultMask = CodeUtil.mask(bits);
         long variableBits = (a.downMask() ^ a.upMask()) | (b.downMask() ^ b.upMask());
-        long variableBitsWithCarry = variableBits | (carryBits(a.downMask(), b.downMask()) ^ carryBits(a.upMask(), b.upMask()));
+        long variableBitsWithCarry = variableBits | (IntegerStamp.carryBits(a.downMask(), b.downMask()) ^ IntegerStamp.carryBits(a.upMask(), b.upMask()));
         long newDownMask = (a.downMask() + b.downMask()) & ~variableBitsWithCarry;
         long newUpMask = (a.downMask() + b.downMask()) | variableBitsWithCarry;
 
@@ -65,10 +61,10 @@ public final class IntegerAddExactNode extends AddNode implements IntegerExactAr
 
         long newLowerBound;
         long newUpperBound;
-        boolean lowerOverflowsPositively = addOverflowsPositively(a.lowerBound(), b.lowerBound(), bits);
-        boolean upperOverflowsPositively = addOverflowsPositively(a.upperBound(), b.upperBound(), bits);
-        boolean lowerOverflowsNegatively = addOverflowsNegatively(a.lowerBound(), b.lowerBound(), bits);
-        boolean upperOverflowsNegatively = addOverflowsNegatively(a.upperBound(), b.upperBound(), bits);
+        boolean lowerOverflowsPositively = IntegerStamp.addOverflowsPositively(a.lowerBound(), b.lowerBound(), bits);
+        boolean upperOverflowsPositively = IntegerStamp.addOverflowsPositively(a.upperBound(), b.upperBound(), bits);
+        boolean lowerOverflowsNegatively = IntegerStamp.addOverflowsNegatively(a.lowerBound(), b.lowerBound(), bits);
+        boolean upperOverflowsNegatively = IntegerStamp.addOverflowsNegatively(a.upperBound(), b.upperBound(), bits);
         if (lowerOverflowsPositively)
         {
             newLowerBound = CodeUtil.maxValue(bits);

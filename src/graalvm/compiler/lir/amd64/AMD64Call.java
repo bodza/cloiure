@@ -1,28 +1,25 @@
 package graalvm.compiler.lir.amd64;
 
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.ILLEGAL;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.STACK;
-import static jdk.vm.ci.code.ValueUtil.asRegister;
+import jdk.vm.ci.amd64.AMD64;
+import jdk.vm.ci.amd64.AMD64Kind;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.RegisterValue;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.InvokeTarget;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.asm.amd64.AMD64Assembler.ConditionFlag;
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.spi.ForeignCallLinkage;
 import graalvm.compiler.lir.LIRFrameState;
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
 import graalvm.compiler.lir.gen.DiagnosticLIRGeneratorTool.ZapRegistersAfterInstruction;
-
-import jdk.vm.ci.amd64.AMD64;
-import jdk.vm.ci.amd64.AMD64Kind;
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.RegisterValue;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.InvokeTarget;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.Value;
 
 public class AMD64Call
 {
@@ -30,9 +27,9 @@ public class AMD64Call
     {
         public static final LIRInstructionClass<CallOp> TYPE = LIRInstructionClass.create(CallOp.class);
 
-        @Def({REG, ILLEGAL}) protected Value result;
-        @Use({REG, STACK}) protected Value[] parameters;
-        @Temp({REG, STACK}) protected Value[] temps;
+        @Def({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value result;
+        @Use({OperandFlag.REG, OperandFlag.STACK}) protected Value[] parameters;
+        @Temp({OperandFlag.REG, OperandFlag.STACK}) protected Value[] temps;
         @State protected LIRFrameState state;
 
         protected CallOp(LIRInstructionClass<? extends CallOp> c, Value result, Value[] parameters, Value[] temps, LIRFrameState state)
@@ -96,7 +93,7 @@ public class AMD64Call
     {
         public static final LIRInstructionClass<IndirectCallOp> TYPE = LIRInstructionClass.create(IndirectCallOp.class);
 
-        @Use({REG}) protected Value targetAddress;
+        @Use({OperandFlag.REG}) protected Value targetAddress;
 
         public IndirectCallOp(ResolvedJavaMethod callTarget, Value result, Value[] parameters, Value[] temps, Value targetAddress, LIRFrameState state)
         {
@@ -112,7 +109,7 @@ public class AMD64Call
         @Override
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
-            indirectCall(crb, masm, asRegister(targetAddress), callTarget, state);
+            indirectCall(crb, masm, ValueUtil.asRegister(targetAddress), callTarget, state);
         }
     }
 
@@ -157,7 +154,7 @@ public class AMD64Call
     {
         public static final LIRInstructionClass<DirectFarForeignCallOp> TYPE = LIRInstructionClass.create(DirectFarForeignCallOp.class);
 
-        @Temp({REG}) protected AllocatableValue callTemp;
+        @Temp({OperandFlag.REG}) protected AllocatableValue callTemp;
 
         public DirectFarForeignCallOp(ForeignCallLinkage callTarget, Value result, Value[] parameters, Value[] temps, LIRFrameState state)
         {

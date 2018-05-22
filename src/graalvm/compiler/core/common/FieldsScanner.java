@@ -1,10 +1,10 @@
 package graalvm.compiler.core.common;
 
-import graalvm.util.UnsafeAccess;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+
+import graalvm.util.UnsafeAccess;
 
 /**
  * Scans the fields in a class hierarchy.

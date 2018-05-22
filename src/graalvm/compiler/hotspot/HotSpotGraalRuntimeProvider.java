@@ -1,12 +1,12 @@
 package graalvm.compiler.hotspot;
 
+import jdk.vm.ci.code.TargetDescription;
+
 import graalvm.compiler.api.runtime.GraalRuntime;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.replacements.SnippetCounter.Group;
 import graalvm.compiler.runtime.RuntimeProvider;
-
-import jdk.vm.ci.code.TargetDescription;
 
 /**
  * Configuration information for the HotSpot Graal runtime.

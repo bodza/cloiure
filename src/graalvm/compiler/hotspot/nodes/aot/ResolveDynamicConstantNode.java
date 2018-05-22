@@ -1,6 +1,7 @@
 package graalvm.compiler.hotspot.nodes.aot;
 
 import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodeinfo.InputType;

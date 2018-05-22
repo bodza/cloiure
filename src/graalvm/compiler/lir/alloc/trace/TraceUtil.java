@@ -2,6 +2,8 @@ package graalvm.compiler.lir.alloc.trace;
 
 import java.util.ArrayList;
 
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.core.common.alloc.Trace;
 import graalvm.compiler.core.common.alloc.TraceBuilderResult;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
@@ -9,8 +11,6 @@ import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.StandardOp.JumpOp;
 import graalvm.compiler.lir.StandardOp.LabelOp;
-
-import jdk.vm.ci.meta.Value;
 
 public class TraceUtil
 {

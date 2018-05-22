@@ -1,20 +1,7 @@
 package graalvm.compiler.lir;
 
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.CONST;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.HINT;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.OUTGOING;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.STACK;
-
 import java.util.ArrayList;
 import java.util.EnumSet;
-
-import org.graalvm.collections.EconomicSet;
-import graalvm.compiler.asm.Label;
-import graalvm.compiler.core.common.cfg.AbstractBlockBase;
-import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.lir.asm.CompilationResultBuilder;
-import graalvm.compiler.lir.framemap.FrameMap;
 
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.RegisterSaveLayout;
@@ -22,6 +9,15 @@ import jdk.vm.ci.code.StackSlot;
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.Value;
+
+import org.graalvm.collections.EconomicSet;
+
+import graalvm.compiler.asm.Label;
+import graalvm.compiler.core.common.cfg.AbstractBlockBase;
+import graalvm.compiler.debug.GraalError;
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
+import graalvm.compiler.lir.asm.CompilationResultBuilder;
+import graalvm.compiler.lir.framemap.FrameMap;
 
 /**
  * A collection of machine-independent LIR operations, as well as interfaces to be implemented for
@@ -55,7 +51,7 @@ public class StandardOp
     public static final class LabelOp extends LIRInstruction
     {
         public static final LIRInstructionClass<LabelOp> TYPE = LIRInstructionClass.create(LabelOp.class);
-        public static final EnumSet<OperandFlag> incomingFlags = EnumSet.of(REG, STACK);
+        public static final EnumSet<OperandFlag> incomingFlags = EnumSet.of(OperandFlag.REG, OperandFlag.STACK);
 
         /**
          * In the LIR, every register and variable must be defined before it is used. For method
@@ -65,7 +61,7 @@ public class StandardOp
          * between the label at the beginning of a block an an actual definition in the second
          * instruction of a block, the registers are defined here in the label.
          */
-        @Def({REG, STACK}) private Value[] incomingValues;
+        @Def({OperandFlag.REG, OperandFlag.STACK}) private Value[] incomingValues;
         private final Label label;
         private final boolean align;
         private int numbPhis;
@@ -172,9 +168,9 @@ public class StandardOp
     public static class JumpOp extends LIRInstruction implements BlockEndOp
     {
         public static final LIRInstructionClass<JumpOp> TYPE = LIRInstructionClass.create(JumpOp.class);
-        public static final EnumSet<OperandFlag> outgoingFlags = EnumSet.of(REG, STACK, CONST, OUTGOING);
+        public static final EnumSet<OperandFlag> outgoingFlags = EnumSet.of(OperandFlag.REG, OperandFlag.STACK, OperandFlag.CONST, OperandFlag.OUTGOING);
 
-        @Alive({REG, STACK, CONST, OUTGOING}) private Value[] outgoingValues;
+        @Alive({OperandFlag.REG, OperandFlag.STACK, OperandFlag.CONST, OperandFlag.OUTGOING}) private Value[] outgoingValues;
 
         private final LabelRef destination;
 
@@ -375,7 +371,7 @@ public class StandardOp
     {
         public static final LIRInstructionClass<BlackholeOp> TYPE = LIRInstructionClass.create(BlackholeOp.class);
 
-        @Use({REG, STACK, CONST}) private Value value;
+        @Use({OperandFlag.REG, OperandFlag.STACK, OperandFlag.CONST}) private Value value;
 
         public BlackholeOp(Value value)
         {
@@ -394,7 +390,7 @@ public class StandardOp
     {
         public static final LIRInstructionClass<BindToRegisterOp> TYPE = LIRInstructionClass.create(BindToRegisterOp.class);
 
-        @Use({REG}) private Value value;
+        @Use({OperandFlag.REG}) private Value value;
 
         public BindToRegisterOp(Value value)
         {
@@ -436,8 +432,8 @@ public class StandardOp
     {
         public static final LIRInstructionClass<StackMove> TYPE = LIRInstructionClass.create(StackMove.class);
 
-        @Def({STACK, HINT}) protected AllocatableValue result;
-        @Use({STACK}) protected AllocatableValue input;
+        @Def({OperandFlag.STACK, OperandFlag.HINT}) protected AllocatableValue result;
+        @Use({OperandFlag.STACK}) protected AllocatableValue input;
 
         public StackMove(AllocatableValue result, AllocatableValue input)
         {

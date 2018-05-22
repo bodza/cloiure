@@ -1,12 +1,14 @@
 package graalvm.compiler.lir.amd64;
 
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.CONST;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.HINT;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.ILLEGAL;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.STACK;
+import jdk.vm.ci.amd64.AMD64;
+import jdk.vm.ci.amd64.AMD64.CPUFeature;
+import jdk.vm.ci.amd64.AMD64Kind;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.asm.Label;
 import graalvm.compiler.asm.amd64.AMD64Address;
@@ -16,6 +18,7 @@ import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
 import graalvm.compiler.code.CompilationResult.JumpTable;
 import graalvm.compiler.core.common.calc.Condition;
 import graalvm.compiler.debug.GraalError;
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.LabelRef;
 import graalvm.compiler.lir.Opcode;
@@ -26,21 +29,12 @@ import graalvm.compiler.lir.SwitchStrategy.BaseSwitchClosure;
 import graalvm.compiler.lir.Variable;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
 
-import jdk.vm.ci.amd64.AMD64;
-import jdk.vm.ci.amd64.AMD64.CPUFeature;
-import jdk.vm.ci.amd64.AMD64Kind;
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.Value;
-
 public class AMD64ControlFlow
 {
     public static final class ReturnOp extends AMD64BlockEndOp implements BlockEndOp
     {
         public static final LIRInstructionClass<ReturnOp> TYPE = LIRInstructionClass.create(ReturnOp.class);
-        @Use({REG, ILLEGAL}) protected Value x;
+        @Use({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value x;
 
         public ReturnOp(Value x)
         {
@@ -159,8 +153,8 @@ public class AMD64ControlFlow
         protected final Constant[] keyConstants;
         private final LabelRef[] keyTargets;
         private LabelRef defaultTarget;
-        @Alive({REG}) protected Value key;
-        @Temp({REG, ILLEGAL}) protected Value scratch;
+        @Alive({OperandFlag.REG}) protected Value key;
+        @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value scratch;
         protected final SwitchStrategy strategy;
 
         public StrategySwitchOp(SwitchStrategy strategy, LabelRef[] keyTargets, LabelRef defaultTarget, Value key, Value scratch)
@@ -182,7 +176,7 @@ public class AMD64ControlFlow
         @Override
         public void emitCode(final CompilationResultBuilder crb, final AMD64MacroAssembler masm)
         {
-            strategy.run(new SwitchClosure(asRegister(key), crb, masm));
+            strategy.run(new SwitchClosure(ValueUtil.asRegister(key), crb, masm));
         }
 
         public class SwitchClosure extends BaseSwitchClosure
@@ -212,8 +206,8 @@ public class AMD64ControlFlow
                         masm.cmpq(keyRegister, (AMD64Address) crb.asLongConstRef(jc));
                         break;
                     case Object:
-                        AMD64Move.const2reg(crb, masm, asRegister(scratch), jc);
-                        masm.cmpptr(keyRegister, asRegister(scratch));
+                        AMD64Move.const2reg(crb, masm, ValueUtil.asRegister(scratch), jc);
+                        masm.cmpptr(keyRegister, ValueUtil.asRegister(scratch));
                         break;
                     default:
                         throw new GraalError("switch only supported for int, long and object");
@@ -236,7 +230,7 @@ public class AMD64ControlFlow
         private final LabelRef defaultTarget;
         private final LabelRef[] targets;
         @Use protected Value index;
-        @Temp({REG, HINT}) protected Value idxScratch;
+        @Temp({OperandFlag.REG, OperandFlag.HINT}) protected Value idxScratch;
         @Temp protected Value scratch;
 
         public TableSwitchOp(final int lowKey, final LabelRef defaultTarget, final LabelRef[] targets, Value index, Variable scratch, Variable idxScratch)
@@ -253,9 +247,9 @@ public class AMD64ControlFlow
         @Override
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
-            Register indexReg = asRegister(index, AMD64Kind.DWORD);
-            Register idxScratchReg = asRegister(idxScratch, AMD64Kind.DWORD);
-            Register scratchReg = asRegister(scratch, AMD64Kind.QWORD);
+            Register indexReg = ValueUtil.asRegister(index, AMD64Kind.DWORD);
+            Register idxScratchReg = ValueUtil.asRegister(idxScratch, AMD64Kind.DWORD);
+            Register scratchReg = ValueUtil.asRegister(scratch, AMD64Kind.QWORD);
 
             if (!indexReg.equals(idxScratchReg))
             {
@@ -331,7 +325,7 @@ public class AMD64ControlFlow
     public static final class CondSetOp extends AMD64LIRInstruction
     {
         public static final LIRInstructionClass<CondSetOp> TYPE = LIRInstructionClass.create(CondSetOp.class);
-        @Def({REG, HINT}) protected Value result;
+        @Def({OperandFlag.REG, OperandFlag.HINT}) protected Value result;
         private final ConditionFlag condition;
 
         public CondSetOp(Variable result, Condition condition)
@@ -352,7 +346,7 @@ public class AMD64ControlFlow
     public static final class FloatCondSetOp extends AMD64LIRInstruction
     {
         public static final LIRInstructionClass<FloatCondSetOp> TYPE = LIRInstructionClass.create(FloatCondSetOp.class);
-        @Def({REG, HINT}) protected Value result;
+        @Def({OperandFlag.REG, OperandFlag.HINT}) protected Value result;
         private final ConditionFlag condition;
 
         public FloatCondSetOp(Variable result, Condition condition)
@@ -373,9 +367,9 @@ public class AMD64ControlFlow
     public static final class CondMoveOp extends AMD64LIRInstruction
     {
         public static final LIRInstructionClass<CondMoveOp> TYPE = LIRInstructionClass.create(CondMoveOp.class);
-        @Def({REG, HINT}) protected Value result;
-        @Alive({REG}) protected Value trueValue;
-        @Use({REG, STACK, CONST}) protected Value falseValue;
+        @Def({OperandFlag.REG, OperandFlag.HINT}) protected Value result;
+        @Alive({OperandFlag.REG}) protected Value trueValue;
+        @Use({OperandFlag.REG, OperandFlag.STACK, OperandFlag.CONST}) protected Value falseValue;
         private final ConditionFlag condition;
 
         public CondMoveOp(Variable result, Condition condition, AllocatableValue trueValue, Value falseValue)
@@ -398,9 +392,9 @@ public class AMD64ControlFlow
     public static final class FloatCondMoveOp extends AMD64LIRInstruction
     {
         public static final LIRInstructionClass<FloatCondMoveOp> TYPE = LIRInstructionClass.create(FloatCondMoveOp.class);
-        @Def({REG}) protected Value result;
-        @Alive({REG}) protected Value trueValue;
-        @Alive({REG}) protected Value falseValue;
+        @Def({OperandFlag.REG}) protected Value result;
+        @Alive({OperandFlag.REG}) protected Value trueValue;
+        @Alive({OperandFlag.REG}) protected Value falseValue;
         private final ConditionFlag condition;
         private final boolean unorderedIsTrue;
 
@@ -456,17 +450,17 @@ public class AMD64ControlFlow
 
     private static void cmove(CompilationResultBuilder crb, AMD64MacroAssembler masm, Value result, ConditionFlag cond, Value other)
     {
-        if (isRegister(other))
+        if (ValueUtil.isRegister(other))
         {
             switch ((AMD64Kind) other.getPlatformKind())
             {
                 case BYTE:
                 case WORD:
                 case DWORD:
-                    masm.cmovl(cond, asRegister(result), asRegister(other));
+                    masm.cmovl(cond, ValueUtil.asRegister(result), ValueUtil.asRegister(other));
                     break;
                 case QWORD:
-                    masm.cmovq(cond, asRegister(result), asRegister(other));
+                    masm.cmovq(cond, ValueUtil.asRegister(result), ValueUtil.asRegister(other));
                     break;
                 default:
                     throw GraalError.shouldNotReachHere();
@@ -480,10 +474,10 @@ public class AMD64ControlFlow
                 case BYTE:
                 case WORD:
                 case DWORD:
-                    masm.cmovl(cond, asRegister(result), addr);
+                    masm.cmovl(cond, ValueUtil.asRegister(result), addr);
                     break;
                 case QWORD:
-                    masm.cmovq(cond, asRegister(result), addr);
+                    masm.cmovq(cond, ValueUtil.asRegister(result), addr);
                     break;
                 default:
                     throw GraalError.shouldNotReachHere();
@@ -498,10 +492,10 @@ public class AMD64ControlFlow
             case BYTE:
             case WORD:
             case DWORD:
-                masm.setl(cond, asRegister(result));
+                masm.setl(cond, ValueUtil.asRegister(result));
                 break;
             case QWORD:
-                masm.setq(cond, asRegister(result));
+                masm.setq(cond, ValueUtil.asRegister(result));
                 break;
             default:
                 throw GraalError.shouldNotReachHere();

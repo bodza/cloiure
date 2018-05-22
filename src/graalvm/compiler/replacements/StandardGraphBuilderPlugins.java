@@ -1,18 +1,21 @@
 package graalvm.compiler.replacements;
 
-import static jdk.vm.ci.code.MemoryBarriers.JMM_POST_VOLATILE_READ;
-import static jdk.vm.ci.code.MemoryBarriers.JMM_POST_VOLATILE_WRITE;
-import static jdk.vm.ci.code.MemoryBarriers.JMM_PRE_VOLATILE_READ;
-import static jdk.vm.ci.code.MemoryBarriers.JMM_PRE_VOLATILE_WRITE;
-import static jdk.vm.ci.code.MemoryBarriers.LOAD_LOAD;
-import static jdk.vm.ci.code.MemoryBarriers.LOAD_STORE;
-import static jdk.vm.ci.code.MemoryBarriers.STORE_LOAD;
-import static jdk.vm.ci.code.MemoryBarriers.STORE_STORE;
-import static graalvm.compiler.nodes.NamedLocationIdentity.OFF_HEAP_LOCATION;
-
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.Arrays;
+
+import jdk.vm.ci.code.BytecodePosition;
+import jdk.vm.ci.code.MemoryBarriers;
+import jdk.vm.ci.meta.DeoptimizationAction;
+import jdk.vm.ci.meta.DeoptimizationReason;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+import jdk.vm.ci.meta.SpeculationLog;
+
+import org.graalvm.word.LocationIdentity;
 
 import graalvm.compiler.api.directives.GraalDirectives;
 import graalvm.compiler.api.replacements.SnippetReflectionProvider;
@@ -32,6 +35,7 @@ import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.DeoptimizeNode;
 import graalvm.compiler.nodes.FixedGuardNode;
 import graalvm.compiler.nodes.LogicNode;
+import graalvm.compiler.nodes.NamedLocationIdentity;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.ValueNode;
@@ -80,17 +84,6 @@ import graalvm.compiler.replacements.nodes.VirtualizableInvokeMacroNode;
 import graalvm.compiler.replacements.nodes.arithmetic.IntegerAddExactNode;
 import graalvm.compiler.replacements.nodes.arithmetic.IntegerMulExactNode;
 import graalvm.compiler.replacements.nodes.arithmetic.IntegerSubExactNode;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.code.BytecodePosition;
-import jdk.vm.ci.meta.DeoptimizationAction;
-import jdk.vm.ci.meta.DeoptimizationReason;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
-import jdk.vm.ci.meta.SpeculationLog;
 
 /**
  * Provides non-runtime specific {@link InvocationPlugin}s.
@@ -243,9 +236,9 @@ public class StandardGraphBuilderPlugins
             }
         });
 
-        r.register1("loadFence", Receiver.class, new UnsafeFencePlugin(LOAD_LOAD | LOAD_STORE));
-        r.register1("storeFence", Receiver.class, new UnsafeFencePlugin(STORE_STORE | LOAD_STORE));
-        r.register1("fullFence", Receiver.class, new UnsafeFencePlugin(LOAD_LOAD | STORE_STORE | LOAD_STORE | STORE_LOAD));
+        r.register1("loadFence", Receiver.class, new UnsafeFencePlugin(MemoryBarriers.LOAD_LOAD | MemoryBarriers.LOAD_STORE));
+        r.register1("storeFence", Receiver.class, new UnsafeFencePlugin(MemoryBarriers.STORE_STORE | MemoryBarriers.LOAD_STORE));
+        r.register1("fullFence", Receiver.class, new UnsafeFencePlugin(MemoryBarriers.LOAD_LOAD | MemoryBarriers.STORE_STORE | MemoryBarriers.LOAD_STORE | MemoryBarriers.STORE_LOAD));
     }
 
     private static void registerIntegerLongPlugins(InvocationPlugins plugins, JavaKind kind)
@@ -736,7 +729,7 @@ public class StandardGraphBuilderPlugins
         {
             // Emits a null-check for the otherwise unused receiver
             unsafe.get();
-            b.addPush(returnKind, new UnsafeMemoryLoadNode(address, returnKind, OFF_HEAP_LOCATION));
+            b.addPush(returnKind, new UnsafeMemoryLoadNode(address, returnKind, NamedLocationIdentity.OFF_HEAP_LOCATION));
             b.getGraph().markUnsafeAccess();
             return true;
         }
@@ -748,13 +741,13 @@ public class StandardGraphBuilderPlugins
             unsafe.get();
             if (isVolatile)
             {
-                b.add(new MembarNode(JMM_PRE_VOLATILE_READ));
+                b.add(new MembarNode(MemoryBarriers.JMM_PRE_VOLATILE_READ));
             }
-            LocationIdentity locationIdentity = object.isNullConstant() ? OFF_HEAP_LOCATION : LocationIdentity.any();
+            LocationIdentity locationIdentity = object.isNullConstant() ? NamedLocationIdentity.OFF_HEAP_LOCATION : LocationIdentity.any();
             b.addPush(returnKind, new RawLoadNode(object, offset, returnKind, locationIdentity));
             if (isVolatile)
             {
-                b.add(new MembarNode(JMM_POST_VOLATILE_READ));
+                b.add(new MembarNode(MemoryBarriers.JMM_POST_VOLATILE_READ));
             }
             b.getGraph().markUnsafeAccess();
             return true;
@@ -770,7 +763,7 @@ public class StandardGraphBuilderPlugins
 
         public UnsafePutPlugin(JavaKind kind, boolean isVolatile)
         {
-            this(kind, isVolatile, JMM_PRE_VOLATILE_WRITE, JMM_POST_VOLATILE_WRITE);
+            this(kind, isVolatile, MemoryBarriers.JMM_PRE_VOLATILE_WRITE, MemoryBarriers.JMM_POST_VOLATILE_WRITE);
         }
 
         private UnsafePutPlugin(JavaKind kind, boolean hasBarrier, int preWrite, int postWrite)
@@ -784,7 +777,7 @@ public class StandardGraphBuilderPlugins
 
         public static UnsafePutPlugin putOrdered(JavaKind kind)
         {
-            return new UnsafePutPlugin(kind, true, LOAD_STORE | STORE_STORE, 0);
+            return new UnsafePutPlugin(kind, true, MemoryBarriers.LOAD_STORE | MemoryBarriers.STORE_STORE, 0);
         }
 
         @Override
@@ -792,7 +785,7 @@ public class StandardGraphBuilderPlugins
         {
             // Emits a null-check for the otherwise unused receiver
             unsafe.get();
-            b.add(new UnsafeMemoryStoreNode(address, value, kind, OFF_HEAP_LOCATION));
+            b.add(new UnsafeMemoryStoreNode(address, value, kind, NamedLocationIdentity.OFF_HEAP_LOCATION));
             b.getGraph().markUnsafeAccess();
             return true;
         }
@@ -806,7 +799,7 @@ public class StandardGraphBuilderPlugins
             {
                 b.add(new MembarNode(preWrite));
             }
-            LocationIdentity locationIdentity = object.isNullConstant() ? OFF_HEAP_LOCATION : LocationIdentity.any();
+            LocationIdentity locationIdentity = object.isNullConstant() ? NamedLocationIdentity.OFF_HEAP_LOCATION : LocationIdentity.any();
             b.add(new RawStoreNode(object, offset, value, kind, locationIdentity));
             if (hasBarrier)
             {

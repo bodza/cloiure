@@ -1,12 +1,10 @@
 package graalvm.compiler.nodes.extended;
 
-import static graalvm.compiler.nodeinfo.InputType.Anchor;
-import static graalvm.compiler.nodeinfo.InputType.Guard;
-
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Simplifiable;
 import graalvm.compiler.graph.spi.SimplifierTool;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.AbstractBeginNode;
 import graalvm.compiler.nodes.FixedNode;
 import graalvm.compiler.nodes.FixedWithNextNode;
@@ -25,7 +23,7 @@ import graalvm.compiler.nodes.virtual.VirtualObjectNode;
 public final class ValueAnchorNode extends FixedWithNextNode implements LIRLowerable, Simplifiable, Virtualizable, AnchoringNode, GuardingNode
 {
     public static final NodeClass<ValueAnchorNode> TYPE = NodeClass.create(ValueAnchorNode.class);
-    @OptionalInput(Guard) ValueNode anchored;
+    @OptionalInput(InputType.Guard) ValueNode anchored;
 
     public ValueAnchorNode(ValueNode value)
     {

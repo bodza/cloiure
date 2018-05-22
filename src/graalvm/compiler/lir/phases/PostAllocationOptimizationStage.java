@@ -1,11 +1,10 @@
 package graalvm.compiler.lir.phases;
 
-import static graalvm.compiler.lir.phases.LIRPhase.Options.LIROptimization;
-
 import graalvm.compiler.lir.ControlFlowOptimizer;
 import graalvm.compiler.lir.EdgeMoveOptimizer;
 import graalvm.compiler.lir.NullCheckOptimizer;
 import graalvm.compiler.lir.RedundantMoveElimination;
+import graalvm.compiler.lir.phases.LIRPhase;
 import graalvm.compiler.lir.phases.PostAllocationOptimizationPhase.PostAllocationOptimizationContext;
 import graalvm.compiler.options.NestedBooleanOptionKey;
 import graalvm.compiler.options.OptionValues;
@@ -14,10 +13,10 @@ public class PostAllocationOptimizationStage extends LIRPhaseSuite<PostAllocatio
 {
     public static class Options
     {
-        public static final NestedBooleanOptionKey LIROptEdgeMoveOptimizer = new NestedBooleanOptionKey(LIROptimization, true);
-        public static final NestedBooleanOptionKey LIROptControlFlowOptimizer = new NestedBooleanOptionKey(LIROptimization, true);
-        public static final NestedBooleanOptionKey LIROptRedundantMoveElimination = new NestedBooleanOptionKey(LIROptimization, true);
-        public static final NestedBooleanOptionKey LIROptNullCheckOptimizer = new NestedBooleanOptionKey(LIROptimization, true);
+        public static final NestedBooleanOptionKey LIROptEdgeMoveOptimizer = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
+        public static final NestedBooleanOptionKey LIROptControlFlowOptimizer = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
+        public static final NestedBooleanOptionKey LIROptRedundantMoveElimination = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
+        public static final NestedBooleanOptionKey LIROptNullCheckOptimizer = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
     }
 
     public PostAllocationOptimizationStage(OptionValues options)

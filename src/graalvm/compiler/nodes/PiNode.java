@@ -2,6 +2,8 @@ package graalvm.compiler.nodes;
 
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import graalvm.compiler.core.common.type.AbstractPointerStamp;
 import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.Stamp;
@@ -22,8 +24,6 @@ import graalvm.compiler.nodes.spi.Virtualizable;
 import graalvm.compiler.nodes.spi.VirtualizerTool;
 import graalvm.compiler.nodes.type.StampTool;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
-
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * A node that changes the type of its input, usually narrowing it. For example, a {@link PiNode}

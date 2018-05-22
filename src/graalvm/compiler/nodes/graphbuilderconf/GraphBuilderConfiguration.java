@@ -2,10 +2,10 @@ package graalvm.compiler.nodes.graphbuilderconf;
 
 import java.util.Arrays;
 
-import graalvm.compiler.core.common.type.StampPair;
-
 import jdk.vm.ci.meta.JavaType;
 import jdk.vm.ci.meta.ResolvedJavaType;
+
+import graalvm.compiler.core.common.type.StampPair;
 
 public class GraphBuilderConfiguration
 {

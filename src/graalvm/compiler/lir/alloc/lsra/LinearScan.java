@@ -1,17 +1,21 @@
 package graalvm.compiler.lir.alloc.lsra;
 
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.isIllegal;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static graalvm.compiler.lir.LIRValueUtil.isVariable;
-import static graalvm.compiler.lir.phases.LIRPhase.Options.LIROptimization;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.EnumSet;
 
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.RegisterArray;
+import jdk.vm.ci.code.RegisterAttributes;
+import jdk.vm.ci.code.RegisterValue;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Value;
+
 import org.graalvm.collections.Pair;
+
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.core.common.cfg.BlockMap;
@@ -20,6 +24,7 @@ import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstruction.OperandMode;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.ValueConsumer;
 import graalvm.compiler.lir.Variable;
 import graalvm.compiler.lir.VirtualStackSlot;
@@ -28,17 +33,10 @@ import graalvm.compiler.lir.framemap.FrameMapBuilder;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;
 import graalvm.compiler.lir.phases.AllocationPhase.AllocationContext;
+import graalvm.compiler.lir.phases.LIRPhase;
 import graalvm.compiler.options.NestedBooleanOptionKey;
 import graalvm.compiler.options.OptionKey;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.RegisterArray;
-import jdk.vm.ci.code.RegisterAttributes;
-import jdk.vm.ci.code.RegisterValue;
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Value;
 
 /**
  * An implementation of the linear scan register allocator algorithm described in
@@ -50,7 +48,7 @@ public class LinearScan
     public static class Options
     {
         // Option "Enable spill position optimization."
-        public static final OptionKey<Boolean> LIROptLSRAOptimizeSpillPosition = new NestedBooleanOptionKey(LIROptimization, true);
+        public static final OptionKey<Boolean> LIROptLSRAOptimizeSpillPosition = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
     }
 
     public static class BlockData
@@ -215,7 +213,7 @@ public class LinearScan
 
     public static boolean isVariableOrRegister(Value value)
     {
-        return isVariable(value) || isRegister(value);
+        return LIRValueUtil.isVariable(value) || ValueUtil.isRegister(value);
     }
 
     /**
@@ -225,9 +223,9 @@ public class LinearScan
      */
     int operandNumber(Value operand)
     {
-        if (isRegister(operand))
+        if (ValueUtil.isRegister(operand))
         {
-            int number = asRegister(operand).number;
+            int number = ValueUtil.asRegister(operand).number;
             return number;
         }
         return firstVariableNumber + ((Variable) operand).index;
@@ -264,7 +262,7 @@ public class LinearScan
         @Override
         public boolean apply(Interval i)
         {
-            return isRegister(i.operand);
+            return ValueUtil.isRegister(i.operand);
         }
     };
 
@@ -273,7 +271,7 @@ public class LinearScan
         @Override
         public boolean apply(Interval i)
         {
-            return isVariable(i.operand);
+            return LIRValueUtil.isVariable(i.operand);
         }
     };
 
@@ -282,7 +280,7 @@ public class LinearScan
         @Override
         public boolean apply(Interval i)
         {
-            return !isRegister(i.operand);
+            return !ValueUtil.isRegister(i.operand);
         }
     };
 
@@ -504,7 +502,7 @@ public class LinearScan
 
     public boolean isProcessed(Value operand)
     {
-        return !isRegister(operand) || attributes(asRegister(operand)).isAllocatable();
+        return !ValueUtil.isRegister(operand) || attributes(ValueUtil.asRegister(operand)).isAllocatable();
     }
 
     // * Phase 5: actual register allocation
@@ -689,12 +687,12 @@ public class LinearScan
             interval = splitChildAtOpId(interval, opId, mode);
         }
 
-        return isIllegal(interval.location()) && interval.canMaterialize();
+        return ValueUtil.isIllegal(interval.location()) && interval.canMaterialize();
     }
 
     boolean isCallerSave(Value operand)
     {
-        return attributes(asRegister(operand)).isCallerSave();
+        return attributes(ValueUtil.asRegister(operand)).isCallerSave();
     }
 
     protected void allocate(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context)
@@ -760,7 +758,7 @@ public class LinearScan
         @Override
         public void visitValue(Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
         {
-            if (isRegister(operand))
+            if (ValueUtil.isRegister(operand))
             {
                 if (intervalFor(operand) == curInterval)
                 {

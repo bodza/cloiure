@@ -1,63 +1,5 @@
 package graalvm.compiler.java;
 
-import static graalvm.compiler.bytecode.Bytecodes.AALOAD;
-import static graalvm.compiler.bytecode.Bytecodes.AASTORE;
-import static graalvm.compiler.bytecode.Bytecodes.ARETURN;
-import static graalvm.compiler.bytecode.Bytecodes.ARRAYLENGTH;
-import static graalvm.compiler.bytecode.Bytecodes.ATHROW;
-import static graalvm.compiler.bytecode.Bytecodes.BALOAD;
-import static graalvm.compiler.bytecode.Bytecodes.BASTORE;
-import static graalvm.compiler.bytecode.Bytecodes.CALOAD;
-import static graalvm.compiler.bytecode.Bytecodes.CASTORE;
-import static graalvm.compiler.bytecode.Bytecodes.DALOAD;
-import static graalvm.compiler.bytecode.Bytecodes.DASTORE;
-import static graalvm.compiler.bytecode.Bytecodes.DRETURN;
-import static graalvm.compiler.bytecode.Bytecodes.FALOAD;
-import static graalvm.compiler.bytecode.Bytecodes.FASTORE;
-import static graalvm.compiler.bytecode.Bytecodes.FRETURN;
-import static graalvm.compiler.bytecode.Bytecodes.GETFIELD;
-import static graalvm.compiler.bytecode.Bytecodes.GETSTATIC;
-import static graalvm.compiler.bytecode.Bytecodes.GOTO;
-import static graalvm.compiler.bytecode.Bytecodes.GOTO_W;
-import static graalvm.compiler.bytecode.Bytecodes.IALOAD;
-import static graalvm.compiler.bytecode.Bytecodes.IASTORE;
-import static graalvm.compiler.bytecode.Bytecodes.IFEQ;
-import static graalvm.compiler.bytecode.Bytecodes.IFGE;
-import static graalvm.compiler.bytecode.Bytecodes.IFGT;
-import static graalvm.compiler.bytecode.Bytecodes.IFLE;
-import static graalvm.compiler.bytecode.Bytecodes.IFLT;
-import static graalvm.compiler.bytecode.Bytecodes.IFNE;
-import static graalvm.compiler.bytecode.Bytecodes.IFNONNULL;
-import static graalvm.compiler.bytecode.Bytecodes.IFNULL;
-import static graalvm.compiler.bytecode.Bytecodes.IF_ACMPEQ;
-import static graalvm.compiler.bytecode.Bytecodes.IF_ACMPNE;
-import static graalvm.compiler.bytecode.Bytecodes.IF_ICMPEQ;
-import static graalvm.compiler.bytecode.Bytecodes.IF_ICMPGE;
-import static graalvm.compiler.bytecode.Bytecodes.IF_ICMPGT;
-import static graalvm.compiler.bytecode.Bytecodes.IF_ICMPLE;
-import static graalvm.compiler.bytecode.Bytecodes.IF_ICMPLT;
-import static graalvm.compiler.bytecode.Bytecodes.IF_ICMPNE;
-import static graalvm.compiler.bytecode.Bytecodes.INVOKEDYNAMIC;
-import static graalvm.compiler.bytecode.Bytecodes.INVOKEINTERFACE;
-import static graalvm.compiler.bytecode.Bytecodes.INVOKESPECIAL;
-import static graalvm.compiler.bytecode.Bytecodes.INVOKESTATIC;
-import static graalvm.compiler.bytecode.Bytecodes.INVOKEVIRTUAL;
-import static graalvm.compiler.bytecode.Bytecodes.IRETURN;
-import static graalvm.compiler.bytecode.Bytecodes.JSR;
-import static graalvm.compiler.bytecode.Bytecodes.JSR_W;
-import static graalvm.compiler.bytecode.Bytecodes.LALOAD;
-import static graalvm.compiler.bytecode.Bytecodes.LASTORE;
-import static graalvm.compiler.bytecode.Bytecodes.LOOKUPSWITCH;
-import static graalvm.compiler.bytecode.Bytecodes.LRETURN;
-import static graalvm.compiler.bytecode.Bytecodes.PUTFIELD;
-import static graalvm.compiler.bytecode.Bytecodes.PUTSTATIC;
-import static graalvm.compiler.bytecode.Bytecodes.RET;
-import static graalvm.compiler.bytecode.Bytecodes.RETURN;
-import static graalvm.compiler.bytecode.Bytecodes.SALOAD;
-import static graalvm.compiler.bytecode.Bytecodes.SASTORE;
-import static graalvm.compiler.bytecode.Bytecodes.TABLESWITCH;
-import static graalvm.compiler.core.common.GraalOptions.SupportJsrBytecodes;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -65,19 +7,21 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
 
+import jdk.vm.ci.code.BytecodeFrame;
+import jdk.vm.ci.meta.ExceptionHandler;
+
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
+
 import graalvm.compiler.bytecode.Bytecode;
 import graalvm.compiler.bytecode.BytecodeLookupSwitch;
 import graalvm.compiler.bytecode.BytecodeStream;
 import graalvm.compiler.bytecode.BytecodeSwitch;
 import graalvm.compiler.bytecode.BytecodeTableSwitch;
 import graalvm.compiler.bytecode.Bytecodes;
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.PermanentBailoutException;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.code.BytecodeFrame;
-import jdk.vm.ci.meta.ExceptionHandler;
 
 /**
  * Builds a mapping between bytecodes and basic blocks and builds a conservative control flow graph
@@ -567,7 +511,7 @@ public final class BciBlockMapping
         iterateOverBytecodes(blockMap, stream);
         if (hasJsrBytecodes)
         {
-            if (!SupportJsrBytecodes.getValue(options))
+            if (!GraalOptions.SupportJsrBytecodes.getValue(options))
             {
                 throw new JsrNotSupportedBailout("jsr/ret parsing disabled");
             }
@@ -614,17 +558,17 @@ public final class BciBlockMapping
 
             switch (stream.currentBC())
             {
-                case IRETURN: // fall through
-                case LRETURN: // fall through
-                case FRETURN: // fall through
-                case DRETURN: // fall through
-                case ARETURN: // fall through
-                case RETURN:
+                case Bytecodes.IRETURN: // fall through
+                case Bytecodes.LRETURN: // fall through
+                case Bytecodes.FRETURN: // fall through
+                case Bytecodes.DRETURN: // fall through
+                case Bytecodes.ARETURN: // fall through
+                case Bytecodes.RETURN:
                 {
                     current = null;
                     break;
                 }
-                case ATHROW:
+                case Bytecodes.ATHROW:
                 {
                     current = null;
                     ExceptionDispatchBlock handler = handleExceptions(blockMap, bci);
@@ -634,49 +578,49 @@ public final class BciBlockMapping
                     }
                     break;
                 }
-                case IFEQ:      // fall through
-                case IFNE:      // fall through
-                case IFLT:      // fall through
-                case IFGE:      // fall through
-                case IFGT:      // fall through
-                case IFLE:      // fall through
-                case IF_ICMPEQ: // fall through
-                case IF_ICMPNE: // fall through
-                case IF_ICMPLT: // fall through
-                case IF_ICMPGE: // fall through
-                case IF_ICMPGT: // fall through
-                case IF_ICMPLE: // fall through
-                case IF_ACMPEQ: // fall through
-                case IF_ACMPNE: // fall through
-                case IFNULL:    // fall through
-                case IFNONNULL:
+                case Bytecodes.IFEQ:      // fall through
+                case Bytecodes.IFNE:      // fall through
+                case Bytecodes.IFLT:      // fall through
+                case Bytecodes.IFGE:      // fall through
+                case Bytecodes.IFGT:      // fall through
+                case Bytecodes.IFLE:      // fall through
+                case Bytecodes.IF_ICMPEQ: // fall through
+                case Bytecodes.IF_ICMPNE: // fall through
+                case Bytecodes.IF_ICMPLT: // fall through
+                case Bytecodes.IF_ICMPGE: // fall through
+                case Bytecodes.IF_ICMPGT: // fall through
+                case Bytecodes.IF_ICMPLE: // fall through
+                case Bytecodes.IF_ACMPEQ: // fall through
+                case Bytecodes.IF_ACMPNE: // fall through
+                case Bytecodes.IFNULL:    // fall through
+                case Bytecodes.IFNONNULL:
                 {
                     current = null;
                     addSuccessor(blockMap, bci, makeBlock(blockMap, stream.readBranchDest()));
                     addSuccessor(blockMap, bci, makeBlock(blockMap, stream.nextBCI()));
                     break;
                 }
-                case GOTO:
-                case GOTO_W:
+                case Bytecodes.GOTO:
+                case Bytecodes.GOTO_W:
                 {
                     current = null;
                     addSuccessor(blockMap, bci, makeBlock(blockMap, stream.readBranchDest()));
                     break;
                 }
-                case TABLESWITCH:
+                case Bytecodes.TABLESWITCH:
                 {
                     current = null;
                     addSwitchSuccessors(blockMap, bci, new BytecodeTableSwitch(stream, bci));
                     break;
                 }
-                case LOOKUPSWITCH:
+                case Bytecodes.LOOKUPSWITCH:
                 {
                     current = null;
                     addSwitchSuccessors(blockMap, bci, new BytecodeLookupSwitch(stream, bci));
                     break;
                 }
-                case JSR:
-                case JSR_W:
+                case Bytecodes.JSR:
+                case Bytecodes.JSR_W:
                 {
                     hasJsrBytecodes = true;
                     int target = stream.readBranchDest();
@@ -691,17 +635,17 @@ public final class BciBlockMapping
                     addSuccessor(blockMap, bci, b1);
                     break;
                 }
-                case RET:
+                case Bytecodes.RET:
                 {
                     current.setEndsWithRet();
                     current = null;
                     break;
                 }
-                case INVOKEINTERFACE:
-                case INVOKESPECIAL:
-                case INVOKESTATIC:
-                case INVOKEVIRTUAL:
-                case INVOKEDYNAMIC:
+                case Bytecodes.INVOKEINTERFACE:
+                case Bytecodes.INVOKESPECIAL:
+                case Bytecodes.INVOKESTATIC:
+                case Bytecodes.INVOKEVIRTUAL:
+                case Bytecodes.INVOKEDYNAMIC:
                 {
                     current = null;
                     addSuccessor(blockMap, bci, makeBlock(blockMap, stream.nextBCI()));
@@ -712,27 +656,27 @@ public final class BciBlockMapping
                     }
                     break;
                 }
-                case IASTORE:
-                case LASTORE:
-                case FASTORE:
-                case DASTORE:
-                case AASTORE:
-                case BASTORE:
-                case CASTORE:
-                case SASTORE:
-                case IALOAD:
-                case LALOAD:
-                case FALOAD:
-                case DALOAD:
-                case AALOAD:
-                case BALOAD:
-                case CALOAD:
-                case SALOAD:
-                case ARRAYLENGTH:
-                case PUTSTATIC:
-                case GETSTATIC:
-                case PUTFIELD:
-                case GETFIELD:
+                case Bytecodes.IASTORE:
+                case Bytecodes.LASTORE:
+                case Bytecodes.FASTORE:
+                case Bytecodes.DASTORE:
+                case Bytecodes.AASTORE:
+                case Bytecodes.BASTORE:
+                case Bytecodes.CASTORE:
+                case Bytecodes.SASTORE:
+                case Bytecodes.IALOAD:
+                case Bytecodes.LALOAD:
+                case Bytecodes.FALOAD:
+                case Bytecodes.DALOAD:
+                case Bytecodes.AALOAD:
+                case Bytecodes.BALOAD:
+                case Bytecodes.CALOAD:
+                case Bytecodes.SALOAD:
+                case Bytecodes.ARRAYLENGTH:
+                case Bytecodes.PUTSTATIC:
+                case Bytecodes.GETSTATIC:
+                case Bytecodes.PUTFIELD:
+                case Bytecodes.GETFIELD:
                 {
                     ExceptionDispatchBlock handler = handleExceptions(blockMap, bci);
                     if (handler != null)

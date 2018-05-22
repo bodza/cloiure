@@ -1,8 +1,8 @@
 package graalvm.compiler.nodes.graphbuilderconf;
 
-import graalvm.compiler.core.common.type.StampPair;
-
 import jdk.vm.ci.meta.JavaType;
+
+import graalvm.compiler.core.common.type.StampPair;
 
 /**
  * Plugin for overriding types in the bytecode parser. This can be used to modify the standard

@@ -1,5 +1,10 @@
 package graalvm.compiler.phases.common;
 
+import jdk.vm.ci.meta.Assumptions;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.MetaAccessProvider;
+
 import graalvm.compiler.core.common.spi.ConstantFieldProvider;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.GraalGraphError;
@@ -28,11 +33,6 @@ import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.BasePhase;
 import graalvm.compiler.phases.Phase;
 import graalvm.compiler.phases.tiers.PhaseContext;
-
-import jdk.vm.ci.meta.Assumptions;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.MetaAccessProvider;
 
 public class CanonicalizerPhase extends BasePhase<PhaseContext>
 {

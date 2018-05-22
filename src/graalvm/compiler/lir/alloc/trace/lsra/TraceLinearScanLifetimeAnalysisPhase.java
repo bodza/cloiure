@@ -1,20 +1,16 @@
 package graalvm.compiler.lir.alloc.trace.lsra;
 
-import static jdk.vm.ci.code.ValueUtil.asRegisterValue;
-import static jdk.vm.ci.code.ValueUtil.asStackSlot;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static jdk.vm.ci.code.ValueUtil.isStackSlot;
-import static graalvm.compiler.lir.LIRValueUtil.asVariable;
-import static graalvm.compiler.lir.LIRValueUtil.isStackSlotValue;
-import static graalvm.compiler.lir.LIRValueUtil.isVariable;
-import static graalvm.compiler.lir.alloc.trace.TraceRegisterAllocationPhase.Options.TraceRAshareSpillInformation;
-import static graalvm.compiler.lir.alloc.trace.TraceRegisterAllocationPhase.Options.TraceRAuseInterTraceHints;
-import static graalvm.compiler.lir.alloc.trace.TraceUtil.asShadowedRegisterValue;
-import static graalvm.compiler.lir.alloc.trace.TraceUtil.isShadowedRegisterValue;
-import static graalvm.compiler.lir.alloc.trace.lsra.TraceLinearScanPhase.isVariableOrRegister;
-
 import java.util.ArrayList;
 import java.util.EnumSet;
+
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.RegisterArray;
+import jdk.vm.ci.code.RegisterValue;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
@@ -36,20 +32,15 @@ import graalvm.compiler.lir.ValueProcedure;
 import graalvm.compiler.lir.Variable;
 import graalvm.compiler.lir.alloc.trace.GlobalLivenessInfo;
 import graalvm.compiler.lir.alloc.trace.ShadowedRegisterValue;
+import graalvm.compiler.lir.alloc.trace.TraceRegisterAllocationPhase.Options;
+import graalvm.compiler.lir.alloc.trace.TraceUtil;
 import graalvm.compiler.lir.alloc.trace.lsra.TraceInterval.RegisterPriority;
 import graalvm.compiler.lir.alloc.trace.lsra.TraceInterval.SpillState;
+import graalvm.compiler.lir.alloc.trace.lsra.TraceLinearScanPhase;
 import graalvm.compiler.lir.alloc.trace.lsra.TraceLinearScanPhase.TraceLinearScan;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;
 import graalvm.compiler.lir.ssa.SSAUtil;
-
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.RegisterArray;
-import jdk.vm.ci.code.RegisterValue;
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.Value;
 
 public final class TraceLinearScanLifetimeAnalysisPhase extends TraceLinearScanAllocationPhase
 {
@@ -116,7 +107,7 @@ public final class TraceLinearScanLifetimeAnalysisPhase extends TraceLinearScanA
             @Override
             public void visitValue(LIRInstruction op, Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
             {
-                if (isVariableOrRegister(operand))
+                if (TraceLinearScanPhase.isVariableOrRegister(operand))
                 {
                     addDef((AllocatableValue) operand, op, registerPriorityOfOutputOperand(op));
                     addRegisterHint(op, operand, mode, flags, true);
@@ -129,7 +120,7 @@ public final class TraceLinearScanLifetimeAnalysisPhase extends TraceLinearScanA
             @Override
             public void visitValue(LIRInstruction op, Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
             {
-                if (isVariableOrRegister(operand))
+                if (TraceLinearScanPhase.isVariableOrRegister(operand))
                 {
                     addTemp((AllocatableValue) operand, op.id(), RegisterPriority.MustHaveRegister);
                     addRegisterHint(op, operand, mode, flags, false);
@@ -141,7 +132,7 @@ public final class TraceLinearScanLifetimeAnalysisPhase extends TraceLinearScanA
             @Override
             public void visitValue(LIRInstruction op, Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
             {
-                if (isVariableOrRegister(operand))
+                if (TraceLinearScanPhase.isVariableOrRegister(operand))
                 {
                     RegisterPriority p = registerPriorityOfInputOperand(flags);
                     int opId = op.id();
@@ -157,7 +148,7 @@ public final class TraceLinearScanLifetimeAnalysisPhase extends TraceLinearScanA
             @Override
             public void visitValue(LIRInstruction op, Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
             {
-                if (isVariableOrRegister(operand))
+                if (TraceLinearScanPhase.isVariableOrRegister(operand))
                 {
                     int opId = op.id();
                     RegisterPriority p = registerPriorityOfInputOperand(flags);
@@ -173,7 +164,7 @@ public final class TraceLinearScanLifetimeAnalysisPhase extends TraceLinearScanA
             @Override
             public void visitValue(LIRInstruction op, Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
             {
-                if (isVariableOrRegister(operand))
+                if (TraceLinearScanPhase.isVariableOrRegister(operand))
                 {
                     int opId = op.id();
                     int blockFrom = 0;
@@ -184,9 +175,9 @@ public final class TraceLinearScanLifetimeAnalysisPhase extends TraceLinearScanA
 
         private void addUse(AllocatableValue operand, int from, int to, RegisterPriority registerPriority)
         {
-            if (isRegister(operand))
+            if (ValueUtil.isRegister(operand))
             {
-                RegisterValue reg = asRegisterValue(operand);
+                RegisterValue reg = ValueUtil.asRegisterValue(operand);
                 if (allocator.isAllocatable(reg))
                 {
                     addFixedUse(reg, from, to);
@@ -194,7 +185,7 @@ public final class TraceLinearScanLifetimeAnalysisPhase extends TraceLinearScanA
             }
             else
             {
-                addVariableUse(asVariable(operand), from, to, registerPriority);
+                addVariableUse(LIRValueUtil.asVariable(operand), from, to, registerPriority);
             }
         }
 
@@ -215,9 +206,9 @@ public final class TraceLinearScanLifetimeAnalysisPhase extends TraceLinearScanA
 
         private void addDef(AllocatableValue operand, LIRInstruction op, RegisterPriority registerPriority)
         {
-            if (isRegister(operand))
+            if (ValueUtil.isRegister(operand))
             {
-                RegisterValue reg = asRegisterValue(operand);
+                RegisterValue reg = ValueUtil.asRegisterValue(operand);
                 if (allocator.isAllocatable(reg))
                 {
                     addFixedDef(reg, op);
@@ -225,7 +216,7 @@ public final class TraceLinearScanLifetimeAnalysisPhase extends TraceLinearScanA
             }
             else
             {
-                addVariableDef(asVariable(operand), op, registerPriority);
+                addVariableDef(LIRValueUtil.asVariable(operand), op, registerPriority);
             }
         }
 
@@ -278,7 +269,7 @@ public final class TraceLinearScanLifetimeAnalysisPhase extends TraceLinearScanA
             }
 
             changeSpillDefinitionPos(op, operand, interval, defPos);
-            if (registerPriority == RegisterPriority.None && interval.spillState().ordinal() <= SpillState.StartInMemory.ordinal() && isStackSlot(operand))
+            if (registerPriority == RegisterPriority.None && interval.spillState().ordinal() <= SpillState.StartInMemory.ordinal() && ValueUtil.isStackSlot(operand))
             {
                 // detection of method-parameters and roundfp-results
                 interval.setSpillState(SpillState.StartInMemory);
@@ -289,9 +280,9 @@ public final class TraceLinearScanLifetimeAnalysisPhase extends TraceLinearScanA
 
         private void addTemp(AllocatableValue operand, int tempPos, RegisterPriority registerPriority)
         {
-            if (isRegister(operand))
+            if (ValueUtil.isRegister(operand))
             {
-                RegisterValue reg = asRegisterValue(operand);
+                RegisterValue reg = ValueUtil.asRegisterValue(operand);
                 if (allocator.isAllocatable(reg))
                 {
                     addFixedTemp(reg, tempPos);
@@ -299,7 +290,7 @@ public final class TraceLinearScanLifetimeAnalysisPhase extends TraceLinearScanA
             }
             else
             {
-                addVariableTemp(asVariable(operand), tempPos, registerPriority);
+                addVariableTemp(LIRValueUtil.asVariable(operand), tempPos, registerPriority);
             }
         }
 
@@ -369,14 +360,14 @@ public final class TraceLinearScanLifetimeAnalysisPhase extends TraceLinearScanA
 
         private void addRegisterHint(final LIRInstruction op, final Value targetValue, OperandMode mode, EnumSet<OperandFlag> flags, final boolean hintAtDef)
         {
-            if (flags.contains(OperandFlag.HINT) && isVariableOrRegister(targetValue))
+            if (flags.contains(OperandFlag.HINT) && TraceLinearScanPhase.isVariableOrRegister(targetValue))
             {
                 ValueProcedure registerHintProc = new ValueProcedure()
                 {
                     @Override
                     public Value doValue(Value registerHint, OperandMode valueMode, EnumSet<OperandFlag> valueFlags)
                     {
-                        if (isVariableOrRegister(registerHint))
+                        if (TraceLinearScanPhase.isVariableOrRegister(registerHint))
                         {
                             /*
                              * TODO (je): clean up
@@ -396,19 +387,19 @@ public final class TraceLinearScanLifetimeAnalysisPhase extends TraceLinearScanA
                             }
                             final TraceInterval to;
                             final IntervalHint from;
-                            if (isRegister(toValue))
+                            if (ValueUtil.isRegister(toValue))
                             {
-                                if (isRegister(fromValue))
+                                if (ValueUtil.isRegister(fromValue))
                                 {
                                     // fixed to fixed move
                                     return null;
                                 }
                                 from = getIntervalHint(toValue);
-                                to = allocator.getOrCreateInterval(asVariable(fromValue));
+                                to = allocator.getOrCreateInterval(LIRValueUtil.asVariable(fromValue));
                             }
                             else
                             {
-                                to = allocator.getOrCreateInterval(asVariable(toValue));
+                                to = allocator.getOrCreateInterval(LIRValueUtil.asVariable(toValue));
                                 from = getIntervalHint(fromValue);
                             }
 
@@ -429,7 +420,7 @@ public final class TraceLinearScanLifetimeAnalysisPhase extends TraceLinearScanA
              * Object method arguments that are passed on the stack are currently not optimized
              * because this requires that the runtime visits method arguments during stack walking.
              */
-            return isStackSlot(value) && asStackSlot(value).isInCallerFrame() && LIRKind.isValue(value);
+            return ValueUtil.isStackSlot(value) && ValueUtil.asStackSlot(value).isInCallerFrame() && LIRKind.isValue(value);
         }
 
         /**
@@ -536,7 +527,7 @@ public final class TraceLinearScanLifetimeAnalysisPhase extends TraceLinearScanA
             }   // end of block iteration
             handleTraceBegin(blocks[0]);
 
-            if (TraceRAuseInterTraceHints.getValue(allocator.getLIR().getOptions()))
+            if (Options.TraceRAuseInterTraceHints.getValue(allocator.getLIR().getOptions()))
             {
                 addInterTraceHints();
             }
@@ -596,15 +587,15 @@ public final class TraceLinearScanLifetimeAnalysisPhase extends TraceLinearScanA
                 JumpOp jump = pred == null ? null : SSAUtil.phiOut(getLIR(), pred);
                 for (int i = 0; i < label.getPhiSize(); i++)
                 {
-                    Variable var = asVariable(label.getIncomingValue(i));
+                    Variable var = LIRValueUtil.asVariable(label.getIncomingValue(i));
                     TraceInterval toInterval = addVariableDef(var, label, RegisterPriority.ShouldHaveRegister);
                     // set hint for phis
                     if (jump != null)
                     {
                         Value out = jump.getOutgoingValue(i);
-                        if (isVariable(out))
+                        if (LIRValueUtil.isVariable(out))
                         {
-                            TraceInterval fromInterval = allocator.getOrCreateInterval(asVariable(out));
+                            TraceInterval fromInterval = allocator.getOrCreateInterval(LIRValueUtil.asVariable(out));
                             toInterval.setLocationHint(fromInterval);
                         }
                     }
@@ -678,18 +669,18 @@ public final class TraceLinearScanLifetimeAnalysisPhase extends TraceLinearScanA
                 // variable not live -> do nothing
                 return;
             }
-            if (isRegister(fromValue))
+            if (ValueUtil.isRegister(fromValue))
             {
-                IntervalHint from = allocator.getOrCreateFixedInterval(asRegisterValue(fromValue));
+                IntervalHint from = allocator.getOrCreateFixedInterval(ValueUtil.asRegisterValue(fromValue));
                 setHint(label, to, from);
             }
-            else if (isStackSlotValue(fromValue))
+            else if (LIRValueUtil.isStackSlotValue(fromValue))
             {
                 setSpillSlot(label, to, (AllocatableValue) fromValue);
             }
-            else if (TraceRAshareSpillInformation.getValue(allocator.getLIR().getOptions()) && isShadowedRegisterValue(fromValue))
+            else if (Options.TraceRAshareSpillInformation.getValue(allocator.getLIR().getOptions()) && TraceUtil.isShadowedRegisterValue(fromValue))
             {
-                ShadowedRegisterValue shadowedRegisterValue = asShadowedRegisterValue(fromValue);
+                ShadowedRegisterValue shadowedRegisterValue = TraceUtil.asShadowedRegisterValue(fromValue);
                 IntervalHint from = getIntervalHint(shadowedRegisterValue.getRegister());
                 setHint(label, to, from);
                 setSpillSlot(label, to, shadowedRegisterValue.getStackSlot());
@@ -720,11 +711,11 @@ public final class TraceLinearScanLifetimeAnalysisPhase extends TraceLinearScanA
 
         private IntervalHint getIntervalHint(AllocatableValue from)
         {
-            if (isRegister(from))
+            if (ValueUtil.isRegister(from))
             {
-                return allocator.getOrCreateFixedInterval(asRegisterValue(from));
+                return allocator.getOrCreateFixedInterval(ValueUtil.asRegisterValue(from));
             }
-            return allocator.getOrCreateInterval(asVariable(from));
+            return allocator.getOrCreateInterval(LIRValueUtil.asVariable(from));
         }
     }
 

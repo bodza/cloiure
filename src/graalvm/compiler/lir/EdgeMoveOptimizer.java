@@ -3,14 +3,14 @@ package graalvm.compiler.lir;
 import java.util.ArrayList;
 import java.util.List;
 
+import jdk.vm.ci.code.TargetDescription;
+
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.StandardOp.LoadConstantOp;
 import graalvm.compiler.lir.StandardOp.MoveOp;
 import graalvm.compiler.lir.StandardOp.ValueMoveOp;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.phases.PostAllocationOptimizationPhase;
-
-import jdk.vm.ci.code.TargetDescription;
 
 /**
  * This class optimizes moves, particularly those that result from eliminating SSA form.

@@ -1,13 +1,15 @@
 package graalvm.compiler.loop;
 
-import static graalvm.compiler.loop.MathUtil.add;
-import static graalvm.compiler.loop.MathUtil.sub;
-import static graalvm.compiler.loop.MathUtil.unsignedDivBefore;
+import jdk.vm.ci.code.CodeUtil;
+import jdk.vm.ci.meta.DeoptimizationAction;
+import jdk.vm.ci.meta.DeoptimizationReason;
+import jdk.vm.ci.meta.JavaConstant;
 
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.util.UnsignedLong;
 import graalvm.compiler.loop.InductionVariable.Direction;
+import graalvm.compiler.loop.MathUtil;
 import graalvm.compiler.nodes.AbstractBeginNode;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.GuardNode;
@@ -20,11 +22,6 @@ import graalvm.compiler.nodes.calc.ConditionalNode;
 import graalvm.compiler.nodes.calc.IntegerLessThanNode;
 import graalvm.compiler.nodes.calc.NegateNode;
 import graalvm.compiler.nodes.extended.GuardingNode;
-
-import jdk.vm.ci.code.CodeUtil;
-import jdk.vm.ci.meta.DeoptimizationAction;
-import jdk.vm.ci.meta.DeoptimizationReason;
-import jdk.vm.ci.meta.JavaConstant;
 
 public class CountedLoopInfo
 {
@@ -82,14 +79,14 @@ public class CountedLoopInfo
         if (iv.direction() == Direction.Up)
         {
             absStride = iv.strideNode();
-            range = sub(graph, end, iv.initNode());
+            range = MathUtil.sub(graph, end, iv.initNode());
             max = end;
             min = iv.initNode();
         }
         else
         {
             absStride = graph.maybeAddOrUnique(NegateNode.create(iv.strideNode(), NodeView.DEFAULT));
-            range = sub(graph, iv.initNode(), end);
+            range = MathUtil.sub(graph, iv.initNode(), end);
             max = iv.initNode();
             min = end;
         }
@@ -97,11 +94,11 @@ public class CountedLoopInfo
         ConstantNode one = ConstantNode.forIntegerStamp(stamp, 1, graph);
         if (oneOff)
         {
-            range = add(graph, range, one);
+            range = MathUtil.add(graph, range, one);
         }
         // round-away-from-zero divison: (range + stride -/+ 1) / stride
-        ValueNode denominator = add(graph, range, sub(graph, absStride, one));
-        ValueNode div = unsignedDivBefore(graph, loop.entryPoint(), denominator, absStride);
+        ValueNode denominator = MathUtil.add(graph, range, MathUtil.sub(graph, absStride, one));
+        ValueNode div = MathUtil.unsignedDivBefore(graph, loop.entryPoint(), denominator, absStride);
 
         if (assumePositive)
         {
@@ -238,19 +235,19 @@ public class CountedLoopInfo
         ConstantNode one = ConstantNode.forIntegerStamp(stamp, 1, graph);
         if (iv.direction() == Direction.Up)
         {
-            ValueNode v1 = sub(graph, ConstantNode.forIntegerStamp(stamp, CodeUtil.maxValue(stamp.getBits()), graph), sub(graph, iv.strideNode(), one));
+            ValueNode v1 = MathUtil.sub(graph, ConstantNode.forIntegerStamp(stamp, CodeUtil.maxValue(stamp.getBits()), graph), MathUtil.sub(graph, iv.strideNode(), one));
             if (oneOff)
             {
-                v1 = sub(graph, v1, one);
+                v1 = MathUtil.sub(graph, v1, one);
             }
             cond = graph.unique(new IntegerLessThanNode(v1, end));
         }
         else
         {
-            ValueNode v1 = add(graph, ConstantNode.forIntegerStamp(stamp, CodeUtil.minValue(stamp.getBits()), graph), sub(graph, one, iv.strideNode()));
+            ValueNode v1 = MathUtil.add(graph, ConstantNode.forIntegerStamp(stamp, CodeUtil.minValue(stamp.getBits()), graph), MathUtil.sub(graph, one, iv.strideNode()));
             if (oneOff)
             {
-                v1 = add(graph, v1, one);
+                v1 = MathUtil.add(graph, v1, one);
             }
             cond = graph.unique(new IntegerLessThanNode(end, v1));
         }

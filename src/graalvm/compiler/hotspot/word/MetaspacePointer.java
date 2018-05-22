@@ -1,27 +1,26 @@
 package graalvm.compiler.hotspot.word;
 
-import static graalvm.compiler.hotspot.word.HotSpotOperation.HotspotOpcode.FROM_POINTER;
-import static graalvm.compiler.hotspot.word.HotSpotOperation.HotspotOpcode.IS_NULL;
-
-import graalvm.compiler.nodes.memory.HeapAccess.BarrierType;
-import graalvm.compiler.word.Word;
-import graalvm.compiler.word.Word.Opcode;
-import graalvm.compiler.word.Word.Operation;
 import org.graalvm.word.LocationIdentity;
 import org.graalvm.word.Pointer;
 import org.graalvm.word.SignedWord;
 import org.graalvm.word.UnsignedWord;
 import org.graalvm.word.WordBase;
 
+import graalvm.compiler.hotspot.word.HotSpotOperation.HotspotOpcode;
+import graalvm.compiler.nodes.memory.HeapAccess.BarrierType;
+import graalvm.compiler.word.Word;
+import graalvm.compiler.word.Word.Opcode;
+import graalvm.compiler.word.Word.Operation;
+
 /**
  * Marker type for a metaspace pointer.
  */
 public abstract class MetaspacePointer
 {
-    @HotSpotOperation(opcode = IS_NULL)
+    @HotSpotOperation(opcode = HotspotOpcode.IS_NULL)
     public abstract boolean isNull();
 
-    @HotSpotOperation(opcode = FROM_POINTER)
+    @HotSpotOperation(opcode = HotspotOpcode.FROM_POINTER)
     public abstract Pointer asWord();
 
     /**

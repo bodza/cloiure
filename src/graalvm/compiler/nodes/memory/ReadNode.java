@@ -1,6 +1,9 @@
 package graalvm.compiler.nodes.memory;
 
-import static graalvm.compiler.nodes.NamedLocationIdentity.ARRAY_LENGTH_LOCATION;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.MetaAccessProvider;
+
+import org.graalvm.word.LocationIdentity;
 
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.type.Stamp;
@@ -13,6 +16,7 @@ import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.CanonicalizableLocation;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.FrameState;
+import graalvm.compiler.nodes.NamedLocationIdentity;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.extended.GuardingNode;
@@ -22,10 +26,6 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.nodes.spi.Virtualizable;
 import graalvm.compiler.nodes.spi.VirtualizerTool;
 import graalvm.compiler.nodes.util.GraphUtil;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.MetaAccessProvider;
 
 /**
  * Reads an {@linkplain FixedAccessNode accessed} value.
@@ -105,7 +105,7 @@ public class ReadNode extends FloatableAccessNode implements LIRLowerableAccess,
                     }
                 }
             }
-            if (locationIdentity.equals(ARRAY_LENGTH_LOCATION))
+            if (locationIdentity.equals(NamedLocationIdentity.ARRAY_LENGTH_LOCATION))
             {
                 ValueNode length = GraphUtil.arrayLength(object);
                 if (length != null)

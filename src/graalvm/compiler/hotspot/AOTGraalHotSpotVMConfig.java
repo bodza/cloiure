@@ -1,8 +1,8 @@
 package graalvm.compiler.hotspot;
 
-import graalvm.compiler.core.common.CompressEncoding;
-
 import jdk.vm.ci.hotspot.HotSpotVMConfigStore;
+
+import graalvm.compiler.core.common.CompressEncoding;
 
 public class AOTGraalHotSpotVMConfig extends GraalHotSpotVMConfig
 {

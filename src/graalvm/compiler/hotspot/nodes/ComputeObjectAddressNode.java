@@ -1,5 +1,7 @@
 package graalvm.compiler.hotspot.nodes;
 
+import jdk.vm.ci.meta.JavaKind;
+
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodes.FixedWithNextNode;
@@ -7,8 +9,6 @@ import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.debug.ControlFlowAnchored;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
-
-import jdk.vm.ci.meta.JavaKind;
 
 /**
  * A high-level intrinsic for getting an address inside of an object. During lowering it will be

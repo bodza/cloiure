@@ -1,8 +1,8 @@
 package graalvm.compiler.lir.asm;
 
-import graalvm.compiler.code.DataSection.Data;
-
 import jdk.vm.ci.meta.Constant;
+
+import graalvm.compiler.code.DataSection.Data;
 
 public abstract class DataBuilder
 {

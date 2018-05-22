@@ -1,243 +1,41 @@
 package graalvm.compiler.java;
 
-import static java.lang.String.format;
-import static java.lang.reflect.Modifier.STATIC;
-import static java.lang.reflect.Modifier.SYNCHRONIZED;
-import static jdk.vm.ci.meta.DeoptimizationAction.InvalidateRecompile;
-import static jdk.vm.ci.meta.DeoptimizationAction.InvalidateReprofile;
-import static jdk.vm.ci.meta.DeoptimizationAction.None;
-import static jdk.vm.ci.meta.DeoptimizationReason.ClassCastException;
-import static jdk.vm.ci.meta.DeoptimizationReason.JavaSubroutineMismatch;
-import static jdk.vm.ci.meta.DeoptimizationReason.NullCheckException;
-import static jdk.vm.ci.meta.DeoptimizationReason.RuntimeConstraint;
-import static jdk.vm.ci.meta.DeoptimizationReason.TypeCheckedInliningViolated;
-import static jdk.vm.ci.meta.DeoptimizationReason.UnreachedCode;
-import static jdk.vm.ci.meta.DeoptimizationReason.Unresolved;
-import static jdk.vm.ci.runtime.JVMCICompiler.INVOCATION_ENTRY_BCI;
-import static graalvm.compiler.bytecode.Bytecodes.AALOAD;
-import static graalvm.compiler.bytecode.Bytecodes.AASTORE;
-import static graalvm.compiler.bytecode.Bytecodes.ACONST_NULL;
-import static graalvm.compiler.bytecode.Bytecodes.ALOAD;
-import static graalvm.compiler.bytecode.Bytecodes.ALOAD_0;
-import static graalvm.compiler.bytecode.Bytecodes.ALOAD_1;
-import static graalvm.compiler.bytecode.Bytecodes.ALOAD_2;
-import static graalvm.compiler.bytecode.Bytecodes.ALOAD_3;
-import static graalvm.compiler.bytecode.Bytecodes.ANEWARRAY;
-import static graalvm.compiler.bytecode.Bytecodes.ARETURN;
-import static graalvm.compiler.bytecode.Bytecodes.ARRAYLENGTH;
-import static graalvm.compiler.bytecode.Bytecodes.ASTORE;
-import static graalvm.compiler.bytecode.Bytecodes.ASTORE_0;
-import static graalvm.compiler.bytecode.Bytecodes.ASTORE_1;
-import static graalvm.compiler.bytecode.Bytecodes.ASTORE_2;
-import static graalvm.compiler.bytecode.Bytecodes.ASTORE_3;
-import static graalvm.compiler.bytecode.Bytecodes.ATHROW;
-import static graalvm.compiler.bytecode.Bytecodes.BALOAD;
-import static graalvm.compiler.bytecode.Bytecodes.BASTORE;
-import static graalvm.compiler.bytecode.Bytecodes.BIPUSH;
-import static graalvm.compiler.bytecode.Bytecodes.BREAKPOINT;
-import static graalvm.compiler.bytecode.Bytecodes.CALOAD;
-import static graalvm.compiler.bytecode.Bytecodes.CASTORE;
-import static graalvm.compiler.bytecode.Bytecodes.CHECKCAST;
-import static graalvm.compiler.bytecode.Bytecodes.D2F;
-import static graalvm.compiler.bytecode.Bytecodes.D2I;
-import static graalvm.compiler.bytecode.Bytecodes.D2L;
-import static graalvm.compiler.bytecode.Bytecodes.DADD;
-import static graalvm.compiler.bytecode.Bytecodes.DALOAD;
-import static graalvm.compiler.bytecode.Bytecodes.DASTORE;
-import static graalvm.compiler.bytecode.Bytecodes.DCMPG;
-import static graalvm.compiler.bytecode.Bytecodes.DCMPL;
-import static graalvm.compiler.bytecode.Bytecodes.DCONST_0;
-import static graalvm.compiler.bytecode.Bytecodes.DCONST_1;
-import static graalvm.compiler.bytecode.Bytecodes.DDIV;
-import static graalvm.compiler.bytecode.Bytecodes.DLOAD;
-import static graalvm.compiler.bytecode.Bytecodes.DLOAD_0;
-import static graalvm.compiler.bytecode.Bytecodes.DLOAD_1;
-import static graalvm.compiler.bytecode.Bytecodes.DLOAD_2;
-import static graalvm.compiler.bytecode.Bytecodes.DLOAD_3;
-import static graalvm.compiler.bytecode.Bytecodes.DMUL;
-import static graalvm.compiler.bytecode.Bytecodes.DNEG;
-import static graalvm.compiler.bytecode.Bytecodes.DREM;
-import static graalvm.compiler.bytecode.Bytecodes.DRETURN;
-import static graalvm.compiler.bytecode.Bytecodes.DSTORE;
-import static graalvm.compiler.bytecode.Bytecodes.DSTORE_0;
-import static graalvm.compiler.bytecode.Bytecodes.DSTORE_1;
-import static graalvm.compiler.bytecode.Bytecodes.DSTORE_2;
-import static graalvm.compiler.bytecode.Bytecodes.DSTORE_3;
-import static graalvm.compiler.bytecode.Bytecodes.DSUB;
-import static graalvm.compiler.bytecode.Bytecodes.DUP;
-import static graalvm.compiler.bytecode.Bytecodes.DUP2;
-import static graalvm.compiler.bytecode.Bytecodes.DUP2_X1;
-import static graalvm.compiler.bytecode.Bytecodes.DUP2_X2;
-import static graalvm.compiler.bytecode.Bytecodes.DUP_X1;
-import static graalvm.compiler.bytecode.Bytecodes.DUP_X2;
-import static graalvm.compiler.bytecode.Bytecodes.F2D;
-import static graalvm.compiler.bytecode.Bytecodes.F2I;
-import static graalvm.compiler.bytecode.Bytecodes.F2L;
-import static graalvm.compiler.bytecode.Bytecodes.FADD;
-import static graalvm.compiler.bytecode.Bytecodes.FALOAD;
-import static graalvm.compiler.bytecode.Bytecodes.FASTORE;
-import static graalvm.compiler.bytecode.Bytecodes.FCMPG;
-import static graalvm.compiler.bytecode.Bytecodes.FCMPL;
-import static graalvm.compiler.bytecode.Bytecodes.FCONST_0;
-import static graalvm.compiler.bytecode.Bytecodes.FCONST_1;
-import static graalvm.compiler.bytecode.Bytecodes.FCONST_2;
-import static graalvm.compiler.bytecode.Bytecodes.FDIV;
-import static graalvm.compiler.bytecode.Bytecodes.FLOAD;
-import static graalvm.compiler.bytecode.Bytecodes.FLOAD_0;
-import static graalvm.compiler.bytecode.Bytecodes.FLOAD_1;
-import static graalvm.compiler.bytecode.Bytecodes.FLOAD_2;
-import static graalvm.compiler.bytecode.Bytecodes.FLOAD_3;
-import static graalvm.compiler.bytecode.Bytecodes.FMUL;
-import static graalvm.compiler.bytecode.Bytecodes.FNEG;
-import static graalvm.compiler.bytecode.Bytecodes.FREM;
-import static graalvm.compiler.bytecode.Bytecodes.FRETURN;
-import static graalvm.compiler.bytecode.Bytecodes.FSTORE;
-import static graalvm.compiler.bytecode.Bytecodes.FSTORE_0;
-import static graalvm.compiler.bytecode.Bytecodes.FSTORE_1;
-import static graalvm.compiler.bytecode.Bytecodes.FSTORE_2;
-import static graalvm.compiler.bytecode.Bytecodes.FSTORE_3;
-import static graalvm.compiler.bytecode.Bytecodes.FSUB;
-import static graalvm.compiler.bytecode.Bytecodes.GETFIELD;
-import static graalvm.compiler.bytecode.Bytecodes.GETSTATIC;
-import static graalvm.compiler.bytecode.Bytecodes.GOTO;
-import static graalvm.compiler.bytecode.Bytecodes.GOTO_W;
-import static graalvm.compiler.bytecode.Bytecodes.I2B;
-import static graalvm.compiler.bytecode.Bytecodes.I2C;
-import static graalvm.compiler.bytecode.Bytecodes.I2D;
-import static graalvm.compiler.bytecode.Bytecodes.I2F;
-import static graalvm.compiler.bytecode.Bytecodes.I2L;
-import static graalvm.compiler.bytecode.Bytecodes.I2S;
-import static graalvm.compiler.bytecode.Bytecodes.IADD;
-import static graalvm.compiler.bytecode.Bytecodes.IALOAD;
-import static graalvm.compiler.bytecode.Bytecodes.IAND;
-import static graalvm.compiler.bytecode.Bytecodes.IASTORE;
-import static graalvm.compiler.bytecode.Bytecodes.ICONST_0;
-import static graalvm.compiler.bytecode.Bytecodes.ICONST_1;
-import static graalvm.compiler.bytecode.Bytecodes.ICONST_2;
-import static graalvm.compiler.bytecode.Bytecodes.ICONST_3;
-import static graalvm.compiler.bytecode.Bytecodes.ICONST_4;
-import static graalvm.compiler.bytecode.Bytecodes.ICONST_5;
-import static graalvm.compiler.bytecode.Bytecodes.ICONST_M1;
-import static graalvm.compiler.bytecode.Bytecodes.IDIV;
-import static graalvm.compiler.bytecode.Bytecodes.IFEQ;
-import static graalvm.compiler.bytecode.Bytecodes.IFGE;
-import static graalvm.compiler.bytecode.Bytecodes.IFGT;
-import static graalvm.compiler.bytecode.Bytecodes.IFLE;
-import static graalvm.compiler.bytecode.Bytecodes.IFLT;
-import static graalvm.compiler.bytecode.Bytecodes.IFNE;
-import static graalvm.compiler.bytecode.Bytecodes.IFNONNULL;
-import static graalvm.compiler.bytecode.Bytecodes.IFNULL;
-import static graalvm.compiler.bytecode.Bytecodes.IF_ACMPEQ;
-import static graalvm.compiler.bytecode.Bytecodes.IF_ACMPNE;
-import static graalvm.compiler.bytecode.Bytecodes.IF_ICMPEQ;
-import static graalvm.compiler.bytecode.Bytecodes.IF_ICMPGE;
-import static graalvm.compiler.bytecode.Bytecodes.IF_ICMPGT;
-import static graalvm.compiler.bytecode.Bytecodes.IF_ICMPLE;
-import static graalvm.compiler.bytecode.Bytecodes.IF_ICMPLT;
-import static graalvm.compiler.bytecode.Bytecodes.IF_ICMPNE;
-import static graalvm.compiler.bytecode.Bytecodes.IINC;
-import static graalvm.compiler.bytecode.Bytecodes.ILOAD;
-import static graalvm.compiler.bytecode.Bytecodes.ILOAD_0;
-import static graalvm.compiler.bytecode.Bytecodes.ILOAD_1;
-import static graalvm.compiler.bytecode.Bytecodes.ILOAD_2;
-import static graalvm.compiler.bytecode.Bytecodes.ILOAD_3;
-import static graalvm.compiler.bytecode.Bytecodes.IMUL;
-import static graalvm.compiler.bytecode.Bytecodes.INEG;
-import static graalvm.compiler.bytecode.Bytecodes.INSTANCEOF;
-import static graalvm.compiler.bytecode.Bytecodes.INVOKEDYNAMIC;
-import static graalvm.compiler.bytecode.Bytecodes.INVOKEINTERFACE;
-import static graalvm.compiler.bytecode.Bytecodes.INVOKESPECIAL;
-import static graalvm.compiler.bytecode.Bytecodes.INVOKESTATIC;
-import static graalvm.compiler.bytecode.Bytecodes.INVOKEVIRTUAL;
-import static graalvm.compiler.bytecode.Bytecodes.IOR;
-import static graalvm.compiler.bytecode.Bytecodes.IREM;
-import static graalvm.compiler.bytecode.Bytecodes.IRETURN;
-import static graalvm.compiler.bytecode.Bytecodes.ISHL;
-import static graalvm.compiler.bytecode.Bytecodes.ISHR;
-import static graalvm.compiler.bytecode.Bytecodes.ISTORE;
-import static graalvm.compiler.bytecode.Bytecodes.ISTORE_0;
-import static graalvm.compiler.bytecode.Bytecodes.ISTORE_1;
-import static graalvm.compiler.bytecode.Bytecodes.ISTORE_2;
-import static graalvm.compiler.bytecode.Bytecodes.ISTORE_3;
-import static graalvm.compiler.bytecode.Bytecodes.ISUB;
-import static graalvm.compiler.bytecode.Bytecodes.IUSHR;
-import static graalvm.compiler.bytecode.Bytecodes.IXOR;
-import static graalvm.compiler.bytecode.Bytecodes.JSR;
-import static graalvm.compiler.bytecode.Bytecodes.JSR_W;
-import static graalvm.compiler.bytecode.Bytecodes.L2D;
-import static graalvm.compiler.bytecode.Bytecodes.L2F;
-import static graalvm.compiler.bytecode.Bytecodes.L2I;
-import static graalvm.compiler.bytecode.Bytecodes.LADD;
-import static graalvm.compiler.bytecode.Bytecodes.LALOAD;
-import static graalvm.compiler.bytecode.Bytecodes.LAND;
-import static graalvm.compiler.bytecode.Bytecodes.LASTORE;
-import static graalvm.compiler.bytecode.Bytecodes.LCMP;
-import static graalvm.compiler.bytecode.Bytecodes.LCONST_0;
-import static graalvm.compiler.bytecode.Bytecodes.LCONST_1;
-import static graalvm.compiler.bytecode.Bytecodes.LDC;
-import static graalvm.compiler.bytecode.Bytecodes.LDC2_W;
-import static graalvm.compiler.bytecode.Bytecodes.LDC_W;
-import static graalvm.compiler.bytecode.Bytecodes.LDIV;
-import static graalvm.compiler.bytecode.Bytecodes.LLOAD;
-import static graalvm.compiler.bytecode.Bytecodes.LLOAD_0;
-import static graalvm.compiler.bytecode.Bytecodes.LLOAD_1;
-import static graalvm.compiler.bytecode.Bytecodes.LLOAD_2;
-import static graalvm.compiler.bytecode.Bytecodes.LLOAD_3;
-import static graalvm.compiler.bytecode.Bytecodes.LMUL;
-import static graalvm.compiler.bytecode.Bytecodes.LNEG;
-import static graalvm.compiler.bytecode.Bytecodes.LOOKUPSWITCH;
-import static graalvm.compiler.bytecode.Bytecodes.LOR;
-import static graalvm.compiler.bytecode.Bytecodes.LREM;
-import static graalvm.compiler.bytecode.Bytecodes.LRETURN;
-import static graalvm.compiler.bytecode.Bytecodes.LSHL;
-import static graalvm.compiler.bytecode.Bytecodes.LSHR;
-import static graalvm.compiler.bytecode.Bytecodes.LSTORE;
-import static graalvm.compiler.bytecode.Bytecodes.LSTORE_0;
-import static graalvm.compiler.bytecode.Bytecodes.LSTORE_1;
-import static graalvm.compiler.bytecode.Bytecodes.LSTORE_2;
-import static graalvm.compiler.bytecode.Bytecodes.LSTORE_3;
-import static graalvm.compiler.bytecode.Bytecodes.LSUB;
-import static graalvm.compiler.bytecode.Bytecodes.LUSHR;
-import static graalvm.compiler.bytecode.Bytecodes.LXOR;
-import static graalvm.compiler.bytecode.Bytecodes.MONITORENTER;
-import static graalvm.compiler.bytecode.Bytecodes.MONITOREXIT;
-import static graalvm.compiler.bytecode.Bytecodes.MULTIANEWARRAY;
-import static graalvm.compiler.bytecode.Bytecodes.NEW;
-import static graalvm.compiler.bytecode.Bytecodes.NEWARRAY;
-import static graalvm.compiler.bytecode.Bytecodes.NOP;
-import static graalvm.compiler.bytecode.Bytecodes.POP;
-import static graalvm.compiler.bytecode.Bytecodes.POP2;
-import static graalvm.compiler.bytecode.Bytecodes.PUTFIELD;
-import static graalvm.compiler.bytecode.Bytecodes.PUTSTATIC;
-import static graalvm.compiler.bytecode.Bytecodes.RET;
-import static graalvm.compiler.bytecode.Bytecodes.RETURN;
-import static graalvm.compiler.bytecode.Bytecodes.SALOAD;
-import static graalvm.compiler.bytecode.Bytecodes.SASTORE;
-import static graalvm.compiler.bytecode.Bytecodes.SIPUSH;
-import static graalvm.compiler.bytecode.Bytecodes.SWAP;
-import static graalvm.compiler.bytecode.Bytecodes.TABLESWITCH;
-import static graalvm.compiler.bytecode.Bytecodes.nameOf;
-import static graalvm.compiler.core.common.GraalOptions.DeoptALot;
-import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
-import static graalvm.compiler.core.common.GraalOptions.ResolveClassBeforeStaticInvoke;
-import static graalvm.compiler.core.common.GraalOptions.StressExplicitExceptionCode;
-import static graalvm.compiler.core.common.GraalOptions.StressInvokeWithExceptionNode;
-import static graalvm.compiler.core.common.type.StampFactory.objectNonNull;
-import static graalvm.compiler.java.BytecodeParserOptions.InlinePartialIntrinsicExitDuringParsing;
-import static graalvm.compiler.java.BytecodeParserOptions.UseGuardedIntrinsics;
-import static graalvm.compiler.nodes.extended.BranchProbabilityNode.FAST_PATH_PROBABILITY;
-import static graalvm.compiler.nodes.extended.BranchProbabilityNode.SLOW_PATH_PROBABILITY;
-import static graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext.CompilationContext.INLINE_DURING_PARSING;
-import static graalvm.compiler.nodes.type.StampTool.isPointerNonNull;
-
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Formatter;
 import java.util.List;
 
+import jdk.vm.ci.code.BailoutException;
+import jdk.vm.ci.code.BytecodeFrame;
+import jdk.vm.ci.code.site.InfopointReason;
+import jdk.vm.ci.meta.ConstantPool;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.DeoptimizationAction;
+import jdk.vm.ci.meta.DeoptimizationReason;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.JavaField;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.JavaMethod;
+import jdk.vm.ci.meta.JavaType;
+import jdk.vm.ci.meta.JavaTypeProfile;
+import jdk.vm.ci.meta.JavaTypeProfile.ProfiledType;
+import jdk.vm.ci.meta.LineNumberTable;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ProfilingInfo;
+import jdk.vm.ci.meta.RawConstant;
+import jdk.vm.ci.meta.ResolvedJavaField;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+import jdk.vm.ci.meta.Signature;
+import jdk.vm.ci.meta.TriState;
+import jdk.vm.ci.runtime.JVMCICompiler;
+
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.bytecode.Bytecode;
 import graalvm.compiler.bytecode.BytecodeDisassembler;
@@ -250,6 +48,7 @@ import graalvm.compiler.bytecode.Bytecodes;
 import graalvm.compiler.bytecode.Bytes;
 import graalvm.compiler.bytecode.ResolvedJavaMethodBytecode;
 import graalvm.compiler.bytecode.ResolvedJavaMethodBytecodeProvider;
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.PermanentBailoutException;
 import graalvm.compiler.core.common.calc.CanonicalCondition;
 import graalvm.compiler.core.common.calc.Condition;
@@ -267,6 +66,7 @@ import graalvm.compiler.graph.Graph.Mark;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.java.BciBlockMapping.BciBlock;
 import graalvm.compiler.java.BciBlockMapping.ExceptionDispatchBlock;
+import graalvm.compiler.java.BytecodeParserOptions;
 import graalvm.compiler.nodes.AbstractBeginNode;
 import graalvm.compiler.nodes.AbstractMergeNode;
 import graalvm.compiler.nodes.BeginNode;
@@ -347,6 +147,7 @@ import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderContext;
 import graalvm.compiler.nodes.graphbuilderconf.InlineInvokePlugin;
 import graalvm.compiler.nodes.graphbuilderconf.InlineInvokePlugin.InlineInfo;
 import graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext;
+import graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext.CompilationContext;
 import graalvm.compiler.nodes.graphbuilderconf.InvocationPlugin;
 import graalvm.compiler.nodes.graphbuilderconf.InvocationPlugins.InvocationPluginReceiver;
 import graalvm.compiler.nodes.graphbuilderconf.InvokeDynamicPlugin;
@@ -374,31 +175,6 @@ import graalvm.compiler.nodes.util.GraphUtil;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.OptimisticOptimizations;
 import graalvm.compiler.phases.util.ValueMergeUtil;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.code.BailoutException;
-import jdk.vm.ci.code.BytecodeFrame;
-import jdk.vm.ci.code.site.InfopointReason;
-import jdk.vm.ci.meta.ConstantPool;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.DeoptimizationAction;
-import jdk.vm.ci.meta.DeoptimizationReason;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaField;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.JavaMethod;
-import jdk.vm.ci.meta.JavaType;
-import jdk.vm.ci.meta.JavaTypeProfile;
-import jdk.vm.ci.meta.JavaTypeProfile.ProfiledType;
-import jdk.vm.ci.meta.LineNumberTable;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ProfilingInfo;
-import jdk.vm.ci.meta.RawConstant;
-import jdk.vm.ci.meta.ResolvedJavaField;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
-import jdk.vm.ci.meta.Signature;
-import jdk.vm.ci.meta.TriState;
 
 /**
  * The {@code GraphBuilder} class parses the bytecode of a method and builds the IR graph.
@@ -908,7 +684,7 @@ public class BytecodeParser implements GraphBuilderContext
      */
     protected void handleUnresolvedLoadConstant(JavaType type)
     {
-        append(new DeoptimizeNode(InvalidateRecompile, Unresolved));
+        append(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.Unresolved));
     }
 
     /**
@@ -917,7 +693,7 @@ public class BytecodeParser implements GraphBuilderContext
      */
     protected void handleUnresolvedCheckCast(JavaType type, ValueNode object)
     {
-        append(new FixedGuardNode(graph.addOrUniqueWithInputs(IsNullNode.create(object)), Unresolved, InvalidateRecompile));
+        append(new FixedGuardNode(graph.addOrUniqueWithInputs(IsNullNode.create(object)), DeoptimizationReason.Unresolved, DeoptimizationAction.InvalidateRecompile));
         frameState.push(JavaKind.Object, appendConstant(JavaConstant.NULL_POINTER));
     }
 
@@ -928,7 +704,7 @@ public class BytecodeParser implements GraphBuilderContext
     protected void handleUnresolvedInstanceOf(JavaType type, ValueNode object)
     {
         AbstractBeginNode successor = graph.add(new BeginNode());
-        DeoptimizeNode deopt = graph.add(new DeoptimizeNode(InvalidateRecompile, Unresolved));
+        DeoptimizeNode deopt = graph.add(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.Unresolved));
         append(new IfNode(graph.addOrUniqueWithInputs(IsNullNode.create(object)), successor, deopt, 1));
         lastInstr = successor;
         frameState.push(JavaKind.Int, appendConstant(JavaConstant.INT_0));
@@ -939,7 +715,7 @@ public class BytecodeParser implements GraphBuilderContext
      */
     protected void handleUnresolvedNewInstance(JavaType type)
     {
-        append(new DeoptimizeNode(InvalidateRecompile, Unresolved));
+        append(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.Unresolved));
     }
 
     /**
@@ -948,7 +724,7 @@ public class BytecodeParser implements GraphBuilderContext
      */
     protected void handleUnresolvedNewObjectArray(JavaType type, ValueNode length)
     {
-        append(new DeoptimizeNode(InvalidateRecompile, Unresolved));
+        append(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.Unresolved));
     }
 
     /**
@@ -957,7 +733,7 @@ public class BytecodeParser implements GraphBuilderContext
      */
     protected void handleUnresolvedNewMultiArray(JavaType type, ValueNode[] dims)
     {
-        append(new DeoptimizeNode(InvalidateRecompile, Unresolved));
+        append(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.Unresolved));
     }
 
     /**
@@ -966,7 +742,7 @@ public class BytecodeParser implements GraphBuilderContext
      */
     protected void handleUnresolvedLoadField(JavaField field, ValueNode receiver)
     {
-        append(new DeoptimizeNode(InvalidateRecompile, Unresolved));
+        append(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.Unresolved));
     }
 
     /**
@@ -976,17 +752,17 @@ public class BytecodeParser implements GraphBuilderContext
      */
     protected void handleUnresolvedStoreField(JavaField field, ValueNode value, ValueNode receiver)
     {
-        append(new DeoptimizeNode(InvalidateRecompile, Unresolved));
+        append(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.Unresolved));
     }
 
     protected void handleUnresolvedExceptionType(JavaType type)
     {
-        append(new DeoptimizeNode(InvalidateRecompile, Unresolved));
+        append(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.Unresolved));
     }
 
     protected void handleUnresolvedInvoke(JavaMethod javaMethod, InvokeKind invokeKind)
     {
-        append(new DeoptimizeNode(InvalidateRecompile, Unresolved));
+        append(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.Unresolved));
     }
 
     private AbstractBeginNode handleException(ValueNode exceptionObject, int bci, boolean deoptimizeOnly)
@@ -1208,8 +984,8 @@ public class BytecodeParser implements GraphBuilderContext
         genInfoPointNode(InfopointReason.BYTECODE_POSITION, null);
 
         ValueNode exception = frameState.pop(JavaKind.Object);
-        FixedGuardNode nullCheck = append(new FixedGuardNode(graph.addOrUniqueWithInputs(IsNullNode.create(exception)), NullCheckException, InvalidateReprofile, true));
-        ValueNode nonNullException = graph.maybeAddOrUnique(PiNode.create(exception, exception.stamp(NodeView.DEFAULT).join(objectNonNull()), nullCheck));
+        FixedGuardNode nullCheck = append(new FixedGuardNode(graph.addOrUniqueWithInputs(IsNullNode.create(exception)), DeoptimizationReason.NullCheckException, DeoptimizationAction.InvalidateReprofile, true));
+        ValueNode nonNullException = graph.maybeAddOrUnique(PiNode.create(exception, exception.stamp(NodeView.DEFAULT).join(StampFactory.objectNonNull()), nullCheck));
         lastInstr.setNext(handleException(nonNullException, bci(), false));
     }
 
@@ -1286,8 +1062,8 @@ public class BytecodeParser implements GraphBuilderContext
         }
         BytecodeExceptionNode exception = graph.add(new BytecodeExceptionNode(metaAccess, NullPointerException.class));
         AbstractBeginNode falseSucc = graph.add(new BeginNode());
-        ValueNode nonNullReceiver = graph.addOrUniqueWithInputs(PiNode.create(receiver, objectNonNull(), falseSucc));
-        append(new IfNode(graph.addOrUniqueWithInputs(IsNullNode.create(receiver)), exception, falseSucc, SLOW_PATH_PROBABILITY));
+        ValueNode nonNullReceiver = graph.addOrUniqueWithInputs(PiNode.create(receiver, StampFactory.objectNonNull(), falseSucc));
+        append(new IfNode(graph.addOrUniqueWithInputs(IsNullNode.create(receiver)), exception, falseSucc, BranchProbabilityNode.SLOW_PATH_PROBABILITY));
         lastInstr = falseSucc;
 
         exception.setStateAfter(createFrameState(bci(), exception));
@@ -1299,7 +1075,7 @@ public class BytecodeParser implements GraphBuilderContext
     {
         AbstractBeginNode trueSucc = graph.add(new BeginNode());
         BytecodeExceptionNode exception = graph.add(new BytecodeExceptionNode(metaAccess, ArrayIndexOutOfBoundsException.class, index));
-        append(new IfNode(genUnique(IntegerBelowNode.create(constantReflection, metaAccess, options, null, index, length, NodeView.DEFAULT)), trueSucc, exception, FAST_PATH_PROBABILITY));
+        append(new IfNode(genUnique(IntegerBelowNode.create(constantReflection, metaAccess, options, null, index, length, NodeView.DEFAULT)), trueSucc, exception, BranchProbabilityNode.FAST_PATH_PROBABILITY));
         lastInstr = trueSucc;
 
         exception.setStateAfter(createFrameState(bci(), exception));
@@ -1347,7 +1123,7 @@ public class BytecodeParser implements GraphBuilderContext
         {
             ResolvedJavaMethod resolvedTarget = (ResolvedJavaMethod) target;
             ResolvedJavaType holder = resolvedTarget.getDeclaringClass();
-            if (!holder.isInitialized() && ResolveClassBeforeStaticInvoke.getValue(options))
+            if (!holder.isInitialized() && GraalOptions.ResolveClassBeforeStaticInvoke.getValue(options))
             {
                 handleUnresolvedInvoke(target, InvokeKind.Static);
             }
@@ -1402,7 +1178,7 @@ public class BytecodeParser implements GraphBuilderContext
 
     void genInvokeDynamic(JavaMethod target)
     {
-        if (!(target instanceof ResolvedJavaMethod) || !genDynamicInvokeHelper((ResolvedJavaMethod) target, stream.readCPI4(), INVOKEDYNAMIC))
+        if (!(target instanceof ResolvedJavaMethod) || !genDynamicInvokeHelper((ResolvedJavaMethod) target, stream.readCPI4(), Bytecodes.INVOKEDYNAMIC))
         {
             handleUnresolvedInvoke(target, InvokeKind.Static);
         }
@@ -1418,16 +1194,16 @@ public class BytecodeParser implements GraphBuilderContext
     {
         InvokeDynamicPlugin invokeDynamicPlugin = graphBuilderConfig.getPlugins().getInvokeDynamicPlugin();
 
-        if (opcode == INVOKEVIRTUAL && invokeDynamicPlugin != null && !invokeDynamicPlugin.isResolvedDynamicInvoke(this, cpi, opcode))
+        if (opcode == Bytecodes.INVOKEVIRTUAL && invokeDynamicPlugin != null && !invokeDynamicPlugin.isResolvedDynamicInvoke(this, cpi, opcode))
         {
             // regular invokevirtual, let caller handle it
             return false;
         }
 
-        if (GeneratePIC.getValue(options) && (invokeDynamicPlugin == null || !invokeDynamicPlugin.supportsDynamicInvoke(this, cpi, opcode)))
+        if (GraalOptions.GeneratePIC.getValue(options) && (invokeDynamicPlugin == null || !invokeDynamicPlugin.supportsDynamicInvoke(this, cpi, opcode)))
         {
             // bail out if static compiler and no dynamic type support
-            append(new DeoptimizeNode(InvalidateRecompile, Unresolved));
+            append(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.Unresolved));
             return true;
         }
 
@@ -1451,15 +1227,15 @@ public class BytecodeParser implements GraphBuilderContext
 
             frameState.push(JavaKind.Object, appendixNode);
         }
-        else if (GeneratePIC.getValue(options))
+        else if (GraalOptions.GeneratePIC.getValue(options))
         {
             // Need to emit runtime guard and perform static initialization.
             // Not implemented yet.
-            append(new DeoptimizeNode(InvalidateRecompile, Unresolved));
+            append(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.Unresolved));
             return true;
         }
 
-        boolean hasReceiver = (opcode == INVOKEDYNAMIC) ? false : !target.isStatic();
+        boolean hasReceiver = (opcode == Bytecodes.INVOKEDYNAMIC) ? false : !target.isStatic();
         ValueNode[] args = frameState.popArguments(target.getSignature().getParameterCount(hasReceiver));
         if (hasReceiver)
         {
@@ -1497,7 +1273,7 @@ public class BytecodeParser implements GraphBuilderContext
          * https://wiki.openjdk.java.net/display/HotSpot/Method+handles+and+invokedynamic
          */
 
-        if (genDynamicInvokeHelper(resolvedTarget, cpi, INVOKEVIRTUAL))
+        if (genDynamicInvokeHelper(resolvedTarget, cpi, Bytecodes.INVOKEVIRTUAL))
         {
             return true;
         }
@@ -1611,9 +1387,9 @@ public class BytecodeParser implements GraphBuilderContext
         }
 
         JavaKind resultType = targetMethod.getSignature().getReturnKind();
-        if (!parsingIntrinsic() && DeoptALot.getValue(options))
+        if (!parsingIntrinsic() && GraalOptions.DeoptALot.getValue(options))
         {
-            append(new DeoptimizeNode(DeoptimizationAction.None, RuntimeConstraint));
+            append(new DeoptimizeNode(DeoptimizationAction.None, DeoptimizationReason.RuntimeConstraint));
             frameState.pushReturn(resultType, ConstantNode.defaultForKind(resultType, graph));
             return null;
         }
@@ -1644,11 +1420,11 @@ public class BytecodeParser implements GraphBuilderContext
 
             if (invokeKind.hasReceiver() && args[0].isNullConstant())
             {
-                append(new DeoptimizeNode(InvalidateRecompile, NullCheckException));
+                append(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.NullCheckException));
                 return null;
             }
 
-            if (!invokeKind.isIndirect() || (UseGuardedIntrinsics.getValue(options) && !GeneratePIC.getValue(options)))
+            if (!invokeKind.isIndirect() || (BytecodeParserOptions.UseGuardedIntrinsics.getValue(options) && !GraalOptions.GeneratePIC.getValue(options)))
             {
                 if (tryInvocationPlugin(invokeKind, args, targetMethod, resultType, returnType))
                 {
@@ -1746,7 +1522,7 @@ public class BytecodeParser implements GraphBuilderContext
             ValueNode receiver = args[0];
             TypeReference checkedType = TypeReference.createTrusted(graph.getAssumptions(), callingClass);
             LogicNode condition = genUnique(createInstanceOf(checkedType, receiver, null));
-            FixedGuardNode fixedGuard = append(new FixedGuardNode(condition, ClassCastException, None, false));
+            FixedGuardNode fixedGuard = append(new FixedGuardNode(condition, DeoptimizationReason.ClassCastException, DeoptimizationAction.None, false));
             args[0] = append(PiNode.create(receiver, StampFactory.object(checkedType, true), fixedGuard));
         }
     }
@@ -1864,7 +1640,7 @@ public class BytecodeParser implements GraphBuilderContext
         {
             // be conservative if information was not recorded (could result in endless
             // recompiles otherwise)
-            if (!StressInvokeWithExceptionNode.getValue(options))
+            if (!GraalOptions.StressInvokeWithExceptionNode.getValue(options))
             {
                 if (optimisticOpts.useExceptionProbability(getOptions()))
                 {
@@ -1954,7 +1730,7 @@ public class BytecodeParser implements GraphBuilderContext
                         {
                             // All profiled types select the intrinsic so
                             // emit a fixed guard instead of an if-then-else.
-                            lastInstr = append(new FixedGuardNode(compare, TypeCheckedInliningViolated, InvalidateReprofile, false));
+                            lastInstr = append(new FixedGuardNode(compare, DeoptimizationReason.TypeCheckedInliningViolated, DeoptimizationAction.InvalidateReprofile, false));
                             return new IntrinsicGuard(currentLastInstr, intrinsicReceiver, mark, null, null);
                         }
                     }
@@ -1969,7 +1745,7 @@ public class BytecodeParser implements GraphBuilderContext
 
             AbstractBeginNode intrinsicBranch = graph.add(new BeginNode());
             AbstractBeginNode nonIntrinsicBranch = graph.add(new BeginNode());
-            append(new IfNode(compare, intrinsicBranch, nonIntrinsicBranch, FAST_PATH_PROBABILITY));
+            append(new IfNode(compare, intrinsicBranch, nonIntrinsicBranch, BranchProbabilityNode.FAST_PATH_PROBABILITY));
             lastInstr = intrinsicBranch;
             return new IntrinsicGuard(currentLastInstr, intrinsicReceiver, mark, nonIntrinsicBranch, profile);
         }
@@ -2192,13 +1968,13 @@ public class BytecodeParser implements GraphBuilderContext
     private boolean tryFastInlineAccessor(ValueNode[] args, ResolvedJavaMethod targetMethod)
     {
         byte[] bytecode = targetMethod.getCode();
-        if (bytecode != null && bytecode.length == ACCESSOR_BYTECODE_LENGTH && Bytes.beU1(bytecode, 0) == ALOAD_0 && Bytes.beU1(bytecode, 1) == GETFIELD)
+        if (bytecode != null && bytecode.length == ACCESSOR_BYTECODE_LENGTH && Bytes.beU1(bytecode, 0) == Bytecodes.ALOAD_0 && Bytes.beU1(bytecode, 1) == Bytecodes.GETFIELD)
         {
             int b4 = Bytes.beU1(bytecode, 4);
-            if (b4 >= IRETURN && b4 <= ARETURN)
+            if (b4 >= Bytecodes.IRETURN && b4 <= Bytecodes.ARETURN)
             {
                 int cpi = Bytes.beU2(bytecode, 2);
-                JavaField field = targetMethod.getConstantPool().lookupField(cpi, targetMethod, GETFIELD);
+                JavaField field = targetMethod.getConstantPool().lookupField(cpi, targetMethod, Bytecodes.GETFIELD);
                 if (field instanceof ResolvedJavaField)
                 {
                     ValueNode receiver = invocationPluginReceiver.init(targetMethod, args).get();
@@ -2228,7 +2004,7 @@ public class BytecodeParser implements GraphBuilderContext
     {
         IntrinsicContext intrinsic = this.intrinsicContext;
 
-        if (intrinsic == null && !graphBuilderConfig.insertFullInfopoints() && targetMethod.equals(inlinedMethod) && (targetMethod.getModifiers() & (STATIC | SYNCHRONIZED)) == 0 && tryFastInlineAccessor(args, targetMethod))
+        if (intrinsic == null && !graphBuilderConfig.insertFullInfopoints() && targetMethod.equals(inlinedMethod) && (targetMethod.getModifiers() & (Modifier.STATIC | Modifier.SYNCHRONIZED)) == 0 && tryFastInlineAccessor(args, targetMethod))
         {
             return true;
         }
@@ -2241,7 +2017,7 @@ public class BytecodeParser implements GraphBuilderContext
                 // if the slow path is taken. During frame state
                 // assignment, the deopt node will get its stateBefore
                 // from the start node of the intrinsic
-                append(new DeoptimizeNode(InvalidateRecompile, RuntimeConstraint));
+                append(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.RuntimeConstraint));
                 return true;
             }
             else
@@ -2250,7 +2026,7 @@ public class BytecodeParser implements GraphBuilderContext
                 {
                     return false;
                 }
-                if (canInlinePartialIntrinsicExit() && InlinePartialIntrinsicExitDuringParsing.getValue(options))
+                if (canInlinePartialIntrinsicExit() && BytecodeParserOptions.InlinePartialIntrinsicExitDuringParsing.getValue(options))
                 {
                     // Otherwise inline the original method. Any frame state created
                     // during the inlining will exclude frame(s) in the
@@ -2271,7 +2047,7 @@ public class BytecodeParser implements GraphBuilderContext
             boolean isIntrinsic = intrinsicBytecodeProvider != null;
             if (intrinsic == null && isIntrinsic)
             {
-                intrinsic = new IntrinsicContext(targetMethod, inlinedMethod, intrinsicBytecodeProvider, INLINE_DURING_PARSING);
+                intrinsic = new IntrinsicContext(targetMethod, inlinedMethod, intrinsicBytecodeProvider, CompilationContext.INLINE_DURING_PARSING);
             }
             if (inlinedMethod.hasBytecodes())
             {
@@ -2335,7 +2111,7 @@ public class BytecodeParser implements GraphBuilderContext
 
         try (IntrinsicScope s = calleeIntrinsicContext != null && !parsingIntrinsic() ? new IntrinsicScope(this, targetMethod.getSignature().toParameterKinds(!targetMethod.isStatic()), args) : null)
         {
-            BytecodeParser parser = graphBuilderInstance.createBytecodeParser(graph, this, targetMethod, INVOCATION_ENTRY_BCI, calleeIntrinsicContext);
+            BytecodeParser parser = graphBuilderInstance.createBytecodeParser(graph, this, targetMethod, JVMCICompiler.INVOCATION_ENTRY_BCI, calleeIntrinsicContext);
             FrameStateBuilder startFrameState = new FrameStateBuilder(parser, parser.code, graph);
             if (!targetMethod.isStatic())
             {
@@ -2537,7 +2313,7 @@ public class BytecodeParser implements GraphBuilderContext
              * When compiling an OSR with a final field store, don't bother tracking the original
              * receiver since the receiver cannot be EA'ed.
              */
-            append(new FinalFieldBarrierNode(entryBCI == INVOCATION_ENTRY_BCI ? originalReceiver : null));
+            append(new FinalFieldBarrierNode(entryBCI == JVMCICompiler.INVOCATION_ENTRY_BCI ? originalReceiver : null));
         }
         synchronizedEpilogue(BytecodeFrame.AFTER_BCI, x, kind);
     }
@@ -2598,7 +2374,7 @@ public class BytecodeParser implements GraphBuilderContext
         ConstantNode returnBciNode = getJsrConstant(retAddress);
         LogicNode guard = IntegerEqualsNode.create(constantReflection, metaAccess, options, null, local, returnBciNode, NodeView.DEFAULT);
         guard = graph.addOrUniqueWithInputs(guard);
-        append(new FixedGuardNode(guard, JavaSubroutineMismatch, InvalidateReprofile));
+        append(new FixedGuardNode(guard, DeoptimizationReason.JavaSubroutineMismatch, DeoptimizationAction.InvalidateReprofile));
         if (!successor.getJsrScope().equals(scope.pop()))
         {
             throw new JsrNotSupportedBailout("unstructured control flow (ret leaves more than one scope)");
@@ -2782,7 +2558,7 @@ public class BytecodeParser implements GraphBuilderContext
     {
         if (isNeverExecutedCode(probability))
         {
-            return graph.add(new DeoptimizeNode(InvalidateReprofile, UnreachedCode));
+            return graph.add(new DeoptimizeNode(DeoptimizationAction.InvalidateReprofile, DeoptimizationReason.UnreachedCode));
         }
         else
         {
@@ -3015,7 +2791,7 @@ public class BytecodeParser implements GraphBuilderContext
         JavaType catchType = block.handler.getCatchType();
         if (graphBuilderConfig.eagerResolving())
         {
-            catchType = lookupType(block.handler.catchTypeCPI(), INSTANCEOF);
+            catchType = lookupType(block.handler.catchTypeCPI(), Bytecodes.INSTANCEOF);
         }
         if (catchType instanceof ResolvedJavaType)
         {
@@ -3029,7 +2805,7 @@ public class BytecodeParser implements GraphBuilderContext
                     {
                         BciBlock nextBlock = block.getSuccessorCount() == 1 ? blockMap.getUnwindBlock() : block.getSuccessor(1);
                         ValueNode exception = frameState.stack[0];
-                        FixedNode trueSuccessor = graph.add(new DeoptimizeNode(InvalidateReprofile, UnreachedCode));
+                        FixedNode trueSuccessor = graph.add(new DeoptimizeNode(DeoptimizationAction.InvalidateReprofile, DeoptimizationReason.UnreachedCode));
                         FixedNode nextDispatch = createTarget(nextBlock, frameState);
                         append(new IfNode(graph.addOrUniqueWithInputs(createInstanceOf(checkedCatchType, exception)), trueSuccessor, nextDispatch, 0));
                         return;
@@ -3137,7 +2913,7 @@ public class BytecodeParser implements GraphBuilderContext
                 {
                     if (block.getJsrScope() != JsrScope.EMPTY_SCOPE)
                     {
-                        throw new JsrNotSupportedBailout("OSR into a JSR scope is not supported");
+                        throw new JsrNotSupportedBailout("OSR into a Bytecodes.JSR scope is not supported");
                     }
                     EntryMarkerNode x = append(new EntryMarkerNode());
                     frameState.insertProxies(value -> graph.unique(new EntryProxyNode(value, x)));
@@ -3369,7 +3145,7 @@ public class BytecodeParser implements GraphBuilderContext
             {
                 if (!graph.isOSR() || getParent() != null || graph.getEntryBCI() != trueBlock.startBci)
                 {
-                    append(new FixedGuardNode(condition, UnreachedCode, InvalidateReprofile, true));
+                    append(new FixedGuardNode(condition, DeoptimizationReason.UnreachedCode, DeoptimizationAction.InvalidateReprofile, true));
                     if (profilingPlugin != null && profilingPlugin.shouldProfile(this, method))
                     {
                         profilingPlugin.profileGoto(this, method, bci(), falseBlock.startBci, stateBefore);
@@ -3382,7 +3158,7 @@ public class BytecodeParser implements GraphBuilderContext
             {
                 if (!graph.isOSR() || getParent() != null || graph.getEntryBCI() != falseBlock.startBci)
                 {
-                    append(new FixedGuardNode(condition, UnreachedCode, InvalidateReprofile, false));
+                    append(new FixedGuardNode(condition, DeoptimizationReason.UnreachedCode, DeoptimizationAction.InvalidateReprofile, false));
                     if (profilingPlugin != null && profilingPlugin.shouldProfile(this, method))
                     {
                         profilingPlugin.profileGoto(this, method, bci(), trueBlock.startBci, stateBefore);
@@ -3768,36 +3544,36 @@ public class BytecodeParser implements GraphBuilderContext
         ValueNode v;
         switch (opcode)
         {
-            case IADD:
-            case LADD:
+            case Bytecodes.IADD:
+            case Bytecodes.LADD:
                 v = genIntegerAdd(x, y);
                 break;
-            case FADD:
-            case DADD:
+            case Bytecodes.FADD:
+            case Bytecodes.DADD:
                 v = genFloatAdd(x, y);
                 break;
-            case ISUB:
-            case LSUB:
+            case Bytecodes.ISUB:
+            case Bytecodes.LSUB:
                 v = genIntegerSub(x, y);
                 break;
-            case FSUB:
-            case DSUB:
+            case Bytecodes.FSUB:
+            case Bytecodes.DSUB:
                 v = genFloatSub(x, y);
                 break;
-            case IMUL:
-            case LMUL:
+            case Bytecodes.IMUL:
+            case Bytecodes.LMUL:
                 v = genIntegerMul(x, y);
                 break;
-            case FMUL:
-            case DMUL:
+            case Bytecodes.FMUL:
+            case Bytecodes.DMUL:
                 v = genFloatMul(x, y);
                 break;
-            case FDIV:
-            case DDIV:
+            case Bytecodes.FDIV:
+            case Bytecodes.DDIV:
                 v = genFloatDiv(x, y);
                 break;
-            case FREM:
-            case DREM:
+            case Bytecodes.FREM:
+            case Bytecodes.DREM:
                 v = genFloatRem(x, y);
                 break;
             default:
@@ -3813,12 +3589,12 @@ public class BytecodeParser implements GraphBuilderContext
         ValueNode v;
         switch (opcode)
         {
-            case IDIV:
-            case LDIV:
+            case Bytecodes.IDIV:
+            case Bytecodes.LDIV:
                 v = genIntegerDiv(x, y);
                 break;
-            case IREM:
-            case LREM:
+            case Bytecodes.IREM:
+            case Bytecodes.LREM:
                 v = genIntegerRem(x, y);
                 break;
             default:
@@ -3840,16 +3616,16 @@ public class BytecodeParser implements GraphBuilderContext
         ValueNode v;
         switch (opcode)
         {
-            case ISHL:
-            case LSHL:
+            case Bytecodes.ISHL:
+            case Bytecodes.LSHL:
                 v = genLeftShift(x, s);
                 break;
-            case ISHR:
-            case LSHR:
+            case Bytecodes.ISHR:
+            case Bytecodes.LSHR:
                 v = genRightShift(x, s);
                 break;
-            case IUSHR:
-            case LUSHR:
+            case Bytecodes.IUSHR:
+            case Bytecodes.LUSHR:
                 v = genUnsignedRightShift(x, s);
                 break;
             default:
@@ -3865,16 +3641,16 @@ public class BytecodeParser implements GraphBuilderContext
         ValueNode v;
         switch (opcode)
         {
-            case IAND:
-            case LAND:
+            case Bytecodes.IAND:
+            case Bytecodes.LAND:
                 v = genAnd(x, y);
                 break;
-            case IOR:
-            case LOR:
+            case Bytecodes.IOR:
+            case Bytecodes.LOR:
                 v = genOr(x, y);
                 break;
-            case IXOR:
-            case LXOR:
+            case Bytecodes.IXOR:
+            case Bytecodes.LXOR:
                 v = genXor(x, y);
                 break;
             default:
@@ -4049,7 +3825,7 @@ public class BytecodeParser implements GraphBuilderContext
     private void genCheckCast()
     {
         int cpi = getStream().readCPI();
-        JavaType type = lookupType(cpi, CHECKCAST);
+        JavaType type = lookupType(cpi, Bytecodes.CHECKCAST);
         ValueNode object = frameState.pop(JavaKind.Object);
 
         if (!(type instanceof ResolvedJavaType))
@@ -4111,7 +3887,7 @@ public class BytecodeParser implements GraphBuilderContext
     private void genInstanceOf()
     {
         int cpi = getStream().readCPI();
-        JavaType type = lookupType(cpi, INSTANCEOF);
+        JavaType type = lookupType(cpi, Bytecodes.INSTANCEOF);
         ValueNode object = frameState.pop(JavaKind.Object);
 
         if (!(type instanceof ResolvedJavaType))
@@ -4186,7 +3962,7 @@ public class BytecodeParser implements GraphBuilderContext
 
     protected void genNewInstance(int cpi)
     {
-        JavaType type = lookupType(cpi, NEW);
+        JavaType type = lookupType(cpi, Bytecodes.NEW);
         genNewInstance(type);
     }
 
@@ -4212,7 +3988,7 @@ public class BytecodeParser implements GraphBuilderContext
             {
                 if (exceptionType.isAssignableFrom(resolvedType))
                 {
-                    append(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, RuntimeConstraint));
+                    append(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.RuntimeConstraint));
                     return;
                 }
             }
@@ -4285,7 +4061,7 @@ public class BytecodeParser implements GraphBuilderContext
 
     private void genNewObjectArray(int cpi)
     {
-        JavaType type = lookupType(cpi, ANEWARRAY);
+        JavaType type = lookupType(cpi, Bytecodes.ANEWARRAY);
 
         if (!(type instanceof ResolvedJavaType))
         {
@@ -4317,7 +4093,7 @@ public class BytecodeParser implements GraphBuilderContext
 
     private void genNewMultiArray(int cpi)
     {
-        JavaType type = lookupType(cpi, MULTIANEWARRAY);
+        JavaType type = lookupType(cpi, Bytecodes.MULTIANEWARRAY);
         int rank = getStream().readUByte(bci() + 3);
         ValueNode[] dims = new ValueNode[rank];
 
@@ -4382,7 +4158,7 @@ public class BytecodeParser implements GraphBuilderContext
 
     private void genGetField(ResolvedJavaField resolvedField, ValueNode receiver)
     {
-        if (!parsingIntrinsic() && GeneratePIC.getValue(getOptions()))
+        if (!parsingIntrinsic() && GraalOptions.GeneratePIC.getValue(getOptions()))
         {
             graph.recordField(resolvedField);
         }
@@ -4450,7 +4226,7 @@ public class BytecodeParser implements GraphBuilderContext
     protected boolean needsExplicitException()
     {
         BytecodeExceptionMode exceptionMode = graphBuilderConfig.getBytecodeExceptionMode();
-        if (exceptionMode == BytecodeExceptionMode.CheckAll || StressExplicitExceptionCode.getValue(options))
+        if (exceptionMode == BytecodeExceptionMode.CheckAll || GraalOptions.StressExplicitExceptionCode.getValue(options))
         {
             return true;
         }
@@ -4479,7 +4255,7 @@ public class BytecodeParser implements GraphBuilderContext
         {
             ResolvedJavaField resolvedField = (ResolvedJavaField) field;
 
-            if (!parsingIntrinsic() && GeneratePIC.getValue(getOptions()))
+            if (!parsingIntrinsic() && GraalOptions.GeneratePIC.getValue(getOptions()))
             {
                 graph.recordField(resolvedField);
             }
@@ -4518,7 +4294,7 @@ public class BytecodeParser implements GraphBuilderContext
             return;
         }
 
-        if (!parsingIntrinsic() && GeneratePIC.getValue(getOptions()))
+        if (!parsingIntrinsic() && GraalOptions.GeneratePIC.getValue(getOptions()))
         {
             graph.recordField(resolvedField);
         }
@@ -4600,7 +4376,7 @@ public class BytecodeParser implements GraphBuilderContext
             return;
         }
 
-        if (!parsingIntrinsic() && GeneratePIC.getValue(getOptions()))
+        if (!parsingIntrinsic() && GraalOptions.GeneratePIC.getValue(getOptions()))
         {
             graph.recordField(resolvedField);
         }
@@ -4786,22 +4562,22 @@ public class BytecodeParser implements GraphBuilderContext
         int bytecode = stream.currentBC();
         switch (bytecode)
         {
-            case IFEQ:
-            case IFNE:
-            case IFLT:
-            case IFGE:
-            case IFGT:
-            case IFLE:
-            case IF_ICMPEQ:
-            case IF_ICMPNE:
-            case IF_ICMPLT:
-            case IF_ICMPGE:
-            case IF_ICMPGT:
-            case IF_ICMPLE:
-            case IF_ACMPEQ:
-            case IF_ACMPNE:
-            case IFNULL:
-            case IFNONNULL:
+            case Bytecodes.IFEQ:
+            case Bytecodes.IFNE:
+            case Bytecodes.IFLT:
+            case Bytecodes.IFGE:
+            case Bytecodes.IFGT:
+            case Bytecodes.IFLE:
+            case Bytecodes.IF_ICMPEQ:
+            case Bytecodes.IF_ICMPNE:
+            case Bytecodes.IF_ICMPLT:
+            case Bytecodes.IF_ICMPGE:
+            case Bytecodes.IF_ICMPGT:
+            case Bytecodes.IF_ICMPLE:
+            case Bytecodes.IF_ACMPEQ:
+            case Bytecodes.IF_ACMPNE:
+            case Bytecodes.IFNULL:
+            case Bytecodes.IFNONNULL:
                 return true;
         }
         return true;
@@ -4813,209 +4589,209 @@ public class BytecodeParser implements GraphBuilderContext
 
         switch (opcode)
         {
-            case NOP:             /* nothing to do */ break;
-            case ACONST_NULL:     frameState.push(JavaKind.Object, appendConstant(JavaConstant.NULL_POINTER)); break;
-            case ICONST_M1:       // fall through
-            case ICONST_0:        // fall through
-            case ICONST_1:        // fall through
-            case ICONST_2:        // fall through
-            case ICONST_3:        // fall through
-            case ICONST_4:        // fall through
-            case ICONST_5:        frameState.push(JavaKind.Int, appendConstant(JavaConstant.forInt(opcode - ICONST_0))); break;
-            case LCONST_0:        // fall through
-            case LCONST_1:        frameState.push(JavaKind.Long, appendConstant(JavaConstant.forLong(opcode - LCONST_0))); break;
-            case FCONST_0:        // fall through
-            case FCONST_1:        // fall through
-            case FCONST_2:        frameState.push(JavaKind.Float, appendConstant(JavaConstant.forFloat(opcode - FCONST_0))); break;
-            case DCONST_0:        // fall through
-            case DCONST_1:        frameState.push(JavaKind.Double, appendConstant(JavaConstant.forDouble(opcode - DCONST_0))); break;
-            case BIPUSH:          frameState.push(JavaKind.Int, appendConstant(JavaConstant.forInt(stream.readByte()))); break;
-            case SIPUSH:          frameState.push(JavaKind.Int, appendConstant(JavaConstant.forInt(stream.readShort()))); break;
-            case LDC:             // fall through
-            case LDC_W:           // fall through
-            case LDC2_W:          genLoadConstant(stream.readCPI(), opcode); break;
-            case ILOAD:           loadLocal(stream.readLocalIndex(), JavaKind.Int); break;
-            case LLOAD:           loadLocal(stream.readLocalIndex(), JavaKind.Long); break;
-            case FLOAD:           loadLocal(stream.readLocalIndex(), JavaKind.Float); break;
-            case DLOAD:           loadLocal(stream.readLocalIndex(), JavaKind.Double); break;
-            case ALOAD:           loadLocalObject(stream.readLocalIndex()); break;
-            case ILOAD_0:         // fall through
-            case ILOAD_1:         // fall through
-            case ILOAD_2:         // fall through
-            case ILOAD_3:         loadLocal(opcode - ILOAD_0, JavaKind.Int); break;
-            case LLOAD_0:         // fall through
-            case LLOAD_1:         // fall through
-            case LLOAD_2:         // fall through
-            case LLOAD_3:         loadLocal(opcode - LLOAD_0, JavaKind.Long); break;
-            case FLOAD_0:         // fall through
-            case FLOAD_1:         // fall through
-            case FLOAD_2:         // fall through
-            case FLOAD_3:         loadLocal(opcode - FLOAD_0, JavaKind.Float); break;
-            case DLOAD_0:         // fall through
-            case DLOAD_1:         // fall through
-            case DLOAD_2:         // fall through
-            case DLOAD_3:         loadLocal(opcode - DLOAD_0, JavaKind.Double); break;
-            case ALOAD_0:         // fall through
-            case ALOAD_1:         // fall through
-            case ALOAD_2:         // fall through
-            case ALOAD_3:         loadLocalObject(opcode - ALOAD_0); break;
-            case IALOAD:          genLoadIndexed(JavaKind.Int   ); break;
-            case LALOAD:          genLoadIndexed(JavaKind.Long  ); break;
-            case FALOAD:          genLoadIndexed(JavaKind.Float ); break;
-            case DALOAD:          genLoadIndexed(JavaKind.Double); break;
-            case AALOAD:          genLoadIndexed(JavaKind.Object); break;
-            case BALOAD:          genLoadIndexed(JavaKind.Byte  ); break;
-            case CALOAD:          genLoadIndexed(JavaKind.Char  ); break;
-            case SALOAD:          genLoadIndexed(JavaKind.Short ); break;
-            case ISTORE:          storeLocal(JavaKind.Int, stream.readLocalIndex()); break;
-            case LSTORE:          storeLocal(JavaKind.Long, stream.readLocalIndex()); break;
-            case FSTORE:          storeLocal(JavaKind.Float, stream.readLocalIndex()); break;
-            case DSTORE:          storeLocal(JavaKind.Double, stream.readLocalIndex()); break;
-            case ASTORE:          storeLocal(JavaKind.Object, stream.readLocalIndex()); break;
-            case ISTORE_0:        // fall through
-            case ISTORE_1:        // fall through
-            case ISTORE_2:        // fall through
-            case ISTORE_3:        storeLocal(JavaKind.Int, opcode - ISTORE_0); break;
-            case LSTORE_0:        // fall through
-            case LSTORE_1:        // fall through
-            case LSTORE_2:        // fall through
-            case LSTORE_3:        storeLocal(JavaKind.Long, opcode - LSTORE_0); break;
-            case FSTORE_0:        // fall through
-            case FSTORE_1:        // fall through
-            case FSTORE_2:        // fall through
-            case FSTORE_3:        storeLocal(JavaKind.Float, opcode - FSTORE_0); break;
-            case DSTORE_0:        // fall through
-            case DSTORE_1:        // fall through
-            case DSTORE_2:        // fall through
-            case DSTORE_3:        storeLocal(JavaKind.Double, opcode - DSTORE_0); break;
-            case ASTORE_0:        // fall through
-            case ASTORE_1:        // fall through
-            case ASTORE_2:        // fall through
-            case ASTORE_3:        storeLocal(JavaKind.Object, opcode - ASTORE_0); break;
-            case IASTORE:         genStoreIndexed(JavaKind.Int   ); break;
-            case LASTORE:         genStoreIndexed(JavaKind.Long  ); break;
-            case FASTORE:         genStoreIndexed(JavaKind.Float ); break;
-            case DASTORE:         genStoreIndexed(JavaKind.Double); break;
-            case AASTORE:         genStoreIndexed(JavaKind.Object); break;
-            case BASTORE:         genStoreIndexed(JavaKind.Byte  ); break;
-            case CASTORE:         genStoreIndexed(JavaKind.Char  ); break;
-            case SASTORE:         genStoreIndexed(JavaKind.Short ); break;
-            case POP:             // fall through
-            case POP2:            // fall through
-            case DUP:             // fall through
-            case DUP_X1:          // fall through
-            case DUP_X2:          // fall through
-            case DUP2:            // fall through
-            case DUP2_X1:         // fall through
-            case DUP2_X2:         // fall through
-            case SWAP:            frameState.stackOp(opcode); break;
-            case IADD:            // fall through
-            case ISUB:            // fall through
-            case IMUL:            genArithmeticOp(JavaKind.Int, opcode); break;
-            case IDIV:            // fall through
-            case IREM:            genIntegerDivOp(JavaKind.Int, opcode); break;
-            case LADD:            // fall through
-            case LSUB:            // fall through
-            case LMUL:            genArithmeticOp(JavaKind.Long, opcode); break;
-            case LDIV:            // fall through
-            case LREM:            genIntegerDivOp(JavaKind.Long, opcode); break;
-            case FADD:            // fall through
-            case FSUB:            // fall through
-            case FMUL:            // fall through
-            case FDIV:            // fall through
-            case FREM:            genArithmeticOp(JavaKind.Float, opcode); break;
-            case DADD:            // fall through
-            case DSUB:            // fall through
-            case DMUL:            // fall through
-            case DDIV:            // fall through
-            case DREM:            genArithmeticOp(JavaKind.Double, opcode); break;
-            case INEG:            genNegateOp(JavaKind.Int); break;
-            case LNEG:            genNegateOp(JavaKind.Long); break;
-            case FNEG:            genNegateOp(JavaKind.Float); break;
-            case DNEG:            genNegateOp(JavaKind.Double); break;
-            case ISHL:            // fall through
-            case ISHR:            // fall through
-            case IUSHR:           genShiftOp(JavaKind.Int, opcode); break;
-            case IAND:            // fall through
-            case IOR:             // fall through
-            case IXOR:            genLogicOp(JavaKind.Int, opcode); break;
-            case LSHL:            // fall through
-            case LSHR:            // fall through
-            case LUSHR:           genShiftOp(JavaKind.Long, opcode); break;
-            case LAND:            // fall through
-            case LOR:             // fall through
-            case LXOR:            genLogicOp(JavaKind.Long, opcode); break;
-            case IINC:            genIncrement(); break;
-            case I2F:             genFloatConvert(FloatConvert.I2F, JavaKind.Int, JavaKind.Float); break;
-            case I2D:             genFloatConvert(FloatConvert.I2D, JavaKind.Int, JavaKind.Double); break;
-            case L2F:             genFloatConvert(FloatConvert.L2F, JavaKind.Long, JavaKind.Float); break;
-            case L2D:             genFloatConvert(FloatConvert.L2D, JavaKind.Long, JavaKind.Double); break;
-            case F2I:             genFloatConvert(FloatConvert.F2I, JavaKind.Float, JavaKind.Int); break;
-            case F2L:             genFloatConvert(FloatConvert.F2L, JavaKind.Float, JavaKind.Long); break;
-            case F2D:             genFloatConvert(FloatConvert.F2D, JavaKind.Float, JavaKind.Double); break;
-            case D2I:             genFloatConvert(FloatConvert.D2I, JavaKind.Double, JavaKind.Int); break;
-            case D2L:             genFloatConvert(FloatConvert.D2L, JavaKind.Double, JavaKind.Long); break;
-            case D2F:             genFloatConvert(FloatConvert.D2F, JavaKind.Double, JavaKind.Float); break;
-            case L2I:             genNarrow(JavaKind.Long, JavaKind.Int); break;
-            case I2L:             genSignExtend(JavaKind.Int, JavaKind.Long); break;
-            case I2B:             genSignExtend(JavaKind.Byte, JavaKind.Int); break;
-            case I2S:             genSignExtend(JavaKind.Short, JavaKind.Int); break;
-            case I2C:             genZeroExtend(JavaKind.Char, JavaKind.Int); break;
-            case LCMP:            genCompareOp(JavaKind.Long, false); break;
-            case FCMPL:           genCompareOp(JavaKind.Float, true); break;
-            case FCMPG:           genCompareOp(JavaKind.Float, false); break;
-            case DCMPL:           genCompareOp(JavaKind.Double, true); break;
-            case DCMPG:           genCompareOp(JavaKind.Double, false); break;
-            case IFEQ:            genIfZero(Condition.EQ); break;
-            case IFNE:            genIfZero(Condition.NE); break;
-            case IFLT:            genIfZero(Condition.LT); break;
-            case IFGE:            genIfZero(Condition.GE); break;
-            case IFGT:            genIfZero(Condition.GT); break;
-            case IFLE:            genIfZero(Condition.LE); break;
-            case IF_ICMPEQ:       genIfSame(JavaKind.Int, Condition.EQ); break;
-            case IF_ICMPNE:       genIfSame(JavaKind.Int, Condition.NE); break;
-            case IF_ICMPLT:       genIfSame(JavaKind.Int, Condition.LT); break;
-            case IF_ICMPGE:       genIfSame(JavaKind.Int, Condition.GE); break;
-            case IF_ICMPGT:       genIfSame(JavaKind.Int, Condition.GT); break;
-            case IF_ICMPLE:       genIfSame(JavaKind.Int, Condition.LE); break;
-            case IF_ACMPEQ:       genIfSame(JavaKind.Object, Condition.EQ); break;
-            case IF_ACMPNE:       genIfSame(JavaKind.Object, Condition.NE); break;
-            case GOTO:            genGoto(); break;
-            case JSR:             genJsr(stream.readBranchDest()); break;
-            case RET:             genRet(stream.readLocalIndex()); break;
-            case TABLESWITCH:     genSwitch(new BytecodeTableSwitch(getStream(), bci())); break;
-            case LOOKUPSWITCH:    genSwitch(new BytecodeLookupSwitch(getStream(), bci())); break;
-            case IRETURN:         genReturn(frameState.pop(JavaKind.Int), JavaKind.Int); break;
-            case LRETURN:         genReturn(frameState.pop(JavaKind.Long), JavaKind.Long); break;
-            case FRETURN:         genReturn(frameState.pop(JavaKind.Float), JavaKind.Float); break;
-            case DRETURN:         genReturn(frameState.pop(JavaKind.Double), JavaKind.Double); break;
-            case ARETURN:         genReturn(frameState.pop(JavaKind.Object), JavaKind.Object); break;
-            case RETURN:          genReturn(null, JavaKind.Void); break;
-            case GETSTATIC:       cpi = stream.readCPI(); genGetStatic(cpi, opcode); break;
-            case PUTSTATIC:       cpi = stream.readCPI(); genPutStatic(cpi, opcode); break;
-            case GETFIELD:        cpi = stream.readCPI(); genGetField(cpi, opcode); break;
-            case PUTFIELD:        cpi = stream.readCPI(); genPutField(cpi, opcode); break;
-            case INVOKEVIRTUAL:   cpi = stream.readCPI(); genInvokeVirtual(cpi, opcode); break;
-            case INVOKESPECIAL:   cpi = stream.readCPI(); genInvokeSpecial(cpi, opcode); break;
-            case INVOKESTATIC:    cpi = stream.readCPI(); genInvokeStatic(cpi, opcode); break;
-            case INVOKEINTERFACE: cpi = stream.readCPI(); genInvokeInterface(cpi, opcode); break;
-            case INVOKEDYNAMIC:   cpi = stream.readCPI4(); genInvokeDynamic(cpi, opcode); break;
-            case NEW:             genNewInstance(stream.readCPI()); break;
-            case NEWARRAY:        genNewPrimitiveArray(stream.readLocalIndex()); break;
-            case ANEWARRAY:       genNewObjectArray(stream.readCPI()); break;
-            case ARRAYLENGTH:     genArrayLength(); break;
-            case ATHROW:          genThrow(); break;
-            case CHECKCAST:       genCheckCast(); break;
-            case INSTANCEOF:      genInstanceOf(); break;
-            case MONITORENTER:    genMonitorEnter(frameState.pop(JavaKind.Object), stream.nextBCI()); break;
-            case MONITOREXIT:     genMonitorExit(frameState.pop(JavaKind.Object), null, stream.nextBCI()); break;
-            case MULTIANEWARRAY:  genNewMultiArray(stream.readCPI()); break;
-            case IFNULL:          genIfNull(Condition.EQ); break;
-            case IFNONNULL:       genIfNull(Condition.NE); break;
-            case GOTO_W:          genGoto(); break;
-            case JSR_W:           genJsr(stream.readBranchDest()); break;
-            case BREAKPOINT:      throw new PermanentBailoutException("concurrent setting of breakpoint");
-            default:              throw new PermanentBailoutException("Unsupported opcode %d (%s) [bci=%d]", opcode, nameOf(opcode), bci);
+            case Bytecodes.NOP:             /* nothing to do */ break;
+            case Bytecodes.ACONST_NULL:     frameState.push(JavaKind.Object, appendConstant(JavaConstant.NULL_POINTER)); break;
+            case Bytecodes.ICONST_M1:       // fall through
+            case Bytecodes.ICONST_0:        // fall through
+            case Bytecodes.ICONST_1:        // fall through
+            case Bytecodes.ICONST_2:        // fall through
+            case Bytecodes.ICONST_3:        // fall through
+            case Bytecodes.ICONST_4:        // fall through
+            case Bytecodes.ICONST_5:        frameState.push(JavaKind.Int, appendConstant(JavaConstant.forInt(opcode - Bytecodes.ICONST_0))); break;
+            case Bytecodes.LCONST_0:        // fall through
+            case Bytecodes.LCONST_1:        frameState.push(JavaKind.Long, appendConstant(JavaConstant.forLong(opcode - Bytecodes.LCONST_0))); break;
+            case Bytecodes.FCONST_0:        // fall through
+            case Bytecodes.FCONST_1:        // fall through
+            case Bytecodes.FCONST_2:        frameState.push(JavaKind.Float, appendConstant(JavaConstant.forFloat(opcode - Bytecodes.FCONST_0))); break;
+            case Bytecodes.DCONST_0:        // fall through
+            case Bytecodes.DCONST_1:        frameState.push(JavaKind.Double, appendConstant(JavaConstant.forDouble(opcode - Bytecodes.DCONST_0))); break;
+            case Bytecodes.BIPUSH:          frameState.push(JavaKind.Int, appendConstant(JavaConstant.forInt(stream.readByte()))); break;
+            case Bytecodes.SIPUSH:          frameState.push(JavaKind.Int, appendConstant(JavaConstant.forInt(stream.readShort()))); break;
+            case Bytecodes.LDC:             // fall through
+            case Bytecodes.LDC_W:           // fall through
+            case Bytecodes.LDC2_W:          genLoadConstant(stream.readCPI(), opcode); break;
+            case Bytecodes.ILOAD:           loadLocal(stream.readLocalIndex(), JavaKind.Int); break;
+            case Bytecodes.LLOAD:           loadLocal(stream.readLocalIndex(), JavaKind.Long); break;
+            case Bytecodes.FLOAD:           loadLocal(stream.readLocalIndex(), JavaKind.Float); break;
+            case Bytecodes.DLOAD:           loadLocal(stream.readLocalIndex(), JavaKind.Double); break;
+            case Bytecodes.ALOAD:           loadLocalObject(stream.readLocalIndex()); break;
+            case Bytecodes.ILOAD_0:         // fall through
+            case Bytecodes.ILOAD_1:         // fall through
+            case Bytecodes.ILOAD_2:         // fall through
+            case Bytecodes.ILOAD_3:         loadLocal(opcode - Bytecodes.ILOAD_0, JavaKind.Int); break;
+            case Bytecodes.LLOAD_0:         // fall through
+            case Bytecodes.LLOAD_1:         // fall through
+            case Bytecodes.LLOAD_2:         // fall through
+            case Bytecodes.LLOAD_3:         loadLocal(opcode - Bytecodes.LLOAD_0, JavaKind.Long); break;
+            case Bytecodes.FLOAD_0:         // fall through
+            case Bytecodes.FLOAD_1:         // fall through
+            case Bytecodes.FLOAD_2:         // fall through
+            case Bytecodes.FLOAD_3:         loadLocal(opcode - Bytecodes.FLOAD_0, JavaKind.Float); break;
+            case Bytecodes.DLOAD_0:         // fall through
+            case Bytecodes.DLOAD_1:         // fall through
+            case Bytecodes.DLOAD_2:         // fall through
+            case Bytecodes.DLOAD_3:         loadLocal(opcode - Bytecodes.DLOAD_0, JavaKind.Double); break;
+            case Bytecodes.ALOAD_0:         // fall through
+            case Bytecodes.ALOAD_1:         // fall through
+            case Bytecodes.ALOAD_2:         // fall through
+            case Bytecodes.ALOAD_3:         loadLocalObject(opcode - Bytecodes.ALOAD_0); break;
+            case Bytecodes.IALOAD:          genLoadIndexed(JavaKind.Int   ); break;
+            case Bytecodes.LALOAD:          genLoadIndexed(JavaKind.Long  ); break;
+            case Bytecodes.FALOAD:          genLoadIndexed(JavaKind.Float ); break;
+            case Bytecodes.DALOAD:          genLoadIndexed(JavaKind.Double); break;
+            case Bytecodes.AALOAD:          genLoadIndexed(JavaKind.Object); break;
+            case Bytecodes.BALOAD:          genLoadIndexed(JavaKind.Byte  ); break;
+            case Bytecodes.CALOAD:          genLoadIndexed(JavaKind.Char  ); break;
+            case Bytecodes.SALOAD:          genLoadIndexed(JavaKind.Short ); break;
+            case Bytecodes.ISTORE:          storeLocal(JavaKind.Int, stream.readLocalIndex()); break;
+            case Bytecodes.LSTORE:          storeLocal(JavaKind.Long, stream.readLocalIndex()); break;
+            case Bytecodes.FSTORE:          storeLocal(JavaKind.Float, stream.readLocalIndex()); break;
+            case Bytecodes.DSTORE:          storeLocal(JavaKind.Double, stream.readLocalIndex()); break;
+            case Bytecodes.ASTORE:          storeLocal(JavaKind.Object, stream.readLocalIndex()); break;
+            case Bytecodes.ISTORE_0:        // fall through
+            case Bytecodes.ISTORE_1:        // fall through
+            case Bytecodes.ISTORE_2:        // fall through
+            case Bytecodes.ISTORE_3:        storeLocal(JavaKind.Int, opcode - Bytecodes.ISTORE_0); break;
+            case Bytecodes.LSTORE_0:        // fall through
+            case Bytecodes.LSTORE_1:        // fall through
+            case Bytecodes.LSTORE_2:        // fall through
+            case Bytecodes.LSTORE_3:        storeLocal(JavaKind.Long, opcode - Bytecodes.LSTORE_0); break;
+            case Bytecodes.FSTORE_0:        // fall through
+            case Bytecodes.FSTORE_1:        // fall through
+            case Bytecodes.FSTORE_2:        // fall through
+            case Bytecodes.FSTORE_3:        storeLocal(JavaKind.Float, opcode - Bytecodes.FSTORE_0); break;
+            case Bytecodes.DSTORE_0:        // fall through
+            case Bytecodes.DSTORE_1:        // fall through
+            case Bytecodes.DSTORE_2:        // fall through
+            case Bytecodes.DSTORE_3:        storeLocal(JavaKind.Double, opcode - Bytecodes.DSTORE_0); break;
+            case Bytecodes.ASTORE_0:        // fall through
+            case Bytecodes.ASTORE_1:        // fall through
+            case Bytecodes.ASTORE_2:        // fall through
+            case Bytecodes.ASTORE_3:        storeLocal(JavaKind.Object, opcode - Bytecodes.ASTORE_0); break;
+            case Bytecodes.IASTORE:         genStoreIndexed(JavaKind.Int   ); break;
+            case Bytecodes.LASTORE:         genStoreIndexed(JavaKind.Long  ); break;
+            case Bytecodes.FASTORE:         genStoreIndexed(JavaKind.Float ); break;
+            case Bytecodes.DASTORE:         genStoreIndexed(JavaKind.Double); break;
+            case Bytecodes.AASTORE:         genStoreIndexed(JavaKind.Object); break;
+            case Bytecodes.BASTORE:         genStoreIndexed(JavaKind.Byte  ); break;
+            case Bytecodes.CASTORE:         genStoreIndexed(JavaKind.Char  ); break;
+            case Bytecodes.SASTORE:         genStoreIndexed(JavaKind.Short ); break;
+            case Bytecodes.POP:             // fall through
+            case Bytecodes.POP2:            // fall through
+            case Bytecodes.DUP:             // fall through
+            case Bytecodes.DUP_X1:          // fall through
+            case Bytecodes.DUP_X2:          // fall through
+            case Bytecodes.DUP2:            // fall through
+            case Bytecodes.DUP2_X1:         // fall through
+            case Bytecodes.DUP2_X2:         // fall through
+            case Bytecodes.SWAP:            frameState.stackOp(opcode); break;
+            case Bytecodes.IADD:            // fall through
+            case Bytecodes.ISUB:            // fall through
+            case Bytecodes.IMUL:            genArithmeticOp(JavaKind.Int, opcode); break;
+            case Bytecodes.IDIV:            // fall through
+            case Bytecodes.IREM:            genIntegerDivOp(JavaKind.Int, opcode); break;
+            case Bytecodes.LADD:            // fall through
+            case Bytecodes.LSUB:            // fall through
+            case Bytecodes.LMUL:            genArithmeticOp(JavaKind.Long, opcode); break;
+            case Bytecodes.LDIV:            // fall through
+            case Bytecodes.LREM:            genIntegerDivOp(JavaKind.Long, opcode); break;
+            case Bytecodes.FADD:            // fall through
+            case Bytecodes.FSUB:            // fall through
+            case Bytecodes.FMUL:            // fall through
+            case Bytecodes.FDIV:            // fall through
+            case Bytecodes.FREM:            genArithmeticOp(JavaKind.Float, opcode); break;
+            case Bytecodes.DADD:            // fall through
+            case Bytecodes.DSUB:            // fall through
+            case Bytecodes.DMUL:            // fall through
+            case Bytecodes.DDIV:            // fall through
+            case Bytecodes.DREM:            genArithmeticOp(JavaKind.Double, opcode); break;
+            case Bytecodes.INEG:            genNegateOp(JavaKind.Int); break;
+            case Bytecodes.LNEG:            genNegateOp(JavaKind.Long); break;
+            case Bytecodes.FNEG:            genNegateOp(JavaKind.Float); break;
+            case Bytecodes.DNEG:            genNegateOp(JavaKind.Double); break;
+            case Bytecodes.ISHL:            // fall through
+            case Bytecodes.ISHR:            // fall through
+            case Bytecodes.IUSHR:           genShiftOp(JavaKind.Int, opcode); break;
+            case Bytecodes.IAND:            // fall through
+            case Bytecodes.IOR:             // fall through
+            case Bytecodes.IXOR:            genLogicOp(JavaKind.Int, opcode); break;
+            case Bytecodes.LSHL:            // fall through
+            case Bytecodes.LSHR:            // fall through
+            case Bytecodes.LUSHR:           genShiftOp(JavaKind.Long, opcode); break;
+            case Bytecodes.LAND:            // fall through
+            case Bytecodes.LOR:             // fall through
+            case Bytecodes.LXOR:            genLogicOp(JavaKind.Long, opcode); break;
+            case Bytecodes.IINC:            genIncrement(); break;
+            case Bytecodes.I2F:             genFloatConvert(FloatConvert.I2F, JavaKind.Int, JavaKind.Float); break;
+            case Bytecodes.I2D:             genFloatConvert(FloatConvert.I2D, JavaKind.Int, JavaKind.Double); break;
+            case Bytecodes.L2F:             genFloatConvert(FloatConvert.L2F, JavaKind.Long, JavaKind.Float); break;
+            case Bytecodes.L2D:             genFloatConvert(FloatConvert.L2D, JavaKind.Long, JavaKind.Double); break;
+            case Bytecodes.F2I:             genFloatConvert(FloatConvert.F2I, JavaKind.Float, JavaKind.Int); break;
+            case Bytecodes.F2L:             genFloatConvert(FloatConvert.F2L, JavaKind.Float, JavaKind.Long); break;
+            case Bytecodes.F2D:             genFloatConvert(FloatConvert.F2D, JavaKind.Float, JavaKind.Double); break;
+            case Bytecodes.D2I:             genFloatConvert(FloatConvert.D2I, JavaKind.Double, JavaKind.Int); break;
+            case Bytecodes.D2L:             genFloatConvert(FloatConvert.D2L, JavaKind.Double, JavaKind.Long); break;
+            case Bytecodes.D2F:             genFloatConvert(FloatConvert.D2F, JavaKind.Double, JavaKind.Float); break;
+            case Bytecodes.L2I:             genNarrow(JavaKind.Long, JavaKind.Int); break;
+            case Bytecodes.I2L:             genSignExtend(JavaKind.Int, JavaKind.Long); break;
+            case Bytecodes.I2B:             genSignExtend(JavaKind.Byte, JavaKind.Int); break;
+            case Bytecodes.I2S:             genSignExtend(JavaKind.Short, JavaKind.Int); break;
+            case Bytecodes.I2C:             genZeroExtend(JavaKind.Char, JavaKind.Int); break;
+            case Bytecodes.LCMP:            genCompareOp(JavaKind.Long, false); break;
+            case Bytecodes.FCMPL:           genCompareOp(JavaKind.Float, true); break;
+            case Bytecodes.FCMPG:           genCompareOp(JavaKind.Float, false); break;
+            case Bytecodes.DCMPL:           genCompareOp(JavaKind.Double, true); break;
+            case Bytecodes.DCMPG:           genCompareOp(JavaKind.Double, false); break;
+            case Bytecodes.IFEQ:            genIfZero(Condition.EQ); break;
+            case Bytecodes.IFNE:            genIfZero(Condition.NE); break;
+            case Bytecodes.IFLT:            genIfZero(Condition.LT); break;
+            case Bytecodes.IFGE:            genIfZero(Condition.GE); break;
+            case Bytecodes.IFGT:            genIfZero(Condition.GT); break;
+            case Bytecodes.IFLE:            genIfZero(Condition.LE); break;
+            case Bytecodes.IF_ICMPEQ:       genIfSame(JavaKind.Int, Condition.EQ); break;
+            case Bytecodes.IF_ICMPNE:       genIfSame(JavaKind.Int, Condition.NE); break;
+            case Bytecodes.IF_ICMPLT:       genIfSame(JavaKind.Int, Condition.LT); break;
+            case Bytecodes.IF_ICMPGE:       genIfSame(JavaKind.Int, Condition.GE); break;
+            case Bytecodes.IF_ICMPGT:       genIfSame(JavaKind.Int, Condition.GT); break;
+            case Bytecodes.IF_ICMPLE:       genIfSame(JavaKind.Int, Condition.LE); break;
+            case Bytecodes.IF_ACMPEQ:       genIfSame(JavaKind.Object, Condition.EQ); break;
+            case Bytecodes.IF_ACMPNE:       genIfSame(JavaKind.Object, Condition.NE); break;
+            case Bytecodes.GOTO:            genGoto(); break;
+            case Bytecodes.JSR:             genJsr(stream.readBranchDest()); break;
+            case Bytecodes.RET:             genRet(stream.readLocalIndex()); break;
+            case Bytecodes.TABLESWITCH:     genSwitch(new BytecodeTableSwitch(getStream(), bci())); break;
+            case Bytecodes.LOOKUPSWITCH:    genSwitch(new BytecodeLookupSwitch(getStream(), bci())); break;
+            case Bytecodes.IRETURN:         genReturn(frameState.pop(JavaKind.Int), JavaKind.Int); break;
+            case Bytecodes.LRETURN:         genReturn(frameState.pop(JavaKind.Long), JavaKind.Long); break;
+            case Bytecodes.FRETURN:         genReturn(frameState.pop(JavaKind.Float), JavaKind.Float); break;
+            case Bytecodes.DRETURN:         genReturn(frameState.pop(JavaKind.Double), JavaKind.Double); break;
+            case Bytecodes.ARETURN:         genReturn(frameState.pop(JavaKind.Object), JavaKind.Object); break;
+            case Bytecodes.RETURN:          genReturn(null, JavaKind.Void); break;
+            case Bytecodes.GETSTATIC:       cpi = stream.readCPI(); genGetStatic(cpi, opcode); break;
+            case Bytecodes.PUTSTATIC:       cpi = stream.readCPI(); genPutStatic(cpi, opcode); break;
+            case Bytecodes.GETFIELD:        cpi = stream.readCPI(); genGetField(cpi, opcode); break;
+            case Bytecodes.PUTFIELD:        cpi = stream.readCPI(); genPutField(cpi, opcode); break;
+            case Bytecodes.INVOKEVIRTUAL:   cpi = stream.readCPI(); genInvokeVirtual(cpi, opcode); break;
+            case Bytecodes.INVOKESPECIAL:   cpi = stream.readCPI(); genInvokeSpecial(cpi, opcode); break;
+            case Bytecodes.INVOKESTATIC:    cpi = stream.readCPI(); genInvokeStatic(cpi, opcode); break;
+            case Bytecodes.INVOKEINTERFACE: cpi = stream.readCPI(); genInvokeInterface(cpi, opcode); break;
+            case Bytecodes.INVOKEDYNAMIC:   cpi = stream.readCPI4(); genInvokeDynamic(cpi, opcode); break;
+            case Bytecodes.NEW:             genNewInstance(stream.readCPI()); break;
+            case Bytecodes.NEWARRAY:        genNewPrimitiveArray(stream.readLocalIndex()); break;
+            case Bytecodes.ANEWARRAY:       genNewObjectArray(stream.readCPI()); break;
+            case Bytecodes.ARRAYLENGTH:     genArrayLength(); break;
+            case Bytecodes.ATHROW:          genThrow(); break;
+            case Bytecodes.CHECKCAST:       genCheckCast(); break;
+            case Bytecodes.INSTANCEOF:      genInstanceOf(); break;
+            case Bytecodes.MONITORENTER:    genMonitorEnter(frameState.pop(JavaKind.Object), stream.nextBCI()); break;
+            case Bytecodes.MONITOREXIT:     genMonitorExit(frameState.pop(JavaKind.Object), null, stream.nextBCI()); break;
+            case Bytecodes.MULTIANEWARRAY:  genNewMultiArray(stream.readCPI()); break;
+            case Bytecodes.IFNULL:          genIfNull(Condition.EQ); break;
+            case Bytecodes.IFNONNULL:       genIfNull(Condition.NE); break;
+            case Bytecodes.GOTO_W:          genGoto(); break;
+            case Bytecodes.JSR_W:           genJsr(stream.readBranchDest()); break;
+            case Bytecodes.BREAKPOINT:      throw new PermanentBailoutException("concurrent setting of breakpoint");
+            default:              throw new PermanentBailoutException("Unsupported opcode %d (%s) [bci=%d]", opcode, Bytecodes.nameOf(opcode), bci);
         }
     }
 
@@ -5061,6 +4837,6 @@ public class BytecodeParser implements GraphBuilderContext
 
     static String nSpaces(int n)
     {
-        return n == 0 ? "" : format("%" + n + "s", "");
+        return n == 0 ? "" : String.format("%" + n + "s", "");
     }
 }

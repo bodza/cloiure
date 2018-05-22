@@ -1,10 +1,10 @@
 package graalvm.compiler.nodes.graphbuilderconf;
 
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.ValueNode;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.JavaConstant;
 
 /**
  * {@link GraphBuilderPlugin} interface for static compilation mode, allowing references to dynamic

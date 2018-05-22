@@ -1,14 +1,6 @@
 package graalvm.compiler.core.phases;
 
-import static graalvm.compiler.core.common.GraalOptions.ConditionalElimination;
-import static graalvm.compiler.core.common.GraalOptions.ImmutableCode;
-import static graalvm.compiler.core.common.GraalOptions.OptDeoptimizationGrouping;
-import static graalvm.compiler.core.common.GraalOptions.OptFloatingReads;
-import static graalvm.compiler.core.common.GraalOptions.OptLoopTransform;
-import static graalvm.compiler.core.common.GraalOptions.PartialUnroll;
-import static graalvm.compiler.core.common.GraalOptions.ReassociateInvariants;
-import static graalvm.compiler.core.common.GraalOptions.VerifyHeapAtReturn;
-
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.loop.DefaultLoopPolicies;
 import graalvm.compiler.loop.LoopPolicies;
 import graalvm.compiler.loop.phases.LoopPartialUnrollPhase;
@@ -35,19 +27,19 @@ public class MidTier extends PhaseSuite<MidTierContext>
     public MidTier(OptionValues options)
     {
         CanonicalizerPhase canonicalizer = new CanonicalizerPhase();
-        if (ImmutableCode.getValue(options))
+        if (GraalOptions.ImmutableCode.getValue(options))
         {
             canonicalizer.disableReadCanonicalization();
         }
 
         appendPhase(new LockEliminationPhase());
 
-        if (OptFloatingReads.getValue(options))
+        if (GraalOptions.OptFloatingReads.getValue(options))
         {
             appendPhase(new IncrementalCanonicalizerPhase<>(canonicalizer, new FloatingReadPhase()));
         }
 
-        if (ConditionalElimination.getValue(options))
+        if (GraalOptions.ConditionalElimination.getValue(options))
         {
             appendPhase(new IterativeConditionalEliminationPhase(canonicalizer, true));
         }
@@ -58,7 +50,7 @@ public class MidTier extends PhaseSuite<MidTierContext>
 
         appendPhase(new GuardLoweringPhase());
 
-        if (VerifyHeapAtReturn.getValue(options))
+        if (GraalOptions.VerifyHeapAtReturn.getValue(options))
         {
             appendPhase(new VerifyHeapAtReturnPhase());
         }
@@ -68,19 +60,19 @@ public class MidTier extends PhaseSuite<MidTierContext>
         appendPhase(new FrameStateAssignmentPhase());
 
         LoopPolicies loopPolicies = createLoopPolicies();
-        if (OptLoopTransform.getValue(options))
+        if (GraalOptions.OptLoopTransform.getValue(options))
         {
-            if (PartialUnroll.getValue(options))
+            if (GraalOptions.PartialUnroll.getValue(options))
             {
                 appendPhase(new LoopPartialUnrollPhase(loopPolicies, canonicalizer));
             }
         }
-        if (ReassociateInvariants.getValue(options))
+        if (GraalOptions.ReassociateInvariants.getValue(options))
         {
             appendPhase(new ReassociateInvariantPhase());
         }
 
-        if (OptDeoptimizationGrouping.getValue(options))
+        if (GraalOptions.OptDeoptimizationGrouping.getValue(options))
         {
             appendPhase(new DeoptimizationGroupingPhase());
         }

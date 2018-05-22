@@ -1,13 +1,13 @@
 package graalvm.compiler.core.common.spi;
 
-import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.options.OptionKey;
-
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.JavaType;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaField;
 import jdk.vm.ci.meta.ResolvedJavaType;
+
+import graalvm.compiler.debug.GraalError;
+import graalvm.compiler.options.OptionKey;
 
 /**
  * Utility for default constant folding semantics for Java fields.

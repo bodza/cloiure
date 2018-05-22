@@ -2,7 +2,15 @@ package graalvm.compiler.core;
 
 import java.util.Collection;
 
+import jdk.vm.ci.code.RegisterConfig;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.meta.Assumptions;
+import jdk.vm.ci.meta.ProfilingInfo;
+import jdk.vm.ci.meta.ResolvedJavaField;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import org.graalvm.collections.EconomicSet;
+
 import graalvm.compiler.code.CompilationResult;
 import graalvm.compiler.core.LIRGenerationPhase.LIRGenerationContext;
 import graalvm.compiler.core.common.GraalOptions;
@@ -36,13 +44,6 @@ import graalvm.compiler.phases.tiers.MidTierContext;
 import graalvm.compiler.phases.tiers.Suites;
 import graalvm.compiler.phases.tiers.TargetProvider;
 import graalvm.compiler.phases.util.Providers;
-
-import jdk.vm.ci.code.RegisterConfig;
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.Assumptions;
-import jdk.vm.ci.meta.ProfilingInfo;
-import jdk.vm.ci.meta.ResolvedJavaField;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * Static methods for orchestrating the compilation of a {@linkplain StructuredGraph graph}.

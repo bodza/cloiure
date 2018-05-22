@@ -3,13 +3,13 @@ package graalvm.compiler.lir.framemap;
 import java.util.BitSet;
 import java.util.List;
 
-import graalvm.compiler.lir.VirtualStackSlot;
-import graalvm.compiler.lir.gen.LIRGenerationResult;
-
 import jdk.vm.ci.code.CallingConvention;
 import jdk.vm.ci.code.CodeCacheProvider;
 import jdk.vm.ci.code.RegisterConfig;
 import jdk.vm.ci.meta.ValueKind;
+
+import graalvm.compiler.lir.VirtualStackSlot;
+import graalvm.compiler.lir.gen.LIRGenerationResult;
 
 /**
  * A {@link FrameMapBuilder} is used to collect all information necessary to

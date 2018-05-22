@@ -1,10 +1,10 @@
 package graalvm.compiler.nodes.graphbuilderconf;
 
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import graalvm.compiler.bytecode.BytecodeProvider;
 import graalvm.compiler.nodes.Invoke;
 import graalvm.compiler.nodes.ValueNode;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * Plugin for specifying what is inlined during graph parsing. This plugin is also notified

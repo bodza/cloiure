@@ -1,8 +1,12 @@
 package graalvm.compiler.hotspot.replacements;
 
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.arrayBaseOffset;
-
 import java.util.zip.CRC32;
+
+import jdk.vm.ci.meta.JavaKind;
+
+import org.graalvm.word.Pointer;
+import org.graalvm.word.WordBase;
+import org.graalvm.word.WordFactory;
 
 import graalvm.compiler.api.replacements.ClassSubstitution;
 import graalvm.compiler.api.replacements.Fold;
@@ -14,13 +18,9 @@ import graalvm.compiler.graph.Node.NodeIntrinsic;
 import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
 import graalvm.compiler.hotspot.nodes.ComputeObjectAddressNode;
 import graalvm.compiler.hotspot.nodes.GraalHotSpotVMConfigNode;
+import graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil;
 import graalvm.compiler.nodes.extended.ForeignCallNode;
 import graalvm.compiler.word.Word;
-import org.graalvm.word.Pointer;
-import org.graalvm.word.WordBase;
-import org.graalvm.word.WordFactory;
-
-import jdk.vm.ci.meta.JavaKind;
 
 /**
  * Substitutions for {@link CRC32}.
@@ -59,7 +59,7 @@ public class CRC32Substitutions
     @MethodSubstitution(optional = true)
     static int updateBytes(int crc, byte[] buf, int off, int len)
     {
-        Word bufAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(buf, arrayBaseOffset(JavaKind.Byte) + off));
+        Word bufAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(buf, HotSpotReplacementsUtil.arrayBaseOffset(JavaKind.Byte) + off));
         return updateBytesCRC32(UPDATE_BYTES_CRC32, crc, bufAddr, len);
     }
 
@@ -69,7 +69,7 @@ public class CRC32Substitutions
     @MethodSubstitution(optional = true)
     static int updateBytes0(int crc, byte[] buf, int off, int len)
     {
-        Word bufAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(buf, arrayBaseOffset(JavaKind.Byte) + off));
+        Word bufAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(buf, HotSpotReplacementsUtil.arrayBaseOffset(JavaKind.Byte) + off));
         return updateBytesCRC32(UPDATE_BYTES_CRC32, crc, bufAddr, len);
     }
 

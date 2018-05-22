@@ -1,6 +1,10 @@
 package graalvm.compiler.hotspot.replacements;
 
-import static jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider.getArrayBaseOffset;
+import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
+import jdk.vm.ci.meta.JavaKind;
+
+import org.graalvm.word.LocationIdentity;
+import org.graalvm.word.WordFactory;
 
 import graalvm.compiler.api.replacements.ClassSubstitution;
 import graalvm.compiler.api.replacements.MethodSubstitution;
@@ -10,11 +14,6 @@ import graalvm.compiler.hotspot.nodes.ComputeObjectAddressNode;
 import graalvm.compiler.nodes.PiNode;
 import graalvm.compiler.nodes.extended.RawLoadNode;
 import graalvm.compiler.word.Word;
-import org.graalvm.word.LocationIdentity;
-import org.graalvm.word.WordFactory;
-
-import jdk.vm.ci.meta.JavaKind;
-
 import graalvm.util.UnsafeAccess;
 
 @ClassSubstitution(className = "sun.security.provider.SHA2", optional = true)
@@ -48,8 +47,8 @@ public class SHA2Substitutions
     {
         Object realReceiver = PiNode.piCastNonNull(receiver, shaClass);
         Object state = RawLoadNode.load(realReceiver, stateOffset, JavaKind.Object, LocationIdentity.any());
-        Word bufAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(buf, getArrayBaseOffset(JavaKind.Byte) + ofs));
-        Word stateAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(state, getArrayBaseOffset(JavaKind.Int)));
+        Word bufAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(buf, HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(JavaKind.Byte) + ofs));
+        Word stateAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(state, HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(JavaKind.Int)));
         HotSpotBackend.sha2ImplCompressStub(bufAddr, stateAddr);
     }
 }

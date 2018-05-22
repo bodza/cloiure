@@ -1,13 +1,18 @@
 package graalvm.compiler.lir.alloc.trace.lsra;
 
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
+
+import jdk.vm.ci.code.RegisterValue;
+import jdk.vm.ci.code.StackSlot;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.Value;
+import jdk.vm.ci.meta.ValueKind;
 
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.util.Util;
@@ -16,13 +21,6 @@ import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.Variable;
 import graalvm.compiler.lir.alloc.trace.lsra.TraceLinearScanPhase.TraceLinearScan;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.code.RegisterValue;
-import jdk.vm.ci.code.StackSlot;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.Value;
-import jdk.vm.ci.meta.ValueKind;
 
 /**
  * Represents an interval in the {@linkplain TraceLinearScan linear scan register allocator}.
@@ -271,7 +269,7 @@ final class TraceInterval extends IntervalHint
     {
         this.operand = operand;
         this.operandNumber = operandNumber;
-        if (isRegister(operand))
+        if (ValueUtil.isRegister(operand))
         {
             location = operand;
         }
@@ -292,11 +290,11 @@ final class TraceInterval extends IntervalHint
 
     void assignLocation(AllocatableValue newLocation)
     {
-        if (isRegister(newLocation))
+        if (ValueUtil.isRegister(newLocation))
         {
             if (newLocation.getValueKind().equals(LIRKind.Illegal) && !kind().equals(LIRKind.Illegal))
             {
-                this.location = asRegister(newLocation).asValue(kind());
+                this.location = ValueUtil.asRegister(newLocation).asValue(kind());
                 return;
             }
         }
@@ -508,7 +506,7 @@ final class TraceInterval extends IntervalHint
 
         if (locationHint != null)
         {
-            if (locationHint.location() != null && isRegister(locationHint.location()))
+            if (locationHint.location() != null && ValueUtil.isRegister(locationHint.location()))
             {
                 return locationHint;
             }
@@ -522,7 +520,7 @@ final class TraceInterval extends IntervalHint
                     for (int i = 0; i < len; i++)
                     {
                         TraceInterval interval = hint.splitChildren.get(i);
-                        if (interval.location != null && isRegister(interval.location))
+                        if (interval.location != null && ValueUtil.isRegister(interval.location))
                         {
                             return interval;
                         }
@@ -817,7 +815,7 @@ final class TraceInterval extends IntervalHint
             to = String.valueOf(to());
         }
         String locationString = this.location == null ? "" : "@" + this.location;
-        return operandNumber + ":" + operand + (isRegister(operand) ? "" : locationString) + "[" + from + "," + to + "]";
+        return operandNumber + ":" + operand + (ValueUtil.isRegister(operand) ? "" : locationString) + "[" + from + "," + to + "]";
     }
 
     /**
@@ -828,7 +826,7 @@ final class TraceInterval extends IntervalHint
     {
         StringBuilder buf = new StringBuilder(100);
         buf.append("any ").append(operandNumber).append(':').append(operand).append(' ');
-        if (!isRegister(operand))
+        if (!ValueUtil.isRegister(operand))
         {
             if (location != null)
             {

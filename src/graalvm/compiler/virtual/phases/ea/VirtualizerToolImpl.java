@@ -1,9 +1,14 @@
 package graalvm.compiler.virtual.phases.ea;
 
-import static graalvm.compiler.core.common.GraalOptions.MaximumEscapeAnalysisArrayLength;
-
 import java.util.List;
 
+import jdk.vm.ci.meta.Assumptions;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.MetaAccessProvider;
+
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.spi.ArrayOffsetProvider;
 import graalvm.compiler.core.common.spi.ConstantFieldProvider;
 import graalvm.compiler.graph.Node;
@@ -21,12 +26,6 @@ import graalvm.compiler.nodes.spi.VirtualizerTool;
 import graalvm.compiler.nodes.virtual.VirtualInstanceNode;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.meta.Assumptions;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.MetaAccessProvider;
 
 /**
  * Forwards calls from {@link VirtualizerTool} to the actual {@link PartialEscapeBlockState}.
@@ -282,7 +281,7 @@ class VirtualizerToolImpl implements VirtualizerTool, CanonicalizerTool
     @Override
     public int getMaximumEntryCount()
     {
-        return MaximumEscapeAnalysisArrayLength.getValue(current.getOptions());
+        return GraalOptions.MaximumEscapeAnalysisArrayLength.getValue(current.getOptions());
     }
 
     @Override

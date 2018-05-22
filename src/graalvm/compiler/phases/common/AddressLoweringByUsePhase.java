@@ -1,5 +1,7 @@
 package graalvm.compiler.phases.common;
 
+import jdk.vm.ci.meta.JavaKind;
+
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node;
@@ -15,8 +17,6 @@ import graalvm.compiler.nodes.memory.address.AddressNode;
 import graalvm.compiler.nodes.memory.address.OffsetAddressNode;
 import graalvm.compiler.nodes.util.GraphUtil;
 import graalvm.compiler.phases.Phase;
-
-import jdk.vm.ci.meta.JavaKind;
 
 /**
  * Created by adinn on 09/05/17.

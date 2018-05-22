@@ -1,11 +1,9 @@
 package graalvm.compiler.graph;
 
-import static graalvm.compiler.graph.Edges.Type.Inputs;
-import static graalvm.compiler.graph.Edges.Type.Successors;
-import graalvm.util.UnsafeAccess;
-
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -14,6 +12,7 @@ import java.util.function.Predicate;
 
 import graalvm.compiler.core.common.type.AbstractPointerStamp;
 import graalvm.compiler.core.common.type.Stamp;
+import graalvm.compiler.graph.Edges.Type;
 import graalvm.compiler.graph.Graph.NodeEventListener;
 import graalvm.compiler.graph.iterators.NodeIterable;
 import graalvm.compiler.graph.iterators.NodePredicate;
@@ -22,6 +21,7 @@ import graalvm.compiler.graph.spi.SimplifierTool;
 import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.options.OptionValues;
+import graalvm.util.UnsafeAccess;
 
 /**
  * This class is the base class for all nodes. It represents a node that can be inserted in a
@@ -43,17 +43,14 @@ public abstract class Node implements Cloneable, NodeInterface
     static final int INITIAL_ID = -1;
     static final int ALIVE_ID_START = 0;
 
-    // The use of fully qualified class names here and in the rest
-    // of this file works around a problem javac has resolving symbols
-
     /**
      * Denotes a non-optional (non-null) node input. This should be applied to exactly the fields of
      * a node that are of type {@link Node} or {@link NodeInputList}. Nodes that update fields of
      * type {@link Node} outside of their constructor should call
      * {@link Node#updateUsages(Node, Node)} just prior to doing the update of the input.
      */
-    @java.lang.annotation.Retention(RetentionPolicy.RUNTIME)
-    @java.lang.annotation.Target(ElementType.FIELD)
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
     public static @interface Input
     {
         InputType value() default InputType.Value;
@@ -65,15 +62,15 @@ public abstract class Node implements Cloneable, NodeInterface
      * {@link Node} outside of their constructor should call {@link Node#updateUsages(Node, Node)}
      * just prior to doing the update of the input.
      */
-    @java.lang.annotation.Retention(RetentionPolicy.RUNTIME)
-    @java.lang.annotation.Target(ElementType.FIELD)
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
     public static @interface OptionalInput
     {
         InputType value() default InputType.Value;
     }
 
-    @java.lang.annotation.Retention(RetentionPolicy.RUNTIME)
-    @java.lang.annotation.Target(ElementType.FIELD)
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
     public static @interface Successor
     {
     }
@@ -82,8 +79,8 @@ public abstract class Node implements Cloneable, NodeInterface
      * Denotes that a parameter of an {@linkplain NodeIntrinsic intrinsic} method must be a compile
      * time constant at all call sites to the intrinsic method.
      */
-    @java.lang.annotation.Retention(RetentionPolicy.RUNTIME)
-    @java.lang.annotation.Target(ElementType.PARAMETER)
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.PARAMETER)
     public static @interface ConstantNodeParameter
     {
     }
@@ -96,8 +93,8 @@ public abstract class Node implements Cloneable, NodeInterface
      * {@linkplain Stamp#javaType type} of the injected stamp is the return type of the annotated
      * method (which cannot be {@code void}).
      */
-    @java.lang.annotation.Retention(RetentionPolicy.RUNTIME)
-    @java.lang.annotation.Target(ElementType.PARAMETER)
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.PARAMETER)
     public static @interface InjectedNodeParameter
     {
     }
@@ -125,8 +122,8 @@ public abstract class Node implements Cloneable, NodeInterface
      * There must be exactly one such factory method or constructor corresponding to a
      * {@link NodeIntrinsic} annotated method.
      */
-    @java.lang.annotation.Retention(RetentionPolicy.RUNTIME)
-    @java.lang.annotation.Target(ElementType.METHOD)
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
     public static @interface NodeIntrinsic
     {
         /**
@@ -951,8 +948,8 @@ public abstract class Node implements Cloneable, NodeInterface
 
     public static final EnumSet<Edges.Type> WithNoEdges = EnumSet.noneOf(Edges.Type.class);
     public static final EnumSet<Edges.Type> WithAllEdges = EnumSet.allOf(Edges.Type.class);
-    public static final EnumSet<Edges.Type> WithOnlyInputEdges = EnumSet.of(Inputs);
-    public static final EnumSet<Edges.Type> WithOnlySucessorEdges = EnumSet.of(Successors);
+    public static final EnumSet<Edges.Type> WithOnlyInputEdges = EnumSet.of(Type.Inputs);
+    public static final EnumSet<Edges.Type> WithOnlySucessorEdges = EnumSet.of(Type.Successors);
 
     /**
      * Makes a copy of this node in(to) a given graph.
@@ -987,8 +984,8 @@ public abstract class Node implements Cloneable, NodeInterface
             newNode = (Node) UnsafeAccess.UNSAFE.allocateInstance(getClass());
             newNode.nodeClass = nodeClassTmp;
             nodeClassTmp.getData().copy(this, newNode);
-            copyOrClearEdgesForClone(newNode, Inputs, edgesToCopy);
-            copyOrClearEdgesForClone(newNode, Successors, edgesToCopy);
+            copyOrClearEdgesForClone(newNode, Type.Inputs, edgesToCopy);
+            copyOrClearEdgesForClone(newNode, Type.Successors, edgesToCopy);
         }
         catch (Exception e)
         {

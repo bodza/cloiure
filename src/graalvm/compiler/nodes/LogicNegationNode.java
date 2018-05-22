@@ -1,10 +1,9 @@
 package graalvm.compiler.nodes;
 
-import static graalvm.compiler.nodeinfo.InputType.Condition;
-
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
+import graalvm.compiler.nodeinfo.InputType;
 
 /**
  * Logic node that negates its argument.
@@ -12,7 +11,7 @@ import graalvm.compiler.graph.spi.CanonicalizerTool;
 public final class LogicNegationNode extends LogicNode implements Canonicalizable.Unary<LogicNode>
 {
     public static final NodeClass<LogicNegationNode> TYPE = NodeClass.create(LogicNegationNode.class);
-    @Input(Condition) LogicNode value;
+    @Input(InputType.Condition) LogicNode value;
 
     public LogicNegationNode(LogicNode value)
     {

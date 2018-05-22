@@ -1,9 +1,8 @@
 package graalvm.compiler.loop;
 
-import static graalvm.compiler.loop.MathUtil.mul;
-
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.Stamp;
+import graalvm.compiler.loop.MathUtil;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
@@ -63,13 +62,13 @@ public class DerivedScaledInductionVariable extends DerivedInductionVariable
     @Override
     public ValueNode initNode()
     {
-        return mul(graph(), base.initNode(), scale);
+        return MathUtil.mul(graph(), base.initNode(), scale);
     }
 
     @Override
     public ValueNode strideNode()
     {
-        return mul(graph(), base.strideNode(), scale);
+        return MathUtil.mul(graph(), base.strideNode(), scale);
     }
 
     @Override
@@ -99,13 +98,13 @@ public class DerivedScaledInductionVariable extends DerivedInductionVariable
     @Override
     public ValueNode extremumNode(boolean assumePositiveTripCount, Stamp stamp)
     {
-        return mul(graph(), base.extremumNode(assumePositiveTripCount, stamp), IntegerConvertNode.convert(scale, stamp, graph(), NodeView.DEFAULT));
+        return MathUtil.mul(graph(), base.extremumNode(assumePositiveTripCount, stamp), IntegerConvertNode.convert(scale, stamp, graph(), NodeView.DEFAULT));
     }
 
     @Override
     public ValueNode exitValueNode()
     {
-        return mul(graph(), base.exitValueNode(), scale);
+        return MathUtil.mul(graph(), base.exitValueNode(), scale);
     }
 
     @Override

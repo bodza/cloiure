@@ -1,5 +1,7 @@
 package graalvm.compiler.hotspot.nodes.aot;
 
+import jdk.vm.ci.meta.Constant;
+
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node;
@@ -12,8 +14,6 @@ import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.FloatingNode;
 import graalvm.compiler.nodes.util.GraphUtil;
 import graalvm.compiler.word.Word;
-
-import jdk.vm.ci.meta.Constant;
 
 public final class EncodedSymbolNode extends FloatingNode implements Canonicalizable
 {

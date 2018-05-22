@@ -1,14 +1,14 @@
 package graalvm.compiler.nodes.util;
 
-import graalvm.compiler.core.common.spi.ConstantFieldProvider;
-import graalvm.compiler.core.common.spi.ConstantFieldProvider.ConstantFieldTool;
-import graalvm.compiler.nodes.ConstantNode;
-import graalvm.compiler.options.OptionValues;
-
 import jdk.vm.ci.meta.ConstantReflectionProvider;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaField;
+
+import graalvm.compiler.core.common.spi.ConstantFieldProvider;
+import graalvm.compiler.core.common.spi.ConstantFieldProvider.ConstantFieldTool;
+import graalvm.compiler.nodes.ConstantNode;
+import graalvm.compiler.options.OptionValues;
 
 public class ConstantFoldUtil
 {

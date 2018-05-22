@@ -1,11 +1,11 @@
 package graalvm.compiler.phases.common.inlining.policy;
 
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import graalvm.compiler.nodes.CallTargetNode;
 import graalvm.compiler.nodes.java.MethodCallTargetNode;
 import graalvm.compiler.nodes.spi.Replacements;
 import graalvm.compiler.phases.common.inlining.walker.MethodInvocation;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * Inline every method which would be replaced by a substitution. Useful for testing purposes.

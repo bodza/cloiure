@@ -2,6 +2,10 @@ package graalvm.compiler.nodes.java;
 
 import java.util.Collections;
 
+import jdk.vm.ci.meta.DeoptimizationAction;
+import jdk.vm.ci.meta.DeoptimizationReason;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import graalvm.compiler.core.common.calc.CanonicalCondition;
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.Stamp;
@@ -22,10 +26,6 @@ import graalvm.compiler.nodes.spi.VirtualizerTool;
 import graalvm.compiler.nodes.util.GraphUtil;
 import graalvm.compiler.nodes.virtual.VirtualArrayNode;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
-
-import jdk.vm.ci.meta.DeoptimizationAction;
-import jdk.vm.ci.meta.DeoptimizationReason;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * The {@code NewArrayNode} is used for all array allocations where the element type is know at

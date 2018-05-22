@@ -1,11 +1,11 @@
 package graalvm.compiler.nodes.calc;
 
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+
 import graalvm.compiler.core.common.calc.CanonicalCondition;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.ValueNodeInterface;
-
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
 
 /**
  * Represents a conversion between primitive types.

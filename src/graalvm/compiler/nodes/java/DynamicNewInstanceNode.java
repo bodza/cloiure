@@ -1,9 +1,11 @@
 package graalvm.compiler.nodes.java;
 
-import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
-
 import java.lang.reflect.Modifier;
 
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
@@ -11,9 +13,6 @@ import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.ValueNode;
-
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 public class DynamicNewInstanceNode extends AbstractNewObjectNode implements Canonicalizable
 {
@@ -49,7 +48,7 @@ public class DynamicNewInstanceNode extends AbstractNewObjectNode implements Can
     {
         if (clazz.isConstant())
         {
-            if (GeneratePIC.getValue(tool.getOptions()))
+            if (GraalOptions.GeneratePIC.getValue(tool.getOptions()))
             {
                 // Can't fold for AOT, because the resulting NewInstanceNode will be missing its
                 // InitializeKlassNode.

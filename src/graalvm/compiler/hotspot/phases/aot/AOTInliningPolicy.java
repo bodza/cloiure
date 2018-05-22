@@ -1,10 +1,10 @@
 package graalvm.compiler.hotspot.phases.aot;
 
-import static graalvm.compiler.core.common.GraalOptions.InlineEverything;
-import static graalvm.compiler.core.common.GraalOptions.TrivialInliningSize;
-
 import java.util.Map;
 
+import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
+
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.nodes.Invoke;
 import graalvm.compiler.nodes.spi.Replacements;
 import graalvm.compiler.options.OptionKey;
@@ -13,8 +13,6 @@ import graalvm.compiler.phases.common.inlining.info.InlineInfo;
 import graalvm.compiler.phases.common.inlining.policy.GreedyInliningPolicy;
 import graalvm.compiler.phases.common.inlining.policy.InliningPolicy;
 import graalvm.compiler.phases.common.inlining.walker.MethodInvocation;
-
-import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
 
 public class AOTInliningPolicy extends GreedyInliningPolicy
 {
@@ -53,7 +51,7 @@ public class AOTInliningPolicy extends GreedyInliningPolicy
         final double relevance = invocation.relevance();
 
         OptionValues options = info.graph().getOptions();
-        if (InlineEverything.getValue(options))
+        if (GraalOptions.InlineEverything.getValue(options))
         {
             return InliningPolicy.Decision.YES;
         }
@@ -71,7 +69,7 @@ public class AOTInliningPolicy extends GreedyInliningPolicy
         double inliningBonus = getInliningBonus(info);
         int nodes = info.determineNodeCount();
 
-        if (nodes < TrivialInliningSize.getValue(options) * inliningBonus)
+        if (nodes < GraalOptions.TrivialInliningSize.getValue(options) * inliningBonus)
         {
             return InliningPolicy.Decision.YES;
         }

@@ -1,22 +1,20 @@
 package graalvm.compiler.java;
 
-import static graalvm.compiler.bytecode.Bytecodes.DUP;
-import static graalvm.compiler.bytecode.Bytecodes.DUP2;
-import static graalvm.compiler.bytecode.Bytecodes.DUP2_X1;
-import static graalvm.compiler.bytecode.Bytecodes.DUP2_X2;
-import static graalvm.compiler.bytecode.Bytecodes.DUP_X1;
-import static graalvm.compiler.bytecode.Bytecodes.DUP_X2;
-import static graalvm.compiler.bytecode.Bytecodes.POP;
-import static graalvm.compiler.bytecode.Bytecodes.POP2;
-import static graalvm.compiler.bytecode.Bytecodes.SWAP;
-import static graalvm.compiler.nodes.FrameState.TWO_SLOT_MARKER;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
+import jdk.vm.ci.code.BytecodeFrame;
+import jdk.vm.ci.meta.Assumptions;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.JavaType;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+import jdk.vm.ci.meta.Signature;
+
 import graalvm.compiler.bytecode.Bytecode;
+import graalvm.compiler.bytecode.Bytecodes;
 import graalvm.compiler.bytecode.ResolvedJavaMethodBytecode;
 import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.PermanentBailoutException;
@@ -45,14 +43,6 @@ import graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext.SideEffectsState
 import graalvm.compiler.nodes.graphbuilderconf.ParameterPlugin;
 import graalvm.compiler.nodes.java.MonitorIdNode;
 import graalvm.compiler.nodes.util.GraphUtil;
-
-import jdk.vm.ci.code.BytecodeFrame;
-import jdk.vm.ci.meta.Assumptions;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.JavaType;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
-import jdk.vm.ci.meta.Signature;
 
 public final class FrameStateBuilder implements SideEffectsState
 {
@@ -142,7 +132,7 @@ public final class FrameStateBuilder implements SideEffectsState
             javaIndex++;
             if (kind.needsTwoSlots())
             {
-                locals[javaIndex] = TWO_SLOT_MARKER;
+                locals[javaIndex] = FrameState.TWO_SLOT_MARKER;
                 javaIndex++;
             }
             index++;
@@ -231,7 +221,7 @@ public final class FrameStateBuilder implements SideEffectsState
             javaIndex++;
             if (kind.needsTwoSlots())
             {
-                locals[javaIndex] = TWO_SLOT_MARKER;
+                locals[javaIndex] = FrameState.TWO_SLOT_MARKER;
                 javaIndex++;
             }
             index++;
@@ -271,12 +261,12 @@ public final class FrameStateBuilder implements SideEffectsState
         sb.append("[locals: [");
         for (int i = 0; i < locals.length; i++)
         {
-            sb.append(i == 0 ? "" : ",").append(locals[i] == null ? "_" : locals[i] == TWO_SLOT_MARKER ? "#" : locals[i].toString(Verbosity.Id));
+            sb.append(i == 0 ? "" : ",").append(locals[i] == null ? "_" : locals[i] == FrameState.TWO_SLOT_MARKER ? "#" : locals[i].toString(Verbosity.Id));
         }
         sb.append("] stack: [");
         for (int i = 0; i < stackSize; i++)
         {
-            sb.append(i == 0 ? "" : ",").append(stack[i] == null ? "_" : stack[i] == TWO_SLOT_MARKER ? "#" : stack[i].toString(Verbosity.Id));
+            sb.append(i == 0 ? "" : ",").append(stack[i] == null ? "_" : stack[i] == FrameState.TWO_SLOT_MARKER ? "#" : stack[i].toString(Verbosity.Id));
         }
         sb.append("] locks: [");
         for (int i = 0; i < lockedObjects.length; i++)
@@ -359,7 +349,7 @@ public final class FrameStateBuilder implements SideEffectsState
         {
             ValueNode x = stack[i];
             ValueNode y = other.stack[i];
-            if (x != y && (x == TWO_SLOT_MARKER || x.isDeleted() || y == TWO_SLOT_MARKER || y.isDeleted() || x.getStackKind() != y.getStackKind()))
+            if (x != y && (x == FrameState.TWO_SLOT_MARKER || x.isDeleted() || y == FrameState.TWO_SLOT_MARKER || y.isDeleted() || x.getStackKind() != y.getStackKind()))
             {
                 return false;
             }
@@ -414,7 +404,7 @@ public final class FrameStateBuilder implements SideEffectsState
         }
         else if (block.isPhiAtMerge(currentValue))
         {
-            if (otherValue == null || otherValue == TWO_SLOT_MARKER || otherValue.isDeleted() || currentValue.getStackKind() != otherValue.getStackKind())
+            if (otherValue == null || otherValue == FrameState.TWO_SLOT_MARKER || otherValue.isDeleted() || currentValue.getStackKind() != otherValue.getStackKind())
             {
                 // This phi must be dead anyway, add input of correct stack kind to keep the graph
                 // invariants.
@@ -428,7 +418,7 @@ public final class FrameStateBuilder implements SideEffectsState
         }
         else if (currentValue != otherValue)
         {
-            if (currentValue == TWO_SLOT_MARKER || otherValue == TWO_SLOT_MARKER)
+            if (currentValue == FrameState.TWO_SLOT_MARKER || otherValue == FrameState.TWO_SLOT_MARKER)
             {
                 return null;
             }
@@ -504,7 +494,7 @@ public final class FrameStateBuilder implements SideEffectsState
         for (int i = 0; i < localsSize(); i++)
         {
             ValueNode value = locals[i];
-            if (value != null && value != TWO_SLOT_MARKER && (!loopEntryState.contains(value) || loopExit.loopBegin().isPhiAtMerge(value)))
+            if (value != null && value != FrameState.TWO_SLOT_MARKER && (!loopEntryState.contains(value) || loopExit.loopBegin().isPhiAtMerge(value)))
             {
                 locals[i] = ProxyNode.forValue(value, loopExit, graph);
             }
@@ -512,7 +502,7 @@ public final class FrameStateBuilder implements SideEffectsState
         for (int i = 0; i < stackSize(); i++)
         {
             ValueNode value = stack[i];
-            if (value != null && value != TWO_SLOT_MARKER && (!loopEntryState.contains(value) || loopExit.loopBegin().isPhiAtMerge(value)))
+            if (value != null && value != FrameState.TWO_SLOT_MARKER && (!loopEntryState.contains(value) || loopExit.loopBegin().isPhiAtMerge(value)))
             {
                 stack[i] = ProxyNode.forValue(value, loopExit, graph);
             }
@@ -532,7 +522,7 @@ public final class FrameStateBuilder implements SideEffectsState
         for (int i = 0; i < localsSize(); i++)
         {
             ValueNode value = locals[i];
-            if (value != null && value != TWO_SLOT_MARKER)
+            if (value != null && value != FrameState.TWO_SLOT_MARKER)
             {
                 locals[i] = proxyFunction.apply(value);
             }
@@ -540,7 +530,7 @@ public final class FrameStateBuilder implements SideEffectsState
         for (int i = 0; i < stackSize(); i++)
         {
             ValueNode value = stack[i];
-            if (value != null && value != TWO_SLOT_MARKER)
+            if (value != null && value != FrameState.TWO_SLOT_MARKER)
             {
                 stack[i] = proxyFunction.apply(value);
             }
@@ -557,7 +547,7 @@ public final class FrameStateBuilder implements SideEffectsState
 
     private ValueNode createLoopPhi(AbstractMergeNode block, ValueNode value, boolean stampFromValue)
     {
-        if (value == null || value == TWO_SLOT_MARKER)
+        if (value == null || value == FrameState.TWO_SLOT_MARKER)
         {
             return value;
         }
@@ -745,7 +735,7 @@ public final class FrameStateBuilder implements SideEffectsState
      */
     public void storeLocal(int i, JavaKind slotKind, ValueNode x)
     {
-        if (locals[i] == TWO_SLOT_MARKER)
+        if (locals[i] == FrameState.TWO_SLOT_MARKER)
         {
             /* Writing the second slot of a two-slot value invalidates the first slot. */
             locals[i - 1] = null;
@@ -754,9 +744,9 @@ public final class FrameStateBuilder implements SideEffectsState
         if (slotKind.needsTwoSlots())
         {
             /* Writing a two-slot value: mark the second slot. */
-            locals[i + 1] = TWO_SLOT_MARKER;
+            locals[i + 1] = FrameState.TWO_SLOT_MARKER;
         }
-        else if (i < locals.length - 1 && locals[i + 1] == TWO_SLOT_MARKER)
+        else if (i < locals.length - 1 && locals[i + 1] == FrameState.TWO_SLOT_MARKER)
         {
             /*
              * Writing a one-slot value to an index previously occupied by a two-slot value: clear
@@ -777,7 +767,7 @@ public final class FrameStateBuilder implements SideEffectsState
         xpush(x);
         if (slotKind.needsTwoSlots())
         {
-            xpush(TWO_SLOT_MARKER);
+            xpush(FrameState.TWO_SLOT_MARKER);
         }
     }
 
@@ -834,7 +824,7 @@ public final class FrameStateBuilder implements SideEffectsState
         for (int i = argSize - 1; i >= 0; i--)
         {
             ValueNode x = xpop();
-            if (x == TWO_SLOT_MARKER)
+            if (x == FrameState.TWO_SLOT_MARKER)
             {
                 /* Ignore second slot of two-slot value. */
                 x = xpop();
@@ -861,24 +851,24 @@ public final class FrameStateBuilder implements SideEffectsState
     {
         switch (opcode)
         {
-            case POP:
+            case Bytecodes.POP:
             {
                 ValueNode w1 = xpop();
                 break;
             }
-            case POP2:
+            case Bytecodes.POP2:
             {
                 xpop();
                 ValueNode w2 = xpop();
                 break;
             }
-            case DUP:
+            case Bytecodes.DUP:
             {
                 ValueNode w1 = xpeek();
                 xpush(w1);
                 break;
             }
-            case DUP_X1:
+            case Bytecodes.DUP_X1:
             {
                 ValueNode w1 = xpop();
                 ValueNode w2 = xpop();
@@ -887,7 +877,7 @@ public final class FrameStateBuilder implements SideEffectsState
                 xpush(w1);
                 break;
             }
-            case DUP_X2:
+            case Bytecodes.DUP_X2:
             {
                 ValueNode w1 = xpop();
                 ValueNode w2 = xpop();
@@ -898,7 +888,7 @@ public final class FrameStateBuilder implements SideEffectsState
                 xpush(w1);
                 break;
             }
-            case DUP2:
+            case Bytecodes.DUP2:
             {
                 ValueNode w1 = xpop();
                 ValueNode w2 = xpop();
@@ -908,7 +898,7 @@ public final class FrameStateBuilder implements SideEffectsState
                 xpush(w1);
                 break;
             }
-            case DUP2_X1:
+            case Bytecodes.DUP2_X1:
             {
                 ValueNode w1 = xpop();
                 ValueNode w2 = xpop();
@@ -920,7 +910,7 @@ public final class FrameStateBuilder implements SideEffectsState
                 xpush(w1);
                 break;
             }
-            case DUP2_X2:
+            case Bytecodes.DUP2_X2:
             {
                 ValueNode w1 = xpop();
                 ValueNode w2 = xpop();
@@ -934,7 +924,7 @@ public final class FrameStateBuilder implements SideEffectsState
                 xpush(w1);
                 break;
             }
-            case SWAP:
+            case Bytecodes.SWAP:
             {
                 ValueNode w1 = xpop();
                 ValueNode w2 = xpop();

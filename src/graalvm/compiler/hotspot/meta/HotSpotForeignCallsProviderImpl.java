@@ -1,13 +1,18 @@
 package graalvm.compiler.hotspot.meta;
 
-import static jdk.vm.ci.hotspot.HotSpotCallingConventionType.JavaCall;
-import static jdk.vm.ci.hotspot.HotSpotCallingConventionType.JavaCallee;
-import static graalvm.compiler.hotspot.HotSpotForeignCallLinkage.RegisterEffect.PRESERVES_REGISTERS;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import jdk.vm.ci.code.CallingConvention;
+import jdk.vm.ci.code.CodeCacheProvider;
+import jdk.vm.ci.hotspot.HotSpotCallingConventionType;
+import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.MetaAccessProvider;
+
 import org.graalvm.collections.EconomicMap;
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.hotspot.HotSpotForeignCallLinkage;
@@ -20,13 +25,6 @@ import graalvm.compiler.hotspot.stubs.Stub;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.word.Word;
 import graalvm.compiler.word.WordTypes;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.code.CallingConvention;
-import jdk.vm.ci.code.CodeCacheProvider;
-import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.MetaAccessProvider;
 
 /**
  * HotSpot implementation of {@link HotSpotForeignCallsProvider}.
@@ -86,7 +84,7 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
      */
     public HotSpotForeignCallLinkage registerStubCall(ForeignCallDescriptor descriptor, boolean reexecutable, Transition transition, LocationIdentity... killedLocations)
     {
-        return register(HotSpotForeignCallLinkageImpl.create(metaAccess, codeCache, wordTypes, this, descriptor, 0L, PRESERVES_REGISTERS, JavaCall, JavaCallee, transition, reexecutable, killedLocations));
+        return register(HotSpotForeignCallLinkageImpl.create(metaAccess, codeCache, wordTypes, this, descriptor, 0L, RegisterEffect.PRESERVES_REGISTERS, HotSpotCallingConventionType.JavaCall, HotSpotCallingConventionType.JavaCallee, transition, reexecutable, killedLocations));
     }
 
     /**

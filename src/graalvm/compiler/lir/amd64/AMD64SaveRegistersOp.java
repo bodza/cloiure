@@ -1,21 +1,21 @@
 package graalvm.compiler.lir.amd64;
 
-import static jdk.vm.ci.code.ValueUtil.asStackSlot;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.STACK;
+import jdk.vm.ci.amd64.AMD64Kind;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.RegisterSaveLayout;
+import jdk.vm.ci.code.StackSlot;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
 
 import org.graalvm.collections.EconomicSet;
+
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.StandardOp.SaveRegistersOp;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
 import graalvm.compiler.lir.framemap.FrameMap;
-
-import jdk.vm.ci.amd64.AMD64Kind;
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.RegisterSaveLayout;
-import jdk.vm.ci.code.StackSlot;
-import jdk.vm.ci.meta.AllocatableValue;
 
 /**
  * Saves registers to stack slots.
@@ -33,7 +33,7 @@ public class AMD64SaveRegistersOp extends AMD64LIRInstruction implements SaveReg
     /**
      * The slots to which the registers are saved.
      */
-    @Def(STACK) protected final AllocatableValue[] slots;
+    @Def(OperandFlag.STACK) protected final AllocatableValue[] slots;
 
     /**
      * Specifies if {@link #remove(EconomicSet)} should have an effect.
@@ -72,7 +72,7 @@ public class AMD64SaveRegistersOp extends AMD64LIRInstruction implements SaveReg
         {
             if (savedRegisters[i] != null)
             {
-                saveRegister(crb, masm, asStackSlot(slots[i]), savedRegisters[i]);
+                saveRegister(crb, masm, ValueUtil.asStackSlot(slots[i]), savedRegisters[i]);
             }
         }
     }
@@ -136,7 +136,7 @@ public class AMD64SaveRegistersOp extends AMD64LIRInstruction implements SaveReg
                 if (savedRegisters[i] != null)
                 {
                     keys[mapIndex] = savedRegisters[i];
-                    StackSlot slot = asStackSlot(slots[i]);
+                    StackSlot slot = ValueUtil.asStackSlot(slots[i]);
                     values[mapIndex] = indexForStackSlot(frameMap, slot);
                     mapIndex++;
                 }

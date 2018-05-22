@@ -1,10 +1,10 @@
 package graalvm.compiler.lir.alloc.trace;
 
-import static graalvm.compiler.lir.LIRValueUtil.asVariable;
-import static graalvm.compiler.lir.LIRValueUtil.isVariable;
-
 import java.util.Arrays;
 import java.util.EnumSet;
+
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.core.common.alloc.Trace;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
@@ -12,14 +12,12 @@ import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstruction.OperandMode;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.StandardOp.JumpOp;
 import graalvm.compiler.lir.StandardOp.LabelOp;
 import graalvm.compiler.lir.ValueProcedure;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.ssa.SSAUtil;
-
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Allocates a trivial trace i.e. a trace consisting of a single block with no instructions other
@@ -81,10 +79,10 @@ public final class TrivialTraceAllocator extends TraceAllocationPhase<TraceAlloc
             @Override
             public Value doValue(Value value, OperandMode mode, EnumSet<OperandFlag> flags)
             {
-                if (isVariable(value))
+                if (LIRValueUtil.isVariable(value))
                 {
                     // since incoming variables are sorted, we can do a binary search
-                    return locIn[Arrays.binarySearch(varIn, asVariable(value).index)];
+                    return locIn[Arrays.binarySearch(varIn, LIRValueUtil.asVariable(value).index)];
                 }
                 return value;
             }

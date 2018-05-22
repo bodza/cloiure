@@ -1,13 +1,18 @@
 package graalvm.compiler.lir.alloc.trace.lsra;
 
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.isIllegal;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static graalvm.compiler.lir.LIRValueUtil.isVariable;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.RegisterArray;
+import jdk.vm.ci.code.RegisterAttributes;
+import jdk.vm.ci.code.RegisterValue;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Value;
+import jdk.vm.ci.meta.ValueKind;
 
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.common.alloc.Trace;
@@ -17,6 +22,7 @@ import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LIRInstruction.OperandMode;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.Variable;
 import graalvm.compiler.lir.VirtualStackSlot;
 import graalvm.compiler.lir.alloc.trace.GlobalLivenessInfo;
@@ -31,15 +37,6 @@ import graalvm.compiler.lir.phases.LIRPhase;
 import graalvm.compiler.options.NestedBooleanOptionKey;
 import graalvm.compiler.options.OptionKey;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.RegisterArray;
-import jdk.vm.ci.code.RegisterAttributes;
-import jdk.vm.ci.code.RegisterValue;
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Value;
-import jdk.vm.ci.meta.ValueKind;
 
 /**
  * Implementation of the Linear Scan allocation approach for traces described in
@@ -101,7 +98,7 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
 
     public static boolean isVariableOrRegister(Value value)
     {
-        return isVariable(value) || isRegister(value);
+        return LIRValueUtil.isVariable(value) || ValueUtil.isRegister(value);
     }
 
     abstract static class IntervalPredicate
@@ -384,7 +381,7 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
 
         public boolean isProcessed(Value operand)
         {
-            return !isRegister(operand) || attributes(asRegister(operand)).isAllocatable();
+            return !ValueUtil.isRegister(operand) || attributes(ValueUtil.asRegister(operand)).isAllocatable();
         }
 
         // * Phase 5: actual register allocation
@@ -575,12 +572,12 @@ public final class TraceLinearScanPhase extends TraceAllocationPhase<TraceAlloca
                 interval = splitChildAtOpId(interval, opId, mode);
             }
 
-            return isIllegal(interval.location()) && interval.canMaterialize();
+            return ValueUtil.isIllegal(interval.location()) && interval.canMaterialize();
         }
 
         boolean isCallerSave(Value operand)
         {
-            return attributes(asRegister(operand)).isCallerSave();
+            return attributes(ValueUtil.asRegister(operand)).isCallerSave();
         }
 
         protected void allocate(TargetDescription target, LIRGenerationResult lirGenRes, TraceAllocationContext traceContext)

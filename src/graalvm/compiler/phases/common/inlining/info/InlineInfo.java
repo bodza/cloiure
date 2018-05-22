@@ -1,6 +1,9 @@
 package graalvm.compiler.phases.common.inlining.info;
 
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import org.graalvm.collections.EconomicSet;
+
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodes.Invoke;
 import graalvm.compiler.nodes.StructuredGraph;
@@ -9,8 +12,6 @@ import graalvm.compiler.phases.common.CanonicalizerPhase;
 import graalvm.compiler.phases.common.inlining.info.elem.Inlineable;
 import graalvm.compiler.phases.tiers.HighTierContext;
 import graalvm.compiler.phases.util.Providers;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * Represents an opportunity for inlining at a given invoke, with the given weight and level. The

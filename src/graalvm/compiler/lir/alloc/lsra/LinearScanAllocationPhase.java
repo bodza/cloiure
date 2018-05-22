@@ -1,10 +1,10 @@
 package graalvm.compiler.lir.alloc.lsra;
 
-import graalvm.compiler.lir.gen.LIRGenerationResult;
-import static graalvm.compiler.lir.phases.AllocationPhase.AllocationContext;
-import graalvm.compiler.lir.phases.LIRPhase;
-
 import jdk.vm.ci.code.TargetDescription;
+
+import graalvm.compiler.lir.gen.LIRGenerationResult;
+import graalvm.compiler.lir.phases.AllocationPhase;
+import graalvm.compiler.lir.phases.LIRPhase;
 
 abstract class LinearScanAllocationPhase
 {
@@ -19,10 +19,10 @@ abstract class LinearScanAllocationPhase
         return getName().toString();
     }
 
-    public final void apply(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context)
+    public final void apply(TargetDescription target, LIRGenerationResult lirGenRes, AllocationPhase.AllocationContext context)
     {
         run(target, lirGenRes, context);
     }
 
-    protected abstract void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationContext context);
+    protected abstract void run(TargetDescription target, LIRGenerationResult lirGenRes, AllocationPhase.AllocationContext context);
 }

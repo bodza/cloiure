@@ -1,6 +1,6 @@
 package graalvm.compiler.nodes.calc;
 
-import static graalvm.compiler.nodes.calc.CompareNode.createCompareNode;
+import jdk.vm.ci.meta.JavaConstant;
 
 import graalvm.compiler.core.common.calc.CanonicalCondition;
 import graalvm.compiler.core.common.type.IntegerStamp;
@@ -17,10 +17,9 @@ import graalvm.compiler.nodes.LogicNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.ValueNode;
+import graalvm.compiler.nodes.calc.CompareNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
-import jdk.vm.ci.meta.JavaConstant;
 
 /**
  * The {@code ConditionalNode} class represents a comparison that yields one of two (eagerly
@@ -303,6 +302,6 @@ public final class ConditionalNode extends FloatingNode implements Canonicalizab
 
     public ConditionalNode(StructuredGraph graph, CanonicalCondition condition, ValueNode x, ValueNode y)
     {
-        this(createCompareNode(graph, condition, x, y, null, NodeView.DEFAULT));
+        this(CompareNode.createCompareNode(graph, condition, x, y, null, NodeView.DEFAULT));
     }
 }

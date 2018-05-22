@@ -1,5 +1,7 @@
 package graalvm.compiler.nodes.calc;
 
+import jdk.vm.ci.meta.TriState;
+
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
@@ -9,8 +11,6 @@ import graalvm.compiler.nodes.BinaryOpLogicNode;
 import graalvm.compiler.nodes.LogicConstantNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
-
-import jdk.vm.ci.meta.TriState;
 
 /**
  * This node will perform a "test" operation on its arguments. Its result is equivalent to the

@@ -1,7 +1,12 @@
 package graalvm.compiler.phases.common;
 
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.TriState;
+
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.MapCursor;
+
 import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.cfg.BlockMap;
 import graalvm.compiler.core.common.type.FloatStamp;
@@ -48,10 +53,6 @@ import graalvm.compiler.phases.schedule.SchedulePhase;
 import graalvm.compiler.phases.schedule.SchedulePhase.SchedulingStrategy;
 import graalvm.compiler.phases.tiers.LowTierContext;
 import graalvm.compiler.phases.tiers.PhaseContext;
-
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.TriState;
 
 /**
  * This phase lowers {@link FloatingReadNode FloatingReadNodes} into corresponding fixed reads.

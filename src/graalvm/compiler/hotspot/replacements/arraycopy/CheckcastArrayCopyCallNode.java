@@ -1,7 +1,10 @@
 package graalvm.compiler.hotspot.replacements.arraycopy;
 
-import static jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider.getArrayBaseOffset;
-import static jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider.getArrayIndexScale;
+import jdk.vm.ci.code.CodeUtil;
+import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
+import jdk.vm.ci.meta.JavaKind;
+
+import org.graalvm.word.LocationIdentity;
 
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.core.common.type.PrimitiveStamp;
@@ -26,10 +29,6 @@ import graalvm.compiler.nodes.memory.address.OffsetAddressNode;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.word.Word;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.code.CodeUtil;
-import jdk.vm.ci.meta.JavaKind;
 
 public final class CheckcastArrayCopyCallNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
 {
@@ -95,10 +94,10 @@ public final class CheckcastArrayCopyCallNode extends AbstractMemoryCheckpoint i
         FixedWithNextNode basePtr = graph().add(new GetObjectAddressNode(base));
         graph().addBeforeFixed(this, basePtr);
 
-        int shift = CodeUtil.log2(getArrayIndexScale(JavaKind.Object));
+        int shift = CodeUtil.log2(HotSpotJVMCIRuntimeProvider.getArrayIndexScale(JavaKind.Object));
         ValueNode extendedPos = IntegerConvertNode.convert(pos, StampFactory.forKind(runtime.getTarget().wordJavaKind), graph(), NodeView.DEFAULT);
         ValueNode scaledIndex = graph().unique(new LeftShiftNode(extendedPos, ConstantNode.forInt(shift, graph())));
-        ValueNode offset = graph().unique(new AddNode(scaledIndex, ConstantNode.forIntegerBits(PrimitiveStamp.getBits(scaledIndex.stamp(NodeView.DEFAULT)), getArrayBaseOffset(JavaKind.Object), graph())));
+        ValueNode offset = graph().unique(new AddNode(scaledIndex, ConstantNode.forIntegerBits(PrimitiveStamp.getBits(scaledIndex.stamp(NodeView.DEFAULT)), HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(JavaKind.Object), graph())));
         return graph().unique(new OffsetAddressNode(basePtr, offset));
     }
 

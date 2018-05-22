@@ -2,6 +2,8 @@ package graalvm.compiler.hotspot.nodes;
 
 import java.util.BitSet;
 
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
@@ -11,8 +13,6 @@ import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.word.Word;
 import graalvm.compiler.word.WordTypes;
-
-import jdk.vm.ci.meta.Value;
 
 /**
  * Node that is used to maintain a stack based counter of how many locks are currently held.

@@ -1,5 +1,8 @@
 package graalvm.compiler.replacements.nodes;
 
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
@@ -9,9 +12,6 @@ import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.extended.RawStoreNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.Value;
 
 /**
  * A special purpose store node that differs from {@link RawStoreNode} in that it is not a

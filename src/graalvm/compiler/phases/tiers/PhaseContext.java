@@ -1,13 +1,13 @@
 package graalvm.compiler.phases.tiers;
 
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.MetaAccessProvider;
+
 import graalvm.compiler.core.common.spi.ConstantFieldProvider;
 import graalvm.compiler.nodes.spi.LoweringProvider;
 import graalvm.compiler.nodes.spi.Replacements;
 import graalvm.compiler.nodes.spi.StampProvider;
 import graalvm.compiler.phases.util.Providers;
-
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.MetaAccessProvider;
 
 public class PhaseContext
 {

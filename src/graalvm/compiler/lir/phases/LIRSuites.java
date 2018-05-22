@@ -1,5 +1,7 @@
 package graalvm.compiler.lir.phases;
 
+import jdk.vm.ci.code.StackSlot;
+
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.Variable;
 import graalvm.compiler.lir.VirtualStackSlot;
@@ -8,8 +10,6 @@ import graalvm.compiler.lir.gen.LIRGeneratorTool;
 import graalvm.compiler.lir.phases.AllocationPhase.AllocationContext;
 import graalvm.compiler.lir.phases.PostAllocationOptimizationPhase.PostAllocationOptimizationContext;
 import graalvm.compiler.lir.phases.PreAllocationOptimizationPhase.PreAllocationOptimizationContext;
-
-import jdk.vm.ci.code.StackSlot;
 
 public class LIRSuites
 {

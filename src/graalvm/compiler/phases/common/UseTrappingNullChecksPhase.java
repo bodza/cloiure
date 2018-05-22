@@ -1,9 +1,12 @@
 package graalvm.compiler.phases.common;
 
-import static graalvm.compiler.core.common.GraalOptions.OptImplicitNullChecks;
-
 import java.util.List;
 
+import jdk.vm.ci.meta.DeoptimizationReason;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.MetaAccessProvider;
+
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.AbstractBeginNode;
@@ -29,10 +32,6 @@ import graalvm.compiler.nodes.util.GraphUtil;
 import graalvm.compiler.options.OptionKey;
 import graalvm.compiler.phases.BasePhase;
 import graalvm.compiler.phases.tiers.LowTierContext;
-
-import jdk.vm.ci.meta.DeoptimizationReason;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.MetaAccessProvider;
 
 public class UseTrappingNullChecksPhase extends BasePhase<LowTierContext>
 {
@@ -189,7 +188,7 @@ public class UseTrappingNullChecksPhase extends BasePhase<LowTierContext>
         DeoptimizingFixedWithNextNode trappingNullCheck = null;
         FixedNode nextNonTrapping = nonTrappingContinuation.next();
         ValueNode value = isNullNode.getValue();
-        if (OptImplicitNullChecks.getValue(ifNode.graph().getOptions()) && implicitNullCheckLimit > 0)
+        if (GraalOptions.OptImplicitNullChecks.getValue(ifNode.graph().getOptions()) && implicitNullCheckLimit > 0)
         {
             if (nextNonTrapping instanceof FixedAccessNode)
             {

@@ -1,15 +1,22 @@
 package graalvm.compiler.lir;
 
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static jdk.vm.ci.code.ValueUtil.isStackSlot;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.RegisterArray;
+import jdk.vm.ci.code.RegisterConfig;
+import jdk.vm.ci.code.RegisterValue;
+import jdk.vm.ci.code.StackSlot;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.Value;
+
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
+
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.LIRInstruction.OperandFlag;
@@ -19,14 +26,6 @@ import graalvm.compiler.lir.StandardOp.ValueMoveOp;
 import graalvm.compiler.lir.framemap.FrameMap;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.phases.PostAllocationOptimizationPhase;
-
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.RegisterArray;
-import jdk.vm.ci.code.RegisterConfig;
-import jdk.vm.ci.code.RegisterValue;
-import jdk.vm.ci.code.StackSlot;
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Removes move instructions, where the destination value is already in place.
@@ -163,7 +162,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
                     if (isEligibleMove(op))
                     {
                         Value dest = MoveOp.asMoveOp(op).getResult();
-                        if (isRegister(dest))
+                        if (ValueUtil.isRegister(dest))
                         {
                             int regNum = ((RegisterValue) dest).getRegister().number;
                             if (regNum >= numRegs)
@@ -171,7 +170,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
                                 numRegs = regNum + 1;
                             }
                         }
-                        else if (isStackSlot(dest))
+                        else if (ValueUtil.isStackSlot(dest))
                         {
                             StackSlot stackSlot = (StackSlot) dest;
                             Integer offset = getOffset(stackSlot);
@@ -492,7 +491,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
          */
         private int getStateIdx(Value location)
         {
-            if (isRegister(location))
+            if (ValueUtil.isRegister(location))
             {
                 int regNum = ((RegisterValue) location).getRegister().number;
                 if (regNum < numRegs)
@@ -501,7 +500,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
                 }
                 return -1;
             }
-            if (isStackSlot(location))
+            if (ValueUtil.isStackSlot(location))
             {
                 StackSlot slot = (StackSlot) location;
                 Integer index = stackIndices.get(getOffset(slot));

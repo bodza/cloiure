@@ -1,5 +1,9 @@
 package graalvm.compiler.replacements.nodes;
 
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import graalvm.compiler.core.common.type.StampPair;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
@@ -8,10 +12,6 @@ import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.nodes.CallTargetNode.InvokeKind;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.ValueNode;
-
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * This node class can be used to create {@link MacroNode}s for simple pure functions like

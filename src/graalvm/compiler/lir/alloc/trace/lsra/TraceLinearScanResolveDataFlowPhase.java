@@ -1,11 +1,9 @@
 package graalvm.compiler.lir.alloc.trace.lsra;
 
-import static graalvm.compiler.lir.LIRValueUtil.asConstant;
-import static graalvm.compiler.lir.LIRValueUtil.asVariable;
-import static graalvm.compiler.lir.LIRValueUtil.isConstantValue;
-import static graalvm.compiler.lir.LIRValueUtil.isVirtualStackSlot;
-
 import java.util.ArrayList;
+
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.common.alloc.Trace;
@@ -13,6 +11,7 @@ import graalvm.compiler.core.common.alloc.TraceBuilderResult;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRInstruction;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.StandardOp;
 import graalvm.compiler.lir.StandardOp.JumpOp;
 import graalvm.compiler.lir.StandardOp.LabelOp;
@@ -21,9 +20,6 @@ import graalvm.compiler.lir.alloc.trace.lsra.TraceLinearScanPhase.TraceLinearSca
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;
 import graalvm.compiler.lir.ssa.SSAUtil;
-
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Phase 6: resolve data flow
@@ -139,20 +135,20 @@ final class TraceLinearScanResolveDataFlowPhase extends TraceLinearScanAllocatio
 
         private void addMapping(Value phiFrom, Value phiTo, int fromId, int toId, TraceLocalMoveResolver moveResolver)
         {
-            if (isVirtualStackSlot(phiTo) && isVirtualStackSlot(phiFrom) && phiTo.equals(phiFrom))
+            if (LIRValueUtil.isVirtualStackSlot(phiTo) && LIRValueUtil.isVirtualStackSlot(phiFrom) && phiTo.equals(phiFrom))
             {
                 // no need to handle virtual stack slots
                 return;
             }
-            TraceInterval toParent = allocator.intervalFor(asVariable(phiTo));
-            if (isConstantValue(phiFrom))
+            TraceInterval toParent = allocator.intervalFor(LIRValueUtil.asVariable(phiTo));
+            if (LIRValueUtil.isConstantValue(phiFrom))
             {
                 TraceInterval toInterval = allocator.splitChildAtOpId(toParent, toId, LIRInstruction.OperandMode.DEF);
-                moveResolver.addMapping(asConstant(phiFrom), toInterval);
+                moveResolver.addMapping(LIRValueUtil.asConstant(phiFrom), toInterval);
             }
             else
             {
-                addMapping(allocator.intervalFor(asVariable(phiFrom)), toParent, fromId, toId, moveResolver);
+                addMapping(allocator.intervalFor(LIRValueUtil.asVariable(phiFrom)), toParent, fromId, toId, moveResolver);
             }
         }
 

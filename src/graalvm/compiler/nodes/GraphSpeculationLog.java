@@ -1,9 +1,9 @@
 package graalvm.compiler.nodes;
 
-import org.graalvm.collections.EconomicMap;
-
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.SpeculationLog;
+
+import org.graalvm.collections.EconomicMap;
 
 /**
  * A wrapper around a {@link SpeculationLog} instance.

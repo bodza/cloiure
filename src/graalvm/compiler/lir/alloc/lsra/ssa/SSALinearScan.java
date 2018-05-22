@@ -1,5 +1,7 @@
 package graalvm.compiler.lir.alloc.lsra.ssa;
 
+import jdk.vm.ci.code.TargetDescription;
+
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.alloc.lsra.LinearScan;
@@ -10,8 +12,6 @@ import graalvm.compiler.lir.alloc.lsra.MoveResolver;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;
 import graalvm.compiler.lir.ssa.SSAUtil;
-
-import jdk.vm.ci.code.TargetDescription;
 
 public final class SSALinearScan extends LinearScan
 {

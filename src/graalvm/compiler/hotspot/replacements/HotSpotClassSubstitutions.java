@@ -1,20 +1,11 @@
 package graalvm.compiler.hotspot.replacements;
 
-import static graalvm.compiler.hotspot.GraalHotSpotVMConfig.INJECTED_VMCONFIG;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.ARRAY_KLASS_COMPONENT_MIRROR;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.KLASS_ACCESS_FLAGS_LOCATION;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.KLASS_MODIFIER_FLAGS_LOCATION;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.KLASS_SUPER_KLASS_LOCATION;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.arrayKlassComponentMirrorOffset;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.klassAccessFlagsOffset;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.klassIsArray;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.klassModifierFlagsOffset;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.klassSuperKlassOffset;
-
 import java.lang.reflect.Modifier;
 
 import graalvm.compiler.api.replacements.ClassSubstitution;
 import graalvm.compiler.api.replacements.MethodSubstitution;
+import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
+import graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil;
 import graalvm.compiler.hotspot.word.KlassPointer;
 import graalvm.compiler.nodes.PiNode;
 import graalvm.compiler.nodes.SnippetAnchorNode;
@@ -36,7 +27,7 @@ public class HotSpotClassSubstitutions
         }
         else
         {
-            return klass.readInt(klassModifierFlagsOffset(INJECTED_VMCONFIG), KLASS_MODIFIER_FLAGS_LOCATION);
+            return klass.readInt(HotSpotReplacementsUtil.klassModifierFlagsOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.KLASS_MODIFIER_FLAGS_LOCATION);
         }
     }
 
@@ -51,7 +42,7 @@ public class HotSpotClassSubstitutions
         }
         else
         {
-            int accessFlags = klass.readInt(klassAccessFlagsOffset(INJECTED_VMCONFIG), KLASS_ACCESS_FLAGS_LOCATION);
+            int accessFlags = klass.readInt(HotSpotReplacementsUtil.klassAccessFlagsOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.KLASS_ACCESS_FLAGS_LOCATION);
             return (accessFlags & Modifier.INTERFACE) != 0;
         }
     }
@@ -68,7 +59,7 @@ public class HotSpotClassSubstitutions
         else
         {
             KlassPointer klassNonNull = ClassGetHubNode.piCastNonNull(klass, SnippetAnchorNode.anchor());
-            return klassIsArray(klassNonNull);
+            return HotSpotReplacementsUtil.klassIsArray(klassNonNull);
         }
     }
 
@@ -86,16 +77,16 @@ public class HotSpotClassSubstitutions
         if (!klass.isNull())
         {
             KlassPointer klassNonNull = ClassGetHubNode.piCastNonNull(klass, SnippetAnchorNode.anchor());
-            int accessFlags = klassNonNull.readInt(klassAccessFlagsOffset(INJECTED_VMCONFIG), KLASS_ACCESS_FLAGS_LOCATION);
+            int accessFlags = klassNonNull.readInt(HotSpotReplacementsUtil.klassAccessFlagsOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.KLASS_ACCESS_FLAGS_LOCATION);
             if ((accessFlags & Modifier.INTERFACE) == 0)
             {
-                if (klassIsArray(klassNonNull))
+                if (HotSpotReplacementsUtil.klassIsArray(klassNonNull))
                 {
                     return Object.class;
                 }
                 else
                 {
-                    KlassPointer superKlass = klassNonNull.readKlassPointer(klassSuperKlassOffset(INJECTED_VMCONFIG), KLASS_SUPER_KLASS_LOCATION);
+                    KlassPointer superKlass = klassNonNull.readKlassPointer(HotSpotReplacementsUtil.klassSuperKlassOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.KLASS_SUPER_KLASS_LOCATION);
                     if (superKlass.isNull())
                     {
                         return null;
@@ -122,9 +113,9 @@ public class HotSpotClassSubstitutions
         if (!klass.isNull())
         {
             KlassPointer klassNonNull = ClassGetHubNode.piCastNonNull(klass, SnippetAnchorNode.anchor());
-            if (klassIsArray(klassNonNull))
+            if (HotSpotReplacementsUtil.klassIsArray(klassNonNull))
             {
-                return PiNode.asNonNullClass(klassNonNull.readObject(arrayKlassComponentMirrorOffset(INJECTED_VMCONFIG), ARRAY_KLASS_COMPONENT_MIRROR));
+                return PiNode.asNonNullClass(klassNonNull.readObject(HotSpotReplacementsUtil.arrayKlassComponentMirrorOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.ARRAY_KLASS_COMPONENT_MIRROR));
             }
         }
         else

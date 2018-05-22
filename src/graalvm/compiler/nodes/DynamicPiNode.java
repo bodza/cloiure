@@ -1,5 +1,9 @@
 package graalvm.compiler.nodes;
 
+import jdk.vm.ci.meta.Assumptions;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.TypeReference;
@@ -7,10 +11,6 @@ import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.nodes.extended.GuardingNode;
-
-import jdk.vm.ci.meta.Assumptions;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * A {@link PiNode} where the type is not yet known. If the type becomes known at a later point in

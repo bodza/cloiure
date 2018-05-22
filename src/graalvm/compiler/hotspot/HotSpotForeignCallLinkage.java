@@ -2,10 +2,11 @@ package graalvm.compiler.hotspot;
 
 import jdk.vm.ci.meta.InvokeTarget;
 
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.core.common.spi.ForeignCallLinkage;
 import graalvm.compiler.core.target.Backend;
 import graalvm.compiler.hotspot.stubs.Stub;
-import org.graalvm.word.LocationIdentity;
 
 /**
  * The details required to link a HotSpot runtime or stub call.

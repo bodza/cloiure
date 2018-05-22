@@ -1,5 +1,9 @@
 package graalvm.compiler.phases.util;
 
+import jdk.vm.ci.code.CodeCacheProvider;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.MetaAccessProvider;
+
 import graalvm.compiler.core.common.spi.ArrayOffsetProvider;
 import graalvm.compiler.core.common.spi.CodeGenProviders;
 import graalvm.compiler.core.common.spi.ConstantFieldProvider;
@@ -8,10 +12,6 @@ import graalvm.compiler.nodes.spi.LoweringProvider;
 import graalvm.compiler.nodes.spi.Replacements;
 import graalvm.compiler.nodes.spi.StampProvider;
 import graalvm.compiler.phases.tiers.PhaseContext;
-
-import jdk.vm.ci.code.CodeCacheProvider;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.MetaAccessProvider;
 
 /**
  * A set of providers, some of which may not be present (i.e., null).

@@ -1,12 +1,15 @@
 package graalvm.compiler.hotspot.amd64;
 
-import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.meta.JavaKind;
 
 import org.graalvm.collections.EconomicMap;
+
 import graalvm.compiler.asm.amd64.AMD64Address.Scale;
 import graalvm.compiler.core.amd64.AMD64AddressNode;
 import graalvm.compiler.core.amd64.AMD64CompressAddressLowering;
 import graalvm.compiler.core.common.CompressEncoding;
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.graph.Node;
@@ -32,9 +35,6 @@ import graalvm.compiler.nodes.memory.address.AddressNode;
 import graalvm.compiler.nodes.memory.address.OffsetAddressNode;
 import graalvm.compiler.options.OptionValues;
 
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.meta.JavaKind;
-
 public class AMD64HotSpotAddressLowering extends AMD64CompressAddressLowering
 {
     private static final int ADDRESS_BITS = 64;
@@ -49,7 +49,7 @@ public class AMD64HotSpotAddressLowering extends AMD64CompressAddressLowering
     {
         this.heapBase = config.getOopEncoding().getBase();
         this.config = config;
-        this.generatePIC = GeneratePIC.getValue(options);
+        this.generatePIC = GraalOptions.GeneratePIC.getValue(options);
         if (heapBase == 0 && !generatePIC)
         {
             this.heapBaseRegister = null;

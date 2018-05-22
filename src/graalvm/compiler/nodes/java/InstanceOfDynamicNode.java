@@ -1,5 +1,11 @@
 package graalvm.compiler.nodes.java;
 
+import jdk.vm.ci.meta.Assumptions;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.ResolvedJavaType;
+import jdk.vm.ci.meta.TriState;
+
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.TypeReference;
 import graalvm.compiler.graph.NodeClass;
@@ -12,12 +18,6 @@ import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.IsNullNode;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
-
-import jdk.vm.ci.meta.Assumptions;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.ResolvedJavaType;
-import jdk.vm.ci.meta.TriState;
 
 /**
  * The {@code InstanceOfDynamicNode} represents a type check where the type being checked is not

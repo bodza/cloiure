@@ -1,13 +1,12 @@
 package graalvm.compiler.replacements.amd64;
 
-import static graalvm.compiler.nodes.extended.BranchProbabilityNode.SLOW_PATH_PROBABILITY;
-import static graalvm.compiler.nodes.extended.BranchProbabilityNode.probability;
-import static graalvm.compiler.replacements.SnippetTemplate.DEFAULT_REPLACER;
+import jdk.vm.ci.code.TargetDescription;
 
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.SnippetReflectionProvider;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.calc.FloatConvertNode;
+import graalvm.compiler.nodes.extended.BranchProbabilityNode;
 import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.util.Providers;
@@ -16,8 +15,6 @@ import graalvm.compiler.replacements.SnippetTemplate.AbstractTemplates;
 import graalvm.compiler.replacements.SnippetTemplate.Arguments;
 import graalvm.compiler.replacements.SnippetTemplate.SnippetInfo;
 import graalvm.compiler.replacements.Snippets;
-
-import jdk.vm.ci.code.TargetDescription;
 
 /**
  * Snippets used for conversion operations on AMD64 where the AMD64 instruction used does not match
@@ -39,7 +36,7 @@ public class AMD64ConvertSnippets implements Snippets
     @Snippet
     public static int f2i(float input, int result)
     {
-        if (probability(SLOW_PATH_PROBABILITY, result == Integer.MIN_VALUE))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, result == Integer.MIN_VALUE))
         {
             if (Float.isNaN(input))
             {
@@ -69,7 +66,7 @@ public class AMD64ConvertSnippets implements Snippets
     @Snippet
     public static long f2l(float input, long result)
     {
-        if (probability(SLOW_PATH_PROBABILITY, result == Long.MIN_VALUE))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, result == Long.MIN_VALUE))
         {
             if (Float.isNaN(input))
             {
@@ -99,7 +96,7 @@ public class AMD64ConvertSnippets implements Snippets
     @Snippet
     public static int d2i(double input, int result)
     {
-        if (probability(SLOW_PATH_PROBABILITY, result == Integer.MIN_VALUE))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, result == Integer.MIN_VALUE))
         {
             if (Double.isNaN(input))
             {
@@ -129,7 +126,7 @@ public class AMD64ConvertSnippets implements Snippets
     @Snippet
     public static long d2l(double input, long result)
     {
-        if (probability(SLOW_PATH_PROBABILITY, result == Long.MIN_VALUE))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, result == Long.MIN_VALUE))
         {
             if (Double.isNaN(input))
             {
@@ -190,7 +187,7 @@ public class AMD64ConvertSnippets implements Snippets
             args.add("result", graph.unique(new AMD64FloatConvertNode(convert.getFloatConvert(), convert.getValue())));
 
             SnippetTemplate template = template(convert, args);
-            template.instantiate(providers.getMetaAccess(), convert, DEFAULT_REPLACER, tool, args);
+            template.instantiate(providers.getMetaAccess(), convert, SnippetTemplate.DEFAULT_REPLACER, tool, args);
             convert.safeDelete();
         }
     }

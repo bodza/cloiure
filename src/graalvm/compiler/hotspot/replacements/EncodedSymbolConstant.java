@@ -4,14 +4,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.nio.ByteBuffer;
 
-import graalvm.compiler.core.common.PermanentBailoutException;
-import graalvm.compiler.core.common.type.DataPointerConstant;
-
 import jdk.vm.ci.hotspot.HotSpotMetaspaceConstant;
 import jdk.vm.ci.hotspot.HotSpotObjectConstant;
 import jdk.vm.ci.hotspot.HotSpotResolvedJavaMethod;
 import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
 import jdk.vm.ci.meta.Constant;
+
+import graalvm.compiler.core.common.PermanentBailoutException;
+import graalvm.compiler.core.common.type.DataPointerConstant;
 
 /**
  * Represents an encoded representation of a constant.

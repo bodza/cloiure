@@ -1,5 +1,11 @@
 package graalvm.compiler.nodes.extended;
 
+import jdk.vm.ci.meta.Assumptions;
+import jdk.vm.ci.meta.Assumptions.AssumptionResult;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.TypeReference;
 import graalvm.compiler.debug.GraalError;
@@ -14,12 +20,6 @@ import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.nodes.type.StampTool;
-
-import jdk.vm.ci.meta.Assumptions;
-import jdk.vm.ci.meta.Assumptions.AssumptionResult;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * Loads a method from the virtual method table of a given hub.

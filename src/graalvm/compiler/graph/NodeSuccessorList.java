@@ -1,7 +1,5 @@
 package graalvm.compiler.graph;
 
-import static graalvm.compiler.graph.Edges.Type.Successors;
-
 import java.util.List;
 
 import graalvm.compiler.graph.Edges.Type;
@@ -37,6 +35,6 @@ public final class NodeSuccessorList<T extends Node> extends NodeList<T>
     @Override
     public Type getEdgesType()
     {
-        return Successors;
+        return Type.Successors;
     }
 }

@@ -1,9 +1,10 @@
 package graalvm.compiler.core.common.spi;
 
-import graalvm.compiler.core.common.LIRKind;
+import jdk.vm.ci.code.ValueKindFactory;
+
 import org.graalvm.word.LocationIdentity;
 
-import jdk.vm.ci.code.ValueKindFactory;
+import graalvm.compiler.core.common.LIRKind;
 
 /**
  * Details about a set of supported {@link ForeignCallDescriptor foreign calls}.

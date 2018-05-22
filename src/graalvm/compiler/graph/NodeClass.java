@@ -1,11 +1,5 @@
 package graalvm.compiler.graph;
 
-import static graalvm.compiler.core.common.Fields.translateInto;
-import static graalvm.compiler.graph.Edges.translateInto;
-import static graalvm.compiler.graph.InputEdges.translateInto;
-import static graalvm.compiler.graph.Node.WithAllEdges;
-import graalvm.util.UnsafeAccess;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
@@ -20,12 +14,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
+
 import graalvm.compiler.core.common.FieldIntrospection;
 import graalvm.compiler.core.common.Fields;
 import graalvm.compiler.core.common.FieldsScanner;
 import graalvm.compiler.debug.GraalError;
+import graalvm.compiler.graph.Edges;
 import graalvm.compiler.graph.Edges.Type;
 import graalvm.compiler.graph.Graph.DuplicationReplacement;
+import graalvm.compiler.graph.InputEdges;
+import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.Node.EdgeVisitor;
 import graalvm.compiler.graph.Node.Input;
 import graalvm.compiler.graph.Node.OptionalInput;
@@ -36,6 +34,7 @@ import graalvm.compiler.graph.spi.Canonicalizable.BinaryCommutative;
 import graalvm.compiler.graph.spi.Simplifiable;
 import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodeinfo.Verbosity;
+import graalvm.util.UnsafeAccess;
 
 /**
  * Metadata for every {@link Node} type. The metadata includes:
@@ -400,9 +399,9 @@ public final class NodeClass<T> extends FieldIntrospection<T>
             super(calc);
             if (superNodeClass != null)
             {
-                translateInto(superNodeClass.inputs, inputs);
-                translateInto(superNodeClass.successors, successors);
-                translateInto(superNodeClass.data, data);
+                InputEdges.translateInto(superNodeClass.inputs, inputs);
+                Edges.translateInto(superNodeClass.successors, successors);
+                Fields.translateInto(superNodeClass.data, data);
                 directInputs = superNodeClass.inputs.getDirectCount();
                 directSuccessors = superNodeClass.successors.getDirectCount();
             }
@@ -981,7 +980,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
                 }
                 else
                 {
-                    Node newNode = node.clone(graph, WithAllEdges);
+                    Node newNode = node.clone(graph, Node.WithAllEdges);
                     newNodes.put(node, newNode);
                 }
             }

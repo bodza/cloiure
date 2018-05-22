@@ -1,5 +1,14 @@
 package graalvm.compiler.nodes.java;
 
+import jdk.vm.ci.meta.Assumptions;
+import jdk.vm.ci.meta.Assumptions.AssumptionResult;
+import jdk.vm.ci.meta.DeoptimizationAction;
+import jdk.vm.ci.meta.DeoptimizationReason;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.JavaTypeProfile;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.StampPair;
@@ -20,15 +29,6 @@ import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.extended.ValueAnchorNode;
 import graalvm.compiler.nodes.spi.UncheckedInterfaceProvider;
 import graalvm.compiler.nodes.type.StampTool;
-
-import jdk.vm.ci.meta.Assumptions;
-import jdk.vm.ci.meta.Assumptions.AssumptionResult;
-import jdk.vm.ci.meta.DeoptimizationAction;
-import jdk.vm.ci.meta.DeoptimizationReason;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.JavaTypeProfile;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 public class MethodCallTargetNode extends CallTargetNode implements IterableNodeType, Simplifiable
 {

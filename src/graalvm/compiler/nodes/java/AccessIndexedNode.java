@@ -1,12 +1,12 @@
 package graalvm.compiler.nodes.java;
 
+import jdk.vm.ci.meta.JavaKind;
+
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
-
-import jdk.vm.ci.meta.JavaKind;
 
 /**
  * The {@code AccessIndexedNode} class is the base class of instructions that read or write elements

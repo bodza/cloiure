@@ -1,6 +1,9 @@
 package graalvm.compiler.hotspot.replacements;
 
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.arrayBaseOffset;
+import jdk.vm.ci.meta.JavaKind;
+
+import org.graalvm.word.WordBase;
+import org.graalvm.word.WordFactory;
 
 import graalvm.compiler.api.replacements.ClassSubstitution;
 import graalvm.compiler.api.replacements.MethodSubstitution;
@@ -8,12 +11,9 @@ import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.graph.Node.ConstantNodeParameter;
 import graalvm.compiler.graph.Node.NodeIntrinsic;
 import graalvm.compiler.hotspot.nodes.ComputeObjectAddressNode;
+import graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil;
 import graalvm.compiler.nodes.extended.ForeignCallNode;
 import graalvm.compiler.word.Word;
-import org.graalvm.word.WordBase;
-import org.graalvm.word.WordFactory;
-
-import jdk.vm.ci.meta.JavaKind;
 
 /**
  * Substitutions for java.util.zip.CRC32C.
@@ -24,7 +24,7 @@ public class CRC32CSubstitutions
     @MethodSubstitution
     static int updateBytes(int crc, byte[] b, int off, int end)
     {
-        Word bufAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(b, arrayBaseOffset(JavaKind.Byte) + off));
+        Word bufAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(b, HotSpotReplacementsUtil.arrayBaseOffset(JavaKind.Byte) + off));
         return updateBytesCRC32(UPDATE_BYTES_CRC32C, crc, bufAddr, end - off);
     }
 

@@ -1,8 +1,8 @@
 package graalvm.compiler.replacements;
 
-import static graalvm.compiler.nodes.calc.CompareNode.createCompareNode;
-
 import java.util.List;
+
+import jdk.vm.ci.code.TargetDescription;
 
 import graalvm.compiler.api.replacements.SnippetReflectionProvider;
 import graalvm.compiler.core.common.calc.CanonicalCondition;
@@ -29,8 +29,6 @@ import graalvm.compiler.phases.util.Providers;
 import graalvm.compiler.replacements.SnippetTemplate.AbstractTemplates;
 import graalvm.compiler.replacements.SnippetTemplate.Arguments;
 import graalvm.compiler.replacements.SnippetTemplate.UsageReplacer;
-
-import jdk.vm.ci.code.TargetDescription;
 
 /**
  * Helper class for lowering {@link InstanceOfNode}s with snippets. The majority of the complexity
@@ -173,7 +171,7 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
             if (condition == null || (!(condition instanceof CompareNode)) || ((CompareNode) condition).getY() != testValue)
             {
                 // Re-use previously generated condition if the trueValue for the test is the same
-                condition = createCompareNode(result.graph(), CanonicalCondition.EQ, result, testValue, null, NodeView.DEFAULT);
+                condition = CompareNode.createCompareNode(result.graph(), CanonicalCondition.EQ, result, testValue, null, NodeView.DEFAULT);
             }
             return condition;
         }

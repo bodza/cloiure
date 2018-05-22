@@ -1,17 +1,15 @@
 package graalvm.compiler.lir.amd64;
 
-import static graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize.DWORD;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
+import jdk.vm.ci.amd64.AMD64;
+import jdk.vm.ci.meta.AllocatableValue;
 
 import graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize;
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
 import graalvm.compiler.core.common.LIRKind;
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
-
-import jdk.vm.ci.amd64.AMD64;
-import jdk.vm.ci.meta.AllocatableValue;
 
 @Opcode("CDQ")
 public class AMD64SignExtendOp extends AMD64LIRInstruction
@@ -20,10 +18,10 @@ public class AMD64SignExtendOp extends AMD64LIRInstruction
 
     private final OperandSize size;
 
-    @Def({REG}) protected AllocatableValue highResult;
-    @Def({REG}) protected AllocatableValue lowResult;
+    @Def({OperandFlag.REG}) protected AllocatableValue highResult;
+    @Def({OperandFlag.REG}) protected AllocatableValue lowResult;
 
-    @Use({REG}) protected AllocatableValue input;
+    @Use({OperandFlag.REG}) protected AllocatableValue input;
 
     public AMD64SignExtendOp(OperandSize size, LIRKind resultKind, AllocatableValue input)
     {
@@ -48,7 +46,7 @@ public class AMD64SignExtendOp extends AMD64LIRInstruction
     @Override
     public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
     {
-        if (size == DWORD)
+        if (size == OperandSize.DWORD)
         {
             masm.cdql();
         }

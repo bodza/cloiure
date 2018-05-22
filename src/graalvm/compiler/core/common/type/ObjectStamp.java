@@ -1,12 +1,12 @@
 package graalvm.compiler.core.common.type;
 
-import graalvm.compiler.core.common.LIRKind;
-import graalvm.compiler.core.common.spi.LIRKindTool;
-
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.MemoryAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaType;
+
+import graalvm.compiler.core.common.LIRKind;
+import graalvm.compiler.core.common.spi.LIRKindTool;
 
 public class ObjectStamp extends AbstractObjectStamp
 {

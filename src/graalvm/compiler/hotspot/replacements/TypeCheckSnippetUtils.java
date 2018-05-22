@@ -1,34 +1,21 @@
 package graalvm.compiler.hotspot.replacements;
 
-import static graalvm.compiler.hotspot.GraalHotSpotVMConfig.INJECTED_VMCONFIG;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.KLASS_SUPER_CHECK_OFFSET_LOCATION;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.METASPACE_ARRAY_LENGTH_LOCATION;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.PRIMARY_SUPERS_LOCATION;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.SECONDARY_SUPERS_ELEMENT_LOCATION;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.SECONDARY_SUPERS_LOCATION;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.metaspaceArrayBaseOffset;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.metaspaceArrayLengthOffset;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.secondarySuperCacheOffset;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.secondarySupersOffset;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.superCheckOffsetOffset;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.wordSize;
-import static graalvm.compiler.nodes.extended.BranchProbabilityNode.NOT_LIKELY_PROBABILITY;
-import static graalvm.compiler.nodes.extended.BranchProbabilityNode.probability;
-
 import java.util.Arrays;
 
+import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
+import jdk.vm.ci.meta.MetaAccessProvider;
+
+import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
 import graalvm.compiler.hotspot.nodes.type.KlassPointerStamp;
+import graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil;
 import graalvm.compiler.hotspot.word.KlassPointer;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.TypeCheckHints;
+import graalvm.compiler.nodes.extended.BranchProbabilityNode;
 import graalvm.compiler.replacements.SnippetCounter;
 import graalvm.compiler.replacements.SnippetCounter.Group;
 import graalvm.compiler.word.Word;
-
-import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
-import jdk.vm.ci.meta.MetaAccessProvider;
 
 /**
  * Utilities and common code paths used by the type check snippets.
@@ -38,7 +25,7 @@ public class TypeCheckSnippetUtils
     static boolean checkSecondarySubType(KlassPointer t, KlassPointer sNonNull, Counters counters)
     {
         // if (S.cache == T) return true
-        if (sNonNull.readKlassPointer(secondarySuperCacheOffset(INJECTED_VMCONFIG), SECONDARY_SUPER_CACHE_LOCATION).equal(t))
+        if (sNonNull.readKlassPointer(HotSpotReplacementsUtil.secondarySuperCacheOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION).equal(t))
         {
             counters.cacheHit.inc();
             return true;
@@ -50,11 +37,11 @@ public class TypeCheckSnippetUtils
     static boolean checkUnknownSubType(KlassPointer t, KlassPointer sNonNull, Counters counters)
     {
         // int off = T.offset
-        int superCheckOffset = t.readInt(superCheckOffsetOffset(INJECTED_VMCONFIG), KLASS_SUPER_CHECK_OFFSET_LOCATION);
-        boolean primary = superCheckOffset != secondarySuperCacheOffset(INJECTED_VMCONFIG);
+        int superCheckOffset = t.readInt(HotSpotReplacementsUtil.superCheckOffsetOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.KLASS_SUPER_CHECK_OFFSET_LOCATION);
+        boolean primary = superCheckOffset != HotSpotReplacementsUtil.secondarySuperCacheOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG);
 
         // if (T = S[off]) return true
-        if (sNonNull.readKlassPointer(superCheckOffset, PRIMARY_SUPERS_LOCATION).equal(t))
+        if (sNonNull.readKlassPointer(superCheckOffset, HotSpotReplacementsUtil.PRIMARY_SUPERS_LOCATION).equal(t))
         {
             if (primary)
             {
@@ -87,13 +74,13 @@ public class TypeCheckSnippetUtils
         }
 
         // if (S.scan_s_s_array(T)) { S.cache = T; return true; }
-        Word secondarySupers = s.readWord(secondarySupersOffset(INJECTED_VMCONFIG), SECONDARY_SUPERS_LOCATION);
-        int length = secondarySupers.readInt(metaspaceArrayLengthOffset(INJECTED_VMCONFIG), METASPACE_ARRAY_LENGTH_LOCATION);
+        Word secondarySupers = s.readWord(HotSpotReplacementsUtil.secondarySupersOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.SECONDARY_SUPERS_LOCATION);
+        int length = secondarySupers.readInt(HotSpotReplacementsUtil.metaspaceArrayLengthOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.METASPACE_ARRAY_LENGTH_LOCATION);
         for (int i = 0; i < length; i++)
         {
-            if (probability(NOT_LIKELY_PROBABILITY, t.equal(loadSecondarySupersElement(secondarySupers, i))))
+            if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_LIKELY_PROBABILITY, t.equal(loadSecondarySupersElement(secondarySupers, i))))
             {
-                s.writeKlassPointer(secondarySuperCacheOffset(INJECTED_VMCONFIG), t, SECONDARY_SUPER_CACHE_LOCATION);
+                s.writeKlassPointer(HotSpotReplacementsUtil.secondarySuperCacheOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), t, HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION);
                 counters.secondariesHit.inc();
                 return true;
             }
@@ -180,6 +167,6 @@ public class TypeCheckSnippetUtils
 
     static KlassPointer loadSecondarySupersElement(Word metaspaceArray, int index)
     {
-        return KlassPointer.fromWord(metaspaceArray.readWord(metaspaceArrayBaseOffset(INJECTED_VMCONFIG) + index * wordSize(), SECONDARY_SUPERS_ELEMENT_LOCATION));
+        return KlassPointer.fromWord(metaspaceArray.readWord(HotSpotReplacementsUtil.metaspaceArrayBaseOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG) + index * HotSpotReplacementsUtil.wordSize(), HotSpotReplacementsUtil.SECONDARY_SUPERS_ELEMENT_LOCATION));
     }
 }

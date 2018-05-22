@@ -1,7 +1,5 @@
 package graalvm.compiler.graph;
 
-import static graalvm.compiler.graph.Edges.Type.Inputs;
-
 import java.util.Collection;
 import java.util.List;
 
@@ -43,6 +41,6 @@ public final class NodeInputList<T extends Node> extends NodeList<T>
     @Override
     public Type getEdgesType()
     {
-        return Inputs;
+        return Type.Inputs;
     }
 }

@@ -1,10 +1,12 @@
 package graalvm.compiler.nodes.java;
 
-import static graalvm.compiler.nodeinfo.InputType.Memory;
-import static graalvm.compiler.nodeinfo.InputType.State;
+import jdk.vm.ci.meta.Value;
+
+import org.graalvm.word.LocationIdentity;
 
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.StateSplit;
@@ -14,9 +16,6 @@ import graalvm.compiler.nodes.memory.LIRLowerableAccess;
 import graalvm.compiler.nodes.memory.MemoryCheckpoint;
 import graalvm.compiler.nodes.memory.address.AddressNode;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.meta.Value;
 
 /**
  * Represents the lowered version of an atomic read-and-write operation like
@@ -26,7 +25,7 @@ public final class LoweredAtomicReadAndWriteNode extends FixedAccessNode impleme
 {
     public static final NodeClass<LoweredAtomicReadAndWriteNode> TYPE = NodeClass.create(LoweredAtomicReadAndWriteNode.class);
     @Input ValueNode newValue;
-    @OptionalInput(State) FrameState stateAfter;
+    @OptionalInput(InputType.State) FrameState stateAfter;
 
     public LoweredAtomicReadAndWriteNode(AddressNode address, LocationIdentity location, ValueNode newValue, BarrierType barrierType)
     {

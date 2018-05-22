@@ -1,9 +1,14 @@
 package graalvm.compiler.nodes.extended;
 
-import static graalvm.compiler.nodeinfo.InputType.Memory;
-import static graalvm.compiler.nodeinfo.InputType.State;
-
 import java.util.List;
+
+import jdk.vm.ci.code.BytecodeFrame;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+import jdk.vm.ci.meta.Value;
+
+import org.graalvm.word.LocationIdentity;
 
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.core.common.spi.ForeignCallLinkage;
@@ -12,6 +17,7 @@ import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeInputList;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.DeoptimizingNode;
 import graalvm.compiler.nodes.FrameState;
@@ -21,13 +27,6 @@ import graalvm.compiler.nodes.memory.AbstractMemoryCheckpoint;
 import graalvm.compiler.nodes.memory.MemoryCheckpoint;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.code.BytecodeFrame;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Node for a {@linkplain ForeignCallDescriptor foreign} call.
@@ -37,7 +36,7 @@ public class ForeignCallNode extends AbstractMemoryCheckpoint implements LIRLowe
     public static final NodeClass<ForeignCallNode> TYPE = NodeClass.create(ForeignCallNode.class);
 
     @Input protected NodeInputList<ValueNode> arguments;
-    @OptionalInput(State) protected FrameState stateDuring;
+    @OptionalInput(InputType.State) protected FrameState stateDuring;
     protected final ForeignCallsProvider foreignCalls;
 
     protected final ForeignCallDescriptor descriptor;

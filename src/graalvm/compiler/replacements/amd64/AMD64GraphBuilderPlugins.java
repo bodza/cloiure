@@ -1,14 +1,13 @@
 package graalvm.compiler.replacements.amd64;
 
-import static graalvm.compiler.replacements.nodes.BinaryMathIntrinsicNode.BinaryOperation.POW;
-import static graalvm.compiler.replacements.nodes.UnaryMathIntrinsicNode.UnaryOperation.COS;
-import static graalvm.compiler.replacements.nodes.UnaryMathIntrinsicNode.UnaryOperation.EXP;
-import static graalvm.compiler.replacements.nodes.UnaryMathIntrinsicNode.UnaryOperation.LOG;
-import static graalvm.compiler.replacements.nodes.UnaryMathIntrinsicNode.UnaryOperation.LOG10;
-import static graalvm.compiler.replacements.nodes.UnaryMathIntrinsicNode.UnaryOperation.SIN;
-import static graalvm.compiler.replacements.nodes.UnaryMathIntrinsicNode.UnaryOperation.TAN;
-
 import java.util.Arrays;
+
+import jdk.vm.ci.amd64.AMD64;
+import jdk.vm.ci.amd64.AMD64.CPUFeature;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
+import org.graalvm.word.LocationIdentity;
 
 import graalvm.compiler.bytecode.BytecodeProvider;
 import graalvm.compiler.lir.amd64.AMD64ArithmeticLIRGeneratorTool.RoundingMode;
@@ -33,12 +32,6 @@ import graalvm.compiler.replacements.nodes.BinaryMathIntrinsicNode.BinaryOperati
 import graalvm.compiler.replacements.nodes.BitCountNode;
 import graalvm.compiler.replacements.nodes.UnaryMathIntrinsicNode;
 import graalvm.compiler.replacements.nodes.UnaryMathIntrinsicNode.UnaryOperation;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.amd64.AMD64;
-import jdk.vm.ci.amd64.AMD64.CPUFeature;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 public class AMD64GraphBuilderPlugins
 {
@@ -133,15 +126,15 @@ public class AMD64GraphBuilderPlugins
     private static void registerMathPlugins(InvocationPlugins plugins, AMD64 arch, boolean arithmeticStubs, BytecodeProvider bytecodeProvider)
     {
         Registration r = new Registration(plugins, Math.class, bytecodeProvider);
-        registerUnaryMath(r, "log", LOG);
-        registerUnaryMath(r, "log10", LOG10);
-        registerUnaryMath(r, "exp", EXP);
-        registerBinaryMath(r, "pow", POW);
+        registerUnaryMath(r, "log", UnaryOperation.LOG);
+        registerUnaryMath(r, "log10", UnaryOperation.LOG10);
+        registerUnaryMath(r, "exp", UnaryOperation.EXP);
+        registerBinaryMath(r, "pow", BinaryOperation.POW);
         if (arithmeticStubs)
         {
-            registerUnaryMath(r, "sin", SIN);
-            registerUnaryMath(r, "cos", COS);
-            registerUnaryMath(r, "tan", TAN);
+            registerUnaryMath(r, "sin", UnaryOperation.SIN);
+            registerUnaryMath(r, "cos", UnaryOperation.COS);
+            registerUnaryMath(r, "tan", UnaryOperation.TAN);
         }
         else
         {

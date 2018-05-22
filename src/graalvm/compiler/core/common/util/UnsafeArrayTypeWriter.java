@@ -1,12 +1,6 @@
 package graalvm.compiler.core.common.util;
 
-import static graalvm.compiler.core.common.util.TypeConversion.asS1;
-import static graalvm.compiler.core.common.util.TypeConversion.asS2;
-import static graalvm.compiler.core.common.util.TypeConversion.asS4;
-import static graalvm.compiler.core.common.util.TypeConversion.asU1;
-import static graalvm.compiler.core.common.util.TypeConversion.asU2;
-import static graalvm.compiler.core.common.util.TypeConversion.asU4;
-
+import graalvm.compiler.core.common.util.TypeConversion;
 import graalvm.util.UnsafeAccess;
 
 /**
@@ -82,26 +76,26 @@ public abstract class UnsafeArrayTypeWriter implements TypeWriter
     public final void putS1(long value)
     {
         long offset = writeOffset(Byte.BYTES);
-        UnsafeAccess.UNSAFE.putByte(writeChunk.data, offset, asS1(value));
+        UnsafeAccess.UNSAFE.putByte(writeChunk.data, offset, TypeConversion.asS1(value));
     }
 
     @Override
     public final void putU1(long value)
     {
         long offset = writeOffset(Byte.BYTES);
-        UnsafeAccess.UNSAFE.putByte(writeChunk.data, offset, asU1(value));
+        UnsafeAccess.UNSAFE.putByte(writeChunk.data, offset, TypeConversion.asU1(value));
     }
 
     @Override
     public final void putU2(long value)
     {
-        putS2(asU2(value));
+        putS2(TypeConversion.asU2(value));
     }
 
     @Override
     public final void putU4(long value)
     {
-        putS4(asU4(value));
+        putS4(TypeConversion.asU4(value));
     }
 
     protected long writeOffset(int writeBytes)
@@ -128,14 +122,14 @@ final class UnalignedUnsafeArrayTypeWriter extends UnsafeArrayTypeWriter
     public void putS2(long value)
     {
         long offset = writeOffset(Short.BYTES);
-        UnsafeAccess.UNSAFE.putShort(writeChunk.data, offset, asS2(value));
+        UnsafeAccess.UNSAFE.putShort(writeChunk.data, offset, TypeConversion.asS2(value));
     }
 
     @Override
     public void putS4(long value)
     {
         long offset = writeOffset(Integer.BYTES);
-        UnsafeAccess.UNSAFE.putInt(writeChunk.data, offset, asS4(value));
+        UnsafeAccess.UNSAFE.putInt(writeChunk.data, offset, TypeConversion.asS4(value));
     }
 
     @Override

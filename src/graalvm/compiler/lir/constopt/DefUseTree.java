@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.StandardOp.LoadConstantOp;
 import graalvm.compiler.lir.Variable;
-
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Represents def-use tree of a constant.

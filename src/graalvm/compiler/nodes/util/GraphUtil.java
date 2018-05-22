@@ -8,10 +8,21 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiFunction;
 
+import jdk.vm.ci.code.BailoutException;
+import jdk.vm.ci.code.BytecodePosition;
+import jdk.vm.ci.meta.Assumptions;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.EconomicSet;
 import org.graalvm.collections.Equivalence;
 import org.graalvm.collections.MapCursor;
+
 import graalvm.compiler.bytecode.Bytecode;
 import graalvm.compiler.code.SourceStackTraceBailoutException;
 import graalvm.compiler.core.common.spi.ConstantFieldProvider;
@@ -53,16 +64,6 @@ import graalvm.compiler.nodes.virtual.VirtualArrayNode;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
 import graalvm.compiler.options.OptionKey;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.code.BailoutException;
-import jdk.vm.ci.code.BytecodePosition;
-import jdk.vm.ci.meta.Assumptions;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 public class GraphUtil
 {

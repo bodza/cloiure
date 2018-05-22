@@ -3,6 +3,10 @@ package graalvm.compiler.nodes.java;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
@@ -20,10 +24,6 @@ import graalvm.compiler.nodes.extended.SwitchNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.nodes.util.GraphUtil;
-
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * The {@code TypeSwitchNode} performs a lookup based on the type of the input value. The type

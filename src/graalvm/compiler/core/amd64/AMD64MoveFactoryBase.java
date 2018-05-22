@@ -1,17 +1,5 @@
 package graalvm.compiler.core.amd64;
 
-import static graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize.QWORD;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize.WORD;
-
-import org.graalvm.collections.EconomicMap;
-import org.graalvm.collections.Equivalence;
-import graalvm.compiler.core.common.LIRKind;
-import graalvm.compiler.lir.VirtualStackSlot;
-import graalvm.compiler.lir.amd64.AMD64LIRInstruction;
-import graalvm.compiler.lir.amd64.AMD64Move.AMD64PushPopStackMove;
-import graalvm.compiler.lir.framemap.FrameMapBuilder;
-import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;
-
 import jdk.vm.ci.amd64.AMD64Kind;
 import jdk.vm.ci.code.Architecture;
 import jdk.vm.ci.code.Register;
@@ -19,6 +7,17 @@ import jdk.vm.ci.code.RegisterArray;
 import jdk.vm.ci.code.RegisterConfig;
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.PlatformKind;
+
+import org.graalvm.collections.EconomicMap;
+import org.graalvm.collections.Equivalence;
+
+import graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize;
+import graalvm.compiler.core.common.LIRKind;
+import graalvm.compiler.lir.VirtualStackSlot;
+import graalvm.compiler.lir.amd64.AMD64LIRInstruction;
+import graalvm.compiler.lir.amd64.AMD64Move.AMD64PushPopStackMove;
+import graalvm.compiler.lir.framemap.FrameMapBuilder;
+import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;
 
 public abstract class AMD64MoveFactoryBase implements MoveFactory
 {
@@ -86,9 +85,9 @@ public abstract class AMD64MoveFactoryBase implements MoveFactory
         switch (kind.getSizeInBytes())
         {
             case 2:
-                return new AMD64PushPopStackMove(WORD, result, input);
+                return new AMD64PushPopStackMove(OperandSize.WORD, result, input);
             case 8:
-                return new AMD64PushPopStackMove(QWORD, result, input);
+                return new AMD64PushPopStackMove(OperandSize.QWORD, result, input);
             default:
                 RegisterBackupPair backup = backupSlotProvider.getScratchRegister(input.getPlatformKind());
                 Register scratchRegister = backup.register;

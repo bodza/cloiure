@@ -2,6 +2,9 @@ package graalvm.compiler.nodes.calc;
 
 import java.util.function.Function;
 
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+
 import graalvm.compiler.core.common.type.ArithmeticOpTable;
 import graalvm.compiler.core.common.type.ArithmeticOpTable.IntegerConvertOp;
 import graalvm.compiler.core.common.type.IntegerStamp;
@@ -15,9 +18,6 @@ import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.ArithmeticLIRLowerable;
 import graalvm.compiler.nodes.spi.StampInverter;
-
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
 
 /**
  * An {@code IntegerConvert} converts an integer to an integer of different width.

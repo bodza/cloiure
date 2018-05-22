@@ -1,25 +1,22 @@
 package graalvm.compiler.hotspot;
 
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.asStackSlot;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static graalvm.compiler.lir.LIRValueUtil.isJavaConstant;
-
 import java.util.ArrayList;
+
+import jdk.vm.ci.code.Location;
+import jdk.vm.ci.code.ReferenceMap;
+import jdk.vm.ci.code.StackSlot;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.hotspot.HotSpotReferenceMap;
+import jdk.vm.ci.meta.PlatformKind;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.PermanentBailoutException;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.LIRFrameState;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.Variable;
 import graalvm.compiler.lir.framemap.ReferenceMapBuilder;
-
-import jdk.vm.ci.code.Location;
-import jdk.vm.ci.code.ReferenceMap;
-import jdk.vm.ci.code.StackSlot;
-import jdk.vm.ci.hotspot.HotSpotReferenceMap;
-import jdk.vm.ci.meta.PlatformKind;
-import jdk.vm.ci.meta.Value;
 
 public final class HotSpotReferenceMapBuilder extends ReferenceMapBuilder
 {
@@ -44,7 +41,7 @@ public final class HotSpotReferenceMapBuilder extends ReferenceMapBuilder
     @Override
     public void addLiveValue(Value v)
     {
-        if (isJavaConstant(v))
+        if (LIRValueUtil.isJavaConstant(v))
         {
             return;
         }
@@ -61,7 +58,7 @@ public final class HotSpotReferenceMapBuilder extends ReferenceMapBuilder
                 objectCount += lirKind.getReferenceCount();
             }
         }
-        if (isRegister(v))
+        if (ValueUtil.isRegister(v))
         {
             int size = lirKind.getPlatformKind().getSizeInBytes();
             if (size > maxRegisterSize)
@@ -135,13 +132,13 @@ public final class HotSpotReferenceMapBuilder extends ReferenceMapBuilder
 
     private Location toLocation(Value v, int offset)
     {
-        if (isRegister(v))
+        if (ValueUtil.isRegister(v))
         {
-            return Location.subregister(asRegister(v), offset);
+            return Location.subregister(ValueUtil.asRegister(v), offset);
         }
         else
         {
-            StackSlot s = asStackSlot(v);
+            StackSlot s = ValueUtil.asStackSlot(v);
             int totalOffset = s.getOffset(totalFrameSize) + offset;
             if (totalOffset > maxOopMapStackOffset)
             {

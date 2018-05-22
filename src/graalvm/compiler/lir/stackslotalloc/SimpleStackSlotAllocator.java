@@ -1,11 +1,12 @@
 package graalvm.compiler.lir.stackslotalloc;
 
-import static graalvm.compiler.lir.LIRValueUtil.asVirtualStackSlot;
-import static graalvm.compiler.lir.LIRValueUtil.isVirtualStackSlot;
+import jdk.vm.ci.code.StackSlot;
+import jdk.vm.ci.code.TargetDescription;
 
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.LIRInstruction;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.ValueProcedure;
 import graalvm.compiler.lir.VirtualStackSlot;
 import graalvm.compiler.lir.framemap.FrameMapBuilderTool;
@@ -13,9 +14,6 @@ import graalvm.compiler.lir.framemap.SimpleVirtualStackSlot;
 import graalvm.compiler.lir.framemap.VirtualStackSlotRange;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.phases.AllocationPhase;
-
-import jdk.vm.ci.code.StackSlot;
-import jdk.vm.ci.code.TargetDescription;
 
 public class SimpleStackSlotAllocator extends AllocationPhase
 {
@@ -54,9 +52,9 @@ public class SimpleStackSlotAllocator extends AllocationPhase
     {
         ValueProcedure updateProc = (value, mode, flags) ->
         {
-            if (isVirtualStackSlot(value))
+            if (LIRValueUtil.isVirtualStackSlot(value))
             {
-                StackSlot stackSlot = mapping[asVirtualStackSlot(value).getId()];
+                StackSlot stackSlot = mapping[LIRValueUtil.asVirtualStackSlot(value).getId()];
                 return stackSlot;
             }
             return value;

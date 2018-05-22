@@ -1,8 +1,11 @@
 package graalvm.compiler.nodes;
 
-import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.core.common.CompressEncoding;
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.type.AbstractObjectStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.debug.GraalError;
@@ -14,10 +17,6 @@ import graalvm.compiler.nodes.calc.UnaryNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.nodes.type.StampTool;
-
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Compress or uncompress an oop or metaspace pointer.
@@ -103,7 +102,7 @@ public abstract class CompressionNode extends UnaryNode implements ConvertNode, 
     {
         if (forValue.isConstant())
         {
-            if (GeneratePIC.getValue(tool.getOptions()))
+            if (GraalOptions.GeneratePIC.getValue(tool.getOptions()))
             {
                 // We always want uncompressed constants
                 return this;

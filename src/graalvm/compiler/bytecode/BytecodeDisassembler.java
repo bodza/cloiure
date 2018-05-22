@@ -1,65 +1,13 @@
 package graalvm.compiler.bytecode;
 
-import static graalvm.compiler.bytecode.Bytecodes.ALOAD;
-import static graalvm.compiler.bytecode.Bytecodes.ANEWARRAY;
-import static graalvm.compiler.bytecode.Bytecodes.ASTORE;
-import static graalvm.compiler.bytecode.Bytecodes.BIPUSH;
-import static graalvm.compiler.bytecode.Bytecodes.CHECKCAST;
-import static graalvm.compiler.bytecode.Bytecodes.DLOAD;
-import static graalvm.compiler.bytecode.Bytecodes.DSTORE;
-import static graalvm.compiler.bytecode.Bytecodes.FLOAD;
-import static graalvm.compiler.bytecode.Bytecodes.FSTORE;
-import static graalvm.compiler.bytecode.Bytecodes.GETFIELD;
-import static graalvm.compiler.bytecode.Bytecodes.GETSTATIC;
-import static graalvm.compiler.bytecode.Bytecodes.GOTO;
-import static graalvm.compiler.bytecode.Bytecodes.GOTO_W;
-import static graalvm.compiler.bytecode.Bytecodes.IFEQ;
-import static graalvm.compiler.bytecode.Bytecodes.IFGE;
-import static graalvm.compiler.bytecode.Bytecodes.IFGT;
-import static graalvm.compiler.bytecode.Bytecodes.IFLE;
-import static graalvm.compiler.bytecode.Bytecodes.IFLT;
-import static graalvm.compiler.bytecode.Bytecodes.IFNE;
-import static graalvm.compiler.bytecode.Bytecodes.IFNONNULL;
-import static graalvm.compiler.bytecode.Bytecodes.IFNULL;
-import static graalvm.compiler.bytecode.Bytecodes.IF_ACMPEQ;
-import static graalvm.compiler.bytecode.Bytecodes.IF_ACMPNE;
-import static graalvm.compiler.bytecode.Bytecodes.IF_ICMPEQ;
-import static graalvm.compiler.bytecode.Bytecodes.IF_ICMPGE;
-import static graalvm.compiler.bytecode.Bytecodes.IF_ICMPGT;
-import static graalvm.compiler.bytecode.Bytecodes.IF_ICMPLE;
-import static graalvm.compiler.bytecode.Bytecodes.IF_ICMPLT;
-import static graalvm.compiler.bytecode.Bytecodes.IF_ICMPNE;
-import static graalvm.compiler.bytecode.Bytecodes.ILOAD;
-import static graalvm.compiler.bytecode.Bytecodes.INSTANCEOF;
-import static graalvm.compiler.bytecode.Bytecodes.INVOKEDYNAMIC;
-import static graalvm.compiler.bytecode.Bytecodes.INVOKEINTERFACE;
-import static graalvm.compiler.bytecode.Bytecodes.INVOKESPECIAL;
-import static graalvm.compiler.bytecode.Bytecodes.INVOKESTATIC;
-import static graalvm.compiler.bytecode.Bytecodes.INVOKEVIRTUAL;
-import static graalvm.compiler.bytecode.Bytecodes.ISTORE;
-import static graalvm.compiler.bytecode.Bytecodes.JSR;
-import static graalvm.compiler.bytecode.Bytecodes.JSR_W;
-import static graalvm.compiler.bytecode.Bytecodes.LDC;
-import static graalvm.compiler.bytecode.Bytecodes.LDC2_W;
-import static graalvm.compiler.bytecode.Bytecodes.LDC_W;
-import static graalvm.compiler.bytecode.Bytecodes.LLOAD;
-import static graalvm.compiler.bytecode.Bytecodes.LOOKUPSWITCH;
-import static graalvm.compiler.bytecode.Bytecodes.LSTORE;
-import static graalvm.compiler.bytecode.Bytecodes.MULTIANEWARRAY;
-import static graalvm.compiler.bytecode.Bytecodes.NEW;
-import static graalvm.compiler.bytecode.Bytecodes.NEWARRAY;
-import static graalvm.compiler.bytecode.Bytecodes.PUTFIELD;
-import static graalvm.compiler.bytecode.Bytecodes.PUTSTATIC;
-import static graalvm.compiler.bytecode.Bytecodes.RET;
-import static graalvm.compiler.bytecode.Bytecodes.SIPUSH;
-import static graalvm.compiler.bytecode.Bytecodes.TABLESWITCH;
-
 import jdk.vm.ci.meta.ConstantPool;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.JavaField;
 import jdk.vm.ci.meta.JavaMethod;
 import jdk.vm.ci.meta.JavaType;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
+
+import graalvm.compiler.bytecode.Bytecodes;
 
 /**
  * Utility for producing a {@code javap}-like disassembly of bytecode.
@@ -169,22 +117,22 @@ public class BytecodeDisassembler
     {
         switch (opcode)
         {
-            case BIPUSH:          buf.append(stream.readByte()); break;
-            case SIPUSH:          buf.append(stream.readShort()); break;
-            case NEW:
-            case CHECKCAST:
-            case INSTANCEOF:
-            case ANEWARRAY:
+            case Bytecodes.BIPUSH:          buf.append(stream.readByte()); break;
+            case Bytecodes.SIPUSH:          buf.append(stream.readShort()); break;
+            case Bytecodes.NEW:
+            case Bytecodes.CHECKCAST:
+            case Bytecodes.INSTANCEOF:
+            case Bytecodes.ANEWARRAY:
             {
                 int cpi = stream.readCPI();
                 JavaType type = cp.lookupType(cpi, opcode);
                 buf.append(String.format("#%-10d // %s", cpi, type.toJavaName()));
                 break;
             }
-            case GETSTATIC:
-            case PUTSTATIC:
-            case GETFIELD:
-            case PUTFIELD:
+            case Bytecodes.GETSTATIC:
+            case Bytecodes.PUTSTATIC:
+            case Bytecodes.GETFIELD:
+            case Bytecodes.PUTFIELD:
             {
                 int cpi = stream.readCPI();
                 JavaField field = cp.lookupField(cpi, method, opcode);
@@ -192,9 +140,9 @@ public class BytecodeDisassembler
                 buf.append(String.format("#%-10d // %s", cpi, fieldDesc));
                 break;
             }
-            case INVOKEVIRTUAL:
-            case INVOKESPECIAL:
-            case INVOKESTATIC:
+            case Bytecodes.INVOKEVIRTUAL:
+            case Bytecodes.INVOKESPECIAL:
+            case Bytecodes.INVOKESTATIC:
             {
                 int cpi = stream.readCPI();
                 JavaMethod callee = cp.lookupMethod(cpi, opcode);
@@ -202,7 +150,7 @@ public class BytecodeDisassembler
                 buf.append(String.format("#%-10d // %s", cpi, calleeDesc));
                 break;
             }
-            case INVOKEINTERFACE:
+            case Bytecodes.INVOKEINTERFACE:
             {
                 int cpi = stream.readCPI();
                 JavaMethod callee = cp.lookupMethod(cpi, opcode);
@@ -210,7 +158,7 @@ public class BytecodeDisassembler
                 buf.append(String.format("#%-10s // %s", cpi + ", " + stream.readUByte(bci + 3), calleeDesc));
                 break;
             }
-            case INVOKEDYNAMIC:
+            case Bytecodes.INVOKEDYNAMIC:
             {
                 int cpi = stream.readCPI4();
                 JavaMethod callee = cp.lookupMethod(cpi, opcode);
@@ -218,9 +166,9 @@ public class BytecodeDisassembler
                 buf.append(String.format("#%-10d // %s", cpi, calleeDesc));
                 break;
             }
-            case LDC:
-            case LDC_W:
-            case LDC2_W:
+            case Bytecodes.LDC:
+            case Bytecodes.LDC_W:
+            case Bytecodes.LDC2_W:
             {
                 int cpi = stream.readCPI();
                 Object constant = cp.lookupConstant(cpi);
@@ -241,49 +189,49 @@ public class BytecodeDisassembler
                 buf.append(String.format("#%-10d // %s", cpi, desc));
                 break;
             }
-            case RET:
-            case ILOAD:
-            case LLOAD:
-            case FLOAD:
-            case DLOAD:
-            case ALOAD:
-            case ISTORE:
-            case LSTORE:
-            case FSTORE:
-            case DSTORE:
-            case ASTORE:
+            case Bytecodes.RET:
+            case Bytecodes.ILOAD:
+            case Bytecodes.LLOAD:
+            case Bytecodes.FLOAD:
+            case Bytecodes.DLOAD:
+            case Bytecodes.ALOAD:
+            case Bytecodes.ISTORE:
+            case Bytecodes.LSTORE:
+            case Bytecodes.FSTORE:
+            case Bytecodes.DSTORE:
+            case Bytecodes.ASTORE:
             {
                 buf.append(String.format("%d", stream.readLocalIndex()));
                 break;
             }
-            case IFEQ:
-            case IFNE:
-            case IFLT:
-            case IFGE:
-            case IFGT:
-            case IFLE:
-            case IF_ICMPEQ:
-            case IF_ICMPNE:
-            case IF_ICMPLT:
-            case IF_ICMPGE:
-            case IF_ICMPGT:
-            case IF_ICMPLE:
-            case IF_ACMPEQ:
-            case IF_ACMPNE:
-            case GOTO:
-            case JSR:
-            case IFNULL:
-            case IFNONNULL:
-            case GOTO_W:
-            case JSR_W:
+            case Bytecodes.IFEQ:
+            case Bytecodes.IFNE:
+            case Bytecodes.IFLT:
+            case Bytecodes.IFGE:
+            case Bytecodes.IFGT:
+            case Bytecodes.IFLE:
+            case Bytecodes.IF_ICMPEQ:
+            case Bytecodes.IF_ICMPNE:
+            case Bytecodes.IF_ICMPLT:
+            case Bytecodes.IF_ICMPGE:
+            case Bytecodes.IF_ICMPGT:
+            case Bytecodes.IF_ICMPLE:
+            case Bytecodes.IF_ACMPEQ:
+            case Bytecodes.IF_ACMPNE:
+            case Bytecodes.GOTO:
+            case Bytecodes.JSR:
+            case Bytecodes.IFNULL:
+            case Bytecodes.IFNONNULL:
+            case Bytecodes.GOTO_W:
+            case Bytecodes.JSR_W:
             {
                 buf.append(String.format("%d", stream.readBranchDest()));
                 break;
             }
-            case LOOKUPSWITCH:
-            case TABLESWITCH:
+            case Bytecodes.LOOKUPSWITCH:
+            case Bytecodes.TABLESWITCH:
             {
-                BytecodeSwitch bswitch = opcode == LOOKUPSWITCH ? new BytecodeLookupSwitch(stream, bci) : new BytecodeTableSwitch(stream, bci);
+                BytecodeSwitch bswitch = opcode == Bytecodes.LOOKUPSWITCH ? new BytecodeLookupSwitch(stream, bci) : new BytecodeTableSwitch(stream, bci);
                 if (multiline)
                 {
                     buf.append("{ // " + bswitch.numberOfCases());
@@ -309,7 +257,7 @@ public class BytecodeDisassembler
                 }
                 break;
             }
-            case NEWARRAY:
+            case Bytecodes.NEWARRAY:
             {
                 int typecode = stream.readLocalIndex();
                 switch (typecode)
@@ -326,7 +274,7 @@ public class BytecodeDisassembler
 
                 break;
             }
-            case MULTIANEWARRAY:
+            case Bytecodes.MULTIANEWARRAY:
             {
                 int cpi = stream.readCPI();
                 JavaType type = cp.lookupType(cpi, opcode);
@@ -354,21 +302,21 @@ public class BytecodeDisassembler
                 {
                     switch (opcode)
                     {
-                        case INVOKEVIRTUAL:
-                        case INVOKESPECIAL:
-                        case INVOKESTATIC:
+                        case Bytecodes.INVOKEVIRTUAL:
+                        case Bytecodes.INVOKESPECIAL:
+                        case Bytecodes.INVOKESTATIC:
                         {
                             int cpi = stream.readCPI();
                             JavaMethod callee = cp.lookupMethod(cpi, opcode);
                             return callee;
                         }
-                        case INVOKEINTERFACE:
+                        case Bytecodes.INVOKEINTERFACE:
                         {
                             int cpi = stream.readCPI();
                             JavaMethod callee = cp.lookupMethod(cpi, opcode);
                             return callee;
                         }
-                        case INVOKEDYNAMIC:
+                        case Bytecodes.INVOKEDYNAMIC:
                         {
                             int cpi = stream.readCPI4();
                             JavaMethod callee = cp.lookupMethod(cpi, opcode);

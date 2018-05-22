@@ -1,6 +1,7 @@
 package graalvm.compiler.core.amd64;
 
 import jdk.vm.ci.code.Register;
+
 import graalvm.compiler.asm.amd64.AMD64Address;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.type.StampFactory;

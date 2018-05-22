@@ -1,10 +1,12 @@
 package graalvm.compiler.hotspot.stubs;
 
-import static jdk.vm.ci.hotspot.HotSpotCallingConventionType.JavaCall;
-import static jdk.vm.ci.hotspot.HotSpotCallingConventionType.JavaCallee;
-import static jdk.vm.ci.hotspot.HotSpotCallingConventionType.NativeCall;
-import static graalvm.compiler.hotspot.HotSpotForeignCallLinkage.RegisterEffect.DESTROYS_REGISTERS;
-import static graalvm.compiler.hotspot.HotSpotForeignCallLinkage.RegisterEffect.PRESERVES_REGISTERS;
+import jdk.vm.ci.hotspot.HotSpotCallingConventionType;
+import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
+import org.graalvm.word.LocationIdentity;
 
 import graalvm.compiler.core.common.CompilationIdentifier;
 import graalvm.compiler.core.common.LIRKind;
@@ -14,6 +16,7 @@ import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.StampPair;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.hotspot.HotSpotForeignCallLinkage;
+import graalvm.compiler.hotspot.HotSpotForeignCallLinkage.RegisterEffect;
 import graalvm.compiler.hotspot.HotSpotForeignCallLinkage.Transition;
 import graalvm.compiler.hotspot.HotSpotForeignCallLinkageImpl;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
@@ -31,12 +34,6 @@ import graalvm.compiler.replacements.GraphKit;
 import graalvm.compiler.replacements.nodes.ReadRegisterNode;
 import graalvm.compiler.word.Word;
 import graalvm.compiler.word.WordTypes;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * A {@linkplain #getGraph generated} stub for a {@link Transition non-leaf} foreign call from
@@ -76,12 +73,12 @@ public class ForeignCallStub extends Stub
      */
     public ForeignCallStub(OptionValues options, HotSpotJVMCIRuntimeProvider runtime, HotSpotProviders providers, long address, ForeignCallDescriptor descriptor, boolean prependThread, Transition transition, boolean reexecutable, LocationIdentity... killedLocations)
     {
-        super(options, providers, HotSpotForeignCallLinkageImpl.create(providers.getMetaAccess(), providers.getCodeCache(), providers.getWordTypes(), providers.getForeignCalls(), descriptor, 0L, PRESERVES_REGISTERS, JavaCall, JavaCallee, transition, reexecutable, killedLocations));
+        super(options, providers, HotSpotForeignCallLinkageImpl.create(providers.getMetaAccess(), providers.getCodeCache(), providers.getWordTypes(), providers.getForeignCalls(), descriptor, 0L, RegisterEffect.PRESERVES_REGISTERS, HotSpotCallingConventionType.JavaCall, HotSpotCallingConventionType.JavaCallee, transition, reexecutable, killedLocations));
         this.jvmciRuntime = runtime;
         this.prependThread = prependThread;
         Class<?>[] targetParameterTypes = createTargetParameters(descriptor);
         ForeignCallDescriptor targetSig = new ForeignCallDescriptor(descriptor.getName() + ":C", descriptor.getResultType(), targetParameterTypes);
-        target = HotSpotForeignCallLinkageImpl.create(providers.getMetaAccess(), providers.getCodeCache(), providers.getWordTypes(), providers.getForeignCalls(), targetSig, address, DESTROYS_REGISTERS, NativeCall, NativeCall, transition, reexecutable, killedLocations);
+        target = HotSpotForeignCallLinkageImpl.create(providers.getMetaAccess(), providers.getCodeCache(), providers.getWordTypes(), providers.getForeignCalls(), targetSig, address, RegisterEffect.DESTROYS_REGISTERS, HotSpotCallingConventionType.NativeCall, HotSpotCallingConventionType.NativeCall, transition, reexecutable, killedLocations);
     }
 
     /**

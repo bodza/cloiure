@@ -1,10 +1,9 @@
 package graalvm.compiler.java;
 
-import static graalvm.compiler.nodes.cfg.ControlFlowGraph.multiplyProbabilities;
-
 import java.util.List;
 
 import org.graalvm.collections.EconomicMap;
+
 import graalvm.compiler.nodes.AbstractBeginNode;
 import graalvm.compiler.nodes.AbstractMergeNode;
 import graalvm.compiler.nodes.ControlSplitNode;
@@ -68,7 +67,7 @@ public final class ComputeLoopFrequenciesClosure extends ReentrantNodeIterator.N
         loop.setLoopFrequency(loopFrequency);
 
         double adjustmentFactor = initialState * loopFrequency;
-        exitStates.replaceAll((exitNode, probability) -> multiplyProbabilities(probability, adjustmentFactor));
+        exitStates.replaceAll((exitNode, probability) -> ControlFlowGraph.multiplyProbabilities(probability, adjustmentFactor));
 
         return exitStates;
     }

@@ -2,10 +2,11 @@ package graalvm.compiler.nodes.java;
 
 import jdk.vm.ci.meta.MetaAccessProvider;
 
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.TypeReference;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.AbstractBeginNode;
 import graalvm.compiler.nodes.BeginStateSplitNode;
 import graalvm.compiler.nodes.InvokeWithExceptionNode;
@@ -15,9 +16,8 @@ import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.memory.MemoryCheckpoint;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
-import org.graalvm.word.LocationIdentity;
 
-import static graalvm.compiler.nodeinfo.InputType.Memory;
+import graalvm.compiler.nodeinfo.InputType;
 
 /**
  * The entry to an exception handler with the exception coming from a call (as opposed to a local

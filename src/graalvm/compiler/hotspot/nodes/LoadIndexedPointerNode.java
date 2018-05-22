@@ -1,11 +1,11 @@
 package graalvm.compiler.hotspot.nodes;
 
+import jdk.vm.ci.meta.JavaKind;
+
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.java.LoadIndexedNode;
-
-import jdk.vm.ci.meta.JavaKind;
 
 public final class LoadIndexedPointerNode extends LoadIndexedNode
 {

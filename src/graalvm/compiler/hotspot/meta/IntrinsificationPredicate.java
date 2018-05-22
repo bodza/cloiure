@@ -3,6 +3,7 @@ package graalvm.compiler.hotspot.meta;
 import java.lang.module.ModuleDescriptor.Requires;
 
 import org.graalvm.collections.EconomicSet;
+
 import graalvm.compiler.phases.tiers.CompilerConfiguration;
 
 /**

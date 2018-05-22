@@ -4,8 +4,9 @@ import java.util.Iterator;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
-import graalvm.compiler.nodes.ValueNode;
 import org.graalvm.word.LocationIdentity;
+
+import graalvm.compiler.nodes.ValueNode;
 
 /**
  * This class maintains a set of known values, identified by base object, locations and offset.

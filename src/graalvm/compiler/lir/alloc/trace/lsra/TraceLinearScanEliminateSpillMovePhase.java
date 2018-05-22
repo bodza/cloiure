@@ -1,9 +1,10 @@
 package graalvm.compiler.lir.alloc.trace.lsra;
 
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static graalvm.compiler.lir.LIRValueUtil.asVariable;
-
 import java.util.ArrayList;
+
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
 
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.common.alloc.Trace;
@@ -12,15 +13,13 @@ import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.LIRInsertionBuffer;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LIRInstruction.OperandMode;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.StandardOp.MoveOp;
 import graalvm.compiler.lir.alloc.trace.lsra.TraceInterval.SpillState;
 import graalvm.compiler.lir.alloc.trace.lsra.TraceLinearScanPhase.IntervalPredicate;
 import graalvm.compiler.lir.alloc.trace.lsra.TraceLinearScanPhase.TraceLinearScan;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;
-
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.AllocatableValue;
 
 final class TraceLinearScanEliminateSpillMovePhase extends TraceLinearScanAllocationPhase
 {
@@ -136,9 +135,9 @@ final class TraceLinearScanEliminateSpillMovePhase extends TraceLinearScanAlloca
      */
     private static boolean canEliminateSpillMove(TraceLinearScan allocator, AbstractBlockBase<?> block, MoveOp move, int lastOpId)
     {
-        TraceInterval curInterval = allocator.intervalFor(asVariable(move.getResult()));
+        TraceInterval curInterval = allocator.intervalFor(LIRValueUtil.asVariable(move.getResult()));
 
-        if (!isRegister(curInterval.location()) && curInterval.inMemoryAt(lastOpId) && !isPhiResolutionMove(allocator, move))
+        if (!ValueUtil.isRegister(curInterval.location()) && curInterval.inMemoryAt(lastOpId) && !isPhiResolutionMove(allocator, move))
         {
             /* Phi resolution moves cannot be removed because they define the value. */
             // TODO (je) check if the comment is still valid!
@@ -157,7 +156,7 @@ final class TraceLinearScanEliminateSpillMovePhase extends TraceLinearScanAlloca
      */
     private static boolean isPhiResolutionMove(TraceLinearScan allocator, MoveOp move)
     {
-        TraceInterval curInterval = allocator.intervalFor(asVariable(move.getResult()));
+        TraceInterval curInterval = allocator.intervalFor(LIRValueUtil.asVariable(move.getResult()));
         return curInterval.isSplitParent();
     }
 }

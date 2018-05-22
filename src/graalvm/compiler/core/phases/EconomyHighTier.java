@@ -1,7 +1,6 @@
 package graalvm.compiler.core.phases;
 
-import static graalvm.compiler.core.common.GraalOptions.ImmutableCode;
-
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.PhaseSuite;
@@ -14,7 +13,7 @@ public class EconomyHighTier extends PhaseSuite<HighTierContext>
     public EconomyHighTier(OptionValues options)
     {
         CanonicalizerPhase canonicalizer = new CanonicalizerPhase();
-        if (ImmutableCode.getValue(options))
+        if (GraalOptions.ImmutableCode.getValue(options))
         {
             canonicalizer.disableReadCanonicalization();
         }

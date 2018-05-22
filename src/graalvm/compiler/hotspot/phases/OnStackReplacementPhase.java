@@ -1,7 +1,11 @@
 package graalvm.compiler.hotspot.phases;
 
-import static jdk.vm.ci.meta.SpeculationLog.SpeculationReason;
-import static graalvm.compiler.phases.common.DeadCodeEliminationPhase.Optionality.Required;
+import jdk.vm.ci.meta.DeoptimizationAction;
+import jdk.vm.ci.meta.DeoptimizationReason;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.SpeculationLog;
+import jdk.vm.ci.runtime.JVMCICompiler;
 
 import graalvm.compiler.core.common.PermanentBailoutException;
 import graalvm.compiler.core.common.cfg.Loop;
@@ -42,12 +46,7 @@ import graalvm.compiler.options.OptionKey;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.Phase;
 import graalvm.compiler.phases.common.DeadCodeEliminationPhase;
-
-import jdk.vm.ci.meta.DeoptimizationAction;
-import jdk.vm.ci.meta.DeoptimizationReason;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.runtime.JVMCICompiler;
+import graalvm.compiler.phases.common.DeadCodeEliminationPhase.Optionality;
 
 public class OnStackReplacementPhase extends Phase
 {
@@ -198,7 +197,7 @@ public class OnStackReplacementPhase extends Phase
 
         osr.replaceAtUsages(InputType.Guard, osrStart);
         GraphUtil.killCFG(start);
-        new DeadCodeEliminationPhase(Required).apply(graph);
+        new DeadCodeEliminationPhase(Optionality.Required).apply(graph);
 
         if (currentOSRWithLocks)
         {
@@ -238,7 +237,7 @@ public class OnStackReplacementPhase extends Phase
                 }
             }
         }
-        new DeadCodeEliminationPhase(Required).apply(graph);
+        new DeadCodeEliminationPhase(Optionality.Required).apply(graph);
         /*
          * There must not be any parameter nodes left after OSR compilation.
          */
@@ -280,7 +279,7 @@ public class OnStackReplacementPhase extends Phase
         return osr.stateAfter().locksSize() != 0;
     }
 
-    private static class OSRLocalSpeculationReason implements SpeculationReason
+    private static class OSRLocalSpeculationReason implements SpeculationLog.SpeculationReason
     {
         private int bci;
         private Stamp speculatedStamp;

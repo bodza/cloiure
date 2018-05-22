@@ -1,12 +1,10 @@
 package graalvm.compiler.lir.alloc.trace.lsra;
 
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-
-import graalvm.compiler.lir.LIRInstruction;
-
+import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.Value;
+
+import graalvm.compiler.lir.LIRInstruction;
 
 /**
  * Represents a fixed interval.
@@ -242,7 +240,7 @@ final class FixedInterval extends IntervalHint
             to = String.valueOf(calcTo());
         }
         String locationString = "@" + this.operand;
-        return asRegister(operand).number + ":" + operand + (isRegister(operand) ? "" : locationString) + "[" + from + "," + to + "]";
+        return ValueUtil.asRegister(operand).number + ":" + operand + (ValueUtil.isRegister(operand) ? "" : locationString) + "[" + from + "," + to + "]";
     }
 
     /**
@@ -252,7 +250,7 @@ final class FixedInterval extends IntervalHint
     public String logString()
     {
         StringBuilder buf = new StringBuilder(100);
-        buf.append("fix ").append(asRegister(operand).number).append(':').append(operand).append(' ');
+        buf.append("fix ").append(ValueUtil.asRegister(operand).number).append(':').append(operand).append(' ');
 
         buf.append(" ranges{");
 

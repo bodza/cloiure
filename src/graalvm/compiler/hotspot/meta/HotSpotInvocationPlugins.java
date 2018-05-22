@@ -2,15 +2,15 @@ package graalvm.compiler.hotspot.meta;
 
 import java.lang.reflect.Type;
 
+import jdk.vm.ci.hotspot.HotSpotResolvedJavaType;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.graphbuilderconf.InvocationPlugin;
 import graalvm.compiler.nodes.graphbuilderconf.InvocationPlugins;
 import graalvm.compiler.nodes.type.StampTool;
 import graalvm.compiler.phases.tiers.CompilerConfiguration;
-
-import jdk.vm.ci.hotspot.HotSpotResolvedJavaType;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * Extension of {@link InvocationPlugins} that disables plugins based on runtime configuration.

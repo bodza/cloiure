@@ -2,6 +2,8 @@ package graalvm.compiler.nodes.calc;
 
 import java.util.function.Function;
 
+import jdk.vm.ci.meta.JavaConstant;
+
 import graalvm.compiler.core.common.type.ArithmeticOpTable;
 import graalvm.compiler.core.common.type.ArithmeticOpTable.ShiftOp;
 import graalvm.compiler.core.common.type.IntegerStamp;
@@ -13,8 +15,6 @@ import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.ArithmeticLIRLowerable;
-
-import jdk.vm.ci.meta.JavaConstant;
 
 /**
  * The {@code ShiftOp} class represents shift operations.

@@ -1,15 +1,19 @@
 package graalvm.compiler.core.amd64;
 
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static graalvm.compiler.lir.LIRValueUtil.asConstant;
-import static graalvm.compiler.lir.LIRValueUtil.isConstantValue;
-import static graalvm.compiler.lir.LIRValueUtil.isStackSlotValue;
+import jdk.vm.ci.amd64.AMD64Kind;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.asm.amd64.AMD64Assembler;
 import graalvm.compiler.core.common.NumUtil;
 import graalvm.compiler.core.common.type.DataPointerConstant;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.LIRInstruction;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.amd64.AMD64AddressValue;
 import graalvm.compiler.lir.amd64.AMD64LIRInstruction;
 import graalvm.compiler.lir.amd64.AMD64Move;
@@ -19,13 +23,6 @@ import graalvm.compiler.lir.amd64.AMD64Move.LeaOp;
 import graalvm.compiler.lir.amd64.AMD64Move.MoveFromConstOp;
 import graalvm.compiler.lir.amd64.AMD64Move.MoveFromRegOp;
 import graalvm.compiler.lir.amd64.AMD64Move.MoveToRegOp;
-
-import jdk.vm.ci.amd64.AMD64Kind;
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.Value;
 
 public abstract class AMD64MoveFactory extends AMD64MoveFactoryBase
 {
@@ -74,11 +71,11 @@ public abstract class AMD64MoveFactory extends AMD64MoveFactoryBase
         {
             return new LeaOp(dst, (AMD64AddressValue) src, AMD64Assembler.OperandSize.QWORD);
         }
-        else if (isConstantValue(src))
+        else if (LIRValueUtil.isConstantValue(src))
         {
-            return createLoad(dst, asConstant(src));
+            return createLoad(dst, LIRValueUtil.asConstant(src));
         }
-        else if (isRegister(src) || isStackSlotValue(dst))
+        else if (ValueUtil.isRegister(src) || LIRValueUtil.isStackSlotValue(dst))
         {
             return new MoveFromRegOp((AMD64Kind) dst.getPlatformKind(), dst, (AllocatableValue) src);
         }

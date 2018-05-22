@@ -1,14 +1,14 @@
 package graalvm.compiler.hotspot.nodes;
 
+import jdk.vm.ci.meta.DeoptimizationAction;
+import jdk.vm.ci.meta.DeoptimizationReason;
+
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.hotspot.HotSpotLIRGenerator;
 import graalvm.compiler.nodes.ControlSinkNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
-import jdk.vm.ci.meta.DeoptimizationAction;
-import jdk.vm.ci.meta.DeoptimizationReason;
 
 /**
  * Removes the current frame and tail calls the uncommon trap routine.

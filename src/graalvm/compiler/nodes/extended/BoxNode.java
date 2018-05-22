@@ -2,6 +2,9 @@ package graalvm.compiler.nodes.extended;
 
 import java.util.Collections;
 
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.TypeReference;
 import graalvm.compiler.graph.NodeClass;
@@ -17,9 +20,6 @@ import graalvm.compiler.nodes.spi.VirtualizableAllocation;
 import graalvm.compiler.nodes.spi.VirtualizerTool;
 import graalvm.compiler.nodes.type.StampTool;
 import graalvm.compiler.nodes.virtual.VirtualBoxingNode;
-
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * This node represents the boxing of a primitive value. This corresponds to a call to the valueOf

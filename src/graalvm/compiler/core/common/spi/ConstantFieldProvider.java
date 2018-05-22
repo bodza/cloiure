@@ -1,9 +1,9 @@
 package graalvm.compiler.core.common.spi;
 
-import graalvm.compiler.options.OptionValues;
-
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.ResolvedJavaField;
+
+import graalvm.compiler.options.OptionValues;
 
 /**
  * Implements the logic that decides whether a field read should be constant folded.

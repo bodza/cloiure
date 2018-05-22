@@ -1,8 +1,11 @@
 package graalvm.compiler.hotspot.stubs;
 
-import static graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext.CompilationContext.INLINE_AFTER_PARSING;
-
 import java.lang.reflect.Method;
+
+import jdk.vm.ci.meta.Local;
+import jdk.vm.ci.meta.LocalVariableTable;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
@@ -22,6 +25,7 @@ import graalvm.compiler.nodes.StructuredGraph.GuardsStage;
 import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderConfiguration;
 import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderConfiguration.Plugins;
 import graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext;
+import graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext.CompilationContext;
 import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.OptimisticOptimizations;
@@ -32,11 +36,6 @@ import graalvm.compiler.phases.tiers.PhaseContext;
 import graalvm.compiler.replacements.ConstantBindingParameterPlugin;
 import graalvm.compiler.replacements.SnippetTemplate;
 import graalvm.compiler.replacements.Snippets;
-
-import jdk.vm.ci.meta.Local;
-import jdk.vm.ci.meta.LocalVariableTable;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * Base class for a stub defined by a snippet.
@@ -89,7 +88,7 @@ public abstract class SnippetStub extends Stub implements Snippets
         final StructuredGraph graph = new StructuredGraph.Builder(options).method(method).compilationId(compilationId).build();
         graph.disableUnsafeAccessTracking();
 
-        IntrinsicContext initialIntrinsicContext = new IntrinsicContext(method, method, getReplacementsBytecodeProvider(), INLINE_AFTER_PARSING);
+        IntrinsicContext initialIntrinsicContext = new IntrinsicContext(method, method, getReplacementsBytecodeProvider(), CompilationContext.INLINE_AFTER_PARSING);
         GraphBuilderPhase.Instance instance = new GraphBuilderPhase.Instance(metaAccess, providers.getStampProvider(), providers.getConstantReflection(), providers.getConstantFieldProvider(), config, OptimisticOptimizations.NONE, initialIntrinsicContext);
         instance.apply(graph);
 

@@ -2,6 +2,8 @@ package graalvm.compiler.core;
 
 import java.util.List;
 
+import jdk.vm.ci.code.TargetDescription;
+
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.core.common.cfg.BlockMap;
 import graalvm.compiler.graph.Node;
@@ -13,8 +15,6 @@ import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.StructuredGraph.ScheduleResult;
 import graalvm.compiler.nodes.cfg.Block;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
-import jdk.vm.ci.code.TargetDescription;
 
 public class LIRGenerationPhase extends LIRPhase<LIRGenerationPhase.LIRGenerationContext>
 {

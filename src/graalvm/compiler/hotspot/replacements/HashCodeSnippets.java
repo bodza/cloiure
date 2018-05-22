@@ -1,21 +1,16 @@
 package graalvm.compiler.hotspot.replacements;
 
-import static graalvm.compiler.hotspot.GraalHotSpotVMConfig.INJECTED_VMCONFIG;
-import static graalvm.compiler.hotspot.meta.HotSpotForeignCallsProviderImpl.IDENTITY_HASHCODE;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.biasedLockMaskInPlace;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.identityHashCode;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.identityHashCodeShift;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.loadWordFromObject;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.markOffset;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.uninitializedIdentityHashCodeValue;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.unlockedMask;
-import static graalvm.compiler.nodes.extended.BranchProbabilityNode.FAST_PATH_PROBABILITY;
-import static graalvm.compiler.nodes.extended.BranchProbabilityNode.NOT_FREQUENT_PROBABILITY;
-import static graalvm.compiler.nodes.extended.BranchProbabilityNode.probability;
+import jdk.vm.ci.code.TargetDescription;
+
+import org.graalvm.word.WordFactory;
 
 import graalvm.compiler.api.replacements.Snippet;
+import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
+import graalvm.compiler.hotspot.meta.HotSpotForeignCallsProviderImpl;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
+import graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil;
 import graalvm.compiler.nodes.StructuredGraph;
+import graalvm.compiler.nodes.extended.BranchProbabilityNode;
 import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.replacements.SnippetTemplate;
@@ -24,16 +19,13 @@ import graalvm.compiler.replacements.SnippetTemplate.Arguments;
 import graalvm.compiler.replacements.SnippetTemplate.SnippetInfo;
 import graalvm.compiler.replacements.Snippets;
 import graalvm.compiler.word.Word;
-import org.graalvm.word.WordFactory;
-
-import jdk.vm.ci.code.TargetDescription;
 
 public class HashCodeSnippets implements Snippets
 {
     @Snippet
     public static int identityHashCodeSnippet(final Object thisObj)
     {
-        if (probability(NOT_FREQUENT_PROBABILITY, thisObj == null))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_FREQUENT_PROBABILITY, thisObj == null))
         {
             return 0;
         }
@@ -42,19 +34,19 @@ public class HashCodeSnippets implements Snippets
 
     static int computeHashCode(final Object x)
     {
-        Word mark = loadWordFromObject(x, markOffset(INJECTED_VMCONFIG));
+        Word mark = HotSpotReplacementsUtil.loadWordFromObject(x, HotSpotReplacementsUtil.markOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
 
         // this code is independent from biased locking (although it does not look that way)
-        final Word biasedLock = mark.and(biasedLockMaskInPlace(INJECTED_VMCONFIG));
-        if (probability(FAST_PATH_PROBABILITY, biasedLock.equal(WordFactory.unsigned(unlockedMask(INJECTED_VMCONFIG)))))
+        final Word biasedLock = mark.and(HotSpotReplacementsUtil.biasedLockMaskInPlace(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, biasedLock.equal(WordFactory.unsigned(HotSpotReplacementsUtil.unlockedMask(GraalHotSpotVMConfig.INJECTED_VMCONFIG)))))
         {
-            int hash = (int) mark.unsignedShiftRight(identityHashCodeShift(INJECTED_VMCONFIG)).rawValue();
-            if (probability(FAST_PATH_PROBABILITY, hash != uninitializedIdentityHashCodeValue(INJECTED_VMCONFIG)))
+            int hash = (int) mark.unsignedShiftRight(HotSpotReplacementsUtil.identityHashCodeShift(GraalHotSpotVMConfig.INJECTED_VMCONFIG)).rawValue();
+            if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, hash != HotSpotReplacementsUtil.uninitializedIdentityHashCodeValue(GraalHotSpotVMConfig.INJECTED_VMCONFIG)))
             {
                 return hash;
             }
         }
-        return identityHashCode(IDENTITY_HASHCODE, x);
+        return HotSpotReplacementsUtil.identityHashCode(HotSpotForeignCallsProviderImpl.IDENTITY_HASHCODE, x);
     }
 
     public static class Templates extends AbstractTemplates

@@ -1,8 +1,8 @@
 package graalvm.compiler.phases.tiers;
 
-import graalvm.compiler.phases.util.Providers;
-
 import jdk.vm.ci.code.TargetDescription;
+
+import graalvm.compiler.phases.util.Providers;
 
 public class LowTierContext extends PhaseContext
 {

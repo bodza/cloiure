@@ -3,6 +3,9 @@ package graalvm.compiler.nodes.java;
 import java.lang.ref.Reference;
 import java.util.Collections;
 
+import jdk.vm.ci.meta.ResolvedJavaField;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.TypeReference;
 import graalvm.compiler.graph.NodeClass;
@@ -12,9 +15,6 @@ import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.VirtualizableAllocation;
 import graalvm.compiler.nodes.spi.VirtualizerTool;
 import graalvm.compiler.nodes.virtual.VirtualInstanceNode;
-
-import jdk.vm.ci.meta.ResolvedJavaField;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * The {@code NewInstanceNode} represents the allocation of an instance class object.

@@ -3,9 +3,9 @@ package graalvm.compiler.hotspot.replacements;
 import graalvm.compiler.api.replacements.ClassSubstitution;
 import graalvm.compiler.api.replacements.MethodSubstitution;
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
-import graalvm.compiler.hotspot.meta.HotSpotHostForeignCallsProvider;
 import graalvm.compiler.graph.Node.ConstantNodeParameter;
 import graalvm.compiler.graph.Node.NodeIntrinsic;
+import graalvm.compiler.hotspot.meta.HotSpotHostForeignCallsProvider;
 import graalvm.compiler.nodes.extended.ForeignCallNode;
 
 /**

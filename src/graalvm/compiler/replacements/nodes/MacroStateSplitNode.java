@@ -1,5 +1,9 @@
 package graalvm.compiler.replacements.nodes;
 
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.core.common.type.StampPair;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.NodeClass;
@@ -13,9 +17,6 @@ import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.java.MethodCallTargetNode;
 import graalvm.compiler.nodes.memory.MemoryCheckpoint;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * This is an extension of {@link MacroNode} that is a {@link StateSplit} and a

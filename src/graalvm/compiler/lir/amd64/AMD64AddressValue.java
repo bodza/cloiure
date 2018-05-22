@@ -1,9 +1,13 @@
 package graalvm.compiler.lir.amd64;
 
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
-import static jdk.vm.ci.code.ValueUtil.isLegal;
-
 import java.util.EnumSet;
+
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.RegisterValue;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Value;
+import jdk.vm.ci.meta.ValueKind;
 
 import graalvm.compiler.asm.amd64.AMD64Address;
 import graalvm.compiler.asm.amd64.AMD64Address.Scale;
@@ -14,16 +18,10 @@ import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstruction.OperandMode;
 
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.RegisterValue;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Value;
-import jdk.vm.ci.meta.ValueKind;
-
 public final class AMD64AddressValue extends CompositeValue
 {
-    @Component({REG, OperandFlag.ILLEGAL}) protected AllocatableValue base;
-    @Component({REG, OperandFlag.ILLEGAL}) protected AllocatableValue index;
+    @Component({OperandFlag.REG, OperandFlag.ILLEGAL}) protected AllocatableValue base;
+    @Component({OperandFlag.REG, OperandFlag.ILLEGAL}) protected AllocatableValue index;
     protected final Scale scale;
     protected final int displacement;
 
@@ -100,12 +98,12 @@ public final class AMD64AddressValue extends CompositeValue
     {
         StringBuilder s = new StringBuilder("[");
         String sep = "";
-        if (isLegal(base))
+        if (ValueUtil.isLegal(base))
         {
             s.append(base);
             sep = " + ";
         }
-        if (isLegal(index))
+        if (ValueUtil.isLegal(index))
         {
             s.append(sep).append(index).append(" * ").append(scale.value);
             sep = " + ";

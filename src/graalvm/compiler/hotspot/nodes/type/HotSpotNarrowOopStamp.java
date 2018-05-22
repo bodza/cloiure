@@ -1,13 +1,5 @@
 package graalvm.compiler.hotspot.nodes.type;
 
-import graalvm.compiler.core.common.CompressEncoding;
-import graalvm.compiler.core.common.type.AbstractObjectStamp;
-import graalvm.compiler.core.common.type.ObjectStamp;
-import graalvm.compiler.core.common.type.Stamp;
-import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.nodes.CompressionNode.CompressionOp;
-import graalvm.compiler.nodes.type.NarrowOopStamp;
-
 import jdk.vm.ci.hotspot.HotSpotCompressedNullConstant;
 import jdk.vm.ci.hotspot.HotSpotMemoryAccessProvider;
 import jdk.vm.ci.hotspot.HotSpotObjectConstant;
@@ -15,6 +7,14 @@ import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.MemoryAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaType;
+
+import graalvm.compiler.core.common.CompressEncoding;
+import graalvm.compiler.core.common.type.AbstractObjectStamp;
+import graalvm.compiler.core.common.type.ObjectStamp;
+import graalvm.compiler.core.common.type.Stamp;
+import graalvm.compiler.debug.GraalError;
+import graalvm.compiler.nodes.CompressionNode.CompressionOp;
+import graalvm.compiler.nodes.type.NarrowOopStamp;
 
 public final class HotSpotNarrowOopStamp extends NarrowOopStamp
 {

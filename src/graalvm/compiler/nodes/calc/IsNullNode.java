@@ -1,5 +1,7 @@
 package graalvm.compiler.nodes.calc;
 
+import jdk.vm.ci.meta.TriState;
+
 import graalvm.compiler.core.common.type.AbstractPointerStamp;
 import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.Stamp;
@@ -17,8 +19,6 @@ import graalvm.compiler.nodes.spi.Virtualizable;
 import graalvm.compiler.nodes.spi.VirtualizerTool;
 import graalvm.compiler.nodes.type.StampTool;
 import graalvm.compiler.nodes.util.GraphUtil;
-
-import jdk.vm.ci.meta.TriState;
 
 /**
  * An IsNullNode will be true if the supplied value is null, and false if it is non-null.

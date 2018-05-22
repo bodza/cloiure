@@ -1,11 +1,11 @@
 package graalvm.compiler.lir.alloc.trace;
 
-import static graalvm.compiler.lir.LIRValueUtil.asVariable;
-import static graalvm.compiler.lir.LIRValueUtil.isVariable;
-
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.EnumSet;
+
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.core.common.cfg.Loop;
@@ -15,12 +15,10 @@ import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstruction.OperandMode;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.Variable;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.phases.AllocationPhase;
-
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Constructs {@link GlobalLivenessInfo global liveness information}.
@@ -108,9 +106,9 @@ public final class GlobalLivenessAnalysisPhase extends AllocationPhase
 
         private int operandNumber(Value operand)
         {
-            if (isVariable(operand))
+            if (LIRValueUtil.isVariable(operand))
             {
-                return asVariable(operand).index;
+                return LIRValueUtil.asVariable(operand).index;
             }
             throw GraalError.shouldNotReachHere("Can only handle Variables: " + operand);
         }
@@ -193,7 +191,7 @@ public final class GlobalLivenessAnalysisPhase extends AllocationPhase
 
         private void processUse(final BitSet liveGen, Value operand)
         {
-            if (isVariable(operand))
+            if (LIRValueUtil.isVariable(operand))
             {
                 int operandNum = operandNumber(operand);
                 liveGen.set(operandNum);
@@ -202,9 +200,9 @@ public final class GlobalLivenessAnalysisPhase extends AllocationPhase
 
         private void processDef(final BitSet liveGen, LIRInstruction op, Value operand)
         {
-            if (isVariable(operand))
+            if (LIRValueUtil.isVariable(operand))
             {
-                recordVariable(op, asVariable(operand));
+                recordVariable(op, LIRValueUtil.asVariable(operand));
                 int operandNum = operandNumber(operand);
                 if (operands[operandNum] == null)
                 {

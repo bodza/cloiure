@@ -1,15 +1,12 @@
 package graalvm.compiler.hotspot.replacements;
 
-import static graalvm.compiler.hotspot.GraalHotSpotVMConfig.INJECTED_VMCONFIG;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.KLASS_ACCESS_FLAGS_LOCATION;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.jvmAccWrittenFlags;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.klassAccessFlagsOffset;
-
 import java.lang.reflect.Modifier;
 
 import graalvm.compiler.api.directives.GraalDirectives;
 import graalvm.compiler.api.replacements.ClassSubstitution;
 import graalvm.compiler.api.replacements.MethodSubstitution;
+import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
+import graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil;
 import graalvm.compiler.hotspot.word.KlassPointer;
 
 /**
@@ -29,7 +26,7 @@ public class ReflectionSubstitutions
         }
         else
         {
-            return klass.readInt(klassAccessFlagsOffset(INJECTED_VMCONFIG), KLASS_ACCESS_FLAGS_LOCATION) & jvmAccWrittenFlags(INJECTED_VMCONFIG);
+            return klass.readInt(HotSpotReplacementsUtil.klassAccessFlagsOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.KLASS_ACCESS_FLAGS_LOCATION) & HotSpotReplacementsUtil.jvmAccWrittenFlags(GraalHotSpotVMConfig.INJECTED_VMCONFIG);
         }
     }
 }

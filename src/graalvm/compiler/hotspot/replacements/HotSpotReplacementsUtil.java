@@ -1,10 +1,18 @@
 package graalvm.compiler.hotspot.replacements;
 
-import static jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider.getArrayBaseOffset;
-import static jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider.getArrayIndexScale;
-import static graalvm.compiler.hotspot.GraalHotSpotVMConfig.INJECTED_VMCONFIG;
-import static graalvm.compiler.hotspot.meta.HotSpotForeignCallsProviderImpl.VERIFY_OOP;
-import graalvm.util.UnsafeAccess;
+import jdk.vm.ci.code.CodeUtil;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.hotspot.HotSpotJVMCIRuntime;
+import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
+import jdk.vm.ci.hotspot.HotSpotMetaspaceConstant;
+import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
+import jdk.vm.ci.meta.Assumptions;
+import jdk.vm.ci.meta.Assumptions.AssumptionResult;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
+import org.graalvm.word.LocationIdentity;
+import org.graalvm.word.WordFactory;
 
 import graalvm.compiler.api.replacements.Fold;
 import graalvm.compiler.api.replacements.Fold.InjectedParameter;
@@ -16,6 +24,7 @@ import graalvm.compiler.graph.Node.ConstantNodeParameter;
 import graalvm.compiler.graph.Node.NodeIntrinsic;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
+import graalvm.compiler.hotspot.meta.HotSpotForeignCallsProviderImpl;
 import graalvm.compiler.hotspot.nodes.ComputeObjectAddressNode;
 import graalvm.compiler.hotspot.word.KlassPointer;
 import graalvm.compiler.nodes.CanonicalizableLocation;
@@ -35,19 +44,7 @@ import graalvm.compiler.nodes.type.StampTool;
 import graalvm.compiler.replacements.nodes.ReadRegisterNode;
 import graalvm.compiler.replacements.nodes.WriteRegisterNode;
 import graalvm.compiler.word.Word;
-import org.graalvm.word.LocationIdentity;
-import org.graalvm.word.WordFactory;
-
-import jdk.vm.ci.code.CodeUtil;
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.hotspot.HotSpotJVMCIRuntime;
-import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
-import jdk.vm.ci.hotspot.HotSpotMetaspaceConstant;
-import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
-import jdk.vm.ci.meta.Assumptions;
-import jdk.vm.ci.meta.Assumptions.AssumptionResult;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.ResolvedJavaType;
+import graalvm.util.UnsafeAccess;
 
 /**
  * A collection of methods used in HotSpot snippets, substitutions and stubs.
@@ -217,12 +214,12 @@ public class HotSpotReplacementsUtil
      */
     public static Object readExceptionOop(Word thread)
     {
-        return thread.readObject(threadExceptionOopOffset(INJECTED_VMCONFIG), EXCEPTION_OOP_LOCATION);
+        return thread.readObject(threadExceptionOopOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), EXCEPTION_OOP_LOCATION);
     }
 
     public static Word readExceptionPc(Word thread)
     {
-        return thread.readWord(threadExceptionPcOffset(INJECTED_VMCONFIG), EXCEPTION_PC_LOCATION);
+        return thread.readWord(threadExceptionPcOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), EXCEPTION_PC_LOCATION);
     }
 
     /**
@@ -230,39 +227,39 @@ public class HotSpotReplacementsUtil
      */
     public static void writeExceptionOop(Word thread, Object value)
     {
-        thread.writeObject(threadExceptionOopOffset(INJECTED_VMCONFIG), value, EXCEPTION_OOP_LOCATION);
+        thread.writeObject(threadExceptionOopOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), value, EXCEPTION_OOP_LOCATION);
     }
 
     public static void writeExceptionPc(Word thread, Word value)
     {
-        thread.writeWord(threadExceptionPcOffset(INJECTED_VMCONFIG), value, EXCEPTION_PC_LOCATION);
+        thread.writeWord(threadExceptionPcOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), value, EXCEPTION_PC_LOCATION);
     }
 
     public static Word readTlabTop(Word thread)
     {
-        return thread.readWord(threadTlabTopOffset(INJECTED_VMCONFIG), TLAB_TOP_LOCATION);
+        return thread.readWord(threadTlabTopOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), TLAB_TOP_LOCATION);
     }
 
     public static Word readTlabEnd(Word thread)
     {
-        return thread.readWord(threadTlabEndOffset(INJECTED_VMCONFIG), TLAB_END_LOCATION);
+        return thread.readWord(threadTlabEndOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), TLAB_END_LOCATION);
     }
 
     public static Word readTlabStart(Word thread)
     {
-        return thread.readWord(threadTlabStartOffset(INJECTED_VMCONFIG), TLAB_START_LOCATION);
+        return thread.readWord(threadTlabStartOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), TLAB_START_LOCATION);
     }
 
     public static void writeTlabTop(Word thread, Word top)
     {
-        thread.writeWord(threadTlabTopOffset(INJECTED_VMCONFIG), top, TLAB_TOP_LOCATION);
+        thread.writeWord(threadTlabTopOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), top, TLAB_TOP_LOCATION);
     }
 
     public static void initializeTlab(Word thread, Word start, Word end)
     {
-        thread.writeWord(threadTlabStartOffset(INJECTED_VMCONFIG), start, TLAB_START_LOCATION);
-        thread.writeWord(threadTlabTopOffset(INJECTED_VMCONFIG), start, TLAB_TOP_LOCATION);
-        thread.writeWord(threadTlabEndOffset(INJECTED_VMCONFIG), end, TLAB_END_LOCATION);
+        thread.writeWord(threadTlabStartOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), start, TLAB_START_LOCATION);
+        thread.writeWord(threadTlabTopOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), start, TLAB_TOP_LOCATION);
+        thread.writeWord(threadTlabEndOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), end, TLAB_END_LOCATION);
     }
 
     /**
@@ -272,8 +269,8 @@ public class HotSpotReplacementsUtil
      */
     public static Object clearPendingException(Word thread)
     {
-        Object result = thread.readObject(threadPendingExceptionOffset(INJECTED_VMCONFIG), PENDING_EXCEPTION_LOCATION);
-        thread.writeObject(threadPendingExceptionOffset(INJECTED_VMCONFIG), null, PENDING_EXCEPTION_LOCATION);
+        Object result = thread.readObject(threadPendingExceptionOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), PENDING_EXCEPTION_LOCATION);
+        thread.writeObject(threadPendingExceptionOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), null, PENDING_EXCEPTION_LOCATION);
         return result;
     }
 
@@ -284,7 +281,7 @@ public class HotSpotReplacementsUtil
      */
     public static int readPendingDeoptimization(Word thread)
     {
-        return thread.readInt(threadPendingDeoptimizationOffset(INJECTED_VMCONFIG), PENDING_DEOPTIMIZATION_LOCATION);
+        return thread.readInt(threadPendingDeoptimizationOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), PENDING_DEOPTIMIZATION_LOCATION);
     }
 
     /**
@@ -292,7 +289,7 @@ public class HotSpotReplacementsUtil
      */
     public static void writePendingDeoptimization(Word thread, int value)
     {
-        thread.writeInt(threadPendingDeoptimizationOffset(INJECTED_VMCONFIG), value, PENDING_DEOPTIMIZATION_LOCATION);
+        thread.writeInt(threadPendingDeoptimizationOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), value, PENDING_DEOPTIMIZATION_LOCATION);
     }
 
     /**
@@ -302,8 +299,8 @@ public class HotSpotReplacementsUtil
      */
     public static Object getAndClearObjectResult(Word thread)
     {
-        Object result = thread.readObject(objectResultOffset(INJECTED_VMCONFIG), OBJECT_RESULT_LOCATION);
-        thread.writeObject(objectResultOffset(INJECTED_VMCONFIG), null, OBJECT_RESULT_LOCATION);
+        Object result = thread.readObject(objectResultOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), OBJECT_RESULT_LOCATION);
+        thread.writeObject(objectResultOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), null, OBJECT_RESULT_LOCATION);
         return result;
     }
 
@@ -432,7 +429,7 @@ public class HotSpotReplacementsUtil
          * sure these are still ints and haven't changed.
          */
         final int layoutHelper = readLayoutHelper(klassNonNull);
-        final int layoutHelperNeutralValue = config(INJECTED_VMCONFIG).klassLayoutHelperNeutralValue;
+        final int layoutHelperNeutralValue = config(GraalHotSpotVMConfig.INJECTED_VMCONFIG).klassLayoutHelperNeutralValue;
         return (layoutHelper < layoutHelperNeutralValue);
     }
 
@@ -498,7 +495,7 @@ public class HotSpotReplacementsUtil
 
     public static void initializeObjectHeader(Word memory, Word markWord, KlassPointer hub)
     {
-        memory.writeWord(markOffset(INJECTED_VMCONFIG), markWord, MARK_WORD_LOCATION);
+        memory.writeWord(markOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), markWord, MARK_WORD_LOCATION);
         StoreHubNode.write(memory, hub);
     }
 
@@ -603,18 +600,18 @@ public class HotSpotReplacementsUtil
     @Fold
     public static int arrayBaseOffset(JavaKind elementKind)
     {
-        return getArrayBaseOffset(elementKind);
+        return HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(elementKind);
     }
 
     @Fold
     public static int arrayIndexScale(JavaKind elementKind)
     {
-        return getArrayIndexScale(elementKind);
+        return HotSpotJVMCIRuntimeProvider.getArrayIndexScale(elementKind);
     }
 
     public static Word arrayStart(int[] a)
     {
-        return WordFactory.unsigned(ComputeObjectAddressNode.get(a, getArrayBaseOffset(JavaKind.Int)));
+        return WordFactory.unsigned(ComputeObjectAddressNode.get(a, HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(JavaKind.Int)));
     }
 
     /**
@@ -632,7 +629,7 @@ public class HotSpotReplacementsUtil
      */
     public static int arrayAllocationSize(int length, int headerSize, int log2ElementSize)
     {
-        return arrayAllocationSize(length, headerSize, log2ElementSize, getConfig(INJECTED_VMCONFIG));
+        return arrayAllocationSize(length, headerSize, log2ElementSize, getConfig(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
     }
 
     /**
@@ -813,9 +810,9 @@ public class HotSpotReplacementsUtil
 
     public static Object verifyOop(Object object)
     {
-        if (verifyOops(INJECTED_VMCONFIG))
+        if (verifyOops(GraalHotSpotVMConfig.INJECTED_VMCONFIG))
         {
-            verifyOopStub(VERIFY_OOP, object);
+            verifyOopStub(HotSpotForeignCallsProviderImpl.VERIFY_OOP, object);
         }
         return object;
     }
@@ -891,12 +888,12 @@ public class HotSpotReplacementsUtil
      */
     public static boolean isInstanceKlassFullyInitialized(KlassPointer hub)
     {
-        return readInstanceKlassState(hub) == instanceKlassStateFullyInitialized(INJECTED_VMCONFIG);
+        return readInstanceKlassState(hub) == instanceKlassStateFullyInitialized(GraalHotSpotVMConfig.INJECTED_VMCONFIG);
     }
 
     private static byte readInstanceKlassState(KlassPointer hub)
     {
-        return hub.readByte(instanceKlassInitStateOffset(INJECTED_VMCONFIG), CLASS_STATE_LOCATION);
+        return hub.readByte(instanceKlassInitStateOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), CLASS_STATE_LOCATION);
     }
 
     public static final LocationIdentity KLASS_MODIFIER_FLAGS_LOCATION = NamedLocationIdentity.immutable("Klass::_modifier_flags");

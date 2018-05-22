@@ -1,18 +1,11 @@
 package graalvm.compiler.code;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.unmodifiableList;
-import static jdk.vm.ci.meta.MetaUtil.identityHashCodeString;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-
-import org.graalvm.collections.EconomicSet;
-import graalvm.compiler.core.common.CompilationIdentifier;
 
 import jdk.vm.ci.code.DebugInfo;
 import jdk.vm.ci.code.StackSlot;
@@ -28,8 +21,13 @@ import jdk.vm.ci.code.site.Reference;
 import jdk.vm.ci.code.site.Site;
 import jdk.vm.ci.meta.Assumptions.Assumption;
 import jdk.vm.ci.meta.InvokeTarget;
+import jdk.vm.ci.meta.MetaUtil;
 import jdk.vm.ci.meta.ResolvedJavaField;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
+
+import org.graalvm.collections.EconomicSet;
+
+import graalvm.compiler.core.common.CompilationIdentifier;
 
 /**
  * Represents the output from compiling a method, including the compiled machine code, associated
@@ -60,7 +58,7 @@ public class CompilationResult
         @Override
         public String toString()
         {
-            return identityHashCodeString(this);
+            return MetaUtil.identityHashCodeString(this);
         }
 
         @Override
@@ -257,7 +255,7 @@ public class CompilationResult
         {
             return getClass().getName() + "[" + methods[0].format("%H.%n(%p)%r") + "]";
         }
-        return identityHashCodeString(this);
+        return MetaUtil.identityHashCodeString(this);
     }
 
     @Override
@@ -662,9 +660,9 @@ public class CompilationResult
     {
         if (infopoints.isEmpty())
         {
-            return emptyList();
+            return Collections.emptyList();
         }
-        return unmodifiableList(infopoints);
+        return Collections.unmodifiableList(infopoints);
     }
 
     /**
@@ -674,9 +672,9 @@ public class CompilationResult
     {
         if (dataPatches.isEmpty())
         {
-            return emptyList();
+            return Collections.emptyList();
         }
-        return unmodifiableList(dataPatches);
+        return Collections.unmodifiableList(dataPatches);
     }
 
     /**
@@ -686,9 +684,9 @@ public class CompilationResult
     {
         if (exceptionHandlers.isEmpty())
         {
-            return emptyList();
+            return Collections.emptyList();
         }
-        return unmodifiableList(exceptionHandlers);
+        return Collections.unmodifiableList(exceptionHandlers);
     }
 
     /**
@@ -698,9 +696,9 @@ public class CompilationResult
     {
         if (marks.isEmpty())
         {
-            return emptyList();
+            return Collections.emptyList();
         }
-        return unmodifiableList(marks);
+        return Collections.unmodifiableList(marks);
     }
 
     public String getName()

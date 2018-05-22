@@ -3,8 +3,12 @@ package graalvm.compiler.virtual.phases.ea;
 import java.util.Iterator;
 import java.util.List;
 
+import jdk.vm.ci.meta.JavaKind;
+
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.nodes.FieldLocationIdentity;
@@ -14,9 +18,6 @@ import graalvm.compiler.nodes.virtual.AllocatedObjectNode;
 import graalvm.compiler.nodes.virtual.VirtualInstanceNode;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
 import graalvm.compiler.options.OptionValues;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.meta.JavaKind;
 
 public final class PEReadEliminationBlockState extends PartialEscapeBlockState<PEReadEliminationBlockState>
 {

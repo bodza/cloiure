@@ -1,6 +1,12 @@
 package graalvm.compiler.nodes.calc;
 
-import static graalvm.compiler.core.common.calc.CanonicalCondition.LT;
+import jdk.vm.ci.code.CodeUtil;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.PrimitiveConstant;
 
 import graalvm.compiler.core.common.NumUtil;
 import graalvm.compiler.core.common.calc.CanonicalCondition;
@@ -18,14 +24,6 @@ import graalvm.compiler.nodes.LogicNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.code.CodeUtil;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.PrimitiveConstant;
 
 public final class IntegerLessThanNode extends IntegerLowerThanNode
 {
@@ -284,7 +282,7 @@ public final class IntegerLessThanNode extends IntegerLowerThanNode
         @Override
         protected CanonicalCondition getCondition()
         {
-            return LT;
+            return CanonicalCondition.LT;
         }
 
         @Override

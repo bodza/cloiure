@@ -1,5 +1,7 @@
 package graalvm.compiler.nodes.java;
 
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.TypeReference;
 import graalvm.compiler.graph.NodeClass;
@@ -10,8 +12,6 @@ import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.ArrayLengthProvider;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
-
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * The {@code NewMultiArrayNode} represents an allocation of a multi-dimensional object array.

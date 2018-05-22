@@ -1,18 +1,17 @@
 package graalvm.compiler.phases.common.inlining.policy;
 
-import static graalvm.compiler.phases.common.inlining.InliningPhase.Options.AlwaysInlineIntrinsics;
-
 import java.util.Map;
+
+import jdk.vm.ci.meta.ProfilingInfo;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 import graalvm.compiler.nodes.Invoke;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.spi.Replacements;
+import graalvm.compiler.phases.common.inlining.InliningPhase.Options;
 import graalvm.compiler.phases.common.inlining.InliningUtil;
 import graalvm.compiler.phases.common.inlining.info.InlineInfo;
 import graalvm.compiler.phases.common.inlining.info.elem.Inlineable;
-
-import jdk.vm.ci.meta.ProfilingInfo;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 public abstract class AbstractInliningPolicy implements InliningPolicy
 {
@@ -42,7 +41,7 @@ public abstract class AbstractInliningPolicy implements InliningPolicy
 
     protected boolean isIntrinsic(Replacements replacements, InlineInfo info)
     {
-        if (AlwaysInlineIntrinsics.getValue(info.graph().getOptions()))
+        if (Options.AlwaysInlineIntrinsics.getValue(info.graph().getOptions()))
         {
             return onlyIntrinsics(replacements, info);
         }

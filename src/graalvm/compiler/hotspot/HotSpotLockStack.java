@@ -1,17 +1,16 @@
 package graalvm.compiler.hotspot;
 
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.STACK;
-
 import java.util.Arrays;
+
+import jdk.vm.ci.meta.AllocatableValue;
 
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.lir.LIRInstruction;
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.VirtualStackSlot;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
 import graalvm.compiler.lir.framemap.FrameMapBuilder;
-
-import jdk.vm.ci.meta.AllocatableValue;
 
 /**
  * Manages allocation and re-use of lock slots in a scoped manner. The slots are used in HotSpot's
@@ -22,7 +21,7 @@ public class HotSpotLockStack extends LIRInstruction
     public static final LIRInstructionClass<HotSpotLockStack> TYPE = LIRInstructionClass.create(HotSpotLockStack.class);
     private static final AllocatableValue[] EMPTY = new AllocatableValue[0];
 
-    @Def({STACK}) private AllocatableValue[] locks;
+    @Def({OperandFlag.STACK}) private AllocatableValue[] locks;
     private final FrameMapBuilder frameMapBuilder;
     private final LIRKind slotKind;
 

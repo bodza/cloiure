@@ -1,12 +1,11 @@
 package graalvm.compiler.nodes;
 
-import static graalvm.compiler.nodeinfo.InputType.State;
+import jdk.vm.ci.meta.MetaAccessProvider;
 
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.IterableNodeType;
 import graalvm.compiler.graph.NodeClass;
-
-import jdk.vm.ci.meta.MetaAccessProvider;
+import graalvm.compiler.nodeinfo.InputType;
 
 /**
  * This node represents an unconditional explicit request for immediate deoptimization.
@@ -17,7 +16,7 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 public abstract class AbstractDeoptimizeNode extends ControlSinkNode implements IterableNodeType, DeoptimizingNode.DeoptBefore
 {
     public static final NodeClass<AbstractDeoptimizeNode> TYPE = NodeClass.create(AbstractDeoptimizeNode.class);
-    @OptionalInput(State) FrameState stateBefore;
+    @OptionalInput(InputType.State) FrameState stateBefore;
 
     protected AbstractDeoptimizeNode(NodeClass<? extends AbstractDeoptimizeNode> c, FrameState stateBefore)
     {

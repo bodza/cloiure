@@ -1,16 +1,16 @@
 package graalvm.compiler.phases.common;
 
-import static graalvm.compiler.core.common.GraalOptions.OptEliminateGuards;
-import static graalvm.compiler.phases.common.LoweringPhase.ProcessBlockState.ST_ENTER;
-import static graalvm.compiler.phases.common.LoweringPhase.ProcessBlockState.ST_ENTER_ALWAYS_REACHED;
-import static graalvm.compiler.phases.common.LoweringPhase.ProcessBlockState.ST_LEAVE;
-import static graalvm.compiler.phases.common.LoweringPhase.ProcessBlockState.ST_PROCESS;
-import static graalvm.compiler.phases.common.LoweringPhase.ProcessBlockState.ST_PROCESS_ALWAYS_REACHED;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.DeoptimizationAction;
+import jdk.vm.ci.meta.DeoptimizationReason;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.MetaAccessProvider;
+
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.spi.ConstantFieldProvider;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.debug.GraalError;
@@ -44,14 +44,9 @@ import graalvm.compiler.nodes.spi.StampProvider;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.BasePhase;
 import graalvm.compiler.phases.Phase;
+import graalvm.compiler.phases.common.LoweringPhase.ProcessBlockState;
 import graalvm.compiler.phases.schedule.SchedulePhase;
 import graalvm.compiler.phases.tiers.PhaseContext;
-
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.DeoptimizationAction;
-import jdk.vm.ci.meta.DeoptimizationReason;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.MetaAccessProvider;
 
 /**
  * Processes all {@link Lowerable} nodes to do their lowering.
@@ -162,7 +157,7 @@ public class LoweringPhase extends BasePhase<PhaseContext>
         public GuardingNode createGuard(FixedNode before, LogicNode condition, DeoptimizationReason deoptReason, DeoptimizationAction action, JavaConstant speculation, boolean negated)
         {
             StructuredGraph graph = before.graph();
-            if (OptEliminateGuards.getValue(graph.getOptions()))
+            if (GraalOptions.OptEliminateGuards.getValue(graph.getOptions()))
             {
                 for (Node usage : condition.usages())
                 {
@@ -185,7 +180,7 @@ public class LoweringPhase extends BasePhase<PhaseContext>
             else
             {
                 GuardNode newGuard = graph.unique(new GuardNode(condition, guardAnchor, deoptReason, action, negated, speculation));
-                if (OptEliminateGuards.getValue(graph.getOptions()))
+                if (GraalOptions.OptEliminateGuards.getValue(graph.getOptions()))
                 {
                     activeGuards.markAndGrow(newGuard);
                 }
@@ -333,7 +328,7 @@ public class LoweringPhase extends BasePhase<PhaseContext>
             @Override
             public void postprocess()
             {
-                if (anchor == block.getBeginNode() && OptEliminateGuards.getValue(activeGuards.graph().getOptions()))
+                if (anchor == block.getBeginNode() && GraalOptions.OptEliminateGuards.getValue(activeGuards.graph().getOptions()))
                 {
                     for (GuardNode guard : anchor.asNode().usages().filter(GuardNode.class))
                     {
@@ -477,29 +472,29 @@ public class LoweringPhase extends BasePhase<PhaseContext>
      */
     public static void processBlock(final Frame<?> rootFrame)
     {
-        ProcessBlockState state = ST_PROCESS;
+        ProcessBlockState state = ProcessBlockState.ST_PROCESS;
         Frame<?> f = rootFrame;
         while (f != null)
         {
             ProcessBlockState nextState;
-            if (state == ST_PROCESS || state == ST_PROCESS_ALWAYS_REACHED)
+            if (state == ProcessBlockState.ST_PROCESS || state == ProcessBlockState.ST_PROCESS_ALWAYS_REACHED)
             {
                 f.preprocess();
-                nextState = state == ST_PROCESS_ALWAYS_REACHED ? ST_ENTER : ST_ENTER_ALWAYS_REACHED;
+                nextState = state == ProcessBlockState.ST_PROCESS_ALWAYS_REACHED ? ProcessBlockState.ST_ENTER : ProcessBlockState.ST_ENTER_ALWAYS_REACHED;
             }
-            else if (state == ST_ENTER_ALWAYS_REACHED)
+            else if (state == ProcessBlockState.ST_ENTER_ALWAYS_REACHED)
             {
                 if (f.alwaysReachedBlock != null && f.alwaysReachedBlock.getDominator() == f.block)
                 {
                     f = f.enterAlwaysReached(f.alwaysReachedBlock);
-                    nextState = ST_PROCESS;
+                    nextState = ProcessBlockState.ST_PROCESS;
                 }
                 else
                 {
-                    nextState = ST_ENTER;
+                    nextState = ProcessBlockState.ST_ENTER;
                 }
             }
-            else if (state == ST_ENTER)
+            else if (state == ProcessBlockState.ST_ENTER)
             {
                 if (f.dominated != null)
                 {
@@ -519,24 +514,24 @@ public class LoweringPhase extends BasePhase<PhaseContext>
                     }
                     if (n == null)
                     {
-                        nextState = ST_LEAVE;
+                        nextState = ProcessBlockState.ST_LEAVE;
                     }
                     else
                     {
                         f = f.enter(n);
-                        nextState = ST_PROCESS;
+                        nextState = ProcessBlockState.ST_PROCESS;
                     }
                 }
                 else
                 {
-                    nextState = ST_LEAVE;
+                    nextState = ProcessBlockState.ST_LEAVE;
                 }
             }
-            else if (state == ST_LEAVE)
+            else if (state == ProcessBlockState.ST_LEAVE)
             {
                 f.postprocess();
                 f = f.parent;
-                nextState = ST_ENTER;
+                nextState = ProcessBlockState.ST_ENTER;
             }
             else
             {
@@ -548,17 +543,17 @@ public class LoweringPhase extends BasePhase<PhaseContext>
 
     public static void processBlockBounded(final Frame<?> rootFrame)
     {
-        ProcessBlockState state = ST_PROCESS;
+        ProcessBlockState state = ProcessBlockState.ST_PROCESS;
         Frame<?> f = rootFrame;
         while (f != null)
         {
             ProcessBlockState nextState;
-            if (state == ST_PROCESS || state == ST_PROCESS_ALWAYS_REACHED)
+            if (state == ProcessBlockState.ST_PROCESS || state == ProcessBlockState.ST_PROCESS_ALWAYS_REACHED)
             {
                 f.preprocess();
-                nextState = state == ST_PROCESS_ALWAYS_REACHED ? ST_ENTER : ST_ENTER_ALWAYS_REACHED;
+                nextState = state == ProcessBlockState.ST_PROCESS_ALWAYS_REACHED ? ProcessBlockState.ST_ENTER : ProcessBlockState.ST_ENTER_ALWAYS_REACHED;
             }
-            else if (state == ST_ENTER_ALWAYS_REACHED)
+            else if (state == ProcessBlockState.ST_ENTER_ALWAYS_REACHED)
             {
                 if (f.alwaysReachedBlock != null && f.alwaysReachedBlock.getDominator() == f.block)
                 {
@@ -568,18 +563,18 @@ public class LoweringPhase extends BasePhase<PhaseContext>
                         // stop recursion here
                         f.postprocess();
                         f = f.parent;
-                        state = ST_ENTER;
+                        state = ProcessBlockState.ST_ENTER;
                         continue;
                     }
                     f = continueRecur;
-                    nextState = ST_PROCESS;
+                    nextState = ProcessBlockState.ST_PROCESS;
                 }
                 else
                 {
-                    nextState = ST_ENTER;
+                    nextState = ProcessBlockState.ST_ENTER;
                 }
             }
-            else if (state == ST_ENTER)
+            else if (state == ProcessBlockState.ST_ENTER)
             {
                 if (f.dominated != null)
                 {
@@ -599,7 +594,7 @@ public class LoweringPhase extends BasePhase<PhaseContext>
                     }
                     if (n == null)
                     {
-                        nextState = ST_LEAVE;
+                        nextState = ProcessBlockState.ST_LEAVE;
                     }
                     else
                     {
@@ -609,23 +604,23 @@ public class LoweringPhase extends BasePhase<PhaseContext>
                             // stop recursion here
                             f.postprocess();
                             f = f.parent;
-                            state = ST_ENTER;
+                            state = ProcessBlockState.ST_ENTER;
                             continue;
                         }
                         f = continueRecur;
-                        nextState = ST_PROCESS;
+                        nextState = ProcessBlockState.ST_PROCESS;
                     }
                 }
                 else
                 {
-                    nextState = ST_LEAVE;
+                    nextState = ProcessBlockState.ST_LEAVE;
                 }
             }
-            else if (state == ST_LEAVE)
+            else if (state == ProcessBlockState.ST_LEAVE)
             {
                 f.postprocess();
                 f = f.parent;
-                nextState = ST_ENTER;
+                nextState = ProcessBlockState.ST_ENTER;
             }
             else
             {

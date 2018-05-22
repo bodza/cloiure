@@ -1,6 +1,9 @@
 package graalvm.compiler.nodes.calc;
 
-import static jdk.vm.ci.code.CodeUtil.mask;
+import jdk.vm.ci.code.CodeUtil;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.TriState;
 
 import graalvm.compiler.core.common.calc.CanonicalCondition;
 import graalvm.compiler.core.common.type.IntegerStamp;
@@ -14,10 +17,6 @@ import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.util.GraphUtil;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.TriState;
 
 /**
  * Common super-class for "a < b" comparisons both {@linkplain IntegerLowerThanNode signed} and
@@ -324,7 +323,7 @@ public abstract class IntegerLowerThanNode extends CompareNode
                     }
                     low += 1;
                 }
-                if (compare(low, lowerBound(xStamp)) > 0 || upperBound(xStamp) != (xStamp.upperBound() & mask(xStamp.getBits())))
+                if (compare(low, lowerBound(xStamp)) > 0 || upperBound(xStamp) != (xStamp.upperBound() & CodeUtil.mask(xStamp.getBits())))
                 {
                     return forInteger(bits, low, upperBound(xStamp));
                 }
@@ -341,7 +340,7 @@ public abstract class IntegerLowerThanNode extends CompareNode
                     }
                     low -= 1;
                 }
-                if (compare(low, upperBound(xStamp)) < 0 || lowerBound(xStamp) != (xStamp.lowerBound() & mask(xStamp.getBits())))
+                if (compare(low, upperBound(xStamp)) < 0 || lowerBound(xStamp) != (xStamp.lowerBound() & CodeUtil.mask(xStamp.getBits())))
                 {
                     return forInteger(bits, lowerBound(xStamp), low);
                 }

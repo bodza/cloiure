@@ -1,10 +1,10 @@
 package graalvm.compiler.lir.phases;
 
+import jdk.vm.ci.code.TargetDescription;
+
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.options.OptionKey;
-
-import jdk.vm.ci.code.TargetDescription;
 
 /**
  * Base class for all {@link LIR low-level} phases. Subclasses should be stateless. There will be

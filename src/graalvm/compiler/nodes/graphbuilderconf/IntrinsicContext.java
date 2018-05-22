@@ -1,11 +1,7 @@
 package graalvm.compiler.nodes.graphbuilderconf;
 
-import static jdk.vm.ci.code.BytecodeFrame.AFTER_BCI;
-import static jdk.vm.ci.code.BytecodeFrame.AFTER_EXCEPTION_BCI;
-import static jdk.vm.ci.code.BytecodeFrame.BEFORE_BCI;
-import static jdk.vm.ci.code.BytecodeFrame.INVALID_FRAMESTATE_BCI;
-import static graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext.CompilationContext.INLINE_AFTER_PARSING;
-import static graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext.CompilationContext.ROOT_COMPILATION;
+import jdk.vm.ci.code.BytecodeFrame;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 import graalvm.compiler.bytecode.BytecodeProvider;
 import graalvm.compiler.nodes.AbstractMergeNode;
@@ -13,9 +9,8 @@ import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.Invoke;
 import graalvm.compiler.nodes.StateSplit;
 import graalvm.compiler.nodes.StructuredGraph;
+import graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext.CompilationContext;
 import graalvm.compiler.nodes.java.ExceptionObjectNode;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * An intrinsic is a substitute implementation of a Java method (or a bytecode in the case of
@@ -107,12 +102,12 @@ public class IntrinsicContext
 
     public boolean isPostParseInlined()
     {
-        return compilationContext.equals(INLINE_AFTER_PARSING);
+        return compilationContext.equals(CompilationContext.INLINE_AFTER_PARSING);
     }
 
     public boolean isCompilationRoot()
     {
-        return compilationContext.equals(ROOT_COMPILATION);
+        return compilationContext.equals(CompilationContext.ROOT_COMPILATION);
     }
 
     /**
@@ -167,7 +162,7 @@ public class IntrinsicContext
             {
                 // Only the last side effect on any execution path in a replacement
                 // can inherit the stateAfter of the replaced node
-                FrameState invalid = graph.add(new FrameState(INVALID_FRAMESTATE_BCI));
+                FrameState invalid = graph.add(new FrameState(BytecodeFrame.INVALID_FRAMESTATE_BCI));
                 for (StateSplit lastSideEffect : sideEffects.sideEffects())
                 {
                     lastSideEffect.setStateAfter(invalid);
@@ -177,11 +172,11 @@ public class IntrinsicContext
             FrameState frameState;
             if (forStateSplit instanceof ExceptionObjectNode)
             {
-                frameState = graph.add(new FrameState(AFTER_EXCEPTION_BCI, (ExceptionObjectNode) forStateSplit));
+                frameState = graph.add(new FrameState(BytecodeFrame.AFTER_EXCEPTION_BCI, (ExceptionObjectNode) forStateSplit));
             }
             else
             {
-                frameState = graph.add(new FrameState(AFTER_BCI));
+                frameState = graph.add(new FrameState(BytecodeFrame.AFTER_BCI));
             }
             return frameState;
         }
@@ -193,12 +188,12 @@ public class IntrinsicContext
                 if (sideEffects.isAfterSideEffect())
                 {
                     // A merge after one or more side effects
-                    return graph.add(new FrameState(AFTER_BCI));
+                    return graph.add(new FrameState(BytecodeFrame.AFTER_BCI));
                 }
                 else
                 {
                     // A merge before any side effects
-                    return graph.add(new FrameState(BEFORE_BCI));
+                    return graph.add(new FrameState(BytecodeFrame.BEFORE_BCI));
                 }
             }
             else

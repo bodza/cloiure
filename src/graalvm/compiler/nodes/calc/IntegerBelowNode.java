@@ -1,5 +1,9 @@
 package graalvm.compiler.nodes.calc;
 
+import jdk.vm.ci.code.CodeUtil;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.MetaAccessProvider;
+
 import graalvm.compiler.core.common.NumUtil;
 import graalvm.compiler.core.common.calc.CanonicalCondition;
 import graalvm.compiler.core.common.type.IntegerStamp;
@@ -11,10 +15,6 @@ import graalvm.compiler.nodes.LogicNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.code.CodeUtil;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.MetaAccessProvider;
 
 public final class IntegerBelowNode extends IntegerLowerThanNode
 {

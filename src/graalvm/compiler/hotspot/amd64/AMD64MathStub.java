@@ -1,16 +1,9 @@
 package graalvm.compiler.hotspot.amd64;
 
-import static graalvm.compiler.hotspot.amd64.AMD64HotSpotForeignCallsProvider.ARITHMETIC_COS_STUB;
-import static graalvm.compiler.hotspot.amd64.AMD64HotSpotForeignCallsProvider.ARITHMETIC_EXP_STUB;
-import static graalvm.compiler.hotspot.amd64.AMD64HotSpotForeignCallsProvider.ARITHMETIC_LOG10_STUB;
-import static graalvm.compiler.hotspot.amd64.AMD64HotSpotForeignCallsProvider.ARITHMETIC_LOG_STUB;
-import static graalvm.compiler.hotspot.amd64.AMD64HotSpotForeignCallsProvider.ARITHMETIC_POW_STUB;
-import static graalvm.compiler.hotspot.amd64.AMD64HotSpotForeignCallsProvider.ARITHMETIC_SIN_STUB;
-import static graalvm.compiler.hotspot.amd64.AMD64HotSpotForeignCallsProvider.ARITHMETIC_TAN_STUB;
-
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.hotspot.HotSpotForeignCallLinkage;
+import graalvm.compiler.hotspot.amd64.AMD64HotSpotForeignCallsProvider;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
 import graalvm.compiler.hotspot.stubs.SnippetStub;
 import graalvm.compiler.options.OptionValues;
@@ -31,31 +24,31 @@ public class AMD64MathStub extends SnippetStub
 
     private static String snippetName(ForeignCallDescriptor descriptor)
     {
-        if (descriptor == ARITHMETIC_LOG_STUB)
+        if (descriptor == AMD64HotSpotForeignCallsProvider.ARITHMETIC_LOG_STUB)
         {
             return "log";
         }
-        if (descriptor == ARITHMETIC_LOG10_STUB)
+        if (descriptor == AMD64HotSpotForeignCallsProvider.ARITHMETIC_LOG10_STUB)
         {
             return "log10";
         }
-        if (descriptor == ARITHMETIC_SIN_STUB)
+        if (descriptor == AMD64HotSpotForeignCallsProvider.ARITHMETIC_SIN_STUB)
         {
             return "sin";
         }
-        if (descriptor == ARITHMETIC_COS_STUB)
+        if (descriptor == AMD64HotSpotForeignCallsProvider.ARITHMETIC_COS_STUB)
         {
             return "cos";
         }
-        if (descriptor == ARITHMETIC_TAN_STUB)
+        if (descriptor == AMD64HotSpotForeignCallsProvider.ARITHMETIC_TAN_STUB)
         {
             return "tan";
         }
-        if (descriptor == ARITHMETIC_EXP_STUB)
+        if (descriptor == AMD64HotSpotForeignCallsProvider.ARITHMETIC_EXP_STUB)
         {
             return "exp";
         }
-        if (descriptor == ARITHMETIC_POW_STUB)
+        if (descriptor == AMD64HotSpotForeignCallsProvider.ARITHMETIC_POW_STUB)
         {
             return "pow";
         }

@@ -1,14 +1,15 @@
 package graalvm.compiler.core.common.alloc;
 
-import org.graalvm.collections.EconomicMap;
-import org.graalvm.collections.Equivalence;
-import graalvm.compiler.core.common.GraalOptions;
-
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.Register.RegisterCategory;
 import jdk.vm.ci.code.RegisterArray;
 import jdk.vm.ci.code.RegisterConfig;
 import jdk.vm.ci.meta.PlatformKind;
+
+import org.graalvm.collections.EconomicMap;
+import org.graalvm.collections.Equivalence;
+
+import graalvm.compiler.core.common.GraalOptions;
 
 /**
  * Configuration for register allocation. This is different to {@link RegisterConfig} as it only

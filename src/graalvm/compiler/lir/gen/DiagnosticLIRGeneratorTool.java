@@ -1,11 +1,12 @@
 package graalvm.compiler.lir.gen;
 
-import graalvm.compiler.lir.LIRInstruction;
-import graalvm.compiler.lir.StandardOp.SaveRegistersOp;
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.RegisterConfig;
 import jdk.vm.ci.code.StackSlot;
 import jdk.vm.ci.meta.JavaConstant;
+
+import graalvm.compiler.lir.LIRInstruction;
+import graalvm.compiler.lir.StandardOp.SaveRegistersOp;
 
 public interface DiagnosticLIRGeneratorTool
 {

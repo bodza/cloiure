@@ -1,18 +1,17 @@
 package graalvm.compiler.nodes.java;
 
-import static graalvm.compiler.nodeinfo.InputType.Memory;
-import static graalvm.compiler.nodeinfo.InputType.Value;
+import jdk.vm.ci.meta.JavaKind;
+
+import org.graalvm.word.LocationIdentity;
 
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.memory.AbstractMemoryCheckpoint;
 import graalvm.compiler.nodes.memory.MemoryCheckpoint;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.meta.JavaKind;
 
 /**
  * Represents an atomic compare-and-swap operation The result is a boolean that contains whether the

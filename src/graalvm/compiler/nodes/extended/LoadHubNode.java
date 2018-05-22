@@ -1,7 +1,9 @@
 package graalvm.compiler.nodes.extended;
 
-import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.MetaAccessProvider;
 
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.TypeReference;
@@ -18,9 +20,6 @@ import graalvm.compiler.nodes.spi.StampProvider;
 import graalvm.compiler.nodes.spi.Virtualizable;
 import graalvm.compiler.nodes.spi.VirtualizerTool;
 import graalvm.compiler.nodes.type.StampTool;
-
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.MetaAccessProvider;
 
 /**
  * Loads an object's hub. The object is not null-checked by this operation.
@@ -71,7 +70,7 @@ public final class LoadHubNode extends FloatingNode implements Lowerable, Canoni
     @Override
     public ValueNode canonical(CanonicalizerTool tool)
     {
-        if (!GeneratePIC.getValue(tool.getOptions()))
+        if (!GraalOptions.GeneratePIC.getValue(tool.getOptions()))
         {
             NodeView view = NodeView.from(tool);
             MetaAccessProvider metaAccess = tool.getMetaAccess();
@@ -87,7 +86,7 @@ public final class LoadHubNode extends FloatingNode implements Lowerable, Canoni
 
     public static ValueNode findSynonym(ValueNode curValue, Stamp stamp, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection)
     {
-        if (!GeneratePIC.getValue(curValue.getOptions()))
+        if (!GraalOptions.GeneratePIC.getValue(curValue.getOptions()))
         {
             TypeReference type = StampTool.typeReferenceOrNull(curValue);
             if (type != null && type.isExact())
@@ -101,7 +100,7 @@ public final class LoadHubNode extends FloatingNode implements Lowerable, Canoni
     @Override
     public void virtualize(VirtualizerTool tool)
     {
-        if (!GeneratePIC.getValue(tool.getOptions()))
+        if (!GraalOptions.GeneratePIC.getValue(tool.getOptions()))
         {
             ValueNode alias = tool.getAlias(getValue());
             TypeReference type = StampTool.typeReferenceOrNull(alias);

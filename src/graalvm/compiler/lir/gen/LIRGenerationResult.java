@@ -1,15 +1,16 @@
 package graalvm.compiler.lir.gen;
 
+import jdk.vm.ci.code.CallingConvention;
+import jdk.vm.ci.code.RegisterConfig;
+
 import org.graalvm.collections.EconomicMap;
+
 import graalvm.compiler.core.common.CompilationIdentifier;
 import graalvm.compiler.core.common.CompilationIdentifier.Verbosity;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.framemap.FrameMap;
 import graalvm.compiler.lir.framemap.FrameMapBuilder;
-
-import jdk.vm.ci.code.CallingConvention;
-import jdk.vm.ci.code.RegisterConfig;
 
 public class LIRGenerationResult
 {

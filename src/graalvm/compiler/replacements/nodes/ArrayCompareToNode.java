@@ -1,12 +1,16 @@
 package graalvm.compiler.replacements.nodes;
 
-import static graalvm.compiler.nodeinfo.InputType.Memory;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.Value;
+
+import org.graalvm.word.LocationIdentity;
 
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.NamedLocationIdentity;
@@ -19,10 +23,6 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.nodes.spi.Virtualizable;
 import graalvm.compiler.nodes.spi.VirtualizerTool;
 import graalvm.compiler.nodes.util.GraphUtil;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Compares two arrays lexicographically.
@@ -49,7 +49,7 @@ public final class ArrayCompareToNode extends FixedWithNextNode implements LIRLo
     /** Length of the other array. */
     @Input ValueNode length2;
 
-    @OptionalInput(Memory) MemoryNode lastLocationAccess;
+    @OptionalInput(InputType.Memory) MemoryNode lastLocationAccess;
 
     public ArrayCompareToNode(ValueNode array1, ValueNode array2, ValueNode length1, ValueNode length2, @ConstantNodeParameter JavaKind kind1, @ConstantNodeParameter JavaKind kind2)
     {

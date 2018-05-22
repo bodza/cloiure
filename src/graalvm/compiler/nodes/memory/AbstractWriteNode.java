@@ -1,5 +1,7 @@
 package graalvm.compiler.nodes.memory;
 
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
@@ -10,7 +12,6 @@ import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.ValueNodeUtil;
 import graalvm.compiler.nodes.extended.GuardingNode;
 import graalvm.compiler.nodes.memory.address.AddressNode;
-import org.graalvm.word.LocationIdentity;
 
 public abstract class AbstractWriteNode extends FixedAccessNode implements StateSplit, MemoryCheckpoint.Single, MemoryAccess, GuardingNode
 {

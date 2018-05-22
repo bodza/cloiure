@@ -1,6 +1,20 @@
 package graalvm.compiler.lir.gen;
 
+import jdk.vm.ci.code.CodeCacheProvider;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.RegisterAttributes;
 import jdk.vm.ci.code.RegisterConfig;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.code.ValueKindFactory;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.PlatformKind;
+import jdk.vm.ci.meta.Value;
+import jdk.vm.ci.meta.ValueKind;
+
 import graalvm.compiler.core.common.CompressEncoding;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.calc.Condition;
@@ -15,20 +29,6 @@ import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LabelRef;
 import graalvm.compiler.lir.SwitchStrategy;
 import graalvm.compiler.lir.Variable;
-
-import jdk.vm.ci.code.CodeCacheProvider;
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.RegisterAttributes;
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.code.ValueKindFactory;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.PlatformKind;
-import jdk.vm.ci.meta.Value;
-import jdk.vm.ci.meta.ValueKind;
 
 public interface LIRGeneratorTool extends DiagnosticLIRGeneratorTool, ValueKindFactory<LIRKind>
 {

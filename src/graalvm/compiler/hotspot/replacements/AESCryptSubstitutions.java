@@ -1,11 +1,13 @@
 package graalvm.compiler.hotspot.replacements;
 
-import static jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider.getArrayBaseOffset;
-import static graalvm.compiler.hotspot.HotSpotBackend.DECRYPT_BLOCK;
-import static graalvm.compiler.hotspot.HotSpotBackend.DECRYPT_BLOCK_WITH_ORIGINAL_KEY;
-import static graalvm.compiler.hotspot.HotSpotBackend.ENCRYPT_BLOCK;
-import static graalvm.compiler.nodes.extended.BranchProbabilityNode.VERY_SLOW_PATH_PROBABILITY;
-import static graalvm.compiler.nodes.extended.BranchProbabilityNode.probability;
+import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
+import jdk.vm.ci.meta.DeoptimizationAction;
+import jdk.vm.ci.meta.DeoptimizationReason;
+import jdk.vm.ci.meta.JavaKind;
+
+import org.graalvm.word.LocationIdentity;
+import org.graalvm.word.Pointer;
+import org.graalvm.word.WordFactory;
 
 import graalvm.compiler.api.replacements.ClassSubstitution;
 import graalvm.compiler.api.replacements.MethodSubstitution;
@@ -13,20 +15,14 @@ import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node.ConstantNodeParameter;
 import graalvm.compiler.graph.Node.NodeIntrinsic;
+import graalvm.compiler.hotspot.HotSpotBackend;
 import graalvm.compiler.hotspot.nodes.ComputeObjectAddressNode;
 import graalvm.compiler.nodes.DeoptimizeNode;
 import graalvm.compiler.nodes.PiNode;
+import graalvm.compiler.nodes.extended.BranchProbabilityNode;
 import graalvm.compiler.nodes.extended.ForeignCallNode;
 import graalvm.compiler.nodes.extended.RawLoadNode;
 import graalvm.compiler.word.Word;
-import org.graalvm.word.LocationIdentity;
-import org.graalvm.word.Pointer;
-import org.graalvm.word.WordFactory;
-
-import jdk.vm.ci.meta.DeoptimizationAction;
-import jdk.vm.ci.meta.DeoptimizationReason;
-import jdk.vm.ci.meta.JavaKind;
-
 import graalvm.util.UnsafeAccess;
 
 /**
@@ -111,24 +107,24 @@ public class AESCryptSubstitutions
         checkArgs(in, inOffset, out, outOffset);
         Object realReceiver = PiNode.piCastNonNull(rcvr, AESCryptClass);
         Object kObject = RawLoadNode.load(realReceiver, kOffset, JavaKind.Object, LocationIdentity.any());
-        Pointer kAddr = Word.objectToTrackedPointer(kObject).add(getArrayBaseOffset(JavaKind.Int));
-        Word inAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(in, getArrayBaseOffset(JavaKind.Byte) + inOffset));
-        Word outAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(out, getArrayBaseOffset(JavaKind.Byte) + outOffset));
+        Pointer kAddr = Word.objectToTrackedPointer(kObject).add(HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(JavaKind.Int));
+        Word inAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(in, HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(JavaKind.Byte) + inOffset));
+        Word outAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(out, HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(JavaKind.Byte) + outOffset));
         if (encrypt)
         {
-            encryptBlockStub(ENCRYPT_BLOCK, inAddr, outAddr, kAddr);
+            encryptBlockStub(HotSpotBackend.ENCRYPT_BLOCK, inAddr, outAddr, kAddr);
         }
         else
         {
             if (withOriginalKey)
             {
                 Object lastKeyObject = RawLoadNode.load(realReceiver, lastKeyOffset, JavaKind.Object, LocationIdentity.any());
-                Pointer lastKeyAddr = Word.objectToTrackedPointer(lastKeyObject).add(getArrayBaseOffset(JavaKind.Byte));
-                decryptBlockWithOriginalKeyStub(DECRYPT_BLOCK_WITH_ORIGINAL_KEY, inAddr, outAddr, kAddr, lastKeyAddr);
+                Pointer lastKeyAddr = Word.objectToTrackedPointer(lastKeyObject).add(HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(JavaKind.Byte));
+                decryptBlockWithOriginalKeyStub(HotSpotBackend.DECRYPT_BLOCK_WITH_ORIGINAL_KEY, inAddr, outAddr, kAddr, lastKeyAddr);
             }
             else
             {
-                decryptBlockStub(DECRYPT_BLOCK, inAddr, outAddr, kAddr);
+                decryptBlockStub(HotSpotBackend.DECRYPT_BLOCK, inAddr, outAddr, kAddr);
             }
         }
     }
@@ -138,7 +134,7 @@ public class AESCryptSubstitutions
      */
     static void checkArgs(byte[] in, int inOffset, byte[] out, int outOffset)
     {
-        if (probability(VERY_SLOW_PATH_PROBABILITY, inOffset < 0 || in.length - AES_BLOCK_SIZE_IN_BYTES < inOffset || outOffset < 0 || out.length - AES_BLOCK_SIZE_IN_BYTES < outOffset))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_SLOW_PATH_PROBABILITY, inOffset < 0 || in.length - AES_BLOCK_SIZE_IN_BYTES < inOffset || outOffset < 0 || out.length - AES_BLOCK_SIZE_IN_BYTES < outOffset))
         {
             DeoptimizeNode.deopt(DeoptimizationAction.None, DeoptimizationReason.RuntimeConstraint);
         }

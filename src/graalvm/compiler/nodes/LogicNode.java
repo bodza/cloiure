@@ -1,10 +1,9 @@
 package graalvm.compiler.nodes;
 
-import static graalvm.compiler.nodeinfo.InputType.Condition;
-
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node.IndirectCanonicalization;
 import graalvm.compiler.graph.NodeClass;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.calc.FloatingNode;
 
 public abstract class LogicNode extends FloatingNode implements IndirectCanonicalization

@@ -1,12 +1,12 @@
 package graalvm.compiler.lir.gen;
 
-import graalvm.compiler.core.common.LIRKind;
-import graalvm.compiler.lir.Variable;
-import graalvm.compiler.options.OptionValues;
-
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.PlatformKind;
 import jdk.vm.ci.meta.Value;
+
+import graalvm.compiler.core.common.LIRKind;
+import graalvm.compiler.lir.Variable;
+import graalvm.compiler.options.OptionValues;
 
 /**
  * This class traverses the HIR instructions and generates LIR instructions from them.

@@ -4,8 +4,11 @@ import java.util.BitSet;
 import java.util.LinkedList;
 import java.util.function.ToDoubleFunction;
 
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import org.graalvm.collections.EconomicSet;
 import org.graalvm.collections.Equivalence;
+
 import graalvm.compiler.nodes.FixedNode;
 import graalvm.compiler.nodes.Invoke;
 import graalvm.compiler.nodes.ParameterNode;
@@ -13,8 +16,6 @@ import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.phases.common.inlining.policy.AbstractInliningPolicy;
 import graalvm.compiler.phases.graph.FixedNodeProbabilityCache;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * A {@link CallsiteHolder} whose graph has been copied already and thus can be modified without

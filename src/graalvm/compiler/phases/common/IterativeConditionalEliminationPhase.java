@@ -1,8 +1,7 @@
 package graalvm.compiler.phases.common;
 
-import static graalvm.compiler.graph.Graph.NodeEvent.NODE_ADDED;
-
 import graalvm.compiler.core.common.RetryableBailoutException;
+import graalvm.compiler.graph.Graph.NodeEvent;
 import graalvm.compiler.graph.Graph.NodeEventScope;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.spi.Simplifiable;
@@ -27,7 +26,7 @@ public class IterativeConditionalEliminationPhase extends BasePhase<PhaseContext
     @Override
     protected void run(StructuredGraph graph, PhaseContext context)
     {
-        HashSetNodeEventListener listener = new HashSetNodeEventListener().exclude(NODE_ADDED);
+        HashSetNodeEventListener listener = new HashSetNodeEventListener().exclude(NodeEvent.NODE_ADDED);
         int count = 0;
         while (true)
         {

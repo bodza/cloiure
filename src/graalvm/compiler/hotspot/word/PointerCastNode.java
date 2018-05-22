@@ -1,5 +1,7 @@
 package graalvm.compiler.hotspot.word;
 
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
@@ -8,8 +10,6 @@ import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.FloatingNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
-import jdk.vm.ci.meta.Value;
 
 /**
  * Cast between Word and metaspace pointers exposed by the {@link HotspotOpcode#FROM_POINTER} and

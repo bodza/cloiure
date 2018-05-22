@@ -6,18 +6,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 
+import jdk.vm.ci.code.RegisterValue;
+import jdk.vm.ci.code.StackSlot;
+import jdk.vm.ci.meta.Value;
+
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 import org.graalvm.collections.MapCursor;
+
 import graalvm.compiler.core.common.FieldIntrospection;
 import graalvm.compiler.core.common.Fields;
 import graalvm.compiler.core.common.FieldsScanner;
 import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstruction.OperandMode;
-
-import jdk.vm.ci.code.RegisterValue;
-import jdk.vm.ci.code.StackSlot;
-import jdk.vm.ci.meta.Value;
 
 abstract class LIRIntrospection<T> extends FieldIntrospection<T>
 {

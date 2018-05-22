@@ -6,7 +6,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jdk.vm.ci.code.Architecture;
+
 import org.graalvm.collections.EconomicMap;
+
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.phases.LIRPhase;
 import graalvm.compiler.lir.phases.LIRPhaseSuite;
@@ -15,8 +18,6 @@ import graalvm.compiler.phases.BasePhase;
 import graalvm.compiler.phases.PhaseSuite;
 import graalvm.compiler.phases.tiers.CompilerConfiguration;
 import graalvm.compiler.serviceprovider.GraalServices;
-
-import jdk.vm.ci.code.Architecture;
 
 /**
  * A factory that creates the {@link CompilerConfiguration} the Graal compiler will use. Each

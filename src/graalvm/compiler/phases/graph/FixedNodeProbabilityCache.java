@@ -1,11 +1,10 @@
 package graalvm.compiler.phases.graph;
 
-import static graalvm.compiler.nodes.cfg.ControlFlowGraph.multiplyProbabilities;
-
 import java.util.function.ToDoubleFunction;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
+
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeInputList;
 import graalvm.compiler.nodes.AbstractBeginNode;
@@ -15,6 +14,7 @@ import graalvm.compiler.nodes.ControlSplitNode;
 import graalvm.compiler.nodes.EndNode;
 import graalvm.compiler.nodes.FixedNode;
 import graalvm.compiler.nodes.LoopBeginNode;
+import graalvm.compiler.nodes.cfg.ControlFlowGraph;
 
 /**
  * Compute probabilities for fixed nodes on the fly and cache them at {@link AbstractBeginNode}s.
@@ -82,7 +82,7 @@ public class FixedNodeProbabilityCache implements ToDoubleFunction<FixedNode>
         else
         {
             ControlSplitNode split = (ControlSplitNode) current.predecessor();
-            probability = multiplyProbabilities(split.probability((AbstractBeginNode) current), applyAsDouble(split));
+            probability = ControlFlowGraph.multiplyProbabilities(split.probability((AbstractBeginNode) current), applyAsDouble(split));
         }
         cache.put(current, probability);
         return probability;
@@ -103,7 +103,7 @@ public class FixedNodeProbabilityCache implements ToDoubleFunction<FixedNode>
         }
         if (current instanceof LoopBeginNode)
         {
-            result = multiplyProbabilities(result, ((LoopBeginNode) current).loopFrequency());
+            result = ControlFlowGraph.multiplyProbabilities(result, ((LoopBeginNode) current).loopFrequency());
         }
         return result;
     }

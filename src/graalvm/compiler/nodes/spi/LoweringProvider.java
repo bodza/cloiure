@@ -1,11 +1,11 @@
 package graalvm.compiler.nodes.spi;
 
+import jdk.vm.ci.meta.JavaKind;
+
 import graalvm.compiler.core.common.spi.ArrayOffsetProvider;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.memory.address.AddressNode;
-
-import jdk.vm.ci.meta.JavaKind;
 
 /**
  * Provides a capability for replacing a higher node with one or more lower level nodes.

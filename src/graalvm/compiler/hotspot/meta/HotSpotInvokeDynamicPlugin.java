@@ -1,5 +1,15 @@
 package graalvm.compiler.hotspot.meta;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+
+import jdk.vm.ci.hotspot.HotSpotResolvedJavaMethod;
+import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
+import jdk.vm.ci.meta.ConstantPool;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import graalvm.compiler.bytecode.Bytecodes;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.debug.GraalError;
@@ -8,18 +18,8 @@ import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
-import graalvm.compiler.nodes.graphbuilderconf.InvokeDynamicPlugin;
 import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderContext;
-
-import jdk.vm.ci.hotspot.HotSpotResolvedJavaMethod;
-import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
-import jdk.vm.ci.meta.ConstantPool;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
+import graalvm.compiler.nodes.graphbuilderconf.InvokeDynamicPlugin;
 
 public class HotSpotInvokeDynamicPlugin implements InvokeDynamicPlugin
 {

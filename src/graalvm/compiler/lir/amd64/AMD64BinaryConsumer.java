@@ -1,13 +1,12 @@
 package graalvm.compiler.lir.amd64;
 
-import static graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize.DWORD;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.COMPOSITE;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.STACK;
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.code.site.DataSectionReference;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.VMConstant;
+import jdk.vm.ci.meta.Value;
 
-import graalvm.compiler.core.common.NumUtil;
 import graalvm.compiler.asm.amd64.AMD64Address;
 import graalvm.compiler.asm.amd64.AMD64Assembler.AMD64BinaryArithmetic;
 import graalvm.compiler.asm.amd64.AMD64Assembler.AMD64MIOp;
@@ -15,17 +14,13 @@ import graalvm.compiler.asm.amd64.AMD64Assembler.AMD64MROp;
 import graalvm.compiler.asm.amd64.AMD64Assembler.AMD64RMOp;
 import graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize;
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
+import graalvm.compiler.core.common.NumUtil;
 import graalvm.compiler.lir.LIRFrameState;
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.StandardOp.ImplicitNullCheck;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
-
-import jdk.vm.ci.code.site.DataSectionReference;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.VMConstant;
-import jdk.vm.ci.meta.Value;
 
 /**
  * AMD64 LIR instructions that have two input operands, but no output operand.
@@ -42,8 +37,8 @@ public class AMD64BinaryConsumer
         @Opcode private final AMD64RMOp opcode;
         private final OperandSize size;
 
-        @Use({REG}) protected AllocatableValue x;
-        @Use({REG, STACK}) protected AllocatableValue y;
+        @Use({OperandFlag.REG}) protected AllocatableValue x;
+        @Use({OperandFlag.REG, OperandFlag.STACK}) protected AllocatableValue y;
 
         public Op(AMD64RMOp opcode, OperandSize size, AllocatableValue x, AllocatableValue y)
         {
@@ -58,13 +53,13 @@ public class AMD64BinaryConsumer
         @Override
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
-            if (isRegister(y))
+            if (ValueUtil.isRegister(y))
             {
-                opcode.emit(masm, size, asRegister(x), asRegister(y));
+                opcode.emit(masm, size, ValueUtil.asRegister(x), ValueUtil.asRegister(y));
             }
             else
             {
-                opcode.emit(masm, size, asRegister(x), (AMD64Address) crb.asAddress(y));
+                opcode.emit(masm, size, ValueUtil.asRegister(x), (AMD64Address) crb.asAddress(y));
             }
         }
     }
@@ -79,7 +74,7 @@ public class AMD64BinaryConsumer
         @Opcode private final AMD64MIOp opcode;
         private final OperandSize size;
 
-        @Use({REG, STACK}) protected AllocatableValue x;
+        @Use({OperandFlag.REG, OperandFlag.STACK}) protected AllocatableValue x;
         private final int y;
 
         public ConstOp(AMD64BinaryArithmetic opcode, OperandSize size, AllocatableValue x, int y)
@@ -105,9 +100,9 @@ public class AMD64BinaryConsumer
         @Override
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
-            if (isRegister(x))
+            if (ValueUtil.isRegister(x))
             {
-                opcode.emit(masm, size, asRegister(x), y);
+                opcode.emit(masm, size, ValueUtil.asRegister(x), y);
             }
             else
             {
@@ -128,7 +123,7 @@ public class AMD64BinaryConsumer
 
         public VMConstOp(AMD64MIOp opcode, AllocatableValue x, VMConstant c)
         {
-            super(TYPE, opcode, DWORD, x, 0xDEADDEAD);
+            super(TYPE, opcode, OperandSize.DWORD, x, 0xDEADDEAD);
             this.c = c;
         }
 
@@ -151,7 +146,7 @@ public class AMD64BinaryConsumer
         @Opcode private final AMD64RMOp opcode;
         private final OperandSize size;
 
-        @Use({REG}) protected AllocatableValue x;
+        @Use({OperandFlag.REG}) protected AllocatableValue x;
         private final Constant y;
 
         private final int alignment;
@@ -176,7 +171,7 @@ public class AMD64BinaryConsumer
         @Override
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
-            opcode.emit(masm, size, asRegister(x), (AMD64Address) crb.recordDataReferenceInCode(y, alignment));
+            opcode.emit(masm, size, ValueUtil.asRegister(x), (AMD64Address) crb.recordDataReferenceInCode(y, alignment));
         }
     }
 
@@ -191,8 +186,8 @@ public class AMD64BinaryConsumer
         @Opcode private final AMD64RMOp opcode;
         private final OperandSize size;
 
-        @Use({REG}) protected AllocatableValue x;
-        @Use({COMPOSITE}) protected AMD64AddressValue y;
+        @Use({OperandFlag.REG}) protected AllocatableValue x;
+        @Use({OperandFlag.COMPOSITE}) protected AMD64AddressValue y;
 
         @State protected LIRFrameState state;
 
@@ -215,7 +210,7 @@ public class AMD64BinaryConsumer
             {
                 crb.recordImplicitException(masm.position(), state);
             }
-            opcode.emit(masm, size, asRegister(x), y.toAddress());
+            opcode.emit(masm, size, ValueUtil.asRegister(x), y.toAddress());
         }
 
         @Override
@@ -241,8 +236,8 @@ public class AMD64BinaryConsumer
         @Opcode private final AMD64MROp opcode;
         private final OperandSize size;
 
-        @Use({COMPOSITE}) protected AMD64AddressValue x;
-        @Use({REG}) protected AllocatableValue y;
+        @Use({OperandFlag.COMPOSITE}) protected AMD64AddressValue x;
+        @Use({OperandFlag.REG}) protected AllocatableValue y;
 
         @State protected LIRFrameState state;
 
@@ -265,7 +260,7 @@ public class AMD64BinaryConsumer
             {
                 crb.recordImplicitException(masm.position(), state);
             }
-            opcode.emit(masm, size, x.toAddress(), asRegister(y));
+            opcode.emit(masm, size, x.toAddress(), ValueUtil.asRegister(y));
         }
 
         @Override
@@ -291,7 +286,7 @@ public class AMD64BinaryConsumer
         @Opcode private final AMD64MIOp opcode;
         private final OperandSize size;
 
-        @Use({COMPOSITE}) protected AMD64AddressValue x;
+        @Use({OperandFlag.COMPOSITE}) protected AMD64AddressValue x;
         private final int y;
 
         @State protected LIRFrameState state;
@@ -357,7 +352,7 @@ public class AMD64BinaryConsumer
 
         public MemoryVMConstOp(AMD64MIOp opcode, AMD64AddressValue x, VMConstant c, LIRFrameState state)
         {
-            super(TYPE, opcode, DWORD, x, 0xDEADDEAD, state);
+            super(TYPE, opcode, OperandSize.DWORD, x, 0xDEADDEAD, state);
             this.c = c;
         }
 

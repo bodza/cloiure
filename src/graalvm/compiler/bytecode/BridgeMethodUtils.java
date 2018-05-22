@@ -1,15 +1,11 @@
 package graalvm.compiler.bytecode;
 
-import static graalvm.compiler.bytecode.Bytecodes.ATHROW;
-import static graalvm.compiler.bytecode.Bytecodes.INVOKEINTERFACE;
-import static graalvm.compiler.bytecode.Bytecodes.INVOKESPECIAL;
-import static graalvm.compiler.bytecode.Bytecodes.INVOKESTATIC;
-import static graalvm.compiler.bytecode.Bytecodes.INVOKEVIRTUAL;
-
 import java.lang.annotation.Annotation;
 
 import jdk.vm.ci.meta.ConstantPool;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
+
+import graalvm.compiler.bytecode.Bytecodes;
 
 /**
  * Utilities for working around the absence of method annotations and parameter annotations on
@@ -42,10 +38,10 @@ public class BridgeMethodUtils
         {
             switch (opcode)
             {
-                case INVOKEVIRTUAL:
-                case INVOKESPECIAL:
-                case INVOKESTATIC:
-                case INVOKEINTERFACE:
+                case Bytecodes.INVOKEVIRTUAL:
+                case Bytecodes.INVOKESPECIAL:
+                case Bytecodes.INVOKESTATIC:
+                case Bytecodes.INVOKEINTERFACE:
                 {
                     int cpi = stream.readCPI();
                     ConstantPool cp = code.getConstantPool();
@@ -61,7 +57,7 @@ public class BridgeMethodUtils
                     }
                     break;
                 }
-                case ATHROW:
+                case Bytecodes.ATHROW:
                 {
                     if (calledAbstractMethodErrorConstructor)
                     {

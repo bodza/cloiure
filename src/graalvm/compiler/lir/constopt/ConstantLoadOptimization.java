@@ -1,8 +1,5 @@
 package graalvm.compiler.lir.constopt;
 
-import static graalvm.compiler.lir.LIRValueUtil.isVariable;
-import static graalvm.compiler.lir.phases.LIRPhase.Options.LIROptimization;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -10,24 +7,26 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.ValueKind;
+
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.core.common.cfg.BlockMap;
 import graalvm.compiler.lir.InstructionValueConsumer;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRInsertionBuffer;
 import graalvm.compiler.lir.LIRInstruction;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.StandardOp.LoadConstantOp;
 import graalvm.compiler.lir.Variable;
 import graalvm.compiler.lir.constopt.ConstantTree.Flags;
 import graalvm.compiler.lir.constopt.ConstantTree.NodeCost;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.gen.LIRGeneratorTool;
+import graalvm.compiler.lir.phases.LIRPhase;
 import graalvm.compiler.lir.phases.PreAllocationOptimizationPhase;
 import graalvm.compiler.options.NestedBooleanOptionKey;
-
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.ValueKind;
 
 /**
  * This optimization tries to improve the handling of constants by replacing a single definition of
@@ -39,7 +38,7 @@ public final class ConstantLoadOptimization extends PreAllocationOptimizationPha
     public static class Options
     {
         // Option "Enable constant load optimization."
-        public static final NestedBooleanOptionKey LIROptConstantLoadOptimization = new NestedBooleanOptionKey(LIROptimization, true);
+        public static final NestedBooleanOptionKey LIROptConstantLoadOptimization = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
     }
 
     @Override
@@ -108,7 +107,7 @@ public final class ConstantLoadOptimization extends PreAllocationOptimizationPha
             {
                 return false;
             }
-            return isVariable(LoadConstantOp.asLoadConstantOp(inst).getResult());
+            return LIRValueUtil.isVariable(LoadConstantOp.asLoadConstantOp(inst).getResult());
         }
 
         private void addUsageToBlockMap(UseEntry entry)
@@ -130,7 +129,7 @@ public final class ConstantLoadOptimization extends PreAllocationOptimizationPha
         {
             InstructionValueConsumer loadConsumer = (instruction, value, mode, flags) ->
             {
-                if (isVariable(value))
+                if (LIRValueUtil.isVariable(value))
                 {
                     Variable var = (Variable) value;
 
@@ -157,7 +156,7 @@ public final class ConstantLoadOptimization extends PreAllocationOptimizationPha
 
             InstructionValueConsumer useConsumer = (instruction, value, mode, flags) ->
             {
-                if (isVariable(value))
+                if (LIRValueUtil.isVariable(value))
                 {
                     Variable var = (Variable) value;
                     if (!phiConstants.get(var.index))

@@ -1,5 +1,10 @@
 package graalvm.compiler.hotspot.nodes;
 
+import jdk.vm.ci.hotspot.HotSpotCompressedNullConstant;
+import jdk.vm.ci.hotspot.HotSpotConstant;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.JavaConstant;
+
 import graalvm.compiler.core.common.CompressEncoding;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.debug.GraalError;
@@ -8,11 +13,6 @@ import graalvm.compiler.hotspot.nodes.type.HotSpotNarrowOopStamp;
 import graalvm.compiler.nodes.CompressionNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
-
-import jdk.vm.ci.hotspot.HotSpotCompressedNullConstant;
-import jdk.vm.ci.hotspot.HotSpotConstant;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.JavaConstant;
 
 public final class HotSpotCompressionNode extends CompressionNode
 {

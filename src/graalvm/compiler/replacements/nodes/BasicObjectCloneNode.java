@@ -2,6 +2,11 @@ package graalvm.compiler.replacements.nodes;
 
 import java.util.Collections;
 
+import jdk.vm.ci.meta.Assumptions;
+import jdk.vm.ci.meta.ResolvedJavaField;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
@@ -18,11 +23,6 @@ import graalvm.compiler.nodes.spi.VirtualizerTool;
 import graalvm.compiler.nodes.util.GraphUtil;
 import graalvm.compiler.nodes.virtual.VirtualInstanceNode;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
-
-import jdk.vm.ci.meta.Assumptions;
-import jdk.vm.ci.meta.ResolvedJavaField;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 public abstract class BasicObjectCloneNode extends MacroStateSplitNode implements VirtualizableAllocation, ArrayLengthProvider
 {

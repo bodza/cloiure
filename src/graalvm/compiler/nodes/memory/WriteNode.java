@@ -1,5 +1,7 @@
 package graalvm.compiler.nodes.memory;
 
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.Node;
@@ -10,7 +12,6 @@ import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.memory.address.AddressNode;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-import org.graalvm.word.LocationIdentity;
 
 /**
  * Writes a given {@linkplain #value() value} a {@linkplain FixedAccessNode memory location}.

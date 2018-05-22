@@ -1,9 +1,5 @@
 package graalvm.compiler.phases.common.inlining.walker;
 
-import static graalvm.compiler.core.common.GraalOptions.Intrinsify;
-import static graalvm.compiler.core.common.GraalOptions.MaximumRecursiveInlining;
-import static graalvm.compiler.core.common.GraalOptions.MegamorphicInliningMinMethodProbability;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -12,8 +8,16 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import jdk.vm.ci.code.BailoutException;
+import jdk.vm.ci.meta.Assumptions.AssumptionResult;
+import jdk.vm.ci.meta.JavaTypeProfile;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import org.graalvm.collections.EconomicSet;
 import org.graalvm.collections.Equivalence;
+
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Graph;
@@ -42,12 +46,6 @@ import graalvm.compiler.phases.common.inlining.info.elem.InlineableGraph;
 import graalvm.compiler.phases.common.inlining.policy.InliningPolicy;
 import graalvm.compiler.phases.tiers.HighTierContext;
 import graalvm.compiler.phases.util.Providers;
-
-import jdk.vm.ci.code.BailoutException;
-import jdk.vm.ci.meta.Assumptions.AssumptionResult;
-import jdk.vm.ci.meta.JavaTypeProfile;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * The space of inlining decisions is explored depth-first with the help of a stack realized by
@@ -108,7 +106,7 @@ public class InliningData
         {
             return "the method is not resolved";
         }
-        else if (method.isNative() && (!Intrinsify.getValue(options) || !InliningUtil.canIntrinsify(context.getReplacements(), method, invokeBci)))
+        else if (method.isNative() && (!GraalOptions.Intrinsify.getValue(options) || !InliningUtil.canIntrinsify(context.getReplacements(), method, invokeBci)))
         {
             return "it is a non-intrinsic native method";
         }
@@ -124,7 +122,7 @@ public class InliningData
         {
             return "it is marked non-inlinable";
         }
-        else if (countRecursiveInlining(method) > MaximumRecursiveInlining.getValue(options))
+        else if (countRecursiveInlining(method) > GraalOptions.MaximumRecursiveInlining.getValue(options))
         {
             return "it exceeds the maximum recursive inlining depth";
         }
@@ -330,7 +328,7 @@ public class InliningData
                 ArrayList<Double> newConcreteMethodsProbabilities = new ArrayList<>();
                 for (int i = 0; i < concreteMethods.size(); ++i)
                 {
-                    if (concreteMethodsProbabilities.get(i) >= MegamorphicInliningMinMethodProbability.getValue(options))
+                    if (concreteMethodsProbabilities.get(i) >= GraalOptions.MegamorphicInliningMinMethodProbability.getValue(options))
                     {
                         newConcreteMethods.add(concreteMethods.get(i));
                         newConcreteMethodsProbabilities.add(concreteMethodsProbabilities.get(i));

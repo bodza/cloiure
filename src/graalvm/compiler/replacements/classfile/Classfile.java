@@ -6,10 +6,10 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import graalvm.compiler.replacements.classfile.ClassfileConstant.Utf8;
-
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
+
+import graalvm.compiler.replacements.classfile.ClassfileConstant.Utf8;
 
 /**
  * Container for objects representing the {@code Code} attributes parsed from a class file.

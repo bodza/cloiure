@@ -2,10 +2,11 @@ package graalvm.compiler.nodes;
 
 import jdk.vm.ci.meta.JavaKind;
 
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.extended.ForeignCallNode;
 import graalvm.compiler.nodes.java.MethodCallTargetNode;
@@ -16,11 +17,8 @@ import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.nodes.spi.UncheckedInterfaceProvider;
 import graalvm.compiler.nodes.util.GraphUtil;
-import org.graalvm.word.LocationIdentity;
 
-import static graalvm.compiler.nodeinfo.InputType.Extension;
-import static graalvm.compiler.nodeinfo.InputType.Memory;
-import static graalvm.compiler.nodeinfo.InputType.State;
+import graalvm.compiler.nodeinfo.InputType;
 
 /**
  * The {@code InvokeNode} represents all kinds of method calls.
@@ -30,8 +28,8 @@ public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke
     public static final NodeClass<InvokeNode> TYPE = NodeClass.create(InvokeNode.class);
 
     @OptionalInput ValueNode classInit;
-    @Input(Extension) CallTargetNode callTarget;
-    @OptionalInput(State) FrameState stateDuring;
+    @Input(InputType.Extension) CallTargetNode callTarget;
+    @OptionalInput(InputType.State) FrameState stateDuring;
     protected final int bci;
     protected boolean polymorphic;
     protected boolean useForInlining;

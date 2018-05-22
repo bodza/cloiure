@@ -2,6 +2,10 @@ package graalvm.compiler.lir.alloc.trace;
 
 import java.util.ArrayList;
 
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.common.JVMCIError;
+import jdk.vm.ci.meta.AllocatableValue;
+
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.common.alloc.Trace;
 import graalvm.compiler.core.common.alloc.TraceBuilderResult;
@@ -10,10 +14,6 @@ import graalvm.compiler.lir.alloc.trace.TraceAllocationPhase.TraceAllocationCont
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.common.JVMCIError;
-import jdk.vm.ci.meta.AllocatableValue;
 
 /**
  * Manages the selection of allocation strategies.

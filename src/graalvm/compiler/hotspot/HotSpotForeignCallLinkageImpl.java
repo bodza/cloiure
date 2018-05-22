@@ -1,16 +1,5 @@
 package graalvm.compiler.hotspot;
 
-import static jdk.vm.ci.hotspot.HotSpotJVMCIRuntime.runtime;
-import static graalvm.compiler.hotspot.HotSpotForeignCallLinkage.RegisterEffect.DESTROYS_REGISTERS;
-
-import org.graalvm.collections.EconomicSet;
-import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
-import graalvm.compiler.core.target.Backend;
-import graalvm.compiler.hotspot.meta.HotSpotForeignCallsProvider;
-import graalvm.compiler.hotspot.stubs.Stub;
-import graalvm.compiler.word.WordTypes;
-import org.graalvm.word.LocationIdentity;
-
 import jdk.vm.ci.code.CallingConvention;
 import jdk.vm.ci.code.CallingConvention.Type;
 import jdk.vm.ci.code.CodeCacheProvider;
@@ -20,11 +9,22 @@ import jdk.vm.ci.code.RegisterConfig;
 import jdk.vm.ci.code.ValueKindFactory;
 import jdk.vm.ci.hotspot.HotSpotCallingConventionType;
 import jdk.vm.ci.hotspot.HotSpotForeignCallTarget;
+import jdk.vm.ci.hotspot.HotSpotJVMCIRuntime;
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.JavaType;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaType;
 import jdk.vm.ci.meta.Value;
+
+import org.graalvm.collections.EconomicSet;
+import org.graalvm.word.LocationIdentity;
+
+import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
+import graalvm.compiler.core.target.Backend;
+import graalvm.compiler.hotspot.HotSpotForeignCallLinkage.RegisterEffect;
+import graalvm.compiler.hotspot.meta.HotSpotForeignCallsProvider;
+import graalvm.compiler.hotspot.stubs.Stub;
+import graalvm.compiler.word.WordTypes;
 
 /**
  * The details required to link a HotSpot runtime or stub call.
@@ -195,7 +195,7 @@ public class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarget impl
     @Override
     public long getMaxCallTargetOffset()
     {
-        return runtime().getHostJVMCIBackend().getCodeCache().getMaxCallTargetOffset(address);
+        return HotSpotJVMCIRuntime.runtime().getHostJVMCIBackend().getCodeCache().getMaxCallTargetOffset(address);
     }
 
     @Override
@@ -261,7 +261,7 @@ public class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarget impl
     @Override
     public boolean destroysRegisters()
     {
-        return effect == DESTROYS_REGISTERS;
+        return effect == RegisterEffect.DESTROYS_REGISTERS;
     }
 
     @Override

@@ -1,7 +1,12 @@
 package graalvm.compiler.hotspot;
 
-import static jdk.vm.ci.code.CodeUtil.K;
-import static jdk.vm.ci.code.CodeUtil.getCallingConvention;
+import jdk.vm.ci.code.CallingConvention;
+import jdk.vm.ci.code.CodeUtil;
+import jdk.vm.ci.hotspot.HotSpotCallingConventionType;
+import jdk.vm.ci.hotspot.HotSpotJVMCIRuntime;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.JavaType;
+import jdk.vm.ci.runtime.JVMCICompiler;
 
 import graalvm.compiler.core.common.NumUtil;
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
@@ -13,13 +18,6 @@ import graalvm.compiler.lir.asm.CompilationResultBuilder;
 import graalvm.compiler.lir.framemap.ReferenceMapBuilder;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.code.CallingConvention;
-import jdk.vm.ci.hotspot.HotSpotCallingConventionType;
-import jdk.vm.ci.hotspot.HotSpotJVMCIRuntime;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.JavaType;
-import jdk.vm.ci.runtime.JVMCICompiler;
 
 /**
  * Common functionality of HotSpot host backends.
@@ -62,7 +60,7 @@ public abstract class HotSpotHostBackend extends HotSpotBackend
             return stub.getLinkage().getIncomingCallingConvention();
         }
 
-        CallingConvention cc = getCallingConvention(getCodeCache(), HotSpotCallingConventionType.JavaCallee, graph.method(), this);
+        CallingConvention cc = CodeUtil.getCallingConvention(getCodeCache(), HotSpotCallingConventionType.JavaCallee, graph.method(), this);
         if (graph.getEntryBCI() != JVMCICompiler.INVOCATION_ENTRY_BCI)
         {
             // for OSR, only a pointer is passed to the method.
@@ -90,7 +88,7 @@ public abstract class HotSpotHostBackend extends HotSpotBackend
             // is greater than a page.
 
             int pageSize = config.vmPageSize;
-            int bangEnd = NumUtil.roundUp(config.stackShadowPages * 4 * K, pageSize);
+            int bangEnd = NumUtil.roundUp(config.stackShadowPages * 4 * CodeUtil.K, pageSize);
 
             // This is how far the previous frame's stack banging extended.
             int bangEndSafe = bangEnd;

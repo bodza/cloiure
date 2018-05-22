@@ -1,16 +1,15 @@
 package graalvm.compiler.hotspot.amd64;
 
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
-import static jdk.vm.ci.amd64.AMD64.rsp;
-import static jdk.vm.ci.code.ValueUtil.asRegister;
+import jdk.vm.ci.amd64.AMD64;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
 
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
-
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.meta.AllocatableValue;
 
 /**
  * Sets up the arguments for an exception handler in the callers frame, removes the current frame
@@ -21,9 +20,9 @@ final class AMD64HotSpotJumpToExceptionHandlerInCallerOp extends AMD64HotSpotEpi
 {
     public static final LIRInstructionClass<AMD64HotSpotJumpToExceptionHandlerInCallerOp> TYPE = LIRInstructionClass.create(AMD64HotSpotJumpToExceptionHandlerInCallerOp.class);
 
-    @Use(REG) AllocatableValue handlerInCallerPc;
-    @Use(REG) AllocatableValue exception;
-    @Use(REG) AllocatableValue exceptionPc;
+    @Use(OperandFlag.REG) AllocatableValue handlerInCallerPc;
+    @Use(OperandFlag.REG) AllocatableValue exception;
+    @Use(OperandFlag.REG) AllocatableValue exceptionPc;
     private final Register thread;
     private final int isMethodHandleReturnOffset;
 
@@ -43,8 +42,8 @@ final class AMD64HotSpotJumpToExceptionHandlerInCallerOp extends AMD64HotSpotEpi
         leaveFrameAndRestoreRbp(crb, masm);
 
         // Discard the return address, thus completing restoration of caller frame
-        masm.incrementq(rsp, 8);
+        masm.incrementq(AMD64.rsp, 8);
 
-        masm.jmp(asRegister(handlerInCallerPc));
+        masm.jmp(ValueUtil.asRegister(handlerInCallerPc));
     }
 }

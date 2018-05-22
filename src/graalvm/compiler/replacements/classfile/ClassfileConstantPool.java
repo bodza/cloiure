@@ -1,17 +1,7 @@
 package graalvm.compiler.replacements.classfile;
 
-import static graalvm.compiler.replacements.classfile.Classfile.skipFully;
-import static graalvm.compiler.replacements.classfile.ClassfileConstant.CONSTANT_Class;
-
 import java.io.DataInputStream;
 import java.io.IOException;
-
-import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.replacements.classfile.ClassfileConstant.ClassRef;
-import graalvm.compiler.replacements.classfile.ClassfileConstant.ExecutableRef;
-import graalvm.compiler.replacements.classfile.ClassfileConstant.FieldRef;
-import graalvm.compiler.replacements.classfile.ClassfileConstant.Primitive;
-import graalvm.compiler.replacements.classfile.ClassfileConstant.Utf8;
 
 import jdk.vm.ci.meta.ConstantPool;
 import jdk.vm.ci.meta.JavaConstant;
@@ -20,6 +10,15 @@ import jdk.vm.ci.meta.JavaMethod;
 import jdk.vm.ci.meta.JavaType;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.Signature;
+
+import graalvm.compiler.debug.GraalError;
+import graalvm.compiler.replacements.classfile.Classfile;
+import graalvm.compiler.replacements.classfile.ClassfileConstant;
+import graalvm.compiler.replacements.classfile.ClassfileConstant.ClassRef;
+import graalvm.compiler.replacements.classfile.ClassfileConstant.ExecutableRef;
+import graalvm.compiler.replacements.classfile.ClassfileConstant.FieldRef;
+import graalvm.compiler.replacements.classfile.ClassfileConstant.Primitive;
+import graalvm.compiler.replacements.classfile.ClassfileConstant.Utf8;
 
 class ClassfileConstantPool implements ConstantPool
 {
@@ -93,16 +92,16 @@ class ClassfileConstantPool implements ConstantPool
             case ClassfileConstant.CONSTANT_Utf8:
                 return new ClassfileConstant.Utf8(stream.readUTF());
             case ClassfileConstant.CONSTANT_MethodHandle:
-                skipFully(stream, 3); // reference_kind, reference_index
+                Classfile.skipFully(stream, 3); // reference_kind, reference_index
                 return new ClassfileConstant.Unsupported(tag, "CONSTANT_MethodHandle_info");
             case ClassfileConstant.CONSTANT_MethodType:
-                skipFully(stream, 2); // descriptor_index
+                Classfile.skipFully(stream, 2); // descriptor_index
                 return new ClassfileConstant.Unsupported(tag, "CONSTANT_MethodType_info");
             case ClassfileConstant.CONSTANT_Dynamic:
-                skipFully(stream, 4); // bootstrap_method_attr_index, name_and_type_index
+                Classfile.skipFully(stream, 4); // bootstrap_method_attr_index, name_and_type_index
                 return new ClassfileConstant.Unsupported(tag, "CONSTANT_Dynamic_info");
             case ClassfileConstant.CONSTANT_InvokeDynamic:
-                skipFully(stream, 4); // bootstrap_method_attr_index, name_and_type_index
+                Classfile.skipFully(stream, 4); // bootstrap_method_attr_index, name_and_type_index
                 return new ClassfileConstant.Unsupported(tag, "CONSTANT_InvokeDynamic_info");
             default:
                 throw new GraalError("Invalid constant pool tag: " + tag);
@@ -175,7 +174,7 @@ class ClassfileConstantPool implements ConstantPool
         }
         switch (c.tag)
         {
-            case CONSTANT_Class:
+            case ClassfileConstant.CONSTANT_Class:
                 final int opcode = -1;
                 return lookupType(index, opcode);
             case ClassfileConstant.CONSTANT_String:

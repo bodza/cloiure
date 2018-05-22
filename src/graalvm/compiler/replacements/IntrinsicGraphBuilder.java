@@ -1,5 +1,15 @@
 package graalvm.compiler.replacements;
 
+import jdk.vm.ci.code.BailoutException;
+import jdk.vm.ci.code.BytecodeFrame;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.JavaType;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+import jdk.vm.ci.meta.Signature;
+
 import graalvm.compiler.bytecode.Bytecode;
 import graalvm.compiler.bytecode.BytecodeProvider;
 import graalvm.compiler.core.common.spi.ConstantFieldProvider;
@@ -25,16 +35,6 @@ import graalvm.compiler.nodes.graphbuilderconf.InvocationPlugin;
 import graalvm.compiler.nodes.graphbuilderconf.InvocationPlugin.Receiver;
 import graalvm.compiler.nodes.spi.StampProvider;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.code.BailoutException;
-import jdk.vm.ci.code.BytecodeFrame;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.JavaType;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
-import jdk.vm.ci.meta.Signature;
 
 /**
  * Implementation of {@link GraphBuilderContext} used to produce a graph for a method based on an

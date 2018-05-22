@@ -1,21 +1,20 @@
 package graalvm.compiler.hotspot.nodes;
 
-import static graalvm.compiler.hotspot.HotSpotBackend.VM_ERROR;
+import jdk.vm.ci.code.CodeUtil;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.bytecode.Bytecode;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.spi.ForeignCallLinkage;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
+import graalvm.compiler.hotspot.HotSpotBackend;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.replacements.nodes.CStringConstant;
-
-import jdk.vm.ci.code.CodeUtil;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Causes the VM to exit with a description of the current Java location and an optional
@@ -60,7 +59,7 @@ public final class VMErrorNode extends DeoptimizingStubCall implements LIRLowera
         Value whereArg = gen.getLIRGeneratorTool().emitConstant(wordKind, new CStringConstant(whereString));
         Value formatArg = gen.getLIRGeneratorTool().emitConstant(wordKind, new CStringConstant(format));
 
-        ForeignCallLinkage linkage = gen.getLIRGeneratorTool().getForeignCalls().lookupForeignCall(VM_ERROR);
+        ForeignCallLinkage linkage = gen.getLIRGeneratorTool().getForeignCalls().lookupForeignCall(HotSpotBackend.VM_ERROR);
         gen.getLIRGeneratorTool().emitForeignCall(linkage, null, whereArg, formatArg, gen.operand(value));
     }
 

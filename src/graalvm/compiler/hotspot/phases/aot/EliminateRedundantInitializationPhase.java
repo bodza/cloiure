@@ -1,7 +1,5 @@
 package graalvm.compiler.hotspot.phases.aot;
 
-import static graalvm.util.CollectionsUtil.anyMatch;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -11,6 +9,7 @@ import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
 import org.graalvm.collections.EconomicSet;
+
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.hotspot.nodes.aot.InitializeKlassNode;
 import graalvm.compiler.hotspot.nodes.aot.ResolveConstantNode;
@@ -23,6 +22,7 @@ import graalvm.compiler.phases.BasePhase;
 import graalvm.compiler.phases.graph.MergeableState;
 import graalvm.compiler.phases.graph.PostOrderNodeIterator;
 import graalvm.compiler.phases.tiers.PhaseContext;
+import graalvm.util.CollectionsUtil;
 
 public class EliminateRedundantInitializationPhase extends BasePhase<PhaseContext>
 {
@@ -104,7 +104,7 @@ public class EliminateRedundantInitializationPhase extends BasePhase<PhaseContex
                 return types.contains(type);
             }
             // For other types see if there is the same type or a subtype
-            return anyMatch(types, t -> type.isAssignableFrom(t));
+            return CollectionsUtil.anyMatch(types, t -> type.isAssignableFrom(t));
         }
 
         public void add(ResolvedJavaType type)

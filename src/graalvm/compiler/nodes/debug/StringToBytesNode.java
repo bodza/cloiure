@@ -1,5 +1,9 @@
 package graalvm.compiler.nodes.debug;
 
+import jdk.vm.ci.meta.JavaKind;
+
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodeinfo.InputType;
@@ -8,9 +12,6 @@ import graalvm.compiler.nodes.NamedLocationIdentity;
 import graalvm.compiler.nodes.memory.MemoryCheckpoint;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.meta.JavaKind;
 
 /**
  * The {@code StringToBytesNode} transforms a compilation-time String into a byte array in the

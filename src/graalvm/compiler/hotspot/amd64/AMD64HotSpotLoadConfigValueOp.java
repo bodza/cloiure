@@ -1,14 +1,13 @@
 package graalvm.compiler.hotspot.amd64;
 
-import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-
 import jdk.vm.ci.amd64.AMD64Kind;
 import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.meta.AllocatableValue;
 
 import graalvm.compiler.asm.amd64.AMD64Address;
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.amd64.AMD64LIRInstruction;
@@ -31,10 +30,10 @@ public final class AMD64HotSpotLoadConfigValueOp extends AMD64LIRInstruction
     @Override
     public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
     {
-        if (GeneratePIC.getValue(crb.getOptions()))
+        if (GraalOptions.GeneratePIC.getValue(crb.getOptions()))
         {
             AMD64Kind kind = (AMD64Kind) result.getPlatformKind();
-            Register reg = asRegister(result);
+            Register reg = ValueUtil.asRegister(result);
             AMD64Address placeholder = masm.getPlaceholder(-1);
             switch (kind)
             {

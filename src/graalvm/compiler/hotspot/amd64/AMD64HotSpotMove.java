@@ -1,27 +1,23 @@
 package graalvm.compiler.hotspot.amd64;
 
-import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.HINT;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.STACK;
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-
-import graalvm.compiler.asm.amd64.AMD64Address;
-import graalvm.compiler.core.common.CompressEncoding;
-import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
-import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
-import graalvm.compiler.lir.LIRInstructionClass;
-import graalvm.compiler.lir.StandardOp.LoadConstantOp;
-import graalvm.compiler.lir.amd64.AMD64LIRInstruction;
-import graalvm.compiler.lir.asm.CompilationResultBuilder;
-
 import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.hotspot.HotSpotMetaspaceConstant;
 import jdk.vm.ci.hotspot.HotSpotObjectConstant;
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.Constant;
+
+import graalvm.compiler.asm.amd64.AMD64Address;
+import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
+import graalvm.compiler.core.common.CompressEncoding;
+import graalvm.compiler.core.common.GraalOptions;
+import graalvm.compiler.debug.GraalError;
+import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
+import graalvm.compiler.lir.LIRInstructionClass;
+import graalvm.compiler.lir.StandardOp.LoadConstantOp;
+import graalvm.compiler.lir.amd64.AMD64LIRInstruction;
+import graalvm.compiler.lir.asm.CompilationResultBuilder;
 
 public class AMD64HotSpotMove
 {
@@ -29,7 +25,7 @@ public class AMD64HotSpotMove
     {
         public static final LIRInstructionClass<HotSpotLoadObjectConstantOp> TYPE = LIRInstructionClass.create(HotSpotLoadObjectConstantOp.class);
 
-        @Def({REG, STACK}) private AllocatableValue result;
+        @Def({OperandFlag.REG, OperandFlag.STACK}) private AllocatableValue result;
         private final HotSpotObjectConstant input;
 
         public HotSpotLoadObjectConstantOp(AllocatableValue result, HotSpotObjectConstant input)
@@ -42,7 +38,7 @@ public class AMD64HotSpotMove
         @Override
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
-            if (GeneratePIC.getValue(crb.getOptions()))
+            if (GraalOptions.GeneratePIC.getValue(crb.getOptions()))
             {
                 throw GraalError.shouldNotReachHere("Object constant load should not be happening directly");
             }
@@ -50,15 +46,15 @@ public class AMD64HotSpotMove
             if (crb.target.inlineObjects)
             {
                 crb.recordInlineDataInCode(input);
-                if (isRegister(result))
+                if (ValueUtil.isRegister(result))
                 {
                     if (compressed)
                     {
-                        masm.movl(asRegister(result), 0xDEADDEAD);
+                        masm.movl(ValueUtil.asRegister(result), 0xDEADDEAD);
                     }
                     else
                     {
-                        masm.movq(asRegister(result), 0xDEADDEADDEADDEADL);
+                        masm.movq(ValueUtil.asRegister(result), 0xDEADDEADDEADDEADL);
                     }
                 }
                 else
@@ -75,16 +71,16 @@ public class AMD64HotSpotMove
             }
             else
             {
-                if (isRegister(result))
+                if (ValueUtil.isRegister(result))
                 {
                     AMD64Address address = (AMD64Address) crb.recordDataReferenceInCode(input, compressed ? 4 : 8);
                     if (compressed)
                     {
-                        masm.movl(asRegister(result), address);
+                        masm.movl(ValueUtil.asRegister(result), address);
                     }
                     else
                     {
-                        masm.movq(asRegister(result), address);
+                        masm.movq(ValueUtil.asRegister(result), address);
                     }
                 }
                 else
@@ -111,7 +107,7 @@ public class AMD64HotSpotMove
     {
         public static final LIRInstructionClass<BaseMove> TYPE = LIRInstructionClass.create(BaseMove.class);
 
-        @Def({REG, HINT}) protected AllocatableValue result;
+        @Def({OperandFlag.REG, OperandFlag.HINT}) protected AllocatableValue result;
         private final GraalHotSpotVMConfig config;
 
         public BaseMove(AllocatableValue result, GraalHotSpotVMConfig config)
@@ -124,7 +120,7 @@ public class AMD64HotSpotMove
         @Override
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
-            masm.movq(asRegister(result), masm.getPlaceholder(-1));
+            masm.movq(ValueUtil.asRegister(result), masm.getPlaceholder(-1));
             crb.recordMark(config.MARKID_NARROW_KLASS_BASE_ADDRESS);
         }
     }
@@ -133,7 +129,7 @@ public class AMD64HotSpotMove
     {
         public static final LIRInstructionClass<HotSpotLoadMetaspaceConstantOp> TYPE = LIRInstructionClass.create(HotSpotLoadMetaspaceConstantOp.class);
 
-        @Def({REG, STACK}) private AllocatableValue result;
+        @Def({OperandFlag.REG, OperandFlag.STACK}) private AllocatableValue result;
         private final HotSpotMetaspaceConstant input;
 
         public HotSpotLoadMetaspaceConstantOp(AllocatableValue result, HotSpotMetaspaceConstant input)
@@ -146,22 +142,22 @@ public class AMD64HotSpotMove
         @Override
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
-            if (GeneratePIC.getValue(crb.getOptions()))
+            if (GraalOptions.GeneratePIC.getValue(crb.getOptions()))
             {
                 throw GraalError.shouldNotReachHere("Metaspace constant load should not be happening directly");
             }
             boolean compressed = input.isCompressed();
-            if (isRegister(result))
+            if (ValueUtil.isRegister(result))
             {
                 if (compressed)
                 {
                     crb.recordInlineDataInCode(input);
-                    masm.movl(asRegister(result), 0xDEADDEAD);
+                    masm.movl(ValueUtil.asRegister(result), 0xDEADDEAD);
                 }
                 else
                 {
                     crb.recordInlineDataInCode(input);
-                    masm.movq(asRegister(result), 0xDEADDEADDEADDEADL);
+                    masm.movq(ValueUtil.asRegister(result), 0xDEADDEADDEADDEADL);
                 }
             }
             else
@@ -199,7 +195,7 @@ public class AMD64HotSpotMove
         {
             masm.shlq(register, encoding.getShift());
         }
-        boolean pic = GeneratePIC.getValue(crb.getOptions());
+        boolean pic = GraalOptions.GeneratePIC.getValue(crb.getOptions());
         if (pic || encoding.hasBase())
         {
             if (pic)

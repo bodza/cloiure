@@ -1,17 +1,17 @@
 package graalvm.compiler.replacements;
 
-import static graalvm.compiler.core.common.GraalOptions.UseSnippetGraphCache;
-import static graalvm.compiler.java.BytecodeParserOptions.InlineDuringParsing;
-import static graalvm.compiler.java.BytecodeParserOptions.InlineIntrinsicsDuringParsing;
-import static graalvm.compiler.nodes.graphbuilderconf.InlineInvokePlugin.InlineInfo.createIntrinsicInlineInfo;
-import static graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext.CompilationContext.INLINE_AFTER_PARSING;
-import static graalvm.compiler.phases.common.DeadCodeEliminationPhase.Optionality.Required;
-
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
+
 import graalvm.compiler.api.replacements.Fold;
 import graalvm.compiler.api.replacements.MethodSubstitution;
 import graalvm.compiler.api.replacements.Snippet;
@@ -25,6 +25,7 @@ import graalvm.compiler.core.common.spi.ConstantFieldProvider;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.Node.NodeIntrinsic;
+import graalvm.compiler.java.BytecodeParserOptions;
 import graalvm.compiler.java.GraphBuilderPhase;
 import graalvm.compiler.java.GraphBuilderPhase.Instance;
 import graalvm.compiler.nodes.CallTargetNode;
@@ -37,7 +38,9 @@ import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderConfiguration;
 import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderConfiguration.Plugins;
 import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderContext;
 import graalvm.compiler.nodes.graphbuilderconf.InlineInvokePlugin;
+import graalvm.compiler.nodes.graphbuilderconf.InlineInvokePlugin.InlineInfo;
 import graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext;
+import graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext.CompilationContext;
 import graalvm.compiler.nodes.graphbuilderconf.InvocationPlugin;
 import graalvm.compiler.nodes.graphbuilderconf.MethodSubstitutionPlugin;
 import graalvm.compiler.nodes.java.MethodCallTargetNode;
@@ -48,16 +51,11 @@ import graalvm.compiler.phases.OptimisticOptimizations;
 import graalvm.compiler.phases.common.CanonicalizerPhase;
 import graalvm.compiler.phases.common.ConvertDeoptimizeToGuardPhase;
 import graalvm.compiler.phases.common.DeadCodeEliminationPhase;
+import graalvm.compiler.phases.common.DeadCodeEliminationPhase.Optionality;
 import graalvm.compiler.phases.tiers.PhaseContext;
 import graalvm.compiler.phases.util.Providers;
 import graalvm.compiler.word.Word;
 import graalvm.compiler.word.WordOperationPlugin;
-
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 public class ReplacementsImpl implements Replacements, InlineInvokePlugin
 {
@@ -120,17 +118,17 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
         Bytecode subst = getSubstitutionBytecode(method);
         if (subst != null)
         {
-            if (b.parsingIntrinsic() || InlineDuringParsing.getValue(b.getOptions()) || InlineIntrinsicsDuringParsing.getValue(b.getOptions()))
+            if (b.parsingIntrinsic() || BytecodeParserOptions.InlineDuringParsing.getValue(b.getOptions()) || BytecodeParserOptions.InlineIntrinsicsDuringParsing.getValue(b.getOptions()))
             {
                 // Forced inlining of intrinsics
-                return createIntrinsicInlineInfo(subst.getMethod(), method, subst.getOrigin());
+                return InlineInfo.createIntrinsicInlineInfo(subst.getMethod(), method, subst.getOrigin());
             }
             return null;
         }
         if (b.parsingIntrinsic())
         {
             // Force inlining when parsing replacements
-            return createIntrinsicInlineInfo(method, null, defaultBytecodeProvider);
+            return InlineInfo.createIntrinsicInlineInfo(method, null, defaultBytecodeProvider);
         }
         return null;
     }
@@ -181,11 +179,11 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
     @Override
     public StructuredGraph getSnippet(ResolvedJavaMethod method, ResolvedJavaMethod recursiveEntry, Object[] args)
     {
-        StructuredGraph graph = UseSnippetGraphCache.getValue(options) ? graphs.get(method) : null;
+        StructuredGraph graph = GraalOptions.UseSnippetGraphCache.getValue(options) ? graphs.get(method) : null;
         if (graph == null)
         {
             StructuredGraph newGraph = makeGraph(defaultBytecodeProvider, method, args, recursiveEntry);
-            if (!UseSnippetGraphCache.getValue(options) || args != null)
+            if (!GraalOptions.UseSnippetGraphCache.getValue(options) || args != null)
             {
                 return newGraph;
             }
@@ -241,11 +239,11 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
             {
                 MethodSubstitutionPlugin msPlugin = (MethodSubstitutionPlugin) plugin;
                 ResolvedJavaMethod substitute = msPlugin.getSubstitute(metaAccess);
-                StructuredGraph graph = UseSnippetGraphCache.getValue(options) ? graphs.get(substitute) : null;
+                StructuredGraph graph = GraalOptions.UseSnippetGraphCache.getValue(options) ? graphs.get(substitute) : null;
                 if (graph == null)
                 {
                     graph = makeGraph(msPlugin.getBytecodeProvider(), substitute, null, method);
-                    if (!UseSnippetGraphCache.getValue(options))
+                    if (!GraalOptions.UseSnippetGraphCache.getValue(options))
                     {
                         return graph;
                     }
@@ -337,7 +335,7 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
                 int sideEffectCount = 0;
                 new ConvertDeoptimizeToGuardPhase().apply(graph, null);
 
-                new DeadCodeEliminationPhase(Required).apply(graph);
+                new DeadCodeEliminationPhase(Optionality.Required).apply(graph);
             }
             else
             {
@@ -409,13 +407,13 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
             if (snippetAnnotation == null)
             {
                 // Post-parse inlined intrinsic
-                initialIntrinsicContext = new IntrinsicContext(substitutedMethod, method, bytecodeProvider, INLINE_AFTER_PARSING);
+                initialIntrinsicContext = new IntrinsicContext(substitutedMethod, method, bytecodeProvider, CompilationContext.INLINE_AFTER_PARSING);
             }
             else
             {
                 // Snippet
                 ResolvedJavaMethod original = substitutedMethod != null ? substitutedMethod : method;
-                initialIntrinsicContext = new IntrinsicContext(original, method, bytecodeProvider, INLINE_AFTER_PARSING, snippetAnnotation.allowPartialIntrinsicArgumentMismatch());
+                initialIntrinsicContext = new IntrinsicContext(original, method, bytecodeProvider, CompilationContext.INLINE_AFTER_PARSING, snippetAnnotation.allowPartialIntrinsicArgumentMismatch());
             }
 
             createGraphBuilder(metaAccess, replacements.providers.getStampProvider(), replacements.providers.getConstantReflection(), replacements.providers.getConstantFieldProvider(), config, OptimisticOptimizations.NONE, initialIntrinsicContext).apply(graph);

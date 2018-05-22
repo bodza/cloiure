@@ -1,13 +1,20 @@
 package graalvm.compiler.hotspot.phases.aot;
 
-import static graalvm.compiler.core.common.cfg.AbstractControlFlowGraph.strictlyDominates;
-import static graalvm.compiler.hotspot.nodes.aot.LoadMethodCountersNode.getLoadMethodCountersNodes;
-import static graalvm.compiler.nodes.ConstantNode.getConstantNodes;
-
 import java.util.HashSet;
 import java.util.List;
 
+import jdk.vm.ci.code.BytecodeFrame;
+import jdk.vm.ci.hotspot.HotSpotMetaspaceConstant;
+import jdk.vm.ci.hotspot.HotSpotObjectConstant;
+import jdk.vm.ci.hotspot.HotSpotResolvedJavaType;
+import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import org.graalvm.collections.EconomicMap;
+
+import graalvm.compiler.core.common.cfg.AbstractControlFlowGraph;
 import graalvm.compiler.core.common.cfg.BlockMap;
 import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.Stamp;
@@ -43,15 +50,6 @@ import graalvm.compiler.phases.graph.ReentrantNodeIterator.NodeIteratorClosure;
 import graalvm.compiler.phases.schedule.SchedulePhase;
 import graalvm.compiler.phases.schedule.SchedulePhase.SchedulingStrategy;
 import graalvm.compiler.phases.tiers.PhaseContext;
-
-import jdk.vm.ci.code.BytecodeFrame;
-import jdk.vm.ci.hotspot.HotSpotMetaspaceConstant;
-import jdk.vm.ci.hotspot.HotSpotObjectConstant;
-import jdk.vm.ci.hotspot.HotSpotResolvedJavaType;
-import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 public class ReplaceConstantNodesPhase extends BasePhase<PhaseContext>
 {
@@ -329,7 +327,7 @@ public class ReplaceConstantNodesPhase extends BasePhase<PhaseContext>
                 // Look for dominating blocks that have existing nodes
                 for (Block d : blockToExisting.getKeys())
                 {
-                    if (strictlyDominates(d, b))
+                    if (AbstractControlFlowGraph.strictlyDominates(d, b))
                     {
                         use.replaceFirstInput(node, blockToExisting.get(d));
                         break;
@@ -456,7 +454,7 @@ public class ReplaceConstantNodesPhase extends BasePhase<PhaseContext>
     {
         new SchedulePhase(SchedulingStrategy.LATEST_OUT_OF_LOOPS, true).apply(graph);
 
-        for (LoadMethodCountersNode node : getLoadMethodCountersNodes(graph))
+        for (LoadMethodCountersNode node : LoadMethodCountersNode.getLoadMethodCountersNodes(graph))
         {
             if (anyUsagesNeedReplacement(node))
             {
@@ -472,7 +470,7 @@ public class ReplaceConstantNodesPhase extends BasePhase<PhaseContext>
     {
         new SchedulePhase(SchedulingStrategy.LATEST_OUT_OF_LOOPS, true).apply(graph);
 
-        for (ConstantNode node : getConstantNodes(graph))
+        for (ConstantNode node : ConstantNode.getConstantNodes(graph))
         {
             Constant constant = node.asConstant();
             if (constant instanceof HotSpotMetaspaceConstant && anyUsagesNeedReplacement(node))

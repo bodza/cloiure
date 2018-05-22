@@ -1,9 +1,8 @@
 package graalvm.compiler.graph;
 
-import static graalvm.compiler.graph.Edges.Type.Inputs;
-
 import java.util.ArrayList;
 
+import graalvm.compiler.graph.Edges.Type;
 import graalvm.compiler.graph.NodeClass.InputInfo;
 import graalvm.compiler.nodeinfo.InputType;
 
@@ -14,7 +13,7 @@ public final class InputEdges extends Edges
 
     public InputEdges(int directCount, ArrayList<InputInfo> edges)
     {
-        super(Inputs, directCount, edges);
+        super(Type.Inputs, directCount, edges);
 
         this.inputTypes = new InputType[edges.size()];
         this.isOptional = new boolean[edges.size()];

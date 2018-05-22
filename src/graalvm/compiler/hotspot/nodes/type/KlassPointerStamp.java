@@ -2,12 +2,6 @@ package graalvm.compiler.hotspot.nodes.type;
 
 import java.util.Objects;
 
-import graalvm.compiler.core.common.CompressEncoding;
-import graalvm.compiler.core.common.LIRKind;
-import graalvm.compiler.core.common.spi.LIRKindTool;
-import graalvm.compiler.core.common.type.AbstractPointerStamp;
-import graalvm.compiler.core.common.type.Stamp;
-
 import jdk.vm.ci.hotspot.HotSpotCompressedNullConstant;
 import jdk.vm.ci.hotspot.HotSpotMemoryAccessProvider;
 import jdk.vm.ci.hotspot.HotSpotMetaspaceConstant;
@@ -15,6 +9,12 @@ import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.MemoryAccessProvider;
 import jdk.vm.ci.meta.MetaAccessProvider;
+
+import graalvm.compiler.core.common.CompressEncoding;
+import graalvm.compiler.core.common.LIRKind;
+import graalvm.compiler.core.common.spi.LIRKindTool;
+import graalvm.compiler.core.common.type.AbstractPointerStamp;
+import graalvm.compiler.core.common.type.Stamp;
 
 public final class KlassPointerStamp extends MetaspacePointerStamp
 {

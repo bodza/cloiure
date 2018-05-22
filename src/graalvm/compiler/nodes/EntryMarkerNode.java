@@ -1,10 +1,9 @@
 package graalvm.compiler.nodes;
 
-import static graalvm.compiler.nodeinfo.InputType.Association;
-
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.IterableNodeType;
 import graalvm.compiler.graph.NodeClass;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 

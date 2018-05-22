@@ -1,5 +1,13 @@
 package graalvm.compiler.hotspot;
 
+import jdk.vm.ci.hotspot.HotSpotMetaspaceConstant;
+import jdk.vm.ci.hotspot.HotSpotObjectConstant;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.DeoptimizationAction;
+import jdk.vm.ci.meta.DeoptimizationReason;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.hotspot.meta.HotSpotConstantLoadAction;
@@ -14,14 +22,6 @@ import graalvm.compiler.lir.LIRFrameState;
 import graalvm.compiler.lir.VirtualStackSlot;
 import graalvm.compiler.lir.gen.LIRGenerator;
 import graalvm.compiler.lir.gen.LIRGeneratorTool;
-
-import jdk.vm.ci.hotspot.HotSpotMetaspaceConstant;
-import jdk.vm.ci.hotspot.HotSpotObjectConstant;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.DeoptimizationAction;
-import jdk.vm.ci.meta.DeoptimizationReason;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.Value;
 
 /**
  * This interface defines the contract a HotSpot backend LIR generator needs to fulfill in addition

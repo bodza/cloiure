@@ -1,17 +1,15 @@
 package graalvm.compiler.lir.alloc.lsra;
 
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static graalvm.compiler.lir.LIRValueUtil.isStackSlotValue;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
 
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.alloc.lsra.Interval.RegisterBinding;
 import graalvm.compiler.lir.alloc.lsra.Interval.RegisterPriority;
 import graalvm.compiler.lir.alloc.lsra.Interval.State;
 import graalvm.compiler.options.OptionKey;
-
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.meta.AllocatableValue;
 
 public class OptimizingLinearScanWalker extends LinearScanWalker
 {
@@ -111,7 +109,7 @@ public class OptimizingLinearScanWalker extends LinearScanWalker
             return false;
         }
 
-        if (!isStackSlotValue(predecessorLocation) && !isRegister(predecessorLocation))
+        if (!LIRValueUtil.isStackSlotValue(predecessorLocation) && !ValueUtil.isRegister(predecessorLocation))
         {
             // value is materialized -> no need for optimization
             return false;
@@ -132,9 +130,9 @@ public class OptimizingLinearScanWalker extends LinearScanWalker
         }
         else
         {
-            if (isRegister(predecessorLocation))
+            if (ValueUtil.isRegister(predecessorLocation))
             {
-                splitRegisterInterval(splitPart, asRegister(predecessorLocation));
+                splitRegisterInterval(splitPart, ValueUtil.asRegister(predecessorLocation));
             }
             else
             {

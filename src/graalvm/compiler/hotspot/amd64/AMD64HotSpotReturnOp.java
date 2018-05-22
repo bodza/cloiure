@@ -1,18 +1,16 @@
 package graalvm.compiler.hotspot.amd64;
 
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.ILLEGAL;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
+import jdk.vm.ci.amd64.AMD64.CPUFeature;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
 import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
 import graalvm.compiler.lir.gen.DiagnosticLIRGeneratorTool.ZapStackArgumentSpaceBeforeInstruction;
-
-import jdk.vm.ci.amd64.AMD64.CPUFeature;
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Returns from a function.
@@ -21,7 +19,7 @@ import jdk.vm.ci.meta.Value;
 final class AMD64HotSpotReturnOp extends AMD64HotSpotEpilogueBlockEndOp implements ZapStackArgumentSpaceBeforeInstruction
 {
     public static final LIRInstructionClass<AMD64HotSpotReturnOp> TYPE = LIRInstructionClass.create(AMD64HotSpotReturnOp.class);
-    @Use({REG, ILLEGAL}) protected Value value;
+    @Use({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value value;
     private final boolean isStub;
     private final Register thread;
     private final Register scratchForSafepointOnReturn;

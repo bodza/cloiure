@@ -2,10 +2,10 @@ package graalvm.compiler.lir;
 
 import java.util.EnumSet;
 
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstruction.OperandMode;
-
-import jdk.vm.ci.meta.Value;
 
 /**
  * Functional interface for iterating over a list of values, possibly returning a value to replace

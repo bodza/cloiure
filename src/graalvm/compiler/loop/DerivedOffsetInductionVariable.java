@@ -1,10 +1,8 @@
 package graalvm.compiler.loop;
 
-import static graalvm.compiler.loop.MathUtil.add;
-import static graalvm.compiler.loop.MathUtil.sub;
-
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.debug.GraalError;
+import graalvm.compiler.loop.MathUtil;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.AddNode;
@@ -134,17 +132,17 @@ public class DerivedOffsetInductionVariable extends DerivedInductionVariable
     {
         if (value instanceof AddNode)
         {
-            return add(graph(), b, o);
+            return MathUtil.add(graph(), b, o);
         }
         if (value instanceof SubNode)
         {
             if (base.valueNode() == value.getX())
             {
-                return sub(graph(), b, o);
+                return MathUtil.sub(graph(), b, o);
             }
             else
             {
-                return sub(graph(), o, b);
+                return MathUtil.sub(graph(), o, b);
             }
         }
         throw GraalError.shouldNotReachHere();

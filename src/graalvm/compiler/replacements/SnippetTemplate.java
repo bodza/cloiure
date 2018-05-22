@@ -1,9 +1,5 @@
 package graalvm.compiler.replacements;
 
-import static graalvm.compiler.graph.iterators.NodePredicates.isNotA;
-import static graalvm.compiler.phases.common.DeadCodeEliminationPhase.Optionality.Required;
-import static org.graalvm.word.LocationIdentity.any;
-
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -15,10 +11,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.Local;
+import jdk.vm.ci.meta.LocalVariableTable;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaMethod.Parameter;
+import jdk.vm.ci.meta.Signature;
+
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.EconomicSet;
 import org.graalvm.collections.Equivalence;
 import org.graalvm.collections.UnmodifiableEconomicMap;
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
 import graalvm.compiler.api.replacements.Snippet.NonNullParameter;
@@ -34,6 +43,7 @@ import graalvm.compiler.graph.Graph.Mark;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.Position;
+import graalvm.compiler.graph.iterators.NodePredicates;
 import graalvm.compiler.loop.LoopEx;
 import graalvm.compiler.loop.LoopsData;
 import graalvm.compiler.loop.phases.LoopTransformations;
@@ -78,6 +88,7 @@ import graalvm.compiler.options.OptionKey;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.common.CanonicalizerPhase;
 import graalvm.compiler.phases.common.DeadCodeEliminationPhase;
+import graalvm.compiler.phases.common.DeadCodeEliminationPhase.Optionality;
 import graalvm.compiler.phases.common.FloatingReadPhase;
 import graalvm.compiler.phases.common.FloatingReadPhase.MemoryMapImpl;
 import graalvm.compiler.phases.common.GuardLoweringPhase;
@@ -88,18 +99,6 @@ import graalvm.compiler.phases.tiers.PhaseContext;
 import graalvm.compiler.phases.util.Providers;
 import graalvm.compiler.replacements.nodes.ExplodeLoopNode;
 import graalvm.compiler.replacements.nodes.LoadSnippetVarargParameterNode;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.Local;
-import jdk.vm.ci.meta.LocalVariableTable;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaMethod.Parameter;
-import jdk.vm.ci.meta.Signature;
 
 /**
  * A snippet template is a graph created by parsing a snippet method and then specialized by binding
@@ -826,7 +825,7 @@ public class SnippetTemplate
             }
         }
 
-        new DeadCodeEliminationPhase(Required).apply(snippetCopy);
+        new DeadCodeEliminationPhase(Optionality.Required).apply(snippetCopy);
 
         new FloatingReadPhase(true, true).apply(snippetCopy);
         new RemoveValueProxyPhase().apply(snippetCopy);
@@ -864,7 +863,7 @@ public class SnippetTemplate
             else
             {
                 // Check that all those memory maps where the only usages of the anchor
-                needsAnchor = anchor.usages().filter(isNotA(MemoryMapNode.class)).isNotEmpty();
+                needsAnchor = anchor.usages().filter(NodePredicates.isNotA(MemoryMapNode.class)).isNotEmpty();
                 // Remove the useless memory map
                 MemoryMapNode memoryMap = null;
                 for (ReturnNode retNode : snippet.getNodes(ReturnNode.TYPE))
@@ -1173,9 +1172,9 @@ public class SnippetTemplate
         }
 
         // remove ANY_LOCATION if it's just a kill by the start node
-        if (memoryMap.getLastLocationAccess(any()) instanceof MemoryAnchorNode)
+        if (memoryMap.getLastLocationAccess(LocationIdentity.any()) instanceof MemoryAnchorNode)
         {
-            kills.remove(any());
+            kills.remove(LocationIdentity.any());
         }
 
         // node can only lower to a ANY_LOCATION kill if the replacee also kills ANY_LOCATION

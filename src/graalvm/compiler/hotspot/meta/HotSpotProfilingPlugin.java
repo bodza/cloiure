@@ -1,5 +1,7 @@
 package graalvm.compiler.hotspot.meta;
 
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import graalvm.compiler.hotspot.nodes.profiling.ProfileBranchNode;
 import graalvm.compiler.hotspot.nodes.profiling.ProfileInvokeNode;
 import graalvm.compiler.hotspot.nodes.profiling.ProfileNode;
@@ -12,8 +14,6 @@ import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderContext;
 import graalvm.compiler.nodes.graphbuilderconf.ProfilingPlugin;
 import graalvm.compiler.options.OptionKey;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 public abstract class HotSpotProfilingPlugin implements ProfilingPlugin
 {

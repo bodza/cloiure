@@ -1,8 +1,13 @@
 package graalvm.compiler.lir.amd64;
 
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.ILLEGAL;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
+import jdk.vm.ci.amd64.AMD64;
+import jdk.vm.ci.amd64.AMD64.CPUFeature;
+import jdk.vm.ci.amd64.AMD64Kind;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.asm.Label;
 import graalvm.compiler.asm.amd64.AMD64Address;
@@ -13,18 +18,11 @@ import graalvm.compiler.asm.amd64.AMD64Assembler.SSEOp;
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.NumUtil;
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
 import graalvm.compiler.lir.gen.LIRGeneratorTool;
-
-import jdk.vm.ci.amd64.AMD64;
-import jdk.vm.ci.amd64.AMD64.CPUFeature;
-import jdk.vm.ci.amd64.AMD64Kind;
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Emits code which compares two arrays of the same length. If the CPU supports any vector
@@ -39,20 +37,20 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
     private final int arrayBaseOffset;
     private final int arrayIndexScale;
 
-    @Def({REG}) protected Value resultValue;
-    @Alive({REG}) protected Value array1Value;
-    @Alive({REG}) protected Value array2Value;
-    @Alive({REG}) protected Value lengthValue;
-    @Temp({REG}) protected Value temp1;
-    @Temp({REG}) protected Value temp2;
-    @Temp({REG}) protected Value temp3;
-    @Temp({REG}) protected Value temp4;
+    @Def({OperandFlag.REG}) protected Value resultValue;
+    @Alive({OperandFlag.REG}) protected Value array1Value;
+    @Alive({OperandFlag.REG}) protected Value array2Value;
+    @Alive({OperandFlag.REG}) protected Value lengthValue;
+    @Temp({OperandFlag.REG}) protected Value temp1;
+    @Temp({OperandFlag.REG}) protected Value temp2;
+    @Temp({OperandFlag.REG}) protected Value temp3;
+    @Temp({OperandFlag.REG}) protected Value temp4;
 
-    @Temp({REG, ILLEGAL}) protected Value temp5;
-    @Temp({REG, ILLEGAL}) protected Value tempXMM;
+    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value temp5;
+    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value tempXMM;
 
-    @Temp({REG, ILLEGAL}) protected Value vectorTemp1;
-    @Temp({REG, ILLEGAL}) protected Value vectorTemp2;
+    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value vectorTemp1;
+    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value vectorTemp2;
 
     public AMD64ArrayEqualsOp(LIRGeneratorTool tool, JavaKind kind, Value result, Value array1, Value array2, Value length)
     {
@@ -103,21 +101,21 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
     @Override
     public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
     {
-        Register result = asRegister(resultValue);
-        Register array1 = asRegister(temp1);
-        Register array2 = asRegister(temp2);
-        Register length = asRegister(temp3);
+        Register result = ValueUtil.asRegister(resultValue);
+        Register array1 = ValueUtil.asRegister(temp1);
+        Register array2 = ValueUtil.asRegister(temp2);
+        Register length = ValueUtil.asRegister(temp3);
 
         Label trueLabel = new Label();
         Label falseLabel = new Label();
         Label done = new Label();
 
         // Load array base addresses.
-        masm.leaq(array1, new AMD64Address(asRegister(array1Value), arrayBaseOffset));
-        masm.leaq(array2, new AMD64Address(asRegister(array2Value), arrayBaseOffset));
+        masm.leaq(array1, new AMD64Address(ValueUtil.asRegister(array1Value), arrayBaseOffset));
+        masm.leaq(array2, new AMD64Address(ValueUtil.asRegister(array2Value), arrayBaseOffset));
 
         // Get array length in bytes.
-        masm.movl(length, asRegister(lengthValue));
+        masm.movl(length, ValueUtil.asRegister(lengthValue));
 
         if (arrayIndexScale > 1)
         {
@@ -175,8 +173,8 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
      */
     private void emitSSE41Compare(CompilationResultBuilder crb, AMD64MacroAssembler masm, Register result, Register array1, Register array2, Register length, Label trueLabel, Label falseLabel)
     {
-        Register vector1 = asRegister(vectorTemp1, AMD64Kind.DOUBLE);
-        Register vector2 = asRegister(vectorTemp2, AMD64Kind.DOUBLE);
+        Register vector1 = ValueUtil.asRegister(vectorTemp1, AMD64Kind.DOUBLE);
+        Register vector2 = ValueUtil.asRegister(vectorTemp2, AMD64Kind.DOUBLE);
 
         Label loop = new Label();
         Label compareTail = new Label();
@@ -262,8 +260,8 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
 
     private void emitAVXCompare(CompilationResultBuilder crb, AMD64MacroAssembler masm, Register result, Register array1, Register array2, Register length, Label trueLabel, Label falseLabel)
     {
-        Register vector1 = asRegister(vectorTemp1, AMD64Kind.DOUBLE);
-        Register vector2 = asRegister(vectorTemp2, AMD64Kind.DOUBLE);
+        Register vector1 = ValueUtil.asRegister(vectorTemp1, AMD64Kind.DOUBLE);
+        Register vector2 = ValueUtil.asRegister(vectorTemp2, AMD64Kind.DOUBLE);
 
         Label loop = new Label();
         Label compareTail = new Label();
@@ -347,7 +345,7 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
         Label loopCheck = new Label();
         Label nanCheck = new Label();
 
-        Register temp = asRegister(temp4);
+        Register temp = ValueUtil.asRegister(temp4);
 
         masm.andl(result, VECTOR_SIZE - 1); // tail count (in bytes)
         masm.andl(length, ~(VECTOR_SIZE - 1));  // vector count (in bytes)
@@ -419,7 +417,7 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
         Label compare2Bytes = new Label();
         Label compare1Byte = new Label();
 
-        Register temp = asRegister(temp4);
+        Register temp = ValueUtil.asRegister(temp4);
 
         if (kind.getByteCount() <= 4)
         {
@@ -486,7 +484,7 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
      */
     private void emitNaNCheck(AMD64MacroAssembler masm, AMD64Address src, Label branchIfNonNaN)
     {
-        Register tempXMMReg = asRegister(tempXMM);
+        Register tempXMMReg = ValueUtil.asRegister(tempXMM);
         if (kind == JavaKind.Float)
         {
             masm.movflt(tempXMMReg, src);
@@ -512,7 +510,7 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
         if (!skipBitwiseCompare)
         {
             // Bitwise compare
-            Register temp = asRegister(temp4);
+            Register temp = ValueUtil.asRegister(temp4);
 
             if (kind == JavaKind.Float)
             {
@@ -539,7 +537,7 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
     private void emitFloatCompareWithinRange(CompilationResultBuilder crb, AMD64MacroAssembler masm, Register base1, Register base2, Register index, int offset, Label falseLabel, int range)
     {
         Label loop = new Label();
-        Register i = asRegister(temp5);
+        Register i = ValueUtil.asRegister(temp5);
 
         masm.movq(i, range);
         masm.negq(i);

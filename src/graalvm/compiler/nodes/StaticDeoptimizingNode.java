@@ -1,10 +1,10 @@
 package graalvm.compiler.nodes;
 
-import graalvm.compiler.debug.GraalError;
-
 import jdk.vm.ci.meta.DeoptimizationAction;
 import jdk.vm.ci.meta.DeoptimizationReason;
 import jdk.vm.ci.meta.JavaConstant;
+
+import graalvm.compiler.debug.GraalError;
 
 public interface StaticDeoptimizingNode extends ValueNodeInterface
 {

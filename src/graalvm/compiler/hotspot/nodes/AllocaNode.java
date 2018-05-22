@@ -2,6 +2,9 @@ package graalvm.compiler.hotspot.nodes;
 
 import java.util.BitSet;
 
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.lir.VirtualStackSlot;
@@ -10,9 +13,6 @@ import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.word.Word;
 import graalvm.compiler.word.WordTypes;
-
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Reserves a block of memory in the stack frame of a method. The block is reserved in the frame for

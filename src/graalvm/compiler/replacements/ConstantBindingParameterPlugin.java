@@ -1,14 +1,14 @@
 package graalvm.compiler.replacements;
 
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.MetaAccessProvider;
+
 import graalvm.compiler.api.replacements.SnippetReflectionProvider;
 import graalvm.compiler.core.common.type.StampPair;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.calc.FloatingNode;
 import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderTool;
 import graalvm.compiler.nodes.graphbuilderconf.ParameterPlugin;
-
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.MetaAccessProvider;
 
 /**
  * A {@link ParameterPlugin} that binds constant values to some parameters.

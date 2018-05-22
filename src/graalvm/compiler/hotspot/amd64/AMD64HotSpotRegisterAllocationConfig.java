@@ -1,44 +1,14 @@
 package graalvm.compiler.hotspot.amd64;
 
-import static jdk.vm.ci.amd64.AMD64.r10;
-import static jdk.vm.ci.amd64.AMD64.r11;
-import static jdk.vm.ci.amd64.AMD64.r12;
-import static jdk.vm.ci.amd64.AMD64.r13;
-import static jdk.vm.ci.amd64.AMD64.r14;
-import static jdk.vm.ci.amd64.AMD64.r8;
-import static jdk.vm.ci.amd64.AMD64.r9;
-import static jdk.vm.ci.amd64.AMD64.rax;
-import static jdk.vm.ci.amd64.AMD64.rbp;
-import static jdk.vm.ci.amd64.AMD64.rbx;
-import static jdk.vm.ci.amd64.AMD64.rcx;
-import static jdk.vm.ci.amd64.AMD64.rdi;
-import static jdk.vm.ci.amd64.AMD64.rdx;
-import static jdk.vm.ci.amd64.AMD64.rsi;
-import static jdk.vm.ci.amd64.AMD64.xmm0;
-import static jdk.vm.ci.amd64.AMD64.xmm1;
-import static jdk.vm.ci.amd64.AMD64.xmm10;
-import static jdk.vm.ci.amd64.AMD64.xmm11;
-import static jdk.vm.ci.amd64.AMD64.xmm12;
-import static jdk.vm.ci.amd64.AMD64.xmm13;
-import static jdk.vm.ci.amd64.AMD64.xmm14;
-import static jdk.vm.ci.amd64.AMD64.xmm15;
-import static jdk.vm.ci.amd64.AMD64.xmm2;
-import static jdk.vm.ci.amd64.AMD64.xmm3;
-import static jdk.vm.ci.amd64.AMD64.xmm4;
-import static jdk.vm.ci.amd64.AMD64.xmm5;
-import static jdk.vm.ci.amd64.AMD64.xmm6;
-import static jdk.vm.ci.amd64.AMD64.xmm7;
-import static jdk.vm.ci.amd64.AMD64.xmm8;
-import static jdk.vm.ci.amd64.AMD64.xmm9;
-
 import java.util.ArrayList;
 import java.util.BitSet;
 
-import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
-
+import jdk.vm.ci.amd64.AMD64;
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.RegisterArray;
 import jdk.vm.ci.code.RegisterConfig;
+
+import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 
 class AMD64HotSpotRegisterAllocationConfig extends RegisterAllocationConfig
 {
@@ -54,9 +24,9 @@ class AMD64HotSpotRegisterAllocationConfig extends RegisterAllocationConfig
      */
     static final Register[] registerAllocationOrder =
     {
-        r10, r11, r8, r9, r12, rcx, rbx, rdi, rdx, rsi, rax, rbp, r13, r14, /*r15,*/ /*rsp,*/
-        xmm0, xmm1, xmm2,  xmm3,  xmm4,  xmm5,  xmm6,  xmm7,
-        xmm8, xmm9, xmm10, xmm11, xmm12, xmm13, xmm14, xmm15
+        AMD64.r10, AMD64.r11, AMD64.r8, AMD64.r9, AMD64.r12, AMD64.rcx, AMD64.rbx, AMD64.rdi, AMD64.rdx, AMD64.rsi, AMD64.rax, AMD64.rbp, AMD64.r13, AMD64.r14, /*r15,*/ /*rsp,*/
+        AMD64.xmm0, AMD64.xmm1, AMD64.xmm2,  AMD64.xmm3,  AMD64.xmm4,  AMD64.xmm5,  AMD64.xmm6,  AMD64.xmm7,
+        AMD64.xmm8, AMD64.xmm9, AMD64.xmm10, AMD64.xmm11, AMD64.xmm12, AMD64.xmm13, AMD64.xmm14, AMD64.xmm15
     };
 
     AMD64HotSpotRegisterAllocationConfig(RegisterConfig registerConfig, String[] allocationRestrictedTo)

@@ -3,13 +3,13 @@ package graalvm.compiler.lir;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.JavaConstant;
+
 import graalvm.compiler.asm.Assembler;
 import graalvm.compiler.asm.Label;
 import graalvm.compiler.core.common.calc.Condition;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
-
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.JavaConstant;
 
 /**
  * This class encapsulates different strategies on how to generate code for switch instructions.

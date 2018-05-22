@@ -4,11 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-import graalvm.compiler.bytecode.Bytecode;
-import graalvm.compiler.bytecode.BytecodeProvider;
-import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.replacements.classfile.ClassfileConstant.Utf8;
-
 import jdk.vm.ci.meta.ConstantPool;
 import jdk.vm.ci.meta.DefaultProfilingInfo;
 import jdk.vm.ci.meta.ExceptionHandler;
@@ -19,6 +14,11 @@ import jdk.vm.ci.meta.LocalVariableTable;
 import jdk.vm.ci.meta.ProfilingInfo;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.TriState;
+
+import graalvm.compiler.bytecode.Bytecode;
+import graalvm.compiler.bytecode.BytecodeProvider;
+import graalvm.compiler.debug.GraalError;
+import graalvm.compiler.replacements.classfile.ClassfileConstant.Utf8;
 
 /**
  * The bytecode properties of a method as parsed directly from a class file without any

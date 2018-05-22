@@ -1,9 +1,10 @@
 package graalvm.compiler.hotspot.meta;
 
-import static graalvm.compiler.hotspot.word.HotSpotOperation.HotspotOpcode.POINTER_EQ;
-import static graalvm.compiler.hotspot.word.HotSpotOperation.HotspotOpcode.POINTER_NE;
-import static graalvm.compiler.nodes.ConstantNode.forBoolean;
-import static org.graalvm.word.LocationIdentity.any;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
+import org.graalvm.word.LocationIdentity;
 
 import graalvm.compiler.api.replacements.SnippetReflectionProvider;
 import graalvm.compiler.bytecode.BridgeMethodUtils;
@@ -17,6 +18,7 @@ import graalvm.compiler.hotspot.nodes.type.MethodPointerStamp;
 import graalvm.compiler.hotspot.word.HotSpotOperation;
 import graalvm.compiler.hotspot.word.HotSpotOperation.HotspotOpcode;
 import graalvm.compiler.hotspot.word.PointerCastNode;
+import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.LogicNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
@@ -31,11 +33,6 @@ import graalvm.compiler.nodes.memory.address.AddressNode;
 import graalvm.compiler.nodes.type.StampTool;
 import graalvm.compiler.word.WordOperationPlugin;
 import graalvm.compiler.word.WordTypes;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * Extends {@link WordOperationPlugin} to handle {@linkplain HotSpotOperation HotSpot word
@@ -93,8 +90,8 @@ class HotSpotWordOperationPlugin extends WordOperationPlugin
                 ValueNode right = args[1];
 
                 PointerEqualsNode comparison = b.add(new PointerEqualsNode(left, right));
-                ValueNode eqValue = b.add(forBoolean(opcode == POINTER_EQ));
-                ValueNode neValue = b.add(forBoolean(opcode == POINTER_NE));
+                ValueNode eqValue = b.add(ConstantNode.forBoolean(opcode == HotspotOpcode.POINTER_EQ));
+                ValueNode neValue = b.add(ConstantNode.forBoolean(opcode == HotspotOpcode.POINTER_NE));
                 b.addPush(returnKind, ConditionalNode.create(comparison, eqValue, neValue, NodeView.DEFAULT));
                 break;
 
@@ -102,7 +99,7 @@ class HotSpotWordOperationPlugin extends WordOperationPlugin
                 ValueNode pointer = args[0];
 
                 LogicNode isNull = b.addWithInputs(IsNullNode.create(pointer));
-                b.addPush(returnKind, ConditionalNode.create(isNull, b.add(forBoolean(true)), b.add(forBoolean(false)), NodeView.DEFAULT));
+                b.addPush(returnKind, ConditionalNode.create(isNull, b.add(ConstantNode.forBoolean(true)), b.add(ConstantNode.forBoolean(false)), NodeView.DEFAULT));
                 break;
 
             case FROM_POINTER:
@@ -123,7 +120,7 @@ class HotSpotWordOperationPlugin extends WordOperationPlugin
                 LocationIdentity location;
                 if (args.length == 2)
                 {
-                    location = any();
+                    location = LocationIdentity.any();
                 }
                 else
                 {

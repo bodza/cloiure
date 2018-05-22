@@ -1,5 +1,7 @@
 package graalvm.compiler.nodes.memory.address;
 
+import jdk.vm.ci.meta.JavaKind;
+
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.PrimitiveStamp;
 import graalvm.compiler.core.common.type.Stamp;
@@ -13,8 +15,6 @@ import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.AddNode;
 import graalvm.compiler.nodes.calc.BinaryArithmeticNode;
-
-import jdk.vm.ci.meta.JavaKind;
 
 /**
  * Represents an address that is composed of a base and an offset. The base can be either a

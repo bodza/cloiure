@@ -2,6 +2,11 @@ package graalvm.compiler.hotspot.replacements;
 
 import java.lang.reflect.Method;
 
+import jdk.vm.ci.meta.Assumptions;
+import jdk.vm.ci.meta.ResolvedJavaField;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import graalvm.compiler.core.common.type.AbstractPointerStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampPair;
@@ -22,11 +27,6 @@ import graalvm.compiler.nodes.spi.Replacements;
 import graalvm.compiler.nodes.spi.VirtualizableAllocation;
 import graalvm.compiler.nodes.type.StampTool;
 import graalvm.compiler.replacements.nodes.BasicObjectCloneNode;
-
-import jdk.vm.ci.meta.Assumptions;
-import jdk.vm.ci.meta.ResolvedJavaField;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 public final class ObjectCloneNode extends BasicObjectCloneNode implements VirtualizableAllocation, ArrayLengthProvider
 {

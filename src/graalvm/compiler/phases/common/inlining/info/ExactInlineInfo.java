@@ -1,12 +1,13 @@
 package graalvm.compiler.phases.common.inlining.info;
 
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import org.graalvm.collections.EconomicSet;
+
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodes.Invoke;
 import graalvm.compiler.phases.common.inlining.info.elem.Inlineable;
 import graalvm.compiler.phases.util.Providers;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * Represents an inlining opportunity where the compiler can statically determine a monomorphic

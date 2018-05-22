@@ -1,5 +1,10 @@
 package graalvm.compiler.hotspot.nodes.aot;
 
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.Value;
+
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
@@ -12,15 +17,11 @@ import graalvm.compiler.nodes.DeoptimizingNode;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
+import graalvm.compiler.nodes.memory.AbstractMemoryCheckpoint;
+import graalvm.compiler.nodes.memory.MemoryCheckpoint;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.nodes.util.GraphUtil;
-import graalvm.compiler.nodes.memory.AbstractMemoryCheckpoint;
-import graalvm.compiler.nodes.memory.MemoryCheckpoint;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.Value;
 
 /**
  * A call to the VM via a regular stub.

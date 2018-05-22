@@ -1,11 +1,11 @@
 package graalvm.compiler.lir.alloc.trace;
 
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.Variable;
-
-import jdk.vm.ci.meta.Value;
 
 /**
  * Stores live in/live out variables and locations for each basic block.

@@ -1,18 +1,17 @@
 package graalvm.compiler.code;
 
-import static jdk.vm.ci.meta.MetaUtil.identityHashCodeString;
-
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
-import graalvm.compiler.code.DataSection.Data;
-
 import jdk.vm.ci.code.site.DataSectionReference;
+import jdk.vm.ci.meta.MetaUtil;
 import jdk.vm.ci.meta.SerializableConstant;
 import jdk.vm.ci.meta.VMConstant;
+
+import graalvm.compiler.code.DataSection.Data;
 
 public final class DataSection implements Iterable<Data>
 {
@@ -68,7 +67,7 @@ public final class DataSection implements Iterable<Data>
         @Override
         public String toString()
         {
-            return identityHashCodeString(this);
+            return MetaUtil.identityHashCodeString(this);
         }
 
         @Override
@@ -251,7 +250,7 @@ public final class DataSection implements Iterable<Data>
     @Override
     public String toString()
     {
-        return identityHashCodeString(this);
+        return MetaUtil.identityHashCodeString(this);
     }
 
     @Override

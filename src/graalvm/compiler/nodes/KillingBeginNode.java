@@ -1,10 +1,10 @@
 package graalvm.compiler.nodes;
 
-import static graalvm.compiler.nodeinfo.InputType.Memory;
+import org.graalvm.word.LocationIdentity;
 
 import graalvm.compiler.graph.NodeClass;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.memory.MemoryCheckpoint;
-import org.graalvm.word.LocationIdentity;
 
 public final class KillingBeginNode extends AbstractBeginNode implements MemoryCheckpoint.Single
 {

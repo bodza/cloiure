@@ -1,17 +1,25 @@
 package graalvm.compiler.lir.gen;
 
-import static jdk.vm.ci.code.ValueUtil.asAllocatableValue;
-import static jdk.vm.ci.code.ValueUtil.isAllocatableValue;
-import static jdk.vm.ci.code.ValueUtil.isLegal;
-import static jdk.vm.ci.code.ValueUtil.isStackSlot;
-import static graalvm.compiler.lir.LIRValueUtil.asConstant;
-import static graalvm.compiler.lir.LIRValueUtil.isConstantValue;
-import static graalvm.compiler.lir.LIRValueUtil.isVariable;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import jdk.vm.ci.code.CallingConvention;
+import jdk.vm.ci.code.CodeCacheProvider;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.RegisterAttributes;
 import jdk.vm.ci.code.RegisterConfig;
+import jdk.vm.ci.code.StackSlot;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.PlatformKind;
+import jdk.vm.ci.meta.Value;
+import jdk.vm.ci.meta.ValueKind;
+
 import graalvm.compiler.asm.Label;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.calc.Condition;
@@ -25,6 +33,7 @@ import graalvm.compiler.lir.ConstantValue;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRFrameState;
 import graalvm.compiler.lir.LIRInstruction;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.LabelRef;
 import graalvm.compiler.lir.StandardOp;
 import graalvm.compiler.lir.StandardOp.BlockEndOp;
@@ -33,21 +42,6 @@ import graalvm.compiler.lir.StandardOp.SaveRegistersOp;
 import graalvm.compiler.lir.SwitchStrategy;
 import graalvm.compiler.lir.Variable;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.code.CallingConvention;
-import jdk.vm.ci.code.CodeCacheProvider;
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.RegisterAttributes;
-import jdk.vm.ci.code.StackSlot;
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.PlatformKind;
-import jdk.vm.ci.meta.Value;
-import jdk.vm.ci.meta.ValueKind;
 
 /**
  * This class traverses the HIR instructions and generates LIR instructions from them.
@@ -236,13 +230,13 @@ public abstract class LIRGenerator implements LIRGeneratorTool
     @Override
     public AllocatableValue asAllocatable(Value value)
     {
-        if (isAllocatableValue(value))
+        if (ValueUtil.isAllocatableValue(value))
         {
-            return asAllocatableValue(value);
+            return ValueUtil.asAllocatableValue(value);
         }
-        else if (isConstantValue(value))
+        else if (LIRValueUtil.isConstantValue(value))
         {
-            return emitLoadConstant(value.getValueKind(), asConstant(value));
+            return emitLoadConstant(value.getValueKind(), LIRValueUtil.asConstant(value));
         }
         else
         {
@@ -253,7 +247,7 @@ public abstract class LIRGenerator implements LIRGeneratorTool
     @Override
     public Variable load(Value value)
     {
-        if (!isVariable(value))
+        if (!LIRValueUtil.isVariable(value))
         {
             return emitMove(value);
         }
@@ -263,7 +257,7 @@ public abstract class LIRGenerator implements LIRGeneratorTool
     @Override
     public Value loadNonConst(Value value)
     {
-        if (isConstantValue(value) && !moveFactory.canInlineConstant(asConstant(value)))
+        if (LIRValueUtil.isConstantValue(value) && !moveFactory.canInlineConstant(LIRValueUtil.asConstant(value)))
         {
             return emitMove(value);
         }
@@ -415,7 +409,7 @@ public abstract class LIRGenerator implements LIRGeneratorTool
         res.setForeignCall(true);
         emitForeignCallOp(linkage, linkageCc.getReturn(), argLocations, linkage.getTemporaries(), state);
 
-        if (isLegal(linkageCc.getReturn()))
+        if (ValueUtil.isLegal(linkageCc.getReturn()))
         {
             return emitMove(linkageCc.getReturn());
         }
@@ -538,7 +532,7 @@ public abstract class LIRGenerator implements LIRGeneratorTool
         List<StackSlot> slots = null;
         for (AllocatableValue arg : res.getCallingConvention().getArguments())
         {
-            if (isStackSlot(arg))
+            if (ValueUtil.isStackSlot(arg))
             {
                 if (slots == null)
                 {

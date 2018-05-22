@@ -1,13 +1,13 @@
 package graalvm.compiler.nodes.virtual;
 
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodes.FixedNode;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.extended.BoxNode;
-
 import graalvm.compiler.nodes.spi.VirtualizerTool;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 public class VirtualBoxingNode extends VirtualInstanceNode
 {

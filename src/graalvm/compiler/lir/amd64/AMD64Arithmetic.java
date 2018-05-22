@@ -1,6 +1,9 @@
 package graalvm.compiler.lir.amd64;
 
-import static jdk.vm.ci.code.ValueUtil.asRegister;
+import jdk.vm.ci.amd64.AMD64;
+import jdk.vm.ci.amd64.AMD64Kind;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
 
 import graalvm.compiler.asm.Label;
 import graalvm.compiler.asm.amd64.AMD64Address;
@@ -10,10 +13,6 @@ import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
-
-import jdk.vm.ci.amd64.AMD64;
-import jdk.vm.ci.amd64.AMD64Kind;
-import jdk.vm.ci.meta.AllocatableValue;
 
 public enum AMD64Arithmetic
 {
@@ -47,16 +46,16 @@ public enum AMD64Arithmetic
             masm.subq(AMD64.rsp, 8);
             if (opcode == FREM)
             {
-                masm.movflt(tmp, asRegister(y));
+                masm.movflt(tmp, ValueUtil.asRegister(y));
                 masm.flds(tmp);
-                masm.movflt(tmp, asRegister(x));
+                masm.movflt(tmp, ValueUtil.asRegister(x));
                 masm.flds(tmp);
             }
             else
             {
-                masm.movdbl(tmp, asRegister(y));
+                masm.movdbl(tmp, ValueUtil.asRegister(y));
                 masm.fldd(tmp);
-                masm.movdbl(tmp, asRegister(x));
+                masm.movdbl(tmp, ValueUtil.asRegister(x));
                 masm.fldd(tmp);
             }
 
@@ -73,12 +72,12 @@ public enum AMD64Arithmetic
             if (opcode == FREM)
             {
                 masm.fstps(tmp);
-                masm.movflt(asRegister(result), tmp);
+                masm.movflt(ValueUtil.asRegister(result), tmp);
             }
             else
             {
                 masm.fstpd(tmp);
-                masm.movdbl(asRegister(result), tmp);
+                masm.movdbl(ValueUtil.asRegister(result), tmp);
             }
             masm.addq(AMD64.rsp, 8);
         }

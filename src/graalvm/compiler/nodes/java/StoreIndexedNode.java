@@ -1,9 +1,11 @@
 package graalvm.compiler.nodes.java;
 
-import static graalvm.compiler.nodeinfo.InputType.State;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.ResolvedJavaType;
 
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.StateSplit;
 import graalvm.compiler.nodes.ValueNode;
@@ -14,9 +16,6 @@ import graalvm.compiler.nodes.type.StampTool;
 import graalvm.compiler.nodes.virtual.VirtualArrayNode;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
 
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.ResolvedJavaType;
-
 /**
  * The {@code StoreIndexedNode} represents a write to an array element.
  */
@@ -24,7 +23,7 @@ public final class StoreIndexedNode extends AccessIndexedNode implements StateSp
 {
     public static final NodeClass<StoreIndexedNode> TYPE = NodeClass.create(StoreIndexedNode.class);
     @Input ValueNode value;
-    @OptionalInput(State) FrameState stateAfter;
+    @OptionalInput(InputType.State) FrameState stateAfter;
 
     @Override
     public FrameState stateAfter()

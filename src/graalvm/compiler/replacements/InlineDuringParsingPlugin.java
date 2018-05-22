@@ -1,16 +1,14 @@
 package graalvm.compiler.replacements;
 
-import static graalvm.compiler.core.common.GraalOptions.TrivialInliningSize;
-import static graalvm.compiler.java.BytecodeParserOptions.InlineDuringParsingMaxDepth;
-import static graalvm.compiler.nodes.graphbuilderconf.InlineInvokePlugin.InlineInfo.createStandardInlineInfo;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
 
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.java.BytecodeParserOptions;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderContext;
 import graalvm.compiler.nodes.graphbuilderconf.InlineInvokePlugin;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
+import graalvm.compiler.nodes.graphbuilderconf.InlineInvokePlugin.InlineInfo;
 
 public final class InlineDuringParsingPlugin implements InlineInvokePlugin
 {
@@ -31,12 +29,12 @@ public final class InlineDuringParsingPlugin implements InlineInvokePlugin
             // Test force inlining first
             if (method.shouldBeInlined())
             {
-                return createStandardInlineInfo(method);
+                return InlineInfo.createStandardInlineInfo(method);
             }
 
             if (!method.isSynchronized() && checkSize(method, args, b.getGraph()) && checkInliningDepth(b))
             {
-                return createStandardInlineInfo(method);
+                return InlineInfo.createStandardInlineInfo(method);
             }
         }
         return null;
@@ -45,7 +43,7 @@ public final class InlineDuringParsingPlugin implements InlineInvokePlugin
     private static boolean checkInliningDepth(GraphBuilderContext b)
     {
         int nodeCount = b.getGraph().getNodeCount();
-        int maxDepth = InlineDuringParsingMaxDepth.getValue(b.getOptions());
+        int maxDepth = BytecodeParserOptions.InlineDuringParsingMaxDepth.getValue(b.getOptions());
         if (nodeCount > NodeBudget && MaxDepthAfterBudgetExceeded < maxDepth)
         {
             maxDepth = MaxDepthAfterBudgetExceeded;
@@ -63,6 +61,6 @@ public final class InlineDuringParsingPlugin implements InlineInvokePlugin
                 bonus++;
             }
         }
-        return method.getCode().length <= TrivialInliningSize.getValue(graph.getOptions()) * bonus;
+        return method.getCode().length <= GraalOptions.TrivialInliningSize.getValue(graph.getOptions()) * bonus;
     }
 }

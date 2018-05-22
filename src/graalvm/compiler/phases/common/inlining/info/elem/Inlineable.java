@@ -1,10 +1,10 @@
 package graalvm.compiler.phases.common.inlining.info.elem;
 
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import graalvm.compiler.nodes.Invoke;
 import graalvm.compiler.phases.common.CanonicalizerPhase;
 import graalvm.compiler.phases.tiers.HighTierContext;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 public interface Inlineable
 {

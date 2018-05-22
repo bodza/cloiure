@@ -1,11 +1,12 @@
 package graalvm.compiler.hotspot.meta;
 
+import org.graalvm.word.WordFactory;
+
 import graalvm.compiler.api.replacements.ClassSubstitution;
 import graalvm.compiler.api.replacements.MethodSubstitution;
 import graalvm.compiler.hotspot.HotSpotBackend;
 import graalvm.compiler.hotspot.nodes.ComputeObjectAddressNode;
 import graalvm.compiler.word.Word;
-import org.graalvm.word.WordFactory;
 
 @ClassSubstitution(className = {"jdk.internal.misc.Unsafe", "sun.misc.Unsafe"})
 public class HotSpotUnsafeSubstitutions

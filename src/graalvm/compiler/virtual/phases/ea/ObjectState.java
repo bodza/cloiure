@@ -3,6 +3,8 @@ package graalvm.compiler.virtual.phases.ea;
 import java.util.Arrays;
 import java.util.List;
 
+import jdk.vm.ci.meta.JavaConstant;
+
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.java.MonitorIdNode;
 import graalvm.compiler.nodes.virtual.EscapeObjectState;
@@ -10,8 +12,6 @@ import graalvm.compiler.nodes.virtual.LockState;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
 import graalvm.compiler.virtual.nodes.MaterializedObjectState;
 import graalvm.compiler.virtual.nodes.VirtualObjectState;
-
-import jdk.vm.ci.meta.JavaConstant;
 
 /**
  * This class describes the state of a virtual object while iterating over the graph. It describes

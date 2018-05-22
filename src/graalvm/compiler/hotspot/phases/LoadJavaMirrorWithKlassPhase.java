@@ -1,7 +1,13 @@
 package graalvm.compiler.hotspot.phases;
 
-import static graalvm.compiler.nodes.ConstantNode.getConstantNodes;
-import static graalvm.compiler.nodes.NamedLocationIdentity.FINAL_LOCATION;
+import jdk.vm.ci.hotspot.HotSpotObjectConstant;
+import jdk.vm.ci.hotspot.HotSpotResolvedJavaField;
+import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
+import jdk.vm.ci.hotspot.HotSpotResolvedPrimitiveType;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaType;
 
 import graalvm.compiler.core.common.CompressEncoding;
 import graalvm.compiler.core.common.type.AbstractObjectStamp;
@@ -15,6 +21,7 @@ import graalvm.compiler.hotspot.nodes.type.HotSpotNarrowOopStamp;
 import graalvm.compiler.hotspot.nodes.type.KlassPointerStamp;
 import graalvm.compiler.hotspot.replacements.HubGetClassNode;
 import graalvm.compiler.nodes.ConstantNode;
+import graalvm.compiler.nodes.NamedLocationIdentity;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.memory.FloatingReadNode;
@@ -23,15 +30,6 @@ import graalvm.compiler.nodes.memory.address.OffsetAddressNode;
 import graalvm.compiler.phases.BasePhase;
 import graalvm.compiler.phases.common.LoweringPhase;
 import graalvm.compiler.phases.tiers.PhaseContext;
-
-import jdk.vm.ci.hotspot.HotSpotObjectConstant;
-import jdk.vm.ci.hotspot.HotSpotResolvedJavaField;
-import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
-import jdk.vm.ci.hotspot.HotSpotResolvedPrimitiveType;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * For AOT compilation we aren't allowed to use a {@link Class} reference ({@code javaMirror})
@@ -105,7 +103,7 @@ public class LoadJavaMirrorWithKlassPhase extends BasePhase<PhaseContext>
                         stamp = HotSpotNarrowOopStamp.compressed((AbstractObjectStamp) stamp, oopEncoding);
                     }
                     AddressNode address = graph.unique(new OffsetAddressNode(clazz, ConstantNode.forLong(typeField.offset(), graph)));
-                    ValueNode read = graph.unique(new FloatingReadNode(address, FINAL_LOCATION, null, stamp));
+                    ValueNode read = graph.unique(new FloatingReadNode(address, NamedLocationIdentity.FINAL_LOCATION, null, stamp));
 
                     if (oopEncoding == null || ((HotSpotObjectConstant) constant).isCompressed())
                     {
@@ -124,7 +122,7 @@ public class LoadJavaMirrorWithKlassPhase extends BasePhase<PhaseContext>
     @Override
     protected void run(StructuredGraph graph, PhaseContext context)
     {
-        for (ConstantNode node : getConstantNodes(graph))
+        for (ConstantNode node : ConstantNode.getConstantNodes(graph))
         {
             JavaConstant constant = node.asJavaConstant();
             ValueNode freadNode = getClassConstantReplacement(graph, context, constant);

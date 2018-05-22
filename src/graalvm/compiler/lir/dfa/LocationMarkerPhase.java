@@ -1,8 +1,10 @@
 package graalvm.compiler.lir.dfa;
 
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static jdk.vm.ci.code.ValueUtil.isStackSlot;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.RegisterAttributes;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.lir.LIR;
@@ -12,11 +14,6 @@ import graalvm.compiler.lir.framemap.FrameMap;
 import graalvm.compiler.lir.framemap.ReferenceMapBuilder;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.phases.AllocationPhase;
-
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.RegisterAttributes;
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Mark all live references for a frame state. The frame state use this information to build the OOP
@@ -49,16 +46,16 @@ public final class LocationMarkerPhase extends AllocationPhase
         @Override
         protected boolean shouldProcessValue(Value operand)
         {
-            if (isRegister(operand))
+            if (ValueUtil.isRegister(operand))
             {
-                Register reg = asRegister(operand);
+                Register reg = ValueUtil.asRegister(operand);
                 if (!reg.mayContainReference() || !attributes(reg).isAllocatable())
                 {
                     // register that's not allocatable or not part of the reference map
                     return false;
                 }
             }
-            else if (!isStackSlot(operand))
+            else if (!ValueUtil.isStackSlot(operand))
             {
                 // neither register nor stack slot
                 return false;

@@ -1,8 +1,7 @@
 package graalvm.compiler.hotspot.amd64;
 
-import static graalvm.compiler.hotspot.HotSpotHostBackend.UNCOMMON_TRAP_HANDLER;
-
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
+import graalvm.compiler.hotspot.HotSpotHostBackend;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.amd64.AMD64Call;
@@ -25,6 +24,6 @@ final class AMD64HotSpotDeoptimizeCallerOp extends AMD64HotSpotEpilogueBlockEndO
     public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
     {
         leaveFrameAndRestoreRbp(crb, masm);
-        AMD64Call.directJmp(crb, masm, crb.foreignCalls.lookupForeignCall(UNCOMMON_TRAP_HANDLER));
+        AMD64Call.directJmp(crb, masm, crb.foreignCalls.lookupForeignCall(HotSpotHostBackend.UNCOMMON_TRAP_HANDLER));
     }
 }

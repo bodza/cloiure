@@ -1,15 +1,15 @@
 package graalvm.compiler.lir.alloc.trace.lsra;
 
-import static jdk.vm.ci.code.ValueUtil.isIllegal;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static graalvm.compiler.lir.LIRValueUtil.asVariable;
-import static graalvm.compiler.lir.LIRValueUtil.isStackSlotValue;
-import static graalvm.compiler.lir.LIRValueUtil.isVariable;
-import static graalvm.compiler.lir.LIRValueUtil.isVirtualStackSlot;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
+
+import jdk.vm.ci.code.RegisterValue;
+import jdk.vm.ci.code.StackSlot;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.common.alloc.Trace;
@@ -21,6 +21,7 @@ import graalvm.compiler.lir.InstructionValueProcedure;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstruction.OperandMode;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.StandardOp;
 import graalvm.compiler.lir.StandardOp.LabelOp;
 import graalvm.compiler.lir.StandardOp.MoveOp;
@@ -31,12 +32,6 @@ import graalvm.compiler.lir.alloc.trace.ShadowedRegisterValue;
 import graalvm.compiler.lir.alloc.trace.lsra.TraceLinearScanPhase.TraceLinearScan;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;
-
-import jdk.vm.ci.code.RegisterValue;
-import jdk.vm.ci.code.StackSlot;
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Specialization of {@link graalvm.compiler.lir.alloc.lsra.LinearScanAssignLocationsPhase} that
@@ -89,7 +84,7 @@ final class TraceLinearScanAssignLocationsPhase extends TraceLinearScanAllocatio
 
         private Value getLocation(LIRInstruction op, TraceInterval interval, OperandMode mode)
         {
-            if (isIllegal(interval.location()) && interval.canMaterialize())
+            if (ValueUtil.isIllegal(interval.location()) && interval.canMaterialize())
             {
                 if (op instanceof LabelOp)
                 {
@@ -109,7 +104,7 @@ final class TraceLinearScanAssignLocationsPhase extends TraceLinearScanAllocatio
          */
         private Value debugInfoProcedure(LIRInstruction op, Value operand, OperandMode valueMode, EnumSet<OperandFlag> flags)
         {
-            if (isVirtualStackSlot(operand))
+            if (LIRValueUtil.isVirtualStackSlot(operand))
             {
                 return operand;
             }
@@ -225,7 +220,7 @@ final class TraceLinearScanAssignLocationsPhase extends TraceLinearScanAllocatio
                 return Value.ILLEGAL;
             }
 
-            if (splitInterval.inMemoryAt(instruction.id()) && isRegister(splitInterval.location()))
+            if (splitInterval.inMemoryAt(instruction.id()) && ValueUtil.isRegister(splitInterval.location()))
             {
                 return new ShadowedRegisterValue((RegisterValue) splitInterval.location(), splitInterval.spillSlot());
             }
@@ -237,7 +232,7 @@ final class TraceLinearScanAssignLocationsPhase extends TraceLinearScanAllocatio
             @Override
             public Value doValue(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
             {
-                if (isVariable(value))
+                if (LIRValueUtil.isVariable(value))
                 {
                     return colorLirOperand(instruction, (Variable) value, mode);
                 }
@@ -267,7 +262,7 @@ final class TraceLinearScanAssignLocationsPhase extends TraceLinearScanAllocatio
             if (MoveOp.isMoveOp(op))
             {
                 AllocatableValue result = MoveOp.asMoveOp(op).getResult();
-                if (isVariable(result) && allocator.isMaterialized(asVariable(result), op.id(), OperandMode.DEF))
+                if (LIRValueUtil.isVariable(result) && allocator.isMaterialized(LIRValueUtil.asVariable(result), op.id(), OperandMode.DEF))
                 {
                     /*
                      * This happens if a materializable interval is originally not spilled but then
@@ -296,7 +291,7 @@ final class TraceLinearScanAssignLocationsPhase extends TraceLinearScanAllocatio
                     instructions.set(j, null);
                     return true;
                 }
-                if (isStackSlotValue(move.getInput()) && isStackSlotValue(move.getResult()))
+                if (LIRValueUtil.isStackSlotValue(move.getInput()) && LIRValueUtil.isStackSlotValue(move.getResult()))
                 {
                     // rewrite stack to stack moves
                     instructions.set(j, spillMoveFactory.createStackMove(move.getResult(), move.getInput()));

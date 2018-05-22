@@ -3,8 +3,17 @@ package graalvm.compiler.phases.common.inlining.info;
 import java.util.ArrayList;
 import java.util.List;
 
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.DeoptimizationAction;
+import jdk.vm.ci.meta.DeoptimizationReason;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.JavaTypeProfile.ProfiledType;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import org.graalvm.collections.EconomicSet;
 import org.graalvm.collections.Equivalence;
+
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodes.AbstractBeginNode;
@@ -34,14 +43,6 @@ import graalvm.compiler.nodes.util.GraphUtil;
 import graalvm.compiler.phases.common.inlining.InliningUtil;
 import graalvm.compiler.phases.common.inlining.info.elem.Inlineable;
 import graalvm.compiler.phases.util.Providers;
-
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.DeoptimizationAction;
-import jdk.vm.ci.meta.DeoptimizationReason;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.JavaTypeProfile.ProfiledType;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * Polymorphic inlining of m methods with n type checks (n &ge; m) in case that the profiling

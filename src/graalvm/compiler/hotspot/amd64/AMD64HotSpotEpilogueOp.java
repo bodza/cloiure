@@ -1,19 +1,16 @@
 package graalvm.compiler.hotspot.amd64;
 
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.STACK;
-import static jdk.vm.ci.amd64.AMD64.rbp;
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.isStackSlot;
+import jdk.vm.ci.amd64.AMD64;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
 
 import graalvm.compiler.asm.amd64.AMD64Address;
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.amd64.AMD64LIRInstruction;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
-
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.meta.AllocatableValue;
 
 /**
  * Superclass for operations that use the value of RBP saved in a method's prologue.
@@ -25,7 +22,7 @@ abstract class AMD64HotSpotEpilogueOp extends AMD64LIRInstruction implements AMD
         super(c);
     }
 
-    @Use({REG, STACK}) private AllocatableValue savedRbp = PLACEHOLDER;
+    @Use({OperandFlag.REG, OperandFlag.STACK}) private AllocatableValue savedRbp = PLACEHOLDER;
 
     protected void leaveFrameAndRestoreRbp(CompilationResultBuilder crb, AMD64MacroAssembler masm)
     {
@@ -34,17 +31,17 @@ abstract class AMD64HotSpotEpilogueOp extends AMD64LIRInstruction implements AMD
 
     static void leaveFrameAndRestoreRbp(AllocatableValue savedRbp, CompilationResultBuilder crb, AMD64MacroAssembler masm)
     {
-        if (isStackSlot(savedRbp))
+        if (ValueUtil.isStackSlot(savedRbp))
         {
             // Restoring RBP from the stack must be done before the frame is removed
-            masm.movq(rbp, (AMD64Address) crb.asAddress(savedRbp));
+            masm.movq(AMD64.rbp, (AMD64Address) crb.asAddress(savedRbp));
         }
         else
         {
-            Register framePointer = asRegister(savedRbp);
-            if (!framePointer.equals(rbp))
+            Register framePointer = ValueUtil.asRegister(savedRbp);
+            if (!framePointer.equals(AMD64.rbp))
             {
-                masm.movq(rbp, framePointer);
+                masm.movq(AMD64.rbp, framePointer);
             }
         }
         crb.frameContext.leave(crb);

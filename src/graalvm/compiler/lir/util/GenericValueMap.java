@@ -1,9 +1,9 @@
 package graalvm.compiler.lir.util;
 
+import jdk.vm.ci.meta.Value;
+
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
-
-import jdk.vm.ci.meta.Value;
 
 public final class GenericValueMap<T> extends ValueMap<Value, T>
 {

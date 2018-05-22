@@ -1,15 +1,13 @@
 package graalvm.compiler.nodes;
 
-import static java.lang.Character.toLowerCase;
-
 import java.util.ArrayList;
 import java.util.Collection;
+
+import jdk.vm.ci.meta.JavaKind;
 
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.memory.MemoryNode;
-
-import jdk.vm.ci.meta.JavaKind;
 
 public class ValueNodeUtil
 {
@@ -78,7 +76,7 @@ public class ValueNodeUtil
      */
     public static String valueString(ValueNode value)
     {
-        return (value == null) ? "-" : ("" + toLowerCase(value.getStackKind().getTypeChar()) + value.toString(Verbosity.Id));
+        return (value == null) ? "-" : ("" + Character.toLowerCase(value.getStackKind().getTypeChar()) + value.toString(Verbosity.Id));
     }
 
     public static ValueNode asNode(MemoryNode node)

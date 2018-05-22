@@ -2,16 +2,16 @@ package graalvm.compiler.nodes;
 
 import java.util.function.Predicate;
 
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.JavaKind;
+
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.iterators.NodePredicate;
 import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.spi.NodeValueMap;
-
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
 
 /**
  * This class represents a value within the graph, including local variables, phis, and all other

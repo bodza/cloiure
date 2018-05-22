@@ -3,12 +3,12 @@ package graalvm.compiler.hotspot;
 import java.util.ArrayList;
 import java.util.List;
 
-import graalvm.compiler.serviceprovider.GraalServices;
-
 import jdk.vm.ci.code.CompiledCode;
 import jdk.vm.ci.code.InstalledCode;
 import jdk.vm.ci.hotspot.HotSpotCodeCacheProvider;
 import jdk.vm.ci.hotspot.HotSpotVMEventListener;
+
+import graalvm.compiler.serviceprovider.GraalServices;
 
 public class HotSpotGraalVMEventListener implements HotSpotVMEventListener
 {

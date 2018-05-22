@@ -1,7 +1,6 @@
 package graalvm.compiler.nodes.java;
 
-import static graalvm.compiler.nodeinfo.InputType.Memory;
-import static graalvm.compiler.nodeinfo.InputType.State;
+import org.graalvm.word.LocationIdentity;
 
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
@@ -14,7 +13,6 @@ import graalvm.compiler.nodes.memory.FixedAccessNode;
 import graalvm.compiler.nodes.memory.LIRLowerableAccess;
 import graalvm.compiler.nodes.memory.MemoryCheckpoint;
 import graalvm.compiler.nodes.memory.address.AddressNode;
-import org.graalvm.word.LocationIdentity;
 
 /**
  * Low-level atomic compare-and-swap operation.
@@ -24,7 +22,7 @@ public abstract class AbstractCompareAndSwapNode extends FixedAccessNode impleme
     public static final NodeClass<AbstractCompareAndSwapNode> TYPE = NodeClass.create(AbstractCompareAndSwapNode.class);
     @Input ValueNode expectedValue;
     @Input ValueNode newValue;
-    @OptionalInput(State) FrameState stateAfter;
+    @OptionalInput(InputType.State) FrameState stateAfter;
 
     @Override
     public FrameState stateAfter()

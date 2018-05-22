@@ -1,10 +1,7 @@
 package graalvm.compiler.hotspot.replacements.profiling;
 
-import static graalvm.compiler.hotspot.GraalHotSpotVMConfig.INJECTED_VMCONFIG;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.config;
-import static graalvm.compiler.nodes.extended.BranchProbabilityNode.SLOW_PATH_PROBABILITY;
-import static graalvm.compiler.nodes.extended.BranchProbabilityNode.probability;
-import static graalvm.compiler.replacements.SnippetTemplate.DEFAULT_REPLACER;
+import jdk.vm.ci.code.CodeUtil;
+import jdk.vm.ci.code.TargetDescription;
 
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
@@ -12,15 +9,18 @@ import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node.ConstantNodeParameter;
 import graalvm.compiler.graph.Node.NodeIntrinsic;
+import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
 import graalvm.compiler.hotspot.HotSpotBackend;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
 import graalvm.compiler.hotspot.nodes.aot.LoadMethodCountersNode;
 import graalvm.compiler.hotspot.nodes.profiling.ProfileBranchNode;
 import graalvm.compiler.hotspot.nodes.profiling.ProfileInvokeNode;
 import graalvm.compiler.hotspot.nodes.profiling.ProfileNode;
+import graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil;
 import graalvm.compiler.hotspot.word.MethodCountersPointer;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.StructuredGraph;
+import graalvm.compiler.nodes.extended.BranchProbabilityNode;
 import graalvm.compiler.nodes.extended.ForeignCallNode;
 import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.nodes.util.GraphUtil;
@@ -30,9 +30,6 @@ import graalvm.compiler.replacements.SnippetTemplate.AbstractTemplates;
 import graalvm.compiler.replacements.SnippetTemplate.Arguments;
 import graalvm.compiler.replacements.SnippetTemplate.SnippetInfo;
 import graalvm.compiler.replacements.Snippets;
-
-import jdk.vm.ci.code.CodeUtil;
-import jdk.vm.ci.code.TargetDescription;
 
 public class ProfileSnippets implements Snippets
 {
@@ -50,12 +47,12 @@ public class ProfileSnippets implements Snippets
     @Snippet
     public static void profileMethodEntry(MethodCountersPointer counters, int step, int stepLog, @ConstantParameter int freqLog)
     {
-        int counterValue = counters.readInt(config(INJECTED_VMCONFIG).invocationCounterOffset) + config(INJECTED_VMCONFIG).invocationCounterIncrement * step;
-        counters.writeInt(config(INJECTED_VMCONFIG).invocationCounterOffset, counterValue);
+        int counterValue = counters.readInt(HotSpotReplacementsUtil.config(GraalHotSpotVMConfig.INJECTED_VMCONFIG).invocationCounterOffset) + HotSpotReplacementsUtil.config(GraalHotSpotVMConfig.INJECTED_VMCONFIG).invocationCounterIncrement * step;
+        counters.writeInt(HotSpotReplacementsUtil.config(GraalHotSpotVMConfig.INJECTED_VMCONFIG).invocationCounterOffset, counterValue);
         if (freqLog >= 0)
         {
             final int mask = notificationMask(freqLog, stepLog);
-            if (probability(SLOW_PATH_PROBABILITY, (counterValue & (mask << config(INJECTED_VMCONFIG).invocationCounterShift)) == 0))
+            if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, (counterValue & (mask << HotSpotReplacementsUtil.config(GraalHotSpotVMConfig.INJECTED_VMCONFIG).invocationCounterShift)) == 0))
             {
                 methodInvocationEvent(HotSpotBackend.INVOCATION_EVENT, counters);
             }
@@ -68,10 +65,10 @@ public class ProfileSnippets implements Snippets
     @Snippet
     public static void profileBackedge(MethodCountersPointer counters, int step, int stepLog, @ConstantParameter int freqLog, int bci, int targetBci)
     {
-        int counterValue = counters.readInt(config(INJECTED_VMCONFIG).backedgeCounterOffset) + config(INJECTED_VMCONFIG).invocationCounterIncrement * step;
-        counters.writeInt(config(INJECTED_VMCONFIG).backedgeCounterOffset, counterValue);
+        int counterValue = counters.readInt(HotSpotReplacementsUtil.config(GraalHotSpotVMConfig.INJECTED_VMCONFIG).backedgeCounterOffset) + HotSpotReplacementsUtil.config(GraalHotSpotVMConfig.INJECTED_VMCONFIG).invocationCounterIncrement * step;
+        counters.writeInt(HotSpotReplacementsUtil.config(GraalHotSpotVMConfig.INJECTED_VMCONFIG).backedgeCounterOffset, counterValue);
         final int mask = notificationMask(freqLog, stepLog);
-        if (probability(SLOW_PATH_PROBABILITY, (counterValue & (mask << config(INJECTED_VMCONFIG).invocationCounterShift)) == 0))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, (counterValue & (mask << HotSpotReplacementsUtil.config(GraalHotSpotVMConfig.INJECTED_VMCONFIG).invocationCounterShift)) == 0))
         {
             methodBackedgeEvent(HotSpotBackend.BACKEDGE_EVENT, counters, bci, targetBci);
         }
@@ -124,7 +121,7 @@ public class ProfileSnippets implements Snippets
                 args.add("targetBci", targetBci);
 
                 SnippetTemplate template = template(profileNode, args);
-                template.instantiate(providers.getMetaAccess(), profileNode, DEFAULT_REPLACER, args);
+                template.instantiate(providers.getMetaAccess(), profileNode, SnippetTemplate.DEFAULT_REPLACER, args);
             }
             else if (profileNode instanceof ProfileInvokeNode)
             {
@@ -136,7 +133,7 @@ public class ProfileSnippets implements Snippets
                 args.add("stepLog", stepLog);
                 args.addConst("freqLog", profileInvokeNode.getNotificationFreqLog());
                 SnippetTemplate template = template(profileNode, args);
-                template.instantiate(providers.getMetaAccess(), profileNode, DEFAULT_REPLACER, args);
+                template.instantiate(providers.getMetaAccess(), profileNode, SnippetTemplate.DEFAULT_REPLACER, args);
             }
             else
             {

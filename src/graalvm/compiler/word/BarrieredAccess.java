@@ -1,12 +1,13 @@
 package graalvm.compiler.word;
 
-import graalvm.compiler.word.Word.Opcode;
-import graalvm.compiler.word.Word.Operation;
 import org.graalvm.word.LocationIdentity;
 import org.graalvm.word.Pointer;
 import org.graalvm.word.SignedWord;
 import org.graalvm.word.UnsignedWord;
 import org.graalvm.word.WordBase;
+
+import graalvm.compiler.word.Word.Opcode;
+import graalvm.compiler.word.Word.Operation;
 
 /**
  * Medium-level memory access for Objects. Similarly to the readXxx and writeXxx methods defined for

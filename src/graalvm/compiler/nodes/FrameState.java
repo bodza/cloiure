@@ -1,13 +1,13 @@
 package graalvm.compiler.nodes;
 
-import static jdk.vm.ci.code.BytecodeFrame.getPlaceholderBciName;
-import static jdk.vm.ci.code.BytecodeFrame.isPlaceholderBci;
-import static graalvm.compiler.nodeinfo.InputType.Association;
-import static graalvm.compiler.nodeinfo.InputType.State;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import jdk.vm.ci.code.BytecodeFrame;
+import jdk.vm.ci.code.CodeUtil;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 import graalvm.compiler.bytecode.Bytecode;
 import graalvm.compiler.core.common.type.StampFactory;
@@ -21,11 +21,6 @@ import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.java.ExceptionObjectNode;
 import graalvm.compiler.nodes.java.MonitorIdNode;
 import graalvm.compiler.nodes.virtual.EscapeObjectState;
-
-import jdk.vm.ci.code.BytecodeFrame;
-import jdk.vm.ci.code.CodeUtil;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * The {@code FrameState} class encapsulates the frame state (i.e. local variables and operand
@@ -72,9 +67,9 @@ public final class FrameState extends VirtualState implements IterableNodeType
      */
     @OptionalInput NodeInputList<ValueNode> values;
 
-    @Input(Association) NodeInputList<MonitorIdNode> monitorIds;
+    @Input(InputType.Association) NodeInputList<MonitorIdNode> monitorIds;
 
-    @OptionalInput(State) NodeInputList<EscapeObjectState> virtualObjectMappings;
+    @OptionalInput(InputType.State) NodeInputList<EscapeObjectState> virtualObjectMappings;
 
     /**
      * The bytecode index to which this frame state applies.
@@ -498,7 +493,7 @@ public final class FrameState extends VirtualState implements IterableNodeType
             Bytecode.appendLocation(sb, fs.getCode(), fs.bci);
             if (BytecodeFrame.isPlaceholderBci(fs.bci))
             {
-                sb.append("//").append(getPlaceholderBciName(fs.bci));
+                sb.append("//").append(BytecodeFrame.getPlaceholderBciName(fs.bci));
             }
             sb.append(nl);
             sb.append("locals: [");
@@ -534,7 +529,7 @@ public final class FrameState extends VirtualState implements IterableNodeType
             String res = super.toString(Verbosity.Name) + "@" + bci;
             if (BytecodeFrame.isPlaceholderBci(bci))
             {
-                res += "[" + getPlaceholderBciName(bci) + "]";
+                res += "[" + BytecodeFrame.getPlaceholderBciName(bci) + "]";
             }
             return res;
         }

@@ -1,7 +1,9 @@
 package graalvm.compiler.hotspot.replacements;
 
-import graalvm.util.UnsafeAccess;
-import static graalvm.compiler.replacements.SnippetTemplate.DEFAULT_REPLACER;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.meta.JavaKind;
+
+import org.graalvm.word.LocationIdentity;
 
 import graalvm.compiler.api.replacements.Fold;
 import graalvm.compiler.api.replacements.Snippet;
@@ -19,10 +21,7 @@ import graalvm.compiler.replacements.SnippetTemplate.SnippetInfo;
 import graalvm.compiler.replacements.Snippets;
 import graalvm.compiler.replacements.nodes.CStringConstant;
 import graalvm.compiler.word.Word;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.JavaKind;
+import graalvm.util.UnsafeAccess;
 
 /**
  * The {@code StringToBytesSnippets} contains a snippet for lowering {@link StringToBytesNode}.
@@ -66,7 +65,7 @@ public class StringToBytesSnippets implements Snippets
             Arguments args = new Arguments(create, stringToBytesNode.graph().getGuardsStage(), tool.getLoweringStage());
             args.addConst("compilationTimeString", stringToBytesNode.getValue());
             SnippetTemplate template = template(stringToBytesNode, args);
-            template.instantiate(providers.getMetaAccess(), stringToBytesNode, DEFAULT_REPLACER, args);
+            template.instantiate(providers.getMetaAccess(), stringToBytesNode, SnippetTemplate.DEFAULT_REPLACER, args);
         }
     }
 }

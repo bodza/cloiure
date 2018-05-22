@@ -1,13 +1,13 @@
 package graalvm.compiler.hotspot.meta;
 
-import graalvm.compiler.core.common.spi.JavaConstantFieldProvider;
-import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
-import graalvm.compiler.options.OptionValues;
-
 import jdk.vm.ci.hotspot.HotSpotResolvedJavaField;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaField;
 import jdk.vm.ci.meta.ResolvedJavaType;
+
+import graalvm.compiler.core.common.spi.JavaConstantFieldProvider;
+import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
+import graalvm.compiler.options.OptionValues;
 
 /**
  * Implements the default constant folding semantics for Java fields in the HotSpot VM.

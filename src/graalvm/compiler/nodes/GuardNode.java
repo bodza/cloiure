@@ -1,7 +1,8 @@
 package graalvm.compiler.nodes;
 
-import static graalvm.compiler.nodeinfo.InputType.Condition;
-import static graalvm.compiler.nodeinfo.InputType.Guard;
+import jdk.vm.ci.meta.DeoptimizationAction;
+import jdk.vm.ci.meta.DeoptimizationReason;
+import jdk.vm.ci.meta.JavaConstant;
 
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.IterableNodeType;
@@ -9,13 +10,10 @@ import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.extended.AnchoringNode;
 import graalvm.compiler.nodes.extended.GuardingNode;
-
-import jdk.vm.ci.meta.DeoptimizationAction;
-import jdk.vm.ci.meta.DeoptimizationReason;
-import jdk.vm.ci.meta.JavaConstant;
 
 /**
  * A guard is a node that deoptimizes based on a conditional expression. Guards are not attached to
@@ -32,7 +30,7 @@ import jdk.vm.ci.meta.JavaConstant;
 public class GuardNode extends FloatingAnchoredNode implements Canonicalizable, GuardingNode, DeoptimizingGuard, IterableNodeType
 {
     public static final NodeClass<GuardNode> TYPE = NodeClass.create(GuardNode.class);
-    @Input(Condition) protected LogicNode condition;
+    @Input(InputType.Condition) protected LogicNode condition;
     protected DeoptimizationReason reason;
     protected DeoptimizationAction action;
     protected JavaConstant speculation;

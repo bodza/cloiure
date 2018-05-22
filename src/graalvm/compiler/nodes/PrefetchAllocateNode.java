@@ -1,9 +1,8 @@
 package graalvm.compiler.nodes;
 
-import static graalvm.compiler.nodeinfo.InputType.Association;
-
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.memory.address.AddressNode;
 import graalvm.compiler.nodes.memory.address.AddressNode.Address;
 import graalvm.compiler.nodes.spi.LIRLowerable;
@@ -12,7 +11,7 @@ import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 public final class PrefetchAllocateNode extends FixedWithNextNode implements LIRLowerable
 {
     public static final NodeClass<PrefetchAllocateNode> TYPE = NodeClass.create(PrefetchAllocateNode.class);
-    @Input(Association) AddressNode address;
+    @Input(InputType.Association) AddressNode address;
 
     public PrefetchAllocateNode(ValueNode address)
     {

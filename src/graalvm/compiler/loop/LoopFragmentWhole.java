@@ -1,6 +1,7 @@
 package graalvm.compiler.loop;
 
 import org.graalvm.collections.EconomicSet;
+
 import graalvm.compiler.core.common.cfg.Loop;
 import graalvm.compiler.graph.Graph;
 import graalvm.compiler.graph.Graph.DuplicationReplacement;

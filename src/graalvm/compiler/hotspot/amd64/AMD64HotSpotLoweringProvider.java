@@ -1,19 +1,16 @@
 package graalvm.compiler.hotspot.amd64;
 
-import static graalvm.compiler.hotspot.HotSpotBackend.Options.GraalArithmeticStubs;
-import static graalvm.compiler.hotspot.amd64.AMD64HotSpotForeignCallsProvider.ARITHMETIC_COS_STUB;
-import static graalvm.compiler.hotspot.amd64.AMD64HotSpotForeignCallsProvider.ARITHMETIC_EXP_STUB;
-import static graalvm.compiler.hotspot.amd64.AMD64HotSpotForeignCallsProvider.ARITHMETIC_LOG10_STUB;
-import static graalvm.compiler.hotspot.amd64.AMD64HotSpotForeignCallsProvider.ARITHMETIC_LOG_STUB;
-import static graalvm.compiler.hotspot.amd64.AMD64HotSpotForeignCallsProvider.ARITHMETIC_POW_STUB;
-import static graalvm.compiler.hotspot.amd64.AMD64HotSpotForeignCallsProvider.ARITHMETIC_SIN_STUB;
-import static graalvm.compiler.hotspot.amd64.AMD64HotSpotForeignCallsProvider.ARITHMETIC_TAN_STUB;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.hotspot.HotSpotConstantReflectionProvider;
+import jdk.vm.ci.meta.MetaAccessProvider;
 
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.core.common.spi.ForeignCallsProvider;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
+import graalvm.compiler.hotspot.HotSpotBackend.Options;
 import graalvm.compiler.hotspot.HotSpotGraalRuntimeProvider;
+import graalvm.compiler.hotspot.amd64.AMD64HotSpotForeignCallsProvider;
 import graalvm.compiler.hotspot.meta.DefaultHotSpotLoweringProvider;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
 import graalvm.compiler.hotspot.meta.HotSpotRegistersProvider;
@@ -25,10 +22,6 @@ import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.replacements.amd64.AMD64ConvertSnippets;
 import graalvm.compiler.replacements.nodes.BinaryMathIntrinsicNode.BinaryOperation;
 import graalvm.compiler.replacements.nodes.UnaryMathIntrinsicNode.UnaryOperation;
-
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.hotspot.HotSpotConstantReflectionProvider;
-import jdk.vm.ci.meta.MetaAccessProvider;
 
 public class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringProvider
 {
@@ -68,22 +61,22 @@ public class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringProvider
     @Override
     protected ForeignCallDescriptor toForeignCall(UnaryOperation operation)
     {
-        if (GraalArithmeticStubs.getValue(runtime.getOptions()))
+        if (Options.GraalArithmeticStubs.getValue(runtime.getOptions()))
         {
             switch (operation)
             {
                 case LOG:
-                    return ARITHMETIC_LOG_STUB;
+                    return AMD64HotSpotForeignCallsProvider.ARITHMETIC_LOG_STUB;
                 case LOG10:
-                    return ARITHMETIC_LOG10_STUB;
+                    return AMD64HotSpotForeignCallsProvider.ARITHMETIC_LOG10_STUB;
                 case SIN:
-                    return ARITHMETIC_SIN_STUB;
+                    return AMD64HotSpotForeignCallsProvider.ARITHMETIC_SIN_STUB;
                 case COS:
-                    return ARITHMETIC_COS_STUB;
+                    return AMD64HotSpotForeignCallsProvider.ARITHMETIC_COS_STUB;
                 case TAN:
-                    return ARITHMETIC_TAN_STUB;
+                    return AMD64HotSpotForeignCallsProvider.ARITHMETIC_TAN_STUB;
                 case EXP:
-                    return ARITHMETIC_EXP_STUB;
+                    return AMD64HotSpotForeignCallsProvider.ARITHMETIC_EXP_STUB;
             }
         }
         else if (operation == UnaryOperation.EXP)
@@ -97,12 +90,12 @@ public class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringProvider
     @Override
     protected ForeignCallDescriptor toForeignCall(BinaryOperation operation)
     {
-        if (GraalArithmeticStubs.getValue(runtime.getOptions()))
+        if (Options.GraalArithmeticStubs.getValue(runtime.getOptions()))
         {
             switch (operation)
             {
                 case POW:
-                    return ARITHMETIC_POW_STUB;
+                    return AMD64HotSpotForeignCallsProvider.ARITHMETIC_POW_STUB;
             }
         }
         else if (operation == BinaryOperation.POW)

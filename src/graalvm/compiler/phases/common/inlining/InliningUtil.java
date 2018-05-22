@@ -1,17 +1,23 @@
 package graalvm.compiler.phases.common.inlining;
 
-import static jdk.vm.ci.meta.DeoptimizationAction.InvalidateReprofile;
-import static jdk.vm.ci.meta.DeoptimizationReason.NullCheckException;
-
 import java.lang.reflect.Constructor;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import jdk.vm.ci.code.BytecodeFrame;
+import jdk.vm.ci.meta.Assumptions;
+import jdk.vm.ci.meta.DeoptimizationAction;
+import jdk.vm.ci.meta.DeoptimizationReason;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.EconomicSet;
 import org.graalvm.collections.UnmodifiableEconomicMap;
+
 import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
@@ -66,14 +72,6 @@ import graalvm.compiler.nodes.type.StampTool;
 import graalvm.compiler.nodes.util.GraphUtil;
 import graalvm.compiler.phases.common.util.HashSetNodeEventListener;
 import graalvm.compiler.phases.util.ValueMergeUtil;
-
-import jdk.vm.ci.code.BytecodeFrame;
-import jdk.vm.ci.meta.Assumptions;
-import jdk.vm.ci.meta.DeoptimizationAction;
-import jdk.vm.ci.meta.DeoptimizationReason;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 public class InliningUtil extends ValueMergeUtil
 {
@@ -728,7 +726,7 @@ public class InliningUtil extends ValueMergeUtil
             if (!StampTool.isPointerNonNull(newReceiver))
             {
                 LogicNode condition = graph.unique(IsNullNode.create(newReceiver));
-                FixedGuardNode fixedGuard = graph.add(new FixedGuardNode(condition, NullCheckException, InvalidateReprofile, true));
+                FixedGuardNode fixedGuard = graph.add(new FixedGuardNode(condition, DeoptimizationReason.NullCheckException, DeoptimizationAction.InvalidateReprofile, true));
                 PiNode nonNullReceiver = graph.unique(new PiNode(newReceiver, StampFactory.objectNonNull(), fixedGuard));
                 graph.addBeforeFixed(invoke.asNode(), fixedGuard);
                 newReceiver = nonNullReceiver;

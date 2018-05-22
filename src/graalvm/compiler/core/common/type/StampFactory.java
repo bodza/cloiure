@@ -1,10 +1,5 @@
 package graalvm.compiler.core.common.type;
 
-import static jdk.vm.ci.code.CodeUtil.signExtend;
-
-import graalvm.compiler.core.common.NumUtil;
-import graalvm.compiler.debug.GraalError;
-
 import jdk.vm.ci.code.CodeUtil;
 import jdk.vm.ci.meta.Assumptions;
 import jdk.vm.ci.meta.JavaConstant;
@@ -14,6 +9,9 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
 import jdk.vm.ci.meta.Signature;
+
+import graalvm.compiler.core.common.NumUtil;
+import graalvm.compiler.debug.GraalError;
 
 public class StampFactory
 {
@@ -165,8 +163,8 @@ public class StampFactory
 
     public static IntegerStamp forUnsignedInteger(int bits, long unsignedLowerBound, long unsignedUpperBound, long downMask, long upMask)
     {
-        long lowerBound = signExtend(unsignedLowerBound, bits);
-        long upperBound = signExtend(unsignedUpperBound, bits);
+        long lowerBound = CodeUtil.signExtend(unsignedLowerBound, bits);
+        long upperBound = CodeUtil.signExtend(unsignedUpperBound, bits);
         if (!NumUtil.sameSign(lowerBound, upperBound))
         {
             lowerBound = CodeUtil.minValue(bits);

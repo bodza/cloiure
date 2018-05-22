@@ -1,13 +1,13 @@
 package graalvm.compiler.nodes;
 
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodes.CallTargetNode.InvokeKind;
 import graalvm.compiler.nodes.java.MethodCallTargetNode;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.type.StampTool;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 public interface Invoke extends StateSplit, Lowerable, DeoptimizingNode.DeoptDuring, FixedNodeInterface, Invokable
 {

@@ -1,16 +1,16 @@
 package graalvm.compiler.nodes.type;
 
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.MemoryAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import graalvm.compiler.core.common.CompressEncoding;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.spi.LIRKindTool;
 import graalvm.compiler.core.common.type.AbstractObjectStamp;
 import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.Stamp;
-
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.MemoryAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 public abstract class NarrowOopStamp extends AbstractObjectStamp
 {

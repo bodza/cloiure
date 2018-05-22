@@ -2,12 +2,12 @@ package graalvm.compiler.nodes;
 
 import java.util.Arrays;
 
-import graalvm.compiler.core.common.type.TypeReference;
-
 import jdk.vm.ci.meta.Assumptions;
 import jdk.vm.ci.meta.JavaTypeProfile;
 import jdk.vm.ci.meta.JavaTypeProfile.ProfiledType;
 import jdk.vm.ci.meta.ResolvedJavaType;
+
+import graalvm.compiler.core.common.type.TypeReference;
 
 /**
  * Utility for deriving hint types for a type check instruction (e.g. checkcast or instanceof) based

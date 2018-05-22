@@ -1,8 +1,8 @@
 package graalvm.compiler.hotspot.nodes.profiling;
 
-import graalvm.compiler.graph.NodeClass;
-
 import jdk.vm.ci.meta.ResolvedJavaMethod;
+
+import graalvm.compiler.graph.NodeClass;
 
 public abstract class ProfileWithNotificationNode extends ProfileNode
 {

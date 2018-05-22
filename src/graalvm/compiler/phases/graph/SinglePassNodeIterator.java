@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
+
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeBitMap;
 import graalvm.compiler.nodes.AbstractBeginNode;

@@ -1,6 +1,7 @@
 package graalvm.compiler.hotspot.amd64;
 
-import static jdk.vm.ci.amd64.AMD64.rsp;
+import jdk.vm.ci.amd64.AMD64;
+import jdk.vm.ci.code.Register;
 
 import graalvm.compiler.asm.amd64.AMD64Address;
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
@@ -8,8 +9,6 @@ import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.amd64.AMD64LIRInstruction;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
-
-import jdk.vm.ci.code.Register;
 
 @Opcode
 final class AMD64HotSpotCRuntimeCallPrologueOp extends AMD64LIRInstruction
@@ -30,6 +29,6 @@ final class AMD64HotSpotCRuntimeCallPrologueOp extends AMD64LIRInstruction
     public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
     {
         // save last Java frame
-        masm.movq(new AMD64Address(thread, threadLastJavaSpOffset), rsp);
+        masm.movq(new AMD64Address(thread, threadLastJavaSpOffset), AMD64.rsp);
     }
 }

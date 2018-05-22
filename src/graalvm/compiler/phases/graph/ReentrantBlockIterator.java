@@ -8,6 +8,7 @@ import java.util.function.Predicate;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
+
 import graalvm.compiler.core.common.cfg.Loop;
 import graalvm.compiler.nodes.AbstractEndNode;
 import graalvm.compiler.nodes.AbstractMergeNode;

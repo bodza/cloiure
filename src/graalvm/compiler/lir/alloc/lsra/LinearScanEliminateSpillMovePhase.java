@@ -1,9 +1,10 @@
 package graalvm.compiler.lir.alloc.lsra;
 
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static graalvm.compiler.lir.phases.LIRPhase.Options.LIROptimization;
-
 import java.util.ArrayList;
+
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
 
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.LIRInsertionBuffer;
@@ -13,18 +14,16 @@ import graalvm.compiler.lir.alloc.lsra.Interval.SpillState;
 import graalvm.compiler.lir.alloc.lsra.LinearScan.IntervalPredicate;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.phases.AllocationPhase.AllocationContext;
+import graalvm.compiler.lir.phases.LIRPhase;
 import graalvm.compiler.options.NestedBooleanOptionKey;
 import graalvm.compiler.options.OptionKey;
-
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.AllocatableValue;
 
 public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
 {
     public static class Options
     {
         // Option "Enable spill move elimination."
-        public static final OptionKey<Boolean> LIROptLSRAEliminateSpillMoves = new NestedBooleanOptionKey(LIROptimization, true);
+        public static final OptionKey<Boolean> LIROptLSRAEliminateSpillMoves = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
     }
 
     private static final IntervalPredicate mustStoreAtDefinition = new LinearScan.IntervalPredicate()
@@ -148,7 +147,7 @@ public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
     {
         Interval curInterval = allocator.intervalFor(move.getResult());
 
-        if (!isRegister(curInterval.location()) && curInterval.alwaysInMemory())
+        if (!ValueUtil.isRegister(curInterval.location()) && curInterval.alwaysInMemory())
         {
             return true;
         }

@@ -1,7 +1,11 @@
 package graalvm.compiler.nodes.calc;
 
-import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.PrimitiveConstant;
 
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.PermanentBailoutException;
 import graalvm.compiler.core.common.calc.CanonicalCondition;
 import graalvm.compiler.core.common.calc.Condition;
@@ -19,11 +23,6 @@ import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.PrimitiveConstant;
 
 public abstract class CompareNode extends BinaryOpLogicNode implements Canonicalizable.Binary<ValueNode>
 {
@@ -207,7 +206,7 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
                 Constant reverseConverted = convert.reverse(constant, constantReflection);
                 if (reverseConverted != null && convert.convert(reverseConverted, constantReflection).equals(constant))
                 {
-                    if (GeneratePIC.getValue(options))
+                    if (GraalOptions.GeneratePIC.getValue(options))
                     {
                         // We always want uncompressed constants
                         return null;

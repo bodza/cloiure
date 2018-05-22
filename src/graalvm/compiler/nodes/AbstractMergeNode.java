@@ -1,7 +1,5 @@
 package graalvm.compiler.nodes;
 
-import static graalvm.compiler.nodeinfo.InputType.Association;
-
 import java.util.List;
 
 import graalvm.compiler.graph.IterableNodeType;
@@ -11,6 +9,7 @@ import graalvm.compiler.graph.NodeInputList;
 import graalvm.compiler.graph.iterators.NodeIterable;
 import graalvm.compiler.graph.spi.Simplifiable;
 import graalvm.compiler.graph.spi.SimplifierTool;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.memory.MemoryPhiNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
@@ -28,7 +27,7 @@ public abstract class AbstractMergeNode extends BeginStateSplitNode implements I
         super(c);
     }
 
-    @Input(Association) protected NodeInputList<EndNode> ends = new NodeInputList<>(this);
+    @Input(InputType.Association) protected NodeInputList<EndNode> ends = new NodeInputList<>(this);
 
     @Override
     public void generate(NodeLIRBuilderTool gen)

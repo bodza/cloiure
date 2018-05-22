@@ -1,8 +1,8 @@
 package graalvm.compiler.phases.common.inlining.walker;
 
-import graalvm.compiler.nodes.StructuredGraph;
-
 import jdk.vm.ci.meta.ResolvedJavaMethod;
+
+import graalvm.compiler.nodes.StructuredGraph;
 
 /**
  * Information about a graph that will potentially be inlined. This includes tracking the

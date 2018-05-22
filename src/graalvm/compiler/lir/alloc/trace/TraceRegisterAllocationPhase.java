@@ -1,5 +1,8 @@
 package graalvm.compiler.lir.alloc.trace;
 
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.meta.AllocatableValue;
+
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.common.alloc.Trace;
 import graalvm.compiler.core.common.alloc.TraceBuilderResult;
@@ -11,9 +14,6 @@ import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;
 import graalvm.compiler.lir.ssa.SSAUtil;
 import graalvm.compiler.options.OptionKey;
-
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.AllocatableValue;
 
 /**
  * Implements the Trace Register Allocation approach as described in

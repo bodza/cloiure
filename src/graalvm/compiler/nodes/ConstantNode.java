@@ -1,5 +1,12 @@
 package graalvm.compiler.nodes;
 
+import jdk.vm.ci.code.CodeUtil;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.PrimitiveConstant;
+
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.type.FloatStamp;
 import graalvm.compiler.core.common.type.IntegerStamp;
@@ -14,13 +21,6 @@ import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.calc.FloatingNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
-import jdk.vm.ci.code.CodeUtil;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.PrimitiveConstant;
 
 /**
  * The {@code ConstantNode} represents a {@link Constant constant}.

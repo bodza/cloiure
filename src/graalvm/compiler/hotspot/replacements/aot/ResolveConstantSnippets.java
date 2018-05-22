@@ -1,8 +1,9 @@
 package graalvm.compiler.hotspot.replacements.aot;
 
-import static graalvm.compiler.nodes.extended.BranchProbabilityNode.VERY_SLOW_PATH_PROBABILITY;
-import static graalvm.compiler.nodes.extended.BranchProbabilityNode.probability;
-import static graalvm.compiler.replacements.SnippetTemplate.DEFAULT_REPLACER;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.hotspot.HotSpotMetaspaceConstant;
+import jdk.vm.ci.hotspot.HotSpotObjectConstant;
+import jdk.vm.ci.meta.Constant;
 
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.debug.GraalError;
@@ -26,6 +27,7 @@ import graalvm.compiler.hotspot.word.MethodPointer;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.ValueNode;
+import graalvm.compiler.nodes.extended.BranchProbabilityNode;
 import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.nodes.util.GraphUtil;
 import graalvm.compiler.options.OptionValues;
@@ -35,18 +37,13 @@ import graalvm.compiler.replacements.SnippetTemplate.Arguments;
 import graalvm.compiler.replacements.SnippetTemplate.SnippetInfo;
 import graalvm.compiler.replacements.Snippets;
 
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.hotspot.HotSpotMetaspaceConstant;
-import jdk.vm.ci.hotspot.HotSpotObjectConstant;
-import jdk.vm.ci.meta.Constant;
-
 public class ResolveConstantSnippets implements Snippets
 {
     @Snippet
     public static Object resolveObjectConstant(Object constant)
     {
         Object result = LoadConstantIndirectlyNode.loadObject(constant);
-        if (probability(VERY_SLOW_PATH_PROBABILITY, result == null))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_SLOW_PATH_PROBABILITY, result == null))
         {
             result = ResolveConstantStubCall.resolveObject(constant, EncodedSymbolNode.encode(constant));
         }
@@ -57,7 +54,7 @@ public class ResolveConstantSnippets implements Snippets
     public static Object resolveDynamicConstant(Object constant)
     {
         Object result = LoadConstantIndirectlyNode.loadObject(constant);
-        if (probability(VERY_SLOW_PATH_PROBABILITY, result == null))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_SLOW_PATH_PROBABILITY, result == null))
         {
             result = ResolveDynamicStubCall.resolveInvoke(constant);
         }
@@ -68,7 +65,7 @@ public class ResolveConstantSnippets implements Snippets
     public static KlassPointer resolveKlassConstant(KlassPointer constant)
     {
         KlassPointer result = LoadConstantIndirectlyNode.loadKlass(constant);
-        if (probability(VERY_SLOW_PATH_PROBABILITY, result.isNull()))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_SLOW_PATH_PROBABILITY, result.isNull()))
         {
             result = ResolveConstantStubCall.resolveKlass(constant, EncodedSymbolNode.encode(constant));
         }
@@ -79,7 +76,7 @@ public class ResolveConstantSnippets implements Snippets
     public static MethodCountersPointer resolveMethodAndLoadCounters(MethodPointer method, KlassPointer klassHint)
     {
         MethodCountersPointer result = LoadMethodCountersIndirectlyNode.loadMethodCounters(method);
-        if (probability(VERY_SLOW_PATH_PROBABILITY, result.isNull()))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_SLOW_PATH_PROBABILITY, result.isNull()))
         {
             result = ResolveMethodAndLoadCountersStubCall.resolveMethodAndLoadCounters(method, klassHint, EncodedSymbolNode.encode(method));
         }
@@ -90,7 +87,7 @@ public class ResolveConstantSnippets implements Snippets
     public static KlassPointer initializeKlass(KlassPointer constant)
     {
         KlassPointer result = LoadConstantIndirectlyNode.loadKlass(constant, HotSpotConstantLoadAction.INITIALIZE);
-        if (probability(VERY_SLOW_PATH_PROBABILITY, result.isNull()))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_SLOW_PATH_PROBABILITY, result.isNull()))
         {
             result = InitializeKlassStubCall.initializeKlass(constant, EncodedSymbolNode.encode(constant));
         }
@@ -101,7 +98,7 @@ public class ResolveConstantSnippets implements Snippets
     public static KlassPointer pureInitializeKlass(KlassPointer constant)
     {
         KlassPointer result = LoadConstantIndirectlyNode.loadKlass(constant, HotSpotConstantLoadAction.INITIALIZE);
-        if (probability(VERY_SLOW_PATH_PROBABILITY, result.isNull()))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_SLOW_PATH_PROBABILITY, result.isNull()))
         {
             result = ResolveConstantStubCall.resolveKlass(constant, EncodedSymbolNode.encode(constant), HotSpotConstantLoadAction.INITIALIZE);
         }
@@ -133,7 +130,7 @@ public class ResolveConstantSnippets implements Snippets
             args.add("constant", value);
 
             SnippetTemplate template = template(resolveConstantNode, args);
-            template.instantiate(providers.getMetaAccess(), resolveConstantNode, DEFAULT_REPLACER, args);
+            template.instantiate(providers.getMetaAccess(), resolveConstantNode, SnippetTemplate.DEFAULT_REPLACER, args);
 
             if (!resolveConstantNode.isDeleted())
             {
@@ -178,7 +175,7 @@ public class ResolveConstantSnippets implements Snippets
             args.add("constant", value);
 
             SnippetTemplate template = template(resolveConstantNode, args);
-            template.instantiate(providers.getMetaAccess(), resolveConstantNode, DEFAULT_REPLACER, args);
+            template.instantiate(providers.getMetaAccess(), resolveConstantNode, SnippetTemplate.DEFAULT_REPLACER, args);
 
             if (!resolveConstantNode.isDeleted())
             {
@@ -199,7 +196,7 @@ public class ResolveConstantSnippets implements Snippets
                 args.add("constant", value);
 
                 SnippetTemplate template = template(initializeKlassNode, args);
-                template.instantiate(providers.getMetaAccess(), initializeKlassNode, DEFAULT_REPLACER, args);
+                template.instantiate(providers.getMetaAccess(), initializeKlassNode, SnippetTemplate.DEFAULT_REPLACER, args);
                 if (!initializeKlassNode.isDeleted())
                 {
                     GraphUtil.killWithUnusedFloatingInputs(initializeKlassNode);
@@ -219,7 +216,7 @@ public class ResolveConstantSnippets implements Snippets
             args.add("method", method);
             args.add("klassHint", resolveMethodAndLoadCountersNode.getHub());
             SnippetTemplate template = template(resolveMethodAndLoadCountersNode, args);
-            template.instantiate(providers.getMetaAccess(), resolveMethodAndLoadCountersNode, DEFAULT_REPLACER, args);
+            template.instantiate(providers.getMetaAccess(), resolveMethodAndLoadCountersNode, SnippetTemplate.DEFAULT_REPLACER, args);
 
             if (!resolveMethodAndLoadCountersNode.isDeleted())
             {

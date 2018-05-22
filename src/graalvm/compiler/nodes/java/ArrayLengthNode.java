@@ -1,5 +1,8 @@
 package graalvm.compiler.nodes.java;
 
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.JavaConstant;
+
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
@@ -15,9 +18,6 @@ import graalvm.compiler.nodes.spi.Virtualizable;
 import graalvm.compiler.nodes.spi.VirtualizerTool;
 import graalvm.compiler.nodes.util.GraphUtil;
 import graalvm.compiler.nodes.virtual.VirtualArrayNode;
-
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.JavaConstant;
 
 /**
  * The {@code ArrayLength} instruction gets the length of an array.

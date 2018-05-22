@@ -4,18 +4,19 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.graalvm.collections.EconomicMap;
-import org.graalvm.collections.Equivalence;
-import graalvm.compiler.api.replacements.SnippetReflectionProvider;
-import graalvm.compiler.bytecode.Bytecode;
-import graalvm.compiler.bytecode.BytecodeProvider;
-import graalvm.compiler.serviceprovider.GraalServices;
-
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaField;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
+
+import org.graalvm.collections.EconomicMap;
+import org.graalvm.collections.Equivalence;
+
+import graalvm.compiler.api.replacements.SnippetReflectionProvider;
+import graalvm.compiler.bytecode.Bytecode;
+import graalvm.compiler.bytecode.BytecodeProvider;
+import graalvm.compiler.serviceprovider.GraalServices;
 
 /**
  * A {@link BytecodeProvider} that provides bytecode properties of a {@link ResolvedJavaMethod} as

@@ -1,7 +1,6 @@
 package graalvm.compiler.virtual.phases.ea;
 
-import static graalvm.compiler.core.common.GraalOptions.EscapeAnalyzeOnly;
-
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.StructuredGraph.ScheduleResult;
 import graalvm.compiler.nodes.cfg.ControlFlowGraph;
@@ -27,7 +26,7 @@ public class EarlyReadEliminationPhase extends EffectsPhase<PhaseContext>
     @Override
     protected void run(StructuredGraph graph, PhaseContext context)
     {
-        if (VirtualUtil.matches(graph, EscapeAnalyzeOnly.getValue(graph.getOptions())))
+        if (VirtualUtil.matches(graph, GraalOptions.EscapeAnalyzeOnly.getValue(graph.getOptions())))
         {
             runAnalysis(graph, context);
         }

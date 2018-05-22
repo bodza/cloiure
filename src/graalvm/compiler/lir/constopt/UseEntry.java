@@ -1,10 +1,10 @@
 package graalvm.compiler.lir.constopt;
 
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.ValueProcedure;
-
-import jdk.vm.ci.meta.Value;
 
 /**
  * Represents a usage of a constant.

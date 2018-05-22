@@ -1,31 +1,5 @@
 package graalvm.compiler.hotspot;
 
-import static graalvm.compiler.core.common.GraalOptions.OptAssumptions;
-import static graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext.CompilationContext.ROOT_COMPILATION;
-
-import graalvm.compiler.api.runtime.GraalJVMCICompiler;
-import graalvm.compiler.bytecode.Bytecode;
-import graalvm.compiler.code.CompilationResult;
-import graalvm.compiler.core.GraalCompiler;
-import graalvm.compiler.core.common.CompilationIdentifier;
-import graalvm.compiler.hotspot.meta.HotSpotProviders;
-import graalvm.compiler.hotspot.phases.OnStackReplacementPhase;
-import graalvm.compiler.java.GraphBuilderPhase;
-import graalvm.compiler.lir.asm.CompilationResultBuilderFactory;
-import graalvm.compiler.lir.phases.LIRSuites;
-import graalvm.compiler.nodes.StructuredGraph;
-import graalvm.compiler.nodes.StructuredGraph.AllowAssumptions;
-import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderConfiguration;
-import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderConfiguration.Plugins;
-import graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext;
-import graalvm.compiler.nodes.spi.Replacements;
-import graalvm.compiler.options.OptionValues;
-import graalvm.compiler.phases.OptimisticOptimizations;
-import graalvm.compiler.phases.OptimisticOptimizations.Optimization;
-import graalvm.compiler.phases.PhaseSuite;
-import graalvm.compiler.phases.tiers.HighTierContext;
-import graalvm.compiler.phases.tiers.Suites;
-
 import jdk.vm.ci.code.CompilationRequest;
 import jdk.vm.ci.code.CompilationRequestResult;
 import jdk.vm.ci.hotspot.HotSpotCompilationRequest;
@@ -38,6 +12,31 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.SpeculationLog;
 import jdk.vm.ci.meta.TriState;
 import jdk.vm.ci.runtime.JVMCICompiler;
+
+import graalvm.compiler.api.runtime.GraalJVMCICompiler;
+import graalvm.compiler.bytecode.Bytecode;
+import graalvm.compiler.code.CompilationResult;
+import graalvm.compiler.core.GraalCompiler;
+import graalvm.compiler.core.common.CompilationIdentifier;
+import graalvm.compiler.core.common.GraalOptions;
+import graalvm.compiler.hotspot.meta.HotSpotProviders;
+import graalvm.compiler.hotspot.phases.OnStackReplacementPhase;
+import graalvm.compiler.java.GraphBuilderPhase;
+import graalvm.compiler.lir.asm.CompilationResultBuilderFactory;
+import graalvm.compiler.lir.phases.LIRSuites;
+import graalvm.compiler.nodes.StructuredGraph;
+import graalvm.compiler.nodes.StructuredGraph.AllowAssumptions;
+import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderConfiguration;
+import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderConfiguration.Plugins;
+import graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext;
+import graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext.CompilationContext;
+import graalvm.compiler.nodes.spi.Replacements;
+import graalvm.compiler.options.OptionValues;
+import graalvm.compiler.phases.OptimisticOptimizations;
+import graalvm.compiler.phases.OptimisticOptimizations.Optimization;
+import graalvm.compiler.phases.PhaseSuite;
+import graalvm.compiler.phases.tiers.HighTierContext;
+import graalvm.compiler.phases.tiers.Suites;
 
 public class HotSpotGraalCompiler implements GraalJVMCICompiler
 {
@@ -87,7 +86,7 @@ public class HotSpotGraalCompiler implements GraalJVMCICompiler
             {
                 speculationLog.collectFailedSpeculations();
             }
-            graph = new StructuredGraph.Builder(options, AllowAssumptions.ifTrue(OptAssumptions.getValue(options))).method(method).entryBCI(entryBCI).speculationLog(speculationLog).useProfilingInfo(useProfilingInfo).compilationId(compilationId).build();
+            graph = new StructuredGraph.Builder(options, AllowAssumptions.ifTrue(GraalOptions.OptAssumptions.getValue(options))).method(method).entryBCI(entryBCI).speculationLog(speculationLog).useProfilingInfo(useProfilingInfo).compilationId(compilationId).build();
         }
         return graph;
     }
@@ -148,7 +147,7 @@ public class HotSpotGraalCompiler implements GraalJVMCICompiler
             StructuredGraph graph = new StructuredGraph.Builder(options, AllowAssumptions.YES).method(substMethod).compilationId(compilationId).build();
             Plugins plugins = new Plugins(providers.getGraphBuilderPlugins());
             GraphBuilderConfiguration config = GraphBuilderConfiguration.getSnippetDefault(plugins);
-            IntrinsicContext initialReplacementContext = new IntrinsicContext(method, substMethod, subst.getOrigin(), ROOT_COMPILATION);
+            IntrinsicContext initialReplacementContext = new IntrinsicContext(method, substMethod, subst.getOrigin(), CompilationContext.ROOT_COMPILATION);
             new GraphBuilderPhase.Instance(providers.getMetaAccess(), providers.getStampProvider(), providers.getConstantReflection(), providers.getConstantFieldProvider(), config, OptimisticOptimizations.NONE, initialReplacementContext).apply(graph);
             return graph;
         }

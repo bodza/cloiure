@@ -1,15 +1,28 @@
 package graalvm.compiler.lir.asm;
 
-import static jdk.vm.ci.code.ValueUtil.asStackSlot;
-import static graalvm.compiler.lir.LIRValueUtil.asJavaConstant;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
+import jdk.vm.ci.code.CodeCacheProvider;
+import jdk.vm.ci.code.DebugInfo;
+import jdk.vm.ci.code.StackSlot;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.code.site.ConstantReference;
+import jdk.vm.ci.code.site.DataSectionReference;
+import jdk.vm.ci.code.site.InfopointReason;
+import jdk.vm.ci.code.site.Mark;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.InvokeTarget;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.VMConstant;
+import jdk.vm.ci.meta.Value;
+
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
+
 import graalvm.compiler.asm.AbstractAddress;
 import graalvm.compiler.asm.Assembler;
 import graalvm.compiler.code.CompilationResult;
@@ -24,24 +37,11 @@ import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRFrameState;
 import graalvm.compiler.lir.LIRInstruction;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.LabelRef;
 import graalvm.compiler.lir.framemap.FrameMap;
 import graalvm.compiler.options.OptionKey;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.code.CodeCacheProvider;
-import jdk.vm.ci.code.DebugInfo;
-import jdk.vm.ci.code.StackSlot;
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.code.site.ConstantReference;
-import jdk.vm.ci.code.site.DataSectionReference;
-import jdk.vm.ci.code.site.InfopointReason;
-import jdk.vm.ci.code.site.Mark;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.InvokeTarget;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.VMConstant;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Fills in a {@link CompilationResult} as its code is being assembled.
@@ -338,7 +338,7 @@ public class CompilationResultBuilder
      */
     public int asIntConst(Value value)
     {
-        JavaConstant constant = asJavaConstant(value);
+        JavaConstant constant = LIRValueUtil.asJavaConstant(value);
         long c = constant.asLong();
         if (!NumUtil.isInt(c))
         {
@@ -352,7 +352,7 @@ public class CompilationResultBuilder
      */
     public float asFloatConst(Value value)
     {
-        JavaConstant constant = asJavaConstant(value);
+        JavaConstant constant = LIRValueUtil.asJavaConstant(value);
         return constant.asFloat();
     }
 
@@ -361,7 +361,7 @@ public class CompilationResultBuilder
      */
     public long asLongConst(Value value)
     {
-        JavaConstant constant = asJavaConstant(value);
+        JavaConstant constant = LIRValueUtil.asJavaConstant(value);
         return constant.asLong();
     }
 
@@ -370,7 +370,7 @@ public class CompilationResultBuilder
      */
     public double asDoubleConst(Value value)
     {
-        JavaConstant constant = asJavaConstant(value);
+        JavaConstant constant = LIRValueUtil.asJavaConstant(value);
         return constant.asDouble();
     }
 
@@ -448,7 +448,7 @@ public class CompilationResultBuilder
 
     public AbstractAddress asAddress(Value value)
     {
-        StackSlot slot = asStackSlot(value);
+        StackSlot slot = ValueUtil.asStackSlot(value);
         return asm.makeAddress(frameMap.getRegisterConfig().getFrameRegister(), frameMap.offsetForStackSlot(slot));
     }
 

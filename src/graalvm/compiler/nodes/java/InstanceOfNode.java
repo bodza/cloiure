@@ -1,6 +1,9 @@
 package graalvm.compiler.nodes.java;
 
-import static graalvm.compiler.nodeinfo.InputType.Anchor;
+import java.util.Objects;
+
+import jdk.vm.ci.meta.JavaTypeProfile;
+import jdk.vm.ci.meta.TriState;
 
 import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.Stamp;
@@ -8,6 +11,7 @@ import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.TypeReference;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.LogicConstantNode;
 import graalvm.compiler.nodes.LogicNegationNode;
 import graalvm.compiler.nodes.LogicNode;
@@ -22,11 +26,6 @@ import graalvm.compiler.nodes.spi.Virtualizable;
 import graalvm.compiler.nodes.spi.VirtualizerTool;
 import graalvm.compiler.nodes.type.StampTool;
 
-import jdk.vm.ci.meta.JavaTypeProfile;
-import jdk.vm.ci.meta.TriState;
-
-import java.util.Objects;
-
 /**
  * The {@code InstanceOfNode} represents an instanceof test.
  */
@@ -37,7 +36,7 @@ public class InstanceOfNode extends UnaryOpLogicNode implements Lowerable, Virtu
     private ObjectStamp checkedStamp;
 
     private JavaTypeProfile profile;
-    @OptionalInput(Anchor) protected AnchoringNode anchor;
+    @OptionalInput(InputType.Anchor) protected AnchoringNode anchor;
 
     private InstanceOfNode(ObjectStamp checkedStamp, ValueNode object, JavaTypeProfile profile, AnchoringNode anchor)
     {

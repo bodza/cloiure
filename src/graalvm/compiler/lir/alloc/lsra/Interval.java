@@ -1,26 +1,25 @@
 package graalvm.compiler.lir.alloc.lsra;
 
-import static graalvm.compiler.lir.LIRValueUtil.isVariable;
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
+
+import jdk.vm.ci.code.RegisterValue;
+import jdk.vm.ci.code.StackSlot;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.Value;
+import jdk.vm.ci.meta.ValueKind;
 
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.util.IntList;
 import graalvm.compiler.core.common.util.Util;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.LIRInstruction;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.Variable;
-import jdk.vm.ci.code.RegisterValue;
-import jdk.vm.ci.code.StackSlot;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.Value;
-import jdk.vm.ci.meta.ValueKind;
 
 /**
  * Represents an interval in the {@linkplain LinearScan linear scan register allocator}.
@@ -552,11 +551,11 @@ public final class Interval
 
     void assignLocation(AllocatableValue newLocation)
     {
-        if (isRegister(newLocation))
+        if (ValueUtil.isRegister(newLocation))
         {
             if (newLocation.getValueKind().equals(LIRKind.Illegal) && !kind.equals(LIRKind.Illegal))
             {
-                this.location = asRegister(newLocation).asValue(kind);
+                this.location = ValueUtil.asRegister(newLocation).asValue(kind);
                 return;
             }
         }
@@ -751,7 +750,7 @@ public final class Interval
     {
         this.operand = operand;
         this.operandNumber = operandNumber;
-        if (isRegister(operand))
+        if (ValueUtil.isRegister(operand))
         {
             location = operand;
         }
@@ -820,7 +819,7 @@ public final class Interval
 
         if (locationHint != null)
         {
-            if (locationHint.location != null && isRegister(locationHint.location))
+            if (locationHint.location != null && ValueUtil.isRegister(locationHint.location))
             {
                 return locationHint;
             }
@@ -831,7 +830,7 @@ public final class Interval
                 for (int i = 0; i < len; i++)
                 {
                     Interval interval = locationHint.splitChildren.get(i);
-                    if (interval.location != null && isRegister(interval.location))
+                    if (interval.location != null && ValueUtil.isRegister(interval.location))
                     {
                         return interval;
                     }
@@ -1057,7 +1056,7 @@ public final class Interval
     public void addUsePos(int pos, RegisterPriority registerPriority)
     {
         // do not add use positions for precolored intervals because they are never used
-        if (registerPriority != RegisterPriority.None && isVariable(operand))
+        if (registerPriority != RegisterPriority.None && LIRValueUtil.isVariable(operand))
         {
             // Note: addUse is called in descending order, so list gets sorted
             // automatically by just appending new use positions
@@ -1259,7 +1258,7 @@ public final class Interval
             to = String.valueOf(calcTo());
         }
         String locationString = this.location == null ? "" : "@" + this.location;
-        return operandNumber + ":" + operand + (isRegister(operand) ? "" : locationString) + "[" + from + "," + to + "]";
+        return operandNumber + ":" + operand + (ValueUtil.isRegister(operand) ? "" : locationString) + "[" + from + "," + to + "]";
     }
 
     /**
@@ -1279,7 +1278,7 @@ public final class Interval
     {
         StringBuilder buf = new StringBuilder(100);
         buf.append(operandNumber).append(':').append(operand).append(' ');
-        if (!isRegister(operand))
+        if (!ValueUtil.isRegister(operand))
         {
             if (location != null)
             {

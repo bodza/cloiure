@@ -1,5 +1,7 @@
 package graalvm.compiler.nodes.java;
 
+import jdk.vm.ci.meta.ResolvedJavaField;
+
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodeinfo.Verbosity;
@@ -7,8 +9,6 @@ import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
-
-import jdk.vm.ci.meta.ResolvedJavaField;
 
 /**
  * The base class of all instructions that access fields.

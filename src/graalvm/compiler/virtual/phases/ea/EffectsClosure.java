@@ -6,6 +6,8 @@ import java.util.List;
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.EconomicSet;
 import org.graalvm.collections.Equivalence;
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.core.common.cfg.BlockMap;
 import graalvm.compiler.core.common.cfg.Loop;
 import graalvm.compiler.core.common.type.Stamp;
@@ -38,7 +40,6 @@ import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.graph.ReentrantBlockIterator;
 import graalvm.compiler.phases.graph.ReentrantBlockIterator.BlockIteratorClosure;
 import graalvm.compiler.phases.graph.ReentrantBlockIterator.LoopInfo;
-import org.graalvm.word.LocationIdentity;
 
 public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> extends EffectsPhase.Closure<BlockT>
 {

@@ -1,11 +1,11 @@
 package graalvm.compiler.hotspot.meta;
 
+import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderContext;
 import graalvm.compiler.options.OptionKey;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 public class HotSpotAOTProfilingPlugin extends HotSpotProfilingPlugin
 {

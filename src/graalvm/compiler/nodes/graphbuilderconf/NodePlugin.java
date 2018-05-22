@@ -1,13 +1,13 @@
 package graalvm.compiler.nodes.graphbuilderconf;
 
-import graalvm.compiler.nodes.ValueNode;
-
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.JavaTypeProfile;
 import jdk.vm.ci.meta.ResolvedJavaField;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
 import jdk.vm.ci.meta.Signature;
+
+import graalvm.compiler.nodes.ValueNode;
 
 public interface NodePlugin extends GraphBuilderPlugin
 {

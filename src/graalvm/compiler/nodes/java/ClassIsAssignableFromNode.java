@@ -1,5 +1,9 @@
 package graalvm.compiler.nodes.java;
 
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.ResolvedJavaType;
+import jdk.vm.ci.meta.TriState;
+
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
@@ -10,10 +14,6 @@ import graalvm.compiler.nodes.LogicConstantNode;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
-
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.ResolvedJavaType;
-import jdk.vm.ci.meta.TriState;
 
 /**
  * The {@code ClassIsAssignableFromNode} represents a type check against {@link Class} instead of

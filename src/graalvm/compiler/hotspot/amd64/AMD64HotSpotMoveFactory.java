@@ -1,9 +1,5 @@
 package graalvm.compiler.hotspot.amd64;
 
-import graalvm.compiler.core.amd64.AMD64MoveFactory;
-import graalvm.compiler.lir.LIRInstruction;
-import graalvm.compiler.lir.amd64.AMD64LIRInstruction;
-
 import jdk.vm.ci.hotspot.HotSpotCompressedNullConstant;
 import jdk.vm.ci.hotspot.HotSpotConstant;
 import jdk.vm.ci.hotspot.HotSpotMetaspaceConstant;
@@ -11,6 +7,10 @@ import jdk.vm.ci.hotspot.HotSpotObjectConstant;
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.JavaConstant;
+
+import graalvm.compiler.core.amd64.AMD64MoveFactory;
+import graalvm.compiler.lir.LIRInstruction;
+import graalvm.compiler.lir.amd64.AMD64LIRInstruction;
 
 public class AMD64HotSpotMoveFactory extends AMD64MoveFactory
 {

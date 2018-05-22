@@ -1,11 +1,10 @@
 package graalvm.compiler.nodes;
 
-import static graalvm.compiler.nodeinfo.InputType.Association;
-
 import java.util.Collections;
 
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 
 /**
@@ -21,7 +20,7 @@ public final class LoopEndNode extends AbstractEndNode
      * evaluation can temporarily assign a non-loop begin. This node will then be deleted shortly
      * after - but we still must not have type system violations for that short amount of time.
      */
-    @Input(Association) AbstractBeginNode loopBegin;
+    @Input(InputType.Association) AbstractBeginNode loopBegin;
     protected int endIndex;
 
     /**

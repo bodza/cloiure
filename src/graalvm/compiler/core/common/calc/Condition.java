@@ -1,11 +1,11 @@
 package graalvm.compiler.core.common.calc;
 
-import graalvm.compiler.debug.GraalError;
-
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.ConstantReflectionProvider;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.PrimitiveConstant;
+
+import graalvm.compiler.debug.GraalError;
 
 /**
  * Condition codes used in conditionals.

@@ -1,5 +1,7 @@
 package graalvm.compiler.nodes.java;
 
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.graph.IterableNodeType;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodes.ValueNode;
@@ -10,7 +12,6 @@ import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.nodes.spi.Virtualizable;
 import graalvm.compiler.nodes.spi.VirtualizerTool;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
-import org.graalvm.word.LocationIdentity;
 
 /**
  * The {@code RawMonitorEnterNode} represents the acquisition of a monitor. The object needs to

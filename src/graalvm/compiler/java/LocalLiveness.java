@@ -1,59 +1,7 @@
 package graalvm.compiler.java;
 
-import static graalvm.compiler.bytecode.Bytecodes.ALOAD;
-import static graalvm.compiler.bytecode.Bytecodes.ALOAD_0;
-import static graalvm.compiler.bytecode.Bytecodes.ALOAD_1;
-import static graalvm.compiler.bytecode.Bytecodes.ALOAD_2;
-import static graalvm.compiler.bytecode.Bytecodes.ALOAD_3;
-import static graalvm.compiler.bytecode.Bytecodes.ASTORE;
-import static graalvm.compiler.bytecode.Bytecodes.ASTORE_0;
-import static graalvm.compiler.bytecode.Bytecodes.ASTORE_1;
-import static graalvm.compiler.bytecode.Bytecodes.ASTORE_2;
-import static graalvm.compiler.bytecode.Bytecodes.ASTORE_3;
-import static graalvm.compiler.bytecode.Bytecodes.DLOAD;
-import static graalvm.compiler.bytecode.Bytecodes.DLOAD_0;
-import static graalvm.compiler.bytecode.Bytecodes.DLOAD_1;
-import static graalvm.compiler.bytecode.Bytecodes.DLOAD_2;
-import static graalvm.compiler.bytecode.Bytecodes.DLOAD_3;
-import static graalvm.compiler.bytecode.Bytecodes.DSTORE;
-import static graalvm.compiler.bytecode.Bytecodes.DSTORE_0;
-import static graalvm.compiler.bytecode.Bytecodes.DSTORE_1;
-import static graalvm.compiler.bytecode.Bytecodes.DSTORE_2;
-import static graalvm.compiler.bytecode.Bytecodes.DSTORE_3;
-import static graalvm.compiler.bytecode.Bytecodes.FLOAD;
-import static graalvm.compiler.bytecode.Bytecodes.FLOAD_0;
-import static graalvm.compiler.bytecode.Bytecodes.FLOAD_1;
-import static graalvm.compiler.bytecode.Bytecodes.FLOAD_2;
-import static graalvm.compiler.bytecode.Bytecodes.FLOAD_3;
-import static graalvm.compiler.bytecode.Bytecodes.FSTORE;
-import static graalvm.compiler.bytecode.Bytecodes.FSTORE_0;
-import static graalvm.compiler.bytecode.Bytecodes.FSTORE_1;
-import static graalvm.compiler.bytecode.Bytecodes.FSTORE_2;
-import static graalvm.compiler.bytecode.Bytecodes.FSTORE_3;
-import static graalvm.compiler.bytecode.Bytecodes.IINC;
-import static graalvm.compiler.bytecode.Bytecodes.ILOAD;
-import static graalvm.compiler.bytecode.Bytecodes.ILOAD_0;
-import static graalvm.compiler.bytecode.Bytecodes.ILOAD_1;
-import static graalvm.compiler.bytecode.Bytecodes.ILOAD_2;
-import static graalvm.compiler.bytecode.Bytecodes.ILOAD_3;
-import static graalvm.compiler.bytecode.Bytecodes.ISTORE;
-import static graalvm.compiler.bytecode.Bytecodes.ISTORE_0;
-import static graalvm.compiler.bytecode.Bytecodes.ISTORE_1;
-import static graalvm.compiler.bytecode.Bytecodes.ISTORE_2;
-import static graalvm.compiler.bytecode.Bytecodes.ISTORE_3;
-import static graalvm.compiler.bytecode.Bytecodes.LLOAD;
-import static graalvm.compiler.bytecode.Bytecodes.LLOAD_0;
-import static graalvm.compiler.bytecode.Bytecodes.LLOAD_1;
-import static graalvm.compiler.bytecode.Bytecodes.LLOAD_2;
-import static graalvm.compiler.bytecode.Bytecodes.LLOAD_3;
-import static graalvm.compiler.bytecode.Bytecodes.LSTORE;
-import static graalvm.compiler.bytecode.Bytecodes.LSTORE_0;
-import static graalvm.compiler.bytecode.Bytecodes.LSTORE_1;
-import static graalvm.compiler.bytecode.Bytecodes.LSTORE_2;
-import static graalvm.compiler.bytecode.Bytecodes.LSTORE_3;
-import static graalvm.compiler.bytecode.Bytecodes.RET;
-
 import graalvm.compiler.bytecode.BytecodeStream;
+import graalvm.compiler.bytecode.Bytecodes;
 import graalvm.compiler.java.BciBlockMapping.BciBlock;
 
 /**
@@ -187,101 +135,101 @@ public abstract class LocalLiveness
         {
             switch (stream.currentBC())
             {
-                case LLOAD:
-                case DLOAD:
+                case Bytecodes.LLOAD:
+                case Bytecodes.DLOAD:
                     loadTwo(blockID, stream.readLocalIndex());
                     break;
-                case LLOAD_0:
-                case DLOAD_0:
+                case Bytecodes.LLOAD_0:
+                case Bytecodes.DLOAD_0:
                     loadTwo(blockID, 0);
                     break;
-                case LLOAD_1:
-                case DLOAD_1:
+                case Bytecodes.LLOAD_1:
+                case Bytecodes.DLOAD_1:
                     loadTwo(blockID, 1);
                     break;
-                case LLOAD_2:
-                case DLOAD_2:
+                case Bytecodes.LLOAD_2:
+                case Bytecodes.DLOAD_2:
                     loadTwo(blockID, 2);
                     break;
-                case LLOAD_3:
-                case DLOAD_3:
+                case Bytecodes.LLOAD_3:
+                case Bytecodes.DLOAD_3:
                     loadTwo(blockID, 3);
                     break;
-                case IINC:
+                case Bytecodes.IINC:
                     localIndex = stream.readLocalIndex();
                     loadOne(blockID, localIndex);
                     storeOne(blockID, localIndex);
                     break;
-                case ILOAD:
-                case FLOAD:
-                case ALOAD:
-                case RET:
+                case Bytecodes.ILOAD:
+                case Bytecodes.FLOAD:
+                case Bytecodes.ALOAD:
+                case Bytecodes.RET:
                     loadOne(blockID, stream.readLocalIndex());
                     break;
-                case ILOAD_0:
-                case FLOAD_0:
-                case ALOAD_0:
+                case Bytecodes.ILOAD_0:
+                case Bytecodes.FLOAD_0:
+                case Bytecodes.ALOAD_0:
                     loadOne(blockID, 0);
                     break;
-                case ILOAD_1:
-                case FLOAD_1:
-                case ALOAD_1:
+                case Bytecodes.ILOAD_1:
+                case Bytecodes.FLOAD_1:
+                case Bytecodes.ALOAD_1:
                     loadOne(blockID, 1);
                     break;
-                case ILOAD_2:
-                case FLOAD_2:
-                case ALOAD_2:
+                case Bytecodes.ILOAD_2:
+                case Bytecodes.FLOAD_2:
+                case Bytecodes.ALOAD_2:
                     loadOne(blockID, 2);
                     break;
-                case ILOAD_3:
-                case FLOAD_3:
-                case ALOAD_3:
+                case Bytecodes.ILOAD_3:
+                case Bytecodes.FLOAD_3:
+                case Bytecodes.ALOAD_3:
                     loadOne(blockID, 3);
                     break;
 
-                case LSTORE:
-                case DSTORE:
+                case Bytecodes.LSTORE:
+                case Bytecodes.DSTORE:
                     storeTwo(blockID, stream.readLocalIndex());
                     break;
-                case LSTORE_0:
-                case DSTORE_0:
+                case Bytecodes.LSTORE_0:
+                case Bytecodes.DSTORE_0:
                     storeTwo(blockID, 0);
                     break;
-                case LSTORE_1:
-                case DSTORE_1:
+                case Bytecodes.LSTORE_1:
+                case Bytecodes.DSTORE_1:
                     storeTwo(blockID, 1);
                     break;
-                case LSTORE_2:
-                case DSTORE_2:
+                case Bytecodes.LSTORE_2:
+                case Bytecodes.DSTORE_2:
                     storeTwo(blockID, 2);
                     break;
-                case LSTORE_3:
-                case DSTORE_3:
+                case Bytecodes.LSTORE_3:
+                case Bytecodes.DSTORE_3:
                     storeTwo(blockID, 3);
                     break;
-                case ISTORE:
-                case FSTORE:
-                case ASTORE:
+                case Bytecodes.ISTORE:
+                case Bytecodes.FSTORE:
+                case Bytecodes.ASTORE:
                     storeOne(blockID, stream.readLocalIndex());
                     break;
-                case ISTORE_0:
-                case FSTORE_0:
-                case ASTORE_0:
+                case Bytecodes.ISTORE_0:
+                case Bytecodes.FSTORE_0:
+                case Bytecodes.ASTORE_0:
                     storeOne(blockID, 0);
                     break;
-                case ISTORE_1:
-                case FSTORE_1:
-                case ASTORE_1:
+                case Bytecodes.ISTORE_1:
+                case Bytecodes.FSTORE_1:
+                case Bytecodes.ASTORE_1:
                     storeOne(blockID, 1);
                     break;
-                case ISTORE_2:
-                case FSTORE_2:
-                case ASTORE_2:
+                case Bytecodes.ISTORE_2:
+                case Bytecodes.FSTORE_2:
+                case Bytecodes.ASTORE_2:
                     storeOne(blockID, 2);
                     break;
-                case ISTORE_3:
-                case FSTORE_3:
-                case ASTORE_3:
+                case Bytecodes.ISTORE_3:
+                case Bytecodes.FSTORE_3:
+                case Bytecodes.ASTORE_3:
                     storeOne(blockID, 3);
                     break;
             }

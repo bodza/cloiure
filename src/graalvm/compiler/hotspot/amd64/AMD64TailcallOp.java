@@ -1,15 +1,14 @@
 package graalvm.compiler.hotspot.amd64;
 
-import static jdk.vm.ci.code.ValueUtil.asRegister;
+import jdk.vm.ci.code.InstalledCode;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.amd64.AMD64LIRInstruction;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
-
-import jdk.vm.ci.code.InstalledCode;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Performs a hard-coded tail call to the specified target, which normally should be an
@@ -37,7 +36,7 @@ public final class AMD64TailcallOp extends AMD64LIRInstruction
         masm.leave();
 
         // jump to the target method
-        masm.jmp(asRegister(target));
+        masm.jmp(ValueUtil.asRegister(target));
         masm.ensureUniquePC();
     }
 }

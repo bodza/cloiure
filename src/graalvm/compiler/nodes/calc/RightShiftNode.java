@@ -1,5 +1,7 @@
 package graalvm.compiler.nodes.calc;
 
+import jdk.vm.ci.code.CodeUtil;
+
 import graalvm.compiler.core.common.type.ArithmeticOpTable;
 import graalvm.compiler.core.common.type.ArithmeticOpTable.ShiftOp.Shr;
 import graalvm.compiler.core.common.type.IntegerStamp;
@@ -11,8 +13,6 @@ import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
-import jdk.vm.ci.code.CodeUtil;
 
 public final class RightShiftNode extends ShiftNode<Shr>
 {

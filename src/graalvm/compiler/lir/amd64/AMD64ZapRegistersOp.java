@@ -1,18 +1,18 @@
 package graalvm.compiler.lir.amd64;
 
-import static graalvm.compiler.lir.amd64.AMD64SaveRegistersOp.prune;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.RegisterSaveLayout;
+import jdk.vm.ci.meta.JavaConstant;
 
 import org.graalvm.collections.EconomicSet;
+
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.StandardOp.SaveRegistersOp;
+import graalvm.compiler.lir.amd64.AMD64SaveRegistersOp;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
 import graalvm.compiler.lir.framemap.FrameMap;
-
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.RegisterSaveLayout;
-import jdk.vm.ci.meta.JavaConstant;
 
 /**
  * Writes well known garbage values to registers.
@@ -61,7 +61,7 @@ public final class AMD64ZapRegistersOp extends AMD64LIRInstruction implements Sa
     @Override
     public int remove(EconomicSet<Register> doNotSave)
     {
-        return prune(doNotSave, zappedRegisters);
+        return AMD64SaveRegistersOp.prune(doNotSave, zappedRegisters);
     }
 
     @Override

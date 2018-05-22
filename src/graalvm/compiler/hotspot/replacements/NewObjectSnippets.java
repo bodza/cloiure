@@ -1,49 +1,24 @@
 package graalvm.compiler.hotspot.replacements;
 
-import static jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider.getArrayBaseOffset;
-import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
-import static graalvm.compiler.core.common.calc.UnsignedMath.belowThan;
-import static graalvm.compiler.hotspot.GraalHotSpotVMConfig.INJECTED_VMCONFIG;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.CLASS_ARRAY_KLASS_LOCATION;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.HUB_WRITE_LOCATION;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.MARK_WORD_LOCATION;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.PROTOTYPE_MARK_WORD_LOCATION;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.TLAB_END_LOCATION;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.TLAB_TOP_LOCATION;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.arrayAllocationSize;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.arrayKlassOffset;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.arrayLengthOffset;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.config;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.initializeObjectHeader;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.instanceHeaderSize;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.isInstanceKlassFullyInitialized;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.layoutHelperHeaderSizeMask;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.layoutHelperHeaderSizeShift;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.layoutHelperLog2ElementSizeMask;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.layoutHelperLog2ElementSizeShift;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.loadKlassFromObject;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.prototypeMarkWordOffset;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.readLayoutHelper;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.readTlabEnd;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.readTlabTop;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.registerAsWord;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.useBiasedLocking;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.useTLAB;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.verifyOop;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.writeTlabTop;
-import static graalvm.compiler.nodes.PiArrayNode.piArrayCastToSnippetReplaceeStamp;
-import static graalvm.compiler.nodes.PiNode.piCastToSnippetReplaceeStamp;
-import static graalvm.compiler.nodes.extended.BranchProbabilityNode.FAST_PATH_PROBABILITY;
-import static graalvm.compiler.nodes.extended.BranchProbabilityNode.FREQUENT_PROBABILITY;
-import static graalvm.compiler.nodes.extended.BranchProbabilityNode.SLOW_PATH_PROBABILITY;
-import static graalvm.compiler.nodes.extended.BranchProbabilityNode.probability;
-import static graalvm.compiler.replacements.SnippetTemplate.DEFAULT_REPLACER;
-import static graalvm.compiler.replacements.nodes.CStringConstant.cstring;
-import static graalvm.compiler.replacements.nodes.ExplodeLoopNode.explodeLoop;
+import jdk.vm.ci.code.CodeUtil;
+import jdk.vm.ci.code.MemoryBarriers;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
+import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
+import jdk.vm.ci.meta.DeoptimizationAction;
+import jdk.vm.ci.meta.DeoptimizationReason;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
+import org.graalvm.word.LocationIdentity;
+import org.graalvm.word.WordFactory;
 
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
 import graalvm.compiler.api.replacements.Snippet.VarargsParameter;
+import graalvm.compiler.core.common.GraalOptions;
+import graalvm.compiler.core.common.calc.UnsignedMath;
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node.ConstantNodeParameter;
@@ -56,15 +31,18 @@ import graalvm.compiler.hotspot.nodes.DimensionsNode;
 import graalvm.compiler.hotspot.nodes.aot.LoadConstantIndirectlyFixedNode;
 import graalvm.compiler.hotspot.nodes.aot.LoadConstantIndirectlyNode;
 import graalvm.compiler.hotspot.nodes.type.KlassPointerStamp;
+import graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil;
 import graalvm.compiler.hotspot.word.KlassPointer;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.DeoptimizeNode;
+import graalvm.compiler.nodes.PiArrayNode;
 import graalvm.compiler.nodes.PiNode;
 import graalvm.compiler.nodes.PrefetchAllocateNode;
 import graalvm.compiler.nodes.SnippetAnchorNode;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.debug.VerifyHeapNode;
+import graalvm.compiler.nodes.extended.BranchProbabilityNode;
 import graalvm.compiler.nodes.extended.ForeignCallNode;
 import graalvm.compiler.nodes.extended.MembarNode;
 import graalvm.compiler.nodes.java.DynamicNewArrayNode;
@@ -83,21 +61,9 @@ import graalvm.compiler.replacements.SnippetTemplate.AbstractTemplates;
 import graalvm.compiler.replacements.SnippetTemplate.Arguments;
 import graalvm.compiler.replacements.SnippetTemplate.SnippetInfo;
 import graalvm.compiler.replacements.Snippets;
+import graalvm.compiler.replacements.nodes.CStringConstant;
 import graalvm.compiler.replacements.nodes.ExplodeLoopNode;
 import graalvm.compiler.word.Word;
-import org.graalvm.word.LocationIdentity;
-import org.graalvm.word.WordFactory;
-
-import jdk.vm.ci.code.CodeUtil;
-import jdk.vm.ci.code.MemoryBarriers;
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
-import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
-import jdk.vm.ci.meta.DeoptimizationAction;
-import jdk.vm.ci.meta.DeoptimizationReason;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * Snippets used for implementing NEW, ANEWARRAY and NEWARRAY.
@@ -115,7 +81,7 @@ public class NewObjectSnippets implements Snippets
 
     public static void emitPrefetchAllocate(Word address, boolean isArray)
     {
-        GraalHotSpotVMConfig config = config(INJECTED_VMCONFIG);
+        GraalHotSpotVMConfig config = HotSpotReplacementsUtil.config(GraalHotSpotVMConfig.INJECTED_VMCONFIG);
         if (config.allocatePrefetchStyle > 0)
         {
             // Insert a prefetch for each allocation only on the fast-path
@@ -135,19 +101,19 @@ public class NewObjectSnippets implements Snippets
     @Snippet
     public static Object allocateInstance(@ConstantParameter int size, KlassPointer hub, Word prototypeMarkWord, @ConstantParameter boolean fillContents, @ConstantParameter Register threadRegister, @ConstantParameter boolean constantSize, @ConstantParameter String typeContext, @ConstantParameter OptionValues options, @ConstantParameter Counters counters)
     {
-        return piCastToSnippetReplaceeStamp(allocateInstanceHelper(size, hub, prototypeMarkWord, fillContents, threadRegister, constantSize, typeContext, options, counters));
+        return PiNode.piCastToSnippetReplaceeStamp(allocateInstanceHelper(size, hub, prototypeMarkWord, fillContents, threadRegister, constantSize, typeContext, options, counters));
     }
 
     public static Object allocateInstanceHelper(int size, KlassPointer hub, Word prototypeMarkWord, boolean fillContents, Register threadRegister, boolean constantSize, String typeContext, OptionValues options, Counters counters)
     {
         Object result;
-        Word thread = registerAsWord(threadRegister);
-        Word top = readTlabTop(thread);
-        Word end = readTlabEnd(thread);
+        Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
+        Word top = HotSpotReplacementsUtil.readTlabTop(thread);
+        Word end = HotSpotReplacementsUtil.readTlabEnd(thread);
         Word newTop = top.add(size);
-        if (useTLAB(INJECTED_VMCONFIG) && probability(FAST_PATH_PROBABILITY, newTop.belowOrEqual(end)))
+        if (HotSpotReplacementsUtil.useTLAB(GraalHotSpotVMConfig.INJECTED_VMCONFIG) && BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, newTop.belowOrEqual(end)))
         {
-            writeTlabTop(thread, newTop);
+            HotSpotReplacementsUtil.writeTlabTop(thread, newTop);
             emitPrefetchAllocate(newTop, false);
             result = formatObject(hub, size, top, prototypeMarkWord, fillContents, constantSize, counters);
         }
@@ -159,7 +125,7 @@ public class NewObjectSnippets implements Snippets
             }
             result = newInstance(HotSpotBackend.NEW_INSTANCE, hub);
         }
-        return verifyOop(result);
+        return HotSpotReplacementsUtil.verifyOop(result);
     }
 
     @NodeIntrinsic(value = ForeignCallNode.class, injectedStampIsNonNull = true)
@@ -172,19 +138,19 @@ public class NewObjectSnippets implements Snippets
         // just load it from the corresponding cell and avoid the resolution check. We have to use a
         // fixed load though, to prevent it from floating above the initialization.
         KlassPointer picHub = LoadConstantIndirectlyFixedNode.loadKlass(hub);
-        return piCastToSnippetReplaceeStamp(allocateInstanceHelper(size, picHub, prototypeMarkWord, fillContents, threadRegister, constantSize, typeContext, options, counters));
+        return PiNode.piCastToSnippetReplaceeStamp(allocateInstanceHelper(size, picHub, prototypeMarkWord, fillContents, threadRegister, constantSize, typeContext, options, counters));
     }
 
     @Snippet
     public static Object allocateInstanceDynamic(Class<?> type, Class<?> classClass, @ConstantParameter boolean fillContents, @ConstantParameter Register threadRegister, @ConstantParameter OptionValues options, @ConstantParameter Counters counters)
     {
-        if (probability(SLOW_PATH_PROBABILITY, type == null))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, type == null))
         {
             DeoptimizeNode.deopt(DeoptimizationAction.None, DeoptimizationReason.RuntimeConstraint);
         }
         Class<?> nonNullType = PiNode.piCastNonNullClass(type, SnippetAnchorNode.anchor());
 
-        if (probability(SLOW_PATH_PROBABILITY, DynamicNewInstanceNode.throwsInstantiationException(type, classClass)))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, DynamicNewInstanceNode.throwsInstantiationException(type, classClass)))
         {
             DeoptimizeNode.deopt(DeoptimizationAction.None, DeoptimizationReason.RuntimeConstraint);
         }
@@ -195,22 +161,22 @@ public class NewObjectSnippets implements Snippets
     private static Object allocateInstanceDynamicHelper(Class<?> type, boolean fillContents, Register threadRegister, OptionValues options, Counters counters, Class<?> nonNullType)
     {
         KlassPointer hub = ClassGetHubNode.readClass(nonNullType);
-        if (probability(FAST_PATH_PROBABILITY, !hub.isNull()))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, !hub.isNull()))
         {
             KlassPointer nonNullHub = ClassGetHubNode.piCastNonNull(hub, SnippetAnchorNode.anchor());
 
-            if (probability(FAST_PATH_PROBABILITY, isInstanceKlassFullyInitialized(nonNullHub)))
+            if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, HotSpotReplacementsUtil.isInstanceKlassFullyInitialized(nonNullHub)))
             {
-                int layoutHelper = readLayoutHelper(nonNullHub);
+                int layoutHelper = HotSpotReplacementsUtil.readLayoutHelper(nonNullHub);
                 /*
                  * src/share/vm/oops/klass.hpp: For instances, layout helper is a positive number,
                  * the instance size. This size is already passed through align_object_size and
                  * scaled to bytes. The low order bit is set if instances of this class cannot be
                  * allocated using the fastpath.
                  */
-                if (probability(FAST_PATH_PROBABILITY, (layoutHelper & 1) == 0))
+                if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, (layoutHelper & 1) == 0))
                 {
-                    Word prototypeMarkWord = nonNullHub.readWord(prototypeMarkWordOffset(INJECTED_VMCONFIG), PROTOTYPE_MARK_WORD_LOCATION);
+                    Word prototypeMarkWord = nonNullHub.readWord(HotSpotReplacementsUtil.prototypeMarkWordOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.PROTOTYPE_MARK_WORD_LOCATION);
                     /*
                      * FIXME(je,ds): we should actually pass typeContext instead of "" but late
                      * binding of parameters is not yet supported by the GraphBuilderPlugin system.
@@ -247,20 +213,20 @@ public class NewObjectSnippets implements Snippets
     public static Object allocateArray(KlassPointer hub, int length, Word prototypeMarkWord, @ConstantParameter int headerSize, @ConstantParameter int log2ElementSize, @ConstantParameter boolean fillContents, @ConstantParameter Register threadRegister, @ConstantParameter boolean maybeUnroll, @ConstantParameter String typeContext, @ConstantParameter OptionValues options, @ConstantParameter Counters counters)
     {
         Object result = allocateArrayImpl(hub, length, prototypeMarkWord, headerSize, log2ElementSize, fillContents, threadRegister, maybeUnroll, typeContext, false, options, counters);
-        return piArrayCastToSnippetReplaceeStamp(verifyOop(result), length);
+        return PiArrayNode.piArrayCastToSnippetReplaceeStamp(HotSpotReplacementsUtil.verifyOop(result), length);
     }
 
     private static Object allocateArrayImpl(KlassPointer hub, int length, Word prototypeMarkWord, int headerSize, int log2ElementSize, boolean fillContents, Register threadRegister, boolean maybeUnroll, String typeContext, boolean skipNegativeCheck, OptionValues options, Counters counters)
     {
         Object result;
-        int allocationSize = arrayAllocationSize(length, headerSize, log2ElementSize);
-        Word thread = registerAsWord(threadRegister);
-        Word top = readTlabTop(thread);
-        Word end = readTlabEnd(thread);
+        int allocationSize = HotSpotReplacementsUtil.arrayAllocationSize(length, headerSize, log2ElementSize);
+        Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
+        Word top = HotSpotReplacementsUtil.readTlabTop(thread);
+        Word end = HotSpotReplacementsUtil.readTlabEnd(thread);
         Word newTop = top.add(allocationSize);
-        if (probability(FREQUENT_PROBABILITY, skipNegativeCheck || belowThan(length, MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH)) && useTLAB(INJECTED_VMCONFIG) && probability(FAST_PATH_PROBABILITY, newTop.belowOrEqual(end)))
+        if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, skipNegativeCheck || UnsignedMath.belowThan(length, MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH)) && HotSpotReplacementsUtil.useTLAB(GraalHotSpotVMConfig.INJECTED_VMCONFIG) && BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, newTop.belowOrEqual(end)))
         {
-            writeTlabTop(thread, newTop);
+            HotSpotReplacementsUtil.writeTlabTop(thread, newTop);
             emitPrefetchAllocate(newTop, true);
             if (counters != null && counters.arrayLoopInit != null)
             {
@@ -305,12 +271,12 @@ public class NewObjectSnippets implements Snippets
          * We only need the dynamic check for void when we have no static information from
          * knownElementKind.
          */
-        if (knownElementKind == JavaKind.Illegal && probability(SLOW_PATH_PROBABILITY, elementType == null || DynamicNewArrayNode.throwsIllegalArgumentException(elementType, voidClass)))
+        if (knownElementKind == JavaKind.Illegal && BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, elementType == null || DynamicNewArrayNode.throwsIllegalArgumentException(elementType, voidClass)))
         {
             DeoptimizeNode.deopt(DeoptimizationAction.None, DeoptimizationReason.RuntimeConstraint);
         }
 
-        KlassPointer klass = loadKlassFromObject(elementType, arrayKlassOffset(INJECTED_VMCONFIG), CLASS_ARRAY_KLASS_LOCATION);
+        KlassPointer klass = HotSpotReplacementsUtil.loadKlassFromObject(elementType, HotSpotReplacementsUtil.arrayKlassOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.CLASS_ARRAY_KLASS_LOCATION);
         if (klass.isNull())
         {
             DeoptimizeNode.deopt(DeoptimizationAction.None, DeoptimizationReason.RuntimeConstraint);
@@ -324,7 +290,7 @@ public class NewObjectSnippets implements Snippets
         int layoutHelper;
         if (knownElementKind == JavaKind.Illegal)
         {
-            layoutHelper = readLayoutHelper(nonNullKlass);
+            layoutHelper = HotSpotReplacementsUtil.readLayoutHelper(nonNullKlass);
         }
         else
         {
@@ -341,11 +307,11 @@ public class NewObjectSnippets implements Snippets
         //    ebt is the BasicType of the elements
         //    esz is the element size in bytes
 
-        int headerSize = (layoutHelper >> layoutHelperHeaderSizeShift(INJECTED_VMCONFIG)) & layoutHelperHeaderSizeMask(INJECTED_VMCONFIG);
-        int log2ElementSize = (layoutHelper >> layoutHelperLog2ElementSizeShift(INJECTED_VMCONFIG)) & layoutHelperLog2ElementSizeMask(INJECTED_VMCONFIG);
+        int headerSize = (layoutHelper >> HotSpotReplacementsUtil.layoutHelperHeaderSizeShift(GraalHotSpotVMConfig.INJECTED_VMCONFIG)) & HotSpotReplacementsUtil.layoutHelperHeaderSizeMask(GraalHotSpotVMConfig.INJECTED_VMCONFIG);
+        int log2ElementSize = (layoutHelper >> HotSpotReplacementsUtil.layoutHelperLog2ElementSizeShift(GraalHotSpotVMConfig.INJECTED_VMCONFIG)) & HotSpotReplacementsUtil.layoutHelperLog2ElementSizeMask(GraalHotSpotVMConfig.INJECTED_VMCONFIG);
 
         Object result = allocateArrayImpl(nonNullKlass, length, prototypeMarkWord, headerSize, log2ElementSize, fillContents, threadRegister, false, "dynamic type", true, options, counters);
-        return piArrayCastToSnippetReplaceeStamp(verifyOop(result), length);
+        return PiArrayNode.piArrayCastToSnippetReplaceeStamp(HotSpotReplacementsUtil.verifyOop(result), length);
     }
 
     /**
@@ -413,7 +379,7 @@ public class NewObjectSnippets implements Snippets
                 counters.instanceSeqInit.inc();
             }
 
-            explodeLoop();
+            ExplodeLoopNode.explodeLoop();
             for (int i = 0; i < MAX_UNROLLED_OBJECT_ZEROING_STORES; i++, offset += 8)
             {
                 if (offset == size)
@@ -433,7 +399,7 @@ public class NewObjectSnippets implements Snippets
                 {
                     counters.instanceSeqInit.inc();
                 }
-                explodeLoop();
+                ExplodeLoopNode.explodeLoop();
             }
             else
             {
@@ -463,11 +429,11 @@ public class NewObjectSnippets implements Snippets
      */
     protected static Object formatObject(KlassPointer hub, int size, Word memory, Word compileTimePrototypeMarkWord, boolean fillContents, boolean constantSize, Counters counters)
     {
-        Word prototypeMarkWord = useBiasedLocking(INJECTED_VMCONFIG) ? hub.readWord(prototypeMarkWordOffset(INJECTED_VMCONFIG), PROTOTYPE_MARK_WORD_LOCATION) : compileTimePrototypeMarkWord;
-        initializeObjectHeader(memory, prototypeMarkWord, hub);
+        Word prototypeMarkWord = HotSpotReplacementsUtil.useBiasedLocking(GraalHotSpotVMConfig.INJECTED_VMCONFIG) ? hub.readWord(HotSpotReplacementsUtil.prototypeMarkWordOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.PROTOTYPE_MARK_WORD_LOCATION) : compileTimePrototypeMarkWord;
+        HotSpotReplacementsUtil.initializeObjectHeader(memory, prototypeMarkWord, hub);
         if (fillContents)
         {
-            zeroMemory(size, memory, constantSize, instanceHeaderSize(INJECTED_VMCONFIG), false, counters);
+            zeroMemory(size, memory, constantSize, HotSpotReplacementsUtil.instanceHeaderSize(GraalHotSpotVMConfig.INJECTED_VMCONFIG), false, counters);
         }
         MembarNode.memoryBarrier(MemoryBarriers.STORE_STORE, LocationIdentity.init());
         return memory.toObjectNonNull();
@@ -476,14 +442,14 @@ public class NewObjectSnippets implements Snippets
     @Snippet
     protected static void verifyHeap(@ConstantParameter Register threadRegister)
     {
-        Word thread = registerAsWord(threadRegister);
-        Word topValue = readTlabTop(thread);
+        Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
+        Word topValue = HotSpotReplacementsUtil.readTlabTop(thread);
         if (!topValue.equal(WordFactory.zero()))
         {
-            Word topValueContents = topValue.readWord(0, MARK_WORD_LOCATION);
+            Word topValueContents = topValue.readWord(0, HotSpotReplacementsUtil.MARK_WORD_LOCATION);
             if (topValueContents.equal(WordFactory.zero()))
             {
-                AssertionSnippets.vmMessageC(AssertionSnippets.ASSERTION_VM_MESSAGE_C, true, cstring("overzeroing of TLAB detected"), 0L, 0L, 0L);
+                AssertionSnippets.vmMessageC(AssertionSnippets.ASSERTION_VM_MESSAGE_C, true, CStringConstant.cstring("overzeroing of TLAB detected"), 0L, 0L, 0L);
             }
         }
     }
@@ -493,12 +459,12 @@ public class NewObjectSnippets implements Snippets
      */
     public static Object formatArray(KlassPointer hub, int allocationSize, int length, int headerSize, Word memory, Word prototypeMarkWord, boolean fillContents, boolean maybeUnroll, Counters counters)
     {
-        memory.writeInt(arrayLengthOffset(INJECTED_VMCONFIG), length, LocationIdentity.init());
+        memory.writeInt(HotSpotReplacementsUtil.arrayLengthOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), length, LocationIdentity.init());
         /*
          * store hub last as the concurrent garbage collectors assume length is valid if hub field
          * is not null
          */
-        initializeObjectHeader(memory, prototypeMarkWord, hub);
+        HotSpotReplacementsUtil.initializeObjectHeader(memory, prototypeMarkWord, hub);
         if (fillContents)
         {
             zeroMemory(allocationSize, memory, false, headerSize, maybeUnroll, counters);
@@ -527,15 +493,15 @@ public class NewObjectSnippets implements Snippets
 
     public static class Templates extends AbstractTemplates
     {
-        private final SnippetInfo allocateInstance = snippet(NewObjectSnippets.class, "allocateInstance", MARK_WORD_LOCATION, HUB_WRITE_LOCATION, TLAB_TOP_LOCATION, TLAB_END_LOCATION);
-        private final SnippetInfo allocateInstancePIC = snippet(NewObjectSnippets.class, "allocateInstancePIC", MARK_WORD_LOCATION, HUB_WRITE_LOCATION, TLAB_TOP_LOCATION, TLAB_END_LOCATION);
-        private final SnippetInfo allocateArray = snippet(NewObjectSnippets.class, "allocateArray", MARK_WORD_LOCATION, HUB_WRITE_LOCATION, TLAB_TOP_LOCATION, TLAB_END_LOCATION);
-        private final SnippetInfo allocateArrayPIC = snippet(NewObjectSnippets.class, "allocateArrayPIC", MARK_WORD_LOCATION, HUB_WRITE_LOCATION, TLAB_TOP_LOCATION, TLAB_END_LOCATION);
-        private final SnippetInfo allocatePrimitiveArrayPIC = snippet(NewObjectSnippets.class, "allocatePrimitiveArrayPIC", MARK_WORD_LOCATION, HUB_WRITE_LOCATION, TLAB_TOP_LOCATION, TLAB_END_LOCATION);
-        private final SnippetInfo allocateArrayDynamic = snippet(NewObjectSnippets.class, "allocateArrayDynamic", MARK_WORD_LOCATION, HUB_WRITE_LOCATION, TLAB_TOP_LOCATION, TLAB_END_LOCATION);
-        private final SnippetInfo allocateInstanceDynamic = snippet(NewObjectSnippets.class, "allocateInstanceDynamic", MARK_WORD_LOCATION, HUB_WRITE_LOCATION, TLAB_TOP_LOCATION, TLAB_END_LOCATION);
-        private final SnippetInfo newmultiarray = snippet(NewObjectSnippets.class, "newmultiarray", TLAB_TOP_LOCATION, TLAB_END_LOCATION);
-        private final SnippetInfo newmultiarrayPIC = snippet(NewObjectSnippets.class, "newmultiarrayPIC", TLAB_TOP_LOCATION, TLAB_END_LOCATION);
+        private final SnippetInfo allocateInstance = snippet(NewObjectSnippets.class, "allocateInstance", HotSpotReplacementsUtil.MARK_WORD_LOCATION, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
+        private final SnippetInfo allocateInstancePIC = snippet(NewObjectSnippets.class, "allocateInstancePIC", HotSpotReplacementsUtil.MARK_WORD_LOCATION, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
+        private final SnippetInfo allocateArray = snippet(NewObjectSnippets.class, "allocateArray", HotSpotReplacementsUtil.MARK_WORD_LOCATION, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
+        private final SnippetInfo allocateArrayPIC = snippet(NewObjectSnippets.class, "allocateArrayPIC", HotSpotReplacementsUtil.MARK_WORD_LOCATION, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
+        private final SnippetInfo allocatePrimitiveArrayPIC = snippet(NewObjectSnippets.class, "allocatePrimitiveArrayPIC", HotSpotReplacementsUtil.MARK_WORD_LOCATION, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
+        private final SnippetInfo allocateArrayDynamic = snippet(NewObjectSnippets.class, "allocateArrayDynamic", HotSpotReplacementsUtil.MARK_WORD_LOCATION, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
+        private final SnippetInfo allocateInstanceDynamic = snippet(NewObjectSnippets.class, "allocateInstanceDynamic", HotSpotReplacementsUtil.MARK_WORD_LOCATION, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
+        private final SnippetInfo newmultiarray = snippet(NewObjectSnippets.class, "newmultiarray", HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
+        private final SnippetInfo newmultiarrayPIC = snippet(NewObjectSnippets.class, "newmultiarrayPIC", HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
         private final SnippetInfo verifyHeap = snippet(NewObjectSnippets.class, "verifyHeap");
         private final GraalHotSpotVMConfig config;
         private final Counters counters;
@@ -558,7 +524,7 @@ public class NewObjectSnippets implements Snippets
             int size = instanceSize(type);
 
             OptionValues localOptions = graph.getOptions();
-            SnippetInfo snippet = GeneratePIC.getValue(localOptions) ? allocateInstancePIC : allocateInstance;
+            SnippetInfo snippet = GraalOptions.GeneratePIC.getValue(localOptions) ? allocateInstancePIC : allocateInstance;
             Arguments args = new Arguments(snippet, graph.getGuardsStage(), tool.getLoweringStage());
             args.addConst("size", size);
             args.add("hub", hub);
@@ -571,7 +537,7 @@ public class NewObjectSnippets implements Snippets
             args.addConst("counters", counters);
 
             SnippetTemplate template = template(newInstanceNode, args);
-            template.instantiate(providers.getMetaAccess(), newInstanceNode, DEFAULT_REPLACER, args);
+            template.instantiate(providers.getMetaAccess(), newInstanceNode, SnippetTemplate.DEFAULT_REPLACER, args);
         }
 
         /**
@@ -584,12 +550,12 @@ public class NewObjectSnippets implements Snippets
             HotSpotResolvedObjectType arrayType = (HotSpotResolvedObjectType) elementType.getArrayClass();
             JavaKind elementKind = elementType.getJavaKind();
             ConstantNode hub = ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), arrayType.klass(), providers.getMetaAccess(), graph);
-            final int headerSize = getArrayBaseOffset(elementKind);
+            final int headerSize = HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(elementKind);
             int log2ElementSize = CodeUtil.log2(HotSpotJVMCIRuntimeProvider.getArrayIndexScale(elementKind));
 
             OptionValues localOptions = graph.getOptions();
             SnippetInfo snippet;
-            if (GeneratePIC.getValue(localOptions))
+            if (GraalOptions.GeneratePIC.getValue(localOptions))
             {
                 if (elementType.isPrimitive())
                 {
@@ -619,7 +585,7 @@ public class NewObjectSnippets implements Snippets
             args.addConst("options", localOptions);
             args.addConst("counters", counters);
             SnippetTemplate template = template(newArrayNode, args);
-            template.instantiate(providers.getMetaAccess(), newArrayNode, DEFAULT_REPLACER, args);
+            template.instantiate(providers.getMetaAccess(), newArrayNode, SnippetTemplate.DEFAULT_REPLACER, args);
         }
 
         public void lower(DynamicNewInstanceNode newInstanceNode, HotSpotRegistersProvider registers, LoweringTool tool)
@@ -635,7 +601,7 @@ public class NewObjectSnippets implements Snippets
             args.addConst("counters", counters);
 
             SnippetTemplate template = template(newInstanceNode, args);
-            template.instantiate(providers.getMetaAccess(), newInstanceNode, DEFAULT_REPLACER, args);
+            template.instantiate(providers.getMetaAccess(), newInstanceNode, SnippetTemplate.DEFAULT_REPLACER, args);
         }
 
         public void lower(DynamicNewArrayNode newArrayNode, HotSpotRegistersProvider registers, LoweringTool tool)
@@ -667,7 +633,7 @@ public class NewObjectSnippets implements Snippets
             args.addConst("options", localOptions);
             args.addConst("counters", counters);
             SnippetTemplate template = template(newArrayNode, args);
-            template.instantiate(providers.getMetaAccess(), newArrayNode, DEFAULT_REPLACER, args);
+            template.instantiate(providers.getMetaAccess(), newArrayNode, SnippetTemplate.DEFAULT_REPLACER, args);
         }
 
         private static HotSpotResolvedObjectType lookupArrayClass(LoweringTool tool, JavaKind kind)
@@ -688,12 +654,12 @@ public class NewObjectSnippets implements Snippets
             HotSpotResolvedObjectType type = (HotSpotResolvedObjectType) newmultiarrayNode.type();
             ConstantNode hub = ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), type.klass(), providers.getMetaAccess(), graph);
 
-            SnippetInfo snippet = GeneratePIC.getValue(localOptions) ? newmultiarrayPIC : newmultiarray;
+            SnippetInfo snippet = GraalOptions.GeneratePIC.getValue(localOptions) ? newmultiarrayPIC : newmultiarray;
             Arguments args = new Arguments(snippet, graph.getGuardsStage(), tool.getLoweringStage());
             args.add("hub", hub);
             args.addConst("rank", rank);
             args.addVarargs("dimensions", int.class, StampFactory.forKind(JavaKind.Int), dims);
-            template(newmultiarrayNode, args).instantiate(providers.getMetaAccess(), newmultiarrayNode, DEFAULT_REPLACER, args);
+            template(newmultiarrayNode, args).instantiate(providers.getMetaAccess(), newmultiarrayNode, SnippetTemplate.DEFAULT_REPLACER, args);
         }
 
         private static int instanceSize(HotSpotResolvedObjectType type)

@@ -2,13 +2,13 @@ package graalvm.compiler.lir;
 
 import java.util.ArrayList;
 
+import jdk.vm.ci.code.TargetDescription;
+
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.StandardOp.ImplicitNullCheck;
 import graalvm.compiler.lir.StandardOp.NullCheck;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.phases.PostAllocationOptimizationPhase;
-
-import jdk.vm.ci.code.TargetDescription;
 
 public final class NullCheckOptimizer extends PostAllocationOptimizationPhase
 {

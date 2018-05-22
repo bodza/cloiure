@@ -1,9 +1,14 @@
 package graalvm.compiler.nodes.extended;
 
-import static graalvm.compiler.nodeinfo.InputType.State;
+import jdk.vm.ci.meta.Assumptions;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.ResolvedJavaField;
+
+import org.graalvm.word.LocationIdentity;
 
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.StateSplit;
 import graalvm.compiler.nodes.ValueNode;
@@ -14,11 +19,6 @@ import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.nodes.spi.Virtualizable;
 import graalvm.compiler.nodes.spi.VirtualizerTool;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.meta.Assumptions;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.ResolvedJavaField;
 
 /**
  * Store of a value at a location specified as an offset relative to an object. No null check is
@@ -28,7 +28,7 @@ public final class RawStoreNode extends UnsafeAccessNode implements StateSplit, 
 {
     public static final NodeClass<RawStoreNode> TYPE = NodeClass.create(RawStoreNode.class);
     @Input ValueNode value;
-    @OptionalInput(State) FrameState stateAfter;
+    @OptionalInput(InputType.State) FrameState stateAfter;
     private final boolean needsBarrier;
 
     public RawStoreNode(ValueNode object, ValueNode offset, ValueNode value, JavaKind accessKind, LocationIdentity locationIdentity)

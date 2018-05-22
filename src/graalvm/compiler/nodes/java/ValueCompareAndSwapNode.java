@@ -1,12 +1,13 @@
 package graalvm.compiler.nodes.java;
 
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.lir.gen.LIRGeneratorTool;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.memory.address.AddressNode;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-import org.graalvm.word.LocationIdentity;
 
 /**
  * A special purpose store node that differs from {@link LogicCompareAndSwapNode} in that it returns

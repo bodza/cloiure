@@ -1,5 +1,8 @@
 package graalvm.compiler.nodes.virtual;
 
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import graalvm.compiler.core.common.spi.ArrayOffsetProvider;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.TypeReference;
@@ -10,9 +13,6 @@ import graalvm.compiler.nodes.FixedNode;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 public abstract class VirtualObjectNode extends ValueNode implements LIRLowerable, IterableNodeType
 {

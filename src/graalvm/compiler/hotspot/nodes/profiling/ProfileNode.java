@@ -1,6 +1,6 @@
 package graalvm.compiler.hotspot.nodes.profiling;
 
-import static graalvm.compiler.nodes.util.GraphUtil.removeFixedWithUnusedInputs;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node;
@@ -15,9 +15,8 @@ import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
+import graalvm.compiler.nodes.util.GraphUtil;
 import graalvm.compiler.options.OptionKey;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 public abstract class ProfileNode extends DeoptimizingFixedWithNextNode implements Simplifiable, Lowerable
 {
@@ -126,7 +125,7 @@ public abstract class ProfileNode extends DeoptimizingFixedWithNextNode implemen
                 if (this.canBeMergedWith(that))
                 {
                     that.setStep(this.getStep() + that.getStep());
-                    removeFixedWithUnusedInputs(this);
+                    GraphUtil.removeFixedWithUnusedInputs(this);
                     tool.addToWorkList(that);
                     break;
                 }

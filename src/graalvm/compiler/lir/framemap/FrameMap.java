@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
-import graalvm.compiler.core.common.NumUtil;
-import graalvm.compiler.core.common.PermanentBailoutException;
-import graalvm.compiler.core.common.LIRKind;
-
 import jdk.vm.ci.code.Architecture;
 import jdk.vm.ci.code.CallingConvention;
 import jdk.vm.ci.code.CodeCacheProvider;
@@ -16,6 +12,10 @@ import jdk.vm.ci.code.StackSlot;
 import jdk.vm.ci.code.TargetDescription;
 import jdk.vm.ci.meta.Value;
 import jdk.vm.ci.meta.ValueKind;
+
+import graalvm.compiler.core.common.LIRKind;
+import graalvm.compiler.core.common.NumUtil;
+import graalvm.compiler.core.common.PermanentBailoutException;
 
 /**
  * This class is used to build the stack frame layout for a compiled method. A {@link StackSlot} is

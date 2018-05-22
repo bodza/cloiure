@@ -1,18 +1,16 @@
 package graalvm.compiler.core.amd64;
 
-import static graalvm.compiler.asm.amd64.AMD64Assembler.AMD64BinaryArithmetic.ADD;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.AMD64BinaryArithmetic.AND;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.AMD64BinaryArithmetic.OR;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.AMD64BinaryArithmetic.SUB;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.AMD64BinaryArithmetic.XOR;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.AMD64RMOp.MOVSX;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.AMD64RMOp.MOVSXB;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.AMD64RMOp.MOVSXD;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize.DWORD;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize.QWORD;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize.SD;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize.SS;
+import jdk.vm.ci.amd64.AMD64;
+import jdk.vm.ci.amd64.AMD64.CPUFeature;
+import jdk.vm.ci.amd64.AMD64Kind;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.PlatformKind;
+import jdk.vm.ci.meta.Value;
+import jdk.vm.ci.meta.ValueKind;
 
+import graalvm.compiler.asm.amd64.AMD64Assembler.AMD64BinaryArithmetic;
 import graalvm.compiler.asm.amd64.AMD64Assembler.AMD64MIOp;
 import graalvm.compiler.asm.amd64.AMD64Assembler.AMD64RMOp;
 import graalvm.compiler.asm.amd64.AMD64Assembler.AMD64RRMOp;
@@ -51,16 +49,6 @@ import graalvm.compiler.nodes.memory.Access;
 import graalvm.compiler.nodes.memory.LIRLowerableAccess;
 import graalvm.compiler.nodes.memory.WriteNode;
 import graalvm.compiler.nodes.util.GraphUtil;
-
-import jdk.vm.ci.amd64.AMD64;
-import jdk.vm.ci.amd64.AMD64.CPUFeature;
-import jdk.vm.ci.amd64.AMD64Kind;
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.PlatformKind;
-import jdk.vm.ci.meta.Value;
-import jdk.vm.ci.meta.ValueKind;
 
 public class AMD64NodeMatchRules extends NodeMatchRules
 {
@@ -172,7 +160,7 @@ public class AMD64NodeMatchRules extends NodeMatchRules
         LabelRef falseLabel = getLIRBlock(x.falseSuccessor());
         double trueLabelProbability = x.probability(x.trueSuccessor());
         AMD64Kind kind = getMemoryKind(access);
-        OperandSize size = kind == AMD64Kind.QWORD ? QWORD : DWORD;
+        OperandSize size = kind == AMD64Kind.QWORD ? OperandSize.QWORD : OperandSize.DWORD;
         if (value.isConstant())
         {
             JavaConstant constant = value.asJavaConstant();
@@ -237,13 +225,13 @@ public class AMD64NodeMatchRules extends NodeMatchRules
             switch (fromBits)
             {
                 case 8:
-                    op = MOVSXB;
+                    op = AMD64RMOp.MOVSXB;
                     break;
                 case 16:
-                    op = MOVSX;
+                    op = AMD64RMOp.MOVSX;
                     break;
                 case 32:
-                    op = MOVSXD;
+                    op = AMD64RMOp.MOVSXD;
                     break;
                 default:
                     throw GraalError.unimplemented("unsupported sign extension (" + fromBits + " bit -> " + toBits + " bit)");
@@ -257,10 +245,10 @@ public class AMD64NodeMatchRules extends NodeMatchRules
             switch (fromBits)
             {
                 case 8:
-                    op = MOVSXB;
+                    op = AMD64RMOp.MOVSXB;
                     break;
                 case 16:
-                    op = MOVSX;
+                    op = AMD64RMOp.MOVSX;
                     break;
                 case 32:
                     return null;
@@ -438,7 +426,7 @@ public class AMD64NodeMatchRules extends NodeMatchRules
         }
         else
         {
-            return binaryRead(ADD.getRMOpcode(size), size, value, access);
+            return binaryRead(AMD64BinaryArithmetic.ADD.getRMOpcode(size), size, value, access);
         }
     }
 
@@ -462,7 +450,7 @@ public class AMD64NodeMatchRules extends NodeMatchRules
         }
         else
         {
-            return binaryRead(SUB.getRMOpcode(size), size, value, access);
+            return binaryRead(AMD64BinaryArithmetic.SUB.getRMOpcode(size), size, value, access);
         }
     }
 
@@ -501,7 +489,7 @@ public class AMD64NodeMatchRules extends NodeMatchRules
         }
         else
         {
-            return binaryRead(AND.getRMOpcode(size), size, value, access);
+            return binaryRead(AMD64BinaryArithmetic.AND.getRMOpcode(size), size, value, access);
         }
     }
 
@@ -516,7 +504,7 @@ public class AMD64NodeMatchRules extends NodeMatchRules
         }
         else
         {
-            return binaryRead(OR.getRMOpcode(size), size, value, access);
+            return binaryRead(AMD64BinaryArithmetic.OR.getRMOpcode(size), size, value, access);
         }
     }
 
@@ -531,7 +519,7 @@ public class AMD64NodeMatchRules extends NodeMatchRules
         }
         else
         {
-            return binaryRead(XOR.getRMOpcode(size), size, value, access);
+            return binaryRead(AMD64BinaryArithmetic.XOR.getRMOpcode(size), size, value, access);
         }
     }
 
@@ -594,25 +582,25 @@ public class AMD64NodeMatchRules extends NodeMatchRules
         switch (root.getFloatConvert())
         {
             case D2F:
-                return emitConvertMemoryOp(AMD64Kind.SINGLE, SSEOp.CVTSD2SS, SD, access);
+                return emitConvertMemoryOp(AMD64Kind.SINGLE, SSEOp.CVTSD2SS, OperandSize.SD, access);
             case D2I:
-                return emitConvertMemoryOp(AMD64Kind.DWORD, SSEOp.CVTTSD2SI, DWORD, access);
+                return emitConvertMemoryOp(AMD64Kind.DWORD, SSEOp.CVTTSD2SI, OperandSize.DWORD, access);
             case D2L:
-                return emitConvertMemoryOp(AMD64Kind.QWORD, SSEOp.CVTTSD2SI, QWORD, access);
+                return emitConvertMemoryOp(AMD64Kind.QWORD, SSEOp.CVTTSD2SI, OperandSize.QWORD, access);
             case F2D:
-                return emitConvertMemoryOp(AMD64Kind.DOUBLE, SSEOp.CVTSS2SD, SS, access);
+                return emitConvertMemoryOp(AMD64Kind.DOUBLE, SSEOp.CVTSS2SD, OperandSize.SS, access);
             case F2I:
-                return emitConvertMemoryOp(AMD64Kind.DWORD, SSEOp.CVTTSS2SI, DWORD, access);
+                return emitConvertMemoryOp(AMD64Kind.DWORD, SSEOp.CVTTSS2SI, OperandSize.DWORD, access);
             case F2L:
-                return emitConvertMemoryOp(AMD64Kind.QWORD, SSEOp.CVTTSS2SI, QWORD, access);
+                return emitConvertMemoryOp(AMD64Kind.QWORD, SSEOp.CVTTSS2SI, OperandSize.QWORD, access);
             case I2D:
-                return emitConvertMemoryOp(AMD64Kind.DOUBLE, SSEOp.CVTSI2SD, DWORD, access);
+                return emitConvertMemoryOp(AMD64Kind.DOUBLE, SSEOp.CVTSI2SD, OperandSize.DWORD, access);
             case I2F:
-                return emitConvertMemoryOp(AMD64Kind.SINGLE, SSEOp.CVTSI2SS, DWORD, access);
+                return emitConvertMemoryOp(AMD64Kind.SINGLE, SSEOp.CVTSI2SS, OperandSize.DWORD, access);
             case L2D:
-                return emitConvertMemoryOp(AMD64Kind.DOUBLE, SSEOp.CVTSI2SD, QWORD, access);
+                return emitConvertMemoryOp(AMD64Kind.DOUBLE, SSEOp.CVTSI2SD, OperandSize.QWORD, access);
             case L2F:
-                return emitConvertMemoryOp(AMD64Kind.SINGLE, SSEOp.CVTSI2SS, QWORD, access);
+                return emitConvertMemoryOp(AMD64Kind.SINGLE, SSEOp.CVTSI2SS, OperandSize.QWORD, access);
             default:
                 throw GraalError.shouldNotReachHere();
         }

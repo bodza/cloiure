@@ -1,5 +1,9 @@
 package graalvm.compiler.hotspot.nodes;
 
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.PlatformKind;
+
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
@@ -9,10 +13,6 @@ import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.word.Word;
 import graalvm.compiler.word.WordTypes;
-
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.PlatformKind;
 
 /**
  * Gets the address of the C++ JavaThread object for the current thread.

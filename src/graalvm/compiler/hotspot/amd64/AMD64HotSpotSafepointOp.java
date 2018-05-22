@@ -1,22 +1,6 @@
 package graalvm.compiler.hotspot.amd64;
 
-import static graalvm.compiler.core.common.NumUtil.isInt;
-import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
-import static graalvm.compiler.core.common.GraalOptions.ImmutableCode;
-import static jdk.vm.ci.amd64.AMD64.rax;
-import static jdk.vm.ci.amd64.AMD64.rip;
-
-import graalvm.compiler.asm.amd64.AMD64Address;
-import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
-import graalvm.compiler.core.common.LIRKind;
-import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
-import graalvm.compiler.lir.LIRFrameState;
-import graalvm.compiler.lir.LIRInstructionClass;
-import graalvm.compiler.lir.Opcode;
-import graalvm.compiler.lir.amd64.AMD64LIRInstruction;
-import graalvm.compiler.lir.asm.CompilationResultBuilder;
-import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
+import jdk.vm.ci.amd64.AMD64;
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.RegisterValue;
 import jdk.vm.ci.code.site.InfopointReason;
@@ -24,6 +8,19 @@ import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.Value;
+
+import graalvm.compiler.asm.amd64.AMD64Address;
+import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
+import graalvm.compiler.core.common.GraalOptions;
+import graalvm.compiler.core.common.LIRKind;
+import graalvm.compiler.core.common.NumUtil;
+import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
+import graalvm.compiler.lir.LIRFrameState;
+import graalvm.compiler.lir.LIRInstructionClass;
+import graalvm.compiler.lir.Opcode;
+import graalvm.compiler.lir.amd64.AMD64LIRInstruction;
+import graalvm.compiler.lir.asm.CompilationResultBuilder;
+import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 
 /**
  * Emits a safepoint poll.
@@ -45,7 +42,7 @@ public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
         this.state = state;
         this.config = config;
         this.thread = thread;
-        if (config.threadLocalHandshakes || isPollingPageFar(config) || ImmutableCode.getValue(tool.getOptions()))
+        if (config.threadLocalHandshakes || isPollingPageFar(config) || GraalOptions.ImmutableCode.getValue(tool.getOptions()))
         {
             temp = tool.getLIRGeneratorTool().newVariable(LIRKind.value(tool.getLIRGeneratorTool().target().arch.getWordKind()));
         }
@@ -81,19 +78,19 @@ public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
     private static boolean isPollingPageFar(GraalHotSpotVMConfig config)
     {
         final long pollingPageAddress = config.safepointPollingAddress;
-        return config.forceUnreachable || !isInt(pollingPageAddress - config.codeCacheLowBound) || !isInt(pollingPageAddress - config.codeCacheHighBound);
+        return config.forceUnreachable || !NumUtil.isInt(pollingPageAddress - config.codeCacheLowBound) || !NumUtil.isInt(pollingPageAddress - config.codeCacheHighBound);
     }
 
     private static void emitGlobalPoll(CompilationResultBuilder crb, AMD64MacroAssembler asm, GraalHotSpotVMConfig config, boolean atReturn, LIRFrameState state, Register scratch)
     {
-        if (ImmutableCode.getValue(crb.getOptions()))
+        if (GraalOptions.ImmutableCode.getValue(crb.getOptions()))
         {
             JavaKind hostWordKind = JavaKind.Long;
             int alignment = hostWordKind.getBitCount() / Byte.SIZE;
             JavaConstant pollingPageAddress = JavaConstant.forIntegerKind(hostWordKind, config.safepointPollingAddress);
             // This move will be patched to load the safepoint page from a data segment
             // co-located with the immutable code.
-            if (GeneratePIC.getValue(crb.getOptions()))
+            if (GraalOptions.GeneratePIC.getValue(crb.getOptions()))
             {
                 asm.movq(scratch, asm.getPlaceholder(-1));
             }
@@ -107,7 +104,7 @@ public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
             {
                 crb.recordInfopoint(pos, state, InfopointReason.SAFEPOINT);
             }
-            asm.testl(rax, new AMD64Address(scratch));
+            asm.testl(AMD64.rax, new AMD64Address(scratch));
         }
         else if (isPollingPageFar(config))
         {
@@ -118,7 +115,7 @@ public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
             {
                 crb.recordInfopoint(pos, state, InfopointReason.SAFEPOINT);
             }
-            asm.testl(rax, new AMD64Address(scratch));
+            asm.testl(AMD64.rax, new AMD64Address(scratch));
         }
         else
         {
@@ -130,7 +127,7 @@ public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
             }
             // The C++ code transforms the polling page offset into an RIP displacement
             // to the real address at that offset in the polling page.
-            asm.testl(rax, new AMD64Address(rip, 0));
+            asm.testl(AMD64.rax, new AMD64Address(AMD64.rip, 0));
         }
     }
 
@@ -143,6 +140,6 @@ public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
         {
             crb.recordInfopoint(pos, state, InfopointReason.SAFEPOINT);
         }
-        asm.testl(rax, new AMD64Address(scratch));
+        asm.testl(AMD64.rax, new AMD64Address(scratch));
     }
 }

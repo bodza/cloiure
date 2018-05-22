@@ -1,10 +1,11 @@
 package graalvm.compiler.lir.alloc.lsra;
 
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-
 import java.util.ArrayList;
 import java.util.EnumSet;
+
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.core.common.cfg.BlockMap;
@@ -13,9 +14,6 @@ import graalvm.compiler.lir.InstructionValueConsumer;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstruction.OperandMode;
-
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.meta.Value;
 
 /**
  */
@@ -131,9 +129,9 @@ final class RegisterVerifier
 
     static void statePut(Interval[] inputState, Value location, Interval interval)
     {
-        if (location != null && isRegister(location))
+        if (location != null && ValueUtil.isRegister(location))
         {
-            Register reg = asRegister(location);
+            Register reg = ValueUtil.asRegister(location);
             int regNum = reg.number;
 
             inputState[regNum] = interval;
@@ -142,11 +140,11 @@ final class RegisterVerifier
 
     static boolean checkState(AbstractBlockBase<?> block, LIRInstruction op, Interval[] inputState, Value operand, Value reg, Interval interval)
     {
-        if (reg != null && isRegister(reg))
+        if (reg != null && ValueUtil.isRegister(reg))
         {
-            if (inputState[asRegister(reg).number] != interval)
+            if (inputState[ValueUtil.asRegister(reg).number] != interval)
             {
-                throw new GraalError("Error in register allocation: operation (%s) in block %s expected register %s (operand %s) to contain the value of interval %s but data-flow says it contains interval %s", op, block, reg, operand, interval, inputState[asRegister(reg).number]);
+                throw new GraalError("Error in register allocation: operation (%s) in block %s expected register %s (operand %s) to contain the value of interval %s but data-flow says it contains interval %s", op, block, reg, operand, interval, inputState[ValueUtil.asRegister(reg).number]);
             }
         }
         return true;

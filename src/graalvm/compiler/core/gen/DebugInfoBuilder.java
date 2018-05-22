@@ -4,8 +4,17 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Queue;
 
+import jdk.vm.ci.code.BytecodeFrame;
+import jdk.vm.ci.code.VirtualObject;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.JavaType;
+import jdk.vm.ci.meta.JavaValue;
+import jdk.vm.ci.meta.Value;
+
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
+
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.ConstantValue;
 import graalvm.compiler.lir.LIRFrameState;
@@ -19,14 +28,6 @@ import graalvm.compiler.nodes.virtual.EscapeObjectState;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
 import graalvm.compiler.virtual.nodes.MaterializedObjectState;
 import graalvm.compiler.virtual.nodes.VirtualObjectState;
-
-import jdk.vm.ci.code.BytecodeFrame;
-import jdk.vm.ci.code.VirtualObject;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.JavaType;
-import jdk.vm.ci.meta.JavaValue;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Builds {@link LIRFrameState}s from {@link FrameState}s.

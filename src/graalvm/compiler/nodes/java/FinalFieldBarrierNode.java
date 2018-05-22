@@ -1,7 +1,6 @@
 package graalvm.compiler.nodes.java;
 
-import static jdk.vm.ci.code.MemoryBarriers.LOAD_STORE;
-import static jdk.vm.ci.code.MemoryBarriers.STORE_STORE;
+import jdk.vm.ci.code.MemoryBarriers;
 
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
@@ -43,6 +42,6 @@ public class FinalFieldBarrierNode extends FixedWithNextNode implements Virtuali
     @Override
     public void lower(LoweringTool tool)
     {
-        graph().replaceFixedWithFixed(this, graph().add(new MembarNode(LOAD_STORE | STORE_STORE)));
+        graph().replaceFixedWithFixed(this, graph().add(new MembarNode(MemoryBarriers.LOAD_STORE | MemoryBarriers.STORE_STORE)));
     }
 }

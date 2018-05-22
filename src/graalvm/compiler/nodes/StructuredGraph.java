@@ -6,10 +6,21 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
+import jdk.vm.ci.meta.Assumptions;
+import jdk.vm.ci.meta.Assumptions.Assumption;
+import jdk.vm.ci.meta.DefaultProfilingInfo;
+import jdk.vm.ci.meta.ProfilingInfo;
+import jdk.vm.ci.meta.ResolvedJavaField;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.SpeculationLog;
+import jdk.vm.ci.meta.TriState;
+import jdk.vm.ci.runtime.JVMCICompiler;
+
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.EconomicSet;
 import org.graalvm.collections.Equivalence;
 import org.graalvm.collections.UnmodifiableEconomicMap;
+
 import graalvm.compiler.core.common.CompilationIdentifier;
 import graalvm.compiler.core.common.cfg.BlockMap;
 import graalvm.compiler.core.common.type.Stamp;
@@ -23,16 +34,6 @@ import graalvm.compiler.nodes.java.MethodCallTargetNode;
 import graalvm.compiler.nodes.spi.VirtualizableAllocation;
 import graalvm.compiler.nodes.util.GraphUtil;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.meta.Assumptions;
-import jdk.vm.ci.meta.Assumptions.Assumption;
-import jdk.vm.ci.meta.DefaultProfilingInfo;
-import jdk.vm.ci.meta.ProfilingInfo;
-import jdk.vm.ci.meta.ResolvedJavaField;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.SpeculationLog;
-import jdk.vm.ci.meta.TriState;
-import jdk.vm.ci.runtime.JVMCICompiler;
 
 /**
  * A graph that contains at least one distinguished node : the {@link #start() start} node. This

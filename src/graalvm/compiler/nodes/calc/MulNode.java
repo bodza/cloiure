@@ -1,9 +1,14 @@
 package graalvm.compiler.nodes.calc;
 
+import jdk.vm.ci.code.CodeUtil;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.PrimitiveConstant;
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.core.common.type.ArithmeticOpTable;
-import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.ArithmeticOpTable.BinaryOp;
 import graalvm.compiler.core.common.type.ArithmeticOpTable.BinaryOp.Mul;
+import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable.BinaryCommutative;
@@ -13,11 +18,6 @@ import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
-import jdk.vm.ci.code.CodeUtil;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.PrimitiveConstant;
-import jdk.vm.ci.meta.Value;
 
 public class MulNode extends BinaryArithmeticNode<Mul> implements NarrowableArithmeticNode, BinaryCommutative<ValueNode>
 {

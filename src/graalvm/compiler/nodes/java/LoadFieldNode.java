@@ -1,12 +1,19 @@
 package graalvm.compiler.nodes.java;
 
-import static graalvm.compiler.graph.iterators.NodePredicates.isNotA;
+import jdk.vm.ci.meta.Assumptions;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.DeoptimizationAction;
+import jdk.vm.ci.meta.DeoptimizationReason;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaField;
 
 import graalvm.compiler.core.common.spi.ConstantFieldProvider;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.StampPair;
 import graalvm.compiler.graph.NodeClass;
+import graalvm.compiler.graph.iterators.NodePredicates;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
 import graalvm.compiler.nodes.ConstantNode;
@@ -23,14 +30,6 @@ import graalvm.compiler.nodes.util.ConstantFoldUtil;
 import graalvm.compiler.nodes.virtual.VirtualInstanceNode;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.meta.Assumptions;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.DeoptimizationAction;
-import jdk.vm.ci.meta.DeoptimizationReason;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaField;
 
 /**
  * The {@code LoadFieldNode} represents a read of a static or instance field.
@@ -142,7 +141,7 @@ public final class LoadFieldNode extends AccessFieldNode implements Canonicaliza
 
     private static PhiNode asPhi(ConstantFieldProvider constantFields, ConstantReflectionProvider constantReflection, MetaAccessProvider metaAcccess, OptionValues options, ValueNode forObject, ResolvedJavaField field, Stamp stamp)
     {
-        if (!field.isStatic() && field.isFinal() && forObject instanceof ValuePhiNode && ((ValuePhiNode) forObject).values().filter(isNotA(ConstantNode.class)).isEmpty())
+        if (!field.isStatic() && field.isFinal() && forObject instanceof ValuePhiNode && ((ValuePhiNode) forObject).values().filter(NodePredicates.isNotA(ConstantNode.class)).isEmpty())
         {
             PhiNode phi = (PhiNode) forObject;
             ConstantNode[] constantNodes = new ConstantNode[phi.valueCount()];

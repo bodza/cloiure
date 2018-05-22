@@ -2,10 +2,10 @@ package graalvm.compiler.hotspot.meta;
 
 import java.util.List;
 
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.core.common.spi.ForeignCallsProvider;
 import graalvm.compiler.hotspot.stubs.Stub;
-
-import jdk.vm.ci.meta.Value;
 
 /**
  * HotSpot extension of {@link ForeignCallsProvider}.

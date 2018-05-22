@@ -1,5 +1,8 @@
 package graalvm.compiler.hotspot.nodes.aot;
 
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
@@ -15,9 +18,6 @@ import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.nodes.util.GraphUtil;
-
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.Value;
 
 /**
  * A call to the VM via a regular stub.

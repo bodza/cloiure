@@ -1,9 +1,8 @@
 package graalvm.compiler.virtual.phases.ea;
 
-import static graalvm.compiler.core.common.GraalOptions.EscapeAnalysisIterations;
-import static graalvm.compiler.core.common.GraalOptions.EscapeAnalyzeOnly;
-
 import org.graalvm.collections.EconomicSet;
+
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.StructuredGraph.ScheduleResult;
@@ -37,7 +36,7 @@ public class PartialEscapePhase extends EffectsPhase<PhaseContext>
 
     public PartialEscapePhase(boolean iterative, boolean readElimination, CanonicalizerPhase canonicalizer, BasePhase<PhaseContext> cleanupPhase, OptionValues options)
     {
-        super(iterative ? EscapeAnalysisIterations.getValue(options) : 1, canonicalizer);
+        super(iterative ? GraalOptions.EscapeAnalysisIterations.getValue(options) : 1, canonicalizer);
         this.readElimination = readElimination;
         this.cleanupPhase = cleanupPhase;
     }
@@ -55,7 +54,7 @@ public class PartialEscapePhase extends EffectsPhase<PhaseContext>
     @Override
     protected void run(StructuredGraph graph, PhaseContext context)
     {
-        if (VirtualUtil.matches(graph, EscapeAnalyzeOnly.getValue(graph.getOptions())))
+        if (VirtualUtil.matches(graph, GraalOptions.EscapeAnalyzeOnly.getValue(graph.getOptions())))
         {
             if (readElimination || graph.hasVirtualizableAllocation())
             {

@@ -1,14 +1,14 @@
 package graalvm.compiler.lir.amd64;
 
+import jdk.vm.ci.amd64.AMD64Kind;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
-
-import jdk.vm.ci.amd64.AMD64Kind;
-import jdk.vm.ci.code.ValueUtil;
-import jdk.vm.ci.meta.Value;
 
 @Opcode("BSWAP")
 public final class AMD64ByteSwapOp extends AMD64LIRInstruction

@@ -3,6 +3,9 @@ package graalvm.compiler.nodes.spi;
 import java.util.Collection;
 import java.util.List;
 
+import jdk.vm.ci.code.CallingConvention;
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.core.common.cfg.BlockMap;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.Node;
@@ -24,9 +27,6 @@ import graalvm.compiler.nodes.calc.ConditionalNode;
 import graalvm.compiler.nodes.cfg.Block;
 import graalvm.compiler.nodes.extended.SwitchNode;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.code.CallingConvention;
-import jdk.vm.ci.meta.Value;
 
 public interface NodeLIRBuilderTool extends NodeValueMap
 {

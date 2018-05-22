@@ -1,9 +1,5 @@
 package graalvm.compiler.phases.common;
 
-import static graalvm.compiler.graph.Graph.NodeEvent.NODE_ADDED;
-import static graalvm.compiler.graph.Graph.NodeEvent.ZERO_USAGES;
-import static org.graalvm.word.LocationIdentity.any;
-
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
@@ -12,7 +8,10 @@ import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.EconomicSet;
 import org.graalvm.collections.Equivalence;
 import org.graalvm.collections.UnmodifiableMapCursor;
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.core.common.cfg.Loop;
+import graalvm.compiler.graph.Graph.NodeEvent;
 import graalvm.compiler.graph.Graph.NodeEventScope;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodes.AbstractBeginNode;
@@ -48,7 +47,6 @@ import graalvm.compiler.phases.common.util.HashSetNodeEventListener;
 import graalvm.compiler.phases.graph.ReentrantNodeIterator;
 import graalvm.compiler.phases.graph.ReentrantNodeIterator.LoopInfo;
 import graalvm.compiler.phases.graph.ReentrantNodeIterator.NodeIteratorClosure;
-import org.graalvm.word.LocationIdentity;
 
 public class FloatingReadPhase extends Phase
 {
@@ -67,7 +65,7 @@ public class FloatingReadPhase extends Phase
         public MemoryMapImpl(StartNode start)
         {
             this();
-            lastMemorySnapshot.put(any(), start);
+            lastMemorySnapshot.put(LocationIdentity.any(), start);
         }
 
         public MemoryMapImpl()
@@ -88,7 +86,7 @@ public class FloatingReadPhase extends Phase
                 lastLocationAccess = lastMemorySnapshot.get(locationIdentity);
                 if (lastLocationAccess == null)
                 {
-                    lastLocationAccess = lastMemorySnapshot.get(any());
+                    lastLocationAccess = lastMemorySnapshot.get(LocationIdentity.any());
                 }
                 return lastLocationAccess;
             }
@@ -224,7 +222,7 @@ public class FloatingReadPhase extends Phase
             }
         }
 
-        HashSetNodeEventListener listener = new HashSetNodeEventListener(EnumSet.of(NODE_ADDED, ZERO_USAGES));
+        HashSetNodeEventListener listener = new HashSetNodeEventListener(EnumSet.of(NodeEvent.NODE_ADDED, NodeEvent.ZERO_USAGES));
         try (NodeEventScope nes = graph.trackNodeEvents(listener))
         {
             ReentrantNodeIterator.apply(new FloatingReadClosure(modifiedInLoops, createFloatingReads, createMemoryMapNodes), graph.start(), new MemoryMapImpl(graph.start()));

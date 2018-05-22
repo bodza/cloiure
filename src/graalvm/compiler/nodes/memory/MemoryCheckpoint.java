@@ -1,9 +1,10 @@
 package graalvm.compiler.nodes.memory;
 
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodes.FixedNode;
 import graalvm.compiler.nodes.FixedNodeInterface;
-import org.graalvm.word.LocationIdentity;
 
 /**
  * This interface marks subclasses of {@link FixedNode} that kill a set of memory locations

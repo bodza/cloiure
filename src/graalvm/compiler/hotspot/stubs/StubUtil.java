@@ -1,17 +1,15 @@
 package graalvm.compiler.hotspot.stubs;
 
-import static jdk.vm.ci.meta.DeoptimizationReason.RuntimeConstraint;
-import static graalvm.compiler.hotspot.GraalHotSpotVMConfig.INJECTED_VMCONFIG;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.clearPendingException;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.getAndClearObjectResult;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.loadHubIntrinsic;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.verifyOops;
-import static graalvm.compiler.replacements.nodes.CStringConstant.cstring;
-
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
+
+import jdk.vm.ci.meta.DeoptimizationAction;
+import jdk.vm.ci.meta.DeoptimizationReason;
+
+import org.graalvm.word.Pointer;
+import org.graalvm.word.WordFactory;
 
 import graalvm.compiler.api.replacements.Fold;
 import graalvm.compiler.api.replacements.Fold.InjectedParameter;
@@ -21,15 +19,13 @@ import graalvm.compiler.graph.Node.NodeIntrinsic;
 import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
 import graalvm.compiler.hotspot.nodes.DeoptimizeCallerNode;
 import graalvm.compiler.hotspot.nodes.StubForeignCallNode;
+import graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil;
 import graalvm.compiler.hotspot.word.KlassPointer;
 import graalvm.compiler.nodes.PiNode;
 import graalvm.compiler.nodes.SnippetAnchorNode;
 import graalvm.compiler.nodes.extended.GuardingNode;
+import graalvm.compiler.replacements.nodes.CStringConstant;
 import graalvm.compiler.word.Word;
-import org.graalvm.word.Pointer;
-import org.graalvm.word.WordFactory;
-
-import jdk.vm.ci.meta.DeoptimizationAction;
 
 /**
  * A collection of methods used in {@link Stub}s.
@@ -69,13 +65,13 @@ public class StubUtil
 
     public static void handlePendingException(Word thread, boolean isObjectResult)
     {
-        if (clearPendingException(thread) != null)
+        if (HotSpotReplacementsUtil.clearPendingException(thread) != null)
         {
             if (isObjectResult)
             {
-                getAndClearObjectResult(thread);
+                HotSpotReplacementsUtil.getAndClearObjectResult(thread);
             }
-            DeoptimizeCallerNode.deopt(DeoptimizationAction.None, RuntimeConstraint);
+            DeoptimizeCallerNode.deopt(DeoptimizationAction.None, DeoptimizationReason.RuntimeConstraint);
         }
     }
 
@@ -89,7 +85,7 @@ public class StubUtil
      */
     public static void printf(String message)
     {
-        vmMessageC(VM_MESSAGE_C, false, cstring(message), 0L, 0L, 0L);
+        vmMessageC(VM_MESSAGE_C, false, CStringConstant.cstring(message), 0L, 0L, 0L);
     }
 
     /**
@@ -100,7 +96,7 @@ public class StubUtil
      */
     public static void printf(String format, long value)
     {
-        vmMessageC(VM_MESSAGE_C, false, cstring(format), value, 0L, 0L);
+        vmMessageC(VM_MESSAGE_C, false, CStringConstant.cstring(format), value, 0L, 0L);
     }
 
     /**
@@ -112,7 +108,7 @@ public class StubUtil
      */
     public static void printf(String format, long v1, long v2)
     {
-        vmMessageC(VM_MESSAGE_C, false, cstring(format), v1, v2, 0L);
+        vmMessageC(VM_MESSAGE_C, false, CStringConstant.cstring(format), v1, v2, 0L);
     }
 
     /**
@@ -125,7 +121,7 @@ public class StubUtil
      */
     public static void printf(String format, long v1, long v2, long v3)
     {
-        vmMessageC(VM_MESSAGE_C, false, cstring(format), v1, v2, v3);
+        vmMessageC(VM_MESSAGE_C, false, CStringConstant.cstring(format), v1, v2, v3);
     }
 
     /**
@@ -143,7 +139,7 @@ public class StubUtil
      */
     public static void fatal(String message)
     {
-        vmMessageC(VM_MESSAGE_C, true, cstring(message), 0L, 0L, 0L);
+        vmMessageC(VM_MESSAGE_C, true, CStringConstant.cstring(message), 0L, 0L, 0L);
     }
 
     /**
@@ -154,7 +150,7 @@ public class StubUtil
      */
     public static void fatal(String format, long value)
     {
-        vmMessageC(VM_MESSAGE_C, true, cstring(format), value, 0L, 0L);
+        vmMessageC(VM_MESSAGE_C, true, CStringConstant.cstring(format), value, 0L, 0L);
     }
 
     /**
@@ -166,7 +162,7 @@ public class StubUtil
      */
     public static void fatal(String format, long v1, long v2)
     {
-        vmMessageC(VM_MESSAGE_C, true, cstring(format), v1, v2, 0L);
+        vmMessageC(VM_MESSAGE_C, true, CStringConstant.cstring(format), v1, v2, 0L);
     }
 
     /**
@@ -179,7 +175,7 @@ public class StubUtil
      */
     public static void fatal(String format, long v1, long v2, long v3)
     {
-        vmMessageC(VM_MESSAGE_C, true, cstring(format), v1, v2, v3);
+        vmMessageC(VM_MESSAGE_C, true, CStringConstant.cstring(format), v1, v2, v3);
     }
 
     /**
@@ -187,9 +183,9 @@ public class StubUtil
      */
     public static Object verifyObject(Object object)
     {
-        if (verifyOops(INJECTED_VMCONFIG))
+        if (HotSpotReplacementsUtil.verifyOops(GraalHotSpotVMConfig.INJECTED_VMCONFIG))
         {
-            Word verifyOopCounter = WordFactory.unsigned(verifyOopCounterAddress(INJECTED_VMCONFIG));
+            Word verifyOopCounter = WordFactory.unsigned(verifyOopCounterAddress(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
             verifyOopCounter.writeInt(0, verifyOopCounter.readInt(0) + 1);
 
             Pointer oop = Word.objectToTrackedPointer(object);
@@ -197,12 +193,12 @@ public class StubUtil
             {
                 GuardingNode anchorNode = SnippetAnchorNode.anchor();
                 // make sure object is 'reasonable'
-                if (!oop.and(WordFactory.unsigned(verifyOopMask(INJECTED_VMCONFIG))).equal(WordFactory.unsigned(verifyOopBits(INJECTED_VMCONFIG))))
+                if (!oop.and(WordFactory.unsigned(verifyOopMask(GraalHotSpotVMConfig.INJECTED_VMCONFIG))).equal(WordFactory.unsigned(verifyOopBits(GraalHotSpotVMConfig.INJECTED_VMCONFIG))))
                 {
                     fatal("oop not in heap: %p", oop.rawValue());
                 }
 
-                KlassPointer klass = loadHubIntrinsic(PiNode.piCastNonNull(object, anchorNode));
+                KlassPointer klass = HotSpotReplacementsUtil.loadHubIntrinsic(PiNode.piCastNonNull(object, anchorNode));
                 if (klass.isNull())
                 {
                     fatal("klass for oop %p is null", oop.rawValue());

@@ -1,5 +1,12 @@
 package graalvm.compiler.nodes.extended;
 
+import jdk.vm.ci.meta.Assumptions;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.ResolvedJavaField;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
@@ -9,12 +16,6 @@ import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.NamedLocationIdentity;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.type.StampTool;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.meta.Assumptions;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.ResolvedJavaField;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 public abstract class UnsafeAccessNode extends FixedWithNextNode implements Canonicalizable
 {

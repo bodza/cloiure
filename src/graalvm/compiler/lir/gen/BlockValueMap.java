@@ -1,8 +1,8 @@
 package graalvm.compiler.lir.gen;
 
-import graalvm.compiler.core.common.cfg.AbstractBlockBase;
-
 import jdk.vm.ci.meta.Value;
+
+import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 
 public interface BlockValueMap
 {

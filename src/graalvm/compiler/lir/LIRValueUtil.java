@@ -1,14 +1,12 @@
 package graalvm.compiler.lir;
 
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.RegisterValue;
 import jdk.vm.ci.code.StackSlot;
+import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.Value;
@@ -80,7 +78,7 @@ public final class LIRValueUtil
 
     public static boolean sameRegister(Value v1, Value v2)
     {
-        return isRegister(v1) && isRegister(v2) && asRegister(v1).equals(asRegister(v2));
+        return ValueUtil.isRegister(v1) && ValueUtil.isRegister(v2) && ValueUtil.asRegister(v1).equals(ValueUtil.asRegister(v2));
     }
 
     public static boolean sameRegister(Value v1, Value v2, Value v3)
@@ -121,9 +119,9 @@ public final class LIRValueUtil
             }
             else if (o instanceof Value)
             {
-                if (isRegister((Value) o))
+                if (ValueUtil.isRegister((Value) o))
                 {
-                    registers.add(asRegister((Value) o));
+                    registers.add(ValueUtil.asRegister((Value) o));
                 }
             }
             else if (o instanceof Object[])

@@ -1,5 +1,7 @@
 package graalvm.compiler.loop;
 
+import java.util.function.BiFunction;
+
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.nodes.FixedNode;
 import graalvm.compiler.nodes.NodeView;
@@ -9,8 +11,6 @@ import graalvm.compiler.nodes.calc.BinaryArithmeticNode;
 import graalvm.compiler.nodes.calc.FixedBinaryNode;
 import graalvm.compiler.nodes.calc.SignedDivNode;
 import graalvm.compiler.nodes.calc.UnsignedDivNode;
-
-import java.util.function.BiFunction;
 
 /**
  * Utility methods to perform integer math with some obvious constant folding first.

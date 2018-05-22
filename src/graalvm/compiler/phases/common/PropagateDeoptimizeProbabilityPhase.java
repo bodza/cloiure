@@ -3,6 +3,7 @@ package graalvm.compiler.phases.common;
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.EconomicSet;
 import org.graalvm.collections.MapCursor;
+
 import graalvm.compiler.graph.NodeStack;
 import graalvm.compiler.nodes.AbstractBeginNode;
 import graalvm.compiler.nodes.AbstractDeoptimizeNode;

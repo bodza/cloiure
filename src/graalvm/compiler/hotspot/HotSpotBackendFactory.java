@@ -1,9 +1,9 @@
 package graalvm.compiler.hotspot;
 
-import graalvm.compiler.phases.tiers.CompilerConfiguration;
-
 import jdk.vm.ci.code.Architecture;
 import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
+
+import graalvm.compiler.phases.tiers.CompilerConfiguration;
 
 public interface HotSpotBackendFactory
 {

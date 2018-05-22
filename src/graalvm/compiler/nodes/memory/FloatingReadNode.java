@@ -1,6 +1,6 @@
 package graalvm.compiler.nodes.memory;
 
-import static graalvm.compiler.nodeinfo.InputType.Memory;
+import org.graalvm.word.LocationIdentity;
 
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.type.Stamp;
@@ -8,12 +8,12 @@ import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNodeUtil;
 import graalvm.compiler.nodes.extended.GuardingNode;
 import graalvm.compiler.nodes.memory.address.AddressNode;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-import org.graalvm.word.LocationIdentity;
 
 /**
  * A floating read of a value from memory specified in terms of an object base and an object
@@ -23,7 +23,7 @@ public final class FloatingReadNode extends FloatingAccessNode implements LIRLow
 {
     public static final NodeClass<FloatingReadNode> TYPE = NodeClass.create(FloatingReadNode.class);
 
-    @OptionalInput(Memory) MemoryNode lastLocationAccess;
+    @OptionalInput(InputType.Memory) MemoryNode lastLocationAccess;
 
     public FloatingReadNode(AddressNode address, LocationIdentity location, MemoryNode lastLocationAccess, Stamp stamp)
     {

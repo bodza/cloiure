@@ -1,8 +1,8 @@
 package graalvm.compiler.lir.framemap;
 
-import graalvm.compiler.lir.VirtualStackSlot;
-
 import jdk.vm.ci.meta.ValueKind;
+
+import graalvm.compiler.lir.VirtualStackSlot;
 
 /**
  * Represents a {@link VirtualStackSlot virtual stack slot} for a specific {@link ValueKind kind}.

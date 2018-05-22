@@ -3,13 +3,13 @@ package graalvm.compiler.nodes.graphbuilderconf;
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Method;
 
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.nodes.Invoke;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.type.StampTool;
-
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * Plugin for handling a specific method invocation.

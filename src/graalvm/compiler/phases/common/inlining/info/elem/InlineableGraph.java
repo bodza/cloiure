@@ -1,9 +1,9 @@
 package graalvm.compiler.phases.common.inlining.info.elem;
 
-import static graalvm.compiler.phases.common.DeadCodeEliminationPhase.Optionality.Optional;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.Node;
@@ -17,11 +17,10 @@ import graalvm.compiler.nodes.StructuredGraph.AllowAssumptions;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.phases.common.CanonicalizerPhase;
 import graalvm.compiler.phases.common.DeadCodeEliminationPhase;
+import graalvm.compiler.phases.common.DeadCodeEliminationPhase.Optionality;
 import graalvm.compiler.phases.common.inlining.InliningUtil;
 import graalvm.compiler.phases.graph.FixedNodeProbabilityCache;
 import graalvm.compiler.phases.tiers.HighTierContext;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * Represents a feasible concrete target for inlining, whose graph has been copied already and thus
@@ -179,7 +178,7 @@ public class InlineableGraph implements Inlineable
             context.getGraphBuilderSuite().apply(newGraph, context);
         }
 
-        new DeadCodeEliminationPhase(Optional).apply(newGraph);
+        new DeadCodeEliminationPhase(Optionality.Optional).apply(newGraph);
 
         canonicalizer.apply(newGraph, context);
 

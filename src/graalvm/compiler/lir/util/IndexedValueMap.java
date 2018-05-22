@@ -3,13 +3,13 @@ package graalvm.compiler.lir.util;
 import java.util.EnumSet;
 import java.util.Objects;
 
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.lir.InstructionValueConsumer;
 import graalvm.compiler.lir.InstructionValueProcedure;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstruction.OperandMode;
-
-import jdk.vm.ci.meta.Value;
 
 public final class IndexedValueMap
 {

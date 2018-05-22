@@ -1,31 +1,24 @@
 package graalvm.compiler.lir.alloc.trace.lsra;
 
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.asStackSlot;
-import static jdk.vm.ci.code.ValueUtil.isIllegal;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static jdk.vm.ci.code.ValueUtil.isStackSlot;
-import static graalvm.compiler.lir.LIRValueUtil.asVirtualStackSlot;
-import static graalvm.compiler.lir.LIRValueUtil.isStackSlotValue;
-import static graalvm.compiler.lir.LIRValueUtil.isVirtualStackSlot;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.lir.LIRInsertionBuffer;
-import graalvm.compiler.lir.LIRInstruction;
-import graalvm.compiler.lir.VirtualStackSlot;
-import graalvm.compiler.lir.alloc.trace.lsra.TraceLinearScanPhase.TraceLinearScan;
-import graalvm.compiler.lir.framemap.FrameMap;
-import graalvm.compiler.lir.framemap.FrameMapBuilderTool;
-
 import jdk.vm.ci.code.StackSlot;
+import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.Value;
+
+import graalvm.compiler.debug.GraalError;
+import graalvm.compiler.lir.LIRInsertionBuffer;
+import graalvm.compiler.lir.LIRInstruction;
+import graalvm.compiler.lir.LIRValueUtil;
+import graalvm.compiler.lir.VirtualStackSlot;
+import graalvm.compiler.lir.alloc.trace.lsra.TraceLinearScanPhase.TraceLinearScan;
+import graalvm.compiler.lir.framemap.FrameMap;
+import graalvm.compiler.lir.framemap.FrameMapBuilderTool;
 
 final class TraceLocalMoveResolver
 {
@@ -45,13 +38,13 @@ final class TraceLocalMoveResolver
 
     private int getStackArrayIndex(Value stackSlotValue)
     {
-        if (isStackSlot(stackSlotValue))
+        if (ValueUtil.isStackSlot(stackSlotValue))
         {
-            return getStackArrayIndex(asStackSlot(stackSlotValue));
+            return getStackArrayIndex(ValueUtil.asStackSlot(stackSlotValue));
         }
-        if (isVirtualStackSlot(stackSlotValue))
+        if (LIRValueUtil.isVirtualStackSlot(stackSlotValue))
         {
-            return getStackArrayIndex(asVirtualStackSlot(stackSlotValue));
+            return getStackArrayIndex(LIRValueUtil.asVirtualStackSlot(stackSlotValue));
         }
         throw GraalError.shouldNotReachHere("value is not a stack slot: " + stackSlotValue);
     }
@@ -79,7 +72,7 @@ final class TraceLocalMoveResolver
 
     protected void setValueBlocked(Value location, int direction)
     {
-        if (isStackSlotValue(location))
+        if (LIRValueUtil.isStackSlotValue(location))
         {
             int stackIdx = getStackArrayIndex(location);
             if (stackIdx == STACK_SLOT_IN_CALLER_FRAME_IDX)
@@ -95,9 +88,9 @@ final class TraceLocalMoveResolver
         }
         else
         {
-            if (isRegister(location))
+            if (ValueUtil.isRegister(location))
             {
-                registerBlocked[asRegister(location).number] += direction;
+                registerBlocked[ValueUtil.asRegister(location).number] += direction;
             }
             else
             {
@@ -118,7 +111,7 @@ final class TraceLocalMoveResolver
 
     protected int valueBlocked(Value location)
     {
-        if (isStackSlotValue(location))
+        if (LIRValueUtil.isStackSlotValue(location))
         {
             int stackIdx = getStackArrayIndex(location);
             if (stackIdx == STACK_SLOT_IN_CALLER_FRAME_IDX)
@@ -132,9 +125,9 @@ final class TraceLocalMoveResolver
             }
             return stackBlocked[stackIdx];
         }
-        if (isRegister(location))
+        if (ValueUtil.isRegister(location))
         {
-            return registerBlocked[asRegister(location).number];
+            return registerBlocked[ValueUtil.asRegister(location).number];
         }
         throw GraalError.shouldNotReachHere("unhandled value " + location);
     }
@@ -219,7 +212,7 @@ final class TraceLocalMoveResolver
         {
             return true;
         }
-        if (from != null && isRegister(from) && isRegister(to) && asRegister(from).equals(asRegister(to)))
+        if (from != null && ValueUtil.isRegister(from) && ValueUtil.isRegister(to) && ValueUtil.asRegister(from).equals(ValueUtil.asRegister(to)))
         {
             return true;
         }
@@ -228,11 +221,11 @@ final class TraceLocalMoveResolver
 
     protected static boolean mightBeBlocked(Value location)
     {
-        if (isRegister(location))
+        if (ValueUtil.isRegister(location))
         {
             return true;
         }
-        if (isStackSlotValue(location))
+        if (LIRValueUtil.isStackSlotValue(location))
         {
             return true;
         }
@@ -267,7 +260,7 @@ final class TraceLocalMoveResolver
      */
     protected LIRInstruction createMove(AllocatableValue fromOpr, AllocatableValue toOpr, AllocatableValue fromLocation, AllocatableValue toLocation)
     {
-        if (isStackSlotValue(toLocation) && isStackSlotValue(fromLocation))
+        if (LIRValueUtil.isStackSlotValue(toLocation) && LIRValueUtil.isStackSlotValue(fromLocation))
         {
             return getAllocator().getSpillMoveFactory().createStackMove(toOpr, fromOpr);
         }
@@ -319,7 +312,7 @@ final class TraceLocalMoveResolver
                     {
                         insertMove(mappingFromOpr.get(i), toInterval);
                     }
-                    if (isStackSlotValue(toInterval.location()))
+                    if (LIRValueUtil.isStackSlotValue(toInterval.location()))
                     {
                         if (busySpillSlots == null)
                         {
@@ -333,7 +326,7 @@ final class TraceLocalMoveResolver
 
                     processedInterval = true;
                 }
-                else if (fromInterval != null && isRegister(fromInterval.location()) && (busySpillSlots == null || !busySpillSlots.contains(fromInterval.spillSlot())))
+                else if (fromInterval != null && ValueUtil.isRegister(fromInterval.location()) && (busySpillSlots == null || !busySpillSlots.contains(fromInterval.spillSlot())))
                 {
                     // this interval cannot be processed now because target is not free
                     // it starts in a register, so it is a possible candidate for spilling
@@ -422,11 +415,11 @@ final class TraceLocalMoveResolver
 
     public void addMapping(TraceInterval fromInterval, TraceInterval toInterval)
     {
-        if (isIllegal(toInterval.location()) && toInterval.canMaterialize())
+        if (ValueUtil.isIllegal(toInterval.location()) && toInterval.canMaterialize())
         {
             return;
         }
-        if (isIllegal(fromInterval.location()) && fromInterval.canMaterialize())
+        if (ValueUtil.isIllegal(fromInterval.location()) && fromInterval.canMaterialize())
         {
             // Instead of a reload, re-materialize the value
             JavaConstant rematValue = fromInterval.getMaterializedValue();

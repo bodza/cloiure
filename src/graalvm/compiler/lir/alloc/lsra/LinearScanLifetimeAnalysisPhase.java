@@ -1,14 +1,19 @@
 package graalvm.compiler.lir.alloc.lsra;
 
-import static jdk.vm.ci.code.ValueUtil.asStackSlot;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static jdk.vm.ci.code.ValueUtil.isStackSlot;
-import static graalvm.compiler.lir.LIRValueUtil.asVariable;
-import static graalvm.compiler.lir.LIRValueUtil.isVariable;
-
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.EnumSet;
+
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.RegisterArray;
+import jdk.vm.ci.code.StackSlot;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.Value;
+import jdk.vm.ci.meta.ValueKind;
 
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.PermanentBailoutException;
@@ -20,6 +25,7 @@ import graalvm.compiler.lir.InstructionValueConsumer;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstruction.OperandMode;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.StandardOp.LoadConstantOp;
 import graalvm.compiler.lir.StandardOp.ValueMoveOp;
 import graalvm.compiler.lir.ValueConsumer;
@@ -28,16 +34,6 @@ import graalvm.compiler.lir.alloc.lsra.Interval.SpillState;
 import graalvm.compiler.lir.alloc.lsra.LinearScan.BlockData;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.phases.AllocationPhase.AllocationContext;
-
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.RegisterArray;
-import jdk.vm.ci.code.StackSlot;
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.Value;
-import jdk.vm.ci.meta.ValueKind;
 
 public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
 {
@@ -77,9 +73,9 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
 
         ValueConsumer setVariableConsumer = (value, mode, flags) ->
         {
-            if (isVariable(value))
+            if (LIRValueUtil.isVariable(value))
             {
-                allocator.getOrCreateInterval(asVariable(value));
+                allocator.getOrCreateInterval(LIRValueUtil.asVariable(value));
             }
         };
 
@@ -143,7 +139,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
 
                 ValueConsumer useConsumer = (operand, mode, flags) ->
                 {
-                    if (isVariable(operand))
+                    if (LIRValueUtil.isVariable(operand))
                     {
                         int operandNum = allocator.operandNumber(operand);
                         if (!liveKillScratch.get(operandNum))
@@ -169,7 +165,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
                 };
                 ValueConsumer defConsumer = (operand, mode, flags) ->
                 {
-                    if (isVariable(operand))
+                    if (LIRValueUtil.isVariable(operand))
                     {
                         int varNum = allocator.operandNumber(operand);
                         liveKillScratch.set(varNum);
@@ -393,7 +389,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
         }
 
         changeSpillDefinitionPos(op, operand, interval, defPos);
-        if (registerPriority == RegisterPriority.None && interval.spillState().ordinal() <= SpillState.StartInMemory.ordinal() && isStackSlot(operand))
+        if (registerPriority == RegisterPriority.None && interval.spillState().ordinal() <= SpillState.StartInMemory.ordinal() && ValueUtil.isStackSlot(operand))
         {
             // detection of method-parameters and roundfp-results
             interval.setSpillState(SpillState.StartInMemory);
@@ -412,7 +408,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
             ValueMoveOp move = ValueMoveOp.asValueMoveOp(op);
             if (optimizeMethodArgument(move.getInput()))
             {
-                StackSlot slot = asStackSlot(move.getInput());
+                StackSlot slot = ValueUtil.asStackSlot(move.getInput());
 
                 Interval interval = allocator.intervalFor(move.getResult());
                 interval.setSpillSlot(slot);
@@ -488,7 +484,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
          * Object method arguments that are passed on the stack are currently not optimized because
          * this requires that the runtime visits method arguments during stack walking.
          */
-        return isStackSlot(value) && asStackSlot(value).isInCallerFrame() && LIRKind.isValue(value);
+        return ValueUtil.isStackSlot(value) && ValueUtil.asStackSlot(value).isInCallerFrame() && LIRKind.isValue(value);
     }
 
     /**
@@ -653,7 +649,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
          */
         for (Interval interval : allocator.intervals())
         {
-            if (interval != null && isRegister(interval.operand))
+            if (interval != null && ValueUtil.isRegister(interval.operand))
             {
                 interval.addRange(0, 1);
             }

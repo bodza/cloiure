@@ -1,9 +1,9 @@
 package graalvm.compiler.nodes.spi;
 
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodes.ValueNode;
-
-import jdk.vm.ci.meta.Value;
 
 public interface NodeValueMap
 {

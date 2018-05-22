@@ -1,14 +1,26 @@
 package graalvm.compiler.hotspot.amd64;
 
-import static graalvm.compiler.hotspot.HotSpotBackend.Options.GraalArithmeticStubs;
 import java.util.ArrayList;
 import java.util.List;
+
+import jdk.vm.ci.amd64.AMD64;
+import jdk.vm.ci.code.Architecture;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.RegisterConfig;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.hotspot.HotSpotCodeCacheProvider;
+import jdk.vm.ci.hotspot.HotSpotConstantReflectionProvider;
+import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
+import jdk.vm.ci.hotspot.HotSpotMetaAccessProvider;
+import jdk.vm.ci.meta.Value;
+import jdk.vm.ci.runtime.JVMCIBackend;
 
 import graalvm.compiler.api.replacements.SnippetReflectionProvider;
 import graalvm.compiler.bytecode.BytecodeProvider;
 import graalvm.compiler.core.common.spi.ConstantFieldProvider;
 import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
 import graalvm.compiler.hotspot.HotSpotBackend;
+import graalvm.compiler.hotspot.HotSpotBackend.Options;
 import graalvm.compiler.hotspot.HotSpotBackendFactory;
 import graalvm.compiler.hotspot.HotSpotGraalRuntimeProvider;
 import graalvm.compiler.hotspot.HotSpotReplacementsImpl;
@@ -35,18 +47,6 @@ import graalvm.compiler.phases.util.Providers;
 import graalvm.compiler.replacements.amd64.AMD64GraphBuilderPlugins;
 import graalvm.compiler.replacements.classfile.ClassfileBytecodeProvider;
 import graalvm.compiler.word.WordTypes;
-
-import jdk.vm.ci.amd64.AMD64;
-import jdk.vm.ci.code.Architecture;
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.RegisterConfig;
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.hotspot.HotSpotCodeCacheProvider;
-import jdk.vm.ci.hotspot.HotSpotConstantReflectionProvider;
-import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
-import jdk.vm.ci.hotspot.HotSpotMetaAccessProvider;
-import jdk.vm.ci.meta.Value;
-import jdk.vm.ci.runtime.JVMCIBackend;
 
 public class AMD64HotSpotBackendFactory implements HotSpotBackendFactory
 {
@@ -94,7 +94,7 @@ public class AMD64HotSpotBackendFactory implements HotSpotBackendFactory
     protected Plugins createGraphBuilderPlugins(CompilerConfiguration compilerConfiguration, GraalHotSpotVMConfig config, OptionValues options, TargetDescription target, HotSpotConstantReflectionProvider constantReflection, HotSpotHostForeignCallsProvider foreignCalls, LoweringProvider lowerer, HotSpotMetaAccessProvider metaAccess, HotSpotSnippetReflectionProvider snippetReflection, HotSpotReplacementsImpl replacements, HotSpotWordTypes wordTypes, HotSpotStampProvider stampProvider)
     {
         Plugins plugins = HotSpotGraphBuilderPlugins.create(compilerConfiguration, config, wordTypes, metaAccess, constantReflection, snippetReflection, foreignCalls, lowerer, stampProvider, replacements);
-        AMD64GraphBuilderPlugins.register(plugins, replacements.getDefaultReplacementBytecodeProvider(), (AMD64) target.arch, GraalArithmeticStubs.getValue(options));
+        AMD64GraphBuilderPlugins.register(plugins, replacements.getDefaultReplacementBytecodeProvider(), (AMD64) target.arch, Options.GraalArithmeticStubs.getValue(options));
         return plugins;
     }
 

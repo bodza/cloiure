@@ -1,10 +1,5 @@
 package graalvm.compiler.hotspot.meta;
 
-import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
-import static graalvm.compiler.hotspot.meta.HotSpotAOTProfilingPlugin.Options.TieredAOT;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.JAVA_THREAD_THREAD_OBJECT_LOCATION;
-import static graalvm.compiler.java.BytecodeParserOptions.InlineDuringParsing;
-
 import java.lang.invoke.ConstantCallSite;
 import java.lang.invoke.MutableCallSite;
 import java.lang.invoke.VolatileCallSite;
@@ -12,13 +7,25 @@ import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.util.zip.CRC32;
 
+import jdk.vm.ci.code.CodeUtil;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.DeoptimizationAction;
+import jdk.vm.ci.meta.DeoptimizationReason;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.api.replacements.SnippetReflectionProvider;
 import graalvm.compiler.bytecode.BytecodeProvider;
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.spi.ForeignCallsProvider;
 import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.TypeReference;
 import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
+import graalvm.compiler.hotspot.meta.HotSpotAOTProfilingPlugin.Options;
 import graalvm.compiler.hotspot.nodes.CurrentJavaThreadNode;
 import graalvm.compiler.hotspot.replacements.AESCryptSubstitutions;
 import graalvm.compiler.hotspot.replacements.BigIntegerSubstitutions;
@@ -29,6 +36,7 @@ import graalvm.compiler.hotspot.replacements.CipherBlockChainingSubstitutions;
 import graalvm.compiler.hotspot.replacements.ClassGetHubNode;
 import graalvm.compiler.hotspot.replacements.HotSpotArraySubstitutions;
 import graalvm.compiler.hotspot.replacements.HotSpotClassSubstitutions;
+import graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil;
 import graalvm.compiler.hotspot.replacements.IdentityHashCodeNode;
 import graalvm.compiler.hotspot.replacements.ObjectCloneNode;
 import graalvm.compiler.hotspot.replacements.ObjectSubstitutions;
@@ -40,6 +48,7 @@ import graalvm.compiler.hotspot.replacements.SHASubstitutions;
 import graalvm.compiler.hotspot.replacements.ThreadSubstitutions;
 import graalvm.compiler.hotspot.replacements.arraycopy.ArrayCopyNode;
 import graalvm.compiler.hotspot.word.HotSpotWordTypes;
+import graalvm.compiler.java.BytecodeParserOptions;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.DynamicPiNode;
 import graalvm.compiler.nodes.FixedGuardNode;
@@ -76,15 +85,6 @@ import graalvm.compiler.replacements.StandardGraphBuilderPlugins;
 import graalvm.compiler.serviceprovider.GraalServices;
 import graalvm.compiler.word.WordOperationPlugin;
 import graalvm.compiler.word.WordTypes;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.code.CodeUtil;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.DeoptimizationAction;
-import jdk.vm.ci.meta.DeoptimizationReason;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * Defines the {@link Plugins} used when running on HotSpot.
@@ -106,20 +106,20 @@ public class HotSpotGraphBuilderPlugins
         plugins.appendTypePlugin(nodePlugin);
         plugins.appendNodePlugin(nodePlugin);
         OptionValues options = replacements.getOptions();
-        if (!GeneratePIC.getValue(options))
+        if (!GraalOptions.GeneratePIC.getValue(options))
         {
             plugins.appendNodePlugin(new MethodHandlePlugin(constantReflection.getMethodHandleAccess(), true));
         }
         plugins.appendInlineInvokePlugin(replacements);
-        if (InlineDuringParsing.getValue(options))
+        if (BytecodeParserOptions.InlineDuringParsing.getValue(options))
         {
             plugins.appendInlineInvokePlugin(new InlineDuringParsingPlugin());
         }
 
-        if (GeneratePIC.getValue(options))
+        if (GraalOptions.GeneratePIC.getValue(options))
         {
             plugins.setClassInitializationPlugin(new HotSpotClassInitializationPlugin());
-            if (TieredAOT.getValue(options))
+            if (Options.TieredAOT.getValue(options))
             {
                 plugins.setProfilingPlugin(new HotSpotAOTProfilingPlugin());
             }
@@ -135,7 +135,7 @@ public class HotSpotGraphBuilderPlugins
                 registerClassPlugins(plugins, config, replacementBytecodeProvider);
                 registerSystemPlugins(invocationPlugins, foreignCalls);
                 registerThreadPlugins(invocationPlugins, metaAccess, wordTypes, config, replacementBytecodeProvider);
-                if (!GeneratePIC.getValue(options))
+                if (!GraalOptions.GeneratePIC.getValue(options))
                 {
                     registerCallSitePlugins(invocationPlugins);
                 }
@@ -162,7 +162,7 @@ public class HotSpotGraphBuilderPlugins
     private static void registerObjectPlugins(InvocationPlugins plugins, OptionValues options, GraalHotSpotVMConfig config, BytecodeProvider bytecodeProvider)
     {
         Registration r = new Registration(plugins, Object.class, bytecodeProvider);
-        if (!GeneratePIC.getValue(options))
+        if (!GraalOptions.GeneratePIC.getValue(options))
         {
             // FIXME: clone() requires speculation and requires a fix in here (to check that b.getAssumptions() != null),
             // and in ReplacementImpl.getSubstitution() where there is an instantiation of IntrinsicGraphBuilder using
@@ -445,7 +445,7 @@ public class HotSpotGraphBuilderPlugins
                 AddressNode address = b.add(new OffsetAddressNode(thread, offset));
                 // JavaThread::_threadObj is never compressed
                 ObjectStamp stamp = StampFactory.objectNonNull(TypeReference.create(b.getAssumptions(), metaAccess.lookupJavaType(Thread.class)));
-                b.addPush(JavaKind.Object, new ReadNode(address, JAVA_THREAD_THREAD_OBJECT_LOCATION, stamp, BarrierType.NONE));
+                b.addPush(JavaKind.Object, new ReadNode(address, HotSpotReplacementsUtil.JAVA_THREAD_THREAD_OBJECT_LOCATION, stamp, BarrierType.NONE));
                 return true;
             }
         });

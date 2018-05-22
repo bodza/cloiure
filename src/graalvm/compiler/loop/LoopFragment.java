@@ -5,7 +5,10 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.Iterator;
 
+import jdk.vm.ci.meta.TriState;
+
 import org.graalvm.collections.EconomicMap;
+
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Graph;
 import graalvm.compiler.graph.Graph.DuplicationReplacement;
@@ -36,8 +39,6 @@ import graalvm.compiler.nodes.java.MonitorEnterNode;
 import graalvm.compiler.nodes.spi.NodeWithState;
 import graalvm.compiler.nodes.virtual.CommitAllocationNode;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
-
-import jdk.vm.ci.meta.TriState;
 
 public abstract class LoopFragment
 {

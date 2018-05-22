@@ -2,10 +2,10 @@ package graalvm.compiler.nodes;
 
 import java.util.EnumMap;
 
-import org.graalvm.word.LocationIdentity;
-
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.JavaKind.FormatWithToString;
+
+import org.graalvm.word.LocationIdentity;
 
 /**
  * A {@link LocationIdentity} with a name.

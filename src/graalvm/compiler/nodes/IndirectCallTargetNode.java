@@ -1,11 +1,11 @@
 package graalvm.compiler.nodes;
 
-import graalvm.compiler.core.common.type.StampPair;
-import graalvm.compiler.graph.NodeClass;
-
 import jdk.vm.ci.code.CallingConvention;
 import jdk.vm.ci.meta.JavaType;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
+
+import graalvm.compiler.core.common.type.StampPair;
+import graalvm.compiler.graph.NodeClass;
 
 public class IndirectCallTargetNode extends LoweredCallTargetNode
 {

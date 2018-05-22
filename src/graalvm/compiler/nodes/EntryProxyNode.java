@@ -1,8 +1,7 @@
 package graalvm.compiler.nodes;
 
-import static graalvm.compiler.nodeinfo.InputType.Association;
-
 import graalvm.compiler.graph.NodeClass;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.calc.FloatingNode;
 import graalvm.compiler.nodes.extended.GuardingNode;
 import graalvm.compiler.nodes.spi.ValueProxy;
@@ -14,7 +13,7 @@ import graalvm.compiler.nodes.spi.ValueProxy;
 public final class EntryProxyNode extends FloatingNode implements ValueProxy
 {
     public static final NodeClass<EntryProxyNode> TYPE = NodeClass.create(EntryProxyNode.class);
-    @Input(Association) EntryMarkerNode proxyPoint;
+    @Input(InputType.Association) EntryMarkerNode proxyPoint;
     @Input ValueNode value;
 
     public EntryProxyNode(ValueNode value, EntryMarkerNode proxyPoint)

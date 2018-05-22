@@ -1,10 +1,11 @@
 package graalvm.compiler.hotspot.replacements;
 
-import static graalvm.compiler.hotspot.HotSpotBackend.DECRYPT;
-import static graalvm.compiler.hotspot.HotSpotBackend.DECRYPT_WITH_ORIGINAL_KEY;
-import static graalvm.compiler.hotspot.HotSpotBackend.ENCRYPT;
-import graalvm.util.UnsafeAccess;
-import static jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider.getArrayBaseOffset;
+import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
+import jdk.vm.ci.meta.JavaKind;
+
+import org.graalvm.word.LocationIdentity;
+import org.graalvm.word.Pointer;
+import org.graalvm.word.WordFactory;
 
 import graalvm.compiler.api.replacements.ClassSubstitution;
 import graalvm.compiler.api.replacements.Fold;
@@ -13,16 +14,13 @@ import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node.ConstantNodeParameter;
 import graalvm.compiler.graph.Node.NodeIntrinsic;
+import graalvm.compiler.hotspot.HotSpotBackend;
 import graalvm.compiler.hotspot.nodes.ComputeObjectAddressNode;
 import graalvm.compiler.nodes.PiNode;
 import graalvm.compiler.nodes.extended.ForeignCallNode;
 import graalvm.compiler.nodes.extended.RawLoadNode;
 import graalvm.compiler.word.Word;
-import org.graalvm.word.LocationIdentity;
-import org.graalvm.word.Pointer;
-import org.graalvm.word.WordFactory;
-
-import jdk.vm.ci.meta.JavaKind;
+import graalvm.util.UnsafeAccess;
 
 /**
  * Substitutions for {@code com.sun.crypto.provider.CipherBlockChaining} methods.
@@ -177,25 +175,25 @@ public class CipherBlockChainingSubstitutions
         Object aesCipher = getAESCryptClass().cast(embeddedCipher);
         Object kObject = RawLoadNode.load(aesCipher, AESCryptSubstitutions.kOffset, JavaKind.Object, LocationIdentity.any());
         Object rObject = RawLoadNode.load(realReceiver, rOffset, JavaKind.Object, LocationIdentity.any());
-        Pointer kAddr = Word.objectToTrackedPointer(kObject).add(getArrayBaseOffset(JavaKind.Int));
-        Pointer rAddr = Word.objectToTrackedPointer(rObject).add(getArrayBaseOffset(JavaKind.Byte));
-        Word inAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(in, getArrayBaseOffset(JavaKind.Byte) + inOffset));
-        Word outAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(out, getArrayBaseOffset(JavaKind.Byte) + outOffset));
+        Pointer kAddr = Word.objectToTrackedPointer(kObject).add(HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(JavaKind.Int));
+        Pointer rAddr = Word.objectToTrackedPointer(rObject).add(HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(JavaKind.Byte));
+        Word inAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(in, HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(JavaKind.Byte) + inOffset));
+        Word outAddr = WordFactory.unsigned(ComputeObjectAddressNode.get(out, HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(JavaKind.Byte) + outOffset));
         if (encrypt)
         {
-            encryptAESCryptStub(ENCRYPT, inAddr, outAddr, kAddr, rAddr, inLength);
+            encryptAESCryptStub(HotSpotBackend.ENCRYPT, inAddr, outAddr, kAddr, rAddr, inLength);
         }
         else
         {
             if (withOriginalKey)
             {
                 Object lastKeyObject = RawLoadNode.load(aesCipher, AESCryptSubstitutions.lastKeyOffset, JavaKind.Object, LocationIdentity.any());
-                Pointer lastKeyAddr = Word.objectToTrackedPointer(lastKeyObject).add(getArrayBaseOffset(JavaKind.Byte));
-                decryptAESCryptWithOriginalKeyStub(DECRYPT_WITH_ORIGINAL_KEY, inAddr, outAddr, kAddr, rAddr, inLength, lastKeyAddr);
+                Pointer lastKeyAddr = Word.objectToTrackedPointer(lastKeyObject).add(HotSpotJVMCIRuntimeProvider.getArrayBaseOffset(JavaKind.Byte));
+                decryptAESCryptWithOriginalKeyStub(HotSpotBackend.DECRYPT_WITH_ORIGINAL_KEY, inAddr, outAddr, kAddr, rAddr, inLength, lastKeyAddr);
             }
             else
             {
-                decryptAESCryptStub(DECRYPT, inAddr, outAddr, kAddr, rAddr, inLength);
+                decryptAESCryptStub(HotSpotBackend.DECRYPT, inAddr, outAddr, kAddr, rAddr, inLength);
             }
         }
     }

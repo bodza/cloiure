@@ -1,17 +1,16 @@
 package graalvm.compiler.lir.amd64;
 
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.STACK;
-import static jdk.vm.ci.code.ValueUtil.asStackSlot;
-
-import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
-import graalvm.compiler.lir.LIRInstructionClass;
-import graalvm.compiler.lir.Opcode;
-import graalvm.compiler.lir.asm.CompilationResultBuilder;
-
 import jdk.vm.ci.amd64.AMD64Kind;
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.StackSlot;
+import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.meta.AllocatableValue;
+
+import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
+import graalvm.compiler.lir.LIRInstructionClass;
+import graalvm.compiler.lir.Opcode;
+import graalvm.compiler.lir.asm.CompilationResultBuilder;
 
 /**
  * Restores registers from stack slots.
@@ -24,7 +23,7 @@ public class AMD64RestoreRegistersOp extends AMD64LIRInstruction
     /**
      * The slots from which the registers are restored.
      */
-    @Use(STACK) protected final AllocatableValue[] slots;
+    @Use(OperandFlag.STACK) protected final AllocatableValue[] slots;
 
     /**
      * The operation that saved the registers restored by this operation.
@@ -61,7 +60,7 @@ public class AMD64RestoreRegistersOp extends AMD64LIRInstruction
         {
             if (savedRegisters[i] != null)
             {
-                restoreRegister(crb, masm, savedRegisters[i], asStackSlot(slots[i]));
+                restoreRegister(crb, masm, savedRegisters[i], ValueUtil.asStackSlot(slots[i]));
             }
         }
     }

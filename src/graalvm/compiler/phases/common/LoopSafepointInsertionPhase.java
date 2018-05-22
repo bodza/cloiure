@@ -1,7 +1,6 @@
 package graalvm.compiler.phases.common;
 
-import static graalvm.compiler.core.common.GraalOptions.GenLoopSafepoints;
-
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.nodes.LoopBeginNode;
 import graalvm.compiler.nodes.LoopEndNode;
 import graalvm.compiler.nodes.SafepointNode;
@@ -16,7 +15,7 @@ public class LoopSafepointInsertionPhase extends Phase
     @Override
     protected void run(StructuredGraph graph)
     {
-        if (GenLoopSafepoints.getValue(graph.getOptions()))
+        if (GraalOptions.GenLoopSafepoints.getValue(graph.getOptions()))
         {
             for (LoopBeginNode loopBeginNode : graph.getNodes(LoopBeginNode.TYPE))
             {

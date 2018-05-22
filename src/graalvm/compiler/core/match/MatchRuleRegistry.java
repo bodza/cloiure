@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
+
 import graalvm.compiler.core.gen.NodeMatchRules;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Edges;

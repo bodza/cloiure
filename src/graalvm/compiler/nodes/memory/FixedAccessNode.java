@@ -1,5 +1,7 @@
 package graalvm.compiler.nodes.memory;
 
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.IterableNodeType;
 import graalvm.compiler.graph.NodeClass;
@@ -8,7 +10,6 @@ import graalvm.compiler.nodes.DeoptimizingFixedWithNextNode;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.extended.GuardingNode;
 import graalvm.compiler.nodes.memory.address.AddressNode;
-import org.graalvm.word.LocationIdentity;
 
 /**
  * Accesses a value at an memory address specified by an {@linkplain #address address}. The access

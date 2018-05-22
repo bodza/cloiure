@@ -1,13 +1,10 @@
 package graalvm.compiler.loop.phases;
 
-import static graalvm.compiler.core.common.GraalOptions.MaximumDesiredSize;
-import static graalvm.compiler.loop.MathUtil.add;
-import static graalvm.compiler.loop.MathUtil.sub;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.RetryableBailoutException;
 import graalvm.compiler.core.common.calc.CanonicalCondition;
 import graalvm.compiler.debug.GraalError;
@@ -20,6 +17,7 @@ import graalvm.compiler.loop.InductionVariable.Direction;
 import graalvm.compiler.loop.LoopEx;
 import graalvm.compiler.loop.LoopFragmentInside;
 import graalvm.compiler.loop.LoopFragmentWhole;
+import graalvm.compiler.loop.MathUtil;
 import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.AbstractBeginNode;
 import graalvm.compiler.nodes.AbstractEndNode;
@@ -70,7 +68,7 @@ public abstract class LoopTransformations
             peel(loop);
             canonicalizer.applyIncremental(graph, context, mark);
             loop.invalidateFragments();
-            if (graph.getNodeCount() > initialNodeCount + MaximumDesiredSize.getValue(graph.getOptions()) * 2)
+            if (graph.getNodeCount() > initialNodeCount + GraalOptions.MaximumDesiredSize.getValue(graph.getOptions()) * 2)
             {
                 throw new RetryableBailoutException("FullUnroll : Graph seems to grow out of proportion");
             }
@@ -378,7 +376,7 @@ public abstract class LoopTransformations
         }
 
         // Preloop always performs at least one iteration, so remove that from the main loop.
-        ValueNode newLimit = sub(graph, ub, mainStride);
+        ValueNode newLimit = MathUtil.sub(graph, ub, mainStride);
 
         // Re-wire the condition with the new limit
         compareNode.replaceFirstInput(ub, newLimit);
@@ -393,7 +391,7 @@ public abstract class LoopTransformations
         ValueNode prePhi = preIv.valueNode();
         // Make new limit one iteration
         ValueNode initIv = preCounted.getStart();
-        ValueNode newLimit = add(graph, initIv, preIv.strideNode());
+        ValueNode newLimit = MathUtil.add(graph, initIv, preIv.strideNode());
 
         // Fetch the variable we are not replacing and configure the one we are
         ValueNode ub;

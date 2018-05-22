@@ -1,12 +1,11 @@
 package graalvm.compiler.nodes;
 
-import static graalvm.compiler.graph.iterators.NodePredicates.isNotA;
-
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.graph.IterableNodeType;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.iterators.NodeIterable;
+import graalvm.compiler.graph.iterators.NodePredicates;
 import graalvm.compiler.graph.spi.SimplifierTool;
 import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.calc.AddNode;
@@ -149,7 +148,7 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
     @Override
     public NodeIterable<Node> anchored()
     {
-        return super.anchored().filter(isNotA(LoopEndNode.class).nor(LoopExitNode.class));
+        return super.anchored().filter(NodePredicates.isNotA(LoopEndNode.class).nor(LoopExitNode.class));
     }
 
     /**

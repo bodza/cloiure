@@ -1,9 +1,9 @@
 package graalvm.compiler.hotspot.amd64;
 
+import jdk.vm.ci.amd64.AMD64Kind;
+
 import graalvm.compiler.core.amd64.AMD64LIRKindTool;
 import graalvm.compiler.core.common.LIRKind;
-
-import jdk.vm.ci.amd64.AMD64Kind;
 
 public class AMD64HotSpotLIRKindTool extends AMD64LIRKindTool
 {

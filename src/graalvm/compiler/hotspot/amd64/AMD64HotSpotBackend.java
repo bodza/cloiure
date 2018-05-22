@@ -1,14 +1,20 @@
 package graalvm.compiler.hotspot.amd64;
 
-import static jdk.vm.ci.amd64.AMD64.r10;
-import static jdk.vm.ci.amd64.AMD64.rax;
-import static jdk.vm.ci.amd64.AMD64.rsp;
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static graalvm.compiler.core.common.GraalOptions.CanOmitFrame;
-import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
-import static graalvm.compiler.core.common.GraalOptions.ZapStackOnMethodEntry;
+import jdk.vm.ci.amd64.AMD64;
+import jdk.vm.ci.amd64.AMD64Kind;
+import jdk.vm.ci.code.CallingConvention;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.RegisterConfig;
+import jdk.vm.ci.code.StackSlot;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.hotspot.HotSpotCallingConventionType;
+import jdk.vm.ci.hotspot.HotSpotSentinelConstant;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.JavaType;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 import org.graalvm.collections.EconomicSet;
+
 import graalvm.compiler.asm.Assembler;
 import graalvm.compiler.asm.Label;
 import graalvm.compiler.asm.amd64.AMD64Address;
@@ -17,6 +23,7 @@ import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
 import graalvm.compiler.code.CompilationResult;
 import graalvm.compiler.core.amd64.AMD64NodeMatchRules;
 import graalvm.compiler.core.common.CompilationIdentifier;
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.target.Backend;
@@ -44,18 +51,6 @@ import graalvm.compiler.lir.gen.LIRGeneratorTool;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.amd64.AMD64;
-import jdk.vm.ci.amd64.AMD64Kind;
-import jdk.vm.ci.code.CallingConvention;
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.RegisterConfig;
-import jdk.vm.ci.code.StackSlot;
-import jdk.vm.ci.hotspot.HotSpotCallingConventionType;
-import jdk.vm.ci.hotspot.HotSpotSentinelConstant;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.JavaType;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * HotSpot AMD64 specific backend.
@@ -103,7 +98,7 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
     {
         AMD64MacroAssembler asm = (AMD64MacroAssembler) crb.asm;
         int pos = asm.position();
-        asm.movl(new AMD64Address(rsp, -bangOffset), AMD64.rax);
+        asm.movl(new AMD64Address(AMD64.rsp, -bangOffset), AMD64.rax);
     }
 
     /**
@@ -158,18 +153,18 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
                 }
                 if (!isStub && asm.position() == verifiedEntryPointOffset)
                 {
-                    asm.subqWide(rsp, frameSize);
+                    asm.subqWide(AMD64.rsp, frameSize);
                 }
                 else
                 {
-                    asm.decrementq(rsp, frameSize);
+                    asm.decrementq(AMD64.rsp, frameSize);
                 }
-                if (ZapStackOnMethodEntry.getValue(crb.getOptions()))
+                if (GraalOptions.ZapStackOnMethodEntry.getValue(crb.getOptions()))
                 {
                     final int intSize = 4;
                     for (int i = 0; i < frameSize / intSize; ++i)
                     {
-                        asm.movl(new AMD64Address(rsp, i * intSize), 0xC1C1C1C1);
+                        asm.movl(new AMD64Address(AMD64.rsp, i * intSize), 0xC1C1C1C1);
                     }
                 }
             }
@@ -183,7 +178,7 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
                 AMD64MacroAssembler asm = (AMD64MacroAssembler) crb.asm;
 
                 int frameSize = crb.frameMap.frameSize();
-                asm.incrementq(rsp, frameSize);
+                asm.incrementq(AMD64.rsp, frameSize);
             }
         }
     }
@@ -206,7 +201,7 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
         HotSpotLIRGenerationResult gen = (HotSpotLIRGenerationResult) lirGenRen;
         LIR lir = gen.getLIR();
         OptionValues options = lir.getOptions();
-        boolean omitFrame = CanOmitFrame.getValue(options) && !frameMap.frameNeedsAllocating() && !lir.hasArgInCallerFrame() && !gen.hasForeignCall();
+        boolean omitFrame = GraalOptions.CanOmitFrame.getValue(options) && !frameMap.frameNeedsAllocating() && !lir.hasArgInCallerFrame() && !gen.hasForeignCall();
 
         Stub stub = gen.getStub();
         Assembler masm = createAssembler(frameMap);
@@ -260,16 +255,16 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
         {
             crb.recordMark(config.MARKID_UNVERIFIED_ENTRY);
             CallingConvention cc = regConfig.getCallingConvention(HotSpotCallingConventionType.JavaCallee, null, new JavaType[]{providers.getMetaAccess().lookupJavaType(Object.class)}, this);
-            Register inlineCacheKlass = rax; // see definition of IC_Klass in
+            Register inlineCacheKlass = AMD64.rax; // see definition of IC_Klass in
                                              // c1_LIRAssembler_x86.cpp
-            Register receiver = asRegister(cc.getArgument(0));
+            Register receiver = ValueUtil.asRegister(cc.getArgument(0));
             AMD64Address src = new AMD64Address(receiver, config.hubOffset);
 
             if (config.useCompressedClassPointers)
             {
-                Register register = r10;
+                Register register = AMD64.r10;
                 AMD64HotSpotMove.decodeKlassPointer(crb, asm, register, providers.getRegisters().getHeapBaseRegister(), src, config);
-                if (GeneratePIC.getValue(crb.getOptions()))
+                if (GraalOptions.GeneratePIC.getValue(crb.getOptions()))
                 {
                     asm.movq(providers.getRegisters().getHeapBaseRegister(), asm.getPlaceholder(-1));
                     crb.recordMark(config.MARKID_NARROW_OOP_BASE_ADDRESS);
@@ -296,7 +291,7 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
         asm.bind(verifiedEntry);
         crb.recordMark(config.MARKID_VERIFIED_ENTRY);
 
-        if (GeneratePIC.getValue(crb.getOptions()))
+        if (GraalOptions.GeneratePIC.getValue(crb.getOptions()))
         {
             // Check for method state
             HotSpotFrameContext frameContext = (HotSpotFrameContext) crb.frameContext;

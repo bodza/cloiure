@@ -1,5 +1,7 @@
 package graalvm.compiler.nodes.java;
 
+import jdk.vm.ci.code.BailoutException;
+
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodeinfo.InputType;
@@ -8,8 +10,6 @@ import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.memory.AbstractMemoryCheckpoint;
 import graalvm.compiler.nodes.memory.MemoryCheckpoint;
-
-import jdk.vm.ci.code.BailoutException;
 
 /**
  * The {@code AccessMonitorNode} is the base class of both monitor acquisition and release.

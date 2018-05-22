@@ -1,9 +1,9 @@
 package graalvm.compiler.lir.alloc.trace;
 
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.STACK;
-
 import java.util.EnumSet;
+
+import jdk.vm.ci.code.RegisterValue;
+import jdk.vm.ci.meta.AllocatableValue;
 
 import graalvm.compiler.lir.CompositeValue;
 import graalvm.compiler.lir.InstructionValueConsumer;
@@ -12,19 +12,16 @@ import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstruction.OperandMode;
 
-import jdk.vm.ci.code.RegisterValue;
-import jdk.vm.ci.meta.AllocatableValue;
-
 /**
  * Represents a {@link #register} which has a shadow copy on the {@link #stackslot stack}.
  */
 public final class ShadowedRegisterValue extends CompositeValue
 {
-    private static final EnumSet<OperandFlag> registerFlags = EnumSet.of(REG);
-    private static final EnumSet<OperandFlag> stackslotFlags = EnumSet.of(STACK);
+    private static final EnumSet<OperandFlag> registerFlags = EnumSet.of(OperandFlag.REG);
+    private static final EnumSet<OperandFlag> stackslotFlags = EnumSet.of(OperandFlag.STACK);
 
-    @Component({REG}) protected RegisterValue register;
-    @Component({STACK}) protected AllocatableValue stackslot;
+    @Component({OperandFlag.REG}) protected RegisterValue register;
+    @Component({OperandFlag.STACK}) protected AllocatableValue stackslot;
 
     public ShadowedRegisterValue(RegisterValue register, AllocatableValue stackslot)
     {

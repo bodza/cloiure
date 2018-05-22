@@ -1,12 +1,15 @@
 package graalvm.compiler.replacements.nodes;
 
-import static graalvm.compiler.nodeinfo.InputType.Memory;
-import static graalvm.compiler.nodeinfo.InputType.State;
-import static org.graalvm.word.LocationIdentity.any;
+import jdk.vm.ci.code.BytecodeFrame;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
+import org.graalvm.word.LocationIdentity;
 
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeInputList;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.DeoptimizingNode;
 import graalvm.compiler.nodes.FrameState;
@@ -25,11 +28,6 @@ import graalvm.compiler.nodes.spi.VirtualizerTool;
 import graalvm.compiler.nodes.type.StampTool;
 import graalvm.compiler.nodes.virtual.VirtualArrayNode;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.code.BytecodeFrame;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 public class BasicArrayCopyNode extends AbstractMemoryCheckpoint implements Virtualizable, MemoryCheckpoint.Single, MemoryAccess, Lowerable, DeoptimizingNode.DeoptDuring
 {
@@ -43,9 +41,9 @@ public class BasicArrayCopyNode extends AbstractMemoryCheckpoint implements Virt
 
     @Input NodeInputList<ValueNode> args;
 
-    @OptionalInput(State) FrameState stateDuring;
+    @OptionalInput(InputType.State) FrameState stateDuring;
 
-    @OptionalInput(Memory) protected MemoryNode lastLocationAccess;
+    @OptionalInput(InputType.Memory) protected MemoryNode lastLocationAccess;
 
     protected JavaKind elementKind;
 
@@ -109,7 +107,7 @@ public class BasicArrayCopyNode extends AbstractMemoryCheckpoint implements Virt
         {
             return NamedLocationIdentity.getArrayLocation(elementKind);
         }
-        return any();
+        return LocationIdentity.any();
     }
 
     @Override

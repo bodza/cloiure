@@ -1,17 +1,17 @@
 package graalvm.compiler.nodes.spi;
 
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.DeoptimizationAction;
+import jdk.vm.ci.meta.DeoptimizationReason;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.MetaAccessProvider;
+
 import graalvm.compiler.core.common.spi.ConstantFieldProvider;
 import graalvm.compiler.nodes.FixedNode;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.LogicNode;
 import graalvm.compiler.nodes.extended.AnchoringNode;
 import graalvm.compiler.nodes.extended.GuardingNode;
-
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.DeoptimizationAction;
-import jdk.vm.ci.meta.DeoptimizationReason;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.MetaAccessProvider;
 
 public interface LoweringTool
 {

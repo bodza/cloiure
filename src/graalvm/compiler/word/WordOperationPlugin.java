@@ -1,10 +1,17 @@
 package graalvm.compiler.word;
 
-import static graalvm.compiler.nodes.ConstantNode.forInt;
-import static graalvm.compiler.nodes.ConstantNode.forIntegerKind;
-import static org.graalvm.word.LocationIdentity.any;
-
 import java.lang.reflect.Constructor;
+
+import jdk.vm.ci.code.BailoutException;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.JavaType;
+import jdk.vm.ci.meta.JavaTypeProfile;
+import jdk.vm.ci.meta.ResolvedJavaField;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
+import org.graalvm.word.LocationIdentity;
+import org.graalvm.word.impl.WordFactoryOperation;
 
 import graalvm.compiler.api.replacements.SnippetReflectionProvider;
 import graalvm.compiler.bytecode.BridgeMethodUtils;
@@ -47,16 +54,6 @@ import graalvm.compiler.nodes.memory.address.OffsetAddressNode;
 import graalvm.compiler.nodes.type.StampTool;
 import graalvm.compiler.word.Word.Opcode;
 import graalvm.compiler.word.Word.Operation;
-import org.graalvm.word.LocationIdentity;
-import org.graalvm.word.impl.WordFactoryOperation;
-
-import jdk.vm.ci.code.BailoutException;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.JavaType;
-import jdk.vm.ci.meta.JavaTypeProfile;
-import jdk.vm.ci.meta.ResolvedJavaField;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * A plugin for calls to {@linkplain Operation word operations}, as well as all other nodes that
@@ -271,7 +268,7 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
             switch (factoryOperation.opcode())
             {
                 case ZERO:
-                    b.addPush(returnKind, forIntegerKind(wordKind, 0L));
+                    b.addPush(returnKind, ConstantNode.forIntegerKind(wordKind, 0L));
                     return;
 
                 case FROM_UNSIGNED:
@@ -311,7 +308,7 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
                 break;
 
             case NOT:
-                b.addPush(returnKind, new XorNode(args[0], b.add(forIntegerKind(wordKind, -1))));
+                b.addPush(returnKind, new XorNode(args[0], b.add(ConstantNode.forIntegerKind(wordKind, -1))));
                 break;
 
             case READ_POINTER:
@@ -323,7 +320,7 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
                 LocationIdentity location;
                 if (args.length == 2)
                 {
-                    location = any();
+                    location = LocationIdentity.any();
                 }
                 else
                 {
@@ -337,7 +334,7 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
                 JavaKind readKind = wordTypes.asKind(wordMethod.getSignature().getReturnType(wordMethod.getDeclaringClass()));
                 AddressNode address = makeAddress(b, args[0], args[1]);
                 BarrierType barrierType = snippetReflection.asObject(BarrierType.class, args[2].asJavaConstant());
-                b.push(returnKind, readOp(b, readKind, address, any(), barrierType, true));
+                b.push(returnKind, readOp(b, readKind, address, LocationIdentity.any(), barrierType, true));
                 break;
             }
             case WRITE_POINTER:
@@ -350,7 +347,7 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
                 LocationIdentity location;
                 if (args.length == 3)
                 {
-                    location = any();
+                    location = LocationIdentity.any();
                 }
                 else
                 {
@@ -440,8 +437,8 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
             comparison = new IntegerLessThanNode(a, b);
         }
 
-        ConstantNode trueValue = graph.add(forInt(1));
-        ConstantNode falseValue = graph.add(forInt(0));
+        ConstantNode trueValue = graph.add(ConstantNode.forInt(1));
+        ConstantNode falseValue = graph.add(ConstantNode.forInt(0));
 
         if (canonical.mustNegate())
         {

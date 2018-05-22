@@ -1,10 +1,9 @@
 package graalvm.compiler.lir.amd64;
 
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.ILLEGAL;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.STACK;
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
+import jdk.vm.ci.amd64.AMD64;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.asm.amd64.AMD64Address;
 import graalvm.compiler.asm.amd64.AMD64Assembler.AMD64MOp;
@@ -12,13 +11,10 @@ import graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize;
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.lir.LIRFrameState;
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
-
-import jdk.vm.ci.amd64.AMD64;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Value;
 
 /**
  * AMD64 mul/div operation. This operation has a single operand for the second input. The first
@@ -31,13 +27,13 @@ public class AMD64MulDivOp extends AMD64LIRInstruction
     @Opcode private final AMD64MOp opcode;
     private final OperandSize size;
 
-    @Def({REG}) protected AllocatableValue highResult;
-    @Def({REG}) protected AllocatableValue lowResult;
+    @Def({OperandFlag.REG}) protected AllocatableValue highResult;
+    @Def({OperandFlag.REG}) protected AllocatableValue lowResult;
 
-    @Use({REG, ILLEGAL}) protected AllocatableValue highX;
-    @Use({REG}) protected AllocatableValue lowX;
+    @Use({OperandFlag.REG, OperandFlag.ILLEGAL}) protected AllocatableValue highX;
+    @Use({OperandFlag.REG}) protected AllocatableValue lowX;
 
-    @Use({REG, STACK}) protected AllocatableValue y;
+    @Use({OperandFlag.REG, OperandFlag.STACK}) protected AllocatableValue y;
 
     @State protected LIRFrameState state;
 
@@ -90,9 +86,9 @@ public class AMD64MulDivOp extends AMD64LIRInstruction
         {
             crb.recordImplicitException(masm.position(), state);
         }
-        if (isRegister(y))
+        if (ValueUtil.isRegister(y))
         {
-            opcode.emit(masm, size, asRegister(y));
+            opcode.emit(masm, size, ValueUtil.asRegister(y));
         }
         else
         {

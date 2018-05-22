@@ -3,11 +3,11 @@ package graalvm.compiler.phases;
 import java.util.EnumSet;
 import java.util.Set;
 
-import graalvm.compiler.core.common.GraalOptions;
-import graalvm.compiler.options.OptionValues;
-
 import jdk.vm.ci.meta.DeoptimizationReason;
 import jdk.vm.ci.meta.ProfilingInfo;
+
+import graalvm.compiler.core.common.GraalOptions;
+import graalvm.compiler.options.OptionValues;
 
 public final class OptimisticOptimizations
 {

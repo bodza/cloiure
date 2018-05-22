@@ -1,11 +1,6 @@
 package graalvm.compiler.hotspot.stubs;
 
-import static graalvm.compiler.hotspot.nodes.JumpToExceptionHandlerNode.jumpToExceptionHandler;
-import static graalvm.compiler.hotspot.nodes.PatchReturnAddressNode.patchReturnAddress;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.registerAsWord;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.writeExceptionOop;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.writeExceptionPc;
-import static graalvm.compiler.hotspot.stubs.StubUtil.newDescriptor;
+import jdk.vm.ci.code.Register;
 
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
@@ -16,11 +11,13 @@ import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
 import graalvm.compiler.hotspot.HotSpotBackend;
 import graalvm.compiler.hotspot.HotSpotForeignCallLinkage;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
+import graalvm.compiler.hotspot.nodes.JumpToExceptionHandlerNode;
+import graalvm.compiler.hotspot.nodes.PatchReturnAddressNode;
 import graalvm.compiler.hotspot.nodes.StubForeignCallNode;
+import graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil;
+import graalvm.compiler.hotspot.stubs.StubUtil;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.word.Word;
-
-import jdk.vm.ci.code.Register;
 
 /**
  * Stub called by the {@linkplain GraalHotSpotVMConfig#MARKID_EXCEPTION_HANDLER_ENTRY exception
@@ -61,20 +58,20 @@ public class ExceptionHandlerStub extends SnippetStub
     @Snippet
     private static void exceptionHandler(Object exception, Word exceptionPc, @ConstantParameter Register threadRegister, @ConstantParameter OptionValues options)
     {
-        Word thread = registerAsWord(threadRegister);
-        writeExceptionOop(thread, exception);
-        writeExceptionPc(thread, exceptionPc);
+        Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
+        HotSpotReplacementsUtil.writeExceptionOop(thread, exception);
+        HotSpotReplacementsUtil.writeExceptionPc(thread, exceptionPc);
 
         // patch throwing pc into return address so that deoptimization finds the right debug info
-        patchReturnAddress(exceptionPc);
+        PatchReturnAddressNode.patchReturnAddress(exceptionPc);
 
         Word handlerPc = exceptionHandlerForPc(EXCEPTION_HANDLER_FOR_PC, thread);
 
         // patch the return address so that this stub returns to the exception handler
-        jumpToExceptionHandler(handlerPc);
+        JumpToExceptionHandlerNode.jumpToExceptionHandler(handlerPc);
     }
 
-    public static final ForeignCallDescriptor EXCEPTION_HANDLER_FOR_PC = newDescriptor(ExceptionHandlerStub.class, "exceptionHandlerForPc", Word.class, Word.class);
+    public static final ForeignCallDescriptor EXCEPTION_HANDLER_FOR_PC = StubUtil.newDescriptor(ExceptionHandlerStub.class, "exceptionHandlerForPc", Word.class, Word.class);
 
     @NodeIntrinsic(value = StubForeignCallNode.class)
     public static native Word exceptionHandlerForPc(@ConstantNodeParameter ForeignCallDescriptor exceptionHandlerForPc, Word thread);

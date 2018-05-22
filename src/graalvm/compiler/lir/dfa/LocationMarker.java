@@ -3,6 +3,10 @@ package graalvm.compiler.lir.dfa;
 import java.util.ArrayList;
 import java.util.EnumSet;
 
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.meta.PlatformKind;
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.core.common.cfg.BlockMap;
@@ -15,10 +19,6 @@ import graalvm.compiler.lir.LIRInstruction.OperandMode;
 import graalvm.compiler.lir.ValueConsumer;
 import graalvm.compiler.lir.framemap.FrameMap;
 import graalvm.compiler.lir.util.ValueSet;
-
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.meta.PlatformKind;
-import jdk.vm.ci.meta.Value;
 
 public abstract class LocationMarker<S extends ValueSet<S>>
 {

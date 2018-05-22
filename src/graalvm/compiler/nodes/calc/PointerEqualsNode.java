@@ -1,5 +1,11 @@
 package graalvm.compiler.nodes.calc;
 
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+import jdk.vm.ci.meta.TriState;
+
 import graalvm.compiler.core.common.calc.CanonicalCondition;
 import graalvm.compiler.core.common.type.AbstractPointerStamp;
 import graalvm.compiler.core.common.type.ObjectStamp;
@@ -17,12 +23,6 @@ import graalvm.compiler.nodes.extended.LoadMethodNode;
 import graalvm.compiler.nodes.type.StampTool;
 import graalvm.compiler.nodes.util.GraphUtil;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
-import jdk.vm.ci.meta.TriState;
 
 public class PointerEqualsNode extends CompareNode implements BinaryCommutative<ValueNode>
 {

@@ -1,21 +1,14 @@
 package graalvm.compiler.asm.amd64;
 
-import static jdk.vm.ci.amd64.AMD64.rax;
-import static jdk.vm.ci.amd64.AMD64.rcx;
-import static jdk.vm.ci.amd64.AMD64.rdx;
-import static jdk.vm.ci.amd64.AMD64.rsp;
-import static graalvm.compiler.asm.amd64.AMD64AsmOptions.UseIncDec;
-import static graalvm.compiler.asm.amd64.AMD64AsmOptions.UseXmmLoadAndClearUpper;
-import static graalvm.compiler.asm.amd64.AMD64AsmOptions.UseXmmRegToRegMoveAll;
-
-import graalvm.compiler.asm.Label;
-import graalvm.compiler.asm.amd64.AMD64Address.Scale;
-import graalvm.compiler.core.common.NumUtil;
-
 import jdk.vm.ci.amd64.AMD64;
 import jdk.vm.ci.amd64.AMD64Kind;
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.TargetDescription;
+
+import graalvm.compiler.asm.Label;
+import graalvm.compiler.asm.amd64.AMD64Address.Scale;
+import graalvm.compiler.asm.amd64.AMD64AsmOptions;
+import graalvm.compiler.core.common.NumUtil;
 
 /**
  * This class implements commonly used X86 code patterns.
@@ -43,7 +36,7 @@ public class AMD64MacroAssembler extends AMD64Assembler
         {
             return;
         }
-        if (value == 1 && UseIncDec)
+        if (value == 1 && AMD64AsmOptions.UseIncDec)
         {
             decq(reg);
         }
@@ -69,7 +62,7 @@ public class AMD64MacroAssembler extends AMD64Assembler
         {
             return;
         }
-        if (value == 1 && UseIncDec)
+        if (value == 1 && AMD64AsmOptions.UseIncDec)
         {
             decq(dst);
         }
@@ -95,7 +88,7 @@ public class AMD64MacroAssembler extends AMD64Assembler
         {
             return;
         }
-        if (value == 1 && UseIncDec)
+        if (value == 1 && AMD64AsmOptions.UseIncDec)
         {
             incq(reg);
         }
@@ -121,7 +114,7 @@ public class AMD64MacroAssembler extends AMD64Assembler
         {
             return;
         }
-        if (value == 1 && UseIncDec)
+        if (value == 1 && AMD64AsmOptions.UseIncDec)
         {
             incq(dst);
         }
@@ -177,7 +170,7 @@ public class AMD64MacroAssembler extends AMD64Assembler
         {
             return;
         }
-        if (value == 1 && UseIncDec)
+        if (value == 1 && AMD64AsmOptions.UseIncDec)
         {
             decl(reg);
         }
@@ -203,7 +196,7 @@ public class AMD64MacroAssembler extends AMD64Assembler
         {
             return;
         }
-        if (value == 1 && UseIncDec)
+        if (value == 1 && AMD64AsmOptions.UseIncDec)
         {
             decl(dst);
         }
@@ -229,7 +222,7 @@ public class AMD64MacroAssembler extends AMD64Assembler
         {
             return;
         }
-        if (value == 1 && UseIncDec)
+        if (value == 1 && AMD64AsmOptions.UseIncDec)
         {
             incl(reg);
         }
@@ -255,7 +248,7 @@ public class AMD64MacroAssembler extends AMD64Assembler
         {
             return;
         }
-        if (value == 1 && UseIncDec)
+        if (value == 1 && AMD64AsmOptions.UseIncDec)
         {
             incl(dst);
         }
@@ -267,7 +260,7 @@ public class AMD64MacroAssembler extends AMD64Assembler
 
     public void movflt(Register dst, Register src)
     {
-        if (UseXmmRegToRegMoveAll)
+        if (AMD64AsmOptions.UseXmmRegToRegMoveAll)
         {
             movaps(dst, src);
         }
@@ -289,7 +282,7 @@ public class AMD64MacroAssembler extends AMD64Assembler
 
     public void movdbl(Register dst, Register src)
     {
-        if (UseXmmRegToRegMoveAll)
+        if (AMD64AsmOptions.UseXmmRegToRegMoveAll)
         {
             movapd(dst, src);
         }
@@ -301,7 +294,7 @@ public class AMD64MacroAssembler extends AMD64Assembler
 
     public void movdbl(Register dst, AMD64Address src)
     {
-        if (UseXmmLoadAndClearUpper)
+        if (AMD64AsmOptions.UseXmmLoadAndClearUpper)
         {
             movsd(dst, src);
         }
@@ -605,7 +598,7 @@ public class AMD64MacroAssembler extends AMD64Assembler
         Label copySubstr = new Label();
         Label copyStr = new Label();
 
-        movq(tmp, rsp); // save old SP
+        movq(tmp, AMD64.rsp); // save old SP
 
         if (intCnt2 > 0) {     // small (< 8 chars) constant substring
             if (intCnt2 == 1) {  // One char
@@ -638,18 +631,18 @@ public class AMD64MacroAssembler extends AMD64Assembler
             jccb(ConditionFlag.BelowEqual, checkStr);
 
             // Move small strings to stack to allow load 16 bytes into vec.
-            subq(rsp, 16);
+            subq(AMD64.rsp, 16);
             int stackOffset = wordSize - 2;
             push(cnt2);
 
             bind(copySubstr);
             movzwl(result, new AMD64Address(str2, cnt2, Scale.Times2, -2));
-            movw(new AMD64Address(rsp, cnt2, Scale.Times2, stackOffset), result);
+            movw(new AMD64Address(AMD64.rsp, cnt2, Scale.Times2, stackOffset), result);
             decrementl(cnt2, 1);
             jccb(ConditionFlag.NotZero, copySubstr);
 
             pop(cnt2);
-            movq(str2, rsp);  // New substring address
+            movq(str2, AMD64.rsp);  // New substring address
         } // non constant
 
         bind(checkStr);
@@ -662,7 +655,7 @@ public class AMD64MacroAssembler extends AMD64Assembler
         cmpl(result, (vmPageSize - 16));
         jccb(ConditionFlag.BelowEqual, bigStrings);
 
-        subq(rsp, 16);
+        subq(AMD64.rsp, 16);
         int stackOffset = -2;
         if (intCnt2 < 0) { // not constant
             push(cnt2);
@@ -672,14 +665,14 @@ public class AMD64MacroAssembler extends AMD64Assembler
 
         bind(copyStr);
         movzwl(result, new AMD64Address(str1, cnt2, Scale.Times2, -2));
-        movw(new AMD64Address(rsp, cnt2, Scale.Times2, stackOffset), result);
+        movw(new AMD64Address(AMD64.rsp, cnt2, Scale.Times2, stackOffset), result);
         decrementl(cnt2, 1);
         jccb(ConditionFlag.NotZero, copyStr);
 
         if (intCnt2 < 0) { // not constant
             pop(cnt2);
         }
-        movq(str1, rsp);  // New string address
+        movq(str1, AMD64.rsp);  // New string address
 
         bind(bigStrings);
         // Load substring.
@@ -713,8 +706,8 @@ public class AMD64MacroAssembler extends AMD64Assembler
             // Reload substr for rescan, this code
             // is executed only for large substrings (> 8 chars)
             bind(reloadSubstr);
-            movq(str2, new AMD64Address(rsp, 2 * wordSize));
-            movl(cnt2, new AMD64Address(rsp, 3 * wordSize));
+            movq(str2, new AMD64Address(AMD64.rsp, 2 * wordSize));
+            movl(cnt2, new AMD64Address(AMD64.rsp, 3 * wordSize));
             movdqu(vec, new AMD64Address(str2, 0));
             // We came here after the beginning of the substring was
             // matched but the rest of it was not so we need to search
@@ -819,7 +812,7 @@ public class AMD64MacroAssembler extends AMD64Assembler
             jmpb(scanSubstr);
 
             bind(retFoundLong);
-            movq(str1, new AMD64Address(rsp, wordSize));
+            movq(str1, new AMD64Address(AMD64.rsp, wordSize));
         } // non constant
 
         bind(retFound);
@@ -828,6 +821,6 @@ public class AMD64MacroAssembler extends AMD64Assembler
         shrl(result, 1); // index
 
         bind(cleanup);
-        pop(rsp); // restore SP
+        pop(AMD64.rsp); // restore SP
     }
 }

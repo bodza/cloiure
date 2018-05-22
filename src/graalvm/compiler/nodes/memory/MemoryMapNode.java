@@ -1,9 +1,5 @@
 package graalvm.compiler.nodes.memory;
 
-import static graalvm.compiler.nodeinfo.InputType.Extension;
-import static graalvm.compiler.nodeinfo.InputType.Memory;
-import static org.graalvm.word.LocationIdentity.any;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -11,21 +7,23 @@ import java.util.List;
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 import org.graalvm.collections.MapCursor;
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeInputList;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.StartNode;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.FloatingNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-import org.graalvm.word.LocationIdentity;
 
 public final class MemoryMapNode extends FloatingNode implements MemoryMap, MemoryNode, LIRLowerable
 {
     public static final NodeClass<MemoryMapNode> TYPE = NodeClass.create(MemoryMapNode.class);
     protected final List<LocationIdentity> locationIdentities;
-    @Input(Memory) NodeInputList<ValueNode> nodes;
+    @Input(InputType.Memory) NodeInputList<ValueNode> nodes;
 
     public MemoryMapNode(EconomicMap<LocationIdentity, MemoryNode> mmap)
     {
@@ -71,7 +69,7 @@ public final class MemoryMapNode extends FloatingNode implements MemoryMap, Memo
             int index = locationIdentities.indexOf(locationIdentity);
             if (index == -1)
             {
-                index = locationIdentities.indexOf(any());
+                index = locationIdentities.indexOf(LocationIdentity.any());
             }
             return (MemoryNode) nodes.get(index);
         }

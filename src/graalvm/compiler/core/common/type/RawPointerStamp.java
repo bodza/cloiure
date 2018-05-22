@@ -1,14 +1,14 @@
 package graalvm.compiler.core.common.type;
 
-import graalvm.compiler.core.common.LIRKind;
-import graalvm.compiler.core.common.spi.LIRKindTool;
-import graalvm.compiler.debug.GraalError;
-
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.MemoryAccessProvider;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.PrimitiveConstant;
 import jdk.vm.ci.meta.ResolvedJavaType;
+
+import graalvm.compiler.core.common.LIRKind;
+import graalvm.compiler.core.common.spi.LIRKindTool;
+import graalvm.compiler.debug.GraalError;
 
 /**
  * Type describing pointers to raw memory. This stamp is used for example for direct pointers to

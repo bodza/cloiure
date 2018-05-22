@@ -1,18 +1,16 @@
 package graalvm.compiler.lir.amd64;
 
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-
 import java.util.BitSet;
-
-import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
-import graalvm.compiler.lir.LIRInstructionClass;
-import graalvm.compiler.lir.asm.CompilationResultBuilder;
 
 import jdk.vm.ci.amd64.AMD64;
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.RegisterValue;
+import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.meta.Value;
+
+import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
+import graalvm.compiler.lir.LIRInstructionClass;
+import graalvm.compiler.lir.asm.CompilationResultBuilder;
 
 public class AMD64VZeroUpper extends AMD64LIRInstruction
 {
@@ -34,9 +32,9 @@ public class AMD64VZeroUpper extends AMD64LIRInstruction
         {
             for (Value value : exclude)
             {
-                if (isRegister(value) && asRegister(value).getRegisterCategory().equals(AMD64.XMM))
+                if (ValueUtil.isRegister(value) && ValueUtil.asRegister(value).getRegisterCategory().equals(AMD64.XMM))
                 {
-                    skippedRegs.set(asRegister(value).number);
+                    skippedRegs.set(ValueUtil.asRegister(value).number);
                     numSkipped++;
                 }
             }

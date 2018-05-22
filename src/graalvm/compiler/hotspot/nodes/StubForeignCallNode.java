@@ -1,8 +1,10 @@
 package graalvm.compiler.hotspot.nodes;
 
-import static graalvm.compiler.nodeinfo.InputType.Memory;
-
 import java.util.Arrays;
+
+import jdk.vm.ci.meta.Value;
+
+import org.graalvm.word.LocationIdentity;
 
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.core.common.spi.ForeignCallLinkage;
@@ -11,15 +13,13 @@ import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeInputList;
 import graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.memory.MemoryCheckpoint;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.meta.Value;
 
 /**
  * Node for a {@linkplain ForeignCallDescriptor foreign} call from within a stub.

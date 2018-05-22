@@ -2,6 +2,8 @@ package graalvm.compiler.nodes.calc;
 
 import java.nio.ByteOrder;
 
+import jdk.vm.ci.meta.JavaKind;
+
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
@@ -11,8 +13,6 @@ import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
-
-import jdk.vm.ci.meta.JavaKind;
 
 /**
  * Produces the platform dependent first or second half of a long or double value as an int.

@@ -1,10 +1,11 @@
 package graalvm.compiler.hotspot.nodes;
 
-import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
-import static graalvm.compiler.hotspot.GraalHotSpotVMConfig.INJECTED_VMCONFIG;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.api.replacements.Fold;
 import graalvm.compiler.api.replacements.Fold.InjectedParameter;
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node;
@@ -17,9 +18,6 @@ import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.calc.FloatingNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Represents {@link GraalHotSpotVMConfig} values that may change after compilation.
@@ -87,7 +85,7 @@ public class GraalHotSpotVMConfigNode extends FloatingNode implements LIRLowerab
 
     public static long cardTableAddress()
     {
-        return loadLongConfigValue(cardTableAddressMark(INJECTED_VMCONFIG));
+        return loadLongConfigValue(cardTableAddressMark(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
     }
 
     public static boolean isCardTableAddressConstant()
@@ -97,27 +95,27 @@ public class GraalHotSpotVMConfigNode extends FloatingNode implements LIRLowerab
 
     public static long heapTopAddress()
     {
-        return loadLongConfigValue(heapTopAddressMark(INJECTED_VMCONFIG));
+        return loadLongConfigValue(heapTopAddressMark(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
     }
 
     public static long heapEndAddress()
     {
-        return loadLongConfigValue(heapEndAddressMark(INJECTED_VMCONFIG));
+        return loadLongConfigValue(heapEndAddressMark(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
     }
 
     public static long crcTableAddress()
     {
-        return loadLongConfigValue(crcTableAddressMark(INJECTED_VMCONFIG));
+        return loadLongConfigValue(crcTableAddressMark(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
     }
 
     public static int logOfHeapRegionGrainBytes()
     {
-        return loadIntConfigValue(logOfHeapRegionGrainBytesMark(INJECTED_VMCONFIG));
+        return loadIntConfigValue(logOfHeapRegionGrainBytesMark(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
     }
 
     public static boolean inlineContiguousAllocationSupported()
     {
-        return loadByteConfigValue(inlineContiguousAllocationSupportedMark(INJECTED_VMCONFIG)) != 0;
+        return loadByteConfigValue(inlineContiguousAllocationSupportedMark(GraalHotSpotVMConfig.INJECTED_VMCONFIG)) != 0;
     }
 
     @Fold
@@ -161,9 +159,9 @@ public class GraalHotSpotVMConfigNode extends FloatingNode implements LIRLowerab
     {
         if (markId == 0)
         {
-            return ConstantNode.forBoolean(!GeneratePIC.getValue(tool.getOptions()));
+            return ConstantNode.forBoolean(!GraalOptions.GeneratePIC.getValue(tool.getOptions()));
         }
-        if (!GeneratePIC.getValue(tool.getOptions()))
+        if (!GraalOptions.GeneratePIC.getValue(tool.getOptions()))
         {
             if (markId == config.MARKID_CARD_TABLE_ADDRESS)
             {

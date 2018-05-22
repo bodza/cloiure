@@ -1,5 +1,7 @@
 package graalvm.compiler.hotspot.nodes;
 
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.hotspot.HotSpotLIRGenerator;
@@ -9,8 +11,6 @@ import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.word.Word;
 import graalvm.compiler.word.WordTypes;
-
-import jdk.vm.ci.meta.Value;
 
 /**
  * Intrinsic for getting the lock in the current {@linkplain BeginLockScopeNode lock scope}.

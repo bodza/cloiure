@@ -1,7 +1,11 @@
 package graalvm.compiler.hotspot;
 
+import jdk.vm.ci.code.CallingConvention;
+import jdk.vm.ci.code.StackSlot;
+
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
+
 import graalvm.compiler.core.common.CompilationIdentifier;
 import graalvm.compiler.hotspot.stubs.Stub;
 import graalvm.compiler.lir.LIR;
@@ -9,9 +13,6 @@ import graalvm.compiler.lir.LIRFrameState;
 import graalvm.compiler.lir.StandardOp.SaveRegistersOp;
 import graalvm.compiler.lir.framemap.FrameMapBuilder;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
-
-import jdk.vm.ci.code.CallingConvention;
-import jdk.vm.ci.code.StackSlot;
 
 public class HotSpotLIRGenerationResult extends LIRGenerationResult
 {

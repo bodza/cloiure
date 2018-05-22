@@ -1,5 +1,8 @@
 package graalvm.compiler.nodes.calc;
 
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.core.common.type.ArithmeticOpTable;
 import graalvm.compiler.core.common.type.ArithmeticOpTable.BinaryOp;
 import graalvm.compiler.core.common.type.ArithmeticOpTable.BinaryOp.Add;
@@ -12,9 +15,6 @@ import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.Value;
 
 public class AddNode extends BinaryArithmeticNode<Add> implements NarrowableArithmeticNode, BinaryCommutative<ValueNode>
 {

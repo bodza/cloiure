@@ -11,13 +11,6 @@ import java.util.Map;
 import java.util.stream.Stream;
 import java.util.stream.Stream.Builder;
 
-import graalvm.compiler.code.CompilationResult;
-import graalvm.compiler.code.CompilationResult.CodeAnnotation;
-import graalvm.compiler.code.CompilationResult.CodeComment;
-import graalvm.compiler.code.CompilationResult.JumpTable;
-import graalvm.compiler.code.DataSection;
-import graalvm.compiler.debug.GraalError;
-
 import jdk.vm.ci.code.CodeCacheProvider;
 import jdk.vm.ci.code.StackSlot;
 import jdk.vm.ci.code.site.ConstantReference;
@@ -33,6 +26,13 @@ import jdk.vm.ci.hotspot.HotSpotCompiledNmethod;
 import jdk.vm.ci.hotspot.HotSpotResolvedJavaMethod;
 import jdk.vm.ci.meta.Assumptions.Assumption;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
+
+import graalvm.compiler.code.CompilationResult;
+import graalvm.compiler.code.CompilationResult.CodeAnnotation;
+import graalvm.compiler.code.CompilationResult.CodeComment;
+import graalvm.compiler.code.CompilationResult.JumpTable;
+import graalvm.compiler.code.DataSection;
+import graalvm.compiler.debug.GraalError;
 
 public class HotSpotCompiledCodeBuilder
 {

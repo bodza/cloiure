@@ -1,25 +1,21 @@
 package graalvm.compiler.lir;
 
-import static graalvm.compiler.lir.LIRValueUtil.isVirtualStackSlot;
-import static jdk.vm.ci.code.ValueUtil.asAllocatableValue;
-import static jdk.vm.ci.code.ValueUtil.isConstantJavaValue;
-import static jdk.vm.ci.code.ValueUtil.isIllegalJavaValue;
-import static jdk.vm.ci.code.ValueUtil.isVirtualObject;
-
 import java.util.EnumSet;
-
-import graalvm.compiler.lir.LIRInstruction.OperandFlag;
-import graalvm.compiler.lir.LIRInstruction.OperandMode;
-import graalvm.compiler.lir.framemap.FrameMap;
-import graalvm.compiler.lir.util.IndexedValueMap;
 
 import jdk.vm.ci.code.BytecodeFrame;
 import jdk.vm.ci.code.DebugInfo;
 import jdk.vm.ci.code.StackLockValue;
+import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.code.VirtualObject;
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.JavaValue;
 import jdk.vm.ci.meta.Value;
+
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
+import graalvm.compiler.lir.LIRInstruction.OperandMode;
+import graalvm.compiler.lir.LIRValueUtil;
+import graalvm.compiler.lir.framemap.FrameMap;
+import graalvm.compiler.lir.util.IndexedValueMap;
 
 /**
  * This class represents garbage collection and deoptimization information attached to a LIR
@@ -112,7 +108,7 @@ public class LIRFrameState
         for (int i = 0; i < values.length; i++)
         {
             JavaValue value = values[i];
-            if (isIllegalJavaValue(value))
+            if (ValueUtil.isIllegalJavaValue(value))
             {
                 continue;
             }
@@ -134,9 +130,9 @@ public class LIRFrameState
                     monitor.setOwner((JavaValue) proc.doValue(inst, (AllocatableValue) owner, OperandMode.ALIVE, STATE_FLAGS));
                 }
                 Value slot = monitor.getSlot();
-                if (isVirtualStackSlot(slot))
+                if (LIRValueUtil.isVirtualStackSlot(slot))
                 {
-                    monitor.setSlot(asAllocatableValue(proc.doValue(inst, slot, OperandMode.ALIVE, STATE_FLAGS)));
+                    monitor.setSlot(ValueUtil.asAllocatableValue(proc.doValue(inst, slot, OperandMode.ALIVE, STATE_FLAGS)));
                 }
             }
         }
@@ -147,7 +143,7 @@ public class LIRFrameState
         for (int i = 0; i < values.length; i++)
         {
             JavaValue value = values[i];
-            if (isIllegalJavaValue(value))
+            if (ValueUtil.isIllegalJavaValue(value))
             {
                 continue;
             }
@@ -164,7 +160,7 @@ public class LIRFrameState
                     proc.visitValue(inst, (AllocatableValue) owner, OperandMode.ALIVE, STATE_FLAGS);
                 }
                 Value slot = monitor.getSlot();
-                if (isVirtualStackSlot(slot))
+                if (LIRValueUtil.isVirtualStackSlot(slot))
                 {
                     proc.visitValue(inst, slot, OperandMode.ALIVE, STATE_FLAGS);
                 }
@@ -174,17 +170,17 @@ public class LIRFrameState
 
     private boolean unprocessed(JavaValue value)
     {
-        if (isIllegalJavaValue(value))
+        if (ValueUtil.isIllegalJavaValue(value))
         {
             // Ignore dead local variables.
             return true;
         }
-        else if (isConstantJavaValue(value))
+        else if (ValueUtil.isConstantJavaValue(value))
         {
             // Ignore constants, the register allocator does not need to see them.
             return true;
         }
-        else if (isVirtualObject(value))
+        else if (ValueUtil.isVirtualObject(value))
         {
             return true;
         }

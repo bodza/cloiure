@@ -1,21 +1,18 @@
 package graalvm.compiler.lir.alloc.lsra.ssa;
 
-import static graalvm.compiler.lir.LIRValueUtil.asConstant;
-import static graalvm.compiler.lir.LIRValueUtil.isConstantValue;
-import static graalvm.compiler.lir.LIRValueUtil.isStackSlotValue;
-
 import java.util.ArrayList;
+
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.LIRInstruction;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.alloc.lsra.Interval;
 import graalvm.compiler.lir.alloc.lsra.LinearScan;
 import graalvm.compiler.lir.alloc.lsra.LinearScanResolveDataFlowPhase;
 import graalvm.compiler.lir.alloc.lsra.MoveResolver;
 import graalvm.compiler.lir.ssa.SSAUtil;
 import graalvm.compiler.lir.ssa.SSAUtil.PhiValueVisitor;
-
-import jdk.vm.ci.meta.Value;
 
 class SSALinearScanResolveDataFlowPhase extends LinearScanResolveDataFlowPhase
 {
@@ -45,16 +42,16 @@ class SSALinearScanResolveDataFlowPhase extends LinearScanResolveDataFlowPhase
                 public void visit(Value phiIn, Value phiOut)
                 {
                     Interval toInterval = allocator.splitChildAtOpId(allocator.intervalFor(phiIn), toBlockFirstInstructionId, LIRInstruction.OperandMode.DEF);
-                    if (isConstantValue(phiOut))
+                    if (LIRValueUtil.isConstantValue(phiOut))
                     {
-                        moveResolver.addMapping(asConstant(phiOut), toInterval);
+                        moveResolver.addMapping(LIRValueUtil.asConstant(phiOut), toInterval);
                     }
                     else
                     {
                         Interval fromInterval = allocator.splitChildAtOpId(allocator.intervalFor(phiOut), phiOutId, LIRInstruction.OperandMode.DEF);
                         if (fromInterval != toInterval && !fromInterval.location().equals(toInterval.location()))
                         {
-                            if (!(isStackSlotValue(toInterval.location()) && isStackSlotValue(fromInterval.location())))
+                            if (!(LIRValueUtil.isStackSlotValue(toInterval.location()) && LIRValueUtil.isStackSlotValue(fromInterval.location())))
                             {
                                 moveResolver.addMapping(fromInterval, toInterval);
                             }

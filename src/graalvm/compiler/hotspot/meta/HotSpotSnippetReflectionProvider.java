@@ -1,16 +1,16 @@
 package graalvm.compiler.hotspot.meta;
 
-import jdk.vm.ci.hotspot.HotSpotResolvedJavaType;
-import graalvm.compiler.api.replacements.SnippetReflectionProvider;
-import graalvm.compiler.hotspot.HotSpotGraalRuntimeProvider;
-import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
-import graalvm.compiler.word.WordTypes;
-
 import jdk.vm.ci.hotspot.HotSpotConstantReflectionProvider;
 import jdk.vm.ci.hotspot.HotSpotObjectConstant;
+import jdk.vm.ci.hotspot.HotSpotResolvedJavaType;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.ResolvedJavaType;
+
+import graalvm.compiler.api.replacements.SnippetReflectionProvider;
+import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
+import graalvm.compiler.hotspot.HotSpotGraalRuntimeProvider;
+import graalvm.compiler.word.WordTypes;
 
 public class HotSpotSnippetReflectionProvider implements SnippetReflectionProvider
 {

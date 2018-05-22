@@ -1,14 +1,14 @@
 package graalvm.compiler.hotspot;
 
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import graalvm.compiler.api.replacements.SnippetReflectionProvider;
 import graalvm.compiler.bytecode.BytecodeProvider;
 import graalvm.compiler.hotspot.word.HotSpotOperation;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.util.Providers;
 import graalvm.compiler.replacements.ReplacementsImpl;
-
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * Filters certain method substitutions based on whether there is underlying hardware support for

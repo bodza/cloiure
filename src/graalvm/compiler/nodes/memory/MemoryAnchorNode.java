@@ -1,7 +1,5 @@
 package graalvm.compiler.nodes.memory;
 
-import static graalvm.compiler.nodeinfo.InputType.Memory;
-
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;

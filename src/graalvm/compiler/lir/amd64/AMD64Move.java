@@ -1,48 +1,36 @@
 package graalvm.compiler.lir.amd64;
 
-import static java.lang.Double.doubleToRawLongBits;
-import static java.lang.Float.floatToRawIntBits;
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static jdk.vm.ci.code.ValueUtil.isStackSlot;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.ConditionFlag.Equal;
-import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.COMPOSITE;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.CONST;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.HINT;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.ILLEGAL;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.STACK;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.UNINITIALIZED;
-import static graalvm.compiler.lir.LIRValueUtil.asJavaConstant;
-import static graalvm.compiler.lir.LIRValueUtil.isJavaConstant;
+import jdk.vm.ci.amd64.AMD64Kind;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.asm.Label;
 import graalvm.compiler.asm.amd64.AMD64Address;
 import graalvm.compiler.asm.amd64.AMD64Assembler.AMD64MIOp;
 import graalvm.compiler.asm.amd64.AMD64Assembler.AMD64MOp;
+import graalvm.compiler.asm.amd64.AMD64Assembler.ConditionFlag;
 import graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize;
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
 import graalvm.compiler.core.common.CompressEncoding;
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.spi.LIRKindTool;
 import graalvm.compiler.core.common.type.DataPointerConstant;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.LIRFrameState;
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstructionClass;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.StandardOp.LoadConstantOp;
 import graalvm.compiler.lir.StandardOp.NullCheck;
 import graalvm.compiler.lir.StandardOp.ValueMoveOp;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.amd64.AMD64Kind;
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.Value;
 
 public class AMD64Move
 {
@@ -70,8 +58,8 @@ public class AMD64Move
     {
         public static final LIRInstructionClass<MoveToRegOp> TYPE = LIRInstructionClass.create(MoveToRegOp.class);
 
-        @Def({REG, HINT}) protected AllocatableValue result;
-        @Use({REG, STACK}) protected AllocatableValue input;
+        @Def({OperandFlag.REG, OperandFlag.HINT}) protected AllocatableValue result;
+        @Use({OperandFlag.REG, OperandFlag.STACK}) protected AllocatableValue input;
 
         public MoveToRegOp(AMD64Kind moveKind, AllocatableValue result, AllocatableValue input)
         {
@@ -98,8 +86,8 @@ public class AMD64Move
     {
         public static final LIRInstructionClass<MoveFromRegOp> TYPE = LIRInstructionClass.create(MoveFromRegOp.class);
 
-        @Def({REG, STACK}) protected AllocatableValue result;
-        @Use({REG, HINT}) protected AllocatableValue input;
+        @Def({OperandFlag.REG, OperandFlag.STACK}) protected AllocatableValue result;
+        @Use({OperandFlag.REG, OperandFlag.HINT}) protected AllocatableValue input;
 
         public MoveFromRegOp(AMD64Kind moveKind, AllocatableValue result, AllocatableValue input)
         {
@@ -126,7 +114,7 @@ public class AMD64Move
     {
         public static final LIRInstructionClass<MoveFromConstOp> TYPE = LIRInstructionClass.create(MoveFromConstOp.class);
 
-        @Def({REG, STACK}) protected AllocatableValue result;
+        @Def({OperandFlag.REG, OperandFlag.STACK}) protected AllocatableValue result;
         private final JavaConstant input;
 
         public MoveFromConstOp(AllocatableValue result, JavaConstant input)
@@ -139,9 +127,9 @@ public class AMD64Move
         @Override
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
-            if (isRegister(result))
+            if (ValueUtil.isRegister(result))
             {
-                const2reg(crb, masm, asRegister(result), input);
+                const2reg(crb, masm, ValueUtil.asRegister(result), input);
             }
             else
             {
@@ -167,8 +155,8 @@ public class AMD64Move
     {
         public static final LIRInstructionClass<AMD64StackMove> TYPE = LIRInstructionClass.create(AMD64StackMove.class);
 
-        @Def({STACK}) protected AllocatableValue result;
-        @Use({STACK, HINT}) protected AllocatableValue input;
+        @Def({OperandFlag.STACK}) protected AllocatableValue result;
+        @Use({OperandFlag.STACK, OperandFlag.HINT}) protected AllocatableValue input;
         @Alive({OperandFlag.STACK, OperandFlag.UNINITIALIZED}) private AllocatableValue backupSlot;
 
         private Register scratch;
@@ -229,8 +217,8 @@ public class AMD64Move
     {
         public static final LIRInstructionClass<AMD64MultiStackMove> TYPE = LIRInstructionClass.create(AMD64MultiStackMove.class);
 
-        @Def({STACK}) protected AllocatableValue[] results;
-        @Use({STACK}) protected Value[] inputs;
+        @Def({OperandFlag.STACK}) protected AllocatableValue[] results;
+        @Use({OperandFlag.STACK}) protected Value[] inputs;
         @Alive({OperandFlag.STACK, OperandFlag.UNINITIALIZED}) private AllocatableValue backupSlot;
 
         private Register scratch;
@@ -274,8 +262,8 @@ public class AMD64Move
     {
         public static final LIRInstructionClass<AMD64PushPopStackMove> TYPE = LIRInstructionClass.create(AMD64PushPopStackMove.class);
 
-        @Def({STACK}) protected AllocatableValue result;
-        @Use({STACK, HINT}) protected AllocatableValue input;
+        @Def({OperandFlag.STACK}) protected AllocatableValue result;
+        @Use({OperandFlag.STACK, OperandFlag.HINT}) protected AllocatableValue input;
         private final OperandSize size;
 
         public AMD64PushPopStackMove(OperandSize size, AllocatableValue result, AllocatableValue input)
@@ -310,8 +298,8 @@ public class AMD64Move
     {
         public static final LIRInstructionClass<LeaOp> TYPE = LIRInstructionClass.create(LeaOp.class);
 
-        @Def({REG}) protected AllocatableValue result;
-        @Use({COMPOSITE, UNINITIALIZED}) protected AMD64AddressValue address;
+        @Def({OperandFlag.REG}) protected AllocatableValue result;
+        @Use({OperandFlag.COMPOSITE, OperandFlag.UNINITIALIZED}) protected AMD64AddressValue address;
         private final OperandSize size;
 
         public LeaOp(AllocatableValue result, AMD64AddressValue address, OperandSize size)
@@ -327,11 +315,11 @@ public class AMD64Move
         {
             if (size == OperandSize.QWORD)
             {
-                masm.leaq(asRegister(result, AMD64Kind.QWORD), address.toAddress());
+                masm.leaq(ValueUtil.asRegister(result, AMD64Kind.QWORD), address.toAddress());
             }
             else
             {
-                masm.lead(asRegister(result, AMD64Kind.DWORD), address.toAddress());
+                masm.lead(ValueUtil.asRegister(result, AMD64Kind.DWORD), address.toAddress());
             }
         }
     }
@@ -340,7 +328,7 @@ public class AMD64Move
     {
         public static final LIRInstructionClass<LeaDataOp> TYPE = LIRInstructionClass.create(LeaDataOp.class);
 
-        @Def({REG}) protected AllocatableValue result;
+        @Def({OperandFlag.REG}) protected AllocatableValue result;
         private final DataPointerConstant data;
 
         public LeaDataOp(AllocatableValue result, DataPointerConstant data)
@@ -353,7 +341,7 @@ public class AMD64Move
         @Override
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
-            masm.leaq(asRegister(result), (AMD64Address) crb.recordDataReferenceInCode(data));
+            masm.leaq(ValueUtil.asRegister(result), (AMD64Address) crb.recordDataReferenceInCode(data));
         }
     }
 
@@ -361,8 +349,8 @@ public class AMD64Move
     {
         public static final LIRInstructionClass<StackLeaOp> TYPE = LIRInstructionClass.create(StackLeaOp.class);
 
-        @Def({REG}) protected AllocatableValue result;
-        @Use({STACK, UNINITIALIZED}) protected AllocatableValue slot;
+        @Def({OperandFlag.REG}) protected AllocatableValue result;
+        @Use({OperandFlag.STACK, OperandFlag.UNINITIALIZED}) protected AllocatableValue slot;
 
         public StackLeaOp(AllocatableValue result, AllocatableValue slot)
         {
@@ -374,7 +362,7 @@ public class AMD64Move
         @Override
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
-            masm.leaq(asRegister(result, AMD64Kind.QWORD), (AMD64Address) crb.asAddress(slot));
+            masm.leaq(ValueUtil.asRegister(result, AMD64Kind.QWORD), (AMD64Address) crb.asAddress(slot));
         }
     }
 
@@ -401,7 +389,7 @@ public class AMD64Move
     {
         public static final LIRInstructionClass<NullCheckOp> TYPE = LIRInstructionClass.create(NullCheckOp.class);
 
-        @Use({COMPOSITE}) protected AMD64AddressValue address;
+        @Use({OperandFlag.COMPOSITE}) protected AMD64AddressValue address;
         @State protected LIRFrameState state;
 
         public NullCheckOp(AMD64AddressValue address, LIRFrameState state)
@@ -439,7 +427,7 @@ public class AMD64Move
         private final AMD64Kind accessKind;
 
         @Def protected AllocatableValue result;
-        @Use({COMPOSITE}) protected AMD64AddressValue address;
+        @Use({OperandFlag.COMPOSITE}) protected AMD64AddressValue address;
         @Use protected AllocatableValue cmpValue;
         @Use protected AllocatableValue newValue;
 
@@ -463,10 +451,10 @@ public class AMD64Move
             switch (accessKind)
             {
                 case DWORD:
-                    masm.cmpxchgl(asRegister(newValue), address.toAddress());
+                    masm.cmpxchgl(ValueUtil.asRegister(newValue), address.toAddress());
                     break;
                 case QWORD:
-                    masm.cmpxchgq(asRegister(newValue), address.toAddress());
+                    masm.cmpxchgq(ValueUtil.asRegister(newValue), address.toAddress());
                     break;
                 default:
                     throw GraalError.shouldNotReachHere();
@@ -482,7 +470,7 @@ public class AMD64Move
         private final AMD64Kind accessKind;
 
         @Def protected AllocatableValue result;
-        @Alive({COMPOSITE}) protected AMD64AddressValue address;
+        @Alive({OperandFlag.COMPOSITE}) protected AMD64AddressValue address;
         @Use protected AllocatableValue delta;
 
         public AtomicReadAndAddOp(AMD64Kind accessKind, AllocatableValue result, AMD64AddressValue address, AllocatableValue delta)
@@ -505,10 +493,10 @@ public class AMD64Move
             switch (accessKind)
             {
                 case DWORD:
-                    masm.xaddl(address.toAddress(), asRegister(result));
+                    masm.xaddl(address.toAddress(), ValueUtil.asRegister(result));
                     break;
                 case QWORD:
-                    masm.xaddq(address.toAddress(), asRegister(result));
+                    masm.xaddq(address.toAddress(), ValueUtil.asRegister(result));
                     break;
                 default:
                     throw GraalError.shouldNotReachHere();
@@ -524,7 +512,7 @@ public class AMD64Move
         private final AMD64Kind accessKind;
 
         @Def protected AllocatableValue result;
-        @Alive({COMPOSITE}) protected AMD64AddressValue address;
+        @Alive({OperandFlag.COMPOSITE}) protected AMD64AddressValue address;
         @Use protected AllocatableValue newValue;
 
         public AtomicReadAndWriteOp(AMD64Kind accessKind, AllocatableValue result, AMD64AddressValue address, AllocatableValue newValue)
@@ -543,10 +531,10 @@ public class AMD64Move
             switch (accessKind)
             {
                 case DWORD:
-                    masm.xchgl(asRegister(result), address.toAddress());
+                    masm.xchgl(ValueUtil.asRegister(result), address.toAddress());
                     break;
                 case QWORD:
-                    masm.xchgq(asRegister(result), address.toAddress());
+                    masm.xchgq(ValueUtil.asRegister(result), address.toAddress());
                     break;
                 default:
                     throw GraalError.shouldNotReachHere();
@@ -561,41 +549,41 @@ public class AMD64Move
 
     public static void move(AMD64Kind moveKind, CompilationResultBuilder crb, AMD64MacroAssembler masm, Value result, Value input)
     {
-        if (isRegister(input))
+        if (ValueUtil.isRegister(input))
         {
-            if (isRegister(result))
+            if (ValueUtil.isRegister(result))
             {
                 reg2reg(moveKind, masm, result, input);
             }
-            else if (isStackSlot(result))
+            else if (ValueUtil.isStackSlot(result))
             {
-                reg2stack(moveKind, crb, masm, result, asRegister(input));
+                reg2stack(moveKind, crb, masm, result, ValueUtil.asRegister(input));
             }
             else
             {
                 throw GraalError.shouldNotReachHere();
             }
         }
-        else if (isStackSlot(input))
+        else if (ValueUtil.isStackSlot(input))
         {
-            if (isRegister(result))
+            if (ValueUtil.isRegister(result))
             {
-                stack2reg(moveKind, crb, masm, asRegister(result), input);
+                stack2reg(moveKind, crb, masm, ValueUtil.asRegister(result), input);
             }
             else
             {
                 throw GraalError.shouldNotReachHere();
             }
         }
-        else if (isJavaConstant(input))
+        else if (LIRValueUtil.isJavaConstant(input))
         {
-            if (isRegister(result))
+            if (ValueUtil.isRegister(result))
             {
-                const2reg(crb, masm, asRegister(result), asJavaConstant(input));
+                const2reg(crb, masm, ValueUtil.asRegister(result), LIRValueUtil.asJavaConstant(input));
             }
-            else if (isStackSlot(result))
+            else if (ValueUtil.isStackSlot(result))
             {
-                const2stack(crb, masm, result, asJavaConstant(input));
+                const2stack(crb, masm, result, LIRValueUtil.asJavaConstant(input));
             }
             else
             {
@@ -610,7 +598,7 @@ public class AMD64Move
 
     private static void reg2reg(AMD64Kind kind, AMD64MacroAssembler masm, Value result, Value input)
     {
-        if (asRegister(input).equals(asRegister(result)))
+        if (ValueUtil.asRegister(input).equals(ValueUtil.asRegister(result)))
         {
             return;
         }
@@ -619,16 +607,16 @@ public class AMD64Move
             case BYTE:
             case WORD:
             case DWORD:
-                masm.movl(asRegister(result), asRegister(input));
+                masm.movl(ValueUtil.asRegister(result), ValueUtil.asRegister(input));
                 break;
             case QWORD:
-                masm.movq(asRegister(result), asRegister(input));
+                masm.movq(ValueUtil.asRegister(result), ValueUtil.asRegister(input));
                 break;
             case SINGLE:
-                masm.movflt(asRegister(result, AMD64Kind.SINGLE), asRegister(input, AMD64Kind.SINGLE));
+                masm.movflt(ValueUtil.asRegister(result, AMD64Kind.SINGLE), ValueUtil.asRegister(input, AMD64Kind.SINGLE));
                 break;
             case DOUBLE:
-                masm.movdbl(asRegister(result, AMD64Kind.DOUBLE), asRegister(input, AMD64Kind.DOUBLE));
+                masm.movdbl(ValueUtil.asRegister(result, AMD64Kind.DOUBLE), ValueUtil.asRegister(input, AMD64Kind.DOUBLE));
                 break;
             default:
                 throw GraalError.shouldNotReachHere("kind=" + kind);
@@ -812,10 +800,10 @@ public class AMD64Move
                 imm = input.asLong();
                 break;
             case Float:
-                imm = floatToRawIntBits(input.asFloat());
+                imm = Float.floatToRawIntBits(input.asFloat());
                 break;
             case Double:
-                imm = doubleToRawLongBits(input.asDouble());
+                imm = Double.doubleToRawLongBits(input.asDouble());
                 break;
             case Object:
                 if (input.isNull())
@@ -858,9 +846,9 @@ public class AMD64Move
         protected final CompressEncoding encoding;
         protected final boolean nonNull;
 
-        @Def({REG, HINT}) private AllocatableValue result;
-        @Use({REG, CONST}) private Value input;
-        @Alive({REG, ILLEGAL, UNINITIALIZED}) private AllocatableValue baseRegister;
+        @Def({OperandFlag.REG, OperandFlag.HINT}) private AllocatableValue result;
+        @Use({OperandFlag.REG, OperandFlag.CONST}) private Value input;
+        @Alive({OperandFlag.REG, OperandFlag.ILLEGAL, OperandFlag.UNINITIALIZED}) private AllocatableValue baseRegister;
 
         protected PointerCompressionOp(LIRInstructionClass<? extends PointerCompressionOp> type, AllocatableValue result, Value input, AllocatableValue baseRegister, CompressEncoding encoding, boolean nonNull, LIRKindTool lirKindTool)
         {
@@ -875,7 +863,7 @@ public class AMD64Move
 
         public static boolean hasBase(OptionValues options, CompressEncoding encoding)
         {
-            return GeneratePIC.getValue(options) || encoding.hasBase();
+            return GraalOptions.GeneratePIC.getValue(options) || encoding.hasBase();
         }
 
         public final Value getInput()
@@ -890,7 +878,7 @@ public class AMD64Move
 
         protected final Register getBaseRegister()
         {
-            return asRegister(baseRegister);
+            return ValueUtil.asRegister(baseRegister);
         }
 
         protected final int getShift()
@@ -923,14 +911,14 @@ public class AMD64Move
         {
             move(lirKindTool.getObjectKind(), crb, masm);
 
-            Register resReg = asRegister(getResult());
+            Register resReg = ValueUtil.asRegister(getResult());
             if (hasBase(crb.getOptions(), encoding))
             {
                 Register baseReg = getBaseRegister();
                 if (!nonNull)
                 {
                     masm.testq(resReg, resReg);
-                    masm.cmovq(Equal, resReg, baseReg);
+                    masm.cmovq(ConditionFlag.Equal, resReg, baseReg);
                 }
                 masm.subq(resReg, baseReg);
             }
@@ -961,7 +949,7 @@ public class AMD64Move
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
             move(lirKindTool.getNarrowOopKind(), crb, masm);
-            emitUncompressCode(masm, asRegister(getResult()), getShift(), hasBase(crb.getOptions(), encoding) ? getBaseRegister() : null, nonNull);
+            emitUncompressCode(masm, ValueUtil.asRegister(getResult()), getShift(), hasBase(crb.getOptions(), encoding) ? getBaseRegister() : null, nonNull);
         }
 
         public static void emitUncompressCode(AMD64MacroAssembler masm, Register resReg, int shift, Register baseReg, boolean nonNull)
@@ -986,7 +974,7 @@ public class AMD64Move
                 }
 
                 Label done = new Label();
-                masm.jccb(Equal, done);
+                masm.jccb(ConditionFlag.Equal, done);
                 masm.addq(resReg, baseReg);
                 masm.bind(done);
             }

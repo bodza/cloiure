@@ -1,5 +1,9 @@
 package graalvm.compiler.hotspot.meta;
 
+import jdk.vm.ci.hotspot.HotSpotCodeCacheProvider;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.MetaAccessProvider;
+
 import graalvm.compiler.api.replacements.SnippetReflectionProvider;
 import graalvm.compiler.core.common.spi.ConstantFieldProvider;
 import graalvm.compiler.hotspot.word.HotSpotWordTypes;
@@ -8,10 +12,6 @@ import graalvm.compiler.nodes.spi.LoweringProvider;
 import graalvm.compiler.nodes.spi.Replacements;
 import graalvm.compiler.phases.tiers.SuitesProvider;
 import graalvm.compiler.phases.util.Providers;
-
-import jdk.vm.ci.hotspot.HotSpotCodeCacheProvider;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.MetaAccessProvider;
 
 /**
  * Extends {@link Providers} to include a number of extra capabilities used by the HotSpot parts of

@@ -1,12 +1,11 @@
 package graalvm.compiler.lir.alloc.trace.lsra;
 
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static graalvm.compiler.lir.LIRValueUtil.asVariable;
-import static graalvm.compiler.lir.alloc.trace.lsra.TraceLinearScanPhase.isVariableOrRegister;
-
 import java.util.ArrayList;
 import java.util.EnumSet;
+
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.core.common.cfg.BlockMap;
@@ -15,11 +14,10 @@ import graalvm.compiler.lir.InstructionValueConsumer;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstruction.OperandMode;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.Variable;
+import graalvm.compiler.lir.alloc.trace.lsra.TraceLinearScanPhase;
 import graalvm.compiler.lir.alloc.trace.lsra.TraceLinearScanPhase.TraceLinearScan;
-
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.meta.Value;
 
 final class RegisterVerifier
 {
@@ -133,9 +131,9 @@ final class RegisterVerifier
 
     static void statePut(TraceInterval[] inputState, Value location, TraceInterval interval)
     {
-        if (location != null && isRegister(location))
+        if (location != null && ValueUtil.isRegister(location))
         {
-            Register reg = asRegister(location);
+            Register reg = ValueUtil.asRegister(location);
             int regNum = reg.number;
 
             inputState[regNum] = interval;
@@ -144,11 +142,11 @@ final class RegisterVerifier
 
     static boolean checkState(AbstractBlockBase<?> block, LIRInstruction op, TraceInterval[] inputState, Value operand, Value reg, TraceInterval interval)
     {
-        if (reg != null && isRegister(reg))
+        if (reg != null && ValueUtil.isRegister(reg))
         {
-            if (inputState[asRegister(reg).number] != interval)
+            if (inputState[ValueUtil.asRegister(reg).number] != interval)
             {
-                throw new GraalError("Error in register allocation: operation (%s) in block %s expected register %s (operand %s) to contain the value of interval %s but data-flow says it contains interval %s", op, block, reg, operand, interval, inputState[asRegister(reg).number]);
+                throw new GraalError("Error in register allocation: operation (%s) in block %s expected register %s (operand %s) to contain the value of interval %s but data-flow says it contains interval %s", op, block, reg, operand, interval, inputState[ValueUtil.asRegister(reg).number]);
             }
         }
         return true;
@@ -163,9 +161,9 @@ final class RegisterVerifier
             public void visitValue(LIRInstruction op, Value operand, OperandMode mode, EnumSet<OperandFlag> flags)
             {
                 // we skip spill moves inserted by the spill position optimization
-                if (isVariableOrRegister(operand) && allocator.isProcessed(operand) && op.id() != TraceLinearScanPhase.DOMINATOR_SPILL_MOVE_ID)
+                if (TraceLinearScanPhase.isVariableOrRegister(operand) && allocator.isProcessed(operand) && op.id() != TraceLinearScanPhase.DOMINATOR_SPILL_MOVE_ID)
                 {
-                    TraceInterval interval = intervalAt(asVariable(operand));
+                    TraceInterval interval = intervalAt(LIRValueUtil.asVariable(operand));
                     if (op.id() != -1)
                     {
                         interval = interval.getSplitChildAtOpId(op.id(), mode);
@@ -176,9 +174,9 @@ final class RegisterVerifier
 
         InstructionValueConsumer defConsumer = (op, operand, mode, flags) ->
         {
-            if (isVariableOrRegister(operand) && allocator.isProcessed(operand))
+            if (TraceLinearScanPhase.isVariableOrRegister(operand) && allocator.isProcessed(operand))
             {
-                TraceInterval interval = intervalAt(asVariable(operand));
+                TraceInterval interval = intervalAt(LIRValueUtil.asVariable(operand));
                 if (op.id() != -1)
                 {
                     interval = interval.getSplitChildAtOpId(op.id(), mode);

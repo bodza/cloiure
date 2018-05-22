@@ -2,14 +2,14 @@ package graalvm.compiler.lir.gen;
 
 import java.util.EnumSet;
 
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstruction.OperandMode;
 import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;
-
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Wrapper for {@link MoveFactory} that checks that the instructions created adhere to the contract

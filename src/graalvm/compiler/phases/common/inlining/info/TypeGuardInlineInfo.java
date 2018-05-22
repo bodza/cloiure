@@ -1,6 +1,12 @@
 package graalvm.compiler.phases.common.inlining.info;
 
+import jdk.vm.ci.meta.DeoptimizationAction;
+import jdk.vm.ci.meta.DeoptimizationReason;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import org.graalvm.collections.EconomicSet;
+
 import graalvm.compiler.core.common.calc.CanonicalCondition;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodes.CallTargetNode.InvokeKind;
@@ -16,11 +22,6 @@ import graalvm.compiler.nodes.extended.LoadHubNode;
 import graalvm.compiler.phases.common.inlining.InliningUtil;
 import graalvm.compiler.phases.common.inlining.info.elem.Inlineable;
 import graalvm.compiler.phases.util.Providers;
-
-import jdk.vm.ci.meta.DeoptimizationAction;
-import jdk.vm.ci.meta.DeoptimizationReason;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * Represents an inlining opportunity for which profiling information suggests a monomorphic

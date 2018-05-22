@@ -1,13 +1,13 @@
 package graalvm.compiler.core.common;
 
-import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
-
 import jdk.vm.ci.code.Architecture;
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.PlatformKind;
 import jdk.vm.ci.meta.Value;
 import jdk.vm.ci.meta.ValueKind;
+
+import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 
 /**
  * Represents the type of values in the LIR. It is composed of a {@link PlatformKind} that gives the

@@ -1,13 +1,13 @@
 package graalvm.compiler.lir.alloc.trace;
 
+import jdk.vm.ci.code.TargetDescription;
+
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.common.alloc.Trace;
 import graalvm.compiler.core.common.alloc.TraceBuilderResult;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;
 import graalvm.compiler.lir.phases.LIRPhase;
-
-import jdk.vm.ci.code.TargetDescription;
 
 public abstract class TraceAllocationPhase<C extends TraceAllocationPhase.TraceAllocationContext>
 {

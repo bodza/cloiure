@@ -2,11 +2,11 @@ package graalvm.compiler.lir;
 
 import java.util.ArrayList;
 
+import jdk.vm.ci.code.TargetDescription;
+
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.phases.PostAllocationOptimizationPhase;
-
-import jdk.vm.ci.code.TargetDescription;
 
 /**
  * This class performs basic optimizations on the control flow graph after LIR generation.

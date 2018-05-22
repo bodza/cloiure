@@ -1,9 +1,9 @@
 package graalvm.compiler.core.match;
 
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.gen.NodeLIRBuilder;
-
-import jdk.vm.ci.meta.Value;
 
 /**
  * A wrapper value for the lazy evaluation of a complex match. There's an intermediate class for the

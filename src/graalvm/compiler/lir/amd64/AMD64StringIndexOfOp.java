@@ -1,18 +1,16 @@
 package graalvm.compiler.lir.amd64;
 
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.ILLEGAL;
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.RegisterValue;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
 import graalvm.compiler.lir.gen.LIRGeneratorTool;
-
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.RegisterValue;
-import jdk.vm.ci.meta.Value;
 
 /**
   */
@@ -21,15 +19,15 @@ public final class AMD64StringIndexOfOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64StringIndexOfOp> TYPE = LIRInstructionClass.create(AMD64StringIndexOfOp.class);
 
-    @Def({REG}) protected Value resultValue;
-    @Alive({REG}) protected Value charPtr1Value;
-    @Alive({REG}) protected Value charPtr2Value;
-    @Use({REG}) protected RegisterValue cnt1Value;
-    @Temp({REG}) protected RegisterValue cnt1ValueT;
-    @Use({REG}) protected RegisterValue cnt2Value;
-    @Temp({REG}) protected RegisterValue cnt2ValueT;
-    @Temp({REG}) protected Value temp1;
-    @Temp({REG, ILLEGAL}) protected Value vectorTemp1;
+    @Def({OperandFlag.REG}) protected Value resultValue;
+    @Alive({OperandFlag.REG}) protected Value charPtr1Value;
+    @Alive({OperandFlag.REG}) protected Value charPtr2Value;
+    @Use({OperandFlag.REG}) protected RegisterValue cnt1Value;
+    @Temp({OperandFlag.REG}) protected RegisterValue cnt1ValueT;
+    @Use({OperandFlag.REG}) protected RegisterValue cnt2Value;
+    @Temp({OperandFlag.REG}) protected RegisterValue cnt2ValueT;
+    @Temp({OperandFlag.REG}) protected Value temp1;
+    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL}) protected Value vectorTemp1;
 
     private final int intCnt2;
 
@@ -59,13 +57,13 @@ public final class AMD64StringIndexOfOp extends AMD64LIRInstruction
     @Override
     public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
     {
-        Register charPtr1 = asRegister(charPtr1Value);
-        Register charPtr2 = asRegister(charPtr2Value);
-        Register cnt1 = asRegister(cnt1Value);
-        Register cnt2 = asRegister(cnt2Value);
-        Register result = asRegister(resultValue);
-        Register vec = asRegister(vectorTemp1);
-        Register tmp = asRegister(temp1);
+        Register charPtr1 = ValueUtil.asRegister(charPtr1Value);
+        Register charPtr2 = ValueUtil.asRegister(charPtr2Value);
+        Register cnt1 = ValueUtil.asRegister(cnt1Value);
+        Register cnt2 = ValueUtil.asRegister(cnt2Value);
+        Register result = ValueUtil.asRegister(resultValue);
+        Register vec = ValueUtil.asRegister(vectorTemp1);
+        Register tmp = ValueUtil.asRegister(temp1);
         if (intCnt2 >= 8)
         {
             masm.stringIndexofC8(charPtr1, charPtr2, cnt1, cnt2, intCnt2, result, vec, tmp);

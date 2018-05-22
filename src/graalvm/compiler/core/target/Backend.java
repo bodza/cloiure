@@ -2,28 +2,6 @@ package graalvm.compiler.core.target;
 
 import java.util.ArrayList;
 
-import org.graalvm.collections.EconomicSet;
-import graalvm.compiler.asm.Assembler;
-import graalvm.compiler.code.CompilationResult;
-import graalvm.compiler.core.common.CompilationIdentifier;
-import graalvm.compiler.core.common.LIRKind;
-import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
-import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
-import graalvm.compiler.core.common.spi.ForeignCallsProvider;
-import graalvm.compiler.lir.LIR;
-import graalvm.compiler.lir.asm.CompilationResultBuilder;
-import graalvm.compiler.lir.asm.CompilationResultBuilderFactory;
-import graalvm.compiler.lir.framemap.FrameMap;
-import graalvm.compiler.lir.framemap.FrameMapBuilder;
-import graalvm.compiler.lir.gen.LIRGenerationResult;
-import graalvm.compiler.lir.gen.LIRGeneratorTool;
-import graalvm.compiler.nodes.StructuredGraph;
-import graalvm.compiler.nodes.GraphSpeculationLog;
-import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-import graalvm.compiler.phases.tiers.SuitesProvider;
-import graalvm.compiler.phases.tiers.TargetProvider;
-import graalvm.compiler.phases.util.Providers;
-
 import jdk.vm.ci.code.BailoutException;
 import jdk.vm.ci.code.CodeCacheProvider;
 import jdk.vm.ci.code.CompilationRequest;
@@ -38,6 +16,29 @@ import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.SpeculationLog;
+
+import org.graalvm.collections.EconomicSet;
+
+import graalvm.compiler.asm.Assembler;
+import graalvm.compiler.code.CompilationResult;
+import graalvm.compiler.core.common.CompilationIdentifier;
+import graalvm.compiler.core.common.LIRKind;
+import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
+import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
+import graalvm.compiler.core.common.spi.ForeignCallsProvider;
+import graalvm.compiler.lir.LIR;
+import graalvm.compiler.lir.asm.CompilationResultBuilder;
+import graalvm.compiler.lir.asm.CompilationResultBuilderFactory;
+import graalvm.compiler.lir.framemap.FrameMap;
+import graalvm.compiler.lir.framemap.FrameMapBuilder;
+import graalvm.compiler.lir.gen.LIRGenerationResult;
+import graalvm.compiler.lir.gen.LIRGeneratorTool;
+import graalvm.compiler.nodes.GraphSpeculationLog;
+import graalvm.compiler.nodes.StructuredGraph;
+import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
+import graalvm.compiler.phases.tiers.SuitesProvider;
+import graalvm.compiler.phases.tiers.TargetProvider;
+import graalvm.compiler.phases.util.Providers;
 
 /**
  * Represents a compiler backend for Graal.

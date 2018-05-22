@@ -1,20 +1,19 @@
 package graalvm.compiler.lir.gen;
 
-import static jdk.vm.ci.meta.Value.ILLEGAL;
-import static graalvm.compiler.lir.LIRValueUtil.isVariable;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Value;
+
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
+
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.LIRInsertionBuffer;
 import graalvm.compiler.lir.LIRInstruction;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;
-
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Converts phi instructions into moves.
@@ -129,7 +128,7 @@ public class PhiResolver
     {
         this.gen = gen;
         moveFactory = gen.getSpillMoveFactory();
-        temp = ILLEGAL;
+        temp = Value.ILLEGAL;
 
         this.buffer = buffer;
         this.buffer.init(instructions);
@@ -173,7 +172,7 @@ public class PhiResolver
     private PhiResolverNode createNode(Value operand, boolean source)
     {
         PhiResolverNode node;
-        if (isVariable(operand))
+        if (LIRValueUtil.isVariable(operand))
         {
             node = operandToNodeMap.get(operand);
             if (node == null)
@@ -253,7 +252,7 @@ public class PhiResolver
     private void moveTempTo(Value dest)
     {
         emitMove(dest, temp);
-        temp = ILLEGAL;
+        temp = Value.ILLEGAL;
     }
 
     private void moveToTemp(Value src)

@@ -3,6 +3,8 @@ package graalvm.compiler.nodes.cfg;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.core.common.cfg.Loop;
 import graalvm.compiler.graph.Node;
@@ -16,7 +18,6 @@ import graalvm.compiler.nodes.LoopBeginNode;
 import graalvm.compiler.nodes.LoopEndNode;
 import graalvm.compiler.nodes.LoopExitNode;
 import graalvm.compiler.nodes.memory.MemoryCheckpoint;
-import org.graalvm.word.LocationIdentity;
 
 public final class Block extends AbstractBlockBase<Block>
 {

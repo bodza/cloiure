@@ -1,6 +1,6 @@
 package graalvm.compiler.lir.alloc.trace;
 
-import static graalvm.compiler.lir.alloc.trace.TraceUtil.isTrivialTrace;
+import jdk.vm.ci.code.TargetDescription;
 
 import graalvm.compiler.core.common.alloc.BiDirectionalTraceBuilder;
 import graalvm.compiler.core.common.alloc.SingleBlockTraceBuilder;
@@ -11,13 +11,12 @@ import graalvm.compiler.core.common.alloc.UniDirectionalTraceBuilder;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.LIR;
+import graalvm.compiler.lir.alloc.trace.TraceUtil;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.phases.AllocationPhase;
 import graalvm.compiler.options.EnumOptionKey;
 import graalvm.compiler.options.OptionKey;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.code.TargetDescription;
 
 public class TraceBuilderPhase extends AllocationPhase
 {

@@ -1,14 +1,14 @@
 package graalvm.compiler.hotspot.nodes.type;
 
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.spi.LIRKindTool;
 import graalvm.compiler.core.common.type.AbstractPointerStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.debug.GraalError;
-
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 public abstract class MetaspacePointerStamp extends AbstractPointerStamp
 {

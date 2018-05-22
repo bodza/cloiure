@@ -1,21 +1,7 @@
 package graalvm.compiler.core.common.type;
 
-import static graalvm.compiler.core.common.calc.FloatConvert.D2F;
-import static graalvm.compiler.core.common.calc.FloatConvert.D2I;
-import static graalvm.compiler.core.common.calc.FloatConvert.D2L;
-import static graalvm.compiler.core.common.calc.FloatConvert.F2D;
-import static graalvm.compiler.core.common.calc.FloatConvert.F2I;
-import static graalvm.compiler.core.common.calc.FloatConvert.F2L;
-
 import java.nio.ByteBuffer;
 import java.util.function.DoubleBinaryOperator;
-
-import graalvm.compiler.core.common.LIRKind;
-import graalvm.compiler.core.common.spi.LIRKindTool;
-import graalvm.compiler.core.common.type.ArithmeticOpTable.BinaryOp;
-import graalvm.compiler.core.common.type.ArithmeticOpTable.FloatConvertOp;
-import graalvm.compiler.core.common.type.ArithmeticOpTable.UnaryOp;
-import graalvm.compiler.debug.GraalError;
 
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.JavaConstant;
@@ -24,6 +10,14 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.PrimitiveConstant;
 import jdk.vm.ci.meta.ResolvedJavaType;
 import jdk.vm.ci.meta.SerializableConstant;
+
+import graalvm.compiler.core.common.LIRKind;
+import graalvm.compiler.core.common.calc.FloatConvert;
+import graalvm.compiler.core.common.spi.LIRKindTool;
+import graalvm.compiler.core.common.type.ArithmeticOpTable.BinaryOp;
+import graalvm.compiler.core.common.type.ArithmeticOpTable.FloatConvertOp;
+import graalvm.compiler.core.common.type.ArithmeticOpTable.UnaryOp;
+import graalvm.compiler.debug.GraalError;
 
 public class FloatStamp extends PrimitiveStamp
 {
@@ -1031,7 +1025,7 @@ public class FloatStamp extends PrimitiveStamp
 
                     null, null, null,
 
-                    new FloatConvertOp(F2I)
+                    new FloatConvertOp(FloatConvert.F2I)
                     {
                         @Override
                         public Constant foldConstant(Constant c)
@@ -1066,7 +1060,7 @@ public class FloatStamp extends PrimitiveStamp
                         }
                     },
 
-                    new FloatConvertOp(F2L)
+                    new FloatConvertOp(FloatConvert.F2L)
                     {
                         @Override
                         public Constant foldConstant(Constant c)
@@ -1101,7 +1095,7 @@ public class FloatStamp extends PrimitiveStamp
                         }
                     },
 
-                    new FloatConvertOp(D2I)
+                    new FloatConvertOp(FloatConvert.D2I)
                     {
                         @Override
                         public Constant foldConstant(Constant c)
@@ -1136,7 +1130,7 @@ public class FloatStamp extends PrimitiveStamp
                         }
                     },
 
-                    new FloatConvertOp(D2L)
+                    new FloatConvertOp(FloatConvert.D2L)
                     {
                         @Override
                         public Constant foldConstant(Constant c)
@@ -1171,7 +1165,7 @@ public class FloatStamp extends PrimitiveStamp
                         }
                     },
 
-                    new FloatConvertOp(F2D)
+                    new FloatConvertOp(FloatConvert.F2D)
                     {
                         @Override
                         public Constant foldConstant(Constant c)
@@ -1192,7 +1186,7 @@ public class FloatStamp extends PrimitiveStamp
                         }
                     },
 
-                    new FloatConvertOp(D2F)
+                    new FloatConvertOp(FloatConvert.D2F)
                     {
                         @Override
                         public Constant foldConstant(Constant c)

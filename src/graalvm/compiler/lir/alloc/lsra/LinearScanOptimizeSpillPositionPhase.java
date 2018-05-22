@@ -1,21 +1,19 @@
 package graalvm.compiler.lir.alloc.lsra;
 
-import static graalvm.compiler.core.common.cfg.AbstractControlFlowGraph.commonDominator;
-import static graalvm.compiler.core.common.cfg.AbstractControlFlowGraph.dominates;
-import static graalvm.compiler.lir.LIRValueUtil.isStackSlotValue;
-
 import java.util.Iterator;
-
-import graalvm.compiler.core.common.cfg.AbstractBlockBase;
-import graalvm.compiler.lir.LIRInsertionBuffer;
-import graalvm.compiler.lir.LIRInstruction;
-import graalvm.compiler.lir.LIRInstruction.OperandMode;
-import graalvm.compiler.lir.alloc.lsra.Interval.SpillState;
-import graalvm.compiler.lir.gen.LIRGenerationResult;
-import graalvm.compiler.lir.phases.AllocationPhase.AllocationContext;
 
 import jdk.vm.ci.code.TargetDescription;
 import jdk.vm.ci.meta.AllocatableValue;
+
+import graalvm.compiler.core.common.cfg.AbstractBlockBase;
+import graalvm.compiler.core.common.cfg.AbstractControlFlowGraph;
+import graalvm.compiler.lir.LIRInsertionBuffer;
+import graalvm.compiler.lir.LIRInstruction;
+import graalvm.compiler.lir.LIRInstruction.OperandMode;
+import graalvm.compiler.lir.LIRValueUtil;
+import graalvm.compiler.lir.alloc.lsra.Interval.SpillState;
+import graalvm.compiler.lir.gen.LIRGenerationResult;
+import graalvm.compiler.lir.phases.AllocationPhase.AllocationContext;
 
 public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAllocationPhase
 {
@@ -59,7 +57,7 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
         Interval firstSpillChild = null;
         for (Interval splitChild : interval.getSplitChildren())
         {
-            if (isStackSlotValue(splitChild.location()))
+            if (LIRValueUtil.isStackSlotValue(splitChild.location()))
             {
                 if (firstSpillChild == null || splitChild.from() < firstSpillChild.from())
                 {
@@ -68,7 +66,7 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
                 // iterate all blocks where the interval has use positions
                 for (AbstractBlockBase<?> splitBlock : blocksForInterval(splitChild))
                 {
-                    if (dominates(defBlock, splitBlock))
+                    if (AbstractControlFlowGraph.dominates(defBlock, splitBlock))
                     {
                         if (spillBlock == null)
                         {
@@ -76,7 +74,7 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
                         }
                         else
                         {
-                            spillBlock = commonDominator(spillBlock, splitBlock);
+                            spillBlock = AbstractControlFlowGraph.commonDominator(spillBlock, splitBlock);
                         }
                     }
                 }

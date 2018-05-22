@@ -1,18 +1,15 @@
 package graalvm.compiler.replacements.classfile;
 
-import static graalvm.compiler.bytecode.Bytecodes.GETSTATIC;
-import static graalvm.compiler.bytecode.Bytecodes.PUTSTATIC;
-
 import java.io.DataInputStream;
 import java.io.IOException;
-
-import graalvm.compiler.bytecode.Bytecodes;
-import graalvm.compiler.debug.GraalError;
 
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.ResolvedJavaField;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
+
+import graalvm.compiler.bytecode.Bytecodes;
+import graalvm.compiler.debug.GraalError;
 
 abstract class ClassfileConstant
 {
@@ -184,7 +181,7 @@ abstract class ClassfileConstant
                 NameAndType nameAndType = cp.get(NameAndType.class, nameAndTypeIndex);
                 String name = nameAndType.getName(cp);
                 String type = nameAndType.getType(cp);
-                field = resolveField(cp.context, cls, name, type, opcode == GETSTATIC || opcode == PUTSTATIC);
+                field = resolveField(cp.context, cls, name, type, opcode == Bytecodes.GETSTATIC || opcode == Bytecodes.PUTSTATIC);
                 if (field == null)
                 {
                     throw new NoSuchFieldError(cls.toJavaName() + "." + name + " " + type);

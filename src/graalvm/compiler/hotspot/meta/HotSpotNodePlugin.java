@@ -1,7 +1,14 @@
 package graalvm.compiler.hotspot.meta;
 
-import static graalvm.compiler.core.common.GraalOptions.ImmutableCode;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.JavaType;
+import jdk.vm.ci.meta.JavaTypeProfile;
+import jdk.vm.ci.meta.ResolvedJavaField;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
 
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.type.StampPair;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.ValueNode;
@@ -13,14 +20,6 @@ import graalvm.compiler.nodes.graphbuilderconf.TypePlugin;
 import graalvm.compiler.nodes.util.ConstantFoldUtil;
 import graalvm.compiler.word.Word;
 import graalvm.compiler.word.WordOperationPlugin;
-
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.JavaType;
-import jdk.vm.ci.meta.JavaTypeProfile;
-import jdk.vm.ci.meta.ResolvedJavaField;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * This plugin handles the HotSpot-specific customizations of bytecode parsing:
@@ -76,7 +75,7 @@ public final class HotSpotNodePlugin implements NodePlugin, TypePlugin
     @Override
     public boolean handleLoadField(GraphBuilderContext b, ValueNode object, ResolvedJavaField field)
     {
-        if (!ImmutableCode.getValue(b.getOptions()) || b.parsingIntrinsic())
+        if (!GraalOptions.ImmutableCode.getValue(b.getOptions()) || b.parsingIntrinsic())
         {
             if (object.isConstant())
             {
@@ -97,7 +96,7 @@ public final class HotSpotNodePlugin implements NodePlugin, TypePlugin
     @Override
     public boolean handleLoadStaticField(GraphBuilderContext b, ResolvedJavaField field)
     {
-        if (!ImmutableCode.getValue(b.getOptions()) || b.parsingIntrinsic())
+        if (!GraalOptions.ImmutableCode.getValue(b.getOptions()) || b.parsingIntrinsic())
         {
             if (tryReadField(b, field, null))
             {

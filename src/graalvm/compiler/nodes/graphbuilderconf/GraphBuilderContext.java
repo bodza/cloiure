@@ -1,8 +1,12 @@
 package graalvm.compiler.nodes.graphbuilderconf;
 
-import static jdk.vm.ci.meta.DeoptimizationAction.InvalidateReprofile;
-import static jdk.vm.ci.meta.DeoptimizationReason.NullCheckException;
-import static graalvm.compiler.core.common.type.StampFactory.objectNonNull;
+import jdk.vm.ci.code.BailoutException;
+import jdk.vm.ci.meta.Assumptions;
+import jdk.vm.ci.meta.DeoptimizationAction;
+import jdk.vm.ci.meta.DeoptimizationReason;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.JavaType;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 import graalvm.compiler.bytecode.Bytecode;
 import graalvm.compiler.bytecode.BytecodeProvider;
@@ -22,14 +26,6 @@ import graalvm.compiler.nodes.StateSplit;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.IsNullNode;
 import graalvm.compiler.nodes.type.StampTool;
-
-import jdk.vm.ci.code.BailoutException;
-import jdk.vm.ci.meta.Assumptions;
-import jdk.vm.ci.meta.DeoptimizationAction;
-import jdk.vm.ci.meta.DeoptimizationReason;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.JavaType;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * Used by a {@link GraphBuilderPlugin} to interface with an object that parses the bytecode of a
@@ -266,7 +262,7 @@ public interface GraphBuilderContext extends GraphBuilderTool
 
     default ValueNode nullCheckedValue(ValueNode value)
     {
-        return nullCheckedValue(value, InvalidateReprofile);
+        return nullCheckedValue(value, DeoptimizationAction.InvalidateReprofile);
     }
 
     /**
@@ -279,8 +275,8 @@ public interface GraphBuilderContext extends GraphBuilderTool
         {
             LogicNode condition = getGraph().unique(IsNullNode.create(value));
             ObjectStamp receiverStamp = (ObjectStamp) value.stamp(NodeView.DEFAULT);
-            Stamp stamp = receiverStamp.join(objectNonNull());
-            FixedGuardNode fixedGuard = append(new FixedGuardNode(condition, NullCheckException, action, true));
+            Stamp stamp = receiverStamp.join(StampFactory.objectNonNull());
+            FixedGuardNode fixedGuard = append(new FixedGuardNode(condition, DeoptimizationReason.NullCheckException, action, true));
             ValueNode nonNullReceiver = getGraph().addOrUniqueWithInputs(PiNode.create(value, stamp, fixedGuard));
             // TODO: Propogating the non-null into the frame state would
             // remove subsequent null-checks on the same value. However,

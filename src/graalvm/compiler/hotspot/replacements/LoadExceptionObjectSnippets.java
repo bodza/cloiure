@@ -1,39 +1,34 @@
 package graalvm.compiler.hotspot.replacements;
 
-import static graalvm.compiler.hotspot.meta.HotSpotForeignCallsProviderImpl.LOAD_AND_CLEAR_EXCEPTION;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.EXCEPTION_OOP_LOCATION;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.EXCEPTION_PC_LOCATION;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.readExceptionOop;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.registerAsWord;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.writeExceptionOop;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.writeExceptionPc;
-import static graalvm.compiler.hotspot.replacements.HotspotSnippetsOptions.LoadExceptionObjectInVM;
-import static graalvm.compiler.nodes.PiNode.piCastToSnippetReplaceeStamp;
-import static graalvm.compiler.replacements.SnippetTemplate.DEFAULT_REPLACER;
+import jdk.vm.ci.code.BytecodeFrame;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
+import org.graalvm.word.WordFactory;
 
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
 import graalvm.compiler.core.common.type.Stamp;
+import graalvm.compiler.hotspot.meta.HotSpotForeignCallsProviderImpl;
 import graalvm.compiler.hotspot.meta.HotSpotProviders;
 import graalvm.compiler.hotspot.meta.HotSpotRegistersProvider;
+import graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil;
+import graalvm.compiler.hotspot.replacements.HotspotSnippetsOptions;
 import graalvm.compiler.hotspot.word.HotSpotWordTypes;
+import graalvm.compiler.nodes.PiNode;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.extended.ForeignCallNode;
 import graalvm.compiler.nodes.java.LoadExceptionObjectNode;
 import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.options.OptionValues;
+import graalvm.compiler.replacements.SnippetTemplate;
 import graalvm.compiler.replacements.SnippetTemplate.AbstractTemplates;
 import graalvm.compiler.replacements.SnippetTemplate.Arguments;
 import graalvm.compiler.replacements.SnippetTemplate.SnippetInfo;
 import graalvm.compiler.replacements.Snippets;
 import graalvm.compiler.replacements.nodes.ReadRegisterNode;
 import graalvm.compiler.word.Word;
-import org.graalvm.word.WordFactory;
-
-import jdk.vm.ci.code.BytecodeFrame;
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 /**
  * Snippet for loading the exception object at the start of an exception dispatcher.
@@ -49,16 +44,16 @@ public class LoadExceptionObjectSnippets implements Snippets
     @Snippet
     public static Object loadException(@ConstantParameter Register threadRegister)
     {
-        Word thread = registerAsWord(threadRegister);
-        Object exception = readExceptionOop(thread);
-        writeExceptionOop(thread, null);
-        writeExceptionPc(thread, WordFactory.zero());
-        return piCastToSnippetReplaceeStamp(exception);
+        Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
+        Object exception = HotSpotReplacementsUtil.readExceptionOop(thread);
+        HotSpotReplacementsUtil.writeExceptionOop(thread, null);
+        HotSpotReplacementsUtil.writeExceptionPc(thread, WordFactory.zero());
+        return PiNode.piCastToSnippetReplaceeStamp(exception);
     }
 
     public static class Templates extends AbstractTemplates
     {
-        private final SnippetInfo loadException = snippet(LoadExceptionObjectSnippets.class, "loadException", EXCEPTION_OOP_LOCATION, EXCEPTION_PC_LOCATION);
+        private final SnippetInfo loadException = snippet(LoadExceptionObjectSnippets.class, "loadException", HotSpotReplacementsUtil.EXCEPTION_OOP_LOCATION, HotSpotReplacementsUtil.EXCEPTION_PC_LOCATION);
         private final HotSpotWordTypes wordTypes;
 
         public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target)
@@ -70,13 +65,13 @@ public class LoadExceptionObjectSnippets implements Snippets
         public void lower(LoadExceptionObjectNode loadExceptionObject, HotSpotRegistersProvider registers, LoweringTool tool)
         {
             StructuredGraph graph = loadExceptionObject.graph();
-            if (LoadExceptionObjectInVM.getValue(graph.getOptions()))
+            if (HotspotSnippetsOptions.LoadExceptionObjectInVM.getValue(graph.getOptions()))
             {
                 ResolvedJavaType wordType = providers.getMetaAccess().lookupJavaType(Word.class);
                 Stamp stamp = wordTypes.getWordStamp(wordType);
                 ReadRegisterNode thread = graph.add(new ReadRegisterNode(stamp, registers.getThreadRegister(), true, false));
                 graph.addBeforeFixed(loadExceptionObject, thread);
-                ForeignCallNode loadExceptionC = graph.add(new ForeignCallNode(providers.getForeignCalls(), LOAD_AND_CLEAR_EXCEPTION, thread));
+                ForeignCallNode loadExceptionC = graph.add(new ForeignCallNode(providers.getForeignCalls(), HotSpotForeignCallsProviderImpl.LOAD_AND_CLEAR_EXCEPTION, thread));
                 loadExceptionC.setStateAfter(loadExceptionObject.stateAfter());
                 graph.replaceFixedWithFixed(loadExceptionObject, loadExceptionC);
             }
@@ -84,7 +79,7 @@ public class LoadExceptionObjectSnippets implements Snippets
             {
                 Arguments args = new Arguments(loadException, loadExceptionObject.graph().getGuardsStage(), tool.getLoweringStage());
                 args.addConst("threadRegister", registers.getThreadRegister());
-                template(loadExceptionObject, args).instantiate(providers.getMetaAccess(), loadExceptionObject, DEFAULT_REPLACER, args);
+                template(loadExceptionObject, args).instantiate(providers.getMetaAccess(), loadExceptionObject, SnippetTemplate.DEFAULT_REPLACER, args);
             }
         }
     }

@@ -1,7 +1,5 @@
 package graalvm.compiler.serviceprovider;
 
-import static java.lang.Thread.currentThread;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
@@ -244,7 +242,7 @@ public final class GraalServices
      */
     public static long getCurrentThreadAllocatedBytes()
     {
-        return getThreadAllocatedBytes(currentThread().getId());
+        return getThreadAllocatedBytes(Thread.currentThread().getId());
     }
 
     /**

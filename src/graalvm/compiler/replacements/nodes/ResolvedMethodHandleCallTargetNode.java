@@ -2,6 +2,8 @@ package graalvm.compiler.replacements.nodes;
 
 import java.lang.invoke.MethodHandle;
 
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import graalvm.compiler.core.common.type.StampPair;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.NodeClass;
@@ -11,8 +13,6 @@ import graalvm.compiler.nodes.java.MethodCallTargetNode;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * A call target that replaces itself in the graph when being lowered by restoring the original

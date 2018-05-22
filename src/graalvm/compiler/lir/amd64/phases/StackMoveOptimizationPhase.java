@@ -1,10 +1,13 @@
 package graalvm.compiler.lir.amd64.phases;
 
-import static graalvm.compiler.lir.phases.LIRPhase.Options.LIROptimization;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.LIR;
@@ -13,13 +16,9 @@ import graalvm.compiler.lir.RedundantMoveElimination;
 import graalvm.compiler.lir.amd64.AMD64Move.AMD64MultiStackMove;
 import graalvm.compiler.lir.amd64.AMD64Move.AMD64StackMove;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
+import graalvm.compiler.lir.phases.LIRPhase;
 import graalvm.compiler.lir.phases.PostAllocationOptimizationPhase;
 import graalvm.compiler.options.NestedBooleanOptionKey;
-
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Replaces sequential {@link AMD64StackMove}s of the same type with a single
@@ -32,7 +31,7 @@ public class StackMoveOptimizationPhase extends PostAllocationOptimizationPhase
 {
     public static class Options
     {
-        public static final NestedBooleanOptionKey LIROptStackMoveOptimizer = new NestedBooleanOptionKey(LIROptimization, true);
+        public static final NestedBooleanOptionKey LIROptStackMoveOptimizer = new NestedBooleanOptionKey(LIRPhase.Options.LIROptimization, true);
     }
 
     @Override

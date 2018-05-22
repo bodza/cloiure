@@ -2,6 +2,9 @@ package graalvm.compiler.lir.alloc.lsra.ssa;
 
 import java.util.EnumSet;
 
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstruction.OperandMode;
@@ -12,9 +15,6 @@ import graalvm.compiler.lir.alloc.lsra.Interval.RegisterPriority;
 import graalvm.compiler.lir.alloc.lsra.LinearScan;
 import graalvm.compiler.lir.alloc.lsra.LinearScanLifetimeAnalysisPhase;
 import graalvm.compiler.lir.ssa.SSAUtil;
-
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Value;
 
 public class SSALinearScanLifetimeAnalysisPhase extends LinearScanLifetimeAnalysisPhase
 {

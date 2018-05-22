@@ -1,5 +1,14 @@
 package graalvm.compiler.hotspot.meta;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+
+import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
+import jdk.vm.ci.meta.ConstantPool;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import graalvm.compiler.core.common.type.ObjectStamp;
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
@@ -12,15 +21,6 @@ import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.graphbuilderconf.ClassInitializationPlugin;
 import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderContext;
-
-import jdk.vm.ci.hotspot.HotSpotResolvedObjectType;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.ResolvedJavaType;
-import jdk.vm.ci.meta.ConstantPool;
-
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 
 public final class HotSpotClassInitializationPlugin implements ClassInitializationPlugin
 {

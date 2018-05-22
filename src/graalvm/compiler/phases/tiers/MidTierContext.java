@@ -1,10 +1,10 @@
 package graalvm.compiler.phases.tiers;
 
-import graalvm.compiler.phases.OptimisticOptimizations;
-import graalvm.compiler.phases.util.Providers;
-
 import jdk.vm.ci.code.TargetDescription;
 import jdk.vm.ci.meta.ProfilingInfo;
+
+import graalvm.compiler.phases.OptimisticOptimizations;
+import graalvm.compiler.phases.util.Providers;
 
 public class MidTierContext extends PhaseContext
 {

@@ -1,11 +1,10 @@
 package graalvm.compiler.core.common;
 
-import graalvm.util.UnsafeAccess;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
 import graalvm.compiler.debug.GraalError;
+import graalvm.util.UnsafeAccess;
 
 /**
  * Describes fields in a class, primarily for access via {@link Unsafe}.

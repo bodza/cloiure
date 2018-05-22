@@ -1,15 +1,18 @@
 package graalvm.compiler.phases.common;
 
-import static graalvm.compiler.nodes.StaticDeoptimizingNode.mergeActions;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
+
+import jdk.vm.ci.meta.DeoptimizationAction;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.TriState;
 
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 import org.graalvm.collections.MapCursor;
 import org.graalvm.collections.Pair;
+
 import graalvm.compiler.core.common.cfg.AbstractControlFlowGraph;
 import graalvm.compiler.core.common.cfg.BlockMap;
 import graalvm.compiler.core.common.type.ArithmeticOpTable;
@@ -45,6 +48,7 @@ import graalvm.compiler.nodes.ParameterNode;
 import graalvm.compiler.nodes.PiNode;
 import graalvm.compiler.nodes.ProxyNode;
 import graalvm.compiler.nodes.ShortCircuitOrNode;
+import graalvm.compiler.nodes.StaticDeoptimizingNode;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.StructuredGraph.ScheduleResult;
 import graalvm.compiler.nodes.UnaryOpLogicNode;
@@ -69,10 +73,6 @@ import graalvm.compiler.phases.BasePhase;
 import graalvm.compiler.phases.schedule.SchedulePhase;
 import graalvm.compiler.phases.schedule.SchedulePhase.SchedulingStrategy;
 import graalvm.compiler.phases.tiers.PhaseContext;
-
-import jdk.vm.ci.meta.DeoptimizationAction;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.TriState;
 
 public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
 {
@@ -820,7 +820,7 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
 
         protected boolean foldGuard(DeoptimizingGuard thisGuard, DeoptimizingGuard otherGuard, boolean outcome, Stamp guardedValueStamp, GuardRewirer rewireGuardFunction)
         {
-            DeoptimizationAction action = mergeActions(otherGuard.getAction(), thisGuard.getAction());
+            DeoptimizationAction action = StaticDeoptimizingNode.mergeActions(otherGuard.getAction(), thisGuard.getAction());
             if (action != null && otherGuard.getSpeculation() == thisGuard.getSpeculation())
             {
                 LogicNode condition = (LogicNode) thisGuard.getCondition().copyWithInputs();

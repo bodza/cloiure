@@ -2,6 +2,9 @@ package graalvm.compiler.nodes.calc;
 
 import java.util.EnumMap;
 
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+
 import graalvm.compiler.core.common.calc.FloatConvert;
 import graalvm.compiler.core.common.type.ArithmeticOpTable;
 import graalvm.compiler.core.common.type.ArithmeticOpTable.FloatConvertOp;
@@ -14,9 +17,6 @@ import graalvm.compiler.nodes.spi.ArithmeticLIRLowerable;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
 
 /**
  * A {@code FloatConvert} converts between integers and floating point numbers according to Java

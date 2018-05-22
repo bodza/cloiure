@@ -1,12 +1,17 @@
 package graalvm.compiler.hotspot;
 
-import static graalvm.compiler.core.common.GraalOptions.GeneratePIC;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import jdk.vm.ci.code.Architecture;
+import jdk.vm.ci.code.stack.StackIntrospection;
+import jdk.vm.ci.hotspot.HotSpotJVMCIRuntime;
+import jdk.vm.ci.hotspot.HotSpotVMConfigStore;
+import jdk.vm.ci.runtime.JVMCIBackend;
+
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
+
 import graalvm.compiler.api.replacements.SnippetReflectionProvider;
 import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.target.Backend;
@@ -19,12 +24,6 @@ import graalvm.compiler.phases.tiers.CompilerConfiguration;
 import graalvm.compiler.replacements.SnippetCounter;
 import graalvm.compiler.replacements.SnippetCounter.Group;
 import graalvm.compiler.runtime.RuntimeProvider;
-
-import jdk.vm.ci.code.Architecture;
-import jdk.vm.ci.code.stack.StackIntrospection;
-import jdk.vm.ci.hotspot.HotSpotJVMCIRuntime;
-import jdk.vm.ci.hotspot.HotSpotVMConfigStore;
-import jdk.vm.ci.runtime.JVMCIBackend;
 
 /**
  * Singleton class holding the instance of the {@link GraalRuntime}.
@@ -53,7 +52,7 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider
     {
         this.runtimeName = getClass().getSimpleName() + ":" + nameQualifier;
         HotSpotVMConfigStore store = jvmciRuntime.getConfigStore();
-        config = GeneratePIC.getValue(options) ? new AOTGraalHotSpotVMConfig(store) : new GraalHotSpotVMConfig(store);
+        config = GraalOptions.GeneratePIC.getValue(options) ? new AOTGraalHotSpotVMConfig(store) : new GraalHotSpotVMConfig(store);
 
         this.options = options;
 

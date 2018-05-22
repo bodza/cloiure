@@ -1,5 +1,9 @@
 package graalvm.compiler.hotspot.nodes.aot;
 
+import jdk.vm.ci.hotspot.HotSpotMetaspaceConstant;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.core.common.PermanentBailoutException;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
@@ -15,10 +19,6 @@ import graalvm.compiler.nodes.calc.FloatingNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.nodes.util.GraphUtil;
-
-import jdk.vm.ci.hotspot.HotSpotMetaspaceConstant;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.Value;
 
 public class LoadMethodCountersIndirectlyNode extends FloatingNode implements Canonicalizable, LIRLowerable
 {

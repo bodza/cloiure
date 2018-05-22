@@ -1,5 +1,7 @@
 package graalvm.compiler.hotspot.nodes.aot;
 
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.iterators.NodeIterable;
@@ -8,8 +10,6 @@ import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.calc.FloatingNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 public class LoadMethodCountersNode extends FloatingNode implements LIRLowerable
 {

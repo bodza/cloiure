@@ -1,5 +1,9 @@
 package graalvm.compiler.nodes.extended;
 
+import jdk.vm.ci.meta.MetaAccessProvider;
+
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.core.common.type.TypeReference;
@@ -11,9 +15,6 @@ import graalvm.compiler.nodes.memory.AbstractMemoryCheckpoint;
 import graalvm.compiler.nodes.memory.MemoryCheckpoint;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.meta.MetaAccessProvider;
 
 /**
  * A node that represents an exception thrown implicitly by a Java bytecode. It can be lowered to

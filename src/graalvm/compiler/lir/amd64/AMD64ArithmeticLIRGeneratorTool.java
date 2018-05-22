@@ -1,10 +1,10 @@
 package graalvm.compiler.lir.amd64;
 
-import graalvm.compiler.lir.Variable;
-import graalvm.compiler.lir.gen.ArithmeticLIRGeneratorTool;
-
 import jdk.vm.ci.amd64.AMD64Kind;
 import jdk.vm.ci.meta.Value;
+
+import graalvm.compiler.lir.Variable;
+import graalvm.compiler.lir.gen.ArithmeticLIRGeneratorTool;
 
 /**
  * This interface can be used to generate AMD64 LIR for arithmetic operations.

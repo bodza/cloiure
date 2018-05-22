@@ -1,9 +1,9 @@
 package graalvm.compiler.lir.stackslotalloc;
 
-import graalvm.compiler.lir.VirtualStackSlot;
-
 import jdk.vm.ci.code.StackSlot;
 import jdk.vm.ci.meta.ValueKind;
+
+import graalvm.compiler.lir.VirtualStackSlot;
 
 public final class StackInterval
 {

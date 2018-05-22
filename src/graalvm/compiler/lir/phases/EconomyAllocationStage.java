@@ -1,7 +1,6 @@
 package graalvm.compiler.lir.phases;
 
-import static graalvm.compiler.core.common.GraalOptions.TraceRA;
-
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.lir.alloc.lsra.LinearScanPhase;
 import graalvm.compiler.lir.alloc.trace.TraceRegisterAllocationPhase;
 import graalvm.compiler.lir.dfa.LocationMarkerPhase;
@@ -13,7 +12,7 @@ public class EconomyAllocationStage extends LIRPhaseSuite<AllocationContext>
 {
     public EconomyAllocationStage(OptionValues options)
     {
-        if (TraceRA.getValue(options))
+        if (GraalOptions.TraceRA.getValue(options))
         {
             appendPhase(new TraceRegisterAllocationPhase());
         }

@@ -1,8 +1,14 @@
 package graalvm.compiler.hotspot;
 
-import static jdk.vm.ci.hotspot.HotSpotCompressedNullConstant.COMPRESSED_NULL;
-
 import java.nio.ByteBuffer;
+
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.hotspot.HotSpotCompressedNullConstant;
+import jdk.vm.ci.hotspot.HotSpotConstant;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.SerializableConstant;
+import jdk.vm.ci.meta.VMConstant;
 
 import graalvm.compiler.code.DataSection.Data;
 import graalvm.compiler.code.DataSection.Patches;
@@ -10,13 +16,6 @@ import graalvm.compiler.code.DataSection.SerializableData;
 import graalvm.compiler.code.DataSection.ZeroData;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.asm.DataBuilder;
-
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.hotspot.HotSpotConstant;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.SerializableConstant;
-import jdk.vm.ci.meta.VMConstant;
 
 public class HotSpotDataBuilder extends DataBuilder
 {
@@ -39,7 +38,7 @@ public class HotSpotDataBuilder extends DataBuilder
     {
         if (JavaConstant.isNull(constant))
         {
-            boolean compressed = COMPRESSED_NULL.equals(constant);
+            boolean compressed = HotSpotCompressedNullConstant.COMPRESSED_NULL.equals(constant);
             int size = compressed ? 4 : target.wordSize;
             return ZeroData.create(size, size);
         }

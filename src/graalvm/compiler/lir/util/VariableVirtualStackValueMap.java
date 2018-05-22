@@ -1,13 +1,9 @@
 package graalvm.compiler.lir.util;
 
-import static graalvm.compiler.lir.LIRValueUtil.asVariable;
-import static graalvm.compiler.lir.LIRValueUtil.asVirtualStackSlot;
-import static graalvm.compiler.lir.LIRValueUtil.isVariable;
-import static graalvm.compiler.lir.LIRValueUtil.isVirtualStackSlot;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.debug.GraalError;
-
-import jdk.vm.ci.meta.Value;
+import graalvm.compiler.lir.LIRValueUtil;
 
 public class VariableVirtualStackValueMap<K extends Value, T> extends ValueMap<K, T>
 {
@@ -23,13 +19,13 @@ public class VariableVirtualStackValueMap<K extends Value, T> extends ValueMap<K
     @Override
     public T get(K value)
     {
-        if (isVariable(value))
+        if (LIRValueUtil.isVariable(value))
         {
-            return get(variables, asVariable(value).index);
+            return get(variables, LIRValueUtil.asVariable(value).index);
         }
-        if (isVirtualStackSlot(value))
+        if (LIRValueUtil.isVirtualStackSlot(value))
         {
-            return get(slots, asVirtualStackSlot(value).getId());
+            return get(slots, LIRValueUtil.asVirtualStackSlot(value).getId());
         }
         throw GraalError.shouldNotReachHere("Unsupported Value: " + value);
     }
@@ -37,13 +33,13 @@ public class VariableVirtualStackValueMap<K extends Value, T> extends ValueMap<K
     @Override
     public void remove(K value)
     {
-        if (isVariable(value))
+        if (LIRValueUtil.isVariable(value))
         {
-            remove(variables, asVariable(value).index);
+            remove(variables, LIRValueUtil.asVariable(value).index);
         }
-        else if (isVirtualStackSlot(value))
+        else if (LIRValueUtil.isVirtualStackSlot(value))
         {
-            remove(slots, asVirtualStackSlot(value).getId());
+            remove(slots, LIRValueUtil.asVirtualStackSlot(value).getId());
         }
         else
         {
@@ -54,13 +50,13 @@ public class VariableVirtualStackValueMap<K extends Value, T> extends ValueMap<K
     @Override
     public void put(K value, T object)
     {
-        if (isVariable(value))
+        if (LIRValueUtil.isVariable(value))
         {
-            put(variables, asVariable(value).index, object);
+            put(variables, LIRValueUtil.asVariable(value).index, object);
         }
-        else if (isVirtualStackSlot(value))
+        else if (LIRValueUtil.isVirtualStackSlot(value))
         {
-            put(slots, asVirtualStackSlot(value).getId(), object);
+            put(slots, LIRValueUtil.asVirtualStackSlot(value).getId(), object);
         }
         else
         {

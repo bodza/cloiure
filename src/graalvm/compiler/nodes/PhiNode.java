@@ -1,7 +1,5 @@
 package graalvm.compiler.nodes;
 
-import static graalvm.compiler.nodeinfo.InputType.Association;
-
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
@@ -9,6 +7,7 @@ import graalvm.compiler.graph.NodeInputList;
 import graalvm.compiler.graph.iterators.NodeIterable;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.calc.FloatingNode;
 
@@ -22,7 +21,7 @@ import graalvm.compiler.nodes.calc.FloatingNode;
 public abstract class PhiNode extends FloatingNode implements Canonicalizable
 {
     public static final NodeClass<PhiNode> TYPE = NodeClass.create(PhiNode.class);
-    @Input(Association) protected AbstractMergeNode merge;
+    @Input(InputType.Association) protected AbstractMergeNode merge;
 
     protected PhiNode(NodeClass<? extends PhiNode> c, Stamp stamp, AbstractMergeNode merge)
     {

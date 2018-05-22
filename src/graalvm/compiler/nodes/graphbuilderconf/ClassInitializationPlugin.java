@@ -1,10 +1,10 @@
 package graalvm.compiler.nodes.graphbuilderconf;
 
-import graalvm.compiler.nodes.FrameState;
-import graalvm.compiler.nodes.ValueNode;
-
 import jdk.vm.ci.meta.ConstantPool;
 import jdk.vm.ci.meta.ResolvedJavaType;
+
+import graalvm.compiler.nodes.FrameState;
+import graalvm.compiler.nodes.ValueNode;
 
 public interface ClassInitializationPlugin extends GraphBuilderPlugin
 {

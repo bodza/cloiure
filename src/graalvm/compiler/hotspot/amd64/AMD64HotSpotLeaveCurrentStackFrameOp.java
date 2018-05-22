@@ -1,6 +1,10 @@
 package graalvm.compiler.hotspot.amd64;
 
-import static jdk.vm.ci.amd64.AMD64.rdx;
+import jdk.vm.ci.amd64.AMD64;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.RegisterConfig;
+import jdk.vm.ci.code.RegisterSaveLayout;
+import jdk.vm.ci.meta.JavaKind;
 
 import graalvm.compiler.asm.amd64.AMD64Address;
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
@@ -9,11 +13,6 @@ import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.StandardOp.SaveRegistersOp;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
 import graalvm.compiler.lir.framemap.FrameMap;
-
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.RegisterConfig;
-import jdk.vm.ci.code.RegisterSaveLayout;
-import jdk.vm.ci.meta.JavaKind;
 
 /**
  * Pops the current frame off the stack including the return address and restores the return
@@ -44,7 +43,7 @@ final class AMD64HotSpotLeaveCurrentStackFrameOp extends AMD64HotSpotEpilogueOp
         final int stackSlotSize = frameMap.getTarget().wordSize;
         Register integerResultRegister = registerConfig.getReturnRegister(JavaKind.Long);
         masm.movptr(integerResultRegister, new AMD64Address(stackPointer, registerSaveLayout.registerToSlot(integerResultRegister) * stackSlotSize));
-        masm.movptr(rdx, new AMD64Address(stackPointer, registerSaveLayout.registerToSlot(rdx) * stackSlotSize));
+        masm.movptr(AMD64.rdx, new AMD64Address(stackPointer, registerSaveLayout.registerToSlot(AMD64.rdx) * stackSlotSize));
 
         // Restore float result register.
         Register floatResultRegister = registerConfig.getReturnRegister(JavaKind.Double);

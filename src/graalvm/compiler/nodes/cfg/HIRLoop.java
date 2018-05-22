@@ -1,8 +1,9 @@
 package graalvm.compiler.nodes.cfg;
 
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.core.common.cfg.Loop;
 import graalvm.compiler.nodes.LoopBeginNode;
-import org.graalvm.word.LocationIdentity;
 
 public final class HIRLoop extends Loop<Block>
 {

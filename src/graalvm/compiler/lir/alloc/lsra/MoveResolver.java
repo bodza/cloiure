@@ -1,20 +1,17 @@
 package graalvm.compiler.lir.alloc.lsra;
 
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.isIllegal;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-
 import java.util.ArrayList;
+
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Constant;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.LIRInsertionBuffer;
 import graalvm.compiler.lir.LIRInstruction;
 import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
-
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Constant;
-import jdk.vm.ci.meta.Value;
 
 /**
  */
@@ -35,9 +32,9 @@ public class MoveResolver
 
     protected void setValueBlocked(Value location, int direction)
     {
-        if (isRegister(location))
+        if (ValueUtil.isRegister(location))
         {
-            registerBlocked[asRegister(location).number] += direction;
+            registerBlocked[ValueUtil.asRegister(location).number] += direction;
         }
         else
         {
@@ -57,9 +54,9 @@ public class MoveResolver
 
     protected int valueBlocked(Value location)
     {
-        if (isRegister(location))
+        if (ValueUtil.isRegister(location))
         {
-            return registerBlocked[asRegister(location).number];
+            return registerBlocked[ValueUtil.asRegister(location).number];
         }
         throw GraalError.shouldNotReachHere("unhandled value " + location);
     }
@@ -144,7 +141,7 @@ public class MoveResolver
         {
             return true;
         }
-        if (from != null && isRegister(from) && isRegister(to) && asRegister(from).equals(asRegister(to)))
+        if (from != null && ValueUtil.isRegister(from) && ValueUtil.isRegister(to) && ValueUtil.asRegister(from).equals(ValueUtil.asRegister(to)))
         {
             return true;
         }
@@ -153,7 +150,7 @@ public class MoveResolver
 
     protected boolean mightBeBlocked(Value location)
     {
-        return isRegister(location);
+        return ValueUtil.isRegister(location);
     }
 
     private void createInsertionBuffer(ArrayList<LIRInstruction> list)
@@ -261,7 +258,7 @@ public class MoveResolver
 
                     processedInterval = true;
                 }
-                else if (fromInterval != null && isRegister(fromInterval.location()) && (busySpillSlots == null || !busySpillSlots.contains(fromInterval.spillSlot())))
+                else if (fromInterval != null && ValueUtil.isRegister(fromInterval.location()) && (busySpillSlots == null || !busySpillSlots.contains(fromInterval.spillSlot())))
                 {
                     // this interval cannot be processed now because target is not free
                     // it starts in a register, so it is a possible candidate for spilling
@@ -346,11 +343,11 @@ public class MoveResolver
 
     public void addMapping(Interval fromInterval, Interval toInterval)
     {
-        if (isIllegal(toInterval.location()) && toInterval.canMaterialize())
+        if (ValueUtil.isIllegal(toInterval.location()) && toInterval.canMaterialize())
         {
             return;
         }
-        if (isIllegal(fromInterval.location()) && fromInterval.canMaterialize())
+        if (ValueUtil.isIllegal(fromInterval.location()) && fromInterval.canMaterialize())
         {
             // Instead of a reload, re-materialize the value
             Constant rematValue = fromInterval.getMaterializedValue();

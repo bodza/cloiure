@@ -1,5 +1,9 @@
 package graalvm.compiler.hotspot.amd64;
 
+import jdk.vm.ci.amd64.AMD64;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
 import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
 import graalvm.compiler.lir.LIRFrameState;
@@ -8,10 +12,6 @@ import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.amd64.AMD64Call.DirectCallOp;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
 import graalvm.compiler.nodes.CallTargetNode.InvokeKind;
-
-import jdk.vm.ci.amd64.AMD64;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.Value;
 
 /**
  * A direct call that complies with the conventions for such calls in HotSpot. In particular, for

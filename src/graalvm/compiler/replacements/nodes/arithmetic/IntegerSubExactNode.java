@@ -1,5 +1,8 @@
 package graalvm.compiler.replacements.nodes.arithmetic;
 
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.JavaKind;
+
 import graalvm.compiler.core.common.type.IntegerStamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
@@ -10,9 +13,6 @@ import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.calc.SubNode;
 import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.nodes.util.GraphUtil;
-
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
 
 /**
  * Node representing an exact integer substraction that will throw an {@link ArithmeticException} in

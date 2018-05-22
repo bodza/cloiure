@@ -1,10 +1,10 @@
 package graalvm.compiler.hotspot;
 
-import graalvm.compiler.core.common.CompressEncoding;
-import graalvm.compiler.hotspot.nodes.GraalHotSpotVMConfigNode;
-
 import jdk.vm.ci.common.JVMCIError;
 import jdk.vm.ci.hotspot.HotSpotVMConfigStore;
+
+import graalvm.compiler.core.common.CompressEncoding;
+import graalvm.compiler.hotspot.nodes.GraalHotSpotVMConfigNode;
 
 /**
  * Used to access native configuration details.

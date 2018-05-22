@@ -1,5 +1,11 @@
 package graalvm.compiler.replacements.amd64;
 
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.Value;
+
+import org.graalvm.word.LocationIdentity;
+import org.graalvm.word.Pointer;
+
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeInputList;
@@ -12,11 +18,6 @@ import graalvm.compiler.nodes.memory.MemoryAccess;
 import graalvm.compiler.nodes.memory.MemoryNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-import org.graalvm.word.LocationIdentity;
-import org.graalvm.word.Pointer;
-
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.Value;
 
 public class AMD64StringIndexOfNode extends FixedWithNextNode implements LIRLowerable, MemoryAccess
 {

@@ -1,5 +1,8 @@
 package graalvm.compiler.replacements.nodes;
 
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodeinfo.Verbosity;
@@ -7,9 +10,6 @@ import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Changes the value of a specific register.

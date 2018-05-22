@@ -1,7 +1,11 @@
 package graalvm.compiler.hotspot.replacements;
 
-import static graalvm.compiler.core.common.GraalOptions.ImmutableCode;
+import jdk.vm.ci.hotspot.HotSpotObjectConstant;
+import jdk.vm.ci.meta.JavaConstant;
 
+import org.graalvm.word.LocationIdentity;
+
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
@@ -13,10 +17,6 @@ import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.memory.MemoryCheckpoint;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.hotspot.HotSpotObjectConstant;
-import jdk.vm.ci.meta.JavaConstant;
 
 public class IdentityHashCodeNode extends FixedWithNextNode implements Canonicalizable, Lowerable, MemoryCheckpoint.Single
 {
@@ -42,7 +42,7 @@ public class IdentityHashCodeNode extends FixedWithNextNode implements Canonical
         if (object.isConstant())
         {
             JavaConstant c = (JavaConstant) object.asConstant();
-            if (ImmutableCode.getValue(tool.getOptions()))
+            if (GraalOptions.ImmutableCode.getValue(tool.getOptions()))
             {
                 return this;
             }

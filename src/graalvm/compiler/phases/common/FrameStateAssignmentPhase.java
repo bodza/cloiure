@@ -2,7 +2,10 @@ package graalvm.compiler.phases.common;
 
 import java.util.List;
 
+import jdk.vm.ci.code.BytecodeFrame;
+
 import org.graalvm.collections.EconomicMap;
+
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodes.AbstractBeginNode;
@@ -19,8 +22,6 @@ import graalvm.compiler.nodes.util.GraphUtil;
 import graalvm.compiler.phases.Phase;
 import graalvm.compiler.phases.graph.ReentrantNodeIterator;
 import graalvm.compiler.phases.graph.ReentrantNodeIterator.NodeIteratorClosure;
-
-import jdk.vm.ci.code.BytecodeFrame;
 
 /**
  * This phase transfers {@link FrameState} nodes from {@link StateSplit} nodes to

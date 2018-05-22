@@ -2,6 +2,8 @@ package graalvm.compiler.nodes.extended;
 
 import java.util.Arrays;
 
+import jdk.vm.ci.meta.Constant;
+
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.debug.GraalError;
@@ -12,8 +14,6 @@ import graalvm.compiler.graph.spi.SimplifierTool;
 import graalvm.compiler.nodes.AbstractBeginNode;
 import graalvm.compiler.nodes.ControlSplitNode;
 import graalvm.compiler.nodes.ValueNode;
-
-import jdk.vm.ci.meta.Constant;
 
 /**
  * The {@code SwitchNode} class is the base of both lookup and table switches.

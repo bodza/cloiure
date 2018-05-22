@@ -1,5 +1,7 @@
 package graalvm.compiler.nodes.spi;
 
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import graalvm.compiler.api.replacements.MethodSubstitution;
 import graalvm.compiler.api.replacements.SnippetTemplateCache;
 import graalvm.compiler.bytecode.Bytecode;
@@ -8,8 +10,6 @@ import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderConfiguration;
 import graalvm.compiler.nodes.graphbuilderconf.InvocationPlugin;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * Interface for managing replacements.

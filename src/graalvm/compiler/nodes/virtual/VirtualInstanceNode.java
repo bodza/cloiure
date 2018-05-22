@@ -1,14 +1,14 @@
 package graalvm.compiler.nodes.virtual;
 
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.ResolvedJavaField;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import graalvm.compiler.core.common.spi.ArrayOffsetProvider;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.nodeinfo.Verbosity;
 import graalvm.compiler.nodes.FixedNode;
 import graalvm.compiler.nodes.ValueNode;
-
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.ResolvedJavaField;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 public class VirtualInstanceNode extends VirtualObjectNode
 {

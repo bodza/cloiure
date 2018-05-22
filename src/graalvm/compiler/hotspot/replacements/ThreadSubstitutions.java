@@ -1,19 +1,15 @@
 package graalvm.compiler.hotspot.replacements;
 
-import static graalvm.compiler.hotspot.GraalHotSpotVMConfig.INJECTED_VMCONFIG;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.JAVA_THREAD_OSTHREAD_LOCATION;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.JAVA_THREAD_THREAD_OBJECT_LOCATION;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.osThreadInterruptedOffset;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.osThreadOffset;
-import static graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil.threadObjectOffset;
-import static org.graalvm.word.LocationIdentity.any;
+import org.graalvm.word.LocationIdentity;
 
 import graalvm.compiler.api.replacements.ClassSubstitution;
 import graalvm.compiler.api.replacements.MethodSubstitution;
 import graalvm.compiler.core.common.spi.ForeignCallDescriptor;
 import graalvm.compiler.graph.Node.ConstantNodeParameter;
 import graalvm.compiler.graph.Node.NodeIntrinsic;
+import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
 import graalvm.compiler.hotspot.nodes.CurrentJavaThreadNode;
+import graalvm.compiler.hotspot.replacements.HotSpotReplacementsUtil;
 import graalvm.compiler.nodes.extended.ForeignCallNode;
 import graalvm.compiler.word.Word;
 
@@ -30,11 +26,11 @@ public class ThreadSubstitutions
     public static boolean isInterrupted(final Thread thisObject, boolean clearInterrupted)
     {
         Word javaThread = CurrentJavaThreadNode.get();
-        Object thread = javaThread.readObject(threadObjectOffset(INJECTED_VMCONFIG), JAVA_THREAD_THREAD_OBJECT_LOCATION);
+        Object thread = javaThread.readObject(HotSpotReplacementsUtil.threadObjectOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.JAVA_THREAD_THREAD_OBJECT_LOCATION);
         if (thisObject == thread)
         {
-            Word osThread = javaThread.readWord(osThreadOffset(INJECTED_VMCONFIG), JAVA_THREAD_OSTHREAD_LOCATION);
-            boolean interrupted = osThread.readInt(osThreadInterruptedOffset(INJECTED_VMCONFIG), any()) != 0;
+            Word osThread = javaThread.readWord(HotSpotReplacementsUtil.osThreadOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.JAVA_THREAD_OSTHREAD_LOCATION);
+            boolean interrupted = osThread.readInt(HotSpotReplacementsUtil.osThreadInterruptedOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), LocationIdentity.any()) != 0;
             if (!interrupted || !clearInterrupted)
             {
                 return interrupted;

@@ -1,7 +1,7 @@
 package graalvm.compiler.nodes.java;
 
-import static graalvm.compiler.nodeinfo.InputType.State;
-import static graalvm.compiler.nodes.java.ForeignCallDescriptors.REGISTER_FINALIZER;
+import jdk.vm.ci.meta.Assumptions;
+import jdk.vm.ci.meta.Assumptions.AssumptionResult;
 
 import graalvm.compiler.core.common.spi.ForeignCallLinkage;
 import graalvm.compiler.core.common.type.ObjectStamp;
@@ -9,19 +9,18 @@ import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.spi.Canonicalizable;
 import graalvm.compiler.graph.spi.CanonicalizerTool;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.AbstractStateSplit;
 import graalvm.compiler.nodes.DeoptimizingNode;
 import graalvm.compiler.nodes.FrameState;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
+import graalvm.compiler.nodes.java.ForeignCallDescriptors;
 import graalvm.compiler.nodes.spi.LIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.nodes.spi.Virtualizable;
 import graalvm.compiler.nodes.spi.VirtualizerTool;
 import graalvm.compiler.nodes.virtual.VirtualObjectNode;
-
-import jdk.vm.ci.meta.Assumptions;
-import jdk.vm.ci.meta.Assumptions.AssumptionResult;
 
 /**
  * This node is used to perform the finalizer registration at the end of the java.lang.Object
@@ -30,7 +29,7 @@ import jdk.vm.ci.meta.Assumptions.AssumptionResult;
 public final class RegisterFinalizerNode extends AbstractStateSplit implements Canonicalizable.Unary<ValueNode>, LIRLowerable, Virtualizable, DeoptimizingNode.DeoptAfter
 {
     public static final NodeClass<RegisterFinalizerNode> TYPE = NodeClass.create(RegisterFinalizerNode.class);
-    @OptionalInput(State) FrameState deoptState;
+    @OptionalInput(InputType.State) FrameState deoptState;
     @Input ValueNode value;
 
     public RegisterFinalizerNode(ValueNode value)
@@ -51,7 +50,7 @@ public final class RegisterFinalizerNode extends AbstractStateSplit implements C
         // Note that an unconditional call to the runtime routine is made without
         // checking that the object actually has a finalizer. This requires the
         // runtime routine to do the check.
-        ForeignCallLinkage linkage = gen.getLIRGeneratorTool().getForeignCalls().lookupForeignCall(REGISTER_FINALIZER);
+        ForeignCallLinkage linkage = gen.getLIRGeneratorTool().getForeignCalls().lookupForeignCall(ForeignCallDescriptors.REGISTER_FINALIZER);
         gen.getLIRGeneratorTool().emitForeignCall(linkage, gen.state(this), gen.operand(getValue()));
     }
 

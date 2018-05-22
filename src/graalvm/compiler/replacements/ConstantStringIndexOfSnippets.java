@@ -1,6 +1,7 @@
 package graalvm.compiler.replacements;
 
-import static graalvm.compiler.replacements.SnippetTemplate.DEFAULT_REPLACER;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.meta.JavaKind;
 
 import graalvm.compiler.api.replacements.Fold;
 import graalvm.compiler.api.replacements.Fold.InjectedParameter;
@@ -12,14 +13,11 @@ import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.util.Providers;
+import graalvm.compiler.replacements.SnippetTemplate;
 import graalvm.compiler.replacements.SnippetTemplate.AbstractTemplates;
 import graalvm.compiler.replacements.SnippetTemplate.Arguments;
 import graalvm.compiler.replacements.SnippetTemplate.SnippetInfo;
 import graalvm.compiler.replacements.nodes.ExplodeLoopNode;
-
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.JavaKind;
-
 import graalvm.util.UnsafeAccess;
 
 public class ConstantStringIndexOfSnippets implements Snippets
@@ -47,7 +45,7 @@ public class ConstantStringIndexOfSnippets implements Snippets
             char[] targetCharArray = snippetReflection.asObject(char[].class, stringIndexOf.getArgument(3).asJavaConstant());
             args.addConst("md2", md2(targetCharArray));
             args.addConst("cache", computeCache(targetCharArray));
-            template(stringIndexOf, args).instantiate(providers.getMetaAccess(), stringIndexOf, DEFAULT_REPLACER, args);
+            template(stringIndexOf, args).instantiate(providers.getMetaAccess(), stringIndexOf, SnippetTemplate.DEFAULT_REPLACER, args);
         }
     }
 

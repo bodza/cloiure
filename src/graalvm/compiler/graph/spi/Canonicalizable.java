@@ -1,9 +1,9 @@
 package graalvm.compiler.graph.spi;
 
+import jdk.vm.ci.meta.MetaAccessProvider;
+
 import graalvm.compiler.graph.Graph;
 import graalvm.compiler.graph.Node;
-
-import jdk.vm.ci.meta.MetaAccessProvider;
 
 /**
  * Nodes can implement {@link Canonicalizable} or one of the two sub-interfaces {@link Unary} and

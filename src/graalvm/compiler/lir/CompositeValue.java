@@ -6,11 +6,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.EnumSet;
 
-import graalvm.compiler.lir.LIRInstruction.OperandFlag;
-import graalvm.compiler.lir.LIRInstruction.OperandMode;
-
 import jdk.vm.ci.meta.Value;
 import jdk.vm.ci.meta.ValueKind;
+
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
+import graalvm.compiler.lir.LIRInstruction.OperandMode;
 
 /**
  * Base class to represent values that need to be stored in more than one register. This is mainly

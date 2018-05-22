@@ -1,5 +1,7 @@
 package graalvm.compiler.nodes;
 
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.graph.NodeClass;
@@ -12,11 +14,8 @@ import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
 import graalvm.compiler.nodes.spi.UncheckedInterfaceProvider;
 import graalvm.compiler.nodes.util.GraphUtil;
-import org.graalvm.word.LocationIdentity;
 
-import static graalvm.compiler.nodeinfo.InputType.Extension;
-import static graalvm.compiler.nodeinfo.InputType.Memory;
-import static graalvm.compiler.nodeinfo.InputType.State;
+import graalvm.compiler.nodeinfo.InputType;
 
 public final class InvokeWithExceptionNode extends ControlSplitNode implements Invoke, MemoryCheckpoint.Single, LIRLowerable, UncheckedInterfaceProvider
 {
@@ -27,9 +26,9 @@ public final class InvokeWithExceptionNode extends ControlSplitNode implements I
     @Successor AbstractBeginNode next;
     @Successor AbstractBeginNode exceptionEdge;
     @OptionalInput ValueNode classInit;
-    @Input(Extension) CallTargetNode callTarget;
-    @OptionalInput(State) FrameState stateDuring;
-    @OptionalInput(State) FrameState stateAfter;
+    @Input(InputType.Extension) CallTargetNode callTarget;
+    @OptionalInput(InputType.State) FrameState stateDuring;
+    @OptionalInput(InputType.State) FrameState stateAfter;
     protected final int bci;
     protected boolean polymorphic;
     protected boolean useForInlining;

@@ -1,13 +1,17 @@
 package graalvm.compiler.replacements;
 
-import static graalvm.compiler.core.common.GraalOptions.ImmutableCode;
-import static graalvm.compiler.replacements.SnippetTemplate.DEFAULT_REPLACER;
-
 import java.util.EnumMap;
+
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.JavaConstant;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.MetaAccessProvider;
 
 import graalvm.compiler.api.replacements.Snippet;
 import graalvm.compiler.api.replacements.Snippet.ConstantParameter;
 import graalvm.compiler.api.replacements.SnippetReflectionProvider;
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.nodes.ConstantNode;
 import graalvm.compiler.nodes.PiNode;
 import graalvm.compiler.nodes.ValueNode;
@@ -18,15 +22,10 @@ import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.options.OptionValues;
 import graalvm.compiler.phases.util.Providers;
 import graalvm.compiler.replacements.SnippetCounter.Group;
+import graalvm.compiler.replacements.SnippetTemplate;
 import graalvm.compiler.replacements.SnippetTemplate.AbstractTemplates;
 import graalvm.compiler.replacements.SnippetTemplate.Arguments;
 import graalvm.compiler.replacements.SnippetTemplate.SnippetInfo;
-
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.JavaConstant;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.MetaAccessProvider;
 
 public class BoxingSnippets implements Snippets
 {
@@ -200,7 +199,7 @@ public class BoxingSnippets implements Snippets
         {
             FloatingNode canonical = canonicalizeBoxing(box, providers.getMetaAccess(), providers.getConstantReflection());
             // if in AOT mode, we don't want to embed boxed constants.
-            if (canonical != null && !ImmutableCode.getValue(box.getOptions()))
+            if (canonical != null && !GraalOptions.ImmutableCode.getValue(box.getOptions()))
             {
                 box.graph().replaceFixedWithFloating(box, canonical);
             }
@@ -211,7 +210,7 @@ public class BoxingSnippets implements Snippets
                 args.addConst("valueOfCounter", valueOfCounter);
 
                 SnippetTemplate template = template(box, args);
-                template.instantiate(providers.getMetaAccess(), box, DEFAULT_REPLACER, args);
+                template.instantiate(providers.getMetaAccess(), box, SnippetTemplate.DEFAULT_REPLACER, args);
             }
         }
 
@@ -222,7 +221,7 @@ public class BoxingSnippets implements Snippets
             args.addConst("valueCounter", valueCounter);
 
             SnippetTemplate template = template(unbox, args);
-            template.instantiate(providers.getMetaAccess(), unbox, DEFAULT_REPLACER, args);
+            template.instantiate(providers.getMetaAccess(), unbox, SnippetTemplate.DEFAULT_REPLACER, args);
         }
     }
 }

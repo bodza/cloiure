@@ -1,7 +1,10 @@
 package graalvm.compiler.core.amd64;
 
-import static graalvm.compiler.core.amd64.AMD64NodeLIRBuilder.Options.MitigateSpeculativeExecutionAttacks;
+import jdk.vm.ci.amd64.AMD64;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Value;
 
+import graalvm.compiler.core.amd64.AMD64NodeLIRBuilder.Options;
 import graalvm.compiler.core.gen.NodeLIRBuilder;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.LIRFrameState;
@@ -18,10 +21,6 @@ import graalvm.compiler.nodes.calc.IntegerDivRemNode;
 import graalvm.compiler.nodes.cfg.Block;
 import graalvm.compiler.options.OptionKey;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.amd64.AMD64;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Value;
 
 public abstract class AMD64NodeLIRBuilder extends NodeLIRBuilder
 {
@@ -129,7 +128,7 @@ public abstract class AMD64NodeLIRBuilder extends NodeLIRBuilder
     @Override
     public void doBlockPrologue(Block block, OptionValues options)
     {
-        if (MitigateSpeculativeExecutionAttacks.getValue(options))
+        if (Options.MitigateSpeculativeExecutionAttacks.getValue(options))
         {
             boolean hasControlSplitPredecessor = false;
             for (Block b : block.getPredecessors())

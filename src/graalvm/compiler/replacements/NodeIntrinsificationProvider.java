@@ -1,5 +1,9 @@
 package graalvm.compiler.replacements;
 
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaType;
+
 import graalvm.compiler.api.replacements.SnippetReflectionProvider;
 import graalvm.compiler.core.common.spi.ArrayOffsetProvider;
 import graalvm.compiler.core.common.spi.ForeignCallsProvider;
@@ -9,10 +13,6 @@ import graalvm.compiler.core.common.type.TypeReference;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.nodes.graphbuilderconf.NodeIntrinsicPluginFactory.InjectionProvider;
 import graalvm.compiler.word.WordTypes;
-
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaType;
 
 public class NodeIntrinsificationProvider implements InjectionProvider
 {

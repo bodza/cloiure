@@ -1,6 +1,8 @@
 package graalvm.compiler.replacements.nodes;
 
-import static jdk.vm.ci.code.BytecodeFrame.isPlaceholderBci;
+import jdk.vm.ci.code.BytecodeFrame;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 import graalvm.compiler.api.replacements.MethodSubstitution;
 import graalvm.compiler.api.replacements.Snippet;
@@ -11,9 +13,9 @@ import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeInputList;
 import graalvm.compiler.nodes.CallTargetNode.InvokeKind;
 import graalvm.compiler.nodes.FixedNode;
-import graalvm.compiler.nodes.Invokable;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.FrameState;
+import graalvm.compiler.nodes.Invokable;
 import graalvm.compiler.nodes.InvokeNode;
 import graalvm.compiler.nodes.StructuredGraph;
 import graalvm.compiler.nodes.StructuredGraph.GuardsStage;
@@ -28,9 +30,6 @@ import graalvm.compiler.phases.common.LoweringPhase;
 import graalvm.compiler.phases.common.RemoveValueProxyPhase;
 import graalvm.compiler.phases.common.inlining.InliningUtil;
 import graalvm.compiler.phases.tiers.PhaseContext;
-
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * Macro nodes can be used to temporarily replace an invoke. They can, for example, be used to
@@ -167,7 +166,7 @@ public abstract class MacroNode extends FixedWithNextNode implements Lowerable, 
         }
         else
         {
-            if (isPlaceholderBci(invoke.bci()))
+            if (BytecodeFrame.isPlaceholderBci(invoke.bci()))
             {
                 throw new GraalError("%s: cannot lower to invoke with placeholder BCI: %s", graph(), this);
             }

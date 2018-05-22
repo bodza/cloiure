@@ -2,6 +2,8 @@ package graalvm.compiler.lir.ssa;
 
 import java.util.ArrayList;
 
+import jdk.vm.ci.meta.Value;
+
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRInstruction;
@@ -10,8 +12,6 @@ import graalvm.compiler.lir.StandardOp.BlockEndOp;
 import graalvm.compiler.lir.StandardOp.JumpOp;
 import graalvm.compiler.lir.StandardOp.LabelOp;
 import graalvm.compiler.lir.ValueConsumer;
-
-import jdk.vm.ci.meta.Value;
 
 /**
  * Utilities for working with Static-Single-Assignment LIR form.

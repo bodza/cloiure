@@ -1,16 +1,6 @@
 package graalvm.compiler.core.phases;
 
-import static graalvm.compiler.core.common.GraalOptions.ConditionalElimination;
-import static graalvm.compiler.core.common.GraalOptions.FullUnroll;
-import static graalvm.compiler.core.common.GraalOptions.ImmutableCode;
-import static graalvm.compiler.core.common.GraalOptions.LoopPeeling;
-import static graalvm.compiler.core.common.GraalOptions.LoopUnswitch;
-import static graalvm.compiler.core.common.GraalOptions.OptConvertDeoptsToGuards;
-import static graalvm.compiler.core.common.GraalOptions.OptLoopTransform;
-import static graalvm.compiler.core.common.GraalOptions.OptReadElimination;
-import static graalvm.compiler.core.common.GraalOptions.PartialEscapeAnalysis;
-import static graalvm.compiler.phases.common.DeadCodeEliminationPhase.Optionality.Optional;
-
+import graalvm.compiler.core.common.GraalOptions;
 import graalvm.compiler.loop.DefaultLoopPolicies;
 import graalvm.compiler.loop.LoopPolicies;
 import graalvm.compiler.loop.phases.LoopFullUnrollPhase;
@@ -23,6 +13,7 @@ import graalvm.compiler.phases.PhaseSuite;
 import graalvm.compiler.phases.common.CanonicalizerPhase;
 import graalvm.compiler.phases.common.ConvertDeoptimizeToGuardPhase;
 import graalvm.compiler.phases.common.DeadCodeEliminationPhase;
+import graalvm.compiler.phases.common.DeadCodeEliminationPhase.Optionality;
 import graalvm.compiler.phases.common.IncrementalCanonicalizerPhase;
 import graalvm.compiler.phases.common.IterativeConditionalEliminationPhase;
 import graalvm.compiler.phases.common.LoweringPhase;
@@ -43,7 +34,7 @@ public class HighTier extends PhaseSuite<HighTierContext>
     public HighTier(OptionValues options)
     {
         CanonicalizerPhase canonicalizer = new CanonicalizerPhase();
-        if (ImmutableCode.getValue(options))
+        if (GraalOptions.ImmutableCode.getValue(options))
         {
             canonicalizer.disableReadCanonicalization();
         }
@@ -53,32 +44,32 @@ public class HighTier extends PhaseSuite<HighTierContext>
         if (Options.Inline.getValue(options))
         {
             appendPhase(new InliningPhase(canonicalizer));
-            appendPhase(new DeadCodeEliminationPhase(Optional));
+            appendPhase(new DeadCodeEliminationPhase(Optionality.Optional));
         }
 
-        if (OptConvertDeoptsToGuards.getValue(options))
+        if (GraalOptions.OptConvertDeoptsToGuards.getValue(options))
         {
             appendPhase(new IncrementalCanonicalizerPhase<>(canonicalizer, new ConvertDeoptimizeToGuardPhase()));
         }
 
-        if (ConditionalElimination.getValue(options))
+        if (GraalOptions.ConditionalElimination.getValue(options))
         {
             appendPhase(new IterativeConditionalEliminationPhase(canonicalizer, false));
         }
 
         LoopPolicies loopPolicies = createLoopPolicies();
-        if (FullUnroll.getValue(options))
+        if (GraalOptions.FullUnroll.getValue(options))
         {
             appendPhase(new LoopFullUnrollPhase(canonicalizer, loopPolicies));
         }
 
-        if (OptLoopTransform.getValue(options))
+        if (GraalOptions.OptLoopTransform.getValue(options))
         {
-            if (LoopPeeling.getValue(options))
+            if (GraalOptions.LoopPeeling.getValue(options))
             {
                 appendPhase(new LoopPeelingPhase(loopPolicies));
             }
-            if (LoopUnswitch.getValue(options))
+            if (GraalOptions.LoopUnswitch.getValue(options))
             {
                 appendPhase(new LoopUnswitchingPhase(loopPolicies));
             }
@@ -86,12 +77,12 @@ public class HighTier extends PhaseSuite<HighTierContext>
 
         appendPhase(canonicalizer);
 
-        if (PartialEscapeAnalysis.getValue(options))
+        if (GraalOptions.PartialEscapeAnalysis.getValue(options))
         {
             appendPhase(new PartialEscapePhase(true, canonicalizer, options));
         }
 
-        if (OptReadElimination.getValue(options))
+        if (GraalOptions.OptReadElimination.getValue(options))
         {
             appendPhase(new EarlyReadEliminationPhase(canonicalizer));
         }

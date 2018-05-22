@@ -1,12 +1,12 @@
 package graalvm.compiler.hotspot;
 
-import graalvm.compiler.api.runtime.GraalRuntime;
-import graalvm.compiler.options.OptionValues;
-import graalvm.compiler.phases.tiers.CompilerConfiguration;
-
 import jdk.vm.ci.hotspot.HotSpotJVMCICompilerFactory;
 import jdk.vm.ci.hotspot.HotSpotJVMCIRuntime;
 import jdk.vm.ci.runtime.JVMCIRuntime;
+
+import graalvm.compiler.api.runtime.GraalRuntime;
+import graalvm.compiler.options.OptionValues;
+import graalvm.compiler.phases.tiers.CompilerConfiguration;
 
 public final class HotSpotGraalCompilerFactory extends HotSpotJVMCICompilerFactory
 {

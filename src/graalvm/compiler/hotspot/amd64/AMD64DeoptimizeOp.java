@@ -1,8 +1,7 @@
 package graalvm.compiler.hotspot.amd64;
 
-import static graalvm.compiler.hotspot.HotSpotHostBackend.UNCOMMON_TRAP_HANDLER;
-
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
+import graalvm.compiler.hotspot.HotSpotHostBackend;
 import graalvm.compiler.lir.LIRFrameState;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.Opcode;
@@ -27,6 +26,6 @@ final class AMD64DeoptimizeOp extends AMD64BlockEndOp implements BlockEndOp
     @Override
     public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
     {
-        AMD64Call.directCall(crb, masm, crb.foreignCalls.lookupForeignCall(UNCOMMON_TRAP_HANDLER), null, false, info);
+        AMD64Call.directCall(crb, masm, crb.foreignCalls.lookupForeignCall(HotSpotHostBackend.UNCOMMON_TRAP_HANDLER), null, false, info);
     }
 }

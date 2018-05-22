@@ -1,12 +1,12 @@
 package graalvm.compiler.lir.asm;
 
+import jdk.vm.ci.code.CodeCacheProvider;
+
 import graalvm.compiler.asm.Assembler;
 import graalvm.compiler.code.CompilationResult;
 import graalvm.compiler.core.common.spi.ForeignCallsProvider;
 import graalvm.compiler.lir.framemap.FrameMap;
 import graalvm.compiler.options.OptionValues;
-
-import jdk.vm.ci.code.CodeCacheProvider;
 
 /**
  * Factory class for creating {@link CompilationResultBuilder}s.

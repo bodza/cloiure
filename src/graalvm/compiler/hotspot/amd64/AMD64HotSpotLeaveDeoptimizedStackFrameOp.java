@@ -1,16 +1,15 @@
 package graalvm.compiler.hotspot.amd64;
 
-import static graalvm.compiler.lir.LIRInstruction.OperandFlag.REG;
-import static jdk.vm.ci.amd64.AMD64.rbp;
-import static jdk.vm.ci.code.ValueUtil.asRegister;
+import jdk.vm.ci.amd64.AMD64;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
 
 import graalvm.compiler.asm.amd64.AMD64MacroAssembler;
+import graalvm.compiler.lir.LIRInstruction.OperandFlag;
 import graalvm.compiler.lir.LIRInstructionClass;
 import graalvm.compiler.lir.Opcode;
 import graalvm.compiler.lir.asm.CompilationResultBuilder;
-
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.meta.AllocatableValue;
 
 /**
  * Pops a deoptimized stack frame off the stack including the return address.
@@ -19,8 +18,8 @@ import jdk.vm.ci.meta.AllocatableValue;
 final class AMD64HotSpotLeaveDeoptimizedStackFrameOp extends AMD64HotSpotEpilogueOp
 {
     public static final LIRInstructionClass<AMD64HotSpotLeaveDeoptimizedStackFrameOp> TYPE = LIRInstructionClass.create(AMD64HotSpotLeaveDeoptimizedStackFrameOp.class);
-    @Use(REG) AllocatableValue frameSize;
-    @Use(REG) AllocatableValue framePointer;
+    @Use(OperandFlag.REG) AllocatableValue frameSize;
+    @Use(OperandFlag.REG) AllocatableValue framePointer;
 
     AMD64HotSpotLeaveDeoptimizedStackFrameOp(AllocatableValue frameSize, AllocatableValue initialInfo)
     {
@@ -33,12 +32,12 @@ final class AMD64HotSpotLeaveDeoptimizedStackFrameOp extends AMD64HotSpotEpilogu
     public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
     {
         Register stackPointer = crb.frameMap.getRegisterConfig().getFrameRegister();
-        masm.addq(stackPointer, asRegister(frameSize));
+        masm.addq(stackPointer, ValueUtil.asRegister(frameSize));
 
         /*
          * Restore the frame pointer before stack bang because if a stack overflow is thrown it
          * needs to be pushed (and preserved).
          */
-        masm.movq(rbp, asRegister(framePointer));
+        masm.movq(AMD64.rbp, ValueUtil.asRegister(framePointer));
     }
 }

@@ -1,25 +1,21 @@
 package graalvm.compiler.lir.alloc.lsra.ssa;
 
-import static graalvm.compiler.lir.LIRValueUtil.asVirtualStackSlot;
-import static graalvm.compiler.lir.LIRValueUtil.isStackSlotValue;
-import static graalvm.compiler.lir.LIRValueUtil.isVirtualStackSlot;
-import static jdk.vm.ci.code.ValueUtil.asStackSlot;
-import static jdk.vm.ci.code.ValueUtil.isStackSlot;
-
 import java.util.Arrays;
+
+import jdk.vm.ci.code.StackSlot;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.lir.LIRInstruction;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.VirtualStackSlot;
 import graalvm.compiler.lir.alloc.lsra.Interval;
 import graalvm.compiler.lir.alloc.lsra.LinearScan;
 import graalvm.compiler.lir.alloc.lsra.MoveResolver;
 import graalvm.compiler.lir.framemap.FrameMap;
 import graalvm.compiler.lir.framemap.FrameMapBuilderTool;
-
-import jdk.vm.ci.code.StackSlot;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Value;
 
 public final class SSAMoveResolver extends MoveResolver
 {
@@ -49,7 +45,7 @@ public final class SSAMoveResolver extends MoveResolver
         {
             return true;
         }
-        if (isStackSlotValue(location))
+        if (LIRValueUtil.isStackSlotValue(location))
         {
             return true;
         }
@@ -58,13 +54,13 @@ public final class SSAMoveResolver extends MoveResolver
 
     private int getStackArrayIndex(Value stackSlotValue)
     {
-        if (isStackSlot(stackSlotValue))
+        if (ValueUtil.isStackSlot(stackSlotValue))
         {
-            return getStackArrayIndex(asStackSlot(stackSlotValue));
+            return getStackArrayIndex(ValueUtil.asStackSlot(stackSlotValue));
         }
-        if (isVirtualStackSlot(stackSlotValue))
+        if (LIRValueUtil.isVirtualStackSlot(stackSlotValue))
         {
-            return getStackArrayIndex(asVirtualStackSlot(stackSlotValue));
+            return getStackArrayIndex(LIRValueUtil.asVirtualStackSlot(stackSlotValue));
         }
         throw GraalError.shouldNotReachHere("value is not a stack slot: " + stackSlotValue);
     }
@@ -93,7 +89,7 @@ public final class SSAMoveResolver extends MoveResolver
     @Override
     protected void setValueBlocked(Value location, int direction)
     {
-        if (isStackSlotValue(location))
+        if (LIRValueUtil.isStackSlotValue(location))
         {
             int stackIdx = getStackArrayIndex(location);
             if (stackIdx == STACK_SLOT_IN_CALLER_FRAME_IDX)
@@ -116,7 +112,7 @@ public final class SSAMoveResolver extends MoveResolver
     @Override
     protected int valueBlocked(Value location)
     {
-        if (isStackSlotValue(location))
+        if (LIRValueUtil.isStackSlotValue(location))
         {
             int stackIdx = getStackArrayIndex(location);
             if (stackIdx == STACK_SLOT_IN_CALLER_FRAME_IDX)
@@ -136,7 +132,7 @@ public final class SSAMoveResolver extends MoveResolver
     @Override
     protected LIRInstruction createMove(AllocatableValue fromOpr, AllocatableValue toOpr, AllocatableValue fromLocation, AllocatableValue toLocation)
     {
-        if (isStackSlotValue(toLocation) && isStackSlotValue(fromLocation))
+        if (LIRValueUtil.isStackSlotValue(toLocation) && LIRValueUtil.isStackSlotValue(fromLocation))
         {
             return getAllocator().getSpillMoveFactory().createStackMove(toOpr, fromOpr);
         }

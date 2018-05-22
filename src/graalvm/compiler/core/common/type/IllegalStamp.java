@@ -1,15 +1,15 @@
 package graalvm.compiler.core.common.type;
 
-import graalvm.compiler.core.common.LIRKind;
-import graalvm.compiler.core.common.spi.LIRKindTool;
-import graalvm.compiler.debug.GraalError;
-
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.MemoryAccessProvider;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.PrimitiveConstant;
 import jdk.vm.ci.meta.ResolvedJavaType;
+
+import graalvm.compiler.core.common.LIRKind;
+import graalvm.compiler.core.common.spi.LIRKindTool;
+import graalvm.compiler.debug.GraalError;
 
 /**
  * This stamp represents the type of the {@link JavaKind#Illegal} value in the second slot of

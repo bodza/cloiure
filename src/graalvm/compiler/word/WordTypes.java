@@ -1,18 +1,19 @@
 package graalvm.compiler.word;
 
-import graalvm.compiler.core.common.type.Stamp;
-import graalvm.compiler.core.common.type.StampFactory;
-import graalvm.compiler.nodes.ValueNode;
-import graalvm.compiler.nodes.type.StampTool;
-import graalvm.compiler.word.Word.Operation;
-import org.graalvm.word.WordBase;
-import org.graalvm.word.WordFactory;
-
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.JavaType;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
+
+import org.graalvm.word.WordBase;
+import org.graalvm.word.WordFactory;
+
+import graalvm.compiler.core.common.type.Stamp;
+import graalvm.compiler.core.common.type.StampFactory;
+import graalvm.compiler.nodes.ValueNode;
+import graalvm.compiler.nodes.type.StampTool;
+import graalvm.compiler.word.Word.Operation;
 
 /**
  * Encapsulates information for Java types representing raw words (as opposed to Objects).

@@ -1,11 +1,10 @@
 package graalvm.compiler.hotspot.amd64;
 
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-
 import java.util.ArrayList;
 import java.util.EnumSet;
 
 import jdk.vm.ci.code.CallingConvention;
+import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.Value;
@@ -93,12 +92,12 @@ public final class AMD64HotSpotConstantRetrievalOp extends AMD64LIRInstruction
         for (int i = 0; i < constants.length; i++)
         {
             crb.recordInlineDataInCodeWithNote(constants[i], notes[i]);
-            masm.leaq(asRegister(gotSlotOffsetParameters[i]), masm.getPlaceholder(-1));
+            masm.leaq(ValueUtil.asRegister(gotSlotOffsetParameters[i]), masm.getPlaceholder(-1));
         }
 
         for (int i = 0; i < constantDescriptions.length; i++)
         {
-            masm.movq(asRegister(descriptionParameters[i]), asRegister(constantDescriptions[i]));
+            masm.movq(ValueUtil.asRegister(descriptionParameters[i]), ValueUtil.asRegister(constantDescriptions[i]));
         }
 
         final int before = masm.position();

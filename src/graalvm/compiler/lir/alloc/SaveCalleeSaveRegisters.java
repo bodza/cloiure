@@ -2,6 +2,13 @@ package graalvm.compiler.lir.alloc;
 
 import java.util.ArrayList;
 
+import jdk.vm.ci.code.Architecture;
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.RegisterArray;
+import jdk.vm.ci.code.RegisterValue;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.meta.PlatformKind;
+
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.LIR;
@@ -13,13 +20,6 @@ import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.gen.LIRGeneratorTool;
 import graalvm.compiler.lir.phases.PreAllocationOptimizationPhase;
 import graalvm.compiler.lir.util.RegisterMap;
-
-import jdk.vm.ci.code.Architecture;
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.RegisterArray;
-import jdk.vm.ci.code.RegisterValue;
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.PlatformKind;
 
 public class SaveCalleeSaveRegisters extends PreAllocationOptimizationPhase
 {

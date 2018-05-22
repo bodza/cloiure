@@ -1,49 +1,23 @@
 package graalvm.compiler.asm.amd64;
 
-import static jdk.vm.ci.amd64.AMD64.CPU;
-import static jdk.vm.ci.amd64.AMD64.XMM;
-import static jdk.vm.ci.amd64.AMD64.r12;
-import static jdk.vm.ci.amd64.AMD64.r13;
-import static jdk.vm.ci.amd64.AMD64.rbp;
-import static jdk.vm.ci.amd64.AMD64.rip;
-import static jdk.vm.ci.amd64.AMD64.rsp;
-import static jdk.vm.ci.code.MemoryBarriers.STORE_LOAD;
-import static graalvm.compiler.asm.amd64.AMD64AsmOptions.UseAddressNop;
-import static graalvm.compiler.asm.amd64.AMD64AsmOptions.UseNormalNop;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.AMD64BinaryArithmetic.ADD;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.AMD64BinaryArithmetic.AND;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.AMD64BinaryArithmetic.CMP;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.AMD64BinaryArithmetic.OR;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.AMD64BinaryArithmetic.SBB;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.AMD64BinaryArithmetic.SUB;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.AMD64BinaryArithmetic.XOR;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.AMD64MOp.DEC;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.AMD64MOp.INC;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.AMD64MOp.NEG;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.AMD64MOp.NOT;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize.BYTE;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize.DWORD;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize.PD;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize.PS;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize.QWORD;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize.SD;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize.SS;
-import static graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize.WORD;
-import static graalvm.compiler.core.common.NumUtil.isByte;
-
-import graalvm.compiler.asm.Assembler;
-import graalvm.compiler.asm.Label;
-import graalvm.compiler.asm.amd64.AMD64Address.Scale;
-import graalvm.compiler.core.common.NumUtil;
-import graalvm.compiler.debug.GraalError;
-
 import jdk.vm.ci.amd64.AMD64;
 import jdk.vm.ci.amd64.AMD64.CPUFeature;
 import jdk.vm.ci.amd64.AMD64Kind;
+import jdk.vm.ci.code.MemoryBarriers;
 import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.Register.RegisterCategory;
 import jdk.vm.ci.code.TargetDescription;
 import jdk.vm.ci.meta.PlatformKind;
+
+import graalvm.compiler.asm.Assembler;
+import graalvm.compiler.asm.Label;
+import graalvm.compiler.asm.amd64.AMD64Address.Scale;
+import graalvm.compiler.asm.amd64.AMD64AsmOptions;
+import graalvm.compiler.asm.amd64.AMD64Assembler.AMD64BinaryArithmetic;
+import graalvm.compiler.asm.amd64.AMD64Assembler.AMD64MOp;
+import graalvm.compiler.asm.amd64.AMD64Assembler.OperandSize;
+import graalvm.compiler.core.common.NumUtil;
+import graalvm.compiler.debug.GraalError;
 
 /**
  * This class implements an assembler that can encode most X86 instructions.
@@ -389,19 +363,19 @@ public class AMD64Assembler extends Assembler
      */
     private enum OpAssertion
     {
-        ByteAssertion(CPU, CPU, BYTE),
-        ByteOrLargerAssertion(CPU, CPU, BYTE, WORD, DWORD, QWORD),
-        WordOrLargerAssertion(CPU, CPU, WORD, DWORD, QWORD),
-        DwordOrLargerAssertion(CPU, CPU, DWORD, QWORD),
-        WordOrDwordAssertion(CPU, CPU, WORD, QWORD),
-        QwordAssertion(CPU, CPU, QWORD),
-        FloatAssertion(XMM, XMM, SS, SD, PS, PD),
-        PackedFloatAssertion(XMM, XMM, PS, PD),
-        SingleAssertion(XMM, XMM, SS),
-        DoubleAssertion(XMM, XMM, SD),
-        PackedDoubleAssertion(XMM, XMM, PD),
-        IntToFloatAssertion(XMM, CPU, DWORD, QWORD),
-        FloatToIntAssertion(CPU, XMM, DWORD, QWORD);
+        ByteAssertion(AMD64.CPU, AMD64.CPU, OperandSize.BYTE),
+        ByteOrLargerAssertion(AMD64.CPU, AMD64.CPU, OperandSize.BYTE, OperandSize.WORD, OperandSize.DWORD, OperandSize.QWORD),
+        WordOrLargerAssertion(AMD64.CPU, AMD64.CPU, OperandSize.WORD, OperandSize.DWORD, OperandSize.QWORD),
+        DwordOrLargerAssertion(AMD64.CPU, AMD64.CPU, OperandSize.DWORD, OperandSize.QWORD),
+        WordOrDwordAssertion(AMD64.CPU, AMD64.CPU, OperandSize.WORD, OperandSize.QWORD),
+        QwordAssertion(AMD64.CPU, AMD64.CPU, OperandSize.QWORD),
+        FloatAssertion(AMD64.XMM, AMD64.XMM, OperandSize.SS, OperandSize.SD, OperandSize.PS, OperandSize.PD),
+        PackedFloatAssertion(AMD64.XMM, AMD64.XMM, OperandSize.PS, OperandSize.PD),
+        SingleAssertion(AMD64.XMM, AMD64.XMM, OperandSize.SS),
+        DoubleAssertion(AMD64.XMM, AMD64.XMM, OperandSize.SD),
+        PackedDoubleAssertion(AMD64.XMM, AMD64.XMM, OperandSize.PD),
+        IntToFloatAssertion(AMD64.XMM, AMD64.CPU, OperandSize.DWORD, OperandSize.QWORD),
+        FloatToIntAssertion(AMD64.CPU, AMD64.XMM, OperandSize.DWORD, OperandSize.QWORD);
 
         private final RegisterCategory resultCategory;
         private final RegisterCategory inputCategory;
@@ -610,14 +584,14 @@ public class AMD64Assembler extends Assembler
             {
                 int indexenc = encode(index) << 3;
                 // [base + indexscale + disp]
-                if (disp == 0 && !base.equals(rbp) && !base.equals(r13))
+                if (disp == 0 && !base.equals(AMD64.rbp) && !base.equals(AMD64.r13))
                 {
                     // [base + indexscale]
                     // [00 reg 100][ss index base]
                     emitByte(0x04 | regenc);
                     emitByte(scale.log2 << 6 | indexenc | baseenc);
                 }
-                else if (isByte(disp) && !force4Byte)
+                else if (NumUtil.isByte(disp) && !force4Byte)
                 {
                     // [base + indexscale + imm8]
                     // [01 reg 100][ss index base] imm8
@@ -634,7 +608,7 @@ public class AMD64Assembler extends Assembler
                     emitInt(disp);
                 }
             }
-            else if (base.equals(rsp) || base.equals(r12))
+            else if (base.equals(AMD64.rsp) || base.equals(AMD64.r12))
             {
                 // [rsp + disp]
                 if (disp == 0)
@@ -644,7 +618,7 @@ public class AMD64Assembler extends Assembler
                     emitByte(0x04 | regenc);
                     emitByte(0x24);
                 }
-                else if (isByte(disp) && !force4Byte)
+                else if (NumUtil.isByte(disp) && !force4Byte)
                 {
                     // [rsp + imm8]
                     // [01 reg 100][00 100 100] disp8
@@ -664,13 +638,13 @@ public class AMD64Assembler extends Assembler
             else
             {
                 // [base + disp]
-                if (disp == 0 && !base.equals(rbp) && !base.equals(r13))
+                if (disp == 0 && !base.equals(AMD64.rbp) && !base.equals(AMD64.r13))
                 {
                     // [base]
                     // [00 reg base]
                     emitByte(0x00 | regenc | baseenc);
                 }
-                else if (isByte(disp) && !force4Byte)
+                else if (NumUtil.isByte(disp) && !force4Byte)
                 {
                     // [base + disp8]
                     // [01 reg base] disp8
@@ -760,7 +734,7 @@ public class AMD64Assembler extends Assembler
                 asm.emitByte(size.sizePrefix);
             }
             int rexPrefix = 0x40 | rxb;
-            if (size == QWORD)
+            if (size == OperandSize.QWORD)
             {
                 rexPrefix |= 0x08;
             }
@@ -985,7 +959,7 @@ public class AMD64Assembler extends Assembler
             if (isSimd)
             {
                 int pre;
-                boolean rexVexW = (size == QWORD) ? true : false;
+                boolean rexVexW = (size == OperandSize.QWORD) ? true : false;
                 AMD64InstructionAttr attributes = new AMD64InstructionAttr(AvxVectorLen.AVX_128bit, rexVexW, /* legacyMode */ false, /* noMaskReg */ false, /* usesVl */ false, asm.target);
                 int curPrefix = size.sizePrefix | prefix1;
                 switch (curPrefix)
@@ -1075,7 +1049,7 @@ public class AMD64Assembler extends Assembler
             if (isSimd)
             {
                 int pre;
-                boolean rexVexW = (size == QWORD) ? true : false;
+                boolean rexVexW = (size == OperandSize.QWORD) ? true : false;
                 AMD64InstructionAttr attributes = new AMD64InstructionAttr(AvxVectorLen.AVX_128bit, rexVexW, /* legacyMode */ false, /* noMaskReg */ false, /* usesVl */ false, asm.target);
                 int curPrefix = size.sizePrefix | prefix1;
                 switch (curPrefix)
@@ -1162,7 +1136,7 @@ public class AMD64Assembler extends Assembler
         {
             int pre;
             int opc;
-            boolean rexVexW = (size == QWORD) ? true : false;
+            boolean rexVexW = (size == OperandSize.QWORD) ? true : false;
             AMD64InstructionAttr attributes = new AMD64InstructionAttr(AvxVectorLen.AVX_128bit, rexVexW, /* legacyMode */ false, /* noMaskReg */ false, /* usesVl */ false, asm.target);
             int curPrefix = size.sizePrefix | prefix1;
             switch (curPrefix)
@@ -1204,7 +1178,7 @@ public class AMD64Assembler extends Assembler
         {
             int pre;
             int opc;
-            boolean rexVexW = (size == QWORD) ? true : false;
+            boolean rexVexW = (size == OperandSize.QWORD) ? true : false;
             AMD64InstructionAttr attributes = new AMD64InstructionAttr(AvxVectorLen.AVX_128bit, rexVexW, /* legacyMode */ false, /* noMaskReg */ false, /* usesVl */ false, asm.target);
             int curPrefix = size.sizePrefix | prefix1;
             switch (curPrefix)
@@ -1329,7 +1303,7 @@ public class AMD64Assembler extends Assembler
             if (isSimd)
             {
                 int pre;
-                boolean rexVexW = (size == QWORD) ? true : false;
+                boolean rexVexW = (size == OperandSize.QWORD) ? true : false;
                 AMD64InstructionAttr attributes = new AMD64InstructionAttr(AvxVectorLen.AVX_128bit, rexVexW, /* legacyMode */ false, /* noMaskReg */ false, /* usesVl */ false, asm.target);
                 int curPrefix = size.sizePrefix | prefix1;
                 switch (curPrefix)
@@ -1401,7 +1375,7 @@ public class AMD64Assembler extends Assembler
             if (isSimd)
             {
                 int pre;
-                boolean rexVexW = (size == QWORD) ? true : false;
+                boolean rexVexW = (size == OperandSize.QWORD) ? true : false;
                 AMD64InstructionAttr attributes = new AMD64InstructionAttr(AvxVectorLen.AVX_128bit, rexVexW, /* legacyMode */ false, /* noMaskReg */ false, /* usesVl */ false, asm.target);
                 int curPrefix = size.sizePrefix | prefix1;
                 switch (curPrefix)
@@ -1803,7 +1777,7 @@ public class AMD64Assembler extends Assembler
 
         public AMD64MIOp getMIOpcode(OperandSize size, boolean sx)
         {
-            if (size == BYTE)
+            if (size == OperandSize.BYTE)
             {
                 return byteImmOp;
             }
@@ -1819,7 +1793,7 @@ public class AMD64Assembler extends Assembler
 
         public AMD64MROp getMROpcode(OperandSize size)
         {
-            if (size == BYTE)
+            if (size == OperandSize.BYTE)
             {
                 return byteMrOp;
             }
@@ -1831,7 +1805,7 @@ public class AMD64Assembler extends Assembler
 
         public AMD64RMOp getRMOpcode(OperandSize size)
         {
-            if (size == BYTE)
+            if (size == OperandSize.BYTE)
             {
                 return byteRmOp;
             }
@@ -1869,17 +1843,17 @@ public class AMD64Assembler extends Assembler
 
     public final void addl(AMD64Address dst, int imm32)
     {
-        ADD.getMIOpcode(DWORD, isByte(imm32)).emit(this, DWORD, dst, imm32);
+        AMD64BinaryArithmetic.ADD.getMIOpcode(OperandSize.DWORD, NumUtil.isByte(imm32)).emit(this, OperandSize.DWORD, dst, imm32);
     }
 
     public final void addl(Register dst, int imm32)
     {
-        ADD.getMIOpcode(DWORD, isByte(imm32)).emit(this, DWORD, dst, imm32);
+        AMD64BinaryArithmetic.ADD.getMIOpcode(OperandSize.DWORD, NumUtil.isByte(imm32)).emit(this, OperandSize.DWORD, dst, imm32);
     }
 
     public final void addl(Register dst, Register src)
     {
-        ADD.rmOp.emit(this, DWORD, dst, src);
+        AMD64BinaryArithmetic.ADD.rmOp.emit(this, OperandSize.DWORD, dst, src);
     }
 
     public final void addpd(Register dst, Register src)
@@ -1954,12 +1928,12 @@ public class AMD64Assembler extends Assembler
 
     public final void andl(Register dst, int imm32)
     {
-        AND.getMIOpcode(DWORD, isByte(imm32)).emit(this, DWORD, dst, imm32);
+        AMD64BinaryArithmetic.AND.getMIOpcode(OperandSize.DWORD, NumUtil.isByte(imm32)).emit(this, OperandSize.DWORD, dst, imm32);
     }
 
     public final void andl(Register dst, Register src)
     {
-        AND.rmOp.emit(this, DWORD, dst, src);
+        AMD64BinaryArithmetic.AND.rmOp.emit(this, OperandSize.DWORD, dst, src);
     }
 
     public final void andpd(Register dst, Register src)
@@ -2024,22 +1998,22 @@ public class AMD64Assembler extends Assembler
 
     public final void cmpl(Register dst, int imm32)
     {
-        CMP.getMIOpcode(DWORD, isByte(imm32)).emit(this, DWORD, dst, imm32);
+        AMD64BinaryArithmetic.CMP.getMIOpcode(OperandSize.DWORD, NumUtil.isByte(imm32)).emit(this, OperandSize.DWORD, dst, imm32);
     }
 
     public final void cmpl(Register dst, Register src)
     {
-        CMP.rmOp.emit(this, DWORD, dst, src);
+        AMD64BinaryArithmetic.CMP.rmOp.emit(this, OperandSize.DWORD, dst, src);
     }
 
     public final void cmpl(Register dst, AMD64Address src)
     {
-        CMP.rmOp.emit(this, DWORD, dst, src);
+        AMD64BinaryArithmetic.CMP.rmOp.emit(this, OperandSize.DWORD, dst, src);
     }
 
     public final void cmpl(AMD64Address dst, int imm32)
     {
-        CMP.getMIOpcode(DWORD, isByte(imm32)).emit(this, DWORD, dst, imm32);
+        AMD64BinaryArithmetic.CMP.getMIOpcode(OperandSize.DWORD, NumUtil.isByte(imm32)).emit(this, OperandSize.DWORD, dst, imm32);
     }
 
     // The 32-bit cmpxchg compares the value at adr with the contents of X86.rax,
@@ -2110,13 +2084,13 @@ public class AMD64Assembler extends Assembler
 
     public final void imull(Register dst, Register src, int value)
     {
-        if (isByte(value))
+        if (NumUtil.isByte(value))
         {
-            AMD64RMIOp.IMUL_SX.emit(this, DWORD, dst, src, value);
+            AMD64RMIOp.IMUL_SX.emit(this, OperandSize.DWORD, dst, src, value);
         }
         else
         {
-            AMD64RMIOp.IMUL.emit(this, DWORD, dst, src, value);
+            AMD64RMIOp.IMUL.emit(this, OperandSize.DWORD, dst, src, value);
         }
     }
 
@@ -2132,7 +2106,7 @@ public class AMD64Assembler extends Assembler
         int shortSize = 2;
         int longSize = 6;
         long disp = jumpTarget - position();
-        if (!forceDisp32 && isByte(disp - shortSize))
+        if (!forceDisp32 && NumUtil.isByte(disp - shortSize))
         {
             // 0111 tttn #8-bit disp
             emitByte(0x70 | cc.getValue());
@@ -2190,7 +2164,7 @@ public class AMD64Assembler extends Assembler
         int shortSize = 2;
         int longSize = 5;
         long disp = jumpTarget - position();
-        if (!forceDisp32 && isByte(disp - shortSize))
+        if (!forceDisp32 && NumUtil.isByte(disp - shortSize))
         {
             emitByte(0xEB);
             emitByte((int) ((disp - shortSize) & 0xFF));
@@ -2233,7 +2207,7 @@ public class AMD64Assembler extends Assembler
     {
         prefix(adr);
         emitByte(0xFF);
-        emitOperandHelper(rsp, adr, 0);
+        emitOperandHelper(AMD64.rsp, adr, 0);
     }
 
     public final void jmpb(Label l)
@@ -2627,17 +2601,17 @@ public class AMD64Assembler extends Assembler
 
     public final void negl(Register dst)
     {
-        NEG.emit(this, DWORD, dst);
+        AMD64MOp.NEG.emit(this, OperandSize.DWORD, dst);
     }
 
     public final void notl(Register dst)
     {
-        NOT.emit(this, DWORD, dst);
+        AMD64MOp.NOT.emit(this, OperandSize.DWORD, dst);
     }
 
     public final void notq(Register dst)
     {
-        NOT.emit(this, QWORD, dst);
+        AMD64MOp.NOT.emit(this, OperandSize.QWORD, dst);
     }
 
     @Override
@@ -2654,7 +2628,7 @@ public class AMD64Assembler extends Assembler
     public void nop(int count)
     {
         int i = count;
-        if (UseNormalNop)
+        if (AMD64AsmOptions.UseNormalNop)
         {
             // The fancy nops aren't currently recognized by debuggers making it a
             // pain to disassemble code while debugging. If assert are on clearly
@@ -2668,7 +2642,7 @@ public class AMD64Assembler extends Assembler
             return;
         }
 
-        if (UseAddressNop)
+        if (AMD64AsmOptions.UseAddressNop)
         {
             // Using multi-bytes nops "0x0F 0x1F [Address]" for AMD.
             // 1: 0x90
@@ -2862,12 +2836,12 @@ public class AMD64Assembler extends Assembler
 
     public final void orl(Register dst, Register src)
     {
-        OR.rmOp.emit(this, DWORD, dst, src);
+        AMD64BinaryArithmetic.OR.rmOp.emit(this, OperandSize.DWORD, dst, src);
     }
 
     public final void orl(Register dst, int imm32)
     {
-        OR.getMIOpcode(DWORD, isByte(imm32)).emit(this, DWORD, dst, imm32);
+        AMD64BinaryArithmetic.OR.getMIOpcode(OperandSize.DWORD, NumUtil.isByte(imm32)).emit(this, OperandSize.DWORD, dst, imm32);
     }
 
     public final void pop(Register dst)
@@ -3182,17 +3156,17 @@ public class AMD64Assembler extends Assembler
 
     public final void subl(AMD64Address dst, int imm32)
     {
-        SUB.getMIOpcode(DWORD, isByte(imm32)).emit(this, DWORD, dst, imm32);
+        AMD64BinaryArithmetic.SUB.getMIOpcode(OperandSize.DWORD, NumUtil.isByte(imm32)).emit(this, OperandSize.DWORD, dst, imm32);
     }
 
     public final void subl(Register dst, int imm32)
     {
-        SUB.getMIOpcode(DWORD, isByte(imm32)).emit(this, DWORD, dst, imm32);
+        AMD64BinaryArithmetic.SUB.getMIOpcode(OperandSize.DWORD, NumUtil.isByte(imm32)).emit(this, OperandSize.DWORD, dst, imm32);
     }
 
     public final void subl(Register dst, Register src)
     {
-        SUB.rmOp.emit(this, DWORD, dst, src);
+        AMD64BinaryArithmetic.SUB.rmOp.emit(this, OperandSize.DWORD, dst, src);
     }
 
     public final void subpd(Register dst, Register src)
@@ -3270,7 +3244,7 @@ public class AMD64Assembler extends Assembler
 
     public final void xorl(Register dst, Register src)
     {
-        XOR.rmOp.emit(this, DWORD, dst, src);
+        AMD64BinaryArithmetic.XOR.rmOp.emit(this, OperandSize.DWORD, dst, src);
     }
 
     public final void xorpd(Register dst, Register src)
@@ -3723,27 +3697,27 @@ public class AMD64Assembler extends Assembler
 
     public final void addq(Register dst, int imm32)
     {
-        ADD.getMIOpcode(QWORD, isByte(imm32)).emit(this, QWORD, dst, imm32);
+        AMD64BinaryArithmetic.ADD.getMIOpcode(OperandSize.QWORD, NumUtil.isByte(imm32)).emit(this, OperandSize.QWORD, dst, imm32);
     }
 
     public final void addq(AMD64Address dst, int imm32)
     {
-        ADD.getMIOpcode(QWORD, isByte(imm32)).emit(this, QWORD, dst, imm32);
+        AMD64BinaryArithmetic.ADD.getMIOpcode(OperandSize.QWORD, NumUtil.isByte(imm32)).emit(this, OperandSize.QWORD, dst, imm32);
     }
 
     public final void addq(Register dst, Register src)
     {
-        ADD.rmOp.emit(this, QWORD, dst, src);
+        AMD64BinaryArithmetic.ADD.rmOp.emit(this, OperandSize.QWORD, dst, src);
     }
 
     public final void addq(AMD64Address dst, Register src)
     {
-        ADD.mrOp.emit(this, QWORD, dst, src);
+        AMD64BinaryArithmetic.ADD.mrOp.emit(this, OperandSize.QWORD, dst, src);
     }
 
     public final void andq(Register dst, int imm32)
     {
-        AND.getMIOpcode(QWORD, isByte(imm32)).emit(this, QWORD, dst, imm32);
+        AMD64BinaryArithmetic.AND.getMIOpcode(OperandSize.QWORD, NumUtil.isByte(imm32)).emit(this, OperandSize.QWORD, dst, imm32);
     }
 
     public final void bsrq(Register dst, Register src)
@@ -3793,17 +3767,17 @@ public class AMD64Assembler extends Assembler
 
     public final void cmpq(Register dst, int imm32)
     {
-        CMP.getMIOpcode(QWORD, isByte(imm32)).emit(this, QWORD, dst, imm32);
+        AMD64BinaryArithmetic.CMP.getMIOpcode(OperandSize.QWORD, NumUtil.isByte(imm32)).emit(this, OperandSize.QWORD, dst, imm32);
     }
 
     public final void cmpq(Register dst, Register src)
     {
-        CMP.rmOp.emit(this, QWORD, dst, src);
+        AMD64BinaryArithmetic.CMP.rmOp.emit(this, OperandSize.QWORD, dst, src);
     }
 
     public final void cmpq(Register dst, AMD64Address src)
     {
-        CMP.rmOp.emit(this, QWORD, dst, src);
+        AMD64BinaryArithmetic.CMP.rmOp.emit(this, OperandSize.QWORD, dst, src);
     }
 
     public final void cmpxchgq(Register reg, AMD64Address adr)
@@ -3856,7 +3830,7 @@ public class AMD64Assembler extends Assembler
 
     public final void decq(AMD64Address dst)
     {
-        DEC.emit(this, QWORD, dst);
+        AMD64MOp.DEC.emit(this, OperandSize.QWORD, dst);
     }
 
     public final void imulq(Register dst, Register src)
@@ -3878,7 +3852,7 @@ public class AMD64Assembler extends Assembler
 
     public final void incq(AMD64Address dst)
     {
-        INC.emit(this, QWORD, dst);
+        AMD64MOp.INC.emit(this, OperandSize.QWORD, dst);
     }
 
     public final void movq(Register dst, long imm64)
@@ -4037,7 +4011,7 @@ public class AMD64Assembler extends Assembler
 
     public final void orq(Register dst, Register src)
     {
-        OR.rmOp.emit(this, QWORD, dst, src);
+        AMD64BinaryArithmetic.OR.rmOp.emit(this, OperandSize.QWORD, dst, src);
     }
 
     public final void shlq(Register dst, int imm8)
@@ -4088,28 +4062,28 @@ public class AMD64Assembler extends Assembler
 
     public final void sbbq(Register dst, Register src)
     {
-        SBB.rmOp.emit(this, QWORD, dst, src);
+        AMD64BinaryArithmetic.SBB.rmOp.emit(this, OperandSize.QWORD, dst, src);
     }
 
     public final void subq(Register dst, int imm32)
     {
-        SUB.getMIOpcode(QWORD, isByte(imm32)).emit(this, QWORD, dst, imm32);
+        AMD64BinaryArithmetic.SUB.getMIOpcode(OperandSize.QWORD, NumUtil.isByte(imm32)).emit(this, OperandSize.QWORD, dst, imm32);
     }
 
     public final void subq(AMD64Address dst, int imm32)
     {
-        SUB.getMIOpcode(QWORD, isByte(imm32)).emit(this, QWORD, dst, imm32);
+        AMD64BinaryArithmetic.SUB.getMIOpcode(OperandSize.QWORD, NumUtil.isByte(imm32)).emit(this, OperandSize.QWORD, dst, imm32);
     }
 
     public final void subqWide(Register dst, int imm32)
     {
         // don't use the sign-extending version, forcing a 32-bit immediate
-        SUB.getMIOpcode(QWORD, false).emit(this, QWORD, dst, imm32);
+        AMD64BinaryArithmetic.SUB.getMIOpcode(OperandSize.QWORD, false).emit(this, OperandSize.QWORD, dst, imm32);
     }
 
     public final void subq(Register dst, Register src)
     {
-        SUB.rmOp.emit(this, QWORD, dst, src);
+        AMD64BinaryArithmetic.SUB.rmOp.emit(this, OperandSize.QWORD, dst, src);
     }
 
     public final void testq(Register dst, Register src)
@@ -4163,7 +4137,7 @@ public class AMD64Assembler extends Assembler
         if (target.isMP)
         {
             // We only have to handle StoreLoad
-            if ((barriers & STORE_LOAD) != 0)
+            if ((barriers & MemoryBarriers.STORE_LOAD) != 0)
             {
                 // All usable chips support "locked" instructions which suffice
                 // as barriers, and are much faster than the alternative of
@@ -4174,7 +4148,7 @@ public class AMD64Assembler extends Assembler
                 // the code where this idiom is used, in particular the
                 // orderAccess code.
                 lock();
-                addl(new AMD64Address(rsp, 0), 0); // Assert the lock# signal here
+                addl(new AMD64Address(AMD64.rsp, 0), 0); // Assert the lock# signal here
             }
         }
     }
@@ -4385,7 +4359,7 @@ public class AMD64Assembler extends Assembler
     @Override
     public AMD64Address getPlaceholder(int instructionStartPosition)
     {
-        return new AMD64Address(rip, Register.None, Scale.Times1, 0, instructionStartPosition);
+        return new AMD64Address(AMD64.rip, Register.None, Scale.Times1, 0, instructionStartPosition);
     }
 
     private void prefetchPrefix(AMD64Address src)

@@ -1,11 +1,19 @@
 package graalvm.compiler.replacements;
 
-import static graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext.CompilationContext.INLINE_AFTER_PARSING;
-
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+
+import jdk.vm.ci.code.BytecodeFrame;
+import jdk.vm.ci.meta.ConstantReflectionProvider;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.JavaType;
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+import jdk.vm.ci.meta.Signature;
+
+import org.graalvm.word.LocationIdentity;
 
 import graalvm.compiler.core.common.CompilationIdentifier;
 import graalvm.compiler.core.common.spi.ConstantFieldProvider;
@@ -38,6 +46,7 @@ import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderConfiguration;
 import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderConfiguration.Plugins;
 import graalvm.compiler.nodes.graphbuilderconf.GraphBuilderTool;
 import graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext;
+import graalvm.compiler.nodes.graphbuilderconf.IntrinsicContext.CompilationContext;
 import graalvm.compiler.nodes.java.ExceptionObjectNode;
 import graalvm.compiler.nodes.java.MethodCallTargetNode;
 import graalvm.compiler.nodes.spi.StampProvider;
@@ -49,15 +58,6 @@ import graalvm.compiler.phases.common.DeadCodeEliminationPhase.Optionality;
 import graalvm.compiler.phases.common.inlining.InliningUtil;
 import graalvm.compiler.phases.util.Providers;
 import graalvm.compiler.word.WordTypes;
-import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.code.BytecodeFrame;
-import jdk.vm.ci.meta.ConstantReflectionProvider;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.JavaType;
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
-import jdk.vm.ci.meta.Signature;
 
 /**
  * A utility for manually creating a graph. This will be expanded as necessary to support all
@@ -358,7 +358,7 @@ public class GraphKit implements GraphBuilderTool
         GraphBuilderConfiguration config = GraphBuilderConfiguration.getSnippetDefault(plugins);
 
         StructuredGraph calleeGraph = new StructuredGraph.Builder(invoke.getOptions()).method(method).build();
-        IntrinsicContext initialReplacementContext = new IntrinsicContext(method, method, providers.getReplacements().getDefaultReplacementBytecodeProvider(), INLINE_AFTER_PARSING);
+        IntrinsicContext initialReplacementContext = new IntrinsicContext(method, method, providers.getReplacements().getDefaultReplacementBytecodeProvider(), CompilationContext.INLINE_AFTER_PARSING);
         GraphBuilderPhase.Instance instance = createGraphBuilderInstance(metaAccess, providers.getStampProvider(), providers.getConstantReflection(), providers.getConstantFieldProvider(), config, OptimisticOptimizations.NONE, initialReplacementContext);
         instance.apply(calleeGraph);
 

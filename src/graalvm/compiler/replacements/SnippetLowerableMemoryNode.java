@@ -1,5 +1,7 @@
 package graalvm.compiler.replacements;
 
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.core.common.type.Stamp;
 import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeInputList;
@@ -11,7 +13,6 @@ import graalvm.compiler.nodes.memory.MemoryAccess;
 import graalvm.compiler.nodes.memory.MemoryNode;
 import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
-import org.graalvm.word.LocationIdentity;
 
 public class SnippetLowerableMemoryNode extends FixedWithNextNode implements Lowerable, MemoryAccess
 {

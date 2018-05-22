@@ -1,20 +1,19 @@
 package graalvm.compiler.hotspot.meta;
 
-import static graalvm.compiler.core.common.GraalOptions.ImmutableCode;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.graph.NodeClass;
-import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
-import graalvm.compiler.options.OptionValues;
-import graalvm.compiler.replacements.SnippetCounter;
 
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaField;
 import jdk.vm.ci.meta.ResolvedJavaType;
+
+import graalvm.compiler.core.common.GraalOptions;
+import graalvm.compiler.debug.GraalError;
+import graalvm.compiler.graph.NodeClass;
+import graalvm.compiler.hotspot.GraalHotSpotVMConfig;
+import graalvm.compiler.options.OptionValues;
+import graalvm.compiler.replacements.SnippetCounter;
 
 /**
  * Extends {@link HotSpotConstantFieldProvider} to override the implementation of
@@ -31,7 +30,7 @@ public class HotSpotGraalConstantFieldProvider extends HotSpotConstantFieldProvi
     @Override
     protected boolean isStaticFieldConstant(ResolvedJavaField field, OptionValues options)
     {
-        return super.isStaticFieldConstant(field, options) && (!ImmutableCode.getValue(options) || isEmbeddableField(field));
+        return super.isStaticFieldConstant(field, options) && (!GraalOptions.ImmutableCode.getValue(options) || isEmbeddableField(field));
     }
 
     /**

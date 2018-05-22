@@ -1,14 +1,15 @@
 package graalvm.compiler.phases.common.inlining.info;
 
+import jdk.vm.ci.meta.Assumptions.AssumptionResult;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import org.graalvm.collections.EconomicSet;
+
 import graalvm.compiler.graph.Node;
 import graalvm.compiler.nodes.CallTargetNode.InvokeKind;
 import graalvm.compiler.nodes.Invoke;
 import graalvm.compiler.phases.common.inlining.InliningUtil;
 import graalvm.compiler.phases.util.Providers;
-
-import jdk.vm.ci.meta.Assumptions.AssumptionResult;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
  * Represents an inlining opportunity where the current class hierarchy leads to a monomorphic

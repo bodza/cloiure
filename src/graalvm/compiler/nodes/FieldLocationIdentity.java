@@ -1,10 +1,9 @@
 package graalvm.compiler.nodes;
 
 import jdk.vm.ci.meta.JavaKind.FormatWithToString;
+import jdk.vm.ci.meta.ResolvedJavaField;
 
 import org.graalvm.word.LocationIdentity;
-
-import jdk.vm.ci.meta.ResolvedJavaField;
 
 public class FieldLocationIdentity extends LocationIdentity implements FormatWithToString
 {

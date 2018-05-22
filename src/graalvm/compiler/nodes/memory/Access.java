@@ -1,8 +1,9 @@
 package graalvm.compiler.nodes.memory;
 
+import org.graalvm.word.LocationIdentity;
+
 import graalvm.compiler.nodes.extended.GuardedNode;
 import graalvm.compiler.nodes.memory.address.AddressNode;
-import org.graalvm.word.LocationIdentity;
 
 public interface Access extends GuardedNode, HeapAccess
 {

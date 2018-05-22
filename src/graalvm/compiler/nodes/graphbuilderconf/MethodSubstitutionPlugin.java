@@ -1,19 +1,18 @@
 package graalvm.compiler.nodes.graphbuilderconf;
 
-import static graalvm.compiler.nodes.graphbuilderconf.InvocationPlugins.resolveType;
-
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import jdk.vm.ci.meta.MetaAccessProvider;
+import jdk.vm.ci.meta.ResolvedJavaMethod;
+
 import graalvm.compiler.bytecode.BytecodeProvider;
 import graalvm.compiler.debug.GraalError;
 import graalvm.compiler.nodes.ValueNode;
-
-import jdk.vm.ci.meta.MetaAccessProvider;
-import jdk.vm.ci.meta.ResolvedJavaMethod;
+import graalvm.compiler.nodes.graphbuilderconf.InvocationPlugins;
 
 /**
  * An {@link InvocationPlugin} for a method where the implementation of the method is provided by a
@@ -127,14 +126,14 @@ public final class MethodSubstitutionPlugin implements InvocationPlugin
                 if (!originalIsStatic)
                 {
                     start = 1;
-                    if (!mparams[0].isAssignableFrom(resolveType(parameters[0], false)))
+                    if (!mparams[0].isAssignableFrom(InvocationPlugins.resolveType(parameters[0], false)))
                     {
                         return false;
                     }
                 }
                 for (int i = start; i < mparams.length; i++)
                 {
-                    if (mparams[i] != resolveType(parameters[i], false))
+                    if (mparams[i] != InvocationPlugins.resolveType(parameters[i], false))
                     {
                         return false;
                     }

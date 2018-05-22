@@ -1,12 +1,10 @@
 package graalvm.compiler.nodes.virtual;
 
-import static graalvm.compiler.nodeinfo.InputType.Association;
-import static graalvm.compiler.nodeinfo.InputType.Extension;
-import static graalvm.compiler.nodeinfo.InputType.Memory;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.graalvm.word.LocationIdentity;
 
 import graalvm.compiler.core.common.type.StampFactory;
 import graalvm.compiler.graph.Node;
@@ -14,6 +12,7 @@ import graalvm.compiler.graph.NodeClass;
 import graalvm.compiler.graph.NodeInputList;
 import graalvm.compiler.graph.spi.Simplifiable;
 import graalvm.compiler.graph.spi.SimplifierTool;
+import graalvm.compiler.nodeinfo.InputType;
 import graalvm.compiler.nodes.FixedWithNextNode;
 import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
@@ -25,7 +24,6 @@ import graalvm.compiler.nodes.spi.Lowerable;
 import graalvm.compiler.nodes.spi.LoweringTool;
 import graalvm.compiler.nodes.spi.VirtualizableAllocation;
 import graalvm.compiler.nodes.spi.VirtualizerTool;
-import org.graalvm.word.LocationIdentity;
 
 public final class CommitAllocationNode extends FixedWithNextNode implements VirtualizableAllocation, Lowerable, Simplifiable, MemoryCheckpoint.Single
 {
@@ -33,7 +31,7 @@ public final class CommitAllocationNode extends FixedWithNextNode implements Vir
 
     @Input NodeInputList<VirtualObjectNode> virtualObjects = new NodeInputList<>(this);
     @Input NodeInputList<ValueNode> values = new NodeInputList<>(this);
-    @Input(Association) NodeInputList<MonitorIdNode> locks = new NodeInputList<>(this);
+    @Input(InputType.Association) NodeInputList<MonitorIdNode> locks = new NodeInputList<>(this);
     protected ArrayList<Integer> lockIndexes = new ArrayList<>(Arrays.asList(0));
     protected ArrayList<Boolean> ensureVirtual = new ArrayList<>();
 

@@ -1,11 +1,11 @@
 package graalvm.compiler.lir.amd64;
 
-import graalvm.compiler.lir.framemap.FrameMap;
-import graalvm.compiler.lir.framemap.FrameMapBuilderImpl;
-
 import jdk.vm.ci.code.CodeCacheProvider;
 import jdk.vm.ci.code.RegisterConfig;
 import jdk.vm.ci.code.StackSlot;
+
+import graalvm.compiler.lir.framemap.FrameMap;
+import graalvm.compiler.lir.framemap.FrameMapBuilderImpl;
 
 public class AMD64FrameMapBuilder extends FrameMapBuilderImpl
 {

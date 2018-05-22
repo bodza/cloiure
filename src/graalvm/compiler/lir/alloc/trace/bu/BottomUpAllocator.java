@@ -1,17 +1,20 @@
 package graalvm.compiler.lir.alloc.trace.bu;
 
-import static jdk.vm.ci.code.ValueUtil.asAllocatableValue;
-import static jdk.vm.ci.code.ValueUtil.asRegister;
-import static jdk.vm.ci.code.ValueUtil.isIllegal;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static graalvm.compiler.lir.LIRValueUtil.asVariable;
-import static graalvm.compiler.lir.LIRValueUtil.isConstantValue;
-import static graalvm.compiler.lir.LIRValueUtil.isVariable;
-
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.EnumSet;
+
+import jdk.vm.ci.code.Register;
+import jdk.vm.ci.code.RegisterArray;
+import jdk.vm.ci.code.RegisterAttributes;
+import jdk.vm.ci.code.RegisterValue;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.common.JVMCIError;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.PlatformKind;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig.AllocatableRegisters;
@@ -41,16 +44,6 @@ import graalvm.compiler.lir.alloc.trace.TraceRegisterAllocationPhase;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;
 import graalvm.compiler.lir.ssa.SSAUtil;
-
-import jdk.vm.ci.code.Register;
-import jdk.vm.ci.code.RegisterArray;
-import jdk.vm.ci.code.RegisterAttributes;
-import jdk.vm.ci.code.RegisterValue;
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.common.JVMCIError;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.PlatformKind;
-import jdk.vm.ci.meta.Value;
 
 /**
  * Allocates registers within a trace in a greedy, bottom-up fashion. The liveness information is
@@ -367,11 +360,11 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
 
         private void visitPhiValuePair(Value phiOut, Value phiIn)
         {
-            AllocatableValue in = asAllocatableValue(phiIn);
+            AllocatableValue in = ValueUtil.asAllocatableValue(phiIn);
 
-            AllocatableValue dest = isRegister(in) ? getCurrentValue(asRegister(in)) : in;
+            AllocatableValue dest = ValueUtil.isRegister(in) ? getCurrentValue(ValueUtil.asRegister(in)) : in;
             final LIRInstruction move;
-            if (isConstantValue(phiOut))
+            if (LIRValueUtil.isConstantValue(phiOut))
             {
                 // insert move from constant
                 move = spillMoveFactory.createLoad(dest, LIRValueUtil.asConstant(phiOut));
@@ -379,7 +372,7 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
             else
             {
                 // insert move from variable
-                move = spillMoveFactory.createMove(dest, asVariable(phiOut));
+                move = spillMoveFactory.createMove(dest, LIRValueUtil.asVariable(phiOut));
             }
             move.setComment(lirGenRes, "BottomUp: phi resolution");
             phiResolutionMoves.add(move);
@@ -457,7 +450,7 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
 
         private void resolveValuePair(Value incomingValue, Value outgoingValue)
         {
-            if (!isIllegal(incomingValue) && !TraceGlobalMoveResolver.isMoveToSelf(outgoingValue, incomingValue))
+            if (!ValueUtil.isIllegal(incomingValue) && !TraceGlobalMoveResolver.isMoveToSelf(outgoingValue, incomingValue))
             {
                 TraceGlobalMoveResolutionPhase.addMapping(moveResolver, outgoingValue, incomingValue);
             }
@@ -598,20 +591,20 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
 
         private Value allocFixedRegister(Value value)
         {
-            if (isRegister(value))
+            if (ValueUtil.isRegister(value))
             {
-                Register reg = asRegister(value);
+                Register reg = ValueUtil.asRegister(value);
                 evacuateRegisterAndSpill(reg);
-                setRegisterUsage(reg, asAllocatableValue(value));
+                setRegisterUsage(reg, ValueUtil.asAllocatableValue(value));
             }
             return value;
         }
 
         private Value allocRegister(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
         {
-            if (isVariable(value) && requiresRegisters(instruction, value, mode, flags))
+            if (LIRValueUtil.isVariable(value) && requiresRegisters(instruction, value, mode, flags))
             {
-                Variable var = asVariable(value);
+                Variable var = LIRValueUtil.asVariable(value);
                 // check if available
                 AllocatableValue currentLocation = getCurrentLocation(var);
                 if (currentLocation == null)
@@ -620,10 +613,10 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
                     return allocRegister(var, mode);
                 }
                 // already a location assigned
-                if (isRegister(currentLocation))
+                if (ValueUtil.isRegister(currentLocation))
                 {
                     // register assigned -> nothing todo
-                    setLastRegisterUsage(asRegister(currentLocation), currentOpId);
+                    setLastRegisterUsage(ValueUtil.asRegister(currentLocation), currentOpId);
                     return currentLocation;
                 }
                 // stackSlot assigned but need register -> spill
@@ -665,25 +658,25 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
 
         private Value allocStackOrRegister(LIRInstruction instruction, Value value, OperandMode mode, EnumSet<OperandFlag> flags)
         {
-            if (isRegister(value))
+            if (ValueUtil.isRegister(value))
             {
                 if ((mode == OperandMode.DEF || mode == OperandMode.TEMP) && !(instruction instanceof LabelOp))
                 {
-                    freeRegister(asRegister(value));
+                    freeRegister(ValueUtil.asRegister(value));
                 }
                 return value;
             }
-            if (isVariable(value))
+            if (LIRValueUtil.isVariable(value))
             {
-                Variable var = asVariable(value);
+                Variable var = LIRValueUtil.asVariable(value);
                 // check if available
                 AllocatableValue currentLocation = getCurrentLocation(var);
                 if (currentLocation != null)
                 {
                     // already a location assigned -> nothing todo
-                    if (isRegister(currentLocation))
+                    if (ValueUtil.isRegister(currentLocation))
                     {
-                        Register reg = asRegister(currentLocation);
+                        Register reg = ValueUtil.asRegister(currentLocation);
                         if (mode == OperandMode.ALIVE && killedAtDef(reg))
                         {
                             AllocatableValue spillSlot = allocateSpillSlot(var);
@@ -766,7 +759,7 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
 
         private boolean isActiveFixedRegister(Register reg)
         {
-            return isRegister(getCurrentValue(reg));
+            return ValueUtil.isRegister(getCurrentValue(reg));
         }
 
         private boolean isCurrentlyUsed(Register reg, OperandMode mode)
@@ -784,9 +777,9 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
             AllocatableValue val = getCurrentValue(reg);
             setCurrentValue(reg, null);
             setLastRegisterKill(reg, currentOpId);
-            if (val != null && isVariable(val))
+            if (val != null && LIRValueUtil.isVariable(val))
             {
-                Variable var = asVariable(val);
+                Variable var = LIRValueUtil.asVariable(val);
                 setCurrentLocation(var, null);
             }
         }
@@ -833,9 +826,9 @@ public final class BottomUpAllocator extends TraceAllocationPhase<TraceAllocatio
 
         private void spillVariable(AllocatableValue val, Register reg)
         {
-            if (val != null && isVariable(val))
+            if (val != null && LIRValueUtil.isVariable(val))
             {
-                Variable var = asVariable(val);
+                Variable var = LIRValueUtil.asVariable(val);
                 // insert reload
                 AllocatableValue spillSlot = allocateSpillSlot(var);
                 setCurrentLocation(var, spillSlot);

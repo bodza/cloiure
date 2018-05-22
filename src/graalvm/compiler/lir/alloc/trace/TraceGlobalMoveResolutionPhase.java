@@ -1,13 +1,13 @@
 package graalvm.compiler.lir.alloc.trace;
 
-import static jdk.vm.ci.code.ValueUtil.asRegisterValue;
-import static jdk.vm.ci.code.ValueUtil.isIllegal;
-import static jdk.vm.ci.code.ValueUtil.isRegister;
-import static graalvm.compiler.lir.LIRValueUtil.isConstantValue;
-import static graalvm.compiler.lir.alloc.trace.TraceUtil.asShadowedRegisterValue;
-import static graalvm.compiler.lir.alloc.trace.TraceUtil.isShadowedRegisterValue;
-
 import java.util.ArrayList;
+
+import jdk.vm.ci.code.Architecture;
+import jdk.vm.ci.code.RegisterValue;
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.code.ValueUtil;
+import jdk.vm.ci.meta.AllocatableValue;
+import jdk.vm.ci.meta.Value;
 
 import graalvm.compiler.core.common.alloc.RegisterAllocationConfig;
 import graalvm.compiler.core.common.alloc.Trace;
@@ -15,18 +15,14 @@ import graalvm.compiler.core.common.alloc.TraceBuilderResult;
 import graalvm.compiler.core.common.cfg.AbstractBlockBase;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRInstruction;
+import graalvm.compiler.lir.LIRValueUtil;
 import graalvm.compiler.lir.StandardOp.JumpOp;
 import graalvm.compiler.lir.StandardOp.LabelOp;
 import graalvm.compiler.lir.alloc.trace.TraceAllocationPhase.TraceAllocationContext;
+import graalvm.compiler.lir.alloc.trace.TraceUtil;
 import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.gen.LIRGeneratorTool.MoveFactory;
 import graalvm.compiler.lir.ssa.SSAUtil;
-
-import jdk.vm.ci.code.Architecture;
-import jdk.vm.ci.code.RegisterValue;
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.AllocatableValue;
-import jdk.vm.ci.meta.Value;
 
 public final class TraceGlobalMoveResolutionPhase
 {
@@ -144,7 +140,7 @@ public final class TraceGlobalMoveResolutionPhase
 
     private static boolean isIllegalDestination(Value to)
     {
-        return isIllegal(to) || isConstantValue(to);
+        return ValueUtil.isIllegal(to) || LIRValueUtil.isConstantValue(to);
     }
 
     public static void addMapping(MoveResolver moveResolver, Value from, Value to)
@@ -153,17 +149,17 @@ public final class TraceGlobalMoveResolutionPhase
         {
             return;
         }
-        if (isShadowedRegisterValue(to))
+        if (TraceUtil.isShadowedRegisterValue(to))
         {
-            ShadowedRegisterValue toSh = asShadowedRegisterValue(to);
+            ShadowedRegisterValue toSh = TraceUtil.asShadowedRegisterValue(to);
             addMappingToRegister(moveResolver, from, toSh.getRegister());
             addMappingToStackSlot(moveResolver, from, toSh.getStackSlot());
         }
         else
         {
-            if (isRegister(to))
+            if (ValueUtil.isRegister(to))
             {
-                addMappingToRegister(moveResolver, from, asRegisterValue(to));
+                addMappingToRegister(moveResolver, from, ValueUtil.asRegisterValue(to));
             }
             else
             {
@@ -174,10 +170,10 @@ public final class TraceGlobalMoveResolutionPhase
 
     private static void addMappingToRegister(MoveResolver moveResolver, Value from, RegisterValue register)
     {
-        if (isShadowedRegisterValue(from))
+        if (TraceUtil.isShadowedRegisterValue(from))
         {
-            RegisterValue fromReg = asShadowedRegisterValue(from).getRegister();
-            AllocatableValue fromStack = asShadowedRegisterValue(from).getStackSlot();
+            RegisterValue fromReg = TraceUtil.asShadowedRegisterValue(from).getRegister();
+            AllocatableValue fromStack = TraceUtil.asShadowedRegisterValue(from).getStackSlot();
             checkAndAddMapping(moveResolver, fromReg, register, fromStack);
         }
         else
@@ -188,9 +184,9 @@ public final class TraceGlobalMoveResolutionPhase
 
     private static void addMappingToStackSlot(MoveResolver moveResolver, Value from, AllocatableValue stack)
     {
-        if (isShadowedRegisterValue(from))
+        if (TraceUtil.isShadowedRegisterValue(from))
         {
-            ShadowedRegisterValue shadowedFrom = asShadowedRegisterValue(from);
+            ShadowedRegisterValue shadowedFrom = TraceUtil.asShadowedRegisterValue(from);
             RegisterValue fromReg = shadowedFrom.getRegister();
             AllocatableValue fromStack = shadowedFrom.getStackSlot();
             if (!fromStack.equals(stack))

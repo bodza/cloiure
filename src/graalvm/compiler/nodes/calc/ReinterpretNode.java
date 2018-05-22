@@ -3,6 +3,10 @@ package graalvm.compiler.nodes.calc;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import jdk.vm.ci.code.CodeUtil;
+import jdk.vm.ci.meta.JavaKind;
+import jdk.vm.ci.meta.SerializableConstant;
+
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.core.common.type.ArithmeticStamp;
 import graalvm.compiler.core.common.type.FloatStamp;
@@ -17,10 +21,6 @@ import graalvm.compiler.nodes.NodeView;
 import graalvm.compiler.nodes.ValueNode;
 import graalvm.compiler.nodes.spi.ArithmeticLIRLowerable;
 import graalvm.compiler.nodes.spi.NodeLIRBuilderTool;
-
-import jdk.vm.ci.code.CodeUtil;
-import jdk.vm.ci.meta.JavaKind;
-import jdk.vm.ci.meta.SerializableConstant;
 
 /**
  * The {@code ReinterpretNode} class represents a reinterpreting conversion that changes the stamp

@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
-import graalvm.compiler.core.common.LIRKind;
-import graalvm.compiler.debug.GraalError;
-import graalvm.compiler.lir.VirtualStackSlot;
-import graalvm.compiler.lir.gen.LIRGenerationResult;
-
 import jdk.vm.ci.code.CallingConvention;
 import jdk.vm.ci.code.CodeCacheProvider;
 import jdk.vm.ci.code.RegisterConfig;
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.ValueKind;
+
+import graalvm.compiler.core.common.LIRKind;
+import graalvm.compiler.debug.GraalError;
+import graalvm.compiler.lir.VirtualStackSlot;
+import graalvm.compiler.lir.gen.LIRGenerationResult;
 
 /**
  * A FrameMapBuilder that records allocation.

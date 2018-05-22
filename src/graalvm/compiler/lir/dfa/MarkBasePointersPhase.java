@@ -1,5 +1,9 @@
 package graalvm.compiler.lir.dfa;
 
+import jdk.vm.ci.code.TargetDescription;
+import jdk.vm.ci.meta.Value;
+import jdk.vm.ci.meta.ValueKind;
+
 import graalvm.compiler.core.common.LIRKind;
 import graalvm.compiler.lir.LIR;
 import graalvm.compiler.lir.LIRFrameState;
@@ -10,10 +14,6 @@ import graalvm.compiler.lir.gen.LIRGenerationResult;
 import graalvm.compiler.lir.phases.AllocationPhase;
 import graalvm.compiler.lir.util.IndexedValueMap;
 import graalvm.compiler.lir.util.ValueSet;
-
-import jdk.vm.ci.code.TargetDescription;
-import jdk.vm.ci.meta.Value;
-import jdk.vm.ci.meta.ValueKind;
 
 /**
  * Record all derived reference base pointers in a frame state.
