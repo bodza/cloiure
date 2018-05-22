@@ -17,18 +17,10 @@ public class EconomyMidTier extends PhaseSuite<MidTierContext>
     public EconomyMidTier(OptionValues options)
     {
         CanonicalizerPhase canonicalizer = new CanonicalizerPhase();
-        if (GraalOptions.ImmutableCode.getValue(options))
-        {
-            canonicalizer.disableReadCanonicalization();
-        }
         appendPhase(new RemoveValueProxyPhase());
-
         appendPhase(new LoopSafepointInsertionPhase());
-
         appendPhase(new GuardLoweringPhase());
-
         appendPhase(new LoweringPhase(canonicalizer, LoweringTool.StandardLoweringStage.MID_TIER));
-
         appendPhase(new FrameStateAssignmentPhase());
     }
 }

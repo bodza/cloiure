@@ -537,7 +537,7 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
                     {
                         stack[++tos] = suxBlock;
                     }
-                    block.setSuccessors(new Block[]{suxBlock});
+                    block.setSuccessors(new Block[] { suxBlock });
                 }
                 else if (last instanceof IfNode)
                 {
@@ -546,15 +546,15 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
                     stack[++tos] = trueSucc;
                     Block falseSucc = nodeMap.get(ifNode.falseSuccessor());
                     stack[++tos] = falseSucc;
-                    block.setSuccessors(new Block[]{trueSucc, falseSucc});
-                    Block[] ifPred = new Block[]{block};
+                    block.setSuccessors(new Block[] { trueSucc, falseSucc });
+                    Block[] ifPred = new Block[] { block };
                     trueSucc.setPredecessors(ifPred);
                     falseSucc.setPredecessors(ifPred);
                 }
                 else if (last instanceof LoopEndNode)
                 {
                     LoopEndNode loopEndNode = (LoopEndNode) last;
-                    block.setSuccessors(new Block[]{nodeMap.get(loopEndNode.loopBegin())});
+                    block.setSuccessors(new Block[] { nodeMap.get(loopEndNode.loopBegin()) });
                     // Nothing to do push onto the stack.
                 }
                 else if (last instanceof ControlSinkNode)
@@ -564,7 +564,7 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
                 else
                 {
                     int startTos = tos;
-                    Block[] ifPred = new Block[]{block};
+                    Block[] ifPred = new Block[] { block };
                     for (Node suxNode : last.successors())
                     {
                         Block sux = nodeMap.get(suxNode);

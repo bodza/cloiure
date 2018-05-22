@@ -203,7 +203,7 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo
             FixedNode exceptionSux = exceptionEdge.next();
             graph.addBeforeFixed(exceptionSux, exceptionMerge);
             exceptionObjectPhi = graph.addWithoutUnique(new ValuePhiNode(StampFactory.forKind(JavaKind.Object), exceptionMerge));
-            exceptionMerge.setStateAfter(exceptionEdge.stateAfter().duplicateModified(invoke.stateAfter().bci, true, JavaKind.Object, new JavaKind[]{JavaKind.Object}, new ValueNode[]{exceptionObjectPhi}));
+            exceptionMerge.setStateAfter(exceptionEdge.stateAfter().duplicateModified(invoke.stateAfter().bci, true, JavaKind.Object, new JavaKind[] { JavaKind.Object }, new ValueNode[] { exceptionObjectPhi }));
         }
 
         // create one separate block for each invoked method
@@ -343,7 +343,7 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo
         AbstractBeginNode calleeEntryNode = graph.add(new BeginNode());
 
         AbstractBeginNode unknownTypeSux = createUnknownTypeSuccessor(graph);
-        AbstractBeginNode[] successors = new AbstractBeginNode[]{calleeEntryNode, unknownTypeSux};
+        AbstractBeginNode[] successors = new AbstractBeginNode[] { calleeEntryNode, unknownTypeSux };
         createDispatchOnTypeBeforeInvoke(graph, successors, false, stampProvider, constantReflection);
 
         calleeEntryNode.setNext(invoke.asNode());
@@ -474,7 +474,7 @@ public class MultiTypeGuardInlineInfo extends AbstractInlineInfo
     {
         AbstractBeginNode invocationEntry = graph.add(new BeginNode());
         AbstractBeginNode unknownTypeSux = createUnknownTypeSuccessor(graph);
-        AbstractBeginNode[] successors = new AbstractBeginNode[]{invocationEntry, unknownTypeSux};
+        AbstractBeginNode[] successors = new AbstractBeginNode[] { invocationEntry, unknownTypeSux };
         createDispatchOnTypeBeforeInvoke(graph, successors, true, stampProvider, constantReflection);
 
         invocationEntry.setNext(invoke.asNode());

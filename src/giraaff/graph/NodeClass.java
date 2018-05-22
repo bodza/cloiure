@@ -194,7 +194,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
                 snc = snc.superNodeClass;
             }
 
-            this.iterableIds = new int[]{iterableId};
+            this.iterableIds = new int[] { iterableId };
         }
         else
         {
@@ -279,7 +279,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     @Override
     public Fields[] getAllFields()
     {
-        return new Fields[]{data, inputs, successors};
+        return new Fields[] { data, inputs, successors };
     }
 
     int[] iterableIds()

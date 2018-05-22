@@ -562,7 +562,9 @@ public final class Interval
         this.location = newLocation;
     }
 
-    /** Returns true is this is the sentinel interval that denotes the end of an interval list. */
+    /**
+     * Returns true is this is the sentinel interval that denotes the end of an interval list.
+     */
     public boolean isEndMarker()
     {
         return operandNumber == END_MARKER_OPERAND_NUMBER;

@@ -48,12 +48,6 @@ public class DynamicNewInstanceNode extends AbstractNewObjectNode implements Can
     {
         if (clazz.isConstant())
         {
-            if (GraalOptions.GeneratePIC.getValue(tool.getOptions()))
-            {
-                // Can't fold for AOT, because the resulting NewInstanceNode will be missing its
-                // InitializeKlassNode.
-                return this;
-            }
             ResolvedJavaType type = tool.getConstantReflection().asJavaType(clazz.asConstant());
             if (type != null && type.isInitialized() && !throwsInstantiationException(type, tool.getMetaAccess()))
             {
@@ -63,7 +57,9 @@ public class DynamicNewInstanceNode extends AbstractNewObjectNode implements Can
         return this;
     }
 
-    /** Hook for subclasses to instantiate a subclass of {@link NewInstanceNode}. */
+    /**
+     * Hook for subclasses to instantiate a subclass of {@link NewInstanceNode}.
+     */
     protected NewInstanceNode createNewInstanceNode(ResolvedJavaType type)
     {
         return new NewInstanceNode(type, fillContents(), stateBefore());

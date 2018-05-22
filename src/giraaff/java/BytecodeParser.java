@@ -140,7 +140,6 @@ import giraaff.nodes.extended.LoadMethodNode;
 import giraaff.nodes.extended.MembarNode;
 import giraaff.nodes.extended.StateSplitProxyNode;
 import giraaff.nodes.extended.ValueAnchorNode;
-import giraaff.nodes.graphbuilderconf.ClassInitializationPlugin;
 import giraaff.nodes.graphbuilderconf.GraphBuilderConfiguration;
 import giraaff.nodes.graphbuilderconf.GraphBuilderConfiguration.BytecodeExceptionMode;
 import giraaff.nodes.graphbuilderconf.GraphBuilderContext;
@@ -152,7 +151,6 @@ import giraaff.nodes.graphbuilderconf.InvocationPlugin;
 import giraaff.nodes.graphbuilderconf.InvocationPlugins.InvocationPluginReceiver;
 import giraaff.nodes.graphbuilderconf.InvokeDynamicPlugin;
 import giraaff.nodes.graphbuilderconf.NodePlugin;
-import giraaff.nodes.graphbuilderconf.ProfilingPlugin;
 import giraaff.nodes.java.ArrayLengthNode;
 import giraaff.nodes.java.ExceptionObjectNode;
 import giraaff.nodes.java.FinalFieldBarrierNode;
@@ -265,7 +263,7 @@ public class BytecodeParser implements GraphBuilderContext
 
                                     // Swap the top-of-stack value with the return value
                                     ValueNode tos = frameStateBuilder.pop(returnKind);
-                                    FrameState newFrameState = frameStateBuilder.create(parser.stream.nextBCI(), parser.getNonIntrinsicAncestor(), false, new JavaKind[]{returnKind}, new ValueNode[]{returnVal});
+                                    FrameState newFrameState = frameStateBuilder.create(parser.stream.nextBCI(), parser.getNonIntrinsicAncestor(), false, new JavaKind[] { returnKind }, new ValueNode[] { returnVal });
                                     frameState.replaceAndDelete(newFrameState);
                                     frameStateBuilder.push(returnKind, tos);
                                 }
@@ -437,16 +435,8 @@ public class BytecodeParser implements GraphBuilderContext
         this.entryBCI = entryBCI;
         this.parent = parent;
 
-        ClassInitializationPlugin classInitializationPlugin = graphBuilderConfig.getPlugins().getClassInitializationPlugin();
-        if (classInitializationPlugin != null && graphBuilderConfig.eagerResolving())
-        {
-            uninitializedIsError = eagerInitializing = !classInitializationPlugin.supportsLazyInitialization(constantPool);
-        }
-        else
-        {
-            eagerInitializing = graphBuilderConfig.eagerResolving();
-            uninitializedIsError = graphBuilderConfig.unresolvedIsError();
-        }
+        eagerInitializing = graphBuilderConfig.eagerResolving();
+        uninitializedIsError = graphBuilderConfig.unresolvedIsError();
 
         if (graphBuilderConfig.insertFullInfopoints() && !parsingIntrinsic())
         {
@@ -558,13 +548,6 @@ public class BytecodeParser implements GraphBuilderContext
             methodSynchronizedObject = synchronizedObject(frameState, method);
             frameState.clearNonLiveLocals(startBlock, liveness, true);
             genMonitorEnter(methodSynchronizedObject, bci());
-        }
-
-        ProfilingPlugin profilingPlugin = this.graphBuilderConfig.getPlugins().getProfilingPlugin();
-        if (profilingPlugin != null && profilingPlugin.shouldProfile(this, method))
-        {
-            FrameState stateBefore = frameState.create(bci(), getNonIntrinsicAncestor(), false, null, null);
-            profilingPlugin.profileInvoke(this, method, stateBefore);
         }
 
         finishPrepare(lastInstr, 0);
@@ -939,13 +922,6 @@ public class BytecodeParser implements GraphBuilderContext
 
     protected void genGoto()
     {
-        ProfilingPlugin profilingPlugin = this.graphBuilderConfig.getPlugins().getProfilingPlugin();
-        if (profilingPlugin != null && profilingPlugin.shouldProfile(this, method))
-        {
-            FrameState stateBefore = frameState.create(bci(), getNonIntrinsicAncestor(), false, null, null);
-            int targetBci = currentBlock.getSuccessor(0).startBci;
-            profilingPlugin.profileGoto(this, method, bci(), targetBci, stateBefore);
-        }
         appendGoto(currentBlock.getSuccessor(0));
     }
 
@@ -1129,19 +1105,11 @@ public class BytecodeParser implements GraphBuilderContext
             }
             else
             {
-                ValueNode classInit = null;
-                ClassInitializationPlugin classInitializationPlugin = graphBuilderConfig.getPlugins().getClassInitializationPlugin();
-                if (classInitializationPlugin != null && classInitializationPlugin.shouldApply(this, resolvedTarget.getDeclaringClass()))
-                {
-                    FrameState stateBefore = frameState.create(bci(), getNonIntrinsicAncestor(), false, null, null);
-                    classInit = classInitializationPlugin.apply(this, resolvedTarget.getDeclaringClass(), stateBefore);
-                }
-
                 ValueNode[] args = frameState.popArguments(resolvedTarget.getSignature().getParameterCount(false));
                 Invoke invoke = appendInvoke(InvokeKind.Static, resolvedTarget, args);
                 if (invoke != null)
                 {
-                    invoke.setClassInit(classInit);
+                    invoke.setClassInit(null);
                 }
             }
         }
@@ -1200,18 +1168,11 @@ public class BytecodeParser implements GraphBuilderContext
             return false;
         }
 
-        if (GraalOptions.GeneratePIC.getValue(options) && (invokeDynamicPlugin == null || !invokeDynamicPlugin.supportsDynamicInvoke(this, cpi, opcode)))
-        {
-            // bail out if static compiler and no dynamic type support
-            append(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.Unresolved));
-            return true;
-        }
-
         JavaConstant appendix = constantPool.lookupAppendix(cpi, opcode);
-        ValueNode appendixNode = null;
-
         if (appendix != null)
         {
+            ValueNode appendixNode;
+
             if (invokeDynamicPlugin != null)
             {
                 invokeDynamicPlugin.recordDynamicMethod(this, cpi, opcode, target);
@@ -1226,13 +1187,6 @@ public class BytecodeParser implements GraphBuilderContext
             }
 
             frameState.push(JavaKind.Object, appendixNode);
-        }
-        else if (GraalOptions.GeneratePIC.getValue(options))
-        {
-            // Need to emit runtime guard and perform static initialization.
-            // Not implemented yet.
-            append(new DeoptimizeNode(DeoptimizationAction.InvalidateRecompile, DeoptimizationReason.Unresolved));
-            return true;
         }
 
         boolean hasReceiver = (opcode == Bytecodes.INVOKEDYNAMIC) ? false : !target.isStatic();
@@ -1424,7 +1378,7 @@ public class BytecodeParser implements GraphBuilderContext
                 return null;
             }
 
-            if (!invokeKind.isIndirect() || (BytecodeParserOptions.UseGuardedIntrinsics.getValue(options) && !GraalOptions.GeneratePIC.getValue(options)))
+            if (!invokeKind.isIndirect() || BytecodeParserOptions.UseGuardedIntrinsics.getValue(options))
             {
                 if (tryInvocationPlugin(invokeKind, args, targetMethod, resultType, returnType))
                 {
@@ -3108,12 +3062,6 @@ public class BytecodeParser implements GraphBuilderContext
         BciBlock falseBlock = falseBlockInput;
         LogicNode condition = conditionInput;
         double probability = probabilityInput;
-        FrameState stateBefore = null;
-        ProfilingPlugin profilingPlugin = this.graphBuilderConfig.getPlugins().getProfilingPlugin();
-        if (profilingPlugin != null && profilingPlugin.shouldProfile(this, method))
-        {
-            stateBefore = frameState.create(bci(), getNonIntrinsicAncestor(), false, null, null);
-        }
 
         // Remove a logic negation node.
         if (condition instanceof LogicNegationNode)
@@ -3146,10 +3094,6 @@ public class BytecodeParser implements GraphBuilderContext
                 if (!graph.isOSR() || getParent() != null || graph.getEntryBCI() != trueBlock.startBci)
                 {
                     append(new FixedGuardNode(condition, DeoptimizationReason.UnreachedCode, DeoptimizationAction.InvalidateReprofile, true));
-                    if (profilingPlugin != null && profilingPlugin.shouldProfile(this, method))
-                    {
-                        profilingPlugin.profileGoto(this, method, bci(), falseBlock.startBci, stateBefore);
-                    }
                     appendGoto(falseBlock);
                     return;
                 }
@@ -3159,18 +3103,9 @@ public class BytecodeParser implements GraphBuilderContext
                 if (!graph.isOSR() || getParent() != null || graph.getEntryBCI() != falseBlock.startBci)
                 {
                     append(new FixedGuardNode(condition, DeoptimizationReason.UnreachedCode, DeoptimizationAction.InvalidateReprofile, false));
-                    if (profilingPlugin != null && profilingPlugin.shouldProfile(this, method))
-                    {
-                        profilingPlugin.profileGoto(this, method, bci(), trueBlock.startBci, stateBefore);
-                    }
                     appendGoto(trueBlock);
                     return;
                 }
-            }
-
-            if (profilingPlugin != null && profilingPlugin.shouldProfile(this, method))
-            {
-                profilingPlugin.profileIf(this, method, bci(), condition, trueBlock.startBci, falseBlock.startBci, stateBefore);
             }
 
             int oldBci = stream.currentBCI();
@@ -3285,22 +3220,10 @@ public class BytecodeParser implements GraphBuilderContext
         {
             // This is an empty block. Skip it.
             BciBlock successorBlock = nextBlock.successors.get(0);
-            ProfilingPlugin profilingPlugin = graphBuilderConfig.getPlugins().getProfilingPlugin();
-            if (profilingPlugin != null && profilingPlugin.shouldProfile(this, method))
-            {
-                FrameState stateBefore = frameState.create(bci(), getNonIntrinsicAncestor(), false, null, null);
-                profilingPlugin.profileGoto(this, method, bci(), successorBlock.startBci, stateBefore);
-            }
             appendGoto(successorBlock);
         }
         else
         {
-            ProfilingPlugin profilingPlugin = graphBuilderConfig.getPlugins().getProfilingPlugin();
-            if (profilingPlugin != null && profilingPlugin.shouldProfile(this, method))
-            {
-                FrameState stateBefore = frameState.create(bci(), getNonIntrinsicAncestor(), false, null, null);
-                profilingPlugin.profileGoto(this, method, bci(), nextBlock.startBci, stateBefore);
-            }
             appendGoto(nextBlock);
         }
     }
@@ -3797,15 +3720,7 @@ public class BytecodeParser implements GraphBuilderContext
              */
             synchronized (BytecodeParser.class)
             {
-                ClassInitializationPlugin classInitializationPlugin = graphBuilderConfig.getPlugins().getClassInitializationPlugin();
-                if (classInitializationPlugin != null)
-                {
-                    classInitializationPlugin.loadReferencedType(this, constantPool, cpi, bytecode);
-                }
-                else
-                {
-                    constantPool.loadReferencedType(cpi, bytecode);
-                }
+                constantPool.loadReferencedType(cpi, bytecode);
             }
         }
     }
@@ -3974,8 +3889,7 @@ public class BytecodeParser implements GraphBuilderContext
             return;
         }
         ResolvedJavaType resolvedType = (ResolvedJavaType) type;
-        ClassInitializationPlugin classInitializationPlugin = graphBuilderConfig.getPlugins().getClassInitializationPlugin();
-        if (!resolvedType.isInitialized() && classInitializationPlugin == null)
+        if (!resolvedType.isInitialized())
         {
             handleUnresolvedNewInstance(type);
             return;
@@ -3992,12 +3906,6 @@ public class BytecodeParser implements GraphBuilderContext
                     return;
                 }
             }
-        }
-
-        if (classInitializationPlugin != null && classInitializationPlugin.shouldApply(this, resolvedType))
-        {
-            FrameState stateBefore = frameState.create(bci(), getNonIntrinsicAncestor(), false, null, null);
-            classInitializationPlugin.apply(this, resolvedType, stateBefore);
         }
 
         for (NodePlugin plugin : graphBuilderConfig.getPlugins().getNodePlugins())
@@ -4072,13 +3980,6 @@ public class BytecodeParser implements GraphBuilderContext
 
         ResolvedJavaType resolvedType = (ResolvedJavaType) type;
 
-        ClassInitializationPlugin classInitializationPlugin = this.graphBuilderConfig.getPlugins().getClassInitializationPlugin();
-        if (classInitializationPlugin != null && classInitializationPlugin.shouldApply(this, resolvedType.getArrayClass()))
-        {
-            FrameState stateBefore = frameState.create(bci(), getNonIntrinsicAncestor(), false, null, null);
-            classInitializationPlugin.apply(this, resolvedType.getArrayClass(), stateBefore);
-        }
-
         ValueNode length = frameState.pop(JavaKind.Int);
         for (NodePlugin plugin : graphBuilderConfig.getPlugins().getNodePlugins())
         {
@@ -4107,13 +4008,6 @@ public class BytecodeParser implements GraphBuilderContext
             return;
         }
         ResolvedJavaType resolvedType = (ResolvedJavaType) type;
-
-        ClassInitializationPlugin classInitializationPlugin = this.graphBuilderConfig.getPlugins().getClassInitializationPlugin();
-        if (classInitializationPlugin != null && classInitializationPlugin.shouldApply(this, resolvedType))
-        {
-            FrameState stateBefore = frameState.create(bci(), getNonIntrinsicAncestor(), false, null, null);
-            classInitializationPlugin.apply(this, resolvedType, stateBefore);
-        }
 
         for (int i = rank - 1; i >= 0; i--)
         {
@@ -4158,11 +4052,6 @@ public class BytecodeParser implements GraphBuilderContext
 
     private void genGetField(ResolvedJavaField resolvedField, ValueNode receiver)
     {
-        if (!parsingIntrinsic() && GraalOptions.GeneratePIC.getValue(getOptions()))
-        {
-            graph.recordField(resolvedField);
-        }
-
         for (NodePlugin plugin : graphBuilderConfig.getPlugins().getNodePlugins())
         {
             if (plugin.handleLoadField(this, receiver, resolvedField))
@@ -4255,11 +4144,6 @@ public class BytecodeParser implements GraphBuilderContext
         {
             ResolvedJavaField resolvedField = (ResolvedJavaField) field;
 
-            if (!parsingIntrinsic() && GraalOptions.GeneratePIC.getValue(getOptions()))
-            {
-                graph.recordField(resolvedField);
-            }
-
             for (NodePlugin plugin : graphBuilderConfig.getPlugins().getNodePlugins())
             {
                 if (plugin.handleStoreField(this, receiver, resolvedField, value))
@@ -4294,11 +4178,6 @@ public class BytecodeParser implements GraphBuilderContext
             return;
         }
 
-        if (!parsingIntrinsic() && GraalOptions.GeneratePIC.getValue(getOptions()))
-        {
-            graph.recordField(resolvedField);
-        }
-
         /*
          * Javac does not allow use of "$assertionsDisabled" for a field name but Eclipse does, in
          * which case a suffix is added to the generated field.
@@ -4307,13 +4186,6 @@ public class BytecodeParser implements GraphBuilderContext
         {
             frameState.push(field.getJavaKind(), ConstantNode.forBoolean(true, graph));
             return;
-        }
-
-        ClassInitializationPlugin classInitializationPlugin = this.graphBuilderConfig.getPlugins().getClassInitializationPlugin();
-        if (classInitializationPlugin != null && classInitializationPlugin.shouldApply(this, resolvedField.getDeclaringClass()))
-        {
-            FrameState stateBefore = frameState.create(bci(), getNonIntrinsicAncestor(), false, null, null);
-            classInitializationPlugin.apply(this, resolvedField.getDeclaringClass(), stateBefore);
         }
 
         for (NodePlugin plugin : graphBuilderConfig.getPlugins().getNodePlugins())
@@ -4332,7 +4204,7 @@ public class BytecodeParser implements GraphBuilderContext
         if (field instanceof ResolvedJavaField)
         {
             ResolvedJavaField resolvedField = (ResolvedJavaField) field;
-            if (resolvedField.getDeclaringClass().isInitialized() || graphBuilderConfig.getPlugins().getClassInitializationPlugin() != null)
+            if (resolvedField.getDeclaringClass().isInitialized())
             {
                 return resolvedField;
             }
@@ -4374,18 +4246,6 @@ public class BytecodeParser implements GraphBuilderContext
         if (resolvedField == null)
         {
             return;
-        }
-
-        if (!parsingIntrinsic() && GraalOptions.GeneratePIC.getValue(getOptions()))
-        {
-            graph.recordField(resolvedField);
-        }
-
-        ClassInitializationPlugin classInitializationPlugin = this.graphBuilderConfig.getPlugins().getClassInitializationPlugin();
-        if (classInitializationPlugin != null && classInitializationPlugin.shouldApply(this, resolvedField.getDeclaringClass()))
-        {
-            FrameState stateBefore = frameState.create(bci(), getNonIntrinsicAncestor(), false, null, null);
-            classInitializationPlugin.apply(this, resolvedField.getDeclaringClass(), stateBefore);
         }
 
         for (NodePlugin plugin : graphBuilderConfig.getPlugins().getNodePlugins())

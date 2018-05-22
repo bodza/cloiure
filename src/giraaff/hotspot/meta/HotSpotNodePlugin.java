@@ -75,15 +75,12 @@ public final class HotSpotNodePlugin implements NodePlugin, TypePlugin
     @Override
     public boolean handleLoadField(GraphBuilderContext b, ValueNode object, ResolvedJavaField field)
     {
-        if (!GraalOptions.ImmutableCode.getValue(b.getOptions()) || b.parsingIntrinsic())
+        if (object.isConstant())
         {
-            if (object.isConstant())
+            JavaConstant asJavaConstant = object.asJavaConstant();
+            if (tryReadField(b, field, asJavaConstant))
             {
-                JavaConstant asJavaConstant = object.asJavaConstant();
-                if (tryReadField(b, field, asJavaConstant))
-                {
-                    return true;
-                }
+                return true;
             }
         }
         if (b.parsingIntrinsic() && wordOperationPlugin.handleLoadField(b, object, field))
@@ -96,12 +93,9 @@ public final class HotSpotNodePlugin implements NodePlugin, TypePlugin
     @Override
     public boolean handleLoadStaticField(GraphBuilderContext b, ResolvedJavaField field)
     {
-        if (!GraalOptions.ImmutableCode.getValue(b.getOptions()) || b.parsingIntrinsic())
+        if (tryReadField(b, field, null))
         {
-            if (tryReadField(b, field, null))
-            {
-                return true;
-            }
+            return true;
         }
         if (b.parsingIntrinsic() && wordOperationPlugin.handleLoadStaticField(b, field))
         {

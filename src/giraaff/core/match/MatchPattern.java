@@ -152,17 +152,17 @@ public class MatchPattern
 
     public MatchPattern(Class<? extends Node> nodeClass, String name, MatchPattern first, Position[] inputs, boolean singleUser)
     {
-        this(nodeClass, name, singleUser, new MatchPattern[]{first}, inputs);
+        this(nodeClass, name, singleUser, new MatchPattern[] { first }, inputs);
     }
 
     public MatchPattern(Class<? extends Node> nodeClass, String name, MatchPattern first, MatchPattern second, Position[] inputs, boolean singleUser)
     {
-        this(nodeClass, name, singleUser, new MatchPattern[]{first, second}, inputs);
+        this(nodeClass, name, singleUser, new MatchPattern[] { first, second }, inputs);
     }
 
     public MatchPattern(Class<? extends Node> nodeClass, String name, MatchPattern first, MatchPattern second, MatchPattern third, Position[] inputs, boolean singleUser)
     {
-        this(nodeClass, name, singleUser, new MatchPattern[]{first, second, third}, inputs);
+        this(nodeClass, name, singleUser, new MatchPattern[] { first, second, third }, inputs);
     }
 
     Class<? extends Node> nodeClass()

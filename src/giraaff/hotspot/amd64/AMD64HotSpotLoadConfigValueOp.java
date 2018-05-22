@@ -30,33 +30,6 @@ public final class AMD64HotSpotLoadConfigValueOp extends AMD64LIRInstruction
     @Override
     public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
     {
-        if (GraalOptions.GeneratePIC.getValue(crb.getOptions()))
-        {
-            AMD64Kind kind = (AMD64Kind) result.getPlatformKind();
-            Register reg = ValueUtil.asRegister(result);
-            AMD64Address placeholder = masm.getPlaceholder(-1);
-            switch (kind)
-            {
-                case BYTE:
-                    masm.movsbl(reg, placeholder);
-                    break;
-                case WORD:
-                    masm.movswl(reg, placeholder);
-                    break;
-                case DWORD:
-                    masm.movl(reg, placeholder);
-                    break;
-                case QWORD:
-                    masm.movq(reg, placeholder);
-                    break;
-                default:
-                    throw GraalError.unimplemented();
-            }
-        }
-        else
-        {
-            throw GraalError.unimplemented();
-        }
-        crb.recordMark(markId);
+        throw GraalError.unimplemented();
     }
 }

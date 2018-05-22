@@ -207,7 +207,7 @@ public class StandardGraphBuilderPlugins
         r.register2("getAddress", Receiver.class, long.class, new UnsafeGetPlugin(JavaKind.Long, false));
         r.register3("putAddress", Receiver.class, long.class, long.class, new UnsafePutPlugin(JavaKind.Long, false));
 
-        for (JavaKind kind : new JavaKind[]{JavaKind.Int, JavaKind.Long, JavaKind.Object})
+        for (JavaKind kind : new JavaKind[] { JavaKind.Int, JavaKind.Long, JavaKind.Object })
         {
             Class<?> javaClass = kind == JavaKind.Object ? Object.class : kind.toJavaClass();
             r.register5("compareAndSet" + kind.name(), Receiver.class, Object.class, long.class, javaClass, javaClass, new InvocationPlugin()
@@ -386,7 +386,7 @@ public class StandardGraphBuilderPlugins
         Registration r = new Registration(plugins, Math.class);
         if (allowDeoptimization)
         {
-            for (JavaKind kind : new JavaKind[]{JavaKind.Int, JavaKind.Long})
+            for (JavaKind kind : new JavaKind[] { JavaKind.Int, JavaKind.Long })
             {
                 Class<?> type = kind.toJavaClass();
 
@@ -621,7 +621,7 @@ public class StandardGraphBuilderPlugins
     private static void registerEdgesPlugins(MetaAccessProvider metaAccess, InvocationPlugins plugins)
     {
         Registration r = new Registration(plugins, Edges.class);
-        for (Class<?> c : new Class<?>[]{Node.class, NodeList.class})
+        for (Class<?> c : new Class<?>[] { Node.class, NodeList.class })
         {
             r.register2("get" + c.getSimpleName() + "Unsafe", Node.class, long.class, new InvocationPlugin()
             {

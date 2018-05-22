@@ -30,7 +30,7 @@ public class AMD64StringIndexOfNode extends FixedWithNextNode implements LIRLowe
     public AMD64StringIndexOfNode(ValueNode sourcePointer, ValueNode sourceCount, ValueNode targetPointer, ValueNode targetCount)
     {
         super(TYPE, StampFactory.forInteger(32));
-        this.arguments = new NodeInputList<>(this, new ValueNode[]{sourcePointer, sourceCount, targetPointer, targetCount});
+        this.arguments = new NodeInputList<>(this, new ValueNode[] { sourcePointer, sourceCount, targetPointer, targetCount });
     }
 
     @Override

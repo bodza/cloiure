@@ -42,11 +42,7 @@ public class IdentityHashCodeNode extends FixedWithNextNode implements Canonical
         if (object.isConstant())
         {
             JavaConstant c = (JavaConstant) object.asConstant();
-            if (GraalOptions.ImmutableCode.getValue(tool.getOptions()))
-            {
-                return this;
-            }
-            JavaConstant identityHashCode = null;
+            JavaConstant identityHashCode;
             if (c.isNull())
             {
                 identityHashCode = JavaConstant.forInt(0);

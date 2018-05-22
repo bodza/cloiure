@@ -597,7 +597,7 @@ public class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator implemen
             default:
                 throw GraalError.shouldNotReachHere();
         }
-        return new Value[]{getLIRGen().emitMove(op.getQuotient()), getLIRGen().emitMove(op.getRemainder())};
+        return new Value[] { getLIRGen().emitMove(op.getQuotient()), getLIRGen().emitMove(op.getRemainder()) };
     }
 
     public Value[] emitUnsignedDivRem(Value a, Value b, LIRFrameState state)
@@ -614,7 +614,7 @@ public class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator implemen
             default:
                 throw GraalError.shouldNotReachHere();
         }
-        return new Value[]{getLIRGen().emitMove(op.getQuotient()), getLIRGen().emitMove(op.getRemainder())};
+        return new Value[] { getLIRGen().emitMove(op.getQuotient()), getLIRGen().emitMove(op.getRemainder()) };
     }
 
     @Override
@@ -1489,7 +1489,7 @@ public class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator implemen
             else if (c instanceof VMConstant)
             {
                 VMConstant vc = (VMConstant) c;
-                if (size == OperandSize.DWORD && !GraalOptions.GeneratePIC.getValue(getOptions()))
+                if (size == OperandSize.DWORD)
                 {
                     getLIRGen().append(new AMD64BinaryConsumer.VMConstOp(AMD64BinaryArithmetic.CMP.getMIOpcode(OperandSize.DWORD, false), left, vc));
                 }

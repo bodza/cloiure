@@ -28,61 +28,6 @@ public class HotSpotGraalConstantFieldProvider extends HotSpotConstantFieldProvi
     }
 
     @Override
-    protected boolean isStaticFieldConstant(ResolvedJavaField field, OptionValues options)
-    {
-        return super.isStaticFieldConstant(field, options) && (!GraalOptions.ImmutableCode.getValue(options) || isEmbeddableField(field));
-    }
-
-    /**
-     * The set of fields whose values cannot be constant folded in ImmutableCode mode. This is
-     * volatile to support double-checked locking lazy initialization.
-     */
-    private volatile List<ResolvedJavaField> nonEmbeddableFields;
-
-    protected boolean isEmbeddableField(ResolvedJavaField field)
-    {
-        if (nonEmbeddableFields == null)
-        {
-            synchronized (this)
-            {
-                if (nonEmbeddableFields == null)
-                {
-                    List<ResolvedJavaField> fields = new ArrayList<>();
-                    try
-                    {
-                        fields.add(metaAccess.lookupJavaField(Boolean.class.getDeclaredField("TRUE")));
-                        fields.add(metaAccess.lookupJavaField(Boolean.class.getDeclaredField("FALSE")));
-
-                        Class<?> characterCacheClass = Character.class.getDeclaredClasses()[0];
-                        fields.add(metaAccess.lookupJavaField(characterCacheClass.getDeclaredField("cache")));
-
-                        Class<?> byteCacheClass = Byte.class.getDeclaredClasses()[0];
-                        fields.add(metaAccess.lookupJavaField(byteCacheClass.getDeclaredField("cache")));
-
-                        Class<?> shortCacheClass = Short.class.getDeclaredClasses()[0];
-                        fields.add(metaAccess.lookupJavaField(shortCacheClass.getDeclaredField("cache")));
-
-                        Class<?> integerCacheClass = Integer.class.getDeclaredClasses()[0];
-                        fields.add(metaAccess.lookupJavaField(integerCacheClass.getDeclaredField("cache")));
-
-                        Class<?> longCacheClass = Long.class.getDeclaredClasses()[0];
-                        fields.add(metaAccess.lookupJavaField(longCacheClass.getDeclaredField("cache")));
-
-                        fields.add(metaAccess.lookupJavaField(Throwable.class.getDeclaredField("UNASSIGNED_STACK")));
-                        fields.add(metaAccess.lookupJavaField(Throwable.class.getDeclaredField("SUPPRESSED_SENTINEL")));
-                    }
-                    catch (SecurityException | NoSuchFieldException e)
-                    {
-                        throw new GraalError(e);
-                    }
-                    nonEmbeddableFields = fields;
-                }
-            }
-        }
-        return !nonEmbeddableFields.contains(field);
-    }
-
-    @Override
     protected boolean isFinalFieldValueConstant(ResolvedJavaField field, JavaConstant value, ConstantFieldTool<?> tool)
     {
         if (super.isFinalFieldValueConstant(field, value, tool))

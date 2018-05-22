@@ -126,15 +126,6 @@ public final class GraalOptions
 
     public static final OptionKey<Boolean> CanOmitFrame = new OptionKey<>(true);
 
-    // Ahead of time compilation
-    // Option "Try to avoid emitting code where patching is required."
-    public static final OptionKey<Boolean> ImmutableCode = new OptionKey<>(false);
-
-    // Option "Generate position independent code."
-    public static final OptionKey<Boolean> GeneratePIC = new OptionKey<>(false);
-
-    public static final OptionKey<Boolean> CallArrayCopy = new OptionKey<>(true);
-
     // Runtime settings
     public static final OptionKey<Boolean> SupportJsrBytecodes = new OptionKey<>(true);
 

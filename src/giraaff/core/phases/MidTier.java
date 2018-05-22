@@ -27,10 +27,6 @@ public class MidTier extends PhaseSuite<MidTierContext>
     public MidTier(OptionValues options)
     {
         CanonicalizerPhase canonicalizer = new CanonicalizerPhase();
-        if (GraalOptions.ImmutableCode.getValue(options))
-        {
-            canonicalizer.disableReadCanonicalization();
-        }
 
         appendPhase(new LockEliminationPhase());
 

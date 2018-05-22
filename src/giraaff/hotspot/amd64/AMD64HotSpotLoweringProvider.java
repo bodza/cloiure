@@ -14,8 +14,6 @@ import giraaff.hotspot.amd64.AMD64HotSpotForeignCallsProvider;
 import giraaff.hotspot.meta.DefaultHotSpotLoweringProvider;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.meta.HotSpotRegistersProvider;
-import giraaff.hotspot.nodes.profiling.ProfileNode;
-import giraaff.hotspot.replacements.profiling.ProbabilisticProfileSnippets;
 import giraaff.nodes.calc.FloatConvertNode;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.options.OptionValues;
@@ -26,7 +24,6 @@ import giraaff.replacements.nodes.UnaryMathIntrinsicNode.UnaryOperation;
 public class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringProvider
 {
     private AMD64ConvertSnippets.Templates convertSnippets;
-    private ProbabilisticProfileSnippets.Templates profileSnippets;
 
     public AMD64HotSpotLoweringProvider(HotSpotGraalRuntimeProvider runtime, MetaAccessProvider metaAccess, ForeignCallsProvider foreignCalls, HotSpotRegistersProvider registers, HotSpotConstantReflectionProvider constantReflection, TargetDescription target)
     {
@@ -37,7 +34,6 @@ public class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringProvider
     public void initialize(OptionValues options, HotSpotProviders providers, GraalHotSpotVMConfig config)
     {
         convertSnippets = new AMD64ConvertSnippets.Templates(options, providers, providers.getSnippetReflection(), providers.getCodeCache().getTarget());
-        profileSnippets = ProfileNode.Options.ProbabilisticProfiling.getValue(options) ? new ProbabilisticProfileSnippets.Templates(options, providers, providers.getCodeCache().getTarget()) : null;
         super.initialize(options, providers, config);
     }
 
@@ -47,10 +43,6 @@ public class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringProvider
         if (n instanceof FloatConvertNode)
         {
             convertSnippets.lower((FloatConvertNode) n, tool);
-        }
-        else if (profileSnippets != null && n instanceof ProfileNode)
-        {
-            profileSnippets.lower((ProfileNode) n, tool);
         }
         else
         {

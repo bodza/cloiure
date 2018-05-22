@@ -294,7 +294,9 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
      */
     public static class GraphMaker
     {
-        /** The replacements object that the graphs are created for. */
+        /**
+         * The replacements object that the graphs are created for.
+         */
         protected final ReplacementsImpl replacements;
 
         /**

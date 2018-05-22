@@ -23,11 +23,6 @@ public class LowTier extends PhaseSuite<LowTierContext>
         CanonicalizerPhase canonicalizer = new CanonicalizerPhase();
         CanonicalizerPhase canonicalizerWithoutGVN = new CanonicalizerPhase();
         canonicalizerWithoutGVN.disableGVN();
-        if (GraalOptions.ImmutableCode.getValue(options))
-        {
-            canonicalizer.disableReadCanonicalization();
-            canonicalizerWithoutGVN.disableReadCanonicalization();
-        }
 
         appendPhase(new LoweringPhase(canonicalizer, LoweringTool.StandardLoweringStage.LOW_TIER));
 

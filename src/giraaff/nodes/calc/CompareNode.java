@@ -206,11 +206,6 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
                 Constant reverseConverted = convert.reverse(constant, constantReflection);
                 if (reverseConverted != null && convert.convert(reverseConverted, constantReflection).equals(constant))
                 {
-                    if (GraalOptions.GeneratePIC.getValue(options))
-                    {
-                        // We always want uncompressed constants
-                        return null;
-                    }
                     return ConstantNode.forConstant(convert.getValue().stamp(view), reverseConverted, metaAccess);
                 }
             }

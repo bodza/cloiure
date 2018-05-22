@@ -34,10 +34,6 @@ public class HighTier extends PhaseSuite<HighTierContext>
     public HighTier(OptionValues options)
     {
         CanonicalizerPhase canonicalizer = new CanonicalizerPhase();
-        if (GraalOptions.ImmutableCode.getValue(options))
-        {
-            canonicalizer.disableReadCanonicalization();
-        }
 
         appendPhase(canonicalizer);
 

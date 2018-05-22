@@ -185,7 +185,7 @@ public class BoxingSnippets implements Snippets
         public Templates(OptionValues options, SnippetCounter.Group.Factory factory, Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
         {
             super(options, providers, snippetReflection, target);
-            for (JavaKind kind : new JavaKind[]{JavaKind.Boolean, JavaKind.Byte, JavaKind.Char, JavaKind.Double, JavaKind.Float, JavaKind.Int, JavaKind.Long, JavaKind.Short})
+            for (JavaKind kind : new JavaKind[] { JavaKind.Boolean, JavaKind.Byte, JavaKind.Char, JavaKind.Double, JavaKind.Float, JavaKind.Int, JavaKind.Long, JavaKind.Short })
             {
                 boxSnippets.put(kind, snippet(BoxingSnippets.class, kind.getJavaName() + "ValueOf"));
                 unboxSnippets.put(kind, snippet(BoxingSnippets.class, kind.getJavaName() + "Value"));
@@ -199,7 +199,7 @@ public class BoxingSnippets implements Snippets
         {
             FloatingNode canonical = canonicalizeBoxing(box, providers.getMetaAccess(), providers.getConstantReflection());
             // if in AOT mode, we don't want to embed boxed constants.
-            if (canonical != null && !GraalOptions.ImmutableCode.getValue(box.getOptions()))
+            if (canonical != null)
             {
                 box.graph().replaceFixedWithFloating(box, canonical);
             }

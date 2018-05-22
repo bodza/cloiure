@@ -64,7 +64,7 @@ public abstract class HotSpotHostBackend extends HotSpotBackend
         if (graph.getEntryBCI() != JVMCICompiler.INVOCATION_ENTRY_BCI)
         {
             // for OSR, only a pointer is passed to the method.
-            JavaType[] parameterTypes = new JavaType[]{getMetaAccess().lookupJavaType(long.class)};
+            JavaType[] parameterTypes = new JavaType[] { getMetaAccess().lookupJavaType(long.class) };
             CallingConvention tmp = getCodeCache().getRegisterConfig().getCallingConvention(HotSpotCallingConventionType.JavaCallee, getMetaAccess().lookupJavaType(void.class), parameterTypes, this);
             cc = new CallingConvention(cc.getStackSize(), cc.getReturn(), tmp.getArgument(0));
         }

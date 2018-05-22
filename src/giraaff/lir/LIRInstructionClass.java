@@ -187,7 +187,7 @@ public class LIRInstructionClass<T> extends LIRIntrospection<T>
     @Override
     public Fields[] getAllFields()
     {
-        return new Fields[]{data, uses, alives, temps, defs, states};
+        return new Fields[] { data, uses, alives, temps, defs, states };
     }
 
     @Override
@@ -377,10 +377,10 @@ public class LIRInstructionClass<T> extends LIRIntrospection<T>
     {
         StringBuilder result = new StringBuilder();
 
-        appendValues(result, obj, "", " = ", "(", ")", new String[]{""}, defs);
+        appendValues(result, obj, "", " = ", "(", ")", new String[] { "" }, defs);
         result.append(String.valueOf(getOpcode(obj)).toUpperCase());
-        appendValues(result, obj, " ", "", "(", ")", new String[]{"", "~"}, uses, alives);
-        appendValues(result, obj, " ", "", "{", "}", new String[]{""}, temps);
+        appendValues(result, obj, " ", "", "(", ")", new String[] { "", "~" }, uses, alives);
+        appendValues(result, obj, " ", "", "{", "}", new String[] { "" }, temps);
 
         for (int i = 0; i < data.getCount(); i++)
         {

@@ -138,7 +138,9 @@ public abstract class LIRInstruction
          */
         UNINITIALIZED,
 
-        /** Outgoing block value. */
+        /**
+         * Outgoing block value.
+         */
         OUTGOING,
     }
 

@@ -61,7 +61,7 @@ public final class ReadRegisterNode extends FixedWithNextNode implements LIRLowe
         Value result = register.asValue(kind);
         if (incoming)
         {
-            generator.getLIRGeneratorTool().emitIncomingValues(new Value[]{result});
+            generator.getLIRGeneratorTool().emitIncomingValues(new Value[] { result });
         }
         if (!directUse)
         {

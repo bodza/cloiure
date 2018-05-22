@@ -82,11 +82,6 @@ public abstract class HotSpotBackend extends Backend implements FrameMap.Referen
     public static final ForeignCallDescriptor IC_MISS_HANDLER = new ForeignCallDescriptor("icMissHandler", void.class);
 
     /**
-     * Descriptor for SharedRuntime::get_handle_wrong_method_stub().
-     */
-    public static final ForeignCallDescriptor WRONG_METHOD_HANDLER = new ForeignCallDescriptor("wrongMethodHandler", void.class);
-
-    /**
      * Descriptor for {@link UnwindExceptionToCallerStub}. This stub is called by code generated
      * from {@link UnwindNode}.
      */

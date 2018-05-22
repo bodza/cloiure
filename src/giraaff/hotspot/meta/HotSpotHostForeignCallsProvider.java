@@ -4,7 +4,6 @@ import java.util.EnumMap;
 
 import jdk.vm.ci.code.CodeCacheProvider;
 import jdk.vm.ci.hotspot.HotSpotCallingConventionType;
-import jdk.vm.ci.hotspot.HotSpotJVMCIRuntime;
 import jdk.vm.ci.hotspot.HotSpotJVMCIRuntimeProvider;
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.MetaAccessProvider;
@@ -17,7 +16,6 @@ import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.core.common.spi.ForeignCallsProvider;
 import giraaff.core.target.Backend;
 import giraaff.debug.GraalError;
-import giraaff.hotspot.CompilerRuntimeHotSpotVMConfig;
 import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.HotSpotBackend;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
@@ -238,19 +236,6 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
         linkForeignCall(options, providers, WriteBarrierSnippets.G1WBPRECALL, c.writeBarrierPreAddress, PREPEND_THREAD, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
         linkForeignCall(options, providers, WriteBarrierSnippets.G1WBPOSTCALL, c.writeBarrierPostAddress, PREPEND_THREAD, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
         linkForeignCall(options, providers, WriteBarrierSnippets.VALIDATE_OBJECT, c.validateObject, PREPEND_THREAD, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
-
-        if (GraalOptions.GeneratePIC.getValue(options))
-        {
-            registerForeignCall(HotSpotBackend.WRONG_METHOD_HANDLER, c.handleWrongMethodStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
-            CompilerRuntimeHotSpotVMConfig cr = new CompilerRuntimeHotSpotVMConfig(HotSpotJVMCIRuntime.runtime().getConfigStore());
-            linkForeignCall(options, providers, HotSpotBackend.RESOLVE_STRING_BY_SYMBOL, cr.resolveStringBySymbol, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
-            linkForeignCall(options, providers, HotSpotBackend.RESOLVE_DYNAMIC_INVOKE, cr.resolveDynamicInvoke, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE, LocationIdentity.any());
-            linkForeignCall(options, providers, HotSpotBackend.RESOLVE_KLASS_BY_SYMBOL, cr.resolveKlassBySymbol, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE, LocationIdentity.any());
-            linkForeignCall(options, providers, HotSpotBackend.RESOLVE_METHOD_BY_SYMBOL_AND_LOAD_COUNTERS, cr.resolveMethodBySymbolAndLoadCounters, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE, NO_LOCATIONS);
-            linkForeignCall(options, providers, HotSpotBackend.INITIALIZE_KLASS_BY_SYMBOL, cr.initializeKlassBySymbol, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE, LocationIdentity.any());
-            linkForeignCall(options, providers, HotSpotBackend.INVOCATION_EVENT, cr.invocationEvent, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE, NO_LOCATIONS);
-            linkForeignCall(options, providers, HotSpotBackend.BACKEDGE_EVENT, cr.backedgeEvent, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE, NO_LOCATIONS);
-        }
 
         // Cannot be a leaf as VM acquires Thread_lock which requires thread_in_vm state
         linkForeignCall(options, providers, ThreadSubstitutions.THREAD_IS_INTERRUPTED, c.threadIsInterruptedAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, LocationIdentity.any());

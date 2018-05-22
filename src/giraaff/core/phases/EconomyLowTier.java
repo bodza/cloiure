@@ -15,15 +15,8 @@ public class EconomyLowTier extends PhaseSuite<LowTierContext>
     public EconomyLowTier(OptionValues options)
     {
         CanonicalizerPhase canonicalizer = new CanonicalizerPhase();
-        if (GraalOptions.ImmutableCode.getValue(options))
-        {
-            canonicalizer.disableReadCanonicalization();
-        }
-
         appendPhase(new LoweringPhase(canonicalizer, LoweringTool.StandardLoweringStage.LOW_TIER));
-
         appendPhase(new ExpandLogicPhase());
-
         appendPhase(new SchedulePhase(SchedulePhase.SchedulingStrategy.FINAL_SCHEDULE));
     }
 }

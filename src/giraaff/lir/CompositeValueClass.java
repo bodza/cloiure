@@ -83,7 +83,7 @@ public final class CompositeValueClass<T> extends FieldIntrospection<T>
     @Override
     public Fields[] getAllFields()
     {
-        return new Fields[]{data, values};
+        return new Fields[] { data, values };
     }
 
     @Override
@@ -103,7 +103,7 @@ public final class CompositeValueClass<T> extends FieldIntrospection<T>
         CompositeValueClass<?> valueClass = compositeClass.get(obj.getClass());
         StringBuilder result = new StringBuilder();
 
-        LIRIntrospection.appendValues(result, obj, "", "", "{", "}", new String[]{""}, valueClass.values);
+        LIRIntrospection.appendValues(result, obj, "", "", "{", "}", new String[] { "" }, valueClass.values);
 
         for (int i = 0; i < valueClass.data.getCount(); i++)
         {

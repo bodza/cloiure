@@ -25,7 +25,6 @@ import giraaff.core.common.type.ObjectStamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.TypeReference;
 import giraaff.hotspot.GraalHotSpotVMConfig;
-import giraaff.hotspot.meta.HotSpotAOTProfilingPlugin.Options;
 import giraaff.hotspot.nodes.CurrentJavaThreadNode;
 import giraaff.hotspot.replacements.AESCryptSubstitutions;
 import giraaff.hotspot.replacements.BigIntegerSubstitutions;
@@ -106,23 +105,11 @@ public class HotSpotGraphBuilderPlugins
         plugins.appendTypePlugin(nodePlugin);
         plugins.appendNodePlugin(nodePlugin);
         OptionValues options = replacements.getOptions();
-        if (!GraalOptions.GeneratePIC.getValue(options))
-        {
-            plugins.appendNodePlugin(new MethodHandlePlugin(constantReflection.getMethodHandleAccess(), true));
-        }
+        plugins.appendNodePlugin(new MethodHandlePlugin(constantReflection.getMethodHandleAccess(), true));
         plugins.appendInlineInvokePlugin(replacements);
         if (BytecodeParserOptions.InlineDuringParsing.getValue(options))
         {
             plugins.appendInlineInvokePlugin(new InlineDuringParsingPlugin());
-        }
-
-        if (GraalOptions.GeneratePIC.getValue(options))
-        {
-            plugins.setClassInitializationPlugin(new HotSpotClassInitializationPlugin());
-            if (Options.TieredAOT.getValue(options))
-            {
-                plugins.setProfilingPlugin(new HotSpotAOTProfilingPlugin());
-            }
         }
 
         invocationPlugins.defer(new Runnable()
@@ -135,10 +122,7 @@ public class HotSpotGraphBuilderPlugins
                 registerClassPlugins(plugins, config, replacementBytecodeProvider);
                 registerSystemPlugins(invocationPlugins, foreignCalls);
                 registerThreadPlugins(invocationPlugins, metaAccess, wordTypes, config, replacementBytecodeProvider);
-                if (!GraalOptions.GeneratePIC.getValue(options))
-                {
-                    registerCallSitePlugins(invocationPlugins);
-                }
+                registerCallSitePlugins(invocationPlugins);
                 registerReflectionPlugins(invocationPlugins, replacementBytecodeProvider);
                 registerConstantPoolPlugins(invocationPlugins, wordTypes, config, replacementBytecodeProvider);
                 registerAESPlugins(invocationPlugins, config, replacementBytecodeProvider);
@@ -162,29 +146,26 @@ public class HotSpotGraphBuilderPlugins
     private static void registerObjectPlugins(InvocationPlugins plugins, OptionValues options, GraalHotSpotVMConfig config, BytecodeProvider bytecodeProvider)
     {
         Registration r = new Registration(plugins, Object.class, bytecodeProvider);
-        if (!GraalOptions.GeneratePIC.getValue(options))
+        // FIXME: clone() requires speculation and requires a fix in here (to check that b.getAssumptions() != null),
+        // and in ReplacementImpl.getSubstitution() where there is an instantiation of IntrinsicGraphBuilder using
+        // a constructor that sets AllowAssumptions to YES automatically. The former has to inherit the assumptions
+        // settings from the root compile instead.
+        r.register1("clone", Receiver.class, new InvocationPlugin()
         {
-            // FIXME: clone() requires speculation and requires a fix in here (to check that b.getAssumptions() != null),
-            // and in ReplacementImpl.getSubstitution() where there is an instantiation of IntrinsicGraphBuilder using
-            // a constructor that sets AllowAssumptions to YES automatically. The former has to inherit the assumptions
-            // settings from the root compile instead. So, for now, I'm disabling it for GeneratePIC.
-            r.register1("clone", Receiver.class, new InvocationPlugin()
+            @Override
+            public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver receiver)
             {
-                @Override
-                public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver receiver)
-                {
-                    ValueNode object = receiver.get();
-                    b.addPush(JavaKind.Object, new ObjectCloneNode(b.getInvokeKind(), targetMethod, b.bci(), b.getInvokeReturnStamp(b.getAssumptions()), object));
-                    return true;
-                }
+                ValueNode object = receiver.get();
+                b.addPush(JavaKind.Object, new ObjectCloneNode(b.getInvokeKind(), targetMethod, b.bci(), b.getInvokeReturnStamp(b.getAssumptions()), object));
+                return true;
+            }
 
-                @Override
-                public boolean inlineOnly()
-                {
-                    return true;
-                }
-            });
-        }
+            @Override
+            public boolean inlineOnly()
+            {
+                return true;
+            }
+        });
         r.registerMethodSubstitution(ObjectSubstitutions.class, "hashCode", Receiver.class);
         if (config.inlineNotify())
         {

@@ -43,14 +43,12 @@ public class AMD64HotSpotAddressLowering extends AMD64CompressAddressLowering
     private final long heapBase;
     private final Register heapBaseRegister;
     private final GraalHotSpotVMConfig config;
-    private final boolean generatePIC;
 
     public AMD64HotSpotAddressLowering(GraalHotSpotVMConfig config, Register heapBaseRegister, OptionValues options)
     {
         this.heapBase = config.getOopEncoding().getBase();
         this.config = config;
-        this.generatePIC = GraalOptions.GeneratePIC.getValue(options);
-        if (heapBase == 0 && !generatePIC)
+        if (heapBase == 0)
         {
             this.heapBaseRegister = null;
         }
@@ -72,10 +70,8 @@ public class AMD64HotSpotAddressLowering extends AMD64CompressAddressLowering
 
         if (heapBaseRegister != null && encoding.getBase() == heapBase)
         {
-            if ((!generatePIC || compression.stamp(NodeView.DEFAULT) instanceof ObjectStamp) && other == null)
+            if (other == null)
             {
-                // With PIC it is only legal to do for oops since the base value may be
-                // different at runtime.
                 ValueNode base = compression.graph().unique(new HeapBaseNode(heapBaseRegister));
                 addr.setBase(base);
             }
@@ -84,30 +80,15 @@ public class AMD64HotSpotAddressLowering extends AMD64CompressAddressLowering
                 return false;
             }
         }
-        else if (encoding.getBase() != 0 || (generatePIC && compression.stamp(NodeView.DEFAULT) instanceof KlassPointerStamp))
+        else if (encoding.getBase() != 0)
         {
-            if (generatePIC)
+            if (updateDisplacement(addr, encoding.getBase(), false))
             {
-                if (other == null)
-                {
-                    ValueNode base = compression.graph().unique(new GraalHotSpotVMConfigNode(config, config.MARKID_NARROW_KLASS_BASE_ADDRESS, JavaKind.Long));
-                    addr.setBase(base);
-                }
-                else
-                {
-                    return false;
-                }
+                addr.setBase(other);
             }
             else
             {
-                if (updateDisplacement(addr, encoding.getBase(), false))
-                {
-                    addr.setBase(other);
-                }
-                else
-                {
-                    return false;
-                }
+                return false;
             }
         }
         else

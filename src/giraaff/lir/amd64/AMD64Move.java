@@ -863,7 +863,7 @@ public class AMD64Move
 
         public static boolean hasBase(OptionValues options, CompressEncoding encoding)
         {
-            return GraalOptions.GeneratePIC.getValue(options) || encoding.hasBase();
+            return encoding.hasBase();
         }
 
         public final Value getInput()

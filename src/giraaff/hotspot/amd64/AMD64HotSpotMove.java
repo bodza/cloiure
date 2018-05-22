@@ -38,10 +38,6 @@ public class AMD64HotSpotMove
         @Override
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
-            if (GraalOptions.GeneratePIC.getValue(crb.getOptions()))
-            {
-                throw GraalError.shouldNotReachHere("Object constant load should not be happening directly");
-            }
             boolean compressed = input.isCompressed();
             if (crb.target.inlineObjects)
             {
@@ -142,10 +138,6 @@ public class AMD64HotSpotMove
         @Override
         public void emitCode(CompilationResultBuilder crb, AMD64MacroAssembler masm)
         {
-            if (GraalOptions.GeneratePIC.getValue(crb.getOptions()))
-            {
-                throw GraalError.shouldNotReachHere("Metaspace constant load should not be happening directly");
-            }
             boolean compressed = input.isCompressed();
             if (ValueUtil.isRegister(result))
             {
@@ -195,18 +187,9 @@ public class AMD64HotSpotMove
         {
             masm.shlq(register, encoding.getShift());
         }
-        boolean pic = GraalOptions.GeneratePIC.getValue(crb.getOptions());
-        if (pic || encoding.hasBase())
+        if (encoding.hasBase())
         {
-            if (pic)
-            {
-                masm.movq(scratch, masm.getPlaceholder(-1));
-                crb.recordMark(config.MARKID_NARROW_KLASS_BASE_ADDRESS);
-            }
-            else
-            {
-                masm.movq(scratch, encoding.getBase());
-            }
+            masm.movq(scratch, encoding.getBase());
             masm.addq(register, scratch);
         }
     }

@@ -6,12 +6,7 @@ import giraaff.core.common.GraalOptions;
 import giraaff.core.phases.HighTier.Options;
 import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.HotSpotGraalRuntimeProvider;
-import giraaff.hotspot.phases.LoadJavaMirrorWithKlassPhase;
 import giraaff.hotspot.phases.WriteBarrierAdditionPhase;
-import giraaff.hotspot.phases.aot.AOTInliningPolicy;
-import giraaff.hotspot.phases.aot.EliminateRedundantInitializationPhase;
-import giraaff.hotspot.phases.aot.ReplaceConstantNodesPhase;
-import giraaff.hotspot.phases.profiling.FinalizeProfileNodesPhase;
 import giraaff.java.SuitesProviderBase;
 import giraaff.lir.phases.LIRSuites;
 import giraaff.options.OptionValues;
@@ -48,33 +43,6 @@ public class HotSpotSuitesProvider extends SuitesProviderBase
     {
         Suites ret = defaultSuitesCreator.createSuites(options);
 
-        if (GraalOptions.ImmutableCode.getValue(options))
-        {
-            // lowering introduces class constants, therefore it must be after lowering
-            ret.getHighTier().appendPhase(new LoadJavaMirrorWithKlassPhase(config));
-            if (GraalOptions.GeneratePIC.getValue(options))
-            {
-                ListIterator<BasePhase<? super HighTierContext>> highTierLowering = ret.getHighTier().findPhase(LoweringPhase.class);
-                highTierLowering.previous();
-                highTierLowering.add(new EliminateRedundantInitializationPhase());
-                if (HotSpotAOTProfilingPlugin.Options.TieredAOT.getValue(options))
-                {
-                    highTierLowering.add(new FinalizeProfileNodesPhase(HotSpotAOTProfilingPlugin.Options.TierAInvokeInlineeNotifyFreqLog.getValue(options)));
-                }
-                ListIterator<BasePhase<? super MidTierContext>> midTierLowering = ret.getMidTier().findPhase(LoweringPhase.class);
-                midTierLowering.add(new ReplaceConstantNodesPhase());
-
-                // Replace inlining policy
-                if (Options.Inline.getValue(options))
-                {
-                    ListIterator<BasePhase<? super HighTierContext>> iter = ret.getHighTier().findPhase(InliningPhase.class);
-                    InliningPhase inlining = (InliningPhase) iter.previous();
-                    CanonicalizerPhase canonicalizer = inlining.getCanonicalizer();
-                    iter.set(new InliningPhase(new AOTInliningPolicy(null), canonicalizer));
-                }
-            }
-        }
-
         ret.getMidTier().appendPhase(new WriteBarrierAdditionPhase(config));
 
         return ret;
@@ -82,8 +50,7 @@ public class HotSpotSuitesProvider extends SuitesProviderBase
 
     protected PhaseSuite<HighTierContext> createGraphBuilderSuite()
     {
-        PhaseSuite<HighTierContext> suite = defaultSuitesCreator.getDefaultGraphBuilderSuite().copy();
-        return suite;
+        return defaultSuitesCreator.getDefaultGraphBuilderSuite().copy();
     }
 
     @Override

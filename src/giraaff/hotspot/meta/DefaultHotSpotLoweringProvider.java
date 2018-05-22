@@ -49,7 +49,6 @@ import giraaff.hotspot.nodes.aot.InitializeKlassNode;
 import giraaff.hotspot.nodes.aot.ResolveConstantNode;
 import giraaff.hotspot.nodes.aot.ResolveDynamicConstantNode;
 import giraaff.hotspot.nodes.aot.ResolveMethodAndLoadCountersNode;
-import giraaff.hotspot.nodes.profiling.ProfileNode;
 import giraaff.hotspot.nodes.type.HotSpotNarrowOopStamp;
 import giraaff.hotspot.nodes.type.KlassPointerStamp;
 import giraaff.hotspot.nodes.type.MethodPointerStamp;
@@ -71,7 +70,6 @@ import giraaff.hotspot.replacements.aot.ResolveConstantSnippets;
 import giraaff.hotspot.replacements.arraycopy.ArrayCopyNode;
 import giraaff.hotspot.replacements.arraycopy.ArrayCopySnippets;
 import giraaff.hotspot.replacements.arraycopy.ArrayCopyWithSlowPathNode;
-import giraaff.hotspot.replacements.profiling.ProfileSnippets;
 import giraaff.hotspot.word.KlassPointer;
 import giraaff.nodes.AbstractBeginNode;
 import giraaff.nodes.AbstractDeoptimizeNode;
@@ -154,7 +152,6 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
     protected StringToBytesSnippets.Templates stringToBytesSnippets;
     protected HashCodeSnippets.Templates hashCodeSnippets;
     protected ResolveConstantSnippets.Templates resolveConstantSnippets;
-    protected ProfileSnippets.Templates profileSnippets;
 
     public DefaultHotSpotLoweringProvider(HotSpotGraalRuntimeProvider runtime, MetaAccessProvider metaAccess, ForeignCallsProvider foreignCalls, HotSpotRegistersProvider registers, HotSpotConstantReflectionProvider constantReflection, TargetDescription target)
     {
@@ -180,7 +177,6 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
         stringToBytesSnippets = new StringToBytesSnippets.Templates(options, providers, target);
         hashCodeSnippets = new HashCodeSnippets.Templates(options, providers, target);
         resolveConstantSnippets = new ResolveConstantSnippets.Templates(options, providers, target);
-        profileSnippets = new ProfileSnippets.Templates(options, providers, target);
     }
 
     public MonitorSnippets.Templates getMonitorSnippets()
@@ -446,10 +442,6 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
             {
                 resolveConstantSnippets.lower((InitializeKlassNode) n, tool);
             }
-        }
-        else if (n instanceof ProfileNode)
-        {
-            profileSnippets.lower((ProfileNode) n, tool);
         }
         else
         {

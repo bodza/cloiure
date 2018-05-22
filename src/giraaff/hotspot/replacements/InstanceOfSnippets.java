@@ -268,12 +268,6 @@ public class InstanceOfSnippets implements Snippets
 
                 OptionValues localOptions = instanceOf.getOptions();
                 JavaTypeProfile profile = instanceOf.profile();
-                if (GraalOptions.GeneratePIC.getValue(localOptions))
-                {
-                    // FIXME: We can't embed constants in hints. We can't really load them from GOT
-                    // either. Hard problem.
-                    profile = null;
-                }
                 TypeCheckHints hintInfo = new TypeCheckHints(instanceOf.type(), profile, assumptions, HotspotSnippetsOptions.TypeCheckMinProfileHitProbability.getValue(localOptions), HotspotSnippetsOptions.TypeCheckMaxHints.getValue(localOptions));
                 final HotSpotResolvedObjectType type = (HotSpotResolvedObjectType) instanceOf.type().getType();
                 ConstantNode hub = ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), type.klass(), providers.getMetaAccess(), instanceOf.graph());

@@ -1,14 +1,12 @@
 package giraaff.core.common.util;
 
 /**
- * Provides low-level sequential write access for signed and unsigned values of size 1, 2, 4, and 8
- * bytes.
+ * Provides low-level sequential write access for signed and unsigned values of size 1, 2, 4, and 8 bytes.
  */
 public interface TypeWriter
 {
     /**
-     * Returns the number of bytes that have been written, i.e., the byte index of the next byte to
-     * be written.
+     * Returns the number of bytes that have been written, i.e., the byte index of the next byte to be written.
      */
     long getBytesWritten();
 

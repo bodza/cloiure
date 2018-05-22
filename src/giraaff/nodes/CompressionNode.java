@@ -102,12 +102,6 @@ public abstract class CompressionNode extends UnaryNode implements ConvertNode, 
     {
         if (forValue.isConstant())
         {
-            if (GraalOptions.GeneratePIC.getValue(tool.getOptions()))
-            {
-                // We always want uncompressed constants
-                return this;
-            }
-
             ConstantNode constant = (ConstantNode) forValue;
             return ConstantNode.forConstant(stamp(NodeView.DEFAULT), convert(constant.getValue(), tool.getConstantReflection()), constant.getStableDimension(), constant.isDefaultStable(), tool.getMetaAccess());
         }

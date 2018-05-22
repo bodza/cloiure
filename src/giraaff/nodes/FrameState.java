@@ -341,7 +341,7 @@ public final class FrameState extends VirtualState implements IterableNodeType
      */
     public FrameState duplicateModified(JavaKind popKind, JavaKind pushedSlotKind, ValueNode pushedValue)
     {
-        return duplicateModified(graph(), bci, rethrowException, duringCall, popKind, new JavaKind[]{pushedSlotKind}, new ValueNode[]{pushedValue});
+        return duplicateModified(graph(), bci, rethrowException, duringCall, popKind, new JavaKind[] { pushedSlotKind }, new ValueNode[] { pushedValue });
     }
 
     /**

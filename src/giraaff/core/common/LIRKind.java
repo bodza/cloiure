@@ -48,7 +48,9 @@ public final class LIRKind extends ValueKind<LIRKind>
      */
     private final int referenceMask;
 
-    /** Mask with 1-bits indicating which references in {@link #referenceMask} are compressed. */
+    /**
+     * Mask with 1-bits indicating which references in {@link #referenceMask} are compressed.
+     */
     private final int referenceCompressionMask;
 
     private AllocatableValue derivedReferenceBase;

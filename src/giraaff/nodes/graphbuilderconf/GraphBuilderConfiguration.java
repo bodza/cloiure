@@ -17,9 +17,7 @@ public class GraphBuilderConfiguration
         private TypePlugin[] typePlugins;
         private InlineInvokePlugin[] inlineInvokePlugins;
         private LoopExplosionPlugin loopExplosionPlugin;
-        private ClassInitializationPlugin classInitializationPlugin;
         private InvokeDynamicPlugin invokeDynamicPlugin;
-        private ProfilingPlugin profilingPlugin;
 
         /**
          * Creates a copy of a given set of plugins. The {@link InvocationPlugins} in
@@ -34,9 +32,7 @@ public class GraphBuilderConfiguration
             this.typePlugins = copyFrom.typePlugins;
             this.inlineInvokePlugins = copyFrom.inlineInvokePlugins;
             this.loopExplosionPlugin = copyFrom.loopExplosionPlugin;
-            this.classInitializationPlugin = copyFrom.classInitializationPlugin;
             this.invokeDynamicPlugin = copyFrom.invokeDynamicPlugin;
-            this.profilingPlugin = copyFrom.profilingPlugin;
         }
 
         /**
@@ -160,16 +156,6 @@ public class GraphBuilderConfiguration
             this.loopExplosionPlugin = plugin;
         }
 
-        public ClassInitializationPlugin getClassInitializationPlugin()
-        {
-            return classInitializationPlugin;
-        }
-
-        public void setClassInitializationPlugin(ClassInitializationPlugin plugin)
-        {
-            this.classInitializationPlugin = plugin;
-        }
-
         public InvokeDynamicPlugin getInvokeDynamicPlugin()
         {
             return invokeDynamicPlugin;
@@ -178,16 +164,6 @@ public class GraphBuilderConfiguration
         public void setInvokeDynamicPlugin(InvokeDynamicPlugin plugin)
         {
             this.invokeDynamicPlugin = plugin;
-        }
-
-        public ProfilingPlugin getProfilingPlugin()
-        {
-            return profilingPlugin;
-        }
-
-        public void setProfilingPlugin(ProfilingPlugin plugin)
-        {
-            this.profilingPlugin = plugin;
         }
 
         public StampPair getOverridingStamp(GraphBuilderTool b, JavaType type, boolean nonNull)
@@ -204,7 +180,7 @@ public class GraphBuilderConfiguration
         }
     }
 
-    private static final ResolvedJavaType[] EMPTY = new ResolvedJavaType[]{};
+    private static final ResolvedJavaType[] EMPTY = new ResolvedJavaType[] { };
 
     private final boolean eagerResolving;
     private final boolean unresolvedIsError;
@@ -330,7 +306,9 @@ public class GraphBuilderConfiguration
         return new GraphBuilderConfiguration(true, true, BytecodeExceptionMode.OmitAll, false, false, EMPTY, plugins);
     }
 
-    /** Returns {@code true} if it is an error for a class/field/method resolution to fail. */
+    /**
+     * Returns {@code true} if it is an error for a class/field/method resolution to fail.
+     */
     public boolean unresolvedIsError()
     {
         return unresolvedIsError;

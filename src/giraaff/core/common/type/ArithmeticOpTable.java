@@ -79,22 +79,22 @@ public final class ArithmeticOpTable
 
     public BinaryOp<?>[] getBinaryOps()
     {
-        return new BinaryOp<?>[]{add, sub, mul, mulHigh, umulHigh, div, rem, and, or, xor};
+        return new BinaryOp<?>[] { add, sub, mul, mulHigh, umulHigh, div, rem, and, or, xor };
     }
 
     public UnaryOp<?>[] getUnaryOps()
     {
-        return new UnaryOp<?>[]{neg, not, abs, sqrt};
+        return new UnaryOp<?>[] { neg, not, abs, sqrt };
     }
 
     public ShiftOp<?>[] getShiftOps()
     {
-        return new ShiftOp<?>[]{shl, shr, ushr};
+        return new ShiftOp<?>[] { shl, shr, ushr };
     }
 
     public IntegerConvertOp<?>[] getIntegerConvertOps()
     {
-        return new IntegerConvertOp<?>[]{zeroExtend, signExtend, narrow};
+        return new IntegerConvertOp<?>[] { zeroExtend, signExtend, narrow };
     }
 
     public static final ArithmeticOpTable EMPTY = new ArithmeticOpTable(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);

@@ -212,28 +212,15 @@ public class CompilationResult
 
     private boolean hasUnsafeAccess;
 
-    private boolean isImmutablePIC;
-
     public CompilationResult(CompilationIdentifier compilationId)
     {
-        this(compilationId, compilationId.toString(CompilationIdentifier.Verbosity.NAME), false);
+        this(compilationId, compilationId.toString(CompilationIdentifier.Verbosity.NAME));
     }
 
     public CompilationResult(CompilationIdentifier compilationId, String name)
     {
-        this(compilationId, name, false);
-    }
-
-    public CompilationResult(CompilationIdentifier compilationId, boolean isImmutablePIC)
-    {
-        this(compilationId, null, isImmutablePIC);
-    }
-
-    public CompilationResult(CompilationIdentifier compilationId, String name, boolean isImmutablePIC)
-    {
         this.compilationId = compilationId;
         this.name = name;
-        this.isImmutablePIC = isImmutablePIC;
     }
 
     public CompilationResult(String name)
@@ -452,11 +439,6 @@ public class CompilationResult
     {
         checkOpen();
         this.maxInterpreterFrameSize = maxInterpreterFrameSize;
-    }
-
-    public boolean isImmutablePIC()
-    {
-        return this.isImmutablePIC;
     }
 
     /**

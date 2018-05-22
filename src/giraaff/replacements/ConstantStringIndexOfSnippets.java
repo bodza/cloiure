@@ -86,7 +86,9 @@ public class ConstantStringIndexOfSnippets implements Snippets
         return arrayOffsetProvider.arrayBaseOffset(JavaKind.Char);
     }
 
-    /** Marker value for the {@link InjectedParameter} injected parameter. */
+    /**
+     * Marker value for the {@link InjectedParameter} injected parameter.
+     */
     static final ArrayOffsetProvider INJECTED = null;
 
     @Snippet

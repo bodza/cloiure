@@ -64,7 +64,9 @@ public final class VerifyingMoveFactory implements MoveFactory
         return inst;
     }
 
-    /** Closure for {@link VerifyingMoveFactory#checkResult}. */
+    /**
+     * Closure for {@link VerifyingMoveFactory#checkResult}.
+     */
     @SuppressWarnings("unused")
     private static class CheckClosure
     {

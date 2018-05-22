@@ -34,7 +34,9 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
         POST_LOOP
     }
 
-    /** See {@link LoopEndNode#canSafepoint} for more information. */
+    /**
+     * See {@link LoopEndNode#canSafepoint} for more information.
+     */
     boolean canEndsSafepoint;
 
     @OptionalInput(InputType.Guard) GuardingNode overflowGuard;
@@ -96,7 +98,9 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
         unrollFactor = currentUnrollFactor;
     }
 
-    /** Disables safepoint for the whole loop, i.e., for all {@link LoopEndNode loop ends}. */
+    /**
+     * Disables safepoint for the whole loop, i.e., for all {@link LoopEndNode loop ends}.
+     */
     public void disableSafepoint()
     {
         /* Store flag locally in case new loop ends are created later on. */

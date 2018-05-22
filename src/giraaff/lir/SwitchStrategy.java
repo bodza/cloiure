@@ -554,7 +554,7 @@ public abstract class SwitchStrategy
 
     private static SwitchStrategy[] getStrategies(double[] keyProbabilities, JavaConstant[] keyConstants, LabelRef[] keyTargets)
     {
-        SwitchStrategy[] strategies = new SwitchStrategy[]{new SequentialStrategy(keyProbabilities, keyConstants), new RangesStrategy(keyProbabilities, keyConstants), new BinaryStrategy(keyProbabilities, keyConstants)};
+        SwitchStrategy[] strategies = new SwitchStrategy[] { new SequentialStrategy(keyProbabilities, keyConstants), new RangesStrategy(keyProbabilities, keyConstants), new BinaryStrategy(keyProbabilities, keyConstants) };
         for (SwitchStrategy strategy : strategies)
         {
             strategy.effortClosure = strategy.new EffortClosure(keyTargets);

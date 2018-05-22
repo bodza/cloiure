@@ -70,29 +70,23 @@ public final class LoadHubNode extends FloatingNode implements Lowerable, Canoni
     @Override
     public ValueNode canonical(CanonicalizerTool tool)
     {
-        if (!GraalOptions.GeneratePIC.getValue(tool.getOptions()))
+        NodeView view = NodeView.from(tool);
+        MetaAccessProvider metaAccess = tool.getMetaAccess();
+        ValueNode curValue = getValue();
+        ValueNode newNode = findSynonym(curValue, stamp(view), metaAccess, tool.getConstantReflection());
+        if (newNode != null)
         {
-            NodeView view = NodeView.from(tool);
-            MetaAccessProvider metaAccess = tool.getMetaAccess();
-            ValueNode curValue = getValue();
-            ValueNode newNode = findSynonym(curValue, stamp(view), metaAccess, tool.getConstantReflection());
-            if (newNode != null)
-            {
-                return newNode;
-            }
+            return newNode;
         }
         return this;
     }
 
     public static ValueNode findSynonym(ValueNode curValue, Stamp stamp, MetaAccessProvider metaAccess, ConstantReflectionProvider constantReflection)
     {
-        if (!GraalOptions.GeneratePIC.getValue(curValue.getOptions()))
+        TypeReference type = StampTool.typeReferenceOrNull(curValue);
+        if (type != null && type.isExact())
         {
-            TypeReference type = StampTool.typeReferenceOrNull(curValue);
-            if (type != null && type.isExact())
-            {
-                return ConstantNode.forConstant(stamp, constantReflection.asObjectHub(type.getType()), metaAccess);
-            }
+            return ConstantNode.forConstant(stamp, constantReflection.asObjectHub(type.getType()), metaAccess);
         }
         return null;
     }
@@ -100,14 +94,11 @@ public final class LoadHubNode extends FloatingNode implements Lowerable, Canoni
     @Override
     public void virtualize(VirtualizerTool tool)
     {
-        if (!GraalOptions.GeneratePIC.getValue(tool.getOptions()))
+        ValueNode alias = tool.getAlias(getValue());
+        TypeReference type = StampTool.typeReferenceOrNull(alias);
+        if (type != null && type.isExact())
         {
-            ValueNode alias = tool.getAlias(getValue());
-            TypeReference type = StampTool.typeReferenceOrNull(alias);
-            if (type != null && type.isExact())
-            {
-                tool.replaceWithValue(ConstantNode.forConstant(stamp(NodeView.DEFAULT), tool.getConstantReflectionProvider().asObjectHub(type.getType()), tool.getMetaAccessProvider(), graph()));
-            }
+            tool.replaceWithValue(ConstantNode.forConstant(stamp(NodeView.DEFAULT), tool.getConstantReflectionProvider().asObjectHub(type.getType()), tool.getMetaAccessProvider(), graph()));
         }
     }
 }

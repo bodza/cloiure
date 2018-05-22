@@ -519,7 +519,7 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
     protected void emitForeignCallOp(ForeignCallLinkage linkage, Value result, Value[] arguments, Value[] temps, LIRFrameState info)
     {
         long maxOffset = linkage.getMaxCallTargetOffset();
-        if (maxOffset != (int) maxOffset && !GraalOptions.GeneratePIC.getValue(getResult().getLIR().getOptions()))
+        if (maxOffset != (int) maxOffset)
         {
             append(new AMD64Call.DirectFarForeignCallOp(linkage, result, arguments, temps, info));
         }

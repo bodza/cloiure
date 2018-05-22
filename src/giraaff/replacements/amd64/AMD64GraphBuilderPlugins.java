@@ -213,7 +213,7 @@ public class AMD64GraphBuilderPlugins
     private static void registerUnsafePlugins(InvocationPlugins plugins, BytecodeProvider replacementsBytecodeProvider)
     {
         Registration r = new Registration(plugins, "jdk.internal.misc.Unsafe", replacementsBytecodeProvider);
-        for (JavaKind kind : new JavaKind[]{JavaKind.Int, JavaKind.Long, JavaKind.Object})
+        for (JavaKind kind : new JavaKind[] { JavaKind.Int, JavaKind.Long, JavaKind.Object })
         {
             Class<?> javaClass = kind == JavaKind.Object ? Object.class : kind.toJavaClass();
 
@@ -247,7 +247,7 @@ public class AMD64GraphBuilderPlugins
             }
         }
 
-        for (JavaKind kind : new JavaKind[]{JavaKind.Char, JavaKind.Short, JavaKind.Int, JavaKind.Long})
+        for (JavaKind kind : new JavaKind[] { JavaKind.Char, JavaKind.Short, JavaKind.Int, JavaKind.Long })
         {
             Class<?> javaClass = kind.toJavaClass();
             r.registerOptional3("get" + kind.name() + "Unaligned", Receiver.class, Object.class, long.class, new UnsafeGetPlugin(kind, false));

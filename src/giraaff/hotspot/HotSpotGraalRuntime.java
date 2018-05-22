@@ -52,7 +52,7 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider
     {
         this.runtimeName = getClass().getSimpleName() + ":" + nameQualifier;
         HotSpotVMConfigStore store = jvmciRuntime.getConfigStore();
-        config = GraalOptions.GeneratePIC.getValue(options) ? new AOTGraalHotSpotVMConfig(store) : new GraalHotSpotVMConfig(store);
+        config = new GraalHotSpotVMConfig(store);
 
         this.options = options;
 

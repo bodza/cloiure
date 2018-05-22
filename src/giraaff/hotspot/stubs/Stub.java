@@ -147,8 +147,6 @@ public abstract class Stub
         {
             CodeCacheProvider codeCache = providers.getCodeCache();
             CompilationResult compResult = buildCompilationResult(backend);
-            // Add a GeneratePIC check here later, we don't want to install
-            // code if we don't have a corresponding VM global symbol.
             HotSpotCompiledCode compiledCode = HotSpotCompiledCodeBuilder.createCompiledCode(codeCache, null, null, compResult);
             code = codeCache.installCode(null, compiledCode, null, null, false);
         }
@@ -160,7 +158,7 @@ public abstract class Stub
     {
         CompilationIdentifier compilationId = getStubCompilationId();
         final StructuredGraph graph = getGraph(compilationId);
-        CompilationResult compResult = new CompilationResult(compilationId, toString(), GraalOptions.GeneratePIC.getValue(options));
+        CompilationResult compResult = new CompilationResult(compilationId, toString());
 
         // Stubs cannot be recompiled so they cannot be compiled with assumptions
 

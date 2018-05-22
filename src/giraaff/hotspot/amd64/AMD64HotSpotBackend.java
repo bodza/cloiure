@@ -8,7 +8,6 @@ import jdk.vm.ci.code.RegisterConfig;
 import jdk.vm.ci.code.StackSlot;
 import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.hotspot.HotSpotCallingConventionType;
-import jdk.vm.ci.hotspot.HotSpotSentinelConstant;
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.JavaType;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
@@ -254,9 +253,8 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
         if (installedCodeOwner != null && !installedCodeOwner.isStatic())
         {
             crb.recordMark(config.MARKID_UNVERIFIED_ENTRY);
-            CallingConvention cc = regConfig.getCallingConvention(HotSpotCallingConventionType.JavaCallee, null, new JavaType[]{providers.getMetaAccess().lookupJavaType(Object.class)}, this);
-            Register inlineCacheKlass = AMD64.rax; // see definition of IC_Klass in
-                                             // c1_LIRAssembler_x86.cpp
+            CallingConvention cc = regConfig.getCallingConvention(HotSpotCallingConventionType.JavaCallee, null, new JavaType[] { providers.getMetaAccess().lookupJavaType(Object.class) }, this);
+            Register inlineCacheKlass = AMD64.rax; // see definition of IC_Klass in c1_LIRAssembler_x86.cpp
             Register receiver = ValueUtil.asRegister(cc.getArgument(0));
             AMD64Address src = new AMD64Address(receiver, config.hubOffset);
 
@@ -264,18 +262,10 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
             {
                 Register register = AMD64.r10;
                 AMD64HotSpotMove.decodeKlassPointer(crb, asm, register, providers.getRegisters().getHeapBaseRegister(), src, config);
-                if (GraalOptions.GeneratePIC.getValue(crb.getOptions()))
+                if (config.narrowKlassBase != 0)
                 {
-                    asm.movq(providers.getRegisters().getHeapBaseRegister(), asm.getPlaceholder(-1));
-                    crb.recordMark(config.MARKID_NARROW_OOP_BASE_ADDRESS);
-                }
-                else
-                {
-                    if (config.narrowKlassBase != 0)
-                    {
-                        // The heap base register was destroyed above, so restore it
-                        asm.movq(providers.getRegisters().getHeapBaseRegister(), config.narrowOopBase);
-                    }
+                    // The heap base register was destroyed above, so restore it
+                    asm.movq(providers.getRegisters().getHeapBaseRegister(), config.narrowOopBase);
                 }
                 asm.cmpq(inlineCacheKlass, register);
             }
@@ -290,19 +280,6 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
         crb.recordMark(config.MARKID_OSR_ENTRY);
         asm.bind(verifiedEntry);
         crb.recordMark(config.MARKID_VERIFIED_ENTRY);
-
-        if (GraalOptions.GeneratePIC.getValue(crb.getOptions()))
-        {
-            // Check for method state
-            HotSpotFrameContext frameContext = (HotSpotFrameContext) crb.frameContext;
-            if (!frameContext.isStub)
-            {
-                crb.recordInlineDataInCodeWithNote(new HotSpotSentinelConstant(LIRKind.value(AMD64Kind.QWORD), JavaKind.Long), HotSpotConstantLoadAction.MAKE_NOT_ENTRANT);
-                asm.movq(AMD64.rax, asm.getPlaceholder(-1));
-                asm.testq(AMD64.rax, AMD64.rax);
-                AMD64Call.directConditionalJmp(crb, asm, getForeignCalls().lookupForeignCall(WRONG_METHOD_HANDLER), ConditionFlag.NotZero);
-            }
-        }
     }
 
     /**

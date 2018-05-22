@@ -42,7 +42,7 @@ public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
         this.state = state;
         this.config = config;
         this.thread = thread;
-        if (config.threadLocalHandshakes || isPollingPageFar(config) || GraalOptions.ImmutableCode.getValue(tool.getOptions()))
+        if (config.threadLocalHandshakes || isPollingPageFar(config))
         {
             temp = tool.getLIRGeneratorTool().newVariable(LIRKind.value(tool.getLIRGeneratorTool().target().arch.getWordKind()));
         }
@@ -83,30 +83,7 @@ public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
 
     private static void emitGlobalPoll(CompilationResultBuilder crb, AMD64MacroAssembler asm, GraalHotSpotVMConfig config, boolean atReturn, LIRFrameState state, Register scratch)
     {
-        if (GraalOptions.ImmutableCode.getValue(crb.getOptions()))
-        {
-            JavaKind hostWordKind = JavaKind.Long;
-            int alignment = hostWordKind.getBitCount() / Byte.SIZE;
-            JavaConstant pollingPageAddress = JavaConstant.forIntegerKind(hostWordKind, config.safepointPollingAddress);
-            // This move will be patched to load the safepoint page from a data segment
-            // co-located with the immutable code.
-            if (GraalOptions.GeneratePIC.getValue(crb.getOptions()))
-            {
-                asm.movq(scratch, asm.getPlaceholder(-1));
-            }
-            else
-            {
-                asm.movq(scratch, (AMD64Address) crb.recordDataReferenceInCode(pollingPageAddress, alignment));
-            }
-            final int pos = asm.position();
-            crb.recordMark(atReturn ? config.MARKID_POLL_RETURN_FAR : config.MARKID_POLL_FAR);
-            if (state != null)
-            {
-                crb.recordInfopoint(pos, state, InfopointReason.SAFEPOINT);
-            }
-            asm.testl(AMD64.rax, new AMD64Address(scratch));
-        }
-        else if (isPollingPageFar(config))
+        if (isPollingPageFar(config))
         {
             asm.movq(scratch, config.safepointPollingAddress);
             crb.recordMark(atReturn ? config.MARKID_POLL_RETURN_FAR : config.MARKID_POLL_FAR);

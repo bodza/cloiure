@@ -22,7 +22,7 @@ public final class SingleBlockTraceBuilder
 
         for (AbstractBlockBase<?> block : blocks)
         {
-            Trace trace = new Trace(new AbstractBlockBase<?>[]{block});
+            Trace trace = new Trace(new AbstractBlockBase<?>[] { block });
             blockToTrace[block.getId()] = trace;
             block.setLinearScanNumber(0);
             trace.setId(traces.size());

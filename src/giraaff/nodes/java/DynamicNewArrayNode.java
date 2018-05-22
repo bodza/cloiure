@@ -80,12 +80,6 @@ public class DynamicNewArrayNode extends AbstractNewArrayNode implements Canonic
     {
         if (elementType.isConstant())
         {
-            if (GraalOptions.GeneratePIC.getValue(tool.getOptions()))
-            {
-                // Can't fold for AOT, because the resulting NewArrayNode will be missing its
-                // ResolveConstantNode for the array class.
-                return this;
-            }
             ResolvedJavaType type = tool.getConstantReflection().asJavaType(elementType.asConstant());
             if (type != null && !throwsIllegalArgumentException(type))
             {
@@ -95,7 +89,9 @@ public class DynamicNewArrayNode extends AbstractNewArrayNode implements Canonic
         return this;
     }
 
-    /** Hook for subclasses to instantiate a subclass of {@link NewArrayNode}. */
+    /**
+     * Hook for subclasses to instantiate a subclass of {@link NewArrayNode}.
+     */
     protected NewArrayNode createNewArrayNode(ResolvedJavaType type)
     {
         return new NewArrayNode(type, length(), fillContents(), stateBefore());

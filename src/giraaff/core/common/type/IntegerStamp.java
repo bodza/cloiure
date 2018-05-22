@@ -1180,11 +1180,11 @@ public final class IntegerStamp extends PrimitiveStamp
                                  * anything about the unsigned range, so we have to return [0,
                                  * MAX_UNSIGNED].
                                  */
-                                return new long[]{0, -1L};
+                                return new long[] { 0, -1L };
                             }
                             else
                             {
-                                return new long[]{stamp.lowerBound(), stamp.upperBound()};
+                                return new long[] { stamp.lowerBound(), stamp.upperBound() };
                             }
                         }
 
