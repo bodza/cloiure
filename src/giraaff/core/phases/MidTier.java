@@ -19,7 +19,6 @@ import giraaff.phases.common.IterativeConditionalEliminationPhase;
 import giraaff.phases.common.LockEliminationPhase;
 import giraaff.phases.common.LoopSafepointInsertionPhase;
 import giraaff.phases.common.LoweringPhase;
-import giraaff.phases.common.VerifyHeapAtReturnPhase;
 import giraaff.phases.tiers.MidTierContext;
 
 public class MidTier extends PhaseSuite<MidTierContext>
@@ -45,11 +44,6 @@ public class MidTier extends PhaseSuite<MidTierContext>
         appendPhase(new LoopSafepointInsertionPhase());
 
         appendPhase(new GuardLoweringPhase());
-
-        if (GraalOptions.VerifyHeapAtReturn.getValue(options))
-        {
-            appendPhase(new VerifyHeapAtReturnPhase());
-        }
 
         appendPhase(new LoweringPhase(canonicalizer, LoweringTool.StandardLoweringStage.MID_TIER));
 

@@ -9,6 +9,7 @@ import giraaff.nodes.extended.GuardingNode;
 /**
  * Guard {@link PhiNode}s merge guard dependencies at control flow merges.
  */
+// NodeInfo.allowedUsageTypes = Guard
 public final class GuardPhiNode extends PhiNode implements GuardingNode
 {
     public static final NodeClass<GuardPhiNode> TYPE = NodeClass.create(GuardPhiNode.class);

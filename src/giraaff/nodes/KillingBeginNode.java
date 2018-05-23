@@ -6,6 +6,7 @@ import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.memory.MemoryCheckpoint;
 
+// NodeInfo.allowedUsageTypes = Memory
 public final class KillingBeginNode extends AbstractBeginNode implements MemoryCheckpoint.Single
 {
     public static final NodeClass<KillingBeginNode> TYPE = NodeClass.create(KillingBeginNode.class);

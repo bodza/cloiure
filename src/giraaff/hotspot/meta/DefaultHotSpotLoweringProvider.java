@@ -52,7 +52,6 @@ import giraaff.hotspot.nodes.aot.ResolveMethodAndLoadCountersNode;
 import giraaff.hotspot.nodes.type.HotSpotNarrowOopStamp;
 import giraaff.hotspot.nodes.type.KlassPointerStamp;
 import giraaff.hotspot.nodes.type.MethodPointerStamp;
-import giraaff.hotspot.replacements.AssertionSnippets;
 import giraaff.hotspot.replacements.ClassGetHubNode;
 import giraaff.hotspot.replacements.HashCodeSnippets;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
@@ -92,7 +91,6 @@ import giraaff.nodes.calc.IntegerDivRemNode;
 import giraaff.nodes.calc.IsNullNode;
 import giraaff.nodes.calc.RemNode;
 import giraaff.nodes.debug.StringToBytesNode;
-import giraaff.nodes.debug.VerifyHeapNode;
 import giraaff.nodes.extended.BytecodeExceptionNode;
 import giraaff.nodes.extended.ForeignCallNode;
 import giraaff.nodes.extended.GetClassNode;
@@ -130,7 +128,6 @@ import giraaff.nodes.type.StampTool;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.options.OptionValues;
 import giraaff.replacements.DefaultJavaLoweringProvider;
-import giraaff.replacements.nodes.AssertionNode;
 
 /**
  * HotSpot implementation of {@link LoweringProvider}.
@@ -147,7 +144,6 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
     protected WriteBarrierSnippets.Templates writeBarrierSnippets;
     protected LoadExceptionObjectSnippets.Templates exceptionObjectSnippets;
     protected UnsafeLoadSnippets.Templates unsafeLoadSnippets;
-    protected AssertionSnippets.Templates assertionSnippets;
     protected ArrayCopySnippets.Templates arraycopySnippets;
     protected StringToBytesSnippets.Templates stringToBytesSnippets;
     protected HashCodeSnippets.Templates hashCodeSnippets;
@@ -172,7 +168,6 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
         writeBarrierSnippets = new WriteBarrierSnippets.Templates(options, runtime, providers, target, config.useCompressedOops ? config.getOopEncoding() : null);
         exceptionObjectSnippets = new LoadExceptionObjectSnippets.Templates(options, providers, target);
         unsafeLoadSnippets = new UnsafeLoadSnippets.Templates(options, providers, target);
-        assertionSnippets = new AssertionSnippets.Templates(options, providers, target);
         arraycopySnippets = new ArrayCopySnippets.Templates(options, runtime, providers, target);
         stringToBytesSnippets = new StringToBytesSnippets.Templates(options, providers, target);
         hashCodeSnippets = new HashCodeSnippets.Templates(options, providers, target);
@@ -304,13 +299,6 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
                 newObjectSnippets.lower(dynamicNewArrayNode, registers, tool);
             }
         }
-        else if (n instanceof VerifyHeapNode)
-        {
-            if (graph.getGuardsStage().areFrameStatesAtDeopts())
-            {
-                newObjectSnippets.lower((VerifyHeapNode) n, registers, tool);
-            }
-        }
         else if (n instanceof RawMonitorEnterNode)
         {
             if (graph.getGuardsStage().areFrameStatesAtDeopts())
@@ -371,10 +359,6 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
         else if (n instanceof LoadExceptionObjectNode)
         {
             exceptionObjectSnippets.lower((LoadExceptionObjectNode) n, registers, tool);
-        }
-        else if (n instanceof AssertionNode)
-        {
-            assertionSnippets.lower((AssertionNode) n, tool);
         }
         else if (n instanceof StringToBytesNode)
         {

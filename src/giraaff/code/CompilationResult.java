@@ -35,133 +35,6 @@ import giraaff.core.common.CompilationIdentifier;
  */
 public class CompilationResult
 {
-    /**
-     * Provides extra information about instructions or data at specific positions in
-     * {@link CompilationResult#getTargetCode()}. This is optional information that can be used to
-     * enhance a disassembly of the code.
-     */
-    public abstract static class CodeAnnotation
-    {
-        public final int position;
-
-        public CodeAnnotation(int position)
-        {
-            this.position = position;
-        }
-
-        @Override
-        public final int hashCode()
-        {
-            throw new UnsupportedOperationException("hashCode");
-        }
-
-        @Override
-        public String toString()
-        {
-            return MetaUtil.identityHashCodeString(this);
-        }
-
-        @Override
-        public abstract boolean equals(Object obj);
-    }
-
-    /**
-     * A string comment about one or more instructions at a specific position in the code.
-     */
-    public static final class CodeComment extends CodeAnnotation
-    {
-        public final String value;
-
-        public CodeComment(int position, String comment)
-        {
-            super(position);
-            this.value = comment;
-        }
-
-        @Override
-        public boolean equals(Object obj)
-        {
-            if (this == obj)
-            {
-                return true;
-            }
-            if (obj instanceof CodeComment)
-            {
-                CodeComment that = (CodeComment) obj;
-                if (this.position == that.position && this.value.equals(that.value))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        @Override
-        public String toString()
-        {
-            return getClass().getSimpleName() + "@" + position + ": " + value;
-        }
-    }
-
-    /**
-     * Describes a table of signed offsets embedded in the code. The offsets are relative to the
-     * starting address of the table. This type of table maybe generated when translating a
-     * multi-way branch based on a key value from a dense value set (e.g. the {@code tableswitch}
-     * JVM instruction).
-     *
-     * The table is indexed by the contiguous range of integers from {@link #low} to {@link #high}
-     * inclusive.
-     */
-    public static final class JumpTable extends CodeAnnotation
-    {
-        /**
-         * The low value in the key range (inclusive).
-         */
-        public final int low;
-
-        /**
-         * The high value in the key range (inclusive).
-         */
-        public final int high;
-
-        /**
-         * The size (in bytes) of each table entry.
-         */
-        public final int entrySize;
-
-        public JumpTable(int position, int low, int high, int entrySize)
-        {
-            super(position);
-            this.low = low;
-            this.high = high;
-            this.entrySize = entrySize;
-        }
-
-        @Override
-        public boolean equals(Object obj)
-        {
-            if (this == obj)
-            {
-                return true;
-            }
-            if (obj instanceof JumpTable)
-            {
-                JumpTable that = (JumpTable) obj;
-                if (this.position == that.position && this.entrySize == that.entrySize && this.low == that.low && this.high == that.high)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        @Override
-        public String toString()
-        {
-            return getClass().getSimpleName() + "@" + position + ": [" + low + " .. " + high + "]";
-        }
-    }
-
     private boolean closed;
 
     private int entryBCI = -1;
@@ -191,8 +64,6 @@ public class CompilationResult
      * The leading number of bytes in {@link #targetCode} containing the emitted machine code.
      */
     private int targetCodeSize;
-
-    private ArrayList<CodeAnnotation> annotations;
 
     private Assumption[] assumptions;
 
@@ -261,7 +132,6 @@ public class CompilationResult
                 this.targetCodeSize == that.targetCodeSize &&
                 Objects.equals(this.name, that.name) &&
                 Objects.equals(this.compilationId, that.compilationId) &&
-                Objects.equals(this.annotations, that.annotations) &&
                 Objects.equals(this.dataSection, that.dataSection) &&
                 Objects.equals(this.exceptionHandlers, that.exceptionHandlers) &&
                 Objects.equals(this.dataPatches, that.dataPatches) &&
@@ -614,28 +484,6 @@ public class CompilationResult
     }
 
     /**
-     * @return the code annotations or {@code null} if there are none
-     */
-    public List<CodeAnnotation> getAnnotations()
-    {
-        if (annotations == null)
-        {
-            return Collections.emptyList();
-        }
-        return annotations;
-    }
-
-    public void addAnnotation(CodeAnnotation annotation)
-    {
-        checkOpen();
-        if (annotations == null)
-        {
-            annotations = new ArrayList<>();
-        }
-        annotations.add(annotation);
-    }
-
-    /**
      * @return the list of infopoints, sorted by {@link Site#pcOffset}
      */
     public List<Infopoint> getInfopoints()
@@ -707,8 +555,8 @@ public class CompilationResult
     /**
      * Clears the information in this object pertaining to generating code. That is, the
      * {@linkplain #getMarks() marks}, {@linkplain #getInfopoints() infopoints},
-     * {@linkplain #getExceptionHandlers() exception handlers}, {@linkplain #getDataPatches() data
-     * patches} and {@linkplain #getAnnotations() annotations} recorded in this object are cleared.
+     * {@linkplain #getExceptionHandlers() exception handlers} and {@linkplain #getDataPatches() data patches}
+     * recorded in this object are cleared.
      */
     public void resetForEmittingCode()
     {
@@ -718,10 +566,6 @@ public class CompilationResult
         exceptionHandlers.clear();
         marks.clear();
         dataSection.clear();
-        if (annotations != null)
-        {
-            annotations.clear();
-        }
     }
 
     private void checkOpen()

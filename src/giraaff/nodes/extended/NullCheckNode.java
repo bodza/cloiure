@@ -8,6 +8,7 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
+// NodeInfo.allowedUsageTypes = Guard
 public final class NullCheckNode extends DeoptimizingFixedWithNextNode implements LIRLowerable, GuardingNode
 {
     public static final NodeClass<NullCheckNode> TYPE = NodeClass.create(NullCheckNode.class);

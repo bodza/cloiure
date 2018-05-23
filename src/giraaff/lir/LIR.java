@@ -143,7 +143,7 @@ public final class LIR extends LIRGenerator.VariableProvider
      */
     public static LabelRef getExceptionEdge(LIRInstruction op)
     {
-        final LabelRef[] exceptionEdge = {null};
+        final LabelRef[] exceptionEdge = { null };
         op.forEachState(state ->
         {
             if (state.exceptionEdge != null)

@@ -47,8 +47,7 @@ public class WriteBarrierAdditionPhase extends Phase
             }
             else if (n instanceof LoweredAtomicReadAndWriteNode)
             {
-                LoweredAtomicReadAndWriteNode loweredAtomicReadAndWriteNode = (LoweredAtomicReadAndWriteNode) n;
-                addAtomicReadWriteNodeBarriers(loweredAtomicReadAndWriteNode, graph);
+                addAtomicReadWriteNodeBarriers((LoweredAtomicReadAndWriteNode) n, graph);
             }
             else if (n instanceof AbstractCompareAndSwapNode)
             {

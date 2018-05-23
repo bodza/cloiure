@@ -28,9 +28,6 @@ import jdk.vm.ci.meta.Assumptions.Assumption;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 import giraaff.code.CompilationResult;
-import giraaff.code.CompilationResult.CodeAnnotation;
-import giraaff.code.CompilationResult.CodeComment;
-import giraaff.code.CompilationResult.JumpTable;
 import giraaff.code.DataSection;
 import giraaff.debug.GraalError;
 
@@ -49,31 +46,7 @@ public class HotSpotCompiledCodeBuilder
 
         ResolvedJavaMethod[] methods = compResult.getMethods();
 
-        List<CodeAnnotation> annotations = compResult.getAnnotations();
-        Comment[] comments = new Comment[annotations.size()];
-        if (!annotations.isEmpty())
-        {
-            for (int i = 0; i < comments.length; i++)
-            {
-                CodeAnnotation annotation = annotations.get(i);
-                String text;
-                if (annotation instanceof CodeComment)
-                {
-                    CodeComment codeComment = (CodeComment) annotation;
-                    text = codeComment.value;
-                }
-                else if (annotation instanceof JumpTable)
-                {
-                    JumpTable jumpTable = (JumpTable) annotation;
-                    text = "JumpTable [" + jumpTable.low + " .. " + jumpTable.high + "]";
-                }
-                else
-                {
-                    text = annotation.toString();
-                }
-                comments[i] = new Comment(annotation.position, text);
-            }
-        }
+        Comment[] comments = new Comment[0];
 
         DataSection data = compResult.getDataSection();
         byte[] dataSection = new byte[data.getSectionSize()];

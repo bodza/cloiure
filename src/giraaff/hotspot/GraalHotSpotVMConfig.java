@@ -38,7 +38,6 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
     public final int contendedPaddingWidth = getFlag("ContendedPaddingWidth", Integer.class);
     public final int fieldsAllocationStyle = getFlag("FieldsAllocationStyle", Integer.class);
     public final boolean compactFields = getFlag("CompactFields", Boolean.class);
-    public final boolean verifyOops = getFlag("VerifyOops", Boolean.class);
     public final boolean ciTime = getFlag("CITime", Boolean.class);
     public final boolean ciTimeEach = getFlag("CITimeEach", Boolean.class);
     public final boolean dontCompileHugeMethods = getFlag("DontCompileHugeMethods", Boolean.class);
@@ -131,14 +130,6 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
     public final int allocateInstancePrefetchLines = getFlag("AllocateInstancePrefetchLines", Integer.class);
     public final int allocatePrefetchStepSize = getFlag("AllocatePrefetchStepSize", Integer.class);
     public final int allocatePrefetchDistance = getFlag("AllocatePrefetchDistance", Integer.class);
-
-    private final long universeCollectedHeap = getFieldValue("CompilerToVM::Data::Universe_collectedHeap", Long.class, "CollectedHeap*");
-    private final int collectedHeapTotalCollectionsOffset = getFieldOffset("CollectedHeap::_total_collections", Integer.class, "unsigned int");
-
-    public long gcTotalCollectionsAddress()
-    {
-        return universeCollectedHeap + collectedHeapTotalCollectionsOffset;
-    }
 
     public final boolean useDeferredInitBarriers = getFlag("ReduceInitialCardMarks", Boolean.class);
 
@@ -464,10 +455,6 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
      */
     public final long nonOopBits = getFieldValue("CompilerToVM::Data::Universe_non_oop_bits", Long.class, "void*");
 
-    public final long verifyOopCounterAddress = getFieldAddress("StubRoutines::_verify_oop_count", "jint");
-    public final long verifyOopMask = getFieldValue("CompilerToVM::Data::Universe_verify_oop_mask", Long.class, "uintptr_t");
-    public final long verifyOopBits = getFieldValue("CompilerToVM::Data::Universe_verify_oop_bits", Long.class, "uintptr_t");
-
     public final int logOfHRGrainBytes = getFieldValue("HeapRegion::LogOfHRGrainBytes", Integer.class, "int");
 
     public final long cardtableStartAddress = getFieldValue("CompilerToVM::Data::cardtable_start_address", Long.class, "jbyte*");
@@ -641,7 +628,6 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
     public final long dynamicNewInstanceAddress = getAddress("JVMCIRuntime::dynamic_new_instance");
 
     public final long threadIsInterruptedAddress = getAddress("JVMCIRuntime::thread_is_interrupted");
-    public final long vmMessageAddress = getAddress("JVMCIRuntime::vm_message");
     public final long identityHashCodeAddress = getAddress("JVMCIRuntime::identity_hash_code");
     public final long exceptionHandlerForPcAddress = getAddress("JVMCIRuntime::exception_handler_for_pc");
     public final long monitorenterAddress = getAddress("JVMCIRuntime::monitorenter");
@@ -651,11 +637,9 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
     public final long throwAndPostJvmtiExceptionAddress = getAddress("JVMCIRuntime::throw_and_post_jvmti_exception");
     public final long throwKlassExternalNameExceptionAddress = getAddress("JVMCIRuntime::throw_klass_external_name_exception");
     public final long throwClassCastExceptionAddress = getAddress("JVMCIRuntime::throw_class_cast_exception");
-    public final long vmErrorAddress = getAddress("JVMCIRuntime::vm_error");
     public final long loadAndClearExceptionAddress = getAddress("JVMCIRuntime::load_and_clear_exception");
     public final long writeBarrierPreAddress = getAddress("JVMCIRuntime::write_barrier_pre");
     public final long writeBarrierPostAddress = getAddress("JVMCIRuntime::write_barrier_post");
-    public final long validateObject = getAddress("JVMCIRuntime::validate_object");
 
     public final long testDeoptimizeCallInt = getAddress("JVMCIRuntime::test_deoptimize_call_int");
 

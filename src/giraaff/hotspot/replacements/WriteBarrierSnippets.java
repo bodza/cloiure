@@ -29,7 +29,6 @@ import giraaff.hotspot.nodes.GraalHotSpotVMConfigNode;
 import giraaff.hotspot.nodes.HotSpotCompressionNode;
 import giraaff.hotspot.nodes.SerialArrayRangeWriteBarrier;
 import giraaff.hotspot.nodes.SerialWriteBarrier;
-import giraaff.hotspot.nodes.VMErrorNode;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
 import giraaff.nodes.NamedLocationIdentity;
 import giraaff.nodes.NodeView;
@@ -134,14 +133,13 @@ public class WriteBarrierSnippets implements Snippets
     }
 
     @Snippet
-    public static void g1PreWriteBarrier(Address address, Object object, Object expectedObject, @ConstantParameter boolean doLoad, @ConstantParameter boolean nullCheck, @ConstantParameter Register threadRegister, @ConstantParameter boolean trace, @ConstantParameter Counters counters)
+    public static void g1PreWriteBarrier(Address address, Object object, Object expectedObject, @ConstantParameter boolean doLoad, @ConstantParameter boolean nullCheck, @ConstantParameter Register threadRegister, @ConstantParameter Counters counters)
     {
         if (nullCheck)
         {
             NullCheckNode.nullCheck(address);
         }
         Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
-        HotSpotReplacementsUtil.verifyOop(object);
         Object fixedExpectedObject = FixedValueAnchorNode.getObject(expectedObject);
         Word field = Word.fromAddress(address);
         Pointer previousOop = Word.objectToTrackedPointer(fixedExpectedObject);
@@ -184,13 +182,10 @@ public class WriteBarrierSnippets implements Snippets
     }
 
     @Snippet
-    public static void g1PostWriteBarrier(Address address, Object object, Object value, @ConstantParameter boolean usePrecise, @ConstantParameter Register threadRegister, @ConstantParameter boolean trace, @ConstantParameter Counters counters)
+    public static void g1PostWriteBarrier(Address address, Object object, Object value, @ConstantParameter boolean usePrecise, @ConstantParameter Register threadRegister, @ConstantParameter Counters counters)
     {
         Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
         Object fixedValue = FixedValueAnchorNode.getObject(value);
-        HotSpotReplacementsUtil.verifyOop(object);
-        HotSpotReplacementsUtil.verifyOop(fixedValue);
-        validateObject(object, fixedValue);
         Pointer oop;
         if (usePrecise)
         {
@@ -287,7 +282,6 @@ public class WriteBarrierSnippets implements Snippets
         {
             Word arrElemPtr = WordFactory.pointer(start + i * scale);
             Pointer oop = Word.objectToTrackedPointer(arrElemPtr.readObject(0, BarrierType.NONE));
-            HotSpotReplacementsUtil.verifyOop(oop.toObject());
             if (oop.notEqual(0))
             {
                 if (indexValue != 0)
@@ -464,7 +458,6 @@ public class WriteBarrierSnippets implements Snippets
             args.addConst("doLoad", writeBarrierPre.doLoad());
             args.addConst("nullCheck", writeBarrierPre.getNullCheck());
             args.addConst("threadRegister", registers.getThreadRegister());
-            args.addConst("trace", traceBarrier(writeBarrierPre.graph()));
             args.addConst("counters", counters);
             template(writeBarrierPre, args).instantiate(providers.getMetaAccess(), writeBarrierPre, SnippetTemplate.DEFAULT_REPLACER, args);
         }
@@ -493,7 +486,6 @@ public class WriteBarrierSnippets implements Snippets
             args.addConst("doLoad", readBarrier.doLoad());
             args.addConst("nullCheck", false);
             args.addConst("threadRegister", registers.getThreadRegister());
-            args.addConst("trace", traceBarrier(readBarrier.graph()));
             args.addConst("counters", counters);
             template(readBarrier, args).instantiate(providers.getMetaAccess(), readBarrier, SnippetTemplate.DEFAULT_REPLACER, args);
         }
@@ -527,7 +519,6 @@ public class WriteBarrierSnippets implements Snippets
 
             args.addConst("usePrecise", writeBarrierPost.usePrecise());
             args.addConst("threadRegister", registers.getThreadRegister());
-            args.addConst("trace", traceBarrier(writeBarrierPost.graph()));
             args.addConst("counters", counters);
             template(writeBarrierPost, args).instantiate(providers.getMetaAccess(), writeBarrierPost, SnippetTemplate.DEFAULT_REPLACER, args);
         }
@@ -552,28 +543,4 @@ public class WriteBarrierSnippets implements Snippets
             template(arrayRangeWriteBarrier, args).instantiate(providers.getMetaAccess(), arrayRangeWriteBarrier, SnippetTemplate.DEFAULT_REPLACER, args);
         }
     }
-
-    public static boolean traceBarrier(StructuredGraph graph)
-    {
-        return GraalOptions.GCDebugStartCycle.getValue(graph.getOptions()) > 0 && ((int) ((Pointer) WordFactory.pointer(HotSpotReplacementsUtil.gcTotalCollectionsAddress(GraalHotSpotVMConfig.INJECTED_VMCONFIG))).readLong(0) > GraalOptions.GCDebugStartCycle.getValue(graph.getOptions()));
-    }
-
-    /**
-     * Validation helper method which performs sanity checks on write operations. The addresses of
-     * both the object and the value being written are checked in order to determine if they reside
-     * in a valid heap region. If an object is stale, an invalid access is performed in order to
-     * prematurely crash the VM and debug the stack trace of the faulty method.
-     */
-    public static void validateObject(Object parent, Object child)
-    {
-        if (HotSpotReplacementsUtil.verifyOops(GraalHotSpotVMConfig.INJECTED_VMCONFIG) && child != null && !validateOop(VALIDATE_OBJECT, parent, child))
-        {
-            VMErrorNode.vmError("Verification ERROR, Parent: %p\n", Word.objectToTrackedPointer(parent).rawValue());
-        }
-    }
-
-    public static final ForeignCallDescriptor VALIDATE_OBJECT = new ForeignCallDescriptor("validate_object", boolean.class, Word.class, Word.class);
-
-    @NodeIntrinsic(ForeignCallNode.class)
-    private static native boolean validateOop(@ConstantNodeParameter ForeignCallDescriptor descriptor, Object parent, Object object);
 }

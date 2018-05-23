@@ -402,62 +402,6 @@ public class AMD64Assembler extends Assembler
         }
     }
 
-    public abstract static class OperandDataAnnotation extends CodeAnnotation
-    {
-        /**
-         * The position (bytes from the beginning of the method) of the operand.
-         */
-        public final int operandPosition;
-        /**
-         * The size of the operand, in bytes.
-         */
-        public final int operandSize;
-        /**
-         * The position (bytes from the beginning of the method) of the next instruction. On AMD64,
-         * RIP-relative operands are relative to this position.
-         */
-        public final int nextInstructionPosition;
-
-        OperandDataAnnotation(int instructionPosition, int operandPosition, int operandSize, int nextInstructionPosition)
-        {
-            super(instructionPosition);
-
-            this.operandPosition = operandPosition;
-            this.operandSize = operandSize;
-            this.nextInstructionPosition = nextInstructionPosition;
-        }
-
-        @Override
-        public String toString()
-        {
-            return getClass().getSimpleName() + " instruction [" + instructionPosition + ", " + nextInstructionPosition + "[ operand at " + operandPosition + " size " + operandSize;
-        }
-    }
-
-    /**
-     * Annotation that stores additional information about the displacement of a
-     * {@link Assembler#getPlaceholder placeholder address} that needs patching.
-     */
-    public static class AddressDisplacementAnnotation extends OperandDataAnnotation
-    {
-        AddressDisplacementAnnotation(int instructionPosition, int operandPosition, int operndSize, int nextInstructionPosition)
-        {
-            super(instructionPosition, operandPosition, operndSize, nextInstructionPosition);
-        }
-    }
-
-    /**
-     * Annotation that stores additional information about the immediate operand, e.g., of a call
-     * instruction, that needs patching.
-     */
-    public static class ImmediateOperandAnnotation extends OperandDataAnnotation
-    {
-        ImmediateOperandAnnotation(int instructionPosition, int operandPosition, int operndSize, int nextInstructionPosition)
-        {
-            super(instructionPosition, operandPosition, operndSize, nextInstructionPosition);
-        }
-    }
-
     /**
      * Constructs an assembler for the AMD64 architecture.
      */
@@ -571,10 +515,6 @@ public class AMD64Assembler extends Assembler
         if (base.equals(AMD64.rip)) { // also matches addresses returned by getPlaceholder()
             // [00 000 101] disp32
             emitByte(0x05 | regenc);
-            if (codePatchingAnnotationConsumer != null && addr.instructionStartPosition >= 0)
-            {
-                codePatchingAnnotationConsumer.accept(new AddressDisplacementAnnotation(addr.instructionStartPosition, position(), 4, position() + 4 + additionalInstructionSize));
-            }
             emitInt(disp);
         }
         else if (base.isValid())
@@ -4213,11 +4153,6 @@ public class AMD64Assembler extends Assembler
      */
     public final void call()
     {
-        if (codePatchingAnnotationConsumer != null)
-        {
-            int pos = position();
-            codePatchingAnnotationConsumer.accept(new ImmediateOperandAnnotation(pos, pos + 1, 4, pos + 5));
-        }
         emitByte(0xE8);
         emitInt(0);
     }

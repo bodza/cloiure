@@ -14,6 +14,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
  * states together. It is thus referenced from the {@link MonitorEnterNode}, from the
  * {@link MonitorExitNode} and from the {@link FrameState}.
  */
+// NodeInfo.allowedUsageTypes = Association
 public class MonitorIdNode extends ValueNode implements IterableNodeType, LIRLowerable
 {
     public static final NodeClass<MonitorIdNode> TYPE = NodeClass.create(MonitorIdNode.class);

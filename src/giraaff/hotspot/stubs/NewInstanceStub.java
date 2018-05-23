@@ -94,14 +94,14 @@ public class NewInstanceStub extends SnippetStub
                 {
                     Word prototypeMarkWord = hub.readWord(HotSpotReplacementsUtil.prototypeMarkWordOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.PROTOTYPE_MARK_WORD_LOCATION);
                     NewObjectSnippets.formatObjectForStub(hub, sizeInBytes, memory, prototypeMarkWord);
-                    return StubUtil.verifyObject(memory.toObject());
+                    return memory.toObject();
                 }
             }
         }
 
         newInstanceC(NEW_INSTANCE_C, thread, hub);
         StubUtil.handlePendingException(thread, true);
-        return StubUtil.verifyObject(HotSpotReplacementsUtil.getAndClearObjectResult(thread));
+        return HotSpotReplacementsUtil.getAndClearObjectResult(thread);
     }
 
     /**

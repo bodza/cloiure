@@ -15,7 +15,6 @@ import giraaff.asm.amd64.AMD64Address;
 import giraaff.asm.amd64.AMD64Address.Scale;
 import giraaff.asm.amd64.AMD64Assembler.ConditionFlag;
 import giraaff.asm.amd64.AMD64MacroAssembler;
-import giraaff.code.CompilationResult.JumpTable;
 import giraaff.core.common.calc.Condition;
 import giraaff.debug.GraalError;
 import giraaff.lir.LIRInstruction.OperandFlag;
@@ -315,9 +314,6 @@ public class AMD64ControlFlow
                     masm.emitByte(0); // padding to make jump table entry 4 bytes wide
                 }
             }
-
-            JumpTable jt = new JumpTable(jumpTablePos, lowKey, highKey, 4);
-            crb.compilationResult.addAnnotation(jt);
         }
     }
 

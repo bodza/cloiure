@@ -24,7 +24,6 @@ import giraaff.hotspot.HotSpotForeignCallLinkage.Transition;
 import giraaff.hotspot.HotSpotGraalRuntimeProvider;
 import giraaff.hotspot.HotSpotHostBackend;
 import giraaff.hotspot.meta.DefaultHotSpotLoweringProvider.RuntimeCalls;
-import giraaff.hotspot.replacements.AssertionSnippets;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
 import giraaff.hotspot.replacements.MonitorSnippets;
 import giraaff.hotspot.replacements.NewObjectSnippets;
@@ -41,7 +40,6 @@ import giraaff.hotspot.stubs.OutOfBoundsExceptionStub;
 import giraaff.hotspot.stubs.Stub;
 import giraaff.hotspot.stubs.StubUtil;
 import giraaff.hotspot.stubs.UnwindExceptionToCallerStub;
-import giraaff.hotspot.stubs.VerifyOopStub;
 import giraaff.nodes.NamedLocationIdentity;
 import giraaff.nodes.java.ForeignCallDescriptors;
 import giraaff.options.OptionValues;
@@ -205,18 +203,10 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
 
         CreateExceptionStub.registerForeignCalls(c, this);
 
-        /*
-         * This message call is registered twice, where the second one must only be used for calls
-         * that do not return, i.e., that exit the VM.
-         */
-        registerForeignCall(StubUtil.VM_MESSAGE_C, c.vmMessageAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, REEXECUTABLE, NO_LOCATIONS);
-        registerForeignCall(AssertionSnippets.ASSERTION_VM_MESSAGE_C, c.vmMessageAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF, REEXECUTABLE, NO_LOCATIONS);
-
         link(new NewInstanceStub(options, providers, registerStubCall(HotSpotBackend.NEW_INSTANCE, REEXECUTABLE, Transition.SAFEPOINT, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION)));
         link(new NewArrayStub(options, providers, registerStubCall(HotSpotBackend.NEW_ARRAY, REEXECUTABLE, Transition.SAFEPOINT, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION)));
         link(new ExceptionHandlerStub(options, providers, foreignCalls.get(HotSpotBackend.EXCEPTION_HANDLER)));
         link(new UnwindExceptionToCallerStub(options, providers, registerStubCall(HotSpotBackend.UNWIND_EXCEPTION_TO_CALLER, NOT_REEXECUTABLE, Transition.SAFEPOINT, LocationIdentity.any())));
-        link(new VerifyOopStub(options, providers, registerStubCall(VERIFY_OOP, REEXECUTABLE, Transition.LEAF_NOFP, NO_LOCATIONS)));
         link(new ArrayStoreExceptionStub(options, providers, registerStubCall(RuntimeCalls.CREATE_ARRAY_STORE_EXCEPTION, REEXECUTABLE, Transition.SAFEPOINT, LocationIdentity.any())));
         link(new ClassCastExceptionStub(options, providers, registerStubCall(RuntimeCalls.CREATE_CLASS_CAST_EXCEPTION, REEXECUTABLE, Transition.SAFEPOINT, LocationIdentity.any())));
         link(new NullPointerExceptionStub(options, providers, registerStubCall(RuntimeCalls.CREATE_NULL_POINTER_EXCEPTION, REEXECUTABLE, Transition.SAFEPOINT, LocationIdentity.any())));
@@ -231,11 +221,9 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
         linkForeignCall(options, providers, NOTIFY_ALL, c.notifyAllAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, LocationIdentity.any());
         linkForeignCall(options, providers, NewObjectSnippets.DYNAMIC_NEW_ARRAY, c.dynamicNewArrayAddress, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE);
         linkForeignCall(options, providers, NewObjectSnippets.DYNAMIC_NEW_INSTANCE, c.dynamicNewInstanceAddress, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE);
-        linkForeignCall(options, providers, HotSpotBackend.VM_ERROR, c.vmErrorAddress, PREPEND_THREAD, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
         linkForeignCall(options, providers, OSR_MIGRATION_END, c.osrMigrationEndAddress, DONT_PREPEND_THREAD, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NO_LOCATIONS);
         linkForeignCall(options, providers, WriteBarrierSnippets.G1WBPRECALL, c.writeBarrierPreAddress, PREPEND_THREAD, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
         linkForeignCall(options, providers, WriteBarrierSnippets.G1WBPOSTCALL, c.writeBarrierPostAddress, PREPEND_THREAD, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
-        linkForeignCall(options, providers, WriteBarrierSnippets.VALIDATE_OBJECT, c.validateObject, PREPEND_THREAD, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
 
         // Cannot be a leaf as VM acquires Thread_lock which requires thread_in_vm state
         linkForeignCall(options, providers, ThreadSubstitutions.THREAD_IS_INTERRUPTED, c.threadIsInterruptedAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, LocationIdentity.any());

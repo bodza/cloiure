@@ -8,7 +8,7 @@ import giraaff.hotspot.HotSpotBackend;
 import giraaff.hotspot.nodes.ComputeObjectAddressNode;
 import giraaff.word.Word;
 
-@ClassSubstitution(className = {"jdk.internal.misc.Unsafe", "sun.misc.Unsafe"})
+@ClassSubstitution(className = { "jdk.internal.misc.Unsafe", "sun.misc.Unsafe" })
 public class HotSpotUnsafeSubstitutions
 {
     public static final String copyMemoryName = "copyMemory0";

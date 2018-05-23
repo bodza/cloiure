@@ -120,7 +120,7 @@ public class ForeignCallStub extends Stub
      *             getAndClearObjectResult(thread());
      *             DeoptimizeCallerNode.deopt(InvalidateReprofile, RuntimeConstraint);
      *         }
-     *         return verifyObject(getAndClearObjectResult(thread()));
+     *         return getAndClearObjectResult(thread());
      *     }
      * </pre>
      *
@@ -169,8 +169,7 @@ public class ForeignCallStub extends Stub
             kit.createInvoke(StubUtil.class, "handlePendingException", thread, ConstantNode.forBoolean(isObjectResult, graph));
             if (isObjectResult)
             {
-                InvokeNode object = kit.createInvoke(HotSpotReplacementsUtil.class, "getAndClearObjectResult", thread);
-                result = kit.createInvoke(StubUtil.class, "verifyObject", object);
+                result = kit.createInvoke(HotSpotReplacementsUtil.class, "getAndClearObjectResult", thread);
             }
             kit.append(new ReturnNode(linkage.getDescriptor().getResultType() == void.class ? null : result));
 

@@ -378,7 +378,7 @@ public final class DataSection implements Iterable<Data>
      */
     public void buildDataSection(ByteBuffer buffer, Patches patch)
     {
-        buildDataSection(buffer, patch, (r, s) -> { });
+        buildDataSection(buffer, patch, (r, s) -> {});
     }
 
     /**

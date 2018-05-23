@@ -180,7 +180,7 @@ public class GraphBuilderConfiguration
         }
     }
 
-    private static final ResolvedJavaType[] EMPTY = new ResolvedJavaType[] { };
+    private static final ResolvedJavaType[] EMPTY = new ResolvedJavaType[] {};
 
     private final boolean eagerResolving;
     private final boolean unresolvedIsError;

@@ -84,7 +84,7 @@ public class TypeCheckHints
         {
             exact = null;
         }
-        Double[] hitProbability = {null};
+        Double[] hitProbability = { null };
         this.hints = makeHints(targetType, profile, minHintHitProbability, maxHints, hitProbability);
         this.hintHitProbability = hitProbability[0];
     }

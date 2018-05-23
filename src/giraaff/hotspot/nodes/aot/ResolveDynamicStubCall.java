@@ -26,6 +26,7 @@ import giraaff.nodes.util.GraphUtil;
 /**
  * A call to the VM via a regular stub.
  */
+// NodeInfo.allowedUsageTypes = Memory
 public class ResolveDynamicStubCall extends AbstractMemoryCheckpoint implements LIRLowerable, Canonicalizable, DeoptimizingNode.DeoptBefore, MemoryCheckpoint.Single
 {
     public static final NodeClass<ResolveDynamicStubCall> TYPE = NodeClass.create(ResolveDynamicStubCall.class);

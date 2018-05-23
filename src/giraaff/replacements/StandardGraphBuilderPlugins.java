@@ -1024,7 +1024,7 @@ public class StandardGraphBuilderPlugins
                 return true;
             }
         };
-        String[] names = {"org.openjdk.jmh.infra.Blackhole", "org.openjdk.jmh.logic.BlackHole"};
+        String[] names = { "org.openjdk.jmh.infra.Blackhole", "org.openjdk.jmh.logic.BlackHole" };
         for (String name : names)
         {
             Registration r = new Registration(plugins, name, bytecodeProvider);

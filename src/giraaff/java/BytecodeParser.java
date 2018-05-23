@@ -4650,7 +4650,6 @@ public class BytecodeParser implements GraphBuilderContext
             case Bytecodes.IFNONNULL:       genIfNull(Condition.NE); break;
             case Bytecodes.GOTO_W:          genGoto(); break;
             case Bytecodes.JSR_W:           genJsr(stream.readBranchDest()); break;
-            case Bytecodes.BREAKPOINT:      throw new PermanentBailoutException("concurrent setting of breakpoint");
             default:              throw new PermanentBailoutException("Unsupported opcode %d (%s) [bci=%d]", opcode, Bytecodes.nameOf(opcode), bci);
         }
     }

@@ -9,6 +9,7 @@ import giraaff.nodes.ValueNode;
 import giraaff.replacements.SnippetTemplate;
 import giraaff.replacements.nodes.BasicArrayCopyNode;
 
+// NodeInfo.allowedUsageTypes = Memory
 public final class ArrayCopyWithSlowPathNode extends BasicArrayCopyNode
 {
     public static final NodeClass<ArrayCopyWithSlowPathNode> TYPE = NodeClass.create(ArrayCopyWithSlowPathNode.class);

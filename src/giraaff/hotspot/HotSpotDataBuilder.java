@@ -27,13 +27,6 @@ public class HotSpotDataBuilder extends DataBuilder
     }
 
     @Override
-    public boolean needDetailedPatchingInformation()
-    {
-        /* The HotSpot VM finds operands that need patching by decoding the instruction. */
-        return false;
-    }
-
-    @Override
     public Data createDataItem(Constant constant)
     {
         if (JavaConstant.isNull(constant))

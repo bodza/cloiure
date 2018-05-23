@@ -26,7 +26,6 @@ import org.graalvm.collections.Equivalence;
 import giraaff.asm.AbstractAddress;
 import giraaff.asm.Assembler;
 import giraaff.code.CompilationResult;
-import giraaff.code.CompilationResult.CodeAnnotation;
 import giraaff.code.DataSection.Data;
 import giraaff.code.DataSection.RawData;
 import giraaff.core.common.NumUtil;
@@ -50,12 +49,6 @@ import giraaff.options.OptionValues;
  */
 public class CompilationResultBuilder
 {
-    public static class Options
-    {
-        // Option "Include the LIR as comments with the final assembly."
-        public static final OptionKey<Boolean> PrintLIRWithAssembly = new OptionKey<>(false);
-    }
-
     private static class ExceptionInfo
     {
         public final int codeOffset;
@@ -65,32 +58,6 @@ public class CompilationResultBuilder
         {
             this.codeOffset = pcOffset;
             this.exceptionEdge = exceptionEdge;
-        }
-    }
-
-    /**
-     * Wrapper for a code annotation that was produced by the {@link Assembler}.
-     */
-    public static final class AssemblerAnnotation extends CodeAnnotation
-    {
-        public final Assembler.CodeAnnotation assemblerCodeAnnotation;
-
-        public AssemblerAnnotation(Assembler.CodeAnnotation assemblerCodeAnnotation)
-        {
-            super(assemblerCodeAnnotation.instructionPosition);
-            this.assemblerCodeAnnotation = assemblerCodeAnnotation;
-        }
-
-        @Override
-        public boolean equals(Object obj)
-        {
-            return this == obj;
-        }
-
-        @Override
-        public String toString()
-        {
-            return assemblerCodeAnnotation.toString();
         }
     }
 
@@ -142,12 +109,6 @@ public class CompilationResultBuilder
         this.frameContext = frameContext;
         this.options = options;
         this.dataCache = dataCache;
-
-        if (dataBuilder.needDetailedPatchingInformation())
-        {
-            // Always enabled in debug mode, even when the VM does not request detailed information, to increase test coverage.
-            asm.setCodePatchingAnnotationConsumer(assemblerCodeAnnotation -> compilationResult.addAnnotation(new AssemblerAnnotation(assemblerCodeAnnotation)));
-        }
     }
 
     public void setTotalFrameSize(int frameSize)
@@ -163,11 +124,6 @@ public class CompilationResultBuilder
     public Mark recordMark(Object id)
     {
         return compilationResult.recordMark(asm.position(), id);
-    }
-
-    public void blockComment(String s)
-    {
-        compilationResult.addAnnotation(new CompilationResult.CodeComment(asm.position(), s));
     }
 
     /**
@@ -486,19 +442,9 @@ public class CompilationResultBuilder
         {
             return;
         }
-        boolean emitComment = Options.PrintLIRWithAssembly.getValue(getOptions());
-        if (emitComment)
-        {
-            blockComment(String.format("block B%d %s", block.getId(), block.getLoop()));
-        }
 
         for (LIRInstruction op : lir.getLIRforBlock(block))
         {
-            if (emitComment)
-            {
-                blockComment(String.format("%d %s", op.id(), op));
-            }
-
             try
             {
                 if (beforeOp != null)

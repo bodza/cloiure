@@ -100,10 +100,6 @@ public abstract class HotSpotHostBackend extends HotSpotBackend
             }
 
             int bangOffset = bangEndSafe;
-            if (bangOffset <= bangEnd)
-            {
-                crb.blockComment("[stack overflow check]");
-            }
             while (bangOffset <= bangEnd)
             {
                 // Need at least one stack bang at end of shadow zone.

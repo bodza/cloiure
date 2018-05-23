@@ -39,7 +39,6 @@ import giraaff.nodes.PrefetchAllocateNode;
 import giraaff.nodes.SnippetAnchorNode;
 import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.ValueNode;
-import giraaff.nodes.debug.VerifyHeapNode;
 import giraaff.nodes.extended.BranchProbabilityNode;
 import giraaff.nodes.extended.ForeignCallNode;
 import giraaff.nodes.extended.MembarNode;
@@ -123,7 +122,7 @@ public class NewObjectSnippets implements Snippets
             }
             result = newInstance(HotSpotBackend.NEW_INSTANCE, hub);
         }
-        return HotSpotReplacementsUtil.verifyOop(result);
+        return result;
     }
 
     @NodeIntrinsic(value = ForeignCallNode.class, injectedStampIsNonNull = true)
@@ -185,7 +184,7 @@ public class NewObjectSnippets implements Snippets
     public static Object allocateArray(KlassPointer hub, int length, Word prototypeMarkWord, @ConstantParameter int headerSize, @ConstantParameter int log2ElementSize, @ConstantParameter boolean fillContents, @ConstantParameter Register threadRegister, @ConstantParameter boolean maybeUnroll, @ConstantParameter String typeContext, @ConstantParameter OptionValues options, @ConstantParameter Counters counters)
     {
         Object result = allocateArrayImpl(hub, length, prototypeMarkWord, headerSize, log2ElementSize, fillContents, threadRegister, maybeUnroll, typeContext, false, options, counters);
-        return PiArrayNode.piArrayCastToSnippetReplaceeStamp(HotSpotReplacementsUtil.verifyOop(result), length);
+        return PiArrayNode.piArrayCastToSnippetReplaceeStamp(result, length);
     }
 
     private static Object allocateArrayImpl(KlassPointer hub, int length, Word prototypeMarkWord, int headerSize, int log2ElementSize, boolean fillContents, Register threadRegister, boolean maybeUnroll, String typeContext, boolean skipNegativeCheck, OptionValues options, Counters counters)
@@ -283,7 +282,7 @@ public class NewObjectSnippets implements Snippets
         int log2ElementSize = (layoutHelper >> HotSpotReplacementsUtil.layoutHelperLog2ElementSizeShift(GraalHotSpotVMConfig.INJECTED_VMCONFIG)) & HotSpotReplacementsUtil.layoutHelperLog2ElementSizeMask(GraalHotSpotVMConfig.INJECTED_VMCONFIG);
 
         Object result = allocateArrayImpl(nonNullKlass, length, prototypeMarkWord, headerSize, log2ElementSize, fillContents, threadRegister, false, "dynamic type", true, options, counters);
-        return PiArrayNode.piArrayCastToSnippetReplaceeStamp(HotSpotReplacementsUtil.verifyOop(result), length);
+        return PiArrayNode.piArrayCastToSnippetReplaceeStamp(result, length);
     }
 
     /**
@@ -403,21 +402,6 @@ public class NewObjectSnippets implements Snippets
         return memory.toObjectNonNull();
     }
 
-    @Snippet
-    protected static void verifyHeap(@ConstantParameter Register threadRegister)
-    {
-        Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
-        Word topValue = HotSpotReplacementsUtil.readTlabTop(thread);
-        if (!topValue.equal(WordFactory.zero()))
-        {
-            Word topValueContents = topValue.readWord(0, HotSpotReplacementsUtil.MARK_WORD_LOCATION);
-            if (topValueContents.equal(WordFactory.zero()))
-            {
-                AssertionSnippets.vmMessageC(AssertionSnippets.ASSERTION_VM_MESSAGE_C, true, CStringConstant.cstring("overzeroing of TLAB detected"), 0L, 0L, 0L);
-            }
-        }
-    }
-
     /**
      * Formats some allocated memory with an object header and zeroes out the rest.
      */
@@ -462,7 +446,6 @@ public class NewObjectSnippets implements Snippets
         private final SnippetInfo allocateArrayDynamic = snippet(NewObjectSnippets.class, "allocateArrayDynamic", HotSpotReplacementsUtil.MARK_WORD_LOCATION, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
         private final SnippetInfo allocateInstanceDynamic = snippet(NewObjectSnippets.class, "allocateInstanceDynamic", HotSpotReplacementsUtil.MARK_WORD_LOCATION, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
         private final SnippetInfo newmultiarray = snippet(NewObjectSnippets.class, "newmultiarray", HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
-        private final SnippetInfo verifyHeap = snippet(NewObjectSnippets.class, "verifyHeap");
         private final GraalHotSpotVMConfig config;
         private final Counters counters;
 
@@ -611,11 +594,6 @@ public class NewObjectSnippets implements Snippets
         {
             int size = type.instanceSize();
             return size;
-        }
-
-        public void lower(VerifyHeapNode verifyHeapNode, HotSpotRegistersProvider registers, LoweringTool tool)
-        {
-            GraphUtil.removeFixedWithUnusedInputs(verifyHeapNode);
         }
     }
 }

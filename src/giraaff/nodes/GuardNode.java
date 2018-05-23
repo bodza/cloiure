@@ -27,6 +27,7 @@ import giraaff.nodes.extended.GuardingNode;
  * maximum flexibility for the guard node and guarantees that deoptimization occurs only if the
  * control flow would have reached the guarded node (without taking exceptions into account).
  */
+// NodeInfo.allowedUsageTypes = Guard
 public class GuardNode extends FloatingAnchoredNode implements Canonicalizable, GuardingNode, DeoptimizingGuard, IterableNodeType
 {
     public static final NodeClass<GuardNode> TYPE = NodeClass.create(GuardNode.class);

@@ -214,7 +214,6 @@ public class Bytecodes
     public static final int IFNONNULL            = 199; // 0xC7
     public static final int GOTO_W               = 200; // 0xC8
     public static final int JSR_W                = 201; // 0xC9
-    public static final int BREAKPOINT           = 202; // 0xCA
 
     public static final int ILLEGAL = 255;
     public static final int END = 256;
@@ -539,7 +538,6 @@ public class Bytecodes
         def(IFNONNULL           , "ifnonnull"       , "boo"  , -1, Flags.FALL_THROUGH | Flags.BRANCH);
         def(GOTO_W              , "goto_w"          , "boooo",  0, Flags.STOP | Flags.BRANCH);
         def(JSR_W               , "jsr_w"           , "boooo",  0, Flags.STOP | Flags.BRANCH);
-        def(BREAKPOINT          , "breakpoint"      , "b"    ,  0, Flags.TRAP);
     }
 
     /**

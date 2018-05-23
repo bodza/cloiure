@@ -43,37 +43,21 @@ public final class GraalOptions
 
     // escape analysis settings
     public static final OptionKey<Boolean> PartialEscapeAnalysis = new OptionKey<>(true);
-
     public static final OptionKey<Integer> EscapeAnalysisIterations = new OptionKey<>(2);
-
     public static final OptionKey<Integer> EscapeAnalysisLoopCutoff = new OptionKey<>(20);
-
     public static final OptionKey<String> EscapeAnalyzeOnly = new OptionKey<>(null);
-
     public static final OptionKey<Integer> MaximumEscapeAnalysisArrayLength = new OptionKey<>(32);
-
     public static final OptionKey<Boolean> PEAInliningHints = new OptionKey<>(false);
-
     public static final OptionKey<Double> TailDuplicationProbability = new OptionKey<>(0.5);
-
     public static final OptionKey<Integer> TailDuplicationTrivialSize = new OptionKey<>(1);
-
     public static final OptionKey<Integer> DeoptsToDisableOptimisticOptimization = new OptionKey<>(40);
-
     public static final OptionKey<Boolean> LoopPeeling = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> ReassociateInvariants = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> FullUnroll = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> LoopUnswitch = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> PartialUnroll = new OptionKey<>(true);
-
     public static final OptionKey<Float> MinimumPeelProbability = new OptionKey<>(0.35f);
-
     public static final OptionKey<Integer> LoopMaxUnswitch = new OptionKey<>(3);
-
     public static final OptionKey<Boolean> UseLoopLimitChecks = new OptionKey<>(true);
 
     // debugging settings
@@ -90,73 +74,39 @@ public final class GraalOptions
     // Option "Stress the code by emitting reads at earliest instead of latest point."
     public static final OptionKey<Boolean> StressTestEarlyReads = new OptionKey<>(false);
 
-    // Debug settings
-    public static final OptionKey<Integer> GCDebugStartCycle = new OptionKey<>(-1);
-
-    // Option "Perform platform dependent validation of the Java heap at returns."
-    public static final OptionKey<Boolean> VerifyHeapAtReturn = new OptionKey<>(false);
-
     // Register allocator debugging
     // Option "Comma separated list of registers that register allocation is limited to."
     public static final OptionKey<String> RegisterPressure = new OptionKey<>(null);
-
     public static final OptionKey<Boolean> ConditionalElimination = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> RawConditionalElimination = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> ReplaceInputsWithConstantsBasedOnStamps = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> RemoveNeverExecutedCode = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> UseExceptionProbability = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> OmitHotExceptionStacktrace = new OptionKey<>(false);
-
     public static final OptionKey<Boolean> GenSafepoints = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> GenLoopSafepoints = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> UseTypeCheckHints = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> InlineVTableStubs = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> AlwaysInlineVTableStubs = new OptionKey<>(false);
-
     public static final OptionKey<Boolean> ResolveClassBeforeStaticInvoke = new OptionKey<>(false);
-
     public static final OptionKey<Boolean> CanOmitFrame = new OptionKey<>(true);
 
     // Runtime settings
     public static final OptionKey<Boolean> SupportJsrBytecodes = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> OptAssumptions = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> OptConvertDeoptsToGuards = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> OptReadElimination = new OptionKey<>(true);
-
     public static final OptionKey<Integer> ReadEliminationMaxLoopVisits = new OptionKey<>(5);
-
     public static final OptionKey<Boolean> OptDeoptimizationGrouping = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> OptScheduleOutOfLoops = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> GuardPriorities = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> OptEliminateGuards = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> OptImplicitNullChecks = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> OptClearNonLiveLocals = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> OptLoopTransform = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> OptFloatingReads = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> OptEliminatePartiallyRedundantGuards = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> OptFilterProfiledTypes = new OptionKey<>(true);
-
     public static final OptionKey<Boolean> OptDevirtualizeInvokesOptimistically = new OptionKey<>(true);
 
     // Option "Allow backend to match complex expressions."

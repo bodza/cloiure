@@ -9,7 +9,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
  * This interface defines the contract a HotSpot backend LIR generator needs to fulfill in addition
  * to abstract methods from {@link LIRGenerator} and {@link NodeLIRBuilderTool}.
  */
-// MatchableNode nodeClass = CompressionNode.class, inputs = {"value"}
+// MatchableNode nodeClass = CompressionNode.class, inputs = { "value" }
 public interface HotSpotNodeLIRBuilder
 {
     void emitPatchReturnAddress(ValueNode address);

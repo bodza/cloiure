@@ -17,6 +17,7 @@ import giraaff.nodes.memory.address.AddressNode;
 /**
  * Low-level atomic compare-and-swap operation.
  */
+// NodeInfo.allowedUsageTypes = Value, Memory
 public abstract class AbstractCompareAndSwapNode extends FixedAccessNode implements StateSplit, LIRLowerableAccess, MemoryCheckpoint.Single
 {
     public static final NodeClass<AbstractCompareAndSwapNode> TYPE = NodeClass.create(AbstractCompareAndSwapNode.class);

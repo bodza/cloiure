@@ -1057,8 +1057,8 @@ public final class IntegerStamp extends PrimitiveStamp
                                 return a.unrestricted();
                             }
 
-                            long[] xExtremes = {a.lowerBound(), a.upperBound()};
-                            long[] yExtremes = {b.lowerBound(), b.upperBound()};
+                            long[] xExtremes = { a.lowerBound(), a.upperBound() };
+                            long[] yExtremes = { b.lowerBound(), b.upperBound() };
                             long min = Long.MAX_VALUE;
                             long max = Long.MIN_VALUE;
                             for (long x : xExtremes)

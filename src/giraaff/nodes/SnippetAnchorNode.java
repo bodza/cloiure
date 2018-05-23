@@ -7,6 +7,7 @@ import giraaff.graph.spi.SimplifierTool;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.extended.GuardingNode;
 
+// NodeInfo.allowedUsageTypes = Value, Anchor, Guard
 public final class SnippetAnchorNode extends FixedWithNextNode implements Simplifiable, GuardingNode
 {
     public static final NodeClass<SnippetAnchorNode> TYPE = NodeClass.create(SnippetAnchorNode.class);

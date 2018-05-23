@@ -18,13 +18,4 @@ public class HotspotSnippetsOptions
 
     // Option "Handle simple cases for inflated monitors in the fast-path."
     public static final OptionKey<Boolean> SimpleFastInflatedLocking = new OptionKey<>(true);
-
-    // Option "Trace monitor operations on objects whose type contains this substring."
-    public static final OptionKey<String> TraceMonitorsTypeFilter = new OptionKey<>(null);
-
-    // Option "Trace monitor operations in methods whose fully qualified name contains this substring."
-    public static final OptionKey<String> TraceMonitorsMethodFilter = new OptionKey<>(null);
-
-    // Option "Emit extra code to dynamically check monitor operations are balanced."
-    public static final OptionKey<Boolean> VerifyBalancedMonitors = new OptionKey<>(false);
 }

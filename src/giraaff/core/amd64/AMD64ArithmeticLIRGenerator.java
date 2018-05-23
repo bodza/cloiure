@@ -63,7 +63,7 @@ public class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator implemen
 
     public AMD64ArithmeticLIRGenerator(Maths maths)
     {
-        this.maths = maths == null ? new Maths() { } : maths;
+        this.maths = maths == null ? new Maths() {} : maths;
     }
 
     private final Maths maths;

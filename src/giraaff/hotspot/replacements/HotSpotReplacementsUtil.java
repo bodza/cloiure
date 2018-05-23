@@ -130,12 +130,6 @@ public class HotSpotReplacementsUtil
         return config.useTLAB;
     }
 
-    @Fold
-    public static boolean verifyOops(@InjectedParameter GraalHotSpotVMConfig config)
-    {
-        return config.verifyOops;
-    }
-
     public static final LocationIdentity EXCEPTION_OOP_LOCATION = NamedLocationIdentity.mutable("ExceptionOop");
 
     /**
@@ -808,18 +802,6 @@ public class HotSpotReplacementsUtil
         return loadHubIntrinsic(object);
     }
 
-    public static Object verifyOop(Object object)
-    {
-        if (verifyOops(GraalHotSpotVMConfig.INJECTED_VMCONFIG))
-        {
-            verifyOopStub(HotSpotForeignCallsProviderImpl.VERIFY_OOP, object);
-        }
-        return object;
-    }
-
-    @NodeIntrinsic(ForeignCallNode.class)
-    private static native Object verifyOopStub(@ConstantNodeParameter ForeignCallDescriptor descriptor, Object object);
-
     public static Word loadWordFromObject(Object object, int offset)
     {
         return loadWordFromObjectIntrinsic(object, offset, LocationIdentity.any(), getWordKind());
@@ -1081,12 +1063,6 @@ public class HotSpotReplacementsUtil
     public static int verifiedEntryPointOffset(@InjectedParameter GraalHotSpotVMConfig config)
     {
         return config.nmethodEntryOffset;
-    }
-
-    @Fold
-    public static long gcTotalCollectionsAddress(@InjectedParameter GraalHotSpotVMConfig config)
-    {
-        return config.gcTotalCollectionsAddress();
     }
 
     @Fold

@@ -100,7 +100,7 @@ public class GraphKit implements GraphBuilderTool
         /*
          * Add a dummy element, so that the access of the last element never leads to an exception.
          */
-        structures.add(new Structure() { });
+        structures.add(new Structure() {});
     }
 
     @Override

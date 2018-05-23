@@ -55,7 +55,6 @@ import giraaff.nodes.calc.SignExtendNode;
 import giraaff.nodes.calc.SubNode;
 import giraaff.nodes.calc.UnpackEndianHalfNode;
 import giraaff.nodes.calc.ZeroExtendNode;
-import giraaff.nodes.debug.VerifyHeapNode;
 import giraaff.nodes.extended.BoxNode;
 import giraaff.nodes.extended.FixedValueAnchorNode;
 import giraaff.nodes.extended.ForeignCallNode;
@@ -222,10 +221,6 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         {
             boxingSnippets.lower((UnboxNode) n, tool);
         }
-        else if (n instanceof VerifyHeapNode)
-        {
-            lowerVerifyHeap((VerifyHeapNode) n);
-        }
         else if (n instanceof UnaryMathIntrinsicNode)
         {
             lowerUnaryMath((UnaryMathIntrinsicNode) n, tool);
@@ -354,11 +349,6 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
     protected ForeignCallDescriptor toForeignCall(BinaryOperation operation)
     {
         return operation.foreignCallDescriptor;
-    }
-
-    protected void lowerVerifyHeap(VerifyHeapNode n)
-    {
-        GraphUtil.removeFixedWithUnusedInputs(n);
     }
 
     protected AddressNode createOffsetAddress(StructuredGraph graph, ValueNode object, long offset)
