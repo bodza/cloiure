@@ -302,35 +302,35 @@ public final class IntegerStamp extends PrimitiveStamp
     @Override
     public String toString()
     {
-        StringBuilder str = new StringBuilder();
-        str.append('i');
-        str.append(getBits());
+        StringBuilder sb = new StringBuilder();
+        sb.append('i');
+        sb.append(getBits());
         if (hasValues())
         {
             if (lowerBound == upperBound)
             {
-                str.append(" [").append(lowerBound).append(']');
+                sb.append(" [").append(lowerBound).append(']');
             }
             else if (lowerBound != CodeUtil.minValue(getBits()) || upperBound != CodeUtil.maxValue(getBits()))
             {
-                str.append(" [").append(lowerBound).append(" - ").append(upperBound).append(']');
+                sb.append(" [").append(lowerBound).append(" - ").append(upperBound).append(']');
             }
             if (downMask != 0)
             {
-                str.append(" \u21ca");
-                new Formatter(str).format("%016x", downMask);
+                sb.append(" \u21ca");
+                new Formatter(sb).format("%016x", downMask);
             }
             if (upMask != CodeUtil.mask(getBits()))
             {
-                str.append(" \u21c8");
-                new Formatter(str).format("%016x", upMask);
+                sb.append(" \u21c8");
+                new Formatter(sb).format("%016x", upMask);
             }
         }
         else
         {
-            str.append("<empty>");
+            sb.append("<empty>");
         }
-        return str.toString();
+        return sb.toString();
     }
 
     private IntegerStamp createStamp(IntegerStamp other, long newUpperBound, long newLowerBound, long newDownMask, long newUpMask)

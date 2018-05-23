@@ -194,24 +194,24 @@ public class ObjectState
     @Override
     public String toString()
     {
-        StringBuilder str = new StringBuilder().append('{');
+        StringBuilder sb = new StringBuilder().append('{');
         if (locks != null)
         {
-            str.append('l').append(locks).append(' ');
+            sb.append('l').append(locks).append(' ');
         }
         if (entries != null)
         {
             for (int i = 0; i < entries.length; i++)
             {
-                str.append("entry").append(i).append('=').append(entries[i]).append(' ');
+                sb.append("entry").append(i).append('=').append(entries[i]).append(' ');
             }
         }
         if (materializedValue != null)
         {
-            str.append("mat=").append(materializedValue);
+            sb.append("mat=").append(materializedValue);
         }
 
-        return str.append('}').toString();
+        return sb.append('}').toString();
     }
 
     @Override

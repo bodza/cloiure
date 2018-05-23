@@ -193,21 +193,21 @@ public class LIRInstructionClass<T> extends LIRIntrospection<T>
     @Override
     public String toString()
     {
-        StringBuilder str = new StringBuilder();
-        str.append(getClass().getSimpleName()).append(" ").append(getClazz().getSimpleName()).append(" use[");
-        uses.appendFields(str);
-        str.append("] alive[");
-        alives.appendFields(str);
-        str.append("] temp[");
-        temps.appendFields(str);
-        str.append("] def[");
-        defs.appendFields(str);
-        str.append("] state[");
-        states.appendFields(str);
-        str.append("] data[");
-        data.appendFields(str);
-        str.append("]");
-        return str.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName()).append(" ").append(getClazz().getSimpleName()).append(" use[");
+        uses.appendFields(sb);
+        sb.append("] alive[");
+        alives.appendFields(sb);
+        sb.append("] temp[");
+        temps.appendFields(sb);
+        sb.append("] def[");
+        defs.appendFields(sb);
+        sb.append("] state[");
+        states.appendFields(sb);
+        sb.append("] data[");
+        data.appendFields(sb);
+        sb.append("]");
+        return sb.toString();
     }
 
     Values getValues(OperandMode mode)

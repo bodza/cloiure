@@ -170,18 +170,18 @@ public class EffectList implements Iterable<EffectList.Effect>
                 }
                 catch (Throwable t)
                 {
-                    StringBuilder str = new StringBuilder();
-                    toString(str, i);
-                    throw new GraalError(t).addContext("effect", str);
+                    StringBuilder sb = new StringBuilder();
+                    toString(sb, i);
+                    throw new GraalError(t).addContext("effect", sb);
                 }
             }
         }
     }
 
-    private void toString(StringBuilder str, int i)
+    private void toString(StringBuilder sb, int i)
     {
         Effect effect = effects[i];
-        str.append(getName(i)).append(" [");
+        sb.append(getName(i)).append(" [");
         boolean first = true;
         for (Field field : effect.getClass().getDeclaredFields())
         {
@@ -194,7 +194,7 @@ public class EffectList implements Iterable<EffectList.Effect>
                     // Inner classes could capture the EffectList itself.
                     continue;
                 }
-                str.append(first ? "" : ", ").append(field.getName()).append("=").append(format(object));
+                sb.append(first ? "" : ", ").append(field.getName()).append("=").append(format(object));
                 first = false;
             }
             catch (SecurityException | IllegalAccessException e)
@@ -202,7 +202,7 @@ public class EffectList implements Iterable<EffectList.Effect>
                 throw new RuntimeException(e);
             }
         }
-        str.append(']');
+        sb.append(']');
     }
 
     private static String format(Object object)
@@ -217,17 +217,17 @@ public class EffectList implements Iterable<EffectList.Effect>
     @Override
     public String toString()
     {
-        StringBuilder str = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < size(); i++)
         {
             Effect effect = get(i);
             if (effect.isVisible())
             {
-                toString(str, i);
-                str.append('\n');
+                toString(sb, i);
+                sb.append('\n');
             }
         }
-        return str.toString();
+        return sb.toString();
     }
 
     private String getName(int i)

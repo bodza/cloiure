@@ -107,7 +107,6 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider
             }
         }
 
-        runtimeStartTime = System.nanoTime();
         bootstrapJVMCI = config.getFlag("BootstrapJVMCI", Boolean.class);
     }
 
@@ -199,7 +198,6 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider
         return compilerConfigurationName;
     }
 
-    private long runtimeStartTime;
     private boolean shutdown;
 
     /**

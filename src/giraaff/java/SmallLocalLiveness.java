@@ -29,21 +29,21 @@ public final class SmallLocalLiveness extends LocalLiveness
 
     private String debugString(long value)
     {
-        StringBuilder str = new StringBuilder("{");
+        StringBuilder sb = new StringBuilder("{");
         long current = value;
         for (int i = 0; i < maxLocals; i++)
         {
             if ((current & 1L) == 1L)
             {
-                if (str.length() > 1)
+                if (sb.length() > 1)
                 {
-                    str.append(", ");
+                    sb.append(", ");
                 }
-                str.append(i);
+                sb.append(i);
             }
             current >>= 1;
         }
-        return str.append('}').toString();
+        return sb.append('}').toString();
     }
 
     @Override

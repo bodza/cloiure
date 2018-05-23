@@ -194,16 +194,16 @@ public final class Block extends AbstractBlockBase<Block>
             @Override
             public String toString()
             {
-                StringBuilder str = new StringBuilder().append('[');
+                StringBuilder sb = new StringBuilder().append('[');
                 for (FixedNode node : this)
                 {
-                    str.append(node).append(", ");
+                    sb.append(node).append(", ");
                 }
-                if (str.length() > 1)
+                if (sb.length() > 1)
                 {
-                    str.setLength(str.length() - 2);
+                    sb.setLength(sb.length() - 2);
                 }
-                return str.append(']').toString();
+                return sb.append(']').toString();
             }
         };
     }

@@ -40,13 +40,9 @@ public class MidTier extends PhaseSuite<MidTierContext>
         }
 
         appendPhase(new LoopSafepointEliminationPhase());
-
         appendPhase(new LoopSafepointInsertionPhase());
-
         appendPhase(new GuardLoweringPhase());
-
         appendPhase(new LoweringPhase(canonicalizer, LoweringTool.StandardLoweringStage.MID_TIER));
-
         appendPhase(new FrameStateAssignmentPhase());
 
         LoopPolicies loopPolicies = createLoopPolicies();

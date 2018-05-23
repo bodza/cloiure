@@ -178,12 +178,14 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
     public void initialize(HotSpotProviders providers, OptionValues options)
     {
         GraalHotSpotVMConfig c = runtime.getVMConfig();
+
         registerForeignCall(HotSpotHostBackend.DEOPTIMIZATION_HANDLER, c.handleDeoptStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
         registerForeignCall(HotSpotHostBackend.UNCOMMON_TRAP_HANDLER, c.uncommonTrapStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
         registerForeignCall(HotSpotBackend.IC_MISS_HANDLER, c.inlineCacheMissStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
 
         registerForeignCall(JAVA_TIME_MILLIS, c.javaTimeMillisAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
         registerForeignCall(JAVA_TIME_NANOS, c.javaTimeNanosAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
+
         registerForeignCall(UnaryOperation.SIN.foreignCallDescriptor, c.arithmeticSinAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF, REEXECUTABLE, NO_LOCATIONS);
         registerForeignCall(UnaryOperation.COS.foreignCallDescriptor, c.arithmeticCosAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF, REEXECUTABLE, NO_LOCATIONS);
         registerForeignCall(UnaryOperation.TAN.foreignCallDescriptor, c.arithmeticTanAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF, REEXECUTABLE, NO_LOCATIONS);
@@ -191,6 +193,7 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
         registerForeignCall(UnaryOperation.LOG.foreignCallDescriptor, c.arithmeticLogAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF, REEXECUTABLE, NO_LOCATIONS);
         registerForeignCall(UnaryOperation.LOG10.foreignCallDescriptor, c.arithmeticLog10Address, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF, REEXECUTABLE, NO_LOCATIONS);
         registerForeignCall(BinaryOperation.POW.foreignCallDescriptor, c.arithmeticPowAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF, REEXECUTABLE, NO_LOCATIONS);
+
         registerForeignCall(Backend.ARITHMETIC_FREM, c.fremAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF, REEXECUTABLE, NO_LOCATIONS);
         registerForeignCall(Backend.ARITHMETIC_DREM, c.dremAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF, REEXECUTABLE, NO_LOCATIONS);
 
@@ -227,8 +230,6 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
 
         // Cannot be a leaf as VM acquires Thread_lock which requires thread_in_vm state
         linkForeignCall(options, providers, ThreadSubstitutions.THREAD_IS_INTERRUPTED, c.threadIsInterruptedAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, LocationIdentity.any());
-
-        linkForeignCall(options, providers, TEST_DEOPTIMIZE_CALL_INT, c.testDeoptimizeCallInt, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE, LocationIdentity.any());
 
         registerArrayCopy(JavaKind.Byte, c.jbyteArraycopy, c.jbyteAlignedArraycopy, c.jbyteDisjointArraycopy, c.jbyteAlignedDisjointArraycopy);
         registerArrayCopy(JavaKind.Boolean, c.jbyteArraycopy, c.jbyteAlignedArraycopy, c.jbyteDisjointArraycopy, c.jbyteAlignedDisjointArraycopy);

@@ -44,10 +44,10 @@ public abstract class NarrowOopStamp extends AbstractObjectStamp
     @Override
     public String toString()
     {
-        StringBuilder str = new StringBuilder();
-        str.append('n');
-        appendString(str);
-        return str.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append('n');
+        appendString(sb);
+        return sb.toString();
     }
 
     @Override

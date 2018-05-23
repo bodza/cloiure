@@ -167,26 +167,26 @@ public class FloatStamp extends PrimitiveStamp
     @Override
     public String toString()
     {
-        StringBuilder str = new StringBuilder();
-        str.append('f');
-        str.append(getBits());
+        StringBuilder sb = new StringBuilder();
+        sb.append('f');
+        sb.append(getBits());
         if (hasValues())
         {
-            str.append(nonNaN ? "!" : "");
+            sb.append(nonNaN ? "!" : "");
             if (lowerBound == upperBound)
             {
-                str.append(" [").append(lowerBound).append(']');
+                sb.append(" [").append(lowerBound).append(']');
             }
             else if (lowerBound != Double.NEGATIVE_INFINITY || upperBound != Double.POSITIVE_INFINITY)
             {
-                str.append(" [").append(lowerBound).append(" - ").append(upperBound).append(']');
+                sb.append(" [").append(lowerBound).append(" - ").append(upperBound).append(']');
             }
         }
         else
         {
-            str.append("<empty>");
+            sb.append("<empty>");
         }
-        return str.toString();
+        return sb.toString();
     }
 
     private static double meetBounds(double a, double b, DoubleBinaryOperator op)

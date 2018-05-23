@@ -34,7 +34,6 @@ public class HighTier extends PhaseSuite<HighTierContext>
     public HighTier(OptionValues options)
     {
         CanonicalizerPhase canonicalizer = new CanonicalizerPhase();
-
         appendPhase(canonicalizer);
 
         if (Options.Inline.getValue(options))
@@ -84,7 +83,6 @@ public class HighTier extends PhaseSuite<HighTierContext>
         }
 
         appendPhase(new RemoveValueProxyPhase());
-
         appendPhase(new LoweringPhase(canonicalizer, LoweringTool.StandardLoweringStage.HIGH_TIER));
     }
 

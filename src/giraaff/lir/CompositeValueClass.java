@@ -89,13 +89,13 @@ public final class CompositeValueClass<T> extends FieldIntrospection<T>
     @Override
     public String toString()
     {
-        StringBuilder str = new StringBuilder();
-        str.append(getClass().getSimpleName()).append(" ").append(getClazz().getSimpleName()).append(" components[");
-        values.appendFields(str);
-        str.append("] data[");
-        data.appendFields(str);
-        str.append("]");
-        return str.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName()).append(" ").append(getClazz().getSimpleName()).append(" components[");
+        values.appendFields(sb);
+        sb.append("] data[");
+        data.appendFields(sb);
+        sb.append("]");
+        return sb.toString();
     }
 
     public static String format(CompositeValue obj)

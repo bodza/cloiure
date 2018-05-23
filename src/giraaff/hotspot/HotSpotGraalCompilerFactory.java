@@ -37,7 +37,7 @@ public final class HotSpotGraalCompilerFactory extends HotSpotJVMCICompilerFacto
     @Override
     public HotSpotGraalCompiler createCompiler(JVMCIRuntime runtime)
     {
-        CompilerConfigurationFactory factory = CompilerConfigurationFactory.selectFactory(null, options);
+        CompilerConfigurationFactory factory = CompilerConfigurationFactory.selectFactory("community", options);
         HotSpotGraalCompiler compiler = createCompiler("VM", runtime, options, factory);
         // Only the HotSpotGraalRuntime associated with the compiler created via
         // jdk.vm.ci.runtime.JVMCIRuntime.getCompiler() is registered for receiving

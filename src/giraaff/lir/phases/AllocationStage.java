@@ -25,6 +25,7 @@ public class AllocationStage extends LIRPhaseSuite<AllocationContext>
         {
             appendPhase(new SimpleStackSlotAllocator());
         }
+
         // currently we mark locations only if we do register allocation
         appendPhase(new LocationMarkerPhase());
     }

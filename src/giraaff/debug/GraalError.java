@@ -176,20 +176,20 @@ public class GraalError extends Error
     @Override
     public String toString()
     {
-        StringBuilder str = new StringBuilder();
-        str.append(super.toString());
-        str.append(context());
-        return str.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append(super.toString());
+        sb.append(context());
+        return sb.toString();
     }
 
     public String context()
     {
-        StringBuilder str = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         for (String s : context)
         {
-            str.append("\n\tat ").append(s);
+            sb.append("\n\tat ").append(s);
         }
-        return str.toString();
+        return sb.toString();
     }
 
     private static String format(String msg, Object... args)

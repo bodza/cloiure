@@ -54,8 +54,8 @@ public abstract class MetaspacePointerStamp extends AbstractPointerStamp
         throw GraalError.shouldNotReachHere("metaspace pointer has no Java type");
     }
 
-    protected void appendString(StringBuilder str)
+    protected void appendString(StringBuilder sb)
     {
-        str.append(nonNull() ? "!" : "").append(alwaysNull() ? " NULL" : "");
+        sb.append(nonNull() ? "!" : "").append(alwaysNull() ? " NULL" : "");
     }
 }

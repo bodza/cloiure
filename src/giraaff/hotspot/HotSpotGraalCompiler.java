@@ -195,13 +195,4 @@ public class HotSpotGraalCompiler implements GraalJVMCICompiler
         }
         return suite;
     }
-
-    /**
-     * Converts {@code method} to a String with {@link JavaMethod#format(String)} and the format
-     * string {@code "%H.%n(%p)"}.
-     */
-    static String str(JavaMethod method)
-    {
-        return method.format("%H.%n(%p)");
-    }
 }

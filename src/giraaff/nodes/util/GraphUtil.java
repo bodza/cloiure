@@ -538,18 +538,18 @@ public class GraphUtil
      */
     public static String toString(Iterable<?> objects)
     {
-        StringBuilder str = new StringBuilder();
-        str.append("[");
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
         for (Object o : objects)
         {
-            str.append(o).append(", ");
+            sb.append(o).append(", ");
         }
-        if (str.length() > 1)
+        if (sb.length() > 1)
         {
-            str.setLength(str.length() - 2);
+            sb.setLength(sb.length() - 2);
         }
-        str.append("]");
-        return str.toString();
+        sb.append("]");
+        return sb.toString();
     }
 
     /**

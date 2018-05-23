@@ -473,15 +473,15 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     @Override
     public String toString()
     {
-        StringBuilder str = new StringBuilder();
-        str.append("NodeClass ").append(getClazz().getSimpleName()).append(" [");
-        inputs.appendFields(str);
-        str.append("] [");
-        successors.appendFields(str);
-        str.append("] [");
-        data.appendFields(str);
-        str.append("]");
-        return str.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append("NodeClass ").append(getClazz().getSimpleName()).append(" [");
+        inputs.appendFields(sb);
+        sb.append("] [");
+        successors.appendFields(sb);
+        sb.append("] [");
+        data.appendFields(sb);
+        sb.append("]");
+        return sb.toString();
     }
 
     private static int deepHashCode0(Object o)

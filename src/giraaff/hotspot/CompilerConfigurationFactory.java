@@ -1,8 +1,6 @@
 package giraaff.hotspot;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,33 +18,25 @@ import giraaff.phases.tiers.CompilerConfiguration;
 import giraaff.serviceprovider.GraalServices;
 
 /**
- * A factory that creates the {@link CompilerConfiguration} the Graal compiler will use. Each
- * factory must have a unique {@link #name} and {@link #autoSelectionPriority}. The latter imposes a
- * total ordering between factories for the purpose of auto-selecting the factory to use.
+ * A factory that creates the {@link CompilerConfiguration} the Graal compiler will use.
+ * Each factory must have a unique {@link #name}.
  */
-public abstract class CompilerConfigurationFactory implements Comparable<CompilerConfigurationFactory>
+public abstract class CompilerConfigurationFactory
 {
     /**
      * The name of this factory. This must be unique across all factory instances.
      */
     private final String name;
 
-    /**
-     * The priority of this factory. This must be unique across all factory instances.
-     */
-    private final int autoSelectionPriority;
-
-    protected CompilerConfigurationFactory(String name, int autoSelectionPriority)
+    protected CompilerConfigurationFactory(String name)
     {
         this.name = name;
-        this.autoSelectionPriority = autoSelectionPriority;
     }
 
     public abstract CompilerConfiguration createCompilerConfiguration();
 
     /**
-     * Collect the set of available {@linkplain HotSpotBackendFactory backends} for this compiler
-     * configuration.
+     * Collect the set of available {@linkplain HotSpotBackendFactory backends} for this compiler configuration.
      */
     public BackendMap createBackendMap()
     {
@@ -77,8 +67,7 @@ public abstract class CompilerConfigurationFactory implements Comparable<Compile
             {
                 if (backend.getName().equals(backendName))
                 {
-                    Class<? extends Architecture> arch = backend.getArchitecture();
-                    HotSpotBackendFactory oldEntry = backends.put(arch, backend);
+                    backends.put(backend.getArchitecture(), backend);
                 }
             }
         }
@@ -90,22 +79,8 @@ public abstract class CompilerConfigurationFactory implements Comparable<Compile
         }
     }
 
-    @Override
-    public int compareTo(CompilerConfigurationFactory o)
-    {
-        if (autoSelectionPriority > o.autoSelectionPriority)
-        {
-            return -1;
-        }
-        if (autoSelectionPriority < o.autoSelectionPriority)
-        {
-            return 1;
-        }
-        return 0;
-    }
-
     /**
-     * @return sorted list of {@link CompilerConfigurationFactory}s
+     * @return list of {@link CompilerConfigurationFactory}s
      */
     private static List<CompilerConfigurationFactory> getAllCandidates()
     {
@@ -114,16 +89,13 @@ public abstract class CompilerConfigurationFactory implements Comparable<Compile
         {
             candidates.add(candidate);
         }
-        Collections.sort(candidates);
         return candidates;
     }
 
     /**
-     * Selects and instantiates a {@link CompilerConfigurationFactory}. The selection algorithm
-     * is as follows: if {@code name} is non-null, then select the factory with the same name;
-     * else select the factory with the highest {@link #autoSelectionPriority} value.
+     * Selects and instantiates the {@link CompilerConfigurationFactory} with the given name.
      *
-     * @param name the name of the compiler configuration to select (optional)
+     * @param name the name of the compiler configuration to select
      */
     public static CompilerConfigurationFactory selectFactory(String name, OptionValues options)
     {
@@ -145,12 +117,7 @@ public abstract class CompilerConfigurationFactory implements Comparable<Compile
         }
         else
         {
-            List<CompilerConfigurationFactory> candidates = getAllCandidates();
-            if (candidates.isEmpty())
-            {
-                throw new GraalError("No %s providers found", CompilerConfigurationFactory.class.getName());
-            }
-            factory = candidates.get(0);
+            throw new GraalError("No %s providers found", CompilerConfigurationFactory.class.getName());
         }
         return factory;
     }
