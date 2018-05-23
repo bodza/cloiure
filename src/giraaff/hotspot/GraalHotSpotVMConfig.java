@@ -43,7 +43,7 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
     public final boolean dontCompileHugeMethods = getFlag("DontCompileHugeMethods", Boolean.class);
     public final int hugeMethodLimit = getFlag("HugeMethodLimit", Integer.class);
     public final boolean inline = getFlag("Inline", Boolean.class);
-    public final boolean inlineNotify = versioned.inlineNotify;
+    public final boolean inlineNotify = getFlag("InlineNotify", Boolean.class);
     public final boolean useFastLocking = getFlag("JVMCIUseFastLocking", Boolean.class);
     public final boolean forceUnreachable = getFlag("ForceUnreachable", Boolean.class);
     public final int codeSegmentSize = getFlag("CodeCacheSegmentSize", Integer.class);
@@ -55,7 +55,7 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
     public final boolean usePopCountInstruction = getFlag("UsePopCountInstruction", Boolean.class);
     public final boolean useAESIntrinsics = getFlag("UseAESIntrinsics", Boolean.class);
     public final boolean useCRC32Intrinsics = getFlag("UseCRC32Intrinsics", Boolean.class);
-    public final boolean useCRC32CIntrinsics = versioned.useCRC32CIntrinsics;
+    public final boolean useCRC32CIntrinsics = getFlag("UseCRC32CIntrinsics", Boolean.class);
     public final boolean threadLocalHandshakes = getFlag("ThreadLocalHandshakes", Boolean.class, false);
 
     private final boolean useMultiplyToLenIntrinsic = getFlag("UseMultiplyToLenIntrinsic", Boolean.class);
@@ -295,38 +295,6 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
     public final int threadIsMethodHandleReturnOffset = getFieldOffset("JavaThread::_is_method_handle_return", Integer.class, "int");
     public final int threadObjectResultOffset = getFieldOffset("JavaThread::_vm_result", Integer.class, "oop");
     public final int jvmciCountersThreadOffset = getFieldOffset("JavaThread::_jvmci_counters", Integer.class, "jlong*");
-    public final int javaThreadReservedStackActivationOffset = versioned.javaThreadReservedStackActivationOffset;
-
-    /**
-     * An invalid value for {@link #rtldDefault}.
-     */
-    public static final long INVALID_RTLD_DEFAULT_HANDLE = 0xDEADFACE;
-
-    /**
-     * Address of the library lookup routine. The C signature of this routine is:
-     *
-     * <pre>
-     *     void* (const char *filename, char *ebuf, int ebuflen)
-     * </pre>
-     */
-    public final long dllLoad = getAddress("os::dll_load");
-
-    /**
-     * Address of the library lookup routine. The C signature of this routine is:
-     *
-     * <pre>
-     *     void* (void* handle, const char* name)
-     * </pre>
-     */
-    public final long dllLookup = getAddress("os::dll_lookup");
-
-    /**
-     * A pseudo-handle which when used as the first argument to {@link #dllLookup} means lookup will
-     * return the first occurrence of the desired symbol using the default library search order. If
-     * this field is {@value #INVALID_RTLD_DEFAULT_HANDLE}, then this capability is not supported on
-     * the current platform.
-     */
-    public final long rtldDefault = getAddress("RTLD_DEFAULT", osName.equals("bsd") || osName.equals("linux") ? null : INVALID_RTLD_DEFAULT_HANDLE);
 
     /**
      * This field is used to pass exception objects into and out of the runtime system during
@@ -363,9 +331,9 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
         return javaThreadAnchorOffset + getFieldOffset("JavaFrameAnchor::_flags", Integer.class, "int");
     }
 
-    public final int runtimeCallStackSize = getConstant("frame::arg_reg_save_area_bytes", Integer.class, intRequiredOnAMD64);
-    public final int frameInterpreterFrameSenderSpOffset = getConstant("frame::interpreter_frame_sender_sp_offset", Integer.class, intRequiredOnAMD64);
-    public final int frameInterpreterFrameLastSpOffset = getConstant("frame::interpreter_frame_last_sp_offset", Integer.class, intRequiredOnAMD64);
+    public final int runtimeCallStackSize = getConstant("frame::arg_reg_save_area_bytes", Integer.class, null);
+    public final int frameInterpreterFrameSenderSpOffset = getConstant("frame::interpreter_frame_sender_sp_offset", Integer.class, null);
+    public final int frameInterpreterFrameLastSpOffset = getConstant("frame::interpreter_frame_last_sp_offset", Integer.class, null);
 
     public final int osThreadInterruptedOffset = getFieldOffset("OSThread::_interrupted", Integer.class, "jint");
 
@@ -420,14 +388,11 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
 
     public final int methodAccessFlagsOffset = getFieldOffset("Method::_access_flags", Integer.class, "AccessFlags");
     public final int methodConstMethodOffset = getFieldOffset("Method::_constMethod", Integer.class, "ConstMethod*");
-    public final int methodIntrinsicIdOffset = versioned.methodIntrinsicIdOffset;
-    public final int methodFlagsOffset = versioned.methodFlagsOffset;
     public final int methodVtableIndexOffset = getFieldOffset("Method::_vtable_index", Integer.class, "int");
 
     public final int methodCountersOffset = getFieldOffset("Method::_method_counters", Integer.class, "MethodCounters*");
     public final int methodDataOffset = getFieldOffset("Method::_method_data", Integer.class, "MethodData*");
     public final int methodCompiledEntryOffset = getFieldOffset("Method::_from_compiled_entry", Integer.class, "address");
-    public final int methodCodeOffset = versioned.methodCodeOffset;
 
     public final int methodFlagsCallerSensitive = getConstant("Method::_caller_sensitive", Integer.class);
     public final int methodFlagsForceInline = getConstant("Method::_force_inline", Integer.class);
@@ -438,8 +403,6 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
 
     public final int invocationCounterOffset = getFieldOffset("MethodCounters::_invocation_counter", Integer.class, "InvocationCounter");
     public final int backedgeCounterOffset = getFieldOffset("MethodCounters::_backedge_counter", Integer.class, "InvocationCounter");
-    public final int invocationCounterIncrement = versioned.invocationCounterIncrement;
-    public final int invocationCounterShift = versioned.invocationCounterShift;
 
     public final int nmethodEntryOffset = getFieldOffset("nmethod::_verified_entry_point", Integer.class, "address");
     public final int compilationLevelFullOptimization = getConstant("CompLevel_full_optimization", Integer.class);
@@ -470,14 +433,23 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
 
     // G1 Collector Related Values.
 
-    public final byte dirtyCardValue = versioned.dirtyCardValue;
-    public final byte g1YoungCardValue = versioned.g1YoungCardValue;
+    public final byte dirtyCardValue = getConstant("CardTableModRefBS::dirty_card", Byte.class);
+    public final byte g1YoungCardValue = getConstant("G1SATBCardTableModRefBS::g1_young_gen", Byte.class);
 
-    public final int g1SATBQueueMarkingOffset = versioned.g1SATBQueueMarkingOffset;
-    public final int g1SATBQueueIndexOffset = versioned.g1SATBQueueIndexOffset;
-    public final int g1SATBQueueBufferOffset = versioned.g1SATBQueueBufferOffset;
-    public final int g1CardQueueIndexOffset = versioned.g1CardQueueIndexOffset;
-    public final int g1CardQueueBufferOffset = versioned.g1CardQueueBufferOffset;
+    final int dirtyCardQueueBufferOffset = getConstant("dirtyCardQueueBufferOffset", Integer.class);
+    final int dirtyCardQueueIndexOffset = getConstant("dirtyCardQueueIndexOffset", Integer.class);
+    final int satbMarkQueueBufferOffset = getConstant("satbMarkQueueBufferOffset", Integer.class);
+    final int satbMarkQueueIndexOffset = getConstant("satbMarkQueueIndexOffset", Integer.class);
+    final int satbMarkQueueActiveOffset = getConstant("satbMarkQueueActiveOffset", Integer.class);
+
+    final int javaThreadDirtyCardQueueOffset = getFieldOffset("JavaThread::_dirty_card_queue", Integer.class, "DirtyCardQueue");
+    final int javaThreadSatbMarkQueueOffset = getFieldOffset("JavaThread::_satb_mark_queue", Integer.class);
+
+    public final int g1CardQueueIndexOffset = javaThreadDirtyCardQueueOffset + dirtyCardQueueIndexOffset;
+    public final int g1CardQueueBufferOffset = javaThreadDirtyCardQueueOffset + dirtyCardQueueBufferOffset;
+    public final int g1SATBQueueMarkingOffset = javaThreadSatbMarkQueueOffset + satbMarkQueueActiveOffset;
+    public final int g1SATBQueueIndexOffset = javaThreadSatbMarkQueueOffset + satbMarkQueueIndexOffset;
+    public final int g1SATBQueueBufferOffset = javaThreadSatbMarkQueueOffset + satbMarkQueueBufferOffset;
 
     public final int klassOffset = getFieldValue("java_lang_Class::_klass_offset", Integer.class, "int");
     public final int arrayKlassOffset = getFieldValue("java_lang_Class::_array_klass_offset", Integer.class, "int");
@@ -552,7 +524,7 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
     // FIXME This is only temporary until the GC code is changed.
     public final boolean inlineContiguousAllocationSupported = getFieldValue("CompilerToVM::Data::_supports_inline_contig_alloc", Boolean.class);
     public final long heapEndAddress = getFieldValue("CompilerToVM::Data::_heap_end_addr", Long.class, "HeapWord**");
-    public final long heapTopAddress = versioned.heapTopAddress;
+    public final long heapTopAddress = getFieldValue("CompilerToVM::Data::_heap_top_addr", Long.class, "HeapWord* volatile*");
 
     public final boolean cmsIncrementalMode = getFlag("CMSIncrementalMode", Boolean.class, false);
 
@@ -561,8 +533,8 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
     public final long handleDeoptStub = getFieldValue("CompilerToVM::Data::SharedRuntime_deopt_blob_unpack", Long.class, "address");
     public final long uncommonTrapStub = getFieldValue("CompilerToVM::Data::SharedRuntime_deopt_blob_uncommon_trap", Long.class, "address");
 
-    public final long codeCacheLowBound = versioned.codeCacheLowBound;
-    public final long codeCacheHighBound = versioned.codeCacheHighBound;
+    public final long codeCacheLowBound = getFieldValue("CodeCache::_low_bound", Long.class, "address");
+    public final long codeCacheHighBound = getFieldValue("CodeCache::_high_bound", Long.class, "address");
 
     public final long aescryptEncryptBlockStub = getFieldValue("StubRoutines::_aescrypt_encryptBlock", Long.class, "address");
     public final long aescryptDecryptBlockStub = getFieldValue("StubRoutines::_aescrypt_decryptBlock", Long.class, "address");
@@ -577,20 +549,18 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
     public final long sha256ImplCompressMB = getFieldValue("StubRoutines::_sha256_implCompressMB", Long.class, "address", 0L);
     public final long sha512ImplCompress = getFieldValue("StubRoutines::_sha512_implCompress", Long.class, "address", 0L);
     public final long sha512ImplCompressMB = getFieldValue("StubRoutines::_sha512_implCompressMB", Long.class, "address", 0L);
-    public final long multiplyToLen = getFieldValue("StubRoutines::_multiplyToLen", Long.class, "address", longRequiredOnAMD64);
+    public final long multiplyToLen = getFieldValue("StubRoutines::_multiplyToLen", Long.class, "address", null);
 
     public final long counterModeAESCrypt = getFieldValue("StubRoutines::_counterMode_AESCrypt", Long.class, "address", 0L);
     public final long ghashProcessBlocks = getFieldValue("StubRoutines::_ghash_processBlocks", Long.class, "address", 0L);
     public final long crc32cTableTddr = getFieldValue("StubRoutines::_crc32c_table_addr", Long.class, "address", 0L);
     public final long updateBytesCRC32C = getFieldValue("StubRoutines::_updateBytesCRC32C", Long.class, "address", 0L);
     public final long updateBytesAdler32 = getFieldValue("StubRoutines::_updateBytesAdler32", Long.class, "address", 0L);
-    public final long squareToLen = getFieldValue("StubRoutines::_squareToLen", Long.class, "address", longRequiredOnAMD64);
-    public final long mulAdd = getFieldValue("StubRoutines::_mulAdd", Long.class, "address", longRequiredOnAMD64);
-    public final long montgomeryMultiply = getFieldValue("StubRoutines::_montgomeryMultiply", Long.class, "address", longRequiredOnAMD64);
-    public final long montgomerySquare = getFieldValue("StubRoutines::_montgomerySquare", Long.class, "address", longRequiredOnAMD64);
+    public final long squareToLen = getFieldValue("StubRoutines::_squareToLen", Long.class, "address", null);
+    public final long mulAdd = getFieldValue("StubRoutines::_mulAdd", Long.class, "address", null);
+    public final long montgomeryMultiply = getFieldValue("StubRoutines::_montgomeryMultiply", Long.class, "address", null);
+    public final long montgomerySquare = getFieldValue("StubRoutines::_montgomerySquare", Long.class, "address", null);
     public final long vectorizedMismatch = getFieldValue("StubRoutines::_vectorizedMismatch", Long.class, "address", 0L);
-
-    public final long throwDelayedStackOverflowErrorEntry = versioned.throwDelayedStackOverflowErrorEntry;
 
     public final long jbyteArraycopy = getFieldValue("StubRoutines::_jbyte_arraycopy", Long.class, "address");
     public final long jshortArraycopy = getFieldValue("StubRoutines::_jshort_arraycopy", Long.class, "address");
@@ -646,7 +616,6 @@ public class GraalHotSpotVMConfig extends GraalHotSpotVMConfigBase
     public final long registerFinalizerAddress = getAddress("SharedRuntime::register_finalizer");
     public final long exceptionHandlerForReturnAddressAddress = getAddress("SharedRuntime::exception_handler_for_return_address");
     public final long osrMigrationEndAddress = getAddress("SharedRuntime::OSR_migration_end");
-    public final long enableStackReservedZoneAddress = versioned.enableStackReservedZoneAddress;
 
     public final long javaTimeMillisAddress = getAddress("os::javaTimeMillis");
     public final long javaTimeNanosAddress = getAddress("os::javaTimeNanos");

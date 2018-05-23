@@ -136,56 +136,32 @@ public class AMD64HotSpotBackendFactory implements HotSpotBackendFactory
     protected Value[] createNativeABICallerSaveRegisters(GraalHotSpotVMConfig config, RegisterConfig regConfig)
     {
         List<Register> callerSave = new ArrayList<>(regConfig.getAllocatableRegisters().asList());
-        if (config.windowsOs)
-        {
-            // http://msdn.microsoft.com/en-us/library/9z1stfyw.aspx
-            callerSave.remove(AMD64.rdi);
-            callerSave.remove(AMD64.rsi);
-            callerSave.remove(AMD64.rbx);
-            callerSave.remove(AMD64.rbp);
-            callerSave.remove(AMD64.rsp);
-            callerSave.remove(AMD64.r12);
-            callerSave.remove(AMD64.r13);
-            callerSave.remove(AMD64.r14);
-            callerSave.remove(AMD64.r15);
-            callerSave.remove(AMD64.xmm6);
-            callerSave.remove(AMD64.xmm7);
-            callerSave.remove(AMD64.xmm8);
-            callerSave.remove(AMD64.xmm9);
-            callerSave.remove(AMD64.xmm10);
-            callerSave.remove(AMD64.xmm11);
-            callerSave.remove(AMD64.xmm12);
-            callerSave.remove(AMD64.xmm13);
-            callerSave.remove(AMD64.xmm14);
-            callerSave.remove(AMD64.xmm15);
-        }
-        else
-        {
-            /*
-             * System V Application Binary Interface, AMD64 Architecture Processor Supplement
-             *
-             * Draft Version 0.96
-             *
-             * http://www.uclibc.org/docs/psABI-x86_64.pdf
-             *
-             * 3.2.1
-             *
-             * ...
-             *
-             * This subsection discusses usage of each register. Registers %rbp, %rbx and %r12
-             * through %r15 "belong" to the calling function and the called function is required to
-             * preserve their values. In other words, a called function must preserve these
-             * registers' values for its caller. Remaining registers "belong" to the called
-             * function. If a calling function wants to preserve such a register value across a
-             * function call, it must save the value in its local stack frame.
-             */
-            callerSave.remove(AMD64.rbp);
-            callerSave.remove(AMD64.rbx);
-            callerSave.remove(AMD64.r12);
-            callerSave.remove(AMD64.r13);
-            callerSave.remove(AMD64.r14);
-            callerSave.remove(AMD64.r15);
-        }
+
+        /*
+         * System V Application Binary Interface, AMD64 Architecture Processor Supplement
+         *
+         * Draft Version 0.96
+         *
+         * http://www.uclibc.org/docs/psABI-x86_64.pdf
+         *
+         * 3.2.1
+         *
+         * ...
+         *
+         * This subsection discusses usage of each register. Registers %rbp, %rbx and %r12
+         * through %r15 "belong" to the calling function and the called function is required to
+         * preserve their values. In other words, a called function must preserve these
+         * registers' values for its caller. Remaining registers "belong" to the called
+         * function. If a calling function wants to preserve such a register value across a
+         * function call, it must save the value in its local stack frame.
+         */
+        callerSave.remove(AMD64.rbp);
+        callerSave.remove(AMD64.rbx);
+        callerSave.remove(AMD64.r12);
+        callerSave.remove(AMD64.r13);
+        callerSave.remove(AMD64.r14);
+        callerSave.remove(AMD64.r15);
+
         Value[] nativeABICallerSaveRegisters = new Value[callerSave.size()];
         for (int i = 0; i < callerSave.size(); i++)
         {

@@ -1,11 +1,11 @@
 package giraaff.lir.alloc;
 
-import giraaff.lir.BailoutAndRestartBackendException;
+import giraaff.core.common.PermanentBailoutException;
 
 /**
  * Thrown if the register allocator runs out of registers. This should never happen in normal mode.
  */
-public final class OutOfRegistersException extends BailoutAndRestartBackendException
+public final class OutOfRegistersException extends PermanentBailoutException
 {
     private final String description;
 

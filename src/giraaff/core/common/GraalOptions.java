@@ -62,7 +62,6 @@ public final class GraalOptions
 
     // debugging settings
     public static final OptionKey<Boolean> ZapStackOnMethodEntry = new OptionKey<>(false);
-
     public static final OptionKey<Boolean> DeoptALot = new OptionKey<>(false);
 
     // Option "Stress the code emitting explicit exception throwing code."
@@ -75,8 +74,6 @@ public final class GraalOptions
     public static final OptionKey<Boolean> StressTestEarlyReads = new OptionKey<>(false);
 
     // Register allocator debugging
-    // Option "Comma separated list of registers that register allocation is limited to."
-    public static final OptionKey<String> RegisterPressure = new OptionKey<>(null);
     public static final OptionKey<Boolean> ConditionalElimination = new OptionKey<>(true);
     public static final OptionKey<Boolean> RawConditionalElimination = new OptionKey<>(true);
     public static final OptionKey<Boolean> ReplaceInputsWithConstantsBasedOnStamps = new OptionKey<>(true);

@@ -315,10 +315,10 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
     }
 
     @Override
-    public RegisterAllocationConfig newRegisterAllocationConfig(RegisterConfig registerConfig, String[] allocationRestrictedTo)
+    public RegisterAllocationConfig newRegisterAllocationConfig(RegisterConfig registerConfig)
     {
-        RegisterConfig registerConfigNonNull = registerConfig == null ? getCodeCache().getRegisterConfig() : registerConfig;
-        return new AMD64HotSpotRegisterAllocationConfig(registerConfigNonNull, allocationRestrictedTo);
+        RegisterConfig registerConfigNonNull = (registerConfig != null) ? registerConfig : getCodeCache().getRegisterConfig();
+        return new AMD64HotSpotRegisterAllocationConfig(registerConfigNonNull);
     }
 
     @Override

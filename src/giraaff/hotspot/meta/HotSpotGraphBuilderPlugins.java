@@ -446,14 +446,12 @@ public class HotSpotGraphBuilderPlugins
     {
         if (config.useAESIntrinsics)
         {
-            String arch = config.osArch;
-            String decryptSuffix = arch.equals("sparc") ? "WithOriginalKey" : "";
             Registration r = new Registration(plugins, "com.sun.crypto.provider.CipherBlockChaining", bytecodeProvider);
             r.registerMethodSubstitution(CipherBlockChainingSubstitutions.class, cbcEncryptName, Receiver.class, byte[].class, int.class, int.class, byte[].class, int.class);
-            r.registerMethodSubstitution(CipherBlockChainingSubstitutions.class, cbcDecryptName, cbcDecryptName + decryptSuffix, Receiver.class, byte[].class, int.class, int.class, byte[].class, int.class);
+            r.registerMethodSubstitution(CipherBlockChainingSubstitutions.class, cbcDecryptName, cbcDecryptName, Receiver.class, byte[].class, int.class, int.class, byte[].class, int.class);
             r = new Registration(plugins, "com.sun.crypto.provider.AESCrypt", bytecodeProvider);
             r.registerMethodSubstitution(AESCryptSubstitutions.class, aesEncryptName, Receiver.class, byte[].class, int.class, byte[].class, int.class);
-            r.registerMethodSubstitution(AESCryptSubstitutions.class, aesDecryptName, aesDecryptName + decryptSuffix, Receiver.class, byte[].class, int.class, byte[].class, int.class);
+            r.registerMethodSubstitution(AESCryptSubstitutions.class, aesDecryptName, aesDecryptName, Receiver.class, byte[].class, int.class, byte[].class, int.class);
         }
     }
 

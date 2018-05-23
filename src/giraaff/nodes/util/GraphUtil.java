@@ -67,49 +67,6 @@ import giraaff.options.OptionValues;
 
 public class GraphUtil
 {
-    public static class Options
-    {
-        // Option "Verify that there are no new unused nodes when performing killCFG."
-        public static final OptionKey<Boolean> VerifyKillCFGUnusedNodes = new OptionKey<>(false);
-    }
-
-    private static void killCFGInner(FixedNode node)
-    {
-        EconomicSet<Node> markedNodes = EconomicSet.create();
-        EconomicMap<AbstractMergeNode, List<AbstractEndNode>> unmarkedMerges = EconomicMap.create();
-
-        // Detach this node from CFG
-        node.replaceAtPredecessor(null);
-
-        markFixedNodes(node, markedNodes, unmarkedMerges);
-
-        fixSurvivingAffectedMerges(markedNodes, unmarkedMerges);
-
-        // Mark non-fixed nodes
-        markUsages(markedNodes);
-
-        // Detach marked nodes from non-marked nodes
-        for (Node marked : markedNodes)
-        {
-            for (Node input : marked.inputs())
-            {
-                if (!markedNodes.contains(input))
-                {
-                    marked.replaceFirstInput(input, null);
-                    tryKillUnused(input);
-                }
-            }
-        }
-        // Kill marked nodes
-        for (Node marked : markedNodes)
-        {
-            if (marked.isAlive())
-            {
-                marked.markDeleted();
-            }
-        }
-    }
-
     private static void markFixedNodes(FixedNode node, EconomicSet<Node> markedNodes, EconomicMap<AbstractMergeNode, List<AbstractEndNode>> unmarkedMerges)
     {
         NodeStack workStack = new NodeStack();
@@ -231,37 +188,37 @@ public class GraphUtil
 
     public static void killCFG(FixedNode node)
     {
-        EconomicSet<Node> unusedNodes = null;
-        EconomicSet<Node> unsafeNodes = null;
-        Graph.NodeEventScope nodeEventScope = null;
-        OptionValues options = node.getOptions();
-        if (GraphUtil.Options.VerifyKillCFGUnusedNodes.getValue(options))
+        EconomicSet<Node> markedNodes = EconomicSet.create();
+        EconomicMap<AbstractMergeNode, List<AbstractEndNode>> unmarkedMerges = EconomicMap.create();
+
+        // Detach this node from CFG
+        node.replaceAtPredecessor(null);
+
+        markFixedNodes(node, markedNodes, unmarkedMerges);
+
+        fixSurvivingAffectedMerges(markedNodes, unmarkedMerges);
+
+        // Mark non-fixed nodes
+        markUsages(markedNodes);
+
+        // Detach marked nodes from non-marked nodes
+        for (Node marked : markedNodes)
         {
-            EconomicSet<Node> collectedUnusedNodes = unusedNodes = EconomicSet.create(Equivalence.IDENTITY);
-            nodeEventScope = node.graph().trackNodeEvents(new Graph.NodeEventListener()
+            for (Node input : marked.inputs())
             {
-                @Override
-                public void changed(Graph.NodeEvent e, Node n)
+                if (!markedNodes.contains(input))
                 {
-                    if (e == Graph.NodeEvent.ZERO_USAGES && isFloatingNode(n) && !(n instanceof GuardNode))
-                    {
-                        collectedUnusedNodes.add(n);
-                    }
+                    marked.replaceFirstInput(input, null);
+                    tryKillUnused(input);
                 }
-            });
+            }
         }
-        killCFGInner(node);
-        if (GraphUtil.Options.VerifyKillCFGUnusedNodes.getValue(options))
+        // Kill marked nodes
+        for (Node marked : markedNodes)
         {
-            nodeEventScope.close();
-            Iterator<Node> iterator = unusedNodes.iterator();
-            while (iterator.hasNext())
+            if (marked.isAlive())
             {
-                Node curNode = iterator.next();
-                if (curNode.isDeleted())
-                {
-                    iterator.remove();
-                }
+                marked.markDeleted();
             }
         }
     }
