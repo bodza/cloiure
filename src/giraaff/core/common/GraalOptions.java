@@ -117,7 +117,4 @@ public final class GraalOptions
 
     // Option "Use a cache for snippet graphs."
     public static final OptionKey<Boolean> UseSnippetGraphCache = new OptionKey<>(true);
-
-    // Option "Enable experimental Trace Register Allocation."
-    public static final OptionKey<Boolean> TraceRA = new OptionKey<>(false);
 }
