@@ -1303,8 +1303,8 @@ public class InvocationPlugins
                 }
                 else if (match.getReturnType().isAssignableFrom(m.getReturnType()))
                 {
-                    // `m` has a more specific return type - choose it
-                    // (`match` is most likely a bridge method)
+                    // 'm' has a more specific return type - choose it
+                    // ('match' is most likely a bridge method)
                     match = m;
                 }
                 else
@@ -1355,8 +1355,8 @@ public class InvocationPlugins
                     final ResolvedJavaType mReturnType = (ResolvedJavaType) m.getSignature().getReturnType(declaringClass);
                     if (matchReturnType.isAssignableFrom(mReturnType))
                     {
-                        // `m` has a more specific return type - choose it
-                        // (`match` is most likely a bridge method)
+                        // 'm' has a more specific return type - choose it
+                        // ('match' is most likely a bridge method)
                         match = m;
                     }
                     else

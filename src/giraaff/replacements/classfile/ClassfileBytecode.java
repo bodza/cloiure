@@ -148,7 +148,7 @@ public class ClassfileBytecode implements Bytecode
                 }
                 else
                 {
-                    final int opcode = -1;  // opcode is not used
+                    final int opcode = -1; // opcode is not used
                     catchType = constantPool.lookupType(catchTypeIndex, opcode);
 
                     // Check for Throwable which catches everything.

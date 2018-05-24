@@ -378,7 +378,7 @@ public class GraphUtil
      * Remove loop header without loop ends. This can happen with degenerated loops like this one:
      *
      * <pre>
-     * for (;;) {
+     * for ( ; ; ) {
      *     try {
      *         break;
      *     } catch (UnresolvedException iioe) {

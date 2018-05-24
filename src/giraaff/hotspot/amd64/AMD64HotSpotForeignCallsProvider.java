@@ -31,14 +31,6 @@ import giraaff.word.WordTypes;
 
 public class AMD64HotSpotForeignCallsProvider extends HotSpotHostForeignCallsProvider
 {
-    public static final ForeignCallDescriptor ARITHMETIC_SIN_STUB = new ForeignCallDescriptor("arithmeticSinStub", double.class, double.class);
-    public static final ForeignCallDescriptor ARITHMETIC_COS_STUB = new ForeignCallDescriptor("arithmeticCosStub", double.class, double.class);
-    public static final ForeignCallDescriptor ARITHMETIC_TAN_STUB = new ForeignCallDescriptor("arithmeticTanStub", double.class, double.class);
-    public static final ForeignCallDescriptor ARITHMETIC_EXP_STUB = new ForeignCallDescriptor("arithmeticExpStub", double.class, double.class);
-    public static final ForeignCallDescriptor ARITHMETIC_POW_STUB = new ForeignCallDescriptor("arithmeticPowStub", double.class, double.class, double.class);
-    public static final ForeignCallDescriptor ARITHMETIC_LOG_STUB = new ForeignCallDescriptor("arithmeticLogStub", double.class, double.class);
-    public static final ForeignCallDescriptor ARITHMETIC_LOG10_STUB = new ForeignCallDescriptor("arithmeticLog10Stub", double.class, double.class);
-
     private final Value[] nativeABICallerSaveRegisters;
 
     public AMD64HotSpotForeignCallsProvider(HotSpotJVMCIRuntimeProvider jvmciRuntime, HotSpotGraalRuntimeProvider runtime, MetaAccessProvider metaAccess, CodeCacheProvider codeCache, WordTypes wordTypes, Value[] nativeABICallerSaveRegisters)
@@ -62,14 +54,6 @@ public class AMD64HotSpotForeignCallsProvider extends HotSpotHostForeignCallsPro
         CallingConvention exceptionCc = new CallingConvention(0, Value.ILLEGAL, exception, exceptionPc);
         register(new HotSpotForeignCallLinkageImpl(HotSpotBackend.EXCEPTION_HANDLER, 0L, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, exceptionCc, null, NOT_REEXECUTABLE, LocationIdentity.any()));
         register(new HotSpotForeignCallLinkageImpl(HotSpotBackend.EXCEPTION_HANDLER_IN_CALLER, HotSpotForeignCallLinkage.JUMP_ADDRESS, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, exceptionCc, null, NOT_REEXECUTABLE, LocationIdentity.any()));
-
-        link(new AMD64MathStub(ARITHMETIC_LOG_STUB, options, providers, registerStubCall(ARITHMETIC_LOG_STUB, REEXECUTABLE, Transition.LEAF, NO_LOCATIONS)));
-        link(new AMD64MathStub(ARITHMETIC_LOG10_STUB, options, providers, registerStubCall(ARITHMETIC_LOG10_STUB, REEXECUTABLE, Transition.LEAF, NO_LOCATIONS)));
-        link(new AMD64MathStub(ARITHMETIC_SIN_STUB, options, providers, registerStubCall(ARITHMETIC_SIN_STUB, REEXECUTABLE, Transition.LEAF, NO_LOCATIONS)));
-        link(new AMD64MathStub(ARITHMETIC_COS_STUB, options, providers, registerStubCall(ARITHMETIC_COS_STUB, REEXECUTABLE, Transition.LEAF, NO_LOCATIONS)));
-        link(new AMD64MathStub(ARITHMETIC_TAN_STUB, options, providers, registerStubCall(ARITHMETIC_TAN_STUB, REEXECUTABLE, Transition.LEAF, NO_LOCATIONS)));
-        link(new AMD64MathStub(ARITHMETIC_EXP_STUB, options, providers, registerStubCall(ARITHMETIC_EXP_STUB, REEXECUTABLE, Transition.LEAF, NO_LOCATIONS)));
-        link(new AMD64MathStub(ARITHMETIC_POW_STUB, options, providers, registerStubCall(ARITHMETIC_POW_STUB, REEXECUTABLE, Transition.LEAF, NO_LOCATIONS)));
 
         if (config.useCRC32Intrinsics)
         {

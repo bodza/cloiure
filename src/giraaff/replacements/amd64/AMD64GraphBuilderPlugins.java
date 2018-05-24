@@ -27,15 +27,11 @@ import giraaff.replacements.IntegerSubstitutions;
 import giraaff.replacements.LongSubstitutions;
 import giraaff.replacements.StandardGraphBuilderPlugins.UnsafeGetPlugin;
 import giraaff.replacements.StandardGraphBuilderPlugins.UnsafePutPlugin;
-import giraaff.replacements.nodes.BinaryMathIntrinsicNode;
-import giraaff.replacements.nodes.BinaryMathIntrinsicNode.BinaryOperation;
 import giraaff.replacements.nodes.BitCountNode;
-import giraaff.replacements.nodes.UnaryMathIntrinsicNode;
-import giraaff.replacements.nodes.UnaryMathIntrinsicNode.UnaryOperation;
 
 public class AMD64GraphBuilderPlugins
 {
-    public static void register(Plugins plugins, BytecodeProvider replacementsBytecodeProvider, AMD64 arch, boolean arithmeticStubs)
+    public static void register(Plugins plugins, BytecodeProvider replacementsBytecodeProvider, AMD64 arch)
     {
         InvocationPlugins invocationPlugins = plugins.getInvocationPlugins();
         invocationPlugins.defer(new Runnable()
@@ -49,7 +45,7 @@ public class AMD64GraphBuilderPlugins
                 registerStringPlugins(invocationPlugins, arch, replacementsBytecodeProvider);
                 registerStringLatin1Plugins(invocationPlugins, replacementsBytecodeProvider);
                 registerStringUTF16Plugins(invocationPlugins, replacementsBytecodeProvider);
-                registerMathPlugins(invocationPlugins, arch, arithmeticStubs, replacementsBytecodeProvider);
+                registerMathPlugins(invocationPlugins, arch, replacementsBytecodeProvider);
                 registerArraysEqualsPlugins(invocationPlugins, replacementsBytecodeProvider);
             }
         });
@@ -123,25 +119,9 @@ public class AMD64GraphBuilderPlugins
         }
     }
 
-    private static void registerMathPlugins(InvocationPlugins plugins, AMD64 arch, boolean arithmeticStubs, BytecodeProvider bytecodeProvider)
+    private static void registerMathPlugins(InvocationPlugins plugins, AMD64 arch, BytecodeProvider bytecodeProvider)
     {
         Registration r = new Registration(plugins, Math.class, bytecodeProvider);
-        registerUnaryMath(r, "log", UnaryOperation.LOG);
-        registerUnaryMath(r, "log10", UnaryOperation.LOG10);
-        registerUnaryMath(r, "exp", UnaryOperation.EXP);
-        registerBinaryMath(r, "pow", BinaryOperation.POW);
-        if (arithmeticStubs)
-        {
-            registerUnaryMath(r, "sin", UnaryOperation.SIN);
-            registerUnaryMath(r, "cos", UnaryOperation.COS);
-            registerUnaryMath(r, "tan", UnaryOperation.TAN);
-        }
-        else
-        {
-            r.registerMethodSubstitution(AMD64MathSubstitutions.class, "sin", double.class);
-            r.registerMethodSubstitution(AMD64MathSubstitutions.class, "cos", double.class);
-            r.registerMethodSubstitution(AMD64MathSubstitutions.class, "tan", double.class);
-        }
 
         if (arch.getFeatures().contains(CPUFeature.SSE4_1))
         {
@@ -149,32 +129,6 @@ public class AMD64GraphBuilderPlugins
             registerRound(r, "ceil", RoundingMode.UP);
             registerRound(r, "floor", RoundingMode.DOWN);
         }
-    }
-
-    private static void registerUnaryMath(Registration r, String name, UnaryOperation operation)
-    {
-        r.register1(name, Double.TYPE, new InvocationPlugin()
-        {
-            @Override
-            public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver receiver, ValueNode value)
-            {
-                b.push(JavaKind.Double, b.append(UnaryMathIntrinsicNode.create(value, operation)));
-                return true;
-            }
-        });
-    }
-
-    private static void registerBinaryMath(Registration r, String name, BinaryOperation operation)
-    {
-        r.register2(name, Double.TYPE, Double.TYPE, new InvocationPlugin()
-        {
-            @Override
-            public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver receiver, ValueNode x, ValueNode y)
-            {
-                b.push(JavaKind.Double, b.append(BinaryMathIntrinsicNode.create(x, y, operation)));
-                return true;
-            }
-        });
     }
 
     private static void registerRound(Registration r, String name, RoundingMode mode)

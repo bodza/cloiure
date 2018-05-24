@@ -63,12 +63,6 @@ import giraaff.word.Word;
  */
 public abstract class HotSpotBackend extends Backend implements FrameMap.ReferenceMapBuilderFactory
 {
-    public static class Options
-    {
-        // Option "Use Graal arithmetic stubs instead of HotSpot stubs where possible."
-        public static final OptionKey<Boolean> GraalArithmeticStubs = new OptionKey<>(false); // GR-8276
-    }
-
     /**
      * Descriptor for {@link ExceptionHandlerStub}. This stub is called by the
      * {@linkplain GraalHotSpotVMConfig#MARKID_EXCEPTION_HANDLER_ENTRY exception handler} in a

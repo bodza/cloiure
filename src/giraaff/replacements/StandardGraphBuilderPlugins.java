@@ -879,7 +879,7 @@ public class StandardGraphBuilderPlugins
             @Override
             public boolean apply(GraphBuilderContext b, ResolvedJavaMethod targetMethod, Receiver receiver)
             {
-                GraalError.guarantee(b.getGraph().getSpeculationLog() != null, "A speculation log is need to use `deoptimizeAndInvalidateWithSpeculation`");
+                GraalError.guarantee(b.getGraph().getSpeculationLog() != null, "A speculation log is need to use 'deoptimizeAndInvalidateWithSpeculation'");
                 BytecodePosition pos = new BytecodePosition(null, b.getMethod(), b.bci());
                 DirectiveSpeculationReason reason = new DirectiveSpeculationReason(pos);
                 JavaConstant speculation;
@@ -1098,7 +1098,7 @@ public class StandardGraphBuilderPlugins
                         {
                             // We cannot use BranchProbabilityNode here since there's no guarantee
                             // the result of MethodHandleImpl.profileBoolean() is used as the
-                            // test in an `if` statement (as required by BranchProbabilityNode).
+                            // test in an 'if' statement (as required by BranchProbabilityNode).
                         }
                     }
                     b.addPush(JavaKind.Boolean, newResult);

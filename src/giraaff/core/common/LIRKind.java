@@ -245,8 +245,8 @@ public final class LIRKind extends ValueKind<LIRKind>
 
     /**
      * Merges the reference information of the inputs. The result will have the {@link PlatformKind}
-     * of {@code mergeKind}. If all inputs are values (references), the result is a value
-     * (reference). Otherwise, the result is an unknown reference.
+     * of {@code mergeKind}. If all inputs are values (references), the result is a value (reference).
+     * Otherwise, the result is an unknown reference.
      *
      * The correctness of the {@link PlatformKind} is not verified.
      */
@@ -254,53 +254,44 @@ public final class LIRKind extends ValueKind<LIRKind>
     {
         if (mergeKind.isUnknownReference())
         {
-            /**
-             * {@code mergeKind} is an unknown reference, therefore the result can only be also an
-             * unknown reference.
-             */
+            // mergeKind is an unknown reference: the result should be also an unknown reference
             return mergeKind;
         }
 
         if (mergeKind.isValue())
         {
-            // {@code mergeKind} is a value.
+            // mergeKind is a value
             if (!inputKind.isValue())
             {
-                /*
-                 * Inputs consists of values and references. Make the result an unknown reference.
-                 */
+                // inputs consists of values and references: make the result an unknown reference
                 return mergeKind.makeUnknownReference();
             }
             return mergeKind;
         }
-        // {@code mergeKind} is a reference.
+        // mergeKind is a reference
         if (mergeKind.referenceMask != inputKind.referenceMask || mergeKind.referenceCompressionMask != inputKind.referenceCompressionMask)
         {
-            /*
-             * Reference masks do not match so the result can only be an unknown reference.
-             */
+            // reference masks do not match: the result can only be an unknown reference
             return mergeKind.makeUnknownReference();
         }
 
-        // Both are references.
+        // both are references
         if (mergeKind.isDerivedReference())
         {
             if (inputKind.isDerivedReference() && mergeKind.getDerivedReferenceBase().equals(inputKind.getDerivedReferenceBase()))
             {
-                // Same reference base so they must be equal.
+                // same reference base: they must be equal
                 return mergeKind;
             }
-            // Base pointers differ. Make the result an unknown reference.
+            // base pointers differ: make the result an unknown reference
             return mergeKind.makeUnknownReference();
         }
         if (inputKind.isDerivedReference())
         {
-            /*
-             * {@code mergeKind} is not derived but {@code inputKind} is. Make the result an unknown reference.
-             */
+            // mergeKind is not derived, but inputKind is: make the result an unknown reference
             return mergeKind.makeUnknownReference();
         }
-        // Both are not derived references so they must be equal.
+        // both are not derived references: they must be equal
         return mergeKind;
     }
 
@@ -548,7 +539,7 @@ public final class LIRKind extends ValueKind<LIRKind>
             }
             return getDerivedReferenceBase().equals(other.getDerivedReferenceBase());
         }
-        // `this` is not a derived reference
+        // 'this' is not a derived reference
         if (other.isDerivedReference())
         {
             return false;

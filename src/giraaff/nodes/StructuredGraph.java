@@ -670,7 +670,8 @@ public final class StructuredGraph extends Graph
 
     public void reduceDegenerateLoopBegin(LoopBeginNode begin)
     {
-        if (begin.forwardEndCount() == 1) { // bypass merge and remove
+        if (begin.forwardEndCount() == 1) // bypass merge and remove
+        {
             reduceTrivialMerge(begin);
         }
         else // convert to merge

@@ -53,7 +53,7 @@ public class ModifiableOptionValues extends OptionValues
             else
             {
                 key.update(newMap, value);
-                // Need to do the null encoding here as `key.update()` doesn't do it
+                // Need to do the null encoding here as 'key.update()' doesn't do it
                 newMap.put(key, encodeNull(value));
             }
         } while (!v.compareAndSet(expect, newMap));
@@ -88,7 +88,7 @@ public class ModifiableOptionValues extends OptionValues
                 else
                 {
                     key.update(newMap, value);
-                    // Need to do the null encoding here as `key.update()` doesn't do it
+                    // Need to do the null encoding here as 'key.update()' doesn't do it
                     newMap.put(key, encodeNull(value));
                 }
             }

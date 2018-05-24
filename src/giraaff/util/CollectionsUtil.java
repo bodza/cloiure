@@ -131,13 +131,13 @@ public final class CollectionsUtil
      */
     public static <T, R> String mapAndJoin(Iterable<T> inputs, Function<? super T, ? extends R> mapper, String delimiter, String prefix, String suffix)
     {
-        StringBuilder strb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         String sep = "";
         for (T t : inputs)
         {
-            strb.append(sep).append(prefix).append(mapper.apply(t)).append(suffix);
+            sb.append(sep).append(prefix).append(mapper.apply(t)).append(suffix);
             sep = delimiter;
         }
-        return strb.toString();
+        return sb.toString();
     }
 }

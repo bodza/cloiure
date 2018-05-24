@@ -120,9 +120,9 @@ public class InlineableGraph implements Inlineable
         List<ParameterNode> params = graph.getNodes(ParameterNode.TYPE).snapshot();
         /*
          * param-nodes that aren't used (eg, as a result of canonicalization) don't occur in
-         * `params`. Thus, in general, the sizes of `params` and `args` don't always match. Still,
+         * 'params'. Thus, in general, the sizes of 'params' and 'args' don't always match. Still,
          * it's always possible to pair a param-node with its corresponding arg-node using
-         * param.index() as index into `args`.
+         * param.index() as index into 'args'.
          */
         for (ParameterNode param : params)
         {

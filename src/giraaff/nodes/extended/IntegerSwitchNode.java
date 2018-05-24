@@ -362,8 +362,8 @@ public final class IntegerSwitchNode extends SwitchNode implements LIRLowerable,
         successors.clear();
 
         /*
-         * Create the new switch node. This is done before removing dead successors as `killCFG` could edit
-         * some of the inputs (e.g., if `newValue` is a loop-phi of the loop that dies while removing successors).
+         * Create the new switch node. This is done before removing dead successors as 'killCFG' could edit
+         * some of the inputs (e.g., if 'newValue' is a loop-phi of the loop that dies while removing successors).
          */
         AbstractBeginNode[] successorsArray = newSuccessors.toArray(new AbstractBeginNode[newSuccessors.size()]);
         SwitchNode newSwitch = graph().add(new IntegerSwitchNode(newValue, successorsArray, newKeys, newKeyProbabilities, newKeySuccessors));

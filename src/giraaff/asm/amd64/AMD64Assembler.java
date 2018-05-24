@@ -512,7 +512,8 @@ public class AMD64Assembler extends Assembler
         AMD64Address.Scale scale = addr.getScale();
         int disp = addr.getDisplacement();
 
-        if (base.equals(AMD64.rip)) { // also matches addresses returned by getPlaceholder()
+        if (base.equals(AMD64.rip)) // also matches addresses returned by getPlaceholder()
+        {
             // [00 000 101] disp32
             emitByte(0x05 | regenc);
             emitInt(disp);
@@ -793,7 +794,7 @@ public class AMD64Assembler extends Assembler
         public static final AMD64RMOp MOVB   = new AMD64RMOp("MOVB",               0x8A, OpAssertion.ByteAssertion);
         public static final AMD64RMOp MOV    = new AMD64RMOp("MOV",                0x8B);
 
-        // MOVD/MOVQ and MOVSS/MOVSD are the same opcode, just with different operand size prefix
+        // MOVD/MOVQ and MOVSS/MOVSD are the same opcode, just with different operand size prefix.
         public static final AMD64RMOp MOVD   = new AMD64RMOp("MOVD",   0x66, P_0F, 0x6E, OpAssertion.IntToFloatAssertion, CPUFeature.SSE2);
         public static final AMD64RMOp MOVQ   = new AMD64RMOp("MOVQ",   0x66, P_0F, 0x6E, OpAssertion.IntToFloatAssertion, CPUFeature.SSE2);
         public static final AMD64RMOp MOVSS  = new AMD64RMOp("MOVSS",        P_0F, 0x10, OpAssertion.FloatAssertion, CPUFeature.SSE);
@@ -1164,12 +1165,12 @@ public class AMD64Assembler extends Assembler
         public static final AMD64MROp MOVB   = new AMD64MROp("MOVB",               0x88, OpAssertion.ByteAssertion);
         public static final AMD64MROp MOV    = new AMD64MROp("MOV",                0x89);
 
-        // MOVD and MOVQ are the same opcode, just with different operand size prefix
+        // MOVD and MOVQ are the same opcode, just with different operand size prefix.
         // Note that as MR opcodes, they have reverse operand order, so the IntToFloatingAssertion must be used.
         public static final AMD64MROp MOVD   = new AMD64MROp("MOVD",   0x66, P_0F, 0x7E, OpAssertion.IntToFloatAssertion, CPUFeature.SSE2);
         public static final AMD64MROp MOVQ   = new AMD64MROp("MOVQ",   0x66, P_0F, 0x7E, OpAssertion.IntToFloatAssertion, CPUFeature.SSE2);
 
-        // MOVSS and MOVSD are the same opcode, just with different operand size prefix
+        // MOVSS and MOVSD are the same opcode, just with different operand size prefix.
         public static final AMD64MROp MOVSS  = new AMD64MROp("MOVSS",        P_0F, 0x11, OpAssertion.FloatAssertion, CPUFeature.SSE);
         public static final AMD64MROp MOVSD  = new AMD64MROp("MOVSD",        P_0F, 0x11, OpAssertion.FloatAssertion, CPUFeature.SSE);
 
@@ -1957,9 +1958,10 @@ public class AMD64Assembler extends Assembler
     }
 
     // The 32-bit cmpxchg compares the value at adr with the contents of X86.rax,
-    // and stores reg into adr if so; otherwise, the value at adr is loaded into X86.rax,.
+    // and stores reg into adr if so; otherwise, the value at adr is loaded into X86.rax.
     // The ZF is set if the compared values were equal, and cleared otherwise.
-    public final void cmpxchgl(Register reg, AMD64Address adr) { // cmpxchg
+    public final void cmpxchgl(Register reg, AMD64Address adr) // cmpxchg
+    {
         prefix(adr, reg);
         emitByte(0x0F);
         emitByte(0xB1);
@@ -2069,10 +2071,8 @@ public class AMD64Assembler extends Assembler
         }
         else
         {
-            // Note: could eliminate cond. jumps to this jump if condition
-            // is the same however, seems to be rather unlikely case.
-            // Note: use jccb() if label to be bound is very close to get
-            // an 8-bit displacement
+            // note: could eliminate cond. jumps to this jump if condition is the same however, seems to be rather unlikely case
+            // note: use jccb() if label to be bound is very close to get an 8-bit displacement
             l.addPatchAt(position());
             emitByte(0x0F);
             emitByte(0x80 | cc.getValue());
@@ -2125,11 +2125,8 @@ public class AMD64Assembler extends Assembler
         }
         else
         {
-            // By default, forward jumps are always 32-bit displacements, since
-            // we can't yet know where the label will be bound. If you're sure that
-            // the forward jump will not run beyond 256 bytes, use jmpb to
-            // force an 8-bit displacement.
-
+            // By default, forward jumps are always 32-bit displacements, since we can't yet know where the label will be bound.
+            // If you're sure that the forward jump will not run beyond 256 bytes, use jmpb to force an 8-bit displacement.
             l.addPatchAt(position());
             emitByte(0xE9);
             emitInt(0);
@@ -2168,7 +2165,7 @@ public class AMD64Assembler extends Assembler
         }
     }
 
-    // This instruction produces ZF or CF flags
+    // This instruction produces ZF or CF flags.
     public final void kortestql(Register src1, Register src2)
     {
         AMD64InstructionAttr attributes = new AMD64InstructionAttr(AvxVectorLen.AVX_128bit, /* rex_w */ true, /* legacy_mode */ true, /* no_mask_reg */ true, /* uses_vl */ false, target);
@@ -2570,12 +2567,9 @@ public class AMD64Assembler extends Assembler
         int i = count;
         if (AMD64AsmOptions.UseNormalNop)
         {
-            // The fancy nops aren't currently recognized by debuggers making it a
-            // pain to disassemble code while debugging. If assert are on clearly
-            // speed is not an issue so simply use the single byte traditional nop
-            // to do alignment.
-
-            for (; i > 0; i--)
+            // The fancy nops aren't currently recognized by debuggers making it a pain to disassemble code while debugging.
+            // If assert are on clearly speed is not an issue so simply use the single byte traditional nop to do alignment.
+            for ( ; i > 0; i--)
             {
                 emitByte(0x90);
             }
@@ -2585,6 +2579,7 @@ public class AMD64Assembler extends Assembler
         if (AMD64AsmOptions.UseAddressNop)
         {
             // Using multi-bytes nops "0x0F 0x1F [Address]" for AMD.
+            //
             // 1: 0x90
             // 2: 0x66 0x90
             // 3: 0x66 0x66 0x90 (don't use "0x0F 0x1F 0x00" - need patching safe padding)
@@ -2596,16 +2591,16 @@ public class AMD64Assembler extends Assembler
             // 9: 0x66 0x0F 0x1F 0x84 0x00 0x00 0x00 0x00 0x00
             // 10: 0x66 0x66 0x0F 0x1F 0x84 0x00 0x00 0x00 0x00 0x00
             // 11: 0x66 0x66 0x66 0x0F 0x1F 0x84 0x00 0x00 0x00 0x00 0x00
-
-            // The rest coding is AMD specific - use consecutive Address nops
-
+            //
+            // The rest coding is AMD specific - use consecutive Address nops.
+            //
             // 12: 0x66 0x0F 0x1F 0x44 0x00 0x00 0x66 0x0F 0x1F 0x44 0x00 0x00
             // 13: 0x0F 0x1F 0x80 0x00 0x00 0x00 0x00 0x66 0x0F 0x1F 0x44 0x00 0x00
             // 14: 0x0F 0x1F 0x80 0x00 0x00 0x00 0x00 0x0F 0x1F 0x80 0x00 0x00 0x00 0x00
             // 15: 0x0F 0x1F 0x84 0x00 0x00 0x00 0x00 0x00 0x0F 0x1F 0x80 0x00 0x00 0x00 0x00
             // 16: 0x0F 0x1F 0x84 0x00 0x00 0x00 0x00 0x00 0x0F 0x1F 0x84 0x00 0x00 0x00 0x00 0x00
-            // Size prefixes (0x66) are added for larger sizes
-
+            //
+            // Size prefixes (0x66) are added for larger sizes.
             while (i >= 22)
             {
                 i -= 11;
@@ -2614,7 +2609,7 @@ public class AMD64Assembler extends Assembler
                 emitByte(0x66); // size prefix
                 addrNop8();
             }
-            // Generate first nop for size between 21-12
+            // Generate first nop for size between 21-12.
             switch (i)
             {
                 case 21:
@@ -2654,7 +2649,7 @@ public class AMD64Assembler extends Assembler
                     break;
             }
 
-            // Generate second nop for size between 11-1
+            // Generate second nop for size between 11-1.
             switch (i)
             {
                 case 11:
@@ -2689,7 +2684,7 @@ public class AMD64Assembler extends Assembler
                     addrNop4();
                     break;
                 case 3:
-                    // Don't use "0x0F 0x1F 0x00" - need patching safe padding
+                    // Don't use "0x0F 0x1F 0x00" - need patching safe padding.
                     emitByte(0x66); // size prefix
                     emitByte(0x66); // size prefix
                     emitByte(0x90); // nop
@@ -3205,7 +3200,7 @@ public class AMD64Assembler extends Assembler
 
     protected final void decl(Register dst)
     {
-        // Use two-byte form (one-byte form is a REX prefix in 64-bit mode)
+        // Use two-byte form (one-byte form is a REX prefix in 64-bit mode).
         int encode = prefixAndEncode(dst.encoding);
         emitByte(0xFF);
         emitByte(0xC8 | encode);
@@ -3213,7 +3208,7 @@ public class AMD64Assembler extends Assembler
 
     protected final void incl(Register dst)
     {
-        // Use two-byte form (one-byte from is a REX prefix in 64-bit mode)
+        // Use two-byte form (one-byte from is a REX prefix in 64-bit mode).
         int encode = prefixAndEncode(dst.encoding);
         emitByte(0xFF);
         emitByte(0xC0 | encode);
@@ -3762,7 +3757,7 @@ public class AMD64Assembler extends Assembler
 
     protected final void decq(Register dst)
     {
-        // Use two-byte form (one-byte from is a REX prefix in 64-bit mode)
+        // Use two-byte form (one-byte from is a REX prefix in 64-bit mode).
         int encode = prefixqAndEncode(dst.encoding);
         emitByte(0xFF);
         emitByte(0xC8 | encode);
@@ -3784,7 +3779,7 @@ public class AMD64Assembler extends Assembler
     public final void incq(Register dst)
     {
         // Don't use it directly. Use Macroincrementq() instead.
-        // Use two-byte form (one-byte from is a REX prefix in 64-bit mode)
+        // Use two-byte form (one-byte from is a REX prefix in 64-bit mode).
         int encode = prefixqAndEncode(dst.encoding);
         emitByte(0xFF);
         emitByte(0xC0 | encode);
@@ -4076,19 +4071,16 @@ public class AMD64Assembler extends Assembler
     {
         if (target.isMP)
         {
-            // We only have to handle StoreLoad
+            // We only have to handle StoreLoad.
             if ((barriers & MemoryBarriers.STORE_LOAD) != 0)
             {
-                // All usable chips support "locked" instructions which suffice
-                // as barriers, and are much faster than the alternative of
-                // using cpuid instruction. We use here a locked add [rsp],0.
-                // This is conveniently otherwise a no-op except for blowing
-                // flags.
-                // Any change to this code may need to revisit other places in
-                // the code where this idiom is used, in particular the
-                // orderAccess code.
+                // All usable chips support "locked" instructions which suffice as barriers,
+                // and are much faster than the alternative of using cpuid instruction.
+                // We use here a locked add [rsp],0. This is conveniently otherwise a no-op except
+                // for blowing flags. Any change to this code may need to revisit other places
+                // in the code where this idiom is used, in particular the orderAccess code.
                 lock();
-                addl(new AMD64Address(AMD64.rsp, 0), 0); // Assert the lock# signal here
+                addl(new AMD64Address(AMD64.rsp, 0), 0); // Assert the lock# signal here.
             }
         }
     }
@@ -4193,24 +4185,6 @@ public class AMD64Assembler extends Assembler
         emitOperandHelper(0, src, 0);
     }
 
-    public final void fldln2()
-    {
-        emitByte(0xD9);
-        emitByte(0xED);
-    }
-
-    public final void fldlg2()
-    {
-        emitByte(0xD9);
-        emitByte(0xEC);
-    }
-
-    public final void fyl2x()
-    {
-        emitByte(0xD9);
-        emitByte(0xF1);
-    }
-
     public final void fstps(AMD64Address src)
     {
         emitByte(0xD9);
@@ -4260,29 +4234,6 @@ public class AMD64Assembler extends Assembler
     {
         emitByte(0xD9);
         emitByte(0xF8);
-    }
-
-    public final void fsin()
-    {
-        emitByte(0xD9);
-        emitByte(0xFE);
-    }
-
-    public final void fcos()
-    {
-        emitByte(0xD9);
-        emitByte(0xFF);
-    }
-
-    public final void fptan()
-    {
-        emitByte(0xD9);
-        emitByte(0xF2);
-    }
-
-    public final void fstp(int i)
-    {
-        emitx87(0xDD, 0xD8, i);
     }
 
     @Override

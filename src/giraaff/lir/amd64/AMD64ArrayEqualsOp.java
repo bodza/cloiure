@@ -342,7 +342,7 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
         Register temp = ValueUtil.asRegister(temp4);
 
         masm.andl(result, VECTOR_SIZE - 1); // tail count (in bytes)
-        masm.andl(length, ~(VECTOR_SIZE - 1));  // vector count (in bytes)
+        masm.andl(length, ~(VECTOR_SIZE - 1)); // vector count (in bytes)
         masm.jcc(ConditionFlag.Zero, compareTail);
 
         masm.leaq(array1, new AMD64Address(array1, length, Scale.Times1, 0));

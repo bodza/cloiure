@@ -83,7 +83,7 @@ public final class ReflectionGetCallerClassNode extends MacroStateSplitNode impl
                     // Frame 0 and 1 must be caller sensitive (see JVM_GetCallerClass).
                     if (!method.isCallerSensitive())
                     {
-                        return null;  // bail-out; let JVM_GetCallerClass do the work
+                        return null; // bail-out; let JVM_GetCallerClass do the work
                     }
                     break;
                 default:
@@ -96,6 +96,6 @@ public final class ReflectionGetCallerClassNode extends MacroStateSplitNode impl
                     break;
             }
         }
-        return null;  // bail-out; let JVM_GetCallerClass do the work
+        return null; // bail-out; let JVM_GetCallerClass do the work
     }
 }

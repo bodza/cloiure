@@ -310,8 +310,8 @@ public class AMD64MacroAssembler extends AMD64Assembler
     }
 
     /**
-     * Non-atomic write of a 64-bit constant to memory. Do not use if the address might be a
-     * volatile field!
+     * Non-atomic write of a 64-bit constant to memory.
+     * Do not use if the address might be a volatile field!
      */
     public final void movlong(AMD64Address dst, long src)
     {
@@ -339,72 +339,18 @@ public class AMD64MacroAssembler extends AMD64Assembler
         movzbq(dst, dst);
     }
 
-    public final void flog(Register dest, Register value, boolean base10)
-    {
-        if (base10)
-        {
-            fldlg2();
-        }
-        else
-        {
-            fldln2();
-        }
-        AMD64Address tmp = trigPrologue(value);
-        fyl2x();
-        trigEpilogue(dest, tmp);
-    }
-
-    public final void fsin(Register dest, Register value)
-    {
-        AMD64Address tmp = trigPrologue(value);
-        fsin();
-        trigEpilogue(dest, tmp);
-    }
-
-    public final void fcos(Register dest, Register value)
-    {
-        AMD64Address tmp = trigPrologue(value);
-        fcos();
-        trigEpilogue(dest, tmp);
-    }
-
-    public final void ftan(Register dest, Register value)
-    {
-        AMD64Address tmp = trigPrologue(value);
-        fptan();
-        fstp(0); // ftan pushes 1.0 in addition to the actual result, pop
-        trigEpilogue(dest, tmp);
-    }
-
     public final void fpop()
     {
         ffree(0);
         fincstp();
     }
 
-    private AMD64Address trigPrologue(Register value)
-    {
-        AMD64Address tmp = new AMD64Address(AMD64.rsp);
-        subq(AMD64.rsp, AMD64Kind.DOUBLE.getSizeInBytes());
-        movdbl(tmp, value);
-        fldd(tmp);
-        return tmp;
-    }
-
-    private void trigEpilogue(Register dest, AMD64Address tmp)
-    {
-        fstpd(tmp);
-        movdbl(dest, tmp);
-        addq(AMD64.rsp, AMD64Kind.DOUBLE.getSizeInBytes());
-    }
-
-    // IndexOf for constant substrings with size >= 8 chars
-    // which don't need to be loaded through stack.
+    // indexOf for constant substrings with size >= 8 chars which don't need to be loaded through stack
     public void stringIndexofC8(Register str1, Register str2, Register cnt1, Register cnt2, int intCnt2, Register result, Register vec, Register tmp)
     {
         // assert(UseSSE42Intrinsics, "SSE4.2 is required");
 
-        // This method uses pcmpestri inxtruction with bound registers
+        // This method uses pcmpestri instruction with bound registers.
         // inputs:
         // xmm - substring
         // rax - substring length (elements count)
@@ -438,58 +384,57 @@ public class AMD64MacroAssembler extends AMD64Assembler
         {
             jmpb(scanToSubstr);
 
-            // Reload substr for rescan, this code
-            // is executed only for large substrings (> 8 chars)
+            // Reload substr for rescan, this code is executed only for large substrings (> 8 chars).
             bind(reloadSubstr);
             movdqu(vec, new AMD64Address(str2, 0));
-            negq(cnt2); // Jumped here with negative cnt2, convert to positive
+            negq(cnt2); // Jumped here with negative cnt2, convert to positive.
 
             bind(reloadStr);
-            // We came here after the beginning of the substring was
-            // matched but the rest of it was not so we need to search
-            // again. Start from the next element after the previous match.
+            // We came here after the beginning of the substring was matched
+            // but the rest of it was not so we need to search again.
+            // Start from the next element after the previous match.
 
             // cnt2 is number of substring reminding elements and
             // cnt1 is number of string reminding elements when cmp failed.
             // Restored cnt1 = cnt1 - cnt2 + int_cnt2
             subl(cnt1, cnt2);
             addl(cnt1, intCnt2);
-            movl(cnt2, intCnt2); // Now restore cnt2
+            movl(cnt2, intCnt2); // now restore cnt2
 
-            decrementl(cnt1, 1);     // Shift to next element
+            decrementl(cnt1, 1); // shift to next element
             cmpl(cnt1, cnt2);
-            jccb(ConditionFlag.Negative, retNotFound);  // Left less then substring
+            jccb(ConditionFlag.Negative, retNotFound); // left less then substring
 
             addq(result, 2);
         }
 
-        // Scan string for start of substr in 16-byte vectors
+        // Scan string for start of substr in 16-byte vectors.
         bind(scanToSubstr);
         pcmpestri(vec, new AMD64Address(result, 0), 0x0d);
-        jccb(ConditionFlag.Below, foundCandidate);   // CF == 1
+        jccb(ConditionFlag.Below, foundCandidate); // CF == 1
         subl(cnt1, 8);
-        jccb(ConditionFlag.LessEqual, retNotFound); // Scanned full string
+        jccb(ConditionFlag.LessEqual, retNotFound); // scanned full string
         cmpl(cnt1, cnt2);
-        jccb(ConditionFlag.Negative, retNotFound);  // Left less then substring
+        jccb(ConditionFlag.Negative, retNotFound); // left less then substring
         addq(result, 16);
         jmpb(scanToSubstr);
 
-        // Found a potential substr
+        // Found a potential substr.
         bind(foundCandidate);
         // Matched whole vector if first element matched (tmp(rcx) == 0).
         if (intCnt2 == 8)
         {
-            jccb(ConditionFlag.Overflow, retFound);    // OF == 1
+            jccb(ConditionFlag.Overflow, retFound); // OF == 1
         }
         else // int_cnt2 > 8
         {
             jccb(ConditionFlag.Overflow, foundSubstr);
         }
-        // After pcmpestri tmp(rcx) contains matched element index
-        // Compute start addr of substr
+        // After pcmpestri tmp(rcx) contains matched element index.
+        // Compute start addr of substr.
         leaq(result, new AMD64Address(result, tmp, Scale.Times2, 0));
 
-        // Make sure string is still long enough
+        // Make sure string is still long enough.
         subl(cnt1, tmp);
         cmpl(cnt1, cnt2);
         if (intCnt2 == 8)
@@ -508,11 +453,10 @@ public class AMD64MacroAssembler extends AMD64Assembler
 
         if (intCnt2 > 8)
         {
-            // This code is optimized for the case when whole substring
-            // is matched if its head is matched.
+            // This code is optimized for the case when whole substring is matched if its head is matched.
             bind(matchSubstrHead);
             pcmpestri(vec, new AMD64Address(result, 0), 0x0d);
-            // Reload only string if does not match
+            // Reload only string if does not match.
             jccb(ConditionFlag.NoOverflow, reloadStr); // OF == 0
 
             Label contScanSubstr = new Label();
@@ -524,7 +468,7 @@ public class AMD64MacroAssembler extends AMD64Assembler
 
             bind(scanSubstr);
             subl(cnt1, 8);
-            cmpl(cnt2, -8); // Do not read beyond substring
+            cmpl(cnt2, -8); // do not read beyond substring
             jccb(ConditionFlag.LessEqual, contScanSubstr);
             // Back-up strings to avoid reading beyond substring:
             // cnt1 = cnt1 - cnt2 + 8
@@ -546,16 +490,16 @@ public class AMD64MacroAssembler extends AMD64Assembler
                 movdqu(vec, new AMD64Address(str2, tmp, Scale.Times2, 0));
                 pcmpestri(vec, new AMD64Address(result, tmp, Scale.Times2, 0), 0x0d);
             }
-            // Need to reload strings pointers if not matched whole vector
+            // Need to reload strings pointers if not matched whole vector.
             jcc(ConditionFlag.NoOverflow, reloadSubstr); // OF == 0
             addq(cnt2, 8);
             jcc(ConditionFlag.Negative, scanSubstr);
-            // Fall through if found full substring
+            // Fall through if found full substring.
         }
 
         bind(retFound);
         // Found result if we matched full small substring.
-        // Compute substr offset
+        // Compute substr offset.
         subq(result, str1);
         shrl(result, 1); // index
         bind(exit);
@@ -602,16 +546,20 @@ public class AMD64MacroAssembler extends AMD64Assembler
 
         movq(tmp, AMD64.rsp); // save old SP
 
-        if (intCnt2 > 0) {     // small (< 8 chars) constant substring
-            if (intCnt2 == 1) {  // One char
+        if (intCnt2 > 0) // small (< 8 chars) constant substring
+        {
+            if (intCnt2 == 1) // One char
+            {
                 movzwl(result, new AMD64Address(str2, 0));
                 movdl(vec, result); // move 32 bits
             }
-            else if (intCnt2 == 2) { // Two chars
+            else if (intCnt2 == 2) // Two chars
+            {
                 movdl(vec, new AMD64Address(str2, 0)); // move 32 bits
             }
-            else if (intCnt2 == 4) { // Four chars
-                movq(vec, new AMD64Address(str2, 0));  // move 64 bits
+            else if (intCnt2 == 4) // Four chars
+            {
+                movq(vec, new AMD64Address(str2, 0)); // move 64 bits
             }
             else // cnt2 = { 3, 5, 6, 7 }
             {
@@ -646,7 +594,7 @@ public class AMD64MacroAssembler extends AMD64Assembler
             jccb(ConditionFlag.NotZero, copySubstr);
 
             pop(cnt2);
-            movq(str2, AMD64.rsp);  // New substring address
+            movq(str2, AMD64.rsp); // New substring address
         }
 
         bind(checkStr);
@@ -661,7 +609,8 @@ public class AMD64MacroAssembler extends AMD64Assembler
 
         subq(AMD64.rsp, 16);
         int stackOffset = -2;
-        if (intCnt2 < 0) { // not constant
+        if (intCnt2 < 0) // not constant
+        {
             push(cnt2);
             stackOffset += wordSize;
         }
@@ -673,25 +622,27 @@ public class AMD64MacroAssembler extends AMD64Assembler
         decrementl(cnt2, 1);
         jccb(ConditionFlag.NotZero, copyStr);
 
-        if (intCnt2 < 0) { // not constant
+        if (intCnt2 < 0) // not constant
+        {
             pop(cnt2);
         }
-        movq(str1, AMD64.rsp);  // New string address
+        movq(str1, AMD64.rsp); // New string address
 
         bind(bigStrings);
         // Load substring.
-        if (intCnt2 < 0) { // -1
+        if (intCnt2 < 0) // -1
+        {
             movdqu(vec, new AMD64Address(str2, 0));
-            push(cnt2);       // substr count
-            push(str2);       // substr addr
-            push(str1);       // string addr
+            push(cnt2); // substr count
+            push(str2); // substr addr
+            push(str1); // string addr
         }
         else
         {
             // Small (< 8 chars) constant substrings are loaded already.
             movl(cnt2, intCnt2);
         }
-        push(tmp);  // original SP
+        push(tmp); // original SP
         // Finished loading
 
         // ========================================================
@@ -699,7 +650,8 @@ public class AMD64MacroAssembler extends AMD64Assembler
 
         movq(result, str1); // string addr
 
-        if (intCnt2 < 0) {  // Only for non constant substring
+        if (intCnt2 < 0) // Only for non constant substring
+        {
             jmpb(scanToSubstr);
 
             // SP saved at sp+0
@@ -719,9 +671,9 @@ public class AMD64MacroAssembler extends AMD64Assembler
             subq(str1, result); // Restore counter
             shrl(str1, 1);
             addl(cnt1, str1);
-            decrementl(cnt1);   // Shift to next element
+            decrementl(cnt1); // Shift to next element
             cmpl(cnt1, cnt2);
-            jccb(ConditionFlag.Negative, retNotFound);  // Left less then substring
+            jccb(ConditionFlag.Negative, retNotFound); // Left less then substring
 
             addq(result, 2);
         }
@@ -729,11 +681,11 @@ public class AMD64MacroAssembler extends AMD64Assembler
         // Scan string for start of substr in 16-byte vectors
         bind(scanToSubstr);
         pcmpestri(vec, new AMD64Address(result, 0), 0x0d);
-        jccb(ConditionFlag.Below, foundCandidate);   // CF == 1
+        jccb(ConditionFlag.Below, foundCandidate); // CF == 1
         subl(cnt1, 8);
         jccb(ConditionFlag.LessEqual, retNotFound); // Scanned full string
         cmpl(cnt1, cnt2);
-        jccb(ConditionFlag.Negative, retNotFound);  // Left less then substring
+        jccb(ConditionFlag.Negative, retNotFound); // Left less then substring
         addq(result, 16);
 
         bind(adjustStr);
@@ -762,7 +714,8 @@ public class AMD64MacroAssembler extends AMD64Assembler
         // Compute start addr of substr
         leaq(result, new AMD64Address(result, tmp, Scale.Times2));
 
-        if (intCnt2 > 0) { // Constant substring
+        if (intCnt2 > 0) // Constant substring
+        {
             // Repeat search for small substring (< 8 chars)
             // from new point without reloading substring.
             // Have to check that we don't read beyond string.

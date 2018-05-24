@@ -295,7 +295,7 @@ public final class LSStackSlotAllocator extends AllocationPhase
             }
             StackInterval next = unhandled.poll();
             // finish handled intervals
-            for (int id = next.from(); activePeekId() < id;)
+            for (int id = next.from(); activePeekId() < id; )
             {
                 finished(active.poll());
             }

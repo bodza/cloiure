@@ -42,8 +42,6 @@ import giraaff.hotspot.stubs.UnwindExceptionToCallerStub;
 import giraaff.nodes.NamedLocationIdentity;
 import giraaff.nodes.java.ForeignCallDescriptors;
 import giraaff.options.OptionValues;
-import giraaff.replacements.nodes.BinaryMathIntrinsicNode.BinaryOperation;
-import giraaff.replacements.nodes.UnaryMathIntrinsicNode.UnaryOperation;
 import giraaff.util.GraalError;
 import giraaff.word.Word;
 import giraaff.word.WordTypes;
@@ -185,14 +183,6 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
 
         registerForeignCall(JAVA_TIME_MILLIS, c.javaTimeMillisAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
         registerForeignCall(JAVA_TIME_NANOS, c.javaTimeNanosAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
-
-        registerForeignCall(UnaryOperation.SIN.foreignCallDescriptor, c.arithmeticSinAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF, REEXECUTABLE, NO_LOCATIONS);
-        registerForeignCall(UnaryOperation.COS.foreignCallDescriptor, c.arithmeticCosAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF, REEXECUTABLE, NO_LOCATIONS);
-        registerForeignCall(UnaryOperation.TAN.foreignCallDescriptor, c.arithmeticTanAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF, REEXECUTABLE, NO_LOCATIONS);
-        registerForeignCall(UnaryOperation.EXP.foreignCallDescriptor, c.arithmeticExpAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF, REEXECUTABLE, NO_LOCATIONS);
-        registerForeignCall(UnaryOperation.LOG.foreignCallDescriptor, c.arithmeticLogAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF, REEXECUTABLE, NO_LOCATIONS);
-        registerForeignCall(UnaryOperation.LOG10.foreignCallDescriptor, c.arithmeticLog10Address, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF, REEXECUTABLE, NO_LOCATIONS);
-        registerForeignCall(BinaryOperation.POW.foreignCallDescriptor, c.arithmeticPowAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF, REEXECUTABLE, NO_LOCATIONS);
 
         registerForeignCall(Backend.ARITHMETIC_FREM, c.fremAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF, REEXECUTABLE, NO_LOCATIONS);
         registerForeignCall(Backend.ARITHMETIC_DREM, c.dremAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF, REEXECUTABLE, NO_LOCATIONS);

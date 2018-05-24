@@ -219,7 +219,7 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
 
     private static ValueNode skipThroughPisAndProxies(ValueNode node)
     {
-        for (ValueNode n = node; n != null;)
+        for (ValueNode n = node; n != null; )
         {
             if (n instanceof PiNode)
             {

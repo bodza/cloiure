@@ -368,7 +368,7 @@ public class NewObjectSnippets implements Snippets
                     counters.instanceLoopInit.inc();
                 }
             }
-            for (; off.rawValue() < size; off = off.add(8))
+            for ( ; off.rawValue() < size; off = off.add(8))
             {
                 memory.initializeLong(off, value, LocationIdentity.init());
             }

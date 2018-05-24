@@ -59,7 +59,7 @@ public class BlockWorkList
         workListIndex++;
         int i = workListIndex - 2;
         // push block towards the beginning of the array
-        for (; i >= 0; i--)
+        for ( ; i >= 0; i--)
         {
             int n = workListNumbers[i];
             if (n >= number)

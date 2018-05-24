@@ -114,19 +114,16 @@ public class ConstantStringIndexOfSnippets implements Snippets
         long base = charArrayBaseOffset(INJECTED);
         int lastChar = UnsafeAccess.UNSAFE.getChar(target, base + targetCountLess1 * 2);
 
-        outer_loop: for (long i = sourceOffset + fromIndex; i < sourceEnd;)
+        outer_loop: for (long i = sourceOffset + fromIndex; i < sourceEnd; )
         {
             int src = UnsafeAccess.UNSAFE.getChar(source, base + (i + targetCountLess1) * 2);
             if (src == lastChar)
             {
-                // With random strings and a 4-character alphabet,
-                // reverse matching at this point sets up 0.8% fewer
-                // frames, but (paradoxically) makes 0.3% more probes.
-                // Since those probes are nearer the lastChar probe,
-                // there is may be a net D$ win with reverse matching.
-                // But, reversing loop inhibits unroll of inner loop
-                // for unknown reason. So, does running outer loop from
-                // (sourceOffset - targetCountLess1) to (sourceOffset + sourceCount)
+                // With random strings and a 4-character alphabet, reverse matching at this point sets
+                // up 0.8% fewer frames, but (paradoxically) makes 0.3% more probes. Since those probes
+                // are nearer the lastChar probe, there is may be a net D$ win with reverse matching.
+                // But, reversing loop inhibits unroll of inner loop for unknown reason. So, does running
+                // outer loop from (sourceOffset - targetCountLess1) to (sourceOffset + sourceCount).
                 if (targetCount <= 8)
                 {
                     ExplodeLoopNode.explodeLoop();

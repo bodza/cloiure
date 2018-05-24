@@ -7,16 +7,15 @@ import giraaff.core.common.LIRKind;
 import giraaff.core.common.calc.FloatConvert;
 import giraaff.lir.LIRFrameState;
 import giraaff.lir.Variable;
-import giraaff.util.GraalError;
 
 /**
  * This interface can be used to generate LIR for arithmetic and simple memory access operations.
  *
  * The setFlags flag in emitAdd, emitSub and emitMul indicates, that the instruction must set the
  * flags register to be used for a later branch. (On AMD64, the condition codes are set in every
- * arithmetic instruction, but other architectures optionally set the flags register) If setFlags is
- * set, the instruction must set the flags register; if false, the instruction may or may not set
- * the flags register.
+ * arithmetic instruction, but other architectures optionally set the flags register.) If setFlags
+ * is set, the instruction must set the flags register; if false, the instruction may or may not
+ * set the flags register.
  */
 public interface ArithmeticLIRGeneratorTool
 {
@@ -77,40 +76,4 @@ public interface ArithmeticLIRGeneratorTool
     Variable emitLoad(LIRKind kind, Value address, LIRFrameState state);
 
     void emitStore(ValueKind<?> kind, Value address, Value input, LIRFrameState state);
-
-    @SuppressWarnings("unused")
-    default Value emitMathLog(Value input, boolean base10)
-    {
-        throw GraalError.unimplemented("No specialized implementation available");
-    }
-
-    @SuppressWarnings("unused")
-    default Value emitMathCos(Value input)
-    {
-        throw GraalError.unimplemented("No specialized implementation available");
-    }
-
-    @SuppressWarnings("unused")
-    default Value emitMathSin(Value input)
-    {
-        throw GraalError.unimplemented("No specialized implementation available");
-    }
-
-    @SuppressWarnings("unused")
-    default Value emitMathTan(Value input)
-    {
-        throw GraalError.unimplemented("No specialized implementation available");
-    }
-
-    @SuppressWarnings("unused")
-    default Value emitMathExp(Value input)
-    {
-        throw GraalError.unimplemented("No specialized implementation available");
-    }
-
-    @SuppressWarnings("unused")
-    default Value emitMathPow(Value x, Value y)
-    {
-        throw GraalError.unimplemented("No specialized implementation available");
-    }
 }

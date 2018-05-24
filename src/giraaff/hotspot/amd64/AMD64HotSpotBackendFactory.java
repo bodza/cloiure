@@ -20,7 +20,6 @@ import giraaff.bytecode.BytecodeProvider;
 import giraaff.core.common.spi.ConstantFieldProvider;
 import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.HotSpotBackend;
-import giraaff.hotspot.HotSpotBackend.Options;
 import giraaff.hotspot.HotSpotBackendFactory;
 import giraaff.hotspot.HotSpotGraalRuntimeProvider;
 import giraaff.hotspot.HotSpotReplacementsImpl;
@@ -94,7 +93,7 @@ public class AMD64HotSpotBackendFactory implements HotSpotBackendFactory
     protected Plugins createGraphBuilderPlugins(CompilerConfiguration compilerConfiguration, GraalHotSpotVMConfig config, OptionValues options, TargetDescription target, HotSpotConstantReflectionProvider constantReflection, HotSpotHostForeignCallsProvider foreignCalls, LoweringProvider lowerer, HotSpotMetaAccessProvider metaAccess, HotSpotSnippetReflectionProvider snippetReflection, HotSpotReplacementsImpl replacements, HotSpotWordTypes wordTypes, HotSpotStampProvider stampProvider)
     {
         Plugins plugins = HotSpotGraphBuilderPlugins.create(compilerConfiguration, config, wordTypes, metaAccess, constantReflection, snippetReflection, foreignCalls, lowerer, stampProvider, replacements);
-        AMD64GraphBuilderPlugins.register(plugins, replacements.getDefaultReplacementBytecodeProvider(), (AMD64) target.arch, Options.GraalArithmeticStubs.getValue(options));
+        AMD64GraphBuilderPlugins.register(plugins, replacements.getDefaultReplacementBytecodeProvider(), (AMD64) target.arch);
         return plugins;
     }
 

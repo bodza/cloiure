@@ -105,10 +105,6 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 import giraaff.options.OptionValues;
 import giraaff.phases.util.Providers;
 import giraaff.replacements.SnippetLowerableMemoryNode.SnippetLowering;
-import giraaff.replacements.nodes.BinaryMathIntrinsicNode;
-import giraaff.replacements.nodes.BinaryMathIntrinsicNode.BinaryOperation;
-import giraaff.replacements.nodes.UnaryMathIntrinsicNode;
-import giraaff.replacements.nodes.UnaryMathIntrinsicNode.UnaryOperation;
 import giraaff.util.GraalError;
 
 /**
@@ -221,14 +217,6 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         {
             boxingSnippets.lower((UnboxNode) n, tool);
         }
-        else if (n instanceof UnaryMathIntrinsicNode)
-        {
-            lowerUnaryMath((UnaryMathIntrinsicNode) n, tool);
-        }
-        else if (n instanceof BinaryMathIntrinsicNode)
-        {
-            lowerBinaryMath((BinaryMathIntrinsicNode) n, tool);
-        }
         else if (n instanceof StringIndexOfNode)
         {
             lowerIndexOf((StringIndexOfNode) n);
@@ -269,76 +257,6 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
             n.graph().add(snippetLower);
             n.graph().replaceFixedWithFixed(n, snippetLower);
         }
-    }
-
-    private void lowerBinaryMath(BinaryMathIntrinsicNode math, LoweringTool tool)
-    {
-        if (tool.getLoweringStage() == LoweringTool.StandardLoweringStage.HIGH_TIER)
-        {
-            return;
-        }
-        ResolvedJavaMethod method = math.graph().method();
-        if (method != null)
-        {
-            if (method.getAnnotation(Snippet.class) != null)
-            {
-                // In the context of the snippet use the LIR lowering instead of the Node lowering.
-                return;
-            }
-            if (method.getName().equalsIgnoreCase(math.getOperation().name()) && tool.getMetaAccess().lookupJavaType(Math.class).equals(method.getDeclaringClass()))
-            {
-                // A root compilation of the intrinsic method should emit the full assembly implementation.
-                return;
-            }
-        }
-        ForeignCallDescriptor foreignCall = toForeignCall(math.getOperation());
-        if (foreignCall != null)
-        {
-            StructuredGraph graph = math.graph();
-            ForeignCallNode call = graph.add(new ForeignCallNode(foreignCalls, toForeignCall(math.getOperation()), math.getX(), math.getY()));
-            graph.addAfterFixed(tool.lastFixedNode(), call);
-            math.replaceAtUsages(call);
-        }
-    }
-
-    private void lowerUnaryMath(UnaryMathIntrinsicNode math, LoweringTool tool)
-    {
-        if (tool.getLoweringStage() == LoweringTool.StandardLoweringStage.HIGH_TIER)
-        {
-            return;
-        }
-        ResolvedJavaMethod method = math.graph().method();
-        if (method != null)
-        {
-            if (method.getAnnotation(Snippet.class) != null)
-            {
-                // In the context of the snippet use the LIR lowering instead of the Node lowering.
-                return;
-            }
-            if (method.getName().equalsIgnoreCase(math.getOperation().name()) && tool.getMetaAccess().lookupJavaType(Math.class).equals(method.getDeclaringClass()))
-            {
-                // A root compilation of the intrinsic method should emit the full assembly implementation.
-                return;
-            }
-        }
-        ForeignCallDescriptor foreignCall = toForeignCall(math.getOperation());
-        if (foreignCall != null)
-        {
-            StructuredGraph graph = math.graph();
-            ForeignCallNode call = math.graph().add(new ForeignCallNode(foreignCalls, foreignCall, math.getValue()));
-            graph.addAfterFixed(tool.lastFixedNode(), call);
-            math.replaceAtUsages(call);
-        }
-    }
-
-    protected ForeignCallDescriptor toForeignCall(UnaryOperation operation)
-    {
-        return operation.foreignCallDescriptor;
-    }
-
-    protected ForeignCallDescriptor toForeignCall(BinaryOperation operation)
-    {
-        return operation.foreignCallDescriptor;
     }
 
     protected AddressNode createOffsetAddress(StructuredGraph graph, ValueNode object, long offset)

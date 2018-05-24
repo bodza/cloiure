@@ -823,7 +823,7 @@ public final class SchedulePhase extends Phase
                     {
                         guardsByPriority.computeIfAbsent(guard.computePriority(), p -> new ArrayList<>()).add(guard);
                     }
-                    // `EnumMap.values` returns values in "natural" key order
+                    // 'EnumMap.values' returns values in "natural" key order
                     for (List<GuardNode> guards : guardsByPriority.values())
                     {
                         processNodes(visited, entries, stack, startBlock, guards);

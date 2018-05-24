@@ -101,7 +101,7 @@ public abstract class Assembler
      */
     public final void emitString(String x)
     {
-        emitString0("\t");  // XXX REMOVE ME pretty-printing
+        emitString0("\t"); // XXX REMOVE ME pretty-printing
         emitString0(x);
         emitString0(NEWLINE);
     }

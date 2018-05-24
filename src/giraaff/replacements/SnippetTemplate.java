@@ -953,8 +953,8 @@ public class SnippetTemplate
         {
             exploded = false;
             ExplodeLoopNode explodeLoop = snippetCopy.getNodes().filter(ExplodeLoopNode.class).first();
-            if (explodeLoop != null) { // Earlier canonicalization may have removed the loop
-                // altogether
+            if (explodeLoop != null) // Earlier canonicalization may have removed the loop altogether
+            {
                 LoopBeginNode loopBegin = explodeLoop.findLoopBegin();
                 if (loopBegin != null)
                 {

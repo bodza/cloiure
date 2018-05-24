@@ -10,7 +10,7 @@ public final class AMD64PrefetchOp extends AMD64LIRInstruction
 {
     public static final LIRInstructionClass<AMD64PrefetchOp> TYPE = LIRInstructionClass.create(AMD64PrefetchOp.class);
 
-    private final int instr;  // AllocatePrefetchInstr
+    private final int instr; // AllocatePrefetchInstr
     @Alive({OperandFlag.COMPOSITE}) protected AMD64AddressValue address;
 
     public AMD64PrefetchOp(AMD64AddressValue address, int instr)

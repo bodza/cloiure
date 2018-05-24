@@ -8,7 +8,6 @@ import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.core.common.spi.ForeignCallsProvider;
 import giraaff.graph.Node;
 import giraaff.hotspot.GraalHotSpotVMConfig;
-import giraaff.hotspot.HotSpotBackend.Options;
 import giraaff.hotspot.HotSpotGraalRuntimeProvider;
 import giraaff.hotspot.amd64.AMD64HotSpotForeignCallsProvider;
 import giraaff.hotspot.meta.DefaultHotSpotLoweringProvider;
@@ -18,8 +17,6 @@ import giraaff.nodes.calc.FloatConvertNode;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.options.OptionValues;
 import giraaff.replacements.amd64.AMD64ConvertSnippets;
-import giraaff.replacements.nodes.BinaryMathIntrinsicNode.BinaryOperation;
-import giraaff.replacements.nodes.UnaryMathIntrinsicNode.UnaryOperation;
 
 public class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringProvider
 {
@@ -48,54 +45,6 @@ public class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringProvider
         {
             super.lower(n, tool);
         }
-    }
-
-    @Override
-    protected ForeignCallDescriptor toForeignCall(UnaryOperation operation)
-    {
-        if (Options.GraalArithmeticStubs.getValue(runtime.getOptions()))
-        {
-            switch (operation)
-            {
-                case LOG:
-                    return AMD64HotSpotForeignCallsProvider.ARITHMETIC_LOG_STUB;
-                case LOG10:
-                    return AMD64HotSpotForeignCallsProvider.ARITHMETIC_LOG10_STUB;
-                case SIN:
-                    return AMD64HotSpotForeignCallsProvider.ARITHMETIC_SIN_STUB;
-                case COS:
-                    return AMD64HotSpotForeignCallsProvider.ARITHMETIC_COS_STUB;
-                case TAN:
-                    return AMD64HotSpotForeignCallsProvider.ARITHMETIC_TAN_STUB;
-                case EXP:
-                    return AMD64HotSpotForeignCallsProvider.ARITHMETIC_EXP_STUB;
-            }
-        }
-        else if (operation == UnaryOperation.EXP)
-        {
-            return operation.foreignCallDescriptor;
-        }
-        // Lower only using LIRGenerator
-        return null;
-    }
-
-    @Override
-    protected ForeignCallDescriptor toForeignCall(BinaryOperation operation)
-    {
-        if (Options.GraalArithmeticStubs.getValue(runtime.getOptions()))
-        {
-            switch (operation)
-            {
-                case POW:
-                    return AMD64HotSpotForeignCallsProvider.ARITHMETIC_POW_STUB;
-            }
-        }
-        else if (operation == BinaryOperation.POW)
-        {
-            return operation.foreignCallDescriptor;
-        }
-        // Lower only using LIRGenerator
-        return null;
     }
 
     @Override

@@ -823,19 +823,19 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                 /*
                  * We have ...; guard(C1); guard(C2);...
                  *
-                 * Where the first guard is `otherGuard` and the second one `thisGuard`.
+                 * Where the first guard is 'otherGuard' and the second one 'thisGuard'.
                  *
-                 * Depending on `outcome`, we have C2 => C1 or C2 => !C1.
+                 * Depending on 'outcome', we have C2 => C1 or C2 => !C1.
                  *
-                 * - If C2 => C1, `mustDeopt` below is false and we transform to ...; guard(C2); ...
+                 * - If C2 => C1, 'mustDeopt' below is false and we transform to ...; guard(C2); ...
                  *
-                 * - If C2 => !C1, `mustDeopt` is true and we transform to ..; guard(C1); deopt;
+                 * - If C2 => !C1, 'mustDeopt' is true and we transform to ..; guard(C1); deopt;
                  */
                 // for the second case, the action of the deopt is copied from there:
                 thisGuard.setAction(action);
                 GuardRewirer rewirer = (guard, result, innerGuardedValueStamp, newInput) ->
                 {
-                    // `result` is `outcome`, `guard` is `otherGuard`
+                    // 'result' is 'outcome', 'guard' is 'otherGuard'
                     boolean mustDeopt = result == otherGuard.isNegated();
                     if (rewireGuardFunction.rewire(guard, mustDeopt == thisGuard.isNegated(), innerGuardedValueStamp, newInput))
                     {

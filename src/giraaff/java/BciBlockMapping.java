@@ -257,7 +257,7 @@ public final class BciBlockMapping
                 @Override
                 public Integer next()
                 {
-                    for (; (l & lMask) == 0; lMask = lMask << 1)
+                    for ( ; (l & lMask) == 0; lMask = lMask << 1)
                     {
                         pos++;
                     }

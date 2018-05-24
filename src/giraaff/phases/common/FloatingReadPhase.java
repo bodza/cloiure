@@ -131,7 +131,7 @@ public class FloatingReadPhase extends Phase
         do
         {
             change = false;
-            for (Iterator<Node> iter = set.iterator(); iter.hasNext();)
+            for (Iterator<Node> iter = set.iterator(); iter.hasNext(); )
             {
                 Node node = iter.next();
                 for (Node usage : node.usages())

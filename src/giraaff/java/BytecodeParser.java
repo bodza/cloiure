@@ -402,7 +402,7 @@ public class BytecodeParser implements GraphBuilderContext
     private ValueNode unwindValue;
     private FixedWithNextNode beforeUnwindNode;
 
-    protected FixedWithNextNode lastInstr;                 // the last instruction added
+    protected FixedWithNextNode lastInstr; // the last instruction added
     private boolean controlFlowSplit;
     private final InvocationPluginReceiver invocationPluginReceiver = new InvocationPluginReceiver(this);
 
