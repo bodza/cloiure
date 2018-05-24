@@ -1,8 +1,5 @@
 package giraaff.hotspot;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jdk.vm.ci.code.Architecture;
 import jdk.vm.ci.code.stack.StackIntrospection;
 import jdk.vm.ci.hotspot.HotSpotJVMCIRuntime;
@@ -20,8 +17,6 @@ import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.nodes.spi.StampProvider;
 import giraaff.options.OptionValues;
 import giraaff.phases.tiers.CompilerConfiguration;
-import giraaff.replacements.SnippetCounter;
-import giraaff.replacements.SnippetCounter.Group;
 import giraaff.runtime.RuntimeProvider;
 import giraaff.util.GraalError;
 
@@ -33,7 +28,6 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider
     private final String runtimeName;
     private final String compilerConfigurationName;
     private final HotSpotBackend hostBackend;
-    private final List<SnippetCounter.Group> snippetCounterGroups;
 
     private final EconomicMap<Class<? extends Architecture>, HotSpotBackend> backends = EconomicMap.create(Equivalence.IDENTITY);
 
@@ -63,7 +57,6 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider
             throw new GraalError("Graal does not support the CMS collector");
         }
 
-        snippetCounterGroups = GraalOptions.SnippetCounters.getValue(options) ? new ArrayList<>() : null;
         CompilerConfiguration compilerConfiguration = compilerConfigurationFactory.createCompilerConfiguration();
         compilerConfigurationName = compilerConfigurationFactory.getName();
 
@@ -131,18 +124,6 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider
     public OptionValues getOptions()
     {
         return options;
-    }
-
-    @Override
-    public Group createSnippetCounterGroup(String groupName)
-    {
-        if (snippetCounterGroups != null)
-        {
-            Group group = new Group(groupName);
-            snippetCounterGroups.add(group);
-            return group;
-        }
-        return null;
     }
 
     @Override

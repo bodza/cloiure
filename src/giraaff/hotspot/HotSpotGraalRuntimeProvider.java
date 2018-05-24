@@ -5,13 +5,12 @@ import jdk.vm.ci.code.TargetDescription;
 import giraaff.api.runtime.GraalRuntime;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.options.OptionValues;
-import giraaff.replacements.SnippetCounter.Group;
 import giraaff.runtime.RuntimeProvider;
 
 /**
  * Configuration information for the HotSpot Graal runtime.
  */
-public interface HotSpotGraalRuntimeProvider extends GraalRuntime, RuntimeProvider, Group.Factory
+public interface HotSpotGraalRuntimeProvider extends GraalRuntime, RuntimeProvider
 {
     default TargetDescription getTarget()
     {

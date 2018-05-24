@@ -108,8 +108,8 @@ import giraaff.replacements.SnippetLowerableMemoryNode.SnippetLowering;
 import giraaff.util.GraalError;
 
 /**
- * VM-independent lowerings for standard Java nodes. VM-specific methods are abstract and must be
- * implemented by VM-specific subclasses.
+ * VM-independent lowerings for standard Java nodes.
+ * VM-specific methods are abstract and must be implemented by VM-specific subclasses.
  */
 public abstract class DefaultJavaLoweringProvider implements LoweringProvider
 {
@@ -129,11 +129,10 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         this.useCompressedOops = useCompressedOops;
     }
 
-    public void initialize(OptionValues options, SnippetCounter.Group.Factory factory, Providers providers, SnippetReflectionProvider snippetReflection)
+    public void initialize(OptionValues options, Providers providers, SnippetReflectionProvider snippetReflection)
     {
-        boxingSnippets = new BoxingSnippets.Templates(options, factory, providers, snippetReflection, target);
+        boxingSnippets = new BoxingSnippets.Templates(options, providers, snippetReflection, target);
         indexOfSnippets = new ConstantStringIndexOfSnippets.Templates(options, providers, snippetReflection, target);
-        providers.getReplacements().registerSnippetTemplateCache(new SnippetCounterNode.SnippetCounterSnippets.Templates(options, providers, snippetReflection, target));
     }
 
     public final TargetDescription getTarget()

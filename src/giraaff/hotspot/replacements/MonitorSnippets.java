@@ -57,7 +57,6 @@ import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.type.StampTool;
 import giraaff.options.OptionValues;
 import giraaff.phases.common.inlining.InliningUtil;
-import giraaff.replacements.SnippetCounter;
 import giraaff.replacements.SnippetTemplate;
 import giraaff.replacements.SnippetTemplate.AbstractTemplates;
 import giraaff.replacements.SnippetTemplate.Arguments;
@@ -148,7 +147,7 @@ public class MonitorSnippets implements Snippets
     private static final boolean PROFILE_CONTEXT = false;
 
     @Snippet
-    public static void monitorenter(Object object, KlassPointer hub, @ConstantParameter int lockDepth, @ConstantParameter Register threadRegister, @ConstantParameter Register stackPointerRegister, @ConstantParameter OptionValues options, @ConstantParameter Counters counters)
+    public static void monitorenter(Object object, KlassPointer hub, @ConstantParameter int lockDepth, @ConstantParameter Register threadRegister, @ConstantParameter Register stackPointerRegister, @ConstantParameter OptionValues options)
     {
         // Load the mark word - this includes a null-check on object
         final Word mark = HotSpotReplacementsUtil.loadWordFromObject(object, HotSpotReplacementsUtil.markOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
@@ -159,7 +158,7 @@ public class MonitorSnippets implements Snippets
 
         if (HotSpotReplacementsUtil.useBiasedLocking(GraalHotSpotVMConfig.INJECTED_VMCONFIG))
         {
-            if (tryEnterBiased(object, hub, lock, mark, threadRegister, options, counters))
+            if (tryEnterBiased(object, hub, lock, mark, threadRegister, options))
             {
                 return;
             }
@@ -168,7 +167,7 @@ public class MonitorSnippets implements Snippets
         if (inlineFastLockSupported(options) && BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, mark.and(HotSpotReplacementsUtil.monitorMask(GraalHotSpotVMConfig.INJECTED_VMCONFIG)).notEqual(0)))
         {
             // Inflated case
-            if (tryEnterInflated(object, lock, mark, threadRegister, options, counters))
+            if (tryEnterInflated(object, lock, mark, threadRegister, options))
             {
                 return;
             }
@@ -189,7 +188,6 @@ public class MonitorSnippets implements Snippets
             Word currentMark = objectPointer.compareAndSwapWord(HotSpotReplacementsUtil.markOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), unlockedMark, lock, HotSpotReplacementsUtil.MARK_WORD_LOCATION);
             if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, currentMark.equal(unlockedMark)))
             {
-                counters.lockCas.inc();
                 AcquiredCASLockNode.mark(object);
                 return;
             }
@@ -216,17 +214,15 @@ public class MonitorSnippets implements Snippets
                 {
                     // Recursively locked => write 0 to the lock slot
                     lock.writeWord(HotSpotReplacementsUtil.lockDisplacedMarkOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), WordFactory.zero(), HotSpotReplacementsUtil.DISPLACED_MARK_WORD_LOCATION);
-                    counters.lockCasRecursive.inc();
                     return;
                 }
-                counters.lockStubFailedCas.inc();
             }
         }
         // slow-path runtime-call
         monitorenterStubC(MONITORENTER, object, lock);
     }
 
-    private static boolean tryEnterBiased(Object object, KlassPointer hub, Word lock, Word mark, Register threadRegister, OptionValues options, Counters counters)
+    private static boolean tryEnterBiased(Object object, KlassPointer hub, Word lock, Word mark, Register threadRegister, OptionValues options)
     {
         // See whether the lock is currently biased toward our thread and
         // whether the epoch is still valid.
@@ -242,7 +238,6 @@ public class MonitorSnippets implements Snippets
         if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, tmp.equal(0)))
         {
             // Object is already biased to current thread -> done
-            counters.lockBiasExisting.inc();
             FastAcquireBiasedLockNode.mark(object);
             return true;
         }
@@ -284,13 +279,11 @@ public class MonitorSnippets implements Snippets
                     if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_FAST_PATH_PROBABILITY, objectPointer.logicCompareAndSwapWord(HotSpotReplacementsUtil.markOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), unbiasedMark, biasedMark, HotSpotReplacementsUtil.MARK_WORD_LOCATION)))
                     {
                         // Object is now biased to current thread -> done
-                        counters.lockBiasAcquired.inc();
                         return true;
                     }
                     // If the biasing toward our thread failed, this means that another thread
                     // owns the bias and we need to revoke that bias. The revocation will occur
                     // in the interpreter runtime.
-                    counters.lockStubRevoke.inc();
                 }
                 else
                 {
@@ -304,13 +297,11 @@ public class MonitorSnippets implements Snippets
                     if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_FAST_PATH_PROBABILITY, objectPointer.logicCompareAndSwapWord(HotSpotReplacementsUtil.markOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), mark, biasedMark, HotSpotReplacementsUtil.MARK_WORD_LOCATION)))
                     {
                         // Object is now biased to current thread -> done
-                        counters.lockBiasTransfer.inc();
                         return true;
                     }
                     // If the biasing toward our thread failed, then another thread
                     // succeeded in biasing it toward itself and we need to revoke that
                     // bias. The revocation will occur in the runtime in the slow case.
-                    counters.lockStubEpochExpired.inc();
                 }
                 // slow-path runtime-call
                 monitorenterStubC(MONITORENTER, object, lock);
@@ -331,14 +322,12 @@ public class MonitorSnippets implements Snippets
                 // Fall through to the normal CAS-based lock, because no matter what
                 // the result of the above CAS, some thread must have succeeded in
                 // removing the bias bit from the object's header.
-                counters.revokeBias.inc();
                 return false;
             }
         }
         else
         {
             // Biasing not enabled -> fall through to lightweight locking
-            counters.unbiasable.inc();
             return false;
         }
     }
@@ -359,7 +348,7 @@ public class MonitorSnippets implements Snippets
         return useFastInflatedLocking(options) && HotSpotReplacementsUtil.monitorMask(config) >= 0 && HotSpotReplacementsUtil.objectMonitorOwnerOffset(config) >= 0;
     }
 
-    private static boolean tryEnterInflated(Object object, Word lock, Word mark, Register threadRegister, OptionValues options, Counters counters)
+    private static boolean tryEnterInflated(Object object, Word lock, Word mark, Register threadRegister, OptionValues options)
     {
         // write non-zero value to lock slot
         lock.writeWord(HotSpotReplacementsUtil.lockDisplacedMarkOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), lock, HotSpotReplacementsUtil.DISPLACED_MARK_WORD_LOCATION);
@@ -373,17 +362,8 @@ public class MonitorSnippets implements Snippets
             if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, monitor.logicCompareAndSwapWord(ownerOffset, owner, HotSpotReplacementsUtil.registerAsWord(threadRegister), HotSpotReplacementsUtil.OBJECT_MONITOR_OWNER_LOCATION)))
             {
                 // success
-                counters.inflatedCas.inc();
                 return true;
             }
-            else
-            {
-                counters.inflatedFailedCas.inc();
-            }
-        }
-        else
-        {
-            counters.inflatedOwned.inc();
         }
         return false;
     }
@@ -405,7 +385,7 @@ public class MonitorSnippets implements Snippets
     }
 
     @Snippet
-    public static void monitorexit(Object object, @ConstantParameter int lockDepth, @ConstantParameter Register threadRegister, @ConstantParameter OptionValues options, @ConstantParameter Counters counters)
+    public static void monitorexit(Object object, @ConstantParameter int lockDepth, @ConstantParameter Register threadRegister, @ConstantParameter OptionValues options)
     {
         final Word mark = HotSpotReplacementsUtil.loadWordFromObject(object, HotSpotReplacementsUtil.markOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG));
         if (HotSpotReplacementsUtil.useBiasedLocking(GraalHotSpotVMConfig.INJECTED_VMCONFIG))
@@ -419,7 +399,6 @@ public class MonitorSnippets implements Snippets
             if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, mark.and(HotSpotReplacementsUtil.biasedLockMaskInPlace(GraalHotSpotVMConfig.INJECTED_VMCONFIG)).equal(WordFactory.unsigned(HotSpotReplacementsUtil.biasedLockPattern(GraalHotSpotVMConfig.INJECTED_VMCONFIG)))))
             {
                 EndLockScopeNode.endLockScope();
-                counters.unlockBias.inc();
                 return;
             }
         }
@@ -432,11 +411,10 @@ public class MonitorSnippets implements Snippets
         if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_LIKELY_PROBABILITY, displacedMark.equal(0)))
         {
             // Recursive locking => done
-            counters.unlockCasRecursive.inc();
         }
         else
         {
-            if (!tryExitInflated(object, mark, lock, threadRegister, options, counters))
+            if (!tryExitInflated(object, mark, lock, threadRegister, options))
             {
                 // Test if object's mark word is pointing to the displaced mark word, and if so, restore
                 // the displaced mark in the object - if the object's mark word is not pointing to
@@ -444,12 +422,11 @@ public class MonitorSnippets implements Snippets
                 Pointer objectPointer = Word.objectToTrackedPointer(object);
                 if (BranchProbabilityNode.probability(BranchProbabilityNode.VERY_FAST_PATH_PROBABILITY, objectPointer.logicCompareAndSwapWord(HotSpotReplacementsUtil.markOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), lock, displacedMark, HotSpotReplacementsUtil.MARK_WORD_LOCATION)))
                 {
-                    counters.unlockCas.inc();
+                    // ...
                 }
                 else
                 {
                     // The object's mark word was not pointing to the displaced header
-                    counters.unlockStub.inc();
                     monitorexitStubC(MONITOREXIT, object, lock);
                 }
             }
@@ -467,7 +444,7 @@ public class MonitorSnippets implements Snippets
         return useFastInflatedLocking(options) && HotSpotReplacementsUtil.objectMonitorEntryListOffset(config) >= 0 && HotSpotReplacementsUtil.objectMonitorCxqOffset(config) >= 0 && HotSpotReplacementsUtil.monitorMask(config) >= 0 && HotSpotReplacementsUtil.objectMonitorOwnerOffset(config) >= 0 && HotSpotReplacementsUtil.objectMonitorRecursionsOffset(config) >= 0;
     }
 
-    private static boolean tryExitInflated(Object object, Word mark, Word lock, Register threadRegister, OptionValues options, Counters counters)
+    private static boolean tryExitInflated(Object object, Word mark, Word lock, Register threadRegister, OptionValues options)
     {
         if (!inlineFastUnlockSupported(options))
         {
@@ -497,11 +474,9 @@ public class MonitorSnippets implements Snippets
                     // release_store
                     MembarNode.memoryBarrier(MemoryBarriers.LOAD_STORE | MemoryBarriers.STORE_STORE);
                     monitor.writeWord(ownerOffset, WordFactory.zero());
-                    counters.unlockInflatedSimple.inc();
                     return true;
                 }
             }
-            counters.unlockStubInflated.inc();
             monitorexitStubC(MONITOREXIT, object, lock);
             return true;
         }
@@ -519,64 +494,6 @@ public class MonitorSnippets implements Snippets
         EndLockScopeNode.endLockScope();
     }
 
-    public static class Counters
-    {
-        /**
-         * Counters for the various paths for acquiring a lock. The counters whose names start with
-         * {@code "lock"} are mutually exclusive. The other counters are for paths that may be shared.
-         */
-        public final SnippetCounter lockBiasExisting;
-        public final SnippetCounter lockBiasAcquired;
-        public final SnippetCounter lockBiasTransfer;
-        public final SnippetCounter lockCas;
-        public final SnippetCounter lockCasRecursive;
-        public final SnippetCounter lockStubEpochExpired;
-        public final SnippetCounter lockStubRevoke;
-        public final SnippetCounter lockStubFailedCas;
-        public final SnippetCounter inflatedCas;
-        public final SnippetCounter inflatedFailedCas;
-        public final SnippetCounter inflatedOwned;
-        public final SnippetCounter unbiasable;
-        public final SnippetCounter revokeBias;
-
-        /**
-         * Counters for the various paths for releasing a lock. The counters whose names start with
-         * {@code "unlock"} are mutually exclusive. The other counters are for paths that may be shared.
-         */
-        public final SnippetCounter unlockBias;
-        public final SnippetCounter unlockCas;
-        public final SnippetCounter unlockCasRecursive;
-        public final SnippetCounter unlockStub;
-        public final SnippetCounter unlockStubInflated;
-        public final SnippetCounter unlockInflatedSimple;
-
-        public Counters(SnippetCounter.Group.Factory factory)
-        {
-            SnippetCounter.Group enter = factory.createSnippetCounterGroup("MonitorEnters");
-            SnippetCounter.Group exit = factory.createSnippetCounterGroup("MonitorExits");
-            lockBiasExisting = new SnippetCounter(enter, "lock{bias:existing}", "bias-locked previously biased object");
-            lockBiasAcquired = new SnippetCounter(enter, "lock{bias:acquired}", "bias-locked newly biased object");
-            lockBiasTransfer = new SnippetCounter(enter, "lock{bias:transfer}", "bias-locked, biased transferred");
-            lockCas = new SnippetCounter(enter, "lock{cas}", "cas-locked an object");
-            lockCasRecursive = new SnippetCounter(enter, "lock{cas:recursive}", "cas-locked, recursive");
-            lockStubEpochExpired = new SnippetCounter(enter, "lock{stub:epoch-expired}", "stub-locked, epoch expired");
-            lockStubRevoke = new SnippetCounter(enter, "lock{stub:revoke}", "stub-locked, biased revoked");
-            lockStubFailedCas = new SnippetCounter(enter, "lock{stub:failed-cas/stack}", "stub-locked, failed cas and stack locking");
-            inflatedCas = new SnippetCounter(enter, "lock{inflated:cas}", "heavyweight-locked, cas-locked");
-            inflatedFailedCas = new SnippetCounter(enter, "lock{inflated:failed-cas}", "heavyweight-locked, failed cas");
-            inflatedOwned = new SnippetCounter(enter, "lock{inflated:owned}", "heavyweight-locked, already owned");
-            unbiasable = new SnippetCounter(enter, "unbiasable", "object with unbiasable type");
-            revokeBias = new SnippetCounter(enter, "revokeBias", "object had bias revoked");
-
-            unlockBias = new SnippetCounter(exit, "unlock{bias}", "bias-unlocked an object");
-            unlockCas = new SnippetCounter(exit, "unlock{cas}", "cas-unlocked an object");
-            unlockCasRecursive = new SnippetCounter(exit, "unlock{cas:recursive}", "cas-unlocked an object, recursive");
-            unlockStub = new SnippetCounter(exit, "unlock{stub}", "stub-unlocked an object");
-            unlockStubInflated = new SnippetCounter(exit, "unlock{stub:inflated}", "stub-unlocked an object with inflated monitor");
-            unlockInflatedSimple = new SnippetCounter(exit, "unlock{inflated}", "unlocked an object monitor");
-        }
-    }
-
     public static class Templates extends AbstractTemplates
     {
         private final SnippetInfo monitorenter = snippet(MonitorSnippets.class, "monitorenter");
@@ -585,14 +502,11 @@ public class MonitorSnippets implements Snippets
         private final SnippetInfo monitorexitStub = snippet(MonitorSnippets.class, "monitorexitStub");
 
         private final boolean useFastLocking;
-        public final Counters counters;
 
-        public Templates(OptionValues options, SnippetCounter.Group.Factory factory, HotSpotProviders providers, TargetDescription target, boolean useFastLocking)
+        public Templates(OptionValues options, HotSpotProviders providers, TargetDescription target, boolean useFastLocking)
         {
             super(options, providers, providers.getSnippetReflection(), target);
             this.useFastLocking = useFastLocking;
-
-            this.counters = new Counters(factory);
         }
 
         public void lower(RawMonitorEnterNode monitorenterNode, HotSpotRegistersProvider registers, LoweringTool tool)
@@ -609,7 +523,6 @@ public class MonitorSnippets implements Snippets
                 args.addConst("threadRegister", registers.getThreadRegister());
                 args.addConst("stackPointerRegister", registers.getStackPointerRegister());
                 args.addConst("options", graph.getOptions());
-                args.addConst("counters", counters);
             }
             else
             {
@@ -617,7 +530,6 @@ public class MonitorSnippets implements Snippets
                 args.add("object", monitorenterNode.object());
                 args.addConst("lockDepth", monitorenterNode.getMonitorId().getLockDepth());
                 args.addConst("options", graph.getOptions());
-                args.addConst("counters", counters);
             }
 
             template(monitorenterNode, args).instantiate(providers.getMetaAccess(), monitorenterNode, SnippetTemplate.DEFAULT_REPLACER, args);
@@ -640,7 +552,6 @@ public class MonitorSnippets implements Snippets
             args.addConst("lockDepth", monitorexitNode.getMonitorId().getLockDepth());
             args.addConst("threadRegister", registers.getThreadRegister());
             args.addConst("options", graph.getOptions());
-            args.addConst("counters", counters);
 
             template(monitorexitNode, args).instantiate(providers.getMetaAccess(), monitorexitNode, SnippetTemplate.DEFAULT_REPLACER, args);
         }

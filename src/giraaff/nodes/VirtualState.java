@@ -33,8 +33,8 @@ public abstract class VirtualState extends Node
     public abstract void applyToNonVirtual(NodeClosure<? super ValueNode> closure);
 
     /**
-     * Performs a <b>pre-order</b> iteration over all elements reachable from this state that are a
-     * subclass of {@link VirtualState}.
+     * Performs a <b>pre-order</b> iteration over all elements reachable from this state that
+     * are a subclass of {@link VirtualState}.
      */
     public abstract void applyToVirtual(VirtualClosure closure);
 

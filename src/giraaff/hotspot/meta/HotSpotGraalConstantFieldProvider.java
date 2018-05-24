@@ -12,7 +12,6 @@ import giraaff.core.common.GraalOptions;
 import giraaff.graph.NodeClass;
 import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.options.OptionValues;
-import giraaff.replacements.SnippetCounter;
 import giraaff.util.GraalError;
 
 /**
@@ -38,7 +37,7 @@ public class HotSpotGraalConstantFieldProvider extends HotSpotConstantFieldProvi
         if (!field.isStatic())
         {
             JavaConstant receiver = tool.getReceiver();
-            if (getSnippetCounterType().isInstance(receiver) || getNodeClassType().isInstance(receiver))
+            if (getNodeClassType().isInstance(receiver))
             {
                 return true;
             }
@@ -70,7 +69,6 @@ public class HotSpotGraalConstantFieldProvider extends HotSpotConstantFieldProvi
     private final MetaAccessProvider metaAccess;
 
     private ResolvedJavaType cachedHotSpotVMConfigType;
-    private ResolvedJavaType cachedSnippetCounterType;
     private ResolvedJavaType cachedNodeClassType;
 
     private ResolvedJavaType getHotSpotVMConfigType()
@@ -80,15 +78,6 @@ public class HotSpotGraalConstantFieldProvider extends HotSpotConstantFieldProvi
             cachedHotSpotVMConfigType = metaAccess.lookupJavaType(GraalHotSpotVMConfig.class);
         }
         return cachedHotSpotVMConfigType;
-    }
-
-    private ResolvedJavaType getSnippetCounterType()
-    {
-        if (cachedSnippetCounterType == null)
-        {
-            cachedSnippetCounterType = metaAccess.lookupJavaType(SnippetCounter.class);
-        }
-        return cachedSnippetCounterType;
     }
 
     private ResolvedJavaType getNodeClassType()

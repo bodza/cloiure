@@ -529,7 +529,7 @@ public class SnippetTemplate
     /**
      * Base class for snippet classes. It provides a cache for {@link SnippetTemplate}s.
      */
-    public abstract static class AbstractTemplates implements giraaff.api.replacements.SnippetTemplateCache
+    public abstract static class AbstractTemplates
     {
         protected final OptionValues options;
         protected final Providers providers;
@@ -575,14 +575,13 @@ public class SnippetTemplate
         {
             Method method = findMethod(declaringClass, methodName, null);
             ResolvedJavaMethod javaMethod = providers.getMetaAccess().lookupJavaMethod(method);
-            LocationIdentity[] privateLocations = GraalOptions.SnippetCounters.getValue(options) ? SnippetCounterNode.addSnippetCounters(initialPrivateLocations) : initialPrivateLocations;
             if (GraalOptions.EagerSnippets.getValue(options))
             {
-                return new EagerSnippetInfo(javaMethod, privateLocations);
+                return new EagerSnippetInfo(javaMethod, initialPrivateLocations);
             }
             else
             {
-                return new LazySnippetInfo(javaMethod, privateLocations);
+                return new LazySnippetInfo(javaMethod, initialPrivateLocations);
             }
         }
 

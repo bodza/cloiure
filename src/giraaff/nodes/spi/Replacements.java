@@ -3,7 +3,6 @@ package giraaff.nodes.spi;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 import giraaff.api.replacements.MethodSubstitution;
-import giraaff.api.replacements.SnippetTemplateCache;
 import giraaff.bytecode.Bytecode;
 import giraaff.bytecode.BytecodeProvider;
 import giraaff.nodes.StructuredGraph;
@@ -80,15 +79,4 @@ public interface Replacements
      * associated with the substitution method.
      */
     BytecodeProvider getDefaultReplacementBytecodeProvider();
-
-    /**
-     * Register snippet templates.
-     */
-    void registerSnippetTemplateCache(SnippetTemplateCache snippetTemplates);
-
-    /**
-     * Get snippet templates that were registered with
-     * {@link Replacements#registerSnippetTemplateCache(SnippetTemplateCache)}.
-     */
-    <T extends SnippetTemplateCache> T getSnippetTemplateCache(Class<T> templatesClass);
 }

@@ -13,8 +13,6 @@ import giraaff.nodes.ConstantNode;
 import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.TypeCheckHints;
 import giraaff.nodes.extended.BranchProbabilityNode;
-import giraaff.replacements.SnippetCounter;
-import giraaff.replacements.SnippetCounter.Group;
 import giraaff.word.Word;
 
 /**
@@ -22,19 +20,18 @@ import giraaff.word.Word;
  */
 public class TypeCheckSnippetUtils
 {
-    static boolean checkSecondarySubType(KlassPointer t, KlassPointer sNonNull, Counters counters)
+    static boolean checkSecondarySubType(KlassPointer t, KlassPointer sNonNull)
     {
         // if (S.cache == T) return true
         if (sNonNull.readKlassPointer(HotSpotReplacementsUtil.secondarySuperCacheOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION).equal(t))
         {
-            counters.cacheHit.inc();
             return true;
         }
 
-        return checkSelfAndSupers(t, sNonNull, counters);
+        return checkSelfAndSupers(t, sNonNull);
     }
 
-    static boolean checkUnknownSubType(KlassPointer t, KlassPointer sNonNull, Counters counters)
+    static boolean checkUnknownSubType(KlassPointer t, KlassPointer sNonNull)
     {
         // int off = T.offset
         int superCheckOffset = t.readInt(HotSpotReplacementsUtil.superCheckOffsetOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.KLASS_SUPER_CHECK_OFFSET_LOCATION);
@@ -43,33 +40,23 @@ public class TypeCheckSnippetUtils
         // if (T = S[off]) return true
         if (sNonNull.readKlassPointer(superCheckOffset, HotSpotReplacementsUtil.PRIMARY_SUPERS_LOCATION).equal(t))
         {
-            if (primary)
-            {
-                counters.cacheHit.inc();
-            }
-            else
-            {
-                counters.displayHit.inc();
-            }
             return true;
         }
 
         // if (off != &cache) return false
         if (primary)
         {
-            counters.displayMiss.inc();
             return false;
         }
 
-        return checkSelfAndSupers(t, sNonNull, counters);
+        return checkSelfAndSupers(t, sNonNull);
     }
 
-    private static boolean checkSelfAndSupers(KlassPointer t, KlassPointer s, Counters counters)
+    private static boolean checkSelfAndSupers(KlassPointer t, KlassPointer s)
     {
         // if (T == S) return true
         if (s.equal(t))
         {
-            counters.equalsSecondary.inc();
             return true;
         }
 
@@ -81,43 +68,10 @@ public class TypeCheckSnippetUtils
             if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_LIKELY_PROBABILITY, t.equal(loadSecondarySupersElement(secondarySupers, i))))
             {
                 s.writeKlassPointer(HotSpotReplacementsUtil.secondarySuperCacheOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), t, HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION);
-                counters.secondariesHit.inc();
                 return true;
             }
         }
-        counters.secondariesMiss.inc();
         return false;
-    }
-
-    static class Counters
-    {
-        final SnippetCounter hintsHit;
-        final SnippetCounter hintsMiss;
-        final SnippetCounter exactHit;
-        final SnippetCounter exactMiss;
-        final SnippetCounter isNull;
-        final SnippetCounter cacheHit;
-        final SnippetCounter secondariesHit;
-        final SnippetCounter secondariesMiss;
-        final SnippetCounter displayHit;
-        final SnippetCounter displayMiss;
-        final SnippetCounter equalsSecondary;
-
-        Counters(SnippetCounter.Group.Factory factory)
-        {
-            Group group = factory.createSnippetCounterGroup("TypeCheck");
-            hintsHit = new SnippetCounter(group, "hintsHit", "hit a hint type");
-            hintsMiss = new SnippetCounter(group, "hintsMiss", "missed a hint type");
-            exactHit = new SnippetCounter(group, "exactHit", "exact type test succeeded");
-            exactMiss = new SnippetCounter(group, "exactMiss", "exact type test failed");
-            isNull = new SnippetCounter(group, "isNull", "object tested was null");
-            cacheHit = new SnippetCounter(group, "cacheHit", "secondary type cache hit");
-            secondariesHit = new SnippetCounter(group, "secondariesHit", "secondaries scan succeeded");
-            secondariesMiss = new SnippetCounter(group, "secondariesMiss", "secondaries scan failed");
-            displayHit = new SnippetCounter(group, "displayHit", "primary type test succeeded");
-            displayMiss = new SnippetCounter(group, "displayMiss", "primary type test failed");
-            equalsSecondary = new SnippetCounter(group, "T_equals_S", "object type was equal to secondary type");
-        }
     }
 
     /**

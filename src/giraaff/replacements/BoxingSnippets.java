@@ -21,7 +21,6 @@ import giraaff.nodes.extended.UnboxNode;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.options.OptionValues;
 import giraaff.phases.util.Providers;
-import giraaff.replacements.SnippetCounter.Group;
 import giraaff.replacements.SnippetTemplate;
 import giraaff.replacements.SnippetTemplate.AbstractTemplates;
 import giraaff.replacements.SnippetTemplate.Arguments;
@@ -30,114 +29,98 @@ import giraaff.replacements.SnippetTemplate.SnippetInfo;
 public class BoxingSnippets implements Snippets
 {
     @Snippet
-    public static Object booleanValueOf(boolean value, @ConstantParameter SnippetCounter valueOfCounter)
+    public static Object booleanValueOf(boolean value)
     {
-        valueOfCounter.inc();
         return PiNode.piCastToSnippetReplaceeStamp(Boolean.valueOf(value));
     }
 
     @Snippet
-    public static Object byteValueOf(byte value, @ConstantParameter SnippetCounter valueOfCounter)
+    public static Object byteValueOf(byte value)
     {
-        valueOfCounter.inc();
         return PiNode.piCastToSnippetReplaceeStamp(Byte.valueOf(value));
     }
 
     @Snippet
-    public static Object charValueOf(char value, @ConstantParameter SnippetCounter valueOfCounter)
+    public static Object charValueOf(char value)
     {
-        valueOfCounter.inc();
         return PiNode.piCastToSnippetReplaceeStamp(Character.valueOf(value));
     }
 
     @Snippet
-    public static Object doubleValueOf(double value, @ConstantParameter SnippetCounter valueOfCounter)
+    public static Object doubleValueOf(double value)
     {
-        valueOfCounter.inc();
         return PiNode.piCastToSnippetReplaceeStamp(Double.valueOf(value));
     }
 
     @Snippet
-    public static Object floatValueOf(float value, @ConstantParameter SnippetCounter valueOfCounter)
+    public static Object floatValueOf(float value)
     {
-        valueOfCounter.inc();
         return PiNode.piCastToSnippetReplaceeStamp(Float.valueOf(value));
     }
 
     @Snippet
-    public static Object intValueOf(int value, @ConstantParameter SnippetCounter valueOfCounter)
+    public static Object intValueOf(int value)
     {
-        valueOfCounter.inc();
         return PiNode.piCastToSnippetReplaceeStamp(Integer.valueOf(value));
     }
 
     @Snippet
-    public static Object longValueOf(long value, @ConstantParameter SnippetCounter valueOfCounter)
+    public static Object longValueOf(long value)
     {
-        valueOfCounter.inc();
         return PiNode.piCastToSnippetReplaceeStamp(Long.valueOf(value));
     }
 
     @Snippet
-    public static Object shortValueOf(short value, @ConstantParameter SnippetCounter valueOfCounter)
+    public static Object shortValueOf(short value)
     {
-        valueOfCounter.inc();
         return PiNode.piCastToSnippetReplaceeStamp(Short.valueOf(value));
     }
 
     @Snippet
-    public static boolean booleanValue(Boolean value, @ConstantParameter SnippetCounter valueCounter)
+    public static boolean booleanValue(Boolean value)
     {
-        valueCounter.inc();
         return value.booleanValue();
     }
 
     @Snippet
-    public static byte byteValue(Byte value, @ConstantParameter SnippetCounter valueCounter)
+    public static byte byteValue(Byte value)
     {
-        valueCounter.inc();
         return value.byteValue();
     }
 
     @Snippet
-    public static char charValue(Character value, @ConstantParameter SnippetCounter valueCounter)
+    public static char charValue(Character value)
     {
-        valueCounter.inc();
         return value.charValue();
     }
 
     @Snippet
-    public static double doubleValue(Double value, @ConstantParameter SnippetCounter valueCounter)
+    public static double doubleValue(Double value)
     {
-        valueCounter.inc();
         return value.doubleValue();
     }
 
     @Snippet
-    public static float floatValue(Float value, @ConstantParameter SnippetCounter valueCounter)
+    public static float floatValue(Float value)
     {
-        valueCounter.inc();
         return value.floatValue();
     }
 
     @Snippet
-    public static int intValue(Integer value, @ConstantParameter SnippetCounter valueCounter)
+    public static int intValue(Integer value)
     {
-        valueCounter.inc();
         return value.intValue();
     }
 
     @Snippet
-    public static long longValue(Long value, @ConstantParameter SnippetCounter valueCounter)
+    public static long longValue(Long value)
     {
-        valueCounter.inc();
         return value.longValue();
     }
 
     @Snippet
-    public static short shortValue(Short value, @ConstantParameter SnippetCounter valueCounter)
+    public static short shortValue(Short value)
     {
-        valueCounter.inc();
         return value.shortValue();
     }
 
@@ -179,10 +162,7 @@ public class BoxingSnippets implements Snippets
         private final EnumMap<JavaKind, SnippetInfo> boxSnippets = new EnumMap<>(JavaKind.class);
         private final EnumMap<JavaKind, SnippetInfo> unboxSnippets = new EnumMap<>(JavaKind.class);
 
-        private final SnippetCounter valueOfCounter;
-        private final SnippetCounter valueCounter;
-
-        public Templates(OptionValues options, SnippetCounter.Group.Factory factory, Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
+        public Templates(OptionValues options, Providers providers, SnippetReflectionProvider snippetReflection, TargetDescription target)
         {
             super(options, providers, snippetReflection, target);
             for (JavaKind kind : new JavaKind[] { JavaKind.Boolean, JavaKind.Byte, JavaKind.Char, JavaKind.Double, JavaKind.Float, JavaKind.Int, JavaKind.Long, JavaKind.Short })
@@ -190,9 +170,6 @@ public class BoxingSnippets implements Snippets
                 boxSnippets.put(kind, snippet(BoxingSnippets.class, kind.getJavaName() + "ValueOf"));
                 unboxSnippets.put(kind, snippet(BoxingSnippets.class, kind.getJavaName() + "Value"));
             }
-            Group group = factory.createSnippetCounterGroup("Boxing");
-            valueOfCounter = new SnippetCounter(group, "valueOf", "box intrinsification");
-            valueCounter = new SnippetCounter(group, "<kind>Value", "unbox intrinsification");
         }
 
         public void lower(BoxNode box, LoweringTool tool)
@@ -207,7 +184,6 @@ public class BoxingSnippets implements Snippets
             {
                 Arguments args = new Arguments(boxSnippets.get(box.getBoxingKind()), box.graph().getGuardsStage(), tool.getLoweringStage());
                 args.add("value", box.getValue());
-                args.addConst("valueOfCounter", valueOfCounter);
 
                 SnippetTemplate template = template(box, args);
                 template.instantiate(providers.getMetaAccess(), box, SnippetTemplate.DEFAULT_REPLACER, args);
@@ -218,7 +194,6 @@ public class BoxingSnippets implements Snippets
         {
             Arguments args = new Arguments(unboxSnippets.get(unbox.getBoxingKind()), unbox.graph().getGuardsStage(), tool.getLoweringStage());
             args.add("value", unbox.getValue());
-            args.addConst("valueCounter", valueCounter);
 
             SnippetTemplate template = template(unbox, args);
             template.instantiate(providers.getMetaAccess(), unbox, SnippetTemplate.DEFAULT_REPLACER, args);

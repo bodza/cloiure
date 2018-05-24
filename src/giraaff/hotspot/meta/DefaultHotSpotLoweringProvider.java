@@ -160,15 +160,15 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
     @Override
     public void initialize(OptionValues options, HotSpotProviders providers, GraalHotSpotVMConfig config)
     {
-        super.initialize(options, runtime, providers, providers.getSnippetReflection());
+        super.initialize(options, providers, providers.getSnippetReflection());
 
-        instanceofSnippets = new InstanceOfSnippets.Templates(options, runtime, providers, target);
-        newObjectSnippets = new NewObjectSnippets.Templates(options, runtime, providers, target, config);
-        monitorSnippets = new MonitorSnippets.Templates(options, runtime, providers, target, config.useFastLocking);
-        writeBarrierSnippets = new WriteBarrierSnippets.Templates(options, runtime, providers, target, config.useCompressedOops ? config.getOopEncoding() : null);
+        instanceofSnippets = new InstanceOfSnippets.Templates(options, providers, target);
+        newObjectSnippets = new NewObjectSnippets.Templates(options, providers, target, config);
+        monitorSnippets = new MonitorSnippets.Templates(options, providers, target, config.useFastLocking);
+        writeBarrierSnippets = new WriteBarrierSnippets.Templates(options, providers, target, config.useCompressedOops ? config.getOopEncoding() : null);
         exceptionObjectSnippets = new LoadExceptionObjectSnippets.Templates(options, providers, target);
         unsafeLoadSnippets = new UnsafeLoadSnippets.Templates(options, providers, target);
-        arraycopySnippets = new ArrayCopySnippets.Templates(options, runtime, providers, target);
+        arraycopySnippets = new ArrayCopySnippets.Templates(options, providers, target);
         stringToBytesSnippets = new StringToBytesSnippets.Templates(options, providers, target);
         hashCodeSnippets = new HashCodeSnippets.Templates(options, providers, target);
         resolveConstantSnippets = new ResolveConstantSnippets.Templates(options, providers, target);
@@ -667,12 +667,11 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
                 graph.addBeforeFixed(migrationEnd, load);
             }
 
-            // taken from c2 monitors_addr = osr_buf + (max_locals+mcnt*2-1)*wordSize);
+            // taken from c2 monitors_addr = osr_buf + (max_locals+mcnt*2-1)*wordSize)
             final int lockCount = osrStart.stateAfter().locksSize();
             final int locksOffset = (graph.method().getMaxLocals() + lockCount * 2 - 1) * wordSize;
 
-            // first initialize the lock slots for all enters with the displaced marks read from the
-            // buffer
+            // first initialize the lock slots for all enters with the displaced marks read from the buffer
             for (OSRMonitorEnterNode osrMonitorEnter : graph.getNodes(OSRMonitorEnterNode.TYPE))
             {
                 MonitorIdNode monitorID = osrMonitorEnter.getMonitorId();

@@ -152,7 +152,7 @@ public class NewInstanceStub extends SnippetStub
                 // an int
                 int tlabFreeSpaceInInts = (int) tlabFreeSpaceInBytes >>> 2;
                 int length = ((alignmentReserveInBytes - headerSize) >>> 2) + tlabFreeSpaceInInts;
-                NewObjectSnippets.formatArray(intArrayHub, 0, length, headerSize, top, intArrayMarkWord, false, false, null);
+                NewObjectSnippets.formatArray(intArrayHub, 0, length, headerSize, top, intArrayMarkWord, false, false);
 
                 long allocated = thread.readLong(HotSpotReplacementsUtil.threadAllocatedBytesOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), HotSpotReplacementsUtil.TLAB_THREAD_ALLOCATED_BYTES_LOCATION);
                 allocated = allocated + top.subtract(HotSpotReplacementsUtil.readTlabStart(thread)).rawValue();

@@ -109,9 +109,6 @@ public final class GraalOptions
     // Option "Allow backend to match complex expressions."
     public static final OptionKey<Boolean> MatchExpressions = new OptionKey<>(true);
 
-    // Option "Enable counters for various paths in snippets."
-    public static final OptionKey<Boolean> SnippetCounters = new OptionKey<>(false);
-
     // Option "Eagerly construct extra snippet info."
     public static final OptionKey<Boolean> EagerSnippets = new OptionKey<>(false);
 

@@ -75,7 +75,7 @@ public class NewArrayStub extends SnippetStub
             Word memory = NewInstanceStub.refillAllocate(thread, intArrayHub, sizeInBytes);
             if (memory.notEqual(0))
             {
-                return NewObjectSnippets.formatArray(hub, sizeInBytes, length, headerSize, memory, WordFactory.unsigned(HotSpotReplacementsUtil.arrayPrototypeMarkWord(GraalHotSpotVMConfig.INJECTED_VMCONFIG)), fillContents, false, null);
+                return NewObjectSnippets.formatArray(hub, sizeInBytes, length, headerSize, memory, WordFactory.unsigned(HotSpotReplacementsUtil.arrayPrototypeMarkWord(GraalHotSpotVMConfig.INJECTED_VMCONFIG)), fillContents, false);
             }
         }
 

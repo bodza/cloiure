@@ -9,14 +9,10 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
-import org.graalvm.collections.EconomicMap;
-import org.graalvm.collections.Equivalence;
-
 import giraaff.api.replacements.Fold;
 import giraaff.api.replacements.MethodSubstitution;
 import giraaff.api.replacements.Snippet;
 import giraaff.api.replacements.SnippetReflectionProvider;
-import giraaff.api.replacements.SnippetTemplateCache;
 import giraaff.bytecode.Bytecode;
 import giraaff.bytecode.BytecodeProvider;
 import giraaff.bytecode.ResolvedJavaMethodBytecode;
@@ -155,10 +151,6 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
         }
     }
 
-    // This map is key'ed by a class name instead of a Class object so that
-    // it is stable across VM executions (in support of replay compilation).
-    private final EconomicMap<String, SnippetTemplateCache> snippetTemplateCache;
-
     public ReplacementsImpl(OptionValues options, Providers providers, SnippetReflectionProvider snippetReflection, BytecodeProvider bytecodeProvider, TargetDescription target)
     {
         this.options = options;
@@ -166,7 +158,6 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
         this.snippetReflection = snippetReflection;
         this.target = target;
         this.graphs = new ConcurrentHashMap<>();
-        this.snippetTemplateCache = EconomicMap.create(Equivalence.DEFAULT);
         this.defaultBytecodeProvider = bytecodeProvider;
     }
 
@@ -332,20 +323,9 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
          */
         protected void finalizeGraph(StructuredGraph graph)
         {
-            if (!GraalOptions.SnippetCounters.getValue(replacements.options) || graph.getNodes().filter(SnippetCounterNode.class).isEmpty())
-            {
-                int sideEffectCount = 0;
-                new ConvertDeoptimizeToGuardPhase().apply(graph, null);
+            new ConvertDeoptimizeToGuardPhase().apply(graph, null);
 
-                new DeadCodeEliminationPhase(Optionality.Required).apply(graph);
-            }
-            else
-            {
-                // ConvertDeoptimizeToGuardPhase will eliminate snippet counters on paths
-                // that terminate in a deopt so we disable it if the graph contains
-                // snippet counters. The trade off is that we miss out on guard
-                // coalescing opportunities.
-            }
+            new DeadCodeEliminationPhase(Optionality.Required).apply(graph);
         }
 
         /**
@@ -428,18 +408,5 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
         {
             return new GraphBuilderPhase.Instance(metaAccess, stampProvider, constantReflection, constantFieldProvider, graphBuilderConfig, optimisticOpts, initialIntrinsicContext);
         }
-    }
-
-    @Override
-    public void registerSnippetTemplateCache(SnippetTemplateCache templates)
-    {
-        snippetTemplateCache.put(templates.getClass().getName(), templates);
-    }
-
-    @Override
-    public <T extends SnippetTemplateCache> T getSnippetTemplateCache(Class<T> templatesClass)
-    {
-        SnippetTemplateCache ret = snippetTemplateCache.get(templatesClass.getName());
-        return templatesClass.cast(ret);
     }
 }
