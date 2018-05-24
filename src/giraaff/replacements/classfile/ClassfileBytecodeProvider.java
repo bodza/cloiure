@@ -16,7 +16,7 @@ import org.graalvm.collections.Equivalence;
 import giraaff.api.replacements.SnippetReflectionProvider;
 import giraaff.bytecode.Bytecode;
 import giraaff.bytecode.BytecodeProvider;
-import giraaff.serviceprovider.GraalServices;
+import giraaff.util.GraalServices;
 
 /**
  * A {@link BytecodeProvider} that provides bytecode properties of a {@link ResolvedJavaMethod} as

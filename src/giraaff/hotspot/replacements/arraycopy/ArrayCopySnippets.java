@@ -18,7 +18,6 @@ import giraaff.api.directives.GraalDirectives;
 import giraaff.api.replacements.Fold;
 import giraaff.api.replacements.Snippet;
 import giraaff.api.replacements.Snippet.ConstantParameter;
-import giraaff.debug.GraalError;
 import giraaff.graph.Node;
 import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.meta.HotSpotProviders;
@@ -50,6 +49,7 @@ import giraaff.replacements.SnippetTemplate.SnippetInfo;
 import giraaff.replacements.Snippets;
 import giraaff.replacements.nodes.BasicArrayCopyNode;
 import giraaff.replacements.nodes.ExplodeLoopNode;
+import giraaff.util.GraalError;
 import giraaff.word.Word;
 
 public class ArrayCopySnippets implements Snippets
@@ -197,10 +197,7 @@ public class ArrayCopySnippets implements Snippets
                 int copiedElements = CheckcastArrayCopyCallNode.checkcastArraycopy(nonNullSrc, srcPos, nonNullDest, destPos, length, superCheckOffset, destElemKlass, false);
                 if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, copiedElements != 0))
                 {
-                    /*
-                     * the stub doesn't throw the ArrayStoreException, but returns the number of
-                     * copied elements (xor'd with -1).
-                     */
+                    // the stub doesn't throw the ArrayStoreException, but returns the number of copied elements (xor'd with -1)
                     copiedElements ^= -1;
                     System.arraycopy(nonNullSrc, srcPos + copiedElements, nonNullDest, destPos + copiedElements, length - copiedElements);
                 }
@@ -218,10 +215,7 @@ public class ArrayCopySnippets implements Snippets
         int copiedElements = GenericArrayCopyCallNode.genericArraycopy(src, srcPos, dest, destPos, length);
         if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, copiedElements != 0))
         {
-            /*
-             * the stub doesn't throw the ArrayStoreException, but returns the number of copied
-             * elements (xor'd with -1).
-             */
+            // the stub doesn't throw the ArrayStoreException, but returns the number of copied elements (xor'd with -1)
             copiedElements ^= -1;
             System.arraycopy(src, srcPos + copiedElements, dest, destPos + copiedElements, length - copiedElements);
         }

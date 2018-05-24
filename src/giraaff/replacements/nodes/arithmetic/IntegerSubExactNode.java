@@ -32,10 +32,9 @@ public final class IntegerSubExactNode extends SubNode implements IntegerExactAr
     public boolean inferStamp()
     {
         /*
-         * Note: it is not allowed to use the foldStamp method of the regular sub node as we do not
-         * know the result stamp of this node if we do not know whether we may deopt. If we know we
-         * can never overflow we will replace this node with its non overflow checking counterpart
-         * anyway.
+         * Note: it is not allowed to use the foldStamp method of the regular sub node as we do not know
+         * the result stamp of this node if we do not know whether we may deopt. If we know we can never
+         * overflow we will replace this node with its non overflow checking counterpart anyway.
          */
         return false;
     }

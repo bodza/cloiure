@@ -17,8 +17,8 @@ import jdk.vm.ci.meta.TriState;
 
 import giraaff.bytecode.Bytecode;
 import giraaff.bytecode.BytecodeProvider;
-import giraaff.debug.GraalError;
 import giraaff.replacements.classfile.ClassfileConstant.Utf8;
+import giraaff.util.GraalError;
 
 /**
  * The bytecode properties of a method as parsed directly from a class file without any

@@ -7,7 +7,6 @@ import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.type.Stamp;
-import giraaff.debug.GraalError;
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
@@ -26,6 +25,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.spi.Virtualizable;
 import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.util.GraphUtil;
+import giraaff.util.GraalError;
 
 /**
  * Reads an {@linkplain FixedAccessNode accessed} value.

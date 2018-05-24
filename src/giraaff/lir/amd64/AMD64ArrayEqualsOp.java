@@ -218,10 +218,7 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
             masm.bind(unalignedCheck);
         }
 
-        /*
-         * Compare the remaining bytes with an unaligned memory load aligned to the end of the
-         * array.
-         */
+        // Compare the remaining bytes with an unaligned memory load aligned to the end of the array.
         masm.movdqu(vector1, new AMD64Address(array1, result, Scale.Times1, -SSE4_1_VECTOR_SIZE));
         masm.movdqu(vector2, new AMD64Address(array2, result, Scale.Times1, -SSE4_1_VECTOR_SIZE));
         masm.pxor(vector1, vector2);
@@ -305,10 +302,7 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
             masm.bind(unalignedCheck);
         }
 
-        /*
-         * Compare the remaining bytes with an unaligned memory load aligned to the end of the
-         * array.
-         */
+        // Compare the remaining bytes with an unaligned memory load aligned to the end of the array.
         masm.vmovdqu(vector1, new AMD64Address(array1, result, Scale.Times1, -AVX_VECTOR_SIZE));
         masm.vmovdqu(vector2, new AMD64Address(array2, result, Scale.Times1, -AVX_VECTOR_SIZE));
         masm.vpxor(vector1, vector1, vector2);
@@ -384,10 +378,7 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
             masm.bind(unalignedCheck);
         }
 
-        /*
-         * Compare the remaining bytes with an unaligned memory load aligned to the end of the
-         * array.
-         */
+        // Compare the remaining bytes with an unaligned memory load aligned to the end of the array.
         masm.movq(temp, new AMD64Address(array1, result, Scale.Times1, -VECTOR_SIZE));
         masm.cmpq(temp, new AMD64Address(array2, result, Scale.Times1, -VECTOR_SIZE));
         if (requiresNaNCheck)

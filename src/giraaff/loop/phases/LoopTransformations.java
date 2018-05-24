@@ -7,7 +7,6 @@ import java.util.List;
 import giraaff.core.common.GraalOptions;
 import giraaff.core.common.RetryableBailoutException;
 import giraaff.core.common.calc.CanonicalCondition;
-import giraaff.debug.GraalError;
 import giraaff.graph.Graph.Mark;
 import giraaff.graph.Node;
 import giraaff.graph.Position;
@@ -42,6 +41,7 @@ import giraaff.nodes.calc.IntegerLessThanNode;
 import giraaff.nodes.extended.SwitchNode;
 import giraaff.phases.common.CanonicalizerPhase;
 import giraaff.phases.tiers.PhaseContext;
+import giraaff.util.GraalError;
 
 public abstract class LoopTransformations
 {

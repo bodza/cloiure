@@ -23,12 +23,12 @@ import giraaff.core.common.spi.CodeGenProviders;
 import giraaff.core.common.spi.ForeignCallLinkage;
 import giraaff.core.common.spi.ForeignCallsProvider;
 import giraaff.core.common.type.Stamp;
-import giraaff.debug.GraalError;
 import giraaff.lir.LIRFrameState;
 import giraaff.lir.LIRInstruction;
 import giraaff.lir.LabelRef;
 import giraaff.lir.SwitchStrategy;
 import giraaff.lir.Variable;
+import giraaff.util.GraalError;
 
 public interface LIRGeneratorTool extends DiagnosticLIRGeneratorTool, ValueKindFactory<LIRKind>
 {
@@ -42,8 +42,7 @@ public interface LIRGeneratorTool extends DiagnosticLIRGeneratorTool, ValueKindF
          * most operations, i.e., for commonly used arithmetic, logical, and comparison operations.
          *
          * @param c The constant to check.
-         * @return True if the constant can be used directly, false if the constant needs to be in a
-         *         register.
+         * @return True if the constant can be used directly, false if the constant needs to be in a register.
          */
         boolean canInlineConstant(Constant c);
 

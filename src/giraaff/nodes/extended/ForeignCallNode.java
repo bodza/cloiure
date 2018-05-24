@@ -49,9 +49,8 @@ public class ForeignCallNode extends AbstractMemoryCheckpoint implements LIRLowe
         node.setStamp(returnStamp);
 
         /*
-         * Need to update the BCI of a ForeignCallNode so that it gets the stateDuring in the case
-         * that the foreign call can deoptimize. As with all deoptimization, we need a state in a
-         * non-intrinsic method.
+         * Need to update the BCI of a ForeignCallNode so that it gets the stateDuring in the case that the
+         * foreign call can deoptimize. As with all deoptimization, we need a state in a non-intrinsic method.
          */
         GraphBuilderContext nonIntrinsicAncestor = b.getNonIntrinsicAncestor();
         if (nonIntrinsicAncestor != null)
@@ -177,8 +176,7 @@ public class ForeignCallNode extends AbstractMemoryCheckpoint implements LIRLowe
     }
 
     /**
-     * Set the {@code bci} of the invoke bytecode for use when converting a stateAfter into a
-     * stateDuring.
+     * Set the {@code bci} of the invoke bytecode for use when converting a stateAfter into a stateDuring.
      */
     public void setBci(int bci)
     {

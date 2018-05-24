@@ -17,8 +17,7 @@ import giraaff.graph.Node;
 public class MatchStatement
 {
     /**
-     * A printable name for this statement. Usually it's just the name of the method doing the
-     * emission.
+     * A printable name for this statement. Usually it's just the name of the method doing the emission.
      */
     private final String name;
 

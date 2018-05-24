@@ -42,8 +42,7 @@ public abstract class Stamp
     public abstract LIRKind getLIRKind(LIRKindTool tool);
 
     /**
-     * Returns the union of this stamp and the given stamp. Typically used to create stamps for phi
-     * nodes.
+     * Returns the union of this stamp and the given stamp. Typically used to create stamps for phi nodes.
      *
      * @param other The stamp that will enlarge this stamp.
      * @return The union of this stamp and the given stamp.
@@ -136,8 +135,7 @@ public abstract class Stamp
      * improved stamp. Otherwise, returns a stamp equal to this.
      *
      * @param other the stamp that should be used to improve this stamp
-     * @return the newly improved stamp or a stamp equal to {@code this} if an improvement was not
-     *         possible
+     * @return the newly improved stamp or a stamp equal to {@code this} if an improvement was not possible
      */
     public abstract Stamp improveWith(Stamp other);
 

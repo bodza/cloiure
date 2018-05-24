@@ -114,10 +114,7 @@ public final class UnsignedRightShiftNode extends ShiftNode<UShr>
     {
         if (super.isNarrowable(resultBits))
         {
-            /*
-             * For unsigned right shifts, the narrow can be done before the shift if the cut off
-             * bits are all zero.
-             */
+            // For unsigned right shifts, the narrow can be done before the shift if the cut off bits are all zero.
             IntegerStamp inputStamp = (IntegerStamp) getX().stamp(NodeView.DEFAULT);
             return (inputStamp.upMask() & ~(resultBits - 1)) == 0;
         }

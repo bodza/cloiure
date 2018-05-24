@@ -18,7 +18,6 @@ import giraaff.core.common.alloc.ComputeBlockOrder;
 import giraaff.core.common.alloc.RegisterAllocationConfig;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.core.target.Backend;
-import giraaff.debug.GraalError;
 import giraaff.lir.LIR;
 import giraaff.lir.alloc.OutOfRegistersException;
 import giraaff.lir.asm.CompilationResultBuilder;
@@ -44,6 +43,7 @@ import giraaff.phases.tiers.MidTierContext;
 import giraaff.phases.tiers.Suites;
 import giraaff.phases.tiers.TargetProvider;
 import giraaff.phases.util.Providers;
+import giraaff.util.GraalError;
 
 /**
  * Static methods for orchestrating the compilation of a {@linkplain StructuredGraph graph}.

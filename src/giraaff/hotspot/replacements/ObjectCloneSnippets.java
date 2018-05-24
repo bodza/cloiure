@@ -7,11 +7,11 @@ import jdk.vm.ci.meta.JavaKind;
 
 import giraaff.api.directives.GraalDirectives;
 import giraaff.api.replacements.Snippet;
-import giraaff.debug.GraalError;
 import giraaff.hotspot.replacements.arraycopy.ArrayCopyCallNode;
 import giraaff.nodes.java.DynamicNewArrayNode;
 import giraaff.nodes.java.NewArrayNode;
 import giraaff.replacements.Snippets;
+import giraaff.util.GraalError;
 
 public class ObjectCloneSnippets implements Snippets
 {
@@ -109,7 +109,7 @@ public class ObjectCloneSnippets implements Snippets
     @Snippet
     public static Object[] objectArrayClone(Object[] src)
     {
-        /* Since this snippet is lowered early the array must be initialized */
+        // Since this snippet is lowered early the array must be initialized
         Object[] result = (Object[]) DynamicNewArrayNode.newArray(GraalDirectives.guardingNonNull(src.getClass().getComponentType()), src.length, JavaKind.Object);
         ArrayCopyCallNode.disjointUninitializedArraycopy(src, 0, result, 0, src.length, JavaKind.Object);
         return result;

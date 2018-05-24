@@ -29,7 +29,7 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 import giraaff.code.CompilationResult;
 import giraaff.code.DataSection;
-import giraaff.debug.GraalError;
+import giraaff.util.GraalError;
 
 public class HotSpotCompiledCodeBuilder
 {

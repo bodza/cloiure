@@ -10,8 +10,7 @@ import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.LoopBeginNode;
 
 /**
- * Placeholder node to denote to snippet preparation that the following loop must be completely
- * unrolled.
+ * Placeholder node to denote to snippet preparation that the following loop must be completely unrolled.
  *
  * @see VarargsParameter
  */

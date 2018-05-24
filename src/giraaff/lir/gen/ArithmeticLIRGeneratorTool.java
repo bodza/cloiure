@@ -5,9 +5,9 @@ import jdk.vm.ci.meta.ValueKind;
 
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.calc.FloatConvert;
-import giraaff.debug.GraalError;
 import giraaff.lir.LIRFrameState;
 import giraaff.lir.Variable;
+import giraaff.util.GraalError;
 
 /**
  * This interface can be used to generate LIR for arithmetic and simple memory access operations.

@@ -31,8 +31,7 @@ public class HashSetNodeEventListener extends NodeEventListener
     }
 
     /**
-     * Creates a {@link NodeEventListener} that collects nodes from all events that match a given
-     * filter.
+     * Creates a {@link NodeEventListener} that collects nodes from all events that match a given filter.
      */
     public HashSetNodeEventListener(Set<NodeEvent> filter)
     {

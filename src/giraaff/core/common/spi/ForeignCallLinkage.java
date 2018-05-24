@@ -10,14 +10,12 @@ import jdk.vm.ci.meta.Value;
 public interface ForeignCallLinkage extends InvokeTarget
 {
     /**
-     * Gets the details of where parameters are passed and value(s) are returned from the caller's
-     * perspective.
+     * Gets the details of where parameters are passed and value(s) are returned from the caller's perspective.
      */
     CallingConvention getOutgoingCallingConvention();
 
     /**
-     * Gets the details of where parameters are passed and value(s) are returned from the callee's
-     * perspective.
+     * Gets the details of where parameters are passed and value(s) are returned from the callee's perspective.
      */
     CallingConvention getIncomingCallingConvention();
 

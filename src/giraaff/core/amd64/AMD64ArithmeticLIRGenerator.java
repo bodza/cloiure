@@ -30,7 +30,6 @@ import giraaff.core.common.GraalOptions;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.NumUtil;
 import giraaff.core.common.calc.FloatConvert;
-import giraaff.debug.GraalError;
 import giraaff.lir.ConstantValue;
 import giraaff.lir.LIRFrameState;
 import giraaff.lir.LIRValueUtil;
@@ -53,6 +52,7 @@ import giraaff.lir.amd64.AMD64SignExtendOp;
 import giraaff.lir.amd64.AMD64Unary;
 import giraaff.lir.gen.ArithmeticLIRGenerator;
 import giraaff.lir.gen.LIRGenerator;
+import giraaff.util.GraalError;
 
 /**
  * This class implements the AMD64 specific portion of the LIR generator.
@@ -944,8 +944,7 @@ public class AMD64ArithmeticLIRGenerator extends ArithmeticLIRGenerator implemen
 
         AllocatableValue input = getLIRGen().asAllocatable(inputVal);
         /*
-         * Conversions between integer to floating point types require moves between CPU and FPU
-         * registers.
+         * Conversions between integer to floating point types require moves between CPU and FPU registers.
          */
         AMD64Kind fromKind = (AMD64Kind) from.getPlatformKind();
         switch ((AMD64Kind) to.getPlatformKind())

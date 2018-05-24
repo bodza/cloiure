@@ -8,13 +8,13 @@ import org.graalvm.word.WordFactory;
 
 import giraaff.api.replacements.ClassSubstitution;
 import giraaff.api.replacements.MethodSubstitution;
-import giraaff.debug.GraalError;
 import giraaff.hotspot.HotSpotBackend;
 import giraaff.hotspot.nodes.ComputeObjectAddressNode;
 import giraaff.nodes.PiNode;
 import giraaff.nodes.extended.RawLoadNode;
-import giraaff.word.Word;
+import giraaff.util.GraalError;
 import giraaff.util.UnsafeAccess;
+import giraaff.word.Word;
 
 @ClassSubstitution(className = "sun.security.provider.SHA2", optional = true)
 public class SHA2Substitutions

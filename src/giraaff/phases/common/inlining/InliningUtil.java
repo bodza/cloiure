@@ -22,7 +22,6 @@ import giraaff.core.common.GraalOptions;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.TypeReference;
-import giraaff.debug.GraalError;
 import giraaff.graph.GraalGraphError;
 import giraaff.graph.Graph.DuplicationReplacement;
 import giraaff.graph.Graph.Mark;
@@ -72,6 +71,7 @@ import giraaff.nodes.type.StampTool;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.phases.common.util.HashSetNodeEventListener;
 import giraaff.phases.util.ValueMergeUtil;
+import giraaff.util.GraalError;
 
 public class InliningUtil extends ValueMergeUtil
 {
@@ -292,9 +292,8 @@ public class InliningUtil extends ValueMergeUtil
 
     /**
      * Inline {@code inlineGraph} into the current replacing the node {@code Invoke} and return the
-     * set of nodes which should be canonicalized. The set should only contain nodes which modified
-     * by the inlining since the current graph and {@code inlineGraph} are expected to already be
-     * canonical.
+     * set of nodes which should be canonicalized. The set should only contain nodes which modified by
+     * the inlining since the current graph and {@code inlineGraph} are expected to already be canonical.
      *
      * @return the set of nodes to canonicalize
      */

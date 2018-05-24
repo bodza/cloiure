@@ -8,12 +8,12 @@ import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.MetaAccessProvider;
 
 import giraaff.core.common.spi.ArrayOffsetProvider;
-import giraaff.debug.GraalError;
 import giraaff.graph.Node;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.java.MonitorIdNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
 import giraaff.options.OptionValues;
+import giraaff.util.GraalError;
 
 /**
  * This tool can be used to query the current state (normal/virtualized/re-materialized) of values
@@ -37,8 +37,7 @@ public interface VirtualizerTool
     ArrayOffsetProvider getArrayOffsetProvider();
 
     /**
-     * This method should be used to query the maximum size of virtualized objects before attempting
-     * virtualization.
+     * This method should be used to query the maximum size of virtualized objects before attempting virtualization.
      *
      * @return the maximum number of entries for virtualized objects.
      */

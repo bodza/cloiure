@@ -5,7 +5,6 @@ import jdk.vm.ci.meta.JavaKind;
 
 import giraaff.core.common.type.FloatStamp;
 import giraaff.core.common.type.Stamp;
-import giraaff.debug.GraalError;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.lir.amd64.AMD64ArithmeticLIRGeneratorTool;
@@ -17,6 +16,7 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.calc.UnaryNode;
 import giraaff.nodes.spi.ArithmeticLIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
+import giraaff.util.GraalError;
 
 /**
  * Round floating-point value.

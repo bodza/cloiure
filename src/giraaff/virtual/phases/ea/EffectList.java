@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import giraaff.debug.GraalError;
 import giraaff.graph.Node;
 import giraaff.nodes.StructuredGraph;
+import giraaff.util.GraalError;
 
 /**
  * An {@link EffectList} can be used to maintain a list of {@link Effect}s and backtrack to a

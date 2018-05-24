@@ -31,12 +31,12 @@ public class ValueMergeUtil
             {
                 if (phiResult == null && (singleResult == null || singleResult == result))
                 {
-                    /* Only one result value, so no need yet for a phi node. */
+                    // Only one result value, so no need yet for a phi node.
                     singleResult = result;
                 }
                 else if (phiResult == null)
                 {
-                    /* Found a second result value, so create phi node. */
+                    // Found a second result value, so create phi node.
                     phiResult = merge.graph().addWithoutUnique(new ValuePhiNode(result.stamp(NodeView.DEFAULT).unrestricted(), merge));
                     for (int i = 0; i < merge.forwardEndCount(); i++)
                     {
@@ -46,7 +46,7 @@ public class ValueMergeUtil
                 }
                 else
                 {
-                    /* Multiple return values, just add to existing phi node. */
+                    // Multiple return values, just add to existing phi node.
                     phiResult.addInput(result);
                 }
             }

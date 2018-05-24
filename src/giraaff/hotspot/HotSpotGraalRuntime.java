@@ -15,7 +15,6 @@ import org.graalvm.collections.Equivalence;
 import giraaff.api.replacements.SnippetReflectionProvider;
 import giraaff.core.common.GraalOptions;
 import giraaff.core.target.Backend;
-import giraaff.debug.GraalError;
 import giraaff.hotspot.CompilerConfigurationFactory.BackendMap;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.nodes.spi.StampProvider;
@@ -24,6 +23,7 @@ import giraaff.phases.tiers.CompilerConfiguration;
 import giraaff.replacements.SnippetCounter;
 import giraaff.replacements.SnippetCounter.Group;
 import giraaff.runtime.RuntimeProvider;
+import giraaff.util.GraalError;
 
 /**
  * Singleton class holding the instance of the {@link GraalRuntime}.
@@ -106,8 +106,6 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider
                 backend.completeInitialization(jvmciRuntime, options);
             }
         }
-
-        bootstrapJVMCI = config.getFlag("BootstrapJVMCI", Boolean.class);
     }
 
     private HotSpotBackend registerBackend(HotSpotBackend backend)
@@ -200,34 +198,9 @@ public final class HotSpotGraalRuntime implements HotSpotGraalRuntimeProvider
 
     private boolean shutdown;
 
-    /**
-     * Take action related to entering a new execution phase.
-     *
-     * @param phase the execution phase being entered
-     */
-    void phaseTransition(String phase)
-    {
-    }
-
     void shutdown()
     {
         shutdown = true;
-
-        phaseTransition("final");
-    }
-
-    private final boolean bootstrapJVMCI;
-    private boolean bootstrapFinished;
-
-    public void notifyBootstrapFinished()
-    {
-        bootstrapFinished = true;
-    }
-
-    @Override
-    public boolean isBootstrapping()
-    {
-        return bootstrapJVMCI && !bootstrapFinished;
     }
 
     @Override

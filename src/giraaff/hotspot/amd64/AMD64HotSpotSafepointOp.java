@@ -72,8 +72,7 @@ public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
     }
 
     /**
-     * Tests if the polling page address can be reached from the code cache with 32-bit
-     * displacements.
+     * Tests if the polling page address can be reached from the code cache with 32-bit displacements.
      */
     private static boolean isPollingPageFar(GraalHotSpotVMConfig config)
     {

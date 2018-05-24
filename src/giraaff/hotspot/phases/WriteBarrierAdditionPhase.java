@@ -1,6 +1,5 @@
 package giraaff.hotspot.phases;
 
-import giraaff.debug.GraalError;
 import giraaff.graph.Node;
 import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.nodes.G1ArrayRangePostWriteBarrier;
@@ -22,6 +21,7 @@ import giraaff.nodes.memory.WriteNode;
 import giraaff.nodes.memory.address.AddressNode;
 import giraaff.nodes.type.StampTool;
 import giraaff.phases.Phase;
+import giraaff.util.GraalError;
 
 public class WriteBarrierAdditionPhase extends Phase
 {

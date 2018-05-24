@@ -5,7 +5,7 @@ import java.util.Arrays;
 /**
  * The name and signature of a foreign call. A foreign call differs from a normal compiled Java call
  * in at least one of these aspects:
- * <ul>
+ *
  * <li>The call is to C/C++/assembler code.</li>
  * <li>The call uses different conventions for passing parameters or returning values.</li>
  * <li>The callee has different register saving semantics. For example, the callee may save all
@@ -14,7 +14,6 @@ import java.util.Arrays;
  * <li>The call does not occur at an INVOKE* bytecode. Such a call could be transformed into a
  * standard Java call if the foreign routine is a normal Java method and the runtime supports
  * linking Java calls at arbitrary bytecodes.</li>
- * </ul>
  */
 public class ForeignCallDescriptor
 {

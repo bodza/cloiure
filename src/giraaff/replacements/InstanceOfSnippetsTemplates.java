@@ -97,10 +97,7 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
             ValueNode falseValue = ConstantNode.forInt(0, graph);
             if (instantiation.isInitialized() && (trueValue != instantiation.trueValue || falseValue != instantiation.falseValue))
             {
-                /*
-                 * This code doesn't really care what values are used so adopt the values from the
-                 * previous instantiation.
-                 */
+                // This code doesn't really care what values are used so adopt the values from the previous instantiation.
                 trueValue = instantiation.trueValue;
                 falseValue = instantiation.falseValue;
             }

@@ -32,7 +32,6 @@ import giraaff.core.common.LIRKind;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.core.common.spi.ForeignCallLinkage;
 import giraaff.core.common.spi.LIRKindTool;
-import giraaff.debug.GraalError;
 import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.HotSpotBackend;
 import giraaff.hotspot.HotSpotDebugInfoBuilder;
@@ -67,6 +66,7 @@ import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.lir.framemap.FrameMapBuilder;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.options.OptionValues;
+import giraaff.util.GraalError;
 
 /**
  * LIR generator specialized for AMD64 HotSpot.

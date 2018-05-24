@@ -27,7 +27,6 @@ import giraaff.core.common.NumUtil;
 import giraaff.core.common.calc.Condition;
 import giraaff.core.common.spi.ForeignCallLinkage;
 import giraaff.core.common.spi.LIRKindTool;
-import giraaff.debug.GraalError;
 import giraaff.lir.ConstantValue;
 import giraaff.lir.LIRFrameState;
 import giraaff.lir.LIRInstruction;
@@ -67,6 +66,7 @@ import giraaff.lir.amd64.AMD64ZapStackOp;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.gen.LIRGenerator;
 import giraaff.phases.util.Providers;
+import giraaff.util.GraalError;
 
 /**
  * This class implements the AMD64 specific portion of the LIR generator.
@@ -83,8 +83,7 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
      * operations, i.e., on the right hand side of a memory access.
      *
      * @param c The constant to check.
-     * @return True if the constant can be used directly, false if the constant needs to be in a
-     *         register.
+     * @return True if the constant can be used directly, false if the constant needs to be in a register.
      */
     protected static final boolean canStoreConstant(JavaConstant c)
     {
@@ -153,9 +152,8 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
     }
 
     /**
-     * The AMD64 backend only uses DWORD and QWORD values in registers because of a performance
-     * penalty when accessing WORD or BYTE registers. This function converts small integer kinds to
-     * DWORD.
+     * The AMD64 backend only uses DWORD and QWORD values in registers because of a performance penalty
+     * when accessing WORD or BYTE registers. This function converts small integer kinds to DWORD.
      */
     @Override
     public <K extends ValueKind<K>> K toRegisterKind(K kind)

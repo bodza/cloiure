@@ -13,7 +13,6 @@ import giraaff.core.common.calc.CanonicalCondition;
 import giraaff.core.common.type.FloatStamp;
 import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.StampFactory;
-import giraaff.debug.GraalError;
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.CanonicalizerTool;
@@ -24,6 +23,7 @@ import giraaff.nodes.LogicNode;
 import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
 import giraaff.options.OptionValues;
+import giraaff.util.GraalError;
 
 public final class IntegerLessThanNode extends IntegerLowerThanNode
 {

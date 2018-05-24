@@ -102,10 +102,7 @@ public class HotSpotGraalCompiler implements GraalJVMCICompiler
         ProfilingInfo profilingInfo = useProfilingInfo ? method.getProfilingInfo(!isOSR, isOSR) : DefaultProfilingInfo.get(TriState.FALSE);
         OptimisticOptimizations optimisticOpts = getOptimisticOpts(profilingInfo, options);
 
-        /*
-         * Cut off never executed code profiles if there is code, e.g. after the osr loop, that is
-         * never executed.
-         */
+        // Cut off never executed code profiles if there is code, e.g. after the osr loop, that is never executed.
         if (isOSR && !OnStackReplacementPhase.Options.DeoptAfterOSR.getValue(options))
         {
             optimisticOpts.remove(Optimization.RemoveNeverExecutedCode);

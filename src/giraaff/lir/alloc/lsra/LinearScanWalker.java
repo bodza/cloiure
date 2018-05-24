@@ -13,7 +13,6 @@ import jdk.vm.ci.meta.Value;
 import giraaff.core.common.alloc.RegisterAllocationConfig.AllocatableRegisters;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.core.common.util.Util;
-import giraaff.debug.GraalError;
 import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRValueUtil;
 import giraaff.lir.StandardOp.ValueMoveOp;
@@ -22,6 +21,7 @@ import giraaff.lir.alloc.lsra.Interval.RegisterBinding;
 import giraaff.lir.alloc.lsra.Interval.RegisterPriority;
 import giraaff.lir.alloc.lsra.Interval.SpillState;
 import giraaff.lir.alloc.lsra.Interval.State;
+import giraaff.util.GraalError;
 
 /**
  */
@@ -790,16 +790,12 @@ class LinearScanWalker extends IntervalWalker
                     {
                         /*
                          * Tool of last resort: we can not spill the current interval so we try
-                         * to spill an active interval that has a usage but do not require a
-                         * register.
+                         * to spill an active interval that has a usage but do not require a register.
                          */
                         continue;
                     }
                     String description = generateOutOfRegErrorMsg(interval, firstUsage, availableRegs);
-                    /*
-                     * assign a reasonable register and do a bailout in product mode to avoid
-                     * errors
-                     */
+                    // assign a reasonable register and do a bailout in product mode to avoid errors
                     allocator.assignSpillSlot(interval);
                     throw new OutOfRegistersException("LinearScan: no register found", description);
                 }

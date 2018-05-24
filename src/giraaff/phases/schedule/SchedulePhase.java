@@ -529,9 +529,8 @@ public final class SchedulePhase extends Phase
                     if (immutableGraph && !visited.contains(usage))
                     {
                         /*
-                         * Normally, dead nodes are deleted by the scheduler before we reach this
-                         * point. Only when the scheduler is asked to not modify a graph, we can see
-                         * dead nodes here.
+                         * Normally, dead nodes are deleted by the scheduler before we reach this point.
+                         * Only when the scheduler is asked to not modify a graph, we can see dead nodes here.
                          */
                         continue;
                     }
@@ -722,8 +721,7 @@ public final class SchedulePhase extends Phase
             }
 
             /**
-             * The id of the micro block, with a block always associated with a lower id than its
-             * successors.
+             * The id of the micro block, with a block always associated with a lower id than its successors.
              */
             public int getId()
             {
@@ -739,8 +737,7 @@ public final class SchedulePhase extends Phase
             }
 
             /**
-             * Takes all nodes in this micro blocks and prepends them to the nodes of the given
-             * parameter.
+             * Takes all nodes in this micro blocks and prepends them to the nodes of the given parameter.
              *
              * @param newBlock the new block for the nodes
              */
@@ -880,10 +877,7 @@ public final class SchedulePhase extends Phase
                         }
                     }
 
-                    /*
-                     * the processing of one loop phi could have marked a previously checked loop
-                     * phi, therefore this needs to be iterative.
-                     */
+                    // the processing of one loop phi could have marked a previously checked loop phi, therefore this needs to be iterative.
                 } while (unmarkedPhi && changed);
             }
 

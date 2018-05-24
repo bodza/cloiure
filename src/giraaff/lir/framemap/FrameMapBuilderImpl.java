@@ -11,9 +11,9 @@ import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.ValueKind;
 
 import giraaff.core.common.LIRKind;
-import giraaff.debug.GraalError;
 import giraaff.lir.VirtualStackSlot;
 import giraaff.lir.gen.LIRGenerationResult;
+import giraaff.util.GraalError;
 
 /**
  * A FrameMapBuilder that records allocation.

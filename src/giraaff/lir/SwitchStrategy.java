@@ -416,8 +416,7 @@ public abstract class SwitchStrategy
     }
 
     /**
-     * This strategy recursively subdivides the list of keys to create a binary search based on
-     * probabilities.
+     * This strategy recursively subdivides the list of keys to create a binary search based on probabilities.
      */
     public static class BinaryStrategy extends PrimitiveStrategy
     {

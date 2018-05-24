@@ -120,7 +120,7 @@ public final class TypeSwitchNode extends SwitchNode implements LIRLowerable, Si
                 Boolean equal = tool.getConstantReflection().constantEquals(constant, typeHub);
                 if (equal == null)
                 {
-                    /* We don't know if this key is a match or not, so we cannot simplify. */
+                    // We don't know if this key is a match or not, so we cannot simplify.
                     return;
                 }
                 else if (equal.booleanValue())

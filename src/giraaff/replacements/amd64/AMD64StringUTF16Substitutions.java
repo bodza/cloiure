@@ -31,10 +31,7 @@ public class AMD64StringUTF16Substitutions
     @MethodSubstitution
     public static int compareToLatin1(byte[] value, byte[] other)
     {
-        /*
-         * Swapping array arguments because intrinsic expects order to be byte[]/char[] but kind
-         * arguments stay in original order.
-         */
+        // Swapping array arguments because intrinsic expects order to be byte[]/char[] but kind arguments stay in original order.
         return ArrayCompareToNode.compareTo(other, value, other.length, value.length, JavaKind.Char, JavaKind.Byte);
     }
 }

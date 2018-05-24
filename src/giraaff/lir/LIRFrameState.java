@@ -18,8 +18,7 @@ import giraaff.lir.framemap.FrameMap;
 import giraaff.lir.util.IndexedValueMap;
 
 /**
- * This class represents garbage collection and deoptimization information attached to a LIR
- * instruction.
+ * This class represents garbage collection and deoptimization information attached to a LIR instruction.
  */
 public class LIRFrameState
 {

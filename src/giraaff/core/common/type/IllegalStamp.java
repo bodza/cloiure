@@ -9,7 +9,7 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.spi.LIRKindTool;
-import giraaff.debug.GraalError;
+import giraaff.util.GraalError;
 
 /**
  * This stamp represents the type of the {@link JavaKind#Illegal} value in the second slot of

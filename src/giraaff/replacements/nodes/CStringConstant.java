@@ -15,8 +15,7 @@ import giraaff.nodes.graphbuilderconf.GraphBuilderContext;
 import giraaff.word.Word;
 
 /**
- * Represents a compile-time constant zero-terminated UTF-8 string installed with the generated
- * code.
+ * Represents a compile-time constant zero-terminated UTF-8 string installed with the generated code.
  */
 public final class CStringConstant extends DataPointerConstant
 {

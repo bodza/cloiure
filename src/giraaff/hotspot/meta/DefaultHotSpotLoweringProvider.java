@@ -26,7 +26,6 @@ import giraaff.core.common.type.ObjectStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.StampPair;
-import giraaff.debug.GraalError;
 import giraaff.graph.Node;
 import giraaff.graph.NodeInputList;
 import giraaff.hotspot.GraalHotSpotVMConfig;
@@ -128,6 +127,7 @@ import giraaff.nodes.type.StampTool;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.options.OptionValues;
 import giraaff.replacements.DefaultJavaLoweringProvider;
+import giraaff.util.GraalError;
 
 /**
  * HotSpot implementation of {@link LoweringProvider}.
@@ -374,7 +374,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
         }
         else if (n instanceof AbstractDeoptimizeNode || n instanceof UnwindNode || n instanceof RemNode || n instanceof SafepointNode)
         {
-            /* No lowering, we generate LIR directly for these nodes. */
+            // No lowering, we generate LIR directly for these nodes.
         }
         else if (n instanceof ClassGetHubNode)
         {

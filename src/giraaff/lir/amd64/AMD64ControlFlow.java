@@ -16,7 +16,6 @@ import giraaff.asm.amd64.AMD64Address.Scale;
 import giraaff.asm.amd64.AMD64Assembler.ConditionFlag;
 import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.core.common.calc.Condition;
-import giraaff.debug.GraalError;
 import giraaff.lir.LIRInstruction.OperandFlag;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.LabelRef;
@@ -27,6 +26,7 @@ import giraaff.lir.SwitchStrategy;
 import giraaff.lir.SwitchStrategy.BaseSwitchClosure;
 import giraaff.lir.Variable;
 import giraaff.lir.asm.CompilationResultBuilder;
+import giraaff.util.GraalError;
 
 public class AMD64ControlFlow
 {

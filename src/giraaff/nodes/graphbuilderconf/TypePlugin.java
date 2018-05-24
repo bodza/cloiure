@@ -6,8 +6,7 @@ import giraaff.core.common.type.StampPair;
 
 /**
  * Plugin for overriding types in the bytecode parser. This can be used to modify the standard
- * behavior of Java type resolution, e.g. to introduce trusted interface types with special
- * semantics.
+ * behavior of Java type resolution, e.g. to introduce trusted interface types with special semantics.
  */
 public interface TypePlugin extends GraphBuilderPlugin
 {

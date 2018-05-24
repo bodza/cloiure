@@ -37,14 +37,12 @@ import giraaff.lir.gen.LIRGeneratorTool.MoveFactory;
 public class PhiResolver
 {
     /**
-     * Tracks a data flow dependency between a source operand and any number of the destination
-     * operands.
+     * Tracks a data flow dependency between a source operand and any number of the destination operands.
      */
     static class PhiResolverNode
     {
         /**
-         * A source operand whose value flows into the {@linkplain #destinations destination}
-         * operands.
+         * A source operand whose value flows into the {@linkplain #destinations destination} operands.
          */
         final Value operand;
 
@@ -54,8 +52,7 @@ public class PhiResolver
         final ArrayList<PhiResolverNode> destinations;
 
         /**
-         * Denotes if a move instruction has already been emitted to initialize the value of
-         * {@link #operand}.
+         * Denotes if a move instruction has already been emitted to initialize the value of {@link #operand}.
          */
         boolean assigned;
 
@@ -232,7 +229,7 @@ public class PhiResolver
             loop = dest;
             moveToTemp(src.operand);
             return;
-        } // else dest is a start node
+        }
 
         if (!dest.assigned)
         {

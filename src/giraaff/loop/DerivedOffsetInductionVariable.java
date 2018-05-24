@@ -1,7 +1,6 @@
 package giraaff.loop;
 
 import giraaff.core.common.type.Stamp;
-import giraaff.debug.GraalError;
 import giraaff.loop.MathUtil;
 import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
@@ -10,6 +9,7 @@ import giraaff.nodes.calc.BinaryArithmeticNode;
 import giraaff.nodes.calc.IntegerConvertNode;
 import giraaff.nodes.calc.NegateNode;
 import giraaff.nodes.calc.SubNode;
+import giraaff.util.GraalError;
 
 public class DerivedOffsetInductionVariable extends DerivedInductionVariable
 {

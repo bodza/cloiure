@@ -150,8 +150,7 @@ public abstract class AbstractMergeNode extends BeginStateSplitNode implements I
     }
 
     /**
-     * This simplify method can deal with a null value for tool, so that it can be used outside of
-     * canonicalization.
+     * This simplify method can deal with a null value for tool, so that it can be used outside of canonicalization.
      */
     @Override
     public void simplify(SimplifierTool tool)

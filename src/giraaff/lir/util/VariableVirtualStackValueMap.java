@@ -2,8 +2,8 @@ package giraaff.lir.util;
 
 import jdk.vm.ci.meta.Value;
 
-import giraaff.debug.GraalError;
 import giraaff.lir.LIRValueUtil;
+import giraaff.util.GraalError;
 
 public class VariableVirtualStackValueMap<K extends Value, T> extends ValueMap<K, T>
 {

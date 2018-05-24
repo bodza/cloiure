@@ -5,7 +5,7 @@ import jdk.vm.ci.meta.ConstantReflectionProvider;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.PrimitiveConstant;
 
-import giraaff.debug.GraalError;
+import giraaff.util.GraalError;
 
 /**
  * Condition codes used in conditionals.
@@ -361,8 +361,7 @@ public enum Condition
      * @param rt the constant on the right side of the comparison
      * @param constantReflection needed to compare constants
      * @param unorderedIsTrue true if an undecided float comparison should result in "true"
-     * @return true if the comparison is known to be true, false if the comparison is known to be
-     *         false
+     * @return true if the comparison is known to be true, false if the comparison is known to be false
      */
     public boolean foldCondition(Constant lt, Constant rt, ConstantReflectionProvider constantReflection, boolean unorderedIsTrue)
     {
@@ -397,8 +396,7 @@ public enum Condition
      * @param lp the constant on the left side of the comparison
      * @param rp the constant on the right side of the comparison
      * @param unorderedIsTrue true if an undecided float comparison should result in "true"
-     * @return true if the comparison is known to be true, false if the comparison is known to be
-     *         false
+     * @return true if the comparison is known to be true, false if the comparison is known to be false
      */
     public boolean foldCondition(PrimitiveConstant lp, PrimitiveConstant rp, boolean unorderedIsTrue)
     {

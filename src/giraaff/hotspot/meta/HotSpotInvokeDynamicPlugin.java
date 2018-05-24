@@ -12,7 +12,6 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 import giraaff.bytecode.Bytecodes;
 import giraaff.core.common.type.Stamp;
-import giraaff.debug.GraalError;
 import giraaff.hotspot.nodes.aot.ResolveDynamicConstantNode;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.FrameState;
@@ -20,6 +19,7 @@ import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.graphbuilderconf.GraphBuilderContext;
 import giraaff.nodes.graphbuilderconf.InvokeDynamicPlugin;
+import giraaff.util.GraalError;
 
 public class HotSpotInvokeDynamicPlugin implements InvokeDynamicPlugin
 {

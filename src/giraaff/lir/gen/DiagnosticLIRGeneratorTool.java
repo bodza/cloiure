@@ -11,8 +11,7 @@ import giraaff.lir.StandardOp.SaveRegistersOp;
 public interface DiagnosticLIRGeneratorTool
 {
     /**
-     * Creates a {@link SaveRegistersOp} that fills a given set of registers with known garbage
-     * value.
+     * Creates a {@link SaveRegistersOp} that fills a given set of registers with known garbage value.
      *
      * The set of registers actually touched might be {@link SaveRegistersOp#remove reduced} later.
      *
@@ -36,8 +35,7 @@ public interface DiagnosticLIRGeneratorTool
 
     /**
      * Marker interface for {@link LIRInstruction instructions} that should be succeeded with a
-     * {@link DiagnosticLIRGeneratorTool#createZapRegisters() ZapRegisterOp} if assertions are
-     * enabled.
+     * {@link DiagnosticLIRGeneratorTool#createZapRegisters() ZapRegisterOp} if assertions are enabled.
      */
     interface ZapRegistersAfterInstruction
     {
@@ -45,8 +43,7 @@ public interface DiagnosticLIRGeneratorTool
 
     /**
      * Marker interface for {@link LIRInstruction instructions} that should be preceded with a
-     * {@link DiagnosticLIRGeneratorTool#zapArgumentSpace ZapArgumentSpaceOp} if assertions are
-     * enabled.
+     * {@link DiagnosticLIRGeneratorTool#zapArgumentSpace ZapArgumentSpaceOp} if assertions are enabled.
      */
     interface ZapStackArgumentSpaceBeforeInstruction
     {

@@ -3,7 +3,6 @@ package giraaff.loop;
 import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.util.UnsignedLong;
-import giraaff.debug.GraalError;
 import giraaff.loop.MathUtil;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.NodeView;
@@ -15,6 +14,7 @@ import giraaff.nodes.calc.BinaryArithmeticNode;
 import giraaff.nodes.calc.IntegerConvertNode;
 import giraaff.nodes.calc.NegateNode;
 import giraaff.nodes.calc.SubNode;
+import giraaff.util.GraalError;
 
 public class BasicInductionVariable extends InductionVariable
 {

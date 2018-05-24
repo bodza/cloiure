@@ -636,9 +636,8 @@ public final class ArithmeticOpTable
         /**
          * Checks whether this operation is associative. An operation is associative when
          * {@code (a . b) . c == a . (b . c)} for all a, b, c. Note that you still have to be
-         * careful with inverses. For example the integer subtraction operation will report
-         * {@code true} here, since you can still reassociate as long as the correct negations are
-         * inserted.
+         * careful with inverses. For example the integer subtraction operation will report {@code true}
+         * here, since you can still reassociate as long as the correct negations are inserted.
          */
         public final boolean isAssociative()
         {

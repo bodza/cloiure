@@ -9,7 +9,7 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
 import giraaff.bytecode.Bytecodes;
-import giraaff.debug.GraalError;
+import giraaff.util.GraalError;
 
 abstract class ClassfileConstant
 {

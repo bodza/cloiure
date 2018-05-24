@@ -17,7 +17,6 @@ import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.StampPair;
 import giraaff.core.common.type.TypeReference;
-import giraaff.debug.GraalError;
 import giraaff.nodes.CallTargetNode;
 import giraaff.nodes.CallTargetNode.InvokeKind;
 import giraaff.nodes.FixedNode;
@@ -35,6 +34,7 @@ import giraaff.nodes.graphbuilderconf.InvocationPlugin;
 import giraaff.nodes.graphbuilderconf.InvocationPlugin.Receiver;
 import giraaff.nodes.spi.StampProvider;
 import giraaff.options.OptionValues;
+import giraaff.util.GraalError;
 
 /**
  * Implementation of {@link GraphBuilderContext} used to produce a graph for a method based on an

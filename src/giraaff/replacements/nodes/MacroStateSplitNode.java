@@ -5,7 +5,6 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.type.StampPair;
-import giraaff.debug.GraalError;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.CallTargetNode.InvokeKind;
@@ -17,6 +16,7 @@ import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.java.MethodCallTargetNode;
 import giraaff.nodes.memory.MemoryCheckpoint;
+import giraaff.util.GraalError;
 
 /**
  * This is an extension of {@link MacroNode} that is a {@link StateSplit} and a

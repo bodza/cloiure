@@ -36,8 +36,7 @@ public abstract class FrameMapBuilder
      *            for guaranteeing that each such object pointer slot is initialized before any
      *            instruction that uses a reference map. Without this guarantee, the garbage
      *            collector could see garbage object values.
-     * @param outObjectStackSlots if non-null, the object pointer slots allocated are added to this
-     *            list
+     * @param outObjectStackSlots if non-null, the object pointer slots allocated are added to this list
      * @return the first reserved stack slot (i.e., at the lowest address)
      */
     public abstract VirtualStackSlot allocateStackSlots(int slots, BitSet objects, List<VirtualStackSlot> outObjectStackSlots);

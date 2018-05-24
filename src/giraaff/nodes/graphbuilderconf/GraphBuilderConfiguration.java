@@ -201,8 +201,7 @@ public class GraphBuilderConfiguration
          */
         OmitAll,
         /**
-         * This mode omits exception edges at invokes, but not for implicit null checks or bounds
-         * checks.
+         * This mode omits exception edges at invokes, but not for implicit null checks or bounds checks.
          */
         ExplicitOnly,
         /**

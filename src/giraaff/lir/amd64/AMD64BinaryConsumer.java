@@ -276,8 +276,7 @@ public class AMD64BinaryConsumer
     }
 
     /**
-     * Instruction that has one {@link AMD64AddressValue memory} operand and one 32-bit immediate
-     * operand.
+     * Instruction that has one {@link AMD64AddressValue memory} operand and one 32-bit immediate operand.
      */
     public static class MemoryConstOp extends AMD64LIRInstruction implements ImplicitNullCheck
     {

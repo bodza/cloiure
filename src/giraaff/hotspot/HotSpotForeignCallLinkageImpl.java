@@ -78,9 +78,8 @@ public class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarget impl
      * @param outgoingCcType outgoing (caller) calling convention type
      * @param incomingCcType incoming (callee) calling convention type (can be null)
      * @param transition specifies if this is a {@linkplain #needsDebugInfo() leaf} call
-     * @param reexecutable specifies if the call can be re-executed without (meaningful) side
-     *            effects. Deoptimization will not return to a point before a call that cannot be
-     *            re-executed.
+     * @param reexecutable specifies if the call can be re-executed without (meaningful) side effects.
+     *            Deoptimization will not return to a point before a call that cannot be re-executed.
      * @param killedLocations the memory locations killed by the call
      */
     public static HotSpotForeignCallLinkage create(MetaAccessProvider metaAccess, CodeCacheProvider codeCache, WordTypes wordTypes, HotSpotForeignCallsProvider foreignCalls, ForeignCallDescriptor descriptor, long address, RegisterEffect effect, Type outgoingCcType, Type incomingCcType, Transition transition, boolean reexecutable, LocationIdentity... killedLocations)

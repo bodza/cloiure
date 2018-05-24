@@ -4,7 +4,7 @@ import jdk.vm.ci.amd64.AMD64Kind;
 
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.spi.LIRKindTool;
-import giraaff.debug.GraalError;
+import giraaff.util.GraalError;
 
 public abstract class AMD64LIRKindTool implements LIRKindTool
 {

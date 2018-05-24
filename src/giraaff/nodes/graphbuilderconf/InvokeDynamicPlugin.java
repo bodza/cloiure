@@ -7,8 +7,7 @@ import giraaff.nodes.FrameState;
 import giraaff.nodes.ValueNode;
 
 /**
- * {@link GraphBuilderPlugin} interface for static compilation mode, allowing references to dynamic
- * types.
+ * {@link GraphBuilderPlugin} interface for static compilation mode, allowing references to dynamic types.
  */
 public interface InvokeDynamicPlugin extends GraphBuilderPlugin
 {

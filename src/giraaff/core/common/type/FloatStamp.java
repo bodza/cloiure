@@ -17,7 +17,7 @@ import giraaff.core.common.spi.LIRKindTool;
 import giraaff.core.common.type.ArithmeticOpTable.BinaryOp;
 import giraaff.core.common.type.ArithmeticOpTable.FloatConvertOp;
 import giraaff.core.common.type.ArithmeticOpTable.UnaryOp;
-import giraaff.debug.GraalError;
+import giraaff.util.GraalError;
 
 public class FloatStamp extends PrimitiveStamp
 {

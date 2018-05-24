@@ -80,9 +80,8 @@ public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockStat
             return true;
         }
         /*
-         * If there is a mismatch between the number of materializations and the number of
-         * virtualizations, we need to apply effects, even if there were no other significant
-         * changes to the graph.
+         * If there is a mismatch between the number of materializations and the number of virtualizations,
+         * we need to apply effects, even if there were no other significant changes to the graph.
          */
         int delta = 0;
         for (Block block : cfg.getBlocks())
@@ -1201,10 +1200,7 @@ public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockStat
                         for (int i = 0; i < states.length; i++)
                         {
                             VirtualObjectNode virtual = virtualObjs[i];
-                            /*
-                             * check whether we trivially see that this is the only reference to
-                             * this allocation
-                             */
+                            // check whether we trivially see that this is the only reference to this allocation
                             if (virtual.hasIdentity() && !isSingleUsageAllocation(getPhiValueAt(phi, i), virtualObjs, states[i]))
                             {
                                 compatible = false;
@@ -1279,9 +1275,7 @@ public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockStat
                 return false;
             }
 
-            /*
-             * Check that the state only references the one virtual object from the Phi.
-             */
+            // Check that the state only references the one virtual object from the Phi.
             VirtualObjectNode singleVirtual = null;
             for (int v = 0; v < virtualObjs.length; v++)
             {
@@ -1293,9 +1287,7 @@ public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockStat
                     }
                     else if (singleVirtual != virtualObjs[v])
                     {
-                        /*
-                         * More than one virtual object is visible in the object state.
-                         */
+                        // More than one virtual object is visible in the object state.
                         return false;
                     }
                 }

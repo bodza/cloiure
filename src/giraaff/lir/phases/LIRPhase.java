@@ -36,7 +36,7 @@ public abstract class LIRPhase<C>
         int innerClassPos = s.indexOf('$');
         if (innerClassPos > 0)
         {
-            /* Remove inner class name. */
+            // Remove inner class name.
             s = s.substring(0, innerClassPos);
         }
         if (s.endsWith("Phase"))

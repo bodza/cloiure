@@ -8,7 +8,6 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.TypeReference;
-import giraaff.debug.GraalError;
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
@@ -20,6 +19,7 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.type.StampTool;
+import giraaff.util.GraalError;
 
 /**
  * Loads a method from the virtual method table of a given hub.

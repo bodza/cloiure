@@ -14,7 +14,6 @@ import giraaff.api.replacements.SnippetReflectionProvider;
 import giraaff.bytecode.BytecodeProvider;
 import giraaff.core.common.CompilationIdentifier;
 import giraaff.core.common.type.StampFactory;
-import giraaff.debug.GraalError;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.java.GraphBuilderPhase;
@@ -36,6 +35,7 @@ import giraaff.phases.tiers.PhaseContext;
 import giraaff.replacements.ConstantBindingParameterPlugin;
 import giraaff.replacements.SnippetTemplate;
 import giraaff.replacements.Snippets;
+import giraaff.util.GraalError;
 
 /**
  * Base class for a stub defined by a snippet.

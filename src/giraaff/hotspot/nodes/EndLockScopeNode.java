@@ -12,8 +12,7 @@ import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
 /**
- * Intrinsic for closing a {@linkplain BeginLockScopeNode scope} binding a stack-based lock with an
- * object.
+ * Intrinsic for closing a {@linkplain BeginLockScopeNode scope} binding a stack-based lock with an object.
  */
 // NodeInfo.allowedUsageTypes = Memory
 public final class EndLockScopeNode extends AbstractMemoryCheckpoint implements LIRLowerable, MonitorExit, MemoryCheckpoint.Single

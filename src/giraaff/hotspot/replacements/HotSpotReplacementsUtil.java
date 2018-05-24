@@ -19,7 +19,6 @@ import giraaff.api.replacements.Fold.InjectedParameter;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.core.common.type.ObjectStamp;
 import giraaff.core.common.type.TypeReference;
-import giraaff.debug.GraalError;
 import giraaff.graph.Node.ConstantNodeParameter;
 import giraaff.graph.Node.NodeIntrinsic;
 import giraaff.graph.spi.CanonicalizerTool;
@@ -43,8 +42,9 @@ import giraaff.nodes.memory.address.OffsetAddressNode;
 import giraaff.nodes.type.StampTool;
 import giraaff.replacements.nodes.ReadRegisterNode;
 import giraaff.replacements.nodes.WriteRegisterNode;
-import giraaff.word.Word;
+import giraaff.util.GraalError;
 import giraaff.util.UnsafeAccess;
+import giraaff.word.Word;
 
 /**
  * A collection of methods used in HotSpot snippets, substitutions and stubs.

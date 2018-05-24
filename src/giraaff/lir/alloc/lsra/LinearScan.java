@@ -19,7 +19,6 @@ import org.graalvm.collections.Pair;
 import giraaff.core.common.alloc.RegisterAllocationConfig;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.core.common.cfg.BlockMap;
-import giraaff.debug.GraalError;
 import giraaff.lir.LIR;
 import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstruction.OperandFlag;
@@ -37,6 +36,7 @@ import giraaff.lir.phases.LIRPhase;
 import giraaff.options.NestedBooleanOptionKey;
 import giraaff.options.OptionKey;
 import giraaff.options.OptionValues;
+import giraaff.util.GraalError;
 
 /**
  * An implementation of the linear scan register allocator algorithm described in
@@ -123,8 +123,7 @@ public class LinearScan
 
     /**
      * Map from an instruction {@linkplain LIRInstruction#id id} to the instruction. Entries should
-     * be retrieved with {@link #instructionForId(int)} as the id is not simply an index into this
-     * array.
+     * be retrieved with {@link #instructionForId(int)} as the id is not simply an index into this array.
      */
     private LIRInstruction[] opIdToInstructionMap;
 
@@ -285,8 +284,7 @@ public class LinearScan
     };
 
     /**
-     * Gets an object describing the attributes of a given register according to this register
-     * configuration.
+     * Gets an object describing the attributes of a given register according to this register configuration.
      */
     public RegisterAttributes attributes(Register reg)
     {
@@ -360,10 +358,7 @@ public class LinearScan
             intervals = Arrays.copyOf(intervals, intervals.length + (intervals.length >> SPLIT_INTERVALS_CAPACITY_RIGHT_SHIFT) + 1);
         }
         intervalsSize++;
-        /*
-         * Note that these variables are not managed and must therefore never be inserted into the
-         * LIR
-         */
+        // Note that these variables are not managed and must therefore never be inserted into the LIR
         Variable variable = new Variable(source.kind(), numVariables++);
 
         Interval interval = createInterval(variable);
@@ -487,8 +482,7 @@ public class LinearScan
      * Determines if an {@link LIRInstruction} destroys all caller saved registers.
      *
      * @param opId an instruction {@linkplain LIRInstruction#id id}
-     * @return {@code true} if the instruction denoted by {@code id} destroys all caller saved
-     *         registers.
+     * @return {@code true} if the instruction denoted by {@code id} destroys all caller saved registers.
      */
     boolean hasCall(int opId)
     {
@@ -680,10 +674,7 @@ public class LinearScan
 
         if (opId != -1)
         {
-            /*
-             * Operands are not changed when an interval is split during allocation, so search the
-             * right interval here.
-             */
+            // Operands are not changed when an interval is split during allocation, so search the right interval here.
             interval = splitChildAtOpId(interval, opId, mode);
         }
 

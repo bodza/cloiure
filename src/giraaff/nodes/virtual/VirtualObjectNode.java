@@ -81,8 +81,7 @@ public abstract class VirtualObjectNode extends ValueNode implements LIRLowerabl
     public abstract JavaKind entryKind(int index);
 
     /**
-     * Returns an exact duplicate of this virtual object node, which has not been added to the graph
-     * yet.
+     * Returns an exact duplicate of this virtual object node, which has not been added to the graph yet.
      */
     public abstract VirtualObjectNode duplicate();
 

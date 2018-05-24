@@ -64,7 +64,7 @@ public class GraphBuilderPhase extends BasePhase<HighTierContext>
             createBytecodeParser(graph, null, graph.method(), graph.getEntryBCI(), initialIntrinsicContext).buildRootMethod();
         }
 
-        /* Hook for subclasses of Instance to provide a subclass of BytecodeParser. */
+        // Hook for subclasses of Instance to provide a subclass of BytecodeParser.
         protected BytecodeParser createBytecodeParser(StructuredGraph graph, BytecodeParser parent, ResolvedJavaMethod method, int entryBCI, IntrinsicContext intrinsicContext)
         {
             return new BytecodeParser(this, graph, parent, method, entryBCI, intrinsicContext);

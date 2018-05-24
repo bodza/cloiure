@@ -11,8 +11,7 @@ import giraaff.phases.util.Providers;
 import giraaff.replacements.ReplacementsImpl;
 
 /**
- * Filters certain method substitutions based on whether there is underlying hardware support for
- * them.
+ * Filters certain method substitutions based on whether there is underlying hardware support for them.
  */
 public class HotSpotReplacementsImpl extends ReplacementsImpl
 {

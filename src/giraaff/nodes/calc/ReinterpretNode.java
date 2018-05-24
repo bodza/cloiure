@@ -53,9 +53,7 @@ public final class ReinterpretNode extends UnaryNode implements ArithmeticLIRLow
 
     private static SerializableConstant evalConst(Stamp stamp, SerializableConstant c)
     {
-        /*
-         * We don't care about byte order here. Either would produce the correct result.
-         */
+        // We don't care about byte order here. Either would produce the correct result.
         ByteBuffer buffer = ByteBuffer.wrap(new byte[c.getSerializedSize()]).order(ByteOrder.nativeOrder());
         c.serialize(buffer);
 
@@ -91,8 +89,7 @@ public final class ReinterpretNode extends UnaryNode implements ArithmeticLIRLow
     }
 
     /**
-     * Compute the {@link IntegerStamp} from a {@link FloatStamp}, losing as little information as
-     * possible.
+     * Compute the {@link IntegerStamp} from a {@link FloatStamp}, losing as little information as possible.
      *
      * Sorting by their bit pattern reinterpreted as signed integers gives the following order of
      * floating point numbers:
@@ -188,8 +185,7 @@ public final class ReinterpretNode extends UnaryNode implements ArithmeticLIRLow
     }
 
     /**
-     * Compute the {@link IntegerStamp} from a {@link FloatStamp}, losing as little information as
-     * possible.
+     * Compute the {@link IntegerStamp} from a {@link FloatStamp}, losing as little information as possible.
      *
      * Sorting by their bit pattern reinterpreted as signed integers gives the following order of
      * floating point numbers:

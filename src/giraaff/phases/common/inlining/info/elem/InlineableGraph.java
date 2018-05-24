@@ -48,8 +48,7 @@ public class InlineableGraph implements Inlineable
 
     /**
      * This method looks up in a cache the graph for the argument, if not found bytecode is parsed.
-     * The graph thus obtained is returned, ie the caller is responsible for cloning before
-     * modification.
+     * The graph thus obtained is returned, ie the caller is responsible for cloning before modification.
      */
     private static StructuredGraph getOriginalGraph(final ResolvedJavaMethod method, final HighTierContext context, CanonicalizerPhase canonicalizer, StructuredGraph caller, int callerBci)
     {
@@ -109,8 +108,7 @@ public class InlineableGraph implements Inlineable
      * <li>arguments with more precise type than that declared by the corresponding parameter</li>
      *
      * The corresponding parameters are updated to reflect the above information. Before doing so,
-     * their usages are added to <code>parameterUsages</code> for later incremental
-     * canonicalization.
+     * their usages are added to <code>parameterUsages</code> for later incremental canonicalization.
      *
      * @return null if no incremental canonicalization is need, a list of nodes for such
      *         canonicalization otherwise.
@@ -164,7 +162,6 @@ public class InlineableGraph implements Inlineable
      * This method builds the IR nodes for the given <code>method</code> and canonicalizes them.
      * Provided profiling info is mature, the resulting graph is cached. The caller is responsible
      * for cloning before modification.
-     * </p>
      */
     private static StructuredGraph parseBytecodes(ResolvedJavaMethod method, HighTierContext context, CanonicalizerPhase canonicalizer, StructuredGraph caller)
     {

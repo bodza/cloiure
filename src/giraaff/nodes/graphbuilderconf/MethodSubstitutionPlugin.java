@@ -10,9 +10,9 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 import giraaff.bytecode.BytecodeProvider;
-import giraaff.debug.GraalError;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.graphbuilderconf.InvocationPlugins;
+import giraaff.util.GraalError;
 
 /**
  * An {@link InvocationPlugin} for a method where the implementation of the method is provided by a

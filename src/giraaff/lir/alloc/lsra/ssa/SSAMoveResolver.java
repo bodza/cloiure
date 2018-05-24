@@ -7,7 +7,6 @@ import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.Value;
 
-import giraaff.debug.GraalError;
 import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRValueUtil;
 import giraaff.lir.VirtualStackSlot;
@@ -16,6 +15,7 @@ import giraaff.lir.alloc.lsra.LinearScan;
 import giraaff.lir.alloc.lsra.MoveResolver;
 import giraaff.lir.framemap.FrameMap;
 import giraaff.lir.framemap.FrameMapBuilderTool;
+import giraaff.util.GraalError;
 
 public final class SSAMoveResolver extends MoveResolver
 {

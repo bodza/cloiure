@@ -6,8 +6,7 @@ package giraaff.graph.spi;
  *
  * Implementors of this interface need to be aware that they need to call
  * {@link SimplifierTool#addToWorkList(giraaff.graph.Node)} for each node that might be
- * influenced (in terms of simplification and canonicalization) by the actions performed in
- * simplify.
+ * influenced (in terms of simplification and canonicalization) by the actions performed in simplify.
  */
 public interface Simplifiable
 {

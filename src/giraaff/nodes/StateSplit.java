@@ -8,14 +8,12 @@ import giraaff.nodes.spi.NodeWithState;
 public interface StateSplit extends NodeWithState
 {
     /**
-     * Gets the {@link FrameState} corresponding to the state of the JVM after execution of this
-     * node.
+     * Gets the {@link FrameState} corresponding to the state of the JVM after execution of this node.
      */
     FrameState stateAfter();
 
     /**
-     * Sets the {@link FrameState} corresponding to the state of the JVM after execution of this
-     * node.
+     * Sets the {@link FrameState} corresponding to the state of the JVM after execution of this node.
      */
     void setStateAfter(FrameState x);
 

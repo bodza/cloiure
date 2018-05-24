@@ -7,7 +7,6 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 import giraaff.api.replacements.MethodSubstitution;
 import giraaff.api.replacements.Snippet;
 import giraaff.core.common.type.StampPair;
-import giraaff.debug.GraalError;
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.NodeInputList;
@@ -30,20 +29,20 @@ import giraaff.phases.common.LoweringPhase;
 import giraaff.phases.common.RemoveValueProxyPhase;
 import giraaff.phases.common.inlining.InliningUtil;
 import giraaff.phases.tiers.PhaseContext;
+import giraaff.util.GraalError;
 
 /**
  * Macro nodes can be used to temporarily replace an invoke. They can, for example, be used to
- * implement constant folding for known JDK functions like {@link Class#isInterface()}.<br/>
- * <br/>
+ * implement constant folding for known JDK functions like {@link Class#isInterface()}.
+ *
  * During lowering, multiple sources are queried in order to look for a replacement:
- * <ul>
+ *
  * <li>If {@link #getLoweredSnippetGraph(LoweringTool)} returns a non-null result, this graph is
  * used as a replacement.</li>
  * <li>If a {@link MethodSubstitution} for the target method is found, this substitution is used as
  * a replacement.</li>
  * <li>Otherwise, the macro node is replaced with an {@link InvokeNode}. Note that this is only
  * possible if the macro node is a {@link MacroStateSplitNode}.</li>
- * </ul>
  */
 public abstract class MacroNode extends FixedWithNextNode implements Lowerable, Invokable
 {

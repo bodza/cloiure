@@ -20,7 +20,6 @@ import giraaff.core.common.GraalOptions;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.spi.LIRKindTool;
 import giraaff.core.common.type.DataPointerConstant;
-import giraaff.debug.GraalError;
 import giraaff.lir.LIRFrameState;
 import giraaff.lir.LIRInstruction.OperandFlag;
 import giraaff.lir.LIRInstructionClass;
@@ -31,6 +30,7 @@ import giraaff.lir.StandardOp.NullCheck;
 import giraaff.lir.StandardOp.ValueMoveOp;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.options.OptionValues;
+import giraaff.util.GraalError;
 
 public class AMD64Move
 {

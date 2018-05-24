@@ -97,7 +97,7 @@ public class NewArrayNode extends AbstractNewArrayNode implements VirtualizableA
         return new VirtualArrayNode(elementType(), constantLength);
     }
 
-    /* Factored out in a separate method so that subclasses can override it. */
+    // Factored out in a separate method so that subclasses can override it.
     protected ConstantNode defaultElementValue()
     {
         return ConstantNode.defaultForKind(elementType().getJavaKind(), graph());

@@ -14,13 +14,13 @@ import giraaff.asm.amd64.AMD64Address.Scale;
 import giraaff.asm.amd64.AMD64Assembler.ConditionFlag;
 import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.core.common.LIRKind;
-import giraaff.debug.GraalError;
 import giraaff.lir.LIRInstruction.OperandFlag;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.Opcode;
 import giraaff.lir.asm.ArrayDataPointerConstant;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.lir.gen.LIRGeneratorTool;
+import giraaff.util.GraalError;
 
 public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction
 {
@@ -293,8 +293,7 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction
      * Reduced argument: r=B*mx-1.0 (computed accurately in high and low parts)
      *
      * Result: k*log(2) - log(B) + p(r) if |x-1| >= small value (2^-6) and p(r) is a degree 7
-     * polynomial -log(B) read from data table (high, low parts) Result is formed from high and low
-     * parts.
+     * polynomial -log(B) read from data table (high, low parts) Result is formed from high and low parts.
      *
      * Special cases: log(NaN) = quiet NaN, and raise invalid exception log(+INF) = that INF log(0)
      * = -INF with divide-by-zero exception raised log(1) = +0 log(x) = NaN with invalid exception
@@ -2418,8 +2417,7 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction
      * The total table size is therefore 5632 bytes.
      *
      * Note that c0 and c1 are always zero. We could try storing other constants here, and just
-     * loading the low part of the SIMD register in these cases, after ensuring the high part is
-     * zero.
+     * loading the low part of the SIMD register in these cases, after ensuring the high part is zero.
      *
      * The higher terms of the polynomial are computed in the *low* part of the SIMD register. This
      * is so we can overlap the multiplication by r^8 and the unpacking of the other part.
@@ -2437,8 +2435,7 @@ public final class AMD64MathIntrinsicUnaryOp extends AMD64LIRInstruction
      *
      * (c0 = c1 = 0, but using them keeps SIMD regularity)
      *
-     * We then do a compensated sum High + Med, add the low parts together and then do the final
-     * sum.
+     * We then do a compensated sum High + Med, add the low parts together and then do the final sum.
      *
      * Here recip_hi + recip_lo is an accurate reciprocal of the remainder modulo pi/2
      *

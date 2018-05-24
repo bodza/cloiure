@@ -23,7 +23,6 @@ import giraaff.core.common.calc.Condition;
 import giraaff.core.gen.NodeLIRBuilder;
 import giraaff.core.gen.NodeMatchRules;
 import giraaff.core.match.ComplexMatchResult;
-import giraaff.debug.GraalError;
 import giraaff.lir.LIRFrameState;
 import giraaff.lir.LabelRef;
 import giraaff.lir.amd64.AMD64AddressValue;
@@ -49,6 +48,7 @@ import giraaff.nodes.memory.Access;
 import giraaff.nodes.memory.LIRLowerableAccess;
 import giraaff.nodes.memory.WriteNode;
 import giraaff.nodes.util.GraphUtil;
+import giraaff.util.GraalError;
 
 public class AMD64NodeMatchRules extends NodeMatchRules
 {

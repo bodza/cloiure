@@ -6,7 +6,6 @@ import jdk.vm.ci.meta.Constant;
 
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
-import giraaff.debug.GraalError;
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.NodeSuccessorList;
@@ -14,6 +13,7 @@ import giraaff.graph.spi.SimplifierTool;
 import giraaff.nodes.AbstractBeginNode;
 import giraaff.nodes.ControlSplitNode;
 import giraaff.nodes.ValueNode;
+import giraaff.util.GraalError;
 
 /**
  * The {@code SwitchNode} class is the base of both lookup and table switches.
@@ -215,10 +215,7 @@ public abstract class SwitchNode extends ControlSplitNode
     {
         for (Node successor : successors())
         {
-            /*
-             * Deleting a branch change change the successors so reload the surviving successor each
-             * time.
-             */
+            // Deleting a branch change change the successors so reload the surviving successor each time.
             if (successor != blockSuccessor(survivingEdge))
             {
                 tool.deleteBranch(successor);

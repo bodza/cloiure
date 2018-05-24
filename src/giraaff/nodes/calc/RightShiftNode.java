@@ -89,10 +89,7 @@ public final class RightShiftNode extends ShiftNode<Shr>
                                 return ConstantNode.forIntegerKind(stamp.getStackKind(), -1L);
                             }
 
-                            /*
-                             * if we cannot replace both shifts with a constant, replace them by a
-                             * full shift for this kind
-                             */
+                            // if we cannot replace both shifts with a constant, replace them by a full shift for this kind
                             return new RightShiftNode(other.getX(), ConstantNode.forInt(mask));
                         }
                         return new RightShiftNode(other.getX(), ConstantNode.forInt(total));

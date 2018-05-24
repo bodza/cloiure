@@ -32,7 +32,6 @@ import giraaff.core.common.NumUtil;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.core.common.spi.ForeignCallsProvider;
 import giraaff.core.common.type.DataPointerConstant;
-import giraaff.debug.GraalError;
 import giraaff.lir.LIR;
 import giraaff.lir.LIRFrameState;
 import giraaff.lir.LIRInstruction;
@@ -41,6 +40,7 @@ import giraaff.lir.LabelRef;
 import giraaff.lir.framemap.FrameMap;
 import giraaff.options.OptionKey;
 import giraaff.options.OptionValues;
+import giraaff.util.GraalError;
 
 /**
  * Fills in a {@link CompilationResult} as its code is being assembled.
@@ -409,8 +409,7 @@ public class CompilationResultBuilder
     }
 
     /**
-     * Determines if a given edge from the block currently being emitted goes to its lexical
-     * successor.
+     * Determines if a given edge from the block currently being emitted goes to its lexical successor.
      */
     public boolean isSuccessorEdge(LabelRef edge)
     {

@@ -178,8 +178,7 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
 
     /**
      * Materializes the given virtual object and produces the necessary effects in the effects list.
-     * This transitively also materializes all other virtual objects that are reachable from the
-     * entries.
+     * This transitively also materializes all other virtual objects that are reachable from the entries.
      */
     public void materializeBefore(FixedNode fixed, VirtualObjectNode virtual, GraphEffectList materializeEffects)
     {

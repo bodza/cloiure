@@ -22,7 +22,6 @@ import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.StampPair;
 import giraaff.core.common.type.TypeReference;
-import giraaff.debug.GraalError;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.Invoke;
 import giraaff.nodes.ValueNode;
@@ -52,6 +51,7 @@ import giraaff.nodes.memory.HeapAccess.BarrierType;
 import giraaff.nodes.memory.address.AddressNode;
 import giraaff.nodes.memory.address.OffsetAddressNode;
 import giraaff.nodes.type.StampTool;
+import giraaff.util.GraalError;
 import giraaff.word.Word.Opcode;
 import giraaff.word.Word.Operation;
 
@@ -190,7 +190,7 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
             }
         }
 
-        /* We never need to intercept the field store. */
+        // We never need to intercept the field store.
         return false;
     }
 
@@ -460,9 +460,8 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
     public static ValueNode readOp(GraphBuilderContext b, JavaKind readKind, AddressNode address, LocationIdentity location, BarrierType barrierType, boolean compressible)
     {
         /*
-         * A JavaReadNode lowered to a ReadNode that will not float. This means it cannot float
-         * above an explicit zero check on its base address or any other test that ensures the read
-         * is safe.
+         * A JavaReadNode lowered to a ReadNode that will not float. This means it cannot float above
+         * an explicit zero check on its base address or any other test that ensures the read is safe.
          */
         JavaReadNode read = b.add(new JavaReadNode(readKind, address, location, barrierType, compressible));
         return read;

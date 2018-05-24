@@ -14,8 +14,7 @@ import giraaff.nodeinfo.InputType;
 import giraaff.nodes.spi.NodeValueMap;
 
 /**
- * This class represents a value within the graph, including local variables, phis, and all other
- * instructions.
+ * This class represents a value within the graph, including local variables, phis, and all other instructions.
  */
 public abstract class ValueNode extends giraaff.graph.Node implements ValueNodeInterface
 {
@@ -71,8 +70,7 @@ public abstract class ValueNode extends giraaff.graph.Node implements ValueNodeI
     /**
      * This method can be overridden by subclasses of {@link ValueNode} if they need to recompute
      * their stamp if their inputs change. A typical implementation will compute the stamp and pass
-     * it to {@link #updateStamp(Stamp)}, whose return value can be used as the result of this
-     * method.
+     * it to {@link #updateStamp(Stamp)}, whose return value can be used as the result of this method.
      *
      * @return true if the stamp has changed, false otherwise.
      */
@@ -124,8 +122,7 @@ public abstract class ValueNode extends giraaff.graph.Node implements ValueNodeI
     /**
      * Convert this value to a constant if it is a constant, otherwise return null.
      *
-     * @return the {@link JavaConstant} represented by this value if it is a constant; {@code null}
-     *         otherwise
+     * @return the {@link JavaConstant} represented by this value if it is a constant; {@code null} otherwise
      */
     public final Constant asConstant()
     {

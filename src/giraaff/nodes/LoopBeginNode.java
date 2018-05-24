@@ -103,9 +103,9 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
      */
     public void disableSafepoint()
     {
-        /* Store flag locally in case new loop ends are created later on. */
+        // Store flag locally in case new loop ends are created later on.
         this.canEndsSafepoint = false;
-        /* Propagate flag to all existing loop ends. */
+        // Propagate flag to all existing loop ends.
         for (LoopEndNode loopEnd : loopEnds())
         {
             loopEnd.disableSafepoint();
@@ -158,7 +158,7 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
     /**
      * Returns the set of {@link LoopEndNode} that correspond to back-edges for this loop, in
      * increasing {@link #phiPredecessorIndex} order. This method is suited to create new loop
-     * {@link PhiNode}.<br>
+     * {@link PhiNode}.
      *
      * For example a new PhiNode may be added as follow:
      *

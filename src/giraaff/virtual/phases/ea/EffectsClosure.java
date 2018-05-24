@@ -11,7 +11,6 @@ import org.graalvm.word.LocationIdentity;
 import giraaff.core.common.cfg.BlockMap;
 import giraaff.core.common.cfg.Loop;
 import giraaff.core.common.type.Stamp;
-import giraaff.debug.GraalError;
 import giraaff.graph.Node;
 import giraaff.graph.NodeBitMap;
 import giraaff.graph.NodeMap;
@@ -40,6 +39,7 @@ import giraaff.options.OptionValues;
 import giraaff.phases.graph.ReentrantBlockIterator;
 import giraaff.phases.graph.ReentrantBlockIterator.BlockIteratorClosure;
 import giraaff.phases.graph.ReentrantBlockIterator.LoopInfo;
+import giraaff.util.GraalError;
 
 public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> extends EffectsPhase.Closure<BlockT>
 {
@@ -58,8 +58,7 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
     protected final NodeMap<ValueNode> aliases;
 
     /**
-     * This set allows for a quick check whether a node has inputs that were replaced with "scalar"
-     * values.
+     * This set allows for a quick check whether a node has inputs that were replaced with "scalar" values.
      */
     private final NodeBitMap hasScalarReplacedInputs;
 
@@ -123,8 +122,7 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
         final ArrayList<GraphEffectList> effectList = new ArrayList<>();
         /*
          * Effects are applied during a ordered iteration over the blocks to apply them in the
-         * correct order, e.g., apply the effect that adds a node to the graph before the node is
-         * used.
+         * correct order, e.g., apply the effect that adds a node to the graph before the node is used.
          */
         BlockIteratorClosure<Void> closure = new BlockIteratorClosure<Void>()
         {
@@ -175,9 +173,8 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
             effects.apply(graph, obsoleteNodes, false);
         }
         /*
-         * Effects that modify the cfg (e.g., removing a branch for an if that got a constant
-         * condition) need to be performed after all other effects, because they change phi value
-         * indexes.
+         * Effects that modify the cfg (e.g., removing a branch for an if that got a constant condition)
+         * need to be performed after all other effects, because they change phi value indexes.
          */
         for (GraphEffectList effects : effectList)
         {

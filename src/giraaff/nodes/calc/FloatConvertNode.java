@@ -19,8 +19,7 @@ import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
 /**
- * A {@code FloatConvert} converts between integers and floating point numbers according to Java
- * semantics.
+ * A {@code FloatConvert} converts between integers and floating point numbers according to Java semantics.
  */
 public final class FloatConvertNode extends UnaryArithmeticNode<FloatConvertOp> implements ConvertNode, Lowerable, ArithmeticLIRLowerable
 {

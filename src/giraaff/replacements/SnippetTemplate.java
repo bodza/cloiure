@@ -38,7 +38,6 @@ import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.StampPair;
 import giraaff.core.common.type.TypeReference;
-import giraaff.debug.GraalError;
 import giraaff.graph.Graph.Mark;
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
@@ -99,6 +98,7 @@ import giraaff.phases.tiers.PhaseContext;
 import giraaff.phases.util.Providers;
 import giraaff.replacements.nodes.ExplodeLoopNode;
 import giraaff.replacements.nodes.LoadSnippetVarargParameterNode;
+import giraaff.util.GraalError;
 
 /**
  * A snippet template is a graph created by parsing a snippet method and then specialized by binding
@@ -284,16 +284,17 @@ public class SnippetTemplate
      * signature of the snippet method. The parameter name is passed to the add methods for
      * assertion checking, i.e., to enforce that the order matches. Which method needs to be called
      * depends on the annotation of the snippet method parameter:
-     * <ul>
-     * <li>Use {@link #add} for a parameter without an annotation. The value is bound when the
+     *
+     * Use {@link #add} for a parameter without an annotation. The value is bound when the
      * {@link SnippetTemplate} is {@link SnippetTemplate#instantiate instantiated}.
-     * <li>Use {@link #addConst} for a parameter annotated with {@link ConstantParameter}. The value
+     *
+     * Use {@link #addConst} for a parameter annotated with {@link ConstantParameter}. The value
      * is bound when the {@link SnippetTemplate} is {@link SnippetTemplate#SnippetTemplate created}.
-     * <li>Use {@link #addVarargs} for an array parameter annotated with {@link VarargsParameter}. A
+     *
+     * Use {@link #addVarargs} for an array parameter annotated with {@link VarargsParameter}. A
      * separate {@link SnippetTemplate} is {@link SnippetTemplate#SnippetTemplate created} for every
      * distinct array length. The actual values are bound when the {@link SnippetTemplate} is
      * {@link SnippetTemplate#instantiate instantiated}
-     * </ul>
      */
     public static class Arguments
     {
@@ -1008,14 +1009,12 @@ public class SnippetTemplate
     private final MemoryAnchorNode memoryAnchor;
 
     /**
-     * Nodes that inherit the {@link StateSplit#stateAfter()} from the replacee during
-     * instantiation.
+     * Nodes that inherit the {@link StateSplit#stateAfter()} from the replacee during instantiation.
      */
     private final ArrayList<StateSplit> sideEffectNodes;
 
     /**
-     * Nodes that inherit a deoptimization {@link FrameState} from the replacee during
-     * instantiation.
+     * Nodes that inherit a deoptimization {@link FrameState} from the replacee during instantiation.
      */
     private final ArrayList<DeoptimizingNode> deoptNodes;
 
@@ -1183,8 +1182,7 @@ public class SnippetTemplate
          * Kills to private locations are safe, since there can be no floating read to these
          * locations except reads that are introduced by the snippet itself or related snippets in
          * the same lowering round. These reads are anchored to a MemoryAnchor at the beginning of
-         * their snippet, so they can not float above a kill in another instance of the same
-         * snippet.
+         * their snippet, so they can not float above a kill in another instance of the same snippet.
          */
         for (LocationIdentity p : this.info.privateLocations)
         {

@@ -1,10 +1,10 @@
 package giraaff.lir.amd64;
 
 import giraaff.asm.amd64.AMD64MacroAssembler;
-import giraaff.debug.GraalError;
 import giraaff.lir.LIRInstruction.OperandFlag;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.asm.CompilationResultBuilder;
+import giraaff.util.GraalError;
 
 public final class AMD64PrefetchOp extends AMD64LIRInstruction
 {

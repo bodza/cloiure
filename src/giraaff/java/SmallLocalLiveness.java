@@ -4,9 +4,7 @@ import giraaff.java.BciBlockMapping.BciBlock;
 
 public final class SmallLocalLiveness extends LocalLiveness
 {
-    /*
-     * local n is represented by the bit accessible as (1 << n)
-     */
+    // local n is represented by the bit accessible as (1 << n)
 
     private final long[] localsLiveIn;
     private final long[] localsLiveOut;

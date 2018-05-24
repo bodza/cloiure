@@ -33,12 +33,11 @@ import giraaff.options.NestedBooleanOptionKey;
 /**
  * Linear Scan stack slot allocator.
  *
- * <b>Remark:</b> The analysis works under the assumption that a stack slot is no longer live after
- * its last usage. If an {@link LIRInstruction instruction} transfers the raw address of the stack
- * slot to another location, e.g. a registers, and this location is referenced later on, the
- * {@link giraaff.lir.LIRInstruction.Use usage} of the stack slot must be marked with
- * the {@link OperandFlag#UNINITIALIZED}. Otherwise the stack slot might be reused and its content
- * destroyed.
+ * Remark: The analysis works under the assumption that a stack slot is no longer live after its last usage.
+ * If an {@link LIRInstruction instruction} transfers the raw address of the stack slot to another location, e.g.
+ * a registers, and this location is referenced later on, the {@link giraaff.lir.LIRInstruction.Use usage} of the
+ * stack slot must be marked with the {@link OperandFlag#UNINITIALIZED}. Otherwise the stack slot might be reused
+ * and its content destroyed.
  */
 public final class LSStackSlotAllocator extends AllocationPhase
 {
@@ -179,10 +178,7 @@ public final class LSStackSlotAllocator extends AllocationPhase
                 StackSlot slot = findFreeSlot((SimpleVirtualStackSlot) virtualSlot);
                 if (slot != null)
                 {
-                    /*
-                     * Free stack slot available. Note that we create a new one because the kind
-                     * might not match.
-                     */
+                    // Free stack slot available. Note that we create a new one because the kind might not match.
                     location = StackSlot.get(current.kind(), slot.getRawOffset(), slot.getRawAddFrameSize());
                 }
                 else
@@ -235,8 +231,7 @@ public final class LSStackSlotAllocator extends AllocationPhase
         }
 
         /**
-         * @return the list of free stack slots for {@code size}. If there is none a list is
-         *         created.
+         * @return the list of free stack slots for {@code size}. If there is none a list is created.
          */
         private Deque<StackSlot> getOrInitFreeSlots(SlotSize size)
         {

@@ -36,8 +36,7 @@ import giraaff.util.CollectionsUtil;
 
 /**
  * Base class for implementing some low level code providing the out-of-line slow path for a snippet
- * and/or a callee saved call to a HotSpot C/C++ runtime function or even a another compiled Java
- * method.
+ * and/or a callee saved call to a HotSpot C/C++ runtime function or even a another compiled Java method.
  */
 public abstract class Stub
 {

@@ -6,7 +6,6 @@ import jdk.vm.ci.hotspot.HotSpotObjectConstant;
 import jdk.vm.ci.meta.Constant;
 
 import giraaff.api.replacements.Snippet;
-import giraaff.debug.GraalError;
 import giraaff.hotspot.meta.HotSpotConstantLoadAction;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.nodes.aot.EncodedSymbolNode;
@@ -36,6 +35,7 @@ import giraaff.replacements.SnippetTemplate.AbstractTemplates;
 import giraaff.replacements.SnippetTemplate.Arguments;
 import giraaff.replacements.SnippetTemplate.SnippetInfo;
 import giraaff.replacements.Snippets;
+import giraaff.util.GraalError;
 
 public class ResolveConstantSnippets implements Snippets
 {

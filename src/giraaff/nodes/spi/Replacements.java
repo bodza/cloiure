@@ -36,8 +36,7 @@ public interface Replacements
      * Gets the snippet graph derived from a given method.
      *
      * @param recursiveEntry if the snippet contains a call to this method, it's considered as
-     *            recursive call and won't be processed for {@linkplain MethodSubstitution
-     *            substitutions}.
+     *            recursive call and won't be processed for {@linkplain MethodSubstitution substitutions}.
      * @param args arguments to the snippet if available, otherwise {@code null}
      * @return the snippet graph, if any, that is derived from {@code method}
      */

@@ -14,7 +14,6 @@ import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.StampPair;
-import giraaff.debug.GraalError;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
 import giraaff.hotspot.HotSpotForeignCallLinkage.RegisterEffect;
 import giraaff.hotspot.HotSpotForeignCallLinkage.Transition;
@@ -32,6 +31,7 @@ import giraaff.options.OptionValues;
 import giraaff.phases.common.RemoveValueProxyPhase;
 import giraaff.replacements.GraphKit;
 import giraaff.replacements.nodes.ReadRegisterNode;
+import giraaff.util.GraalError;
 import giraaff.word.Word;
 import giraaff.word.WordTypes;
 

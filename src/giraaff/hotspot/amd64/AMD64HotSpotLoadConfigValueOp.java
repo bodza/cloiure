@@ -8,10 +8,10 @@ import jdk.vm.ci.meta.AllocatableValue;
 import giraaff.asm.amd64.AMD64Address;
 import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.core.common.GraalOptions;
-import giraaff.debug.GraalError;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.amd64.AMD64LIRInstruction;
 import giraaff.lir.asm.CompilationResultBuilder;
+import giraaff.util.GraalError;
 
 public final class AMD64HotSpotLoadConfigValueOp extends AMD64LIRInstruction
 {

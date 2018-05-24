@@ -13,7 +13,6 @@ import org.graalvm.collections.Equivalence;
 import giraaff.core.common.calc.Condition;
 import giraaff.core.common.cfg.Loop;
 import giraaff.core.common.type.IntegerStamp;
-import giraaff.debug.GraalError;
 import giraaff.graph.Graph;
 import giraaff.graph.Node;
 import giraaff.graph.NodeBitMap;
@@ -52,6 +51,7 @@ import giraaff.nodes.cfg.ControlFlowGraph;
 import giraaff.nodes.debug.ControlFlowAnchored;
 import giraaff.nodes.extended.ValueAnchorNode;
 import giraaff.nodes.util.GraphUtil;
+import giraaff.util.GraalError;
 
 public class LoopEx
 {
@@ -416,10 +416,7 @@ public class LoopEx
                 }
                 if (op.usages().count() == 1 && op.usages().first() == baseIvNode)
                 {
-                    /*
-                     * This is just the base induction variable increment with no other uses so
-                     * don't bother reporting it.
-                     */
+                    // This is just the base induction variable increment with no other uses so don't bother reporting it.
                     continue;
                 }
                 InductionVariable iv = null;

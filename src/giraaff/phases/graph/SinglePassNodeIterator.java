@@ -28,13 +28,12 @@ import giraaff.nodes.StructuredGraph;
  * A SinglePassNodeIterator iterates the fixed nodes of the graph in post order starting from its
  * start node. Unlike in iterative dataflow analysis, a single pass is performed, which allows
  * keeping a smaller working set of pending {@link MergeableState}. This iteration scheme requires:
- * <ul>
+ *
  * <li>{@link MergeableState#merge(AbstractMergeNode, List)} to always return <code>true</code> (an
  * assertion checks this)</li>
  * <li>{@link #controlSplit(ControlSplitNode)} to always return all successors (otherwise, not all
  * associated {@link EndNode} will be visited. In turn, visiting all the end nodes for a given
  * {@link AbstractMergeNode} is a precondition before that merge node can be visited)</li>
- * </ul>
  *
  * For this iterator the CFG is defined by the classical CFG nodes (
  * {@link giraaff.nodes.ControlSplitNode},
@@ -66,8 +65,7 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
      * a pre-state (at the time, as done for a loop-begin in {@link #apply()}) only to make it a
      * post-state soon after (continuing with the loop-begin example, also in {@link #apply()}). In
      * any case, given that keys are limited to the nodes mentioned in the previous paragraph, in
-     * all cases an entry can be considered to hold a post-state by the time such entry is
-     * retrieved.
+     * all cases an entry can be considered to hold a post-state by the time such entry is retrieved.
      *
      * The only method that makes this map grow is {@link #keepForLater(FixedNode, MergeableState)}
      * and the only one that shrinks it is {@link #pruneEntry(FixedNode)}. To make sure no entry is

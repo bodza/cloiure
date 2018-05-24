@@ -19,7 +19,6 @@ import org.graalvm.collections.Equivalence;
 
 import giraaff.core.common.GraalOptions;
 import giraaff.core.common.type.ObjectStamp;
-import giraaff.debug.GraalError;
 import giraaff.graph.Graph;
 import giraaff.graph.Node;
 import giraaff.nodes.CallTargetNode;
@@ -46,6 +45,7 @@ import giraaff.phases.common.inlining.info.elem.InlineableGraph;
 import giraaff.phases.common.inlining.policy.InliningPolicy;
 import giraaff.phases.tiers.HighTierContext;
 import giraaff.phases.util.Providers;
+import giraaff.util.GraalError;
 
 /**
  * The space of inlining decisions is explored depth-first with the help of a stack realized by
@@ -446,12 +446,11 @@ public class InliningData
     /**
      *
      * This method attempts:
-     * <ol>
+     *
      * <li>to inline at the callsite given by <code>calleeInvocation</code>, where that callsite
      * belongs to the {@link CallsiteHolderExplorable} at the top of the {@link #graphQueue}
      * maintained in this class.</li>
      * <li>otherwise, to devirtualize the callsite in question.</li>
-     * </ol>
      *
      * @return true iff inlining was actually performed
      */
@@ -680,7 +679,6 @@ public class InliningData
     }
 
     /**
-     * <p>
      * The stack realized by {@link InliningData} grows and shrinks as choices are made among the
      * alternatives below:
      * <ol>
@@ -702,18 +700,14 @@ public class InliningData
      * </ul>
      * </li>
      * </ol>
-     * </p>
      *
-     * <p>
      * Some facts about the alternatives above:
-     * <ul>
+     *
      * <li>the first step amounts to backtracking, the 2nd one to depth-search, and the 3rd one also
      * involves backtracking (however possibly after inlining).</li>
      * <li>the choice of abandon-and-backtrack or delve-into depends on
      * {@link InliningPolicy#isWorthInlining} and {@link InliningPolicy#continueInlining}.</li>
      * <li>the 3rd choice is picked whenever none of the previous choices are made</li>
-     * </ul>
-     * </p>
      *
      * @return true iff inlining was actually performed
      */

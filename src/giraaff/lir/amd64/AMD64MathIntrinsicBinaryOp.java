@@ -13,13 +13,13 @@ import giraaff.asm.amd64.AMD64Address.Scale;
 import giraaff.asm.amd64.AMD64Assembler.ConditionFlag;
 import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.core.common.LIRKind;
-import giraaff.debug.GraalError;
 import giraaff.lir.LIRInstruction.OperandFlag;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.Opcode;
 import giraaff.lir.asm.ArrayDataPointerConstant;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.lir.gen.LIRGeneratorTool;
+import giraaff.util.GraalError;
 
 public final class AMD64MathIntrinsicBinaryOp extends AMD64LIRInstruction
 {
@@ -142,8 +142,7 @@ public final class AMD64MathIntrinsicBinaryOp extends AMD64LIRInstruction
      * non-integer y. pow(x,-INF) = +INF for |x|<1. pow(x,-INF) = +0 for |x|>1. pow(x,+INF) = +0 for
      * |x|<1. pow(x,+INF) = +INF for |x|>1. pow(-INF,y) = -0 for y an odd integer < 0. pow(-INF,y) =
      * +0 for y < 0 and not an odd integer. pow(-INF,y) = -INF for y an odd integer > 0. pow(-INF,y)
-     * = +INF for y > 0 and not an odd integer. pow(+INF,y) = +0 for y <0. pow(+INF,y) = +INF for y
-     * >0.
+     * = +INF for y > 0 and not an odd integer. pow(+INF,y) = +0 for y <0. pow(+INF,y) = +INF for y >0.
      *
      */
 

@@ -87,10 +87,10 @@ public final class LoopEndNode extends AbstractEndNode
     }
 
     /**
-     * Returns the index of this loop end amongst its {@link LoopBeginNode}'s loop ends.<br>
+     * Returns the index of this loop end amongst its {@link LoopBeginNode}'s loop ends.
      *
-     * Since a LoopBeginNode also has {@linkplain LoopBeginNode#forwardEnds() forward ends}, this is
-     * <b>not</b> the index into {@link PhiNode} values at the loop begin. Use
+     * Since a LoopBeginNode also has {@linkplain LoopBeginNode#forwardEnds() forward ends},
+     * this is *not* the index into {@link PhiNode} values at the loop begin. Use
      * {@link LoopBeginNode#phiPredecessorIndex(AbstractEndNode)} for this purpose.
      *
      */

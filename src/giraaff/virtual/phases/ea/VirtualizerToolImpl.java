@@ -145,10 +145,7 @@ class VirtualizerToolImpl implements VirtualizerTool, CanonicalizerTool
             }
             else if (entryKind == JavaKind.Int && (accessKind == JavaKind.Long || accessKind == JavaKind.Double) && offset % 8 == 0)
             {
-                /*
-                 * Special case: Allow storing a single long or double value into two consecutive
-                 * int slots.
-                 */
+                // Special case: Allow storing a single long or double value into two consecutive int slots.
                 int nextIndex = virtual.entryIndexForOffset(getArrayOffsetProvider(), offset + 4, JavaKind.Int);
                 if (nextIndex != -1)
                 {

@@ -1,10 +1,10 @@
 package giraaff.loop;
 
 import giraaff.core.common.type.Stamp;
-import giraaff.debug.GraalError;
 import giraaff.nodes.NodeView;
 import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.ValueNode;
+import giraaff.util.GraalError;
 
 /**
  * This class describes a value node that is an induction variable in a counted loop.

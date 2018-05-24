@@ -182,8 +182,7 @@ public class AMD64HotSpotAddressLowering extends AMD64CompressAddressLowering
     }
 
     /**
-     * Create a sign extend for {@code input}, or zero extend if {@code input} can be proven
-     * positive.
+     * Create a sign extend for {@code input}, or zero extend if {@code input} can be proven positive.
      */
     private static ValueNode signExtend(ValueNode input, LoopEx loop)
     {

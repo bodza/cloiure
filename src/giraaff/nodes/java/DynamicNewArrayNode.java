@@ -27,8 +27,7 @@ public class DynamicNewArrayNode extends AbstractNewArrayNode implements Canonic
 
     /**
      * Class pointer to void.class needs to be exposed earlier than this node is lowered so that it
-     * can be replaced by the AOT machinery. If it's not needed for lowering this input can be
-     * ignored.
+     * can be replaced by the AOT machinery. If it's not needed for lowering this input can be ignored.
      */
     @OptionalInput ValueNode voidClass;
 

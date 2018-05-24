@@ -15,7 +15,6 @@ import giraaff.core.common.GraalOptions;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.core.common.spi.ForeignCallsProvider;
 import giraaff.core.target.Backend;
-import giraaff.debug.GraalError;
 import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.hotspot.HotSpotBackend;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
@@ -45,6 +44,7 @@ import giraaff.nodes.java.ForeignCallDescriptors;
 import giraaff.options.OptionValues;
 import giraaff.replacements.nodes.BinaryMathIntrinsicNode.BinaryOperation;
 import giraaff.replacements.nodes.UnaryMathIntrinsicNode.UnaryOperation;
+import giraaff.util.GraalError;
 import giraaff.word.Word;
 import giraaff.word.WordTypes;
 

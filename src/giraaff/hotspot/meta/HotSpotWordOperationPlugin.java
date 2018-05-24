@@ -10,7 +10,6 @@ import giraaff.api.replacements.SnippetReflectionProvider;
 import giraaff.bytecode.BridgeMethodUtils;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
-import giraaff.debug.GraalError;
 import giraaff.hotspot.nodes.LoadIndexedPointerNode;
 import giraaff.hotspot.nodes.type.KlassPointerStamp;
 import giraaff.hotspot.nodes.type.MetaspacePointerStamp;
@@ -31,12 +30,12 @@ import giraaff.nodes.memory.HeapAccess.BarrierType;
 import giraaff.nodes.memory.ReadNode;
 import giraaff.nodes.memory.address.AddressNode;
 import giraaff.nodes.type.StampTool;
+import giraaff.util.GraalError;
 import giraaff.word.WordOperationPlugin;
 import giraaff.word.WordTypes;
 
 /**
- * Extends {@link WordOperationPlugin} to handle {@linkplain HotSpotOperation HotSpot word
- * operations}.
+ * Extends {@link WordOperationPlugin} to handle {@linkplain HotSpotOperation HotSpot word operations}.
  */
 class HotSpotWordOperationPlugin extends WordOperationPlugin
 {

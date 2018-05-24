@@ -43,8 +43,7 @@ public abstract class EffectsBlockState<T extends EffectsBlockState<T>>
     }
 
     /**
-     * Returns true if every value in subMap is also present in the superMap (according to "equals"
-     * semantics).
+     * Returns true if every value in subMap is also present in the superMap (according to "equals" semantics).
      */
     protected static <K, V> boolean isSubMapOf(EconomicMap<K, V> superMap, EconomicMap<K, V> subMap)
     {

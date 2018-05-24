@@ -6,7 +6,6 @@ import jdk.vm.ci.meta.Value;
 
 import giraaff.core.amd64.AMD64NodeLIRBuilder.Options;
 import giraaff.core.gen.NodeLIRBuilder;
-import giraaff.debug.GraalError;
 import giraaff.lir.LIRFrameState;
 import giraaff.lir.amd64.AMD64Call;
 import giraaff.lir.gen.LIRGeneratorTool;
@@ -21,6 +20,7 @@ import giraaff.nodes.calc.IntegerDivRemNode;
 import giraaff.nodes.cfg.Block;
 import giraaff.options.OptionKey;
 import giraaff.options.OptionValues;
+import giraaff.util.GraalError;
 
 public abstract class AMD64NodeLIRBuilder extends NodeLIRBuilder
 {

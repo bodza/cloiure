@@ -7,13 +7,13 @@ import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 
 import giraaff.core.gen.NodeMatchRules;
-import giraaff.debug.GraalError;
 import giraaff.graph.Edges;
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.Position;
 import giraaff.options.OptionValues;
-import giraaff.serviceprovider.GraalServices;
+import giraaff.util.GraalError;
+import giraaff.util.GraalServices;
 
 public class MatchRuleRegistry
 {

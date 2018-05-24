@@ -9,8 +9,7 @@ import java.lang.annotation.Target;
  * Annotates a method replaced by a compile-time constant. A (resolved) call to the annotated method
  * is replaced with a constant obtained by calling the annotated method via reflection.
  *
- * All arguments to such a method (including the receiver if applicable) must be compile-time
- * constants.
+ * All arguments to such a method (including the receiver if applicable) must be compile-time constants.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

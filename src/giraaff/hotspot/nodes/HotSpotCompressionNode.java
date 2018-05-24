@@ -7,12 +7,12 @@ import jdk.vm.ci.meta.JavaConstant;
 
 import giraaff.core.common.CompressEncoding;
 import giraaff.core.common.type.Stamp;
-import giraaff.debug.GraalError;
 import giraaff.graph.NodeClass;
 import giraaff.hotspot.nodes.type.HotSpotNarrowOopStamp;
 import giraaff.nodes.CompressionNode;
 import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
+import giraaff.util.GraalError;
 
 public final class HotSpotCompressionNode extends CompressionNode
 {

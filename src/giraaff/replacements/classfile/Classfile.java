@@ -14,10 +14,8 @@ import giraaff.replacements.classfile.ClassfileConstant.Utf8;
 /**
  * Container for objects representing the {@code Code} attributes parsed from a class file.
  *
- * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3">Code
- *      attributes</a>
- * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4">Constant
- *      Pool</a>
+ * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3">Code attributes</a>
+ * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4">Constant Pool</a>
  */
 public class Classfile
 {

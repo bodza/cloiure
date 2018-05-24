@@ -41,8 +41,7 @@ public final class PiArrayNode extends PiNode implements ArrayLengthProvider
     }
 
     /**
-     * Changes the stamp of an object inside a snippet to be the stamp of the node replaced by the
-     * snippet.
+     * Changes the stamp of an object inside a snippet to be the stamp of the node replaced by the snippet.
      */
     @NodeIntrinsic(Placeholder.class)
     public static native Object piArrayCastToSnippetReplaceeStamp(Object object, int length);

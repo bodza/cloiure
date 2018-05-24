@@ -335,9 +335,7 @@ public final class StructuredGraph extends Graph
     {
         if (super.maybeCompress())
         {
-            /*
-             * The schedule contains a NodeMap which is unusable after compression.
-             */
+            // The schedule contains a NodeMap which is unusable after compression.
             clearLastSchedule();
             return true;
         }
@@ -675,7 +673,8 @@ public final class StructuredGraph extends Graph
         if (begin.forwardEndCount() == 1) { // bypass merge and remove
             reduceTrivialMerge(begin);
         }
-        else { // convert to merge
+        else // convert to merge
+        {
             AbstractMergeNode merge = this.add(new MergeNode());
             for (EndNode end : begin.forwardEnds())
             {

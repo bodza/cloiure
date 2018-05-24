@@ -131,8 +131,7 @@ public abstract class Edges extends Fields
     }
 
     /**
-     * Initializes the list edges in a given node based on the size of the list edges in a prototype
-     * node.
+     * Initializes the list edges in a given node based on the size of the list edges in a prototype node.
      *
      * @param node the node whose list edges are to be initialized
      * @param prototype the node whose list edge sizes are used when creating new edge lists

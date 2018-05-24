@@ -5,7 +5,6 @@ import jdk.vm.ci.meta.Value;
 
 import org.graalvm.word.LocationIdentity;
 
-import giraaff.debug.GraalError;
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
@@ -22,6 +21,7 @@ import giraaff.nodes.memory.MemoryCheckpoint;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.util.GraphUtil;
+import giraaff.util.GraalError;
 
 /**
  * A call to the VM via a regular stub.

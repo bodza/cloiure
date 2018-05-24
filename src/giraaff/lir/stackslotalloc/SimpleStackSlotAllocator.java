@@ -4,7 +4,6 @@ import jdk.vm.ci.code.StackSlot;
 import jdk.vm.ci.code.TargetDescription;
 
 import giraaff.core.common.cfg.AbstractBlockBase;
-import giraaff.debug.GraalError;
 import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRValueUtil;
 import giraaff.lir.ValueProcedure;
@@ -14,6 +13,7 @@ import giraaff.lir.framemap.SimpleVirtualStackSlot;
 import giraaff.lir.framemap.VirtualStackSlotRange;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.phases.AllocationPhase;
+import giraaff.util.GraalError;
 
 public class SimpleStackSlotAllocator extends AllocationPhase
 {

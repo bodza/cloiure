@@ -2,7 +2,6 @@ package giraaff.hotspot.nodes.aot;
 
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
-import giraaff.debug.GraalError;
 import giraaff.graph.NodeClass;
 import giraaff.graph.iterators.NodeIterable;
 import giraaff.hotspot.nodes.type.MethodCountersPointerStamp;
@@ -10,6 +9,7 @@ import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.calc.FloatingNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
+import giraaff.util.GraalError;
 
 public class LoadMethodCountersNode extends FloatingNode implements LIRLowerable
 {

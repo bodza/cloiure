@@ -17,8 +17,7 @@ import giraaff.nodes.ValueNode;
 
 /**
  * Returns -1, 0, or 1 if either x &lt; y, x == y, or x &gt; y. If the comparison is undecided (one
- * of the inputs is NaN), the result is 1 if isUnorderedLess is false and -1 if isUnorderedLess is
- * true.
+ * of the inputs is NaN), the result is 1 if isUnorderedLess is false and -1 if isUnorderedLess is true.
  */
 public final class NormalizeCompareNode extends BinaryNode implements IterableNodeType
 {

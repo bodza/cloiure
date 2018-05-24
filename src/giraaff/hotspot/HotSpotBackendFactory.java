@@ -15,8 +15,7 @@ public interface HotSpotBackendFactory
     String getName();
 
     /**
-     * Gets the class describing the architecture the backend created by this factory is associated
-     * with.
+     * Gets the class describing the architecture the backend created by this factory is associated with.
      */
     Class<? extends Architecture> getArchitecture();
 

@@ -46,9 +46,8 @@ import giraaff.virtual.phases.ea.ReadEliminationBlockState.LoadCacheEntry;
 import giraaff.virtual.phases.ea.ReadEliminationBlockState.UnsafeLoadCacheEntry;
 
 /**
- * This closure initially handled a set of nodes that is disjunct from
- * {@link PEReadEliminationClosure}, but over time both have evolved so that there's a significant
- * overlap.
+ * This closure initially handled a set of nodes that is disjunct from {@link PEReadEliminationClosure},
+ * but over time both have evolved so that there's a significant overlap.
  */
 public final class ReadEliminationClosure extends EffectsClosure<ReadEliminationBlockState>
 {
@@ -335,10 +334,7 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
                     newState.addCacheEntry(key, value);
                 }
             }
-            /*
-             * For object phis, see if there are known reads on all predecessors, for which we could
-             * create new phis.
-             */
+            // For object phis, see if there are known reads on all predecessors, for which we could create new phis.
             for (PhiNode phi : getPhis())
             {
                 if (phi.getStackKind() == JavaKind.Object)

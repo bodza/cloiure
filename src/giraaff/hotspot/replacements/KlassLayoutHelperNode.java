@@ -71,9 +71,7 @@ public final class KlassLayoutHelperNode extends FloatingNode implements Canonic
                 {
                     if (!type.isArray() && !type.isInterface())
                     {
-                        /*
-                         * Definitely some form of instance type.
-                         */
+                        // Definitely some form of instance type.
                         return updateStamp(StampFactory.forInteger(JavaKind.Int, config.klassLayoutHelperNeutralValue, Integer.MAX_VALUE));
                     }
                     if (type.isArray())

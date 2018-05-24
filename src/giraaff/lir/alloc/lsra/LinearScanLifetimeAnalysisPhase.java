@@ -20,7 +20,6 @@ import giraaff.core.common.PermanentBailoutException;
 import giraaff.core.common.alloc.ComputeBlockOrder;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.core.common.util.BitMap2D;
-import giraaff.debug.GraalError;
 import giraaff.lir.InstructionValueConsumer;
 import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstruction.OperandFlag;
@@ -34,6 +33,7 @@ import giraaff.lir.alloc.lsra.Interval.SpillState;
 import giraaff.lir.alloc.lsra.LinearScan.BlockData;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.phases.AllocationPhase.AllocationContext;
+import giraaff.util.GraalError;
 
 public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
 {
@@ -183,14 +183,11 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
 
                     op.visitEachInput(useConsumer);
                     op.visitEachAlive(useConsumer);
-                    /*
-                     * Add uses of live locals from interpreter's point of view for proper
-                     * debug information generation.
-                     */
+                    // Add uses of live locals from interpreter's point of view for proper debug information generation.
                     op.visitEachState(stateConsumer);
                     op.visitEachTemp(defConsumer);
                     op.visitEachOutput(defConsumer);
-                } // end of instruction iteration
+                }
 
                 BlockData blockSets = allocator.getBlockData(block);
                 blockSets.liveGen = trimClone(liveGenScratch);
@@ -198,7 +195,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
                 // sticky size, will get non-sticky in computeGlobalLiveSets
                 blockSets.liveIn = new BitSet(0);
                 blockSets.liveOut = new BitSet(0);
-            } // end of block iteration
+            }
         }
         catch (OutOfMemoryError oom)
         {
@@ -234,9 +231,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
 
                 changeOccurredInBlock = false;
 
-                /*
-                 * liveOut(block) is the union of liveIn(sux), for successors sux of block.
-                 */
+                // liveOut(block) is the union of liveIn(sux), for successors sux of block.
                 int n = block.getSuccessorCount();
                 if (n > 0)
                 {
@@ -262,12 +257,9 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
                 if (iterationCount == 0 || changeOccurredInBlock)
                 {
                     /*
-                     * liveIn(block) is the union of liveGen(block) with (liveOut(block) &
-                     * !liveKill(block)).
+                     * liveIn(block) is the union of liveGen(block) with (liveOut(block) & !liveKill(block)).
                      *
-                     * Note: liveIn has to be computed only in first iteration or if liveOut
-                     * has changed!
-                     *
+                     * Note: liveIn has to be computed only in first iteration or if liveOut has changed!
                      * Note: liveIn set can only grow, never shrink. No need to clear it.
                      */
                     BitSet liveIn = blockSets.liveIn;
@@ -286,10 +278,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
 
             if (changeOccurred && iterationCount > 50)
             {
-                /*
-                 * Very unlikely, should never happen: If it happens we cannot guarantee it
-                 * won't happen again.
-                 */
+                // Very unlikely, should never happen: If it happens we cannot guarantee it won't happen again.
                 throw new PermanentBailoutException("too many iterations in computeGlobalLiveSets");
             }
         } while (changeOccurred);
@@ -381,9 +370,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
         }
         else
         {
-            /*
-             * Dead value - make vacuous interval also add register priority for dead intervals
-             */
+            // Dead value - make vacuous interval also add register priority for dead intervals
             interval.addRange(defPos, defPos + 1);
             interval.addUsePos(defPos, registerPriority);
         }
@@ -428,7 +415,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
                     Interval from = allocator.getOrCreateInterval((AllocatableValue) registerHint);
                     Interval to = allocator.getOrCreateInterval((AllocatableValue) targetValue);
 
-                    /* hints always point from def to use */
+                    // hints always point from def to use
                     if (hintAtDef)
                     {
                         to.setLocationHint(from);
@@ -506,8 +493,7 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
     }
 
     /**
-     * Determines the priority which with an instruction's input operand will be allocated a
-     * register.
+     * Determines the priority which with an instruction's input operand will be allocated a register.
      */
     protected static RegisterPriority registerPriorityOfInputOperand(EnumSet<OperandFlag> flags)
     {
@@ -640,8 +626,8 @@ public class LinearScanLifetimeAnalysisPhase extends LinearScanAllocationPhase
 
                 // special steps for some instructions (especially moves)
                 handleMethodArguments(op);
-            } // end of instruction iteration
-        } // end of block iteration
+            }
+        }
 
         /*
          * Add the range [0, 1] to all fixed intervals. The register allocator need not handle

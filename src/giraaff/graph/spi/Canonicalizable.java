@@ -9,13 +9,13 @@ import giraaff.graph.Node;
  * Nodes can implement {@link Canonicalizable} or one of the two sub-interfaces {@link Unary} and
  * {@link Binary} to provide local optimizations like constant folding and strength reduction.
  * Implementations should return a replacement that is always semantically correct for the given
- * inputs, or "this" if they do not see an opportunity for improvement.<br/>
- * <br/>
+ * inputs, or "this" if they do not see an opportunity for improvement.
+ *
  * <b>Implementations of {@link Canonicalizable#canonical(CanonicalizerTool)} or the equivalent
- * methods of the two sub-interfaces must not have any side effects.</b><br/>
+ * methods of the two sub-interfaces must not have any side effects.</b>
  * They are not allowed to change inputs, successors or properties of any node (including the
- * current one) and they also cannot add new nodes to the graph.<br/>
- * <br/>
+ * current one) and they also cannot add new nodes to the graph.
+ *
  * In addition to pre-existing nodes they can return newly created nodes, which will be added to the
  * graph automatically if (and only if) the effects of the canonicalization are committed.
  * Non-cyclic graphs (DAGs) of newly created nodes (i.e., one newly created node with an input to
@@ -27,9 +27,9 @@ public interface Canonicalizable
      * Implementations of this method can provide local optimizations like constant folding and
      * strength reduction. Implementations should look at the properties and inputs of the current
      * node and determine if there is a more optimal and always semantically correct replacement.
-     * <br/>
+     *
      * The return value determines the effect that the canonicalization will have:
-     * <ul>
+     *
      * <li>Returning an pre-existing node will replace the current node with the given one.</li>
      * <li>Returning a newly created node (that was not yet added to the graph) will replace the
      * current node with the given one, after adding it to the graph. If both the replacement and
@@ -39,7 +39,6 @@ public interface Canonicalizable
      * <li>Returning {@code null} will delete the current node and replace it with {@code null} at
      * all usages. Note that it is not necessary to delete floating nodes that have no more usages
      * this way - they will be deleted automatically.</li>
-     * </ul>
      *
      * @param tool provides access to runtime interfaces like {@link MetaAccessProvider}
      */

@@ -14,8 +14,8 @@ import giraaff.code.DataSection.Data;
 import giraaff.code.DataSection.Patches;
 import giraaff.code.DataSection.SerializableData;
 import giraaff.code.DataSection.ZeroData;
-import giraaff.debug.GraalError;
 import giraaff.lir.asm.DataBuilder;
+import giraaff.util.GraalError;
 
 public class HotSpotDataBuilder extends DataBuilder
 {

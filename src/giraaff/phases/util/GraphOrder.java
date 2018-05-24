@@ -3,7 +3,6 @@ package giraaff.phases.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import giraaff.debug.GraalError;
 import giraaff.graph.GraalGraphError;
 import giraaff.graph.Node;
 import giraaff.graph.NodeBitMap;
@@ -15,6 +14,7 @@ import giraaff.nodes.PhiNode;
 import giraaff.nodes.StateSplit;
 import giraaff.nodes.StructuredGraph;
 import giraaff.phases.graph.StatelessPostOrderNodeIterator;
+import giraaff.util.GraalError;
 
 public final class GraphOrder
 {

@@ -22,7 +22,6 @@ import giraaff.bytecode.BytecodeProvider;
 import giraaff.bytecode.ResolvedJavaMethodBytecode;
 import giraaff.core.common.GraalOptions;
 import giraaff.core.common.spi.ConstantFieldProvider;
-import giraaff.debug.GraalError;
 import giraaff.graph.Node;
 import giraaff.graph.Node.NodeIntrinsic;
 import giraaff.java.BytecodeParserOptions;
@@ -54,6 +53,7 @@ import giraaff.phases.common.DeadCodeEliminationPhase;
 import giraaff.phases.common.DeadCodeEliminationPhase.Optionality;
 import giraaff.phases.tiers.PhaseContext;
 import giraaff.phases.util.Providers;
+import giraaff.util.GraalError;
 import giraaff.word.Word;
 import giraaff.word.WordOperationPlugin;
 

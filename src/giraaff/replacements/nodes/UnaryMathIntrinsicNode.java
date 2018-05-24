@@ -7,7 +7,6 @@ import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.core.common.type.FloatStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
-import giraaff.debug.GraalError;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.lir.gen.ArithmeticLIRGeneratorTool;
@@ -19,6 +18,7 @@ import giraaff.nodes.spi.ArithmeticLIRLowerable;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
+import giraaff.util.GraalError;
 
 public final class UnaryMathIntrinsicNode extends UnaryNode implements ArithmeticLIRLowerable, Lowerable
 {

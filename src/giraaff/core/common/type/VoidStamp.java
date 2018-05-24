@@ -8,7 +8,7 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.spi.LIRKindTool;
-import giraaff.debug.GraalError;
+import giraaff.util.GraalError;
 
 /**
  * Singleton stamp representing the value of type {@code void}.

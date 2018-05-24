@@ -12,7 +12,6 @@ import giraaff.core.common.type.AbstractPointerStamp;
 import giraaff.core.common.type.FloatStamp;
 import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.Stamp;
-import giraaff.debug.GraalError;
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable.BinaryCommutative;
@@ -25,6 +24,7 @@ import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.options.OptionValues;
+import giraaff.util.GraalError;
 
 public final class IntegerEqualsNode extends CompareNode implements BinaryCommutative<ValueNode>
 {
@@ -298,9 +298,7 @@ public final class IntegerEqualsNode extends CompareNode implements BinaryCommut
                 }
                 if (nonConstant instanceof AndNode)
                 {
-                    /*
-                     * a & c == c is the same as a & c != 0, if c is a single bit.
-                     */
+                    // a & c == c is the same as a & c != 0, if c is a single bit
                     AndNode andNode = (AndNode) nonConstant;
                     if (Long.bitCount(((PrimitiveConstant) constant).asLong()) == 1 && andNode.getY().isConstant() && andNode.getY().asJavaConstant().equals(constant))
                     {

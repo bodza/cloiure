@@ -4,10 +4,10 @@ import jdk.vm.ci.code.Register;
 
 import giraaff.api.replacements.Snippet;
 import giraaff.api.replacements.Snippet.ConstantParameter;
-import giraaff.debug.GraalError;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.options.OptionValues;
+import giraaff.util.GraalError;
 
 /**
  * Stub to allocate a {@link NullPointerException} thrown by a bytecode.

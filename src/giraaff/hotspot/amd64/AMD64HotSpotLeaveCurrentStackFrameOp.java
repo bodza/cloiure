@@ -49,10 +49,7 @@ final class AMD64HotSpotLeaveCurrentStackFrameOp extends AMD64HotSpotEpilogueOp
         Register floatResultRegister = registerConfig.getReturnRegister(JavaKind.Double);
         masm.movdbl(floatResultRegister, new AMD64Address(stackPointer, registerSaveLayout.registerToSlot(floatResultRegister) * stackSlotSize));
 
-        /*
-         * All of the register save area will be popped of the stack. Only the return address
-         * remains.
-         */
+        // All of the register save area will be popped of the stack. Only the return address remains.
         leaveFrameAndRestoreRbp(crb, masm);
 
         // Remove return address.

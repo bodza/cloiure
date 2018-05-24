@@ -34,8 +34,7 @@ public final class AMD64Address extends AbstractAddress
     }
 
     /**
-     * Creates an {@link AMD64Address} with given base register, no scaling and a given
-     * displacement.
+     * Creates an {@link AMD64Address} with given base register, no scaling and a given displacement.
      *
      * @param base the base register
      * @param displacement the displacement
@@ -46,8 +45,7 @@ public final class AMD64Address extends AbstractAddress
     }
 
     /**
-     * Creates an {@link AMD64Address} with given base and index registers, scaling and 0
-     * displacement.
+     * Creates an {@link AMD64Address} with given base and index registers, scaling and 0 displacement.
      *
      * @param base the base register
      * @param index the index register

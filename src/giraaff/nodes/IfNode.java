@@ -19,7 +19,6 @@ import giraaff.core.common.calc.Condition;
 import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
-import giraaff.debug.GraalError;
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.iterators.NodeIterable;
@@ -41,6 +40,7 @@ import giraaff.nodes.java.LoadFieldNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.util.GraphUtil;
+import giraaff.util.GraalError;
 
 /**
  * The {@code IfNode} represents a branch that can go one of two directions depending on the outcome
@@ -444,9 +444,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
             ValueNode result = ConditionalNode.canonicalizeConditional(condition, trueValue, falseValue, phi.stamp(view), view);
             if (result != null)
             {
-                /*
-                 * canonicalizeConditional returns possibly new nodes so add them to the graph.
-                 */
+                // canonicalizeConditional returns possibly new nodes so add them to the graph
                 if (result.graph() == null)
                 {
                     result = graph().addOrUniqueWithInputs(result);
@@ -539,8 +537,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                     AbstractBeginNode trueSucc = ifNode2.trueSuccessor();
                     IntegerBelowNode below = null;
                     /*
-                     * Convert x >= 0 && x < positive which is represented as !(x < 0) && x <
-                     * <positive> into an unsigned compare.
+                     * Convert x >= 0 && x < positive which is represented as !(x < 0) && x < <positive> into an unsigned compare.
                      */
                     if (lessThan2.getX() == lessThan.getX() && lessThan2.getY().stamp(view) instanceof IntegerStamp && ((IntegerStamp) lessThan2.getY().stamp(view)).isPositive() && sameDestination(trueSuccessor(), ifNode2.falseSuccessor))
                     {
@@ -782,10 +779,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                 }
                 if (distinct == 0)
                 {
-                    /*
-                     * Multiple phis but merging same values for true and false, so simply delete
-                     * the path
-                     */
+                    // Multiple phis but merging same values for true and false, so simply delete the path
                     removeThroughFalseBranch(tool, merge);
                     return true;
                 }
@@ -843,16 +837,17 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
          * loop, but the resulting conditional node will be inside the loop, so we need to proxy the
          * resulting conditional node. Callers of this method ensure that true and false successor
          * have no usages, therefore a and b in the graph below can never be proxies themselves.
+         *
+         *              +--+
+         *              |If|
+         *              +--+      +-----+ +-----+
+         *         +----+  +----+ |  a  | |  b  |
+         *         |Lex |  |Lex | +----^+ +^----+
+         *         +----+  +----+      |   |
+         *           +-------+         +---+
+         *           | Merge +---------+Phi|
+         *           +-------+         +---+
          */
-        //              +--+
-        //              |If|
-        //              +--+      +-----+ +-----+
-        //         +----+  +----+ |  a  | |  b  |
-        //         |Lex |  |Lex | +----^+ +^----+
-        //         +----+  +----+      |   |
-        //           +-------+         +---+
-        //           | Merge +---------+Phi|
-        //           +-------+         +---+
         if (this.graph().hasValueProxies())
         {
             if (trueSuccessor instanceof LoopExitNode && falseSuccessor instanceof LoopExitNode)
@@ -999,23 +994,17 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         }
         if (merge.stateAfter() != null)
         {
-            /* We'll get the chance to simplify this after frame state assignment. */
+            // We'll get the chance to simplify this after frame state assignment.
             return false;
         }
         PhiNode phi = merge.phis().first();
         if (phi.usages().count() != 1)
         {
-            /*
-             * For simplicity the below code assumes assumes the phi goes dead at the end so skip
-             * this case.
-             */
+            // For simplicity the below code assumes assumes the phi goes dead at the end so skip this case.
             return false;
         }
 
-        /*
-         * Check that the condition uses the phi and that there is only one user of the condition
-         * expression.
-         */
+        // Check that the condition uses the phi and that there is only one user of the condition expression.
         if (!conditionUses(condition(), phi))
         {
             return false;
@@ -1027,7 +1016,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
          * simplifiable, usually where the stamp allows the question to be answered.
          */
 
-        /* Each successor of the if gets a new merge if needed. */
+        // Each successor of the if gets a new merge if needed.
         MergeNode trueMerge = null;
         MergeNode falseMerge = null;
 
@@ -1115,8 +1104,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                 /*
                  * It can be unsafe to simplify a ShortCircuitOr before deopts are fixed because
                  * conversion to guards assumes that all the required conditions are being tested.
-                 * Simplfying the condition based on context before this happens may lose a
-                 * condition.
+                 * Simplfying the condition based on context before this happens may lose a condition.
                  */
                 ShortCircuitOrNode orNode = (ShortCircuitOrNode) condition;
                 return (conditionUses(orNode.x, phi) || conditionUses(orNode.y, phi));
@@ -1157,9 +1145,7 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
                     {
                         return result;
                     }
-                    /*
-                     * Create a new node to carry the optimized inputs.
-                     */
+                    // Create a new node to carry the optimized inputs.
                     ShortCircuitOrNode newOr = new ShortCircuitOrNode(resultX, orNode.xNegated, resultY, orNode.yNegated, orNode.getShortCircuitProbability());
                     return newOr.canonical(tool);
                 }

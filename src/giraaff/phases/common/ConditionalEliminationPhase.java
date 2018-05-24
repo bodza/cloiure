@@ -438,10 +438,7 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                 while (entries.advance())
                 {
                     ValuePhiNode phi = entries.getKey();
-                    /*
-                     * Phi might have been killed already via a conditional elimination in another
-                     * branch.
-                     */
+                    // Phi might have been killed already via a conditional elimination in another branch.
                     if (phi.isDeleted())
                     {
                         continue;
@@ -624,8 +621,7 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                         {
                             /*
                              * This 'and' proves something about some of the bits in and.getX().
-                             * It's equivalent to or'ing in the mask value since those values are
-                             * known to be set.
+                             * It's equivalent to or'ing in the mask value since those values are known to be set.
                              */
                             BinaryOp<Or> op = ArithmeticOpTable.forStamp(x.stamp(NodeView.DEFAULT)).getOr();
                             IntegerStamp newStampX = (IntegerStamp) op.foldStamp(getSafeStamp(andX), getOtherSafeStamp(y));
@@ -1032,8 +1028,7 @@ public class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                         {
                             /*
                              * This 'and' proves something about some of the bits in and.getX().
-                             * It's equivalent to or'ing in the mask value since those values are
-                             * known to be set.
+                             * It's equivalent to or'ing in the mask value since those values are known to be set.
                              */
                             BinaryOp<Or> op = ArithmeticOpTable.forStamp(x.stamp(NodeView.DEFAULT)).getOr();
                             IntegerStamp newStampX = (IntegerStamp) op.foldStamp(getSafeStamp(and.getX()), getOtherSafeStamp(y));

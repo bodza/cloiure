@@ -16,8 +16,7 @@ import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.phases.AllocationPhase;
 
 /**
- * Mark all live references for a frame state. The frame state use this information to build the OOP
- * maps.
+ * Mark all live references for a frame state. The frame state use this information to build the OOP maps.
  */
 public final class LocationMarkerPhase extends AllocationPhase
 {
@@ -83,8 +82,7 @@ public final class LocationMarkerPhase extends AllocationPhase
         }
 
         /**
-         * Gets an object describing the attributes of a given register according to this register
-         * configuration.
+         * Gets an object describing the attributes of a given register according to this register configuration.
          */
         private RegisterAttributes attributes(Register reg)
         {

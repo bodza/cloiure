@@ -492,10 +492,7 @@ public final class PEReadEliminationClosure extends PartialEscapeClosure<PEReadE
                     newState.readCache.put(key, value);
                 }
             }
-            /*
-             * For object phis, see if there are known reads on all predecessors, for which we could
-             * create new phis.
-             */
+            // For object phis, see if there are known reads on all predecessors, for which we could create new phis.
             for (PhiNode phi : getPhis())
             {
                 if (phi.getStackKind() == JavaKind.Object)

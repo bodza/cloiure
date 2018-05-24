@@ -6,7 +6,6 @@ import java.util.List;
 
 import giraaff.core.common.cfg.AbstractControlFlowGraph;
 import giraaff.core.common.cfg.Loop;
-import giraaff.debug.GraalError;
 import giraaff.graph.Node;
 import giraaff.graph.NodeMap;
 import giraaff.nodes.AbstractBeginNode;
@@ -22,6 +21,7 @@ import giraaff.nodes.LoopExitNode;
 import giraaff.nodes.MergeNode;
 import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.StructuredGraph.GuardsStage;
+import giraaff.util.GraalError;
 
 public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
 {
@@ -737,9 +737,7 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
             }
         }
 
-        /*
-         * Compute the loop exit blocks after FSA.
-         */
+        // Compute the loop exit blocks after FSA.
         if (graph.getGuardsStage() == GuardsStage.AFTER_FSA)
         {
             for (Block b : reversePostOrder)

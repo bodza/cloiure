@@ -60,10 +60,8 @@ public class IntervalWalker
      * Creates a new interval walker.
      *
      * @param allocator the register allocator context
-     * @param unhandledFixed the list of unhandled {@linkplain RegisterBinding#Fixed fixed}
-     *            intervals
-     * @param unhandledAny the list of unhandled {@linkplain RegisterBinding#Any non-fixed}
-     *            intervals
+     * @param unhandledFixed the list of unhandled {@linkplain RegisterBinding#Fixed fixed} intervals
+     * @param unhandledAny the list of unhandled {@linkplain RegisterBinding#Any non-fixed} intervals
      */
     IntervalWalker(LinearScan allocator, Interval unhandledFixed, Interval unhandledAny)
     {
@@ -218,8 +216,7 @@ public class IntervalWalker
      * Walk up to {@code toOpId}.
      *
      * @postcondition {@link #currentPosition} is set to {@code toOpId}, {@link #activeLists} and
-     *                {@link #inactiveLists} are populated and {@link Interval#state}s are up to
-     *                date.
+     *                {@link #inactiveLists} are populated and {@link Interval#state}s are up to date.
      */
     protected void walkTo(int toOpId)
     {

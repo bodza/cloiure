@@ -16,8 +16,7 @@ public class InferStamps
      *
      * This method can be used when it is needed that stamps are inferred before the first run of
      * the canonicalizer. For example, word type rewriting must run before the first run of the
-     * canonicalizer because many nodes are not prepared to see the word type during
-     * canonicalization.
+     * canonicalizer because many nodes are not prepared to see the word type during canonicalization.
      */
     public static void inferStamps(StructuredGraph graph)
     {

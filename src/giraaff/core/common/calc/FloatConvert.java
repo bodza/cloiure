@@ -1,6 +1,6 @@
 package giraaff.core.common.calc;
 
-import giraaff.debug.GraalError;
+import giraaff.util.GraalError;
 
 public enum FloatConvert
 {

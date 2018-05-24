@@ -3,7 +3,7 @@ package giraaff.core.common;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import giraaff.debug.GraalError;
+import giraaff.util.GraalError;
 import giraaff.util.UnsafeAccess;
 
 /**

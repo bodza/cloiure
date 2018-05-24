@@ -14,10 +14,10 @@ import org.graalvm.collections.EconomicSet;
 
 import giraaff.asm.Label;
 import giraaff.core.common.cfg.AbstractBlockBase;
-import giraaff.debug.GraalError;
 import giraaff.lir.LIRInstruction.OperandFlag;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.lir.framemap.FrameMap;
+import giraaff.util.GraalError;
 
 /**
  * A collection of machine-independent LIR operations, as well as interfaces to be implemented for
@@ -304,8 +304,7 @@ public class StandardOp
          *
          * @param doNotSave registers that should not be saved by this operation
          * @return the number of registers pruned
-         * @throws UnsupportedOperationException if removal is not {@linkplain #supportsRemove()
-         *             supported}
+         * @throws UnsupportedOperationException if removal is not {@linkplain #supportsRemove() supported}
          */
         int remove(EconomicSet<Register> doNotSave);
 

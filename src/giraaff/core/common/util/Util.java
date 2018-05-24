@@ -10,8 +10,7 @@ import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 /**
- * The {@code Util} class contains a motley collection of utility methods used throughout the
- * compiler.
+ * The {@code Util} class contains a motley collection of utility methods used throughout the compiler.
  */
 public class Util
 {
@@ -35,8 +34,7 @@ public class Util
 
     /**
      * Sets the element at a given position of a list and ensures that this position exists. If the
-     * list is current shorter than the position, intermediate positions are filled with a given
-     * value.
+     * list is current shorter than the position, intermediate positions are filled with a given value.
      *
      * @param list the list to put the element into
      * @param pos the position at which to insert the element

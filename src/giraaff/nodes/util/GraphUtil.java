@@ -148,10 +148,7 @@ public class GraphUtil
                     {
                         if (markedNodes.contains(loopExit))
                         {
-                            /*
-                             * disconnect from loop begin so that reduceDegenerateLoopBegin doesn't
-                             * transform it into a new beginNode
-                             */
+                            // disconnect from loop begin so that reduceDegenerateLoopBegin doesn't transform it into a new beginNode
                             loopExit.replaceFirstInput(loopBegin, null);
                         }
                     }
@@ -276,8 +273,7 @@ public class GraphUtil
     }
 
     /**
-     * Removes all nodes created after the {@code mark}, assuming no "old" nodes point to "new"
-     * nodes.
+     * Removes all nodes created after the {@code mark}, assuming no "old" nodes point to "new" nodes.
      */
     public static void removeNewNodes(Graph graph, Graph.Mark mark)
     {
@@ -624,8 +620,7 @@ public class GraphUtil
     }
 
     /**
-     * Looks for an {@link ArrayLengthProvider} while iterating through all {@link ValueProxy
-     * ValueProxies}.
+     * Looks for an {@link ArrayLengthProvider} while iterating through all {@link ValueProxy ValueProxies}.
      *
      * @param value The start value.
      * @return The array length if one was found, or null otherwise.
@@ -671,15 +666,12 @@ public class GraphUtil
 
     private static ValueNode originalValueSimple(ValueNode value)
     {
-        /* The very simple case: look through proxies. */
+        // The very simple case: look through proxies.
         ValueNode cur = originalValueForProxy(value);
 
         while (cur instanceof PhiNode)
         {
-            /*
-             * We found a phi function. Check if we can analyze it without allocating temporary data
-             * structures.
-             */
+            // We found a phi function. Check if we can analyze it without allocating temporary data structures.
             PhiNode phi = (PhiNode) cur;
 
             ValueNode phiSingleValue = null;
@@ -689,16 +681,16 @@ public class GraphUtil
                 ValueNode phiCurValue = originalValueForProxy(phi.valueAt(i));
                 if (phiCurValue == phi)
                 {
-                    /* Simple cycle, we can ignore the input value. */
+                    // Simple cycle, we can ignore the input value.
                 }
                 else if (phiSingleValue == null)
                 {
-                    /* The first input. */
+                    // The first input.
                     phiSingleValue = phiCurValue;
                 }
                 else if (phiSingleValue != phiCurValue)
                 {
-                    /* Another input that is different from the first input. */
+                    // Another input that is different from the first input.
 
                     if (phiSingleValue instanceof PhiNode || phiCurValue instanceof PhiNode)
                     {
@@ -728,7 +720,7 @@ public class GraphUtil
             cur = phiSingleValue;
         }
 
-        /* We reached a "normal" node, which is the original value. */
+        // We reached a "normal" node, which is the original value.
         return cur;
     }
 
@@ -765,17 +757,17 @@ public class GraphUtil
             ValueNode phiCurValue = originalValueForProxy(phi.valueAt(i));
             if (phiCurValue instanceof PhiNode)
             {
-                /* Recursively process a phi function input. */
+                // Recursively process a phi function input.
                 phiCurValue = originalValueForComplicatedPhi((PhiNode) phiCurValue, visited);
             }
 
             if (phiCurValue == null)
             {
-                /* Cycle to a phi function that was already seen. We can ignore this input. */
+                // Cycle to a phi function that was already seen. We can ignore this input.
             }
             else if (phiSingleValue == null)
             {
-                /* The first input. */
+                // The first input.
                 phiSingleValue = phiCurValue;
             }
             else if (phiCurValue != phiSingleValue)
@@ -999,13 +991,13 @@ public class GraphUtil
 
         if (fromInt < 0 || newLengthInt < 0 || fromInt > sourceLengthInt)
         {
-            /* Illegal values for either from index, the new length or the source length. */
+            // Illegal values for either from index, the new length or the source length.
             return;
         }
 
         if (newLengthInt >= tool.getMaximumEntryCount())
         {
-            /* The new array size is higher than maximum allowed size of virtualized objects. */
+            // The new array size is higher than maximum allowed size of virtualized objects.
             return;
         }
 
@@ -1014,7 +1006,7 @@ public class GraphUtil
 
         if (sourceAlias instanceof VirtualObjectNode)
         {
-            /* The source array is virtualized, just copy over the values. */
+            // The source array is virtualized, just copy over the values.
             VirtualObjectNode sourceVirtual = (VirtualObjectNode) sourceAlias;
             for (int i = 0; i < readLength; i++)
             {
@@ -1023,7 +1015,7 @@ public class GraphUtil
         }
         else
         {
-            /* The source array is not virtualized, emit index loads. */
+            // The source array is not virtualized, emit index loads.
             for (int i = 0; i < readLength; i++)
             {
                 LoadIndexedNode load = new LoadIndexedNode(null, sourceAlias, ConstantNode.forInt(i + fromInt, graph), elementKind);
@@ -1033,14 +1025,14 @@ public class GraphUtil
         }
         if (readLength < newLengthInt)
         {
-            /* Pad the copy with the default value of its elment kind. */
+            // Pad the copy with the default value of its elment kind.
             ValueNode defaultValue = ConstantNode.defaultForKind(elementKind, graph);
             for (int i = readLength; i < newLengthInt; i++)
             {
                 newEntryState[i] = defaultValue;
             }
         }
-        /* Perform the replacement. */
+        // Perform the replacement.
         VirtualArrayNode newVirtualArray = virtualArrayProvider.apply(newComponentType, newLengthInt);
         tool.createVirtualObject(newVirtualArray, newEntryState, Collections.<MonitorIdNode> emptyList(), false);
         tool.replaceWithVirtual(newVirtualArray);

@@ -159,10 +159,7 @@ public class AMD64Call
         public DirectFarForeignCallOp(ForeignCallLinkage callTarget, Value result, Value[] parameters, Value[] temps, LIRFrameState state)
         {
             super(TYPE, callTarget, result, parameters, temps, state);
-            /*
-             * The register allocator does not support virtual registers that are used at the call
-             * site, so use a fixed register.
-             */
+            // The register allocator does not support virtual registers that are used at the call site, so use a fixed register.
             callTemp = AMD64.rax.asValue(LIRKind.value(AMD64Kind.QWORD));
         }
 

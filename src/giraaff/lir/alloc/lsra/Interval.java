@@ -16,10 +16,10 @@ import jdk.vm.ci.meta.ValueKind;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.util.IntList;
 import giraaff.core.common.util.Util;
-import giraaff.debug.GraalError;
 import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRValueUtil;
 import giraaff.lir.Variable;
+import giraaff.util.GraalError;
 
 /**
  * Represents an interval in the {@linkplain LinearScan linear scan register allocator}.
@@ -96,8 +96,7 @@ public final class Interval
         }
 
         /**
-         * Adds an interval to a list sorted by {@linkplain Interval#currentFrom() current from}
-         * positions.
+         * Adds an interval to a list sorted by {@linkplain Interval#currentFrom() current from} positions.
          *
          * @param binding specifies the list to be updated
          * @param interval the interval to add
@@ -265,8 +264,7 @@ public final class Interval
         Unhandled,
 
         /**
-         * An interval that {@linkplain Interval#covers covers} {@code position} and has an assigned
-         * register.
+         * An interval that {@linkplain Interval#covers covers} {@code position} and has an assigned register.
          */
         Active,
 
@@ -332,8 +330,7 @@ public final class Interval
 
     /**
      * List of use positions. Each entry in the list records the use position and register priority
-     * associated with the use position. The entries in the list are in descending order of use
-     * position.
+     * associated with the use position. The entries in the list are in descending order of use position.
      *
      */
     public static final class UsePosList
@@ -488,8 +485,7 @@ public final class Interval
     private Range current;
 
     /**
-     * Link to next interval in a sorted list of intervals that ends with
-     * LinearScan.intervalEndMarker.
+     * Link to next interval in a sorted list of intervals that ends with LinearScan.intervalEndMarker.
      */
     Interval next;
 
@@ -903,10 +899,7 @@ public final class Interval
             {
                 if (interval != result && interval.from() <= opId && opId < interval.to() + toOffset)
                 {
-                    /*
-                     * Should not happen: Try another compilation as it is very unlikely to happen
-                     * again.
-                     */
+                    // Should not happen: Try another compilation as it is very unlikely to happen again.
                     throw new GraalError("two valid result intervals found for opId %d: %d and %d\n%s\n", opId, result.operandNumber, interval.operandNumber, result.logString(allocator), interval.logString(allocator));
                 }
             }
@@ -1160,11 +1153,9 @@ public final class Interval
     }
 
     /**
-     * Splits this interval at a specified position and returns the head as a new interval (this
-     * interval is the tail).
+     * Splits this interval at a specified position and returns the head as a new interval (this interval is the tail).
      *
-     * Currently, only the first range can be split, and the new interval must not have split
-     * positions
+     * Currently, only the first range can be split, and the new interval must not have split positions
      */
     Interval splitFromStart(int splitPos, LinearScan allocator)
     {

@@ -17,7 +17,7 @@ import giraaff.asm.amd64.AMD64Assembler.AMD64BinaryArithmetic;
 import giraaff.asm.amd64.AMD64Assembler.AMD64MOp;
 import giraaff.asm.amd64.AMD64Assembler.OperandSize;
 import giraaff.core.common.NumUtil;
-import giraaff.debug.GraalError;
+import giraaff.util.GraalError;
 
 /**
  * This class implements an assembler that can encode most X86 instructions.
@@ -434,9 +434,9 @@ public class AMD64Assembler extends Assembler
 
     /**
      * Get RXB bits for register-memory instruction. The R bit extends the ModRM.reg field. There
-     * are two cases for the memory operand:<br>
+     * are two cases for the memory operand:
      * ModRM.rm contains the base register: In that case, B extends the ModRM.rm field and X = 0.
-     * <br>
+     *
      * There is an SIB byte: In that case, X extends SIB.index and B extends SIB.base.
      */
     protected static int getRXB(Register reg, AMD64Address rm)

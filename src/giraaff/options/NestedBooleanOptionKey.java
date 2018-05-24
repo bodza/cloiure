@@ -1,8 +1,7 @@
 package giraaff.options;
 
 /**
- * A nested Boolean {@link OptionKey} that can be overridden by a {@link #masterOption master
- * option}.
+ * A nested Boolean {@link OptionKey} that can be overridden by a {@link #masterOption master option}.
  *
  * If the option is present on the command line the specified value is used.
  * Otherwise {@link #getValue} depends on the {@link #masterOption} and evaluates as follows:

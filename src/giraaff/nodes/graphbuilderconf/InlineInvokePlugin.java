@@ -93,8 +93,7 @@ public interface InlineInvokePlugin extends GraphBuilderPlugin
     }
 
     /**
-     * Determines whether a call to a given method is to be inlined. The return value is a
-     * tri-state:
+     * Determines whether a call to a given method is to be inlined. The return value is a tri-state:
      *
      * Non-null return value with a non-null {@link InlineInfo#getMethodToInline method}: That
      * {@link InlineInfo#getMethodToInline method} is inlined. Note that it can be a different
@@ -104,8 +103,7 @@ public interface InlineInvokePlugin extends GraphBuilderPlugin
      * {@link InlineInfo#DO_NOT_INLINE_WITH_EXCEPTION}: The method is not inlined, and other plugins
      * with a lower priority cannot overwrite this decision.
      *
-     * Null return value: This plugin made no decision, other plugins with a lower priority are
-     * asked.
+     * Null return value: This plugin made no decision, other plugins with a lower priority are asked.
      *
      * @param b the context
      * @param method the target method of an invoke

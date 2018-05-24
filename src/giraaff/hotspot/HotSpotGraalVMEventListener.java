@@ -8,7 +8,7 @@ import jdk.vm.ci.code.InstalledCode;
 import jdk.vm.ci.hotspot.HotSpotCodeCacheProvider;
 import jdk.vm.ci.hotspot.HotSpotVMEventListener;
 
-import giraaff.serviceprovider.GraalServices;
+import giraaff.util.GraalServices;
 
 public class HotSpotGraalVMEventListener implements HotSpotVMEventListener
 {
@@ -38,11 +38,5 @@ public class HotSpotGraalVMEventListener implements HotSpotVMEventListener
         {
             listener.notifyInstall(codeCache, installedCode, compiledCode);
         }
-    }
-
-    @Override
-    public void notifyBootstrapFinished()
-    {
-        runtime.notifyBootstrapFinished();
     }
 }

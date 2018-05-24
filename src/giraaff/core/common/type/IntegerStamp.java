@@ -21,7 +21,7 @@ import giraaff.core.common.type.ArithmeticOpTable.FloatConvertOp;
 import giraaff.core.common.type.ArithmeticOpTable.IntegerConvertOp;
 import giraaff.core.common.type.ArithmeticOpTable.ShiftOp;
 import giraaff.core.common.type.ArithmeticOpTable.UnaryOp;
-import giraaff.debug.GraalError;
+import giraaff.util.GraalError;
 
 /**
  * Describes the possible values of a node that produces an int or long result.
@@ -485,8 +485,7 @@ public final class IntegerStamp extends PrimitiveStamp
      * Checks if the 2 stamps represent values of the same sign. Returns true if the two stamps are
      * both positive of null or if they are both strictly negative
      *
-     * @return true if the two stamps are both positive of null or if they are both strictly
-     *         negative
+     * @return true if the two stamps are both positive of null or if they are both strictly negative
      */
     public static boolean sameSign(IntegerStamp s1, IntegerStamp s2)
     {
@@ -1176,9 +1175,8 @@ public final class IntegerStamp extends PrimitiveStamp
                             if (stamp.lowerBound() < 0 && stamp.upperBound() >= 0)
                             {
                                 /*
-                                 * If -1 and 0 are both in the signed range, then we can't say
-                                 * anything about the unsigned range, so we have to return [0,
-                                 * MAX_UNSIGNED].
+                                 * If -1 and 0 are both in the signed range, then we can't say anything
+                                 * about the unsigned range, so we have to return [0, MAX_UNSIGNED].
                                  */
                                 return new long[] { 0, -1L };
                             }
@@ -1306,7 +1304,7 @@ public final class IntegerStamp extends PrimitiveStamp
                             long newLowerBound = Math.min(a.lowerBound(), 0);
                             long newUpperBound = Math.max(a.upperBound(), 0);
 
-                            /* the maximum absolute value of the result, derived from b */
+                            // the maximum absolute value of the result, derived from b
                             long magnitude;
                             if (b.lowerBound() == CodeUtil.minValue(b.getBits()))
                             {
@@ -1510,10 +1508,7 @@ public final class IntegerStamp extends PrimitiveStamp
                                 long removedBits = -1L << (bits - shiftAmount - 1);
                                 if ((value.lowerBound() & removedBits) == 0 && (value.upperBound() & removedBits) == 0)
                                 {
-                                    /*
-                                     * use a better stamp if neither lower nor upper bound can lose
-                                     * bits
-                                     */
+                                    // use a better stamp if neither lower nor upper bound can lose bits
                                     return new IntegerStamp(bits, value.lowerBound() << shiftAmount, value.upperBound() << shiftAmount, value.downMask() << shiftAmount, value.upMask() << shiftAmount);
                                 }
                             }

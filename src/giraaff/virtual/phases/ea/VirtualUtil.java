@@ -2,8 +2,8 @@ package giraaff.virtual.phases.ea;
 
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
-import giraaff.debug.GraalError;
 import giraaff.nodes.StructuredGraph;
+import giraaff.util.GraalError;
 
 public final class VirtualUtil
 {

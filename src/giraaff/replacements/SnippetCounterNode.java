@@ -11,7 +11,6 @@ import giraaff.api.replacements.Snippet;
 import giraaff.api.replacements.Snippet.ConstantParameter;
 import giraaff.api.replacements.SnippetReflectionProvider;
 import giraaff.core.common.type.StampFactory;
-import giraaff.debug.GraalError;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.NamedLocationIdentity;
@@ -25,8 +24,9 @@ import giraaff.replacements.SnippetTemplate;
 import giraaff.replacements.SnippetTemplate.AbstractTemplates;
 import giraaff.replacements.SnippetTemplate.Arguments;
 import giraaff.replacements.SnippetTemplate.SnippetInfo;
-import giraaff.word.ObjectAccess;
+import giraaff.util.GraalError;
 import giraaff.util.UnsafeAccess;
+import giraaff.word.ObjectAccess;
 
 /**
  * This node can be used to add a counter to the code that will estimate the dynamic number of calls

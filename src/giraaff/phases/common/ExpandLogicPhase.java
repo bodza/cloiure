@@ -2,7 +2,6 @@ package giraaff.phases.common;
 
 import giraaff.core.common.type.FloatStamp;
 import giraaff.core.common.type.Stamp;
-import giraaff.debug.GraalError;
 import giraaff.graph.Graph;
 import giraaff.graph.Node;
 import giraaff.nodes.AbstractBeginNode;
@@ -24,6 +23,7 @@ import giraaff.nodes.calc.IntegerEqualsNode;
 import giraaff.nodes.calc.IntegerLessThanNode;
 import giraaff.nodes.calc.NormalizeCompareNode;
 import giraaff.phases.Phase;
+import giraaff.util.GraalError;
 
 public class ExpandLogicPhase extends Phase
 {

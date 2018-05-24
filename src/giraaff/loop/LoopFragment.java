@@ -9,7 +9,6 @@ import jdk.vm.ci.meta.TriState;
 
 import org.graalvm.collections.EconomicMap;
 
-import giraaff.debug.GraalError;
 import giraaff.graph.Graph;
 import giraaff.graph.Graph.DuplicationReplacement;
 import giraaff.graph.Node;
@@ -39,6 +38,7 @@ import giraaff.nodes.java.MonitorEnterNode;
 import giraaff.nodes.spi.NodeWithState;
 import giraaff.nodes.virtual.CommitAllocationNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
+import giraaff.util.GraalError;
 
 public abstract class LoopFragment
 {
@@ -387,10 +387,7 @@ public abstract class LoopFragment
                 Node current = currentEntry.n;
                 if (!isLoopNode && current instanceof GuardNode)
                 {
-                    /*
-                     * (gd) this is only OK if we are not going to make loop transforms based on
-                     * this
-                     */
+                    // (gd) this is only OK if we are not going to make loop transforms based on this
                     isLoopNode = true;
                 }
                 if (isLoopNode)

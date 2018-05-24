@@ -12,9 +12,9 @@ import giraaff.core.common.CompressEncoding;
 import giraaff.core.common.type.AbstractObjectStamp;
 import giraaff.core.common.type.ObjectStamp;
 import giraaff.core.common.type.Stamp;
-import giraaff.debug.GraalError;
 import giraaff.nodes.CompressionNode.CompressionOp;
 import giraaff.nodes.type.NarrowOopStamp;
+import giraaff.util.GraalError;
 
 public final class HotSpotNarrowOopStamp extends NarrowOopStamp
 {

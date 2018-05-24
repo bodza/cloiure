@@ -11,7 +11,6 @@ import jdk.vm.ci.meta.JavaType;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.Signature;
 
-import giraaff.debug.GraalError;
 import giraaff.replacements.classfile.Classfile;
 import giraaff.replacements.classfile.ClassfileConstant;
 import giraaff.replacements.classfile.ClassfileConstant.ClassRef;
@@ -19,6 +18,7 @@ import giraaff.replacements.classfile.ClassfileConstant.ExecutableRef;
 import giraaff.replacements.classfile.ClassfileConstant.FieldRef;
 import giraaff.replacements.classfile.ClassfileConstant.Primitive;
 import giraaff.replacements.classfile.ClassfileConstant.Utf8;
+import giraaff.util.GraalError;
 
 class ClassfileConstantPool implements ConstantPool
 {

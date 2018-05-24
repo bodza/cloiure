@@ -120,8 +120,7 @@ public class ConstantTree extends PrintableDominatorOptimizationProblem<Constant
     }
 
     /**
-     * Returns the cost object associated with {@code block}. If there is none, a new cost object is
-     * created.
+     * Returns the cost object associated with {@code block}. If there is none, a new cost object is created.
      */
     NodeCost getOrInitCost(AbstractBlockBase<?> block)
     {

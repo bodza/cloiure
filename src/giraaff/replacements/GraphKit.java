@@ -19,7 +19,6 @@ import giraaff.core.common.CompilationIdentifier;
 import giraaff.core.common.spi.ConstantFieldProvider;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.StampPair;
-import giraaff.debug.GraalError;
 import giraaff.graph.Graph;
 import giraaff.graph.Node.ValueNumberable;
 import giraaff.java.FrameStateBuilder;
@@ -57,6 +56,7 @@ import giraaff.phases.common.DeadCodeEliminationPhase;
 import giraaff.phases.common.DeadCodeEliminationPhase.Optionality;
 import giraaff.phases.common.inlining.InliningUtil;
 import giraaff.phases.util.Providers;
+import giraaff.util.GraalError;
 import giraaff.word.WordTypes;
 
 /**
@@ -97,9 +97,7 @@ public class GraphKit implements GraphBuilderTool
         this.lastFixedNode = graph.start();
 
         structures = new ArrayList<>();
-        /*
-         * Add a dummy element, so that the access of the last element never leads to an exception.
-         */
+        // Add a dummy element, so that the access of the last element never leads to an exception.
         structures.add(new Structure() {});
     }
 
@@ -235,8 +233,7 @@ public class GraphKit implements GraphBuilderTool
     }
 
     /**
-     * Creates and appends an {@link InvokeNode} for a call to a given method with a given set of
-     * arguments.
+     * Creates and appends an {@link InvokeNode} for a call to a given method with a given set of arguments.
      */
     public InvokeNode createInvoke(ResolvedJavaMethod method, InvokeKind invokeKind, FrameStateBuilder frameStateBuilder, int bci, ValueNode... args)
     {
@@ -479,7 +476,7 @@ public class GraphKit implements GraphBuilderTool
 
         if (thenPart != null && elsePart != null)
         {
-            /* Both parts are alive, we need a real merge. */
+            // Both parts are alive, we need a real merge.
             EndNode thenEnd = graph.add(new EndNode());
             graph.addAfterFixed(thenPart, thenEnd);
             EndNode elseEnd = graph.add(new EndNode());
@@ -493,17 +490,17 @@ public class GraphKit implements GraphBuilderTool
         }
         else if (thenPart != null)
         {
-            /* elsePart ended with a control sink, so we can continue with thenPart. */
+            // elsePart ended with a control sink, so we can continue with thenPart.
             lastFixedNode = thenPart;
         }
         else if (elsePart != null)
         {
-            /* thenPart ended with a control sink, so we can continue with elsePart. */
+            // thenPart ended with a control sink, so we can continue with elsePart.
             lastFixedNode = elsePart;
         }
         else
         {
-            /* Both parts ended with a control sink, so no nodes can be added after the if. */
+            // Both parts ended with a control sink, so no nodes can be added after the if.
         }
         s.state = IfState.FINISHED;
         popStructure();

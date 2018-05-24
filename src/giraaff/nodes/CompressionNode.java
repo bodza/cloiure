@@ -8,7 +8,6 @@ import giraaff.core.common.CompressEncoding;
 import giraaff.core.common.GraalOptions;
 import giraaff.core.common.type.AbstractObjectStamp;
 import giraaff.core.common.type.Stamp;
-import giraaff.debug.GraalError;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.lir.gen.LIRGeneratorTool;
@@ -17,6 +16,7 @@ import giraaff.nodes.calc.UnaryNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.type.StampTool;
+import giraaff.util.GraalError;
 
 /**
  * Compress or uncompress an oop or metaspace pointer.

@@ -19,7 +19,6 @@ import jdk.vm.ci.meta.Signature;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.StampPair;
 import giraaff.core.common.type.TypeReference;
-import giraaff.debug.GraalError;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Simplifiable;
 import giraaff.graph.spi.SimplifierTool;
@@ -42,6 +41,7 @@ import giraaff.nodes.java.InstanceOfNode;
 import giraaff.nodes.java.MethodCallTargetNode;
 import giraaff.nodes.type.StampTool;
 import giraaff.nodes.util.GraphUtil;
+import giraaff.util.GraalError;
 
 /**
  * Node for invocation methods defined on the class {@link MethodHandle}.
@@ -208,8 +208,7 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
     }
 
     /**
-     * Helper function to get the {@link InvokeNode} for the targetMethod of a
-     * java.lang.invoke.MemberName.
+     * Helper function to get the {@link InvokeNode} for the targetMethod of a java.lang.invoke.MemberName.
      *
      * @param target the target, already loaded from the member name node
      *

@@ -25,8 +25,7 @@ public final class GraphEffectList extends EffectList
     }
 
     /**
-     * Determines how many objects are virtualized (positive) or materialized (negative) by this
-     * effect.
+     * Determines how many objects are virtualized (positive) or materialized (negative) by this effect.
      */
     private int virtualizationDelta;
 
@@ -91,8 +90,7 @@ public final class GraphEffectList extends EffectList
     }
 
     /**
-     * Sets the phi node's input at the given index to the given value, adding new phi inputs as
-     * needed.
+     * Sets the phi node's input at the given index to the given value, adding new phi inputs as needed.
      *
      * @param node The phi node whose input should be changed.
      * @param index The index of the phi input to be changed.

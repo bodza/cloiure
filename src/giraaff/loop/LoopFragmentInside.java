@@ -7,7 +7,6 @@ import java.util.List;
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 
-import giraaff.debug.GraalError;
 import giraaff.graph.Graph.DuplicationReplacement;
 import giraaff.graph.Node;
 import giraaff.graph.NodeBitMap;
@@ -42,6 +41,7 @@ import giraaff.nodes.calc.CompareNode;
 import giraaff.nodes.calc.SubNode;
 import giraaff.nodes.memory.MemoryPhiNode;
 import giraaff.nodes.util.GraphUtil;
+import giraaff.util.GraalError;
 
 public class LoopFragmentInside extends LoopFragment
 {
@@ -147,10 +147,7 @@ public class LoopFragmentInside extends LoopFragment
     {
         patchNodes(dataFixWithinAfter);
 
-        /*
-         * Collect any new back edges values before updating them since they might reference each
-         * other.
-         */
+        // Collect any new back edges values before updating them since they might reference each other.
         LoopBeginNode mainLoopBegin = loop.loopBegin();
         ArrayList<ValueNode> backedgeValues = new ArrayList<>();
         for (PhiNode mainPhiNode : mainLoopBegin.phis())

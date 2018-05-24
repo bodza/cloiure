@@ -52,10 +52,7 @@ public class SSALinearScanLifetimeAnalysisPhase extends LinearScanLifetimeAnalys
         Interval currentHint = target.locationHint(false);
         if (currentHint == null || currentHint.from() > target.from())
         {
-            /*
-             * Update hint if there was none or if the hint interval starts after the hinted
-             * interval.
-             */
+            // Update hint if there was none or if the hint interval starts after the hinted interval.
             target.setLocationHint(source);
         }
     }

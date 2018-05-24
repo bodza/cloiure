@@ -158,9 +158,8 @@ public final class LIRKind extends ValueKind<LIRKind>
     }
 
     /**
-     * Derive a new type from inputs. The result will have the {@link PlatformKind} of one of the
-     * inputs. If all inputs are values, the result is a value. Otherwise, the result is an unknown
-     * reference.
+     * Derive a new type from inputs. The result will have the {@link PlatformKind} of one of the inputs.
+     * If all inputs are values, the result is a value. Otherwise, the result is an unknown reference.
      *
      * This method should be used to construct the result {@link LIRKind} of any operation that
      * modifies values (e.g. arithmetics).
@@ -264,7 +263,7 @@ public final class LIRKind extends ValueKind<LIRKind>
 
         if (mergeKind.isValue())
         {
-            /* {@code mergeKind} is a value. */
+            // {@code mergeKind} is a value.
             if (!inputKind.isValue())
             {
                 /*
@@ -274,7 +273,7 @@ public final class LIRKind extends ValueKind<LIRKind>
             }
             return mergeKind;
         }
-        /* {@code mergeKind} is a reference. */
+        // {@code mergeKind} is a reference.
         if (mergeKind.referenceMask != inputKind.referenceMask || mergeKind.referenceCompressionMask != inputKind.referenceCompressionMask)
         {
             /*
@@ -283,26 +282,25 @@ public final class LIRKind extends ValueKind<LIRKind>
             return mergeKind.makeUnknownReference();
         }
 
-        /* Both are references. */
+        // Both are references.
         if (mergeKind.isDerivedReference())
         {
             if (inputKind.isDerivedReference() && mergeKind.getDerivedReferenceBase().equals(inputKind.getDerivedReferenceBase()))
             {
-                /* Same reference base so they must be equal. */
+                // Same reference base so they must be equal.
                 return mergeKind;
             }
-            /* Base pointers differ. Make the result an unknown reference. */
+            // Base pointers differ. Make the result an unknown reference.
             return mergeKind.makeUnknownReference();
         }
         if (inputKind.isDerivedReference())
         {
             /*
-             * {@code mergeKind} is not derived but {@code inputKind} is. Make the result an unknown
-             * reference.
+             * {@code mergeKind} is not derived but {@code inputKind} is. Make the result an unknown reference.
              */
             return mergeKind.makeUnknownReference();
         }
-        /* Both are not derived references so they must be equal. */
+        // Both are not derived references so they must be equal.
         return mergeKind;
     }
 
@@ -437,11 +435,9 @@ public final class LIRKind extends ValueKind<LIRKind>
     }
 
     /**
-     * Check whether the {@code idx}th part of this value is a reference that must be tracked at
-     * safepoints.
+     * Check whether the {@code idx}th part of this value is a reference that must be tracked at safepoints.
      *
-     * @param idx The index into the vector if this is a vector kind. Must be 0 if this is a scalar
-     *            kind.
+     * @param idx The index into the vector if this is a vector kind. Must be 0 if this is a scalar kind.
      */
     public boolean isReference(int idx)
     {
@@ -451,8 +447,7 @@ public final class LIRKind extends ValueKind<LIRKind>
     /**
      * Check whether the {@code idx}th part of this value is a <b>compressed</b> reference.
      *
-     * @param idx The index into the vector if this is a vector kind. Must be 0 if this is a scalar
-     *            kind.
+     * @param idx The index into the vector if this is a vector kind. Must be 0 if this is a scalar kind.
      */
     public boolean isCompressedReference(int idx)
     {

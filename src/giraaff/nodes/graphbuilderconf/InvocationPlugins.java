@@ -24,10 +24,10 @@ import org.graalvm.collections.UnmodifiableMapCursor;
 
 import giraaff.api.replacements.MethodSubstitutionRegistry;
 import giraaff.bytecode.BytecodeProvider;
-import giraaff.debug.GraalError;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.graphbuilderconf.InvocationPlugin.Receiver;
 import giraaff.nodes.graphbuilderconf.InvocationPlugins.LateClassPlugins;
+import giraaff.util.GraalError;
 
 /**
  * Manages a set of {@link InvocationPlugin}s.
@@ -848,8 +848,7 @@ public class InvocationPlugins
      * after the compiler has been initialized.
      *
      * @param ignored if non-null, the bindings from {@code other} already in this object prior to
-     *            calling this method are added to this list. These bindings are not added to this
-     *            object.
+     *            calling this method are added to this list. These bindings are not added to this object.
      */
     public synchronized void addTestPlugins(InvocationPlugins other, List<Pair<String, Binding>> ignored)
     {

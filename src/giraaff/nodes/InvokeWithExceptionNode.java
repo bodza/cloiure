@@ -322,8 +322,7 @@ public final class InvokeWithExceptionNode extends ControlSplitNode implements I
     }
 
     /**
-     * Replaces this InvokeWithExceptionNode with a normal InvokeNode. Kills the exception dispatch
-     * code.
+     * Replaces this InvokeWithExceptionNode with a normal InvokeNode. Kills the exception dispatch code.
      */
     public InvokeNode replaceWithInvoke()
     {

@@ -11,13 +11,13 @@ import giraaff.asm.amd64.AMD64Address;
 import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.core.common.CompressEncoding;
 import giraaff.core.common.GraalOptions;
-import giraaff.debug.GraalError;
 import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.lir.LIRInstruction.OperandFlag;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.StandardOp.LoadConstantOp;
 import giraaff.lir.amd64.AMD64LIRInstruction;
 import giraaff.lir.asm.CompilationResultBuilder;
+import giraaff.util.GraalError;
 
 public class AMD64HotSpotMove
 {

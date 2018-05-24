@@ -70,8 +70,7 @@ import giraaff.word.Word;
  *
  * The locking algorithm used is described in the paper
  * <a href="http://dl.acm.org/citation.cfm?id=1167515.1167496"> Eliminating synchronization-related
- * atomic operations with biased locking and bulk rebiasing</a> by Kenneth Russell and David
- * Detlefs.
+ * atomic operations with biased locking and bulk rebiasing</a> by Kenneth Russell and David Detlefs.
  *
  * Comment below is reproduced from {@code markOop.hpp} for convenience:
  *

@@ -11,7 +11,7 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 import jdk.vm.ci.meta.Signature;
 
 import giraaff.core.common.NumUtil;
-import giraaff.debug.GraalError;
+import giraaff.util.GraalError;
 
 public class StampFactory
 {

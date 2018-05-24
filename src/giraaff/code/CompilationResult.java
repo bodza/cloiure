@@ -234,8 +234,7 @@ public class CompilationResult
     }
 
     /**
-     * Sets the fields that were referenced from the bytecodes that were used as input to the
-     * compilation.
+     * Sets the fields that were referenced from the bytecodes that were used as input to the compilation.
      *
      * @param accessedFields the collected set of fields accessed during compilation
      */
@@ -248,8 +247,7 @@ public class CompilationResult
     }
 
     /**
-     * Gets the fields that were referenced from bytecodes that were used as input to the
-     * compilation.
+     * Gets the fields that were referenced from bytecodes that were used as input to the compilation.
      *
      * The caller must not modify the contents of the returned array.
      *
@@ -326,8 +324,7 @@ public class CompilationResult
 
     /**
      * Records a data patch in the code section. The data patch can refer to something in the
-     * {@link DataSectionReference data section} or directly to an {@link ConstantReference inlined
-     * constant}.
+     * {@link DataSectionReference data section} or directly to an {@link ConstantReference inlined constant}.
      *
      * @param codePos the position in the code that needs to be patched
      * @param ref the reference that should be inserted in the code
@@ -340,8 +337,7 @@ public class CompilationResult
 
     /**
      * Records a data patch in the code section. The data patch can refer to something in the
-     * {@link DataSectionReference data section} or directly to an {@link ConstantReference inlined
-     * constant}.
+     * {@link DataSectionReference data section} or directly to an {@link ConstantReference inlined constant}.
      *
      * @param codePos the position in the code that needs to be patched
      * @param ref the reference that should be inserted in the code

@@ -33,8 +33,7 @@ import giraaff.options.OptionValues;
  * used to create the type checks with the exception handler catch types. If a bytecode is covered
  * by an exception handler, this bytecode ends the basic block. This guarantees that a) control flow
  * cannot be transferred to an exception dispatch block in the middle of a block, and b) that every
- * block has at most one exception dispatch block (which is always the last entry in the successor
- * list).
+ * block has at most one exception dispatch block (which is always the last entry in the successor list).
  *
  * If a bytecode is covered by multiple exception handlers, a chain of exception dispatch blocks is
  * created so that multiple exception handler types can be checked. The chains are re-used if
@@ -42,8 +41,7 @@ import giraaff.options.OptionValues;
  *
  * Note that exception unwinds, i.e., bytecodes that can throw an exception but the exception is not
  * handled in this method, do not end a basic block. Not modeling the exception unwind block reduces
- * the complexity of the CFG, and there is no algorithm yet where the exception unwind block would
- * matter.
+ * the complexity of the CFG, and there is no algorithm yet where the exception unwind block would matter.
  *
  * The class also handles subroutines (jsr and ret bytecodes): subroutines are inlined by
  * duplicating the subroutine blocks. This is limited to simple, structured subroutines with a

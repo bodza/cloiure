@@ -11,8 +11,7 @@ import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.virtual.VirtualObjectNode;
 
 /**
- * A helper class to allow elimination of byte code instrumentation that could interfere with escape
- * analysis.
+ * A helper class to allow elimination of byte code instrumentation that could interfere with escape analysis.
  */
 public class VirtualizableInvokeMacroNode extends MacroStateSplitNode implements Virtualizable
 {

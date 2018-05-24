@@ -56,10 +56,7 @@ public class NewInstanceStub extends SnippetStub
         Word top = HotSpotReplacementsUtil.readTlabTop(thread);
         Word end = HotSpotReplacementsUtil.readTlabEnd(thread);
         Word newTop = top.add(size);
-        /*
-         * this check might lead to problems if the TLAB is within 16GB of the address space end
-         * (checked in c++ code)
-         */
+        // this check might lead to problems if the TLAB is within 16GB of the address space end (checked in c++ code)
         if (BranchProbabilityNode.probability(BranchProbabilityNode.FAST_PATH_PROBABILITY, newTop.belowOrEqual(end)))
         {
             HotSpotReplacementsUtil.writeTlabTop(thread, newTop);
@@ -69,8 +66,7 @@ public class NewInstanceStub extends SnippetStub
     }
 
     /**
-     * Re-attempts allocation after an initial TLAB allocation failed or was skipped (e.g., due to
-     * -XX:-UseTLAB).
+     * Re-attempts allocation after an initial TLAB allocation failed or was skipped (e.g., due to -XX:-UseTLAB).
      *
      * @param hub the hub of the object to be allocated
      * @param intArrayHub the hub for {@code int[].class}
@@ -78,10 +74,7 @@ public class NewInstanceStub extends SnippetStub
     @Snippet
     private static Object newInstance(KlassPointer hub, @ConstantParameter KlassPointer intArrayHub, @ConstantParameter Register threadRegister, @ConstantParameter OptionValues options)
     {
-        /*
-         * The type is known to be an instance so Klass::_layout_helper is the instance size as a
-         * raw number
-         */
+        // The type is known to be an instance so Klass::_layout_helper is the instance size as a raw number.
         Word thread = HotSpotReplacementsUtil.registerAsWord(threadRegister);
         boolean inlineContiguousAllocationSupported = GraalHotSpotVMConfigNode.inlineContiguousAllocationSupported();
         if (inlineContiguousAllocationSupported && !HotSpotReplacementsUtil.useCMSIncrementalMode(GraalHotSpotVMConfig.INJECTED_VMCONFIG))

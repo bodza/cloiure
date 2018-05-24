@@ -203,10 +203,7 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
                     PiNode otherPi = (PiNode) n;
                     if (object == otherPi.object() && computedStamp.equals(otherPi.stamp(NodeView.DEFAULT)))
                     {
-                        /*
-                         * Two PiNodes with the same guard and same result, so return the one with
-                         * the more precise piStamp.
-                         */
+                        // Two PiNodes with the same guard and same result, so return the one with the more precise piStamp.
                         Stamp newStamp = stamp.join(otherPi.piStamp);
                         if (newStamp.equals(otherPi.piStamp))
                         {
@@ -262,8 +259,7 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
     private static native Class<?> asNonNullClassIntrinsic(Object object, @ConstantNodeParameter Class<?> toType, @ConstantNodeParameter boolean exactType, @ConstantNodeParameter boolean nonNull);
 
     /**
-     * Changes the stamp of an object inside a snippet to be the stamp of the node replaced by the
-     * snippet.
+     * Changes the stamp of an object inside a snippet to be the stamp of the node replaced by the snippet.
      */
     @NodeIntrinsic(PiNode.Placeholder.class)
     public static native Object piCastToSnippetReplaceeStamp(Object object);

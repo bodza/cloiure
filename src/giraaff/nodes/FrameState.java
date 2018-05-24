@@ -11,7 +11,6 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 import giraaff.bytecode.Bytecode;
 import giraaff.core.common.type.StampFactory;
-import giraaff.debug.GraalError;
 import giraaff.graph.IterableNodeType;
 import giraaff.graph.NodeClass;
 import giraaff.graph.NodeInputList;
@@ -21,6 +20,7 @@ import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.java.ExceptionObjectNode;
 import giraaff.nodes.java.MonitorIdNode;
 import giraaff.nodes.virtual.EscapeObjectState;
+import giraaff.util.GraalError;
 
 /**
  * The {@code FrameState} class encapsulates the frame state (i.e. local variables and operand
@@ -135,8 +135,7 @@ public final class FrameState extends VirtualState implements IterableNodeType
     /**
      * Creates a placeholder frame state with a single element on the stack representing a return
      * value or thrown exception. This allows the parsing of an intrinsic to communicate the
-     * returned or thrown value in a {@link StateSplit#stateAfter() stateAfter} to the inlining call
-     * site.
+     * returned or thrown value in a {@link StateSplit#stateAfter() stateAfter} to the inlining call site.
      *
      * @param bci this must be {@link BytecodeFrame#AFTER_BCI}
      */

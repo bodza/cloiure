@@ -5,7 +5,6 @@ import java.lang.invoke.MethodHandle;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 import giraaff.core.common.type.StampPair;
-import giraaff.debug.GraalError;
 import giraaff.graph.NodeClass;
 import giraaff.graph.NodeInputList;
 import giraaff.nodes.ValueNode;
@@ -13,6 +12,7 @@ import giraaff.nodes.java.MethodCallTargetNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
+import giraaff.util.GraalError;
 
 /**
  * A call target that replaces itself in the graph when being lowered by restoring the original

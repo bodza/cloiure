@@ -151,9 +151,7 @@ public class BasicArrayCopyNode extends AbstractMemoryCheckpoint implements Virt
         return true;
     }
 
-    /*
-     * Returns true if this copy doesn't require store checks. Trivially true for primitive arrays.
-     */
+    // Returns true if this copy doesn't require store checks. Trivially true for primitive arrays.
     public boolean isExact()
     {
         ResolvedJavaType srcType = StampTool.typeOrNull(getSource().stamp(NodeView.DEFAULT));

@@ -81,13 +81,13 @@ public final class WordCastNode extends FixedWithNextNode implements LIRLowerabl
     {
         if (tool.allUsagesAvailable() && hasNoUsages())
         {
-            /* If the cast is unused, it can be eliminated. */
+            // If the cast is unused, it can be eliminated.
             return input;
         }
 
         if (input.isConstant())
         {
-            /* Null pointers are uncritical for GC, so they can be constant folded. */
+            // Null pointers are uncritical for GC, so they can be constant folded.
             if (input.asJavaConstant().isNull())
             {
                 return ConstantNode.forIntegerStamp(stamp(NodeView.DEFAULT), 0);

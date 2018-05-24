@@ -20,10 +20,10 @@ import giraaff.code.CompilationResult;
 import giraaff.core.CompilationWrapper;
 import giraaff.core.common.CompilationIdentifier;
 import giraaff.core.phases.HighTier.Options;
-import giraaff.debug.GraalError;
 import giraaff.java.BytecodeParserOptions;
 import giraaff.options.OptionKey;
 import giraaff.options.OptionValues;
+import giraaff.util.GraalError;
 
 public class CompilationTask
 {
@@ -144,9 +144,7 @@ public class CompilationTask
         this.useProfilingInfo = useProfilingInfo;
         this.installAsDefault = installAsDefault;
 
-        /*
-         * Disable inlining if HotSpot has it disabled unless it's been explicitly set in Graal.
-         */
+        // Disable inlining if HotSpot has it disabled unless it's been explicitly set in Graal.
         HotSpotGraalRuntimeProvider graalRuntime = compiler.getGraalRuntime();
         GraalHotSpotVMConfig config = graalRuntime.getVMConfig();
         OptionValues newOptions = options;

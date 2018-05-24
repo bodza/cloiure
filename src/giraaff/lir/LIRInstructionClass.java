@@ -9,12 +9,12 @@ import jdk.vm.ci.meta.Value;
 
 import giraaff.core.common.Fields;
 import giraaff.core.common.FieldsScanner;
-import giraaff.debug.GraalError;
 import giraaff.lir.LIRInstruction.OperandFlag;
 import giraaff.lir.LIRInstruction.OperandMode;
 import giraaff.lir.StandardOp.LoadConstantOp;
 import giraaff.lir.StandardOp.MoveOp;
 import giraaff.lir.StandardOp.ValueMoveOp;
+import giraaff.util.GraalError;
 
 public class LIRInstructionClass<T> extends LIRIntrospection<T>
 {

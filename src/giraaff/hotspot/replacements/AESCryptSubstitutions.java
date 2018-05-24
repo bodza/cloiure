@@ -12,7 +12,6 @@ import org.graalvm.word.WordFactory;
 import giraaff.api.replacements.ClassSubstitution;
 import giraaff.api.replacements.MethodSubstitution;
 import giraaff.core.common.spi.ForeignCallDescriptor;
-import giraaff.debug.GraalError;
 import giraaff.graph.Node.ConstantNodeParameter;
 import giraaff.graph.Node.NodeIntrinsic;
 import giraaff.hotspot.HotSpotBackend;
@@ -22,8 +21,9 @@ import giraaff.nodes.PiNode;
 import giraaff.nodes.extended.BranchProbabilityNode;
 import giraaff.nodes.extended.ForeignCallNode;
 import giraaff.nodes.extended.RawLoadNode;
-import giraaff.word.Word;
+import giraaff.util.GraalError;
 import giraaff.util.UnsafeAccess;
+import giraaff.word.Word;
 
 /**
  * Substitutions for {@code com.sun.crypto.provider.AESCrypt} methods.

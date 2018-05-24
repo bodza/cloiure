@@ -56,10 +56,7 @@ public class LinearScanAssignLocationsPhase extends LinearScanAllocationPhase
 
         if (opId != -1)
         {
-            /*
-             * Operands are not changed when an interval is split during allocation, so search the
-             * right interval here.
-             */
+            // Operands are not changed when an interval is split during allocation, so search the right interval here.
             interval = allocator.splitChildAtOpId(interval, opId, mode);
         }
 
@@ -119,9 +116,7 @@ public class LinearScanAssignLocationsPhase extends LinearScanAllocationPhase
             final LIRInstruction op = instructions.get(j);
             if (op == null)
             {
-                /*
-                 * this can happen when spill-moves are removed in eliminateSpillMoves
-                 */
+                // this can happen when spill-moves are removed in eliminateSpillMoves
                 hasDead = true;
             }
             else if (assignLocations(op))

@@ -11,7 +11,6 @@ import giraaff.core.common.calc.CanonicalCondition;
 import giraaff.core.common.type.AbstractPointerStamp;
 import giraaff.core.common.type.ObjectStamp;
 import giraaff.core.common.type.TypeReference;
-import giraaff.debug.GraalError;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.nodes.ConstantNode;
@@ -26,6 +25,7 @@ import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.virtual.VirtualBoxingNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
 import giraaff.options.OptionValues;
+import giraaff.util.GraalError;
 
 public final class ObjectEqualsNode extends PointerEqualsNode implements Virtualizable
 {

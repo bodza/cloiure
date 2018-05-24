@@ -61,7 +61,6 @@ import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.StampPair;
 import giraaff.core.common.type.TypeReference;
-import giraaff.debug.GraalError;
 import giraaff.graph.Graph.Mark;
 import giraaff.graph.Node;
 import giraaff.java.BciBlockMapping.BciBlock;
@@ -173,6 +172,7 @@ import giraaff.nodes.util.GraphUtil;
 import giraaff.options.OptionValues;
 import giraaff.phases.OptimisticOptimizations;
 import giraaff.phases.util.ValueMergeUtil;
+import giraaff.util.GraalError;
 
 /**
  * The {@code GraphBuilder} class parses the bytecode of a method and builds the IR graph.
@@ -493,11 +493,6 @@ public class BytecodeParser implements GraphBuilderContext
             originalReceiver = startFrameState.loadLocal(0, JavaKind.Object);
         }
 
-        /*
-         * Configure the assertion checking behavior of the FrameStateBuilder. This needs to be
-         * done only when assertions are enabled, so it is wrapped in an assertion itself.
-         */
-
         liveness = LocalLiveness.compute(stream, blockMap.getBlocks(), method.getMaxLocals(), blockMap.getLoopCount());
 
         lastInstr = startInstruction;
@@ -788,8 +783,7 @@ public class BytecodeParser implements GraphBuilderContext
         BciBlock dispatchBlock = currentBlock.exceptionDispatchBlock();
         /*
          * The exception dispatch block is always for the last bytecode of a block, so if we are not
-         * at the endBci yet, there is no exception handler for this bci and we can unwind
-         * immediately.
+         * at the endBci yet, there is no exception handler for this bci and we can unwind immediately.
          */
         if (bci != currentBlock.endBci || dispatchBlock == null)
         {
@@ -1895,7 +1889,7 @@ public class BytecodeParser implements GraphBuilderContext
                     }
                     inlineInfo = null;
                 }
-                /* Do not inline, and do not ask the remaining plugins. */
+                // Do not inline, and do not ask the remaining plugins.
                 return inlineInfo;
             }
         }
@@ -2076,7 +2070,7 @@ public class BytecodeParser implements GraphBuilderContext
 
             if (parser.returnDataList == null)
             {
-                /* Callee does not return. */
+                // Callee does not return.
                 lastInstr = null;
             }
             else
@@ -2089,14 +2083,14 @@ public class BytecodeParser implements GraphBuilderContext
                 }
                 if (parser.returnDataList.size() == 1)
                 {
-                    /* Callee has a single return, we can continue parsing at that point. */
+                    // Callee has a single return, we can continue parsing at that point.
                     ReturnToCallerData singleReturnData = parser.returnDataList.get(0);
                     lastInstr = singleReturnData.beforeReturnNode;
                     calleeReturnValue = singleReturnData.returnValue;
                 }
                 else
                 {
-                    /* Callee has multiple returns, we need to insert a control flow merge. */
+                    // Callee has multiple returns, we need to insert a control flow merge.
                     returnMergeNode = graph.add(new MergeNode());
                     calleeReturnValue = ValueMergeUtil.mergeValueProducers(returnMergeNode, parser.returnDataList, returnData -> returnData.beforeReturnNode, returnData -> returnData.returnValue);
                 }
@@ -2111,9 +2105,7 @@ public class BytecodeParser implements GraphBuilderContext
                     lastInstr = finishInstruction(returnMergeNode, frameState);
                 }
             }
-            /*
-             * Propagate any side effects into the caller when parsing intrinsics.
-             */
+            // Propagate any side effects into the caller when parsing intrinsics.
             if (parser.frameState.isAfterSideEffect() && parsingIntrinsic())
             {
                 for (StateSplit sideEffect : parser.frameState.sideEffects())
@@ -2161,10 +2153,7 @@ public class BytecodeParser implements GraphBuilderContext
     {
         if (currentBlock != null && stream.nextBCI() > currentBlock.endBci)
         {
-            /*
-             * Clear non-live locals early so that the exception handler entry gets the cleared
-             * state.
-             */
+            // Clear non-live locals early so that the exception handler entry gets the cleared state.
             frameState.clearNonLiveLocals(currentBlock, liveness, false);
         }
 
@@ -2192,9 +2181,7 @@ public class BytecodeParser implements GraphBuilderContext
                     }
                     else
                     {
-                        /*
-                         * This must be the return value from within a partial intrinsification.
-                         */
+                        // This must be the return value from within a partial intrinsification.
                     }
                 }
             }
@@ -2769,9 +2756,7 @@ public class BytecodeParser implements GraphBuilderContext
 
             BciBlock nextBlock = block.getSuccessorCount() == 1 ? blockMap.getUnwindBlock() : block.getSuccessor(1);
             ValueNode exception = frameState.stack[0];
-            /*
-             * Anchor for the piNode, which must be before any LoopExit inserted by createTarget.
-             */
+            // Anchor for the piNode, which must be before any LoopExit inserted by createTarget.
             BeginNode piNodeAnchor = graph.add(new BeginNode());
             ObjectStamp checkedStamp = StampFactory.objectNonNull(checkedCatchType);
             PiNode piNode = graph.addWithoutUnique(new PiNode(exception, checkedStamp));
@@ -2804,8 +2789,7 @@ public class BytecodeParser implements GraphBuilderContext
     {
         if (block.isLoopHeader())
         {
-            // Create the loop header block, which later will merge the backward branches of
-            // the loop.
+            // Create the loop header block, which later will merge the backward branches of the loop.
             controlFlowSplit = true;
             LoopBeginNode loopBegin = appendLoopBegin(this.lastInstr, block.startBci);
             lastInstr = loopBegin;
@@ -2841,7 +2825,7 @@ public class BytecodeParser implements GraphBuilderContext
         stream.setBCI(block.startBci);
         int bci = block.startBci;
 
-        /* Reset line number for new block */
+        // Reset line number for new block
         if (graphBuilderConfig.insertFullInfopoints())
         {
             previousLineNumber = -1;
@@ -2907,19 +2891,19 @@ public class BytecodeParser implements GraphBuilderContext
         }
     }
 
-    /* Also a hook for subclasses. */
+    // Also a hook for subclasses.
     protected boolean forceLoopPhis()
     {
         return graph.isOSR();
     }
 
-    /* Hook for subclasses. */
+    // Hook for subclasses.
     protected boolean stampFromValueForForcedPhis()
     {
         return false;
     }
 
-    /* Also a hook for subclasses. */
+    // Also a hook for subclasses.
     protected boolean disableLoopSafepoint()
     {
         return parsingIntrinsic();

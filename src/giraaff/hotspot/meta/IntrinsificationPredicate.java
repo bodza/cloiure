@@ -17,8 +17,7 @@ import giraaff.phases.tiers.CompilerConfiguration;
 public final class IntrinsificationPredicate
 {
     /**
-     * Set of modules composed of the module defining the compiler configuration and its transitive
-     * dependencies.
+     * Set of modules composed of the module defining the compiler configuration and its transitive dependencies.
      */
     private final EconomicSet<Module> trustedModules;
 

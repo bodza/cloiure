@@ -461,7 +461,7 @@ public class AMD64MacroAssembler extends AMD64Assembler
             jccb(ConditionFlag.Negative, retNotFound);  // Left less then substring
 
             addq(result, 2);
-        } // (int_cnt2 > 8)
+        }
 
         // Scan string for start of substr in 16-byte vectors
         bind(scanToSubstr);
@@ -481,7 +481,8 @@ public class AMD64MacroAssembler extends AMD64Assembler
         {
             jccb(ConditionFlag.Overflow, retFound);    // OF == 1
         }
-        else { // int_cnt2 > 8
+        else // int_cnt2 > 8
+        {
             jccb(ConditionFlag.Overflow, foundSubstr);
         }
         // After pcmpestri tmp(rcx) contains matched element index
@@ -495,7 +496,8 @@ public class AMD64MacroAssembler extends AMD64Assembler
         {
             jccb(ConditionFlag.GreaterEqual, scanToSubstr);
         }
-        else { // int_cnt2 > 8
+        else // int_cnt2 > 8
+        {
             jccb(ConditionFlag.GreaterEqual, matchSubstrHead);
         }
         // Left less then substring.
@@ -549,7 +551,7 @@ public class AMD64MacroAssembler extends AMD64Assembler
             addq(cnt2, 8);
             jcc(ConditionFlag.Negative, scanSubstr);
             // Fall through if found full substring
-        } // (int_cnt2 > 8)
+        }
 
         bind(retFound);
         // Found result if we matched full small substring.
@@ -557,7 +559,7 @@ public class AMD64MacroAssembler extends AMD64Assembler
         subq(result, str1);
         shrl(result, 1); // index
         bind(exit);
-    } // string_indexofC8
+    }
 
     // Small strings are loaded through stack if they cross page boundary.
     public void stringIndexOf(Register str1, Register str2, Register cnt1, Register cnt2, int intCnt2, Register result, Register vec, Register tmp, int vmPageSize)
@@ -611,7 +613,8 @@ public class AMD64MacroAssembler extends AMD64Assembler
             else if (intCnt2 == 4) { // Four chars
                 movq(vec, new AMD64Address(str2, 0));  // move 64 bits
             }
-            else { // cnt2 = { 3, 5, 6, 7 }
+            else // cnt2 = { 3, 5, 6, 7 }
+            {
                 // Array header size is 12 bytes in 32-bit VM
                 // + 6 bytes for 3 chars == 18 bytes,
                 // enough space to load vec and shift.
@@ -619,7 +622,8 @@ public class AMD64MacroAssembler extends AMD64Assembler
                 psrldq(vec, 16 - (intCnt2 * 2));
             }
         }
-        else { // not constant substring
+        else // not constant substring
+        {
             cmpl(cnt2, 8);
             jccb(ConditionFlag.AboveEqual, bigStrings); // Both strings are big enough
 
@@ -643,7 +647,7 @@ public class AMD64MacroAssembler extends AMD64Assembler
 
             pop(cnt2);
             movq(str2, AMD64.rsp);  // New substring address
-        } // non constant
+        }
 
         bind(checkStr);
         cmpl(cnt1, 8);
@@ -720,7 +724,7 @@ public class AMD64MacroAssembler extends AMD64Assembler
             jccb(ConditionFlag.Negative, retNotFound);  // Left less then substring
 
             addq(result, 2);
-        } // non constant
+        }
 
         // Scan string for start of substr in 16-byte vectors
         bind(scanToSubstr);
@@ -766,7 +770,8 @@ public class AMD64MacroAssembler extends AMD64Assembler
             jccb(ConditionFlag.Greater, adjustStr);
             // Fall through if matched whole substring.
         }
-        else { // non constant
+        else // non constant
+        {
             addl(tmp, cnt2);
             // Found result if we matched whole substring.
             cmpl(tmp, 8);
@@ -813,7 +818,7 @@ public class AMD64MacroAssembler extends AMD64Assembler
 
             bind(retFoundLong);
             movq(str1, new AMD64Address(AMD64.rsp, wordSize));
-        } // non constant
+        }
 
         bind(retFound);
         // Compute substr offset

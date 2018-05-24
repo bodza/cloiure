@@ -11,7 +11,6 @@ import jdk.vm.ci.meta.Value;
 import giraaff.asm.amd64.AMD64Assembler;
 import giraaff.core.common.NumUtil;
 import giraaff.core.common.type.DataPointerConstant;
-import giraaff.debug.GraalError;
 import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRValueUtil;
 import giraaff.lir.amd64.AMD64AddressValue;
@@ -23,6 +22,7 @@ import giraaff.lir.amd64.AMD64Move.LeaOp;
 import giraaff.lir.amd64.AMD64Move.MoveFromConstOp;
 import giraaff.lir.amd64.AMD64Move.MoveFromRegOp;
 import giraaff.lir.amd64.AMD64Move.MoveToRegOp;
+import giraaff.util.GraalError;
 
 public abstract class AMD64MoveFactory extends AMD64MoveFactoryBase
 {

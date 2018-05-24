@@ -15,7 +15,6 @@ import giraaff.api.replacements.Snippet.NonNullParameter;
 import giraaff.api.replacements.Snippet.VarargsParameter;
 import giraaff.core.common.GraalOptions;
 import giraaff.core.common.type.StampFactory;
-import giraaff.debug.GraalError;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.nodes.type.KlassPointerStamp;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
@@ -44,6 +43,7 @@ import giraaff.replacements.SnippetTemplate.Arguments;
 import giraaff.replacements.SnippetTemplate.SnippetInfo;
 import giraaff.replacements.Snippets;
 import giraaff.replacements.nodes.ExplodeLoopNode;
+import giraaff.util.GraalError;
 
 /**
  * Snippets used for implementing the type test of an instanceof instruction. Since instanceof is a

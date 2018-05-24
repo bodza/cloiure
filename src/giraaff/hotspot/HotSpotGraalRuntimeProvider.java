@@ -37,11 +37,6 @@ public interface HotSpotGraalRuntimeProvider extends GraalRuntime, RuntimeProvid
     OptionValues getOptions();
 
     /**
-     * Determines if the VM is currently bootstrapping the JVMCI compiler.
-     */
-    boolean isBootstrapping();
-
-    /**
      * This runtime has been requested to shutdown.
      */
     boolean isShutdown();

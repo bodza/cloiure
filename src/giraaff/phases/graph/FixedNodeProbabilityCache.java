@@ -24,29 +24,20 @@ public class FixedNodeProbabilityCache implements ToDoubleFunction<FixedNode>
     private final EconomicMap<FixedNode, Double> cache = EconomicMap.create(Equivalence.IDENTITY);
 
     /**
-     * <p>
      * Given a {@link FixedNode} this method finds the most immediate {@link AbstractBeginNode}
      * preceding it that either:
-     * <ul>
-     * <li>has no predecessor (ie, the begin-node is a merge, in particular a loop-begin, or the
-     * start-node)</li>
-     * <li>has a control-split predecessor</li>
-     * </ul>
-     * </p>
      *
-     * <p>
+     * - has no predecessor (ie, the begin-node is a merge, in particular a loop-begin, or the start-node)
+     * - has a control-split predecessor
+     *
      * The thus found {@link AbstractBeginNode} is equi-probable with the {@link FixedNode} it was
      * obtained from. When computed for the first time (afterwards a cache lookup returns it) that
      * probability is computed as follows, again depending on the begin-node's predecessor:
-     * <ul>
-     * <li>No predecessor. In this case the begin-node is either:</li>
-     * <ul>
-     * <li>a merge-node, whose probability adds up those of its forward-ends</li>
-     * <li>a loop-begin, with probability as above multiplied by the loop-frequency</li>
-     * </ul>
-     * <li>Control-split predecessor: probability of the branch times that of the control-split</li>
-     * </ul>
-     * </p>
+     *
+     * - No predecessor. In this case the begin-node is either:
+     * -- a merge-node, whose probability adds up those of its forward-ends
+     * -- a loop-begin, with probability as above multiplied by the loop-frequency
+     * - Control-split predecessor: probability of the branch times that of the control-split
      *
      * As an exception to all the above, a probability of 1 is assumed for a {@link FixedNode} that
      * appears to be dead-code (ie, lacks a predecessor).

@@ -26,7 +26,6 @@ import giraaff.core.common.type.Stamp;
 import giraaff.core.match.ComplexMatchValue;
 import giraaff.core.match.MatchRuleRegistry;
 import giraaff.core.match.MatchStatement;
-import giraaff.debug.GraalError;
 import giraaff.graph.GraalGraphError;
 import giraaff.graph.Node;
 import giraaff.graph.NodeMap;
@@ -78,6 +77,7 @@ import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.spi.NodeValueMap;
 import giraaff.options.OptionValues;
+import giraaff.util.GraalError;
 
 /**
  * This class traverses the HIR instructions and generates LIR instructions from them.
@@ -170,8 +170,7 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
     }
 
     /**
-     * Used by the {@link MatchStatement} machinery to override the generation LIR for some
-     * ValueNodes.
+     * Used by the {@link MatchStatement} machinery to override the generation LIR for some ValueNodes.
      */
     public void setMatchResult(Node x, Value operand)
     {
@@ -201,7 +200,7 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
     protected LIRKind getExactPhiKind(PhiNode phi)
     {
         LIRKind derivedKind = gen.toRegisterKind(gen.getLIRKind(phi.stamp(NodeView.DEFAULT)));
-        /* Collect reference information. */
+        // Collect reference information.
         for (int i = 0; i < phi.valueCount() && !derivedKind.isUnknownReference(); i++)
         {
             ValueNode node = phi.valueAt(i);
@@ -218,7 +217,7 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
                 LIRKind kind = gen.getLIRKind(node.stamp(NodeView.DEFAULT));
                 valueKind = gen.toRegisterKind(kind);
             }
-            /* Merge the reference information of the derived kind and the input. */
+            // Merge the reference information of the derived kind and the input.
             derivedKind = LIRKind.mergeReferenceInformation(derivedKind, valueKind);
         }
         return derivedKind;
@@ -261,17 +260,15 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
             if (ValueUtil.isRegister(value))
             {
                 /*
-                 * Fixed register intervals are not allowed at block boundaries so we introduce a
-                 * new Variable.
+                 * Fixed register intervals are not allowed at block boundaries so we introduce a new Variable.
                  */
                 value = gen.emitMove(value);
             }
             else if (!allowObjectConstantToStackMove() && node instanceof ConstantNode && !LIRKind.isValue(value))
             {
                 /*
-                 * Some constants are not allowed as inputs for PHIs in certain backends. Explicitly
-                 * create a copy of this value to force it into a register. The new variable is only
-                 * used in the PHI.
+                 * Some constants are not allowed as inputs for PHIs in certain backends. Explicitly create
+                 * a copy of this value to force it into a register. The new variable is only used in the PHI.
                  */
                 Variable result = gen.newVariable(value.getValueKind());
                 gen.emitMove(result, value);
@@ -356,8 +353,7 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
                     }
                     else
                     {
-                        // There can be cases in which the result of an instruction is already set
-                        // before by other instructions.
+                        // There can be cases in which the result of an instruction is already set before by other instructions.
                     }
                 }
             }
@@ -649,11 +645,9 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
 
     /**
      * This method tries to create a switch implementation that is optimal for the given switch. It
-     * will either generate a sequential if/then/else cascade, a set of range tests or a table
-     * switch.
+     * will either generate a sequential if/then/else cascade, a set of range tests or a table switch.
      *
-     * If the given switch does not contain int keys, it will always create a sequential
-     * implementation.
+     * If the given switch does not contain int keys, it will always create a sequential implementation.
      */
     @Override
     public void emitSwitch(SwitchNode x)

@@ -8,7 +8,7 @@ import giraaff.core.common.LIRKind;
 import giraaff.core.common.spi.LIRKindTool;
 import giraaff.core.common.type.AbstractPointerStamp;
 import giraaff.core.common.type.Stamp;
-import giraaff.debug.GraalError;
+import giraaff.util.GraalError;
 
 public abstract class MetaspacePointerStamp extends AbstractPointerStamp
 {

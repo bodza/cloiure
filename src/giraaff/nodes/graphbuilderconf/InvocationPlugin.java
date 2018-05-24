@@ -6,10 +6,10 @@ import java.lang.reflect.Method;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
-import giraaff.debug.GraalError;
 import giraaff.nodes.Invoke;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.type.StampTool;
+import giraaff.util.GraalError;
 
 /**
  * Plugin for handling a specific method invocation.

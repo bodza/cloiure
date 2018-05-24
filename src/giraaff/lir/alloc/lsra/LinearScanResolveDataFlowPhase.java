@@ -108,10 +108,7 @@ public class LinearScanResolveDataFlowPhase extends LinearScanAllocationPhase
                     {
                         blockCompleted.set(block.getLinearScanNumber());
 
-                        /*
-                         * Directly resolve between pred and sux (without looking at the empty block
-                         * between).
-                         */
+                        // Directly resolve between pred and sux (without looking at the empty block between).
                         resolveCollectMappings(pred, sux, block, moveResolver);
                         if (moveResolver.hasMappings())
                         {
@@ -136,16 +133,12 @@ public class LinearScanResolveDataFlowPhase extends LinearScanAllocationPhase
 
                 for (AbstractBlockBase<?> toBlock : fromBlock.getSuccessors())
                 {
-                    /*
-                     * Check for duplicate edges between the same blocks (can happen with switch
-                     * blocks).
-                     */
+                    // Check for duplicate edges between the same blocks (can happen with switch blocks).
                     if (!alreadyResolved.get(toBlock.getLinearScanNumber()))
                     {
                         alreadyResolved.set(toBlock.getLinearScanNumber());
 
-                        // collect all intervals that have been split between
-                        // fromBlock and toBlock
+                        // collect all intervals that have been split between fromBlock and toBlock
                         resolveCollectMappings(fromBlock, toBlock, null, moveResolver);
                         if (moveResolver.hasMappings())
                         {

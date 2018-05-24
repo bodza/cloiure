@@ -37,8 +37,7 @@ public class NamedLocationIdentity extends LocationIdentity implements FormatWit
     }
 
     /**
-     * Creates a named unique location identity for read and write operations against mutable
-     * memory.
+     * Creates a named unique location identity for read and write operations against mutable memory.
      *
      * @param name the name of the new location identity
      */

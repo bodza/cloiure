@@ -11,7 +11,6 @@ import giraaff.core.common.PermanentBailoutException;
 import giraaff.core.common.cfg.Loop;
 import giraaff.core.common.type.ObjectStamp;
 import giraaff.core.common.type.Stamp;
-import giraaff.debug.GraalError;
 import giraaff.graph.Node;
 import giraaff.graph.iterators.NodeIterable;
 import giraaff.loop.LoopsData;
@@ -47,6 +46,7 @@ import giraaff.options.OptionValues;
 import giraaff.phases.Phase;
 import giraaff.phases.common.DeadCodeEliminationPhase;
 import giraaff.phases.common.DeadCodeEliminationPhase.Optionality;
+import giraaff.util.GraalError;
 
 public class OnStackReplacementPhase extends Phase
 {
@@ -238,9 +238,7 @@ public class OnStackReplacementPhase extends Phase
             }
         }
         new DeadCodeEliminationPhase(Optionality.Required).apply(graph);
-        /*
-         * There must not be any parameter nodes left after OSR compilation.
-         */
+        // There must not be any parameter nodes left after OSR compilation.
     }
 
     private static EntryMarkerNode getEntryMarker(StructuredGraph graph)

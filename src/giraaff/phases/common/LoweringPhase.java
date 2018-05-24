@@ -13,7 +13,6 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 import giraaff.core.common.GraalOptions;
 import giraaff.core.common.spi.ConstantFieldProvider;
 import giraaff.core.common.type.StampFactory;
-import giraaff.debug.GraalError;
 import giraaff.graph.Graph.Mark;
 import giraaff.graph.Node;
 import giraaff.graph.NodeBitMap;
@@ -47,6 +46,7 @@ import giraaff.phases.Phase;
 import giraaff.phases.common.LoweringPhase.ProcessBlockState;
 import giraaff.phases.schedule.SchedulePhase;
 import giraaff.phases.tiers.PhaseContext;
+import giraaff.util.GraalError;
 
 /**
  * Processes all {@link Lowerable} nodes to do their lowering.
@@ -255,8 +255,7 @@ public class LoweringPhase extends BasePhase<PhaseContext>
 
             /*
              * In VERIFY_LOWERING, we want to verify whether the lowering itself changes the graph.
-             * Make sure we're not detecting spurious changes because the SchedulePhase modifies the
-             * graph.
+             * Make sure we're not detecting spurious changes because the SchedulePhase modifies the graph.
              */
             boolean immutableSchedule = mode == LoweringMode.VERIFY_LOWERING;
 

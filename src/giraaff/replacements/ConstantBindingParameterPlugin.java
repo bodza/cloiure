@@ -43,10 +43,7 @@ public class ConstantBindingParameterPlugin implements ParameterPlugin
                 ConstantNode otherCon = (ConstantNode) arg;
                 if (otherCon.graph() != b.getGraph())
                 {
-                    /*
-                     * This is a node from another graph, so copy over extra state into a new
-                     * ConstantNode.
-                     */
+                    // This is a node from another graph, so copy over extra state into a new ConstantNode.
                     constantNode = ConstantNode.forConstant(stamp.getTrustedStamp(), otherCon.getValue(), otherCon.getStableDimension(), otherCon.isDefaultStable(), metaAccess);
                 }
                 else

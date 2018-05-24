@@ -6,7 +6,6 @@ import jdk.vm.ci.code.BytecodeFrame;
 
 import org.graalvm.collections.EconomicMap;
 
-import giraaff.debug.GraalError;
 import giraaff.graph.Node;
 import giraaff.nodes.AbstractBeginNode;
 import giraaff.nodes.AbstractMergeNode;
@@ -22,6 +21,7 @@ import giraaff.nodes.util.GraphUtil;
 import giraaff.phases.Phase;
 import giraaff.phases.graph.ReentrantNodeIterator;
 import giraaff.phases.graph.ReentrantNodeIterator.NodeIteratorClosure;
+import giraaff.util.GraalError;
 
 /**
  * This phase transfers {@link FrameState} nodes from {@link StateSplit} nodes to

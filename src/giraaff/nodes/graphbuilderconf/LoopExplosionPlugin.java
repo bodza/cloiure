@@ -27,15 +27,13 @@ public interface LoopExplosionPlugin extends GraphBuilderPlugin
         /**
          * Like {@link #FULL_EXPLODE}, but in addition explosion does not stop at loop exits. Code
          * after the loop is duplicated for every loop exit of every loop iteration. For example, a
-         * loop with 4 iterations and 2 loop exits leads to 4 * 2 = 8 copies of the code after the
-         * loop.
+         * loop with 4 iterations and 2 loop exits leads to 4 * 2 = 8 copies of the code after the loop.
          */
         FULL_EXPLODE_UNTIL_RETURN,
         /**
          * like {@link #FULL_EXPLODE}, but copies of the loop body that have the exact same state
          * (all local variables have the same value) are merged. This reduces the number of copies
-         * necessary, but can introduce loops again. This kind is useful for bytecode interpreter
-         * loops.
+         * necessary, but can introduce loops again. This kind is useful for bytecode interpreter loops.
          */
         MERGE_EXPLODE
     }

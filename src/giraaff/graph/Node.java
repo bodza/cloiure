@@ -107,7 +107,7 @@ public abstract class Node implements Cloneable, NodeInterface
      * A factory method corresponding to an annotated method is a static method named
      * {@code intrinsify} defined in the class denoted by {@link #value()}. In order, its signature
      * is as follows:
-     * <ol>
+     *
      * <li>A {@code GraphBuilderContext} parameter.</li>
      * <li>A {@code ResolvedJavaMethod} parameter.</li>
      * <li>A sequence of zero or more {@linkplain InjectedNodeParameter injected} parameters.</li>
@@ -118,7 +118,7 @@ public abstract class Node implements Cloneable, NodeInterface
      * <ol>
      * <li>A sequence of zero or more {@linkplain InjectedNodeParameter injected} parameters.</li>
      * <li>Remaining parameters that match the declared parameters of the annotated method.</li>
-     * </ol>
+     *
      * There must be exactly one such factory method or constructor corresponding to a
      * {@link NodeIntrinsic} annotated method.
      */
@@ -136,8 +136,7 @@ public abstract class Node implements Cloneable, NodeInterface
         /**
          * If {@code true}, the factory method or constructor selected by the annotation must have
          * an {@linkplain InjectedNodeParameter injected} {@link Stamp} parameter. Calling
-         * {@link AbstractPointerStamp#nonNull()} on the injected stamp is guaranteed to return
-         * {@code true}.
+         * {@link AbstractPointerStamp#nonNull()} on the injected stamp is guaranteed to return {@code true}.
          */
         boolean injectedStampIsNonNull() default false;
     }
@@ -147,8 +146,7 @@ public abstract class Node implements Cloneable, NodeInterface
      * {@linkplain NodeClass#isLeafNode() leaf} node can be replaced by another node of the same
      * type that has exactly the same {@linkplain NodeClass#getData() data} values. A non-leaf node
      * can be replaced by another node of the same type that has exactly the same data values as
-     * well as the same {@linkplain Node#inputs() inputs} and {@linkplain Node#successors()
-     * successors}.
+     * well as the same {@linkplain Node#inputs() inputs} and {@linkplain Node#successors() successors}.
      */
     public interface ValueNumberable
     {
@@ -725,9 +723,7 @@ public abstract class Node implements Cloneable, NodeInterface
     private void replaceAtUsage(Node other, Node toBeDeleted, Node usage)
     {
         boolean result = usage.getNodeClass().replaceFirstInput(usage, this, other);
-        /*
-         * Don't notify for nodes which are about to be deleted.
-         */
+        // Don't notify for nodes which are about to be deleted.
         if (toBeDeleted == null || usage != toBeDeleted)
         {
             maybeNotifyInputChanged(usage);
@@ -930,8 +926,7 @@ public abstract class Node implements Cloneable, NodeInterface
      * @param newNode the result of cloning this node or {@link Unsafe#allocateInstance(Class) raw
      *            allocating} a copy of this node
      * @param type the type of edges to process
-     * @param edgesToCopy if {@code type} is in this set, the edges are copied otherwise they are
-     *            cleared
+     * @param edgesToCopy if {@code type} is in this set, the edges are copied otherwise they are cleared
      */
     private void copyOrClearEdgesForClone(Node newNode, Edges.Type type, EnumSet<Edges.Type> edgesToCopy)
     {

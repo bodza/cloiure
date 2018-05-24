@@ -244,10 +244,7 @@ public final class ConditionalNode extends FloatingNode implements Canonicalizab
 
             if (condition instanceof IntegerLessThanNode)
             {
-                /*
-                 * Convert a conditional add ((x < 0) ? (x + y) : x) into (x + (y & (x >> (bits -
-                 * 1)))) to avoid the test.
-                 */
+                // Convert a conditional add ((x < 0) ? (x + y) : x) into (x + (y & (x >> (bits - 1)))) to avoid the test.
                 IntegerLessThanNode lt = (IntegerLessThanNode) condition;
                 if (lt.getY().isConstant() && lt.getY().asConstant().isDefaultForKind())
                 {

@@ -1,6 +1,5 @@
 package giraaff.nodes.extended;
 
-import giraaff.debug.GraalError;
 import giraaff.graph.NodeClass;
 import giraaff.graph.iterators.NodePredicates;
 import giraaff.graph.spi.Simplifiable;
@@ -15,6 +14,7 @@ import giraaff.nodes.calc.FloatingNode;
 import giraaff.nodes.calc.IntegerEqualsNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
+import giraaff.util.GraalError;
 
 /**
  * Instances of this node class will look for a preceding if node and put the given probability into
@@ -135,8 +135,7 @@ public final class BranchProbabilityNode extends FloatingNode implements Simplif
     /**
      * This intrinsic should only be used for the condition of an if statement. The parameter
      * condition should also only denote a simple condition and not a combined condition involving
-     * &amp;&amp; or || operators. It injects the probability of the condition into the if
-     * statement.
+     * &amp;&amp; or || operators. It injects the probability of the condition into the if statement.
      *
      * @param probability the probability that the given condition is true as a double value between
      *            0.0 and 1.0.

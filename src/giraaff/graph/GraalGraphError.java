@@ -1,6 +1,6 @@
 package giraaff.graph;
 
-import giraaff.debug.GraalError;
+import giraaff.util.GraalError;
 
 /**
  * This error is the graph/node aware extension of {@link GraalError}.

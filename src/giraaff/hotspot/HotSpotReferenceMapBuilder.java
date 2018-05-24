@@ -12,11 +12,11 @@ import jdk.vm.ci.meta.Value;
 
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.PermanentBailoutException;
-import giraaff.debug.GraalError;
 import giraaff.lir.LIRFrameState;
 import giraaff.lir.LIRValueUtil;
 import giraaff.lir.Variable;
 import giraaff.lir.framemap.ReferenceMapBuilder;
+import giraaff.util.GraalError;
 
 public final class HotSpotReferenceMapBuilder extends ReferenceMapBuilder
 {

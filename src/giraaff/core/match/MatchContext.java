@@ -9,10 +9,10 @@ import org.graalvm.collections.Equivalence;
 
 import giraaff.core.gen.NodeLIRBuilder;
 import giraaff.core.match.MatchPattern.Result;
-import giraaff.debug.GraalError;
 import giraaff.graph.Node;
 import giraaff.nodes.calc.FloatingNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
+import giraaff.util.GraalError;
 
 /**
  * Container for state captured during a match.

@@ -151,8 +151,7 @@ public class PhaseSuite<C> extends BasePhase<C>
     }
 
     /**
-     * Removes the first instance of the given phase class, looking recursively into inner phase
-     * suites.
+     * Removes the first instance of the given phase class, looking recursively into inner phase suites.
      */
     @SuppressWarnings("unchecked")
     public boolean removePhase(Class<? extends BasePhase<? super C>> phaseClass)
@@ -183,8 +182,7 @@ public class PhaseSuite<C> extends BasePhase<C>
     }
 
     /**
-     * Removes the first instance of the given phase class, looking recursively into inner phase
-     * suites.
+     * Removes the first instance of the given phase class, looking recursively into inner phase suites.
      */
     @SuppressWarnings("unchecked")
     public boolean replacePhase(Class<? extends BasePhase<? super C>> phaseClass, BasePhase<? super C> newPhase)

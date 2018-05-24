@@ -125,10 +125,7 @@ public final class CheckcastArrayCopyCallNode extends AbstractMemoryCheckpoint i
     @Override
     public LocationIdentity getLocationIdentity()
     {
-        /*
-         * Because of restrictions that the memory graph of snippets matches the original node,
-         * pretend that we kill any.
-         */
+        // Because of restrictions that the memory graph of snippets matches the original node, pretend that we kill any.
         return LocationIdentity.any();
     }
 

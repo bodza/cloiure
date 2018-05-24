@@ -5,7 +5,7 @@ import jdk.vm.ci.runtime.JVMCICompiler;
 
 import giraaff.core.common.CompilationIdentifier;
 import giraaff.core.common.CompilationRequestIdentifier;
-import giraaff.debug.GraalError;
+import giraaff.util.GraalError;
 
 /**
  * {@link CompilationIdentifier} for a {@linkplain HotSpotCompilationRequest hotspot compilation request}.

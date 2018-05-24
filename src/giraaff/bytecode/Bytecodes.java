@@ -317,14 +317,12 @@ public class Bytecodes
     private static final String[] nameArray = new String[256];
 
     /**
-     * An array that maps from a bytecode value to the set of {@link Flags} for the corresponding
-     * instruction.
+     * An array that maps from a bytecode value to the set of {@link Flags} for the corresponding instruction.
      */
     private static final int[] flagsArray = new int[256];
 
     /**
-     * An array that maps from a bytecode value to the length in bytes for the corresponding
-     * instruction.
+     * An array that maps from a bytecode value to the length in bytes for the corresponding instruction.
      */
     private static final int[] lengthArray = new int[256];
 
@@ -565,8 +563,7 @@ public class Bytecodes
     }
 
     /**
-     * Gets the effect on the depth of the expression stack of an instruction denoted by a given
-     * opcode.
+     * Gets the effect on the depth of the expression stack of an instruction denoted by a given opcode.
      *
      * @param opcode an instruction opcode
      * @return the change in the stack caused by the instruction denoted by {@code opcode}. If
@@ -635,8 +632,7 @@ public class Bytecodes
      * Determines if a given opcode denotes an instruction that can cause an implicit exception.
      *
      * @param opcode an opcode to test
-     * @return {@code true} iff {@code opcode} can cause an implicit exception, {@code false}
-     *         otherwise
+     * @return {@code true} iff {@code opcode} can cause an implicit exception, {@code false} otherwise
      */
     public static boolean canTrap(int opcode)
     {
@@ -673,8 +669,7 @@ public class Bytecodes
      * after popping it from the operand stack.
      *
      * @param opcode an opcode to test
-     * @return {@code true} iff {@code opcode} stores a value to a local variable, {@code false}
-     *         otherwise
+     * @return {@code true} iff {@code opcode} stores a value to a local variable, {@code false} otherwise
      */
     public static boolean isInvoke(int opcode)
     {
@@ -686,8 +681,7 @@ public class Bytecodes
      * after popping it from the operand stack.
      *
      * @param opcode an opcode to test
-     * @return {@code true} iff {@code opcode} stores a value to a local variable, {@code false}
-     *         otherwise
+     * @return {@code true} iff {@code opcode} stores a value to a local variable, {@code false} otherwise
      */
     public static boolean isStore(int opcode)
     {
@@ -730,8 +724,7 @@ public class Bytecodes
 
     /**
      * Gets the arithmetic operator name for a given opcode. If {@code opcode} does not denote an
-     * arithmetic instruction, then the {@linkplain #nameOf(int) name} of the opcode is returned
-     * instead.
+     * arithmetic instruction, then the {@linkplain #nameOf(int) name} of the opcode is returned instead.
      *
      * @param op an opcode
      * @return the arithmetic operator name

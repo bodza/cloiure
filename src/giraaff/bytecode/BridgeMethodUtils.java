@@ -151,8 +151,7 @@ public class BridgeMethodUtils
 
     /**
      * A helper for {@link ResolvedJavaMethod#getParameterAnnotation(Class, int)} that handles the
-     * absence of parameter annotations on bridge methods where the bridged method has parameter
-     * annotations.
+     * absence of parameter annotations on bridge methods where the bridged method has parameter annotations.
      */
     public static <T extends Annotation> T getParameterAnnotation(Class<T> annotationClass, int parameterIndex, ResolvedJavaMethod method)
     {

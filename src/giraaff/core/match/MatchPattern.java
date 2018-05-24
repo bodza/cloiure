@@ -120,8 +120,7 @@ public class MatchPattern
     private final Position[] inputs;
 
     /**
-     * Can there only be one user of the node. Constant nodes can be matched even if there are other
-     * users.
+     * Can there only be one user of the node. Constant nodes can be matched even if there are other users.
      */
     private final boolean singleUser;
 

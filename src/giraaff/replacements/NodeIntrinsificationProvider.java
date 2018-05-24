@@ -10,8 +10,8 @@ import giraaff.core.common.spi.ForeignCallsProvider;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.TypeReference;
-import giraaff.debug.GraalError;
 import giraaff.nodes.graphbuilderconf.NodeIntrinsicPluginFactory.InjectionProvider;
+import giraaff.util.GraalError;
 import giraaff.word.WordTypes;
 
 public class NodeIntrinsificationProvider implements InjectionProvider

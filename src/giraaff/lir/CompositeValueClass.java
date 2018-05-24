@@ -7,25 +7,23 @@ import java.util.EnumSet;
 import giraaff.core.common.FieldIntrospection;
 import giraaff.core.common.Fields;
 import giraaff.core.common.FieldsScanner;
-import giraaff.debug.GraalError;
 import giraaff.lir.CompositeValue.Component;
 import giraaff.lir.LIRInstruction.OperandFlag;
 import giraaff.lir.LIRIntrospection.LIRFieldsScanner;
 import giraaff.lir.LIRIntrospection.OperandModeAnnotation;
 import giraaff.lir.LIRIntrospection.Values;
+import giraaff.util.GraalError;
 
 /**
  * Lazily associated metadata for every {@link CompositeValue} type. The metadata includes:
- * <ul>
+ *
  * <li>The offsets of fields annotated with {@link Component} as well as methods for iterating over
  * such fields.</li>
- * </ul>
  */
 public final class CompositeValueClass<T> extends FieldIntrospection<T>
 {
     /**
-     * The CompositeValueClass is only used for formatting for the most part so cache it as a
-     * ClassValue.
+     * The CompositeValueClass is only used for formatting for the most part so cache it as a ClassValue.
      */
     private static final ClassValue<CompositeValueClass<?>> compositeClass = new ClassValue<CompositeValueClass<?>>()
     {

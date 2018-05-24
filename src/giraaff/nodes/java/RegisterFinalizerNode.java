@@ -23,8 +23,7 @@ import giraaff.nodes.spi.VirtualizerTool;
 import giraaff.nodes.virtual.VirtualObjectNode;
 
 /**
- * This node is used to perform the finalizer registration at the end of the java.lang.Object
- * constructor.
+ * This node is used to perform the finalizer registration at the end of the java.lang.Object constructor.
  */
 public final class RegisterFinalizerNode extends AbstractStateSplit implements Canonicalizable.Unary<ValueNode>, LIRLowerable, Virtualizable, DeoptimizingNode.DeoptAfter
 {

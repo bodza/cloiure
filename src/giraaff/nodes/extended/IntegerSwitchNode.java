@@ -176,7 +176,7 @@ public final class IntegerSwitchNode extends SwitchNode implements LIRLowerable,
 
         if (newKeyDatas.size() == keys.length)
         {
-            /* All keys are reachable. */
+            // All keys are reachable.
             return false;
         }
         else if (newKeyDatas.size() == 0)
@@ -212,16 +212,13 @@ public final class IntegerSwitchNode extends SwitchNode implements LIRLowerable,
     {
         if (!(value() instanceof LoadIndexedNode))
         {
-            /* Not the switch pattern we are looking for. */
+            // Not the switch pattern we are looking for.
             return false;
         }
         LoadIndexedNode loadIndexed = (LoadIndexedNode) value();
         if (loadIndexed.usages().count() > 1)
         {
-            /*
-             * The array load is necessary for other reasons too, so there is no benefit optimizing
-             * the switch.
-             */
+            // The array load is necessary for other reasons too, so there is no benefit optimizing the switch.
             return false;
         }
 
@@ -239,7 +236,7 @@ public final class IntegerSwitchNode extends SwitchNode implements LIRLowerable,
         Integer optionalArrayLength = tool.getConstantReflection().readArrayLength(arrayConstant);
         if (optionalArrayLength == null)
         {
-            /* Loading a constant value can be denied by the VM. */
+            // Loading a constant value can be denied by the VM.
             return false;
         }
         int arrayLength = optionalArrayLength;
@@ -250,7 +247,7 @@ public final class IntegerSwitchNode extends SwitchNode implements LIRLowerable,
             JavaConstant elementConstant = tool.getConstantReflection().readArrayElement(arrayConstant, i);
             if (elementConstant == null || elementConstant.getJavaKind() != JavaKind.Int)
             {
-                /* Loading a constant value can be denied by the VM. */
+                // Loading a constant value can be denied by the VM.
                 return false;
             }
             int element = elementConstant.asInt();
@@ -262,7 +259,7 @@ public final class IntegerSwitchNode extends SwitchNode implements LIRLowerable,
             reverseArrayMapping.computeIfAbsent(element, e -> new ArrayList<>()).add(i);
         }
 
-        /* Build high-level representation of new switch keys. */
+        // Build high-level representation of new switch keys.
         List<KeyData> newKeyDatas = new ArrayList<>(arrayLength);
         ArrayList<AbstractBeginNode> newSuccessors = new ArrayList<>(blockSuccessorCount());
         for (int i = 0; i < keys.length; i++)
@@ -270,7 +267,7 @@ public final class IntegerSwitchNode extends SwitchNode implements LIRLowerable,
             List<Integer> newKeys = reverseArrayMapping.get(keys[i]);
             if (newKeys == null || newKeys.size() == 0)
             {
-                /* The switch case is unreachable, we can ignore it. */
+                // The switch case is unreachable, we can ignore it.
                 continue;
             }
 
@@ -297,13 +294,10 @@ public final class IntegerSwitchNode extends SwitchNode implements LIRLowerable,
         LogicNode boundsCheck = graph().unique(new IntegerBelowNode(newValue, ConstantNode.forInt(arrayLength, graph())));
         graph().addBeforeFixed(this, graph().add(new FixedGuardNode(boundsCheck, DeoptimizationReason.BoundsCheckException, DeoptimizationAction.InvalidateReprofile)));
 
-        /*
-         * Build the low-level representation of the new switch keys and replace ourself with a new
-         * node.
-         */
+        // Build the low-level representation of the new switch keys and replace ourself with a new node.
         doReplace(newValue, newKeyDatas, newSuccessors, newDefaultSuccessor, newDefaultProbability);
 
-        /* The array load is now unnecessary. */
+        // The array load is now unnecessary.
         GraphUtil.removeFixedWithUnusedInputs(loadIndexed);
 
         return true;
@@ -322,10 +316,10 @@ public final class IntegerSwitchNode extends SwitchNode implements LIRLowerable,
 
     private void doReplace(ValueNode newValue, List<KeyData> newKeyDatas, ArrayList<AbstractBeginNode> newSuccessors, int newDefaultSuccessor, double newDefaultProbability)
     {
-        /* Sort the new keys (invariant of the IntegerSwitchNode). */
+        // Sort the new keys (invariant of the IntegerSwitchNode).
         newKeyDatas.sort(Comparator.comparingInt(k -> k.key));
 
-        /* Create the final data arrays. */
+        // Create the final data arrays.
         int newKeyCount = newKeyDatas.size();
         int[] newKeys = new int[newKeyCount];
         double[] newKeyProbabilities = new double[newKeyCount + 1];
@@ -342,7 +336,7 @@ public final class IntegerSwitchNode extends SwitchNode implements LIRLowerable,
         newKeySuccessors[newKeyCount] = newDefaultSuccessor;
         newKeyProbabilities[newKeyCount] = newDefaultProbability;
 
-        /* Normalize new probabilities so that they sum up to 1. */
+        // Normalize new probabilities so that they sum up to 1.
         double totalProbability = 0;
         for (double probability : newKeyProbabilities)
         {
@@ -363,28 +357,24 @@ public final class IntegerSwitchNode extends SwitchNode implements LIRLowerable,
             }
         }
 
-        /*
-         * Collect dead successors. Successors have to be cleaned before adding the new node to the
-         * graph.
-         */
+        // Collect dead successors. Successors have to be cleaned before adding the new node to the graph.
         List<AbstractBeginNode> deadSuccessors = successors.filter(s -> !newSuccessors.contains(s)).snapshot();
         successors.clear();
 
         /*
-         * Create the new switch node. This is done before removing dead successors as `killCFG`
-         * could edit some of the inputs (e.g., if `newValue` is a loop-phi of the loop that dies
-         * while removing successors).
+         * Create the new switch node. This is done before removing dead successors as `killCFG` could edit
+         * some of the inputs (e.g., if `newValue` is a loop-phi of the loop that dies while removing successors).
          */
         AbstractBeginNode[] successorsArray = newSuccessors.toArray(new AbstractBeginNode[newSuccessors.size()]);
         SwitchNode newSwitch = graph().add(new IntegerSwitchNode(newValue, successorsArray, newKeys, newKeyProbabilities, newKeySuccessors));
 
-        /* Remove dead successors. */
+        // Remove dead successors.
         for (AbstractBeginNode successor : deadSuccessors)
         {
             GraphUtil.killCFG(successor);
         }
 
-        /* Replace ourselves with the new switch */
+        // Replace ourselves with the new switch
         ((FixedWithNextNode) predecessor()).setNext(newSwitch);
         GraphUtil.killWithUnusedFloatingInputs(this);
     }

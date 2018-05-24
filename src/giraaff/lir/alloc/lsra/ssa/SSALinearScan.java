@@ -48,10 +48,7 @@ public final class SSALinearScan extends LinearScan
     @Override
     protected void beforeSpillMoveElimination()
     {
-        /*
-         * PHIs where the Out and In value matches (ie. there is no resolution move)
-         * are falsely detected as errors.
-         */
+        // PHIs where the Out and In value matches (ie. there is no resolution move) are falsely detected as errors.
         for (AbstractBlockBase<?> toBlock : sortedBlocks())
         {
             if (toBlock.getPredecessorCount() > 1)

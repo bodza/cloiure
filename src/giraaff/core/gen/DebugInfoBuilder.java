@@ -15,7 +15,6 @@ import jdk.vm.ci.meta.Value;
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 
-import giraaff.debug.GraalError;
 import giraaff.lir.ConstantValue;
 import giraaff.lir.LIRFrameState;
 import giraaff.lir.LabelRef;
@@ -26,6 +25,7 @@ import giraaff.nodes.spi.NodeValueMap;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.nodes.virtual.EscapeObjectState;
 import giraaff.nodes.virtual.VirtualObjectNode;
+import giraaff.util.GraalError;
 import giraaff.virtual.nodes.MaterializedObjectState;
 import giraaff.virtual.nodes.VirtualObjectState;
 
@@ -151,9 +151,8 @@ public class DebugInfoBuilder
     }
 
     /*
-     * Customization point for subclasses. For example, Word types have a kind Object, but are
-     * internally stored as a primitive value. We do not know about Word types here, but subclasses
-     * do know.
+     * Customization point for subclasses. For example, Word types have a kind Object, but are internally
+     * stored as a primitive value. We do not know about Word types here, but subclasses do know.
      */
     protected JavaKind storageKind(JavaType type)
     {

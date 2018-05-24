@@ -51,8 +51,7 @@ public class NewArrayStub extends SnippetStub
     }
 
     /**
-     * Re-attempts allocation after an initial TLAB allocation failed or was skipped (e.g., due to
-     * -XX:-UseTLAB).
+     * Re-attempts allocation after an initial TLAB allocation failed or was skipped (e.g., due to -XX:-UseTLAB).
      *
      * @param hub the hub of the object to be allocated
      * @param length the length of the array

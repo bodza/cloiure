@@ -30,7 +30,7 @@ public final class PEReadEliminationBlockState extends PartialEscapeBlockState<P
         public final int index;
         public final JavaKind kind;
 
-        /* This flag does not affect hashCode or equals implementations. */
+        // This flag does not affect hashCode or equals implementations.
         public final boolean overflowAccess;
 
         ReadCacheEntry(LocationIdentity identity, ValueNode object, int index, JavaKind kind, boolean overflowAccess)

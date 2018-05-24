@@ -7,7 +7,6 @@ import jdk.vm.ci.meta.Constant;
 import giraaff.core.common.type.ArithmeticOpTable;
 import giraaff.core.common.type.ArithmeticOpTable.BinaryOp;
 import giraaff.core.common.type.Stamp;
-import giraaff.debug.GraalError;
 import giraaff.graph.Graph;
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
@@ -22,6 +21,7 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.ValuePhiNode;
 import giraaff.nodes.spi.ArithmeticLIRLowerable;
 import giraaff.nodes.spi.NodeValueMap;
+import giraaff.util.GraalError;
 
 public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements ArithmeticOperation, ArithmeticLIRLowerable, Canonicalizable.Binary<ValueNode>
 {
@@ -319,8 +319,7 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
     /**
      * Determines if it would be better to swap the inputs in order to produce better assembly code.
      * First we try to pick a value which is dead after this use. If both values are dead at this
-     * use then we try pick an induction variable phi to encourage the phi to live in a single
-     * register.
+     * use then we try pick an induction variable phi to encourage the phi to live in a single register.
      *
      * @return true if inputs should be swapped, false otherwise
      */

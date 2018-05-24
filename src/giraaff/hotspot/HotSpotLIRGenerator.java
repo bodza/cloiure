@@ -9,7 +9,6 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.core.common.LIRKind;
-import giraaff.debug.GraalError;
 import giraaff.hotspot.meta.HotSpotConstantLoadAction;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.nodes.GraalHotSpotVMConfigNode;
@@ -22,6 +21,7 @@ import giraaff.lir.LIRFrameState;
 import giraaff.lir.VirtualStackSlot;
 import giraaff.lir.gen.LIRGenerator;
 import giraaff.lir.gen.LIRGeneratorTool;
+import giraaff.util.GraalError;
 
 /**
  * This interface defines the contract a HotSpot backend LIR generator needs to fulfill in addition

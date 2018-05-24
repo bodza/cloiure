@@ -27,7 +27,6 @@ import giraaff.core.common.type.ObjectStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.TypeReference;
-import giraaff.debug.GraalError;
 import giraaff.graph.Edges;
 import giraaff.graph.Node;
 import giraaff.graph.NodeList;
@@ -84,6 +83,7 @@ import giraaff.replacements.nodes.VirtualizableInvokeMacroNode;
 import giraaff.replacements.nodes.arithmetic.IntegerAddExactNode;
 import giraaff.replacements.nodes.arithmetic.IntegerMulExactNode;
 import giraaff.replacements.nodes.arithmetic.IntegerSubExactNode;
+import giraaff.util.GraalError;
 
 /**
  * Provides non-runtime specific {@link InvocationPlugin}s.
@@ -1110,8 +1110,7 @@ public class StandardGraphBuilderPlugins
     }
 
     /**
-     * Registers a plugin to ignore {@code com.sun.tdk.jcov.runtime.Collect.hit} within an
-     * intrinsic.
+     * Registers a plugin to ignore {@code com.sun.tdk.jcov.runtime.Collect.hit} within an intrinsic.
      */
     private static void registerJcovCollectPlugins(InvocationPlugins plugins, BytecodeProvider bytecodeProvider)
     {

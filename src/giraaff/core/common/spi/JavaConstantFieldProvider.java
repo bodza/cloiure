@@ -6,8 +6,8 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaField;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
-import giraaff.debug.GraalError;
 import giraaff.options.OptionKey;
+import giraaff.util.GraalError;
 
 /**
  * Utility for default constant folding semantics for Java fields.

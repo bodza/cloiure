@@ -4,8 +4,7 @@ import giraaff.core.common.type.Stamp;
 import giraaff.graph.NodeClass;
 
 /**
- * Base class of all nodes that are fixed within the control flow graph and have an immediate
- * successor.
+ * Base class of all nodes that are fixed within the control flow graph and have an immediate successor.
  */
 public abstract class FixedWithNextNode extends FixedNode
 {

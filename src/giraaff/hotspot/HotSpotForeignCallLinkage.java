@@ -47,8 +47,7 @@ public interface HotSpotForeignCallLinkage extends ForeignCallLinkage, InvokeTar
 
         /**
          * A call to a leaf function that might use floating point registers and may have its caller
-         * stack inspected. That is, {@code JavaFrameAnchor} management code around the call is
-         * required.
+         * stack inspected. That is, {@code JavaFrameAnchor} management code around the call is required.
          */
         STACK_INSPECTABLE_LEAF,
 

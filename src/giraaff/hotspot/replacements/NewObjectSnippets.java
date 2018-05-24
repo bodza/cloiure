@@ -238,10 +238,7 @@ public class NewObjectSnippets implements Snippets
 
     private static Object allocateArrayDynamicImpl(Class<?> elementType, Class<?> voidClass, int length, boolean fillContents, Register threadRegister, JavaKind knownElementKind, int knownLayoutHelper, Word prototypeMarkWord, OptionValues options, Counters counters)
     {
-        /*
-         * We only need the dynamic check for void when we have no static information from
-         * knownElementKind.
-         */
+        // We only need the dynamic check for void when we have no static information from knownElementKind.
         if (knownElementKind == JavaKind.Illegal && BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, elementType == null || DynamicNewArrayNode.throwsIllegalArgumentException(elementType, voidClass)))
         {
             DeoptimizeNode.deopt(DeoptimizationAction.None, DeoptimizationReason.RuntimeConstraint);
@@ -408,10 +405,7 @@ public class NewObjectSnippets implements Snippets
     public static Object formatArray(KlassPointer hub, int allocationSize, int length, int headerSize, Word memory, Word prototypeMarkWord, boolean fillContents, boolean maybeUnroll, Counters counters)
     {
         memory.writeInt(HotSpotReplacementsUtil.arrayLengthOffset(GraalHotSpotVMConfig.INJECTED_VMCONFIG), length, LocationIdentity.init());
-        /*
-         * store hub last as the concurrent garbage collectors assume length is valid if hub field
-         * is not null
-         */
+        // store hub last as the concurrent garbage collectors assume length is valid if hub field is not null
         HotSpotReplacementsUtil.initializeObjectHeader(memory, prototypeMarkWord, hub);
         if (fillContents)
         {
@@ -544,10 +538,7 @@ public class NewObjectSnippets implements Snippets
             args.add("length", length.isAlive() ? length : graph.addOrUniqueWithInputs(length));
             args.addConst("fillContents", newArrayNode.fillContents());
             args.addConst("threadRegister", registers.getThreadRegister());
-            /*
-             * We use Kind.Illegal as a marker value instead of null because constant snippet
-             * parameters cannot be null.
-             */
+            // We use Kind.Illegal as a marker value instead of null because constant snippet parameters cannot be null.
             args.addConst("knownElementKind", newArrayNode.getKnownElementKind() == null ? JavaKind.Illegal : newArrayNode.getKnownElementKind());
             if (newArrayNode.getKnownElementKind() != null)
             {

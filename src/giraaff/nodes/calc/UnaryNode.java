@@ -7,8 +7,7 @@ import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
 
 /**
- * The {@code UnaryNode} class is the base of arithmetic and bit logic operations with exactly one
- * input.
+ * The {@code UnaryNode} class is the base of arithmetic and bit logic operations with exactly one input.
  */
 public abstract class UnaryNode extends FloatingNode implements Canonicalizable.Unary<ValueNode>
 {

@@ -16,7 +16,6 @@ import org.graalvm.word.impl.WordBoxFactory;
 
 import giraaff.core.common.calc.Condition;
 import giraaff.core.common.calc.UnsignedMath;
-import giraaff.debug.GraalError;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.calc.AddNode;
 import giraaff.nodes.calc.AndNode;
@@ -33,6 +32,7 @@ import giraaff.nodes.calc.UnsignedRightShiftNode;
 import giraaff.nodes.calc.XorNode;
 import giraaff.nodes.memory.HeapAccess.BarrierType;
 import giraaff.nodes.memory.address.AddressNode.Address;
+import giraaff.util.GraalError;
 import giraaff.util.UnsafeAccess;
 
 public abstract class Word implements SignedWord, UnsignedWord, Pointer
@@ -44,7 +44,7 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer
 
     public static void ensureInitialized()
     {
-        /* Calling this method ensures that the static initializer has been executed. */
+        // Calling this method ensures that the static initializer has been executed.
     }
 
     /**

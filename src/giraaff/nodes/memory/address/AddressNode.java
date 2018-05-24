@@ -30,9 +30,8 @@ public abstract class AddressNode extends FloatingNode implements IndirectCanoni
     public abstract ValueNode getIndex();
 
     /**
-     * Constant that is the maximum displacement from the base and index for this address. This
-     * value is used to determine whether using the access as an implicit null check on the base is
-     * valid.
+     * Constant that is the maximum displacement from the base and index for this address. This value
+     * is used to determine whether using the access as an implicit null check on the base is valid.
      *
      * @return the maximum distance in bytes from the base that this address can be
      */

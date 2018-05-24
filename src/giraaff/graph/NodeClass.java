@@ -18,7 +18,6 @@ import org.graalvm.collections.Equivalence;
 import giraaff.core.common.FieldIntrospection;
 import giraaff.core.common.Fields;
 import giraaff.core.common.FieldsScanner;
-import giraaff.debug.GraalError;
 import giraaff.graph.Edges;
 import giraaff.graph.Edges.Type;
 import giraaff.graph.Graph.DuplicationReplacement;
@@ -34,15 +33,15 @@ import giraaff.graph.spi.Canonicalizable.BinaryCommutative;
 import giraaff.graph.spi.Simplifiable;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodeinfo.Verbosity;
+import giraaff.util.GraalError;
 import giraaff.util.UnsafeAccess;
 
 /**
  * Metadata for every {@link Node} type. The metadata includes:
- * <ul>
+ *
  * <li>The offsets of fields annotated with {@link Input} and {@link Successor} as well as methods
  * for iterating over such fields.</li>
  * <li>The identifier for an {@link IterableNodeType} class.</li>
- * </ul>
  */
 public final class NodeClass<T> extends FieldIntrospection<T>
 {

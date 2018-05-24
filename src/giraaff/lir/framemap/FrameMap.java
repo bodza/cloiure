@@ -227,8 +227,7 @@ public abstract class FrameMap
 
     /**
      * Reserves a new spill slot in the frame of the method being compiled. The returned slot is
-     * aligned on its natural alignment, i.e., an 8-byte spill slot is aligned at an 8-byte
-     * boundary.
+     * aligned on its natural alignment, i.e., an 8-byte spill slot is aligned at an 8-byte boundary.
      *
      * @param kind The kind of the spill slot to be reserved.
      * @return A spill slot denoting the reserved memory area.

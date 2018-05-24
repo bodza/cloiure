@@ -33,8 +33,7 @@ public @interface Snippet
     }
 
     /**
-     * Denotes a snippet parameter that will bound to a constant value during snippet template
-     * instantiation.
+     * Denotes a snippet parameter that will bound to a constant value during snippet template instantiation.
      */
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.PARAMETER)
@@ -43,8 +42,7 @@ public @interface Snippet
     }
 
     /**
-     * Denotes a snippet parameter that will bound to a non-null value during snippet template
-     * instantiation.
+     * Denotes a snippet parameter that will bound to a non-null value during snippet template instantiation.
      */
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.PARAMETER)

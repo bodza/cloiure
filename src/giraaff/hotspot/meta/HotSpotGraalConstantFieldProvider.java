@@ -9,11 +9,11 @@ import jdk.vm.ci.meta.ResolvedJavaField;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
 import giraaff.core.common.GraalOptions;
-import giraaff.debug.GraalError;
 import giraaff.graph.NodeClass;
 import giraaff.hotspot.GraalHotSpotVMConfig;
 import giraaff.options.OptionValues;
 import giraaff.replacements.SnippetCounter;
+import giraaff.util.GraalError;
 
 /**
  * Extends {@link HotSpotConstantFieldProvider} to override the implementation of

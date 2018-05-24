@@ -62,7 +62,7 @@ public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
     void eliminateSpillMoves(LIRGenerationResult res)
     {
         /*
-         * collect all intervals that must be stored after their definition. The list is sorted
+         * Collect all intervals that must be stored after their definition. The list is sorted
          * by Interval.spillDefinitionPos.
          */
         Interval interval = allocator.createUnhandledLists(mustStoreAtDefinition, null).getLeft();
@@ -84,15 +84,11 @@ public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
                     MoveOp move = MoveOp.asMoveOp(op);
                     /*
                      * Remove move from register to stack if the stack slot is guaranteed to
-                     * be correct. Only moves that have been inserted by LinearScan can be
-                     * removed.
+                     * be correct. Only moves that have been inserted by LinearScan can be removed.
                      */
                     if (Options.LIROptLSRAEliminateSpillMoves.getValue(allocator.getOptions()) && canEliminateSpillMove(block, move))
                     {
-                        /*
-                         * Move target is a stack slot that is always correct, so eliminate
-                         * instruction.
-                         */
+                        // Move target is a stack slot that is always correct, so eliminate instruction.
 
                         // null-instructions are deleted by assignRegNum
                         instructions.set(j, null);
@@ -100,21 +96,14 @@ public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
                 }
                 else
                 {
-                    /*
-                     * Insert move from register to stack just after the beginning of the
-                     * interval.
-                     */
-
+                    // Insert move from register to stack just after the beginning of the interval.
                     while (!interval.isEndMarker() && interval.spillDefinitionPos() == opId)
                     {
                         if (!interval.canMaterialize())
                         {
                             if (!insertionBuffer.initialized())
                             {
-                                /*
-                                 * prepare insertion buffer (appended when all instructions
-                                 * in the block are processed)
-                                 */
+                                // prepare insertion buffer (appended when all instructions in the block are processed)
                                 insertionBuffer.init(instructions);
                             }
 
@@ -130,13 +119,13 @@ public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
                         interval = interval.next;
                     }
                 }
-            } // end of instruction iteration
+            }
 
             if (insertionBuffer.initialized())
             {
                 insertionBuffer.finish();
             }
-        } // end of block iteration
+        }
     }
 
     /**

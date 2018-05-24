@@ -82,8 +82,7 @@ public class FieldsScanner
      * Scans the fields in a class hierarchy.
      *
      * @param clazz the class at which to start scanning
-     * @param endClazz scanning stops when this class is encountered (i.e. {@code endClazz} is not
-     *            scanned)
+     * @param endClazz scanning stops when this class is encountered (i.e. {@code endClazz} is not scanned)
      */
     public void scan(Class<?> clazz, Class<?> endClazz, boolean includeTransient)
     {

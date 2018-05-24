@@ -4,7 +4,7 @@ import jdk.vm.ci.meta.DeoptimizationAction;
 import jdk.vm.ci.meta.DeoptimizationReason;
 import jdk.vm.ci.meta.JavaConstant;
 
-import giraaff.debug.GraalError;
+import giraaff.util.GraalError;
 
 public interface StaticDeoptimizingNode extends ValueNodeInterface
 {
@@ -21,8 +21,7 @@ public interface StaticDeoptimizingNode extends ValueNodeInterface
     /**
      * Describes how much information is gathered when deoptimization triggers.
      *
-     * This enum is {@link Comparable} and orders its element from highest priority to lowest
-     * priority.
+     * This enum is {@link Comparable} and orders its element from highest priority to lowest priority.
      */
     enum GuardPriority
     {

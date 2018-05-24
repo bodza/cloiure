@@ -3,7 +3,7 @@ package giraaff.hotspot.stubs;
 import java.util.concurrent.atomic.AtomicLong;
 
 import giraaff.core.common.CompilationIdentifier;
-import giraaff.debug.GraalError;
+import giraaff.util.GraalError;
 
 /**
  * {@link CompilationIdentifier} for {@linkplain Stub stub compilations}.

@@ -14,8 +14,7 @@ public interface NodePlugin extends GraphBuilderPlugin
     /**
      * Handle the parsing of a method invocation bytecode to a method that can be bound statically.
      * If the method returns true, it must {@link GraphBuilderContext#push push} a value as the
-     * result of the method invocation using the {@link Signature#getReturnKind return kind} of the
-     * method.
+     * result of the method invocation using the {@link Signature#getReturnKind return kind} of the method.
      *
      * @param b the context
      * @param method the statically bound, invoked method

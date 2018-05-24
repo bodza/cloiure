@@ -78,9 +78,7 @@ public final class ReentrantBlockIterator
     public static <StateT> EconomicMap<FixedNode, StateT> apply(BlockIteratorClosure<StateT> closure, Block start, StateT initialState, Predicate<Block> stopAtBlock)
     {
         Deque<Block> blockQueue = new ArrayDeque<>();
-        /*
-         * States are stored on EndNodes before merges, and on BeginNodes after ControlSplitNodes.
-         */
+        // States are stored on EndNodes before merges, and on BeginNodes after ControlSplitNodes.
         EconomicMap<FixedNode, StateT> states = EconomicMap.create(Equivalence.IDENTITY);
 
         StateT state = initialState;

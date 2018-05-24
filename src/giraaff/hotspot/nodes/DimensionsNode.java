@@ -16,8 +16,7 @@ import giraaff.word.Word;
 import giraaff.word.WordTypes;
 
 /**
- * Intrinsic for allocating an on-stack array of integers to hold the dimensions of a multianewarray
- * instruction.
+ * Intrinsic for allocating an on-stack array of integers to hold the dimensions of a multianewarray instruction.
  */
 public final class DimensionsNode extends FixedWithNextNode implements LIRLowerable
 {

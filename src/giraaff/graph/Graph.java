@@ -8,11 +8,11 @@ import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 import org.graalvm.collections.UnmodifiableEconomicMap;
 
-import giraaff.debug.GraalError;
 import giraaff.graph.Node.ValueNumberable;
 import giraaff.graph.iterators.NodeIterable;
 import giraaff.options.OptionKey;
 import giraaff.options.OptionValues;
+import giraaff.util.GraalError;
 
 /**
  * This class is a graph container, it contains the set of nodes that belong to this graph.
@@ -60,8 +60,7 @@ public class Graph
     NodeEventListener nodeEventListener;
 
     /**
-     * Used to global value number {@link ValueNumberable} {@linkplain NodeClass#isLeafNode() leaf}
-     * nodes.
+     * Used to global value number {@link ValueNumberable} {@linkplain NodeClass#isLeafNode() leaf} nodes.
      */
     private EconomicMap<Node, Node>[] cachedLeafNodes;
 
@@ -707,8 +706,7 @@ public class Graph
     }
 
     /**
-     * Returns an {@link Iterable} providing all nodes added since the last {@link Graph#getMark()
-     * mark}.
+     * Returns an {@link Iterable} providing all nodes added since the last {@link Graph#getMark() mark}.
      */
     public NodeIterable<Node> getNewNodes(Mark mark)
     {
@@ -961,9 +959,8 @@ public class Graph
     }
 
     /**
-     * Rebuilds the lists used to support {@link #getNodes(NodeClass)}. This is useful for
-     * serialization where the underlying {@linkplain NodeClass#iterableId() iterable ids} may have
-     * changed.
+     * Rebuilds the lists used to support {@link #getNodes(NodeClass)}. This is useful for serialization
+     * where the underlying {@linkplain NodeClass#iterableId() iterable ids} may have changed.
      */
     private void recomputeIterableNodeLists()
     {

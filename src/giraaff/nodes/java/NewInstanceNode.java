@@ -76,7 +76,7 @@ public class NewInstanceNode extends AbstractNewObjectNode implements Virtualiza
         return new VirtualInstanceNode(instanceClass(), hasIdentity);
     }
 
-    /* Factored out in a separate method so that subclasses can override it. */
+    // Factored out in a separate method so that subclasses can override it.
     protected ConstantNode defaultFieldValue(ResolvedJavaField field)
     {
         return ConstantNode.defaultForKind(field.getType().getJavaKind(), graph());

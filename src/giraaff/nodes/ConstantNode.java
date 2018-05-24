@@ -12,7 +12,6 @@ import giraaff.core.common.type.FloatStamp;
 import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
-import giraaff.debug.GraalError;
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.iterators.NodeIterable;
@@ -21,6 +20,7 @@ import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.calc.FloatingNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
+import giraaff.util.GraalError;
 
 /**
  * The {@code ConstantNode} represents a {@link Constant constant}.
@@ -57,9 +57,8 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
         if (stableDimension == 0)
         {
             /*
-             * Ensure that isDefaultStable has a canonical value to avoid having two constant nodes
-             * that only differ in this field. The value of isDefaultStable is only used when we
-             * have a stable array dimension.
+             * Ensure that isDefaultStable has a canonical value to avoid having two constant nodes that only differ
+             * in this field. The value of isDefaultStable is only used when we have a stable array dimension.
              */
             this.isDefaultStable = false;
         }

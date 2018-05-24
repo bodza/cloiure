@@ -33,8 +33,7 @@ public interface TypeReader
     long getS8();
 
     /**
-     * Reads a signed value that has been written using {@link TypeWriter#putSV variable byte size
-     * encoding}.
+     * Reads a signed value that has been written using {@link TypeWriter#putSV variable byte size encoding}.
      */
     default long getSV()
     {
@@ -83,8 +82,7 @@ public interface TypeReader
     }
 
     /**
-     * Reads an unsigned variable byte size encoded value that is known to fit into the range of
-     * int.
+     * Reads an unsigned variable byte size encoded value that is known to fit into the range of int.
      */
     default int getUVInt()
     {

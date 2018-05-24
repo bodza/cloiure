@@ -29,7 +29,6 @@ import giraaff.core.common.type.ObjectStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.TypeReference;
-import giraaff.debug.GraalError;
 import giraaff.graph.Node;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.CompressionNode.CompressionOp;
@@ -110,6 +109,7 @@ import giraaff.replacements.nodes.BinaryMathIntrinsicNode;
 import giraaff.replacements.nodes.BinaryMathIntrinsicNode.BinaryOperation;
 import giraaff.replacements.nodes.UnaryMathIntrinsicNode;
 import giraaff.replacements.nodes.UnaryMathIntrinsicNode.UnaryOperation;
+import giraaff.util.GraalError;
 
 /**
  * VM-independent lowerings for standard Java nodes. VM-specific methods are abstract and must be
@@ -282,17 +282,12 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         {
             if (method.getAnnotation(Snippet.class) != null)
             {
-                /*
-                 * In the context of the snippet use the LIR lowering instead of the Node lowering.
-                 */
+                // In the context of the snippet use the LIR lowering instead of the Node lowering.
                 return;
             }
             if (method.getName().equalsIgnoreCase(math.getOperation().name()) && tool.getMetaAccess().lookupJavaType(Math.class).equals(method.getDeclaringClass()))
             {
-                /*
-                 * A root compilation of the intrinsic method should emit the full assembly
-                 * implementation.
-                 */
+                // A root compilation of the intrinsic method should emit the full assembly implementation.
                 return;
             }
         }
@@ -317,17 +312,12 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         {
             if (method.getAnnotation(Snippet.class) != null)
             {
-                /*
-                 * In the context of the snippet use the LIR lowering instead of the Node lowering.
-                 */
+                // In the context of the snippet use the LIR lowering instead of the Node lowering.
                 return;
             }
             if (method.getName().equalsIgnoreCase(math.getOperation().name()) && tool.getMetaAccess().lookupJavaType(Math.class).equals(method.getDeclaringClass()))
             {
-                /*
-                 * A root compilation of the intrinsic method should emit the full assembly
-                 * implementation.
-                 */
+                // A root compilation of the intrinsic method should emit the full assembly implementation.
                 return;
             }
         }
@@ -484,7 +474,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         LogicNode condition = null;
         if (elementKind == JavaKind.Object && !StampTool.isPointerAlwaysNull(value))
         {
-            /* Array store check. */
+            // Array store check.
             TypeReference arrayType = StampTool.typeReferenceOrNull(array);
             if (arrayType != null && arrayType.isExact())
             {
@@ -498,10 +488,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
             }
             else
             {
-                /*
-                 * The guard on the read hub should be the null check of the array that was
-                 * introduced earlier.
-                 */
+                // The guard on the read hub should be the null check of the array that was introduced earlier.
                 ValueNode arrayClass = createReadHub(graph, array, tool);
                 ValueNode componentHub = createReadArrayComponentHub(graph, arrayClass, storeIndexed);
                 LogicNode typeTest = graph.unique(InstanceOfDynamicNode.create(graph.getAssumptions(), tool.getConstantReflection(), componentHub, value, false));

@@ -8,7 +8,6 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * the represented type or also to its sub types in the class hierarchy. When creating a type
  * reference, the following options have to be considered:
  *
- * <ul>
  * <li>The reference should always only refer to the given concrete type. Use
  * {@link #createExactTrusted(ResolvedJavaType)} for this purpose.</li>
  * <li>The reference should be created without assumptions about the class hierarchy. The returned
@@ -19,7 +18,6 @@ import jdk.vm.ci.meta.ResolvedJavaType;
  * reference is also exact, when there is only a single concrete sub type for the given type.
  * Depending on whether interface types can be trusted for this type reference use {@link #create}
  * or {@link #createTrusted}.</li>
- * </ul>
  *
  * For the methods with untrusted interface types, a {@code null} reference will be constructed for
  * untrusted interface types. Examples for interface types that cannot be trusted are types for
@@ -50,8 +48,7 @@ public final class TypeReference
     }
 
     /**
-     * Creates a type reference using the given type without assumptions and without trusting
-     * interface types.
+     * Creates a type reference using the given type without assumptions and without trusting interface types.
      */
     public static TypeReference createWithoutAssumptions(ResolvedJavaType type)
     {
@@ -59,8 +56,7 @@ public final class TypeReference
     }
 
     /**
-     * Creates a type reference using the given type without assumptions and trusting interface
-     * types.
+     * Creates a type reference using the given type without assumptions and trusting interface types.
      */
     public static TypeReference createTrustedWithoutAssumptions(ResolvedJavaType type)
     {
@@ -68,8 +64,7 @@ public final class TypeReference
     }
 
     /**
-     * Creates a type reference using the given type with assumptions and without trusting interface
-     * types.
+     * Creates a type reference using the given type with assumptions and without trusting interface types.
      */
     public static TypeReference create(Assumptions assumptions, ResolvedJavaType type)
     {

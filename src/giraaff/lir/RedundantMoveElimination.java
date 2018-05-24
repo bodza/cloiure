@@ -97,9 +97,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
 
         private final FrameMap frameMap;
 
-        /*
-         * Pseudo value for a not yet assigned location.
-         */
+        // Pseudo value for a not yet assigned location.
         static final int INIT_VALUE = 0;
 
         Optimization(FrameMap frameMap)
@@ -183,9 +181,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
                 }
             }
 
-            /*
-             * Now we know the number of locations to optimize, so we can allocate the block states.
-             */
+            // Now we know the number of locations to optimize, so we can allocate the block states.
             int numLocations = numRegs + stackIndices.size();
             for (AbstractBlockBase<?> block : blocks)
             {
@@ -210,9 +206,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
 
             int numIter = 0;
 
-            /*
-             * Iterate until there are no more changes.
-             */
+            // Iterate until there are no more changes.
             int currentValueNum = 1;
             boolean firstRound = true;
             boolean changed;
@@ -248,17 +242,14 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
                     }
                     else
                     {
-                        /*
-                         * Merge the states of predecessor blocks
-                         */
+                        // Merge the states of predecessor blocks
                         for (AbstractBlockBase<?> predecessor : block.getPredecessors())
                         {
                             BlockData predData = blockData.get(predecessor);
                             newState |= mergeState(data.entryState, predData.exitState, valueNum);
                         }
                     }
-                    // Advance by the value numbers which are "consumed" by
-                    // clearValues and mergeState
+                    // Advance by the value numbers which are "consumed" by clearValues and mergeState
                     valueNum += data.entryState.length;
 
                     if (newState || firstRound)
@@ -287,9 +278,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
 
                 if (numIter > 5)
                 {
-                    /*
-                     * This is _very_ seldom.
-                     */
+                    // This is _very_ seldom.
                     return false;
                 }
             } while (changed);
@@ -349,9 +338,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
         {
             if (isEligibleMove(op))
             {
-                /*
-                 * Handle the special case of a move instruction
-                 */
+                // Handle the special case of a move instruction
                 ValueMoveOp moveOp = ValueMoveOp.asValueMoveOp(op);
                 int sourceIdx = getStateIdx(moveOp.getInput());
                 int destIdx = getStateIdx(moveOp.getResult());
@@ -376,9 +363,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
                 }
             }
 
-            /*
-             * Value procedure for the instruction's output and temp values
-             */
+            // Value procedure for the instruction's output and temp values
             class OutputValueConsumer implements ValueConsumer
             {
                 int opValueNum;
@@ -394,9 +379,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
                     int stateIdx = getStateIdx(operand);
                     if (stateIdx >= 0)
                     {
-                        /*
-                         * Assign a unique number to the output or temp location.
-                         */
+                        // Assign a unique number to the output or temp location.
                         state[stateIdx] = encodeValueNum(opValueNum++, !LIRKind.isValue(operand));
                     }
                 }
@@ -405,9 +388,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
             OutputValueConsumer outputValueConsumer = new OutputValueConsumer(valueNum);
 
             op.visitEachTemp(outputValueConsumer);
-            /*
-             * Semantically the output values are written _after_ the temp values
-             */
+            // Semantically the output values are written _after_ the temp values
             op.visitEachOutput(outputValueConsumer);
 
             valueNum = outputValueConsumer.opValueNum;
@@ -525,8 +506,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
         }
 
         /**
-         * Returns true if an encoded value number (which is stored in a state) refers to an object
-         * reference.
+         * Returns true if an encoded value number (which is stored in a state) refers to an object reference.
          */
         private static boolean isObjectValue(int encodedValueNum)
         {
@@ -543,9 +523,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
                 ValueMoveOp moveOp = ValueMoveOp.asValueMoveOp(op);
                 Value source = moveOp.getInput();
                 Value dest = moveOp.getResult();
-                /*
-                 * Moves with mismatching kinds are not moves, but memory loads/stores!
-                 */
+                // Moves with mismatching kinds are not moves, but memory loads/stores!
                 return source.getValueKind().equals(dest.getValueKind());
             }
             return false;

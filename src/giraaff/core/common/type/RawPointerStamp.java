@@ -8,7 +8,7 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.spi.LIRKindTool;
-import giraaff.debug.GraalError;
+import giraaff.util.GraalError;
 
 /**
  * Type describing pointers to raw memory. This stamp is used for example for direct pointers to

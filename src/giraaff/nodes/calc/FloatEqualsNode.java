@@ -8,7 +8,6 @@ import giraaff.core.common.calc.CanonicalCondition;
 import giraaff.core.common.type.FloatStamp;
 import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.Stamp;
-import giraaff.debug.GraalError;
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable.BinaryCommutative;
@@ -19,6 +18,7 @@ import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.options.OptionValues;
+import giraaff.util.GraalError;
 
 public final class FloatEqualsNode extends CompareNode implements BinaryCommutative<ValueNode>
 {

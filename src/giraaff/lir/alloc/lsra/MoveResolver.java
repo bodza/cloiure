@@ -7,11 +7,11 @@ import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.Value;
 
-import giraaff.debug.GraalError;
 import giraaff.lir.LIRInsertionBuffer;
 import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRValueUtil;
 import giraaff.lir.gen.LIRGenerationResult;
+import giraaff.util.GraalError;
 
 /**
  */

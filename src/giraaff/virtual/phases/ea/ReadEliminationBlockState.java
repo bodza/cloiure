@@ -85,8 +85,7 @@ public final class ReadEliminationBlockState extends EffectsBlockState<ReadElimi
 
     /**
      * CacheEntry describing an Unsafe memory reference. The memory location and the location
-     * identity are separate so both must be considered when looking for optimizable memory
-     * accesses.
+     * identity are separate so both must be considered when looking for optimizable memory accesses.
      */
     static final class UnsafeLoadCacheEntry extends CacheEntry<ValueNode>
     {

@@ -36,8 +36,7 @@ public class MethodInvocation
      * <li>a fixed-param of the graph containing the callsite (ie, of <code>callee.graph()</code>
      * that contains <code>callee.invoke</code>)</li>
      *
-     * Given those positions, the
-     * {@link giraaff.phases.common.inlining.walker.CallsiteHolderExplorable}
+     * Given those positions, the {@link giraaff.phases.common.inlining.walker.CallsiteHolderExplorable}
      * instantiated in {@link #buildCallsiteHolderForElement(int)} can determine which of <i>its</i>
      * parameters are fixed.
      */

@@ -117,10 +117,7 @@ public class MethodCallTargetNode extends CallTargetNode implements IterableNode
 
         if (type != null)
         {
-            /*
-             * either the holder class is exact, or the receiver object has an exact type, or it's
-             * an array type
-             */
+            // either the holder class is exact, or the receiver object has an exact type, or it's an array type
             ResolvedJavaMethod resolvedMethod = type.getType().resolveConcreteMethod(targetMethod, contextType);
             if (resolvedMethod != null && (resolvedMethod.canBeStaticallyBound() || type.isExact() || type.getType().isArray()))
             {
@@ -168,10 +165,7 @@ public class MethodCallTargetNode extends CallTargetNode implements IterableNode
             // try to turn a interface call into a virtual call
             ResolvedJavaType declaredReceiverType = targetMethod().getDeclaringClass();
 
-            /*
-             * We need to check the invoke kind to avoid recursive simplification for virtual
-             * interface methods calls.
-             */
+            // We need to check the invoke kind to avoid recursive simplification for virtual interface methods calls.
             if (declaredReceiverType.isInterface())
             {
                 ResolvedJavaType singleImplementor = declaredReceiverType.getSingleImplementor();

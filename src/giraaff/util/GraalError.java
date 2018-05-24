@@ -1,4 +1,4 @@
-package giraaff.debug;
+package giraaff.util;
 
 import java.util.ArrayList;
 import java.util.Locale;

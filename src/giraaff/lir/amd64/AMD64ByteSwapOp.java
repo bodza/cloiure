@@ -5,10 +5,10 @@ import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.asm.amd64.AMD64MacroAssembler;
-import giraaff.debug.GraalError;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.Opcode;
 import giraaff.lir.asm.CompilationResultBuilder;
+import giraaff.util.GraalError;
 
 @Opcode("BSWAP")
 public final class AMD64ByteSwapOp extends AMD64LIRInstruction

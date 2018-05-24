@@ -81,7 +81,7 @@ import giraaff.replacements.MethodHandlePlugin;
 import giraaff.replacements.NodeIntrinsificationProvider;
 import giraaff.replacements.ReplacementsImpl;
 import giraaff.replacements.StandardGraphBuilderPlugins;
-import giraaff.serviceprovider.GraalServices;
+import giraaff.util.GraalServices;
 import giraaff.word.WordOperationPlugin;
 import giraaff.word.WordTypes;
 

@@ -83,7 +83,8 @@ public final class Range
                         return r1.from;
                     }
                 }
-                else { // r1.from() == r2.from()
+                else // r1.from() == r2.from()
+                {
                     if (r1.from == r1.to)
                     {
                         r1 = r1.next;

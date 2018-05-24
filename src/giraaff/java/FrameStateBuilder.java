@@ -20,7 +20,6 @@ import giraaff.core.common.GraalOptions;
 import giraaff.core.common.PermanentBailoutException;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.StampPair;
-import giraaff.debug.GraalError;
 import giraaff.java.BciBlockMapping.BciBlock;
 import giraaff.nodeinfo.Verbosity;
 import giraaff.nodes.AbstractMergeNode;
@@ -43,6 +42,7 @@ import giraaff.nodes.graphbuilderconf.IntrinsicContext.SideEffectsState;
 import giraaff.nodes.graphbuilderconf.ParameterPlugin;
 import giraaff.nodes.java.MonitorIdNode;
 import giraaff.nodes.util.GraphUtil;
+import giraaff.util.GraalError;
 
 public final class FrameStateBuilder implements SideEffectsState
 {
@@ -85,8 +85,7 @@ public final class FrameStateBuilder implements SideEffectsState
     }
 
     /**
-     * Creates a new frame state builder for the given code attribute, method and the given target
-     * graph.
+     * Creates a new frame state builder for the given code attribute, method and the given target graph.
      *
      * @param code the bytecode in which the frame exists
      * @param graph the target graph of Graal nodes created by the builder
@@ -737,21 +736,18 @@ public final class FrameStateBuilder implements SideEffectsState
     {
         if (locals[i] == FrameState.TWO_SLOT_MARKER)
         {
-            /* Writing the second slot of a two-slot value invalidates the first slot. */
+            // Writing the second slot of a two-slot value invalidates the first slot.
             locals[i - 1] = null;
         }
         locals[i] = x;
         if (slotKind.needsTwoSlots())
         {
-            /* Writing a two-slot value: mark the second slot. */
+            // Writing a two-slot value: mark the second slot.
             locals[i + 1] = FrameState.TWO_SLOT_MARKER;
         }
         else if (i < locals.length - 1 && locals[i + 1] == FrameState.TWO_SLOT_MARKER)
         {
-            /*
-             * Writing a one-slot value to an index previously occupied by a two-slot value: clear
-             * the old marker of the second slot.
-             */
+            // Writing a one-slot value to an index previously occupied by a two-slot value: clear the old marker of the second slot.
             locals[i + 1] = null;
         }
     }
@@ -813,8 +809,7 @@ public final class FrameStateBuilder implements SideEffectsState
     }
 
     /**
-     * Pop the specified number of slots off of this stack and return them as an array of
-     * instructions.
+     * Pop the specified number of slots off of this stack and return them as an array of instructions.
      *
      * @return an array containing the arguments off of the stack
      */
@@ -826,7 +821,7 @@ public final class FrameStateBuilder implements SideEffectsState
             ValueNode x = xpop();
             if (x == FrameState.TWO_SLOT_MARKER)
             {
-                /* Ignore second slot of two-slot value. */
+                // Ignore second slot of two-slot value.
                 x = xpop();
             }
             result[i] = x;

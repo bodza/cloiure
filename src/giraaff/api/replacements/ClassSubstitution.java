@@ -22,8 +22,7 @@ public @interface ClassSubstitution
     Class<?> value() default ClassSubstitution.class;
 
     /**
-     * Specifies the original class or classes if a single class is being used for multiple
-     * substitutions.
+     * Specifies the original class or classes if a single class is being used for multiple substitutions.
      *
      * This method is provided for cases where the original class is not accessible (according to
      * Java language access control rules).
