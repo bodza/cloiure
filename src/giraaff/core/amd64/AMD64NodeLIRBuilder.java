@@ -30,9 +30,9 @@ public abstract class AMD64NodeLIRBuilder extends NodeLIRBuilder
         public static final OptionKey<Boolean> MitigateSpeculativeExecutionAttacks = new OptionKey<>(false);
     }
 
-    public AMD64NodeLIRBuilder(StructuredGraph graph, LIRGeneratorTool gen, AMD64NodeMatchRules nodeMatchRules)
+    public AMD64NodeLIRBuilder(StructuredGraph graph, LIRGeneratorTool gen)
     {
-        super(graph, gen, nodeMatchRules);
+        super(graph, gen);
     }
 
     @Override

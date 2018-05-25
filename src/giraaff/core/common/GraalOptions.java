@@ -106,9 +106,6 @@ public final class GraalOptions
     public static final OptionKey<Boolean> OptFilterProfiledTypes = new OptionKey<>(true);
     public static final OptionKey<Boolean> OptDevirtualizeInvokesOptimistically = new OptionKey<>(true);
 
-    // Option "Allow backend to match complex expressions."
-    public static final OptionKey<Boolean> MatchExpressions = new OptionKey<>(true);
-
     // Option "Eagerly construct extra snippet info."
     public static final OptionKey<Boolean> EagerSnippets = new OptionKey<>(false);
 

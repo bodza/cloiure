@@ -15,7 +15,6 @@ import jdk.vm.ci.meta.JavaType;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.core.amd64.AMD64NodeLIRBuilder;
-import giraaff.core.amd64.AMD64NodeMatchRules;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.spi.ForeignCallLinkage;
 import giraaff.core.gen.DebugInfoBuilder;
@@ -45,9 +44,9 @@ import giraaff.nodes.spi.NodeValueMap;
  */
 public class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements HotSpotNodeLIRBuilder
 {
-    public AMD64HotSpotNodeLIRBuilder(StructuredGraph graph, LIRGeneratorTool gen, AMD64NodeMatchRules nodeMatchRules)
+    public AMD64HotSpotNodeLIRBuilder(StructuredGraph graph, LIRGeneratorTool gen)
     {
-        super(graph, gen, nodeMatchRules);
+        super(graph, gen);
         ((AMD64HotSpotLIRGenerator) gen).setDebugInfoBuilder(((HotSpotDebugInfoBuilder) getDebugInfoBuilder()));
     }
 

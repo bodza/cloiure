@@ -20,7 +20,6 @@ import giraaff.asm.amd64.AMD64Address;
 import giraaff.asm.amd64.AMD64Assembler.ConditionFlag;
 import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.code.CompilationResult;
-import giraaff.core.amd64.AMD64NodeMatchRules;
 import giraaff.core.common.CompilationIdentifier;
 import giraaff.core.common.GraalOptions;
 import giraaff.core.common.LIRKind;
@@ -89,7 +88,7 @@ public class AMD64HotSpotBackend extends HotSpotHostBackend
     @Override
     public NodeLIRBuilderTool newNodeLIRBuilder(StructuredGraph graph, LIRGeneratorTool lirGen)
     {
-        return new AMD64HotSpotNodeLIRBuilder(graph, lirGen, new AMD64NodeMatchRules(lirGen));
+        return new AMD64HotSpotNodeLIRBuilder(graph, lirGen);
     }
 
     @Override

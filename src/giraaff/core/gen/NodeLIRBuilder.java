@@ -23,9 +23,6 @@ import giraaff.core.common.calc.Condition;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.core.common.cfg.BlockMap;
 import giraaff.core.common.type.Stamp;
-import giraaff.core.match.ComplexMatchValue;
-import giraaff.core.match.MatchRuleRegistry;
-import giraaff.core.match.MatchStatement;
 import giraaff.graph.GraalGraphError;
 import giraaff.graph.Node;
 import giraaff.graph.NodeMap;
@@ -91,27 +88,11 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
 
     private ValueNode currentInstruction;
 
-    private final NodeMatchRules nodeMatchRules;
-    private EconomicMap<Class<? extends Node>, List<MatchStatement>> matchRules;
-
-    public NodeLIRBuilder(StructuredGraph graph, LIRGeneratorTool gen, NodeMatchRules nodeMatchRules)
+    public NodeLIRBuilder(StructuredGraph graph, LIRGeneratorTool gen)
     {
         this.gen = (LIRGenerator) gen;
-        this.nodeMatchRules = nodeMatchRules;
         this.nodeOperands = graph.createNodeMap();
         this.debugInfoBuilder = createDebugInfoBuilder(graph, this);
-        OptionValues options = graph.getOptions();
-        if (GraalOptions.MatchExpressions.getValue(options))
-        {
-            matchRules = MatchRuleRegistry.lookup(nodeMatchRules.getClass(), options);
-        }
-
-        nodeMatchRules.lirBuilder = this;
-    }
-
-    public NodeMatchRules getNodeMatchRules()
-    {
-        return nodeMatchRules;
     }
 
     protected DebugInfoBuilder createDebugInfoBuilder(StructuredGraph graph, NodeValueMap nodeValueMap)
@@ -120,9 +101,8 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
     }
 
     /**
-     * Returns the operand that has been previously initialized by
-     * {@link #setResult(ValueNode, Value)} with the result of an instruction. It's a code
-     * generation error to ask for the operand of ValueNode that doesn't have one yet.
+     * Returns the operand that has been previously initialized by {@link #setResult(ValueNode, Value)} with the result
+     * of an instruction. It's a code generation error to ask for the operand of ValueNode that doesn't have one yet.
      *
      * @param node A node that produces a result value.
      */
@@ -167,14 +147,6 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
     {
         nodeOperands.set(x, operand);
         return operand;
-    }
-
-    /**
-     * Used by the {@link MatchStatement} machinery to override the generation LIR for some ValueNodes.
-     */
-    public void setMatchResult(Node x, Value operand)
-    {
-        nodeOperands.set(x, operand);
     }
 
     public LabelRef getLIRBlock(FixedNode b)
@@ -309,10 +281,6 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
 
             List<Node> nodes = blockMap.get(block);
 
-            // Allow NodeLIRBuilder subclass to specialize code generation of any interesting groups
-            // of instructions
-            matchComplexExpressions(nodes);
-
             for (int i = 0; i < nodes.size(); i++)
             {
                 Node node = nodes.get(i);
@@ -338,19 +306,6 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
                             }
                         }
                     }
-                    else if (ComplexMatchValue.INTERIOR_MATCH.equals(operand))
-                    {
-                        // Doesn't need to be evaluated
-                    }
-                    else if (operand instanceof ComplexMatchValue)
-                    {
-                        ComplexMatchValue match = (ComplexMatchValue) operand;
-                        operand = match.evaluate(this);
-                        if (operand != null)
-                        {
-                            setResult(valueNode, operand);
-                        }
-                    }
                     else
                     {
                         // There can be cases in which the result of an instruction is already set before by other instructions.
@@ -370,35 +325,6 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
                     throw new GraalError("Block without BlockEndOp: " + block.getEndNode());
                 }
                 gen.emitJump(getLIRBlock((FixedNode) successors.first()));
-            }
-        }
-    }
-
-    protected void matchComplexExpressions(List<Node> nodes)
-    {
-        if (matchRules != null)
-        {
-            // Match the nodes in backwards order to encourage longer matches.
-            for (int index = nodes.size() - 1; index >= 0; index--)
-            {
-                Node node = nodes.get(index);
-                if (getOperand(node) != null)
-                {
-                    continue;
-                }
-                // See if this node is the root of any MatchStatements
-                List<MatchStatement> statements = matchRules.get(node.getClass());
-                if (statements != null)
-                {
-                    for (MatchStatement statement : statements)
-                    {
-                        if (statement.generate(this, index, node, nodes))
-                        {
-                            // Found a match so skip to the next
-                            break;
-                        }
-                    }
-                }
             }
         }
     }
